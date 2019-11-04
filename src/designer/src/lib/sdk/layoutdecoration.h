@@ -45,6 +45,8 @@ class QLayout;
 class QDesignerLayoutDecorationExtension
 {
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerLayoutDecorationExtension)
+
     enum InsertMode
     {
         InsertWidgetMode,
@@ -52,7 +54,8 @@ public:
         InsertColumnMode
     };
 
-    virtual ~QDesignerLayoutDecorationExtension() {}
+    QDesignerLayoutDecorationExtension() = default;
+    virtual ~QDesignerLayoutDecorationExtension() = default;
 
     virtual QList<QWidget*> widgets(QLayout *layout) const = 0;
 

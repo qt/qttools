@@ -53,8 +53,10 @@ public:
     QWidget *widget(int index) const override;
     int currentIndex() const override;
     void setCurrentIndex(int index) override;
+    bool canAddWidget() const override { return true; }
     void addWidget(QWidget *widget) override;
     void insertWidget(int index, QWidget *widget) override;
+    bool canRemove(int) const override { return true; }
     void remove(int index) override;
 
     // Semismart positioning of a new MDI child after cascading

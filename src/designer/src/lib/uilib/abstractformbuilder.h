@@ -118,7 +118,7 @@ class QFormBuilderExtra;
 class QDESIGNER_UILIB_EXPORT QAbstractFormBuilder
 {
 public:
-    Q_DISABLE_COPY(QAbstractFormBuilder)
+    Q_DISABLE_COPY_MOVE(QAbstractFormBuilder)
 
     QAbstractFormBuilder();
     virtual ~QAbstractFormBuilder();

@@ -29,11 +29,6 @@
 #include "abstractpromotioninterface.h"
 
 QT_BEGIN_NAMESPACE
-
-QDesignerPromotionInterface::~QDesignerPromotionInterface()
-{
-}
-
 /*!
     \class QDesignerPromotionInterface
 

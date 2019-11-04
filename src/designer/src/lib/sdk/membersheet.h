@@ -41,7 +41,10 @@ class QString; // FIXME: fool syncqt
 class QDesignerMemberSheetExtension
 {
 public:
-    virtual ~QDesignerMemberSheetExtension() {}
+    Q_DISABLE_COPY_MOVE(QDesignerMemberSheetExtension)
+
+    QDesignerMemberSheetExtension() = default;
+    virtual ~QDesignerMemberSheetExtension() = default;
 
     virtual int count() const = 0;
 

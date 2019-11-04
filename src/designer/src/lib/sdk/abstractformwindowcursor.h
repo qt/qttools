@@ -41,6 +41,8 @@ class QString;
 class QDESIGNER_SDK_EXPORT QDesignerFormWindowCursorInterface
 {
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerFormWindowCursorInterface)
+
     enum MoveOperation
     {
         NoMove,
@@ -61,8 +63,8 @@ public:
         KeepAnchor
     };
 
-public:
-    virtual ~QDesignerFormWindowCursorInterface() {}
+    QDesignerFormWindowCursorInterface() = default;
+    virtual ~QDesignerFormWindowCursorInterface() = default;
 
     virtual QDesignerFormWindowInterface *formWindow() const = 0;
 

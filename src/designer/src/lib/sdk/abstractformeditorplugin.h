@@ -41,7 +41,10 @@ class QAction;
 class QDESIGNER_SDK_EXPORT QDesignerFormEditorPluginInterface
 {
 public:
-    virtual ~QDesignerFormEditorPluginInterface() {}
+    Q_DISABLE_COPY_MOVE(QDesignerFormEditorPluginInterface)
+
+    QDesignerFormEditorPluginInterface() = default;
+    virtual ~QDesignerFormEditorPluginInterface() = default;
 
     virtual bool isInitialized() const = 0;
     virtual void initialize(QDesignerFormEditorInterface *core) = 0;

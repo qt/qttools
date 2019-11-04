@@ -40,7 +40,10 @@ class QString;
 class QDESIGNER_SDK_EXPORT QDesignerSettingsInterface
 {
 public:
-    virtual ~QDesignerSettingsInterface() {}
+    Q_DISABLE_COPY_MOVE(QDesignerSettingsInterface)
+
+    QDesignerSettingsInterface() = default;
+    virtual ~QDesignerSettingsInterface() = default;
 
     virtual void beginGroup(const QString &prefix) = 0;
     virtual void endGroup() = 0;

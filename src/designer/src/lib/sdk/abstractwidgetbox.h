@@ -47,7 +47,8 @@ class QDESIGNER_SDK_EXPORT QDesignerWidgetBoxInterface : public QWidget
 {
     Q_OBJECT
 public:
-    class QDESIGNER_SDK_EXPORT Widget {
+    class QDESIGNER_SDK_EXPORT Widget
+    {
     public:
         enum Type { Default, Custom };
         Widget(const QString &aname = QString(), const QString &xml = QString(),
@@ -71,11 +72,10 @@ public:
         QSharedDataPointer<QDesignerWidgetBoxWidgetData> m_data;
     };
 
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
     using WidgetList = QList<Widget>;
-#endif
 
-    class Category {
+    class Category
+    {
     public:
         enum Type { Default, Scratchpad };
 
@@ -96,8 +96,9 @@ public:
     private:
         QString m_name;
         Type m_type;
-        QList<Widget> m_widget_list;
+        WidgetList m_widget_list;
     };
+
     using CategoryList = QList<Category>;
 
     explicit QDesignerWidgetBoxInterface(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());

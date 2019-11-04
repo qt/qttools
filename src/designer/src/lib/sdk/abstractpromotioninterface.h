@@ -42,9 +42,13 @@ class QDesignerWidgetDataBaseItemInterface;
 class QDESIGNER_SDK_EXPORT QDesignerPromotionInterface
 {
 public:
-    virtual ~QDesignerPromotionInterface();
+    Q_DISABLE_COPY_MOVE(QDesignerPromotionInterface)
 
-    struct PromotedClass {
+    QDesignerPromotionInterface() = default;
+    virtual ~QDesignerPromotionInterface() = default;
+
+    struct PromotedClass
+    {
         QDesignerWidgetDataBaseItemInterface *baseItem;
         QDesignerWidgetDataBaseItemInterface *promotedItem;
     };

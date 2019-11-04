@@ -39,7 +39,10 @@ class QWidget;
 class QDesignerContainerExtension
 {
 public:
-    virtual ~QDesignerContainerExtension() {}
+    Q_DISABLE_COPY_MOVE(QDesignerContainerExtension)
+
+    QDesignerContainerExtension() = default;
+    virtual ~QDesignerContainerExtension() = default;
 
     virtual int count() const = 0;
     virtual QWidget *widget(int index) const = 0;
@@ -47,17 +50,13 @@ public:
     virtual int currentIndex() const = 0;
     virtual void setCurrentIndex(int index) = 0;
 
+    virtual bool canAddWidget() const = 0;
     virtual void addWidget(QWidget *widget) = 0;
     virtual void insertWidget(int index, QWidget *widget) = 0;
+    virtual bool canRemove(int index) const = 0;
     virtual void remove(int index) = 0;
-
-    virtual bool canAddWidget() const
-    // ### Qt6 remove body, provided in Qt5 for source compatibility to Qt4.
-         { return true; }
-    virtual bool canRemove(int index) const
-    // ### Qt6 remove body, provided in Qt5 for source compatibility to Qt4.
-         { Q_UNUSED(index); return true; }
 };
+
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerContainerExtension, "org.qt-project.Qt.Designer.Container")
 
 QT_END_NAMESPACE

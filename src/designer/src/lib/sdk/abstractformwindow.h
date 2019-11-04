@@ -61,9 +61,9 @@ public:
         SaveOnlyUsedResourceFiles,
         DontSaveResourceFiles
     };
+    Q_ENUM(ResourceFileSaveMode)
 
-public:
-    explicit QDesignerFormWindowInterface(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+    explicit QDesignerFormWindowInterface(QWidget *parent = nullptr, Qt::WindowFlags flags = {});
     virtual ~QDesignerFormWindowInterface();
 
     virtual QString fileName() const = 0;

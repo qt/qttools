@@ -429,6 +429,7 @@
     \snippet containerextension/multipagewidgetcontainerextension.cpp 3
 
     You must reimplement \l
+    {QDesignerContainerExtension::canAddWidget()}{canAddWidget()} and \l
     {QDesignerContainerExtension::addWidget()}{addWidget()} adding a
     given page to the container, \l
     {QDesignerContainerExtension::count()}{count()} returning the
@@ -447,6 +448,7 @@
     You must reimplement \l
     {QDesignerContainerExtension::insertWidget()}{insertWidget()}
     adding a given page to the container at a given index, \l
+    {QDesignerContainerExtension::canRemove()}{canRemove()} and \l
     {QDesignerContainerExtension::remove()}{remove()} deleting the
     page at a given index, \l
     {QDesignerContainerExtension::setCurrentIndex()}{setCurrentIndex()}
