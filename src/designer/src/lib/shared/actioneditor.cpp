@@ -101,7 +101,7 @@ public:
 };
 
 //--------  ActionEditor
-ObjectNamingMode ActionEditor::m_objectNamingMode = Underscore; // fixme Qt 6: CamelCase
+ObjectNamingMode ActionEditor::m_objectNamingMode = CamelCase;
 
 ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, Qt::WindowFlags flags) :
     QDesignerActionEditorInterface(parent, flags),
