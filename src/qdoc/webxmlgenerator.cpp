@@ -893,12 +893,16 @@ void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
 
     for (const auto *node : nodeList) {
         writer.writeStartElement("row");
-        writer.writeStartElement("heading");
+        writer.writeStartElement("item");
+        writer.writeStartElement("para");
         generateFullName(writer, node, relative);
-        writer.writeEndElement(); // heading
+        writer.writeEndElement(); // para
+        writer.writeEndElement(); // item
 
         writer.writeStartElement("item");
+        writer.writeStartElement("para");
         writer.writeCharacters(node->doc().briefText().toString());
+        writer.writeEndElement(); // para
         writer.writeEndElement(); // item
         writer.writeEndElement(); // row
     }
