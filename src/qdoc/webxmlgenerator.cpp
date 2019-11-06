@@ -765,7 +765,10 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
         fullName = node->fullName();
     if (!fullName.isEmpty() && !link.isEmpty()) {
         writer.writeStartElement("link");
-        writer.writeAttribute("raw", atom->string());
+        if (!atom->string().isEmpty())
+            writer.writeAttribute("raw", atom->string());
+        else
+            writer.writeAttribute("raw", fullName);
         writer.writeAttribute("href", link);
         writer.writeAttribute("type", targetType(node));
         if (node) {
@@ -798,6 +801,13 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
             }
         }
         inLink = true;
+    }
+}
+
+void WebXMLGenerator::endLink(QXmlStreamWriter &writer) {
+    if (inLink) {
+        writer.writeEndElement(); // link
+        inLink = false;
     }
 }
 
@@ -895,7 +905,9 @@ void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
         writer.writeStartElement("row");
         writer.writeStartElement("item");
         writer.writeStartElement("para");
-        generateFullName(writer, node, relative);
+        const QString link = linkForNode(node, relative);
+        startLink(writer, node->doc().body().firstAtom(), node, link);
+        endLink(writer);
         writer.writeEndElement(); // para
         writer.writeEndElement(); // item
 
@@ -907,20 +919,6 @@ void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
         writer.writeEndElement(); // row
     }
     writer.writeEndElement(); // table
-}
-
-void WebXMLGenerator::generateFullName(QXmlStreamWriter &writer,
-    const Node *node, const Node *relative)
-{
-    QString type = targetType(node);
-    QString name = node->fullName(relative);
-    writer.writeStartElement("link");
-    writer.writeAttribute("href", fullDocumentLocation(node));
-    writer.writeAttribute("type", type);
-    if (type == QLatin1String("page"))
-        writer.writeAttribute("page", name);
-    writer.writeCharacters(name);
-    writer.writeEndElement(); // link
 }
 
 const QPair<QString,QString> WebXMLGenerator::anchorForNode(const Node *node)
