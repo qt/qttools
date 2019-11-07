@@ -382,11 +382,9 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
 
         // Current lupdate ignores comments on the same line before the declaration.
         // void Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
-        if (declLineNum == sourceMgr.getLineNumber(commentEndDecomp.first, commentEndDecomp.second)) {
-            qCDebug(lcClang) << "Comment ends on same line as the declaration. Comment '"
-                << (*comment)->getRawText(sourceMgr) << "' is ignored, continue.";
-            continue;
-        }
+        bool sameLineComment = false;
+        if (declLineNum == sourceMgr.getLineNumber(commentEndDecomp.first, commentEndDecomp.second))
+            sameLineComment = true;
 
         // Extract text between the comment and declaration.
         llvm::StringRef text(buffer + commentEndDecomp.second,
@@ -398,6 +396,12 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
             qCDebug(lcClang) << "Found another declaration or preprocessor directive between"
                 " comment and declaration, break.";
             break;
+        }
+        if (sameLineComment && text.find_first_of(",") != llvm::StringRef::npos) {
+            qCDebug(lcClang) << "Comment ends on same line as the declaration and is separated "
+            "from the tr call by a ','. Comment '"
+                << (*comment)->getRawText(sourceMgr) << "' is ignored, continue.";
+            continue; // if there is a comment on the previous line it should be picked up
         }
 
         // There should be no other translation function between comment and declaration.
