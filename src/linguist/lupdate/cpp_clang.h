@@ -72,6 +72,7 @@ struct TranslationRelatedStore
     qint64 locationCol = -1;
     QString contextArg;
     QString contextRetrieved;
+    QString contextRetrievedTempNOOP;
     QString lupdateSource;
     QString lupdateLocationFile;
     qint64 lupdateLocationLine = -1;
@@ -189,6 +190,19 @@ namespace LupdatePrivate
 namespace ClangCppParser
 {
     void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd);
+
+    void fillTranslator(Translator *tor, Stores &stores);
+    void fillTranslator(Translator *tor, TranslationRelatedStore store);
+
+    TranslatorMessage fillTranslatorMessage(const TranslationRelatedStore &store,
+        const QString &id, bool plural, bool isID);
+
+    void handleTr(Translator *tor, const TranslationRelatedStore &store, bool plural);
+    void handleTrId(Translator *tor, const TranslationRelatedStore &store, bool plural);
+    void handleTranslate(Translator *tor, const TranslationRelatedStore &store, bool plural);
+
+    void correctAstTranslationContext(Stores &stores);
+    void correctNoopTanslationContext(Stores &stores);
 }
 
 QT_END_NAMESPACE

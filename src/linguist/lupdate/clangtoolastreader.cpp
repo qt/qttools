@@ -33,6 +33,34 @@ QT_BEGIN_NAMESPACE
 
 namespace LupdatePrivate
 {
+    /*
+        Retrieves the context for the NOOP macros using the context of
+        the NamedDeclaration within which the Macro is.
+        The context is stripped of the function or method part as it used not to be retrieved
+        in the previous cpp parser.
+    */
+    QString contextForNoopMacro(clang::NamedDecl *namedDecl)
+    {
+        QStringList context;
+        const clang::DeclContext *decl = namedDecl->getDeclContext();
+        while (decl) {
+            if (clang::isa<clang::NamedDecl>(decl) && !decl->isFunctionOrMethod()) {
+                if (const auto *namespaceDecl = clang::dyn_cast<clang::NamespaceDecl>(decl)) {
+                    context.prepend(namespaceDecl->isAnonymousNamespace()
+                        ? QStringLiteral("(anonymous namespace)")
+                        : QString::fromStdString(namespaceDecl->getDeclName().getAsString()));
+                } else if (const auto *recordDecl = clang::dyn_cast<clang::RecordDecl>(decl)) {
+                    static const QString anonymous = QStringLiteral("(anonymous %1)");
+                    context.prepend(recordDecl->getIdentifier()
+                        ? QString::fromStdString(recordDecl->getDeclName().getAsString())
+                        : anonymous.arg(QLatin1String(recordDecl->getKindName().data())));
+                }
+            }
+            decl = decl->getParent();
+        }
+        return context.join(QStringLiteral("::"));
+    }
+
     QString contextForFunctionDecl(clang::FunctionDecl *func, const std::string &funcName)
     {
         std::string context;
@@ -103,6 +131,15 @@ namespace LupdatePrivate
         if (text.contains(llvm::StringRef("QT_TRANSLATE_NOOP3_UTF8(")))
             return true;
         return false;
+    }
+
+    bool isPointWithin(const clang::SourceRange &sourceRange, const clang::SourceLocation &point,
+        const clang::SourceManager &sm)
+    {
+        clang::SourceLocation start = sourceRange.getBegin();
+        clang::SourceLocation end = sourceRange.getEnd();
+        return point == start || point == end || (sm.isBeforeInTranslationUnit(start, point)
+            && sm.isBeforeInTranslationUnit(point, end));
     }
 }
 
@@ -206,7 +243,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         qCDebug(lcClang) << "Plural      : " << store.lupdatePlural;
         break;
     }
-    m_translationStoresFromAST.push_back(store);
+    m_stores.AST.push_back(store);
     return true;
 }
 
@@ -423,123 +460,10 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
     }
 }
 
-/*
-    Fill the Translator with the retrieved information after traversing the AST.
-*/
-void LupdateVisitor::fillTranslator()
-{
-    for (const auto &store : qAsConst(m_translationStoresFromAST))
-        fillTranslator(store);
-    // Here also need to fill the translator with the information retrieved from the PreProcessor
-}
-
-void LupdateVisitor::fillTranslator(TranslationRelatedStore store)
-{
-    bool forcePlural = false;
-    switch (trFunctionAliasManager.trFunctionByName(store.funcName)) {
-    case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
-        // If there is a Q_DECLARE_TR_FUNCTION the context given takes priority
-        // over the retrieved context.
-        // The retrieved context for Q_DECLARE_TR_FUNCTION (where the macro was)
-        // has to fit the start of the retrieved context of the tr function or
-        // NOOP macro if there is already a argument giving the context, it has
-        // priority.
-        //handleDeclareTrFunctions(); // TODO: Implement.
-        break;
-    case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
-        forcePlural = true;
-        Q_FALLTHROUGH();
-    case TrFunctionAliasManager::Function_tr:
-    case TrFunctionAliasManager::Function_trUtf8:
-    case TrFunctionAliasManager::Function_QT_TR_NOOP:
-    case TrFunctionAliasManager::Function_QT_TR_NOOP_UTF8:
-        handleTr(store, forcePlural);
-        break;
-    case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
-    case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
-        forcePlural = true;
-        Q_FALLTHROUGH();
-    case TrFunctionAliasManager::Function_translate:
-    case TrFunctionAliasManager::Function_findMessage:
-    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
-    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
-    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
-    case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
-        handleTranslate(store, forcePlural);
-        break;
-    case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
-        forcePlural = true;
-        Q_FALLTHROUGH();
-    case TrFunctionAliasManager::Function_qtTrId:
-    case TrFunctionAliasManager::Function_QT_TRID_NOOP:
-        handleTrId(store, forcePlural);
-        break;
-    }
-}
-
-TranslatorMessage LupdateVisitor::fillTranslatorMessage(const TranslationRelatedStore &store,
-    bool forcePlural, bool isId)
-{
-    QString context;
-    if (!isId) {
-        context = ParserTool::transcode(store.contextArg.isEmpty() ? store.contextRetrieved
-            : store.contextArg);
-    }
-
-    TranslatorMessage msg(context,
-                          ParserTool::transcode(isId ? store.lupdateSourceWhenId
-                                                     : store.lupdateSource),
-                          ParserTool::transcode(store.lupdateComment),
-                          QString(),
-                          store.lupdateLocationFile,
-                          store.lupdateLocationLine,
-                          QStringList(),
-                          TranslatorMessage::Type::Unfinished,
-                          (forcePlural ? forcePlural : !store.lupdatePlural.isEmpty()));
-
-    if (!store.lupdateAllMagicMetaData.empty())
-        msg.setExtras(store.lupdateAllMagicMetaData);
-    msg.setExtraComment(ParserTool::transcode(store.lupdateExtraComment));
-    return msg;
-}
-
-void LupdateVisitor::handleTranslate(const TranslationRelatedStore &store, bool forcePlural)
-{
-    if (!store.lupdateSourceWhenId.isEmpty())
-        qCDebug(lcClang) << "//% is ignored when using translate function\n";
-
-    TranslatorMessage msg = fillTranslatorMessage(store, forcePlural);
-    msg.setId(ParserTool::transcode(store.lupdateIdMetaData)); // //= NOT to be used with qTrId
-    m_tor->append(msg);
-}
-
-void LupdateVisitor::handleTr(const TranslationRelatedStore &store, bool forcePlural)
-{
-    if (!store.lupdateSourceWhenId.isEmpty())
-        qCDebug(lcClang) << "//% is ignored when using tr function\n";
-    if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()) {
-        qCDebug(lcClang) << "tr() cannot be called without context \n";
-        return;
-    }
-
-    TranslatorMessage msg = fillTranslatorMessage(store, forcePlural);
-    msg.setId(ParserTool::transcode(store.lupdateIdMetaData)); // //= NOT to be used with qTrId
-    m_tor->append(msg);
-}
-
-void LupdateVisitor::handleTrId(const TranslationRelatedStore &store, bool forcePlural)
-{
-    if (!store.lupdateIdMetaData.isEmpty())
-        qCDebug(lcClang) << "//= is ignored when using qtTrId function \n";
-
-    TranslatorMessage msg = fillTranslatorMessage(store, forcePlural, true);
-    msg.setId(ParserTool::transcode(store.lupdateId));
-    m_tor->append(msg);
-}
-
 void LupdateVisitor::processPreprocessorCalls()
 {
-    for (const auto &store : qAsConst(m_translationStoresFromPP))
+    m_macro = (m_stores.Preprocessor.size() > 0);
+    for (const auto &store : qAsConst(m_stores.Preprocessor))
         processPreprocessorCall(store);
 }
 
@@ -551,10 +475,121 @@ void LupdateVisitor::processPreprocessorCall(TranslationRelatedStore store)
 
     if (store.isValid()) {
         if (store.funcName.contains(QStringLiteral("Q_DECLARE_TR_FUNCTIONS")))
-            m_qDeclateTrFunctionContext.push_back(store);
+            m_qDeclareTrMacroAll.push_back(store);
         else
-            m_noopTranslationStores.push_back(store);
+            m_noopTranslationMacroAll.push_back(store);
         store.printStore();
+    }
+}
+
+bool LupdateVisitor::VisitNamedDecl(clang::NamedDecl *namedDeclaration)
+{
+    if (!m_macro)
+        return true;
+    auto fullLocation = m_context->getFullLoc(namedDeclaration->getBeginLoc());
+    if (!fullLocation.isValid() || !fullLocation.getFileEntry())
+        return true;
+
+    if (fullLocation.getFileEntry()->getName() != m_inputFile)
+        return true;
+
+    qCDebug(lcClang) << "NamedDecl Name:   " << namedDeclaration->getQualifiedNameAsString();
+    qCDebug(lcClang) << "NamedDecl source: " << namedDeclaration->getSourceRange().printToString(
+        m_context->getSourceManager());
+    // Checks if there is a macro located within the range of this NamedDeclaration
+    // in order to find a context for the macro
+    findContextForTranslationStoresFromPP(namedDeclaration);
+    return true;
+}
+
+void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *namedDeclaration)
+{
+    qCDebug(lcClang) << "=================findContextForTranslationStoresFromPP===================";
+    qCDebug(lcClang) << "m_noopTranslationMacroAll " << m_noopTranslationMacroAll.size();
+    qCDebug(lcClang) << "m_qDeclareTrMacroAll      " << m_qDeclareTrMacroAll.size();
+    clang::SourceManager &sm = m_context->getSourceManager();
+
+    // Looking for NOOP context only in the input file
+    // because we are not interested in the NOOP from all related file
+    // Once QT_TR_NOOP are gone this step can be removes because the only
+    // QT_...NOOP left will have an context as argument
+    for (TranslationRelatedStore &store : m_noopTranslationMacroAll) {
+        if (!store.contextArg.isEmpty())
+            continue;
+        clang::SourceLocation sourceLoc = store.callLocation;
+        if (!sourceLoc.isValid())
+            continue;
+        if (LupdatePrivate::isPointWithin(namedDeclaration->getSourceRange(), sourceLoc, sm)) {
+            /*
+                void N3::C1::C12::C121::f2()
+                {
+                    const char test_NOOP[] = QT_TR_NOOP("A QT_TR_NOOP N3::C1::C13");
+                }
+                In such case namedDeclaration->getQualifiedNameAsString() will give only
+                test_NOOP as context.
+                This is why the following function is needed
+            */
+            store.contextRetrievedTempNOOP = LupdatePrivate::contextForNoopMacro(namedDeclaration);
+            qCDebug(lcClang) << "------------------------------------------NOOP Macro in range ---";
+            qCDebug(lcClang) << "Range " << namedDeclaration->getSourceRange().printToString(sm);
+            qCDebug(lcClang) << "Point " << sourceLoc.printToString(sm);
+            qCDebug(lcClang) << "=========== Visit Named Declaration =============================";
+            qCDebug(lcClang) << " Declaration Location    " <<
+                namedDeclaration->getSourceRange().printToString(sm);
+            qCDebug(lcClang) << " Macro       Location                                 "
+                << store.callLocation.printToString(sm);
+            qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
+                << namedDeclaration->getQualifiedNameAsString();
+            qCDebug(lcClang) << " Context LupdatePrivate::contextForNoopMacro          "
+                << store.contextRetrievedTempNOOP;
+            qCDebug(lcClang) << " Context Retrieved       " << store.contextRetrievedTempNOOP;
+            qCDebug(lcClang) << "=================================================================";
+            store.printStore();
+        }
+    }
+
+    for (TranslationRelatedStore &store : m_qDeclareTrMacroAll) {
+        clang::SourceLocation sourceLoc = store.callLocation;
+        if (!sourceLoc.isValid())
+            continue;
+        if (LupdatePrivate::isPointWithin(namedDeclaration->getSourceRange(), sourceLoc, sm)) {
+            store.contextRetrieved = QString::fromStdString(
+                namedDeclaration->getQualifiedNameAsString());
+            qCDebug(lcClang) << "------------------------------------------DECL Macro in range ---";
+            qCDebug(lcClang) << "Range " << namedDeclaration->getSourceRange().printToString(sm);
+            qCDebug(lcClang) << "Point " << sourceLoc.printToString(sm);
+            qCDebug(lcClang) << "=========== Visit Named Declaration =============================";
+            qCDebug(lcClang) << " Declaration Location    " <<
+                namedDeclaration->getSourceRange().printToString(sm);
+            qCDebug(lcClang) << " Macro       Location                                 "
+                << store.callLocation.printToString(sm);
+            qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
+                << store.contextRetrieved;
+            qCDebug(lcClang) << " Context LupdatePrivate::contextForNoopMacro          "
+                << LupdatePrivate::contextForNoopMacro(namedDeclaration);
+            qCDebug(lcClang) << " Context Retrieved       " << store.contextRetrieved;
+            qCDebug(lcClang) << "=================================================================";
+            store.printStore();
+        }
+    }
+}
+
+void LupdateVisitor::generateOuput()
+{
+    qCDebug(lcClang) << "===================generateOuput============================";
+
+    for (TranslationRelatedStore &store : m_noopTranslationMacroAll) {
+        if (store.contextRetrievedTempNOOP.isEmpty() && store.contextArg.isEmpty())
+            continue;
+        // only fill if a context has been retrieved in the file we're currently visiting
+        m_stores.QNoopTranlsationWithContext.push_back(store);
+    }
+
+    for (TranslationRelatedStore &store : m_qDeclareTrMacroAll) {
+        if (store.contextRetrieved.isEmpty())
+            continue;
+        // only fill if a context has been retrieved in the file we're currently visiting
+        m_stores.QDeclareTrWithContext.push_back(store);
     }
 }
 

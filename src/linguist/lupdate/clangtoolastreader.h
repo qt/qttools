@@ -57,17 +57,19 @@ class Translator;
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
 public:
-    explicit LupdateVisitor(clang::ASTContext *context, Translator *tor)
-        : m_context(context),
-          m_tor(tor)
+    explicit LupdateVisitor(clang::ASTContext *context, Stores &stores)
+        : m_context(context)
+        , m_stores(stores)
     {
         m_inputFile = m_context->getSourceManager().getFileEntryForID(
             m_context->getSourceManager().getMainFileID())->getName();
     }
 
     bool VisitCallExpr(clang::CallExpr *callExpression);
-    void fillTranslator();
     void processPreprocessorCalls();
+    bool VisitNamedDecl(clang::NamedDecl *namedDeclaration);
+    void findContextForTranslationStoresFromPP(clang::NamedDecl *namedDeclaration);
+    void generateOuput();
 
 private:
     std::vector<QString> rawCommentsForCallExpr(const clang::CallExpr *callExpr) const;
@@ -75,30 +77,24 @@ private:
 
     void setInfoFromRawComment(const QString &commentString, TranslationRelatedStore *store);
 
-    void fillTranslator(TranslationRelatedStore store);
-    TranslatorMessage fillTranslatorMessage(const TranslationRelatedStore &store,
-        bool forcePlural, bool isID = false);
-    void handleTr(const TranslationRelatedStore &store, bool forcePlural);
-    void handleTrId(const TranslationRelatedStore &store, bool forcePlural);
-    void handleTranslate(const TranslationRelatedStore &store, bool forcePlural);
-
     void processPreprocessorCall(TranslationRelatedStore store);
 
     clang::ASTContext *m_context { nullptr };
     Translator *m_tor { nullptr };
     std::string m_inputFile;
 
-    TranslationStores m_translationStoresFromAST;
-    TranslationStores m_qDeclateTrFunctionContext;
-    TranslationStores m_noopTranslationStores;
-    TranslationStores m_translationStoresFromPP;
+    Stores &m_stores;
+
+    TranslationStores m_qDeclareTrMacroAll;
+    TranslationStores m_noopTranslationMacroAll;
+    bool m_macro = false;
 };
 
 class LupdateASTConsumer : public clang::ASTConsumer
 {
 public:
-    explicit LupdateASTConsumer(clang::ASTContext *context, Translator *tor)
-        : m_visitor(context, tor)
+    explicit LupdateASTConsumer(clang::ASTContext *context, Stores &stores)
+        : m_visitor(context, stores)
     {}
 
     // This method is called when the ASTs for entire translation unit have been
@@ -108,7 +104,7 @@ public:
         m_visitor.processPreprocessorCalls();
         bool traverse = m_visitor.TraverseAST(context);
         qCDebug(lcClang) << "TraverseAST: " << traverse;
-        m_visitor.fillTranslator();
+        m_visitor.generateOuput();
     }
 
 private:
@@ -118,42 +114,42 @@ private:
 class LupdateFrontendAction : public clang::ASTFrontendAction
 {
 public:
-    LupdateFrontendAction(Translator *tor)
-        : m_tor(tor)
+    LupdateFrontendAction(Stores &outputStoresWithContext)
+        : m_stores(outputStoresWithContext)
     {}
 
     std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
         clang::CompilerInstance &compiler, llvm::StringRef /* inFile */) override
     {
-        LupdateASTConsumer *consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_tor);
+        auto consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_stores);
         return std::unique_ptr<clang::ASTConsumer>(consumer);
     }
 
 private:
-    Translator *m_tor { nullptr };
+    Stores &m_stores;
 };
 
 class LupdateToolActionFactory : public clang::tooling::FrontendActionFactory
 {
 public:
-    LupdateToolActionFactory(Translator *tor)
-        : m_tor(tor)
+    LupdateToolActionFactory(Stores &stores)
+        : m_stores(stores)
     {}
 
 #if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
     std::unique_ptr<clang::FrontendAction> create() override
     {
-        return std::make_unique<LupdateFrontendAction>(m_tor);
+        return std::make_unique<LupdateFrontendAction>(m_stores);
     }
 #else
     clang::FrontendAction *create() override
     {
-        return new LupdateFrontendAction(m_tor);
+        return new LupdateFrontendAction(m_stores);
     }
 #endif
 
 private:
-    Translator *m_tor { nullptr };
+    Stores &m_stores;
 };
 
 QT_END_NAMESPACE
