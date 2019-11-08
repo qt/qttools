@@ -43,9 +43,6 @@
 
 QT_BEGIN_NAMESPACE
 
-using ActionList = QList<QAction *>;
-using GraphicsItemList = QList<QGraphicsItem *>;
-
 enum { debugZoomWidget = 0 };
 
 static const int menuZoomList[] = { 100, 25, 50, 75, 125, 150 , 175, 200 };
@@ -77,11 +74,10 @@ int ZoomMenu::zoomOf(const QAction *a)
 
 void ZoomMenu::addActions(QMenu *m)
 {
-    const ActionList za = m_menuActions->actions();
-    const ActionList::const_iterator cend = za.constEnd();
-    for (ActionList::const_iterator it =  za.constBegin(); it != cend; ++it) {
-        m->addAction(*it);
-        if (zoomOf(*it)  == 100)
+    const auto za = m_menuActions->actions();
+    for (QAction *a : za) {
+        m->addAction(a);
+        if (zoomOf(a) == 100)
             m->addSeparator();
     }
 }
@@ -93,13 +89,13 @@ int ZoomMenu::zoom() const
 
 void ZoomMenu::setZoom(int percent)
 {
-    const ActionList za = m_menuActions->actions();
-    const ActionList::const_iterator cend = za.constEnd();
-    for (ActionList::const_iterator it =  za.constBegin(); it != cend; ++it)
-        if (zoomOf(*it) == percent) {
-            (*it)->setChecked(true);
+    const auto za = m_menuActions->actions();
+    for (QAction *a : za) {
+        if (zoomOf(a) == percent) {
+            a->setChecked(true);
             return;
         }
+    }
 }
 
 void ZoomMenu::slotZoomMenu(QAction *a)

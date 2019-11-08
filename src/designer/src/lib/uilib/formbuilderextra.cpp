@@ -386,7 +386,7 @@ inline bool parsePerCellProperty(Layout *l, int count, void (Layout::*setter)(in
         clearPerCellValue(l, count, setter, defaultValue);
         return true;
     }
-    const QVector<QStringRef> list = s.splitRef(QLatin1Char(','));
+    const auto list = s.splitRef(QLatin1Char(','));
     if (list.isEmpty()) {
         clearPerCellValue(l, count, setter, defaultValue);
         return true;
@@ -804,7 +804,8 @@ QFormBuilderStrings::QFormBuilderStrings() :
                                    whatsThisAttribute));
 
     // Note: this skips the first item!
-    QList<TextRoleNName>::const_iterator it = itemTextRoles.constBegin(), end = itemTextRoles.constEnd();
+    auto it = itemTextRoles.constBegin();
+    const auto end = itemTextRoles.constEnd();
     while (++it != end)
         treeItemTextRoleHash.insert(it->second, it->first);
 }

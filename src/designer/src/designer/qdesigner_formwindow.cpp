@@ -173,7 +173,7 @@ int QDesignerFormWindow::getNumberOfUntitledWindows() const
                 if (maxUntitled == 0)
                     ++maxUntitled;
                 if (match.lastCapturedIndex() >= 2) {
-                    const QStringRef numberCapture = match.capturedRef(2);
+                    const auto numberCapture = match.capturedRef(2);
                     if (!numberCapture.isEmpty())
                         maxUntitled = qMax(numberCapture.toInt(), maxUntitled);
                 }

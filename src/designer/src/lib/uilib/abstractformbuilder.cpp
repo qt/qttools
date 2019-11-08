@@ -796,8 +796,8 @@ static inline Qt::Alignment alignmentFromDom(const QString &in)
 {
     Qt::Alignment rc = nullptr;
     if (!in.isEmpty()) {
-        const QVector<QStringRef> flags = in.splitRef(QLatin1Char('|'));
-        for (const QStringRef &f : flags) {
+        const auto flags = in.splitRef(QLatin1Char('|'));
+        for (const auto &f : flags) {
             if (f == QStringLiteral("Qt::AlignLeft")) {
                 rc |= Qt::AlignLeft;
             } else if (f == QStringLiteral("Qt::AlignRight")) {
@@ -1172,7 +1172,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
                 continue;
 
             if (QMenu *menu = qobject_cast<QMenu *>(childWidget)) {
-                const QList<QAction *> actions = menu->parentWidget()->actions();
+                const auto actions = menu->parentWidget()->actions();
                 const bool found =
                     std::any_of(actions.cbegin(), actions.cend(),
                                 [menu] (const QAction *a) { return a->menu() == menu; });
@@ -1201,7 +1201,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
 
     // add-action
     QVector<DomActionRef *> ui_action_refs;
-    const QList<QAction *> &actions = widget->actions();
+    const auto &actions = widget->actions();
     ui_action_refs.reserve(actions.size());
     for (QAction *action : actions) {
         if (DomActionRef *ui_action_ref = createActionRefDom(action)) {
@@ -1452,7 +1452,7 @@ QList<DomProperty*> QAbstractFormBuilder::computeProperties(QObject *obj)
     for(int i=0; i < propertyCount; ++i)
         properties.insert(meta->property(i).name(), true);
 
-    const QList<QByteArray> propertyNames = properties.keys();
+    const auto propertyNames = properties.keys();
 
     const int propertyNamesCount = propertyNames.size();
     for(int i=0; i<propertyNamesCount ; ++i) {
@@ -2484,7 +2484,7 @@ DomActionGroup *QAbstractFormBuilder::createDom(QActionGroup *actionGroup)
 
     QVector<DomAction *> ui_actions;
 
-    const QList<QAction *> &actions = actionGroup->actions();
+    const auto &actions = actionGroup->actions();
     ui_actions.reserve(actions.size());
     for (QAction *action : actions) {
         if (DomAction *ui_action = createDom(action)) {

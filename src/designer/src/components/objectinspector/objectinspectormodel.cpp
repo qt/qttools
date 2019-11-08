@@ -270,8 +270,6 @@ namespace qdesigner_internal {
                               const ModelRecursionContext &ctx)
     {
         using ButtonGroupList = QList<QButtonGroup *>;
-        using ActionList = QList<QAction *>;
-
         // 1) Create entry
         const ObjectData entry(parent, object, ctx);
         model.push_back(entry);
@@ -289,46 +287,41 @@ namespace qdesigner_internal {
             }
         }
 
-        QObjectList children = object->children();
-        if (!children.isEmpty()) {
+        if (!object->children().isEmpty()) {
             ButtonGroupList buttonGroups;
+            QObjectList children = object->children();
             std::sort(children.begin(), children.end(), sortEntry);
-            const QObjectList::const_iterator cend = children.constEnd();
-            for (QObjectList::const_iterator it = children.constBegin(); it != cend; ++it) {
+            for (QObject *childObject : qAsConst(children)) {
                 // Managed child widgets unless we had a container extension
-                if ((*it)->isWidgetType()) {
+                if (childObject->isWidgetType()) {
                     if (!containerExtension) {
-                        QWidget *widget = qobject_cast<QWidget*>(*it);
+                        QWidget *widget = qobject_cast<QWidget*>(childObject);
                         if (fwi->isManaged(widget))
                             createModelRecursion(fwi, object, widget, model, ctx);
                     }
                 } else {
-                    if (ctx.mdb->item(*it)) {
-                        if (QButtonGroup *bg = qobject_cast<QButtonGroup*>(*it))
+                    if (ctx.mdb->item(childObject)) {
+                        if (auto bg = qobject_cast<QButtonGroup*>(childObject))
                             buttonGroups.push_back(bg);
                     } // Has MetaDataBase entry
                 }
             }
             // Add button groups
             if (!buttonGroups.isEmpty()) {
-                const ButtonGroupList::const_iterator bgcend = buttonGroups.constEnd();
-                for (ButtonGroupList::const_iterator bgit = buttonGroups.constBegin(); bgit != bgcend; ++bgit)
-                    createModelRecursion(fwi, object, *bgit, model, ctx);
+                for (QButtonGroup *group : qAsConst(buttonGroups))
+                    createModelRecursion(fwi, object, group, model, ctx);
             }
         } // has children
         if (object->isWidgetType()) {
             // Add actions
-            const ActionList actions = static_cast<QWidget*>(object)->actions();
-            if (!actions.isEmpty()) {
-                const ActionList::const_iterator cend = actions.constEnd();
-                    for (ActionList::const_iterator it = actions.constBegin(); it != cend; ++it)
-                    if (ctx.mdb->item(*it)) {
-                        QAction *action = *it;
-                        QObject *obj = action;
-                            if (action->menu())
-                            obj = action->menu();
-                        createModelRecursion(fwi, object, obj, model, ctx);
-                    }
+            const auto actions = static_cast<QWidget*>(object)->actions();
+            for (QAction *action : actions) {
+                if (ctx.mdb->item(action)) {
+                    QObject *childObject = action;
+                    if (auto menu = action->menu())
+                        childObject = menu;
+                    createModelRecursion(fwi, object, childObject, model, ctx);
+                }
             }
         }
     }

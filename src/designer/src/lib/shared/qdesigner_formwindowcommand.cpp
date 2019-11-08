@@ -100,9 +100,7 @@ void QDesignerFormWindowCommand::updateBuddies(QDesignerFormWindowInterface *for
 {
     QExtensionManager* extensionManager = form->core()->extensionManager();
 
-    using LabelList = QList<QLabel *>;
-
-    const LabelList label_list = form->findChildren<QLabel*>();
+    const auto label_list = form->findChildren<QLabel*>();
     if (label_list.isEmpty())
         return;
 
@@ -110,9 +108,9 @@ void QDesignerFormWindowCommand::updateBuddies(QDesignerFormWindowInterface *for
     const QByteArray oldNameU8 = old_name.toUtf8();
     const QByteArray newNameU8 = new_name.toUtf8();
 
-    const LabelList::const_iterator cend = label_list.constEnd();
-    for (LabelList::const_iterator it = label_list.constBegin(); it != cend; ++it ) {
-        if (QDesignerPropertySheetExtension* sheet = qt_extension<QDesignerPropertySheetExtension*>(extensionManager, *it)) {
+    for (QLabel *label : label_list) {
+        if (QDesignerPropertySheetExtension* sheet =
+                qt_extension<QDesignerPropertySheetExtension*>(extensionManager, label)) {
             const int idx = sheet->indexOf(buddyProperty);
             if (idx != -1) {
                 const QByteArray oldBuddy = sheet->property(idx).toByteArray();

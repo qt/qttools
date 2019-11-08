@@ -235,7 +235,7 @@ QDesignerWorkbench::QDesignerWorkbench()  :
     { // Add application specific options pages
         QDesignerAppearanceOptionsPage *appearanceOptions = new QDesignerAppearanceOptionsPage(m_core);
         connect(appearanceOptions, &QDesignerAppearanceOptionsPage::settingsChanged, this, &QDesignerWorkbench::notifyUISettingsChanged);
-        QList<QDesignerOptionsPageInterface*> optionsPages = m_core->optionsPages();
+        auto optionsPages = m_core->optionsPages();
         optionsPages.push_front(appearanceOptions);
         m_core->setOptionsPages(optionsPages);
     }

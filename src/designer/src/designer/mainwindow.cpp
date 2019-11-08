@@ -150,12 +150,11 @@ QStringList DockedMdiArea::uiFiles(const QMimeData *d) const
     QStringList rc;
     if (!d->hasFormat(QLatin1String(uriListMimeFormatC)))
         return rc;
-    const QList<QUrl> urls = d->urls();
+    const auto urls = d->urls();
     if (urls.isEmpty())
         return rc;
-    const QList<QUrl>::const_iterator cend = urls.constEnd();
-    for (QList<QUrl>::const_iterator it = urls.constBegin(); it != cend; ++it) {
-        const QString fileName = it->toLocalFile();
+    for (const auto &url : urls) {
+        const QString fileName = url.toLocalFile();
         if (!fileName.isEmpty() && fileName.endsWith(m_extension))
             rc.push_back(fileName);
     }

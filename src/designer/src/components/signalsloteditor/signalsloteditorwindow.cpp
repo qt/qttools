@@ -79,9 +79,6 @@ static void addWidgetToObjectList(const QWidget *w, QStringList &r)
 
 static QStringList objectNameList(QDesignerFormWindowInterface *form)
 {
-    using ActionList = QList<QAction *>;
-    using ButtonGroupList = QList<QButtonGroup *>;
-
     QStringList result;
 
     QWidget *mainContainer = form->mainContainer();
@@ -104,30 +101,24 @@ static QStringList objectNameList(QDesignerFormWindowInterface *form)
     const QDesignerMetaDataBaseInterface *mdb = form->core()->metaDataBase();
 
     // Add managed actions and actions with managed menus
-    const ActionList actions = mainContainer->findChildren<QAction*>();
-    if (!actions.isEmpty()) {
-        const ActionList::const_iterator cend = actions.constEnd();
-        for (ActionList::const_iterator it = actions.constBegin(); it != cend; ++it) {
-            QAction *a = *it;
-            if (!a->isSeparator()) {
-                if (QMenu *menu = a->menu()) {
-                    if (mdb->item(menu))
-                        result.push_back(menu->objectName());
-                } else {
-                    if (mdb->item(a))
-                        result.push_back(a->objectName());
-                }
+    const auto actions = mainContainer->findChildren<QAction*>();
+    for (QAction *a : actions) {
+        if (!a->isSeparator()) {
+            if (QMenu *menu = a->menu()) {
+                if (mdb->item(menu))
+                    result.push_back(menu->objectName());
+            } else {
+                if (mdb->item(a))
+                    result.push_back(a->objectName());
             }
         }
     }
 
     // Add  managed buttons groups
-    const ButtonGroupList buttonGroups = mainContainer->findChildren<QButtonGroup *>();
-    if (!buttonGroups.isEmpty()) {
-        const ButtonGroupList::const_iterator cend = buttonGroups.constEnd();
-        for (ButtonGroupList::const_iterator it = buttonGroups.constBegin(); it != cend; ++it)
-            if (mdb->item(*it))
-                result.append((*it)->objectName());
+    const auto buttonGroups = mainContainer->findChildren<QButtonGroup *>();
+    for (QButtonGroup * b : buttonGroups) {
+        if (mdb->item(b))
+            result.append(b->objectName());
     }
 
     result.sort();

@@ -162,7 +162,7 @@ void SelectSignalDialog::populate(QDesignerFormEditorInterface *core, QObject *o
     if (defaultSignal.isEmpty()) {
         selectedIndex = m_model->index(0, 0, m_model->index(0, 0, QModelIndex())); // first method
     } else {
-        const QList<QStandardItem *> items = m_model->findItems(defaultSignal, Qt::MatchExactly | Qt::MatchRecursive, 0);
+        const auto items = m_model->findItems(defaultSignal, Qt::MatchExactly | Qt::MatchRecursive, 0);
         if (!items.isEmpty())
             selectedIndex = m_model->indexFromItem(items.constFirst());
     }

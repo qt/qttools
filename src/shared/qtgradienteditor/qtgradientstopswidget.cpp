@@ -170,7 +170,7 @@ void QtGradientStopsWidgetPrivate::setupMove(QtGradientStop *stop, int x)
     int viewportX = qRound(toViewport(stop->position()));
     m_moveOffset = x - viewportX;
 
-    const QList<QtGradientStop *> stops = m_stops;
+    const auto stops = m_stops;
     m_stops.clear();
     for (QtGradientStop *s : stops) {
         if (m_model->isSelected(s) || s == stop) {
@@ -450,7 +450,7 @@ void QtGradientStopsWidget::setGradientStopsModel(QtGradientStopsModel *model)
         for (auto it = stopsMap.cbegin(), end = stopsMap.cend(); it != end; ++it)
             d_ptr->slotStopAdded(it.value());
 
-        const QList<QtGradientStop *> selected = d_ptr->m_model->selectedStops();
+        const auto selected = d_ptr->m_model->selectedStops();
         for (QtGradientStop *stop : selected)
             d_ptr->slotStopSelected(stop, true);
 
@@ -652,8 +652,8 @@ void QtGradientStopsWidget::mouseMoveEvent(QMouseEvent *e)
             p2 = QPoint(xv2, qRound(d_ptr->m_handleSize / 2));
         }
 
-        QList<QtGradientStop *> beginList = d_ptr->stopsAt(p1);
-        QList<QtGradientStop *> endList = d_ptr->stopsAt(p2);
+        const auto beginList = d_ptr->stopsAt(p1);
+        const auto endList = d_ptr->stopsAt(p2);
 
         double x1 = d_ptr->fromViewport(xv1);
         double x2 = d_ptr->fromViewport(xv2);

@@ -366,7 +366,7 @@ bool WidgetBoxTreeWidget::readCategories(const QString &fileName, const QString 
     while (!reader.atEnd()) {
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement: {
-            const QStringRef tag = reader.name();
+            const auto tag = reader.name();
             if (tag == QLatin1String(widgetBoxRootElementC)) {
                 //<widgetbox version="4.5">
                 continue;
@@ -411,7 +411,7 @@ bool WidgetBoxTreeWidget::readCategories(const QString &fileName, const QString 
             break;
         }
         case QXmlStreamReader::EndElement: {
-           const QStringRef tag = reader.name();
+           const auto tag = reader.name();
            if (tag == QLatin1String(widgetBoxRootElementC)) {
                continue;
            }
@@ -472,7 +472,7 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
         case QXmlStreamReader::StartElement:
             if (nesting++ == 0) {
                 // First element must be <ui> or (legacy) <widget>
-                const QStringRef name = r.name();
+                const auto name = r.name();
                 if (name == QLatin1String(uiElementC)) {
                     startTagPosition = currentPosition;
                 } else {
@@ -593,7 +593,7 @@ static int findCategory(const QString &name, const WidgetBoxTreeWidget::Category
 static inline bool isValidIcon(const QIcon &icon)
 {
     if (!icon.isNull()) {
-        const QList<QSize> availableSizes = icon.availableSizes();
+        const auto availableSizes = icon.availableSizes();
         return !availableSizes.isEmpty() && !availableSizes.constFirst().isEmpty();
     }
     return false;

@@ -150,7 +150,7 @@ QList<QAction*> ContainerWidgetTaskMenu::taskActions() const
     const QDesignerContainerExtension *ce = containerExtension();
     const int index = ce->currentIndex();
 
-    QList<QAction*> actions = QDesignerTaskMenu::taskActions();
+    auto actions = QDesignerTaskMenu::taskActions();
     actions += m_taskActions;
     // Update the page submenu, deletion and promotion. Updated on demand due to promotion state.
     m_pageMenu->clear();
@@ -224,7 +224,7 @@ WizardContainerWidgetTaskMenu::WizardContainerWidgetTaskMenu(QWizard *w, QObject
 {
     connect(m_nextAction, &QAction::triggered, w, &QWizard::next);
     connect(m_previousAction, &QAction::triggered, w, &QWizard::back);
-    QList<QAction*> &l = containerActions();
+    auto &l = containerActions();
     l.push_front(createSeparator());
     l.push_front(m_nextAction);
     l.push_front(m_previousAction);
@@ -260,7 +260,7 @@ void MdiContainerWidgetTaskMenu::initializeActions()
     m_tileAction = new QAction(tr("Tile"), this);
     m_cascadeAction = new QAction(tr("Cascade"), this);
 
-    QList<QAction*> &l = containerActions();
+    auto &l = containerActions();
     l.push_front(createSeparator());
     l.push_front(m_tileAction);
     l.push_front(m_cascadeAction);
@@ -271,7 +271,7 @@ void MdiContainerWidgetTaskMenu::initializeActions()
 
 QList<QAction*> MdiContainerWidgetTaskMenu::taskActions() const
 {
-    const QList<QAction*> rc = ContainerWidgetTaskMenu::taskActions();
+    const auto rc = ContainerWidgetTaskMenu::taskActions();
     // Enable
     const int count = pageCount();
     m_nextAction->setEnabled(count > 1);

@@ -895,12 +895,11 @@ bool RCCResourceLibrary::writeDataStructure()
         file->m_childOffset = offset;
 
         //sort by hash value for binary lookup
-        QList<RCCFileInfo*> m_children = file->m_children.values();
-        std::sort(m_children.begin(), m_children.end(), qt_rcc_compare_hash);
+        auto children = file->m_children.values();
+        std::sort(children.begin(), children.end(), qt_rcc_compare_hash);
 
         //write out the actual data now
-        for (int i = 0; i < m_children.size(); ++i) {
-            RCCFileInfo *child = m_children.at(i);
+        for (RCCFileInfo *child : children) {
             ++offset;
             if (child->m_flags & RCCFileInfo::Directory)
                 pending.push(child);
@@ -914,12 +913,11 @@ bool RCCResourceLibrary::writeDataStructure()
         RCCFileInfo *file = pending.pop();
 
         //sort by hash value for binary lookup
-        QList<RCCFileInfo*> m_children = file->m_children.values();
-        std::sort(m_children.begin(), m_children.end(), qt_rcc_compare_hash);
+        auto children = file->m_children.values();
+        std::sort(children.begin(), children.end(), qt_rcc_compare_hash);
 
         //write out the actual data now
-        for (int i = 0; i < m_children.size(); ++i) {
-            RCCFileInfo *child = m_children.at(i);
+        for (RCCFileInfo *child : children) {
             child->writeDataInfo(*this);
             if (child->m_flags & RCCFileInfo::Directory)
                 pending.push(child);

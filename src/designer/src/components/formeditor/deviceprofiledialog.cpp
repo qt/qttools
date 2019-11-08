@@ -73,7 +73,7 @@ DeviceProfileDialog::DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QW
     setModal(true);
     m_ui->setupUi(this);
 
-    const QList<int> standardFontSizes = QFontDatabase::standardSizes();
+    const auto standardFontSizes = QFontDatabase::standardSizes();
     populateNumericCombo(standardFontSizes.constBegin(), standardFontSizes.constEnd(), m_ui->m_systemFontSizeCombo);
 
     // 288pt observed on macOS.

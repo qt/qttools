@@ -329,7 +329,7 @@ bool IconSelector::checkPixmap(const QString &fileName, CheckMode cm, QString *e
 static QString imageFilter()
 {
     QString filter = QApplication::translate("IconSelector", "All Pixmaps (");
-    const QList<QByteArray> supportedImageFormats = QImageReader::supportedImageFormats();
+    const auto supportedImageFormats = QImageReader::supportedImageFormats();
     const QString jpeg = QStringLiteral("JPEG");
     const int count = supportedImageFormats.count();
     for (int i = 0; i< count; ++i) {

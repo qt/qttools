@@ -374,9 +374,7 @@ void WidgetDataBase::loadPlugins()
     unsigned addedPlugins = 0;
     unsigned removedPlugins = 0;
     if (!pluginList.isEmpty()) {
-        ItemList::const_iterator cend = pluginList.constEnd();
-        for (ItemList::const_iterator it = pluginList.constBegin();it != cend; ++it )  {
-            QDesignerWidgetDataBaseItemInterface* pluginItem = *it;
+        for (QDesignerWidgetDataBaseItemInterface *pluginItem : qAsConst(pluginList)) {
             const QString pluginName = pluginItem->name();
             NameIndexMap::iterator existingIt = existingCustomClasses.find(pluginName);
             if (existingIt == existingCustomClasses.end()) {
@@ -429,10 +427,10 @@ QList<QVariant> WidgetDataBase::defaultPropertyValues(const QString &name)
         object = factory->createWidget(name, nullptr);
     if (!object) {
         qDebug() << "** WARNING Factory failed to create " << name;
-        return QList<QVariant>();
+        return {};
     }
     // Get properties from sheet.
-    QList<QVariant> result;
+    QVariantList result;
     if (const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_core->extensionManager(), object)) {
         const int propertyCount = sheet->count();
         for (int i = 0; i < propertyCount; ++i) {
@@ -448,7 +446,7 @@ void WidgetDataBase::grabDefaultPropertyValues()
     const int itemCount = count();
     for (int i = 0; i < itemCount; ++i) {
         QDesignerWidgetDataBaseItemInterface *dbItem = item(i);
-        const QList<QVariant> default_prop_values = defaultPropertyValues(dbItem->name());
+        const auto default_prop_values = defaultPropertyValues(dbItem->name());
         dbItem->setDefaultPropertyValues(default_prop_values);
     }
 }

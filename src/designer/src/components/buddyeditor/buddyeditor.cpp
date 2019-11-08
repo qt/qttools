@@ -83,8 +83,6 @@ static QString buddy(QLabel *label, QDesignerFormEditorInterface *core)
     return sheet->property(prop_idx).toString();
 }
 
-using LabelList = QList<QLabel *>;
-
 namespace qdesigner_internal {
 
 /*******************************************************************************
@@ -144,7 +142,7 @@ void BuddyEditor::updateBackground()
 
     m_updating = true;
     QList<Connection *> newList;
-    const LabelList label_list = background()->findChildren<QLabel*>();
+    const auto label_list = background()->findChildren<QLabel*>();
     for (QLabel *label : label_list) {
         const QString buddy_name = buddy(label, m_formWindow->core());
         if (buddy_name.isEmpty())
@@ -212,7 +210,7 @@ void BuddyEditor::setBackground(QWidget *background)
     clear();
     ConnectionEdit::setBackground(background);
 
-    const LabelList label_list = background->findChildren<QLabel*>();
+    const auto label_list = background->findChildren<QLabel*>();
     for (QLabel *label : label_list) {
         const QString buddy_name = buddy(label, m_formWindow->core());
         if (buddy_name.isEmpty())
@@ -328,7 +326,7 @@ void BuddyEditor::deleteSelected()
 void BuddyEditor::autoBuddy()
 {
     // Any labels?
-    LabelList labelList = background()->findChildren<QLabel*>();
+    auto labelList = background()->findChildren<QLabel*>();
     if (labelList.isEmpty())
         return;
     // Find already used buddies
@@ -338,7 +336,7 @@ void BuddyEditor::autoBuddy()
         usedBuddies.push_back(c->widget(EndPoint::Target));
     // Find potential new buddies, keep lists in sync
     QWidgetList buddies;
-    for (LabelList::iterator it = labelList.begin(); it != labelList.end(); ) {
+    for (auto it = labelList.begin(); it != labelList.end(); ) {
         QLabel *label = *it;
         QWidget *newBuddy = nullptr;
         if (m_formWindow->isManaged(label)) {

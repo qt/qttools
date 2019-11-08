@@ -881,7 +881,7 @@ QVariant PropertyHelper::findDefaultValue(QDesignerFormWindowInterface *fw) cons
         return  m_oldValue.first; // We simply don't know the value in this case
 
     const QDesignerWidgetDataBaseItemInterface *item = fw->core()->widgetDataBase()->item(item_idx);
-    const QList<QVariant> default_prop_values = item->defaultPropertyValues();
+    const auto default_prop_values = item->defaultPropertyValues();
     if (m_index < default_prop_values.size())
         return default_prop_values.at(m_index);
 

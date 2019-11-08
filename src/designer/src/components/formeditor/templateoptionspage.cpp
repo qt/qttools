@@ -96,7 +96,7 @@ void TemplateOptionsWidget::addTemplatePath()
     if (templatePath.isEmpty())
         return;
 
-    const QList<QListWidgetItem *> existing
+    const auto existing
             = m_ui->m_templatePathListWidget->findItems(templatePath, Qt::MatchExactly);
     if (!existing.isEmpty())
         return;
@@ -108,8 +108,7 @@ void TemplateOptionsWidget::addTemplatePath()
 
 void TemplateOptionsWidget::removeTemplatePath()
 {
-    const QList<QListWidgetItem *> selectedPaths
-            = m_ui->m_templatePathListWidget->selectedItems();
+    const auto selectedPaths = m_ui->m_templatePathListWidget->selectedItems();
     if (selectedPaths.isEmpty())
         return;
     delete selectedPaths.constFirst();
@@ -117,7 +116,7 @@ void TemplateOptionsWidget::removeTemplatePath()
 
 void TemplateOptionsWidget::templatePathSelectionChanged()
 {
-    const QList<QListWidgetItem *> selectedPaths = m_ui->m_templatePathListWidget->selectedItems();
+    const auto selectedPaths = m_ui->m_templatePathListWidget->selectedItems();
     m_ui->m_removeTemplatePathButton->setEnabled(!selectedPaths.isEmpty());
 }
 

@@ -73,7 +73,7 @@ QAction *SpacerTaskMenu::preferredEditAction() const
 
 QList<QAction*> SpacerTaskMenu::taskActions() const
 {
-    return QList<QAction*>();
+    return {};
 }
 
 QT_END_NAMESPACE

@@ -177,12 +177,10 @@ LayoutInfo::Type LayoutInfo::laidoutWidgetType(const QDesignerFormEditorInterfac
     }
 
     // 3) Some child layout (see below comment about Q3GroupBox)
-    const QList<QLayout*> childLayouts = parentLayout->findChildren<QLayout*>();
+    const auto childLayouts = parentLayout->findChildren<QLayout*>();
     if (childLayouts.isEmpty())
         return NoLayout;
-    const QList<QLayout*>::const_iterator lcend = childLayouts.constEnd();
-    for (QList<QLayout*>::const_iterator it = childLayouts.constBegin(); it != lcend; ++it) {
-        QLayout *layout = *it;
+    for (QLayout *layout : childLayouts) {
         if (layout->indexOf(widget) != -1) {
             if (isManaged)
                 *isManaged = core->metaDataBase()->item(layout);

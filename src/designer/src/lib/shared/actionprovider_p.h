@@ -66,7 +66,7 @@ public:
 template <class Widget>
     int actionIndexAt(const Widget *w, const QPoint &pos, Qt::Orientation orientation)
 {
-    const QList<QAction*> actions = w->actions();
+    const auto actions = w->actions();
     const int actionCount = actions.count();
     if (actionCount == 0)
         return -1;

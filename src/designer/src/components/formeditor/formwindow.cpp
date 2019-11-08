@@ -1159,15 +1159,15 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     if (!widgetChildren.isEmpty())
         insertNames(metaDataBase, widgetChildren.constBegin(), widgetChildren.constEnd(), w, existingNames);
 
-    const QList<QLayout *> layoutChildren = main->findChildren<QLayout*>();
+    const auto layoutChildren = main->findChildren<QLayout*>();
     if (!layoutChildren.isEmpty())
         insertNames(metaDataBase, layoutChildren.constBegin(), layoutChildren.constEnd(), w, existingNames);
 
-    const QList<QAction *> actionChildren = main->findChildren<QAction*>();
+    const auto actionChildren = main->findChildren<QAction*>();
     if (!actionChildren.isEmpty())
         insertNames(metaDataBase, actionChildren.constBegin(), actionChildren.constEnd(), w, existingNames);
 
-    const QList<QButtonGroup *> buttonGroupChildren = main->findChildren<QButtonGroup*>();
+    const auto buttonGroupChildren = main->findChildren<QButtonGroup*>();
     if (!buttonGroupChildren.isEmpty())
         insertNames(metaDataBase, buttonGroupChildren.constBegin(), buttonGroupChildren.constEnd(), w, existingNames);
 
