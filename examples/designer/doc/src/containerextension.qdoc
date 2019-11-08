@@ -171,11 +171,10 @@
     another page or changes one of the page titles. To be able to give
     each page their own title, we have chosen to use the
     QWidget::windowTitle property to store the page title (for more
-    information see the MultiPageWidget class \l
-    {containerextension/multipagewidget.cpp}{implementation}). Note
-    that currently there is no way of adding a custom property (e.g.,
-    a page title) to the pages without using a predefined property as
-    placeholder.
+    information see the MultiPageWidget class implementation in
+    \e containerextension/multipagewidget.cpp. Note that currently there
+    is no way of adding a custom property (for example, a page title) to
+    the pages without using a predefined property as placeholder.
 
     The \c MultiPageWidgetPlugin class inherits from both QObject and
     QDesignerCustomWidgetInterface. It is important to remember, when
@@ -279,8 +278,8 @@
     QDesignerPropertySheetExtension::indexOf() function. As previously
     mentioned, we have chosen to use the QWidget::windowTitle property
     to store the page title (for more information see the
-    MultiPageWidget class \l
-    {containerextension/multipagewidget.cpp}{implementation}).
+    MultiPageWidget class implementation in
+    \e containerextension/multipagewidget.cpp.
     Finally, we implicitly force an update of the page's property
     sheet by calling the
     QDesignerPropertySheetExtension::setChanged() function.
@@ -489,7 +488,6 @@
     updated whenever the user views another page or changes one of the
     page titles.
 
-    See the MultiPageWidget class \l
-    {containerextension/multipagewidget.cpp}{implementation}
-    for more details.
+    See the MultiPageWidget class implementation in
+    \e containerextension/multipagewidget.cpp for more details.
 */

@@ -38,6 +38,7 @@ using namespace qdesigner_internal;
 /*!
     \class qdesigner_internal::QDesignerFormWindowManager
     \inmodule QtDesigner
+    \internal
 
     Extends QDesignerFormWindowManagerInterface with methods to control
     the preview and printing of forms. It provides a facade that simplifies
