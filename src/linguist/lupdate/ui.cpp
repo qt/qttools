@@ -29,40 +29,41 @@
 #include "lupdate.h"
 
 #include <translator.h>
+#include <xmlparser.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QString>
-
-#include <QtXml/QXmlAttributes>
-#include <QtXml/QXmlDefaultHandler>
-#include <QtXml/QXmlLocator>
-#include <QtXml/QXmlParseException>
-
+#include <QtCore/QXmlStreamReader>
 
 QT_BEGIN_NAMESPACE
 
-class UiReader : public QXmlDefaultHandler
+class UiReader : public XmlParser
 {
 public:
-    UiReader(Translator &translator, ConversionData &cd)
-      : m_translator(translator), m_cd(cd), m_lineNumber(-1), m_isTrString(false),
-        m_insideStringList(false), m_idBasedTranslations(false)
-    {}
-
-    bool startElement(const QString &namespaceURI, const QString &localName,
-        const QString &qName, const QXmlAttributes &atts);
-    bool endElement(const QString &namespaceURI, const QString &localName,
-        const QString &qName);
-    bool characters(const QString &ch);
-    bool fatalError(const QXmlParseException &exception);
-
-    void setDocumentLocator(QXmlLocator *locator) { m_locator = locator; }
+    UiReader(Translator &translator, ConversionData &cd, QXmlStreamReader &reader)
+        : XmlParser(reader),
+          m_translator(translator),
+          m_cd(cd),
+          m_lineNumber(-1),
+          m_isTrString(false),
+          m_insideStringList(false),
+          m_idBasedTranslations(false)
+    {
+    }
+    ~UiReader() override = default;
 
 private:
+    bool startElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                      const QStringRef &qName, const QXmlStreamAttributes &atts) override;
+    bool endElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                    const QStringRef &qName) override;
+    bool characters(const QStringRef &ch) override;
+    bool fatalError(qint64 line, qint64 column, const QString &message) override;
+
     void flush();
-    void readTranslationAttributes(const QXmlAttributes &atts);
+    void readTranslationAttributes(const QXmlStreamAttributes &atts);
 
     Translator &m_translator;
     ConversionData &m_cd;
@@ -71,7 +72,6 @@ private:
     QString m_comment;
     QString m_extracomment;
     QString m_id;
-    QXmlLocator *m_locator;
 
     QString m_accum;
     int m_lineNumber;
@@ -80,8 +80,8 @@ private:
     bool m_idBasedTranslations;
 };
 
-bool UiReader::startElement(const QString &namespaceURI,
-    const QString &localName, const QString &qName, const QXmlAttributes &atts)
+bool UiReader::startElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                            const QStringRef &qName, const QXmlStreamAttributes &atts)
 {
     Q_UNUSED(namespaceURI);
     Q_UNUSED(localName);
@@ -95,16 +95,16 @@ bool UiReader::startElement(const QString &namespaceURI,
         m_insideStringList = true;
         readTranslationAttributes(atts);
     } else if (qName == QLatin1String("ui")) { // UI "header"
-        const int translationTypeIndex = atts.index(QStringLiteral("idbasedtr"));
-        m_idBasedTranslations = translationTypeIndex >= 0
-            && atts.value(translationTypeIndex) == QLatin1String("true");
+        const auto attr = QStringLiteral("idbasedtr");
+        m_idBasedTranslations =
+                atts.hasAttribute(attr) && atts.value(attr) == QLatin1String("true");
     }
     m_accum.clear();
     return true;
 }
 
-bool UiReader::endElement(const QString &namespaceURI,
-    const QString &localName, const QString &qName)
+bool UiReader::endElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                          const QStringRef &qName)
 {
     Q_UNUSED(namespaceURI);
     Q_UNUSED(localName);
@@ -127,17 +127,18 @@ bool UiReader::endElement(const QString &namespaceURI,
     return true;
 }
 
-bool UiReader::characters(const QString &ch)
+bool UiReader::characters(const QStringRef &ch)
 {
-    m_accum += ch;
+    m_accum += ch.toString();
     return true;
 }
 
-bool UiReader::fatalError(const QXmlParseException &exception)
+bool UiReader::fatalError(qint64 line, qint64 column, const QString &message)
 {
     QString msg = LU::tr("XML error: Parse error at line %1, column %2 (%3).")
-        .arg(exception.lineNumber()).arg(exception.columnNumber())
-        .arg(exception.message());
+                          .arg(line)
+                          .arg(column)
+                          .arg(message);
     m_cd.appendError(msg);
     return false;
 }
@@ -160,17 +161,17 @@ void UiReader::flush()
     }
 }
 
-void UiReader::readTranslationAttributes(const QXmlAttributes &atts)
+void UiReader::readTranslationAttributes(const QXmlStreamAttributes &atts)
 {
-    const QString notr = atts.value(QStringLiteral("notr"));
+    const auto notr = atts.value(QStringLiteral("notr"));
     if (notr.isEmpty() || notr != QStringLiteral("true")) {
         m_isTrString = true;
-        m_comment = atts.value(QStringLiteral("comment"));
-        m_extracomment = atts.value(QStringLiteral("extracomment"));
+        m_comment = atts.value(QStringLiteral("comment")).toString();
+        m_extracomment = atts.value(QStringLiteral("extracomment")).toString();
         if (m_idBasedTranslations)
-            m_id = atts.value(QStringLiteral("id"));
+            m_id = atts.value(QStringLiteral("id")).toString();
         if (!m_cd.m_noUiLines)
-            m_lineNumber = m_locator->lineNumber();
+            m_lineNumber = static_cast<int>(reader.lineNumber());
     } else {
         m_isTrString = false;
     }
@@ -184,20 +185,14 @@ bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
         cd.appendError(LU::tr("Cannot open %1: %2").arg(filename, file.errorString()));
         return false;
     }
-    QXmlInputSource in(&file);
-    QXmlSimpleReader reader;
-    reader.setFeature(QLatin1String("http://xml.org/sax/features/namespaces"), false);
-    reader.setFeature(QLatin1String("http://xml.org/sax/features/namespace-prefixes"), true);
-    reader.setFeature(QLatin1String(
-            "http://trolltech.com/xml/features/report-whitespace-only-CharData"), false);
-    UiReader handler(translator, cd);
-    reader.setContentHandler(&handler);
-    reader.setErrorHandler(&handler);
-    bool result = reader.parse(in);
+
+    QXmlStreamReader reader(&file);
+    reader.setNamespaceProcessing(false);
+
+    UiReader uiReader(translator, cd, reader);
+    bool result = uiReader.parse();
     if (!result)
         cd.appendError(LU::tr("Parse error in UI file"));
-    reader.setContentHandler(0);
-    reader.setErrorHandler(0);
     return result;
 }
 
