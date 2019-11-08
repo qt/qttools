@@ -606,7 +606,7 @@ void QDesignerWorkbench::removeFormWindow(QDesignerFormWindow *formWindow)
         m_windowMenu->removeAction(action);
     }
 
-    if (m_formWindows.empty()) {
+    if (m_formWindows.isEmpty()) {
         m_actionManager->setWindowListSeparatorVisible(false);
         // Show up new form dialog unless closing
         if (loadOk && m_state == StateUp
@@ -1077,7 +1077,7 @@ void QDesignerWorkbench::restoreUISettings()
     ToolWindowFontSettings fontSettings = QDesignerSettings(m_core).toolWindowFont();
     const QFont &font = fontSettings.m_useFont ? fontSettings.m_font : qApp->font();
 
-    if (font == m_toolWindows.front()->font())
+    if (font == m_toolWindows.constFirst()->font())
         return;
 
     for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))

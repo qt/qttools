@@ -265,7 +265,7 @@ void EmbeddedOptionsControlPrivate::sortAndPopulateProfileCombo()
     // Clear items until only "None" is left
     for (int i = m_profileCombo->count() - 1; i > 0; i--)
         m_profileCombo->removeItem(i);
-    if (!m_sortedProfiles.empty()) {
+    if (!m_sortedProfiles.isEmpty()) {
         std::sort(m_sortedProfiles.begin(), m_sortedProfiles.end(), deviceProfileLessThan);
         m_profileCombo->addItems(existingProfileNames());
     }

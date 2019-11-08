@@ -169,7 +169,7 @@ const QByteArray *QtResourceModelPrivate::createResource(const QString &path, QS
         *errorCount = library.failedResources().size();
         *contents = resMap.keys();
 
-        if (resMap.empty())
+        if (resMap.isEmpty())
             break;
 
         buffer.close();

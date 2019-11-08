@@ -244,7 +244,7 @@ void FormWindowSettings::setData(const FormWindowData &data)
 
     m_ui->authorLineEdit->setText(data.author);
 
-    if (data.includeHints.empty()) {
+    if (data.includeHints.isEmpty()) {
         m_ui->includeHintsTextEdit->clear();
     } else {
         m_ui->includeHintsTextEdit->setText(data.includeHints.join(QLatin1Char('\n')));

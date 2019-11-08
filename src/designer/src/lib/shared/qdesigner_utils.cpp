@@ -198,7 +198,7 @@ namespace qdesigner_internal
     QString DesignerMetaFlags::toString(int value, SerializationMode sm) const
     {
         const QStringList flagIds = flags(value);
-        if (flagIds.empty())
+        if (flagIds.isEmpty())
             return QString();
 
         const QChar delimiter = QLatin1Char('|');

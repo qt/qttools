@@ -476,7 +476,7 @@ void FormLayoutMenu::populate(QWidget *w, QDesignerFormWindowInterface *fw, Acti
 {
     switch (LayoutInfo::managedLayoutType(fw->core(), w)) {
     case LayoutInfo::Form:
-        if (!actions.empty() && !actions.back()->isSeparator())
+        if (!actions.isEmpty() && !actions.constLast()->isSeparator())
             actions.push_back(m_separator1);
         actions.push_back(m_populateFormAction);
         actions.push_back(m_separator2);

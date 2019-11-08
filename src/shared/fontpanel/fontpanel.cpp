@@ -119,10 +119,10 @@ void FontPanel::setSelectedFont(const QFont &f)
     if (m_familyComboBox->currentIndex() < 0) {
         // family not in writing system - find the corresponding one?
         QList<QFontDatabase::WritingSystem> familyWritingSystems = m_fontDatabase.writingSystems(f.family());
-        if (familyWritingSystems.empty())
+        if (familyWritingSystems.isEmpty())
             return;
 
-        setWritingSystem(familyWritingSystems.front());
+        setWritingSystem(familyWritingSystems.constFirst());
         m_familyComboBox->setCurrentFont(f);
     }
 
@@ -213,7 +213,7 @@ void FontPanel::updateFamily(const QString &family)
     const QString &oldStyleString = styleString();
 
     const QStringList &styles = m_fontDatabase.styles(family);
-    const bool hasStyles = !styles.empty();
+    const bool hasStyles = !styles.isEmpty();
 
     m_styleComboBox->setCurrentIndex(-1);
     m_styleComboBox->clear();
@@ -270,10 +270,10 @@ void FontPanel::updatePointSizes(const QString &family, const QString &styleStri
     const int oldPointSize = pointSize();
 
     QList<int> pointSizes =  m_fontDatabase.pointSizes(family, styleString);
-    if (pointSizes.empty())
+    if (pointSizes.isEmpty())
         pointSizes = QFontDatabase::standardSizes();
 
-    const bool hasSizes = !pointSizes.empty();
+    const bool hasSizes = !pointSizes.isEmpty();
     m_pointSizeComboBox->clear();
     m_pointSizeComboBox->setEnabled(hasSizes);
     m_pointSizeComboBox->setCurrentIndex(-1);

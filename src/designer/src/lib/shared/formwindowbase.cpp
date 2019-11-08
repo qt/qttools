@@ -446,7 +446,7 @@ void FormWindowBase::deleteWidgetList(const QWidgetList &widget_list)
     // the signal slot editor are connected to widgetRemoved() and add their
     // own commands (for example, to delete w's connections)
     const QString description = widget_list.size() == 1 ?
-        tr("Delete '%1'").arg(widget_list.front()->objectName()) : tr("Delete");
+        tr("Delete '%1'").arg(widget_list.constFirst()->objectName()) : tr("Delete");
 
     commandHistory()->beginMacro(description);
     for (QWidget *w : qAsConst(widget_list)) {
@@ -467,16 +467,16 @@ QMenu *FormWindowBase::createExtensionTaskMenu(QDesignerFormWindowInterface *fw,
     if (const QDesignerTaskMenuExtension *extTaskMenu = qt_extension<QDesignerTaskMenuExtension*>(em, o))
         actions += extTaskMenu->taskActions();
     if (const QDesignerTaskMenuExtension *intTaskMenu = qobject_cast<QDesignerTaskMenuExtension *>(em->extension(o, QStringLiteral("QDesignerInternalTaskMenuExtension")))) {
-        if (!actions.empty()) {
+        if (!actions.isEmpty()) {
             QAction *a = new QAction(fw);
             a->setSeparator(true);
             actions.push_back(a);
         }
         actions += intTaskMenu->taskActions();
     }
-    if (actions.empty())
+    if (actions.isEmpty())
         return nullptr;
-    if (trailingSeparator && !actions.back()->isSeparator()) {
+    if (trailingSeparator && !actions.constLast()->isSeparator()) {
         QAction *a  = new QAction(fw);
         a->setSeparator(true);
         actions.push_back(a);

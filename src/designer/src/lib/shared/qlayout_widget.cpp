@@ -217,7 +217,7 @@ static bool removeEmptyCellsOnGrid(GridLikeLayout *grid, const QRect &area)
                 }
         }
     // remove, starting from last
-    if (!indexesToBeRemoved.empty()) {
+    if (!indexesToBeRemoved.isEmpty()) {
         std::stable_sort(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
         for (int i = indexesToBeRemoved.size() - 1; i >= 0; i--)
             delete grid->takeAt(indexesToBeRemoved[i]);
@@ -979,7 +979,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void GridLayoutHelper::popState(const QDesignerFormEditorInterface *core, QWidget *widgetWithManagedLayout)
     {
-        Q_ASSERT(!m_states.empty());
+        Q_ASSERT(!m_states.isEmpty());
         const GridLayoutState state = m_states.pop();
         state.applyToLayout(core, widgetWithManagedLayout);
     }
@@ -1137,7 +1137,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     void FormLayoutHelper::popState(const QDesignerFormEditorInterface *core, QWidget *widgetWithManagedLayout)
     {
         QFormLayout *formLayout = qobject_cast<QFormLayout *>(LayoutInfo::managedLayout(core, widgetWithManagedLayout));
-        Q_ASSERT(!m_states.empty() && formLayout);
+        Q_ASSERT(!m_states.isEmpty() && formLayout);
 
         const FormLayoutState storedState = m_states.pop();
         const FormLayoutState currentState =  state(formLayout);

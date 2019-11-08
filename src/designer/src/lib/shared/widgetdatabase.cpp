@@ -373,7 +373,7 @@ void WidgetDataBase::loadPlugins()
     unsigned replacedPlugins = 0;
     unsigned addedPlugins = 0;
     unsigned removedPlugins = 0;
-    if (!pluginList.empty()) {
+    if (!pluginList.isEmpty()) {
         ItemList::const_iterator cend = pluginList.constEnd();
         for (ItemList::const_iterator it = pluginList.constBegin();it != cend; ++it )  {
             QDesignerWidgetDataBaseItemInterface* pluginItem = *it;
@@ -399,7 +399,7 @@ void WidgetDataBase::loadPlugins()
         }
     }
     // 4) remove classes that have not been matched. The stored indexes become invalid while deleting.
-    if (!existingCustomClasses.empty()) {
+    if (!existingCustomClasses.isEmpty()) {
         NameIndexMap::const_iterator cend = existingCustomClasses.constEnd();
         for (NameIndexMap::const_iterator it = existingCustomClasses.constBegin();it != cend; ++it )  {
             const int index = indexOfClassName(it.key());
@@ -503,7 +503,7 @@ static inline bool suitableForNewForm(const QString &className)
 QStringList WidgetDataBase::formWidgetClasses(const QDesignerFormEditorInterface *core)
 {
     static QStringList rc;
-    if (rc.empty()) {
+    if (rc.isEmpty()) {
         const QDesignerWidgetDataBaseInterface *wdb = core->widgetDataBase();
         const int widgetCount = wdb->count();
         for (int i = 0; i < widgetCount; i++) {

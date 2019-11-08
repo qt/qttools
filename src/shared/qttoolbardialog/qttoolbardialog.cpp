@@ -1388,7 +1388,7 @@ void QtToolBarDialogPrivate::leftClicked()
         ToolBarItem *item = widgetActionToToolBar.value(action);
         if (item == currentToolBar) { // have to be
             toolBarToWidgetActions[item].remove(action);
-            if (toolBarToWidgetActions[item].empty())
+            if (toolBarToWidgetActions[item].isEmpty())
                 toolBarToWidgetActions.remove(item);
         }
         widgetActionToToolBar.insert(action, 0);
@@ -1437,7 +1437,7 @@ void QtToolBarDialogPrivate::rightClicked()
                 if (toolBar) {
                     currentState[toolBar].removeAll(action);
                     toolBarToWidgetActions[toolBar].remove(action);
-                    if (toolBarToWidgetActions[toolBar].empty())
+                    if (toolBarToWidgetActions[toolBar].isEmpty())
                         toolBarToWidgetActions.remove(toolBar);
                 }
                 widgetActionToToolBar.insert(action, currentToolBar);

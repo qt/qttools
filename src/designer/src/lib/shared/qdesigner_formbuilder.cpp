@@ -226,7 +226,7 @@ static bool readDomEnumerationValue(const DomProperty *p,
 
 void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &properties)
 {
-    if (properties.empty())
+    if (properties.isEmpty())
         return;
 
     const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), o);

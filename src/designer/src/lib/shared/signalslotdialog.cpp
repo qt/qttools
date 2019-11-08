@@ -270,7 +270,7 @@ void SignaturePanel::slotAdd()
         newSlot += QString::number(i); // Always add number, Avoid setting 'slot' for first entry
         newSlot += QLatin1Char('(');
         // check for function name independent of parameters
-        if (m_model->findItems(newSlot, Qt::MatchStartsWith, 0).empty()) {
+        if (m_model->findItems(newSlot, Qt::MatchStartsWith, 0).isEmpty()) {
             newSlot += QLatin1Char(')');
             QStandardItem * item = createEditableItem(newSlot);
             m_model->appendRow(item);
@@ -290,13 +290,13 @@ int SignaturePanel::count(const QString &signature) const
 void SignaturePanel::slotRemove()
 {
     const QModelIndexList selectedIndexes = m_listView->selectionModel()->selectedIndexes ();
-    if (selectedIndexes.empty())
+    if (selectedIndexes.isEmpty())
         return;
 
     closeEditor();
     // scroll to previous
-    if (const int row = selectedIndexes.front().row())
-        m_listView->setCurrentIndex (selectedIndexes.front().sibling(row - 1, 0));
+    if (const int row = selectedIndexes.constFirst().row())
+        m_listView->setCurrentIndex (selectedIndexes.constFirst().sibling(row - 1, 0));
 
     for (int  i = selectedIndexes.size() - 1; i >= 0; i--)
         qDeleteAll(m_model->takeRow(selectedIndexes[i].row()));
@@ -304,7 +304,7 @@ void SignaturePanel::slotRemove()
 
 void SignaturePanel::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &)
 {
-    m_removeButton->setEnabled(!selected.indexes().empty());
+    m_removeButton->setEnabled(!selected.indexes().isEmpty());
 }
 
 void SignaturePanel::setData(const SignalSlotDialogData &d)

@@ -772,11 +772,11 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
     // If its the first one, position relative to form.
     // 2nd, attempt to tile right (for comparing styles) or cascade
     const QSize size = widget->size();
-    const bool firstPreview = d->m_previews.empty();
+    const bool firstPreview = d->m_previews.isEmpty();
     if (firstPreview) {
         widget->move(fw->mapToGlobal(QPoint(Spacing, Spacing)));
     } else {
-        if (QWidget *lastPreview = d->m_previews.back().m_widget) {
+        if (QWidget *lastPreview = d->m_previews.constLast().m_widget) {
             QDesktopWidget *desktop = qApp->desktop();
             const QRect lastPreviewGeometry = lastPreview->frameGeometry();
             const QRect availGeometry = desktop->availableGeometry(lastPreview);
@@ -798,7 +798,7 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
 QWidget *PreviewManager::raise(const QDesignerFormWindowInterface *fw, const PreviewConfiguration &pc)
 {
     using PreviewDataList = PreviewManagerPrivate::PreviewDataList;
-    if (d->m_previews.empty())
+    if (d->m_previews.isEmpty())
         return nullptr;
 
     // find matching window
@@ -816,7 +816,7 @@ QWidget *PreviewManager::raise(const QDesignerFormWindowInterface *fw, const Pre
 
 void PreviewManager::closeAllPreviews()
 {
-    if (!d->m_previews.empty()) {
+    if (!d->m_previews.isEmpty()) {
         d->m_updateBlocked = true;
         d->m_activePreview = nullptr;
         for (auto it = d->m_previews.constBegin(), cend = d->m_previews.constEnd(); it != cend ;++it) {
@@ -843,7 +843,7 @@ void PreviewManager::updatePreviewClosed(QWidget *w)
             ++it;
         }
     }
-    if (d->m_previews.empty())
+    if (d->m_previews.isEmpty())
         emit lastPreviewClosed();
 }
 

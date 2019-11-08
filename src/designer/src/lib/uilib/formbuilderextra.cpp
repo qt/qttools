@@ -207,7 +207,7 @@ bool QFormBuilderExtra::applyPropertyInternally(QObject *o, const QString &prope
 
 void QFormBuilderExtra::applyInternalProperties() const
 {
-    if (m_buddies.empty())
+    if (m_buddies.isEmpty())
         return;
 
     const BuddyHash::const_iterator cend = m_buddies.constEnd();
@@ -223,7 +223,7 @@ bool QFormBuilderExtra::applyBuddy(const QString &buddyName, BuddyMode applyMode
     }
 
     const QWidgetList widgets = label->topLevelWidget()->findChildren<QWidget*>(buddyName);
-    if (widgets.empty()) {
+    if (widgets.isEmpty()) {
         label->setBuddy(nullptr);
         return false;
     }
@@ -387,7 +387,7 @@ inline bool parsePerCellProperty(Layout *l, int count, void (Layout::*setter)(in
         return true;
     }
     const QVector<QStringRef> list = s.splitRef(QLatin1Char(','));
-    if (list.empty()) {
+    if (list.isEmpty()) {
         clearPerCellValue(l, count, setter, defaultValue);
         return true;
     }

@@ -363,7 +363,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
         break;
     }
     // Restore expansionState from QVariant map
-    if (!expansionState.empty()) {
+    if (!expansionState.isEmpty()) {
         const QVariantMap::const_iterator cend = expansionState.constEnd();
         for (QVariantMap::const_iterator it = expansionState.constBegin(); it != cend; ++it)
             m_expansionState.insert(it.key(), it.value().toBool());
@@ -386,7 +386,7 @@ void PropertyEditor::saveSettings() const
     settings->setValue(QLatin1String(SortedKeyC), QVariant(m_sorting));
     // Save last expansionState as QVariant map
     QVariantMap expansionState;
-    if (!m_expansionState.empty()) {
+    if (!m_expansionState.isEmpty()) {
         const QMap<QString, bool>::const_iterator cend = m_expansionState.constEnd();
         for (QMap<QString, bool>::const_iterator it = m_expansionState.constBegin(); it != cend; ++it)
             expansionState.insert(it.key(), QVariant(it.value()));
@@ -436,7 +436,7 @@ void PropertyEditor::storePropertiesExpansionState(const QList<QtBrowserItem *> 
 {
     const QChar bar = QLatin1Char('|');
     for (QtBrowserItem *propertyItem : items) {
-        if (!propertyItem->children().empty()) {
+        if (!propertyItem->children().isEmpty()) {
             QtProperty *property = propertyItem->property();
             const QString propertyName = property->propertyName();
             const QMap<QtProperty *, QString>::const_iterator itGroup = m_propertyToGroup.constFind(property);
@@ -459,7 +459,7 @@ void PropertyEditor::storeExpansionState()
         for (QtBrowserItem *item : items) {
             const QString groupName = item->property()->propertyName();
             QList<QtBrowserItem *> propertyItems = item->children();
-            if (!propertyItems.empty())
+            if (!propertyItems.isEmpty())
                 m_expansionState[groupName] = isExpanded(item);
 
             // properties stuff here
@@ -814,7 +814,7 @@ void PropertyEditor::updateBrowserValue(QtVariantProperty *property, const QVari
     }
 
     // Rich text string property with comment: Store/Update the font the rich text editor dialog starts out with
-    if (type == QVariant::String && !property->subProperties().empty()) {
+    if (type == QVariant::String && !property->subProperties().isEmpty()) {
         const int fontIndex = m_propertySheet->indexOf(m_strings.m_fontProperty);
         if (fontIndex != -1)
             property->setAttribute(m_strings.m_fontAttribute, m_propertySheet->property(fontIndex));
@@ -1093,8 +1093,8 @@ void PropertyEditor::setObject(QObject *object)
                     lastGroup = groupProperty;
                     lastProperty = nullptr;  // Append at end
                     const QList<QtProperty*> subProperties = lastGroup->subProperties();
-                    if (!subProperties.empty())
-                        lastProperty = subProperties.back();
+                    if (!subProperties.isEmpty())
+                        lastProperty = subProperties.constLast();
                     lastGroup = groupProperty;
                 }
                 if (!m_groups.contains(groupProperty))
@@ -1123,7 +1123,7 @@ void PropertyEditor::setObject(QObject *object)
     QMap<QString, QtVariantProperty *> groups = m_nameToGroup;
     for (auto itGroup = groups.cbegin(), end = groups.cend(); itGroup != end; ++itGroup) {
         QtVariantProperty *groupProperty = itGroup.value();
-        if (groupProperty->subProperties().empty()) {
+        if (groupProperty->subProperties().isEmpty()) {
             if (groupProperty == m_dynamicGroup)
                 m_dynamicGroup = nullptr;
             delete groupProperty;
@@ -1247,7 +1247,7 @@ void PropertyEditor::editProperty(const QString &name)
     if (QtVariantProperty *property = m_nameToProperty.value(name, 0)) {
         const QList<QtBrowserItem *> items = m_currentBrowser->items(property);
         if (items.size() == 1)
-            browserItem = items.front();
+            browserItem = items.constFirst();
     }
     if (browserItem == nullptr)
         return;

@@ -65,15 +65,12 @@ QWidget *QWizardContainer::widget(int index) const
 
 int QWizardContainer::currentIndex() const
 {
-    const IdList idList = m_wizard->pageIds();
-    const int currentId = m_wizard->currentId();
-    const int rc = idList.empty() ? -1 : idList.indexOf(currentId);
-    return rc;
+    return m_wizard->pageIds().indexOf(m_wizard->currentId());
 }
 
 void QWizardContainer::setCurrentIndex(int index)
 {
-    if (index < 0 || m_wizard->pageIds().empty())
+    if (index < 0 || m_wizard->pageIds().isEmpty())
         return;
 
     int currentIdx = currentIndex();

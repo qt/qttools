@@ -708,7 +708,7 @@ QDesignerMenu::ActionDragCheck QDesignerMenu::checkAction(QAction *action) const
 void QDesignerMenu::dragEnterEvent(QDragEnterEvent *event)
 {
     const ActionRepositoryMimeData *d = qobject_cast<const ActionRepositoryMimeData*>(event->mimeData());
-    if (!d || d->actionList().empty()) {
+    if (!d || d->actionList().isEmpty()) {
         event->ignore();
         return;
     }
@@ -740,7 +740,7 @@ void QDesignerMenu::dragMoveEvent(QDragMoveEvent *event)
     }
 
     const ActionRepositoryMimeData *d = qobject_cast<const ActionRepositoryMimeData*>(event->mimeData());
-    if (!d || d->actionList().empty()) {
+    if (!d || d->actionList().isEmpty()) {
         event->ignore();
         return;
     }
@@ -785,7 +785,7 @@ void QDesignerMenu::dropEvent(QDropEvent *event)
 
     QDesignerFormWindowInterface *fw = formWindow();
     const ActionRepositoryMimeData *d = qobject_cast<const ActionRepositoryMimeData*>(event->mimeData());
-    if (!d || d->actionList().empty()) {
+    if (!d || d->actionList().isEmpty()) {
         event->ignore();
         return;
     }

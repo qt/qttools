@@ -1143,7 +1143,7 @@ inline QRect expandGeometry(const QRect &rect)
 template <class GridLikeLayout, int LayoutType, int GridMode>
 QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QWidgetList &widgetList)
 {
-    if (widgetList.empty())
+    if (widgetList.isEmpty())
         return QWidgetList();
 
     // Pixel to cell conversion:

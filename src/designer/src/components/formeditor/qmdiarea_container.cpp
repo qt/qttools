@@ -144,7 +144,7 @@ QMdiAreaPropertySheet::MdiAreaProperty QMdiAreaPropertySheet::mdiAreaProperty(co
 {
     using MdiAreaPropertyHash = QHash<QString, MdiAreaProperty>;
     static MdiAreaPropertyHash mdiAreaPropertyHash;
-    if (mdiAreaPropertyHash.empty()) {
+    if (mdiAreaPropertyHash.isEmpty()) {
         mdiAreaPropertyHash.insert(QLatin1String(subWindowNameC), MdiAreaSubWindowName);
         mdiAreaPropertyHash.insert(QLatin1String(subWindowTitleC), MdiAreaSubWindowTitle);
     }

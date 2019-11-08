@@ -1371,7 +1371,7 @@ static ConnectionEdit::ConnectionSet findConnectionsOf(const ConnectionEdit::Con
 void ConnectionEdit::widgetRemoved(QWidget *widget)
 {
     // Remove all connections of that widget and its children.
-    if (m_con_list.empty())
+    if (m_con_list.isEmpty())
         return;
 
     QWidgetList child_list = widget->findChildren<QWidget*>();
@@ -1388,7 +1388,7 @@ void ConnectionEdit::widgetRemoved(QWidget *widget)
 void ConnectionEdit::objectRemoved(QObject *o)
 {
     // Remove all connections of that object and its children (in case of action groups).
-    if (m_con_list.empty())
+    if (m_con_list.isEmpty())
         return;
 
     QObjectList child_list = o->children();

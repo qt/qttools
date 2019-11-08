@@ -183,7 +183,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     connect(m_ui->profileComboBox,
             QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &NewFormWidget::slotDeviceProfileIndexChanged);
-    if (m_deviceProfiles.empty()) {
+    if (m_deviceProfiles.isEmpty()) {
         m_ui->profileComboBox->setEnabled(false);
     } else {
         const DeviceProfileList::const_iterator dcend = m_deviceProfiles.constEnd();
@@ -446,7 +446,7 @@ void NewFormWidget::loadFrom(const QString &path, bool resourceFile, const QStri
 void NewFormWidget::loadFrom(const QString &title, const QStringList &nameList,
                        const QString &selectedItem, QTreeWidgetItem *&selectedItemFound)
 {
-    if (nameList.empty())
+    if (nameList.isEmpty())
         return;
     QTreeWidgetItem *root = new QTreeWidgetItem(m_ui->treeWidget);
     root->setFlags(root->flags() & ~Qt::ItemIsSelectable);

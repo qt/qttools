@@ -103,7 +103,7 @@ void QDesignerFormWindowCommand::updateBuddies(QDesignerFormWindowInterface *for
     using LabelList = QList<QLabel *>;
 
     const LabelList label_list = form->findChildren<QLabel*>();
-    if (label_list.empty())
+    if (label_list.isEmpty())
         return;
 
     const QString buddyProperty = QStringLiteral("buddy");

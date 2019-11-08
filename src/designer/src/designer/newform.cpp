@@ -104,7 +104,7 @@ QDialogButtonBox *NewForm::createButtonBox()
     QMenu *recentFilesMenu = new QMenu(tr("&Recent Forms"), m_recentButton);
     // Pop the "Recent Files" stuff in here.
     const QList<QAction *> recentActions = da->recentFilesActions()->actions();
-    if (!recentActions.empty()) {
+    if (!recentActions.isEmpty()) {
         const QList<QAction *>::const_iterator acend = recentActions.constEnd();
         for (QList<QAction *>::const_iterator it = recentActions.constBegin(); it != acend; ++it) {
             recentFilesMenu->addAction(*it);

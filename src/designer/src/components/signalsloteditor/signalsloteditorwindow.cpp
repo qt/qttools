@@ -105,7 +105,7 @@ static QStringList objectNameList(QDesignerFormWindowInterface *form)
 
     // Add managed actions and actions with managed menus
     const ActionList actions = mainContainer->findChildren<QAction*>();
-    if (!actions.empty()) {
+    if (!actions.isEmpty()) {
         const ActionList::const_iterator cend = actions.constEnd();
         for (ActionList::const_iterator it = actions.constBegin(); it != cend; ++it) {
             QAction *a = *it;
@@ -123,7 +123,7 @@ static QStringList objectNameList(QDesignerFormWindowInterface *form)
 
     // Add  managed buttons groups
     const ButtonGroupList buttonGroups = mainContainer->findChildren<QButtonGroup *>();
-    if (!buttonGroups.empty()) {
+    if (!buttonGroups.isEmpty()) {
         const ButtonGroupList::const_iterator cend = buttonGroups.constEnd();
         for (ButtonGroupList::const_iterator it = buttonGroups.constBegin(); it != cend; ++it)
             if (mdb->item(*it))

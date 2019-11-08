@@ -160,7 +160,7 @@ void  WidgetBoxTreeWidget::restoreExpandedState()
     const auto &closedCategoryList = settings->value(groupKey + QLatin1String(widgetBoxExpandedKeyC), QStringList()).toStringList();
     const StringSet closedCategories(closedCategoryList.cbegin(), closedCategoryList.cend());
     expandAll();
-    if (closedCategories.empty())
+    if (closedCategories.isEmpty())
         return;
 
     if (const int numCategories = categoryCount()) {
@@ -594,8 +594,7 @@ static inline bool isValidIcon(const QIcon &icon)
 {
     if (!icon.isNull()) {
         const QList<QSize> availableSizes = icon.availableSizes();
-        if (!availableSizes.empty())
-            return !availableSizes.front().isEmpty();
+        return !availableSizes.isEmpty() && !availableSizes.constFirst().isEmpty();
     }
     return false;
 }
@@ -606,7 +605,7 @@ WidgetBoxTreeWidget::CategoryList WidgetBoxTreeWidget::loadCustomCategoryList() 
 
     const QDesignerPluginManager *pm = m_core->pluginManager();
     const QDesignerPluginManager::CustomWidgetList customWidgets = pm->registeredCustomWidgets();
-    if (customWidgets.empty())
+    if (customWidgets.isEmpty())
         return result;
 
     static const QString customCatName = tr("Custom Widgets");

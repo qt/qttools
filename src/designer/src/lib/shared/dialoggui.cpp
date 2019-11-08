@@ -211,13 +211,13 @@ QString DialogGui::getOpenImageFileName(QWidget *parent, const QString &caption,
         return QString();
 
     const QStringList selectedFiles = fileDialog.selectedFiles();
-    if (selectedFiles.empty())
+    if (selectedFiles.isEmpty())
         return QString();
 
     if (selectedFilter)
         *selectedFilter =  fileDialog.selectedNameFilter();
 
-    return selectedFiles.front();
+    return selectedFiles.constFirst();
 #else
     return getOpenFileName(parent, caption, dir, filter, selectedFilter, options);
 #endif
@@ -232,7 +232,7 @@ QStringList DialogGui::getOpenImageFileNames(QWidget *parent, const QString &cap
         return QStringList();
 
     const QStringList selectedFiles = fileDialog.selectedFiles();
-    if (!selectedFiles.empty() && selectedFilter)
+    if (!selectedFiles.isEmpty() && selectedFilter)
         *selectedFilter =  fileDialog.selectedNameFilter();
 
     return selectedFiles;
