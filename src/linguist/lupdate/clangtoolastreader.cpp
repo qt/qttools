@@ -469,7 +469,8 @@ void LupdateVisitor::processPreprocessorCalls()
 
 void LupdateVisitor::processPreprocessorCall(TranslationRelatedStore store)
 {
-    const std::vector<QString> rawComments = rawCommentsFromSourceLocation(store.callLocation);
+    const std::vector<QString> rawComments = rawCommentsFromSourceLocation(store
+        .callLocation(m_context->getSourceManager()));
     for (const auto &rawComment : rawComments)
         setInfoFromRawComment(rawComment, &store);
 
@@ -516,7 +517,7 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
     for (TranslationRelatedStore &store : m_noopTranslationMacroAll) {
         if (!store.contextArg.isEmpty())
             continue;
-        clang::SourceLocation sourceLoc = store.callLocation;
+        clang::SourceLocation sourceLoc = store.callLocation(sm);
         if (!sourceLoc.isValid())
             continue;
         if (LupdatePrivate::isPointWithin(namedDeclaration->getSourceRange(), sourceLoc, sm)) {
@@ -537,7 +538,7 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
             qCDebug(lcClang) << " Declaration Location    " <<
                 namedDeclaration->getSourceRange().printToString(sm);
             qCDebug(lcClang) << " Macro       Location                                 "
-                << store.callLocation.printToString(sm);
+                << sourceLoc.printToString(sm);
             qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
                 << namedDeclaration->getQualifiedNameAsString();
             qCDebug(lcClang) << " Context LupdatePrivate::contextForNoopMacro          "
@@ -549,7 +550,7 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
     }
 
     for (TranslationRelatedStore &store : m_qDeclareTrMacroAll) {
-        clang::SourceLocation sourceLoc = store.callLocation;
+        clang::SourceLocation sourceLoc = store.callLocation(sm);
         if (!sourceLoc.isValid())
             continue;
         if (LupdatePrivate::isPointWithin(namedDeclaration->getSourceRange(), sourceLoc, sm)) {
@@ -562,7 +563,7 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
             qCDebug(lcClang) << " Declaration Location    " <<
                 namedDeclaration->getSourceRange().printToString(sm);
             qCDebug(lcClang) << " Macro       Location                                 "
-                << store.callLocation.printToString(sm);
+                << sourceLoc.printToString(sm);
             qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
                 << store.contextRetrieved;
             qCDebug(lcClang) << " Context LupdatePrivate::contextForNoopMacro          "

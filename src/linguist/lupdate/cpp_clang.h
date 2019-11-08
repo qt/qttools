@@ -43,6 +43,7 @@
 #endif
 
 #include <clang/Basic/SourceLocation.h>
+#include <clang/Basic/SourceManager.h>
 
 #if defined(Q_CC_MSVC)
 # pragma warning(pop)
@@ -84,11 +85,27 @@ struct TranslationRelatedStore
     QString lupdateComment;
     QString lupdateExtraComment;
     QString lupdatePlural;
-    clang::SourceLocation callLocation;
+    clang::SourceLocation sourceLocation;
 
     bool isValid() const
     {
         return !lupdateLocationFile.isEmpty() && (lupdateLocationLine > -1) && (locationCol > -1);
+    }
+
+    clang::SourceLocation callLocation(const clang::SourceManager &sourceManager)
+    {
+        if (sourceLocation.isInvalid()) {
+            auto sourceFile = sourceManager.getFileManager()
+                .getFile(lupdateLocationFile.toStdString());
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
+            sourceLocation = sourceManager.translateFileLineCol(sourceFile.get(),
+                lupdateLocationLine, locationCol);
+#else
+            sourceLocation = sourceManager.translateFileLineCol(sourceFile, lupdateLocationLine,
+                locationCol);
+#endif
+        }
+        return sourceLocation;
     }
 
     void printStore() const

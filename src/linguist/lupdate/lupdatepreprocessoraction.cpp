@@ -64,7 +64,6 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
     store.lupdateLocationFile = QString::fromStdString(fileName);
     store.lupdateLocationLine = sm.getExpansionLineNumber(sourceRange.getBegin());
     store.locationCol = sm.getExpansionColumnNumber(sourceRange.getBegin());
-    store.callLocation = sourceRange.getBegin();
 
     if (macroArgs) {
         std::vector<QString> arguments(macroArgs->getNumMacroArguments());
