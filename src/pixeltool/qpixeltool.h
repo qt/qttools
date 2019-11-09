@@ -53,6 +53,7 @@ public slots:
     void setZoomVisible(bool visible);
 #if QT_CONFIG(clipboard)
     void copyToClipboard();
+    void copyColorToClipboard();
 #endif
     void saveToFile();
     void increaseGridSize() { setGridSize(m_gridSize + 1); }
