@@ -1260,8 +1260,11 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
                     appendFullName(text, overrides->parent(), fullName, overrides);
                     text << "." << Atom::ParaRight;
                     generateText(text, fn, marker);
-                    return;
+                } else {
+                    fn->doc().location().warning(tr("Illegal \\reimp; no documented virtual function for %1")
+                                                    .arg(overrides->plainSignature()));
                 }
+                return;
             }
             const PropertyNode *sameName = cn->findOverriddenProperty(fn);
             if (sameName && sameName->hasDoc()) {
@@ -1271,10 +1274,6 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
                 appendFullName(text, sameName->parent(), fullName, sameName);
                 text << "." << Atom::ParaRight;
                 generateText(text, fn, marker);
-            } else {
-                fn->doc().location().warning(
-                        tr("Illegal \\reimp; no documented virtual function for %1")
-                                .arg(fn->plainSignature()));
             }
         }
     }
