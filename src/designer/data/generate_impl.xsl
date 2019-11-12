@@ -194,7 +194,7 @@
         <xsl:if test="$node/xs:attribute">
             <xsl:text>    const QXmlStreamAttributes &amp;attributes = reader.attributes();&endl;</xsl:text>
             <xsl:text>    for (const QXmlStreamAttribute &amp;attribute : attributes) {&endl;</xsl:text>
-            <xsl:text>        const QStringRef name = attribute.name();&endl;</xsl:text>
+            <xsl:text>        const auto name = attribute.name();&endl;</xsl:text>
 
             <xsl:for-each select="$node/xs:attribute">
                 <xsl:variable name="camel-case-name">
@@ -347,7 +347,7 @@
         <xsl:text>    while (!reader.hasError()) {&endl;</xsl:text>
         <xsl:text>        switch (reader.readNext()) {&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::StartElement : {&endl;</xsl:text>
-        <xsl:text>            const QStringRef tag = reader.name();&endl;</xsl:text>
+        <xsl:text>            const auto tag = reader.name();&endl;</xsl:text>
 
         <xsl:for-each select="$node//xs:sequence | $node//xs:choice | $node//xs:all">
             <xsl:call-template name="read-impl-load-child-element">
