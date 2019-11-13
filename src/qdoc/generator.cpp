@@ -1408,9 +1408,8 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
 }
 
 /*!
-  Generates a bold line that says:
-  "The signal is private, not emitted by the user.
-  The function is public so the user can pass it to connect()."
+  Generates a bold line that explains that this is a private signal,
+  only made public to let users pass it to connect().
  */
 void Generator::generatePrivateSignalNote(const Node *node, CodeMarker *marker)
 {
