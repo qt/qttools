@@ -1669,13 +1669,13 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
 
     Text text;
     text << Atom::ParaLeft
-         << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
          << "Note:"
-         << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
          << " Signal "
-         << Atom(Atom::FormattingLeft,ATOM_FORMATTING_ITALIC)
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC)
          << node->name()
-         << Atom(Atom::FormattingRight,ATOM_FORMATTING_ITALIC)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_ITALIC)
          << " is overloaded in this class. "
             "To connect to this signal by using the function pointer syntax, Qt "
             "provides a convenient helper for obtaining the function pointer as "
