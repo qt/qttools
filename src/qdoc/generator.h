@@ -29,7 +29,6 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "node.h"
 #include "text.h"
 
 #include <QtCore/qlist.h>
@@ -46,6 +45,7 @@ typedef QMap<Node *, NodeMultiMap> ParentMaps;
 class Config;
 class CodeMarker;
 class Location;
+class Node;
 class QDocDatabase;
 
 class Generator

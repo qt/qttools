@@ -36,6 +36,7 @@
 #include "doc.h"
 #include "editdistance.h"
 #include "loggingcategory.h"
+#include "node.h"
 #include "openedlist.h"
 #include "qdocdatabase.h"
 #include "quoter.h"
