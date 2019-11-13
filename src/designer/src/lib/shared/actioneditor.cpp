@@ -528,7 +528,7 @@ static inline QString textPropertyValue(const QDesignerPropertySheetExtension *s
     return ps.value();
 }
 
-void ActionEditor::editAction(QAction *action)
+void ActionEditor::editAction(QAction *action, int column)
 {
     if (!action)
         return;
@@ -545,6 +545,24 @@ void ActionEditor::editAction(QAction *action)
     oldActionData.keysequence = ActionModel::actionShortCut(sheet);
     oldActionData.checkable =  action->isCheckable();
     dlg.setActionData(oldActionData);
+
+    switch (column) {
+    case qdesigner_internal::ActionModel::NameColumn:
+        dlg.focusName();
+        break;
+    case qdesigner_internal::ActionModel::TextColumn:
+        dlg.focusText();
+        break;
+    case qdesigner_internal::ActionModel::ShortCutColumn:
+        dlg.focusShortcut();
+        break;
+    case qdesigner_internal::ActionModel::CheckedColumn:
+        dlg.focusCheckable();
+        break;
+    case qdesigner_internal::ActionModel::ToolTipColumn:
+        dlg.focusTooltip();
+        break;
+    }
 
     if (!dlg.exec())
         return;

@@ -124,7 +124,7 @@ public slots:
 signals:
     void actionContextMenuRequested(QContextMenuEvent *event, QAction *);
     void currentActionChanged(QAction *action);
-    void actionActivated(QAction *action);
+    void actionActivated(QAction *action, int column);
 
 protected slots:
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
@@ -215,7 +215,7 @@ public slots:
 signals:
     void contextMenuRequested(QContextMenuEvent *event, QAction *);
     void currentChanged(QAction *action);
-    void activated(QAction *action);
+    void activated(QAction *action, int column);
     void selectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
     void resourceImageDropped(const QString &data, QAction *action);
 

@@ -392,7 +392,7 @@ void ActionTreeView::currentChanged(const QModelIndex &current, const QModelInde
 
 void ActionTreeView::slotActivated(const QModelIndex &index)
 {
-    emit actionActivated(m_model->actionAt(index));
+    emit actionActivated(m_model->actionAt(index), index.column());
 }
 
 void ActionTreeView::startDrag(Qt::DropActions supportedActions)
@@ -499,7 +499,8 @@ ActionView::ActionView(QWidget *parent) :
 
     // make it possible for vs integration to reimplement edit action dialog
     // [which it shouldn't do actually]
-    connect(m_actionListView, &ActionListView::actionActivated, this, &ActionView::activated);
+    connect(m_actionListView, &ActionListView::actionActivated,
+            this, [this](QAction *a) { this->activated(a, -1); });
     connect(m_actionTreeView, &ActionTreeView::actionActivated, this, &ActionView::activated);
 
     connect(m_actionListView, &ActionListView::currentActionChanged,
