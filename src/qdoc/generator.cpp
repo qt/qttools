@@ -1485,21 +1485,21 @@ static bool hasExceptions(const Node *node,
     bool result = false;
     Node::ThreadSafeness ts = node->threadSafeness();
     const NodeList &children = static_cast<const Aggregate *>(node)->childNodes();
-    for (auto *node : children) {
-        if (!node->isObsolete()){
-            switch (node->threadSafeness()) {
+    for (auto *child : children) {
+        if (!child->isObsolete()){
+            switch (child->threadSafeness()) {
             case Node::Reentrant:
-                reentrant.append(node);
+                reentrant.append(child);
                 if (ts == Node::ThreadSafe)
                     result = true;
                 break;
             case Node::ThreadSafe:
-                threadsafe.append(node);
+                threadsafe.append(child);
                 if (ts == Node::Reentrant)
                     result = true;
                 break;
             case Node::NonReentrant:
-                nonreentrant.append(node);
+                nonreentrant.append(child);
                 result = true;
                 break;
             default:
@@ -1974,7 +1974,7 @@ void Generator::initializeGenerator(const Config &config)
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)
 {
-    return atom->next() != nullptr && atom->next()->type() == expectedAtomType;
+    return atom->next() && atom->next()->type() == expectedAtomType;
 }
 
 /*!
@@ -2137,7 +2137,7 @@ int Generator::skipAtoms(const Atom *atom, Atom::AtomType type) const
 {
     int skipAhead = 0;
     atom = atom->next();
-    while (atom != nullptr && atom->type() != type) {
+    while (atom && atom->type() != type) {
         skipAhead++;
         atom = atom->next();
     }
@@ -2162,7 +2162,7 @@ void Generator::initializeTextOutput()
 void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 {
     if (node->isFunction() && !node->isMacro()) {
-        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        const auto fn = static_cast<const FunctionNode *>(node);
         if (fn->overloadNumber() == 0) {
             QString alternateName;
             const FunctionNode *alternateFunc = nullptr;
