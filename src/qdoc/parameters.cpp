@@ -517,11 +517,11 @@ void Parameters::getNames(QSet<QString> &names) const
 }
 
 /*!
-  Construct a list of the parameter types and append it to
-  \a out. \a out is not cleared first.
+  Construct a list of the parameter types and return it.
  */
-void Parameters::getTypeList(QString &out) const
+QString Parameters::generateTypeList() const
 {
+    QString out;
     if (count() > 0) {
         for (int i = 0; i < count(); ++i) {
             if (i > 0)
@@ -529,14 +529,16 @@ void Parameters::getTypeList(QString &out) const
             out += parameters_.at(i).type();
         }
     }
+    return out;
 }
 
 /*!
   Construct a list of the parameter type/name pairs and
-  append it to \a out. \a out is not cleared first.
+  return it.
 */
-void Parameters::getTypeAndNameList(QString &out) const
+QString Parameters::generateTypeAndNameList() const
 {
+    QString out;
     if (count() > 0) {
         for (int i = 0; i < count(); ++i) {
             if (i != 0)
@@ -548,6 +550,7 @@ void Parameters::getTypeAndNameList(QString &out) const
             out += p.name();
         }
     }
+    return out;
 }
 
 /*!
