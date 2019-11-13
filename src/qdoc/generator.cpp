@@ -1632,11 +1632,7 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
 }
 
 /*!
-    If the node is an overloaded signal, and a node with an example on how to connect to it
-
-    Someone didn't finish writing this comment, and I don't know what this
-    function is supposed to do, so I have not tried to complete the comment
-    yet.
+    If the node is an overloaded signal, add a node with an example on how to connect to it
  */
 void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
 {
