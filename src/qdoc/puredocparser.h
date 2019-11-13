@@ -48,7 +48,7 @@ public:
 
     static PureDocParser *pureDocParser() { return pureParser_; }
 
- private:
+private:
     bool processQdocComments();
     static PureDocParser *pureParser_;
     Tokenizer *tokenizer_;

@@ -426,10 +426,10 @@ public:
     void setOutputFileName(const QString &f) override { outputFileName_ = f; }
     QString outputFileName() const override { return outputFileName_; }
 
- protected:
+protected:
     friend class Node;
 
- protected:
+protected:
     bool noAutoList_;
     QString title_;
     QString subtitle_;
@@ -508,7 +508,7 @@ private:
     void adoptFunction(FunctionNode *fn);
     static bool isSameSignature(const FunctionNode *f1, const FunctionNode *f2);
 
- protected:
+protected:
     NodeList children_;
     NodeList relatedByProxy_;
 
@@ -518,14 +518,14 @@ private:
     NodeMap nonfunctionMap_;
     NodeList nonfunctionList_;
 
- protected:
+protected:
     int functionCount_;
     FunctionMap functionMap_;
 };
 
 class ProxyNode : public Aggregate
 {
- public:
+public:
     ProxyNode(Aggregate *parent, const QString &name);
     bool docMustBeGenerated() const override { return true; }
     bool isRelatableType() const override { return true; }
@@ -634,7 +634,7 @@ public:
     PropertyNode *findOverriddenProperty(const FunctionNode *fn);
     bool docMustBeGenerated() const override;
 
- private:
+private:
     void promotePublicBases(const QList<RelatedClass> &bases);
 
 private:

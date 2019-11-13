@@ -56,7 +56,7 @@ class QDocIndexFiles
     friend class QDocDatabase;
     friend class WebXMLGenerator; // for using generateIndexSections()
 
- private:
+private:
     static QDocIndexFiles* qdocIndexFiles();
     static void destroyQDocIndexFiles();
 
@@ -75,7 +75,7 @@ class QDocIndexFiles
     bool generateIndexSection(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
     void generateIndexSections(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
 
- private:
+private:
     static QDocIndexFiles* qdocIndexFiles_;
     QDocDatabase *qdb_;
     Generator *gen_;

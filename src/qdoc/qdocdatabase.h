@@ -54,7 +54,7 @@ enum FindFlag {
 
 class QDocForest
 {
-  private:
+private:
     friend class QDocDatabase;
     QDocForest(QDocDatabase *qdb)
         : qdb_(qdb), primaryTree_(nullptr), currentIndex_(0) { }
@@ -197,7 +197,7 @@ class QDocForest
     void setPrimaryTree(const QString &t);
     NamespaceNode *newIndexTree(const QString &module);
 
-  private:
+private:
     QDocDatabase *qdb_;
     Tree *primaryTree_;
     int currentIndex_;
@@ -211,7 +211,7 @@ class QDocDatabase
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::QDocDatabase)
 
-  public:
+public:
     static QDocDatabase *qdocDB();
     static void destroyQdocDB();
     ~QDocDatabase();
@@ -261,7 +261,7 @@ class QDocDatabase
     static NodeMapMap &newQmlTypeMaps() { return newQmlTypeMaps_; }
     static NodeMultiMapMap &newSinceMaps() { return newSinceMaps_; }
 
- private:
+private:
     void findAllClasses(Aggregate *node) { node->findAllClasses(); }
     void findAllFunctions(Aggregate *node) { node->findAllFunctions(functionIndex_); }
     void findAllAttributions(Aggregate *node) { node->findAllAttributions(attributions_); }
@@ -269,7 +269,7 @@ class QDocDatabase
     void findAllObsoleteThings(Aggregate *node) { node->findAllObsoleteThings(); }
     void findAllSince(Aggregate *node) { node->findAllSince(); }
 
- public:
+public:
     /*******************************************************************
      special collection access functions
     ********************************************************************/
@@ -334,7 +334,7 @@ class QDocDatabase
     FunctionNode *findFunctionNodeForTag(QString tag) { return primaryTree()->findFunctionNodeForTag(tag); }
     FunctionNode *findMacroNode(const QString &t) { return primaryTree()->findMacroNode(t); }
 
-  private:
+private:
     const Node *findNodeForTarget(QStringList &targetPath,
                                   const Node *relative,
                                   Node::Genus genus,
@@ -349,7 +349,7 @@ class QDocDatabase
     }
 
     /*******************************************************************/
-  public:
+public:
     void addPropertyFunction(PropertyNode *property,
                              const QString &funcName,
                              PropertyNode::FunctionRole funcRole) {
@@ -402,7 +402,7 @@ class QDocDatabase
     void resolveProxies();
     void resolveBaseClasses();
 
- private:
+private:
     friend class Tree;
 
     const Node *findNode(const QStringList &path,
@@ -415,16 +415,16 @@ class QDocDatabase
     bool isLoaded(const QString &t) { return forest_.isLoaded(t); }
     static void initializeDB();
 
- private:
+private:
     QDocDatabase();
     QDocDatabase(QDocDatabase const &) : showInternal_(false), forest_(this) { }
     QDocDatabase& operator=(QDocDatabase const &);
 
- public:
+public:
     static bool debug;
     Tree *primaryTree() { return forest_.primaryTree(); }
 
- private:
+private:
     static QDocDatabase *qdocDB_;
     static NodeMap typeNodeMap_;
     static NodeMultiMap obsoleteClasses_;

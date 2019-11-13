@@ -198,7 +198,7 @@ public:
     virtual const QString &error() { return noError_; }
     virtual void resolveSquareBracketParams() { }
 
- protected:
+protected:
     static QString noError_;
     Atom *next_;
     AtomType type_;
@@ -207,7 +207,7 @@ public:
 
 class LinkAtom : public Atom
 {
- public:
+public:
     LinkAtom(const QString &p1, const QString &p2);
     LinkAtom(const LinkAtom &t);
     LinkAtom(Atom *previous, const LinkAtom &t);
@@ -221,7 +221,7 @@ class LinkAtom : public Atom
     const QString &error() override { return error_; }
     void resolveSquareBracketParams() override;
 
- protected:
+protected:
     bool resolved_;
     Node::Genus genus_;
     Node::NodeType goal_;

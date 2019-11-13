@@ -63,7 +63,7 @@ public:
     void precompileHeaders() override;
     Node *parseFnArg(const Location &location, const QString &fnArg) override;
 
- private:
+private:
     void getDefaultArgs();
     bool getMoreArgs();
     void buildPCH();
