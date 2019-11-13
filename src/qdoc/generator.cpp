@@ -971,9 +971,10 @@ void Generator::generateRequiredLinks(const Node *node, CodeMarker *marker)
 
 /*!
   Generates an external link to the project folder for example \a node.
-  The path to the example is appended to \a baseUrl string, or to a
-  specific location within the string marked with the placeholder '\1'
-  character.
+  The path to the example replaces a placeholder '\1' character if
+  one is found in the \a baseUrl string. If no such placeholder is found,
+  the path is appended to \a baseUrl, after a '/' character if \a baseUrl did
+  not already end in one.
 */
 void Generator::generateLinkToExample(const ExampleNode *en,
                                       CodeMarker *marker,
