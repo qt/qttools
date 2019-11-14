@@ -4,7 +4,7 @@
 ## lconvert Tool:
 #####################################################################
 
-add_qt_tool(lconvert
+qt_add_tool(lconvert
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
@@ -28,5 +28,4 @@ add_qt_tool(lconvert
 
 #### Keys ignored in scope 1:.:.:lconvert.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Translation File Converter"
-# _LOADED = "qt_tool"
 # _OPTION = "host_build"

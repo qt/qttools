@@ -4,7 +4,7 @@
 ## lupdate Tool:
 #####################################################################
 
-add_qt_tool(lupdate
+qt_add_tool(lupdate
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
@@ -38,7 +38,6 @@ add_qt_tool(lupdate
 #### Keys ignored in scope 1:.:.:lupdate.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Translation File Update Tool"
 # QT_TOOL_ENV = "qmake"
-# _LOADED = "qt_tool"
 # _OPTION = "host_build"
 # qmake.name = "QMAKE"
 # qmake.value = "$$shell_path($$QMAKE_QMAKE)"
@@ -46,7 +45,7 @@ add_qt_tool(lupdate
 ## Scopes:
 #####################################################################
 
-extend_target(lupdate CONDITION TARGET Qt::QmlDevToolsPrivate
+qt_extend_target(lupdate CONDITION TARGET Qt::QmlDevToolsPrivate
     SOURCES
         qdeclarative.cpp
     LIBRARIES
@@ -55,7 +54,7 @@ extend_target(lupdate CONDITION TARGET Qt::QmlDevToolsPrivate
         Qt::QmlDevTools
 )
 
-extend_target(lupdate CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+qt_extend_target(lupdate CONDITION NOT TARGET Qt::QmlDevToolsPrivate
     DEFINES
         QT_NO_QML
 )

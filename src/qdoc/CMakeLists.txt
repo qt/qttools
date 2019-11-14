@@ -4,7 +4,7 @@
 ## qdoc Tool:
 #####################################################################
 
-add_qt_tool(qdoc
+qt_add_tool(qdoc
     SOURCES
         atom.cpp atom.h
         clangcodeparser.cpp clangcodeparser.h
@@ -64,7 +64,6 @@ add_qt_tool(qdoc
 # QMAKE_SUBSTITUTES = "cmake_qdoc_config_file" "cmake_qdoc_config_version_file"
 # QMAKE_TARGET_DESCRIPTION = "Qt Documentation Compiler"
 # TR_EXCLUDE = "$$PWD/*"
-# _LOADED = "qt_tool" "cmake_functions" "qt_build_paths"
 # _OPTION = "host_build"
 # cmake_qdoc_config_file.input = "$$PWD/Qt5DocToolsConfig.cmake.in"
 # cmake_qdoc_config_file.output = "$$MODULE_BASE_OUTDIR/lib/cmake/Qt5DocTools/Qt5DocToolsConfig.cmake"
@@ -80,14 +79,14 @@ add_qt_tool(qdoc
 #### Keys ignored in scope 2:.:.:qdoc.pro:NOT force_bootstrap:
 # _REQUIREMENTS = "qtConfig(xmlstreamwriter)"
 
-extend_target(qdoc CONDITION TARGET Qt::QmlDevToolsPrivate
+qt_extend_target(qdoc CONDITION TARGET Qt::QmlDevToolsPrivate
     LIBRARIES
         Qt::QmlDevToolsPrivate
     PUBLIC_LIBRARIES
         Qt::QmlDevTools
 )
 
-extend_target(qdoc CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+qt_extend_target(qdoc CONDITION NOT TARGET Qt::QmlDevToolsPrivate
     DEFINES
         QT_NO_DECLARATIVE
 )
@@ -95,7 +94,7 @@ extend_target(qdoc CONDITION NOT TARGET Qt::QmlDevToolsPrivate
 #### Keys ignored in scope 6:.:.:qdoc.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:
 # QMAKE_RPATHDIR = "$$CLANG_LIBDIR"
 
-extend_target(qdoc CONDITION win32-icc_x_ OR win32-msvc_x_
+qt_extend_target(qdoc CONDITION win32-icc_x_ OR win32-msvc_x_
     LINK_OPTIONS
         "/STACK:4194304"
 )
@@ -113,7 +112,7 @@ extend_target(qdoc CONDITION win32-icc_x_ OR win32-msvc_x_
 #### Keys ignored in scope 11:.:.:qdoc.pro:CMAKE_BIN_DIR___contains___^\\.\\./._x_:
 # CMAKE_BIN_DIR = "$$[QT_HOST_BINS]/"
 # CMAKE_BIN_DIR_IS_ABSOLUTE = "True"
-add_qt_docs(qdoc
+qt_add_docs(qdoc
     doc/config/qdoc.qdocconf
 )
 

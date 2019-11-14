@@ -4,7 +4,7 @@
 ## UiTools Module:
 #####################################################################
 
-add_qt_module(UiTools
+qt_add_module(UiTools
     STATIC
     SOURCES
         ../lib/uilib/abstractformbuilder.cpp ../lib/uilib/abstractformbuilder.h
@@ -30,12 +30,9 @@ add_qt_module(UiTools
         Qt::Widgets
 )
 
-#### Keys ignored in scope 1:.:.:uitools.pro:<TRUE>:
-# _LOADED = "qt_module"
-
 ## Scopes:
 #####################################################################
-add_qt_docs(UiTools
+qt_add_docs(UiTools
     doc/qtuitools.qdocconf
 )
 

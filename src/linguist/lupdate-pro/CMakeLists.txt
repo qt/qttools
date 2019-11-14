@@ -4,7 +4,7 @@
 ## lupdate-pro Tool:
 #####################################################################
 
-add_qt_tool(lupdate-pro
+qt_add_tool(lupdate-pro
     SOURCES
         ../shared/runqttool.cpp ../shared/runqttool.h
         main.cpp
@@ -18,7 +18,6 @@ add_qt_tool(lupdate-pro
 #### Keys ignored in scope 1:.:.:lupdate-pro.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Translation File Update Tool for QMake Projects"
 # QT_TOOL_ENV = "qmake"
-# _LOADED = "qt_tool"
 # _OPTION = "host_build"
 # qmake.name = "QMAKE"
 # qmake.value = "$$shell_path($$QMAKE_QMAKE)"

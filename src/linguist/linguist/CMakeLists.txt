@@ -4,7 +4,7 @@
 ## linguist Binary:
 #####################################################################
 
-add_qt_executable(linguist
+qt_add_executable(linguist
     GUI
     SOURCES
         ../shared/numerus.cpp
@@ -121,7 +121,7 @@ set(linguist_resource_files
     "images/win/whatsthis.png"
 )
 
-add_qt_resource(linguist "linguist"
+qt_add_resource(linguist "linguist"
     PREFIX
         "/"
     FILES
@@ -132,14 +132,13 @@ add_qt_resource(linguist "linguist"
 #### Keys ignored in scope 1:.:.:linguist.pro:<TRUE>:
 # PROJECTNAME = "Qt" "Linguist"
 # QMAKE_TARGET_DESCRIPTION = "Qt" "Linguist"
-# _LOADED = "qt_app"
 # phrasebooks.files = "$$PWD/../phrasebooks/*"
 # phrasebooks.path = "$$[QT_INSTALL_DATA]/phrasebooks"
 
 ## Scopes:
 #####################################################################
 
-extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
+qt_extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
     DEFINES
         QT_OPENSOURCE
 )
@@ -154,7 +153,7 @@ extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
 #### Keys ignored in scope 5:.:.:linguist.pro:APPLE:
 # ICON = "linguist.icns"
 # QMAKE_INFO_PLIST = "Info_mac.plist"
-add_qt_docs(linguist
+qt_add_docs(linguist
     doc/qtlinguist.qdocconf
 )
 

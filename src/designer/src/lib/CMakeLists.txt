@@ -4,7 +4,7 @@
 ## Designer Module:
 #####################################################################
 
-add_qt_module(Designer
+qt_add_module(Designer
     PLUGIN_TYPES designer
     SOURCES
         ../../../shared/deviceskin/deviceskin.cpp ../../../shared/deviceskin/deviceskin.h
@@ -177,31 +177,6 @@ add_qt_module(Designer
 )
 
 # Resources:
-set(shared_resource_files
-    "defaultgradients.xml"
-    "templates/forms/240x320/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/240x320/Dialog_with_Buttons_Right.ui"
-    "templates/forms/320x240/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/320x240/Dialog_with_Buttons_Right.ui"
-    "templates/forms/480x640/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/480x640/Dialog_with_Buttons_Right.ui"
-    "templates/forms/640x480/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/640x480/Dialog_with_Buttons_Right.ui"
-    "templates/forms/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/Dialog_with_Buttons_Right.ui"
-    "templates/forms/Dialog_without_Buttons.ui"
-    "templates/forms/Main_Window.ui"
-    "templates/forms/Widget.ui"
-)
-
-add_qt_resource(Designer "shared"
-    PREFIX
-        "/qt-project.org/designer"
-    BASE
-        "shared"
-    FILES
-        ${shared_resource_files}
-)
 set_source_files_properties("../../../shared/deviceskin/skins/ClamshellPhone.skin"
     PROPERTIES QT_RESOURCE_ALIAS "ClamshellPhone.skin"
 )
@@ -209,7 +184,7 @@ set(ClamshellPhone_resource_files
     "ClamshellPhone.skin"
 )
 
-add_qt_resource(Designer "ClamshellPhone"
+qt_add_resource(Designer "ClamshellPhone"
     PREFIX
         "/skins"
     BASE
@@ -224,7 +199,7 @@ set(SmartPhone2_resource_files
     "SmartPhone2.skin"
 )
 
-add_qt_resource(Designer "SmartPhone2"
+qt_add_resource(Designer "SmartPhone2"
     PREFIX
         "/skins"
     BASE
@@ -239,7 +214,7 @@ set(SmartPhone_resource_files
     "SmartPhone.skin"
 )
 
-add_qt_resource(Designer "SmartPhone"
+qt_add_resource(Designer "SmartPhone"
     PREFIX
         "/skins"
     BASE
@@ -254,7 +229,7 @@ set(SmartPhoneWithButtons_resource_files
     "SmartPhoneWithButtons.skin"
 )
 
-add_qt_resource(Designer "SmartPhoneWithButtons"
+qt_add_resource(Designer "SmartPhoneWithButtons"
     PREFIX
         "/skins"
     BASE
@@ -269,7 +244,7 @@ set(TouchscreenPhone_resource_files
     "TouchscreenPhone.skin"
 )
 
-add_qt_resource(Designer "TouchscreenPhone"
+qt_add_resource(Designer "TouchscreenPhone"
     PREFIX
         "/skins"
     BASE
@@ -284,7 +259,7 @@ set(PortableMedia_resource_files
     "PortableMedia.skin"
 )
 
-add_qt_resource(Designer "PortableMedia"
+qt_add_resource(Designer "PortableMedia"
     PREFIX
         "/skins"
     BASE
@@ -299,7 +274,7 @@ set(S60-QVGA-Candybar_resource_files
     "S60-QVGA-Candybar.skin"
 )
 
-add_qt_resource(Designer "S60-QVGA-Candybar"
+qt_add_resource(Designer "S60-QVGA-Candybar"
     PREFIX
         "/skins"
     BASE
@@ -314,7 +289,7 @@ set(S60-nHD-Touchscreen_resource_files
     "S60-nHD-Touchscreen.skin"
 )
 
-add_qt_resource(Designer "S60-nHD-Touchscreen"
+qt_add_resource(Designer "S60-nHD-Touchscreen"
     PREFIX
         "/skins"
     BASE
@@ -361,7 +336,7 @@ set(findwidget_resource_files
     "images/wrap.png"
 )
 
-add_qt_resource(Designer "findwidget"
+qt_add_resource(Designer "findwidget"
     PREFIX
         "/qt-project.org/shared"
     BASE
@@ -428,7 +403,7 @@ set(qtgradienteditor_resource_files
     "images/zoomout.png"
 )
 
-add_qt_resource(Designer "qtgradienteditor"
+qt_add_resource(Designer "qtgradienteditor"
     PREFIX
         "/qt-project.org/qtgradienteditor"
     BASE
@@ -436,21 +411,45 @@ add_qt_resource(Designer "qtgradienteditor"
     FILES
         ${qtgradienteditor_resource_files}
 )
+set(shared_resource_files
+    "defaultgradients.xml"
+    "templates/forms/240x320/Dialog_with_Buttons_Bottom.ui"
+    "templates/forms/240x320/Dialog_with_Buttons_Right.ui"
+    "templates/forms/320x240/Dialog_with_Buttons_Bottom.ui"
+    "templates/forms/320x240/Dialog_with_Buttons_Right.ui"
+    "templates/forms/480x640/Dialog_with_Buttons_Bottom.ui"
+    "templates/forms/480x640/Dialog_with_Buttons_Right.ui"
+    "templates/forms/640x480/Dialog_with_Buttons_Bottom.ui"
+    "templates/forms/640x480/Dialog_with_Buttons_Right.ui"
+    "templates/forms/Dialog_with_Buttons_Bottom.ui"
+    "templates/forms/Dialog_with_Buttons_Right.ui"
+    "templates/forms/Dialog_without_Buttons.ui"
+    "templates/forms/Main_Window.ui"
+    "templates/forms/Widget.ui"
+)
+
+qt_add_resource(Designer "shared"
+    PREFIX
+        "/qt-project.org/designer"
+    BASE
+        "shared"
+    FILES
+        ${shared_resource_files}
+)
 
 
 #### Keys ignored in scope 1:.:.:lib.pro:<TRUE>:
 # MODULE = "designer"
-# _LOADED = "qt_module"
 
 ## Scopes:
 #####################################################################
 
-extend_target(Designer CONDITION static
+qt_extend_target(Designer CONDITION static
     DEFINES
         QT_DESIGNER_STATIC
 )
 
-extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
+qt_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.h
         ../../../shared/qtpropertybrowser/qteditorfactory.cpp ../../../shared/qtpropertybrowser/qteditorfactory.h
@@ -540,8 +539,8 @@ if(NOT QT_BUILD_SHARED_LIBS)
         "images/cursor-wait.png"
         "images/cursor-whatsthis.png"
     )
-    
-    add_qt_resource(Designer "qtpropertybrowser"
+
+    qt_add_resource(Designer "qtpropertybrowser"
         PREFIX
             "/qt-project.org/qtpropertybrowser"
         BASE
@@ -551,7 +550,7 @@ if(NOT QT_BUILD_SHARED_LIBS)
     )
 endif()
 
-extend_target(Designer CONDITION QT_BUILD_SHARED_LIBS
+qt_extend_target(Designer CONDITION QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../shared/qtpropertybrowser/qtpropertybrowserutils.cpp ../../../shared/qtpropertybrowser/qtpropertybrowserutils_p.h
     INCLUDE_DIRECTORIES

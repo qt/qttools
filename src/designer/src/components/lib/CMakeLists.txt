@@ -4,7 +4,7 @@
 ## DesignerComponents Module:
 #####################################################################
 
-add_qt_module(DesignerComponents
+qt_add_module(DesignerComponents
     INTERNAL_MODULE
     SOURCES
         ../buddyeditor/buddyeditor.cpp ../buddyeditor/buddyeditor.h
@@ -136,7 +136,7 @@ set(propertyeditor_resource_files
     "fontmapping.xml"
 )
 
-add_qt_resource(DesignerComponents "propertyeditor"
+qt_add_resource(DesignerComponents "propertyeditor"
     PREFIX
         "/qt-project.org/propertyeditor"
     BASE
@@ -835,7 +835,7 @@ set(formeditor_resource_files
     "images/win/widgettool.png"
 )
 
-add_qt_resource(DesignerComponents "formeditor"
+qt_add_resource(DesignerComponents "formeditor"
     PREFIX
         "/qt-project.org/formeditor"
     BASE
@@ -850,7 +850,7 @@ set(formeditor1_resource_files
     "defaultbrushes.xml"
 )
 
-add_qt_resource(DesignerComponents "formeditor1"
+qt_add_resource(DesignerComponents "formeditor1"
     PREFIX
         "/qt-project.org/brushes"
     BASE
@@ -865,7 +865,7 @@ set(widgetbox_resource_files
     "widgetbox.xml"
 )
 
-add_qt_resource(DesignerComponents "widgetbox"
+qt_add_resource(DesignerComponents "widgetbox"
     PREFIX
         "/qt-project.org/widgetbox"
     BASE
@@ -877,24 +877,23 @@ add_qt_resource(DesignerComponents "widgetbox"
 
 #### Keys ignored in scope 1:.:.:lib.pro:<TRUE>:
 # MODULE = "designercomponents"
-# _LOADED = "qt_module"
 
 ## Scopes:
 #####################################################################
 
-extend_target(DesignerComponents CONDITION static
+qt_extend_target(DesignerComponents CONDITION static
     DEFINES
         QT_DESIGNER_STATIC
 )
 
-extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
+qt_extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
     INCLUDE_DIRECTORIES
         ../../../../shared/findwidget
         ../../../../shared/qtgradienteditor
         ../../../../shared/qtpropertybrowser
 )
 
-extend_target(DesignerComponents CONDITION QT_BUILD_SHARED_LIBS
+qt_extend_target(DesignerComponents CONDITION QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../../shared/findwidget/abstractfindwidget.cpp ../../../../shared/findwidget/abstractfindwidget.h
         ../../../../shared/findwidget/itemviewfindwidget.cpp ../../../../shared/findwidget/itemviewfindwidget.h
@@ -916,6 +915,53 @@ extend_target(DesignerComponents CONDITION QT_BUILD_SHARED_LIBS
 
 if(QT_BUILD_SHARED_LIBS)
     # Resources:
+    set_source_files_properties("../../../../shared/findwidget/images/mac/closetab.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/closetab.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/mac/next.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/next.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/mac/previous.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/previous.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/mac/searchfind.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/mac/searchfind.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/closetab.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/closetab.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/next.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/next.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/previous.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/previous.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/win/searchfind.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/win/searchfind.png"
+    )
+    set_source_files_properties("../../../../shared/findwidget/images/wrap.png"
+        PROPERTIES QT_RESOURCE_ALIAS "images/wrap.png"
+    )
+    set(findwidget_resource_files
+        "images/mac/closetab.png"
+        "images/mac/next.png"
+        "images/mac/previous.png"
+        "images/mac/searchfind.png"
+        "images/win/closetab.png"
+        "images/win/next.png"
+        "images/win/previous.png"
+        "images/win/searchfind.png"
+        "images/wrap.png"
+    )
+
+    qt_add_resource(DesignerComponents "findwidget"
+        PREFIX
+            "/qt-project.org/shared"
+        BASE
+            "../../../../shared/findwidget"
+        FILES
+            ${findwidget_resource_files}
+    )
     set_source_files_properties("../../../../shared/qtpropertybrowser/images/cursor-arrow.png"
         PROPERTIES QT_RESOURCE_ALIAS "images/cursor-arrow.png"
     )
@@ -990,60 +1036,13 @@ if(QT_BUILD_SHARED_LIBS)
         "images/cursor-wait.png"
         "images/cursor-whatsthis.png"
     )
-    
-    add_qt_resource(DesignerComponents "qtpropertybrowser"
+
+    qt_add_resource(DesignerComponents "qtpropertybrowser"
         PREFIX
             "/qt-project.org/qtpropertybrowser"
         BASE
             "../../../../shared/qtpropertybrowser"
         FILES
             ${qtpropertybrowser_resource_files}
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/mac/closetab.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/mac/closetab.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/mac/next.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/mac/next.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/mac/previous.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/mac/previous.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/mac/searchfind.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/mac/searchfind.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/win/closetab.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/win/closetab.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/win/next.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/win/next.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/win/previous.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/win/previous.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/win/searchfind.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/win/searchfind.png"
-    )
-    set_source_files_properties("../../../../shared/findwidget/images/wrap.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/wrap.png"
-    )
-    set(findwidget_resource_files
-        "images/mac/closetab.png"
-        "images/mac/next.png"
-        "images/mac/previous.png"
-        "images/mac/searchfind.png"
-        "images/win/closetab.png"
-        "images/win/next.png"
-        "images/win/previous.png"
-        "images/win/searchfind.png"
-        "images/wrap.png"
-    )
-    
-    add_qt_resource(DesignerComponents "findwidget"
-        PREFIX
-            "/qt-project.org/shared"
-        BASE
-            "../../../../shared/findwidget"
-        FILES
-            ${findwidget_resource_files}
     )
 endif()

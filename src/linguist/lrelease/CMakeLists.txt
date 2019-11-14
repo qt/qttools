@@ -4,7 +4,7 @@
 ## lrelease Tool:
 #####################################################################
 
-add_qt_tool(lrelease
+qt_add_tool(lrelease
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
@@ -31,7 +31,6 @@ add_qt_tool(lrelease
 #### Keys ignored in scope 1:.:.:lrelease.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Translation File Compiler"
 # QT_TOOL_ENV = "qmake"
-# _LOADED = "qt_tool"
 # _OPTION = "host_build"
 # qmake.name = "QMAKE"
 # qmake.value = "$$shell_path($$QMAKE_QMAKE)"

@@ -4,7 +4,7 @@
 ## designer Binary:
 #####################################################################
 
-add_qt_executable(designer
+qt_add_executable(designer
     GUI
     SOURCES
         ../../../shared/fontpanel/fontpanel.cpp ../../../shared/fontpanel/fontpanel.h
@@ -55,7 +55,7 @@ set(designer_resource_files
     "images/designer.png"
 )
 
-add_qt_resource(designer "designer"
+qt_add_resource(designer "designer"
     PREFIX
         "/qt-project.org/designer"
     FILES
@@ -88,7 +88,7 @@ set(qttoolbardialog_resource_files
     "images/up.png"
 )
 
-add_qt_resource(designer "qttoolbardialog"
+qt_add_resource(designer "qttoolbardialog"
     PREFIX
         "/qt-project.org/qttoolbardialog"
     BASE
@@ -100,17 +100,16 @@ add_qt_resource(designer "qttoolbardialog"
 
 #### Keys ignored in scope 1:.:.:designer.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt" "Designer"
-# _LOADED = "qt_app"
 
 ## Scopes:
 #####################################################################
 
-extend_target(designer CONDITION TARGET Qt::PrintSupport
+qt_extend_target(designer CONDITION TARGET Qt::PrintSupport
     PUBLIC_LIBRARIES
         Qt::PrintSupport
 )
 
-extend_target(designer CONDITION QT_CONFIG___contains___static
+qt_extend_target(designer CONDITION QT_CONFIG___contains___static
     DEFINES
         QT_DESIGNER_STATIC
 )
@@ -129,11 +128,11 @@ extend_target(designer CONDITION QT_CONFIG___contains___static
 # QMAKE_BUNDLE_DATA = "FILETYPES"
 # QMAKE_INFO_PLIST = "Info_mac.plist"
 
-extend_target(designer CONDITION UNIX AND NOT APPLE_OSX AND NOT HAIKU
+qt_extend_target(designer CONDITION UNIX AND NOT APPLE_OSX AND NOT HAIKU
     PUBLIC_LIBRARIES
         m
 )
-add_qt_docs(designer
+qt_add_docs(designer
     doc/qtdesigner.qdocconf
 )
 

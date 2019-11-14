@@ -4,7 +4,7 @@
 ## qtattributionsscanner Tool:
 #####################################################################
 
-add_qt_tool(qtattributionsscanner
+qt_add_tool(qtattributionsscanner
     SOURCES
         jsongenerator.cpp jsongenerator.h
         logging.h
@@ -28,7 +28,6 @@ add_qt_tool(qtattributionsscanner
 # INSTALLS = "cmake_qattributionsscanner_tools_files"
 # QMAKE_SUBSTITUTES = "cmake_qattributionsscanner_config_file" "cmake_qattributionsscanner_config_version_file"
 # QMAKE_TARGET_DESCRIPTION = "Qt Source Code Attribution Scanner"
-# _LOADED = "qt_tool" "cmake_functions" "qt_build_paths"
 # _OPTION = "host_build"
 # cmake_qattributionsscanner_config_file.input = "$$PWD/Qt5AttributionsScannerTools.cmake.in"
 # cmake_qattributionsscanner_config_file.output = "$$MODULE_BASE_OUTDIR/lib/cmake/Qt5AttributionsScannerTools/Qt5AttributionsScannerToolsConfig.cmake"

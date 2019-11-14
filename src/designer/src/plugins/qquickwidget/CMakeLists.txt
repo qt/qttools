@@ -4,7 +4,7 @@
 ## qquickwidget Plugin:
 #####################################################################
 
-add_qt_plugin(qquickwidget
+qt_add_plugin(qquickwidget
     TYPE designer
     CLASS_NAME QQuickWidgetPlugin
     SOURCES
@@ -22,7 +22,7 @@ set(qquickwidget_plugin_resource_files
     "images/qquickwidget.png"
 )
 
-add_qt_resource(qquickwidget "qquickwidget_plugin"
+qt_add_resource(qquickwidget "qquickwidget_plugin"
     PREFIX
         "/qt-project.org/qquickwidget"
     FILES

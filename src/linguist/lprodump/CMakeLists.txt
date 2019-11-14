@@ -4,7 +4,7 @@
 ## lprodump Tool:
 #####################################################################
 
-add_qt_tool(lprodump
+qt_add_tool(lprodump
     SOURCES
         ../shared/ioutils.cpp ../shared/ioutils.h
         ../shared/profileevaluator.cpp ../shared/profileevaluator.h
@@ -37,7 +37,7 @@ set(proparser_resource_files
     "exclusive_builds.prf"
 )
 
-add_qt_resource(lprodump "proparser"
+qt_add_resource(lprodump "proparser"
     PREFIX
         "/qmake/override_features"
     BASE
@@ -50,7 +50,6 @@ add_qt_resource(lprodump "proparser"
 #### Keys ignored in scope 1:.:.:lprodump.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Linguist QMake Project Dump Tool"
 # QT_TOOL_ENV = "qmake"
-# _LOADED = "qt_tool"
 # _OPTION = "host_build"
 # qmake.name = "QMAKE"
 # qmake.value = "$$shell_path($$QMAKE_QMAKE)"
