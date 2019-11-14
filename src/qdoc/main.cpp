@@ -128,8 +128,11 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
               Add all subdirectories of the indexdirs as dependModules,
               when an asterisk is used in the 'depends' list.
             */
+            bool asteriskUsed = false;
             if (config.dependModules().contains("*")) {
                 config.dependModules().removeOne("*");
+                asteriskUsed = true;
+                Location::logToStdErrAlways("qdocconf file has depends = *; loading all index files found");
                 for (int i = 0; i < config.indexDirs().size(); i++) {
                     QDir scanDir = QDir(config.indexDirs()[i]);
                     scanDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -183,7 +186,7 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                     if (!indexFiles.contains(indexToAdd))
                         indexFiles << indexToAdd;
                 }
-                else {
+                else if (!asteriskUsed) {
                     Location::null.warning(QString("\"%1\" Cannot locate index file for dependency \"%2\"").arg(
                                                config.getString(CONFIG_PROJECT), config.dependModules()[i]));
                 }
@@ -336,8 +339,11 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     else
         clangParser_->setModuleHeader(project);
 
-    config.dependModules() = config.getStringList(CONFIG_DEPENDS);
-    config.dependModules().removeDuplicates();
+    // Retrieve the dependencies if loadIndexFiles() was not called
+    if (config.dependModules().isEmpty()) {
+        config.dependModules() = config.getStringList(CONFIG_DEPENDS);
+        config.dependModules().removeDuplicates();
+    }
     qdb->setSearchOrder(config.dependModules());
 
     // Store the title of the index (landing) page
