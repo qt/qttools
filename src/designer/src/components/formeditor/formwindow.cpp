@@ -75,6 +75,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qbuffer.h>
 #include <QtCore/qtimer.h>
+#include <QtCore/qvector.h>
 #include <QtCore/qxmlstream.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qaction.h>
@@ -162,7 +163,7 @@ public:
 
 private:
 
-    using SelectionPool = QList<WidgetSelection *>;
+    using SelectionPool = QVector<WidgetSelection *>;
     SelectionPool m_selectionPool;
 
     typedef QHash<QWidget *, WidgetSelection *> SelectionHash;

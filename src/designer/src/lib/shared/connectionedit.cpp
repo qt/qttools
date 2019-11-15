@@ -1379,8 +1379,10 @@ void ConnectionEdit::widgetRemoved(QWidget *widget)
 
     const ConnectionSet remove_set = findConnectionsOf(m_con_list, child_list.constBegin(),  child_list.constEnd());
 
-    if (!remove_set.isEmpty())
-        m_undo_stack->push(new DeleteConnectionsCommand(this, remove_set.keys()));
+    if (!remove_set.isEmpty()) {
+        auto cmd = new DeleteConnectionsCommand(this, ConnectionList(remove_set.cbegin(), remove_set.cend()));
+        m_undo_stack->push(cmd);
+    }
 
     updateBackground();
 }
@@ -1394,8 +1396,10 @@ void ConnectionEdit::objectRemoved(QObject *o)
     QObjectList child_list = o->children();
     child_list.prepend(o);
     const ConnectionSet remove_set = findConnectionsOf(m_con_list, child_list.constBegin(),  child_list.constEnd());
-    if (!remove_set.isEmpty())
-        m_undo_stack->push(new DeleteConnectionsCommand(this, remove_set.keys()));
+    if (!remove_set.isEmpty()) {
+        auto cmd = new DeleteConnectionsCommand(this, ConnectionList(remove_set.cbegin(), remove_set.cend()));
+        m_undo_stack->push(cmd);
+    }
 
     updateBackground();
 }
@@ -1500,7 +1504,8 @@ void ConnectionEdit::deleteSelected()
 {
     if (m_sel_con_set.isEmpty())
         return;
-    m_undo_stack->push(new DeleteConnectionsCommand(this, m_sel_con_set.keys()));
+    auto cmd = new DeleteConnectionsCommand(this, ConnectionList(m_sel_con_set.cbegin(), m_sel_con_set.cend()));
+    m_undo_stack->push(cmd);
 }
 
 void ConnectionEdit::addConnection(Connection *con)

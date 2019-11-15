@@ -41,6 +41,7 @@
 #include <metadatabase_p.h>
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qvector.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qaction.h>
@@ -141,7 +142,7 @@ void BuddyEditor::updateBackground()
     ConnectionEdit::updateBackground();
 
     m_updating = true;
-    QList<Connection *> newList;
+    QVector<Connection *> newList;
     const auto label_list = background()->findChildren<QLabel*>();
     for (QLabel *label : label_list) {
         const QString buddy_name = buddy(label, m_formWindow->core());
@@ -163,7 +164,7 @@ void BuddyEditor::updateBackground()
         newList.append(con);
     }
 
-    QList<Connection *> toRemove;
+    QVector<Connection *> toRemove;
 
     const int c = connectionCount();
     for (int i = 0; i < c; i++) {

@@ -535,7 +535,7 @@ void DeviceSkin::paintEvent( QPaintEvent *)
     } else {
         p.drawPixmap(0, 0, skinImageClosed);
     }
-    QList<int> toDraw;
+    QVector<int> toDraw;
     if ( buttonPressed == true ) {
         toDraw += buttonIndex;
     }

@@ -56,6 +56,7 @@
 #include <QtCore/qhash.h>
 #include <QtCore/qpoint.h>
 #include <QtCore/qrect.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -316,7 +317,7 @@ private:
 class QDESIGNER_SHARED_EXPORT PromoteToCustomWidgetCommand : public QDesignerFormWindowCommand
 {
 public:
-    using WidgetPointerList = QList<QPointer<QWidget> >;
+    using WidgetPointerList = QVector<QPointer<QWidget> >;
 
     explicit PromoteToCustomWidgetCommand(QDesignerFormWindowInterface *formWindow);
 
@@ -354,7 +355,7 @@ public:
     void restore(QDesignerFormWindowInterface *formWindow) const;
 
 private:
-    using WidgetPointerList = QList<QPointer<QWidget> >;
+    using WidgetPointerList = QVector<QPointer<QWidget> >;
     WidgetPointerList m_selection;
     QPointer<QWidget> m_current;
 };
@@ -871,7 +872,7 @@ struct QDESIGNER_SHARED_EXPORT ListContents {
     bool operator==(const ListContents &rhs) const { return m_items == rhs.m_items; }
     bool operator!=(const ListContents &rhs) const { return m_items != rhs.m_items; }
 
-    QList<ItemData> m_items;
+    QVector<ItemData> m_items;
 };
 
 // Data structure representing the contents of a QTableWidget with
@@ -933,7 +934,7 @@ struct QDESIGNER_SHARED_EXPORT TreeWidgetContents {
         //bool m_firstColumnSpanned:1;
         //bool m_hidden:1;
         //bool m_expanded:1;
-        QList<ItemContents> m_children;
+        QVector<ItemContents> m_children;
     };
 
     void clear();
@@ -945,7 +946,7 @@ struct QDESIGNER_SHARED_EXPORT TreeWidgetContents {
     bool operator!=(const TreeWidgetContents &rhs) const { return !(*this == rhs); }
 
     ListContents m_headerItem;
-    QList<ItemContents> m_rootItems;
+    QVector<ItemContents> m_rootItems;
 };
 
 class QDESIGNER_SHARED_EXPORT ChangeTreeContentsCommand: public QDesignerFormWindowCommand
@@ -1016,7 +1017,7 @@ public:
         QAction *before;
         QWidget *widget;
     };
-    using ActionData = QList<ActionDataItem>;
+    using ActionData = QVector<ActionDataItem>;
 
 private:
     QAction *m_action;

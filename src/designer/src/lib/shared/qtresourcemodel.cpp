@@ -295,7 +295,7 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
     const auto oldData = m_pathToData.values();
     const auto newData = newPathToData.values();
 
-    QList<const QByteArray *> toDelete;
+    QVector<const QByteArray *> toDelete;
     for (const QByteArray *array : oldData) {
         if (array && !newData.contains(array))
             toDelete.append(array);

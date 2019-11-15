@@ -59,6 +59,7 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -555,7 +556,7 @@ public:
 
     QPointer<QWidget> m_activePreview;
 
-    using PreviewDataList = QList<PreviewData>;
+    using PreviewDataList = QVector<PreviewData>;
 
     PreviewDataList m_previews;
 

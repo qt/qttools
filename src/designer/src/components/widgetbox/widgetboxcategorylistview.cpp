@@ -129,7 +129,7 @@ public:
     bool removeCustomWidgets();
 
 private:
-    using WidgetBoxCategoryEntrys = QList<WidgetBoxCategoryEntry>;
+    using WidgetBoxCategoryEntrys = QVector<WidgetBoxCategoryEntry>;
 
     QDesignerFormEditorInterface *m_core;
     WidgetBoxCategoryEntrys m_items;
