@@ -219,7 +219,7 @@ QWidget *QAbstractFormBuilder::create(DomUI *ui, QWidget *parentWidget)
     if (QWidget *widget = create(ui_widget, parentWidget)) {
         // Reparent button groups that were actually created to main container for them to be found in the signal/slot part
         const ButtonGroupHash &buttonGroups = d->buttonGroups();
-        if (!buttonGroups.empty()) {
+        if (!buttonGroups.isEmpty()) {
             const ButtonGroupHash::const_iterator cend = buttonGroups.constEnd();
             for (ButtonGroupHash::const_iterator it = buttonGroups.constBegin(); it != cend; ++it)
                 if (it.value().second)
@@ -297,7 +297,7 @@ QWidget *QAbstractFormBuilder::create(DomWidget *ui_widget, QWidget *parentWidge
     }
 
     const auto &addActions = ui_widget->elementAddAction();
-    if (!addActions.empty()) {
+    if (!addActions.isEmpty()) {
         const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
         for (DomActionRef *ui_action_ref : addActions) {
             const QString name = ui_action_ref->attributeName();
@@ -881,7 +881,7 @@ QLayoutItem *QAbstractFormBuilder::create(DomLayoutItem *ui_layoutItem, QLayout 
 
         const DomSpacer *ui_spacer = ui_layoutItem->elementSpacer();
         const auto &spacerProperties =  ui_spacer->elementProperty();
-        if (!spacerProperties.empty()) {
+        if (!spacerProperties.isEmpty()) {
             const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
             for (DomProperty *p : spacerProperties) {
                 const QVariant v = toVariant(&QAbstractFormBuilderGadget::staticMetaObject, p); // ### remove me
@@ -1592,7 +1592,7 @@ DomButtonGroups *QAbstractFormBuilder::saveButtonGroups(const QWidget *mainConta
 {
     // Save fst order buttongroup children of maincontainer
     const QObjectList &mchildren = mainContainer->children();
-    if (mchildren.empty())
+    if (mchildren.isEmpty())
         return nullptr;
     QVector<DomButtonGroup *> domGroups;
     for (QObject *o : mchildren) {
@@ -1600,7 +1600,7 @@ DomButtonGroups *QAbstractFormBuilder::saveButtonGroups(const QWidget *mainConta
             if (DomButtonGroup* dg = createDom(bg))
                 domGroups.push_back(dg);
     }
-    if (domGroups.empty())
+    if (domGroups.isEmpty())
         return nullptr;
     DomButtonGroups *rc = new DomButtonGroups;
     rc->setElementButtonGroup(domGroups);
@@ -2263,7 +2263,7 @@ void QAbstractFormBuilder::loadComboBoxExtraInfo(DomWidget *ui_widget, QComboBox
 static QString buttonGroupName(const DomWidget *ui_widget)
 {
     const auto &attributes = ui_widget->elementAttribute();
-    if (attributes.empty())
+    if (attributes.isEmpty())
         return QString();
     const QString buttonGroupProperty = QLatin1String(buttonGroupPropertyC);
     for (const DomProperty *p : attributes) {

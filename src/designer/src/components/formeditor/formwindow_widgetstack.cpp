@@ -165,7 +165,7 @@ void FormWindowWidgetStack::addTool(QDesignerFormWindowToolInterface *tool)
         m_layout->addWidget(w);
     } else {
         // The form editor might not have a tool initially, use dummy. Assert on anything else
-        Q_ASSERT(m_tools.empty());
+        Q_ASSERT(m_tools.isEmpty());
         m_layout->addWidget(m_formContainer);
     }
 

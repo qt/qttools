@@ -79,7 +79,7 @@ void TemplateOptionsWidget::setTemplatePaths(const QStringList &l)
 {
     // add paths and select 0
     m_ui->m_templatePathListWidget->clear();
-    if (l.empty()) {
+    if (l.isEmpty()) {
         // disable button
         templatePathSelectionChanged();
     } else {
@@ -98,7 +98,7 @@ void TemplateOptionsWidget::addTemplatePath()
 
     const QList<QListWidgetItem *> existing
             = m_ui->m_templatePathListWidget->findItems(templatePath, Qt::MatchExactly);
-    if (!existing.empty())
+    if (!existing.isEmpty())
         return;
 
     QListWidgetItem *newItem = new QListWidgetItem(templatePath);
@@ -110,15 +110,15 @@ void TemplateOptionsWidget::removeTemplatePath()
 {
     const QList<QListWidgetItem *> selectedPaths
             = m_ui->m_templatePathListWidget->selectedItems();
-    if (selectedPaths.empty())
+    if (selectedPaths.isEmpty())
         return;
-    delete selectedPaths.front();
+    delete selectedPaths.constFirst();
 }
 
 void TemplateOptionsWidget::templatePathSelectionChanged()
 {
     const QList<QListWidgetItem *> selectedPaths = m_ui->m_templatePathListWidget->selectedItems();
-    m_ui->m_removeTemplatePathButton->setEnabled(!selectedPaths.empty());
+    m_ui->m_removeTemplatePathButton->setEnabled(!selectedPaths.isEmpty());
 }
 
 QString TemplateOptionsWidget::chooseTemplatePath(QDesignerFormEditorInterface *core, QWidget *parent)

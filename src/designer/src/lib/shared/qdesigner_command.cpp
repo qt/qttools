@@ -235,7 +235,7 @@ void InsertWidgetCommand::refreshBuddyLabels()
     using LabelList = QList<QLabel *>;
 
     const LabelList label_list = formWindow()->findChildren<QLabel*>();
-    if (label_list.empty())
+    if (label_list.isEmpty())
         return;
 
     const QString buddyProperty = QStringLiteral("buddy");
@@ -350,7 +350,7 @@ void ManageWidgetCommandHelper::init(const QDesignerFormWindowInterface *fw, QWi
     m_managedChildren.clear();
 
     const QWidgetList children = m_widget->findChildren<QWidget *>();
-    if (children.empty())
+    if (children.isEmpty())
         return;
 
     m_managedChildren.reserve(children.size());
@@ -370,7 +370,7 @@ void ManageWidgetCommandHelper::manage(QDesignerFormWindowInterface *fw)
 {
     // Manage the managed children after parent
     fw->manageWidget(m_widget);
-    if (!m_managedChildren.empty()) {
+    if (!m_managedChildren.isEmpty()) {
         const WidgetVector::const_iterator lcend = m_managedChildren.constEnd();
         for (WidgetVector::const_iterator it = m_managedChildren.constBegin(); it != lcend; ++it)
             fw->manageWidget(*it);
@@ -380,7 +380,7 @@ void ManageWidgetCommandHelper::manage(QDesignerFormWindowInterface *fw)
 void ManageWidgetCommandHelper::unmanage(QDesignerFormWindowInterface *fw)
 {
     // Unmanage the managed children first
-    if (!m_managedChildren.empty()) {
+    if (!m_managedChildren.isEmpty()) {
         const WidgetVector::const_iterator lcend = m_managedChildren.constEnd();
         for (WidgetVector::const_iterator it = m_managedChildren.constBegin(); it != lcend; ++it)
             fw->unmanageWidget(*it);
@@ -665,7 +665,7 @@ DemoteFromCustomWidgetCommand::DemoteFromCustomWidgetCommand
 
 void DemoteFromCustomWidgetCommand::init(const WidgetList &promoted)
 {
-    m_promote_cmd.init(promoted, promotedCustomClassName(core(), promoted.front()));
+    m_promote_cmd.init(promoted, promotedCustomClassName(core(), promoted.constFirst()));
 }
 
 void DemoteFromCustomWidgetCommand::redo()
@@ -695,7 +695,7 @@ void CursorSelectionState::save(const QDesignerFormWindowInterface *formWindow)
 
 void CursorSelectionState::restore(QDesignerFormWindowInterface *formWindow) const
 {
-    if (m_selection.empty()) {
+    if (m_selection.isEmpty()) {
         formWindow->clearSelection(true);
     } else {
         // Select current as last
@@ -2692,7 +2692,7 @@ void RemoveActionCommand::redo()
 
     core()->actionEditor()->setFormWindow(fw);
     core()->actionEditor()->unmanageAction(m_action);
-    if (!m_actionData.empty())
+    if (!m_actionData.isEmpty())
         core()->objectInspector()->setFormWindow(fw);
 }
 
@@ -2702,7 +2702,7 @@ void RemoveActionCommand::undo()
     core()->actionEditor()->manageAction(m_action);
     for (const ActionDataItem &item : qAsConst(m_actionData))
         item.widget->insertAction(item.before, m_action);
-    if (!m_actionData.empty())
+    if (!m_actionData.isEmpty())
         core()->objectInspector()->setFormWindow(formWindow());
 }
 

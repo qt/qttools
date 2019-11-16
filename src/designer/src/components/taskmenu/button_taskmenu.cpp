@@ -211,7 +211,7 @@ CreateButtonGroupCommand::CreateButtonGroupCommand(QDesignerFormWindowInterface 
 
 bool CreateButtonGroupCommand::init(const ButtonList &bl)
 {
-    if (bl.empty())
+    if (bl.isEmpty())
         return false;
     QDesignerFormWindowInterface *fw = formWindow();
     QButtonGroup *buttonGroup = new QButtonGroup(fw->mainContainer());
@@ -286,9 +286,9 @@ RemoveButtonsFromGroupCommand::RemoveButtonsFromGroupCommand(QDesignerFormWindow
 
 bool RemoveButtonsFromGroupCommand::init(const ButtonList &bl)
 {
-    if (bl.empty())
+    if (bl.isEmpty())
         return false;
-    QButtonGroup *group = bl.front()->group();
+    QButtonGroup *group = bl.constFirst()->group();
     if (!group)
         return false;
     if (bl.size() >= group->buttons().size())
@@ -560,7 +560,7 @@ static ButtonList buttonList(const QDesignerFormWindowCursorInterface *cursor)
 static QUndoCommand *createRemoveButtonsCommand(QDesignerFormWindowInterface *fw, const ButtonList &bl)
 {
 
-    QButtonGroup *bg = bl.front()->group();
+    QButtonGroup *bg = bl.constFirst()->group();
     // Complete group or 1-member group?
     if (bl.size() >= bg->buttons().size() - 1) {
         BreakButtonGroupCommand *breakCmd = new BreakButtonGroupCommand(fw);
@@ -588,7 +588,7 @@ void ButtonTaskMenu::createGroup()
     const ButtonList bl = buttonList(fw->cursor());
     // Do we need to remove the buttons from an existing group?
     QUndoCommand *removeCmd = nullptr;
-    if (bl.front()->group()) {
+    if (bl.constFirst()->group()) {
         removeCmd = createRemoveButtonsCommand(fw, bl);
         if (!removeCmd)
             return;
@@ -651,7 +651,7 @@ void ButtonTaskMenu::addToGroup(QAction *a)
     const ButtonList bl = buttonList(fw->cursor());
     // Do we need to remove the buttons from an existing group?
     QUndoCommand *removeCmd = nullptr;
-    if (bl.front()->group()) {
+    if (bl.constFirst()->group()) {
         removeCmd = createRemoveButtonsCommand(fw, bl);
         if (!removeCmd)
             return;

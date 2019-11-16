@@ -470,7 +470,7 @@ QString QDesignerPropertySheetPrivate::transformLayoutPropertyName(int index) co
 {
     using TypeNameMap = QMap<QDesignerPropertySheet::PropertyType, QString>;
     static TypeNameMap typeNameMap;
-    if (typeNameMap.empty()) {
+    if (typeNameMap.isEmpty()) {
         typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutObjectName, QStringLiteral("objectName"));
         typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutLeftMargin, QStringLiteral("leftMargin"));
         typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutTopMargin, QStringLiteral("topMargin"));
@@ -519,7 +519,7 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromNam
 {
     typedef QHash<QString, PropertyType> PropertyTypeHash;
     static PropertyTypeHash propertyTypeHash;
-    if (propertyTypeHash.empty()) {
+    if (propertyTypeHash.isEmpty()) {
         propertyTypeHash.insert(QLatin1String(layoutObjectNameC),         PropertyLayoutObjectName);
         propertyTypeHash.insert(QLatin1String(layoutLeftMarginC),         PropertyLayoutLeftMargin);
         propertyTypeHash.insert(QLatin1String(layoutTopMarginC),          PropertyLayoutTopMargin);
@@ -676,7 +676,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
 
     using ByteArrayList = QList<QByteArray>;
     const ByteArrayList names = object->dynamicPropertyNames();
-    if (!names.empty()) {
+    if (!names.isEmpty()) {
         const ByteArrayList::const_iterator cend =  names.constEnd();
         for (ByteArrayList::const_iterator it = names.constBegin(); it != cend; ++it) {
             const char* cName = it->constData();

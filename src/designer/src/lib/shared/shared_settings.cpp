@@ -90,7 +90,7 @@ Grid QDesignerSharedSettings::defaultGrid() const
     Grid grid;
     const QVariantMap defaultGridMap
             = m_settings->value(QLatin1String(defaultGridKey), QVariantMap()).toMap();
-    if (!defaultGridMap.empty())
+    if (!defaultGridMap.isEmpty())
         grid.fromVariantMap(defaultGridMap);
     return grid;
 }
@@ -103,7 +103,7 @@ void QDesignerSharedSettings::setDefaultGrid(const Grid &grid)
 const QStringList &QDesignerSharedSettings::defaultFormTemplatePaths()
 {
     static QStringList rc;
-    if (rc.empty()) {
+    if (rc.isEmpty()) {
         // Ensure default form template paths
         const QString templatePath = QStringLiteral("/templates");
         // home
@@ -300,7 +300,7 @@ QDesignerSharedSettings::DeviceProfileList QDesignerSharedSettings::deviceProfil
 {
     DeviceProfileList rc;
     const QStringList xmls = deviceProfileXml();
-    if (xmls.empty())
+    if (xmls.isEmpty())
         return rc;
     // De-serialize
     QString errorMessage;

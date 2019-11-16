@@ -290,7 +290,7 @@ namespace qdesigner_internal {
         }
 
         QObjectList children = object->children();
-        if (!children.empty()) {
+        if (!children.isEmpty()) {
             ButtonGroupList buttonGroups;
             std::sort(children.begin(), children.end(), sortEntry);
             const QObjectList::const_iterator cend = children.constEnd();
@@ -310,7 +310,7 @@ namespace qdesigner_internal {
                 }
             }
             // Add button groups
-            if (!buttonGroups.empty()) {
+            if (!buttonGroups.isEmpty()) {
                 const ButtonGroupList::const_iterator bgcend = buttonGroups.constEnd();
                 for (ButtonGroupList::const_iterator bgit = buttonGroups.constBegin(); bgit != bgcend; ++bgit)
                     createModelRecursion(fwi, object, *bgit, model, ctx);
@@ -319,7 +319,7 @@ namespace qdesigner_internal {
         if (object->isWidgetType()) {
             // Add actions
             const ActionList actions = static_cast<QWidget*>(object)->actions();
-            if (!actions.empty()) {
+            if (!actions.isEmpty()) {
                 const ActionList::const_iterator cend = actions.constEnd();
                     for (ActionList::const_iterator it = actions.constBegin(); it != cend; ++it)
                     if (ctx.mdb->item(*it)) {
@@ -415,7 +415,7 @@ namespace qdesigner_internal {
     void ObjectInspectorModel::rebuild(const ObjectModel &newModel)
     {
         clearItems();
-        if (newModel.empty())
+        if (newModel.isEmpty())
             return;
 
         const ObjectModel::const_iterator mcend = newModel.constEnd();
@@ -424,7 +424,7 @@ namespace qdesigner_internal {
         StandardItemList rootRow = createModelRow(it->object());
         it->setItems(rootRow, m_icons);
         appendRow(rootRow);
-        m_objectIndexMultiMap.insert(it->object(), indexFromItem(rootRow.front()));
+        m_objectIndexMultiMap.insert(it->object(), indexFromItem(rootRow.constFirst()));
         for (++it; it != mcend; ++it) {
             // Add to parent item, found via map
             const QModelIndex parentIndex = m_objectIndexMultiMap.value(it->parent(), QModelIndex());
@@ -433,7 +433,7 @@ namespace qdesigner_internal {
             StandardItemList row = createModelRow(it->object());
             it->setItems(row, m_icons);
             parentItem->appendRow(row);
-            m_objectIndexMultiMap.insert(it->object(), indexFromItem(row.front()));
+            m_objectIndexMultiMap.insert(it->object(), indexFromItem(row.constFirst()));
         }
     }
 

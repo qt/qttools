@@ -41,6 +41,9 @@
 #define QDESIGNER_DOCKWIDGET_H
 
 #include "shared_global_p.h"
+
+#include <qdesigner_propertysheet_p.h>
+
 #include <QtWidgets/qdockwidget.h>
 
 QT_BEGIN_NAMESPACE
@@ -50,8 +53,8 @@ class QDesignerFormWindowInterface;
 class QDESIGNER_SHARED_EXPORT QDesignerDockWidget: public QDockWidget
 {
     Q_OBJECT
-    Q_PROPERTY(Qt::DockWidgetArea dockWidgetArea READ dockWidgetArea WRITE setDockWidgetArea DESIGNABLE docked STORED false)
-    Q_PROPERTY(bool docked READ docked WRITE setDocked DESIGNABLE inMainWindow STORED false)
+    Q_PROPERTY(Qt::DockWidgetArea dockWidgetArea READ dockWidgetArea WRITE setDockWidgetArea DESIGNABLE true STORED false)
+    Q_PROPERTY(bool docked READ docked WRITE setDocked DESIGNABLE true STORED false)
 public:
     QDesignerDockWidget(QWidget *parent = nullptr);
     ~QDesignerDockWidget() override;
@@ -68,6 +71,18 @@ private:
     QDesignerFormWindowInterface *formWindow() const;
     QMainWindow *findMainWindow() const;
 };
+
+class QDESIGNER_SHARED_EXPORT QDockWidgetPropertySheet : public QDesignerPropertySheet
+{
+     Q_OBJECT
+public:
+    using QDesignerPropertySheet::QDesignerPropertySheet;
+
+    bool isEnabled(int index) const override;
+};
+
+using QDockWidgetPropertySheetFactory =
+    QDesignerPropertySheetFactory<QDockWidget, QDockWidgetPropertySheet>;
 
 QT_END_NAMESPACE
 

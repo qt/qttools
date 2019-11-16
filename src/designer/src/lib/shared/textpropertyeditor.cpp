@@ -259,7 +259,7 @@ namespace qdesigner_internal {
             break;
         case ValidationURL: {
             static QStringList urlCompletions;
-            if (urlCompletions.empty()) {
+            if (urlCompletions.isEmpty()) {
                 urlCompletions.push_back(QStringLiteral("about:blank"));
                 urlCompletions.push_back(QStringLiteral("http://"));
                 urlCompletions.push_back(QStringLiteral("http://www."));

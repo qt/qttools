@@ -517,7 +517,7 @@ QList<QDesignerCustomWidgetInterface*> QFormBuilder::customWidgets() const
 void QFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &properties)
 {
 
-    if (properties.empty())
+    if (properties.isEmpty())
         return;
 
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();

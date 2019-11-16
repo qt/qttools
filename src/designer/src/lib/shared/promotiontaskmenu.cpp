@@ -111,7 +111,7 @@ void PromotionTaskMenu::setDemoteLabel(const QString &demoteLabel)
 PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDesignerFormWindowInterface *formWindow)
 {
     // clear out old
-    if (!m_promotionActions.empty()) {
+    if (!m_promotionActions.isEmpty()) {
         qDeleteAll(m_promotionActions);
         m_promotionActions.clear();
     }
@@ -122,7 +122,7 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
     // Check for a homogenous selection
     const PromotionSelectionList promotionSelection = promotionSelectionList(formWindow);
 
-    if (promotionSelection.empty())
+    if (promotionSelection.isEmpty())
         return NoHomogenousSelection;
 
     QDesignerFormEditorInterface *core = formWindow->core();
@@ -137,7 +137,7 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
     // figure out candidates
     const QString baseClassName = WidgetFactory::classNameOf(core,  m_widget);
     const WidgetDataBaseItemList candidates = promotionCandidates(core->widgetDataBase(), baseClassName );
-    if (candidates.empty()) {
+    if (candidates.isEmpty()) {
         // Is this thing promotable at all?
         return QDesignerPromotionDialog::baseClassNames(core->promotion()).contains(baseClassName) ?  CanPromote : NotApplicable;
     }
@@ -230,7 +230,7 @@ void PromotionTaskMenu::slotDemoteFromCustomWidget()
 {
     QDesignerFormWindowInterface *fw = formWindow();
     const PromotionSelectionList promotedWidgets = promotionSelectionList(fw);
-    Q_ASSERT(!promotedWidgets.empty() && isPromoted(fw->core(), promotedWidgets.front()));
+    Q_ASSERT(!promotedWidgets.isEmpty() && isPromoted(fw->core(), promotedWidgets.constFirst()));
 
     // ### use the undo stack
     DemoteFromCustomWidgetCommand *cmd = new DemoteFromCustomWidgetCommand(fw);

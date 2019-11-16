@@ -290,7 +290,7 @@ namespace qdesigner_internal {
     const QStringList &QDesignerPromotionDialog::baseClassNames(const QDesignerPromotionInterface *promotion) {
         using WidgetDataBaseItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
         static QStringList rc;
-        if (rc.empty()) {
+        if (rc.isEmpty()) {
             // Convert the item list into a string list.
             const WidgetDataBaseItemList dbItems =  promotion->promotionBaseClasses();
             const WidgetDataBaseItemList::const_iterator cend =  dbItems.constEnd();
@@ -351,7 +351,7 @@ namespace qdesigner_internal {
     QDesignerWidgetDataBaseItemInterface *QDesignerPromotionDialog::databaseItemAt(const QItemSelection &selected, unsigned &flags) const {
         flags = 0;
         const QModelIndexList indexes = selected.indexes();
-        if (indexes.empty())
+        if (indexes.isEmpty())
             return nullptr;
         const PromotionModel::ModelData data = m_model->modelData(indexes.constFirst());
         QDesignerWidgetDataBaseItemInterface *dbItem = data.promotedItem;

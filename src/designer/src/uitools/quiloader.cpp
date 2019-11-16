@@ -438,7 +438,7 @@ void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &
     if (!m_trwatch)
         m_trwatch = new TranslationWatcher(o, m_class, m_idBased);
 
-    if (properties.empty())
+    if (properties.isEmpty())
         return;
 
     // Unlike string item roles, string properties are not loaded via the textBuilder

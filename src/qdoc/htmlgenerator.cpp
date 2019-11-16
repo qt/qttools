@@ -3024,7 +3024,7 @@ void HtmlGenerator::generateAnnotatedLists(const Node *relative,
   the classes in the class map \a nmm and then generates a
   compact list of the class names alphabetized on the part
   of the name not including the common prefix. You can tell
-  the function to use \a comonPrefix as the common prefix,
+  the function to use \a commonPrefix as the common prefix,
   but normally you let it figure it out itself by looking at
   the name of the first and last classes in the class map
   \a nmm.

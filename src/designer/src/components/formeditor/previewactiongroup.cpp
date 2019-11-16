@@ -98,7 +98,7 @@ void PreviewActionGroup::updateDeviceProfiles()
     const DeviceProfileList profiles = settings.deviceProfiles();
     const ActionList al = actions();
     // Separator?
-    const bool hasProfiles = !profiles.empty();
+    const bool hasProfiles = !profiles.isEmpty();
     al.at(MaxDeviceActions)->setVisible(hasProfiles);
     int index = 0;
     if (hasProfiles) {

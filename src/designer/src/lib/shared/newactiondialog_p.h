@@ -89,6 +89,13 @@ public:
     QString actionText() const;
     QString actionName() const;
 
+public slots:
+    void focusName();
+    void focusText();
+    void focusTooltip();
+    void focusShortcut();
+    void focusCheckable();
+
 private slots:
     void on_editActionText_textEdited(const QString &text);
     void on_editObjectName_textEdited(const QString &text);

@@ -78,7 +78,7 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
             this, &NewActionDialog::slotResetKeySequence);
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-    m_ui->editActionText->setFocus();
+    focusText();
     updateButtons();
 
     QDesignerFormWindowInterface *form = parent->formWindow();
@@ -94,6 +94,31 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
 NewActionDialog::~NewActionDialog()
 {
     delete m_ui;
+}
+
+void NewActionDialog::focusName()
+{
+    m_ui->editObjectName->setFocus();
+}
+
+void NewActionDialog::focusText()
+{
+    m_ui->editActionText->setFocus();
+}
+
+void NewActionDialog::focusTooltip()
+{
+    m_ui->tooltipEditor->setFocus();
+}
+
+void NewActionDialog::focusShortcut()
+{
+    m_ui->keySequenceEdit->setFocus();
+}
+
+void NewActionDialog::focusCheckable()
+{
+    m_ui->checkableCheckBox->setFocus();
 }
 
 QString NewActionDialog::actionText() const

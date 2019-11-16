@@ -224,7 +224,7 @@ void QSimpleResource::handleDomCustomWidgets(const QDesignerFormEditorInterface 
     // (derived first, max depth: promoted custom plugin = 2)
     for (int iteration = 0;  iteration < 2;  iteration++) {
         addCustomWidgetsToWidgetDatabase(core, custom_widget_list);
-        if (custom_widget_list.empty())
+        if (custom_widget_list.isEmpty())
             return;
     }
     // Oops, there are classes left whose base class could not be found.
@@ -250,7 +250,7 @@ FormBuilderClipboard::FormBuilderClipboard(QWidget *w)
 
 bool FormBuilderClipboard::empty() const
 {
-    return m_widgets.empty() && m_actions.empty();
+    return m_widgets.isEmpty() && m_actions.isEmpty();
 }
 }
 

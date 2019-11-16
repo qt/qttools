@@ -2272,7 +2272,7 @@ void DesignerEditorFactory::disconnectPropertyManager(QtVariantPropertyManager *
 template <class EditorContainer, class Editor, class SetterParameter, class Value>
 static inline void applyToEditors(const EditorContainer &list, void (Editor::*setter)(SetterParameter), const Value &value)
 {
-    if (list.empty()) {
+    if (list.isEmpty()) {
         return;
     }
     for (auto it = list.constBegin(), end = list.constEnd(); it != end; ++it) {
@@ -2659,7 +2659,7 @@ void DesignerEditorFactory::slotStringTextChanged(const QString &value)
             PropertySheetStringValue strVal = qvariant_cast<PropertySheetStringValue>(val);
             strVal.setValue(value);
             // Disable translation if no translation subproperties exist.
-            if (varProp->subProperties().empty())
+            if (varProp->subProperties().isEmpty())
                 strVal.setTranslatable(false);
             val = QVariant::fromValue(strVal);
         } else {
@@ -2725,7 +2725,7 @@ void DesignerEditorFactory::slotStringListChanged(const QStringList &value)
             PropertySheetStringListValue listValue = qvariant_cast<PropertySheetStringListValue>(val);
             listValue.setValue(value);
             // Disable translation if no translation subproperties exist.
-            if (varProp->subProperties().empty())
+            if (varProp->subProperties().isEmpty())
                 listValue.setTranslatable(false);
             val = QVariant::fromValue(listValue);
         } else {

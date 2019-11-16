@@ -206,7 +206,7 @@ Qt::DropAction QDesignerMimeData::proposedDropAction() const
 
 Qt::DropAction QDesignerMimeData::execDrag(const QDesignerDnDItems &items, QWidget * dragSource)
 {
-    if (items.empty())
+    if (items.isEmpty())
         return Qt::IgnoreAction;
 
     QDrag *drag = new QDrag(dragSource);

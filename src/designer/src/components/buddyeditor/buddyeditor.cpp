@@ -329,7 +329,7 @@ void BuddyEditor::autoBuddy()
 {
     // Any labels?
     LabelList labelList = background()->findChildren<QLabel*>();
-    if (labelList.empty())
+    if (labelList.isEmpty())
         return;
     // Find already used buddies
     QWidgetList usedBuddies;
@@ -355,7 +355,7 @@ void BuddyEditor::autoBuddy()
         }
     }
     // Add the list in one go.
-    if (labelList.empty())
+    if (labelList.isEmpty())
         return;
     const int count = labelList.size();
     Q_ASSERT(count == buddies.size());

@@ -124,7 +124,7 @@ void EditorFactoryPrivate<Editor>::slotEditorDestroyed(QObject *object)
             const typename PropertyToEditorListMap::iterator pit = m_createdEditors.find(property);
             if (pit != m_createdEditors.end()) {
                 pit.value().removeAll(editor);
-                if (pit.value().empty())
+                if (pit.value().isEmpty())
                     m_createdEditors.erase(pit);
             }
             m_editorToProperty.erase(itEditor);

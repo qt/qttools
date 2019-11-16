@@ -140,20 +140,20 @@ void ConnectDialog::setSignalSlot(const QString &signal, const QString &slot)
 {
     ListWidgetItems sigItems = m_ui.signalList->findItems(signal, Qt::MatchExactly);
 
-    if (sigItems.empty()) {
+    if (sigItems.isEmpty()) {
         m_ui.showAllCheckBox->setChecked(true);
         sigItems = m_ui.signalList->findItems(signal, Qt::MatchExactly);
     }
 
-    if (!sigItems.empty()) {
-        selectSignal(sigItems.front());
+    if (!sigItems.isEmpty()) {
+        selectSignal(sigItems.constFirst());
         ListWidgetItems slotItems = m_ui.slotList->findItems(slot, Qt::MatchExactly);
-        if (slotItems.empty()) {
+        if (slotItems.isEmpty()) {
             m_ui.showAllCheckBox->setChecked(true);
             slotItems = m_ui.slotList->findItems(slot, Qt::MatchExactly);
         }
-        if (!slotItems.empty())
-            selectSlot(slotItems.front());
+        if (!slotItems.isEmpty())
+            selectSlot(slotItems.constFirst());
     }
 }
 

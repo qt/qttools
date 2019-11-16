@@ -228,7 +228,7 @@ QLabel *buddyLabelOf(QDesignerFormWindowInterface *fw, QWidget *w)
 {
     using LabelList = QList<QLabel *>;
     const LabelList labelList = fw->findChildren<QLabel*>();
-    if (labelList.empty())
+    if (labelList.isEmpty())
         return nullptr;
     const LabelList::const_iterator cend = labelList.constEnd();
     for (LabelList::const_iterator it = labelList.constBegin(); it != cend; ++it )
@@ -586,7 +586,7 @@ bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
         return false;
 
     const QStringList c = MorphWidgetCommand::candidateClasses(fw, w);
-    if (c.empty())
+    if (c.isEmpty())
         return false;
 
     // Pull up

@@ -646,7 +646,7 @@ PropertyHelper::PropertyHelper(QObject* object,
         m_objectType = OT_Widget;
     } else {
         if (const QAction *action = qobject_cast<const QAction *>(m_object))
-            m_objectType = action->associatedWidgets().empty() ? OT_FreeAction : OT_AssociatedAction;
+            m_objectType = action->associatedWidgets().isEmpty() ? OT_FreeAction : OT_AssociatedAction;
     }
 
     if(debugPropertyCommands)
@@ -982,7 +982,7 @@ bool PropertyListCommand::add(QObject *object, const QString &propertyName)
 
     const PropertyDescription description(propertyName, sheet, index);
 
-    if (m_propertyHelperList.empty()) {
+    if (m_propertyHelperList.isEmpty()) {
         // first entry
         m_propertyDescription = description;
     } else {
@@ -1018,7 +1018,7 @@ bool PropertyListCommand::initList(const QObjectList &list, const QString &aprop
             add(o, apropertyName);
     }
 
-    return !propertyHelperList().empty();
+    return !propertyHelperList().isEmpty();
 }
 
 

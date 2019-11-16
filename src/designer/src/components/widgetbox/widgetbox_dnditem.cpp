@@ -174,7 +174,7 @@ static QWidget *decorationFromDomWidget(DomUI *dom_ui, QDesignerFormEditorInterf
     QWidget *fakeTopLevel = builder.createUI(dom_ui, nullptr);
     fakeTopLevel->setParent(nullptr, Qt::ToolTip); // Container
     // Actual widget
-    const DomWidget *domW = dom_ui->elementWidget()->elementWidget().front();
+    const DomWidget *domW = dom_ui->elementWidget()->elementWidget().constFirst();
     QWidget *w = fakeTopLevel->findChildren<QWidget*>().constFirst();
     Q_ASSERT(w);
     // hack begin;

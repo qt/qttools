@@ -256,7 +256,7 @@ QToolBoxWidgetPropertySheet::ToolBoxProperty QToolBoxWidgetPropertySheet::toolBo
 {
     using ToolBoxPropertyHash = QHash<QString, ToolBoxProperty>;
     static ToolBoxPropertyHash toolBoxPropertyHash;
-    if (toolBoxPropertyHash.empty()) {
+    if (toolBoxPropertyHash.isEmpty()) {
         toolBoxPropertyHash.insert(QLatin1String(currentItemTextKey),    PropertyCurrentItemText);
         toolBoxPropertyHash.insert(QLatin1String(currentItemNameKey),    PropertyCurrentItemName);
         toolBoxPropertyHash.insert(QLatin1String(currentItemIconKey),    PropertyCurrentItemIcon);
