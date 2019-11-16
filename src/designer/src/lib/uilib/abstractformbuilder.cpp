@@ -1043,7 +1043,7 @@ QActionGroup *QAbstractFormBuilder::createActionGroup(QObject *parent, const QSt
     Therefore, you should remove properties that are not required from your
     resulting XML files, before loading them. Alternatively, if you already
     know which properties you want to save when you call this method,
-    you can overload \l computeProperties() and return a filtered list of
+    you can overload \c computeProperties() and return a filtered list of
     required properties. Otherwise, unexpected behavior may occur as some
     of these properties may depend on each other.
 

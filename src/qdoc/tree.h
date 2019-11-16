@@ -44,7 +44,7 @@ class QDocDatabase;
 
 struct TargetRec
 {
-  public:
+public:
     enum TargetType { Unknown, Target, Keyword, Contents, Class, Function, Page, Subtitle };
 
     TargetRec(const QString &name,
@@ -71,7 +71,7 @@ struct TargetRec
 
 struct TargetLoc
 {
-  public:
+public:
   TargetLoc(const Node *loc, const QString &t, const QString &fileName, const QString &text, bool broken)
   : loc_(loc), target_(t), fileName_(fileName), text_(text), broken_(broken) { }
     const Node *loc_;
@@ -93,14 +93,14 @@ class Tree
     friend class QDocForest;
     friend class QDocDatabase;
 
- private: // Note the constructor and destructor are private.
+private: // Note the constructor and destructor are private.
     typedef QMap<PropertyNode::FunctionRole, QString> RoleMap;
     typedef QMap<PropertyNode *, RoleMap> PropertyMap;
 
     Tree(const QString &camelCaseModuleName, QDocDatabase *qdb);
     ~Tree();
 
- public: // Of necessity, a few public functions remain.
+public: // Of necessity, a few public functions remain.
     const QString &camelCaseModuleName() const { return camelCaseModuleName_; }
     const QString &physicalModuleName() const { return physicalModuleName_; }
     const QString &indexFileName() const { return indexFileName_; }
@@ -114,7 +114,7 @@ class Tree
     void addToDontDocumentMap(QString &arg);
     void markDontDocumentNodes();
 
- private: // The rest of the class is private.
+private: // The rest of the class is private.
     Aggregate *findAggregate(const QString &name);
     Node *findNodeForInclude(const QStringList &path) const;
     ClassNode *findClassNode(const QStringList &path, const Node *start = nullptr) const;

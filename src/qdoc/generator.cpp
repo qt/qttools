@@ -1235,14 +1235,14 @@ void Generator::generateDocumentation(Node *node)
  */
 void Generator::generateMaintainerList(const Aggregate *node, CodeMarker *marker)
 {
-    QStringList sl = getMetadataElements(node,"maintainer");
+    QStringList sl = getMetadataElements(node, "maintainer");
 
     if (!sl.isEmpty()) {
         Text text;
         text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
              << "Maintained by: "
-             << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD);
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
         for (int i = 0; i < sl.size(); ++i)
             text << sl.at(i) << separator(i, sl.size());

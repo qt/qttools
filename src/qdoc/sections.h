@@ -45,11 +45,11 @@ typedef QList<ClassKeysNodes *> ClassKeysNodesList;
 
 class Section
 {
- public:
+public:
     enum Style { Summary, Details, AllMembers, Accessors };
     enum Status { Obsolete, Active };
 
- public:
+public:
     Section() : style_(Details), status_(Active), aggregate_(nullptr) { }
     Section(Style style, Status status);
     ~Section();
@@ -108,10 +108,10 @@ class Section
     const Aggregate *aggregate() const { return aggregate_; }
     void setAggregate(Aggregate *t) { aggregate_ = t; }
 
- private:
+private:
     QString sortName(const Node *node, const QString *name = nullptr);
 
- private:
+private:
     Style   style_;
     Status  status_;
     QString title_;
@@ -139,7 +139,7 @@ typedef QVector<const Section *> SectionPtrVector;
 
 class Sections
 {
- public:
+public:
     enum VectorIndex {
         AllMembers = 0,
         PublicTypes = 0,
@@ -228,7 +228,7 @@ class Sections
 
     Aggregate *aggregate() const { return aggregate_; }
 
- private:
+private:
     void stdRefPageSwitch(SectionVector &v, Node *n, Node *t = nullptr);
     void distributeNodeInSummaryVector(SectionVector &sv, Node *n);
     void distributeNodeInDetailsVector(SectionVector &dv, Node *n);
@@ -236,7 +236,7 @@ class Sections
     void distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool sharing = false);
     void initAggregate(SectionVector &v, Aggregate *aggregate);
 
- private:
+private:
     Aggregate *aggregate_;
 
     static SectionVector stdSummarySections_;
