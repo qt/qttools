@@ -55,8 +55,15 @@ function(qt_tools_find_lib_clang)
         endif()
     endif()
 
-    if(NOT LLVM_INSTALL_DIR)
+    if(NOT LLVM_INSTALL_DIR AND ENV{LLVM_INSTALL_DIR})
         set(LLVM_INSTALL_DIR "$ENV{LLVM_INSTALL_DIR}")
+    endif()
+
+    if(NOT LLVM_INSTALL_DIR)
+      find_package(LLVM CONFIG QUIET)
+      if (LLVM_FOUND)
+        set(LLVM_INSTALL_DIR ${LLVM_BINARY_DIR})
+      endif()
     endif()
 
     # Assume libclang is installed on the target system
