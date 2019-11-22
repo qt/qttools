@@ -329,7 +329,7 @@ Qt::WindowFlags QDesignerWorkbench::magicalWindowFlags(const QWidget *widgetForF
             return Qt::Window;
         default:
             Q_ASSERT(0);
-            return nullptr;
+            return {};
     }
 }
 

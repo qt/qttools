@@ -794,7 +794,7 @@ static inline QString alignmentValue(Qt::Alignment a)
 
 static inline Qt::Alignment alignmentFromDom(const QString &in)
 {
-    Qt::Alignment rc = nullptr;
+    Qt::Alignment rc;
     if (!in.isEmpty()) {
         const auto flags = in.splitRef(QLatin1Char('|'));
         for (const auto &f : flags) {
