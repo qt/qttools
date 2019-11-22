@@ -11,7 +11,7 @@ project(QtTools # special case
 
 # special case begin
 set(QT_REPO_NOT_WARNINGS_CLEAN TRUE)
-find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
+find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core Network)
 find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Xml Widgets Quick QuickWidgets)
 # special case end
 
