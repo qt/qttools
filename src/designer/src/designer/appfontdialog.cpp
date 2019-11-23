@@ -82,7 +82,7 @@ public:
 
     // Store loaded fonts as pair of file name and Id
     using FileNameFontIdPair = QPair<QString,int>;
-    using FileNameFontIdPairs = QList<FileNameFontIdPair>;
+    using FileNameFontIdPairs = QVector<FileNameFontIdPair>;
     const FileNameFontIdPairs &fonts() const;
 
 private:

@@ -232,18 +232,15 @@ void InsertWidgetCommand::undo()
 
 void InsertWidgetCommand::refreshBuddyLabels()
 {
-    using LabelList = QList<QLabel *>;
-
-    const LabelList label_list = formWindow()->findChildren<QLabel*>();
+    const auto label_list = formWindow()->findChildren<QLabel*>();
     if (label_list.isEmpty())
         return;
 
     const QString buddyProperty = QStringLiteral("buddy");
     const QByteArray objectNameU8 = m_widget->objectName().toUtf8();
     // Re-set the buddy (The sheet locates the object by name and sets it)
-    const LabelList::const_iterator cend = label_list.constEnd();
-    for (LabelList::const_iterator it = label_list.constBegin(); it != cend; ++it ) {
-        if (QDesignerPropertySheetExtension* sheet = propertySheet(*it)) {
+    for (QLabel *label : label_list) {
+        if (QDesignerPropertySheetExtension* sheet = propertySheet(label)) {
             const int idx = sheet->indexOf(buddyProperty);
             if (idx != -1) {
                 const QVariant value = sheet->property(idx);
@@ -2656,7 +2653,7 @@ static RemoveActionCommand::ActionData findActionIn(QAction *action)
     const QWidgetList &associatedWidgets = action->associatedWidgets();
     for (QWidget *widget : associatedWidgets) {
         if (qobject_cast<const QMenu *>(widget) || qobject_cast<const QToolBar *>(widget)) {
-            const QList<QAction*> actionList = widget->actions();
+            const auto actionList = widget->actions();
             const int size = actionList.size();
             for (int i = 0; i < size; ++i) {
                 if (actionList.at(i) == action) {

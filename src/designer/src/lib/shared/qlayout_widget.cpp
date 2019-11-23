@@ -638,12 +638,11 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     GridLayoutState::CellStates GridLayoutState::cellStates(const QList<QRect> &rects, int numRows, int numColumns)
     {
         CellStates rc = CellStates(numRows * numColumns, CellState(Free, Free));
-        const QList<QRect>::const_iterator rcend = rects.constEnd();
-        for (QList<QRect>::const_iterator it = rects.constBegin(); it != rcend; ++it) {
-            const int leftColumn = it->x();
-            const int topRow = it->y();
-            const int rightColumn = leftColumn + it->width() - 1;
-            const int bottomRow = topRow + it->height() - 1;
+        for (const auto &rect : rects) {
+            const int leftColumn = rect.x();
+            const int topRow = rect.y();
+            const int rightColumn = leftColumn + rect.width() - 1;
+            const int bottomRow = topRow + rect.height() - 1;
             for (int r = topRow; r <= bottomRow; r++)
                 for (int c = leftColumn; c <= rightColumn; c++) {
                     const int flatIndex = r * numColumns + c;

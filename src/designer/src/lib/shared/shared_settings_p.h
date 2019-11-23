@@ -45,7 +45,7 @@
 #include "deviceprofile_p.h"
 
 #include <QtCore/qglobal.h>
-#include <QtCore/qlist.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -67,7 +67,7 @@ namespace qdesigner_internal {
 
 class QDESIGNER_SHARED_EXPORT QDesignerSharedSettings {
 public:
-    using DeviceProfileList = QList<DeviceProfile>;
+    using DeviceProfileList = QVector<DeviceProfile>;
 
     explicit QDesignerSharedSettings(QDesignerFormEditorInterface *core);
 

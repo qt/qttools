@@ -399,10 +399,10 @@ void QtQrcManager::exportQrcFile(QtQrcFile *qrcFile, QtQrcFileData *qrcFileData)
 
     QList<QtResourcePrefixData> resourceList;
 
-    const QList<QtResourcePrefix *> resourcePrefixes = qrcFile->resourcePrefixList();
+    const auto resourcePrefixes = qrcFile->resourcePrefixList();
     for (const QtResourcePrefix *prefix : resourcePrefixes) {
         QList<QtResourceFileData> resourceFileList;
-        const QList<QtResourceFile *> resourceFiles = prefix->resourceFiles();
+        const auto resourceFiles = prefix->resourceFiles();
         for (QtResourceFile *file : resourceFiles) {
             QtResourceFileData fileData;
             fileData.path = file->path();
@@ -460,7 +460,7 @@ QtResourcePrefix *QtQrcManager::prevResourcePrefix(QtResourcePrefix *resourcePre
 {
     if (!resourcePrefix)
         return nullptr;
-    QList<QtResourcePrefix *> prefixes = qrcFileOf(resourcePrefix)->resourcePrefixList();
+    const auto prefixes = qrcFileOf(resourcePrefix)->resourcePrefixList();
     const int idx = prefixes.indexOf(resourcePrefix);
     if (idx <= 0)
         return nullptr;
@@ -471,7 +471,7 @@ QtResourcePrefix *QtQrcManager::nextResourcePrefix(QtResourcePrefix *resourcePre
 {
     if (!resourcePrefix)
         return nullptr;
-    QList<QtResourcePrefix *> prefixes = qrcFileOf(resourcePrefix)->resourcePrefixList();
+    const auto prefixes = qrcFileOf(resourcePrefix)->resourcePrefixList();
     const int idx = prefixes.indexOf(resourcePrefix);
     if (idx < 0 || idx == prefixes.size() - 1)
         return nullptr;
@@ -482,7 +482,7 @@ QtResourceFile *QtQrcManager::prevResourceFile(QtResourceFile *resourceFile) con
 {
     if (!resourceFile)
         return nullptr;
-    QList<QtResourceFile *> files = resourcePrefixOf(resourceFile)->resourceFiles();
+    const auto files = resourcePrefixOf(resourceFile)->resourceFiles();
     const int idx = files.indexOf(resourceFile);
     if (idx <= 0)
         return nullptr;
@@ -493,7 +493,7 @@ QtResourceFile *QtQrcManager::nextResourceFile(QtResourceFile *resourceFile) con
 {
     if (!resourceFile)
         return nullptr;
-    QList<QtResourceFile *> files = resourcePrefixOf(resourceFile)->resourceFiles();
+    const auto files = resourcePrefixOf(resourceFile)->resourceFiles();
     const int idx = files.indexOf(resourceFile);
     if (idx < 0 || idx == files.size() - 1)
         return nullptr;
@@ -502,7 +502,7 @@ QtResourceFile *QtQrcManager::nextResourceFile(QtResourceFile *resourceFile) con
 
 void QtQrcManager::clear()
 {
-    const QList<QtQrcFile *> oldQrcFiles = qrcFiles();
+    const auto oldQrcFiles = qrcFiles();
     for (QtQrcFile *qf : oldQrcFiles)
         removeQrcFile(qf);
 }
@@ -569,7 +569,7 @@ void QtQrcManager::removeQrcFile(QtQrcFile *qrcFile)
     if (idx < 0)
         return;
 
-    const QList<QtResourcePrefix *> resourcePrefixes = qrcFile->resourcePrefixList();
+    const auto resourcePrefixes = qrcFile->resourcePrefixList();
     for (QtResourcePrefix *rp : resourcePrefixes)
         removeResourcePrefix(rp);
 
@@ -672,7 +672,7 @@ void QtQrcManager::removeResourcePrefix(QtResourcePrefix *resourcePrefix)
 
     const int idx = qrcFile->m_resourcePrefixes.indexOf(resourcePrefix);
 
-    const QList<QtResourceFile *> resourceFiles = resourcePrefix->resourceFiles();
+    const auto resourceFiles = resourcePrefix->resourceFiles();
     for (QtResourceFile *rf : resourceFiles)
         removeResourceFile(rf);
 
@@ -1013,7 +1013,7 @@ void QtResourceEditorDialogPrivate::slotResourcePrefixMoved(QtResourcePrefix *re
     const QModelIndex index = m_treeModel->indexFromItem(prefixItem);
     const bool expanded = m_ui.resourceTreeView->isExpanded(index);
     m_ignoreCurrentChanged = true;
-    const QList<QStandardItem *> items = m_treeModel->takeRow(index.row());
+    const auto items = m_treeModel->takeRow(index.row());
 
     int row = m_treeModel->rowCount();
     QtResourcePrefix *nextResourcePrefix = m_qrcManager->nextResourcePrefix(resourcePrefix);
@@ -1126,7 +1126,7 @@ void QtResourceEditorDialogPrivate::slotResourceFileMoved(QtResourceFile *resour
 
     QStandardItem *parentItem = pathItem->parent();
     m_ignoreCurrentChanged = true;
-    const QList<QStandardItem *> items = parentItem->takeRow(m_treeModel->indexFromItem(pathItem).row());
+    const auto items = parentItem->takeRow(m_treeModel->indexFromItem(pathItem).row());
 
     int row = parentItem->rowCount();
     QtResourceFile *nextResourceFile = m_qrcManager->nextResourceFile(resourceFile);
@@ -1189,7 +1189,7 @@ void QtResourceEditorDialogPrivate::slotCurrentQrcFileChanged(QListWidgetItem *i
         QMap<QtResourcePrefix *, QStandardItem *> currentPrefixList = m_resourcePrefixToPrefixItem;
         for (auto it = currentPrefixList.cbegin(), end = currentPrefixList.cend(); it != end; ++it) {
             QtResourcePrefix *resourcePrefix = it.key();
-            const QList<QtResourceFile *> currentResourceFiles = resourcePrefix->resourceFiles();
+            const auto currentResourceFiles = resourcePrefix->resourceFiles();
             for (QtResourceFile *rf : currentResourceFiles)
                 slotResourceFileRemoved(rf);
             slotResourcePrefixRemoved(resourcePrefix);
@@ -1200,12 +1200,12 @@ void QtResourceEditorDialogPrivate::slotCurrentQrcFileChanged(QListWidgetItem *i
     slotCurrentTreeViewItemChanged(QModelIndex());
     QStandardItem *firstPrefix = nullptr; // select first prefix
     if (m_currentQrcFile) {
-        const QList<QtResourcePrefix *> newPrefixList = m_currentQrcFile->resourcePrefixList();
+        const auto newPrefixList = m_currentQrcFile->resourcePrefixList();
         for (QtResourcePrefix *resourcePrefix : newPrefixList) {
             if (QStandardItem *newPrefixItem = insertResourcePrefix(resourcePrefix))
                 if (!firstPrefix)
                     firstPrefix = newPrefixItem;
-            const QList<QtResourceFile *> newResourceFiles = resourcePrefix->resourceFiles();
+            const auto newResourceFiles = resourcePrefix->resourceFiles();
             for (QtResourceFile *rf : newResourceFiles)
                 slotResourceFileInserted(rf);
         }
@@ -1542,7 +1542,7 @@ void QtResourceEditorDialogPrivate::slotAddFiles()
 
     QtResourceFile *nextResourceFile = m_qrcManager->nextResourceFile(currentResourceFile);
     if (!currentResourceFile) {
-        QList<QtResourceFile *> resourceFiles = currentResourcePrefix->resourceFiles();
+        const auto resourceFiles = currentResourcePrefix->resourceFiles();
         if (resourceFiles.count() > 0)
             nextResourceFile = resourceFiles.first();
     }
@@ -1660,7 +1660,7 @@ void QtResourceEditorDialogPrivate::slotClonePrefix()
     QtResourcePrefix *newResourcePrefix = m_qrcManager->insertResourcePrefix(m_currentQrcFile, currentResourcePrefix->prefix(),
                                     currentResourcePrefix->language(), m_qrcManager->nextResourcePrefix(currentResourcePrefix));
     if (newResourcePrefix) {
-        const QList<QtResourceFile *> files = currentResourcePrefix->resourceFiles();
+        const auto files = currentResourcePrefix->resourceFiles();
         for (QtResourceFile *resourceFile : files) {
             QString path = resourceFile->path();
             QFileInfo fi(path);
@@ -2096,7 +2096,7 @@ void QtResourceEditorDialog::accept()
     QStringList newQrcPaths;
     QList<QtQrcFileData> currentState;
 
-    const QList<QtQrcFile *> qrcFiles = d_ptr->m_qrcManager->qrcFiles();
+    const auto qrcFiles = d_ptr->m_qrcManager->qrcFiles();
     for (QtQrcFile *qrcFile : qrcFiles) {
         QtQrcFileData qrcFileData;
         d_ptr->m_qrcManager->exportQrcFile(qrcFile, &qrcFileData);

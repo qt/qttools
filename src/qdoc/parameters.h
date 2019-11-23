@@ -41,7 +41,7 @@ class CodeChunk;
 
 class Parameter
 {
- public:
+public:
     Parameter() {}
     Parameter(const QString &type,
               const QString &name = QString(),
@@ -65,7 +65,7 @@ class Parameter
 
     QString signature(bool includeValue = false) const;
 
- public:
+public:
     QString type_;
     QString name_;
     QString defaultValue_;
@@ -75,7 +75,7 @@ typedef QVector<Parameter> ParameterVector;
 
 class Parameters
 {
- public:
+public:
     Parameters();
     Parameters(const QString &signature);
 
@@ -102,7 +102,7 @@ class Parameters
     void getTypeAndNameList(QString &out) const;
     bool match(const Parameters &parameters) const;
 
- private:
+private:
     void readToken();
     QString lexeme();
     QString previousLexeme();
@@ -112,7 +112,7 @@ class Parameters
     bool matchParameter();
     bool parse(const QString &signature);
 
- private:
+private:
     static QRegExp varComment_;
 
     bool valid_;

@@ -51,6 +51,7 @@
 #include <QtCore/qstringlist.h>
 #include <QtCore/qpair.h>
 #include <QtCore/qmap.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -69,7 +70,7 @@ class QDESIGNER_SHARED_EXPORT NewFormWidget : public QDesignerNewFormWidgetInter
     Q_DISABLE_COPY_MOVE(NewFormWidget)
 
 public:
-    using DeviceProfileList = QList<qdesigner_internal::DeviceProfile>;
+    using DeviceProfileList = QVector<qdesigner_internal::DeviceProfile>;
 
     explicit NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parentWidget);
     ~NewFormWidget() override;

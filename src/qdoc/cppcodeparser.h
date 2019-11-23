@@ -85,15 +85,15 @@ protected:
     void processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs);
     bool hasTooManyTopics(const Doc &doc) const;
 
- private:
+private:
     void setExampleFileLists(PageNode *pn);
 
- protected:
+protected:
     typedef bool (Node::*NodeTypeTestFunc) () const;
     QMap<QString, NodeTypeTestFunc> nodeTypeTestFuncMap_;
     QMap<QString, Node::NodeType> nodeTypeMap_;
 
- private:
+private:
     static QStringList exampleFiles;
     static QStringList exampleDirs;
     static QSet<QString> excludeDirs;

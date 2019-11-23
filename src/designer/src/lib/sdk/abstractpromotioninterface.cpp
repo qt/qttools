@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \fn virtual QDesignerPromotionInterface::PromotedClasses promotedClasses()  const
+    \fn QDesignerPromotionInterface::PromotedClasses QDesignerPromotionInterface::promotedClasses() const
 
     Returns a list of promoted classes along with their base classes in alphabetical order.
     It can be used to populate tree models for editing promoted widgets.

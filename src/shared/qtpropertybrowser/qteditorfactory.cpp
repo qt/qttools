@@ -1543,7 +1543,7 @@ bool QtCharEdit::eventFilter(QObject *o, QEvent *e)
     if (o == m_lineEdit && e->type() == QEvent::ContextMenu) {
         QContextMenuEvent *c = static_cast<QContextMenuEvent *>(e);
         QMenu *menu = m_lineEdit->createStandardContextMenu();
-        const QList<QAction *> actions = menu->actions();
+        const auto actions = menu->actions();
         for (QAction *action : actions) {
             action->setShortcut(QKeySequence());
             QString actionString = action->text();

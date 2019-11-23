@@ -253,7 +253,7 @@ void QDesignerMimeData::removeMovedWidgetsFromSourceForm(const QDesignerDnDItems
                 if (FormWindowBase *fb = qobject_cast<FormWindowBase *>((*it)->source()))
                     formWidgetMap.insert(fb, w);
 
-    const QList<FormWindowBase *> &formWindows = formWidgetMap.uniqueKeys();
+    const auto &formWindows = formWidgetMap.uniqueKeys();
     for (FormWindowBase *fb : formWindows)
         fb->deleteWidgetList(formWidgetMap.values(fb));
 }

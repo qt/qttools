@@ -124,7 +124,7 @@ ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
 {
     ActionList rc;
     const int index = actionIndexAt(m_toolBar, m_toolBar->mapFromGlobal(globalPos), m_toolBar->orientation());
-    const ActionList actions = m_toolBar->actions();
+    const auto actions = m_toolBar->actions();
     QAction *action = index != -1 ?actions.at(index) : 0;
     QVariant itemData;
 

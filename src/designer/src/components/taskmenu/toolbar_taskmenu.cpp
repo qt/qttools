@@ -58,7 +58,7 @@ namespace qdesigner_internal {
     {
         if (ToolBarEventFilter *ef = ToolBarEventFilter::eventFilterOf(m_toolBar))
             return ef->contextMenuActions();
-        return QList<QAction*>();
+        return {};
     }
 
     // ------------ StatusBarTaskMenu

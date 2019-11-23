@@ -59,6 +59,7 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -207,7 +208,7 @@ void PreviewDeviceSkin::setPreview(QWidget *formWidget)
 void PreviewDeviceSkin::slotSkinKeyPressEvent(int code, const QString& text, bool autorep)
 {
     if (QWidget *focusWidget =  QApplication::focusWidget()) {
-        QKeyEvent e(QEvent::KeyPress, code, nullptr, text, autorep);
+        QKeyEvent e(QEvent::KeyPress, code, {}, text, autorep);
         QApplication::sendEvent(focusWidget, &e);
     }
 }
@@ -215,7 +216,7 @@ void PreviewDeviceSkin::slotSkinKeyPressEvent(int code, const QString& text, boo
 void PreviewDeviceSkin::slotSkinKeyReleaseEvent(int code, const QString& text, bool autorep)
 {
     if (QWidget *focusWidget =  QApplication::focusWidget()) {
-        QKeyEvent e(QEvent::KeyRelease, code, nullptr, text, autorep);
+        QKeyEvent e(QEvent::KeyRelease, code, {}, text, autorep);
         QApplication::sendEvent(focusWidget, &e);
     }
 }
@@ -555,7 +556,7 @@ public:
 
     QPointer<QWidget> m_activePreview;
 
-    using PreviewDataList = QList<PreviewData>;
+    using PreviewDataList = QVector<PreviewData>;
 
     PreviewDataList m_previews;
 

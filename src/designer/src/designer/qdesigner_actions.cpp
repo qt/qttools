@@ -907,7 +907,7 @@ void QDesignerActions::updateRecentFileActions()
     QStringList files = m_settings.recentFilesList();
     const int originalSize = files.size();
     int numRecentFiles = qMin(files.size(), int(MaxRecentFiles));
-    const QList<QAction *> recentFilesActs = m_recentFilesActions->actions();
+    const auto recentFilesActs = m_recentFilesActions->actions();
 
     for (int i = 0; i < numRecentFiles; ++i) {
         const QFileInfo fi(files[i]);

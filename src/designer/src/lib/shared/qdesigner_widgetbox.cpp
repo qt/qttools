@@ -190,7 +190,7 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
 
     while (!reader.atEnd()) {
         if (reader.readNext() == QXmlStreamReader::StartElement) {
-            const QStringRef name = reader.name();
+            const auto name = reader.name();
             if (ui) {
                 reader.raiseError(tr("Unexpected element <%1>").arg(name.toString()));
                 continue;

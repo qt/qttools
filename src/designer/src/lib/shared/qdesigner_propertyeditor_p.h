@@ -56,7 +56,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerPropertyEditor: public QDesignerPropertyE
 {
     Q_OBJECT
 public:
-    explicit QDesignerPropertyEditor(QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
+    explicit QDesignerPropertyEditor(QWidget *parent = nullptr, Qt::WindowFlags flags = {});
 
     // A pair <ValidationMode, bool isTranslatable>.
     using StringPropertyParameters = QPair<TextPropertyValidationMode, bool>;

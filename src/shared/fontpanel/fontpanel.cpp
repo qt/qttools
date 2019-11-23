@@ -64,7 +64,7 @@ FontPanel::FontPanel(QWidget *parentWidget) :
     // writing systems
     m_writingSystemComboBox->setEditable(false);
 
-    QList<QFontDatabase::WritingSystem> writingSystems = m_fontDatabase.writingSystems();
+    auto writingSystems = m_fontDatabase.writingSystems();
     writingSystems.push_front(QFontDatabase::Any);
     for (QFontDatabase::WritingSystem ws : qAsConst(writingSystems))
         m_writingSystemComboBox->addItem(QFontDatabase::writingSystemName(ws), QVariant(ws));
@@ -269,7 +269,7 @@ void FontPanel::updatePointSizes(const QString &family, const QString &styleStri
 {
     const int oldPointSize = pointSize();
 
-    QList<int> pointSizes =  m_fontDatabase.pointSizes(family, styleString);
+    auto pointSizes =  m_fontDatabase.pointSizes(family, styleString);
     if (pointSizes.isEmpty())
         pointSizes = QFontDatabase::standardSizes();
 

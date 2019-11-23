@@ -452,13 +452,13 @@ void PropertyEditor::storePropertiesExpansionState(const QList<QtBrowserItem *> 
 
 void PropertyEditor::storeExpansionState()
 {
-    const QList<QtBrowserItem *> items = m_currentBrowser->topLevelItems();
+    const auto items = m_currentBrowser->topLevelItems();
     if (m_sorting) {
         storePropertiesExpansionState(items);
     } else {
         for (QtBrowserItem *item : items) {
             const QString groupName = item->property()->propertyName();
-            QList<QtBrowserItem *> propertyItems = item->children();
+            auto propertyItems = item->children();
             if (!propertyItems.isEmpty())
                 m_expansionState[groupName] = isExpanded(item);
 
@@ -470,7 +470,7 @@ void PropertyEditor::storeExpansionState()
 
 void PropertyEditor::collapseAll()
 {
-    const QList<QtBrowserItem *> items = m_currentBrowser->topLevelItems();
+    const auto items = m_currentBrowser->topLevelItems();
     for (QtBrowserItem *group : items)
         setExpanded(group, false);
 }
@@ -498,7 +498,7 @@ void PropertyEditor::applyPropertiesExpansionState(const QList<QtBrowserItem *> 
 
 void PropertyEditor::applyExpansionState()
 {
-    const QList<QtBrowserItem *> items = m_currentBrowser->topLevelItems();
+    const auto items = m_currentBrowser->topLevelItems();
     if (m_sorting) {
         applyPropertiesExpansionState(items);
     } else {
@@ -533,7 +533,7 @@ int PropertyEditor::applyPropertiesFilter(const QList<QtBrowserItem *> &items)
 
 void PropertyEditor::applyFilter()
 {
-    const QList<QtBrowserItem *> items = m_currentBrowser->topLevelItems();
+    const auto items = m_currentBrowser->topLevelItems();
     if (m_sorting) {
         applyPropertiesFilter(items);
     } else {
@@ -664,7 +664,7 @@ void PropertyEditor::slotSorting(bool sort)
 void PropertyEditor::updateColors()
 {
     if (m_treeBrowser && m_currentBrowser == m_treeBrowser) {
-        const QList<QtBrowserItem *> items = m_treeBrowser->topLevelItems();
+        const auto items = m_treeBrowser->topLevelItems();
         for (QtBrowserItem *item : items)
             m_treeBrowser->setBackgroundColor(item, propertyColor(item->property()));
     }
@@ -1092,7 +1092,7 @@ void PropertyEditor::setObject(QObject *object)
                 if (lastGroup != groupProperty) {
                     lastGroup = groupProperty;
                     lastProperty = nullptr;  // Append at end
-                    const QList<QtProperty*> subProperties = lastGroup->subProperties();
+                    const auto subProperties = lastGroup->subProperties();
                     if (!subProperties.isEmpty())
                         lastProperty = subProperties.constLast();
                     lastGroup = groupProperty;
@@ -1108,7 +1108,7 @@ void PropertyEditor::setObject(QObject *object)
 
                 property->setModified(m_propertySheet->isChanged(i));
                 if (propertyName == QStringLiteral("geometry") && type == QVariant::Rect) {
-                    const QList<QtProperty *> &subProperties = property->subProperties();
+                    const auto &subProperties = property->subProperties();
                     for (QtProperty *subProperty : subProperties) {
                         const QString subPropertyName = subProperty->propertyName();
                         if (subPropertyName == QStringLiteral("X") || subPropertyName == QStringLiteral("Y"))
@@ -1157,7 +1157,7 @@ QtBrowserItem *PropertyEditor::nonFakePropertyBrowserItem(QtBrowserItem *item) c
 {
     // Top-level properties are QObject/QWidget groups, etc. Find first item property below
     // which should be nonfake
-    const QList<QtBrowserItem *> topLevelItems = m_currentBrowser->topLevelItems();
+    const auto topLevelItems = m_currentBrowser->topLevelItems();
     do {
         if (topLevelItems.contains(item->parent()))
             return item;
@@ -1245,7 +1245,7 @@ void PropertyEditor::editProperty(const QString &name)
     // find the browser item belonging to the property, make it current and edit it
     QtBrowserItem *browserItem = nullptr;
     if (QtVariantProperty *property = m_nameToProperty.value(name, 0)) {
-        const QList<QtBrowserItem *> items = m_currentBrowser->items(property);
+        const auto items = m_currentBrowser->items(property);
         if (items.size() == 1)
             browserItem = items.constFirst();
     }

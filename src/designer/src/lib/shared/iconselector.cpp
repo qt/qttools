@@ -55,6 +55,7 @@
 #include <QtWidgets/qlabel.h>
 #include <QtGui/qvalidator.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qvector.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -189,7 +190,7 @@ public:
     void slotResetAllActivated();
     void slotUpdate();
 
-    QList<QPair<QPair<QIcon::Mode, QIcon::State>, QString> > m_stateToName; // could be static map
+    QVector<QPair<QPair<QIcon::Mode, QIcon::State>, QString> > m_stateToName; // could be static map
 
     QMap<QPair<QIcon::Mode, QIcon::State>, int>  m_stateToIndex;
     QMap<int, QPair<QIcon::Mode, QIcon::State> > m_indexToState;
@@ -329,7 +330,7 @@ bool IconSelector::checkPixmap(const QString &fileName, CheckMode cm, QString *e
 static QString imageFilter()
 {
     QString filter = QApplication::translate("IconSelector", "All Pixmaps (");
-    const QList<QByteArray> supportedImageFormats = QImageReader::supportedImageFormats();
+    const auto supportedImageFormats = QImageReader::supportedImageFormats();
     const QString jpeg = QStringLiteral("JPEG");
     const int count = supportedImageFormats.count();
     for (int i = 0; i< count; ++i) {

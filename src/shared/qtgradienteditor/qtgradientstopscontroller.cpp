@@ -402,7 +402,7 @@ void QtGradientStopsControllerPrivate::slotChangeColor(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    const auto stops = m_model->selectedStops();
     for (QtGradientStop *s : stops) {
         if (s != stop)
             m_model->changeStop(s, color);
@@ -415,7 +415,7 @@ void QtGradientStopsControllerPrivate::slotChangeHue(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    const auto stops = m_model->selectedStops();
     for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
@@ -444,7 +444,7 @@ void QtGradientStopsControllerPrivate::slotChangeSaturation(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    const auto stops = m_model->selectedStops();
     for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
@@ -477,7 +477,7 @@ void QtGradientStopsControllerPrivate::slotChangeValue(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    const auto stops = m_model->selectedStops();
     for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
@@ -510,7 +510,7 @@ void QtGradientStopsControllerPrivate::slotChangeAlpha(const QColor &color)
     if (!stop)
         return;
     m_model->changeStop(stop, color);
-    const QList<QtGradientStop *> stops = m_model->selectedStops();
+    const auto stops = m_model->selectedStops();
     for (QtGradientStop *s : stops) {
         if (s != stop) {
             QColor c = s->color();
@@ -676,7 +676,7 @@ void QtGradientStopsController::setGradientStops(const QGradientStops &stops)
 QGradientStops QtGradientStopsController::gradientStops() const
 {
     QGradientStops stops;
-    const QList<QtGradientStop *> stopsList = d_ptr->m_model->stops().values();
+    const auto stopsList = d_ptr->m_model->stops().values();
     for (const QtGradientStop *stop : stopsList)
         stops << QPair<qreal, QColor>(stop->position(), stop->color());
     return stops;

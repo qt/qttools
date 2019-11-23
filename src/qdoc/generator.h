@@ -239,7 +239,7 @@ private:
                                   const QString &configVar,
                                   const QString &subDir);
 
- protected:
+protected:
     const Config *config_;
     QDocDatabase *qdb_;
     bool inLink_;

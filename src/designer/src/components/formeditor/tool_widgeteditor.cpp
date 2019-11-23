@@ -222,7 +222,7 @@ void WidgetEditorTool::detectDockDrag(const QDesignerMimeData *mimeData)
     if (!mw)
         return;
 
-    const QList<QDesignerDnDItemInterface*> item_list = mimeData->items();
+    const auto item_list = mimeData->items();
 
     for (QDesignerDnDItemInterface *item : item_list) {
         if (item->decoration() && item->decoration()->property("_q_dockDrag").toBool())

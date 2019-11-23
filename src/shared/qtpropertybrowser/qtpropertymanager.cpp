@@ -428,7 +428,7 @@ void QtMetaEnumProvider::initLocale()
     if (!nameToLanguage.contains(QLocale::languageToString(system.language())))
         nameToLanguage.insert(QLocale::languageToString(system.language()), system.language());
 
-    const QList<QLocale::Language> languages = nameToLanguage.values();
+    const auto languages = nameToLanguage.values();
     for (QLocale::Language language : languages) {
         QList<QLocale::Country> countries;
         countries = QLocale::countriesForLanguage(language);

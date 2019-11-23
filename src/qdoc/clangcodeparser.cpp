@@ -899,6 +899,8 @@ void ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
     QString signature = spelling.mid(lpIdx + 1, rpIdx - lpIdx - 1);
     signature = signature.simplified();
     QStringList part = signature.split(QChar(' '));
+    if (part.first() == QLatin1String("enum"))
+        part.takeFirst(); // QTBUG-80027
     if (part.size() < 2)
         return;
     QString type = part.at(0);

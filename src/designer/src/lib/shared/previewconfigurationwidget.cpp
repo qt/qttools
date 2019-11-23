@@ -57,7 +57,7 @@ static const char *skinExtensionC = "skin";
 
 // Pair of skin name, path
 typedef QPair<QString, QString> SkinNamePath;
-using Skins = QList<SkinNamePath>;
+using Skins = QVector<SkinNamePath>;
 enum { SkinComboNoneIndex = 0 };
 
 // find default skins (resources)
@@ -144,9 +144,8 @@ PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::PreviewConfigurat
     Skins skins = defaultSkins();
     skins.push_front(SkinNamePath(PreviewConfigurationWidget::tr("None"), QString()));
 
-    const Skins::const_iterator scend = skins.constEnd();
-    for (Skins::const_iterator it = skins.constBegin(); it != scend; ++it)
-        m_ui.m_skinCombo->addItem (it->first, QVariant(it->second));
+    for (const auto &skin : qAsConst(skins))
+        m_ui.m_skinCombo->addItem(skin.first, QVariant(skin.second));
     m_browseSkinIndex = m_firstUserSkinIndex = skins.size();
     m_ui.m_skinCombo->addItem(PreviewConfigurationWidget::tr("Browse..."), QString());
 

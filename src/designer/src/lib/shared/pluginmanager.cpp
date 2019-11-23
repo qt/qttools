@@ -544,7 +544,7 @@ void QDesignerPluginManagerPrivate::addCustomWidgets(const QObject *o,
         return;
     }
     if (const QDesignerCustomWidgetCollectionInterface *coll = qobject_cast<QDesignerCustomWidgetCollectionInterface*>(o)) {
-        const QList<QDesignerCustomWidgetInterface *> &collCustomWidgets = coll->customWidgets();
+        const auto &collCustomWidgets = coll->customWidgets();
         for (QDesignerCustomWidgetInterface *c : collCustomWidgets)
             addCustomWidget(c, pluginPath, designerLanguage);
     }
