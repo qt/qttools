@@ -102,10 +102,12 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
 
     config.dependModules() += config.getStringList(CONFIG_DEPENDS);
     config.dependModules().removeDuplicates();
+    bool useNoSubDirs = false;
     QSet<QString> subDirs;
 
     for (const auto &format : formats) {
         if (config.getBool(format + Config::dot + "nosubdirs")) {
+            useNoSubDirs = true;
             QString singleOutputSubdir = config.getString(format
                                                           + Config::dot
                                                           + "outputsubdir");
@@ -125,34 +127,56 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                 }
             }
             /*
-              Add all subdirectories of the indexdirs as dependModules,
-              when an asterisk is used in the 'depends' list.
+              Load all dependencies:
+              Either add all subdirectories of the indexdirs as dependModules,
+              when an asterisk is used in the 'depends' list, or
+              when <format>.nosubdirs is set, we need to look for all .index files
+              in the output subdirectory instead.
             */
             bool asteriskUsed = false;
             if (config.dependModules().contains("*")) {
                 config.dependModules().removeOne("*");
                 asteriskUsed = true;
-                Location::logToStdErrAlways("qdocconf file has depends = *; loading all index files found");
-                for (int i = 0; i < config.indexDirs().size(); i++) {
-                    QDir scanDir = QDir(config.indexDirs()[i]);
-                    scanDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-                    QFileInfoList dirList = scanDir.entryInfoList();
-                    for (int j = 0; j < dirList.size(); j++) {
-                        if (dirList[j].fileName().toLower() != config.getString(CONFIG_PROJECT).toLower())
+                if (useNoSubDirs) {
+                    std::for_each(formats.begin(), formats.end(),
+                        [&](const QString &format) {
+                            QDir scanDir(config.getOutputDir(format));
+                            QStringList foundModules = scanDir.entryList(QStringList("*.index"), QDir::Files);
+                            std::transform(foundModules.begin(), foundModules.end(), foundModules.begin(),
+                                [](const QString &index) {
+                                    return QFileInfo(index).baseName();
+                            });
+                            config.dependModules() << foundModules;
+                        });
+                } else {
+                    for (int i = 0; i < config.indexDirs().size(); i++) {
+                        QDir scanDir = QDir(config.indexDirs()[i]);
+                        scanDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+                        QFileInfoList dirList = scanDir.entryInfoList();
+                        for (int j = 0; j < dirList.size(); j++) {
                             config.dependModules().append(dirList[j].fileName());
+                        }
                     }
                 }
+                // Remove self-dependencies and possible duplicates
+                config.dependModules().removeAll(config.getString(CONFIG_PROJECT).toLower());
+                config.dependModules().removeDuplicates();
+                Location::logToStdErrAlways(QString("qdocconf file has depends = *;"
+                                                    " loading all %1 index files found").arg(config.dependModules().count()));
             }
             for (int i = 0; i < config.dependModules().size(); i++) {
                 QString indexToAdd;
+                QString dependModule = config.dependModules()[i];
                 QList<QFileInfo> foundIndices;
                 // Always look in module-specific subdir, even with *.nosubdirs config
-                subDirs << config.dependModules()[i];
+                bool useModuleSubDir = !subDirs.contains(dependModule);
+                subDirs << dependModule;
+
                 for (int j = 0; j < config.indexDirs().size(); j++) {
                     for (const auto &subDir : subDirs) {
                         QString fileToLookFor = config.indexDirs()[j]
                                 + QLatin1Char('/') + subDir
-                                + QLatin1Char('/') + config.dependModules()[i] + ".index";
+                                + QLatin1Char('/') + dependModule + ".index";
                         if (QFile::exists(fileToLookFor)) {
                             QFileInfo tempFileInfo(fileToLookFor);
                             if (!foundIndices.contains(tempFileInfo))
@@ -160,7 +184,9 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                         }
                     }
                 }
-                subDirs.remove(config.dependModules()[i]);
+                // Clear the temporary module-specific subdir
+                if (useModuleSubDir)
+                    subDirs.remove(dependModule);
                 std::sort(foundIndices.begin(), foundIndices.end(), creationTimeBefore);
                 if (foundIndices.size() > 1) {
                     /*
@@ -173,10 +199,10 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
                     for (const auto &found : qAsConst(foundIndices))
                         indexPaths << found.absoluteFilePath();
                     Location::null.warning(QString("Multiple index files found for dependency \"%1\":\n%2").arg(
-                                               config.dependModules()[i], indexPaths.join('\n')));
+                                               dependModule, indexPaths.join('\n')));
                     Location::null.warning(QString("Using %1 as index file for dependency \"%2\"").arg(
                                                foundIndices[foundIndices.size() - 1].absoluteFilePath(),
-                                               config.dependModules()[i]));
+                                               dependModule));
                     indexToAdd = foundIndices[foundIndices.size() - 1].absoluteFilePath();
                 }
                 else if (foundIndices.size() == 1) {

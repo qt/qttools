@@ -971,9 +971,10 @@ void Generator::generateRequiredLinks(const Node *node, CodeMarker *marker)
 
 /*!
   Generates an external link to the project folder for example \a node.
-  The path to the example is appended to \a baseUrl string, or to a
-  specific location within the string marked with the placeholder '\1'
-  character.
+  The path to the example replaces a placeholder '\1' character if
+  one is found in the \a baseUrl string. If no such placeholder is found,
+  the path is appended to \a baseUrl, after a '/' character if \a baseUrl did
+  not already end in one.
 */
 void Generator::generateLinkToExample(const ExampleNode *en,
                                       CodeMarker *marker,
@@ -1407,9 +1408,8 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
 }
 
 /*!
-  Generates a bold line that says:
-  "The signal is private, not emitted by the user.
-  The function is public so the user can pass it to connect()."
+  Generates a bold line that explains that this is a private signal,
+  only made public to let users pass it to connect().
  */
 void Generator::generatePrivateSignalNote(const Node *node, CodeMarker *marker)
 {
@@ -1484,21 +1484,21 @@ static bool hasExceptions(const Node *node,
     bool result = false;
     Node::ThreadSafeness ts = node->threadSafeness();
     const NodeList &children = static_cast<const Aggregate *>(node)->childNodes();
-    for (auto *node : children) {
-        if (!node->isObsolete()){
-            switch (node->threadSafeness()) {
+    for (auto *child : children) {
+        if (!child->isObsolete()){
+            switch (child->threadSafeness()) {
             case Node::Reentrant:
-                reentrant.append(node);
+                reentrant.append(child);
                 if (ts == Node::ThreadSafe)
                     result = true;
                 break;
             case Node::ThreadSafe:
-                threadsafe.append(node);
+                threadsafe.append(child);
                 if (ts == Node::Reentrant)
                     result = true;
                 break;
             case Node::NonReentrant:
-                nonreentrant.append(node);
+                nonreentrant.append(child);
                 result = true;
                 break;
             default:
@@ -1632,11 +1632,7 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
 }
 
 /*!
-    If the node is an overloaded signal, and a node with an example on how to connect to it
-
-    Someone didn't finish writing this comment, and I don't know what this
-    function is supposed to do, so I have not tried to complete the comment
-    yet.
+    If the node is an overloaded signal, add a node with an example on how to connect to it
  */
 void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
 {
@@ -1668,13 +1664,13 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
 
     Text text;
     text << Atom::ParaLeft
-         << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
          << "Note:"
-         << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
          << " Signal "
-         << Atom(Atom::FormattingLeft,ATOM_FORMATTING_ITALIC)
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC)
          << node->name()
-         << Atom(Atom::FormattingRight,ATOM_FORMATTING_ITALIC)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_ITALIC)
          << " is overloaded in this class. "
             "To connect to this signal by using the function pointer syntax, Qt "
             "provides a convenient helper for obtaining the function pointer as "
@@ -1973,7 +1969,7 @@ void Generator::initializeGenerator(const Config &config)
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)
 {
-    return atom->next() != nullptr && atom->next()->type() == expectedAtomType;
+    return atom->next() && atom->next()->type() == expectedAtomType;
 }
 
 /*!
@@ -2136,7 +2132,7 @@ int Generator::skipAtoms(const Atom *atom, Atom::AtomType type) const
 {
     int skipAhead = 0;
     atom = atom->next();
-    while (atom != nullptr && atom->type() != type) {
+    while (atom && atom->type() != type) {
         skipAhead++;
         atom = atom->next();
     }
@@ -2161,7 +2157,7 @@ void Generator::initializeTextOutput()
 void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 {
     if (node->isFunction() && !node->isMacro()) {
-        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        const auto fn = static_cast<const FunctionNode *>(node);
         if (fn->overloadNumber() == 0) {
             QString alternateName;
             const FunctionNode *alternateFunc = nullptr;
