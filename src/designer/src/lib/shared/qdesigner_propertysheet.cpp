@@ -44,9 +44,12 @@
 #include <QtWidgets/qlayout.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qdialog.h>
+#include <QtWidgets/qgroupbox.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qgroupbox.h>
 #include <QtWidgets/qstyle.h>
+#include <QtWidgets/qabstractbutton.h>
+#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qmainwindow.h>
@@ -173,6 +176,7 @@ class QDesignerPropertySheetPrivate {
 public:
     using PropertyType = QDesignerPropertySheet::PropertyType;
     using ObjectType = QDesignerPropertySheet::ObjectType;
+    using ObjectFlags = QDesignerPropertySheet::ObjectFlags;
 
     explicit QDesignerPropertySheetPrivate(QDesignerPropertySheet *sheetPublic, QObject *object, QObject *sheetParent);
 
@@ -227,6 +231,7 @@ public:
     QDesignerFormEditorInterface *m_core;
     const QDesignerMetaObjectInterface *m_meta;
     const ObjectType m_objectType;
+    const ObjectFlags m_objectFlags;
 
     using InfoHash = QHash<int, Info>;
     InfoHash m_info;
@@ -388,6 +393,7 @@ QDesignerPropertySheetPrivate::QDesignerPropertySheetPrivate(QDesignerPropertySh
     m_core(formEditorForObject(sheetParent)),
     m_meta(m_core->introspection()->metaObject(object)),
     m_objectType(QDesignerPropertySheet::objectTypeFromObject(object)),
+    m_objectFlags(QDesignerPropertySheet::objectFlagsFromObject(object)),
     m_canHaveLayoutAttributes(hasLayoutAttributes(m_core, object)),
     m_object(object),
     m_lastLayout(nullptr),
@@ -515,6 +521,17 @@ QDesignerPropertySheet::ObjectType QDesignerPropertySheet::objectTypeFromObject(
     return ObjectNone;
 }
 
+QDesignerPropertySheet::ObjectFlags QDesignerPropertySheet::objectFlagsFromObject(const QObject *o)
+{
+    ObjectFlags result;
+    if ((o->isWidgetType() && (qobject_cast<const QAbstractButton *>(o)
+                               || qobject_cast<const QGroupBox *>(o)))
+        || qobject_cast<const QAction *>(o)) {
+        result |= CheckableProperty;
+    }
+    return result;
+}
+
 QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromName(const QString &name)
 {
     typedef QHash<QString, PropertyType> PropertyTypeHash;
@@ -540,6 +557,7 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromNam
         propertyTypeHash.insert(QLatin1String(layoutGridColumnMinimumWidthC),    PropertyLayoutGridColumnMinimumWidth);
         propertyTypeHash.insert(QStringLiteral("buddy"),                   PropertyBuddy);
         propertyTypeHash.insert(QStringLiteral("geometry"),                PropertyGeometry);
+        propertyTypeHash.insert(QStringLiteral("checked"),                 PropertyChecked);
         propertyTypeHash.insert(QStringLiteral("checkable"),               PropertyCheckable);
         propertyTypeHash.insert(QStringLiteral("accessibleName"),          PropertyAccessibility);
         propertyTypeHash.insert(QStringLiteral("accessibleDescription"),   PropertyAccessibility);
@@ -1567,8 +1585,16 @@ bool QDesignerPropertySheet::isEnabled(int index) const
     // as this might be done via TaskMenu/Cursor::setProperty. Note that those
     // properties are not visible.
     const QDesignerMetaPropertyInterface *p = d->m_meta->property(index);
-    return (p->accessFlags() & QDesignerMetaPropertyInterface::WriteAccess) &&
-           designableState(p, d->m_object) != PropertyOfObjectNotDesignable;
+    if (!p->accessFlags().testFlag(QDesignerMetaPropertyInterface::WriteAccess))
+        return false;
+
+    if (designableState(p, d->m_object) == PropertyOfObjectNotDesignable)
+        return false;
+
+    const PropertyType type = propertyType(index);
+    if (type == PropertyChecked && d->m_objectFlags.testFlag(CheckableProperty))
+        return d->m_object->property("checkable").toBool();
+    return true;
 }
 
 bool QDesignerPropertySheet::isAttribute(int index) const

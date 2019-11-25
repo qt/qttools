@@ -155,6 +155,7 @@ public:
                         PropertyBuddy,
                         PropertyAccessibility,
                         PropertyGeometry,
+                        PropertyChecked,
                         PropertyCheckable,
                         PropertyWindowTitle,
                         PropertyWindowIcon,
@@ -168,8 +169,14 @@ public:
     };
 
     enum ObjectType { ObjectNone, ObjectLabel, ObjectLayout, ObjectLayoutWidget };
+    enum ObjectFlag
+    {
+        CheckableProperty = 0x1 // Has a "checked" property depending on "checkable"
+    };
+    Q_DECLARE_FLAGS(ObjectFlags, ObjectFlag)
 
     static ObjectType objectTypeFromObject(const QObject *o);
+    static ObjectFlags objectFlagsFromObject(const QObject *o);
     static PropertyType propertyTypeFromName(const QString &name);
 
 protected:
@@ -247,6 +254,8 @@ void QDesignerPropertySheetFactory<Object, PropertySheet>::registerExtension(QEx
 
 // Standard property sheet
 typedef QDesignerPropertySheetFactory<QObject, QDesignerPropertySheet> QDesignerDefaultPropertySheetFactory;
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(QDesignerPropertySheet::ObjectFlags)
 
 QT_END_NAMESPACE
 
