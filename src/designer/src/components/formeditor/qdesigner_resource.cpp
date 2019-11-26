@@ -108,7 +108,7 @@ Q_DECLARE_METATYPE(QWidgetList)
 QT_BEGIN_NAMESPACE
 
 namespace {
-    using DomPropertyList = QList<DomProperty *>;
+    using DomPropertyList = QVector<DomProperty *>;
 }
 
 static const char *currentUiVersion = "4.0";
@@ -939,7 +939,7 @@ static bool readDomEnumerationValue(const DomProperty *p,
     return false;
 }
 
-void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &properties)
+void QDesignerResource::applyProperties(QObject *o, const QVector<DomProperty*> &properties)
 {
     if (properties.isEmpty())
         return;
@@ -1387,7 +1387,7 @@ DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_paren
                 designerWarning(msgUnmanagedPage(core(), widget, i, page));
                 continue;
             }
-            QList<DomProperty*> ui_attribute_list;
+            QVector<DomProperty*> ui_attribute_list;
 
             const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
             // attribute `icon'
@@ -1456,7 +1456,7 @@ DomWidget *QDesignerResource::saveWidget(QToolBox *widget, DomWidget *ui_parentW
             }
 
             // attribute `label'
-            QList<DomProperty*> ui_attribute_list;
+            QVector<DomProperty*> ui_attribute_list;
 
             const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
 
@@ -1889,13 +1889,13 @@ bool QDesignerResource::canCompressSpacings(QObject *object) const
     return false;
 }
 
-QList<DomProperty*> QDesignerResource::computeProperties(QObject *object)
+QVector<DomProperty*> QDesignerResource::computeProperties(QObject *object)
 {
-    QList<DomProperty*> properties;
+    QVector<DomProperty*> properties;
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), object)) {
         QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core()->extensionManager(), object);
         const int count = sheet->count();
-        QList<DomProperty *> spacingProperties;
+        QVector<DomProperty *> spacingProperties;
         const bool compressSpacings = canCompressSpacings(object);
         for (int index = 0; index < count; ++index) {
             if (!sheet->isChanged(index) && (!dynamicSheet || !dynamicSheet->isDynamicProperty(index)))

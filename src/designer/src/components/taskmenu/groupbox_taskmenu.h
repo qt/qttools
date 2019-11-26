@@ -49,11 +49,11 @@ public:
     explicit GroupBoxTaskMenu(QGroupBox *groupbox, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QList<QAction*> taskActions() const override;
+    QVector<QAction*> taskActions() const override;
 
 private:
     QAction *m_editTitleAction;
-    QList<QAction*> m_taskActions;
+    QVector<QAction*> m_taskActions;
 };
 
 typedef ExtensionFactory<QDesignerTaskMenuExtension, QGroupBox, GroupBoxTaskMenu>  GroupBoxTaskMenuFactory;

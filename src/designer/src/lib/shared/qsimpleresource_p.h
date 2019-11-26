@@ -101,7 +101,7 @@ private:
 // Contents of clipboard for formbuilder copy and paste operations
 // (Actions and widgets)
 struct QDESIGNER_SHARED_EXPORT FormBuilderClipboard {
-    using ActionList = QList<QAction *>;
+    using ActionList = QVector<QAction *>;
 
     FormBuilderClipboard() = default;
     FormBuilderClipboard(QWidget *w);

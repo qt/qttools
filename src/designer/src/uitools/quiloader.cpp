@@ -400,7 +400,7 @@ public:
         return nullptr;
     }
 
-    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
+    void applyProperties(QObject *o, const QVector<DomProperty*> &properties) override;
     QWidget *create(DomUI *ui, QWidget *parentWidget) override;
     QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
     bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
@@ -431,7 +431,7 @@ static QString convertTranslatable(const DomProperty *p, const QByteArray &class
     return strVal->translate(className, idBased);
 }
 
-void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &properties)
+void FormBuilderPrivate::applyProperties(QObject *o, const QVector<DomProperty*> &properties)
 {
     QFormBuilder::applyProperties(o, properties);
 

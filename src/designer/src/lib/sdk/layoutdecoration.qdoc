@@ -49,7 +49,7 @@
 */
 
 /*!
-    \fn virtual QList<QWidget*> QDesignerLayoutDecorationExtension::widgets(QLayout *layout) const
+    \fn virtual QVector<QWidget*> QDesignerLayoutDecorationExtension::widgets(QLayout *layout) const
 
     Returns the widgets that are managed by the given \a layout.
 

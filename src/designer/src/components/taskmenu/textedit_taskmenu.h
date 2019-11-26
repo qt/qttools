@@ -51,7 +51,7 @@ public:
     ~TextEditTaskMenu() override;
 
     QAction *preferredEditAction() const override;
-    QList<QAction*> taskActions() const override;
+    QVector<QAction*> taskActions() const override;
 
 private slots:
     void editText();
@@ -63,7 +63,7 @@ private:
     const QString m_property;
     const QString m_windowTitle;
 
-    mutable QList<QAction*> m_taskActions;
+    mutable QVector<QAction*> m_taskActions;
     QAction *m_editTextAction;
 };
 

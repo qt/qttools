@@ -79,7 +79,7 @@ public:
                                                                    // then later when that resource set is activated it needs to be reregistered)
     QMap<QtResourceSet *, bool>             m_newlyCreated; // all created but not activated yet
                                                             // (if was active at some point and it's not now it will not be on that map)
-    QMap<QString, QList<QtResourceSet *> >  m_pathToResourceSet;
+    QMap<QString, QVector<QtResourceSet *> >  m_pathToResourceSet;
     QtResourceSet                          *m_currentResourceSet = nullptr;
 
     typedef QMap<QString, const QByteArray *> PathDataMap;
@@ -487,7 +487,7 @@ void QtResourceModel::setModified(const QString &path)
         d_ptr->m_resourceSetToReload.insert(rs, true);
 }
 
-QList<QtResourceSet *> QtResourceModel::resourceSets() const
+QVector<QtResourceSet *> QtResourceModel::resourceSets() const
 {
     return d_ptr->m_resourceSetToPaths.keys();
 }

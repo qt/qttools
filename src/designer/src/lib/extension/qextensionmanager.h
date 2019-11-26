@@ -51,7 +51,7 @@ public:
     QObject *extension(QObject *object, const QString &iid) const override;
 
 private:
-    using FactoryList = QList<QAbstractExtensionFactory *>;
+    using FactoryList = QVector<QAbstractExtensionFactory *>;
     typedef QHash<QString, FactoryList> FactoryMap;
     FactoryMap m_extensions;
     FactoryList m_globalExtension;

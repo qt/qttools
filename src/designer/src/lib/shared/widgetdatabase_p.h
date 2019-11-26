@@ -101,8 +101,8 @@ public:
     QString extends() const override;
     void setExtends(const QString &s) override;
 
-    void setDefaultPropertyValues(const QList<QVariant> &list) override;
-    QList<QVariant> defaultPropertyValues() const override;
+    void setDefaultPropertyValues(const QVector<QVariant> &list) override;
+    QVector<QVariant> defaultPropertyValues() const override;
 
     static WidgetDataBaseItem *clone(const QDesignerWidgetDataBaseItemInterface *item);
 
@@ -129,7 +129,7 @@ private:
     uint m_container: 1;
     uint m_custom: 1;
     uint m_promoted: 1;
-    QList<QVariant> m_defaultPropertyValues;
+    QVector<QVariant> m_defaultPropertyValues;
     QStringList m_fakeSlots;
     QStringList m_fakeSignals;
 };
@@ -170,7 +170,7 @@ public slots:
     void loadPlugins();
 
 private:
-    QList<QVariant> defaultPropertyValues(const QString &name);
+    QVector<QVariant> defaultPropertyValues(const QString &name);
 
     QDesignerFormEditorInterface *m_core;
 };
@@ -184,7 +184,7 @@ QDESIGNER_SHARED_EXPORT QDesignerWidgetDataBaseItemInterface
                        bool promoted,
                        bool custom);
 
-using WidgetDataBaseItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
+using WidgetDataBaseItemList = QVector<QDesignerWidgetDataBaseItemInterface *>;
 
 QDESIGNER_SHARED_EXPORT WidgetDataBaseItemList
         promotionCandidates(const QDesignerWidgetDataBaseInterface *db,

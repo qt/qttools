@@ -56,7 +56,7 @@ static const char *uriListMimeFormatC = "text/uri-list";
 
 QT_BEGIN_NAMESPACE
 
-using ActionList = QList<QAction *>;
+using ActionList = QVector<QAction *>;
 
 // Helpers for creating toolbars and menu
 

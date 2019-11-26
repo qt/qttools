@@ -77,7 +77,7 @@ public:
     PositionStopMap stops() const;
     QtGradientStop *at(qreal pos) const;
     QColor color(qreal pos) const; // calculated between points
-    QList<QtGradientStop *> selectedStops() const;
+    QVector<QtGradientStop *> selectedStops() const;
     QtGradientStop *currentStop() const;
     bool isSelected(QtGradientStop *stop) const;
     QtGradientStop *firstSelected() const;

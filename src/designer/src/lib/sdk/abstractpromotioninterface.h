@@ -53,7 +53,7 @@ public:
         QDesignerWidgetDataBaseItemInterface *promotedItem;
     };
 
-    using PromotedClasses = QList<PromotedClass>;
+    using PromotedClasses = QVector<PromotedClass>;
 
     virtual PromotedClasses promotedClasses() const = 0;
 
@@ -70,7 +70,7 @@ public:
 
     virtual bool setPromotedClassIncludeFile(const QString &className, const QString &includeFile, QString *errorMessage) = 0;
 
-    virtual QList<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const = 0;
+    virtual QVector<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const = 0;
 };
 
 QT_END_NAMESPACE

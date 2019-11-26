@@ -108,10 +108,10 @@ private:
     QString realClassName(QObject *object) const;
     void storeExpansionState();
     void applyExpansionState();
-    void storePropertiesExpansionState(const QList<QtBrowserItem *> &items);
-    void applyPropertiesExpansionState(const QList<QtBrowserItem *> &items);
+    void storePropertiesExpansionState(const QVector<QtBrowserItem *> &items);
+    void applyPropertiesExpansionState(const QVector<QtBrowserItem *> &items);
     void applyFilter();
-    int applyPropertiesFilter(const QList<QtBrowserItem *> &items);
+    int applyPropertiesFilter(const QVector<QtBrowserItem *> &items);
     void setExpanded(QtBrowserItem *item, bool expanded);
     bool isExpanded(QtBrowserItem *item) const;
     void setItemVisible(QtBrowserItem *item, bool visible);
@@ -157,7 +157,7 @@ private:
     QMap<QString, QtVariantProperty*> m_nameToProperty;
     QMap<QtProperty*, QString> m_propertyToGroup;
     QMap<QString, QtVariantProperty*> m_nameToGroup;
-    QList<QtProperty *> m_groups;
+    QVector<QtProperty *> m_groups;
     QtProperty *m_dynamicGroup = nullptr;
     QString m_recentlyAddedDynamicProperty;
     bool m_updatingBrowser = false;

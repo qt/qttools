@@ -56,8 +56,8 @@ namespace qdesigner_internal {
 
 enum { debugButtonMenu = 0 };
 
-using ButtonList = QList<QAbstractButton *>;
-using ButtonGroupList = QList<QButtonGroup *>;
+using ButtonList = QVector<QAbstractButton *>;
+using ButtonGroupList = QVector<QButtonGroup *>;
 
 // ButtonGroupCommand: Base for commands handling button groups and button lists
 // addButtonsToGroup() and removeButtonsFromGroup() are low-level helpers for
@@ -363,7 +363,7 @@ QAction *ButtonGroupTaskMenu::preferredEditAction() const
     return m_menu.selectGroupAction();
 }
 
-QList<QAction*> ButtonGroupTaskMenu::taskActions() const
+QVector<QAction*> ButtonGroupTaskMenu::taskActions() const
 {
     m_menu.initialize(QDesignerFormWindowInterface::findFormWindow(m_buttonGroup), m_buttonGroup);
     return m_taskActions;
@@ -509,7 +509,7 @@ bool ButtonTaskMenu::refreshAssignMenu(const QDesignerFormWindowInterface *fw, i
     return !m_assignGroupSubMenu->isEmpty();
 }
 
-QList<QAction*> ButtonTaskMenu::taskActions() const
+QVector<QAction*> ButtonTaskMenu::taskActions() const
 {
     ButtonTaskMenu *ncThis = const_cast<ButtonTaskMenu*>(this);
     QButtonGroup *buttonGroup = nullptr;

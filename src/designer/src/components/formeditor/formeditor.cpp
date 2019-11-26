@@ -142,7 +142,7 @@ FormEditor::FormEditor(QObject *parent)
     connect(resourceModel, &QtResourceModel::qrcFileModifiedExternally,
             this, &FormEditor::slotQrcFileChangedExternally);
 
-    QList<QDesignerOptionsPageInterface*> optionsPages;
+    QVector<QDesignerOptionsPageInterface*> optionsPages;
     optionsPages << new TemplateOptionsPage(this) << new FormEditorOptionsPage(this) << new EmbeddedOptionsPage(this);
     setOptionsPages(optionsPages);
 

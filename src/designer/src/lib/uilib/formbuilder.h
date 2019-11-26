@@ -80,7 +80,7 @@ public:
     void addPluginPath(const QString &pluginPath);
     void setPluginPath(const QStringList &pluginPaths);
 
-    QList<QDesignerCustomWidgetInterface*> customWidgets() const;
+    QVector<QDesignerCustomWidgetInterface*> customWidgets() const;
 
 protected:
     QWidget *create(DomUI *ui, QWidget *parentWidget) override;
@@ -99,7 +99,7 @@ protected:
     bool addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 
     virtual void updateCustomWidgets();
-    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
+    void applyProperties(QObject *o, const QVector<DomProperty*> &properties) override;
 
     static QWidget *widgetByName(QWidget *topLevel, const QString &name);
 

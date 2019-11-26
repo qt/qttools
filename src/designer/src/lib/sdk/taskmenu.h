@@ -45,7 +45,7 @@ public:
 
     virtual QAction *preferredEditAction() const;
 
-    virtual QList<QAction*> taskActions() const = 0;
+    virtual QVector<QAction*> taskActions() const = 0;
 };
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerTaskMenuExtension, "org.qt-project.Qt.Designer.TaskMenu")
 

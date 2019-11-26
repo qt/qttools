@@ -608,7 +608,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
         // Figure out states of a cell and return as a flat vector of
         // [column1, column2,...] (address as  row * columnCount + col)
-        static CellStates cellStates(const QList<QRect> &rects, int numRows, int numColumns);
+        static CellStates cellStates(const QVector<QRect> &rects, int numRows, int numColumns);
 
         typedef QMap<QWidget *, QRect> WidgetItemMap;
         typedef QMap<QWidget *, Qt::Alignment> WidgetAlignmentMap;
@@ -635,7 +635,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         return str;
     }
 
-    GridLayoutState::CellStates GridLayoutState::cellStates(const QList<QRect> &rects, int numRows, int numColumns)
+    GridLayoutState::CellStates GridLayoutState::cellStates(const QVector<QRect> &rects, int numRows, int numColumns)
     {
         CellStates rc = CellStates(numRows * numColumns, CellState(Free, Free));
         for (const auto &rect : rects) {

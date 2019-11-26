@@ -145,7 +145,7 @@ QString ContainerWidgetTaskMenu::pageMenuText(ContainerType ct, int index, int c
     return tr("Page %1 of %2").arg(index + 1).arg(count);
 }
 
-QList<QAction*> ContainerWidgetTaskMenu::taskActions() const
+QVector<QAction*> ContainerWidgetTaskMenu::taskActions() const
 {
     const QDesignerContainerExtension *ce = containerExtension();
     const int index = ce->currentIndex();
@@ -231,7 +231,7 @@ WizardContainerWidgetTaskMenu::WizardContainerWidgetTaskMenu(QWizard *w, QObject
     l.push_front(createSeparator());
 }
 
-QList<QAction*> WizardContainerWidgetTaskMenu::taskActions() const
+QVector<QAction*> WizardContainerWidgetTaskMenu::taskActions() const
 {
     // Enable
     const QDesignerContainerExtension *ce = containerExtension();
@@ -269,7 +269,7 @@ void MdiContainerWidgetTaskMenu::initializeActions()
     l.push_front(createSeparator());
 }
 
-QList<QAction*> MdiContainerWidgetTaskMenu::taskActions() const
+QVector<QAction*> MdiContainerWidgetTaskMenu::taskActions() const
 {
     const auto rc = ContainerWidgetTaskMenu::taskActions();
     // Enable

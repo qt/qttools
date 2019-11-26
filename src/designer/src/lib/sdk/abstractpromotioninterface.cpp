@@ -91,7 +91,7 @@ QT_BEGIN_NAMESPACE
     with an error message in \a errorMessage on failure.
 */
 
-/*! \fn virtual QList<QDesignerWidgetDataBaseItemInterface *> QDesignerPromotionInterface::promotionBaseClasses() const
+/*! \fn virtual QVector<QDesignerWidgetDataBaseItemInterface *> QDesignerPromotionInterface::promotionBaseClasses() const
 
      Return a list of base classes that are suitable for promotion.
 */

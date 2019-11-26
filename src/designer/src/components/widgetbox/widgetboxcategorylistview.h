@@ -58,7 +58,7 @@ public:
     explicit WidgetBoxCategoryListView(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
     void setViewMode(ViewMode vm);
 
-    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list);
+    void dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list);
 
     using QListView::contentsSize;
 

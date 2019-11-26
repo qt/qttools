@@ -76,7 +76,7 @@ QAction *TextEditTaskMenu::preferredEditAction() const
     return m_editTextAction;
 }
 
-QList<QAction*> TextEditTaskMenu::taskActions() const
+QVector<QAction*> TextEditTaskMenu::taskActions() const
 {
     return m_taskActions + QDesignerTaskMenu::taskActions();
 }

@@ -82,7 +82,7 @@ struct QtResourceFileData {
 struct QtResourcePrefixData {
     QString prefix;
     QString language;
-    QList<QtResourceFileData> resourceFileList;
+    QVector<QtResourceFileData> resourceFileList;
     bool operator==(const QtResourcePrefixData &other) const
     {
         return prefix == other.prefix && language == other.language
@@ -92,7 +92,7 @@ struct QtResourcePrefixData {
 
 struct QtQrcFileData {
     QString qrcPath;
-    QList<QtResourcePrefixData> resourceList;
+    QVector<QtResourcePrefixData> resourceList;
     bool operator==(const QtQrcFileData &other) const
     { return qrcPath == other.qrcPath && resourceList == other.resourceList; }
 };
@@ -230,13 +230,13 @@ public:
 
     QString prefix() const { return m_prefix; }
     QString language() const { return m_language; }
-    QList<QtResourceFile *> resourceFiles() const { return m_resourceFiles; }
+    QVector<QtResourceFile *> resourceFiles() const { return m_resourceFiles; }
 private:
     QtResourcePrefix() = default;
 
     QString m_prefix;
     QString m_language;
-    QList<QtResourceFile *> m_resourceFiles;
+    QVector<QtResourceFile *> m_resourceFiles;
 
 };
 // ------------------- QtQrcFile
@@ -246,7 +246,7 @@ public:
 
     QString path() const { return m_path; }
     QString fileName() const { return m_fileName; }
-    QList<QtResourcePrefix *> resourcePrefixList() const { return m_resourcePrefixes; }
+    QVector<QtResourcePrefix *> resourcePrefixList() const { return m_resourcePrefixes; }
     QtQrcFileData initialState() const { return m_initialState; }
 
 private:
@@ -260,7 +260,7 @@ private:
 
     QString m_path;
     QString m_fileName;
-    QList<QtResourcePrefix *> m_resourcePrefixes;
+    QVector<QtResourcePrefix *> m_resourcePrefixes;
     QtQrcFileData m_initialState;
 };
 
@@ -272,7 +272,7 @@ public:
     QtQrcManager(QObject *parent = nullptr);
     ~QtQrcManager() override;
 
-    QList<QtQrcFile *> qrcFiles() const;
+    QVector<QtQrcFile *> qrcFiles() const;
 
     // helpers
     QtQrcFile *qrcFileOf(const QString &path) const;
@@ -332,12 +332,12 @@ signals:
     void resourceFileRemoved(QtResourceFile *resourceFile);
 private:
 
-    QList<QtQrcFile *> m_qrcFiles;
+    QVector<QtQrcFile *> m_qrcFiles;
     QMap<QString, QtQrcFile *> m_pathToQrc;
     QMap<QtQrcFile *, bool> m_qrcFileToExists;
     QMap<QtResourcePrefix *, QtQrcFile *> m_prefixToQrc;
     QMap<QtResourceFile *, QtResourcePrefix *> m_fileToPrefix;
-    QMap<QString, QList<QtResourceFile *> > m_fullPathToResourceFiles;
+    QMap<QString, QVector<QtResourceFile *> > m_fullPathToResourceFiles;
     QMap<QString, QIcon> m_fullPathToIcon;
     QMap<QString, bool> m_fullPathToExists;
 };
@@ -353,7 +353,7 @@ QtQrcManager::~QtQrcManager()
     clear();
 }
 
-QList<QtQrcFile *> QtQrcManager::qrcFiles() const
+QVector<QtQrcFile *> QtQrcManager::qrcFiles() const
 {
     return m_qrcFiles;
 }
@@ -397,11 +397,11 @@ void QtQrcManager::exportQrcFile(QtQrcFile *qrcFile, QtQrcFileData *qrcFileData)
 
     QtQrcFileData &data = *qrcFileData;
 
-    QList<QtResourcePrefixData> resourceList;
+    QVector<QtResourcePrefixData> resourceList;
 
     const auto resourcePrefixes = qrcFile->resourcePrefixList();
     for (const QtResourcePrefix *prefix : resourcePrefixes) {
-        QList<QtResourceFileData> resourceFileList;
+        QVector<QtResourceFileData> resourceFileList;
         const auto resourceFiles = prefix->resourceFiles();
         for (QtResourceFile *file : resourceFiles) {
             QtResourceFileData fileData;
@@ -857,7 +857,7 @@ public:
     QtResourceModel *m_resourceModel = nullptr;
     QDesignerDialogGuiInterface *m_dlgGui = nullptr;
     QtQrcManager *m_qrcManager = nullptr;
-    QList<QtQrcFileData> m_initialState;
+    QVector<QtQrcFileData> m_initialState;
 
     QMap<QtQrcFile *, QListWidgetItem *> m_qrcFileToItem;
     QMap<QListWidgetItem *, QtQrcFile *> m_itemToQrcFile;
@@ -983,7 +983,7 @@ QStandardItem *QtResourceEditorDialogPrivate::insertResourcePrefix(QtResourcePre
 
     QStandardItem *prefixItem = new QStandardItem();
     QStandardItem *languageItem = new QStandardItem();
-    QList<QStandardItem *> items;
+    QVector<QStandardItem *> items;
     items << prefixItem;
     items << languageItem;
     m_treeModel->insertRow(row, items);
@@ -1087,7 +1087,7 @@ void QtResourceEditorDialogPrivate::slotResourceFileInserted(QtResourceFile *res
     QStandardItem *pathItem = new QStandardItem(resourceFile->path());
     QStandardItem *aliasItem = new QStandardItem();
     QStandardItem *parentItem = m_resourcePrefixToPrefixItem.value(resourcePrefix);
-    QList<QStandardItem *> items;
+    QVector<QStandardItem *> items;
     items << pathItem;
     items << aliasItem;
 
@@ -2094,7 +2094,7 @@ void QtResourceEditorDialog::displayResourceFailures(const QString &logOutput, Q
 void QtResourceEditorDialog::accept()
 {
     QStringList newQrcPaths;
-    QList<QtQrcFileData> currentState;
+    QVector<QtQrcFileData> currentState;
 
     const auto qrcFiles = d_ptr->m_qrcManager->qrcFiles();
     for (QtQrcFile *qrcFile : qrcFiles) {

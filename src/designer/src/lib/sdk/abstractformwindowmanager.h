@@ -120,7 +120,7 @@ public:
 
     virtual QDesignerFormEditorInterface *core() const = 0;
 
-    virtual void dragItems(const QList<QDesignerDnDItemInterface*> &item_list) = 0;
+    virtual void dragItems(const QVector<QDesignerDnDItemInterface*> &item_list) = 0;
 
     virtual QPixmap createPreviewPixmap() const = 0;
 

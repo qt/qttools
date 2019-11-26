@@ -61,7 +61,7 @@ class QDESIGNER_SHARED_EXPORT FormLayoutMenu : public QObject
     Q_DISABLE_COPY_MOVE(FormLayoutMenu)
     Q_OBJECT
 public:
-    using ActionList = QList<QAction *>;
+    using ActionList = QVector<QAction *>;
 
     explicit FormLayoutMenu(QObject *parent);
 

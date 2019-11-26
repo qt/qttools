@@ -78,7 +78,7 @@ public:
     void addToolBar(QToolBar *toolBar, const QString &category);
     void removeToolBar(QToolBar *toolBar);
 
-    QList<QToolBar *> toolBars() const;
+    QVector<QToolBar *> toolBars() const;
 
     QByteArray saveState(int version = 0) const;
     bool restoreState(const QByteArray &state, int version = 0);

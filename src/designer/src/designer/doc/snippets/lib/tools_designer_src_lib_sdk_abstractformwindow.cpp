@@ -55,7 +55,7 @@
 
 
 //! [1]
-    QList<QDesignerFormWindowInterface *> forms;
+    QVector<QDesignerFormWindowInterface *> forms;
     QDesignerFormWindowInterface *formWindow;
 
     QDesignerFormWindowManagerInterface *manager = formEditor->formWindowManager();

@@ -146,7 +146,7 @@ protected:
     virtual QActionGroup *create(DomActionGroup *ui_action_group, QObject *parent);
     virtual void addMenuAction(QAction *action);
 
-    virtual void applyProperties(QObject *o, const QList<DomProperty*> &properties);
+    virtual void applyProperties(QObject *o, const QVector<DomProperty*> &properties);
     bool applyPropertyInternally(QObject *o, const QString &propertyName, const QVariant &value);
 
     virtual void applyTabStops(QWidget *widget, DomTabStops *tabStops);
@@ -186,7 +186,7 @@ protected:
     virtual DomTabStops *saveTabStops();
     virtual DomResources *saveResources();
     DomButtonGroups *saveButtonGroups(const QWidget *mainContainer);
-    virtual QList<DomProperty*> computeProperties(QObject *obj);
+    virtual QVector<DomProperty*> computeProperties(QObject *obj);
     virtual bool checkProperty(QObject *obj, const QString &prop) const;
     virtual DomProperty *createProperty(QObject *object, const QString &propertyName, const QVariant &value);
 
@@ -221,7 +221,7 @@ protected:
     static QString toString(const DomString *str);
 
     using DomPropertyHash = QHash<QString, DomProperty*>;
-    static DomPropertyHash propertyMap(const QList<DomProperty*> &properties);
+    static DomPropertyHash propertyMap(const QVector<DomProperty*> &properties);
 
     void setupColorGroup(QPalette &palette, QPalette::ColorGroup colorGroup, DomColorGroup *group);
     DomColorGroup *saveColorGroup(const QPalette &palette);

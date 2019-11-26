@@ -51,9 +51,9 @@ QAction *LayoutWidgetTaskMenu::preferredEditAction() const
     return m_formLayoutMenu->preferredEditAction(m_widget, m_widget->formWindow());
 }
 
-QList<QAction*> LayoutWidgetTaskMenu::taskActions() const
+QVector<QAction*> LayoutWidgetTaskMenu::taskActions() const
 {
-    QList<QAction*> rc;
+    QVector<QAction*> rc;
     QDesignerFormWindowInterface *fw = m_widget->formWindow();
     m_morphMenu->populate(m_widget, fw, rc);
     m_formLayoutMenu->populate(m_widget, fw, rc);
@@ -71,7 +71,7 @@ QAction *SpacerTaskMenu::preferredEditAction() const
     return nullptr;
 }
 
-QList<QAction*> SpacerTaskMenu::taskActions() const
+QVector<QAction*> SpacerTaskMenu::taskActions() const
 {
     return {};
 }

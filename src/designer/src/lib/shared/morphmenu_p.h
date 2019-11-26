@@ -55,7 +55,7 @@ class QDESIGNER_SHARED_EXPORT MorphMenu : public QObject {
     Q_DISABLE_COPY_MOVE(MorphMenu)
     Q_OBJECT
 public:
-    using ActionList = QList<QAction *>;
+    using ActionList = QVector<QAction *>;
 
     explicit MorphMenu(QObject *parent = nullptr);
 

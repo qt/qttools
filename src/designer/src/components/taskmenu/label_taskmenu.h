@@ -48,14 +48,14 @@ public:
     explicit LabelTaskMenu(QLabel *button, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QList<QAction*> taskActions() const override;
+    QVector<QAction*> taskActions() const override;
 
 private slots:
     void editRichText();
 
 private:
     QLabel *m_label;
-    QList<QAction*> m_taskActions;
+    QVector<QAction*> m_taskActions;
     QAction *m_editRichTextAction;
     QAction *m_editPlainTextAction;
 };
