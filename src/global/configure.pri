@@ -126,7 +126,7 @@ defineReplace(CheckClangCppLibForLupdateParser) {
                           clangIndex \
                           clangBasic
 
-    versionIsAtLeast($$CLANG_VERSION, "10.0.0"){
+    versionIsAtLeast($$CLANG_VERSION, "9.0.0"){
         libToTest += clangToolingRefactoring
     } else {
         libToTest += clangToolingRefactor
