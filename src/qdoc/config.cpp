@@ -643,7 +643,7 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
 QRegExp Config::getRegExp(const QString &var) const
 {
     QString pattern;
-    const QList<QRegExp> subRegExps = getRegExpList(var);
+    const QVector<QRegExp> subRegExps = getRegExpList(var);
 
     for (const auto &regExp : subRegExps) {
         if (!regExp.isValid())
@@ -662,10 +662,10 @@ QRegExp Config::getRegExp(const QString &var) const
   map, converts the string list to a list of regular expressions,
   and returns it.
  */
-QList<QRegExp> Config::getRegExpList(const QString &var) const
+QVector<QRegExp> Config::getRegExpList(const QString &var) const
 {
     const QStringList strs = getStringList(var);
-    QList<QRegExp> regExps;
+    QVector<QRegExp> regExps;
     for (const auto &str : strs)
         regExps += QRegExp(str);
     return regExps;

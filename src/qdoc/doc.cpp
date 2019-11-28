@@ -55,7 +55,7 @@ QT_BEGIN_NAMESPACE
 Q_GLOBAL_STATIC(QSet<QString>, null_Set_QString)
 Q_GLOBAL_STATIC(TopicList, nullTopicList)
 Q_GLOBAL_STATIC(QStringList, null_QStringList)
-Q_GLOBAL_STATIC(QList<Text>, null_QList_Text)
+Q_GLOBAL_STATIC(QVector<Text>, null_QVector_Text)
 Q_GLOBAL_STATIC(QStringMultiMap, null_QStringMultiMap)
 
 struct Macro
@@ -298,10 +298,10 @@ class DocPrivateExtra
 public:
     Doc::Sections       granularity_;
     Doc::Sections       section_; // ###
-    QList<Atom *>       tableOfContents_;
+    QVector<Atom *>     tableOfContents_;
     QVector<int>        tableOfContentsLevels_;
-    QList<Atom *>       keywords_;
-    QList<Atom *>       targets_;
+    QVector<Atom *>     keywords_;
+    QVector<Atom *>     targets_;
     QStringMultiMap     metaMap_;
 
     DocPrivateExtra()
@@ -349,7 +349,7 @@ public:
     QString src;
     Text text;
     QSet<QString> params;
-    QList<Text> alsoList;
+    QVector<Text> alsoList;
     QStringList enumItemList;
     QStringList omitEnumItemList;
     QSet<QString> metacommandsUsed;
@@ -3098,9 +3098,9 @@ ArgList Doc::metaCommandArgs(const QString &metacommand) const
     return priv == nullptr ? ArgList() : priv->metaCommandMap.value(metacommand);
 }
 
-const QList<Text> &Doc::alsoList() const
+const QVector<Text> &Doc::alsoList() const
 {
-    return priv == nullptr ? *null_QList_Text() : priv->alsoList;
+    return priv == nullptr ? *null_QVector_Text() : priv->alsoList;
 }
 
 bool Doc::hasTableOfContents() const
@@ -3118,7 +3118,7 @@ bool Doc::hasTargets() const
     return priv && priv->extra && !priv->extra->targets_.isEmpty();
 }
 
-const QList<Atom *> &Doc::tableOfContents() const
+const QVector<Atom *> &Doc::tableOfContents() const
 {
     priv->constructExtra();
     return priv->extra->tableOfContents_;
@@ -3130,13 +3130,13 @@ const QVector<int> &Doc::tableOfContentsLevels() const
     return priv->extra->tableOfContentsLevels_;
 }
 
-const QList<Atom *> &Doc::keywords() const
+const QVector<Atom *> &Doc::keywords() const
 {
     priv->constructExtra();
     return priv->extra->keywords_;
 }
 
-const QList<Atom *> &Doc::targets() const
+const QVector<Atom *> &Doc::targets() const
 {
     priv->constructExtra();
     return priv->extra->targets_;

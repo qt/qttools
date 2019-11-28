@@ -58,7 +58,7 @@ class SharedCommentNode;
 
 typedef QMap<QString, FunctionNode *> FunctionMap;
 typedef QList<Node *> NodeList;
-typedef QList<ClassNode *> ClassList;
+typedef QVector<ClassNode *> ClassList;
 typedef QVector<Node *> NodeVector;
 typedef QMap<QString, Node *> NodeMap;
 typedef QMap<QString, NodeMap> NodeMapMap;
@@ -66,7 +66,7 @@ typedef QMultiMap<QString, Node *> NodeMultiMap;
 typedef QMap<QString, NodeMultiMap> NodeMultiMapMap;
 typedef QMap<QString, CollectionNode *> CNMap;
 typedef QMultiMap<QString, CollectionNode *> CNMultiMap;
-typedef QList<CollectionNode *> CollectionList;
+typedef QVector<CollectionNode *> CollectionList;
 
 class Node
 {
@@ -287,7 +287,7 @@ public:
     virtual void markDefault() { }
     virtual void markReadOnly(bool ) { }
 
-    bool match(const QList<int> &types) const;
+    bool match(const QVector<int> &types) const;
     Aggregate *parent() const { return parent_; }
     const QString &name() const { return name_; }
     QString physicalModuleName() const;
@@ -615,15 +615,15 @@ public:
     void removePrivateAndInternalBases();
     void resolvePropertyOverriddenFromPtrs(PropertyNode *pn);
 
-    QList<RelatedClass> &baseClasses() { return bases_; }
-    QList<RelatedClass> &derivedClasses() { return derived_; }
-    QList<RelatedClass> &ignoredBaseClasses() { return ignoredBases_; }
-    QList<UsingClause> &usingClauses() { return usingClauses_; }
+    QVector<RelatedClass> &baseClasses() { return bases_; }
+    QVector<RelatedClass> &derivedClasses() { return derived_; }
+    QVector<RelatedClass> &ignoredBaseClasses() { return ignoredBases_; }
+    QVector<UsingClause> &usingClauses() { return usingClauses_; }
 
-    const QList<RelatedClass> &baseClasses() const { return bases_; }
-    const QList<RelatedClass> &derivedClasses() const { return derived_; }
-    const QList<RelatedClass> &ignoredBaseClasses() const { return ignoredBases_; }
-    const QList<UsingClause> &usingClauses() const { return usingClauses_; }
+    const QVector<RelatedClass> &baseClasses() const { return bases_; }
+    const QVector<RelatedClass> &derivedClasses() const { return derived_; }
+    const QVector<RelatedClass> &ignoredBaseClasses() const { return ignoredBases_; }
+    const QVector<UsingClause> &usingClauses() const { return usingClauses_; }
 
     QmlTypeNode *qmlElement() { return qmlelement; }
     void setQmlElement(QmlTypeNode *qcn) { qmlelement = qcn; }
@@ -636,13 +636,13 @@ public:
     bool docMustBeGenerated() const override;
 
 private:
-    void promotePublicBases(const QList<RelatedClass> &bases);
+    void promotePublicBases(const QVector<RelatedClass> &bases);
 
 private:
-    QList<RelatedClass> bases_;
-    QList<RelatedClass> derived_;
-    QList<RelatedClass> ignoredBases_;
-    QList<UsingClause> usingClauses_;
+    QVector<RelatedClass> bases_;
+    QVector<RelatedClass> derived_;
+    QVector<RelatedClass> ignoredBases_;
+    QVector<UsingClause> usingClauses_;
     bool abstract_;
     bool wrapper_;
     QString obsoleteLink_;
@@ -707,7 +707,7 @@ struct ImportRec {
     bool isEmpty() const { return name_.isEmpty(); }
 };
 
-typedef QList<ImportRec> ImportList;
+typedef QVector<ImportRec> ImportList;
 
 class QmlTypeNode : public Aggregate
 {
@@ -847,14 +847,14 @@ public:
     void setFlagsType(TypedefNode *typedeff);
     bool hasItem(const QString &name) const { return names_.contains(name); }
 
-    const QList<EnumItem> &items() const { return items_; }
+    const QVector<EnumItem> &items() const { return items_; }
     Access itemAccess(const QString &name) const;
     const TypedefNode *flagsType() const { return flagsType_; }
     QString itemValue(const QString &name) const;
     Node *clone(Aggregate *parent) override;
 
 private:
-    QList<EnumItem> items_;
+    QVector<EnumItem> items_;
     QSet<QString> names_;
     const TypedefNode *flagsType_;
 };

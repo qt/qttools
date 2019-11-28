@@ -73,7 +73,7 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 
 #ifndef QT_NO_TRANSLATION
 typedef QPair<QString, QTranslator *> Translator;
-static QList<Translator> translators;
+static QVector<Translator> translators;
 #endif
 
 static ClangCodeParser* clangParser_ = nullptr;
@@ -167,7 +167,7 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
             for (int i = 0; i < config.dependModules().size(); i++) {
                 QString indexToAdd;
                 QString dependModule = config.dependModules()[i];
-                QList<QFileInfo> foundIndices;
+                QVector<QFileInfo> foundIndices;
                 // Always look in module-specific subdir, even with *.nosubdirs config
                 bool useModuleSubDir = !subDirs.contains(dependModule);
                 subDirs << dependModule;

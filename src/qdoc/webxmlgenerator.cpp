@@ -222,7 +222,7 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
     while (atom)
         atom = addAtomElements(writer, atom, node, marker_);
 
-    QList<Text> alsoList = node->doc().alsoList();
+    QVector<Text> alsoList = node->doc().alsoList();
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {

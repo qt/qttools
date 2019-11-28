@@ -2423,7 +2423,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node,
                                             CodeMarker *marker,
                                             QVector<Section> *sections)
 {
-    QList<Atom *> toc;
+    QVector<Atom *> toc;
     if (node->doc().hasTableOfContents())
         toc = node->doc().tableOfContents();
     if (tocDepth == 0 || (toc.isEmpty() && !sections && !node->isModule())) {
@@ -3182,7 +3182,7 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
     if (type != Node::NoType) {
         NodeList nodeList;
         qdb_->mergeCollections(type, cnm, relative);
-        const CollectionList collectionList = cnm.values();
+        const auto collectionList = cnm.values();
         nodeList.reserve(collectionList.size());
         for (auto *collectionNode : collectionList)
             nodeList.append(collectionNode);
@@ -3346,7 +3346,7 @@ void HtmlGenerator::generateSectionList(const Section& section,
 
 void HtmlGenerator::generateSectionInheritedList(const Section& section, const Node *relative)
 {
-    const QList<QPair<Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
+    const QVector<QPair<Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
     for (const auto &member : inheritedMembers) {
         out() << "<li class=\"fn\">";
         out() << member.second << ' ';
@@ -3720,7 +3720,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
     generateSince(node, marker);
 
     if (node->isProperty()) {
-        const PropertyNode *property = static_cast<const PropertyNode *>(node);
+        const auto property = static_cast<const PropertyNode *>(node);
         Section section(Section::Accessors, Section::Active);
 
         section.appendMembers(property->getters().toVector());

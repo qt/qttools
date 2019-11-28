@@ -39,7 +39,7 @@
 QT_BEGIN_NAMESPACE
 
 QString CodeMarker::defaultLang;
-QList<CodeMarker *> CodeMarker::markers;
+QVector<CodeMarker *> CodeMarker::markers;
 
 /*!
   When a code marker constructs itself, it puts itself into

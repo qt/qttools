@@ -86,7 +86,7 @@ private:
     QString macName(const Node *parent, const QString &name = QString());
 
     static QString defaultLang;
-    static QList<CodeMarker *> markers;
+    static QVector<CodeMarker *> markers;
 };
 
 QT_END_NAMESPACE

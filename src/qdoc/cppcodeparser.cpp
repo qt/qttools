@@ -1015,7 +1015,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
 
 void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
 {
-    QList<Doc>::Iterator d = docs.begin();
+    QVector<Doc>::Iterator d = docs.begin();
     for (const auto &node : nodes) {
         if (node != nullptr) {
             processMetaCommands(*d, node);

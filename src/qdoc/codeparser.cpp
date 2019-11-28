@@ -42,7 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QList<CodeParser *> CodeParser::parsers;
+QVector<CodeParser *> CodeParser::parsers;
 bool CodeParser::showInternal_ = false;
 bool CodeParser::singleExec_ = false;
 

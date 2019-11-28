@@ -938,7 +938,7 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
 
 static void pushBaseClasses(QStack<ClassNode *> &stack, ClassNode *cn)
 {
-    const QList<RelatedClass> &baseClasses = cn->baseClasses();
+    const QVector<RelatedClass> baseClasses = cn->baseClasses();
     for (const auto &cls : baseClasses) {
         if (cls.node_)
             stack.prepend(cls.node_);

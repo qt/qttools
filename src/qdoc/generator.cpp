@@ -57,7 +57,7 @@ QStringList Generator::exampleDirs;
 QStringList Generator::exampleImgExts;
 QMap<QString, QMap<QString, QString> > Generator::fmtLeftMaps;
 QMap<QString, QMap<QString, QString> > Generator::fmtRightMaps;
-QList<Generator *> Generator::generators;
+QVector<Generator *> Generator::generators;
 QStringList Generator::imageDirs;
 QStringList Generator::imageFiles;
 QMap<QString, QStringList> Generator::imgFileExts;
@@ -185,7 +185,7 @@ void Generator::signatureList(const NodeList &nodes, const Node *relative, CodeM
     generateText(text, relative, marker);
 }
 
-int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<RelatedClass> &rc)
+int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QVector<RelatedClass> &rc)
 {
     QMap<QString,Text> classMap;
     for (const auto &relatedClass : rc) {
@@ -716,7 +716,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 
 void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
 {
-    QList<Text> alsoList = node->doc().alsoList();
+    QVector<Text> alsoList = node->doc().alsoList();
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {
@@ -879,7 +879,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             const EnumNode *enume = static_cast<const EnumNode *>(node);
 
             QSet<QString> definedItems;
-            const QList<EnumItem> &items = enume->items();
+            const QVector<EnumItem> &items = enume->items();
             for (const auto &item : items)
                 definedItems.insert(item.name());
 
@@ -1114,7 +1114,7 @@ void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
              << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD);
 
         int index = 0;
-        const QList<RelatedClass> &baseClasses = classe->baseClasses();
+        const QVector<RelatedClass> &baseClasses = classe->baseClasses();
         for (const auto &cls : baseClasses) {
             if (cls.node_) {
                 appendFullName(text, cls.node_, classe);
@@ -2163,7 +2163,7 @@ void Generator::initializeTextOutput()
     sectionNumber_.clear();
 }
 
-void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
+void Generator::supplementAlsoList(const Node *node, QVector<Text> &alsoList)
 {
     if (node->isFunction() && !node->isMacro()) {
         const auto fn = static_cast<const FunctionNode *>(node);

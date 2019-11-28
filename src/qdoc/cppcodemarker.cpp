@@ -495,7 +495,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
             keywords.insert(keywordTable[j]);
     }
 #define readChar() \
-    ch = (i < (int)code.length()) ? code[i++].cell() : EOF
+    ch = (i < code.length()) ? code[i++].cell() : EOF
 
     QString code = in;
     QString out;

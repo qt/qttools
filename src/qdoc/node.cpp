@@ -659,7 +659,7 @@ QString Node::fullName(const Node *relative) const
   If a match is found, return true. If no match is found,
   return false.
  */
-bool Node::match(const QList<int> &types) const
+bool Node::match(const QVector<int> &types) const
 {
     for (int i=0; i<types.size(); ++i) {
         if (nodeType() == types.at(i))
@@ -2928,7 +2928,7 @@ QString Aggregate::typeWord(bool cap) const
   is called recursively with the list of base classes from
   that private or internal class node.
  */
-void ClassNode::promotePublicBases(const QList<RelatedClass> &bases)
+void ClassNode::promotePublicBases(const QVector<RelatedClass> &bases)
 {
     if (!bases.isEmpty()) {
         for (int i = bases.size() - 1; i >= 0; --i) {
@@ -2978,7 +2978,7 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *dc = derived_.at(i).node_;
         if (dc != nullptr && (dc->isPrivate() || dc->isInternal())) {
             derived_.removeAt(i);
-            const QList<RelatedClass> &dd = dc->derivedClasses();
+            const QVector<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)
                 derived_.insert(i, dd.at(j));
         }
@@ -3377,7 +3377,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 
     PropertyNode *pn = nullptr;
 
-    const QList<RelatedClass> &bases = baseClasses();
+    const QVector<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {
             ClassNode *cn = bases[i].node_;
@@ -3388,7 +3388,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
             }
         }
     }
-    const QList<RelatedClass> &ignoredBases = ignoredBaseClasses();
+    const QVector<RelatedClass> &ignoredBases = ignoredBaseClasses();
     if (!ignoredBases.isEmpty()) {
         for (int i = 0; i < ignoredBases.size(); ++i) {
             ClassNode *cn = ignoredBases[i].node_;
@@ -3412,7 +3412,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 QmlTypeNode *ClassNode::findQmlBaseNode()
 {
     QmlTypeNode *result = nullptr;
-    const QList<RelatedClass> &bases = baseClasses();
+    const QVector<RelatedClass> &bases = baseClasses();
 
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {

@@ -50,7 +50,7 @@ class Text;
 class DitaRef;
 
 typedef QPair<QString, Location> ArgLocPair;
-typedef QList<ArgLocPair> ArgList;
+typedef QVector<ArgLocPair> ArgList;
 typedef QMap<QString, QString> QStringMap;
 typedef QMultiMap<QString, QString> QStringMultiMap;
 
@@ -63,9 +63,9 @@ struct Topic
     bool isEmpty() const { return topic.isEmpty(); }
     void clear() { topic.clear(); args.clear(); }
 };
-typedef QList<Topic> TopicList;
+typedef QVector<Topic> TopicList;
 
-typedef QList<DitaRef *> DitaRefList;
+typedef QVector<DitaRef *> DitaRefList;
 
 class DitaRef
 {
@@ -154,16 +154,16 @@ public:
     const QSet<QString> &metaCommandsUsed() const;
     const TopicList &topicsUsed() const;
     ArgList metaCommandArgs(const QString &metaCommand) const;
-    const QList<Text> &alsoList() const;
+    const QVector<Text> &alsoList() const;
     bool hasTableOfContents() const;
     bool hasKeywords() const;
     bool hasTargets() const;
     bool isInternal() const;
     bool isMarkedReimp() const;
-    const QList<Atom *> &tableOfContents() const;
+    const QVector<Atom *> &tableOfContents() const;
     const QVector<int> &tableOfContentsLevels() const;
-    const QList<Atom *> &keywords() const;
-    const QList<Atom *> &targets() const;
+    const QVector<Atom *> &keywords() const;
+    const QVector<Atom *> &targets() const;
     const QStringMultiMap &metaTagMap() const;
 
     static void initialize(const Config &config);
@@ -184,7 +184,7 @@ private:
     static const Config *config_;
 };
 Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
-typedef QList<Doc> DocList;
+typedef QVector<Doc> DocList;
 
 QT_END_NAMESPACE
 

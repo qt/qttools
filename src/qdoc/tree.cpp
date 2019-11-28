@@ -237,10 +237,10 @@ void Tree::resolveBaseClasses(Aggregate *n)
     for (auto it = n->constBegin(); it != n->constEnd(); ++it) {
         if ((*it)->isClassNode()) {
             ClassNode *cn = static_cast<ClassNode *>(*it);
-            QList<RelatedClass> &bases = cn->baseClasses();
-            for (auto &cls : bases) {
-                if (cls.node_ == nullptr) {
-                    Node *n = qdb_->findClassNode(cls.path_);
+            QVector<RelatedClass> &bases = cn->baseClasses();
+            for (auto &base : bases) {
+                if (base.node_ == nullptr) {
+                    Node *n = qdb_->findClassNode(base.path_);
                     /*
                       If the node for the base class was not found,
                       the reason might be that the subclass is in a
@@ -256,12 +256,12 @@ void Tree::resolveBaseClasses(Aggregate *n)
                         if (parent != nullptr)
                             // Exclude the root namespace
                             if (parent->isNamespace() && !parent->name().isEmpty())
-                                n = findClassNode(cls.path_, parent);
+                                n = findClassNode(base.path_, parent);
                     }
                     if (n != nullptr) {
                         ClassNode *bcn = static_cast<ClassNode *>(n);
-                        cls.node_ = bcn;
-                        bcn->addDerivedClass(cls.access_, cn);
+                        base.node_ = bcn;
+                        bcn->addDerivedClass(base.access_, cn);
                     }
                 }
             }
@@ -366,7 +366,7 @@ void Tree::resolveUsingClauses()
     for (auto *child : children) {
         if (child->isClassNode()) {
             ClassNode *cn = static_cast<ClassNode *>(child);
-            QList<UsingClause> &usingClauses = cn->usingClauses();
+            QVector<UsingClause> &usingClauses = cn->usingClauses();
             for (auto &usingClause : usingClauses) {
                 if (usingClause.node() == nullptr) {
                     const Node *n = qdb_->findFunctionNode(usingClause.signature(), cn, Node::CPP);
@@ -792,7 +792,7 @@ void Tree::resolveTargets(Aggregate *root)
         }
 
         if (child->doc().hasTableOfContents()) {
-            const QList<Atom *> &toc = child->doc().tableOfContents();
+            const QVector<Atom *> &toc = child->doc().tableOfContents();
             for (int i = 0; i < toc.size(); ++i) {
                 QString ref = refForAtom(toc.at(i));
                 QString title = Text::sectionHeading(toc.at(i)).toString();
@@ -805,7 +805,7 @@ void Tree::resolveTargets(Aggregate *root)
             }
         }
         if (child->doc().hasKeywords()) {
-            const QList<Atom *> &keywords = child->doc().keywords();
+            const QVector<Atom *> &keywords = child->doc().keywords();
             for (int i = 0; i < keywords.size(); ++i) {
                 QString ref = refForAtom(keywords.at(i));
                 QString title = keywords.at(i)->string();
@@ -817,7 +817,7 @@ void Tree::resolveTargets(Aggregate *root)
             }
         }
         if (child->doc().hasTargets()) {
-            const QList<Atom *> &targets = child->doc().targets();
+            const QVector<Atom *> &targets = child->doc().targets();
             for (int i = 0; i < targets.size(); ++i) {
                 QString ref = refForAtom(targets.at(i));
                 QString title = targets.at(i)->string();
@@ -843,7 +843,7 @@ Tree::findUnambiguousTarget(const QString &target, Node::Genus genus, QString &r
 {
     int numBestTargets = 0;
     TargetRec *bestTarget = nullptr;
-    QList<TargetRec *> bestTargetList;
+    QVector<TargetRec *> bestTargetList;
 
     QString key = target;
     for (auto it = nodesByTargetTitle_.find(key); it != nodesByTargetTitle_.constEnd(); ++it) {

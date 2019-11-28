@@ -141,7 +141,7 @@ protected:
     static QString outputPrefix(const Node *node);
     static QString outputSuffix(const Node *node);
     static void singularPlural(Text &text, const NodeList &nodes);
-    static void supplementAlsoList(const Node *node, QList<Text> &alsoList);
+    static void supplementAlsoList(const Node *node, QVector<Text> &alsoList);
     static QString trimmedTrailing(const QString &string,
                                    const QString &prefix,
                                    const QString &suffix);
@@ -204,7 +204,8 @@ protected:
                         const QString &fullName,
                         const Node *actualNode);
     void appendFullNames(Text &text, const NodeList &nodes, const Node *relative);
-    int appendSortedNames(Text &text, const ClassNode *classe, const QList<RelatedClass> &classes);
+    int appendSortedNames(Text &text, const ClassNode *classe,
+                          const QVector<RelatedClass> &classes);
     void appendSignature(Text &text, const Node *node);
     void signatureList(const NodeList &nodes, const Node *relative, CodeMarker *marker);
 
@@ -216,7 +217,7 @@ private:
     static QStringList exampleImgExts;
     static QMap<QString, QMap<QString, QString> > fmtLeftMaps;
     static QMap<QString, QMap<QString, QString> > fmtRightMaps;
-    static QList<Generator *> generators;
+    static QVector<Generator *> generators;
     static QStringList imageDirs;
     static QStringList imageFiles;
     static QMap<QString, QStringList> imgFileExts;
