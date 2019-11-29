@@ -670,6 +670,12 @@ void HelpEngineWrapper::setTopicChooserGeometry(const QByteArray &geometry)
     d->m_helpEngine->setCustomValue(TopicChooserGeometryKey, geometry);
 }
 
+QHelpEngineCore *HelpEngineWrapper::helpEngine() const
+{
+    return d->m_helpEngine;
+}
+
+
 // -- TimeoutForwarder
 
 TimeoutForwarder::TimeoutForwarder(const QString &fileName)
