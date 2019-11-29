@@ -24,6 +24,8 @@ HEADERS += aboutdialog.h \
     contentwindow.h \
     findwidget.h \
     filternamedialog.h \
+    helpdocsettings.h \
+    helpdocsettingswidget.h \
     helpenginewrapper.h \
     helpbrowsersupport.h \
     helpviewer.h \
@@ -57,6 +59,8 @@ SOURCES += aboutdialog.cpp \
     contentwindow.cpp \
     findwidget.cpp \
     filternamedialog.cpp \
+    helpdocsettings.cpp \
+    helpdocsettingswidget.cpp \
     helpenginewrapper.cpp \
     helpbrowsersupport.cpp \
     helpviewer.cpp \
@@ -98,6 +102,7 @@ FORMS += bookmarkdialog.ui \
     bookmarkmanagerwidget.ui \
     bookmarkwidget.ui \
     filternamedialog.ui \
+    helpdocsettingswidget.ui \
     preferencesdialog.ui \
     topicchooser.ui
 

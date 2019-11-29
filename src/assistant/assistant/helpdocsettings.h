@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -37,43 +37,46 @@
 **
 ****************************************************************************/
 
-#ifndef QCOMPRESSEDHELPINFO_H
-#define QCOMPRESSEDHELPINFO_H
-
-#include <QtHelp/qhelp_global.h>
+#ifndef HELPDOCSETTINGS_H
+#define HELPDOCSETTINGS_H
 
 #include <QtCore/QSharedDataPointer>
 
 QT_BEGIN_NAMESPACE
 
 class QVersionNumber;
-class QCompressedHelpInfoPrivate;
+class QHelpEngineCore;
+class HelpDocSettingsPrivate;
 
-class QHELP_EXPORT QCompressedHelpInfo final
+class HelpDocSettings final
 {
 public:
-    QCompressedHelpInfo();
-    QCompressedHelpInfo(const QCompressedHelpInfo &other);
-    QCompressedHelpInfo(QCompressedHelpInfo &&other);
-    ~QCompressedHelpInfo();
+    HelpDocSettings();
+    HelpDocSettings(const HelpDocSettings &other);
+    HelpDocSettings(HelpDocSettings &&other);
+    ~HelpDocSettings();
 
-    QCompressedHelpInfo &operator=(const QCompressedHelpInfo &other);
-    QCompressedHelpInfo &operator=(QCompressedHelpInfo &&other);
+    HelpDocSettings &operator=(const HelpDocSettings &other);
+    HelpDocSettings &operator=(HelpDocSettings &&other);
 
-    void swap(QCompressedHelpInfo &other) Q_DECL_NOTHROW
+    void swap(HelpDocSettings &other) noexcept
     { d.swap(other.d); }
 
-    QString namespaceName() const;
-    QString component() const;
-    QVersionNumber version() const;
-    bool isNull() const;
+    bool addDocumentation(const QString &fileName);
+    bool removeDocumentation(const QString &namespaceName);
+    QString namespaceName(const QString &fileName) const;
+    QStringList components() const;
+    QList<QVersionNumber> versions() const;
+    QStringList namespaces() const;
+    QMap<QString, QString> namespaceToFileName() const;
 
-    static QCompressedHelpInfo fromCompressedHelpFile(const QString &documentationFileName);
+    static HelpDocSettings readSettings(QHelpEngineCore *helpEngine);
+    static bool applySettings(QHelpEngineCore *helpEngine, const HelpDocSettings &settings);
 
 private:
-    QSharedDataPointer<QCompressedHelpInfoPrivate> d;
+    QSharedDataPointer<HelpDocSettingsPrivate> d;
 };
 
 QT_END_NAMESPACE
 
-#endif // QHELPCOLLECTIONDETAILS_H
+#endif // HELPDOCSETTINGS_H

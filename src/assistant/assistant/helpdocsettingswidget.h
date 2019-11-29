@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -37,43 +37,37 @@
 **
 ****************************************************************************/
 
-#ifndef QCOMPRESSEDHELPINFO_H
-#define QCOMPRESSEDHELPINFO_H
+#ifndef HELPDOCSETTINGSWIDGET_H
+#define HELPDOCSETTINGSWIDGET_H
 
-#include <QtHelp/qhelp_global.h>
-
-#include <QtCore/QSharedDataPointer>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
-class QVersionNumber;
-class QCompressedHelpInfoPrivate;
+class HelpDocSettings;
+class HelpDocSettingsWidgetPrivate;
 
-class QHELP_EXPORT QCompressedHelpInfo final
+class HelpDocSettingsWidget : public QWidget
 {
+    Q_OBJECT
 public:
-    QCompressedHelpInfo();
-    QCompressedHelpInfo(const QCompressedHelpInfo &other);
-    QCompressedHelpInfo(QCompressedHelpInfo &&other);
-    ~QCompressedHelpInfo();
+    HelpDocSettingsWidget(QWidget *parent = nullptr);
 
-    QCompressedHelpInfo &operator=(const QCompressedHelpInfo &other);
-    QCompressedHelpInfo &operator=(QCompressedHelpInfo &&other);
+    ~HelpDocSettingsWidget();
 
-    void swap(QCompressedHelpInfo &other) Q_DECL_NOTHROW
-    { d.swap(other.d); }
+    void setDocSettings(const HelpDocSettings &settings);
+    HelpDocSettings docSettings() const;
 
-    QString namespaceName() const;
-    QString component() const;
-    QVersionNumber version() const;
-    bool isNull() const;
-
-    static QCompressedHelpInfo fromCompressedHelpFile(const QString &documentationFileName);
+Q_SIGNALS:
+    void docSettingsChanged(const HelpDocSettings &settings);
 
 private:
-    QSharedDataPointer<QCompressedHelpInfoPrivate> d;
+    QScopedPointer<class HelpDocSettingsWidgetPrivate> d_ptr;
+    Q_DECLARE_PRIVATE(HelpDocSettingsWidget)
+    Q_DISABLE_COPY_MOVE(HelpDocSettingsWidget)
 };
 
 QT_END_NAMESPACE
 
-#endif // QHELPCOLLECTIONDETAILS_H
+#endif
+
