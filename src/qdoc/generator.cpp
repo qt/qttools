@@ -1652,14 +1652,13 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
     }
 
     // We have an overloaded signal, show an example. Note, for const
-    // overloaded signals one should use Q{Const,NonConst}Overload, but
+    // overloaded signals, one should use Q{Const,NonConst}Overload, but
     // it is very unlikely that we will ever have public API overloading
     // signals by const.
     QString code = "connect(" + objectName + ", QOverload<";
-    func->parameters().getTypeList(code);
+    code += func->parameters().generateTypeList();
     code += ">::of(&" + func->parent()->name() + "::" + func->name() + "),\n    [=](";
-    func->parameters().getTypeAndNameList(code);
-
+    code += func->parameters().generateTypeAndNameList();
     code += "){ /* ... */ });";
 
     Text text;
@@ -1679,7 +1678,6 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
 
     generateText(text, node, marker);
 }
-
 
 /*!
   Traverses the database recursively to generate all the documentation.
