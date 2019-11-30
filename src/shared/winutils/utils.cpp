@@ -794,14 +794,13 @@ static inline MsvcDebugRuntimeResult checkMsvcDebugRuntime(const QStringList &de
     for (const QString &lib : dependentLibraries) {
         int pos = 0;
         if (lib.startsWith(QLatin1String("MSVCR"), Qt::CaseInsensitive)
-            || lib.startsWith(QLatin1String("MSVCP"), Qt::CaseInsensitive)) {
-            pos = 5;
-        } else if (lib.startsWith(QLatin1String("VCRUNTIME"), Qt::CaseInsensitive)) {
-            pos = 9;
+            || lib.startsWith(QLatin1String("MSVCP"), Qt::CaseInsensitive)
+            || lib.startsWith(QLatin1String("VCRUNTIME"), Qt::CaseInsensitive)) {
+            int lastDotPos = lib.lastIndexOf(QLatin1Char('.'));
+            pos = -1 == lastDotPos ? 0 : lastDotPos - 1;
         }
-        if (pos && lib.at(pos).isDigit()) {
-            for (++pos; lib.at(pos).isDigit(); ++pos)
-                ;
+
+        if (pos) {
             return lib.at(pos).toLower() == QLatin1Char('d')
                 ? MsvcDebugRuntime : MsvcReleaseRuntime;
         }
