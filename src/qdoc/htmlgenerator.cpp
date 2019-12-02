@@ -815,7 +815,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                             Node *parent = (*member).parent();
                             pmap = parentmaps.find(parent);
                             if (pmap == parentmaps.end())
-                                pmap = parentmaps.insert(parent,NodeMultiMap());
+                                pmap = parentmaps.insert(parent, NodeMultiMap());
                             pmap->insert(member->name(), member);
                         }
                         for (auto map = parentmaps.begin(); map != parentmaps.end(); ++map) {

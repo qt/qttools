@@ -175,9 +175,9 @@ void QDocForest::setSearchOrder(const QStringList &t)
         return;
 
     /* Allocate space for the search order. */
-    searchOrder_.reserve(forest_.size()+1);
+    searchOrder_.reserve(forest_.size() + 1);
     searchOrder_.clear();
-    moduleNames_.reserve(forest_.size()+1);
+    moduleNames_.reserve(forest_.size() + 1);
     moduleNames_.clear();
 
     /* The primary tree is always first in the search order. */

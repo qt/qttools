@@ -404,31 +404,31 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         QStringList sourceList;
 
         qCDebug(lcQdoc, "Reading headerdirs");
-        headerList = config.getAllFiles(CONFIG_HEADERS,CONFIG_HEADERDIRS,excludedDirs,excludedFiles);
-        QMap<QString,QString> headers;
-        QMultiMap<QString,QString> headerFileNames;
-        for (int i=0; i<headerList.size(); ++i) {
+        headerList = config.getAllFiles(CONFIG_HEADERS,CONFIG_HEADERDIRS, excludedDirs, excludedFiles);
+        QMap<QString, QString> headers;
+        QMultiMap<QString, QString> headerFileNames;
+        for (int i = 0; i < headerList.size(); ++i) {
             if (headerList[i].contains(QString("doc/snippets")))
                 continue;
             if (headers.contains(headerList[i]))
                 continue;
             headers.insert(headerList[i],headerList[i]);
             QString t = headerList[i].mid(headerList[i].lastIndexOf('/')+1);
-            headerFileNames.insert(t,t);
+            headerFileNames.insert(t, t);
         }
 
         qCDebug(lcQdoc, "Reading sourcedirs");
-        sourceList = config.getAllFiles(CONFIG_SOURCES,CONFIG_SOURCEDIRS,excludedDirs,excludedFiles);
-        QMap<QString,QString> sources;
-        QMultiMap<QString,QString> sourceFileNames;
-        for (int i=0; i<sourceList.size(); ++i) {
+        sourceList = config.getAllFiles(CONFIG_SOURCES,CONFIG_SOURCEDIRS, excludedDirs, excludedFiles);
+        QMap<QString, QString> sources;
+        QMultiMap<QString, QString> sourceFileNames;
+        for (int i = 0; i < sourceList.size(); ++i) {
             if (sourceList[i].contains(QString("doc/snippets")))
                 continue;
             if (sources.contains(sourceList[i]))
                 continue;
-            sources.insert(sourceList[i],sourceList[i]);
-            QString t = sourceList[i].mid(sourceList[i].lastIndexOf('/')+1);
-            sourceFileNames.insert(t,t);
+            sources.insert(sourceList[i], sourceList[i]);
+            QString t = sourceList[i].mid(sourceList[i].lastIndexOf('/') + 1);
+            sourceFileNames.insert(t, t);
         }
         /*
           Find all the qdoc files in the example dirs, and add
@@ -436,11 +436,11 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         */
         qCDebug(lcQdoc, "Reading exampledirs");
         QStringList exampleQdocList = config.getExampleQdocFiles(excludedDirs, excludedFiles);
-        for (int i=0; i<exampleQdocList.size(); ++i) {
+        for (int i = 0; i < exampleQdocList.size(); ++i) {
             if (!sources.contains(exampleQdocList[i])) {
-                sources.insert(exampleQdocList[i],exampleQdocList[i]);
-                QString t = exampleQdocList[i].mid(exampleQdocList[i].lastIndexOf('/')+1);
-                sourceFileNames.insert(t,t);
+                sources.insert(exampleQdocList[i], exampleQdocList[i]);
+                QString t = exampleQdocList[i].mid(exampleQdocList[i].lastIndexOf('/') + 1);
+                sourceFileNames.insert(t, t);
             }
         }
         /*
