@@ -40,6 +40,7 @@ private slots:
     void htmlFromQDocFile();
     void htmlFromCpp();
     void htmlFromQml();
+    void htmlFromCppBug80259();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -155,6 +156,15 @@ void tst_generatedOutput::htmlFromQml()
     testAndCompare("testqml.qdocconf",
                    "test-componentset-example.html "
                    "uicomponents-qmlmodule.html");
+}
+
+void tst_generatedOutput::htmlFromCppBug80259()
+{
+    testAndCompare("bug80259/testmodule.qdocconf",
+                   "first.html "
+                   "second.html "
+                   "third.html "
+                   "index.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
