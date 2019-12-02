@@ -51,3 +51,13 @@ information about a particular change.
    is configured with -feature-relocatable.
  - [QTBUG-75272] Added option -no-virtualkeyboard to disable deployment of
     Qt Virtual Keyboard.
+
+****************************************************************************
+*                                  qdoc                                    *
+****************************************************************************
+
+ - QDoc no longer attempts to run if 'project' configuration variable is
+   not set; it now fails with an appropriate error message.
+
+ - [QTBUG-80051] 'depends' configuration now accepts '*' as a value,
+   instructing QDoc to load all available index files as dependencies.
