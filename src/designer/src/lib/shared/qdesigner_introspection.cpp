@@ -99,7 +99,7 @@ namespace  {
         Kind kind() const override { return m_kind; }
 
         AccessFlags accessFlags() const override { return m_access; }
-        Attributes attributes(const QObject *object = nullptr) const override;
+        Attributes attributes() const override;
 
         QVariant::Type type() const override { return m_property.type(); }
         QString name() const override        { return m_name; }
@@ -162,20 +162,9 @@ namespace  {
         delete m_enumerator;
     }
 
-    QDesignerMetaProperty::Attributes QDesignerMetaProperty::attributes(const QObject *object) const
+    QDesignerMetaProperty::Attributes QDesignerMetaProperty::attributes() const
     {
-        if (!object)
-            return m_defaultAttributes;
-        Attributes rc;
-        if (m_property.isDesignable(object))
-            rc |= DesignableAttribute;
-        if (m_property.isScriptable(object))
-            rc |= ScriptableAttribute;
-        if (m_property.isStored(object))
-            rc |= StoredAttribute;
-        if (m_property.isUser(object))
-            rc |= UserAttribute;
-        return rc;
+        return m_defaultAttributes;
     }
 
     // -------------- QDesignerMetaMethod

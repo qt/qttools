@@ -1458,23 +1458,13 @@ bool QDesignerPropertySheet::isFakeLayoutProperty(int index) const
     return false;
 }
 
-// Determine the "designable" state of a property. Properties, which have
-// a per-object boolean test function that returns false are shown in
-// disabled state ("checked" depending on "checkable", etc.)
-// Properties, which are generally not designable independent
-// of the object are not shown at all.
-enum DesignableState { PropertyIsDesignable,
-                       // Object has a Designable test function that returns false.
-                       PropertyOfObjectNotDesignable,
-                       PropertyNotDesignable };
-
-static inline DesignableState designableState(const QDesignerMetaPropertyInterface *p, const QObject *object)
-{
-    if (p->attributes(object) & QDesignerMetaPropertyInterface::DesignableAttribute)
-        return PropertyIsDesignable;
-    return (p->attributes() & QDesignerMetaPropertyInterface::DesignableAttribute) ?
-            PropertyOfObjectNotDesignable : PropertyNotDesignable;
-}
+// Visible vs. Enabled: In Qt 5, it was possible to define a boolean function
+// for the DESIGNABLE attribute of Q_PROPERTY. Qt Designer would use that to
+// determine isEnabled() for the property and return isVisible() = false
+// for properties that specified 'false' for DESIGNABLE.
+// This was used for example for the "checked" property of QAbstractButton,
+// QGroupBox and QAction, where "checkable" would determine isEnabled().
+// This is now implemented by querying the property directly.
 
 bool QDesignerPropertySheet::isVisible(int index) const
 {
@@ -1550,8 +1540,7 @@ bool QDesignerPropertySheet::isVisible(int index) const
     if  (!(p->accessFlags() & QDesignerMetaPropertyInterface::WriteAccess))
          return false;
 
-    // Enabled handling: Hide only statically not designable properties
-    return designableState(p, d->m_object) != PropertyNotDesignable;
+    return p->attributes().testFlag(QDesignerMetaPropertyInterface::DesignableAttribute);
 }
 
 void QDesignerPropertySheet::setVisible(int index, bool visible)
@@ -1588,7 +1577,7 @@ bool QDesignerPropertySheet::isEnabled(int index) const
     if (!p->accessFlags().testFlag(QDesignerMetaPropertyInterface::WriteAccess))
         return false;
 
-    if (designableState(p, d->m_object) == PropertyOfObjectNotDesignable)
+    if (!p->attributes().testFlag(QDesignerMetaPropertyInterface::DesignableAttribute))
         return false;
 
     const PropertyType type = propertyType(index);

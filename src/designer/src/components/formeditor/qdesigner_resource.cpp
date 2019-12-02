@@ -1534,7 +1534,7 @@ bool QDesignerResource::checkProperty(QObject *obj, const QString &prop) const
     const QDesignerMetaObjectInterface *meta = core()->introspection()->metaObject(obj);
 
     const int pindex = meta->indexOfProperty(prop);
-    if (pindex != -1 && !(meta->property(pindex)->attributes(obj) & QDesignerMetaPropertyInterface::StoredAttribute))
+    if (pindex != -1 && !meta->property(pindex)->attributes().testFlag(QDesignerMetaPropertyInterface::StoredAttribute))
         return false;
 
     if (prop == QStringLiteral("objectName") || prop == QStringLiteral("spacerName"))  // ### don't store the property objectName
