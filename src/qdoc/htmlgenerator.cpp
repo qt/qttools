@@ -1212,7 +1212,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << '>';
         else {
             out() << '>';
-            //out() << "><p>";
         }
         if (matchAhead(atom, Atom::ParaLeft))
             skipAhead = 1;
@@ -1223,7 +1222,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << "</th>";
         else {
             out() << "</td>";
-            //out() << "</p></td>";
         }
         if (matchAhead(atom, Atom::ParaLeft))
             skipAhead = 1;
@@ -1495,7 +1493,6 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
     generateBrief(aggregate, marker);
     for (auto it = summarySections->constBegin(); it != summarySections->constEnd(); ++it) {
         if (!it->members().isEmpty()) {
-            // out() << "<hr />\n";
             QString ref = registerRef(it->title().toLower());
             out() << "<a name=\"" << ref << "\"></a>" << divNavTop << "\n";
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(it->title()) << "</h2>\n";
@@ -1508,7 +1505,6 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
 
     if (!aggregate->doc().isEmpty()) {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
-        //out() << "<hr />\n"
         out() << "<div class=\"descr\">\n" // QTBUG-9504
               << "<h2 id=\"" << detailsRef << "\">" << "Detailed Description" << "</h2>\n";
         generateBody(aggregate, marker);
@@ -1522,7 +1518,6 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
         if (section.isEmpty())
             continue;
 
-        //out() << "<hr />\n";
         if (!section.divClass().isEmpty())
             out() << "<div class=\"" << section.divClass() << "\">\n"; // QTBUG-9504
         out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
@@ -1623,7 +1618,6 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
         generateQmlText(cn->doc().body(), cn, marker, qcn->name());
     generateAlsoList(qcn, marker);
     generateExtractionMark(qcn, EndMark);
-    //out() << "<hr />\n";
 
     const QVector<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
     for (const auto &section : stdQmlTypeDetailsSections) {
@@ -1830,7 +1824,6 @@ void HtmlGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker
     for (const auto &member : members)
         generateDetailedMember(member, cn, marker);
 
-    //    generateAnnotatedList(cn, marker, cn->members());
     generateFooter(cn);
 }
 
@@ -3106,7 +3099,6 @@ void HtmlGenerator::generateLegaleseList(const Node *relative, CodeMarker *marke
     QMap<Text, const Node *>::ConstIterator it = legaleseTexts.constBegin();
     while (it != legaleseTexts.constEnd()) {
         Text text = it.key();
-        //out() << "<hr />\n";
         generateText(text, relative, marker);
         out() << "<ul>\n";
         do {
@@ -3371,7 +3363,6 @@ void HtmlGenerator::generateSectionInheritedList(const Section& section, const N
     }
 }
 
-// generateSynopsis(*m, relative, marker, Section::Summary, alignNames);
 void HtmlGenerator::generateSynopsis(const Node *node,
                                      const Node *relative,
                                      CodeMarker *marker,
@@ -3746,7 +3737,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
 
         if (!notifiers.members().isEmpty()) {
             out() << "<p><b>Notifier signal:</b></p>\n";
-            //out() << "<p>This signal is emitted when the property value is changed.</p>\n";
             generateSectionList(notifiers, node, marker);
         }
     }
