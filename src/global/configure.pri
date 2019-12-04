@@ -1,7 +1,7 @@
-defineReplace(extractVersion)      { return($$replace(1, ^(\\d+\\.\\d+\\.\\d+)(svn)?$, \\1)) }
-defineReplace(extractMajorVersion) { return($$replace(1, ^(\\d+)\\.\\d+\\.\\d+(svn)?$, \\1)) }
-defineReplace(extractMinorVersion) { return($$replace(1, ^\\d+\\.(\\d+)\\.\\d+(svn)?$, \\1)) }
-defineReplace(extractPatchVersion) { return($$replace(1, ^\\d+\\.\\d+\\.(\\d+)(svn)?$, \\1)) }
+defineReplace(extractVersion)      { return($$replace(1, ^(\\d+\\.\\d+\\.\\d+)(svn|git)?$, \\1)) }
+defineReplace(extractMajorVersion) { return($$replace(1, ^(\\d+)\\.\\d+\\.\\d+(svn|git)?$, \\1)) }
+defineReplace(extractMinorVersion) { return($$replace(1, ^\\d+\\.(\\d+)\\.\\d+(svn|git)?$, \\1)) }
+defineReplace(extractPatchVersion) { return($$replace(1, ^\\d+\\.\\d+\\.(\\d+)(svn|git)?$, \\1)) }
 
 defineTest(versionIsAtLeast) {
     actual_major_version = $$extractMajorVersion($$1)
@@ -190,8 +190,10 @@ defineReplace(CheckClangLlvmLibForLupdateParser) {
             return($$CLANG_LLVM_LIBS)
         }
     }
-    !equals(QMAKE_HOST.os, Windows): \
-        CLANG_LLVM_LIBS += -lz -ltinfo
+    !equals(QMAKE_HOST.os, Windows): {
+        equals(QMAKE_HOST.os, Darwin): CLANG_LLVM_LIBS += -lz -lcurses
+        else: CLANG_LLVM_LIBS += -lz -ltinfo
+    }
     return($$CLANG_LLVM_LIBS)
 }
 
