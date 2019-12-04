@@ -155,7 +155,17 @@ void tst_generatedOutput::htmlFromQml()
 {
     testAndCompare("testqml.qdocconf",
                    "test-componentset-example.html "
-                   "uicomponents-qmlmodule.html");
+                   "uicomponents-qmlmodule.html "
+                   "qdoc-test-qmlmodule.html "
+                   "qml-qdoc-test-abstractparent.html "
+                   "qml-qdoc-test-child.html "
+                   "qml-qdoc-test-doctest.html "
+                   "qml-qdoc-test-type-members.html "
+                   "qml-qdoc-test-type.html "
+                   "qml-uicomponents-progressbar.html "
+                   "qml-uicomponents-switch.html "
+                   "qml-uicomponents-tabwidget.html "
+                   "qml-int.html");
 }
 
 void tst_generatedOutput::htmlFromCppBug80259()
