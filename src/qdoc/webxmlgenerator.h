@@ -64,14 +64,12 @@ protected:
 
 
 private:
-    const QPair<QString,QString> anchorForNode(const Node *node);
     void generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative, const NodeMap &nodeMap);
     void generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative, const NodeList &nodeList);
     void generateRelations(QXmlStreamWriter &writer, const Node *node);
     void startLink(QXmlStreamWriter &writer, const Atom *atom, const Node *node,
                    const QString &link);
     void endLink(QXmlStreamWriter &writer);
-    QString targetType(const Node *node);
 
     bool inLink;
     bool inContents;

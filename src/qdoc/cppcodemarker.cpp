@@ -139,8 +139,9 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             !node->parent()->isHeader() &&
             !node->isProperty() &&
             !node->isQmlNode() &&
-            !node->isJsNode())
+            !node->isJsNode()) {
             name.prepend(taggedNode(node->parent()) + "::");
+        }
     }
 
     switch (node->nodeType()) {
@@ -197,12 +198,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                synopsis.append(" &");
             else if (func->isRefRef())
                synopsis.append(" &&");
-        }
-        else if (style == Section::AllMembers) {
+        } else if (style == Section::AllMembers) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
                 synopsis += " : " + typified(func->returnType());
-        }
-        else {
+        } else {
             if (func->isRef())
                synopsis.append(" &");
             else if (func->isRefRef())
@@ -220,19 +219,15 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 bracketed += "virtual";
             }
 
-            if (func->access() == Node::Protected) {
+            if (func->access() == Node::Protected)
                 bracketed += "protected";
-            }
-            else if (func->access() == Node::Private) {
+            else if (func->access() == Node::Private)
                 bracketed += "private";
-            }
 
-            if (func->isSignal()) {
+            if (func->isSignal())
                 bracketed += "signal";
-            }
-            else if (func->isSlot()) {
+            else if (func->isSlot())
                 bracketed += "slot";
-            }
             if (!bracketed.isEmpty())
                 extra += QLatin1Char('[') + bracketed.join(' ') + QStringLiteral("] ");
         }
@@ -259,15 +254,13 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                         synopsis += ", ";
                     synopsis += documentedItems.at(i);
                 }
-            }
-            else {
+            } else {
                 for (int i = 0; i < documentedItems.size(); ++i) {
                     if (i < MaxEnumValues-2 || i == documentedItems.size()-1) {
                         if (i != 0)
                             synopsis += ", ";
                         synopsis += documentedItems.at(i);
-                    }
-                    else if (i == MaxEnumValues - 1) {
+                    } else if (i == MaxEnumValues - 1) {
                         synopsis += ", ...";
                     }
                 }
@@ -281,8 +274,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         typedeff = static_cast<const TypedefNode *>(node);
         if (typedeff->associatedEnum()) {
             synopsis = "flags " + name;
-        }
-        else {
+        } else {
             synopsis = "typedef " + name;
         }
         break;
@@ -294,8 +286,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         variable = static_cast<const VariableNode *>(node);
         if (style == Section::AllMembers) {
             synopsis = name + " : " + typified(variable->dataType());
-        }
-        else {
+        } else {
             synopsis = typified(variable->leftType(), true) +
                     name + protect(variable->rightType());
         }
@@ -325,9 +316,9 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
 QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
 {
     QString name = taggedQmlNode(node);
-    if (summary)
-        name = linkTag(node,name);
-    else if (node->isQmlProperty() || node->isJsProperty()) {
+    if (summary) {
+        name = linkTag(node, name);
+    } else if (node->isQmlProperty() || node->isJsProperty()) {
         const QmlPropertyNode *pn = static_cast<const QmlPropertyNode *>(node);
         if (pn->isAttached())
             name.prepend(pn->element() + QLatin1Char('.'));
@@ -362,8 +353,9 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
             }
         }
         synopsis += QLatin1Char(')');
-    } else
+    } else {
         synopsis = name;
+    }
 
     QString extra;
     if (summary) {
@@ -392,20 +384,18 @@ QString CppCodeMarker::markedUpName(const Node *node)
 
 QString CppCodeMarker::markedUpFullName(const Node *node, const Node *relative)
 {
-    if (node->name().isEmpty()) {
+    if (node->name().isEmpty())
         return "global";
+
+    QString fullName;
+    for (;;) {
+        fullName.prepend(markedUpName(node));
+        if (node->parent() == relative || node->parent()->name().isEmpty())
+            break;
+        fullName.prepend("<@op>::</@op>");
+        node = node->parent();
     }
-    else {
-        QString fullName;
-        for (;;) {
-            fullName.prepend(markedUpName(node));
-            if (node->parent() == relative || node->parent()->name().isEmpty())
-                break;
-            fullName.prepend("<@op>::</@op>");
-            node = node->parent();
-        }
-        return fullName;
-    }
+    return fullName;
 }
 
 QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *relative)
@@ -443,7 +433,6 @@ QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
 QString CppCodeMarker::functionBeginRegExp(const QString &funcName)
 {
     return QLatin1Char('^') + QRegExp::escape(funcName) + QLatin1Char('$');
-
 }
 
 QString CppCodeMarker::functionEndRegExp(const QString &/* funcName */)

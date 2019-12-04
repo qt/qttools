@@ -35,7 +35,7 @@
 
 #include "codemarker.h"
 #include "config.h"
-#include "generator.h"
+#include "xmlgenerator.h"
 
 #include <QtCore/qhash.h>
 #include <QtCore/qregexp.h>
@@ -45,7 +45,7 @@ QT_BEGIN_NAMESPACE
 
 class HelpProjectWriter;
 
-class HtmlGenerator : public Generator
+class HtmlGenerator : public XmlGenerator
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::HtmlGenerator)
 
@@ -80,16 +80,11 @@ protected:
     void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
     void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
     QString fileExtension() const override;
-    virtual QString refForNode(const Node *node);
-    virtual QString linkForNode(const Node *node, const Node *relative);
 
     void generateManifestFile(const QString &manifest, const QString &element);
     void readManifestMetaContent(const Config &config);
     void generateKeywordAnchors(const Node *node);
     void generateAssociatedPropertyNotes(FunctionNode *fn);
-
-    QString getLink(const Atom *atom, const Node *relative, const Node **node);
-    QString getAutoLink(const Atom *atom, const Node *relative, const Node **node);
 
 private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };
@@ -107,7 +102,6 @@ private:
         QSet<QString> tags;
     };
 
-    const QPair<QString,QString> anchorForNode(const Node *node);
     void generateNavigationBar(const QString &title,
                                const Node *node,
                                CodeMarker *marker,
@@ -185,12 +179,8 @@ private:
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
     void generateLink(const Atom *atom, CodeMarker *marker);
 
-    inline bool hasBrief(const Node *node);
-    QString registerRef(const QString &ref);
     QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
-    static int hOffset(const Node *node);
-    static bool isThreeColumnEnumValueTable(const Atom *atom);
 #ifdef GENERATE_MAC_REFS
     void generateMacRef(const Node *node, CodeMarker *marker);
 #endif
@@ -202,7 +192,6 @@ private:
 
     QXmlStreamWriter &xmlWriter();
 
-    QHash<QString, QString> refMap;
     int codeIndent;
     QString codePrefix;
     QString codeSuffix;
@@ -249,15 +238,6 @@ public:
     static bool debugging_on;
     static QString divNavTop;
 };
-
-// Do not display \brief for QML/JS types, document and collection nodes
-inline bool HtmlGenerator::hasBrief(const Node *node)
-{
-    return !(node->isQmlType()
-             || node->isPageNode()
-             || node->isCollectionNode()
-             || node->isJsType());
-}
 
 #define HTMLGENERATOR_ADDRESS           "address"
 #define HTMLGENERATOR_FOOTER            "footer"

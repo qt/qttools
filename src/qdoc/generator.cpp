@@ -251,6 +251,38 @@ void Generator::writeOutFileNames()
 }
 
 /*!
+  Creates the file named \a fileName in the output directory
+  and returns a QFile pointing to this file. In particular,
+  this method deals with errors when opening the file:
+  the returned QFile is always valid and can be written to.
+
+  \sa beginFilePage()
+ */
+QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
+{
+    QString path = outputDir() + QLatin1Char('/');
+    if (Generator::useOutputSubdirs() && !node->outputSubdirectory().isEmpty() &&
+        !outputDir().endsWith(node->outputSubdirectory())) {
+        path += node->outputSubdirectory() + QLatin1Char('/');
+    }
+    path += fileName;
+
+    auto outPath = redirectDocumentationToDevNull_ ? QStringLiteral("/dev/null") : path;
+    auto outFile = new QFile(outPath);
+    if (!redirectDocumentationToDevNull_ && outFile->exists()) {
+        node->location().error(
+            tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
+    }
+    if (!outFile->open(QFile::WriteOnly)) {
+        node->location().fatal(
+            tr("Cannot open output file '%1'").arg(outFile->fileName()));
+    }
+    qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
+    outFileNames_ << fileName;
+    return outFile;
+}
+
+/*!
   Creates the file named \a fileName in the output directory.
   Attaches a QTextStream to the created file, which is written
   to all over the place using out(). This function does not
@@ -260,21 +292,8 @@ void Generator::writeOutFileNames()
  */
 void Generator::beginFilePage(const Node *node, const QString &fileName)
 {
-    QString path = outputDir() + QLatin1Char('/');
-    if (Generator::useOutputSubdirs() && !node->outputSubdirectory().isEmpty() &&
-        !outputDir().endsWith(node->outputSubdirectory()))
-        path += node->outputSubdirectory() + QLatin1Char('/');
-    path += fileName;
-
-    QFile* outFile = new QFile(redirectDocumentationToDevNull_ ? QStringLiteral("/dev/null") : path);
-    if (!redirectDocumentationToDevNull_ && outFile->exists())
-        node->location().error(tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
-    if (!outFile->open(QFile::WriteOnly))
-        node->location().fatal(tr("Cannot open output file '%1'").arg(outFile->fileName()));
-    qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
-    outFileNames_ << fileName;
+    QFile *outFile = openSubPageFile(node, fileName);
     QTextStream* out = new QTextStream(outFile);
-
 #ifndef QT_NO_TEXTCODEC
     if (outputCodec)
         out->setCodec(outputCodec);
@@ -1014,6 +1033,25 @@ void Generator::generateLinkToExample(const ExampleNode *en,
     generateText(text, nullptr, marker);
 }
 
+void Generator::addImageToCopy(const ExampleNode *en, const QString &file)
+{
+    QDir dirInfo;
+    QString userFriendlyFilePath;
+    const QString prefix("/images/used-in-examples/");
+    QString srcPath = Config::findFile(en->location(),
+                                       QStringList(),
+                                       exampleDirs,
+                                       file,
+                                       exampleImgExts,
+                                       &userFriendlyFilePath);
+    outFileNames_ << prefix.mid(1) + userFriendlyFilePath;
+    userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
+    QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
+    if (!dirInfo.mkpath(imgOutDir))
+        en->location().fatal(tr("Cannot create output directory '%1'").arg(imgOutDir));
+    Config::copyFile(en->location(), srcPath, file, imgOutDir);
+}
+
 /*!
   This function is called when the documentation for an example is
   being formatted. It outputs a list of files for the example, which
@@ -1045,26 +1083,9 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
     QString path;
     for (const auto &file : qAsConst(paths)) {
         if (images) {
-            if (!file.isEmpty()) {
-                QDir dirInfo;
-                QString userFriendlyFilePath;
-                const QString prefix("/images/used-in-examples/");
-                QString srcPath = Config::findFile(en->location(),
-                                                   QStringList(),
-                                                   exampleDirs,
-                                                   file,
-                                                   exampleImgExts,
-                                                   &userFriendlyFilePath);
-                outFileNames_ << prefix.mid(1) + userFriendlyFilePath;
-                userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
-                QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
-                if (!dirInfo.mkpath(imgOutDir))
-                    en->location().fatal(tr("Cannot create output directory '%1'").arg(imgOutDir));
-                Config::copyFile(en->location(), srcPath, file, imgOutDir);
-            }
-
-        }
-        else {
+            if (!file.isEmpty())
+                addImageToCopy(en, file);
+        } else {
             generateExampleFilePage(en, file, marker);
         }
 
@@ -1476,15 +1497,15 @@ bool Generator::generateText(const Text &text,
   nonreentrant, and true is returned. If there are no exceptions,
   the three node lists remain empty and false is returned.
  */
-static bool hasExceptions(const Node *node,
-                          NodeList &reentrant,
-                          NodeList &threadsafe,
-                          NodeList &nonreentrant)
+bool Generator::hasExceptions(const Node *node,
+                              NodeList &reentrant,
+                              NodeList &threadsafe,
+                              NodeList &nonreentrant)
 {
     bool result = false;
     Node::ThreadSafeness ts = node->threadSafeness();
     const NodeList &children = static_cast<const Aggregate *>(node)->childNodes();
-    for (auto *child : children) {
+    for (auto child : children) {
         if (!child->isObsolete()){
             switch (child->threadSafeness()) {
             case Node::Reentrant:
@@ -1632,15 +1653,16 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
 }
 
 /*!
-    If the node is an overloaded signal, add a node with an example on how to connect to it
+  Returns the string containing an example code of the input node,
+  if it is an overloaded signal. Otherwise, returns an empty string.
  */
-void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
+QString Generator::getOverloadedSignalCode(const Node *node)
 {
     if (!node->isFunction())
-        return;
-    const FunctionNode *func = static_cast<const FunctionNode *>(node);
+        return QString();
+    const auto func = static_cast<const FunctionNode *>(node);
     if (!func->isSignal() || !func->hasOverloads())
-        return;
+        return QString();
 
     // Compute a friendly name for the object of that instance.
     // e.g:  "QAbstractSocket" -> "abstractSocket"
@@ -1652,15 +1674,30 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
     }
 
     // We have an overloaded signal, show an example. Note, for const
-    // overloaded signals one should use Q{Const,NonConst}Overload, but
+    // overloaded signals, one should use Q{Const,NonConst}Overload, but
     // it is very unlikely that we will ever have public API overloading
     // signals by const.
     QString code = "connect(" + objectName + ", QOverload<";
-    func->parameters().getTypeList(code);
+    code += func->parameters().generateTypeList();
     code += ">::of(&" + func->parent()->name() + "::" + func->name() + "),\n    [=](";
-    func->parameters().getTypeAndNameList(code);
-
+    code += func->parameters().generateTypeAndNameList();
     code += "){ /* ... */ });";
+
+    return code;
+}
+
+/*!
+    If the node is an overloaded signal, and a node with an example on how to connect to it
+
+    Someone didn't finish writing this comment, and I don't know what this
+    function is supposed to do, so I have not tried to complete the comment
+    yet.
+ */
+void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
+{
+    QString code = getOverloadedSignalCode(node);
+    if (code.isEmpty())
+        return;
 
     Text text;
     text << Atom::ParaLeft
@@ -1675,11 +1712,10 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
             "To connect to this signal by using the function pointer syntax, Qt "
             "provides a convenient helper for obtaining the function pointer as "
             "shown in this example:"
-          << Atom(Atom::Code, marker->markedUpCode(code, node, func->location()));
+          << Atom(Atom::Code, marker->markedUpCode(code, node, node->location()));
 
     generateText(text, node, marker);
 }
-
 
 /*!
   Traverses the database recursively to generate all the documentation.
@@ -2263,7 +2299,7 @@ QString Generator::typeString(const Node *node)
     case Node::Typedef:
         return "typedef";
     case Node::Function: {
-        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::JsSignal:
         case FunctionNode::QmlSignal:

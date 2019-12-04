@@ -441,9 +441,10 @@ protected:
 class ExternalPageNode : public PageNode
 {
 public:
-    ExternalPageNode(Aggregate *parent, const QString &name)
-        : PageNode(Node::ExternalPage, parent, name) {
+    ExternalPageNode(Aggregate *parent, const QString &url)
+        : PageNode(Node::ExternalPage, parent, url) {
         setPageType(Node::ArticlePage);
+        setUrl(url);
     }
 };
 

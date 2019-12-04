@@ -98,8 +98,8 @@ public:
     QString rawSignature(bool names = false, bool values = false) const;
     void set(const QString &signature);
     void getNames(QSet<QString> &names) const;
-    void getTypeList(QString &out) const;
-    void getTypeAndNameList(QString &out) const;
+    QString generateTypeList() const;
+    QString generateTypeAndNameList() const;
     bool match(const Parameters &parameters) const;
 
 private:
