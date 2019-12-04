@@ -569,25 +569,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             break;
         }
         out() << "<p>";
-        if (relative->isProperty() || relative->isVariable()) {
-            atom = atom->next();
-            if (atom != nullptr && atom->type() == Atom::String) {
-                QString firstWord = atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
-                if (firstWord == QLatin1String("the")
-                      || firstWord == QLatin1String("a")
-                      || firstWord == QLatin1String("an")
-                      || firstWord == QLatin1String("whether")
-                      || firstWord == QLatin1String("which")) {
-                    QString str = "This ";
-                    if (relative->isProperty())
-                        str += "property holds ";
-                    else
-                        str += "variable holds ";
-                    str += atom->string().left(1).toLower() + atom->string().mid(1);
-                    const_cast<Atom *>(atom)->setString(str);
-                }
-            }
-        }
+        rewritePropertyBrief(atom, relative);
         break;
     case Atom::BriefRight:
         if (hasBrief(relative))
@@ -728,13 +710,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         }
         else if ((idx = atom->string().indexOf(QStringLiteral("bymodule"))) != -1) {
             QString moduleName = atom->string().mid(idx + 8).trimmed();
-            Node::NodeType type = Node::Module;
-            if (atom->string().startsWith(QLatin1String("qml")))
-                type = Node::QmlModule;
-            else if (atom->string().startsWith(QLatin1String("js")))
-                type = Node::JsModule;
-            else if (atom->string().startsWith(QLatin1String("groups")))
-                type = Node::Group;
+            Node::NodeType type = typeFromString(atom);
             QDocDatabase *qdb = QDocDatabase::qdocDB();
             const CollectionNode *cn = qdb->getCollectionNode(moduleName, type);
             if (cn) {
@@ -908,13 +884,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 out() << " alt=\"\"";
             out() << " />";
             helpProjectWriter->addExtraFile(fileName);
-            if (relative->isExample()) {
-                const ExampleNode *cen = static_cast<const ExampleNode *>(relative);
-                if (cen->imageFileName().isEmpty()) {
-                    ExampleNode *en = const_cast<ExampleNode *>(cen);
-                    en->setImageFileName(fileName);
-                }
-            }
+            setImageFileName(relative, fileName);
         }
         if (atom->type() == Atom::Image)
             out() << "</p>";
@@ -1082,24 +1052,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << "<dt>";
         }
         else { // (atom->string() == ATOM_LIST_VALUE)
-            const Atom *lookAhead = atom->next();
-            QString t = lookAhead->string();
-            lookAhead = lookAhead->next();
-            Q_ASSERT(lookAhead->type() == Atom::ListTagRight);
-            lookAhead = lookAhead->next();
-            if (lookAhead && lookAhead->type() == Atom::SinceTagLeft) {
-                lookAhead = lookAhead->next();
-                Q_ASSERT(lookAhead && lookAhead->type() == Atom::String);
-                t = t + QLatin1String(" (since ");
-                if (lookAhead->string().at(0).isDigit())
-                    t = t + QLatin1String("Qt ");
-                t = t + lookAhead->string() + QLatin1String(")");
-                skipAhead = 4;
-            }
-            else {
-                skipAhead = 1;
-            }
-            t = protectEnc(plainCode(marker->markedUpEnumValue(t, relative)));
+            QPair<QString, int> pair = getAtomListValue(atom);
+            skipAhead = pair.second;
+            QString t = protectEnc(plainCode(marker->markedUpEnumValue(pair.first, relative)));
             out() << "<tr><td class=\"topAlign\"><code>" << t << "</code>";
 
             if (relative->isEnumType()) {
@@ -1215,30 +1170,15 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::TableLeft:
     {
-        QString p1, p2;
-        QString attr = "generic";
-        QString width;
+        QPair<QString, QString> pair = getTableWidthAttr(atom);
+        QString attr = pair.second;
+        QString width = pair.first;
+
         if (in_para) {
             out() << "</p>\n";
             in_para = false;
         }
-        if (atom->count() > 0) {
-            p1 = atom->string(0);
-            if (atom->count() > 1)
-                p2 = atom->string(1);
-        }
-        if (!p1.isEmpty()) {
-            if (p1 == QLatin1String("borderless"))
-                attr = p1;
-            else if (p1.contains(QLatin1Char('%')))
-                width = p1;
-        }
-        if (!p2.isEmpty()) {
-            if (p2 == QLatin1String("borderless"))
-                attr = p2;
-            else if (p2.contains(QLatin1Char('%')))
-                width = p2;
-        }
+
         out() << "<div class=\"table\"><table class=\"" << attr << '"';
         if (!width.isEmpty())
             out() << " width=\"" << width << '"';
@@ -3745,23 +3685,6 @@ void HtmlGenerator::generateLink(const Atom *atom, CodeMarker *marker)
     }
 }
 
-QString HtmlGenerator::registerRef(const QString &ref)
-{
-    QString clean = Generator::cleanRef(ref);
-
-    for (;;) {
-        QString &prevRef = refMap[clean.toLower()];
-        if (prevRef.isEmpty()) {
-            prevRef = ref;
-            break;
-        } else if (prevRef == ref) {
-            break;
-        }
-        clean += QLatin1Char('x');
-    }
-    return clean;
-}
-
 QString HtmlGenerator::protectEnc(const QString &string)
 {
 #ifndef QT_NO_TEXTCODEC
@@ -3827,199 +3750,6 @@ QString HtmlGenerator::fileName(const Node *node)
     if (node->isExternalPage())
         return node->name();
     return Generator::fileName(node);
-}
-
-QString HtmlGenerator::refForNode(const Node *node)
-{
-    QString ref;
-    switch (node->nodeType()) {
-    case Node::Enum:
-        ref = node->name() + "-enum";
-        break;
-    case Node::Typedef:
-        {
-            const TypedefNode *tdn = static_cast<const TypedefNode *>(node);
-            if (tdn->associatedEnum())
-                return refForNode(tdn->associatedEnum());
-            else
-                ref = node->name() + "-typedef";
-        }
-        break;
-    case Node::Function:
-        {
-            const FunctionNode *fn = static_cast<const FunctionNode *>(node);
-            switch (fn->metaness()) {
-            case FunctionNode::JsSignal:
-            case FunctionNode::QmlSignal:
-                ref = fn->name() + "-signal";
-                break;
-            case FunctionNode::JsSignalHandler:
-            case FunctionNode::QmlSignalHandler:
-                ref = fn->name() + "-signal-handler";
-                break;
-            case FunctionNode::JsMethod:
-            case FunctionNode::QmlMethod:
-                ref = fn->name() + "-method";
-                if (fn->overloadNumber() != 0)
-                    ref += QLatin1Char('-') + QString::number(fn->overloadNumber());
-                break;
-            default:
-                if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty()) {
-                    return refForNode(fn->firstAssociatedProperty());
-                } else {
-                    ref = fn->name();
-                    if (fn->overloadNumber() != 0)
-                        ref += QLatin1Char('-') + QString::number(fn->overloadNumber());
-                }
-                break;
-            }
-        }
-        break;
-    case Node::JsProperty:
-    case Node::QmlProperty:
-        if (node->isAttached())
-            ref = node->name() + "-attached-prop";
-        else
-            ref = node->name() + "-prop";
-        break;
-    case Node::Property:
-        ref = node->name() + "-prop";
-        break;
-    case Node::Variable:
-        ref = node->name() + "-var";
-        break;
-    case Node::SharedComment:
-        if (node->isPropertyGroup())
-            ref = node->name() + "-prop";
-        break;
-    default:
-        break;
-    }
-    return registerRef(ref);
-}
-
-/*!
-  This function is called for links, i.e. for words that
-  are marked with the qdoc link command. For autolinks
-  that are not marked with the qdoc link command, the
-  getAutoLink() function is called
-
-  It returns the string for a link found by using the data
-  in the \a atom to search the database. It also sets \a node
-  to point to the target node for that link. \a relative points
-  to the node holding the qdoc comment where the link command
-  was found.
- */
-QString HtmlGenerator::getLink(const Atom *atom, const Node *relative, const Node** node)
-{
-    const QString &t = atom->string();
-    if (t.at(0) == QChar('h')) {
-        if (t.startsWith("http:") || t.startsWith("https:"))
-            return t;
-    }
-    else if (t.at(0) == QChar('f')) {
-        if (t.startsWith("file:") || t.startsWith("ftp:"))
-            return t;
-    }
-    else if (t.at(0) == QChar('m')) {
-        if (t.startsWith("mailto:"))
-            return t;
-    }
-    return getAutoLink(atom, relative, node);
-}
-
-/*!
-  This function is called for autolinks, i.e. for words that
-  are not marked with the qdoc link command that qdoc has
-  reason to believe should be links. For links marked with
-  the qdoc link command, the getLink() function is called.
-
-  It returns the string for a link found by using the data
-  in the \a atom to search the database. It also sets \a node
-  to point to the target node for that link. \a relative points
-  to the node holding the qdoc comment where the link command
-  was found.
- */
-QString HtmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const Node** node)
-{
-    QString ref;
-
-    *node = qdb_->findNodeForAtom(atom, relative, ref);
-    if (!(*node)) {
-        return QString();
-    }
-
-    QString link = (*node)->url();
-    if (link.isEmpty())
-        link = linkForNode(*node, relative);
-    if (!ref.isEmpty()) {
-        int hashtag = link.lastIndexOf(QChar('#'));
-        if (hashtag != -1)
-            link.truncate(hashtag);
-        link += QLatin1Char('#') + ref;
-    }
-    return link;
-}
-
-/*!
-  Construct the link string for the \a node and return it.
-  The \a relative node is use to decide the link we are
-  generating is in the same file as the target. Note the
-  relative node can be 0, which pretty much guarantees
-  that the link and the target aren't in the same file.
-  */
-QString HtmlGenerator::linkForNode(const Node *node, const Node *relative)
-{
-    if (node == nullptr)
-        return QString();
-    if (!node->url().isEmpty())
-        return node->url();
-    if (fileBase(node).isEmpty())
-        return QString();
-    if (node->isPrivate())
-        return QString();
-    QString fn = fileName(node);
-    if (node && node->parent() &&
-        (node->parent()->isQmlType() || node->parent()->isJsType())
-        && node->parent()->isAbstract()) {
-        if (Generator::qmlTypeContext()) {
-            if (Generator::qmlTypeContext()->inherits(node->parent())) {
-                fn = fileName(Generator::qmlTypeContext());
-            }
-            else if (node->parent()->isInternal()) {
-                node->doc().location().warning(tr("Cannot link to property in internal type '%1'").arg(node->parent()->name()));
-                return QString();
-            }
-        }
-    }
-    QString link = fn;
-
-    if (!node->isPageNode() || node->isPropertyGroup()) {
-        QString ref = refForNode(node);
-        if (relative && fn == fileName(relative) && ref == refForNode(relative))
-            return QString();
-
-        link += QLatin1Char('#');
-        link += ref;
-    }
-    /*
-      If the output is going to subdirectories, then if the
-      two nodes will be output to different directories, then
-      the link must go up to the parent directory and then
-      back down into the other subdirectory.
-     */
-    if (node && relative && (node != relative)) {
-        if (useOutputSubdirs() && !node->isExternalPage() &&
-               node->outputSubdirectory() != relative->outputSubdirectory()) {
-            if (link.startsWith(QString(node->outputSubdirectory() + QLatin1Char('/')))) {
-                link.prepend(QString("../"));
-            }
-            else {
-                link.prepend(QString("../" + node->outputSubdirectory() + QLatin1Char('/')));
-            }
-        }
-    }
-    return link;
 }
 
 void HtmlGenerator::generateFullName(const Node *apparentNode, const Node *relative, const Node *actualNode)
@@ -4132,53 +3862,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
     }
     generateAlsoList(node, marker);
     generateExtractionMark(node, EndMark);
-}
-
-int HtmlGenerator::hOffset(const Node *node)
-{
-    switch (node->nodeType()) {
-    case Node::Namespace:
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-    case Node::Module:
-        return 2;
-    case Node::QmlModule:
-    case Node::QmlBasicType:
-    case Node::QmlType:
-    case Node::Page:
-        return 1;
-    case Node::Enum:
-    case Node::Typedef:
-    case Node::Function:
-    case Node::Property:
-    default:
-        return 3;
-    }
-}
-
-bool HtmlGenerator::isThreeColumnEnumValueTable(const Atom *atom)
-{
-    while (atom != nullptr && !(atom->type() == Atom::ListRight && atom->string() == ATOM_LIST_VALUE)) {
-        if (atom->type() == Atom::ListItemLeft && !matchAhead(atom, Atom::ListItemRight))
-            return true;
-        atom = atom->next();
-    }
-    return false;
-}
-
-
-const QPair<QString,QString> HtmlGenerator::anchorForNode(const Node *node)
-{
-    QPair<QString,QString> anchorPair;
-
-    anchorPair.first = Generator::fileName(node);
-    if (node->isPageNode()) {
-        const PageNode *pn = static_cast<const PageNode *>(node);
-        anchorPair.second = pn->title();
-    }
-
-    return anchorPair;
 }
 
 #ifdef GENERATE_MAC_REFS

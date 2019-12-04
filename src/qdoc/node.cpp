@@ -158,49 +158,27 @@ bool Node::changeType(NodeType from, NodeType to)
  */
 bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 {
+#define LT_RETURN_IF_NOT_EQUAL(a, b) \
+    if ((a) != (b)) \
+        return (a) < (b);
+
     if (n1->isPageNode() && n2->isPageNode()) {
-        const PageNode *f1 = static_cast<const PageNode *>(n1);
-        const PageNode *f2 = static_cast<const PageNode *>(n2);
-        if (f1->fullTitle() < f2->fullTitle())
-            return true;
-        else if (f1->fullTitle() > f2->fullTitle())
-            return false;
+        LT_RETURN_IF_NOT_EQUAL(n1->fullName(), n2->fullName());
+        LT_RETURN_IF_NOT_EQUAL(n1->fullTitle(), n2->fullTitle());
     }
 
     if (n1->isFunction() && n2->isFunction()) {
         const FunctionNode *f1 = static_cast<const FunctionNode *>(n1);
         const FunctionNode *f2 = static_cast<const FunctionNode *>(n2);
 
-        if (f1->isConst() < f2->isConst())
-            return true;
-        else if (f1->isConst() > f2->isConst())
-            return false;
-
-        if (f1->signature(false, false) < f2->signature(false, false))
-            return true;
-        else if (f1->signature(false, false) > f2->signature(false, false))
-            return false;
+        LT_RETURN_IF_NOT_EQUAL(f1->isConst(), f2->isConst());
+        LT_RETURN_IF_NOT_EQUAL(f1->signature(false, false), f2->signature(false, false));
     }
 
-    if (n1->location().filePath() < n2->location().filePath())
-        return true;
-    else if (n1->location().filePath() > n2->location().filePath())
-        return false;
-
-    if (n1->nodeType() < n2->nodeType())
-        return true;
-    else if (n1->nodeType() > n2->nodeType())
-        return false;
-
-    if (n1->name() < n2->name())
-        return true;
-    else if (n1->name() > n2->name())
-        return false;
-
-    if (n1->access() < n2->access())
-        return true;
-    else if (n1->access() > n2->access())
-        return false;
+    LT_RETURN_IF_NOT_EQUAL(n1->location().filePath(), n2->location().filePath());
+    LT_RETURN_IF_NOT_EQUAL(n1->nodeType(), n2->nodeType());
+    LT_RETURN_IF_NOT_EQUAL(n1->name(), n2->name());
+    LT_RETURN_IF_NOT_EQUAL(n1->access(), n2->access());
 
     return false;
 }
@@ -3611,17 +3589,7 @@ bool HeaderNode::hasDocumentedChildren() const
  */
 
 /*!
-  Returns the node's full title, which is usually whatever
-  title() returns, but for some cases the full title migth
-  be different from title(), so this might require changing,
-  because currently it just returns the title().
-
-  mws 13/07/2018. This function used to test the node subtype
-  for File or Image and append text to the title(), but there
-  are no node subtypes now, so it can't do that. There are no
-  node type values for File and Image either. Files and images
-  are used in examples, but the ExampleNode's example files
-  and example images are stored as lists of path strings.
+  Returns the node's full title.
  */
 QString PageNode::fullTitle() const
 {

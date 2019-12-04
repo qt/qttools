@@ -811,39 +811,6 @@ void WebXMLGenerator::endLink(QXmlStreamWriter &writer) {
     }
 }
 
-QString WebXMLGenerator::targetType(const Node *node)
-{
-    if (!node)
-        return "external";
-
-    switch (node->nodeType()) {
-    case Node::Namespace:
-        return "namespace";
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-        return "class";
-    case Node::Page:
-    case Node::Example:
-        return "page";
-    case Node::Enum:
-        return "enum";
-    case Node::Typedef:
-        return "typedef";
-    case Node::Property:
-        return "property";
-    case Node::Function:
-        return "function";
-    case Node::Variable:
-        return "variable";
-    case Node::Module:
-        return "module";
-    default:
-        break;
-    }
-    return QString();
-}
-
 void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *node)
 {
     if (node && !node->links().empty()) {
@@ -919,17 +886,6 @@ void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
         writer.writeEndElement(); // row
     }
     writer.writeEndElement(); // table
-}
-
-const QPair<QString,QString> WebXMLGenerator::anchorForNode(const Node *node)
-{
-    QPair<QString,QString> anchorPair;
-
-    anchorPair.first = fullDocumentLocation(node);
-    if (node->isTextPageNode())
-        anchorPair.second = node->title();
-
-    return anchorPair;
 }
 
 QT_END_NAMESPACE

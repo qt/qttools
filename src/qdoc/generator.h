@@ -103,6 +103,7 @@ public:
     static bool useTimestamps() { return useTimestamps_; }
 
 protected:
+    static QFile *openSubPageFile(const Node *node, const QString &fileName);
     void beginFilePage(const Node *node, const QString &fileName);
     void endFilePage() { endSubPage(); } // for symmetry
     void beginSubPage(const Node *node, const QString &fileName);
@@ -164,6 +165,7 @@ protected:
     QString getMetadataElement(const Aggregate *inner, const QString &t);
     QStringList getMetadataElements(const Aggregate *inner, const QString &t);
     void generateOverloadedSignal(const Node *node, CodeMarker *marker);
+    static QString getOverloadedSignalCode(const Node *node);
     QString indent(int level, const QString &markedCode);
     QTextStream& out();
     QString outFileName();
@@ -177,6 +179,11 @@ protected:
     void setImageFileExtensions(const QStringList &extensions);
     void unknownAtom(const Atom *atom);
     int appendSortedQmlNames(Text &text, const Node *base, const NodeList &subs);
+
+    static bool hasExceptions(const Node *node,
+                              NodeList &reentrant,
+                              NodeList &threadsafe,
+                              NodeList &nonreentrant);
 
     QMap<QString, QStringList> editionGroupMap;
     QMap<QString, QStringList> editionModuleMap;
@@ -200,6 +207,8 @@ protected:
     int appendSortedNames(Text &text, const ClassNode *classe, const QList<RelatedClass> &classes);
     void appendSignature(Text &text, const Node *node);
     void signatureList(const NodeList &nodes, const Node *relative, CodeMarker *marker);
+
+    void addImageToCopy(const ExampleNode *en, const QString &file);
 
 private:
     static Generator *currentGenerator_;
