@@ -1367,7 +1367,7 @@ void DocParser::parse(const QString &source,
                                     append(Atom::FormatEndif);
                                 } else {
                                     append(Atom::FormatElse);
-                                    numPendingFi++;
+                                    ++numPendingFi;
                                 }
                             }
                         }
