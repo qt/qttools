@@ -223,7 +223,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
 
             QStringList documentedItems = enume->doc().enumItemNames();
             if (documentedItems.isEmpty()) {
-                const auto enumItems = enume->items();
+                const auto &enumItems = enume->items();
                 for (const auto &item : enumItems)
                     documentedItems << item.name();
             }
@@ -231,23 +231,15 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
             for (const auto &item : omitItems)
                 documentedItems.removeAll(item);
 
-            if (documentedItems.size() <= MaxEnumValues) {
-                for (int i = 0; i < documentedItems.size(); ++i) {
-                    if (i != 0)
-                        synopsis += ", ";
-                    synopsis += documentedItems.at(i);
-                }
-            } else {
-                for (int i = 0; i < documentedItems.size(); ++i) {
-                    if (i < MaxEnumValues - 2 || i == documentedItems.size() - 1) {
-                        if (i != 0)
-                            synopsis += ", ";
-                        synopsis += documentedItems.at(i);
-                    } else if (i == MaxEnumValues - 1) {
-                        synopsis += ", ...";
-                    }
-                }
+            if (documentedItems.size() > MaxEnumValues) {
+                // Take the last element and keep it safe, then elide the surplus.
+                const QString last = documentedItems.last();
+                documentedItems = documentedItems.mid(0, MaxEnumValues - 1);
+                documentedItems += "&hellip;";
+                documentedItems += last;
             }
+            synopsis += documentedItems.join(QLatin1String(", "));
+
             if (!documentedItems.isEmpty())
                 synopsis += QLatin1Char(' ');
             synopsis += QLatin1Char('}');
