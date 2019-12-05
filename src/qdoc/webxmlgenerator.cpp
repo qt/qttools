@@ -289,6 +289,9 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
 {
     bool keepQuoting = false;
 
+    if (!atom)
+        return nullptr;
+
     switch (atom->type()) {
     case Atom::AnnotatedList:
     {
@@ -750,11 +753,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     }
 
     hasQuotingInformation = keepQuoting;
+    return atom->next();
 
-    if (atom)
-        return atom->next();
-
-    return nullptr;
 }
 
 void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,

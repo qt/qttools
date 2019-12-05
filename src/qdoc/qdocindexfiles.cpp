@@ -157,6 +157,11 @@ void QDocIndexFiles::readIndexFile(const QString &path)
     basesList_.clear();
 
     NamespaceNode *root = qdb_->newIndexTree(project_);
+    if (!root) {
+        qWarning() << "Issue parsing index tree" << path;
+        return;
+    }
+
     root->tree()->setIndexTitle(indexTitle);
 
     // Scan all elements in the XML file, constructing a map that contains
@@ -387,7 +392,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader& reader,
         } else
             goto done;
 
-        if (current && current->isExample()) {
+        if (current->isExample()) {
             ExampleNode *en = static_cast<ExampleNode *>(current);
             if (subtype == QDocAttrFile) {
                 en->appendFile(name);

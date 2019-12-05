@@ -1909,7 +1909,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
                                           const QString &buildversion,
                                           bool tableItems)
 {
-    if (noNavigationBar)
+    if (noNavigationBar || node == nullptr)
         return;
 
     Text navigationbar;
@@ -2879,7 +2879,7 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative,
                                           CodeMarker *marker,
                                           const NodeMultiMap &nmm)
 {
-    if (nmm.isEmpty())
+    if (nmm.isEmpty() || relative == nullptr)
         return;
     generateAnnotatedList(relative, marker, nmm.values());
 }
