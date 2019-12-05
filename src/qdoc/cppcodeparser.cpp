@@ -710,8 +710,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc,
  */
 void CppCodeParser::processMetaCommands(const Doc &doc, Node *node)
 {
-    QStringList metaCommandsUsed = doc.metaCommandsUsed().values();
-    metaCommandsUsed.sort(); // TODO: why are these sorted? mws 24/12/2018
+    const QStringList metaCommandsUsed = doc.metaCommandsUsed().values();
     for (const auto &command : metaCommandsUsed) {
         const ArgList args = doc.metaCommandArgs(command);
         for (const auto &arg : args)
