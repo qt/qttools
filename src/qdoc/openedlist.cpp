@@ -135,7 +135,7 @@ int OpenedList::fromAlpha(const QString &str)
     int n = 0;
     int u;
 
-    for (int i = 0; i < (int) str.length(); i++) {
+    for (int i = 0; i < str.length(); i++) {
         u = str[i].toLower().unicode();
         if (u >= 'a' && u <= 'z') {
             n *= 26;

@@ -3234,7 +3234,7 @@ void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, 
                 out() << "<tr><td class=\"memItemLeft rightAlign topAlign\"> ";
             }
             else {
-                if (twoColumn && i == (int) (nv.count() + 1) / 2)
+                if (twoColumn && i == (nv.count() + 1) / 2)
                     out() << "</ul></td><td class=\"topAlign\"><ul>\n";
                 out() << "<li class=\"fn\">";
             }
@@ -3293,7 +3293,7 @@ void HtmlGenerator::generateSectionList(const Section& section,
                 out() << "<tr><td class=\"memItemLeft topAlign rightAlign\"> ";
             }
             else {
-                if (twoColumn && i == (int) (members.count() + 1) / 2)
+                if (twoColumn && i == (members.count() + 1) / 2)
                     out() << "</ul></td><td class=\"topAlign\"><ul>\n";
                 out() << "<li class=\"fn\">";
             }

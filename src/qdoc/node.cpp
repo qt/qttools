@@ -1359,7 +1359,7 @@ QString Node::cleanId(const QString &str)
         clean += QLatin1Char('a');
     }
 
-    for (int i = 1; i < (int) name.length(); i++) {
+    for (int i = 1; i < name.length(); i++) {
         const QChar c = name[i];
         const uint u = c.unicode();
         if ((u >= 'a' && u <= 'z') ||

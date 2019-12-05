@@ -2135,7 +2135,7 @@ bool DocParser::expandMacro()
 
     QString cmdStr;
     int backslashPos = pos++;
-    while (pos < (int) input_.length() && input_[pos].isLetterOrNumber())
+    while (pos < input_.length() && input_[pos].isLetterOrNumber())
         cmdStr += input_[pos++];
 
     endPos = pos;
@@ -2301,9 +2301,9 @@ QString DocParser::getBracedArgument(bool verbatim)
 {
     QString arg;
     int delimDepth = 0;
-    if (pos < (int) input_.length() && input_[pos] == '{') {
+    if (pos < input_.length() && input_[pos] == '{') {
         pos++;
-        while (pos < (int) input_.length() && delimDepth >= 0) {
+        while (pos < input_.length() && delimDepth >= 0) {
             switch (input_[pos].unicode()) {
             case '{':
                 delimDepth++;
@@ -2443,7 +2443,7 @@ QString DocParser::getBracketedArgument()
 QString DocParser::getOptionalArgument()
 {
     skipSpacesOrOneEndl();
-    if (pos + 1 < (int) input_.length() && input_[pos] == '\\' &&
+    if (pos + 1 < input_.length() && input_[pos] == '\\' &&
             input_[pos + 1].isLetterOrNumber()) {
         return QString();
     }
@@ -2636,7 +2636,7 @@ void DocParser::skipSpacesOnLine()
 void DocParser::skipSpacesOrOneEndl()
 {
     int firstEndl = -1;
-    while (pos < (int) input_.length() && input_[pos].isSpace()) {
+    while (pos < input_.length() && input_[pos].isSpace()) {
         QChar ch = input_[pos];
         if (ch == '\n') {
             if (firstEndl == -1) {
@@ -2773,7 +2773,7 @@ int DocParser::indentLevel(const QString &str)
     int minIndent = INT_MAX;
     int column = 0;
 
-    for (int i = 0; i < (int) str.length(); i++) {
+    for (int i = 0; i < str.length(); i++) {
         if (str[i] == '\n') {
             column = 0;
         }
@@ -2794,7 +2794,7 @@ QString DocParser::unindent(int level, const QString &str)
     QString t;
     int column = 0;
 
-    for (int i = 0; i < (int) str.length(); i++) {
+    for (int i = 0; i < str.length(); i++) {
         if (str[i] == QLatin1Char('\n')) {
             t += '\n';
             column = 0;
@@ -3273,7 +3273,7 @@ void Doc::trimCStyleComment(Location &location, QString &str)
     int asterColumn = location.columnNo() + 1;
     int i;
 
-    for (i = 0; i < (int) str.length(); i++) {
+    for (i = 0; i < str.length(); i++) {
         if (m.columnNo() == asterColumn) {
             if (str[i] != '*')
                 break;

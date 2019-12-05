@@ -735,7 +735,7 @@ bool Tokenizer::isTrue(const QString &condition)
           X && Y || Z     // the or
           (X || Y) && Z   // the and
     */
-    for (int i = 0; i < (int) condition.length() - 1; i++) {
+    for (int i = 0; i < condition.length() - 1; i++) {
         QChar ch = condition[i];
         if (ch == QChar('(')) {
             parenDepth++;
