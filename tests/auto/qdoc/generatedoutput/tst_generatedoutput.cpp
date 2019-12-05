@@ -50,7 +50,8 @@ private:
     void compareLineByLine(const QStringList &expectedFiles);
     void testAndCompare(const char *input,
                         const char *outNames,
-                        const char *extraParams = nullptr);
+                        const char *extraParams = nullptr,
+                        const char *outputPathPrefix = nullptr);
 };
 
 void tst_generatedOutput::initTestCase()
@@ -124,16 +125,27 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 
 void tst_generatedOutput::testAndCompare(const char *input,
                                          const char *outNames,
-                                         const char *extraParams)
+                                         const char *extraParams,
+                                         const char *outputPathPrefix)
 {
-    QStringList args{ "-outputdir", m_outputDir->path(), QFINDTESTDATA(input) };
+    QStringList args{ "-outputdir", m_outputDir->path() + "/" + outputPathPrefix,
+                     QFINDTESTDATA(input) };
     if (extraParams)
         args << QString(QLatin1String(extraParams)).split(QChar(' '));
+
     runQDocProcess(args);
+
     if (QTest::currentTestFailed())
         return;
-    compareLineByLine(QString(QLatin1String(outNames)).split(QChar(' ')));
+
+    QStringList expectedOuts(QString(QLatin1String(outNames)).split(QChar(' ')));
+    if (outputPathPrefix)
+        for (auto &expectedOut : expectedOuts)
+            expectedOut = QString(outputPathPrefix) + "/" + expectedOut;
+
+    compareLineByLine(expectedOuts);
 }
+
 
 void tst_generatedOutput::htmlFromQDocFile()
 {
