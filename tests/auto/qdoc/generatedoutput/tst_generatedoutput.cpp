@@ -47,6 +47,8 @@ private slots:
     void webXmlFromQml();
     void webXmlFromCppBug80259();
 
+    void examplesManifestXml();
+
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
@@ -235,6 +237,12 @@ void tst_generatedOutput::webXmlFromCppBug80259()
                    "html/second.webxml "
                    "html/third.webxml "
                    "html/index.webxml");
+}
+
+void tst_generatedOutput::examplesManifestXml()
+{
+    testAndCompare("examples-qhp.qdocconf",
+                   "examples-manifest.xml");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
