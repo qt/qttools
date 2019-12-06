@@ -259,7 +259,7 @@ QMap<QString, QStringList> Config::includeFilesMap_;
 Config::Config(const QString &programName, const QStringList &args)
     : prog(programName)
 {
-    numInstances++;
+    ++numInstances;
     processCommandLineOptions(args);
     reset();
 }
@@ -921,7 +921,7 @@ QString Config::copyFile(const Location &location,
 int Config::numParams(const QString &value)
 {
     int max = 0;
-    for (int i = 0; i != value.length(); i++) {
+    for (int i = 0; i != value.length(); ++i) {
         uint c = value[i].unicode();
         if (c > 0 && c < 8)
             max = qMax(max, static_cast<int>(c));

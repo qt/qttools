@@ -269,7 +269,7 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur) {
             if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
             bool different = false;
-            for (int i = 0; i < actualArg; i++) {
+            for (int i = 0; i < actualArg; ++i) {
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
                 QString t1 = parameters.at(i).type();
@@ -347,7 +347,7 @@ static Node *findFunctionNodeForCursor(QDocDatabase *qdb, CXCursor cur) {
             if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
             bool different = false;
-            for (int i = 0; i < numArg; i++) {
+            for (int i = 0; i < numArg; ++i) {
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
                 QString t1 = parameters.at(i).type();
@@ -884,7 +884,7 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
                 }
                 return CXChildVisit_Continue;
             });
-            i++;
+            ++i;
         }
         return CXChildVisit_Continue;
     });
@@ -1521,7 +1521,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                                         QString pName = blankSplit.last();
                                         int j = 0;
                                         while (j < pName.length() && !pName.at(i).isLetter())
-                                            j++;
+                                            ++j;
                                         if (j > 0)
                                             pName = pName.mid(j);
                                         if (!pName.isEmpty() && pName != parameters[i].name())

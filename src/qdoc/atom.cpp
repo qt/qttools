@@ -334,7 +334,7 @@ QString Atom::typeString() const
         while (atms[i].english != nullptr) {
             if (atms[i].no != i)
                 Location::internalError(QCoreApplication::translate("QDoc::Atom", "atom %1 missing").arg(i));
-            i++;
+            ++i;
         }
         deja = true;
     }

@@ -2383,7 +2383,7 @@ void Aggregate::adoptFunction(FunctionNode *fn)
     auto it = functionMap_.find(fn->name());
     if (it == functionMap_.end())
         functionMap_.insert(fn->name(), fn);
-    functionCount_++;
+    ++functionCount_;
 }
 
 /*!

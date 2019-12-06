@@ -161,7 +161,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             synopsis += QLatin1Char('(');
             if (!func->parameters().isEmpty()) {
                 const Parameters &parameters = func->parameters();
-                for (int i = 0; i < parameters.count(); i++) {
+                for (int i = 0; i < parameters.count(); ++i) {
                     if (i > 0)
                         synopsis += ", ";
                     QString name = parameters.at(i).name();
@@ -337,7 +337,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
         synopsis += QLatin1Char('(');
         if (!func->parameters().isEmpty()) {
             const Parameters &parameters = func->parameters();
-            for (int i = 0; i < parameters.count(); i++) {
+            for (int i = 0; i < parameters.count(); ++i) {
                 if (i > 0)
                     synopsis += ", ";
                 QString name = parameters.at(i).name();
@@ -607,12 +607,12 @@ QString CppCodeMarker::addMarkUp(const QString &in,
             case '(':
                 finish = i;
                 readChar();
-                parenDepth++;
+                ++parenDepth;
                 break;
             case ')':
                 finish = i;
                 readChar();
-                parenDepth--;
+                --parenDepth;
                 break;
             case ':':
                 finish = i;
