@@ -580,12 +580,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         // now widely used to write teletype text. As a result, text marked
         // with the \c command is not passed to a code marker.
         out() << formattingLeftMap()[ATOM_FORMATTING_TELETYPE];
-        if (inLink_) {
-            out() << protectEnc(plainCode(atom->string()));
-        }
-        else {
-            out() << protectEnc(plainCode(atom->string()));
-        }
+        out() << protectEnc(plainCode(atom->string()));
         out() << formattingRightMap()[ATOM_FORMATTING_TELETYPE];
         break;
     case Atom::CaptionLeft:
@@ -939,23 +934,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 QString target = qdb_->getNewLinkTarget(relative, node, outFileName(), text);
                 out() << "<a id=\"" << Doc::canonicalTitle(target) << "\" class=\"qa-mark\"></a>";
             }
-            /*
-              mws saw this on 17/10/2014.
-              Is this correct? Setting node to 0 means the
-              following test always fails. Did we decide to
-              no longer warn about linking to obsolete things?
-             */
             node = nullptr;
-            if (node && node->isObsolete()) {
-                if ((relative->parent() != node) && !relative->isObsolete()) {
-                    inObsoleteLink = true;
-                    if (obsoleteLinks) {
-                        relative->doc().location().warning(tr("Link to obsolete item '%1' in %2")
-                                                           .arg(atom->string())
-                                                           .arg(relative->plainFullName()));
-                    }
-                }
-            }
         }
         beginLink(link, node, relative);
         skipAhead = 1;

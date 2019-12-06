@@ -4231,7 +4231,6 @@ QString FunctionNode::metanessString() const
     default:
         return "plain";
     }
-    return QString();
 }
 
 /*!
