@@ -1,9 +1,9 @@
 # Generated from plugins.pro.
 
-if(TARGET webkitwidgets)
+if(TARGET Qt::WebKitWidgets)
     add_subdirectory(qwebview)
 endif()
-if(TARGET axcontainer AND WIN32)
+if(TARGET Qt::AxContainer AND WIN32)
     add_subdirectory(activeqt)
 endif()
 if(TARGET Qt::QuickWidgets)
