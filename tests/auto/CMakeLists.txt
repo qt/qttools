@@ -1,0 +1,24 @@
+# Generated from auto.pro.
+
+if(QT_FEATURE_process AND NOT CMAKE_CROSS_COMPILING)
+    add_subdirectory(linguist)
+    add_subdirectory(qtattributionsscanner)
+    add_subdirectory(qtdiag)
+endif()
+if(NOT CMAKE_CROSS_COMPILING)
+    add_subdirectory(qdoc)
+endif()
+if(TARGET Qt::Help AND NOT CMAKE_CROSS_COMPILING)
+    add_subdirectory(qhelpcontentmodel)
+    add_subdirectory(qhelpenginecore)
+    add_subdirectory(qhelpgenerator)
+    add_subdirectory(qhelpindexmodel)
+    add_subdirectory(qhelpprojectdata)
+endif()
+# special case begin
+#add_subdirectory(cmake)
+#add_subdirectory(installed_cmake)
+# special case end
+if(QT_FEATURE_process AND WIN32 AND NOT CMAKE_CROSS_COMPILING AND NOT WINRT)
+    add_subdirectory(windeployqt)
+endif()

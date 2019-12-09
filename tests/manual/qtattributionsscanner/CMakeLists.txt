@@ -1,0 +1,2 @@
+# Generated from qtattributionsscanner.pro.
+
