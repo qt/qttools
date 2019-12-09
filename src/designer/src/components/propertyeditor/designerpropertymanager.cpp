@@ -1012,7 +1012,7 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
     }
 
     if (QtProperty *flagProperty = m_flagToProperty.value(property, 0)) {
-        const QList<QtProperty *> subFlags = m_propertyToFlags.value(flagProperty);
+        const auto subFlags = m_propertyToFlags.value(flagProperty);
         const int subFlagCount = subFlags.count();
         // flag changed
         const bool subValue = variantProperty(property)->value().toBool();
@@ -1025,7 +1025,7 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
         m_changingSubValue = true;
 
         FlagData data = m_flagValues.value(flagProperty);
-        const QList<uint> values = data.values;
+        const auto values = data.values;
         // Compute new value, without including (additional) supermasks
         if (values.at(subIndex) == 0) {
             for (int i = 0; i < subFlagCount; ++i) {
@@ -1123,7 +1123,7 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
 {
     if (QtProperty *flagProperty = m_flagToProperty.value(property, 0)) {
         PropertyToPropertyListMap::iterator it = m_propertyToFlags.find(flagProperty);
-        QList<QtProperty *> &propertyList = it.value();
+        auto &propertyList = it.value();
         propertyList.replace(propertyList.indexOf(property), 0);
         m_flagToProperty.remove(property);
     } else if (QtProperty *alignProperty = m_alignHToProperty.value(property, 0)) {
@@ -1516,15 +1516,13 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         const uint v = data.val;
         const QChar bar = QLatin1Char('|');
         QString valueStr;
-        const QList<QPair<QString, uint> > flags = data.flags;
-        const  QList<QPair<QString, uint> >::const_iterator fcend = flags.constEnd();
-        for (QList<QPair<QString, uint> >::const_iterator it = flags.constBegin(); it != fcend; ++it) {
-            const uint val = it->second;
+        for (const DesignerIntPair &p : data.flags) {
+            const uint val = p.second;
             const bool checked = (val == 0) ? (v == 0) : ((val & v) == val);
             if (checked) {
                 if (!valueStr.isEmpty())
                     valueStr += bar;
-                valueStr += it->first;
+                valueStr += p.first;
             }
         }
         return valueStr;
@@ -1754,8 +1752,8 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
 
         // set Value
 
-        const QList<uint> values = data.values;
-        const QList<QtProperty *> subFlags = m_propertyToFlags.value(property);
+        const auto values = data.values;
+        const auto subFlags = m_propertyToFlags.value(property);
         const int subFlagCount = subFlags.count();
         for (int i = 0; i < subFlagCount; ++i) {
             QtVariantProperty *subFlag = variantProperty(subFlags.at(i));
@@ -2272,7 +2270,7 @@ void DesignerEditorFactory::disconnectPropertyManager(QtVariantPropertyManager *
 template <class EditorContainer, class Editor, class SetterParameter, class Value>
 static inline void applyToEditors(const EditorContainer &list, void (Editor::*setter)(SetterParameter), const Value &value)
 {
-    if (list.empty()) {
+    if (list.isEmpty()) {
         return;
     }
     for (auto it = list.constBegin(), end = list.constEnd(); it != end; ++it) {
@@ -2317,7 +2315,7 @@ void DesignerEditorFactory::slotPropertyChanged(QtProperty *property)
             defaultPixmap = qvariant_cast<QIcon>(manager->attributeValue(property, QLatin1String(defaultResourceAttributeC))).pixmap(16, 16);
         else if (m_fwb)
             defaultPixmap = m_fwb->iconCache()->icon(qvariant_cast<PropertySheetIconValue>(manager->value(property))).pixmap(16, 16);
-        const QList<PixmapEditor *> editors = m_iconPropertyToEditors.value(property);
+        const auto editors = m_iconPropertyToEditors.value(property);
         for (PixmapEditor *editor : editors)
             editor->setDefaultPixmap(defaultPixmap);
     }
@@ -2659,7 +2657,7 @@ void DesignerEditorFactory::slotStringTextChanged(const QString &value)
             PropertySheetStringValue strVal = qvariant_cast<PropertySheetStringValue>(val);
             strVal.setValue(value);
             // Disable translation if no translation subproperties exist.
-            if (varProp->subProperties().empty())
+            if (varProp->subProperties().isEmpty())
                 strVal.setTranslatable(false);
             val = QVariant::fromValue(strVal);
         } else {
@@ -2725,7 +2723,7 @@ void DesignerEditorFactory::slotStringListChanged(const QStringList &value)
             PropertySheetStringListValue listValue = qvariant_cast<PropertySheetStringListValue>(val);
             listValue.setValue(value);
             // Disable translation if no translation subproperties exist.
-            if (varProp->subProperties().empty())
+            if (varProp->subProperties().isEmpty())
                 listValue.setTranslatable(false);
             val = QVariant::fromValue(listValue);
         } else {
@@ -2746,7 +2744,7 @@ ResetDecorator::ResetDecorator(const QDesignerFormEditorInterface *core, QObject
 
 ResetDecorator::~ResetDecorator()
 {
-    const QList<ResetWidget *> editors = m_resetWidgetToProperty.keys();
+    const auto editors = m_resetWidgetToProperty.keys();
     qDeleteAll(editors);
 }
 
@@ -2819,7 +2817,7 @@ QWidget *ResetDecorator::editor(QWidget *subEditor, bool resettable, QtAbstractP
 
 void ResetDecorator::slotPropertyChanged(QtProperty *property)
 {
-    QMap<QtProperty *, QList<ResetWidget *> >::ConstIterator prIt = m_createdResetWidgets.constFind(property);
+    const auto prIt = m_createdResetWidgets.constFind(property);
     if (prIt == m_createdResetWidgets.constEnd())
         return;
 

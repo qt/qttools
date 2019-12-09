@@ -33,11 +33,11 @@
 
 #include <QtWidgets/qwizard.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
-using IdList = QList<int>;
-using WizardPageList = QList<QWizardPage *>;
+using WizardPageList = QVector<QWizardPage *>;
 
 namespace qdesigner_internal {
 
@@ -56,7 +56,7 @@ QWidget *QWizardContainer::widget(int index) const
 {
     QWidget *rc = nullptr;
     if (index >= 0) {
-        const IdList idList = m_wizard->pageIds();
+        const auto idList = m_wizard->pageIds();
         if (index < idList.size())
             rc = m_wizard->page(idList.at(index));
     }
@@ -65,15 +65,12 @@ QWidget *QWizardContainer::widget(int index) const
 
 int QWizardContainer::currentIndex() const
 {
-    const IdList idList = m_wizard->pageIds();
-    const int currentId = m_wizard->currentId();
-    const int rc = idList.empty() ? -1 : idList.indexOf(currentId);
-    return rc;
+    return m_wizard->pageIds().indexOf(m_wizard->currentId());
 }
 
 void QWizardContainer::setCurrentIndex(int index)
 {
-    if (index < 0 || m_wizard->pageIds().empty())
+    if (index < 0 || m_wizard->pageIds().isEmpty())
         return;
 
     int currentIdx = currentIndex();
@@ -120,7 +117,7 @@ void QWizardContainer::insertWidget(int index, QWidget *widget)
         return;
     }
 
-    const IdList idList = m_wizard->pageIds();
+    const auto idList = m_wizard->pageIds();
     const int pageCount = idList.size();
     if (index >= pageCount) {
         addWidget(widget);
@@ -142,9 +139,8 @@ void QWizardContainer::insertWidget(int index, QWidget *widget)
             m_wizard->removePage(idList.at(i));
         }
         int newId = idBefore + delta;
-        const WizardPageList::const_iterator wcend = pageList.constEnd();
-        for (WizardPageList::const_iterator it = pageList.constBegin(); it != wcend; ++it) {
-            m_wizard->setPage(newId, *it);
+        for (QWizardPage *page : qAsConst(pageList)) {
+            m_wizard->setPage(newId, page);
             newId += delta;
         }
     } else {
@@ -160,7 +156,7 @@ void QWizardContainer::remove(int index)
     if (index < 0)
         return;
 
-    const IdList idList = m_wizard->pageIds();
+    const auto idList = m_wizard->pageIds();
     if (index >= idList.size())
         return;
 

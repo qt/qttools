@@ -107,7 +107,7 @@ QHelpFilterData &QHelpFilterData::operator=(const QHelpFilterData &) = default;
 QHelpFilterData &QHelpFilterData::operator=(QHelpFilterData &&) = default;
 
 /*!
-    \fn void QHelpFilterData::swap(QCompressedHelpInfo &other)
+    \fn void QHelpFilterData::swap(QHelpFilterData &other)
 
     Swaps the filter \a other with this filter. This
     operation is very fast and never fails.

@@ -53,7 +53,10 @@ class QDesignerResourceBrowserInterface;
 class QDesignerLanguageExtension
 {
 public:
-    virtual ~QDesignerLanguageExtension() {}
+    Q_DISABLE_COPY_MOVE(QDesignerLanguageExtension)
+
+    QDesignerLanguageExtension() = default;
+    virtual ~QDesignerLanguageExtension() = default;
 
     /*!
         Returns the name to be matched against the "language" attribute of the <ui> element.

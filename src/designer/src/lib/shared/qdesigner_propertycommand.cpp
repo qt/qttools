@@ -646,7 +646,7 @@ PropertyHelper::PropertyHelper(QObject* object,
         m_objectType = OT_Widget;
     } else {
         if (const QAction *action = qobject_cast<const QAction *>(m_object))
-            m_objectType = action->associatedWidgets().empty() ? OT_FreeAction : OT_AssociatedAction;
+            m_objectType = action->associatedWidgets().isEmpty() ? OT_FreeAction : OT_AssociatedAction;
     }
 
     if(debugPropertyCommands)
@@ -881,7 +881,7 @@ QVariant PropertyHelper::findDefaultValue(QDesignerFormWindowInterface *fw) cons
         return  m_oldValue.first; // We simply don't know the value in this case
 
     const QDesignerWidgetDataBaseItemInterface *item = fw->core()->widgetDataBase()->item(item_idx);
-    const QList<QVariant> default_prop_values = item->defaultPropertyValues();
+    const auto default_prop_values = item->defaultPropertyValues();
     if (m_index < default_prop_values.size())
         return default_prop_values.at(m_index);
 
@@ -982,7 +982,7 @@ bool PropertyListCommand::add(QObject *object, const QString &propertyName)
 
     const PropertyDescription description(propertyName, sheet, index);
 
-    if (m_propertyHelperList.empty()) {
+    if (m_propertyHelperList.isEmpty()) {
         // first entry
         m_propertyDescription = description;
     } else {
@@ -1018,7 +1018,7 @@ bool PropertyListCommand::initList(const QObjectList &list, const QString &aprop
             add(o, apropertyName);
     }
 
-    return !propertyHelperList().empty();
+    return !propertyHelperList().isEmpty();
 }
 
 

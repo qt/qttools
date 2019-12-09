@@ -217,7 +217,7 @@ static bool removeEmptyCellsOnGrid(GridLikeLayout *grid, const QRect &area)
                 }
         }
     // remove, starting from last
-    if (!indexesToBeRemoved.empty()) {
+    if (!indexesToBeRemoved.isEmpty()) {
         std::stable_sort(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
         for (int i = indexesToBeRemoved.size() - 1; i >= 0; i--)
             delete grid->takeAt(indexesToBeRemoved[i]);
@@ -638,12 +638,11 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     GridLayoutState::CellStates GridLayoutState::cellStates(const QList<QRect> &rects, int numRows, int numColumns)
     {
         CellStates rc = CellStates(numRows * numColumns, CellState(Free, Free));
-        const QList<QRect>::const_iterator rcend = rects.constEnd();
-        for (QList<QRect>::const_iterator it = rects.constBegin(); it != rcend; ++it) {
-            const int leftColumn = it->x();
-            const int topRow = it->y();
-            const int rightColumn = leftColumn + it->width() - 1;
-            const int bottomRow = topRow + it->height() - 1;
+        for (const auto &rect : rects) {
+            const int leftColumn = rect.x();
+            const int topRow = rect.y();
+            const int rightColumn = leftColumn + rect.width() - 1;
+            const int bottomRow = topRow + rect.height() - 1;
             for (int r = topRow; r <= bottomRow; r++)
                 for (int c = leftColumn; c <= rightColumn; c++) {
                     const int flatIndex = r * numColumns + c;
@@ -979,7 +978,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void GridLayoutHelper::popState(const QDesignerFormEditorInterface *core, QWidget *widgetWithManagedLayout)
     {
-        Q_ASSERT(!m_states.empty());
+        Q_ASSERT(!m_states.isEmpty());
         const GridLayoutState state = m_states.pop();
         state.applyToLayout(core, widgetWithManagedLayout);
     }
@@ -1137,7 +1136,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     void FormLayoutHelper::popState(const QDesignerFormEditorInterface *core, QWidget *widgetWithManagedLayout)
     {
         QFormLayout *formLayout = qobject_cast<QFormLayout *>(LayoutInfo::managedLayout(core, widgetWithManagedLayout));
-        Q_ASSERT(!m_states.empty() && formLayout);
+        Q_ASSERT(!m_states.isEmpty() && formLayout);
 
         const FormLayoutState storedState = m_states.pop();
         const FormLayoutState currentState =  state(formLayout);

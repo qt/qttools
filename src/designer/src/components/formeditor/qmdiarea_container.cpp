@@ -117,7 +117,7 @@ void QMdiAreaContainer::insertWidget(int, QWidget *widget)
 
 void QMdiAreaContainer::remove(int index)
 {
-    QList<QMdiSubWindow *> subWins = m_mdiArea->subWindowList(QMdiArea::CreationOrder);
+    auto subWins = m_mdiArea->subWindowList(QMdiArea::CreationOrder);
     if (index >= 0 && index < subWins.size()) {
         QMdiSubWindow *f = subWins.at(index);
         m_mdiArea->removeSubWindow(f->widget());
@@ -144,7 +144,7 @@ QMdiAreaPropertySheet::MdiAreaProperty QMdiAreaPropertySheet::mdiAreaProperty(co
 {
     using MdiAreaPropertyHash = QHash<QString, MdiAreaProperty>;
     static MdiAreaPropertyHash mdiAreaPropertyHash;
-    if (mdiAreaPropertyHash.empty()) {
+    if (mdiAreaPropertyHash.isEmpty()) {
         mdiAreaPropertyHash.insert(QLatin1String(subWindowNameC), MdiAreaSubWindowName);
         mdiAreaPropertyHash.insert(QLatin1String(subWindowTitleC), MdiAreaSubWindowTitle);
     }

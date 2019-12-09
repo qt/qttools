@@ -38,7 +38,10 @@ class QVariant;
 class QDesignerPropertySheetExtension
 {
 public:
-    virtual ~QDesignerPropertySheetExtension() {}
+    Q_DISABLE_COPY_MOVE(QDesignerPropertySheetExtension)
+
+    QDesignerPropertySheetExtension() = default;
+    virtual ~QDesignerPropertySheetExtension() = default;
 
     virtual int count() const = 0;
 
@@ -63,9 +66,7 @@ public:
     virtual bool isChanged(int index) const = 0;
     virtual void setChanged(int index, bool changed) = 0;
 
-    virtual bool isEnabled(int index) const
-        // ### Qt6 remove body, provided in Qt5 for source compatibility to Qt4.
-        { Q_UNUSED(index); return true; }
+    virtual bool isEnabled(int index) const = 0;
 };
 
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerPropertySheetExtension,

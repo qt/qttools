@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,31 +26,31 @@
 **
 ****************************************************************************/
 
-#include <qcryptographichash.h>
-#include <qdebug.h>
-#include <qhash.h>
-#include <qmap.h>
+#include "helpprojectwriter.h"
 
 #include "atom.h"
-#include "helpprojectwriter.h"
-#include "htmlgenerator.h"
 #include "config.h"
+#include "htmlgenerator.h"
 #include "node.h"
 #include "qdocdatabase.h"
-#include <qdebug.h>
+
+#include <QtCore/qcryptographichash.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 
 HelpProjectWriter::HelpProjectWriter(const Config &config,
                                      const QString &defaultFileName,
-                                     Generator* g)
+                                     Generator *g)
 {
     reset(config, defaultFileName, g);
 }
 
 void HelpProjectWriter::reset(const Config &config,
                          const QString &defaultFileName,
-                         Generator* g)
+                         Generator *g)
 {
     projects.clear();
     gen_ = g;
@@ -65,9 +65,9 @@ void HelpProjectWriter::reset(const Config &config,
     // generator.
     outputDir = config.getOutputDir();
 
-    QStringList names = config.getStringList(CONFIG_QHP + Config::dot + "projects");
+    const QStringList names = config.getStringList(CONFIG_QHP + Config::dot + "projects");
 
-    foreach (const QString &projectName, names) {
+    for (const auto &projectName : names) {
         HelpProject project;
         project.name = projectName;
 
@@ -85,18 +85,20 @@ void HelpProjectWriter::reset(const Config &config,
         const auto &filterAttributes = config.getStringList(prefix + "filterAttributes");
         project.filterAttributes = QSet<QString>(filterAttributes.cbegin(), filterAttributes.cend());
         project.includeIndexNodes = config.getBool(prefix + "includeIndexNodes");
-        QSet<QString> customFilterNames = config.subVars(prefix + "customFilters");
-        foreach (const QString &filterName, customFilterNames) {
+        const QSet<QString> customFilterNames = config.subVars(prefix + "customFilters");
+        for (const auto &filterName : customFilterNames) {
             QString name = config.getString(prefix + "customFilters" + Config::dot + filterName + Config::dot + "name");
             const auto &filters = config.getStringList(prefix + "customFilters" + Config::dot + filterName + Config::dot + "filterAttributes");
             project.customFilters[name] = QSet<QString>(filters.cbegin(), filters.cend());
         }
         //customFilters = config.defs.
 
-        foreach (QString name, config.getStringSet(prefix + "excluded"))
+        const auto excludedPrefixes = config.getStringSet(prefix + "excluded");
+        for (auto name : excludedPrefixes)
             project.excluded.insert(name.replace(QLatin1Char('\\'), QLatin1Char('/')));
 
-        foreach (const QString &name, config.getStringList(prefix + "subprojects")) {
+        const auto subprojectPrefixes = config.getStringList(prefix + "subprojects");
+        for (const auto &name : subprojectPrefixes) {
             SubProject subproject;
             QString subprefix = prefix + "subprojects" + Config::dot + name + Config::dot;
             subproject.title = config.getString(subprefix + "title");
@@ -158,7 +160,7 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     for (auto it = pageTypeHash.cbegin(), end = pageTypeHash.cend(); it != end; ++it)
         fullSubset.insert(it.value());
 
-    foreach (const QString &selector, selectors) {
+    for (const QString &selector : selectors) {
         QStringList pieces = selector.split(QLatin1Char(':'));
         if (pieces.size() == 1) {
             QString lower = selector.toLower();
@@ -217,7 +219,10 @@ QStringList HelpProjectWriter::keywordDetails(const Node *node) const
         else
             details << node->name();
         // "id"
-        details << node->parent()->name()+"::"+node->name();
+        if (!node->isRelatedNonmember())
+            details << node->parent()->name()+"::"+node->name();
+        else
+            details << node->name();
     }
     else if (node->isQmlType() || node->isQmlBasicType()) {
         details << node->name();
@@ -271,8 +276,9 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
             // Add all group members for '[group|module|qmlmodule]:name' selector
             if (node->isGroup() || node->isModule() || node->isQmlModule()) {
                 if (project.subprojects[i].groups.contains(node->name().toLower())) {
-                    const CollectionNode* cn = static_cast<const CollectionNode*>(node);
-                    foreach (const Node* m, cn->members()) {
+                    const CollectionNode *cn = static_cast<const CollectionNode *>(node);
+                    const auto members = cn->members();
+                    for (const Node *m : members) {
                         QString memberName = m->isTextPageNode()
                                 ? m->fullTitle() : m->fullDocumentName();
                         project.subprojects[i].nodes[memberName] = m;
@@ -306,7 +312,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     case Node::JsType:
     case Node::JsBasicType:
         if (node->doc().hasKeywords()) {
-            foreach (const Atom* keyword, node->doc().keywords()) {
+            const auto keywords = node->doc().keywords();
+            for (const Atom *keyword : keywords) {
                 if (!keyword->string().isEmpty()) {
                     QStringList details;
                     details << keyword->string()
@@ -328,8 +335,9 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     case Node::Enum:
         project.keywords.append(keywordDetails(node));
     {
-        const EnumNode *enumNode = static_cast<const EnumNode*>(node);
-        foreach (const EnumItem &item, enumNode->items()) {
+        const EnumNode *enumNode = static_cast<const EnumNode *>(node);
+        const auto items = enumNode->items();
+        for (const auto &item : items) {
             QStringList details;
 
             if (enumNode->itemAccess(item.name()) == Node::Private)
@@ -353,10 +361,11 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
     case Node::QmlModule:
     case Node::JsModule:
         {
-            const CollectionNode* cn = static_cast<const CollectionNode*>(node);
+            const CollectionNode *cn = static_cast<const CollectionNode *>(node);
             if (!cn->fullTitle().isEmpty()) {
                 if (cn->doc().hasKeywords()) {
-                    foreach (const Atom* keyword, cn->doc().keywords()) {
+                    const auto keywords = cn->doc().keywords();
+                    for (const Atom *keyword : keywords) {
                         if (!keyword->string().isEmpty()) {
                             QStringList details;
                             details << keyword->string()
@@ -436,10 +445,11 @@ bool HelpProjectWriter::generateSection(HelpProject &project,
         // Page nodes (such as manual pages) contain subtypes, titles and other
         // attributes.
     case Node::Page: {
-        const PageNode *pn = static_cast<const PageNode*>(node);
+        const PageNode *pn = static_cast<const PageNode *>(node);
         if (!pn->fullTitle().isEmpty()) {
             if (pn->doc().hasKeywords()) {
-                foreach (const Atom *keyword, pn->doc().keywords()) {
+                const auto keywords = pn->doc().keywords();
+                for (const Atom *keyword : keywords) {
                     if (!keyword->string().isEmpty()) {
                         QStringList details;
                         details << keyword->string()
@@ -489,9 +499,12 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
         const Aggregate *aggregate = static_cast<const Aggregate *>(node);
 
         // Ensure that we don't visit nodes more than once.
-        QSet<const Node*> childSet;
+        QSet<const Node *> childSet;
         const NodeList &children = aggregate->childNodes();
-        foreach (const Node *child, children) {
+        for (const auto *child : children) {
+            // Skip related non-members adopted by some other aggregate
+            if (child->parent() != aggregate)
+                continue;
             if (child->isIndexNode() || child->isPrivate())
                 continue;
             if (child->isTextPageNode()) {
@@ -499,12 +512,12 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
             } else {
                 // Store member status of children
                 project.memberStatus[node].insert(child->status());
-                if (child->isFunction() && static_cast<const FunctionNode*>(child)->isOverload())
+                if (child->isFunction() && static_cast<const FunctionNode *>(child)->isOverload())
                     continue;
                 childSet << child;
             }
         }
-        foreach (const Node *child, childSet)
+        for (const auto *child : qAsConst(childSet))
             generateSections(project, writer, child);
     }
 }
@@ -612,7 +625,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::Page: {
         // Page nodes (such as manual pages) contain subtypes, titles and other
         // attributes.
-        const PageNode *pn = static_cast<const PageNode*>(node);
+        const PageNode *pn = static_cast<const PageNode *>(node);
 
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
@@ -626,7 +639,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::JsModule:
     case Node::QmlModule:
         {
-            const CollectionNode* cn = static_cast<const CollectionNode*>(node);
+            const CollectionNode *cn = static_cast<const CollectionNode *>(node);
             writer.writeStartElement("section");
             writer.writeAttribute("ref", href);
             writer.writeAttribute("title", cn->fullTitle());
@@ -643,7 +656,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     const Node *rootNode;
 
     // Restrict searching only to the local (primary) tree
-    QVector<Tree*> searchOrder = qdb_->searchOrder();
+    QVector<Tree *> searchOrder = qdb_->searchOrder();
     qdb_->setLocalSearch();
 
     if (!project.indexRoot.isEmpty())
@@ -682,7 +695,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
         writer.writeAttribute("name", it.key());
         QStringList sortedAttributes = it.value().values();
         sortedAttributes.sort();
-        foreach (const QString &filter, sortedAttributes)
+        for (const auto &filter : qAsConst(sortedAttributes))
             writer.writeTextElement("filterAttribute", filter);
         writer.writeEndElement(); // customFilter
     }
@@ -693,12 +706,12 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     // Write filterAttribute elements.
     QStringList sortedFilterAttributes = project.filterAttributes.values();
     sortedFilterAttributes.sort();
-    foreach (const QString &filterName, sortedFilterAttributes)
+    for (const auto &filterName : qAsConst(sortedFilterAttributes))
         writer.writeTextElement("filterAttribute", filterName);
 
     writer.writeStartElement("toc");
     writer.writeStartElement("section");
-    const Node* node = qdb_->findPageNodeByTitle(project.indexTitle);
+    const Node *node = qdb_->findPageNodeByTitle(project.indexTitle);
     if (node == nullptr)
         node = qdb_->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
     QString indexPath;
@@ -780,14 +793,14 @@ void HelpProjectWriter::generateProject(HelpProject &project)
             if (subproject.sortPages) {
                 QStringList titles = subproject.nodes.keys();
                 titles.sort();
-                foreach (const QString &title, titles) {
+                for (const auto &title : qAsConst(titles)) {
                     writeNode(project, writer, subproject.nodes[title]);
                 }
             } else {
                 // Find a contents node and navigate from there, using the NextLink values.
                 QSet<QString> visited;
                 bool contentsFound = false;
-                foreach (const Node *node, subproject.nodes) {
+                for (const auto *node : qAsConst(subproject.nodes)) {
                     QString nextTitle = node->links().value(Node::NextLink).first;
                     if (!nextTitle.isEmpty() &&
                             node->links().value(Node::ContentsLink).first.isEmpty()) {
@@ -811,11 +824,11 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                 }
                 // No contents/nextpage links found, write all nodes unsorted
                 if (!contentsFound) {
-                    QList<const Node*> subnodes = subproject.nodes.values();
+                    QList<const Node *> subnodes = subproject.nodes.values();
 
                     std::sort(subnodes.begin(), subnodes.end(), Node::nodeNameLessThan);
 
-                    foreach (const Node *node, subnodes)
+                    for (const auto *node : qAsConst(subnodes))
                         writeNode(project, writer, node);
                 }
             }
@@ -832,7 +845,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
     writer.writeStartElement("keywords");
     std::sort(project.keywords.begin(), project.keywords.end());
-    foreach (const QStringList &details, project.keywords) {
+    for (const QStringList &details : qAsConst(project.keywords)) {
         writer.writeStartElement("keyword");
         writer.writeAttribute("name", details[0]);
         writer.writeAttribute("id", details[1]);
@@ -850,7 +863,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     files.unite(project.extraFiles);
     QStringList sortedFiles = files.values();
     sortedFiles.sort();
-    foreach (const QString &usedFile, sortedFiles) {
+    for (const auto &usedFile : qAsConst(sortedFiles)) {
         if (!usedFile.isEmpty())
             writer.writeTextElement("file", usedFile);
     }

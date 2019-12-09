@@ -1,0 +1,10 @@
+project = Test
+description = "A test project for QDoc build artifacts"
+moduleheader=
+outputdir = ./html
+
+exampledirs = .
+sources.fileextensions = \
+    examples.qdoc
+
+macro.begincomment      = "\\c{/*}"

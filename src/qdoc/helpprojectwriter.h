@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,17 +29,17 @@
 #ifndef HELPPROJECTWRITER_H
 #define HELPPROJECTWRITER_H
 
-#include <qstring.h>
-#include <qxmlstream.h>
-
 #include "config.h"
 #include "node.h"
+
+#include <QtCore/qstring.h>
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 
 class QDocDatabase;
 class Generator;
-typedef QPair<QString, const Node*> QStringNodePair;
+typedef QPair<QString, const Node *> QStringNodePair;
 
 using NodeTypeSet = QSet<unsigned char>;
 
@@ -71,7 +71,7 @@ struct HelpProject
     QSet<QString> files;
     QSet<QString> extraFiles;
     QSet<QString> filterAttributes;
-    QHash<QString, QSet<QString> > customFilters;
+    QHash<QString, QSet<QString>> customFilters;
     QSet<QString> excluded;
     QList<SubProject> subprojects;
     QHash<const Node *, NodeStatusSet> memberStatus;
@@ -85,10 +85,10 @@ class HelpProjectWriter
 public:
     HelpProjectWriter(const Config &config,
                       const QString &defaultFileName,
-                      Generator* g);
+                      Generator *g);
     void reset(const Config &config,
           const QString &defaultFileName,
-          Generator* g);
+          Generator *g);
     void addExtraFile(const QString &file);
     void addExtraFiles(const QSet<QString> &files);
     void generate();
@@ -108,8 +108,8 @@ private:
     void writeSection(QXmlStreamWriter &writer, const QString &path,
                             const QString &value);
 
-    QDocDatabase* qdb_;
-    Generator* gen_;
+    QDocDatabase *qdb_;
+    Generator *gen_;
 
     QString outputDir;
     QList<HelpProject> projects;

@@ -36,7 +36,7 @@ QT_BEGIN_NAMESPACE
 
 static QList<QByteArray> stringListToByteArray(const QStringList &l)
 {
-    if (l.empty())
+    if (l.isEmpty())
         return QList<QByteArray>();
     QList<QByteArray> rc;
     const QStringList::const_iterator cend = l.constEnd();

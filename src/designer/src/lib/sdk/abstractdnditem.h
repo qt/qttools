@@ -40,10 +40,12 @@ class QPoint;
 class QDESIGNER_SDK_EXPORT QDesignerDnDItemInterface
 {
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerDnDItemInterface)
+
     enum DropType { MoveDrop, CopyDrop };
 
-    QDesignerDnDItemInterface() {}
-    virtual ~QDesignerDnDItemInterface() {}
+    QDesignerDnDItemInterface() = default;
+    virtual ~QDesignerDnDItemInterface() = default;
 
     virtual DomUI *domUi() const = 0;
     virtual QWidget *widget() const = 0;

@@ -43,10 +43,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
-
 class UiReader : public QXmlDefaultHandler
 {
 public:

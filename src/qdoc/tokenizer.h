@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,11 +33,11 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-#include <qfile.h>
-#include <qstack.h>
-#include <qstring.h>
-
 #include "location.h"
+
+#include <QtCore/qfile.h>
+#include <QtCore/qstack.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -88,8 +88,8 @@ class Tokenizer
     Q_DECLARE_TR_FUNCTIONS(QDoc::Tokenizer)
 
 public:
-    Tokenizer(const Location& loc, const QByteArray &in);
-    Tokenizer(const Location& loc, QFile &file);
+    Tokenizer(const Location &loc, const QByteArray &in);
+    Tokenizer(const Location &loc, QFile &file);
 
     ~Tokenizer();
 
@@ -104,7 +104,7 @@ public:
     int braceDepth() const { return yyBraceDepth; }
     int parenDepth() const { return yyParenDepth; }
     int bracketDepth() const { return yyBracketDepth; }
-    Location& tokenLocation() { return yyTokLoc; }
+    Location &tokenLocation() { return yyTokLoc; }
 
     static void initialize(const Config &config);
     static void terminate();
@@ -112,7 +112,7 @@ public:
 
 private:
     void init();
-    void start(const Location& loc);
+    void start(const Location &loc);
     /*
       This limit on the length of a lexeme seems fairly high, but a
       doc comment can be arbitrarily long. The previous 65,536 limit

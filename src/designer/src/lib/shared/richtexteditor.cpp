@@ -131,7 +131,7 @@ QString simplifyRichTextFilter(const QString &in, bool *isPlainTextPtr = nullptr
         case QXmlStreamReader::StartElement:
             elementCount++;
             if (filterElement(reader.name())) {
-                const QStringRef name = reader.name();
+                const auto name = reader.name();
                 QXmlStreamAttributes attributes = reader.attributes();
                 filterAttributes(name, &attributes, &paragraphAlignmentFound);
                 writer.writeStartElement(name.toString());
@@ -425,7 +425,7 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 {
     // Font size combo box
     m_font_size_input->setEditable(false);
-    const QList<int> font_sizes = QFontDatabase::standardSizes();
+    const auto font_sizes = QFontDatabase::standardSizes();
     for (int font_size : font_sizes)
         m_font_size_input->addItem(QString::number(font_size));
 

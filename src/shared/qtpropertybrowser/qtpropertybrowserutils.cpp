@@ -214,7 +214,11 @@ QString QtPropertyBrowserUtils::fontValueText(const QFont &f)
 QString QtPropertyBrowserUtils::dateFormat()
 {
     QLocale loc;
-    return loc.dateFormat(QLocale::ShortFormat);
+    QString format = loc.dateFormat(QLocale::ShortFormat);
+    // Change dd.MM.yy, MM/dd/yy to 4 digit years
+    if (format.count(QLatin1Char('y')) == 2)
+        format.insert(format.indexOf(QLatin1Char('y')), QLatin1String("yy"));
+    return format;
 }
 
 QString QtPropertyBrowserUtils::timeFormat()

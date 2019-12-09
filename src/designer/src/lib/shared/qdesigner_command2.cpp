@@ -143,7 +143,7 @@ QString MorphLayoutCommand::formatDescription(QDesignerFormEditorInterface * /* 
 
 LayoutAlignmentCommand::LayoutAlignmentCommand(QDesignerFormWindowInterface *formWindow) :
     QDesignerFormWindowCommand(QApplication::translate("Command", "Change layout alignment"), formWindow),
-    m_newAlignment(nullptr), m_oldAlignment(nullptr), m_widget(nullptr)
+    m_widget(nullptr)
 {
 }
 
@@ -180,7 +180,7 @@ Qt::Alignment LayoutAlignmentCommand::alignmentOf(const QDesignerFormEditorInter
                          (type == LayoutInfo::HBox || type == LayoutInfo::VBox
                           || type == LayoutInfo::Grid);
     if (!enabled)
-        return Qt::Alignment(nullptr);
+        return {};
     // Get alignment
     const int index = layout->indexOf(w);
     Q_ASSERT(index >= 0);

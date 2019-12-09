@@ -11,7 +11,9 @@ qtHaveModule(qmldevtools-private) {
     DEFINES += QT_NO_DECLARATIVE
 }
 
-include($$OUT_PWD/qtqdoc-config.pri)
+DEFINES += QT_NO_FOREACH
+
+include($$OUT_PWD/../global/qttools-config.pri)
 
 LIBS += $$CLANG_LIBS
 !contains(QMAKE_DEFAULT_INCDIRS, $$CLANG_INCLUDEPATH): INCLUDEPATH += $$CLANG_INCLUDEPATH
@@ -19,9 +21,6 @@ DEFINES += $$CLANG_DEFINES
 
 !contains(QMAKE_DEFAULT_LIBDIRS, $$CLANG_LIBDIR):!disable_external_rpath: QMAKE_RPATHDIR += $$CLANG_LIBDIR
 DEFINES += $$shell_quote(CLANG_RESOURCE_DIR=\"$${CLANG_LIBDIR}/clang/$${CLANG_VERSION}/include\")
-
-DEFINES += \
-    QDOC2_COMPAT
 
 INCLUDEPATH += $$QT_SOURCE_TREE/src/tools/qdoc \
                $$QT_SOURCE_TREE/src/tools/qdoc/qmlparser
@@ -59,9 +58,10 @@ HEADERS += atom.h \
            text.h \
            tokenizer.h \
            tree.h \
+           xmlgenerator.h \
            webxmlgenerator.h \
-           qdocglobals.h \
-           qdoccommandlineparser.h
+           qdoccommandlineparser.h \
+           utilities.h
 
 SOURCES += atom.cpp \
            clangcodeparser.cpp \
@@ -91,10 +91,11 @@ SOURCES += atom.cpp \
            text.cpp \
            tokenizer.cpp \
            tree.cpp \
+           xmlgenerator.cpp \
            yyindent.cpp \
            webxmlgenerator.cpp \
-           qdocglobals.cpp \
-           qdoccommandlineparser.cpp
+           qdoccommandlineparser.cpp \
+           utilities.cpp
 
 ### QML/JS Parser ###
 

@@ -45,6 +45,7 @@
 
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
+#include <QtCore/qvector.h>
 #include <QtCore/qpointer.h>
 
 #include <QtWidgets/qwidget.h>
@@ -67,7 +68,7 @@ class ConnectionEdit;
 class QDESIGNER_SHARED_EXPORT CETypes
 {
 public:
-    using ConnectionList = QList<Connection *>;
+    using ConnectionList = QVector<Connection *>;
     using ConnectionSet = QHash<Connection*, Connection*> ;
     using WidgetSet = QHash<QWidget*, QWidget*>;
 
@@ -132,7 +133,7 @@ public:
 private:
     QPoint m_source_pos, m_target_pos;
     QObject *m_source, *m_target;
-    QList<QPoint> m_knee_list;
+    QVector<QPoint> m_knee_list;
     QPolygonF m_arrow_head;
     ConnectionEdit *m_edit;
     QString m_source_label, m_target_label;

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,12 +33,12 @@
 #ifndef SEPARATOR_H
 #define SEPARATOR_H
 
-#include <qstring.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 
-QString separator( int index, int count );
-QString comma( int index, int count );
+QString separator(int index, int count);
+QString comma(int index, int count);
 
 QT_END_NAMESPACE
 

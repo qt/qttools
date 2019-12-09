@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2018 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -39,24 +39,24 @@ class CppCodeMarker : public CodeMarker
 
 public:
     CppCodeMarker();
-    ~CppCodeMarker();
+    ~CppCodeMarker() override;
 
-    bool recognizeCode(const QString& code) override;
-    bool recognizeExtension(const QString& ext) override;
-    bool recognizeLanguage(const QString& lang) override;
+    bool recognizeCode(const QString &code) override;
+    bool recognizeExtension(const QString &ext) override;
+    bool recognizeLanguage(const QString &lang) override;
     Atom::AtomType atomType() const override;
-    QString markedUpCode(const QString& code, const Node *relative, const Location &location) override;
+    QString markedUpCode(const QString &code, const Node *relative, const Location &location) override;
     QString markedUpSynopsis(const Node *node, const Node *relative, Section::Style style) override;
     QString markedUpQmlItem(const Node *node, bool summary) override;
     QString markedUpName(const Node *node) override;
     QString markedUpFullName(const Node *node, const Node *relative) override;
     QString markedUpEnumValue(const QString &enumValue, const Node *relative) override;
-    QString markedUpIncludes(const QStringList& includes) override;
-    QString functionBeginRegExp(const QString& funcName) override;
-    QString functionEndRegExp(const QString& funcName) override;
+    QString markedUpIncludes(const QStringList &includes) override;
+    QString functionBeginRegExp(const QString &funcName) override;
+    QString functionEndRegExp(const QString &funcName) override;
 
 private:
-    QString addMarkUp(const QString& protectedCode, const Node *relative, const Location &location);
+    QString addMarkUp(const QString &protectedCode, const Node *relative, const Location &location);
 };
 
 QT_END_NAMESPACE

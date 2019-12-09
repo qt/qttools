@@ -237,6 +237,24 @@
     See how QDoc renders this property on the reference page for the
     \l {State::changes}{State} type.
 
+    \target dontdocument-command
+    \section1 \\dontdocument
+
+    The \\dontdocument command is only used in a dontdocument.qdoc file
+    for a particular module. This file specifies publically declared
+    classes or structs that are not meant to be documented. QDoc will
+    not print warnings about missing \\class comments for these classes
+    and structs.
+
+    Below you will find the \\dontdocument command in the
+    dontdocument.qdoc for widgets:
+
+    \badcode
+    / *!
+       \dontdocument (QTypeInfo QMetaTypeId)
+    * /
+    \endcode
+
     \target obsolete-command
     \section1 \\obsolete
 

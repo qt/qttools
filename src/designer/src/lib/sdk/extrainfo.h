@@ -43,7 +43,10 @@ class QDesignerFormEditorInterface;
 class QDESIGNER_SDK_EXPORT QDesignerExtraInfoExtension
 {
 public:
-    virtual ~QDesignerExtraInfoExtension() {}
+    Q_DISABLE_COPY_MOVE(QDesignerExtraInfoExtension)
+
+    QDesignerExtraInfoExtension() = default;
+    virtual ~QDesignerExtraInfoExtension() = default;
 
     virtual QDesignerFormEditorInterface *core() const = 0;
     virtual QWidget *widget() const = 0;

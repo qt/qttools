@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,11 +26,14 @@
 **
 ****************************************************************************/
 
-#include <qobjectdefs.h>
 #include "codemarker.h"
+
 #include "config.h"
 #include "node.h"
-#include <qdebug.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qobjectdefs.h>
+
 #include <stdio.h>
 
 QT_BEGIN_NAMESPACE
@@ -63,7 +66,7 @@ CodeMarker::~CodeMarker()
   A code market performs no initialization by default. Marker-specific
   initialization is performed in subclasses.
  */
-void CodeMarker::initializeMarker(const Config& ) // config
+void CodeMarker::initializeMarker(const Config &) // config
 {
 }
 
@@ -79,7 +82,7 @@ void CodeMarker::terminateMarker()
   All the code markers in the static list are initialized
   here, after the qdoc configuration file has been loaded.
  */
-void CodeMarker::initialize(const Config& config)
+void CodeMarker::initialize(const Config &config)
 {
     defaultLang = config.getString(CONFIG_LANGUAGE);
     QList<CodeMarker *>::ConstIterator m = markers.constBegin();
@@ -101,7 +104,7 @@ void CodeMarker::terminate()
     }
 }
 
-CodeMarker *CodeMarker::markerForCode(const QString& code)
+CodeMarker *CodeMarker::markerForCode(const QString &code)
 {
     CodeMarker *defaultMarker = markerForLanguage(defaultLang);
     if (defaultMarker != nullptr && defaultMarker->recognizeCode(code))
@@ -116,7 +119,7 @@ CodeMarker *CodeMarker::markerForCode(const QString& code)
     return defaultMarker;
 }
 
-CodeMarker *CodeMarker::markerForFileName(const QString& fileName)
+CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
 {
     CodeMarker *defaultMarker = markerForLanguage(defaultLang);
     int dot = -1;
@@ -135,7 +138,7 @@ CodeMarker *CodeMarker::markerForFileName(const QString& fileName)
     return defaultMarker;
 }
 
-CodeMarker *CodeMarker::markerForLanguage(const QString& lang)
+CodeMarker *CodeMarker::markerForLanguage(const QString &lang)
 {
     QList<CodeMarker *>::ConstIterator m = markers.constBegin();
     while (m != markers.constEnd()) {
@@ -146,7 +149,7 @@ CodeMarker *CodeMarker::markerForLanguage(const QString& lang)
     return nullptr;
 }
 
-const Node *CodeMarker::nodeForString(const QString& string)
+const Node *CodeMarker::nodeForString(const QString &string)
 {
 #if QT_POINTER_SIZE == 4
     const quintptr n = string.toUInt();
@@ -171,7 +174,7 @@ static const QString slt   = QLatin1String("&lt;");
 static const QString sgt   = QLatin1String("&gt;");
 static const QString squot = QLatin1String("&quot;");
 
-QString CodeMarker::protect(const QString& str)
+QString CodeMarker::protect(const QString &str)
 {
     int n = str.length();
     QString marked;
@@ -257,7 +260,7 @@ QString CodeMarker::typified(const QString &string, bool trailingSpace)
     return result;
 }
 
-QString CodeMarker::taggedNode(const Node* node)
+QString CodeMarker::taggedNode(const Node *node)
 {
     QString tag;
     QString name = node->name();
@@ -307,11 +310,11 @@ QString CodeMarker::taggedNode(const Node* node)
             + QLatin1String("</") + tag + QLatin1Char('>'));
 }
 
-QString CodeMarker::taggedQmlNode(const Node* node)
+QString CodeMarker::taggedQmlNode(const Node *node)
 {
     QString tag;
     if (node->isFunction()) {
-        const FunctionNode* fn = static_cast<const FunctionNode*>(node);
+        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::JsSignal:
         case FunctionNode::QmlSignal:
@@ -338,7 +341,7 @@ QString CodeMarker::taggedQmlNode(const Node* node)
             + QLatin1String("</") + tag + QLatin1Char('>');
 }
 
-QString CodeMarker::linkTag(const Node *node, const QString& body)
+QString CodeMarker::linkTag(const Node *node, const QString &body)
 {
     return QLatin1String("<@link node=\"") + stringForNode(node)
             + QLatin1String("\">") + body + QLatin1String("</@link>");
@@ -366,10 +369,11 @@ QStringList CodeMarker::macRefsForNode(Node *node)
     {
         QStringList stringList;
         stringList << encode(result + QLatin1String("tag/") + macName(node));
-        foreach (const QString &enumName, node->doc().enumItemNames()) {
+        const auto enumItemNames = node->doc().enumItemNames();
+        for (const auto &name : enumItemNames) {
             // ### Write a plainEnumValue() and use it here
             stringList << encode(result + QLatin1String("econst/") +
-                                 macName(node->parent(), enumName));
+                                 macName(node->parent(), name));
         }
         return stringList;
     }
@@ -409,9 +413,9 @@ QStringList CodeMarker::macRefsForNode(Node *node)
         break;
     case Node::Property:
     {
-        NodeList list = static_cast<const PropertyNode*>(node)->functions();
+        const NodeList list = static_cast<const PropertyNode *>(node)->functions();
         QStringList stringList;
-        foreach (Node* node, list) {
+        for (auto *node : list) {
             stringList += macRefsForNode(node);
         }
         return stringList;

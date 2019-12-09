@@ -30,8 +30,8 @@
 //  W A R N I N G
 //  -------------
 //
-// This file is not part of the Qt API.  It exists for the convenience
-// of Qt Designer.  This header
+// This file is not part of the Qt API. It exists for the convenience
+// of Qt Designer. This header
 // file may change from version to version without notice, or even be removed.
 //
 // We mean it.
@@ -49,6 +49,8 @@ QT_BEGIN_NAMESPACE
 class QDESIGNER_SDK_EXPORT QDesignerMetaEnumInterface
 {
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerMetaEnumInterface)
+
     QDesignerMetaEnumInterface();
     virtual ~QDesignerMetaEnumInterface();
     virtual bool isFlag() const = 0;
@@ -67,6 +69,8 @@ public:
 class QDESIGNER_SDK_EXPORT QDesignerMetaPropertyInterface
 {
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerMetaPropertyInterface)
+
     enum Kind { EnumKind, FlagKind, OtherKind };
     enum AccessFlag { ReadAccess = 0x0001, WriteAccess = 0x0002, ResetAccess = 0x0004 };
     enum Attribute { DesignableAttribute = 0x0001, ScriptableAttribute = 0x0002, StoredAttribute = 0x0004, UserAttribute = 0x0008};
@@ -99,6 +103,8 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QDesignerMetaPropertyInterface::Attributes)
 class QDESIGNER_SDK_EXPORT QDesignerMetaMethodInterface
 {
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerMetaMethodInterface)
+
     QDesignerMetaMethodInterface();
     virtual ~QDesignerMetaMethodInterface();
 
@@ -115,8 +121,11 @@ public:
     virtual QString typeName() const  = 0;
 };
 
-class QDESIGNER_SDK_EXPORT QDesignerMetaObjectInterface {
+class QDESIGNER_SDK_EXPORT QDesignerMetaObjectInterface
+{
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerMetaObjectInterface)
+
     QDesignerMetaObjectInterface();
     virtual ~QDesignerMetaObjectInterface();
 
@@ -144,8 +153,11 @@ public:
 };
 
 // To be obtained from core
-class QDESIGNER_SDK_EXPORT QDesignerIntrospectionInterface {
+class QDESIGNER_SDK_EXPORT QDesignerIntrospectionInterface
+{
 public:
+    Q_DISABLE_COPY_MOVE(QDesignerIntrospectionInterface)
+
     QDesignerIntrospectionInterface();
     virtual ~QDesignerIntrospectionInterface();
 

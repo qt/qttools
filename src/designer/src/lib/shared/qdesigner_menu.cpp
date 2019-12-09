@@ -568,7 +568,7 @@ void QDesignerMenu::paintEvent(QPaintEvent *event)
 
     QAction *current = currentAction();
 
-    const QList<QAction *> &actionList = actions();
+    const auto &actionList = actions();
     for (QAction *a : actionList) {
         const QRect g = actionGeometry(a);
 
@@ -708,7 +708,7 @@ QDesignerMenu::ActionDragCheck QDesignerMenu::checkAction(QAction *action) const
 void QDesignerMenu::dragEnterEvent(QDragEnterEvent *event)
 {
     const ActionRepositoryMimeData *d = qobject_cast<const ActionRepositoryMimeData*>(event->mimeData());
-    if (!d || d->actionList().empty()) {
+    if (!d || d->actionList().isEmpty()) {
         event->ignore();
         return;
     }
@@ -740,7 +740,7 @@ void QDesignerMenu::dragMoveEvent(QDragMoveEvent *event)
     }
 
     const ActionRepositoryMimeData *d = qobject_cast<const ActionRepositoryMimeData*>(event->mimeData());
-    if (!d || d->actionList().empty()) {
+    if (!d || d->actionList().isEmpty()) {
         event->ignore();
         return;
     }
@@ -785,7 +785,7 @@ void QDesignerMenu::dropEvent(QDropEvent *event)
 
     QDesignerFormWindowInterface *fw = formWindow();
     const ActionRepositoryMimeData *d = qobject_cast<const ActionRepositoryMimeData*>(event->mimeData());
-    if (!d || d->actionList().empty()) {
+    if (!d || d->actionList().isEmpty()) {
         event->ignore();
         return;
     }
@@ -851,7 +851,7 @@ void QDesignerMenu::closeMenuChain()
         w = w->parentWidget();
 
     if (w) {
-        const QList<QMenu *> &menus = w->findChildren<QMenu *>();
+        const auto &menus = w->findChildren<QMenu *>();
         for (QMenu *subMenu : menus)
             subMenu->hide();
     }
@@ -1298,7 +1298,7 @@ QAction *QDesignerMenu::safeActionAt(int index) const
 void QDesignerMenu::hideSubMenu()
 {
     m_lastSubMenuIndex = -1;
-    const QList<QMenu *> &menus = findChildren<QMenu *>();
+    const auto &menus = findChildren<QMenu *>();
     for (QMenu *subMenu : menus)
         subMenu->hide();
 }

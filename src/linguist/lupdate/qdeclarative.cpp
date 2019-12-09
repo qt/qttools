@@ -52,10 +52,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
-
 using namespace QQmlJS;
 
 static QString MagicComment(QLatin1String("TRANSLATOR"));
@@ -110,6 +106,10 @@ protected:
             case TrFunctionAliasManager::Function_QT_TR_NOOP: {
                 if (!node->arguments) {
                     yyMsg(identLineNo) << qPrintable(LU::tr("%1() requires at least one argument.\n").arg(name));
+                    return;
+                }
+                if (AST::cast<AST::TemplateLiteral *>(node->arguments->expression)) {
+                    yyMsg(identLineNo) << qPrintable(LU::tr("%1() cannot be used with template literals. Ignoring\n").arg(name));
                     return;
                 }
 
@@ -290,7 +290,7 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
         for (int i = 0, end = qMin(column > 0 ? column - 1 : 0, textLine.length()); i < end; ++i) {
             const QChar ch = textLine.at(i);
             if (ch.isSpace())
-                error += ch.unicode();
+                error += ch;
             else
                 error += QLatin1Char(' ');
         }

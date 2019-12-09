@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,7 +29,7 @@
 #ifndef QDOCTAGFILES_H
 #define QDOCTAGFILES_H
 
-#include "qxmlstream.h"
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -41,21 +41,21 @@ class QDocTagFiles
 {
     friend class QDocDatabase;
 
- private:
-    static QDocTagFiles* qdocTagFiles();
+private:
+    static QDocTagFiles *qdocTagFiles();
     static void destroyQDocTagFiles();
 
     QDocTagFiles();
     ~QDocTagFiles();
 
-    void generateTagFileCompounds(QXmlStreamWriter& writer, const Aggregate* inner);
-    void generateTagFileMembers(QXmlStreamWriter& writer, const Aggregate* inner);
-    void generateTagFile(const QString& fileName, Generator* g);
+    void generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *inner);
+    void generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *inner);
+    void generateTagFile(const QString &fileName, Generator *g);
 
- private:
-    static QDocTagFiles* qdocTagFiles_;
-    QDocDatabase* qdb_;
-    Generator* gen_;
+private:
+    static QDocTagFiles *qdocTagFiles_;
+    QDocDatabase *qdb_;
+    Generator *gen_;
 };
 
 QT_END_NAMESPACE

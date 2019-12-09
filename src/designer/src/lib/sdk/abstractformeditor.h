@@ -118,10 +118,6 @@ protected:
 
 private:
     QScopedPointer<QDesignerFormEditorInterfacePrivate> d;
-
-private:
-    QDesignerFormEditorInterface(const QDesignerFormEditorInterface &other);
-    void operator = (const QDesignerFormEditorInterface &other);
 };
 
 QT_END_NAMESPACE

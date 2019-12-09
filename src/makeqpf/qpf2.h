@@ -84,7 +84,7 @@ public:
     void addInt8(qint8 value) { *addBytes(sizeof(value)) = quint8(value); }
     void addByteArray(const QByteArray &string) {
         uchar *data = addBytes(string.length());
-        qMemCopy(data, string.constData(), string.length());
+        memcpy(data, string.constData(), static_cast<size_t>(string.length()));
     }
 
     void align4() { while (qpf.size() & 3) { addUInt8('\0'); } }

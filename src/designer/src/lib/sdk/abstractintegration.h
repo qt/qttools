@@ -62,6 +62,7 @@ public:
         ReloadResourceFileSilently,
         PromptToReloadResourceFile // Default
     };
+    Q_ENUM(ResourceFileWatcherBehaviour)
 
     enum FeatureFlag
     {

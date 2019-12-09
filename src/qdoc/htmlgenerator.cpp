@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,23 +30,26 @@
   htmlgenerator.cpp
 */
 
+#include "htmlgenerator.h"
+
 #include "codemarker.h"
 #include "codeparser.h"
 #include "helpprojectwriter.h"
-#include "htmlgenerator.h"
 #include "node.h"
 #include "qdocdatabase.h"
 #include "separator.h"
 #include "tree.h"
 #include "quoter.h"
-#include <ctype.h>
-#include <qdebug.h>
-#include <qlist.h>
-#include <qiterator.h>
-#include <qtextcodec.h>
-#include <quuid.h>
-#include <qmap.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qiterator.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
+
+#include <ctype.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -299,19 +302,11 @@ QString HtmlGenerator::format()
   Generate targets for any \keyword commands that were seen
   in the qdoc comment for the \a node.
  */
-void HtmlGenerator::generateKeywordAnchors(const Node* node)
+void HtmlGenerator::generateKeywordAnchors(const Node *node)
 {
     Q_UNUSED(node);
     // Disabled: keywords always link to the top of the QDoc
     // comment they appear in, and do not use a dedicated anchor.
-#if 0
-    if (!node->doc().isEmpty()) {
-        const QList<Atom*>& keywords = node->doc().keywords();
-        foreach (Atom* a, keywords) {
-            out() << QLatin1String("<a name=\"") << Doc::canonicalTitle(a->string()) << QLatin1String("\"></a>");
-        }
-    }
-#endif
 }
 
 /*!
@@ -324,7 +319,7 @@ void HtmlGenerator::generateKeywordAnchors(const Node* node)
  */
 void HtmlGenerator::generateDocs()
 {
-    Node* qflags = qdb_->findClassNode(QStringList("QFlags"));
+    Node *qflags = qdb_->findClassNode(QStringList("QFlags"));
     if (qflags)
         qflagsHref_ = linkForNode(qflags, nullptr);
     if (!preparing())
@@ -355,9 +350,9 @@ void HtmlGenerator::generateDocs()
  */
 void HtmlGenerator::generateQAPage()
 {
-    NamespaceNode* node = qdb_->primaryTreeRoot();
+    NamespaceNode *node = qdb_->primaryTreeRoot();
     beginSubPage(node, "aaa-" + defaultModuleName().toLower() + "-qa-page.html");
-    CodeMarker* marker = CodeMarker::markerForFileName(node->location().filePath());
+    CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
     QString title = "Quality Assurance Page for " + defaultModuleName();
     QString t = "Quality assurance information for checking the " + defaultModuleName() + " documentation.";
     generateHeader(title, node, marker);
@@ -442,9 +437,9 @@ void HtmlGenerator::generateExampleFilePage(const Node *en,
   go to targets in the specified \a module. The \a marker
   is used for the same thing the marker is always used for.
  */
-QString HtmlGenerator::generateLinksToLinksPage(const QString& module, CodeMarker* marker)
+QString HtmlGenerator::generateLinksToLinksPage(const QString &module, CodeMarker *marker)
 {
-    NamespaceNode* node = qdb_->primaryTreeRoot();
+    NamespaceNode *node = qdb_->primaryTreeRoot();
     QString fileName = "aaa-links-to-" + module + ".html";
     beginSubPage(node, fileName);
     QString title = "Links from " + defaultModuleName() + " to " + module;
@@ -455,10 +450,10 @@ QString HtmlGenerator::generateLinksToLinksPage(const QString& module, CodeMarke
     out() << "Click on a link to go to the location of the link. The link is marked ";
     out() << "with red asterisks. ";
     out() << "Click on the marked link to see if it goes to the right place.</p>\n";
-    TargetList* tlist = qdb_->getTargetList(module);
+    const TargetList *tlist = qdb_->getTargetList(module);
     if (tlist) {
         out() << "<table class=\"valuelist\"><tr valign=\"top\" class=\"odd\"><th class=\"tblConst\">Link to  link...</th><th class=\"tblval\">In file...</th><th class=\"tbldscr\">Somewhere after line number...</th></tr>\n";
-        foreach (TargetLoc* t, *tlist) {
+        for (const TargetLoc *t : *tlist) {
             // e.g.: <a name="link-8421"></a><a href="layout.html">Layout Management</a>
             out() << "<tr><td class=\"topAlign\">";
             out() << "<a href=\"" << t->fileName_ << "#" << t->target_ << "\">";
@@ -484,11 +479,11 @@ QString HtmlGenerator::generateLinksToLinksPage(const QString& module, CodeMarke
   broken links that were found. The \a marker is used for
   the same thing the marker is always used for.
  */
-QString HtmlGenerator::generateLinksToBrokenLinksPage(CodeMarker* marker, int& count)
+QString HtmlGenerator::generateLinksToBrokenLinksPage(CodeMarker *marker, int &count)
 {
     QString fileName;
-    NamespaceNode* node = qdb_->primaryTreeRoot();
-    TargetList* tlist = qdb_->getTargetList("broken");
+    NamespaceNode *node = qdb_->primaryTreeRoot();
+    const TargetList *tlist = qdb_->getTargetList("broken");
     if (tlist && !tlist->isEmpty()) {
         count = tlist->size();
         fileName = "aaa-links-to-broken-links.html";
@@ -500,7 +495,7 @@ QString HtmlGenerator::generateLinksToBrokenLinksPage(CodeMarker* marker, int& c
         out() << "Click on a link to go to the broken link.  ";
         out() << "The link's target could not be found.</p>\n";
         out() << "<table class=\"valuelist\"><tr valign=\"top\" class=\"odd\"><th class=\"tblConst\">Link to broken link...</th><th class=\"tblval\">In file...</th><th class=\"tbldscr\">Somewhere after line number...</th></tr>\n";
-        foreach (TargetLoc* t, *tlist) {
+        for (const TargetLoc *t : *tlist) {
             // e.g.: <a name="link-8421"></a><a href="layout.html">Layout Management</a>
             out() << "<tr><td class=\"topAlign\">";
             out() << "<a href=\"" << t->fileName_ << "#" << t->target_ << "\">";
@@ -528,6 +523,14 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
 
     switch (atom->type()) {
     case Atom::AutoLink:
+    {
+        QString name = atom->string();
+        if (relative && relative->name() == name.replace(QLatin1String("()"), QLatin1String())) {
+            out() << protectEnc(atom->string());
+            break;
+        }
+    }
+    Q_FALLTHROUGH();
     case Atom::NavAutoLink:
         if (!inLink_ && !inContents_ && !inSectionHeading_) {
             const Node *node = nullptr;
@@ -566,25 +569,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             break;
         }
         out() << "<p>";
-        if (relative->isProperty() || relative->isVariable()) {
-            atom = atom->next();
-            if (atom != nullptr && atom->type() == Atom::String) {
-                QString firstWord = atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
-                if (firstWord == QLatin1String("the")
-                      || firstWord == QLatin1String("a")
-                      || firstWord == QLatin1String("an")
-                      || firstWord == QLatin1String("whether")
-                      || firstWord == QLatin1String("which")) {
-                    QString str = "This ";
-                    if (relative->isProperty())
-                        str += "property holds ";
-                    else
-                        str += "variable holds ";
-                    str += atom->string().left(1).toLower() + atom->string().mid(1);
-                    const_cast<Atom *>(atom)->setString(str);
-                }
-            }
-        }
+        rewritePropertyBrief(atom, relative);
         break;
     case Atom::BriefRight:
         if (hasBrief(relative))
@@ -695,7 +680,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::AnnotatedList:
         {
-            const CollectionNode* cn = qdb_->getCollectionNode(atom->string(), Node::Group);
+            const CollectionNode *cn = qdb_->getCollectionNode(atom->string(), Node::Group);
             if (cn)
                 generateList(cn, marker, atom->string());
         }
@@ -725,15 +710,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         }
         else if ((idx = atom->string().indexOf(QStringLiteral("bymodule"))) != -1) {
             QString moduleName = atom->string().mid(idx + 8).trimmed();
-            Node::NodeType type = Node::Module;
-            if (atom->string().startsWith(QLatin1String("qml")))
-                type = Node::QmlModule;
-            else if (atom->string().startsWith(QLatin1String("js")))
-                type = Node::JsModule;
-            else if (atom->string().startsWith(QLatin1String("groups")))
-                type = Node::Group;
-            QDocDatabase* qdb = QDocDatabase::qdocDB();
-            const CollectionNode* cn = qdb->getCollectionNode(moduleName, type);
+            Node::NodeType type = typeFromString(atom);
+            QDocDatabase *qdb = QDocDatabase::qdocDB();
+            const CollectionNode *cn = qdb->getCollectionNode(moduleName, type);
             if (cn) {
                 if (type == Node::Module) {
                     NodeMap m;
@@ -749,22 +728,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         else if (atom->string().startsWith("examplefiles") ||
                  atom->string().startsWith("exampleimages")) {
             if (relative->isExample()) {
-#if 0
-                /*
-                  The removed code will be physically removed if and
-                  when this update is determined to be successful.
-                  This overload of generateFileList() should no longer
-                  be needed, so there is a qDebug() there to tell me
-                  if it would have been called. So far, it hasn't
-                  happened. mws 18/08/2018
-                 */
-                Node::NodeSubtype subType = (atom->string().mid(7,5) == "image") ? Node::Image : Node::File;
-                QString regExp;
-                int secondArg = atom->string().indexOf(" ");
-                if (secondArg != -1)
-                regExp = atom->string().mid(++secondArg);
-                generateFileList(static_cast<const PageNode*>(relative), marker, subType, regExp);
-#endif
                 qDebug() << "GENERATE FILE LIST CALLED" << relative->name() << atom->string();
             }
             else
@@ -809,9 +772,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         else if (atom->string() == QLatin1String("related")) {
             generateList(relative, marker, "related");
         } else {
-            const CollectionNode* cn = qdb_->getCollectionNode(atom->string(), Node::Group);
+            const CollectionNode *cn = qdb_->getCollectionNode(atom->string(), Node::Group);
             if (cn) {
-                if (!generateGroupList(const_cast<CollectionNode*>(cn)))
+                if (!generateGroupList(const_cast<CollectionNode *>(cn)))
                     relative->location().warning(QString("'\\generatelist \1' group is empty").arg(atom->string()));
             } else {
                 relative->location().warning(QString("'\\generatelist \1' no such group").arg(atom->string()));
@@ -820,12 +783,12 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::SinceList:
         {
-            const NodeMultiMap& nsmap = qdb_->getSinceMap(atom->string());
+            const NodeMultiMap &nsmap = qdb_->getSinceMap(atom->string());
             if (nsmap.isEmpty())
                 break;
 
-            const NodeMap& ncmap = qdb_->getClassMap(atom->string());
-            const NodeMap& nqcmap = qdb_->getQmlTypeMap(atom->string());
+            const NodeMap &ncmap = qdb_->getClassMap(atom->string());
+            const NodeMap &nqcmap = qdb_->getQmlTypeMap(atom->string());
 
             Sections sections(nsmap);
             out() << "<ul>\n";
@@ -860,7 +823,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                         ParentMaps::iterator pmap;
                         NodeVector::const_iterator i = s->members().constBegin();
                         while (i != s->members().constEnd()) {
-                            Node* p = (*i)->parent();
+                            Node *p = (*i)->parent();
                             pmap = parentmaps.find(p);
                             if (pmap == parentmaps.end())
                                 pmap = parentmaps.insert(p,NodeMultiMap());
@@ -921,13 +884,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 out() << " alt=\"\"";
             out() << " />";
             helpProjectWriter->addExtraFile(fileName);
-            if (relative->isExample()) {
-                const ExampleNode* cen = static_cast<const ExampleNode*>(relative);
-                if (cen->imageFileName().isEmpty()) {
-                    ExampleNode* en = const_cast<ExampleNode*>(cen);
-                    en->setImageFileName(fileName);
-                }
-            }
+            setImageFileName(relative, fileName);
         }
         if (atom->type() == Atom::Image)
             out() << "</p>";
@@ -1095,24 +1052,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << "<dt>";
         }
         else { // (atom->string() == ATOM_LIST_VALUE)
-            const Atom* lookAhead = atom->next();
-            QString t = lookAhead->string();
-            lookAhead = lookAhead->next();
-            Q_ASSERT(lookAhead->type() == Atom::ListTagRight);
-            lookAhead = lookAhead->next();
-            if (lookAhead && lookAhead->type() == Atom::SinceTagLeft) {
-                lookAhead = lookAhead->next();
-                Q_ASSERT(lookAhead && lookAhead->type() == Atom::String);
-                t = t + QLatin1String(" (since ");
-                if (lookAhead->string().at(0).isDigit())
-                    t = t + QLatin1String("Qt ");
-                t = t + lookAhead->string() + QLatin1String(")");
-                skipAhead = 4;
-            }
-            else {
-                skipAhead = 1;
-            }
-            t = protectEnc(plainCode(marker->markedUpEnumValue(t, relative)));
+            QPair<QString, int> pair = getAtomListValue(atom);
+            skipAhead = pair.second;
+            QString t = protectEnc(plainCode(marker->markedUpEnumValue(pair.first, relative)));
             out() << "<tr><td class=\"topAlign\"><code>" << t << "</code>";
 
             if (relative->isEnumType()) {
@@ -1228,30 +1170,15 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::TableLeft:
     {
-        QString p1, p2;
-        QString attr = "generic";
-        QString width;
+        QPair<QString, QString> pair = getTableWidthAttr(atom);
+        QString attr = pair.second;
+        QString width = pair.first;
+
         if (in_para) {
             out() << "</p>\n";
             in_para = false;
         }
-        if (atom->count() > 0) {
-            p1 = atom->string(0);
-            if (atom->count() > 1)
-                p2 = atom->string(1);
-        }
-        if (!p1.isEmpty()) {
-            if (p1 == QLatin1String("borderless"))
-                attr = p1;
-            else if (p1.contains(QLatin1Char('%')))
-                width = p1;
-        }
-        if (!p2.isEmpty()) {
-            if (p2 == QLatin1String("borderless"))
-                attr = p2;
-            else if (p2.contains(QLatin1Char('%')))
-                width = p2;
-        }
+
         out() << "<div class=\"table\"><table class=\"" << attr << '"';
         if (!width.isEmpty())
             out() << " width=\"" << width << '"';
@@ -1373,7 +1300,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     QString title;
     QString rawTitle;
     QString fullTitle;
-    NamespaceNode* ns = nullptr;
+    NamespaceNode *ns = nullptr;
     SectionVector *summarySections = nullptr;
     SectionVector *detailsSections = nullptr;
 
@@ -1383,7 +1310,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         rawTitle = aggregate->plainName();
         fullTitle = aggregate->plainFullName();
         title = rawTitle + " Namespace";
-        ns = static_cast<NamespaceNode*>(aggregate);
+        ns = static_cast<NamespaceNode *>(aggregate);
         summarySections = &sections.stdSummarySections();
         detailsSections = &sections.stdDetailsSections();
     }
@@ -1421,7 +1348,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     generateKeywordAnchors(aggregate);
     generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
     if (ns && !ns->hasDoc() && ns->docNode()) {
-        NamespaceNode* NS = ns->docNode();
+        NamespaceNode *NS = ns->docNode();
         Text brief;
         brief << "The " << ns->name() << " namespace includes the following elements from module "
               << ns->tree()->camelCaseModuleName() << ". The full namespace is "
@@ -1567,7 +1494,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
                 if (!prop->notifiers().isEmpty())
                     names << prop->notifiers().first()->name();
             } else if ((*m)->isEnumType()) {
-                const EnumNode *enume = reinterpret_cast<const EnumNode*>(*m);
+                const EnumNode *enume = reinterpret_cast<const EnumNode *>(*m);
                 if (enume->flagsType())
                     names << enume->flagsType()->name();
                 const auto &enumItemNameList = enume->doc().enumItemNames();
@@ -1665,7 +1592,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
                     if (func->isSomeCtor() || func->isDtor() || func->overloadNumber() != 0)
                         names.clear();
                 } else if ((*m)->isEnumType()) {
-                    const EnumNode *enume = reinterpret_cast<const EnumNode*>(*m);
+                    const EnumNode *enume = reinterpret_cast<const EnumNode *>(*m);
                     if (enume->flagsType())
                         names << enume->flagsType()->name();
                     const auto &enumItemNameList = enume->doc().enumItemNames();
@@ -1691,7 +1618,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
   Generate the HTML page for a QML type. \qcn is the QML type.
   \marker is the code markeup object.
  */
-void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
+void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 {
     Generator::setQmlTypeContext(qcn);
     SubTitleSize subTitleSize = LargeSubTitle;
@@ -1732,7 +1659,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
             out() << "<a name=\"" << ref
                   << "\"></a>" << divNavTop << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-            generateQmlSummary(*s, qcn, marker);
+            generateQmlSummary(s->members(), qcn, marker);
         }
         ++s;
     }
@@ -1742,7 +1669,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
     out() << "<a name=\"" << detailsRef << "\"></a>" << divNavTop << '\n';
     out() << "<h2 id=\"" << detailsRef << "\">" << "Detailed Description" << "</h2>\n";
     generateBody(qcn, marker);
-    ClassNode* cn = qcn->classNode();
+    ClassNode *cn = qcn->classNode();
     if (cn)
         generateQmlText(cn->doc().body(), cn, marker, qcn->name());
     generateAlsoList(qcn, marker);
@@ -1770,7 +1697,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode* qcn, CodeMarker* marker)
   Generate the HTML page for the QML basic type represented
   by the QML basic type node \a qbtn.
  */
-void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker* marker)
+void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
     QString htmlTitle = qbtn->fullTitle();
@@ -1798,7 +1725,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker*
             out() << "<a name=\"" << ref
                   << "\"></a>" << divNavTop << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(s->title()) << "</h2>\n";
-            generateQmlSummary(*s, qbtn, marker);
+            generateQmlSummary(s->members(), qbtn, marker);
         }
         ++s;
     }
@@ -1831,7 +1758,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode* qbtn, CodeMarker*
   Generate the HTML page for an entity that doesn't map
   to any underlying parsable C++, QML, or Javascript element.
  */
-void HtmlGenerator::generatePageNode(PageNode* pn, CodeMarker* marker)
+void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = pn->fullTitle();
@@ -1868,7 +1795,7 @@ void HtmlGenerator::generatePageNode(PageNode* pn, CodeMarker* marker)
 /*!
   Generate the HTML page for a group, module, or QML module.
  */
-void HtmlGenerator::generateCollectionNode(CollectionNode* cn, CodeMarker* marker)
+void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = cn->fullTitle();
@@ -1951,12 +1878,6 @@ void HtmlGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker
           << "namespace that is documented in a different module. The reference "
           << "page for that class or namespace will link to the function or type "
           << "on this page.";
-#if 0
-          << Atom(Atom::LinkNode, CodeMarker::stringForNode(NS))
-          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-          << Atom(Atom::String, " here.")
-          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-#endif
     out() << "<p>";
     generateText(brief, cn, marker);
     out() << "</p>\n";
@@ -2045,7 +1966,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
     }
     else {
         if (node->isAggregate()) {
-            QStringList groups = static_cast<const Aggregate*>(node)->groupNames();
+            QStringList groups = static_cast<const Aggregate *>(node)->groupNames();
             if (groups.length() == 1) {
                 const Node *groupNode = qdb_->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
                 if (groupNode && !groupNode->title().isEmpty()) {
@@ -2095,7 +2016,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title,
         out() << "</li>\n";
 }
 
-void HtmlGenerator::generateHeader(const QString& title,
+void HtmlGenerator::generateHeader(const QString &title,
                                    const Node *node,
                                    CodeMarker *marker)
 {
@@ -2248,7 +2169,7 @@ void HtmlGenerator::generateHeader(const QString& title,
         out() << "<p class=\"naviNextPrevious headerNavi\">\n" << navigationLinks << "</p><p/>\n";
 }
 
-void HtmlGenerator::generateTitle(const QString& title,
+void HtmlGenerator::generateTitle(const QString &title,
                                   const Text &subtitle,
                                   SubTitleSize subTitleSize,
                                   const Node *relative,
@@ -2332,7 +2253,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     if (aggregate->isClassNode() || aggregate->isNamespace()) {
         //add the QT variable to the map
         if (!aggregate->physicalModuleName().isEmpty()) {
-            const CollectionNode* cn = qdb_->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
+            const CollectionNode *cn = qdb_->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
             if (cn && !cn->qtVariable().isEmpty()) {
                 text.clear();
                 text << "QT += " + cn->qtVariable();
@@ -2342,7 +2263,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     }
 
     if (aggregate->isClassNode()) {
-        ClassNode* classe = static_cast<ClassNode*>(aggregate);
+        ClassNode *classe = static_cast<ClassNode *>(aggregate);
         if (classe->qmlElement() != nullptr && !classe->isInternal()) {
             text.clear();
             text << Atom(Atom::LinkNode, CodeMarker::stringForNode(classe->qmlElement()))
@@ -2441,11 +2362,18 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     //add the module name and version to the map
     QString logicalModuleVersion;
-    const CollectionNode* collection = qdb_->getCollectionNode(qcn->logicalModuleName(), qcn->nodeType());
+    const CollectionNode *collection = qdb_->getCollectionNode(qcn->logicalModuleName(), qcn->nodeType());
     if (collection != nullptr)
         logicalModuleVersion = collection->logicalModuleVersion();
     else
         logicalModuleVersion = qcn->logicalModuleVersion();
+
+    if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
+        qcn->doc().location().warning(tr("Could not resolve QML import "
+                                         "statement for type '%1'").arg(qcn->name()),
+                                      tr("Maybe you forgot to use the "
+                                         "'\\%1' command?").arg(COMMAND_INQMLMODULE));
+
     text.clear();
     text << "import " + qcn->logicalModuleName() + QLatin1Char(' ') + logicalModuleVersion;
     requisites.insert(importText, text);
@@ -2467,7 +2395,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     }
 
     //add the instantiates to the map
-    ClassNode* cn = qcn->classNode();
+    ClassNode *cn = qcn->classNode();
     if (cn && !cn->isInternal()) {
         text.clear();
         text << Atom(Atom::LinkNode,CodeMarker::stringForNode(qcn));
@@ -2480,7 +2408,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     }
 
     //add the inherits to the map
-    QmlTypeNode* base = qcn->qmlBaseNode();
+    QmlTypeNode *base = qcn->qmlBaseNode();
     while (base && base->isInternal()) {
         base = base->qmlBaseNode();
     }
@@ -2564,9 +2492,9 @@ void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker,
  */
 void HtmlGenerator::generateTableOfContents(const Node *node,
                                             CodeMarker *marker,
-                                            QVector<Section>* sections)
+                                            QVector<Section> *sections)
 {
-    QList<Atom*> toc;
+    QList<Atom *> toc;
     if (node->doc().hasTableOfContents())
         toc = node->doc().tableOfContents();
     if (tocDepth == 0 || (toc.isEmpty() && !sections && !node->isModule())) {
@@ -2719,7 +2647,7 @@ QString HtmlGenerator::generateAllMembersFile(const Section &section, CodeMarker
   including the inherited members. The \a marker is used for
   formatting stuff.
  */
-QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeMarker* marker)
+QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeMarker *marker)
 {
 
     if (sections.allMembersSection().isEmpty())
@@ -2740,10 +2668,10 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
     if (!cknl.isEmpty()) {
         for (int i=0; i<cknl.size(); i++) {
             ClassKeysNodes* ckn = cknl[i];
-            const QmlTypeNode* qcn = ckn->first;
+            const QmlTypeNode *qcn = ckn->first;
             KeysAndNodes& kn = ckn->second;
-            QStringList& keys = kn.first;
-            NodeVector& nodes = kn.second;
+            QStringList &keys = kn.first;
+            NodeVector &nodes = kn.second;
             if (nodes.isEmpty())
                 continue;
             if (i != 0) {
@@ -2753,20 +2681,30 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             }
             out() << "<ul>\n";
             for (int j=0; j<keys.size(); j++) {
-                if (nodes[j]->access() == Node::Private || nodes[j]->isInternal()) {
+                Node *node = nodes[j];
+                if (node->access() == Node::Private || node->isInternal())
                     continue;
-                }
-                out() << "<li class=\"fn\">";
-                QString prefix;
-                if (!keys.isEmpty()) {
-                    prefix = keys.at(j).mid(1);
-                    prefix = prefix.left(keys.at(j).indexOf("::")+1);
-                }
-                generateQmlItem(nodes[j], aggregate, marker, true);
-                if (nodes[j]->isAttached())
-                    out() << " [attached]";
-                //generateSynopsis(nodes[j], qcn, marker, Section::AllMembers, false, &prefix);
-                out() << "</li>\n";
+                if (node->isSharingComment() &&
+                    node->sharedCommentNode()->isPropertyGroup())
+                    continue;
+
+                std::function<void(Node *)> generate = [&](Node *n) {
+                    out() << "<li class=\"fn\">";
+                    generateQmlItem(n, aggregate, marker, true);
+                    if (n->isDefault())
+                        out() << " [default]";
+                    else if (n->isAttached())
+                        out() << " [attached]";
+                    // Indent property group members
+                    if (n->isPropertyGroup()) {
+                        out() << "<ul>\n";
+                        const QVector<Node *> &collective = static_cast<SharedCommentNode *>(n)->collective();
+                        std::for_each(collective.begin(), collective.end(), generate);
+                        out() << "</ul>\n";
+                    }
+                    out() << "</li>\n";
+                };
+                generate(node);
             }
             out() << "</ul>\n";
         }
@@ -2870,7 +2808,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
         out() << "<a name=\"" << ref
               << "\"></a>" << divNavTop << '\n';
         out() << "<h2 id=\"" << ref << "\">" << protectEnc(summary_spv.at(i)->title()) << "</h2>\n";
-        generateQmlSummary(*(summary_spv.at(i)), aggregate, marker);
+        generateQmlSummary(summary_spv.at(i)->obsoleteMembers(), aggregate, marker);
     }
 
     for (int i = 0; i < details_spv.size(); ++i) {
@@ -2889,7 +2827,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
     return fileName;
 }
 
-void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap& classMap)
+void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap &classMap)
 {
     if (classMap.isEmpty())
         return;
@@ -2913,15 +2851,16 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap& classM
             out() << "</ul>\n";
         }
         else {
-            ClassNode* child = static_cast<ClassNode*>(*stack.top().begin());
+            ClassNode *child = static_cast<ClassNode *>(*stack.top().begin());
             out() << "<li>";
             generateFullName(child, relative);
             out() << "</li>\n";
             stack.top().erase(stack.top().begin());
 
             NodeMap newTop;
-            foreach (const RelatedClass &d, child->derivedClasses()) {
-                if (d.node_ && !d.isPrivate() && !d.node_->isInternal() && d.node_->hasDoc())
+            const auto derivedClasses = child->derivedClasses();
+            for (const RelatedClass &d : derivedClasses) {
+                if (d.node_ && d.node_->isInAPI())
                     newTop.insert(d.node_->name(), d.node_);
             }
             if (!newTop.isEmpty()) {
@@ -2936,9 +2875,9 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap& classM
   Output an annotated list of the nodes in \a nodeMap.
   A two-column table is output.
  */
-void HtmlGenerator::generateAnnotatedList(const Node* relative,
-                                          CodeMarker* marker,
-                                          const NodeMultiMap& nmm)
+void HtmlGenerator::generateAnnotatedList(const Node *relative,
+                                          CodeMarker *marker,
+                                          const NodeMultiMap &nmm)
 {
     if (nmm.isEmpty())
         return;
@@ -2949,11 +2888,11 @@ void HtmlGenerator::generateAnnotatedList(const Node* relative,
  */
 void HtmlGenerator::generateAnnotatedList(const Node *relative,
                                           CodeMarker *marker,
-                                          const NodeList& unsortedNodes)
+                                          const NodeList &unsortedNodes)
 {
     NodeMultiMap nmm;
     bool allInternal = true;
-    foreach (Node* node, unsortedNodes) {
+    for (auto *node : unsortedNodes) {
         if (!node->isInternal() && !node->isObsolete()) {
             allInternal = false;
             nmm.insert(node->fullName(relative), node);
@@ -2966,7 +2905,7 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative,
     NodeList nodes = nmm.values();
     std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
 
-    foreach (const Node* node, nodes) {
+    for (const auto *node : qAsConst(nodes)) {
         if (++row % 2 == 1)
             out() << "<tr class=\"odd topAlign\">";
         else
@@ -3006,11 +2945,12 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative,
   Outputs a series of annotated lists from the nodes in \a nmm,
   divided into sections based by the key names in the multimap.
  */
-void HtmlGenerator::generateAnnotatedLists(const Node* relative,
-                                          CodeMarker* marker,
-                                          const NodeMultiMap& nmm)
+void HtmlGenerator::generateAnnotatedLists(const Node *relative,
+                                          CodeMarker *marker,
+                                          const NodeMultiMap &nmm)
 {
-    foreach (const QString &name, nmm.uniqueKeys()) {
+    const auto &uniqueKeys = nmm.uniqueKeys();
+    for (const QString &name : uniqueKeys) {
         if (!name.isEmpty()) {
             out() << "<h2 id=\"" << registerRef(name.toLower())
                   << "\">" << protectEnc(name) << "</h2>\n";
@@ -3024,7 +2964,7 @@ void HtmlGenerator::generateAnnotatedLists(const Node* relative,
   the classes in the class map \a nmm and then generates a
   compact list of the class names alphabetized on the part
   of the name not including the common prefix. You can tell
-  the function to use \a comonPrefix as the common prefix,
+  the function to use \a commonPrefix as the common prefix,
   but normally you let it figure it out itself by looking at
   the name of the first and last classes in the class map
   \a nmm.
@@ -3054,11 +2994,11 @@ void HtmlGenerator::generateCompactList(ListType listType,
     NodeMultiMap::ConstIterator c = nmm.constBegin();
     while (c != nmm.constEnd()) {
         QStringList pieces = c.key().split("::");
-        QString key;
         int idx = commonPrefixLen;
         if (idx > 0 && !pieces.last().startsWith(commonPrefix, Qt::CaseInsensitive))
             idx = 0;
-        key = pieces.last().mid(idx).toLower();
+        QString last = pieces.last().toLower();
+        QString key = last.mid(idx);
 
         int paragraphNr = NumParagraphs - 1;
 
@@ -3071,7 +3011,7 @@ void HtmlGenerator::generateCompactList(ListType listType,
 
         paragraphName[paragraphNr] = key[0].toUpper();
         usedParagraphNames.insert(key[0].toLower().cell());
-        paragraph[paragraphNr].insert(c.key(), c.value());
+        paragraph[paragraphNr].insert(last, c.value());
         ++c;
     }
 
@@ -3216,7 +3156,7 @@ void HtmlGenerator::generateFunctionIndex(const Node *relative)
     char currentLetter;
 
     out() << "<ul>\n";
-    NodeMapMap& funcIndex = qdb_->getFunctionIndex();
+    NodeMapMap &funcIndex = qdb_->getFunctionIndex();
     QMap<QString, NodeMap >::ConstIterator f = funcIndex.constBegin();
     while (f != funcIndex.constEnd()) {
         out() << "<li>";
@@ -3243,7 +3183,7 @@ void HtmlGenerator::generateFunctionIndex(const Node *relative)
 
 void HtmlGenerator::generateLegaleseList(const Node *relative, CodeMarker *marker)
 {
-    TextToNodeMap& legaleseTexts = qdb_->getLegaleseTexts();
+    TextToNodeMap &legaleseTexts = qdb_->getLegaleseTexts();
     QMap<Text, const Node *>::ConstIterator it = legaleseTexts.constBegin();
     while (it != legaleseTexts.constEnd()) {
         Text text = it.key();
@@ -3297,13 +3237,14 @@ void HtmlGenerator::generateQmlItem(const Node *node,
   and must not be empty. If it is empty, nothing is output, and
   false is returned. Otherewise, the list is generated and true is returned.
  */
-bool HtmlGenerator::generateGroupList(CollectionNode* cn)
+bool HtmlGenerator::generateGroupList(CollectionNode *cn)
 {
     qdb_->mergeCollections(cn);
     if (cn->members().isEmpty())
         return false;
     out() << "<ul>\n";
-    foreach (const Node* node, cn->members()) {
+    const auto members = cn->members();
+    for (const auto *node : members) {
         out() << "<li>"
               << "<a href=\"#"
               << Doc::canonicalTitle(node->title())
@@ -3315,7 +3256,7 @@ bool HtmlGenerator::generateGroupList(CollectionNode* cn)
     return true;
 }
 
-void HtmlGenerator::generateList(const Node* relative, CodeMarker* marker, const QString& selector)
+void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const QString &selector)
 {
     CNMap cnm;
     Node::NodeType type = Node::NoType;
@@ -3328,12 +3269,13 @@ void HtmlGenerator::generateList(const Node* relative, CodeMarker* marker, const
     else if (selector == QLatin1String("js-modules"))
         type = Node::JsModule;
     if (type != Node::NoType) {
-        NodeList nl;
+        NodeList nodeList;
         qdb_->mergeCollections(type, cnm, relative);
-        CollectionList cl = cnm.values();
-        foreach (CollectionNode* cn, cl)
-            nl.append(cn);
-        generateAnnotatedList(relative, marker, nl);
+        const CollectionList collectionList = cnm.values();
+        nodeList.reserve(collectionList.size());
+        for (auto *collectionNode : collectionList)
+            nodeList.append(collectionNode);
+        generateAnnotatedList(relative, marker, nodeList);
     }
     else {
         /*
@@ -3346,14 +3288,14 @@ void HtmlGenerator::generateList(const Node* relative, CodeMarker* marker, const
                                                   "\\module, \\qmlmodule, and \\jsmodule comments.").arg(selector));
             return;
         }
-        Node* n = const_cast<Node*>(relative);
-        CollectionNode* cn = static_cast<CollectionNode*>(n);
+        Node *n = const_cast<Node *>(relative);
+        CollectionNode *cn = static_cast<CollectionNode *>(n);
         qdb_->mergeCollections(cn);
         generateAnnotatedList(cn, marker, cn->members());
     }
 }
 
-void HtmlGenerator::generateSection(const NodeVector& nv, const Node *relative, CodeMarker *marker)
+void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, CodeMarker *marker)
 {
     bool alignNames = true;
     if (!nv.isEmpty()) {
@@ -3453,14 +3395,14 @@ void HtmlGenerator::generateSectionList(const Section& section,
             }
 
             QString prefix;
-            const QStringList& keys = section.keys(status);
+            const QStringList &keys = section.keys(status);
             if (!keys.isEmpty()) {
                 prefix = keys.at(i).mid(1);
                 prefix = prefix.left(keys.at(i).indexOf("::") + 1);
             }
             generateSynopsis(*m, relative, marker, section.style(), alignNames, &prefix);
             if ((*m)->isFunction()) {
-                const FunctionNode* fn = static_cast<const FunctionNode*>(*m);
+                const FunctionNode *fn = static_cast<const FunctionNode *>(*m);
                 if (fn->isPrivateSignal()) {
                     hasPrivateSignals = true;
                     if (alignNames)
@@ -3525,7 +3467,7 @@ void HtmlGenerator::generateSynopsis(const Node *node,
                                      CodeMarker *marker,
                                      Section::Style style,
                                      bool alignNames,
-                                     const QString* prefix)
+                                     const QString *prefix)
 {
     QString marked = marker->markedUpSynopsis(node, relative, style);
 
@@ -3565,8 +3507,8 @@ void HtmlGenerator::generateSynopsis(const Node *node,
     out() << highlightedCode(marked, relative, alignNames);
 }
 
-QString HtmlGenerator::highlightedCode(const QString& markedCode,
-                                       const Node* relative,
+QString HtmlGenerator::highlightedCode(const QString &markedCode,
+                                       const Node *relative,
                                        bool alignNames, Node::Genus genus)
 {
     QString src = markedCode;
@@ -3596,7 +3538,7 @@ QString HtmlGenerator::highlightedCode(const QString& markedCode,
             i += 2;
             if (parseArg(src, linkTag, &i, srcSize, &arg, &par1)) {
                 html += QLatin1String("<b>");
-                const Node* n = CodeMarker::nodeForString(par1.toString());
+                const Node *n = CodeMarker::nodeForString(par1.toString());
                 QString link = linkForNode(n, relative);
                 addLink(link, arg, &html);
                 html += QLatin1String("</b>");
@@ -3609,7 +3551,7 @@ QString HtmlGenerator::highlightedCode(const QString& markedCode,
             }
             else if (parseArg(src, typeTag, &i, srcSize, &arg, &par1)) {
                 par1 = QStringRef();
-                const Node* n = qdb_->findTypeNode(arg.toString(), relative, genus);
+                const Node *n = qdb_->findTypeNode(arg.toString(), relative, genus);
                 html += QLatin1String("<span class=\"type\">");
                 if (n && (n->isQmlBasicType() || n->isJsBasicType())) {
                     if (relative && (relative->genus() == n->genus() || genus == n->genus()))
@@ -3626,7 +3568,7 @@ QString HtmlGenerator::highlightedCode(const QString& markedCode,
                 if (arg.startsWith(QLatin1Char('&')))
                     html += arg;
                 else {
-                    const Node* n = qdb_->findNodeForInclude(QStringList(arg.toString()));
+                    const Node *n = qdb_->findNodeForInclude(QStringList(arg.toString()));
                     if (n && n != relative)
                         addLink(linkForNode(n,relative), arg, &html);
                     else
@@ -3722,7 +3664,7 @@ QString HtmlGenerator::highlightedCode(const QString& markedCode,
     return html;
 }
 
-void HtmlGenerator::generateLink(const Atom* atom, CodeMarker* marker)
+void HtmlGenerator::generateLink(const Atom *atom, CodeMarker *marker)
 {
     static QRegExp camelCase("[A-Z][A-Z][a-z]|[a-z][A-Z0-9]|_");
 
@@ -3741,23 +3683,6 @@ void HtmlGenerator::generateLink(const Atom* atom, CodeMarker* marker)
     } else {
         out() << protectEnc(atom->string());
     }
-}
-
-QString HtmlGenerator::registerRef(const QString& ref)
-{
-    QString clean = Generator::cleanRef(ref);
-
-    for (;;) {
-        QString& prevRef = refMap[clean.toLower()];
-        if (prevRef.isEmpty()) {
-            prevRef = ref;
-            break;
-        } else if (prevRef == ref) {
-            break;
-        }
-        clean += QLatin1Char('x');
-    }
-    return clean;
 }
 
 QString HtmlGenerator::protectEnc(const QString &string)
@@ -3827,199 +3752,6 @@ QString HtmlGenerator::fileName(const Node *node)
     return Generator::fileName(node);
 }
 
-QString HtmlGenerator::refForNode(const Node *node)
-{
-    QString ref;
-    switch (node->nodeType()) {
-    case Node::Enum:
-        ref = node->name() + "-enum";
-        break;
-    case Node::Typedef:
-        {
-            const TypedefNode* tdn = static_cast<const TypedefNode *>(node);
-            if (tdn->associatedEnum())
-                return refForNode(tdn->associatedEnum());
-            else
-                ref = node->name() + "-typedef";
-        }
-        break;
-    case Node::Function:
-        {
-            const FunctionNode *fn = static_cast<const FunctionNode *>(node);
-            switch (fn->metaness()) {
-            case FunctionNode::JsSignal:
-            case FunctionNode::QmlSignal:
-                ref = fn->name() + "-signal";
-                break;
-            case FunctionNode::JsSignalHandler:
-            case FunctionNode::QmlSignalHandler:
-                ref = fn->name() + "-signal-handler";
-                break;
-            case FunctionNode::JsMethod:
-            case FunctionNode::QmlMethod:
-                ref = fn->name() + "-method";
-                if (fn->overloadNumber() != 0)
-                    ref += QLatin1Char('-') + QString::number(fn->overloadNumber());
-                break;
-            default:
-                if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty()) {
-                    return refForNode(fn->firstAssociatedProperty());
-                } else {
-                    ref = fn->name();
-                    if (fn->overloadNumber() != 0)
-                        ref += QLatin1Char('-') + QString::number(fn->overloadNumber());
-                }
-                break;
-            }
-        }
-        break;
-    case Node::JsProperty:
-    case Node::QmlProperty:
-        if (node->isAttached())
-            ref = node->name() + "-attached-prop";
-        else
-            ref = node->name() + "-prop";
-        break;
-    case Node::Property:
-        ref = node->name() + "-prop";
-        break;
-    case Node::Variable:
-        ref = node->name() + "-var";
-        break;
-    case Node::SharedComment:
-        if (node->isPropertyGroup())
-            ref = node->name() + "-prop";
-        break;
-    default:
-        break;
-    }
-    return registerRef(ref);
-}
-
-/*!
-  This function is called for links, i.e. for words that
-  are marked with the qdoc link command. For autolinks
-  that are not marked with the qdoc link command, the
-  getAutoLink() function is called
-
-  It returns the string for a link found by using the data
-  in the \a atom to search the database. It also sets \a node
-  to point to the target node for that link. \a relative points
-  to the node holding the qdoc comment where the link command
-  was found.
- */
-QString HtmlGenerator::getLink(const Atom *atom, const Node *relative, const Node** node)
-{
-    const QString& t = atom->string();
-    if (t.at(0) == QChar('h')) {
-        if (t.startsWith("http:") || t.startsWith("https:"))
-            return t;
-    }
-    else if (t.at(0) == QChar('f')) {
-        if (t.startsWith("file:") || t.startsWith("ftp:"))
-            return t;
-    }
-    else if (t.at(0) == QChar('m')) {
-        if (t.startsWith("mailto:"))
-            return t;
-    }
-    return getAutoLink(atom, relative, node);
-}
-
-/*!
-  This function is called for autolinks, i.e. for words that
-  are not marked with the qdoc link command that qdoc has
-  reason to believe should be links. For links marked with
-  the qdoc link command, the getLink() function is called.
-
-  It returns the string for a link found by using the data
-  in the \a atom to search the database. It also sets \a node
-  to point to the target node for that link. \a relative points
-  to the node holding the qdoc comment where the link command
-  was found.
- */
-QString HtmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const Node** node)
-{
-    QString ref;
-
-    *node = qdb_->findNodeForAtom(atom, relative, ref);
-    if (!(*node)) {
-        return QString();
-    }
-
-    QString link = (*node)->url();
-    if (link.isEmpty())
-        link = linkForNode(*node, relative);
-    if (!ref.isEmpty()) {
-        int hashtag = link.lastIndexOf(QChar('#'));
-        if (hashtag != -1)
-            link.truncate(hashtag);
-        link += QLatin1Char('#') + ref;
-    }
-    return link;
-}
-
-/*!
-  Construct the link string for the \a node and return it.
-  The \a relative node is use to decide the link we are
-  generating is in the same file as the target. Note the
-  relative node can be 0, which pretty much guarantees
-  that the link and the target aren't in the same file.
-  */
-QString HtmlGenerator::linkForNode(const Node *node, const Node *relative)
-{
-    if (node == nullptr)
-        return QString();
-    if (!node->url().isEmpty())
-        return node->url();
-    if (fileBase(node).isEmpty())
-        return QString();
-    if (node->isPrivate())
-        return QString();
-    QString fn = fileName(node);
-    if (node && node->parent() &&
-        (node->parent()->isQmlType() || node->parent()->isJsType())
-        && node->parent()->isAbstract()) {
-        if (Generator::qmlTypeContext()) {
-            if (Generator::qmlTypeContext()->inherits(node->parent())) {
-                fn = fileName(Generator::qmlTypeContext());
-            }
-            else if (node->parent()->isInternal()) {
-                node->doc().location().warning(tr("Cannot link to property in internal type '%1'").arg(node->parent()->name()));
-                return QString();
-            }
-        }
-    }
-    QString link = fn;
-
-    if ((!node->isAggregate() && !node->isCollectionNode()) || node->isPropertyGroup()) {
-        QString ref = refForNode(node);
-        if (relative && fn == fileName(relative) && ref == refForNode(relative))
-            return QString();
-
-        link += QLatin1Char('#');
-        link += ref;
-    }
-    /*
-      If the output is going to subdirectories, then if the
-      two nodes will be output to different directories, then
-      the link must go up to the parent directory and then
-      back down into the other subdirectory.
-     */
-    if (node && relative && (node != relative)) {
-        if (useOutputSubdirs() && !node->isExternalPage() &&
-               node->outputSubdirectory() != relative->outputSubdirectory()) {
-            if (link.startsWith(QString(node->outputSubdirectory() + QLatin1Char('/')))) {
-                link.prepend(QString("../"));
-            }
-            else {
-                link.prepend(QString("../" + node->outputSubdirectory() + QLatin1Char('/')));
-            }
-        }
-    }
-    return link;
-}
-
 void HtmlGenerator::generateFullName(const Node *apparentNode, const Node *relative, const Node *actualNode)
 {
     if (actualNode == nullptr)
@@ -4044,18 +3776,16 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
     generateKeywordAnchors(node);
     QString nodeRef = nullptr;
     if (node->isSharedCommentNode()) {
-        const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode*>(node);
-        const QVector<Node*>& collective = scn->collective();
+        const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode *>(node);
+        const QVector<Node *> &collective = scn->collective();
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
-        foreach (const Node* n, collective) {
-            if (n->isFunction()) {
-                nodeRef = refForNode(n);
-                out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
-                out() << "<a name=\"" + nodeRef + "\"></a>";
-                generateSynopsis(n, relative, marker, Section::Details);
-                out() << "</h3>";
-            }
+        for (const auto *node : collective) {
+            nodeRef = refForNode(node);
+            out() << "<h3 class=\"fn fngroupitem\" id=\"" << nodeRef << "\">";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            generateSynopsis(node, relative, marker, Section::Details);
+            out() << "</h3>";
         }
         if (collective.size() > 1)
             out() << "</div>";
@@ -4111,12 +3841,12 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
         }
     }
     else if (node->isFunction()) {
-        const FunctionNode* fn = static_cast<const FunctionNode*>(node);
+        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
         if (fn->isPrivateSignal())
             generatePrivateSignalNote(node, marker);
         if (fn->isInvokable())
             generateInvokableNote(node, marker);
-        generateAssociatedPropertyNotes(const_cast<FunctionNode*>(fn));
+        generateAssociatedPropertyNotes(const_cast<FunctionNode *>(fn));
     }
     else if (node->isEnumType()) {
         const EnumNode *etn = static_cast<const EnumNode *>(node);
@@ -4134,53 +3864,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node,
     generateExtractionMark(node, EndMark);
 }
 
-int HtmlGenerator::hOffset(const Node *node)
-{
-    switch (node->nodeType()) {
-    case Node::Namespace:
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-    case Node::Module:
-        return 2;
-    case Node::QmlModule:
-    case Node::QmlBasicType:
-    case Node::QmlType:
-    case Node::Page:
-        return 1;
-    case Node::Enum:
-    case Node::Typedef:
-    case Node::Function:
-    case Node::Property:
-    default:
-        return 3;
-    }
-}
-
-bool HtmlGenerator::isThreeColumnEnumValueTable(const Atom *atom)
-{
-    while (atom != nullptr && !(atom->type() == Atom::ListRight && atom->string() == ATOM_LIST_VALUE)) {
-        if (atom->type() == Atom::ListItemLeft && !matchAhead(atom, Atom::ListItemRight))
-            return true;
-        atom = atom->next();
-    }
-    return false;
-}
-
-
-const QPair<QString,QString> HtmlGenerator::anchorForNode(const Node *node)
-{
-    QPair<QString,QString> anchorPair;
-
-    anchorPair.first = Generator::fileName(node);
-    if (node->isPageNode()) {
-        const PageNode *pn = static_cast<const PageNode*>(node);
-        anchorPair.second = pn->title();
-    }
-
-    return anchorPair;
-}
-
 #ifdef GENERATE_MAC_REFS
 /*
   No longer valid.
@@ -4190,8 +3873,8 @@ void HtmlGenerator::generateMacRef(const Node *node, CodeMarker *marker)
     if (!pleaseGenerateMacRef || marker == 0)
         return;
 
-    QStringList macRefs = marker->macRefsForNode(node);
-    foreach (const QString &macRef, macRefs)
+    const QStringList macRefs = marker->macRefsForNode(node);
+    for (const auto &macRef : macRefs)
         out() << "<a name=\"" << "//apple_ref/" << macRef << "\"></a>\n";
 }
 #endif
@@ -4247,23 +3930,23 @@ void HtmlGenerator::endLink()
 }
 
 /*!
-  Generates the summary for the \a section. Only used for
+  Generates the summary list for the \a members. Only used for
   sections of QML element documentation.
  */
-void HtmlGenerator::generateQmlSummary(const Section& section,
+void HtmlGenerator::generateQmlSummary(const NodeVector &members,
                                        const Node *relative,
                                        CodeMarker *marker)
 {
-    if (!section.members().isEmpty()) {
+    if (!members.isEmpty()) {
         out() << "<ul>\n";
-        NodeVector::const_iterator m = section.members().constBegin();
-        while (m != section.members().constEnd()) {
+        NodeVector::const_iterator m = members.constBegin();
+        while (m != members.constEnd()) {
             out() << "<li class=\"fn\">";
             generateQmlItem(*m, relative, marker, true);
             if ((*m)->isPropertyGroup()) {
-                const SharedCommentNode* scn = static_cast<const SharedCommentNode*>(*m);
+                const SharedCommentNode *scn = static_cast<const SharedCommentNode *>(*m);
                 if (scn->count() > 0) {
-                    QVector<Node*>::ConstIterator p = scn->collective().constBegin();
+                    QVector<Node *>::ConstIterator p = scn->collective().constBegin();
                     out() << "<ul>\n";
                     while (p != scn->collective().constEnd()) {
                         if ((*p)->isQmlProperty() || (*p)->isJsProperty()) {
@@ -4291,7 +3974,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
                                               const Aggregate *relative,
                                               CodeMarker *marker)
 {
-    QmlPropertyNode* qpn = nullptr;
+    QmlPropertyNode *qpn = nullptr;
 #ifdef GENERATE_MAC_REFS
     generateMacRef(node, marker);
 #endif
@@ -4308,22 +3991,24 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
     QString qmlItemFooter("</table></div>\n</div>");
 
     out() << "<div class=\"qmlitem\">";
-    QString nodeRef = refForNode(node);
+    QString nodeRef;
     if (node->isPropertyGroup()) {
-        const SharedCommentNode* scn = static_cast<const SharedCommentNode*>(node);
-        QVector<Node*>::ConstIterator p = scn->collective().constBegin();
+        const SharedCommentNode *scn = static_cast<const SharedCommentNode*>(node);
+        QVector<Node *>::ConstIterator p = scn->collective().constBegin();
         out() << "<div class=\"qmlproto\">";
         out() << "<div class=\"table\"><table class=\"qmlname\">";
-
-        QString heading = scn->name() + " group";
-        out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
-        out() << "<th class=\"centerAlign\"><p>";
-        out() << "<a name=\"" + nodeRef + "\"></a>";
-        out() << "<b>" << heading << "</b>";
-        out() << "</p></th></tr>";
+        if (!scn->name().isEmpty()) {
+            nodeRef = refForNode(scn);
+            QString heading = scn->name() + " group";
+            out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
+            out() << "<th class=\"centerAlign\"><p>";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
+            out() << "<b>" << heading << "</b>";
+            out() << "</p></th></tr>";
+        }
         while (p != scn->collective().constEnd()) {
             if ((*p)->isQmlProperty() || (*p)->isJsProperty()) {
-                qpn = static_cast<QmlPropertyNode*>(*p);
+                qpn = static_cast<QmlPropertyNode *>(*p);
                 nodeRef = refForNode(qpn);
                 out() << "<tr valign=\"top\" class=\"odd\" id=\"" << nodeRef << "\">";
                 out() << "<td class=\"tblQmlPropNode\"><p>";
@@ -4341,7 +4026,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
         out() << "</table></div>";
         out() << "</div>";
     } else if (node->isQmlProperty() || node->isJsProperty()) {
-        qpn = static_cast<QmlPropertyNode*>(node);
+        qpn = static_cast<QmlPropertyNode *>(node);
         out() << qmlItemHeader;
         out() << qmlItemStart.arg(nodeRef, "tblQmlPropNode", refForNode(qpn));
 
@@ -4358,13 +4043,13 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
         out() << qmlItemEnd;
         out() << qmlItemFooter;
     } else if (node->isSharedCommentNode()) {
-        const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode*>(node);
-        const QVector<Node*>& collective = scn->collective();
+        const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode *>(node);
+        const QVector<Node *> &collective = scn->collective();
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
         out() << qmlItemHeader;
         for (const auto m : collective) {
-            if (m->isFunction(Node::CPP) || m->isFunction(Node::JS)) {
+            if (m->isFunction(Node::QML) || m->isFunction(Node::JS)) {
                 out() << qmlItemStart.arg(nodeRef, "tblQmlFuncNode", refForNode(m));
                 generateSynopsis(m, relative, marker, Section::Details, false);
                 out() << qmlItemEnd;
@@ -4395,11 +4080,11 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
   Output the "Inherits" line for the QML element,
   if there should be one.
  */
-void HtmlGenerator::generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker)
+void HtmlGenerator::generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker)
 {
     if (!qcn)
         return;
-    QmlTypeNode* base = qcn->qmlBaseNode();
+    QmlTypeNode *base = qcn->qmlBaseNode();
     while (base && base->isInternal()) {
         base = base->qmlBaseNode();
     }
@@ -4422,9 +4107,9 @@ void HtmlGenerator::generateQmlInherits(QmlTypeNode* qcn, CodeMarker* marker)
   If there is no class node, or if the class node status
   is set to Node::Internal, do nothing.
  */
-void HtmlGenerator::generateQmlInstantiates(QmlTypeNode* qcn, CodeMarker* marker)
+void HtmlGenerator::generateQmlInstantiates(QmlTypeNode *qcn, CodeMarker *marker)
 {
-    ClassNode* cn = qcn->classNode();
+    ClassNode *cn = qcn->classNode();
     if (cn && !cn->isInternal()) {
         Text text;
         text << Atom::ParaLeft;
@@ -4456,10 +4141,10 @@ void HtmlGenerator::generateQmlInstantiates(QmlTypeNode* qcn, CodeMarker* marker
   If there is no QML element, or if the class node status
   is set to Node::Internal, do nothing.
  */
-void HtmlGenerator::generateInstantiatedBy(ClassNode* cn, CodeMarker* marker)
+void HtmlGenerator::generateInstantiatedBy(ClassNode *cn, CodeMarker *marker)
 {
     if (cn &&  !cn->isInternal() && cn->qmlElement() != nullptr) {
-        const QmlTypeNode* qcn = cn->qmlElement();
+        const QmlTypeNode *qcn = cn->qmlElement();
         Text text;
         text << Atom::ParaLeft;
         text << Atom(Atom::LinkNode,CodeMarker::stringForNode(cn));
@@ -4495,7 +4180,7 @@ void HtmlGenerator::generateExtractionMark(const Node *node, ExtractionMarkType 
                 out() << "-prop";
                 const PropertyNode *prop = static_cast<const PropertyNode *>(node);
                 const NodeList &list = prop->functions();
-                foreach (const Node *propFuncNode, list) {
+                for (const auto *propFuncNode : list) {
                     if (propFuncNode->isFunction()) {
                         const FunctionNode *func = static_cast<const FunctionNode *>(propFuncNode);
                         out() << "$$$" + func->name() + func->parameters().rawSignature().remove(' ');
@@ -4503,7 +4188,8 @@ void HtmlGenerator::generateExtractionMark(const Node *node, ExtractionMarkType 
                 }
             } else if (node->isEnumType()) {
                 const EnumNode *enumNode = static_cast<const EnumNode *>(node);
-                foreach (const EnumItem &item, enumNode->items())
+                const auto items = enumNode->items();
+                for (const auto &item : items)
                     out() << "$$$" + item.name();
             }
         } else if (markType == BriefMark) {
@@ -4537,7 +4223,7 @@ void HtmlGenerator::generateManifestFiles()
  */
 void HtmlGenerator::generateManifestFile(const QString &manifest, const QString &element)
 {
-    ExampleNodeMap& exampleNodeMap = qdb_->exampleNodeMap();
+    ExampleNodeMap &exampleNodeMap = qdb_->exampleNodeMap();
     if (exampleNodeMap.isEmpty())
         return;
     QString fileName = manifest +"-manifest.xml";
@@ -4549,7 +4235,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
     bool proceed = false;
     ExampleNodeMap::Iterator i = exampleNodeMap.begin();
     while (i != exampleNodeMap.end()) {
-        const ExampleNode* en = i.value();
+        const ExampleNode *en = i.value();
         if (demos) {
             if (en->name().startsWith("demos")) {
                 proceed = true;
@@ -4575,7 +4261,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
     QStringList usedAttributes;
     i = exampleNodeMap.begin();
     while (i != exampleNodeMap.end()) {
-        const ExampleNode* en = i.value();
+        const ExampleNode *en = i.value();
         if (demos) {
             if (!en->name().startsWith("demos")) {
                 ++i;
@@ -4595,7 +4281,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         QString docUrl = manifestDir + fileBase(en) + ".html";
         writer.writeAttribute("docUrl", docUrl);
         QStringList proFiles;
-        foreach (const QString file, en->files()) {
+        const auto exampleFiles = en->files();
+        for (const QString &file : exampleFiles) {
             if (file.endsWith(".pro") || file.endsWith(".qmlproject") || file.endsWith(".pyproject"))
                 proFiles << file;
         }
@@ -4628,7 +4315,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         QString fullName = project + QLatin1Char('/') + en->title();
         QSet<QString> tags;
         for (int idx=0; idx < manifestMetaContent.size(); ++idx) {
-            foreach (const QString &name, manifestMetaContent[idx].names) {
+            const auto names = manifestMetaContent[idx].names;
+            for (const QString &name : names) {
                 bool match = false;
                 int wildcard = name.indexOf(QChar('*'));
                 switch (wildcard) {
@@ -4643,7 +4331,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
                 }
                 if (match) {
                     tags += manifestMetaContent[idx].tags;
-                    foreach (const QString &attr, manifestMetaContent[idx].attributes) {
+                    const auto attributes = manifestMetaContent[idx].attributes;
+                    for (const QString &attr : attributes) {
                         QLatin1Char div(':');
                         QStringList attrList = attr.split(div);
                         if (attrList.count() == 1)
@@ -4719,7 +4408,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             bool wrote_one = false;
             QStringList sortedTags = tags.values();
             sortedTags.sort();
-            foreach (const QString &tag, sortedTags) {
+            for (const auto &tag : qAsConst(sortedTags)) {
                 if (wrote_one)
                     writer.writeCharacters(",");
                 writer.writeCharacters(tag);
@@ -4730,7 +4419,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
 
         QString ename = en->name().mid(en->name().lastIndexOf('/')+1);
         QMap<int, QString> filesToOpen;
-        foreach (QString file, en->files()) {
+        const auto files = en->files();
+        for (const QString &file : files) {
             QFileInfo fileInfo(file);
             QString fileName = fileInfo.fileName().toLower();
             // open .qml, .cpp and .h files with a
@@ -4784,9 +4474,10 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
  */
 void HtmlGenerator::readManifestMetaContent(const Config &config)
 {
-    QStringList names = config.getStringList(CONFIG_MANIFESTMETA + Config::dot + QStringLiteral("filters"));
+    const QStringList names =
+            config.getStringList(CONFIG_MANIFESTMETA + Config::dot + QStringLiteral("filters"));
 
-    foreach (const QString &manifest, names) {
+    for (const auto &manifest : names) {
         ManifestMetaFilter filter;
         QString prefix = CONFIG_MANIFESTMETA + Config::dot + manifest + Config::dot;
         filter.names = config.getStringSet(prefix + QStringLiteral("names"));
@@ -4801,14 +4492,14 @@ void HtmlGenerator::readManifestMetaContent(const Config &config)
   \e{relates} comand. Report these as errors if they
   are not also marked \e {internal}.
  */
-void HtmlGenerator::reportOrphans(const Aggregate* parent)
+void HtmlGenerator::reportOrphans(const Aggregate *parent)
 {
-    const NodeList& children = parent->childNodes();
+    const NodeList &children = parent->childNodes();
     if (children.size() == 0)
         return;
 
     QString message = "has documentation but no \\relates command";
-    foreach (Node *child, children) {
+    for (const auto *child : children) {
         if (!child || child->isInternal() || child->doc().isEmpty() || !child->isRelatedNonmember())
             continue;
         switch (child->nodeType()) {
@@ -4820,7 +4511,7 @@ void HtmlGenerator::reportOrphans(const Aggregate* parent)
             break;
         case Node::Function:
             {
-                const FunctionNode* fn = static_cast<const FunctionNode*>(child);
+                const FunctionNode *fn = static_cast<const FunctionNode *>(child);
                 switch (fn->metaness()) {
                 case FunctionNode::QmlSignal:
                     child->location().warning(tr("Global QML, signal, %1 %2").arg(child->name()).arg(message));
@@ -4872,7 +4563,7 @@ void HtmlGenerator::reportOrphans(const Aggregate* parent)
   output generator, it is perhaps impossible for there to ever
   be more than one writer open.
  */
-QXmlStreamWriter& HtmlGenerator::xmlWriter()
+QXmlStreamWriter &HtmlGenerator::xmlWriter()
 {
     return *xmlWriterStack.top();
 }
@@ -4885,11 +4576,11 @@ void HtmlGenerator::generateAssociatedPropertyNotes(FunctionNode *fn)
 {
     if (fn->hasAssociatedProperties()) {
         out() << "<p><b>Note:</b> ";
-        NodeList &nodes = fn->associatedProperties();
+        NodeList nodes = fn->associatedProperties();
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
-        foreach (const Node *n, nodes) {
+        for (const auto *node : qAsConst(nodes)) {
             QString msg;
-            const PropertyNode *pn = static_cast<const PropertyNode*>(n);
+            const PropertyNode *pn = static_cast<const PropertyNode *>(node);
             switch (pn->role(fn)) {
             case PropertyNode::Getter:
                 msg = QStringLiteral("Getter function ");

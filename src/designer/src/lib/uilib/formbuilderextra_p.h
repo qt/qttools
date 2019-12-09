@@ -69,6 +69,7 @@
 #include <QtCore/qstringlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qdir.h>
+#include <QtGui/qpalette.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -89,9 +90,13 @@ namespace QFormInternal
 {
 #endif
 
+class DomBrush;
 class DomButtonGroups;
 class DomButtonGroup;
+class DomColorGroup;
 class DomCustomWidget;
+class DomPalette;
+class DomProperty;
 class DomUI;
 
 class QAbstractFormBuilder;
@@ -174,6 +179,16 @@ public:
     static QString gridLayoutColumnMinimumWidth(const QGridLayout *);
     static bool setGridLayoutColumnMinimumWidth(const QString &, QGridLayout *);
     static void clearGridLayoutColumnMinimumWidth(QGridLayout *);
+
+    static void setPixmapProperty(DomProperty *p, const QPair<QString, QString> &ip);
+    static QPalette loadPalette(const DomPalette *dom);
+    static void setupColorGroup(QPalette *palette, QPalette::ColorGroup colorGroup,
+                                const DomColorGroup *group);
+    static DomColorGroup *saveColorGroup(const QPalette &palette,
+                                         QPalette::ColorGroup colorGroup);
+    static DomPalette *savePalette(const QPalette &palette);
+    static QBrush setupBrush(const DomBrush *brush);
+    static DomBrush *saveBrush(const QBrush &br);
 
     QStringList m_pluginPaths;
     QMap<QString, QDesignerCustomWidgetInterface*> m_customWidgets;

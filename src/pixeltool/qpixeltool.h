@@ -51,8 +51,9 @@ public slots:
     void toggleGrid();
     void toggleFreeze();
     void setZoomVisible(bool visible);
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void copyToClipboard();
+    void copyColorToClipboard();
 #endif
     void saveToFile();
     void increaseGridSize() { setGridSize(m_gridSize + 1); }
@@ -78,12 +79,12 @@ private:
     void startGridSizeVisibleTimer();
     QString aboutText() const;
 
-    bool m_freeze;
-    bool m_displayZoom;
-    bool m_displayGridSize;
-    bool m_mouseDown;
+    bool m_freeze = false;
+    bool m_displayZoom = false;
+    bool m_displayGridSize = false;
+    bool m_mouseDown = false;
     bool m_autoUpdate;
-    bool m_preview_mode;
+    bool m_preview_mode = false;
 
     int m_gridActive;
     int m_zoom;
@@ -92,9 +93,9 @@ private:
 
     int m_updateId;
     int m_displayZoomId;
-    int m_displayGridSizeId;
+    int m_displayGridSizeId = 0;
 
-    int m_currentColor;
+    QRgb m_currentColor = 0;
 
     QPoint m_lastMousePos;
     QPoint m_dragStart;

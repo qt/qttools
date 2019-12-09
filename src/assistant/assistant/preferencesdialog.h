@@ -29,6 +29,7 @@
 #ifndef PREFERENCESDIALOG_H
 #define PREFERENCESDIALOG_H
 
+#include <QtCore/QVersionNumber>
 #include <QtWidgets/QDialog>
 #include <QtHelp/QHelpFilterData>
 #include "ui_preferencesdialog.h"
@@ -60,9 +61,6 @@ class PreferencesDialog : public QDialog
 
 public:
     PreferencesDialog(QWidget *parent = nullptr);
-    ~PreferencesDialog() override;
-
-    void showDialog();
 
 private slots:
     void filterSelected(QListWidgetItem *item);
@@ -97,6 +95,8 @@ private:
     QString suggestedNewFilterName(const QString &initialFilterName) const;
     QString getUniqueFilterName(const QString &windowTitle,
                                 const QString &initialFilterName = QString());
+    void applyDocListFilter(QListWidgetItem *item);
+
     void updateFilterPage();
     void updateCurrentFilter();
     void updateDocumentationPage();

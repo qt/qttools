@@ -28,6 +28,9 @@
 ****************************************************************************/
 
 #include "lupdate.h"
+#if QT_CONFIG(clangcpp)
+#include "cpp_clang.h"
+#endif
 
 #include <profileutils.h>
 #include <projectdescriptionreader.h>
@@ -46,6 +49,10 @@
 #include <QtCore/QTranslator>
 
 #include <iostream>
+
+bool useClangToParseCpp = false;
+QString commandLineCompileCommands; // for the path to the json file passed as a command line argument.
+                                    // Has priority over what is in the .pro file and passed to the project.
 
 // Can't have an array of QStaticStringData<N> for different N, so
 // use QString, which requires constructor calls. Doesn't matter
@@ -197,10 +204,6 @@ static void printErr(const QString & out)
     std::cerr << qPrintable(out);
 }
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
-
 static void recursiveFileInfoList(const QDir &dir,
     const QSet<QString> &nameFilters, QDir::Filters filter,
     QFileInfoList *fileinfolist)
@@ -279,6 +282,13 @@ static void printUsage()
         "           Specify the output file(s). This will override the TRANSLATIONS.\n"
         "    -version\n"
         "           Display the version of lupdate and exit.\n"
+        "    -clang-parser \n"
+        "           Use clang to parse cpp files. Otherwise a custom parser is used.\n"
+        "           Need a compile_commands.json for the files that needs to be parsed.\n"
+        "           The path to this file can be given in the .pro file\n"
+        "           under LUPDATE_COMPILE_COMMANDS_PATH.\n"
+        "           If no path is given search for compile_commands.json will be attempted\n"
+        "           through all parent paths of the first input file.\n"
         "    @lst-file\n"
         "           Read additional file names (one per line) or includepaths (one per\n"
         "           line, and prefixed with -I) from lst-file.\n"
@@ -517,7 +527,14 @@ static void processSources(Translator &fetchedTor,
         printErr(LU::tr("lupdate warning: Some files have been ignored due to missing qml/javascript support\n"));
 #endif
 
-    loadCPP(fetchedTor, sourceFilesCpp, cd);
+    if (useClangToParseCpp) {
+#if QT_CONFIG(clangcpp)
+        ClangCppParser::loadCPP(fetchedTor, sourceFilesCpp, cd);
+#endif
+    }
+    else
+        loadCPP(fetchedTor, sourceFilesCpp, cd);
+
     if (!cd.error().isEmpty())
         printErr(cd.error());
 }
@@ -583,6 +600,10 @@ private:
         cd.m_includePath = prj.includePaths;
         cd.m_excludes = prj.excluded;
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
+        if (commandLineCompileCommands.isEmpty())
+            cd.m_compileCommandsPath = prj.compileCommands;
+        else
+            cd.m_compileCommandsPath = commandLineCompileCommands;
 
         QStringList tsFiles;
         if (hasTranslations(prj)) {
@@ -837,7 +858,19 @@ int main(int argc, char **argv)
                 includePath += args[i].mid(2);
             }
             continue;
-        } else if (arg.startsWith(QLatin1String("-")) && arg != QLatin1String("-")) {
+        }
+#if QT_CONFIG(clangcpp)
+        else if (arg == QLatin1String("-clang-parser")) {
+            useClangToParseCpp = true;
+            // the option after -clang-parser is optional
+            if ((i + 1) != argc && !args[i + 1].startsWith(QLatin1String("-"))) {
+                 i++;
+                 commandLineCompileCommands = args[i];
+             }
+            continue;
+        }
+#endif
+        else if (arg.startsWith(QLatin1String("-")) && arg != QLatin1String("-")) {
             printErr(LU::tr("Unrecognized option '%1'.\n").arg(arg));
             return 1;
         }
@@ -999,6 +1032,7 @@ int main(int argc, char **argv)
         cd.m_projectRoots = projectRoots;
         cd.m_includePath = includePath;
         cd.m_allCSources = allCSources;
+        cd.m_compileCommandsPath = commandLineCompileCommands;
         for (const QString &resource : qAsConst(resourceFiles))
             sourceFiles << getResources(resource);
         processSources(fetchedTor, sourceFiles, cd);

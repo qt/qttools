@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,10 +30,10 @@
   codechunk.cpp
 */
 
-#include <qregexp.h>
-#include <qstringlist.h>
-
 #include "codechunk.h"
+
+#include <QtCore/qregexp.h>
+#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -84,7 +84,7 @@ static const bool needSpace[9][9] = {
     /* ( */ { false, false, false, false, false, false, false, false, false },
 };
 
-static int category( QChar ch )
+static int category(QChar ch)
 {
     return charCategory[static_cast<int>(ch.toLatin1())];
 }
@@ -120,17 +120,17 @@ static int category( QChar ch )
   Appends \a lexeme to the current string contents, inserting
   a space if appropriate.
  */
-void CodeChunk::append( const QString& lexeme )
+void CodeChunk::append(const QString &lexeme)
 {
-    if ( !s.isEmpty() && !lexeme.isEmpty() ) {
+    if (!s.isEmpty() && !lexeme.isEmpty()) {
         /*
           Should there be a space or not between the code chunk so far and the
           new lexeme?
         */
         int cat1 = category(s.at(s.size() - 1));
         int cat2 = category(lexeme[0]);
-        if ( needSpace[cat1][cat2] )
-            s += QLatin1Char( ' ' );
+        if (needSpace[cat1][cat2])
+            s += QLatin1Char(' ');
     }
     s += lexeme;
 }

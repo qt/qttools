@@ -75,6 +75,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qbuffer.h>
 #include <QtCore/qtimer.h>
+#include <QtCore/qvector.h>
 #include <QtCore/qxmlstream.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qaction.h>
@@ -162,7 +163,7 @@ public:
 
 private:
 
-    using SelectionPool = QList<WidgetSelection *>;
+    using SelectionPool = QVector<WidgetSelection *>;
     SelectionPool m_selectionPool;
 
     typedef QHash<QWidget *, WidgetSelection *> SelectionHash;
@@ -178,7 +179,7 @@ FormWindow::Selection::~Selection()
 
 void FormWindow::Selection::clear()
 {
-    if (!m_usedSelections.empty()) {
+    if (!m_usedSelections.isEmpty()) {
         for (auto it = m_usedSelections.begin(), mend = m_usedSelections.end(); it != mend; ++it)
             it.value()->setWidget(nullptr);
         m_usedSelections.clear();
@@ -684,6 +685,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
     const bool blocked = blockSelectionChanged(true);
 
     QWidgetList sel = selectedWidgets();
+    const QWidgetList originalSelection = sel;
     simplifySelection(&sel);
 
     QSet<QWidget*> widget_set;
@@ -733,9 +735,14 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
         }
     }
 
+    // In case when we have reduced the selection (by calling simplifySelection()
+    // beforehand) we still need to hide selection handles for children widgets
+    for (auto *widget : originalSelection)
+        m_selection->hide(widget);
+
     blockSelectionChanged(blocked);
 
-    if (!sel.empty()) // reshow selection?
+    if (!sel.isEmpty()) // reshow selection?
         if (QDesignerMimeData::execDrag(item_list, core()->topLevel()) == Qt::IgnoreAction && dropType == QDesignerDnDItemInterface::MoveDrop)
             for (QWidget *widget : qAsConst(sel))
                 m_selection->show(widget);
@@ -940,7 +947,7 @@ bool FormWindow::isMainContainer(const QWidget *w) const
 void FormWindow::updateChildSelections(QWidget *w)
 {
     const QWidgetList l = w->findChildren<QWidget*>();
-    if (!l.empty()) {
+    if (!l.isEmpty()) {
         const QWidgetList::const_iterator lcend = l.constEnd();
         for (QWidgetList::const_iterator it = l.constBegin(); it != lcend; ++it) {
             QWidget *w = *it;
@@ -1150,19 +1157,19 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
 
     const QDesignerMetaDataBaseInterface *metaDataBase = core()->metaDataBase();
     const QWidgetList widgetChildren = main->findChildren<QWidget*>();
-    if (!widgetChildren.empty())
+    if (!widgetChildren.isEmpty())
         insertNames(metaDataBase, widgetChildren.constBegin(), widgetChildren.constEnd(), w, existingNames);
 
-    const QList<QLayout *> layoutChildren = main->findChildren<QLayout*>();
-    if (!layoutChildren.empty())
+    const auto layoutChildren = main->findChildren<QLayout*>();
+    if (!layoutChildren.isEmpty())
         insertNames(metaDataBase, layoutChildren.constBegin(), layoutChildren.constEnd(), w, existingNames);
 
-    const QList<QAction *> actionChildren = main->findChildren<QAction*>();
-    if (!actionChildren.empty())
+    const auto actionChildren = main->findChildren<QAction*>();
+    if (!actionChildren.isEmpty())
         insertNames(metaDataBase, actionChildren.constBegin(), actionChildren.constEnd(), w, existingNames);
 
-    const QList<QButtonGroup *> buttonGroupChildren = main->findChildren<QButtonGroup*>();
-    if (!buttonGroupChildren.empty())
+    const auto buttonGroupChildren = main->findChildren<QButtonGroup*>();
+    if (!buttonGroupChildren.isEmpty())
         insertNames(metaDataBase, buttonGroupChildren.constBegin(), buttonGroupChildren.constEnd(), w, existingNames);
 
     const StringSet::const_iterator enEnd = existingNames.constEnd();
@@ -1695,7 +1702,7 @@ QWidget *FormWindow::containerForPaste() const
         // Try to find a close parent, for example a non-laid-out
         // QFrame/QGroupBox when a widget within it is selected.
         QWidgetList selection = selectedWidgets();
-        if (selection.empty())
+        if (selection.isEmpty())
             break;
         simplifySelection(&selection);
 
@@ -2252,7 +2259,7 @@ QAction *FormWindow::createSelectAncestorSubMenu(QWidget *w)
     for (QWidget *p = w->parentWidget(); p && p != mc; p = p->parentWidget())
         if (isManaged(p) && !isWidgetSelected(p))
             parents.push_back(p);
-    if (parents.empty())
+    if (parents.isEmpty())
         return nullptr;
     // Create a submenu listing the managed, unselected parents
     QMenu *menu = new QMenu;

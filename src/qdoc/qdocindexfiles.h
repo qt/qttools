@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -39,6 +39,7 @@ class Generator;
 class QStringList;
 class QDocDatabase;
 class WebXMLGenerator;
+class QXmlStreamReader;
 class QXmlStreamWriter;
 class QXmlStreamAttributes;
 
@@ -55,16 +56,16 @@ class QDocIndexFiles
     friend class QDocDatabase;
     friend class WebXMLGenerator; // for using generateIndexSections()
 
- private:
+private:
     static QDocIndexFiles* qdocIndexFiles();
     static void destroyQDocIndexFiles();
 
     QDocIndexFiles();
     ~QDocIndexFiles();
 
-    void readIndexes(const QStringList& indexFiles);
-    void readIndexFile(const QString& path);
-    void readIndexSection(QXmlStreamReader &reader, Node* current, const QString& indexUrl);
+    void readIndexes(const QStringList &indexFiles);
+    void readIndexFile(const QString &path);
+    void readIndexSection(QXmlStreamReader &reader, Node *current, const QString &indexUrl);
     void insertTarget(TargetRec::TargetType type, const QXmlStreamAttributes &attributes, Node *node);
     void resolveIndex();
 
@@ -74,12 +75,12 @@ class QDocIndexFiles
     bool generateIndexSection(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
     void generateIndexSections(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
 
- private:
+private:
     static QDocIndexFiles* qdocIndexFiles_;
-    QDocDatabase* qdb_;
-    Generator* gen_;
+    QDocDatabase *qdb_;
+    Generator *gen_;
     QString project_;
-    QVector<QPair<ClassNode*,QString> > basesList_;
+    QVector<QPair<ClassNode *, QString> > basesList_;
 };
 
 QT_END_NAMESPACE

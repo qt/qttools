@@ -551,7 +551,7 @@ QByteArray MainWindow::createSfntTable()
                 glyphRecord.boundingRectY = qToBigEndian(TO_FIXED_POINT(glyphData.boundingRect.y()));
                 glyphRecord.boundingRectWidth = qToBigEndian(TO_FIXED_POINT(glyphData.boundingRect.width()));
                 glyphRecord.boundingRectHeight = qToBigEndian(TO_FIXED_POINT(glyphData.boundingRect.height()));
-                glyphRecord.textureIndex = qToBigEndian(glyphData.textureIndex);
+                glyphRecord.textureIndex = qToBigEndian(quint16(glyphData.textureIndex));
                 buffer.write(reinterpret_cast<char *>(&glyphRecord), sizeof(QtdfGlyphRecord));
 
                 int expectedWidth = qCeil(glyphData.texCoord.width + glyphData.texCoord.xMargin * 2);
@@ -693,17 +693,24 @@ void MainWindow::updateUnicodeRanges()
                this,
                &MainWindow::updateSelection);
 
+    QItemSelection selectedItems;
+
     for (int i = 0; i < ui->lwUnicodeRanges->count(); ++i) {
         QListWidgetItem *item = ui->lwUnicodeRanges->item(i);
-        DistanceFieldModel::UnicodeRange unicodeRange = item->data(Qt::UserRole).value<DistanceFieldModel::UnicodeRange>();
-        QList<glyph_t> glyphIndexes = m_model->glyphIndexesForUnicodeRange(unicodeRange);
-        for (glyph_t glyphIndex : glyphIndexes) {
-            QModelIndex index = m_model->index(glyphIndex);
-            ui->lvGlyphs->selectionModel()->select(index, item->isSelected()
-                                                            ? QItemSelectionModel::Select
-                                                            : QItemSelectionModel::Deselect);
+        if (item->isSelected()) {
+            DistanceFieldModel::UnicodeRange unicodeRange = item->data(Qt::UserRole).value<DistanceFieldModel::UnicodeRange>();
+            QList<glyph_t> glyphIndexes = m_model->glyphIndexesForUnicodeRange(unicodeRange);
+
+            for (glyph_t glyphIndex : glyphIndexes) {
+                QModelIndex index = m_model->index(glyphIndex);
+                selectedItems.select(index, index);
+            }
         }
     }
+
+    ui->lvGlyphs->selectionModel()->clearSelection();
+    if (!selectedItems.isEmpty())
+        ui->lvGlyphs->selectionModel()->select(selectedItems, QItemSelectionModel::Select);
 
     connect(ui->lvGlyphs->selectionModel(),
             &QItemSelectionModel::selectionChanged,

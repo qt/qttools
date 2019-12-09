@@ -101,7 +101,7 @@ void PluginDialog::populateTreeWidget()
 
             if (QObject *plugin = loader.instance()) {
                 if (const QDesignerCustomWidgetCollectionInterface *c = qobject_cast<QDesignerCustomWidgetCollectionInterface*>(plugin)) {
-                    const QList<QDesignerCustomWidgetInterface *> &collCustomWidgets = c->customWidgets();
+                    const auto &collCustomWidgets = c->customWidgets();
                     for (const QDesignerCustomWidgetInterface *p : collCustomWidgets)
                         setItem(pluginItem, p->name(), p->toolTip(), p->whatsThis(), p->icon());
                 } else {

@@ -242,7 +242,7 @@ public:
     bool eventFilter(QObject *o, QEvent *event) override
     {
         if (event->type() == QEvent::LanguageChange) {
-            const QList<QByteArray> &dynamicPropertyNames = o->dynamicPropertyNames();
+            const auto &dynamicPropertyNames = o->dynamicPropertyNames();
             for (const QByteArray &prop : dynamicPropertyNames) {
                 if (prop.startsWith(PROP_GENERIC_PREFIX)) {
                     const QByteArray propName = prop.mid(sizeof(PROP_GENERIC_PREFIX) - 1);
@@ -438,7 +438,7 @@ void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &
     if (!m_trwatch)
         m_trwatch = new TranslationWatcher(o, m_class, m_idBased);
 
-    if (properties.empty())
+    if (properties.isEmpty())
         return;
 
     // Unlike string item roles, string properties are not loaded via the textBuilder

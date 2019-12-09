@@ -50,7 +50,7 @@ void Selection::clear()
 
 bool Selection::empty() const
 {
-    return managed.empty() && unmanaged.empty() && objects.empty();
+    return managed.isEmpty() && unmanaged.isEmpty() && objects.isEmpty();
 }
 
 QObjectList Selection::selection() const

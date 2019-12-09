@@ -2809,7 +2809,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
     } else if (event->type() == QEvent::Wheel) {
         QWheelEvent *we = static_cast<QWheelEvent *>(event);
         if (we->modifiers() & Qt::ControlModifier) {
-            if (we->delta() > 0)
+            if (we->angleDelta().y() > 0)
                 m_messageEditor->increaseFontSize();
             else
                 m_messageEditor->decreaseFontSize();

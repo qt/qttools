@@ -794,14 +794,13 @@ static inline MsvcDebugRuntimeResult checkMsvcDebugRuntime(const QStringList &de
     for (const QString &lib : dependentLibraries) {
         int pos = 0;
         if (lib.startsWith(QLatin1String("MSVCR"), Qt::CaseInsensitive)
-            || lib.startsWith(QLatin1String("MSVCP"), Qt::CaseInsensitive)) {
-            pos = 5;
-        } else if (lib.startsWith(QLatin1String("VCRUNTIME"), Qt::CaseInsensitive)) {
-            pos = 9;
+            || lib.startsWith(QLatin1String("MSVCP"), Qt::CaseInsensitive)
+            || lib.startsWith(QLatin1String("VCRUNTIME"), Qt::CaseInsensitive)) {
+            int lastDotPos = lib.lastIndexOf(QLatin1Char('.'));
+            pos = -1 == lastDotPos ? 0 : lastDotPos - 1;
         }
-        if (pos && lib.at(pos).isDigit()) {
-            for (++pos; lib.at(pos).isDigit(); ++pos)
-                ;
+
+        if (pos) {
             return lib.at(pos).toLower() == QLatin1Char('d')
                 ? MsvcDebugRuntime : MsvcReleaseRuntime;
         }
@@ -991,18 +990,21 @@ bool patchQtCore(const QString &path, QString *errorMessage)
         std::wcout << "Patching " << QFileInfo(path).fileName() << "...\n";
 
     QFile file(path);
-    if (!file.open(QIODevice::ReadWrite)) {
+    if (!file.open(QIODevice::ReadOnly)) {
         *errorMessage = QString::fromLatin1("Unable to patch %1: %2").arg(
                     QDir::toNativeSeparators(path), file.errorString());
         return false;
     }
-    QByteArray content = file.readAll();
+    const QByteArray oldContent = file.readAll();
 
-    if (content.isEmpty()) {
+    if (oldContent.isEmpty()) {
         *errorMessage = QString::fromLatin1("Unable to patch %1: Could not read file content").arg(
                     QDir::toNativeSeparators(path));
         return false;
     }
+    file.close();
+
+    QByteArray content = oldContent;
 
     QByteArray prfxpath("qt_prfxpath=");
     int startPos = content.indexOf(prfxpath);
@@ -1023,11 +1025,13 @@ bool patchQtCore(const QString &path, QString *errorMessage)
     QByteArray replacement = QByteArray(endPos - startPos, char(0));
     replacement[0] = '.';
     content.replace(startPos, endPos - startPos, replacement);
+    if (content == oldContent)
+        return true;
 
-    if (!file.seek(0)
-            || (file.write(content) != content.size())) {
-        *errorMessage = QString::fromLatin1("Unable to patch %1: Could not write to file").arg(
-                    QDir::toNativeSeparators(path));
+    if (!file.open(QIODevice::WriteOnly)
+        || (file.write(content) != content.size())) {
+        *errorMessage = QString::fromLatin1("Unable to patch %1: Could not write to file: %2").arg(
+                    QDir::toNativeSeparators(path), file.errorString());
         return false;
     }
     return true;

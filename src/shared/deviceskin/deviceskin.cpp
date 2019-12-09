@@ -69,7 +69,7 @@ namespace {
 }
 
 static void parseRect(const QString &value, QRect *rect) {
-    const QVector<QStringRef> l = value.splitRef(QLatin1Char(' '));
+    const auto l = value.splitRef(QLatin1Char(' '));
     rect->setRect(l[0].toInt(), l[1].toInt(), l[2].toInt(), l[3].toInt());
 }
 
@@ -535,7 +535,7 @@ void DeviceSkin::paintEvent( QPaintEvent *)
     } else {
         p.drawPixmap(0, 0, skinImageClosed);
     }
-    QList<int> toDraw;
+    QVector<int> toDraw;
     if ( buttonPressed == true ) {
         toDraw += buttonIndex;
     }

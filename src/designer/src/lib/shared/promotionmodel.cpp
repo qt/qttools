@@ -129,7 +129,7 @@ namespace qdesigner_internal {
         // Set the item index as user data on the item.
         const PromotedClasses promotedClasses = m_core->promotion()->promotedClasses();
 
-        if (promotedClasses.empty())
+        if (promotedClasses.isEmpty())
             return;
 
         const QSet<QString> usedPromotedClasses = m_core->promotion()->referencedPromotedClassNames();
@@ -143,7 +143,7 @@ namespace qdesigner_internal {
             if (baseClass !=  it->baseItem) {
                 baseClass =  it->baseItem;
                 const StandardItemList baseRow = baseModelRow(it->baseItem);
-                baseItem = baseRow.front();
+                baseItem = baseRow.constFirst();
                 appendRow(baseRow);
             }
             Q_ASSERT(baseItem);
@@ -187,7 +187,7 @@ namespace qdesigner_internal {
 
     QModelIndex PromotionModel::indexOfClass(const QString &className) const {
         const StandardItemList matches = findItems (className, Qt::MatchFixedString|Qt::MatchCaseSensitive|Qt::MatchRecursive);
-        return matches.empty() ? QModelIndex() : indexFromItem (matches.front());
+        return matches.isEmpty() ? QModelIndex() : indexFromItem (matches.constFirst());
     }
 } // namespace qdesigner_internal
 

@@ -100,7 +100,7 @@ public slots:
 private slots:
     void slotCurrentItemChanged(QAction *item);
     void slotSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
-    void editAction(QAction *item);
+    void editAction(QAction *item, int column = -1);
     void editCurrentAction();
     void navigateToSlotCurrentAction();
     void slotActionChanged();
@@ -117,7 +117,7 @@ private slots:
 #endif
 
 signals:
-    void itemActivated(QAction *item);
+    void itemActivated(QAction *item, int column);
     // Context menu for item or global menu if item == 0.
     void contextMenuRequested(QMenu *menu, QAction *item);
 

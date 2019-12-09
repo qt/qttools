@@ -556,7 +556,7 @@ void QPF::addGlyphs(QFontEngine *fe, const QList<CharacterRange> &ranges)
                         ;
                 }
 
-                memcpy(data, img.bits(), img.byteCount());
+                memcpy(data, img.bits(), static_cast<size_t>(img.sizeInBytes()));
             }
         }
     }

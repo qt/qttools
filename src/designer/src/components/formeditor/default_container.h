@@ -57,8 +57,10 @@ public:
     int currentIndex() const override { return m_widget->currentIndex(); }
     void setCurrentIndex(int index) override;
 
+    bool canAddWidget() const override { return true; }
     void addWidget(QWidget *widget) override;
     void insertWidget(int index, QWidget *widget) override;
+    bool canRemove(int) const override { return true; }
     void remove(int index) override;
 
 private:
@@ -79,8 +81,10 @@ public:
     int currentIndex() const override { return m_widget->currentIndex(); }
     void setCurrentIndex(int index) override;
 
+    bool canAddWidget() const override { return true; }
     void addWidget(QWidget *widget) override;
     void insertWidget(int index, QWidget *widget) override;
+    bool canRemove(int) const override { return true; }
     void remove(int index) override;
 
 private:
@@ -101,8 +105,10 @@ public:
     int currentIndex() const override { return m_widget->currentIndex(); }
     void setCurrentIndex(int index) override;
 
+    bool canAddWidget() const override { return true; }
     void addWidget(QWidget *widget) override;
     void insertWidget(int index, QWidget *widget) override;
+    bool canRemove(int) const override { return true; }
     void remove(int index) override;
 
 private:

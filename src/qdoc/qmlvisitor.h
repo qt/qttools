@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -31,7 +31,8 @@
 
 #include "node.h"
 
-#include <qstring.h>
+#include <QtCore/qstring.h>
+
 #ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsastvisitor_p.h>
 #include <private/qqmljsengine_p.h>
@@ -65,7 +66,7 @@ public:
                   QQmlJS::Engine *engine,
                   const QSet<QString> &commands,
                   const QSet<QString> &topics);
-    virtual ~QmlDocVisitor();
+    ~QmlDocVisitor() override;
 
     bool visit(QQmlJS::AST::UiImport *import) override;
     void endVisit(QQmlJS::AST::UiImport *definition) override;
@@ -99,9 +100,9 @@ private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);
     QQmlJS::AST::SourceLocation precedingComment(quint32 offset) const;
     bool applyDocumentation(QQmlJS::AST::SourceLocation location, Node *node);
-    void applyMetacommands(QQmlJS::AST::SourceLocation location, Node* node, Doc& doc);
-    bool splitQmlPropertyArg(const Doc& doc,
-                             const QString& arg,
+    void applyMetacommands(QQmlJS::AST::SourceLocation location, Node *node, Doc &doc);
+    bool splitQmlPropertyArg(const Doc &doc,
+                             const QString &arg,
                              QmlPropArgs& qpa);
 
     QQmlJS::Engine *engine;

@@ -52,6 +52,7 @@
 #include <QtWidgets/qgroupbox.h>
 
 #include <QtCore/qset.h>
+#include <QtCore/qvector.h>
 
 #include <algorithm>
 
@@ -59,7 +60,7 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
-using DeviceProfileList = QList<DeviceProfile>;
+using DeviceProfileList = QVector<DeviceProfile>;
 
 enum { profileComboIndexOffset = 1 };
 
@@ -265,7 +266,7 @@ void EmbeddedOptionsControlPrivate::sortAndPopulateProfileCombo()
     // Clear items until only "None" is left
     for (int i = m_profileCombo->count() - 1; i > 0; i--)
         m_profileCombo->removeItem(i);
-    if (!m_sortedProfiles.empty()) {
+    if (!m_sortedProfiles.isEmpty()) {
         std::sort(m_sortedProfiles.begin(), m_sortedProfiles.end(), deviceProfileLessThan);
         m_profileCombo->addItems(existingProfileNames());
     }

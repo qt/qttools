@@ -464,7 +464,7 @@ static QString protect(const QString &str)
             result += QLatin1String("&apos;");
             break;
         default:
-            if ((c < 0x20 || (ch > 0x7f && ch.isSpace())) && c != '\n' && c != '\t')
+            if ((c < 0x20 || (ch > QChar(0x7f) && ch.isSpace())) && c != '\n' && c != '\t')
                 result += numericEntity(c);
             else // this also covers surrogates
                 result += QChar(c);

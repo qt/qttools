@@ -39,7 +39,11 @@ class QWidget;
 class QDESIGNER_SDK_EXPORT QDesignerOptionsPageInterface
 {
 public:
-    virtual ~QDesignerOptionsPageInterface() {}
+    Q_DISABLE_COPY_MOVE(QDesignerOptionsPageInterface)
+
+    QDesignerOptionsPageInterface() = default;
+    virtual ~QDesignerOptionsPageInterface() = default;
+
     virtual QString name() const = 0;
     virtual QWidget *createPage(QWidget *parent) = 0;
     virtual void apply() = 0;

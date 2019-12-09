@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -31,10 +31,14 @@
 */
 
 #include "cppcodemarker.h"
+
+#include "generator.h"
 #include "text.h"
 #include "tree.h"
-#include <qdebug.h>
-#include <qregexp.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qregexp.h>
+
 #include <ctype.h>
 
 QT_BEGIN_NAMESPACE
@@ -58,7 +62,7 @@ CppCodeMarker::~CppCodeMarker()
 /*!
   Returns \c true.
  */
-bool CppCodeMarker::recognizeCode(const QString & /* code */)
+bool CppCodeMarker::recognizeCode(const QString &/* code */)
 {
     return true;
 }
@@ -67,7 +71,7 @@ bool CppCodeMarker::recognizeCode(const QString & /* code */)
   Returns \c true if \a ext is any of a list of file extensions
   for the C++ language.
  */
-bool CppCodeMarker::recognizeExtension(const QString& extension)
+bool CppCodeMarker::recognizeExtension(const QString &extension)
 {
     QByteArray ext = extension.toLatin1();
     return ext == "c" ||
@@ -128,9 +132,17 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         name = linkTag(node, name);
     name = "<@name>" + name + "</@name>";
 
-    if ((style == Section::Details) && !node->parent()->name().isEmpty() &&
-        !node->isProperty() && !node->isQmlNode() && !node->isJsNode())
-        name.prepend(taggedNode(node->parent()) + "::");
+    if (style == Section::Details) {
+        if (!node->isRelatedNonmember() &&
+            !node->isProxyNode() &&
+            !node->parent()->name().isEmpty() &&
+            !node->parent()->isHeader() &&
+            !node->isProperty() &&
+            !node->isQmlNode() &&
+            !node->isJsNode()) {
+            name.prepend(taggedNode(node->parent()) + "::");
+        }
+    }
 
     switch (node->nodeType()) {
     case Node::Namespace:
@@ -186,12 +198,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                synopsis.append(" &");
             else if (func->isRefRef())
                synopsis.append(" &&");
-        }
-        else if (style == Section::AllMembers) {
+        } else if (style == Section::AllMembers) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
                 synopsis += " : " + typified(func->returnType());
-        }
-        else {
+        } else {
             if (func->isRef())
                synopsis.append(" &");
             else if (func->isRefRef())
@@ -209,19 +219,15 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 bracketed += "virtual";
             }
 
-            if (func->access() == Node::Protected) {
+            if (func->access() == Node::Protected)
                 bracketed += "protected";
-            }
-            else if (func->access() == Node::Private) {
+            else if (func->access() == Node::Private)
                 bracketed += "private";
-            }
 
-            if (func->isSignal()) {
+            if (func->isSignal())
                 bracketed += "signal";
-            }
-            else if (func->isSlot()) {
+            else if (func->isSlot())
                 bracketed += "slot";
-            }
             if (!bracketed.isEmpty())
                 extra += QLatin1Char('[') + bracketed.join(' ') + QStringLiteral("] ");
         }
@@ -234,11 +240,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
 
             QStringList documentedItems = enume->doc().enumItemNames();
             if (documentedItems.isEmpty()) {
-                foreach (const EnumItem &item, enume->items())
+                const auto enumItems = enume->items();
+                for (const auto &item : enumItems)
                     documentedItems << item.name();
             }
-            QStringList omitItems = enume->doc().omitEnumItemNames();
-            foreach (const QString &item, omitItems)
+            const QStringList omitItems = enume->doc().omitEnumItemNames();
+            for (const auto &item : omitItems)
                 documentedItems.removeAll(item);
 
             if (documentedItems.size() <= MaxEnumValues) {
@@ -247,15 +254,13 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                         synopsis += ", ";
                     synopsis += documentedItems.at(i);
                 }
-            }
-            else {
+            } else {
                 for (int i = 0; i < documentedItems.size(); ++i) {
                     if (i < MaxEnumValues-2 || i == documentedItems.size()-1) {
                         if (i != 0)
                             synopsis += ", ";
                         synopsis += documentedItems.at(i);
-                    }
-                    else if (i == MaxEnumValues - 1) {
+                    } else if (i == MaxEnumValues - 1) {
                         synopsis += ", ...";
                     }
                 }
@@ -269,8 +274,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         typedeff = static_cast<const TypedefNode *>(node);
         if (typedeff->associatedEnum()) {
             synopsis = "flags " + name;
-        }
-        else {
+        } else {
             synopsis = "typedef " + name;
         }
         break;
@@ -282,8 +286,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         variable = static_cast<const VariableNode *>(node);
         if (style == Section::AllMembers) {
             synopsis = name + " : " + typified(variable->dataType());
-        }
-        else {
+        } else {
             synopsis = typified(variable->leftType(), true) +
                     name + protect(variable->rightType());
         }
@@ -310,23 +313,23 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
 
 /*!
  */
-QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
+QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
 {
     QString name = taggedQmlNode(node);
-    if (summary)
-        name = linkTag(node,name);
-    else if (node->isQmlProperty() || node->isJsProperty()) {
-        const QmlPropertyNode* pn = static_cast<const QmlPropertyNode*>(node);
+    if (summary) {
+        name = linkTag(node, name);
+    } else if (node->isQmlProperty() || node->isJsProperty()) {
+        const QmlPropertyNode *pn = static_cast<const QmlPropertyNode *>(node);
         if (pn->isAttached())
             name.prepend(pn->element() + QLatin1Char('.'));
     }
     name = "<@name>" + name + "</@name>";
     QString synopsis;
     if (node->isQmlProperty() || node->isJsProperty()) {
-        const QmlPropertyNode* pn = static_cast<const QmlPropertyNode*>(node);
+        const QmlPropertyNode *pn = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(pn->dataType());
     } else if (node->isFunction(Node::QML) || node->isFunction(Node::JS)) {
-        const FunctionNode* func = static_cast<const FunctionNode*>(node);
+        const FunctionNode *func = static_cast<const FunctionNode *>(node);
         if (!func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true) + name;
         else
@@ -350,8 +353,9 @@ QString CppCodeMarker::markedUpQmlItem(const Node* node, bool summary)
             }
         }
         synopsis += QLatin1Char(')');
-    } else
+    } else {
         synopsis = name;
+    }
 
     QString extra;
     if (summary) {
@@ -380,20 +384,18 @@ QString CppCodeMarker::markedUpName(const Node *node)
 
 QString CppCodeMarker::markedUpFullName(const Node *node, const Node *relative)
 {
-    if (node->name().isEmpty()) {
+    if (node->name().isEmpty())
         return "global";
+
+    QString fullName;
+    for (;;) {
+        fullName.prepend(markedUpName(node));
+        if (node->parent() == relative || node->parent()->name().isEmpty())
+            break;
+        fullName.prepend("<@op>::</@op>");
+        node = node->parent();
     }
-    else {
-        QString fullName;
-        for (;;) {
-            fullName.prepend(markedUpName(node));
-            if (node->parent() == relative || node->parent()->name().isEmpty())
-                break;
-            fullName.prepend("<@op>::</@op>");
-            node = node->parent();
-        }
-        return fullName;
-    }
+    return fullName;
 }
 
 QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *relative)
@@ -416,7 +418,7 @@ QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *r
     return fullName;
 }
 
-QString CppCodeMarker::markedUpIncludes(const QStringList& includes)
+QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
 {
     QString code;
 
@@ -428,13 +430,12 @@ QString CppCodeMarker::markedUpIncludes(const QStringList& includes)
     return code;
 }
 
-QString CppCodeMarker::functionBeginRegExp(const QString& funcName)
+QString CppCodeMarker::functionBeginRegExp(const QString &funcName)
 {
     return QLatin1Char('^') + QRegExp::escape(funcName) + QLatin1Char('$');
-
 }
 
-QString CppCodeMarker::functionEndRegExp(const QString& /* funcName */)
+QString CppCodeMarker::functionEndRegExp(const QString &/* funcName */)
 {
     return "^\\}$";
 }

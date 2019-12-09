@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -114,7 +114,7 @@ QStringList QmlCodeParser::sourceFileNameFilter()
   If it can't open the file at \a filePath, it reports an error
   and returns without doing anything.
  */
-void QmlCodeParser::parseSourceFile(const Location& location, const QString& filePath)
+void QmlCodeParser::parseSourceFile(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
     currentFile_ = filePath;
@@ -147,7 +147,8 @@ void QmlCodeParser::parseSourceFile(const Location& location, const QString& fil
                                << "The output is incomplete.";
         }
     }
-    foreach (const QQmlJS::DiagnosticMessage &msg, parser->diagnosticMessages()) {
+    const auto &messages = parser->diagnosticMessages();
+    for (const auto &msg : messages) {
         qDebug().nospace() << qPrintable(filePath) << ':'
 #if Q_QML_PRIVATE_API_VERSION < 5
                            << msg.loc.startLine << ": QML syntax error at col "
@@ -167,7 +168,7 @@ static QSet<QString> topicCommands_;
 /*!
   Returns the set of strings representing the topic commands.
  */
-const QSet<QString>& QmlCodeParser::topicCommands()
+const QSet<QString> &QmlCodeParser::topicCommands()
 {
     if (topicCommands_.isEmpty()) {
         topicCommands_ << COMMAND_VARIABLE

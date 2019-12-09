@@ -60,7 +60,6 @@
 
 #include <QtWidgets/QAction>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QDockWidget>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QImageReader>
@@ -842,7 +841,7 @@ void MainWindow::showPreferences()
             m_centralWidget, &CentralWidget::updateBrowserFont);
     connect(&dia, &PreferencesDialog::updateUserInterface,
             m_centralWidget, &CentralWidget::updateUserInterface);
-    dia.showDialog();
+    dia.exec();
 }
 
 void MainWindow::syncContents()

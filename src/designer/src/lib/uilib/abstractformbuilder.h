@@ -118,7 +118,7 @@ class QFormBuilderExtra;
 class QDESIGNER_UILIB_EXPORT QAbstractFormBuilder
 {
 public:
-    Q_DISABLE_COPY(QAbstractFormBuilder)
+    Q_DISABLE_COPY_MOVE(QAbstractFormBuilder)
 
     QAbstractFormBuilder();
     virtual ~QAbstractFormBuilder();
@@ -243,17 +243,20 @@ protected:
     // A Pair of icon path/qrc path.
     using IconPaths = QPair<QString, QString>;
 
-    IconPaths iconPaths(const QIcon &) const;
-    IconPaths pixmapPaths(const QPixmap &) const;
     void setIconProperty(DomProperty &, const IconPaths &) const;
     void setPixmapProperty(DomProperty &, const IconPaths &) const;
-    DomProperty* iconToDomProperty(const QIcon &) const;
 
     static const DomResourcePixmap *domPixmap(const DomProperty* p);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    IconPaths iconPaths(const QIcon &) const;
+    IconPaths pixmapPaths(const QPixmap &) const;
+    DomProperty* iconToDomProperty(const QIcon &) const;
     QIcon domPropertyToIcon(const DomResourcePixmap *);
     QIcon domPropertyToIcon(const DomProperty* p);
     QPixmap domPropertyToPixmap(const DomResourcePixmap* p);
     QPixmap domPropertyToPixmap(const DomProperty* p);
+#endif
 
 private:
 //

@@ -150,12 +150,11 @@ QStringList DockedMdiArea::uiFiles(const QMimeData *d) const
     QStringList rc;
     if (!d->hasFormat(QLatin1String(uriListMimeFormatC)))
         return rc;
-    const QList<QUrl> urls = d->urls();
-    if (urls.empty())
+    const auto urls = d->urls();
+    if (urls.isEmpty())
         return rc;
-    const QList<QUrl>::const_iterator cend = urls.constEnd();
-    for (QList<QUrl>::const_iterator it = urls.constBegin(); it != cend; ++it) {
-        const QString fileName = it->toLocalFile();
+    for (const auto &url : urls) {
+        const QString fileName = url.toLocalFile();
         if (!fileName.isEmpty() && fileName.endsWith(m_extension))
             rc.push_back(fileName);
     }
@@ -169,7 +168,7 @@ bool DockedMdiArea::event(QEvent *event)
     switch (event->type()) {
     case QEvent::DragEnter: {
         QDragEnterEvent *e = static_cast<QDragEnterEvent*>(event);
-        if (!uiFiles(e->mimeData()).empty()) {
+        if (!uiFiles(e->mimeData()).isEmpty()) {
             e->acceptProposedAction();
             return true;
         }
@@ -338,7 +337,7 @@ QMdiSubWindow *DockedMainWindow::createMdiSubWindow(QWidget *fw, Qt::WindowFlags
     // designer menu actions
     if (designerCloseActionShortCut == QKeySequence(QKeySequence::Close)) {
         const ActionList systemMenuActions = rc->systemMenu()->actions();
-        if (!systemMenuActions.empty()) {
+        if (!systemMenuActions.isEmpty()) {
             const ActionList::const_iterator cend = systemMenuActions.constEnd();
             for (ActionList::const_iterator it = systemMenuActions.constBegin(); it != cend; ++it) {
                 if ( (*it)->shortcut() == designerCloseActionShortCut) {

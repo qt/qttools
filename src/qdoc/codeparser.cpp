@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -31,12 +31,14 @@
 */
 
 #include "codeparser.h"
-#include "node.h"
-#include "tree.h"
+
 #include "config.h"
 #include "generator.h"
+#include "node.h"
 #include "qdocdatabase.h"
-#include <qdebug.h>
+#include "tree.h"
+
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -66,7 +68,7 @@ CodeParser::~CodeParser()
 /*!
   Initialize the code parser base class.
  */
-void CodeParser::initializeParser(const Config& config)
+void CodeParser::initializeParser(const Config &config)
 {
     showInternal_ = config.getBool(CONFIG_SHOWINTERNAL);
     singleExec_ = config.getBool(CONFIG_SINGLEEXEC);
@@ -85,7 +87,7 @@ QStringList CodeParser::headerFileNameFilter()
     return sourceFileNameFilter();
 }
 
-void CodeParser::parseHeaderFile(const Location& location, const QString& filePath)
+void CodeParser::parseHeaderFile(const Location &location, const QString &filePath)
 {
     parseSourceFile(location, filePath);
 }
@@ -94,13 +96,10 @@ void CodeParser::parseHeaderFile(const Location& location, const QString& filePa
   All the code parsers in the static list are initialized here,
   after the qdoc configuration variables have been set.
  */
-void CodeParser::initialize(const Config& config)
+void CodeParser::initialize(const Config &config)
 {
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-        (*p)->initializeParser(config);
-        ++p;
-    }
+    for (const auto &parser : qAsConst(parsers))
+        parser->initializeParser(config);
 }
 
 /*!
@@ -108,20 +107,15 @@ void CodeParser::initialize(const Config& config)
  */
 void CodeParser::terminate()
 {
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-        (*p)->terminateParser();
-        ++p;
-    }
+    for (const auto parser : parsers)
+        parser->terminateParser();
 }
 
-CodeParser *CodeParser::parserForLanguage(const QString& language)
+CodeParser *CodeParser::parserForLanguage(const QString &language)
 {
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-        if ((*p)->language() == language)
-            return *p;
-        ++p;
+    for (const auto parser : qAsConst(parsers)) {
+        if (parser->language() == language)
+            return parser;
     }
     return nullptr;
 }
@@ -130,16 +124,13 @@ CodeParser *CodeParser::parserForHeaderFile(const QString &filePath)
 {
     QString fileName = QFileInfo(filePath).fileName();
 
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-
-        QStringList headerPatterns = (*p)->headerFileNameFilter();
-        foreach (const QString &pattern, headerPatterns) {
+    for (const auto &parser : qAsConst(parsers)) {
+        const QStringList headerPatterns = parser->headerFileNameFilter();
+        for (const auto &pattern : headerPatterns) {
             QRegExp re(pattern, Qt::CaseInsensitive, QRegExp::Wildcard);
             if (re.exactMatch(fileName))
-                return *p;
+                return parser;
         }
-        ++p;
     }
     return nullptr;
 }
@@ -148,16 +139,13 @@ CodeParser *CodeParser::parserForSourceFile(const QString &filePath)
 {
     QString fileName = QFileInfo(filePath).fileName();
 
-    QList<CodeParser *>::ConstIterator p = parsers.constBegin();
-    while (p != parsers.constEnd()) {
-
-        QStringList sourcePatterns = (*p)->sourceFileNameFilter();
-        foreach (const QString &pattern, sourcePatterns) {
+    for (const auto &parser : parsers) {
+        const QStringList sourcePatterns = parser->sourceFileNameFilter();
+        for (const QString &pattern : sourcePatterns) {
             QRegExp re(pattern, Qt::CaseInsensitive, QRegExp::Wildcard);
             if (re.exactMatch(fileName))
-                return *p;
+                return parser;
         }
-        ++p;
     }
     return nullptr;
 }
@@ -166,7 +154,7 @@ static QSet<QString> commonMetaCommands_;
 /*!
   Returns the set of strings representing the common metacommands.
  */
-const QSet<QString>& CodeParser::commonMetaCommands()
+const QSet<QString> &CodeParser::commonMetaCommands()
 {
     if (commonMetaCommands_.isEmpty()) {
         commonMetaCommands_ << COMMAND_ABSTRACT
@@ -202,9 +190,9 @@ const QSet<QString>& CodeParser::commonMetaCommands()
 /*!
   \internal
  */
-void CodeParser::extractPageLinkAndDesc(const QString& arg,
-                                        QString* link,
-                                        QString* desc)
+void CodeParser::extractPageLinkAndDesc(const QString &arg,
+                                        QString *link,
+                                        QString *desc)
 {
     QRegExp bracedRegExp(QLatin1String("\\{([^{}]*)\\}(?:\\{([^{}]*)\\})?"));
 
@@ -230,7 +218,7 @@ void CodeParser::extractPageLinkAndDesc(const QString& arg,
 /*!
   \internal
  */
-void CodeParser::setLink(Node* node, Node::LinkType linkType, const QString& arg)
+void CodeParser::setLink(Node *node, Node::LinkType linkType, const QString &arg)
 {
     QString link;
     QString desc;
@@ -299,7 +287,7 @@ bool CodeParser::isParsingQdoc() const
   In some cases it prints a qdoc warning that it has done this. Namely,
   for C++ classes and namespaces.
  */
-void CodeParser::checkModuleInclusion(Node* n)
+void CodeParser::checkModuleInclusion(Node *n)
 {
     if (n->physicalModuleName().isEmpty()) {
         n->setPhysicalModuleName(Generator::defaultModuleName());
@@ -320,7 +308,7 @@ void CodeParser::checkModuleInclusion(Node* n)
         default:
             return;
         }
-        if (!n->isPrivate() && !n->name().isEmpty() && !n->doc().isEmpty()) {
+        if (n->isInAPI() && !n->name().isEmpty()) {
             n->doc().location().warning(tr("%1 %2 has no \\inmodule command; "
                                            "using project name by default: %3")
                                         .arg(word).arg(n->name()).arg(Generator::defaultModuleName()));

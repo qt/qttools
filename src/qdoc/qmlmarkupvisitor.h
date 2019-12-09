@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -32,7 +32,8 @@
 #include "node.h"
 #include "tree.h"
 
-#include <qstring.h>
+#include <QtCore/qstring.h>
+
 #ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsastvisitor_p.h>
 #include <private/qqmljsengine_p.h>

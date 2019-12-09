@@ -86,7 +86,7 @@ namespace qdesigner_internal {
     // Map the font family names to display names retrieved from the XML configuration
     static QStringList designerFamilyNames(QStringList families, const FontPropertyManager::NameMap &nm)
     {
-        if (nm.empty())
+        if (nm.isEmpty())
             return families;
 
         const auto ncend = nm.constEnd();
@@ -117,9 +117,9 @@ namespace qdesigner_internal {
         m_propertyToAntialiasing[property] = antialiasing;
         m_antialiasingToProperty[antialiasing] = property;
         // Fiddle family names
-        if (!m_familyMappings.empty()) {
+        if (!m_familyMappings.isEmpty()) {
             const PropertyToSubPropertiesMap::iterator it = m_propertyToFontSubProperties.find(m_createdFontProperty);
-            QtVariantProperty *familyProperty = vm->variantProperty(it.value().front());
+            QtVariantProperty *familyProperty = vm->variantProperty(it.value().constFirst());
             const QString enumNamesAttribute = QStringLiteral("enumNames");
             QStringList plainFamilyNames = familyProperty->attributeValue(enumNamesAttribute).toStringList();
             // Did someone load fonts or something?

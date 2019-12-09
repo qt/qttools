@@ -169,7 +169,7 @@ const QByteArray *QtResourceModelPrivate::createResource(const QString &path, QS
         *errorCount = library.failedResources().size();
         *contents = resMap.keys();
 
-        if (resMap.empty())
+        if (resMap.isEmpty())
             break;
 
         buffer.close();
@@ -279,9 +279,9 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
             m_pathToModified.insert(path, false);
             m_pathToContents.insert(path, contents);
             newResourceSetChanged = true;
-            const QMap<QString, QList<QtResourceSet *> >::iterator itReload = m_pathToResourceSet.find(path);
+            const auto itReload = m_pathToResourceSet.find(path);
             if (itReload != m_pathToResourceSet.end()) {
-                const QList<QtResourceSet *> resources = itReload.value();
+                const auto resources = itReload.value();
                 for (QtResourceSet *res : resources) {
                     if (res != resourceSet) {
                         m_resourceSetToReload[res] = true;
@@ -292,10 +292,10 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
         }
     }
 
-    const QList<const QByteArray *> oldData = m_pathToData.values();
-    const QList<const QByteArray *> newData = newPathToData.values();
+    const auto oldData = m_pathToData.values();
+    const auto newData = newPathToData.values();
 
-    QList<const QByteArray *> toDelete;
+    QVector<const QByteArray *> toDelete;
     for (const QByteArray *array : oldData) {
         if (array && !newData.contains(array))
             toDelete.append(array);
@@ -373,7 +373,7 @@ void QtResourceModelPrivate::removeOldPaths(QtResourceSet *resourceSet, const QS
         // remove old
         for (const QString &oldPath : oldPaths) {
             if (!newPaths.contains(oldPath)) {
-                const QMap<QString, QList<QtResourceSet *> >::iterator itRemove = m_pathToResourceSet.find(oldPath);
+                const auto itRemove = m_pathToResourceSet.find(oldPath);
                 if (itRemove != m_pathToResourceSet.end()) {
                     const int idx = itRemove.value().indexOf(resourceSet);
                     if (idx >= 0)
@@ -452,7 +452,7 @@ QtResourceModel::QtResourceModel(QObject *parent) :
 QtResourceModel::~QtResourceModel()
 {
     blockSignals(true);
-    const QList<QtResourceSet *> resourceList = resourceSets();
+    const auto resourceList = resourceSets();
     for (QtResourceSet *rs : resourceList)
         removeResourceSet(rs);
     blockSignals(false);
@@ -478,11 +478,11 @@ void QtResourceModel::setModified(const QString &path)
         return;
 
     d_ptr->m_pathToModified[path] = true;
-    QMap<QString, QList<QtResourceSet *> >::const_iterator it = d_ptr->m_pathToResourceSet.constFind(path);
+    const auto it = d_ptr->m_pathToResourceSet.constFind(path);
     if (it == d_ptr->m_pathToResourceSet.constEnd())
         return;
 
-    const QList<QtResourceSet *> resourceList = it.value();
+    const auto resourceList = it.value();
     for (QtResourceSet *rs : resourceList)
         d_ptr->m_resourceSetToReload.insert(rs, true);
 }

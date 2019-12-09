@@ -310,7 +310,7 @@
 
         <xsl:text>class QDESIGNER_UILIB_EXPORT </xsl:text>
         <xsl:value-of select="$name"/>
-        <xsl:text> {&endl;    Q_DISABLE_COPY(</xsl:text>
+        <xsl:text> {&endl;    Q_DISABLE_COPY_MOVE(</xsl:text>
         <xsl:value-of select="$name"/>
         <xsl:text>)&endl;</xsl:text>
         <xsl:text>public:&endl;</xsl:text>

@@ -198,7 +198,7 @@ namespace qdesigner_internal
     QString DesignerMetaFlags::toString(int value, SerializationMode sm) const
     {
         const QStringList flagIds = flags(value);
-        if (flagIds.empty())
+        if (flagIds.isEmpty())
             return QString();
 
         const QChar delimiter = QLatin1Char('|');
@@ -695,7 +695,7 @@ namespace qdesigner_internal
         if (const QDesignerTaskMenuExtension *taskMenu = qt_extension<QDesignerTaskMenuExtension*>(core->extensionManager(), managedWidget)) {
             action = taskMenu->preferredEditAction();
             if (!action) {
-                const QList<QAction *> actions = taskMenu->taskActions();
+                const auto actions = taskMenu->taskActions();
                 if (!actions.isEmpty())
                     action = actions.first();
             }
@@ -705,7 +705,7 @@ namespace qdesigner_internal
                         core->extensionManager()->extension(managedWidget, QStringLiteral("QDesignerInternalTaskMenuExtension")))) {
                 action = taskMenu->preferredEditAction();
                 if (!action) {
-                    const QList<QAction *> actions = taskMenu->taskActions();
+                    const auto actions = taskMenu->taskActions();
                     if (!actions.isEmpty())
                         action = actions.first();
                 }

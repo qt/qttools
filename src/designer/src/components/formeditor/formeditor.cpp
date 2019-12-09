@@ -44,6 +44,7 @@
 #include "spacer_propertysheet.h"
 #include "line_propertysheet.h"
 #include "layout_propertysheet.h"
+#include "qdesigner_dockwidget_p.h"
 #include "qdesigner_stackedbox_p.h"
 #include "qdesigner_toolbox_p.h"
 #include "qdesigner_tabwidget_p.h"
@@ -111,6 +112,7 @@ FormEditor::FormEditor(QObject *parent)
     QMenuActionProviderFactory::registerExtension(mgr, actionProviderExtensionId);
 
     QDesignerDefaultPropertySheetFactory::registerExtension(mgr);
+    QDockWidgetPropertySheetFactory::registerExtension(mgr);
     QLayoutWidgetPropertySheetFactory::registerExtension(mgr);
     SpacerPropertySheetFactory::registerExtension(mgr);
     LinePropertySheetFactory::registerExtension(mgr);

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2017 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -47,7 +47,7 @@ class QmlCodeMarker : public CppCodeMarker
 
 public:
     QmlCodeMarker();
-    ~QmlCodeMarker();
+    ~QmlCodeMarker() override;
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;

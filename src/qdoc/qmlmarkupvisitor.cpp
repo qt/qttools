@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -28,8 +28,9 @@
 
 #include "qmlmarkupvisitor.h"
 
-#include <qstringlist.h>
-#include <qglobal.h>
+#include <QtCore/qglobal.h>
+#include <QtCore/qstringlist.h>
+
 #ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsast_p.h>
 #include <private/qqmljsastfwd_p.h>
@@ -89,7 +90,7 @@ static const QString slt   = QLatin1String("&lt;");
 static const QString sgt   = QLatin1String("&gt;");
 static const QString squot = QLatin1String("&quot;");
 
-QString QmlMarkupVisitor::protect(const QString& str)
+QString QmlMarkupVisitor::protect(const QString &str)
 {
     int n = str.length();
     QString marked;
@@ -191,7 +192,7 @@ void QmlMarkupVisitor::addMarkedUpToken(
         return;
 
     output += QString(QLatin1String("<@%1")).arg(tagName);
-    foreach (const QString &key, attributes)
+    for (const auto &key : attributes)
         output += QString(QLatin1String(" %1=\"%2\"")).arg(key).arg(attributes[key]);
     output += QString(QLatin1String(">%2</@%3>")).arg(protect(sourceText(location)), tagName);
     cursor += location.length;
@@ -235,7 +236,8 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiImport *uiimport)
 
 void QmlMarkupVisitor::endVisit(QQmlJS::AST::UiImport *uiimport)
 {
-    addVerbatim(uiimport->versionToken);
+    if (uiimport->version)
+        addVerbatim(uiimport->version->firstSourceLocation(), uiimport->version->lastSourceLocation());
     addVerbatim(uiimport->asToken);
     addMarkedUpToken(uiimport->importIdToken, QLatin1String("headerfile"));
     addVerbatim(uiimport->semicolonToken);

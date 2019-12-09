@@ -53,6 +53,7 @@ bool alwaysOwerwriteEnabled = false;
 bool runCodesign = false;
 QStringList librarySearchPath;
 QString codesignIdentiy;
+bool hardenedRuntime = false;
 bool appstoreCompliant = false;
 int logLevel = 1;
 bool deployFramework = false;
@@ -530,12 +531,11 @@ QSet<QString> getBinaryRPaths(const QString &path, bool resolve = true, QString 
 
     QString output = otool.readAllStandardOutput();
     QStringList outputLines = output.split("\n");
-    QStringListIterator i(outputLines);
 
-    while (i.hasNext()) {
-        if (i.next().contains("cmd LC_RPATH") && i.hasNext() &&
-        i.next().contains("cmdsize") && i.hasNext()) {
-            const QString &rpathCmd = i.next();
+    for (auto i = outputLines.cbegin(), end = outputLines.cend(); i != end; ++i) {
+        if (i->contains("cmd LC_RPATH") && ++i != end &&
+            i->contains("cmdsize") && ++i != end) {
+            const QString &rpathCmd = *i;
             int pathStart = rpathCmd.indexOf("path ");
             int pathEnd = rpathCmd.indexOf(" (");
             if (pathStart >= 0 && pathEnd >= 0 && pathStart < pathEnd) {
@@ -1372,11 +1372,18 @@ void codesignFile(const QString &identity, const QString &filePath)
     if (!runCodesign)
         return;
 
-    LogNormal() << "codesign" << filePath;
+    QString codeSignLogMessage = "codesign";
+    if (hardenedRuntime)
+        codeSignLogMessage += ", enable hardned runtime";
+    LogNormal() << codeSignLogMessage << filePath;
+
+    QStringList codeSignOptions = { "--preserve-metadata=identifier,entitlements", "--force", "-s",
+                                    identity, filePath };
+    if (hardenedRuntime)
+        codeSignOptions << "-o" << "runtime";
 
     QProcess codesign;
-    codesign.start("codesign", QStringList() << "--preserve-metadata=identifier,entitlements"
-                                             << "--force" << "-s" << identity << filePath);
+    codesign.start("codesign", codeSignOptions);
     codesign.waitForFinished(-1);
 
     QByteArray err = codesign.readAllStandardError();

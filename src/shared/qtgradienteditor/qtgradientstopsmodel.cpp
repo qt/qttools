@@ -375,7 +375,7 @@ void QtGradientStopsModel::moveStops(double newPosition)
 
     PositionStopMap stopList;
 
-    const QList<QtGradientStop *> selected = selectedStops();
+    const auto selected = selectedStops();
     for (QtGradientStop *stop : selected)
         stopList[stop->position()] = stop;
     stopList[current->position()] = current;
@@ -406,33 +406,33 @@ void QtGradientStopsModel::moveStops(double newPosition)
 
 void QtGradientStopsModel::clear()
 {
-    const QList<QtGradientStop *> stopsList = stops().values();
+    const auto stopsList = stops().values();
     for (QtGradientStop *stop : stopsList)
         removeStop(stop);
 }
 
 void QtGradientStopsModel::clearSelection()
 {
-    const QList<QtGradientStop *> stopsList = selectedStops();
+    const auto stopsList = selectedStops();
     for (QtGradientStop *stop : stopsList)
         selectStop(stop, false);
+}
+
+namespace {
+    template <typename BidirectionalIterator>
+    std::reverse_iterator<BidirectionalIterator> rev(BidirectionalIterator it)
+    { return std::reverse_iterator<BidirectionalIterator>(it); }
 }
 
 void QtGradientStopsModel::flipAll()
 {
     QMap<qreal, QtGradientStop *> stopsMap = stops();
-    QMapIterator<qreal, QtGradientStop *> itStop(stopsMap);
-    itStop.toBack();
-
     QMap<QtGradientStop *, bool> swappedList;
-
-    while (itStop.hasPrevious()) {
-        itStop.previous();
-
-        QtGradientStop *stop = itStop.value();
+    for (auto itStop = rev(stopsMap.keyValueEnd()), end = rev(stopsMap.keyValueBegin()); itStop != end; ++itStop) {
+        QtGradientStop *stop = (*itStop).second;
         if (swappedList.contains(stop))
             continue;
-        const double newPos = 1.0 - itStop.key();
+        const double newPos = 1.0 - (*itStop).first;
         if (stopsMap.contains(newPos)) {
             QtGradientStop *swapped = stopsMap.value(newPos);
             swappedList[swapped] = true;
@@ -452,7 +452,7 @@ void QtGradientStopsModel::selectAll()
 
 void QtGradientStopsModel::deleteStops()
 {
-    const QList<QtGradientStop *> selected = selectedStops();
+    const auto selected = selectedStops();
     for (QtGradientStop *stop : selected)
         removeStop(stop);
     QtGradientStop *current = currentStop();

@@ -30,11 +30,14 @@
 #define LUPDATE_H
 
 #include "qglobal.h"
+#include <QtTools/private/qttools-config_p.h>
 
-#include <QList>
-#include <QString>
-#include <QStringList>
-#include <QHash>
+#include <QtCore/QList>
+#include <QtCore/QHash>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtCore/QTranslator>
 
 QT_BEGIN_NAMESPACE
 
@@ -135,6 +138,10 @@ private:
 private:
     QStringList m_trFunctionAliases[NumTrFunctions];
     mutable QHash<QString,TrFunction> m_nameToTrFunctionMap;
+};
+
+class LU {
+    Q_DECLARE_TR_FUNCTIONS(LUpdate)
 };
 
 QT_END_NAMESPACE

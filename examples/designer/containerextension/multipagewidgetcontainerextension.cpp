@@ -61,6 +61,11 @@ MultiPageWidgetContainerExtension::MultiPageWidgetContainerExtension(MultiPageWi
 //! [0]
 
 //! [1]
+bool MultiPageWidgetContainerExtension::canAddWidget() const
+{
+    return true;
+}
+
 void MultiPageWidgetContainerExtension::addWidget(QWidget *widget)
 {
     myWidget->addPage(widget);
@@ -89,6 +94,12 @@ void MultiPageWidgetContainerExtension::insertWidget(int index, QWidget *widget)
 //! [4]
 
 //! [5]
+bool MultiPageWidgetContainerExtension::canRemove(int index) const
+{
+    Q_UNUSED(index);
+    return true;
+}
+
 void MultiPageWidgetContainerExtension::remove(int index)
 {
     myWidget->removePage(index);

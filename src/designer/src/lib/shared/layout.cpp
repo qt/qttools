@@ -392,7 +392,7 @@ void Layout::breakLayout()
     for (auto it = rects.cbegin(), end = rects.cend(); it != end; ++it) {
         QWidget *w = it.key();
         if (needReparent) {
-            w->setParent(m_layoutBase->parentWidget(), nullptr);
+            w->setParent(m_layoutBase->parentWidget(), {});
             w->move(m_layoutBasePos + it.value().topLeft());
             w->show();
         }
@@ -456,7 +456,7 @@ QLayout *Layout::createLayout(int type)
 void Layout::reparentToLayoutBase(QWidget *w)
 {
     if (w->parent() != m_layoutBase) {
-        w->setParent(m_layoutBase, nullptr);
+        w->setParent(m_layoutBase, {});
         w->move(QPoint(0,0));
     }
 }
@@ -1104,7 +1104,7 @@ void GridLayout<GridLikeLayout, LayoutType, GridMode>::doLayout()
             if (needReparent)
                 reparentToLayoutBase(w);
 
-            Qt::Alignment alignment = Qt::Alignment(nullptr);
+            Qt::Alignment alignment;
             if (const Spacer *spacer = qobject_cast<const Spacer*>(w))
                 alignment = spacer->alignment();
 
@@ -1143,7 +1143,7 @@ inline QRect expandGeometry(const QRect &rect)
 template <class GridLikeLayout, int LayoutType, int GridMode>
 QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QWidgetList &widgetList)
 {
-    if (widgetList.empty())
+    if (widgetList.isEmpty())
         return QWidgetList();
 
     // Pixel to cell conversion:

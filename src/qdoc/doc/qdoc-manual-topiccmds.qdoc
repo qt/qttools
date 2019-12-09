@@ -1365,9 +1365,6 @@
         responds to a \c clicked() event.
     \endcode
 
-    The \l{componentset}{UIComponents} example demonstrates proper usage of
-    QDoc commands to document QML types and QML modules.
-
     \target inqmlmodule-command
     \section1 \\inqmlmodule
 
@@ -1386,9 +1383,6 @@
 
     To link to the \c ClickableButton, use the
     \c{\l ClickableComponents::ClickableButton} format.
-
-    The \l{componentset}{UIComponents} example demonstrates proper usage of
-    QDoc commands to document QML types and QML modules.
 
     The \l {noautolist-command} {\\noautolist} command can be used here
     to omit the automatically generated list of types at the end.

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,15 +26,16 @@
 **
 ****************************************************************************/
 
-#include "config.h"
 #include "tokenizer.h"
+
+#include "config.h"
 #include "generator.h"
 
-#include <qfile.h>
-#include <qhash.h>
-#include <qregexp.h>
-#include <qstring.h>
-#include <qtextcodec.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qstring.h>
+#include <QtCore/qtextcodec.h>
 
 #include <ctype.h>
 #include <string.h>
@@ -115,7 +116,7 @@ static void insertKwordIntoHash(const char *s, int number)
     kwordHashTable[k] = number;
 }
 
-Tokenizer::Tokenizer(const Location& loc, QFile &in)
+Tokenizer::Tokenizer(const Location &loc, QFile &in)
 {
     init();
     yyIn = in.readAll();
@@ -123,7 +124,7 @@ Tokenizer::Tokenizer(const Location& loc, QFile &in)
     start(loc);
 }
 
-Tokenizer::Tokenizer(const Location& loc, const QByteArray &in)
+Tokenizer::Tokenizer(const Location &loc, const QByteArray &in)
     : yyIn(in)
 {
     init();
@@ -517,17 +518,18 @@ void Tokenizer::initialize(const Config &config)
 
     ignoredTokensAndDirectives = new QHash<QByteArray, bool>;
 
-    QStringList tokens = config.getStringList(LANGUAGE_CPP + Config::dot + CONFIG_IGNORETOKENS);
-    foreach (const QString &t, tokens) {
-        const QByteArray tb = t.toLatin1();
+    const QStringList tokens =
+            config.getStringList(LANGUAGE_CPP + Config::dot + CONFIG_IGNORETOKENS);
+    for (const auto &token : tokens) {
+        const QByteArray tb = token.toLatin1();
         ignoredTokensAndDirectives->insert(tb, false);
         insertKwordIntoHash(tb.data(), -1);
     }
 
-    QStringList directives = config.getStringList(LANGUAGE_CPP + Config::dot
+    const QStringList directives = config.getStringList(LANGUAGE_CPP + Config::dot
                                                   + CONFIG_IGNOREDIRECTIVES);
-    foreach (const QString &d, directives) {
-        const QByteArray db = d.toLatin1();
+    for (const auto &directive : directives) {
+        const QByteArray db = directive.toLatin1();
         ignoredTokensAndDirectives->insert(db, true);
         insertKwordIntoHash(db.data(), -1);
     }
@@ -572,7 +574,7 @@ void Tokenizer::init()
     parsingMacro = false;
 }
 
-void Tokenizer::start(const Location& loc)
+void Tokenizer::start(const Location &loc)
 {
     yyTokLoc = loc;
     yyCurLoc = loc;

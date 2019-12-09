@@ -33,7 +33,7 @@
 #include <qdir.h>
 #include <qapplication.h>
 #include <qscreen.h>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <qclipboard.h>
 #endif
 #include <qpainter.h>
@@ -67,14 +67,6 @@ static QPoint initialPos(const QSettings &settings, const QSize &initialSize)
 
 QPixelTool::QPixelTool(QWidget *parent)
     : QWidget(parent)
-    , m_freeze(false)
-    , m_displayZoom(false)
-    , m_displayGridSize(false)
-    , m_mouseDown(false)
-    , m_preview_mode(false)
-    , m_displayZoomId(0)
-    , m_displayGridSizeId(0)
-    , m_currentColor(0)
 {
     setWindowTitle(QCoreApplication::applicationName());
     QSettings settings(QLatin1String("QtProject"), QLatin1String("QPixelTool"));
@@ -313,12 +305,14 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
     case Qt::Key_A:
         m_autoUpdate = !m_autoUpdate;
         break;
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     case Qt::Key_C:
-        if (e->modifiers() & Qt::ControlModifier)
+        if (e->modifiers().testFlag(Qt::ControlModifier))
             copyToClipboard();
+        else
+            copyColorToClipboard();
         break;
-#endif
+#endif // QT_CONFIG(clipboard)
     case Qt::Key_S:
         if (e->modifiers() & Qt::ControlModifier) {
             releaseKeyboard();
@@ -453,10 +447,12 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     // Copy to clipboard / save
     menu.addAction(QLatin1String("Save as image..."),
                    this, &QPixelTool::saveToFile, QKeySequence::SaveAs);
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     menu.addAction(QLatin1String("Copy to clipboard"),
                    this, &QPixelTool::copyToClipboard, QKeySequence::Copy);
-#endif
+    menu.addAction(QLatin1String("Copy color value to clipboard"),
+                   this, &QPixelTool::copyColorToClipboard, Qt::Key_C);
+#endif // QT_CONFIG(clipboard)
 
     menu.addSeparator();
     menu.addAction(QLatin1String("About Qt"), qApp, &QApplication::aboutQt);
@@ -497,7 +493,7 @@ QSize QPixelTool::sizeHint() const
     return m_initialSize;
 }
 
-static inline QString pixelToolTitle(QPoint pos)
+static inline QString pixelToolTitle(QPoint pos, const QColor &currentColor)
 {
     if (QHighDpiScaling::isActive()) {
         if (auto screen = QGuiApplication::screenAt(pos))
@@ -505,7 +501,8 @@ static inline QString pixelToolTitle(QPoint pos)
     }
     return QCoreApplication::applicationName() + QLatin1String(" [")
         + QString::number(pos.x())
-        + QLatin1String(", ") + QString::number(pos.y()) + QLatin1Char(']');
+        + QLatin1String(", ") + QString::number(pos.y()) + QLatin1String("] ")
+        + currentColor.name();
 }
 
 void QPixelTool::grabScreen()
@@ -523,7 +520,7 @@ void QPixelTool::grabScreen()
         return;
 
     if (m_lastMousePos != mousePos)
-        setWindowTitle(pixelToolTitle(mousePos));
+        setWindowTitle(pixelToolTitle(mousePos, m_currentColor));
 
     int w = int(width() / float(m_zoom));
     int h = int(height() / float(m_zoom));
@@ -538,7 +535,7 @@ void QPixelTool::grabScreen()
 
     const QBrush darkBrush = palette().color(QPalette::Dark);
     const QDesktopWidget *desktopWidget = QApplication::desktop();
-    if (QScreen *screen = QGuiApplication::screens().value(desktopWidget->screenNumber(this), nullptr)) {
+    if (QScreen *screen = this->screen()) {
         m_buffer = screen->grabWindow(desktopWidget->winId(), x, y, w, h);
     } else {
         m_buffer = QPixmap(w, h);
@@ -561,6 +558,7 @@ void QPixelTool::grabScreen()
 
     update();
 
+    m_currentColor = m_buffer.toImage().pixel(m_buffer.rect().center());
     m_lastMousePos = mousePos;
 }
 
@@ -642,12 +640,17 @@ void QPixelTool::setGridSize(int gridSize)
     }
 }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void QPixelTool::copyToClipboard()
 {
     QGuiApplication::clipboard()->setPixmap(m_buffer);
 }
-#endif
+
+void QPixelTool::copyColorToClipboard()
+{
+    QGuiApplication::clipboard()->setText(QColor(m_currentColor).name());
+}
+#endif // QT_CONFIG(clipboard)
 
 void QPixelTool::saveToFile()
 {

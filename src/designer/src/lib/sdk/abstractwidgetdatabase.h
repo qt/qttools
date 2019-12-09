@@ -44,7 +44,10 @@ class QDebug;
 class QDesignerWidgetDataBaseItemInterface
 {
 public:
-    virtual ~QDesignerWidgetDataBaseItemInterface() {}
+    Q_DISABLE_COPY_MOVE(QDesignerWidgetDataBaseItemInterface)
+
+    QDesignerWidgetDataBaseItemInterface() = default;
+    virtual ~QDesignerWidgetDataBaseItemInterface() = default;
 
     virtual QString name() const = 0;
     virtual void setName(const QString &name) = 0;

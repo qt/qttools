@@ -103,7 +103,7 @@ static bool isIntegerList(const QString &s)
 static LayoutPropertyType  layoutPropertyType(const QString &name)
 {
     static QHash<QString, LayoutPropertyType> namePropertyMap;
-    if (namePropertyMap.empty()) {
+    if (namePropertyMap.isEmpty()) {
         namePropertyMap.insert(QLatin1String(leftMargin), LayoutPropertyLeftMargin);
         namePropertyMap.insert(QLatin1String(topMargin), LayoutPropertyTopMargin);
         namePropertyMap.insert(QLatin1String(rightMargin), LayoutPropertyRightMargin);

@@ -34,7 +34,9 @@
 
 QT_BEGIN_NAMESPACE
 
+class QAction;
 class QListView;
+class QMenu;
 class QLabel;
 class QtColorButton;
 class QDesignerFormEditorInterface;
@@ -65,6 +67,9 @@ private slots:
     void on_detailsRadio_clicked();
 
     void paletteChanged(const QPalette &palette);
+    void viewContextMenuRequested(const QPoint &pos);
+    void save();
+    void load();
 
 protected:
 
@@ -81,12 +86,16 @@ private:
     Ui::PaletteEditor ui;
     QPalette m_editPalette;
     QPalette m_parentPalette;
-    QPalette::ColorGroup m_currentColorGroup;
     class PaletteModel *m_paletteModel;
-    bool m_modelUpdated;
-    bool m_paletteUpdated;
-    bool m_compute;
     QDesignerFormEditorInterface *m_core;
+    QAction *m_lighterAction = nullptr;
+    QAction *m_darkerAction = nullptr;
+    QAction *m_copyColorAction = nullptr;
+    QMenu *m_contextMenu = nullptr;
+    QPalette::ColorGroup m_currentColorGroup = QPalette::Active;
+    bool m_modelUpdated = false;
+    bool m_paletteUpdated = false;
+    bool m_compute = true;
 };
 
 
@@ -108,18 +117,27 @@ public:
     QPalette getPalette() const;
     void setPalette(const QPalette &palette, const QPalette &parentPalette);
 
+    QBrush brushAt(const QModelIndex &index) const;
+
     QPalette::ColorRole colorRole() const { return QPalette::NoRole; }
     void setCompute(bool on) { m_compute = on; }
 signals:
     void paletteChanged(const QPalette &palette);
 private:
+    struct RoleEntry
+    {
+        QString name;
+        QPalette::ColorRole role;
+    };
 
     QPalette::ColorGroup columnToGroup(int index) const;
     int groupToColumn(QPalette::ColorGroup group) const;
+    QPalette::ColorRole roleAt(int row) const { return m_roleEntries.at(row).role; }
+    int rowOf(QPalette::ColorRole role) const;
 
     QPalette m_palette;
     QPalette m_parentPalette;
-    QMap<QPalette::ColorRole, QString> m_roleNames;
+    QVector<RoleEntry> m_roleEntries;
     bool m_compute = true;
 };
 

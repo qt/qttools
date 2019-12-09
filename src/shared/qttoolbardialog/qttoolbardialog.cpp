@@ -173,14 +173,14 @@ QToolBar *QtFullToolBarManagerPrivate::toolBarWidgetAction(QAction *action) cons
 void QtFullToolBarManagerPrivate::removeWidgetActions(const QMap<QToolBar *, QList<QAction *> >
             &actions)
 {
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator itToolBar = actions.constBegin();
+    auto itToolBar = actions.constBegin();
     while (itToolBar != actions.constEnd()) {
         QToolBar *toolBar = itToolBar.key();
-        QList<QAction *> newActions = toolBars.value(toolBar);
-        QList<QAction *> newActionsWithSeparators = toolBarsWithSeparators.value(toolBar);
+        auto newActions = toolBars.value(toolBar);
+        auto newActionsWithSeparators = toolBarsWithSeparators.value(toolBar);
 
         QList<QAction *> removedActions;
-        const QList<QAction *> actionList = itToolBar.value();
+        const auto actionList = itToolBar.value();
         for (QAction *action : actionList) {
             if (newActions.contains(action) && toolBarWidgetAction(action) == toolBar) {
                 newActions.removeAll(action);
@@ -206,8 +206,7 @@ void QtFullToolBarManagerPrivate::saveState(QDataStream &stream) const
 {
     stream << (uchar) ToolBarMarker;
     stream << defaultToolBars.size();
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator itToolBar =
-                defaultToolBars.constBegin();
+    auto itToolBar = defaultToolBars.constBegin();
     while (itToolBar != defaultToolBars.constEnd()) {
         QToolBar *tb = itToolBar.key();
         if (tb->objectName().isEmpty()) {
@@ -219,7 +218,7 @@ void QtFullToolBarManagerPrivate::saveState(QDataStream &stream) const
             stream << tb->objectName();
         }
 
-        const QList<QAction *> actions = toolBars.value(tb);
+        const auto actions = toolBars.value(tb);
         stream << actions.size();
         for (QAction *action : actions) {
             if (action) {
@@ -250,7 +249,7 @@ void QtFullToolBarManagerPrivate::saveState(QDataStream &stream) const
 
             stream << toolBars[tb].size();
 
-            const QList<QAction *> actions = toolBars.value(tb);
+            const auto actions = toolBars.value(tb);
             for (QAction *action : actions) {
                 if (action) {
                     if (action->objectName().isEmpty()) {
@@ -310,7 +309,7 @@ bool QtFullToolBarManagerPrivate::restoreState(QDataStream &stream) const
     if (ctmarker != CustomToolBarMarker)
         return false;
 
-    QList<QToolBar *> oldCustomToolBars = customToolBars;
+    auto oldCustomToolBars = customToolBars;
 
     stream >> toolBars;
     for (int i = 0; i < toolBars; i++) {
@@ -353,8 +352,7 @@ bool QtFullToolBarManagerPrivate::restoreState(QDataStream &stream) const
 
 QToolBar *QtFullToolBarManagerPrivate::findDefaultToolBar(const QString &objectName) const
 {
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator itToolBar =
-                defaultToolBars.constBegin();
+    auto itToolBar = defaultToolBars.constBegin();
     while (itToolBar != defaultToolBars.constEnd()) {
         QToolBar *tb = itToolBar.key();
         if (tb->objectName() == objectName)
@@ -406,7 +404,7 @@ QAction *QtFullToolBarManagerPrivate::findAction(const QString &actionName) cons
 
 QToolBar *QtFullToolBarManagerPrivate::toolBarByName(const QString &toolBarName) const
 {
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator itToolBar = toolBars.constBegin();
+    auto itToolBar = toolBars.constBegin();
     while (itToolBar != toolBars.constEnd()) {
         QToolBar *toolBar = itToolBar.key();
         if (toolBar->objectName() == toolBarName)
@@ -456,11 +454,10 @@ QStringList QtFullToolBarManager::categories() const
 
 QList<QAction *> QtFullToolBarManager::categoryActions(const QString &category) const
 {
-    QMap<QString, QList<QAction *> >::ConstIterator it =
-                d_ptr->categoryToActions.find(category);
+    const auto it = d_ptr->categoryToActions.constFind(category);
     if (it != d_ptr->categoryToActions.constEnd())
         return it.value();
-    return QList<QAction *>();
+    return {};
 }
 
 QString QtFullToolBarManager::actionCategory(QAction *action) const
@@ -494,7 +491,7 @@ void QtFullToolBarManager::removeAction(QAction *action)
     if (!d_ptr->allActions.contains(action))
         return;
 
-    const QList<QToolBar *> toolBars = d_ptr->actionToToolBars[action];
+    const auto toolBars = d_ptr->actionToToolBars[action];
     for (QToolBar *toolBar : toolBars) {
         d_ptr->toolBars[toolBar].removeAll(action);
         d_ptr->toolBarsWithSeparators[toolBar].removeAll(action);
@@ -502,8 +499,7 @@ void QtFullToolBarManager::removeAction(QAction *action)
         toolBar->removeAction(action);
     }
 
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator itDefault =
-            d_ptr->defaultToolBars.constBegin();
+    auto itDefault = d_ptr->defaultToolBars.constBegin();
     while (itDefault != d_ptr->defaultToolBars.constEnd()) {
         if (itDefault.value().contains(action))
             d_ptr->defaultToolBars[itDefault.key()].removeAll(action);
@@ -546,7 +542,7 @@ void QtFullToolBarManager::addDefaultToolBar(QToolBar *toolBar, const QString &c
 
     QList<QAction *> newActionsWithSeparators;
     QList<QAction *> newActions;
-    const QList<QAction *> actions = toolBar->actions();
+    const auto actions = toolBar->actions();
     for (QAction *action : actions) {
         addAction(action, category);
         if (d_ptr->widgetActions.contains(action))
@@ -569,7 +565,7 @@ void QtFullToolBarManager::removeDefaultToolBar(QToolBar *toolBar)
     if (!d_ptr->defaultToolBars.contains(toolBar))
         return;
 
-    const QList<QAction *> defaultActions = d_ptr->defaultToolBars[toolBar];
+    const auto defaultActions = d_ptr->defaultToolBars[toolBar];
     setToolBar(toolBar, QList<QAction *>());
     for (QAction *action : defaultActions)
         removeAction(action);
@@ -638,7 +634,7 @@ QList<QAction *> QtFullToolBarManager::actions(QToolBar *toolBar) const
 
 void QtFullToolBarManager::setToolBars(const QMap<QToolBar *, QList<QAction *> > &actions)
 {
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator it = actions.constBegin();
+    auto it = actions.constBegin();
     while (it != actions.constEnd()) {
         setToolBar(it.key(), it.value());
         ++it;
@@ -669,7 +665,7 @@ void QtFullToolBarManager::setToolBar(QToolBar *toolBar, const QList<QAction *> 
 
     d_ptr->removeWidgetActions(toRemove);
 
-    const QList<QAction *> oldActions = d_ptr->toolBarsWithSeparators.value(toolBar);
+    const auto oldActions = d_ptr->toolBarsWithSeparators.value(toolBar);
     for (QAction *action : oldActions) {
         /*
         When addDefaultToolBar() separator actions could be checked if they are
@@ -715,7 +711,7 @@ void QtFullToolBarManager::resetToolBar(QToolBar *toolBar)
 void QtFullToolBarManager::resetAllToolBars()
 {
     setToolBars(defaultToolBars());
-    const QList<QToolBar *> oldCustomToolBars = d_ptr->customToolBars;
+    const auto oldCustomToolBars = d_ptr->customToolBars;
     for (QToolBar *tb : oldCustomToolBars)
         deleteToolBar(tb);
 }
@@ -1097,7 +1093,7 @@ void QtToolBarDialogPrivate::fillNew()
     for (const QString &category : categories) {
         QTreeWidgetItem *categoryItem = new QTreeWidgetItem(ui.actionTree);
         categoryItem->setText(0, category);
-        const QList<QAction *> actions = toolBarManager->categoryActions(category);
+        const auto actions = toolBarManager->categoryActions(category);
         for (QAction *action : actions) {
             item = new QTreeWidgetItem(categoryItem);
             item->setText(0, action->text());
@@ -1115,8 +1111,8 @@ void QtToolBarDialogPrivate::fillNew()
     }
     //ui.actionTree->sortItems(0, Qt::AscendingOrder);
 
-    QMap<QToolBar *, QList<QAction *> > toolBars = toolBarManager->toolBarsActions();
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator it = toolBars.constBegin();
+    const auto toolBars = toolBarManager->toolBarsActions();
+    auto it = toolBars.constBegin();
     while (it != toolBars.constEnd()) {
         QToolBar *toolBar = it.key();
         ToolBarItem *tbItem = createItem(toolBar);
@@ -1125,7 +1121,7 @@ void QtToolBarDialogPrivate::fillNew()
                 ui.toolBarList);
         toolBarToItem.insert(tbItem, item);
         itemToToolBar.insert(item, tbItem);
-        const QList<QAction *> actions = it.value();
+        const auto actions = it.value();
         for (QAction *action : actions) {
             if (toolBarManager->isWidgetAction(action)) {
                 widgetActionToToolBar.insert(action, tbItem);
@@ -1257,8 +1253,8 @@ void QtToolBarDialogPrivate::removeClicked()
 
 void QtToolBarDialogPrivate::defaultClicked()
 {
-    QMap<QToolBar *, QList<QAction *> > defaultToolBars = toolBarManager->defaultToolBars();
-    QMap<QToolBar *, QList<QAction *> >::ConstIterator itToolBar = defaultToolBars.constBegin();
+    const auto defaultToolBars = toolBarManager->defaultToolBars();
+    auto itToolBar = defaultToolBars.constBegin();
     while (itToolBar != defaultToolBars.constEnd()) {
         QToolBar *toolBar = itToolBar.key();
         ToolBarItem *toolBarItem = toolBarItems.value(toolBar);
@@ -1289,7 +1285,7 @@ void QtToolBarDialogPrivate::defaultClicked()
     }
     currentToolBarChanged(toolBarToItem.value(currentToolBar));
 
-    const QList<ToolBarItem *> toolBars = currentState.keys();
+    const auto toolBars = currentState.keys();
     for (ToolBarItem *tb : toolBars)
         removeToolBar(tb);
 }
@@ -1302,8 +1298,8 @@ void QtToolBarDialogPrivate::okClicked()
 
 void QtToolBarDialogPrivate::applyClicked()
 {
-    QMap<ToolBarItem *, QList<QAction *> > toolBars = currentState;
-    QMap<ToolBarItem *, QList<QAction *> >::ConstIterator itToolBar = toolBars.constBegin();
+    const auto toolBars = currentState;
+    auto itToolBar = toolBars.constBegin();
     while (itToolBar != toolBars.constEnd()) {
         ToolBarItem *item = itToolBar.key();
         QToolBar *toolBar = item->toolBar();
@@ -1329,7 +1325,7 @@ void QtToolBarDialogPrivate::applyClicked()
     for (ToolBarItem *item : toCreate) {
         QString toolBarName = item->toolBarName();
         createdItems.remove(item);
-        QList<QAction *> actions = currentState.value(item);
+        const auto actions = currentState.value(item);
         QToolBar *toolBar = toolBarManager->createToolBar(toolBarName);
         item->setToolBar(toolBar);
         toolBarManager->setToolBar(toolBar, actions);
@@ -1347,7 +1343,7 @@ void QtToolBarDialogPrivate::upClicked()
     ui.currentToolBarList->takeItem(row);
     int newRow = row - 1;
     ui.currentToolBarList->insertItem(newRow, currentToolBarAction);
-    QList<QAction *> actions = currentState.value(currentToolBar);
+    auto actions = currentState.value(currentToolBar);
     QAction *action = actions.at(row);
     actions.removeAt(row);
     actions.insert(newRow, action);
@@ -1367,7 +1363,7 @@ void QtToolBarDialogPrivate::downClicked()
     ui.currentToolBarList->takeItem(row);
     int newRow = row + 1;
     ui.currentToolBarList->insertItem(newRow, currentToolBarAction);
-    QList<QAction *> actions = currentState.value(currentToolBar);
+    auto actions = currentState.value(currentToolBar);
     QAction *action = actions.at(row);
     actions.removeAt(row);
     actions.insert(newRow, action);
@@ -1388,7 +1384,7 @@ void QtToolBarDialogPrivate::leftClicked()
         ToolBarItem *item = widgetActionToToolBar.value(action);
         if (item == currentToolBar) { // have to be
             toolBarToWidgetActions[item].remove(action);
-            if (toolBarToWidgetActions[item].empty())
+            if (toolBarToWidgetActions[item].isEmpty())
                 toolBarToWidgetActions.remove(item);
         }
         widgetActionToToolBar.insert(action, 0);
@@ -1437,7 +1433,7 @@ void QtToolBarDialogPrivate::rightClicked()
                 if (toolBar) {
                     currentState[toolBar].removeAll(action);
                     toolBarToWidgetActions[toolBar].remove(action);
-                    if (toolBarToWidgetActions[toolBar].empty())
+                    if (toolBarToWidgetActions[toolBar].isEmpty())
                         toolBarToWidgetActions.remove(toolBar);
                 }
                 widgetActionToToolBar.insert(action, currentToolBar);
@@ -1500,7 +1496,7 @@ void QtToolBarDialogPrivate::currentToolBarChanged(QListWidgetItem *current)
     if (!currentToolBar) {
         return;
     }
-    const QList<QAction *> actions = currentState.value(currentToolBar);
+    const auto actions = currentState.value(currentToolBar);
     QListWidgetItem *first = 0;
     for (QAction *action : actions) {
         QString actionName = separatorText;

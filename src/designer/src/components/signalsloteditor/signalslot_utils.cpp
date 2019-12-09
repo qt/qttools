@@ -93,7 +93,7 @@ static void memberList(QDesignerFormEditorInterface *core,
     const QString className = wdbItem->name();
 
     const QStringList wdbFakeMethods = member_type == qdesigner_internal::SlotMember ? wdbItem->fakeSlots() : wdbItem->fakeSignals();
-    if (!wdbFakeMethods.empty())
+    if (!wdbFakeMethods.isEmpty())
         for (const QString &fakeMethod : wdbFakeMethods)
             if (predicate(fakeMethod)) {
                 *it = ClassNameSignaturePair(className, fakeMethod);
@@ -106,7 +106,7 @@ static void memberList(QDesignerFormEditorInterface *core,
 
     if (const qdesigner_internal::MetaDataBaseItem *mdbItem = metaDataBase->metaDataBaseItem(object)) {
         const QStringList mdbFakeMethods =  member_type == qdesigner_internal::SlotMember ? mdbItem->fakeSlots() : mdbItem->fakeSignals();
-        if (!mdbFakeMethods.empty())
+        if (!mdbFakeMethods.isEmpty())
             for (const QString &fakeMethod : mdbFakeMethods)
                 if (predicate(fakeMethod)) {
                     *it = ClassNameSignaturePair(className, fakeMethod);
@@ -266,7 +266,7 @@ namespace qdesigner_internal {
     {
         QMap<QString, QString> rc;
         memberList(core, object, type, true, EqualsPredicate(signature), SignatureIterator(&rc));
-        return !rc.empty();
+        return !rc.isEmpty();
     }
 
     // ### deprecated

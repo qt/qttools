@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,11 +33,11 @@
 #ifndef DOC_H
 #define DOC_H
 
-#include <qset.h>
-#include <qstring.h>
-#include <qmap.h>
-
 #include "location.h"
+
+#include <QtCore/qmap.h>
+#include <QtCore/qset.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -59,13 +59,13 @@ struct Topic
     QString topic;
     QString args;
     Topic() { }
-    Topic(QString& t, const QString &a) : topic(t), args(a) { }
+    Topic(QString &t, const QString &a) : topic(t), args(a) { }
     bool isEmpty() const { return topic.isEmpty(); }
     void clear() { topic.clear(); args.clear(); }
 };
 typedef QList<Topic> TopicList;
 
-typedef QList<DitaRef*> DitaRefList;
+typedef QList<DitaRef *> DitaRefList;
 
 class DitaRef
 {
@@ -73,13 +73,13 @@ public:
     DitaRef() { }
     virtual ~DitaRef() { }
 
-    const QString& navtitle() const { return navtitle_; }
-    const QString& href() const { return href_; }
-    void setNavtitle(const QString& t) { navtitle_ = t; }
-    void setHref(const QString& t) { href_ = t; }
+    const QString &navtitle() const { return navtitle_; }
+    const QString &href() const { return href_; }
+    void setNavtitle(const QString &t) { navtitle_ = t; }
+    void setHref(const QString &t) { href_ = t; }
     virtual bool isMapRef() const = 0;
-    virtual const DitaRefList* subrefs() const { return nullptr; }
-    virtual void appendSubref(DitaRef* ) { }
+    virtual const DitaRefList *subrefs() const { return nullptr; }
+    virtual void appendSubref(DitaRef *) { }
 
 private:
     QString navtitle_;
@@ -90,11 +90,11 @@ class TopicRef : public DitaRef
 {
 public:
     TopicRef() { }
-    ~TopicRef();
+    ~TopicRef() override;
 
     bool isMapRef() const override { return false; }
-    const DitaRefList* subrefs() const override { return &subrefs_; }
-    void appendSubref(DitaRef* t) override { subrefs_.append(t); }
+    const DitaRefList *subrefs() const override { return &subrefs_; }
+    void appendSubref(DitaRef *t) override { subrefs_.append(t); }
 
 private:
     DitaRefList subrefs_;
@@ -104,7 +104,6 @@ class MapRef : public DitaRef
 {
 public:
     MapRef() { }
-    ~MapRef() { }
 
     bool isMapRef() const override { return true; }
 };
@@ -126,25 +125,25 @@ public:
     };
 
     Doc() : priv(nullptr) {}
-    Doc(const Location& start_loc,
-        const Location& end_loc,
-        const QString& source,
-        const QSet<QString>& metaCommandSet,
-        const QSet<QString>& topics);
+    Doc(const Location &start_loc,
+        const Location &end_loc,
+        const QString &source,
+        const QSet<QString> &metaCommandSet,
+        const QSet<QString> &topics);
     Doc(const Doc &doc);
     ~Doc();
 
-    Doc& operator=( const Doc& doc );
+    Doc &operator=(const Doc &doc);
     void simplifyEnumDoc();
     void setBody(const Text &body);
     const DitaRefList& ditamap() const;
 
     const Location &location() const;
-    const Location& startLocation() const;
-    const Location& endLocation() const;
+    const Location &startLocation() const;
+    const Location &endLocation() const;
     bool isEmpty() const;
-    const QString& source() const;
-    const Text& body() const;
+    const QString &source() const;
+    const Text &body() const;
     Text briefText(bool inclusive = false) const;
     Text trimmedBriefText(const QString &className) const;
     Text legaleseText() const;
@@ -153,8 +152,8 @@ public:
     const QStringList &enumItemNames() const;
     const QStringList &omitEnumItemNames() const;
     const QSet<QString> &metaCommandsUsed() const;
-    const TopicList& topicsUsed() const;
-    ArgList metaCommandArgs(const QString& metaCommand) const;
+    const TopicList &topicsUsed() const;
+    ArgList metaCommandArgs(const QString &metaCommand) const;
     const QList<Text> &alsoList() const;
     bool hasTableOfContents() const;
     bool hasKeywords() const;
@@ -167,22 +166,22 @@ public:
     const QList<Atom *> &targets() const;
     const QStringMultiMap &metaTagMap() const;
 
-    static void initialize( const Config &config );
+    static void initialize(const Config &config);
     static void terminate();
-    static QString alias( const QString &english );
-    static void trimCStyleComment( Location& location, QString& str );
-    static QString resolveFile(const Location &location,const QString &fileName,
+    static QString alias(const QString &english);
+    static void trimCStyleComment(Location &location, QString &str);
+    static QString resolveFile(const Location &location, const QString &fileName,
                                QString *userFriendlyFilePath = nullptr);
     static CodeMarker *quoteFromFile(const Location &location,
                                      Quoter &quoter,
                                      const QString &fileName);
     static QString canonicalTitle(const QString &title);
-    static const Config* config() { return config_; }
+    static const Config *config() { return config_; }
 
 private:
     void detach();
     DocPrivate *priv;
-    static const Config* config_;
+    static const Config *config_;
 };
 Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
 typedef QList<Doc> DocList;

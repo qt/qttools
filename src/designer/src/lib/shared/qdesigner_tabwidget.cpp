@@ -118,9 +118,9 @@ QTabBar *QTabWidgetEventFilter::tabBar() const
 {
     // QTabWidget::tabBar() accessor is protected, grmbl...
     if (!m_cachedTabBar) {
-        const QList<QTabBar *> tabBars = m_tabWidget->findChildren<QTabBar *>();
+        const auto tabBars = m_tabWidget->findChildren<QTabBar *>();
         Q_ASSERT(tabBars.size() == 1);
-        m_cachedTabBar = tabBars.front();
+        m_cachedTabBar = tabBars.constFirst();
     }
     return m_cachedTabBar;
 
@@ -406,7 +406,7 @@ QTabWidgetPropertySheet::TabWidgetProperty QTabWidgetPropertySheet::tabWidgetPro
 {
     using TabWidgetPropertyHash = QHash<QString, TabWidgetProperty>;
     static TabWidgetPropertyHash tabWidgetPropertyHash;
-    if (tabWidgetPropertyHash.empty()) {
+    if (tabWidgetPropertyHash.isEmpty()) {
         tabWidgetPropertyHash.insert(QLatin1String(currentTabTextKey),      PropertyCurrentTabText);
         tabWidgetPropertyHash.insert(QLatin1String(currentTabNameKey),      PropertyCurrentTabName);
         tabWidgetPropertyHash.insert(QLatin1String(currentTabIconKey),      PropertyCurrentTabIcon);

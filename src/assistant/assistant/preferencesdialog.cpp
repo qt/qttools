@@ -103,6 +103,16 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
                 this, &PreferencesDialog::addDocumentation);
         connect(m_ui.docRemoveButton, &QAbstractButton::clicked,
                 this, &PreferencesDialog::removeDocumentation);
+        connect(m_ui.registeredDocsFilterLineEdit, &QLineEdit::textChanged,
+                this, [this](const QString &) {
+            for (const auto item : m_namespaceToItem)
+                applyDocListFilter(item);
+        });
+        connect(m_ui.registeredDocsListWidget, &QListWidget::itemSelectionChanged,
+                this, [this](){
+            m_ui.docRemoveButton->setEnabled(
+                        !m_ui.registeredDocsListWidget->selectedItems().isEmpty());
+        });
 
         updateDocumentationPage();
     }
@@ -142,31 +152,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
         setFont(helpEngine.appFont());
 }
 
-PreferencesDialog::~PreferencesDialog()
-{
-    if (m_appFontChanged) {
-        helpEngine.setAppFont(m_appFontPanel->selectedFont());
-        helpEngine.setUseAppFont(m_appFontPanel->isChecked());
-        helpEngine.setAppWritingSystem(m_appFontPanel->writingSystem());
-        emit updateApplicationFont();
-    }
-
-    if (m_browserFontChanged) {
-        helpEngine.setBrowserFont(m_browserFontPanel->selectedFont());
-        helpEngine.setUseBrowserFont(m_browserFontPanel->isChecked());
-        helpEngine.setBrowserWritingSystem(m_browserFontPanel->writingSystem());
-        emit updateBrowserFont();
-    }
-
-    QString homePage = m_ui.homePageLineEdit->text();
-    if (homePage.isEmpty())
-        homePage = QLatin1String("help");
-    helpEngine.setHomePage(homePage);
-
-    int option = m_ui.helpStartComboBox->currentIndex();
-    helpEngine.setStartOption(option);
-}
-
 FilterSetup PreferencesDialog::readOriginalSetup() const
 {
     FilterSetup filterSetup;
@@ -193,12 +178,6 @@ FilterSetup PreferencesDialog::readOriginalSetup() const
     filterSetup.m_currentFilter = helpEngine.filterEngine()->activeFilter();
 
     return filterSetup;
-}
-
-void PreferencesDialog::showDialog()
-{
-    if (exec() != Accepted)
-        m_appFontChanged = m_browserFontChanged = false;
 }
 
 void PreferencesDialog::updateFilterPage()
@@ -265,8 +244,23 @@ void PreferencesDialog::updateDocumentationPage()
         QListWidgetItem *item = new QListWidgetItem(namespaceName);
         m_namespaceToItem.insert(namespaceName, item);
         m_itemToNamespace.insert(item, namespaceName);
+        applyDocListFilter(item);
         m_ui.registeredDocsListWidget->addItem(item);
     }
+    m_ui.docRemoveButton->setEnabled(
+                !m_ui.registeredDocsListWidget->selectedItems().isEmpty());
+}
+
+void PreferencesDialog::applyDocListFilter(QListWidgetItem *item)
+{
+    const QString namespaceName = m_itemToNamespace.value(item);
+    const QString nameFilter = m_ui.registeredDocsFilterLineEdit->text();
+
+    const bool matches = nameFilter.isEmpty() || namespaceName.contains(nameFilter);
+
+    if (!matches)
+        item->setSelected(false);
+    item->setHidden(!matches);
 }
 
 void PreferencesDialog::filterSelected(QListWidgetItem *item)
@@ -436,12 +430,17 @@ void PreferencesDialog::addDocumentation()
         m_currentSetup.m_namespaceToVersion.insert(namespaceName, version);
         m_currentSetup.m_versionToNamespace[version].append(namespaceName);
 
+        if (!added) {
+            added = true;
+            m_ui.registeredDocsListWidget->clearSelection();
+        }
+
         QListWidgetItem *item = new QListWidgetItem(namespaceName);
         m_namespaceToItem.insert(namespaceName, item);
         m_itemToNamespace.insert(item, namespaceName);
         m_ui.registeredDocsListWidget->insertItem(m_namespaceToItem.keys().indexOf(namespaceName), item);
-
-        added = true;
+        item->setSelected(true);
+        applyDocListFilter(item);
     }
 
     if (added)
@@ -563,6 +562,30 @@ void PreferencesDialog::applyChanges()
     helpEngine.setShowTabs(m_ui.showTabs->isChecked());
     if (m_showTabs != m_ui.showTabs->isChecked())
         emit updateUserInterface();
+
+    if (m_appFontChanged) {
+        helpEngine.setAppFont(m_appFontPanel->selectedFont());
+        helpEngine.setUseAppFont(m_appFontPanel->isChecked());
+        helpEngine.setAppWritingSystem(m_appFontPanel->writingSystem());
+        emit updateApplicationFont();
+        m_appFontChanged = false;
+    }
+
+    if (m_browserFontChanged) {
+        helpEngine.setBrowserFont(m_browserFontPanel->selectedFont());
+        helpEngine.setUseBrowserFont(m_browserFontPanel->isChecked());
+        helpEngine.setBrowserWritingSystem(m_browserFontPanel->writingSystem());
+        emit updateBrowserFont();
+        m_browserFontChanged = false;
+    }
+
+    QString homePage = m_ui.homePageLineEdit->text();
+    if (homePage.isEmpty())
+        homePage = QLatin1String("help");
+    helpEngine.setHomePage(homePage);
+
+    const int option = m_ui.helpStartComboBox->currentIndex();
+    helpEngine.setStartOption(option);
 }
 
 void PreferencesDialog::updateFontSettingsPage()

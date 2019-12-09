@@ -212,8 +212,7 @@ void WidgetFactory::loadPlugins()
 {
     m_customFactory.clear();
 
-    const QList<QDesignerCustomWidgetInterface*> &lst =
-        m_core->pluginManager()->registeredCustomWidgets();
+    const auto &lst = m_core->pluginManager()->registeredCustomWidgets();
     for (QDesignerCustomWidgetInterface *c : lst)
         m_customFactory.insert(c->name(), c);
 }

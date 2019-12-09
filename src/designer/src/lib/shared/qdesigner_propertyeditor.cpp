@@ -49,7 +49,7 @@ using PropertyNameTypeMap = QHash<QString, StringPropertyParameters>;
 static const PropertyNameTypeMap &stringPropertyTypes()
 {
     static PropertyNameTypeMap propertyNameTypeMap;
-    if (propertyNameTypeMap.empty()) {
+    if (propertyNameTypeMap.isEmpty()) {
         const StringPropertyParameters richtext(ValidationRichText, true);
         // Accessibility. Both are texts the narrator reads
         propertyNameTypeMap.insert(QStringLiteral("accessibleDescription"), richtext);

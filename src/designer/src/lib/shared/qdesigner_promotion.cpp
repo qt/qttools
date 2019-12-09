@@ -48,7 +48,7 @@ namespace {
     // Return a set of on-promotable classes
     const QSet<QString> &nonPromotableClasses() {
         static QSet<QString> rc;
-        if (rc.empty()) {
+        if (rc.isEmpty()) {
             rc.insert(QStringLiteral("Line"));
             rc.insert(QStringLiteral("QAction"));
             rc.insert(QStringLiteral("Spacer"));
@@ -225,7 +225,7 @@ namespace qdesigner_internal {
         // convert map into list.
         PromotedClasses rc;
 
-        if (baseClassPromotedMap.empty())
+        if (baseClassPromotedMap.isEmpty())
             return rc;
 
         const BaseClassPromotedMap::const_iterator bcend = baseClassPromotedMap.constEnd();
@@ -262,7 +262,7 @@ namespace qdesigner_internal {
         // check the scratchpad of the widget box
         if (QDesignerWidgetBoxInterface *widgetBox = m_core->widgetBox()) {
             const QStringList scratchPadClasses = getScratchPadClasses(widgetBox);
-            if (!scratchPadClasses.empty()) {
+            if (!scratchPadClasses.isEmpty()) {
                 // Check whether these are actually promoted
                 QDesignerWidgetDataBaseInterface *widgetDataBase = m_core->widgetDataBase();
                 QStringList::const_iterator cend = scratchPadClasses.constEnd();

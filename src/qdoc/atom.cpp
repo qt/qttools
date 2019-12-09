@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,12 +26,15 @@
 **
 ****************************************************************************/
 
-#include <qregexp.h>
 #include "atom.h"
+
 #include "location.h"
 #include "qdocdatabase.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qregexp.h>
+
 #include <stdio.h>
-#include <qdebug.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -235,27 +238,27 @@ static const struct {
     { nullptr, 0 }
 };
 
-/*! \fn Atom::Atom(AtomType type, const QString& string)
+/*! \fn Atom::Atom(AtomType type, const QString &string)
 
   Constructs an atom of the specified \a type with the single
   parameter \a string and does not put the new atom in a list.
 */
 
-/*! \fn Atom::Atom(AtomType type, const QString& p1, const QString& p2)
+/*! \fn Atom::Atom(AtomType type, const QString &p1, const QString &p2)
 
   Constructs an atom of the specified \a type with the two
   parameters \a p1 and \a p2 and does not put the new atom
   in a list.
 */
 
-/*! \fn Atom(Atom *previous, AtomType type, const QString& string)
+/*! \fn Atom(Atom *previous, AtomType type, const QString &string)
 
   Constructs an atom of the specified \a type with the single
   parameter \a string and inserts the new atom into the list
   after the \a previous atom.
 */
 
-/*! \fn Atom::Atom(Atom* previous, AtomType type, const QString& p1, const QString& p2)
+/*! \fn Atom::Atom(Atom *previous, AtomType type, const QString &p1, const QString &p2)
 
   Constructs an atom of the specified \a type with the two
   parameters \a p1 and \a p2 and inserts the new atom into
@@ -269,7 +272,7 @@ static const struct {
   \also string()
 */
 
-/*! \fn void Atom::appendString(const QString& string)
+/*! \fn void Atom::appendString(const QString &string)
 
   Appends \a string to the string parameter of this atom.
 
@@ -290,7 +293,7 @@ static const struct {
   Return the next Atom in the list if it is of AtomType \a t.
   Otherwise return 0.
  */
-const Atom* Atom::next(AtomType t) const
+const Atom *Atom::next(AtomType t) const
 {
     return (next_ && (next_->type() == t)) ? next_ : nullptr;
 }
@@ -299,7 +302,7 @@ const Atom* Atom::next(AtomType t) const
   Return the next Atom in the list if it is of AtomType \a t
   and its string part is \a s. Otherwise return 0.
  */
-const Atom* Atom::next(AtomType t, const QString& s) const
+const Atom *Atom::next(AtomType t, const QString &s) const
 {
     return (next_ && (next_->type() == t) && (next_->string() == s)) ? next_ : nullptr;
 }
@@ -342,7 +345,7 @@ QString Atom::typeString() const
     return QLatin1String(atms[i].english);
 }
 
-/*! \fn const QString& Atom::string() const
+/*! \fn const QString &Atom::string() const
 
   Returns the string parameter that together with the type
   characterizes this atom.
@@ -376,7 +379,7 @@ void Atom::dump() const
   words separated by spaces. The constructor splits \a p2 on
   the space character.
  */
-LinkAtom::LinkAtom(const QString& p1, const QString& p2)
+LinkAtom::LinkAtom(const QString &p1, const QString &p2)
     : Atom(p1),
       resolved_(false),
       genus_(Node::DontCare),
@@ -396,28 +399,28 @@ void LinkAtom::resolveSquareBracketParams()
 {
     if (resolved_)
         return;
-    QStringList params = squareBracketParams_.toLower().split(QLatin1Char(' '));
-     foreach (const QString& p, params) {
+    const QStringList params = squareBracketParams_.toLower().split(QLatin1Char(' '));
+     for (const auto &param : params) {
         if (!domain_) {
-            domain_ = QDocDatabase::qdocDB()->findTree(p);
+            domain_ = QDocDatabase::qdocDB()->findTree(param);
             if (domain_) {
                  continue;
             }
          }
         if (goal_ == Node::NoType) {
-            goal_ = Node::goal(p);
+            goal_ = Node::goal(param);
             if (goal_ != Node::NoType)
                 continue;
         }
-        if (p == "qml") {
+        if (param == "qml") {
             genus_ = Node::QML;
             continue;
         }
-        if (p == "cpp") {
+        if (param == "cpp") {
             genus_ = Node::CPP;
             continue;
         }
-        if (p == "doc") {
+        if (param == "doc") {
             genus_ = Node::DOC;
             continue;
         }
@@ -430,7 +433,7 @@ void LinkAtom::resolveSquareBracketParams()
 /*!
   Standard copy constructor of LinkAtom \a t.
  */
-LinkAtom::LinkAtom(const LinkAtom& t)
+LinkAtom::LinkAtom(const LinkAtom &t)
     : Atom(Link, t.string()),
       resolved_(t.resolved_),
       genus_(t.genus_),
@@ -447,7 +450,7 @@ LinkAtom::LinkAtom(const LinkAtom& t)
   where the new LinkAtom will not be the first one
   in the list.
  */
-LinkAtom::LinkAtom(Atom* previous, const LinkAtom& t)
+LinkAtom::LinkAtom(Atom *previous, const LinkAtom &t)
     : Atom(previous, Link, t.string()),
       resolved_(t.resolved_),
       genus_(t.genus_),

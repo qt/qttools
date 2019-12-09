@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,8 +30,10 @@
   text.cpp
 */
 
-#include <qregexp.h>
 #include "text.h"
+
+#include <QtCore/qregexp.h>
+
 #include <stdio.h>
 
 QT_BEGIN_NAMESPACE
@@ -47,7 +49,7 @@ Text::Text(const QString &str)
     operator<<(str);
 }
 
-Text::Text(const Text& text)
+Text::Text(const Text &text)
     : first(nullptr), last(nullptr)
 {
     operator=(text);
@@ -58,7 +60,7 @@ Text::~Text()
     clear();
 }
 
-Text& Text::operator=(const Text& text)
+Text &Text::operator=(const Text &text)
 {
     if (this != &text) {
         clear();
@@ -67,17 +69,17 @@ Text& Text::operator=(const Text& text)
     return *this;
 }
 
-Text& Text::operator<<(Atom::AtomType atomType)
+Text &Text::operator<<(Atom::AtomType atomType)
 {
     return operator<<(Atom(atomType));
 }
 
-Text& Text::operator<<(const QString& string)
+Text &Text::operator<<(const QString &string)
 {
     return operator<<(Atom(Atom::String, string));
 }
 
-Text& Text::operator<<(const Atom& atom)
+Text &Text::operator<<(const Atom& atom)
 {
     if (atom.count() < 2) {
         if (first == nullptr) {
@@ -103,7 +105,7 @@ Text& Text::operator<<(const Atom& atom)
   the LinkAtom \a atom and connects the cop;y to the list
   in this Text.
  */
-Text& Text::operator<<(const LinkAtom& atom)
+Text &Text::operator<<(const LinkAtom &atom)
 {
     if (first == nullptr) {
         first = new LinkAtom(atom);
@@ -114,9 +116,9 @@ Text& Text::operator<<(const LinkAtom& atom)
     return *this;
 }
 
-Text& Text::operator<<(const Text& text)
+Text &Text::operator<<(const Text &text)
 {
-    const Atom* atom = text.firstAtom();
+    const Atom *atom = text.firstAtom();
     while (atom != nullptr) {
         operator<<(*atom);
         atom = atom->next();
@@ -129,7 +131,7 @@ void Text::stripFirstAtom()
     if (first != nullptr) {
         if (first == last)
             last = nullptr;
-        Atom* oldFirst = first;
+        Atom *oldFirst = first;
         first = first->next();
         delete oldFirst;
     }
@@ -138,7 +140,7 @@ void Text::stripFirstAtom()
 void Text::stripLastAtom()
 {
     if (last != nullptr) {
-        Atom* oldLast = last;
+        Atom *oldLast = last;
         if (first == last) {
             first = nullptr;
             last = nullptr;
@@ -160,7 +162,7 @@ void Text::stripLastAtom()
 QString Text::toString() const
 {
     QString str;
-    const Atom* atom = firstAtom();
+    const Atom *atom = firstAtom();
     while (atom != nullptr) {
         if (atom->type() == Atom::String ||
             atom->type() == Atom::AutoLink ||
@@ -176,7 +178,7 @@ QString Text::toString() const
  */
 bool Text::contains(const QString &str) const
 {
-    const Atom* atom = firstAtom();
+    const Atom *atom = firstAtom();
     while (atom != nullptr) {
         if (atom->type() == Atom::String ||
             atom->type() == Atom::AutoLink ||
@@ -188,10 +190,10 @@ bool Text::contains(const QString &str) const
     return false;
 }
 
-Text Text::subText(Atom::AtomType left, Atom::AtomType right, const Atom* from, bool inclusive) const
+Text Text::subText(Atom::AtomType left, Atom::AtomType right, const Atom *from, bool inclusive) const
 {
-    const Atom* begin = from ? from : firstAtom();
-    const Atom* end;
+    const Atom *begin = from ? from : firstAtom();
+    const Atom *end;
 
     while (begin != nullptr && begin->type() != left)
         begin = begin->next();
@@ -210,16 +212,16 @@ Text Text::subText(Atom::AtomType left, Atom::AtomType right, const Atom* from, 
     return subText(begin, end);
 }
 
-Text Text::sectionHeading(const Atom* sectionLeft)
+Text Text::sectionHeading(const Atom *sectionLeft)
 {
     if (sectionLeft != nullptr) {
-        const Atom* begin = sectionLeft;
+        const Atom *begin = sectionLeft;
         while (begin != nullptr && begin->type() != Atom::SectionHeadingLeft)
             begin = begin->next();
         if (begin != nullptr)
             begin = begin->next();
 
-        const Atom* end = begin;
+        const Atom *end = begin;
         while (end != nullptr && end->type() != Atom::SectionHeadingRight)
             end = end->next();
 
@@ -229,10 +231,10 @@ Text Text::sectionHeading(const Atom* sectionLeft)
     return Text();
 }
 
-const Atom* Text::sectionHeadingAtom(const Atom* sectionLeft)
+const Atom *Text::sectionHeadingAtom(const Atom *sectionLeft)
 {
     if (sectionLeft != nullptr) {
-        const Atom* begin = sectionLeft;
+        const Atom *begin = sectionLeft;
         while (begin != nullptr && begin->type() != Atom::SectionHeadingLeft)
             begin = begin->next();
         if (begin != nullptr)
@@ -245,7 +247,7 @@ const Atom* Text::sectionHeadingAtom(const Atom* sectionLeft)
 
 void Text::dump() const
 {
-    const Atom* atom = firstAtom();
+    const Atom *atom = firstAtom();
     while (atom != nullptr) {
         QString str = atom->string();
         str.replace("\\", "\\\\");
@@ -259,7 +261,7 @@ void Text::dump() const
     }
 }
 
-Text Text::subText(const Atom* begin, const Atom* end)
+Text Text::subText(const Atom *begin, const Atom *end)
 {
     Text text;
     if (begin != nullptr) {
@@ -274,7 +276,7 @@ Text Text::subText(const Atom* begin, const Atom* end)
 void Text::clear()
 {
     while (first != nullptr) {
-        Atom* atom = first;
+        Atom *atom = first;
         first = first->next();
         delete atom;
     }
@@ -289,8 +291,8 @@ int Text::compare(const Text &text1, const Text &text2)
     if (text2.isEmpty())
         return 1;
 
-    const Atom* atom1 = text1.firstAtom();
-    const Atom* atom2 = text2.firstAtom();
+    const Atom *atom1 = text1.firstAtom();
+    const Atom *atom2 = text2.firstAtom();
 
     for (;;) {
         if (atom1->type() != atom2->type())

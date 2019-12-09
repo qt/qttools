@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,26 +26,29 @@
 **
 ****************************************************************************/
 
-#include "config.h"
 #include "doc.h"
+
+#include "atom.h"
+#include "config.h"
 #include "codemarker.h"
 #include "editdistance.h"
+#include "generator.h"
+#include "loggingcategory.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "text.h"
-#include "atom.h"
 #include "tokenizer.h"
-#include "loggingcategory.h"
-#include <qdatetime.h>
-#include <qfile.h>
-#include <qfileinfo.h>
-#include <qhash.h>
-#include <qtextstream.h>
-#include <qregexp.h>
+
+#include <QtCore/qdatetime.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qtextstream.h>
+
 #include <ctype.h>
 #include <limits.h>
-#include <qdebug.h>
-#include "generator.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -295,10 +298,10 @@ class DocPrivateExtra
 public:
     Doc::Sections       granularity_;
     Doc::Sections       section_; // ###
-    QList<Atom*>        tableOfContents_;
+    QList<Atom *>       tableOfContents_;
     QVector<int>        tableOfContentsLevels_;
-    QList<Atom*>        keywords_;
-    QList<Atom*>        targets_;
+    QList<Atom *>       keywords_;
+    QList<Atom *>       targets_;
     QStringMultiMap     metaMap_;
 
     DocPrivateExtra()
@@ -331,12 +334,12 @@ typedef QMap<QString, ArgList> CommandMap;
 class DocPrivate : public Shared
 {
 public:
-    DocPrivate(const Location& start = Location::null,
-               const Location& end = Location::null,
-               const QString& source = QString());
+    DocPrivate(const Location &start = Location::null,
+               const Location &end = Location::null,
+               const QString &source = QString());
     ~DocPrivate();
 
-    void addAlso(const Text& also);
+    void addAlso(const Text &also);
     void constructExtra();
     bool isEnumDocSimplifiable() const;
 
@@ -358,9 +361,9 @@ public:
     DitaRefList ditamap_;
 };
 
-DocPrivate::DocPrivate(const Location& start,
-                       const Location& end,
-                       const QString& source)
+DocPrivate::DocPrivate(const Location &start,
+                       const Location &end,
+                       const QString &source)
     : start_loc(start),
       end_loc(end),
       src(source),
@@ -378,12 +381,10 @@ DocPrivate::DocPrivate(const Location& start,
 DocPrivate::~DocPrivate()
 {
     delete extra;
-    foreach (DitaRef* t, ditamap_) {
-        delete t;
-    }
+    qDeleteAll(ditamap_);
 }
 
-void DocPrivate::addAlso(const Text& also)
+void DocPrivate::addAlso(const Text &also)
 {
     alsoList.append(also);
 }
@@ -423,15 +424,15 @@ public:
     void parse(const QString &source,
                DocPrivate *docPrivate,
                const QSet<QString> &metaCommandSet,
-               const QSet<QString>& possibleTopics);
+               const QSet<QString> &possibleTopics);
 
     static int endCmdFor(int cmd);
     static QString cmdName(int cmd);
     static QString endCmdName(int cmd);
-    static QString untabifyEtc(const QString& str);
-    static int indentLevel(const QString& str);
-    static QString unindent(int level, const QString& str);
-    static QString slashed(const QString& str);
+    static QString untabifyEtc(const QString &str);
+    static int indentLevel(const QString &str);
+    static QString unindent(int level, const QString &str);
+    static QString slashed(const QString &str);
 
     static int tabSize;
     static QStringList exampleFiles;
@@ -441,21 +442,21 @@ public:
     static bool quoting;
 
 private:
-    Location& location();
-    QString detailsUnknownCommand(const QSet<QString>& metaCommandSet,
-                                  const QString& str);
-    void insertTarget(const QString& target, bool keyword);
-    void include(const QString& fileName, const QString& identifier);
-    void startFormat(const QString& format, int cmd);
+    Location &location();
+    QString detailsUnknownCommand(const QSet<QString> &metaCommandSet,
+                                  const QString &str);
+    void insertTarget(const QString &target, bool keyword);
+    void include(const QString &fileName, const QString &identifier);
+    void startFormat(const QString &format, int cmd);
     bool openCommand(int cmd);
     bool closeCommand(int endCmd);
     void startSection(Doc::Sections unit, int cmd);
     void endSection(int unit, int endCmd);
     void parseAlso();
     void append(const QString &string);
-    void append(Atom::AtomType type, const QString& string = QString());
-    void append(Atom::AtomType type, const QString& p1, const QString& p2);
-    void append(const QString& p1, const QString& p2);
+    void append(Atom::AtomType type, const QString &string = QString());
+    void append(Atom::AtomType type, const QString &p1, const QString &p2);
+    void append(const QString &p1, const QString &p2);
     void appendChar(QChar ch);
     void appendWord(const QString &word);
     void appendToCode(const QString &code);
@@ -463,14 +464,14 @@ private:
     void startNewPara();
     void enterPara(Atom::AtomType leftType = Atom::ParaLeft,
                    Atom::AtomType rightType = Atom::ParaRight,
-                   const QString& string = QString());
+                   const QString &string = QString());
     void leavePara();
     void leaveValue();
     void leaveValueList();
     void leaveTableRow();
     CodeMarker *quoteFromFile();
     bool expandMacro();
-    void expandMacro(const QString& name, const QString& def, int numParams);
+    void expandMacro(const QString &name, const QString &def, int numParams);
     QString expandMacroToString(const QString &name, const QString &def, int numParams, const QString &matchExpr);
     Doc::Sections getSectioningUnit();
     QString getArgument(bool verbatim = false);
@@ -525,7 +526,7 @@ private:
     QStack<int> openedCommands;
     QStack<OpenedList> openedLists;
     Quoter quoter;
-    QStack<DitaRef*> ditarefs_;
+    QStack<DitaRef *> ditarefs_;
     Atom *lastAtom;
 };
 
@@ -545,10 +546,10 @@ bool DocParser::quoting = false;
   found in \a source. These metacommands are not markup text
   commands. They are topic commands and related metacommands.
  */
-void DocParser::parse(const QString& source,
+void DocParser::parse(const QString &source,
                       DocPrivate *docPrivate,
-                      const QSet<QString>& metaCommandSet,
-                      const QSet<QString>& possibleTopics)
+                      const QSet<QString> &metaCommandSet,
+                      const QSet<QString> &possibleTopics)
 {
     input_ = source;
     pos = 0;
@@ -975,7 +976,7 @@ void DocParser::parse(const QString& source,
                 case CMD_TOPICREF:
                 case CMD_MAPREF:
                     if (openCommand(cmd)) {
-                        DitaRef* t = nullptr;
+                        DitaRef *t = nullptr;
                         if (cmd == CMD_MAPREF)
                             t = new MapRef();
                         else
@@ -1679,20 +1680,13 @@ void DocParser::insertTarget(const QString &target, bool keyword)
     }
 }
 
-void DocParser::include(const QString& fileName, const QString& identifier)
+void DocParser::include(const QString &fileName, const QString &identifier)
 {
     if (location().depth() > 16)
         location().fatal(tr("Too many nested '\\%1's").arg(cmdName(CMD_INCLUDE)));
 
     QString userFriendlyFilePath;
     QString filePath = Doc::config()->getIncludeFilePath(fileName);
-#if 0
-    QString filePath = Config::findFile(location(),
-                                        sourceFiles,
-                                        sourceDirs,
-                                        fileName,
-                                        userFriendlyFilePath);
-#endif
     if (filePath.isEmpty()) {
         location().warning(tr("Cannot find qdoc include file '%1'").arg(fileName));
     }
@@ -1763,7 +1757,7 @@ void DocParser::include(const QString& fileName, const QString& identifier)
     }
 }
 
-void DocParser::startFormat(const QString& format, int cmd)
+void DocParser::startFormat(const QString &format, int cmd)
 {
     enterPara();
 
@@ -1963,7 +1957,7 @@ void DocParser::append(const QString &string)
     priv->text << Atom(string); // The Atom type is Link.
 }
 
-void DocParser::append(Atom::AtomType type, const QString& p1, const QString& p2)
+void DocParser::append(Atom::AtomType type, const QString &p1, const QString &p2)
 {
     Atom::AtomType lastType = priv->text.lastAtom()->type();
     if ((lastType == Atom::Code) && priv->text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
@@ -1971,7 +1965,7 @@ void DocParser::append(Atom::AtomType type, const QString& p1, const QString& p2
     priv->text << Atom(type, p1, p2);
 }
 
-void DocParser::append(const QString& p1, const QString& p2)
+void DocParser::append(const QString &p1, const QString &p2)
 {
     Atom::AtomType lastType = priv->text.lastAtom()->type();
     if ((lastType == Atom::Code) && priv->text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
@@ -2004,7 +1998,7 @@ void DocParser::appendWord(const QString &word)
         priv->text.lastAtom()->appendString(word);
 }
 
-void DocParser::appendToCode(const QString& markedCode)
+void DocParser::appendToCode(const QString &markedCode)
 {
     if (!isCode(lastAtom)) {
         append(Atom::Code);
@@ -2031,7 +2025,7 @@ void DocParser::startNewPara()
 
 void DocParser::enterPara(Atom::AtomType leftType,
                           Atom::AtomType rightType,
-                          const QString& string)
+                          const QString &string)
 {
     if (paraState == OutsideParagraph) {
 
@@ -2746,7 +2740,7 @@ QString DocParser::endCmdName(int cmd)
     return cmdName(endCmdFor(cmd));
 }
 
-QString DocParser::untabifyEtc(const QString& str)
+QString DocParser::untabifyEtc(const QString &str)
 {
     QString result;
     result.reserve(str.length());
@@ -2780,7 +2774,7 @@ QString DocParser::untabifyEtc(const QString& str)
     return result;
 }
 
-int DocParser::indentLevel(const QString& str)
+int DocParser::indentLevel(const QString &str)
 {
     int minIndent = INT_MAX;
     int column = 0;
@@ -2798,7 +2792,7 @@ int DocParser::indentLevel(const QString& str)
     return minIndent;
 }
 
-QString DocParser::unindent(int level, const QString& str)
+QString DocParser::unindent(int level, const QString &str)
 {
     if (level == 0)
         return str;
@@ -2820,7 +2814,7 @@ QString DocParser::unindent(int level, const QString& str)
     return t;
 }
 
-QString DocParser::slashed(const QString& str)
+QString DocParser::slashed(const QString &str)
 {
     QString result = str;
     result.replace(QLatin1Char('/'), "\\/");
@@ -2859,18 +2853,18 @@ bool DocParser::isQuote(const Atom *atom)
   QML documentation, there is the case where the qdoc \e{qmlproperty}
   command can appear multiple times in a qdoc comment.
  */
-Doc::Doc(const Location& start_loc,
-         const Location& end_loc,
-         const QString& source,
-         const QSet<QString>& metaCommandSet,
-         const QSet<QString>& topics)
+Doc::Doc(const Location &start_loc,
+         const Location &end_loc,
+         const QString &source,
+         const QSet<QString> &metaCommandSet,
+         const QSet<QString> &topics)
 {
-    priv = new DocPrivate(start_loc,end_loc,source);
+    priv = new DocPrivate(start_loc, end_loc, source);
     DocParser parser;
-    parser.parse(source,priv,metaCommandSet,topics);
+    parser.parse(source, priv, metaCommandSet, topics);
 }
 
-Doc::Doc(const Doc& doc)
+Doc::Doc(const Doc &doc)
     : priv(nullptr)
 {
     operator=(doc);
@@ -2882,7 +2876,7 @@ Doc::~Doc()
         delete priv;
 }
 
-Doc &Doc::operator=(const Doc& doc)
+Doc &Doc::operator=(const Doc &doc)
 {
     if (doc.priv)
         doc.priv->ref();
@@ -2938,7 +2932,7 @@ const Location &Doc::location() const
 /*!
   Returns the starting location of a qdoc comment.
  */
-const Location& Doc::startLocation() const
+const Location &Doc::startLocation() const
 {
     return location();
 }
@@ -2946,7 +2940,7 @@ const Location& Doc::startLocation() const
 /*!
   Returns the ending location of a qdoc comment.
  */
-const Location& Doc::endLocation() const
+const Location &Doc::endLocation() const
 {
     static const Location dummy;
     return priv == nullptr ? dummy : priv->end_loc;
@@ -2963,7 +2957,7 @@ bool Doc::isEmpty() const
     return priv == nullptr || priv->src.isEmpty();
 }
 
-const Text& Doc::body() const
+const Text &Doc::body() const
 {
     static const Text dummy;
     return priv == nullptr ? dummy : priv->text;
@@ -3100,12 +3094,12 @@ bool Doc::isMarkedReimp() const
   current qdoc comment. Normally there is only one, but there
   can be multiple \e{qmlproperty} commands, for example.
  */
-const TopicList& Doc::topicsUsed() const
+const TopicList &Doc::topicsUsed() const
 {
     return priv == nullptr ? *nullTopicList() : priv->topics_;
 }
 
-ArgList Doc::metaCommandArgs(const QString& metacommand) const
+ArgList Doc::metaCommandArgs(const QString &metacommand) const
 {
     return priv == nullptr ? ArgList() : priv->metaCommandMap.value(metacommand);
 }
@@ -3159,9 +3153,9 @@ const QStringMultiMap &Doc::metaTagMap() const
     return priv && priv->extra ? priv->extra->metaMap_ : *null_QStringMultiMap();
 }
 
-const Config* Doc::config_ = nullptr;
+const Config *Doc::config_ = nullptr;
 
-void Doc::initialize(const Config& config)
+void Doc::initialize(const Config &config)
 {
     DocParser::tabSize = config.getInt(CONFIG_TABSIZE);
     DocParser::exampleFiles = config.getCanonicalPathList(CONFIG_EXAMPLES);
@@ -3277,7 +3271,7 @@ QString Doc::alias(const QString &english)
   Trims the deadwood out of \a str. i.e., this function
   cleans up \a str.
  */
-void Doc::trimCStyleComment(Location& location, QString& str)
+void Doc::trimCStyleComment(Location &location, QString &str)
 {
     QString cleaned;
     Location m = location;
@@ -3420,9 +3414,7 @@ void Doc::detach()
  */
 TopicRef::~TopicRef()
 {
-    foreach (DitaRef* t, subrefs_) {
-        delete t;
-    }
+    qDeleteAll(subrefs_);
 }
 
 /*!

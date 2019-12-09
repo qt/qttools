@@ -38,7 +38,10 @@ class QAction;
 class QDesignerTaskMenuExtension
 {
 public:
-    virtual ~QDesignerTaskMenuExtension() {}
+    Q_DISABLE_COPY_MOVE(QDesignerTaskMenuExtension)
+
+    QDesignerTaskMenuExtension() = default;
+    virtual ~QDesignerTaskMenuExtension() = default;
 
     virtual QAction *preferredEditAction() const;
 

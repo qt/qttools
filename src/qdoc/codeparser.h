@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,8 +29,9 @@
 #ifndef CODEPARSER_H
 #define CODEPARSER_H
 
-#include <qset.h>
 #include "node.h"
+
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -47,41 +48,41 @@ public:
     CodeParser();
     virtual ~CodeParser();
 
-    virtual void initializeParser(const Config& config);
+    virtual void initializeParser(const Config &config);
     virtual void terminateParser();
     virtual QString language() = 0;
     virtual QStringList headerFileNameFilter();
     virtual QStringList sourceFileNameFilter() = 0;
-    virtual void parseHeaderFile(const Location& location, const QString& filePath);
-    virtual void parseSourceFile(const Location& location, const QString& filePath) = 0;
+    virtual void parseHeaderFile(const Location &location, const QString &filePath);
+    virtual void parseSourceFile(const Location &location, const QString &filePath) = 0;
     virtual void precompileHeaders() { }
     virtual Node *parseFnArg(const Location &, const QString &) { return nullptr; }
 
     bool isParsingH() const;
     bool isParsingCpp() const;
     bool isParsingQdoc() const;
-    const QString& currentFile() const { return currentFile_; }
-    const QString& moduleHeader() const { return moduleHeader_; }
-    void setModuleHeader(const QString& t) { moduleHeader_ = t; }
-    void checkModuleInclusion(Node* n);
+    const QString &currentFile() const { return currentFile_; }
+    const QString &moduleHeader() const { return moduleHeader_; }
+    void setModuleHeader(const QString &t) { moduleHeader_ = t; }
+    void checkModuleInclusion(Node *n);
 
-    static void initialize(const Config& config);
+    static void initialize(const Config &config);
     static void terminate();
-    static CodeParser *parserForLanguage(const QString& language);
+    static CodeParser *parserForLanguage(const QString &language);
     static CodeParser *parserForHeaderFile(const QString &filePath);
     static CodeParser *parserForSourceFile(const QString &filePath);
-    static void setLink(Node* node, Node::LinkType linkType, const QString& arg);
+    static void setLink(Node *node, Node::LinkType linkType, const QString &arg);
     static bool isWorthWarningAbout(const Doc &doc);
 
 protected:
-    const QSet<QString>& commonMetaCommands();
-    static void extractPageLinkAndDesc(const QString& arg,
-                                       QString* link,
-                                       QString* desc);
+    const QSet<QString> &commonMetaCommands();
+    static void extractPageLinkAndDesc(const QString &arg,
+                                       QString *link,
+                                       QString *desc);
     static bool showInternal() { return showInternal_; }
     QString moduleHeader_;
     QString currentFile_;
-    QDocDatabase* qdb_;
+    QDocDatabase *qdb_;
 
 private:
     static QList<CodeParser *> parsers;

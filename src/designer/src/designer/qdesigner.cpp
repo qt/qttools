@@ -252,7 +252,7 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
 
     m_suppressNewFormShow = m_workbench->readInBackup();
 
-    if (!options.files.empty()) {
+    if (!options.files.isEmpty()) {
         const QStringList::const_iterator cend = options.files.constEnd();
         for (QStringList::const_iterator it = options.files.constBegin(); it != cend; ++it) {
             // Ensure absolute paths for recent file list to be unique

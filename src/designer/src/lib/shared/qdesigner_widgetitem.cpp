@@ -224,7 +224,7 @@ bool QDesignerWidgetItem::check(const QLayout *layout, QWidget *w, Qt::Orientati
     // well. Avoid nested layouts (as the effective stretch cannot be easily
     // computed and may mess things up).
     if (ptrToOrientations)
-        *ptrToOrientations = nullptr;
+        *ptrToOrientations = {};
 
     const QObject *layoutParent = layout->parent();
     if (!layoutParent || !layoutParent->isWidgetType() || !WidgetFactory::isFormEditorObject(layoutParent))

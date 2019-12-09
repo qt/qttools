@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,7 +33,7 @@
 #ifndef CODECHUNK_H
 #define CODECHUNK_H
 
-#include <qstring.h>
+#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -43,9 +43,9 @@ class CodeChunk
 {
 public:
     CodeChunk() : hotspot(-1) {}
-    CodeChunk(const QString& str) : s(str), hotspot(-1) {}
+    CodeChunk(const QString &str) : s(str), hotspot(-1) {}
 
-    void append( const QString& lexeme );
+    void append(const QString &lexeme);
     void appendHotspot() { if (hotspot == -1) hotspot = s.length(); }
 
     bool isEmpty() const { return s.isEmpty(); }
@@ -60,28 +60,28 @@ private:
     int hotspot;
 };
 
-inline bool operator==( const CodeChunk& c, const CodeChunk& d ) {
+inline bool operator==(const CodeChunk& c, const CodeChunk& d) {
     return c.toString() == d.toString();
 }
 
-inline bool operator!=( const CodeChunk& c, const CodeChunk& d ) {
-    return !( c == d );
+inline bool operator!=(const CodeChunk& c, const CodeChunk& d) {
+    return !(c == d);
 }
 
-inline bool operator<( const CodeChunk& c, const CodeChunk& d ) {
+inline bool operator<(const CodeChunk& c, const CodeChunk& d) {
     return c.toString() < d.toString();
 }
 
-inline bool operator>( const CodeChunk& c, const CodeChunk& d ) {
+inline bool operator>(const CodeChunk& c, const CodeChunk& d) {
     return d < c;
 }
 
-inline bool operator<=( const CodeChunk& c, const CodeChunk& d ) {
-    return !( c > d );
+inline bool operator<=(const CodeChunk& c, const CodeChunk& d) {
+    return !(c > d);
 }
 
-inline bool operator>=( const CodeChunk& c, const CodeChunk& d ) {
-    return !( c < d );
+inline bool operator>=(const CodeChunk& c, const CodeChunk& d) {
+    return !(c < d);
 }
 
 QT_END_NAMESPACE

@@ -373,10 +373,8 @@ void WidgetDataBase::loadPlugins()
     unsigned replacedPlugins = 0;
     unsigned addedPlugins = 0;
     unsigned removedPlugins = 0;
-    if (!pluginList.empty()) {
-        ItemList::const_iterator cend = pluginList.constEnd();
-        for (ItemList::const_iterator it = pluginList.constBegin();it != cend; ++it )  {
-            QDesignerWidgetDataBaseItemInterface* pluginItem = *it;
+    if (!pluginList.isEmpty()) {
+        for (QDesignerWidgetDataBaseItemInterface *pluginItem : qAsConst(pluginList)) {
             const QString pluginName = pluginItem->name();
             NameIndexMap::iterator existingIt = existingCustomClasses.find(pluginName);
             if (existingIt == existingCustomClasses.end()) {
@@ -399,7 +397,7 @@ void WidgetDataBase::loadPlugins()
         }
     }
     // 4) remove classes that have not been matched. The stored indexes become invalid while deleting.
-    if (!existingCustomClasses.empty()) {
+    if (!existingCustomClasses.isEmpty()) {
         NameIndexMap::const_iterator cend = existingCustomClasses.constEnd();
         for (NameIndexMap::const_iterator it = existingCustomClasses.constBegin();it != cend; ++it )  {
             const int index = indexOfClassName(it.key());
@@ -429,10 +427,10 @@ QList<QVariant> WidgetDataBase::defaultPropertyValues(const QString &name)
         object = factory->createWidget(name, nullptr);
     if (!object) {
         qDebug() << "** WARNING Factory failed to create " << name;
-        return QList<QVariant>();
+        return {};
     }
     // Get properties from sheet.
-    QList<QVariant> result;
+    QVariantList result;
     if (const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_core->extensionManager(), object)) {
         const int propertyCount = sheet->count();
         for (int i = 0; i < propertyCount; ++i) {
@@ -448,7 +446,7 @@ void WidgetDataBase::grabDefaultPropertyValues()
     const int itemCount = count();
     for (int i = 0; i < itemCount; ++i) {
         QDesignerWidgetDataBaseItemInterface *dbItem = item(i);
-        const QList<QVariant> default_prop_values = defaultPropertyValues(dbItem->name());
+        const auto default_prop_values = defaultPropertyValues(dbItem->name());
         dbItem->setDefaultPropertyValues(default_prop_values);
     }
 }
@@ -503,7 +501,7 @@ static inline bool suitableForNewForm(const QString &className)
 QStringList WidgetDataBase::formWidgetClasses(const QDesignerFormEditorInterface *core)
 {
     static QStringList rc;
-    if (rc.empty()) {
+    if (rc.isEmpty()) {
         const QDesignerWidgetDataBaseInterface *wdb = core->widgetDataBase();
         const int widgetCount = wdb->count();
         for (int i = 0; i < widgetCount; i++) {
@@ -601,22 +599,22 @@ static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const 
 // Generate default standard ui new form xml based on the class passed on as similarClassName.
 static QString generateNewFormXML(const QString &className, const QString &similarClassName, const QString &name)
 {
-    QString rc; {
-        QTextStream str(&rc);
-        str << QStringLiteral("<ui version=\"4.0\" >\n<class>") << name << QStringLiteral("</class>\n")
-            <<  QStringLiteral("<widget class=\"") << className << QStringLiteral("\" name=\"") << name << QStringLiteral("\" >\n")
-            <<  QStringLiteral("<property name=\"geometry\" >\n<rect><x>0</x><y>0</y><width>")
-            << NewFormWidth << QStringLiteral("</width><height>") << NewFormHeight << QStringLiteral("</height></rect>\n</property>\n");
-        str << QStringLiteral("<property name=\"windowTitle\" >\n<string>") << name << QStringLiteral("</string>\n</property>\n");
+    QString rc;
+    QTextStream str(&rc);
+    str << R"(<ui version="4.0"><class>)" << name << "</class>"
+        << R"(<widget class=")" << className << R"(" name=")" << name << R"(">)"
+        << R"(<property name="geometry" ><rect><x>0</x><y>0</y><width>)"
+        << NewFormWidth << "</width><height>" << NewFormHeight << "</height></rect></property>"
+        << R"(<property name="windowTitle"><string>)" << name << "</string></property>\n";
 
-        if (similarClassName == QStringLiteral("QMainWindow")) {
-            str << QStringLiteral("<widget class=\"QWidget\" name=\"centralwidget\" />\n");
-        } else {
-            if (similarClassName == QStringLiteral("QWizard"))
-                str << QStringLiteral("<widget class=\"QWizardPage\" name=\"wizardPage1\" /><widget class=\"QWizardPage\" name=\"wizardPage2\" />\n");
-        }
-        str << QStringLiteral("</widget>\n</ui>\n");
+    if (similarClassName == QLatin1String("QMainWindow")) {
+        str << R"(<widget class="QWidget" name="centralwidget"/>)";
+    } else if (similarClassName == QLatin1String("QWizard")) {
+        str << R"(<widget class="QWizardPage" name="wizardPage1"/><widget class="QWizardPage" name="wizardPage2"/>)";
+    } else if (similarClassName == QLatin1String("QDockWidget")) {
+        str << R"(<widget class="QWidget" name="dockWidgetContents"/>)";
     }
+    str << "</widget></ui>\n";
     return rc;
 }
 

@@ -82,7 +82,7 @@ public:
 
     // Store loaded fonts as pair of file name and Id
     using FileNameFontIdPair = QPair<QString,int>;
-    using FileNameFontIdPairs = QList<FileNameFontIdPair>;
+    using FileNameFontIdPairs = QVector<FileNameFontIdPair>;
     const FileNameFontIdPairs &fonts() const;
 
 private:
@@ -122,7 +122,7 @@ void AppFontManager::restore(const QDesignerSettingsInterface *s, const QString 
 
     if (debugAppFontWidget)
         qDebug() << "AppFontManager::restoring" << fontFiles.size() << "fonts from " << prefix;
-    if (!fontFiles.empty()) {
+    if (!fontFiles.isEmpty()) {
         QString errorMessage;
         const QStringList::const_iterator cend = fontFiles.constEnd();
         for (QStringList::const_iterator it = fontFiles.constBegin(); it != cend; ++it)
@@ -311,7 +311,7 @@ void AppFontWidget::addFiles()
     const QStringList files =
         QFileDialog::getOpenFileNames(this, tr("Add Font Files"), QString(),
                                       tr("Font files (*.ttf)"));
-    if (files.empty())
+    if (files.isEmpty())
         return;
 
     QString errorMessage;
@@ -331,7 +331,7 @@ void AppFontWidget::addFiles()
 
 static void removeFonts(const QModelIndexList &selectedIndexes, AppFontModel *model, QWidget *dialogParent)
 {
-    if (selectedIndexes.empty())
+    if (selectedIndexes.isEmpty())
         return;
 
     // Reverse sort top level rows and remove
@@ -382,7 +382,7 @@ void AppFontWidget::slotRemoveAll()
 
 void AppFontWidget::selectionChanged(const QItemSelection &selected, const QItemSelection & /*deselected*/)
 {
-     m_removeButton->setEnabled(!selected.indexes().empty());
+     m_removeButton->setEnabled(!selected.indexes().isEmpty());
 }
 
 void AppFontWidget::save(QDesignerSettingsInterface *s, const QString &prefix)

@@ -219,7 +219,7 @@ QWidget *QAbstractFormBuilder::create(DomUI *ui, QWidget *parentWidget)
     if (QWidget *widget = create(ui_widget, parentWidget)) {
         // Reparent button groups that were actually created to main container for them to be found in the signal/slot part
         const ButtonGroupHash &buttonGroups = d->buttonGroups();
-        if (!buttonGroups.empty()) {
+        if (!buttonGroups.isEmpty()) {
             const ButtonGroupHash::const_iterator cend = buttonGroups.constEnd();
             for (ButtonGroupHash::const_iterator it = buttonGroups.constBegin(); it != cend; ++it)
                 if (it.value().second)
@@ -297,7 +297,7 @@ QWidget *QAbstractFormBuilder::create(DomWidget *ui_widget, QWidget *parentWidge
     }
 
     const auto &addActions = ui_widget->elementAddAction();
-    if (!addActions.empty()) {
+    if (!addActions.isEmpty()) {
         const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
         for (DomActionRef *ui_action_ref : addActions) {
             const QString name = ui_action_ref->attributeName();
@@ -794,10 +794,10 @@ static inline QString alignmentValue(Qt::Alignment a)
 
 static inline Qt::Alignment alignmentFromDom(const QString &in)
 {
-    Qt::Alignment rc = nullptr;
+    Qt::Alignment rc;
     if (!in.isEmpty()) {
-        const QVector<QStringRef> flags = in.splitRef(QLatin1Char('|'));
-        for (const QStringRef &f : flags) {
+        const auto flags = in.splitRef(QLatin1Char('|'));
+        for (const auto &f : flags) {
             if (f == QStringLiteral("Qt::AlignLeft")) {
                 rc |= Qt::AlignLeft;
             } else if (f == QStringLiteral("Qt::AlignRight")) {
@@ -881,7 +881,7 @@ QLayoutItem *QAbstractFormBuilder::create(DomLayoutItem *ui_layoutItem, QLayout 
 
         const DomSpacer *ui_spacer = ui_layoutItem->elementSpacer();
         const auto &spacerProperties =  ui_spacer->elementProperty();
-        if (!spacerProperties.empty()) {
+        if (!spacerProperties.isEmpty()) {
             const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
             for (DomProperty *p : spacerProperties) {
                 const QVariant v = toVariant(&QAbstractFormBuilderGadget::staticMetaObject, p); // ### remove me
@@ -959,27 +959,7 @@ QVariant QAbstractFormBuilder::toVariant(const QMetaObject *meta, DomProperty *p
 void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGroup colorGroup,
             DomColorGroup *group)
 {
-    // old format
-    const auto &colors = group->elementColor();
-    for (int role = 0; role < colors.size(); ++role) {
-        const DomColor *color = colors.at(role);
-        const QColor c(color->elementRed(), color->elementGreen(), color->elementBlue());
-        palette.setColor(colorGroup, QPalette::ColorRole(role), c);
-    }
-
-    // new format
-    const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
-
-    const auto colorRoles = group->elementColorRole();
-    for (const DomColorRole *colorRole : colorRoles) {
-        if (colorRole->hasAttributeRole()) {
-            const int r = colorRole_enum.keyToValue(colorRole->attributeRole().toLatin1());
-            if (r != -1) {
-                const QBrush br = setupBrush(colorRole->elementBrush());
-                palette.setBrush(colorGroup, static_cast<QPalette::ColorRole>(r), br);
-            }
-        }
-    }
+    QFormBuilderExtra::setupColorGroup(&palette, colorGroup, group);
 }
 
 /*!
@@ -987,26 +967,8 @@ void QAbstractFormBuilder::setupColorGroup(QPalette &palette, QPalette::ColorGro
 */
 DomColorGroup *QAbstractFormBuilder::saveColorGroup(const QPalette &palette)
 {
-
-    const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
-
-    DomColorGroup *group = new DomColorGroup();
-    QVector<DomColorRole *> colorRoles;
-
-    const uint mask = palette.resolve();
-    for (int role = QPalette::WindowText; role < QPalette::NColorRoles; ++role) {
-        if (mask & (1 << role)) {
-            const QBrush &br = palette.brush(QPalette::ColorRole(role));
-
-            DomColorRole *colorRole = new DomColorRole();
-            colorRole->setElementBrush(saveBrush(br));
-            colorRole->setAttributeRole(QLatin1String(colorRole_enum.valueToKey(role)));
-            colorRoles.append(colorRole);
-        }
-    }
-
-    group->setElementColorRole(colorRoles);
-    return group;
+    return QFormBuilderExtra::saveColorGroup(palette,
+                                             palette.currentColorGroup());
 }
 
 /*!
@@ -1014,143 +976,12 @@ DomColorGroup *QAbstractFormBuilder::saveColorGroup(const QPalette &palette)
 */
 QBrush QAbstractFormBuilder::setupBrush(DomBrush *brush)
 {
-    QBrush br;
-    if (!brush->hasAttributeBrushStyle())
-        return br;
-
-    const Qt::BrushStyle style = enumKeyOfObjectToValue<QAbstractFormBuilderGadget, Qt::BrushStyle>("brushStyle",
-                                                                                                    brush->attributeBrushStyle().toLatin1().constData());
-
-    if (style == Qt::LinearGradientPattern ||
-            style == Qt::RadialGradientPattern ||
-            style == Qt::ConicalGradientPattern) {
-        const QMetaEnum gradientType_enum = metaEnum<QAbstractFormBuilderGadget>("gradientType");
-        const QMetaEnum gradientSpread_enum = metaEnum<QAbstractFormBuilderGadget>("gradientSpread");
-        const QMetaEnum gradientCoordinate_enum = metaEnum<QAbstractFormBuilderGadget>("gradientCoordinate");
-
-        const DomGradient *gradient = brush->elementGradient();
-        const QGradient::Type type = enumKeyToValue<QGradient::Type>(gradientType_enum, gradient->attributeType().toLatin1());
-
-
-        QGradient *gr = nullptr;
-
-        if (type == QGradient::LinearGradient) {
-            gr = new QLinearGradient(QPointF(gradient->attributeStartX(), gradient->attributeStartY()),
-                            QPointF(gradient->attributeEndX(), gradient->attributeEndY()));
-        } else if (type == QGradient::RadialGradient) {
-            gr = new QRadialGradient(QPointF(gradient->attributeCentralX(), gradient->attributeCentralY()),
-                            gradient->attributeRadius(),
-                            QPointF(gradient->attributeFocalX(), gradient->attributeFocalY()));
-        } else if (type == QGradient::ConicalGradient) {
-            gr = new QConicalGradient(QPointF(gradient->attributeCentralX(), gradient->attributeCentralY()),
-                            gradient->attributeAngle());
-        }
-        if (!gr)
-            return br;
-
-        const QGradient::Spread spread = enumKeyToValue<QGradient::Spread>(gradientSpread_enum, gradient->attributeSpread().toLatin1());
-        gr->setSpread(spread);
-
-        const QGradient::CoordinateMode coord = enumKeyToValue<QGradient::CoordinateMode>(gradientCoordinate_enum, gradient->attributeCoordinateMode().toLatin1());
-        gr->setCoordinateMode(coord);
-
-        const auto &stops = gradient->elementGradientStop();
-        for (const DomGradientStop *stop : stops) {
-            const DomColor *color = stop->elementColor();
-            gr->setColorAt(stop->attributePosition(), QColor::fromRgb(color->elementRed(),
-                            color->elementGreen(), color->elementBlue(), color->attributeAlpha()));
-        }
-        br = QBrush(*gr);
-        delete gr;
-    } else if (style == Qt::TexturePattern) {
-        const DomProperty *texture = brush->elementTexture();
-        if (texture && texture->kind() == DomProperty::Pixmap) {
-            br.setTexture(domPropertyToPixmap(texture));
-        }
-    } else {
-        const DomColor *color = brush->elementColor();
-        br.setColor(QColor::fromRgb(color->elementRed(),
-                            color->elementGreen(), color->elementBlue(), color->attributeAlpha()));
-        br.setStyle((Qt::BrushStyle)style);
-    }
-    return br;
+    return QFormBuilderExtra::setupBrush(brush);
 }
 
-/*!
-    \internal
-*/
 DomBrush *QAbstractFormBuilder::saveBrush(const QBrush &br)
 {
-    const QMetaEnum brushStyle_enum = metaEnum<QAbstractFormBuilderGadget>("brushStyle");
-
-    DomBrush *brush = new DomBrush();
-    const Qt::BrushStyle style = br.style();
-    brush->setAttributeBrushStyle(QLatin1String(brushStyle_enum.valueToKey(style)));
-    if (style == Qt::LinearGradientPattern ||
-                style == Qt::RadialGradientPattern ||
-                style == Qt::ConicalGradientPattern) {
-        const QMetaEnum gradientType_enum = metaEnum<QAbstractFormBuilderGadget>("gradientType");
-        const QMetaEnum gradientSpread_enum = metaEnum<QAbstractFormBuilderGadget>("gradientSpread");
-        const QMetaEnum gradientCoordinate_enum = metaEnum<QAbstractFormBuilderGadget>("gradientCoordinate");
-
-        DomGradient *gradient = new DomGradient();
-        const QGradient *gr = br.gradient();
-        const QGradient::Type type = gr->type();
-        gradient->setAttributeType(QLatin1String(gradientType_enum.valueToKey(type)));
-        gradient->setAttributeSpread(QLatin1String(gradientSpread_enum.valueToKey(gr->spread())));
-        gradient->setAttributeCoordinateMode(QLatin1String(gradientCoordinate_enum.valueToKey(gr->coordinateMode())));
-        QVector<DomGradientStop *> stops;
-        const QGradientStops st = gr->stops();
-        for (const QGradientStop &pair : st) {
-            DomGradientStop *stop = new DomGradientStop();
-            stop->setAttributePosition(pair.first);
-            DomColor *color = new DomColor();
-            color->setElementRed(pair.second.red());
-            color->setElementGreen(pair.second.green());
-            color->setElementBlue(pair.second.blue());
-            color->setAttributeAlpha(pair.second.alpha());
-            stop->setElementColor(color);
-            stops.append(stop);
-        }
-        gradient->setElementGradientStop(stops);
-        if (type == QGradient::LinearGradient) {
-            auto lgr = static_cast<const QLinearGradient *>(gr);
-            gradient->setAttributeStartX(lgr->start().x());
-            gradient->setAttributeStartY(lgr->start().y());
-            gradient->setAttributeEndX(lgr->finalStop().x());
-            gradient->setAttributeEndY(lgr->finalStop().y());
-        } else if (type == QGradient::RadialGradient) {
-            auto rgr = static_cast<const QRadialGradient *>(gr);
-            gradient->setAttributeCentralX(rgr->center().x());
-            gradient->setAttributeCentralY(rgr->center().y());
-            gradient->setAttributeFocalX(rgr->focalPoint().x());
-            gradient->setAttributeFocalY(rgr->focalPoint().y());
-            gradient->setAttributeRadius(rgr->radius());
-        } else if (type == QGradient::ConicalGradient) {
-            auto cgr = static_cast<const QConicalGradient *>(gr);
-            gradient->setAttributeCentralX(cgr->center().x());
-            gradient->setAttributeCentralY(cgr->center().y());
-            gradient->setAttributeAngle(cgr->angle());
-        }
-
-        brush->setElementGradient(gradient);
-    } else if (style == Qt::TexturePattern) {
-        const QPixmap pixmap = br.texture();
-        if (!pixmap.isNull()) {
-            DomProperty *p = new DomProperty;
-            setPixmapProperty(*p,  pixmapPaths(pixmap));
-            brush->setElementTexture(p);
-        }
-    } else {
-        const QColor &c = br.color();
-        DomColor *color = new DomColor();
-        color->setElementRed(c.red());
-        color->setElementGreen(c.green());
-        color->setElementBlue(c.blue());
-        color->setAttributeAlpha(c.alpha());
-        brush->setElementColor(color);
-    }
-    return brush;
+    return QFormBuilderExtra::saveBrush(br);
 }
 
 /*!
@@ -1200,6 +1031,21 @@ QActionGroup *QAbstractFormBuilder::createActionGroup(QObject *parent, const QSt
 
     Saves an XML representation of the given \a widget to the
     specified \a device in the standard UI file format.
+
+    \note Unlike when saving a form in Qt Designer, all property values are
+    written. This is because, the state of whether a property value was
+    modified or not isn't stored in the Qt property system. The widget that
+    is being saved, could have been created dynamically, not loaded via
+    \l load(), so in this case the form builder isn't aware of the list of
+    changed properties. Also, there's no generic way to do this for widgets
+    that were created dynamically.
+
+    Therefore, you should remove properties that are not required from your
+    resulting XML files, before loading them. Alternatively, if you already
+    know which properties you want to save when you call this method,
+    you can overload \c computeProperties() and return a filtered list of
+    required properties. Otherwise, unexpected behavior may occur as some
+    of these properties may depend on each other.
 
     \sa load()
 */
@@ -1326,7 +1172,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
                 continue;
 
             if (QMenu *menu = qobject_cast<QMenu *>(childWidget)) {
-                const QList<QAction *> actions = menu->parentWidget()->actions();
+                const auto actions = menu->parentWidget()->actions();
                 const bool found =
                     std::any_of(actions.cbegin(), actions.cend(),
                                 [menu] (const QAction *a) { return a->menu() == menu; });
@@ -1355,7 +1201,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
 
     // add-action
     QVector<DomActionRef *> ui_action_refs;
-    const QList<QAction *> &actions = widget->actions();
+    const auto &actions = widget->actions();
     ui_action_refs.reserve(actions.size());
     for (QAction *action : actions) {
         if (DomActionRef *ui_action_ref = createActionRefDom(action)) {
@@ -1606,7 +1452,7 @@ QList<DomProperty*> QAbstractFormBuilder::computeProperties(QObject *obj)
     for(int i=0; i < propertyCount; ++i)
         properties.insert(meta->property(i).name(), true);
 
-    const QList<QByteArray> propertyNames = properties.keys();
+    const auto propertyNames = properties.keys();
 
     const int propertyNamesCount = propertyNames.size();
     for(int i=0; i<propertyNamesCount ; ++i) {
@@ -1746,7 +1592,7 @@ DomButtonGroups *QAbstractFormBuilder::saveButtonGroups(const QWidget *mainConta
 {
     // Save fst order buttongroup children of maincontainer
     const QObjectList &mchildren = mainContainer->children();
-    if (mchildren.empty())
+    if (mchildren.isEmpty())
         return nullptr;
     QVector<DomButtonGroup *> domGroups;
     for (QObject *o : mchildren) {
@@ -1754,7 +1600,7 @@ DomButtonGroups *QAbstractFormBuilder::saveButtonGroups(const QWidget *mainConta
             if (DomButtonGroup* dg = createDom(bg))
                 domGroups.push_back(dg);
     }
-    if (domGroups.empty())
+    if (domGroups.isEmpty())
         return nullptr;
     DomButtonGroups *rc = new DomButtonGroups;
     rc->setElementButtonGroup(domGroups);
@@ -2417,7 +2263,7 @@ void QAbstractFormBuilder::loadComboBoxExtraInfo(DomWidget *ui_widget, QComboBox
 static QString buttonGroupName(const DomWidget *ui_widget)
 {
     const auto &attributes = ui_widget->elementAttribute();
-    if (attributes.empty())
+    if (attributes.isEmpty())
         return QString();
     const QString buttonGroupProperty = QLatin1String(buttonGroupPropertyC);
     for (const DomProperty *p : attributes) {
@@ -2638,7 +2484,7 @@ DomActionGroup *QAbstractFormBuilder::createDom(QActionGroup *actionGroup)
 
     QVector<DomAction *> ui_actions;
 
-    const QList<QAction *> &actions = actionGroup->actions();
+    const auto &actions = actionGroup->actions();
     ui_actions.reserve(actions.size());
     for (QAction *action : actions) {
         if (DomAction *ui_action = createDom(action)) {
@@ -2681,6 +2527,8 @@ QMetaEnum QAbstractFormBuilder::toolBarAreaMetaEnum()
     return metaEnum<QAbstractFormBuilderGadget>("toolBarArea");
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
 /*!
     \internal
     Return paths of an icon.
@@ -2704,6 +2552,8 @@ QAbstractFormBuilder::IconPaths QAbstractFormBuilder::pixmapPaths(const QPixmap 
     qWarning() << "QAbstractFormBuilder::pixmapPaths() is obsoleted";
     return IconPaths();
 }
+
+#endif // < Qt 6
 
 /*!
     \internal
@@ -2731,15 +2581,10 @@ void QAbstractFormBuilder::setIconProperty(DomProperty &p, const IconPaths &ip) 
 
 void QAbstractFormBuilder::setPixmapProperty(DomProperty &p, const IconPaths &ip) const
 {
-    DomResourcePixmap *pix = new DomResourcePixmap;
-    if (!ip.second.isEmpty())
-        pix->setAttributeResource(ip.second);
-
-    pix->setText(ip.first);
-
-    p.setAttributeName(QFormBuilderStrings::instance().pixmapAttribute);
-    p.setElementPixmap(pix);
+    QFormBuilderExtra::setPixmapProperty(&p, ip);
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
 /*!
     \internal
@@ -2752,6 +2597,8 @@ DomProperty* QAbstractFormBuilder::iconToDomProperty(const QIcon &icon) const
     qWarning() << "QAbstractFormBuilder::iconToDomProperty() is obsoleted";
     return nullptr;
 }
+
+#endif // < Qt 6
 
 /*!
     \internal
@@ -2803,6 +2650,8 @@ const DomResourcePixmap *QAbstractFormBuilder::domPixmap(const DomProperty* p) {
     }
     return nullptr;
 }
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
 /*!
     \internal
@@ -2857,6 +2706,8 @@ QPixmap QAbstractFormBuilder::domPropertyToPixmap(const DomProperty* p)
     qWarning() << "QAbstractFormBuilder::domPropertyToPixmap() is obsoleted";
     return QPixmap();
 }
+
+#endif // < Qt 6
 
 /*!
     \fn void QAbstractFormBuilder::createConnections ( DomConnections *, QWidget * )

@@ -71,7 +71,6 @@
 #endif
 #include <QtWidgets/qmdiarea.h>
 #include <QtWidgets/qmdisubwindow.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qmessagebox.h>
 
 #include <QtCore/qdebug.h>
@@ -567,7 +566,7 @@ static inline QWidget *findLayoutContainer(const FormWindow *fw)
 {
     QWidgetList l(fw->selectedWidgets());
     fw->simplifySelection(&l);
-    return l.empty() ? fw->mainContainer() : l.front();
+    return l.isEmpty() ? fw->mainContainer() : l.constFirst();
 }
 
 void FormWindowManager::createLayout()
@@ -617,7 +616,7 @@ void FormWindowManager::slotActionSimplifyLayoutActivated()
     if (selectedWidgets.size() != 1)
         return;
     SimplifyLayoutCommand *cmd = new SimplifyLayoutCommand(m_activeFormWindow);
-    if (cmd->init(selectedWidgets.front())) {
+    if (cmd->init(selectedWidgets.constFirst())) {
         m_activeFormWindow->commandHistory()->push(cmd);
     } else {
         delete cmd;
@@ -754,7 +753,7 @@ QSet<QWidget *> FormWindowManager::getUnsortedLayoutsToBeBroken(bool firstOnly) 
     for (QWidget *selectedWidget : qAsConst(selection)) {
         // find all layouts
         const QWidgetList &list = layoutsToBeBroken(selectedWidget);
-        if (!list.empty()) {
+        if (!list.isEmpty()) {
             for (QWidget *widget : list)
                 layouts.insert(widget);
             if (firstOnly)

@@ -45,7 +45,10 @@ class QDesignerFormEditorInterface;
 class QDesignerMetaDataBaseItemInterface
 {
 public:
-    virtual ~QDesignerMetaDataBaseItemInterface() {}
+    Q_DISABLE_COPY_MOVE(QDesignerMetaDataBaseItemInterface)
+
+    QDesignerMetaDataBaseItemInterface() = default;
+    virtual ~QDesignerMetaDataBaseItemInterface() = default;
 
     virtual QString name() const = 0;
     virtual void setName(const QString &name) = 0;

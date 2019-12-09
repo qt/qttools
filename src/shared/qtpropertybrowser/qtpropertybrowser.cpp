@@ -452,7 +452,7 @@ void QtProperty::insertSubProperty(QtProperty *property,
         return;
 
     // traverse all children of item. if this item is a child of item then cannot add.
-    QList<QtProperty *> pendingList = property->subProperties();
+    auto pendingList = property->subProperties();
     QMap<QtProperty *, bool> visited;
     while (!pendingList.isEmpty()) {
         QtProperty *i = pendingList.first();
@@ -499,7 +499,7 @@ void QtProperty::removeSubProperty(QtProperty *property)
 
     d_ptr->m_manager->d_ptr->propertyRemoved(property, this);
 
-    QList<QtProperty *> pendingList = subProperties();
+    auto pendingList = subProperties();
     int pos = 0;
     while (pos < pendingList.count()) {
         if (pendingList.at(pos) == property) {
@@ -1279,7 +1279,7 @@ void QtAbstractPropertyBrowserPrivate::insertSubTree(QtProperty *property,
     m_managerToProperties[manager].append(property);
     m_propertyToParents[property].append(parentProperty);
 
-    const QList<QtProperty *> subList = property->subProperties();
+    const auto subList = property->subProperties();
     for (QtProperty *subProperty : subList)
         insertSubTree(subProperty, property);
 }
@@ -1316,7 +1316,7 @@ void QtAbstractPropertyBrowserPrivate::removeSubTree(QtProperty *property,
         m_managerToProperties.remove(manager);
     }
 
-    const QList<QtProperty *> subList = property->subProperties();
+    const auto subList = property->subProperties();
     for (QtProperty *subProperty : subList)
         removeSubTree(subProperty, property);
 }
@@ -1325,8 +1325,7 @@ void QtAbstractPropertyBrowserPrivate::createBrowserIndexes(QtProperty *property
 {
     QMap<QtBrowserItem *, QtBrowserItem *> parentToAfter;
     if (afterProperty) {
-        QMap<QtProperty *, QList<QtBrowserItem *> >::ConstIterator it =
-            m_propertyToIndexes.constFind(afterProperty);
+        const auto it = m_propertyToIndexes.constFind(afterProperty);
         if (it == m_propertyToIndexes.constEnd())
             return;
 
@@ -1336,8 +1335,7 @@ void QtAbstractPropertyBrowserPrivate::createBrowserIndexes(QtProperty *property
                 parentToAfter[idx->parent()] = idx;
         }
     } else if (parentProperty) {
-        QMap<QtProperty *, QList<QtBrowserItem *> >::ConstIterator it =
-                m_propertyToIndexes.find(parentProperty);
+        const auto it = m_propertyToIndexes.find(parentProperty);
         if (it == m_propertyToIndexes.constEnd())
             return;
 
@@ -1366,7 +1364,7 @@ QtBrowserItem *QtAbstractPropertyBrowserPrivate::createBrowserIndex(QtProperty *
 
     q_ptr->itemInserted(newIndex, afterIndex);
 
-    const QList<QtProperty *> subItems = property->subProperties();
+    const auto subItems = property->subProperties();
     QtBrowserItem *afterChild = 0;
     for (QtProperty *child : subItems)
         afterChild = createBrowserIndex(child, newIndex, afterChild);
@@ -1376,8 +1374,7 @@ QtBrowserItem *QtAbstractPropertyBrowserPrivate::createBrowserIndex(QtProperty *
 void QtAbstractPropertyBrowserPrivate::removeBrowserIndexes(QtProperty *property, QtProperty *parentProperty)
 {
     QList<QtBrowserItem *> toRemove;
-    QMap<QtProperty *, QList<QtBrowserItem *> >::ConstIterator it =
-        m_propertyToIndexes.constFind(property);
+    const auto it = m_propertyToIndexes.constFind(property);
     if (it == m_propertyToIndexes.constEnd())
         return;
 
@@ -1393,7 +1390,7 @@ void QtAbstractPropertyBrowserPrivate::removeBrowserIndexes(QtProperty *property
 
 void QtAbstractPropertyBrowserPrivate::removeBrowserIndex(QtBrowserItem *index)
 {
-    QList<QtBrowserItem *> children = index->children();
+    const auto children = index->children();
     for (int i = children.count(); i > 0; i--) {
         removeBrowserIndex(children.at(i - 1));
     }
@@ -1418,7 +1415,7 @@ void QtAbstractPropertyBrowserPrivate::removeBrowserIndex(QtBrowserItem *index)
 
 void QtAbstractPropertyBrowserPrivate::clearIndex(QtBrowserItem *index)
 {
-    const QList<QtBrowserItem *> children = index->children();
+    const auto children = index->children();
     for (QtBrowserItem *item : children)
         clearIndex(item);
     delete index;
@@ -1456,12 +1453,11 @@ void QtAbstractPropertyBrowserPrivate::slotPropertyDataChanged(QtProperty *prope
     if (!m_propertyToParents.contains(property))
         return;
 
-    QMap<QtProperty *, QList<QtBrowserItem *> >::ConstIterator it =
-            m_propertyToIndexes.find(property);
+    const auto it = m_propertyToIndexes.constFind(property);
     if (it == m_propertyToIndexes.constEnd())
         return;
 
-    const QList<QtBrowserItem *> indexes = it.value();
+    const auto indexes = it.value();
     for (QtBrowserItem *idx : indexes)
         q_ptr->itemChanged(idx);
     //q_ptr->propertyChanged(property);
@@ -1662,7 +1658,7 @@ QtAbstractPropertyBrowser::QtAbstractPropertyBrowser(QWidget *parent)
 */
 QtAbstractPropertyBrowser::~QtAbstractPropertyBrowser()
 {
-    const QList<QtBrowserItem *> indexes = topLevelItems();
+    const auto indexes = topLevelItems();
     for (QtBrowserItem *item : indexes)
         d_ptr->clearIndex(item);
 }
@@ -1727,7 +1723,7 @@ QList<QtBrowserItem *> QtAbstractPropertyBrowser::topLevelItems() const
 */
 void QtAbstractPropertyBrowser::clear()
 {
-    const QList<QtProperty *> subList = properties();
+    const auto subList = properties();
     for (auto rit = subList.crbegin(), rend = subList.crend(); rit != rend; ++rit)
         removeProperty(*rit);
 }
@@ -1775,7 +1771,7 @@ QtBrowserItem *QtAbstractPropertyBrowser::insertProperty(QtProperty *property,
         return 0;
 
     // if item is already inserted in this item then cannot add.
-    QList<QtProperty *> pendingList = properties();
+    auto pendingList = properties();
     int pos = 0;
     int newPos = 0;
     while (pos < pendingList.count()) {
@@ -1813,7 +1809,7 @@ void QtAbstractPropertyBrowser::removeProperty(QtProperty *property)
     if (!property)
         return;
 
-    QList<QtProperty *> pendingList = properties();
+    auto pendingList = properties();
     int pos = 0;
     while (pos < pendingList.count()) {
         if (pendingList.at(pos) == property) {

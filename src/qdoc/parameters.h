@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,9 +29,9 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include <qregexp.h>
-#include <qvector.h>
-#include <qset.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qset.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -41,7 +41,7 @@ class CodeChunk;
 
 class Parameter
 {
- public:
+public:
     Parameter() {}
     Parameter(const QString &type,
               const QString &name = QString(),
@@ -65,7 +65,7 @@ class Parameter
 
     QString signature(bool includeValue = false) const;
 
- public:
+public:
     QString type_;
     QString name_;
     QString defaultValue_;
@@ -75,7 +75,7 @@ typedef QVector<Parameter> ParameterVector;
 
 class Parameters
 {
- public:
+public:
     Parameters();
     Parameters(const QString &signature);
 
@@ -98,11 +98,11 @@ class Parameters
     QString rawSignature(bool names = false, bool values = false) const;
     void set(const QString &signature);
     void getNames(QSet<QString> &names) const;
-    void getTypeList(QString &out) const;
-    void getTypeAndNameList(QString &out) const;
+    QString generateTypeList() const;
+    QString generateTypeAndNameList() const;
     bool match(const Parameters &parameters) const;
 
- private:
+private:
     void readToken();
     QString lexeme();
     QString previousLexeme();
@@ -112,7 +112,7 @@ class Parameters
     bool matchParameter();
     bool parse(const QString &signature);
 
- private:
+private:
     static QRegExp varComment_;
 
     bool valid_;

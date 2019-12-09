@@ -226,14 +226,10 @@ static QString suggestObjectName(const QString &oldClassName, const QString &new
 // Find the label whose buddy the widget is.
 QLabel *buddyLabelOf(QDesignerFormWindowInterface *fw, QWidget *w)
 {
-    using LabelList = QList<QLabel *>;
-    const LabelList labelList = fw->findChildren<QLabel*>();
-    if (labelList.empty())
-        return nullptr;
-    const LabelList::const_iterator cend = labelList.constEnd();
-    for (LabelList::const_iterator it = labelList.constBegin(); it != cend; ++it )
-        if ( (*it)->buddy() == w)
-            return *it;
+    const auto labelList = fw->findChildren<QLabel*>();
+    for (QLabel *label : labelList)
+        if (label->buddy() == w)
+            return label;
     return nullptr;
 }
 
@@ -586,7 +582,7 @@ bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
         return false;
 
     const QStringList c = MorphWidgetCommand::candidateClasses(fw, w);
-    if (c.empty())
+    if (c.isEmpty())
         return false;
 
     // Pull up

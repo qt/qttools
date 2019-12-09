@@ -548,7 +548,7 @@ void CentralWidget::highlightSearchTerms()
                                 searchInput.split(QRegExp("\\W+"), QString::SkipEmptyParts);
     HelpViewer *viewer = currentHelpViewer();
     for (const QString &word : words)
-        viewer->findText(word, nullptr, false, true);
+        viewer->findText(word, {}, false, true);
     disconnect(viewer, &HelpViewer::loadFinished,
                this, &CentralWidget::highlightSearchTerms);
 }

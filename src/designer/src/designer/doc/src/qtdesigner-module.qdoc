@@ -46,3 +46,8 @@
 
     \snippet plugins/doc_src_qtdesigner.pro 1
 */
+
+/*!
+    \namespace qdesigner_internal
+    \internal
+*/

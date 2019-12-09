@@ -516,14 +516,14 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
         ui->setAttributeConnectslotsbyname(false);
 
     const QVariantMap designerFormData = m_formWindow->formData();
-    if (!designerFormData.empty()) {
+    if (!designerFormData.isEmpty()) {
         DomPropertyList domPropertyList;
         const  QVariantMap::const_iterator cend = designerFormData.constEnd();
         for (QVariantMap::const_iterator it = designerFormData.constBegin(); it != cend; ++it) {
             if (DomProperty *prop = variantToDomProperty(this, widget->metaObject(), it.key(), it.value()))
                 domPropertyList += prop;
         }
-        if (!domPropertyList.empty()) {
+        if (!domPropertyList.isEmpty()) {
             DomDesignerData* domDesignerFormData = new DomDesignerData;
             domDesignerFormData->setElementProperty(domPropertyList);
             ui->setElementDesignerdata(domDesignerFormData);
@@ -590,7 +590,7 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
         const MetaDataBaseItem *item = metaDataBase->metaDataBaseItem(m_formWindow->mainContainer());
         const QStringList fakeSlots = item->fakeSlots();
         const QStringList fakeSignals  =item->fakeSignals();
-        if (!fakeSlots.empty() || !fakeSignals.empty()) {
+        if (!fakeSlots.isEmpty() || !fakeSignals.isEmpty()) {
             DomSlots *domSlots = new DomSlots();
             domSlots->setElementSlot(fakeSlots);
             domSlots->setElementSignal(fakeSignals);
@@ -708,7 +708,7 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
         // Register all button groups the form builder adds as children of the main container for them to be found
         // in the signal slot editor
         const QObjectList mchildren = mainWidget->children();
-        if (!mchildren.empty()) {
+        if (!mchildren.isEmpty()) {
             QDesignerMetaDataBaseInterface *mdb = core()->metaDataBase();
             const QObjectList::const_iterator cend = mchildren.constEnd();
             for (QObjectList::const_iterator it = mchildren.constBegin(); it != cend; ++it)
@@ -740,7 +740,7 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
         // Initialize the mainwindow geometry. Has it been  explicitly specified?
         bool hasExplicitGeometry = false;
         const auto &properties = ui->elementWidget()->elementProperty();
-        if (!properties.empty()) {
+        if (!properties.isEmpty()) {
             const QString geometry = QStringLiteral("geometry");
             for (const DomProperty *p : properties) {
                 if (p->attributeName() == geometry) {
@@ -941,7 +941,7 @@ static bool readDomEnumerationValue(const DomProperty *p,
 
 void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &properties)
 {
-    if (properties.empty())
+    if (properties.isEmpty())
         return;
 
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), o);
@@ -1692,7 +1692,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     ui_widget->setAttributeName(QLatin1String(clipboardObjectName));
     bool hasItems = false;
     // Widgets
-    if (!selection.m_widgets.empty()) {
+    if (!selection.m_widgets.isEmpty()) {
         QVector<DomWidget *> ui_widget_list;
         const int size = selection.m_widgets.size();
         for (int i=0; i< size; ++i) {
@@ -1703,19 +1703,19 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
             if (ui_child)
                 ui_widget_list.append(ui_child);
         }
-        if (!ui_widget_list.empty()) {
+        if (!ui_widget_list.isEmpty()) {
             ui_widget->setElementWidget(ui_widget_list);
             hasItems = true;
         }
     }
     // actions
-    if (!selection.m_actions.empty()) {
+    if (!selection.m_actions.isEmpty()) {
         QVector<DomAction *> domActions;
         for (QAction* action : qAsConst(selection.m_actions)) {
             if (DomAction *domAction = createDom(action))
                 domActions += domAction;
         }
-        if (!domActions.empty()) {
+        if (!domActions.isEmpty()) {
             ui_widget-> setElementAction(domActions);
             hasItems = true;
         }
@@ -1750,7 +1750,7 @@ FormBuilderClipboard QDesignerResource::paste(DomUI *ui, QWidget *widgetParent, 
     const DomWidget *topLevel = ui->elementWidget();
     initialize(ui);
     const auto &domWidgets = topLevel->elementWidget();
-    if (!domWidgets.empty()) {
+    if (!domWidgets.isEmpty()) {
         const QPoint offset = m_formWindow->grid();
         for (DomWidget* domWidget : domWidgets) {
             if (QWidget *w = create(domWidget, widgetParent)) {
@@ -1857,7 +1857,7 @@ DomCustomWidgets *QDesignerResource::saveCustomWidgets()
             WidgetDataBaseItem *internalItem = static_cast<WidgetDataBaseItem *>(item);
             const QStringList fakeSlots = internalItem->fakeSlots();
             const QStringList fakeSignals = internalItem->fakeSignals();
-            if (!fakeSlots.empty() || !fakeSignals.empty()) {
+            if (!fakeSlots.isEmpty() || !fakeSignals.isEmpty()) {
                 DomSlots *domSlots = new DomSlots();
                 domSlots->setElementSlot(fakeSlots);
                 domSlots->setElementSignal(fakeSignals);
@@ -2212,7 +2212,7 @@ QActionGroup *QDesignerResource::createActionGroup(QObject *parent, const QStrin
 void QDesignerResource::applyAttributesToPropertySheet(const DomWidget *ui_widget, QWidget *widget)
 {
     const DomPropertyList attributes = ui_widget->elementAttribute();
-    if (attributes.empty())
+    if (attributes.isEmpty())
         return;
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_formWindow->core()->extensionManager(), widget);
     const DomPropertyList::const_iterator acend = attributes.constEnd();

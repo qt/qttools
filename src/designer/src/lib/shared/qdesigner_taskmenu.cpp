@@ -250,7 +250,7 @@ bool LayoutAlignmentMenu::setAlignment(const QDesignerFormEditorInterface *core,
 
 Qt::Alignment LayoutAlignmentMenu::alignment() const
 {
-    Qt::Alignment alignment = nullptr;
+    Qt::Alignment alignment;
     if (const QAction *horizAction = m_horizGroup->checkedAction())
         if (const int horizAlign = horizAction->data().toInt())
             alignment |= static_cast<Qt::Alignment>(horizAlign);

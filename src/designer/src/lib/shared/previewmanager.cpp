@@ -59,6 +59,7 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -207,7 +208,7 @@ void PreviewDeviceSkin::setPreview(QWidget *formWidget)
 void PreviewDeviceSkin::slotSkinKeyPressEvent(int code, const QString& text, bool autorep)
 {
     if (QWidget *focusWidget =  QApplication::focusWidget()) {
-        QKeyEvent e(QEvent::KeyPress, code, nullptr, text, autorep);
+        QKeyEvent e(QEvent::KeyPress, code, {}, text, autorep);
         QApplication::sendEvent(focusWidget, &e);
     }
 }
@@ -215,7 +216,7 @@ void PreviewDeviceSkin::slotSkinKeyPressEvent(int code, const QString& text, boo
 void PreviewDeviceSkin::slotSkinKeyReleaseEvent(int code, const QString& text, bool autorep)
 {
     if (QWidget *focusWidget =  QApplication::focusWidget()) {
-        QKeyEvent e(QEvent::KeyRelease, code, nullptr, text, autorep);
+        QKeyEvent e(QEvent::KeyRelease, code, {}, text, autorep);
         QApplication::sendEvent(focusWidget, &e);
     }
 }
@@ -555,7 +556,7 @@ public:
 
     QPointer<QWidget> m_activePreview;
 
-    using PreviewDataList = QList<PreviewData>;
+    using PreviewDataList = QVector<PreviewData>;
 
     PreviewDataList m_previews;
 
@@ -622,10 +623,9 @@ static QWidget *fakeContainer(QWidget *w)
         dock->setFeatures(dock->features() & ~(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetClosable));
         dock->setAllowedAreas(Qt::LeftDockWidgetArea);
         QMainWindow *mw = new QMainWindow;
-        int leftMargin, topMargin, rightMargin, bottomMargin;
-        mw->getContentsMargins(&leftMargin, &topMargin, &rightMargin, &bottomMargin);
+        const QMargins cm = mw->contentsMargins();
         mw->addDockWidget(Qt::LeftDockWidgetArea, dock);
-        mw->resize(size + QSize(leftMargin + rightMargin, topMargin + bottomMargin));
+        mw->resize(size + QSize(cm.left() + cm.right(), cm.top() + cm.bottom()));
         return mw;
     }
     return w;
@@ -773,11 +773,11 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
     // If its the first one, position relative to form.
     // 2nd, attempt to tile right (for comparing styles) or cascade
     const QSize size = widget->size();
-    const bool firstPreview = d->m_previews.empty();
+    const bool firstPreview = d->m_previews.isEmpty();
     if (firstPreview) {
         widget->move(fw->mapToGlobal(QPoint(Spacing, Spacing)));
     } else {
-        if (QWidget *lastPreview = d->m_previews.back().m_widget) {
+        if (QWidget *lastPreview = d->m_previews.constLast().m_widget) {
             QDesktopWidget *desktop = qApp->desktop();
             const QRect lastPreviewGeometry = lastPreview->frameGeometry();
             const QRect availGeometry = desktop->availableGeometry(lastPreview);
@@ -799,7 +799,7 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
 QWidget *PreviewManager::raise(const QDesignerFormWindowInterface *fw, const PreviewConfiguration &pc)
 {
     using PreviewDataList = PreviewManagerPrivate::PreviewDataList;
-    if (d->m_previews.empty())
+    if (d->m_previews.isEmpty())
         return nullptr;
 
     // find matching window
@@ -817,7 +817,7 @@ QWidget *PreviewManager::raise(const QDesignerFormWindowInterface *fw, const Pre
 
 void PreviewManager::closeAllPreviews()
 {
-    if (!d->m_previews.empty()) {
+    if (!d->m_previews.isEmpty()) {
         d->m_updateBlocked = true;
         d->m_activePreview = nullptr;
         for (auto it = d->m_previews.constBegin(), cend = d->m_previews.constEnd(); it != cend ;++it) {
@@ -844,7 +844,7 @@ void PreviewManager::updatePreviewClosed(QWidget *w)
             ++it;
         }
     }
-    if (d->m_previews.empty())
+    if (d->m_previews.isEmpty())
         emit lastPreviewClosed();
 }
 

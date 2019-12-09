@@ -58,7 +58,6 @@
 #include <QtWidgets/qactiongroup.h>
 #include <QtGui/qevent.h>
 #include <QtGui/qscreen.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qmenubar.h>
@@ -236,7 +235,7 @@ QDesignerWorkbench::QDesignerWorkbench()  :
     { // Add application specific options pages
         QDesignerAppearanceOptionsPage *appearanceOptions = new QDesignerAppearanceOptionsPage(m_core);
         connect(appearanceOptions, &QDesignerAppearanceOptionsPage::settingsChanged, this, &QDesignerWorkbench::notifyUISettingsChanged);
-        QList<QDesignerOptionsPageInterface*> optionsPages = m_core->optionsPages();
+        auto optionsPages = m_core->optionsPages();
         optionsPages.push_front(appearanceOptions);
         m_core->setOptionsPages(optionsPages);
     }
@@ -330,7 +329,7 @@ Qt::WindowFlags QDesignerWorkbench::magicalWindowFlags(const QWidget *widgetForF
             return Qt::Window;
         default:
             Q_ASSERT(0);
-            return nullptr;
+            return {};
     }
 }
 
@@ -569,9 +568,9 @@ QRect QDesignerWorkbench::desktopGeometry() const
     case NeutralMode:
         break;
     }
-    const int screenNumber = widget ? QApplication::desktop()->screenNumber(widget) : 0;
-    auto screen = QGuiApplication::screens().value(screenNumber, QGuiApplication::primaryScreen());
-    return screen->availableGeometry();
+    const auto screen = widget ? widget->screen() : QGuiApplication::primaryScreen();
+    return screen ? screen->availableGeometry()
+                  : QGuiApplication::primaryScreen()->availableGeometry();
 }
 
 QRect QDesignerWorkbench::availableGeometry() const
@@ -579,9 +578,8 @@ QRect QDesignerWorkbench::availableGeometry() const
     if (m_mode == DockedMode)
         return m_dockedMainWindow->mdiArea()->geometry();
 
-    const int screenNumber = QApplication::desktop()->screenNumber(widgetBoxToolWindow());
-    auto screen = QGuiApplication::screens().value(screenNumber, QGuiApplication::primaryScreen());
-    return screen->availableGeometry();
+    const auto screen = widgetBoxToolWindow()->screen();
+    return screen ? screen->availableGeometry() : QGuiApplication::primaryScreen()->availableGeometry() ;
 }
 
 int QDesignerWorkbench::marginHint() const
@@ -608,7 +606,7 @@ void QDesignerWorkbench::removeFormWindow(QDesignerFormWindow *formWindow)
         m_windowMenu->removeAction(action);
     }
 
-    if (m_formWindows.empty()) {
+    if (m_formWindows.isEmpty()) {
         m_actionManager->setWindowListSeparatorVisible(false);
         // Show up new form dialog unless closing
         if (loadOk && m_state == StateUp
@@ -689,7 +687,7 @@ QDesignerFormWindow *QDesignerWorkbench::findFormWindow(QWidget *widget) const
 bool QDesignerWorkbench::handleClose()
 {
     m_state = StateClosing;
-    QList<QDesignerFormWindow *> dirtyForms;
+    QVector<QDesignerFormWindow *> dirtyForms;
     for (QDesignerFormWindow *w : qAsConst(m_formWindows)) {
         if (w->editor()->isDirty())
             dirtyForms << w;
@@ -1079,7 +1077,7 @@ void QDesignerWorkbench::restoreUISettings()
     ToolWindowFontSettings fontSettings = QDesignerSettings(m_core).toolWindowFont();
     const QFont &font = fontSettings.m_useFont ? fontSettings.m_font : qApp->font();
 
-    if (font == m_toolWindows.front()->font())
+    if (font == m_toolWindows.constFirst()->font())
         return;
 
     for (QDesignerToolWindow *tw : qAsConst(m_toolWindows))

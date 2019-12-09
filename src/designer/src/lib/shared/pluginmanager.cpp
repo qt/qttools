@@ -544,7 +544,7 @@ void QDesignerPluginManagerPrivate::addCustomWidgets(const QObject *o,
         return;
     }
     if (const QDesignerCustomWidgetCollectionInterface *coll = qobject_cast<QDesignerCustomWidgetCollectionInterface*>(o)) {
-        const QList<QDesignerCustomWidgetInterface *> &collCustomWidgets = coll->customWidgets();
+        const auto &collCustomWidgets = coll->customWidgets();
         for (QDesignerCustomWidgetInterface *c : collCustomWidgets)
             addCustomWidget(c, pluginPath, designerLanguage);
     }
@@ -589,7 +589,7 @@ QStringList QDesignerPluginManager::findPlugins(const QString &path)
         return QStringList();
 
     const QFileInfoList infoList = dir.entryInfoList(QDir::Files);
-    if (infoList.empty())
+    if (infoList.isEmpty())
         return QStringList();
 
     // Load symbolic links but make sure all file names are unique as not
@@ -738,7 +738,7 @@ void QDesignerPluginManager::ensureInitialized()
     m_d->clearCustomWidgets();
     // Add the static custom widgets
     const QObjectList staticPluginObjects = QPluginLoader::staticInstances();
-    if (!staticPluginObjects.empty()) {
+    if (!staticPluginObjects.isEmpty()) {
         const QString staticPluginPath = QCoreApplication::applicationFilePath();
         for (QObject *o : staticPluginObjects)
             m_d->addCustomWidgets(o, staticPluginPath, designerLanguage);

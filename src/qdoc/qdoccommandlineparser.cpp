@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -28,12 +28,12 @@
 
 #include "qdoccommandlineparser.h"
 
-#include <QtCore/qdebug.h>
-#include <QtCore/qfile.h>
-
-#include "config.h"
-#include "generator.h"
 #include "loggingcategory.h"
+#include "utilities.h"
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
 
 QDocCommandLineParser::QDocCommandLineParser()
     : QCommandLineParser(),
@@ -144,82 +144,45 @@ QDocCommandLineParser::QDocCommandLineParser()
     addOption(timestampsOption);
 }
 
-void QDocCommandLineParser::process(const QCoreApplication &app, QDocGlobals &qdocGlobals)
+/*!
+ * \internal
+ *
+ * Create a list of arguments from the command line and/or file(s).
+ * This lets QDoc accept arguments contained in a file provided as a
+ * command-line argument prepended by '@'.
+ */
+static QStringList argumentsFromCommandLineAndFile(const QStringList &arguments)
 {
-    QCommandLineParser::process(app);
-
-    qdocGlobals.addDefine(values(defineOption));
-    qdocGlobals.dependModules() += values(dependsOption);
-    qdocGlobals.enableHighlighting(isSet(highlightingOption));
-    qdocGlobals.setShowInternal(isSet(showInternalOption));
-    qdocGlobals.setSingleExec(isSet(singleExecOption));
-    qdocGlobals.setWriteQaPages(isSet(writeQaPagesOption));
-    qdocGlobals.setRedirectDocumentationToDevNull(isSet(redirectDocumentationToDevNullOption));
-    Config::generateExamples = !isSet(noExamplesOption);
-    foreach (const QString &indexDir, values(indexDirOption)) {
-        if (QFile::exists(indexDir))
-            qdocGlobals.appendToIndexDirs(indexDir);
-        else
-            qDebug() << "Cannot find index directory" << indexDir;
+    QStringList allArguments;
+    allArguments.reserve(arguments.size());
+    for (const QString &argument : arguments) {
+        // "@file" doesn't start with a '-' so we can't use QCommandLineParser for it
+        if (argument.startsWith(QLatin1Char('@'))) {
+            QString optionsFile = argument;
+            optionsFile.remove(0, 1);
+            if (optionsFile.isEmpty())
+                qFatal("The @ option requires an input file");
+            QFile f(optionsFile);
+            if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+                qFatal("Cannot open options file specified with @: %ls",
+                       qUtf16Printable(optionsFile));
+            while (!f.atEnd()) {
+                QString line = QString::fromLocal8Bit(f.readLine().trimmed());
+                if (!line.isEmpty())
+                    allArguments << line;
+            }
+        } else {
+            allArguments << argument;
+        }
     }
-    if (isSet(installDirOption))
-        Config::installDir = value(installDirOption);
-    qdocGlobals.setObsoleteLinks(isSet(obsoleteLinksOption));
-    if (isSet(outputDirOption))
-        Config::overrideOutputDir = value(outputDirOption);
-    foreach (const QString &format, values(outputFormatOption))
-        Config::overrideOutputFormats.insert(format);
-    qdocGlobals.setNoLinkErrors(isSet(noLinkErrorsOption) || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
-    qdocGlobals.setAutolinkErrors(isSet(autoLinkErrorsOption));
-    if (isSet(debugOption))
-        Generator::startDebugging(QString("command line"));
-    qCDebug(lcQdoc).noquote() << "Arguments :" << QCoreApplication::arguments();
+    return allArguments;
+}
 
-    if (isSet(prepareOption))
-        Generator::setQDocPass(Generator::Prepare);
-    if (isSet(generateOption))
-        Generator::setQDocPass(Generator::Generate);
-    if (isSet(singleExecOption)) {
-        Generator::setSingleExec();
-        if (isSet(indexDirOption))
-            qDebug() << "WARNING: -indexdir option ignored: Index files are not used in -single-exec mode.";
-    }
-    if (isSet(writeQaPagesOption))
-        Generator::setWriteQaPages();
-    if (isSet(logProgressOption))
-        Location::startLoggingProgress();
-    if (isSet(timestampsOption))
-        Generator::setUseTimestamps();
+void QDocCommandLineParser::process(const QStringList &arguments)
+{
+    auto allArguments = argumentsFromCommandLineAndFile(arguments);
+    QCommandLineParser::process(allArguments);
 
-    QDir currentDir = QDir::current();
-    const auto paths = values(includePathOption);
-    for (const auto &i : paths)
-        qdocGlobals.addIncludePath("-I", currentDir.absoluteFilePath(i));
-
-#ifdef QDOC_PASS_ISYSTEM
-    const auto paths2 = values(includePathSystemOption);
-    for (const auto &i : paths2)
-        qdocGlobals.addIncludePath("-isystem", currentDir.absoluteFilePath(i));
-#endif
-    const auto paths3 = values(frameworkOption);
-    for (const auto &i : paths3)
-        qdocGlobals.addIncludePath("-F", currentDir.absoluteFilePath(i));
-
-    /*
-      The default indent for code is 0.
-      The default value for false is 0.
-      The default supported file extensions are cpp, h, qdoc and qml.
-      The default language is c++.
-      The default output format is html.
-      The default tab size is 8.
-      And those are all the default values for configuration variables.
-     */
-    if (qdocGlobals.defaults().isEmpty()) {
-        qdocGlobals.defaults().insert(CONFIG_CODEINDENT, QLatin1String("0"));
-        qdocGlobals.defaults().insert(CONFIG_FALSEHOODS, QLatin1String("0"));
-        qdocGlobals.defaults().insert(CONFIG_FILEEXTENSIONS, QLatin1String("*.cpp *.h *.qdoc *.qml"));
-        qdocGlobals.defaults().insert(CONFIG_LANGUAGE, QLatin1String("Cpp"));
-        qdocGlobals.defaults().insert(CONFIG_OUTPUTFORMATS, QLatin1String("HTML"));
-        qdocGlobals.defaults().insert(CONFIG_TABSIZE, QLatin1String("8"));
-    }
+    if (isSet(singleExecOption) && isSet(indexDirOption))
+        qDebug("WARNING: -indexdir option ignored: Index files are not used in single-exec mode.");
 }

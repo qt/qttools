@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -42,23 +42,23 @@ class Text
 public:
     Text();
     explicit Text(const QString &str);
-    Text(const Text& text);
+    Text(const Text &text);
     ~Text();
 
-    Text& operator=(const Text& text);
+    Text &operator=(const Text &text);
 
     Atom *firstAtom() { return first; }
     Atom *lastAtom() { return last; }
-    Text& operator<<(Atom::AtomType atomType);
-    Text& operator<<(const QString& string);
-    Text& operator<<(const Atom& atom);
-    Text& operator<<(const LinkAtom& atom);
-    Text& operator<<(const Text& text);
+    Text &operator<<(Atom::AtomType atomType);
+    Text &operator<<(const QString &string);
+    Text &operator<<(const Atom& atom);
+    Text &operator<<(const LinkAtom &atom);
+    Text &operator<<(const Text &text);
     void stripFirstAtom();
     void stripLastAtom();
 
     bool isEmpty() const { return first == nullptr; }
-    bool contains(const QString& str) const;
+    bool contains(const QString &str) const;
     QString toString() const;
     const Atom *firstAtom() const { return first; }
     const Atom *lastAtom() const { return last; }

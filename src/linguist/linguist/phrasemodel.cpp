@@ -116,7 +116,7 @@ QVariant PhraseModel::headerData(int section, Qt::Orientation orientation, int r
 Qt::ItemFlags PhraseModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
-        return 0;
+        return {};
     Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     // Edit is allowed for source & translation if item is from phrasebook
     if (plist.at(index.row())->phraseBook()

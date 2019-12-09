@@ -37,7 +37,7 @@ QT_BEGIN_NAMESPACE
 // Qt Implementation
 static QStringList byteArrayListToStringList(const QByteArrayList &l)
 {
-    if (l.empty())
+    if (l.isEmpty())
         return QStringList();
     QStringList rc;
     for (const QByteArray &b : l)

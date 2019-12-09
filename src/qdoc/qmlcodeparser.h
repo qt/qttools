@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -35,7 +35,8 @@
 
 #include "codeparser.h"
 
-#include <qset.h>
+#include <QtCore/qset.h>
+
 #ifndef QT_NO_DECLARATIVE
 #include <private/qqmljsengine_p.h>
 #include <private/qqmljslexer_p.h>
@@ -54,13 +55,13 @@ class QmlCodeParser : public CodeParser
 
 public:
     QmlCodeParser();
-    virtual ~QmlCodeParser();
+    ~QmlCodeParser() override;
 
-    void initializeParser(const Config& config) override;
+    void initializeParser(const Config &config) override;
     void terminateParser() override;
     QString language() override;
     QStringList sourceFileNameFilter() override;
-    void parseSourceFile(const Location& location, const QString& filePath) override;
+    void parseSourceFile(const Location &location, const QString &filePath) override;
 
 #ifndef QT_NO_DECLARATIVE
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
@@ -68,7 +69,7 @@ public:
 #endif
 
 protected:
-    const QSet<QString>& topicCommands();
+    const QSet<QString> &topicCommands();
 
 private:
 #ifndef QT_NO_DECLARATIVE

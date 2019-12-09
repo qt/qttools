@@ -44,9 +44,12 @@
 #include <QtWidgets/qlayout.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qdialog.h>
+#include <QtWidgets/qgroupbox.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qgroupbox.h>
 #include <QtWidgets/qstyle.h>
+#include <QtWidgets/qabstractbutton.h>
+#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qmainwindow.h>
@@ -173,6 +176,7 @@ class QDesignerPropertySheetPrivate {
 public:
     using PropertyType = QDesignerPropertySheet::PropertyType;
     using ObjectType = QDesignerPropertySheet::ObjectType;
+    using ObjectFlags = QDesignerPropertySheet::ObjectFlags;
 
     explicit QDesignerPropertySheetPrivate(QDesignerPropertySheet *sheetPublic, QObject *object, QObject *sheetParent);
 
@@ -227,6 +231,7 @@ public:
     QDesignerFormEditorInterface *m_core;
     const QDesignerMetaObjectInterface *m_meta;
     const ObjectType m_objectType;
+    const ObjectFlags m_objectFlags;
 
     using InfoHash = QHash<int, Info>;
     InfoHash m_info;
@@ -388,6 +393,7 @@ QDesignerPropertySheetPrivate::QDesignerPropertySheetPrivate(QDesignerPropertySh
     m_core(formEditorForObject(sheetParent)),
     m_meta(m_core->introspection()->metaObject(object)),
     m_objectType(QDesignerPropertySheet::objectTypeFromObject(object)),
+    m_objectFlags(QDesignerPropertySheet::objectFlagsFromObject(object)),
     m_canHaveLayoutAttributes(hasLayoutAttributes(m_core, object)),
     m_object(object),
     m_lastLayout(nullptr),
@@ -470,7 +476,7 @@ QString QDesignerPropertySheetPrivate::transformLayoutPropertyName(int index) co
 {
     using TypeNameMap = QMap<QDesignerPropertySheet::PropertyType, QString>;
     static TypeNameMap typeNameMap;
-    if (typeNameMap.empty()) {
+    if (typeNameMap.isEmpty()) {
         typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutObjectName, QStringLiteral("objectName"));
         typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutLeftMargin, QStringLiteral("leftMargin"));
         typeNameMap.insert(QDesignerPropertySheet::PropertyLayoutTopMargin, QStringLiteral("topMargin"));
@@ -515,11 +521,22 @@ QDesignerPropertySheet::ObjectType QDesignerPropertySheet::objectTypeFromObject(
     return ObjectNone;
 }
 
+QDesignerPropertySheet::ObjectFlags QDesignerPropertySheet::objectFlagsFromObject(const QObject *o)
+{
+    ObjectFlags result;
+    if ((o->isWidgetType() && (qobject_cast<const QAbstractButton *>(o)
+                               || qobject_cast<const QGroupBox *>(o)))
+        || qobject_cast<const QAction *>(o)) {
+        result |= CheckableProperty;
+    }
+    return result;
+}
+
 QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromName(const QString &name)
 {
     typedef QHash<QString, PropertyType> PropertyTypeHash;
     static PropertyTypeHash propertyTypeHash;
-    if (propertyTypeHash.empty()) {
+    if (propertyTypeHash.isEmpty()) {
         propertyTypeHash.insert(QLatin1String(layoutObjectNameC),         PropertyLayoutObjectName);
         propertyTypeHash.insert(QLatin1String(layoutLeftMarginC),         PropertyLayoutLeftMargin);
         propertyTypeHash.insert(QLatin1String(layoutTopMarginC),          PropertyLayoutTopMargin);
@@ -540,6 +557,7 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromNam
         propertyTypeHash.insert(QLatin1String(layoutGridColumnMinimumWidthC),    PropertyLayoutGridColumnMinimumWidth);
         propertyTypeHash.insert(QStringLiteral("buddy"),                   PropertyBuddy);
         propertyTypeHash.insert(QStringLiteral("geometry"),                PropertyGeometry);
+        propertyTypeHash.insert(QStringLiteral("checked"),                 PropertyChecked);
         propertyTypeHash.insert(QStringLiteral("checkable"),               PropertyCheckable);
         propertyTypeHash.insert(QStringLiteral("accessibleName"),          PropertyAccessibility);
         propertyTypeHash.insert(QStringLiteral("accessibleDescription"),   PropertyAccessibility);
@@ -676,7 +694,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
 
     using ByteArrayList = QList<QByteArray>;
     const ByteArrayList names = object->dynamicPropertyNames();
-    if (!names.empty()) {
+    if (!names.isEmpty()) {
         const ByteArrayList::const_iterator cend =  names.constEnd();
         for (ByteArrayList::const_iterator it = names.constBegin(); it != cend; ++it) {
             const char* cName = it->constData();
@@ -1567,8 +1585,16 @@ bool QDesignerPropertySheet::isEnabled(int index) const
     // as this might be done via TaskMenu/Cursor::setProperty. Note that those
     // properties are not visible.
     const QDesignerMetaPropertyInterface *p = d->m_meta->property(index);
-    return (p->accessFlags() & QDesignerMetaPropertyInterface::WriteAccess) &&
-           designableState(p, d->m_object) != PropertyOfObjectNotDesignable;
+    if (!p->accessFlags().testFlag(QDesignerMetaPropertyInterface::WriteAccess))
+        return false;
+
+    if (designableState(p, d->m_object) == PropertyOfObjectNotDesignable)
+        return false;
+
+    const PropertyType type = propertyType(index);
+    if (type == PropertyChecked && d->m_objectFlags.testFlag(CheckableProperty))
+        return d->m_object->property("checkable").toBool();
+    return true;
 }
 
 bool QDesignerPropertySheet::isAttribute(int index) const
@@ -1657,16 +1683,16 @@ QObject *QDesignerAbstractPropertySheetFactory::extension(QObject *object, const
 
 void QDesignerAbstractPropertySheetFactory::objectDestroyed(QObject *object)
 {
-    QMutableMapIterator<QObject*, QObject*> it(m_impl->m_extensions);
-    while (it.hasNext()) {
-        it.next();
+    for (auto it = m_impl->m_extensions.begin(), end = m_impl->m_extensions.end(); it != end; /*erasing*/) {
         if (it.key() == object || it.value() == object) {
             if (it.key() == object) {
                 QObject *ext = it.value();
                 disconnect(ext, &QObject::destroyed, this, &QDesignerAbstractPropertySheetFactory::objectDestroyed);
                 delete ext;
             }
-            it.remove();
+            it = m_impl->m_extensions.erase(it);
+        } else {
+            ++it;
         }
     }
 }
