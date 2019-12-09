@@ -5,7 +5,6 @@
 #####################################################################
 
 qt_add_tool(lupdate
-    TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
@@ -67,20 +66,11 @@ qt_extend_target(lupdate CONDITION QT_FEATURE_clangcpp
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h
     DEFINES
-        # special case begin
-        # remove these
-        #(CLANG_RESOURCE_DIR=\"/clang//include\")
-        #(LUPDATE_CLANG_VERSION_STR=\"\")
-        #LUPDATE_CLANG_VERSION_MAJOR=
-        #LUPDATE_CLANG_VERSION_MINOR=
-        #LUPDATE_CLANG_VERSION_PATCH=
-        # in favor of these
-        CLANG_RESOURCE_DIR="\"${QT_LIB_CLANG_LIBDIR}/clang/${QT_LIB_CLANG_VERSION}\""
-        LUPDATE_CLANG_VERSION_STR="\"${QT_LIB_CLANG_VERSION}\""
-        LUPDATE_CLANG_VERSION_MAJOR="${QT_LIB_CLANG_VERSION_MAJOR}"
-        LUPDATE_CLANG_VERSION_MINOR="${QT_LIB_CLANG_VERSION_MINOR}"
-        LUPDATE_CLANG_VERSION_PATCH="${QT_LIB_CLANG_VERSION_PATCH}"
-        # special case end
+        (CLANG_RESOURCE_DIR=\"/clang//include\")
+        (LUPDATE_CLANG_VERSION_STR=\"\")
+        LUPDATE_CLANG_VERSION_MAJOR=
+        LUPDATE_CLANG_VERSION_MINOR=
+        LUPDATE_CLANG_VERSION_PATCH=
 )
 
 #### Keys ignored in scope 6:.:.:lupdate.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:

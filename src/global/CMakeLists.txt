@@ -1,0 +1,13 @@
+# Generated from global.pro.
+
+#####################################################################
+## Tools Module:
+#####################################################################
+
+qt_add_module(Tools
+    INTERNAL_MODULE
+    HEADER_MODULE
+)
+
+#### Keys ignored in scope 1:.:.:global.pro:<TRUE>:
+# MODULE = "tools"

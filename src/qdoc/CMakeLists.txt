@@ -29,7 +29,6 @@ qt_add_tool(qdoc
         puredocparser.cpp puredocparser.h
         qdoccommandlineparser.cpp qdoccommandlineparser.h
         qdocdatabase.cpp qdocdatabase.h
-        qdocglobals.cpp qdocglobals.h
         qdocindexfiles.cpp qdocindexfiles.h
         qdoctagfiles.cpp qdoctagfiles.h
         qmlcodemarker.cpp qmlcodemarker.h
@@ -42,7 +41,9 @@ qt_add_tool(qdoc
         text.cpp text.h
         tokenizer.cpp tokenizer.h
         tree.cpp tree.h
+        utilities.cpp utilities.h
         webxmlgenerator.cpp webxmlgenerator.h
+        xmlgenerator.cpp xmlgenerator.h
         yyindent.cpp
     LIBRARIES # special case
         WrapLibClang::WrapLibClang # special case

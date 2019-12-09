@@ -1,5 +1,6 @@
 # Generated from src.pro.
 
+add_subdirectory(global)
 add_subdirectory(linguist)
 add_subdirectory(qtattributionsscanner)
 if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets)

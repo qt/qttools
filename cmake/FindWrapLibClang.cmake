@@ -18,6 +18,11 @@ function(qt_tools_find_llvm_version_from_lib_dir lib_dir out_var)
 endfunction()
 
 function(qt_tools_find_lib_clang)
+    if(TARGET WrapLibClang::WrapLibClang)
+        set(WrapLibClang_FOUND TRUE PARENT_SCOPE)
+        return()
+    endif()
+
     if(NOT QDOC_USE_STATIC_LIBCLANG AND DEFINED ENV{QDOC_USE_STATIC_LIBCLANG})
         set(QDOC_USE_STATIC_LIBCLANG "$ENV{QDOC_USE_STATIC_LIBCLANG}")
     endif()
@@ -206,6 +211,16 @@ function(qt_tools_find_lib_clang)
     endif() # QDOC_USE_STATIC_LIBCLANG
 
     qt_tools_create_lib_clang_target()
+
+    # Break apart version string
+    string(REPLACE "." ";" version_list ${QT_LIB_CLANG_VERSION})
+    list(GET version_list 0 QT_LIB_CLANG_VERSION_MAJOR)
+    list(GET version_list 1 QT_LIB_CLANG_VERSION_MINOR)
+    list(GET version_list 2 QT_LIB_CLANG_VERSION_PATCH)
+
+    set(QT_LIB_CLANG_VERSION_MAJOR ${QT_LIB_CLANG_VERSION_MAJOR} CACHE STRING "" FORCE)
+    set(QT_LIB_CLANG_VERSION_MINOR ${QT_LIB_CLANG_VERSION_MINOR} CACHE STRING "" FORCE)
+    set(QT_LIB_CLANG_VERSION_PATCH ${QT_LIB_CLANG_VERSION_PATCH} CACHE STRING "" FORCE)
     set(QT_LIB_CLANG_LIBS "${QT_LIB_CLANG_LIBS}" CACHE STRING "" FORCE)
     set(QT_LIB_CLANG_LIBDIR "${QT_LIB_CLANG_LIBDIR}" CACHE STRING "" FORCE)
     set(QT_LIB_CLANG_INCLUDEPATH "${QT_LIB_CLANG_INCLUDEPATH}" CACHE STRING "" FORCE)
