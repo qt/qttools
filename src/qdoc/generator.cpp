@@ -918,8 +918,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             }
         } else if (node->isFunction()) {
             const FunctionNode *fn = static_cast<const FunctionNode *>(node);
-            QSet<QString> declaredNames;
-            fn->parameters().getNames(declaredNames);
+            const QSet<QString> declaredNames = fn->parameters().getNames();
             QSet<QString> documentedNames = fn->doc().parameterNames();
             if (declaredNames != documentedNames) {
                 QSet<QString>::const_iterator i = declaredNames.constBegin();
