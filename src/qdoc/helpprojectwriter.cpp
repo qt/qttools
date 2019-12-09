@@ -157,7 +157,7 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
 
 
     NodeTypeSet fullSubset;
-    for (auto it = pageTypeHash.cbegin(), end = pageTypeHash.cend(); it != end; ++it)
+    for (auto it = pageTypeHash.constBegin(); it != pageTypeHash.constEnd(); ++it)
         fullSubset.insert(it.value());
 
     for (const QString &selector : selectors) {
@@ -689,8 +689,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeEndElement();
 
     // Write customFilter elements.
-    QHash<QString, QSet<QString> >::ConstIterator it;
-    for (it = project.customFilters.constBegin(); it != project.customFilters.constEnd(); ++it) {
+    for (auto it = project.customFilters.constBegin(); it != project.customFilters.constEnd(); ++it) {
         writer.writeStartElement("customFilter");
         writer.writeAttribute("name", it.key());
         QStringList sortedAttributes = it.value().values();

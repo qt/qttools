@@ -177,11 +177,8 @@ void Quoter::quoteFromFile(const QString &userFriendlyFilePath,
     /*
       Squeeze blanks (cat -s).
     */
-    QStringList::Iterator m = markedLines.begin();
-    while (m != markedLines.end()) {
-        replaceMultipleNewlines(*m);
-        ++m;
-    }
+    for (auto &line : markedLines)
+        replaceMultipleNewlines(line);
     codeLocation.start();
 }
 

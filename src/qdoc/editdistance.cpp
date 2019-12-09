@@ -75,19 +75,17 @@ QString nearestName(const QString &actual, const QSet<QString> &candidates)
     int numBest = 0;
     QString best;
 
-    QSet<QString>::ConstIterator c = candidates.constBegin();
-    while (c != candidates.constEnd()) {
-        if ((*c)[0] == actual[0]) {
-            int delta = editDistance(actual, *c);
+    for (const auto &candidate : candidates) {
+        if (candidate[0] == actual[0]) {
+            int delta = editDistance(actual, candidate);
             if (delta < deltaBest) {
                 deltaBest = delta;
                 numBest = 1;
-                best = *c;
+                best = candidate;
             } else if (delta == deltaBest) {
                 numBest++;
             }
         }
-        ++c;
     }
 
     if (numBest == 1 && deltaBest <= 2 && actual.length() + best.length() >= 5)

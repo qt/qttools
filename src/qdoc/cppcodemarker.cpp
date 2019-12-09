@@ -422,11 +422,9 @@ QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
 {
     QString code;
 
-    QStringList::ConstIterator inc = includes.constBegin();
-    while (inc != includes.constEnd()) {
-        code += "<@preprocessor>#include &lt;<@headerfile>" + *inc + "</@headerfile>&gt;</@preprocessor>\n";
-        ++inc;
-    }
+    for (const auto &include : includes)
+        code += "<@preprocessor>#include &lt;<@headerfile>"
+                + include + "</@headerfile>&gt;</@preprocessor>\n";
     return code;
 }
 

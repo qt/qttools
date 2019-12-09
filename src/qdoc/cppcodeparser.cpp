@@ -712,15 +712,10 @@ void CppCodeParser::processMetaCommands(const Doc &doc, Node *node)
 {
     QStringList metaCommandsUsed = doc.metaCommandsUsed().values();
     metaCommandsUsed.sort(); // TODO: why are these sorted? mws 24/12/2018
-    QStringList::ConstIterator cmd = metaCommandsUsed.constBegin();
-    while (cmd != metaCommandsUsed.constEnd()) {
-        ArgList args = doc.metaCommandArgs(*cmd);
-        ArgList::ConstIterator arg = args.constBegin();
-        while (arg != args.constEnd()) {
-            processMetaCommand(doc, *cmd, *arg, node);
-            ++arg;
-        }
-        ++cmd;
+    for (const auto &command : metaCommandsUsed) {
+        const ArgList args = doc.metaCommandArgs(command);
+        for (const auto &arg : args)
+            processMetaCommand(doc, command, arg, node);
     }
 }
 
@@ -986,18 +981,17 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
             }
         } else if (args.size() > 1) {
             QVector<SharedCommentNode *> sharedCommentNodes;
-            ArgList::ConstIterator arg = args.constBegin();
-            while (arg != args.constEnd()) {
+            for (const auto &arg : qAsConst(args)) {
                 node = nullptr;
                 if (topic == COMMAND_FN) {
                     if (showInternal() || !doc.isInternal())
-                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg->first);
+                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg.first);
                 } else if (topic == COMMAND_MACRO) {
-                    node = parseMacroArg(doc.location(), arg->first);
+                    node = parseMacroArg(doc.location(), arg.first);
                 } else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic)) {
-                    node = parseOtherFuncArg(topic, doc.location(), arg->first);
+                    node = parseOtherFuncArg(topic, doc.location(), arg.first);
                 } else {
-                    node = processTopicCommand(doc, topic, *arg);
+                    node = processTopicCommand(doc, topic, arg);
                 }
                 if (node != nullptr) {
                     bool found = false;
@@ -1015,7 +1009,6 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                         docs.append(doc);
                     }
                 }
-                ++arg;
             }
         }
     }
@@ -1023,15 +1016,14 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
 
 void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
 {
-    NodeList::Iterator n = nodes.begin();
     QList<Doc>::Iterator d = docs.begin();
-    while (n != nodes.end()) {
-        if (*n != nullptr) {
-            processMetaCommands(*d, *n);
-            (*n)->setDoc(*d);
-            checkModuleInclusion(*n);
-            if ((*n)->isAggregate()) {
-                Aggregate *aggregate = static_cast<Aggregate *>(*n);
+    for (const auto &node : nodes) {
+        if (node != nullptr) {
+            processMetaCommands(*d, node);
+            node->setDoc(*d);
+            checkModuleInclusion(node);
+            if (node->isAggregate()) {
+                Aggregate *aggregate = static_cast<Aggregate *>(node);
                 if (aggregate->includeFiles().isEmpty()) {
                     Aggregate *parent = aggregate;
                     while (parent->physicalModuleName().isEmpty() && (parent->parent() != nullptr))
@@ -1044,7 +1036,6 @@ void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
             }
         }
         ++d;
-        ++n;
     }
 }
 

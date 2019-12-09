@@ -2035,16 +2035,16 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
 {
     nodes.clear();
     int nonfunctionCount = nonfunctionMap_.count(name);
-    FunctionMap::const_iterator i = functionMap_.find(name);
-    if (i != functionMap_.end()) {
+    auto it = functionMap_.find(name);
+    if (it != functionMap_.end()) {
         int functionCount = 0;
-        FunctionNode *fn = i.value();
+        FunctionNode *fn = it.value();
         while (fn != nullptr) {
             ++functionCount;
             fn = fn->nextOverload();
         }
         nodes.reserve(nonfunctionCount + functionCount);
-        fn = i.value();
+        fn = it.value();
         while (fn != nullptr) {
             nodes.append(fn);
             fn = fn->nextOverload();
@@ -2053,10 +2053,9 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
         nodes.reserve(nonfunctionCount);
     }
     if (nonfunctionCount > 0) {
-        NodeMap::const_iterator i = nonfunctionMap_.find(name);
-        while (i != nonfunctionMap_.end() && i.key() == name) {
-            nodes.append(i.value());
-            ++i;
+        for (auto it = nonfunctionMap_.find(name);
+                  it != nonfunctionMap_.end() && it.key() == name; ++it) {
+            nodes.append(it.value());
         }
     }
 }
@@ -2088,10 +2087,10 @@ Node *Aggregate::findNonfunctionChild(const QString &name, bool (Node::*isMatch)
  */
 FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters &parameters)
 {
-    FunctionMap::iterator i = functionMap_.find(name);
-    if (i == functionMap_.end())
+    auto it = functionMap_.find(name);
+    if (it == functionMap_.end())
         return nullptr;
-    FunctionNode *fn = i.value();
+    FunctionNode *fn = it.value();
 
     if (parameters.isEmpty() && fn->parameters().isEmpty() && !fn->isInternal())
         return fn;
@@ -2114,10 +2113,10 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
     }
 
     if (parameters.isEmpty()) {
-        for (fn = i.value(); fn != nullptr; fn = fn->nextOverload())
+        for (fn = it.value(); fn != nullptr; fn = fn->nextOverload())
             if (!fn->isInternal())
                 return fn;
-        return i.value();
+        return it.value();
     }
     return nullptr;
 }
@@ -2184,14 +2183,13 @@ void Aggregate::normalizeOverloads()
       Ensure that none of the primary functions is inactive, private,
       or marked \e {overload}.
     */
-    FunctionMap::Iterator i = functionMap_.begin();
-    while (i != functionMap_.end()) {
-        FunctionNode *fn = i.value();
+    for (auto it = functionMap_.begin(); it != functionMap_.end(); ++it) {
+        FunctionNode *fn = it.value();
         if (fn->isOverload()) {
             FunctionNode *primary = fn->findPrimaryFunction();
             if (primary) {
                 primary->setNextOverload(fn);
-                i.value() = primary;
+                it.value() = primary;
                 fn = primary;
             } else {
                 fn->clearOverloadFlag();
@@ -2222,7 +2220,7 @@ void Aggregate::normalizeOverloads()
             internalFn->setOverloadNumber(++count);
             internalFn = internalFn->nextOverload();
         }
-        ++i; // process next function in function map.
+        // process next function in function map.
     }
     /*
       Recursive part.
@@ -2362,11 +2360,11 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
  */
 void Aggregate::addFunction(FunctionNode *fn)
 {
-    FunctionMap::iterator i = functionMap_.find(fn->name());
-    if (i == functionMap_.end())
+    auto it = functionMap_.find(fn->name());
+    if (it == functionMap_.end())
         functionMap_.insert(fn->name(), fn);
     else
-        i.value()->appendOverload(fn);
+        it.value()->appendOverload(fn);
     functionCount_++;
 }
 
@@ -2382,8 +2380,8 @@ void Aggregate::addFunction(FunctionNode *fn)
  */
 void Aggregate::adoptFunction(FunctionNode *fn)
 {
-    FunctionMap::iterator i = functionMap_.find(fn->name());
-    if (i == functionMap_.end())
+    auto it = functionMap_.find(fn->name());
+    if (it == functionMap_.end())
         functionMap_.insert(fn->name(), fn);
     functionCount_++;
 }
@@ -2530,8 +2528,8 @@ QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, bool attached) cons
  */
 bool Aggregate::hasOverloads(const FunctionNode *fn) const
 {
-    FunctionMap::const_iterator i = functionMap_.find(fn->name());
-    return (i == functionMap_.end() ? false : (i.value()->nextOverload() != nullptr));
+    auto it = functionMap_.find(fn->name());
+    return (it == functionMap_.end() ? false : (it.value()->nextOverload() != nullptr));
 }
 
 /*!
@@ -2565,19 +2563,19 @@ void Aggregate::printChildren(const QString &title)
  */
 void Aggregate::removeFunctionNode(FunctionNode *fn)
 {
-    FunctionMap::Iterator i = functionMap_.find(fn->name());
-    if (i != functionMap_.end()) {
-        if (i.value() == fn) {
+    auto it = functionMap_.find(fn->name());
+    if (it != functionMap_.end()) {
+        if (it.value() == fn) {
             if (fn->nextOverload() != nullptr) {
-                i.value() = fn->nextOverload();
+                it.value() = fn->nextOverload();
                 fn->setNextOverload(nullptr);
                 fn->setOverloadNumber(0);
             }
             else {
-                functionMap_.erase(i);
+                functionMap_.erase(it);
             }
         } else {
-            FunctionNode *current = i.value();
+            FunctionNode *current = it.value();
             while (current != nullptr) {
                 if (current->nextOverload() == fn) {
                     current->setNextOverload(fn->nextOverload());
@@ -2620,9 +2618,8 @@ static bool keep(FunctionNode *fn)
  */
 void Aggregate::findAllFunctions(NodeMapMap &functionIndex)
 {
-    FunctionMap::const_iterator i;
-    for (i = functionMap_.constBegin(); i != functionMap_.constEnd(); ++i) {
-        FunctionNode *fn = i.value();
+    for (auto it = functionMap_.constBegin(); it != functionMap_.constEnd(); ++it) {
+        FunctionNode *fn = it.value();
         if (keep(fn))
             functionIndex[fn->name()].insert(fn->parent()->fullDocumentName(), fn);
         fn = fn->nextOverload();
@@ -2771,15 +2768,15 @@ void Aggregate::findAllSince()
         QString sinceString = node->since();
         // Insert a new entry into each map for each new since string found.
         if (!node->isPrivate() && !sinceString.isEmpty()) {
-            NodeMultiMapMap::iterator nsmap = QDocDatabase::newSinceMaps().find(sinceString);
+            auto nsmap = QDocDatabase::newSinceMaps().find(sinceString);
             if (nsmap == QDocDatabase::newSinceMaps().end())
                 nsmap = QDocDatabase::newSinceMaps().insert(sinceString, NodeMultiMap());
 
-            NodeMapMap::iterator ncmap = QDocDatabase::newClassMaps().find(sinceString);
+            auto ncmap = QDocDatabase::newClassMaps().find(sinceString);
             if (ncmap == QDocDatabase::newClassMaps().end())
                 ncmap = QDocDatabase::newClassMaps().insert(sinceString, NodeMap());
 
-            NodeMapMap::iterator nqcmap = QDocDatabase::newQmlTypeMaps().find(sinceString);
+            auto nqcmap = QDocDatabase::newQmlTypeMaps().find(sinceString);
             if (nqcmap == QDocDatabase::newQmlTypeMaps().end())
                 nqcmap = QDocDatabase::newQmlTypeMaps().insert(sinceString, NodeMap());
 
@@ -2995,9 +2992,8 @@ void ClassNode::removePrivateAndInternalBases()
  */
 void ClassNode::resolvePropertyOverriddenFromPtrs(PropertyNode *pn)
 {
-    QList<RelatedClass>::const_iterator bc = baseClasses().constBegin();
-    while (bc != baseClasses().constEnd()) {
-        ClassNode *cn = bc->node_;
+    for (const auto &baseClass : qAsConst(baseClasses())) {
+        ClassNode *cn = baseClass.node_;
         if (cn) {
             Node *n = cn->findNonfunctionChild(pn->name(), &Node::isProperty);
             if (n) {
@@ -3008,7 +3004,6 @@ void ClassNode::resolvePropertyOverriddenFromPtrs(PropertyNode *pn)
             else
                 cn->resolvePropertyOverriddenFromPtrs(pn);
         }
-        ++bc;
     }
 }
 
@@ -3451,12 +3446,11 @@ QmlTypeNode *ClassNode::findQmlBaseNode()
  */
 FunctionNode *ClassNode::findOverriddenFunction(const FunctionNode *fn)
 {
-    QList<RelatedClass>::Iterator bc = bases_.begin();
-    while (bc != bases_.end()) {
-        ClassNode *cn = bc->node_;
+    for (auto &bc : bases_) {
+        ClassNode *cn = bc.node_;
         if (cn == nullptr) {
-            cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
-            bc->node_ = cn;
+            cn = QDocDatabase::qdocDB()->findClassNode(bc.path_);
+            bc.node_ = cn;
         }
         if (cn != nullptr) {
             FunctionNode *result = cn->findFunctionChild(fn);
@@ -3466,7 +3460,6 @@ FunctionNode *ClassNode::findOverriddenFunction(const FunctionNode *fn)
             if (result != nullptr && !result->isNonvirtual())
                 return result;
         }
-        ++bc;
     }
     return nullptr;
 }
@@ -3480,31 +3473,27 @@ FunctionNode *ClassNode::findOverriddenFunction(const FunctionNode *fn)
  */
 PropertyNode *ClassNode::findOverriddenProperty(const FunctionNode *fn)
 {
-    QList<RelatedClass>::Iterator bc = bases_.begin();
-    while (bc != bases_.end()) {
-        ClassNode *cn = bc->node_;
+    for (auto &baseClass : bases_) {
+        ClassNode *cn = baseClass.node_;
         if (cn == nullptr) {
-            cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
-            bc->node_ = cn;
+            cn = QDocDatabase::qdocDB()->findClassNode(baseClass.path_);
+            baseClass.node_ = cn;
         }
         if (cn != nullptr) {
             const NodeList &children = cn->childNodes();
-            NodeList::const_iterator i = children.begin();
-            while (i != children.end()) {
-                if ((*i)->isProperty()) {
-                    PropertyNode *pn = static_cast<PropertyNode *>(*i);
+            for (const auto &child : children) {
+                if (child->isProperty()) {
+                    PropertyNode *pn = static_cast<PropertyNode *>(child);
                     if (pn->name() == fn->name() || pn->hasAccessFunction(fn->name())) {
                         if (pn->hasDoc())
                             return pn;
                     }
                 }
-                i++;
             }
             PropertyNode *result = cn->findOverriddenProperty(fn);
             if (result != nullptr)
                 return result;
         }
-        ++bc;
     }
     return nullptr;
 }
@@ -4488,29 +4477,21 @@ QString PropertyNode::qualifiedDataType() const
  */
 bool PropertyNode::hasAccessFunction(const QString &name) const
 {
-    NodeList::const_iterator i = getters().begin();
-    while (i != getters().end()) {
-        if ((*i)->name() == name)
+    for (const auto &getter : getters()) {
+        if (getter->name() == name)
             return true;
-        ++i;
     }
-    i = setters().begin();
-    while (i != setters().end()) {
-        if ((*i)->name() == name)
+    for (const auto &setter : setters()) {
+        if (setter->name() == name)
             return true;
-        ++i;
     }
-    i = resetters().begin();
-    while (i != resetters().end()) {
-        if ((*i)->name() == name)
+    for (const auto &resetter : resetters()) {
+        if (resetter->name() == name)
             return true;
-        ++i;
     }
-    i = notifiers().begin();
-    while (i != notifiers().end()) {
-        if ((*i)->name() == name)
+    for (const auto &notifier : notifiers()) {
+        if (notifier->name() == name)
             return true;
-        ++i;
     }
     return false;
 }
@@ -4833,11 +4814,9 @@ void CollectionNode::addMember(Node *node)
 bool CollectionNode::hasNamespaces() const
 {
     if (!members_.isEmpty()) {
-        NodeList::const_iterator i = members_.begin();
-        while (i != members_.end()) {
-            if ((*i)->isNamespace())
+        for (const auto &member : qAsConst(members_)) {
+            if (member->isNamespace())
                 return true;
-            ++i;
         }
     }
     return false;
@@ -4850,11 +4829,9 @@ bool CollectionNode::hasNamespaces() const
 bool CollectionNode::hasClasses() const
 {
     if (!members_.isEmpty()) {
-        NodeList::const_iterator i = members_.cbegin();
-        while (i != members_.cend()) {
-            if ((*i)->isClassNode())
+        for (const auto &member : qAsConst(members_)) {
+            if (member->isClassNode())
                 return true;
-            ++i;
         }
     }
     return false;
@@ -4867,11 +4844,9 @@ bool CollectionNode::hasClasses() const
 void CollectionNode::getMemberNamespaces(NodeMap& out)
 {
     out.clear();
-    NodeList::const_iterator i = members_.cbegin();
-    while (i != members_.cend()) {
-        if ((*i)->isNamespace())
-            out.insert((*i)->name(), (*i));
-        ++i;
+    for (const auto &member : qAsConst(members_)) {
+        if (member->isNamespace())
+            out.insert(member->name(), member);
     }
 }
 
@@ -4882,11 +4857,9 @@ void CollectionNode::getMemberNamespaces(NodeMap& out)
 void CollectionNode::getMemberClasses(NodeMap& out) const
 {
     out.clear();
-    NodeList::const_iterator i = members_.cbegin();
-    while (i != members_.cend()) {
-        if ((*i)->isClassNode())
-            out.insert((*i)->name(), (*i));
-        ++i;
+    for (const auto &i : qAsConst(members_)) {
+        if (i->isClassNode())
+            out.insert(i->name(), i);
     }
 }
 
@@ -4898,10 +4871,8 @@ void CollectionNode::printMembers(const QString &title)
 {
     qDebug() << title << name() << members_.size();
     if (members_.size() > 0) {
-        for (int i=0; i<members_.size(); ++i) {
-            Node *n = members_.at(i);
-            qDebug() << "  MEMBER:" << n->name() << n->nodeTypeString();
-        }
+        for (const auto &member : qAsConst(members_))
+            qDebug() << "  MEMBER:" << member->name() << member->nodeTypeString();
     }
 }
 

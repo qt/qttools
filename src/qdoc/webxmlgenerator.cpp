@@ -817,8 +817,7 @@ void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *no
         QPair<QString, QString> anchorPair;
         const Node *linkNode;
 
-        for (QMap<Node::LinkType, QPair<QString, QString> >::const_iterator it =
-             node->links().cbegin(), end = node->links().cend(); it != end; ++it) {
+        for (auto it = node->links().cbegin(); it != node->links().cend(); ++it) {
 
             linkNode = qdb_->findNodeForTarget(it.value().first, node);
 

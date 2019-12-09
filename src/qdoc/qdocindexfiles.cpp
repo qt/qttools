@@ -1450,14 +1450,12 @@ void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregat
 {
     FunctionMap &functionMap = aggregate->functionMap();
     if (!functionMap.isEmpty()) {
-        FunctionMap::iterator i = functionMap.begin();
-        while (i != functionMap.end()) {
-            FunctionNode *fn = i.value();
+        for (auto it = functionMap.begin(); it != functionMap.end(); ++it) {
+            FunctionNode *fn = it.value();
             while (fn != nullptr) {
                 generateFunctionSection(writer, fn);
                 fn = fn->nextOverload();
             }
-            i++;
         }
     }
 }
@@ -1497,41 +1495,33 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             */
             const CNMap &groups = qdb_->groups();
             if (!groups.isEmpty()) {
-                CNMap::ConstIterator g = groups.constBegin();
-                while (g != groups.constEnd()) {
-                    if (generateIndexSection(writer, g.value(), post))
+                for (auto it = groups.constBegin(); it != groups.constEnd(); ++it) {
+                    if (generateIndexSection(writer, it.value(), post))
                         writer.writeEndElement();
-                    ++g;
                 }
             }
 
             const CNMap &modules = qdb_->modules();
             if (!modules.isEmpty()) {
-                CNMap::ConstIterator g = modules.constBegin();
-                while (g != modules.constEnd()) {
-                    if (generateIndexSection(writer, g.value(), post))
+                for (auto it = modules.constBegin(); it != modules.constEnd(); ++it) {
+                    if (generateIndexSection(writer, it.value(), post))
                         writer.writeEndElement();
-                    ++g;
                 }
             }
 
             const CNMap &qmlModules = qdb_->qmlModules();
             if (!qmlModules.isEmpty()) {
-                CNMap::ConstIterator g = qmlModules.constBegin();
-                while (g != qmlModules.constEnd()) {
-                    if (generateIndexSection(writer, g.value(), post))
+                for (auto it = qmlModules.constBegin(); it != qmlModules.constEnd(); ++it) {
+                    if (generateIndexSection(writer, it.value(), post))
                         writer.writeEndElement();
-                    ++g;
                 }
             }
 
             const CNMap &jsModules = qdb_->jsModules();
             if (!jsModules.isEmpty()) {
-                CNMap::ConstIterator g = jsModules.constBegin();
-                while (g != jsModules.constEnd()) {
-                    if (generateIndexSection(writer, g.value(), post))
+                for (auto it = jsModules.constBegin(); it != jsModules.constEnd(); ++it) {
+                    if (generateIndexSection(writer, it.value(), post))
                         writer.writeEndElement();
-                    ++g;
                 }
             }
         }

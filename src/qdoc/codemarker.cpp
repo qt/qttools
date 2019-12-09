@@ -85,11 +85,8 @@ void CodeMarker::terminateMarker()
 void CodeMarker::initialize(const Config &config)
 {
     defaultLang = config.getString(CONFIG_LANGUAGE);
-    QList<CodeMarker *>::ConstIterator m = markers.constBegin();
-    while (m != markers.constEnd()) {
-        (*m)->initializeMarker(config);
-        ++m;
-    }
+    for (const auto &marker : qAsConst(markers))
+        marker->initializeMarker(config);
 }
 
 /*!
@@ -97,11 +94,8 @@ void CodeMarker::initialize(const Config &config)
  */
 void CodeMarker::terminate()
 {
-    QList<CodeMarker *>::ConstIterator m = markers.constBegin();
-    while (m != markers.constEnd()) {
-        (*m)->terminateMarker();
-        ++m;
-    }
+    for (const auto &marker : qAsConst(markers))
+        marker->terminateMarker();
 }
 
 CodeMarker *CodeMarker::markerForCode(const QString &code)
@@ -110,12 +104,11 @@ CodeMarker *CodeMarker::markerForCode(const QString &code)
     if (defaultMarker != nullptr && defaultMarker->recognizeCode(code))
         return defaultMarker;
 
-    QList<CodeMarker *>::ConstIterator m = markers.constBegin();
-    while (m != markers.constEnd()) {
-        if ((*m)->recognizeCode(code))
-            return *m;
-        ++m;
+    for (const auto &marker : qAsConst(markers)) {
+        if (marker->recognizeCode(code))
+            return marker;
     }
+
     return defaultMarker;
 }
 
@@ -127,11 +120,9 @@ CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
         QString ext = fileName.mid(dot + 1);
         if (defaultMarker != nullptr && defaultMarker->recognizeExtension(ext))
             return defaultMarker;
-        QList<CodeMarker *>::ConstIterator m = markers.constBegin();
-        while (m != markers.constEnd()) {
-            if ((*m)->recognizeExtension(ext))
-                return *m;
-            ++m;
+        for (const auto &marker : qAsConst(markers)) {
+            if (marker->recognizeExtension(ext))
+                return marker;
         }
         --dot;
     }
@@ -140,11 +131,9 @@ CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
 
 CodeMarker *CodeMarker::markerForLanguage(const QString &lang)
 {
-    QList<CodeMarker *>::ConstIterator m = markers.constBegin();
-    while (m != markers.constEnd()) {
-        if ((*m)->recognizeLanguage(lang))
-            return *m;
-        ++m;
+    for (const auto &marker : qAsConst(markers)) {
+        if (marker->recognizeLanguage(lang))
+            return marker;
     }
     return nullptr;
 }

@@ -145,12 +145,10 @@ void Generator::appendFullName(Text &text,
 
 void Generator::appendFullNames(Text &text, const NodeList &nodes, const Node *relative)
 {
-    NodeList::ConstIterator n = nodes.constBegin();
     int index = 0;
-    while (n != nodes.constEnd()) {
-        appendFullName(text,*n,relative);
+    for (const auto &node : nodes) {
+        appendFullName(text, node, relative);
         text << comma(index++,nodes.count());
-        ++n;
     }
 }
 
@@ -177,13 +175,11 @@ void Generator::signatureList(const NodeList &nodes, const Node *relative, CodeM
     Text text;
     int count = 0;
     text << Atom(Atom::ListLeft, QString("bullet"));
-    NodeList::ConstIterator n = nodes.constBegin();
-    while (n != nodes.constEnd()) {
+    for (const auto &node: nodes) {
         text << Atom(Atom::ListItemNumber, QString::number(++count));
         text << Atom(Atom::ListItemLeft, QString("bullet"));
-        appendSignature(text, *n);
+        appendSignature(text, node);
         text << Atom(Atom::ListItemRight, QString("bullet"));
-        ++n;
     }
     text << Atom(Atom::ListRight, QString("bullet"));
     generateText(text, relative, marker);
@@ -191,21 +187,17 @@ void Generator::signatureList(const NodeList &nodes, const Node *relative, CodeM
 
 int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<RelatedClass> &rc)
 {
-    QList<RelatedClass>::ConstIterator r;
     QMap<QString,Text> classMap;
-    int index = 0;
-
-    r = rc.constBegin();
-    while (r != rc.constEnd()) {
-        ClassNode *rcn = (*r).node_;
+    for (const auto &relatedClass : rc) {
+        ClassNode *rcn = relatedClass.node_;
         if (rcn && rcn->isInAPI()) {
             Text className;
             appendFullName(className, rcn, cn);
             classMap[className.toString().toLower()] = className;
         }
-        ++r;
     }
 
+    int index = 0;
     const QStringList classNames = classMap.keys();
     for (const auto &className : classNames) {
         text << classMap[className];
@@ -217,17 +209,17 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
 int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList &subs)
 {
     QMap<QString,Text> classMap;
-    int index = 0;
 
-    for (int i = 0; i < subs.size(); ++i) {
-        Text t;
-        if (!base->isQtQuickNode() || !subs[i]->isQtQuickNode() ||
-                (base->logicalModuleName() == subs[i]->logicalModuleName())) {
-            appendFullName(t, subs[i], base);
-            classMap[t.toString().toLower()] = t;
+    for (const auto sub : subs) {
+        Text text;
+        if (!base->isQtQuickNode() || !sub->isQtQuickNode() ||
+                (base->logicalModuleName() == sub->logicalModuleName())) {
+            appendFullName(text, sub, base);
+            classMap[text.toString().toLower()] = text;
         }
     }
 
+    int index = 0;
     const QStringList names = classMap.keys();
     for (const auto &name : names) {
         text << classMap[name];
@@ -887,65 +879,56 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             const EnumNode *enume = static_cast<const EnumNode *>(node);
 
             QSet<QString> definedItems;
-            QList<EnumItem>::ConstIterator it = enume->items().constBegin();
-            while (it != enume->items().constEnd()) {
-                definedItems.insert((*it).name());
-                ++it;
-            }
+            const QList<EnumItem> &items = enume->items();
+            for (const auto &item : items)
+                definedItems.insert(item.name());
 
             const auto &documentedItemList = enume->doc().enumItemNames();
             QSet<QString> documentedItems(documentedItemList.cbegin(), documentedItemList.cend());
-            QSet<QString> allItems = definedItems + documentedItems;
+            const QSet<QString> allItems = definedItems + documentedItems;
             if (allItems.count() > definedItems.count() ||
                     allItems.count() > documentedItems.count()) {
-                QSet<QString>::ConstIterator a = allItems.constBegin();
-                while (a != allItems.constEnd()) {
-                    if (!definedItems.contains(*a)) {
+                for (const auto &it : allItems) {
+                    if (!definedItems.contains(it)) {
                         QString details;
-                        QString best = nearestName(*a, definedItems);
+                        QString best = nearestName(it, definedItems);
                         if (!best.isEmpty() && !documentedItems.contains(best))
                             details = tr("Maybe you meant '%1'?").arg(best);
 
                         node->doc().location().warning(tr("No such enum item '%1' in %2")
-                                                       .arg(*a).arg(node->plainFullName()), details);
-                    }
-                    else if (!documentedItems.contains(*a)) {
+                                                       .arg(it).arg(node->plainFullName()), details);
+                    } else if (!documentedItems.contains(it)) {
                         node->doc().location().warning(tr("Undocumented enum item '%1' in %2")
-                                                       .arg(*a).arg(node->plainFullName()));
+                                                       .arg(it).arg(node->plainFullName()));
                     }
-                    ++a;
                 }
             }
         } else if (node->isFunction()) {
             const FunctionNode *fn = static_cast<const FunctionNode *>(node);
             const QSet<QString> declaredNames = fn->parameters().getNames();
-            QSet<QString> documentedNames = fn->doc().parameterNames();
+            const QSet<QString> documentedNames = fn->doc().parameterNames();
             if (declaredNames != documentedNames) {
-                QSet<QString>::const_iterator i = declaredNames.constBegin();
-                while (i != declaredNames.constEnd()) {
-                    if (!documentedNames.contains(*i)) {
+                for (const auto &name : declaredNames) {
+                    if (!documentedNames.contains(name)) {
                         if (fn->isActive() || fn->isPreliminary()) {
                             if (!fn->isMarkedReimp() && !fn->isOverload()) {
                                 fn->doc().location().warning(
                                           tr("Undocumented parameter '%1' in %2")
-                                          .arg(*i).arg(node->plainFullName()));
+                                          .arg(name).arg(node->plainFullName()));
                             }
                         }
                     }
-                    ++i;
                 }
-                i = documentedNames.constBegin();
-                while (i != documentedNames.constEnd()) {
-                    if (!declaredNames.contains(*i)) {
-                        QString best = nearestName(*i, declaredNames);
+                for (const auto &name : documentedNames) {
+                    if (!declaredNames.contains(name)) {
+                        QString best = nearestName(name, declaredNames);
                         QString details;
                         if (!best.isEmpty())
                             details = tr("Maybe you meant '%1'?").arg(best);
                         fn->doc().location().warning(tr("No such parameter '%1' in %2")
-                                                     .arg(*i).arg(fn->plainFullName()),
+                                                     .arg(name).arg(fn->plainFullName()),
                                                      details);
                     }
-                    ++i;
                 }
             }
             /*
@@ -1123,9 +1106,6 @@ void Generator::generateInheritedBy(const ClassNode *classe, CodeMarker *marker)
 
 void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
 {
-    QList<RelatedClass>::ConstIterator r;
-    int index;
-
     if (!classe->baseClasses().isEmpty()) {
         Text text;
         text << Atom::ParaLeft
@@ -1133,21 +1113,20 @@ void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
              << "Inherits: "
              << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD);
 
-        r = classe->baseClasses().constBegin();
-        index = 0;
-        while (r != classe->baseClasses().constEnd()) {
-            if ((*r).node_) {
-                appendFullName(text, (*r).node_, classe);
+        int index = 0;
+        const QList<RelatedClass> &baseClasses = classe->baseClasses();
+        for (const auto &cls : baseClasses) {
+            if (cls.node_) {
+                appendFullName(text, cls.node_, classe);
 
-                if ((*r).access_ == Node::Protected) {
+                if (cls.access_ == Node::Protected) {
                     text << " (protected)";
                 }
-                else if ((*r).access_ == Node::Private) {
+                else if (cls.access_ == Node::Private) {
                     text << " (private)";
                 }
                 text << separator(index++, classe->baseClasses().count());
             }
-            ++r;
         }
         text << Atom::ParaRight;
         generateText(text, classe, marker);
@@ -1728,32 +1707,29 @@ void Generator::generateDocs()
 
 Generator *Generator::generatorForFormat(const QString &format)
 {
-    QList<Generator *>::ConstIterator g = generators.constBegin();
-    while (g != generators.constEnd()) {
-        if ((*g)->format() == format)
-            return *g;
-        ++g;
+    for (const auto &generator : qAsConst(generators)) {
+        if (generator->format() == format)
+            return generator;
     }
     return nullptr;
 }
 
 /*!
-  Looks up the tag \a t in the map of metadata values for the
+  Looks up the tag \a tag in the map of metadata values for the
   current topic in \a inner. If a value for the tag is found,
   the value is returned.
 
-  \note If \a t is found in the metadata map, it is erased.
-  i.e. Once you call this function for a particular \a t,
-  you consume \a t.
+  \note If \a tag is found in the metadata map, it is erased.
+  i.e. Once you call this function for a particular \a tag,
+  you consume \a tag.
  */
-QString Generator::getMetadataElement(const Aggregate *inner, const QString &t)
+QString Generator::getMetadataElement(const Aggregate *inner, const QString &tag)
 {
     QString s;
-    QStringMultiMap& metaTagMap = const_cast<QStringMultiMap&>(inner->doc().metaTagMap());
-    QStringMultiMap::iterator i = metaTagMap.find(t);
-    if (i != metaTagMap.end()) {
-        s = i.value();
-        metaTagMap.erase(i);
+    QStringMultiMap &metaTagMap = const_cast<QStringMultiMap &>(inner->doc().metaTagMap());
+    for (auto it = metaTagMap.find(tag); it != metaTagMap.end();) {
+        s = it.value();
+        metaTagMap.erase(it);
     }
     return s;
 }
@@ -1986,11 +1962,8 @@ void Generator::augmentImageDirs(QSet<QString> &moreImageDirs)
 {
     if (moreImageDirs.isEmpty())
         return;
-    QSet<QString>::const_iterator i = moreImageDirs.begin();
-    while (i != moreImageDirs.end()) {
-        imageDirs.append(*i);
-        ++i;
-    }
+    for (const auto &it : moreImageDirs)
+        imageDirs.append(it);
 }
 
 /*!
@@ -2243,11 +2216,9 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 
 void Generator::terminate()
 {
-    QList<Generator *>::ConstIterator g = generators.constBegin();
-    while (g != generators.constEnd()) {
-        if (outputFormats.contains((*g)->format()))
-            (*g)->terminateGenerator();
-        ++g;
+    for (const auto &generator : qAsConst(generators)) {
+         if (outputFormats.contains(generator->format()))
+         generator->terminateGenerator();
     }
 
     fmtLeftMaps.clear();

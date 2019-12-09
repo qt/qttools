@@ -1156,7 +1156,7 @@ void ClangCodeParser::getDefaultArgs()
 static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &allHeaders)
 {
     QVector<QByteArray> result;
-    for (auto it = allHeaders.cbegin(), end = allHeaders.cend(); it != end; ++it) {
+    for (auto it = allHeaders.cbegin(); it != allHeaders.cend(); ++it) {
         const QByteArray path = "-I" + it.value().toLatin1();
         const QByteArray parent = "-I"
             + QDir::cleanPath(it.value() + QLatin1String("/../")).toLatin1();
@@ -1284,13 +1284,12 @@ void ClangCodeParser::buildPCH()
             if (tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
                 QTextStream out(&tmpHeaderFile);
                 if (header.isEmpty()) {
-                    QList<QString> keys = allHeaders_.keys();
-                    QList<QString> values = allHeaders_.values();
-                    for (int i = 0; i < keys.size(); i++) {
-                        if (!keys.at(i).endsWith(QLatin1String("_p.h")) &&
-                            !keys.at(i).startsWith(QLatin1String("moc_"))) {
-                            QString line = QLatin1String("#include \"") + values.at(i) +
-                                QLatin1String("/") + keys.at(i) + QLatin1String("\"");
+                    for (auto it = allHeaders_.constKeyValueBegin();
+                              it != allHeaders_.constKeyValueEnd(); ++it) {
+                        if (!(*it).first.endsWith(QLatin1String("_p.h")) &&
+                            !(*it).first.startsWith(QLatin1String("moc_"))) {
+                            QString line = QLatin1String("#include \"") + (*it).second +
+                                    QLatin1String("/") + (*it).first + QLatin1String("\"");
                             out << line << "\n";
                         }
                     }

@@ -292,13 +292,12 @@ static void processQdocconfFile(const QString &fileName, Config &config)
       but only if they haven't already been loaded. This works in both
       -prepare/-generate mode and -singleexec mode.
      */
-    QStringList fileNames = config.getStringList(CONFIG_TRANSLATORS);
-    QStringList::ConstIterator fn = fileNames.constBegin();
-    while (fn != fileNames.constEnd()) {
+    const QStringList fileNames = config.getStringList(CONFIG_TRANSLATORS);
+    for (const auto &fileName : fileNames) {
         bool found = false;
         if (!translators.isEmpty()) {
             for (int i=0; i<translators.size(); ++i) {
-                if (translators.at(i).first == *fn) {
+                if (translators.at(i).first == fileName) {
                     found = true;
                     break;
                 }
@@ -306,15 +305,14 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         }
         if (!found) {
             QTranslator *translator = new QTranslator(nullptr);
-            if (!translator->load(*fn)) {
-                config.lastLocation().error(QCoreApplication::translate("QDoc", "Cannot load translator '%1'").arg(*fn));
+            if (!translator->load(fileName)) {
+                config.lastLocation().error(QCoreApplication::translate("QDoc", "Cannot load translator '%1'").arg(fileName));
             }
             else {
                 QCoreApplication::instance()->installTranslator(translator);
-                translators.append(Translator(*fn, translator));
+                translators.append(Translator(fileName, translator));
             }
         }
-        ++fn;
     }
 #endif
 
@@ -452,15 +450,13 @@ static void processQdocconfFile(const QString &fileName, Config &config)
 
         qCDebug(lcQdoc, "Parsing header files");
         int parsed = 0;
-        QMap<QString,QString>::ConstIterator h = headers.constBegin();
-        while (h != headers.constEnd()) {
-            CodeParser *codeParser = CodeParser::parserForHeaderFile(h.key());
+        for (auto it = headers.constBegin(); it != headers.constEnd(); ++it) {
+            CodeParser *codeParser = CodeParser::parserForHeaderFile(it.key());
             if (codeParser) {
                 ++parsed;
-                qCDebug(lcQdoc, "Parsing %s", qPrintable(h.key()));
-                codeParser->parseHeaderFile(config.location(), h.key());
+                qCDebug(lcQdoc, "Parsing %s", qPrintable(it.key()));
+                codeParser->parseHeaderFile(config.location(), it.key());
             }
-            ++h;
         }
 
         clangParser_->precompileHeaders();
@@ -471,15 +467,13 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         */
         parsed = 0;
         Location::logToStdErrAlways("Parse source files for " + project);
-        QMap<QString,QString>::ConstIterator s = sources.constBegin();
-        while (s != sources.constEnd()) {
-            CodeParser *codeParser = CodeParser::parserForSourceFile(s.key());
+        for (const auto &key : sources.keys()) {
+            auto *codeParser = CodeParser::parserForSourceFile(key);
             if (codeParser) {
                 ++parsed;
-                qCDebug(lcQdoc, "Parsing %s", qPrintable(s.key()));
-                codeParser->parseSourceFile(config.location(), s.key());
+                qCDebug(lcQdoc, "Parsing %s", qPrintable(key));
+                codeParser->parseSourceFile(config.location(), key);
             }
-            ++s;
         }
         Location::logToStdErrAlways("Source files parsed for " + project);
     }
@@ -499,15 +493,13 @@ static void processQdocconfFile(const QString &fileName, Config &config)
       one.
      */
     qCDebug(lcQdoc, "Generating docs");
-    QSet<QString>::ConstIterator of = outputFormats.constBegin();
-    while (of != outputFormats.constEnd()) {
-        Generator *generator = Generator::generatorForFormat(*of);
+    for (const auto &format : outputFormats) {
+        auto *generator = Generator::generatorForFormat(format);
         if (generator == nullptr)
             outputFormatsLocation.fatal(QCoreApplication::translate("QDoc",
-                                               "Unknown output format '%1'").arg(*of));
+                                               "Unknown output format '%1'").arg(format));
         generator->initializeFormat(config);
         generator->generateDocs();
-        ++of;
     }
     qdb->clearLinkCounts();
 

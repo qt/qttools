@@ -1350,20 +1350,16 @@ void DocParser::parse(const QString &source,
                     } else if (macroHash()->contains(cmdStr)) {
                         const Macro &macro = macroHash()->value(cmdStr);
                         int numPendingFi = 0;
-                        QStringMap::ConstIterator d;
                         int numFormatDefs = 0;
                         QString matchExpr;
-                        d = macro.otherDefs.constBegin();
-                        while (d != macro.otherDefs.constEnd()) {
-                            if (d.key() == "match") {
-                                matchExpr = d.value();
-                                ++d;
+                        for (auto it = macro.otherDefs.constBegin(); it != macro.otherDefs.constEnd(); ++it) {
+                            if (it.key() == "match") {
+                                matchExpr = it.value();
                             } else {
-                                append(Atom::FormatIf, d.key());
-                                expandMacro(cmdStr, *d, macro.numParams);
-                                ++d;
+                                append(Atom::FormatIf, it.key());
+                                expandMacro(cmdStr, *it, macro.numParams);
                                 ++numFormatDefs;
-                                if (d == macro.otherDefs.constEnd()) {
+                                if (it == macro.otherDefs.constEnd()) {
                                     append(Atom::FormatEndif);
                                 } else {
                                     append(Atom::FormatElse);
@@ -1463,16 +1459,16 @@ void DocParser::parse(const QString &source,
             braceDepth--;
             pos++;
 
-            QMap<int, QString>::Iterator f = pendingFormats.find(braceDepth);
-            if (f == pendingFormats.end()) {
+            auto format = pendingFormats.find(braceDepth);
+            if (format == pendingFormats.end()) {
                 enterPara();
                 appendChar('}');
             } else {
-                append(Atom::FormattingRight, *f);
-                if (*f == ATOM_FORMATTING_INDEX) {
+                append(Atom::FormattingRight, *format);
+                if (*format == ATOM_FORMATTING_INDEX) {
                     if (indexStartedPara)
                         skipAllSpaces();
-                } else if (*f == ATOM_FORMATTING_LINK) {
+                } else if (*format == ATOM_FORMATTING_LINK) {
                     // hack for C++ to support links like
                     // \l{QString::}{count()}
                     if (currentLinkAtom &&
@@ -1483,7 +1479,7 @@ void DocParser::parse(const QString &source,
                     }
                     currentLinkAtom = nullptr;
                 }
-                pendingFormats.erase(f);
+                pendingFormats.erase(format);
             }
             break;
         }
@@ -1761,14 +1757,12 @@ void DocParser::startFormat(const QString &format, int cmd)
 {
     enterPara();
 
-    QMap<int, QString>::ConstIterator f = pendingFormats.constBegin();
-    while (f != pendingFormats.constEnd()) {
-        if (*f == format) {
+    for (const auto &item : qAsConst(pendingFormats)) {
+        if (item == format) {
             location().warning(tr("Cannot nest '\\%1' commands")
                                .arg(cmdName(cmd)));
             return;
         }
-        ++f;
     }
 
     append(Atom::FormattingLeft, format);
