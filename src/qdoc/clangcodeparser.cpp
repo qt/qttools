@@ -1095,14 +1095,15 @@ static const char *defaultArgs_[] = {
     "-fno-exceptions", // Workaround for clang bug http://reviews.llvm.org/D17988
     "-DQ_QDOC",
     "-DQT_DISABLE_DEPRECATED_BEFORE=0",
-    "-DQT_ANNOTATE_CLASS(type,...)=static_assert(sizeof(#__VA_ARGS__), #type);",
-    "-DQT_ANNOTATE_CLASS2(type,a1,a2)=static_assert(sizeof(#a1, #a2), #type);",
+    "-DQT_ANNOTATE_CLASS(type,...)=static_assert(sizeof(#__VA_ARGS__),#type);",
+    "-DQT_ANNOTATE_CLASS2(type,a1,a2)=static_assert(sizeof(#a1,#a2),#type);",
     "-DQT_ANNOTATE_FUNCTION(a)=__attribute__((annotate(#a)))",
     "-DQT_ANNOTATE_ACCESS_SPECIFIER(a)=__attribute__((annotate(#a)))",
     "-Wno-constant-logical-operand",
 #ifdef Q_OS_WIN
     "-fms-compatibility-version=19",
 #endif
+    "-ferror-limit=0",
     "-I" CLANG_RESOURCE_DIR
 };
 
