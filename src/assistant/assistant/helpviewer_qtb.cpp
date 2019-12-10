@@ -160,7 +160,7 @@ void HelpViewer::doSetSource(const QUrl &url, QTextDocument::ResourceType type)
     bool helpOrAbout = (url.toString() == QLatin1String("help"));
     const QUrl resolvedUrl = (helpOrAbout ? LocalHelpFile : HelpEngineWrapper::instance().findFile(url));
 
-    QTextBrowser::setSource(resolvedUrl);
+    QTextBrowser::doSetSource(resolvedUrl, type);
 
     if (!resolvedUrl.isValid()) {
         helpOrAbout = (url.toString() == QLatin1String("about:blank"));
