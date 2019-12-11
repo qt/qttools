@@ -167,7 +167,7 @@ defineReplace(CheckClangLlvmLibForLupdateParser) {
                           LLVMSupport \
                           LLVMDemangle
 
-    versionIsAtLeast($$CLANG_VERSION, "10.0.0") {
+    versionIsAtLeast($$CLANG_VERSION, "9.0.0") {
         libToTest += LLVMBitstreamReader\
                      LLVMRemarks
     }
