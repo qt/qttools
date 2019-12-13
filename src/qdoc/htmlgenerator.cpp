@@ -3855,7 +3855,6 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
                                               const Aggregate *relative,
                                               CodeMarker *marker)
 {
-    QmlPropertyNode *qpn = nullptr;
 #ifdef GENERATE_MAC_REFS
     generateMacRef(node, marker);
 #endif
@@ -3866,61 +3865,52 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
                           "<div class=\"table\"><table class=\"qmlname\">\n");
 
     QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
-                    "<td class=\"%2\"><p>\n<a name=\"%3\"></a>");
+                    "<td class=\"%2\"><p>\n");
     QString qmlItemEnd("</p></td></tr>\n");
 
-    QString qmlItemFooter("</table></div>\n</div>");
+    QString qmlItemFooter("</table></div></div>\n");
+
+
+    std::function<void (QmlPropertyNode *)> generateQmlProperty = [&](QmlPropertyNode *n) {
+        out() << qmlItemStart.arg(refForNode(n), "tblQmlPropNode");
+
+        if (!n->isReadOnlySet() && n->declarativeCppNode())
+            n->markReadOnly(!n->isWritable());
+
+        if (n->isReadOnly())
+            out() << "<span class=\"qmlreadonly\">[read-only] </span>";
+        if (n->isDefault())
+            out() << "<span class=\"qmldefault\">[default] </span>";
+
+        generateQmlItem(n, relative, marker, false);
+        out() << qmlItemEnd;
+    };
+
+    std::function<void (Node *)> generateQmlMethod = [&](Node *n) {
+        out() << qmlItemStart.arg(refForNode(n), "tblQmlFuncNode");
+        generateSynopsis(n, relative, marker, Section::Details, false);
+        out() << qmlItemEnd;
+    };
 
     out() << "<div class=\"qmlitem\">";
-    QString nodeRef;
     if (node->isPropertyGroup()) {
         const SharedCommentNode *scn = static_cast<const SharedCommentNode*>(node);
-        out() << "<div class=\"qmlproto\">";
-        out() << "<div class=\"table\"><table class=\"qmlname\">";
+        out() << qmlItemHeader;
         if (!scn->name().isEmpty()) {
-            nodeRef = refForNode(scn);
-            QString heading = scn->name() + " group";
-            out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
+            out() << "<tr valign=\"top\" class=\"even\" id=\"" << refForNode(scn) << "\">";
             out() << "<th class=\"centerAlign\"><p>";
-            out() << "<a name=\"" + nodeRef + "\"></a>";
-            out() << "<b>" << heading << "</b>";
-            out() << "</p></th></tr>";
+            out() << "<b>" << scn->name() << " group</b>";
+            out() << "</p></th></tr>\n";
         }
         const QVector<Node *> sharedNodes = scn->collective();
         for (const auto &node : sharedNodes) {
-            if (node->isQmlProperty() || node->isJsProperty()) {
-                qpn = static_cast<QmlPropertyNode *>(node);
-                nodeRef = refForNode(qpn);
-                out() << "<tr valign=\"top\" class=\"odd\" id=\"" << nodeRef << "\">";
-                out() << "<td class=\"tblQmlPropNode\"><p>";
-                out() << "<a name=\"" + nodeRef + "\"></a>";
-
-                if (!qpn->isWritable())
-                    out() << "<span class=\"qmlreadonly\">[read-only] </span>";
-                if (qpn->isDefault())
-                    out() << "<span class=\"qmldefault\">[default] </span>";
-                generateQmlItem(qpn, relative, marker, false);
-                out() << "</p></td></tr>";
-            }
+            if (node->isQmlProperty() || node->isJsProperty())
+                generateQmlProperty(static_cast<QmlPropertyNode *>(node));
         }
-        out() << "</table></div>";
-        out() << "</div>";
+        out() << qmlItemFooter;
     } else if (node->isQmlProperty() || node->isJsProperty()) {
-        qpn = static_cast<QmlPropertyNode *>(node);
         out() << qmlItemHeader;
-        out() << qmlItemStart.arg(nodeRef, "tblQmlPropNode", refForNode(qpn));
-
-        if (!qpn->isReadOnlySet()) {
-            if (qpn->declarativeCppNode())
-                qpn->markReadOnly(!qpn->isWritable());
-        }
-        if (qpn->isReadOnly())
-            out() << "<span class=\"qmlreadonly\">[read-only] </span>";
-        if (qpn->isDefault())
-            out() << "<span class=\"qmldefault\">[default] </span>";
-
-        generateQmlItem(qpn, relative, marker, false);
-        out() << qmlItemEnd;
+        generateQmlProperty(static_cast<QmlPropertyNode *>(node));
         out() << qmlItemFooter;
     } else if (node->isSharedCommentNode()) {
         const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode *>(node);
@@ -3929,20 +3919,17 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node,
             out() << "<div class=\"fngroup\">\n";
         out() << qmlItemHeader;
         for (const auto &node : sharedNodes) {
-            if (node->isFunction(Node::QML) || node->isFunction(Node::JS)) {
-                out() << qmlItemStart.arg(nodeRef, "tblQmlFuncNode", refForNode(node));
-                generateSynopsis(node, relative, marker, Section::Details, false);
-                out() << qmlItemEnd;
-            }
+            if (node->isFunction(Node::QML) || node->isFunction(Node::JS))
+                generateQmlMethod(node);
+            else if (node->isQmlProperty() || node->isJsProperty())
+                generateQmlProperty(static_cast<QmlPropertyNode *>(node));
         }
         out() << qmlItemFooter;
         if (sharedNodes.size() > 1)
-            out() << "</div>";
+            out() << "</div>"; // fngroup
     } else { // assume the node is a method/signal handler
         out() << qmlItemHeader;
-        out() << qmlItemStart.arg(nodeRef, "tblQmlFuncNode", refForNode(node));
-        generateSynopsis(node, relative, marker, Section::Details, false);
-        out() << qmlItemEnd;
+        generateQmlMethod(node);
         out() << qmlItemFooter;
     }
 

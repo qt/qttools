@@ -69,9 +69,23 @@
 */
 
 /*!
+    \qmlproperty int Type::fourth
+    \qmlproperty int Type::fifth
+
+    \brief A group of properties sharing a documentation comment.
+*/
+
+/*!
     \qmlmethod Type Type::copy(a)
 
     Returns another Type based on \a a.
+*/
+
+/*!
+    \qmlmethod Type::enable()
+    \qmlmethod Type::disable()
+
+    Enables or disables this type.
 */
 
 /*!
