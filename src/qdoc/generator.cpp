@@ -1337,28 +1337,32 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
     }
 }
 
+QString Generator::formatSince(const Node *node)
+{
+    QStringList since = node->since().split(QLatin1Char(' '));
+
+    // If there is only one argument, assume it is the Qt version number.
+    if (since.count() == 1)
+        return "Qt " + since[0];
+
+    // Otherwise, use the original <project> <version> string.
+    return node->since();
+}
+
 void Generator::generateSince(const Node *node, CodeMarker *marker)
 {
     if (!node->since().isEmpty()) {
         Text text;
         text << Atom::ParaLeft
              << "This "
-             << typeString(node);
+             << typeString(node)
+             << " was introduced ";
         if (node->isEnumType())
-            text << " was introduced or modified in ";
-        else
-            text << " was introduced in ";
-
-        QStringList since = node->since().split(QLatin1Char(' '));
-        if (since.count() == 1) {
-            // If there is only one argument, assume it is the Qt version number.
-            text << " Qt " << since[0];
-        } else {
-            // Otherwise, reconstruct the <project> <version> string.
-            text << " " << since.join(' ');
-        }
-
-        text << "." << Atom::ParaRight;
+            text << "or modified ";
+        text << "in "
+             << formatSince(node)
+             << "."
+             << Atom::ParaRight;
         generateText(text, node, marker);
     }
 }

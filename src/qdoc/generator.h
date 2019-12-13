@@ -157,6 +157,7 @@ protected:
     void generateRequiredLinks(const Node *node, CodeMarker *marker);
     void generateLinkToExample(const ExampleNode *en, CodeMarker *marker, const QString &exampleUrl);
     virtual void generateFileList(const ExampleNode *en, CodeMarker *marker, bool images);
+    static QString formatSince(const Node *node);
     void generateSince(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     void generatePrivateSignalNote(const Node *node, CodeMarker *marker);

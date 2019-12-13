@@ -2172,16 +2172,8 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     //add the since and project into the map
     if (!aggregate->since().isEmpty()) {
         text.clear();
-        QStringList since = aggregate->since().split(QLatin1Char(' '));
-        if (since.count() == 1) {
-            // If there is only one argument, assume it is the Qt version number.
-            text << " Qt " << since[0];
-        }
-        else {
-                //Otherwise, reconstruct the <project> <version> string.
-                text << " " << since.join(' ');
-        }
-        text << Atom::ParaRight;
+        text << formatSince(aggregate)
+             << Atom::ParaRight;
         requisites.insert(sinceText, text);
     }
 
@@ -2304,16 +2296,8 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     //add the since and project into the map
     if (!qcn->since().isEmpty()) {
         text.clear();
-        QStringList since = qcn->since().split(QLatin1Char(' '));
-        if (since.count() == 1) {
-            // If there is only one argument, assume it is the Qt version number.
-            text << " Qt " << since[0];
-        }
-        else {
-                //Otherwise, reconstruct the <project> <version> string.
-                text << " " << since.join(' ');
-        }
-        text << Atom::ParaRight;
+        text << formatSince(qcn)
+             << Atom::ParaRight;
         requisites.insert(sinceText, text);
     }
 
