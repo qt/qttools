@@ -1062,7 +1062,7 @@ static QString libraryPath(const QString &libraryLocation, const char *name,
     if (platform & WindowsBased) {
         result += QLatin1String(name);
         result += qtLibInfix;
-        if (debug)
+        if (debug && platformHasDebugSuffix(platform))
             result += QLatin1Char('d');
     } else if (platform & UnixBased) {
         result += QStringLiteral("lib");
@@ -1408,11 +1408,11 @@ static DeployResult deploy(const Options &options,
     if ((options.platform & WindowsBased) && options.platform != WinCEIntel
         && options.platform != WinCEArm && !qtGuiLibrary.isEmpty())  {
         QString libGlesName = QStringLiteral("libGLESV2");
-        if (isDebug)
+        if (isDebug && platformHasDebugSuffix(options.platform))
             libGlesName += QLatin1Char('d');
         libGlesName += QLatin1String(windowsSharedLibrarySuffix);
         QString libCombinedQtAngleName = QStringLiteral("QtANGLE");
-        if (isDebug)
+        if (isDebug && platformHasDebugSuffix(options.platform))
             libCombinedQtAngleName += QLatin1Char('d');
         libCombinedQtAngleName += QLatin1String(windowsSharedLibrarySuffix);
         const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
@@ -1428,7 +1428,7 @@ static DeployResult deploy(const Options &options,
                 const QString libGlesFullPath = qtBinDir + slash + libGlesName;
                 deployedQtLibraries.append(libGlesFullPath);
                 QString libEglFullPath = qtBinDir + slash + QStringLiteral("libEGL");
-                if (isDebug)
+                if (isDebug && platformHasDebugSuffix(options.platform))
                     libEglFullPath += QLatin1Char('d');
                 libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
                 deployedQtLibraries.append(libEglFullPath);
@@ -1606,7 +1606,7 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
                                              "qtwebengine_resources_100p.pak",
                                              "qtwebengine_resources_200p.pak"};
     QByteArray webEngineProcessName(webEngineProcessC);
-    if (isDebug)
+    if (isDebug && platformHasDebugSuffix(options.platform))
         webEngineProcessName.append('d');
     if (optVerboseLevel)
         std::wcout << "Deploying: " << webEngineProcessName.constData() << "...\n";
