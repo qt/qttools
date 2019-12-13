@@ -42,6 +42,11 @@ private slots:
     void htmlFromQml();
     void htmlFromCppBug80259();
 
+    void webXmlFromQDocFile();
+    void webXmlFromCpp();
+    void webXmlFromQml();
+    void webXmlFromCppBug80259();
+
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
@@ -126,6 +131,8 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
             QString prefix = file + delim + QString::number(lineNumber) + delim;
             QString expectedLine = prefix + expectedIn.readLine();
             QString actualLine = prefix + actualIn.readLine();
+            removeFullPathStrings(actualLine);
+            removeFullPathStrings(expectedLine);
             QCOMPARE(actualLine, expectedLine);
         }
     }
@@ -162,6 +169,13 @@ void tst_generatedOutput::htmlFromQDocFile()
                    "qdoctests-qdocfileoutput-linking.html");
 }
 
+void tst_generatedOutput::webXmlFromQDocFile()
+{
+    testAndCompare("webxml_test.qdocconf",
+                   "html/qdoctests-qdocfileoutput.webxml "
+                   "html/qdoctests-qdocfileoutput-linking.webxml");
+}
+
 void tst_generatedOutput::htmlFromCpp()
 {
     testAndCompare("testcpp.qdocconf",
@@ -170,6 +184,16 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc-test-members.html "
                    "testqdoc.html");
 }
+
+
+void tst_generatedOutput::webXmlFromCpp()
+{
+    testAndCompare("webxml_testcpp.qdocconf",
+                   "html/testcpp-module.webxml "
+                   "html/testqdoc-test.webxml "
+                   "html/testqdoc-testderived.webxml");
+}
+
 
 void tst_generatedOutput::htmlFromQml()
 {
@@ -188,6 +212,13 @@ void tst_generatedOutput::htmlFromQml()
                    "qml-int.html");
 }
 
+void tst_generatedOutput::webXmlFromQml()
+{
+    testAndCompare("webxml_testqml.qdocconf",
+                   "html/test-componentset-example.webxml "
+                   "html/uicomponents-qmlmodule.webxml");
+}
+
 void tst_generatedOutput::htmlFromCppBug80259()
 {
     testAndCompare("bug80259/testmodule.qdocconf",
@@ -195,6 +226,15 @@ void tst_generatedOutput::htmlFromCppBug80259()
                    "second.html "
                    "third.html "
                    "index.html");
+}
+
+void tst_generatedOutput::webXmlFromCppBug80259()
+{
+    testAndCompare("bug80259/webxml_testmodule.qdocconf",
+                   "html/first.webxml "
+                   "html/second.webxml "
+                   "html/third.webxml "
+                   "html/index.webxml");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
