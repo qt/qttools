@@ -620,14 +620,30 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
 {
+    return linksForIdentifier(id, d->usesFilterEngine
+                              ? d->filterEngine->activeFilter()
+                              : d->currentFilter);
+}
+
+/*!
+    \since 5.15
+
+    Returns a map of the documents found for the \a id, filtered by \a filterName.
+    The map contains the document titles and their URLs. The returned map contents depend on
+    the passed filter, and therefore only the identifiers registered for
+    this filter will be returned. If you want to get all results unfiltered,
+    pass empty string as \a filterName.
+*/
+QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id, const QString &filterName) const
+{
     if (!d->setup())
         return QMap<QString, QUrl>();
 
     if (d->usesFilterEngine)
-        return d->collectionHandler->linksForIdentifier(id, d->filterEngine->activeFilter());
+        return d->collectionHandler->linksForIdentifier(id, filterName);
 
     // obsolete
-    return d->collectionHandler->linksForIdentifier(id, filterAttributes(d->currentFilter));
+    return d->collectionHandler->linksForIdentifier(id, filterAttributes(filterName));
 }
 
 /*!
@@ -638,14 +654,33 @@ QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
 */
 QMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
 {
+    return linksForKeyword(keyword, d->usesFilterEngine
+                           ? d->filterEngine->activeFilter()
+                           : d->currentFilter);
+}
+
+/*!
+    \since 5.15
+
+    Returns a map of the documents found for the \a keyword, filtered by \a filterName.
+    The map contains the document titles and their URLs. The returned map contents depend on
+    the passed filter, and therefore only the keywords registered for
+    this filter will be returned. If you want to get all results unfiltered,
+    pass empty string as \a filterName.
+
+*/
+QMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword, const QString &filterName) const
+{
     if (!d->setup())
         return QMap<QString, QUrl>();
 
     if (d->usesFilterEngine)
-        return d->collectionHandler->linksForKeyword(keyword, d->filterEngine->activeFilter());
+        return d->collectionHandler->linksForKeyword(keyword, filterName);
 
-    return d->collectionHandler->linksForKeyword(keyword, filterAttributes(d->currentFilter));
+    // obsolete
+    return d->collectionHandler->linksForKeyword(keyword, filterAttributes(filterName));
 }
+
 
 /*!
     Removes the \a key from the settings section in the

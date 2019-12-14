@@ -284,6 +284,7 @@ struct Options {
     bool deployPdb = false;
     bool dryRun = false;
     bool patchQt = true;
+    bool ignoreLibraryErrors = false;
 
     inline bool isWinRt() const {
         return platform == WinRtArm || platform == WinRtIntel;
@@ -374,6 +375,10 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     QCommandLineOption noPatchQtOption(QStringLiteral("no-patchqt"),
                                        QStringLiteral("Do not patch the Qt6Core library."));
     parser->addOption(noPatchQtOption);
+
+    QCommandLineOption ignoreErrorOption(QStringLiteral("ignore-library-errors"),
+                                         QStringLiteral("Ignore errors when libraries cannot be found."));
+    parser->addOption(ignoreErrorOption);
 
     QCommandLineOption noPluginsOption(QStringLiteral("no-plugins"),
                                        QStringLiteral("Skip plugin deployment."));
@@ -556,6 +561,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     }
 
     options->patchQt = !parser->isSet(noPatchQtOption);
+    options->ignoreLibraryErrors = parser->isSet(ignoreErrorOption);
 
     for (int i = 0; i < qtModulesCount; ++i) {
         if (parser->isSet(*enabledModuleOptions.at(i)))
@@ -1207,9 +1213,15 @@ static inline QString qtlibInfixFromCoreLibName(const QString &path, bool isDebu
 static bool updateLibrary(const QString &sourceFileName, const QString &targetDirectory,
                           const Options &options, QString *errorMessage)
 {
-
-    if (!updateFile(sourceFileName, targetDirectory, options.updateFileFlags, options.json, errorMessage))
+    if (!updateFile(sourceFileName, targetDirectory, options.updateFileFlags, options.json, errorMessage)) {
+        if (options.ignoreLibraryErrors) {
+            std::wcerr << "Warning: Could not update " << sourceFileName << " :" << *errorMessage << '\n';
+            errorMessage->clear();
+            return true;
+        }
         return false;
+    }
+
     if (options.deployPdb) {
         const QFileInfo pdb(pdbFileName(sourceFileName));
         if (pdb.isFile())

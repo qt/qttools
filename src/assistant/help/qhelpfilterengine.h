@@ -68,6 +68,7 @@ public:
     bool setActiveFilter(const QString &filterName);
 
     QStringList availableComponents() const;
+    QList<QVersionNumber> availableVersions() const;
 
     QHelpFilterData filterData(const QString &filterName) const;
     bool setFilterData(const QString &filterName, const QHelpFilterData &filterData);
@@ -75,6 +76,9 @@ public:
     bool removeFilter(const QString &filterName);
 
     QStringList namespacesForFilter(const QString &filterName) const;
+
+    QStringList indices() const;
+    QStringList indices(const QString &filterName) const;
 
 Q_SIGNALS:
     void filterActivated(const QString &newFilter);

@@ -204,6 +204,19 @@ QStringList QHelpFilterEngine::availableComponents() const
 }
 
 /*!
+    \since 5.15
+
+    Returns the list of all available versions defined in all
+    registered documentation files.
+*/
+QList<QVersionNumber> QHelpFilterEngine::availableVersions() const
+{
+    if (!d->setup())
+        return QList<QVersionNumber>();
+    return d->m_collectionHandler->availableVersions();
+}
+
+/*!
     Returns the filter details associated with \a filterName.
 */
 QHelpFilterData QHelpFilterEngine::filterData(const QString &filterName) const
@@ -285,6 +298,34 @@ QStringList QHelpFilterEngine::namespacesForFilter(const QString &filterName) co
     if (!d->setup())
         return QStringList();
     return  d->m_collectionHandler->namespacesForFilter(filterName);
+}
+
+/*!
+    \since 5.15
+
+    Returns a sorted list of available indices.
+    The returned list contents depend on the active filter, and therefore only
+    the indices registered for the active filter will be returned.
+*/
+QStringList QHelpFilterEngine::indices() const
+{
+    return indices(activeFilter());
+}
+
+/*!
+    \since 5.15
+
+    Returns a sorted list of available indices, filtered by \a filterName.
+    The returned list contents depend on the passed filter, and therefore only
+    the indices registered for this filter will be returned.
+    If you want to get all available indices unfiltered,
+    pass empty string as \a filterName.
+*/
+QStringList QHelpFilterEngine::indices(const QString &filterName) const
+{
+    if (!d->setup())
+        return QStringList();
+    return d->m_collectionHandler->indicesForFilter(filterName);
 }
 
 QT_END_NAMESPACE

@@ -588,13 +588,13 @@ QStringList QHelpCollectionHandler::availableComponents() const
     return list;
 }
 
-QStringList QHelpCollectionHandler::availableVersions() const
+QList<QVersionNumber> QHelpCollectionHandler::availableVersions() const
 {
-    QStringList list;
+    QList<QVersionNumber> list;
     if (m_query) {
         m_query->exec(QLatin1String("SELECT DISTINCT Version FROM VersionTable ORDER BY Version"));
         while (m_query->next())
-            list.append(m_query->value(0).toString());
+            list.append(QVersionNumber::fromString(m_query->value(0).toString()));
     }
     return list;
 }

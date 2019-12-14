@@ -158,7 +158,7 @@ public:
     QStringList filters() const;
 
     QStringList availableComponents() const;
-    QStringList availableVersions() const;
+    QList<QVersionNumber> availableVersions() const;
     QMap<QString, QString> namespaceToComponent() const;
     QMap<QString, QVersionNumber> namespaceToVersion() const;
     QHelpFilterData filterData(const QString &filterName) const;
