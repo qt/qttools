@@ -61,6 +61,11 @@ enum Platform {
     UnknownPlatform
 };
 
+inline bool platformHasDebugSuffix(Platform p) // Uses 'd' debug suffix
+{
+    return (p & WindowsBased) != 0 && (p & MinGW) == 0;
+}
+
 enum ListOption {
     ListNone = 0,
     ListSource,

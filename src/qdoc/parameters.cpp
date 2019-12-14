@@ -507,13 +507,15 @@ void Parameters::set(const QString &signature)
 /*!
   Insert all the parameter names into names.
  */
-void Parameters::getNames(QSet<QString> &names) const
+QSet<QString> Parameters::getNames() const
 {
+    QSet<QString> names;
     const auto params = parameters_;
     for (const auto &parameter : params) {
         if (!parameter.name().isEmpty())
             names.insert(parameter.name());
     }
+    return names;
 }
 
 /*!

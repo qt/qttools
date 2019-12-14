@@ -269,7 +269,7 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur) {
             if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
             bool different = false;
-            for (int i = 0; i < actualArg; i++) {
+            for (int i = 0; i < actualArg; ++i) {
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
                 QString t1 = parameters.at(i).type();
@@ -347,7 +347,7 @@ static Node *findFunctionNodeForCursor(QDocDatabase *qdb, CXCursor cur) {
             if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
             bool different = false;
-            for (int i = 0; i < numArg; i++) {
+            for (int i = 0; i < numArg; ++i) {
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
                 QString t1 = parameters.at(i).type();
@@ -884,7 +884,7 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
                 }
                 return CXChildVisit_Continue;
             });
-            i++;
+            ++i;
         }
         return CXChildVisit_Continue;
     });
@@ -1156,7 +1156,7 @@ void ClangCodeParser::getDefaultArgs()
 static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &allHeaders)
 {
     QVector<QByteArray> result;
-    for (auto it = allHeaders.cbegin(), end = allHeaders.cend(); it != end; ++it) {
+    for (auto it = allHeaders.cbegin(); it != allHeaders.cend(); ++it) {
         const QByteArray path = "-I" + it.value().toLatin1();
         const QByteArray parent = "-I"
             + QDir::cleanPath(it.value() + QLatin1String("/../")).toLatin1();
@@ -1284,13 +1284,12 @@ void ClangCodeParser::buildPCH()
             if (tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
                 QTextStream out(&tmpHeaderFile);
                 if (header.isEmpty()) {
-                    QList<QString> keys = allHeaders_.keys();
-                    QList<QString> values = allHeaders_.values();
-                    for (int i = 0; i < keys.size(); i++) {
-                        if (!keys.at(i).endsWith(QLatin1String("_p.h")) &&
-                            !keys.at(i).startsWith(QLatin1String("moc_"))) {
-                            QString line = QLatin1String("#include \"") + values.at(i) +
-                                QLatin1String("/") + keys.at(i) + QLatin1String("\"");
+                    for (auto it = allHeaders_.constKeyValueBegin();
+                              it != allHeaders_.constKeyValueEnd(); ++it) {
+                        if (!(*it).first.endsWith(QLatin1String("_p.h")) &&
+                            !(*it).first.startsWith(QLatin1String("moc_"))) {
+                            QString line = QLatin1String("#include \"") + (*it).second +
+                                    QLatin1String("/") + (*it).first + QLatin1String("\"");
                             out << line << "\n";
                         }
                     }
@@ -1522,7 +1521,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                                         QString pName = blankSplit.last();
                                         int j = 0;
                                         while (j < pName.length() && !pName.at(i).isLetter())
-                                            j++;
+                                            ++j;
                                         if (j > 0)
                                             pName = pName.mid(j);
                                         if (!pName.isEmpty() && pName != parameters[i].name())

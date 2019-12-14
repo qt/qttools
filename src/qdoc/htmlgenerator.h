@@ -221,7 +221,7 @@ private:
     bool obsoleteLinks;
     QStack<QXmlStreamWriter *> xmlWriterStack;
     static int id;
-    QList<ManifestMetaFilter> manifestMetaContent;
+    QVector<ManifestMetaFilter> manifestMetaContent;
     QString homepage;
     QString hometitle;
     QString landingpage;

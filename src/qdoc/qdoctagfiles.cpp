@@ -138,7 +138,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
 
             // Classes contain information about their base classes.
             const ClassNode *classNode = static_cast<const ClassNode *>(node);
-            const QList<RelatedClass> bases = classNode->baseClasses();
+            const QVector<RelatedClass> bases = classNode->baseClasses();
             for (const auto &related : bases) {
                 ClassNode *n = related.node_;
                 if (n)

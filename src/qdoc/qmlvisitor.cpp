@@ -82,7 +82,7 @@ QmlDocVisitor::~QmlDocVisitor()
 QQmlJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) const
 {
     const auto comments = engine->comments();
-    for (auto it = comments.rbegin(), end = comments.rend(); it != end; ++it) {
+    for (auto it = comments.rbegin(); it != comments.rend(); ++it) {
         QQmlJS::AST::SourceLocation loc = *it;
 
         if (loc.begin() <= lastEndOffset) {
@@ -450,10 +450,8 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
     QSet<QString> metacommands = doc.metaCommandsUsed();
     if (metacommands.count() > 0) {
         metacommands.subtract(topics_);
-        QSet<QString>::iterator i = metacommands.begin();
-        while (i != metacommands.end()) {
-            QString command = *i;
-            ArgList args = doc.metaCommandArgs(command);
+        for (const auto &command : qAsConst(metacommands)) {
+            const ArgList args = doc.metaCommandArgs(command);
             if ((command == COMMAND_QMLABSTRACT) || (command == COMMAND_ABSTRACT)) {
                 if (node->isQmlType() || node->isJsType()) {
                     node->setAbstract(true);
@@ -480,11 +478,8 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
                 node->markReadOnly(1);
             }
             else if ((command == COMMAND_INGROUP) && !args.isEmpty()) {
-                ArgList::ConstIterator argsIter = args.constBegin();
-                while (argsIter != args.constEnd()) {
-                    QDocDatabase::qdocDB()->addToGroup(argsIter->first, node);
-                    ++argsIter;
-                }
+                for (const auto &argument : args)
+                    QDocDatabase::qdocDB()->addToGroup(argument.first, node);
             }
             else if (command == COMMAND_INTERNAL) {
                 node->setStatus(Node::Internal);
@@ -508,7 +503,6 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
             else {
                 doc.location().warning(tr("The \\%1 command is ignored in QML files").arg(command));
             }
-            ++i;
         }
     }
 }

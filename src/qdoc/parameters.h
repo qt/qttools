@@ -97,7 +97,7 @@ public:
     QString signature(bool includeValues = false) const;
     QString rawSignature(bool names = false, bool values = false) const;
     void set(const QString &signature);
-    void getNames(QSet<QString> &names) const;
+    QSet<QString> getNames() const;
     QString generateTypeList() const;
     QString generateTypeAndNameList() const;
     bool match(const Parameters &parameters) const;

@@ -348,9 +348,8 @@ Sections::Sections(const NodeMultiMap &nsmap) : aggregate_(nullptr)
     if (nsmap.isEmpty())
         return;
     SectionVector &sections = sinceSections();
-    NodeMultiMap::const_iterator n = nsmap.constBegin();
-    while (n != nsmap.constEnd()) {
-        Node *node = n.value();
+    for (auto it = nsmap.constBegin(); it != nsmap.constEnd(); ++it) {
+        Node *node = it.value();
         switch (node->nodeType()) {
         case Node::JsType:
         case Node::QmlType:
@@ -422,7 +421,6 @@ Sections::Sections(const NodeMultiMap &nsmap) : aggregate_(nullptr)
         default:
             break;
         }
-        ++n;
     }
 }
 
@@ -682,22 +680,17 @@ void Sections::buildStdRefPageSections()
         if (!ns->hasDoc())
             documentAll = false; // only document children that have documentation
     }
-    NodeList::ConstIterator c = aggregate_->constBegin();
-    while (c != aggregate_->constEnd()) {
-        Node *n = *c;
+    for (auto it = aggregate_->constBegin(); it != aggregate_->constEnd(); ++it) {
+        Node *n = *it;
         if (documentAll || n->hasDoc()) {
             stdRefPageSwitch(stdSummarySections(), n);
             stdRefPageSwitch(stdDetailsSections(), n);
         }
-        ++c;
     }
     if (!aggregate_->relatedByProxy().isEmpty()) {
-        c = aggregate_->relatedByProxy().constBegin();
-        while (c != aggregate_->relatedByProxy().constEnd()) {
-            Node *n = *c;
-            stdRefPageSwitch(stdSummarySections(), n);
-            ++c;
-        }
+        const QList<Node *> &relatedBy = aggregate_->relatedByProxy();
+        for (const auto &node : relatedBy)
+            stdRefPageSwitch(stdSummarySections(), node);
     }
     /*
       If we are building the sections for the reference page
@@ -705,12 +698,10 @@ void Sections::buildStdRefPageSections()
       included children in the sections.
      */
     if (ns && !ns->includedChildren().isEmpty()) {
-        NodeList::ConstIterator c = ns->includedChildren().constBegin();
-        while (c != ns->includedChildren().constEnd()) {
-            Node *n = *c;
-            if (documentAll || n->hasDoc())
-                stdRefPageSwitch(stdSummarySections(), n);
-            ++c;
+        const QList<Node *> &children = ns->includedChildren();
+        for (const auto &child : children) {
+            if (documentAll || child->hasDoc())
+                stdRefPageSwitch(stdSummarySections(), child);
         }
     }
     reduce(stdSummarySections());
@@ -939,7 +930,7 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
         if (scn->isPropertyGroup()) {
             sv[QmlProperties].insert(scn);
         } else {
-            for (auto child : scn->collective())
+            for (const auto &child : scn->collective())
                 distributeQmlNodeInSummaryVector(sv, child, true);
         }
     }
@@ -947,11 +938,10 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
 
 static void pushBaseClasses(QStack<ClassNode *> &stack, ClassNode *cn)
 {
-    QList<RelatedClass>::ConstIterator r = cn->baseClasses().constBegin();
-    while (r != cn->baseClasses().constEnd()) {
-        if (r->node_)
-            stack.prepend(r->node_);
-        ++r;
+    const QVector<RelatedClass> baseClasses = cn->baseClasses();
+    for (const auto &cls : baseClasses) {
+        if (cls.node_)
+            stack.prepend(cls.node_);
     }
 }
 
@@ -961,35 +951,29 @@ static void pushBaseClasses(QStack<ClassNode *> &stack, ClassNode *cn)
  */
 void Sections::buildStdCppClassRefPageSections()
 {
-    SectionVector &sv = stdCppClassSummarySections();
-    SectionVector &dv = stdCppClassDetailsSections();
+    SectionVector &summarySections = stdCppClassSummarySections();
+    SectionVector &detailsSections = stdCppClassDetailsSections();
     Section &allMembers = allMembersSection();
     bool documentAll = true;
     if (aggregate_->parent() && !aggregate_->name().isEmpty() && !aggregate_->hasDoc())
         documentAll = false;
-    NodeList::ConstIterator c = aggregate_->constBegin();
-    while (c != aggregate_->constEnd()) {
-        Node *n = *c;
+    for (auto it = aggregate_->constBegin(); it != aggregate_->constEnd();++it) {
+        Node *n = *it;
         if (!n->isPrivate()
             && !n->isProperty()
             && !n->isRelatedNonmember()
             && !n->isSharedCommentNode())
             allMembers.insert(n);
-        if (!documentAll && !n->hasDoc()) {
-            ++c;
+        if (!documentAll && !n->hasDoc())
             continue;
-        }
-        distributeNodeInSummaryVector(sv, n);
-        distributeNodeInDetailsVector(dv, n);
-        ++c;
+
+        distributeNodeInSummaryVector(summarySections, n);
+        distributeNodeInDetailsVector(detailsSections, n);
     }
     if (!aggregate_->relatedByProxy().isEmpty()) {
-        c = aggregate_->relatedByProxy().constBegin();
-        while (c != aggregate_->relatedByProxy().constEnd()) {
-            Node *n = *c;
-            distributeNodeInSummaryVector(sv, n);
-            ++c;
-        }
+        const QList<Node *> relatedBy = aggregate_->relatedByProxy();
+        for (const auto &node : relatedBy)
+            distributeNodeInSummaryVector(summarySections, node);
     }
 
     QStack<ClassNode *> stack;
@@ -997,25 +981,21 @@ void Sections::buildStdCppClassRefPageSections()
     pushBaseClasses(stack, cn);
     while (!stack.isEmpty()) {
         ClassNode *cn = stack.pop();
-        c = cn->constBegin();
-        while (c != cn->constEnd()) {
-            Node *n = *c;
+        for (auto it = cn->constBegin(); it != cn->constEnd(); ++it) {
+            Node *n = *it;
             if (!n->isPrivate()
                 && !n->isProperty()
                 && !n->isRelatedNonmember()
                 && !n->isSharedCommentNode())
                 allMembers.insert(n);
-            if (!documentAll && !n->hasDoc()) {
-                ++c;
+            if (!documentAll && !n->hasDoc())
                 continue;
-            }
             //distributeNodeInSummaryVector(sv, n); Why was this here? mws 03/07/2019
-            ++c;
         }
         pushBaseClasses(stack, cn);
     }
-    reduce(sv);
-    reduce(dv);
+    reduce(summarySections);
+    reduce(detailsSections);
     allMembers.reduce();
 }
 
@@ -1027,27 +1007,24 @@ void Sections::buildStdCppClassRefPageSections()
 void Sections::buildStdQmlTypeRefPageSections()
 {
     ClassMap* classMap = nullptr;
-    SectionVector &sv = stdQmlTypeSummarySections();
-    SectionVector &dv = stdQmlTypeDetailsSections();
+    SectionVector &summarySections = stdQmlTypeSummarySections();
+    SectionVector &detailsSections = stdQmlTypeDetailsSections();
     Section &allMembers = allMembersSection();
 
     const Aggregate *qtn = aggregate_;
     while (true) {
         if (!qtn->isAbstract() || !classMap)
             classMap = allMembers.newClassMap(qtn);
-        NodeList::ConstIterator c = qtn->constBegin();
-        while (c != qtn->constEnd()) {
-            Node *n = *c;
-            if (n->isInternal()) {
-                ++c;
+        for (auto it = qtn->constBegin(); it !=qtn->constEnd(); ++it) {
+            Node *n = *it;
+            if (n->isInternal())
                 continue;
-            }
+
             if (!n->isSharedCommentNode() || n->isPropertyGroup())
                 allMembers.add(classMap, n);
 
-            distributeQmlNodeInSummaryVector(sv, n);
-            distributeQmlNodeInDetailsVector(dv, n);
-            ++c;
+            distributeQmlNodeInSummaryVector(summarySections, n);
+            distributeQmlNodeInDetailsVector(detailsSections, n);
         }
         if (qtn->qmlBaseNode() == qtn) {
             qDebug() << "qdoc internal error: circular type definition."
@@ -1066,15 +1043,12 @@ void Sections::buildStdQmlTypeRefPageSections()
     while (qtn != nullptr) {
         if (!qtn->isAbstract() || !classMap)
             classMap = allMembers.newClassMap(qtn);
-        NodeList::ConstIterator c = qtn->constBegin();
-        while (c != qtn->constEnd()) {
-            Node *n = *c;
-            if (n->isInternal() || n->isSharedCommentNode()) {
-                ++c;
+        for (auto it = qtn->constBegin(); it != qtn->constEnd(); ++it) {
+            Node *n = *it;
+            if (n->isInternal() || n->isSharedCommentNode())
                 continue;
-            }
+
             allMembers.add(classMap, n);
-            ++c;
         }
         if (qtn->qmlBaseNode() == qtn) {
             qDebug() << "qdoc internal error: circular type definition."
@@ -1085,8 +1059,8 @@ void Sections::buildStdQmlTypeRefPageSections()
         }
         qtn = static_cast<QmlTypeNode *>(qtn->qmlBaseNode());
     }
-    reduce(sv);
-    reduce(dv);
+    reduce(summarySections);
+    reduce(detailsSections);
     allMembers.reduce();
 }
 
@@ -1098,30 +1072,26 @@ void Sections::buildStdQmlTypeRefPageSections()
  */
 bool Sections::hasObsoleteMembers(SectionPtrVector *summary_spv, SectionPtrVector *details_spv) const
 {
-    const SectionVector *sv = nullptr;
+    const SectionVector *sections = nullptr;
     if (aggregate_->isClassNode())
-        sv = &stdCppClassSummarySections();
+        sections = &stdCppClassSummarySections();
     else if (aggregate_->isQmlType() || aggregate_->isQmlBasicType())
-        sv = &stdQmlTypeSummarySections();
+        sections = &stdQmlTypeSummarySections();
     else
-        sv = &stdSummarySections();
-    SectionVector::ConstIterator s = sv->constBegin();
-    while (s != sv->constEnd()) {
-        if (!s->obsoleteMembers().isEmpty())
-            summary_spv->append(&(*s));
-        ++s;
+        sections = &stdSummarySections();
+    for (const auto &section : *sections) {
+        if (!section.obsoleteMembers().isEmpty())
+            summary_spv->append(&section);
     }
     if (aggregate_->isClassNode())
-        sv = &stdCppClassDetailsSections();
+        sections = &stdCppClassDetailsSections();
     else if (aggregate_->isQmlType() || aggregate_->isQmlBasicType())
-        sv = &stdQmlTypeDetailsSections();
+        sections = &stdQmlTypeDetailsSections();
     else
-        sv = &stdDetailsSections();
-    s = sv->constBegin();
-    while (s != sv->constEnd()) {
-        if (!s->obsoleteMembers().isEmpty())
-            details_spv->append(&(*s));
-        ++s;
+        sections = &stdDetailsSections();
+    for (const auto &it : *sections) {
+        if (!it.obsoleteMembers().isEmpty())
+            details_spv->append(&it);
     }
     return !summary_spv->isEmpty();
 }

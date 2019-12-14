@@ -51,7 +51,7 @@ public:
     };
 
     QmlMarkupVisitor(const QString &code,
-                     const QList<QQmlJS::AST::SourceLocation> &pragmas,
+                     const QVector<QQmlJS::AST::SourceLocation> &pragmas,
                      QQmlJS::Engine *engine);
     virtual ~QmlMarkupVisitor();
 
@@ -158,7 +158,7 @@ private:
 
     QQmlJS::Engine *engine;
     QVector<ExtraType> extraTypes;
-    QList<QQmlJS::AST::SourceLocation> extraLocations;
+    QVector<QQmlJS::AST::SourceLocation> extraLocations;
     QString source;
     QString output;
     quint32 cursor;

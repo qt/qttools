@@ -215,8 +215,8 @@ void Location::pop()
  */
 QString Location::fileName() const
 {
-    QString fp = filePath();
-    return (fp.isEmpty() ? fp : fp.mid(fp.lastIndexOf('/') + 1));
+    QFileInfo fi(filePath());
+    return fi.fileName();
 }
 
 

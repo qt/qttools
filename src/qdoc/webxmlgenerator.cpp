@@ -222,7 +222,7 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
     while (atom)
         atom = addAtomElements(writer, atom, node, marker_);
 
-    QList<Text> alsoList = node->doc().alsoList();
+    QVector<Text> alsoList = node->doc().alsoList();
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {
@@ -288,6 +288,9 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
                                              const Atom *atom, const Node *relative, CodeMarker *marker)
 {
     bool keepQuoting = false;
+
+    if (!atom)
+        return nullptr;
 
     switch (atom->type()) {
     case Atom::AnnotatedList:
@@ -750,11 +753,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     }
 
     hasQuotingInformation = keepQuoting;
+    return atom->next();
 
-    if (atom)
-        return atom->next();
-
-    return nullptr;
 }
 
 void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
@@ -817,8 +817,7 @@ void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *no
         QPair<QString, QString> anchorPair;
         const Node *linkNode;
 
-        for (QMap<Node::LinkType, QPair<QString, QString> >::const_iterator it =
-             node->links().cbegin(), end = node->links().cend(); it != end; ++it) {
+        for (auto it = node->links().cbegin(); it != node->links().cend(); ++it) {
 
             linkNode = qdb_->findNodeForTarget(it.value().first, node);
 

@@ -126,7 +126,7 @@ static QRegExp *iflikeKeyword = nullptr;
 static QChar firstNonWhiteSpace(const QString &t)
 {
     int i = 0;
-    while (i < (int) t.length()) {
+    while (i < t.length()) {
         if (!t[i].isSpace())
             return t[i];
         i++;
@@ -151,7 +151,7 @@ static bool isOnlyWhiteSpace(const QString &t)
 int columnForIndex(const QString &t, int index)
 {
     int col = 0;
-    if (index > (int) t.length())
+    if (index > t.length())
         index = t.length();
 
     for (int i = 0; i < index; i++) {
@@ -230,7 +230,7 @@ static QString trimmedCodeLine(const QString &t)
         int pos1 = label->pos(1);
         int stop = cap1.length();
 
-        if (pos1 + stop < (int) trimmed.length() && ppIndentSize < stop)
+        if (pos1 + stop < trimmed.length() && ppIndentSize < stop)
             stop = ppIndentSize;
 
         int i = 0;
@@ -238,7 +238,7 @@ static QString trimmedCodeLine(const QString &t)
             eraseChar(trimmed, pos1 + i, ' ');
             i++;
         }
-        while (i < (int) cap1.length()) {
+        while (i < cap1.length()) {
             eraseChar(trimmed, pos1 + i, ';');
             i++;
         }

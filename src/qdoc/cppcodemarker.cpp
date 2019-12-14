@@ -161,7 +161,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             synopsis += QLatin1Char('(');
             if (!func->parameters().isEmpty()) {
                 const Parameters &parameters = func->parameters();
-                for (int i = 0; i < parameters.count(); i++) {
+                for (int i = 0; i < parameters.count(); ++i) {
                     if (i > 0)
                         synopsis += ", ";
                     QString name = parameters.at(i).name();
@@ -337,7 +337,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
         synopsis += QLatin1Char('(');
         if (!func->parameters().isEmpty()) {
             const Parameters &parameters = func->parameters();
-            for (int i = 0; i < parameters.count(); i++) {
+            for (int i = 0; i < parameters.count(); ++i) {
                 if (i > 0)
                     synopsis += ", ";
                 QString name = parameters.at(i).name();
@@ -422,11 +422,9 @@ QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
 {
     QString code;
 
-    QStringList::ConstIterator inc = includes.constBegin();
-    while (inc != includes.constEnd()) {
-        code += "<@preprocessor>#include &lt;<@headerfile>" + *inc + "</@headerfile>&gt;</@preprocessor>\n";
-        ++inc;
-    }
+    for (const auto &include : includes)
+        code += "<@preprocessor>#include &lt;<@headerfile>"
+                + include + "</@headerfile>&gt;</@preprocessor>\n";
     return code;
 }
 
@@ -497,7 +495,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
             keywords.insert(keywordTable[j]);
     }
 #define readChar() \
-    ch = (i < (int)code.length()) ? code[i++].cell() : EOF
+    ch = (i < code.length()) ? code[i++].cell() : EOF
 
     QString code = in;
     QString out;
@@ -609,12 +607,12 @@ QString CppCodeMarker::addMarkUp(const QString &in,
             case '(':
                 finish = i;
                 readChar();
-                parenDepth++;
+                ++parenDepth;
                 break;
             case ')':
                 finish = i;
                 readChar();
-                parenDepth--;
+                --parenDepth;
                 break;
             case ':':
                 finish = i;

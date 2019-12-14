@@ -44,12 +44,12 @@ int editDistance(const QString &s, const QString &t)
     int *d = new int[m * n];
     int result;
 
-    for ( i = 0; i < m; i++ )
+    for (i = 0; i < m; ++i)
         D( i, 0 ) = i;
-    for ( j = 0; j < n; j++ )
+    for (j = 0; j < n; ++j)
         D( 0, j ) = j;
-    for ( i = 1; i < m; i++ ) {
-        for ( j = 1; j < n; j++ ) {
+    for (i = 1; i < m; ++i) {
+        for (j = 1; j < n; ++j) {
             if ( s[i - 1] == t[j - 1] ) {
                 D( i, j ) = D( i - 1, j - 1 );
             } else {
@@ -75,19 +75,17 @@ QString nearestName(const QString &actual, const QSet<QString> &candidates)
     int numBest = 0;
     QString best;
 
-    QSet<QString>::ConstIterator c = candidates.constBegin();
-    while (c != candidates.constEnd()) {
-        if ((*c)[0] == actual[0]) {
-            int delta = editDistance(actual, *c);
+    for (const auto &candidate : candidates) {
+        if (candidate[0] == actual[0]) {
+            int delta = editDistance(actual, candidate);
             if (delta < deltaBest) {
                 deltaBest = delta;
                 numBest = 1;
-                best = *c;
+                best = candidate;
             } else if (delta == deltaBest) {
-                numBest++;
+                ++numBest;
             }
         }
-        ++c;
     }
 
     if (numBest == 1 && deltaBest <= 2 && actual.length() + best.length() >= 5)
