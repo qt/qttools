@@ -34,8 +34,8 @@
 #include <QtCore/qstring.h>
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsastvisitor_p.h>
-#include <private/qqmljsengine_p.h>
+#    include <private/qqmljsastvisitor_p.h>
+#    include <private/qqmljsengine_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -47,7 +47,8 @@ struct QmlPropArgs
     QString component_;
     QString name_;
 
-    void clear() {
+    void clear()
+    {
         type_.clear();
         module_.clear();
         component_.clear();
@@ -61,11 +62,8 @@ class QmlDocVisitor : public QQmlJS::AST::Visitor
     Q_DECLARE_TR_FUNCTIONS(QDoc::QmlDocVisitor)
 
 public:
-    QmlDocVisitor(const QString &filePath,
-                  const QString &code,
-                  QQmlJS::Engine *engine,
-                  const QSet<QString> &commands,
-                  const QSet<QString> &topics);
+    QmlDocVisitor(const QString &filePath, const QString &code, QQmlJS::Engine *engine,
+                  const QSet<QString> &commands, const QSet<QString> &topics);
     ~QmlDocVisitor() override;
 
     bool visit(QQmlJS::AST::UiImport *import) override;
@@ -101,9 +99,7 @@ private:
     QQmlJS::AST::SourceLocation precedingComment(quint32 offset) const;
     bool applyDocumentation(QQmlJS::AST::SourceLocation location, Node *node);
     void applyMetacommands(QQmlJS::AST::SourceLocation location, Node *node, Doc &doc);
-    bool splitQmlPropertyArg(const Doc &doc,
-                             const QString &arg,
-                             QmlPropArgs& qpa);
+    bool splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlPropArgs &qpa);
 
     QQmlJS::Engine *engine;
     quint32 lastEndOffset;

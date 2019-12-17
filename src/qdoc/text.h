@@ -51,7 +51,7 @@ public:
     Atom *lastAtom() { return last; }
     Text &operator<<(Atom::AtomType atomType);
     Text &operator<<(const QString &string);
-    Text &operator<<(const Atom& atom);
+    Text &operator<<(const Atom &atom);
     Text &operator<<(const LinkAtom &atom);
     Text &operator<<(const Text &text);
     void stripFirstAtom();
@@ -62,7 +62,8 @@ public:
     QString toString() const;
     const Atom *firstAtom() const { return first; }
     const Atom *lastAtom() const { return last; }
-    Text subText(Atom::AtomType left, Atom::AtomType right, const Atom *from = nullptr, bool inclusive = false) const;
+    Text subText(Atom::AtomType left, Atom::AtomType right, const Atom *from = nullptr,
+                 bool inclusive = false) const;
     void dump() const;
     void clear();
 
@@ -72,23 +73,34 @@ public:
     static int compare(const Text &text1, const Text &text2);
 
 private:
-
     Atom *first;
     Atom *last;
 };
 
 inline bool operator==(const Text &text1, const Text &text2)
-{ return Text::compare(text1, text2) == 0; }
+{
+    return Text::compare(text1, text2) == 0;
+}
 inline bool operator!=(const Text &text1, const Text &text2)
-{ return Text::compare(text1, text2) != 0; }
+{
+    return Text::compare(text1, text2) != 0;
+}
 inline bool operator<(const Text &text1, const Text &text2)
-{ return Text::compare(text1, text2) < 0; }
+{
+    return Text::compare(text1, text2) < 0;
+}
 inline bool operator<=(const Text &text1, const Text &text2)
-{ return Text::compare(text1, text2) <= 0; }
+{
+    return Text::compare(text1, text2) <= 0;
+}
 inline bool operator>(const Text &text1, const Text &text2)
-{ return Text::compare(text1, text2) > 0; }
+{
+    return Text::compare(text1, text2) > 0;
+}
 inline bool operator>=(const Text &text1, const Text &text2)
-{ return Text::compare(text1, text2) >= 0; }
+{
+    return Text::compare(text1, text2) >= 0;
+}
 
 QT_END_NAMESPACE
 

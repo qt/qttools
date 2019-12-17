@@ -59,7 +59,7 @@ protected:
     QString refForNode(const Node *node);
     QString linkForNode(const Node *node, const Node *relative);
     QString getLink(const Atom *atom, const Node *relative, const Node **node);
-    QString getAutoLink(const Atom *atom, const Node *relative, const Node** node);
+    QString getAutoLink(const Atom *atom, const Node *relative, const Node **node);
 
     const QPair<QString, QString> anchorForNode(const Node *node);
 
@@ -68,4 +68,4 @@ protected:
 
 QT_END_NAMESPACE
 
-#endif //XMLGENERATOR_H
+#endif // XMLGENERATOR_H

@@ -38,9 +38,9 @@
 #include <QtCore/qset.h>
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsengine_p.h>
-#include <private/qqmljslexer_p.h>
-#include <private/qqmljsparser_p.h>
+#    include <private/qqmljsengine_p.h>
+#    include <private/qqmljslexer_p.h>
+#    include <private/qqmljsparser_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE

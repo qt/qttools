@@ -152,15 +152,14 @@ QString CodeMarker::stringForNode(const Node *node)
 {
     if (sizeof(const Node *) == sizeof(ulong)) {
         return QString::number(reinterpret_cast<quintptr>(node));
-    }
-    else {
+    } else {
         return QString::number(reinterpret_cast<qulonglong>(node));
     }
 }
 
-static const QString samp  = QLatin1String("&amp;");
-static const QString slt   = QLatin1String("&lt;");
-static const QString sgt   = QLatin1String("&gt;");
+static const QString samp = QLatin1String("&amp;");
+static const QString slt = QLatin1String("&lt;");
+static const QString sgt = QLatin1String("&gt;");
 static const QString squot = QLatin1String("&quot;");
 
 QString CodeMarker::protect(const QString &str)
@@ -171,11 +170,20 @@ QString CodeMarker::protect(const QString &str)
     const QChar *data = str.constData();
     for (int i = 0; i != n; ++i) {
         switch (data[i].unicode()) {
-        case '&': marked += samp;  break;
-        case '<': marked += slt;   break;
-        case '>': marked += sgt;   break;
-        case '"': marked += squot; break;
-        default : marked += data[i];
+        case '&':
+            marked += samp;
+            break;
+        case '<':
+            marked += slt;
+            break;
+        case '>':
+            marked += sgt;
+            break;
+        case '"':
+            marked += squot;
+            break;
+        default:
+            marked += data[i];
         }
     }
     return marked;
@@ -188,11 +196,20 @@ void CodeMarker::appendProtectedString(QString *output, const QStringRef &str)
     const QChar *data = str.constData();
     for (int i = 0; i != n; ++i) {
         switch (data[i].unicode()) {
-        case '&': *output += samp;  break;
-        case '<': *output += slt;   break;
-        case '>': *output += sgt;   break;
-        case '"': *output += squot; break;
-        default : *output += data[i];
+        case '&':
+            *output += samp;
+            break;
+        case '<':
+            *output += slt;
+            break;
+        case '>':
+            *output += sgt;
+            break;
+        case '"':
+            *output += squot;
+            break;
+        default:
+            *output += data[i];
         }
     }
 }
@@ -208,12 +225,10 @@ QString CodeMarker::typified(const QString &string, bool trailingSpace)
             ch = string.at(i);
 
         QChar lower = ch.toLower();
-        if ((lower >= QLatin1Char('a') && lower <= QLatin1Char('z'))
-                || ch.digitValue() >= 0 || ch == QLatin1Char('_')
-                || ch == QLatin1Char(':')) {
+        if ((lower >= QLatin1Char('a') && lower <= QLatin1Char('z')) || ch.digitValue() >= 0
+            || ch == QLatin1Char('_') || ch == QLatin1Char(':')) {
             pendingWord += ch;
-        }
-        else {
+        } else {
             if (!pendingWord.isEmpty()) {
                 bool isProbablyType = (pendingWord != QLatin1String("const"));
                 if (isProbablyType)
@@ -242,9 +257,8 @@ QString CodeMarker::typified(const QString &string, bool trailingSpace)
         }
     }
     if (trailingSpace && string.size()) {
-        if (!string.endsWith(QLatin1Char('*'))
-                && !string.endsWith(QLatin1Char('&')))
-                result += QLatin1Char(' ');
+        if (!string.endsWith(QLatin1Char('*')) && !string.endsWith(QLatin1Char('&')))
+            result += QLatin1Char(' ');
     }
     return result;
 }
@@ -295,8 +309,8 @@ QString CodeMarker::taggedNode(const Node *node)
         tag = QLatin1String("@unknown");
         break;
     }
-    return (QLatin1Char('<') + tag + QLatin1Char('>') + protect(name)
-            + QLatin1String("</") + tag + QLatin1Char('>'));
+    return (QLatin1Char('<') + tag + QLatin1Char('>') + protect(name) + QLatin1String("</") + tag
+            + QLatin1Char('>'));
 }
 
 QString CodeMarker::taggedQmlNode(const Node *node)
@@ -326,14 +340,14 @@ QString CodeMarker::taggedQmlNode(const Node *node)
     } else {
         tag = QLatin1String("@unknown");
     }
-    return QLatin1Char('<') + tag + QLatin1Char('>') + protect(node->name())
-            + QLatin1String("</") + tag + QLatin1Char('>');
+    return QLatin1Char('<') + tag + QLatin1Char('>') + protect(node->name()) + QLatin1String("</")
+            + tag + QLatin1Char('>');
 }
 
 QString CodeMarker::linkTag(const Node *node, const QString &body)
 {
-    return QLatin1String("<@link node=\"") + stringForNode(node)
-            + QLatin1String("\">") + body + QLatin1String("</@link>");
+    return QLatin1String("<@link node=\"") + stringForNode(node) + QLatin1String("\">") + body
+            + QLatin1String("</@link>");
 }
 
 static QString encode(const QString &string)
@@ -345,32 +359,27 @@ QStringList CodeMarker::macRefsForNode(Node *node)
 {
     QString result = QLatin1String("cpp/");
     switch (node->nodeType()) {
-    case Node::Class:
-    {
+    case Node::Class: {
         const ClassNode *classe = static_cast<const ClassNode *>(node);
         {
             result += QLatin1String("cl/");
         }
         result += macName(classe); // ### Maybe plainName?
-    }
-        break;
-    case Node::Enum:
-    {
+    } break;
+    case Node::Enum: {
         QStringList stringList;
         stringList << encode(result + QLatin1String("tag/") + macName(node));
         const auto enumItemNames = node->doc().enumItemNames();
         for (const auto &name : enumItemNames) {
             // ### Write a plainEnumValue() and use it here
-            stringList << encode(result + QLatin1String("econst/") +
-                                 macName(node->parent(), name));
+            stringList << encode(result + QLatin1String("econst/") + macName(node->parent(), name));
         }
         return stringList;
     }
     case Node::Typedef:
         result += QLatin1String("tdef/") + macName(node);
         break;
-    case Node::Function:
-    {
+    case Node::Function: {
         bool isMacro = false;
         Q_UNUSED(isMacro);
         const FunctionNode *func = static_cast<const FunctionNode *>(node);
@@ -381,27 +390,22 @@ QStringList CodeMarker::macRefsForNode(Node *node)
 
         if (func->isMacro()) {
             result += QLatin1String("macro/");
-        }
-        else if (func->isStatic()) {
+        } else if (func->isStatic()) {
             result += QLatin1String("clm/");
-        }
-        else if (!func->parent()->name().isEmpty()) {
+        } else if (!func->parent()->name().isEmpty()) {
             result += QLatin1String("instm/");
-        }
-        else {
+        } else {
             result += QLatin1String("func/");
         }
 
         result += macName(func);
         if (result.endsWith(QLatin1String("()")))
             result.chop(2);
-    }
-        break;
+    } break;
     case Node::Variable:
         result += QLatin1String("data/") + macName(node);
         break;
-    case Node::Property:
-    {
+    case Node::Property: {
         const NodeList list = static_cast<const PropertyNode *>(node)->functions();
         QStringList stringList;
         for (auto *node : list) {

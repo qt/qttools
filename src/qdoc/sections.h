@@ -36,7 +36,7 @@
 QT_BEGIN_NAMESPACE
 
 typedef QMultiMap<QString, Node *> MemberMap; // the string is the member signature
-typedef QPair<const QmlTypeNode *, MemberMap> ClassMap;    // the node is the QML type
+typedef QPair<const QmlTypeNode *, MemberMap> ClassMap; // the node is the QML type
 typedef QVector<ClassMap *> ClassMapList;
 
 typedef QPair<QStringList, NodeVector> KeysAndNodes;
@@ -50,27 +50,30 @@ public:
     enum Status { Obsolete, Active };
 
 public:
-    Section() : style_(Details), status_(Active), aggregate_(nullptr) { }
+    Section() : style_(Details), status_(Active), aggregate_(nullptr) {}
     Section(Style style, Status status);
     ~Section();
 
-    void init(const QString &title) {
+    void init(const QString &title) { title_ = title; }
+    void init(const QString &singular, const QString &plural)
+    {
+        singular_ = singular;
+        plural_ = plural;
+    }
+    void init(const QString &title, const QString &singular, const QString &plural)
+    {
         title_ = title;
+        divClass_.clear();
+        singular_ = singular;
+        plural_ = plural;
     }
-    void init(const QString &singular,
-              const QString &plural) {
-        singular_ = singular; plural_ = plural;
-    }
-    void init(const QString &title,
-              const QString &singular,
-              const QString &plural) {
-        title_ = title; divClass_.clear(); singular_= singular; plural_ = plural;
-    }
-    void init(const QString &title,
-              const QString &divClass,
-              const QString &singular,
-              const QString &plural) {
-        title_ = title; divClass_ = divClass; singular_= singular; plural_ = plural;
+    void init(const QString &title, const QString &divClass, const QString &singular,
+              const QString &plural)
+    {
+        title_ = title;
+        divClass_ = divClass;
+        singular_ = singular;
+        plural_ = plural;
     }
 
     void insert(Node *node);
@@ -84,11 +87,10 @@ public:
 
     void clear();
     void reduce();
-    bool isEmpty() const {
-        return (memberMap_.isEmpty() &&
-                inheritedMembers_.isEmpty() &&
-                reimplementedMemberMap_.isEmpty() &&
-                classMapList_.isEmpty());
+    bool isEmpty() const
+    {
+        return (memberMap_.isEmpty() && inheritedMembers_.isEmpty()
+                && reimplementedMemberMap_.isEmpty() && classMapList_.isEmpty());
     }
 
     Style style() const { return style_; }
@@ -101,7 +103,7 @@ public:
     const QStringList &keys(Status t) const { return (t == Obsolete ? obsoleteKeys_ : keys_); }
     const NodeVector &members() const { return members_; }
     const NodeVector &reimplementedMembers() const { return reimplementedMembers_; }
-    const QVector<QPair<Aggregate*, int> > &inheritedMembers() const { return inheritedMembers_; }
+    const QVector<QPair<Aggregate *, int>> &inheritedMembers() const { return inheritedMembers_; }
     ClassKeysNodesList &classKeysNodesList() { return classKeysNodesList_; }
     const NodeVector &obsoleteMembers() const { return obsoleteMembers_; }
     void appendMembers(const NodeVector &nv) { members_.append(nv); }
@@ -112,8 +114,8 @@ private:
     QString sortName(const Node *node, const QString *name = nullptr);
 
 private:
-    Style   style_;
-    Status  status_;
+    Style style_;
+    Status status_;
     QString title_;
     QString divClass_;
     QString singular_;
@@ -125,7 +127,7 @@ private:
     NodeVector members_;
     NodeVector obsoleteMembers_;
     NodeVector reimplementedMembers_;
-    QVector<QPair<Aggregate *, int> > inheritedMembers_;
+    QVector<QPair<Aggregate *, int>> inheritedMembers_;
     ClassKeysNodesList classKeysNodesList_;
 
     QMultiMap<QString, Node *> memberMap_;
@@ -247,7 +249,6 @@ private:
     static SectionVector stdQmlTypeDetailsSections_;
     static SectionVector sinceSections_;
     static SectionVector allMembers_;
-
 };
 
 QT_END_NAMESPACE

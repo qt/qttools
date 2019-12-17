@@ -62,7 +62,7 @@ CppCodeMarker::~CppCodeMarker()
 /*!
   Returns \c true.
  */
-bool CppCodeMarker::recognizeCode(const QString &/* code */)
+bool CppCodeMarker::recognizeCode(const QString & /* code */)
 {
     return true;
 }
@@ -74,20 +74,9 @@ bool CppCodeMarker::recognizeCode(const QString &/* code */)
 bool CppCodeMarker::recognizeExtension(const QString &extension)
 {
     QByteArray ext = extension.toLatin1();
-    return ext == "c" ||
-            ext == "c++" ||
-            ext == "qdoc" ||
-            ext == "qtt" ||
-            ext == "qtx" ||
-            ext == "cc" ||
-            ext == "cpp" ||
-            ext == "cxx" ||
-            ext == "ch" ||
-            ext == "h" ||
-            ext == "h++" ||
-            ext == "hh" ||
-            ext == "hpp" ||
-            ext == "hxx";
+    return ext == "c" || ext == "c++" || ext == "qdoc" || ext == "qtt" || ext == "qtx"
+            || ext == "cc" || ext == "cpp" || ext == "cxx" || ext == "ch" || ext == "h"
+            || ext == "h++" || ext == "hh" || ext == "hpp" || ext == "hxx";
 }
 
 /*!
@@ -106,15 +95,13 @@ Atom::AtomType CppCodeMarker::atomType() const
     return Atom::Code;
 }
 
-QString CppCodeMarker::markedUpCode(const QString &code,
-                                    const Node *relative,
+QString CppCodeMarker::markedUpCode(const QString &code, const Node *relative,
                                     const Location &location)
 {
     return addMarkUp(code, relative, location);
 }
 
-QString CppCodeMarker::markedUpSynopsis(const Node *node,
-                                        const Node * /* relative */,
+QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relative */,
                                         Section::Style style)
 {
     const int MaxEnumValues = 6;
@@ -133,13 +120,9 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
     name = "<@name>" + name + "</@name>";
 
     if (style == Section::Details) {
-        if (!node->isRelatedNonmember() &&
-            !node->isProxyNode() &&
-            !node->parent()->name().isEmpty() &&
-            !node->parent()->isHeader() &&
-            !node->isProperty() &&
-            !node->isQmlNode() &&
-            !node->isJsNode()) {
+        if (!node->isRelatedNonmember() && !node->isProxyNode() && !node->parent()->name().isEmpty()
+            && !node->parent()->isHeader() && !node->isProperty() && !node->isQmlNode()
+            && !node->isJsNode()) {
             name.prepend(taggedNode(node->parent()) + "::");
         }
     }
@@ -152,7 +135,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         synopsis = "class " + name;
         break;
     case Node::Function:
-        func = (const FunctionNode *) node;
+        func = (const FunctionNode *)node;
 
         if (style != Section::AllMembers && !func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true);
@@ -195,17 +178,17 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
             if (func->isPureVirtual())
                 synopsis.append(" = 0");
             if (func->isRef())
-               synopsis.append(" &");
+                synopsis.append(" &");
             else if (func->isRefRef())
-               synopsis.append(" &&");
+                synopsis.append(" &&");
         } else if (style == Section::AllMembers) {
             if (!func->returnType().isEmpty() && func->returnType() != "void")
                 synopsis += " : " + typified(func->returnType());
         } else {
             if (func->isRef())
-               synopsis.append(" &");
+                synopsis.append(" &");
             else if (func->isRefRef())
-               synopsis.append(" &&");
+                synopsis.append(" &&");
             QStringList bracketed;
             if (func->isStatic()) {
                 bracketed += "static";
@@ -256,7 +239,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
                 }
             } else {
                 for (int i = 0; i < documentedItems.size(); ++i) {
-                    if (i < MaxEnumValues-2 || i == documentedItems.size()-1) {
+                    if (i < MaxEnumValues - 2 || i == documentedItems.size() - 1) {
                         if (i != 0)
                             synopsis += ", ";
                         synopsis += documentedItems.at(i);
@@ -287,8 +270,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node,
         if (style == Section::AllMembers) {
             synopsis = name + " : " + typified(variable->dataType());
         } else {
-            synopsis = typified(variable->leftType(), true) +
-                    name + protect(variable->rightType());
+            synopsis = typified(variable->leftType(), true) + name + protect(variable->rightType());
         }
         break;
     default:
@@ -423,8 +405,8 @@ QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
     QString code;
 
     for (const auto &include : includes)
-        code += "<@preprocessor>#include &lt;<@headerfile>"
-                + include + "</@headerfile>&gt;</@preprocessor>\n";
+        code += "<@preprocessor>#include &lt;<@headerfile>" + include
+                + "</@headerfile>&gt;</@preprocessor>\n";
     return code;
 }
 
@@ -433,7 +415,7 @@ QString CppCodeMarker::functionBeginRegExp(const QString &funcName)
     return QLatin1Char('^') + QRegExp::escape(funcName) + QLatin1Char('$');
 }
 
-QString CppCodeMarker::functionEndRegExp(const QString &/* funcName */)
+QString CppCodeMarker::functionEndRegExp(const QString & /* funcName */)
 {
     return "^\\}$";
 }
@@ -451,8 +433,7 @@ QString CppCodeMarker::functionEndRegExp(const QString &/* funcName */)
     @type
 */
 
-QString CppCodeMarker::addMarkUp(const QString &in,
-                                 const Node * /* relative */,
+QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                                  const Location & /* location */)
 {
     static QSet<QString> types;
@@ -462,26 +443,42 @@ QString CppCodeMarker::addMarkUp(const QString &in,
         // initialize statics
         Q_ASSERT(keywords.isEmpty());
         static const QString typeTable[] = {
-            QLatin1String("bool"), QLatin1String("char"), QLatin1String("double"), QLatin1String("float"), QLatin1String("int"), QLatin1String("long"), QLatin1String("short"),
-            QLatin1String("signed"), QLatin1String("unsigned"), QLatin1String("uint"), QLatin1String("ulong"), QLatin1String("ushort"), QLatin1String("uchar"), QLatin1String("void"),
-            QLatin1String("qlonglong"), QLatin1String("qulonglong"),
-            QLatin1String("qint"), QLatin1String("qint8"), QLatin1String("qint16"), QLatin1String("qint32"), QLatin1String("qint64"),
-            QLatin1String("quint"), QLatin1String("quint8"), QLatin1String("quint16"), QLatin1String("quint32"), QLatin1String("quint64"),
-            QLatin1String("qreal"), QLatin1String("cond")
+            QLatin1String("bool"),       QLatin1String("char"),    QLatin1String("double"),
+            QLatin1String("float"),      QLatin1String("int"),     QLatin1String("long"),
+            QLatin1String("short"),      QLatin1String("signed"),  QLatin1String("unsigned"),
+            QLatin1String("uint"),       QLatin1String("ulong"),   QLatin1String("ushort"),
+            QLatin1String("uchar"),      QLatin1String("void"),    QLatin1String("qlonglong"),
+            QLatin1String("qulonglong"), QLatin1String("qint"),    QLatin1String("qint8"),
+            QLatin1String("qint16"),     QLatin1String("qint32"),  QLatin1String("qint64"),
+            QLatin1String("quint"),      QLatin1String("quint8"),  QLatin1String("quint16"),
+            QLatin1String("quint32"),    QLatin1String("quint64"), QLatin1String("qreal"),
+            QLatin1String("cond")
         };
 
         static const QString keywordTable[] = {
-            QLatin1String("and"), QLatin1String("and_eq"), QLatin1String("asm"), QLatin1String("auto"), QLatin1String("bitand"), QLatin1String("bitor"), QLatin1String("break"),
-            QLatin1String("case"), QLatin1String("catch"), QLatin1String("class"), QLatin1String("compl"), QLatin1String("const"), QLatin1String("const_cast"),
-            QLatin1String("continue"), QLatin1String("default"), QLatin1String("delete"), QLatin1String("do"), QLatin1String("dynamic_cast"), QLatin1String("else"),
-            QLatin1String("enum"), QLatin1String("explicit"), QLatin1String("export"), QLatin1String("extern"), QLatin1String("false"), QLatin1String("for"), QLatin1String("friend"),
-            QLatin1String("goto"), QLatin1String("if"), QLatin1String("include"), QLatin1String("inline"), QLatin1String("monitor"), QLatin1String("mutable"), QLatin1String("namespace"),
-            QLatin1String("new"), QLatin1String("not"), QLatin1String("not_eq"), QLatin1String("operator"), QLatin1String("or"), QLatin1String("or_eq"), QLatin1String("private"), QLatin1String("protected"),
-            QLatin1String("public"), QLatin1String("register"), QLatin1String("reinterpret_cast"), QLatin1String("return"), QLatin1String("sizeof"),
-            QLatin1String("static"), QLatin1String("static_cast"), QLatin1String("struct"), QLatin1String("switch"), QLatin1String("template"), QLatin1String("this"),
-            QLatin1String("throw"), QLatin1String("true"), QLatin1String("try"), QLatin1String("typedef"), QLatin1String("typeid"), QLatin1String("typename"), QLatin1String("union"),
-            QLatin1String("using"), QLatin1String("virtual"), QLatin1String("volatile"), QLatin1String("wchar_t"), QLatin1String("while"), QLatin1String("xor"),
-            QLatin1String("xor_eq"), QLatin1String("synchronized"),
+            QLatin1String("and"), QLatin1String("and_eq"), QLatin1String("asm"),
+            QLatin1String("auto"), QLatin1String("bitand"), QLatin1String("bitor"),
+            QLatin1String("break"), QLatin1String("case"), QLatin1String("catch"),
+            QLatin1String("class"), QLatin1String("compl"), QLatin1String("const"),
+            QLatin1String("const_cast"), QLatin1String("continue"), QLatin1String("default"),
+            QLatin1String("delete"), QLatin1String("do"), QLatin1String("dynamic_cast"),
+            QLatin1String("else"), QLatin1String("enum"), QLatin1String("explicit"),
+            QLatin1String("export"), QLatin1String("extern"), QLatin1String("false"),
+            QLatin1String("for"), QLatin1String("friend"), QLatin1String("goto"),
+            QLatin1String("if"), QLatin1String("include"), QLatin1String("inline"),
+            QLatin1String("monitor"), QLatin1String("mutable"), QLatin1String("namespace"),
+            QLatin1String("new"), QLatin1String("not"), QLatin1String("not_eq"),
+            QLatin1String("operator"), QLatin1String("or"), QLatin1String("or_eq"),
+            QLatin1String("private"), QLatin1String("protected"), QLatin1String("public"),
+            QLatin1String("register"), QLatin1String("reinterpret_cast"), QLatin1String("return"),
+            QLatin1String("sizeof"), QLatin1String("static"), QLatin1String("static_cast"),
+            QLatin1String("struct"), QLatin1String("switch"), QLatin1String("template"),
+            QLatin1String("this"), QLatin1String("throw"), QLatin1String("true"),
+            QLatin1String("try"), QLatin1String("typedef"), QLatin1String("typeid"),
+            QLatin1String("typename"), QLatin1String("union"), QLatin1String("using"),
+            QLatin1String("virtual"), QLatin1String("volatile"), QLatin1String("wchar_t"),
+            QLatin1String("while"), QLatin1String("xor"), QLatin1String("xor_eq"),
+            QLatin1String("synchronized"),
             // Qt specific
             QLatin1String("signals"), QLatin1String("slots"), QLatin1String("emit")
         };
@@ -494,8 +491,7 @@ QString CppCodeMarker::addMarkUp(const QString &in,
         for (int j = sizeof(keywordTable) / sizeof(QString) - 1; j; --j)
             keywords.insert(keywordTable[j]);
     }
-#define readChar() \
-    ch = (i < code.length()) ? code[i++].cell() : EOF
+#define readChar() ch = (i < code.length()) ? code[i++].cell() : EOF
 
     QString code = in;
     QString out;

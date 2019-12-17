@@ -58,10 +58,14 @@ struct Topic
 {
     QString topic;
     QString args;
-    Topic() { }
-    Topic(QString &t, const QString &a) : topic(t), args(a) { }
+    Topic() {}
+    Topic(QString &t, const QString &a) : topic(t), args(a) {}
     bool isEmpty() const { return topic.isEmpty(); }
-    void clear() { topic.clear(); args.clear(); }
+    void clear()
+    {
+        topic.clear();
+        args.clear();
+    }
 };
 typedef QVector<Topic> TopicList;
 
@@ -70,8 +74,8 @@ typedef QVector<DitaRef *> DitaRefList;
 class DitaRef
 {
 public:
-    DitaRef() { }
-    virtual ~DitaRef() { }
+    DitaRef() {}
+    virtual ~DitaRef() {}
 
     const QString &navtitle() const { return navtitle_; }
     const QString &href() const { return href_; }
@@ -79,7 +83,7 @@ public:
     void setHref(const QString &t) { href_ = t; }
     virtual bool isMapRef() const = 0;
     virtual const DitaRefList *subrefs() const { return nullptr; }
-    virtual void appendSubref(DitaRef *) { }
+    virtual void appendSubref(DitaRef *) {}
 
 private:
     QString navtitle_;
@@ -89,7 +93,7 @@ private:
 class TopicRef : public DitaRef
 {
 public:
-    TopicRef() { }
+    TopicRef() {}
     ~TopicRef() override;
 
     bool isMapRef() const override { return false; }
@@ -103,7 +107,7 @@ private:
 class MapRef : public DitaRef
 {
 public:
-    MapRef() { }
+    MapRef() {}
 
     bool isMapRef() const override { return true; }
 };
@@ -125,18 +129,15 @@ public:
     };
 
     Doc() : priv(nullptr) {}
-    Doc(const Location &start_loc,
-        const Location &end_loc,
-        const QString &source,
-        const QSet<QString> &metaCommandSet,
-        const QSet<QString> &topics);
+    Doc(const Location &start_loc, const Location &end_loc, const QString &source,
+        const QSet<QString> &metaCommandSet, const QSet<QString> &topics);
     Doc(const Doc &doc);
     ~Doc();
 
     Doc &operator=(const Doc &doc);
     void simplifyEnumDoc();
     void setBody(const Text &body);
-    const DitaRefList& ditamap() const;
+    const DitaRefList &ditamap() const;
 
     const Location &location() const;
     const Location &startLocation() const;
@@ -172,8 +173,7 @@ public:
     static void trimCStyleComment(Location &location, QString &str);
     static QString resolveFile(const Location &location, const QString &fileName,
                                QString *userFriendlyFilePath = nullptr);
-    static CodeMarker *quoteFromFile(const Location &location,
-                                     Quoter &quoter,
+    static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter,
                                      const QString &fileName);
     static QString canonicalTitle(const QString &title);
     static const Config *config() { return config_; }

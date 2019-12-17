@@ -55,7 +55,11 @@ public:
 
     void start();
     void advance(QChar ch);
-    void advanceLines(int n) { stkTop->lineNo += n; stkTop->columnNo = 1; }
+    void advanceLines(int n)
+    {
+        stkTop->lineNo += n;
+        stkTop->columnNo = 1;
+    }
 
     void push(const QString &filePath);
     void pop();
@@ -71,14 +75,10 @@ public:
     int lineNo() const { return stkTop->lineNo; }
     int columnNo() const { return stkTop->columnNo; }
     bool etc() const { return etcetera; }
-    void warning(const QString &message,
-                 const QString &details = QString()) const;
-    void error(const QString &message,
-               const QString &details = QString()) const;
-    void fatal(const QString &message,
-               const QString &details = QString()) const;
-    void report(const QString &message,
-                const QString &details = QString()) const;
+    void warning(const QString &message, const QString &details = QString()) const;
+    void error(const QString &message, const QString &details = QString()) const;
+    void fatal(const QString &message, const QString &details = QString()) const;
+    void report(const QString &message, const QString &details = QString()) const;
 
     static const Location null;
 
@@ -104,9 +104,7 @@ private:
     };
     friend class QTypeInfo<StackEntry>;
 
-    void emitMessage(MessageType type,
-                     const QString &message,
-                     const QString &details) const;
+    void emitMessage(MessageType type, const QString &message, const QString &details) const;
     QString toString() const;
     QString top() const;
 
