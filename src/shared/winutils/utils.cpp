@@ -112,7 +112,7 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform,
     QString nameFilter = prefix;
     if (nameFilter.isEmpty())
         nameFilter += QLatin1Char('*');
-    if (debugMatchMode == MatchDebug && (platform & WindowsBased))
+    if (debugMatchMode == MatchDebug && platformHasDebugSuffix(platform))
         nameFilter += QLatin1Char('d');
     nameFilter += sharedLibrarySuffix(platform);
     QStringList result;

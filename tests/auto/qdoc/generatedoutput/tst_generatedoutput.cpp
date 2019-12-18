@@ -40,16 +40,24 @@ private slots:
     void htmlFromQDocFile();
     void htmlFromCpp();
     void htmlFromQml();
+    void htmlFromCppBug80259();
+
+    void webXmlFromQDocFile();
+    void webXmlFromCpp();
+    void webXmlFromQml();
+    void webXmlFromCppBug80259();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
 
+    void removeFullPathStrings(QString& str);
     void runQDocProcess(const QStringList &arguments);
     void compareLineByLine(const QStringList &expectedFiles);
     void testAndCompare(const char *input,
                         const char *outNames,
-                        const char *extraParams = nullptr);
+                        const char *extraParams = nullptr,
+                        const char *outputPathPrefix = nullptr);
 };
 
 void tst_generatedOutput::initTestCase()
@@ -93,6 +101,13 @@ void tst_generatedOutput::runQDocProcess(const QStringList &arguments)
     QFAIL("Running QDoc failed. See output above.");
 }
 
+void tst_generatedOutput::removeFullPathStrings(QString &str)
+{
+    QRegularExpression re("(location|path|filepath)=\"[^\"]+\"");
+    QRegularExpressionMatch match = re.match(str);
+    str.replace(re, match.captured(1) + "=\"REMOVED_BY_TEST\"");
+}
+
 void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 {
     for (const auto &file : expectedFiles) {
@@ -116,6 +131,8 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
             QString prefix = file + delim + QString::number(lineNumber) + delim;
             QString expectedLine = prefix + expectedIn.readLine();
             QString actualLine = prefix + actualIn.readLine();
+            removeFullPathStrings(actualLine);
+            removeFullPathStrings(expectedLine);
             QCOMPARE(actualLine, expectedLine);
         }
     }
@@ -123,22 +140,40 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 
 void tst_generatedOutput::testAndCompare(const char *input,
                                          const char *outNames,
-                                         const char *extraParams)
+                                         const char *extraParams,
+                                         const char *outputPathPrefix)
 {
-    QStringList args{ "-outputdir", m_outputDir->path(), QFINDTESTDATA(input) };
+    QStringList args{ "-outputdir", m_outputDir->path() + "/" + outputPathPrefix,
+                     QFINDTESTDATA(input) };
     if (extraParams)
         args << QString(QLatin1String(extraParams)).split(QChar(' '));
+
     runQDocProcess(args);
+
     if (QTest::currentTestFailed())
         return;
-    compareLineByLine(QString(QLatin1String(outNames)).split(QChar(' ')));
+
+    QStringList expectedOuts(QString(QLatin1String(outNames)).split(QChar(' ')));
+    if (outputPathPrefix)
+        for (auto &expectedOut : expectedOuts)
+            expectedOut = QString(outputPathPrefix) + "/" + expectedOut;
+
+    compareLineByLine(expectedOuts);
 }
+
 
 void tst_generatedOutput::htmlFromQDocFile()
 {
     testAndCompare("test.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html");
+}
+
+void tst_generatedOutput::webXmlFromQDocFile()
+{
+    testAndCompare("webxml_test.qdocconf",
+                   "html/qdoctests-qdocfileoutput.webxml "
+                   "html/qdoctests-qdocfileoutput-linking.webxml");
 }
 
 void tst_generatedOutput::htmlFromCpp()
@@ -150,11 +185,56 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc.html");
 }
 
+
+void tst_generatedOutput::webXmlFromCpp()
+{
+    testAndCompare("webxml_testcpp.qdocconf",
+                   "html/testcpp-module.webxml "
+                   "html/testqdoc-test.webxml "
+                   "html/testqdoc-testderived.webxml");
+}
+
+
 void tst_generatedOutput::htmlFromQml()
 {
     testAndCompare("testqml.qdocconf",
                    "test-componentset-example.html "
-                   "uicomponents-qmlmodule.html");
+                   "uicomponents-qmlmodule.html "
+                   "qdoc-test-qmlmodule.html "
+                   "qml-qdoc-test-abstractparent.html "
+                   "qml-qdoc-test-child.html "
+                   "qml-qdoc-test-doctest.html "
+                   "qml-qdoc-test-type-members.html "
+                   "qml-qdoc-test-type.html "
+                   "qml-uicomponents-progressbar.html "
+                   "qml-uicomponents-switch.html "
+                   "qml-uicomponents-tabwidget.html "
+                   "qml-int.html");
+}
+
+void tst_generatedOutput::webXmlFromQml()
+{
+    testAndCompare("webxml_testqml.qdocconf",
+                   "html/test-componentset-example.webxml "
+                   "html/uicomponents-qmlmodule.webxml");
+}
+
+void tst_generatedOutput::htmlFromCppBug80259()
+{
+    testAndCompare("bug80259/testmodule.qdocconf",
+                   "first.html "
+                   "second.html "
+                   "third.html "
+                   "index.html");
+}
+
+void tst_generatedOutput::webXmlFromCppBug80259()
+{
+    testAndCompare("bug80259/webxml_testmodule.qdocconf",
+                   "html/first.webxml "
+                   "html/second.webxml "
+                   "html/third.webxml "
+                   "html/index.webxml");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

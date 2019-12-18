@@ -40,9 +40,9 @@
 #include <QtCore/qstringlist.h>
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsast_p.h>
-#include <private/qqmljsastfwd_p.h>
-#include <private/qqmljsengine_p.h>
+#    include <private/qqmljsast_p.h>
+#    include <private/qqmljsastfwd_p.h>
+#    include <private/qqmljsengine_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -51,11 +51,8 @@ QT_BEGIN_NAMESPACE
 /*!
   The constructor stores all the parameters in local data members.
  */
-QmlDocVisitor::QmlDocVisitor(const QString &filePath,
-                             const QString &code,
-                             QQmlJS::Engine *engine,
-                             const QSet<QString> &commands,
-                             const QSet<QString> &topics)
+QmlDocVisitor::QmlDocVisitor(const QString &filePath, const QString &code, QQmlJS::Engine *engine,
+                             const QSet<QString> &commands, const QSet<QString> &topics)
     : nestingLevel(0)
 {
     lastEndOffset = 0;
@@ -82,18 +79,16 @@ QmlDocVisitor::~QmlDocVisitor()
 QQmlJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) const
 {
     const auto comments = engine->comments();
-    for (auto it = comments.rbegin(), end = comments.rend(); it != end; ++it) {
+    for (auto it = comments.rbegin(); it != comments.rend(); ++it) {
         QQmlJS::AST::SourceLocation loc = *it;
 
         if (loc.begin() <= lastEndOffset) {
             // Return if we reach the end of the preceding structure.
             break;
-        }
-        else if (usedComments.contains(loc.begin())) {
+        } else if (usedComments.contains(loc.begin())) {
             // Return if we encounter a previously used comment.
             break;
-        }
-        else if (loc.begin() > lastEndOffset && loc.end() < offset) {
+        } else if (loc.begin() > lastEndOffset && loc.end() < offset) {
             // Only examine multiline comments in order to avoid snippet markers.
             if (document.at(loc.offset - 1) == QLatin1Char('*')) {
                 QString comment = document.mid(loc.offset, loc.length);
@@ -109,7 +104,7 @@ QQmlJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) cons
 
 class QmlSignatureParser
 {
-  public:
+public:
     QmlSignatureParser(FunctionNode *func, const QString &signature, const Location &loc);
     void readToken() { tok_ = tokenizer_->getToken(); }
     QString lexeme() { return tokenizer_->lexeme(); }
@@ -120,7 +115,7 @@ class QmlSignatureParser
     bool matchParameter();
     bool matchFunctionDecl();
 
-  private:
+private:
     QString signature_;
     QStringList names_;
     QString funcName_;
@@ -160,9 +155,10 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
         node->setDoc(doc);
         nodes.append(node);
         if (topicsUsed.size() > 0) {
-            for (int i=0; i<topicsUsed.size(); ++i) {
+            for (int i = 0; i < topicsUsed.size(); ++i) {
                 QString topic = topicsUsed.at(i).topic;
-                if (!topic.startsWith(QLatin1String("qml")) && !topic.startsWith(QLatin1String("js")))
+                if (!topic.startsWith(QLatin1String("qml"))
+                    && !topic.startsWith(QLatin1String("js")))
                     continue; // maybe a qdoc warning here? mws 18/07/18
                 QString args = topicsUsed.at(i).args;
                 if (topic == COMMAND_JSTYPE) {
@@ -173,8 +169,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                         if (qpa.name_ == nodePassedIn->name()) {
                             if (nodePassedIn->isAlias())
                                 nodePassedIn->setDataType(qpa.type_);
-                        }
-                        else {
+                        } else {
                             bool isAttached = topic.contains(QLatin1String("attached"));
                             QmlPropertyNode *n = parent->hasQmlProperty(qpa.name_, isAttached);
                             if (n == nullptr)
@@ -186,12 +181,12 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                                 n->markDefault();
                             if (isAttached)
                                 n->markReadOnly(0);
-                            if ((topic == COMMAND_JSPROPERTY) || (topic == COMMAND_JSATTACHEDPROPERTY))
+                            if ((topic == COMMAND_JSPROPERTY)
+                                || (topic == COMMAND_JSATTACHEDPROPERTY))
                                 n->changeType(Node::QmlProperty, Node::JsProperty);
                             nodes.append(n);
                         }
-                    }
-                    else
+                    } else
                         qDebug() << "  FAILED TO PARSE QML OR JS PROPERTY:" << topic << args;
                 } else if (topic.endsWith(QLatin1String("method"))) {
                     if (node->isFunction()) {
@@ -203,7 +198,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
                 }
             }
         }
-        for (int i=0; i<nodes.size(); ++i)
+        for (int i = 0; i < nodes.size(); ++i)
             applyMetacommands(loc, nodes.at(i), doc);
         usedComments.insert(loc.offset);
         if (doc.isEmpty()) {
@@ -217,7 +212,8 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Nod
     return false;
 }
 
-QmlSignatureParser::QmlSignatureParser(FunctionNode *func, const QString &signature, const Location &loc)
+QmlSignatureParser::QmlSignatureParser(FunctionNode *func, const QString &signature,
+                                       const Location &loc)
     : signature_(signature), func_(func), location_(loc)
 {
     QByteArray latin1 = signature.toLatin1();
@@ -256,11 +252,8 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
         bool virgin = true;
 
         if (tok_ != Tok_Ident) {
-            while (match(Tok_signed) ||
-                   match(Tok_unsigned) ||
-                   match(Tok_short) ||
-                   match(Tok_long) ||
-                   match(Tok_int64)) {
+            while (match(Tok_signed) || match(Tok_unsigned) || match(Tok_short) || match(Tok_long)
+                   || match(Tok_int64)) {
                 type->append(previousLexeme());
                 virgin = false;
             }
@@ -269,19 +262,12 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
         if (virgin) {
             if (match(Tok_Ident)) {
                 type->append(previousLexeme());
-            }
-            else if (match(Tok_void) ||
-                     match(Tok_int) ||
-                     match(Tok_char) ||
-                     match(Tok_double) ||
-                     match(Tok_Ellipsis))
+            } else if (match(Tok_void) || match(Tok_int) || match(Tok_char) || match(Tok_double)
+                       || match(Tok_Ellipsis))
                 type->append(previousLexeme());
             else
                 return false;
-        }
-        else if (match(Tok_int) ||
-                 match(Tok_char) ||
-                 match(Tok_double)) {
+        } else if (match(Tok_int) || match(Tok_char) || match(Tok_double)) {
             type->append(previousLexeme());
         }
 
@@ -291,10 +277,7 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
             break;
     }
 
-    while (match(Tok_Ampersand) ||
-           match(Tok_Aster) ||
-           match(Tok_const) ||
-           match(Tok_Caret))
+    while (match(Tok_Ampersand) || match(Tok_Aster) || match(Tok_const) || match(Tok_Caret))
         type->append(previousLexeme());
 
     /*
@@ -308,8 +291,8 @@ bool QmlSignatureParser::matchTypeAndName(CodeChunk *type, QString *var)
 
     if (tok_ == Tok_LeftBracket) {
         int bracketDepth0 = tokenizer_->bracketDepth();
-        while ((tokenizer_->bracketDepth() >= bracketDepth0 && tok_ != Tok_Eoi) ||
-               tok_ == Tok_RightBracket) {
+        while ((tokenizer_->bracketDepth() >= bracketDepth0 && tok_ != Tok_Eoi)
+               || tok_ == Tok_RightBracket) {
             type->append(lexeme());
             readToken();
         }
@@ -333,10 +316,9 @@ bool QmlSignatureParser::matchParameter()
         return false;
     if (match(Tok_Equal)) {
         int parenDepth0 = tokenizer_->parenDepth();
-        while (tokenizer_->parenDepth() >= parenDepth0 &&
-               (tok_ != Tok_Comma ||
-                tokenizer_->parenDepth() > parenDepth0) &&
-               tok_ != Tok_Eoi) {
+        while (tokenizer_->parenDepth() >= parenDepth0
+               && (tok_ != Tok_Comma || tokenizer_->parenDepth() > parenDepth0)
+               && tok_ != Tok_Eoi) {
             defaultValue.append(lexeme());
             readToken();
         }
@@ -405,9 +387,7 @@ bool QmlSignatureParser::matchFunctionDecl()
   are found, a qdoc warning is emitted and false is
   returned.
  */
-bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc,
-                                        const QString &arg,
-                                        QmlPropArgs& qpa)
+bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlPropArgs &qpa)
 {
     qpa.clear();
     QStringList blankSplit = arg.split(QLatin1Char(' '));
@@ -419,20 +399,17 @@ bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc,
             qpa.component_ = colonSplit[1];
             qpa.name_ = colonSplit[2];
             return true;
-        }
-        else if (colonSplit.size() == 2) {
+        } else if (colonSplit.size() == 2) {
             qpa.component_ = colonSplit[0];
             qpa.name_ = colonSplit[1];
             return true;
-        }
-        else if (colonSplit.size() == 1) {
+        } else if (colonSplit.size() == 1) {
             qpa.name_ = colonSplit[0];
             return true;
         }
         QString msg = "Unrecognizable QML module/component qualifier for " + arg;
         doc.location().warning(tr(msg.toLatin1().data()));
-    }
-    else {
+    } else {
         QString msg = "Missing property type for " + arg;
         doc.location().warning(tr(msg.toLatin1().data()));
     }
@@ -442,73 +419,52 @@ bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc,
 /*!
   Applies the metacommands found in the comment.
  */
-void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation,
-                                      Node *node,
-                                      Doc &doc)
+void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation, Node *node, Doc &doc)
 {
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QSet<QString> metacommands = doc.metaCommandsUsed();
     if (metacommands.count() > 0) {
         metacommands.subtract(topics_);
-        QSet<QString>::iterator i = metacommands.begin();
-        while (i != metacommands.end()) {
-            QString command = *i;
-            ArgList args = doc.metaCommandArgs(command);
+        for (const auto &command : qAsConst(metacommands)) {
+            const ArgList args = doc.metaCommandArgs(command);
             if ((command == COMMAND_QMLABSTRACT) || (command == COMMAND_ABSTRACT)) {
                 if (node->isQmlType() || node->isJsType()) {
                     node->setAbstract(true);
                 }
-            }
-            else if (command == COMMAND_DEPRECATED) {
+            } else if (command == COMMAND_DEPRECATED) {
                 node->setStatus(Node::Obsolete);
-            }
-            else if ((command == COMMAND_INQMLMODULE) || (command == COMMAND_INJSMODULE)) {
-                qdb->addToQmlModule(args[0].first,node);
-            }
-            else if (command == COMMAND_QMLINHERITS) {
+            } else if ((command == COMMAND_INQMLMODULE) || (command == COMMAND_INJSMODULE)) {
+                qdb->addToQmlModule(args[0].first, node);
+            } else if (command == COMMAND_QMLINHERITS) {
                 if (node->name() == args[0].first)
                     doc.location().warning(tr("%1 tries to inherit itself").arg(args[0].first));
                 else if (node->isQmlType() || node->isJsType()) {
                     QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(node);
                     qmlType->setQmlBaseName(args[0].first);
                 }
-            }
-            else if (command == COMMAND_QMLDEFAULT) {
+            } else if (command == COMMAND_QMLDEFAULT) {
                 node->markDefault();
-            }
-            else if (command == COMMAND_QMLREADONLY) {
+            } else if (command == COMMAND_QMLREADONLY) {
                 node->markReadOnly(1);
-            }
-            else if ((command == COMMAND_INGROUP) && !args.isEmpty()) {
-                ArgList::ConstIterator argsIter = args.constBegin();
-                while (argsIter != args.constEnd()) {
-                    QDocDatabase::qdocDB()->addToGroup(argsIter->first, node);
-                    ++argsIter;
-                }
-            }
-            else if (command == COMMAND_INTERNAL) {
+            } else if ((command == COMMAND_INGROUP) && !args.isEmpty()) {
+                for (const auto &argument : args)
+                    QDocDatabase::qdocDB()->addToGroup(argument.first, node);
+            } else if (command == COMMAND_INTERNAL) {
                 node->setStatus(Node::Internal);
-            }
-            else if (command == COMMAND_OBSOLETE) {
+            } else if (command == COMMAND_OBSOLETE) {
                 node->setStatus(Node::Obsolete);
-            }
-            else if (command == COMMAND_PAGEKEYWORDS) {
+            } else if (command == COMMAND_PAGEKEYWORDS) {
                 // Not done yet. Do we need this?
-            }
-            else if (command == COMMAND_PRELIMINARY) {
+            } else if (command == COMMAND_PRELIMINARY) {
                 node->setStatus(Node::Preliminary);
-            }
-            else if (command == COMMAND_SINCE) {
+            } else if (command == COMMAND_SINCE) {
                 QString arg = args[0].first; //.join(' ');
                 node->setSince(arg);
-            }
-            else if (command == COMMAND_WRAPPER) {
+            } else if (command == COMMAND_WRAPPER) {
                 node->setWrapper();
-            }
-            else {
+            } else {
                 doc.location().warning(tr("The \\%1 command is ignored in QML files").arg(command));
             }
-            ++i;
         }
     }
 }
@@ -549,7 +505,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
 
     if (current->isNamespace()) {
         QmlTypeNode *component = nullptr;
-        Node *candidate = current ->findChildNode(name, Node::QML);
+        Node *candidate = current->findChildNode(name, Node::QML);
         if (candidate != nullptr)
             component = static_cast<QmlTypeNode *>(candidate);
         else
@@ -583,7 +539,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiImport *import)
 {
     QString name = document.mid(import->fileNameToken.offset, import->fileNameToken.length);
     if (name[0] == '\"')
-        name = name.mid(1, name.length()-2);
+        name = name.mid(1, name.length() - 2);
     QString version;
     if (import->version) {
         const auto start = import->version->firstSourceLocation().begin();
@@ -618,20 +574,18 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiArrayBinding *)
     return true;
 }
 
-void QmlDocVisitor::endVisit(QQmlJS::AST::UiArrayBinding *)
-{
-}
+void QmlDocVisitor::endVisit(QQmlJS::AST::UiArrayBinding *) {}
 
-template <typename T>
+template<typename T>
 QString qualifiedIdToString(T node);
 
-template <>
+template<>
 QString qualifiedIdToString(QStringRef node)
 {
     return node.toString();
 }
 
-template <>
+template<>
 QString qualifiedIdToString(QQmlJS::AST::UiQualifiedId *node)
 {
     QString s;
@@ -657,8 +611,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
         return true;
     }
     switch (member->type) {
-    case QQmlJS::AST::UiPublicMember::Signal:
-    {
+    case QQmlJS::AST::UiPublicMember::Signal: {
         if (current->isQmlType() || current->isJsType()) {
             QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(current);
             if (qmlType) {
@@ -678,8 +631,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
         }
         break;
     }
-    case QQmlJS::AST::UiPublicMember::Property:
-    {
+    case QQmlJS::AST::UiPublicMember::Property: {
         QString type = qualifiedIdToString(member->memberType);
         QString name = member->name.toString();
         if (current->isQmlType() || current->isJsType()) {
@@ -707,7 +659,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
 /*!
   End the visit of the \a member.
  */
-void QmlDocVisitor::endVisit(QQmlJS::AST::UiPublicMember* member)
+void QmlDocVisitor::endVisit(QQmlJS::AST::UiPublicMember *member)
 {
     lastEndOffset = member->lastSourceLocation().end();
 }
@@ -721,7 +673,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::IdentifierPropertyName *)
   Begin the visit of the function declaration \a fd, but only
   if the nesting level is 1.
  */
-bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration* fd)
+bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration *fd)
 {
     if (nestingLevel <= 1) {
         FunctionNode::Metaness metaness = FunctionNode::QmlMethod;
@@ -748,7 +700,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration* fd)
 /*!
   End the visit of the function declaration, \a fd.
  */
-void QmlDocVisitor::endVisit(QQmlJS::AST::FunctionDeclaration* fd)
+void QmlDocVisitor::endVisit(QQmlJS::AST::FunctionDeclaration *fd)
 {
     lastEndOffset = fd->lastSourceLocation().end();
 }
@@ -762,22 +714,22 @@ void QmlDocVisitor::endVisit(QQmlJS::AST::FunctionDeclaration* fd)
   documentation, that discussion must take place in the comment
   for the signal.
  */
-bool QmlDocVisitor::visit(QQmlJS::AST::UiScriptBinding* )
+bool QmlDocVisitor::visit(QQmlJS::AST::UiScriptBinding *)
 {
     return true;
 }
 
-void QmlDocVisitor::endVisit(QQmlJS::AST::UiScriptBinding* sb)
+void QmlDocVisitor::endVisit(QQmlJS::AST::UiScriptBinding *sb)
 {
     lastEndOffset = sb->lastSourceLocation().end();
 }
 
-bool QmlDocVisitor::visit(QQmlJS::AST::UiQualifiedId* )
+bool QmlDocVisitor::visit(QQmlJS::AST::UiQualifiedId *)
 {
     return true;
 }
 
-void QmlDocVisitor::endVisit(QQmlJS::AST::UiQualifiedId* )
+void QmlDocVisitor::endVisit(QQmlJS::AST::UiQualifiedId *)
 {
     // nothing.
 }

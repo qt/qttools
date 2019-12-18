@@ -36,6 +36,7 @@
 #include "doc.h"
 #include "editdistance.h"
 #include "loggingcategory.h"
+#include "node.h"
 #include "openedlist.h"
 #include "qdocdatabase.h"
 #include "quoter.h"
@@ -46,7 +47,7 @@
 #include <QtCore/qdir.h>
 
 #ifndef QT_BOOTSTRAPPED
-#  include "QtCore/qurl.h"
+#    include "QtCore/qurl.h"
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -54,9 +55,9 @@ QT_BEGIN_NAMESPACE
 Generator *Generator::currentGenerator_;
 QStringList Generator::exampleDirs;
 QStringList Generator::exampleImgExts;
-QMap<QString, QMap<QString, QString> > Generator::fmtLeftMaps;
-QMap<QString, QMap<QString, QString> > Generator::fmtRightMaps;
-QList<Generator *> Generator::generators;
+QMap<QString, QMap<QString, QString>> Generator::fmtLeftMaps;
+QMap<QString, QMap<QString, QString>> Generator::fmtRightMaps;
+QVector<Generator *> Generator::generators;
 QStringList Generator::imageDirs;
 QStringList Generator::imageFiles;
 QMap<QString, QStringList> Generator::imgFileExts;
@@ -116,9 +117,7 @@ Generator::~Generator()
     generators.removeAll(this);
 }
 
-void Generator::appendFullName(Text &text,
-                               const Node *apparentNode,
-                               const Node *relative,
+void Generator::appendFullName(Text &text, const Node *apparentNode, const Node *relative,
                                const Node *actualNode)
 {
     if (actualNode == nullptr)
@@ -129,27 +128,22 @@ void Generator::appendFullName(Text &text,
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 }
 
-void Generator::appendFullName(Text &text,
-                               const Node *apparentNode,
-                               const QString &fullName,
+void Generator::appendFullName(Text &text, const Node *apparentNode, const QString &fullName,
                                const Node *actualNode)
 {
     if (actualNode == nullptr)
         actualNode = apparentNode;
     text << Atom(Atom::LinkNode, CodeMarker::stringForNode(actualNode))
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-         << Atom(Atom::String, fullName)
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, fullName)
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 }
 
 void Generator::appendFullNames(Text &text, const NodeList &nodes, const Node *relative)
 {
-    NodeList::ConstIterator n = nodes.constBegin();
     int index = 0;
-    while (n != nodes.constEnd()) {
-        appendFullName(text,*n,relative);
-        text << comma(index++,nodes.count());
-        ++n;
+    for (const auto &node : nodes) {
+        appendFullName(text, node, relative);
+        text << comma(index++, nodes.count());
     }
 }
 
@@ -176,35 +170,29 @@ void Generator::signatureList(const NodeList &nodes, const Node *relative, CodeM
     Text text;
     int count = 0;
     text << Atom(Atom::ListLeft, QString("bullet"));
-    NodeList::ConstIterator n = nodes.constBegin();
-    while (n != nodes.constEnd()) {
+    for (const auto &node : nodes) {
         text << Atom(Atom::ListItemNumber, QString::number(++count));
         text << Atom(Atom::ListItemLeft, QString("bullet"));
-        appendSignature(text, *n);
+        appendSignature(text, node);
         text << Atom(Atom::ListItemRight, QString("bullet"));
-        ++n;
     }
     text << Atom(Atom::ListRight, QString("bullet"));
     generateText(text, relative, marker);
 }
 
-int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<RelatedClass> &rc)
+int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QVector<RelatedClass> &rc)
 {
-    QList<RelatedClass>::ConstIterator r;
-    QMap<QString,Text> classMap;
-    int index = 0;
-
-    r = rc.constBegin();
-    while (r != rc.constEnd()) {
-        ClassNode *rcn = (*r).node_;
+    QMap<QString, Text> classMap;
+    for (const auto &relatedClass : rc) {
+        ClassNode *rcn = relatedClass.node_;
         if (rcn && rcn->isInAPI()) {
             Text className;
             appendFullName(className, rcn, cn);
             classMap[className.toString().toLower()] = className;
         }
-        ++r;
     }
 
+    int index = 0;
     const QStringList classNames = classMap.keys();
     for (const auto &className : classNames) {
         text << classMap[className];
@@ -215,18 +203,18 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
 
 int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList &subs)
 {
-    QMap<QString,Text> classMap;
-    int index = 0;
+    QMap<QString, Text> classMap;
 
-    for (int i = 0; i < subs.size(); ++i) {
-        Text t;
-        if (!base->isQtQuickNode() || !subs[i]->isQtQuickNode() ||
-                (base->logicalModuleName() == subs[i]->logicalModuleName())) {
-            appendFullName(t, subs[i], base);
-            classMap[t.toString().toLower()] = t;
+    for (const auto sub : subs) {
+        Text text;
+        if (!base->isQtQuickNode() || !sub->isQtQuickNode()
+            || (base->logicalModuleName() == sub->logicalModuleName())) {
+            appendFullName(text, sub, base);
+            classMap[text.toString().toLower()] = text;
         }
     }
 
+    int index = 0;
     const QStringList names = classMap.keys();
     for (const auto &name : names) {
         text << classMap[name];
@@ -261,8 +249,8 @@ void Generator::writeOutFileNames()
 QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 {
     QString path = outputDir() + QLatin1Char('/');
-    if (Generator::useOutputSubdirs() && !node->outputSubdirectory().isEmpty() &&
-        !outputDir().endsWith(node->outputSubdirectory())) {
+    if (Generator::useOutputSubdirs() && !node->outputSubdirectory().isEmpty()
+        && !outputDir().endsWith(node->outputSubdirectory())) {
         path += node->outputSubdirectory() + QLatin1Char('/');
     }
     path += fileName;
@@ -271,11 +259,10 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
     auto outFile = new QFile(outPath);
     if (!redirectDocumentationToDevNull_ && outFile->exists()) {
         node->location().error(
-            tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
+                tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
     }
     if (!outFile->open(QFile::WriteOnly)) {
-        node->location().fatal(
-            tr("Cannot open output file '%1'").arg(outFile->fileName()));
+        node->location().fatal(tr("Cannot open output file '%1'").arg(outFile->fileName()));
     }
     qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
     outFileNames_ << fileName;
@@ -293,7 +280,7 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 void Generator::beginFilePage(const Node *node, const QString &fileName)
 {
     QFile *outFile = openSubPageFile(node, fileName);
-    QTextStream* out = new QTextStream(outFile);
+    QTextStream *out = new QTextStream(outFile);
 #ifndef QT_NO_TEXTCODEC
     if (outputCodec)
         out->setCodec(outputCodec);
@@ -301,17 +288,17 @@ void Generator::beginFilePage(const Node *node, const QString &fileName)
     outStreamStack.push(out);
 }
 
- /*!
-  Creates the file named \a fileName in the output directory.
-  Attaches a QTextStream to the created file, which is written
-  to all over the place using out(). This function calls another
-  function, \c beginFilePage(), which is really just most of what
-  this function used to contain. We needed a different version
-  that doesn't store the \a fileName in the \a node as the output
-  file name.
+/*!
+ Creates the file named \a fileName in the output directory.
+ Attaches a QTextStream to the created file, which is written
+ to all over the place using out(). This function calls another
+ function, \c beginFilePage(), which is really just most of what
+ this function used to contain. We needed a different version
+ that doesn't store the \a fileName in the \a node as the output
+ file name.
 
-  \sa beginFilePage()
- */
+ \sa beginFilePage()
+*/
 void Generator::beginSubPage(const Node *node, const QString &fileName)
 {
     beginFilePage(node, fileName);
@@ -349,11 +336,10 @@ static void transmogrify(QString &input, QString &output)
         uint u = c.unicode();
         if (u >= 'A' && u <= 'Z')
             u += 'a' - 'A';
-        if ((u >= 'a' &&  u <= 'z') || (u >= '0' && u <= '9')) {
+        if ((u >= 'a' && u <= 'z') || (u >= '0' && u <= '9')) {
             output += QLatin1Char(u);
             begun = true;
-        }
-        else if (begun) {
+        } else if (begun) {
             output += QLatin1Char('-');
             begun = false;
         }
@@ -398,8 +384,8 @@ QString Generator::fileBase(const Node *node) const
         if (node->isExample()) {
             base.append(QLatin1String("-example"));
         }
-    } else if (node->isQmlType() || node->isQmlBasicType() ||
-               node->isJsType() || node->isJsBasicType()) {
+    } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
+               || node->isJsBasicType()) {
         base = node->name();
         /*
           To avoid file name conflicts in the html directory,
@@ -408,9 +394,7 @@ QString Generator::fileBase(const Node *node) const
           module name.
         */
         if (!node->logicalModuleName().isEmpty()) {
-            base.prepend(node->logicalModuleName()
-                         + outputSuffix(node)
-                         + QLatin1Char('-'));
+            base.prepend(node->logicalModuleName() + outputSuffix(node) + QLatin1Char('-'));
         }
         base.prepend(outputPrefix(node));
     } else if (node->isProxyNode()) {
@@ -448,8 +432,7 @@ QString Generator::fileBase(const Node *node) const
   empty (default value), retrieve the file extension from
   the generator.
  */
-QString Generator::linkForExampleFile(const QString &path,
-                                      const Node *parent,
+QString Generator::linkForExampleFile(const QString &path, const Node *parent,
                                       const QString &fileExt)
 {
     QString link = path;
@@ -471,8 +454,7 @@ QString Generator::linkForExampleFile(const QString &path,
     Helper function to construct a title for a file or image page
     included in an example.
 */
-QString Generator::exampleFileTitle(const ExampleNode *relative,
-                                    const QString &fileName)
+QString Generator::exampleFileTitle(const ExampleNode *relative, const QString &fileName)
 {
     QString suffix;
     if (relative->files().contains(fileName))
@@ -511,9 +493,7 @@ QString Generator::cleanRef(const QString &ref)
     const QChar c = ref[0];
     const uint u = c.unicode();
 
-    if ((u >= 'a' && u <= 'z') ||
-            (u >= 'A' && u <= 'Z') ||
-            (u >= '0' && u <= '9')) {
+    if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9')) {
         clean += c;
     } else if (u == '~') {
         clean += "dtor.";
@@ -526,10 +506,8 @@ QString Generator::cleanRef(const QString &ref)
     for (int i = 1; i < ref.length(); i++) {
         const QChar c = ref[i];
         const uint u = c.unicode();
-        if ((u >= 'a' && u <= 'z') ||
-                (u >= 'A' && u <= 'Z') ||
-                (u >= '0' && u <= '9') || u == '-' ||
-                u == '_' || u == ':' || u == '.') {
+        if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9') || u == '-'
+            || u == '_' || u == ':' || u == '.') {
             clean += c;
         } else if (c.isSpace()) {
             clean += QLatin1Char('-');
@@ -596,26 +574,23 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
             parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
         else
             return QString();
-    }
-    else if (node->isQmlType() || node->isQmlBasicType() ||
-             node->isJsType() || node->isJsBasicType()) {
+    } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
+               || node->isJsBasicType()) {
         QString fb = fileBase(node);
         if (fb.startsWith(outputPrefix(node)))
             return fb + QLatin1Char('.') + currentGenerator()->fileExtension();
         else {
             QString mq;
             if (!node->logicalModuleName().isEmpty()) {
-                mq = node->logicalModuleName().replace(QChar('.'),QChar('-'));
+                mq = node->logicalModuleName().replace(QChar('.'), QChar('-'));
                 mq = mq.toLower() + QLatin1Char('-');
             }
-            return fdl + outputPrefix(node) + mq + fileBase(node) +
-                QLatin1Char('.') + currentGenerator()->fileExtension();
+            return fdl + outputPrefix(node) + mq + fileBase(node) + QLatin1Char('.')
+                    + currentGenerator()->fileExtension();
         }
-    }
-    else if (node->isTextPageNode() || node->isCollectionNode()) {
+    } else if (node->isTextPageNode() || node->isCollectionNode()) {
         parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
-    }
-    else if (fileBase(node).isEmpty())
+    } else if (fileBase(node).isEmpty())
         return QString();
 
     Node *parentNode = nullptr;
@@ -634,8 +609,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::Proxy:
         parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
         break;
-    case Node::Function:
-    {
+    case Node::Function: {
         const FunctionNode *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::JsSignal:
@@ -656,8 +630,8 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
             else if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty())
                 return fullDocumentLocation(fn->firstAssociatedProperty());
             else if (fn->overloadNumber() > 0)
-                anchorRef = QLatin1Char('#') + cleanRef(fn->name())
-                    + QLatin1Char('-') + QString::number(fn->overloadNumber());
+                anchorRef = QLatin1Char('#') + cleanRef(fn->name()) + QLatin1Char('-')
+                        + QString::number(fn->overloadNumber());
             else
                 anchorRef = QLatin1Char('#') + cleanRef(fn->name());
             break;
@@ -672,8 +646,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::Enum:
         anchorRef = QLatin1Char('#') + node->name() + "-enum";
         break;
-    case Node::Typedef:
-    {
+    case Node::Typedef: {
         const TypedefNode *tdef = static_cast<const TypedefNode *>(node);
         if (tdef->associatedEnum()) {
             return fullDocumentLocation(tdef->associatedEnum());
@@ -701,13 +674,12 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::HeaderFile:
     case Node::Module:
     case Node::JsModule:
-    case Node::QmlModule:
-    {
+    case Node::QmlModule: {
         parentName = fileBase(node);
-        parentName.replace(QLatin1Char('/'), QLatin1Char('-')).replace(QLatin1Char('.'), QLatin1Char('-'));
+        parentName.replace(QLatin1Char('/'), QLatin1Char('-'))
+                .replace(QLatin1Char('.'), QLatin1Char('-'));
         parentName += QLatin1Char('.') + currentGenerator()->fileExtension();
-    }
-        break;
+    } break;
     default:
         break;
     }
@@ -723,15 +695,13 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 
 void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
 {
-    QList<Text> alsoList = node->doc().alsoList();
+    QVector<Text> alsoList = node->doc().alsoList();
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {
         Text text;
-        text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
-             << "See also "
-             << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD);
+        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << "See also "
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
         for (int i = 0; i < alsoList.size(); ++i)
             text << alsoList.at(i) << separator(i, alsoList.size());
@@ -741,30 +711,21 @@ void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
     }
 }
 
-const Atom *Generator::generateAtomList(const Atom *atom,
-                                        const Node *relative,
-                                        CodeMarker *marker,
-                                        bool generate,
-                                        int &numAtoms)
+const Atom *Generator::generateAtomList(const Atom *atom, const Node *relative, CodeMarker *marker,
+                                        bool generate, int &numAtoms)
 {
     while (atom != nullptr) {
         if (atom->type() == Atom::FormatIf) {
             int numAtoms0 = numAtoms;
             bool rightFormat = canHandleFormat(atom->string());
-            atom = generateAtomList(atom->next(),
-                                    relative,
-                                    marker,
-                                    generate && rightFormat,
+            atom = generateAtomList(atom->next(), relative, marker, generate && rightFormat,
                                     numAtoms);
             if (atom == nullptr)
                 return nullptr;
 
             if (atom->type() == Atom::FormatElse) {
                 ++numAtoms;
-                atom = generateAtomList(atom->next(),
-                                        relative,
-                                        marker,
-                                        generate && !rightFormat,
+                atom = generateAtomList(atom->next(), relative, marker, generate && !rightFormat,
                                         numAtoms);
                 if (atom == nullptr)
                     return nullptr;
@@ -772,23 +733,16 @@ const Atom *Generator::generateAtomList(const Atom *atom,
 
             if (atom->type() == Atom::FormatEndif) {
                 if (generate && numAtoms0 == numAtoms) {
-                    relative->location().warning(tr("Output format %1 not handled %2")
-                                                 .arg(format()).arg(outFileName()));
+                    relative->location().warning(
+                            tr("Output format %1 not handled %2").arg(format()).arg(outFileName()));
                     Atom unhandledFormatAtom(Atom::UnhandledFormat, format());
-                    generateAtomList(&unhandledFormatAtom,
-                                     relative,
-                                     marker,
-                                     generate,
-                                     numAtoms);
+                    generateAtomList(&unhandledFormatAtom, relative, marker, generate, numAtoms);
                 }
                 atom = atom->next();
             }
-        }
-        else if (atom->type() == Atom::FormatElse ||
-                 atom->type() == Atom::FormatEndif) {
+        } else if (atom->type() == Atom::FormatElse || atom->type() == Atom::FormatEndif) {
             return atom;
-        }
-        else {
+        } else {
             int n = 1;
             if (generate) {
                 n += generateAtom(atom, relative, marker);
@@ -823,54 +777,49 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            }
-            else if (func->isCtor()) {
+            } else if (func->isCtor()) {
                 Text text;
                 text << "Default constructs an instance of ";
                 text << func->parent()->name() << ".";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            }
-            else if (func->isCCtor()) {
+            } else if (func->isCCtor()) {
                 Text text;
                 text << "Copy constructor.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            }
-            else if (func->isMCtor()) {
+            } else if (func->isMCtor()) {
                 Text text;
                 text << "Move-copy constructor.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            }
-            else if (func->isCAssign()) {
+            } else if (func->isCAssign()) {
                 Text text;
                 text << "Copy-assignment operator.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            }
-            else if (func->isMAssign()) {
+            } else if (func->isMAssign()) {
                 Text text;
                 text << "Move-assignment operator.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            }
-            else if (!node->isWrapper() && !node->isMarkedReimp()) {
+            } else if (!node->isWrapper() && !node->isMarkedReimp()) {
                 if (!func->isIgnored()) // undocumented functions added by Q_OBJECT
-                    node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
+                    node->location().warning(
+                            tr("No documentation for '%1'").arg(node->plainSignature()));
             }
         } else if (!node->isWrapper() && !node->isMarkedReimp()) {
             // Don't require documentation of things defined in Q_GADGET
             if (node->name() != QLatin1String("QtGadgetHelper"))
-                node->location().warning(tr("No documentation for '%1'").arg(node->plainSignature()));
+                node->location().warning(
+                        tr("No documentation for '%1'").arg(node->plainSignature()));
         }
-    }
-    else if (!node->isSharingComment()) {
+    } else if (!node->isSharingComment()) {
         if (node->isFunction()) {
             const FunctionNode *fn = static_cast<const FunctionNode *>(node);
             if (!fn->overridesThis().isEmpty())
@@ -886,66 +835,60 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             const EnumNode *enume = static_cast<const EnumNode *>(node);
 
             QSet<QString> definedItems;
-            QList<EnumItem>::ConstIterator it = enume->items().constBegin();
-            while (it != enume->items().constEnd()) {
-                definedItems.insert((*it).name());
-                ++it;
-            }
+            const QVector<EnumItem> &items = enume->items();
+            for (const auto &item : items)
+                definedItems.insert(item.name());
 
             const auto &documentedItemList = enume->doc().enumItemNames();
             QSet<QString> documentedItems(documentedItemList.cbegin(), documentedItemList.cend());
-            QSet<QString> allItems = definedItems + documentedItems;
-            if (allItems.count() > definedItems.count() ||
-                    allItems.count() > documentedItems.count()) {
-                QSet<QString>::ConstIterator a = allItems.constBegin();
-                while (a != allItems.constEnd()) {
-                    if (!definedItems.contains(*a)) {
+            const QSet<QString> allItems = definedItems + documentedItems;
+            if (allItems.count() > definedItems.count()
+                || allItems.count() > documentedItems.count()) {
+                for (const auto &it : allItems) {
+                    if (!definedItems.contains(it)) {
                         QString details;
-                        QString best = nearestName(*a, definedItems);
+                        QString best = nearestName(it, definedItems);
                         if (!best.isEmpty() && !documentedItems.contains(best))
                             details = tr("Maybe you meant '%1'?").arg(best);
 
                         node->doc().location().warning(tr("No such enum item '%1' in %2")
-                                                       .arg(*a).arg(node->plainFullName()), details);
-                    }
-                    else if (!documentedItems.contains(*a)) {
+                                                               .arg(it)
+                                                               .arg(node->plainFullName()),
+                                                       details);
+                    } else if (!documentedItems.contains(it)) {
                         node->doc().location().warning(tr("Undocumented enum item '%1' in %2")
-                                                       .arg(*a).arg(node->plainFullName()));
+                                                               .arg(it)
+                                                               .arg(node->plainFullName()));
                     }
-                    ++a;
                 }
             }
         } else if (node->isFunction()) {
             const FunctionNode *fn = static_cast<const FunctionNode *>(node);
-            QSet<QString> declaredNames;
-            fn->parameters().getNames(declaredNames);
-            QSet<QString> documentedNames = fn->doc().parameterNames();
+            const QSet<QString> declaredNames = fn->parameters().getNames();
+            const QSet<QString> documentedNames = fn->doc().parameterNames();
             if (declaredNames != documentedNames) {
-                QSet<QString>::const_iterator i = declaredNames.constBegin();
-                while (i != declaredNames.constEnd()) {
-                    if (!documentedNames.contains(*i)) {
+                for (const auto &name : declaredNames) {
+                    if (!documentedNames.contains(name)) {
                         if (fn->isActive() || fn->isPreliminary()) {
                             if (!fn->isMarkedReimp() && !fn->isOverload()) {
-                                fn->doc().location().warning(
-                                          tr("Undocumented parameter '%1' in %2")
-                                          .arg(*i).arg(node->plainFullName()));
+                                fn->doc().location().warning(tr("Undocumented parameter '%1' in %2")
+                                                                     .arg(name)
+                                                                     .arg(node->plainFullName()));
                             }
                         }
                     }
-                    ++i;
                 }
-                i = documentedNames.constBegin();
-                while (i != documentedNames.constEnd()) {
-                    if (!declaredNames.contains(*i)) {
-                        QString best = nearestName(*i, declaredNames);
+                for (const auto &name : documentedNames) {
+                    if (!declaredNames.contains(name)) {
+                        QString best = nearestName(name, declaredNames);
                         QString details;
                         if (!best.isEmpty())
                             details = tr("Maybe you meant '%1'?").arg(best);
                         fn->doc().location().warning(tr("No such parameter '%1' in %2")
-                                                     .arg(*i).arg(fn->plainFullName()),
+                                                             .arg(name)
+                                                             .arg(fn->plainFullName()),
                                                      details);
                     }
-                    ++i;
                 }
             }
             /*
@@ -953,11 +896,12 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
               for all functions with a return type.
               mws 13/12/2018
             */
-            if (!fn->isObsolete() && fn->returnsBool() &&
-                !fn->isMarkedReimp() && !fn->isOverload()) {
+            if (!fn->isObsolete() && fn->returnsBool() && !fn->isMarkedReimp()
+                && !fn->isOverload()) {
                 if (!fn->doc().body().contains("return"))
-                    node->doc().location().warning(tr("Undocumented return value "
-                                           "(hint: use 'return' or 'returns' in the text"));
+                    node->doc().location().warning(
+                            tr("Undocumented return value "
+                               "(hint: use 'return' or 'returns' in the text"));
             }
         }
     }
@@ -981,7 +925,7 @@ void Generator::generateRequiredLinks(const Node *node, CodeMarker *marker)
     if (exampleUrl.isEmpty()) {
         if (!en->noAutoList()) {
             generateFileList(en, marker, false); // files
-            generateFileList(en, marker, true);  // images
+            generateFileList(en, marker, true); // images
         }
     } else {
         generateLinkToExample(en, marker, exampleUrl);
@@ -995,8 +939,7 @@ void Generator::generateRequiredLinks(const Node *node, CodeMarker *marker)
   the path is appended to \a baseUrl, after a '/' character if \a baseUrl did
   not already end in one.
 */
-void Generator::generateLinkToExample(const ExampleNode *en,
-                                      CodeMarker *marker,
+void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
                                       const QString &baseUrl)
 {
     QString exampleUrl(baseUrl);
@@ -1018,17 +961,14 @@ void Generator::generateLinkToExample(const ExampleNode *en,
 
     // Construct a path to the example; <install path>/<example name>
     QStringList path = QStringList()
-        << config()->getString(CONFIG_EXAMPLESINSTALLPATH)
-        << en->name();
+            << config()->getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
     path.removeAll({});
 
     Text text;
     text << Atom::ParaLeft
          << Atom(Atom::Link, exampleUrl.replace(placeholder, path.join(separator)))
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-         << Atom(Atom::String, link)
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
-         << Atom::ParaRight;
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << Atom(Atom::String, link)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom::ParaRight;
 
     generateText(text, nullptr, marker);
 }
@@ -1038,12 +978,8 @@ void Generator::addImageToCopy(const ExampleNode *en, const QString &file)
     QDir dirInfo;
     QString userFriendlyFilePath;
     const QString prefix("/images/used-in-examples/");
-    QString srcPath = Config::findFile(en->location(),
-                                       QStringList(),
-                                       exampleDirs,
-                                       file,
-                                       exampleImgExts,
-                                       &userFriendlyFilePath);
+    QString srcPath = Config::findFile(en->location(), QStringList(), exampleDirs, file,
+                                       exampleImgExts, &userFriendlyFilePath);
     outFileNames_ << prefix.mid(1) + userFriendlyFilePath;
     userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
     QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
@@ -1071,7 +1007,7 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
         paths = en->images();
         tag = "Images:";
         atomType = Atom::ExampleImageLink;
-    } else { //files
+    } else { // files
         paths = en->files();
         tag = "Files:";
     }
@@ -1091,13 +1027,9 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
 
         openedList.next();
         text << Atom(Atom::ListItemNumber, openedList.numberString())
-             << Atom(Atom::ListItemLeft, openedList.styleString())
-             << Atom::ParaLeft
-             << Atom(atomType, file)
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-             << file
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
-             << Atom::ParaRight
+             << Atom(Atom::ListItemLeft, openedList.styleString()) << Atom::ParaLeft
+             << Atom(atomType, file) << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << file
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom::ParaRight
              << Atom(Atom::ListItemRight, openedList.styleString());
         path = file;
     }
@@ -1110,10 +1042,8 @@ void Generator::generateInheritedBy(const ClassNode *classe, CodeMarker *marker)
 {
     if (!classe->derivedClasses().isEmpty()) {
         Text text;
-        text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
-             << "Inherited by: "
-             << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD);
+        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+             << "Inherited by: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
         appendSortedNames(text, classe, classe->derivedClasses());
         text << Atom::ParaRight;
@@ -1123,31 +1053,24 @@ void Generator::generateInheritedBy(const ClassNode *classe, CodeMarker *marker)
 
 void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
 {
-    QList<RelatedClass>::ConstIterator r;
-    int index;
-
     if (!classe->baseClasses().isEmpty()) {
         Text text;
-        text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
-             << "Inherits: "
-             << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD);
+        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+             << "Inherits: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
-        r = classe->baseClasses().constBegin();
-        index = 0;
-        while (r != classe->baseClasses().constEnd()) {
-            if ((*r).node_) {
-                appendFullName(text, (*r).node_, classe);
+        int index = 0;
+        const QVector<RelatedClass> &baseClasses = classe->baseClasses();
+        for (const auto &cls : baseClasses) {
+            if (cls.node_) {
+                appendFullName(text, cls.node_, classe);
 
-                if ((*r).access_ == Node::Protected) {
+                if (cls.access_ == Node::Protected) {
                     text << " (protected)";
-                }
-                else if ((*r).access_ == Node::Private) {
+                } else if (cls.access_ == Node::Private) {
                     text << " (private)";
                 }
                 text << separator(index++, classe->baseClasses().count());
             }
-            ++r;
         }
         text << Atom::ParaRight;
         generateText(text, classe, marker);
@@ -1209,7 +1132,8 @@ void Generator::generateDocumentation(Node *node)
                 // other use cases pop up.
                 QString name = cn->name().toLower();
                 name.replace(QChar(' '), QString("-"));
-                QString filename = cn->tree()->physicalModuleName() + "-" + name + "." + fileExtension();
+                QString filename =
+                        cn->tree()->physicalModuleName() + "-" + name + "." + fileExtension();
                 beginSubPage(node, filename);
                 generateGenericCollectionPage(cn, marker);
                 endSubPage();
@@ -1219,8 +1143,8 @@ void Generator::generateDocumentation(Node *node)
             generatePageNode(static_cast<PageNode *>(node), marker);
             endSubPage();
         } else if (node->isAggregate()) {
-            if ((node->isClassNode() || node->isHeader() || node->isNamespace()) &&
-                node->docMustBeGenerated()) {
+            if ((node->isClassNode() || node->isHeader() || node->isNamespace())
+                && node->docMustBeGenerated()) {
                 beginSubPage(node, fileName(node));
                 generateCppReferencePage(static_cast<Aggregate *>(node), marker);
                 endSubPage();
@@ -1261,10 +1185,8 @@ void Generator::generateMaintainerList(const Aggregate *node, CodeMarker *marker
 
     if (!sl.isEmpty()) {
         Text text;
-        text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-             << "Maintained by: "
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
+        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+             << "Maintained by: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
         for (int i = 0; i < sl.size(); ++i)
             text << sl.at(i) << separator(i, sl.size());
@@ -1278,8 +1200,7 @@ void Generator::generateMaintainerList(const Aggregate *node, CodeMarker *marker
   Output the "Inherit by" list for the QML element,
   if it is inherited by any other elements.
  */
-void Generator::generateQmlInheritedBy(const QmlTypeNode *qcn,
-                                              CodeMarker *marker)
+void Generator::generateQmlInheritedBy(const QmlTypeNode *qcn, CodeMarker *marker)
 {
     if (qcn) {
         NodeList subs;
@@ -1298,10 +1219,8 @@ void Generator::generateQmlInheritedBy(const QmlTypeNode *qcn,
   Extract sections of markup text surrounded by \e qmltext
   and \e endqmltext and output them.
  */
-bool Generator::generateQmlText(const Text &text,
-                                const Node *relative,
-                                CodeMarker *marker,
-                                const QString &/* qmlName */ )
+bool Generator::generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
+                                const QString & /* qmlName */)
 {
     const Atom *atom = text.firstAtom();
     bool result = false;
@@ -1335,7 +1254,8 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
                 if (overrides->hasDoc()) {
                     Text text;
                     text << Atom::ParaLeft << "Reimplements: ";
-                    QString fullName =  overrides->parent()->name() + "::" + overrides->signature(false, true);
+                    QString fullName =
+                            overrides->parent()->name() + "::" + overrides->signature(false, true);
                     appendFullName(text, overrides->parent(), fullName, overrides);
                     text << "." << Atom::ParaRight;
                     generateText(text, fn, marker);
@@ -1346,40 +1266,39 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
             if (sameName && sameName->hasDoc()) {
                 Text text;
                 text << Atom::ParaLeft << "Reimplements an access function for property: ";
-                QString fullName =  sameName->parent()->name() + "::" + sameName->name();
+                QString fullName = sameName->parent()->name() + "::" + sameName->name();
                 appendFullName(text, sameName->parent(), fullName, sameName);
                 text << "." << Atom::ParaRight;
                 generateText(text, fn, marker);
             } else {
-                fn->doc().location().warning(tr("Illegal \\reimp; no documented virtual function for %1")
-                                             .arg(fn->plainSignature()));
+                fn->doc().location().warning(
+                        tr("Illegal \\reimp; no documented virtual function for %1")
+                                .arg(fn->plainSignature()));
             }
         }
     }
+}
+
+QString Generator::formatSince(const Node *node)
+{
+    QStringList since = node->since().split(QLatin1Char(' '));
+
+    // If there is only one argument, assume it is the Qt version number.
+    if (since.count() == 1)
+        return "Qt " + since[0];
+
+    // Otherwise, use the original <project> <version> string.
+    return node->since();
 }
 
 void Generator::generateSince(const Node *node, CodeMarker *marker)
 {
     if (!node->since().isEmpty()) {
         Text text;
-        text << Atom::ParaLeft
-             << "This "
-             << typeString(node);
+        text << Atom::ParaLeft << "This " << typeString(node) << " was introduced ";
         if (node->isEnumType())
-            text << " was introduced or modified in ";
-        else
-            text << " was introduced in ";
-
-        QStringList since = node->since().split(QLatin1Char(' '));
-        if (since.count() == 1) {
-            // If there is only one argument, assume it is the Qt version number.
-            text << " Qt " << since[0];
-        } else {
-            // Otherwise, reconstruct the <project> <version> string.
-            text << " " << since.join(' ');
-        }
-
-        text << "." << Atom::ParaRight;
+            text << "or modified ";
+        text << "in " << formatSince(node) << "." << Atom::ParaRight;
         generateText(text, node, marker);
     }
 }
@@ -1393,13 +1312,9 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         // Do nothing.
         break;
     case Node::Preliminary:
-        text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-             << "This "
-             << typeString(node)
-             << " is under development and is subject to change."
-             << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-             << Atom::ParaRight;
+        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << "This "
+             << typeString(node) << " is under development and is subject to change."
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD) << Atom::ParaRight;
         break;
     case Node::Deprecated:
         text << Atom::ParaLeft;
@@ -1435,11 +1350,10 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
 void Generator::generatePrivateSignalNote(const Node *node, CodeMarker *marker)
 {
     Text text;
-    text << Atom::ParaLeft
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note: "
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-         << "This is a private signal. It can be used in signal connections but cannot be emitted by the user."
+    text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+         << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
+         << "This is a private signal. It can be used in signal connections but cannot be emitted "
+            "by the user."
          << Atom::ParaRight;
     generateText(text, node, marker);
 }
@@ -1451,16 +1365,11 @@ void Generator::generatePrivateSignalNote(const Node *node, CodeMarker *marker)
 void Generator::generateInvokableNote(const Node *node, CodeMarker *marker)
 {
     Text text;
-    text << Atom::ParaLeft
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note: "
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
+    text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+         << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
          << "This function can be invoked via the meta-object system and from QML. See "
-         << Atom(Atom::Link,"Q_INVOKABLE")
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-         << "Q_INVOKABLE"
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
-         << "."
+         << Atom(Atom::Link, "Q_INVOKABLE") << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+         << "Q_INVOKABLE" << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << "."
          << Atom::ParaRight;
     generateText(text, node, marker);
 }
@@ -1470,19 +1379,13 @@ void Generator::generateInvokableNote(const Node *node, CodeMarker *marker)
   is the node that represents the entity where a qdoc comment
   was found, and \a text represents the qdoc comment.
  */
-bool Generator::generateText(const Text &text,
-                             const Node *relative,
-                             CodeMarker *marker)
+bool Generator::generateText(const Text &text, const Node *relative, CodeMarker *marker)
 {
     bool result = false;
     if (text.firstAtom() != nullptr) {
         int numAtoms = 0;
         initializeTextOutput();
-        generateAtomList(text.firstAtom(),
-                         relative,
-                         marker,
-                         true,
-                         numAtoms);
+        generateAtomList(text.firstAtom(), relative, marker, true, numAtoms);
         result = true;
     }
     return result;
@@ -1497,16 +1400,14 @@ bool Generator::generateText(const Text &text,
   nonreentrant, and true is returned. If there are no exceptions,
   the three node lists remain empty and false is returned.
  */
-bool Generator::hasExceptions(const Node *node,
-                              NodeList &reentrant,
-                              NodeList &threadsafe,
+bool Generator::hasExceptions(const Node *node, NodeList &reentrant, NodeList &threadsafe,
                               NodeList &nonreentrant)
 {
     bool result = false;
     Node::ThreadSafeness ts = node->threadSafeness();
     const NodeList &children = static_cast<const Aggregate *>(node)->childNodes();
     for (auto child : children) {
-        if (!child->isObsolete()){
+        if (!child->isObsolete()) {
             switch (child->threadSafeness()) {
             case Node::Reentrant:
                 reentrant.append(child);
@@ -1532,11 +1433,8 @@ bool Generator::hasExceptions(const Node *node,
 
 static void startNote(Text &text)
 {
-    text << Atom::ParaLeft
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note:"
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-         << " ";
+    text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+         << "Note:" << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD) << " ";
 }
 
 /*!
@@ -1552,30 +1450,19 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
     Node::ThreadSafeness ts = node->threadSafeness();
     bool exceptions = false;
 
-    rlink << Atom(Atom::Link,"reentrant")
-          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-          << "reentrant"
-          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+    rlink << Atom(Atom::Link, "reentrant") << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+          << "reentrant" << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 
-    tlink << Atom(Atom::Link,"thread-safe")
-          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-          << "thread-safe"
-          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+    tlink << Atom(Atom::Link, "thread-safe") << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+          << "thread-safe" << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 
     switch (ts) {
     case Node::UnspecifiedSafeness:
         break;
     case Node::NonReentrant:
-        text << Atom::ParaLeft
-             << Atom(Atom::FormattingLeft,ATOM_FORMATTING_BOLD)
-             << "Warning:"
-             << Atom(Atom::FormattingRight,ATOM_FORMATTING_BOLD)
-             << " This "
-             << typeString(node)
-             << " is not "
-             << rlink
-             << "."
-             << Atom::ParaRight;
+        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+             << "Warning:" << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD) << " This "
+             << typeString(node) << " is not " << rlink << "." << Atom::ParaRight;
         break;
     case Node::Reentrant:
     case Node::ThreadSafe:
@@ -1592,8 +1479,7 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
                 text << ".";
             else
                 text << " with the following exceptions:";
-        }
-        else {
+        } else {
             text << "This " << typeString(node) << " is ";
             if (ts == Node::ThreadSafe)
                 text << tlink;
@@ -1606,46 +1492,33 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
     default:
         break;
     }
-    generateText(text,node,marker);
+    generateText(text, node, marker);
 
     if (exceptions) {
         text.clear();
         if (ts == Node::Reentrant) {
             if (!nonreentrant.isEmpty()) {
                 startNote(text);
-                text << "These functions are not "
-                     << rlink
-                     << ":"
-                     << Atom::ParaRight;
+                text << "These functions are not " << rlink << ":" << Atom::ParaRight;
                 signatureList(nonreentrant, node, marker);
             }
             if (!threadsafe.isEmpty()) {
                 text.clear();
                 startNote(text);
-                text << "These functions are also "
-                     << tlink
-                     << ":"
-                     << Atom::ParaRight;
+                text << "These functions are also " << tlink << ":" << Atom::ParaRight;
                 generateText(text, node, marker);
                 signatureList(threadsafe, node, marker);
             }
-        }
-        else { // thread-safe
+        } else { // thread-safe
             if (!reentrant.isEmpty()) {
                 startNote(text);
-                text << "These functions are only "
-                     << rlink
-                     << ":"
-                     << Atom::ParaRight;
+                text << "These functions are only " << rlink << ":" << Atom::ParaRight;
                 signatureList(reentrant, node, marker);
             }
             if (!nonreentrant.isEmpty()) {
                 text.clear();
                 startNote(text);
-                text << "These functions are not "
-                     << rlink
-                     << ":"
-                     << Atom::ParaRight;
+                text << "These functions are not " << rlink << ":" << Atom::ParaRight;
                 signatureList(nonreentrant, node, marker);
             }
         }
@@ -1700,19 +1573,15 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
         return;
 
     Text text;
-    text << Atom::ParaLeft
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note:"
-         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-         << " Signal "
-         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC)
-         << node->name()
+    text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+         << "Note:" << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD) << " Signal "
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC) << node->name()
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_ITALIC)
          << " is overloaded in this class. "
             "To connect to this signal by using the function pointer syntax, Qt "
             "provides a convenient helper for obtaining the function pointer as "
             "shown in this example:"
-          << Atom(Atom::Code, marker->markedUpCode(code, node, node->location()));
+         << Atom(Atom::Code, marker->markedUpCode(code, node, node->location()));
 
     generateText(text, node, marker);
 }
@@ -1728,32 +1597,29 @@ void Generator::generateDocs()
 
 Generator *Generator::generatorForFormat(const QString &format)
 {
-    QList<Generator *>::ConstIterator g = generators.constBegin();
-    while (g != generators.constEnd()) {
-        if ((*g)->format() == format)
-            return *g;
-        ++g;
+    for (const auto &generator : qAsConst(generators)) {
+        if (generator->format() == format)
+            return generator;
     }
     return nullptr;
 }
 
 /*!
-  Looks up the tag \a t in the map of metadata values for the
+  Looks up the tag \a tag in the map of metadata values for the
   current topic in \a inner. If a value for the tag is found,
   the value is returned.
 
-  \note If \a t is found in the metadata map, it is erased.
-  i.e. Once you call this function for a particular \a t,
-  you consume \a t.
+  \note If \a tag is found in the metadata map, it is erased.
+  i.e. Once you call this function for a particular \a tag,
+  you consume \a tag.
  */
-QString Generator::getMetadataElement(const Aggregate *inner, const QString &t)
+QString Generator::getMetadataElement(const Aggregate *inner, const QString &tag)
 {
     QString s;
-    QStringMultiMap& metaTagMap = const_cast<QStringMultiMap&>(inner->doc().metaTagMap());
-    QStringMultiMap::iterator i = metaTagMap.find(t);
-    if (i != metaTagMap.end()) {
-        s = i.value();
-        metaTagMap.erase(i);
+    QStringMultiMap &metaTagMap = const_cast<QStringMultiMap &>(inner->doc().metaTagMap());
+    for (auto it = metaTagMap.find(tag); it != metaTagMap.end();) {
+        s = it.value();
+        metaTagMap.erase(it);
     }
     return s;
 }
@@ -1770,7 +1636,7 @@ QString Generator::getMetadataElement(const Aggregate *inner, const QString &t)
 QStringList Generator::getMetadataElements(const Aggregate *inner, const QString &t)
 {
     QStringList s;
-    QStringMultiMap& metaTagMap = const_cast<QStringMultiMap&>(inner->doc().metaTagMap());
+    QStringMultiMap &metaTagMap = const_cast<QStringMultiMap &>(inner->doc().metaTagMap());
     s = metaTagMap.values(t);
     if (!s.isEmpty())
         metaTagMap.remove(t);
@@ -1783,19 +1649,13 @@ QStringList Generator::getMetadataElements(const Aggregate *inner, const QString
 QString Generator::imageFileName(const Node *relative, const QString &fileBase)
 {
     QString userFriendlyFilePath;
-    QString filePath = Config::findFile(relative->doc().location(),
-                                        imageFiles,
-                                        imageDirs,
-                                        fileBase,
-                                        imgFileExts[format()],
-                                        &userFriendlyFilePath);
+    QString filePath = Config::findFile(relative->doc().location(), imageFiles, imageDirs, fileBase,
+                                        imgFileExts[format()], &userFriendlyFilePath);
 
     if (filePath.isEmpty())
         return QString();
 
-    QString path = Config::copyFile(relative->doc().location(),
-                                    filePath,
-                                    userFriendlyFilePath,
+    QString path = Config::copyFile(relative->doc().location(), filePath, userFriendlyFilePath,
                                     outputDir() + QLatin1String("/images"));
     int images_slash = path.lastIndexOf("images/");
     QString relImagePath;
@@ -1816,8 +1676,7 @@ QString Generator::indent(int level, const QString &markedCode)
     while (i < markedCode.length()) {
         if (markedCode.at(i) == QLatin1Char('\n')) {
             column = 0;
-        }
-        else {
+        } else {
             if (column == 0) {
                 for (int j = 0; j < level; j++)
                     t += QLatin1Char(' ');
@@ -1828,8 +1687,6 @@ QString Generator::indent(int level, const QString &markedCode)
     }
     return t;
 }
-
-
 
 void Generator::initialize(const Config &config)
 {
@@ -1867,13 +1724,15 @@ void Generator::initialize(const Config &config)
                     config.lastLocation().warning(tr("Formatting '%1' must "
                                                      "have exactly one "
                                                      "parameter (found %2)")
-                                                  .arg(n).arg(numParams));
+                                                          .arg(n)
+                                                          .arg(numParams));
                 } else if (numOccs > 1) {
                     config.lastLocation().fatal(tr("Formatting '%1' must "
                                                    "contain exactly one "
                                                    "occurrence of '\\1' "
                                                    "(found %2)")
-                                                .arg(n).arg(numOccs));
+                                                        .arg(n)
+                                                        .arg(numOccs));
                 } else {
                     int paramPos = def.indexOf("\1");
                     fmtLeftMaps[f].insert(n, def.left(paramPos));
@@ -1909,15 +1768,16 @@ void Generator::initialize(const Config &config)
   Creates template-specific subdirs (e.g. /styles and /scripts for HTML)
   and copies the files to them.
   */
-void Generator::copyTemplateFiles(const Config &config, const QString &configVar, const QString &subDir)
+void Generator::copyTemplateFiles(const Config &config, const QString &configVar,
+                                  const QString &subDir)
 {
     QStringList files = config.getCanonicalPathList(configVar, true);
     if (!files.isEmpty()) {
         QDir dirInfo;
         QString templateDir = outDir_ + QLatin1Char('/') + subDir;
         if (!dirInfo.exists(templateDir) && !dirInfo.mkdir(templateDir)) {
-            config.lastLocation().fatal(tr("Cannot create %1 directory '%2'")
-                                        .arg(subDir, templateDir));
+            config.lastLocation().fatal(
+                    tr("Cannot create %1 directory '%2'").arg(subDir, templateDir));
         } else {
             for (const auto &file : files) {
                 if (!file.isEmpty())
@@ -1965,7 +1825,8 @@ void Generator::initializeFormat(const Config &config)
         return;
 
     if (!dirInfo.exists(outDir_ + "/images") && !dirInfo.mkdir(outDir_ + "/images"))
-        config.lastLocation().fatal(tr("Cannot create images directory '%1'").arg(outDir_ + "/images"));
+        config.lastLocation().fatal(
+                tr("Cannot create images directory '%1'").arg(outDir_ + "/images"));
 
     copyTemplateFiles(config, format() + Config::dot + CONFIG_STYLESHEETS, "style");
     copyTemplateFiles(config, format() + Config::dot + CONFIG_SCRIPTS, "scripts");
@@ -1986,11 +1847,8 @@ void Generator::augmentImageDirs(QSet<QString> &moreImageDirs)
 {
     if (moreImageDirs.isEmpty())
         return;
-    QSet<QString>::const_iterator i = moreImageDirs.begin();
-    while (i != moreImageDirs.end()) {
-        imageDirs.append(*i);
-        ++i;
-    }
+    for (const auto &it : moreImageDirs)
+        imageDirs.append(it);
 }
 
 /*!
@@ -2044,42 +1902,36 @@ QString Generator::outputSuffix(const Node *node)
     return QString();
 }
 
-bool Generator::parseArg(const QString &src,
-                             const QString &tag,
-                             int *pos,
-                             int n,
-                             QStringRef *contents,
-                             QStringRef *par1,
-                             bool debug)
+bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n,
+                         QStringRef *contents, QStringRef *par1, bool debug)
 {
-#define SKIP_CHAR(c) \
-    if (debug) \
-    qDebug() << "looking for " << c << " at " << QString(src.data() + i, n - i); \
-    if (i >= n || src[i] != c) { \
-    if (debug) \
-    qDebug() << " char '" << c << "' not found"; \
-    return false; \
-} \
+#define SKIP_CHAR(c)                                                                               \
+    if (debug)                                                                                     \
+        qDebug() << "looking for " << c << " at " << QString(src.data() + i, n - i);               \
+    if (i >= n || src[i] != c) {                                                                   \
+        if (debug)                                                                                 \
+            qDebug() << " char '" << c << "' not found";                                           \
+        return false;                                                                              \
+    }                                                                                              \
     ++i;
 
-
-#define SKIP_SPACE \
-    while (i < n && src[i] == ' ') \
-    ++i;
+#define SKIP_SPACE                                                                                 \
+    while (i < n && src[i] == ' ')                                                                 \
+        ++i;
 
     int i = *pos;
     int j = i;
 
     // assume "<@" has been parsed outside
-    //SKIP_CHAR('<');
-    //SKIP_CHAR('@');
+    // SKIP_CHAR('<');
+    // SKIP_CHAR('@');
 
     if (tag != QStringRef(&src, i, tag.length())) {
         return false;
     }
 
     if (debug)
-        qDebug() << "haystack:" << src << "needle:" << tag << "i:" <<i;
+        qDebug() << "haystack:" << src << "needle:" << tag << "i:" << i;
 
     // skip tag
     i += tag.length();
@@ -2190,7 +2042,7 @@ void Generator::initializeTextOutput()
     sectionNumber_.clear();
 }
 
-void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
+void Generator::supplementAlsoList(const Node *node, QVector<Text> &alsoList)
 {
     if (node->isFunction() && !node->isMacro()) {
         const auto fn = static_cast<const FunctionNode *>(node);
@@ -2211,8 +2063,7 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
                         alternateFunc = fn->parent()->findFunctionChild(alternateName, QString());
                     }
                 }
-            }
-            else if (!fn->name().isEmpty()) {
+            } else if (!fn->name().isEmpty()) {
                 alternateName = "set";
                 alternateName += fn->name()[0].toUpper();
                 alternateName += fn->name().mid(1);
@@ -2231,8 +2082,7 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 
                     Text also;
                     also << Atom(Atom::Link, alternateName)
-                         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                         << alternateName
+                         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << alternateName
                          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
                     alsoList.prepend(also);
                 }
@@ -2243,11 +2093,9 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 
 void Generator::terminate()
 {
-    QList<Generator *>::ConstIterator g = generators.constBegin();
-    while (g != generators.constEnd()) {
-        if (outputFormats.contains((*g)->format()))
-            (*g)->terminateGenerator();
-        ++g;
+    for (const auto &generator : qAsConst(generators)) {
+        if (outputFormats.contains(generator->format()))
+            generator->terminateGenerator();
     }
 
     fmtLeftMaps.clear();
@@ -2258,15 +2106,14 @@ void Generator::terminate()
     outDir_.clear();
 }
 
-void Generator::terminateGenerator()
-{
-}
+void Generator::terminateGenerator() {}
 
 /*!
   Trims trailing whitespace off the \a string and returns
   the trimmed string.
  */
-QString Generator::trimmedTrailing(const QString &string, const QString &prefix, const QString &suffix)
+QString Generator::trimmedTrailing(const QString &string, const QString &prefix,
+                                   const QString &suffix)
 {
     QString trimmed = string;
     while (trimmed.length() > 0 && trimmed[trimmed.length() - 1].isSpace())
@@ -2329,8 +2176,8 @@ QString Generator::typeString(const Node *node)
 
 void Generator::unknownAtom(const Atom *atom)
 {
-    Location::internalError(tr("unknown atom type '%1' in %2 generator")
-                            .arg(atom->typeString()).arg(format()));
+    Location::internalError(
+            tr("unknown atom type '%1' in %2 generator").arg(atom->typeString()).arg(format()));
 }
 
 QT_END_NAMESPACE

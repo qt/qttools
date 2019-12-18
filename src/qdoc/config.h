@@ -48,20 +48,26 @@ QT_BEGIN_NAMESPACE
   This struct contains all the information for
   one config variable found in a qdocconf file.
  */
-struct ConfigVar {
+struct ConfigVar
+{
     bool plus_;
     QString name_;
     QStringList values_;
     QString currentPath_;
     Location location_;
 
-  ConfigVar() : plus_(false) { }
+    ConfigVar() : plus_(false) {}
 
-  ConfigVar(const QString &name, const QStringList &values, const QString &dir)
-    : plus_(true), name_(name), values_(values), currentPath_(dir) { }
+    ConfigVar(const QString &name, const QStringList &values, const QString &dir)
+        : plus_(true), name_(name), values_(values), currentPath_(dir)
+    {
+    }
 
-  ConfigVar(const QString &name, const QStringList &values, const QString &dir, const Location &loc)
-    : plus_(false), name_(name), values_(values), currentPath_(dir), location_(loc) { }
+    ConfigVar(const QString &name, const QStringList &values, const QString &dir,
+              const Location &loc)
+        : plus_(false), name_(name), values_(values), currentPath_(dir), location_(loc)
+    {
+    }
 };
 
 /*
@@ -100,37 +106,32 @@ public:
     QStringList getStringList(const QString &var) const;
     QStringList getCanonicalPathList(const QString &var, bool validate = false) const;
     QRegExp getRegExp(const QString &var) const;
-    QList<QRegExp> getRegExpList(const QString &var) const;
+    QVector<QRegExp> getRegExpList(const QString &var) const;
     QSet<QString> subVars(const QString &var) const;
     void subVarsAndValues(const QString &var, ConfigVarMultimap &t) const;
-    QStringList getAllFiles(const QString &filesVar,
-                            const QString &dirsVar,
+    QStringList getAllFiles(const QString &filesVar, const QString &dirsVar,
                             const QSet<QString> &excludedDirs = QSet<QString>(),
                             const QSet<QString> &excludedFiles = QSet<QString>());
     QString getIncludeFilePath(const QString &fileName) const;
-    QStringList getExampleQdocFiles(const QSet<QString> &excludedDirs, const QSet<QString> &excludedFiles);
-    QStringList getExampleImageFiles(const QSet<QString> &excludedDirs, const QSet<QString> &excludedFiles);
+    QStringList getExampleQdocFiles(const QSet<QString> &excludedDirs,
+                                    const QSet<QString> &excludedFiles);
+    QStringList getExampleImageFiles(const QSet<QString> &excludedDirs,
+                                     const QSet<QString> &excludedFiles);
 
     static QStringList loadMaster(const QString &fileName);
     static bool isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles);
-    static QStringList getFilesHere(const QString &dir,
-                                    const QString &nameFilter,
+    static QStringList getFilesHere(const QString &dir, const QString &nameFilter,
                                     const Location &location = Location(),
                                     const QSet<QString> &excludedDirs = QSet<QString>(),
                                     const QSet<QString> &excludedFiles = QSet<QString>());
-    static QString findFile(const Location &location,
-                            const QStringList &files,
-                            const QStringList &dirs,
-                            const QString &fileName,
+    static QString findFile(const Location &location, const QStringList &files,
+                            const QStringList &dirs, const QString &fileName,
                             QString *userFriendlyFilePath = nullptr);
-    static QString findFile(const Location &location,
-                            const QStringList &files,
-                            const QStringList &dirs,
-                            const QString &fileBase,
+    static QString findFile(const Location &location, const QStringList &files,
+                            const QStringList &dirs, const QString &fileBase,
                             const QStringList &fileExtensions,
                             QString *userFriendlyFilePath = nullptr);
-    static QString copyFile(const Location &location,
-                            const QString &sourceFilePath,
+    static QString copyFile(const Location &location, const QString &sourceFilePath,
                             const QString &userFriendlySourceFilePath,
                             const QString &targetDirPath);
     static int numParams(const QString &value);
@@ -174,7 +175,7 @@ private:
     QString prog;
     Location loc;
     Location lastLocation_;
-    ConfigVarMultimap   configVars_;
+    ConfigVarMultimap configVars_;
 
     static QMap<QString, QString> uncompressedFiles;
     static QMap<QString, QString> extractedDirs;

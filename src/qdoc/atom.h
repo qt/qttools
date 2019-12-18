@@ -134,20 +134,14 @@ public:
 
     friend class LinkAtom;
 
-    Atom(const QString &string)
-        : next_(nullptr), type_(Link)
+    Atom(const QString &string) : next_(nullptr), type_(Link) { strs << string; }
+
+    Atom(AtomType type, const QString &string = "") : next_(nullptr), type_(type)
     {
         strs << string;
     }
 
-    Atom(AtomType type, const QString &string = "")
-        : next_(nullptr), type_(type)
-    {
-        strs << string;
-    }
-
-    Atom(AtomType type, const QString &p1, const QString &p2)
-        : next_(nullptr), type_(type)
+    Atom(AtomType type, const QString &p1, const QString &p2) : next_(nullptr), type_(type)
     {
         strs << p1;
         if (!p2.isEmpty())
@@ -170,7 +164,7 @@ public:
         previous->next_ = this;
     }
 
-    virtual ~Atom() { }
+    virtual ~Atom() {}
 
     void appendChar(QChar ch) { strs[0] += ch; }
     void appendString(const QString &string) { strs[0] += string; }
@@ -196,7 +190,7 @@ public:
     virtual Tree *domain() { return nullptr; }
     virtual Node::NodeType goal() { return Node::NoType; }
     virtual const QString &error() { return noError_; }
-    virtual void resolveSquareBracketParams() { }
+    virtual void resolveSquareBracketParams() {}
 
 protected:
     static QString noError_;
@@ -211,13 +205,29 @@ public:
     LinkAtom(const QString &p1, const QString &p2);
     LinkAtom(const LinkAtom &t);
     LinkAtom(Atom *previous, const LinkAtom &t);
-    ~LinkAtom() override { }
+    ~LinkAtom() override {}
 
     bool isLinkAtom() const override { return true; }
-    Node::Genus genus() override { resolveSquareBracketParams(); return genus_; }
-    bool specifiesDomain() override { resolveSquareBracketParams(); return (domain_ != nullptr); }
-    Tree *domain() override { resolveSquareBracketParams(); return domain_; }
-    Node::NodeType goal() override { resolveSquareBracketParams(); return goal_; }
+    Node::Genus genus() override
+    {
+        resolveSquareBracketParams();
+        return genus_;
+    }
+    bool specifiesDomain() override
+    {
+        resolveSquareBracketParams();
+        return (domain_ != nullptr);
+    }
+    Tree *domain() override
+    {
+        resolveSquareBracketParams();
+        return domain_;
+    }
+    Node::NodeType goal() override
+    {
+        resolveSquareBracketParams();
+        return goal_;
+    }
     const QString &error() override { return error_; }
     void resolveSquareBracketParams() override;
 
@@ -230,26 +240,26 @@ protected:
     QString squareBracketParams_;
 };
 
-#define ATOM_FORMATTING_BOLD            "bold"
-#define ATOM_FORMATTING_INDEX           "index"
-#define ATOM_FORMATTING_ITALIC          "italic"
-#define ATOM_FORMATTING_LINK            "link"
-#define ATOM_FORMATTING_PARAMETER       "parameter"
-#define ATOM_FORMATTING_SPAN            "span "
-#define ATOM_FORMATTING_SUBSCRIPT       "subscript"
-#define ATOM_FORMATTING_SUPERSCRIPT     "superscript"
-#define ATOM_FORMATTING_TELETYPE        "teletype"
-#define ATOM_FORMATTING_UICONTROL       "uicontrol"
-#define ATOM_FORMATTING_UNDERLINE       "underline"
+#define ATOM_FORMATTING_BOLD "bold"
+#define ATOM_FORMATTING_INDEX "index"
+#define ATOM_FORMATTING_ITALIC "italic"
+#define ATOM_FORMATTING_LINK "link"
+#define ATOM_FORMATTING_PARAMETER "parameter"
+#define ATOM_FORMATTING_SPAN "span "
+#define ATOM_FORMATTING_SUBSCRIPT "subscript"
+#define ATOM_FORMATTING_SUPERSCRIPT "superscript"
+#define ATOM_FORMATTING_TELETYPE "teletype"
+#define ATOM_FORMATTING_UICONTROL "uicontrol"
+#define ATOM_FORMATTING_UNDERLINE "underline"
 
-#define ATOM_LIST_BULLET                "bullet"
-#define ATOM_LIST_TAG                   "tag"
-#define ATOM_LIST_VALUE                 "value"
-#define ATOM_LIST_LOWERALPHA            "loweralpha"
-#define ATOM_LIST_LOWERROMAN            "lowerroman"
-#define ATOM_LIST_NUMERIC               "numeric"
-#define ATOM_LIST_UPPERALPHA            "upperalpha"
-#define ATOM_LIST_UPPERROMAN            "upperroman"
+#define ATOM_LIST_BULLET "bullet"
+#define ATOM_LIST_TAG "tag"
+#define ATOM_LIST_VALUE "value"
+#define ATOM_LIST_LOWERALPHA "loweralpha"
+#define ATOM_LIST_LOWERROMAN "lowerroman"
+#define ATOM_LIST_NUMERIC "numeric"
+#define ATOM_LIST_UPPERALPHA "upperalpha"
+#define ATOM_LIST_UPPERROMAN "upperroman"
 
 QT_END_NAMESPACE
 

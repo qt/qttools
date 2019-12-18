@@ -31,11 +31,10 @@
 
 #include <QtCore/qstring.h>
 
-namespace Utilities
-{
-    void startDebugging(const QString &message);
-    void stopDebugging(const QString &message);
-    bool debugging();
+namespace Utilities {
+void startDebugging(const QString &message);
+void stopDebugging(const QString &message);
+bool debugging();
 };
 
 #endif // UTILITIES_H

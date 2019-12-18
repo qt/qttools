@@ -1,0 +1,2 @@
+include(testmodule.qdocconf)
+include(../webxml.qdocconf)

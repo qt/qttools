@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Third" href="third.html" status="active" access="public" location="aaa.h" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/bug80259/inc/testmodule/aaa.h" lineno="2" documented="true" module="TestModule">
+            <description path="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/bug80259/src/main.cpp" line="49" column="4">
+                <para>This is a third class</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

@@ -67,13 +67,13 @@ struct HelpProject
     QString fileName;
     QString indexRoot;
     QString indexTitle;
-    QList<QStringList> keywords;
+    QVector<QStringList> keywords;
     QSet<QString> files;
     QSet<QString> extraFiles;
     QSet<QString> filterAttributes;
     QHash<QString, QSet<QString>> customFilters;
     QSet<QString> excluded;
-    QList<SubProject> subprojects;
+    QVector<SubProject> subprojects;
     QHash<const Node *, NodeStatusSet> memberStatus;
     bool includeIndexNodes;
 };
@@ -83,36 +83,28 @@ class HelpProjectWriter
     Q_DECLARE_TR_FUNCTIONS(QDoc::HelpProjectWriter)
 
 public:
-    HelpProjectWriter(const Config &config,
-                      const QString &defaultFileName,
-                      Generator *g);
-    void reset(const Config &config,
-          const QString &defaultFileName,
-          Generator *g);
+    HelpProjectWriter(const Config &config, const QString &defaultFileName, Generator *g);
+    void reset(const Config &config, const QString &defaultFileName, Generator *g);
     void addExtraFile(const QString &file);
     void addExtraFiles(const QSet<QString> &files);
     void generate();
 
 private:
     void generateProject(HelpProject &project);
-    void generateSections(HelpProject &project, QXmlStreamWriter &writer,
-                          const Node *node);
-    bool generateSection(HelpProject &project, QXmlStreamWriter &writer,
-                         const Node *node);
+    void generateSections(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
+    bool generateSection(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     QStringList keywordDetails(const Node *node) const;
     void writeHashFile(QFile &file);
     void writeNode(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     void readSelectors(SubProject &subproject, const QStringList &selectors);
-    void addMembers(HelpProject &project, QXmlStreamWriter &writer,
-                           const Node *node);
-    void writeSection(QXmlStreamWriter &writer, const QString &path,
-                            const QString &value);
+    void addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
+    void writeSection(QXmlStreamWriter &writer, const QString &path, const QString &value);
 
     QDocDatabase *qdb_;
     Generator *gen_;
 
     QString outputDir;
-    QList<HelpProject> projects;
+    QVector<HelpProject> projects;
 };
 
 QT_END_NAMESPACE

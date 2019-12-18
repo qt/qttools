@@ -50,13 +50,11 @@ public:
     bool recognizeLanguage(const QString &language) override;
     Atom::AtomType atomType() const override;
 
-    virtual QString markedUpCode(const QString &code,
-                                 const Node *relative,
+    virtual QString markedUpCode(const QString &code, const Node *relative,
                                  const Location &location) override;
 
 private:
-    QString addMarkUp(const QString &code, const Node *relative,
-                      const Location &location);
+    QString addMarkUp(const QString &code, const Node *relative, const Location &location);
 };
 
 QT_END_NAMESPACE
