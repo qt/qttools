@@ -179,13 +179,45 @@ function(qt_tools_find_lib_clang)
     set(QT_LIB_CLANG_LIBS "")
     set(QT_LIB_CLANG_DEFINES "")
 
+    set(QT_HAS_CLANGCPP FALSE)
     if(NOT QDOC_USE_STATIC_LIBCLANG)
         if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
             list(APPEND QT_LIB_CLANG_LIBS libclang advapi32 shell32)
         else()
             list(APPEND QT_LIB_CLANG_LIBS -lclang)
         endif()
+        set(QT_CLANGCPP_DY_LIB ${QT_LIB_CLANG_LIBDIR}/libclang_shared.so)
+        if (EXISTS ${QT_CLANGCPP_DY_LIB})
+            list(APPEND QT_LIB_CLANG_LIBS -lclang_shared)
+            set(QT_HAS_CLANGCPP TRUE)
+        else()
+            qt_check_clang_cpp_lib_for_lupdate_parser("${QT_LIB_CLANG_LIBDIR}"
+                "${QT_LIB_CLANG_VERSION}"
+                QT_CLANG_CPP_LIBS)
+            list(APPEND QT_LIB_CLANG_LIBS ${QT_CLANG_CPP_LIBS})
+            if (QT_CLANG_CPP_LIBS)
+                set(QT_HAS_CLANGCPP TRUE)
+            endif()
+        endif()
+
+        if (QT_HAS_CLANGCPP)
+            set(QT_LLVM_DY_LIB "${QT_LIB_CLANG_LIBDIR}/libLLVM.so")
+            if (EXISTS ${QT_LLVM_DY_LIB})
+                list(APPEND QT_LIB_CLANG_LIBS -lLLVM)
+                set(QT_HAS_CLANGCPP TRUE)
+            else()
+                qt_check_clang_llvm_lib_for_lupdate_parser("${QT_LIB_CLANG_LIBDIR}"
+                    "${QT_LIB_CLANG_VERSION}"
+                    QT_CLANG_LLVM_LIBS)
+                if(QT_CLANG_LLVM_LIBS)
+                    list(APPEND QT_LIB_CLANG_LIBS ${QT_CLANG_LLVM_LIBS})
+                    set(QT_HAS_CLANGCPP TRUE)
+                endif()
+            endif()
+        endif()
     else()
+        # Assume true for now
+        set(QT_HAS_CLANGCPP TRUE)
         if(MSVC)
             list(APPEND QT_LIB_CLANG_DEFINES "CINDEX_LINKAGE=")
             list(APPEND QT_LIB_CLANG_LIBS -llibclang_static -ladvapi32 -lshell32 -lMincore)
@@ -210,7 +242,9 @@ function(qt_tools_find_lib_clang)
         endif() # MSVC
     endif() # QDOC_USE_STATIC_LIBCLANG
 
-    qt_tools_create_lib_clang_target()
+    if (QT_HAS_CLANGCPP)
+        qt_tools_create_lib_clang_target()
+    endif()
 
     # Break apart version string
     string(REPLACE "." ";" version_list ${QT_LIB_CLANG_VERSION})
@@ -228,7 +262,7 @@ function(qt_tools_find_lib_clang)
     set(QT_LIB_CLANG_VERSION "${QT_LIB_CLANG_VERSION}" CACHE STRING "" FORCE)
     set(QT_LIBCLANG_RESOURCE_DIR "\"${QT_LIB_CLANG_LIBDIR}/clang/${QT_LIB_CLANG_VERSION}/include\""
         CACHE STRING "Qt libclang resource dir.")
-    set(WrapLibClang_FOUND TRUE PARENT_SCOPE)
+    set(WrapLibClang_FOUND ${QT_HAS_CLANGCPP} PARENT_SCOPE)
 endfunction()
 
 function(qt_tools_create_lib_clang_target)
@@ -437,6 +471,111 @@ function(qt_tools_get_flag_list_of_llvm_static_libs out_var)
     PARENT_SCOPE)
 endfunction()
 
+function(qt_find_clang_libs)
+    cmake_parse_arguments(arg "" "CLANG_LIB_DIR;OUTPUT_LIBRARIES" "LIBS" ${ARGN})
+
+    set(lib_list "")
+    foreach(lib IN LISTS arg_LIBS)
+        if (MSVC OR WIN32)
+            set(lib_full_paths ${arg_CLANG_LIB_DIR}/${lib}.lib)
+        else()
+            set(lib_full_paths
+                ${arg_CLANG_LIB_DIR}/lib${lib}.a
+                ${arg_CLANG_LIB_DIR}/lib${lib}.so
+            )
+        endif()
+        set(found_lib FALSE)
+        foreach (lib_full_path IN LISTS lib_full_paths)
+        if (EXISTS "${lib_full_path}")
+            list(APPEND lib_list -l${lib})
+            set(found_lib TRUE)
+            message(STATUS "Found ${lib_full_path}")
+        else()
+            message(STATUS "Could not locate ${lib_full_path}")
+        endif()
+        endforeach()
+        if (NOT found_lib)
+            message(WARNING "Could not locate ${lib}")
+            return()
+        endif()
+    endforeach()
+
+    set(${arg_OUTPUT_LIBRARIES} ${lib_list} PARENT_SCOPE)
+endfunction()
+
+function(qt_check_clang_cpp_lib_for_lupdate_parser clang_lib_dir clang_version output_libs)
+    set(libs_to_test
+        clangTooling
+        clangFrontendTool
+        clangFrontend
+        clangDriver
+        clangSerialization
+        clangCodeGen
+        clangParse
+        clangSema
+        clangStaticAnalyzerFrontend
+        clangStaticAnalyzerCheckers
+        clangStaticAnalyzerCore
+        clangAnalysis
+        clangARCMigrate
+        clangASTMatchers
+        clangAST
+        clangRewrite
+        clangRewriteFrontend
+        clangEdit
+        clangLex
+        clangIndex
+        clangBasic
+    )
+
+    if (clang_version VERSION_GREATER_EQUAL "9.0.0")
+        list(APPEND libs_to_test clangToolingRefactoring)
+    else()
+        list(APPEND libs_to_test clangToolingRefactor)
+    endif()
+
+    set(collected_libs "")
+    qt_find_clang_libs(
+        CLANG_LIB_DIR ${clang_lib_dir}
+        OUTPUT_LIBRARIES collected_libs
+        LIBS ${libs_to_test}
+    )
+    set(${output_libs} ${collected_libs} PARENT_SCOPE)
+endfunction()
+function(qt_check_clang_llvm_lib_for_lupdate_parser clang_lib_dir clang_version output_libs)
+
+    set(libs_to_test
+        LLVMOption
+        LLVMProfileData
+        LLVMMCParser
+        LLVMMC
+        LLVMBitReader
+        LLVMCore
+        LLVMBinaryFormat
+        LLVMSupport
+        LLVMDemangle
+    )
+
+    if (clang_version VERSION_GREATER_EQUAL "9.0.0")
+        list(APPEND libs_to_test LLVMBitstreamReader LLVMRemarks)
+    endif()
+
+    set(collected_libs "")
+    qt_find_clang_libs(
+        CLANG_LIB_DIR ${clang_lib_dir}
+        OUTPUT_LIBRARIES collected_libs
+        LIBS ${libs_to_test}
+    )
+    if (collected_libs AND NOT WIN32)
+        if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+            list(APPEND collected_libs -lz -lcurses)
+        else()
+            list(APPEND collected_libs -lz -ltinfo)
+        endif()
+    endif()
+
+    set(${output_libs} ${collected_libs} PARENT_SCOPE)
+endfunction()
 # Tries to find libclang. If successful, creates an imported target called
 # WrapLibClang::WrapLibClang.
 qt_tools_find_lib_clang()
