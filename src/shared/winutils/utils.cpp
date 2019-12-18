@@ -59,7 +59,8 @@ int optVerboseLevel = 1;
 
 bool isBuildDirectory(Platform platform, const QString &dirName)
 {
-    return (platform & WindowsBased) && (dirName == QLatin1String("debug") || dirName == QLatin1String("release"));
+    return (platform.testFlag(Msvc) || platform.testFlag(ClangMsvc))
+        && (dirName == QLatin1String("debug") || dirName == QLatin1String("release"));
 }
 
 // Create a symbolic link by changing to the source directory to make sure the
@@ -932,7 +933,7 @@ QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wor
     const QString kitDir = QString::fromLocal8Bit(qgetenv("WindowsSdkDir"));
     if (!kitDir.isEmpty()) {
         QString redistDirPath = QDir::cleanPath(kitDir) + QStringLiteral("/Redist/D3D/");
-        if (platform & ArmBased) {
+        if (platform.testFlag(ArmBased)) {
             redistDirPath += QStringLiteral("arm");
         } else {
             redistDirPath += wordSize == 32 ? QStringLiteral("x86") : QStringLiteral("x64");
@@ -955,7 +956,7 @@ QString findD3dCompiler(Platform platform, const QString &qtBinDir, unsigned wor
             return fi.absoluteFilePath();
     }
     // Find the latest D3D compiler DLL in path (Windows 8.1 has d3dcompiler_47).
-    if (platform & IntelBased) {
+    if (platform.testFlag(IntelBased)) {
         QString errorMessage;
         unsigned detectedWordSize;
         for (const QString &candidate : qAsConst(candidateVersions)) {
