@@ -44,7 +44,10 @@ PureDocParser *PureDocParser::pureParser_ = nullptr;
  */
 QStringList PureDocParser::sourceFileNameFilter()
 {
-    return QStringList() << "*.qdoc" << "*.qtx" << "*.qtt" << "*.js";
+    return QStringList() << "*.qdoc"
+                         << "*.qtx"
+                         << "*.qtt"
+                         << "*.js";
 }
 
 /*!
@@ -102,7 +105,8 @@ bool PureDocParser::processQdocComments()
             if (topics.isEmpty()) {
                 doc.location().warning(tr("This qdoc comment contains no topic command "
                                           "(e.g., '\\%1', '\\%2').")
-                                       .arg(COMMAND_MODULE).arg(COMMAND_PAGE));
+                                               .arg(COMMAND_MODULE)
+                                               .arg(COMMAND_PAGE));
                 continue;
             }
             if (hasTooManyTopics(doc))
@@ -114,8 +118,7 @@ bool PureDocParser::processQdocComments()
 
             processTopicArgs(doc, topic, nodes, docs);
             processMetaCommands(nodes, docs);
-        }
-        else {
+        } else {
             tok_ = tokenizer_->getToken();
         }
     }

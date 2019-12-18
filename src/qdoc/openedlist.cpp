@@ -40,13 +40,9 @@ QT_BEGIN_NAMESPACE
 
 static const char roman[] = "m\2d\5c\2l\5x\2v\5i";
 
-OpenedList::OpenedList(ListStyle style)
-    : sty(style), ini(1), nex(0)
-{
-}
+OpenedList::OpenedList(ListStyle style) : sty(style), ini(1), nex(0) {}
 
-OpenedList::OpenedList(const Location &location, const QString &hint)
-    : sty(Bullet), ini(1)
+OpenedList::OpenedList(const Location &location, const QString &hint) : sty(Bullet), ini(1)
 {
     QRegExp hintSyntax("(\\W*)([0-9]+|[A-Z]+|[a-z]+)(\\W*)");
 

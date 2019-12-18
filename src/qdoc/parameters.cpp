@@ -83,8 +83,7 @@ QString Parameter::signature(bool includeValue) const
   of its parameters.
  */
 
-Parameters::Parameters()
-  : valid_(true), privateSignal_(false), tok_(0), tokenizer_(nullptr)
+Parameters::Parameters() : valid_(true), privateSignal_(false), tok_(0), tokenizer_(nullptr)
 {
     // nothing.
 }
@@ -152,14 +151,11 @@ void Parameters::matchTemplateAngles(CodeChunk &type)
         do {
             if (tok_ == Tok_LeftAngle) {
                 leftAngleDepth++;
-            }
-            else if (tok_ == Tok_RightAngle) {
+            } else if (tok_ == Tok_RightAngle) {
                 leftAngleDepth--;
-            }
-            else if (tok_ == Tok_LeftParen || tok_ == Tok_LeftBrace) {
+            } else if (tok_ == Tok_LeftParen || tok_ == Tok_LeftBrace) {
                 ++parenAndBraceDepth;
-            }
-            else if (tok_ == Tok_RightParen || tok_ == Tok_RightBrace) {
+            } else if (tok_ == Tok_RightParen || tok_ == Tok_RightBrace) {
                 if (--parenAndBraceDepth < 0)
                     return;
             }
@@ -198,8 +194,8 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
             while (match(Tok_const) || match(Tok_volatile))
                 type.append(previousLexeme());
             QString pending;
-            while (tok_ == Tok_signed || tok_ == Tok_int || tok_ == Tok_unsigned ||
-                   tok_ == Tok_short || tok_ == Tok_long || tok_ == Tok_int64) {
+            while (tok_ == Tok_signed || tok_ == Tok_int || tok_ == Tok_unsigned
+                   || tok_ == Tok_short || tok_ == Tok_long || tok_ == Tok_int64) {
                 if (tok_ == Tok_signed)
                     pending = lexeme();
                 else {
@@ -229,25 +225,22 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
                   with the real one used in Qt Creator.
                   Is it still needed? mws 11/12/2018
                  */
-                if (lexeme() == "(" &&
-                    ((previousLexeme() == "QT_PREPEND_NAMESPACE") || (previousLexeme() == "NS"))) {
+                if (lexeme() == "("
+                    && ((previousLexeme() == "QT_PREPEND_NAMESPACE")
+                        || (previousLexeme() == "NS"))) {
                     readToken();
                     readToken();
                     type.append(previousLexeme());
                     readToken();
-                }
-                else
+                } else
                     type.append(previousLexeme());
-            }
-            else if (match(Tok_void) || match(Tok_int) || match(Tok_char) ||
-                     match(Tok_double) || match(Tok_Ellipsis)) {
+            } else if (match(Tok_void) || match(Tok_int) || match(Tok_char) || match(Tok_double)
+                       || match(Tok_Ellipsis)) {
                 type.append(previousLexeme());
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else if (match(Tok_int) || match(Tok_char) || match(Tok_double)) {
+        } else if (match(Tok_int) || match(Tok_char) || match(Tok_double)) {
             type.append(previousLexeme());
         }
 
@@ -262,8 +255,8 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
             break;
     }
 
-    while (match(Tok_Ampersand) || match(Tok_Aster) || match(Tok_const) ||
-           match(Tok_Caret) || match(Tok_Ellipsis))
+    while (match(Tok_Ampersand) || match(Tok_Aster) || match(Tok_const) || match(Tok_Caret)
+           || match(Tok_Ellipsis))
         type.append(previousLexeme());
 
     if (match(Tok_LeftParenAster)) {
@@ -296,8 +289,7 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
         if (!match(Tok_RightParen))
             return false;
         type.append(previousLexeme());
-    }
-    else {
+    } else {
         /*
           The common case: Look for an optional identifier, then for
           some array brackets.
@@ -306,8 +298,7 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
 
         if (match(Tok_Ident)) {
             name = previousLexeme();
-        }
-        else if (match(Tok_Comment)) {
+        } else if (match(Tok_Comment)) {
             /*
               A neat hack: Commented-out parameter names are
               recognized by qdoc. It's impossible to illustrate
@@ -318,8 +309,7 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
             */
             if (varComment_.exactMatch(previousLexeme()))
                 name = varComment_.cap(1);
-        }
-        else if (match(Tok_LeftParen)) {
+        } else if (match(Tok_LeftParen)) {
             name = "(";
             while (tok_ != Tok_RightParen && tok_ != Tok_Eoi) {
                 name.append(lexeme());
@@ -336,17 +326,15 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
                 name.append("]");
                 readToken();
             }
-        }
-        else if (qProp && (match(Tok_default) || match(Tok_final) || match(Tok_override))) {
+        } else if (qProp && (match(Tok_default) || match(Tok_final) || match(Tok_override))) {
             // Hack to make 'default', 'final' and 'override'  work again in Q_PROPERTY
             name = previousLexeme();
         }
 
         if (tok_ == Tok_LeftBracket) {
             int bracketDepth0 = tokenizer_->bracketDepth();
-            while ((tokenizer_->bracketDepth() >= bracketDepth0 &&
-                    tok_ != Tok_Eoi) ||
-                   tok_ == Tok_RightBracket) {
+            while ((tokenizer_->bracketDepth() >= bracketDepth0 && tok_ != Tok_Eoi)
+                   || tok_ == Tok_RightBracket) {
                 type.append(lexeme());
                 readToken();
             }
@@ -377,9 +365,8 @@ bool Parameters::matchParameter()
     if (match(Tok_Equal)) {
         chunk.clear();
         int pdepth = tokenizer_->parenDepth();
-        while (tokenizer_->parenDepth() >= pdepth &&
-               (tok_ != Tok_Comma || (tokenizer_->parenDepth() > pdepth)) &&
-               tok_ != Tok_Eoi) {
+        while (tokenizer_->parenDepth() >= pdepth
+               && (tok_ != Tok_Comma || (tokenizer_->parenDepth() > pdepth)) && tok_ != Tok_Eoi) {
             chunk.append(lexeme());
             readToken();
         }

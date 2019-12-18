@@ -40,10 +40,8 @@ QT_BEGIN_NAMESPACE
  */
 bool XmlGenerator::hasBrief(const Node *node)
 {
-    return !(node->isQmlType()
-        || node->isPageNode()
-        || node->isCollectionNode()
-        || node->isJsType());
+    return !(node->isQmlType() || node->isPageNode() || node->isCollectionNode()
+             || node->isJsType());
 }
 
 /*!
@@ -92,23 +90,19 @@ int XmlGenerator::hOffset(const Node *node)
  */
 void XmlGenerator::rewritePropertyBrief(const Atom *atom, const Node *relative)
 {
-    if (relative->nodeType() == Node::Property ||
-        relative->nodeType() == Node::Variable) {
+    if (relative->nodeType() == Node::Property || relative->nodeType() == Node::Variable) {
         atom = atom->next();
         if (atom && atom->type() == Atom::String) {
             QString firstWord =
-                atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
-            if (firstWord == QLatin1String("the")
-                || firstWord == QLatin1String("a")
-                || firstWord == QLatin1String("an")
-                || firstWord == QLatin1String("whether")
+                    atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
+            if (firstWord == QLatin1String("the") || firstWord == QLatin1String("a")
+                || firstWord == QLatin1String("an") || firstWord == QLatin1String("whether")
                 || firstWord == QLatin1String("which")) {
                 QString str = QLatin1String("This ")
-                    + QLatin1String(relative->nodeType() == Node::Property ?
-                                    "property" : "variable")
-                    + QLatin1String(" holds ")
-                    + atom->string().left(1).toLower()
-                    + atom->string().mid(1);
+                        + QLatin1String(relative->nodeType() == Node::Property ? "property"
+                                                                               : "variable")
+                        + QLatin1String(" holds ") + atom->string().left(1).toLower()
+                        + atom->string().mid(1);
                 const_cast<Atom *>(atom)->setString(str);
             }
         }
@@ -140,7 +134,7 @@ void XmlGenerator::setImageFileName(const Node *relative, const QString &fileNam
     if (relative->isExample()) {
         const auto cen = static_cast<const ExampleNode *>(relative);
         if (cen->imageFileName().isEmpty()) {
-            auto *en = const_cast<ExampleNode*>(cen);
+            auto *en = const_cast<ExampleNode *>(cen);
             en->setImageFileName(fileName);
         }
     }
@@ -250,8 +244,7 @@ QString XmlGenerator::refForNode(const Node *node)
         if (tdn->associatedEnum())
             return refForNode(tdn->associatedEnum());
         ref = node->name() + "-typedef";
-    }
-        break;
+    } break;
     case Node::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
@@ -279,8 +272,7 @@ QString XmlGenerator::refForNode(const Node *node)
             }
             break;
         }
-    }
-        break;
+    } break;
     case Node::JsProperty:
     case Node::QmlProperty:
         if (node->isAttached())
@@ -324,15 +316,14 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
         return QString();
 
     QString fn = fileName(node);
-    if (node && node->parent()
-        && (node->parent()->isQmlType() || node->parent()->isJsType())
+    if (node && node->parent() && (node->parent()->isQmlType() || node->parent()->isJsType())
         && node->parent()->isAbstract()) {
         if (Generator::qmlTypeContext()) {
             if (Generator::qmlTypeContext()->inherits(node->parent())) {
                 fn = fileName(Generator::qmlTypeContext());
             } else if (node->parent()->isInternal()) {
-                node->doc().location().warning(
-                    tr("Cannot link to property in internal type '%1'").arg(node->parent()->name()));
+                node->doc().location().warning(tr("Cannot link to property in internal type '%1'")
+                                                       .arg(node->parent()->name()));
                 return QString();
             }
         }
@@ -356,8 +347,8 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
       back down into the other subdirectory.
      */
     if (node && relative && (node != relative)) {
-        if (useOutputSubdirs() && !node->isExternalPage() &&
-            node->outputSubdirectory() != relative->outputSubdirectory()) {
+        if (useOutputSubdirs() && !node->isExternalPage()
+            && node->outputSubdirectory() != relative->outputSubdirectory()) {
             if (link.startsWith(QString(node->outputSubdirectory() + QLatin1Char('/')))) {
                 link.prepend(QString("../"));
             } else {

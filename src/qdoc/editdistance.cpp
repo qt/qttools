@@ -36,7 +36,7 @@ QT_BEGIN_NAMESPACE
 
 int editDistance(const QString &s, const QString &t)
 {
-#define D( i, j ) d[(i) * n + (j)]
+#define D(i, j) d[(i)*n + (j)]
     int i;
     int j;
     int m = s.length() + 1;
@@ -45,22 +45,22 @@ int editDistance(const QString &s, const QString &t)
     int result;
 
     for (i = 0; i < m; ++i)
-        D( i, 0 ) = i;
+        D(i, 0) = i;
     for (j = 0; j < n; ++j)
-        D( 0, j ) = j;
+        D(0, j) = j;
     for (i = 1; i < m; ++i) {
         for (j = 1; j < n; ++j) {
-            if ( s[i - 1] == t[j - 1] ) {
-                D( i, j ) = D( i - 1, j - 1 );
+            if (s[i - 1] == t[j - 1]) {
+                D(i, j) = D(i - 1, j - 1);
             } else {
-                int x = D( i - 1, j );
-                int y = D( i - 1, j - 1 );
-                int z = D( i, j - 1 );
-                D( i, j ) = 1 + qMin( qMin(x, y), z );
+                int x = D(i - 1, j);
+                int y = D(i - 1, j - 1);
+                int z = D(i, j - 1);
+                D(i, j) = 1 + qMin(qMin(x, y), z);
             }
         }
     }
-    result = D( m - 1, n - 1 );
+    result = D(m - 1, n - 1);
     delete[] d;
     return result;
 #undef D

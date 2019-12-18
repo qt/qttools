@@ -94,7 +94,8 @@ QString ConfigStrings::OUTPUTFORMATS = QStringLiteral("outputformats");
 QString ConfigStrings::OUTPUTPREFIXES = QStringLiteral("outputprefixes");
 QString ConfigStrings::OUTPUTSUFFIXES = QStringLiteral("outputsuffixes");
 QString ConfigStrings::PROJECT = QStringLiteral("project");
-QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL = QStringLiteral("redirectdocumentationtodevnull");
+QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL =
+        QStringLiteral("redirectdocumentationtodevnull");
 QString ConfigStrings::QHP = QStringLiteral("qhp");
 QString ConfigStrings::QUOTINGINFORMATION = QStringLiteral("quotinginformation");
 QString ConfigStrings::SCRIPTDIRS = QStringLiteral("scriptdirs");
@@ -205,7 +206,7 @@ void MetaStack::process(QChar ch, const Location &location)
 
         top().next.clear();
         for (const auto &prefix : prefixes) {
-            for (const auto &suffix: suffixes)
+            for (const auto &suffix : suffixes)
                 top().next << prefix + suffix;
         }
     } else if (ch == QLatin1Char(',') && count() > 1) {
@@ -256,8 +257,7 @@ QMap<QString, QStringList> Config::includeFilesMap_;
   internal state variables to either default values or to ones
   defined in command line arguments \a args.
  */
-Config::Config(const QString &programName, const QStringList &args)
-    : prog(programName)
+Config::Config(const QString &programName, const QStringList &args) : prog(programName)
 {
     ++numInstances;
     processCommandLineOptions(args);
@@ -309,7 +309,7 @@ void Config::reset()
 #undef SET
     setListFlag(CONFIG_NOLINKERRORS,
                 m_parser.isSet(m_parser.noLinkErrorsOption)
-                || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
+                        || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
 
     // CONFIG_DEFINES and CONFIG_INCLUDEPATHS are set in load()
 }
@@ -418,12 +418,11 @@ void Config::setIndexDirs()
 {
     m_indexDirs = m_parser.values(m_parser.indexDirOption);
     auto it = std::remove_if(m_indexDirs.begin(), m_indexDirs.end(),
-        [](const QString &s) { return !QFile::exists(s); });
+                             [](const QString &s) { return !QFile::exists(s); });
 
-    std::for_each(it, m_indexDirs.end(),
-        [](const QString &s) {
-            Location::logToStdErrAlways(tr("Cannot find index directory: %1").arg(s));
-        });
+    std::for_each(it, m_indexDirs.end(), [](const QString &s) {
+        Location::logToStdErrAlways(tr("Cannot find index directory: %1").arg(s));
+    });
     m_indexDirs.erase(it, m_indexDirs.end());
 }
 
@@ -517,13 +516,13 @@ QString Config::getString(const QString &var, const QString &defaultString) cons
         QString value("");
         int i = configVars.size() - 1;
         while (i >= 0) {
-            const ConfigVar& cv = configVars[i];
+            const ConfigVar &cv = configVars[i];
             if (!cv.location_.isEmpty())
                 const_cast<Config *>(this)->lastLocation_ = cv.location_;
             if (!cv.values_.isEmpty()) {
                 if (!cv.plus_)
                     value.clear();
-                for (int j=0; j<cv.values_.size(); ++j) {
+                for (int j = 0; j < cv.values_.size(); ++j) {
                     if (!value.isEmpty() && !value.endsWith(QChar('\n')))
                         value.append(QChar(' '));
                     value.append(cv.values_[j]);
@@ -601,7 +600,7 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
     if (!configVars.empty()) {
         int i = configVars.size() - 1;
         while (i >= 0) {
-            const ConfigVar& cv = configVars[i];
+            const ConfigVar &cv = configVars[i];
             if (!cv.location_.isEmpty())
                 const_cast<Config *>(this)->lastLocation_ = cv.location_;
             if (!cv.plus_)
@@ -610,7 +609,7 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
             const QStringList &sl = cv.values_;
             if (!sl.isEmpty()) {
                 t.reserve(t.size() + sl.size());
-                for (int i=0; i<sl.size(); ++i) {
+                for (int i = 0; i < sl.size(); ++i) {
                     QDir dir(sl[i].simplified());
                     QString path = dir.path();
                     if (dir.isRelative())
@@ -746,8 +745,7 @@ QString Config::getIncludeFilePath(const QString &fileName) const
   The directories in \a excludedDirs are avoided. The files
   in \a excludedFiles are not included in the return list.
  */
-QStringList Config::getAllFiles(const QString &filesVar,
-                                const QString &dirsVar,
+QStringList Config::getAllFiles(const QString &filesVar, const QString &dirsVar,
                                 const QSet<QString> &excludedDirs,
                                 const QSet<QString> &excludedFiles)
 {
@@ -794,10 +792,8 @@ QStringList Config::getExampleImageFiles(const QSet<QString> &excludedDirs,
   \a location is used for obtaining the file and line numbers
   for report qdoc errors.
  */
-QString Config::findFile(const Location &location,
-                         const QStringList &files,
-                         const QStringList &dirs,
-                         const QString &fileName,
+QString Config::findFile(const Location &location, const QStringList &files,
+                         const QStringList &dirs, const QString &fileName,
                          QString *userFriendlyFilePath)
 {
     if (fileName.isEmpty() || fileName.startsWith(QLatin1Char('/'))) {
@@ -811,8 +807,7 @@ QString Config::findFile(const Location &location,
     QString firstComponent = components.first();
 
     for (const auto &file : files) {
-        if (file == firstComponent ||
-                file.endsWith(QLatin1Char('/') + firstComponent)) {
+        if (file == firstComponent || file.endsWith(QLatin1Char('/') + firstComponent)) {
             fileInfo.setFile(file);
             if (!fileInfo.exists())
                 location.fatal(tr("File '%1' does not exist").arg(file));
@@ -854,18 +849,12 @@ QString Config::findFile(const Location &location,
 
 /*!
  */
-QString Config::findFile(const Location &location,
-                         const QStringList &files,
-                         const QStringList &dirs,
-                         const QString &fileBase,
-                         const QStringList &fileExtensions,
-                         QString *userFriendlyFilePath)
+QString Config::findFile(const Location &location, const QStringList &files,
+                         const QStringList &dirs, const QString &fileBase,
+                         const QStringList &fileExtensions, QString *userFriendlyFilePath)
 {
     for (const auto &extension : fileExtensions) {
-        QString filePath = findFile(location,
-                                    files,
-                                    dirs,
-                                    fileBase + QLatin1Char('.') + extension,
+        QString filePath = findFile(location, files, dirs, fileBase + QLatin1Char('.') + extension,
                                     userFriendlyFilePath);
         if (!filePath.isEmpty())
             return filePath;
@@ -880,15 +869,14 @@ QString Config::findFile(const Location &location,
   the file and line number where a qdoc error occurred. The
   constructed output file name is returned.
  */
-QString Config::copyFile(const Location &location,
-                         const QString &sourceFilePath,
-                         const QString &userFriendlySourceFilePath,
-                         const QString &targetDirPath)
+QString Config::copyFile(const Location &location, const QString &sourceFilePath,
+                         const QString &userFriendlySourceFilePath, const QString &targetDirPath)
 {
     QFile inFile(sourceFilePath);
     if (!inFile.open(QFile::ReadOnly)) {
         location.warning(tr("Cannot open input file for copy: '%1': %2")
-                         .arg(sourceFilePath).arg(inFile.errorString()));
+                                 .arg(sourceFilePath)
+                                 .arg(inFile.errorString()));
         return QString();
     }
 
@@ -903,7 +891,8 @@ QString Config::copyFile(const Location &location,
     QFile outFile(outFileName);
     if (!outFile.open(QFile::WriteOnly)) {
         location.warning(tr("Cannot open output file for copy: '%1': %2")
-                         .arg(outFileName).arg(outFile.errorString()));
+                                 .arg(outFileName)
+                                 .arg(outFile.errorString()));
         return QString();
     }
 
@@ -945,8 +934,7 @@ bool Config::removeDirContents(const QString &dir)
         if (entry.isFile()) {
             if (!dirInfo.remove(entry.fileName()))
                 ok = false;
-        }
-        else if (entry.isDir()) {
+        } else if (entry.isDir()) {
             if (entry.fileName() != QLatin1String(".") && entry.fileName() != QLatin1String("..")) {
                 if (removeDirContents(entry.absoluteFilePath())) {
                     if (!dirInfo.rmdir(entry.fileName()))
@@ -966,12 +954,8 @@ bool Config::removeDirContents(const QString &dir)
  */
 bool Config::isMetaKeyChar(QChar ch)
 {
-    return ch.isLetterOrNumber()
-            || ch == QLatin1Char('_')
-            || ch == QLatin1Char('.')
-            || ch == QLatin1Char('{')
-            || ch == QLatin1Char('}')
-            || ch == QLatin1Char(',');
+    return ch.isLetterOrNumber() || ch == QLatin1Char('_') || ch == QLatin1Char('.')
+            || ch == QLatin1Char('{') || ch == QLatin1Char('}') || ch == QLatin1Char(',');
 }
 
 /*!
@@ -985,10 +969,13 @@ QStringList Config::loadMaster(const QString &fileName)
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {
             int prefix = location.filePath().length() - location.fileName().length();
-            fin.setFileName(Config::installDir + QLatin1Char('/') + fileName.right(fileName.length() - prefix));
+            fin.setFileName(Config::installDir + QLatin1Char('/')
+                            + fileName.right(fileName.length() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
-            location.fatal(tr("Cannot open master qdocconf file '%1': %2").arg(fileName).arg(fin.errorString()));
+            location.fatal(tr("Cannot open master qdocconf file '%1': %2")
+                                   .arg(fileName)
+                                   .arg(fin.errorString()));
     }
     QTextStream stream(&fin);
 #ifndef QT_NO_TEXTCODEC
@@ -1018,20 +1005,20 @@ void Config::load(Location location, const QString &fileName)
     QDir::setCurrent(path);
     QRegExp keySyntax(QLatin1String("\\w+(?:\\.\\w+)*"));
 
-#define SKIP_CHAR() \
-    do { \
-    location.advance(c); \
-    ++i; \
-    c = text.at(i); \
-    cc = c.unicode(); \
-} while (0)
+#define SKIP_CHAR()                                                                                \
+    do {                                                                                           \
+        location.advance(c);                                                                       \
+        ++i;                                                                                       \
+        c = text.at(i);                                                                            \
+        cc = c.unicode();                                                                          \
+    } while (0)
 
-#define SKIP_SPACES() \
-    while (c.isSpace() && cc != '\n') \
+#define SKIP_SPACES()                                                                              \
+    while (c.isSpace() && cc != '\n')                                                              \
     SKIP_CHAR()
 
-#define PUT_CHAR() \
-    word += c; \
+#define PUT_CHAR()                                                                                 \
+    word += c;                                                                                     \
     SKIP_CHAR();
 
     if (location.depth() > 16)
@@ -1041,7 +1028,8 @@ void Config::load(Location location, const QString &fileName)
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {
             int prefix = location.filePath().length() - location.fileName().length();
-            fin.setFileName(Config::installDir + QLatin1Char('/') + fileName.right(fileName.length() - prefix));
+            fin.setFileName(Config::installDir + QLatin1Char('/')
+                            + fileName.right(fileName.length() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
             location.fatal(tr("Cannot open file '%1': %2").arg(fileName).arg(fin.errorString()));
@@ -1111,8 +1099,7 @@ void Config::load(Location location, const QString &fileName)
                             const QByteArray val = qgetenv(var.toLatin1().data());
                             if (val.isNull()) {
                                 location.fatal(tr("Environment variable '%1' undefined").arg(var));
-                            }
-                            else {
+                            } else {
                                 includeFile += QString::fromLatin1(val);
                             }
                         }
@@ -1133,8 +1120,7 @@ void Config::load(Location location, const QString &fileName)
                   Here is the recursive call.
                  */
                 load(location, QFileInfo(QDir(path), includeFile).filePath());
-            }
-            else {
+            } else {
                 /*
                   It wasn't an include statement, so it's something else.
                   We must see either '=' or '+=' next. If not, fatal error.
@@ -1155,26 +1141,22 @@ void Config::load(Location location, const QString &fileName)
                         SKIP_CHAR();
                         if (cc == '\n') {
                             SKIP_CHAR();
-                        }
-                        else if (cc > '0' && cc < '8') {
+                        } else if (cc > '0' && cc < '8') {
                             word += QChar(c.digitValue());
                             SKIP_CHAR();
-                        }
-                        else if ((metaCharPos = QString::fromLatin1("abfnrtv").indexOf(c)) != -1) {
+                        } else if ((metaCharPos = QString::fromLatin1("abfnrtv").indexOf(c))
+                                   != -1) {
                             word += QLatin1Char("\a\b\f\n\r\t\v"[metaCharPos]);
                             SKIP_CHAR();
-                        }
-                        else {
+                        } else {
                             PUT_CHAR();
                         }
-                    }
-                    else if (c.isSpace() || cc == '#') {
+                    } else if (c.isSpace() || cc == '#') {
                         if (inQuote) {
                             if (cc == '\n')
                                 location.fatal(tr("Unterminated string"));
                             PUT_CHAR();
-                        }
-                        else {
+                        } else {
                             if (!word.isEmpty()) {
                                 if (metWord)
                                     stringValue += QLatin1Char(' ');
@@ -1188,8 +1170,7 @@ void Config::load(Location location, const QString &fileName)
                                 break;
                             SKIP_SPACES();
                         }
-                    }
-                    else if (cc == '"') {
+                    } else if (cc == '"') {
                         if (inQuote) {
                             if (!prevWordQuoted)
                                 stringValue += QLatin1Char(' ');
@@ -1202,8 +1183,7 @@ void Config::load(Location location, const QString &fileName)
                         }
                         inQuote = !inQuote;
                         SKIP_CHAR();
-                    }
-                    else if (cc == '$') {
+                    } else if (cc == '$') {
                         QString var;
                         SKIP_CHAR();
                         while (c.isLetterOrNumber() || cc == '_') {
@@ -1214,13 +1194,11 @@ void Config::load(Location location, const QString &fileName)
                             const QByteArray val = qgetenv(var.toLatin1().constData());
                             if (val.isNull()) {
                                 location.fatal(tr("Environment variable '%1' undefined").arg(var));
-                            }
-                            else {
+                            } else {
                                 word += QString::fromLatin1(val);
                             }
                         }
-                    }
-                    else {
+                    } else {
                         if (!inQuote && cc == '=')
                             location.fatal(tr("Unexpected '='"));
                         PUT_CHAR();
@@ -1231,7 +1209,8 @@ void Config::load(Location location, const QString &fileName)
                         keyLoc.fatal(tr("Invalid key '%1'").arg(key));
 
                     ConfigVarMultimap::Iterator i;
-                    i = configVars_.insert(key, ConfigVar(key, rhsValues, QDir::currentPath(), keyLoc));
+                    i = configVars_.insert(key,
+                                           ConfigVar(key, rhsValues, QDir::currentPath(), keyLoc));
                     i.value().plus_ = plus;
                 }
             }
@@ -1256,13 +1235,12 @@ bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &exclud
     return excludedFiles.contains(fileName);
 }
 
-QStringList Config::getFilesHere(const QString &uncleanDir,
-                                 const QString &nameFilter,
-                                 const Location &location,
-                                 const QSet<QString> &excludedDirs,
+QStringList Config::getFilesHere(const QString &uncleanDir, const QString &nameFilter,
+                                 const Location &location, const QSet<QString> &excludedDirs,
                                  const QSet<QString> &excludedFiles)
 {
-    QString dir = location.isEmpty() ? QDir::cleanPath(uncleanDir) : QDir(uncleanDir).canonicalPath();
+    QString dir =
+            location.isEmpty() ? QDir::cleanPath(uncleanDir) : QDir(uncleanDir).canonicalPath();
     QStringList result;
     if (excludedDirs.contains(dir))
         return result;
@@ -1273,7 +1251,7 @@ QStringList Config::getFilesHere(const QString &uncleanDir,
     dirInfo.setSorting(QDir::Name);
     dirInfo.setFilter(QDir::Files);
     QStringList fileNames = dirInfo.entryList();
-    for (const auto &file: qAsConst(fileNames)) {
+    for (const auto &file : qAsConst(fileNames)) {
         if (!file.startsWith(QLatin1Char('~'))) {
             QString s = dirInfo.filePath(file);
             QString c = QDir::cleanPath(s);
@@ -1283,10 +1261,11 @@ QStringList Config::getFilesHere(const QString &uncleanDir,
     }
 
     dirInfo.setNameFilters(QStringList(QLatin1String("*")));
-    dirInfo.setFilter(QDir::Dirs|QDir::NoDotAndDotDot);
+    dirInfo.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
     fileNames = dirInfo.entryList();
     for (const auto &file : fileNames)
-        result += getFilesHere(dirInfo.filePath(file), nameFilter, location, excludedDirs, excludedFiles);
+        result += getFilesHere(dirInfo.filePath(file), nameFilter, location, excludedDirs,
+                               excludedFiles);
     return result;
 }
 

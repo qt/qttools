@@ -36,7 +36,7 @@
 #include "cppcodemarker.h"
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsastfwd_p.h>
+#    include <private/qqmljsastfwd_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -53,8 +53,7 @@ public:
     bool recognizeExtension(const QString &ext) override;
     bool recognizeLanguage(const QString &language) override;
     Atom::AtomType atomType() const override;
-    virtual QString markedUpCode(const QString &code,
-                                 const Node *relative,
+    virtual QString markedUpCode(const QString &code, const Node *relative,
                                  const Location &location) override;
 
     QString markedUpName(const Node *node) override;
@@ -69,8 +68,7 @@ public:
 #endif
 
 private:
-    QString addMarkUp(const QString &code, const Node *relative,
-                      const Location &location);
+    QString addMarkUp(const QString &code, const Node *relative, const Location &location);
 };
 
 QT_END_NAMESPACE

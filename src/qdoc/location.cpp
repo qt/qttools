@@ -66,8 +66,7 @@ bool Location::logProgress_ = false;
 /*!
   Constructs an empty location.
  */
-Location::Location()
-    : stk(nullptr), stkTop(&stkBottom), stkDepth(0), etcetera(false)
+Location::Location() : stk(nullptr), stkTop(&stkBottom), stkDepth(0), etcetera(false)
 {
     // nothing.
 }
@@ -104,8 +103,7 @@ Location &Location::operator=(const Location &other)
     if (other.stk == nullptr) {
         stk = nullptr;
         stkTop = &stkBottom;
-    }
-    else {
+    } else {
         stk = new QStack<StackEntry>(*other.stk);
         stkTop = &stk->top();
     }
@@ -141,12 +139,9 @@ void Location::advance(QChar ch)
     if (ch == QLatin1Char('\n')) {
         stkTop->lineNo++;
         stkTop->columnNo = 1;
-    }
-    else if (ch == QLatin1Char('\t')) {
-        stkTop->columnNo =
-                1 + tabSize * (stkTop->columnNo + tabSize-1) / tabSize;
-    }
-    else {
+    } else if (ch == QLatin1Char('\t')) {
+        stkTop->columnNo = 1 + tabSize * (stkTop->columnNo + tabSize - 1) / tabSize;
+    } else {
         stkTop->columnNo++;
     }
 }
@@ -181,15 +176,13 @@ void Location::pop()
 {
     if (--stkDepth == 0) {
         stkBottom = StackEntry();
-    }
-    else {
+    } else {
         stk->pop();
         if (stk->isEmpty()) {
             delete stk;
             stk = nullptr;
             stkTop = &stkBottom;
-        }
-        else {
+        } else {
             stkTop = &stk->top();
         }
     }
@@ -218,7 +211,6 @@ QString Location::fileName() const
     QFileInfo fi(filePath());
     return fi.fileName();
 }
-
 
 /*!
   Returns the suffix of the file name. Returns an empty string
@@ -291,11 +283,11 @@ int Location::exitCode()
     if (warningLimit < 0 || warningCount <= warningLimit)
         return EXIT_SUCCESS;
 
-    Location::null.emitMessage(Error,
-        tr("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
-            .arg(QString::number(warningCount),
-                 QString::number(warningLimit),
-                 project), QString());
+    Location::null.emitMessage(
+            Error,
+            tr("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
+                    .arg(QString::number(warningCount), QString::number(warningLimit), project),
+            QString());
     return warningCount;
 }
 
@@ -341,10 +333,8 @@ void Location::initialize(const Config &config)
     QRegExp regExp = config.getRegExp(CONFIG_SPURIOUS);
     if (regExp.isValid()) {
         spuriousRegExp = new QRegExp(regExp);
-    }
-    else {
-        config.lastLocation().warning(tr("Invalid regular expression '%1'")
-                                      .arg(regExp.pattern()));
+    } else {
+        config.lastLocation().warning(tr("Invalid regular expression '%1'").arg(regExp.pattern()));
     }
 }
 
@@ -388,7 +378,8 @@ void Location::logToStdErrAlways(const QString &message)
 {
     if (Generator::useTimestamps()) {
         QTime t = QTime::currentTime();
-        fprintf(stderr, "%s LOG: %s\n", t.toString().toLatin1().constData(), message.toLatin1().data());
+        fprintf(stderr, "%s LOG: %s\n", t.toString().toLatin1().constData(),
+                message.toLatin1().data());
     } else {
         fprintf(stderr, "LOG: %s\n", message.toLatin1().constData());
     }
@@ -403,7 +394,8 @@ void Location::internalError(const QString &hint)
     Location::null.fatal(tr("Internal error (%1)").arg(hint),
                          tr("There is a bug in %1. Seek advice from your local"
                             " %2 guru.")
-                         .arg(programName).arg(programName));
+                                 .arg(programName)
+                                 .arg(programName));
 }
 
 /*!
@@ -411,13 +403,9 @@ void Location::internalError(const QString &hint)
   and outputs that string to \c stderr. \a type specifies
   whether the \a message is an error or a warning.
  */
-void Location::emitMessage(MessageType type,
-                           const QString &message,
-                           const QString &details) const
+void Location::emitMessage(MessageType type, const QString &message, const QString &details) const
 {
-    if (type == Warning &&
-            spuriousRegExp != nullptr &&
-            spuriousRegExp->exactMatch(message))
+    if (type == Warning && spuriousRegExp != nullptr && spuriousRegExp->exactMatch(message))
         return;
 
     QString result = message;

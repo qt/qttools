@@ -40,47 +40,45 @@ QT_BEGIN_NAMESPACE
 enum { Other, Alnum, Gizmo, Comma, LBrace, RBrace, RAngle, Colon, Paren };
 
 // entries 128 and above are Other
-static const int charCategory[256] = {
-    Other,  Other,  Other,  Other,  Other,  Other,  Other,  Other,
-    Other,  Other,  Other,  Other,  Other,  Other,  Other,  Other,
-    Other,  Other,  Other,  Other,  Other,  Other,  Other,  Other,
-    Other,  Other,  Other,  Other,  Other,  Other,  Other,  Other,
-    //          !       "       #       $       %       &       '
-    Other,  Other,  Other,  Other,  Other,  Gizmo,  Gizmo,  Other,
-    //  (       )       *       +       ,       -       .       /
-    Paren,  Paren, Gizmo,  Gizmo,  Comma,  Other,  Other,  Gizmo,
-    //  0       1       2       3       4       5       6       7
-    Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
-    //  8       9       :       ;       <       =       >       ?
-    Alnum,  Alnum,  Colon,  Other,  Other,  Gizmo,  RAngle, Gizmo,
-    //  @       A       B       C       D       E       F       G
-    Other,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
-    //  H       I       J       K       L       M       N       O
-    Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
-    //  P       Q       R       S       T       U       V       W
-    Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
-    //  X       Y       Z       [       \       ]       ^       _
-    Alnum,  Alnum,  Alnum,  Other,  Other,  Other,  Gizmo,  Alnum,
-    //  `       a       b       c       d       e       f       g
-    Other,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
-    //  h       i       j       k       l       m       n       o
-    Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
-    //  p       q       r       s       t       u       v       w
-    Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,  Alnum,
-    //  x       y       z       {       |       }       ~
-    Alnum,  Alnum,  Alnum,  LBrace, Gizmo,  RBrace, Other,  Other
-};
+static const int charCategory[256] = { Other, Other, Other, Other, Other, Other, Other, Other,
+                                       Other, Other, Other, Other, Other, Other, Other, Other,
+                                       Other, Other, Other, Other, Other, Other, Other, Other,
+                                       Other, Other, Other, Other, Other, Other, Other, Other,
+                                       //          !       "       #       $       %       &       '
+                                       Other, Other, Other, Other, Other, Gizmo, Gizmo, Other,
+                                       //  (       )       *       +       ,       -       .       /
+                                       Paren, Paren, Gizmo, Gizmo, Comma, Other, Other, Gizmo,
+                                       //  0       1       2       3       4       5       6       7
+                                       Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum,
+                                       //  8       9       :       ;       <       =       >       ?
+                                       Alnum, Alnum, Colon, Other, Other, Gizmo, RAngle, Gizmo,
+                                       //  @       A       B       C       D       E       F       G
+                                       Other, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum,
+                                       //  H       I       J       K       L       M       N       O
+                                       Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum,
+                                       //  P       Q       R       S       T       U       V       W
+                                       Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum,
+                                       //  X       Y       Z       [       \       ]       ^       _
+                                       Alnum, Alnum, Alnum, Other, Other, Other, Gizmo, Alnum,
+                                       //  `       a       b       c       d       e       f       g
+                                       Other, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum,
+                                       //  h       i       j       k       l       m       n       o
+                                       Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum,
+                                       //  p       q       r       s       t       u       v       w
+                                       Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum, Alnum,
+                                       //  x       y       z       {       |       }       ~
+                                       Alnum, Alnum, Alnum, LBrace, Gizmo, RBrace, Other, Other };
 
 static const bool needSpace[9][9] = {
     /*        [      a      +      ,      {       }     >      :      )    */
-    /* [ */ { false, false, false, false, false, true,  false, false, false },
-    /* a */ { false, true,  true,  false, false, true,  false, false, false },
-    /* + */ { false, true,  false, false, false, true,  false, true,  false },
-    /* , */ { true,  true,  true,  true,  true,  true,  true,  true,  false },
+    /* [ */ { false, false, false, false, false, true, false, false, false },
+    /* a */ { false, true, true, false, false, true, false, false, false },
+    /* + */ { false, true, false, false, false, true, false, true, false },
+    /* , */ { true, true, true, true, true, true, true, true, false },
     /* { */ { false, false, false, false, false, false, false, false, false },
     /* } */ { false, false, false, false, false, false, false, false, false },
-    /* > */ { true,  true,  true,  false, true,  true,  true,  false, false },
-    /* : */ { false, false, true,  true,  true,  true,  true,  false, false },
+    /* > */ { true, true, true, false, true, true, true, false, false },
+    /* : */ { false, false, true, true, true, true, true, false, false },
     /* ( */ { false, false, false, false, false, false, false, false, false },
 };
 

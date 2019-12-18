@@ -43,10 +43,11 @@ class Parameter
 {
 public:
     Parameter() {}
-    Parameter(const QString &type,
-              const QString &name = QString(),
+    Parameter(const QString &type, const QString &name = QString(),
               const QString &defaultValue = QString())
-        : type_(type), name_(name), defaultValue_(defaultValue) { }
+        : type_(type), name_(name), defaultValue_(defaultValue)
+    {
+    }
 
     void setName(const QString &name) { name_ = name; }
     bool hasType() const { return !type_.isEmpty(); }
@@ -55,12 +56,18 @@ public:
     const QString &defaultValue() const { return defaultValue_; }
     void setDefaultValue(const QString &t) { defaultValue_ = t; }
 
-    void set(const QString &type, const QString &name) {
-        type_ = type; name_ = name; defaultValue_.clear();
+    void set(const QString &type, const QString &name)
+    {
+        type_ = type;
+        name_ = name;
+        defaultValue_.clear();
     }
 
-    void set(const QString &type, const QString &name, const QString &defaultValue) {
-        type_ = type; name_ = name; defaultValue_ = defaultValue;
+    void set(const QString &type, const QString &name, const QString &defaultValue)
+    {
+        type_ = type;
+        name_ = name;
+        defaultValue_ = defaultValue;
     }
 
     QString signature(bool includeValue = false) const;
@@ -79,7 +86,12 @@ public:
     Parameters();
     Parameters(const QString &signature);
 
-    void clear() { parameters_.clear(); privateSignal_ = false; valid_ = true; }
+    void clear()
+    {
+        parameters_.clear();
+        privateSignal_ = false;
+        valid_ = true;
+    }
     const ParameterVector &parameters() const { return parameters_; }
     bool isPrivateSignal() const { return privateSignal_; }
     bool isEmpty() const { return parameters_.isEmpty(); }
