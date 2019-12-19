@@ -1723,15 +1723,13 @@ bool DocParser::isAutoLinkString(const QString &word, int &curPos)
         } else if (latin1Ch == '_' || latin1Ch == '@') {
             ++numStrangeSymbols;
             ++curPos;
-        } else if ((latin1Ch == ':') &&
-                   (curPos < len - 1) &&
-                   (word.at(curPos + 1) == QLatin1Char(':'))) {
+        } else if ((latin1Ch == ':') && (curPos < len - 1)
+                   && (word.at(curPos + 1) == QLatin1Char(':'))) {
             ++numStrangeSymbols;
             curPos += 2;
         } else if (latin1Ch == '(') {
             if (curPos > startPos) {
-                if ((curPos < len - 1) &&
-                    (word.at(curPos + 1) == QLatin1Char(')'))) {
+                if ((curPos < len - 1) && (word.at(curPos + 1) == QLatin1Char(')'))) {
                     ++numStrangeSymbols;
                     pos += 2;
                     break;
