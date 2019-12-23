@@ -16,19 +16,22 @@ qtHaveModule(widgets) {
     }
 }
 
-SUBDIRS += linguist \
-    qtattributionsscanner
+SUBDIRS += linguist
 
-qtConfig(library) {
-    !android|android_app: SUBDIRS += qtplugininfo
+qtConfig(commandlineparser) {
+    SUBDIRS += qtattributionsscanner
+    qtConfig(library) {
+        !android|android_app: SUBDIRS += qtplugininfo
+    }
 }
+
 
 SUBDIRS += global
 include($$OUT_PWD/global/qttools-config.pri)
 QT_FOR_CONFIG += tools-private
-qtConfig(clang): qtConfig(thread): SUBDIRS += qdoc
+qtConfig(clang): qtConfig(thread): qtConfig(commandlineparser): SUBDIRS += qdoc
 
-!android|android_app: SUBDIRS += qtpaths
+qtConfig(commandlineparser): !android|android_app: SUBDIRS += qtpaths
 
 macos {
     SUBDIRS += macdeployqt
@@ -38,7 +41,7 @@ qtHaveModule(dbus): SUBDIRS += qdbus
 
 win32|winrt:SUBDIRS += windeployqt
 winrt:SUBDIRS += winrtrunner
-qtHaveModule(gui):!wasm:!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
+qtHaveModule(gui):qtConfig(commandlineparser):!wasm:!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
 
 qtNomakeTools( \
     distancefieldgenerator \
