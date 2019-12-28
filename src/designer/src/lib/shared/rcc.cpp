@@ -589,7 +589,7 @@ bool RCCResourceLibrary::addFile(const QString &alias, const RCCFileInfo &file)
             parent->m_children.insert(node, s);
             parent = s;
         } else {
-            parent = parent->m_children[node];
+            parent = *parent->m_children.constFind(node);
         }
     }
 
@@ -602,7 +602,7 @@ bool RCCResourceLibrary::addFile(const QString &alias, const RCCFileInfo &file)
                      qPrintable(fileName), qPrintable(filename));
         }
     }
-    parent->m_children.insertMulti(filename, s);
+    parent->m_children.insert(filename, s);
     return true;
 }
 
