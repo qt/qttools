@@ -2914,15 +2914,18 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
         QString contents = protectEnc(marked.mid(templateTag.pos(1), templateTag.cap(1).length()));
         marked.replace(templateTag.pos(1), templateTag.cap(1).length(), contents);
     }
-    marked.replace(QRegExp("<@param>([a-z]+)_([1-9n])</@param>"), "<i>\\1<sub>\\2</sub></i>");
-    marked.replace("<@param>", "<i>");
-    marked.replace("</@param>", "</i>");
 
+    // Look for the _ character in the member name followed by a number (or n):
+    // this is intended to be rendered as a subscript.
+    marked.replace(QRegExp("<@param>([a-z]+)_([0-9]+|n)</@param>"),
+                   "<i>\\1<sub>\\2</sub></i>");
+
+    // Replace some markup by HTML tags. Do both the opening and the closing tag
+    // in one go (instead of <@param> and </@param> separately, for instance).
+    marked.replace("@param>", "i>");
     if (summary)
         marked.replace("@name>", "b>");
-
-    marked.replace("<@extra>", "<code>");
-    marked.replace("</@extra>", "</code>");
+    marked.replace("@extra>", "code>");
 
     if (summary) {
         marked.remove("<@type>");

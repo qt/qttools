@@ -217,6 +217,7 @@ struct ConfigStrings
     static QString HOMETITLE;
     static QString IGNOREDIRECTIVES;
     static QString IGNORETOKENS;
+    static QString IGNOREWORDS;
     static QString IMAGEDIRS;
     static QString IMAGES;
     static QString INCLUDEPATHS;
@@ -298,6 +299,7 @@ struct ConfigStrings
 #define CONFIG_HOMETITLE ConfigStrings::HOMETITLE
 #define CONFIG_IGNOREDIRECTIVES ConfigStrings::IGNOREDIRECTIVES
 #define CONFIG_IGNORETOKENS ConfigStrings::IGNORETOKENS
+#define CONFIG_IGNOREWORDS ConfigStrings::IGNOREWORDS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
 #define CONFIG_IMAGES ConfigStrings::IMAGES
 #define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS

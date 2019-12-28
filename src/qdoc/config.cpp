@@ -74,6 +74,7 @@ QString ConfigStrings::HOMEPAGE = QStringLiteral("homepage");
 QString ConfigStrings::HOMETITLE = QStringLiteral("hometitle");
 QString ConfigStrings::IGNOREDIRECTIVES = QStringLiteral("ignoredirectives");
 QString ConfigStrings::IGNORETOKENS = QStringLiteral("ignoretokens");
+QString ConfigStrings::IGNOREWORDS = QStringLiteral("ignorewords");
 QString ConfigStrings::IMAGEDIRS = QStringLiteral("imagedirs");
 QString ConfigStrings::IMAGES = QStringLiteral("images");
 QString ConfigStrings::INCLUDEPATHS = QStringLiteral("includepaths");
