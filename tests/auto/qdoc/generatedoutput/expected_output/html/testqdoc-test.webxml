@@ -31,6 +31,13 @@
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                 </description>
             </function>
+            <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.h" lineno="45" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void overload()">
+                <description path="" line="0" column="0"/>
+            </function>
+            <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.h" lineno="46" meta="plain" virtual="non" const="false" static="false" final="false" override="false" overload="true" overload-number="1" type="void" signature="void overload(bool b)">
+                <parameter type="bool" name="b" default=""/>
+                <description path="" line="0" column="0"/>
+            </function>
             <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.h" lineno="36" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
                 <parameter type="int" name="v" default=""/>
                 <description path="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.cpp" line="111" column="4">
