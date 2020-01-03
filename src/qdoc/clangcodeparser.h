@@ -53,7 +53,7 @@ class ClangCodeParser : public CppCodeParser
 public:
     ~ClangCodeParser() override;
 
-    void initializeParser(const Config &config) override;
+    void initializeParser() override;
     void terminateParser() override;
     QString language() override;
     QStringList headerFileNameFilter() override;

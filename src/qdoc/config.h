@@ -44,6 +44,21 @@
 
 QT_BEGIN_NAMESPACE
 
+template<typename T>
+class Singleton
+{
+public:
+    Singleton(const Singleton &) = delete;
+    Singleton &operator=(const Singleton &) = delete;
+    static T &instance() {
+        static T instance;
+        return instance;
+    }
+
+protected:
+    Singleton() = default;
+};
+
 /*
   This struct contains all the information for
   one config variable found in a qdocconf file.
@@ -75,14 +90,14 @@ struct ConfigVar
  */
 typedef QMultiMap<QString, ConfigVar> ConfigVarMultimap;
 
-class Config
+class Config : public Singleton<Config>
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::Config)
 
 public:
-    Config(const QString &programName, const QStringList &args);
     ~Config();
 
+    void init(const QString &programName, const QStringList &args);
     bool getDebug() const { return debug_; }
 
     void clear();
@@ -179,7 +194,6 @@ private:
 
     static QMap<QString, QString> uncompressedFiles;
     static QMap<QString, QString> extractedDirs;
-    static int numInstances;
     static QStack<QString> workingDirs_;
     static QMap<QString, QStringList> includeFilesMap_;
     QDocCommandLineParser m_parser;

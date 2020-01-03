@@ -315,13 +315,14 @@ void Location::report(const QString &message, const QString &details) const
 }
 
 /*!
-  Gets several parameters from the \a config, including
+  Gets several parameters from the config, including
   tab size, program name, and a regular expression that
   appears to be used for matching certain error messages
   so that emitMessage() can avoid printing them.
  */
-void Location::initialize(const Config &config)
+void Location::initialize()
 {
+    Config &config = Config::instance();
     tabSize = config.getInt(CONFIG_TABSIZE);
     programName = config.programName();
     project = config.getString(CONFIG_PROJECT);

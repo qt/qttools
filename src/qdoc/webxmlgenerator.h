@@ -30,7 +30,6 @@
 #define WEBXMLGENERATOR_H
 
 #include "codemarker.h"
-#include "config.h"
 #include "htmlgenerator.h"
 #include "qdocindexfiles.h"
 
@@ -44,7 +43,7 @@ class WebXMLGenerator : public HtmlGenerator, public IndexSectionWriter
 public:
     explicit WebXMLGenerator() {}
 
-    void initializeGenerator(const Config &config) override;
+    void initializeGenerator() override;
     void terminateGenerator() override;
     QString format() override;
     // from IndexSectionWriter

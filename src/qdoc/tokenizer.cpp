@@ -502,8 +502,9 @@ int Tokenizer::getToken()
     return Tok_Eoi;
 }
 
-void Tokenizer::initialize(const Config &config)
+void Tokenizer::initialize()
 {
+    Config &config = Config::instance();
     QString versionSym = config.getString(CONFIG_VERSIONSYM);
 
     QString sourceEncoding = config.getString(CONFIG_SOURCEENCODING);

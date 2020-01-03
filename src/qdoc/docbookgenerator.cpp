@@ -36,6 +36,7 @@
 #include <QtCore/qversionnumber.h>
 
 #include "codemarker.h"
+#include "config.h"
 #include "generator.h"
 #include "docbookgenerator.h"
 #include "node.h"
@@ -96,12 +97,13 @@ static void writeAnchor(QXmlStreamWriter &writer, QString id)
 
 /*!
   Initializes the DocBook output generator's data structures
-  from the configuration class \a config.
+  from the configuration (Config).
  */
-void DocBookGenerator::initializeGenerator(const Config &config)
+void DocBookGenerator::initializeGenerator()
 {
     // Excerpts from HtmlGenerator::initializeGenerator.
-    Generator::initializeGenerator(config);
+    Generator::initializeGenerator();
+    Config &config = Config::instance();
 
     project = config.getString(CONFIG_PROJECT);
 
@@ -2132,7 +2134,7 @@ void DocBookGenerator::generateRequiredLinks(QXmlStreamWriter &writer, const Nod
         return;
 
     const auto en = static_cast<const ExampleNode *>(node);
-    QString exampleUrl = config()->getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
+    QString exampleUrl = Config::instance().getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
 
     if (exampleUrl.isEmpty()) {
         if (!en->noAutoList()) {
@@ -2173,7 +2175,7 @@ void DocBookGenerator::generateLinkToExample(QXmlStreamWriter &writer, const Exa
 
     // Construct a path to the example; <install path>/<example name>
     QStringList path = QStringList()
-            << config()->getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
+            << Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
     path.removeAll({});
 
     writer.writeStartElement(dbNamespace, "para");

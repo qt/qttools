@@ -34,15 +34,13 @@
 
 QT_BEGIN_NAMESPACE
 
-class Config;
-
 class CodeMarker
 {
 public:
     CodeMarker();
     virtual ~CodeMarker();
 
-    virtual void initializeMarker(const Config &config);
+    virtual void initializeMarker();
     virtual void terminateMarker();
     virtual bool recognizeCode(const QString & /*code*/) { return true; }
     virtual bool recognizeExtension(const QString & /*extension*/) { return true; }
@@ -73,7 +71,7 @@ public:
     virtual QString functionEndRegExp(const QString & /*funcName*/) { return QString(); }
     virtual QStringList macRefsForNode(Node *node);
 
-    static void initialize(const Config &config);
+    static void initialize();
     static void terminate();
     static CodeMarker *markerForCode(const QString &code);
     static CodeMarker *markerForFileName(const QString &fileName);

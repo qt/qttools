@@ -41,13 +41,12 @@
 
 QT_BEGIN_NAMESPACE
 
-HelpProjectWriter::HelpProjectWriter(const Config &config, const QString &defaultFileName,
-                                     Generator *g)
+HelpProjectWriter::HelpProjectWriter(const QString &defaultFileName, Generator *g)
 {
-    reset(config, defaultFileName, g);
+    reset(defaultFileName, g);
 }
 
-void HelpProjectWriter::reset(const Config &config, const QString &defaultFileName, Generator *g)
+void HelpProjectWriter::reset(const QString &defaultFileName, Generator *g)
 {
     projects.clear();
     gen_ = g;
@@ -60,6 +59,7 @@ void HelpProjectWriter::reset(const Config &config, const QString &defaultFileNa
 
     // The output directory should already have been checked by the calling
     // generator.
+    Config &config = Config::instance();
     outputDir = config.getOutputDir();
 
     const QStringList names = config.getStringList(CONFIG_QHP + Config::dot + "projects");

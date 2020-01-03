@@ -37,13 +37,11 @@
 #include <qregexp.h>
 #include <qxmlstream.h>
 #include "codemarker.h"
-#include "config.h"
 #include "xmlgenerator.h"
 
 #include <QtCore/qxmlstream.h>
 
 #include "codemarker.h"
-#include "config.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -52,7 +50,7 @@ class DocBookGenerator : public XmlGenerator
 public:
     explicit DocBookGenerator() = default;
 
-    void initializeGenerator(const Config &config) override;
+    void initializeGenerator() override;
     QString format() override;
 
 protected:

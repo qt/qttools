@@ -33,7 +33,6 @@
 #include "qmlcodeparser.h"
 
 #include "node.h"
-#include "config.h"
 #include "qmlvisitor.h"
 
 #ifndef QT_NO_DECLARATIVE
@@ -60,14 +59,12 @@ QmlCodeParser::QmlCodeParser()
 QmlCodeParser::~QmlCodeParser() {}
 
 /*!
-  Initializes the code parser base class. The \a config argument
-  is passed to the initialization functions in the base class.
-
+  Initializes the code parser base class.
   Also creates a lexer and parser from QQmlJS.
  */
-void QmlCodeParser::initializeParser(const Config &config)
+void QmlCodeParser::initializeParser()
 {
-    CodeParser::initializeParser(config);
+    CodeParser::initializeParser();
 
 #ifndef QT_NO_DECLARATIVE
     lexer = new QQmlJS::Lexer(&engine);

@@ -29,7 +29,6 @@
 #ifndef HELPPROJECTWRITER_H
 #define HELPPROJECTWRITER_H
 
-#include "config.h"
 #include "node.h"
 
 #include <QtCore/qstring.h>
@@ -83,8 +82,8 @@ class HelpProjectWriter
     Q_DECLARE_TR_FUNCTIONS(QDoc::HelpProjectWriter)
 
 public:
-    HelpProjectWriter(const Config &config, const QString &defaultFileName, Generator *g);
-    void reset(const Config &config, const QString &defaultFileName, Generator *g);
+    HelpProjectWriter(const QString &defaultFileName, Generator *g);
+    void reset(const QString &defaultFileName, Generator *g);
     void addExtraFile(const QString &file);
     void addExtraFiles(const QSet<QString> &files);
     void generate();

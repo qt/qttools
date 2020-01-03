@@ -57,7 +57,7 @@ class CppCodeParser : public CodeParser
 public:
     CppCodeParser();
 
-    void initializeParser(const Config &config) override;
+    void initializeParser() override;
     void terminateParser() override;
     QString language() override { return QStringLiteral("Cpp"); }
     QStringList headerFileNameFilter() override;

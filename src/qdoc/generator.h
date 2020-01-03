@@ -42,7 +42,6 @@ QT_BEGIN_NAMESPACE
 typedef QMultiMap<QString, Node *> NodeMultiMap;
 typedef QMap<Node *, NodeMultiMap> ParentMaps;
 
-class Config;
 class CodeMarker;
 class Location;
 class Node;
@@ -62,18 +61,17 @@ public:
     virtual bool canHandleFormat(const QString &format) { return format == this->format(); }
     virtual QString format() = 0;
     virtual void generateDocs();
-    virtual void initializeGenerator(const Config &config);
-    virtual void initializeFormat(const Config &config);
+    virtual void initializeGenerator();
+    virtual void initializeFormat();
     virtual void terminateGenerator();
 
     QString fullDocumentLocation(const Node *node, bool useSubdir = false);
-    const Config *config() { return config_; }
     QString linkForExampleFile(const QString &path, const Node *parent,
                                const QString &fileExt = QString());
     static QString exampleFileTitle(const ExampleNode *relative, const QString &fileName);
     static Generator *currentGenerator() { return currentGenerator_; }
     static Generator *generatorForFormat(const QString &format);
-    static void initialize(const Config &config);
+    static void initialize();
     static const QString &outputDir() { return outDir_; }
     static const QString &outputSubdir() { return outSubdir_; }
     static void terminate();
@@ -231,11 +229,9 @@ private:
     static QmlTypeNode *qmlTypeContext_;
 
     void generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker);
-    static void copyTemplateFiles(const Config &config, const QString &configVar,
-                                  const QString &subDir);
+    static void copyTemplateFiles(const QString &configVar, const QString &subDir);
 
 protected:
-    const Config *config_;
     QDocDatabase *qdb_;
     bool inLink_;
     bool inContents_;

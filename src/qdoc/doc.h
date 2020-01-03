@@ -43,7 +43,6 @@ QT_BEGIN_NAMESPACE
 
 class Atom;
 class CodeMarker;
-class Config;
 class DocPrivate;
 class Quoter;
 class Text;
@@ -167,7 +166,7 @@ public:
     const QVector<Atom *> &targets() const;
     const QStringMultiMap &metaTagMap() const;
 
-    static void initialize(const Config &config);
+    static void initialize();
     static void terminate();
     static QString alias(const QString &english);
     static void trimCStyleComment(Location &location, QString &str);
@@ -176,12 +175,10 @@ public:
     static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter,
                                      const QString &fileName);
     static QString canonicalTitle(const QString &title);
-    static const Config *config() { return config_; }
 
 private:
     void detach();
     DocPrivate *priv;
-    static const Config *config_;
 };
 Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
 typedef QVector<Doc> DocList;

@@ -32,6 +32,7 @@
 
 #include "htmlgenerator.h"
 
+#include "config.h"
 #include "codemarker.h"
 #include "codeparser.h"
 #include "helpprojectwriter.h"
@@ -105,9 +106,9 @@ HtmlGenerator::~HtmlGenerator()
 
 /*!
   Initializes the HTML output generator's data structures
-  from the configuration class \a config.
+  from the configuration (Config) singleton.
  */
-void HtmlGenerator::initializeGenerator(const Config &config)
+void HtmlGenerator::initializeGenerator()
 {
     static const struct
     {
@@ -126,7 +127,8 @@ void HtmlGenerator::initializeGenerator(const Config &config)
                      { ATOM_FORMATTING_UNDERLINE, "<u>", "</u>" },
                      { nullptr, nullptr, nullptr } };
 
-    Generator::initializeGenerator(config);
+    Generator::initializeGenerator();
+    Config &config = Config::instance();
     obsoleteLinks = config.getBool(CONFIG_OBSOLETELINKS);
     setImageFileExtensions(QStringList() << "png"
                                          << "jpg"
@@ -204,9 +206,9 @@ void HtmlGenerator::initializeGenerator(const Config &config)
       per qdoc execution.
      */
     if (helpProjectWriter)
-        helpProjectWriter->reset(config, project.toLower() + ".qhp", this);
+        helpProjectWriter->reset(project.toLower() + ".qhp", this);
     else
-        helpProjectWriter = new HelpProjectWriter(config, project.toLower() + ".qhp", this);
+        helpProjectWriter = new HelpProjectWriter(project.toLower() + ".qhp", this);
 
     // Documentation template handling
     headerScripts = config.getString(HtmlGenerator::format() + Config::dot + CONFIG_HEADERSCRIPTS);
@@ -217,7 +219,7 @@ void HtmlGenerator::initializeGenerator(const Config &config)
             QLatin1String("qthelp://") + config.getString(prefix + QLatin1String("namespace"));
     manifestDir += QLatin1Char('/') + config.getString(prefix + QLatin1String("virtualFolder"))
             + QLatin1Char('/');
-    readManifestMetaContent(config);
+    readManifestMetaContent();
     examplesPath = config.getString(CONFIG_EXAMPLESINSTALLPATH);
     if (!examplesPath.isEmpty())
         examplesPath += QLatin1Char('/');
@@ -4089,8 +4091,9 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
   The manifest metacontent map is cleared immediately after
   the manifest files have been generated.
  */
-void HtmlGenerator::readManifestMetaContent(const Config &config)
+void HtmlGenerator::readManifestMetaContent()
 {
+    Config &config = Config::instance();
     const QStringList names =
             config.getStringList(CONFIG_MANIFESTMETA + Config::dot + QStringLiteral("filters"));
 

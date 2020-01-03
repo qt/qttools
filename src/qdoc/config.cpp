@@ -241,7 +241,6 @@ QString Config::overrideOutputDir;
 QString Config::installDir;
 QSet<QString> Config::overrideOutputFormats;
 QMap<QString, QString> Config::extractedDirs;
-int Config::numInstances;
 QStack<QString> Config::workingDirs_;
 QMap<QString, QStringList> Config::includeFilesMap_;
 
@@ -254,13 +253,13 @@ QMap<QString, QStringList> Config::includeFilesMap_;
  */
 
 /*!
-  The constructor sets the \a programName and initializes all
+  Initializes the Config with \a programName and sets all
   internal state variables to either default values or to ones
   defined in command line arguments \a args.
  */
-Config::Config(const QString &programName, const QStringList &args) : prog(programName)
+void Config::init(const QString &programName, const QStringList &args)
 {
-    ++numInstances;
+    prog = programName;
     processCommandLineOptions(args);
     reset();
 }

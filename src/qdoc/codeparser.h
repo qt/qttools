@@ -35,7 +35,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Config;
 class Location;
 class QString;
 class QDocDatabase;
@@ -48,7 +47,7 @@ public:
     CodeParser();
     virtual ~CodeParser();
 
-    virtual void initializeParser(const Config &config);
+    virtual void initializeParser();
     virtual void terminateParser();
     virtual QString language() = 0;
     virtual QStringList headerFileNameFilter();
@@ -66,7 +65,7 @@ public:
     void setModuleHeader(const QString &t) { moduleHeader_ = t; }
     void checkModuleInclusion(Node *n);
 
-    static void initialize(const Config &config);
+    static void initialize();
     static void terminate();
     static CodeParser *parserForLanguage(const QString &language);
     static CodeParser *parserForHeaderFile(const QString &filePath);

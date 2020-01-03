@@ -38,7 +38,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Config;
 class QRegExp;
 
 class Location
@@ -82,7 +81,7 @@ public:
 
     static const Location null;
 
-    static void initialize(const Config &config);
+    static void initialize();
     static void terminate();
     static void information(const QString &message);
     static void internalError(const QString &hint);

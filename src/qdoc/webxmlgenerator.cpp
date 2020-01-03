@@ -41,9 +41,9 @@ QT_BEGIN_NAMESPACE
 
 static CodeMarker *marker_ = nullptr;
 
-void WebXMLGenerator::initializeGenerator(const Config &config)
+void WebXMLGenerator::initializeGenerator()
 {
-    HtmlGenerator::initializeGenerator(config);
+    HtmlGenerator::initializeGenerator();
 }
 
 void WebXMLGenerator::terminateGenerator()
