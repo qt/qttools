@@ -56,6 +56,7 @@ private slots:
 
     // Output format independent tests
     void examplesManifestXml();
+    void ignoresinceVariable();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -275,6 +276,13 @@ void tst_generatedOutput::docBookFromQml()
 void tst_generatedOutput::examplesManifestXml()
 {
     testAndCompare("examples-qhp.qdocconf", "examples-manifest.xml");
+}
+
+void tst_generatedOutput::ignoresinceVariable()
+{
+    testAndCompare("ignoresince.qdocconf",
+                   "ignoresince/testqdoc.html "
+                   "ignoresince/testqdoc-test.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

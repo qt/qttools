@@ -1,0 +1,8 @@
+include(testcpp.qdocconf)
+defines += test_ignoresince
+
+ignoresince      = 2.0
+ignoresince.Test = 1.0
+
+HTML.nosubdirs      = true
+HTML.outputsubdir   = ignoresince

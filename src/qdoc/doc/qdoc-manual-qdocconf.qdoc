@@ -106,6 +106,7 @@
     \li \l {HTML.postheader-variable} {HTML.postheader}
     \li \l {HTML.style-variable} {HTML.style}
     \li \l {ignorewords-variable} {ignorewords}
+    \li \l {ignoresince-variable} {ignoresince}
     \li \l {imagedirs-variable} {imagedirs}
     \li \l {images-variable} {images}
     \li \l {images.fileextensions-variable} {images.fileextensions}
@@ -628,6 +629,37 @@
     ignored words.
 
     The \c ignorewords variable was introduced in QDoc 5.14.
+
+    \target ignoresince-variable
+    \section ignoresince
+
+    The \c ignoresince variable is used for setting a cutoff value for
+    versions passed to the \l {since-command}{\\since} command. All
+    \\since commands that define a version lower than the cutoff are
+    ignored and do not generate output.
+
+    The cutoff values are project-specific. The project name can be
+    defined as a subvariable. The default project name is \e Qt. For
+    example:
+
+    \badcode
+    ignoresince      = 5.0
+    ignoresince.QDoc = 5.0
+    \endcode
+
+    These will ignore \\since commands where the major version is 4
+    or lower and the project is either \c QDoc or undefined.
+
+    \badcode
+    \since 3.2          # Ignored
+    \since 5.2          # Documented (as 'Qt 5.2')
+    \since QDoc 4.6     # Ignored
+    \since QtQuick 2.5  # Documented
+    \endcode
+
+    The \c ignoresince variable was introduced in QDoc 5.15.
+
+    See also \l {since-command}{\\since}.
 
     \target imagedirs-variable
     \section1 imagedirs
