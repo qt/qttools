@@ -62,7 +62,6 @@ private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
 
-    void removeFullPathStrings(QString &str);
     void runQDocProcess(const QStringList &arguments);
     void compareLineByLine(const QStringList &expectedFiles);
     void testAndCompare(const char *input, const char *outNames, const char *extraParams = nullptr,
@@ -110,13 +109,6 @@ void tst_generatedOutput::runQDocProcess(const QStringList &arguments)
     QFAIL("Running QDoc failed. See output above.");
 }
 
-void tst_generatedOutput::removeFullPathStrings(QString &str)
-{
-    QRegularExpression re("(location|path|filepath)=\"[^\"]+\"");
-    QRegularExpressionMatch match = re.match(str);
-    str.replace(re, match.captured(1) + "=\"REMOVED_BY_TEST\"");
-}
-
 void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 {
     for (const auto &file : expectedFiles) {
@@ -140,8 +132,6 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
             QString prefix = file + delim + QString::number(lineNumber) + delim;
             QString expectedLine = prefix + expectedIn.readLine();
             QString actualLine = prefix + actualIn.readLine();
-            removeFullPathStrings(actualLine);
-            removeFullPathStrings(expectedLine);
             QCOMPARE(actualLine, expectedLine);
         }
     }

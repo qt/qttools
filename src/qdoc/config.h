@@ -240,6 +240,7 @@ struct ConfigStrings
     static QString LANDINGPAGE;
     static QString LANDINGTITLE;
     static QString LANGUAGE;
+    static QString LOCATIONINFO;
     static QString MACRO;
     static QString MANIFESTMETA;
     static QString MODULEHEADER;
@@ -323,6 +324,7 @@ struct ConfigStrings
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE
 #define CONFIG_LANDINGTITLE ConfigStrings::LANDINGTITLE
 #define CONFIG_LANGUAGE ConfigStrings::LANGUAGE
+#define CONFIG_LOCATIONINFO ConfigStrings::LOCATIONINFO
 #define CONFIG_MACRO ConfigStrings::MACRO
 #define CONFIG_MANIFESTMETA ConfigStrings::MANIFESTMETA
 #define CONFIG_MODULEHEADER ConfigStrings::MODULEHEADER

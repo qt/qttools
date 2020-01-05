@@ -111,6 +111,7 @@
     \li \l {images-variable} {images}
     \li \l {images.fileextensions-variable} {images.fileextensions}
     \li \l {language-variable} {language}
+    \li \l {locationinfo-variable} {locationinfo}
     \li \l {macro-variable} {macro}
     \li \l {manifestmeta-variable} {manifestmeta}
     \li \l {navigation-variable} {navigation}
@@ -788,6 +789,28 @@
     \endcode
 
     This identifies C++ as the language of the Qt source code.
+
+    \target locationinfo-variable
+    \section1 locationinfo
+
+    The \c locationinfo boolean variable determines whether detailed
+    location information about each entity is written to
+    \c {.index}-files and \c {.webxml]-files (when using the WebXML
+    output format).
+
+    Location information consists of the full path and line
+    number of either the declaration or documentation comment block
+    in the source code.
+
+    Setting this to \c false turns off location info:
+
+    \badcode
+        locationinfo = false
+    \endcode
+
+    The default value is \c true.
+
+    The \c locationinfo variable was introduced in QDoc 5.15.
 
     \target macro-variable
     \section1 macro

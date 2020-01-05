@@ -69,6 +69,7 @@ QDocIndexFiles *QDocIndexFiles::qdocIndexFiles_ = nullptr;
 QDocIndexFiles::QDocIndexFiles() : gen_(nullptr)
 {
     qdb_ = QDocDatabase::qdocDB();
+    storeLocationInfo_ = Config::instance().getBool(CONFIG_LOCATIONINFO);
 }
 
 /*!
@@ -930,7 +931,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     const Location &declLocation = node->declLocation();
     if (!declLocation.fileName().isEmpty())
         writer.writeAttribute("location", declLocation.fileName());
-    if (!declLocation.filePath().isEmpty()) {
+    if (storeLocationInfo_ && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
     }
@@ -1321,7 +1322,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     const Location &declLocation = fn->declLocation();
     if (!declLocation.fileName().isEmpty())
         writer.writeAttribute("location", declLocation.fileName());
-    if (!declLocation.filePath().isEmpty()) {
+    if (storeLocationInfo_ && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
     }

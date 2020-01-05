@@ -83,6 +83,7 @@ QString ConfigStrings::INDEXES = QStringLiteral("indexes");
 QString ConfigStrings::LANDINGPAGE = QStringLiteral("landingpage");
 QString ConfigStrings::LANDINGTITLE = QStringLiteral("landingtitle");
 QString ConfigStrings::LANGUAGE = QStringLiteral("language");
+QString ConfigStrings::LOCATIONINFO = QStringLiteral("locationinfo");
 QString ConfigStrings::MACRO = QStringLiteral("macro");
 QString ConfigStrings::MANIFESTMETA = QStringLiteral("manifestmeta");
 QString ConfigStrings::MODULEHEADER = QStringLiteral("moduleheader");
@@ -294,6 +295,7 @@ void Config::reset()
     setStringList(CONFIG_LANGUAGE, QStringList("Cpp")); // i.e. C++
     setStringList(CONFIG_OUTPUTFORMATS, QStringList("HTML"));
     setStringList(CONFIG_TABSIZE, QStringList("8"));
+    setStringList(CONFIG_LOCATIONINFO, QStringList("true"));
 
     // Publish options from the command line as config variables
     const auto setListFlag = [this](const QString &key, bool test) {
