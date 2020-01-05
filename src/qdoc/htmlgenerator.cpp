@@ -1833,7 +1833,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
     out() << "<!DOCTYPE html>\n";
     out() << QString("<html lang=\"%1\">\n").arg(naturalLanguage);
     out() << "<head>\n";
-    out() << "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+    out() << "  <meta charset=\"utf-8\">\n";
     if (node && !node->doc().location().isEmpty())
         out() << "<!-- " << node->doc().location().fileName() << " -->\n";
 
