@@ -171,13 +171,6 @@ void tst_generatedOutput::htmlFromQDocFile()
                    "qdoctests-qdocfileoutput-linking.html");
 }
 
-void tst_generatedOutput::webXmlFromQDocFile()
-{
-    testAndCompare("webxml_test.qdocconf",
-                   "html/qdoctests-qdocfileoutput.webxml "
-                   "html/qdoctests-qdocfileoutput-linking.webxml");
-}
-
 void tst_generatedOutput::htmlFromCpp()
 {
     testAndCompare("testcpp.qdocconf",
@@ -186,16 +179,6 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc-test-members.html "
                    "testqdoc.html");
 }
-
-
-void tst_generatedOutput::webXmlFromCpp()
-{
-    testAndCompare("webxml_testcpp.qdocconf",
-                   "html/testcpp-module.webxml "
-                   "html/testqdoc-test.webxml "
-                   "html/testqdoc-testderived.webxml");
-}
-
 
 void tst_generatedOutput::htmlFromQml()
 {
@@ -214,13 +197,6 @@ void tst_generatedOutput::htmlFromQml()
                    "qml-int.html");
 }
 
-void tst_generatedOutput::webXmlFromQml()
-{
-    testAndCompare("webxml_testqml.qdocconf",
-                   "html/test-componentset-example.webxml "
-                   "html/uicomponents-qmlmodule.webxml");
-}
-
 void tst_generatedOutput::htmlFromCppBug80259()
 {
     testAndCompare("bug80259/testmodule.qdocconf",
@@ -228,6 +204,29 @@ void tst_generatedOutput::htmlFromCppBug80259()
                    "second.html "
                    "third.html "
                    "index.html");
+}
+
+void tst_generatedOutput::webXmlFromQDocFile()
+{
+    testAndCompare("webxml_test.qdocconf",
+                   "html/qdoctests-qdocfileoutput.webxml "
+                   "html/qdoctests-qdocfileoutput-linking.webxml");
+}
+
+void tst_generatedOutput::webXmlFromCpp()
+{
+    testAndCompare("webxml_testcpp.qdocconf",
+                   "html/testcpp-module.webxml "
+                   "html/testqdoc-test.webxml "
+                   "html/testqdoc-testderived.webxml");
+}
+
+
+void tst_generatedOutput::webXmlFromQml()
+{
+    testAndCompare("webxml_testqml.qdocconf",
+                   "html/test-componentset-example.webxml "
+                   "html/uicomponents-qmlmodule.webxml");
 }
 
 void tst_generatedOutput::webXmlFromCppBug80259()
