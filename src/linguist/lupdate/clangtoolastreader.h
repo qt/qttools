@@ -57,7 +57,7 @@ class Translator;
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
 public:
-    explicit LupdateVisitor(clang::ASTContext *context, Stores &stores)
+    explicit LupdateVisitor(clang::ASTContext *context, Stores *stores)
         : m_context(context)
         , m_stores(stores)
     {
@@ -80,12 +80,12 @@ private:
     void processPreprocessorCall(TranslationRelatedStore store);
     void processIsolatedComments();
 
-    clang::ASTContext *m_context { nullptr };
-    Translator *m_tor { nullptr };
+    clang::ASTContext *m_context = nullptr;
     std::string m_inputFile;
 
-    Stores &m_stores;
+    Stores *m_stores = nullptr;
 
+    TranslationStores m_trCalls;
     TranslationStores m_qDeclareTrMacroAll;
     TranslationStores m_noopTranslationMacroAll;
     bool m_macro = false;
@@ -94,7 +94,7 @@ private:
 class LupdateASTConsumer : public clang::ASTConsumer
 {
 public:
-    explicit LupdateASTConsumer(clang::ASTContext *context, Stores &stores)
+    explicit LupdateASTConsumer(clang::ASTContext *context, Stores *stores)
         : m_visitor(context, stores)
     {}
 
@@ -115,8 +115,8 @@ private:
 class LupdateFrontendAction : public clang::ASTFrontendAction
 {
 public:
-    LupdateFrontendAction(Stores &outputStoresWithContext)
-        : m_stores(outputStoresWithContext)
+    LupdateFrontendAction(Stores *stores)
+        : m_stores(stores)
     {}
 
     std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
@@ -127,13 +127,13 @@ public:
     }
 
 private:
-    Stores &m_stores;
+    Stores *m_stores = nullptr;
 };
 
 class LupdateToolActionFactory : public clang::tooling::FrontendActionFactory
 {
 public:
-    LupdateToolActionFactory(Stores &stores)
+    LupdateToolActionFactory(Stores *stores)
         : m_stores(stores)
     {}
 
@@ -150,7 +150,7 @@ public:
 #endif
 
 private:
-    Stores &m_stores;
+    Stores *m_stores = nullptr;
 };
 
 QT_END_NAMESPACE

@@ -30,6 +30,7 @@
 #define CLANG_CPP_H
 
 #include "lupdate.h"
+#include "synchronized.h"
 
 #include <QtCore/qloggingcategory.h>
 #include <QtCore/qregularexpression.h>
@@ -134,10 +135,16 @@ using TranslationStores = std::vector<TranslationRelatedStore>;
 
 struct Stores
 {
+    Stores(TranslationStores &a, TranslationStores &qd, TranslationStores &qn)
+        : AST(a)
+        , QDeclareTrWithContext(qd)
+        , QNoopTranlsationWithContext(qn)
+    {}
+
     TranslationStores Preprocessor;
-    TranslationStores AST;
-    TranslationStores QDeclareTrWithContext;
-    TranslationStores QNoopTranlsationWithContext;
+    WriteSynchronizedRef<TranslationRelatedStore> AST;
+    WriteSynchronizedRef<TranslationRelatedStore> QDeclareTrWithContext;
+    WriteSynchronizedRef<TranslationRelatedStore> QNoopTranlsationWithContext;
 };
 
 namespace LupdatePrivate
@@ -208,18 +215,14 @@ namespace ClangCppParser
 {
     void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd);
 
-    void fillTranslator(Translator *tor, Stores &stores);
-    void fillTranslator(Translator *tor, TranslationRelatedStore store);
-
-    TranslatorMessage fillTranslatorMessage(const TranslationRelatedStore &store,
+    void fillTranslator(const TranslationRelatedStore &store, Translator &tor, ConversionData &cd);
+    TranslatorMessage translatorMessage(const TranslationRelatedStore &store,
         const QString &id, bool plural, bool isID);
 
-    void handleTr(Translator *tor, const TranslationRelatedStore &store, bool plural);
-    void handleTrId(Translator *tor, const TranslationRelatedStore &store, bool plural);
-    void handleTranslate(Translator *tor, const TranslationRelatedStore &store, bool plural);
-
-    void correctAstTranslationContext(Stores &stores);
-    void correctNoopTanslationContext(Stores &stores);
+    void correctAstTranslationContext(ReadSynchronizedRef<TranslationRelatedStore> &ast,
+        WriteSynchronizedRef<TranslationRelatedStore> &newAst, const TranslationStores &qDecl);
+    void correctNoopTanslationContext(ReadSynchronizedRef<TranslationRelatedStore> &qNoop,
+        WriteSynchronizedRef<TranslationRelatedStore> &newQNoop, const TranslationStores &qDecl);
 }
 
 QT_END_NAMESPACE

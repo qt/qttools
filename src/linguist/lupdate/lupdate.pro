@@ -58,7 +58,8 @@ qtConfig(clangcpp) {
     HEADERS += \
         cpp_clang.h \
         clangtoolastreader.h \
-        lupdatepreprocessoraction.h
+        lupdatepreprocessoraction.h \
+        synchronized.h
 }
 
 mingw {

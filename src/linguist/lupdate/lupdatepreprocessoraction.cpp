@@ -100,7 +100,7 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
         storeMacroArguments(arguments, &store);
     }
     if (store.isValid())
-        m_stores.push_back(store);
+        m_ppStores.emplace_back(std::move(store));
 }
 
 void LupdatePPCallbacks::storeMacroArguments(const std::vector<QString> &args,

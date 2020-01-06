@@ -30,6 +30,7 @@
 #define LUPDATEPREPROCESSORACTION_H
 
 #include "cpp_clang.h"
+#include "synchronized.h"
 
 #if defined(Q_CC_MSVC)
 # pragma warning(push)
@@ -56,12 +57,17 @@ QT_BEGIN_NAMESPACE
 class LupdatePPCallbacks : public clang::PPCallbacks
 {
 public:
-    LupdatePPCallbacks(TranslationStores &stores, clang::Preprocessor &pp)
-        : m_stores(stores)
-        , m_preprocessor(pp)
+    LupdatePPCallbacks(WriteSynchronizedRef<TranslationRelatedStore> *stores, clang::Preprocessor &pp)
+        : m_preprocessor(pp)
+        , m_stores(stores)
     {
         const auto &sm = m_preprocessor.getSourceManager();
         m_inputFile = sm.getFileEntryForID(sm.getMainFileID())->getName();
+    }
+
+    ~LupdatePPCallbacks() override
+    {
+        m_stores->emplace_bulk(std::move(m_ppStores));
     }
 
 private:
@@ -71,14 +77,16 @@ private:
     void storeMacroArguments(const std::vector<QString> &args, TranslationRelatedStore *store);
 
     std::string m_inputFile;
-    TranslationStores &m_stores;
     clang::Preprocessor &m_preprocessor;
+
+    TranslationStores m_ppStores;
+    WriteSynchronizedRef<TranslationRelatedStore> *m_stores { nullptr };
 };
 
 class LupdatePreprocessorAction : public clang::PreprocessOnlyAction
 {
 public:
-    LupdatePreprocessorAction(TranslationStores &stores)
+    LupdatePreprocessorAction(WriteSynchronizedRef<TranslationRelatedStore> *stores)
         : m_stores(stores)
     {}
 
@@ -94,13 +102,13 @@ private:
     }
 
 private:
-    TranslationStores &m_stores;
+    WriteSynchronizedRef<TranslationRelatedStore> *m_stores { nullptr };
 };
 
 class LupdatePreprocessorActionFactory : public clang::tooling::FrontendActionFactory
 {
 public:
-    LupdatePreprocessorActionFactory(TranslationStores &stores)
+    explicit LupdatePreprocessorActionFactory(WriteSynchronizedRef<TranslationRelatedStore> *stores)
         : m_stores(stores)
     {}
 
@@ -117,7 +125,7 @@ public:
 #endif
 
 private:
-    TranslationStores &m_stores;
+    WriteSynchronizedRef<TranslationRelatedStore> *m_stores { nullptr };
 };
 
 QT_END_NAMESPACE

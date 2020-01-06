@@ -243,7 +243,9 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         qCDebug(lcClang) << "Plural      : " << store.lupdatePlural;
         break;
     }
-    m_stores.AST.push_back(store);
+    // locationCol needs to be set for the store to be considered valid (but really only needed for PP calls, to reconstruct location)
+    store.locationCol = 0;
+    m_trCalls.emplace_back(std::move(store));
     return true;
 }
 
@@ -262,7 +264,7 @@ void LupdateVisitor::processIsolatedComments()
         return;
 
     std::vector<clang::RawComment *> tmp;
-    for (auto commentInFile : *commentsInThisFile)
+    for (const auto &commentInFile : *commentsInThisFile)
         tmp.emplace_back(commentInFile.second);
     clang::ArrayRef<clang::RawComment *> rawComments = tmp;
 #else
@@ -277,8 +279,8 @@ void LupdateVisitor::processIsolatedComments()
     // /*  TRANSLATOR CONTEXT
     //     whatever */
     // They are not associated to any tr calls
-    // Each one needs it's own entry in the m_stores.AST TranslationStores
-    for (auto rawComment : rawComments) {
+    // Each one needs its own entry in the m_stores->AST translation store
+    for (const auto &rawComment : rawComments) {
         if (sourceMgr.getFilename(rawComment->getBeginLoc()).str() != m_inputFile)
             continue;
         // Comments not separated by an empty line will be part of the same Raw comments
@@ -321,7 +323,7 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
         return {};
 
     std::vector<clang::RawComment *> tmp;
-    for (auto commentInFile : *commentsInThisFile)
+    for (const auto &commentInFile : *commentsInThisFile)
         tmp.emplace_back(commentInFile.second);
     clang::ArrayRef<clang::RawComment *> rawComments = tmp;
 #else
@@ -532,7 +534,7 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
             newStore.lupdateLocationLine = storeLine;
             newStore.locationCol = 0;
             newStore.printStore();
-            m_stores.AST.push_back(newStore);
+            m_trCalls.emplace_back(std::move(newStore));
         }
 
         save = false;
@@ -543,8 +545,8 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
 
 void LupdateVisitor::processPreprocessorCalls()
 {
-    m_macro = (m_stores.Preprocessor.size() > 0);
-    for (const auto &store : qAsConst(m_stores.Preprocessor))
+    m_macro = (m_stores->Preprocessor.size() > 0);
+    for (const auto &store : m_stores->Preprocessor)
         processPreprocessorCall(store);
 }
 
@@ -557,9 +559,9 @@ void LupdateVisitor::processPreprocessorCall(TranslationRelatedStore store)
 
     if (store.isValid()) {
         if (store.funcName.contains(QStringLiteral("Q_DECLARE_TR_FUNCTIONS")))
-            m_qDeclareTrMacroAll.push_back(store);
+            m_qDeclareTrMacroAll.emplace_back(std::move(store));
         else
-            m_noopTranslationMacroAll.push_back(store);
+            m_noopTranslationMacroAll.emplace_back(std::move(store));
         store.printStore();
     }
 }
@@ -658,22 +660,24 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
 
 void LupdateVisitor::generateOuput()
 {
-    qCDebug(lcClang) << "===================generateOuput============================";
+    qCDebug(lcClang) << "=================m_trCallserateOuput============================";
+    m_noopTranslationMacroAll.erase(std::remove_if(m_noopTranslationMacroAll.begin(),
+          m_noopTranslationMacroAll.end(), [](const TranslationRelatedStore &store) {
+              // only fill if a context has been retrieved in the file we're currently visiting
+              return store.contextRetrievedTempNOOP.isEmpty() && store.contextArg.isEmpty();
+      }), m_noopTranslationMacroAll.end());
 
-    for (TranslationRelatedStore &store : m_noopTranslationMacroAll) {
-        if (store.contextRetrievedTempNOOP.isEmpty() && store.contextArg.isEmpty())
-            continue;
-        // only fill if a context has been retrieved in the file we're currently visiting
-        m_stores.QNoopTranlsationWithContext.push_back(store);
-    }
+    m_stores->QNoopTranlsationWithContext.emplace_bulk(std::move(m_noopTranslationMacroAll));
 
-    for (TranslationRelatedStore &store : m_qDeclareTrMacroAll) {
-        if (store.contextRetrieved.isEmpty())
-            continue;
-        // only fill if a context has been retrieved in the file we're currently visiting
-        m_stores.QDeclareTrWithContext.push_back(store);
-    }
+    m_qDeclareTrMacroAll.erase(std::remove_if(m_qDeclareTrMacroAll.begin(),
+          m_qDeclareTrMacroAll.end(), [](const TranslationRelatedStore &store) {
+              // only fill if a context has been retrieved in the file we're currently visiting
+              return store.contextRetrieved.isEmpty();
+      }), m_qDeclareTrMacroAll.end());
+    m_stores->QDeclareTrWithContext.emplace_bulk(std::move(m_qDeclareTrMacroAll));
+
     processIsolatedComments();
+    m_stores->AST.emplace_bulk(std::move(m_trCalls));
 }
 
 QT_END_NAMESPACE
