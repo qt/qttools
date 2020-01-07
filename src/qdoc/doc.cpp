@@ -1723,15 +1723,13 @@ bool DocParser::isAutoLinkString(const QString &word, int &curPos)
         } else if (latin1Ch == '_' || latin1Ch == '@') {
             ++numStrangeSymbols;
             ++curPos;
-        } else if ((latin1Ch == ':') &&
-                   (curPos < len - 1) &&
-                   (word.at(curPos + 1) == QLatin1Char(':'))) {
+        } else if ((latin1Ch == ':') && (curPos < len - 1)
+                   && (word.at(curPos + 1) == QLatin1Char(':'))) {
             ++numStrangeSymbols;
             curPos += 2;
         } else if (latin1Ch == '(') {
             if (curPos > startPos) {
-                if ((curPos < len - 1) &&
-                    (word.at(curPos + 1) == QLatin1Char(')'))) {
+                if ((curPos < len - 1) && (word.at(curPos + 1) == QLatin1Char(')'))) {
                     ++numStrangeSymbols;
                     pos += 2;
                     break;
@@ -1862,7 +1860,7 @@ void DocParser::append(const QString &string)
     Atom::AtomType lastType = priv->text.lastAtom()->type();
     if ((lastType == Atom::Code) && priv->text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
         priv->text.lastAtom()->chopString();
-    priv->text << Atom(string); // The Atom type is Link.
+    priv->text << Atom(Atom::Link, string);
 }
 
 void DocParser::append(Atom::AtomType type, const QString &p1, const QString &p2)
@@ -1879,7 +1877,7 @@ void DocParser::append(const QString &p1, const QString &p2)
     if ((lastType == Atom::Code) && priv->text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
         priv->text.lastAtom()->chopString();
     if (p2.isEmpty())
-        priv->text << Atom(p1); // The Atom type is Link.
+        priv->text << Atom(Atom::Link, p1);
     else
         priv->text << LinkAtom(p1, p2);
 }

@@ -134,37 +134,29 @@ public:
 
     friend class LinkAtom;
 
-    Atom(const QString &string) : next_(nullptr), type_(Link) { strs << string; }
+    Atom(AtomType type, const QString &string = "") : type_(type), strs(string) {}
 
-    Atom(AtomType type, const QString &string = "") : next_(nullptr), type_(type)
+    Atom(AtomType type, const QString &p1, const QString &p2) : type_(type), strs(p1)
     {
-        strs << string;
-    }
-
-    Atom(AtomType type, const QString &p1, const QString &p2) : next_(nullptr), type_(type)
-    {
-        strs << p1;
         if (!p2.isEmpty())
             strs << p2;
     }
 
-    Atom(Atom *previous, AtomType type, const QString &string = "")
-        : next_(previous->next_), type_(type)
+    Atom(Atom *previous, AtomType type, const QString &string)
+        : next_(previous->next_), type_(type), strs(string)
     {
-        strs << string;
         previous->next_ = this;
     }
 
     Atom(Atom *previous, AtomType type, const QString &p1, const QString &p2)
-        : next_(previous->next_), type_(type)
+        : next_(previous->next_), type_(type), strs(p1)
     {
-        strs << p1;
         if (!p2.isEmpty())
             strs << p2;
         previous->next_ = this;
     }
 
-    virtual ~Atom() {}
+    virtual ~Atom() = default;
 
     void appendChar(QChar ch) { strs[0] += ch; }
     void appendString(const QString &string) { strs[0] += string; }
@@ -194,7 +186,7 @@ public:
 
 protected:
     static QString noError_;
-    Atom *next_;
+    Atom *next_ = nullptr;
     AtomType type_;
     QStringList strs;
 };

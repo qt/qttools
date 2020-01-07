@@ -1830,15 +1830,10 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
 
 void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeMarker *marker)
 {
-#ifndef QT_NO_TEXTCODEC
-    out() << QString("<?xml version=\"1.0\" encoding=\"%1\"?>\n").arg(outputEncoding);
-#else
-    out() << QString("<?xml version=\"1.0\"?>\n");
-#endif
     out() << "<!DOCTYPE html>\n";
     out() << QString("<html lang=\"%1\">\n").arg(naturalLanguage);
     out() << "<head>\n";
-    out() << "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+    out() << "  <meta charset=\"utf-8\">\n";
     if (node && !node->doc().location().isEmpty())
         out() << "<!-- " << node->doc().location().fileName() << " -->\n";
 
