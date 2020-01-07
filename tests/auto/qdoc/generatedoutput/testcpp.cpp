@@ -139,4 +139,12 @@ void TestDerived::virtualFun()
     return;
 }
 
+/*!
+    \fn TestQDoc::Test::overload()
+    \fn TestQDoc::Test::overload(bool b)
+
+    Overloads that share a documentation comment, optionally taking
+    a parameter \a b.
+*/
+
 } // namespace TestQDoc

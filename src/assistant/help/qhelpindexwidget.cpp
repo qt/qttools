@@ -134,6 +134,7 @@ void QHelpIndexProvider::run()
         return;
 
     QHelpCollectionHandler collectionHandler(collectionFile);
+    collectionHandler.setReadOnly(true);
     if (!collectionHandler.openCollectionFile())
         return;
 
