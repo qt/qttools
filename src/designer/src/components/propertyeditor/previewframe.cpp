@@ -78,7 +78,7 @@ PreviewFrame::PreviewFrame(QWidget *parent) :
 
 void PreviewFrame::setPreviewPalette(const QPalette &pal)
 {
-    ensureMdiSubWindow()->widget()->setPalette(pal);
+    ensureMdiSubWindow()->setPalette(pal);
 }
 
 void PreviewFrame::setSubWindowActive(bool active)
