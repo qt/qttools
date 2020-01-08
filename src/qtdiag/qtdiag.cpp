@@ -74,6 +74,21 @@
 #include <qpa/qplatformnativeinterface.h>
 #include <private/qhighdpiscaling_p.h>
 
+#include <QtGui/private/qrhi_p.h>
+#include <QtGui/QOffscreenSurface>
+#if QT_CONFIG(opengl)
+# include <QtGui/private/qrhigles2_p.h>
+#endif
+#if QT_CONFIG(vulkan)
+# include <QtGui/private/qrhivulkan_p.h>
+#endif
+#ifdef Q_OS_WIN
+#include <QtGui/private/qrhid3d11_p.h>
+#endif
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+# include <QtGui/private/qrhimetal_p.h>
+#endif
+
 #ifdef QT_WIDGETS_LIB
 #  include <QtWidgets/QStyleFactory>
 #endif
@@ -257,6 +272,90 @@ void dumpVkInfo(QTextStream &str)
     }
 }
 #endif // vulkan
+
+void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation impl, QRhiInitParams *initParams)
+{
+    struct RhiFeature {
+        const char *name;
+        QRhi::Feature val;
+    };
+    const RhiFeature features[] = {
+        { "MultisampleTexture", QRhi::MultisampleTexture },
+        { "MultisampleRenderBuffer", QRhi::MultisampleRenderBuffer },
+        { "DebugMarkers", QRhi::DebugMarkers },
+        { "Timestamps", QRhi::Timestamps },
+        { "Instancing", QRhi::Instancing },
+        { "CustomInstanceStepRate", QRhi::CustomInstanceStepRate },
+        { "PrimitiveRestart", QRhi::PrimitiveRestart },
+        { "NonDynamicUniformBuffers", QRhi::NonDynamicUniformBuffers },
+        { "NonFourAlignedEffectiveIndexBufferOffset", QRhi::NonFourAlignedEffectiveIndexBufferOffset },
+        { "NPOTTextureRepeat", QRhi::NPOTTextureRepeat },
+        { "RedOrAlpha8IsRed", QRhi::RedOrAlpha8IsRed },
+        { "ElementIndexUint", QRhi::ElementIndexUint },
+        { "Compute", QRhi::Compute },
+        { "WideLines", QRhi::WideLines },
+        { "VertexShaderPointSize", QRhi::VertexShaderPointSize },
+        { "BaseVertex", QRhi::BaseVertex },
+        { "BaseInstance", QRhi::BaseInstance },
+        { "TriangleFanTopology", QRhi::TriangleFanTopology },
+        { "ReadBackNonUniformBuffer", QRhi::ReadBackNonUniformBuffer },
+        { "ReadBackNonBaseMipLevel", QRhi::ReadBackNonBaseMipLevel },
+        { nullptr, QRhi::Feature(0) }
+    };
+
+    QScopedPointer<QRhi> rhi(QRhi::create(impl, initParams, QRhi::Flags(), nullptr));
+    if (rhi) {
+        str << name << ":\n";
+        str << "  Min Texture Size: " << rhi->resourceLimit(QRhi::TextureSizeMin) << "\n";
+        str << "  Max Texture Size: " << rhi->resourceLimit(QRhi::TextureSizeMax) << "\n";
+        str << "  Max Color Attachments: " << rhi->resourceLimit(QRhi::MaxColorAttachments) << "\n";
+        str << "  Frames in Flight: " << rhi->resourceLimit(QRhi::FramesInFlight) << "\n";
+        str << "  Uniform Buffer Alignment: " << rhi->ubufAlignment() << "\n";
+        str << "  Features:\n";
+        for (int i = 0; features[i].name; i++) {
+            str << "    " << (rhi->isFeatureSupported(features[i].val) ? "v" : "-") << " " << features[i].name << "\n";
+        }
+    }
+}
+
+void dumpRhiInfo(QTextStream &str)
+{
+    str << "Qt Rendering Hardware Interface supported backends:\n";
+
+#if QT_CONFIG(opengl)
+    {
+        QRhiGles2InitParams params;
+        params.fallbackSurface = QRhiGles2InitParams::newFallbackSurface();
+        dumpRhiBackendInfo(str, "OpenGL ES2", QRhi::OpenGLES2, &params);
+        delete params.fallbackSurface;
+    }
+#endif
+
+#if QT_CONFIG(vulkan)
+    {
+        QVulkanInstance vulkanInstance;
+        vulkanInstance.create();
+        QRhiVulkanInitParams params;
+        params.inst = &vulkanInstance;
+        dumpRhiBackendInfo(str, "Vulkan", QRhi::Vulkan, &params);
+        vulkanInstance.destroy();
+    }
+#endif
+
+#ifdef Q_OS_WIN
+    {
+        QRhiD3D11InitParams params;
+        dumpRhiBackendInfo(str, "Direct3D 11", QRhi::D3D11, &params);
+    }
+#endif
+
+#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
+    {
+        QRhiMetalInitParams params;
+        dumpRhiBackendInfo(str, "Metal", QRhi::Metal, &params);
+    }
+#endif
+}
 
 #define DUMP_CAPABILITY(str, integration, capability) \
     if (platformIntegration->hasCapability(QPlatformIntegration::capability)) \
@@ -663,7 +762,7 @@ QString qtDiag(unsigned flags)
 #ifndef QT_NO_OPENGL
     if (flags & QtDiagGl) {
         dumpGlInfo(str, flags & QtDiagGlExtensions);
-        str << "\n\n";
+        str << "\n";
     }
 #else
     Q_UNUSED(flags);
@@ -687,8 +786,15 @@ QString qtDiag(unsigned flags)
                 if (!description.isEmpty())
                     str << "\nGPU #" << (i + 1) << ":\n" << description << '\n';
             }
+            str << "\n";
         }
     }
+
+    if (flags & QtDiagRhi) {
+        dumpRhiInfo(str);
+        str << "\n";
+    }
+
     return result;
 }
 

@@ -34,6 +34,7 @@
 #include "cppcodeparser.h"
 #include "doc.h"
 #include "htmlgenerator.h"
+#include "docbookgenerator.h"
 #include "jscodemarker.h"
 #include "location.h"
 #include "loggingcategory.h"
@@ -559,6 +560,7 @@ int main(int argc, char **argv)
 
     HtmlGenerator htmlGenerator;
     WebXMLGenerator webXMLGenerator;
+    DocBookGenerator docBookGenerator;
 
     Config config(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());
 

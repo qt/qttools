@@ -74,6 +74,7 @@ QString ConfigStrings::HOMEPAGE = QStringLiteral("homepage");
 QString ConfigStrings::HOMETITLE = QStringLiteral("hometitle");
 QString ConfigStrings::IGNOREDIRECTIVES = QStringLiteral("ignoredirectives");
 QString ConfigStrings::IGNORETOKENS = QStringLiteral("ignoretokens");
+QString ConfigStrings::IGNOREWORDS = QStringLiteral("ignorewords");
 QString ConfigStrings::IMAGEDIRS = QStringLiteral("imagedirs");
 QString ConfigStrings::IMAGES = QStringLiteral("images");
 QString ConfigStrings::INCLUDEPATHS = QStringLiteral("includepaths");
@@ -394,6 +395,8 @@ void Config::processCommandLineOptions(const QStringList &args)
         Location::startLoggingProgress();
     if (m_parser.isSet(m_parser.timestampsOption))
         Generator::setUseTimestamps();
+    if (m_parser.isSet(m_parser.useDocBookExtensions))
+        Generator::setUseDocBookExtensions();
 }
 
 void Config::setIncludePaths()

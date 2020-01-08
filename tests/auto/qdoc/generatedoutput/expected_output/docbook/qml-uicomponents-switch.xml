@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Switch QML Type</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A component that can be turned on or off.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import UIComponents 1.0</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>A toggle switch has two states: an <db:code>on</db:code> and an <db:code>off</db:code> state. The <db:code>off</db:code> state is when the <db:link xlink:href="qml-uicomponents-switch.xml#on-prop">on</db:link> property is set to <db:code>false</db:code>.</db:para>
+<db:para>The ToggleSwitch component is part of the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>
+<db:para>This documentation is part of the <db:link xlink:href="test-componentset-example.xml">UIComponents</db:link> example.</db:para>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="on-prop">
+<db:title>on : bool</db:title>
+<db:fieldsynopsis>
+<db:type>bool</db:type>
+<db:varname>on</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Indicates the state of the switch. If <db:code>false</db:code>, then the switch is in the <db:code>off</db:code> state.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="toggle-method">
+<db:title>toggle()</db:title>
+<db:para>A method to toggle the switch. If the switch is <db:code>on</db:code>, the toggling it will turn it <db:code>off</db:code>. Toggling a switch in the <db:code>off</db:code> position will turn it <db:code>on</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

@@ -50,11 +50,13 @@ int main(int argc, char **argv)
     const QCommandLineOption glExtensionOption(QStringLiteral("gl-extensions"), QStringLiteral("List GL extensions"));
     const QCommandLineOption fontOption(QStringLiteral("fonts"), QStringLiteral("Output list of fonts"));
     const QCommandLineOption noVkOption(QStringLiteral("no-vulkan"), QStringLiteral("Do not output Vulkan information"));
+    const QCommandLineOption noRhiOption(QStringLiteral("no-rhi"), QStringLiteral("Do not output RHI information"));
     commandLineParser.setApplicationDescription(QStringLiteral("Prints diagnostic output about the Qt library."));
     commandLineParser.addOption(noGlOption);
     commandLineParser.addOption(glExtensionOption);
     commandLineParser.addOption(fontOption);
     commandLineParser.addOption(noVkOption);
+    commandLineParser.addOption(noRhiOption);
     commandLineParser.addHelpOption();
     commandLineParser.process(app);
     unsigned flags = commandLineParser.isSet(noGlOption) ? 0u : unsigned(QtDiagGl);
@@ -64,6 +66,8 @@ int main(int argc, char **argv)
         flags |= QtDiagFonts;
     if (!commandLineParser.isSet(noVkOption))
         flags |= QtDiagVk;
+    if (!commandLineParser.isSet(noRhiOption))
+        flags |= QtDiagRhi;
 
     std::wcout << qtDiag(flags).toStdWString();
     std::wcout.flush();

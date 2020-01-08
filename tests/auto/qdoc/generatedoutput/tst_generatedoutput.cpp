@@ -37,26 +37,34 @@ private slots:
     void initTestCase();
     void init();
 
+    // HTML generator
     void htmlFromQDocFile();
     void htmlFromCpp();
     void htmlFromQml();
     void htmlFromCppBug80259();
 
+    // WebXML generator
     void webXmlFromQDocFile();
     void webXmlFromCpp();
     void webXmlFromQml();
     void webXmlFromCppBug80259();
 
+    // DocBook generator
+    void docBookFromQDocFile();
+    void docBookFromCpp();
+    void docBookFromQml();
+
+    // Output format independent tests
+    void examplesManifestXml();
+
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
 
-    void removeFullPathStrings(QString& str);
+    void removeFullPathStrings(QString &str);
     void runQDocProcess(const QStringList &arguments);
     void compareLineByLine(const QStringList &expectedFiles);
-    void testAndCompare(const char *input,
-                        const char *outNames,
-                        const char *extraParams = nullptr,
+    void testAndCompare(const char *input, const char *outNames, const char *extraParams = nullptr,
                         const char *outputPathPrefix = nullptr);
 };
 
@@ -73,7 +81,7 @@ void tst_generatedOutput::init()
     m_outputDir.reset(new QTemporaryDir());
     if (!m_outputDir->isValid()) {
         const QString errorMessage =
-            "Couldn't create temporary directory: " + m_outputDir->errorString();
+                "Couldn't create temporary directory: " + m_outputDir->errorString();
         QFAIL(qPrintable(errorMessage));
     }
 }
@@ -138,13 +146,11 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
     }
 }
 
-void tst_generatedOutput::testAndCompare(const char *input,
-                                         const char *outNames,
-                                         const char *extraParams,
-                                         const char *outputPathPrefix)
+void tst_generatedOutput::testAndCompare(const char *input, const char *outNames,
+                                         const char *extraParams, const char *outputPathPrefix)
 {
-    QStringList args{ "-outputdir", m_outputDir->path() + "/" + outputPathPrefix,
-                     QFINDTESTDATA(input) };
+    QStringList args { "-outputdir", m_outputDir->path() + "/" + outputPathPrefix,
+                       QFINDTESTDATA(input) };
     if (extraParams)
         args << QString(QLatin1String(extraParams)).split(QChar(' '));
 
@@ -161,19 +167,11 @@ void tst_generatedOutput::testAndCompare(const char *input,
     compareLineByLine(expectedOuts);
 }
 
-
 void tst_generatedOutput::htmlFromQDocFile()
 {
     testAndCompare("test.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html");
-}
-
-void tst_generatedOutput::webXmlFromQDocFile()
-{
-    testAndCompare("webxml_test.qdocconf",
-                   "html/qdoctests-qdocfileoutput.webxml "
-                   "html/qdoctests-qdocfileoutput-linking.webxml");
 }
 
 void tst_generatedOutput::htmlFromCpp()
@@ -184,16 +182,6 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc-test-members.html "
                    "testqdoc.html");
 }
-
-
-void tst_generatedOutput::webXmlFromCpp()
-{
-    testAndCompare("webxml_testcpp.qdocconf",
-                   "html/testcpp-module.webxml "
-                   "html/testqdoc-test.webxml "
-                   "html/testqdoc-testderived.webxml");
-}
-
 
 void tst_generatedOutput::htmlFromQml()
 {
@@ -212,13 +200,6 @@ void tst_generatedOutput::htmlFromQml()
                    "qml-int.html");
 }
 
-void tst_generatedOutput::webXmlFromQml()
-{
-    testAndCompare("webxml_testqml.qdocconf",
-                   "html/test-componentset-example.webxml "
-                   "html/uicomponents-qmlmodule.webxml");
-}
-
 void tst_generatedOutput::htmlFromCppBug80259()
 {
     testAndCompare("bug80259/testmodule.qdocconf",
@@ -228,6 +209,28 @@ void tst_generatedOutput::htmlFromCppBug80259()
                    "index.html");
 }
 
+void tst_generatedOutput::webXmlFromQDocFile()
+{
+    testAndCompare("webxml_test.qdocconf",
+                   "html/qdoctests-qdocfileoutput.webxml "
+                   "html/qdoctests-qdocfileoutput-linking.webxml");
+}
+
+void tst_generatedOutput::webXmlFromCpp()
+{
+    testAndCompare("webxml_testcpp.qdocconf",
+                   "html/testcpp-module.webxml "
+                   "html/testqdoc-test.webxml "
+                   "html/testqdoc-testderived.webxml");
+}
+
+void tst_generatedOutput::webXmlFromQml()
+{
+    testAndCompare("webxml_testqml.qdocconf",
+                   "html/test-componentset-example.webxml "
+                   "html/uicomponents-qmlmodule.webxml");
+}
+
 void tst_generatedOutput::webXmlFromCppBug80259()
 {
     testAndCompare("bug80259/webxml_testmodule.qdocconf",
@@ -235,6 +238,43 @@ void tst_generatedOutput::webXmlFromCppBug80259()
                    "html/second.webxml "
                    "html/third.webxml "
                    "html/index.webxml");
+}
+
+void tst_generatedOutput::docBookFromQDocFile()
+{
+    testAndCompare("docbook_test.qdocconf",
+                   "docbook/qdoctests-qdocfileoutput.xml "
+                   "docbook/qdoctests-qdocfileoutput-linking.xml");
+}
+
+void tst_generatedOutput::docBookFromCpp()
+{
+    testAndCompare("docbook_testcpp.qdocconf",
+                   "docbook/testcpp-module.xml "
+                   "docbook/testqdoc-test.xml "
+                   "docbook/testqdoc-testderived.xml "
+                   "docbook/testqdoc.xml");
+}
+
+void tst_generatedOutput::docBookFromQml()
+{
+    testAndCompare("docbook_testqml.qdocconf",
+                   "docbook/test-componentset-example.xml "
+                   "docbook/uicomponents-qmlmodule.xml "
+                   "docbook/qdoc-test-qmlmodule.xml "
+                   "docbook/qml-qdoc-test-abstractparent.xml "
+                   "docbook/qml-qdoc-test-child.xml "
+                   "docbook/qml-qdoc-test-doctest.xml "
+                   "docbook/qml-qdoc-test-type.xml "
+                   "docbook/qml-uicomponents-progressbar.xml "
+                   "docbook/qml-uicomponents-switch.xml "
+                   "docbook/qml-uicomponents-tabwidget.xml "
+                   "docbook/qml-int.xml");
+}
+
+void tst_generatedOutput::examplesManifestXml()
+{
+    testAndCompare("examples-qhp.qdocconf", "examples-manifest.xml");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

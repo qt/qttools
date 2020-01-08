@@ -377,7 +377,7 @@ void Atom::dump() const
   the space character.
  */
 LinkAtom::LinkAtom(const QString &p1, const QString &p2)
-    : Atom(p1),
+    : Atom(Atom::Link, p1),
       resolved_(false),
       genus_(Node::DontCare),
       goal_(Node::NoType),

@@ -40,6 +40,10 @@ public:
     void deprecatedMember();
     inline void inlineFunction() {};
     virtual void virtualFun();
+
+protected:
+    void overload() {}
+    void overload(bool b) { if (!b) return; }
 };
 
 class TestDerived : public Test {

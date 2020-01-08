@@ -73,12 +73,12 @@ static QString qmlDirectoryRecursion(Platform platform, const QString &path)
 }
 
 // Find a directory containing QML files in the project
-QString findQmlDirectory(int platform, const QString &startDirectoryName)
+QString findQmlDirectory(Platform platform, const QString &startDirectoryName)
 {
     QDir startDirectory(startDirectoryName);
-    if (isBuildDirectory(Platform(platform), startDirectory.dirName()))
+    if (isBuildDirectory(platform, startDirectory.dirName()))
         startDirectory.cdUp();
-    return qmlDirectoryRecursion(Platform(platform), startDirectory.path());
+    return qmlDirectoryRecursion(platform, startDirectory.path());
 }
 
 static void findFileRecursion(const QDir &directory, Platform platform,

@@ -105,6 +105,7 @@
     \li \l {HTML.footer-variable} {HTML.footer}
     \li \l {HTML.postheader-variable} {HTML.postheader}
     \li \l {HTML.style-variable} {HTML.style}
+    \li \l {ignorewords-variable} {ignorewords}
     \li \l {imagedirs-variable} {imagedirs}
     \li \l {images-variable} {images}
     \li \l {images.fileextensions-variable} {images.fileextensions}
@@ -595,6 +596,39 @@
 
     See also \l headerdirs.
 
+    \target ignorewords-variable
+    \section1 ignorewords
+
+    The \c ignorewords variable is used for specifying a list of strings
+    that QDoc will ignore when resolving hyperlink targets.
+
+    QDoc has an auto-linking feature, where linking is attempted for words
+    that resemble C++, QML, or JavaScript entities. Specifically, a string
+    qualifies for auto-linking if it is at least three characters in
+    length, has no whitespace, and it
+
+    \list
+      \li is a \e camelCase word, that is, it contains at least one
+          uppercase character at index greater than zero, or
+      \li contains the substring \c {()} or \c {::}, or
+      \li contains at least one special character, \c {@} or \c {_}.
+    \endlist
+
+    Adding a qualified word to \c ignorewords stops QDoc from linking
+    that word automatically. For example, if the word \e OpenGL is a
+    valid link target (a section, \l{page-command}{\\page}, or
+    \l {externalpage-command}{\\externalpage} title), a hyperlink for
+    each occurrence can be avoided with
+
+    \badcode
+    ignorewords += OpenGL
+    \endcode
+
+    Linking explicitly with \l {l-command}{\\l} continues to work for
+    ignored words.
+
+    The \c ignorewords variable was introduced in QDoc 5.14.
+
     \target imagedirs-variable
     \section1 imagedirs
 
@@ -929,9 +963,10 @@
     The \c outputformats variable specifies the format(s) of
     the generated documentation.
 
-    Since Qt 5.11, QDoc supports the HTML and WebXML formats. If no
+    Since Qt 5.11, QDoc supports the HTML and WebXML formats; since
+    Qt 5.15, it can also generate the documentation in DocBook. If no
     \c outputformats are specified, QDoc generates the documentation
-    in HTML (the default format). Both output formats can be specified,
+    in HTML (the default format). All output formats can be specified,
     with dedicated output directories and other settings. For example:
 
     \badcode

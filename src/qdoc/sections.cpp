@@ -826,10 +826,8 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
         }
         if (fn->isIgnored())
             return;
-        if (!fn->isSharingComment()) {
-            if (!fn->hasAssociatedProperties() || !fn->doc().isEmpty())
-                dv[DetailsMemberFunctions].insert(n);
-        }
+        if (!fn->hasAssociatedProperties() || !fn->doc().isEmpty())
+            dv[DetailsMemberFunctions].insert(n);
         return;
     }
     if (t->isRelatedNonmember()) {

@@ -1,0 +1,2 @@
+include(testcpp.qdocconf)
+include(docbook.qdocconf)

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TabWidget QML Type</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A widget that places its children as tabs.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import UIComponents 1.0</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>A <db:link xlink:href="qml-uicomponents-tabwidget.xml">TabWidget</db:link> places its children as tabs in a view. Selecting a tab involves selecting the tab at the top.</db:para>
+<db:para>The <db:link xlink:href="qml-uicomponents-tabwidget.xml">TabWidget</db:link> component is part of the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>
+<db:para>This documentation is part of the <db:link xlink:href="test-componentset-example.xml">UIComponents</db:link> example.</db:para>
+<db:section xml:id="adding-tabs">
+<db:title>Adding Tabs</db:title>
+<db:para>To add a tab, declare the tab as a child of the <db:link xlink:href="qml-uicomponents-tabwidget.xml">TabWidget</db:link>.</db:para>
+<db:programlisting language="cpp">TabWidget {
+    id: tabwidget
+
+    Rectangle {
+        id: tab1
+        color: &lt;@string&gt;&amp;quot;red&amp;quot;&lt;/@string&gt;
+        &lt;@comment&gt;//... omitted&lt;/@comment&gt;
+    }
+    Rectangle {
+        id: tab2
+        color: &lt;@string&gt;&amp;quot;blue&amp;quot;&lt;/@string&gt;
+        &lt;@comment&gt;//... omitted&lt;/@comment&gt;
+    }
+
+}
+</db:programlisting>
+</db:section>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="current-prop">
+<db:title>current : int</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>current</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>The currently active tab in the <db:link xlink:href="qml-uicomponents-tabwidget.xml">TabWidget</db:link>.</db:para>
+</db:section>
+<db:section xml:id="sampleReadOnlyProperty-prop">
+<db:title>[read-only] sampleReadOnlyProperty : int</db:title>
+<db:fieldsynopsis>
+<db:type>int</db:type>
+<db:varname>sampleReadOnlyProperty</db:varname>
+<db:modifier>[read-only]</db:modifier>
+
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>A sample <db:code>read-only</db:code> property. A contrived property to demonstrate QDoc's ability to detect read-only properties.</db:para>
+<db:para>The signature is:</db:para>
+<db:programlisting language="cpp">readonly property &lt;@type&gt;int&lt;/@type&gt; sampleReadOnlyProperty: &lt;@number&gt;0&lt;/@number&gt;
+</db:programlisting>
+<db:para>Note that the property must be initialized to a value.</db:para>
+</db:section>
+</db:section>
+</db:article>

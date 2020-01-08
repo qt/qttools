@@ -1830,15 +1830,10 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
 
 void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeMarker *marker)
 {
-#ifndef QT_NO_TEXTCODEC
-    out() << QString("<?xml version=\"1.0\" encoding=\"%1\"?>\n").arg(outputEncoding);
-#else
-    out() << QString("<?xml version=\"1.0\"?>\n");
-#endif
     out() << "<!DOCTYPE html>\n";
     out() << QString("<html lang=\"%1\">\n").arg(naturalLanguage);
     out() << "<head>\n";
-    out() << "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+    out() << "  <meta charset=\"utf-8\">\n";
     if (node && !node->doc().location().isEmpty())
         out() << "<!-- " << node->doc().location().fileName() << " -->\n";
 
@@ -2914,15 +2909,18 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
         QString contents = protectEnc(marked.mid(templateTag.pos(1), templateTag.cap(1).length()));
         marked.replace(templateTag.pos(1), templateTag.cap(1).length(), contents);
     }
-    marked.replace(QRegExp("<@param>([a-z]+)_([1-9n])</@param>"), "<i>\\1<sub>\\2</sub></i>");
-    marked.replace("<@param>", "<i>");
-    marked.replace("</@param>", "</i>");
 
+    // Look for the _ character in the member name followed by a number (or n):
+    // this is intended to be rendered as a subscript.
+    marked.replace(QRegExp("<@param>([a-z]+)_([0-9]+|n)</@param>"),
+                   "<i>\\1<sub>\\2</sub></i>");
+
+    // Replace some markup by HTML tags. Do both the opening and the closing tag
+    // in one go (instead of <@param> and </@param> separately, for instance).
+    marked.replace("@param>", "i>");
     if (summary)
         marked.replace("@name>", "b>");
-
-    marked.replace("<@extra>", "<code>");
-    marked.replace("</@extra>", "</code>");
+    marked.replace("@extra>", "code>");
 
     if (summary) {
         marked.remove("<@type>");
@@ -4201,7 +4199,7 @@ QXmlStreamWriter &HtmlGenerator::xmlWriter()
   Generates bold Note lines that explain how function \a fn
   is associated with each of its associated properties.
  */
-void HtmlGenerator::generateAssociatedPropertyNotes(FunctionNode *fn)
+void HtmlGenerator::generateAssociatedPropertyNotes(const FunctionNode *fn)
 {
     if (fn->hasAssociatedProperties()) {
         out() << "<p><b>Note:</b> ";

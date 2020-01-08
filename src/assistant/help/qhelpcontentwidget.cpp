@@ -276,6 +276,7 @@ void QHelpContentProvider::run()
         return;
 
     QHelpCollectionHandler collectionHandler(collectionFile);
+    collectionHandler.setReadOnly(true);
     if (!collectionHandler.openCollectionFile())
         return;
 

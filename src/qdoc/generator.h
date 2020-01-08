@@ -84,6 +84,7 @@ public:
     static bool autolinkErrors() { return autolinkErrors_; }
     static void setQDocPass(QDocPass t) { qdocPass_ = t; }
     static void setUseTimestamps() { useTimestamps_ = true; }
+    static void setUseDocBookExtensions() { useDocBookExtensions_ = true; }
     static bool preparing() { return (qdocPass_ == Prepare); }
     static bool generating() { return (qdocPass_ == Generate); }
     static bool singleExec() { return qdocSingleExec_; }
@@ -99,6 +100,7 @@ public:
     static QString cleanRef(const QString &ref);
     static QString plainCode(const QString &markedCode);
     static bool useTimestamps() { return useTimestamps_; }
+    static bool useDocBookExtensions() { return useDocBookExtensions_; }
 
 protected:
     static QFile *openSubPageFile(const Node *node, const QString &fileName);
@@ -193,6 +195,8 @@ protected:
     void signatureList(const NodeList &nodes, const Node *relative, CodeMarker *marker);
 
     void addImageToCopy(const ExampleNode *en, const QString &file);
+    static bool compareNodes(const Node *a, const Node *b) { return (a->name() < b->name()); }
+    static bool comparePaths(const QString &a, const QString &b) { return (a < b); }
 
 private:
     static Generator *currentGenerator_;
@@ -223,11 +227,10 @@ private:
     static bool qdocWriteQaPages_;
     static bool useOutputSubdirs_;
     static bool useTimestamps_;
+    static bool useDocBookExtensions_;
     static QmlTypeNode *qmlTypeContext_;
 
     void generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker);
-    static bool compareNodes(Node *a, Node *b) { return (a->name() < b->name()); }
-    static bool comparePaths(QString a, QString b) { return (a < b); }
     static void copyTemplateFiles(const Config &config, const QString &configVar,
                                   const QString &subDir);
 

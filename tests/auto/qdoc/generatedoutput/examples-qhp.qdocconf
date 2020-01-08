@@ -1,0 +1,18 @@
+# QML test includes a documented example
+include(testqml.qdocconf)
+
+# Configure .qhp generation
+qhp.projects            = Test
+
+qhp.Test.file           = test.qhp
+qhp.Test.namespace      = org.qt-project.test.001
+qhp.Test.virtualFolder  = test
+qhp.Test.indexTitle     = UI Components
+qhp.Test.indexRoot      =
+
+# Add some meta-data to the example
+manifestmeta.filters = test
+
+manifestmeta.test.names = *
+manifestmeta.test.attributes = isTest:true
+manifestmeta.test.tags = test
