@@ -28,6 +28,11 @@
 
 #include "previewwidget.h"
 
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qmenu.h>
+
+#include <QtCore/qabstractitemmodel.h>
+
 QT_BEGIN_NAMESPACE
 
 using namespace qdesigner_internal;
@@ -36,6 +41,16 @@ PreviewWidget::PreviewWidget(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
+    ui.treeWidget->expandAll();
+    auto model = ui.treeWidget->model();
+    ui.treeWidget->setCurrentIndex(model->index(0, 0, model->index(0, 0)));
+    auto toolButtonMenu = new QMenu(ui.menuToolButton);
+    toolButtonMenu->addAction(tr("Option 1"));
+    toolButtonMenu->addSeparator();
+    auto checkable = toolButtonMenu->addAction(tr("Checkable"));
+    checkable->setCheckable(true);
+    ui.menuToolButton->setMenu(toolButtonMenu);
+    ui.menuToolButton->setPopupMode(QToolButton::InstantPopup);
 }
 
 PreviewWidget::~PreviewWidget() = default;
