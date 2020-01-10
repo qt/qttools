@@ -35,7 +35,7 @@
 #include <QtGui/qevent.h>
 #include <QtGui/qfontmetrics.h>
 #include <QtGui/qpixmap.h>
-#include <QtGui/qmatrix.h>
+#include <QtGui/qtransform.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qaction.h>
@@ -881,7 +881,7 @@ void Connection::updatePixmap(EndPoint::Type type)
     const LineDir dir = labelDir(type);
 
     if (dir == DownDir)
-        *pm = pm->transformed(QMatrix(0.0, -1.0, 1.0, 0.0, 0.0, 0.0));
+        *pm = pm->transformed(QTransform(0.0, -1.0, 1.0, 0.0, 0.0, 0.0));
 }
 
 void Connection::checkWidgets()

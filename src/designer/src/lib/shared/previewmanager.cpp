@@ -54,7 +54,7 @@
 #include <QtWidgets/qaction.h>
 #include <QtWidgets/qactiongroup.h>
 #include <QtGui/qcursor.h>
-#include <QtGui/qmatrix.h>
+#include <QtGui/qtransform.h>
 
 #include <QtCore/qmap.h>
 #include <QtCore/qdebug.h>
@@ -169,7 +169,7 @@ protected:
     virtual void fitWidget(const QSize &size);
     //  Calculate the complete transformation for the skin
     // (base class implementation provides rotation).
-    virtual QMatrix skinTransform() const;
+    virtual QTransform skinTransform() const;
 
 private:
     const QSize m_screenSize;
@@ -286,9 +286,9 @@ void PreviewDeviceSkin::fitWidget(const QSize &size)
     view()->setFixedSize(size);
 }
 
-QMatrix PreviewDeviceSkin::skinTransform() const
+QTransform PreviewDeviceSkin::skinTransform() const
 {
-    QMatrix newTransform;
+    QTransform newTransform;
     switch (m_direction)  {
         case DirectionUp:
             break;
@@ -342,7 +342,7 @@ signals:
 
 protected:
     void populateContextMenu(QMenu *m) override;
-    QMatrix skinTransform() const override;
+    QTransform skinTransform() const override;
     void fitWidget(const QSize &size) override;
 
 private:
@@ -415,10 +415,10 @@ void ZoomablePreviewDeviceSkin::populateContextMenu(QMenu *menu)
     menu->addSeparator();
 }
 
-QMatrix ZoomablePreviewDeviceSkin::skinTransform() const
+QTransform ZoomablePreviewDeviceSkin::skinTransform() const
 {
     // Complete transformation consisting of base class rotation and zoom.
-    QMatrix rc = PreviewDeviceSkin::skinTransform();
+    QTransform rc = PreviewDeviceSkin::skinTransform();
     const int zp = zoomPercent();
     if (zp != 100) {
         const qreal factor = zoomFactor(zp);
