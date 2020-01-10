@@ -1110,11 +1110,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 }
             }
         }
-        if (inTableHeader_)
-            out() << '>';
-        else {
-            out() << '>';
-        }
+        out() << '>';
         if (matchAhead(atom, Atom::ParaLeft))
             skipAhead = 1;
     } break;
