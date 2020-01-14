@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd and/or its subsidiary(-ies).
+** Copyright (C) 2020 The Qt Company Ltd and/or its subsidiary(-ies).
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -90,7 +90,7 @@ void MainWindow::about()
                 "<h3>%1</h3>"
                 "<p>Version %2</p></center>"
                 "<p>Copyright (C) %3 The Qt Company Ltd.</p>")
-            .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2019")));
+            .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2020")));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();
 }
