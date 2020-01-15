@@ -90,6 +90,37 @@ struct TranslationRelatedStore
 
     bool isValid() const
     {
+        switch (trFunctionAliasManager.trFunctionByName(funcName)) {
+        // only one argument: the source
+        case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
+            if (contextArg.isEmpty())
+                return false;
+            break;
+        case TrFunctionAliasManager::Function_tr:
+        case TrFunctionAliasManager::Function_trUtf8:
+            if (lupdateSource.isEmpty())
+                return false;
+            break;
+        // two arguments: the context and the source
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
+        case TrFunctionAliasManager::Function_translate:
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
+            if (contextArg.isEmpty() || lupdateSource.isEmpty())
+                return false;
+            // not sure if the third argument is compulsory
+            break;
+        // only one argument (?) the message Id
+        case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
+        case TrFunctionAliasManager::Function_qtTrId:
+        case TrFunctionAliasManager::Function_QT_TRID_NOOP:
+            if (lupdateId.isEmpty())
+                return false;
+            break;
+        }
         return !lupdateLocationFile.isEmpty() && (lupdateLocationLine > -1) && (locationCol > -1);
     }
 
