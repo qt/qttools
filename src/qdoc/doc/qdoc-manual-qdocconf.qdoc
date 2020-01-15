@@ -632,7 +632,7 @@
     The \c ignorewords variable was introduced in QDoc 5.14.
 
     \target ignoresince-variable
-    \section ignoresince
+    \section1 ignoresince
 
     The \c ignoresince variable is used for setting a cutoff value for
     versions passed to the \l {since-command}{\\since} command. All
@@ -795,7 +795,7 @@
 
     The \c locationinfo boolean variable determines whether detailed
     location information about each entity is written to
-    \c {.index}-files and \c {.webxml]-files (when using the WebXML
+    \c {.index}-files and \c {.webxml}-files (when using the WebXML
     output format).
 
     Location information consists of the full path and line
