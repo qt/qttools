@@ -827,10 +827,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
 #endif
     case CXCursor_EnumDecl: {
-        if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another tu
-            return CXChildVisit_Continue;
+        EnumNode *en = static_cast<EnumNode *>(findNodeForCursor(qdb_, cursor));
+        if (en && en->items().count())
+            return CXChildVisit_Continue; // Was already parsed, probably in another TU
         QString enumTypeName = fromCXString(clang_getCursorSpelling(cursor));
-        EnumNode *en = nullptr;
         if (enumTypeName.isEmpty()) {
             enumTypeName = "anonymous";
             if (parent_ && (parent_->isClassNode() || parent_->isNamespace())) {
@@ -840,10 +840,11 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             }
         }
         if (!en) {
-            en = new EnumNode(parent_, enumTypeName);
+            en = new EnumNode(parent_, enumTypeName, clang_EnumDecl_isScoped(cursor));
             en->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
             en->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         }
+
         // Enum values
         visitChildrenLambda(cursor, [&](CXCursor cur) {
             if (clang_getCursorKind(cur) != CXCursor_EnumConstantDecl)

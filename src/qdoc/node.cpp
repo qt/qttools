@@ -600,25 +600,24 @@ QString Node::plainName() const
 /*!
   Constructs and returns the node's fully qualified name by
   recursively ascending the parent links and prepending each
-  parent name + "::". Breaks out when the parent pointer is
-  \a relative. Almost all calls to this function pass 0 for
-  \a relative.
+  parent name + "::". Breaks out when reaching a HeaderNode,
+  or when the parent pointer is \a relative. Typically, calls
+  to this function pass \c nullptr for \a relative.
  */
 QString Node::plainFullName(const Node *relative) const
 {
     if (name_.isEmpty())
         return QLatin1String("global");
 
-    QString fullName;
+    QStringList parts;
     const Node *node = this;
-    while (node) {
-        fullName.prepend(node->plainName());
+    while (node && !node->isHeader()) {
+        parts.prepend(node->plainName());
         if (node->parent() == relative || node->parent()->name().isEmpty())
-            break;
-        fullName.prepend(QLatin1String("::"));
+          break;
         node = node->parent();
     }
-    return fullName;
+    return parts.join(QLatin1String("::"));
 }
 
 /*!

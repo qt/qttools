@@ -221,7 +221,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         break;
     case Node::Enum:
         enume = static_cast<const EnumNode *>(node);
-        synopsis = "enum " + name;
+        synopsis = "enum ";
+        if (enume->isScoped())
+            synopsis += "class ";
+        synopsis += name;
         if (style == Section::Summary) {
             synopsis += " { ";
 
@@ -382,18 +385,18 @@ QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *r
         return enumValue;
 
     const Node *node = relative->parent();
-    QString fullName;
-    while (node->parent()) {
-        fullName.prepend(markedUpName(node));
+    QStringList parts;
+    while (!node->isHeader() && node->parent()) {
+        parts.prepend(markedUpName(node));
         if (node->parent() == relative || node->parent()->name().isEmpty())
             break;
-        fullName.prepend("<@op>::</@op>");
         node = node->parent();
     }
-    if (!fullName.isEmpty())
-        fullName.append("<@op>::</@op>");
-    fullName.append(enumValue);
-    return fullName;
+    if (static_cast<const EnumNode *>(relative)->isScoped())
+        parts.append(relative->name());
+
+    parts.append(enumValue);
+    return parts.join(QLatin1String("<@op>::</@op>"));
 }
 
 QString CppCodeMarker::markedUpIncludes(const QStringList &includes)

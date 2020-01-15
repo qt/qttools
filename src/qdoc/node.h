@@ -864,13 +864,17 @@ private:
 class EnumNode : public Node
 {
 public:
-    EnumNode(Aggregate *parent, const QString &name) : Node(Enum, parent, name), flagsType_(nullptr)
+    EnumNode(Aggregate *parent, const QString &name, bool isScoped = false)
+    : Node(Enum, parent, name),
+    flagsType_(nullptr),
+    isScoped_(isScoped)
     {
     }
 
     void addItem(const EnumItem &item);
     void setFlagsType(TypedefNode *typedeff);
     bool hasItem(const QString &name) const { return names_.contains(name); }
+    bool isScoped() const { return isScoped_; }
 
     const QVector<EnumItem> &items() const { return items_; }
     Access itemAccess(const QString &name) const;
@@ -882,6 +886,7 @@ private:
     QVector<EnumItem> items_;
     QSet<QString> names_;
     const TypedefNode *flagsType_;
+    bool isScoped_;
 };
 
 class TypedefNode : public Node

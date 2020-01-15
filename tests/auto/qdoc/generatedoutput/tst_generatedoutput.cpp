@@ -58,6 +58,7 @@ private slots:
     void examplesManifestXml();
     void ignoresinceVariable();
     void templateParameters();
+    void scopedEnum();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -282,6 +283,11 @@ void tst_generatedOutput::templateParameters()
                                           "template/foo.html "
                                           "template/bar.html "
                                           "template/baz.html");
+}
+
+void tst_generatedOutput::scopedEnum()
+{
+  testAndCompare("scopedenum.qdocconf", "scopedenum/testqdoc-test.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

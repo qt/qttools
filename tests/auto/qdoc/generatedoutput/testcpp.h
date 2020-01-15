@@ -33,6 +33,14 @@ namespace TestQDoc {
 
 class Test {
 public:
+#ifdef test_scopedenum
+    enum class ScopedEnum : unsigned char {
+        This = 0x01,
+        That = 0x02,
+        All = This | That,
+        OmittedValue = 99
+    };
+#endif
     int someFunction(int v);
     void someFunctionDefaultArg(int i, bool b);
     void obsoleteMember();

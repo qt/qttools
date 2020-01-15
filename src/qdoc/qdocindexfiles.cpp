@@ -421,7 +421,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         node = pn;
 
     } else if (elementName == QLatin1String("enum")) {
-        EnumNode *enumNode = new EnumNode(parent, name);
+        EnumNode *enumNode = new EnumNode(parent, name, attributes.hasAttribute("scoped"));
 
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
@@ -1175,6 +1175,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     } break;
     case Node::Enum: {
         const EnumNode *enumNode = static_cast<const EnumNode *>(node);
+        if (enumNode->isScoped())
+            writer.writeAttribute("scoped", "true");
         if (enumNode->flagsType())
             writer.writeAttribute("typedef", enumNode->flagsType()->fullDocumentName());
         const auto &items = enumNode->items();
