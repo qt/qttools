@@ -1197,12 +1197,17 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     Text subtitleText;
     if (rawTitle != fullTitle) {
         if (aggregate->parent()->isClassNode()) {
-            QString word2 = aggregate->parent()->typeWord(false);
-            subtitleText << word << " " << rawTitle << " is declared in " << word2 << " "
-                         << Atom(Atom::AutoLink, aggregate->parent()->plainName()) << "."
-                         << Atom(Atom::LineBreak);
+            const QStringList ancestors = fullTitle.split(QLatin1String("::"));
+            for (const auto a : ancestors) {
+                if (a == rawTitle) {
+                    subtitleText << a;
+                    break;
+                } else {
+                    subtitleText << Atom(Atom::AutoLink, a) << "::";
+                }
+            }
         } else {
-            subtitleText << "(" << Atom(Atom::AutoLink, fullTitle) << ")" << Atom(Atom::LineBreak);
+            subtitleText << fullTitle;
         }
     }
 

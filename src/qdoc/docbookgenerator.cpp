@@ -2431,7 +2431,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
 
     QString subtitleText;
     if (rawTitle != fullTitle)
-        subtitleText = "(" + fullTitle + ")";
+        subtitleText = fullTitle;
 
     // Start producing the DocBook file.
     QXmlStreamWriter &writer = *startDocument(node);
