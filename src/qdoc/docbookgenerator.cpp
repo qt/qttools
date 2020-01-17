@@ -2425,8 +2425,11 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
         ns = static_cast<const NamespaceNode *>(aggregate);
     } else if (aggregate->isClass()) {
         rawTitle = aggregate->plainName();
-        fullTitle = aggregate->plainFullName();
-        title = rawTitle + " Class";
+        QString templateDecl = node->templateDecl();
+        if (!templateDecl.isEmpty())
+            fullTitle = QString("%1 %2 ").arg(templateDecl, aggregate->typeWord(false));
+        fullTitle += aggregate->plainFullName();
+        title = rawTitle + QLatin1Char(' ') + aggregate->typeWord(true);
     }
 
     QString subtitleText;

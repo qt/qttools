@@ -136,9 +136,13 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         break;
     case Node::Function:
         func = (const FunctionNode *)node;
-
+        if (style == Section::Details) {
+            QString templateDecl = node->templateDecl();
+            if (!templateDecl.isEmpty())
+                synopsis = templateDecl + QLatin1Char(' ');
+        }
         if (style != Section::AllMembers && !func->returnType().isEmpty())
-            synopsis = typified(func->returnType(), true);
+            synopsis += typified(func->returnType(), true);
         synopsis += name;
         if (!func->isMacroWithoutParams()) {
             synopsis += QLatin1Char('(');

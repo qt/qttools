@@ -57,6 +57,7 @@ private slots:
     // Output format independent tests
     void examplesManifestXml();
     void ignoresinceVariable();
+    void templateParameters();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -273,6 +274,14 @@ void tst_generatedOutput::ignoresinceVariable()
     testAndCompare("ignoresince.qdocconf",
                    "ignoresince/testqdoc.html "
                    "ignoresince/testqdoc-test.html");
+}
+
+void tst_generatedOutput::templateParameters()
+{
+  testAndCompare("testtemplate.qdocconf", "template/testqdoc-test.html "
+                                          "template/foo.html "
+                                          "template/bar.html "
+                                          "template/baz.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

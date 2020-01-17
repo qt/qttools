@@ -1488,11 +1488,13 @@ QString Node::physicalModuleName() const
   \sa PageType
 */
 
-/*! \fn  QString Node::signature(bool values, bool noReturnType) const
+/*! \fn  QString Node::signature(bool values, bool noReturnType, bool templateParams) const
 
   If this node is a FunctionNode, this function returns the function's
-  signature, including default values if \a values is \c true, and
-  including the function's return type if \a noReturnType is \c false.
+  signature, including default values if \a values is \c true,
+  function's return type if \a noReturnType is \c false, and
+  prefixed with 'template <parameter_list>' for function templates
+  if templateParams is \true.
 
   If this node is not a FunctionNode, this function returns plainName().
 */
@@ -4240,27 +4242,35 @@ bool FunctionNode::hasActiveAssociatedProperty() const
 
 /*!
   Reconstructs and returns the function's signature. If \a values
-  is true, the default values of the parameters are included, if
-  present.
+  is \c true, the default values of the parameters are included.
+  The return type is included unless \a noReturnType is \c true.
+  Function templates are prefixed with \c {template <parameter_list>}
+  if \a templateParams is \c true.
  */
-QString FunctionNode::signature(bool values, bool noReturnType) const
+QString FunctionNode::signature(bool values, bool noReturnType, bool templateParams) const
 {
-    QString result;
-    if (!noReturnType && !returnType().isEmpty())
-        result = returnType() + QLatin1Char(' ');
-    result += name();
+    QStringList elements;
+
+    if (templateParams)
+        elements << templateDecl();
+    if (!noReturnType)
+        elements << returnType_;
+    elements.removeAll({});
+
     if (!isMacroWithoutParams()) {
-        result += QLatin1Char('(') + parameters_.signature(values) + QLatin1Char(')');
-        if (isMacro())
-            return result;
+        elements << name() + QLatin1Char('(') + parameters_.signature(values) + QLatin1Char(')');
+        if (!isMacro()) {
+            if (isConst())
+                elements << QStringLiteral("const");
+            if (isRef())
+                elements << QStringLiteral("&");
+            else if (isRefRef())
+                elements << QStringLiteral("&&");
+        }
+    } else {
+        elements << name();
     }
-    if (isConst())
-        result += " const";
-    if (isRef())
-        result += " &";
-    else if (isRefRef())
-        result += " &&";
-    return result;
+    return elements.join(QLatin1Char(' '));
 }
 
 /*!

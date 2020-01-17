@@ -1171,6 +1171,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
     Sections sections(aggregate);
     QString word = aggregate->typeWord(true);
+    QString templateDecl = aggregate->templateDecl();
     if (aggregate->isNamespace()) {
         rawTitle = aggregate->plainName();
         fullTitle = aggregate->plainFullName();
@@ -1181,11 +1182,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     } else if (aggregate->isClassNode()) {
         rawTitle = aggregate->plainName();
         fullTitle = aggregate->plainFullName();
-        if (aggregate->isStruct())
-            word = QLatin1String("Struct");
-        else if (aggregate->isUnion())
-            word = QLatin1String("Union");
-        title = rawTitle + " " + word;
+        title = rawTitle + QLatin1Char(' ') + word;
         summarySections = &sections.stdCppClassSummarySections();
         detailsSections = &sections.stdCppClassDetailsSections();
     } else if (aggregate->isHeader()) {
@@ -1195,10 +1192,13 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
 
     Text subtitleText;
-    if (rawTitle != fullTitle) {
-        if (aggregate->parent()->isClassNode()) {
+    if (rawTitle != fullTitle || !templateDecl.isEmpty()) {
+        if (aggregate->isClassNode()) {
+            if (!templateDecl.isEmpty())
+                subtitleText << templateDecl + QLatin1Char(' ');
+            subtitleText << aggregate->typeWord(false) + QLatin1Char(' ');
             const QStringList ancestors = fullTitle.split(QLatin1String("::"));
-            for (const auto a : ancestors) {
+            for (const auto &a : ancestors) {
                 if (a == rawTitle) {
                     subtitleText << a;
                     break;
