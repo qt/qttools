@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -26,20 +26,17 @@
 **
 ****************************************************************************/
 
-#include "optionswidget.h"
+#include "qoptionswidget_p.h"
 
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QItemDelegate>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QVBoxLayout>
 
-#include <algorithm>
-
 QT_BEGIN_NAMESPACE
 
 class ListWidgetDelegate : public QItemDelegate
 {
-//    Q_OBJECT not needed
 public:
     ListWidgetDelegate(QWidget *w) : QItemDelegate(w), m_widget(w) {}
 
@@ -87,9 +84,7 @@ static QStringList subtract(const QStringList &minuend, const QStringList &subtr
     return result;
 }
 
-/////////////////
-
-OptionsWidget::OptionsWidget(QWidget *parent)
+QOptionsWidget::QOptionsWidget(QWidget *parent)
     : QWidget(parent)
     , m_noOptionText(tr("No Option"))
     , m_invalidOptionText(tr("Invalid Option"))
@@ -100,16 +95,16 @@ OptionsWidget::OptionsWidget(QWidget *parent)
     layout->addWidget(m_listWidget);
     layout->setContentsMargins(QMargins());
 
-    connect(m_listWidget, &QListWidget::itemChanged, this, &OptionsWidget::itemChanged);
+    connect(m_listWidget, &QListWidget::itemChanged, this, &QOptionsWidget::itemChanged);
 }
 
-void OptionsWidget::clear()
+void QOptionsWidget::clear()
 {
     setOptions(QStringList(), QStringList());
 }
 
-void OptionsWidget::setOptions(const QStringList &validOptions,
-                               const QStringList &selectedOptions)
+void QOptionsWidget::setOptions(const QStringList &validOptions,
+                                const QStringList &selectedOptions)
 {
     m_listWidget->clear();
     m_optionToItem.clear();
@@ -145,17 +140,17 @@ void OptionsWidget::setOptions(const QStringList &validOptions,
     }
 }
 
-QStringList OptionsWidget::validOptions() const
+QStringList QOptionsWidget::validOptions() const
 {
     return m_validOptions;
 }
 
-QStringList OptionsWidget::selectedOptions() const
+QStringList QOptionsWidget::selectedOptions() const
 {
     return m_selectedOptions;
 }
 
-void OptionsWidget::setNoOptionText(const QString &text)
+void QOptionsWidget::setNoOptionText(const QString &text)
 {
     if (m_noOptionText == text)
         return;
@@ -171,7 +166,7 @@ void OptionsWidget::setNoOptionText(const QString &text)
     }
 }
 
-void OptionsWidget::setInvalidOptionText(const QString &text)
+void QOptionsWidget::setInvalidOptionText(const QString &text)
 {
     if (m_invalidOptionText == text)
         return;
@@ -183,7 +178,7 @@ void OptionsWidget::setInvalidOptionText(const QString &text)
         m_optionToItem.value(option)->setText(optionText(option, false));
 }
 
-QString OptionsWidget::optionText(const QString &optionName, bool valid) const
+QString QOptionsWidget::optionText(const QString &optionName, bool valid) const
 {
     QString text = optionName;
     if (optionName.isEmpty())
@@ -193,7 +188,7 @@ QString OptionsWidget::optionText(const QString &optionName, bool valid) const
     return text;
 }
 
-QListWidgetItem *OptionsWidget::appendItem(const QString &optionName, bool valid, bool selected)
+QListWidgetItem *QOptionsWidget::appendItem(const QString &optionName, bool valid, bool selected)
 {
     QListWidgetItem *optionItem = new QListWidgetItem(optionText(optionName, valid), m_listWidget);
     optionItem->setCheckState(selected ? Qt::Checked : Qt::Unchecked);
@@ -203,14 +198,14 @@ QListWidgetItem *OptionsWidget::appendItem(const QString &optionName, bool valid
     return optionItem;
 }
 
-void OptionsWidget::appendSeparator()
+void QOptionsWidget::appendSeparator()
 {
     QListWidgetItem *separatorItem = new QListWidgetItem(m_listWidget);
     ListWidgetDelegate::setSeparator(separatorItem);
     m_listWidget->insertItem(m_listWidget->count(), separatorItem);
 }
 
-void OptionsWidget::itemChanged(QListWidgetItem *item)
+void QOptionsWidget::itemChanged(QListWidgetItem *item)
 {
     const auto it = m_itemToOption.constFind(item);
     if (it == m_itemToOption.constEnd())

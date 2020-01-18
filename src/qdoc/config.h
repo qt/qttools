@@ -44,6 +44,21 @@
 
 QT_BEGIN_NAMESPACE
 
+template<typename T>
+class Singleton
+{
+public:
+    Singleton(const Singleton &) = delete;
+    Singleton &operator=(const Singleton &) = delete;
+    static T &instance() {
+        static T instance;
+        return instance;
+    }
+
+protected:
+    Singleton() = default;
+};
+
 /*
   This struct contains all the information for
   one config variable found in a qdocconf file.
@@ -75,14 +90,14 @@ struct ConfigVar
  */
 typedef QMultiMap<QString, ConfigVar> ConfigVarMultimap;
 
-class Config
+class Config : public Singleton<Config>
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::Config)
 
 public:
-    Config(const QString &programName, const QStringList &args);
     ~Config();
 
+    void init(const QString &programName, const QStringList &args);
     bool getDebug() const { return debug_; }
 
     void clear();
@@ -179,7 +194,6 @@ private:
 
     static QMap<QString, QString> uncompressedFiles;
     static QMap<QString, QString> extractedDirs;
-    static int numInstances;
     static QStack<QString> workingDirs_;
     static QMap<QString, QStringList> includeFilesMap_;
     QDocCommandLineParser m_parser;
@@ -217,6 +231,7 @@ struct ConfigStrings
     static QString HOMETITLE;
     static QString IGNOREDIRECTIVES;
     static QString IGNORETOKENS;
+    static QString IGNORESINCE;
     static QString IGNOREWORDS;
     static QString IMAGEDIRS;
     static QString IMAGES;
@@ -225,6 +240,7 @@ struct ConfigStrings
     static QString LANDINGPAGE;
     static QString LANDINGTITLE;
     static QString LANGUAGE;
+    static QString LOCATIONINFO;
     static QString MACRO;
     static QString MANIFESTMETA;
     static QString MODULEHEADER;
@@ -298,6 +314,7 @@ struct ConfigStrings
 #define CONFIG_HOMEPAGE ConfigStrings::HOMEPAGE
 #define CONFIG_HOMETITLE ConfigStrings::HOMETITLE
 #define CONFIG_IGNOREDIRECTIVES ConfigStrings::IGNOREDIRECTIVES
+#define CONFIG_IGNORESINCE ConfigStrings::IGNORESINCE
 #define CONFIG_IGNORETOKENS ConfigStrings::IGNORETOKENS
 #define CONFIG_IGNOREWORDS ConfigStrings::IGNOREWORDS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
@@ -307,6 +324,7 @@ struct ConfigStrings
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE
 #define CONFIG_LANDINGTITLE ConfigStrings::LANDINGTITLE
 #define CONFIG_LANGUAGE ConfigStrings::LANGUAGE
+#define CONFIG_LOCATIONINFO ConfigStrings::LOCATIONINFO
 #define CONFIG_MACRO ConfigStrings::MACRO
 #define CONFIG_MANIFESTMETA ConfigStrings::MANIFESTMETA
 #define CONFIG_MODULEHEADER ConfigStrings::MODULEHEADER

@@ -69,6 +69,7 @@ QDocIndexFiles *QDocIndexFiles::qdocIndexFiles_ = nullptr;
 QDocIndexFiles::QDocIndexFiles() : gen_(nullptr)
 {
     qdb_ = QDocDatabase::qdocDB();
+    storeLocationInfo_ = Config::instance().getBool(CONFIG_LOCATIONINFO);
 }
 
 /*!
@@ -930,7 +931,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     const Location &declLocation = node->declLocation();
     if (!declLocation.fileName().isEmpty())
         writer.writeAttribute("location", declLocation.fileName());
-    if (!declLocation.filePath().isEmpty()) {
+    if (storeLocationInfo_ && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
     }
@@ -1321,7 +1322,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     const Location &declLocation = fn->declLocation();
     if (!declLocation.fileName().isEmpty())
         writer.writeAttribute("location", declLocation.fileName());
-    if (!declLocation.filePath().isEmpty()) {
+    if (storeLocationInfo_ && !declLocation.filePath().isEmpty()) {
         writer.writeAttribute("filepath", declLocation.filePath());
         writer.writeAttribute("lineno", QString("%1").arg(declLocation.lineNo()));
     }
@@ -1503,11 +1504,10 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
 }
 
 /*!
-  Writes aqdoc module index in XML to a file named \afilerName.
-  \a url becaomes the \c url attribute of the <INDEX> element.
-  \a title becomes the \c title attribute of the <INDEX> element.
-  \a g is used to get the Config object that contains the variables
-  from the module's .qdocconf file.
+  Writes a qdoc module index in XML to a file named \a fileName.
+  \a url is the \c url attribute of the <INDEX> element.
+  \a title is the \c title attribute of the <INDEX> element.
+  \a g is a pointer to the current Generator in use, stored for later use.
  */
 void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
                                    const QString &title, Generator *g)
@@ -1529,7 +1529,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     writer.writeAttribute("url", url);
     writer.writeAttribute("title", title);
     writer.writeAttribute("version", qdb_->version());
-    writer.writeAttribute("project", g->config()->getString(CONFIG_PROJECT));
+    writer.writeAttribute("project", Config::instance().getString(CONFIG_PROJECT));
 
     root_ = qdb_->primaryTreeRoot();
     if (!root_->tree()->indexTitle().isEmpty())

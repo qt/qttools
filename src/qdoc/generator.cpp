@@ -921,7 +921,7 @@ void Generator::generateRequiredLinks(const Node *node, CodeMarker *marker)
         return;
 
     const ExampleNode *en = static_cast<const ExampleNode *>(node);
-    QString exampleUrl = config()->getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
+    QString exampleUrl = Config::instance().getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
 
     if (exampleUrl.isEmpty()) {
         if (!en->noAutoList()) {
@@ -962,7 +962,7 @@ void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
 
     // Construct a path to the example; <install path>/<example name>
     QStringList path = QStringList()
-            << config()->getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
+            << Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
     path.removeAll({});
 
     Text text;
@@ -1685,8 +1685,9 @@ QString Generator::indent(int level, const QString &markedCode)
     return t;
 }
 
-void Generator::initialize(const Config &config)
+void Generator::initialize()
 {
+    Config &config = Config::instance();
     outputFormats = config.getOutputFormats();
     redirectDocumentationToDevNull_ = config.getBool(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL);
 
@@ -1706,7 +1707,7 @@ void Generator::initialize(const Config &config)
     for (auto &g : generators) {
         if (outputFormats.contains(g->format())) {
             currentGenerator_ = g;
-            g->initializeGenerator(config);
+            g->initializeGenerator();
         }
     }
 
@@ -1765,9 +1766,9 @@ void Generator::initialize(const Config &config)
   Creates template-specific subdirs (e.g. /styles and /scripts for HTML)
   and copies the files to them.
   */
-void Generator::copyTemplateFiles(const Config &config, const QString &configVar,
-                                  const QString &subDir)
+void Generator::copyTemplateFiles(const QString &configVar, const QString &subDir)
 {
+    Config &config = Config::instance();
     QStringList files = config.getCanonicalPathList(configVar, true);
     if (!files.isEmpty()) {
         QDir dirInfo;
@@ -1785,12 +1786,13 @@ void Generator::copyTemplateFiles(const Config &config, const QString &configVar
 }
 
 /*!
-    Reads format-specific variables from \a config, sets output
+    Reads format-specific variables from config, sets output
     (sub)directories, creates them on the filesystem and copies the
     template-specific files.
  */
-void Generator::initializeFormat(const Config &config)
+void Generator::initializeFormat()
 {
+    Config &config = Config::instance();
     outFileNames_.clear();
     useOutputSubdirs_ = true;
     if (config.getBool(format() + Config::dot + "nosubdirs"))
@@ -1825,9 +1827,9 @@ void Generator::initializeFormat(const Config &config)
         config.lastLocation().fatal(
                 tr("Cannot create images directory '%1'").arg(outDir_ + "/images"));
 
-    copyTemplateFiles(config, format() + Config::dot + CONFIG_STYLESHEETS, "style");
-    copyTemplateFiles(config, format() + Config::dot + CONFIG_SCRIPTS, "scripts");
-    copyTemplateFiles(config, format() + Config::dot + CONFIG_EXTRAIMAGES, "images");
+    copyTemplateFiles(format() + Config::dot + CONFIG_STYLESHEETS, "style");
+    copyTemplateFiles(format() + Config::dot + CONFIG_SCRIPTS, "scripts");
+    copyTemplateFiles(format() + Config::dot + CONFIG_EXTRAIMAGES, "images");
 
     // Use a format-specific .quotinginformation if defined, otherwise a global value
     if (config.subVars(format()).contains(CONFIG_QUOTINGINFORMATION))
@@ -1851,11 +1853,10 @@ void Generator::augmentImageDirs(QSet<QString> &moreImageDirs)
 /*!
   Sets the generator's pointer to the Config instance.
  */
-void Generator::initializeGenerator(const Config &config)
+void Generator::initializeGenerator()
 {
-    config_ = &config;
-    showInternal_ = config.getBool(CONFIG_SHOWINTERNAL);
-    singleExec_ = config.getBool(CONFIG_SINGLEEXEC);
+    showInternal_ = Config::instance().getBool(CONFIG_SHOWINTERNAL);
+    singleExec_ = Config::instance().getBool(CONFIG_SINGLEEXEC);
 }
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)

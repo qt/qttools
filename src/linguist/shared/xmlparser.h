@@ -1,9 +1,9 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the Qt Assistant of the Qt Toolkit.
+** This file is part of the Qt Linguist of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -26,40 +26,38 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets/QPushButton>
+#ifndef XMLPARSER_H
+#define XMLPARSER_H
 
-#include "filternamedialog.h"
+#include <QtCore/qglobal.h>
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 
-FilterNameDialog::FilterNameDialog(QWidget *parent)
-    : QDialog(parent)
+class XmlParser
 {
-    m_ui.setupUi(this);
-    connect(m_ui.buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::clicked,
-            this, &QDialog::accept);
-    connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked,
-            this, &QDialog::reject);
-    connect(m_ui.lineEdit, &QLineEdit::textChanged,
-            this, &FilterNameDialog::updateOkButton);
-    m_ui.buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
-}
+public:
+    XmlParser(QXmlStreamReader &r, bool whitespaceOnlyData = false)
+        : reader(r), reportWhitespaceOnlyData(whitespaceOnlyData)
+    {
+    }
+    virtual ~XmlParser() = default;
 
-void FilterNameDialog::setFilterName(const QString &filter)
-{
-    m_ui.lineEdit->setText(filter);
-    m_ui.lineEdit->selectAll();
-}
+    bool parse();
 
-QString FilterNameDialog::filterName() const
-{
-    return m_ui.lineEdit->text();
-}
+protected:
+    virtual bool startElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                              const QStringRef &qName, const QXmlStreamAttributes &atts);
+    virtual bool endElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                            const QStringRef &qName);
+    virtual bool characters(const QStringRef &text);
+    virtual bool endDocument();
+    virtual bool fatalError(qint64 line, qint64 column, const QString &message);
 
-void FilterNameDialog::updateOkButton()
-{
-    m_ui.buttonBox->button(QDialogButtonBox::Ok)
-        ->setDisabled(m_ui.lineEdit->text().isEmpty());
-}
+    QXmlStreamReader &reader;
+    bool reportWhitespaceOnlyData;
+};
 
 QT_END_NAMESPACE
+
+#endif // XMLPARSER_H

@@ -27,6 +27,7 @@
 ****************************************************************************/
 
 #include "translator.h"
+#include "xmlparser.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QMap>
@@ -35,11 +36,6 @@
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
-
-#include <QtXml/QXmlAttributes>
-#include <QtXml/QXmlDefaultHandler>
-#include <QtXml/QXmlParseException>
-
 
 // The string value is historical and reflects the main purpose: Keeping
 // obsolete entries separate from the magic file message (which both have
@@ -368,22 +364,22 @@ static void writeMessage(QTextStream &ts, const TranslatorMessage &msg, const QR
     }
 }
 
-
-class XLIFFHandler : public QXmlDefaultHandler
+class XLIFFHandler : public XmlParser
 {
 public:
-    XLIFFHandler(Translator &translator, ConversionData &cd);
-
-    bool startElement(const QString& namespaceURI, const QString &localName,
-        const QString &qName, const QXmlAttributes &atts );
-    bool endElement(const QString& namespaceURI, const QString &localName,
-        const QString &qName );
-    bool characters(const QString &ch);
-    bool fatalError(const QXmlParseException &exception);
-
-    bool endDocument();
+    XLIFFHandler(Translator &translator, ConversionData &cd, QXmlStreamReader &reader);
+    ~XLIFFHandler() override = default;
 
 private:
+    bool startElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                      const QStringRef &qName, const QXmlStreamAttributes &atts) override;
+    bool endElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                    const QStringRef &qName) override;
+    bool characters(const QStringRef &ch) override;
+    bool fatalError(qint64 line, qint64 column, const QString &message) override;
+
+    bool endDocument() override;
+
     enum XliffContext {
         XC_xliff,
         XC_group,
@@ -442,14 +438,16 @@ private:
     QStack<int> m_contextStack;
 };
 
-XLIFFHandler::XLIFFHandler(Translator &translator, ConversionData &cd)
-  : m_translator(translator), m_cd(cd),
-    m_translate(true),
-    m_approved(true),
-    m_lineNumber(-1),
-    m_URITT(QLatin1String(TrollTsNamespaceURI)),
-    m_URI(QLatin1String(XLIFF11namespaceURI)),
-    m_URI12(QLatin1String(XLIFF12namespaceURI))
+XLIFFHandler::XLIFFHandler(Translator &translator, ConversionData &cd, QXmlStreamReader &reader)
+    : XmlParser(reader, true),
+      m_translator(translator),
+      m_cd(cd),
+      m_translate(true),
+      m_approved(true),
+      m_lineNumber(-1),
+      m_URITT(QLatin1String(TrollTsNamespaceURI)),
+      m_URI(QLatin1String(XLIFF11namespaceURI)),
+      m_URI12(QLatin1String(XLIFF12namespaceURI))
 {}
 
 
@@ -485,33 +483,35 @@ bool XLIFFHandler::hasContext(XliffContext ctx) const
     return false;
 }
 
-bool XLIFFHandler::startElement(const QString& namespaceURI,
-    const QString &localName, const QString &qName, const QXmlAttributes &atts )
+bool XLIFFHandler::startElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                                const QStringRef &qName, const QXmlStreamAttributes &atts)
 {
     Q_UNUSED(qName);
     if (namespaceURI == m_URITT)
         goto bail;
-    if (namespaceURI != m_URI && namespaceURI != m_URI12)
-        return false;
+    if (namespaceURI != m_URI && namespaceURI != m_URI12) {
+        return fatalError(reader.lineNumber(), reader.columnNumber(),
+                          QLatin1String("Unknown namespace in the XLIFF file"));
+    }
     if (localName == QLatin1String("xliff")) {
         // make sure that the stack is not empty during parsing
         pushContext(XC_xliff);
     } else if (localName == QLatin1String("file")) {
-        m_fileName = atts.value(QLatin1String("original"));
-        m_language = atts.value(QLatin1String("target-language"));
+        m_fileName = atts.value(QLatin1String("original")).toString();
+        m_language = atts.value(QLatin1String("target-language")).toString();
         m_language.replace(QLatin1Char('-'), QLatin1Char('_'));
-        m_sourceLanguage = atts.value(QLatin1String("source-language"));
+        m_sourceLanguage = atts.value(QLatin1String("source-language")).toString();
         m_sourceLanguage.replace(QLatin1Char('-'), QLatin1Char('_'));
         if (m_sourceLanguage == QLatin1String("en"))
             m_sourceLanguage.clear();
     } else if (localName == QLatin1String("group")) {
         if (atts.value(QLatin1String("restype")) == QLatin1String(restypeContext)) {
-            m_context = atts.value(QLatin1String("resname"));
+            m_context = atts.value(QLatin1String("resname")).toString();
             pushContext(XC_restype_context);
         } else {
             if (atts.value(QLatin1String("restype")) == QLatin1String(restypePlurals)) {
                 pushContext(XC_restype_plurals);
-                m_id = atts.value(QLatin1String("id"));
+                m_id = atts.value(QLatin1String("id")).toString();
                 if (atts.value(QLatin1String("translate")) == QLatin1String("no"))
                     m_translate = false;
             } else {
@@ -523,7 +523,7 @@ bool XLIFFHandler::startElement(const QString& namespaceURI,
             if (atts.value(QLatin1String("translate")) == QLatin1String("no"))
                 m_translate = false;
         if (!hasContext(XC_restype_plurals)) {
-            m_id = atts.value(QLatin1String("id"));
+            m_id = atts.value(QLatin1String("id")).toString();
             if (m_id.startsWith(QLatin1String("_msg")))
                 m_id.clear();
         }
@@ -539,19 +539,18 @@ bool XLIFFHandler::startElement(const QString& namespaceURI,
         if (atts.value(QLatin1String("restype")) != QLatin1String(restypeDummy))
             pushContext(XC_restype_translation);
     } else if (localName == QLatin1String("context-group")) {
-        QString purpose = atts.value(QLatin1String("purpose"));
-        if (purpose == QLatin1String("location"))
+        if (atts.value(QLatin1String("purpose")) == QLatin1String("location"))
             pushContext(XC_context_group);
         else
             pushContext(XC_context_group_any);
     } else if (currentContext() == XC_context_group && localName == QLatin1String("context")) {
-        QString ctxtype = atts.value(QLatin1String("context-type"));
+        const auto ctxtype = atts.value(QLatin1String("context-type"));
         if (ctxtype == QLatin1String("linenumber"))
             pushContext(XC_context_linenumber);
         else if (ctxtype == QLatin1String("sourcefile"))
             pushContext(XC_context_filename);
     } else if (currentContext() == XC_context_group_any && localName == QLatin1String("context")) {
-        QString ctxtype = atts.value(QLatin1String("context-type"));
+        const auto ctxtype = atts.value(QLatin1String("context-type"));
         if (ctxtype == QLatin1String(contextMsgctxt))
             pushContext(XC_context_comment);
         else if (ctxtype == QLatin1String(contextOldMsgctxt))
@@ -563,7 +562,7 @@ bool XLIFFHandler::startElement(const QString& namespaceURI,
         else
             pushContext(XC_translator_comment);
     } else if (localName == QLatin1String("ph")) {
-        QString ctype = atts.value(QLatin1String("ctype"));
+        QString ctype = atts.value(QLatin1String("ctype")).toString();
         if (ctype.startsWith(QLatin1String("x-ch-")))
             m_ctype = ctype.mid(5);
         pushContext(XC_ph);
@@ -574,19 +573,21 @@ bail:
     return true;
 }
 
-bool XLIFFHandler::endElement(const QString &namespaceURI, const QString& localName,
-    const QString &qName)
+bool XLIFFHandler::endElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                              const QStringRef &qName)
 {
     Q_UNUSED(qName);
     if (namespaceURI == m_URITT) {
         if (hasContext(XC_trans_unit) || hasContext(XC_restype_plurals))
-            m_extra[localName] = accum;
+            m_extra[localName.toString()] = accum;
         else
-            m_translator.setExtra(localName, accum);
+            m_translator.setExtra(localName.toString(), accum);
         return true;
     }
-    if (namespaceURI != m_URI && namespaceURI != m_URI12)
-        return false;
+    if (namespaceURI != m_URI && namespaceURI != m_URI12) {
+        return fatalError(reader.lineNumber(), reader.columnNumber(),
+                          QLatin1String("Unknown namespace in the XLIFF file"));
+    }
     //qDebug() << "URI:" <<  namespaceURI << "QNAME:" << qName;
     if (localName == QLatin1String("xliff")) {
         popContext(XC_xliff);
@@ -640,15 +641,19 @@ bool XLIFFHandler::endElement(const QString &namespaceURI, const QString& localN
         if (!m_hadAlt)
             m_oldSources.append(QString());
         if (!hasContext(XC_restype_plurals)) {
-            if (!finalizeMessage(false))
-                return false;
+            if (!finalizeMessage(false)) {
+                return fatalError(reader.lineNumber(), reader.columnNumber(),
+                                  QLatin1String("Element processing failed"));
+            }
         }
     } else if (localName == QLatin1String("alt-trans")) {
         popContext(XC_alt_trans);
     } else if (localName == QLatin1String("group")) {
         if (popContext(XC_restype_plurals)) {
-            if (!finalizeMessage(true))
-                return false;
+            if (!finalizeMessage(true)) {
+                return fatalError(reader.lineNumber(), reader.columnNumber(),
+                                  QLatin1String("Element processing failed"));
+            }
         } else if (popContext(XC_restype_context)) {
             m_context.clear();
         } else {
@@ -658,7 +663,7 @@ bool XLIFFHandler::endElement(const QString &namespaceURI, const QString& localN
     return true;
 }
 
-bool XLIFFHandler::characters(const QString &ch)
+bool XLIFFHandler::characters(const QStringRef &ch)
 {
     if (currentContext() == XC_ph) {
         // handle the content of <ph> elements
@@ -670,7 +675,7 @@ bool XLIFFHandler::characters(const QString &ch)
                 accum.append(chr);
         }
     } else {
-        QString t = ch;
+        QString t = ch.toString();
         t.replace(QLatin1String("\r"), QLatin1String(""));
         accum.append(t);
     }
@@ -730,23 +735,20 @@ bool XLIFFHandler::finalizeMessage(bool isPlural)
     return true;
 }
 
-bool XLIFFHandler::fatalError(const QXmlParseException &exception)
+bool XLIFFHandler::fatalError(qint64 line, qint64 column, const QString &message)
 {
     QString msg = QString::asprintf("XML error: Parse error at line %d, column %d (%s).\n",
-                                    exception.lineNumber(), exception.columnNumber(),
-                                    exception.message().toLatin1().data());
+                                    static_cast<int>(line), static_cast<int>(column),
+                                    message.toLatin1().data());
     m_cd.appendError(msg);
     return false;
 }
 
 bool loadXLIFF(Translator &translator, QIODevice &dev, ConversionData &cd)
 {
-    QXmlInputSource in(&dev);
-    QXmlSimpleReader reader;
-    XLIFFHandler hand(translator, cd);
-    reader.setContentHandler(&hand);
-    reader.setErrorHandler(&hand);
-    return reader.parse(in);
+    QXmlStreamReader reader(&dev);
+    XLIFFHandler hand(translator, cd, reader);
+    return hand.parse();
 }
 
 bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)

@@ -474,7 +474,7 @@ DeviceSkin::~DeviceSkin( )
     delete cursorw;
 }
 
-void DeviceSkin::setTransform( const QMatrix& wm )
+void DeviceSkin::setTransform(const QTransform &wm)
 {
     transform = QImage::trueMatrix(wm,m_parameters.skinImageUp.width(),m_parameters.skinImageUp.height());
     calcRegions();
@@ -488,7 +488,7 @@ void DeviceSkin::setTransform( const QMatrix& wm )
 
 void DeviceSkin::setZoom( double z )
 {
-    setTransform(QMatrix().scale(z,z));
+    setTransform(QTransform().scale(z,z));
 }
 
 void DeviceSkin::updateSecondaryScreen()

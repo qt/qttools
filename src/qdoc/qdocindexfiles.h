@@ -85,6 +85,7 @@ private:
     Generator *gen_;
     QString project_;
     QVector<QPair<ClassNode *, QString>> basesList_;
+    bool storeLocationInfo_;
 };
 
 QT_END_NAMESPACE

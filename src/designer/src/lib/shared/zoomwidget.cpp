@@ -516,7 +516,7 @@ void ZoomWidget::dump() const
 {
 
     qDebug() << "ZoomWidget::dump " << geometry() << " Viewport " << viewport()->geometry()
-        << "Scroll: " << scrollPosition() << "Matrix: " << matrix() << " SceneRect: " << sceneRect();
+        << "Scroll: " << scrollPosition() << "Transform: " << transform() << " SceneRect: " << sceneRect();
     if (m_proxy) {
         qDebug() << "Proxy Pos: " << m_proxy->pos() << "Proxy " << m_proxy->size()
             << "\nProxy size hint"

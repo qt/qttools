@@ -45,7 +45,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Config;
 class Node;
 class QString;
 
@@ -57,7 +56,7 @@ public:
     QmlCodeParser();
     ~QmlCodeParser() override;
 
-    void initializeParser(const Config &config) override;
+    void initializeParser() override;
     void terminateParser() override;
     QString language() override;
     QStringList sourceFileNameFilter() override;

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -26,51 +26,31 @@
 **
 ****************************************************************************/
 
-#ifndef OPTIONSWIDGET_H
-#define OPTIONSWIDGET_H
+#ifndef QFILTERNAMEDIALOG_H
+#define QFILTERNAMEDIALOG_H
 
-#include <QtWidgets/QWidget>
-#include <QtCore/QMap>
+#include <QtWidgets/QDialog>
+#include "ui_qfilternamedialog.h"
 
 QT_BEGIN_NAMESPACE
 
-class QListWidget;
-class QListWidgetItem;
-
-class OptionsWidget : public QWidget
+class QFilterNameDialog : public QDialog
 {
     Q_OBJECT
+
 public:
-    OptionsWidget(QWidget *parent = nullptr);
+    QFilterNameDialog(QWidget *parent = nullptr);
 
-    void clear();
-    void setOptions(const QStringList &validOptions,
-                    const QStringList &selectedOptions);
-    QStringList validOptions() const;
-    QStringList selectedOptions() const;
+    void setFilterName(const QString &filter);
+    QString filterName() const;
 
-    void setNoOptionText(const QString &text);
-    void setInvalidOptionText(const QString &text);
-
-signals:
-    void optionSelectionChanged(const QStringList &options);
+private slots:
+    void updateOkButton();
 
 private:
-    QString optionText(const QString &optionName, bool valid) const;
-    QListWidgetItem *appendItem(const QString &optionName, bool valid, bool selected);
-    void appendSeparator();
-    void itemChanged(QListWidgetItem *item);
-
-    QListWidget *m_listWidget = nullptr;
-    QString m_noOptionText;
-    QString m_invalidOptionText;
-    QStringList m_validOptions;
-    QStringList m_invalidOptions;
-    QStringList m_selectedOptions;
-    QMap<QString, QListWidgetItem *> m_optionToItem;
-    QMap<QListWidgetItem *, QString> m_itemToOption;
+    Ui::FilterNameDialogClass m_ui;
 };
 
 QT_END_NAMESPACE
 
-#endif  // OPTIONSWIDGET_H
+#endif // QFILTERNAMEDIALOG_H

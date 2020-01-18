@@ -55,12 +55,14 @@ public:
         , m_namespaceName(other.m_namespaceName)
         , m_component(other.m_component)
         , m_version(other.m_version)
+        , m_isNull(other.m_isNull)
     { }
     ~QCompressedHelpInfoPrivate() = default;
 
     QString m_namespaceName;
     QString m_component;
     QVersionNumber m_version;
+    bool m_isNull = true;
 };
 
 /*!
@@ -151,6 +153,15 @@ QVersionNumber QCompressedHelpInfo::version() const
 }
 
 /*!
+    Returns \c true if the info is invalid, otherwise returns
+    \c false.
+*/
+bool QCompressedHelpInfo::isNull() const
+{
+    return d->m_isNull;
+}
+
+/*!
     Returns the QCompressedHelpInfo instance for the
     \a documentationFileName of the existing qch file.
 */
@@ -164,6 +175,7 @@ QCompressedHelpInfo QCompressedHelpInfo::fromCompressedHelpFile(const QString &d
         info.d->m_namespaceName = reader.namespaceName();
         info.d->m_component = reader.virtualFolder();
         info.d->m_version = QVersionNumber::fromString(reader.version());
+        info.d->m_isNull = false;
         return info;
     }
     return QCompressedHelpInfo();

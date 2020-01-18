@@ -90,9 +90,9 @@ CppCodeParser::CppCodeParser()
   for identifying important nodes. And it initializes
   some filters for identifying and excluding certain kinds of files.
  */
-void CppCodeParser::initializeParser(const Config &config)
+void CppCodeParser::initializeParser()
 {
-    CodeParser::initializeParser(config);
+    CodeParser::initializeParser();
 
     /*
       All these can appear in a C++ namespace. Don't add
@@ -118,6 +118,7 @@ void CppCodeParser::initializeParser(const Config &config)
     nodeTypeTestFuncMap_.insert(COMMAND_PROPERTY, &Node::isProperty);
     nodeTypeTestFuncMap_.insert(COMMAND_VARIABLE, &Node::isVariable);
 
+    Config &config = Config::instance();
     exampleFiles = config.getCanonicalPathList(CONFIG_EXAMPLES);
     exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
     QStringList exampleFilePatterns =

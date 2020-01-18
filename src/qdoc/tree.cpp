@@ -63,9 +63,8 @@ QT_BEGIN_NAMESPACE
   qdoc database that is constructing the tree. This might not
   be necessary, and it might be removed later.
 
-  \a camelCaseModuleName is the project name for this tree,
-  which was obtained from the qdocconf file via the Config
-  singleton.
+  \a camelCaseModuleName is the project name for this tree
+  as it appears in the qdocconf file.
  */
 Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
     : treeHasBeenAnalyzed_(false),

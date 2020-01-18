@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.h" lineno="49" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A derived class in a namespace">
-            <description path="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.cpp" line="55" column="4">
+        <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A derived class in a namespace">
+            <description>
                 <brief>A derived class in a namespace.</brief>
             </description>
-            <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.h" lineno="51" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override">
-                <description path="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/testcpp.cpp" line="134" column="4"/>
+            <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override">
+                <description/>
             </function>
         </class>
     </document>

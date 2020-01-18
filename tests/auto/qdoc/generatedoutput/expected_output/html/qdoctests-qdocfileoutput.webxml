@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="qdoctests-qdocfileoutput.html" href="qdoctests-qdocfileoutput.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/qdoctests-outputfromqdocfiles.qdoc" lineno="28" documented="true" subtype="page" title="Testing QDoc output from .qdoc files" fulltitle="Testing QDoc output from .qdoc files" subtitle="" module="Test" brief="This is a simple page for testing purposes only">
+        <page name="qdoctests-qdocfileoutput.html" href="qdoctests-qdocfileoutput.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Testing QDoc output from .qdoc files" fulltitle="Testing QDoc output from .qdoc files" subtitle="" module="Test" brief="This is a simple page for testing purposes only">
             <contents name="supported-file-types" title="Supported file types" level="1"/>
             <contents name="further-information" title="Further information" level="1"/>
             <contents name="linking" title="Linking" level="1"/>
-            <description path="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/qdoctests-outputfromqdocfiles.qdoc" line="28" column="4">
+            <description>
                 <brief>This is a simple page for testing purposes only.</brief>
                 <para>QDoc generates documentation for software projects. It does this by extracting <italic>QDoc comments</italic> from project source files. QDoc comments are signified by a C-style-like comment tag followed by an exclamation point, like this: <teletype type="highlighted">/*!</teletype> <teletype type="highlighted">This text is contained within QDoc comment tags.</teletype> <teletype type="highlighted">*/</teletype>.</para>
                 <section id="supported-file-types">

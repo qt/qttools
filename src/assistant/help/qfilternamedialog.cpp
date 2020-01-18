@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Assistant of the Qt Toolkit.
@@ -26,31 +26,40 @@
 **
 ****************************************************************************/
 
-#ifndef FILTERNAMEDIALOG_H
-#define FILTERNAMEDIALOG_H
+#include <QtWidgets/QPushButton>
 
-#include <QtWidgets/QDialog>
-#include "ui_filternamedialog.h"
+#include "qfilternamedialog_p.h"
 
 QT_BEGIN_NAMESPACE
 
-class FilterNameDialog : public QDialog
+QFilterNameDialog::QFilterNameDialog(QWidget *parent)
+    : QDialog(parent)
 {
-    Q_OBJECT
+    m_ui.setupUi(this);
+    connect(m_ui.buttonBox->button(QDialogButtonBox::Ok), &QAbstractButton::clicked,
+            this, &QDialog::accept);
+    connect(m_ui.buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked,
+            this, &QDialog::reject);
+    connect(m_ui.lineEdit, &QLineEdit::textChanged,
+            this, &QFilterNameDialog::updateOkButton);
+    m_ui.buttonBox->button(QDialogButtonBox::Ok)->setDisabled(true);
+}
 
-public:
-    FilterNameDialog(QWidget *parent = nullptr);
+void QFilterNameDialog::setFilterName(const QString &filter)
+{
+    m_ui.lineEdit->setText(filter);
+    m_ui.lineEdit->selectAll();
+}
 
-    void setFilterName(const QString &filter);
-    QString filterName() const;
+QString QFilterNameDialog::filterName() const
+{
+    return m_ui.lineEdit->text();
+}
 
-private slots:
-    void updateOkButton();
-
-private:
-    Ui::FilterNameDialogClass m_ui;
-};
+void QFilterNameDialog::updateOkButton()
+{
+    m_ui.buttonBox->button(QDialogButtonBox::Ok)
+        ->setDisabled(m_ui.lineEdit->text().isEmpty());
+}
 
 QT_END_NAMESPACE
-
-#endif // FILTERNAMEDIALOG_H

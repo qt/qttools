@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -106,10 +106,12 @@
     \li \l {HTML.postheader-variable} {HTML.postheader}
     \li \l {HTML.style-variable} {HTML.style}
     \li \l {ignorewords-variable} {ignorewords}
+    \li \l {ignoresince-variable} {ignoresince}
     \li \l {imagedirs-variable} {imagedirs}
     \li \l {images-variable} {images}
     \li \l {images.fileextensions-variable} {images.fileextensions}
     \li \l {language-variable} {language}
+    \li \l {locationinfo-variable} {locationinfo}
     \li \l {macro-variable} {macro}
     \li \l {manifestmeta-variable} {manifestmeta}
     \li \l {navigation-variable} {navigation}
@@ -629,6 +631,37 @@
 
     The \c ignorewords variable was introduced in QDoc 5.14.
 
+    \target ignoresince-variable
+    \section1 ignoresince
+
+    The \c ignoresince variable is used for setting a cutoff value for
+    versions passed to the \l {since-command}{\\since} command. All
+    \\since commands that define a version lower than the cutoff are
+    ignored and do not generate output.
+
+    The cutoff values are project-specific. The project name can be
+    defined as a subvariable. The default project name is \e Qt. For
+    example:
+
+    \badcode
+    ignoresince      = 5.0
+    ignoresince.QDoc = 5.0
+    \endcode
+
+    These will ignore \\since commands where the major version is 4
+    or lower and the project is either \c QDoc or undefined.
+
+    \badcode
+    \since 3.2          # Ignored
+    \since 5.2          # Documented (as 'Qt 5.2')
+    \since QDoc 4.6     # Ignored
+    \since QtQuick 2.5  # Documented
+    \endcode
+
+    The \c ignoresince variable was introduced in QDoc 5.15.
+
+    See also \l {since-command}{\\since}.
+
     \target imagedirs-variable
     \section1 imagedirs
 
@@ -756,6 +789,28 @@
     \endcode
 
     This identifies C++ as the language of the Qt source code.
+
+    \target locationinfo-variable
+    \section1 locationinfo
+
+    The \c locationinfo boolean variable determines whether detailed
+    location information about each entity is written to
+    \c {.index}-files and \c {.webxml}-files (when using the WebXML
+    output format).
+
+    Location information consists of the full path and line
+    number of either the declaration or documentation comment block
+    in the source code.
+
+    Setting this to \c false turns off location info:
+
+    \badcode
+        locationinfo = false
+    \endcode
+
+    The default value is \c true.
+
+    The \c locationinfo variable was introduced in QDoc 5.15.
 
     \target macro-variable
     \section1 macro
@@ -1945,7 +2000,7 @@
     dita.metadata.default.author      = Qt Development Frameworks
     dita.metadata.default.permissions = all
     dita.metadata.default.publisher   = Qt Project
-    dita.metadata.default.copyryear = 2018
+    dita.metadata.default.copyryear = 2020
     dita.metadata.default.copyrholder = Qt Project
     dita.metadata.default.audience = programmer
     \endcode

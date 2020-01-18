@@ -66,6 +66,7 @@ public:
     QString namespaceName() const;
     QString component() const;
     QVersionNumber version() const;
+    bool isNull() const;
 
     static QCompressedHelpInfo fromCompressedHelpFile(const QString &documentationFileName);
 

@@ -34,7 +34,6 @@
 #define HTMLGENERATOR_H
 
 #include "codemarker.h"
-#include "config.h"
 #include "xmlgenerator.h"
 
 #include <QtCore/qhash.h>
@@ -54,7 +53,7 @@ public:
     HtmlGenerator();
     ~HtmlGenerator() override;
 
-    void initializeGenerator(const Config &config) override;
+    void initializeGenerator() override;
     void terminateGenerator() override;
     QString format() override;
     void generateDocs() override;
@@ -79,7 +78,7 @@ protected:
     QString fileExtension() const override;
 
     void generateManifestFile(const QString &manifest, const QString &element);
-    void readManifestMetaContent(const Config &config);
+    void readManifestMetaContent();
     void generateKeywordAnchors(const Node *node);
     void generateAssociatedPropertyNotes(const FunctionNode *fn);
 

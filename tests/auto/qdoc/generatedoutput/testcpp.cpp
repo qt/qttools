@@ -50,6 +50,11 @@ namespace TestQDoc {
     \class TestQDoc::Test
     \inmodule TestCPP
     \brief A class in a namespace.
+
+\if defined(test_ignoresince)
+    //! omitted by ignoresince
+    \since 1.1
+\endif
 */
 
 /*!
@@ -61,6 +66,10 @@ namespace TestQDoc {
 /*!
     \macro QDOCTEST_MACRO
     \relates TestQDoc
+\if defined(test_ignoresince)
+    //! omitted by ignoresince.Test
+    \since Test 0.9
+\endif
 */
 
 /*!
@@ -102,6 +111,9 @@ void Test::anotherObsoleteMember()
 
 /*!
     Function that takes a parameter \a i and \a b.
+\if defined(test_ignoresince)
+    \since 2.0
+\endif
 */
 void Test::someFunctionDefaultArg(int i, bool b = false)
 {
@@ -111,6 +123,9 @@ void Test::someFunctionDefaultArg(int i, bool b = false)
 /*!
     Function that takes a parameter \a v.
     Also returns the value of \a v.
+\if defined(test_ignoresince)
+    \since Test 1.0
+\endif
 */
 int Test::someFunction(int v)
 {

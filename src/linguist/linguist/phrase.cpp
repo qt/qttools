@@ -28,6 +28,7 @@
 
 #include "phrase.h"
 #include "translator.h"
+#include "xmlparser.h"
 
 #include <QApplication>
 #include <QFile>
@@ -36,9 +37,7 @@
 #include <QRegExp>
 #include <QTextCodec>
 #include <QTextStream>
-#include <QXmlAttributes>
-#include <QXmlDefaultHandler>
-#include <QXmlParseException>
+#include <QXmlStreamReader>
 
 QT_BEGIN_NAMESPACE
 
@@ -104,24 +103,26 @@ bool operator==(const Phrase &p, const Phrase &q)
         p.definition() == q.definition() && p.phraseBook() == q.phraseBook();
 }
 
-class QphHandler : public QXmlDefaultHandler
+class QphHandler : public XmlParser
 {
 public:
-    QphHandler(PhraseBook *phraseBook)
-        : pb(phraseBook), ferrorCount(0) { }
-
-    virtual bool startElement(const QString &namespaceURI,
-        const QString &localName, const QString &qName,
-        const QXmlAttributes &atts);
-    virtual bool endElement(const QString &namespaceURI,
-        const QString &localName, const QString &qName);
-    virtual bool characters(const QString &ch);
-    virtual bool fatalError(const QXmlParseException &exception);
+    QphHandler(PhraseBook *phraseBook, QXmlStreamReader &reader)
+        : XmlParser(reader), pb(phraseBook), ferrorCount(0)
+    {
+    }
+    ~QphHandler() override = default;
 
     QString language() const { return m_language; }
     QString sourceLanguage() const { return m_sourceLanguage; }
 
 private:
+    bool startElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                      const QStringRef &qName, const QXmlStreamAttributes &atts) override;
+    bool endElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                    const QStringRef &qName) override;
+    bool characters(const QStringRef &ch) override;
+    bool fatalError(qint64 line, qint64 column, const QString &message) override;
+
     PhraseBook *pb;
     QString source;
     QString target;
@@ -133,14 +134,15 @@ private:
     int ferrorCount;
 };
 
-bool QphHandler::startElement(const QString & /* namespaceURI */,
-                              const QString & /* localName */,
-                              const QString &qName,
-                              const QXmlAttributes &atts)
+bool QphHandler::startElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                              const QStringRef &qName, const QXmlStreamAttributes &atts)
 {
+    Q_UNUSED(namespaceURI)
+    Q_UNUSED(localName)
+
     if (qName == QLatin1String("QPH")) {
-        m_language = atts.value(QLatin1String("language"));
-        m_sourceLanguage = atts.value(QLatin1String("sourcelanguage"));
+        m_language = atts.value(QLatin1String("language")).toString();
+        m_sourceLanguage = atts.value(QLatin1String("sourcelanguage")).toString();
     } else if (qName == QLatin1String("phrase")) {
         source.truncate(0);
         target.truncate(0);
@@ -150,10 +152,12 @@ bool QphHandler::startElement(const QString & /* namespaceURI */,
     return true;
 }
 
-bool QphHandler::endElement(const QString & /* namespaceURI */,
-                            const QString & /* localName */,
-                            const QString &qName)
+bool QphHandler::endElement(const QStringRef &namespaceURI, const QStringRef &localName,
+                            const QStringRef &qName)
 {
+    Q_UNUSED(namespaceURI)
+    Q_UNUSED(localName)
+
     if (qName == QLatin1String("source"))
         source = accum;
     else if (qName == QLatin1String("target"))
@@ -165,20 +169,20 @@ bool QphHandler::endElement(const QString & /* namespaceURI */,
     return true;
 }
 
-bool QphHandler::characters(const QString &ch)
+bool QphHandler::characters(const QStringRef &ch)
 {
     accum += ch;
     return true;
 }
 
-bool QphHandler::fatalError(const QXmlParseException &exception)
+bool QphHandler::fatalError(qint64 line, qint64 column, const QString &message)
 {
     if (ferrorCount++ == 0) {
         QString msg = PhraseBook::tr("Parse error at line %1, column %2 (%3).")
-            .arg(exception.lineNumber()).arg(exception.columnNumber())
-            .arg(exception.message());
-        QMessageBox::information(0,
-            QObject::tr("Qt Linguist"), msg);
+                              .arg(line)
+                              .arg(column)
+                              .arg(message);
+        QMessageBox::information(nullptr, QObject::tr("Qt Linguist"), msg);
     }
     return false;
 }
@@ -223,20 +227,10 @@ bool PhraseBook::load(const QString &fileName, bool *langGuessed)
 
     m_fileName = fileName;
 
-    QXmlInputSource in(&f);
-    QXmlSimpleReader reader;
-    // don't click on these!
-    reader.setFeature(QLatin1String("http://xml.org/sax/features/namespaces"), false);
-    reader.setFeature(QLatin1String("http://xml.org/sax/features/namespace-prefixes"), true);
-    reader.setFeature(QLatin1String("http://trolltech.com/xml/features/report-whitespace"
-                                    "-only-CharData"), false);
-    QphHandler *hand = new QphHandler(this);
-    reader.setContentHandler(hand);
-    reader.setErrorHandler(hand);
-
-    bool ok = reader.parse(in);
-    reader.setContentHandler(0);
-    reader.setErrorHandler(0);
+    QXmlStreamReader reader(&f);
+    QphHandler *hand = new QphHandler(this, reader);
+    reader.setNamespaceProcessing(false);
+    bool ok = hand->parse();
 
     Translator::languageAndCountry(hand->language(), &m_language, &m_country);
     *langGuessed = false;

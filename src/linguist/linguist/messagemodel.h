@@ -37,8 +37,6 @@
 #include <QtCore/QLocale>
 #include <QtGui/QColor>
 #include <QtGui/QBitmap>
-#include <QtXml/QXmlDefaultHandler>
-
 
 QT_BEGIN_NAMESPACE
 

@@ -68,10 +68,10 @@ CodeParser::~CodeParser()
 /*!
   Initialize the code parser base class.
  */
-void CodeParser::initializeParser(const Config &config)
+void CodeParser::initializeParser()
 {
-    showInternal_ = config.getBool(CONFIG_SHOWINTERNAL);
-    singleExec_ = config.getBool(CONFIG_SINGLEEXEC);
+    showInternal_ = Config::instance().getBool(CONFIG_SHOWINTERNAL);
+    singleExec_ = Config::instance().getBool(CONFIG_SINGLEEXEC);
 }
 
 /*!
@@ -96,10 +96,10 @@ void CodeParser::parseHeaderFile(const Location &location, const QString &filePa
   All the code parsers in the static list are initialized here,
   after the qdoc configuration variables have been set.
  */
-void CodeParser::initialize(const Config &config)
+void CodeParser::initialize()
 {
     for (const auto &parser : qAsConst(parsers))
-        parser->initializeParser(config);
+        parser->initializeParser();
 }
 
 /*!

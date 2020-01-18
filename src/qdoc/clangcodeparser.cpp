@@ -1045,8 +1045,9 @@ ClangCodeParser::~ClangCodeParser()
   \a config. Call the initializeParser() in the base class.
   Get the defines list from the qdocconf database.
  */
-void ClangCodeParser::initializeParser(const Config &config)
+void ClangCodeParser::initializeParser()
 {
+    Config &config = Config::instance();
     printParsingErrors_ = 1;
     version_ = config.getString(CONFIG_VERSION);
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
@@ -1069,7 +1070,7 @@ void ClangCodeParser::initializeParser(const Config &config)
                            path = fi.canonicalFilePath().toUtf8();
                        return path.prepend("-I");
                    });
-    CppCodeParser::initializeParser(config);
+    CppCodeParser::initializeParser();
     pchFileDir_.reset(nullptr);
     allHeaders_.clear();
     pchName_.clear();

@@ -1567,7 +1567,7 @@ void DocParser::include(const QString &fileName, const QString &identifier)
         location().fatal(tr("Too many nested '\\%1's").arg(cmdName(CMD_INCLUDE)));
 
     QString userFriendlyFilePath;
-    QString filePath = Doc::config()->getIncludeFilePath(fileName);
+    QString filePath = Config::instance().getIncludeFilePath(fileName);
     if (filePath.isEmpty()) {
         location().warning(tr("Cannot find qdoc include file '%1'").arg(fileName));
     } else {
@@ -3011,10 +3011,9 @@ const QStringMultiMap &Doc::metaTagMap() const
     return priv && priv->extra ? priv->extra->metaMap_ : *null_QStringMultiMap();
 }
 
-const Config *Doc::config_ = nullptr;
-
-void Doc::initialize(const Config &config)
+void Doc::initialize()
 {
+    Config &config = Config::instance();
     DocParser::tabSize = config.getInt(CONFIG_TABSIZE);
     DocParser::exampleFiles = config.getCanonicalPathList(CONFIG_EXAMPLES);
     DocParser::exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
@@ -3024,7 +3023,6 @@ void Doc::initialize(const Config &config)
 
     QmlTypeNode::qmlOnly = config.getBool(CONFIG_QMLONLY);
     QStringMap reverseAliasMap;
-    config_ = &config;
 
     for (const auto &a : config.subVars(CONFIG_ALIAS)) {
         QString alias = config.getString(CONFIG_ALIAS + Config::dot + a);

@@ -29,6 +29,7 @@
 #include "node.h"
 
 #include "codemarker.h"
+#include "config.h"
 #include "cppcodeparser.h"
 #include "generator.h"
 #include "puredocparser.h"
@@ -38,6 +39,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/quuid.h>
+#include <QtCore/qversionnumber.h>
 
 #include <algorithm>
 
@@ -1048,12 +1050,25 @@ void Node::setLink(LinkType linkType, const QString &link, const QString &desc)
 
 /*!
     Sets the information about the project and version a node was introduced
-    in. The string is simplified, removing excess whitespace before being
-    stored.
+    in, unless the version is lower than the 'ignoresince.<project>'
+    configuration variable.
  */
 void Node::setSince(const QString &since)
 {
-    since_ = since.simplified();
+    QStringList parts = since.split(QLatin1Char(' '));
+    QString project;
+    if (parts.size() > 1)
+        project = Config::dot + parts.first();
+
+    QVersionNumber cutoff =
+        QVersionNumber::fromString(Config::instance().getString(
+            CONFIG_IGNORESINCE + project)).normalized();
+
+    if (!cutoff.isNull() &&
+        QVersionNumber::fromString(parts.last()).normalized() < cutoff)
+        return;
+
+    since_ = parts.join(QLatin1Char(' '));
 }
 
 /*!

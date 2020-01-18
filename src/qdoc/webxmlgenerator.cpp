@@ -28,6 +28,7 @@
 
 #include "webxmlgenerator.h"
 
+#include "config.h"
 #include "helpprojectwriter.h"
 #include "node.h"
 #include "qdocdatabase.h"
@@ -41,9 +42,9 @@ QT_BEGIN_NAMESPACE
 
 static CodeMarker *marker_ = nullptr;
 
-void WebXMLGenerator::initializeGenerator(const Config &config)
+void WebXMLGenerator::initializeGenerator()
 {
-    HtmlGenerator::initializeGenerator(config);
+    HtmlGenerator::initializeGenerator();
 }
 
 void WebXMLGenerator::terminateGenerator()
@@ -135,11 +136,14 @@ void WebXMLGenerator::generateExampleFilePage(const Node *en, const QString &fil
     writer.writeAttribute("fulltitle", title);
     writer.writeAttribute("subtitle", file);
     writer.writeStartElement("description");
-    QString userFriendlyFilePath; // unused
-    writer.writeAttribute("path",
-                          Doc::resolveFile(en->doc().location(), file, &userFriendlyFilePath));
-    writer.writeAttribute("line", "0");
-    writer.writeAttribute("column", "0");
+
+    if (Config::instance().getBool(CONFIG_LOCATIONINFO)) {
+        QString userFriendlyFilePath; // unused
+        writer.writeAttribute("path",
+                              Doc::resolveFile(en->doc().location(), file, &userFriendlyFilePath));
+        writer.writeAttribute("line", "0");
+        writer.writeAttribute("column", "0");
+    }
 
     Quoter quoter;
     Doc::quoteFromFile(en->doc().location(), quoter, file);
@@ -171,9 +175,11 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
     Q_ASSERT(marker_);
 
     writer.writeStartElement("description");
-    writer.writeAttribute("path", node->doc().location().filePath());
-    writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
-    writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
+    if (Config::instance().getBool(CONFIG_LOCATIONINFO)) {
+        writer.writeAttribute("path", node->doc().location().filePath());
+        writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
+        writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
+    }
 
     if (node->isTextPageNode())
         generateRelations(writer, node);

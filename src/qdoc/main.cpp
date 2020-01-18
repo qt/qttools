@@ -88,8 +88,9 @@ static ClangCodeParser *clangParser_ = nullptr;
   a list of output formats; each format may have a different
   output subdirectory where index files are located.
 */
-static void loadIndexFiles(Config &config, const QSet<QString> &formats)
+static void loadIndexFiles(const QSet<QString> &formats)
 {
+    Config &config = Config::instance();
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QStringList indexFiles;
     const QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
@@ -229,8 +230,9 @@ static void loadIndexFiles(Config &config, const QSet<QString> &formats)
     of QDoc. The \a config instance represents the configuration data for QDoc.
     All other classes are initialized with the same config.
  */
-static void processQdocconfFile(const QString &fileName, Config &config)
+static void processQdocconfFile(const QString &fileName)
 {
+    Config &config = Config::instance();
     config.setPreviousCurrentDir(QDir::currentPath());
 
     /*
@@ -242,7 +244,7 @@ static void processQdocconfFile(const QString &fileName, Config &config)
       in the file being processed, mainly for error reporting
       purposes.
      */
-    Location::initialize(config);
+    Location::initialize();
     config.load(fileName);
     QString project = config.getString(CONFIG_PROJECT);
     if (project.isEmpty()) {
@@ -279,12 +281,12 @@ static void processQdocconfFile(const QString &fileName, Config &config)
       are either cleared after they have been used, or they
       are cleared in the terminate() functions below.
      */
-    Location::initialize(config);
-    Tokenizer::initialize(config);
-    CodeMarker::initialize(config);
-    CodeParser::initialize(config);
-    Generator::initialize(config);
-    Doc::initialize(config);
+    Location::initialize();
+    Tokenizer::initialize();
+    CodeMarker::initialize();
+    CodeParser::initialize();
+    Generator::initialize();
+    Doc::initialize();
 
 #ifndef QT_NO_TRANSLATION
     /*
@@ -348,7 +350,7 @@ static void processQdocconfFile(const QString &fileName, Config &config)
     if (!Generator::singleExec()) {
         if (!Generator::preparing()) {
             qCDebug(lcQdoc, "  loading index files");
-            loadIndexFiles(config, outputFormats);
+            loadIndexFiles(outputFormats);
             qCDebug(lcQdoc, "  done loading index files");
         }
         qdb->newPrimaryTree(project);
@@ -497,7 +499,7 @@ static void processQdocconfFile(const QString &fileName, Config &config)
         if (generator == nullptr)
             outputFormatsLocation.fatal(
                     QCoreApplication::translate("QDoc", "Unknown output format '%1'").arg(format));
-        generator->initializeFormat(config);
+        generator->initializeFormat();
         generator->generateDocs();
     }
     qdb->clearLinkCounts();
@@ -562,7 +564,8 @@ int main(int argc, char **argv)
     WebXMLGenerator webXMLGenerator;
     DocBookGenerator docBookGenerator;
 
-    Config config(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());
+    Config::instance().init(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());
+    Config &config = Config::instance();
 
     // Get the list of files to act on:
     QStringList qdocFiles = config.qdocFiles();
@@ -577,19 +580,19 @@ int main(int argc, char **argv)
         Generator::setQDocPass(Generator::Prepare);
         for (const auto &file : qAsConst(qdocFiles)) {
             config.dependModules().clear();
-            processQdocconfFile(file, config);
+            processQdocconfFile(file);
         }
         Generator::setQDocPass(Generator::Generate);
         QDocDatabase::qdocDB()->processForest();
         for (const auto &file : qAsConst(qdocFiles)) {
             config.dependModules().clear();
-            processQdocconfFile(file, config);
+            processQdocconfFile(file);
         }
     } else {
         // separate qdoc processes for prepare and generate phases
         for (const auto &file : qAsConst(qdocFiles)) {
             config.dependModules().clear();
-            processQdocconfFile(file, config);
+            processQdocconfFile(file);
         }
     }
 

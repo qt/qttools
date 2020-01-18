@@ -169,7 +169,7 @@ public:
     int bracketDepth() const { return yyBracketDepth; }
     Location &tokenLocation() { return yyTokLoc; }
 
-    static void initialize(const Config &config);
+    static void initialize();
     static void terminate();
     static bool isTrue(const QString &condition);
 

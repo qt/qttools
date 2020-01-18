@@ -29,31 +29,17 @@
 #ifndef PREFERENCESDIALOG_H
 #define PREFERENCESDIALOG_H
 
-#include <QtCore/QVersionNumber>
+#include <QtCore/QMap>
 #include <QtWidgets/QDialog>
 #include <QtHelp/QHelpFilterData>
 #include "ui_preferencesdialog.h"
+#include "helpdocsettings.h"
 
 QT_BEGIN_NAMESPACE
 
 class FontPanel;
 class HelpEngineWrapper;
 class QFileSystemWatcher;
-class QVersionNumber;
-
-struct FilterSetup {
-    QMap<QString, QString>            m_namespaceToComponent;
-    QMap<QString, QStringList>        m_componentToNamespace;
-
-    QMap<QString, QVersionNumber>     m_namespaceToVersion;
-    QMap<QVersionNumber, QStringList> m_versionToNamespace;
-
-    QMap<QString, QString>            m_namespaceToFileName;
-    QMap<QString, QString>            m_fileNameToNamespace;
-
-    QMap<QString, QHelpFilterData>    m_filterToData;
-    QString                           m_currentFilter;
-};
 
 class PreferencesDialog : public QDialog
 {
@@ -63,17 +49,6 @@ public:
     PreferencesDialog(QWidget *parent = nullptr);
 
 private slots:
-    void filterSelected(QListWidgetItem *item);
-    void componentsChanged(const QStringList &components);
-    void versionsChanged(const QStringList &versions);
-    void addFilterClicked();
-    void renameFilterClicked();
-    void removeFilterClicked();
-    void addFilter(const QString &filterName,
-                   const QHelpFilterData &filterData = QHelpFilterData());
-    void removeFilter(const QString &filterName);
-    void addDocumentation();
-    void removeDocumentation();
     void okClicked();
     void applyClicked();
     void applyChanges();
@@ -92,28 +67,12 @@ signals:
     void updateUserInterface();
 
 private:
-    QString suggestedNewFilterName(const QString &initialFilterName) const;
-    QString getUniqueFilterName(const QString &windowTitle,
-                                const QString &initialFilterName = QString());
-    void applyDocListFilter(QListWidgetItem *item);
-
-    void updateFilterPage();
-    void updateCurrentFilter();
-    void updateDocumentationPage();
     void updateFontSettingsPage();
     void updateOptionsPage();
-    FilterSetup readOriginalSetup() const;
 
     Ui::PreferencesDialogClass m_ui;
 
-    FilterSetup m_originalSetup;
-    FilterSetup m_currentSetup;
-
-    QMap<QString, QListWidgetItem *> m_namespaceToItem;
-    QHash<QListWidgetItem *, QString> m_itemToNamespace;
-
-    QMap<QString, QListWidgetItem *> m_filterToItem;
-    QHash<QListWidgetItem *, QString> m_itemToFilter;
+    HelpDocSettings m_docSettings;
 
     FontPanel *m_appFontPanel;
     FontPanel *m_browserFontPanel;

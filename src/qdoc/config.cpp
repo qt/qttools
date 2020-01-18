@@ -73,6 +73,7 @@ QString ConfigStrings::HEADERSTYLES = QStringLiteral("headerstyles");
 QString ConfigStrings::HOMEPAGE = QStringLiteral("homepage");
 QString ConfigStrings::HOMETITLE = QStringLiteral("hometitle");
 QString ConfigStrings::IGNOREDIRECTIVES = QStringLiteral("ignoredirectives");
+QString ConfigStrings::IGNORESINCE = QStringLiteral("ignoresince");
 QString ConfigStrings::IGNORETOKENS = QStringLiteral("ignoretokens");
 QString ConfigStrings::IGNOREWORDS = QStringLiteral("ignorewords");
 QString ConfigStrings::IMAGEDIRS = QStringLiteral("imagedirs");
@@ -82,6 +83,7 @@ QString ConfigStrings::INDEXES = QStringLiteral("indexes");
 QString ConfigStrings::LANDINGPAGE = QStringLiteral("landingpage");
 QString ConfigStrings::LANDINGTITLE = QStringLiteral("landingtitle");
 QString ConfigStrings::LANGUAGE = QStringLiteral("language");
+QString ConfigStrings::LOCATIONINFO = QStringLiteral("locationinfo");
 QString ConfigStrings::MACRO = QStringLiteral("macro");
 QString ConfigStrings::MANIFESTMETA = QStringLiteral("manifestmeta");
 QString ConfigStrings::MODULEHEADER = QStringLiteral("moduleheader");
@@ -241,7 +243,6 @@ QString Config::overrideOutputDir;
 QString Config::installDir;
 QSet<QString> Config::overrideOutputFormats;
 QMap<QString, QString> Config::extractedDirs;
-int Config::numInstances;
 QStack<QString> Config::workingDirs_;
 QMap<QString, QStringList> Config::includeFilesMap_;
 
@@ -254,13 +255,13 @@ QMap<QString, QStringList> Config::includeFilesMap_;
  */
 
 /*!
-  The constructor sets the \a programName and initializes all
+  Initializes the Config with \a programName and sets all
   internal state variables to either default values or to ones
   defined in command line arguments \a args.
  */
-Config::Config(const QString &programName, const QStringList &args) : prog(programName)
+void Config::init(const QString &programName, const QStringList &args)
 {
-    ++numInstances;
+    prog = programName;
     processCommandLineOptions(args);
     reset();
 }
@@ -294,6 +295,7 @@ void Config::reset()
     setStringList(CONFIG_LANGUAGE, QStringList("Cpp")); // i.e. C++
     setStringList(CONFIG_OUTPUTFORMATS, QStringList("HTML"));
     setStringList(CONFIG_TABSIZE, QStringList("8"));
+    setStringList(CONFIG_LOCATIONINFO, QStringList("true"));
 
     // Publish options from the command line as config variables
     const auto setListFlag = [this](const QString &key, bool test) {
