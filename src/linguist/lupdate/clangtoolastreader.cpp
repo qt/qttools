@@ -154,23 +154,42 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     const auto fullLocation = m_context->getFullLoc(callExpression->getBeginLoc());
     if (fullLocation.isInvalid())
         return true;
-
-    // Checking that the CallExpression is from the input file we're interested in
-    std::string fileName;
-    if (const auto fileEntry = fullLocation.getFileEntry())
-        fileName = fileEntry->getName();
-    if (fileName != m_inputFile)
-        return true;
-
     clang::FunctionDecl *func = callExpression->getDirectCallee();
     if (!func)
         return true;
     clang::QualType q = callExpression->getType();
     if (!q.getTypePtrOrNull())
         return true;
-    const std::string funcName = func->getNameInfo().getAsString();
+
+    struct {
+        unsigned Line;
+        std::string Filename;
+    } info;
+
+    const auto funcName = QString::fromStdString(func->getNameInfo().getAsString());
+
     // Only continue if the function a translation function (TODO: deal with alias function...)
-    if (funcName != "tr" && funcName != "qtTrId" && funcName != "translate" && funcName != "trUtf8")
+    switch (trFunctionAliasManager.trFunctionByName(funcName)) {
+    case TrFunctionAliasManager::Function_tr:
+    case TrFunctionAliasManager::Function_trUtf8:
+    case TrFunctionAliasManager::Function_translate:
+    case TrFunctionAliasManager::Function_qtTrId:{
+
+        const auto &sm = m_context->getSourceManager();
+        const auto fileLoc = sm.getFileLoc(callExpression->getBeginLoc());
+        if (fileLoc.isInvalid() || !fileLoc.isFileID())
+            return true;
+        auto presumedLoc = sm.getPresumedLoc(fileLoc);
+        if (presumedLoc.isInvalid())
+            return true;
+        info = { presumedLoc.getLine(), presumedLoc.getFilename() };
+    }   break;
+    default:
+        return true;
+    }
+
+    // Checking that the CallExpression is from the input file we're interested in
+    if (info.Filename != m_inputFile)
         return true;
 
     qCDebug(lcClang) << "************************** VisitCallExpr ****************";
@@ -178,10 +197,10 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     // Function independent retrieve
     TranslationRelatedStore store;
     store.callType = QStringLiteral("ASTRead_CallExpr");
-    store.funcName = QString::fromStdString(funcName);
-    store.lupdateLocationFile = QString::fromStdString(fileName);
-    store.lupdateLocationLine = fullLocation.getSpellingLineNumber();
-    store.contextRetrieved = LupdatePrivate::contextForFunctionDecl(func, funcName);
+    store.funcName = funcName;
+    store.lupdateLocationFile = QString::fromStdString(info.Filename);
+    store.lupdateLocationLine = info.Line;
+    store.contextRetrieved = LupdatePrivate::contextForFunctionDecl(func, funcName.toStdString());
 
     qCDebug(lcClang) << "CallType          : ASTRead_CallExpr";
     qCDebug(lcClang) << "Function name     : " << store.funcName;
@@ -208,7 +227,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     }
 
     // Function dependent retrieve!
-    switch (trFunctionAliasManager.trFunctionByName(QString::fromStdString(funcName))) {
+    switch (trFunctionAliasManager.trFunctionByName(funcName)) {
     case TrFunctionAliasManager::Function_tr:
     case TrFunctionAliasManager::Function_trUtf8:
         if (arguments.size() != 3 || !LupdatePrivate::hasQuote(arguments[0]))
