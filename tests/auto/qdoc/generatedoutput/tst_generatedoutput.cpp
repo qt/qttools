@@ -48,6 +48,7 @@ private slots:
     void webXmlFromCppBug80259();
 
     void examplesManifestXml();
+    void inheritedQmlPropertyGroups();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -242,6 +243,12 @@ void tst_generatedOutput::examplesManifestXml()
 {
     testAndCompare("examples-qhp.qdocconf",
                    "examples-manifest.xml");
+}
+
+void tst_generatedOutput::inheritedQmlPropertyGroups()
+{
+    testAndCompare("qmlpropertygroups/qmlpropertygroups.qdocconf",
+                   "qmlpropertygroups/qml-qdoc-test-anotherchild-members.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
