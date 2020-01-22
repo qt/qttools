@@ -465,7 +465,7 @@ void QHelpSearchIndexWriter::run()
             const QMap<QString, QByteArray> txtFiles
                     = reader.filesData(attributes, QLatin1String("txt"));
 
-            QMap<QString, QByteArray> files = htmlFiles;
+            QMultiMap<QString, QByteArray> files = htmlFiles;
             files.unite(htmFiles);
             files.unite(txtFiles);
 
