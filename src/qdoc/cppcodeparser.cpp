@@ -455,6 +455,7 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
         docs.append(doc);
         for (const auto n : sharedNodes)
             scn->append(n);
+        scn->sort();
     }
 }
 
@@ -947,6 +948,8 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                     }
                 }
             }
+            for (auto *scn : sharedCommentNodes)
+                scn->sort();
         }
     }
 }

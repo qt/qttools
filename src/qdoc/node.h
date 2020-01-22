@@ -952,6 +952,10 @@ public:
         n->setSharedCommentNode(this);
         setGenus(n->genus());
     }
+    void sort()
+    {
+        std::sort(collective_.begin(), collective_.end(), Node::nodeNameLessThan);
+    }
     const QVector<Node *> &collective() const { return collective_; }
     void setOverloadFlags();
     void setRelatedNonmember(bool b) override;
