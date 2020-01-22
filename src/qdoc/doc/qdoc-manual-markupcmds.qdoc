@@ -240,21 +240,6 @@
        }
     \endcode
 
-    If qdoc is generating DITA XML, it will translate the commands to:
-
-    \code
-        <sectiondiv outputclass="float-right">
-            <p>
-                <fig>
-                    <image href="images/qml-column.png" placement="inline"/>
-                </fig>
-            </p>
-        </sectiondiv>
-    \endcode
-
-    Your DITA XML publishing program must then recognize the \e
-    {outputclass} attribute value.
-
     \note Note that the \b {\\div} command can be nested.
 
     Below you can find an example taken from the index.qdoc file used to
@@ -319,53 +304,6 @@
              \enddiv
             \enddiv
           \enddiv
-
-    When generating DITA XML, qdoc outputs the nested \e {div} commands as:
-
-    \code
-      <sectiondiv outputclass="indexbox guide">
-          <sectiondiv outputclass="heading">
-              <p>Qt Developer Guide</p>
-          </sectiondiv>
-          <sectiondiv outputclass="indexboxcont indexboxbar">
-              <sectiondiv outputclass="section indexIcon"/>
-              <sectiondiv outputclass="section">
-                  <p>Qt is a cross-platform application and UI
-                     framework. Using Qt, you can write
-                     web-enabled applications once and deploy
-                     them across desktop, mobile and embedded
-                     operating systems without rewriting the
-                     source code.
-                  </p>
-              </sectiondiv>
-              <sectiondiv outputclass="section sectionlist">
-                  <ul>
-                      <li>
-                          <xref href="gettingstarted.xml#id-606ee7a8-219b-47b7-8f94-91bc8c76e54c">Getting started</xref>
-                      </li>
-                      <li>
-                          <xref href="installation.xml#id-075c20e2-aa1e-4f88-a316-a46517e50443">Installation</xref>
-                      </li>
-                      <li>
-                          <xref href="how-to-learn-qt.xml#id-49f509b5-52f9-4cd9-9921-74217b9a5182">How to learn Qt</xref>
-                      </li>
-                      <li>
-                          <xref href="tutorials.xml#id-a737f955-a904-455f-b4aa-0dc69ed5a64f">Tutorials</xref>
-                      </li>
-                      <li>
-                          <xref href="all-examples.xml#id-98d95159-d65b-4706-b08f-13d80080448d">Examples</xref>
-                      </li>
-                      <li>
-                          <xref href="qt4-7-intro.xml#id-519ae0e3-4242-4c2a-b2be-e05d1e95f177">What's new in Qt 4.7</xref>
-                      </li>
-                  </ul>
-              </sectiondiv>
-          </sectiondiv>
-      </sectiondiv>
-    \endcode
-
-    Your DITA XML publishing program must recognize the values of the
-    \e {outputclass} attribute.
 
     See also \l {span-command} {\\span}.
 
@@ -640,7 +578,6 @@
 
     The \\uicontrol command is used to mark content as being used for UI
     control elements. When using HTML, the output is rendered in bold.
-    When using DITA XML the content is enclosed in a \c{uicontrol} tag.
 
     \sa \\b
 
@@ -2837,13 +2774,6 @@
            * /
            \endcode
 
-    \note This doesn't work in DITA XML, so don't use it because it
-    produces a DITA XML file that doesn't validate. There probably is
-    a way to do this in DITA, so if we figure it out, we will put it
-    in. But this capability is not used anywhere other than right
-    here, so it probably isn't important. For now, if you use this
-    option, qdoc will ignore it and produce a list without it.
-
     QDoc renders this as:
 
            \list G
@@ -3363,7 +3293,7 @@
     \page 12-0-qdoc-commands-miscellaneous.html
     \previouspage Special Content
     \contentspage QDoc Manual
-    \nextpage Creating DITA Maps
+    \nextpage The QDoc Configuration File
 
     \title Miscellaneous
 
@@ -3799,8 +3729,7 @@
     \target meta-command
     \section1 \\meta
 
-    The \\meta command is mainly used for including metadata in DITA
-    XML files. It is also used for adding metadata to example documentation,
+    The \\meta command is used for adding metadata to example documentation,
     and when generating HTML output for specifying the \e maintainer(s) of a
     C++ class.
 
@@ -3826,46 +3755,7 @@
     \endcode
 
     When running QDoc to generate HTML, the example above will have no
-    effect on the generated output, but if you run QDoc to generate
-    DITA XML, the example will generate the following:
-
-    \code
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE cxxClass PUBLIC "-//NOKIA//DTD DITA C++ API Class Reference Type v0.6.0//EN" "dtd/cxxClass.dtd">
-    <!--qwidget.cpp-->
-    <cxxClass id="id-9a14268e-6b09-4eee-b940-21a00a0961df">
-       <apiName>QWidget</apiName>
-       <shortdesc>the QWidget class is the base class of all user interface objects.</shortdesc>
-       <prolog>
-           <author>Qt Development Frameworks</author>
-           <publisher>Qt Project</publisher>
-           <copyright>
-               <copyryear year="2020"/>
-               <copyrholder>Qt Project</copyrholder>
-           </copyright>
-           <permissions view="all"/>
-           <metadata>
-               <audience type="designer"/>
-               <audience type="programmer"/>
-               <audience type="user"/>
-               <category>Class reference</category>
-               <prodinfo>
-                   <prodname>Qt Reference Documentation</prodname>
-                   <vrmlist>
-                       <vrm version="4" release="7" modification="3"/>
-                   </vrmlist>
-                   <component>QtGui</component>
-               </prodinfo>
-               <othermeta name="platform" content="MeeGo"/>
-               <othermeta name="platform" content="macOS 10.6"/>
-               <othermeta name="technology" content="User Interface"/>
-           </metadata>
-       </prolog>
-    \endcode
-
-    In the example output, several values have been set using default
-    values obtained from the QDoc configuration file. See \l
-    {Generating DITA XML Output} for details.
+    effect on the generated output.
 
     \b {Example Metadata}
 
@@ -3968,8 +3858,7 @@
     The \\raw command and the corresponding
     \\endraw command delimit a block of raw mark-up language code.
 
-    \note Avoid using this command if possible, because it generates
-    DITA XML code that causes problems. If you are trying to generate
+    \note Avoid using this command if possible. If you are trying to generate
     special table or list behavior, try to get the behavior you want
     using the \l {span-command} {\\span} and \l {div-command} {\\div}
     commands in your \l {table-command} {\\table} or \l {list-command}

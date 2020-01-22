@@ -27,7 +27,7 @@
 
 /*!
     \page 21-0-qdoc-configuration.html
-    \previouspage Creating DITA Maps
+    \previouspage Miscellaneous
     \contentspage QDoc Manual
     \nextpage Generic Configuration Variables
 
@@ -821,9 +821,7 @@
 
     A macro variable can be restricted for use in one type of output
     generation. By appending \c {.HTML} to the macro name, for
-    example, the macro is only used when generating HTML output. By
-    appending \c {.DITAXML} to the macro name, the macro is only used
-    when generating DITA XML.
+    example, the macro is only used when generating HTML output.
 
     \badcode
         macro.gui              = "\\b"
@@ -1951,71 +1949,12 @@
     another tag is applied to all examples by using just \c {*} as the
     match string.
 */
-/*!
-    \page 21-3-qt-dita-xml-output.html
-    \previouspage minimum.qdocconf
-    \contentspage QDoc Manual
-    \nextpage QA Pages
-
-    \title Generating DITA XML Output
-
-    QDoc can generate \l {http://dita.xml.org} {DITA XML output}.
-
-    In your configuration file, set your \c {outputformats} variable
-    to \c {DITAXML}, and send the output to an appropriate directory:
-
-    \badcode
-    outputdir                  = $QTDIR/doc/ditaxml
-    outputformats              = DITAXML
-    \endcode
-
-    And include these macros in your configuration file to prevent
-    QDoc from doing some escaping that doesn't validate in XML:
-
-    \badcode
-    macro.aacute.DITAXML       = "&aacute;"
-    macro.Aring.DITAXML        = "&Aring;"
-    macro.aring.DITAXML        = "&aring;"
-    macro.Auml.DITAXML         = "&Auml;"
-    macro.br.DITAXML           = " "
-    macro.BR.DITAXML           = " "
-    macro.copyright.DITAXML    = "&copy;"
-    macro.eacute.DITAXML       = "&eacute;"
-    macro.hr.DITAXML           = " "
-    macro.iacute.DITAXML       = "&iacute;"
-    macro.oslash.DITAXML       = "&oslash;"
-    macro.ouml.DITAXML         = "&ouml;"
-    macro.raisedaster.DITAXML  = "<sup>*</sup>"
-    macro.rarrow.DITAXML       = "&rarr;"
-    macro.reg.DITAXML          = "<sup>&reg;</sup>"
-    macro.uuml.DITAXML         = "&uuml;"
-    macro.mdash.DITAXML        = "&mdash;"
-    macro.emptyspan.DITAXML    = " "
-    \endcode
-
-    You can also set default values for some of the tags in the DITA
-    \c {<prolog>} and \c {<metadata>} elements:
-
-    \badcode
-    dita.metadata.default.author      = Qt Development Frameworks
-    dita.metadata.default.permissions = all
-    dita.metadata.default.publisher   = Qt Project
-    dita.metadata.default.copyryear = 2020
-    dita.metadata.default.copyrholder = Qt Project
-    dita.metadata.default.audience = programmer
-    \endcode
-
-    See the \l {meta-command}
-    {\\meta} command for more details on DITA metadata.
-
-*/
-
 
 /*!
     \page 21-1-minimum-qdocconf.html
     \previouspage qtgui.qdocconf
     \contentspage QDoc Manual
-    \nextpage Generating DITA XML Output
+    \nextpage The QDoc Configuration File
 
     \title minimum.qdocconf
 

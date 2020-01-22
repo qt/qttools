@@ -57,7 +57,6 @@
           \li \l {Special Content}
           \li \l {Miscellaneous}
         \endlist
-      \li \l{Creating DITA Maps}
       \li \l {The QDoc Configuration File}
         \list
           \li \l {Generic Configuration Variables}
@@ -68,7 +67,6 @@
           \li \l {Example Manifest Files}
           \li \l {qtgui.qdocconf}
           \li \l {minimum.qdocconf}
-          \li \l {Generating DITA XML Output}
         \endlist
       \li \l {QA Pages}
     \endlist
