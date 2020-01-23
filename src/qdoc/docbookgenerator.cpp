@@ -1827,16 +1827,17 @@ void DocBookGenerator::generateQmlRequisites(QXmlStreamWriter &writer, const Qml
 
     // Module name and version (i.e. import).
     QString logicalModuleVersion;
-    const CollectionNode *collection =
-            qdb_->getCollectionNode(qcn->logicalModuleName(), qcn->nodeType());
-    if (collection)
-        logicalModuleVersion = collection->logicalModuleVersion();
-    else
-        logicalModuleVersion = qcn->logicalModuleVersion();
+    const CollectionNode *collection = qcn->logicalModule();
 
-    generateRequisite(writer, "Import Statement",
-                      "import " + qcn->logicalModuleName() + QLatin1Char(' ')
-                              + logicalModuleVersion);
+    // skip import statement for \internal collections
+    if (!collection || !collection->isInternal() || showInternal_) {
+        logicalModuleVersion =
+            collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
+
+        generateRequisite(writer, "Import Statement",
+                          "import " + qcn->logicalModuleName() + QLatin1Char(' ')
+                                  + logicalModuleVersion);
+    }
 
     // Since and project.
     if (!qcn->since().isEmpty())

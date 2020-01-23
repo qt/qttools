@@ -2133,24 +2133,25 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
 
     // add the module name and version to the map
     QString logicalModuleVersion;
-    const CollectionNode *collection =
-            qdb_->getCollectionNode(qcn->logicalModuleName(), qcn->nodeType());
-    if (collection != nullptr)
-        logicalModuleVersion = collection->logicalModuleVersion();
-    else
-        logicalModuleVersion = qcn->logicalModuleVersion();
+    const CollectionNode *collection = qcn->logicalModule();
 
-    if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
-        qcn->doc().location().warning(tr("Could not resolve QML import "
-                                         "statement for type '%1'")
-                                              .arg(qcn->name()),
-                                      tr("Maybe you forgot to use the "
-                                         "'\\%1' command?")
-                                              .arg(COMMAND_INQMLMODULE));
+    // skip import statement of \internal collections
+    if (!collection || !collection->isInternal() || showInternal_) {
+        logicalModuleVersion =
+            collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
 
-    text.clear();
-    text << "import " + qcn->logicalModuleName() + QLatin1Char(' ') + logicalModuleVersion;
-    requisites.insert(importText, text);
+        if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
+            qcn->doc().location().warning(tr("Could not resolve QML import "
+                                             "statement for type '%1'")
+                                                  .arg(qcn->name()),
+                                          tr("Maybe you forgot to use the "
+                                             "'\\%1' command?")
+                                                  .arg(COMMAND_INQMLMODULE));
+
+        text.clear();
+        text << "import " + qcn->logicalModuleName() + QLatin1Char(' ') + logicalModuleVersion;
+        requisites.insert(importText, text);
+    }
 
     // add the since and project into the map
     if (!qcn->since().isEmpty()) {

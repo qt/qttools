@@ -394,9 +394,9 @@ QString Generator::fileBase(const Node *node) const
           to the file name. The suffix, if one exists, is appended to the
           module name.
         */
-        if (!node->logicalModuleName().isEmpty()) {
+        if (!node->logicalModuleName().isEmpty() && (!node->logicalModule()->isInternal() || showInternal_))
             base.prepend(node->logicalModuleName() + outputSuffix(node) + QLatin1Char('-'));
-        }
+
         base.prepend(outputPrefix(node));
     } else if (node->isProxyNode()) {
         base = node->name();
