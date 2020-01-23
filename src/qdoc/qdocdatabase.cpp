@@ -1021,13 +1021,13 @@ NodeMapMap &QDocDatabase::getFunctionIndex()
  */
 void QDocDatabase::findAllLegaleseTexts(Aggregate *node)
 {
-    for (auto it = node->constBegin(); it != node->constEnd(); ++it) {
-        if (!(*it)->isPrivate()) {
-            if (!(*it)->doc().legaleseText().isEmpty())
-                legaleseTexts_.insert((*it)->doc().legaleseText(), *it);
-            if ((*it)->isAggregate())
-                findAllLegaleseTexts(static_cast<Aggregate *>(*it));
-        }
+    for (const auto &childNode : node->childNodes()) {
+        if (childNode->isPrivate())
+            continue;
+        if (!childNode->doc().legaleseText().isEmpty())
+            legaleseTexts_.insert(childNode->doc().legaleseText(), childNode);
+        if (childNode->isAggregate())
+            findAllLegaleseTexts(static_cast<Aggregate *>(childNode));
     }
 }
 
