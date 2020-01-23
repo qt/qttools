@@ -59,6 +59,7 @@ private slots:
     void ignoresinceVariable();
     void templateParameters();
     void scopedEnum();
+    void dontDocument();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -289,6 +290,13 @@ void tst_generatedOutput::scopedEnum()
 {
   testAndCompare("scopedenum.qdocconf", "scopedenum/testqdoc-test.html");
 }
+
+void tst_generatedOutput::dontDocument()
+{
+  testAndCompare("dontdocument/dontdocument.qdocconf", "dontdocument/classes.html "
+                                                       "dontdocument/seenclass.html");
+}
+
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
 

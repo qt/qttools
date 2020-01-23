@@ -2702,7 +2702,7 @@ void Aggregate::findAllObsoleteThings()
 void Aggregate::findAllClasses()
 {
     for (auto *node : qAsConst(children_)) {
-        if (!node->isPrivate() && !node->isInternal()
+        if (!node->isPrivate() && !node->isInternal() && !node->isDontDocument()
             && node->tree()->camelCaseModuleName() != QString("QDoc")) {
             if (node->isClassNode()) {
                 QDocDatabase::cppClasses().insert(node->qualifyCppName().toLower(), node);
@@ -2947,7 +2947,7 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *bc = bases_.at(i).node_;
         if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || found.contains(bc))) {
+        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument() || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);
@@ -2961,7 +2961,7 @@ void ClassNode::removePrivateAndInternalBases()
     i = 0;
     while (i < derived_.size()) {
         ClassNode *dc = derived_.at(i).node_;
-        if (dc != nullptr && (dc->isPrivate() || dc->isInternal())) {
+        if (dc != nullptr && (dc->isPrivate() || dc->isInternal() || dc->isDontDocument())) {
             derived_.removeAt(i);
             const QVector<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)

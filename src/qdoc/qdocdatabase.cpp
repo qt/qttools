@@ -1103,12 +1103,13 @@ const NodeMap &QDocDatabase::getSinceMap(const QString &key)
 void QDocDatabase::resolveStuff()
 {
     if (Generator::dualExec() || Generator::preparing()) {
+        // order matters
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
         primaryTreeRoot()->normalizeOverloads();
+        primaryTree()->markDontDocumentNodes();
         primaryTree()->removePrivateAndInternalBases(primaryTreeRoot());
         primaryTree()->resolveProperties();
-        primaryTree()->markDontDocumentNodes();
         primaryTreeRoot()->markUndocumentedChildrenInternal();
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveTargets(primaryTreeRoot());
@@ -1119,7 +1120,6 @@ void QDocDatabase::resolveStuff()
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
         primaryTreeRoot()->resolveQmlInheritance();
-        // primaryTree()->resolveTargets(primaryTreeRoot());
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveUsingClauses();
     }

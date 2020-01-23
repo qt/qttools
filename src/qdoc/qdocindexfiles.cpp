@@ -587,6 +587,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             node->setStatus(Node::Active);
         else if (status == QLatin1String("internal"))
             node->setStatus(Node::Internal);
+        else if (status == QLatin1String("ignored"))
+            node->setStatus(Node::DontDocument);
         else
             node->setStatus(Node::Active);
 
@@ -737,6 +739,8 @@ static const QString getStatusString(Node::Status t)
         return QLatin1String("active");
     case Node::Internal:
         return QLatin1String("internal");
+    case Node::DontDocument:
+        return QLatin1String("ignored");
     default:
         break;
     }
