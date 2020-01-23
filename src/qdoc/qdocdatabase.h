@@ -39,7 +39,7 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QMap<Text, const Node *> TextToNodeMap;
+typedef QMultiMap<Text, const Node *> TextToNodeMap;
 
 class Atom;
 class Generator;

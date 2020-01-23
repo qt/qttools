@@ -2384,7 +2384,7 @@ void Aggregate::adoptFunction(FunctionNode *fn)
  */
 void Aggregate::addChildByTitle(Node *child, const QString &title)
 {
-    nonfunctionMap_.insertMulti(title, child);
+    nonfunctionMap_.insert(title, child);
 }
 
 /*!
@@ -2416,7 +2416,7 @@ void Aggregate::addChild(Node *child)
     if (child->isFunction()) {
         addFunction(static_cast<FunctionNode *>(child));
     } else if (!child->name().isEmpty()) {
-        nonfunctionMap_.insertMulti(child->name(), child);
+        nonfunctionMap_.insert(child->name(), child);
         if (child->isEnumType())
             enumChildren_.append(child);
     }
@@ -2441,7 +2441,7 @@ void Aggregate::adoptChild(Node *child)
         if (child->isFunction()) {
             adoptFunction(static_cast<FunctionNode *>(child));
         } else if (!child->name().isEmpty()) {
-            nonfunctionMap_.insertMulti(child->name(), child);
+            nonfunctionMap_.insert(child->name(), child);
             if (child->isEnumType())
                 enumChildren_.append(child);
         }
@@ -2734,7 +2734,7 @@ void Aggregate::findAllAttributions(NodeMultiMap &attributions)
     for (auto *node : qAsConst(children_)) {
         if (!node->isPrivate()) {
             if (node->pageType() == Node::AttributionPage)
-                attributions.insertMulti(node->tree()->indexTitle(), node);
+                attributions.insert(node->tree()->indexTitle(), node);
             else if (node->isAggregate())
                 static_cast<Aggregate *>(node)->findAllAttributions(attributions);
         }

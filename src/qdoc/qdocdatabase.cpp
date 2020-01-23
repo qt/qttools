@@ -1024,7 +1024,7 @@ void QDocDatabase::findAllLegaleseTexts(Aggregate *node)
     for (auto it = node->constBegin(); it != node->constEnd(); ++it) {
         if (!(*it)->isPrivate()) {
             if (!(*it)->doc().legaleseText().isEmpty())
-                legaleseTexts_.insertMulti((*it)->doc().legaleseText(), *it);
+                legaleseTexts_.insert((*it)->doc().legaleseText(), *it);
             if ((*it)->isAggregate())
                 findAllLegaleseTexts(static_cast<Aggregate *>(*it));
         }

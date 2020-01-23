@@ -532,7 +532,7 @@ protected:
 private:
     QStringList includeFiles_;
     NodeList enumChildren_;
-    NodeMap nonfunctionMap_;
+    NodeMultiMap nonfunctionMap_;
     NodeList nonfunctionList_;
 
 protected:

@@ -204,13 +204,13 @@ void Section::insert(Node *node)
     if (!irrelevant) {
         QString key = sortName(node);
         if (node->isObsolete()) {
-            obsoleteMemberMap_.insertMulti(key, node);
+            obsoleteMemberMap_.insert(key, node);
         } else {
             if (!inherited)
-                memberMap_.insertMulti(key, node);
+                memberMap_.insert(key, node);
             else if (style_ == AllMembers) {
                 if (!memberMap_.contains(key))
-                    memberMap_.insertMulti(key, node);
+                    memberMap_.insert(key, node);
             }
             if (inherited && (node->parent()->isClassNode() || node->parent()->isNamespace())) {
                 if (inheritedMembers_.isEmpty()
