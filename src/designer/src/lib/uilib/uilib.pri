@@ -6,6 +6,9 @@ DEFINES += QT_DESIGNER QT_USE_QSTRINGBUILDER
 QT += widgets
 QT_PRIVATE += uiplugin
 
+qtConfig(opengl): \
+    QT_PRIVATE += opengl
+
 # Input
 HEADERS += \
     $$PWD/ui4_p.h \
