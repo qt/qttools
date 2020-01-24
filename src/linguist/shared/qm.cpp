@@ -151,9 +151,9 @@ public:
         uint o;
     };
 
-    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96 };
+    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96, Language = 0xa7 };
 
-    Releaser() {}
+    Releaser(const QString &language) : m_language(language) {}
 
     bool save(QIODevice *iod);
 
@@ -179,6 +179,7 @@ private:
     void writeMessage(const ByteTranslatorMessage & msg, QDataStream & stream,
         TranslatorSaveMode strip, Prefix prefix) const;
 
+    QString m_language;
     // for squeezed but non-file data, this is what needs to be deleted
     QByteArray m_messageArray;
     QByteArray m_offsetArray;
@@ -249,6 +250,12 @@ bool Releaser::save(QIODevice *iod)
     QDataStream s(iod);
     s.writeRawData((const char *)magic, MagicLength);
 
+    if (!m_language.isEmpty()) {
+        QByteArray lang = originalBytes(m_language);
+        quint32 las = quint32(lang.size());
+        s << quint8(Language) << las;
+        s.writeRawData(lang, las);
+    }
     if (!m_dependencyArray.isEmpty()) {
         quint32 das = quint32(m_dependencyArray.size());
         s << quint8(Dependencies) << das;
@@ -465,7 +472,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
         return false;
     }
 
-    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96 };
+    enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96, Language = 0xa7 };
 
     // for squeezed but non-file data, this is what needs to be deleted
     const uchar *messageArray = 0;
@@ -473,6 +480,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     uint offsetLength = 0;
 
     bool ok = true;
+    bool utf8Fail = false;
     const uchar *end = data + len;
 
     data += MagicLength;
@@ -505,6 +513,10 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 dependencies.append(dep);
             }
             translator.setDependencies(dependencies);
+        } else if (tag == Language) {
+            QString language;
+            fromBytes((const char *)data, blockLen, &language, &utf8Fail);
+            translator.setLanguageCode(language);
         }
 
         data += blockLen;
@@ -524,7 +536,6 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
         guessPlurals = (numerusForms.count() == 1);
 
     QString context, sourcetext, comment;
-    bool utf8Fail = false;
     QStringList translations;
 
     for (const uchar *start = offsetArray; start != offsetArray + (numItems << 3); start += 8) {
@@ -632,7 +643,7 @@ static bool containsStripped(const Translator &translator, const TranslatorMessa
 
 bool saveQM(const Translator &translator, QIODevice &dev, ConversionData &cd)
 {
-    Releaser releaser;
+    Releaser releaser(translator.languageCode());
     QLocale::Language l;
     QLocale::Country c;
     Translator::languageAndCountry(translator.languageCode(), &l, &c);
