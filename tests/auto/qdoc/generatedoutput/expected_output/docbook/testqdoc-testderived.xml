@@ -2,7 +2,7 @@
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
 <db:title>TestDerived Class</db:title>
-<db:subtitle>(TestQDoc::TestDerived)</db:subtitle>
+<db:subtitle>TestQDoc::TestDerived</db:subtitle>
 <db:productname>TestCPP</db:productname>
 <db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
 <db:abstract>

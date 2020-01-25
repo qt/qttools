@@ -600,25 +600,24 @@ QString Node::plainName() const
 /*!
   Constructs and returns the node's fully qualified name by
   recursively ascending the parent links and prepending each
-  parent name + "::". Breaks out when the parent pointer is
-  \a relative. Almost all calls to this function pass 0 for
-  \a relative.
+  parent name + "::". Breaks out when reaching a HeaderNode,
+  or when the parent pointer is \a relative. Typically, calls
+  to this function pass \c nullptr for \a relative.
  */
 QString Node::plainFullName(const Node *relative) const
 {
     if (name_.isEmpty())
         return QLatin1String("global");
 
-    QString fullName;
+    QStringList parts;
     const Node *node = this;
-    while (node) {
-        fullName.prepend(node->plainName());
+    while (node && !node->isHeader()) {
+        parts.prepend(node->plainName());
         if (node->parent() == relative || node->parent()->name().isEmpty())
-            break;
-        fullName.prepend(QLatin1String("::"));
+          break;
         node = node->parent();
     }
-    return fullName;
+    return parts.join(QLatin1String("::"));
 }
 
 /*!
@@ -1488,11 +1487,13 @@ QString Node::physicalModuleName() const
   \sa PageType
 */
 
-/*! \fn  QString Node::signature(bool values, bool noReturnType) const
+/*! \fn  QString Node::signature(bool values, bool noReturnType, bool templateParams) const
 
   If this node is a FunctionNode, this function returns the function's
-  signature, including default values if \a values is \c true, and
-  including the function's return type if \a noReturnType is \c false.
+  signature, including default values if \a values is \c true,
+  function's return type if \a noReturnType is \c false, and
+  prefixed with 'template <parameter_list>' for function templates
+  if templateParams is \true.
 
   If this node is not a FunctionNode, this function returns plainName().
 */
@@ -2383,7 +2384,7 @@ void Aggregate::adoptFunction(FunctionNode *fn)
  */
 void Aggregate::addChildByTitle(Node *child, const QString &title)
 {
-    nonfunctionMap_.insertMulti(title, child);
+    nonfunctionMap_.insert(title, child);
 }
 
 /*!
@@ -2415,7 +2416,7 @@ void Aggregate::addChild(Node *child)
     if (child->isFunction()) {
         addFunction(static_cast<FunctionNode *>(child));
     } else if (!child->name().isEmpty()) {
-        nonfunctionMap_.insertMulti(child->name(), child);
+        nonfunctionMap_.insert(child->name(), child);
         if (child->isEnumType())
             enumChildren_.append(child);
     }
@@ -2440,7 +2441,7 @@ void Aggregate::adoptChild(Node *child)
         if (child->isFunction()) {
             adoptFunction(static_cast<FunctionNode *>(child));
         } else if (!child->name().isEmpty()) {
-            nonfunctionMap_.insertMulti(child->name(), child);
+            nonfunctionMap_.insert(child->name(), child);
             if (child->isEnumType())
                 enumChildren_.append(child);
         }
@@ -2701,7 +2702,7 @@ void Aggregate::findAllObsoleteThings()
 void Aggregate::findAllClasses()
 {
     for (auto *node : qAsConst(children_)) {
-        if (!node->isPrivate() && !node->isInternal()
+        if (!node->isPrivate() && !node->isInternal() && !node->isDontDocument()
             && node->tree()->camelCaseModuleName() != QString("QDoc")) {
             if (node->isClassNode()) {
                 QDocDatabase::cppClasses().insert(node->qualifyCppName().toLower(), node);
@@ -2733,7 +2734,7 @@ void Aggregate::findAllAttributions(NodeMultiMap &attributions)
     for (auto *node : qAsConst(children_)) {
         if (!node->isPrivate()) {
             if (node->pageType() == Node::AttributionPage)
-                attributions.insertMulti(node->tree()->indexTitle(), node);
+                attributions.insert(node->tree()->indexTitle(), node);
             else if (node->isAggregate())
                 static_cast<Aggregate *>(node)->findAllAttributions(attributions);
         }
@@ -2946,7 +2947,7 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *bc = bases_.at(i).node_;
         if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || found.contains(bc))) {
+        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument() || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);
@@ -2960,7 +2961,7 @@ void ClassNode::removePrivateAndInternalBases()
     i = 0;
     while (i < derived_.size()) {
         ClassNode *dc = derived_.at(i).node_;
-        if (dc != nullptr && (dc->isPrivate() || dc->isInternal())) {
+        if (dc != nullptr && (dc->isPrivate() || dc->isInternal() || dc->isDontDocument())) {
             derived_.removeAt(i);
             const QVector<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)
@@ -4240,27 +4241,35 @@ bool FunctionNode::hasActiveAssociatedProperty() const
 
 /*!
   Reconstructs and returns the function's signature. If \a values
-  is true, the default values of the parameters are included, if
-  present.
+  is \c true, the default values of the parameters are included.
+  The return type is included unless \a noReturnType is \c true.
+  Function templates are prefixed with \c {template <parameter_list>}
+  if \a templateParams is \c true.
  */
-QString FunctionNode::signature(bool values, bool noReturnType) const
+QString FunctionNode::signature(bool values, bool noReturnType, bool templateParams) const
 {
-    QString result;
-    if (!noReturnType && !returnType().isEmpty())
-        result = returnType() + QLatin1Char(' ');
-    result += name();
+    QStringList elements;
+
+    if (templateParams)
+        elements << templateDecl();
+    if (!noReturnType)
+        elements << returnType_;
+    elements.removeAll({});
+
     if (!isMacroWithoutParams()) {
-        result += QLatin1Char('(') + parameters_.signature(values) + QLatin1Char(')');
-        if (isMacro())
-            return result;
+        elements << name() + QLatin1Char('(') + parameters_.signature(values) + QLatin1Char(')');
+        if (!isMacro()) {
+            if (isConst())
+                elements << QStringLiteral("const");
+            if (isRef())
+                elements << QStringLiteral("&");
+            else if (isRefRef())
+                elements << QStringLiteral("&&");
+        }
+    } else {
+        elements << name();
     }
-    if (isConst())
-        result += " const";
-    if (isRef())
-        result += " &";
-    else if (isRefRef())
-        result += " &&";
-    return result;
+    return elements.join(QLatin1Char(' '));
 }
 
 /*!

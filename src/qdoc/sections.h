@@ -77,7 +77,7 @@ public:
     }
 
     void insert(Node *node);
-    void insert(const QString &key, Node *node) { memberMap_.insertMulti(key, node); }
+    void insert(const QString &key, Node *node) { memberMap_.insert(key, node); }
     bool insertReimplementedMember(Node *node);
 
     ClassMap *newClassMap(const Aggregate *aggregate);

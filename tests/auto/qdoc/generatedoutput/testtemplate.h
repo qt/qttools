@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,43 +25,29 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+
 #pragma once
-#define QDOCTEST_MACRO test
-#define QDOCTEST_MACRO2(x) (x) < 0 ? 0 : (x))
 
-namespace TestQDoc {
-
-class Test {
+template <typename T>
+class Foo {
 public:
-#ifdef test_scopedenum
-    enum class ScopedEnum : unsigned char {
-        This = 0x01,
-        That = 0x02,
-        All = This | That,
-        OmittedValue = 99
-    };
-#endif
-    int someFunction(int v);
-    void someFunctionDefaultArg(int i, bool b);
-    void obsoleteMember();
-    void anotherObsoleteMember();
-    void deprecatedMember();
-    inline void inlineFunction() {};
-    virtual void virtualFun();
-
-protected:
-    void overload() {}
-    void overload(bool b) { if (!b) return; }
-#ifdef test_template
-    template <typename T1, typename T2> void funcTemplate(T1 a, T2 b) {
-        a = b;
-    }
-#endif
+    Foo() {}
+private:
+    T t;
 };
 
-class TestDerived : public Test {
+template <typename T, typename D>
+class Bar {
 public:
-    void virtualFun() override;
+    Bar() {}
+private:
+    T t;
+    D d;
 };
 
-} // namespace TestQDoc
+template<template<typename> class X, typename Y>
+struct Baz
+{
+    X<Y> z;
+    Baz() : z() {}
+};

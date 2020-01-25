@@ -421,7 +421,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         node = pn;
 
     } else if (elementName == QLatin1String("enum")) {
-        EnumNode *enumNode = new EnumNode(parent, name);
+        EnumNode *enumNode = new EnumNode(parent, name, attributes.hasAttribute("scoped"));
 
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
@@ -587,6 +587,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             node->setStatus(Node::Active);
         else if (status == QLatin1String("internal"))
             node->setStatus(Node::Internal);
+        else if (status == QLatin1String("ignored"))
+            node->setStatus(Node::DontDocument);
         else
             node->setStatus(Node::Active);
 
@@ -737,6 +739,8 @@ static const QString getStatusString(Node::Status t)
         return QLatin1String("active");
     case Node::Internal:
         return QLatin1String("internal");
+    case Node::DontDocument:
+        return QLatin1String("ignored");
     default:
         break;
     }
@@ -1175,6 +1179,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     } break;
     case Node::Enum: {
         const EnumNode *enumNode = static_cast<const EnumNode *>(node);
+        if (enumNode->isScoped())
+            writer.writeAttribute("scoped", "true");
         if (enumNode->flagsType())
             writer.writeAttribute("typedef", enumNode->flagsType()->fullDocumentName());
         const auto &items = enumNode->items();

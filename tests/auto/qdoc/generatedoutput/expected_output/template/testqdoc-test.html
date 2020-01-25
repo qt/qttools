@@ -41,6 +41,7 @@
 <a name="protected-functions"></a>
 <h2 id="protected-functions">Protected Functions</h2>
 <div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#funcTemplate">funcTemplate</a></b>(T1 <i>a</i>, T2 <i>b</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#overload">overload</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#overload-1">overload</a></b>(bool <i>b</i>)</td></tr>
 </table></div>
@@ -62,6 +63,10 @@
 <h3 class="fn fngroupitem" id="overload"><a name="overload"></a><code>[protected] </code><span class="type">void</span> Test::<span class="name">overload</span>()</h3><h3 class="fn fngroupitem" id="overload-1"><a name="overload-1"></a><code>[protected] </code><span class="type">void</span> Test::<span class="name">overload</span>(<span class="type">bool</span> <i>b</i>)</h3></div>
 <p>Overloads that share a documentation comment, optionally taking a parameter <i>b</i>.</p>
 <!-- @@@ -->
+<!-- $$$funcTemplate[overload1]$$$funcTemplateT1T2 -->
+<h3 class="fn" id="funcTemplate"><a name="funcTemplate"></a><code>[protected] </code>template &lt;typename T1, typename T2&gt; <span class="type">void</span> Test::<span class="name">funcTemplate</span>(<span class="type">T1</span> <i>a</i>, <span class="type">T2</span> <i>b</i>)</h3>
+<p>Function template with two parameters, <i>a</i> and <i>b</i>.</p>
+<!-- @@@funcTemplate -->
 <!-- $$$inlineFunction[overload1]$$$inlineFunction -->
 <h3 class="fn" id="inlineFunction"><a name="inlineFunction"></a><span class="type">void</span> Test::<span class="name">inlineFunction</span>()</h3>
 <p>An inline function, documented using the \fn QDoc command.</p>
@@ -69,12 +74,10 @@
 <!-- $$$someFunction[overload1]$$$someFunctionint -->
 <h3 class="fn" id="someFunction"><a name="someFunction"></a><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span> <i>v</i>)</h3>
 <p>Function that takes a parameter <i>v</i>. Also returns the value of <i>v</i>.</p>
-<p>This function was introduced in Test 1.0.</p>
 <!-- @@@someFunction -->
 <!-- $$$someFunctionDefaultArg[overload1]$$$someFunctionDefaultArgintbool -->
 <h3 class="fn" id="someFunctionDefaultArg"><a name="someFunctionDefaultArg"></a><span class="type">void</span> Test::<span class="name">someFunctionDefaultArg</span>(<span class="type">int</span> <i>i</i>, <span class="type">bool</span> <i>b</i> = false)</h3>
 <p>Function that takes a parameter <i>i</i> and <i>b</i>.</p>
-<p>This function was introduced in Qt 2.0.</p>
 <!-- @@@someFunctionDefaultArg -->
 <!-- $$$virtualFun[overload1]$$$virtualFun -->
 <h3 class="fn" id="virtualFun"><a name="virtualFun"></a><code>[virtual] </code><span class="type">void</span> Test::<span class="name">virtualFun</span>()</h3>

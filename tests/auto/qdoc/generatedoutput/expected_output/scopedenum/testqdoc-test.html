@@ -11,6 +11,7 @@
 <div class="toc">
 <h3><a name="toc">Contents</a></h3>
 <ul>
+<li class="level1"><a href="#public-types">Public Types</a></li>
 <li class="level1"><a href="#public-functions">Public Functions</a></li>
 <li class="level1"><a href="#protected-functions">Protected Functions</a></li>
 <li class="level1"><a href="#macros">Macros</a></li>
@@ -30,6 +31,11 @@
 <li><a href="testqdoc-test-members.html">List of all members, including inherited members</a></li>
 <li><a href="testqdoc-test-obsolete.html">Obsolete members</a></li>
 </ul>
+<a name="public-types"></a>
+<h2 id="public-types">Public Types</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> enum class </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#ScopedEnum-enum">ScopedEnum</a></b> { This, That, All }</td></tr>
+</table></div>
 <a name="public-functions"></a>
 <h2 id="public-functions">Public Functions</h2>
 <div class="table"><table class="alignedsummary">
@@ -55,6 +61,17 @@
 <h2 id="details">Detailed Description</h2>
 </div>
 <!-- @@@Test -->
+<div class="types">
+<h2>Member Type Documentation</h2>
+<!-- $$$ScopedEnum$$$This$$$That$$$All$$$OmittedValue -->
+<h3 class="fn" id="ScopedEnum-enum"><a name="ScopedEnum-enum"></a>enum class Test::<span class="name">ScopedEnum</span></h3>
+<div class="table"><table class="valuelist"><tr valign="top" class="odd"><th class="tblConst">Constant</th><th class="tblval">Value</th><th class="tbldscr">Description</th></tr>
+<tr><td class="topAlign"><code>TestQDoc::Test::ScopedEnum::This</code></td><td class="topAlign tblval"><code>0x01</code></td><td class="topAlign">Something</td></tr>
+<tr><td class="topAlign"><code>TestQDoc::Test::ScopedEnum::That</code></td><td class="topAlign tblval"><code>0x02</code></td><td class="topAlign">Something else</td></tr>
+<tr><td class="topAlign"><code>TestQDoc::Test::ScopedEnum::All</code></td><td class="topAlign tblval"><code>This | That</code></td><td class="topAlign">Everything</td></tr>
+</table></div>
+<!-- @@@ScopedEnum -->
+</div>
 <div class="func">
 <h2>Member Function Documentation</h2>
 <!-- $$$ -->
@@ -69,12 +86,10 @@
 <!-- $$$someFunction[overload1]$$$someFunctionint -->
 <h3 class="fn" id="someFunction"><a name="someFunction"></a><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span> <i>v</i>)</h3>
 <p>Function that takes a parameter <i>v</i>. Also returns the value of <i>v</i>.</p>
-<p>This function was introduced in Test 1.0.</p>
 <!-- @@@someFunction -->
 <!-- $$$someFunctionDefaultArg[overload1]$$$someFunctionDefaultArgintbool -->
 <h3 class="fn" id="someFunctionDefaultArg"><a name="someFunctionDefaultArg"></a><span class="type">void</span> Test::<span class="name">someFunctionDefaultArg</span>(<span class="type">int</span> <i>i</i>, <span class="type">bool</span> <i>b</i> = false)</h3>
 <p>Function that takes a parameter <i>i</i> and <i>b</i>.</p>
-<p>This function was introduced in Qt 2.0.</p>
 <!-- @@@someFunctionDefaultArg -->
 <!-- $$$virtualFun[overload1]$$$virtualFun -->
 <h3 class="fn" id="virtualFun"><a name="virtualFun"></a><code>[virtual] </code><span class="type">void</span> Test::<span class="name">virtualFun</span>()</h3>

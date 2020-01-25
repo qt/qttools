@@ -2354,7 +2354,8 @@ QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldNa
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + QLatin1String(" : ") + m_query->value(3).toString();
 
-        linkMap.insertMulti(title, buildQUrl(m_query->value(1).toString(),
+        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(title, buildQUrl(
+                                             m_query->value(1).toString(),
                                              m_query->value(2).toString(),
                                              m_query->value(3).toString(),
                                              m_query->value(4).toString()));
@@ -2414,7 +2415,8 @@ QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldNa
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + QLatin1String(" : ") + m_query->value(3).toString();
 
-        linkMap.insertMulti(title, buildQUrl(m_query->value(1).toString(),
+        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(title, buildQUrl(
+                                             m_query->value(1).toString(),
                                              m_query->value(2).toString(),
                                              m_query->value(3).toString(),
                                              m_query->value(4).toString()));

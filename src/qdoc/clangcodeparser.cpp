@@ -110,6 +110,55 @@ static QString fromCXString(CXString &&string)
     return ret;
 }
 
+static QString templateDecl(CXCursor cursor);
+
+/*!
+    Returns a list of template parameters at \a cursor.
+*/
+static QStringList getTemplateParameters(CXCursor cursor)
+{
+    QStringList parameters;
+    visitChildrenLambda(cursor, [&parameters](CXCursor cur) {
+        QString name = fromCXString(clang_getCursorSpelling(cur));
+        QString type;
+
+        switch (clang_getCursorKind(cur)) {
+        case CXCursor_TemplateTypeParameter:
+            type = QStringLiteral("typename");
+            break;
+        case CXCursor_NonTypeTemplateParameter:
+            type = fromCXString(clang_getTypeSpelling(clang_getCursorType(cur)));
+            // Hack: Omit QtPrivate template parameters from public documentation
+            if (type.startsWith(QLatin1String("QtPrivate")))
+                return CXChildVisit_Continue;
+            break;
+        case CXCursor_TemplateTemplateParameter:
+            type = templateDecl(cur) + QLatin1String(" class");
+            break;
+        default:
+            return CXChildVisit_Continue;
+        }
+
+        if (!name.isEmpty())
+            name.prepend(QLatin1Char(' '));
+
+        parameters << type + name;
+        return CXChildVisit_Continue;
+    });
+
+    return parameters;
+}
+
+/*!
+   Gets the template declaration at specified \a cursor.
+ */
+static QString templateDecl(CXCursor cursor)
+{
+    QStringList params = getTemplateParameters(cursor);
+    return QLatin1String("template <") + params.join(QLatin1String(", ")) +
+           QLatin1Char('>');
+}
+
 /*!
     convert a CXSourceLocation to a qdoc Location
  */
@@ -573,6 +622,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
 CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation loc)
 {
     auto kind = clang_getCursorKind(cursor);
+    QString templateString;
     switch (kind) {
     case CXCursor_TypeAliasDecl: {
         QString spelling = getSpelling(clang_getCursorExtent(cursor));
@@ -595,8 +645,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (fromCXString(clang_getCursorSpelling(cursor)).isEmpty()) // anonymous struct or union
             return CXChildVisit_Continue;
         Q_FALLTHROUGH();
-    case CXCursor_ClassDecl:
-    case CXCursor_ClassTemplate: {
+    case CXCursor_ClassTemplate:
+        templateString = templateDecl(cursor);
+        Q_FALLTHROUGH();
+    case CXCursor_ClassDecl: {
         if (!clang_isCursorDefinition(cursor))
             return CXChildVisit_Continue;
 
@@ -622,10 +674,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
 
-        if (kind == CXCursor_ClassTemplate) {
-            QString displayName = fromCXString(clang_getCursorSpelling(cursor));
-            classe->setTemplateStuff(displayName.mid(className.size()));
-        }
+        if (kind == CXCursor_ClassTemplate)
+            classe->setTemplateDecl(templateString);
 
         QScopedValueRollback<Aggregate *> setParent(parent_, classe);
         return visitChildren(cursor);
@@ -661,8 +711,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         QScopedValueRollback<Aggregate *> setParent(parent_, ns);
         return visitChildren(cursor);
     }
-    case CXCursor_FunctionDecl:
     case CXCursor_FunctionTemplate:
+        templateString = templateDecl(cursor);
+        Q_FALLTHROUGH();
+    case CXCursor_FunctionDecl:
     case CXCursor_CXXMethod:
     case CXCursor_Constructor:
     case CXCursor_Destructor:
@@ -760,6 +812,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (clang_isFunctionTypeVariadic(funcType))
             parameters.append(QStringLiteral("..."));
         readParameterNamesAndAttributes(fn, cursor);
+        fn->setTemplateDecl(templateString);
         return CXChildVisit_Continue;
     }
 #if CINDEX_VERSION >= 36
@@ -774,10 +827,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
 #endif
     case CXCursor_EnumDecl: {
-        if (findNodeForCursor(qdb_, cursor)) // Was already parsed, propably in another tu
-            return CXChildVisit_Continue;
+        EnumNode *en = static_cast<EnumNode *>(findNodeForCursor(qdb_, cursor));
+        if (en && en->items().count())
+            return CXChildVisit_Continue; // Was already parsed, probably in another TU
         QString enumTypeName = fromCXString(clang_getCursorSpelling(cursor));
-        EnumNode *en = nullptr;
         if (enumTypeName.isEmpty()) {
             enumTypeName = "anonymous";
             if (parent_ && (parent_->isClassNode() || parent_->isNamespace())) {
@@ -787,10 +840,11 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             }
         }
         if (!en) {
-            en = new EnumNode(parent_, enumTypeName);
+            en = new EnumNode(parent_, enumTypeName, clang_EnumDecl_isScoped(cursor));
             en->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
             en->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         }
+
         // Enum values
         visitChildrenLambda(cursor, [&](CXCursor cur) {
             if (clang_getCursorKind(cur) != CXCursor_EnumConstantDecl)

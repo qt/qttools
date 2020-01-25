@@ -232,7 +232,7 @@ public:
     QString plainFullName(const Node *relative = nullptr) const;
     QString plainSignature() const;
     QString fullName(const Node *relative = nullptr) const;
-    virtual QString signature(bool, bool) const { return plainName(); }
+    virtual QString signature(bool, bool, bool = false) const { return plainName(); }
 
     const QString &fileNameBase() const { return fileNameBase_; }
     bool hasFileNameBase() const { return !fileNameBase_.isEmpty(); }
@@ -251,7 +251,7 @@ public:
     void setSince(const QString &since);
     void setPhysicalModuleName(const QString &name) { physicalModuleName_ = name; }
     void setUrl(const QString &url) { url_ = url; }
-    void setTemplateStuff(const QString &t) { templateStuff_ = t; }
+    void setTemplateDecl(const QString &t) { templateDecl_ = t; }
     void setReconstitutedBrief(const QString &t) { reconstitutedBrief_ = t; }
     void setParent(Aggregate *n) { parent_ = n; }
     void setIndexNodeFlag(bool isIndexNode = true) { indexNodeFlag_ = isIndexNode; }
@@ -319,7 +319,7 @@ public:
     ThreadSafeness threadSafeness() const;
     ThreadSafeness inheritedThreadSafeness() const;
     QString since() const { return since_; }
-    QString templateStuff() const { return templateStuff_; }
+    const QString &templateDecl() const { return templateDecl_; }
     const QString &reconstitutedBrief() const { return reconstitutedBrief_; }
     QString nodeSubtypeString() const;
     virtual void addPageKeywords(const QString &) {}
@@ -387,7 +387,7 @@ private:
     QString physicalModuleName_;
     QString url_;
     QString since_;
-    QString templateStuff_;
+    QString templateDecl_;
     QString reconstitutedBrief_;
     // mutable QString uuid_;
     QString outSubDir_;
@@ -532,7 +532,7 @@ protected:
 private:
     QStringList includeFiles_;
     NodeList enumChildren_;
-    NodeMap nonfunctionMap_;
+    NodeMultiMap nonfunctionMap_;
     NodeList nonfunctionList_;
 
 protected:
@@ -864,13 +864,17 @@ private:
 class EnumNode : public Node
 {
 public:
-    EnumNode(Aggregate *parent, const QString &name) : Node(Enum, parent, name), flagsType_(nullptr)
+    EnumNode(Aggregate *parent, const QString &name, bool isScoped = false)
+    : Node(Enum, parent, name),
+    flagsType_(nullptr),
+    isScoped_(isScoped)
     {
     }
 
     void addItem(const EnumItem &item);
     void setFlagsType(TypedefNode *typedeff);
     bool hasItem(const QString &name) const { return names_.contains(name); }
+    bool isScoped() const { return isScoped_; }
 
     const QVector<EnumItem> &items() const { return items_; }
     Access itemAccess(const QString &name) const;
@@ -882,6 +886,7 @@ private:
     QVector<EnumItem> items_;
     QSet<QString> names_;
     const TypedefNode *flagsType_;
+    bool isScoped_;
 };
 
 class TypedefNode : public Node
@@ -1053,7 +1058,7 @@ public:
     const Parameters &parameters() const { return parameters_; }
     bool isPrivateSignal() const { return parameters_.isPrivateSignal(); }
     void setParameters(const QString &signature) { parameters_.set(signature); }
-    QString signature(bool values, bool noReturnType) const override;
+    QString signature(bool values, bool noReturnType, bool templateParams = false) const override;
 
     const QString &overridesThis() const { return overridesThis_; }
     const NodeList &associatedProperties() const { return associatedProperties_; }

@@ -1827,16 +1827,17 @@ void DocBookGenerator::generateQmlRequisites(QXmlStreamWriter &writer, const Qml
 
     // Module name and version (i.e. import).
     QString logicalModuleVersion;
-    const CollectionNode *collection =
-            qdb_->getCollectionNode(qcn->logicalModuleName(), qcn->nodeType());
-    if (collection)
-        logicalModuleVersion = collection->logicalModuleVersion();
-    else
-        logicalModuleVersion = qcn->logicalModuleVersion();
+    const CollectionNode *collection = qcn->logicalModule();
 
-    generateRequisite(writer, "Import Statement",
-                      "import " + qcn->logicalModuleName() + QLatin1Char(' ')
-                              + logicalModuleVersion);
+    // skip import statement for \internal collections
+    if (!collection || !collection->isInternal() || showInternal_) {
+        logicalModuleVersion =
+            collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
+
+        generateRequisite(writer, "Import Statement",
+                          "import " + qcn->logicalModuleName() + QLatin1Char(' ')
+                                  + logicalModuleVersion);
+    }
 
     // Since and project.
     if (!qcn->since().isEmpty())
@@ -2425,13 +2426,16 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
         ns = static_cast<const NamespaceNode *>(aggregate);
     } else if (aggregate->isClass()) {
         rawTitle = aggregate->plainName();
-        fullTitle = aggregate->plainFullName();
-        title = rawTitle + " Class";
+        QString templateDecl = node->templateDecl();
+        if (!templateDecl.isEmpty())
+            fullTitle = QString("%1 %2 ").arg(templateDecl, aggregate->typeWord(false));
+        fullTitle += aggregate->plainFullName();
+        title = rawTitle + QLatin1Char(' ') + aggregate->typeWord(true);
     }
 
     QString subtitleText;
     if (rawTitle != fullTitle)
-        subtitleText = "(" + fullTitle + ")";
+        subtitleText = fullTitle;
 
     // Start producing the DocBook file.
     QXmlStreamWriter &writer = *startDocument(node);
