@@ -960,8 +960,10 @@ void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
     }
 
     // Construct a path to the example; <install path>/<example name>
-    QStringList path = QStringList()
-            << config()->getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
+    QString pathRoot = en->doc().metaTagMap().value(QLatin1String("installpath"));
+    if (pathRoot.isEmpty())
+        pathRoot = config()->getString(CONFIG_EXAMPLESINSTALLPATH);
+    QStringList path = QStringList() << pathRoot << en->name();
     path.removeAll({});
 
     Text text;

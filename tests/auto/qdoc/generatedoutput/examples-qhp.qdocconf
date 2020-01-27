@@ -1,6 +1,8 @@
 # QML test includes a documented example
 include(testqml.qdocconf)
 
+examplesinstallpath = test
+
 # Configure .qhp generation
 qhp.projects            = Test
 

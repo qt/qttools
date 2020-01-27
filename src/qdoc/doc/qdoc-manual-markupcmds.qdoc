@@ -3888,6 +3888,22 @@
     This would result in the following tags: \e {tutorial,basic,hello,world}.
     Common words such as \e example are ignored.
 
+    \b {Example Install Paths}
+
+    The \\meta command combined with an argument \c installpath specifies the
+    location of an installed example. This value overrides the one that is set
+    using the \c examplesinstallpath configuration variable.
+
+    \badcode
+    / *!
+        \example helloworld
+        \title Hello World Example
+        \meta {installpath} {tutorials}
+    * /
+    \endcode
+
+    See also \l {examplesinstallpath}.
+
     \target noautolist-command
     \section1 \\noautolist
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="componentset" href="test-componentset-example.html" status="active" location="examples.qdoc" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/examples.qdoc" lineno="28" documented="true" subtype="example" title="QML Documentation Example" fulltitle="QML Documentation Example" subtitle="" module="Test">
+        <page name="componentset" href="test-componentset-example.html" status="active" location="examples.qdoc" filepath="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/qml/componentset/examples.qdoc" lineno="28" documented="true" subtype="example" title="QML Documentation Example" fulltitle="QML Documentation Example" subtitle="" module="Test" brief="Example for documenting QML types">
             <contents name="qml-class" title="QML Class" level="1"/>
             <contents name="properties-signals-handlers-and-methods" title="Properties, Signals, Handlers, and Methods" level="1"/>
             <contents name="internal-documentation" title="Internal Documentation" level="2"/>
             <contents name="qml-types-with-c-implementation" title="QML Types with C++ Implementation" level="1"/>
-            <description path="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/examples.qdoc" line="28" column="4">
+            <description path="/home/levon/work/official/qttools/tests/auto/qdoc/generatedoutput/qml/componentset/examples.qdoc" line="28" column="4">
+                <brief>Example for documenting QML types.</brief>
                 <para>This example demonstrates one of the ways to document QML types.</para>
                 <para>In particular, there are sample types that are documented with QDoc commands comments. There are documentation comments for the QML types and their public interfaces. The types are grouped into a module, the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module.</para>
                 <para>The uicomponents.qdoc file generates the overview page for the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module page.</para>
@@ -32,6 +33,29 @@ An aliased property of type int.</code>
                     <heading level="1">QML Types with C++ Implementation</heading>
                     <para>This example only demonstrates the documentation for types in QML files, but the regular QML commands may be placed inside C++ classes to define the public API of the QML type.</para>
                 </section>
+                <para>Files:</para>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="componentset/ProgressBar.qml" href="test-componentset-progressbar-qml.html" type="page" page="ProgressBar.qml Example File">componentset/ProgressBar.qml</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="componentset/Switch.qml" href="test-componentset-switch-qml.html" type="page" page="Switch.qml Example File">componentset/Switch.qml</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="componentset/TabWidget.qml" href="test-componentset-tabwidget-qml.html" type="page" page="TabWidget.qml Example File">componentset/TabWidget.qml</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="componentset/componentset.pro" href="test-componentset-componentset-pro.html" type="page" page="componentset.pro Example File">componentset/componentset.pro</link>
+                        </para>
+                    </item>
+                </list>
             </description>
         </page>
     </document>
