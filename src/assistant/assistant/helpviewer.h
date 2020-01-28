@@ -117,7 +117,7 @@ signals:
     void sourceChanged(const QUrl &url);
     void forwardAvailable(bool enabled);
     void backwardAvailable(bool enabled);
-    void highlighted(const QString &link);
+    void highlighted(const QUrl &link);
     void printRequested();
 #elif !defined(BROWSER_QTWEBKIT)
     // Provide signals present in QWebView for browsers that do not inherit QWebView

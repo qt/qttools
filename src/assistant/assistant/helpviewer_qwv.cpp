@@ -166,8 +166,10 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
         SLOT(actionChanged()));
     connect(pageAction(QWebPage::Forward), SIGNAL(changed()), this,
         SLOT(actionChanged()));
-    connect(page(), SIGNAL(linkHovered(QString,QString,QString)), this,
-        SIGNAL(highlighted(QString)));
+    connect(page(), &QWebPage::linkHovered, this,
+            [this] (const QString &link, const QString &, const QString &) {
+                emit this->highlighted(QUrl(link));
+    });
     connect(this, SIGNAL(urlChanged(QUrl)), this, SIGNAL(sourceChanged(QUrl)));
     connect(this, SIGNAL(loadStarted()), this, SLOT(setLoadStarted()));
     connect(this, SIGNAL(loadFinished(bool)), this, SLOT(setLoadFinished(bool)));
