@@ -60,6 +60,7 @@ private slots:
     void templateParameters();
     void scopedEnum();
     void dontDocument();
+    void inheritedQmlPropertyGroups();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -280,23 +281,30 @@ void tst_generatedOutput::ignoresinceVariable()
 
 void tst_generatedOutput::templateParameters()
 {
-  testAndCompare("testtemplate.qdocconf", "template/testqdoc-test.html "
-                                          "template/foo.html "
-                                          "template/bar.html "
-                                          "template/baz.html");
+    testAndCompare("testtemplate.qdocconf",
+                   "template/testqdoc-test.html "
+                   "template/foo.html "
+                   "template/bar.html "
+                   "template/baz.html");
 }
 
 void tst_generatedOutput::scopedEnum()
 {
-  testAndCompare("scopedenum.qdocconf", "scopedenum/testqdoc-test.html");
+    testAndCompare("scopedenum.qdocconf", "scopedenum/testqdoc-test.html");
 }
 
 void tst_generatedOutput::dontDocument()
 {
-  testAndCompare("dontdocument/dontdocument.qdocconf", "dontdocument/classes.html "
-                                                       "dontdocument/seenclass.html");
+    testAndCompare("dontdocument/dontdocument.qdocconf",
+                   "dontdocument/classes.html "
+                   "dontdocument/seenclass.html");
 }
 
+void tst_generatedOutput::inheritedQmlPropertyGroups()
+{
+    testAndCompare("qmlpropertygroups/qmlpropertygroups.qdocconf",
+                   "qmlpropertygroups/qml-qdoc-test-anotherchild-members.html");
+}
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
 

@@ -1,0 +1,7 @@
+include(../testqml.qdocconf)
+
+includepaths += ..
+sourcedirs += .
+
+HTML.nosubdirs = true
+HTML.outputsubdir = qmlpropertygroups
