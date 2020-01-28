@@ -2213,7 +2213,7 @@ void Aggregate::normalizeOverloads()
 const NodeList &Aggregate::nonfunctionList()
 {
     nonfunctionList_ = nonfunctionMap_.values();
-    std::sort(nonfunctionList_.begin(), nonfunctionList_.end());
+    std::sort(nonfunctionList_.begin(), nonfunctionList_.end(), Node::nodeNameLessThan);
     nonfunctionList_.erase(std::unique(nonfunctionList_.begin(), nonfunctionList_.end()),
                            nonfunctionList_.end());
     return nonfunctionList_;
