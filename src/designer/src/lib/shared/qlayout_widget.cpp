@@ -1915,11 +1915,11 @@ void QLayoutWidget::paintEvent(QPaintEvent*)
                         columns[column + i - 2] = true;
 
                     while (rowSpan > 0) {
-                        excludedColumnsForRow[row + rowSpan - 1].unite(columns);
+                        excludedColumnsForRow[row + rowSpan - 1].insert(columns);
                         rowSpan--;
                     }
                     while (columnSpan > 0) {
-                        excludedRowsForColumn[column + columnSpan - 1].unite(rows);
+                        excludedRowsForColumn[column + columnSpan - 1].insert(rows);
                         columnSpan--;
                     }
                 }
