@@ -676,7 +676,7 @@ void MainWindow::setupActions()
     connect(m_centralWidget, &CentralWidget::backwardAvailable,
             globalActions, &GlobalActions::updateActions);
     connect(m_centralWidget, &CentralWidget::highlighted,
-            this, [this](const QString &link) { statusBar()->showMessage(link);} );
+            this, [this](const QUrl &link) { statusBar()->showMessage(link.toString());} );
 
     // index window
     connect(m_indexWindow, &IndexWindow::linkActivated,

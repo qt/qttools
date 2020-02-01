@@ -568,12 +568,12 @@ void CentralWidget::handleSourceChanged(const QUrl &url)
         emit sourceChanged(url);
 }
 
-void CentralWidget::slotHighlighted(const QString &link)
+void CentralWidget::slotHighlighted(const QUrl &link)
 {
     TRACE_OBJ
-    QString resolvedLink = m_resolvedLinks.value(link);
+    QUrl resolvedLink = m_resolvedLinks.value(link);
     if (!link.isEmpty() && resolvedLink.isEmpty()) {
-        resolvedLink = HelpEngineWrapper::instance().findFile(link).toString();
+        resolvedLink = HelpEngineWrapper::instance().findFile(link);
         m_resolvedLinks.insert(link, resolvedLink);
     }
     emit highlighted(resolvedLink);
@@ -605,7 +605,7 @@ void CentralWidget::connectSignals(HelpViewer *page)
             this, &CentralWidget::backwardAvailable);
     connect(page, &HelpViewer::sourceChanged,
             this, &CentralWidget::handleSourceChanged);
-    connect(page, QOverload<const QString &>::of(&HelpViewer::highlighted),
+    connect(page, QOverload<const QUrl &>::of(&HelpViewer::highlighted),
             this, &CentralWidget::slotHighlighted);
 }
 

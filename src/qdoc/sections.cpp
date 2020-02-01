@@ -30,6 +30,7 @@
 
 #include "config.h"
 #include "generator.h"
+#include "loggingcategory.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qobjectdefs.h>
@@ -979,7 +980,6 @@ void Sections::buildStdCppClassRefPageSections()
                 allMembers.insert(n);
             if (!documentAll && !n->hasDoc())
                 continue;
-            // distributeNodeInSummaryVector(sv, n); Why was this here? mws 03/07/2019
         }
         pushBaseClasses(stack, cn);
     }
@@ -1000,51 +1000,29 @@ void Sections::buildStdQmlTypeRefPageSections()
     Section &allMembers = allMembersSection();
 
     const Aggregate *qtn = aggregate_;
-    while (true) {
+    while (qtn) {
         if (!qtn->isAbstract() || !classMap)
             classMap = allMembers.newClassMap(qtn);
-        for (auto it = qtn->constBegin(); it != qtn->constEnd(); ++it) {
-            Node *n = *it;
+        for (const auto n : qtn->childNodes()) {
             if (n->isInternal())
                 continue;
 
             if (!n->isSharedCommentNode() || n->isPropertyGroup())
                 allMembers.add(classMap, n);
 
-            distributeQmlNodeInSummaryVector(summarySections, n);
-            distributeQmlNodeInDetailsVector(detailsSections, n);
+            if (qtn == aggregate_ || qtn->isAbstract()) {
+                distributeQmlNodeInSummaryVector(summarySections, n);
+                distributeQmlNodeInDetailsVector(detailsSections, n);
+            }
         }
         if (qtn->qmlBaseNode() == qtn) {
-            qDebug() << "qdoc internal error: circular type definition."
-                     << "QML type" << qtn->name() << "can't be its own base type";
-            qtn = nullptr;
-            break;
-        }
-        qtn = static_cast<QmlTypeNode *>(qtn->qmlBaseNode());
-        if (qtn == nullptr)
-            break;
-        if (!qtn->isAbstract())
-            break;
-    }
-
-    while (qtn != nullptr) {
-        if (!qtn->isAbstract() || !classMap)
-            classMap = allMembers.newClassMap(qtn);
-        for (auto it = qtn->constBegin(); it != qtn->constEnd(); ++it) {
-            Node *n = *it;
-            if (n->isInternal() || n->isSharedCommentNode())
-                continue;
-
-            allMembers.add(classMap, n);
-        }
-        if (qtn->qmlBaseNode() == qtn) {
-            qDebug() << "qdoc internal error: circular type definition."
-                     << "QML type" << qtn->name() << "can't be its own base type";
-            qtn = nullptr;
+            qCDebug(lcQdoc, "error: circular type definition: '%s' inherits itself",
+                    qPrintable(qtn->name()));
             break;
         }
         qtn = static_cast<QmlTypeNode *>(qtn->qmlBaseNode());
     }
+
     reduce(summarySections);
     reduce(detailsSections);
     allMembers.reduce();
