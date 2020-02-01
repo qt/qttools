@@ -27,6 +27,7 @@
 ****************************************************************************/
 #include <QProcess>
 #include <QTemporaryDir>
+#include <QDirIterator>
 #include <QtTest>
 
 class tst_generatedOutput : public QObject
@@ -61,6 +62,7 @@ private slots:
     void scopedEnum();
     void dontDocument();
     void inheritedQmlPropertyGroups();
+    void crossModuleLinking();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -70,6 +72,7 @@ private:
     void compareLineByLine(const QStringList &expectedFiles);
     void testAndCompare(const char *input, const char *outNames, const char *extraParams = nullptr,
                         const char *outputPathPrefix = nullptr);
+    void copyIndexFiles();
 };
 
 void tst_generatedOutput::initTestCase()
@@ -160,6 +163,20 @@ void tst_generatedOutput::testAndCompare(const char *input, const char *outNames
             expectedOut = QString(outputPathPrefix) + "/" + expectedOut;
 
     compareLineByLine(expectedOuts);
+}
+
+// Copy <project>.index to <project>/<project>.index in the outputdir
+void tst_generatedOutput::copyIndexFiles()
+{
+    QDirIterator it(m_outputDir->path(), QStringList("*.index"), QDir::Files, QDirIterator::Subdirectories);
+    while (it.hasNext()) {
+        QFileInfo fileInfo(it.next());
+        QDir indexDir(m_outputDir->path());
+        QVERIFY(indexDir.mkpath(fileInfo.baseName()));
+        QVERIFY(indexDir.cd(fileInfo.baseName()));
+        if (!indexDir.exists(fileInfo.fileName()))
+            QVERIFY(QFile::copy(fileInfo.filePath(), indexDir.filePath(fileInfo.fileName())));
+    }
 }
 
 void tst_generatedOutput::htmlFromQDocFile()
@@ -304,6 +321,17 @@ void tst_generatedOutput::inheritedQmlPropertyGroups()
 {
     testAndCompare("qmlpropertygroups/qmlpropertygroups.qdocconf",
                    "qmlpropertygroups/qml-qdoc-test-anotherchild-members.html");
+}
+
+void tst_generatedOutput::crossModuleLinking()
+{
+    htmlFromCpp();
+    copyIndexFiles();
+    QString indexDir = QLatin1String("-indexdir ") +  m_outputDir->path();
+    testAndCompare("crossmodule/crossmodule.qdocconf",
+                   "crossmodule/testtype.html "
+                   "crossmodule/testtype-members.html",
+                   indexDir.toLatin1().data());
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
