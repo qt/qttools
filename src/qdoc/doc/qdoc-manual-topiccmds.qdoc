@@ -1489,20 +1489,20 @@
 
     \code
     / *!
-        \typedef QLinkedList::Iterator
+        \typedef QVector::Iterator
 
-        Qt-style synonym for QList::iterator.
+        Qt-style synonym for QVector::iterator.
     * /
     \endcode
 
-    QDoc includes this one on the reference page for class QLinkedList as:
+    QDoc includes this one on the reference page for class QVector as:
 
     \quotation
         \raw HTML
-        <h3>typedef QLinkedList::Iterator</h3>
+        <h3>typedef QVector::Iterator</h3>
         \endraw
 
-        Qt-style synonym for QList::iterator.
+        Qt-style synonym for QVector::iterator.
     \endquotation
 
     \target variable-command
