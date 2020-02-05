@@ -1221,7 +1221,7 @@
     QT_VERSION_STR is defined in qglobal.h as follows
 
     \badcode
-        #define QT_VERSION_STR   "4.0.1"
+        #define QT_VERSION_STR   "5.14.1"
     \endcode
 
     When a version number is specified (using the \tt{\l version} or
@@ -1726,14 +1726,14 @@
     \badcode
     project     = Qt
     description = Qt Reference Documentation
-    url         = http://doc.qt.io/qt-4.8/
+    url         = https://doc.qt.io/qt/
 
          ...
     \endcode
 
     This makes sure that whenever \c qt.index is used to generate
     references to for example Qt classes, the base URL is \c
-    http://doc.qt.io/qt-4.8/.
+    https://doc.qt.io/qt/.
 
     See also \l indexes and \l {url.examples}.
 
@@ -1801,7 +1801,7 @@
     \badcode
         project     = Qt
         description = Qt Reference Documentation
-        url         = http://doc.qt.io/qt-4.8/
+        url         = http://doc.qt.io/qt/
 
         ...
     \endcode
