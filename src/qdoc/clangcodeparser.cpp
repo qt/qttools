@@ -1208,7 +1208,7 @@ void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QStri
 }
 
 static const char *defaultArgs_[] = {
-    "-std=c++14",
+    "-std=c++17",
 #ifndef Q_OS_WIN
     "-fPIC",
 #else
