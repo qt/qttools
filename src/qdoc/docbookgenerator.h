@@ -56,12 +56,19 @@ public:
 protected:
     QString fileExtension() const override;
     void generateDocumentation(Node *node) override;
+    using Generator::generateCppReferencePage;
     void generateCppReferencePage(Node *node);
+    using Generator::generatePageNode;
     void generatePageNode(PageNode *pn);
+    using Generator::generateQmlTypePage;
     void generateQmlTypePage(QmlTypeNode *qcn);
+    using Generator::generateQmlBasicTypePage;
     void generateQmlBasicTypePage(QmlBasicTypeNode *qbtn);
+    using Generator::generateCollectionNode;
     void generateCollectionNode(CollectionNode *cn);
+    using Generator::generateGenericCollectionPage;
     void generateGenericCollectionPage(CollectionNode *cn);
+    using Generator::generateProxyPage;
     void generateProxyPage(Aggregate *aggregate);
 
     void generateList(QXmlStreamWriter &writer, const Node *relative, const QString &selector);
@@ -78,11 +85,14 @@ protected:
     bool generateStatus(QXmlStreamWriter &writer, const Node *node);
     bool generateThreadSafeness(QXmlStreamWriter &writer, const Node *node);
     bool generateSince(QXmlStreamWriter &writer, const Node *node);
+    using Generator::generateBody;
     void generateBody(QXmlStreamWriter &writer, const Node *node);
 
+    using Generator::generateText;
     bool generateText(QXmlStreamWriter &writer, const Text &text, const Node *relative);
     const Atom *generateAtomList(QXmlStreamWriter &writer, const Atom *atom, const Node *relative,
                                  bool generate, int &numAtoms);
+    using Generator::generateAtom;
     int generateAtom(QXmlStreamWriter &writer, const Atom *atom, const Node *relative);
 
 private:
@@ -100,6 +110,7 @@ private:
     void generateCompactList(QXmlStreamWriter &writer, ListType listType, const Node *relative,
                              const NodeMultiMap &nmm, const QString &commonPrefix,
                              const QString &selector);
+    using Generator::generateFileList;
     void generateFileList(QXmlStreamWriter &writer, const ExampleNode *en, bool images);
     void generateObsoleteMembers(QXmlStreamWriter &writer, const Sections &sections);
     void generateObsoleteQmlMembers(QXmlStreamWriter &writer, const Sections &sections);
@@ -123,18 +134,22 @@ private:
     void generateFullName(QXmlStreamWriter &writer, const Node *apparentNode,
                           const QString &fullName, const Node *actualNode);
     void generateBrief(QXmlStreamWriter &writer, const Node *node);
+    using Generator::generateAlsoList;
     void generateAlsoList(QXmlStreamWriter &writer, const Node *node);
     static void generateSignatureList(QXmlStreamWriter &writer, const NodeList &nodes);
+    using Generator::generateMaintainerList;
     void generateMaintainerList(QXmlStreamWriter &writer, const Aggregate *node);
     void generateReimplementsClause(QXmlStreamWriter &writer, const FunctionNode *fn);
     void generateClassHierarchy(QXmlStreamWriter &writer, const Node *relative, NodeMap &classMap);
     void generateFunctionIndex(QXmlStreamWriter &writer, const Node *relative);
     void generateLegaleseList(QXmlStreamWriter &writer, const Node *relative);
+    using Generator::generateExampleFilePage;
     void generateExampleFilePage(const Node *en, const QString &file);
     static void generateOverloadedSignal(QXmlStreamWriter &writer, const Node *node);
     static void generatePrivateSignalNote(QXmlStreamWriter &writer);
     static void generateInvokableNote(QXmlStreamWriter &writer, const Node *node);
     void generateAssociatedPropertyNotes(QXmlStreamWriter &writer, const FunctionNode *fn);
+    using Generator::generateQmlText;
     bool generateQmlText(QXmlStreamWriter &writer, const Text &text, const Node *relative);
     void generateRequiredLinks(QXmlStreamWriter &writer, const Node *node);
     void generateLinkToExample(QXmlStreamWriter &writer, const ExampleNode *en,
@@ -147,7 +162,6 @@ private:
                    const Node *relative);
     void endLink(QXmlStreamWriter &writer);
 
-    bool hasQuotingInformation {};
     bool inListItemLineOpen {};
     bool inLink {};
     int currentSectionLevel {};

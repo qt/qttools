@@ -689,8 +689,9 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto baseNode = findNodeForCursor(qdb_, baseCursor);
         auto classe = static_cast<ClassNode *>(parent_);
         if (baseNode == nullptr || !baseNode->isClassNode()) {
-            QString bcName = fromCXString(clang_getCursorSpelling(baseCursor));
-            classe->addUnresolvedBaseClass(access, QStringList(bcName), bcName);
+            QString bcName = reconstructQualifiedPathForCursor(baseCursor);
+            classe->addUnresolvedBaseClass(access,
+                bcName.split(QLatin1String("::"), QString::SkipEmptyParts), bcName);
             return CXChildVisit_Continue;
         }
         auto baseClasse = static_cast<ClassNode *>(baseNode);
