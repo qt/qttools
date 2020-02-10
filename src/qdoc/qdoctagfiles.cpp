@@ -181,7 +181,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
         switch (node->nodeType()) {
         case Node::Enum:
             nodeName = "member";
-            kind = "enum";
+            kind = "enumeration";
             break;
         case Node::Typedef:
             nodeName = "member";
@@ -292,14 +292,15 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             const EnumNode *enumNode = static_cast<const EnumNode *>(node);
             writer.writeTextElement("name", objName);
             QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+            writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
-            writer.writeTextElement("arglist", QString());
             writer.writeEndElement(); // member
 
-            for (int i = 0; i < enumNode->items().size(); ++i) {
-                EnumItem item = enumNode->items().value(i);
+            for (const auto &item : enumNode->items()) {
                 writer.writeStartElement("member");
-                writer.writeAttribute("name", item.name());
+                writer.writeAttribute("kind", "enumvalue");
+                writer.writeTextElement("name", item.name());
+                writer.writeTextElement("anchorfile", pieces[0]);
                 writer.writeTextElement("anchor", pieces[1]);
                 writer.writeTextElement("arglist", QString());
                 writer.writeEndElement(); // member
