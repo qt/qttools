@@ -3625,7 +3625,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
                           "<div class=\"table\"><table class=\"qmlname\">\n");
 
     QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
-                         "<td class=\"%2\"><p>\n");
+                         "<td class=\"%2\"><p>\n<a name=\"%1\"></a>");
     QString qmlItemEnd("</p></td></tr>\n");
 
     QString qmlItemFooter("</table></div></div>\n");
@@ -3656,8 +3656,10 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         const SharedCommentNode *scn = static_cast<const SharedCommentNode *>(node);
         out() << qmlItemHeader;
         if (!scn->name().isEmpty()) {
-            out() << "<tr valign=\"top\" class=\"even\" id=\"" << refForNode(scn) << "\">";
+            const QString nodeRef = refForNode(scn);
+            out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
             out() << "<th class=\"centerAlign\"><p>";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
             out() << "<b>" << scn->name() << " group</b>";
             out() << "</p></th></tr>\n";
         }
