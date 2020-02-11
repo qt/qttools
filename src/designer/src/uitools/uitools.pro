@@ -1,5 +1,4 @@
 TARGET = QtUiTools
-CONFIG += static
 
 include(../lib/uilib/uilib.pri)
 

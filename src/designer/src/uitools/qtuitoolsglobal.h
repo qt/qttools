@@ -37,74 +37,24 @@
 **
 ****************************************************************************/
 
-#ifndef QUILOADER_P_H
-#define QUILOADER_P_H
+#ifndef QTUITOOLSGLOBAL_H
+#define QTUITOOLSGLOBAL_H
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#include <QtUiTools/qtuitoolsglobal.h>
-#include <QtCore/qbytearray.h>
-#include <QtCore/qmetatype.h>
-
-QT_FORWARD_DECLARE_CLASS(QDataStream)
-
-// This file is here for use by the form preview in Linguist. If you change anything
-// here or in the code which uses it, remember to adapt Linguist accordingly.
-
-#define PROP_GENERIC_PREFIX "_q_notr_"
-#define PROP_TOOLITEMTEXT "_q_toolItemText_notr"
-#define PROP_TOOLITEMTOOLTIP "_q_toolItemToolTip_notr"
-#define PROP_TABPAGETEXT "_q_tabPageText_notr"
-#define PROP_TABPAGETOOLTIP "_q_tabPageToolTip_notr"
-#define PROP_TABPAGEWHATSTHIS "_q_tabPageWhatsThis_notr"
+#include <QtCore/qglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QUiTranslatableStringValue
-{
-public:
-    QByteArray value() const { return m_value; }
-    void setValue(const QByteArray &value) { m_value = value; }
-    QByteArray qualifier() const { return m_qualifier; }
-    void setQualifier(const QByteArray &qualifier) { m_qualifier = qualifier; }
-
-    QString translate(const QByteArray &className, bool idBased) const;
-
-private:
-    friend QDataStream &operator>>(QDataStream &in, QUiTranslatableStringValue &s);
-
-    QByteArray m_value;
-    QByteArray m_qualifier; // Comment or ID for id-based tr().
-};
-
-struct QUiItemRolePair {
-    int realRole;
-    int shadowRole;
-};
-
-#ifdef QFORMINTERNAL_NAMESPACE
-namespace QFormInternal
-{
-#endif
-
-extern const Q_UITOOLS_EXPORT QUiItemRolePair qUiItemRoles[];
-
-#ifdef QFORMINTERNAL_NAMESPACE
-}
+#ifndef QT_STATIC
+#  if defined(QT_BUILD_UITOOLS_LIB)
+#    define Q_UITOOLS_EXPORT Q_DECL_EXPORT
+#  else
+#    define Q_UITOOLS_EXPORT Q_DECL_IMPORT
+#  endif
+#else
+#  define Q_UITOOLS_EXPORT
 #endif
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QUiTranslatableStringValue)
+#endif // QTUITOOLSGLOBAL_H
 
-
-#endif // QUILOADER_P_H

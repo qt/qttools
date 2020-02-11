@@ -3,7 +3,7 @@
 ** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the Qt Designer of the Qt Toolkit.
+** This file is part of the Qt UI Tools library of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -40,6 +40,7 @@
 #ifndef QUILOADER_H
 #define QUILOADER_H
 
+#include <QtUiTools/qtuitoolsglobal.h>
 #include <QtCore/qobject.h>
 #include <QtCore/qscopedpointer.h>
 
@@ -54,7 +55,7 @@ class QIODevice;
 class QDir;
 
 class QUiLoaderPrivate;
-class QUiLoader : public QObject
+class Q_UITOOLS_EXPORT QUiLoader : public QObject
 {
     Q_OBJECT
 public:
