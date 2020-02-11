@@ -3725,15 +3725,15 @@
     The command is useful when some snippet of commands or text is to
     be used in multiple places in the documentation. Use the \\include
     command wherever you want to insert a snippet into the documentation.
-    The file containing the snippet to include must be located under the
-    path(s) listed in the \l{sourcedirs-variable}{sourcedirs} QDoc
-    configuration variable. It can be either any source file parsed
-    by QDoc (or even the same one where \\include command is used), or
-    any other text file. To store snippets in a separate file that is
-    not meant to be parsed by QDoc, use a file extension that is not
-    listed in \l {sources.fileextensions-variable}{sources.fileextensions};
+    The file containing the snippet to include, must be located under the
+    path(s) listed in the \l{sourcedirs-variable}{sourcedirs} or
+    \l{exampledirs-variable}{exampledirs} QDoc configuration variable.
+    It can be either any source file parsed by QDoc (or even the same one
+    where \\include command is used), or any other text file. To store
+    snippets in a separate file that is not meant to be parsed by QDoc,
+    use a file extension that is not listed in
+    \l{sources.fileextensions-variable}{sources.fileextensions};
     for example, \c .qdocinc.
-
 
     The command can have either one or two arguments. The first
     argument is always a file name. The contents of the file must be

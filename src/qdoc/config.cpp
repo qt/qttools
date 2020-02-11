@@ -724,8 +724,12 @@ QString Config::getIncludeFilePath(const QString &fileName) const
     if (!includeFilesMap_.contains(ext)) {
         QSet<QString> t;
         QStringList result;
-        const QStringList dirs = getCanonicalPathList(CONFIG_SOURCEDIRS);
-        for (const auto &dir : dirs)
+        const auto sourceDirs = getCanonicalPathList(CONFIG_SOURCEDIRS);
+        for (const auto &dir : sourceDirs)
+            result += getFilesHere(dir, ext, location(), t, t);
+        // Append the include files from the exampledirs as well
+        const auto exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
+        for (const auto &dir : exampleDirs)
             result += getFilesHere(dir, ext, location(), t, t);
         includeFilesMap_.insert(ext, result);
     }
