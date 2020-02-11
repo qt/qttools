@@ -407,7 +407,7 @@ void QHelpFilterSettingsWidget::setAvailableVersions(const QList<QVersionNumber>
     Reads the filter settings stored inside \a filterEngine and sets up
     this filter settings widget accordingly.
 */
-void QHelpFilterSettingsWidget::readSettings(QHelpFilterEngine *filterEngine)
+void QHelpFilterSettingsWidget::readSettings(const QHelpFilterEngine *filterEngine)
 {
     Q_D(QHelpFilterSettingsWidget);
     const QHelpFilterSettings settings = QHelpFilterSettings::readSettings(filterEngine);
@@ -419,9 +419,9 @@ void QHelpFilterSettingsWidget::readSettings(QHelpFilterEngine *filterEngine)
     widget, to the \a filterEngine. The old settings stored in the filter
     engine will be overwritten.
 */
-bool QHelpFilterSettingsWidget::applySettings(QHelpFilterEngine *filterEngine)
+bool QHelpFilterSettingsWidget::applySettings(QHelpFilterEngine *filterEngine) const
 {
-    Q_D(QHelpFilterSettingsWidget);
+    Q_D(const QHelpFilterSettingsWidget);
     return QHelpFilterSettings::applySettings(filterEngine, d->filterSettings());
 }
 

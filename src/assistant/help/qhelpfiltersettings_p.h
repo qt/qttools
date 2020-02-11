@@ -73,7 +73,7 @@ public:
     void setCurrentFilter(const QString &filterName);
     QString currentFilter() const;
 
-    static QHelpFilterSettings readSettings(QHelpFilterEngine *filterEngine);
+    static QHelpFilterSettings readSettings(const QHelpFilterEngine *filterEngine);
     static bool applySettings(QHelpFilterEngine *filterEngine, const QHelpFilterSettings &settings);
 
 private:
