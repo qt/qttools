@@ -33,16 +33,13 @@
 #ifndef DOCBOOKGENERATOR_H
 #define DOCBOOKGENERATOR_H
 
-#include <qhash.h>
-#include <qregexp.h>
-#include <qxmlstream.h>
 #include "codemarker.h"
 #include "config.h"
 #include "xmlgenerator.h"
 
+#include <QtCore/qhash.h>
+#include <QtCore/qregexp.h>
 #include <QtCore/qxmlstream.h>
-
-#include "codemarker.h"
 
 QT_BEGIN_NAMESPACE
 
