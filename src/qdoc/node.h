@@ -865,9 +865,7 @@ class EnumNode : public Node
 {
 public:
     EnumNode(Aggregate *parent, const QString &name, bool isScoped = false)
-    : Node(Enum, parent, name),
-    flagsType_(nullptr),
-    isScoped_(isScoped)
+        : Node(Enum, parent, name), flagsType_(nullptr), isScoped_(isScoped)
     {
     }
 
@@ -957,10 +955,7 @@ public:
         n->setSharedCommentNode(this);
         setGenus(n->genus());
     }
-    void sort()
-    {
-        std::sort(collective_.begin(), collective_.end(), Node::nodeNameLessThan);
-    }
+    void sort() { std::sort(collective_.begin(), collective_.end(), Node::nodeNameLessThan); }
     const QVector<Node *> &collective() const { return collective_; }
     void setOverloadFlags();
     void setRelatedNonmember(bool b) override;

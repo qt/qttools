@@ -155,8 +155,7 @@ static QStringList getTemplateParameters(CXCursor cursor)
 static QString templateDecl(CXCursor cursor)
 {
     QStringList params = getTemplateParameters(cursor);
-    return QLatin1String("template <") + params.join(QLatin1String(", ")) +
-           QLatin1Char('>');
+    return QLatin1String("template <") + params.join(QLatin1String(", ")) + QLatin1Char('>');
 }
 
 /*!
@@ -690,8 +689,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto classe = static_cast<ClassNode *>(parent_);
         if (baseNode == nullptr || !baseNode->isClassNode()) {
             QString bcName = reconstructQualifiedPathForCursor(baseCursor);
-            classe->addUnresolvedBaseClass(access,
-                bcName.split(QLatin1String("::"), QString::SkipEmptyParts), bcName);
+            classe->addUnresolvedBaseClass(
+                    access, bcName.split(QLatin1String("::"), QString::SkipEmptyParts), bcName);
             return CXChildVisit_Continue;
         }
         auto baseClasse = static_cast<ClassNode *>(baseNode);

@@ -2138,7 +2138,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     // skip import statement of \internal collections
     if (!collection || !collection->isInternal() || showInternal_) {
         logicalModuleVersion =
-            collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
+                collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
 
         if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
             qcn->doc().location().warning(tr("Could not resolve QML import "
@@ -2916,8 +2916,7 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
 
     // Look for the _ character in the member name followed by a number (or n):
     // this is intended to be rendered as a subscript.
-    marked.replace(QRegExp("<@param>([a-z]+)_([0-9]+|n)</@param>"),
-                   "<i>\\1<sub>\\2</sub></i>");
+    marked.replace(QRegExp("<@param>([a-z]+)_([0-9]+|n)</@param>"), "<i>\\1<sub>\\2</sub></i>");
 
     // Replace some markup by HTML tags. Do both the opening and the closing tag
     // in one go (instead of <@param> and </@param> separately, for instance).

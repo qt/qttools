@@ -614,7 +614,7 @@ QString Node::plainFullName(const Node *relative) const
     while (node && !node->isHeader()) {
         parts.prepend(node->plainName());
         if (node->parent() == relative || node->parent()->name().isEmpty())
-          break;
+            break;
         node = node->parent();
     }
     return parts.join(QLatin1String("::"));
@@ -1060,11 +1060,10 @@ void Node::setSince(const QString &since)
         project = Config::dot + parts.first();
 
     QVersionNumber cutoff =
-        QVersionNumber::fromString(Config::instance().getString(
-            CONFIG_IGNORESINCE + project)).normalized();
+            QVersionNumber::fromString(Config::instance().getString(CONFIG_IGNORESINCE + project))
+                    .normalized();
 
-    if (!cutoff.isNull() &&
-        QVersionNumber::fromString(parts.last()).normalized() < cutoff)
+    if (!cutoff.isNull() && QVersionNumber::fromString(parts.last()).normalized() < cutoff)
         return;
 
     since_ = parts.join(QLatin1Char(' '));
@@ -2947,7 +2946,9 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *bc = bases_.at(i).node_;
         if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument() || found.contains(bc))) {
+        if (bc != nullptr
+            && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument()
+                || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);

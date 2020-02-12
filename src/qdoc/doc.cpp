@@ -1375,7 +1375,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                             // The QML and JS property group commands are no longer required
                             // for grouping QML and JS properties. They are allowed but ignored.
                             location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
-                                               detailsUnknownCommand(metaCommandSet,cmdStr));
+                                               detailsUnknownCommand(metaCommandSet, cmdStr));
                         }
                         enterPara();
                         append(Atom::UnknownCommand, cmdStr);

@@ -394,7 +394,8 @@ QString Generator::fileBase(const Node *node) const
           to the file name. The suffix, if one exists, is appended to the
           module name.
         */
-        if (!node->logicalModuleName().isEmpty() && (!node->logicalModule()->isInternal() || showInternal_))
+        if (!node->logicalModuleName().isEmpty()
+            && (!node->logicalModule()->isInternal() || showInternal_))
             base.prepend(node->logicalModuleName() + outputSuffix(node) + QLatin1Char('-'));
 
         base.prepend(outputPrefix(node));
@@ -1261,8 +1262,9 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
                     text << "." << Atom::ParaRight;
                     generateText(text, fn, marker);
                 } else {
-                    fn->doc().location().warning(tr("Illegal \\reimp; no documented virtual function for %1")
-                                                    .arg(overrides->plainSignature()));
+                    fn->doc().location().warning(
+                            tr("Illegal \\reimp; no documented virtual function for %1")
+                                    .arg(overrides->plainSignature()));
                 }
                 return;
             }
