@@ -269,7 +269,7 @@ bool CodeParser::isParsingQdoc() const
 void CodeParser::checkModuleInclusion(Node *n)
 {
     if (n->physicalModuleName().isEmpty()) {
-        n->setPhysicalModuleName(Generator::defaultModuleName());
+        qdb_->addToModule(Generator::defaultModuleName(), n);
         QString word;
         switch (n->nodeType()) {
         case Node::Class:
