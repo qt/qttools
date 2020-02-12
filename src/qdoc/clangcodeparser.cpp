@@ -45,7 +45,6 @@
 
 #include "codechunk.h"
 #include "config.h"
-#include "generator.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
 #include "utilities.h"
@@ -1703,7 +1702,8 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
          */
         if (fnNode == nullptr) {
             unsigned diagnosticCount = clang_getNumDiagnostics(tu);
-            if (diagnosticCount > 0 && (!Generator::preparing() || Generator::singleExec())) {
+            const auto &config = Config::instance();
+            if (diagnosticCount > 0 && (!config.preparing() || config.singleExec())) {
                 bool report = true;
                 QStringList signature = fnArg.split(QChar('('));
                 if (signature.size() > 1) {

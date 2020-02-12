@@ -52,7 +52,6 @@ class Generator
     Q_DECLARE_TR_FUNCTIONS(QDoc::Generator)
 
 public:
-    enum QDocPass { Neither, Prepare, Generate };
     enum ListType { Generic, Obsolete };
 
     Generator();
@@ -80,16 +79,6 @@ public:
     static void augmentImageDirs(QSet<QString> &moreImageDirs);
     static bool noLinkErrors() { return noLinkErrors_; }
     static bool autolinkErrors() { return autolinkErrors_; }
-    static void setQDocPass(QDocPass t) { qdocPass_ = t; }
-    static void setUseTimestamps() { useTimestamps_ = true; }
-    static void setUseDocBookExtensions() { useDocBookExtensions_ = true; }
-    static bool preparing() { return (qdocPass_ == Prepare); }
-    static bool generating() { return (qdocPass_ == Generate); }
-    static bool singleExec() { return qdocSingleExec_; }
-    static bool dualExec() { return !qdocSingleExec_; }
-    static bool writeQaPages() { return qdocWriteQaPages_; }
-    static void setSingleExec() { qdocSingleExec_ = true; }
-    static void setWriteQaPages() { qdocWriteQaPages_ = true; }
     static QString defaultModuleName() { return project_; }
     static void resetUseOutputSubdirs() { useOutputSubdirs_ = false; }
     static bool useOutputSubdirs() { return useOutputSubdirs_; }
@@ -97,8 +86,6 @@ public:
     static QmlTypeNode *qmlTypeContext() { return qmlTypeContext_; }
     static QString cleanRef(const QString &ref);
     static QString plainCode(const QString &markedCode);
-    static bool useTimestamps() { return useTimestamps_; }
-    static bool useDocBookExtensions() { return useDocBookExtensions_; }
 
 protected:
     static QFile *openSubPageFile(const Node *node, const QString &fileName);
@@ -220,12 +207,8 @@ private:
     static bool noLinkErrors_;
     static bool autolinkErrors_;
     static bool redirectDocumentationToDevNull_;
-    static QDocPass qdocPass_;
     static bool qdocSingleExec_;
-    static bool qdocWriteQaPages_;
     static bool useOutputSubdirs_;
-    static bool useTimestamps_;
-    static bool useDocBookExtensions_;
     static QmlTypeNode *qmlTypeContext_;
 
     void generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker);

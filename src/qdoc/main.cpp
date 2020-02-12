@@ -237,9 +237,9 @@ void logStartEndMessage(const QLatin1String &startStop, const Config &config)
     const QString runName = " qdoc for "
             + config.getString(CONFIG_PROJECT)
             + QLatin1String(" in ")
-            + QLatin1String(Generator::singleExec() ? "single" : "dual")
+            + QLatin1String(config.singleExec() ? "single" : "dual")
             + QLatin1String(" process mode, (")
-            + QLatin1String(Generator::preparing() ? "prepare" : "generate")
+            + QLatin1String(config.preparing() ? "prepare" : "generate")
             + QLatin1String(" phase)");
 
     const QString msg = startStop + runName;
@@ -358,14 +358,14 @@ static void processQdocconfFile(const QString &fileName)
     Location outputFormatsLocation = config.lastLocation();
 
     qdb->clearSearchOrder();
-    if (!Generator::singleExec()) {
-        if (!Generator::preparing()) {
+    if (!config.singleExec()) {
+        if (!config.preparing()) {
             qCDebug(lcQdoc, "  loading index files");
             loadIndexFiles(outputFormats);
             qCDebug(lcQdoc, "  done loading index files");
         }
         qdb->newPrimaryTree(project);
-    } else if (Generator::preparing())
+    } else if (config.preparing())
         qdb->newPrimaryTree(project);
     else
         qdb->setPrimaryTree(project);
@@ -409,7 +409,7 @@ static void processQdocconfFile(const QString &fileName)
     }
     Generator::augmentImageDirs(exampleImageDirs);
 
-    if (Generator::dualExec() || Generator::preparing()) {
+    if (config.dualExec() || config.preparing()) {
         QStringList headerList;
         QStringList sourceList;
 
@@ -585,14 +585,14 @@ int main(int argc, char **argv)
     if (config.singleExec())
         qdocFiles = Config::loadMaster(qdocFiles.at(0));
 
-    if (Generator::singleExec()) {
+    if (config.singleExec()) {
         // single qdoc process for prepare and generate phases
-        Generator::setQDocPass(Generator::Prepare);
+        config.setQDocPass(Config::Prepare);
         for (const auto &file : qAsConst(qdocFiles)) {
             config.dependModules().clear();
             processQdocconfFile(file);
         }
-        Generator::setQDocPass(Generator::Generate);
+        config.setQDocPass(Config::Generate);
         QDocDatabase::qdocDB()->processForest();
         for (const auto &file : qAsConst(qdocFiles)) {
             config.dependModules().clear();

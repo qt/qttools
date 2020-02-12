@@ -84,8 +84,6 @@ public:
     static void terminate();
     static void information(const QString &message);
     static void internalError(const QString &hint);
-    static void startLoggingProgress() { logProgress_ = true; }
-    static void stopLoggingProgress() { logProgress_ = false; }
     static QString canonicalRelativePath(const QString &path);
     static int exitCode();
 
@@ -117,7 +115,6 @@ private:
     static QString programName;
     static QString project;
     static QRegExp *spuriousRegExp;
-    static bool logProgress_;
 };
 Q_DECLARE_TYPEINFO(Location::StackEntry, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(Location, Q_COMPLEX_TYPE); // stkTop = &stkBottom

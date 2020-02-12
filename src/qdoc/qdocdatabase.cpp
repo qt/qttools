@@ -1102,7 +1102,8 @@ const NodeMap &QDocDatabase::getSinceMap(const QString &key)
  */
 void QDocDatabase::resolveStuff()
 {
-    if (Generator::dualExec() || Generator::preparing()) {
+    const auto &config = Config::instance();
+    if (config.dualExec() || config.preparing()) {
         // order matters
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
@@ -1116,19 +1117,19 @@ void QDocDatabase::resolveStuff()
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveUsingClauses();
     }
-    if (Generator::singleExec() && Generator::generating()) {
+    if (config.singleExec() && config.generating()) {
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveUsingClauses();
     }
-    if (Generator::generating()) {
+    if (config.generating()) {
         resolveNamespaces();
         resolveProxies();
         resolveBaseClasses();
     }
-    if (Generator::dualExec())
+    if (config.dualExec())
         QDocIndexFiles::destroyQDocIndexFiles();
 }
 

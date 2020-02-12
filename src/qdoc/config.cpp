@@ -31,7 +31,6 @@
 */
 
 #include "config.h"
-#include "generator.h"
 #include "loggingcategory.h"
 
 #include <QtCore/qdebug.h>
@@ -57,6 +56,7 @@ QString ConfigStrings::CPPCLASSESTITLE = QStringLiteral("cppclassestitle");
 QString ConfigStrings::DEFINES = QStringLiteral("defines");
 QString ConfigStrings::DEPENDS = QStringLiteral("depends");
 QString ConfigStrings::DESCRIPTION = QStringLiteral("description");
+QString ConfigStrings::DOCBOOKEXTENSIONS = QStringLiteral("usedocbookextensions");
 QString ConfigStrings::EDITION = QStringLiteral("edition");
 QString ConfigStrings::ENDHEADER = QStringLiteral("endheader");
 QString ConfigStrings::EXAMPLEDIRS = QStringLiteral("exampledirs");
@@ -85,6 +85,7 @@ QString ConfigStrings::LANDINGPAGE = QStringLiteral("landingpage");
 QString ConfigStrings::LANDINGTITLE = QStringLiteral("landingtitle");
 QString ConfigStrings::LANGUAGE = QStringLiteral("language");
 QString ConfigStrings::LOCATIONINFO = QStringLiteral("locationinfo");
+QString ConfigStrings::LOGPROGRESS = QStringLiteral("logprogress");
 QString ConfigStrings::MACRO = QStringLiteral("macro");
 QString ConfigStrings::MANIFESTMETA = QStringLiteral("manifestmeta");
 QString ConfigStrings::MODULEHEADER = QStringLiteral("moduleheader");
@@ -117,6 +118,7 @@ QString ConfigStrings::STYLESHEETS = QStringLiteral("stylesheets");
 QString ConfigStrings::SYNTAXHIGHLIGHTING = QStringLiteral("syntaxhighlighting");
 QString ConfigStrings::TABSIZE = QStringLiteral("tabsize");
 QString ConfigStrings::TAGFILE = QStringLiteral("tagfile");
+QString ConfigStrings::TIMESTAMPS = QStringLiteral("timestamps");
 QString ConfigStrings::TRANSLATORS = QStringLiteral("translators");
 QString ConfigStrings::URL = QStringLiteral("url");
 QString ConfigStrings::VERSION = QStringLiteral("version");
@@ -385,24 +387,20 @@ void Config::processCommandLineOptions(const QStringList &args)
 
     debug_ = m_parser.isSet(m_parser.debugOption);
 
-    // TODO: Make Generator use Config instead of storing these separately
     if (m_parser.isSet(m_parser.prepareOption))
-        Generator::setQDocPass(Generator::Prepare);
+        m_qdocPass = Prepare;
     if (m_parser.isSet(m_parser.generateOption))
-        Generator::setQDocPass(Generator::Generate);
-    if (m_parser.isSet(m_parser.singleExecOption))
-        Generator::setSingleExec();
+        m_qdocPass = Generate;
     if (m_parser.isSet(m_parser.writeQaPagesOption)) {
-        Generator::setWriteQaPages();
         qCWarning(lcQdoc,
                 "The QA pages option for QDoc is deprecated and will be removed in Qt 6.");
     }
     if (m_parser.isSet(m_parser.logProgressOption))
-        Location::startLoggingProgress();
+        setStringList(CONFIG_LOGPROGRESS, QStringList("true"));
     if (m_parser.isSet(m_parser.timestampsOption))
-        Generator::setUseTimestamps();
+        setStringList(CONFIG_TIMESTAMPS, QStringList("true"));
     if (m_parser.isSet(m_parser.useDocBookExtensions))
-        Generator::setUseDocBookExtensions();
+        setStringList(CONFIG_DOCBOOKEXTENSIONS, QStringList("true"));
 }
 
 void Config::setIncludePaths()
@@ -475,7 +473,7 @@ QString Config::getOutputDir(const QString &format) const
         t = getString(CONFIG_OUTPUTDIR);
     else
         t = overrideOutputDir;
-    if (Generator::singleExec()) {
+    if (getBool(CONFIG_SINGLEEXEC)) {
         QString project = getString(CONFIG_PROJECT);
         t += QLatin1Char('/') + project.toLower();
     }

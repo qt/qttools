@@ -48,7 +48,6 @@ int Location::warningLimit = -1;
 QString Location::programName;
 QString Location::project;
 QRegExp *Location::spuriousRegExp = nullptr;
-bool Location::logProgress_ = false;
 
 /*!
   \class Location
@@ -256,7 +255,8 @@ QString Location::canonicalRelativePath(const QString &path)
  */
 void Location::warning(const QString &message, const QString &details) const
 {
-    if (!Generator::preparing() || Generator::singleExec())
+    const auto &config = Config::instance();
+    if (!config.preparing() || config.singleExec())
         emitMessage(Warning, message, details);
 }
 
@@ -267,7 +267,8 @@ void Location::warning(const QString &message, const QString &details) const
  */
 void Location::error(const QString &message, const QString &details) const
 {
-    if (!Generator::preparing() || Generator::singleExec())
+    const auto &config = Config::instance();
+    if (!config.preparing() || config.singleExec())
         emitMessage(Error, message, details);
 }
 
