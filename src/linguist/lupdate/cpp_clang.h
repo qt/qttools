@@ -120,6 +120,9 @@ struct TranslationRelatedStore
             if (lupdateId.isEmpty())
                 return false;
             break;
+        default:
+            if (funcName == QStringLiteral("TRANSLATOR") && lupdateComment.isEmpty())
+                return false;
         }
         return !lupdateLocationFile.isEmpty() && (lupdateLocationLine > -1) && (locationCol > -1);
     }
