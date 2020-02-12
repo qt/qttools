@@ -103,19 +103,19 @@ void DocBookGenerator::initializeGenerator()
 {
     // Excerpts from HtmlGenerator::initializeGenerator.
     Generator::initializeGenerator();
-    Config &config = Config::instance();
+    config = &Config::instance();
 
-    project = config.getString(CONFIG_PROJECT);
+    project = config->getString(CONFIG_PROJECT);
 
-    projectDescription = config.getString(CONFIG_DESCRIPTION);
+    projectDescription = config->getString(CONFIG_DESCRIPTION);
     if (projectDescription.isEmpty() && !project.isEmpty())
         projectDescription = project + QLatin1String(" Reference Documentation");
 
-    naturalLanguage = config.getString(CONFIG_NATURALLANGUAGE);
+    naturalLanguage = config->getString(CONFIG_NATURALLANGUAGE);
     if (naturalLanguage.isEmpty())
         naturalLanguage = QLatin1String("en");
 
-    buildversion = config.getString(CONFIG_BUILDVERSION);
+    buildversion = config->getString(CONFIG_BUILDVERSION);
 }
 
 QString DocBookGenerator::format()

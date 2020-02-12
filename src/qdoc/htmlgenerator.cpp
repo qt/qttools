@@ -128,8 +128,8 @@ void HtmlGenerator::initializeGenerator()
                      { nullptr, nullptr, nullptr } };
 
     Generator::initializeGenerator();
-    Config &config = Config::instance();
-    obsoleteLinks = config.getBool(CONFIG_OBSOLETELINKS);
+    config = &Config::instance();
+    obsoleteLinks = config->getBool(CONFIG_OBSOLETELINKS);
     setImageFileExtensions(QStringList() << "png"
                                          << "jpg"
                                          << "jpeg"
@@ -147,49 +147,50 @@ void HtmlGenerator::initializeGenerator()
         i++;
     }
 
-    style = config.getString(HtmlGenerator::format() + Config::dot + CONFIG_STYLE);
-    endHeader = config.getString(HtmlGenerator::format() + Config::dot + CONFIG_ENDHEADER);
-    postHeader = config.getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_POSTHEADER);
+    style = config->getString(HtmlGenerator::format() + Config::dot + CONFIG_STYLE);
+    endHeader = config->getString(HtmlGenerator::format() + Config::dot + CONFIG_ENDHEADER);
+    postHeader =
+            config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_POSTHEADER);
     postPostHeader =
-            config.getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_POSTPOSTHEADER);
-    prologue = config.getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_PROLOGUE);
+            config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_POSTPOSTHEADER);
+    prologue = config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_PROLOGUE);
 
-    footer = config.getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_FOOTER);
-    address = config.getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_ADDRESS);
+    footer = config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_FOOTER);
+    address = config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_ADDRESS);
     pleaseGenerateMacRef =
-            config.getBool(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_GENERATEMACREFS);
+            config->getBool(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_GENERATEMACREFS);
     noNavigationBar =
-            config.getBool(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_NONAVIGATIONBAR);
-    navigationSeparator = config.getString(HtmlGenerator::format() + Config::dot
-                                           + HTMLGENERATOR_NAVIGATIONSEPARATOR);
-    tocDepth = config.getInt(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_TOCDEPTH);
+            config->getBool(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_NONAVIGATIONBAR);
+    navigationSeparator = config->getString(HtmlGenerator::format() + Config::dot
+                                            + HTMLGENERATOR_NAVIGATIONSEPARATOR);
+    tocDepth = config->getInt(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_TOCDEPTH);
 
-    project = config.getString(CONFIG_PROJECT);
+    project = config->getString(CONFIG_PROJECT);
 
-    projectDescription = config.getString(CONFIG_DESCRIPTION);
+    projectDescription = config->getString(CONFIG_DESCRIPTION);
     if (projectDescription.isEmpty() && !project.isEmpty())
         projectDescription = project + QLatin1String(" Reference Documentation");
 
-    projectUrl = config.getString(CONFIG_URL);
-    tagFile_ = config.getString(CONFIG_TAGFILE);
+    projectUrl = config->getString(CONFIG_URL);
+    tagFile_ = config->getString(CONFIG_TAGFILE);
 
 #ifndef QT_NO_TEXTCODEC
-    outputEncoding = config.getString(CONFIG_OUTPUTENCODING);
+    outputEncoding = config->getString(CONFIG_OUTPUTENCODING);
     if (outputEncoding.isEmpty())
         outputEncoding = QLatin1String("UTF-8");
     outputCodec = QTextCodec::codecForName(outputEncoding.toLocal8Bit());
 #endif
 
-    naturalLanguage = config.getString(CONFIG_NATURALLANGUAGE);
+    naturalLanguage = config->getString(CONFIG_NATURALLANGUAGE);
     if (naturalLanguage.isEmpty())
         naturalLanguage = QLatin1String("en");
 
-    const QSet<QString> editionNames = config.subVars(CONFIG_EDITION);
+    const QSet<QString> editionNames = config->subVars(CONFIG_EDITION);
     for (const auto &editionName : editionNames) {
-        QStringList editionModules = config.getStringList(CONFIG_EDITION + Config::dot + editionName
-                                                          + Config::dot + "modules");
-        QStringList editionGroups = config.getStringList(CONFIG_EDITION + Config::dot + editionName
-                                                         + Config::dot + "groups");
+        QStringList editionModules = config->getStringList(CONFIG_EDITION + Config::dot
+                                                           + editionName + Config::dot + "modules");
+        QStringList editionGroups = config->getStringList(CONFIG_EDITION + Config::dot + editionName
+                                                          + Config::dot + "groups");
 
         if (!editionModules.isEmpty())
             editionModuleMap[editionName] = editionModules;
@@ -197,9 +198,9 @@ void HtmlGenerator::initializeGenerator()
             editionGroupMap[editionName] = editionGroups;
     }
 
-    codeIndent = config.getInt(CONFIG_CODEINDENT); // QTBUG-27798
-    codePrefix = config.getString(CONFIG_CODEPREFIX);
-    codeSuffix = config.getString(CONFIG_CODESUFFIX);
+    codeIndent = config->getInt(CONFIG_CODEINDENT); // QTBUG-27798
+    codePrefix = config->getString(CONFIG_CODEPREFIX);
+    codeSuffix = config->getString(CONFIG_CODESUFFIX);
 
     /*
       The help file write should be allocated once and only once
@@ -211,40 +212,40 @@ void HtmlGenerator::initializeGenerator()
         helpProjectWriter = new HelpProjectWriter(project.toLower() + ".qhp", this);
 
     // Documentation template handling
-    headerScripts = config.getString(HtmlGenerator::format() + Config::dot + CONFIG_HEADERSCRIPTS);
-    headerStyles = config.getString(HtmlGenerator::format() + Config::dot + CONFIG_HEADERSTYLES);
+    headerScripts = config->getString(HtmlGenerator::format() + Config::dot + CONFIG_HEADERSCRIPTS);
+    headerStyles = config->getString(HtmlGenerator::format() + Config::dot + CONFIG_HEADERSTYLES);
 
     QString prefix = CONFIG_QHP + Config::dot + project + Config::dot;
     manifestDir =
-            QLatin1String("qthelp://") + config.getString(prefix + QLatin1String("namespace"));
-    manifestDir += QLatin1Char('/') + config.getString(prefix + QLatin1String("virtualFolder"))
+            QLatin1String("qthelp://") + config->getString(prefix + QLatin1String("namespace"));
+    manifestDir += QLatin1Char('/') + config->getString(prefix + QLatin1String("virtualFolder"))
             + QLatin1Char('/');
     readManifestMetaContent();
-    examplesPath = config.getString(CONFIG_EXAMPLESINSTALLPATH);
+    examplesPath = config->getString(CONFIG_EXAMPLESINSTALLPATH);
     if (!examplesPath.isEmpty())
         examplesPath += QLatin1Char('/');
 
     // Retrieve the config for the navigation bar
-    homepage = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_HOMEPAGE);
+    homepage = config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_HOMEPAGE);
 
-    hometitle = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_HOMETITLE, homepage);
+    hometitle = config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_HOMETITLE, homepage);
 
-    landingpage = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGPAGE);
+    landingpage = config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGPAGE);
 
     landingtitle =
-            config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE, landingpage);
+            config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE, landingpage);
 
-    cppclassespage = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_CPPCLASSESPAGE);
+    cppclassespage = config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_CPPCLASSESPAGE);
 
-    cppclassestitle = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_CPPCLASSESTITLE,
-                                       QLatin1String("C++ Classes"));
+    cppclassestitle = config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_CPPCLASSESTITLE,
+                                        QLatin1String("C++ Classes"));
 
-    qmltypespage = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_QMLTYPESPAGE);
+    qmltypespage = config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_QMLTYPESPAGE);
 
-    qmltypestitle = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_QMLTYPESTITLE,
-                                     QLatin1String("QML Types"));
+    qmltypestitle = config->getString(CONFIG_NAVIGATION + Config::dot + CONFIG_QMLTYPESTITLE,
+                                      QLatin1String("QML Types"));
 
-    buildversion = config.getString(CONFIG_BUILDVERSION);
+    buildversion = config->getString(CONFIG_BUILDVERSION);
 }
 
 /*!

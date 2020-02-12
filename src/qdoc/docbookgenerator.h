@@ -37,6 +37,7 @@
 #include <qregexp.h>
 #include <qxmlstream.h>
 #include "codemarker.h"
+#include "config.h"
 #include "xmlgenerator.h"
 
 #include <QtCore/qxmlstream.h>
@@ -173,6 +174,8 @@ private:
     QString naturalLanguage;
     QString buildversion;
     QXmlStreamWriter *writer = nullptr;
+
+    Config *config;
 };
 
 QT_END_NAMESPACE
