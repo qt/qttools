@@ -64,7 +64,7 @@ class RemoteControl : public QMainWindow
     Q_OBJECT
 
 public:
-    RemoteControl(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
+    RemoteControl(QWidget *parent = nullptr, Qt::WindowFlags flags = {});
     ~RemoteControl();
 
 private:
