@@ -53,7 +53,7 @@ class Generator
 
 public:
     enum ListType { Generic, Obsolete };
-    enum Addendum { Invokable, PrivateSignal, AssociatedProperties };
+    enum Addendum { Invokable, PrivateSignal, QmlSignalHandler, AssociatedProperties };
 
     Generator();
     virtual ~Generator();

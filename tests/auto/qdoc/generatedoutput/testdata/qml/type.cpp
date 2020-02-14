@@ -92,14 +92,10 @@
     \qmlsignal Type::completed(int status)
 
     This signal is emitted when the operation completed with \a status.
-
-    \note The corresponding handler is \c onCompleted.
 */
 
 /*!
     \qmlattachedsignal Type::configured()
 
     This attached signal is emitted when the type was configured.
-
-    \note The corresponding handler is \c onConfigured.
 */

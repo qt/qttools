@@ -829,6 +829,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         }
 
         if (fn) {
+            if (fn->isQmlSignal())
+                generateAddendum(node, QmlSignalHandler, marker);
             if (fn->isPrivateSignal())
                 generateAddendum(node, PrivateSignal, marker);
             if (fn->isInvokable())
@@ -1373,6 +1375,16 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         text << "This is a private signal. It can be used in signal connections "
                 "but cannot be emitted by the user.";
         break;
+    case QmlSignalHandler:
+    {
+        QString handler(node->name());
+        handler[0] = handler[0].toTitleCase();
+        handler.prepend(QLatin1String("on"));
+        text << "The corresponding handler is "
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_TELETYPE) << handler
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_TELETYPE) << ".";
+        break;
+    }
     case AssociatedProperties:
     {
         if (!node->isFunction())

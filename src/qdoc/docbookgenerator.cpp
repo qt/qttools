@@ -2116,6 +2116,8 @@ void DocBookGenerator::generateBody(const Node *node)
         }
 
         if (fn) {
+            if (fn->isQmlSignal())
+                generateAddendum(node, QmlSignalHandler);
             if (fn->isPrivateSignal())
                 generateAddendum(node, PrivateSignal);
             if (fn->isInvokable())
@@ -3426,6 +3428,19 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
             "This is a private signal. It can be used in signal connections but "
             "cannot be emitted by the user.");
         break;
+    case QmlSignalHandler:
+    {
+        QString handler(node->name());
+        handler[0] = handler[0].toTitleCase();
+        handler.prepend(QLatin1String("on"));
+        writer->writeStartElement(dbNamespace, "para");
+        writer->writeCharacters("The corresponding handler is ");
+        writer->writeTextElement(dbNamespace, "code", handler);
+        writer->writeCharacters(".");
+        writer->writeEndElement(); // para
+        newLine();
+        break;
+    }
     case AssociatedProperties:
     {
         if (!node->isFunction())
