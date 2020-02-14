@@ -1,8 +1,8 @@
-project = Test
+project = OutputFromQDocFiles
 description = "A test project for QDoc build artifacts"
 moduleheader =
 
-sources = qdoctests-outputfromqdocfiles.qdoc
+sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc
 
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"

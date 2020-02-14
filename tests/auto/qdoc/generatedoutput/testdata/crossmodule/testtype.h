@@ -27,7 +27,7 @@
 ****************************************************************************/
 #pragma once
 
-#include "../testcpp.h"
+#include "../testcpp/testcpp.h"
 
 class TestType : public TestQDoc::TestDerived
 {

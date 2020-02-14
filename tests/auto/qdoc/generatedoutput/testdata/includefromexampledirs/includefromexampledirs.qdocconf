@@ -1,4 +1,4 @@
-include(../testqml.qdocconf)
+include(../configs/testqml.qdocconf)
 
 includepaths += ..
 sourcedirs += src
