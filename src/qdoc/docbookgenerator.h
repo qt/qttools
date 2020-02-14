@@ -81,6 +81,7 @@ protected:
     bool generateStatus(const Node *node);
     bool generateThreadSafeness(const Node *node);
     bool generateSince(const Node *node);
+    void generateAddendum(const Node *node, Generator::Addendum type, CodeMarker *marker = nullptr) override;
     using Generator::generateBody;
     void generateBody(const Node *node);
 
@@ -133,9 +134,6 @@ private:
     void generateExampleFilePage(const Node *en, const QString &file,
                                  CodeMarker *marker = nullptr) override;
     void generateOverloadedSignal(const Node *node);
-    void generatePrivateSignalNote();
-    void generateInvokableNote(const Node *node);
-    void generateAssociatedPropertyNotes(const FunctionNode *fn);
     bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker = nullptr,
                          const QString &qmlName = QString()) override;
     void generateRequiredLinks(const Node *node);

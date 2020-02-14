@@ -135,6 +135,9 @@
 <db:section xml:id="completed-signal">
 <db:title>completed(<db:emphasis>status</db:emphasis>)</db:title>
 <db:para>This signal is emitted when the operation completed with <db:code role="parameter">status</db:code>.</db:para>
+<db:note>
+<db:para>The corresponding handler is <db:code>onCompleted</db:code>.</db:para>
+</db:note>
 </db:section>
 </db:section>
 <db:section xml:id="attached-signal-documentation">
@@ -142,6 +145,9 @@
 <db:section xml:id="configured-signal">
 <db:title>configured()</db:title>
 <db:para>This attached signal is emitted when the type was configured.</db:para>
+<db:note>
+<db:para>The corresponding handler is <db:code>onConfigured</db:code>.</db:para>
+</db:note>
 </db:section>
 </db:section>
 <db:section xml:id="method-documentation">

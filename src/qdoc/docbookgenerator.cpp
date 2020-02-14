@@ -2076,27 +2076,28 @@ bool DocBookGenerator::generateThreadSafeness(const Node *node)
 void DocBookGenerator::generateBody(const Node *node)
 {
     // From Generator::generateBody, without warnings.
+    const FunctionNode *fn = node->isFunction() ? static_cast<const FunctionNode *>(node) : nullptr;
+
     if (!node->hasDoc() && !node->hasSharedDoc()) {
         /*
           Test for special function, like a destructor or copy constructor,
           that has no documentation.
         */
-        if (node->nodeType() == Node::Function) {
-            const auto func = static_cast<const FunctionNode *>(node);
+        if (fn) {
             QString t;
-            if (func->isDtor()) {
-                t = "Destroys the instance of " + func->parent()->name() + ".";
-                if (func->isVirtual())
+            if (fn->isDtor()) {
+                t = "Destroys the instance of " + fn->parent()->name() + ".";
+                if (fn->isVirtual())
                     t += " The destructor is virtual.";
-            } else if (func->isCtor()) {
-                t = "Default constructs an instance of " + func->parent()->name() + ".";
-            } else if (func->isCCtor()) {
+            } else if (fn->isCtor()) {
+                t = "Default constructs an instance of " + fn->parent()->name() + ".";
+            } else if (fn->isCCtor()) {
                 t = "Copy constructor.";
-            } else if (func->isMCtor()) {
+            } else if (fn->isMCtor()) {
                 t = "Move-copy constructor.";
-            } else if (func->isCAssign()) {
+            } else if (fn->isCAssign()) {
                 t = "Copy-assignment constructor.";
-            } else if (func->isMAssign()) {
+            } else if (fn->isMAssign()) {
                 t = "Move-assignment constructor.";
             }
 
@@ -2104,15 +2105,23 @@ void DocBookGenerator::generateBody(const Node *node)
                 writer->writeTextElement(dbNamespace, "para", t);
         }
     } else if (!node->isSharingComment()) {
-        if (node->nodeType() == Node::Function) {
-            const auto func = static_cast<const FunctionNode *>(node);
-            if (!func->overridesThis().isEmpty())
-                generateReimplementsClause(func);
+        if (fn) {
+            if (!fn->overridesThis().isEmpty())
+                generateReimplementsClause(fn);
         }
 
         if (!generateText(node->doc().body(), node)) {
             if (node->isMarkedReimp())
                 return;
+        }
+
+        if (fn) {
+            if (fn->isPrivateSignal())
+                generateAddendum(node, PrivateSignal);
+            if (fn->isInvokable())
+                generateAddendum(node, Invokable);
+            if (fn->hasAssociatedProperties())
+                generateAddendum(node, AssociatedProperties);
         }
 
         // Warning generation skipped with respect to Generator::generateBody.
@@ -3393,83 +3402,70 @@ void DocBookGenerator::generateOverloadedSignal(const Node *node)
 }
 
 /*!
-  Generates a bold line that explains that this is a private signal,
-  only made public to let users pass it to connect().
- */
-void DocBookGenerator::generatePrivateSignalNote()
+  Generates an addendum note of type \a type for \a node. \a marker
+  is unused in this generator.
+*/
+void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker)
 {
-    // From Generator::generatePrivateSignalNote.
+    Q_UNUSED(marker);
+    Q_ASSERT(node && !node->name().isEmpty());
     writer->writeStartElement(dbNamespace, "note");
     newLine();
-    writer->writeTextElement(dbNamespace, "para",
-                             "This is a private signal. It can be used in signal connections but "
-                             "cannot be emitted by the user.");
-    writer->writeEndElement(); // note
-    newLine();
-}
-
-/*!
-  Generates a bold line that says:
-  "This function can be invoked via the meta-object system and from QML. See Q_INVOKABLE."
- */
-void DocBookGenerator::generateInvokableNote(const Node *node)
-{
-    // From Generator::generateInvokableNote.
-    writer->writeStartElement(dbNamespace, "note");
-    newLine();
-    writer->writeStartElement(dbNamespace, "para");
-    writer->writeCharacters(
-            "This function can be invoked via the meta-object system and from QML. See ");
-    generateSimpleLink(node->url(), "Q_INVOKABLE");
-    writer->writeCharacters(".");
-    writer->writeEndElement(); // para
-    newLine();
-    writer->writeEndElement(); // note
-    newLine();
-}
-
-/*!
-  Generates bold Note lines that explain how function \a fn
-  is associated with each of its associated properties.
- */
-void DocBookGenerator::generateAssociatedPropertyNotes(const FunctionNode *fn)
-{
-    // From HtmlGenerator::generateAssociatedPropertyNotes.
-    if (fn->hasAssociatedProperties()) {
-        writer->writeStartElement(dbNamespace, "note");
-        newLine();
+    switch (type) {
+    case Invokable:
         writer->writeStartElement(dbNamespace, "para");
-
+        writer->writeCharacters(
+            "This function can be invoked via the meta-object system and from QML. See ");
+        generateSimpleLink(node->url(), "Q_INVOKABLE");
+        writer->writeCharacters(".");
+        writer->writeEndElement(); // para
+        newLine();
+        break;
+    case PrivateSignal:
+        writer->writeTextElement(dbNamespace, "para",
+            "This is a private signal. It can be used in signal connections but "
+            "cannot be emitted by the user.");
+        break;
+    case AssociatedProperties:
+    {
+        if (!node->isFunction())
+            return;
+        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
         NodeList nodes = fn->associatedProperties();
+        if (nodes.isEmpty())
+            return;
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
         for (const auto node : qAsConst(nodes)) {
             QString msg;
             const auto pn = static_cast<const PropertyNode *>(node);
             switch (pn->role(fn)) {
             case PropertyNode::Getter:
-                msg = QStringLiteral("Getter function ");
+                msg = QStringLiteral("Getter function");
                 break;
             case PropertyNode::Setter:
-                msg = QStringLiteral("Setter function ");
+                msg = QStringLiteral("Setter function");
                 break;
             case PropertyNode::Resetter:
-                msg = QStringLiteral("Resetter function ");
+                msg = QStringLiteral("Resetter function");
                 break;
             case PropertyNode::Notifier:
-                msg = QStringLiteral("Notifier signal ");
+                msg = QStringLiteral("Notifier signal");
                 break;
             default:
-                break;
+                continue;
             }
-            writer->writeCharacters(msg + "for property ");
+            writer->writeCharacters(msg + " for property ");
             generateSimpleLink(linkForNode(pn, nullptr), pn->name());
             writer->writeCharacters(". ");
         }
-        writer->writeEndElement(); // para
-        newLine();
-        writer->writeEndElement(); // note
-        newLine();
+        break;
     }
+    default:
+        break;
+    }
+
+    writer->writeEndElement(); // note
+    newLine();
 }
 
 void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *relative)
@@ -3568,13 +3564,6 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             newLine();
             generateSectionList(notifiers, node);
         }
-    } else if (node->isFunction()) {
-        const auto fn = static_cast<const FunctionNode *>(node);
-        if (fn->isPrivateSignal())
-            generatePrivateSignalNote();
-        if (fn->isInvokable())
-            generateInvokableNote(node);
-        generateAssociatedPropertyNotes(fn);
     } else if (node->isEnumType()) {
         const auto en = static_cast<const EnumNode *>(node);
 
@@ -3646,9 +3635,9 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
         newLine();
 
         if (hasPrivateSignals)
-            generatePrivateSignalNote();
+            generateAddendum(relative, Generator::PrivateSignal);
         if (isInvokable)
-            generateInvokableNote(relative);
+            generateAddendum(relative, Generator::Invokable);
     }
 
     if (status != Section::Obsolete && section.style() == Section::Summary
