@@ -9,7 +9,7 @@ SOURCES += \
 HEADERS += \
     $$PWD/translator.h \
     $$PWD/translatormessage.h \
-    $$PWF/xmlparser.h
+    $$PWD/xmlparser.h
 
 # "real" formats readers and writers
 SOURCES += \
