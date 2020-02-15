@@ -2228,7 +2228,7 @@ void Aggregate::normalizeOverloads()
 const NodeList &Aggregate::nonfunctionList()
 {
     nonfunctionList_ = nonfunctionMap_.values();
-    std::sort(nonfunctionList_.begin(), nonfunctionList_.end());
+    std::sort(nonfunctionList_.begin(), nonfunctionList_.end(), Node::nodeNameLessThan);
     nonfunctionList_.erase(std::unique(nonfunctionList_.begin(), nonfunctionList_.end()),
                            nonfunctionList_.end());
     return nonfunctionList_;
@@ -4221,19 +4221,23 @@ void FunctionNode::addAssociatedProperty(PropertyNode *p)
 }
 
 /*!
-  Returns true if this function has at least one property
-  that is active, i.e. at least one property that is not
-  obsolete.
- */
-bool FunctionNode::hasActiveAssociatedProperty() const
+    \reimp
+
+    Returns \c true if this is an access function for an obsolete property,
+    otherwise calls the base implementation of isObsolete().
+*/
+bool FunctionNode::isObsolete() const
 {
-    if (associatedProperties_.isEmpty())
-        return false;
-    for (const auto *property : qAsConst(associatedProperties_)) {
-        if (!property->isObsolete())
-            return true;
-    }
-    return false;
+    auto it = std::find_if_not(associatedProperties_.begin(),
+                               associatedProperties_.end(),
+                               [](const Node *p)->bool {
+                                    return p->isObsolete();
+                               });
+
+    if (!associatedProperties_.isEmpty() && it == associatedProperties_.end())
+        return true;
+
+    return Node::isObsolete();
 }
 
 /*! \fn unsigned char FunctionNode::overloadNumber() const

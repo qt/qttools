@@ -328,7 +328,7 @@ typedef QMap<QString, ArgList> CommandMap;
 class DocPrivate : public Shared
 {
 public:
-    DocPrivate(const Location &start = Location::null, const Location &end = Location::null,
+    DocPrivate(const Location &start = Location(), const Location &end = Location(),
                const QString &source = QString());
     ~DocPrivate();
 

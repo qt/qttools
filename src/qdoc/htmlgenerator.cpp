@@ -3635,7 +3635,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
                           "<div class=\"table\"><table class=\"qmlname\">\n");
 
     QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
-                         "<td class=\"%2\"><p>\n");
+                         "<td class=\"%2\"><p>\n<a name=\"%1\"></a>");
     QString qmlItemEnd("</p></td></tr>\n");
 
     QString qmlItemFooter("</table></div></div>\n");
@@ -3666,8 +3666,10 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         const SharedCommentNode *scn = static_cast<const SharedCommentNode *>(node);
         out() << qmlItemHeader;
         if (!scn->name().isEmpty()) {
-            out() << "<tr valign=\"top\" class=\"even\" id=\"" << refForNode(scn) << "\">";
+            const QString nodeRef = refForNode(scn);
+            out() << "<tr valign=\"top\" class=\"even\" id=\"" << nodeRef << "\">";
             out() << "<th class=\"centerAlign\"><p>";
+            out() << "<a name=\"" + nodeRef + "\"></a>";
             out() << "<b>" << scn->name() << " group</b>";
             out() << "</p></th></tr>\n";
         }
@@ -3900,6 +3902,14 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         } else if (en->name().startsWith("demos")) {
             continue;
         }
+
+        // Retrieve the install path specified with \meta command,
+        // or fall back to the one defined in .qdocconf
+        QString installPath = en->doc().metaTagMap().value(QLatin1String("installpath"));
+        if (installPath.isEmpty())
+            installPath = examplesPath;
+        if (!installPath.isEmpty() && !installPath.endsWith(QLatin1Char('/')))
+            installPath += QLatin1Char('/');
         // attributes that are always written for the element
         usedAttributes.clear();
         usedAttributes << "name"
@@ -3919,7 +3929,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         }
         if (!proFiles.isEmpty()) {
             if (proFiles.size() == 1) {
-                writer.writeAttribute("projectPath", examplesPath + proFiles[0]);
+                writer.writeAttribute("projectPath", installPath + proFiles[0]);
             } else {
                 QString exampleName = en->name().split('/').last();
                 bool proWithExampleNameFound = false;
@@ -3928,13 +3938,13 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
                         || proFiles[j].endsWith(QStringLiteral("%1/%1.qmlproject").arg(exampleName))
                         || proFiles[j].endsWith(
                                 QStringLiteral("%1/%1.pyproject").arg(exampleName))) {
-                        writer.writeAttribute("projectPath", examplesPath + proFiles[j]);
+                        writer.writeAttribute("projectPath", installPath + proFiles[j]);
                         proWithExampleNameFound = true;
                         break;
                     }
                 }
                 if (!proWithExampleNameFound)
-                    writer.writeAttribute("projectPath", examplesPath + proFiles[0]);
+                    writer.writeAttribute("projectPath", installPath + proFiles[0]);
             }
         }
         if (!en->imageFileName().isEmpty()) {
@@ -4072,7 +4082,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             if (--it == filesToOpen.constBegin()) {
                 writer.writeAttribute(QStringLiteral("mainFile"), QStringLiteral("true"));
             }
-            writer.writeCharacters(examplesPath + it.value());
+            writer.writeCharacters(installPath + it.value());
             writer.writeEndElement();
         }
 

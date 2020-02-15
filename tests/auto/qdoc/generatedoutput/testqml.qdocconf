@@ -16,5 +16,7 @@ excludedirs = ./bug80259
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
+examples.fileextensions = "*.qml"
+
 macro.begincomment      = "\\c{/*}"
 macro.QDocTestVer       = "1.1"

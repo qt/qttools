@@ -336,7 +336,7 @@ const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *r
  */
 void QDocForest::printLinkCounts(const QString &project)
 {
-    Location::null.report(QString("%1: Link Counts").arg(project));
+    Location().report(QString("%1: Link Counts").arg(project));
     QMultiMap<int, QString> m;
     for (const auto *tree : searchOrder()) {
         if (tree->linkCount() < 0)
@@ -352,10 +352,10 @@ void QDocForest::printLinkCounts(const QString &project)
         for (int k = 0; k < pad; ++k)
             line += QLatin1Char(' ');
         line += "%1";
-        Location::null.report(line.arg(-(it.key())));
+        Location().report(line.arg(-(it.key())));
     }
-    Location::null.report("Optimal depends variable:");
-    Location::null.report(depends);
+    Location().report("Optimal depends variable:");
+    Location().report(depends);
 }
 
 /*!

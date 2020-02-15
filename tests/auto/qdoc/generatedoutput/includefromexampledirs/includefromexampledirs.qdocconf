@@ -1,0 +1,12 @@
+include(../testqml.qdocconf)
+
+includepaths += ..
+sourcedirs += src
+
+excludedirs += excludes \
+               ../qml/componentset
+
+exampledirs += excludes
+
+HTML.nosubdirs = true
+HTML.outputsubdir = includefromexampledirs

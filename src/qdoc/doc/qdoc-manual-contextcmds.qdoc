@@ -672,11 +672,11 @@
     \endcode
 
     QDoc includes this line on the reference page for the
-    \l{http://qt-project.org/doc/qt-4.7/qml-pauseanimation.html} {PauseAnimation}
+    \l [QML] PauseAnimation
     element:
 
     \quotation
-        Inherits \l{http://qt-project.org/doc/qt-4.7/qml-animation.html} {Animation}
+        Inherits \l [QML] Animation
     \endquotation
 
     \target overload-command
@@ -693,9 +693,9 @@
     should be fully documented. Each overload can have whatever extra
     documentation you want to add for just that overloaded version.
 
-    From Qt 4.5, you can include the function name plus '()' as a
-    parameter to the \b{\\overload} command, which will include a
-    standard \e{This function overloads...}  line of text with a link
+    You can include the function name plus '()' as a parameter to
+    the \b{\\overload} command, which will include a standard
+    \e{This function overloads...}  line of text with a link
     to the documentation for the primary version of the function.
 
     \code

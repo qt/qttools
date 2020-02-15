@@ -728,9 +728,7 @@ void Sections::distributeNodeInSummaryVector(SectionVector &sv, Node *n)
                 sv[RelatedNonmembers].insert(n);
             return;
         }
-        if (fn->hasAssociatedProperties() && !fn->hasActiveAssociatedProperty())
-            return;
-        else if (fn->isIgnored())
+        if (fn->isIgnored())
             return;
         if (fn->isSlot()) {
             if (fn->isPublic())
