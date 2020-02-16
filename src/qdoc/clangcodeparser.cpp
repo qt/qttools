@@ -593,6 +593,8 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
                                                   bool &ignoreSignature)
 {
     switch (clang_getCursorKind(cursor)) {
+    case CXCursor_Namespace:
+        return CXChildVisit_Recurse;
     case CXCursor_FunctionDecl:
     case CXCursor_FunctionTemplate:
     case CXCursor_CXXMethod:
@@ -1503,14 +1505,14 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
         return;
     }
 
-    CXCursor cur = clang_getTranslationUnitCursor(tu);
+    CXCursor tuCur = clang_getTranslationUnitCursor(tu);
     ClangVisitor visitor(qdb_, allHeaders_);
-    visitor.visitChildren(cur);
+    visitor.visitChildren(tuCur);
 
     CXToken *tokens;
     unsigned int numTokens = 0;
     const QSet<QString> &commands = topicCommands() + metaCommands();
-    clang_tokenize(tu, clang_getCursorExtent(cur), &tokens, &numTokens);
+    clang_tokenize(tu, clang_getCursorExtent(tuCur), &tokens, &numTokens);
 
     for (unsigned int i = 0; i < numTokens; ++i) {
         if (clang_getTokenKind(tokens[i]) != CXToken_Comment)
@@ -1519,7 +1521,8 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
         if (!comment.startsWith("/*!"))
             continue;
 
-        auto loc = fromCXSourceLocation(clang_getTokenLocation(tu, tokens[i]));
+        auto commentLoc = clang_getTokenLocation(tu, tokens[i]);
+        auto loc = fromCXSourceLocation(commentLoc);
         auto end_loc = fromCXSourceLocation(clang_getRangeEnd(clang_getTokenExtent(tu, tokens[i])));
         Doc::trimCStyleComment(loc, comment);
 
@@ -1536,7 +1539,6 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
             topic = topics[0].topic;
 
         if (topic.isEmpty()) {
-            CXSourceLocation commentLoc = clang_getTokenLocation(tu, tokens[i]);
             Node *n = nullptr;
             if (i + 1 < numTokens) {
                 // Try to find the next declaration.
@@ -1568,6 +1570,17 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                 }
             }
         } else {
+            // Store the namespace scope from lexical parents of the comment
+            namespaceScope_.clear();
+            CXCursor cur = clang_getCursor(tu, commentLoc);
+            while (true) {
+                CXCursorKind kind = clang_getCursorKind(cur);
+                if (clang_isTranslationUnit(kind) || clang_isInvalid(kind))
+                    break;
+                if (kind == CXCursor_Namespace)
+                    namespaceScope_ << fromCXString(clang_getCursorSpelling(cur));
+                cur = clang_getCursorLexicalParent(cur);
+            }
             processTopicArgs(doc, topic, nodes, docs);
         }
         processMetaCommands(nodes, docs);
@@ -1654,9 +1667,14 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
         args.push_back(pchName_.constData());
     }
     CXTranslationUnit tu;
-    QByteArray fn = fnArg.toUtf8();
+    QByteArray fn;
+    for (const auto &ns : qAsConst(namespaceScope_))
+        fn.prepend("namespace " + ns.toUtf8() + " {");
+    fn += fnArg.toUtf8();
     if (!fn.endsWith(";"))
         fn += "{ }";
+    fn.append(namespaceScope_.size(), '}');
+
     const char *dummyFileName = "/fn_dummyfile.cpp";
     CXUnsavedFile unsavedFile { dummyFileName, fn.constData(),
                                 static_cast<unsigned long>(fn.size()) };
