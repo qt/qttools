@@ -2246,12 +2246,14 @@ void DocBookGenerator::generateExampleFilePage(const Node *node, const QString &
                                                CodeMarker *marker)
 {
     Q_UNUSED(marker);
-    Q_ASSERT(writer == nullptr);
     // From HtmlGenerator::generateExampleFilePage.
     if (!node->isExample())
         return;
 
     const auto en = static_cast<const ExampleNode *>(node);
+
+    // Store current (active) writer
+    QXmlStreamWriter *currentWriter = writer;
     writer = startDocument(en, file);
     generateHeader(en->fullTitle(), en->subtitle(), en);
 
@@ -2265,6 +2267,8 @@ void DocBookGenerator::generateExampleFilePage(const Node *node, const QString &
     generateText(text, en);
 
     endDocument();
+    // Restore writer
+    writer = currentWriter;
 }
 
 void DocBookGenerator::generateReimplementsClause(const FunctionNode *fn)
