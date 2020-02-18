@@ -42,6 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class Config;
 class HelpProjectWriter;
 
 class HtmlGenerator : public XmlGenerator
@@ -199,6 +200,8 @@ private:
     QString buildversion;
     QString qflagsHref_;
     int tocDepth;
+
+    Config *config;
 
 public:
     static bool debugging_on;

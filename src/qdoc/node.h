@@ -183,7 +183,6 @@ public:
     bool isJsType() const { return nodeType_ == JsType; }
     bool isModule() const { return nodeType_ == Module; }
     bool isNamespace() const { return nodeType_ == Namespace; }
-    bool isObsolete() const { return (status_ == Obsolete); }
     bool isPage() const { return nodeType_ == Page; }
     bool isPreliminary() const { return (status_ == Preliminary); }
     bool isPrivate() const { return access_ == Private; }
@@ -205,6 +204,7 @@ public:
     bool isVariable() const { return nodeType_ == Variable; }
     bool isGenericCollection() const { return (nodeType_ == Node::Collection); }
 
+    virtual bool isObsolete() const { return (status_ == Obsolete); }
     virtual bool isAbstract() const { return false; }
     virtual bool isAggregate() const { return false; } // means "can have children"
     virtual bool isFirstClassAggregate() const
@@ -865,9 +865,7 @@ class EnumNode : public Node
 {
 public:
     EnumNode(Aggregate *parent, const QString &name, bool isScoped = false)
-    : Node(Enum, parent, name),
-    flagsType_(nullptr),
-    isScoped_(isScoped)
+        : Node(Enum, parent, name), flagsType_(nullptr), isScoped_(isScoped)
     {
     }
 
@@ -957,10 +955,7 @@ public:
         n->setSharedCommentNode(this);
         setGenus(n->genus());
     }
-    void sort()
-    {
-        std::sort(collective_.begin(), collective_.end(), Node::nodeNameLessThan);
-    }
+    void sort() { std::sort(collective_.begin(), collective_.end(), Node::nodeNameLessThan); }
     const QVector<Node *> &collective() const { return collective_; }
     void setOverloadFlags();
     void setRelatedNonmember(bool b) override;
@@ -1030,6 +1025,7 @@ public:
     bool isMacroWithParams() const { return (metaness_ == MacroWithParams); }
     bool isMacroWithoutParams() const { return (metaness_ == MacroWithoutParams); }
     bool isMacro() const override { return (isMacroWithParams() || isMacroWithoutParams()); }
+    bool isObsolete() const override;
 
     bool isCppFunction() const { return metaness_ == Plain; } // Is this correct?
     bool isSignal() const { return (metaness_ == Signal); }
@@ -1070,7 +1066,6 @@ public:
     bool hasAssociatedProperties() const { return !associatedProperties_.isEmpty(); }
     bool hasOneAssociatedProperty() const { return (associatedProperties_.size() == 1); }
     Node *firstAssociatedProperty() const { return associatedProperties_[0]; }
-    bool hasActiveAssociatedProperty() const;
 
     QString element() const override { return parent()->name(); }
     bool isAttached() const override { return attached_; }

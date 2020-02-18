@@ -33,15 +33,13 @@
 #ifndef DOCBOOKGENERATOR_H
 #define DOCBOOKGENERATOR_H
 
-#include <qhash.h>
-#include <qregexp.h>
-#include <qxmlstream.h>
 #include "codemarker.h"
+#include "config.h"
 #include "xmlgenerator.h"
 
+#include <QtCore/qhash.h>
+#include <QtCore/qregexp.h>
 #include <QtCore/qxmlstream.h>
-
-#include "codemarker.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -71,96 +69,96 @@ protected:
     using Generator::generateProxyPage;
     void generateProxyPage(Aggregate *aggregate);
 
-    void generateList(QXmlStreamWriter &writer, const Node *relative, const QString &selector);
-    void generateHeader(QXmlStreamWriter &writer, const QString &title, const QString &subtitle,
-                        const Node *node);
-    void closeTextSections(QXmlStreamWriter &writer);
-    void generateFooter(QXmlStreamWriter &writer);
-    void generateDocBookSynopsis(QXmlStreamWriter &writer, const Node *node);
-    void generateRequisites(QXmlStreamWriter &writer, const Aggregate *inner);
-    void generateQmlRequisites(QXmlStreamWriter &writer, const QmlTypeNode *qcn);
-    void generateSortedNames(QXmlStreamWriter &writer, const ClassNode *cn,
-                             const QVector<RelatedClass> &rc);
-    void generateSortedQmlNames(QXmlStreamWriter &writer, const Node *base, const NodeList &subs);
-    bool generateStatus(QXmlStreamWriter &writer, const Node *node);
-    bool generateThreadSafeness(QXmlStreamWriter &writer, const Node *node);
-    bool generateSince(QXmlStreamWriter &writer, const Node *node);
+    void generateList(const Node *relative, const QString &selector);
+    void generateHeader(const QString &title, const QString &subtitle, const Node *node);
+    void closeTextSections();
+    void generateFooter();
+    void generateDocBookSynopsis(const Node *node);
+    void generateRequisites(const Aggregate *inner);
+    void generateQmlRequisites(const QmlTypeNode *qcn);
+    void generateSortedNames(const ClassNode *cn, const QVector<RelatedClass> &rc);
+    void generateSortedQmlNames(const Node *base, const NodeList &subs);
+    bool generateStatus(const Node *node);
+    bool generateThreadSafeness(const Node *node);
+    bool generateSince(const Node *node);
     using Generator::generateBody;
-    void generateBody(QXmlStreamWriter &writer, const Node *node);
+    void generateBody(const Node *node);
 
-    using Generator::generateText;
-    bool generateText(QXmlStreamWriter &writer, const Text &text, const Node *relative);
-    const Atom *generateAtomList(QXmlStreamWriter &writer, const Atom *atom, const Node *relative,
-                                 bool generate, int &numAtoms);
-    using Generator::generateAtom;
-    int generateAtom(QXmlStreamWriter &writer, const Atom *atom, const Node *relative);
+    bool generateText(const Text &text, const Node *relative,
+                      CodeMarker *marker = nullptr) override;
+    const Atom *generateAtomList(const Atom *atom, const Node *relative, bool generate,
+                                 int &numAtoms);
+    int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker = nullptr) override;
 
 private:
     QXmlStreamWriter *startDocument(const Node *node);
     QXmlStreamWriter *startDocument(const ExampleNode *en, const QString &file);
     QXmlStreamWriter *startGenericDocument(const Node *node, const QString &fileName);
-    static void endDocument(QXmlStreamWriter *writer);
+    void endDocument();
 
-    void generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative,
-                               const NodeList &nodeList, const QString &selector);
-    void generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative,
-                               const NodeMultiMap &nmm, const QString &selector);
-    void generateAnnotatedLists(QXmlStreamWriter &writer, const Node *relative,
-                                const NodeMultiMap &nmm, const QString &selector);
-    void generateCompactList(QXmlStreamWriter &writer, ListType listType, const Node *relative,
-                             const NodeMultiMap &nmm, const QString &commonPrefix,
-                             const QString &selector);
+    void generateAnnotatedList(const Node *relative, const NodeList &nodeList,
+                               const QString &selector);
+    void generateAnnotatedList(const Node *relative, const NodeMultiMap &nmm,
+                               const QString &selector);
+    void generateAnnotatedLists(const Node *relative, const NodeMultiMap &nmm,
+                                const QString &selector);
+    void generateCompactList(ListType listType, const Node *relative, const NodeMultiMap &nmm,
+                             const QString &commonPrefix, const QString &selector);
     using Generator::generateFileList;
-    void generateFileList(QXmlStreamWriter &writer, const ExampleNode *en, bool images);
-    void generateObsoleteMembers(QXmlStreamWriter &writer, const Sections &sections);
-    void generateObsoleteQmlMembers(QXmlStreamWriter &writer, const Sections &sections);
-    void generateSectionList(QXmlStreamWriter &writer, const Section &section, const Node *relative,
+    void generateFileList(const ExampleNode *en, bool images);
+    void generateObsoleteMembers(const Sections &sections);
+    void generateObsoleteQmlMembers(const Sections &sections);
+    void generateSectionList(const Section &section, const Node *relative,
                              Section::Status status = Section::Active);
-    void generateSectionInheritedList(QXmlStreamWriter &writer, const Section &section,
-                                      const Node *relative);
-    void generateSynopsisName(QXmlStreamWriter &writer, const Node *node, const Node *relative,
-                              bool generateNameLink);
-    void generateParameter(QXmlStreamWriter &writer, const Parameter &parameter,
-                           const Node *relative, bool generateExtra, bool generateType);
-    void generateSynopsis(QXmlStreamWriter &writer, const Node *node, const Node *relative,
-                          Section::Style style);
-    void generateEnumValue(QXmlStreamWriter &writer, const QString &enumValue,
-                           const Node *relative);
-    void generateDetailedMember(QXmlStreamWriter &writer, const Node *node,
-                                const PageNode *relative);
-    void generateDetailedQmlMember(QXmlStreamWriter &writer, Node *node, const Aggregate *relative);
+    void generateSectionInheritedList(const Section &section, const Node *relative);
+    void generateSynopsisName(const Node *node, const Node *relative, bool generateNameLink);
+    void generateParameter(const Parameter &parameter, const Node *relative, bool generateExtra,
+                           bool generateType);
+    void generateSynopsis(const Node *node, const Node *relative, Section::Style style);
+    void generateEnumValue(const QString &enumValue, const Node *relative);
+    void generateDetailedMember(const Node *node, const PageNode *relative);
+    void generateDetailedQmlMember(Node *node, const Aggregate *relative);
 
-    void generateFullName(QXmlStreamWriter &writer, const Node *node, const Node *relative);
-    void generateFullName(QXmlStreamWriter &writer, const Node *apparentNode,
-                          const QString &fullName, const Node *actualNode);
-    void generateBrief(QXmlStreamWriter &writer, const Node *node);
-    using Generator::generateAlsoList;
-    void generateAlsoList(QXmlStreamWriter &writer, const Node *node);
-    static void generateSignatureList(QXmlStreamWriter &writer, const NodeList &nodes);
-    using Generator::generateMaintainerList;
-    void generateMaintainerList(QXmlStreamWriter &writer, const Aggregate *node);
-    void generateReimplementsClause(QXmlStreamWriter &writer, const FunctionNode *fn);
-    void generateClassHierarchy(QXmlStreamWriter &writer, const Node *relative, NodeMap &classMap);
-    void generateFunctionIndex(QXmlStreamWriter &writer, const Node *relative);
-    void generateLegaleseList(QXmlStreamWriter &writer, const Node *relative);
-    using Generator::generateExampleFilePage;
-    void generateExampleFilePage(const Node *en, const QString &file);
-    static void generateOverloadedSignal(QXmlStreamWriter &writer, const Node *node);
-    static void generatePrivateSignalNote(QXmlStreamWriter &writer);
-    static void generateInvokableNote(QXmlStreamWriter &writer, const Node *node);
-    void generateAssociatedPropertyNotes(QXmlStreamWriter &writer, const FunctionNode *fn);
-    using Generator::generateQmlText;
-    bool generateQmlText(QXmlStreamWriter &writer, const Text &text, const Node *relative);
-    void generateRequiredLinks(QXmlStreamWriter &writer, const Node *node);
-    void generateLinkToExample(QXmlStreamWriter &writer, const ExampleNode *en,
-                               const QString &baseUrl);
+    void generateFullName(const Node *node, const Node *relative);
+    void generateFullName(const Node *apparentNode, const QString &fullName,
+                          const Node *actualNode);
+    void generateBrief(const Node *node);
+    void generateAlsoList(const Node *node, CodeMarker *marker = nullptr) override;
+    void generateSignatureList(const NodeList &nodes);
+    void generateMaintainerList(const Aggregate *node, CodeMarker *marker = nullptr) override;
+    void generateReimplementsClause(const FunctionNode *fn);
+    void generateClassHierarchy(const Node *relative, NodeMap &classMap);
+    void generateFunctionIndex(const Node *relative);
+    void generateLegaleseList(const Node *relative);
+    void generateExampleFilePage(const Node *en, const QString &file,
+                                 CodeMarker *marker = nullptr) override;
+    void generateOverloadedSignal(const Node *node);
+    void generatePrivateSignalNote();
+    void generateInvokableNote(const Node *node);
+    void generateAssociatedPropertyNotes(const FunctionNode *fn);
+    bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker = nullptr,
+                         const QString &qmlName = QString()) override;
+    void generateRequiredLinks(const Node *node);
+    void generateLinkToExample(const ExampleNode *en, const QString &baseUrl);
 
-    void typified(QXmlStreamWriter &writer, const QString &string, const Node *relative,
-                  bool trailingSpace = false, bool generateType = true);
-    void generateLink(QXmlStreamWriter &writer, const Atom *atom);
-    void beginLink(QXmlStreamWriter &writer, const QString &link, const Node *node,
-                   const Node *relative);
-    void endLink(QXmlStreamWriter &writer);
+    void typified(const QString &string, const Node *relative, bool trailingSpace = false,
+                  bool generateType = true);
+    void generateLink(const Atom *atom);
+    void beginLink(const QString &link, const Node *node, const Node *relative);
+    void endLink();
+    inline void newLine();
+    void startSectionBegin();
+    void startSectionBegin(const QString &id);
+    void startSectionEnd();
+    void startSection(const QString &id, const QString &title);
+    void endSection();
+    void writeAnchor(const QString &id);
+    void generateSimpleLink(const QString &href, const QString &text);
+    void generateStartRequisite(const QString &description);
+    void generateEndRequisite();
+    void generateRequisite(const QString &description, const QString &value);
+    void generateSynopsisInfo(const QString &key, const QString &value);
+    void generateModifier(const QString &value);
 
     bool inListItemLineOpen {};
     bool inLink {};
@@ -172,6 +170,9 @@ private:
     QString projectDescription;
     QString naturalLanguage;
     QString buildversion;
+    QXmlStreamWriter *writer = nullptr;
+
+    Config *config;
 };
 
 QT_END_NAMESPACE

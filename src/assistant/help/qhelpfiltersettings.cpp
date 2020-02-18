@@ -107,7 +107,7 @@ QString QHelpFilterSettings::currentFilter() const
     return d->m_currentFilter;
 }
 
-QHelpFilterSettings QHelpFilterSettings::readSettings(QHelpFilterEngine *filterEngine)
+QHelpFilterSettings QHelpFilterSettings::readSettings(const QHelpFilterEngine *filterEngine)
 {
     QHelpFilterSettings filterSettings;
 

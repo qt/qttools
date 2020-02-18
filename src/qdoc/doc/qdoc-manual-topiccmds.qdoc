@@ -812,18 +812,10 @@
                <table width="100%">
                    <tr valign="top" bgcolor="#d0d0d0">
                    <td><b>
-                   <a href="http://doc.qt.io/qt-5/qabstractsocket.html">QAbstractSocket</a>
+                   <a href="https://doc.qt.io/qt-5/qabstractsocket.html">QAbstractSocket</a>
                    </b></td>
                    <td>
                    The base functionality common to all socket types
-                   </td></tr>
-
-                   <tr valign="top" bgcolor="#d0d0d0">
-                   <td><b>
-                   <a href="http://doc.qt.io/archives/qt-4.7/qftp.html">QFtp</a>
-                   </b></td>
-                   <td>
-                   Implementation of the FTP protocol
                    </td></tr>
 
                    <tr valign="top" bgcolor="#d0d0d0">
@@ -884,7 +876,7 @@
 
            \quotation
                \raw HTML
-               <center><h1>Qt Namespace Reference</h1></center>
+               <center><h1>Qt Namespace</h1></center>
                <p>The Qt namespace contains miscellaneous
                identifiers used throughout the Qt library.
                <a href="13-qdoc-commands-topics.html#name">More...</a>
@@ -893,15 +885,15 @@
                <pre>#include &lt;Qt&gt;</pre>
                <ul>
                <li>
-               <a href="http://doc.qt.io/archives/qt-4.7/qt-qt3.html">
-                   Qt 3 support members</a></li>
+               <a href="https://doc.qt.io/qt-5/qt-obsolete.html">
+                   Obsolete members</a></li>
                </ul>
 
 
                <h3>Types</h3>
                <ul>
                <li>flags
-               <a href="http://doc.qt.io/archives/qt-4.7/qt.html#AlignmentFlag-enum">Alignment</a></b></li>
+               <a href="https://doc.qt.io/qt-5/qt.html#AlignmentFlag-enum">Alignment</a></b></li>
                <li>...</li></ul>
                <hr />
                \endraw
@@ -1206,7 +1198,7 @@
     \endcode
 
     This example generates the
-    \l {http://qt-project.org/doc/qt-4.7/qml-transform.html} {QML Transform}
+    \l {https://doc.qt.io/qt-5/qml-qtquick-transform.html} {QML Transform}
     page. The \\qmlclass comment should include the \l
     {since-command} {\\since} command, because all QML types are
     new. It should also include the \l{brief-command} {\\brief}
@@ -1279,7 +1271,7 @@
     \endcode
 
     The example generates the \l
-    {http://qt-project.org/doc/qt-4.7/qml-transform.html} {QML Transform}
+    {https://doc.qt.io/qt-5/qml-qtquick-transform.html} {QML Transform}
     page. The \e{\\qmltype} comment includes \l{instantiates-command}
     {\\instantiates} to specify that a Transform is instantiated by
     the C++ class QGraphicsTransform. A \\qmltype comment should
@@ -1412,7 +1404,7 @@
     \endcode
 
     The example generates the \l
-    {http://qt-project.org/doc/qt-4.7/qml-transform.html} {QML Transform}
+    {https://doc.qt.io/qt-5/qml-qtquick-transform.html} {QML Transform}
     page. The \e{\\qmltype} comment includes \l{instantiates-command}
     {\\instantiates} to specify that a Transform is instantiated by
     the C++ class QGraphicsTransform. A \\qmltype comment should

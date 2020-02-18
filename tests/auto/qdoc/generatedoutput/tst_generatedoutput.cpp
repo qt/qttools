@@ -63,6 +63,7 @@ private slots:
     void dontDocument();
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
+    void includeFromExampleDirs();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -332,6 +333,14 @@ void tst_generatedOutput::crossModuleLinking()
                    "crossmodule/testtype.html "
                    "crossmodule/testtype-members.html",
                    indexDir.toLatin1().data());
+}
+
+void tst_generatedOutput::includeFromExampleDirs()
+{
+    testAndCompare("includefromexampledirs/includefromexampledirs.qdocconf",
+                   "includefromexampledirs/index.html "
+                   "includefromexampledirs/qml-qdoc-test-abstractparent.html "
+                   "includefromexampledirs/qml-qdoc-test-abstractparent-members.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

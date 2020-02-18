@@ -28,6 +28,10 @@
 /*!
     \example componentset
     \title QML Documentation Example
+    \brief Example for documenting QML types.
+
+    \meta tag {test,sample}
+    \meta installpath tutorials
 
     This example demonstrates one of the ways to document QML types.
 

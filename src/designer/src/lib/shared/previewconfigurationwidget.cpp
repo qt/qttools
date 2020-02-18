@@ -317,7 +317,7 @@ PreviewConfigurationWidget::PreviewConfigurationWidget(QDesignerFormEditorInterf
             this, &PreviewConfigurationWidget::slotEditAppStyleSheet);
     connect(m_impl->skinRemoveButton(), &QAbstractButton::clicked,
             this, &PreviewConfigurationWidget::slotDeleteSkinEntry);
-    connect(m_impl->skinCombo(), QOverload<int>::of(&QComboBox::currentIndexChanged),
+    connect(m_impl->skinCombo(), QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
             this, &PreviewConfigurationWidget::slotSkinChanged);
 
     m_impl->retrieveSettings();

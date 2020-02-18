@@ -614,7 +614,7 @@ QString Node::plainFullName(const Node *relative) const
     while (node && !node->isHeader()) {
         parts.prepend(node->plainName());
         if (node->parent() == relative || node->parent()->name().isEmpty())
-          break;
+            break;
         node = node->parent();
     }
     return parts.join(QLatin1String("::"));
@@ -1060,11 +1060,10 @@ void Node::setSince(const QString &since)
         project = Config::dot + parts.first();
 
     QVersionNumber cutoff =
-        QVersionNumber::fromString(Config::instance().getString(
-            CONFIG_IGNORESINCE + project)).normalized();
+            QVersionNumber::fromString(Config::instance().getString(CONFIG_IGNORESINCE + project))
+                    .normalized();
 
-    if (!cutoff.isNull() &&
-        QVersionNumber::fromString(parts.last()).normalized() < cutoff)
+    if (!cutoff.isNull() && QVersionNumber::fromString(parts.last()).normalized() < cutoff)
         return;
 
     since_ = parts.join(QLatin1Char(' '));
@@ -2229,7 +2228,7 @@ void Aggregate::normalizeOverloads()
 const NodeList &Aggregate::nonfunctionList()
 {
     nonfunctionList_ = nonfunctionMap_.values();
-    std::sort(nonfunctionList_.begin(), nonfunctionList_.end());
+    std::sort(nonfunctionList_.begin(), nonfunctionList_.end(), Node::nodeNameLessThan);
     nonfunctionList_.erase(std::unique(nonfunctionList_.begin(), nonfunctionList_.end()),
                            nonfunctionList_.end());
     return nonfunctionList_;
@@ -2947,7 +2946,9 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *bc = bases_.at(i).node_;
         if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument() || found.contains(bc))) {
+        if (bc != nullptr
+            && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument()
+                || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);
@@ -4220,19 +4221,23 @@ void FunctionNode::addAssociatedProperty(PropertyNode *p)
 }
 
 /*!
-  Returns true if this function has at least one property
-  that is active, i.e. at least one property that is not
-  obsolete.
- */
-bool FunctionNode::hasActiveAssociatedProperty() const
+    \reimp
+
+    Returns \c true if this is an access function for an obsolete property,
+    otherwise calls the base implementation of isObsolete().
+*/
+bool FunctionNode::isObsolete() const
 {
-    if (associatedProperties_.isEmpty())
-        return false;
-    for (const auto *property : qAsConst(associatedProperties_)) {
-        if (!property->isObsolete())
-            return true;
-    }
-    return false;
+    auto it = std::find_if_not(associatedProperties_.begin(),
+                               associatedProperties_.end(),
+                               [](const Node *p)->bool {
+                                    return p->isObsolete();
+                               });
+
+    if (!associatedProperties_.isEmpty() && it == associatedProperties_.end())
+        return true;
+
+    return Node::isObsolete();
 }
 
 /*! \fn unsigned char FunctionNode::overloadNumber() const

@@ -137,7 +137,7 @@ to content listed in the index.
 \note QDoc omits this value when the -installdir argument
 is specified when running QDoc.
 
-\keyword examplesinstallpath
+\target examplesinstallpath
 
 \badcode
    examplesinstallpath     = gui
@@ -150,7 +150,11 @@ installed in the \e gui directory under the parent examples directory
 \note The examplepath variable has to match the example directory specified in
       \c exampledirs.
 
-\b {See also}: \l {exampledirs}.
+\note It is possible to override the \c exampleinstallpath for a specific
+      \l {example-command}{\\example} using the \l {meta-command}{\\meta}
+      command.
+
+\b {See also}: \l {exampledirs} and \l {meta-command}{\\meta}.
 
 \badcode
    qhp.projects    = QtGui

@@ -99,7 +99,7 @@ static void loadIndexFiles(const QSet<QString> &formats)
         if (fi.exists() && fi.isFile())
             indexFiles << index;
         else
-            Location::null.warning(QString("Index file not found: %1").arg(index));
+            Location().warning(QString("Index file not found: %1").arg(index));
     }
 
     config.dependModules() += config.getStringList(CONFIG_DEPENDS);
@@ -196,10 +196,10 @@ static void loadIndexFiles(const QSet<QString> &formats)
                     indexPaths.reserve(foundIndices.size());
                     for (const auto &found : qAsConst(foundIndices))
                         indexPaths << found.absoluteFilePath();
-                    Location::null.warning(
+                    Location().warning(
                             QString("Multiple index files found for dependency \"%1\":\n%2")
                                     .arg(module, indexPaths.join('\n')));
-                    Location::null.warning(
+                    Location().warning(
                             QString("Using %1 as index file for dependency \"%2\"")
                                     .arg(foundIndices[foundIndices.size() - 1].absoluteFilePath(),
                                          module));
@@ -211,18 +211,39 @@ static void loadIndexFiles(const QSet<QString> &formats)
                     if (!indexFiles.contains(indexToAdd))
                         indexFiles << indexToAdd;
                 } else if (!asteriskUsed) {
-                    Location::null.warning(
+                    Location().warning(
                             QString("\"%1\" Cannot locate index file for dependency \"%2\"")
                                     .arg(config.getString(CONFIG_PROJECT), module));
                 }
             }
         } else {
-            Location::null.warning(
+            Location().warning(
                     QLatin1String("Dependent modules specified, but no index directories were set. "
                                   "There will probably be errors for missing links."));
         }
     }
     qdb->readIndexes(indexFiles);
+}
+
+/*!
+    \internal
+    Prints to stderr the name of the project that QDoc is running for,
+    in which mode and which phase.
+
+    If QDoc is running in debug mode, also logs the command line arguments.
+ */
+void logStartEndMessage(const QLatin1String &startStop, const Config &config)
+{
+    const QString runName = " qdoc for "
+            + config.getString(CONFIG_PROJECT)
+            + QLatin1String(" in ")
+            + QLatin1String(Generator::singleExec() ? "single" : "dual")
+            + QLatin1String(" process mode, (")
+            + QLatin1String(Generator::preparing() ? "prepare" : "generate")
+            + QLatin1String(" phase)");
+
+    const QString msg = startStop + runName;
+    Location::logToStdErrAlways(msg);
 }
 
 /*!
@@ -258,22 +279,13 @@ static void processQdocconfFile(const QString &fileName)
     if (!config.currentDir().isEmpty())
         QDir::setCurrent(config.currentDir());
 
-    QString phase = " in ";
-    if (Generator::singleExec())
-        phase += "single process mode, ";
-    else
-        phase += "dual process mode, ";
-    if (Generator::preparing())
-        phase += "(prepare phase)";
-    else if (Generator::generating())
-        phase += "(generate phase)";
+    logStartEndMessage(QLatin1String("Start"), config);
 
-    QString msg = "Start qdoc for " + config.getString(CONFIG_PROJECT) + phase;
-    Location::logToStdErrAlways(msg);
     if (config.getDebug()) {
         Utilities::startDebugging(QString("command line"));
         qCDebug(lcQdoc).noquote() << "Arguments:" << QCoreApplication::arguments();
     }
+
     /*
       Initialize all the classes and data structures with the
       qdoc configuration. This is safe to do for each qdocconf
@@ -508,8 +520,7 @@ static void processQdocconfFile(const QString &fileName)
     if (Utilities::debugging())
         Utilities::stopDebugging(project);
 
-    msg = "End qdoc for " + config.getString(CONFIG_PROJECT) + phase;
-    Location::logToStdErrAlways(msg);
+    logStartEndMessage(QLatin1String("End"), config);
     QDocDatabase::qdocDB()->setVersion(QString());
     Generator::terminate();
     CodeParser::terminate();

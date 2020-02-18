@@ -244,7 +244,8 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiImport *uiimport)
 void QmlMarkupVisitor::endVisit(QQmlJS::AST::UiImport *uiimport)
 {
     if (uiimport->version)
-        addVerbatim(uiimport->version->firstSourceLocation(), uiimport->version->lastSourceLocation());
+        addVerbatim(uiimport->version->firstSourceLocation(),
+                    uiimport->version->lastSourceLocation());
     addVerbatim(uiimport->asToken);
     addMarkedUpToken(uiimport->importIdToken, QLatin1String("headerfile"));
     addVerbatim(uiimport->semicolonToken);

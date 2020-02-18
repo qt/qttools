@@ -42,7 +42,7 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ class QHELP_EXPORT QHelpFilterSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    QHelpFilterSettingsWidget(QWidget *parent);
+    explicit QHelpFilterSettingsWidget(QWidget *parent = nullptr);
 
     ~QHelpFilterSettingsWidget();
 
@@ -63,8 +63,8 @@ public:
     void setAvailableVersions(const QList<QVersionNumber> &versions);
 
     // TODO: filterEngine may be moved to c'tor or to setFilterEngine() setter
-    void readSettings(QHelpFilterEngine *filterEngine);
-    bool applySettings(QHelpFilterEngine *filterEngine);
+    void readSettings(const QHelpFilterEngine *filterEngine);
+    bool applySettings(QHelpFilterEngine *filterEngine) const;
 
 private:
     QScopedPointer<class QHelpFilterSettingsWidgetPrivate> d_ptr;
@@ -74,5 +74,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif
-
+#endif // QHELPFILTERSETTINGSWIDGET_H

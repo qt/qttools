@@ -276,7 +276,7 @@ Config::~Config()
  */
 void Config::clear()
 {
-    loc = lastLocation_ = Location::null;
+    loc = lastLocation_ = Location();
     configVars_.clear();
     includeFilesMap_.clear();
 }
@@ -329,12 +329,12 @@ void Config::load(const QString &fileName)
     if (configVars_.contains(CONFIG_PROJECT))
         reset();
 
-    load(Location::null, fileName);
+    load(Location(), fileName);
     if (loc.isEmpty())
         loc = Location(fileName);
     else
         loc.setEtc(true);
-    lastLocation_ = Location::null;
+    lastLocation_ = Location();
 
     // Add defines and includepaths from command line to their
     // respective configuration variables. Values set here are
@@ -728,8 +728,12 @@ QString Config::getIncludeFilePath(const QString &fileName) const
     if (!includeFilesMap_.contains(ext)) {
         QSet<QString> t;
         QStringList result;
-        const QStringList dirs = getCanonicalPathList(CONFIG_SOURCEDIRS);
-        for (const auto &dir : dirs)
+        const auto sourceDirs = getCanonicalPathList(CONFIG_SOURCEDIRS);
+        for (const auto &dir : sourceDirs)
+            result += getFilesHere(dir, ext, location(), t, t);
+        // Append the include files from the exampledirs as well
+        const auto exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
+        for (const auto &dir : exampleDirs)
             result += getFilesHere(dir, ext, location(), t, t);
         includeFilesMap_.insert(ext, result);
     }
@@ -969,7 +973,7 @@ bool Config::isMetaKeyChar(QChar ch)
  */
 QStringList Config::loadMaster(const QString &fileName)
 {
-    Location location = Location::null;
+    Location location;
     QFile fin(fileName);
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {

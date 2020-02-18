@@ -328,7 +328,7 @@ typedef QMap<QString, ArgList> CommandMap;
 class DocPrivate : public Shared
 {
 public:
-    DocPrivate(const Location &start = Location::null, const Location &end = Location::null,
+    DocPrivate(const Location &start = Location(), const Location &end = Location(),
                const QString &source = QString());
     ~DocPrivate();
 
@@ -1375,7 +1375,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                             // The QML and JS property group commands are no longer required
                             // for grouping QML and JS properties. They are allowed but ignored.
                             location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
-                                               detailsUnknownCommand(metaCommandSet,cmdStr));
+                                               detailsUnknownCommand(metaCommandSet, cmdStr));
                         }
                         enterPara();
                         append(Atom::UnknownCommand, cmdStr);
