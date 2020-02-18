@@ -25,9 +25,11 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include "cpp_clang.h"
 
-#include <translator.h>
+#include "cpp_clang.h"
+#include "clangtoolastreader.h"
+#include "lupdatepreprocessoraction.h"
+#include "translator.h"
 
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <llvm/Option/Option.h>
@@ -76,6 +78,9 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &filename
 
     clang::tooling::ClangTool tool(OptionsParser.getCompilations(), sources);
     tool.appendArgumentsAdjuster(getClangArgumentAdjuster());
+
+    Stores stores;
+    tool.run(new LupdatePreprocessorActionFactory(stores.Preprocessor));
 
     Translator *tor = new Translator();
 

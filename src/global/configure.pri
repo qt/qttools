@@ -191,8 +191,7 @@ defineReplace(CheckClangLlvmLibForLupdateParser) {
         }
     }
     !equals(QMAKE_HOST.os, Windows): {
-        equals(QMAKE_HOST.os, Darwin): CLANG_LLVM_LIBS += -lz -lcurses
-        else: CLANG_LLVM_LIBS += -lz -ltinfo
+        CLANG_LLVM_LIBS += -lz -ltinfo
     }
     return($$CLANG_LLVM_LIBS)
 }

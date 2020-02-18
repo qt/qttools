@@ -53,10 +53,12 @@ HEADERS += \
 qtConfig(clangcpp) {
     SOURCES += \
         cpp_clang.cpp \
-        clangtoolastreader.cpp
+        clangtoolastreader.cpp \
+        lupdatepreprocessoraction.cpp
     HEADERS += \
         cpp_clang.h \
-        clangtoolastreader.h
+        clangtoolastreader.h \
+        lupdatepreprocessoraction.h
 }
 
 mingw {
