@@ -137,7 +137,6 @@ private:
 #define COMMAND_OBSOLETE Doc::alias(QLatin1String("obsolete"))
 #define COMMAND_OVERLOAD Doc::alias(QLatin1String("overload"))
 #define COMMAND_PAGE Doc::alias(QLatin1String("page"))
-#define COMMAND_PAGEKEYWORDS Doc::alias(QLatin1String("pagekeywords"))
 #define COMMAND_PERMISSIONS Doc::alias(QLatin1String("permissions"))
 #define COMMAND_PRELIMINARY Doc::alias(QLatin1String("preliminary"))
 #define COMMAND_PREVIOUSPAGE Doc::alias(QLatin1String("previouspage"))

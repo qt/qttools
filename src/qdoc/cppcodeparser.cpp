@@ -620,8 +620,6 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         node->setSince(arg);
     } else if (command == COMMAND_WRAPPER) {
         node->setWrapper();
-    } else if (command == COMMAND_PAGEKEYWORDS) {
-        node->addPageKeywords(arg);
     } else if (command == COMMAND_THREADSAFE) {
         node->setThreadSafeness(Node::ThreadSafe);
     } else if (command == COMMAND_TITLE) {
