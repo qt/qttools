@@ -97,7 +97,6 @@ private slots:
     void errorReceived(const QString &msg);
 };
 
-
 class QHelpEnginePrivate : public QHelpEngineCorePrivate
 {
     Q_OBJECT

@@ -44,6 +44,7 @@
 #include <QtHelp/QHelpEngine>
 #include <QtHelp/QHelpFilterEngine>
 #include <QtHelp/QHelpIndexWidget>
+#include <QtHelp/QHelpLink>
 #include <QtHelp/QHelpSearchQueryWidget>
 
 #ifdef Q_OS_WIN
@@ -199,9 +200,9 @@ void RemoteControl::handleActivateIdentifierCommand(const QString &arg)
         clearCache();
         m_activateIdentifier = arg;
     } else {
-        const QMap<QString, QUrl> links = helpEngine.linksForIdentifier(arg);
-        if (!links.isEmpty())
-            CentralWidget::instance()->setSource(links.first());
+        const auto docs = helpEngine.documentsForIdentifier(arg);
+        if (!docs.isEmpty())
+            CentralWidget::instance()->setSource(docs.first().url);
     }
 }
 
@@ -266,10 +267,10 @@ void RemoteControl::applyCache()
         m_mainWindow->setIndexString(m_activateKeyword);
         helpEngine.indexWidget()->activateCurrentItem();
     } else if (!m_activateIdentifier.isEmpty()) {
-        const QMap<QString, QUrl> links =
-            helpEngine.linksForIdentifier(m_activateIdentifier);
-        if (!links.isEmpty())
-            CentralWidget::instance()->setSource(links.first());
+        const auto docs =
+            helpEngine.documentsForIdentifier(m_activateIdentifier);
+        if (!docs.isEmpty())
+            CentralWidget::instance()->setSource(docs.first().url);
     } else if (!m_currentFilter.isEmpty()) {
         helpEngine.filterEngine()->setActiveFilter(m_currentFilter);
     }

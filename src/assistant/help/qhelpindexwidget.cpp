@@ -45,6 +45,7 @@
 
 #include <QtCore/QThread>
 #include <QtCore/QMutex>
+#include <QtHelp/QHelpLink>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QHeaderView>
 
@@ -223,13 +224,28 @@ bool QHelpIndexModel::isCreatingIndex() const
 }
 
 /*!
-    \obsolete
-    Use QHelpEngineCore::linksForKeyword() instead.
+    \since 5.15
+
+    Returns the associated help engine that manages this model.
 */
+QHelpEngineCore *QHelpIndexModel::helpEngine() const
+{
+    return d->helpEngine->q;
+}
+
+#if QT_DEPRECATED_SINCE(5, 15)
+/*!
+    \obsolete
+    Use QHelpEngineCore::documentsForKeyword() instead.
+*/
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 QMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) const
 {
     return d->helpEngine->q->linksForKeyword(keyword);
 }
+QT_WARNING_POP
+#endif
 
 /*!
     Filters the indices and returns the model index of the best
@@ -307,18 +323,48 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
     \fn void QHelpIndexWidget::linkActivated(const QUrl &link,
         const QString &keyword)
 
+    \obsolete
+
+    Use documentActivated() instead.
+
     This signal is emitted when an item is activated and its
     associated \a link should be shown. To know where the link
-    belongs to, the \a keyword is given as a second paremeter.
+    belongs to, the \a keyword is given as a second parameter.
 */
 
 /*!
     \fn void QHelpIndexWidget::linksActivated(const QMap<QString, QUrl> &links,
         const QString &keyword)
 
+    \obsolete
+
+    Use documentsActivated() instead.
+
     This signal is emitted when the item representing the \a keyword
     is activated and the item has more than one link associated.
     The \a links consist of the document titles and their URLs.
+*/
+
+/*!
+    \fn void QHelpIndexWidget::documentActivated(const QHelpLink &document,
+        const QString &keyword)
+
+    \since 5.15
+
+    This signal is emitted when an item is activated and its
+    associated \a document should be shown. To know where the link
+    belongs to, the \a keyword is given as a second parameter.
+*/
+
+/*!
+    \fn void QHelpIndexWidget::documentsActivated(const QList<QHelpLink> &documents,
+        const QString &keyword)
+
+    \since 5.15
+
+    This signal is emitted when the item representing the \a keyword
+    is activated and the item has more than one document associated.
+    The \a documents consist of the document titles and their URLs.
 */
 
 QHelpIndexWidget::QHelpIndexWidget()
@@ -342,11 +388,23 @@ void QHelpIndexWidget::showLink(const QModelIndex &index)
     const QVariant &v = indexModel->data(index, Qt::DisplayRole);
     const QString name = v.isValid() ? v.toString() : QString();
 
-    const QMap<QString, QUrl> &links = indexModel->linksForKeyword(name);
-    if (links.count() > 1)
+    const QList<QHelpLink> &docs = indexModel->helpEngine()->documentsForKeyword(name);
+    if (docs.count() > 1) {
+        emit documentsActivated(docs, name);
+        QT_WARNING_PUSH
+        QT_WARNING_DISABLE_DEPRECATED
+        QMap<QString, QUrl> links;
+        for (const auto &doc : docs)
+            static_cast<QMultiMap<QString, QUrl> &>(links).insert(doc.title, doc.url);
         emit linksActivated(links, name);
-    else if (!links.isEmpty())
-        emit linkActivated(links.first(), name);
+        QT_WARNING_POP
+    } else if (!docs.isEmpty()) {
+        emit documentActivated(docs.first(), name);
+        QT_WARNING_PUSH
+        QT_WARNING_DISABLE_DEPRECATED
+        emit linkActivated(docs.first().url, name);
+        QT_WARNING_POP
+    }
 }
 
 /*!

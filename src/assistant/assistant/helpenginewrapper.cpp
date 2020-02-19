@@ -41,6 +41,7 @@
 #include <QtHelp/QHelpEngine>
 #include <QtHelp/QHelpFilterEngine>
 #include <QtHelp/QHelpIndexModel>
+#include <QtHelp/QHelpLink>
 #include <QtHelp/QHelpSearchEngine>
 
 QT_BEGIN_NAMESPACE
@@ -261,10 +262,10 @@ QByteArray HelpEngineWrapper::fileData(const QUrl &url) const
     return d->m_helpEngine->fileData(url);
 }
 
-QMap<QString, QUrl> HelpEngineWrapper::linksForIdentifier(const QString &id) const
+QList<QHelpLink> HelpEngineWrapper::documentsForIdentifier(const QString &id) const
 {
     TRACE_OBJ
-    return d->m_helpEngine->linksForIdentifier(id);
+    return d->m_helpEngine->documentsForIdentifier(id);
 }
 
 QString HelpEngineWrapper::error() const

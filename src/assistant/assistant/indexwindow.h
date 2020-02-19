@@ -37,6 +37,7 @@ QT_BEGIN_NAMESPACE
 
 class QHelpIndexWidget;
 class QModelIndex;
+struct QHelpLink;
 
 class IndexWindow : public QWidget
 {
@@ -54,8 +55,7 @@ public:
 
 signals:
     void linkActivated(const QUrl &link);
-    void linksActivated(const QMap<QString, QUrl> &links,
-        const QString &keyword);
+    void documentsActivated(const QList<QHelpLink> &documents, const QString &keyword);
     void escapePressed();
 
 private slots:

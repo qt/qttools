@@ -22,6 +22,7 @@ SOURCES += \
     qhelpdbreader.cpp \
     qhelpcontentwidget.cpp \
     qhelpindexwidget.cpp \
+    qhelplink.cpp \
     qhelpcollectionhandler.cpp \
     qhelpsearchengine.cpp \
     qhelpsearchquerywidget.cpp \
@@ -46,6 +47,7 @@ HEADERS += \
     qhelpdbreader_p.h \
     qhelpcontentwidget.h \
     qhelpindexwidget.h \
+    qhelplink.h \
     qhelpcollectionhandler_p.h \
     qhelpsearchengine.h \
     qhelpsearchquerywidget.h \
