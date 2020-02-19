@@ -257,6 +257,8 @@ namespace ClangCppParser
         WriteSynchronizedRef<TranslationRelatedStore> &newAst, const TranslationStores &qDecl);
     void correctNoopTanslationContext(ReadSynchronizedRef<TranslationRelatedStore> &qNoop,
         WriteSynchronizedRef<TranslationRelatedStore> &newQNoop, const TranslationStores &qDecl);
+
+    bool containsTranslationInformation(llvm::StringRef ba);
 }
 
 QT_END_NAMESPACE

@@ -65,7 +65,7 @@ clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
     };
 }
 
-void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd)
+bool ClangCppParser::containsTranslationInformation(llvm::StringRef ba)
 {
     // pre-process the files by a simple text search if there is any occurrence
     // of things we are interested in
@@ -87,33 +87,37 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     constexpr llvm::StringLiteral trUtf8("trUtf8(");
     constexpr llvm::StringLiteral translate("translate(");
 
+    const size_t pos = ba.find_first_of("QT_TR");
+    const auto baSliced = ba.slice(pos, llvm::StringRef::npos);
+     if (pos != llvm::StringRef::npos) {
+         if (baSliced.contains(qtTrNoop) || baSliced.contains(qtTrNoopUTF8) || baSliced.contains(qtTrNNoop)
+             || baSliced.contains(qtTrIdNoop) || baSliced.contains(qtTrIdNNoop)
+             || baSliced.contains(qtTranslateNoop) ||  baSliced.contains(qtTranslateNoopUTF8)
+             ||  baSliced.contains(qtTranslateNNoop) || baSliced.contains(qtTranslateNoop3)
+             ||  baSliced.contains(qtTranslateNoop3UTF8) ||  baSliced.contains(qtTranslateNNoop3))
+             return true;
+     }
+
+     if (ba.contains(qDeclareTrFunction) || ba.contains(translatorComment) || ba.contains(qtTrId) || ba.contains(tr)
+         || ba.contains(trUtf8) || ba.contains(translate))
+        return true;
+
+     return false;
+}
+
+void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd)
+{
+    // pre-process the files by a simple text search if there is any occurrence
+    // of things we are interested in
     std::vector<std::string> sources, sourcesAst, sourcesPP;
     for (const QString &filename : files) {
         QFile file(filename);
         if (file.open(QIODevice::ReadOnly)) {
             if (const uchar *memory = file.map(0, file.size())) {
                 const auto ba = llvm::StringRef((const char*) (memory), file.size());
-                if (ba.contains(qDeclareTrFunction)) {
+                if (containsTranslationInformation(ba)) {
                     sourcesPP.emplace_back(filename.toStdString());
                     sourcesAst.emplace_back(sourcesPP.back());
-                    continue;
-                }
-                const size_t pos = ba.find_first_of("QT_TR");
-                const auto baSliced = ba.slice(pos, llvm::StringRef::npos);
-                 if (pos != llvm::StringRef::npos) {
-                     if (baSliced.contains(qtTrNoop) || baSliced.contains(qtTrNoopUTF8) || baSliced.contains(qtTrNNoop)
-                         || baSliced.contains(qtTrIdNoop) || baSliced.contains(qtTrIdNNoop)
-                         || baSliced.contains(qtTranslateNoop) ||  baSliced.contains(qtTranslateNoopUTF8)
-                         ||  baSliced.contains(qtTranslateNNoop) || baSliced.contains(qtTranslateNoop3)
-                         ||  baSliced.contains(qtTranslateNoop3UTF8) ||  baSliced.contains(qtTranslateNNoop3)) {
-                         sourcesPP.emplace_back(filename.toStdString());
-                         sourcesAst.emplace_back(sourcesPP.back());
-                         continue;
-                     }
-                 }
-                if (ba.contains(translatorComment) || ba.contains(qtTrId) || ba.contains(tr)
-                    || ba.contains(trUtf8) || ba.contains(translate)) {
-                    sourcesAst.emplace_back(filename.toStdString());
                 }
             } else {
                 // mmap did not succeed, remember it anyway

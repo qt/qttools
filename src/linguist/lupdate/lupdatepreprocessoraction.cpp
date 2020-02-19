@@ -138,4 +138,27 @@ void LupdatePPCallbacks::storeMacroArguments(const std::vector<QString> &args,
     }
 }
 
+// Hook called when a source range is skipped.
+// Emit a warning if translation information is found within this range.
+void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
+    clang::SourceLocation endifLoc)
+{
+    const auto &sm = m_preprocessor.getSourceManager();
+    llvm::StringRef fileName = sm.getFilename(sourceRange.getBegin());
+    if (fileName != m_inputFile)
+        return;
+    const char *begin = sm.getCharacterData(sourceRange.getBegin());
+    const char *end = sm.getCharacterData(sourceRange.getEnd());
+    llvm::StringRef skippedText = llvm::StringRef(begin, end - begin);
+    if (ClangCppParser::containsTranslationInformation(skippedText)) {
+        qCDebug(lcClang) << "SourceRangeSkipped: skipped text:" << skippedText;
+        unsigned int beginLine = sm.getExpansionLineNumber(sourceRange.getBegin());
+        unsigned int endLine = sm.getExpansionLineNumber(sourceRange.getEnd());
+        qWarning("Code with translation information has been skipped "
+                 "in file %s between lines %d and %d",
+                 m_inputFile.c_str(), beginLine, endLine);
+    }
+
+}
+
 QT_END_NAMESPACE
