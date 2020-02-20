@@ -248,6 +248,51 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
 }
 
 /*
+    Retrieve the comments not associated with tr calls.
+*/
+void LupdateVisitor::processIsolatedComments()
+{
+    qCDebug(lcClang) << "==== processIsolatedComments ====";
+    auto &sourceMgr = m_context->getSourceManager();
+
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
+    const clang::FileID file = sourceMgr.getMainFileID();
+    const auto commentsInThisFile = m_context->getRawCommentList().getCommentsInFile(file);
+    if (!commentsInThisFile)
+        return;
+
+    std::vector<clang::RawComment *> tmp;
+    for (auto commentInFile : *commentsInThisFile)
+        tmp.emplace_back(commentInFile.second);
+    clang::ArrayRef<clang::RawComment *> rawComments = tmp;
+#else
+    clang::ArrayRef<clang::RawComment *> rawComments = m_context->getRawCommentList().getComments();
+#endif
+
+    // If there are no comments anywhere, we won't find anything.
+    if (rawComments.empty())
+        return;
+
+    // Searching for the comments of the form:
+    // /*  TRANSLATOR CONTEXT
+    //     whatever */
+    // They are not associated to any tr calls
+    // Each one needs it's own entry in the m_stores.AST TranslationStores
+    for (auto rawComment : rawComments) {
+        if (sourceMgr.getFilename(rawComment->getBeginLoc()).str() != m_inputFile)
+            continue;
+        // Comments not separated by an empty line will be part of the same Raw comments
+        // Each one needs to be saved with its line number.
+        // The store is used here only to pass this information.
+        TranslationRelatedStore store;
+        store.lupdateLocationLine = sourceMgr.getPresumedLoc(rawComment->getBeginLoc()).getLine();
+        qCDebug(lcClang) << " raw Comment : \n"
+            << QString::fromStdString(rawComment->getRawText(sourceMgr));
+        setInfoFromRawComment(QString::fromStdString(rawComment->getRawText(sourceMgr)), &store);
+    }
+}
+
+/*
     Retrieve the comments associated with the CallExpression.
 */
 std::vector<QString> LupdateVisitor::rawCommentsForCallExpr(const clang::CallExpr *callExpr) const
@@ -377,34 +422,44 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
 void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
     TranslationRelatedStore *store)
 {
-    const QStringList commentLines = commentString.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+    const QStringList commentLines = commentString.split(QLatin1Char('\n'));
 
     static const QRegularExpression
-        cppStyle(QStringLiteral("^\\/\\/(?<identifier>[:=~%])\\s+(?<comment>.+)$"));
+        cppStyle(
+        QStringLiteral("^\\/\\/(?<identifier>[:=~%]|(\\s*?TRANSLATOR))\\s+(?<comment>.+)$"));
     static const QRegularExpression
-        cStyleSingle(QStringLiteral("^\\/\\*(?<identifier>[:=~%])\\s+(?<comment>.+)\\*\\/$"));
+        cStyleSingle(
+        QStringLiteral("^\\/\\*(?<identifier>[:=~%]|(\\s*?TRANSLATOR))\\s+(?<comment>.+)\\*\\/$"));
     static const QRegularExpression
-        cStyleMultiBegin(QStringLiteral("^\\/\\*(?<identifier>[:=~%])\\s+(?<comment>.*)$"));
+        cStyleMultiBegin(
+        QStringLiteral("^\\/\\*(?<identifier>[:=~%]|(\\s*?TRANSLATOR))\\s+(?<comment>.*)$"));
 
     static const QRegularExpression isSpace(QStringLiteral("\\s+"));
-    static const QRegularExpression idefix(QStringLiteral("^\\/\\*(?<identifier>[:=~%])"));
+    static const QRegularExpression idefix(
+        QStringLiteral("^\\/\\*(?<identifier>[:=~%]|(\\s*?TRANSLATOR))"));
 
     bool save = false;
     bool sawStarPrefix = false;
     bool sourceIdentifier = false;
 
+    int storeLine = store->lupdateLocationLine;
+    int lineExtra =  storeLine - 1;
+
     QString comment, identifier;
     for (auto line : commentLines) {
         line = line.trimmed();
-
+        lineExtra++;
         if (!sawStarPrefix) {
             if (line.startsWith(QStringLiteral("//"))) {
                 // Process C++ style comment.
                 save = LupdatePrivate::capture(cppStyle, line, &identifier, &comment);
+                storeLine = lineExtra;
             } else if (line.startsWith(QLatin1String("/*")) && line.endsWith(QLatin1String("*/"))) {
                 // Process C style comment on a single line.
+                storeLine = lineExtra;
                 save = LupdatePrivate::capture(cStyleSingle, line, &identifier, &comment);
             } else if (line.startsWith(QLatin1String("/*"))) {
+                storeLine = lineExtra;
                 sawStarPrefix = true; // Start processing a multi line C style comment.
 
                 auto result = idefix.match(line);
@@ -412,7 +467,8 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
                     continue; // No identifier found.
                 identifier = result.captured(QLatin1String("identifier"));
 
-                if (line.size() > 4) // The line is not just opening, try grab the comment.
+                // The line is not just opening, try grab the comment.
+                 if (line.size() > (identifier.size() + 3))
                     LupdatePrivate::capture(cStyleMultiBegin, line, &identifier, &comment);
                 sourceIdentifier = (identifier == QLatin1String("%"));
             }
@@ -433,25 +489,46 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
             comment += line;
             save = !sawStarPrefix && !comment.isEmpty();
         }
-
         if (!save)
             continue;
 
-        if (identifier == QStringLiteral(":")) {
-            if (!store->lupdateExtraComment.isEmpty())
-                store->lupdateExtraComment.append(QLatin1Char(' '));
-            store->lupdateExtraComment += comment;
-        } else if (identifier == QStringLiteral("=")) {
-            if (!store->lupdateIdMetaData.isEmpty())
-                store->lupdateIdMetaData.append(QLatin1Char(' '));
-            store->lupdateIdMetaData = comment; // Only the last one is to be picked up.
-        } else if (identifier == QStringLiteral("~")) {
-            auto first = comment.section(isSpace, 0, 0);
-            auto second = comment.mid(first.size()).trimmed();
-            if (!second.isEmpty())
-                store->lupdateAllMagicMetaData.insert(first, second);
-        } else if (identifier == QLatin1String("%")) {
-            store->lupdateSourceWhenId += comment;
+        // To avoid processing the non TRANSLATOR comments when setInfoFromRawComment in called
+        // from processIsolatedComments
+        if (!store->funcName.isEmpty()) {
+            if (identifier == QStringLiteral(":")) {
+                if (!store->lupdateExtraComment.isEmpty())
+                    store->lupdateExtraComment.append(QLatin1Char(' '));
+                store->lupdateExtraComment += comment;
+            } else if (identifier == QStringLiteral("=")) {
+                if (!store->lupdateIdMetaData.isEmpty())
+                    store->lupdateIdMetaData.append(QLatin1Char(' '));
+                store->lupdateIdMetaData = comment; // Only the last one is to be picked up.
+            } else if (identifier == QStringLiteral("~")) {
+                auto first = comment.section(isSpace, 0, 0);
+                auto second = comment.mid(first.size()).trimmed();
+                if (!second.isEmpty())
+                    store->lupdateAllMagicMetaData.insert(first, second);
+            } else if (identifier == QLatin1String("%")) {
+                store->lupdateSourceWhenId += comment;
+            }
+        } else if (identifier.trimmed() == QStringLiteral("TRANSLATOR")) {
+            // separate the comment in two in order to get the context
+            // then save it as a new entry in m_stores.
+            // reminder: TRANSLATOR comments are isolated comments not linked to any tr call
+            qCDebug(lcClang) << "Comment = " << comment;
+            TranslationRelatedStore newStore;
+            // need a funcName name in order to get handeled in fillTranslator
+            newStore.funcName = QStringLiteral("TRANSLATOR");
+            auto index = comment.indexOf(QStringLiteral(" "));
+            if (index >= 0) {
+                newStore.contextArg = comment.left(index).trimmed();
+                newStore.lupdateComment = comment.mid(index).trimmed();
+            }
+            newStore.lupdateLocationFile = QString::fromStdString(m_inputFile);
+            newStore.lupdateLocationLine = storeLine;
+            newStore.locationCol = 0;
+            newStore.printStore();
+            m_stores.AST.push_back(newStore);
         }
 
         save = false;
@@ -592,6 +669,7 @@ void LupdateVisitor::generateOuput()
         // only fill if a context has been retrieved in the file we're currently visiting
         m_stores.QDeclareTrWithContext.push_back(store);
     }
+    processIsolatedComments();
 }
 
 QT_END_NAMESPACE

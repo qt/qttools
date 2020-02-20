@@ -78,6 +78,7 @@ private:
     void setInfoFromRawComment(const QString &commentString, TranslationRelatedStore *store);
 
     void processPreprocessorCall(TranslationRelatedStore store);
+    void processIsolatedComments();
 
     clang::ASTContext *m_context { nullptr };
     Translator *m_tor { nullptr };

@@ -1,4 +1,4 @@
-/****************************************************************************
+﻿/****************************************************************************
 **
 ** Copyright (C) 2019 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
@@ -139,6 +139,9 @@ void ClangCppParser::fillTranslator(Translator *tor, TranslationRelatedStore sto
     case TrFunctionAliasManager::Function_QT_TRID_NOOP:
         handleTrId(tor, store, plural);
         break;
+    default:
+        if (store.funcName == QStringLiteral("TRANSLATOR"))
+            handleTr(tor, store, false);
     }
 }
 
