@@ -302,6 +302,48 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         { "ReadBackNonBaseMipLevel", QRhi::ReadBackNonBaseMipLevel },
         { nullptr, QRhi::Feature(0) }
     };
+    struct RhiTextureFormat {
+        const char *name;
+        QRhiTexture::Format val;
+    };
+    const RhiTextureFormat textureFormats[] = {
+        { "RGBA8", QRhiTexture::RGBA8 },
+        { "BGRA8", QRhiTexture::BGRA8 },
+        { "R8", QRhiTexture::R8 },
+        { "R16", QRhiTexture::R16 },
+        { "RED_OR_ALPHA8", QRhiTexture::RED_OR_ALPHA8 },
+        { "RGBA16F", QRhiTexture::RGBA16F },
+        { "RGBA32F", QRhiTexture::RGBA32F },
+        { "R16F", QRhiTexture::R16F },
+        { "R32F", QRhiTexture::R32F },
+        { "D16", QRhiTexture::D16 },
+        { "D32F", QRhiTexture::D32F },
+        { "BC1", QRhiTexture::BC1 },
+        { "BC2", QRhiTexture::BC2 },
+        { "BC3", QRhiTexture::BC3 },
+        { "BC4", QRhiTexture::BC4 },
+        { "BC5", QRhiTexture::BC5 },
+        { "BC6H", QRhiTexture::BC6H },
+        { "BC7", QRhiTexture::BC7 },
+        { "ETC2_RGB8", QRhiTexture::ETC2_RGB8 },
+        { "ETC2_RGB8A1", QRhiTexture::ETC2_RGB8A1 },
+        { "ETC2_RGBA8", QRhiTexture::ETC2_RGBA8 },
+        { "ASTC_4x4", QRhiTexture::ASTC_4x4 },
+        { "ASTC_5x4", QRhiTexture::ASTC_5x4 },
+        { "ASTC_5x5", QRhiTexture::ASTC_5x5 },
+        { "ASTC_6x5", QRhiTexture::ASTC_6x5 },
+        { "ASTC_6x6", QRhiTexture::ASTC_6x6 },
+        { "ASTC_8x5", QRhiTexture::ASTC_8x5 },
+        { "ASTC_8x6", QRhiTexture::ASTC_8x6 },
+        { "ASTC_8x8", QRhiTexture::ASTC_8x8 },
+        { "ASTC_10x5", QRhiTexture::ASTC_10x5 },
+        { "ASTC_10x6", QRhiTexture::ASTC_10x6 },
+        { "ASTC_10x8", QRhiTexture::ASTC_10x8 },
+        { "ASTC_10x10", QRhiTexture::ASTC_10x10 },
+        { "ASTC_12x10", QRhiTexture::ASTC_12x10 },
+        { "ASTC_12x12", QRhiTexture::ASTC_12x12 },
+        { nullptr, QRhiTexture::UnknownFormat }
+    };
 
     QScopedPointer<QRhi> rhi(QRhi::create(impl, initParams, QRhi::Flags(), nullptr));
     if (rhi) {
@@ -311,10 +353,20 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         str << "  Max Color Attachments: " << rhi->resourceLimit(QRhi::MaxColorAttachments) << "\n";
         str << "  Frames in Flight: " << rhi->resourceLimit(QRhi::FramesInFlight) << "\n";
         str << "  Uniform Buffer Alignment: " << rhi->ubufAlignment() << "\n";
+        QByteArrayList supportedSampleCounts;
+        for (int s : rhi->supportedSampleCounts())
+            supportedSampleCounts << QByteArray::number(s);
+        str << "  Supported MSAA sample counts: " << supportedSampleCounts.join(',') << "\n";
         str << "  Features:\n";
         for (int i = 0; features[i].name; i++) {
             str << "    " << (rhi->isFeatureSupported(features[i].val) ? "v" : "-") << " " << features[i].name << "\n";
         }
+        str << "  Texture formats:";
+        for (int i = 0; textureFormats[i].name; i++) {
+            if (rhi->isTextureFormatSupported(textureFormats[i].val))
+                str << " " << textureFormats[i].name;
+        }
+        str << "\n";
     }
 }
 
@@ -326,7 +378,7 @@ void dumpRhiInfo(QTextStream &str)
     {
         QRhiGles2InitParams params;
         params.fallbackSurface = QRhiGles2InitParams::newFallbackSurface();
-        dumpRhiBackendInfo(str, "OpenGL ES2", QRhi::OpenGLES2, &params);
+        dumpRhiBackendInfo(str, "OpenGL (with default QSurfaceFormat)", QRhi::OpenGLES2, &params);
         delete params.fallbackSurface;
     }
 #endif
