@@ -1,5 +1,116 @@
 {
+    "module": "tools",
+
     "subconfigs": [
         "src/qdoc"
+    ],
+    "features": {
+        "assistant": {
+            "label": "Qt Assistant",
+            "purpose": "Qt Assistant is a tool for viewing on-line documentation in Qt help file format.",
+            "output": [ "privateFeature" ]
+        },
+        "designer": {
+            "label": "Qt Designer",
+            "purpose": "Qt Designer is the Qt tool for designing and building graphical user interfaces (GUIs) with Qt Widgets. You can compose and customize your windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different styles and resolutions.",
+            "output": [ "privateFeature" ]
+        },
+        "distancefieldgenerator": {
+            "label": "Qt Distance Field Generator",
+            "purpose": "The Qt Distance Field Generator tool can be used to pregenerate the font cache in order to optimize startup performance.",
+            "output": [ "privateFeature" ]
+        },
+        "kmap2qmap": {
+            "label": "kmap2qmap",
+            "purpose": "kmap2qmap is a tool to generate keymaps for use on Embedded Linux. The source files have to be in standard Linux kmap format that is e.g. understood by the kernel's loadkeys command.",
+            "output": [ "privateFeature" ]
+        },
+        "linguist": {
+            "label": "Qt Linguist",
+            "purpose": "Qt Linguist can be used by translator to translate text in Qt applications.",
+            "output": [ "privateFeature" ]
+        },
+        "macdeployqt": {
+            "label": "Mac Deployment Tool",
+            "purpose": "The Mac deployment tool automates the process of creating a deployable application bundle that contains the Qt libraries as private frameworks.",
+            "condition": "config.darwin",
+            "output": [ "privateFeature" ]
+        },
+        "makeqpf": {
+            "label": "makeqpf",
+            "purpose": "makeqpf is a tool to generate pre-rendered fonts in QPF2 format for use on Embedded Linux.",
+            "output": [ "privateFeature" ]
+        },
+        "pixeltool": {
+            "label": "pixeltool",
+            "purpose": "The Qt Pixel Zooming Tool is a graphical application that magnifies the screen around the mouse pointer so you can look more closely at individual pixels.",
+            "output": [ "privateFeature" ]
+        },
+        "qdbus": {
+            "label": "qdbus",
+            "purpose": "qdbus is a communication interface for Qt-based applications.",
+            "output": [ "privateFeature" ]
+        },
+        "qev": {
+            "label": "qev",
+            "purpose": "qev allows introspection of incoming events for a QWidget, similar to the X11 xev tool.",
+            "output": [ "privateFeature" ]
+        },
+        "qtattributionsscanner": {
+            "label": "Qt Attributions Scanner",
+            "purpose": "Qt Attributions Scanner generates attribution documents for third-party code in Qt.",
+            "output": [ "privateFeature" ]
+        },
+        "qtdiag": {
+            "label": "qtdiag",
+            "purpose": "qtdiag outputs information about the Qt installation it was built with.",
+            "output": [ "privateFeature" ]
+        },
+        "qtpaths": {
+            "label": "qtpaths",
+            "purpose": "qtpaths is a command line client to QStandardPaths.",
+            "output": [ "privateFeature" ]
+        },
+        "qtplugininfo": {
+            "label": "qtplugininfo",
+            "purpose": "qtplugininfo dumps metadata about Qt plugins in JSON format.",
+            "output": [ "privateFeature" ]
+        },
+        "windeployqt": {
+            "label": "Windows deployment tool",
+            "purpose": "The Windows deployment tool is designed to automate the process of creating a deployable folder containing the Qt-related dependencies (libraries, QML imports, plugins, and translations) required to run the application from that folder. It creates a sandbox for Universal Windows Platform (UWP) or an installation tree for Windows desktop applications, which can be easily bundled into an installation package.",
+            "condition": "config.win32 || config.winrt",
+            "output": [ "privateFeature" ]
+        },
+        "winrtrunner": {
+            "label": "WinRT Runner Tool",
+            "purpose": "The WinRT Runner Tool installs, runs, and collects test results for packages made with Qt.",
+            "condition": "config.winrt",
+            "output": [ "privateFeature" ]
+        }
+    },
+    "summary": [
+        {
+            "section": "Qt Tools",
+            "entries": [
+                "assistant",
+                "designer",
+                "distancefieldgenerator",
+                "kmap2qmap",
+                "linguist",
+                "macdeployqt",
+                "makeqpf",
+                "pixeltool",
+                "qdbus",
+                "qev",
+                "qtattributionsscanner",
+                "qtdiag",
+                "qtpaths",
+                "qtplugininfo",
+                "windeployqt",
+                "winrtrunner"
+            ]
+        }
     ]
 }
+

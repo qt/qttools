@@ -1,3 +1,7 @@
+include($$OUT_PWD/../../qttools-config.pri)
+QT_FOR_CONFIG += tools-private
+requires(qtConfig(distancefieldgenerator))
+
 TARGET = qdistancefieldgenerator
 
 QT += gui widgets gui-private core-private quick-private

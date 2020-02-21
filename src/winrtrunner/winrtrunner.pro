@@ -1,3 +1,7 @@
+include($$OUT_PWD/../../qttools-config.pri)
+QT_FOR_CONFIG += tools-private
+requires(qtConfig(winrtrunner))
+
 option(host_build)
 CONFIG += force_bootstrap
 

@@ -1,4 +1,9 @@
 requires(qtHaveModule(sql))
+
+include($$OUT_PWD/../../qttools-config.pri)
+QT_FOR_CONFIG += tools-private
+requires(qtConfig(assistant))
+
 TEMPLATE = subdirs
 
 SUBDIRS += \

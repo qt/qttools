@@ -1,3 +1,7 @@
+include($$OUT_PWD/../../qttools-config.pri)
+QT_FOR_CONFIG += tools-private
+requires(qtConfig(makeqpf))
+
 QT += widgets gui-private core-private
 CONFIG += console
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
