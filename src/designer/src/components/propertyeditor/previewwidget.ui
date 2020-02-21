@@ -129,7 +129,7 @@
         <item>
          <widget class="QPushButton" name="toggleButton">
           <property name="text">
-           <string>ToggleButton</string>
+           <string extracomment="Palette Editor Preview Widget">ToggleButton</string>
           </property>
           <property name="checkable">
            <bool>true</bool>
@@ -147,14 +147,14 @@
           <item>
            <widget class="QToolButton" name="toolButton">
             <property name="text">
-             <string>ToolButton</string>
+             <string extracomment="Palette Editor Preview Widget">ToolButton</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QToolButton" name="menuToolButton">
             <property name="text">
-             <string>Menu</string>
+             <string extracomment="Palette Editor Preview Widget">Menu</string>
             </property>
            </widget>
           </item>
@@ -181,7 +181,7 @@
    <item row="0" column="1">
     <widget class="QGroupBox" name="itemGroupBox">
      <property name="title">
-      <string>Item Views</string>
+      <string extracomment="Palette Editor Preview Widget">Item Views</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -194,26 +194,26 @@
         </property>
         <column>
          <property name="text">
-          <string>Column 1</string>
+          <string extracomment="Palette Editor Preview Widget">Column 1</string>
          </property>
         </column>
         <item>
          <property name="text">
-          <string>Top Level 1</string>
+          <string extracomment="Palette Editor Preview Widget">Top Level 1</string>
          </property>
          <item>
           <property name="text">
-           <string>Nested Item 1</string>
+           <string extracomment="Palette Editor Preview Widget">Nested Item 1</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Nested Item 2</string>
+           <string extracomment="Palette Editor Preview Widget">Nested Item 2</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Nested Item 3</string>
+           <string extracomment="Palette Editor Preview Widget">Nested Item 3</string>
           </property>
          </item>
         </item>
@@ -225,7 +225,7 @@
    <item row="1" column="0">
     <widget class="QGroupBox" name="simpleGroupBox">
      <property name="title">
-      <string>Simple Input Widgets</string>
+      <string extracomment="Palette Editor Preview Widget">Simple Input Widgets</string>
      </property>
      <property name="checkable">
       <bool>true</bool>
@@ -252,12 +252,12 @@
           </item>
           <item>
            <property name="text">
-            <string>Item1</string>
+            <string extracomment="Palette Editor Preview Widget">Item1</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>Item2</string>
+            <string extracomment="Palette Editor Preview Widget">Item2</string>
            </property>
           </item>
          </widget>
@@ -291,7 +291,7 @@
    <item row="1" column="1">
     <widget class="QGroupBox" name="displayGroupBox">
      <property name="title">
-      <string>Display Widgets</string>
+      <string extracomment="Palette Editor Preview Widget">Display Widgets</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
@@ -307,7 +307,7 @@
       <item>
        <widget class="QLabel" name="label">
         <property name="text">
-         <string>QLabel</string>
+         <string extracomment="Palette Editor Preview Widget">QLabel</string>
         </property>
        </widget>
       </item>
@@ -317,7 +317,7 @@
          <enum>QFrame::StyledPanel</enum>
         </property>
         <property name="text">
-         <string>QLabel with frame</string>
+         <string extracomment="Palette Editor Preview Widget">QLabel with frame</string>
         </property>
        </widget>
       </item>
