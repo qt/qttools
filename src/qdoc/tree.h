@@ -203,7 +203,6 @@ private: // The rest of the class is private.
     QString getNewLinkTarget(const Node *locNode, const Node *t, const QString &fileName,
                              QString &text, bool broken);
     TargetList *getTargetList(const QString &module);
-    QStringList getTargetListKeys() { return targetListMap_->keys(); }
     FunctionNode *findFunctionNodeForTag(const QString &tag, Aggregate *parent = nullptr);
     FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = nullptr);
 
@@ -227,7 +226,6 @@ private:
     CNMap jsModules_;
     QmlTypeMap qmlTypeMap_;
     ExampleNodeMap exampleNodeMap_;
-    TargetListMap *targetListMap_;
     NodeList proxies_;
     NodeMap dontDocumentMap_;
 };

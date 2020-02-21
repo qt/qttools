@@ -287,8 +287,6 @@ void HtmlGenerator::generateDocs()
         qflagsHref_ = linkForNode(qflags, nullptr);
     if (!config->preparing())
         Generator::generateDocs();
-    if (config->generating() && config->getBool(CONFIG_WRITEQAPAGES))
-        generateQAPage();
 
     if (!config->generating()) {
         QString fileBase =
@@ -305,60 +303,6 @@ void HtmlGenerator::generateDocs()
         */
         qdb_->generateTagFile(tagFile_, this);
     }
-}
-
-/*!
-  Output the module's Quality Assurance page.
- */
-void HtmlGenerator::generateQAPage()
-{
-    NamespaceNode *node = qdb_->primaryTreeRoot();
-    beginSubPage(node, "aaa-" + defaultModuleName().toLower() + "-qa-page.html");
-    CodeMarker *marker = CodeMarker::markerForFileName(node->location().filePath());
-    QString title = "Quality Assurance Page for " + defaultModuleName();
-    QString t = "Quality assurance information for checking the " + defaultModuleName()
-            + " documentation.";
-    generateHeader(title, node, marker);
-    generateTitle(title, Text() << t, LargeSubTitle, node, marker);
-
-    QStringList strings;
-    QVector<int> counts;
-    QString depends = qdb_->getLinkCounts(strings, counts);
-    if (!strings.isEmpty()) {
-        t = "Intermodule Link Counts";
-        QString ref = registerRef(t);
-        out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
-        out() << "<h2 id=\"" << ref << "\">" << protectEnc(t) << "</h2>\n";
-        out() << "<table class=\"valuelist\"><tr valign=\"top\" "
-              << "class=\"even\"><th class=\"tblConst\">Destination Module</th>"
-              << "<th class=\"tblval\">Link Count</th></tr>\n";
-        QString fileName;
-        for (int i = 0; i < strings.size(); ++i) {
-            fileName = generateLinksToLinksPage(strings.at(i), marker);
-            out() << "<tr><td class=\"topAlign\"><tt>"
-                  << "<a href=\"" << fileName << "\">" << strings.at(i) << "</a>"
-                  << "</tt></td><td class=\"topAlign\"><tt>" << counts.at(i) << "</tt></td></tr>\n";
-        }
-        int count = 0;
-        fileName = generateLinksToBrokenLinksPage(marker, count);
-        if (count != 0) {
-            out() << "<tr><td class=\"topAlign\"><tt>"
-                  << "<a href=\"" << fileName << "\">"
-                  << "Broken Links"
-                  << "</a>"
-                  << "</tt></td><td class=\"topAlign\"><tt>" << count << "</tt></td></tr>\n";
-        }
-
-        out() << "</table>\n";
-        t = "The Optimal \"depends\" Variable";
-        out() << "<h2>" << protectEnc(t) << "</h2>\n";
-        t = "Consider replacing the depends variable in " + defaultModuleName().toLower()
-                + ".qdocconf with this one, if the two are not identical:";
-        out() << "<p>" << protectEnc(t) << "</p>\n";
-        out() << "<p>" << protectEnc(depends) << "</p>\n";
-    }
-    generateFooter();
-    endSubPage();
 }
 
 /*!
@@ -383,91 +327,6 @@ void HtmlGenerator::generateExampleFilePage(const Node *en, const QString &file,
 
     generateText(text, en, codeMarker);
     endFilePage();
-}
-
-/*!
-  This function writes an html file containing a list of
-  links to links that originate in the current module and
-  go to targets in the specified \a module. The \a marker
-  is used for the same thing the marker is always used for.
- */
-QString HtmlGenerator::generateLinksToLinksPage(const QString &module, CodeMarker *marker)
-{
-    NamespaceNode *node = qdb_->primaryTreeRoot();
-    QString fileName = "aaa-links-to-" + module + ".html";
-    beginSubPage(node, fileName);
-    QString title = "Links from " + defaultModuleName() + " to " + module;
-    generateHeader(title, node, marker);
-    generateTitle(title, Text(), SmallSubTitle, node, marker);
-    out() << "<p>This is a list of links from " << defaultModuleName() << " to " << module << ".  ";
-    out() << "Click on a link to go to the location of the link. The link is marked ";
-    out() << "with red asterisks. ";
-    out() << "Click on the marked link to see if it goes to the right place.</p>\n";
-    const TargetList *tlist = qdb_->getTargetList(module);
-    if (tlist) {
-        out() << "<table class=\"valuelist\"><tr valign=\"top\" class=\"odd\"><th "
-                 "class=\"tblConst\">Link to  link...</th><th class=\"tblval\">In file...</th><th "
-                 "class=\"tbldscr\">Somewhere after line number...</th></tr>\n";
-        for (const TargetLoc *t : *tlist) {
-            // e.g.: <a name="link-8421"></a><a href="layout.html">Layout Management</a>
-            out() << "<tr><td class=\"topAlign\">";
-            out() << "<a href=\"" << t->fileName_ << "#" << t->target_ << "\">";
-            out() << t->text_ << "</a></td>";
-            out() << "<td class=\"topAlign\">";
-            QString f = t->loc_->doc().location().filePath();
-            out() << f << "</td>";
-            out() << "<td class=\"topAlign\">";
-            out() << t->loc_->doc().location().lineNo() << "</td></tr>\n";
-        }
-        out() << "</table>\n";
-    }
-    generateFooter();
-    endSubPage();
-    return fileName;
-}
-
-/*!
-  This function writes an html file containing a list of
-  links to broken links that originate in the current
-  module and go nowwhere. It returns the name of the file
-  it generates, and it sets \a count to the number of
-  broken links that were found. The \a marker is used for
-  the same thing the marker is always used for.
- */
-QString HtmlGenerator::generateLinksToBrokenLinksPage(CodeMarker *marker, int &count)
-{
-    QString fileName;
-    NamespaceNode *node = qdb_->primaryTreeRoot();
-    const TargetList *tlist = qdb_->getTargetList("broken");
-    if (tlist && !tlist->isEmpty()) {
-        count = tlist->size();
-        fileName = "aaa-links-to-broken-links.html";
-        beginSubPage(node, fileName);
-        QString title = "Broken links in " + defaultModuleName();
-        generateHeader(title, node, marker);
-        generateTitle(title, Text(), SmallSubTitle, node, marker);
-        out() << "<p>This is a list of broken links in " << defaultModuleName() << ".  ";
-        out() << "Click on a link to go to the broken link.  ";
-        out() << "The link's target could not be found.</p>\n";
-        out() << "<table class=\"valuelist\"><tr valign=\"top\" class=\"odd\"><th "
-                 "class=\"tblConst\">Link to broken link...</th><th class=\"tblval\">In "
-                 "file...</th><th class=\"tbldscr\">Somewhere after line number...</th></tr>\n";
-        for (const TargetLoc *t : *tlist) {
-            // e.g.: <a name="link-8421"></a><a href="layout.html">Layout Management</a>
-            out() << "<tr><td class=\"topAlign\">";
-            out() << "<a href=\"" << t->fileName_ << "#" << t->target_ << "\">";
-            out() << t->text_ << "</a></td>";
-            out() << "<td class=\"topAlign\">";
-            QString f = t->loc_->doc().location().filePath();
-            out() << f << "</td>";
-            out() << "<td class=\"topAlign\">";
-            out() << t->loc_->doc().location().lineNo() << "</td></tr>\n";
-        }
-        out() << "</table>\n";
-        generateFooter();
-        endSubPage();
-    }
-    return fileName;
 }
 
 /*!
@@ -502,13 +361,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             if (link.isEmpty()) {
                 out() << protectEnc(atom->string());
             } else {
-                if (config->getBool(CONFIG_WRITEQAPAGES)
-                        && node && (atom->type() != Atom::NavAutoLink)) {
-                    QString text = atom->string();
-                    QString target = qdb_->getNewLinkTarget(relative, node, outFileName(), text);
-                    out() << "<a id=\"" << Doc::canonicalTitle(target)
-                          << "\" class=\"qa-mark\"></a>";
-                }
                 beginLink(link, node, relative);
                 generateLink(atom, marker);
                 endLink();
@@ -847,17 +699,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         QString link = getLink(atom, relative, &node);
         if (link.isEmpty() && (node != relative) && !noLinkErrors()) {
             relative->doc().location().warning(tr("Can't link to '%1'").arg(atom->string()));
-            if (config->getBool(CONFIG_WRITEQAPAGES) && (atom->type() != Atom::NavAutoLink)) {
-                QString text = atom->next()->next()->string();
-                QString target = qdb_->getNewLinkTarget(relative, node, outFileName(), text, true);
-                out() << "<a id=\"" << Doc::canonicalTitle(target) << "\" class=\"qa-mark\"></a>";
-            }
         } else {
-            if (config->getBool(CONFIG_WRITEQAPAGES) && node && (atom->type() != Atom::NavLink)) {
-                QString text = atom->next()->next()->string();
-                QString target = qdb_->getNewLinkTarget(relative, node, outFileName(), text);
-                out() << "<a id=\"" << Doc::canonicalTitle(target) << "\" class=\"qa-mark\"></a>";
-            }
             node = nullptr;
         }
         beginLink(link, node, relative);

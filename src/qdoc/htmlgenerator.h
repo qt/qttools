@@ -64,10 +64,7 @@ public:
     static QString protect(const QString &string, const QString &encoding = "ISO-8859-1");
 
 protected:
-    void generateQAPage() override;
     void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
-    QString generateLinksToLinksPage(const QString &module, CodeMarker *marker);
-    QString generateLinksToBrokenLinksPage(CodeMarker *marker, int &count);
     virtual int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;

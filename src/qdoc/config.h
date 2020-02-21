@@ -296,7 +296,6 @@ struct ConfigStrings
     static QString QMLTYPESPAGE;
     static QString QMLTYPESTITLE;
     static QString WARNINGLIMIT;
-    static QString WRITEQAPAGES;
 };
 
 #define CONFIG_ALIAS ConfigStrings::ALIAS
@@ -383,7 +382,6 @@ struct ConfigStrings
 #define CONFIG_QMLTYPESPAGE ConfigStrings::QMLTYPESPAGE
 #define CONFIG_QMLTYPESTITLE ConfigStrings::QMLTYPESTITLE
 #define CONFIG_WARNINGLIMIT ConfigStrings::WARNINGLIMIT
-#define CONFIG_WRITEQAPAGES ConfigStrings::WRITEQAPAGES
 
 inline bool Config::singleExec() const
 {

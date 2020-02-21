@@ -73,14 +73,10 @@ Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
       camelCaseModuleName_(camelCaseModuleName),
       physicalModuleName_(camelCaseModuleName.toLower()),
       qdb_(qdb),
-      root_(nullptr, QString()),
-      targetListMap_(nullptr)
+      root_(nullptr, QString())
 {
     root_.setPhysicalModuleName(physicalModuleName_);
     root_.setTree(this);
-    const auto &config = Config::instance();
-    if (config.getBool(CONFIG_WRITEQAPAGES))
-        targetListMap_ = new TargetListMap;
 }
 
 /*!
@@ -104,17 +100,6 @@ Tree::~Tree()
     }
     nodesByTargetRef_.clear();
     nodesByTargetTitle_.clear();
-    const auto &config = Config::instance();
-    if (config.getBool(CONFIG_WRITEQAPAGES) && targetListMap_) {
-        for (auto target = targetListMap_->begin(); target != targetListMap_->end(); ++target) {
-            TargetList *tlist = target.value();
-            if (tlist) {
-                for (auto *location : qAsConst(*tlist))
-                    delete location;
-            }
-            delete tlist;
-        }
-    }
 }
 
 /* API members */
@@ -1278,48 +1263,6 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path, const Parame
         relative = relative->parent();
     } while (relative);
     return nullptr;
-}
-
-/*!
-  Generate a target of the form link-nnn, where the nnn is
-  the current link count for this tree. This target string
-  is returned. It will be output as an HTML anchor just before
-  an HTML link to the node \a t.
-
-  The node \a t
- */
-QString Tree::getNewLinkTarget(const Node *locNode, const Node *t, const QString &fileName,
-                               QString &text, bool broken)
-{
-    QString physicalModuleName;
-    if (t != nullptr && !broken) {
-        Tree *tree = t->tree();
-        if (tree != this)
-            tree->incrementLinkCount();
-        physicalModuleName = tree->physicalModuleName();
-    } else
-        physicalModuleName = "broken";
-    incrementLinkCount();
-    QString target = QString("qa-target-%1").arg(-(linkCount()));
-    TargetLoc *tloc = new TargetLoc(locNode, target, fileName, text, broken);
-    TargetList *tList = nullptr;
-    auto it = targetListMap_->find(physicalModuleName);
-    if (it == targetListMap_->end()) {
-        tList = new TargetList;
-        it = targetListMap_->insert(physicalModuleName, tList);
-    } else
-        tList = it.value();
-    tList->append(tloc);
-    return target;
-}
-
-/*!
-  Look up the target list for the specified \a module
-  and return a pointer to it.
- */
-TargetList *Tree::getTargetList(const QString &module)
-{
-    return targetListMap_->value(module);
 }
 
 /*!

@@ -129,7 +129,6 @@ QString ConfigStrings::QMLONLY = QStringLiteral("qmlonly");
 QString ConfigStrings::QMLTYPESPAGE = QStringLiteral("qmltypespage");
 QString ConfigStrings::QMLTYPESTITLE = QStringLiteral("qmltypestitle");
 QString ConfigStrings::WARNINGLIMIT = QStringLiteral("warninglimit");
-QString ConfigStrings::WRITEQAPAGES = QStringLiteral("writeqapages");
 
 /*!
   An entry in a stack, where each entry is a list
@@ -308,7 +307,6 @@ void Config::reset()
     SET(CONFIG_SYNTAXHIGHLIGHTING, highlightingOption);
     SET(CONFIG_SHOWINTERNAL, showInternalOption);
     SET(CONFIG_SINGLEEXEC, singleExecOption);
-    SET(CONFIG_WRITEQAPAGES, writeQaPagesOption);
     SET(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, redirectDocumentationToDevNullOption);
     SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
     SET(CONFIG_OBSOLETELINKS, obsoleteLinksOption);
@@ -391,10 +389,6 @@ void Config::processCommandLineOptions(const QStringList &args)
         m_qdocPass = Prepare;
     if (m_parser.isSet(m_parser.generateOption))
         m_qdocPass = Generate;
-    if (m_parser.isSet(m_parser.writeQaPagesOption)) {
-        qCWarning(lcQdoc,
-                "The QA pages option for QDoc is deprecated and will be removed in Qt 6.");
-    }
     if (m_parser.isSet(m_parser.logProgressOption))
         setStringList(CONFIG_LOGPROGRESS, QStringList("true"));
     if (m_parser.isSet(m_parser.timestampsOption))

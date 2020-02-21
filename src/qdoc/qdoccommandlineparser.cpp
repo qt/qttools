@@ -56,7 +56,6 @@ QDocCommandLineParser::QDocCommandLineParser()
       generateOption(QStringList() << QStringLiteral("generate")),
       logProgressOption(QStringList() << QStringLiteral("log-progress")),
       singleExecOption(QStringList() << QStringLiteral("single-exec")),
-      writeQaPagesOption(QStringList() << QStringLiteral("write-qa-pages")),
       includePathOption("I", "Add dir to the include path for header files.", "path"),
       includePathSystemOption("isystem", "Add dir to the system include path for header files.",
                               "path"),
@@ -151,9 +150,6 @@ QDocCommandLineParser::QDocCommandLineParser()
     singleExecOption.setDescription(
             QCoreApplication::translate("qdoc", "Run qdoc once over all the qdoc conf files."));
     addOption(singleExecOption);
-
-    writeQaPagesOption.setDescription(QCoreApplication::translate("qdoc", "Write QA pages."));
-    addOption(writeQaPagesOption);
 
     includePathOption.setFlags(QCommandLineOption::ShortOptionStyle);
     addOption(includePathOption);

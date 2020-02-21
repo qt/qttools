@@ -396,13 +396,6 @@ public:
     {
         return forest_.getLinkCounts(strings, counts);
     }
-    QString getNewLinkTarget(const Node *locNode, const Node *t, const QString &fileName,
-                             QString &text, bool broken = false)
-    {
-        return primaryTree()->getNewLinkTarget(locNode, t, fileName, text, broken);
-    }
-    TargetList *getTargetList(const QString &t) { return primaryTree()->getTargetList(t); }
-    QStringList getTargetListKeys() { return primaryTree()->getTargetListKeys(); }
     QStringList keys() { return forest_.keys(); }
     void resolveNamespaces();
     void resolveProxies();
