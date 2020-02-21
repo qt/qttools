@@ -32,6 +32,7 @@
 
 #include "config.h"
 #include "generator.h"
+#include "loggingcategory.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
@@ -391,8 +392,11 @@ void Config::processCommandLineOptions(const QStringList &args)
         Generator::setQDocPass(Generator::Generate);
     if (m_parser.isSet(m_parser.singleExecOption))
         Generator::setSingleExec();
-    if (m_parser.isSet(m_parser.writeQaPagesOption))
+    if (m_parser.isSet(m_parser.writeQaPagesOption)) {
         Generator::setWriteQaPages();
+        qCWarning(lcQdoc,
+                "The QA pages option for QDoc is deprecated and will be removed in Qt 6.");
+    }
     if (m_parser.isSet(m_parser.logProgressOption))
         Location::startLoggingProgress();
     if (m_parser.isSet(m_parser.timestampsOption))
