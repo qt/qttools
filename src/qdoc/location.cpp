@@ -358,18 +358,6 @@ void Location::information(const QString &message)
 }
 
 /*!
-  Prints \a message to \c stderr followed by a \c{'\n'},
-  but only if the -log-progress option is set.
- */
-void Location::logToStdErr(const QString &message)
-{
-    if (logProgress_) {
-        fprintf(stderr, "LOG: %s\n", message.toLatin1().data());
-        fflush(stderr);
-    }
-}
-
-/*!
   Report a program bug, including the \a hint.
  */
 void Location::internalError(const QString &hint)

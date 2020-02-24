@@ -84,7 +84,6 @@ public:
     static void terminate();
     static void information(const QString &message);
     static void internalError(const QString &hint);
-    static void logToStdErr(const QString &message);
     static void startLoggingProgress() { logProgress_ = true; }
     static void stopLoggingProgress() { logProgress_ = false; }
     static QString canonicalRelativePath(const QString &path);
