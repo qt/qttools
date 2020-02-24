@@ -1281,8 +1281,7 @@ bool ClangCodeParser::getMoreArgs()
           of reasonable places to look for include files and use
           that list instead.
          */
-        Location::logToStdErrAlways(
-                "No include paths passed to qdoc; guessing reasonable include paths");
+        qCWarning(lcQdoc) << "No include paths passed to qdoc; guessing reasonable include paths";
         guessedIncludePaths = true;
         auto forest = qdb_->searchOrder();
 
@@ -1312,7 +1311,7 @@ void ClangCodeParser::buildPCH()
             const QByteArray module = moduleHeader().toUtf8();
             QByteArray header;
             QByteArray privateHeaderDir;
-            Location::logToStdErrAlways("Build & visit PCH for " + moduleHeader());
+            qCInfo(lcQdoc) << "Build & visit PCH for " << moduleHeader();
             // A predicate for std::find_if() to locate a path to the module's header
             // (e.g. QtGui/QtGui) to be used as pre-compiled header
             struct FindPredicate
@@ -1403,8 +1402,7 @@ void ClangCodeParser::buildPCH()
                 tmpHeaderFile.close();
             }
             if (printParsingErrors_ == 0)
-                Location::logToStdErrAlways(
-                        "clang not printing errors; include paths were guessed");
+                qCWarning(lcQdoc) << "clang not printing errors; include paths were guessed";
             CXErrorCode err =
                     clang_parseTranslationUnit2(index_, tmpHeader.toLatin1().data(), args_.data(),
                                                 static_cast<int>(args_.size()), nullptr, 0,
@@ -1416,7 +1414,7 @@ void ClangCodeParser::buildPCH()
                 auto error = clang_saveTranslationUnit(tu, pchName_.constData(),
                                                        clang_defaultSaveOptions(tu));
                 if (error) {
-                    Location::logToStdErrAlways("Could not save PCH file for " + moduleHeader());
+                    qCCritical(lcQdoc) << "Could not save PCH file for " << moduleHeader();
                     pchName_.clear();
                 } else {
                     // Visit the header now, as token from pre-compiled header won't be visited
@@ -1424,12 +1422,12 @@ void ClangCodeParser::buildPCH()
                     CXCursor cur = clang_getTranslationUnitCursor(tu);
                     ClangVisitor visitor(qdb_, allHeaders_);
                     visitor.visitChildren(cur);
-                    Location::logToStdErrAlways("PCH built & visited for " + moduleHeader());
+                    qCInfo(lcQdoc) << "PCH built & visited for " << moduleHeader();
                 }
                 clang_disposeTranslationUnit(tu);
             } else {
                 pchFileDir_->remove();
-                Location::logToStdErrAlways("Could not create PCH file for " + moduleHeader());
+                qCCritical(lcQdoc) << "Could not create PCH file for " << moduleHeader();
             }
             args_.pop_back(); // remove the "-xc++";
         }

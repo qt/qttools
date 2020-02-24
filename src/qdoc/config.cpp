@@ -430,7 +430,7 @@ void Config::setIndexDirs()
                              [](const QString &s) { return !QFile::exists(s); });
 
     std::for_each(it, m_indexDirs.end(), [](const QString &s) {
-        Location::logToStdErrAlways(tr("Cannot find index directory: %1").arg(s));
+        qCWarning(lcQdoc) << "Cannot find index directory: " << s;
     });
     m_indexDirs.erase(it, m_indexDirs.end());
 }

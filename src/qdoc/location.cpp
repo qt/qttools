@@ -370,22 +370,6 @@ void Location::logToStdErr(const QString &message)
 }
 
 /*!
-  Always prints the current time and \a message to \c stderr
-  followed by a \c{'\n'}.
- */
-void Location::logToStdErrAlways(const QString &message)
-{
-    if (Generator::useTimestamps()) {
-        QTime t = QTime::currentTime();
-        fprintf(stderr, "%s LOG: %s\n", t.toString().toLatin1().constData(),
-                message.toLatin1().data());
-    } else {
-        fprintf(stderr, "LOG: %s\n", message.toLatin1().constData());
-    }
-    fflush(stderr);
-}
-
-/*!
   Report a program bug, including the \a hint.
  */
 void Location::internalError(const QString &hint)
