@@ -5,3 +5,4 @@ headers = ../testcpp/testcpp.h
 sources = ../testcpp/testcpp.cpp
 
 macro.CMDFN = \\\\fn
+locationinfo = false

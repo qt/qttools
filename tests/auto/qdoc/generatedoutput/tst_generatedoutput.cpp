@@ -65,6 +65,8 @@ private slots:
     void crossModuleLinking();
     void includeFromExampleDirs();
     void singleExec();
+    void preparePhase();
+    void generatePhase();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -359,6 +361,22 @@ void tst_generatedOutput::singleExec()
                    "-single-exec");
 }
 
+void tst_generatedOutput::preparePhase()
+{
+    testAndCompare("testdata/configs/testcpp.qdocconf",
+                   "testcpp.index",
+                   "-prepare");
+}
+
+void tst_generatedOutput::generatePhase()
+{
+    testAndCompare("testdata/configs/testcpp.qdocconf",
+                   "testcpp-module.html "
+                   "testqdoc-test.html "
+                   "testqdoc-test-members.html "
+                   "testqdoc.html",
+                   "-generate");
+}
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
 
