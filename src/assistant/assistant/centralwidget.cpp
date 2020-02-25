@@ -545,7 +545,7 @@ void CentralWidget::highlightSearchTerms()
     const bool wholePhrase = searchInput.startsWith(QLatin1Char('"')) &&
                              searchInput.endsWith(QLatin1Char('"'));
     const QStringList &words = wholePhrase ? QStringList(searchInput.mid(1, searchInput.length() - 2)) :
-                                searchInput.split(QRegExp("\\W+"), QString::SkipEmptyParts);
+                                searchInput.split(QRegExp("\\W+"), Qt::SkipEmptyParts);
     HelpViewer *viewer = currentHelpViewer();
     for (const QString &word : words)
         viewer->findText(word, {}, false, true);

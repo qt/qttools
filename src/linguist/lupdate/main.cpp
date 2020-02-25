@@ -285,7 +285,7 @@ static void printUsage()
 
 static bool handleTrFunctionAliases(const QString &arg)
 {
-    foreach (const QString &pair, arg.split(QLatin1Char(','), QString::SkipEmptyParts)) {
+    foreach (const QString &pair, arg.split(QLatin1Char(','), Qt::SkipEmptyParts)) {
         const int equalSign = pair.indexOf(QLatin1Char('='));
         if (equalSign < 0) {
             printErr(LU::tr("tr-function mapping '%1' in -tr-function-alias is missing the '='.\n").arg(pair));

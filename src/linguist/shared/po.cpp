@@ -548,7 +548,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                 QString xrefs;
                 foreach (const QString &ref,
                          codec->toUnicode(item.references).split(
-                                 QRegExp(QLatin1String("\\s")), QString::SkipEmptyParts)) {
+                                 QRegExp(QLatin1String("\\s")), Qt::SkipEmptyParts)) {
                     int pos = ref.indexOf(QLatin1Char(':'));
                     int lpos = ref.lastIndexOf(QLatin1Char(':'));
                     if (pos != -1 && pos == lpos) {
@@ -607,7 +607,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                 case ',': {
                     QStringList flags =
                             QString::fromLatin1(line.mid(2)).split(
-                                    QRegExp(QLatin1String("[, ]")), QString::SkipEmptyParts);
+                                    QRegExp(QLatin1String("[, ]")), Qt::SkipEmptyParts);
                     if (flags.removeOne(QLatin1String("fuzzy")))
                         item.isFuzzy = true;
                     flags.removeOne(QLatin1String("qt-format"));
@@ -750,7 +750,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
     out << "msgid \"\"\n";
     Translator::ExtraData headers = translator.extras();
     QStringList hdrOrder = translator.extra(QLatin1String("po-headers")).split(
-            QLatin1Char(','), QString::SkipEmptyParts);
+            QLatin1Char(','), Qt::SkipEmptyParts);
     // Keep in sync with loadPO
     addPoHeader(headers, hdrOrder, "MIME-Version", QLatin1String("1.0"));
     addPoHeader(headers, hdrOrder, "Content-Type",

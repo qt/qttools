@@ -103,7 +103,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
         } else if (key == QLatin1String("Path")) {
             p.path = QDir(directory).absoluteFilePath(value);
         } else if (key == QLatin1String("Files")) {
-            p.files = value.split(QRegExp(QStringLiteral("\\s")), QString::SkipEmptyParts);
+            p.files = value.split(QRegExp(QStringLiteral("\\s")), Qt::SkipEmptyParts);
         } else if (key == QLatin1String("Id")) {
             p.id = value;
         } else if (key == QLatin1String("Homepage")) {

@@ -2439,7 +2439,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
     QString code = untabifyEtc(getUntilEnd(cmd));
 
     if (!argStr.isEmpty()) {
-        QStringList args = argStr.split(" ", QString::SkipEmptyParts);
+        QStringList args = argStr.split(" ", Qt::SkipEmptyParts);
         int paramNo, j = 0;
         while (j < code.size()) {
             if (code[j] == '\\' && j < code.size() - 1 && (paramNo = code[j + 1].digitValue()) >= 1

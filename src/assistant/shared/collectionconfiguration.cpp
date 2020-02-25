@@ -239,7 +239,7 @@ void CollectionConfiguration::setDefaultHomePage(QHelpEngineCore &helpEngine,
 const QStringList CollectionConfiguration::lastShownPages(const QHelpEngineCore &helpEngine)
 {
     return helpEngine.customValue(LastShownPagesKey).toString().
-        split(ListSeparator, QString::SkipEmptyParts);
+        split(ListSeparator, Qt::SkipEmptyParts);
 }
 
 void CollectionConfiguration::setLastShownPages(QHelpEngineCore &helpEngine,
@@ -252,7 +252,7 @@ void CollectionConfiguration::setLastShownPages(QHelpEngineCore &helpEngine,
 const QStringList CollectionConfiguration::lastZoomFactors(const QHelpEngineCore &helpEngine)
 {
     return helpEngine.customValue(LastZoomFactorsKey).toString().
-        split(ListSeparator, QString::SkipEmptyParts);
+        split(ListSeparator, Qt::SkipEmptyParts);
 }
 
 void CollectionConfiguration::setLastZoomFactors(QHelpEngineCore &helpEngine,
