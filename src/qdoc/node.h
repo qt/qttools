@@ -322,7 +322,6 @@ public:
     const QString &templateDecl() const { return templateDecl_; }
     const QString &reconstitutedBrief() const { return reconstitutedBrief_; }
     QString nodeSubtypeString() const;
-    virtual void addPageKeywords(const QString &) {}
 
     bool isSharingComment() const { return (sharedCommentNode_ != nullptr); }
     bool hasSharedDoc() const;
@@ -434,8 +433,6 @@ public:
     const QStringList &groupNames() const { return groupNames_; }
     void appendGroupName(const QString &t) override { groupNames_.append(t); }
 
-    const QStringList &pageKeywords() const { return pageKeywds_; }
-    void addPageKeywords(const QString &t) override { pageKeywds_ << t; }
     void setOutputFileName(const QString &f) override { outputFileName_ = f; }
     QString outputFileName() const override { return outputFileName_; }
 
@@ -448,7 +445,6 @@ protected:
     QString subtitle_;
     QString outputFileName_;
     QStringList groupNames_;
-    QStringList pageKeywds_;
 };
 
 class ExternalPageNode : public PageNode

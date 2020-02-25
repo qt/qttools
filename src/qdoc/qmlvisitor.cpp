@@ -453,8 +453,6 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation, Node *node, D
                 node->setStatus(Node::Internal);
             } else if (command == COMMAND_OBSOLETE) {
                 node->setStatus(Node::Obsolete);
-            } else if (command == COMMAND_PAGEKEYWORDS) {
-                // Not done yet. Do we need this?
             } else if (command == COMMAND_PRELIMINARY) {
                 node->setStatus(Node::Preliminary);
             } else if (command == COMMAND_SINCE) {

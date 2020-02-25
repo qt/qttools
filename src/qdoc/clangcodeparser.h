@@ -78,6 +78,7 @@ private:
     QVector<QByteArray> defines_;
     std::vector<const char *> args_;
     QVector<QByteArray> moreArgs_;
+    QStringList namespaceScope_;
 };
 
 QT_END_NAMESPACE

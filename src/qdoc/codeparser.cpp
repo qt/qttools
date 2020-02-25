@@ -161,11 +161,11 @@ const QSet<QString> &CodeParser::commonMetaCommands()
                             << COMMAND_INJSMODULE << COMMAND_INMODULE << COMMAND_INPUBLICGROUP
                             << COMMAND_INQMLMODULE << COMMAND_INTERNAL << COMMAND_MAINCLASS
                             << COMMAND_NOAUTOLIST << COMMAND_NONREENTRANT << COMMAND_OBSOLETE
-                            << COMMAND_PAGEKEYWORDS << COMMAND_PRELIMINARY << COMMAND_QMLABSTRACT
-                            << COMMAND_QMLDEFAULT << COMMAND_QMLINHERITS << COMMAND_QMLREADONLY
-                            << COMMAND_QTVARIABLE << COMMAND_REENTRANT << COMMAND_SINCE
-                            << COMMAND_STARTPAGE << COMMAND_SUBTITLE << COMMAND_THREADSAFE
-                            << COMMAND_TITLE << COMMAND_WRAPPER;
+                            << COMMAND_PRELIMINARY << COMMAND_QMLABSTRACT << COMMAND_QMLDEFAULT
+                            << COMMAND_QMLINHERITS << COMMAND_QMLREADONLY << COMMAND_QTVARIABLE
+                            << COMMAND_REENTRANT << COMMAND_SINCE << COMMAND_STARTPAGE
+                            << COMMAND_SUBTITLE << COMMAND_THREADSAFE << COMMAND_TITLE
+                            << COMMAND_WRAPPER;
     }
     return commonMetaCommands_;
 }
@@ -269,7 +269,7 @@ bool CodeParser::isParsingQdoc() const
 void CodeParser::checkModuleInclusion(Node *n)
 {
     if (n->physicalModuleName().isEmpty()) {
-        n->setPhysicalModuleName(Generator::defaultModuleName());
+        qdb_->addToModule(Generator::defaultModuleName(), n);
         QString word;
         switch (n->nodeType()) {
         case Node::Class:

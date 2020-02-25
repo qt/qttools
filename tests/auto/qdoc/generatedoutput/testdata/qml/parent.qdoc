@@ -57,3 +57,8 @@
 
     \brief An integer basic type.
 */
+
+/*!
+    \qmlmethod int int::abs()
+    Returns the absolute value of this integer.
+*/

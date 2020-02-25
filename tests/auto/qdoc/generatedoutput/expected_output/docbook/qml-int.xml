@@ -11,4 +11,11 @@
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 </db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="abs-method">
+<db:title>int abs()</db:title>
+<db:para>Returns the absolute value of this integer.</db:para>
+</db:section>
+</db:section>
 </db:article>

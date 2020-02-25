@@ -182,14 +182,14 @@ void tst_generatedOutput::copyIndexFiles()
 
 void tst_generatedOutput::htmlFromQDocFile()
 {
-    testAndCompare("test.qdocconf",
+    testAndCompare("testdata/configs/test.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html");
 }
 
 void tst_generatedOutput::htmlFromCpp()
 {
-    testAndCompare("testcpp.qdocconf",
+    testAndCompare("testdata/configs/testcpp.qdocconf",
                    "testcpp-module.html "
                    "testqdoc-test.html "
                    "testqdoc-test-members.html "
@@ -198,7 +198,7 @@ void tst_generatedOutput::htmlFromCpp()
 
 void tst_generatedOutput::htmlFromQml()
 {
-    testAndCompare("testqml.qdocconf",
+    testAndCompare("testdata/configs/testqml.qdocconf",
                    "test-componentset-example.html "
                    "uicomponents-qmlmodule.html "
                    "qdoc-test-qmlmodule.html "
@@ -215,7 +215,7 @@ void tst_generatedOutput::htmlFromQml()
 
 void tst_generatedOutput::htmlFromCppBug80259()
 {
-    testAndCompare("bug80259/testmodule.qdocconf",
+    testAndCompare("testdata/bug80259/testmodule.qdocconf",
                    "first.html "
                    "second.html "
                    "third.html "
@@ -224,14 +224,14 @@ void tst_generatedOutput::htmlFromCppBug80259()
 
 void tst_generatedOutput::webXmlFromQDocFile()
 {
-    testAndCompare("webxml_test.qdocconf",
+    testAndCompare("testdata/configs/webxml_test.qdocconf",
                    "html/qdoctests-qdocfileoutput.webxml "
                    "html/qdoctests-qdocfileoutput-linking.webxml");
 }
 
 void tst_generatedOutput::webXmlFromCpp()
 {
-    testAndCompare("webxml_testcpp.qdocconf",
+    testAndCompare("testdata/configs/webxml_testcpp.qdocconf",
                    "html/testcpp-module.webxml "
                    "html/testqdoc-test.webxml "
                    "html/testqdoc-testderived.webxml");
@@ -239,14 +239,14 @@ void tst_generatedOutput::webXmlFromCpp()
 
 void tst_generatedOutput::webXmlFromQml()
 {
-    testAndCompare("webxml_testqml.qdocconf",
+    testAndCompare("testdata/configs/webxml_testqml.qdocconf",
                    "html/test-componentset-example.webxml "
                    "html/uicomponents-qmlmodule.webxml");
 }
 
 void tst_generatedOutput::webXmlFromCppBug80259()
 {
-    testAndCompare("bug80259/webxml_testmodule.qdocconf",
+    testAndCompare("testdata/bug80259/webxml_testmodule.qdocconf",
                    "html/first.webxml "
                    "html/second.webxml "
                    "html/third.webxml "
@@ -255,14 +255,14 @@ void tst_generatedOutput::webXmlFromCppBug80259()
 
 void tst_generatedOutput::docBookFromQDocFile()
 {
-    testAndCompare("docbook_test.qdocconf",
+    testAndCompare("testdata/configs/docbook_test.qdocconf",
                    "docbook/qdoctests-qdocfileoutput.xml "
                    "docbook/qdoctests-qdocfileoutput-linking.xml");
 }
 
 void tst_generatedOutput::docBookFromCpp()
 {
-    testAndCompare("docbook_testcpp.qdocconf",
+    testAndCompare("testdata/configs/docbook_testcpp.qdocconf",
                    "docbook/testcpp-module.xml "
                    "docbook/testqdoc-test.xml "
                    "docbook/testqdoc-testderived.xml "
@@ -271,7 +271,7 @@ void tst_generatedOutput::docBookFromCpp()
 
 void tst_generatedOutput::docBookFromQml()
 {
-    testAndCompare("docbook_testqml.qdocconf",
+    testAndCompare("testdata/configs/docbook_testqml.qdocconf",
                    "docbook/test-componentset-example.xml "
                    "docbook/uicomponents-qmlmodule.xml "
                    "docbook/qdoc-test-qmlmodule.xml "
@@ -287,19 +287,19 @@ void tst_generatedOutput::docBookFromQml()
 
 void tst_generatedOutput::examplesManifestXml()
 {
-    testAndCompare("examples-qhp.qdocconf", "examples-manifest.xml");
+    testAndCompare("testdata/configs/examples-qhp.qdocconf", "examples-manifest.xml");
 }
 
 void tst_generatedOutput::ignoresinceVariable()
 {
-    testAndCompare("ignoresince.qdocconf",
+    testAndCompare("testdata/configs/ignoresince.qdocconf",
                    "ignoresince/testqdoc.html "
                    "ignoresince/testqdoc-test.html");
 }
 
 void tst_generatedOutput::templateParameters()
 {
-    testAndCompare("testtemplate.qdocconf",
+    testAndCompare("testdata/configs/testtemplate.qdocconf",
                    "template/testqdoc-test.html "
                    "template/foo.html "
                    "template/bar.html "
@@ -308,19 +308,19 @@ void tst_generatedOutput::templateParameters()
 
 void tst_generatedOutput::scopedEnum()
 {
-    testAndCompare("scopedenum.qdocconf", "scopedenum/testqdoc-test.html");
+    testAndCompare("testdata/configs/scopedenum.qdocconf", "scopedenum/testqdoc-test.html");
 }
 
 void tst_generatedOutput::dontDocument()
 {
-    testAndCompare("dontdocument/dontdocument.qdocconf",
+    testAndCompare("testdata/dontdocument/dontdocument.qdocconf",
                    "dontdocument/classes.html "
                    "dontdocument/seenclass.html");
 }
 
 void tst_generatedOutput::inheritedQmlPropertyGroups()
 {
-    testAndCompare("qmlpropertygroups/qmlpropertygroups.qdocconf",
+    testAndCompare("testdata/qmlpropertygroups/qmlpropertygroups.qdocconf",
                    "qmlpropertygroups/qml-qdoc-test-anotherchild-members.html");
 }
 
@@ -329,7 +329,7 @@ void tst_generatedOutput::crossModuleLinking()
     htmlFromCpp();
     copyIndexFiles();
     QString indexDir = QLatin1String("-indexdir ") +  m_outputDir->path();
-    testAndCompare("crossmodule/crossmodule.qdocconf",
+    testAndCompare("testdata/crossmodule/crossmodule.qdocconf",
                    "crossmodule/testtype.html "
                    "crossmodule/testtype-members.html",
                    indexDir.toLatin1().data());
@@ -337,7 +337,7 @@ void tst_generatedOutput::crossModuleLinking()
 
 void tst_generatedOutput::includeFromExampleDirs()
 {
-    testAndCompare("includefromexampledirs/includefromexampledirs.qdocconf",
+    testAndCompare("testdata/includefromexampledirs/includefromexampledirs.qdocconf",
                    "includefromexampledirs/index.html "
                    "includefromexampledirs/qml-qdoc-test-abstractparent.html "
                    "includefromexampledirs/qml-qdoc-test-abstractparent-members.html");

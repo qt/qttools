@@ -1,4 +1,4 @@
-include(../testcpp.qdocconf)
+include(../configs/testcpp.qdocconf)
 
 headers += dont.h
 sources += dont.cpp test.qdoc

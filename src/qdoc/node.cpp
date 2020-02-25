@@ -1822,12 +1822,6 @@ QString Node::physicalModuleName() const
   Returns the node's reconstituted brief data member.
  */
 
-/*! \fn void Node::addPageKeywords(const QString &t)
-  If this is a PageNode, the function appends the string \a t
-  to the page keywords data member. Otherwise the function does
-  nothing.
- */
-
 /*! \fn bool Node::isSharingComment() const
   This function returns \c true if the node is sharing a comment
   with other nodes. For example, multiple functions can be documented
@@ -3659,14 +3653,6 @@ bool PageNode::setTitle(const QString &title)
 
 /*! \fn void PageNode::appendGroupName(const QString &t)
   Appends \a t to the list of group names.
- */
-
-/*! \fn const QStringList &PageNode::pageKeywords() const
-  Returns a const reference to the list of keywords for this page.
- */
-
-/*! \fn void PageNode::addPageKeywords(const QString &t)
-  Appends \a t to the keywords list.
  */
 
 /*! \fn void PageNode::setOutputFileName(const QString &f)

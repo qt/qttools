@@ -5,13 +5,13 @@ project = Test
 description = "A test project for QDoc build artifacts"
 outputdir = ./html
 
-exampledirs = qml
+exampledirs = ../qml
 
-headerdirs += .
-sourcedirs += qml
+headerdirs += ../
+sourcedirs += ../qml
 
 # Exclude source files from other tests' subdirs
-excludedirs = ./bug80259
+excludedirs = ../bug80259
 
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"

@@ -172,7 +172,7 @@ private:
     QString buildversion;
     QXmlStreamWriter *writer = nullptr;
 
-    Config *config;
+    Config *config = nullptr;
 };
 
 QT_END_NAMESPACE

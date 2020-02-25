@@ -156,7 +156,8 @@ void TestDerived::virtualFun()
 
 /*!
     \fn TestQDoc::Test::overload()
-    \fn TestQDoc::Test::overload(bool b)
+    \fn Test::overload(bool b)
+     //! The second overload should match even without the fully qualified path
 
     Overloads that share a documentation comment, optionally taking
     a parameter \a b.
