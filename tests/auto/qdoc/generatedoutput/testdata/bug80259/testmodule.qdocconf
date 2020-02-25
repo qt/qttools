@@ -2,9 +2,9 @@ project = TestModule
 
 moduleheader = TestModule.h
 
-headerdirs = inc
-sourcedirs = src
-includepaths += ./bug80259/inc/testmodule
+headerdirs = ./inc
+sourcedirs = ./src
+includepaths += ./inc/testmodule
 
 sources.fileextensions = "*.cpp *.qdoc"
 headers.fileextensions = "*.h"
