@@ -174,10 +174,8 @@ void QHelpFilterSettingsWidgetPrivate::versionsChanged(const QStringList &versio
 
 void QHelpFilterSettingsWidgetPrivate::addFilterClicked()
 {
-    Q_Q(QHelpFilterSettingsWidget);
-
-    const QString newFilterName = getUniqueFilterName(q->tr("Add Filter"),
-                                  suggestedNewFilterName(q->tr("New Filter")));
+    const QString newFilterName = getUniqueFilterName(QHelpFilterSettingsWidget::tr("Add Filter"),
+                                  suggestedNewFilterName(QHelpFilterSettingsWidget::tr("New Filter")));
     if (newFilterName.isEmpty())
         return;
 
@@ -186,13 +184,11 @@ void QHelpFilterSettingsWidgetPrivate::addFilterClicked()
 
 void QHelpFilterSettingsWidgetPrivate::renameFilterClicked()
 {
-    Q_Q(QHelpFilterSettingsWidget);
-
     const QString &currentFilter = m_itemToFilter.value(m_ui.filterWidget->currentItem());
     if (currentFilter.isEmpty())
         return;
 
-    const QString newFilterName = getUniqueFilterName(q->tr("Rename Filter"), currentFilter);
+    const QString newFilterName = getUniqueFilterName(QHelpFilterSettingsWidget::tr("Rename Filter"), currentFilter);
     if (newFilterName.isEmpty())
         return;
 
@@ -212,8 +208,8 @@ void QHelpFilterSettingsWidgetPrivate::removeFilterClicked()
     if (currentFilter.isEmpty())
         return;
 
-    if (QMessageBox::question(q, q->tr("Remove Filter"),
-                              q->tr("Are you sure you want to remove the \"%1\" filter?")
+    if (QMessageBox::question(q, QHelpFilterSettingsWidget::tr("Remove Filter"),
+                              QHelpFilterSettingsWidget::tr("Are you sure you want to remove the \"%1\" filter?")
                               .arg(currentFilter),
                               QMessageBox::Yes | QMessageBox::No)
             != QMessageBox::Yes) {
@@ -266,8 +262,8 @@ QString QHelpFilterSettingsWidgetPrivate::getUniqueFilterName(const QString &win
         if (!m_filterToItem.contains(newFilterName))
             break;
 
-        if (QMessageBox::warning(q, q->tr("Filter Exists"),
-                                 q->tr("The filter \"%1\" already exists.")
+        if (QMessageBox::warning(q, QHelpFilterSettingsWidget::tr("Filter Exists"),
+                                 QHelpFilterSettingsWidget::tr("The filter \"%1\" already exists.")
                                  .arg(newFilterName),
                                  QMessageBox::Retry | QMessageBox::Cancel)
                 == QMessageBox::Cancel) {
