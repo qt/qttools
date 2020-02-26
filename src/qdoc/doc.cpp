@@ -1814,7 +1814,7 @@ void DocParser::parseAlso()
         if (input_[pos] == '{') {
             target = getArgument();
             skipSpacesOnLine();
-            if (input_[pos] == '{') {
+            if (pos < len && input_[pos] == '{') {
                 str = getArgument();
 
                 // hack for C++ to support links like \l{QString::}{count()}
@@ -1841,7 +1841,7 @@ void DocParser::parseAlso()
         if (pos < len && input_[pos] == ',') {
             pos++;
             skipSpacesOrOneEndl();
-        } else if (input_[pos] != '\n') {
+        } else if (pos >= len || input_[pos] != '\n') {
             location().warning(tr("Missing comma in '\\%1'").arg(cmdName(CMD_SA)));
         }
     }
