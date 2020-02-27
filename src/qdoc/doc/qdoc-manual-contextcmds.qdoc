@@ -262,7 +262,7 @@
     deprecated, and it should no longer be used in new code. There is
     no guarantee for how long it will remain in the library.
 
-    The command must stand on its own line.
+    The \\obsolete command takes no arguments.
 
     When generating the reference documentation for a class, QDoc will
     create and link to a separate page documenting its obsolete

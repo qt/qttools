@@ -100,9 +100,7 @@ void Test::obsoleteMember()
 }
 
 /*!
-    \obsolete
-
-    Use obsoleteMember() instead.
+    \obsolete Use obsoleteMember() instead.
 */
 void Test::anotherObsoleteMember()
 {

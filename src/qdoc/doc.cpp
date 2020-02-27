@@ -1325,6 +1325,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case NOT_A_CMD:
                     if (metaCommandSet.contains(cmdStr)) {
                         priv->metacommandsUsed.insert(cmdStr);
+                        // Force a linebreak after \obsolete or \deprecated
+                        // to treat potential arguments as a new text paragraph.
+                        if (pos < len &&
+                            (cmdStr == QLatin1String("obsolete") ||
+                             cmdStr == QLatin1String("deprecated")))
+                            input_[pos] = '\n';
                         QString arg = getMetaCommandArgument(cmdStr);
                         priv->metaCommandMap[cmdStr].append(ArgLocPair(arg, location()));
                         if (possibleTopics.contains(cmdStr)) {
