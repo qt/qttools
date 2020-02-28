@@ -41,6 +41,15 @@
 
 QT_BEGIN_NAMESPACE
 
+#ifndef QT_NO_DECLARATIVE
+#    include <private/qqmlapiversion_p.h>
+#    if Q_QML_PRIVATE_API_VERSION < 8
+namespace QQmlJS {
+    using SourceLocation = AST::SourceLocation;
+}
+#    endif
+#endif
+
 class QmlCodeMarker : public CppCodeMarker
 {
     Q_DECLARE_TR_FUNCTIONS(QDoc::QmlCodeMarker)
@@ -64,7 +73,7 @@ public:
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
 #ifndef QT_NO_DECLARATIVE
-    QVector<QQmlJS::AST::SourceLocation> extractPragmas(QString &script);
+    QVector<QQmlJS::SourceLocation> extractPragmas(QString &script);
 #endif
 
 private:

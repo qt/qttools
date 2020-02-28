@@ -164,7 +164,7 @@ QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative *
     QQmlJS::Lexer lexer(&engine);
 
     QString newCode = code;
-    QVector<QQmlJS::AST::SourceLocation> pragmas = extractPragmas(newCode);
+    QVector<QQmlJS::SourceLocation> pragmas = extractPragmas(newCode);
     lexer.setCode(newCode, 1);
 
     QQmlJS::Parser parser(&engine);
@@ -217,11 +217,11 @@ static void replaceWithSpace(QString &str, int idx, int n)
   Searches for ".pragma <value>" or ".import <stuff>" declarations
   in \a script. Currently supported pragmas are: library
 */
-QVector<QQmlJS::AST::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
+QVector<QQmlJS::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
 {
     const QString pragma(QLatin1String("pragma"));
     const QString library(QLatin1String("library"));
-    QVector<QQmlJS::AST::SourceLocation> removed;
+    QVector<QQmlJS::SourceLocation> removed;
 
     QQmlJS::Lexer l(nullptr);
     l.setCode(script, 0);
@@ -246,7 +246,7 @@ QVector<QQmlJS::AST::SourceLocation> QmlCodeMarker::extractPragmas(QString &scri
             token = l.lex();
         }
         replaceWithSpace(script, startOffset, endOffset - startOffset);
-        removed.append(QQmlJS::AST::SourceLocation(startOffset, endOffset - startOffset, startLine,
+        removed.append(QQmlJS::SourceLocation(startOffset, endOffset - startOffset, startLine,
                                                    startColumn));
     }
     return removed;
