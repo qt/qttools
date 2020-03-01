@@ -1059,6 +1059,9 @@ void ClangCodeParser::initializeParser(const Config &config)
         if (p.startsWith(QLatin1String("-I")) || p.startsWith(QLatin1String("-F"))) {
             rawpath = p.mid(2).trimmed();
             option = p.left(2).toUtf8();
+        } else if (p.startsWith(QLatin1String("-isystem"))) {
+            rawpath = p.mid(8).trimmed();
+            option = "-isystem";
         } else {
             rawpath = p;
             option = "-I";
