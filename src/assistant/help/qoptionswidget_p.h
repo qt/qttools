@@ -29,6 +29,17 @@
 #ifndef QOPTIONSWIDGET_H
 #define QOPTIONSWIDGET_H
 
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API. It exists for the convenience
+// of the help generator tools. This header file may change from version
+// to version without notice, or even be removed.
+//
+// We mean it.
+//
+
 #include <QtWidgets/QWidget>
 #include <QtCore/QMap>
 
