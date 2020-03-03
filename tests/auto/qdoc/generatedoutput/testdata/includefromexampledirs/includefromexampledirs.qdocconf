@@ -1,6 +1,5 @@
 include(../configs/testqml.qdocconf)
 
-includepaths += ..
 sourcedirs += src
 
 excludedirs += excludes \

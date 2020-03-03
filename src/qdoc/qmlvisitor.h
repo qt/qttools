@@ -40,6 +40,15 @@
 
 QT_BEGIN_NAMESPACE
 
+#ifndef QT_NO_DECLARATIVE
+#    include <private/qqmlapiversion_p.h>
+#    if Q_QML_PRIVATE_API_VERSION < 8
+namespace QQmlJS {
+    using SourceLocation = AST::SourceLocation;
+}
+#    endif
+#endif
+
 struct QmlPropArgs
 {
     QString type_;
@@ -96,9 +105,9 @@ public:
 
 private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);
-    QQmlJS::AST::SourceLocation precedingComment(quint32 offset) const;
-    bool applyDocumentation(QQmlJS::AST::SourceLocation location, Node *node);
-    void applyMetacommands(QQmlJS::AST::SourceLocation location, Node *node, Doc &doc);
+    QQmlJS::SourceLocation precedingComment(quint32 offset) const;
+    bool applyDocumentation(QQmlJS::SourceLocation location, Node *node);
+    void applyMetacommands(QQmlJS::SourceLocation location, Node *node, Doc &doc);
     bool splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlPropArgs &qpa);
 
     QQmlJS::Engine *engine;

@@ -1325,6 +1325,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case NOT_A_CMD:
                     if (metaCommandSet.contains(cmdStr)) {
                         priv->metacommandsUsed.insert(cmdStr);
+                        // Force a linebreak after \obsolete or \deprecated
+                        // to treat potential arguments as a new text paragraph.
+                        if (pos < len &&
+                            (cmdStr == QLatin1String("obsolete") ||
+                             cmdStr == QLatin1String("deprecated")))
+                            input_[pos] = '\n';
                         QString arg = getMetaCommandArgument(cmdStr);
                         priv->metaCommandMap[cmdStr].append(ArgLocPair(arg, location()));
                         if (possibleTopics.contains(cmdStr)) {
@@ -1814,7 +1820,7 @@ void DocParser::parseAlso()
         if (input_[pos] == '{') {
             target = getArgument();
             skipSpacesOnLine();
-            if (input_[pos] == '{') {
+            if (pos < len && input_[pos] == '{') {
                 str = getArgument();
 
                 // hack for C++ to support links like \l{QString::}{count()}
@@ -1841,7 +1847,7 @@ void DocParser::parseAlso()
         if (pos < len && input_[pos] == ',') {
             pos++;
             skipSpacesOrOneEndl();
-        } else if (input_[pos] != '\n') {
+        } else if (pos >= len || input_[pos] != '\n') {
             location().warning(tr("Missing comma in '\\%1'").arg(cmdName(CMD_SA)));
         }
     }
@@ -2433,7 +2439,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
     QString code = untabifyEtc(getUntilEnd(cmd));
 
     if (!argStr.isEmpty()) {
-        QStringList args = argStr.split(" ", QString::SkipEmptyParts);
+        QStringList args = argStr.split(" ", Qt::SkipEmptyParts);
         int paramNo, j = 0;
         while (j < code.size()) {
             if (code[j] == '\\' && j < code.size() - 1 && (paramNo = code[j + 1].digitValue()) >= 1

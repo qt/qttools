@@ -185,7 +185,7 @@ OtoolInfo findDependencyInfo(const QString &binaryPath)
         "current version (\\d+\\.\\d+\\.\\d+)\\)$"));
 
     QString output = otool.readAllStandardOutput();
-    QStringList outputLines = output.split("\n", QString::SkipEmptyParts);
+    QStringList outputLines = output.split("\n", Qt::SkipEmptyParts);
     if (outputLines.size() < 2) {
         LogError() << "Could not parse otool output:" << output;
         return info;

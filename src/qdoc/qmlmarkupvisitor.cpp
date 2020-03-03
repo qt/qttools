@@ -41,7 +41,7 @@ QT_BEGIN_NAMESPACE
 
 #ifndef QT_NO_DECLARATIVE
 QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
-                                   const QVector<QQmlJS::AST::SourceLocation> &pragmas,
+                                   const QVector<QQmlJS::SourceLocation> &pragmas,
                                    QQmlJS::Engine *engine)
 {
     this->source = source;
@@ -53,7 +53,7 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
     // Merge the lists of locations of pragmas and comments in the source code.
     int i = 0;
     int j = 0;
-    const QList<QQmlJS::AST::SourceLocation> comments = engine->comments();
+    const QList<QQmlJS::SourceLocation> comments = engine->comments();
     while (i < comments.size() && j < pragmas.length()) {
         if (comments[i].offset < pragmas[j].offset) {
             extraTypes.append(Comment);
@@ -186,7 +186,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
     cursor = finish;
 }
 
-void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::AST::SourceLocation &location,
+void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::SourceLocation &location,
                                         const QString &tagName,
                                         const QHash<QString, QString> &attributes)
 {
@@ -205,13 +205,13 @@ void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::AST::SourceLocation &location,
     cursor += location.length;
 }
 
-QString QmlMarkupVisitor::sourceText(QQmlJS::AST::SourceLocation &location)
+QString QmlMarkupVisitor::sourceText(QQmlJS::SourceLocation &location)
 {
     return source.mid(location.offset, location.length);
 }
 
-void QmlMarkupVisitor::addVerbatim(QQmlJS::AST::SourceLocation first,
-                                   QQmlJS::AST::SourceLocation last)
+void QmlMarkupVisitor::addVerbatim(QQmlJS::SourceLocation first,
+                                   QQmlJS::SourceLocation last)
 {
     if (!first.isValid())
         return;

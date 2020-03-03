@@ -692,7 +692,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (baseNode == nullptr || !baseNode->isClassNode()) {
             QString bcName = reconstructQualifiedPathForCursor(baseCursor);
             classe->addUnresolvedBaseClass(
-                    access, bcName.split(QLatin1String("::"), QString::SkipEmptyParts), bcName);
+                    access, bcName.split(QLatin1String("::"), Qt::SkipEmptyParts), bcName);
             return CXChildVisit_Continue;
         }
         auto baseClasse = static_cast<ClassNode *>(baseNode);

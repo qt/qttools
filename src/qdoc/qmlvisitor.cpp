@@ -76,11 +76,11 @@ QmlDocVisitor::~QmlDocVisitor()
 /*!
   Returns the location of the nearest comment above the \a offset.
  */
-QQmlJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) const
+QQmlJS::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) const
 {
     const auto comments = engine->comments();
     for (auto it = comments.rbegin(); it != comments.rend(); ++it) {
-        QQmlJS::AST::SourceLocation loc = *it;
+        QQmlJS::SourceLocation loc = *it;
 
         if (loc.begin() <= lastEndOffset) {
             // Return if we reach the end of the preceding structure.
@@ -99,7 +99,7 @@ QQmlJS::AST::SourceLocation QmlDocVisitor::precedingComment(quint32 offset) cons
         }
     }
 
-    return QQmlJS::AST::SourceLocation();
+    return QQmlJS::SourceLocation();
 }
 
 class QmlSignatureParser
@@ -134,9 +134,9 @@ private:
   If a qdoc comment is found for \a location, true is returned.
   If a comment is not found there, false is returned.
  */
-bool QmlDocVisitor::applyDocumentation(QQmlJS::AST::SourceLocation location, Node *node)
+bool QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *node)
 {
-    QQmlJS::AST::SourceLocation loc = precedingComment(location.begin());
+    QQmlJS::SourceLocation loc = precedingComment(location.begin());
 
     if (loc.isValid()) {
         QString source = document.mid(loc.offset, loc.length);
@@ -419,7 +419,7 @@ bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlP
 /*!
   Applies the metacommands found in the comment.
  */
-void QmlDocVisitor::applyMetacommands(QQmlJS::AST::SourceLocation, Node *node, Doc &doc)
+void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &doc)
 {
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QSet<QString> metacommands = doc.metaCommandsUsed();

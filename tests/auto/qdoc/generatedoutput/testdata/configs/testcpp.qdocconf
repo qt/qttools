@@ -1,5 +1,5 @@
 project = TestCPP
-includepaths += -I.
+includepaths += -I../testcpp
 
 headers = ../testcpp/testcpp.h
 sources = ../testcpp/testcpp.cpp
