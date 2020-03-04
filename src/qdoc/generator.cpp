@@ -2133,8 +2133,8 @@ QString Generator::typeString(const Node *node)
     case Node::Union:
         return "union";
     case Node::QmlType:
-        return "type";
     case Node::QmlBasicType:
+    case Node::JsBasicType:
         return "type";
     case Node::Page:
         return "documentation";

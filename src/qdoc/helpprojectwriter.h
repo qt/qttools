@@ -44,11 +44,9 @@ using NodeTypeSet = QSet<unsigned char>;
 
 struct SubProject
 {
-    using NodeTypeToSet = QHash<unsigned char, NodeTypeSet>;
-
     QString title;
     QString indexTitle;
-    NodeTypeToSet selectors;
+    NodeTypeSet selectors;
     bool sortPages;
     QString type;
     QHash<QString, const Node *> nodes;

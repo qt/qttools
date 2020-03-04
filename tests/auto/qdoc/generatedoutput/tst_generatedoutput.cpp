@@ -56,7 +56,7 @@ private slots:
     void docBookFromQml();
 
     // Output format independent tests
-    void examplesManifestXml();
+    void examplesManifestXmlAndQhp();
     void ignoresinceVariable();
     void templateParameters();
     void scopedEnum();
@@ -286,9 +286,11 @@ void tst_generatedOutput::docBookFromQml()
                    "docbook/qml-int.xml");
 }
 
-void tst_generatedOutput::examplesManifestXml()
+void tst_generatedOutput::examplesManifestXmlAndQhp()
 {
-    testAndCompare("testdata/configs/examples-qhp.qdocconf", "examples-manifest.xml");
+    testAndCompare("testdata/configs/examples-qhp.qdocconf",
+                   "examples-manifest.xml "
+                   "test.qhp");
 }
 
 void tst_generatedOutput::ignoresinceVariable()

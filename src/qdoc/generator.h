@@ -63,6 +63,7 @@ public:
     virtual void initializeGenerator();
     virtual void initializeFormat();
     virtual void terminateGenerator();
+    virtual QString typeString(const Node *node);
 
     QString fullDocumentLocation(const Node *node, bool useSubdir = false);
     QString linkForExampleFile(const QString &path, const Node *parent,
@@ -118,7 +119,6 @@ protected:
     virtual bool generateText(const Text &text, const Node *relative, CodeMarker *marker);
     virtual QString imageFileName(const Node *relative, const QString &fileBase);
     virtual int skipAtoms(const Atom *atom, Atom::AtomType type) const;
-    virtual QString typeString(const Node *node);
 
     static bool matchAhead(const Atom *atom, Atom::AtomType expectedAtomType);
     static QString outputPrefix(const Node *node);
