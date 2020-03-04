@@ -32,6 +32,7 @@
 #include "config.h"
 #include "generator.h"
 #include "location.h"
+#include "loggingcategory.h"
 #include "qdocdatabase.h"
 #include "qdoctagfiles.h"
 
@@ -109,8 +110,7 @@ void QDocIndexFiles::destroyQDocIndexFiles()
 void QDocIndexFiles::readIndexes(const QStringList &indexFiles)
 {
     for (const QString &file : indexFiles) {
-        QString msg = "Loading index file: " + file;
-        Location::logToStdErr(msg);
+        qCInfo(lcQdoc) << "Loading index file: " << file;
         readIndexFile(file);
     }
 }
@@ -1522,8 +1522,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     if (!file.open(QFile::WriteOnly | QFile::Text))
         return;
 
-    QString msg = "Writing index file: " + fileName;
-    Location::logToStdErr(msg);
+    qCInfo(lcQdoc) << "Writing index file: " << fileName;
 
     gen_ = g;
     QXmlStreamWriter writer(&file);

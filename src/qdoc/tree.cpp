@@ -78,9 +78,9 @@ Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
 {
     root_.setPhysicalModuleName(physicalModuleName_);
     root_.setTree(this);
-    if (Generator::writeQaPages()) {
+    const auto &config = Config::instance();
+    if (config.getBool(CONFIG_WRITEQAPAGES))
         targetListMap_ = new TargetListMap;
-    }
 }
 
 /*!
@@ -104,7 +104,8 @@ Tree::~Tree()
     }
     nodesByTargetRef_.clear();
     nodesByTargetTitle_.clear();
-    if (Generator::writeQaPages() && targetListMap_) {
+    const auto &config = Config::instance();
+    if (config.getBool(CONFIG_WRITEQAPAGES) && targetListMap_) {
         for (auto target = targetListMap_->begin(); target != targetListMap_->end(); ++target) {
             TargetList *tlist = target.value();
             if (tlist) {

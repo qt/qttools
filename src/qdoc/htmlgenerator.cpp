@@ -285,19 +285,19 @@ void HtmlGenerator::generateDocs()
     Node *qflags = qdb_->findClassNode(QStringList("QFlags"));
     if (qflags)
         qflagsHref_ = linkForNode(qflags, nullptr);
-    if (!preparing())
+    if (!config->preparing())
         Generator::generateDocs();
-    if (Generator::generating() && Generator::writeQaPages())
+    if (config->generating() && config->getBool(CONFIG_WRITEQAPAGES))
         generateQAPage();
 
-    if (!generating()) {
+    if (!config->generating()) {
         QString fileBase =
                 project.toLower().simplified().replace(QLatin1Char(' '), QLatin1Char('-'));
         qdb_->generateIndex(outputDir() + QLatin1Char('/') + fileBase + ".index", projectUrl,
                             projectDescription, this);
     }
 
-    if (!preparing()) {
+    if (!config->preparing()) {
         helpProjectWriter->generate();
         generateManifestFiles();
         /*
@@ -502,7 +502,8 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             if (link.isEmpty()) {
                 out() << protectEnc(atom->string());
             } else {
-                if (Generator::writeQaPages() && node && (atom->type() != Atom::NavAutoLink)) {
+                if (config->getBool(CONFIG_WRITEQAPAGES)
+                        && node && (atom->type() != Atom::NavAutoLink)) {
                     QString text = atom->string();
                     QString target = qdb_->getNewLinkTarget(relative, node, outFileName(), text);
                     out() << "<a id=\"" << Doc::canonicalTitle(target)
@@ -846,13 +847,13 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         QString link = getLink(atom, relative, &node);
         if (link.isEmpty() && (node != relative) && !noLinkErrors()) {
             relative->doc().location().warning(tr("Can't link to '%1'").arg(atom->string()));
-            if (Generator::writeQaPages() && (atom->type() != Atom::NavAutoLink)) {
+            if (config->getBool(CONFIG_WRITEQAPAGES) && (atom->type() != Atom::NavAutoLink)) {
                 QString text = atom->next()->next()->string();
                 QString target = qdb_->getNewLinkTarget(relative, node, outFileName(), text, true);
                 out() << "<a id=\"" << Doc::canonicalTitle(target) << "\" class=\"qa-mark\"></a>";
             }
         } else {
-            if (Generator::writeQaPages() && node && (atom->type() != Atom::NavLink)) {
+            if (config->getBool(CONFIG_WRITEQAPAGES) && node && (atom->type() != Atom::NavLink)) {
                 QString text = atom->next()->next()->string();
                 QString target = qdb_->getNewLinkTarget(relative, node, outFileName(), text);
                 out() << "<a id=\"" << Doc::canonicalTitle(target) << "\" class=\"qa-mark\"></a>";

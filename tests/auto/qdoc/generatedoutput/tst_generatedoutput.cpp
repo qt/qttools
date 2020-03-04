@@ -64,6 +64,7 @@ private slots:
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
     void includeFromExampleDirs();
+    void singleExec();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -342,6 +343,20 @@ void tst_generatedOutput::includeFromExampleDirs()
                    "includefromexampledirs/qml-qdoc-test-abstractparent.html "
                    "includefromexampledirs/qml-qdoc-test-abstractparent-members.html");
 }
+
+void tst_generatedOutput::singleExec()
+{
+    // Build both testcpp and crossmodule projects in single-exec mode
+    testAndCompare("testdata/singleexec/singleexec.qdocconf",
+                   "testcpp-module.html "
+                   "testqdoc-test.html "
+                   "testqdoc-test-members.html "
+                   "testqdoc.html "
+                   "crossmodule/testtype.html "
+                   "crossmodule/testtype-members.html",
+                   "-single-exec");
+}
+
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
 

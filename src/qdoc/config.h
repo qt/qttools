@@ -98,6 +98,8 @@ class Config : public Singleton<Config>
 public:
     ~Config();
 
+    enum QDocPass { Neither, Prepare, Generate };
+
     void init(const QString &programName, const QStringList &args);
     bool getDebug() const { return debug_; }
 
@@ -163,6 +165,7 @@ public:
     static QSet<QString> overrideOutputFormats;
 
     inline bool singleExec() const;
+    inline bool dualExec() const;
     QStringList &defines() { return m_defines; }
     QStringList &dependModules() { return m_dependModules; }
     QStringList &includePaths() { return m_includePaths; }
@@ -171,6 +174,11 @@ public:
     void setCurrentDir(const QString &path) { m_currentDir = path; }
     QString previousCurrentDir() const { return m_previousCurrentDir; }
     void setPreviousCurrentDir(const QString &path) { m_previousCurrentDir = path; }
+
+    QDocPass qdocPass() const { return m_qdocPass; }
+    void setQDocPass(const QDocPass &pass) { m_qdocPass = pass; };
+    bool preparing() const { return (m_qdocPass == Prepare); }
+    bool generating() const { return (m_qdocPass == Generate); }
 
 private:
     void processCommandLineOptions(const QStringList &args);
@@ -198,6 +206,8 @@ private:
     static QStack<QString> workingDirs_;
     static QMap<QString, QStringList> includeFilesMap_;
     QDocCommandLineParser m_parser;
+
+    QDocPass m_qdocPass = Neither;
 };
 
 struct ConfigStrings
@@ -214,6 +224,7 @@ struct ConfigStrings
     static QString DEFINES;
     static QString DEPENDS;
     static QString DESCRIPTION;
+    static QString DOCBOOKEXTENSIONS;
     static QString EDITION;
     static QString ENDHEADER;
     static QString EXAMPLEDIRS;
@@ -242,6 +253,7 @@ struct ConfigStrings
     static QString LANDINGTITLE;
     static QString LANGUAGE;
     static QString LOCATIONINFO;
+    static QString LOGPROGRESS;
     static QString MACRO;
     static QString MANIFESTMETA;
     static QString MODULEHEADER;
@@ -273,6 +285,7 @@ struct ConfigStrings
     static QString SYNTAXHIGHLIGHTING;
     static QString TABSIZE;
     static QString TAGFILE;
+    static QString TIMESTAMPS;
     static QString TRANSLATORS;
     static QString URL;
     static QString VERSION;
@@ -298,6 +311,7 @@ struct ConfigStrings
 #define CONFIG_DEFINES ConfigStrings::DEFINES
 #define CONFIG_DEPENDS ConfigStrings::DEPENDS
 #define CONFIG_DESCRIPTION ConfigStrings::DESCRIPTION
+#define CONFIG_DOCBOOKEXTENSIONS ConfigStrings::DOCBOOKEXTENSIONS
 #define CONFIG_EDITION ConfigStrings::EDITION
 #define CONFIG_ENDHEADER ConfigStrings::ENDHEADER
 #define CONFIG_EXAMPLEDIRS ConfigStrings::EXAMPLEDIRS
@@ -326,6 +340,7 @@ struct ConfigStrings
 #define CONFIG_LANDINGTITLE ConfigStrings::LANDINGTITLE
 #define CONFIG_LANGUAGE ConfigStrings::LANGUAGE
 #define CONFIG_LOCATIONINFO ConfigStrings::LOCATIONINFO
+#define CONFIG_LOGPROGRESS ConfigStrings::LOGPROGRESS
 #define CONFIG_MACRO ConfigStrings::MACRO
 #define CONFIG_MANIFESTMETA ConfigStrings::MANIFESTMETA
 #define CONFIG_MODULEHEADER ConfigStrings::MODULEHEADER
@@ -357,6 +372,7 @@ struct ConfigStrings
 #define CONFIG_SYNTAXHIGHLIGHTING ConfigStrings::SYNTAXHIGHLIGHTING
 #define CONFIG_TABSIZE ConfigStrings::TABSIZE
 #define CONFIG_TAGFILE ConfigStrings::TAGFILE
+#define CONFIG_TIMESTAMPS ConfigStrings::TIMESTAMPS
 #define CONFIG_TRANSLATORS ConfigStrings::TRANSLATORS
 #define CONFIG_URL ConfigStrings::URL
 #define CONFIG_VERSION ConfigStrings::VERSION
@@ -372,6 +388,11 @@ struct ConfigStrings
 inline bool Config::singleExec() const
 {
     return getBool(CONFIG_SINGLEEXEC);
+}
+
+inline bool Config::dualExec() const
+{
+    return !getBool(CONFIG_SINGLEEXEC);
 }
 
 QT_END_NAMESPACE

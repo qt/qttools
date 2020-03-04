@@ -2537,7 +2537,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     // Generator::generateThreadSafeness, QDocIndexFiles::generateIndexSection.
 
     // This function is the only place where DocBook extensions are used.
-    if (useDocBookExtensions())
+    if (config->getBool(CONFIG_DOCBOOKEXTENSIONS))
         return;
 
     // Nothing to export in some cases.

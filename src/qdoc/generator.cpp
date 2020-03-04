@@ -75,12 +75,8 @@ QStringList Generator::styleFiles;
 bool Generator::noLinkErrors_ = false;
 bool Generator::autolinkErrors_ = false;
 bool Generator::redirectDocumentationToDevNull_ = false;
-Generator::QDocPass Generator::qdocPass_ = Generator::Neither;
 bool Generator::qdocSingleExec_ = false;
-bool Generator::qdocWriteQaPages_ = false;
 bool Generator::useOutputSubdirs_ = true;
-bool Generator::useTimestamps_ = false;
-bool Generator::useDocBookExtensions_ = false;
 QmlTypeNode *Generator::qmlTypeContext_ = nullptr;
 
 static QRegExp tag("</?@[^>]*>");
@@ -1814,7 +1810,7 @@ void Generator::initializeFormat()
 
     QDir dirInfo;
     if (dirInfo.exists(outDir_)) {
-        if (!generating() && Generator::useOutputSubdirs()) {
+        if (!config.generating() && Generator::useOutputSubdirs()) {
             if (!Config::removeDirContents(outDir_))
                 config.lastLocation().error(tr("Cannot empty output directory '%1'").arg(outDir_));
         }
@@ -1823,7 +1819,7 @@ void Generator::initializeFormat()
     }
 
     // Output directory exists, which is enough for prepare phase.
-    if (preparing())
+    if (config.preparing())
         return;
 
     if (!dirInfo.exists(outDir_ + "/images") && !dirInfo.mkdir(outDir_ + "/images"))
