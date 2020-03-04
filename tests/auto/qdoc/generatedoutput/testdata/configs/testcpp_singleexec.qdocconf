@@ -1,0 +1,6 @@
+include(testcpp.qdocconf)
+
+# Config::getOutputDir() forces a subdir in single-exec mode (why?),
+# disable it here explicitly
+HTML.nosubdirs          = true
+HTML.outputsubdir       = .
