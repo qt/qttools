@@ -4,6 +4,7 @@ INCLUDEPATH += $$PWD
 DEFINES += QT_DESIGNER QT_USE_QSTRINGBUILDER
 
 QT += widgets
+qtHaveModule(openglwidgets): QT += openglwidgets
 QT_PRIVATE += uiplugin
 
 qtConfig(opengl): \

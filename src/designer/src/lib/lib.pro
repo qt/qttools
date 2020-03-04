@@ -2,6 +2,7 @@ TARGET = QtDesigner
 MODULE = designer
 
 QT = core-private gui-private widgets-private xml uiplugin
+qtHaveModule(openglwidgets): QT += openglwidgets
 
 DEFINES += \
     QDESIGNER_SDK_LIBRARY \

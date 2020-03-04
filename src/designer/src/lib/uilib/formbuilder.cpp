@@ -44,8 +44,8 @@
 #include <QtUiPlugin/customwidget.h>
 #include <QtWidgets/QtWidgets>
 
-#if QT_CONFIG(opengl)
-#include <QtOpenGL/qopenglwidget.h>
+#ifdef QT_OPENGLWIDGETS_LIB
+#  include <QtOpenGLWidgets/qopenglwidget.h>
 #endif
 
 QT_BEGIN_NAMESPACE

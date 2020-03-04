@@ -111,7 +111,7 @@ DECLARE_WIDGET(QWidget, "")
 #if QT_CONFIG(keysequenceedit)
 DECLARE_WIDGET(QKeySequenceEdit, "")
 #endif
-#if QT_CONFIG(opengl)
+#ifdef QT_OPENGLWIDGETS_LIB
 DECLARE_WIDGET(QOpenGLWidget, "")
 #endif
 #if QT_CONFIG(splitter)
