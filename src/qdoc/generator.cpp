@@ -2219,6 +2219,10 @@ QString Generator::typeString(const Node *node)
     case Node::JsModule:
     case Node::QmlModule:
         return "module";
+    case Node::SharedComment: {
+        const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
+        return collective.first()->nodeTypeString();
+    }
     default:
         return "documentation";
     }

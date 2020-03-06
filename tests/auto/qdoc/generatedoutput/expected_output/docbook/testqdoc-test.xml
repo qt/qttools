@@ -45,6 +45,7 @@
 <db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:synopsis>
 <db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
+<db:para>This function was introduced in Test 1.2.</db:para>
 </db:section>
 <db:section xml:id="inlineFunction">
 <db:title>Test::void inlineFunction()</db:title>
