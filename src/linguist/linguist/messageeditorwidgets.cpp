@@ -418,7 +418,7 @@ QString FormMultiWidget::getTranslation() const
     for (int i = 0; i < m_editors.count(); ++i) {
         if (i)
             ret += QChar(Translator::BinaryVariantSeparator);
-        ret += toPlainText(m_editors.at(i)->document()->docHandle()->plainText());
+        ret += toPlainText(m_editors.at(i)->document()->toRawText());
     }
     return ret;
 }
