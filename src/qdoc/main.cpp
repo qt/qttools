@@ -238,12 +238,12 @@ void logStartEndMessage(const QLatin1String &startStop, const Config &config)
             + config.getString(CONFIG_PROJECT)
             + QLatin1String(" in ")
             + QLatin1String(config.singleExec() ? "single" : "dual")
-            + QLatin1String(" process mode, (")
+            + QLatin1String(" process mode: ")
             + QLatin1String(config.preparing() ? "prepare" : "generate")
-            + QLatin1String(" phase)");
+            + QLatin1String(" phase.");
 
     const QString msg = startStop + runName;
-    qCInfo(lcQdoc) << msg.data();
+    qCInfo(lcQdoc) << msg.toUtf8().data();
 }
 
 /*!
