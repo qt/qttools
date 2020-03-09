@@ -1522,7 +1522,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     if (!file.open(QFile::WriteOnly | QFile::Text))
         return;
 
-    qCInfo(lcQdoc) << "Writing index file: " << fileName;
+    qCInfo(lcQdoc) << "Writing index file:" << fileName;
 
     gen_ = g;
     QXmlStreamWriter writer(&file);

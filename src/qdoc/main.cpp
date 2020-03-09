@@ -478,7 +478,7 @@ static void processQdocconfFile(const QString &fileName)
           add it to the big tree.
         */
         parsed = 0;
-        qCInfo(lcQdoc) << "Parse source files for " << project;
+        qCInfo(lcQdoc) << "Parse source files for" << project;
         for (const auto &key : sources.keys()) {
             auto *codeParser = CodeParser::parserForSourceFile(key);
             if (codeParser) {
@@ -487,7 +487,7 @@ static void processQdocconfFile(const QString &fileName)
                 codeParser->parseSourceFile(config.location(), key);
             }
         }
-        qCInfo(lcQdoc) << "Source files parsed for " << project;
+        qCInfo(lcQdoc) << "Source files parsed for" << project;
     }
     /*
       Now the primary tree has been built from all the header and
