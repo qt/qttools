@@ -34,6 +34,6 @@
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override"/>
             </class>
         </namespace>
-        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" module="TestCPP" members="TestCPP,TestQDoc,Test,TestDerived,QDOCTEST_MACRO,QDOCTEST_MACRO2,deprecatedMember,obsoleteMember,anotherObsoleteMember,someFunctionDefaultArg,someFunction,inlineFunction,virtualFun,virtualFun," brief="A test module page"/>
+        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" module="TestCPP" members="TestQDoc,Test,TestDerived" brief="A test module page"/>
     </namespace>
 </INDEX>
