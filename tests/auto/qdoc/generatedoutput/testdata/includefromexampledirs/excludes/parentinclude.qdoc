@@ -29,6 +29,7 @@
 /*!
 //! abstract-type
     \qmltype AbstractParent
+    \inqmlmodule QDoc.Test
     \ingroup qmltypes
     \qmlabstract
     \brief Abstract base QML type.
@@ -48,17 +49,4 @@
     \qmlmethod void AbstractParent::rear(Child child)
     \brief Do some abstract parenting on \a child.
 //! rear-qmlmethod
-*/
-
-/*!
-    \qmltype Child
-    \ingroup qmltypes
-    \inherits AbstractParent
-    \brief A Child inheriting its parent.
-*/
-
-/*!
-    \qmlbasictype int
-    \ingroup qmltypes
-    \brief An integer basic type.
 */

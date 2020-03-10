@@ -5,4 +5,9 @@ headers = ../testcpp/testcpp.h
 sources = ../testcpp/testcpp.cpp
 
 macro.CMDFN = \\\\fn
+macro.nothing = \\dontdocument ()
 locationinfo = false
+
+# zero warning tolerance
+warninglimit = 0
+warninglimit.enabled = true

@@ -167,7 +167,7 @@ void TestDerived::virtualFun()
     \fn template <typename T1, typename T2> void TestQDoc::Test::funcTemplate(T1 a, T2 b)
     \brief Function template with two parameters, \a a and \a b.
 \else
-    //! nothing
+    \nothing
 \endif
 */
 
