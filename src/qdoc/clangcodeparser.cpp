@@ -1586,6 +1586,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     clang_disposeTokens(tu, tokens, numTokens);
     clang_disposeTranslationUnit(tu);
     clang_disposeIndex(index_);
+    namespaceScope_.clear();
 }
 
 /*!
