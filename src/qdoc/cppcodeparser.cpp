@@ -531,7 +531,6 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                 doc.location().warning(tr("Invalid '\\%1' not allowed in '\\%2'")
                                                .arg(COMMAND_RELATES, node->nodeTypeString()));
             } else if (!node->isRelatedNonmember() &&
-                       //!node->parent()->name().isEmpty() &&
                        !node->parent()->isNamespace() && !node->parent()->isHeader()) {
                 if (!doc.isInternal()) {
                     doc.location().warning(tr("Invalid '\\%1' ('%2' must be global)")
