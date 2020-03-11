@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- examples.qdoc -->
+  <title>QML Documentation Example | Test</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#qml-class">QML Class</a></li>
+<li class="level1"><a href="#properties-signals-handlers-and-methods">Properties, Signals, Handlers, and Methods</a></li>
+<li class="level2"><a href="#internal-documentation">Internal Documentation</a></li>
+<li class="level1"><a href="#qml-types-with-c-implementation">QML Types with C++ Implementation</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">QML Documentation Example</h1>
+<span class="subtitle"></span>
+<!-- $$$componentset-brief -->
+<p>Example for documenting QML types.</p>
+<!-- @@@componentset -->
+<!-- $$$componentset-description -->
+<div class="descr"> <a name="details"></a>
+<p>This example demonstrates one of the ways to document QML types.</p>
+<p>In particular, there are sample types that are documented with QDoc commands comments. There are documentation comments for the QML types and their public interfaces. The types are grouped into a module, the <a href="uicomponents-qmlmodule.html">UI Components</a> module.</p>
+<p>The uicomponents.qdoc file generates the overview page for the <a href="uicomponents-qmlmodule.html">UI Components</a> module page.</p>
+<p>The generated documentation is available in the <a href="uicomponents-qmlmodule.html">UI Components</a> module.</p>
+<a name="qml-class"></a>
+<h4 id="qml-class">QML Class</h4>
+<p>The QML types use the \qmltype to document the type. In addition, they have the \inmodule command in order for QDoc to associate them to the <code>UIComponents</code> module.</p>
+<p>QDoc uses the \brief command to place a basic description when listing the types.</p>
+<a name="properties-signals-handlers-and-methods"></a>
+<h4 id="properties-signals-handlers-and-methods">Properties, Signals, Handlers, and Methods</h4>
+<p>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</p>
+<p>To document the type of a <i>property alias</i>, you must use the \qmlproperty command to specify the data type.</p>
+<pre class="cpp">\qmlproperty <span class="type">int</span> anAliasedProperty
+An aliased property of type <span class="type">int</span><span class="operator">.</span></pre>
+<a name="internal-documentation"></a>
+<h5 id="internal-documentation">Internal Documentation</h5>
+<p>You may declare that a documentation is for internal use by placing the \internal command after the beginning QDoc comment <code>/*</code>. QDoc will prevent the internal documentation from appearing in the public API.</p>
+<p>If you wish to omit certain parts of the documentation, you may use the \omit and \endomit command.</p>
+<a name="qml-types-with-c-implementation"></a>
+<h4 id="qml-types-with-c-implementation">QML Types with C++ Implementation</h4>
+<p>This example only demonstrates the documentation for types in QML files, but the regular QML commands may be placed inside C++ classes to define the public API of the QML type.</p>
+</div>
+<!-- @@@componentset -->
+</body>
+</html>

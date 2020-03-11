@@ -67,6 +67,7 @@ private slots:
     void singleExec();
     void preparePhase();
     void generatePhase();
+    void noAutoList();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -376,6 +377,17 @@ void tst_generatedOutput::generatePhase()
                    "testqdoc-test-members.html "
                    "testqdoc.html",
                    "-generate");
+}
+
+void tst_generatedOutput::noAutoList()
+{
+    testAndCompare("testdata/configs/noautolist.qdocconf",
+                   "noautolist/testcpp-module.html "
+                   "noautolist/test-componentset-example.html "
+                   "noautolist/qdoc-test-qmlmodule.html "
+                   "noautolist-docbook/testcpp-module.xml "
+                   "noautolist-docbook/test-componentset-example.xml "
+                   "noautolist-docbook/qdoc-test-qmlmodule.xml");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

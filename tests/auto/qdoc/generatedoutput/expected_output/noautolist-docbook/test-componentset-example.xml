@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QML Documentation Example</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Example for documenting QML types.</db:para>
+</db:abstract>
+</db:info>
+<db:para>This example demonstrates one of the ways to document QML types.</db:para>
+<db:para>In particular, there are sample types that are documented with QDoc commands comments. There are documentation comments for the QML types and their public interfaces. The types are grouped into a module, the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>
+<db:para>The uicomponents.qdoc file generates the overview page for the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module page.</db:para>
+<db:para>The generated documentation is available in the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>
+<db:section xml:id="qml-class">
+<db:title>QML Class</db:title>
+<db:para>The QML types use the \qmltype to document the type. In addition, they have the \inmodule command in order for QDoc to associate them to the <db:code>UIComponents</db:code> module.</db:para>
+<db:para>QDoc uses the \brief command to place a basic description when listing the types.</db:para>
+</db:section>
+<db:section xml:id="properties-signals-handlers-and-methods">
+<db:title>Properties, Signals, Handlers, and Methods</db:title>
+<db:para>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</db:para>
+<db:para>To document the type of a <db:emphasis>property alias</db:emphasis>, you must use the \qmlproperty command to specify the data type.</db:para>
+<db:programlisting language="cpp">\qmlproperty &lt;@type&gt;int&lt;/@type&gt; anAliasedProperty
+An aliased property of type &lt;@type&gt;int&lt;/@type&gt;&lt;@op&gt;.&lt;/@op&gt;
+</db:programlisting>
+<db:section xml:id="internal-documentation">
+<db:title>Internal Documentation</db:title>
+<db:para>You may declare that a documentation is for internal use by placing the \internal command after the beginning QDoc comment <db:code>/*</db:code>. QDoc will prevent the internal documentation from appearing in the public API.</db:para>
+<db:para>If you wish to omit certain parts of the documentation, you may use the \omit and \endomit command.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="qml-types-with-c-implementation">
+<db:title>QML Types with C++ Implementation</db:title>
+<db:para>This example only demonstrates the documentation for types in QML files, but the regular QML commands may be placed inside C++ classes to define the public API of the QML type.</db:para>
+</db:section>
+</db:article>

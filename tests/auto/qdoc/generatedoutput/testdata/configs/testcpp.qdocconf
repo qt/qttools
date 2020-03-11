@@ -6,6 +6,7 @@ sources = ../testcpp/testcpp.cpp
 
 macro.CMDFN = \\\\fn
 macro.nothing = \\dontdocument ()
+macro.testnoautolist = \\if defined(test_noautolist)\n\\noautolist\n\\endif
 locationinfo = false
 
 # zero warning tolerance

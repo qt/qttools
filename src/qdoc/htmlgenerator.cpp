@@ -1650,23 +1650,24 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
         generateStatus(cn, marker);
         generateSince(cn, marker);
 
-        NodeMultiMap nmm;
-        cn->getMemberNamespaces(nmm);
-        if (!nmm.isEmpty()) {
-            ref = registerRef("namespaces");
-            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
-            out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
-            generateAnnotatedList(cn, marker, nmm);
+        if (!cn->noAutoList()) {
+            NodeMultiMap nmm;
+            cn->getMemberNamespaces(nmm);
+            if (!nmm.isEmpty()) {
+                ref = registerRef("namespaces");
+                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+                out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
+                generateAnnotatedList(cn, marker, nmm);
+            }
+            nmm.clear();
+            cn->getMemberClasses(nmm);
+            if (!nmm.isEmpty()) {
+                ref = registerRef("classes");
+                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+                out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";
+                generateAnnotatedList(cn, marker, nmm);
+            }
         }
-        nmm.clear();
-        cn->getMemberClasses(nmm);
-        if (!nmm.isEmpty()) {
-            ref = registerRef("classes");
-            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
-            out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";
-            generateAnnotatedList(cn, marker, nmm);
-        }
-        nmm.clear();
     }
 
     Text brief = cn->doc().briefText();
@@ -2281,13 +2282,15 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
     out() << "<ul>\n";
 
     if (node->isModule()) {
-        if (node->hasNamespaces()) {
-            out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
-                  << registerRef("namespaces") << "\">Namespaces</a></li>\n";
-        }
-        if (node->hasClasses()) {
-            out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
-                  << registerRef("classes") << "\">Classes</a></li>\n";
+        if (!static_cast<const CollectionNode *>(node)->noAutoList()) {
+            if (node->hasNamespaces()) {
+                out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
+                      << registerRef("namespaces") << "\">Namespaces</a></li>\n";
+            }
+            if (node->hasClasses()) {
+                out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
+                      << registerRef("classes") << "\">Classes</a></li>\n";
+            }
         }
         out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#" << registerRef("details")
               << "\">Detailed Description</a></li>\n";

@@ -31,6 +31,8 @@
 /*!
     \qmlmodule QDoc.Test \QDocTestVer
     \brief QML Types for the Test module.
+
+    \testnoautolist
 */
 
 /*!

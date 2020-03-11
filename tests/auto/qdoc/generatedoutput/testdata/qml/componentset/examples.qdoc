@@ -30,6 +30,8 @@
     \title QML Documentation Example
     \brief Example for documenting QML types.
 
+    \testnoautolist
+
     \meta tag {test,sample}
     \meta installpath tutorials
 
