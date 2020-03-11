@@ -80,7 +80,7 @@ CppCodeParser::CppCodeParser()
     }
     if (metaCommands_.isEmpty()) {
         metaCommands_ = commonMetaCommands();
-        metaCommands_ << COMMAND_CONTENTSPAGE << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
+        metaCommands_ << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
                       << COMMAND_OVERLOAD << COMMAND_PREVIOUSPAGE << COMMAND_QMLINSTANTIATES
                       << COMMAND_REIMP << COMMAND_RELATES;
     }
@@ -559,9 +559,6 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                 }
             }
         }
-    } else if (command == COMMAND_CONTENTSPAGE) {
-        qCWarning(lcQdoc, "(qdoc) The \\contentspage command is obsolete and should not be used.");
-        setLink(node, Node::ContentsLink, arg);
     } else if (command == COMMAND_NEXTPAGE) {
         setLink(node, Node::NextLink, arg);
     } else if (command == COMMAND_PREVIOUSPAGE) {

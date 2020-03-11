@@ -93,7 +93,6 @@ private:
 #define COMMAND_CATEGORY Doc::alias(QLatin1String("category"))
 #define COMMAND_CLASS Doc::alias(QLatin1String("class"))
 #define COMMAND_COMPONENT Doc::alias(QLatin1String("component"))
-#define COMMAND_CONTENTSPAGE Doc::alias(QLatin1String("contentspage"))
 #define COMMAND_COPYRHOLDER Doc::alias(QLatin1String("copyrholder"))
 #define COMMAND_COPYRYEAR Doc::alias(QLatin1String("copyryear"))
 #define COMMAND_DEPRECATED Doc::alias(QLatin1String("deprecated")) // ### don't document
