@@ -28,7 +28,6 @@
 /*!
     \page 21-0-qdoc-configuration.html
     \previouspage Miscellaneous
-    \contentspage QDoc Manual
     \nextpage Generic Configuration Variables
 
     \title The QDoc Configuration File
@@ -151,7 +150,6 @@
 /*!
     \page 22-qdoc-configuration-generalvariables.html
     \previouspage The QDoc Configuration File
-    \contentspage QDoc Manual
     \nextpage Creating Help Project Files
 
     \title Generic Configuration Variables
@@ -1317,7 +1315,6 @@
 /*!
     \page 22-creating-help-project-files.html
     \previouspage Generic Configuration Variables
-    \contentspage QDoc Manual
     \nextpage C++ Specific Configuration Variables
 
     \title Creating Help Project Files
@@ -1451,7 +1448,6 @@
 /*!
     \page 23-qdoc-configuration-cppvariables.html
     \previouspage Creating Help Project Files
-    \contentspage QDoc Manual
     \nextpage Format-specific Configuration Variables
 
     \title C++ Specific Configuration Variables
@@ -1562,7 +1558,6 @@
 /*!
     \page 24-qdoc-configuration-htmlvariables.html
     \previouspage C++ Specific Configuration Variables
-    \contentspage QDoc Manual
     \nextpage Supporting Derived Projects
 
     \keyword HTML Specific Configuration Variables
@@ -1713,7 +1708,6 @@
 /*!
     \page 25-qdoc-configuration-derivedprojects.html
     \previouspage Format-specific Configuration Variables
-    \contentspage QDoc Manual
     \nextpage Example Manifest Files
 
     \title Supporting Derived Projects
@@ -1871,7 +1865,6 @@
 /*!
     \page 26-qdoc-configuration-example-manifest-files.html
     \previouspage Supporting Derived Projects
-    \contentspage QDoc Manual
 
     \title Example Manifest Files
 
@@ -1953,7 +1946,6 @@
 /*!
     \page 21-1-minimum-qdocconf.html
     \previouspage qtgui.qdocconf
-    \contentspage QDoc Manual
     \nextpage The QDoc Configuration File
 
     \title minimum.qdocconf
@@ -1964,7 +1956,6 @@
 /*!
     \page 21-2-qtgui-qdocconf.html
     \previouspage Supporting Derived Projects
-    \contentspage QDoc Manual
     \nextpage minimum.qdocconf
 
     \title qtgui.qdocconf
