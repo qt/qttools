@@ -155,6 +155,7 @@ void TestDerived::virtualFun()
 /*!
     \fn TestQDoc::Test::overload()
     \fn Test::overload(bool b)
+    \since Test 1.2
      //! The second overload should match even without the fully qualified path
 
     Overloads that share a documentation comment, optionally taking
@@ -166,7 +167,7 @@ void TestDerived::virtualFun()
     \fn template <typename T1, typename T2> void TestQDoc::Test::funcTemplate(T1 a, T2 b)
     \brief Function template with two parameters, \a a and \a b.
 \else
-    //! nothing
+    \nothing
 \endif
 */
 

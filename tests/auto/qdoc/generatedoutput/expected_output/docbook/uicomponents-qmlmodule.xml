@@ -9,7 +9,7 @@
 </db:abstract>
 </db:info>
 <db:anchor xml:id="details"/>
-<db:para>This is a listing of a list of UI components implemented by QML types. These files are available for general import and they are based on the <db:link xlink:href="">Qt Quick Code Samples</db:link>.</db:para>
+<db:para>This is a listing of a list of UI components implemented by QML types. These files are available for general import and they are based on the Qt Quick Code Samples.</db:para>
 <db:para>This module is part of the <db:link xlink:href="test-componentset-example.xml">UIComponents</db:link> example.</db:para>
 <db:variablelist role="members">
 <db:varlistentry>

@@ -829,7 +829,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         out() << formattingRightMap()[ATOM_FORMATTING_BOLD];
         break;
     case Atom::NoteRight:
-        out() << "</p>";
+        out() << "</p>\n";
         break;
     case Atom::LegaleseLeft:
         out() << "<div class=\"LegaleseLeft\">";
@@ -3114,10 +3114,12 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
             if (twoColumn)
                 out() << "</td></tr>\n</table></div>\n";
         }
-        if (hasPrivateSignals && alignNames)
-            generatePrivateSignalNote(relative, marker);
-        if (isInvokable && alignNames)
-            generateInvokableNote(relative, marker);
+        if (alignNames) {
+            if (hasPrivateSignals)
+                generateAddendum(relative, Generator::PrivateSignal, marker);
+            if (isInvokable)
+                generateAddendum(relative, Generator::Invokable, marker);
+        }
     }
 
     if (status != Section::Obsolete && section.style() == Section::Summary
@@ -3502,13 +3504,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
             out() << "<p><b>Notifier signal:</b></p>\n";
             generateSectionList(notifiers, node, marker);
         }
-    } else if (node->isFunction()) {
-        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
-        if (fn->isPrivateSignal())
-            generatePrivateSignalNote(node, marker);
-        if (fn->isInvokable())
-            generateInvokableNote(node, marker);
-        generateAssociatedPropertyNotes(const_cast<FunctionNode *>(fn));
     } else if (node->isEnumType()) {
         const EnumNode *etn = static_cast<const EnumNode *>(node);
         if (etn->flagsType()) {
@@ -4209,42 +4204,6 @@ void HtmlGenerator::reportOrphans(const Aggregate *parent)
 QXmlStreamWriter &HtmlGenerator::xmlWriter()
 {
     return *xmlWriterStack.top();
-}
-
-/*!
-  Generates bold Note lines that explain how function \a fn
-  is associated with each of its associated properties.
- */
-void HtmlGenerator::generateAssociatedPropertyNotes(const FunctionNode *fn)
-{
-    if (fn->hasAssociatedProperties()) {
-        out() << "<p><b>Note:</b> ";
-        NodeList nodes = fn->associatedProperties();
-        std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
-        for (const auto *node : qAsConst(nodes)) {
-            QString msg;
-            const PropertyNode *pn = static_cast<const PropertyNode *>(node);
-            switch (pn->role(fn)) {
-            case PropertyNode::Getter:
-                msg = QStringLiteral("Getter function ");
-                break;
-            case PropertyNode::Setter:
-                msg = QStringLiteral("Setter function ");
-                break;
-            case PropertyNode::Resetter:
-                msg = QStringLiteral("Resetter function ");
-                break;
-            case PropertyNode::Notifier:
-                msg = QStringLiteral("Notifier signal ");
-                break;
-            default:
-                break;
-            }
-            QString link = linkForNode(pn, nullptr);
-            out() << msg << "for property <a href=\"" << link << "\">" << pn->name() << "</a>. ";
-        }
-        out() << "</p>";
-    }
 }
 
 QT_END_NAMESPACE

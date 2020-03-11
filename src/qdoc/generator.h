@@ -53,6 +53,7 @@ class Generator
 
 public:
     enum ListType { Generic, Obsolete };
+    enum Addendum { Invokable, PrivateSignal, QmlSignalHandler, AssociatedProperties };
 
     Generator();
     virtual ~Generator();
@@ -63,6 +64,7 @@ public:
     virtual void initializeGenerator();
     virtual void initializeFormat();
     virtual void terminateGenerator();
+    virtual QString typeString(const Node *node);
 
     QString fullDocumentLocation(const Node *node, bool useSubdir = false);
     QString linkForExampleFile(const QString &path, const Node *parent,
@@ -118,7 +120,6 @@ protected:
     virtual bool generateText(const Text &text, const Node *relative, CodeMarker *marker);
     virtual QString imageFileName(const Node *relative, const QString &fileBase);
     virtual int skipAtoms(const Atom *atom, Atom::AtomType type) const;
-    virtual QString typeString(const Node *node);
 
     static bool matchAhead(const Atom *atom, Atom::AtomType expectedAtomType);
     static QString outputPrefix(const Node *node);
@@ -140,8 +141,7 @@ protected:
     static QString formatSince(const Node *node);
     void generateSince(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
-    void generatePrivateSignalNote(const Node *node, CodeMarker *marker);
-    void generateInvokableNote(const Node *node, CodeMarker *marker);
+    virtual void generateAddendum(const Node *node, Addendum type, CodeMarker *marker);
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
     QString getMetadataElement(const Aggregate *inner, const QString &t);
     QStringList getMetadataElements(const Aggregate *inner, const QString &t);

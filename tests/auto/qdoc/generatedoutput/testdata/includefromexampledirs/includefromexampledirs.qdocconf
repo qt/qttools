@@ -5,6 +5,8 @@ sourcedirs += src
 excludedirs += excludes \
                ../qml/componentset
 
+excludefiles += ../qml/parent.qdoc
+
 exampledirs += excludes
 
 HTML.nosubdirs = true

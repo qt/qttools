@@ -28,7 +28,6 @@
 /*!
     \page 27-qdoc-commands-alphabetical.html
     \previouspage Introduction to QDoc
-    \contentspage QDoc Manual
     \nextpage Topic Commands
 
     \title Command Index
@@ -49,7 +48,6 @@
     \li \l {class-command} {\\class}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
-    \li \l {contentspage-command} {\\contentspage}
     \li \l {default-command} {\\default}
     \li \l {div-command} {\\div}
     \li \l {dots-command} {\\dots}

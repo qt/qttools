@@ -92,7 +92,6 @@ void HelpProjectWriter::reset(const QString &defaultFileName, Generator *g)
                                          + Config::dot + "filterAttributes");
             project.customFilters[name] = QSet<QString>(filters.cbegin(), filters.cend());
         }
-        // customFilters = config.defs.
 
         const auto excludedPrefixes = config.getStringSet(prefix + "excluded");
         for (auto name : excludedPrefixes)
@@ -103,6 +102,8 @@ void HelpProjectWriter::reset(const QString &defaultFileName, Generator *g)
             SubProject subproject;
             QString subprefix = prefix + "subprojects" + Config::dot + name + Config::dot;
             subproject.title = config.getString(subprefix + "title");
+            if (subproject.title.isEmpty())
+                continue;
             subproject.indexTitle = config.getString(subprefix + "indexTitle");
             subproject.sortPages = config.getBool(subprefix + "sortPages");
             subproject.type = config.getString(subprefix + "type");
@@ -129,8 +130,8 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     typeHash["union"] = Node::Union;
     typeHash["header"] = Node::HeaderFile;
     typeHash["headerfile"] = Node::HeaderFile;
-    typeHash["doc"] = Node::Page; // to be removed from qdocconf files
-    typeHash["fake"] = Node::Page; // to be removed from qdocconf files
+    typeHash["doc"] = Node::Page; // Unused (supported but ignored as a prefix)
+    typeHash["fake"] = Node::Page; // Unused (supported but ignored as a prefix)
     typeHash["page"] = Node::Page;
     typeHash["enum"] = Node::Enum;
     typeHash["example"] = Node::Example;
@@ -149,41 +150,26 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     typeHash["qmltype"] = Node::QmlType;
     typeHash["qmlbasictype"] = Node::QmlBasicType;
 
-    QHash<QString, Node::NodeType> pageTypeHash;
-    pageTypeHash["example"] = Node::Example;
-    pageTypeHash["headerfile"] = Node::HeaderFile;
-    pageTypeHash["header"] = Node::HeaderFile;
-    pageTypeHash["page"] = Node::Page;
-    pageTypeHash["externalpage"] = Node::ExternalPage;
-
-    NodeTypeSet fullSubset;
-    for (auto it = pageTypeHash.constBegin(); it != pageTypeHash.constEnd(); ++it)
-        fullSubset.insert(it.value());
-
     for (const QString &selector : selectors) {
         QStringList pieces = selector.split(QLatin1Char(':'));
-        if (pieces.size() == 1) {
-            QString lower = selector.toLower();
-            if (typeHash.contains(lower))
-                subproject.selectors[typeHash[lower]] = fullSubset;
-        } else if (pieces.size() >= 2) {
-            QString pageTypeStr = pieces[0].toLower();
-            pieces = pieces[1].split(QLatin1Char(','));
-            if (typeHash.contains(pageTypeStr)) {
-                NodeTypeSet nodeTypeSet;
-                for (int i = 0; i < pieces.size(); ++i) {
-                    QString piece = pieces[i].toLower();
-                    if (typeHash[pageTypeStr] == Node::Group
-                        || typeHash[pageTypeStr] == Node::Module
-                        || typeHash[pageTypeStr] == Node::QmlModule
-                        || typeHash[pageTypeStr] == Node::JsModule) {
-                        subproject.groups << piece;
-                        continue;
-                    }
-                    if (pageTypeHash.contains(piece))
-                        nodeTypeSet.insert(pageTypeHash[piece]);
+        // Remove doc: or fake: prefix
+        if (pieces.size() > 1 && typeHash.value(pieces[0].toLower()) == Node::Page)
+            pieces.takeFirst();
+
+        QString typeName = pieces.takeFirst().toLower();
+        if (!typeHash.contains(typeName))
+            continue;
+
+        subproject.selectors << typeHash.value(typeName);
+        if (!pieces.isEmpty()) {
+            pieces = pieces[0].split(QLatin1Char(','));
+            for (const auto &piece : qAsConst(pieces)) {
+                if (typeHash[typeName] == Node::Group
+                    || typeHash[typeName] == Node::Module
+                    || typeHash[typeName] == Node::QmlModule
+                    || typeHash[typeName] == Node::JsModule) {
+                    subproject.groups << piece.toLower();
                 }
-                subproject.selectors[typeHash[pageTypeStr]] = nodeTypeSet;
             }
         }
     }
@@ -268,7 +254,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
             project.subprojects[i].nodes[objName] = node;
         } else if (subproject.selectors.contains(node->nodeType())) {
             // Add all group members for '[group|module|qmlmodule]:name' selector
-            if (node->isGroup() || node->isModule() || node->isQmlModule()) {
+            if (node->isCollectionNode()) {
                 if (project.subprojects[i].groups.contains(node->name().toLower())) {
                     const CollectionNode *cn = static_cast<const CollectionNode *>(node);
                     const auto members = cn->members();
@@ -277,20 +263,15 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                                 m->isTextPageNode() ? m->fullTitle() : m->fullDocumentName();
                         project.subprojects[i].nodes[memberName] = m;
                     }
+                    continue;
+                } else if (!project.subprojects[i].groups.isEmpty()) {
+                    continue; // Node does not represent specified group(s)
                 }
+            } else if (node->isTextPageNode()) {
+                if (node->isExternalPage() || node->fullTitle().isEmpty())
+                    continue;
             }
-            // Accept only the node types in the selectors hash.
-            else if (!node->isTextPageNode())
-                project.subprojects[i].nodes[objName] = node;
-            else {
-                // Accept only doc nodes with subtypes contained in the selector's
-                // mask.
-                if (subproject.selectors[node->nodeType()].contains(node->nodeType())
-                    && !node->isExternalPage() && !node->fullTitle().isEmpty()) {
-
-                    project.subprojects[i].nodes[objName] = node;
-                }
-            }
+            project.subprojects[i].nodes[objName] = node;
         }
     }
 
@@ -537,6 +518,9 @@ void HelpProjectWriter::writeSection(QXmlStreamWriter &writer, const QString &pa
  */
 void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node)
 {
+    if (node->isQmlBasicType() || node->isJsBasicType())
+        return;
+
     QString href = gen_->fullDocumentLocation(node, false);
     href = href.left(href.size() - 5);
     if (href.isEmpty())
@@ -570,58 +554,41 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::Class:
     case Node::Struct:
     case Node::Union:
+    case Node::QmlType:
+    case Node::JsType:
+    case Node::QmlBasicType:
+    case Node::JsBasicType: {
+        QString typeStr = gen_->typeString(node);
+        if (!typeStr.isEmpty())
+            typeStr[0] = typeStr[0].toTitleCase();
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
         if (node->parent() && !node->parent()->name().isEmpty())
             writer.writeAttribute(
-                    "title", tr("%1::%2 Class Reference").arg(node->parent()->name()).arg(objName));
+                    "title", tr("%1::%2 %3 Reference").arg(node->parent()->name()).arg(objName).arg(typeStr));
         else
-            writer.writeAttribute("title", tr("%1 Class Reference").arg(objName));
+            writer.writeAttribute("title", tr("%1 %2 Reference").arg(objName).arg(typeStr));
 
         addMembers(project, writer, node);
         writer.writeEndElement(); // section
-        break;
+    } break;
 
     case Node::Namespace:
         writeSection(writer, href, objName);
         break;
 
+    case Node::Example:
     case Node::HeaderFile:
-        writer.writeStartElement("section");
-        writer.writeAttribute("ref", href);
-        writer.writeAttribute("title", node->fullTitle());
-        addMembers(project, writer, node);
-        writer.writeEndElement(); // section
-        break;
-
-    case Node::JsType:
-    case Node::QmlType:
-        writer.writeStartElement("section");
-        writer.writeAttribute("ref", href);
-        writer.writeAttribute("title", tr("%1 Type Reference").arg(node->fullTitle()));
-        addMembers(project, writer, node);
-        writer.writeEndElement(); // section
-        break;
-
-    case Node::Page: {
-        // Page nodes (such as manual pages) contain subtypes, titles and other
-        // attributes.
-        const PageNode *pn = static_cast<const PageNode *>(node);
-
-        writer.writeStartElement("section");
-        writer.writeAttribute("ref", href);
-        writer.writeAttribute("title", pn->fullTitle());
-
-        writer.writeEndElement(); // section
-    } break;
+    case Node::Page:
     case Node::Group:
     case Node::Module:
     case Node::JsModule:
     case Node::QmlModule: {
-        const CollectionNode *cn = static_cast<const CollectionNode *>(node);
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
-        writer.writeAttribute("title", cn->fullTitle());
+        writer.writeAttribute("title", node->fullTitle());
+        if (node->nodeType() == Node::HeaderFile)
+            addMembers(project, writer, node);
         writer.writeEndElement(); // section
     } break;
     default:;

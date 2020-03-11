@@ -759,55 +759,55 @@ const Atom *Generator::generateAtomList(const Atom *atom, const Node *relative, 
  */
 void Generator::generateBody(const Node *node, CodeMarker *marker)
 {
+    const FunctionNode *fn = node->isFunction() ? static_cast<const FunctionNode *>(node) : nullptr;
     if (!node->hasDoc() && !node->hasSharedDoc()) {
         /*
           Test for special function, like a destructor or copy constructor,
           that has no documentation.
         */
-        if (node->isFunction()) {
-            const FunctionNode *func = static_cast<const FunctionNode *>(node);
-            if (func->isDtor()) {
+        if (fn) {
+            if (fn->isDtor()) {
                 Text text;
                 text << "Destroys the instance of ";
-                text << func->parent()->name() << ".";
-                if (func->isVirtual())
+                text << fn->parent()->name() << ".";
+                if (fn->isVirtual())
                     text << " The destructor is virtual.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            } else if (func->isCtor()) {
+            } else if (fn->isCtor()) {
                 Text text;
                 text << "Default constructs an instance of ";
-                text << func->parent()->name() << ".";
+                text << fn->parent()->name() << ".";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            } else if (func->isCCtor()) {
+            } else if (fn->isCCtor()) {
                 Text text;
                 text << "Copy constructor.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            } else if (func->isMCtor()) {
+            } else if (fn->isMCtor()) {
                 Text text;
                 text << "Move-copy constructor.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            } else if (func->isCAssign()) {
+            } else if (fn->isCAssign()) {
                 Text text;
                 text << "Copy-assignment operator.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
-            } else if (func->isMAssign()) {
+            } else if (fn->isMAssign()) {
                 Text text;
                 text << "Move-assignment operator.";
                 out() << "<p>";
                 generateText(text, node, marker);
                 out() << "</p>";
             } else if (!node->isWrapper() && !node->isMarkedReimp()) {
-                if (!func->isIgnored()) // undocumented functions added by Q_OBJECT
+                if (!fn->isIgnored()) // undocumented functions added by Q_OBJECT
                     node->location().warning(
                             tr("No documentation for '%1'").arg(node->plainSignature()));
             }
@@ -818,8 +818,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                         tr("No documentation for '%1'").arg(node->plainSignature()));
         }
     } else if (!node->isSharingComment()) {
-        if (node->isFunction()) {
-            const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        if (fn) {
             if (!fn->overridesThis().isEmpty())
                 generateReimplementsClause(fn, marker);
         }
@@ -829,6 +828,18 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 return;
         }
 
+        if (fn) {
+            if (fn->isQmlSignal())
+                generateAddendum(node, QmlSignalHandler, marker);
+            if (fn->isPrivateSignal())
+                generateAddendum(node, PrivateSignal, marker);
+            if (fn->isInvokable())
+                generateAddendum(node, Invokable, marker);
+            if (fn->hasAssociatedProperties())
+                generateAddendum(node, AssociatedProperties, marker);
+        }
+
+        // Generate warnings
         if (node->isEnumType()) {
             const EnumNode *enume = static_cast<const EnumNode *>(node);
 
@@ -860,8 +871,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                     }
                 }
             }
-        } else if (node->isFunction()) {
-            const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        } else if (fn) {
             const QSet<QString> declaredNames = fn->parameters().getNames();
             const QSet<QString> documentedNames = fn->doc().parameterNames();
             if (declaredNames != documentedNames) {
@@ -1344,33 +1354,76 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
 }
 
 /*!
-  Generates a bold line that explains that this is a private signal,
-  only made public to let users pass it to connect().
- */
-void Generator::generatePrivateSignalNote(const Node *node, CodeMarker *marker)
+  Generates an addendum note of type \a type for \a node, using \a marker
+  as the code marker.
+*/
+void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker)
 {
+    Q_ASSERT(node && !node->name().isEmpty());
     Text text;
     text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-         << "This is a private signal. It can be used in signal connections but cannot be emitted "
-            "by the user."
-         << Atom::ParaRight;
-    generateText(text, node, marker);
-}
+         << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
-/*!
-  Generates a bold line that says:
-  "This function can be invoked via the meta-object system and from QML. See Q_INVOKABLE."
- */
-void Generator::generateInvokableNote(const Node *node, CodeMarker *marker)
-{
-    Text text;
-    text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
-         << "This function can be invoked via the meta-object system and from QML. See "
-         << Atom(Atom::Link, "Q_INVOKABLE") << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-         << "Q_INVOKABLE" << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << "."
-         << Atom::ParaRight;
+    switch (type) {
+    case Invokable:
+        text << "This function can be invoked via the meta-object system and from QML. See "
+             << Atom(Atom::Link, "Q_INVOKABLE")
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << "Q_INVOKABLE"
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ".";
+        break;
+    case PrivateSignal:
+        text << "This is a private signal. It can be used in signal connections "
+                "but cannot be emitted by the user.";
+        break;
+    case QmlSignalHandler:
+    {
+        QString handler(node->name());
+        handler[0] = handler[0].toTitleCase();
+        handler.prepend(QLatin1String("on"));
+        text << "The corresponding handler is "
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_TELETYPE) << handler
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_TELETYPE) << ".";
+        break;
+    }
+    case AssociatedProperties:
+    {
+        if (!node->isFunction())
+            return;
+        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        NodeList nodes = fn->associatedProperties();
+        if (nodes.isEmpty())
+            return;
+        std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
+        for (const auto *n : qAsConst(nodes)) {
+            QString msg;
+            const PropertyNode *pn = static_cast<const PropertyNode *>(n);
+            switch (pn->role(fn)) {
+            case PropertyNode::Getter:
+                msg = QStringLiteral("Getter function");
+                break;
+            case PropertyNode::Setter:
+                msg = QStringLiteral("Setter function");
+                break;
+            case PropertyNode::Resetter:
+                msg = QStringLiteral("Resetter function");
+                break;
+            case PropertyNode::Notifier:
+                msg = QStringLiteral("Notifier signal");
+                break;
+            default:
+                continue;
+            }
+            text << msg << " for property " << Atom(Atom::Link, pn->name())
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << pn->name()
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ". ";
+        }
+        break;
+    }
+    default:
+        return;
+    }
+
+    text << Atom::ParaRight;
     generateText(text, node, marker);
 }
 
@@ -2133,8 +2186,8 @@ QString Generator::typeString(const Node *node)
     case Node::Union:
         return "union";
     case Node::QmlType:
-        return "type";
     case Node::QmlBasicType:
+    case Node::JsBasicType:
         return "type";
     case Node::Page:
         return "documentation";
@@ -2166,6 +2219,10 @@ QString Generator::typeString(const Node *node)
     case Node::JsModule:
     case Node::QmlModule:
         return "module";
+    case Node::SharedComment: {
+        const auto &collective = static_cast<const SharedCommentNode *>(node)->collective();
+        return collective.first()->nodeTypeString();
+    }
     default:
         return "documentation";
     }

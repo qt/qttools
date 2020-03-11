@@ -108,12 +108,13 @@ void FormWindowData::fromFormWindow(FormWindowBase* fw)
     defaultMargin =  defaultSpacing = INT_MIN;
     fw->layoutDefault(&defaultMargin, &defaultSpacing);
 
-    QStyle *style = fw->formContainer()->style();
+    auto container = fw->formContainer();
+    QStyle *style = container->style();
     layoutDefaultEnabled = defaultMargin != INT_MIN || defaultSpacing != INT_MIN;
     if (defaultMargin == INT_MIN)
-        defaultMargin = style->pixelMetric(QStyle::PM_DefaultChildMargin, nullptr);
+        defaultMargin = style->pixelMetric(QStyle::PM_LayoutLeftMargin, nullptr, container);
     if (defaultSpacing == INT_MIN)
-        defaultSpacing = style->pixelMetric(QStyle::PM_DefaultLayoutSpacing, nullptr);
+        defaultSpacing = style->pixelMetric(QStyle::PM_LayoutHorizontalSpacing, nullptr);
 
 
     marginFunction.clear();

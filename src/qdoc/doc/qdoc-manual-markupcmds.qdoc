@@ -27,7 +27,6 @@
 
 /*!
     \page 03-qdoc-commands-markup.html
-    \contentspage QDoc Manual
     \previouspage Naming Things
     \nextpage Text Markup
 
@@ -109,7 +108,6 @@
 
 /*!
     \page 04-qdoc-commands-textmarkup.html
-    \contentspage QDoc Manual
     \previouspage Markup Commands
     \nextpage Document Structure
 
@@ -659,7 +657,6 @@
 /*!
     \page 05-qdoc-commands-documentstructure.html
     \previouspage Text Markup
-    \contentspage QDoc Manual
     \nextpage Including Code Inline
 
     \title Document Structure
@@ -858,7 +855,6 @@
 /*!
     \page 06-qdoc-commands-includecodeinline.html
     \previouspage Document Structure
-    \contentspage QDoc Manual
     \nextpage Including External Code
 
     \title Including Code Inline
@@ -1091,7 +1087,6 @@
 /*!
     \page 07-0-qdoc-commands-includingexternalcode.html
     \previouspage Including Code Inline
-    \contentspage QDoc Manual
     \nextpage Creating Links
 
     \title Including External Code
@@ -1722,7 +1717,6 @@
 /*!
     \page 08-qdoc-commands-creatinglinks.html
     \previouspage Including External Code
-    \contentspage QDoc Manual
     \nextpage Including Images
 
     \title Creating Links
@@ -2119,7 +2113,6 @@
 /*!
     \page 09-qdoc-commands-includingimages.html
     \previouspage Creating Links
-    \contentspage QDoc Manual
     \nextpage Tables and Lists
 
     \title Including Images
@@ -2316,7 +2309,6 @@
 /*!
     \page 10-qdoc-commands-tablesandlists.html
     \previouspage Including Images
-    \contentspage QDoc Manual
     \nextpage Special Content
 
     \title Tables and Lists
@@ -2857,7 +2849,6 @@
 /*!
     \page 11-qdoc-commands-specialcontent.html
     \previouspage Tables and Lists
-    \contentspage QDoc Manual
     \nextpage Miscellaneous
 
     \title Special Content
@@ -3292,7 +3283,6 @@
 /*!
     \page 12-0-qdoc-commands-miscellaneous.html
     \previouspage Special Content
-    \contentspage QDoc Manual
     \nextpage The QDoc Configuration File
 
     \title Miscellaneous

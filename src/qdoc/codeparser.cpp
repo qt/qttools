@@ -269,25 +269,28 @@ bool CodeParser::isParsingQdoc() const
 void CodeParser::checkModuleInclusion(Node *n)
 {
     if (n->physicalModuleName().isEmpty()) {
-        qdb_->addToModule(Generator::defaultModuleName(), n);
-        QString word;
-        switch (n->nodeType()) {
-        case Node::Class:
-            word = QLatin1String("Class");
-            break;
-        case Node::Struct:
-            word = QLatin1String("Struct");
-            break;
-        case Node::Union:
-            word = QLatin1String("Union");
-            break;
-        case Node::Namespace:
-            word = QLatin1String("Namespace");
-            break;
-        default:
-            return;
-        }
+        n->setPhysicalModuleName(Generator::defaultModuleName());
+
         if (n->isInAPI() && !n->name().isEmpty()) {
+            QString word;
+            switch (n->nodeType()) {
+            case Node::Class:
+                word = QLatin1String("Class");
+                break;
+            case Node::Struct:
+                word = QLatin1String("Struct");
+                break;
+            case Node::Union:
+                word = QLatin1String("Union");
+                break;
+            case Node::Namespace:
+                word = QLatin1String("Namespace");
+                break;
+            default:
+                return;
+            }
+
+            qdb_->addToModule(Generator::defaultModuleName(), n);
             n->doc().location().warning(tr("%1 %2 has no \\inmodule command; "
                                            "using project name by default: %3")
                                                 .arg(word)

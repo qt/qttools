@@ -56,7 +56,7 @@ private slots:
     void docBookFromQml();
 
     // Output format independent tests
-    void examplesManifestXml();
+    void examplesManifestXmlAndQhp();
     void ignoresinceVariable();
     void templateParameters();
     void scopedEnum();
@@ -65,6 +65,8 @@ private slots:
     void crossModuleLinking();
     void includeFromExampleDirs();
     void singleExec();
+    void preparePhase();
+    void generatePhase();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -286,9 +288,11 @@ void tst_generatedOutput::docBookFromQml()
                    "docbook/qml-int.xml");
 }
 
-void tst_generatedOutput::examplesManifestXml()
+void tst_generatedOutput::examplesManifestXmlAndQhp()
 {
-    testAndCompare("testdata/configs/examples-qhp.qdocconf", "examples-manifest.xml");
+    testAndCompare("testdata/configs/examples-qhp.qdocconf",
+                   "examples-manifest.xml "
+                   "test.qhp");
 }
 
 void tst_generatedOutput::ignoresinceVariable()
@@ -357,6 +361,22 @@ void tst_generatedOutput::singleExec()
                    "-single-exec");
 }
 
+void tst_generatedOutput::preparePhase()
+{
+    testAndCompare("testdata/configs/testcpp.qdocconf",
+                   "testcpp.index",
+                   "-prepare");
+}
+
+void tst_generatedOutput::generatePhase()
+{
+    testAndCompare("testdata/configs/testcpp.qdocconf",
+                   "testcpp-module.html "
+                   "testqdoc-test.html "
+                   "testqdoc-test-members.html "
+                   "testqdoc.html",
+                   "-generate");
+}
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
 

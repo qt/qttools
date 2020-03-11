@@ -1310,7 +1310,7 @@ void ClangCodeParser::buildPCH()
             const QByteArray module = moduleHeader().toUtf8();
             QByteArray header;
             QByteArray privateHeaderDir;
-            qCInfo(lcQdoc) << "Build & visit PCH for " << moduleHeader();
+            qCDebug(lcQdoc) << "Build and visit PCH for" << moduleHeader();
             // A predicate for std::find_if() to locate a path to the module's header
             // (e.g. QtGui/QtGui) to be used as pre-compiled header
             struct FindPredicate
@@ -1413,7 +1413,7 @@ void ClangCodeParser::buildPCH()
                 auto error = clang_saveTranslationUnit(tu, pchName_.constData(),
                                                        clang_defaultSaveOptions(tu));
                 if (error) {
-                    qCCritical(lcQdoc) << "Could not save PCH file for " << moduleHeader();
+                    qCCritical(lcQdoc) << "Could not save PCH file for" << moduleHeader();
                     pchName_.clear();
                 } else {
                     // Visit the header now, as token from pre-compiled header won't be visited
@@ -1421,7 +1421,7 @@ void ClangCodeParser::buildPCH()
                     CXCursor cur = clang_getTranslationUnitCursor(tu);
                     ClangVisitor visitor(qdb_, allHeaders_);
                     visitor.visitChildren(cur);
-                    qCInfo(lcQdoc) << "PCH built & visited for " << moduleHeader();
+                    qCDebug(lcQdoc) << "PCH built and visited for" << moduleHeader();
                 }
                 clang_disposeTranslationUnit(tu);
             } else {
@@ -1586,6 +1586,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     clang_disposeTokens(tu, tokens, numTokens);
     clang_disposeTranslationUnit(tu);
     clang_disposeIndex(index_);
+    namespaceScope_.clear();
 }
 
 /*!

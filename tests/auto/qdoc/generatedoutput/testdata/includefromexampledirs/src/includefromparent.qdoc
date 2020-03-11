@@ -49,3 +49,18 @@
 
 \include parent.qdocinc
 */
+
+/*!
+    \qmltype Child
+    \inqmlmodule QDoc.Test
+    \ingroup qmltypes
+    \inherits AbstractParent
+    \brief A Child inheriting its parent.
+*/
+
+/*!
+    \qmlbasictype int
+    \inqmlmodule QDoc.Test
+    \ingroup qmltypes
+    \brief An integer basic type.
+*/

@@ -33,8 +33,9 @@
 #include "cppcodeparser.h"
 
 #include "config.h"
-#include "qdocdatabase.h"
 #include "generator.h"
+#include "loggingcategory.h"
+#include "qdocdatabase.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qfile.h>
@@ -559,6 +560,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             }
         }
     } else if (command == COMMAND_CONTENTSPAGE) {
+        qCWarning(lcQdoc, "(qdoc) The \\contentspage command is obsolete and should not be used.");
         setLink(node, Node::ContentsLink, arg);
     } else if (command == COMMAND_NEXTPAGE) {
         setLink(node, Node::NextLink, arg);
