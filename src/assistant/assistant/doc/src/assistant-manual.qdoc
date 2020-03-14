@@ -62,7 +62,6 @@
     \page assistant-custom-help-viewer.html
     \title Customizing Qt Assistant
 
-    \contentspage {Qt Assistant Manual}{Contents}
     \previouspage Using Qt Assistant
 
     Using \QA as custom help viewer requires more than just being able to
