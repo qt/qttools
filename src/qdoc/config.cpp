@@ -344,6 +344,10 @@ void Config::load(const QString &fileName)
     // always added to what's defined in configuration file.
     insertStringList(CONFIG_DEFINES, m_defines);
     insertStringList(CONFIG_INCLUDEPATHS, m_includePaths);
+
+    // Prefetch values that are used internally
+    m_exampleFiles = getCanonicalPathList(CONFIG_EXAMPLES);
+    m_exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
 }
 
 /*!
@@ -792,6 +796,32 @@ QStringList Config::getExampleImageFiles(const QSet<QString> &excludedDirs,
     for (const auto &dir : dirs)
         result += getFilesHere(dir, nameFilter, location(), excludedDirs, excludedFiles);
     return result;
+}
+
+/*!
+    Returns the path to the project file for \a examplePath, or an empty string
+    if no project file was found.
+ */
+QString Config::getExampleProjectFile(const QString &examplePath)
+{
+    QFileInfo fileInfo(examplePath);
+    QStringList validNames;
+    validNames << fileInfo.fileName() + QLatin1String(".pro")
+               << fileInfo.fileName() + QLatin1String(".qmlproject")
+               << fileInfo.fileName() + QLatin1String(".pyproject")
+               << QLatin1String("CMakeLists.txt")
+               << QLatin1String("qbuild.pro"); // legacy
+
+    QString projectFile;
+
+    for (const auto &name : qAsConst(validNames)) {
+        projectFile = Config::findFile(Location(), m_exampleFiles, m_exampleDirs,
+                                       examplePath + QLatin1Char('/') + name);
+        if (!projectFile.isEmpty())
+            return projectFile;
+    }
+
+    return projectFile;
 }
 
 /*!

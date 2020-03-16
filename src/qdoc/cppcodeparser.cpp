@@ -48,8 +48,6 @@ QT_BEGIN_NAMESPACE
 
 /* qmake ignore Q_OBJECT */
 
-QStringList CppCodeParser::exampleFiles;
-QStringList CppCodeParser::exampleDirs;
 QSet<QString> CppCodeParser::excludeDirs;
 QSet<QString> CppCodeParser::excludeFiles;
 
@@ -120,8 +118,6 @@ void CppCodeParser::initializeParser()
     nodeTypeTestFuncMap_.insert(COMMAND_VARIABLE, &Node::isVariable);
 
     Config &config = Config::instance();
-    exampleFiles = config.getCanonicalPathList(CONFIG_EXAMPLES);
-    exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
     QStringList exampleFilePatterns =
             config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_FILEEXTENSIONS);
 
@@ -771,58 +767,29 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     return macro;
 }
 
-void CppCodeParser::setExampleFileLists(PageNode *pn)
+void CppCodeParser::setExampleFileLists(ExampleNode *en)
 {
-    QString examplePath = pn->name();
-    QString proFileName =
-            examplePath + QLatin1Char('/') + examplePath.split(QLatin1Char('/')).last() + ".pro";
-    QString fullPath =
-            Config::findFile(pn->doc().location(), exampleFiles, exampleDirs, proFileName);
-
+    Config &config = Config::instance();
+    QString fullPath = config.getExampleProjectFile(en->name());
     if (fullPath.isEmpty()) {
-        QString tmp = proFileName;
-        proFileName = examplePath + QLatin1Char('/') + "qbuild.pro";
-        fullPath = Config::findFile(pn->doc().location(), exampleFiles, exampleDirs, proFileName);
-        if (fullPath.isEmpty()) {
-            proFileName = examplePath + QLatin1Char('/')
-                    + examplePath.split(QLatin1Char('/')).last() + ".qmlproject";
-            fullPath =
-                    Config::findFile(pn->doc().location(), exampleFiles, exampleDirs, proFileName);
-            if (fullPath.isEmpty()) {
-                proFileName = examplePath + QLatin1Char('/')
-                        + examplePath.split(QLatin1Char('/')).last() + ".pyproject";
-                fullPath = Config::findFile(pn->doc().location(), exampleFiles, exampleDirs,
-                                            proFileName);
-                if (fullPath.isEmpty()) {
-                    QString details = QLatin1String("Example directories: ")
-                            + exampleDirs.join(QLatin1Char(' '));
-                    if (!exampleFiles.isEmpty())
-                        details += QLatin1String(", example files: ")
-                                + exampleFiles.join(QLatin1Char(' '));
-                    pn->location().warning(
-                            tr("Cannot find file '%1' or '%2'").arg(tmp).arg(proFileName), details);
-                    pn->location().warning(tr("  EXAMPLE PATH DOES NOT EXIST: %1").arg(examplePath),
-                                           details);
-                    return;
-                }
-            }
-        }
+        QString details = QLatin1String("Example directories: ")
+                + config.getCanonicalPathList(CONFIG_EXAMPLEDIRS).join(QLatin1Char(' '));
+        en->location().warning(
+                tr("Cannot find project file for example '%1'").arg(en->name()), details);
+        return;
     }
 
-    int sizeOfBoringPartOfName = fullPath.size() - proFileName.size();
-    if (fullPath.startsWith("./"))
-        sizeOfBoringPartOfName = sizeOfBoringPartOfName - 2;
-    fullPath.truncate(fullPath.lastIndexOf('/'));
+    QDir exampleDir(QFileInfo(fullPath).dir());
 
-    QStringList exampleFiles = Config::getFilesHere(fullPath, exampleNameFilter, Location(),
+    QStringList exampleFiles = Config::getFilesHere(exampleDir.path(), exampleNameFilter, Location(),
                                                     excludeDirs, excludeFiles);
     // Search for all image files under the example project, excluding doc/images directory.
     QSet<QString> excludeDocDirs(excludeDirs);
-    excludeDocDirs.insert(QDir(fullPath).canonicalPath() + "/doc/images");
-    QStringList imageFiles = Config::getFilesHere(fullPath, exampleImageFilter, Location(),
+    excludeDocDirs.insert(exampleDir.path() + QLatin1String("/doc/images"));
+    QStringList imageFiles = Config::getFilesHere(exampleDir.path(), exampleImageFilter, Location(),
                                                   excludeDocDirs, excludeFiles);
     if (!exampleFiles.isEmpty()) {
-        // move main.cpp and to the end, if it exists
+        // move main.cpp to the end, if it exists
         QString mainCpp;
 
         const auto isGeneratedOrMainCpp = [&mainCpp](const QString &fileName) {
@@ -842,16 +809,19 @@ void CppCodeParser::setExampleFileLists(PageNode *pn)
         if (!mainCpp.isEmpty())
             exampleFiles.append(mainCpp);
 
-        // add any qmake Qt resource files and qmake project files
-        exampleFiles += Config::getFilesHere(fullPath, "*.qrc *.pro *.qmlproject qmldir");
+        // Add any resource and project files
+        exampleFiles += Config::getFilesHere(exampleDir.path(),
+                QLatin1String("*.qrc *.pro *.qmlproject *.pyproject CMakeLists.txt qmldir"));
     }
 
+    exampleDir.cdUp();
+    int pathLen = exampleDir.path().size() + 1;
     for (auto &file : exampleFiles)
-        file = file.mid(sizeOfBoringPartOfName);
+        file = file.mid(pathLen);
     for (auto &file : imageFiles)
-        file = file.mid(sizeOfBoringPartOfName);
-    ExampleNode *en = static_cast<ExampleNode *>(pn);
-    en->setFiles(exampleFiles);
+        file = file.mid(pathLen);
+
+    en->setFiles(exampleFiles, fullPath.mid(pathLen));
     en->setImages(imageFiles);
 }
 

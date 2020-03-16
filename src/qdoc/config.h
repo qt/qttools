@@ -135,6 +135,7 @@ public:
                                     const QSet<QString> &excludedFiles);
     QStringList getExampleImageFiles(const QSet<QString> &excludedDirs,
                                      const QSet<QString> &excludedFiles);
+    QString getExampleProjectFile(const QString &examplePath);
 
     static QStringList loadMaster(const QString &fileName);
     static bool isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles);
@@ -189,6 +190,8 @@ private:
     QStringList m_defines {};
     QStringList m_includePaths {};
     QStringList m_indexDirs {};
+    QStringList m_exampleFiles {};
+    QStringList m_exampleDirs {};
     QString m_currentDir {};
     QString m_previousCurrentDir {};
 

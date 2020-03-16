@@ -3919,33 +3919,9 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         writer.writeAttribute("name", en->title());
         QString docUrl = manifestDir + fileBase(en) + ".html";
         writer.writeAttribute("docUrl", docUrl);
-        QStringList proFiles;
         const auto exampleFiles = en->files();
-        for (const QString &file : exampleFiles) {
-            if (file.endsWith(".pro") || file.endsWith(".qmlproject")
-                || file.endsWith(".pyproject"))
-                proFiles << file;
-        }
-        if (!proFiles.isEmpty()) {
-            if (proFiles.size() == 1) {
-                writer.writeAttribute("projectPath", installPath + proFiles[0]);
-            } else {
-                QString exampleName = en->name().split('/').last();
-                bool proWithExampleNameFound = false;
-                for (int j = 0; j < proFiles.size(); j++) {
-                    if (proFiles[j].endsWith(QStringLiteral("%1/%1.pro").arg(exampleName))
-                        || proFiles[j].endsWith(QStringLiteral("%1/%1.qmlproject").arg(exampleName))
-                        || proFiles[j].endsWith(
-                                QStringLiteral("%1/%1.pyproject").arg(exampleName))) {
-                        writer.writeAttribute("projectPath", installPath + proFiles[j]);
-                        proWithExampleNameFound = true;
-                        break;
-                    }
-                }
-                if (!proWithExampleNameFound)
-                    writer.writeAttribute("projectPath", installPath + proFiles[0]);
-            }
-        }
+        if (!en->projectFile().isEmpty())
+            writer.writeAttribute("projectPath", installPath + en->projectFile());
         if (!en->imageFileName().isEmpty()) {
             writer.writeAttribute("imageUrl", manifestDir + en->imageFileName());
             usedAttributes << "imageUrl";

@@ -204,6 +204,7 @@ void tst_generatedOutput::htmlFromQml()
 {
     testAndCompare("testdata/configs/testqml.qdocconf",
                    "test-componentset-example.html "
+                   "test-cmaketest-example.html "
                    "uicomponents-qmlmodule.html "
                    "qdoc-test-qmlmodule.html "
                    "qml-qdoc-test-abstractparent.html "

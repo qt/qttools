@@ -28,6 +28,8 @@
 
 #include "config.h"
 
+#include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qstringlist.h>
 #include <QtTest/QtTest>
@@ -43,6 +45,7 @@ class tst_Config : public QObject
 private slots:
     void classMembersInitializeToFalseOrEmpty();
     void includePathsFromCommandLine();
+    void getExampleProjectFile();
 };
 
 void tst_Config::classMembersInitializeToFalseOrEmpty()
@@ -79,6 +82,32 @@ void tst_Config::includePathsFromCommandLine()
 
     QCOMPARE(actual, expected);
 }
+
+void::tst_Config::getExampleProjectFile()
+{
+    QStringList commandLineArgs = { QStringLiteral("./qdoc") };
+    Config::instance().init("QDoc Test", commandLineArgs);
+    auto &config = Config::instance();
+
+    const auto docConfig = QFINDTESTDATA("/testdata/configs/exampletest.qdocconf");
+    config.load(docConfig);
+
+    auto rootDir = QFileInfo(docConfig).dir();
+    QVERIFY(rootDir.cd("../exampletest/examples/test"));
+
+    QVERIFY(config.getExampleProjectFile("invalid").isEmpty());
+    QVERIFY(config.getExampleProjectFile("test/empty").isEmpty());
+
+    QCOMPARE(config.getExampleProjectFile("test/example1"),
+             rootDir.absoluteFilePath("example1/example1.pro"));
+    QCOMPARE(config.getExampleProjectFile("test/example2"),
+             rootDir.absoluteFilePath("example2/example2.qmlproject"));
+    QCOMPARE(config.getExampleProjectFile("test/example3"),
+             rootDir.absoluteFilePath("example3/example3.pyproject"));
+    QCOMPARE(config.getExampleProjectFile("test/example4"),
+             rootDir.absoluteFilePath("example4/CMakeLists.txt"));
+}
+
 
 QTEST_APPLESS_MAIN(tst_Config)
 

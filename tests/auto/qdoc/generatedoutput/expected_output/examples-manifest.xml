@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <instructionals module="Test">
     <examples>
+        <example name="CMake Example Project" docUrl="qthelp://org.qt-project.test.001/test/test-cmaketest-example.html" projectPath="test/cmaketest/CMakeLists.txt" isTest="true">
+            <description><![CDATA[No description available]]></description>
+            <tags>cmake,project,test</tags>
+            <fileToOpen mainFile="true">test/cmaketest/main.cpp</fileToOpen>
+        </example>
         <example name="QML Documentation Example" docUrl="qthelp://org.qt-project.test.001/test/test-componentset-example.html" projectPath="tutorials/componentset/componentset.pro" isTest="true">
             <description><![CDATA[Example for documenting QML types.]]></description>
             <tags>documentation,qml,sample,test</tags>
