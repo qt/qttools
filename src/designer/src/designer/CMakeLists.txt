@@ -33,13 +33,10 @@ qt_add_executable(designer
         ../lib/sdk
         ../lib/shared
         extra
-    LIBRARIES
+    PUBLIC_LIBRARIES
         Qt::CorePrivate
         Qt::DesignerComponentsPrivate
         Qt::DesignerPrivate
-    PUBLIC_LIBRARIES
-        Qt::Designer
-        Qt::DesignerComponents
         Qt::Gui
         Qt::Network
         Qt::Widgets
@@ -128,7 +125,7 @@ qt_extend_target(designer CONDITION QT_CONFIG___contains___static
 # QMAKE_BUNDLE_DATA = "FILETYPES"
 # QMAKE_INFO_PLIST = "Info_mac.plist"
 
-qt_extend_target(designer CONDITION UNIX AND NOT APPLE_OSX AND NOT HAIKU
+qt_extend_target(designer CONDITION UNIX AND NOT HAIKU AND NOT MACOS
     PUBLIC_LIBRARIES
         m
 )

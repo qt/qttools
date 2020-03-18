@@ -5,7 +5,7 @@
 #####################################################################
 
 qt_add_tool(windeployqt
-    #BOOTSTRAP # special case remove
+    BOOTSTRAP
     SOURCES
         ../shared/winutils/elfreader.cpp ../shared/winutils/elfreader.h
         ../shared/winutils/qmlutils.cpp ../shared/winutils/qmlutils.h
@@ -19,7 +19,6 @@ qt_add_tool(windeployqt
         ../shared/winutils
     PUBLIC_LIBRARIES
         Qt::CorePrivate
-        Qt::Core # special case
 )
 
 #### Keys ignored in scope 1:.:.:windeployqt.pro:<TRUE>:

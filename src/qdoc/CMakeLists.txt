@@ -15,6 +15,7 @@ qt_add_tool(qdoc
         cppcodemarker.cpp cppcodemarker.h
         cppcodeparser.cpp cppcodeparser.h
         doc.cpp doc.h
+        docbookgenerator.cpp docbookgenerator.h
         editdistance.cpp editdistance.h
         generator.cpp generator.h
         helpprojectwriter.cpp helpprojectwriter.h
@@ -81,10 +82,8 @@ qt_add_tool(qdoc
 # _REQUIREMENTS = "qtConfig(xmlstreamwriter)"
 
 qt_extend_target(qdoc CONDITION TARGET Qt::QmlDevToolsPrivate
-    LIBRARIES
-        Qt::QmlDevToolsPrivate
     PUBLIC_LIBRARIES
-        Qt::QmlDevTools
+        Qt::QmlDevToolsPrivate
 )
 
 qt_extend_target(qdoc CONDITION NOT TARGET Qt::QmlDevToolsPrivate

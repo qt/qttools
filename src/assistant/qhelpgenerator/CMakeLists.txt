@@ -12,11 +12,9 @@ qt_add_tool(qhelpgenerator
         main.cpp
         qhelpdatainterface.cpp qhelpdatainterface_p.h
         qhelpprojectdata.cpp qhelpprojectdata_p.h
-    LIBRARIES
-        Qt::HelpPrivate
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::Help
+        Qt::HelpPrivate
         Qt::Network
 )
 

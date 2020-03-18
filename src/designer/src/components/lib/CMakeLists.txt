@@ -112,15 +112,12 @@ qt_add_module(DesignerComponents
         ../taskmenu
         ../widgetbox
     LIBRARIES
-        Qt::DesignerPrivate
-        Qt::GuiPrivate
-        Qt::WidgetsPrivate
         Qt::Xml
     PUBLIC_LIBRARIES
         Qt::Core
-        Qt::Designer
-        Qt::Gui
-        Qt::Widgets
+        Qt::DesignerPrivate
+        Qt::GuiPrivate
+        Qt::WidgetsPrivate
         Qt::Xml
     ENABLE_AUTOGEN_TOOLS
         uic

@@ -27,7 +27,7 @@ qt_add_module(Help
         qhelpsearchresultwidget.cpp qhelpsearchresultwidget.h
         qoptionswidget.cpp qoptionswidget_p.h
     DEFINES
-        # -QT_ASCII_CAST_WARNINGS # special case remove
+        -QT_ASCII_CAST_WARNINGS
         QHELP_LIB
     LIBRARIES
         Qt::CorePrivate

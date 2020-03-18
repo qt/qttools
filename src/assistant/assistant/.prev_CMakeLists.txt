@@ -20,10 +20,11 @@ qt_add_executable(assistant
         centralwidget.cpp centralwidget.h
         cmdlineparser.cpp cmdlineparser.h
         contentwindow.cpp contentwindow.h
-        filternamedialog.cpp filternamedialog.h filternamedialog.ui
         findwidget.cpp findwidget.h
         globalactions.cpp globalactions.h
         helpbrowsersupport.cpp helpbrowsersupport.h
+        helpdocsettings.cpp helpdocsettings.h
+        helpdocsettingswidget.cpp helpdocsettingswidget.h helpdocsettingswidget.ui
         helpenginewrapper.cpp helpenginewrapper.h
         helpviewer.cpp helpviewer.h helpviewer_p.h
         indexwindow.cpp indexwindow.h
@@ -33,7 +34,6 @@ qt_add_executable(assistant
         openpagesmodel.cpp openpagesmodel.h
         openpagesswitcher.cpp openpagesswitcher.h
         openpageswidget.cpp openpageswidget.h
-        optionswidget.cpp optionswidget.h
         preferencesdialog.cpp preferencesdialog.h preferencesdialog.ui
         qtdocinstaller.cpp qtdocinstaller.h
         remotecontrol.cpp remotecontrol.h
@@ -76,9 +76,7 @@ set(assistant_images_resource_files
     "images/mac/editcopy.png"
     "images/mac/find.png"
     "images/mac/home.png"
-    "images/mac/minus.png"
     "images/mac/next.png"
-    "images/mac/plus.png"
     "images/mac/previous.png"
     "images/mac/print.png"
     "images/mac/resetzoom.png"
@@ -91,9 +89,7 @@ set(assistant_images_resource_files
     "images/win/editcopy.png"
     "images/win/find.png"
     "images/win/home.png"
-    "images/win/minus.png"
     "images/win/next.png"
-    "images/win/plus.png"
     "images/win/previous.png"
     "images/win/print.png"
     "images/win/resetzoom.png"

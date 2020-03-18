@@ -15,13 +15,11 @@ qt_add_executable(qdistancefieldgenerator
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
         QT_NO_FOREACH
-    LIBRARIES
+    PUBLIC_LIBRARIES
         Qt::CorePrivate
+        Qt::Gui
         Qt::GuiPrivate
         Qt::QuickPrivate
-    PUBLIC_LIBRARIES
-        Qt::Gui
-        Qt::Quick
         Qt::Widgets
     ENABLE_AUTOGEN_TOOLS
         uic

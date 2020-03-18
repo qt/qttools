@@ -12,11 +12,10 @@ qt_add_executable(makeqpf
     DEFINES
         QT_DISABLE_DEPRECATED_BEFORE=0
         QT_NO_FREETYPE
-    LIBRARIES
-        Qt::CorePrivate
-        Qt::GuiPrivate
     PUBLIC_LIBRARIES
+        Qt::CorePrivate
         Qt::Gui
+        Qt::GuiPrivate
         Qt::Widgets
     ENABLE_AUTOGEN_TOOLS
         uic

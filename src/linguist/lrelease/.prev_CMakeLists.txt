@@ -16,16 +16,15 @@ qt_add_tool(lrelease
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
         ../shared/xliff.cpp
+        ../shared/xmlparser.cpp ../shared/xmlparser.h
         main.cpp
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
-    LIBRARIES
-        Qt::CorePrivate
     PUBLIC_LIBRARIES
-        Qt::Xml
+        Qt::CorePrivate
 )
 
 #### Keys ignored in scope 1:.:.:lrelease.pro:<TRUE>:

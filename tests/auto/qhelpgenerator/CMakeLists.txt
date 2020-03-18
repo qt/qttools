@@ -13,10 +13,8 @@ qt_add_test(tst_qhelpgenerator
     DEFINES
         QT_USE_USING_NAMESPACE
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}\\\"
-    LIBRARIES
-        Qt::HelpPrivate
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::Help
+        Qt::HelpPrivate
         Qt::Sql
 )

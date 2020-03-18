@@ -14,10 +14,8 @@ qt_add_executable(qdbusviewer
         qdbusmodel.cpp qdbusmodel.h
         qdbusviewer.cpp qdbusviewer.h
         servicesproxymodel.cpp servicesproxymodel.h
-    LIBRARIES
-        Qt::DBusPrivate
     PUBLIC_LIBRARIES
-        Qt::DBus
+        Qt::DBusPrivate
         Qt::Gui
         Qt::Widgets
         Qt::Xml

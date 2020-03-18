@@ -1,24 +1,23 @@
 # Generated from activeqt.pro.
 
 #####################################################################
-## qaxwidget Plugin:
+## QAxWidgetPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(qaxwidget
+qt_add_plugin(QAxWidgetPlugin
+    OUTPUT_NAME qaxwidget
     TYPE designer
-    CLASS_NAME QAxWidgetPlugin
     SOURCES
         qaxwidgetextrainfo.cpp qaxwidgetextrainfo.h
         qaxwidgetplugin.cpp qaxwidgetplugin.h
         qaxwidgetpropertysheet.cpp qaxwidgetpropertysheet.h
         qaxwidgettaskmenu.cpp qaxwidgettaskmenu.h
         qdesigneraxwidget.cpp qdesigneraxwidget.h
-    LIBRARIES
-        Qt::DesignerPrivate
     PUBLIC_LIBRARIES
         Qt::AxContainer
         Qt::Core
         Qt::Designer
+        Qt::DesignerPrivate
         Qt::Gui
         Qt::Widgets
 )

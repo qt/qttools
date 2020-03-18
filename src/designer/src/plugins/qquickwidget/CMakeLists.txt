@@ -1,12 +1,12 @@
 # Generated from qquickwidget.pro.
 
 #####################################################################
-## qquickwidget Plugin:
+## QQuickWidgetPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(qquickwidget
+qt_add_plugin(QQuickWidgetPlugin
+    OUTPUT_NAME qquickwidget
     TYPE designer
-    CLASS_NAME QQuickWidgetPlugin
     SOURCES
         qquickwidget_plugin.cpp qquickwidget_plugin.h
     PUBLIC_LIBRARIES
@@ -22,7 +22,7 @@ set(qquickwidget_plugin_resource_files
     "images/qquickwidget.png"
 )
 
-qt_add_resource(qquickwidget "qquickwidget_plugin"
+qt_add_resource(QQuickWidgetPlugin "qquickwidget_plugin"
     PREFIX
         "/qt-project.org/qquickwidget"
     FILES

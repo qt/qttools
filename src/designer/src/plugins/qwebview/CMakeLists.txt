@@ -1,20 +1,20 @@
 # Generated from qwebview.pro.
 
 #####################################################################
-## qwebview Plugin:
+## QWebViewPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(qwebview
+qt_add_plugin(QWebViewPlugin
+    OUTPUT_NAME qwebview
     TYPE designer
-    CLASS_NAME QWebViewPlugin
     SOURCES
         qwebview_plugin.cpp qwebview_plugin.h
     PUBLIC_LIBRARIES
         Qt::Core
         Qt::Designer
         Qt::Gui
+        Qt::WebKitWidgets
         Qt::Widgets
-        webkitwidgets
 )
 
 # Resources:
@@ -22,7 +22,7 @@ set(qwebview_plugin_resource_files
     "images/qwebview.png"
 )
 
-qt_add_resource(qwebview "qwebview_plugin"
+qt_add_resource(QWebViewPlugin "qwebview_plugin"
     PREFIX
         "/qt-project.org/qwebview"
     FILES

@@ -2,9 +2,9 @@
 
 cmake_minimum_required(VERSION 3.15.0)
 
-project(tools_FIXME
+project(QtTools
     VERSION 6.0.0
-    DESCRIPTION "Qt tools_FIXME Libraries"
+    DESCRIPTION "Qt Tools Libraries"
     HOMEPAGE_URL "https://qt.io/"
     LANGUAGES CXX C
 )

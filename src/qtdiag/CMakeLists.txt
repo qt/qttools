@@ -8,11 +8,10 @@ qt_add_executable(qtdiag
     SOURCES
         main.cpp
         qtdiag.cpp qtdiag.h
-    LIBRARIES
-        Qt::CorePrivate
-        Qt::GuiPrivate
     PUBLIC_LIBRARIES
+        Qt::CorePrivate
         Qt::Gui
+        Qt::GuiPrivate
 )
 
 ## Scopes:

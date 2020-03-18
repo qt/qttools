@@ -1,12 +1,12 @@
 # Generated from view3d.pro.
 
 #####################################################################
-## view3d Plugin:
+## QView3DPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(view3d
+qt_add_plugin(QView3DPlugin
+    OUTPUT_NAME view3d
     TYPE designer
-    CLASS_NAME QView3DPlugin
     SOURCES
         view3d.cpp view3d.h
         view3d_global.h

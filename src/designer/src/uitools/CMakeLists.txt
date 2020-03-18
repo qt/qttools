@@ -5,7 +5,6 @@
 #####################################################################
 
 qt_add_module(UiTools
-    STATIC
     SOURCES
         ../lib/uilib/abstractformbuilder.cpp ../lib/uilib/abstractformbuilder.h
         ../lib/uilib/formbuilder.cpp ../lib/uilib/formbuilder.h
@@ -32,6 +31,16 @@ qt_add_module(UiTools
 
 ## Scopes:
 #####################################################################
+
+qt_extend_target(UiTools CONDITION TARGET Qt::OpenGLWidgets
+    PUBLIC_LIBRARIES
+        Qt::OpenGLWidgets
+)
+
+qt_extend_target(UiTools CONDITION QT_FEATURE_opengl
+    LIBRARIES
+        Qt::OpenGL
+)
 qt_add_docs(UiTools
     doc/qtuitools.qdocconf
 )

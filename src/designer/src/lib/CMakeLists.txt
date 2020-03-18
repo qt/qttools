@@ -170,6 +170,10 @@ qt_add_module(Designer
         Qt::UiPlugin
         Qt::Widgets
         Qt::Xml
+    PRIVATE_MODULE_INTERFACE
+        Qt::CorePrivate
+        Qt::GuiPrivate
+        Qt::WidgetsPrivate
     ENABLE_AUTOGEN_TOOLS
         uic
     PRECOMPILED_HEADER
@@ -444,6 +448,11 @@ qt_add_resource(Designer "shared"
 ## Scopes:
 #####################################################################
 
+qt_extend_target(Designer CONDITION TARGET Qt::OpenGLWidgets
+    PUBLIC_LIBRARIES
+        Qt::OpenGLWidgets
+)
+
 qt_extend_target(Designer CONDITION static
     DEFINES
         QT_DESIGNER_STATIC
@@ -555,4 +564,9 @@ qt_extend_target(Designer CONDITION QT_BUILD_SHARED_LIBS
         ../../../shared/qtpropertybrowser/qtpropertybrowserutils.cpp ../../../shared/qtpropertybrowser/qtpropertybrowserutils_p.h
     INCLUDE_DIRECTORIES
         ../../../shared/qtpropertybrowser
+)
+
+qt_extend_target(Designer CONDITION QT_FEATURE_opengl
+    LIBRARIES
+        Qt::OpenGL
 )

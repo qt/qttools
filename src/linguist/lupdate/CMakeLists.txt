@@ -19,6 +19,7 @@ qt_add_tool(lupdate
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
         ../shared/xliff.cpp
+        ../shared/xmlparser.cpp ../shared/xmlparser.h
         cpp.cpp cpp.h
         java.cpp
         lupdate.h
@@ -30,12 +31,9 @@ qt_add_tool(lupdate
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
-    LIBRARIES
+    PUBLIC_LIBRARIES
         Qt::CorePrivate
         Qt::ToolsPrivate
-    PUBLIC_LIBRARIES
-        Qt::Tools
-        Qt::Xml
 )
 
 #### Keys ignored in scope 1:.:.:lupdate.pro:<TRUE>:
@@ -51,10 +49,8 @@ qt_add_tool(lupdate
 qt_extend_target(lupdate CONDITION TARGET Qt::QmlDevToolsPrivate
     SOURCES
         qdeclarative.cpp
-    LIBRARIES
-        Qt::QmlDevToolsPrivate
     PUBLIC_LIBRARIES
-        Qt::QmlDevTools
+        Qt::QmlDevToolsPrivate
 )
 
 qt_extend_target(lupdate CONDITION NOT TARGET Qt::QmlDevToolsPrivate
@@ -66,6 +62,7 @@ qt_extend_target(lupdate CONDITION QT_FEATURE_clangcpp
     SOURCES
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h
+        lupdatepreprocessoraction.cpp lupdatepreprocessoraction.h
     DEFINES
         # special case begin
         # remove these

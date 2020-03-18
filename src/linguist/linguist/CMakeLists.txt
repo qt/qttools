@@ -16,6 +16,7 @@ qt_add_executable(linguist
         ../shared/translatormessage.cpp ../shared/translatormessage.h
         ../shared/ts.cpp
         ../shared/xliff.cpp
+        ../shared/xmlparser.cpp ../shared/xmlparser.h
         batchtranslation.ui
         batchtranslationdialog.cpp batchtranslationdialog.h
         errorsview.cpp errorsview.h
@@ -46,16 +47,13 @@ qt_add_executable(linguist
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
-    LIBRARIES
-        Qt::CorePrivate
-        Qt::GuiPrivate
-        Qt::UiToolsPrivate
     PUBLIC_LIBRARIES
+        Qt::CorePrivate
         Qt::Gui
+        Qt::GuiPrivate
         Qt::PrintSupport
-        Qt::UiTools
+        Qt::UiToolsPrivate
         Qt::Widgets
-        Qt::Xml
     ENABLE_AUTOGEN_TOOLS
         uic
 )
