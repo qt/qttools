@@ -126,7 +126,7 @@ static QRegExp *iflikeKeyword = nullptr;
 static QChar firstNonWhiteSpace(const QString &t)
 {
     int i = 0;
-    while (i < (int) t.length()) {
+    while (i < t.length()) {
         if (!t[i].isSpace())
             return t[i];
         i++;
@@ -151,7 +151,7 @@ static bool isOnlyWhiteSpace(const QString &t)
 int columnForIndex(const QString &t, int index)
 {
     int col = 0;
-    if (index > (int) t.length())
+    if (index > t.length())
         index = t.length();
 
     for (int i = 0; i < index; i++) {
@@ -230,7 +230,7 @@ static QString trimmedCodeLine(const QString &t)
         int pos1 = label->pos(1);
         int stop = cap1.length();
 
-        if (pos1 + stop < (int) trimmed.length() && ppIndentSize < stop)
+        if (pos1 + stop < trimmed.length() && ppIndentSize < stop)
             stop = ppIndentSize;
 
         int i = 0;
@@ -238,7 +238,7 @@ static QString trimmedCodeLine(const QString &t)
             eraseChar(trimmed, pos1 + i, ' ');
             i++;
         }
-        while (i < (int) cap1.length()) {
+        while (i < cap1.length()) {
             eraseChar(trimmed, pos1 + i, ';');
             i++;
         }
@@ -247,7 +247,7 @@ static QString trimmedCodeLine(const QString &t)
     /*
         Remove C++-style comments.
     */
-    k = trimmed.indexOf( "//" );
+    k = trimmed.indexOf("//");
     if (k != -1)
         trimmed.truncate(k);
 
@@ -309,10 +309,8 @@ static const bool *yyLeftBraceFollows = nullptr;
     Saves and restores the state of the global linizer. This enables
     backtracking.
 */
-#define YY_SAVE() \
-    LinizerState savedState = *yyLinizerState
-#define YY_RESTORE() \
-    *yyLinizerState = savedState
+#define YY_SAVE() LinizerState savedState = *yyLinizerState
+#define YY_RESTORE() *yyLinizerState = savedState
 
 /*
     Advances to the previous line in yyProgram and update yyLine
@@ -323,8 +321,7 @@ static bool readLine()
 {
     int k;
 
-    yyLinizerState->leftBraceFollows =
-            (firstNonWhiteSpace(yyLinizerState->line) == QChar('{'));
+    yyLinizerState->leftBraceFollows = (firstNonWhiteSpace(yyLinizerState->line) == QChar('{'));
 
     do {
         if (yyLinizerState->iter == yyProgram->constBegin()) {
@@ -374,7 +371,7 @@ static bool readLine()
             Remove preprocessor directives.
         */
         k = 0;
-        while (k < (int) yyLinizerState->line.length()) {
+        while (k < (int)yyLinizerState->line.length()) {
             QChar ch = yyLinizerState->line[k];
             if (ch == QChar('#')) {
                 yyLinizerState->line.clear();
@@ -397,8 +394,7 @@ static bool readLine()
             the other way around, as we are parsing backwards.
         */
         yyLinizerState->braceDepth +=
-                yyLinizerState->line.count('}') -
-                yyLinizerState->line.count('{');
+                yyLinizerState->line.count('}') - yyLinizerState->line.count('{');
 
         /*
             We use a dirty trick for
@@ -413,8 +409,7 @@ static bool readLine()
         */
         if (yyLinizerState->pendingRightBrace)
             yyLinizerState->braceDepth++;
-        yyLinizerState->pendingRightBrace =
-                (yyLinizerState->line.indexOf(*braceX) == 0);
+        yyLinizerState->pendingRightBrace = (yyLinizerState->line.indexOf(*braceX) == 0);
         if (yyLinizerState->pendingRightBrace)
             yyLinizerState->braceDepth--;
     } while (yyLinizerState->line.isEmpty());
@@ -502,7 +497,7 @@ static int indentWhenBottomLineStartsInCComment()
         */
         int indent = columnForIndex(*yyLine, k);
         k += 2;
-        while (k < (int) yyLine->length()) {
+        while (k < (int)yyLine->length()) {
             if (!(*yyLine)[k].isSpace())
                 return columnForIndex(*yyLine, k);
             k++;
@@ -623,14 +618,13 @@ static bool isUnfinishedLine()
     if (yyLine->isEmpty())
         return false;
 
-    QChar lastCh = (*yyLine)[(int) yyLine->length() - 1];
+    QChar lastCh = (*yyLine)[(int)yyLine->length() - 1];
     if (QString("{};").indexOf(lastCh) == -1 && !yyLine->endsWith("...")) {
         /*
           It doesn't end with ';' or similar. If it's neither
           "Q_OBJECT" nor "if ( x )", it must be an unfinished line.
         */
-        unf = (yyLine->indexOf("Q_OBJECT") == -1 &&
-               !matchBracelessControlStatement());
+        unf = (yyLine->indexOf("Q_OBJECT") == -1 && !matchBracelessControlStatement());
     } else if (lastCh == QChar(';')) {
         if (lastParen(*yyLine) == QChar('(')) {
             /*
@@ -639,8 +633,8 @@ static bool isUnfinishedLine()
                   for ( int i = 1; i < 10;
             */
             unf = true;
-        } else if (readLine() && yyLine->endsWith(QLatin1Char(';')) &&
-                   lastParen(*yyLine) == QChar('(')) {
+        } else if (readLine() && yyLine->endsWith(QLatin1Char(';'))
+                   && lastParen(*yyLine) == QChar('(')) {
             /*
               Exception:
 
@@ -719,8 +713,8 @@ static int indentForContinuationLine()
                     Such a brace must be treated just like the other
                     delimiters.
                 */
-                if ( braceDepth == -1 ) {
-                    if (j < (int) yyLine->length() - 1) {
+                if (braceDepth == -1) {
+                    if (j < (int)yyLine->length() - 1) {
                         hook = j;
                     } else {
                         return 0; // shouldn't happen
@@ -753,12 +747,10 @@ static int indentForContinuationLine()
                     end of the unfinished lines or by unbalanced
                     parentheses.
                 */
-                if (QString("!=<>").indexOf((*yyLine)[j - 1]) == -1 &&
-                    (*yyLine)[j + 1] != '=') {
-                    if (braceDepth == 0 && delimDepth == 0 &&
-                         j < (int) yyLine->length() - 1 &&
-                         !yyLine->endsWith(QLatin1Char(',')) &&
-                         (yyLine->contains('(') == yyLine->contains(')')))
+                if (QString("!=<>").indexOf((*yyLine)[j - 1]) == -1 && (*yyLine)[j + 1] != '=') {
+                    if (braceDepth == 0 && delimDepth == 0 && j < (int)yyLine->length() - 1
+                        && !yyLine->endsWith(QLatin1Char(','))
+                        && (yyLine->contains('(') == yyLine->contains(')')))
                         hook = j;
                 }
             }
@@ -780,7 +772,7 @@ static int indentForContinuationLine()
                             "foo foo foo foo foo foo foo foo foo") );
             */
             hook++;
-            while (hook < (int) yyLine->length()) {
+            while (hook < (int)yyLine->length()) {
                 if (!(*yyLine)[hook].isSpace())
                     return columnForIndex(*yyLine, hook);
                 hook++;
@@ -991,8 +983,7 @@ static void initializeIndenter()
 {
     literal = new QRegExp("([\"'])(?:\\\\.|[^\\\\])*\\1");
     literal->setMinimal(true);
-    label = new QRegExp(
-                "^\\s*((?:case\\b([^:]|::)+|[a-zA-Z_0-9]+)(?:\\s+slots)?:)(?!:)");
+    label = new QRegExp("^\\s*((?:case\\b([^:]|::)+|[a-zA-Z_0-9]+)(?:\\s+slots)?:)(?!:)");
     inlineCComment = new QRegExp("/\\*.*\\*/");
     inlineCComment->setMinimal(true);
     braceX = new QRegExp("^\\s*\\}\\s*(?:else|catch)\\b");
@@ -1068,10 +1059,9 @@ int indentForBottomLine(const QStringList &program, QChar typedIn)
             */
             indent -= ppIndentSize;
         } else if (okay(typedIn, ':')) {
-            QRegExp caseLabel(
-                        "\\s*(?:case\\b(?:[^:]|::)+"
-                        "|(?:public|protected|private|signals|default)(?:\\s+slots)?\\s*"
-                        ")?:.*" );
+            QRegExp caseLabel("\\s*(?:case\\b(?:[^:]|::)+"
+                              "|(?:public|protected|private|signals|default)(?:\\s+slots)?\\s*"
+                              ")?:.*");
 
             if (caseLabel.exactMatch(bottomLine)) {
                 /*
@@ -1106,60 +1096,60 @@ QT_END_NAMESPACE
   Test driver.
 */
 
-#include <qfile.h>
-#include <qtextstream.h>
+#    include <qfile.h>
+#    include <qtextstream.h>
 
-#include <errno.h>
+#    include <errno.h>
 
 QT_BEGIN_NAMESPACE
 
-static QString fileContents( const QString &fileName )
+static QString fileContents(const QString &fileName)
 {
-    QFile f( fileName );
-    if ( !f.open(QFile::ReadOnly) ) {
-        qWarning( "yyindent error: Cannot open file '%s' for reading: %s",
-                  fileName.toLatin1().data(), strerror(errno) );
+    QFile f(fileName);
+    if (!f.open(QFile::ReadOnly)) {
+        qWarning("yyindent error: Cannot open file '%s' for reading: %s",
+                 fileName.toLatin1().data(), strerror(errno));
         return QString();
     }
 
-    QTextStream t( &f );
+    QTextStream t(&f);
     QString contents = t.read();
     f.close();
-    if ( contents.isEmpty() )
-        qWarning( "yyindent error: File '%s' is empty", fileName.toLatin1().data() );
+    if (contents.isEmpty())
+        qWarning("yyindent error: File '%s' is empty", fileName.toLatin1().data());
     return contents;
 }
 
 QT_END_NAMESPACE
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     QT_USE_NAMESPACE
 
-    if ( argc != 2 ) {
-        qWarning( "usage: yyindent file.cpp" );
+    if (argc != 2) {
+        qWarning("usage: yyindent file.cpp");
         return 1;
     }
 
-    QString code = fileContents( argv[1] );
-    QStringList program = QStringList::split( '\n', code, true );
+    QString code = fileContents(argv[1]);
+    QStringList program = QStringList::split('\n', code, true);
     QStringList p;
     QString out;
 
-    while ( !program.isEmpty() && program.last().trimmed().isEmpty() )
-        program.remove( program.fromLast() );
+    while (!program.isEmpty() && program.last().trimmed().isEmpty())
+        program.remove(program.fromLast());
 
     QStringList::ConstIterator line = program.constBegin();
-    while ( line != program.constEnd() ) {
-        p.push_back( *line );
-        QChar typedIn = firstNonWhiteSpace( *line );
-        if ( p.last().endsWith(QLatin1Char(':')) )
+    while (line != program.constEnd()) {
+        p.push_back(*line);
+        QChar typedIn = firstNonWhiteSpace(*line);
+        if (p.last().endsWith(QLatin1Char(':')))
             typedIn = ':';
 
-        int indent = indentForBottomLine( p, typedIn );
+        int indent = indentForBottomLine(p, typedIn);
 
-        if ( !(*line).trimmed().isEmpty() ) {
-            for ( int j = 0; j < indent; j++ )
+        if (!(*line).trimmed().isEmpty()) {
+            for (int j = 0; j < indent; j++)
                 out += QLatin1Char(' ');
             out += (*line).trimmed();
         }
@@ -1167,10 +1157,10 @@ int main( int argc, char **argv )
         ++line;
     }
 
-    while ( out.endsWith(QLatin1Char('\n')) )
-        out.truncate( out.length() - 1 );
+    while (out.endsWith(QLatin1Char('\n')))
+        out.truncate(out.length() - 1);
 
-    printf( "%s\n", out.toLatin1().data() );
+    printf("%s\n", out.toLatin1().data());
     return 0;
 }
 

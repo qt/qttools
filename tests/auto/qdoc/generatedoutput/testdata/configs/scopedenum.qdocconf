@@ -1,0 +1,7 @@
+include(testcpp.qdocconf)
+defines += test_scopedenum
+
+sources += ../scopedenum/scopedenum.qdoc
+
+HTML.nosubdirs    = true
+HTML.outputsubdir = scopedenum

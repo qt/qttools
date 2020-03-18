@@ -81,9 +81,9 @@ QAction *TicTacToeTaskMenu::preferredEditAction() const
 //! [2]
 
 //! [3]
-QList<QAction *> TicTacToeTaskMenu::taskActions() const
+QVector<QAction *> TicTacToeTaskMenu::taskActions() const
 {
-    return QList<QAction *>{editStateAction};
+    return {editStateAction};
 }
 //! [3]
 

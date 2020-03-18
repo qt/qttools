@@ -47,12 +47,10 @@ struct TargetRec
 public:
     enum TargetType { Unknown, Target, Keyword, Contents, Class, Function, Page, Subtitle };
 
-    TargetRec(const QString &name,
-              const QString &title,
-              TargetRec::TargetType type,
-              Node *node,
+    TargetRec(const QString &name, const QString &title, TargetRec::TargetType type, Node *node,
               int priority)
-    : node_(node), ref_(name), title_(title), priority_(priority), type_(type) {
+        : node_(node), ref_(name), title_(title), priority_(priority), type_(type)
+    {
         // Discard the dedicated ref for keywords - they always
         // link to the top of the QDoc comment they appear in
         if (type == Keyword)
@@ -72,8 +70,11 @@ public:
 struct TargetLoc
 {
 public:
-  TargetLoc(const Node *loc, const QString &t, const QString &fileName, const QString &text, bool broken)
-  : loc_(loc), target_(t), fileName_(fileName), text_(text), broken_(broken) { }
+    TargetLoc(const Node *loc, const QString &t, const QString &fileName, const QString &text,
+              bool broken)
+        : loc_(loc), target_(t), fileName_(fileName), text_(text), broken_(broken)
+    {
+    }
     const Node *loc_;
     QString target_;
     QString fileName_;
@@ -119,52 +120,34 @@ private: // The rest of the class is private.
     Node *findNodeForInclude(const QStringList &path) const;
     ClassNode *findClassNode(const QStringList &path, const Node *start = nullptr) const;
     NamespaceNode *findNamespaceNode(const QStringList &path) const;
-    const FunctionNode *findFunctionNode(const QStringList &path,
-                                         const Parameters &parameters,
-                                         const Node *relative,
-                                         Node::Genus genus) const;
-    Node *findNodeRecursive(const QStringList &path,
-                            int pathIndex,
-                            const Node *start,
-                            bool (Node::*) () const) const;
-    const Node *findNodeForTarget(const QStringList &path,
-                                  const QString &target,
-                                  const Node *node,
-                                  int flags,
-                                  Node::Genus genus,
-                                  QString &ref) const;
-    const Node *matchPathAndTarget(const QStringList &path,
-                                   int idx,
-                                   const QString &target,
-                                   const Node *node,
-                                   int flags,
-                                   Node::Genus genus,
+    const FunctionNode *findFunctionNode(const QStringList &path, const Parameters &parameters,
+                                         const Node *relative, Node::Genus genus) const;
+    Node *findNodeRecursive(const QStringList &path, int pathIndex, const Node *start,
+                            bool (Node::*)() const) const;
+    const Node *findNodeForTarget(const QStringList &path, const QString &target, const Node *node,
+                                  int flags, Node::Genus genus, QString &ref) const;
+    const Node *matchPathAndTarget(const QStringList &path, int idx, const QString &target,
+                                   const Node *node, int flags, Node::Genus genus,
                                    QString &ref) const;
 
-    const Node *findNode(const QStringList &path,
-                         const Node *relative,
-                         int flags,
+    const Node *findNode(const QStringList &path, const Node *relative, int flags,
                          Node::Genus genus) const;
 
     QmlTypeNode *findQmlTypeNode(const QStringList &path);
 
-    Node *findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch) () const) const;
+    Node *findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch)() const) const;
     Aggregate *findRelatesNode(const QStringList &path);
     QString getRef(const QString &target, const Node *node) const;
-    void insertTarget(const QString &name,
-                      const QString &title,
-                      TargetRec::TargetType type,
-                      Node *node,
-                      int priority);
+    void insertTarget(const QString &name, const QString &title, TargetRec::TargetType type,
+                      Node *node, int priority);
     void resolveTargets(Aggregate *root);
     const Node *findUnambiguousTarget(const QString &target, Node::Genus genus, QString &ref) const;
     const PageNode *findPageNodeByTitle(const QString &title) const;
 
-    void addPropertyFunction(PropertyNode *property,
-                             const QString &funcName,
+    void addPropertyFunction(PropertyNode *property, const QString &funcName,
                              PropertyNode::FunctionRole funcRole);
     void resolveBaseClasses(Aggregate *n);
-    void resolveBaseClassesHelper(int pass, ClassNode* cn);
+    void resolveBaseClassesHelper(int pass, ClassNode *cn);
     void resolvePropertyOverriddenFromPtrs(Aggregate *n);
     void resolveProperties();
     void resolveCppToQmlLinks();
@@ -187,8 +170,14 @@ private: // The rest of the class is private.
 
     CollectionNode *findGroup(const QString &name) { return findCollection(name, Node::Group); }
     CollectionNode *findModule(const QString &name) { return findCollection(name, Node::Module); }
-    CollectionNode *findQmlModule(const QString &name) { return findCollection(name, Node::QmlModule); }
-    CollectionNode *findJsModule(const QString &name) { return findCollection(name, Node::JsModule); }
+    CollectionNode *findQmlModule(const QString &name)
+    {
+        return findCollection(name, Node::QmlModule);
+    }
+    CollectionNode *findJsModule(const QString &name)
+    {
+        return findCollection(name, Node::JsModule);
+    }
 
     CollectionNode *addGroup(const QString &name) { return findGroup(name); }
     CollectionNode *addModule(const QString &name) { return findModule(name); }
@@ -211,12 +200,9 @@ private: // The rest of the class is private.
     bool docsHaveBeenGenerated() const { return docsHaveBeenGenerated_; }
     void setTreeHasBeenAnalyzed() { treeHasBeenAnalyzed_ = true; }
     void setdocsHaveBeenGenerated() { docsHaveBeenGenerated_ = true; }
-    QString getNewLinkTarget(const Node *locNode,
-                             const Node *t,
-                             const QString &fileName,
-                             QString &text,
-                             bool broken);
-    TargetList* getTargetList(const QString &module);
+    QString getNewLinkTarget(const Node *locNode, const Node *t, const QString &fileName,
+                             QString &text, bool broken);
+    TargetList *getTargetList(const QString &module);
     QStringList getTargetListKeys() { return targetListMap_->keys(); }
     FunctionNode *findFunctionNodeForTag(const QString &tag, Aggregate *parent = nullptr);
     FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = nullptr);

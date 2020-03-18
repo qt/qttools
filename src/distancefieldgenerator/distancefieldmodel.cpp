@@ -183,7 +183,7 @@ void DistanceFieldModel::addDistanceField(const QImage &distanceField,
 
     if (ucs4 != 0) {
         UnicodeRange range = unicodeRangeForUcs4(ucs4);
-        m_glyphsPerUnicodeRange.insertMulti(range, glyphId);
+        m_glyphsPerUnicodeRange.insert(range, glyphId);
         m_glyphsPerUcs4.insert(ucs4, glyphId);
     }
 

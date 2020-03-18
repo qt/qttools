@@ -1,0 +1,4 @@
+locationinfo              = false
+outputformats             = WebXML
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true

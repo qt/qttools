@@ -34,7 +34,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QHash<QString,QString> Quoter::commentHash;
+QHash<QString, QString> Quoter::commentHash;
 
 static void replaceMultipleNewlines(QString &s)
 {
@@ -106,8 +106,7 @@ static void trimWhiteSpace(QString &str)
     str.resize(++j);
 }
 
-Quoter::Quoter()
-    : silent(false)
+Quoter::Quoter() : silent(false)
 {
     /* We're going to hard code these delimiters:
         * C++, Qt, Qt Script, Java:
@@ -135,12 +134,11 @@ void Quoter::reset()
     silent = false;
     plainLines.clear();
     markedLines.clear();
-    codeLocation = Location::null;
+    codeLocation = Location();
 }
 
-void Quoter::quoteFromFile(const QString &userFriendlyFilePath,
-                            const QString &plainCode,
-                            const QString &markedCode)
+void Quoter::quoteFromFile(const QString &userFriendlyFilePath, const QString &plainCode,
+                           const QString &markedCode)
 {
     silent = false;
 
@@ -177,11 +175,8 @@ void Quoter::quoteFromFile(const QString &userFriendlyFilePath,
     /*
       Squeeze blanks (cat -s).
     */
-    QStringList::Iterator m = markedLines.begin();
-    while (m != markedLines.end()) {
-        replaceMultipleNewlines(*m);
-        ++m;
-    }
+    for (auto &line : markedLines)
+        replaceMultipleNewlines(line);
     codeLocation.start();
 }
 
@@ -189,7 +184,7 @@ QString Quoter::quoteLine(const Location &docLocation, const QString &command,
                           const QString &pattern)
 {
     if (plainLines.isEmpty()) {
-        failedAtEnd( docLocation, command );
+        failedAtEnd(docLocation, command);
         return QString();
     }
 
@@ -203,8 +198,7 @@ QString Quoter::quoteLine(const Location &docLocation, const QString &command,
 
     if (!silent) {
         docLocation.warning(tr("Command '\\%1' failed").arg(command));
-        codeLocation.warning(tr("Pattern '%1' didn't match here")
-                             .arg(pattern));
+        codeLocation.warning(tr("Pattern '%1' didn't match here").arg(pattern));
         silent = true;
     }
     return QString();
@@ -252,8 +246,7 @@ QString Quoter::quoteSnippet(const Location &docLocation, const QString &identif
     return t;
 }
 
-QString Quoter::quoteTo(const Location &docLocation, const QString &command,
-                        const QString &pattern)
+QString Quoter::quoteTo(const Location &docLocation, const QString &command, const QString &pattern)
 {
     QString t;
     QString comment = commentForCode();
@@ -301,21 +294,18 @@ QString Quoter::getLine(int unindent)
     return t;
 }
 
-bool Quoter::match(const Location &docLocation, const QString &pattern0,
-                   const QString &line)
+bool Quoter::match(const Location &docLocation, const QString &pattern0, const QString &line)
 {
     QString str = line;
     while (str.endsWith(QLatin1Char('\n')))
         str.truncate(str.length() - 1);
 
     QString pattern = pattern0;
-    if (pattern.startsWith(QLatin1Char('/'))
-         && pattern.endsWith(QLatin1Char('/'))
-         && pattern.length() > 2) {
+    if (pattern.startsWith(QLatin1Char('/')) && pattern.endsWith(QLatin1Char('/'))
+        && pattern.length() > 2) {
         QRegExp rx(pattern.mid(1, pattern.length() - 2));
         if (!silent && !rx.isValid()) {
-            docLocation.warning(tr("Invalid regular expression '%1'")
-                                .arg(rx.pattern()));
+            docLocation.warning(tr("Invalid regular expression '%1'").arg(rx.pattern()));
             silent = true;
         }
         return str.indexOf(rx) != -1;
@@ -328,11 +318,12 @@ bool Quoter::match(const Location &docLocation, const QString &pattern0,
 void Quoter::failedAtEnd(const Location &docLocation, const QString &command)
 {
     if (!silent && !command.isEmpty()) {
-        if (codeLocation.filePath().isEmpty() ) {
+        if (codeLocation.filePath().isEmpty()) {
             docLocation.warning(tr("Unexpected '\\%1'").arg(command));
         } else {
             docLocation.warning(tr("Command '\\%1' failed at end of file '%2'")
-                                .arg(command).arg(codeLocation.filePath()));
+                                        .arg(command)
+                                        .arg(codeLocation.filePath()));
         }
         silent = true;
     }

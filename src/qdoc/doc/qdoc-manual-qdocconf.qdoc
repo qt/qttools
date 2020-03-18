@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -27,8 +27,7 @@
 
 /*!
     \page 21-0-qdoc-configuration.html
-    \previouspage Creating DITA Maps
-    \contentspage QDoc Manual
+    \previouspage Miscellaneous
     \nextpage Generic Configuration Variables
 
     \title The QDoc Configuration File
@@ -105,10 +104,13 @@
     \li \l {HTML.footer-variable} {HTML.footer}
     \li \l {HTML.postheader-variable} {HTML.postheader}
     \li \l {HTML.style-variable} {HTML.style}
+    \li \l {ignorewords-variable} {ignorewords}
+    \li \l {ignoresince-variable} {ignoresince}
     \li \l {imagedirs-variable} {imagedirs}
     \li \l {images-variable} {images}
     \li \l {images.fileextensions-variable} {images.fileextensions}
     \li \l {language-variable} {language}
+    \li \l {locationinfo-variable} {locationinfo}
     \li \l {macro-variable} {macro}
     \li \l {manifestmeta-variable} {manifestmeta}
     \li \l {navigation-variable} {navigation}
@@ -148,7 +150,6 @@
 /*!
     \page 22-qdoc-configuration-generalvariables.html
     \previouspage The QDoc Configuration File
-    \contentspage QDoc Manual
     \nextpage Creating Help Project Files
 
     \title Generic Configuration Variables
@@ -595,6 +596,70 @@
 
     See also \l headerdirs.
 
+    \target ignorewords-variable
+    \section1 ignorewords
+
+    The \c ignorewords variable is used for specifying a list of strings
+    that QDoc will ignore when resolving hyperlink targets.
+
+    QDoc has an auto-linking feature, where linking is attempted for words
+    that resemble C++, QML, or JavaScript entities. Specifically, a string
+    qualifies for auto-linking if it is at least three characters in
+    length, has no whitespace, and it
+
+    \list
+      \li is a \e camelCase word, that is, it contains at least one
+          uppercase character at index greater than zero, or
+      \li contains the substring \c {()} or \c {::}, or
+      \li contains at least one special character, \c {@} or \c {_}.
+    \endlist
+
+    Adding a qualified word to \c ignorewords stops QDoc from linking
+    that word automatically. For example, if the word \e OpenGL is a
+    valid link target (a section, \l{page-command}{\\page}, or
+    \l {externalpage-command}{\\externalpage} title), a hyperlink for
+    each occurrence can be avoided with
+
+    \badcode
+    ignorewords += OpenGL
+    \endcode
+
+    Linking explicitly with \l {l-command}{\\l} continues to work for
+    ignored words.
+
+    The \c ignorewords variable was introduced in QDoc 5.14.
+
+    \target ignoresince-variable
+    \section1 ignoresince
+
+    The \c ignoresince variable is used for setting a cutoff value for
+    versions passed to the \l {since-command}{\\since} command. All
+    \\since commands that define a version lower than the cutoff are
+    ignored and do not generate output.
+
+    The cutoff values are project-specific. The project name can be
+    defined as a subvariable. The default project name is \e Qt. For
+    example:
+
+    \badcode
+    ignoresince      = 5.0
+    ignoresince.QDoc = 5.0
+    \endcode
+
+    These will ignore \\since commands where the major version is 4
+    or lower and the project is either \c QDoc or undefined.
+
+    \badcode
+    \since 3.2          # Ignored
+    \since 5.2          # Documented (as 'Qt 5.2')
+    \since QDoc 4.6     # Ignored
+    \since QtQuick 2.5  # Documented
+    \endcode
+
+    The \c ignoresince variable was introduced in QDoc 5.15.
+
+    See also \l {since-command}{\\since}.
+
     \target imagedirs-variable
     \section1 imagedirs
 
@@ -723,6 +788,28 @@
 
     This identifies C++ as the language of the Qt source code.
 
+    \target locationinfo-variable
+    \section1 locationinfo
+
+    The \c locationinfo boolean variable determines whether detailed
+    location information about each entity is written to
+    \c {.index}-files and \c {.webxml}-files (when using the WebXML
+    output format).
+
+    Location information consists of the full path and line
+    number of either the declaration or documentation comment block
+    in the source code.
+
+    Setting this to \c false turns off location info:
+
+    \badcode
+        locationinfo = false
+    \endcode
+
+    The default value is \c true.
+
+    The \c locationinfo variable was introduced in QDoc 5.15.
+
     \target macro-variable
     \section1 macro
 
@@ -732,9 +819,7 @@
 
     A macro variable can be restricted for use in one type of output
     generation. By appending \c {.HTML} to the macro name, for
-    example, the macro is only used when generating HTML output. By
-    appending \c {.DITAXML} to the macro name, the macro is only used
-    when generating DITA XML.
+    example, the macro is only used when generating HTML output.
 
     \badcode
         macro.gui              = "\\b"
@@ -929,9 +1014,10 @@
     The \c outputformats variable specifies the format(s) of
     the generated documentation.
 
-    Since Qt 5.11, QDoc supports the HTML and WebXML formats. If no
+    Since Qt 5.11, QDoc supports the HTML and WebXML formats; since
+    Qt 5.15, it can also generate the documentation in DocBook. If no
     \c outputformats are specified, QDoc generates the documentation
-    in HTML (the default format). Both output formats can be specified,
+    in HTML (the default format). All output formats can be specified,
     with dedicated output directories and other settings. For example:
 
     \badcode
@@ -1187,7 +1273,7 @@
     QT_VERSION_STR is defined in qglobal.h as follows
 
     \badcode
-        #define QT_VERSION_STR   "4.0.1"
+        #define QT_VERSION_STR   "5.14.1"
     \endcode
 
     When a version number is specified (using the \tt{\l version} or
@@ -1229,7 +1315,6 @@
 /*!
     \page 22-creating-help-project-files.html
     \previouspage Generic Configuration Variables
-    \contentspage QDoc Manual
     \nextpage C++ Specific Configuration Variables
 
     \title Creating Help Project Files
@@ -1363,7 +1448,6 @@
 /*!
     \page 23-qdoc-configuration-cppvariables.html
     \previouspage Creating Help Project Files
-    \contentspage QDoc Manual
     \nextpage Format-specific Configuration Variables
 
     \title C++ Specific Configuration Variables
@@ -1474,7 +1558,6 @@
 /*!
     \page 24-qdoc-configuration-htmlvariables.html
     \previouspage C++ Specific Configuration Variables
-    \contentspage QDoc Manual
     \nextpage Supporting Derived Projects
 
     \keyword HTML Specific Configuration Variables
@@ -1625,7 +1708,6 @@
 /*!
     \page 25-qdoc-configuration-derivedprojects.html
     \previouspage Format-specific Configuration Variables
-    \contentspage QDoc Manual
     \nextpage Example Manifest Files
 
     \title Supporting Derived Projects
@@ -1692,14 +1774,14 @@
     \badcode
     project     = Qt
     description = Qt Reference Documentation
-    url         = http://doc.qt.io/qt-4.8/
+    url         = https://doc.qt.io/qt/
 
          ...
     \endcode
 
     This makes sure that whenever \c qt.index is used to generate
     references to for example Qt classes, the base URL is \c
-    http://doc.qt.io/qt-4.8/.
+    https://doc.qt.io/qt/.
 
     See also \l indexes and \l {url.examples}.
 
@@ -1767,7 +1849,7 @@
     \badcode
         project     = Qt
         description = Qt Reference Documentation
-        url         = http://doc.qt.io/qt-4.8/
+        url         = http://doc.qt.io/qt/
 
         ...
     \endcode
@@ -1783,7 +1865,6 @@
 /*!
     \page 26-qdoc-configuration-example-manifest-files.html
     \previouspage Supporting Derived Projects
-    \contentspage QDoc Manual
 
     \title Example Manifest Files
 
@@ -1861,71 +1942,11 @@
     another tag is applied to all examples by using just \c {*} as the
     match string.
 */
-/*!
-    \page 21-3-qt-dita-xml-output.html
-    \previouspage minimum.qdocconf
-    \contentspage QDoc Manual
-    \nextpage QA Pages
-
-    \title Generating DITA XML Output
-
-    QDoc can generate \l {http://dita.xml.org} {DITA XML output}.
-
-    In your configuration file, set your \c {outputformats} variable
-    to \c {DITAXML}, and send the output to an appropriate directory:
-
-    \badcode
-    outputdir                  = $QTDIR/doc/ditaxml
-    outputformats              = DITAXML
-    \endcode
-
-    And include these macros in your configuration file to prevent
-    QDoc from doing some escaping that doesn't validate in XML:
-
-    \badcode
-    macro.aacute.DITAXML       = "&aacute;"
-    macro.Aring.DITAXML        = "&Aring;"
-    macro.aring.DITAXML        = "&aring;"
-    macro.Auml.DITAXML         = "&Auml;"
-    macro.br.DITAXML           = " "
-    macro.BR.DITAXML           = " "
-    macro.copyright.DITAXML    = "&copy;"
-    macro.eacute.DITAXML       = "&eacute;"
-    macro.hr.DITAXML           = " "
-    macro.iacute.DITAXML       = "&iacute;"
-    macro.oslash.DITAXML       = "&oslash;"
-    macro.ouml.DITAXML         = "&ouml;"
-    macro.raisedaster.DITAXML  = "<sup>*</sup>"
-    macro.rarrow.DITAXML       = "&rarr;"
-    macro.reg.DITAXML          = "<sup>&reg;</sup>"
-    macro.uuml.DITAXML         = "&uuml;"
-    macro.mdash.DITAXML        = "&mdash;"
-    macro.emptyspan.DITAXML    = " "
-    \endcode
-
-    You can also set default values for some of the tags in the DITA
-    \c {<prolog>} and \c {<metadata>} elements:
-
-    \badcode
-    dita.metadata.default.author      = Qt Development Frameworks
-    dita.metadata.default.permissions = all
-    dita.metadata.default.publisher   = Qt Project
-    dita.metadata.default.copyryear = 2018
-    dita.metadata.default.copyrholder = Qt Project
-    dita.metadata.default.audience = programmer
-    \endcode
-
-    See the \l {meta-command}
-    {\\meta} command for more details on DITA metadata.
-
-*/
-
 
 /*!
     \page 21-1-minimum-qdocconf.html
     \previouspage qtgui.qdocconf
-    \contentspage QDoc Manual
-    \nextpage Generating DITA XML Output
+    \nextpage The QDoc Configuration File
 
     \title minimum.qdocconf
 
@@ -1935,7 +1956,6 @@
 /*!
     \page 21-2-qtgui-qdocconf.html
     \previouspage Supporting Derived Projects
-    \contentspage QDoc Manual
     \nextpage minimum.qdocconf
 
     \title qtgui.qdocconf

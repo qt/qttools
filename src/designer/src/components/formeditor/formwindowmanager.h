@@ -77,7 +77,7 @@ public:
 
     bool eventFilter(QObject *o, QEvent *e) override;
 
-    void dragItems(const QList<QDesignerDnDItemInterface*> &item_list) override;
+    void dragItems(const QVector<QDesignerDnDItemInterface*> &item_list) override;
 
     QUndoGroup *undoGroup() const;
 
@@ -122,7 +122,7 @@ private:
 
     QDesignerFormEditorInterface *m_core;
     FormWindow *m_activeFormWindow;
-    QList<FormWindow*> m_formWindows;
+    QVector<FormWindow*> m_formWindows;
 
     PreviewManager *m_previewManager;
 

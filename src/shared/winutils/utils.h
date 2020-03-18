@@ -43,23 +43,37 @@
 QT_BEGIN_NAMESPACE
 
 enum PlatformFlag {
-    WindowsBased = 0x1000,
-    UnixBased = 0x2000,
-    IntelBased = 0x4000,
-    ArmBased = 0x8000,
-    MinGW = 0x10000
-};
-
-enum Platform {
-    WindowsDesktop = WindowsBased + IntelBased,
+    // OS
+    WindowsBased = 0x00001,
+    UnixBased    = 0x00002,
+    WinRt        = 0x00004,
+    // CPU
+    IntelBased   = 0x00010,
+    ArmBased     = 0x00020,
+    // Compiler
+    Msvc         = 0x00100,
+    MinGW        = 0x00200,
+    ClangMsvc    = 0x00400,
+    ClangMinGW   = 0x00800,
+    // Platforms
+    WindowsDesktopMsvc = WindowsBased + IntelBased + Msvc,
     WindowsDesktopMinGW = WindowsBased + IntelBased + MinGW,
-    WinRtIntel = WindowsBased + IntelBased + 1,
-    WinRtArm = WindowsBased + ArmBased + 2,
-    WinCEIntel = WindowsBased + IntelBased + 5,
-    WinCEArm = WindowsBased + ArmBased + 6,
+    WindowsDesktopClangMsvc = WindowsBased + IntelBased + ClangMsvc,
+    WindowsDesktopClangMinGW = WindowsBased + IntelBased + ClangMinGW,
+    WinRtIntelMsvc = WindowsBased + WinRt + IntelBased + Msvc,
+    WinRtArmMsvc = WindowsBased + WinRt + ArmBased + Msvc,
     Unix = UnixBased,
     UnknownPlatform
 };
+
+Q_DECLARE_FLAGS(Platform, PlatformFlag)
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Platform)
+
+inline bool platformHasDebugSuffix(Platform p) // Uses 'd' debug suffix
+{
+    return p.testFlag(Msvc) || p.testFlag(ClangMsvc);
+}
 
 enum ListOption {
     ListNone = 0,

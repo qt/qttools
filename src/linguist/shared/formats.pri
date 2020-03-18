@@ -1,17 +1,15 @@
-
-# infrastructure
-QT *= xml
-
 INCLUDEPATH *= $$PWD
 
 SOURCES += \
     $$PWD/numerus.cpp \
     $$PWD/translator.cpp \
-    $$PWD/translatormessage.cpp
+    $$PWD/translatormessage.cpp \
+    $$PWD/xmlparser.cpp
 
 HEADERS += \
     $$PWD/translator.h \
-    $$PWD/translatormessage.h
+    $$PWD/translatormessage.h \
+    $$PWD/xmlparser.h
 
 # "real" formats readers and writers
 SOURCES += \

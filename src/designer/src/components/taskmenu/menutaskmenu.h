@@ -55,7 +55,7 @@ public:
     explicit MenuTaskMenu(QDesignerMenu *menu, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QList<QAction*> taskActions() const override;
+    QVector<QAction*> taskActions() const override;
 
 private slots:
     void removeMenu();
@@ -77,7 +77,7 @@ public:
     explicit MenuBarTaskMenu(QDesignerMenuBar *bar, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QList<QAction*> taskActions() const override;
+    QVector<QAction*> taskActions() const override;
 
 private:
     QDesignerMenuBar *m_bar;

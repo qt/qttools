@@ -197,9 +197,9 @@ QDesignerMetaPropertyInterface::~QDesignerMetaPropertyInterface() = default;
 */
 
 /*!
-    \fn Attributes QDesignerMetaPropertyInterface::attributes(const QObject *object) const
+    \fn Attributes QDesignerMetaPropertyInterface::attributes() const
 
-     Returns the attributes of the property for the gives \a object.
+     Returns the attributes of the property.
 */
 
 /*!

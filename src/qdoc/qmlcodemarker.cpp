@@ -40,22 +40,18 @@
 #include "generator.h"
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsast_p.h>
-#include <private/qqmljsastfwd_p.h>
-#include <private/qqmljsengine_p.h>
-#include <private/qqmljslexer_p.h>
-#include <private/qqmljsparser_p.h>
+#    include <private/qqmljsast_p.h>
+#    include <private/qqmljsastfwd_p.h>
+#    include <private/qqmljsengine_p.h>
+#    include <private/qqmljslexer_p.h>
+#    include <private/qqmljsparser_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
 
-QmlCodeMarker::QmlCodeMarker()
-{
-}
+QmlCodeMarker::QmlCodeMarker() {}
 
-QmlCodeMarker::~QmlCodeMarker()
-{
-}
+QmlCodeMarker::~QmlCodeMarker() {}
 
 /*!
   Returns \c true if the \a code is recognized by the parser.
@@ -103,8 +99,7 @@ Atom::AtomType QmlCodeMarker::atomType() const
     return Atom::Qml;
 }
 
-QString QmlCodeMarker::markedUpCode(const QString &code,
-                                    const Node *relative,
+QString QmlCodeMarker::markedUpCode(const QString &code, const Node *relative,
                                     const Location &location)
 {
     return addMarkUp(code, relative, location);
@@ -127,8 +122,7 @@ QString QmlCodeMarker::markedUpFullName(const Node *node, const Node *relative)
 {
     if (node->name().isEmpty()) {
         return "global";
-    }
-    else {
+    } else {
         QString fullName;
         for (;;) {
             fullName.prepend(markedUpName(node));
@@ -145,11 +139,9 @@ QString QmlCodeMarker::markedUpIncludes(const QStringList &includes)
 {
     QString code;
 
-    QStringList::ConstIterator inc = includes.constBegin();
-    while (inc != includes.constEnd()) {
-        code += "import " + *inc + QLatin1Char('\n');
-        ++inc;
-    }
+    for (const auto &include : includes)
+        code += "import " + include + QLatin1Char('\n');
+
     Location location;
     return addMarkUp(code, nullptr, location);
 }
@@ -157,16 +149,14 @@ QString QmlCodeMarker::markedUpIncludes(const QStringList &includes)
 QString QmlCodeMarker::functionBeginRegExp(const QString &funcName)
 {
     return QLatin1Char('^') + QRegExp::escape("function " + funcName) + QLatin1Char('$');
-
 }
 
-QString QmlCodeMarker::functionEndRegExp(const QString &/* funcName */)
+QString QmlCodeMarker::functionEndRegExp(const QString & /* funcName */)
 {
     return "^\\}$";
 }
 
-QString QmlCodeMarker::addMarkUp(const QString &code,
-                                 const Node * /* relative */,
+QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative */,
                                  const Location &location)
 {
 #ifndef QT_NO_DECLARATIVE
@@ -174,7 +164,7 @@ QString QmlCodeMarker::addMarkUp(const QString &code,
     QQmlJS::Lexer lexer(&engine);
 
     QString newCode = code;
-    QList<QQmlJS::AST::SourceLocation> pragmas = extractPragmas(newCode);
+    QVector<QQmlJS::SourceLocation> pragmas = extractPragmas(newCode);
     lexer.setCode(newCode, 1);
 
     QQmlJS::Parser parser(&engine);
@@ -187,14 +177,15 @@ QString QmlCodeMarker::addMarkUp(const QString &code,
         QmlMarkupVisitor visitor(code, pragmas, &engine);
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError()) {
-            location.warning(location.fileName() +
-                             tr("Unable to analyze QML snippet. The output is incomplete."));
+            location.warning(location.fileName()
+                             + tr("Unable to analyze QML snippet. The output is incomplete."));
         }
         output = visitor.markedUpCode();
     } else {
-        location.warning(tr("Unable to parse QML snippet: \"%1\" at line %2, column %3").arg(
-                             parser.errorMessage()).arg(parser.errorLineNumber()).arg(
-                             parser.errorColumnNumber()));
+        location.warning(tr("Unable to parse QML snippet: \"%1\" at line %2, column %3")
+                                 .arg(parser.errorMessage())
+                                 .arg(parser.errorLineNumber())
+                                 .arg(parser.errorColumnNumber()));
         output = protect(code);
     }
 
@@ -226,11 +217,11 @@ static void replaceWithSpace(QString &str, int idx, int n)
   Searches for ".pragma <value>" or ".import <stuff>" declarations
   in \a script. Currently supported pragmas are: library
 */
-QList<QQmlJS::AST::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
+QVector<QQmlJS::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
 {
     const QString pragma(QLatin1String("pragma"));
     const QString library(QLatin1String("library"));
-    QList<QQmlJS::AST::SourceLocation> removed;
+    QVector<QQmlJS::SourceLocation> removed;
 
     QQmlJS::Lexer l(nullptr);
     l.setCode(script, 0);
@@ -255,9 +246,7 @@ QList<QQmlJS::AST::SourceLocation> QmlCodeMarker::extractPragmas(QString &script
             token = l.lex();
         }
         replaceWithSpace(script, startOffset, endOffset - startOffset);
-        removed.append(QQmlJS::AST::SourceLocation(startOffset,
-                                                   endOffset - startOffset,
-                                                   startLine,
+        removed.append(QQmlJS::SourceLocation(startOffset, endOffset - startOffset, startLine,
                                                    startColumn));
     }
     return removed;

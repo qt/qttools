@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Testing QDoc output from .qdoc files</db:title>
+<db:productname>OutputFromQDocFiles</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>This is a simple page for testing purposes only.</db:para>
+</db:abstract>
+</db:info>
+<db:para>QDoc generates documentation for software projects. It does this by extracting <db:emphasis>QDoc comments</db:emphasis> from project source files. QDoc comments are signified by a C-style-like comment tag followed by an exclamation point, like this: <db:code>/*!</db:code> <db:code>This text is contained within QDoc comment tags.</db:code> <db:code>*/</db:code>.</db:para>
+<db:section xml:id="supported-file-types">
+<db:title>Supported file types</db:title>
+<db:para>QDoc parses <db:code>.cpp</db:code> and <db:code>.qdoc</db:code> files. It does extract comments from header (<db:code>.h</db:code>) files.</db:para>
+</db:section>
+<db:section xml:id="further-information">
+<db:title>Further information</db:title>
+<db:para>This test document is written with the purpose of testing the output QDoc generates when parsing <db:code>.qdoc</db:code> files. It is fairly simple and makes use of a limited subset of QDoc's command. Those commands are:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:code>\page</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\title</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\brief</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\e</db:code> (for emphasizing &quot;QDoc comments&quot;)</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\c</db:code> (for multiple monospace-formatted entries)</db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\section1</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\list</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\li</db:code></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:code>\endlist</db:code></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+<db:section xml:id="linking">
+<db:title>Linking</db:title>
+<db:para>There are multiple ways to create hyperlinks to other topics:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput-linking.xml">Linking to a page title</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput-linking.xml#link-targets">Linking to a section title</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput-linking.xml#link-test-target">Linking using a \target string</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput-linking.xml">Linking using a \keyword string</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+</db:article>

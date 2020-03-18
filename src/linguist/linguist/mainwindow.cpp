@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Linguist of the Qt Toolkit.
@@ -299,7 +299,6 @@ MainWindow::MainWindow()
     m_contextDock = new QDockWidget(this);
     m_contextDock->setObjectName(QLatin1String("ContextDockWidget"));
     m_contextDock->setAllowedAreas(Qt::AllDockWidgetAreas);
-    m_contextDock->setFeatures(QDockWidget::AllDockWidgetFeatures);
     m_contextDock->setWindowTitle(tr("Context"));
     m_contextDock->setAcceptDrops(true);
     m_contextDock->installEventFilter(this);
@@ -329,7 +328,6 @@ MainWindow::MainWindow()
     m_messagesDock = new QDockWidget(this);
     m_messagesDock->setObjectName(QLatin1String("StringsDockWidget"));
     m_messagesDock->setAllowedAreas(Qt::AllDockWidgetAreas);
-    m_messagesDock->setFeatures(QDockWidget::AllDockWidgetFeatures);
     m_messagesDock->setWindowTitle(tr("Strings"));
     m_messagesDock->setAcceptDrops(true);
     m_messagesDock->installEventFilter(this);
@@ -366,7 +364,6 @@ MainWindow::MainWindow()
     m_phrasesDock = new QDockWidget(this);
     m_phrasesDock->setObjectName(QLatin1String("PhrasesDockwidget"));
     m_phrasesDock->setAllowedAreas(Qt::AllDockWidgetAreas);
-    m_phrasesDock->setFeatures(QDockWidget::AllDockWidgetFeatures);
     m_phrasesDock->setWindowTitle(tr("Phrases and guesses"));
 
     m_phraseView = new PhraseView(m_dataModel, &m_phraseDict, this);
@@ -376,7 +373,6 @@ MainWindow::MainWindow()
     m_sourceAndFormDock = new QDockWidget(this);
     m_sourceAndFormDock->setObjectName(QLatin1String("SourceAndFormDock"));
     m_sourceAndFormDock->setAllowedAreas(Qt::AllDockWidgetAreas);
-    m_sourceAndFormDock->setFeatures(QDockWidget::AllDockWidgetFeatures);
     m_sourceAndFormDock->setWindowTitle(tr("Sources and Forms"));
     m_sourceAndFormView = new QStackedWidget(this);
     m_sourceAndFormDock->setWidget(m_sourceAndFormView);
@@ -391,7 +387,6 @@ MainWindow::MainWindow()
     m_errorsDock = new QDockWidget(this);
     m_errorsDock->setObjectName(QLatin1String("ErrorsDockWidget"));
     m_errorsDock->setAllowedAreas(Qt::AllDockWidgetAreas);
-    m_errorsDock->setFeatures(QDockWidget::AllDockWidgetFeatures);
     m_errorsDock->setWindowTitle(tr("Warnings"));
     m_errorsView = new ErrorsView(m_dataModel, this);
     m_errorsDock->setWidget(m_errorsView);
@@ -1360,7 +1355,7 @@ void MainWindow::about()
     const QString description
             = tr("Qt Linguist is a tool for adding translations to Qt applications.");
     const QString copyright
-            = tr("Copyright (C) %1 The Qt Company Ltd.").arg(QStringLiteral("2019"));
+            = tr("Copyright (C) %1 The Qt Company Ltd.").arg(QStringLiteral("2020"));
     box.setText(QStringLiteral("<center><img src=\":/images/icons/linguist-128-32.png\"/></img><p>%1</p></center>"
                                "<p>%2</p>"
                                "<p>%3</p>").arg(version, description, copyright));

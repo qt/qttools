@@ -34,7 +34,6 @@
 #define HTMLGENERATOR_H
 
 #include "codemarker.h"
-#include "config.h"
 #include "xmlgenerator.h"
 
 #include <QtCore/qhash.h>
@@ -43,6 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class Config;
 class HelpProjectWriter;
 
 class HtmlGenerator : public XmlGenerator
@@ -50,12 +50,11 @@ class HtmlGenerator : public XmlGenerator
     Q_DECLARE_TR_FUNCTIONS(QDoc::HtmlGenerator)
 
 public:
-
 public:
     HtmlGenerator();
     ~HtmlGenerator() override;
 
-    void initializeGenerator(const Config &config) override;
+    void initializeGenerator() override;
     void terminateGenerator() override;
     QString format() override;
     void generateDocs() override;
@@ -69,9 +68,7 @@ protected:
     void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
     QString generateLinksToLinksPage(const QString &module, CodeMarker *marker);
     QString generateLinksToBrokenLinksPage(CodeMarker *marker, int &count);
-    virtual int generateAtom(const Atom *atom,
-                             const Node *relative,
-                             CodeMarker *marker) override;
+    virtual int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker) override;
@@ -82,18 +79,12 @@ protected:
     QString fileExtension() const override;
 
     void generateManifestFile(const QString &manifest, const QString &element);
-    void readManifestMetaContent(const Config &config);
+    void readManifestMetaContent();
     void generateKeywordAnchors(const Node *node);
-    void generateAssociatedPropertyNotes(FunctionNode *fn);
 
 private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };
-    enum ExtractionMarkType {
-        BriefMark,
-        DetailedDescriptionMark,
-        MemberMark,
-        EndMark
-    };
+    enum ExtractionMarkType { BriefMark, DetailedDescriptionMark, MemberMark, EndMark };
 
     struct ManifestMetaFilter
     {
@@ -102,29 +93,18 @@ private:
         QSet<QString> tags;
     };
 
-    void generateNavigationBar(const QString &title,
-                               const Node *node,
-                               CodeMarker *marker,
-                               const QString &buildversion,
-                               bool tableItems = false);
-    void generateHeader(const QString &title,
-                        const Node *node = nullptr,
+    void generateNavigationBar(const QString &title, const Node *node, CodeMarker *marker,
+                               const QString &buildversion, bool tableItems = false);
+    void generateHeader(const QString &title, const Node *node = nullptr,
                         CodeMarker *marker = nullptr);
-    void generateTitle(const QString &title,
-                       const Text &subTitle,
-                       SubTitleSize subTitleSize,
-                       const Node *relative,
-                       CodeMarker *marker);
+    void generateTitle(const QString &title, const Text &subTitle, SubTitleSize subTitleSize,
+                       const Node *relative, CodeMarker *marker);
     void generateFooter(const Node *node = nullptr);
-    void generateRequisites(Aggregate *inner,
-                            CodeMarker *marker);
-    void generateQmlRequisites(QmlTypeNode *qcn,
-                            CodeMarker *marker);
-    void generateBrief(const Node *node,
-                       CodeMarker *marker,
-                       const Node *relative = nullptr, bool addLink=true);
-    void generateTableOfContents(const Node *node,
-                                 CodeMarker *marker,
+    void generateRequisites(Aggregate *inner, CodeMarker *marker);
+    void generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker);
+    void generateBrief(const Node *node, CodeMarker *marker, const Node *relative = nullptr,
+                       bool addLink = true);
+    void generateTableOfContents(const Node *node, CodeMarker *marker,
                                  QVector<Section> *sections = nullptr);
     void generateSidebar();
     QString generateAllMembersFile(const Section &section, CodeMarker *marker);
@@ -132,50 +112,36 @@ private:
     QString generateObsoleteMembersFile(const Sections &sections, CodeMarker *marker);
     QString generateObsoleteQmlMembersFile(const Sections &sections, CodeMarker *marker);
     void generateClassHierarchy(const Node *relative, NodeMap &classMap);
-    void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeMultiMap &nodeMap);
-    void generateAnnotatedLists(const Node *relative, CodeMarker *marker, const NodeMultiMap &nodeMap);
+    void generateAnnotatedList(const Node *relative, CodeMarker *marker,
+                               const NodeMultiMap &nodeMap);
+    void generateAnnotatedLists(const Node *relative, CodeMarker *marker,
+                                const NodeMultiMap &nodeMap);
     void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeList &nodes);
-    void generateCompactList(ListType listType,
-                             const Node *relative,
-                             const NodeMultiMap &classMap,
-                             bool includeAlphabet,
-                             QString commonPrefix);
+    void generateCompactList(ListType listType, const Node *relative, const NodeMultiMap &classMap,
+                             bool includeAlphabet, QString commonPrefix);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative, CodeMarker *marker);
     bool generateGroupList(CollectionNode *cn);
     void generateList(const Node *relative, CodeMarker *marker, const QString &selector);
-    void generateSectionList(const Section& section,
-                             const Node *relative,
-                             CodeMarker *marker,
+    void generateSectionList(const Section &section, const Node *relative, CodeMarker *marker,
                              Section::Status = Section::Active);
-    void generateQmlSummary(const NodeVector &members,
-                            const Node *relative,
-                            CodeMarker *marker);
-    void generateQmlItem(const Node *node,
-                         const Node *relative,
-                         CodeMarker *marker,
-                         bool summary);
-    void generateDetailedQmlMember(Node *node,
-                                   const Aggregate *relative,
-                                   CodeMarker *marker);
+    void generateQmlSummary(const NodeVector &members, const Node *relative, CodeMarker *marker);
+    void generateQmlItem(const Node *node, const Node *relative, CodeMarker *marker, bool summary);
+    void generateDetailedQmlMember(Node *node, const Aggregate *relative, CodeMarker *marker);
     void generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker) override;
     void generateQmlInstantiates(QmlTypeNode *qcn, CodeMarker *marker);
     void generateInstantiatedBy(ClassNode *cn, CodeMarker *marker);
 
     void generateSection(const NodeVector &nv, const Node *relative, CodeMarker *marker);
-    void generateSynopsis(const Node *node,
-                          const Node *relative,
-                          CodeMarker *marker,
-                          Section::Style style,
-                          bool alignNames = false,
+    void generateSynopsis(const Node *node, const Node *relative, CodeMarker *marker,
+                          Section::Style style, bool alignNames = false,
                           const QString *prefix = nullptr);
-    void generateSectionInheritedList(const Section& section, const Node *relative);
-    QString highlightedCode(const QString &markedCode,
-                            const Node *relative,
-                            bool alignNames = false,
-                            Node::Genus genus = Node::DontCare);
+    void generateSectionInheritedList(const Section &section, const Node *relative);
+    QString highlightedCode(const QString &markedCode, const Node *relative,
+                            bool alignNames = false, Node::Genus genus = Node::DontCare);
 
-    void generateFullName(const Node *apparentNode, const Node *relative, const Node *actualNode = nullptr);
+    void generateFullName(const Node *apparentNode, const Node *relative,
+                          const Node *actualNode = nullptr);
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
     void generateLink(const Atom *atom, CodeMarker *marker);
 
@@ -221,7 +187,7 @@ private:
     bool obsoleteLinks;
     QStack<QXmlStreamWriter *> xmlWriterStack;
     static int id;
-    QList<ManifestMetaFilter> manifestMetaContent;
+    QVector<ManifestMetaFilter> manifestMetaContent;
     QString homepage;
     QString hometitle;
     QString landingpage;
@@ -234,22 +200,23 @@ private:
     QString qflagsHref_;
     int tocDepth;
 
+    Config *config;
+
 public:
     static bool debugging_on;
     static QString divNavTop;
 };
 
-#define HTMLGENERATOR_ADDRESS           "address"
-#define HTMLGENERATOR_FOOTER            "footer"
-#define HTMLGENERATOR_GENERATEMACREFS   "generatemacrefs" // ### document me
-#define HTMLGENERATOR_POSTHEADER        "postheader"
-#define HTMLGENERATOR_POSTPOSTHEADER    "postpostheader"
-#define HTMLGENERATOR_PROLOGUE          "prologue"
-#define HTMLGENERATOR_NONAVIGATIONBAR   "nonavigationbar"
+#define HTMLGENERATOR_ADDRESS "address"
+#define HTMLGENERATOR_FOOTER "footer"
+#define HTMLGENERATOR_GENERATEMACREFS "generatemacrefs" // ### document me
+#define HTMLGENERATOR_POSTHEADER "postheader"
+#define HTMLGENERATOR_POSTPOSTHEADER "postpostheader"
+#define HTMLGENERATOR_PROLOGUE "prologue"
+#define HTMLGENERATOR_NONAVIGATIONBAR "nonavigationbar"
 #define HTMLGENERATOR_NAVIGATIONSEPARATOR "navigationseparator"
-#define HTMLGENERATOR_NOSUBDIRS         "nosubdirs"
-#define HTMLGENERATOR_TOCDEPTH          "tocdepth"
-
+#define HTMLGENERATOR_NOSUBDIRS "nosubdirs"
+#define HTMLGENERATOR_TOCDEPTH "tocdepth"
 
 QT_END_NAMESPACE
 

@@ -372,7 +372,7 @@ void FormMultiWidget::slotSelectionChanged()
 
 void FormMultiWidget::setTranslation(const QString &text, bool userAction)
 {
-    QStringList texts = text.split(QChar(Translator::BinaryVariantSeparator), QString::KeepEmptyParts);
+    QStringList texts = text.split(QChar(Translator::BinaryVariantSeparator), Qt::KeepEmptyParts);
 
     while (m_editors.count() > texts.count()) {
         delete m_minusButtons.takeLast();
@@ -418,7 +418,7 @@ QString FormMultiWidget::getTranslation() const
     for (int i = 0; i < m_editors.count(); ++i) {
         if (i)
             ret += QChar(Translator::BinaryVariantSeparator);
-        ret += toPlainText(m_editors.at(i)->document()->docHandle()->plainText());
+        ret += toPlainText(m_editors.at(i)->document()->toRawText());
     }
     return ret;
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="componentset" href="test-componentset-example.html" status="active" location="examples.qdoc" documented="true" subtype="example" title="QML Documentation Example" fulltitle="QML Documentation Example" subtitle="" module="Test" brief="Example for documenting QML types">
+            <contents name="qml-class" title="QML Class" level="1"/>
+            <contents name="properties-signals-handlers-and-methods" title="Properties, Signals, Handlers, and Methods" level="1"/>
+            <contents name="internal-documentation" title="Internal Documentation" level="2"/>
+            <contents name="qml-types-with-c-implementation" title="QML Types with C++ Implementation" level="1"/>
+            <description>
+                <brief>Example for documenting QML types.</brief>
+                <para>This example demonstrates one of the ways to document QML types.</para>
+                <para>In particular, there are sample types that are documented with QDoc commands comments. There are documentation comments for the QML types and their public interfaces. The types are grouped into a module, the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module.</para>
+                <para>The uicomponents.qdoc file generates the overview page for the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module page.</para>
+                <para>The generated documentation is available in the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module.</para>
+                <section id="qml-class">
+                    <heading level="1">QML Class</heading>
+                    <para>The QML types use the \qmltype to document the type. In addition, they have the \inmodule command in order for QDoc to associate them to the <teletype type="highlighted">UIComponents</teletype> module.</para>
+                    <para>QDoc uses the \brief command to place a basic description when listing the types.</para>
+                </section>
+                <section id="properties-signals-handlers-and-methods">
+                    <heading level="1">Properties, Signals, Handlers, and Methods</heading>
+                    <para>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</para>
+                    <para>To document the type of a <italic>property alias</italic>, you must use the \qmlproperty command to specify the data type.</para>
+                    <code>\qmlproperty int anAliasedProperty
+An aliased property of type int.</code>
+                </section>
+                <section id="internal-documentation">
+                    <heading level="2">Internal Documentation</heading>
+                    <para>You may declare that a documentation is for internal use by placing the \internal command after the beginning QDoc comment <teletype type="highlighted">/*</teletype>. QDoc will prevent the internal documentation from appearing in the public API.</para>
+                    <para>If you wish to omit certain parts of the documentation, you may use the \omit and \endomit command.</para>
+                </section>
+                <section id="qml-types-with-c-implementation">
+                    <heading level="1">QML Types with C++ Implementation</heading>
+                    <para>This example only demonstrates the documentation for types in QML files, but the regular QML commands may be placed inside C++ classes to define the public API of the QML type.</para>
+                </section>
+                <para>Files:</para>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="componentset/ProgressBar.qml" href="test-componentset-progressbar-qml.html" type="page" page="ProgressBar.qml Example File">componentset/ProgressBar.qml</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="componentset/Switch.qml" href="test-componentset-switch-qml.html" type="page" page="Switch.qml Example File">componentset/Switch.qml</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="componentset/TabWidget.qml" href="test-componentset-tabwidget-qml.html" type="page" page="TabWidget.qml Example File">componentset/TabWidget.qml</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="componentset/componentset.pro" href="test-componentset-componentset-pro.html" type="page" page="componentset.pro Example File">componentset/componentset.pro</link>
+                        </para>
+                    </item>
+                </list>
+            </description>
+        </page>
+    </document>
+</WebXML>

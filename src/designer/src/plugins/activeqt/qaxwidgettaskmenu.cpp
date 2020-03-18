@@ -117,7 +117,7 @@ QAxWidgetTaskMenu::~QAxWidgetTaskMenu()
 {
 }
 
-QList<QAction*> QAxWidgetTaskMenu::taskActions() const
+QVector<QAction*> QAxWidgetTaskMenu::taskActions() const
 {
     const bool loaded = m_axwidget->loaded();
     m_setAction->setEnabled(!loaded);

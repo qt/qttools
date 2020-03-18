@@ -128,7 +128,7 @@
 */
 
 /*!
-    \fn QList<QAction*> QDesignerTaskMenuExtension::taskActions() const
+    \fn QVector<QAction*> QDesignerTaskMenuExtension::taskActions() const
 
     Returns the task menu extension as a list of actions which will be
     included in \QD's task menu when a plugin with the specified

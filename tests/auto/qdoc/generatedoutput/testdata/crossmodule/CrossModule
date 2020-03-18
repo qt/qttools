@@ -1,0 +1,2 @@
+#include "../testcpp/TestCPP"
+#include "testtype.h"

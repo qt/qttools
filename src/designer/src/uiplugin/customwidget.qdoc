@@ -287,7 +287,7 @@
 */
 
 /*!
-    \fn QList<QDesignerCustomWidgetInterface*> QDesignerCustomWidgetCollectionInterface::customWidgets() const
+    \fn QVector<QDesignerCustomWidgetInterface*> QDesignerCustomWidgetCollectionInterface::customWidgets() const
 
     Returns a list of interfaces to the collection's custom widgets.
 */

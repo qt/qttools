@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A namespace">
+            <contents name="usage" title="Usage" level="1"/>
+            <description>
+                <brief>A namespace.</brief>
+                <section id="usage">
+                    <heading level="1">Usage</heading>
+                    <para>This namespace is for testing QDoc output.</para>
+                </section>
+            </description>
+            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="true" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO">
+                <description />
+            </function>
+            <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A class in a namespace">
+                <description>
+                    <brief>A class in a namespace.</brief>
+                </description>
+                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="true" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2( x)">
+                    <parameter type="" name="x" default=""/>
+                    <description>
+                        <brief>A macro with argument <argument>x</argument>.</brief>
+                    </description>
+                </function>
+                <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void anotherObsoleteMember()">
+                    <description>
+                        <para>Use <link raw="obsoleteMember()" href="testqdoc-test-obsolete.html#obsoleteMember" type="function">obsoleteMember()</link> instead.</para>
+                    </description>
+                </function>
+                <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void deprecatedMember()">
+                    <description>
+                        <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
+                    </description>
+                </function>
+                <function name="inlineFunction" fullname="TestQDoc::Test::inlineFunction" href="testqdoc-test.html#inlineFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" brief="An inline function, documented using the \fn QDoc command" signature="void inlineFunction()">
+                    <description>
+                        <brief>An inline function, documented using the \fn QDoc command.</brief>
+                    </description>
+                </function>
+                <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void obsoleteMember()">
+                    <description>
+                        <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
+                    </description>
+                </function>
+                <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
+                    <parameter type="int" name="v" default=""/>
+                    <description>
+                        <para>Function that takes a parameter <argument>v</argument>. Also returns the value of <argument>v</argument>.</para>
+                    </description>
+                </function>
+                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)">
+                    <parameter type="int" name="i" default=""/>
+                    <parameter type="bool" name="b" default="false"/>
+                    <description>
+                        <para>Function that takes a parameter <argument>i</argument> and <argument>b</argument>.</para>
+                    </description>
+                </function>
+                <function name="virtualFun" fullname="TestQDoc::Test::virtualFun" href="testqdoc-test.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="false" type="void" signature="void virtualFun()">
+                    <description>
+                        <para>Function that must be reimplemented.</para>
+                    </description>
+                </function>
+            </class>
+            <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A derived class in a namespace">
+                <description>
+                    <brief>A derived class in a namespace.</brief>
+                </description>
+                <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override">
+                    <description />
+                </function>
+            </class>
+        </namespace>
+    </document>
+</WebXML>

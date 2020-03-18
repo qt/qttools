@@ -63,9 +63,8 @@ QT_BEGIN_NAMESPACE
   qdoc database that is constructing the tree. This might not
   be necessary, and it might be removed later.
 
-  \a camelCaseModuleName is the project name for this tree,
-  which was obtained from the qdocconf file via the Config
-  singleton.
+  \a camelCaseModuleName is the project name for this tree
+  as it appears in the qdocconf file.
  */
 Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
     : treeHasBeenAnalyzed_(false),
@@ -79,9 +78,9 @@ Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
 {
     root_.setPhysicalModuleName(physicalModuleName_);
     root_.setTree(this);
-    if (Generator::writeQaPages()) {
+    const auto &config = Config::instance();
+    if (config.getBool(CONFIG_WRITEQAPAGES))
         targetListMap_ = new TargetListMap;
-    }
 }
 
 /*!
@@ -100,23 +99,20 @@ Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
  */
 Tree::~Tree()
 {
-    TargetMap::iterator i = nodesByTargetRef_.begin();
-    while (i != nodesByTargetRef_.end()) {
+    for (auto i = nodesByTargetRef_.begin(); i != nodesByTargetRef_.end(); ++i) {
         delete i.value();
-        ++i;
     }
     nodesByTargetRef_.clear();
     nodesByTargetTitle_.clear();
-    if (Generator::writeQaPages() && targetListMap_) {
-        TargetListMap::iterator i = targetListMap_->begin();
-        while (i != targetListMap_->end()) {
-            TargetList *tlist = i.value();
+    const auto &config = Config::instance();
+    if (config.getBool(CONFIG_WRITEQAPAGES) && targetListMap_) {
+        for (auto target = targetListMap_->begin(); target != targetListMap_->end(); ++target) {
+            TargetList *tlist = target.value();
             if (tlist) {
                 for (auto *location : qAsConst(*tlist))
                     delete location;
             }
             delete tlist;
-            ++i;
         }
     }
 }
@@ -148,7 +144,8 @@ Node *Tree::findNodeForInclude(const QStringList &path) const
 Aggregate *Tree::findAggregate(const QString &name)
 {
     QStringList path = name.split(QLatin1String("::"));
-    return static_cast<Aggregate *>(findNodeRecursive(path, 0, const_cast<NamespaceNode *>(root()), &Node::isFirstClassAggregate));
+    return static_cast<Aggregate *>(findNodeRecursive(path, 0, const_cast<NamespaceNode *>(root()),
+                                                      &Node::isFirstClassAggregate));
 }
 
 /*!
@@ -221,8 +218,7 @@ Aggregate *Tree::findRelatesNode(const QStringList &path)
   Inserts function name \a funcName and function role \a funcRole into
   the property function map for the specified \a property.
  */
-void Tree::addPropertyFunction(PropertyNode *property,
-                               const QString &funcName,
+void Tree::addPropertyFunction(PropertyNode *property, const QString &funcName,
                                PropertyNode::FunctionRole funcRole)
 {
     unresolvedPropertyMap[property].insert(funcRole, funcName);
@@ -238,15 +234,13 @@ void Tree::addPropertyFunction(PropertyNode *property,
  */
 void Tree::resolveBaseClasses(Aggregate *n)
 {
-    NodeList::ConstIterator c = n->constBegin();
-    while (c != n->constEnd()) {
-        if ((*c)->isClassNode()) {
-            ClassNode *cn = static_cast<ClassNode *>(*c);
-            QList<RelatedClass> &bases = cn->baseClasses();
-            QList<RelatedClass>::iterator b = bases.begin();
-            while (b != bases.end()) {
-                if ((*b).node_ == nullptr) {
-                    Node *n = qdb_->findClassNode((*b).path_);
+    for (auto it = n->constBegin(); it != n->constEnd(); ++it) {
+        if ((*it)->isClassNode()) {
+            ClassNode *cn = static_cast<ClassNode *>(*it);
+            QVector<RelatedClass> &bases = cn->baseClasses();
+            for (auto &base : bases) {
+                if (base.node_ == nullptr) {
+                    Node *n = qdb_->findClassNode(base.path_);
                     /*
                       If the node for the base class was not found,
                       the reason might be that the subclass is in a
@@ -262,21 +256,19 @@ void Tree::resolveBaseClasses(Aggregate *n)
                         if (parent != nullptr)
                             // Exclude the root namespace
                             if (parent->isNamespace() && !parent->name().isEmpty())
-                                n = findClassNode((*b).path_, parent);
+                                n = findClassNode(base.path_, parent);
                     }
                     if (n != nullptr) {
                         ClassNode *bcn = static_cast<ClassNode *>(n);
-                        (*b).node_ = bcn;
-                        bcn->addDerivedClass((*b).access_, cn);
+                        base.node_ = bcn;
+                        bcn->addDerivedClass(base.access_, cn);
                     }
                 }
-                ++b;
             }
             resolveBaseClasses(cn);
-        } else if ((*c)->isNamespace()) {
-            resolveBaseClasses(static_cast<NamespaceNode *>(*c));
+        } else if ((*it)->isNamespace()) {
+            resolveBaseClasses(static_cast<NamespaceNode *>(*it));
         }
-        ++c;
     }
 }
 
@@ -284,21 +276,17 @@ void Tree::resolveBaseClasses(Aggregate *n)
  */
 void Tree::resolvePropertyOverriddenFromPtrs(Aggregate *n)
 {
-    NodeList::ConstIterator c = n->constBegin();
-    while (c != n->constEnd()) {
-        if ((*c)->isClassNode()) {
-            ClassNode *cn = static_cast<ClassNode *>(*c);
-            NodeList::ConstIterator p = cn->constBegin();
-            while (p != cn->constEnd()) {
-                if ((*p)->isProperty())
-                    cn->resolvePropertyOverriddenFromPtrs(static_cast<PropertyNode *>(*p));
-                ++p;
+    for (auto node = n->constBegin(); node != n->constEnd(); ++node) {
+        if ((*node)->isClassNode()) {
+            ClassNode *cn = static_cast<ClassNode *>(*node);
+            for (auto property = cn->constBegin(); property != cn->constEnd(); ++property) {
+                if ((*property)->isProperty())
+                    cn->resolvePropertyOverriddenFromPtrs(static_cast<PropertyNode *>(*property));
             }
             resolvePropertyOverriddenFromPtrs(cn);
-        } else if ((*c)->isNamespace()) {
-            resolvePropertyOverriddenFromPtrs(static_cast<NamespaceNode *>(*c));
+        } else if ((*node)->isNamespace()) {
+            resolvePropertyOverriddenFromPtrs(static_cast<NamespaceNode *>(*node));
         }
-        ++c;
     }
 }
 
@@ -306,10 +294,8 @@ void Tree::resolvePropertyOverriddenFromPtrs(Aggregate *n)
  */
 void Tree::resolveProperties()
 {
-    PropertyMap::ConstIterator propEntry;
-
-    propEntry = unresolvedPropertyMap.constBegin();
-    while (propEntry != unresolvedPropertyMap.constEnd()) {
+    for (auto propEntry = unresolvedPropertyMap.constBegin();
+         propEntry != unresolvedPropertyMap.constEnd(); ++propEntry) {
         PropertyNode *property = propEntry.key();
         Aggregate *parent = property->parent();
         QString getterName = (*propEntry)[PropertyNode::Getter];
@@ -317,39 +303,31 @@ void Tree::resolveProperties()
         QString resetterName = (*propEntry)[PropertyNode::Resetter];
         QString notifierName = (*propEntry)[PropertyNode::Notifier];
 
-        NodeList::ConstIterator c = parent->constBegin();
-        while (c != parent->constEnd()) {
-            if ((*c)->isFunction()) {
-                FunctionNode *function = static_cast<FunctionNode *>(*c);
-                if (function->access() == property->access() &&
-                        (function->status() == property->status() ||
-                         function->doc().isEmpty())) {
+        for (auto it = parent->constBegin(); it != parent->constEnd(); ++it) {
+            if ((*it)->isFunction()) {
+                FunctionNode *function = static_cast<FunctionNode *>(*it);
+                if (function->access() == property->access()
+                    && (function->status() == property->status() || function->doc().isEmpty())) {
                     if (function->name() == getterName) {
                         property->addFunction(function, PropertyNode::Getter);
-                    }
-                    else if (function->name() == setterName) {
+                    } else if (function->name() == setterName) {
                         property->addFunction(function, PropertyNode::Setter);
-                    }
-                    else if (function->name() == resetterName) {
+                    } else if (function->name() == resetterName) {
                         property->addFunction(function, PropertyNode::Resetter);
-                    }
-                    else if (function->name() == notifierName) {
+                    } else if (function->name() == notifierName) {
                         property->addSignal(function, PropertyNode::Notifier);
                     }
                 }
             }
-            ++c;
         }
-        ++propEntry;
     }
 
-    propEntry = unresolvedPropertyMap.constBegin();
-    while (propEntry != unresolvedPropertyMap.constEnd()) {
+    for (auto propEntry = unresolvedPropertyMap.constBegin();
+         propEntry != unresolvedPropertyMap.constEnd(); ++propEntry) {
         PropertyNode *property = propEntry.key();
         // redo it to set the property functions
         if (property->overriddenFrom())
             property->setOverriddenFrom(property->overriddenFrom());
-        ++propEntry;
     }
 
     unresolvedPropertyMap.clear();
@@ -384,15 +362,13 @@ void Tree::resolveUsingClauses()
     for (auto *child : children) {
         if (child->isClassNode()) {
             ClassNode *cn = static_cast<ClassNode *>(child);
-            QList<UsingClause> &usingClauses = cn->usingClauses();
-            QList<UsingClause>::iterator uc = usingClauses.begin();
-            while (uc != usingClauses.end()) {
-                if ((*uc).node() == nullptr) {
-                    const Node *n = qdb_->findFunctionNode((*uc).signature(), cn, Node::CPP);
+            QVector<UsingClause> &usingClauses = cn->usingClauses();
+            for (auto &usingClause : usingClauses) {
+                if (usingClause.node() == nullptr) {
+                    const Node *n = qdb_->findFunctionNode(usingClause.signature(), cn, Node::CPP);
                     if (n != nullptr)
-                        (*uc).setNode(n);
+                        usingClause.setNode(n);
                 }
-                ++uc;
             }
         }
     }
@@ -412,13 +388,11 @@ void Tree::removePrivateAndInternalBases(NamespaceNode *rootNode)
     if (rootNode == nullptr)
         rootNode = root();
 
-    NodeList::ConstIterator c = rootNode->constBegin();
-    while (c != rootNode->constEnd()) {
-        if ((*c)->isClassNode())
-            static_cast<ClassNode *>(*c)->removePrivateAndInternalBases();
-        else if ((*c)->isNamespace())
-            removePrivateAndInternalBases(static_cast<NamespaceNode *>(*c));
-        ++c;
+    for (auto node = rootNode->constBegin(); node != rootNode->constEnd(); ++node) {
+        if ((*node)->isClassNode())
+            static_cast<ClassNode *>(*node)->removePrivateAndInternalBases();
+        else if ((*node)->isNamespace())
+            removePrivateAndInternalBases(static_cast<NamespaceNode *>(*node));
     }
 }
 
@@ -444,7 +418,7 @@ ClassList Tree::allBaseClasses(const ClassNode *classNode) const
   search at the tree root. \a subtype is not used unless
   \a type is \c{Page}.
  */
-Node *Tree::findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch) () const) const
+Node *Tree::findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch)() const) const
 {
     return findNodeRecursive(path, 0, root(), isMatch);
 }
@@ -465,10 +439,8 @@ Node *Tree::findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch)
   If the algorithm is successful, the pointer to the final
   node is returned. Otherwise 0 is returned.
  */
-Node *Tree::findNodeRecursive(const QStringList &path,
-                              int pathIndex,
-                              const Node *start,
-                              bool (Node::*isMatch) () const) const
+Node *Tree::findNodeRecursive(const QStringList &path, int pathIndex, const Node *start,
+                              bool (Node::*isMatch)() const) const
 {
     if (start == nullptr || path.isEmpty())
         return nullptr;
@@ -482,13 +454,12 @@ Node *Tree::findNodeRecursive(const QStringList &path,
         if (node == nullptr)
             continue;
         if (node->name() == name) {
-            if (pathIndex+1 >= path.size()) {
+            if (pathIndex + 1 >= path.size()) {
                 if ((node->*(isMatch))())
                     return node;
                 continue;
-            }
-            else { // Search the children of n for the next name in the path.
-                node = findNodeRecursive(path, pathIndex+1, node, isMatch);
+            } else { // Search the children of n for the next name in the path.
+                node = findNodeRecursive(path, pathIndex + 1, node, isMatch);
                 if (node != nullptr)
                     return node;
             }
@@ -510,11 +481,8 @@ Node *Tree::findNodeRecursive(const QStringList &path,
   If a matching node is found, \a ref is an output parameter that
   is set to the HTML reference to use for the link.
  */
-const Node *Tree::findNodeForTarget(const QStringList &path,
-                                    const QString &target,
-                                    const Node *start,
-                                    int flags,
-                                    Node::Genus genus,
+const Node *Tree::findNodeForTarget(const QStringList &path, const QString &target,
+                                    const Node *start, int flags, Node::Genus genus,
                                     QString &ref) const
 {
     const Node *node = nullptr;
@@ -555,8 +523,8 @@ const Node *Tree::findNodeForTarget(const QStringList &path,
       type node.
     */
     int path_idx = 0;
-    if (((genus == Node::QML) || (genus == Node::DontCare)) &&
-        (path.size() >= 2) && !path[0].isEmpty()) {
+    if (((genus == Node::QML) || (genus == Node::DontCare)) && (path.size() >= 2)
+        && !path[0].isEmpty()) {
         QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
         if (qcn) {
             current = qcn;
@@ -566,8 +534,7 @@ const Node *Tree::findNodeForTarget(const QStringList &path,
                     if (!ref.isEmpty())
                         return current;
                     return nullptr;
-                }
-                else
+                } else
                     return current;
             }
             path_idx = 2;
@@ -576,7 +543,8 @@ const Node *Tree::findNodeForTarget(const QStringList &path,
 
     while (current != nullptr) {
         if (current->isAggregate()) { // Should this be isPageNode() ???
-            const Node *node = matchPathAndTarget(path, path_idx, target, current, flags, genus, ref);
+            const Node *node =
+                    matchPathAndTarget(path, path_idx, target, current, flags, genus, ref);
             if (node)
                 return node;
         }
@@ -606,12 +574,8 @@ const Node *Tree::findNodeForTarget(const QStringList &path,
   \a path is a not a fully-qualified name. \a node is
   most often the root of this Tree.
  */
-const Node *Tree::matchPathAndTarget(const QStringList &path,
-                                     int idx,
-                                     const QString &target,
-                                     const Node *node,
-                                     int flags,
-                                     Node::Genus genus,
+const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QString &target,
+                                     const Node *node, int flags, Node::Genus genus,
                                      QString &ref) const
 {
     /*
@@ -643,21 +607,22 @@ const Node *Tree::matchPathAndTarget(const QStringList &path,
         }
     }
     if (target.isEmpty()) {
-        if ((idx) == (path.size()-1) && node->isAggregate() && (flags & SearchEnumValues)) {
-            const Node *t = static_cast<const Aggregate *>(node)->findEnumNodeForValue(path.at(idx));
+        if ((idx) == (path.size() - 1) && node->isAggregate() && (flags & SearchEnumValues)) {
+            const Node *t =
+                    static_cast<const Aggregate *>(node)->findEnumNodeForValue(path.at(idx));
             if (t)
                 return t;
         }
     }
-    if (((genus == Node::CPP) || (genus == Node::DontCare)) &&
-        node->isClassNode() && (flags & SearchBaseClasses)) {
+    if (((genus == Node::CPP) || (genus == Node::DontCare)) && node->isClassNode()
+        && (flags & SearchBaseClasses)) {
         const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
         for (const auto *base : bases) {
             const Node *t = matchPathAndTarget(path, idx, target, base, flags, genus, ref);
-            if (t && ! t->isPrivate())
+            if (t && !t->isPrivate())
                 return t;
             if (target.isEmpty()) {
-                if ((idx) == (path.size()-1) && (flags & SearchEnumValues)) {
+                if ((idx) == (path.size() - 1) && (flags & SearchEnumValues)) {
                     t = base->findEnumNodeForValue(path.at(idx));
                     if (t)
                         return t;
@@ -674,9 +639,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path,
   recursively if no match is found. The \a flags are used to
   restrict the search.
  */
-const Node *Tree::findNode(const QStringList &path,
-                           const Node *start,
-                           int flags,
+const Node *Tree::findNode(const QStringList &path, const Node *start, int flags,
                            Node::Genus genus) const
 {
     const Node *current = start;
@@ -696,8 +659,8 @@ const Node *Tree::findNode(const QStringList &path,
           If the answer is yes, the reference identifies a QML
           type node.
         */
-        if (((genus == Node::QML) || (genus == Node::DontCare)) &&
-            (path.size() >= 2) && !path[0].isEmpty()) {
+        if (((genus == Node::QML) || (genus == Node::DontCare)) && (path.size() >= 2)
+            && !path[0].isEmpty()) {
             QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
             if (qcn != nullptr) {
                 node = qcn;
@@ -711,16 +674,18 @@ const Node *Tree::findNode(const QStringList &path,
             if (node == nullptr || !node->isAggregate())
                 break;
 
-            // Clear the TypesOnly flag until the last path segment, as e.g. namespaces are not types.
-            // We also ignore module nodes as they are not aggregates and thus have no children.
+            // Clear the TypesOnly flag until the last path segment, as e.g. namespaces are not
+            // types. We also ignore module nodes as they are not aggregates and thus have no
+            // children.
             int tmpFlags = (i < path.size() - 1) ? (flags & ~TypesOnly) | IgnoreModules : flags;
 
-            const Node *next = static_cast<const Aggregate *>(node)->findChildNode(path.at(i), genus, tmpFlags);
-            if ((next == nullptr) && (flags & SearchEnumValues) && i == path.size()-1) {
+            const Node *next = static_cast<const Aggregate *>(node)->findChildNode(path.at(i),
+                                                                                   genus, tmpFlags);
+            if ((next == nullptr) && (flags & SearchEnumValues) && i == path.size() - 1) {
                 next = static_cast<const Aggregate *>(node)->findEnumNodeForValue(path.at(i));
             }
-            if ((next == nullptr) && ((genus == Node::CPP) || (genus == Node::DontCare)) &&
-                node->isClassNode() && (flags & SearchBaseClasses)) {
+            if ((next == nullptr) && ((genus == Node::CPP) || (genus == Node::DontCare))
+                && node->isClassNode() && (flags & SearchBaseClasses)) {
                 const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
                 for (const auto *base : bases) {
                     next = base->findChildNode(path.at(i), genus, tmpFlags);
@@ -748,22 +713,22 @@ const Node *Tree::findNode(const QStringList &path,
  */
 QString Tree::getRef(const QString &target, const Node *node) const
 {
-    TargetMap::const_iterator i = nodesByTargetTitle_.constFind(target);
-    if (i != nodesByTargetTitle_.constEnd()) {
+    auto it = nodesByTargetTitle_.constFind(target);
+    if (it != nodesByTargetTitle_.constEnd()) {
         do {
-            if (i.value()->node_ == node)
-                return i.value()->ref_;
-            ++i;
-        } while (i != nodesByTargetTitle_.constEnd() && i.key() == target);
+            if (it.value()->node_ == node)
+                return it.value()->ref_;
+            ++it;
+        } while (it != nodesByTargetTitle_.constEnd() && it.key() == target);
     }
     QString key = Doc::canonicalTitle(target);
-    i = nodesByTargetRef_.constFind(key);
-    if (i != nodesByTargetRef_.constEnd()) {
+    it = nodesByTargetRef_.constFind(key);
+    if (it != nodesByTargetRef_.constEnd()) {
         do {
-            if (i.value()->node_ == node)
-                return i.value()->ref_;
-            ++i;
-        } while (i != nodesByTargetRef_.constEnd() && i.key() == key);
+            if (it.value()->node_ == node)
+                return it.value()->ref_;
+            ++it;
+        } while (it != nodesByTargetRef_.constEnd() && it.key() == key);
     }
     return QString();
 }
@@ -774,11 +739,8 @@ QString Tree::getRef(const QString &target, const Node *node) const
   the \a node, the \a priority. and a canonicalized form of
   the \a name, which is later used.
  */
-void Tree::insertTarget(const QString &name,
-                        const QString &title,
-                        TargetRec::TargetType type,
-                        Node *node,
-                        int priority)
+void Tree::insertTarget(const QString &name, const QString &title, TargetRec::TargetType type,
+                        Node *node, int priority)
 {
     TargetRec *target = new TargetRec(name, title, type, node, priority);
     nodesByTargetRef_.insert(name, target);
@@ -799,9 +761,9 @@ void Tree::resolveTargets(Aggregate *root)
                 QList<PageNode *> nodes = pageNodesByTitle_.values(key);
                 bool alreadyThere = false;
                 if (!nodes.empty()) {
-                    for (int i=0; i< nodes.size(); ++i) {
-                        if (nodes[i]->isExternalPage()) {
-                            if (node->name() == nodes[i]->name()) {
+                    for (const auto &node_ : nodes) {
+                        if (node_->isExternalPage()) {
+                            if (node->name() == node_->name()) {
                                 alreadyThere = true;
                                 break;
                             }
@@ -814,7 +776,7 @@ void Tree::resolveTargets(Aggregate *root)
         }
 
         if (child->doc().hasTableOfContents()) {
-            const QList<Atom *> &toc = child->doc().tableOfContents();
+            const QVector<Atom *> &toc = child->doc().tableOfContents();
             for (int i = 0; i < toc.size(); ++i) {
                 QString ref = refForAtom(toc.at(i));
                 QString title = Text::sectionHeading(toc.at(i)).toString();
@@ -827,7 +789,7 @@ void Tree::resolveTargets(Aggregate *root)
             }
         }
         if (child->doc().hasKeywords()) {
-            const QList<Atom *> &keywords = child->doc().keywords();
+            const QVector<Atom *> &keywords = child->doc().keywords();
             for (int i = 0; i < keywords.size(); ++i) {
                 QString ref = refForAtom(keywords.at(i));
                 QString title = keywords.at(i)->string();
@@ -839,7 +801,7 @@ void Tree::resolveTargets(Aggregate *root)
             }
         }
         if (child->doc().hasTargets()) {
-            const QList<Atom *> &targets = child->doc().targets();
+            const QVector<Atom *> &targets = child->doc().targets();
             for (int i = 0; i < targets.size(); ++i) {
                 QString ref = refForAtom(targets.at(i));
                 QString title = targets.at(i)->string();
@@ -860,32 +822,29 @@ void Tree::resolveTargets(Aggregate *root)
   This function searches for a \a target anchor node. If it
   finds one, it sets \a ref and returns the found node.
  */
-const Node*
-Tree::findUnambiguousTarget(const QString &target, Node::Genus genus, QString &ref) const
+const Node *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus,
+                                        QString &ref) const
 {
     int numBestTargets = 0;
     TargetRec *bestTarget = nullptr;
-    QList<TargetRec *> bestTargetList;
+    QVector<TargetRec *> bestTargetList;
 
     QString key = target;
-    TargetMap::const_iterator i = nodesByTargetTitle_.find(key);
-    while (i != nodesByTargetTitle_.constEnd()) {
-        if (i.key() != key)
+    for (auto it = nodesByTargetTitle_.find(key); it != nodesByTargetTitle_.constEnd(); ++it) {
+        if (it.key() != key)
             break;
-        TargetRec *candidate = i.value();
+        TargetRec *candidate = it.value();
         if ((genus == Node::DontCare) || (genus == candidate->genus())) {
             if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
                 bestTarget = candidate;
                 bestTargetList.clear();
                 bestTargetList.append(candidate);
                 numBestTargets = 1;
-            }
-            else if (candidate->priority_ == bestTarget->priority_) {
+            } else if (candidate->priority_ == bestTarget->priority_) {
                 bestTargetList.append(candidate);
                 ++numBestTargets;
             }
         }
-        ++i;
     }
     if (bestTarget) {
         ref = bestTarget->ref_;
@@ -895,24 +854,21 @@ Tree::findUnambiguousTarget(const QString &target, Node::Genus genus, QString &r
     numBestTargets = 0;
     bestTarget = nullptr;
     key = Doc::canonicalTitle(target);
-    i = nodesByTargetRef_.find(key);
-    while (i != nodesByTargetRef_.constEnd()) {
-        if (i.key() != key)
+    for (auto it = nodesByTargetRef_.find(key); it != nodesByTargetRef_.constEnd(); ++it) {
+        if (it.key() != key)
             break;
-        TargetRec *candidate = i.value();
+        TargetRec *candidate = it.value();
         if ((genus == Node::DontCare) || (genus == candidate->genus())) {
             if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
                 bestTarget = candidate;
                 bestTargetList.clear();
                 bestTargetList.append(candidate);
                 numBestTargets = 1;
-            }
-            else if (candidate->priority_ == bestTarget->priority_) {
+            } else if (candidate->priority_ == bestTarget->priority_) {
                 bestTargetList.append(candidate);
                 ++numBestTargets;
             }
         }
-        ++i;
     }
     if (bestTarget) {
         ref = bestTarget->ref_;
@@ -928,32 +884,33 @@ Tree::findUnambiguousTarget(const QString &target, Node::Genus genus, QString &r
  */
 const PageNode *Tree::findPageNodeByTitle(const QString &title) const
 {
-    PageNodeMultiMap::const_iterator i;
+    PageNodeMultiMap::const_iterator it;
     if (title.contains(QChar(' ')))
-        i = pageNodesByTitle_.constFind(Doc::canonicalTitle(title));
+        it = pageNodesByTitle_.constFind(Doc::canonicalTitle(title));
     else
-        i = pageNodesByTitle_.constFind(title);
-    if (i != pageNodesByTitle_.constEnd()) {
+        it = pageNodesByTitle_.constFind(title);
+    if (it != pageNodesByTitle_.constEnd()) {
         /*
           Reporting all these duplicate section titles is probably
           overkill. We should report the duplicate file and let
           that suffice.
         */
-        PageNodeMultiMap::const_iterator j = i;
+        PageNodeMultiMap::const_iterator j = it;
         ++j;
-        if (j != pageNodesByTitle_.constEnd() && j.key() == i.key()) {
+        if (j != pageNodesByTitle_.constEnd() && j.key() == it.key()) {
             while (j != pageNodesByTitle_.constEnd()) {
-                if (j.key() == i.key() && j.value()->url().isEmpty()) {
+                if (j.key() == it.key() && j.value()->url().isEmpty()) {
                     break; // Just report one duplicate for now.
                 }
                 ++j;
             }
             if (j != pageNodesByTitle_.cend()) {
-                i.value()->location().warning("This page title exists in more than one file: " + title);
+                it.value()->location().warning("This page title exists in more than one file: "
+                                               + title);
                 j.value()->location().warning("[It also exists here]");
             }
         }
-        return i.value();
+        return it.value();
     }
     return nullptr;
 }
@@ -1020,11 +977,11 @@ CNMap *Tree::getCollectionMap(Node::NodeType type)
  */
 CollectionNode *Tree::getCollection(const QString &name, Node::NodeType type)
 {
-    CNMap *m = getCollectionMap(type);
-    if (m) {
-        CNMap::const_iterator i = m->constFind(name);
-        if (i != m->cend())
-            return i.value();
+    CNMap *map = getCollectionMap(type);
+    if (map) {
+        auto it = map->constFind(name);
+        if (it != map->cend())
+            return it.value();
     }
     return nullptr;
 }
@@ -1049,9 +1006,9 @@ CollectionNode *Tree::findCollection(const QString &name, Node::NodeType type)
     CNMap *m = getCollectionMap(type);
     if (!m) // error
         return nullptr;
-    CNMap::const_iterator i = m->constFind(name);
-    if (i != m->cend())
-        return i.value();
+    auto it = m->constFind(name);
+    if (it != m->cend())
+        return it.value();
     CollectionNode *cn = new CollectionNode(type, root(), name);
     cn->markNotSeen();
     m->insert(name, cn);
@@ -1183,7 +1140,7 @@ CollectionNode *Tree::addToQmlModule(const QString &name, Node *node)
     node->setQmlModule(cn);
     if (node->isQmlType()) {
         QmlTypeNode *n = static_cast<QmlTypeNode *>(node);
-        for (int i=0; i<qmid.size(); ++i) {
+        for (int i = 0; i < qmid.size(); ++i) {
             QString key = qmid[i] + "::" + node->name();
             insertQmlType(key, n);
         }
@@ -1214,7 +1171,7 @@ CollectionNode *Tree::addToJsModule(const QString &name, Node *node)
     node->setQmlModule(cn);
     if (node->isJsType()) {
         QmlTypeNode *n = static_cast<QmlTypeNode *>(node);
-        for (int i=0; i<qmid.size(); ++i) {
+        for (int i = 0; i < qmid.size(); ++i) {
             QString key = qmid[i] + "::" + node->name();
             insertQmlType(key, n);
         }
@@ -1229,7 +1186,7 @@ CollectionNode *Tree::addToJsModule(const QString &name, Node *node)
 void Tree::insertQmlType(const QString &key, QmlTypeNode *n)
 {
     if (!qmlTypeMap_.contains(key))
-        qmlTypeMap_.insert(key,n);
+        qmlTypeMap_.insert(key, n);
 }
 
 /*!
@@ -1244,13 +1201,11 @@ void Tree::insertQmlType(const QString &key, QmlTypeNode *n)
   pointer to it is returned. Otherwise, nullis returned. If
   \a relative is ull, the search begins at the tree root.
  */
-const FunctionNode *Tree::findFunctionNode(const QStringList &path,
-                                           const Parameters &parameters,
-                                           const Node *relative,
-                                           Node::Genus genus) const
+const FunctionNode *Tree::findFunctionNode(const QStringList &path, const Parameters &parameters,
+                                           const Node *relative, Node::Genus genus) const
 {
-    if (path.size() == 3 && !path[0].isEmpty() &&
-        ((genus == Node::QML) || (genus == Node::DontCare))) {
+    if (path.size() == 3 && !path[0].isEmpty()
+        && ((genus == Node::QML) || (genus == Node::DontCare))) {
         QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
         if (qcn == nullptr) {
             QStringList p(path[1]);
@@ -1333,11 +1288,8 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path,
 
   The node \a t
  */
-QString Tree::getNewLinkTarget(const Node *locNode,
-                               const Node *t,
-                               const QString &fileName,
-                               QString &text,
-                               bool broken)
+QString Tree::getNewLinkTarget(const Node *locNode, const Node *t, const QString &fileName,
+                               QString &text, bool broken)
 {
     QString physicalModuleName;
     if (t != nullptr && !broken) {
@@ -1345,20 +1297,18 @@ QString Tree::getNewLinkTarget(const Node *locNode,
         if (tree != this)
             tree->incrementLinkCount();
         physicalModuleName = tree->physicalModuleName();
-    }
-    else
+    } else
         physicalModuleName = "broken";
     incrementLinkCount();
     QString target = QString("qa-target-%1").arg(-(linkCount()));
     TargetLoc *tloc = new TargetLoc(locNode, target, fileName, text, broken);
     TargetList *tList = nullptr;
-    TargetListMap::iterator i = targetListMap_->find(physicalModuleName);
-    if (i == targetListMap_->end()) {
+    auto it = targetListMap_->find(physicalModuleName);
+    if (it == targetListMap_->end()) {
         tList = new TargetList;
-        i = targetListMap_->insert(physicalModuleName, tList);
-    }
-    else
-        tList = i.value();
+        it = targetListMap_->insert(physicalModuleName, tList);
+    } else
+        tList = it.value();
     tList->append(tloc);
     return target;
 }
@@ -1452,12 +1402,10 @@ void Tree::addToDontDocumentMap(QString &arg)
  */
 void Tree::markDontDocumentNodes()
 {
-    NodeMap::iterator i = dontDocumentMap_.begin();
-    while (i != dontDocumentMap_.end()) {
-        Aggregate *node = findAggregate(i.key());
+    for (auto it = dontDocumentMap_.begin(); it != dontDocumentMap_.end(); ++it) {
+        Aggregate *node = findAggregate(it.key());
         if (node != nullptr)
             node->setStatus(Node::DontDocument);
-        ++i;
     }
 }
 

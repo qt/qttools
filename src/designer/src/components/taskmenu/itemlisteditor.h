@@ -99,8 +99,8 @@ protected:
     DesignerEditorFactory *m_editorFactory;
     QSplitter *m_propertySplitter =  nullptr;
     QtTreePropertyBrowser *m_propertyBrowser;
-    QList<QtVariantProperty*> m_properties;
-    QList<QtVariantProperty*> m_rootProperties;
+    QVector<QtVariantProperty*> m_properties;
+    QVector<QtVariantProperty*> m_rootProperties;
     QHash<QtVariantProperty*, int> m_propertyToRole;
     bool m_updatingBrowser = false;
 };

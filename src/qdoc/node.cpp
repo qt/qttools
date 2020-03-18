@@ -29,6 +29,7 @@
 #include "node.h"
 
 #include "codemarker.h"
+#include "config.h"
 #include "cppcodeparser.h"
 #include "generator.h"
 #include "puredocparser.h"
@@ -38,6 +39,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/quuid.h>
+#include <QtCore/qversionnumber.h>
 
 #include <algorithm>
 
@@ -130,21 +132,21 @@ bool Node::changeType(NodeType from, NodeType to)
     if (nodeType_ == from) {
         nodeType_ = to;
         switch (to) {
-          case QmlType:
-          case QmlModule:
-          case QmlProperty:
-          case QmlBasicType:
-              setGenus(Node::QML);
-              break;
-          case JsType:
-          case JsModule:
-          case JsProperty:
-          case JsBasicType:
-              setGenus(Node::JS);
-              break;
-          default:
-              setGenus(Node::CPP);
-              break;
+        case QmlType:
+        case QmlModule:
+        case QmlProperty:
+        case QmlBasicType:
+            setGenus(Node::QML);
+            break;
+        case JsType:
+        case JsModule:
+        case JsProperty:
+        case JsBasicType:
+            setGenus(Node::JS);
+            break;
+        default:
+            setGenus(Node::CPP);
+            break;
         }
         return true;
     }
@@ -158,8 +160,8 @@ bool Node::changeType(NodeType from, NodeType to)
  */
 bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 {
-#define LT_RETURN_IF_NOT_EQUAL(a, b) \
-    if ((a) != (b)) \
+#define LT_RETURN_IF_NOT_EQUAL(a, b)                                                               \
+    if ((a) != (b))                                                                                \
         return (a) < (b);
 
     if (n1->isPageNode() && n2->isPageNode()) {
@@ -598,25 +600,24 @@ QString Node::plainName() const
 /*!
   Constructs and returns the node's fully qualified name by
   recursively ascending the parent links and prepending each
-  parent name + "::". Breaks out when the parent pointer is
-  \a relative. Almost all calls to this function pass 0 for
-  \a relative.
+  parent name + "::". Breaks out when reaching a HeaderNode,
+  or when the parent pointer is \a relative. Typically, calls
+  to this function pass \c nullptr for \a relative.
  */
 QString Node::plainFullName(const Node *relative) const
 {
     if (name_.isEmpty())
         return QLatin1String("global");
 
-    QString fullName;
+    QStringList parts;
     const Node *node = this;
-    while (node) {
-        fullName.prepend(node->plainName());
+    while (node && !node->isHeader()) {
+        parts.prepend(node->plainName());
         if (node->parent() == relative || node->parent()->name().isEmpty())
             break;
-        fullName.prepend(QLatin1String("::"));
         node = node->parent();
     }
-    return fullName;
+    return parts.join(QLatin1String("::"));
 }
 
 /*!
@@ -659,9 +660,9 @@ QString Node::fullName(const Node *relative) const
   If a match is found, return true. If no match is found,
   return false.
  */
-bool Node::match(const QList<int> &types) const
+bool Node::match(const QVector<int> &types) const
 {
-    for (int i=0; i<types.size(); ++i) {
+    for (int i = 0; i < types.size(); ++i) {
         if (nodeType() == types.at(i))
             return true;
     }
@@ -721,8 +722,8 @@ Node::Node(NodeType type, Aggregate *parent, const QString &name)
         operators_.insert("&=", "bitwise-and-assign");
         operators_.insert("|=", "bitwise-or-assign");
         operators_.insert("^=", "bitwise-xor-assign");
-        operators_.insert("<<=" ,"bitwise-left-shift-assign");
-        operators_.insert(">>=" ,"bitwise-right-shift-assign");
+        operators_.insert("<<=", "bitwise-left-shift-assign");
+        operators_.insert(">>=", "bitwise-right-shift-assign");
         operators_.insert("||", "logical-or");
         operators_.insert("&&", "logical-and");
         operators_.insert("()", "call");
@@ -761,38 +762,38 @@ Node::Node(NodeType type, Aggregate *parent, const QString &name)
 Node::PageType Node::getPageType(Node::NodeType t)
 {
     switch (t) {
-      case Node::Namespace:
-      case Node::Class:
-      case Node::Struct:
-      case Node::Union:
-      case Node::HeaderFile:
-      case Node::Enum:
-      case Node::Function:
-      case Node::Typedef:
-      case Node::Property:
-      case Node::Variable:
-      case Node::QmlType:
-      case Node::QmlProperty:
-      case Node::QmlBasicType:
-      case Node::JsType:
-      case Node::JsProperty:
-      case Node::JsBasicType:
-      case Node::SharedComment:
-          return Node::ApiPage;
-      case Node::Example:
-          return Node::ExamplePage;
-      case Node::Page:
-      case Node::ExternalPage:
-          return Node::NoPageType;
-      case Node::Group:
-      case Node::Module:
-      case Node::QmlModule:
-      case Node::JsModule:
-      case Node::Collection:
-          return Node::OverviewPage;
-      case Node::Proxy:
-      default:
-          return Node::NoPageType;
+    case Node::Namespace:
+    case Node::Class:
+    case Node::Struct:
+    case Node::Union:
+    case Node::HeaderFile:
+    case Node::Enum:
+    case Node::Function:
+    case Node::Typedef:
+    case Node::Property:
+    case Node::Variable:
+    case Node::QmlType:
+    case Node::QmlProperty:
+    case Node::QmlBasicType:
+    case Node::JsType:
+    case Node::JsProperty:
+    case Node::JsBasicType:
+    case Node::SharedComment:
+        return Node::ApiPage;
+    case Node::Example:
+        return Node::ExamplePage;
+    case Node::Page:
+    case Node::ExternalPage:
+        return Node::NoPageType;
+    case Node::Group:
+    case Node::Module:
+    case Node::QmlModule:
+    case Node::JsModule:
+    case Node::Collection:
+        return Node::OverviewPage;
+    case Node::Proxy:
+    default:
+        return Node::NoPageType;
     }
 }
 
@@ -808,38 +809,38 @@ Node::PageType Node::getPageType(Node::NodeType t)
 Node::Genus Node::getGenus(Node::NodeType t)
 {
     switch (t) {
-      case Node::Enum:
-      case Node::Class:
-      case Node::Struct:
-      case Node::Union:
-      case Node::Module:
-      case Node::Typedef:
-      case Node::Property:
-      case Node::Variable:
-      case Node::Function:
-      case Node::Namespace:
-      case Node::HeaderFile:
-          return Node::CPP;
-      case Node::QmlType:
-      case Node::QmlModule:
-      case Node::QmlProperty:
-      case Node::QmlBasicType:
-          return Node::QML;
-      case Node::JsType:
-      case Node::JsModule:
-      case Node::JsProperty:
-      case Node::JsBasicType:
-          return Node::JS;
-      case Node::Page:
-      case Node::Group:
-      case Node::Example:
-      case Node::ExternalPage:
-          return Node::DOC;
-      case Node::Collection:
-      case Node::SharedComment:
-      case Node::Proxy:
-      default:
-          return Node::DontCare;
+    case Node::Enum:
+    case Node::Class:
+    case Node::Struct:
+    case Node::Union:
+    case Node::Module:
+    case Node::Typedef:
+    case Node::Property:
+    case Node::Variable:
+    case Node::Function:
+    case Node::Namespace:
+    case Node::HeaderFile:
+        return Node::CPP;
+    case Node::QmlType:
+    case Node::QmlModule:
+    case Node::QmlProperty:
+    case Node::QmlBasicType:
+        return Node::QML;
+    case Node::JsType:
+    case Node::JsModule:
+    case Node::JsProperty:
+    case Node::JsBasicType:
+        return Node::JS;
+    case Node::Page:
+    case Node::Group:
+    case Node::Example:
+    case Node::ExternalPage:
+        return Node::DOC;
+    case Node::Collection:
+    case Node::SharedComment:
+    case Node::Proxy:
+    default:
+        return Node::DontCare;
     }
 }
 
@@ -1048,12 +1049,24 @@ void Node::setLink(LinkType linkType, const QString &link, const QString &desc)
 
 /*!
     Sets the information about the project and version a node was introduced
-    in. The string is simplified, removing excess whitespace before being
-    stored.
+    in, unless the version is lower than the 'ignoresince.<project>'
+    configuration variable.
  */
 void Node::setSince(const QString &since)
 {
-    since_ = since.simplified();
+    QStringList parts = since.split(QLatin1Char(' '));
+    QString project;
+    if (parts.size() > 1)
+        project = Config::dot + parts.first();
+
+    QVersionNumber cutoff =
+            QVersionNumber::fromString(Config::instance().getString(CONFIG_IGNORESINCE + project))
+                    .normalized();
+
+    if (!cutoff.isNull() && QVersionNumber::fromString(parts.last()).normalized() < cutoff)
+        return;
+
+    since_ = parts.join(QLatin1Char(' '));
 }
 
 /*!
@@ -1079,19 +1092,16 @@ QString Node::accessString() const
 QString Node::extractClassName(const QString &string) const
 {
     QString result;
-    for (int i=0; i<=string.size(); ++i) {
+    for (int i = 0; i <= string.size(); ++i) {
         QChar ch;
         if (i != string.size())
             ch = string.at(i);
 
         QChar lower = ch.toLower();
-        if ((lower >= QLatin1Char('a') && lower <= QLatin1Char('z')) ||
-                ch.digitValue() >= 0 ||
-                ch == QLatin1Char('_') ||
-                ch == QLatin1Char(':')) {
+        if ((lower >= QLatin1Char('a') && lower <= QLatin1Char('z')) || ch.digitValue() >= 0
+            || ch == QLatin1Char('_') || ch == QLatin1Char(':')) {
             result += ch;
-        }
-        else if (!result.isEmpty()) {
+        } else if (!result.isEmpty()) {
             if (result != QLatin1String("const"))
                 return result;
             result.clear();
@@ -1125,7 +1135,6 @@ Node::ThreadSafeness Node::inheritedThreadSafeness() const
         return parent_->inheritedThreadSafeness();
     return safeness_;
 }
-
 
 /*!
   If this node is a QML or JS type node, return a pointer to
@@ -1193,7 +1202,7 @@ Aggregate *Node::root() const
 /*!
   Returns a pointer to the Tree this node is in.
  */
-Tree* Node::tree() const
+Tree *Node::tree() const
 {
     return root()->tree();
 }
@@ -1203,7 +1212,7 @@ Tree* Node::tree() const
   location, or both, depending on the suffix of the file
   name from the file path in location \a t.
  */
-void Node::setLocation(const Location& t)
+void Node::setLocation(const Location &t)
 {
     QString suffix = t.fileSuffix();
     if (suffix == "h")
@@ -1246,7 +1255,6 @@ QString Node::qualifyWithParentName()
         return parent_->name() + "::" + name_;
     return name_;
 }
-
 
 /*!
   Returns the QML node's qualified name by stripping off the
@@ -1344,58 +1352,41 @@ QString Node::cleanId(const QString &str)
     const QChar c = name[0];
     const uint u = c.unicode();
 
-    if ((u >= 'a' && u <= 'z') ||
-            (u >= 'A' && u <= 'Z') ||
-            (u >= '0' && u <= '9')) {
+    if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9')) {
         clean += c;
-    }
-    else if (u == '~') {
+    } else if (u == '~') {
         clean += "dtor.";
-    }
-    else if (u == '_') {
+    } else if (u == '_') {
         clean += "underscore.";
-    }
-    else {
+    } else {
         clean += QLatin1Char('a');
     }
 
-    for (int i = 1; i < (int) name.length(); i++) {
+    for (int i = 1; i < name.length(); i++) {
         const QChar c = name[i];
         const uint u = c.unicode();
-        if ((u >= 'a' && u <= 'z') ||
-                (u >= 'A' && u <= 'Z') ||
-                (u >= '0' && u <= '9') || u == '-' ||
-                u == '_' || u == '.') {
+        if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9') || u == '-'
+            || u == '_' || u == '.') {
             clean += c;
-        }
-        else if (c.isSpace() || u == ':' ) {
+        } else if (c.isSpace() || u == ':') {
             clean += QLatin1Char('-');
-        }
-        else if (u == '!') {
+        } else if (u == '!') {
             clean += "-not";
-        }
-        else if (u == '&') {
+        } else if (u == '&') {
             clean += "-and";
-        }
-        else if (u == '<') {
+        } else if (u == '<') {
             clean += "-lt";
-        }
-        else if (u == '=') {
+        } else if (u == '=') {
             clean += "-eq";
-        }
-        else if (u == '>') {
+        } else if (u == '>') {
             clean += "-gt";
-        }
-        else if (u == '#') {
+        } else if (u == '#') {
             clean += "-hash";
-        }
-        else if (u == '(') {
+        } else if (u == '(') {
             clean += QLatin1Char('-');
-        }
-        else if (u == ')') {
+        } else if (u == ')') {
             clean += QLatin1Char('-');
-        }
-        else {
+        } else {
             clean += QLatin1Char('-');
             clean += QString::number((int)u, 16);
         }
@@ -1495,11 +1486,13 @@ QString Node::physicalModuleName() const
   \sa PageType
 */
 
-/*! \fn  QString Node::signature(bool values, bool noReturnType) const
+/*! \fn  QString Node::signature(bool values, bool noReturnType, bool templateParams) const
 
   If this node is a FunctionNode, this function returns the function's
-  signature, including default values if \a values is \c true, and
-  including the function's return type if \a noReturnType is \c false.
+  signature, including default values if \a values is \c true,
+  function's return type if \a noReturnType is \c false, and
+  prefixed with 'template <parameter_list>' for function templates
+  if templateParams is \true.
 
   If this node is not a FunctionNode, this function returns plainName().
 */
@@ -1829,12 +1822,6 @@ QString Node::physicalModuleName() const
   Returns the node's reconstituted brief data member.
  */
 
-/*! \fn void Node::addPageKeywords(const QString &t)
-  If this is a PageNode, the function appends the string \a t
-  to the page keywords data member. Otherwise the function does
-  nothing.
- */
-
 /*! \fn bool Node::isSharingComment() const
   This function returns \c true if the node is sharing a comment
   with other nodes. For example, multiple functions can be documented
@@ -2007,13 +1994,9 @@ Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findF
                 Node *node = nodes.at(i);
                 if (genus == node->genus()) {
                     if (findFlags & TypesOnly) {
-                        if (!node->isTypedef()
-                                && !node->isClassNode()
-                                && !node->isQmlType()
-                                && !node->isQmlBasicType()
-                                && !node->isJsType()
-                                && !node->isJsBasicType()
-                                && !node->isEnumType())
+                        if (!node->isTypedef() && !node->isClassNode() && !node->isQmlType()
+                            && !node->isQmlBasicType() && !node->isJsType()
+                            && !node->isJsBasicType() && !node->isEnumType())
                             continue;
                     } else if (findFlags & IgnoreModules && node->isModule())
                         continue;
@@ -2035,16 +2018,16 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
 {
     nodes.clear();
     int nonfunctionCount = nonfunctionMap_.count(name);
-    FunctionMap::const_iterator i = functionMap_.find(name);
-    if (i != functionMap_.end()) {
+    auto it = functionMap_.find(name);
+    if (it != functionMap_.end()) {
         int functionCount = 0;
-        FunctionNode *fn = i.value();
+        FunctionNode *fn = it.value();
         while (fn != nullptr) {
             ++functionCount;
             fn = fn->nextOverload();
         }
         nodes.reserve(nonfunctionCount + functionCount);
-        fn = i.value();
+        fn = it.value();
         while (fn != nullptr) {
             nodes.append(fn);
             fn = fn->nextOverload();
@@ -2053,10 +2036,9 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
         nodes.reserve(nonfunctionCount);
     }
     if (nonfunctionCount > 0) {
-        NodeMap::const_iterator i = nonfunctionMap_.find(name);
-        while (i != nonfunctionMap_.end() && i.key() == name) {
-            nodes.append(i.value());
-            ++i;
+        for (auto it = nonfunctionMap_.find(name); it != nonfunctionMap_.end() && it.key() == name;
+             ++it) {
+            nodes.append(it.value());
         }
     }
 }
@@ -2068,10 +2050,10 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
   passed must be one of the isXxx() functions in class Node
   that tests the node type.
  */
-Node *Aggregate::findNonfunctionChild(const QString &name, bool (Node::*isMatch) () const)
+Node *Aggregate::findNonfunctionChild(const QString &name, bool (Node::*isMatch)() const)
 {
     NodeList nodes = nonfunctionMap_.values(name);
-    for (int i=0; i<nodes.size(); ++i) {
+    for (int i = 0; i < nodes.size(); ++i) {
         Node *node = nodes.at(i);
         if ((node->*(isMatch))())
             return node;
@@ -2088,10 +2070,10 @@ Node *Aggregate::findNonfunctionChild(const QString &name, bool (Node::*isMatch)
  */
 FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters &parameters)
 {
-    FunctionMap::iterator i = functionMap_.find(name);
-    if (i == functionMap_.end())
+    auto it = functionMap_.find(name);
+    if (it == functionMap_.end())
         return nullptr;
-    FunctionNode *fn = i.value();
+    FunctionNode *fn = it.value();
 
     if (parameters.isEmpty() && fn->parameters().isEmpty() && !fn->isInternal())
         return fn;
@@ -2114,10 +2096,10 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
     }
 
     if (parameters.isEmpty()) {
-        for (fn = i.value(); fn != nullptr; fn = fn->nextOverload())
+        for (fn = it.value(); fn != nullptr; fn = fn->nextOverload())
             if (!fn->isInternal())
                 return fn;
-        return i.value();
+        return it.value();
     }
     return nullptr;
 }
@@ -2184,14 +2166,13 @@ void Aggregate::normalizeOverloads()
       Ensure that none of the primary functions is inactive, private,
       or marked \e {overload}.
     */
-    FunctionMap::Iterator i = functionMap_.begin();
-    while (i != functionMap_.end()) {
-        FunctionNode *fn = i.value();
+    for (auto it = functionMap_.begin(); it != functionMap_.end(); ++it) {
+        FunctionNode *fn = it.value();
         if (fn->isOverload()) {
             FunctionNode *primary = fn->findPrimaryFunction();
             if (primary) {
                 primary->setNextOverload(fn);
-                i.value() = primary;
+                it.value() = primary;
                 fn = primary;
             } else {
                 fn->clearOverloadFlag();
@@ -2222,7 +2203,7 @@ void Aggregate::normalizeOverloads()
             internalFn->setOverloadNumber(++count);
             internalFn = internalFn->nextOverload();
         }
-        ++i; // process next function in function map.
+        // process next function in function map.
     }
     /*
       Recursive part.
@@ -2241,7 +2222,7 @@ void Aggregate::normalizeOverloads()
 const NodeList &Aggregate::nonfunctionList()
 {
     nonfunctionList_ = nonfunctionMap_.values();
-    std::sort(nonfunctionList_.begin(), nonfunctionList_.end());
+    std::sort(nonfunctionList_.begin(), nonfunctionList_.end(), Node::nodeNameLessThan);
     nonfunctionList_.erase(std::unique(nonfunctionList_.begin(), nonfunctionList_.end()),
                            nonfunctionList_.end());
     return nonfunctionList_;
@@ -2362,11 +2343,11 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
  */
 void Aggregate::addFunction(FunctionNode *fn)
 {
-    FunctionMap::iterator i = functionMap_.find(fn->name());
-    if (i == functionMap_.end())
+    auto it = functionMap_.find(fn->name());
+    if (it == functionMap_.end())
         functionMap_.insert(fn->name(), fn);
     else
-        i.value()->appendOverload(fn);
+        it.value()->appendOverload(fn);
     functionCount_++;
 }
 
@@ -2382,10 +2363,10 @@ void Aggregate::addFunction(FunctionNode *fn)
  */
 void Aggregate::adoptFunction(FunctionNode *fn)
 {
-    FunctionMap::iterator i = functionMap_.find(fn->name());
-    if (i == functionMap_.end())
+    auto it = functionMap_.find(fn->name());
+    if (it == functionMap_.end())
         functionMap_.insert(fn->name(), fn);
-    functionCount_++;
+    ++functionCount_;
 }
 
 /*!
@@ -2396,7 +2377,7 @@ void Aggregate::adoptFunction(FunctionNode *fn)
  */
 void Aggregate::addChildByTitle(Node *child, const QString &title)
 {
-    nonfunctionMap_.insertMulti(title, child);
+    nonfunctionMap_.insert(title, child);
 }
 
 /*!
@@ -2428,7 +2409,7 @@ void Aggregate::addChild(Node *child)
     if (child->isFunction()) {
         addFunction(static_cast<FunctionNode *>(child));
     } else if (!child->name().isEmpty()) {
-        nonfunctionMap_.insertMulti(child->name(), child);
+        nonfunctionMap_.insert(child->name(), child);
         if (child->isEnumType())
             enumChildren_.append(child);
     }
@@ -2453,7 +2434,7 @@ void Aggregate::adoptChild(Node *child)
         if (child->isFunction()) {
             adoptFunction(static_cast<FunctionNode *>(child));
         } else if (!child->name().isEmpty()) {
-            nonfunctionMap_.insertMulti(child->name(), child);
+            nonfunctionMap_.insert(child->name(), child);
             if (child->isEnumType())
                 enumChildren_.append(child);
         }
@@ -2530,8 +2511,8 @@ QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, bool attached) cons
  */
 bool Aggregate::hasOverloads(const FunctionNode *fn) const
 {
-    FunctionMap::const_iterator i = functionMap_.find(fn->name());
-    return (i == functionMap_.end() ? false : (i.value()->nextOverload() != nullptr));
+    auto it = functionMap_.find(fn->name());
+    return (it == functionMap_.end() ? false : (it.value()->nextOverload() != nullptr));
 }
 
 /*!
@@ -2542,7 +2523,7 @@ void Aggregate::printChildren(const QString &title)
 {
     qDebug() << title << name() << children_.size();
     if (children_.size() > 0) {
-        for (int i=0; i<children_.size(); ++i) {
+        for (int i = 0; i < children_.size(); ++i) {
             Node *n = children_.at(i);
             qDebug() << "  CHILD:" << n->name() << n->nodeTypeString();
         }
@@ -2565,19 +2546,18 @@ void Aggregate::printChildren(const QString &title)
  */
 void Aggregate::removeFunctionNode(FunctionNode *fn)
 {
-    FunctionMap::Iterator i = functionMap_.find(fn->name());
-    if (i != functionMap_.end()) {
-        if (i.value() == fn) {
+    auto it = functionMap_.find(fn->name());
+    if (it != functionMap_.end()) {
+        if (it.value() == fn) {
             if (fn->nextOverload() != nullptr) {
-                i.value() = fn->nextOverload();
+                it.value() = fn->nextOverload();
                 fn->setNextOverload(nullptr);
                 fn->setOverloadNumber(0);
-            }
-            else {
-                functionMap_.erase(i);
+            } else {
+                functionMap_.erase(it);
             }
         } else {
-            FunctionNode *current = i.value();
+            FunctionNode *current = it.value();
             while (current != nullptr) {
                 if (current->nextOverload() == fn) {
                     current->setNextOverload(fn->nextOverload());
@@ -2601,11 +2581,7 @@ void Aggregate::removeFunctionNode(FunctionNode *fn)
  */
 static bool keep(FunctionNode *fn)
 {
-    if (fn->isPrivate() ||
-        fn->isObsolete() ||
-        fn->isInternal() ||
-        fn->isSomeCtor() ||
-        fn->isDtor())
+    if (fn->isPrivate() || fn->isObsolete() || fn->isInternal() || fn->isSomeCtor() || fn->isDtor())
         return false;
     return true;
 }
@@ -2620,9 +2596,8 @@ static bool keep(FunctionNode *fn)
  */
 void Aggregate::findAllFunctions(NodeMapMap &functionIndex)
 {
-    FunctionMap::const_iterator i;
-    for (i = functionMap_.constBegin(); i != functionMap_.constEnd(); ++i) {
-        FunctionNode *fn = i.value();
+    for (auto it = functionMap_.constBegin(); it != functionMap_.constEnd(); ++it) {
+        FunctionNode *fn = it.value();
         if (keep(fn))
             functionIndex[fn->name()].insert(fn->parent()->fullDocumentName(), fn);
         fn = fn->nextOverload();
@@ -2671,9 +2646,9 @@ bool Aggregate::hasObsoleteMembers() const
 {
     for (const auto *node : children_) {
         if (!node->isPrivate() && node->isObsolete()) {
-            if (node->isFunction() || node->isProperty() || node->isEnumType() ||
-                node->isTypedef() || node->isTypeAlias() || node->isVariable() ||
-                node->isQmlProperty() || node->isJsProperty())
+            if (node->isFunction() || node->isProperty() || node->isEnumType() || node->isTypedef()
+                || node->isTypeAlias() || node->isVariable() || node->isQmlProperty()
+                || node->isJsProperty())
                 return true;
         }
     }
@@ -2703,7 +2678,8 @@ void Aggregate::findAllObsoleteThings()
             } else if (node->isQmlType() || node->isJsType()) {
                 Aggregate *a = static_cast<Aggregate *>(node);
                 if (a->hasObsoleteMembers())
-                    QDocDatabase::qmlTypesWithObsoleteMembers().insert(node->qualifyQmlName(), node);
+                    QDocDatabase::qmlTypesWithObsoleteMembers().insert(node->qualifyQmlName(),
+                                                                       node);
             } else if (node->isAggregate()) {
                 static_cast<Aggregate *>(node)->findAllObsoleteThings();
             }
@@ -2719,14 +2695,15 @@ void Aggregate::findAllObsoleteThings()
 void Aggregate::findAllClasses()
 {
     for (auto *node : qAsConst(children_)) {
-        if (!node->isPrivate() && !node->isInternal() &&
-            node->tree()->camelCaseModuleName() != QString("QDoc")) {
+        if (!node->isPrivate() && !node->isInternal() && !node->isDontDocument()
+            && node->tree()->camelCaseModuleName() != QString("QDoc")) {
             if (node->isClassNode()) {
                 QDocDatabase::cppClasses().insert(node->qualifyCppName().toLower(), node);
-            } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType() || node->isJsBasicType()) {
+            } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
+                       || node->isJsBasicType()) {
                 QString name = node->unqualifyQmlName();
                 QDocDatabase::qmlTypes().insert(name, node);
-                //also add to the QML basic type map
+                // also add to the QML basic type map
                 if (node->isQmlBasicType() || node->isJsBasicType())
                     QDocDatabase::qmlBasicTypes().insert(name, node);
             } else if (node->isExample()) {
@@ -2750,7 +2727,7 @@ void Aggregate::findAllAttributions(NodeMultiMap &attributions)
     for (auto *node : qAsConst(children_)) {
         if (!node->isPrivate()) {
             if (node->pageType() == Node::AttributionPage)
-                attributions.insertMulti(node->tree()->indexTitle(), node);
+                attributions.insert(node->tree()->indexTitle(), node);
             else if (node->isAggregate())
                 static_cast<Aggregate *>(node)->findAllAttributions(attributions);
         }
@@ -2771,15 +2748,15 @@ void Aggregate::findAllSince()
         QString sinceString = node->since();
         // Insert a new entry into each map for each new since string found.
         if (!node->isPrivate() && !sinceString.isEmpty()) {
-            NodeMultiMapMap::iterator nsmap = QDocDatabase::newSinceMaps().find(sinceString);
+            auto nsmap = QDocDatabase::newSinceMaps().find(sinceString);
             if (nsmap == QDocDatabase::newSinceMaps().end())
                 nsmap = QDocDatabase::newSinceMaps().insert(sinceString, NodeMultiMap());
 
-            NodeMapMap::iterator ncmap = QDocDatabase::newClassMaps().find(sinceString);
+            auto ncmap = QDocDatabase::newClassMaps().find(sinceString);
             if (ncmap == QDocDatabase::newClassMaps().end())
                 ncmap = QDocDatabase::newClassMaps().insert(sinceString, NodeMap());
 
-            NodeMapMap::iterator nqcmap = QDocDatabase::newQmlTypeMaps().find(sinceString);
+            auto nqcmap = QDocDatabase::newQmlTypeMaps().find(sinceString);
             if (nqcmap == QDocDatabase::newQmlTypeMaps().end())
                 nqcmap = QDocDatabase::newQmlTypeMaps().insert(sinceString, NodeMap());
 
@@ -2788,8 +2765,7 @@ void Aggregate::findAllSince()
                 FunctionNode *fn = static_cast<FunctionNode *>(node);
                 if (!fn->isObsolete() && !fn->isSomeCtor() && !fn->isDtor())
                     nsmap.value().insert(fn->name(), fn);
-            }
-            else if (node->isClassNode()) {
+            } else if (node->isClassNode()) {
                 // Insert classes into the since and class maps.
                 QString name = node->qualifyWithParentName();
                 nsmap.value().insert(name, node);
@@ -2840,7 +2816,7 @@ void Aggregate::resolveQmlInheritance()
         } else {
             if (!type->importList().isEmpty()) {
                 const ImportList &imports = type->importList();
-                for (int i=0; i<imports.size(); ++i) {
+                for (int i = 0; i < imports.size(); ++i) {
                     base = QDocDatabase::qdocDB()->findQmlType(imports[i], type->qmlBaseName());
                     if (base && (base != type)) {
                         if (base->logicalModuleVersion()[0] != imports[i].version_[0])
@@ -2931,7 +2907,7 @@ QString Aggregate::typeWord(bool cap) const
   is called recursively with the list of base classes from
   that private or internal class node.
  */
-void ClassNode::promotePublicBases(const QList<RelatedClass> &bases)
+void ClassNode::promotePublicBases(const QVector<RelatedClass> &bases)
 {
     if (!bases.isEmpty()) {
         for (int i = bases.size() - 1; i >= 0; --i) {
@@ -2964,13 +2940,14 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *bc = bases_.at(i).node_;
         if (bc == nullptr)
             bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
-        if (bc != nullptr && (bc->isPrivate() || bc->isInternal() || found.contains(bc))) {
+        if (bc != nullptr
+            && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument()
+                || found.contains(bc))) {
             RelatedClass rc = bases_.at(i);
             bases_.removeAt(i);
             ignoredBases_.append(rc);
             promotePublicBases(bc->baseClasses());
-        }
-        else {
+        } else {
             ++i;
         }
         found.insert(bc);
@@ -2979,13 +2956,12 @@ void ClassNode::removePrivateAndInternalBases()
     i = 0;
     while (i < derived_.size()) {
         ClassNode *dc = derived_.at(i).node_;
-        if (dc != nullptr && (dc->isPrivate() || dc->isInternal())) {
+        if (dc != nullptr && (dc->isPrivate() || dc->isInternal() || dc->isDontDocument())) {
             derived_.removeAt(i);
-            const QList<RelatedClass> &dd = dc->derivedClasses();
+            const QVector<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)
                 derived_.insert(i, dd.at(j));
-        }
-        else {
+        } else {
             ++i;
         }
     }
@@ -2995,20 +2971,17 @@ void ClassNode::removePrivateAndInternalBases()
  */
 void ClassNode::resolvePropertyOverriddenFromPtrs(PropertyNode *pn)
 {
-    QList<RelatedClass>::const_iterator bc = baseClasses().constBegin();
-    while (bc != baseClasses().constEnd()) {
-        ClassNode *cn = bc->node_;
+    for (const auto &baseClass : qAsConst(baseClasses())) {
+        ClassNode *cn = baseClass.node_;
         if (cn) {
             Node *n = cn->findNonfunctionChild(pn->name(), &Node::isProperty);
             if (n) {
                 PropertyNode *baseProperty = static_cast<PropertyNode *>(n);
                 cn->resolvePropertyOverriddenFromPtrs(baseProperty);
                 pn->setOverriddenFrom(baseProperty);
-            }
-            else
+            } else
                 cn->resolvePropertyOverriddenFromPtrs(pn);
         }
-        ++bc;
     }
 }
 
@@ -3104,8 +3077,12 @@ void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
             QString msg1 = node->name();
             if (node->isFunction())
                 msg1 += "()";
-            msg1 += tr(" is documented, but namespace %1 is not documented in any module.").arg(name());
-            QString msg2 = tr("Add /*! '\\%1 %2' ... */ or remove the qdoc comment marker (!) at that line number.").arg(COMMAND_NAMESPACE).arg(name());
+            msg1 += tr(" is documented, but namespace %1 is not documented in any module.")
+                            .arg(name());
+            QString msg2 = tr("Add /*! '\\%1 %2' ... */ or remove the qdoc comment marker (!) at "
+                              "that line number.")
+                                   .arg(COMMAND_NAMESPACE)
+                                   .arg(name());
 
             node->doc().location().warning(msg1, msg2);
         }
@@ -3351,8 +3328,7 @@ void ClassNode::addDerivedClass(Access access, ClassNode *node)
   before the generate phase of qdoc. In an unresolved base
   class, the pointer to the base class node is 0.
  */
-void ClassNode::addUnresolvedBaseClass(Access access,
-                                       const QStringList &path,
+void ClassNode::addUnresolvedBaseClass(Access access, const QStringList &path,
                                        const QString &signature)
 {
     bases_.append(RelatedClass(access, path, signature));
@@ -3382,7 +3358,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 
     PropertyNode *pn = nullptr;
 
-    const QList<RelatedClass> &bases = baseClasses();
+    const QVector<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {
             ClassNode *cn = bases[i].node_;
@@ -3393,7 +3369,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
             }
         }
     }
-    const QList<RelatedClass> &ignoredBases = ignoredBaseClasses();
+    const QVector<RelatedClass> &ignoredBases = ignoredBaseClasses();
     if (!ignoredBases.isEmpty()) {
         for (int i = 0; i < ignoredBases.size(); ++i) {
             ClassNode *cn = ignoredBases[i].node_;
@@ -3417,7 +3393,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 QmlTypeNode *ClassNode::findQmlBaseNode()
 {
     QmlTypeNode *result = nullptr;
-    const QList<RelatedClass> &bases = baseClasses();
+    const QVector<RelatedClass> &bases = baseClasses();
 
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {
@@ -3451,22 +3427,21 @@ QmlTypeNode *ClassNode::findQmlBaseNode()
  */
 FunctionNode *ClassNode::findOverriddenFunction(const FunctionNode *fn)
 {
-    QList<RelatedClass>::Iterator bc = bases_.begin();
-    while (bc != bases_.end()) {
-        ClassNode *cn = bc->node_;
+    for (auto &bc : bases_) {
+        ClassNode *cn = bc.node_;
         if (cn == nullptr) {
-            cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
-            bc->node_ = cn;
+            cn = QDocDatabase::qdocDB()->findClassNode(bc.path_);
+            bc.node_ = cn;
         }
         if (cn != nullptr) {
             FunctionNode *result = cn->findFunctionChild(fn);
-            if (result != nullptr && !result->isInternal() && !result->isNonvirtual() && result->hasDoc())
+            if (result != nullptr && !result->isInternal() && !result->isNonvirtual()
+                && result->hasDoc())
                 return result;
             result = cn->findOverriddenFunction(fn);
             if (result != nullptr && !result->isNonvirtual())
                 return result;
         }
-        ++bc;
     }
     return nullptr;
 }
@@ -3480,31 +3455,27 @@ FunctionNode *ClassNode::findOverriddenFunction(const FunctionNode *fn)
  */
 PropertyNode *ClassNode::findOverriddenProperty(const FunctionNode *fn)
 {
-    QList<RelatedClass>::Iterator bc = bases_.begin();
-    while (bc != bases_.end()) {
-        ClassNode *cn = bc->node_;
+    for (auto &baseClass : bases_) {
+        ClassNode *cn = baseClass.node_;
         if (cn == nullptr) {
-            cn = QDocDatabase::qdocDB()->findClassNode(bc->path_);
-            bc->node_ = cn;
+            cn = QDocDatabase::qdocDB()->findClassNode(baseClass.path_);
+            baseClass.node_ = cn;
         }
         if (cn != nullptr) {
             const NodeList &children = cn->childNodes();
-            NodeList::const_iterator i = children.begin();
-            while (i != children.end()) {
-                if ((*i)->isProperty()) {
-                    PropertyNode *pn = static_cast<PropertyNode *>(*i);
+            for (const auto &child : children) {
+                if (child->isProperty()) {
+                    PropertyNode *pn = static_cast<PropertyNode *>(child);
                     if (pn->name() == fn->name() || pn->hasAccessFunction(fn->name())) {
                         if (pn->hasDoc())
                             return pn;
                     }
                 }
-                i++;
             }
             PropertyNode *result = cn->findOverriddenProperty(fn);
             if (result != nullptr)
                 return result;
         }
-        ++bc;
     }
     return nullptr;
 }
@@ -3684,14 +3655,6 @@ bool PageNode::setTitle(const QString &title)
   Appends \a t to the list of group names.
  */
 
-/*! \fn const QStringList &PageNode::pageKeywords() const
-  Returns a const reference to the list of keywords for this page.
- */
-
-/*! \fn void PageNode::addPageKeywords(const QString &t)
-  Appends \a t to the keywords list.
- */
-
 /*! \fn void PageNode::setOutputFileName(const QString &f)
   Sets this PageNode's output file name to \a f.
  */
@@ -3727,7 +3690,7 @@ bool PageNode::setTitle(const QString &title)
 /*!
   Add \a item to the enum type's item list.
  */
-void EnumNode::addItem(const EnumItem& item)
+void EnumNode::addItem(const EnumItem &item)
 {
     items_.append(item);
     names_.insert(item.name());
@@ -3998,27 +3961,27 @@ static void buildTopicMetanessMap()
 Node::Genus FunctionNode::getGenus(FunctionNode::Metaness t)
 {
     switch (t) {
-        case FunctionNode::Plain:
-        case FunctionNode::Signal:
-        case FunctionNode::Slot:
-        case FunctionNode::Ctor:
-        case FunctionNode::Dtor:
-        case FunctionNode::CCtor:
-        case FunctionNode::MCtor:
-        case FunctionNode::MacroWithParams:
-        case FunctionNode::MacroWithoutParams:
-        case FunctionNode::Native:
-        case FunctionNode::CAssign:
-        case FunctionNode::MAssign:
-            return Node::CPP;
-        case FunctionNode::QmlSignal:
-        case FunctionNode::QmlSignalHandler:
-        case FunctionNode::QmlMethod:
-            return Node::QML;
-        case FunctionNode::JsSignal:
-        case FunctionNode::JsSignalHandler:
-        case FunctionNode::JsMethod:
-            return Node::JS;
+    case FunctionNode::Plain:
+    case FunctionNode::Signal:
+    case FunctionNode::Slot:
+    case FunctionNode::Ctor:
+    case FunctionNode::Dtor:
+    case FunctionNode::CCtor:
+    case FunctionNode::MCtor:
+    case FunctionNode::MacroWithParams:
+    case FunctionNode::MacroWithoutParams:
+    case FunctionNode::Native:
+    case FunctionNode::CAssign:
+    case FunctionNode::MAssign:
+        return Node::CPP;
+    case FunctionNode::QmlSignal:
+    case FunctionNode::QmlSignalHandler:
+    case FunctionNode::QmlMethod:
+        return Node::QML;
+    case FunctionNode::JsSignal:
+    case FunctionNode::JsSignalHandler:
+    case FunctionNode::JsMethod:
+        return Node::JS;
     }
     return Node::DontCare;
 }
@@ -4077,19 +4040,19 @@ bool FunctionNode::changeMetaness(Metaness from, Metaness to)
     if (metaness_ == from) {
         metaness_ = to;
         switch (to) {
-          case QmlSignal:
-          case QmlSignalHandler:
-          case QmlMethod:
-              setGenus(Node::QML);
-              break;
-          case JsSignal:
-          case JsSignalHandler:
-          case JsMethod:
-              setGenus(Node::JS);
-              break;
-          default:
-              setGenus(Node::CPP);
-              break;
+        case QmlSignal:
+        case QmlSignalHandler:
+        case QmlMethod:
+            setGenus(Node::QML);
+            break;
+        case JsSignal:
+        case JsSignalHandler:
+        case JsMethod:
+            setGenus(Node::JS);
+            break;
+        default:
+            setGenus(Node::CPP);
+            break;
         }
         return true;
     }
@@ -4168,20 +4131,20 @@ FunctionNode *FunctionNode::findPrimaryFunction()
 QString FunctionNode::kindString() const
 {
     switch (metaness_) {
-        case FunctionNode::QmlSignal:
-            return "QML signal";
-        case FunctionNode::QmlSignalHandler:
-            return "QML signal handler";
-        case FunctionNode::QmlMethod:
-            return "QML method";
-        case FunctionNode::JsSignal:
-            return "JS signal";
-        case FunctionNode::JsSignalHandler:
-            return "JS signal handler";
-        case FunctionNode::JsMethod:
-            return "JS method";
-        default:
-            return "function";
+    case FunctionNode::QmlSignal:
+        return "QML signal";
+    case FunctionNode::QmlSignalHandler:
+        return "QML signal handler";
+    case FunctionNode::QmlMethod:
+        return "QML method";
+    case FunctionNode::JsSignal:
+        return "JS signal";
+    case FunctionNode::JsSignalHandler:
+        return "JS signal handler";
+    case FunctionNode::JsMethod:
+        return "JS method";
+    default:
+        return "function";
     }
 }
 
@@ -4231,7 +4194,6 @@ QString FunctionNode::metanessString() const
     default:
         return "plain";
     }
-    return QString();
 }
 
 /*!
@@ -4245,19 +4207,23 @@ void FunctionNode::addAssociatedProperty(PropertyNode *p)
 }
 
 /*!
-  Returns true if this function has at least one property
-  that is active, i.e. at least one property that is not
-  obsolete.
- */
-bool FunctionNode::hasActiveAssociatedProperty() const
+    \reimp
+
+    Returns \c true if this is an access function for an obsolete property,
+    otherwise calls the base implementation of isObsolete().
+*/
+bool FunctionNode::isObsolete() const
 {
-    if (associatedProperties_.isEmpty())
-        return false;
-    for (const auto *property : qAsConst(associatedProperties_)) {
-        if (!property->isObsolete())
-            return true;
-    }
-    return false;
+    auto it = std::find_if_not(associatedProperties_.begin(),
+                               associatedProperties_.end(),
+                               [](const Node *p)->bool {
+                                    return p->isObsolete();
+                               });
+
+    if (!associatedProperties_.isEmpty() && it == associatedProperties_.end())
+        return true;
+
+    return Node::isObsolete();
 }
 
 /*! \fn unsigned char FunctionNode::overloadNumber() const
@@ -4266,27 +4232,35 @@ bool FunctionNode::hasActiveAssociatedProperty() const
 
 /*!
   Reconstructs and returns the function's signature. If \a values
-  is true, the default values of the parameters are included, if
-  present.
+  is \c true, the default values of the parameters are included.
+  The return type is included unless \a noReturnType is \c true.
+  Function templates are prefixed with \c {template <parameter_list>}
+  if \a templateParams is \c true.
  */
-QString FunctionNode::signature(bool values, bool noReturnType) const
+QString FunctionNode::signature(bool values, bool noReturnType, bool templateParams) const
 {
-    QString result;
-    if (!noReturnType && !returnType().isEmpty())
-        result = returnType() + QLatin1Char(' ');
-    result += name();
+    QStringList elements;
+
+    if (templateParams)
+        elements << templateDecl();
+    if (!noReturnType)
+        elements << returnType_;
+    elements.removeAll({});
+
     if (!isMacroWithoutParams()) {
-        result += QLatin1Char('(') + parameters_.signature(values) + QLatin1Char(')');
-        if (isMacro())
-            return result;
+        elements << name() + QLatin1Char('(') + parameters_.signature(values) + QLatin1Char(')');
+        if (!isMacro()) {
+            if (isConst())
+                elements << QStringLiteral("const");
+            if (isRef())
+                elements << QStringLiteral("&");
+            else if (isRefRef())
+                elements << QStringLiteral("&&");
+        }
+    } else {
+        elements << name();
     }
-    if (isConst())
-        result += " const";
-    if (isRef())
-        result += " &";
-    else if (isRefRef())
-        result += " &&";
-    return result;
+    return elements.join(QLatin1Char(' '));
 }
 
 /*!
@@ -4295,9 +4269,9 @@ QString FunctionNode::signature(bool values, bool noReturnType) const
  */
 PropertyNode::FunctionRole PropertyNode::role(const FunctionNode *fn) const
 {
-    for (int i=0; i<4; i++) {
+    for (int i = 0; i < 4; i++) {
         if (functions_[i].contains(const_cast<FunctionNode *>(fn)))
-            return (FunctionRole) i;
+            return (FunctionRole)i;
     }
     return Notifier;
 }
@@ -4319,8 +4293,8 @@ Node *VariableNode::clone(Aggregate *parent)
  */
 void FunctionNode::debug() const
 {
-    qDebug("QML METHOD %s returnType_ %s parentPath_ %s",
-           qPrintable(name()), qPrintable(returnType_), qPrintable(parentPath_.join(' ')));
+    qDebug("QML METHOD %s returnType_ %s parentPath_ %s", qPrintable(name()),
+           qPrintable(returnType_), qPrintable(parentPath_.join(' ')));
 }
 
 /*!
@@ -4370,11 +4344,9 @@ bool FunctionNode::compare(const FunctionNode *fn) const
 bool FunctionNode::isIgnored() const
 {
     if (!hasDoc() && !hasSharedDoc()) {
-        if (name().startsWith(QLatin1String("qt_")) ||
-            name() == QLatin1String("metaObject") ||
-            name() == QLatin1String("tr") ||
-            name() == QLatin1String("trUtf8") ||
-            name() == QLatin1String("d_func")) {
+        if (name().startsWith(QLatin1String("qt_")) || name() == QLatin1String("metaObject")
+            || name() == QLatin1String("tr") || name() == QLatin1String("trUtf8")
+            || name() == QLatin1String("d_func")) {
             return true;
         }
         QString s = signature(false, false);
@@ -4470,16 +4442,14 @@ QString PropertyNode::qualifiedDataType() const
         if (type_.contains(QLatin1Char('*')) || type_.contains(QLatin1Char('&'))) {
             // 'QWidget *' becomes 'QWidget *' const
             return type_ + " const";
-        }
-        else {
+        } else {
             /*
               'int' becomes 'const int' ('int const' is
               correct C++, but looks wrong)
              */
             return "const " + type_;
         }
-    }
-    else {
+    } else {
         return type_;
     }
 }
@@ -4489,29 +4459,21 @@ QString PropertyNode::qualifiedDataType() const
  */
 bool PropertyNode::hasAccessFunction(const QString &name) const
 {
-    NodeList::const_iterator i = getters().begin();
-    while (i != getters().end()) {
-        if ((*i)->name() == name)
+    for (const auto &getter : getters()) {
+        if (getter->name() == name)
             return true;
-        ++i;
     }
-    i = setters().begin();
-    while (i != setters().end()) {
-        if ((*i)->name() == name)
+    for (const auto &setter : setters()) {
+        if (setter->name() == name)
             return true;
-        ++i;
     }
-    i = resetters().begin();
-    while (i != resetters().end()) {
-        if ((*i)->name() == name)
+    for (const auto &resetter : resetters()) {
+        if (resetter->name() == name)
             return true;
-        ++i;
     }
-    i = notifiers().begin();
-    while (i != notifiers().end()) {
-        if ((*i)->name() == name)
+    for (const auto &notifier : notifiers()) {
+        if (notifier->name() == name)
             return true;
-        ++i;
     }
     return false;
 }
@@ -4573,7 +4535,6 @@ void QmlTypeNode::subclasses(const Node *base, NodeList &subs)
         subs = inheritedBy.values(base);
     }
 }
-
 
 /*!
   If this QML type node has a base type node,
@@ -4648,9 +4609,7 @@ QmlBasicTypeNode::QmlBasicTypeNode(Aggregate *parent, const QString &name, Node:
 /*!
   Constructor for the QML property node.
  */
-QmlPropertyNode::QmlPropertyNode(Aggregate *parent,
-                                 const QString &name,
-                                 const QString &type,
+QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, const QString &type,
                                  bool attached)
     : Node(parent->isJsType() ? JsProperty : QmlProperty, parent, name),
       type_(type),
@@ -4692,16 +4651,20 @@ bool QmlPropertyNode::isWritable()
                 if (pn)
                     return pn->isWritable();
                 else
-                    defLocation().warning(tr("No Q_PROPERTY for QML property %1::%2::%3 "
-                                             "in C++ class documented as QML type: "
-                                             "(property not found in the C++ class or its base classes)")
-                                          .arg(logicalModuleName()).arg(qmlTypeName()).arg(name()));
-            }
-            else
+                    defLocation().warning(
+                            tr("No Q_PROPERTY for QML property %1::%2::%3 "
+                               "in C++ class documented as QML type: "
+                               "(property not found in the C++ class or its base classes)")
+                                    .arg(logicalModuleName())
+                                    .arg(qmlTypeName())
+                                    .arg(name()));
+            } else
                 defLocation().warning(tr("No Q_PROPERTY for QML property %1::%2::%3 "
                                          "in C++ class documented as QML type: "
                                          "(C++ class not specified or not found).")
-                                      .arg(logicalModuleName()).arg(qmlTypeName()).arg(name()));
+                                              .arg(logicalModuleName())
+                                              .arg(qmlTypeName())
+                                              .arg(name()));
         }
     }
     return true;
@@ -4749,8 +4712,7 @@ PropertyNode *QmlPropertyNode::findCorrespondingCppProperty()
                          */
                         return (pn2 ? pn2 : pn);
                     }
-                }
-                else
+                } else
                     return pn;
             }
         }
@@ -4787,8 +4749,7 @@ PropertyNode *QmlPropertyNode::findCorrespondingCppProperty()
   appends this node to that Tree's proxy list so it will be
   easy to find later.
  */
-ProxyNode::ProxyNode(Aggregate *parent, const QString &name)
-    : Aggregate(Node::Proxy, parent, name)
+ProxyNode::ProxyNode(Aggregate *parent, const QString &name) : Aggregate(Node::Proxy, parent, name)
 {
     tree()->appendProxy(this);
 }
@@ -4834,11 +4795,9 @@ void CollectionNode::addMember(Node *node)
 bool CollectionNode::hasNamespaces() const
 {
     if (!members_.isEmpty()) {
-        NodeList::const_iterator i = members_.begin();
-        while (i != members_.end()) {
-            if ((*i)->isNamespace())
+        for (const auto &member : qAsConst(members_)) {
+            if (member->isNamespace())
                 return true;
-            ++i;
         }
     }
     return false;
@@ -4851,11 +4810,9 @@ bool CollectionNode::hasNamespaces() const
 bool CollectionNode::hasClasses() const
 {
     if (!members_.isEmpty()) {
-        NodeList::const_iterator i = members_.cbegin();
-        while (i != members_.cend()) {
-            if ((*i)->isClassNode())
+        for (const auto &member : qAsConst(members_)) {
+            if (member->isClassNode())
                 return true;
-            ++i;
         }
     }
     return false;
@@ -4865,14 +4822,12 @@ bool CollectionNode::hasClasses() const
   Loads \a out with all this collection node's members that
   are namespace nodes.
  */
-void CollectionNode::getMemberNamespaces(NodeMap& out)
+void CollectionNode::getMemberNamespaces(NodeMap &out)
 {
     out.clear();
-    NodeList::const_iterator i = members_.cbegin();
-    while (i != members_.cend()) {
-        if ((*i)->isNamespace())
-            out.insert((*i)->name(), (*i));
-        ++i;
+    for (const auto &member : qAsConst(members_)) {
+        if (member->isNamespace())
+            out.insert(member->name(), member);
     }
 }
 
@@ -4880,14 +4835,12 @@ void CollectionNode::getMemberNamespaces(NodeMap& out)
   Loads \a out with all this collection node's members that
   are class nodes.
  */
-void CollectionNode::getMemberClasses(NodeMap& out) const
+void CollectionNode::getMemberClasses(NodeMap &out) const
 {
     out.clear();
-    NodeList::const_iterator i = members_.cbegin();
-    while (i != members_.cend()) {
-        if ((*i)->isClassNode())
-            out.insert((*i)->name(), (*i));
-        ++i;
+    for (const auto &i : qAsConst(members_)) {
+        if (i->isClassNode())
+            out.insert(i->name(), i);
     }
 }
 
@@ -4899,10 +4852,8 @@ void CollectionNode::printMembers(const QString &title)
 {
     qDebug() << title << name() << members_.size();
     if (members_.size() > 0) {
-        for (int i=0; i<members_.size(); ++i) {
-            Node *n = members_.at(i);
-            qDebug() << "  MEMBER:" << n->name() << n->nodeTypeString();
-        }
+        for (const auto &member : qAsConst(members_))
+            qDebug() << "  MEMBER:" << member->name() << member->nodeTypeString();
     }
 }
 
@@ -4973,7 +4924,6 @@ Node *SharedCommentNode::clone(Aggregate *parent)
     parent->addChild(scn);
     return scn;
 }
-
 
 /*!
   Sets the related nonmember flag in this node and in each

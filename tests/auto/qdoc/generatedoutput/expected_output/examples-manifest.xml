@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instructionals module="Test">
+    <examples>
+        <example name="QML Documentation Example" docUrl="qthelp://org.qt-project.test.001/test/test-componentset-example.html" projectPath="tutorials/componentset/componentset.pro" isTest="true">
+            <description><![CDATA[Example for documenting QML types.]]></description>
+            <tags>documentation,qml,sample,test</tags>
+        </example>
+    </examples>
+</instructionals>

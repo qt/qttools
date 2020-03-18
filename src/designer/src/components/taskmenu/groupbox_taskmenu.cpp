@@ -78,7 +78,7 @@ GroupBoxTaskMenu::GroupBoxTaskMenu(QGroupBox *groupbox, QObject *parent)
     m_taskActions.append(sep);
 }
 
-QList<QAction*> GroupBoxTaskMenu::taskActions() const
+QVector<QAction*> GroupBoxTaskMenu::taskActions() const
 {
     return m_taskActions + QDesignerTaskMenu::taskActions();
 }

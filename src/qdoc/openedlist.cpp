@@ -40,13 +40,9 @@ QT_BEGIN_NAMESPACE
 
 static const char roman[] = "m\2d\5c\2l\5x\2v\5i";
 
-OpenedList::OpenedList(ListStyle style)
-    : sty(style), ini(1), nex(0)
-{
-}
+OpenedList::OpenedList(ListStyle style) : sty(style), ini(1), nex(0) {}
 
-OpenedList::OpenedList(const Location &location, const QString &hint)
-    : sty(Bullet), ini(1)
+OpenedList::OpenedList(const Location &location, const QString &hint) : sty(Bullet), ini(1)
 {
     QRegExp hintSyntax("(\\W*)([0-9]+|[A-Z]+|[a-z]+)(\\W*)");
 
@@ -135,7 +131,7 @@ int OpenedList::fromAlpha(const QString &str)
     int n = 0;
     int u;
 
-    for (int i = 0; i < (int) str.length(); i++) {
+    for (int i = 0; i < str.length(); i++) {
         u = str[i].toLower().unicode();
         if (u >= 'a' && u <= 'z') {
             n *= 26;

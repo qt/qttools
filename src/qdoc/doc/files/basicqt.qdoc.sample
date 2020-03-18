@@ -1,6 +1,5 @@
  /*!
      \page basicqt.html
-     \contentspage {Basic Qt} {Contents}
      \nextpage Getting Started
 
      \indexpage Index
@@ -24,7 +23,6 @@
  /*!
     \page gettingstarted.html
     \previouspage Basic Qt
-    \contentspage {Basic Qt} {Contents}
     \nextpage Creating Dialogs
 
     \indexpage Index
@@ -40,7 +38,6 @@
 / *!
     \page creatingdialogs.html
     \previouspage Getting Started
-    \contentspage {Basic Qt} {Contents}
 
     \indexpage Index
     \startpage Basic Qt

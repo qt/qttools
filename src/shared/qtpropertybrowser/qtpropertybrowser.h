@@ -53,7 +53,7 @@ class QtProperty
 public:
     virtual ~QtProperty();
 
-    QList<QtProperty *> subProperties() const;
+    QVector<QtProperty *> subProperties() const;
 
     QtAbstractPropertyManager *propertyManager() const;
 
@@ -224,7 +224,7 @@ class QtBrowserItem
 public:
     QtProperty *property() const;
     QtBrowserItem *parent() const;
-    QList<QtBrowserItem *> children() const;
+    QVector<QtBrowserItem *> children() const;
     QtAbstractPropertyBrowser *browser() const;
 private:
     explicit QtBrowserItem(QtAbstractPropertyBrowser *browser, QtProperty *property, QtBrowserItem *parent);
@@ -243,10 +243,10 @@ public:
     explicit QtAbstractPropertyBrowser(QWidget *parent = 0);
     ~QtAbstractPropertyBrowser();
 
-    QList<QtProperty *> properties() const;
-    QList<QtBrowserItem *> items(QtProperty *property) const;
+    QVector<QtProperty *> properties() const;
+    QVector<QtBrowserItem *> items(QtProperty *property) const;
     QtBrowserItem *topLevelItem(QtProperty *property) const;
-    QList<QtBrowserItem *> topLevelItems() const;
+    QVector<QtBrowserItem *> topLevelItems() const;
     void clear();
 
     template <class PropertyManager>

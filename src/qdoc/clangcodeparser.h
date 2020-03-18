@@ -53,7 +53,7 @@ class ClangCodeParser : public CppCodeParser
 public:
     ~ClangCodeParser() override;
 
-    void initializeParser(const Config &config) override;
+    void initializeParser() override;
     void terminateParser() override;
     QString language() override;
     QStringList headerFileNameFilter() override;
@@ -78,6 +78,7 @@ private:
     QVector<QByteArray> defines_;
     std::vector<const char *> args_;
     QVector<QByteArray> moreArgs_;
+    QStringList namespaceScope_;
 };
 
 QT_END_NAMESPACE

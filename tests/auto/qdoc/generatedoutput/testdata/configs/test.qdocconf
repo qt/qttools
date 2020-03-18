@@ -1,0 +1,12 @@
+project = OutputFromQDocFiles
+description = "A test project for QDoc build artifacts"
+moduleheader =
+
+sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc
+
+macro.beginqdoc = "\\c {/*!}"
+macro.endqdoc = "\\c */"
+
+# zero warning tolerance
+warninglimit = 0
+warninglimit.enabled = true

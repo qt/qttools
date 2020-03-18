@@ -42,7 +42,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QList<CodeParser *> CodeParser::parsers;
+QVector<CodeParser *> CodeParser::parsers;
 bool CodeParser::showInternal_ = false;
 bool CodeParser::singleExec_ = false;
 
@@ -68,10 +68,10 @@ CodeParser::~CodeParser()
 /*!
   Initialize the code parser base class.
  */
-void CodeParser::initializeParser(const Config &config)
+void CodeParser::initializeParser()
 {
-    showInternal_ = config.getBool(CONFIG_SHOWINTERNAL);
-    singleExec_ = config.getBool(CONFIG_SINGLEEXEC);
+    showInternal_ = Config::instance().getBool(CONFIG_SHOWINTERNAL);
+    singleExec_ = Config::instance().getBool(CONFIG_SINGLEEXEC);
 }
 
 /*!
@@ -96,10 +96,10 @@ void CodeParser::parseHeaderFile(const Location &location, const QString &filePa
   All the code parsers in the static list are initialized here,
   after the qdoc configuration variables have been set.
  */
-void CodeParser::initialize(const Config &config)
+void CodeParser::initialize()
 {
     for (const auto &parser : qAsConst(parsers))
-        parser->initializeParser(config);
+        parser->initializeParser();
 }
 
 /*!
@@ -157,42 +157,23 @@ static QSet<QString> commonMetaCommands_;
 const QSet<QString> &CodeParser::commonMetaCommands()
 {
     if (commonMetaCommands_.isEmpty()) {
-        commonMetaCommands_ << COMMAND_ABSTRACT
-                            << COMMAND_DEPRECATED
-                            << COMMAND_INGROUP
-                            << COMMAND_INJSMODULE
-                            << COMMAND_INMODULE
-                            << COMMAND_INPUBLICGROUP
-                            << COMMAND_INQMLMODULE
-                            << COMMAND_INTERNAL
-                            << COMMAND_MAINCLASS
-                            << COMMAND_NOAUTOLIST
-                            << COMMAND_NONREENTRANT
-                            << COMMAND_OBSOLETE
-                            << COMMAND_PAGEKEYWORDS
-                            << COMMAND_PRELIMINARY
-                            << COMMAND_QMLABSTRACT
-                            << COMMAND_QMLDEFAULT
-                            << COMMAND_QMLINHERITS
-                            << COMMAND_QMLREADONLY
-                            << COMMAND_QTVARIABLE
-                            << COMMAND_REENTRANT
-                            << COMMAND_SINCE
-                            << COMMAND_STARTPAGE
-                            << COMMAND_SUBTITLE
-                            << COMMAND_THREADSAFE
-                            << COMMAND_TITLE
+        commonMetaCommands_ << COMMAND_ABSTRACT << COMMAND_DEPRECATED << COMMAND_INGROUP
+                            << COMMAND_INJSMODULE << COMMAND_INMODULE << COMMAND_INPUBLICGROUP
+                            << COMMAND_INQMLMODULE << COMMAND_INTERNAL << COMMAND_MAINCLASS
+                            << COMMAND_NOAUTOLIST << COMMAND_NONREENTRANT << COMMAND_OBSOLETE
+                            << COMMAND_PRELIMINARY << COMMAND_QMLABSTRACT << COMMAND_QMLDEFAULT
+                            << COMMAND_QMLINHERITS << COMMAND_QMLREADONLY << COMMAND_QTVARIABLE
+                            << COMMAND_REENTRANT << COMMAND_SINCE << COMMAND_STARTPAGE
+                            << COMMAND_SUBTITLE << COMMAND_THREADSAFE << COMMAND_TITLE
                             << COMMAND_WRAPPER;
-   }
+    }
     return commonMetaCommands_;
 }
 
 /*!
   \internal
  */
-void CodeParser::extractPageLinkAndDesc(const QString &arg,
-                                        QString *link,
-                                        QString *desc)
+void CodeParser::extractPageLinkAndDesc(const QString &arg, QString *link, QString *desc)
 {
     QRegExp bracedRegExp(QLatin1String("\\{([^{}]*)\\}(?:\\{([^{}]*)\\})?"));
 
@@ -201,14 +182,12 @@ void CodeParser::extractPageLinkAndDesc(const QString &arg,
         *desc = bracedRegExp.cap(2);
         if (desc->isEmpty())
             *desc = *link;
-    }
-    else {
+    } else {
         int spaceAt = arg.indexOf(QLatin1Char(' '));
         if (arg.contains(QLatin1String(".html")) && spaceAt != -1) {
             *link = arg.leftRef(spaceAt).trimmed().toString();
             *desc = arg.midRef(spaceAt).trimmed().toString();
-        }
-        else {
+        } else {
             *link = arg;
             *desc = arg;
         }
@@ -291,27 +270,32 @@ void CodeParser::checkModuleInclusion(Node *n)
 {
     if (n->physicalModuleName().isEmpty()) {
         n->setPhysicalModuleName(Generator::defaultModuleName());
-        QString word;
-        switch (n->nodeType()) {
-        case Node::Class:
-            word = QLatin1String("Class");
-            break;
-        case Node::Struct:
-            word = QLatin1String("Struct");
-            break;
-        case Node::Union:
-            word = QLatin1String("Union");
-            break;
-        case Node::Namespace:
-            word = QLatin1String("Namespace");
-            break;
-        default:
-            return;
-        }
+
         if (n->isInAPI() && !n->name().isEmpty()) {
+            QString word;
+            switch (n->nodeType()) {
+            case Node::Class:
+                word = QLatin1String("Class");
+                break;
+            case Node::Struct:
+                word = QLatin1String("Struct");
+                break;
+            case Node::Union:
+                word = QLatin1String("Union");
+                break;
+            case Node::Namespace:
+                word = QLatin1String("Namespace");
+                break;
+            default:
+                return;
+            }
+
+            qdb_->addToModule(Generator::defaultModuleName(), n);
             n->doc().location().warning(tr("%1 %2 has no \\inmodule command; "
                                            "using project name by default: %3")
-                                        .arg(word).arg(n->name()).arg(Generator::defaultModuleName()));
+                                                .arg(word)
+                                                .arg(n->name())
+                                                .arg(Generator::defaultModuleName()));
         }
     }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="qdoctests-qdocfileoutput-linking.html" href="qdoctests-qdocfileoutput-linking.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Testing QDoc's link command" fulltitle="Testing QDoc's link command" subtitle="" module="OutputFromQDocFiles" brief="This is a page for testing QDoc's link command">
+            <target name="link-test-target"/>
+            <keyword name="qdoc-linking-test" title="QDoc Linking Test"/>
+            <contents name="link-targets" title="Link targets" level="1"/>
+            <description>
+                <brief>This is a page for testing QDoc's link command.</brief>
+                <target name="link-test-target"/>
+                <section id="link-targets">
+                    <heading level="1">Link targets</heading>
+                    <para>Valid parameters for the link command (<teletype type="highlighted">\l</teletype>) are page and section titles, targets defined with \target or \keyword commands, and API reference keywords (types, methods, namespaces, and so on).</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

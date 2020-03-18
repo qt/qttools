@@ -40,21 +40,17 @@
 #include "tree.h"
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsast_p.h>
-#include <private/qqmljsengine_p.h>
-#include <private/qqmljslexer_p.h>
-#include <private/qqmljsparser_p.h>
+#    include <private/qqmljsast_p.h>
+#    include <private/qqmljsengine_p.h>
+#    include <private/qqmljslexer_p.h>
+#    include <private/qqmljsparser_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
 
-JsCodeMarker::JsCodeMarker()
-{
-}
+JsCodeMarker::JsCodeMarker() {}
 
-JsCodeMarker::~JsCodeMarker()
-{
-}
+JsCodeMarker::~JsCodeMarker() {}
 
 /*!
   Returns \c true if the \a code is recognized by the parser.
@@ -67,7 +63,7 @@ bool JsCodeMarker::recognizeCode(const QString &code)
     QQmlJS::Parser parser(&engine);
 
     QString newCode = code;
-    QList<QQmlJS::AST::SourceLocation> pragmas = extractPragmas(newCode);
+    QVector<QQmlJS::SourceLocation> pragmas = extractPragmas(newCode);
     lexer.setCode(newCode, 1);
 
     return parser.parseProgram();
@@ -102,15 +98,13 @@ Atom::AtomType JsCodeMarker::atomType() const
     return Atom::JavaScript;
 }
 
-QString JsCodeMarker::markedUpCode(const QString &code,
-                                   const Node *relative,
+QString JsCodeMarker::markedUpCode(const QString &code, const Node *relative,
                                    const Location &location)
 {
     return addMarkUp(code, relative, location);
 }
 
-QString JsCodeMarker::addMarkUp(const QString &code,
-                                const Node * /* relative */,
+QString JsCodeMarker::addMarkUp(const QString &code, const Node * /* relative */,
                                 const Location &location)
 {
 #ifndef QT_NO_DECLARATIVE
@@ -118,7 +112,7 @@ QString JsCodeMarker::addMarkUp(const QString &code,
     QQmlJS::Lexer lexer(&engine);
 
     QString newCode = code;
-    QList<QQmlJS::AST::SourceLocation> pragmas = extractPragmas(newCode);
+    QVector<QQmlJS::SourceLocation> pragmas = extractPragmas(newCode);
     lexer.setCode(newCode, 1);
 
     QQmlJS::Parser parser(&engine);
@@ -131,15 +125,16 @@ QString JsCodeMarker::addMarkUp(const QString &code,
         QmlMarkupVisitor visitor(code, pragmas, &engine);
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError()) {
-            location.warning(location.fileName() +
-                             tr("Unable to analyze JavaScript. The output is incomplete."));
+            location.warning(location.fileName()
+                             + tr("Unable to analyze JavaScript. The output is incomplete."));
         }
         output = visitor.markedUpCode();
     } else {
-        location.warning(location.fileName() +
-                         tr("Unable to parse JavaScript: \"%1\" at line %2, column %3").arg(
-                             parser.errorMessage()).arg(parser.errorLineNumber()).arg(
-                             parser.errorColumnNumber()));
+        location.warning(location.fileName()
+                         + tr("Unable to parse JavaScript: \"%1\" at line %2, column %3")
+                                   .arg(parser.errorMessage())
+                                   .arg(parser.errorLineNumber())
+                                   .arg(parser.errorColumnNumber()));
         output = protect(code);
     }
     return output;

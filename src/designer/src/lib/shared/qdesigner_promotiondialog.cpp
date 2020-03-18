@@ -288,7 +288,7 @@ namespace qdesigner_internal {
     }
 
     const QStringList &QDesignerPromotionDialog::baseClassNames(const QDesignerPromotionInterface *promotion) {
-        using WidgetDataBaseItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
+        using WidgetDataBaseItemList = QVector<QDesignerWidgetDataBaseItemInterface *>;
         static QStringList rc;
         if (rc.isEmpty()) {
             // Convert the item list into a string list.

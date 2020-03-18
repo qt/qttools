@@ -46,7 +46,7 @@ struct QDocCommandLineParser : public QCommandLineParser
     QCommandLineOption prepareOption, generateOption, logProgressOption;
     QCommandLineOption singleExecOption, writeQaPagesOption;
     QCommandLineOption includePathOption, includePathSystemOption, frameworkOption;
-    QCommandLineOption timestampsOption;
+    QCommandLineOption timestampsOption, useDocBookExtensions;
 };
 
 QT_END_NAMESPACE

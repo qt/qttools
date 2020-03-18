@@ -31,6 +31,7 @@
 
 #include <QAbstractListModel>
 #include <QRawFont>
+#include <QtGui/qpainterpath.h>
 #include <QtGui/private/qtextengine_p.h>
 #include <QMultiHash>
 #include <QScopedPointer>

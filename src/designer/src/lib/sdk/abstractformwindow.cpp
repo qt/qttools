@@ -609,7 +609,7 @@ void QDesignerFormWindowInterface::activateResourceFilePaths(const QStringList &
 */
 
 /*!
-    \fn virtual void QDesignerFormWindowInterface::simplifySelection(QList<QWidget*> *widgets) const
+    \fn virtual void QDesignerFormWindowInterface::simplifySelection(QVector<QWidget*> *widgets) const
 
     Simplifies the selection of widgets specified by \a widgets.
 

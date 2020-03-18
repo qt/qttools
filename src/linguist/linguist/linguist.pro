@@ -1,4 +1,4 @@
-QT += core-private gui-private widgets xml uitools-private printsupport
+QT += core-private gui-private widgets uitools-private printsupport
 
 DEFINES += QT_NO_CAST_FROM_ASCII QT_NO_CAST_TO_ASCII
 

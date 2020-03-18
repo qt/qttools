@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>395</width>
-    <height>341</height>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="fontsTab">
       <attribute name="title">
@@ -69,60 +69,21 @@
       <attribute name="title">
        <string>Filters</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="3">
-        <widget class="QLabel" name="componentsLabel">
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
-         </property>
-         <property name="text">
-          <string>Components:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <widget class="QLabel" name="versionsLabel">
-         <property name="text">
-          <string>Versions:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="3">
-        <widget class="QListWidget" name="filterWidget"/>
-       </item>
-       <item row="1" column="3" rowspan="2">
-        <widget class="OptionsWidget" name="componentWidget" native="true"/>
-       </item>
-       <item row="1" column="4" rowspan="2">
-        <widget class="OptionsWidget" name="versionWidget" native="true"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QToolButton" name="filterAddButton">
-         <property name="text">
-          <string>Add...</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QToolButton" name="filterRenameButton">
-         <property name="text">
-          <string>Rename...</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QToolButton" name="filterRemoveButton">
-         <property name="text">
-          <string>Remove</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QLabel" name="filterLabel">
-         <property name="text">
-          <string>Filter:</string>
-         </property>
-        </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QHelpFilterSettingsWidget" name="filterSettingsWidget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -130,61 +91,21 @@
       <attribute name="title">
        <string>Documentation</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Registered Documentation:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="registeredDocsFilterLineEdit">
-         <property name="placeholderText">
-          <string>&lt;Filter&gt;</string>
-         </property>
-         <property name="clearButtonEnabled">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" rowspan="2">
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QPushButton" name="docAddButton">
-           <property name="text">
-            <string>Add...</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="docRemoveButton">
-           <property name="text">
-            <string>Remove</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer>
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0">
-        <widget class="QListWidget" name="registeredDocsListWidget">
-         <property name="selectionMode">
-          <enum>QAbstractItemView::ExtendedSelection</enum>
-         </property>
-        </widget>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="HelpDocSettingsWidget" name="docSettingsWidget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -359,9 +280,15 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>OptionsWidget</class>
+   <class>HelpDocSettingsWidget</class>
    <extends>QWidget</extends>
-   <header>optionswidget.h</header>
+   <header>helpdocsettingswidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QHelpFilterSettingsWidget</class>
+   <extends>QWidget</extends>
+   <header>qhelpfiltersettingswidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

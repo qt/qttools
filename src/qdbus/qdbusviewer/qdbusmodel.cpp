@@ -305,7 +305,7 @@ QString QDBusModel::dBusTypeSignature(const QModelIndex &index) const
 
 QModelIndex QDBusModel::findObject(const QDBusObjectPath &objectPath)
 {
-    QStringList path = objectPath.path().split(QLatin1Char('/'), QString::SkipEmptyParts);
+    QStringList path = objectPath.path().split(QLatin1Char('/'), Qt::SkipEmptyParts);
 
     QDBusItem *item = root;
     int childIdx = -1;

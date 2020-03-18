@@ -1,0 +1,22 @@
+include(testcpp.qdocconf)
+moduleheader = TestCPP
+
+project = Test
+description = "A test project for QDoc build artifacts"
+outputdir = ./html
+
+exampledirs = ../qml
+
+headerdirs += ../
+sourcedirs += ../qml
+
+# Exclude source files from other tests' subdirs
+excludedirs = ../bug80259
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+examples.fileextensions = "*.qml"
+
+macro.begincomment      = "\\c{/*}"
+macro.QDocTestVer       = "1.1"

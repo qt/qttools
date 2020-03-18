@@ -103,7 +103,9 @@ public:
     QUrl findFile(const QUrl &url) const;
 
     QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
+    QMap<QString, QUrl> linksForIdentifier(const QString &id, const QString &filterName) const;
     QMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
+    QMap<QString, QUrl> linksForKeyword(const QString &keyword, const QString &filterName) const;
 
     bool removeCustomValue(const QString &key);
     QVariant customValue(const QString &key,

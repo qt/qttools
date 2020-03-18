@@ -476,8 +476,8 @@ class QDesignerPluginManagerPrivate {
 
     // Synced lists of custom widgets and their data. Note that the list
     // must be ordered for collections to appear in order.
-    QList<QDesignerCustomWidgetInterface *> m_customWidgets;
-    QList<QDesignerCustomWidgetData> m_customWidgetData;
+    QVector<QDesignerCustomWidgetInterface *> m_customWidgets;
+    QVector<QDesignerCustomWidgetData> m_customWidgetData;
 
     QStringList defaultPluginPaths() const;
 

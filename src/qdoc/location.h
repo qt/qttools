@@ -38,7 +38,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Config;
 class QRegExp;
 
 class Location
@@ -55,7 +54,11 @@ public:
 
     void start();
     void advance(QChar ch);
-    void advanceLines(int n) { stkTop->lineNo += n; stkTop->columnNo = 1; }
+    void advanceLines(int n)
+    {
+        stkTop->lineNo += n;
+        stkTop->columnNo = 1;
+    }
 
     void push(const QString &filePath);
     void pop();
@@ -71,25 +74,16 @@ public:
     int lineNo() const { return stkTop->lineNo; }
     int columnNo() const { return stkTop->columnNo; }
     bool etc() const { return etcetera; }
-    void warning(const QString &message,
-                 const QString &details = QString()) const;
-    void error(const QString &message,
-               const QString &details = QString()) const;
-    void fatal(const QString &message,
-               const QString &details = QString()) const;
-    void report(const QString &message,
-                const QString &details = QString()) const;
+    void warning(const QString &message, const QString &details = QString()) const;
+    void error(const QString &message, const QString &details = QString()) const;
+    void fatal(const QString &message, const QString &details = QString()) const;
+    void report(const QString &message, const QString &details = QString()) const;
 
-    static const Location null;
+    static void initialize();
 
-    static void initialize(const Config &config);
     static void terminate();
     static void information(const QString &message);
     static void internalError(const QString &hint);
-    static void logToStdErr(const QString &message);
-    static void logToStdErrAlways(const QString &message);
-    static void startLoggingProgress() { logProgress_ = true; }
-    static void stopLoggingProgress() { logProgress_ = false; }
     static QString canonicalRelativePath(const QString &path);
     static int exitCode();
 
@@ -104,9 +98,7 @@ private:
     };
     friend class QTypeInfo<StackEntry>;
 
-    void emitMessage(MessageType type,
-                     const QString &message,
-                     const QString &details) const;
+    void emitMessage(MessageType type, const QString &message, const QString &details) const;
     QString toString() const;
     QString top() const;
 
@@ -123,7 +115,6 @@ private:
     static QString programName;
     static QString project;
     static QRegExp *spuriousRegExp;
-    static bool logProgress_;
 };
 Q_DECLARE_TYPEINFO(Location::StackEntry, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(Location, Q_COMPLEX_TYPE); // stkTop = &stkBottom

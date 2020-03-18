@@ -83,7 +83,7 @@ class EditorFactoryPrivate
 {
 public:
 
-    typedef QList<Editor *> EditorList;
+    typedef QVector<Editor *> EditorList;
     typedef QMap<QtProperty *, EditorList> PropertyToEditorListMap;
     typedef QMap<Editor *, QtProperty *> EditorToPropertyMap;
 

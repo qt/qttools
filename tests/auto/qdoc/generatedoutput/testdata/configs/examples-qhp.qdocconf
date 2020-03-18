@@ -1,0 +1,37 @@
+# QML test includes a documented example
+include(testqml.qdocconf)
+version = 0.0.1
+
+examplesinstallpath = test
+
+# Configure .qhp generation
+qhp.projects            = Test
+
+qhp.Test.file           = test.qhp
+qhp.Test.namespace      = org.qt-project.test.001
+qhp.Test.virtualFolder  = test
+qhp.Test.indexTitle     = UI Components
+qhp.Test.indexRoot      =
+
+qhp.Test.subprojects    = test classes qmltypes undefined
+qhp.Test.subprojects.test.title       = Test
+qhp.Test.subprojects.test.indexTitle  = UI Components
+qhp.Test.subprojects.test.selectors   = doc:page fake:example module qmlmodule
+qhp.Test.subprojects.test.sortPages   = true
+
+qhp.Test.subprojects.classes.title      = Classes
+qhp.Test.subprojects.classes.indexTitle = QDoc Test C++ Classes
+qhp.Test.subprojects.classes.selectors  = class namespace doc:headerfile boop:whatever
+qhp.Test.subprojects.classes.sortPages  = true
+
+qhp.Test.subprojects.qmltypes.title      = QML Types
+qhp.Test.subprojects.qmltypes.indexTitle = UI Components
+qhp.Test.subprojects.qmltypes.selectors  = qmlmodule:UIComponents,QDoc.Test
+qhp.Test.subprojects.qmltypes.sortPages  = true
+
+# Add some meta-data to the example
+manifestmeta.filters = test
+
+manifestmeta.test.names = *
+manifestmeta.test.attributes = isTest:true
+manifestmeta.test.tags = test

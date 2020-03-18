@@ -46,6 +46,7 @@ class QHelpIndexModel;
 class QHelpIndexWidget;
 class QHelpSearchEngine;
 class QHelpFilterEngine;
+class QHelpEngineCore;
 
 enum {
     ShowHomePage = 0,
@@ -174,6 +175,8 @@ public:
 
     const QByteArray topicChooserGeometry() const;
     void setTopicChooserGeometry(const QByteArray &geometry);
+
+    QHelpEngineCore *helpEngine() const;
 
 signals:
 

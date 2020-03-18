@@ -588,13 +588,13 @@ QStringList QHelpCollectionHandler::availableComponents() const
     return list;
 }
 
-QStringList QHelpCollectionHandler::availableVersions() const
+QList<QVersionNumber> QHelpCollectionHandler::availableVersions() const
 {
-    QStringList list;
+    QList<QVersionNumber> list;
     if (m_query) {
         m_query->exec(QLatin1String("SELECT DISTINCT Version FROM VersionTable ORDER BY Version"));
         while (m_query->next())
-            list.append(m_query->value(0).toString());
+            list.append(QVersionNumber::fromString(m_query->value(0).toString()));
     }
     return list;
 }
@@ -2354,7 +2354,8 @@ QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldNa
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + QLatin1String(" : ") + m_query->value(3).toString();
 
-        linkMap.insertMulti(title, buildQUrl(m_query->value(1).toString(),
+        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(title, buildQUrl(
+                                             m_query->value(1).toString(),
                                              m_query->value(2).toString(),
                                              m_query->value(3).toString(),
                                              m_query->value(4).toString()));
@@ -2414,7 +2415,8 @@ QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldNa
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + QLatin1String(" : ") + m_query->value(3).toString();
 
-        linkMap.insertMulti(title, buildQUrl(m_query->value(1).toString(),
+        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(title, buildQUrl(
+                                             m_query->value(1).toString(),
                                              m_query->value(2).toString(),
                                              m_query->value(3).toString(),
                                              m_query->value(4).toString()));

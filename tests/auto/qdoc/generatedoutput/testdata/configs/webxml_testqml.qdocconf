@@ -1,0 +1,2 @@
+include(testqml.qdocconf)
+include(webxml.qdocconf)

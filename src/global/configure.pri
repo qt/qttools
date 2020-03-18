@@ -1,7 +1,7 @@
-defineReplace(extractVersion)      { return($$replace(1, ^(\\d+\\.\\d+\\.\\d+)(svn)?$, \\1)) }
-defineReplace(extractMajorVersion) { return($$replace(1, ^(\\d+)\\.\\d+\\.\\d+(svn)?$, \\1)) }
-defineReplace(extractMinorVersion) { return($$replace(1, ^\\d+\\.(\\d+)\\.\\d+(svn)?$, \\1)) }
-defineReplace(extractPatchVersion) { return($$replace(1, ^\\d+\\.\\d+\\.(\\d+)(svn)?$, \\1)) }
+defineReplace(extractVersion)      { return($$replace(1, ^(\\d+\\.\\d+\\.\\d+)(svn|git)?$, \\1)) }
+defineReplace(extractMajorVersion) { return($$replace(1, ^(\\d+)\\.\\d+\\.\\d+(svn|git)?$, \\1)) }
+defineReplace(extractMinorVersion) { return($$replace(1, ^\\d+\\.(\\d+)\\.\\d+(svn|git)?$, \\1)) }
+defineReplace(extractPatchVersion) { return($$replace(1, ^\\d+\\.\\d+\\.(\\d+)(svn|git)?$, \\1)) }
 
 defineTest(versionIsAtLeast) {
     actual_major_version = $$extractMajorVersion($$1)
@@ -167,7 +167,7 @@ defineReplace(CheckClangLlvmLibForLupdateParser) {
                           LLVMSupport \
                           LLVMDemangle
 
-    versionIsAtLeast($$CLANG_VERSION, "10.0.0") {
+    versionIsAtLeast($$CLANG_VERSION, "9.0.0") {
         libToTest += LLVMBitstreamReader\
                      LLVMRemarks
     }
@@ -190,8 +190,9 @@ defineReplace(CheckClangLlvmLibForLupdateParser) {
             return($$CLANG_LLVM_LIBS)
         }
     }
-    !equals(QMAKE_HOST.os, Windows): \
+    !equals(QMAKE_HOST.os, Windows): {
         CLANG_LLVM_LIBS += -lz -ltinfo
+    }
     return($$CLANG_LLVM_LIBS)
 }
 

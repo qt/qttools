@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>QDoc Test C++ Classes</db:title>
+<db:productname>TestCPP</db:productname>
+<db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A test module page.</db:para>
+</db:abstract>
+</db:info>
+<db:para>A test module page.</db:para>
+<db:section xml:id="namespaces">
+<db:title>Namespaces</db:title>
+<db:variablelist role="namespaces">
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc.xml" xlink:role="namespace">TestQDoc</db:link></db:term>
+<db:listitem>
+<db:para>A namespace.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="classes">
+<db:title>Classes</db:title>
+<db:variablelist role="classes">
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc-test.xml" xlink:role="class">TestQDoc::Test</db:link></db:term>
+<db:listitem>
+<db:para>A class in a namespace.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestQDoc::TestDerived</db:link></db:term>
+<db:listitem>
+<db:para>A derived class in a namespace.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:section>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+</db:article>

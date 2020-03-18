@@ -1,0 +1,63 @@
+Qt 5.14 introduces many new features and improvements as well as bugfixes
+over the 5.13.x series. For more details, refer to the online documentation
+included in this distribution. The documentation is also available online:
+
+https://doc.qt.io/qt-5/index.html
+
+The Qt version 5.14 series is binary compatible with the 5.13.x series.
+Applications compiled for 5.13 will continue to run with 5.14.
+
+Some of the changes listed in this file include issue tracking numbers
+corresponding to tasks in the Qt Bug Tracker:
+
+https://bugreports.qt.io/
+
+Each of these identifiers can be entered in the bug tracker to obtain more
+information about a particular change.
+
+****************************************************************************
+*                                 pixeltool                                *
+****************************************************************************
+
+ - 'c' now copies color under cursor, and shows it in the tool window title.
+
+****************************************************************************
+*                                Qt Designer                               *
+****************************************************************************
+
+ - [QTBUG-76375] A per-form setting for disabling generating calls to
+   QObject::connectSlotsByName() has been added to support migrating forms
+   to Qt 5 connection syntax.
+ - The multiselection-modifier of the buddy/signal slot editors has been
+   changed to Control instead of (historical) Shift.
+
+****************************************************************************
+*                                Qt Linguist                               *
+****************************************************************************
+
+ - [QTBUG-76265] lupdate now warns about qsTr() calls with template literals
+   in .qml files.
+ - [QTBUG-67908] Extra \n when reading translator comment from .po file now
+   gets removed.
+ - [QTBUG-76723] CMake: qt5_create_translation was creating a warning when
+   translation files had the same prefix, separated by a dot. This is now
+   fixed.
+
+****************************************************************************
+*                               windeployqt                                *
+****************************************************************************
+
+ - [QTBUG-15234] windeployqt does not patch paths in Qt5Core anymore if Qt
+   is configured with -feature-relocatable.
+ - [QTBUG-75272] Added option -no-virtualkeyboard to disable deployment of
+    Qt Virtual Keyboard.
+
+****************************************************************************
+*                                  qdoc                                    *
+****************************************************************************
+
+ - QDoc no longer attempts to run if 'project' configuration variable is
+   not set; it now fails with an appropriate error message.
+
+ - [QTBUG-80051] 'depends' configuration now accepts '*' as a value,
+   instructing QDoc to load all available index files as dependencies.

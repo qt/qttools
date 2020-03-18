@@ -36,10 +36,19 @@
 #include "cppcodemarker.h"
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsastfwd_p.h>
+#    include <private/qqmljsastfwd_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
+
+#ifndef QT_NO_DECLARATIVE
+#    include <private/qqmlapiversion_p.h>
+#    if Q_QML_PRIVATE_API_VERSION < 8
+namespace QQmlJS {
+    using SourceLocation = AST::SourceLocation;
+}
+#    endif
+#endif
 
 class QmlCodeMarker : public CppCodeMarker
 {
@@ -53,8 +62,7 @@ public:
     bool recognizeExtension(const QString &ext) override;
     bool recognizeLanguage(const QString &language) override;
     Atom::AtomType atomType() const override;
-    virtual QString markedUpCode(const QString &code,
-                                 const Node *relative,
+    virtual QString markedUpCode(const QString &code, const Node *relative,
                                  const Location &location) override;
 
     QString markedUpName(const Node *node) override;
@@ -65,12 +73,11 @@ public:
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
 #ifndef QT_NO_DECLARATIVE
-    QList<QQmlJS::AST::SourceLocation> extractPragmas(QString &script);
+    QVector<QQmlJS::SourceLocation> extractPragmas(QString &script);
 #endif
 
 private:
-    QString addMarkUp(const QString &code, const Node *relative,
-                      const Location &location);
+    QString addMarkUp(const QString &code, const Node *relative, const Location &location);
 };
 
 QT_END_NAMESPACE

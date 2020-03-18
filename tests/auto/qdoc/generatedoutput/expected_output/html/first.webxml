@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="First" href="first.html" status="active" access="public" location="bbb.h" documented="true" module="TestModule">
+            <description>
+                <para>This is a first class</para>
+            </description>
+            <class name="Nested" fullname="First::Nested" href="first-nested.html" status="active" access="private" location="bbb.h" documented="true" module="TestModule">
+                <description>
+                    <para>This is a nested class</para>
+                </description>
+            </class>
+        </class>
+    </document>
+</WebXML>

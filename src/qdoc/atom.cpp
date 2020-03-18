@@ -145,98 +145,97 @@ QT_BEGIN_NAMESPACE
 
 QString Atom::noError_ = QString();
 
-static const struct {
+static const struct
+{
     const char *english;
     int no;
-} atms[] = {
-    { "AnnotatedList", Atom::AnnotatedList },
-    { "AutoLink", Atom::AutoLink },
-    { "BaseName", Atom::BaseName },
-    { "br", Atom::BR},
-    { "BriefLeft", Atom::BriefLeft },
-    { "BriefRight", Atom::BriefRight },
-    { "C", Atom::C },
-    { "CaptionLeft", Atom::CaptionLeft },
-    { "CaptionRight", Atom::CaptionRight },
-    { "Code", Atom::Code },
-    { "CodeBad", Atom::CodeBad },
-    { "CodeNew", Atom::CodeNew },
-    { "CodeOld", Atom::CodeOld },
-    { "CodeQuoteArgument", Atom::CodeQuoteArgument },
-    { "CodeQuoteCommand", Atom::CodeQuoteCommand },
-    { "DivLeft", Atom::DivLeft },
-    { "DivRight", Atom::DivRight },
-    { "EndQmlText", Atom::EndQmlText },
-    { "ExampleFileLink", Atom::ExampleFileLink},
-    { "ExampleImageLink", Atom::ExampleImageLink},
-    { "FootnoteLeft", Atom::FootnoteLeft },
-    { "FootnoteRight", Atom::FootnoteRight },
-    { "FormatElse", Atom::FormatElse },
-    { "FormatEndif", Atom::FormatEndif },
-    { "FormatIf", Atom::FormatIf },
-    { "FormattingLeft", Atom::FormattingLeft },
-    { "FormattingRight", Atom::FormattingRight },
-    { "GeneratedList", Atom::GeneratedList },
-    { "hr", Atom::HR},
-    { "Image", Atom::Image },
-    { "ImageText", Atom::ImageText },
-    { "ImportantLeft", Atom::ImportantLeft },
-    { "ImportantRight", Atom::ImportantRight },
-    { "InlineImage", Atom::InlineImage },
-    { "JavaScript", Atom::JavaScript },
-    { "EndJavaScript", Atom::EndJavaScript },
-    { "Keyword", Atom::Keyword },
-    { "LegaleseLeft", Atom::LegaleseLeft },
-    { "LegaleseRight", Atom::LegaleseRight },
-    { "LineBreak", Atom::LineBreak },
-    { "Link", Atom::Link },
-    { "LinkNode", Atom::LinkNode },
-    { "ListLeft", Atom::ListLeft },
-    { "ListItemNumber", Atom::ListItemNumber },
-    { "ListTagLeft", Atom::ListTagLeft },
-    { "ListTagRight", Atom::ListTagRight },
-    { "ListItemLeft", Atom::ListItemLeft },
-    { "ListItemRight", Atom::ListItemRight },
-    { "ListRight", Atom::ListRight },
-    { "NavAutoLink", Atom::NavAutoLink },
-    { "NavLink", Atom::NavLink },
-    { "Nop", Atom::Nop },
-    { "NoteLeft", Atom::NoteLeft },
-    { "NoteRight", Atom::NoteRight },
-    { "ParaLeft", Atom::ParaLeft },
-    { "ParaRight", Atom::ParaRight },
-    { "Qml", Atom::Qml},
-    { "QmlText", Atom::QmlText },
-    { "QuotationLeft", Atom::QuotationLeft },
-    { "QuotationRight", Atom::QuotationRight },
-    { "RawString", Atom::RawString },
-    { "SectionLeft", Atom::SectionLeft },
-    { "SectionRight", Atom::SectionRight },
-    { "SectionHeadingLeft", Atom::SectionHeadingLeft },
-    { "SectionHeadingRight", Atom::SectionHeadingRight },
-    { "SidebarLeft", Atom::SidebarLeft },
-    { "SidebarRight", Atom::SidebarRight },
-    { "SinceList", Atom::SinceList },
-    { "SinceTagLeft", Atom::SinceTagLeft },
-    { "SinceTagRight", Atom::SinceTagRight },
-    { "SnippetCommand", Atom::SnippetCommand },
-    { "SnippetIdentifier", Atom::SnippetIdentifier },
-    { "SnippetLocation", Atom::SnippetLocation },
-    { "String", Atom::String },
-    { "TableLeft", Atom::TableLeft },
-    { "TableRight", Atom::TableRight },
-    { "TableHeaderLeft", Atom::TableHeaderLeft },
-    { "TableHeaderRight", Atom::TableHeaderRight },
-    { "TableRowLeft", Atom::TableRowLeft },
-    { "TableRowRight", Atom::TableRowRight },
-    { "TableItemLeft", Atom::TableItemLeft },
-    { "TableItemRight", Atom::TableItemRight },
-    { "TableOfContents", Atom::TableOfContents },
-    { "Target", Atom::Target },
-    { "UnhandledFormat", Atom::UnhandledFormat },
-    { "UnknownCommand", Atom::UnknownCommand },
-    { nullptr, 0 }
-};
+} atms[] = { { "AnnotatedList", Atom::AnnotatedList },
+             { "AutoLink", Atom::AutoLink },
+             { "BaseName", Atom::BaseName },
+             { "br", Atom::BR },
+             { "BriefLeft", Atom::BriefLeft },
+             { "BriefRight", Atom::BriefRight },
+             { "C", Atom::C },
+             { "CaptionLeft", Atom::CaptionLeft },
+             { "CaptionRight", Atom::CaptionRight },
+             { "Code", Atom::Code },
+             { "CodeBad", Atom::CodeBad },
+             { "CodeNew", Atom::CodeNew },
+             { "CodeOld", Atom::CodeOld },
+             { "CodeQuoteArgument", Atom::CodeQuoteArgument },
+             { "CodeQuoteCommand", Atom::CodeQuoteCommand },
+             { "DivLeft", Atom::DivLeft },
+             { "DivRight", Atom::DivRight },
+             { "EndQmlText", Atom::EndQmlText },
+             { "ExampleFileLink", Atom::ExampleFileLink },
+             { "ExampleImageLink", Atom::ExampleImageLink },
+             { "FootnoteLeft", Atom::FootnoteLeft },
+             { "FootnoteRight", Atom::FootnoteRight },
+             { "FormatElse", Atom::FormatElse },
+             { "FormatEndif", Atom::FormatEndif },
+             { "FormatIf", Atom::FormatIf },
+             { "FormattingLeft", Atom::FormattingLeft },
+             { "FormattingRight", Atom::FormattingRight },
+             { "GeneratedList", Atom::GeneratedList },
+             { "hr", Atom::HR },
+             { "Image", Atom::Image },
+             { "ImageText", Atom::ImageText },
+             { "ImportantLeft", Atom::ImportantLeft },
+             { "ImportantRight", Atom::ImportantRight },
+             { "InlineImage", Atom::InlineImage },
+             { "JavaScript", Atom::JavaScript },
+             { "EndJavaScript", Atom::EndJavaScript },
+             { "Keyword", Atom::Keyword },
+             { "LegaleseLeft", Atom::LegaleseLeft },
+             { "LegaleseRight", Atom::LegaleseRight },
+             { "LineBreak", Atom::LineBreak },
+             { "Link", Atom::Link },
+             { "LinkNode", Atom::LinkNode },
+             { "ListLeft", Atom::ListLeft },
+             { "ListItemNumber", Atom::ListItemNumber },
+             { "ListTagLeft", Atom::ListTagLeft },
+             { "ListTagRight", Atom::ListTagRight },
+             { "ListItemLeft", Atom::ListItemLeft },
+             { "ListItemRight", Atom::ListItemRight },
+             { "ListRight", Atom::ListRight },
+             { "NavAutoLink", Atom::NavAutoLink },
+             { "NavLink", Atom::NavLink },
+             { "Nop", Atom::Nop },
+             { "NoteLeft", Atom::NoteLeft },
+             { "NoteRight", Atom::NoteRight },
+             { "ParaLeft", Atom::ParaLeft },
+             { "ParaRight", Atom::ParaRight },
+             { "Qml", Atom::Qml },
+             { "QmlText", Atom::QmlText },
+             { "QuotationLeft", Atom::QuotationLeft },
+             { "QuotationRight", Atom::QuotationRight },
+             { "RawString", Atom::RawString },
+             { "SectionLeft", Atom::SectionLeft },
+             { "SectionRight", Atom::SectionRight },
+             { "SectionHeadingLeft", Atom::SectionHeadingLeft },
+             { "SectionHeadingRight", Atom::SectionHeadingRight },
+             { "SidebarLeft", Atom::SidebarLeft },
+             { "SidebarRight", Atom::SidebarRight },
+             { "SinceList", Atom::SinceList },
+             { "SinceTagLeft", Atom::SinceTagLeft },
+             { "SinceTagRight", Atom::SinceTagRight },
+             { "SnippetCommand", Atom::SnippetCommand },
+             { "SnippetIdentifier", Atom::SnippetIdentifier },
+             { "SnippetLocation", Atom::SnippetLocation },
+             { "String", Atom::String },
+             { "TableLeft", Atom::TableLeft },
+             { "TableRight", Atom::TableRight },
+             { "TableHeaderLeft", Atom::TableHeaderLeft },
+             { "TableHeaderRight", Atom::TableHeaderRight },
+             { "TableRowLeft", Atom::TableRowLeft },
+             { "TableRowRight", Atom::TableRowRight },
+             { "TableItemLeft", Atom::TableItemLeft },
+             { "TableItemRight", Atom::TableItemRight },
+             { "TableOfContents", Atom::TableOfContents },
+             { "Target", Atom::Target },
+             { "UnhandledFormat", Atom::UnhandledFormat },
+             { "UnknownCommand", Atom::UnknownCommand },
+             { nullptr, 0 } };
 
 /*! \fn Atom::Atom(AtomType type, const QString &string)
 
@@ -333,8 +332,9 @@ QString Atom::typeString() const
         int i = 0;
         while (atms[i].english != nullptr) {
             if (atms[i].no != i)
-                Location::internalError(QCoreApplication::translate("QDoc::Atom", "atom %1 missing").arg(i));
-            i++;
+                Location::internalError(
+                        QCoreApplication::translate("QDoc::Atom", "atom %1 missing").arg(i));
+            ++i;
         }
         deja = true;
     }
@@ -365,10 +365,7 @@ void Atom::dump() const
     str.replace(QRegExp(QLatin1String("[^\x20-\x7e]")), QLatin1String("?"));
     if (!str.isEmpty())
         str = QLatin1String(" \"") + str + QLatin1Char('"');
-    fprintf(stderr,
-            "    %-15s%s\n",
-            typeString().toLatin1().data(),
-            str.toLatin1().data());
+    fprintf(stderr, "    %-15s%s\n", typeString().toLatin1().data(), str.toLatin1().data());
 }
 
 /*!
@@ -380,7 +377,7 @@ void Atom::dump() const
   the space character.
  */
 LinkAtom::LinkAtom(const QString &p1, const QString &p2)
-    : Atom(p1),
+    : Atom(Atom::Link, p1),
       resolved_(false),
       genus_(Node::DontCare),
       goal_(Node::NoType),
@@ -400,13 +397,13 @@ void LinkAtom::resolveSquareBracketParams()
     if (resolved_)
         return;
     const QStringList params = squareBracketParams_.toLower().split(QLatin1Char(' '));
-     for (const auto &param : params) {
+    for (const auto &param : params) {
         if (!domain_) {
             domain_ = QDocDatabase::qdocDB()->findTree(param);
             if (domain_) {
-                 continue;
+                continue;
             }
-         }
+        }
         if (goal_ == Node::NoType) {
             goal_ = Node::goal(param);
             if (goal_ != Node::NoType)

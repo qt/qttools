@@ -98,7 +98,7 @@ signals:
     void resourceImageDropped(const QString &path, QAction *action);
 
 private:
-    using QStandardItemList = QList<QStandardItem *>;
+    using QStandardItemList = QVector<QStandardItem *>;
 
     void initializeHeaders();
     static void setItems(QDesignerFormEditorInterface *core, QAction *a,
@@ -203,7 +203,7 @@ public:
     QAction *currentAction() const;
     void setCurrentIndex(const QModelIndex &index);
 
-    using ActionList = QList<QAction *>;
+    using ActionList = QVector<QAction *>;
     ActionList selectedActions() const;
     QItemSelection selection() const;
 
@@ -232,7 +232,7 @@ class QDESIGNER_SHARED_EXPORT ActionRepositoryMimeData: public QMimeData
 {
     Q_OBJECT
 public:
-    using ActionList = QList<QAction *>;
+    using ActionList = QVector<QAction *>;
 
     ActionRepositoryMimeData(const ActionList &, Qt::DropAction dropAction);
     ActionRepositoryMimeData(QAction *, Qt::DropAction dropAction);

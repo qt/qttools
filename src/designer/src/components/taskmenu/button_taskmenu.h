@@ -84,11 +84,11 @@ public:
     explicit ButtonGroupTaskMenu(QButtonGroup *buttonGroup, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QList<QAction*> taskActions() const override;
+    QVector<QAction*> taskActions() const override;
 
 private:
     QButtonGroup *m_buttonGroup;
-    QList<QAction*> m_taskActions;
+    QVector<QAction*> m_taskActions;
     mutable ButtonGroupMenu m_menu;
 };
 
@@ -102,7 +102,7 @@ public:
     ~ButtonTaskMenu() override;
 
     QAction *preferredEditAction() const override;
-    QList<QAction*> taskActions() const override;
+    QVector<QAction*> taskActions() const override;
 
     QAbstractButton *button() const;
 
@@ -125,7 +125,7 @@ private:
     bool refreshAssignMenu(const QDesignerFormWindowInterface *fw, int buttonCount, SelectionType st, QButtonGroup *currentGroup);
     QMenu *createGroupSelectionMenu(const QDesignerFormWindowInterface *fw);
 
-    QList<QAction*> m_taskActions;
+    QVector<QAction*> m_taskActions;
     mutable ButtonGroupMenu m_groupMenu;
     QMenu *m_assignGroupSubMenu;
     QActionGroup *m_assignActionGroup;

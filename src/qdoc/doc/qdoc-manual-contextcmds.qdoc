@@ -28,7 +28,6 @@
 /*!
     \page 14-qdoc-commands-contextcommands.html
     \previouspage Topic Commands
-    \contentspage QDoc Manual
     \nextpage Document Navigation
 
     \title Context Commands
@@ -47,7 +46,6 @@
 
     \list
       \li \l {abstract-command} {\\abstract}
-      \li \l {contentspage-command}{\\contentspage},
       \li \l {ingroup-command}{\\ingroup},
       \li \l {inherits-command}{\\inherits},
       \li \l {inmodule-command}{\\inmodule},
@@ -74,7 +72,6 @@
 /*!
     \page 15-qdoc-commands-navigation.html
     \previouspage Context Commands
-    \contentspage QDoc Manual
     \nextpage Status
 
     \title Document Navigation
@@ -169,20 +166,11 @@
     documentation. The generated link type tells browsers and search
     engines which document is considered by the author to be the
     starting point of the collection.
-
-    \target contentspage-command
-    \section2 \\contentspage
-
-    The \\contentspage command links the current page to a table of
-    contents page. The command follows the same syntax and argument
-    convention as the \l {previouspage-command} {\\previouspage}
-    command.
 */
 
 /*!
     \page 16-qdoc-commands-status.html
     \previouspage Document Navigation
-    \contentspage QDoc Manual
     \nextpage Thread Support
 
     \title Status
@@ -262,7 +250,7 @@
     deprecated, and it should no longer be used in new code. There is
     no guarantee for how long it will remain in the library.
 
-    The command must stand on its own line.
+    The \\obsolete command takes no arguments.
 
     When generating the reference documentation for a class, QDoc will
     create and link to a separate page documenting its obsolete
@@ -441,7 +429,6 @@
 /*!
     \page 17-qdoc-commands-thread.html
     \previouspage Status
-    \contentspage QDoc Manual
     \nextpage Relating Things
 
     \title Thread Support
@@ -621,7 +608,6 @@
 /*!
     \page 18-qdoc-commands-relating.html
     \previouspage Thread Support
-    \contentspage QDoc Manual
     \nextpage Grouping Things
 
     \title Relating Things
@@ -672,11 +658,11 @@
     \endcode
 
     QDoc includes this line on the reference page for the
-    \l{http://qt-project.org/doc/qt-4.7/qml-pauseanimation.html} {PauseAnimation}
+    \l [QML] PauseAnimation
     element:
 
     \quotation
-        Inherits \l{http://qt-project.org/doc/qt-4.7/qml-animation.html} {Animation}
+        Inherits \l [QML] Animation
     \endquotation
 
     \target overload-command
@@ -693,9 +679,9 @@
     should be fully documented. Each overload can have whatever extra
     documentation you want to add for just that overloaded version.
 
-    From Qt 4.5, you can include the function name plus '()' as a
-    parameter to the \b{\\overload} command, which will include a
-    standard \e{This function overloads...}  line of text with a link
+    You can include the function name plus '()' as a parameter to
+    the \b{\\overload} command, which will include a standard
+    \e{This function overloads...}  line of text with a link
     to the documentation for the primary version of the function.
 
     \code
@@ -808,7 +794,6 @@
 /*!
     \page 19-qdoc-commands-grouping.html
     \previouspage Relating Things
-    \contentspage QDoc Manual
     \nextpage Naming Things
 
     \title Grouping Things
@@ -890,7 +875,6 @@
 /*!
     \page 20-qdoc-commands-namingthings.html
     \previouspage Grouping Things
-    \contentspage QDoc Manual
     \nextpage Markup Commands
 
     \title Naming Things

@@ -23,14 +23,14 @@ HEADERS += aboutdialog.h \
     cmdlineparser.h \
     contentwindow.h \
     findwidget.h \
-    filternamedialog.h \
+    helpdocsettings.h \
+    helpdocsettingswidget.h \
     helpenginewrapper.h \
     helpbrowsersupport.h \
     helpviewer.h \
     helpviewer_p.h \
     indexwindow.h \
     mainwindow.h \
-    optionswidget.h \
     preferencesdialog.h \
     qtdocinstaller.h \
     remotecontrol.h \
@@ -56,14 +56,14 @@ SOURCES += aboutdialog.cpp \
     cmdlineparser.cpp \
     contentwindow.cpp \
     findwidget.cpp \
-    filternamedialog.cpp \
+    helpdocsettings.cpp \
+    helpdocsettingswidget.cpp \
     helpenginewrapper.cpp \
     helpbrowsersupport.cpp \
     helpviewer.cpp \
     indexwindow.cpp \
     main.cpp \
     mainwindow.cpp \
-    optionswidget.cpp \
     preferencesdialog.cpp \
     qtdocinstaller.cpp \
     remotecontrol.cpp \
@@ -97,7 +97,7 @@ win32 {
 FORMS += bookmarkdialog.ui \
     bookmarkmanagerwidget.ui \
     bookmarkwidget.ui \
-    filternamedialog.ui \
+    helpdocsettingswidget.ui \
     preferencesdialog.ui \
     topicchooser.ui
 

@@ -66,7 +66,7 @@ QAction *TableWidgetTaskMenu::preferredEditAction() const
     return m_editItemsAction;
 }
 
-QList<QAction*> TableWidgetTaskMenu::taskActions() const
+QVector<QAction*> TableWidgetTaskMenu::taskActions() const
 {
     return m_taskActions + QDesignerTaskMenu::taskActions();
 }

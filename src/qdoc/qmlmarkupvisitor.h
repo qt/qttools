@@ -35,23 +35,27 @@
 #include <QtCore/qstring.h>
 
 #ifndef QT_NO_DECLARATIVE
-#include <private/qqmljsastvisitor_p.h>
-#include <private/qqmljsengine_p.h>
+#    include <private/qqmljsastvisitor_p.h>
+#    include <private/qqmljsengine_p.h>
 #endif
 
 QT_BEGIN_NAMESPACE
 
 #ifndef QT_NO_DECLARATIVE
+#    include <private/qqmlapiversion_p.h>
+#    if Q_QML_PRIVATE_API_VERSION < 8
+namespace QQmlJS {
+    using SourceLocation = AST::SourceLocation;
+}
+#    endif
+
+
 class QmlMarkupVisitor : public QQmlJS::AST::Visitor
 {
 public:
-    enum ExtraType{
-        Comment,
-        Pragma
-    };
+    enum ExtraType { Comment, Pragma };
 
-    QmlMarkupVisitor(const QString &code,
-                     const QList<QQmlJS::AST::SourceLocation> &pragmas,
+    QmlMarkupVisitor(const QString &code, const QVector<QQmlJS::SourceLocation> &pragmas,
                      QQmlJS::Engine *engine);
     virtual ~QmlMarkupVisitor();
 
@@ -148,17 +152,16 @@ protected:
 private:
     typedef QHash<QString, QString> StringHash;
     void addExtra(quint32 start, quint32 finish);
-    void addMarkedUpToken(QQmlJS::AST::SourceLocation &location,
-                          const QString &text,
+    void addMarkedUpToken(QQmlJS::SourceLocation &location, const QString &text,
                           const StringHash &attributes = StringHash());
-    void addVerbatim(QQmlJS::AST::SourceLocation first,
-                     QQmlJS::AST::SourceLocation last = QQmlJS::AST::SourceLocation());
-    QString sourceText(QQmlJS::AST::SourceLocation &location);
+    void addVerbatim(QQmlJS::SourceLocation first,
+                     QQmlJS::SourceLocation last = QQmlJS::SourceLocation());
+    QString sourceText(QQmlJS::SourceLocation &location);
     void throwRecursionDepthError() final;
 
     QQmlJS::Engine *engine;
     QVector<ExtraType> extraTypes;
-    QList<QQmlJS::AST::SourceLocation> extraLocations;
+    QVector<QQmlJS::SourceLocation> extraLocations;
     QString source;
     QString output;
     quint32 cursor;

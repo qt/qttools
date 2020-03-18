@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>AbstractParent QML Type</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Abstract base QML type.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import QDoc.Test 1.1</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherited By:</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="qml-qdoc-test-child.xml" xlink:role="">Child</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="children-prop">
+<db:title>[default] children : list&lt;Child&gt;</db:title>
+<db:fieldsynopsis>
+<db:type>list&lt;Child&gt;</db:type>
+<db:varname>children</db:varname>
+<db:modifier>writable</db:modifier>
+<db:modifier>[default]</db:modifier>
+
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Children of the type.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="rear-method">
+<db:title>void rear(<db:emphasis>child</db:emphasis>)</db:title>
+<db:para>Do some abstract parenting on <db:code role="parameter">child</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

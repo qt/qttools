@@ -35,25 +35,25 @@
     \brief This namespace holds QDoc-internal utility methods.
  */
 namespace Utilities {
-    static inline void setDebugEnabled(bool value)
-    {
-        const_cast<QLoggingCategory &>(lcQdoc()).setEnabled(QtDebugMsg, value);
-    }
+static inline void setDebugEnabled(bool value)
+{
+    const_cast<QLoggingCategory &>(lcQdoc()).setEnabled(QtDebugMsg, value);
+}
 
-    void startDebugging(const QString &message)
-    {
-        setDebugEnabled(true);
-        qCDebug(lcQdoc, "START DEBUGGING: %ls", qUtf16Printable(message));
-    }
+void startDebugging(const QString &message)
+{
+    setDebugEnabled(true);
+    qCDebug(lcQdoc, "START DEBUGGING: %ls", qUtf16Printable(message));
+}
 
-    void stopDebugging(const QString &message)
-    {
-        qCDebug(lcQdoc, "STOP DEBUGGING: %ls", qUtf16Printable(message));
-        setDebugEnabled(false);
-    }
+void stopDebugging(const QString &message)
+{
+    qCDebug(lcQdoc, "STOP DEBUGGING: %ls", qUtf16Printable(message));
+    setDebugEnabled(false);
+}
 
-    bool debugging()
-    {
-        return lcQdoc().isEnabled(QtDebugMsg);
-    }
+bool debugging()
+{
+    return lcQdoc().isEnabled(QtDebugMsg);
+}
 }

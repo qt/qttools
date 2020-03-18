@@ -108,7 +108,7 @@ public:
     // Helper to create a basic popup menu from task menu extensions (internal/public)
     static QMenu *createExtensionTaskMenu(QDesignerFormWindowInterface *fw, QObject *o, bool trailingSeparator = true);
 
-    virtual bool dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, QWidget *target,
+    virtual bool dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list, QWidget *target,
                              const QPoint &global_mouse_pos) = 0;
 
     // Helper to find the widget at the mouse position with some flags.

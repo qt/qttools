@@ -45,7 +45,8 @@ public:
     bool recognizeExtension(const QString &ext) override;
     bool recognizeLanguage(const QString &lang) override;
     Atom::AtomType atomType() const override;
-    QString markedUpCode(const QString &code, const Node *relative, const Location &location) override;
+    QString markedUpCode(const QString &code, const Node *relative,
+                         const Location &location) override;
     QString markedUpSynopsis(const Node *node, const Node *relative, Section::Style style) override;
     QString markedUpQmlItem(const Node *node, bool summary) override;
     QString markedUpName(const Node *node) override;

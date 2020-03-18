@@ -153,7 +153,7 @@ TreeWidgetContents TreeWidgetEditor::fillContentsFromTreeWidget(QTreeWidget *tre
     treeCont.m_headerItem.applyToListWidget(m_columnEditor->listWidget(), iconCache(), true);
     m_columnEditor->setupEditor(treeWidget, treeHeaderPropList);
 
-    QList<QtVariantProperty*> rootProperties;
+    QVector<QtVariantProperty*> rootProperties;
     rootProperties.append(setupPropertyGroup(tr("Per column properties"), treeItemColumnPropList));
     rootProperties.append(setupPropertyGroup(tr("Common properties"), treeItemCommonPropList));
     m_rootProperties = rootProperties;
@@ -498,7 +498,7 @@ void TreeWidgetEditor::moveColumnItems(const PropertyDefinition *propList,
 {
     BoolBlocker block(m_updatingBrowser);
 
-    QList<QVariant> saveCol;
+    QVector<QVariant> saveCol;
     for (int j = 0; propList[j].name; j++)
         saveCol.append(item->data(toColumn, propList[j].role));
     QVariant editVariant = item->data(toColumn, Qt::EditRole);

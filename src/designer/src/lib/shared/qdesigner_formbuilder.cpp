@@ -224,7 +224,7 @@ static bool readDomEnumerationValue(const DomProperty *p,
     return false;
 }
 
-void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &properties)
+void QDesignerFormBuilder::applyProperties(QObject *o, const QVector<DomProperty*> &properties)
 {
     if (properties.isEmpty())
         return;

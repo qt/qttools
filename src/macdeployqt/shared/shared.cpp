@@ -53,6 +53,7 @@ bool alwaysOwerwriteEnabled = false;
 bool runCodesign = false;
 QStringList librarySearchPath;
 QString codesignIdentiy;
+QString extraEntitlements;
 bool hardenedRuntime = false;
 bool appstoreCompliant = false;
 int logLevel = 1;
@@ -184,7 +185,7 @@ OtoolInfo findDependencyInfo(const QString &binaryPath)
         "current version (\\d+\\.\\d+\\.\\d+)\\)$"));
 
     QString output = otool.readAllStandardOutput();
-    QStringList outputLines = output.split("\n", QString::SkipEmptyParts);
+    QStringList outputLines = output.split("\n", Qt::SkipEmptyParts);
     if (outputLines.size() < 2) {
         LogError() << "Could not parse otool output:" << output;
         return info;
@@ -471,6 +472,23 @@ QStringList findAppBundleFiles(const QString &appBundlePath, bool absolutePath =
     }
 
     return result;
+}
+
+QString findEntitlementsFile(const QString& path)
+{
+    QDirIterator iter(path, QStringList() << QString::fromLatin1("*.entitlements"),
+            QDir::Files, QDirIterator::Subdirectories);
+
+    while (iter.hasNext()) {
+        iter.next();
+        if (iter.fileInfo().isSymLink())
+            continue;
+
+        //return the first entitlements file - only one is used for signing anyway
+        return iter.fileInfo().absoluteFilePath();
+    }
+
+    return QString();
 }
 
 QList<FrameworkInfo> getQtFrameworks(const QList<DylibInfo> &dependencies, const QString &appBundlePath, const QSet<QString> &rpaths, bool useDebugLibs)
@@ -1382,6 +1400,9 @@ void codesignFile(const QString &identity, const QString &filePath)
     if (hardenedRuntime)
         codeSignOptions << "-o" << "runtime";
 
+    if (!extraEntitlements.isEmpty())
+        codeSignOptions << "--entitlements" << extraEntitlements;
+
     QProcess codesign;
     codesign.start("codesign", codeSignOptions);
     codesign.waitForFinished(-1);
@@ -1503,6 +1524,9 @@ QSet<QString> codesignBundle(const QString &identity,
                 continue;
             }
         }
+
+        // Look for an entitlements file in the bundle to include when signing
+        extraEntitlements = findEntitlementsFile(appBundleAbsolutePath + "/Contents/Resources/");
 
         // All dependencies are signed, now sign this binary.
         codesignFile(identity, binary);

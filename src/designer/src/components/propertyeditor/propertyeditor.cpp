@@ -432,7 +432,7 @@ bool PropertyEditor::isItemVisible(QtBrowserItem *item) const
  * - Anything below (properties) is assumed to be collapsed
  * That is, the map is required, the state cannot be stored in a set */
 
-void PropertyEditor::storePropertiesExpansionState(const QList<QtBrowserItem *> &items)
+void PropertyEditor::storePropertiesExpansionState(const QVector<QtBrowserItem *> &items)
 {
     const QChar bar = QLatin1Char('|');
     for (QtBrowserItem *propertyItem : items) {
@@ -475,7 +475,7 @@ void PropertyEditor::collapseAll()
         setExpanded(group, false);
 }
 
-void PropertyEditor::applyPropertiesExpansionState(const QList<QtBrowserItem *> &items)
+void PropertyEditor::applyPropertiesExpansionState(const QVector<QtBrowserItem *> &items)
 {
     const QChar bar = QLatin1Char('|');
     for (QtBrowserItem *propertyItem : items) {
@@ -516,7 +516,7 @@ void PropertyEditor::applyExpansionState()
     }
 }
 
-int PropertyEditor::applyPropertiesFilter(const QList<QtBrowserItem *> &items)
+int PropertyEditor::applyPropertiesFilter(const QVector<QtBrowserItem *> &items)
 {
     int showCount = 0;
     const bool matchAll = m_filterPattern.isEmpty();
@@ -1011,7 +1011,7 @@ void PropertyEditor::setObject(QObject *object)
                         m_updatingBrowser = false;
                     } else if (type == DesignerPropertyManager::designerFlagTypeId()) {
                         const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(value);
-                        QList<QPair<QString, uint> > flags;
+                        QVector<QPair<QString, uint> > flags;
                         for (const QString &name : f.metaFlags.keys()) {
                             const uint val = f.metaFlags.keyToValue(name);
                             flags.append(qMakePair(name, val));

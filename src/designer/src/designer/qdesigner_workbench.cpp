@@ -72,7 +72,7 @@ QT_BEGIN_NAMESPACE
 
 static const char *appFontPrefixC = "AppFonts";
 
-using ActionList = QList<QAction *>;
+using ActionList = QVector<QAction *>;
 
 static QMdiSubWindow *mdiSubWindowOf(const QWidget *w)
 {

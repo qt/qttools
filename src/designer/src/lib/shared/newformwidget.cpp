@@ -179,7 +179,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     m_deviceProfiles = settings.deviceProfiles();
     m_ui->profileComboBox->addItem(tr("None"));
     connect(m_ui->profileComboBox,
-            QOverload<int>::of(&QComboBox::currentIndexChanged),
+            QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
             this, &NewFormWidget::slotDeviceProfileIndexChanged);
     if (m_deviceProfiles.isEmpty()) {
         m_ui->profileComboBox->setEnabled(false);

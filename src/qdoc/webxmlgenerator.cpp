@@ -28,6 +28,7 @@
 
 #include "webxmlgenerator.h"
 
+#include "config.h"
 #include "helpprojectwriter.h"
 #include "node.h"
 #include "qdocdatabase.h"
@@ -41,10 +42,9 @@ QT_BEGIN_NAMESPACE
 
 static CodeMarker *marker_ = nullptr;
 
-
-void WebXMLGenerator::initializeGenerator(const Config &config)
+void WebXMLGenerator::initializeGenerator()
 {
-    HtmlGenerator::initializeGenerator(config);
+    HtmlGenerator::initializeGenerator();
 }
 
 void WebXMLGenerator::terminateGenerator()
@@ -71,9 +71,7 @@ QString WebXMLGenerator::fileExtension() const
     Some pages produce supplementary output while being generated, and that's
     handled here.
 */
-int WebXMLGenerator::generateAtom(const Atom *atom,
-                                  const Node *relative,
-                                  CodeMarker *marker)
+int WebXMLGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
 {
     if (supplement && currentWriter)
         addAtomElements(*currentWriter.data(), atom, relative, marker);
@@ -120,9 +118,8 @@ void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker * /* marker */)
     endSubPage();
 }
 
-void WebXMLGenerator::generateExampleFilePage(const Node *en,
-                                            const QString &file,
-                                            CodeMarker * /* marker */)
+void WebXMLGenerator::generateExampleFilePage(const Node *en, const QString &file,
+                                              CodeMarker * /* marker */)
 {
     QByteArray data;
     QXmlStreamWriter writer(&data);
@@ -139,25 +136,25 @@ void WebXMLGenerator::generateExampleFilePage(const Node *en,
     writer.writeAttribute("fulltitle", title);
     writer.writeAttribute("subtitle", file);
     writer.writeStartElement("description");
-    QString userFriendlyFilePath; // unused
-    writer.writeAttribute("path", Doc::resolveFile(en->doc().location(),
-                                                   file,
-                                                   &userFriendlyFilePath));
-    writer.writeAttribute("line", "0");
-    writer.writeAttribute("column", "0");
+
+    if (Config::instance().getBool(CONFIG_LOCATIONINFO)) {
+        QString userFriendlyFilePath; // unused
+        writer.writeAttribute("path",
+                              Doc::resolveFile(en->doc().location(), file, &userFriendlyFilePath));
+        writer.writeAttribute("line", "0");
+        writer.writeAttribute("column", "0");
+    }
 
     Quoter quoter;
     Doc::quoteFromFile(en->doc().location(), quoter, file);
     QString code = quoter.quoteTo(en->location(), QString(), QString());
     writer.writeTextElement("code", trimmedTrailing(code, QString(), QString()));
 
-
     writer.writeEndElement(); // description
     writer.writeEndElement(); // page
     writer.writeEndElement(); // document
     writer.writeEndElement(); // WebXML
     writer.writeEndDocument();
-
 
     out() << data;
     endFilePage();
@@ -178,9 +175,11 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
     Q_ASSERT(marker_);
 
     writer.writeStartElement("description");
-    writer.writeAttribute("path", node->doc().location().filePath());
-    writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
-    writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
+    if (Config::instance().getBool(CONFIG_LOCATIONINFO)) {
+        writer.writeAttribute("path", node->doc().location().filePath());
+        writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
+        writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));
+    }
 
     if (node->isTextPageNode())
         generateRelations(writer, node);
@@ -222,7 +221,7 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
     while (atom)
         atom = addAtomElements(writer, atom, node, marker_);
 
-    QList<Text> alsoList = node->doc().alsoList();
+    QVector<Text> alsoList = node->doc().alsoList();
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {
@@ -267,8 +266,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
                 qdb_->mergeCollections(static_cast<CollectionNode *>(node));
                 generatePageNode(static_cast<PageNode *>(node), nullptr);
             }
-        }
-        else if (node->isTextPageNode())
+        } else if (node->isTextPageNode())
             generatePageNode(static_cast<PageNode *>(node), nullptr);
         // else if TODO: anything else?
     }
@@ -276,27 +274,27 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     if (node->isAggregate()) {
         Aggregate *aggregate = static_cast<Aggregate *>(node);
         for (auto c : aggregate->childNodes()) {
-            if ((c->isAggregate() ||
-                c->isTextPageNode() ||
-                c->isCollectionNode()) && !c->isPrivate())
+            if ((c->isAggregate() || c->isTextPageNode() || c->isCollectionNode())
+                && !c->isPrivate())
                 generateDocumentation(c);
         }
     }
 }
 
-const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
-                                             const Atom *atom, const Node *relative, CodeMarker *marker)
+const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Atom *atom,
+                                             const Node *relative, CodeMarker *marker)
 {
     bool keepQuoting = false;
 
+    if (!atom)
+        return nullptr;
+
     switch (atom->type()) {
-    case Atom::AnnotatedList:
-    {
-        const CollectionNode* cn = qdb_->getCollectionNode(atom->string(), Node::Group);
+    case Atom::AnnotatedList: {
+        const CollectionNode *cn = qdb_->getCollectionNode(atom->string(), Node::Group);
         if (cn)
             generateAnnotatedList(writer, relative, cn->members());
-    }
-        break;
+    } break;
     case Atom::AutoLink:
         if (!inLink && !inSectionHeading) {
             const Node *node = nullptr;
@@ -345,9 +343,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
             const QVector<QStringRef> words = str.splitRef(' ');
             if (!words.isEmpty()) {
                 const QStringRef &first(words.at(0));
-                if (!(first == "contains" || first == "specifies"
-                      || first == "describes" || first == "defines"
-                      || first == "holds" || first == "determines"))
+                if (!(first == "contains" || first == "specifies" || first == "describes"
+                      || first == "defines" || first == "holds" || first == "determines"))
                     writer.writeCharacters(" holds ");
                 else
                     writer.writeCharacters(" ");
@@ -375,7 +372,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
 
     case Atom::Code:
         if (!hasQuotingInformation)
-            writer.writeTextElement("code", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+            writer.writeTextElement(
+                    "code", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
         else
             keepQuoting = true;
         break;
@@ -383,22 +381,26 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
 #ifdef QDOC_QML
     case Atom::Qml:
         if (!hasQuotingInformation)
-            writer.writeTextElement("qml", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+            writer.writeTextElement(
+                    "qml", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
         else
             keepQuoting = true;
 #endif
     case Atom::CodeBad:
-        writer.writeTextElement("badcode", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+        writer.writeTextElement("badcode",
+                                trimmedTrailing(plainCode(atom->string()), QString(), QString()));
         break;
 
     case Atom::CodeNew:
         writer.writeTextElement("para", "you can rewrite it as");
-        writer.writeTextElement("newcode", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+        writer.writeTextElement("newcode",
+                                trimmedTrailing(plainCode(atom->string()), QString(), QString()));
         break;
 
     case Atom::CodeOld:
         writer.writeTextElement("para", "For example, if you have code like");
-        writer.writeTextElement("oldcode", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
+        writer.writeTextElement("oldcode",
+                                trimmedTrailing(plainCode(atom->string()), QString(), QString()));
         break;
 
     case Atom::CodeQuoteArgument:
@@ -421,25 +423,21 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         }
         break;
 
-    case Atom::ExampleFileLink:
-    {
+    case Atom::ExampleFileLink: {
         if (!inLink) {
             QString link = linkForExampleFile(atom->string(), relative);
             if (!link.isEmpty())
                 startLink(writer, atom, relative, link);
         }
-    }
-    break;
+    } break;
 
-    case Atom::ExampleImageLink:
-    {
+    case Atom::ExampleImageLink: {
         if (!inLink) {
             QString link = atom->string();
             if (!link.isEmpty())
                 startLink(writer, atom, nullptr, "images/used-in-examples/" + link);
         }
-    }
-    break;
+    } break;
 
     case Atom::FootnoteLeft:
         writer.writeStartElement("footnote");
@@ -456,8 +454,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         writer.writeStartElement("raw");
         writer.writeAttribute("format", atom->string());
         break;
-    case Atom::FormattingLeft:
-    {
+    case Atom::FormattingLeft: {
         if (atom->string() == ATOM_FORMATTING_BOLD)
             writer.writeStartElement("bold");
         else if (atom->string() == ATOM_FORMATTING_ITALIC)
@@ -474,11 +471,9 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
             writer.writeStartElement("argument");
         else if (atom->string() == ATOM_FORMATTING_INDEX)
             writer.writeStartElement("index");
-    }
-        break;
+    } break;
 
-    case Atom::FormattingRight:
-    {
+    case Atom::FormattingRight: {
         if (atom->string() == ATOM_FORMATTING_BOLD)
             writer.writeEndElement();
         else if (atom->string() == ATOM_FORMATTING_ITALIC)
@@ -562,8 +557,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
                 writer.writeAttribute("type", "enum");
             else
                 writer.writeAttribute("type", "definition");
-        }
-        else {
+        } else {
             writer.writeAttribute("type", "ordered");
             if (atom->string() == ATOM_LIST_UPPERALPHA)
                 writer.writeAttribute("start", "A");
@@ -580,14 +574,12 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
 
     case Atom::ListItemNumber:
         break;
-    case Atom::ListTagLeft:
-    {
+    case Atom::ListTagLeft: {
         writer.writeStartElement("definition");
 
-        writer.writeTextElement("term", plainCode(
-                                    marker->markedUpEnumValue(atom->next()->string(), relative)));
-    }
-        break;
+        writer.writeTextElement(
+                "term", plainCode(marker->markedUpEnumValue(atom->next()->string(), relative)));
+    } break;
 
     case Atom::ListTagRight:
         writer.writeEndElement(); // definition
@@ -647,14 +639,12 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         writer.writeEndElement(); // section
         break;
 
-    case Atom::SectionHeadingLeft:
-    {
+    case Atom::SectionHeadingLeft: {
         writer.writeStartElement("heading");
         int unit = atom->string().toInt(); // + hOffset(relative)
         writer.writeAttribute("level", QString::number(unit));
         inSectionHeading = true;
-    }
-        break;
+    } break;
 
     case Atom::SectionHeadingRight:
         writer.writeEndElement(); // heading
@@ -668,7 +658,6 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     case Atom::SnippetCommand:
         if (quoting_) {
             writer.writeStartElement(atom->string());
-
         }
         break;
 
@@ -719,8 +708,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
         writer.writeEndElement(); // row
         break;
 
-    case Atom::TableItemLeft:
-    {
+    case Atom::TableItemLeft: {
         writer.writeStartElement("item");
         QStringList spans = atom->string().split(",");
         if (spans.size() == 2) {
@@ -729,8 +717,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
             if (spans.at(1) != "1")
                 writer.writeAttribute("rowspan", spans.at(1).trimmed());
         }
-    }
-        break;
+    } break;
     case Atom::TableItemRight:
         writer.writeEndElement(); // item
         break;
@@ -750,15 +737,11 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer,
     }
 
     hasQuotingInformation = keepQuoting;
-
-    if (atom)
-        return atom->next();
-
-    return nullptr;
+    return atom->next();
 }
 
-void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
-                                const Node *node, const QString &link)
+void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom, const Node *node,
+                                const QString &link)
 {
     QString fullName = link;
     if (node)
@@ -776,8 +759,7 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
             case Node::Enum:
                 writer.writeAttribute("enum", fullName);
                 break;
-            case Node::Example:
-            {
+            case Node::Example: {
                 const ExampleNode *en = static_cast<const ExampleNode *>(node);
                 QString fileTitle = exampleFileTitle(en, atom->string());
                 if (!fileTitle.isEmpty()) {
@@ -785,17 +767,15 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
                     break;
                 }
             }
-            Q_FALLTHROUGH();
+                Q_FALLTHROUGH();
             case Node::Page:
                 writer.writeAttribute("page", fullName);
                 break;
-            case Node::Property:
-            {
+            case Node::Property: {
                 const PropertyNode *propertyNode = static_cast<const PropertyNode *>(node);
                 if (propertyNode->getters().size() > 0)
                     writer.writeAttribute("getter", propertyNode->getters().at(0)->fullName());
-            }
-                break;
+            } break;
             default:
                 break;
             }
@@ -804,7 +784,8 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom,
     }
 }
 
-void WebXMLGenerator::endLink(QXmlStreamWriter &writer) {
+void WebXMLGenerator::endLink(QXmlStreamWriter &writer)
+{
     if (inLink) {
         writer.writeEndElement(); // link
         inLink = false;
@@ -817,8 +798,7 @@ void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *no
         QPair<QString, QString> anchorPair;
         const Node *linkNode;
 
-        for (QMap<Node::LinkType, QPair<QString, QString> >::const_iterator it =
-             node->links().cbegin(), end = node->links().cend(); it != end; ++it) {
+        for (auto it = node->links().cbegin(); it != node->links().cend(); ++it) {
 
             linkNode = qdb_->findNodeForTarget(it.value().first, node);
 
@@ -856,14 +836,14 @@ void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *no
     }
 }
 
-void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
-    const Node *relative, const NodeMap &nodeMap)
+void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative,
+                                            const NodeMap &nodeMap)
 {
     generateAnnotatedList(writer, relative, nodeMap.values());
 }
 
-void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer,
-    const Node *relative, const NodeList &nodeList)
+void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer, const Node *relative,
+                                            const NodeList &nodeList)
 {
     writer.writeStartElement("table");
     writer.writeAttribute("width", "100%");

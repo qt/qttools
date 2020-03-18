@@ -39,6 +39,7 @@
 #include <private/qqmljslexer_p.h>
 #include <private/qqmljsastvisitor_p.h>
 #include <private/qqmljsast_p.h>
+#include <private/qqmlapiversion_p.h>
 
 #include <QCoreApplication>
 #include <QFile>
@@ -51,6 +52,12 @@
 #include <cctype>
 
 QT_BEGIN_NAMESPACE
+
+#if Q_QML_PRIVATE_API_VERSION < 8
+namespace QQmlJS {
+    using SourceLocation = AST::SourceLocation;
+}
+#endif
 
 using namespace QQmlJS;
 
@@ -229,7 +236,7 @@ private:
 
 
     void processComments(quint32 offset, bool flush = false);
-    void processComment(const AST::SourceLocation &loc);
+    void processComment(const SourceLocation &loc);
     void consumeComment();
 
     bool createString(AST::ExpressionNode *ast, QString *out)
@@ -259,7 +266,7 @@ private:
     TranslatorMessage::ExtraData extra;
     QString sourcetext;
     QString trcontext;
-    QList<AST::SourceLocation> m_todo;
+    QList<SourceLocation> m_todo;
 };
 
 QString createErrorString(const QString &filename, const QString &code, Parser &parser)
@@ -274,7 +281,7 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
         if (m.isWarning())
             continue;
 
-#if Q_QML_PRIVATE_API_VERSION < 5
+#if Q_QML_PRIVATE_API_VERSION >= 8
         const int line = m.loc.startLine;
         const int column = m.loc.startColumn;
 #else
@@ -315,7 +322,7 @@ void FindTrCalls::postVisit(AST::Node *node)
 void FindTrCalls::processComments(quint32 offset, bool flush)
 {
     for (; !m_todo.isEmpty(); m_todo.removeFirst()) {
-        AST::SourceLocation loc = m_todo.first();
+        SourceLocation loc = m_todo.first();
         if (! flush && (loc.begin() >= offset))
             break;
 
@@ -332,7 +339,7 @@ void FindTrCalls::consumeComment()
     sourcetext.clear();
 }
 
-void FindTrCalls::processComment(const AST::SourceLocation &loc)
+void FindTrCalls::processComment(const SourceLocation &loc)
 {
     if (!loc.length)
         return;

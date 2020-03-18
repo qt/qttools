@@ -88,7 +88,7 @@ bool QDocDatabase::debug = false;
  */
 QDocForest::~QDocForest()
 {
-    for (int i=0; i<searchOrder_.size(); ++i)
+    for (int i = 0; i < searchOrder_.size(); ++i)
         delete searchOrder_.at(i);
     forest_.clear();
     searchOrder_.clear();
@@ -175,9 +175,9 @@ void QDocForest::setSearchOrder(const QStringList &t)
         return;
 
     /* Allocate space for the search order. */
-    searchOrder_.reserve(forest_.size()+1);
+    searchOrder_.reserve(forest_.size() + 1);
     searchOrder_.clear();
-    moduleNames_.reserve(forest_.size()+1);
+    moduleNames_.reserve(forest_.size() + 1);
     moduleNames_.clear();
 
     /* The primary tree is always first in the search order. */
@@ -186,12 +186,11 @@ void QDocForest::setSearchOrder(const QStringList &t)
     moduleNames_.append(primaryName);
     forest_.remove(primaryName);
 
-    QMap<QString, Tree *>::iterator i;
     for (const QString &m : t) {
         if (primaryName != m) {
-            i = forest_.find(m);
-            if (i != forest_.end()) {
-                searchOrder_.append(i.value());
+            auto it = forest_.find(m);
+            if (it != forest_.end()) {
+                searchOrder_.append(it.value());
                 moduleNames_.append(m);
                 forest_.remove(m);
             }
@@ -203,11 +202,9 @@ void QDocForest::setSearchOrder(const QStringList &t)
       know any better at this point.
      */
     if (!forest_.isEmpty()) {
-        i = forest_.begin();
-        while (i != forest_.end()) {
-            searchOrder_.append(i.value());
-            moduleNames_.append(i.key());
-            ++i;
+        for (auto it = forest_.begin(); it != forest_.end(); ++it) {
+            searchOrder_.append(it.value());
+            moduleNames_.append(it.key());
         }
         forest_.clear();
     }
@@ -220,7 +217,7 @@ void QDocForest::setSearchOrder(const QStringList &t)
       Note that this loop also inserts the primary tree into the
       forrest. That is a requirement.
      */
-    for (int i=0; i<searchOrder_.size(); ++i) {
+    for (int i = 0; i < searchOrder_.size(); ++i) {
         if (!forest_.contains(moduleNames_.at(i))) {
             forest_.insert(moduleNames_.at(i), searchOrder_.at(i));
         }
@@ -312,10 +309,8 @@ void QDocForest::newPrimaryTree(const QString &module)
   to 0, the starting point for each index tree is the root
   of the index tree.
  */
-const Node *QDocForest::findNodeForTarget(QStringList &targetPath,
-                                          const Node *relative,
-                                          Node::Genus genus,
-                                          QString &ref)
+const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *relative,
+                                          Node::Genus genus, QString &ref)
 {
     int flags = SearchBaseClasses | SearchEnumValues;
 
@@ -341,7 +336,7 @@ const Node *QDocForest::findNodeForTarget(QStringList &targetPath,
  */
 void QDocForest::printLinkCounts(const QString &project)
 {
-    Location::null.report(QString("%1: Link Counts").arg(project));
+    Location().report(QString("%1: Link Counts").arg(project));
     QMultiMap<int, QString> m;
     for (const auto *tree : searchOrder()) {
         if (tree->linkCount() < 0)
@@ -349,20 +344,18 @@ void QDocForest::printLinkCounts(const QString &project)
     }
     QString depends = "depends                 +=";
     QString module = project.toLower();
-    QMultiMap<int, QString>::iterator i = m.begin();
-    while (i != m.end()) {
-        QString line = "  " + i.value();
-        if (i.value() != module)
-            depends += QLatin1Char(' ') + i.value();
+    for (auto it = m.begin(); it != m.end(); ++it) {
+        QString line = "  " + it.value();
+        if (it.value() != module)
+            depends += QLatin1Char(' ') + it.value();
         int pad = 30 - line.length();
-        for (int k=0; k<pad; ++k)
+        for (int k = 0; k < pad; ++k)
             line += QLatin1Char(' ');
         line += "%1";
-        Location::null.report(line.arg(-(i.key())));
-        ++i;
+        Location().report(line.arg(-(it.key())));
     }
-    Location::null.report("Optimal depends variable:");
-    Location::null.report(depends);
+    Location().report("Optimal depends variable:");
+    Location().report(depends);
 }
 
 /*!
@@ -378,14 +371,12 @@ QString QDocForest::getLinkCounts(QStringList &strings, QVector<int> &counts)
     }
     QString depends = "depends                 +=";
     QString module = Generator::defaultModuleName().toLower();
-    QMultiMap<int, QString>::iterator i = m.begin();
-    while (i != m.end()) {
-        if (i.value() != module) {
-            counts.append(-(i.key()));
-            strings.append(i.value());
-            depends += QLatin1Char(' ') + i.value();
+    for (auto it = m.begin(); it != m.end(); ++it) {
+        if (it.value() != module) {
+            counts.append(-(it.key()));
+            strings.append(it.value());
+            depends += QLatin1Char(' ') + it.value();
         }
-        ++i;
     }
     return depends;
 }
@@ -401,8 +392,7 @@ QString QDocForest::getLinkCounts(QStringList &strings, QVector<int> &counts)
   C++ function or a QML function.
  */
 const FunctionNode *QDocForest::findFunctionNode(const QStringList &path,
-                                                 const Parameters &parameters,
-                                                 const Node *relative,
+                                                 const Parameters &parameters, const Node *relative,
                                                  Node::Genus genus)
 {
     for (const auto *tree : searchOrder()) {
@@ -450,8 +440,7 @@ NodeMultiMapMap QDocDatabase::newSinceMaps_;
   modules sequentially in a loop. Each source file for each module
   is read exactly once.
  */
-QDocDatabase::QDocDatabase()
-    : showInternal_(false), singleExec_(false), forest_(this)
+QDocDatabase::QDocDatabase() : showInternal_(false), singleExec_(false), forest_(this)
 {
     // nothing
 }
@@ -473,10 +462,10 @@ QDocDatabase::~QDocDatabase()
 QDocDatabase *QDocDatabase::qdocDB()
 {
     if (qdocDB_ == nullptr) {
-      qdocDB_ = new QDocDatabase;
-      initializeDB();
+        qdocDB_ = new QDocDatabase;
+        initializeDB();
     }
-   return qdocDB_;
+    return qdocDB_;
 }
 
 /*!
@@ -840,7 +829,7 @@ QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &import, const QString &n
             qmName = import.name_;
         else
             qmName = import.importUri_;
-        for (int i=0; i<dotSplit.size(); ++i) {
+        for (int i = 0; i < dotSplit.size(); ++i) {
             QString qualifiedName = qmName + "::" + dotSplit[i];
             QmlTypeNode *qcn = forest_.lookupQmlType(qualifiedName);
             if (qcn)
@@ -880,7 +869,7 @@ void QDocDatabase::processForest()
   mode, each tree is analyzed in turn, and its classes and
   types are added to the appropriate node maps.
  */
-void QDocDatabase::processForest(void (QDocDatabase::*func) (Aggregate*))
+void QDocDatabase::processForest(void (QDocDatabase::*func)(Aggregate *))
 {
     Tree *t = forest_.firstTree();
     while (t) {
@@ -1032,15 +1021,13 @@ NodeMapMap &QDocDatabase::getFunctionIndex()
  */
 void QDocDatabase::findAllLegaleseTexts(Aggregate *node)
 {
-    NodeList::ConstIterator c = node->constBegin();
-    while (c != node->constEnd()) {
-        if (!(*c)->isPrivate()) {
-            if (!(*c)->doc().legaleseText().isEmpty())
-                legaleseTexts_.insertMulti((*c)->doc().legaleseText(), *c);
-            if ((*c)->isAggregate())
-                findAllLegaleseTexts(static_cast<Aggregate *>(*c));
+    for (auto it = node->constBegin(); it != node->constEnd(); ++it) {
+        if (!(*it)->isPrivate()) {
+            if (!(*it)->doc().legaleseText().isEmpty())
+                legaleseTexts_.insert((*it)->doc().legaleseText(), *it);
+            if ((*it)->isAggregate())
+                findAllLegaleseTexts(static_cast<Aggregate *>(*it));
         }
-        ++c;
     }
 }
 
@@ -1072,9 +1059,9 @@ const NodeMap &QDocDatabase::getClassMap(const QString &key)
 {
     if (newSinceMaps_.isEmpty() && newClassMaps_.isEmpty() && newQmlTypeMaps_.isEmpty())
         processForest(&QDocDatabase::findAllSince);
-    NodeMapMap::const_iterator i = newClassMaps_.constFind(key);
-    if (i != newClassMaps_.constEnd())
-        return i.value();
+    auto it = newClassMaps_.constFind(key);
+    if (it != newClassMaps_.constEnd())
+        return it.value();
     return emptyNodeMap_;
 }
 
@@ -1087,9 +1074,9 @@ const NodeMap &QDocDatabase::getQmlTypeMap(const QString &key)
 {
     if (newSinceMaps_.isEmpty() && newClassMaps_.isEmpty() && newQmlTypeMaps_.isEmpty())
         processForest(&QDocDatabase::findAllSince);
-    NodeMapMap::const_iterator i = newQmlTypeMaps_.constFind(key);
-    if (i != newQmlTypeMaps_.constEnd())
-        return i.value();
+    auto it = newQmlTypeMaps_.constFind(key);
+    if (it != newQmlTypeMaps_.constEnd())
+        return it.value();
     return emptyNodeMap_;
 }
 
@@ -1102,9 +1089,9 @@ const NodeMap &QDocDatabase::getSinceMap(const QString &key)
 {
     if (newSinceMaps_.isEmpty() && newClassMaps_.isEmpty() && newQmlTypeMaps_.isEmpty())
         processForest(&QDocDatabase::findAllSince);
-    NodeMultiMapMap::const_iterator i = newSinceMaps_.constFind(key);
-    if (i != newSinceMaps_.constEnd())
-        return i.value();
+    auto it = newSinceMaps_.constFind(key);
+    if (it != newSinceMaps_.constEnd())
+        return it.value();
     return emptyNodeMultiMap_;
 }
 
@@ -1113,34 +1100,36 @@ const NodeMap &QDocDatabase::getSinceMap(const QString &key)
   documentation. These tasks create required data structures
   and resolve links.
  */
-void QDocDatabase::resolveStuff() {
-    if (Generator::dualExec() || Generator::preparing()) {
+void QDocDatabase::resolveStuff()
+{
+    const auto &config = Config::instance();
+    if (config.dualExec() || config.preparing()) {
+        // order matters
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
         primaryTreeRoot()->normalizeOverloads();
+        primaryTree()->markDontDocumentNodes();
         primaryTree()->removePrivateAndInternalBases(primaryTreeRoot());
         primaryTree()->resolveProperties();
-        primaryTree()->markDontDocumentNodes();
         primaryTreeRoot()->markUndocumentedChildrenInternal();
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveTargets(primaryTreeRoot());
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveUsingClauses();
     }
-    if (Generator::singleExec() && Generator::generating()) {
+    if (config.singleExec() && config.generating()) {
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
         primaryTreeRoot()->resolveQmlInheritance();
-        //primaryTree()->resolveTargets(primaryTreeRoot());
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveUsingClauses();
     }
-    if (Generator::generating()) {
+    if (config.generating()) {
         resolveNamespaces();
         resolveProxies();
         resolveBaseClasses();
     }
-    if (Generator::dualExec())
+    if (config.dualExec())
         QDocIndexFiles::destroyQDocIndexFiles();
 }
 
@@ -1200,8 +1189,8 @@ void QDocDatabase::resolveNamespaces()
                 for (auto *node : namespaces) {
                     NamespaceNode *NS = static_cast<NamespaceNode *>(node);
                     if (NS->hadDoc() && NS != ns) {
-                        ns->doc().location().warning(tr("Namespace %1 documented more than once")
-                                                     .arg(NS->name()));
+                        ns->doc().location().warning(
+                                tr("Namespace %1 documented more than once").arg(NS->name()));
                         NS->doc().location().warning(tr("...also seen here"));
                     }
                 }
@@ -1232,12 +1221,11 @@ void QDocDatabase::resolveNamespaces()
             for (auto *node : namespaces) {
                 auto *nameSpaceNode = static_cast<NamespaceNode *>(node);
                 if (nameSpaceNode != ns) {
-                    NodeList::ConstIterator c = nameSpaceNode->constBegin();
-                    while (c != nameSpaceNode->constEnd()) {
-                        Node *N = *c;
+                    for (auto it = nameSpaceNode->constBegin(); it != nameSpaceNode->constEnd();
+                         ++it) {
+                        Node *N = *it;
                         if (N && N->isPublic() && !N->isInternal())
                             ns->includeChild(N);
-                        ++c;
                     }
                 }
             }
@@ -1280,7 +1268,6 @@ void QDocDatabase::resolveProxies()
     }
 }
 
-
 /*!
   Finds the function node for the qualified function path in
   \a target and returns a pointer to it. The \a target is a
@@ -1294,8 +1281,7 @@ void QDocDatabase::resolveProxies()
 
   The entire forest is searched, but the first match is accepted.
  */
-const FunctionNode *QDocDatabase::findFunctionNode(const QString &target,
-                                                   const Node *relative,
+const FunctionNode *QDocDatabase::findFunctionNode(const QString &target, const Node *relative,
                                                    Node::Genus genus)
 {
     QString signature;
@@ -1326,9 +1312,9 @@ const Node *QDocDatabase::findTypeNode(const QString &type, const Node *relative
 {
     QStringList path = type.split("::");
     if ((path.size() == 1) && (path.at(0)[0].isLower() || path.at(0) == QString("T"))) {
-        NodeMap::iterator i = typeNodeMap_.find(path.at(0));
-        if (i != typeNodeMap_.end())
-            return i.value();
+        auto it = typeNodeMap_.find(path.at(0));
+        if (it != typeNodeMap_.end())
+            return it.value();
     }
     return forest_.findTypeNode(path, relative, genus);
 }
@@ -1378,7 +1364,7 @@ void QDocDatabase::readIndexes(const QStringList &indexFiles)
 {
     QStringList filesToRead;
     for (const QString &file : indexFiles) {
-        QString fn = file.mid(file.lastIndexOf(QChar('/'))+1);
+        QString fn = file.mid(file.lastIndexOf(QChar('/')) + 1);
         if (!isLoaded(fn))
             filesToRead << file;
         else
@@ -1392,9 +1378,10 @@ void QDocDatabase::readIndexes(const QStringList &indexFiles)
   index file is generated with the parameters \a url and \a title,
   using the generator \a g.
  */
-void QDocDatabase::generateIndex(const QString &fileName, const QString &url, const QString &title, Generator *g)
+void QDocDatabase::generateIndex(const QString &fileName, const QString &url, const QString &title,
+                                 Generator *g)
 {
-    QString t = fileName.mid(fileName.lastIndexOf(QChar('/'))+1);
+    QString t = fileName.mid(fileName.lastIndexOf(QChar('/')) + 1);
     primaryTree()->setIndexFileName(t);
     QDocIndexFiles::qdocIndexFiles()->generateIndex(fileName, url, title, g);
     QDocIndexFiles::destroyQDocIndexFiles();
@@ -1410,7 +1397,7 @@ void QDocDatabase::generateIndex(const QString &fileName, const QString &url, co
 
   This function only searches in the current primary tree.
  */
-Node *QDocDatabase::findNodeInOpenNamespace(QStringList &path, bool (Node::*isMatch) () const)
+Node *QDocDatabase::findNodeInOpenNamespace(QStringList &path, bool (Node::*isMatch)() const)
 {
     if (path.isEmpty())
         return nullptr;
@@ -1445,11 +1432,9 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
     for (auto *tree : searchOrder()) {
         CNMap *m = tree->getCollectionMap(type);
         if (m && !m->isEmpty()) {
-            CNMap::const_iterator i = m->cbegin();
-            while (i != m->cend()) {
-                if (!i.value()->isInternal())
-                    cnmm.insert(i.key(), i.value());
-                ++i;
+            for (auto it = m->cbegin(); it != m->cend(); ++it) {
+                if (!it.value()->isInternal())
+                    cnmm.insert(it.key(), it.value());
             }
         }
     }
@@ -1471,9 +1456,10 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
                 for (CollectionNode *value : values) {
                     if (value != n) {
                         // Allow multiple (major) versions of QML/JS modules
-                        if ((n->isQmlModule() || n->isJsModule()) &&
-                                n->logicalModuleIdentifier() != value->logicalModuleIdentifier()) {
-                            if (value->wasSeen() && value != relative && !value->members().isEmpty())
+                        if ((n->isQmlModule() || n->isJsModule())
+                            && n->logicalModuleIdentifier() != value->logicalModuleIdentifier()) {
+                            if (value->wasSeen() && value != relative
+                                && !value->members().isEmpty())
                                 cnm.insert(value->fullTitle().toLower(), value);
                             continue;
                         }
@@ -1507,8 +1493,8 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
     for (auto *tree : searchOrder()) {
         CollectionNode *cn = tree->getCollection(c->name(), c->nodeType());
         if (cn && cn != c) {
-            if ((cn->isQmlModule() || cn->isJsModule()) &&
-                cn->logicalModuleIdentifier() != c->logicalModuleIdentifier())
+            if ((cn->isQmlModule() || cn->isJsModule())
+                && cn->logicalModuleIdentifier() != c->logicalModuleIdentifier())
                 continue;
             for (auto *node : cn->members())
                 c->addMember(node);
@@ -1536,13 +1522,13 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
     Tree *domain = nullptr;
     Node::Genus genus = Node::DontCare;
     // Reserved for future use
-    //Node::NodeType goal = Node::NoType;
+    // Node::NodeType goal = Node::NoType;
 
     if (atom->isLinkAtom()) {
         domain = atom->domain();
         genus = atom->genus();
         // Reserved for future use
-        //goal = atom->goal();
+        // goal = atom->goal();
     }
 
     if (first.isEmpty())
@@ -1575,8 +1561,7 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
                 relative = nullptr;
             return domain->findNodeForTarget(nodePath, target, relative, flags, genus, ref);
         }
-    }
-    else {
+    } else {
         if (first.endsWith(".html"))
             node = findNodeByNameAndType(QStringList(first), &Node::isPageNode);
         else if (first.endsWith(QChar(')')))

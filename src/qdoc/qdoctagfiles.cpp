@@ -74,9 +74,9 @@ QDocTagFiles::~QDocTagFiles()
  */
 QDocTagFiles *QDocTagFiles::qdocTagFiles()
 {
-   if (qdocTagFiles_ == nullptr)
-      qdocTagFiles_ = new QDocTagFiles;
-   return qdocTagFiles_;
+    if (qdocTagFiles_ == nullptr)
+        qdocTagFiles_ = new QDocTagFiles;
+    return qdocTagFiles_;
 }
 
 /*!
@@ -138,7 +138,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
 
             // Classes contain information about their base classes.
             const ClassNode *classNode = static_cast<const ClassNode *>(node);
-            const QList<RelatedClass> bases = classNode->baseClasses();
+            const QVector<RelatedClass> bases = classNode->baseClasses();
             for (const auto &related : bases) {
                 ClassNode *n = related.node_;
                 if (n)
@@ -181,7 +181,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
         switch (node->nodeType()) {
         case Node::Enum:
             nodeName = "member";
-            kind = "enum";
+            kind = "enumeration";
             break;
         case Node::Typedef:
             nodeName = "member";
@@ -243,85 +243,85 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             writer.writeCharacters(node->fullDocumentName());
             writer.writeEndElement();
             break;
-        case Node::Function:
-            {
-                /*
-                  Function nodes contain information about
-                  the type of function being described.
-                */
+        case Node::Function: {
+            /*
+              Function nodes contain information about
+              the type of function being described.
+            */
 
-                const FunctionNode *functionNode = static_cast<const FunctionNode *>(node);
-                writer.writeAttribute("protection", access);
-                writer.writeAttribute("virtualness", functionNode->virtualness());
-                writer.writeAttribute("static", functionNode->isStatic() ? "yes" : "no");
+            const FunctionNode *functionNode = static_cast<const FunctionNode *>(node);
+            writer.writeAttribute("protection", access);
+            writer.writeAttribute("virtualness", functionNode->virtualness());
+            writer.writeAttribute("static", functionNode->isStatic() ? "yes" : "no");
 
-                if (functionNode->isNonvirtual())
-                    writer.writeTextElement("type", functionNode->returnType());
-                else
-                    writer.writeTextElement("type", "virtual " + functionNode->returnType());
+            if (functionNode->isNonvirtual())
+                writer.writeTextElement("type", functionNode->returnType());
+            else
+                writer.writeTextElement("type", "virtual " + functionNode->returnType());
 
-                writer.writeTextElement("name", objName);
-                QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
-                writer.writeTextElement("anchorfile", pieces[0]);
-                writer.writeTextElement("anchor", pieces[1]);
-                QString signature = functionNode->signature(false, false);
-                signature = signature.mid(signature.indexOf(QChar('('))).trimmed();
-                if (functionNode->isConst())
-                    signature += " const";
-                if (functionNode->isFinal())
-                    signature += " final";
-                if (functionNode->isOverride())
-                    signature += " override";
-                if (functionNode->isPureVirtual())
-                    signature += " = 0";
-                writer.writeTextElement("arglist", signature);
-            }
+            writer.writeTextElement("name", objName);
+            const QStringList pieces =
+                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+            writer.writeTextElement("anchorfile", pieces[0]);
+            writer.writeTextElement("anchor", pieces[1]);
+            QString signature = functionNode->signature(false, false);
+            signature = signature.mid(signature.indexOf(QChar('('))).trimmed();
+            if (functionNode->isConst())
+                signature += " const";
+            if (functionNode->isFinal())
+                signature += " final";
+            if (functionNode->isOverride())
+                signature += " override";
+            if (functionNode->isPureVirtual())
+                signature += " = 0";
+            writer.writeTextElement("arglist", signature);
+        }
             writer.writeEndElement(); // member
             break;
-        case Node::Property:
-            {
-                const PropertyNode *propertyNode = static_cast<const PropertyNode *>(node);
-                writer.writeAttribute("type", propertyNode->dataType());
-                writer.writeTextElement("name", objName);
-                QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
-                writer.writeTextElement("anchorfile", pieces[0]);
-                writer.writeTextElement("anchor", pieces[1]);
-                writer.writeTextElement("arglist", QString());
-            }
+        case Node::Property: {
+            const PropertyNode *propertyNode = static_cast<const PropertyNode *>(node);
+            writer.writeAttribute("type", propertyNode->dataType());
+            writer.writeTextElement("name", objName);
+            const QStringList pieces =
+                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+            writer.writeTextElement("anchorfile", pieces[0]);
+            writer.writeTextElement("anchor", pieces[1]);
+            writer.writeTextElement("arglist", QString());
+        }
             writer.writeEndElement(); // member
             break;
-        case Node::Enum:
-            {
-                const EnumNode *enumNode = static_cast<const EnumNode *>(node);
-                writer.writeTextElement("name", objName);
-                QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+        case Node::Enum: {
+            const EnumNode *enumNode = static_cast<const EnumNode *>(node);
+            writer.writeTextElement("name", objName);
+            const QStringList pieces =
+                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+            writer.writeTextElement("anchorfile", pieces[0]);
+            writer.writeTextElement("anchor", pieces[1]);
+            writer.writeEndElement(); // member
+
+            for (const auto &item : enumNode->items()) {
+                writer.writeStartElement("member");
+                writer.writeAttribute("kind", "enumvalue");
+                writer.writeTextElement("name", item.name());
+                writer.writeTextElement("anchorfile", pieces[0]);
                 writer.writeTextElement("anchor", pieces[1]);
                 writer.writeTextElement("arglist", QString());
                 writer.writeEndElement(); // member
-
-                for (int i = 0; i < enumNode->items().size(); ++i) {
-                    EnumItem item = enumNode->items().value(i);
-                    writer.writeStartElement("member");
-                    writer.writeAttribute("name", item.name());
-                    writer.writeTextElement("anchor", pieces[1]);
-                    writer.writeTextElement("arglist", QString());
-                    writer.writeEndElement(); // member
-                }
             }
-            break;
-        case Node::Typedef:
-            {
-                const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
-                if (typedefNode->associatedEnum())
-                    writer.writeAttribute("type", typedefNode->associatedEnum()->fullDocumentName());
-                else
-                    writer.writeAttribute("type", QString());
-                writer.writeTextElement("name", objName);
-                QStringList pieces = gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
-                writer.writeTextElement("anchorfile", pieces[0]);
-                writer.writeTextElement("anchor", pieces[1]);
-                writer.writeTextElement("arglist", QString());
-            }
+        } break;
+        case Node::Typedef: {
+            const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
+            if (typedefNode->associatedEnum())
+                writer.writeAttribute("type", typedefNode->associatedEnum()->fullDocumentName());
+            else
+                writer.writeAttribute("type", QString());
+            writer.writeTextElement("name", objName);
+            const QStringList pieces =
+                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+            writer.writeTextElement("anchorfile", pieces[0]);
+            writer.writeTextElement("anchor", pieces[1]);
+            writer.writeTextElement("arglist", QString());
+        }
             writer.writeEndElement(); // member
             break;
 
@@ -343,12 +343,10 @@ void QDocTagFiles::generateTagFile(const QString &fileName, Generator *g)
     // If no path was specified or it doesn't exist,
     // default to the output directory
     if (fileInfo.fileName() == fileName || !fileInfo.dir().exists())
-        file.setFileName(gen_->outputDir() + QLatin1Char('/') +
-                         fileInfo.fileName());
+        file.setFileName(gen_->outputDir() + QLatin1Char('/') + fileInfo.fileName());
 
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
-        Location::null.warning(
-            QString("Failed to open %1 for writing.").arg(file.fileName()));
+        Location().warning(QString("Failed to open %1 for writing.").arg(file.fileName()));
         return;
     }
 

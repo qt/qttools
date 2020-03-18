@@ -44,11 +44,9 @@ class OpenedList
     Q_DECLARE_TR_FUNCTIONS(QDoc::OpenedList)
 
 public:
-    enum ListStyle { Bullet, Tag, Value, Numeric, UpperAlpha, LowerAlpha,
-                     UpperRoman, LowerRoman };
+    enum ListStyle { Bullet, Tag, Value, Numeric, UpperAlpha, LowerAlpha, UpperRoman, LowerRoman };
 
-    OpenedList()
-        : sty(Bullet), ini(1), nex(0) { }
+    OpenedList() : sty(Bullet), ini(1), nex(0) {}
     OpenedList(ListStyle style);
     OpenedList(const Location &location, const QString &hint);
 

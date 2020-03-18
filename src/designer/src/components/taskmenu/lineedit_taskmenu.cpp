@@ -80,7 +80,7 @@ QAction *LineEditTaskMenu::preferredEditAction() const
     return m_editTextAction;
 }
 
-QList<QAction*> LineEditTaskMenu::taskActions() const
+QVector<QAction*> LineEditTaskMenu::taskActions() const
 {
     return m_taskActions + QDesignerTaskMenu::taskActions();
 }

@@ -68,7 +68,7 @@ QAction *ComboBoxTaskMenu::preferredEditAction() const
     return m_editItemsAction;
 }
 
-QList<QAction*> ComboBoxTaskMenu::taskActions() const
+QVector<QAction*> ComboBoxTaskMenu::taskActions() const
 {
     return m_taskActions + QDesignerTaskMenu::taskActions();
 }

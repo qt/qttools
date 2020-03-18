@@ -302,7 +302,7 @@ void QHelpSearchQueryWidget::collapseExtendedSearch()
 QList<QHelpSearchQuery> QHelpSearchQueryWidget::query() const
 {
     return QList<QHelpSearchQuery>() << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
-           searchInput().split(QChar::Space, QString::SkipEmptyParts));
+           searchInput().split(QChar::Space, Qt::SkipEmptyParts));
 }
 
 /*!

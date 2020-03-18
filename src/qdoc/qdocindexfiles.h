@@ -57,7 +57,7 @@ class QDocIndexFiles
     friend class WebXMLGenerator; // for using generateIndexSections()
 
 private:
-    static QDocIndexFiles* qdocIndexFiles();
+    static QDocIndexFiles *qdocIndexFiles();
     static void destroyQDocIndexFiles();
 
     QDocIndexFiles();
@@ -66,21 +66,26 @@ private:
     void readIndexes(const QStringList &indexFiles);
     void readIndexFile(const QString &path);
     void readIndexSection(QXmlStreamReader &reader, Node *current, const QString &indexUrl);
-    void insertTarget(TargetRec::TargetType type, const QXmlStreamAttributes &attributes, Node *node);
+    void insertTarget(TargetRec::TargetType type, const QXmlStreamAttributes &attributes,
+                      Node *node);
     void resolveIndex();
 
-    void generateIndex(const QString &fileName, const QString &url, const QString &title, Generator *g);
+    void generateIndex(const QString &fileName, const QString &url, const QString &title,
+                       Generator *g);
     void generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn);
     void generateFunctionSections(QXmlStreamWriter &writer, Aggregate *aggregate);
-    bool generateIndexSection(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
-    void generateIndexSections(QXmlStreamWriter &writer, Node *node, IndexSectionWriter *post = nullptr);
+    bool generateIndexSection(QXmlStreamWriter &writer, Node *node,
+                              IndexSectionWriter *post = nullptr);
+    void generateIndexSections(QXmlStreamWriter &writer, Node *node,
+                               IndexSectionWriter *post = nullptr);
 
 private:
-    static QDocIndexFiles* qdocIndexFiles_;
+    static QDocIndexFiles *qdocIndexFiles_;
     QDocDatabase *qdb_;
     Generator *gen_;
     QString project_;
-    QVector<QPair<ClassNode *, QString> > basesList_;
+    QVector<QPair<ClassNode *, QString>> basesList_;
+    bool storeLocationInfo_;
 };
 
 QT_END_NAMESPACE

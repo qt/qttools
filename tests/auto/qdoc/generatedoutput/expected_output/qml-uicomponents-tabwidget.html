@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- TabWidget.qml -->
+  <title>TabWidget QML Type | Test</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3><a name="toc">Contents</a></h3>
+<ul>
+<li class="level1"><a href="#properties">Properties</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+<li class="level2"><a href="#adding-tabs">Adding Tabs</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">TabWidget QML Type</h1>
+<span class="subtitle"></span>
+<!-- $$$TabWidget-brief -->
+<p>A widget that places its children as tabs. <a href="#details">More...</a></p>
+<!-- @@@TabWidget -->
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> Import Statement:</td><td class="memItemRight bottomAlign"> import UIComponents 1.0</td></tr></table></div><ul>
+<li><a href="qml-uicomponents-tabwidget-members.html">List of all members, including inherited members</a></li>
+</ul>
+<a name="properties"></a>
+<h2 id="properties">Properties</h2>
+<ul>
+<li class="fn"><b><b><a href="qml-uicomponents-tabwidget.html#current-prop">current</a></b></b> : int</li>
+<li class="fn"><b><b><a href="qml-uicomponents-tabwidget.html#sampleReadOnlyProperty-prop">sampleReadOnlyProperty</a></b></b> : int</li>
+</ul>
+<!-- $$$TabWidget-description -->
+<a name="details"></a>
+<h2 id="details">Detailed Description</h2>
+<p>A TabWidget places its children as tabs in a view. Selecting a tab involves selecting the tab at the top.</p>
+<p>The TabWidget component is part of the <a href="uicomponents-qmlmodule.html">UI Components</a> module.</p>
+<p>This documentation is part of the <a href="test-componentset-example.html">UIComponents</a> example.</p>
+<a name="adding-tabs"></a>
+<h2 id="adding-tabs">Adding Tabs</h2>
+<p>To add a tab, declare the tab as a child of the TabWidget.</p>
+<pre class="cpp">TabWidget {
+    id: tabwidget
+
+    Rectangle {
+        id: tab1
+        color: <span class="string">&quot;red&quot;</span>
+        <span class="comment">//... omitted</span>
+    }
+    Rectangle {
+        id: tab2
+        color: <span class="string">&quot;blue&quot;</span>
+        <span class="comment">//... omitted</span>
+    }
+
+}</pre>
+<!-- @@@TabWidget -->
+<h2>Property Documentation</h2>
+<!-- $$$current -->
+<div class="qmlitem"><div class="qmlproto">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="current-prop">
+<td class="tblQmlPropNode"><p>
+<a name="current-prop"></a><span class="name">current</span> : <span class="type"><a href="qml-int.html">int</a></span></p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>The currently active tab in the <a href="qml-uicomponents-tabwidget.html">TabWidget</a>.</p>
+</div></div><!-- @@@current -->
+<br/>
+<!-- $$$sampleReadOnlyProperty -->
+<div class="qmlitem"><div class="qmlproto">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="sampleReadOnlyProperty-prop">
+<td class="tblQmlPropNode"><p>
+<a name="sampleReadOnlyProperty-prop"></a><span class="qmlreadonly">[read-only] </span><span class="name">sampleReadOnlyProperty</span> : <span class="type"><a href="qml-int.html">int</a></span></p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>A sample <code>read-only</code> property. A contrived property to demonstrate QDoc's ability to detect read-only properties.</p>
+<p>The signature is:</p>
+<pre class="cpp">readonly property <span class="type"><a href="qml-int.html">int</a></span> sampleReadOnlyProperty: <span class="number">0</span></pre>
+<p>Note that the property must be initialized to a value.</p>
+</div></div><!-- @@@sampleReadOnlyProperty -->
+<br/>
+</body>
+</html>

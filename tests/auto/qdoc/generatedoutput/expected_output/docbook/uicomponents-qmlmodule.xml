@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>UI Components</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Basic set of UI components.</db:para>
+</db:abstract>
+</db:info>
+<db:anchor xml:id="details"/>
+<db:para>This is a listing of a list of UI components implemented by QML types. These files are available for general import and they are based on the Qt Quick Code Samples.</db:para>
+<db:para>This module is part of the <db:link xlink:href="test-componentset-example.xml">UIComponents</db:link> example.</db:para>
+<db:variablelist role="members">
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-uicomponents-progressbar.xml" xlink:role="">ProgressBar</db:link></db:term>
+<db:listitem>
+<db:para>A component that shows the progress of an event.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-uicomponents-switch.xml" xlink:role="">Switch</db:link></db:term>
+<db:listitem>
+<db:para>A component that can be turned on or off.</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-uicomponents-tabwidget.xml" xlink:role="">TabWidget</db:link></db:term>
+<db:listitem>
+<db:para>A widget that places its children as tabs.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:article>

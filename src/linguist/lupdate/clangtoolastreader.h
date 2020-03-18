@@ -29,148 +29,47 @@
 #ifndef CLANG_TOOL_AST_READER_H
 #define CLANG_TOOL_AST_READER_H
 
-#include "lupdate.h"
-#include "translator.h"
-#include "translatormessage.h"
-
-#include <QtCore/qloggingcategory.h>
+#include "cpp_clang.h"
 
 #if defined(Q_CC_MSVC)
+# pragma warning(push)
 # pragma warning(disable: 4100)
 # pragma warning(disable: 4146)
 # pragma warning(disable: 4267)
 # pragma warning(disable: 4624)
 #endif
 
-#include <llvm/ADT/APInt.h>
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/FrontendActions.h>
 #include <clang/Tooling/Tooling.h>
-#include <clang/Lex/PPCallbacks.h>
-#include <clang/Lex/Preprocessor.h>
 
 #if defined(Q_CC_MSVC)
-# pragma warning(default: 4100)
-# pragma warning(default: 4146)
-# pragma warning(default: 4267)
-# pragma warning(default: 4624)
+# pragma warning(pop)
 #endif
 
 #include <memory>
-#include <string>
-#include <utility>
-#include <vector>
 
 QT_BEGIN_NAMESPACE
 
-inline QDebug operator<<(QDebug out, const std::string& str)
-{
-    out << QString::fromStdString(str);
-    return out;
-}
-Q_DECLARE_LOGGING_CATEGORY(lcClang)
-
-#define LUPDATE_CLANG_VERSION_CHECK(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
-#define LUPDATE_CLANG_VERSION LUPDATE_CLANG_VERSION_CHECK(LUPDATE_CLANG_VERSION_MAJOR, \
-    LUPDATE_CLANG_VERSION_MINOR, LUPDATE_CLANG_VERSION_PATCH)
-
-// Local storage of translation information (information from the AST and
-// linguist side)
-struct TranslationRelatedStore
-{
-    QString callType;
-    QString rawCode;
-    QString funcName;
-    qint64 locationCol = -1;
-    QString contextArg;
-    QString contextRetrieved;
-    QString lupdateSource;
-    QString lupdateLocationFile;
-    qint64 lupdateLocationLine = -1;
-    QString lupdateId;
-    QString lupdateSourceWhenId;
-    QString lupdateIdMetaData;
-    QString lupdateMagicMetaData;
-    QHash<QString, QString> lupdateAllMagicMetaData;
-    QString lupdateComment;
-    QString lupdateExtraComment;
-    QString lupdatePlural;
-    clang::SourceLocation callLocation;
-
-    bool isValid() const
-    {
-        return !lupdateLocationFile.isEmpty() && (lupdateLocationLine > -1) && (locationCol > -1);
-    }
-
-    void printStore() const
-    {
-        qCDebug(lcClang) << "------------------ Printing Store----------------------------------\n";
-        qCDebug(lcClang)
-            << "callType            : " << callType << "\n"
-            << "rawCode             : \n" << rawCode << "\n"
-            << "funcName            : " << funcName << "\n"
-            << "LocationCol         : " << locationCol << "\n"
-            << "contextArg          : " << contextArg << "\n"
-            << "contextRetrieved    : " << contextRetrieved << "\n"
-            << "lupdateSource       : " << lupdateSource << "\n"
-            << "lupdateLocationFile : " << lupdateLocationFile << "\n"
-            << "lupdateLocationLine : " << lupdateLocationLine << "\n"
-            << "lupdateId           : " << lupdateId << "\n"
-            << "lupdateIdMetaData   : " << lupdateIdMetaData << "\n"
-            << "lupdateMagicMetaData: " << lupdateMagicMetaData << "\n"
-            << "lupdateComment      : " << lupdateComment << "\n"
-            << "lupdateExtraComment : " << lupdateExtraComment << "\n"
-            << "lupdatePlural       : " << lupdatePlural;
-        qCDebug(lcClang) << "-------------------------------------------------------------------\n";
-    }
-};
-
-using TranslationStores = std::vector<TranslationRelatedStore>;
-
-class LupdatePPCallbacks : public clang::PPCallbacks
-{
-public:
-    LupdatePPCallbacks(TranslationStores &translationStores, clang::Preprocessor &preprocessor)
-        : m_translationStores(translationStores),
-          m_preprocessor(preprocessor)
-    {
-        const auto &sm = m_preprocessor.getSourceManager();
-        m_inputFile = sm.getFileEntryForID(sm.getMainFileID())->getName();
-    }
-
-    ~LupdatePPCallbacks() override
-    {}
-
-    // Overridden callback functions.
-    void MacroExpands(const clang::Token &macroNameTok,
-        const clang::MacroDefinition &macroDefinition, clang::SourceRange range,
-        const clang::MacroArgs *args) override;
-
-private:
-    void storeMacroArguments(const std::vector<QString> &args, TranslationRelatedStore *store);
-
-    TranslationStores &m_translationStores;
-    clang::Preprocessor &m_preprocessor;
-    std::string m_inputFile;
-};
+class Translator;
 
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
-    friend class LupdateASTConsumer;
-
 public:
-    explicit LupdateVisitor(clang::ASTContext *context, Translator *tor)
-        : m_context(context),
-          m_tor(tor)
+    explicit LupdateVisitor(clang::ASTContext *context, Stores &stores)
+        : m_context(context)
+        , m_stores(stores)
     {
         m_inputFile = m_context->getSourceManager().getFileEntryForID(
             m_context->getSourceManager().getMainFileID())->getName();
     }
 
     bool VisitCallExpr(clang::CallExpr *callExpression);
-    void fillTranslator();
     void processPreprocessorCalls();
+    bool VisitNamedDecl(clang::NamedDecl *namedDeclaration);
+    void findContextForTranslationStoresFromPP(clang::NamedDecl *namedDeclaration);
+    void generateOuput();
 
 private:
     std::vector<QString> rawCommentsForCallExpr(const clang::CallExpr *callExpr) const;
@@ -178,30 +77,24 @@ private:
 
     void setInfoFromRawComment(const QString &commentString, TranslationRelatedStore *store);
 
-    void fillTranslator(TranslationRelatedStore store);
-    TranslatorMessage fillTranslatorMessage(const TranslationRelatedStore &store,
-        bool forcePlural, bool isID = false);
-    void handleTr(const TranslationRelatedStore &store, bool forcePlural);
-    void handleTrId(const TranslationRelatedStore &store, bool forcePlural);
-    void handleTranslate(const TranslationRelatedStore &store, bool forcePlural);
-
     void processPreprocessorCall(TranslationRelatedStore store);
 
     clang::ASTContext *m_context { nullptr };
     Translator *m_tor { nullptr };
     std::string m_inputFile;
 
-    TranslationStores m_translationStoresFromAST;
-    TranslationStores m_qDeclateTrFunctionContext;
-    TranslationStores m_noopTranslationStores;
-    TranslationStores m_translationStoresFromPP;
+    Stores &m_stores;
+
+    TranslationStores m_qDeclareTrMacroAll;
+    TranslationStores m_noopTranslationMacroAll;
+    bool m_macro = false;
 };
 
 class LupdateASTConsumer : public clang::ASTConsumer
 {
 public:
-    explicit LupdateASTConsumer(clang::ASTContext *context, Translator *tor)
-        : m_visitor(context, tor)
+    explicit LupdateASTConsumer(clang::ASTContext *context, Stores &stores)
+        : m_visitor(context, stores)
     {}
 
     // This method is called when the ASTs for entire translation unit have been
@@ -211,12 +104,7 @@ public:
         m_visitor.processPreprocessorCalls();
         bool traverse = m_visitor.TraverseAST(context);
         qCDebug(lcClang) << "TraverseAST: " << traverse;
-        m_visitor.fillTranslator();
-    }
-
-    TranslationStores &preprocessorStores()
-    {
-        return m_visitor.m_translationStoresFromPP;
+        m_visitor.generateOuput();
     }
 
 private:
@@ -226,47 +114,42 @@ private:
 class LupdateFrontendAction : public clang::ASTFrontendAction
 {
 public:
-    LupdateFrontendAction(Translator *tor)
-        : m_tor(tor)
+    LupdateFrontendAction(Stores &outputStoresWithContext)
+        : m_stores(outputStoresWithContext)
     {}
 
     std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
         clang::CompilerInstance &compiler, llvm::StringRef /* inFile */) override
     {
-        LupdateASTConsumer *consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_tor);
-        clang::Preprocessor &preprocessor = compiler.getPreprocessor();
-        LupdatePPCallbacks *callbacks = new LupdatePPCallbacks(consumer->preprocessorStores(),
-            preprocessor);
-        preprocessor.addPPCallbacks(std::unique_ptr<clang::PPCallbacks>(callbacks));
-
+        auto consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_stores);
         return std::unique_ptr<clang::ASTConsumer>(consumer);
     }
 
 private:
-    Translator *m_tor { nullptr };
+    Stores &m_stores;
 };
 
 class LupdateToolActionFactory : public clang::tooling::FrontendActionFactory
 {
 public:
-    LupdateToolActionFactory(Translator *tor)
-        : m_tor(tor)
+    LupdateToolActionFactory(Stores &stores)
+        : m_stores(stores)
     {}
 
 #if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
     std::unique_ptr<clang::FrontendAction> create() override
     {
-        return std::make_unique<LupdateFrontendAction>(m_tor);
+        return std::make_unique<LupdateFrontendAction>(m_stores);
     }
 #else
     clang::FrontendAction *create() override
     {
-        return new LupdateFrontendAction(m_tor);
+        return new LupdateFrontendAction(m_stores);
     }
 #endif
 
 private:
-    Translator *m_tor { nullptr };
+    Stores &m_stores;
 };
 
 QT_END_NAMESPACE

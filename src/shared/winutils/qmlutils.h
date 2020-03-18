@@ -35,7 +35,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QString findQmlDirectory(int platform, const QString &startDirectoryName);
+QString findQmlDirectory(Platform platform, const QString &startDirectoryName);
 
 struct QmlImportScanResult {
     struct Module {

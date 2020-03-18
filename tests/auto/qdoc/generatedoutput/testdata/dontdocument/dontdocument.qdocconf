@@ -1,0 +1,7 @@
+include(../configs/testcpp.qdocconf)
+
+headers += dont.h
+sources += dont.cpp test.qdoc
+
+HTML.nosubdirs = true
+HTML.outputsubdir = dontdocument

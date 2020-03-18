@@ -1,0 +1,13 @@
+project = TestModule
+
+moduleheader = TestModule.h
+
+headerdirs = ./inc
+sourcedirs = ./src
+includepaths += ./inc/testmodule
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+outputdir = doc
+outputformats = HTML

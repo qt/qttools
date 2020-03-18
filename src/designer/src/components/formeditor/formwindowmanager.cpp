@@ -955,7 +955,7 @@ void FormWindowManager::deviceProfilesChanged()
 
 // DnD stuff
 
-void FormWindowManager::dragItems(const QList<QDesignerDnDItemInterface*> &item_list)
+void FormWindowManager::dragItems(const QVector<QDesignerDnDItemInterface*> &item_list)
 {
     QDesignerMimeData::execDrag(item_list, m_core->topLevel());
 }

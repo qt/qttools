@@ -38,19 +38,14 @@
 
 QT_BEGIN_NAMESPACE
 
-Text::Text()
-    : first(nullptr), last(nullptr)
-{
-}
+Text::Text() : first(nullptr), last(nullptr) {}
 
-Text::Text(const QString &str)
-    : first(nullptr), last(nullptr)
+Text::Text(const QString &str) : first(nullptr), last(nullptr)
 {
     operator<<(str);
 }
 
-Text::Text(const Text &text)
-    : first(nullptr), last(nullptr)
+Text::Text(const Text &text) : first(nullptr), last(nullptr)
 {
     operator=(text);
 }
@@ -79,22 +74,19 @@ Text &Text::operator<<(const QString &string)
     return operator<<(Atom(Atom::String, string));
 }
 
-Text &Text::operator<<(const Atom& atom)
+Text &Text::operator<<(const Atom &atom)
 {
     if (atom.count() < 2) {
         if (first == nullptr) {
             first = new Atom(atom.type(), atom.string());
             last = first;
-        }
-        else
+        } else
             last = new Atom(last, atom.type(), atom.string());
-    }
-    else {
+    } else {
         if (first == nullptr) {
             first = new Atom(atom.type(), atom.string(), atom.string(1));
             last = first;
-        }
-        else
+        } else
             last = new Atom(last, atom.type(), atom.string(), atom.string(1));
     }
     return *this;
@@ -110,8 +102,7 @@ Text &Text::operator<<(const LinkAtom &atom)
     if (first == nullptr) {
         first = new LinkAtom(atom);
         last = first;
-    }
-    else
+    } else
         last = new LinkAtom(last, atom);
     return *this;
 }
@@ -164,9 +155,8 @@ QString Text::toString() const
     QString str;
     const Atom *atom = firstAtom();
     while (atom != nullptr) {
-        if (atom->type() == Atom::String ||
-            atom->type() == Atom::AutoLink ||
-            atom->type() == Atom::C)
+        if (atom->type() == Atom::String || atom->type() == Atom::AutoLink
+            || atom->type() == Atom::C)
             str += atom->string();
         atom = atom->next();
     }
@@ -180,9 +170,8 @@ bool Text::contains(const QString &str) const
 {
     const Atom *atom = firstAtom();
     while (atom != nullptr) {
-        if (atom->type() == Atom::String ||
-            atom->type() == Atom::AutoLink ||
-            atom->type() == Atom::C)
+        if (atom->type() == Atom::String || atom->type() == Atom::AutoLink
+            || atom->type() == Atom::C)
             if (atom->string().contains(str, Qt::CaseInsensitive))
                 return true;
         atom = atom->next();
@@ -190,7 +179,8 @@ bool Text::contains(const QString &str) const
     return false;
 }
 
-Text Text::subText(Atom::AtomType left, Atom::AtomType right, const Atom *from, bool inclusive) const
+Text Text::subText(Atom::AtomType left, Atom::AtomType right, const Atom *from,
+                   bool inclusive) const
 {
     const Atom *begin = from ? from : firstAtom();
     const Atom *end;
@@ -256,7 +246,8 @@ void Text::dump() const
         str.replace(QRegExp("[^\x20-\x7e]"), "?");
         if (!str.isEmpty())
             str = " \"" + str + QLatin1Char('"');
-        fprintf(stderr, "    %-15s%s\n", atom->typeString().toLatin1().data(), str.toLatin1().data());
+        fprintf(stderr, "    %-15s%s\n", atom->typeString().toLatin1().data(),
+                str.toLatin1().data());
         atom = atom->next();
     }
 }

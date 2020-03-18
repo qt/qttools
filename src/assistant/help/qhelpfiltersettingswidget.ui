@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QHelpFilterSettingsWidget</class>
+ <widget class="QWidget" name="QHelpFilterSettingsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>347</width>
+    <height>127</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="filterLabel">
+     <property name="text">
+      <string>Filter</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLabel" name="componentsLabel">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="text">
+      <string>Components</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLabel" name="versionsLabel">
+     <property name="text">
+      <string>Versions</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="QListWidget" name="filterWidget"/>
+   </item>
+   <item row="1" column="3" rowspan="2">
+    <widget class="QOptionsWidget" name="componentWidget" native="true"/>
+   </item>
+   <item row="1" column="4" rowspan="2">
+    <widget class="QOptionsWidget" name="versionWidget" native="true"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QToolButton" name="addButton">
+     <property name="text">
+      <string>Add...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QToolButton" name="renameButton">
+     <property name="text">
+      <string>Rename...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QToolButton" name="removeButton">
+     <property name="text">
+      <string>Remove</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QOptionsWidget</class>
+   <extends>QWidget</extends>
+   <header>qoptionswidget_p.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

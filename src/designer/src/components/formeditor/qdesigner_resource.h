@@ -90,8 +90,8 @@ protected:
     QWidget *create(DomWidget *ui_widget, QWidget *parentWidget) override;
     QLayout *create(DomLayout *ui_layout, QLayout *layout, QWidget *parentWidget) override;
     QLayoutItem *create(DomLayoutItem *ui_layoutItem, QLayout *layout, QWidget *parentWidget) override;
-    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
-    QList<DomProperty*> computeProperties(QObject *obj) override;
+    void applyProperties(QObject *o, const QVector<DomProperty*> &properties) override;
+    QVector<DomProperty*> computeProperties(QObject *obj) override;
     DomProperty *createProperty(QObject *object, const QString &propertyName, const QVariant &value) override;
 
     QWidget *createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name) override;
@@ -145,7 +145,7 @@ private:
     QStringList mergeWithLoadedPaths(const QStringList &paths) const;
     void applyAttributesToPropertySheet(const DomWidget *ui_widget, QWidget *widget);
 
-    using DomCustomWidgetList = QList<DomCustomWidget *>;
+    using DomCustomWidgetList = QVector<DomCustomWidget *>;
     void addCustomWidgetsToWidgetDatabase(DomCustomWidgetList& list);
     FormWindow *m_formWindow;
     bool m_isMainWidget;

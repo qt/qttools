@@ -43,14 +43,13 @@ QT_BEGIN_NAMESPACE
 
 class Atom;
 class CodeMarker;
-class Config;
 class DocPrivate;
 class Quoter;
 class Text;
 class DitaRef;
 
 typedef QPair<QString, Location> ArgLocPair;
-typedef QList<ArgLocPair> ArgList;
+typedef QVector<ArgLocPair> ArgList;
 typedef QMap<QString, QString> QStringMap;
 typedef QMultiMap<QString, QString> QStringMultiMap;
 
@@ -58,20 +57,24 @@ struct Topic
 {
     QString topic;
     QString args;
-    Topic() { }
-    Topic(QString &t, const QString &a) : topic(t), args(a) { }
+    Topic() {}
+    Topic(QString &t, const QString &a) : topic(t), args(a) {}
     bool isEmpty() const { return topic.isEmpty(); }
-    void clear() { topic.clear(); args.clear(); }
+    void clear()
+    {
+        topic.clear();
+        args.clear();
+    }
 };
-typedef QList<Topic> TopicList;
+typedef QVector<Topic> TopicList;
 
-typedef QList<DitaRef *> DitaRefList;
+typedef QVector<DitaRef *> DitaRefList;
 
 class DitaRef
 {
 public:
-    DitaRef() { }
-    virtual ~DitaRef() { }
+    DitaRef() {}
+    virtual ~DitaRef() {}
 
     const QString &navtitle() const { return navtitle_; }
     const QString &href() const { return href_; }
@@ -79,7 +82,7 @@ public:
     void setHref(const QString &t) { href_ = t; }
     virtual bool isMapRef() const = 0;
     virtual const DitaRefList *subrefs() const { return nullptr; }
-    virtual void appendSubref(DitaRef *) { }
+    virtual void appendSubref(DitaRef *) {}
 
 private:
     QString navtitle_;
@@ -89,7 +92,7 @@ private:
 class TopicRef : public DitaRef
 {
 public:
-    TopicRef() { }
+    TopicRef() {}
     ~TopicRef() override;
 
     bool isMapRef() const override { return false; }
@@ -103,7 +106,7 @@ private:
 class MapRef : public DitaRef
 {
 public:
-    MapRef() { }
+    MapRef() {}
 
     bool isMapRef() const override { return true; }
 };
@@ -125,18 +128,15 @@ public:
     };
 
     Doc() : priv(nullptr) {}
-    Doc(const Location &start_loc,
-        const Location &end_loc,
-        const QString &source,
-        const QSet<QString> &metaCommandSet,
-        const QSet<QString> &topics);
+    Doc(const Location &start_loc, const Location &end_loc, const QString &source,
+        const QSet<QString> &metaCommandSet, const QSet<QString> &topics);
     Doc(const Doc &doc);
     ~Doc();
 
     Doc &operator=(const Doc &doc);
     void simplifyEnumDoc();
     void setBody(const Text &body);
-    const DitaRefList& ditamap() const;
+    const DitaRefList &ditamap() const;
 
     const Location &location() const;
     const Location &startLocation() const;
@@ -154,37 +154,34 @@ public:
     const QSet<QString> &metaCommandsUsed() const;
     const TopicList &topicsUsed() const;
     ArgList metaCommandArgs(const QString &metaCommand) const;
-    const QList<Text> &alsoList() const;
+    const QVector<Text> &alsoList() const;
     bool hasTableOfContents() const;
     bool hasKeywords() const;
     bool hasTargets() const;
     bool isInternal() const;
     bool isMarkedReimp() const;
-    const QList<Atom *> &tableOfContents() const;
+    const QVector<Atom *> &tableOfContents() const;
     const QVector<int> &tableOfContentsLevels() const;
-    const QList<Atom *> &keywords() const;
-    const QList<Atom *> &targets() const;
+    const QVector<Atom *> &keywords() const;
+    const QVector<Atom *> &targets() const;
     const QStringMultiMap &metaTagMap() const;
 
-    static void initialize(const Config &config);
+    static void initialize();
     static void terminate();
     static QString alias(const QString &english);
     static void trimCStyleComment(Location &location, QString &str);
     static QString resolveFile(const Location &location, const QString &fileName,
                                QString *userFriendlyFilePath = nullptr);
-    static CodeMarker *quoteFromFile(const Location &location,
-                                     Quoter &quoter,
+    static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter,
                                      const QString &fileName);
     static QString canonicalTitle(const QString &title);
-    static const Config *config() { return config_; }
 
 private:
     void detach();
     DocPrivate *priv;
-    static const Config *config_;
 };
 Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
-typedef QList<Doc> DocList;
+typedef QVector<Doc> DocList;
 
 QT_END_NAMESPACE
 

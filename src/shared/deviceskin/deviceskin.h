@@ -91,7 +91,7 @@ struct DeviceSkinParameters {
     int screenDepth;
     QPoint cursorHot;
     QVector<DeviceSkinButtonArea> buttonAreas;
-    QList<int> toggleAreaList;
+    QVector<int> toggleAreaList;
 
     int joystick;
     QString prefix;
@@ -113,7 +113,7 @@ public:
     void setSecondaryView( QWidget *v );
 
     void setZoom( double );
-    void setTransform( const QMatrix& );
+    void setTransform(const QTransform &);
 
     bool hasCursor() const;
 
@@ -155,7 +155,7 @@ private:
     QPoint clickPos;
     bool buttonPressed;
     int buttonIndex;
-    QMatrix transform;
+    QTransform transform;
     qvfb_internal::CursorWindow *cursorw;
 
     bool joydown;

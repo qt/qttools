@@ -46,7 +46,11 @@ public:
     CodeChunk(const QString &str) : s(str), hotspot(-1) {}
 
     void append(const QString &lexeme);
-    void appendHotspot() { if (hotspot == -1) hotspot = s.length(); }
+    void appendHotspot()
+    {
+        if (hotspot == -1)
+            hotspot = s.length();
+    }
 
     bool isEmpty() const { return s.isEmpty(); }
     void clear() { s.clear(); }
@@ -60,27 +64,33 @@ private:
     int hotspot;
 };
 
-inline bool operator==(const CodeChunk& c, const CodeChunk& d) {
+inline bool operator==(const CodeChunk &c, const CodeChunk &d)
+{
     return c.toString() == d.toString();
 }
 
-inline bool operator!=(const CodeChunk& c, const CodeChunk& d) {
+inline bool operator!=(const CodeChunk &c, const CodeChunk &d)
+{
     return !(c == d);
 }
 
-inline bool operator<(const CodeChunk& c, const CodeChunk& d) {
+inline bool operator<(const CodeChunk &c, const CodeChunk &d)
+{
     return c.toString() < d.toString();
 }
 
-inline bool operator>(const CodeChunk& c, const CodeChunk& d) {
+inline bool operator>(const CodeChunk &c, const CodeChunk &d)
+{
     return d < c;
 }
 
-inline bool operator<=(const CodeChunk& c, const CodeChunk& d) {
+inline bool operator<=(const CodeChunk &c, const CodeChunk &d)
+{
     return !(c > d);
 }
 
-inline bool operator>=(const CodeChunk& c, const CodeChunk& d) {
+inline bool operator>=(const CodeChunk &c, const CodeChunk &d)
+{
     return !(c < d);
 }
 

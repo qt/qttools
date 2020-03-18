@@ -71,6 +71,10 @@
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qpointer.h>
 
+#ifdef QT_OPENGLWIDGETS_LIB
+#  include <QtOpenGLWidgets/qopenglwidget.h>
+#endif
+
 QT_BEGIN_NAMESPACE
 
 #ifdef Q_OS_WIN

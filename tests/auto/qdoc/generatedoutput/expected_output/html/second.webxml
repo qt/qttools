@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Second" href="second.html" status="active" access="public" location="ccc.h" documented="true" module="TestModule">
+            <description>
+                <para>This is a second class</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

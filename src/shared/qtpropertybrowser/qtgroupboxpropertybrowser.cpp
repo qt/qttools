@@ -73,7 +73,7 @@ public:
         QGridLayout *layout{nullptr};
         QFrame *line{nullptr};
         WidgetItem *parent{nullptr};
-        QList<WidgetItem *> children;
+        QVector<WidgetItem *> children;
     };
 private:
     void updateLater();
@@ -87,8 +87,8 @@ private:
     QMap<WidgetItem *, QtBrowserItem *> m_itemToIndex;
     QMap<QWidget *, WidgetItem *> m_widgetToItem;
     QGridLayout *m_mainLayout;
-    QList<WidgetItem *> m_children;
-    QList<WidgetItem *> m_recreateQueue;
+    QVector<WidgetItem *> m_children;
+    QVector<WidgetItem *> m_recreateQueue;
 };
 
 void QtGroupBoxPropertyBrowserPrivate::init(QWidget *parent)
