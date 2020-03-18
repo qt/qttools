@@ -49,6 +49,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <cstdio>
 
 QT_BEGIN_NAMESPACE
@@ -1225,6 +1226,16 @@ static bool updateLibrary(const QString &sourceFileName, const QString &targetDi
     return true;
 }
 
+// Find out the ICU version to add the data library icudtXX.dll, which does not
+// show as a dependency.
+static QString getIcuVersion(const QString &libName)
+{
+    QString version;
+    std::copy_if(libName.cbegin(), libName.cend(), std::back_inserter(version),
+                 [](QChar c) { return c.isDigit(); });
+    return version;
+}
+
 static DeployResult deploy(const Options &options,
                            const QMap<QString, QString> &qmakeVariables,
                            QString *errorMessage)
@@ -1317,11 +1328,8 @@ static DeployResult deploy(const Options &options,
             if (!icuLibs.isEmpty()) {
                 // Find out the ICU version to add the data library icudtXX.dll, which does not show
                 // as a dependency.
-                QRegExp numberExpression(QStringLiteral("\\d+"));
-                Q_ASSERT(numberExpression.isValid());
-                const int index = numberExpression.indexIn(icuLibs.front());
-                if (index >= 0)  {
-                    const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
+                const QString icuVersion = getIcuVersion(icuLibs.constFirst());
+                if (!icuVersion.isEmpty())  {
                     if (optVerboseLevel > 1)
                         std::wcout << "Adding ICU version " << icuVersion << '\n';
                     icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QLatin1String(windowsSharedLibrarySuffix));

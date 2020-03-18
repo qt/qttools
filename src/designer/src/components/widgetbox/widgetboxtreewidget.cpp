@@ -966,7 +966,6 @@ void WidgetBoxTreeWidget::dropWidgets(const QVector<QDesignerDnDItemInterface*> 
 void WidgetBoxTreeWidget::filter(const QString &f)
 {
     const bool empty = f.isEmpty();
-    QRegExp re = empty ? QRegExp() : QRegExp(f, Qt::CaseInsensitive, QRegExp::FixedString);
     const int numTopLevels = topLevelItemCount();
     bool changed = false;
     for (int i = 0; i < numTopLevels; i++) {
@@ -974,7 +973,7 @@ void WidgetBoxTreeWidget::filter(const QString &f)
         WidgetBoxCategoryListView *categoryView = categoryViewAt(i);
         // Anything changed? -> Enable the category
         const int oldCount = categoryView->count(WidgetBoxCategoryListView::FilteredAccess);
-        categoryView->filter(re);
+        categoryView->filter(f, Qt::CaseInsensitive);
         const int newCount = categoryView->count(WidgetBoxCategoryListView::FilteredAccess);
         if (oldCount != newCount) {
             changed = true;

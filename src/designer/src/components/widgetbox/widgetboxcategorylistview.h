@@ -40,7 +40,6 @@ class QDesignerFormEditorInterface;
 class QDesignerDnDItemInterface;
 
 class QSortFilterProxyModel;
-class QRegExp;
 
 namespace qdesigner_internal {
 
@@ -85,7 +84,7 @@ signals:
     void lastItemRemoved();
 
 public slots:
-    void filter(const QRegExp &re);
+    void filter(const QString &needle, Qt::CaseSensitivity caseSensitivity);
     void removeCurrentItem();
     void editCurrentItem();
 

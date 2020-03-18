@@ -59,6 +59,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QRegularExpression>
 #include <QToolButton>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
@@ -129,8 +130,10 @@ void FindFileDialog::update()
 
 void FindFileDialog::findFiles()
 {
-    QRegExp filePattern(fileNameComboBox->currentText() + "*");
-    filePattern.setPatternSyntax(QRegExp::Wildcard);
+    QString wildCard = fileNameComboBox->currentText();
+    if (!wildCard.endsWith('*'))
+        wildCard += '*';
+    QRegularExpression filePattern(QRegularExpression::wildcardToRegularExpression(wildCard));
 
     QDir directory(directoryComboBox->currentText());
 
@@ -138,7 +141,7 @@ void FindFileDialog::findFiles()
     QStringList matchingFiles;
 
     for (const QString &file : allFiles) {
-        if (filePattern.exactMatch(file))
+        if (filePattern.match(file).hasMatch())
             matchingFiles << file;
     }
     showFiles(matchingFiles);

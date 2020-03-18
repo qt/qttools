@@ -65,6 +65,7 @@
 #include <QtWidgets/QAbstractItemView>
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QTreeView>
+#include <QtCore/QRegularExpression>
 
 #include <algorithm>
 
@@ -301,8 +302,12 @@ QModelIndex ItemViewFindWidget::findHelper(const QString &textToFind, bool skipC
             Qt::CaseSensitivity cs = caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
             if (wholeWords()) {
-                QString rx = QLatin1String("\\b") + QRegExp::escape(textToFind) + QLatin1String("\\b");
-                if (idx.data().toString().indexOf(QRegExp(rx, cs)) >= 0)
+                QString rx = QLatin1String("\\b") + QRegularExpression::escape(textToFind)
+                             + QLatin1String("\\b");
+                QRegularExpression re(rx);
+                if (cs == Qt::CaseInsensitive)
+                    re.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
+                if (idx.data().toString().indexOf(re) >= 0)
                     return idx;
             } else {
                 if (idx.data().toString().indexOf(textToFind, 0, cs) >= 0)

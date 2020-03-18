@@ -482,9 +482,10 @@ QString WidgetBoxCategoryListView::widgetDomXml(const QDesignerWidgetBoxInterfac
     return domXml;
 }
 
-void WidgetBoxCategoryListView::filter(const QRegExp &re)
+void WidgetBoxCategoryListView::filter(const QString &needle, Qt::CaseSensitivity caseSensitivity)
 {
-    m_proxyModel->setFilterRegExp(re);
+    m_proxyModel->setFilterFixedString(needle);
+    m_proxyModel->setFilterCaseSensitivity(caseSensitivity);
 }
 
 QDesignerWidgetBoxInterface::Category WidgetBoxCategoryListView::category() const
