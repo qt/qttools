@@ -44,6 +44,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class QRegularExpression;
+
 class QtSpinBoxFactoryPrivate;
 
 class QtSpinBoxFactory : public QtAbstractEditorFactory<QtIntPropertyManager>
@@ -181,7 +183,7 @@ private:
     Q_DECLARE_PRIVATE(QtLineEditFactory)
     Q_DISABLE_COPY_MOVE(QtLineEditFactory)
     Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QString &))
-    Q_PRIVATE_SLOT(d_func(), void slotRegExpChanged(QtProperty *, const QRegExp &))
+    Q_PRIVATE_SLOT(d_func(), void slotRegExpChanged(QtProperty *, const QRegularExpression &))
     Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QString &))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
 };
