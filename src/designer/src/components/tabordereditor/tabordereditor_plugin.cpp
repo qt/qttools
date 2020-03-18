@@ -113,3 +113,5 @@ QAction *TabOrderEditorPlugin::action() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_tabordereditor_plugin.cpp"
