@@ -105,6 +105,9 @@ public:
     Connection *indexToConnection(const QModelIndex &index) const;
     void updateAll();
 
+    const SignalSlotConnection *connectionAt(const QModelIndex &index) const;
+    static QString columnText(const SignalSlotConnection *con, int column);
+
 private slots:
     void connectionAdded(Connection *con);
     void connectionRemoved(int idx);
