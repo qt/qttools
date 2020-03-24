@@ -1106,25 +1106,32 @@ void ClangCodeParser::initializeParser()
     printParsingErrors_ = 1;
     version_ = config.getString(CONFIG_VERSION);
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
-    QStringList squeezedArgs;
+    QSet<QString> seen;
+    includePaths_.clear();
+    // Remove empty paths and duplicates and add -I and canonicalize if necessary
     for (const auto &p : args) {
-        if (p.startsWith(QLatin1String("-I")))
-            squeezedArgs << p.mid(2).trimmed();
-        else
-            squeezedArgs << p;
+        QByteArray option;
+        QString rawpath;
+        if (p.startsWith(QLatin1String("-I")) || p.startsWith(QLatin1String("-F"))) {
+            rawpath = p.mid(2).trimmed();
+            option = p.left(2).toUtf8();
+        } else if (p.startsWith(QLatin1String("-isystem"))) {
+            rawpath = p.mid(8).trimmed();
+            option = "-isystem";
+        } else {
+            rawpath = p;
+            option = "-I";
+        }
+        if (rawpath.isEmpty() || seen.contains(rawpath))
+            continue;
+        seen.insert(rawpath);
+        QByteArray path(rawpath.toUtf8());
+        QFileInfo fi(QDir::current(), rawpath);
+        if (fi.exists())
+            path = fi.canonicalFilePath().toUtf8();
+        path.prepend(option);
+        includePaths_.append(path);
     }
-    // Remove empty paths and duplicates
-    squeezedArgs.removeAll({});
-    squeezedArgs.removeDuplicates();
-    includePaths_.resize(squeezedArgs.size());
-    std::transform(squeezedArgs.begin(), squeezedArgs.end(), includePaths_.begin(),
-                   [](const QString &s) {
-                       QByteArray path(s.toUtf8());
-                       QFileInfo fi(QDir::current(), s);
-                       if (fi.exists())
-                           path = fi.canonicalFilePath().toUtf8();
-                       return path.prepend("-I");
-                   });
     CppCodeParser::initializeParser();
     pchFileDir_.reset(nullptr);
     allHeaders_.clear();

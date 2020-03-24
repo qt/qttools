@@ -1,6 +1,7 @@
 QT += network help-private
 
 QTPLUGIN.platforms = qminimal
+QTPLUGIN.sqldrivers = qsqlite
 
 SOURCES += ../shared/collectionconfiguration.cpp \
            helpgenerator.cpp \
