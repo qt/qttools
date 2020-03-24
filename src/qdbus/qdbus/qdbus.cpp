@@ -30,7 +30,7 @@
 #include <stdlib.h>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QStringList>
 #include <QtCore/qmetaobject.h>
 #include <QtXml/QDomDocument>
@@ -406,14 +406,14 @@ static int placeCall(const QString &service, const QString &path, const QString 
 
 static bool globServices(QDBusConnectionInterface *bus, const QString &glob)
 {
-    QRegExp pattern(glob, Qt::CaseSensitive, QRegExp::Wildcard);
+    QRegularExpression pattern(QRegularExpression::wildcardToRegularExpression(glob));
     if (!pattern.isValid())
         return false;
 
     QStringList names = bus->registeredServiceNames();
     names.sort();
     for (const QString &name : qAsConst(names))
-        if (pattern.exactMatch(name))
+        if (pattern.match(name).hasMatch())
             printf("%s\n", qPrintable(name));
 
     return true;

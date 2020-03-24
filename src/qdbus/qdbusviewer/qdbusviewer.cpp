@@ -162,8 +162,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
         logError(QLatin1String("Cannot connect to D-Bus: ") + c.lastError().message());
     }
 
-    objectPathRegExp.setMinimal(true);
-
+    objectPathRegExp.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
 }
 
 static inline QString topSplitterStateKey() { return QStringLiteral("topSplitterState"); }

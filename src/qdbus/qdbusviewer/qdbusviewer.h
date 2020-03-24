@@ -31,7 +31,7 @@
 
 #include <QtWidgets/QWidget>
 #include <QtDBus/QDBusConnection>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 
 class ServicesProxyModel;
 
@@ -101,7 +101,7 @@ private:
     QTextBrowser *log;
     QSplitter *topSplitter;
     QSplitter *splitter;
-    QRegExp objectPathRegExp;
+    QRegularExpression objectPathRegExp;
 };
 
 #endif

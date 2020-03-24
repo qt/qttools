@@ -33,7 +33,6 @@
 #include <QtCore/qjsonarray.h>
 #include <QtCore/qjsondocument.h>
 #include <QtCore/qjsonobject.h>
-#include <QtCore/qregexp.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qvariant.h>
 
@@ -103,7 +102,7 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
         } else if (key == QLatin1String("Path")) {
             p.path = QDir(directory).absoluteFilePath(value);
         } else if (key == QLatin1String("Files")) {
-            p.files = value.split(QRegExp(QStringLiteral("\\s")), Qt::SkipEmptyParts);
+            p.files = value.simplified().split(QLatin1Char(' '), Qt::SkipEmptyParts);
         } else if (key == QLatin1String("Id")) {
             p.id = value;
         } else if (key == QLatin1String("Homepage")) {
