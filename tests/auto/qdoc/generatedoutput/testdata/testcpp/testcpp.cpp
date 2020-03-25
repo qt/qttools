@@ -36,6 +36,10 @@ namespace TestQDoc {
     \brief A test module page.
 
     \testnoautolist
+
+\if defined(test_nestedmacro)
+    \versionnote {module} {\ver}
+\endif
 */
 
 /*!

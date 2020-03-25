@@ -68,6 +68,7 @@ private slots:
     void preparePhase();
     void generatePhase();
     void noAutoList();
+    void nestedMacro();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -389,6 +390,13 @@ void tst_generatedOutput::noAutoList()
                    "noautolist-docbook/testcpp-module.xml "
                    "noautolist-docbook/test-componentset-example.xml "
                    "noautolist-docbook/qdoc-test-qmlmodule.xml");
+}
+
+
+void tst_generatedOutput::nestedMacro()
+{
+    testAndCompare("testdata/configs/nestedmacro.qdocconf",
+                   "nestedmacro/testcpp-module.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)
