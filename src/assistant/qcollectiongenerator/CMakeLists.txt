@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_add_tool(qcollectiongenerator
+    TOOLS_TARGET Tools # special case
     SOURCES
         main.c
     PUBLIC_LIBRARIES

@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_add_tool(lupdate-pro
+    TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/runqttool.cpp ../shared/runqttool.h
         main.cpp

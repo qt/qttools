@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_add_tool(qtattributionsscanner
+    TOOLS_TARGET Tools # special case
     SOURCES
         jsongenerator.cpp jsongenerator.h
         logging.h

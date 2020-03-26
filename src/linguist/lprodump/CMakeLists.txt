@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_add_tool(lprodump
+    TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/ioutils.cpp ../shared/ioutils.h
         ../shared/profileevaluator.cpp ../shared/profileevaluator.h

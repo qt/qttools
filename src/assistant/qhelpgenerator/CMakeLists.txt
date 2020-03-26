@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_add_tool(qhelpgenerator
+    TOOLS_TARGET Tools # special case
     SOURCES
         ../shared/collectionconfiguration.cpp ../shared/collectionconfiguration.h
         collectionconfigreader.cpp collectionconfigreader.h
