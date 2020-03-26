@@ -200,13 +200,13 @@ void PreferencesDialog::updateFontSettingsPage()
 
     const QList<QComboBox*> &appCombos = m_appFontPanel->findChildren<QComboBox*>();
     for (QComboBox* box : appCombos) {
-        connect(box, QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+        connect(box, QOverload<int>::of(&QComboBox::currentIndexChanged),
                 this, &PreferencesDialog::appFontSettingChanged);
     }
 
     const QList<QComboBox*> &browserCombos = m_browserFontPanel->findChildren<QComboBox*>();
     for (QComboBox* box : browserCombos) {
-        connect(box, QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+        connect(box, QOverload<int>::of(&QComboBox::currentIndexChanged),
                 this, &PreferencesDialog::browserFontSettingChanged);
     }
 }

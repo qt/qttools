@@ -94,7 +94,7 @@ DPI_Chooser::DPI_Chooser(QWidget *parent) :
     setFocusProxy(m_predefinedCombo);
     m_predefinedCombo->setEditable(false);
     m_predefinedCombo->setCurrentIndex(0);
-    connect(m_predefinedCombo, QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+    connect(m_predefinedCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &DPI_Chooser::syncSpinBoxes);
     // top row with predefined settings
     QVBoxLayout *vBoxLayout = new QVBoxLayout;
