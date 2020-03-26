@@ -1,5 +1,10 @@
 # Generated from linguist.pro.
 
+
+qt_exclude_tool_directories_from_default_target(
+    linguist
+)
+
 add_subdirectory(lconvert)
 add_subdirectory(lprodump)
 add_subdirectory(lrelease)

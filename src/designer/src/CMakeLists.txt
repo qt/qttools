@@ -1,5 +1,13 @@
 # Generated from src.pro.
 
+
+qt_exclude_tool_directories_from_default_target(
+    lib
+    components
+    designer
+    plugins
+)
+
 add_subdirectory(uiplugin)
 add_subdirectory(uitools)
 if(QT_FEATURE_process)

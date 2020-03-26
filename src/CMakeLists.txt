@@ -1,5 +1,11 @@
 # Generated from src.pro.
 
+
+qt_exclude_tool_directories_from_default_target(
+    distancefieldgenerator
+    pixeltool
+)
+
 add_subdirectory(global) # special case add as first directory
 add_subdirectory(linguist)
 # add_subdirectory(global) # special case remove

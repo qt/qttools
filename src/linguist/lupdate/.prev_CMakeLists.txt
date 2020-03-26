@@ -62,6 +62,7 @@ qt_extend_target(lupdate CONDITION QT_FEATURE_clangcpp
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h
         lupdatepreprocessoraction.cpp lupdatepreprocessoraction.h
+        synchronized.h
     DEFINES
         (CLANG_RESOURCE_DIR=\"/clang//include\")
         (LUPDATE_CLANG_VERSION_STR=\"\")

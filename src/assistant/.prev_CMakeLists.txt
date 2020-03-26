@@ -1,5 +1,12 @@
 # Generated from assistant.pro.
 
+
+qt_exclude_tool_directories_from_default_target(
+    assistant
+    qhelpgenerator
+    qcollectiongenerator
+)
+
 if(NOT TARGET Qt::Sql)
     return()
 endif()

@@ -63,6 +63,7 @@ qt_extend_target(lupdate CONDITION QT_FEATURE_clangcpp
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h
         lupdatepreprocessoraction.cpp lupdatepreprocessoraction.h
+        synchronized.h
     DEFINES
         # special case begin
         # remove these

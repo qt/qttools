@@ -1,5 +1,11 @@
 # Generated from src.pro.
 
+
+qt_exclude_tool_directories_from_default_target(
+    distancefieldgenerator
+    pixeltool
+)
+
 add_subdirectory(linguist)
 add_subdirectory(global)
 if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets)
