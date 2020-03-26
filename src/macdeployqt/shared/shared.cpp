@@ -55,6 +55,7 @@ QStringList librarySearchPath;
 QString codesignIdentiy;
 QString extraEntitlements;
 bool hardenedRuntime = false;
+bool secureTimestamp = false;
 bool appstoreCompliant = false;
 int logLevel = 1;
 bool deployFramework = false;
@@ -1392,13 +1393,18 @@ void codesignFile(const QString &identity, const QString &filePath)
 
     QString codeSignLogMessage = "codesign";
     if (hardenedRuntime)
-        codeSignLogMessage += ", enable hardned runtime";
+        codeSignLogMessage += ", enable hardened runtime";
+    if (secureTimestamp)
+        codeSignLogMessage += ", include secure timestamp";
     LogNormal() << codeSignLogMessage << filePath;
 
     QStringList codeSignOptions = { "--preserve-metadata=identifier,entitlements", "--force", "-s",
                                     identity, filePath };
     if (hardenedRuntime)
         codeSignOptions << "-o" << "runtime";
+
+    if (secureTimestamp)
+        codeSignOptions << "--timestamp";
 
     if (!extraEntitlements.isEmpty())
         codeSignOptions << "--entitlements" << extraEntitlements;

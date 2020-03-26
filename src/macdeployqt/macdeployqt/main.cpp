@@ -53,6 +53,7 @@ int main(int argc, char **argv)
         qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
         qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
         qDebug() << "   -hardened-runtime  : Enable Hardened Runtime when code signing";
+        qDebug() << "   -timestamp         : Include a secure timestamp when code signing (requires internet connection)";
         qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
         qDebug() << "   -libpath=<path>    : Add the given path to the library search path";
         qDebug() << "   -fs=<filesystem>   : Set the filesystem used for the .dmg disk image (defaults to HFS+)";
@@ -100,6 +101,7 @@ int main(int argc, char **argv)
     extern bool hardenedRuntime;
     extern bool appstoreCompliant;
     extern bool deployFramework;
+    extern bool secureTimestamp;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -169,6 +171,9 @@ int main(int argc, char **argv)
         } else if (argument.startsWith(QByteArray("-hardened-runtime"))) {
             LogDebug() << "Argument found:" << argument;
             hardenedRuntime = true;
+        } else if (argument.startsWith(QByteArray("-timestamp"))) {
+            LogDebug() << "Argument found:" << argument;
+            secureTimestamp = true;
         } else if (argument == QByteArray("-appstore-compliant")) {
             LogDebug() << "Argument found:" << argument;
             appstoreCompliant = true;
