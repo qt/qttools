@@ -813,8 +813,7 @@ void CppCodeParser::setExampleFileLists(ExampleNode *en)
                 QLatin1String("*.qrc *.pro *.qmlproject *.pyproject CMakeLists.txt qmldir"));
     }
 
-    exampleDir.cdUp();
-    int pathLen = exampleDir.path().size() + 1;
+    const int pathLen = exampleDir.path().size() - en->name().size();
     for (auto &file : exampleFiles)
         file = file.mid(pathLen);
     for (auto &file : imageFiles)
