@@ -543,7 +543,7 @@ void BookmarkManager::textChanged(const QString &text)
             bookmarkTreeView->setRootIsDecorated(false);
             bookmarkTreeView->setModel(typeAndSearchModel);
         }
-        typeAndSearchModel->setFilterRegExp(QRegExp(text));
+        typeAndSearchModel->setFilterRegularExpression(text);
     } else {
         typeAndSearch = false;
         bookmarkTreeView->setModel(bookmarkModel);
