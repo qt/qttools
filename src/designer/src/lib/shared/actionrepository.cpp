@@ -35,16 +35,17 @@
 #include <QtDesigner/propertysheet.h>
 #include <QtDesigner/qextensionmanager.h>
 
-#include <QtGui/qdrag.h>
-#include <QtGui/qevent.h>
-#include <QtGui/qstandarditemmodel.h>
 #include <QtWidgets/qtoolbutton.h>
-#include <QtGui/qpixmap.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qmenu.h>
+
+#include <QtGui/qpixmap.h>
+#include <QtGui/qaction.h>
+#include <QtGui/qdrag.h>
 #include <QtGui/qevent.h>
+#include <QtGui/qstandarditemmodel.h>
+
 #include <QtCore/qset.h>
 #include <QtCore/qdebug.h>
 

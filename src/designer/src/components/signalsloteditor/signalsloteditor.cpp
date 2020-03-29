@@ -40,8 +40,9 @@
 #include <QtDesigner/abstractmetadatabase.h>
 
 #include <QtWidgets/qapplication.h>
-#include <QtWidgets/qundostack.h>
 #include <QtWidgets/qmenu.h>
+
+#include <QtGui/qundostack.h>
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qdebug.h>

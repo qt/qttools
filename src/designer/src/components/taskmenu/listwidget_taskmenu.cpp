@@ -33,10 +33,11 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qstyle.h>
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qstyleoption.h>
+
+#include <QtGui/qaction.h>
 
 #include <QtCore/qcoreevent.h>
 #include <QtCore/qvariant.h>

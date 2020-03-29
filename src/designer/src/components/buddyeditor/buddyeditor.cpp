@@ -40,12 +40,14 @@
 #include <connectionedit_p.h>
 #include <metadatabase_p.h>
 
-#include <QtCore/qdebug.h>
-#include <QtCore/qvector.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qmenu.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
+
+#include <QtGui/qaction.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qvector.h>
 
 #include <algorithm>
 

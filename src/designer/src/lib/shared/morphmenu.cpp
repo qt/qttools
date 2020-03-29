@@ -44,11 +44,10 @@
 #include <QtDesigner/propertysheet.h>
 
 #include <QtWidgets/qwidget.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qlayout.h>
-#include <QtWidgets/qundostack.h>
+#include <QtGui/qundostack.h>
 #include <QtWidgets/qsplitter.h>
 
 #include <QtWidgets/qframe.h>
@@ -62,6 +61,8 @@
 #include <QtWidgets/qtextedit.h>
 #include <QtWidgets/qplaintextedit.h>
 #include <QtWidgets/qlabel.h>
+
+#include <QtGui/qaction.h>
 
 #include <QtCore/qstringlist.h>
 #include <QtCore/qmap.h>

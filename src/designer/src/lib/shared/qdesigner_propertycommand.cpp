@@ -45,15 +45,17 @@
 #include <QtDesigner/abstractwidgetdatabase.h>
 #include <QtDesigner/qextensionmanager.h>
 
-#include <QtCore/qsize.h>
-#include <QtCore/qtextstream.h>
 #include <QtWidgets/qwidget.h>
 #include <QtWidgets/qapplication.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qdialog.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qlayout.h>
-#include <qdebug.h>
+
+#include <QtGui/qaction.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qsize.h>
+#include <QtCore/qtextstream.h>
 
 QT_BEGIN_NAMESPACE
 

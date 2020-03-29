@@ -40,12 +40,13 @@
 
 #include <QtUiPlugin/customwidget.h>
 
-#include <QtGui/qicon.h>
 #include <QtWidgets/qwidget.h>
-#include <QtWidgets/qaction.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qicon.h>
+
 #include <QtCore/qdebug.h>
 #include <QtCore/qcoreapplication.h>
-
 
 QT_BEGIN_NAMESPACE
 

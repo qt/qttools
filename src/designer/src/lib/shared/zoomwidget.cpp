@@ -31,10 +31,11 @@
 #include <QtWidgets/qgraphicsscene.h>
 #include <QtWidgets/qgraphicsproxywidget.h>
 #include <QtWidgets/qmenu.h>
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qactiongroup.h>
-#include <QtGui/qevent.h>
 #include <QtWidgets/qscrollbar.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+#include <QtGui/qevent.h>
 
 #include <QtCore/qtextstream.h>
 #include <QtCore/qmath.h>

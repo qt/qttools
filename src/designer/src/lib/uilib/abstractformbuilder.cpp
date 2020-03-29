@@ -44,17 +44,6 @@
 #include "ui4_p.h"
 #include "properties_p.h"
 
-#include <QtCore/qvariant.h>
-#include <QtCore/qmetaobject.h>
-#include <QtCore/qfileinfo.h>
-#include <QtCore/qdir.h>
-#include <QtCore/qqueue.h>
-#include <QtCore/qhash.h>
-#include <QtCore/qpair.h>
-#include <QtCore/qdebug.h>
-#include <QtCore/qcoreapplication.h>
-
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qmainwindow.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qmenubar.h>
@@ -82,7 +71,18 @@
 #  include <private/qlayout_p.h> // Compiling within Designer
 #endif
 
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+
+#include <QtCore/qcoreapplication.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qpair.h>
+#include <QtCore/qqueue.h>
+#include <QtCore/qvariant.h>
 #include <QtCore/qxmlstream.h>
 
 #include <limits.h>

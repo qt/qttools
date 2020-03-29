@@ -30,8 +30,10 @@
 #include "invisible_widget_p.h"
 #include "qdesigner_toolbar_p.h"
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
+
+#include <QtGui/qaction.h>
+
 #include <QtCore/qrect.h>
 #include <QtCore/qdebug.h>
 

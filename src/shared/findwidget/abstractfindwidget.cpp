@@ -53,21 +53,21 @@
 
 #include "abstractfindwidget.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QEvent>
-#include <QtCore/QFile>
-#include <QtCore/QTimer>
-
-#include <QtGui/QKeyEvent>
-
 #include <QtWidgets/QCheckBox>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QShortcut>
 #include <QtWidgets/QToolButton>
+
+#include <QtGui/QAction>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QShortcut>
+
+#include <QtCore/QCoreApplication>
+#include <QtCore/QEvent>
+#include <QtCore/QFile>
+#include <QtCore/QTimer>
 
 QT_BEGIN_NAMESPACE
 

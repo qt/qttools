@@ -37,23 +37,24 @@
 #include "qdesigner_utils_p.h"
 #include "qdesigner_objectinspector_p.h"
 
-#include <QtCore/qtimer.h>
-#include <QtCore/qdebug.h>
-
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractwidgetfactory.h>
 #include <QtDesigner/abstractmetadatabase.h>
 #include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qlineedit.h>
-#include <QtGui/qpainter.h>
-#include <QtGui/qdrag.h>
 #include <QtWidgets/qrubberband.h>
 #include <QtWidgets/qtooltip.h>
 #include <QtWidgets/qtoolbar.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qdrag.h>
 #include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+
+#include <QtCore/qtimer.h>
+#include <QtCore/qdebug.h>
 
 Q_DECLARE_METATYPE(QAction*)
 

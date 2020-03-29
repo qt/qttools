@@ -38,9 +38,10 @@
 #include <QtDesigner/abstractwidgetbox.h>
 #include <QtDesigner/QDesignerComponents>
 
-#include <QtCore/qdebug.h>
-#include <QtWidgets/qaction.h>
+#include <QtGui/qaction.h>
 #include <QtGui/qevent.h>
+
+#include <QtCore/qdebug.h>
 
 enum { debugToolWindow = 0 };
 

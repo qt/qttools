@@ -42,8 +42,9 @@
 
 #include "shared_global_p.h"
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qmenubar.h>
+
+#include <QtGui/qaction.h>
 
 #include <QtCore/qpointer.h>
 #include <QtCore/qmimedata.h>

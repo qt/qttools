@@ -34,7 +34,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
 
-#include <QtWidgets/QAction>
+#include <QtGui/QAction>
 #include <QtGui/QFont>
 
 #if defined(BROWSER_QTWEBKIT)

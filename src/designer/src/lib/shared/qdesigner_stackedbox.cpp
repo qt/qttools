@@ -36,10 +36,12 @@
 #include <QtDesigner/abstractformwindow.h>
 
 #include <QtWidgets/qtoolbutton.h>
-#include <QtWidgets/qaction.h>
-#include <QtGui/qevent.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qstackedwidget.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qevent.h>
+
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

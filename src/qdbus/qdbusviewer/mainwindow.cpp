@@ -34,7 +34,7 @@
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QMenu>
-#include <QtWidgets/QAction>
+#include <QtGui/QAction>
 #include <QtWidgets/QMessageBox>
 
 #include <QtDBus/QDBusConnection>

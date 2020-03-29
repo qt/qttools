@@ -34,9 +34,11 @@
 #include <QtDesigner/propertysheet.h>
 #include <QtDesigner/qextensionmanager.h>
 #include <widgetfactory_p.h>
-#include <QtWidgets/qaction.h>
+
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qabstractbutton.h>
+
+#include <QtGui/qaction.h>
 
 QT_BEGIN_NAMESPACE
 

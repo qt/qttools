@@ -37,14 +37,16 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/qaction.h>
-#include <QtGui/qevent.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qmdisubwindow.h>
 #include <QtWidgets/qstatusbar.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qlayout.h>
 #include <QtWidgets/qdockwidget.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+#include <QtGui/qevent.h>
 
 #include <QtCore/qurl.h>
 #include <QtCore/qdebug.h>

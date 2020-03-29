@@ -48,16 +48,9 @@
 #include <textbuilder_p.h>
 #include <ui4_p.h>
 
-#include <QtCore/qdebug.h>
-#include <QtCore/qdatastream.h>
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qactiongroup.h>
 #include <QtWidgets/qapplication.h>
-#include <QtCore/qdir.h>
-#include <QtCore/qlibraryinfo.h>
 #include <QtWidgets/qlayout.h>
 #include <QtWidgets/qwidget.h>
-#include <QtCore/qmap.h>
 #include <QtWidgets/qtabwidget.h>
 #include <QtWidgets/qtreewidget.h>
 #include <QtWidgets/qlistwidget.h>
@@ -65,6 +58,15 @@
 #include <QtWidgets/qtoolbox.h>
 #include <QtWidgets/qcombobox.h>
 #include <QtWidgets/qfontcombobox.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qdatastream.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qlibraryinfo.h>
 
 QT_BEGIN_NAMESPACE
 

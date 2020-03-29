@@ -45,13 +45,8 @@
 #include <QtDesigner/abstractformwindowcursor.h>
 #include <abstractdialoggui_p.h>
 
-#include <QtCore/qabstractitemmodel.h>
-#include <QtCore/qdebug.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qbuttongroup.h>
 #include <QtWidgets/qmenu.h>
-#include <QtCore/qsortfilterproxymodel.h>
-#include <QtGui/qstandarditemmodel.h>
 #include <QtWidgets/qcombobox.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qitemdelegate.h>
@@ -62,6 +57,13 @@
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qbuttongroup.h>
 #include <QtWidgets/qtoolbar.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qstandarditemmodel.h>
+
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qsortfilterproxymodel.h>
 
 QT_BEGIN_NAMESPACE
 

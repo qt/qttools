@@ -51,8 +51,8 @@
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qdialog.h>
 #include <QtWidgets/qmenu.h>
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qactiongroup.h>
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
 #include <QtGui/qcursor.h>
 #include <QtGui/qtransform.h>
 

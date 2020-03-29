@@ -81,8 +81,6 @@
 #include <QtWidgets/qstackedwidget.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qtabbar.h>
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qactiongroup.h>
 #include <QtWidgets/qbuttongroup.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qmainwindow.h>
@@ -93,6 +91,9 @@
 #include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qwizard.h>
 #include <private/qlayoutengine_p.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
 
 #include <QtCore/qbuffer.h>
 #include <QtCore/qdir.h>

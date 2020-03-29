@@ -36,12 +36,6 @@
 
 #include <QtDesigner/abstractformeditor.h>
 
-#include <QtCore/qdir.h>
-#include <QtCore/qfileinfo.h>
-#include <QtCore/qdebug.h>
-#include <QtCore/qdir.h>
-#include <QtCore/qtemporaryfile.h>
-
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qpushbutton.h>
@@ -50,6 +44,15 @@
 #include <QtWidgets/qcheckbox.h>
 #include <QtWidgets/qframe.h>
 #include <QtWidgets/qmessagebox.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+
+#include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qdebug.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qtemporaryfile.h>
 
 QT_BEGIN_NAMESPACE
 

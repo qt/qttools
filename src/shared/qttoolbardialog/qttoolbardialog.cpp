@@ -40,13 +40,15 @@
 #include "qttoolbardialog.h"
 #include "ui_qttoolbardialog.h"
 
-#include <QtCore/QSet>
-#include <QtGui/QtEvents>
-#include <QtWidgets/QAction>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QPushButton>
+
+#include <QtGui/QAction>
+#include <QtGui/QtEvents>
+
+#include <QtCore/QSet>
 
 #include <algorithm>
 

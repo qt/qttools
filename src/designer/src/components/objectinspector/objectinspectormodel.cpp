@@ -41,10 +41,12 @@
 #include <QtDesigner/abstractmetadatabase.h>
 #include <QtDesigner/qextensionmanager.h>
 #include <QtWidgets/qlayout.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qlayoutitem.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qbuttongroup.h>
+
+#include <QtGui/qaction.h>
+
 #include <QtCore/qset.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qcoreapplication.h>

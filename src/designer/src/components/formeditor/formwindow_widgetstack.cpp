@@ -29,11 +29,12 @@
 #include "formwindow_widgetstack.h"
 #include <QtDesigner/abstractformwindowtool.h>
 
-#include <QtWidgets/qwidget.h>
-#include <QtGui/qevent.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qstackedlayout.h>
 #include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qwidget.h>
+
+#include <QtGui/qevent.h>
+#include <QtGui/qaction.h>
 
 #include <QtCore/qdebug.h>
 

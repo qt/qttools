@@ -26,7 +26,7 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets/qaction.h>
+#include <QtGui/qaction.h>
 
 #include "tabordereditor_plugin.h"
 #include "tabordereditor_tool.h"

@@ -72,29 +72,31 @@
 
 #include <abstractdialoggui_p.h>
 
-#include <QtCore/qdebug.h>
-#include <QtCore/qbuffer.h>
-#include <QtCore/qtimer.h>
-#include <QtCore/qvector.h>
-#include <QtCore/qxmlstream.h>
 #include <QtWidgets/qmenu.h>
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qactiongroup.h>
-#if QT_CONFIG(clipboard)
-#include <QtGui/qclipboard.h>
-#endif
-#include <QtWidgets/qundogroup.h>
 #include <QtWidgets/qscrollarea.h>
 #include <QtWidgets/qrubberband.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qsplitter.h>
-#include <QtGui/qpainter.h>
 #include <QtWidgets/qgroupbox.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qtoolbox.h>
 #include <QtWidgets/qstackedwidget.h>
 #include <QtWidgets/qtabwidget.h>
 #include <QtWidgets/qbuttongroup.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+#if QT_CONFIG(clipboard)
+#  include <QtGui/qclipboard.h>
+#endif
+#include <QtGui/qpainter.h>
+#include <QtGui/qundogroup.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qbuffer.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qvector.h>
+#include <QtCore/qxmlstream.h>
 
 Q_DECLARE_METATYPE(QWidget*)
 

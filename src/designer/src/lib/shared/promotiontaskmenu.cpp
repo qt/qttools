@@ -42,9 +42,11 @@
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qwidget.h>
 #include <QtWidgets/qmenu.h>
+
+#include <QtGui/qaction.h>
+
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

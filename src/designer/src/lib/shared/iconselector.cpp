@@ -42,7 +42,6 @@
 
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qcombobox.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qdialogbuttonbox.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qdialog.h>
@@ -53,7 +52,10 @@
 #include <QtWidgets/qdialogbuttonbox.h>
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qlabel.h>
+
+#include <QtGui/qaction.h>
 #include <QtGui/qvalidator.h>
+
 #include <QtCore/qdebug.h>
 #include <QtCore/qvector.h>
 

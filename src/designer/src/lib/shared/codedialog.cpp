@@ -32,20 +32,21 @@
 
 #include <texteditfindwidget.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
 #if QT_CONFIG(clipboard)
 #include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qdialogbuttonbox.h>
 #include <QtWidgets/qfiledialog.h>
-#include <QtGui/qicon.h>
-#include <QtGui/qevent.h>
 #include <QtWidgets/qmessagebox.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qtextedit.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qboxlayout.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qicon.h>
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>

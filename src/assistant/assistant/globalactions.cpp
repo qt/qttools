@@ -32,8 +32,9 @@
 #include "helpviewer.h"
 #include "tracer.h"
 
-#include <QtWidgets/QAction>
 #include <QtWidgets/QMenu>
+
+#include <QtGui/QAction>
 
 #if defined(BROWSER_QTWEBKIT)
 #  include <QWebHistory>

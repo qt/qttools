@@ -28,8 +28,9 @@
 
 #include "previewwidget.h"
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qmenu.h>
+
+#include <QtGui/qaction.h>
 
 #include <QtCore/qabstractitemmodel.h>
 

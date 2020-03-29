@@ -45,10 +45,6 @@
 #include <QtDesigner/taskmenu.h>
 #include <QtDesigner/abstractintegration.h>
 
-#include <QtCore/qdebug.h>
-#include <QtCore/qlist.h>
-#include <QtCore/qset.h>
-#include <QtCore/qtimer.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qlistwidget.h>
 #include <QtWidgets/qtreewidget.h>
@@ -59,8 +55,14 @@
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qstatusbar.h>
 #include <QtWidgets/qmenu.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qlabel.h>
+
+#include <QtGui/qaction.h>
+
+#include <QtCore/qdebug.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qset.h>
+#include <QtCore/qtimer.h>
 
 QT_BEGIN_NAMESPACE
 

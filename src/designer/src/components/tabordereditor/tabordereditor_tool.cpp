@@ -31,8 +31,9 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
+#include <QtGui/qaction.h>
+
 #include <QtCore/qcoreevent.h>
-#include <QtWidgets/qaction.h>
 
 QT_BEGIN_NAMESPACE
 

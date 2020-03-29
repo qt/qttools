@@ -41,14 +41,15 @@
 #include <QtDesigner/qextensionmanager.h>
 #include <QtDesigner/abstractwidgetfactory.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qmenu.h>
+
+#include <QtGui/qaction.h>
 #include <QtGui/qevent.h>
 #include <QtGui/qdrag.h>
-#include <QtWidgets/qapplication.h>
+
 #include <QtCore/qdebug.h>
 
 Q_DECLARE_METATYPE(QAction*)

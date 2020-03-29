@@ -60,18 +60,19 @@
 #include <QtDesigner/abstractwidgetbox.h>
 #include <QtDesigner/abstractintegration.h>
 
-#include <QtWidgets/qundogroup.h>
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qsplitter.h>
-#include <QtGui/qevent.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qsizegrip.h>
-#if QT_CONFIG(clipboard)
-#include <QtGui/qclipboard.h>
-#endif
 #include <QtWidgets/qmdiarea.h>
 #include <QtWidgets/qmdisubwindow.h>
 #include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qsplitter.h>
+
+#include <QtGui/qaction.h>
+#if QT_CONFIG(clipboard)
+#  include <QtGui/qclipboard.h>
+#endif
+#include <QtGui/qevent.h>
+#include <QtGui/qundogroup.h>
 
 #include <QtCore/qdebug.h>
 

@@ -37,17 +37,6 @@
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractformwindowmanager.h>
 
-#include <QtCore/qfile.h>
-#include <QtCore/qmetaobject.h>
-#include <QtCore/qsavefile.h>
-#include <QtCore/qxmlstream.h>
-#include <QtGui/qguiapplication.h>
-#include <QtGui/qpainter.h>
-#include <QtGui/qscreen.h>
-#if QT_CONFIG(clipboard)
-#  include <QtGui/qclipboard.h>
-#endif
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qfiledialog.h>
 #include <QtWidgets/qmessagebox.h>
 #include <QtWidgets/qpushbutton.h>
@@ -55,6 +44,19 @@
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qheaderview.h>
+
+#include <QtGui/qaction.h>
+#if QT_CONFIG(clipboard)
+#  include <QtGui/qclipboard.h>
+#endif
+#include <QtGui/qguiapplication.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qscreen.h>
+
+#include <QtCore/qfile.h>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qsavefile.h>
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 

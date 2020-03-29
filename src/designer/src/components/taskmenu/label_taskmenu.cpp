@@ -31,9 +31,10 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qstyle.h>
 #include <QtWidgets/qstyleoption.h>
+
+#include <QtGui/qaction.h>
 #include <QtGui/qtextdocument.h>
 
 static const char *textPropertyC = "text";

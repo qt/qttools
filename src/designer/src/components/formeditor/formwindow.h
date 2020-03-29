@@ -33,7 +33,7 @@
 #include <formwindowbase_p.h>
 
 // Qt
-#include <QtWidgets/qundostack.h>
+#include <QtGui/qundostack.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>

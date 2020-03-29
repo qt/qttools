@@ -38,10 +38,12 @@
 #include <qdesigner_dnditem_p.h>
 #include <qdesigner_resource.h>
 
-#include <QtGui/qevent.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qmainwindow.h>
+
+#include <QtGui/qaction.h>
 #include <QtGui/qcursor.h>
+#include <QtGui/qevent.h>
+
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

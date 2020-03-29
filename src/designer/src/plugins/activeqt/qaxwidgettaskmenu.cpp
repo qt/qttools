@@ -35,15 +35,18 @@
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/qextensionmanager.h>
 
-#include <QtWidgets/qmessagebox.h>
-#include <QtWidgets/qundostack.h>
-#include <QtWidgets/qaction.h>
-#include <QtCore/quuid.h>
 #include <ActiveQt/qaxselect.h>
+#include <ActiveQt/qaxtypes.h>
 
-#include <qt_windows.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtGui/qundostack.h>
+
+#include <QtGui/qaction.h>
+
+#include <QtCore/qt_windows.h>
+#include <QtCore/quuid.h>
+
 #include <olectl.h>
-#include <qaxtypes.h>
 
 QT_BEGIN_NAMESPACE
 

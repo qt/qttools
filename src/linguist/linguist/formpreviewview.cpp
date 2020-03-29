@@ -31,10 +31,6 @@
 
 #include <quiloader.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QTime>
-
-#include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFontComboBox>
 #include <QtWidgets/QFrame>
@@ -50,6 +46,11 @@
 #include <QtWidgets/QToolBox>
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QScrollArea>
+
+#include <QtGui/QAction>
+
+#include <QtCore/QDebug>
+#include <QtCore/QTime>
 
 QT_BEGIN_NAMESPACE
 

@@ -38,14 +38,16 @@
 #include <QtDesigner/abstractobjectinspector.h>
 #include <QtDesigner/abstractpropertyeditor.h>
 
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qactiongroup.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qstyle.h>
 #include <QtWidgets/qstyleoption.h>
 #include <QtWidgets/qabstractbutton.h>
 #include <QtWidgets/qbuttongroup.h>
 #include <QtWidgets/qapplication.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+
 #include <QtCore/qdebug.h>
 
 Q_DECLARE_METATYPE(QButtonGroup*)

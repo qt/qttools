@@ -36,28 +36,30 @@
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractsettings.h>
 
-#include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
-#include <QtCore/qpointer.h>
-#include <QtCore/qxmlstream.h>
-
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qcolordialog.h>
 #include <QtWidgets/qcombobox.h>
-#include <QtGui/qfontdatabase.h>
-#include <QtGui/qtextcursor.h>
-#include <QtGui/qpainter.h>
-#include <QtGui/qicon.h>
 #include <QtWidgets/qmenu.h>
-#include <QtGui/qevent.h>
 #include <QtWidgets/qtabwidget.h>
-#include <QtGui/qtextobject.h>
-#include <QtGui/qtextdocument.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qdialogbuttonbox.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qfontdatabase.h>
+#include <QtGui/qicon.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qtextcursor.h>
+#include <QtGui/qtextdocument.h>
+#include <QtGui/qtextobject.h>
+
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qpointer.h>
+#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 

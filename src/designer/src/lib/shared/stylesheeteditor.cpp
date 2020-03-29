@@ -44,18 +44,19 @@
 
 #include <texteditfindwidget.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qcolordialog.h>
 #include <QtWidgets/qdialogbuttonbox.h>
 #include <QtWidgets/qfontdialog.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qpushbutton.h>
-#include <QtGui/qtextdocument.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qboxlayout.h>
-#include <private/qcssparser_p.h>
 
+#include <QtGui/qaction.h>
 #include <QtGui/qevent.h>
+#include <QtGui/qtextdocument.h>
+
+#include <private/qcssparser_p.h>
 
 QT_BEGIN_NAMESPACE
 

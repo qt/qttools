@@ -26,7 +26,7 @@
 **
 ****************************************************************************/
 
-#include <QtWidgets/qaction.h>
+#include <QtGui/qaction.h>
 
 #include "buddyeditor_plugin.h"
 #include "buddyeditor_tool.h"

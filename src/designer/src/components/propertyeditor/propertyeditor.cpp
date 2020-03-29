@@ -53,7 +53,7 @@
 #include <iconloader_p.h>
 #include <widgetfactory_p.h>
 
-#include <QtWidgets/qaction.h>
+#include <QtWidgets/qlabel.h>
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qapplication.h>
@@ -62,8 +62,9 @@
 #include <QtWidgets/qstackedwidget.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qtoolbutton.h>
-#include <QtWidgets/qactiongroup.h>
-#include <QtWidgets/qlabel.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
 #include <QtGui/qpainter.h>
 
 #include <QtCore/qdebug.h>

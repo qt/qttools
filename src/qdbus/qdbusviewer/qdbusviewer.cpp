@@ -32,14 +32,7 @@
 #include "propertydialog.h"
 #include "logviewer.h"
 
-
-#include <QtCore/QStringListModel>
-#include <QtCore/QMetaProperty>
-#include <QtCore/QSettings>
-#include <QtGui/QKeyEvent>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QShortcut>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QInputDialog>
@@ -48,9 +41,18 @@
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QTreeWidget>
 #include <QtWidgets/QHeaderView>
+
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusMetaType>
+
+#include <QtGui/QAction>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QShortcut>
+
+#include <QtCore/QStringListModel>
+#include <QtCore/QMetaProperty>
+#include <QtCore/QSettings>
 
 #include <private/qdbusutil_p.h>
 

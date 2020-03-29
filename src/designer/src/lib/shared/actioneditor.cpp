@@ -49,21 +49,23 @@
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qsplitter.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
 #if QT_CONFIG(clipboard)
 #include <QtGui/qclipboard.h>
 #endif
 #include <QtWidgets/qitemdelegate.h>
-#include <QtGui/qpainter.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qtoolbutton.h>
-#include <QtGui/qevent.h>
-#include <QtCore/qitemselectionmodel.h>
 
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+
+#include <QtCore/qitemselectionmodel.h>
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qbuffer.h>

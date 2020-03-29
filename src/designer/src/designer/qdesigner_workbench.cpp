@@ -48,16 +48,6 @@
 #include <QtDesigner/private/formwindowbase_p.h>
 #include <QtDesigner/private/actioneditor_p.h>
 
-#include <QtCore/qdir.h>
-#include <QtCore/qfile.h>
-#include <QtCore/qurl.h>
-#include <QtCore/qtimer.h>
-#include <QtCore/qpluginloader.h>
-#include <QtCore/qdebug.h>
-
-#include <QtWidgets/qactiongroup.h>
-#include <QtGui/qevent.h>
-#include <QtGui/qscreen.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qmenubar.h>
@@ -67,6 +57,17 @@
 #include <QtWidgets/qmdiarea.h>
 #include <QtWidgets/qmdisubwindow.h>
 #include <QtWidgets/qlayout.h>
+
+#include <QtGui/qactiongroup.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qscreen.h>
+
+#include <QtCore/qdir.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qurl.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qpluginloader.h>
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

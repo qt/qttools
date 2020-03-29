@@ -30,7 +30,8 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
-#include <QtWidgets/qaction.h>
+#include <QtGui/qaction.h>
+
 #include <QtCore/qcoreevent.h>
 #include <QtCore/qdebug.h>
 

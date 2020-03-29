@@ -39,8 +39,6 @@
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/abstractwidgetdatabase.h>
 
-#include <QtCore/qdebug.h>
-
 #include <QtWidgets/qlayout.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qdialog.h>
@@ -49,11 +47,14 @@
 #include <QtWidgets/qgroupbox.h>
 #include <QtWidgets/qstyle.h>
 #include <QtWidgets/qabstractbutton.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qmainwindow.h>
 #include <QtWidgets/qmenubar.h>
+
+#include <QtGui/qaction.h>
+
+#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

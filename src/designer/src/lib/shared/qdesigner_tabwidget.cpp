@@ -36,12 +36,13 @@
 
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qtabbar.h>
-#include <QtWidgets/qaction.h>
-#include <QtGui/qevent.h>
-#include <QtGui/qdrag.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qtabwidget.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qdrag.h>
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qmimedata.h>

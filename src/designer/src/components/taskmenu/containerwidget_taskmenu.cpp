@@ -38,7 +38,6 @@
 #include <promotiontaskmenu_p.h>
 #include <widgetdatabase_p.h>
 
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qmainwindow.h>
 #include <QtWidgets/qtoolbox.h>
 #include <QtWidgets/qstackedwidget.h>
@@ -47,6 +46,8 @@
 #include <QtWidgets/qmdiarea.h>
 #include <QtWidgets/qwizard.h>
 #include <QtWidgets/qmenu.h>
+
+#include <QtGui/qaction.h>
 
 #include <QtCore/qdebug.h>
 

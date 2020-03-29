@@ -48,25 +48,26 @@
 #include <iconselector_p.h>
 #include <abstractdialoggui_p.h>
 
+#include <QtWidgets/qapplication.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qtoolbutton.h>
 #include <QtWidgets/qboxlayout.h>
-#include <QtCore/qfileinfo.h>
-#if QT_CONFIG(clipboard)
-#include <QtGui/qclipboard.h>
-#endif
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qdialogbuttonbox.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qfiledialog.h>
-#include <QtWidgets/qaction.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qkeysequenceedit.h>
+
+#include <QtGui/qaction.h>
+#if QT_CONFIG(clipboard)
+#include <QtGui/qclipboard.h>
+#endif
 #include <QtGui/qevent.h>
-#include <QtWidgets/qapplication.h>
-#include <QtCore/qurl.h>
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qurl.h>
 
 QT_BEGIN_NAMESPACE
 

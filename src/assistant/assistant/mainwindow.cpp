@@ -58,12 +58,14 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include <QtWidgets/QAction>
-#include <QtWidgets/QComboBox>
-#include <QtWidgets/QDockWidget>
+#include <QtGui/QAction>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QImageReader>
 #include <QtGui/QScreen>
+#include <QtGui/QShortcut>
+
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QDockWidget>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
@@ -71,7 +73,6 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressBar>
-#include <QtWidgets/QShortcut>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QToolButton>

@@ -43,13 +43,14 @@
 
 #include <QtUiPlugin/customwidget.h>
 
-#include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qapplication.h>
-#include <QtWidgets/qtreewidget.h>
-#include <QtGui/qevent.h>
-#include <QtWidgets/qaction.h>
-#include <QtWidgets/qactiongroup.h>
+#include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qmenu.h>
+#include <QtWidgets/qtreewidget.h>
+
+#include <QtGui/qaction.h>
+#include <QtGui/qactiongroup.h>
+#include <QtGui/qevent.h>
 
 #include <QtCore/qfile.h>
 #include <QtCore/qtimer.h>
