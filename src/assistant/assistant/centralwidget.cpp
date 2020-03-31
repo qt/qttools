@@ -34,7 +34,7 @@
 #include "openpagesmanager.h"
 #include "tracer.h"
 
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QTimer>
 
 #include <QtGui/QKeyEvent>
@@ -545,7 +545,7 @@ void CentralWidget::highlightSearchTerms()
     const bool wholePhrase = searchInput.startsWith(QLatin1Char('"')) &&
                              searchInput.endsWith(QLatin1Char('"'));
     const QStringList &words = wholePhrase ? QStringList(searchInput.mid(1, searchInput.length() - 2)) :
-                                searchInput.split(QRegExp("\\W+"), Qt::SkipEmptyParts);
+                                searchInput.split(QRegularExpression("\\W+"), Qt::SkipEmptyParts);
     HelpViewer *viewer = currentHelpViewer();
     for (const QString &word : words)
         viewer->findText(word, {}, false, true);

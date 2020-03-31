@@ -269,7 +269,9 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
     int perfectMatch = -1;
 
     if (!wildcard.isEmpty()) {
-        const QRegExp regExp(wildcard, Qt::CaseInsensitive, QRegExp::Wildcard);
+        auto re = QRegularExpression::wildcardToRegularExpression(wildcard,
+                                                                  QRegularExpression::UnanchoredWildcardConversion);
+        const QRegularExpression regExp(re, QRegularExpression::CaseInsensitiveOption);
         for (const QString &index : qAsConst(d->indices)) {
             if (index.contains(regExp)) {
                 lst.append(index);

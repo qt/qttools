@@ -46,7 +46,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QSet>
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>
@@ -807,15 +807,16 @@ bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
             emit warning(tr("File \"%1\" cannot be opened.").arg(fileName));
             continue;
         }
-        const QRegExp linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
+        const QRegularExpression linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
         QTextStream stream(&htmlFile);
         const QString codec = QHelpGlobal::codecFromData(htmlFile.read(1000));
         stream.setCodec(QTextCodec::codecForName(codec.toLatin1().constData()));
         const QString &content = stream.readAll();
         QStringList invalidLinks;
-        for (int pos = linkPattern.indexIn(content); pos != -1;
-             pos = linkPattern.indexIn(content, pos + 1)) {
-            const QString &linkedFileName = linkPattern.cap(1);
+        QRegularExpressionMatch match;
+        int pos = 0;
+        while ((match = linkPattern.match(content, pos)).hasMatch()) {
+            const QString &linkedFileName = match.captured(1);
             if (linkedFileName.contains(QLatin1String("://")))
                 continue;
             const QString &curDir = QFileInfo(fileName).dir().path();
@@ -828,6 +829,7 @@ bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
                 allLinksOk = false;
                 invalidLinks.append(canonicalLinkedFileName);
             }
+            pos = match.capturedEnd();
         }
     }
 

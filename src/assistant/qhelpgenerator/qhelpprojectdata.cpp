@@ -44,7 +44,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QStack>
 #include <QtCore/QMap>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QTextStream>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
@@ -318,13 +318,14 @@ void QHelpProjectDataPrivate::addMatchingFiles(const QString &pattern)
 
     bool matchFound = false;
 #ifdef Q_OS_WIN
-    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+    auto cs = QRegularExpression::CaseInsensitiveOption;
 #else
-    Qt::CaseSensitivity cs = Qt::CaseSensitive;
+    auto cs = QRegularExpression::NoPatternOption;
 #endif
-    const QRegExp regExp(fileInfo.fileName(), cs, QRegExp::Wildcard);
+    const QRegularExpression regExp(QRegularExpression::wildcardToRegularExpression(fileInfo.fileName()), cs);
     for (const QString &file : entries) {
-        if (regExp.exactMatch(file)) {
+        auto match = regExp.match(file);
+        if (match.hasMatch()) {
             matchFound = true;
             filterSectionList.last().
                 addFile(QFileInfo(pattern).dir().path() + QLatin1Char('/') + file);
