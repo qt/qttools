@@ -37,7 +37,7 @@
 #include "xmlgenerator.h"
 
 #include <QtCore/qhash.h>
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
@@ -160,7 +160,7 @@ private:
     QString codeSuffix;
     HelpProjectWriter *helpProjectWriter;
     bool inObsoleteLink;
-    QRegExp funcLeftParen;
+    QRegularExpression funcLeftParen;
     QString style;
     QString headerScripts;
     QString headerStyles;

@@ -44,7 +44,7 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qtextstream.h>
 
 #include <cctype>
@@ -2028,13 +2028,14 @@ QString DocParser::expandMacroToString(const QString &name, const QString &def, 
         return rawString;
 
     QString result;
-    QRegExp re(matchExpr);
+    QRegularExpression re(matchExpr);
     int capStart = (re.captureCount() > 0) ? 1 : 0;
     int i = 0;
-    while ((i = re.indexIn(rawString, i)) != -1) {
+    QRegularExpressionMatch match;
+    while ((match = re.match(rawString, i)).hasMatch()) {
         for (int c = capStart; c <= re.captureCount(); ++c)
-            result += re.cap(c);
-        i += re.matchedLength();
+            result += match.captured(c);
+        i = match.capturedEnd();
     }
 
     return result;
@@ -2293,16 +2294,17 @@ QString DocParser::getMetaCommandArgument(const QString &cmdStr)
 QString DocParser::getUntilEnd(int cmd)
 {
     int endCmd = endCmdFor(cmd);
-    QRegExp rx("\\\\" + cmdName(endCmd) + "\\b");
+    QRegularExpression rx("\\\\" + cmdName(endCmd) + "\\b");
     QString t;
-    int end = rx.indexIn(input_, pos);
+    auto match = rx.match(input_, pos);
 
-    if (end == -1) {
+    if (!match.hasMatch()) {
         location().warning(tr("Missing '\\%1'").arg(cmdName(endCmd)));
         pos = input_.length();
     } else {
+        int end = match.capturedStart();
         t = input_.mid(pos, end - pos);
-        pos = end + rx.matchedLength();
+        pos = match.capturedEnd();
     }
     return t;
 }
@@ -2410,14 +2412,14 @@ void DocParser::skipAllSpaces()
 
 void DocParser::skipToNextPreprocessorCommand()
 {
-    QRegExp rx("\\\\(?:" + cmdName(CMD_IF) + QLatin1Char('|') + cmdName(CMD_ELSE) + QLatin1Char('|')
+    QRegularExpression rx("\\\\(?:" + cmdName(CMD_IF) + QLatin1Char('|') + cmdName(CMD_ELSE) + QLatin1Char('|')
                + cmdName(CMD_ENDIF) + ")\\b");
-    int end = rx.indexIn(input_, pos + 1); // ### + 1 necessary?
+    auto match = rx.match(input_, pos + 1); // ### + 1 necessary?
 
-    if (end == -1)
+    if (!match.hasMatch())
         pos = input_.length();
     else
-        pos = end;
+        pos = match.capturedStart();
 }
 
 int DocParser::endCmdFor(int cmd)
@@ -3024,7 +3026,7 @@ QString Doc::canonicalTitle(const QString &title)
     // The code below is equivalent to the following chunk, but _much_
     // faster (accounts for ~10% of total running time)
     //
-    //  QRegExp attributeExpr("[^A-Za-z0-9]+");
+    //  QRegularExpression attributeExpr("[^A-Za-z0-9]+");
     //  QString result = title.toLower();
     //  result.replace(attributeExpr, " ");
     //  result = result.simplified();

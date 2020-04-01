@@ -36,7 +36,7 @@
 #include "tree.h"
 
 #include <QtCore/qdebug.h>
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -392,7 +392,7 @@ QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
 
 QString CppCodeMarker::functionBeginRegExp(const QString &funcName)
 {
-    return QLatin1Char('^') + QRegExp::escape(funcName) + QLatin1Char('$');
+    return QLatin1Char('^') + QRegularExpression::escape(funcName) + QLatin1Char('$');
 }
 
 QString CppCodeMarker::functionEndRegExp(const QString & /* funcName */)
@@ -482,9 +482,9 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
     int start = 0;
     int finish = 0;
     QChar ch;
-    QRegExp classRegExp("Qt?(?:[A-Z3]+[a-z][A-Za-z]*|t)");
-    QRegExp functionRegExp("q([A-Z][a-z]+)+");
-    QRegExp findFunctionRegExp(QStringLiteral("^\\s*\\("));
+    QRegularExpression classRegExp(QRegularExpression::anchoredPattern("Qt?(?:[A-Z3]+[a-z][A-Za-z]*|t)"));
+    QRegularExpression functionRegExp(QRegularExpression::anchoredPattern("q([A-Z][a-z]+)+"));
+    QRegularExpression findFunctionRegExp(QStringLiteral("^\\s*\\("));
 
     readChar();
 
@@ -500,9 +500,9 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                 readChar();
             } while (ch.isLetterOrNumber() || ch == '_');
 
-            if (classRegExp.exactMatch(ident)) {
+            if (classRegExp.match(ident).hasMatch()) {
                 tag = QStringLiteral("type");
-            } else if (functionRegExp.exactMatch(ident)) {
+            } else if (functionRegExp.match(ident).hasMatch()) {
                 tag = QStringLiteral("func");
                 target = true;
             } else if (types.contains(ident)) {

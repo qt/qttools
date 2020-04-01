@@ -1296,7 +1296,7 @@
     \target substring
 
     If the substring argument is surrounded by slashes it is
-    interpreted as a \l {QRegExp}{regular expression}.
+    interpreted as a \l {QRegularExpression}{regular expression}.
 
            \code
            / *!
@@ -2069,9 +2069,9 @@
 
     \code
     / *!
-        \class QRegExp
+        \class QRegularExpression
         \reentrant
-        \brief The QRegExp class provides pattern
+        \brief The QRegularExpression class provides pattern
                matching using regular expressions.
         \ingroup tools
         \ingroup misc
@@ -2091,7 +2091,7 @@
     \code
     / *!
         When a string is surrounded by slashes, it is
-        interpreted as a \l {QRegExp}{regular expression}.
+        interpreted as a \l {QRegularExpression}{regular expression}.
     * /
     \endcode
 

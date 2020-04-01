@@ -33,7 +33,7 @@
 
 #include <QtCore/qfile.h>
 #include <QtCore/qhash.h>
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qtextcodec.h>
 
@@ -111,12 +111,12 @@ static int kwordHashTable[KwordHashTableSize];
 
 static QHash<QByteArray, bool> *ignoredTokensAndDirectives = nullptr;
 
-static QRegExp *comment = nullptr;
-static QRegExp *versionX = nullptr;
-static QRegExp *definedX = nullptr;
+static QRegularExpression *comment = nullptr;
+static QRegularExpression *versionX = nullptr;
+static QRegularExpression *definedX = nullptr;
 
-static QRegExp *defines = nullptr;
-static QRegExp *falsehoods = nullptr;
+static QRegularExpression *defines = nullptr;
+static QRegularExpression *falsehoods = nullptr;
 
 #ifndef QT_NO_TEXTCODEC
 static QTextCodec *sourceCodec = nullptr;
@@ -514,18 +514,17 @@ void Tokenizer::initialize()
     sourceCodec = QTextCodec::codecForName(sourceEncoding.toLocal8Bit());
 #endif
 
-    comment = new QRegExp("/(?:\\*.*\\*/|/.*\n|/[^\n]*$)");
-    comment->setMinimal(true);
-    versionX = new QRegExp("$cannot possibly match^");
+    comment = new QRegularExpression("/(?:\\*.*\\*/|/.*\n|/[^\n]*$)", QRegularExpression::InvertedGreedinessOption);
+    versionX = new QRegularExpression("$cannot possibly match^");
     if (!versionSym.isEmpty())
-        versionX->setPattern("[ \t]*(?:" + QRegExp::escape(versionSym)
-                             + ")[ \t]+\"([^\"]*)\"[ \t]*");
-    definedX = new QRegExp("defined ?\\(?([A-Z_0-9a-z]+) ?\\)?");
+        versionX->setPattern("^[ \t]*(?:" + QRegularExpression::escape(versionSym)
+                             + ")[ \t]+\"([^\"]*)\"[ \t]*$");
+    definedX = new QRegularExpression("^defined ?\\(?([A-Z_0-9a-z]+) ?\\)?$");
 
     QStringList d = config.getStringList(CONFIG_DEFINES);
     d += "qdoc";
-    defines = new QRegExp(d.join('|'));
-    falsehoods = new QRegExp(config.getStringList(CONFIG_FALSEHOODS).join('|'));
+    defines = new QRegularExpression(QRegularExpression::anchoredPattern(d.join('|')));
+    falsehoods = new QRegularExpression(QRegularExpression::anchoredPattern(config.getStringList(CONFIG_FALSEHOODS).join('|')));
 
     /*
       The keyword hash table is always cleared before any words are inserted.
@@ -662,9 +661,9 @@ int Tokenizer::getTokenAfterPreprocessor()
             if (directive == QString("if"))
                 pushSkipping(!isTrue(condition));
             else if (directive == QString("ifdef"))
-                pushSkipping(!defines->exactMatch(condition));
+                pushSkipping(!defines->match(condition).hasMatch());
             else if (directive == QString("ifndef"))
-                pushSkipping(defines->exactMatch(condition));
+                pushSkipping(defines->match(condition).hasMatch());
         } else if (directive[0] == QChar('e')) {
             if (directive == QString("elif")) {
                 bool old = popSkipping();
@@ -678,8 +677,9 @@ int Tokenizer::getTokenAfterPreprocessor()
                 popSkipping();
             }
         } else if (directive == QString("define")) {
-            if (versionX->exactMatch(condition))
-                yyVersion = versionX->cap(1);
+            auto match = versionX->match(condition);
+            if (match.hasMatch())
+                yyVersion = match.captured(1);
         }
     }
 
@@ -785,10 +785,11 @@ bool Tokenizer::isTrue(const QString &condition)
     if (t[0] == QChar('(') && t.endsWith(QChar(')')))
         return isTrue(t.mid(1, t.length() - 2));
 
-    if (definedX->exactMatch(t))
-        return defines->exactMatch(definedX->cap(1));
+    auto match = definedX->match(t);
+    if (match.hasMatch())
+        return defines->match(match.captured(1)).hasMatch();
     else
-        return !falsehoods->exactMatch(t);
+        return !falsehoods->match(t).hasMatch();
 }
 
 QString Tokenizer::lexeme() const

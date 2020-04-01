@@ -34,6 +34,7 @@
 #include <qurl.h>
 #include <qmap.h>
 #include <QtCore/qversionnumber.h>
+#include <QtCore/qregularexpression.h>
 
 #include "codemarker.h"
 #include "config.h"
@@ -924,10 +925,11 @@ void DocBookGenerator::generateClassHierarchy(const Node *relative, NodeMap &cla
 void DocBookGenerator::generateLink(const Atom *atom)
 {
     // From HtmlGenerator::generateLink.
-    QRegExp funcLeftParen("\\S(\\()");
-    if (funcLeftParen.indexIn(atom->string()) != -1) {
+    QRegularExpression funcLeftParen("\\S(\\()");
+    auto match = funcLeftParen.match(atom->string());
+    if (match.hasMatch()) {
         // hack for C++: move () outside of link
-        int k = funcLeftParen.pos(1);
+        int k = match.capturedStart(1);
         writer->writeCharacters(atom->string().left(k));
         writer->writeEndElement(); // link
         inLink = false;
@@ -3125,13 +3127,14 @@ void DocBookGenerator::generateParameter(const Parameter &parameter, const Node 
     if (generateExtra || pname.isEmpty()) {
         // Look for the _ character in the member name followed by a number (or n):
         // this is intended to be rendered as a subscript.
-        QRegExp sub("([a-z]+)_([0-9]+|n)");
+        QRegularExpression sub("([a-z]+)_([0-9]+|n)");
 
         writer->writeStartElement(dbNamespace, "emphasis");
-        if (sub.indexIn(paramName) != -1) {
-            writer->writeCharacters(sub.cap(0));
+        auto match = sub.match(paramName);
+        if (match.hasMatch()) {
+            writer->writeCharacters(match.captured(0));
             writer->writeStartElement(dbNamespace, "sub");
-            writer->writeCharacters(sub.cap(1));
+            writer->writeCharacters(match.captured(1));
             writer->writeEndElement(); // sub
         } else {
             writer->writeCharacters(paramName);

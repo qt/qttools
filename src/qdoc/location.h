@@ -38,7 +38,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QRegExp;
+class QRegularExpression;
 
 class Location
 {
@@ -114,7 +114,7 @@ private:
     static int warningLimit;
     static QString programName;
     static QString project;
-    static QRegExp *spuriousRegExp;
+    static QRegularExpression *spuriousRegExp;
 };
 Q_DECLARE_TYPEINFO(Location::StackEntry, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(Location, Q_COMPLEX_TYPE); // stkTop = &stkBottom

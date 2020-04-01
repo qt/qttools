@@ -36,6 +36,7 @@
 #include "generator.h"
 #include "node.h"
 #include "qdocdatabase.h"
+#include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -124,8 +125,8 @@ CodeParser *CodeParser::parserForHeaderFile(const QString &filePath)
     for (const auto &parser : qAsConst(parsers)) {
         const QStringList headerPatterns = parser->headerFileNameFilter();
         for (const auto &pattern : headerPatterns) {
-            QRegExp re(pattern, Qt::CaseInsensitive, QRegExp::Wildcard);
-            if (re.exactMatch(fileName))
+            auto re = QRegularExpression::fromWildcard(pattern, Qt::CaseInsensitive);
+            if (re.match(fileName).hasMatch())
                 return parser;
         }
     }
@@ -139,8 +140,8 @@ CodeParser *CodeParser::parserForSourceFile(const QString &filePath)
     for (const auto &parser : parsers) {
         const QStringList sourcePatterns = parser->sourceFileNameFilter();
         for (const QString &pattern : sourcePatterns) {
-            QRegExp re(pattern, Qt::CaseInsensitive, QRegExp::Wildcard);
-            if (re.exactMatch(fileName))
+            auto re = QRegularExpression::fromWildcard(pattern, Qt::CaseInsensitive);
+            if (re.match(fileName).hasMatch())
                 return parser;
         }
     }
@@ -172,11 +173,11 @@ const QSet<QString> &CodeParser::commonMetaCommands()
  */
 void CodeParser::extractPageLinkAndDesc(const QString &arg, QString *link, QString *desc)
 {
-    QRegExp bracedRegExp(QLatin1String("\\{([^{}]*)\\}(?:\\{([^{}]*)\\})?"));
-
-    if (bracedRegExp.exactMatch(arg)) {
-        *link = bracedRegExp.cap(1);
-        *desc = bracedRegExp.cap(2);
+    QRegularExpression bracedRegExp(QRegularExpression::anchoredPattern(QLatin1String("\\{([^{}]*)\\}(?:\\{([^{}]*)\\})?")));
+    auto match = bracedRegExp.match(arg);
+    if (match.hasMatch()) {
+        *link = match.captured(1);
+        *desc = match.captured(2);
         if (desc->isEmpty())
             *desc = *link;
     } else {

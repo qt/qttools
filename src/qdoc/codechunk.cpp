@@ -32,7 +32,6 @@
 
 #include "codechunk.h"
 
-#include <QtCore/qregexp.h>
 #include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE

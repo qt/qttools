@@ -38,6 +38,7 @@
 #include <QtCore/qtemporaryfile.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qvariant.h>
+#include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -623,14 +624,14 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
   Calls getRegExpList() with the control variable \a var and
   iterates through the resulting list of regular expressions,
   concatening them with some extras characters to form a single
-  QRegExp, which is returned/
+  QRegularExpression, which is returned/
 
   \sa getRegExpList()
  */
-QRegExp Config::getRegExp(const QString &var) const
+QRegularExpression Config::getRegExp(const QString &var) const
 {
     QString pattern;
-    const QVector<QRegExp> subRegExps = getRegExpList(var);
+    const auto subRegExps = getRegExpList(var);
 
     for (const auto &regExp : subRegExps) {
         if (!regExp.isValid())
@@ -641,7 +642,7 @@ QRegExp Config::getRegExp(const QString &var) const
     }
     if (pattern.isEmpty())
         pattern = QLatin1String("$x"); // cannot match
-    return QRegExp(pattern);
+    return QRegularExpression(pattern);
 }
 
 /*!
@@ -649,12 +650,12 @@ QRegExp Config::getRegExp(const QString &var) const
   map, converts the string list to a list of regular expressions,
   and returns it.
  */
-QVector<QRegExp> Config::getRegExpList(const QString &var) const
+QVector<QRegularExpression> Config::getRegExpList(const QString &var) const
 {
     const QStringList strs = getStringList(var);
-    QVector<QRegExp> regExps;
+    QVector<QRegularExpression> regExps;
     for (const auto &str : strs)
-        regExps += QRegExp(str);
+        regExps += QRegularExpression(str);
     return regExps;
 }
 
@@ -1021,7 +1022,7 @@ void Config::load(Location location, const QString &fileName)
     QString path = fileInfo.canonicalPath();
     pushWorkingDir(path);
     QDir::setCurrent(path);
-    QRegExp keySyntax(QLatin1String("\\w+(?:\\.\\w+)*"));
+    QRegularExpression keySyntax(QRegularExpression::anchoredPattern(QLatin1String("\\w+(?:\\.\\w+)*")));
 
 #define SKIP_CHAR()                                                                                \
     do {                                                                                           \
@@ -1234,7 +1235,7 @@ void Config::load(Location location, const QString &fileName)
                     }
                 }
                 for (const auto &key : keys) {
-                    if (!keySyntax.exactMatch(key))
+                    if (!keySyntax.match(key).hasMatch())
                         keyLoc.fatal(tr("Invalid key '%1'").arg(key));
 
                     ConfigVar configVar(key, rhsValues, QDir::currentPath(), keyLoc, expandVars);
@@ -1258,8 +1259,8 @@ bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &exclud
 {
     for (const QString &entry : excludedFiles) {
         if (entry.contains(QLatin1Char('*')) || entry.contains(QLatin1Char('?'))) {
-            QRegExp re(entry, Qt::CaseSensitive, QRegExp::Wildcard);
-            if (re.exactMatch(fileName))
+            QRegularExpression re(QRegularExpression::wildcardToRegularExpression(entry));
+            if (re.match(fileName).hasMatch())
                 return true;
         }
     }

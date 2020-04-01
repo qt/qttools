@@ -271,7 +271,7 @@
     enclose documentation that only will be included if the
     preprocessor symbol is defined.
 
-    The values of the variable are regular expressions (see QRegExp
+    The values of the variable are regular expressions (see QRegularExpression
     for details). By default, no symbol is defined, meaning that code
     protected with #ifdef...#endif will be ignored.
 
@@ -575,7 +575,7 @@
     The \c falsehoods variable defines the truth value of specified
     preprocessor symbols as false.
 
-    The values of the variable are regular expressions (see QRegExp
+    The values of the variable are regular expressions (see QRegularExpression
     for details). If this variable is not set for a preprocessor
     symbol, QDoc assumes its truth value is true. The exception is
     '0', which is always false.

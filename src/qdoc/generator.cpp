@@ -45,6 +45,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qregularexpression.h>
 
 #ifndef QT_BOOTSTRAPPED
 #    include "QtCore/qurl.h"
@@ -79,7 +80,7 @@ bool Generator::qdocSingleExec_ = false;
 bool Generator::useOutputSubdirs_ = true;
 QmlTypeNode *Generator::qmlTypeContext_ = nullptr;
 
-static QRegExp tag("</?@[^>]*>");
+static QRegularExpression tag("</?@[^>]*>");
 static QLatin1String amp("&amp;");
 static QLatin1String gt("&gt;");
 static QLatin1String lt("&lt;");
@@ -316,7 +317,7 @@ void Generator::endSubPage()
 
 /*
   the code below is effectively equivalent to:
-  input.replace(QRegExp("[^A-Za-z0-9]+"), " ");
+  input.replace(QRegularExpression("[^A-Za-z0-9]+"), " ");
   input = input.trimmed();
   input.replace(QLatin1Char(' '), QLatin1Char('-'));
   input = input.toLower();

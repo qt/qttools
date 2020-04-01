@@ -38,7 +38,6 @@
 #include "xmlgenerator.h"
 
 #include <QtCore/qhash.h>
-#include <QtCore/qregexp.h>
 #include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE

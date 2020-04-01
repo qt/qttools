@@ -32,6 +32,8 @@
 
 #include "qmlcodemarker.h"
 
+#include <QtCore/qregularexpression.h>
+
 #include "atom.h"
 #include "node.h"
 #include "qmlmarkupvisitor.h"
@@ -146,7 +148,7 @@ QString QmlCodeMarker::markedUpIncludes(const QStringList &includes)
 
 QString QmlCodeMarker::functionBeginRegExp(const QString &funcName)
 {
-    return QLatin1Char('^') + QRegExp::escape("function " + funcName) + QLatin1Char('$');
+    return QLatin1Char('^') + QRegularExpression::escape("function " + funcName) + QLatin1Char('$');
 }
 
 QString QmlCodeMarker::functionEndRegExp(const QString & /* funcName */)

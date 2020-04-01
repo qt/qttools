@@ -35,6 +35,7 @@
 #include "tree.h"
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -1440,7 +1441,7 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
     }
     if (cnmm.isEmpty())
         return;
-    QRegExp singleDigit("\\b([0-9])\\b");
+    QRegularExpression singleDigit("\\b([0-9])\\b");
     const QStringList keys = cnmm.uniqueKeys();
     for (const auto &key : keys) {
         const QList<CollectionNode *> values = cnmm.values(key);

@@ -34,7 +34,7 @@
 
 #include "atom.h"
 
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -44,13 +44,14 @@ OpenedList::OpenedList(ListStyle style) : sty(style), ini(1), nex(0) {}
 
 OpenedList::OpenedList(const Location &location, const QString &hint) : sty(Bullet), ini(1)
 {
-    QRegExp hintSyntax("(\\W*)([0-9]+|[A-Z]+|[a-z]+)(\\W*)");
+    QRegularExpression hintSyntax("^(\\W*)([0-9]+|[A-Z]+|[a-z]+)(\\W*)$");
 
-    if (hintSyntax.exactMatch(hint)) {
+    auto match = hintSyntax.match(hint);
+    if (match.hasMatch()) {
         bool ok;
         int asNumeric = hint.toInt(&ok);
-        int asRoman = fromRoman(hintSyntax.cap(2));
-        int asAlpha = fromAlpha(hintSyntax.cap(2));
+        int asRoman = fromRoman(match.captured(2));
+        int asAlpha = fromAlpha(match.captured(2));
 
         if (ok) {
             sty = Numeric;
@@ -62,8 +63,8 @@ OpenedList::OpenedList(const Location &location, const QString &hint) : sty(Bull
             sty = (hint == hint.toLower()) ? LowerAlpha : UpperAlpha;
             ini = asAlpha;
         }
-        pref = hintSyntax.cap(1);
-        suff = hintSyntax.cap(3);
+        pref = match.captured(1);
+        suff = match.captured(3);
     } else if (!hint.isEmpty()) {
         location.warning(tr("Unrecognized list style '%1'").arg(hint));
     }

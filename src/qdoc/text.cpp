@@ -32,7 +32,7 @@
 
 #include "text.h"
 
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 
 #include <cstdio>
 
@@ -243,7 +243,7 @@ void Text::dump() const
         str.replace("\\", "\\\\");
         str.replace("\"", "\\\"");
         str.replace("\n", "\\n");
-        str.replace(QRegExp("[^\x20-\x7e]"), "?");
+        str.replace(QRegularExpression("[^\x20-\x7e]"), "?");
         if (!str.isEmpty())
             str = " \"" + str + QLatin1Char('"');
         fprintf(stderr, "    %-15s%s\n", atom->typeString().toLatin1().data(),

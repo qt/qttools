@@ -34,7 +34,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QRegExp Parameters::varComment_("/\\*\\s*([a-zA-Z_0-9]+)\\s*\\*/");
+QRegularExpression Parameters::varComment_("^/\\*\\s*([a-zA-Z_0-9]+)\\s*\\*/$");
 
 /*!
   \class Parameter
@@ -307,8 +307,9 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
               inside a C++-style comment, because the explanation
               does not fit on one line.
             */
-            if (varComment_.exactMatch(previousLexeme()))
-                name = varComment_.cap(1);
+            auto match = varComment_.match(previousLexeme());
+            if (match.hasMatch())
+                name = match.captured(1);
         } else if (match(Tok_LeftParen)) {
             name = "(";
             while (tok_ != Tok_RightParen && tok_ != Tok_Eoi) {

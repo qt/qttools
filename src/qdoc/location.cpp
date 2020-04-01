@@ -32,7 +32,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/QTime>
 
 #include <climits>
@@ -46,7 +46,7 @@ int Location::warningCount = 0;
 int Location::warningLimit = -1;
 QString Location::programName;
 QString Location::project;
-QRegExp *Location::spuriousRegExp = nullptr;
+QRegularExpression *Location::spuriousRegExp = nullptr;
 
 /*!
   \class Location
@@ -329,9 +329,9 @@ void Location::initialize()
         || config.getBool(CONFIG_WARNINGLIMIT + Config::dot + "enabled"))
         warningLimit = config.getInt(CONFIG_WARNINGLIMIT);
 
-    QRegExp regExp = config.getRegExp(CONFIG_SPURIOUS);
+    QRegularExpression regExp = config.getRegExp(CONFIG_SPURIOUS);
     if (regExp.isValid()) {
-        spuriousRegExp = new QRegExp(regExp);
+        spuriousRegExp = new QRegularExpression(regExp);
     } else {
         config.lastLocation().warning(tr("Invalid regular expression '%1'").arg(regExp.pattern()));
     }
@@ -376,8 +376,11 @@ void Location::internalError(const QString &hint)
  */
 void Location::emitMessage(MessageType type, const QString &message, const QString &details) const
 {
-    if (type == Warning && spuriousRegExp != nullptr && spuriousRegExp->exactMatch(message))
-        return;
+    if (type == Warning && spuriousRegExp != nullptr) {
+        auto match = spuriousRegExp->match(message, 0, QRegularExpression::NormalMatch, QRegularExpression::AnchorAtOffsetMatchOption);
+        if (match.hasMatch() && match.capturedLength() == message.length())
+            return;
+    }
 
     QString result = message;
     if (!details.isEmpty())

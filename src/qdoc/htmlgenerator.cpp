@@ -49,6 +49,7 @@
 #include <QtCore/qtextcodec.h>
 #include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
+#include <QtCore/qregularexpression.h>
 
 #include <cctype>
 
@@ -61,11 +62,6 @@ QString HtmlGenerator::divNavTop;
 
 static bool showBrokenLinks = false;
 
-static QRegExp linkTag("(<@link node=\"([^\"]+)\">).*(</@link>)");
-static QRegExp funcTag("(<@func target=\"([^\"]*)\">)(.*)(</@func>)");
-static QRegExp typeTag("(<@(type|headerfile|func)(?: +[^>]*)?>)(.*)(</@\\2>)");
-static QRegExp spanTag("</@(?:comment|preprocessor|string|char|number|op|type|name|keyword)>");
-static QRegExp unknownTag("</?@[^>]*>");
 
 static void addLink(const QString &linkTarget, const QStringRef &nestedStuff, QString *res)
 {
@@ -466,9 +462,10 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << formattingLeftMap()[atom->string()];
         if (atom->string() == ATOM_FORMATTING_PARAMETER) {
             if (atom->next() != nullptr && atom->next()->type() == Atom::String) {
-                QRegExp subscriptRegExp("([a-z]+)_([0-9n])");
-                if (subscriptRegExp.exactMatch(atom->next()->string())) {
-                    out() << subscriptRegExp.cap(1) << "<sub>" << subscriptRegExp.cap(2)
+                QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
+                auto match = subscriptRegExp.match(atom->next()->string());
+                if (match.hasMatch()) {
+                    out() << match.captured(1) << "<sub>" << match.captured(2)
                           << "</sub>";
                     skipAhead = 1;
                 }
@@ -1720,10 +1717,11 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
     QVersionNumber projectVersion = QVersionNumber::fromString(qdb_->version());
     if (!projectVersion.isNull()) {
         QVersionNumber titleVersion;
-        QRegExp re("\\d+\\.\\d+");
+        QRegularExpression re(QLatin1String("\\d+\\.\\d+"));
         const QString &versionedTitle = titleSuffix.isEmpty() ? title : titleSuffix;
-        if (versionedTitle.contains(re))
-            titleVersion = QVersionNumber::fromString(re.cap());
+        auto match = re.match(versionedTitle);
+        if (match.hasMatch())
+            titleVersion = QVersionNumber::fromString(match.captured());
         if (titleVersion.isNull() || !titleVersion.isPrefixOf(projectVersion))
             out() << QLatin1Char(' ') << projectVersion.toString();
     }
@@ -2757,15 +2755,16 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
                                     bool summary)
 {
     QString marked = marker->markedUpQmlItem(node, summary);
-    QRegExp templateTag("(<[^@>]*>)");
-    if (marked.indexOf(templateTag) != -1) {
-        QString contents = protectEnc(marked.mid(templateTag.pos(1), templateTag.cap(1).length()));
-        marked.replace(templateTag.pos(1), templateTag.cap(1).length(), contents);
+    QRegularExpression templateTag("(<[^@>]*>)");
+    auto match = templateTag.match(marked);
+    if (match.hasMatch()) {
+        QString contents = protectEnc(match.captured(1));
+        marked.replace(match.capturedStart(1), match.capturedLength(1), contents);
     }
 
     // Look for the _ character in the member name followed by a number (or n):
     // this is intended to be rendered as a subscript.
-    marked.replace(QRegExp("<@param>([a-z]+)_([0-9]+|n)</@param>"), "<i>\\1<sub>\\2</sub></i>");
+    marked.replace(QRegularExpression("<@param>([a-z]+)_([0-9]+|n)</@param>"), "<i>\\1<sub>\\2</sub></i>");
 
     // Replace some markup by HTML tags. Do both the opening and the closing tag
     // in one go (instead of <@param> and </@param> separately, for instance).
@@ -3001,12 +3000,14 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
 
     if (prefix)
         marked.prepend(*prefix);
-    QRegExp templateTag("(<[^@>]*>)");
-    if (marked.indexOf(templateTag) != -1) {
-        QString contents = protectEnc(marked.mid(templateTag.pos(1), templateTag.cap(1).length()));
-        marked.replace(templateTag.pos(1), templateTag.cap(1).length(), contents);
+    QRegularExpression templateTag("(<[^@>]*>)");
+    auto match = templateTag.match(marked);
+    if (match.hasMatch()) {
+        QString contents = protectEnc(match.captured(1));
+        marked.replace(match.capturedStart(1), match.capturedLength(1), contents);
     }
-    marked.replace(QRegExp("<@param>([a-z]+)_([1-9n])</@param>"), "<i>\\1<sub>\\2</sub></i>");
+
+    marked.replace(QRegularExpression("<@param>([a-z]+)_([1-9n])</@param>"), "<i>\\1<sub>\\2</sub></i>");
     marked.replace("<@param>", "<i>");
     marked.replace("</@param>", "</i>");
 
@@ -3016,8 +3017,7 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
     }
 
     if (style == Section::AllMembers) {
-        QRegExp extraRegExp("<@extra>.*</@extra>");
-        extraRegExp.setMinimal(true);
+        QRegularExpression extraRegExp("<@extra>.*</@extra>", QRegularExpression::InvertedGreedinessOption);
         marked.remove(extraRegExp);
     } else {
         marked.replace("<@extra>", "<code>");
@@ -3181,11 +3181,10 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
 
 void HtmlGenerator::generateLink(const Atom *atom, CodeMarker *marker)
 {
-    static QRegExp camelCase("[A-Z][A-Z][a-z]|[a-z][A-Z0-9]|_");
-
-    if (funcLeftParen.indexIn(atom->string()) != -1 && marker->recognizeLanguage("Cpp")) {
+    auto match = funcLeftParen.match(atom->string());
+    if (match.hasMatch() && marker->recognizeLanguage("Cpp")) {
         // hack for C++: move () outside of link
-        int k = funcLeftParen.pos(1);
+        int k = match.capturedStart(1);
         out() << protectEnc(atom->string().left(k));
         if (link_.isEmpty()) {
             if (showBrokenLinks)
@@ -3823,11 +3822,12 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         // Add words from module name as tags
         // QtQuickControls -> qt,quick,controls
         // QtOpenGL -> qt,opengl
-        QRegExp re("([A-Z]+[a-z0-9]*(3D|GL)?)");
+        QRegularExpression re("([A-Z]+[a-z0-9]*(3D|GL)?)");
         int pos = 0;
-        while ((pos = re.indexIn(project, pos)) != -1) {
-            tags << re.cap(1).toLower();
-            pos += re.matchedLength();
+        QRegularExpressionMatch match;
+        while ((match = re.match(project, pos)).hasMatch()) {
+            tags << match.captured(1).toLower();
+            pos = match.capturedEnd();
         }
 
         // Include tags added via \meta {tag} {tag1[,tag2,...]}

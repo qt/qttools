@@ -160,8 +160,8 @@ public:
     QSet<QString> getStringSet(const QString &var) const;
     QStringList getStringList(const QString &var) const;
     QStringList getCanonicalPathList(const QString &var, bool validate = false) const;
-    QRegExp getRegExp(const QString &var) const;
-    QVector<QRegExp> getRegExpList(const QString &var) const;
+    QRegularExpression getRegExp(const QString &var) const;
+    QVector<QRegularExpression> getRegExpList(const QString &var) const;
     QSet<QString> subVars(const QString &var) const;
     void subVarsAndValues(const QString &var, ConfigVarMap &map) const;
     QStringList getAllFiles(const QString &filesVar, const QString &dirsVar,

@@ -30,7 +30,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qfileinfo.h>
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -54,7 +54,7 @@ static void replaceMultipleNewlines(QString &s)
     s.resize(++j);
 }
 
-// This is equivalent to  line.split( QRegExp("\n(?!\n|$)") ) but much faster
+// This is equivalent to  line.split( QRegularExpression("\n(?!\n|$)") ) but much faster
 QStringList Quoter::splitLines(const QString &line)
 {
     QStringList result;
@@ -303,7 +303,7 @@ bool Quoter::match(const Location &docLocation, const QString &pattern0, const Q
     QString pattern = pattern0;
     if (pattern.startsWith(QLatin1Char('/')) && pattern.endsWith(QLatin1Char('/'))
         && pattern.length() > 2) {
-        QRegExp rx(pattern.mid(1, pattern.length() - 2));
+        QRegularExpression rx(pattern.mid(1, pattern.length() - 2));
         if (!silent && !rx.isValid()) {
             docLocation.warning(tr("Invalid regular expression '%1'").arg(rx.pattern()));
             silent = true;

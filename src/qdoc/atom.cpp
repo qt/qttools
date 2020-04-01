@@ -31,7 +31,7 @@
 #include "location.h"
 #include "qdocdatabase.h"
 
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 
 #include <cstdio>
 
@@ -361,7 +361,7 @@ void Atom::dump() const
     str.replace(QLatin1String("\\"), QLatin1String("\\\\"));
     str.replace(QLatin1String("\""), QLatin1String("\\\""));
     str.replace(QLatin1String("\n"), QLatin1String("\\n"));
-    str.replace(QRegExp(QLatin1String("[^\x20-\x7e]")), QLatin1String("?"));
+    str.replace(QRegularExpression(QLatin1String("[^\x20-\x7e]")), QLatin1String("?"));
     if (!str.isEmpty())
         str = QLatin1String(" \"") + str + QLatin1Char('"');
     fprintf(stderr, "    %-15s%s\n", typeString().toLatin1().data(), str.toLatin1().data());

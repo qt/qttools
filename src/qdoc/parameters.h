@@ -29,7 +29,7 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 #include <QtCore/qset.h>
 #include <QtCore/qvector.h>
 
@@ -125,7 +125,7 @@ private:
     bool parse(const QString &signature);
 
 private:
-    static QRegExp varComment_;
+    static QRegularExpression varComment_;
 
     bool valid_;
     bool privateSignal_;
