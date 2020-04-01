@@ -32,7 +32,6 @@
 #include <iostream>
 #include <QProcess>
 #include <QDir>
-#include <QRegExp>
 #include <QSet>
 #include <QStack>
 #include <QDirIterator>
