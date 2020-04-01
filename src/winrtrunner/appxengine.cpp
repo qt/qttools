@@ -47,6 +47,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QRegularExpression>
 
 #include <ShlObj.h>
 #include <Shlwapi.h>
@@ -644,7 +645,8 @@ bool AppxEngine::createPackage(const QString &packageFileName)
             return false;
         }
 
-        QRegExp pattern(QStringLiteral("^\"([^\"]*)\"\\s*\"([^\"]*)\"$"));
+        QRegularExpression pattern(QStringLiteral("^\"([^\"]*)\"\\s*\"([^\"]*)\"$"));
+        QRegularExpressionMatch match;
         bool inFileSection = false;
         while (!mappingFile.atEnd()) {
             const QString line = QString::fromUtf8(mappingFile.readLine()).trimmed();
@@ -652,13 +654,13 @@ bool AppxEngine::createPackage(const QString &packageFileName)
                 inFileSection = line == QStringLiteral("[Files]");
                 continue;
             }
-            if (pattern.cap(2).compare(QStringLiteral("AppxManifest.xml"), Qt::CaseInsensitive) == 0)
+            if (match.captured(2).compare(QStringLiteral("AppxManifest.xml"), Qt::CaseInsensitive) == 0)
                 continue;
-            if (inFileSection && pattern.indexIn(line) >= 0 && pattern.captureCount() == 2) {
-                QString inputFile = pattern.cap(1);
+            if (inFileSection && (match = pattern.match(line)).hasMatch()) {
+                QString inputFile = match.captured(1);
                 if (!QFile::exists(inputFile))
                     inputFile = base.absoluteFilePath(inputFile);
-                files.insert(QDir::toNativeSeparators(inputFile), QDir::toNativeSeparators(pattern.cap(2)));
+                files.insert(QDir::toNativeSeparators(inputFile), QDir::toNativeSeparators(match.captured(2)));
             }
         }
     } else {

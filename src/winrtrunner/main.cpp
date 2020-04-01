@@ -40,7 +40,7 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QStringList>
 #include <QtCore/QMap>
 #include <QtCore/QLoggingCategory>
@@ -60,10 +60,10 @@ int main(int argc, char *argv[])
     // confuse users.
     const QByteArray loggingRules = qgetenv("QT_LOGGING_RULES");
     const QList<QByteArray> rules = loggingRules.split(';');
-    QRegExp runnerExp(QLatin1String("^qt\\.winrtrunner.*\\s*=\\s*true\\s*$"));
+    QRegularExpression runnerExp(QLatin1String("^qt\\.winrtrunner.*\\s*=\\s*true\\s*$"));
     bool runnerRuleFound = false;
     for (const QByteArray &rule : rules) {
-        if (runnerExp.indexIn(QLatin1String(rule)) != -1) {
+        if (runnerExp.match(QLatin1String(rule)).hasMatch()) {
             runnerRuleFound = true;
             break;
         }
