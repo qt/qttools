@@ -135,8 +135,8 @@ void AddConnectionCommand::redo()
     emit edit()->aboutToAddConnection(edit()->m_con_list.size());
     edit()->m_con_list.append(m_con);
     m_con->inserted();
-    edit()->setSelected(m_con, true);
     emit edit()->connectionAdded(m_con);
+    edit()->setSelected(m_con, true);
 }
 
 void AddConnectionCommand::undo()
@@ -223,10 +223,10 @@ void DeleteConnectionsCommand::undo()
         emit edit()->aboutToAddConnection(edit()->m_con_list.size());
         edit()->m_con_list.append(con);
         edit()->selectNone();
-        edit()->setSelected(con, true);
         con->update();
         con->inserted();
         emit edit()->connectionAdded(con);
+        edit()->setSelected(con, true);
     }
 }
 

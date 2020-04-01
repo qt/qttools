@@ -772,9 +772,10 @@ void SignalSlotEditorWindow::updateDialogSelection(Connection *con)
         return;
 
     QModelIndex index = m_proxy_model->mapFromSource(m_model->connectionToIndex(con));
-    if (index == m_view->currentIndex())
+    if (!index.isValid() || index == m_view->currentIndex())
         return;
     m_handling_selection_change = true;
+    m_view->scrollTo(index, QTreeView::EnsureVisible);
     m_view->setCurrentIndex(index);
     m_handling_selection_change = false;
 
