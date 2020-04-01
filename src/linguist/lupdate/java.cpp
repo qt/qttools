@@ -32,7 +32,6 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
-#include <QtCore/QRegExp>
 #include <QtCore/QStack>
 #include <QtCore/QStack>
 #include <QtCore/QString>

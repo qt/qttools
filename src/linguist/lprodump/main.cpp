@@ -38,7 +38,7 @@
 #include <QtCore/QDirIterator>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -235,9 +235,9 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
 
     foreach (const QString &ex, excludes) {
         // TODO: take advantage of the file list being sorted
-        QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
+        QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
         for (QStringList::Iterator it = sourceFiles.begin(); it != sourceFiles.end(); ) {
-            if (rx.exactMatch(*it))
+            if (rx.match(*it).hasMatch())
                 it = sourceFiles.erase(it);
             else
                 ++it;
@@ -261,9 +261,9 @@ QStringList getExcludes(const ProFileEvaluator &visitor, const QString &projectD
 static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subProjects)
 {
     foreach (const QString &ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
-        QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
+        QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
         for (QStringList::Iterator it = subProjects->begin(); it != subProjects->end(); ) {
-            if (rx.exactMatch(*it))
+            if (rx.match(*it).hasMatch())
                 it = subProjects->erase(it);
             else
                 ++it;

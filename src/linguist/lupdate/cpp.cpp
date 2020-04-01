@@ -33,6 +33,7 @@
 #include <QtCore/QStack>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
+#include <QtCore/QRegularExpression>
 
 QT_BEGIN_NAMESPACE
 
@@ -1267,8 +1268,8 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
     QString cleanFile = QDir::cleanPath(file);
 
     foreach (const QString &ex, cd.m_excludes) {
-        QRegExp rx(ex, Qt::CaseSensitive, QRegExp::Wildcard);
-        if (rx.exactMatch(cleanFile))
+        QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
+        if (rx.match(cleanFile).hasMatch())
             return;
     }
 

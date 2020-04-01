@@ -30,7 +30,7 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
@@ -474,11 +474,11 @@ static QString protect(const QString &str)
 }
 
 static void writeExtras(QTextStream &t, const char *indent,
-                        const TranslatorMessage::ExtraData &extras, QRegExp drops)
+                        const TranslatorMessage::ExtraData &extras, QRegularExpression drops)
 {
     QStringList outs;
     for (Translator::ExtraData::ConstIterator it = extras.begin(); it != extras.end(); ++it) {
-        if (!drops.exactMatch(it.key())) {
+        if (!drops.match(it.key()).hasMatch()) {
             outs << (QStringLiteral("<extra-") + it.key() + QLatin1Char('>')
                      + protect(it.value())
                      + QStringLiteral("</extra-") + it.key() + QLatin1Char('>'));
@@ -540,7 +540,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
         t << "</dependencies>\n";
     }
 
-    QRegExp drops(cd.dropTags().join(QLatin1Char('|')));
+    QRegularExpression drops(QRegularExpression::anchoredPattern(cd.dropTags().join(QLatin1Char('|'))));
 
     writeExtras(t, "    ", translator.extras(), drops);
 

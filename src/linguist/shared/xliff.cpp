@@ -31,7 +31,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QMap>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QStack>
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>
@@ -176,10 +176,10 @@ static QString protect(const QString &str, bool makePhs = true)
 
 
 static void writeExtras(QTextStream &ts, int indent,
-                        const TranslatorMessage::ExtraData &extras, QRegExp drops)
+                        const TranslatorMessage::ExtraData &extras, QRegularExpression drops)
 {
     for (Translator::ExtraData::ConstIterator it = extras.begin(); it != extras.end(); ++it) {
-        if (!drops.exactMatch(it.key())) {
+        if (!drops.match(it.key()).hasMatch()) {
             writeIndent(ts, indent);
             ts << "<trolltech:" << it.key() << '>'
                << protect(it.value())
@@ -205,7 +205,7 @@ static void writeLineNumber(QTextStream &ts, const TranslatorMessage &msg, int i
     }
 }
 
-static void writeComment(QTextStream &ts, const TranslatorMessage &msg, const QRegExp &drops, int indent)
+static void writeComment(QTextStream &ts, const TranslatorMessage &msg, const QRegularExpression &drops, int indent)
 {
     if (!msg.comment().isEmpty()) {
         writeIndent(ts, indent);
@@ -232,7 +232,7 @@ static void writeComment(QTextStream &ts, const TranslatorMessage &msg, const QR
     }
 }
 
-static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const QRegExp &drops, int indent)
+static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const QRegularExpression &drops, int indent)
 {
     static int msgid;
     QString msgidstr = !msg.id().isEmpty() ? msg.id() : QString::fromLatin1("_msg%1").arg(++msgid);
@@ -341,7 +341,7 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
     }
 }
 
-static void writeMessage(QTextStream &ts, const TranslatorMessage &msg, const QRegExp &drops, int indent)
+static void writeMessage(QTextStream &ts, const TranslatorMessage &msg, const QRegularExpression &drops, int indent)
 {
     if (msg.isPlural()) {
         writeIndent(ts, indent);
@@ -761,7 +761,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
     QStringList dtgs = cd.dropTags();
     dtgs << QLatin1String("po-(old_)?msgid_plural");
-    QRegExp drops(dtgs.join(QLatin1Char('|')));
+    QRegularExpression drops(QRegularExpression::anchoredPattern(dtgs.join(QLatin1Char('|'))));
 
     QHash<QString, QHash<QString, QList<TranslatorMessage> > > messageOrder;
     QHash<QString, QList<QString> > contextOrder;

@@ -143,7 +143,7 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
             }
             break;
         }
-        if (err ? !QRegExp(tmpl).exactMatch(actual.at(ai)) : (actual.at(ai) != tmpl)) {
+        if (err ? !QRegularExpression(QRegularExpression::anchoredPattern(tmpl)).match(actual.at(ai)).hasMatch() : (actual.at(ai) != tmpl)) {
             if (require <= 0) {
                 accept = 0;
                 continue;
@@ -160,7 +160,7 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
                                          .arg(err ? "output" : "result")
                                          .arg(em + 1).arg(expectedFn)));
                 }
-                if (ai == am || (err ? !QRegExp(tmpl).exactMatch(actual.at(am - 1)) :
+                if (ai == am || (err ? !QRegularExpression(QRegularExpression::anchoredPattern(tmpl)).match(actual.at(am - 1)).hasMatch() :
                                        (actual.at(am - 1) != tmpl))) {
                     if (require <= 0) {
                         accept = 0;

@@ -43,7 +43,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QTextStream>
 
 #include <private/qlocale_p.h>
@@ -722,7 +722,7 @@ QString Translator::guessLanguageCodeFromFileName(const QString &filename)
             break;
         }
     }
-    static QRegExp re(QLatin1String("[\\._]"));
+    static QRegularExpression re(QLatin1String("[\\._]"));
     while (true) {
         QLocale locale(str);
         //qDebug() << "LANGUAGE FROM " << str << "LANG: " << locale.language();

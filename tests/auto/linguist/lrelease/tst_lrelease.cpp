@@ -76,9 +76,9 @@ void tst_lrelease::doCompare(const QStringList &actual, const QString &expectedF
         } else if (i == ei) {
             ei = 0;
             break;
-        } else if (!QRegExp(expected.at(i)).exactMatch(actual.at(i))) {
+        } else if (!QRegularExpression(QRegularExpression::anchoredPattern(expected.at(i))).match(actual.at(i)).hasMatch()) {
             while ((ei - 1) >= i && (gi - 1) >= i &&
-                     (QRegExp(expected.at(ei - 1)).exactMatch(actual.at(gi - 1))))
+                     (QRegularExpression(QRegularExpression::anchoredPattern(expected.at(ei - 1))).match(actual.at(gi - 1))).hasMatch())
                 ei--, gi--;
             break;
         }

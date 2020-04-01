@@ -72,7 +72,7 @@
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QProcess>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStackedWidget>
@@ -1809,7 +1809,7 @@ void MainWindow::revalidate()
 QString MainWindow::friendlyString(const QString& str)
 {
     QString f = str.toLower();
-    f.replace(QRegExp(QString(QLatin1String("[.,:;!?()-]"))), QString(QLatin1String(" ")));
+    f.replace(QRegularExpression(QString(QLatin1String("[.,:;!?()-]"))), QString(QLatin1String(" ")));
     f.remove(QLatin1Char('&'));
     return f.simplified();
 }

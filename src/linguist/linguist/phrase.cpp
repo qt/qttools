@@ -34,7 +34,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
-#include <QRegExp>
 #include <QTextCodec>
 #include <QTextStream>
 #include <QXmlStreamReader>

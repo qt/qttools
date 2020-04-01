@@ -248,7 +248,7 @@ public:
     }
     // No destructor, as a RAII pattern cannot be used: references to the
     // temporary string can legitimately outlive instances of this class
-    // (if they are held by Qt, e.g. in QRegExp).
+    // (if they are held by Qt, e.g. in QRegularExpression).
     QString &set(const ProString &ps) { return ps.toQString(*m_rs); }
     QString &str() { return *m_rs; }
 

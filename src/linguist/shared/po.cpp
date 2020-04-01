@@ -31,7 +31,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QIODevice>
 #include <QtCore/QHash>
-#include <QtCore/QRegExp>
+#include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
@@ -548,7 +548,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                 QString xrefs;
                 foreach (const QString &ref,
                          codec->toUnicode(item.references).split(
-                                 QRegExp(QLatin1String("\\s")), Qt::SkipEmptyParts)) {
+                                 QRegularExpression(QLatin1String("\\s")), Qt::SkipEmptyParts)) {
                     int pos = ref.indexOf(QLatin1Char(':'));
                     int lpos = ref.lastIndexOf(QLatin1Char(':'));
                     if (pos != -1 && pos == lpos) {
@@ -607,7 +607,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                 case ',': {
                     QStringList flags =
                             QString::fromLatin1(line.mid(2)).split(
-                                    QRegExp(QLatin1String("[, ]")), Qt::SkipEmptyParts);
+                                    QRegularExpression(QLatin1String("[, ]")), Qt::SkipEmptyParts);
                     if (flags.removeOne(QLatin1String("fuzzy")))
                         item.isFuzzy = true;
                     flags.removeOne(QLatin1String("qt-format"));

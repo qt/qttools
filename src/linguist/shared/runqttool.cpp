@@ -32,7 +32,7 @@
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qdir.h>
-#include <QtCore/qregexp.h>
+#include <QtCore/qregularexpression.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -62,7 +62,7 @@ static void printErr(const QString &out)
 
 static QString shellQuoted(const QString &str)
 {
-    static QRegExp rx(QStringLiteral("\\s"));
+    static QRegularExpression rx(QStringLiteral("\\s"));
     QString result = str;
     if (result.contains(rx)) {
         const QLatin1Char dblqt = QLatin1Char('"');
