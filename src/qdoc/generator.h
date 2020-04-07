@@ -159,8 +159,6 @@ protected:
     static bool hasExceptions(const Node *node, NodeList &reentrant, NodeList &threadsafe,
                               NodeList &nonreentrant);
 
-    QMap<QString, QStringList> editionGroupMap;
-    QMap<QString, QStringList> editionModuleMap;
     QString naturalLanguage;
 #ifndef QT_NO_TEXTCODEC
     QTextCodec *outputCodec;

@@ -91,7 +91,6 @@
     \li \l {Cpp.ignoretokens-variable} {Cpp.ignoretokens}
     \li \l {defines-variable} {defines}
     \li \l {depends-variable} {depends}
-    \li \l {edition-variable} {edition}
     \li \l {exampledirs-variable} {exampledirs}
     \li \l {examples-variable} {examples}
     \li \l {examples.fileextensions-variable} {examples.fileextensions}
@@ -244,10 +243,10 @@
     line using the -D option. For example:
 
     \badcode
-        currentdirectory$ qdoc -Dconsoleedition qtgui.qdocconf
+        currentdirectory$ qdoc -Dqtforpython qtgui.qdocconf
     \endcode
 
-    In this case the -D option ensures that the \c consoleedition
+    In this case the -D option ensures that the \c qtforpython
     preprocessor symbol is defined when QDoc processes the source
     files defined in the qtgui.qdocconf file.
 
@@ -304,37 +303,6 @@
     \endcode
 
     See also \l indexes, \l project, and \l url.
-
-    \target edition-variable
-    \section1 edition
-
-    The \c edition variable specifies which modules are included in
-    each edition of a package, and provides QDoc with information to
-    provide class lists for each edition.
-
-    This feature is mostly used when providing documentation for Qt
-    packages.
-
-    The \c edition variable is always used with a particular edition
-    name to define the modules for that edition:
-
-    \badcode
-        edition.Console      = QtCore QtNetwork QtSql QtXml
-        edition.Desktop      = QtCore QtGui QtNetwork QtOpenGL QtSql QtXml \
-                               QtDesigner QtAssistant Qt3Support QAxContainer \
-                               QAxServer
-        edition.DesktopLight = QtCore QtGui Qt3SupportLight
-    \endcode
-
-    In the above examples, the \c Console edition only includes the
-    contents of four modules. Only the classes from these modules will
-    be used when the \l{Miscellaneous#generatelist-command}
-    {generatelist} command is used to generate a list of classes for
-    this edition:
-
-    \badcode
-        \generatelist{classesbyedition Console}
-    \endcode
 
     \target exampledirs-variable
     \section1 exampledirs
