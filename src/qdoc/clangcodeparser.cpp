@@ -65,6 +65,9 @@ QT_BEGIN_NAMESPACE
 static CXTranslationUnit_Flags flags_ = static_cast<CXTranslationUnit_Flags>(0);
 static CXIndex index_ = nullptr;
 
+QByteArray ClangCodeParser::fn_;
+constexpr const char *fnDummyFileName = "/fn_dummyfile.cpp";
+
 #ifndef QT_NO_DEBUG_STREAM
 template<class T>
 static QDebug operator<<(QDebug debug, const std::vector<T> &v)
@@ -199,11 +202,15 @@ static QString getSpelling(CXSourceRange range)
     unsigned int offset1, offset2;
     clang_getFileLocation(start, &file1, nullptr, nullptr, &offset1);
     clang_getFileLocation(end, &file2, nullptr, nullptr, &offset2);
+
     if (file1 != file2 || offset2 <= offset1)
         return QString();
     QFile file(fromCXString(clang_getFileName(file1)));
-    if (!file.open(QFile::ReadOnly))
+    if (!file.open(QFile::ReadOnly)) {
+        if (file.fileName() == fnDummyFileName)
+            return QString::fromUtf8(ClangCodeParser::fn().mid(offset1, offset2 - offset1));
         return QString();
+    }
     file.seek(offset1);
     return QString::fromUtf8(file.read(offset2 - offset1));
 }
@@ -1595,6 +1602,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     clang_disposeTranslationUnit(tu);
     clang_disposeIndex(index_);
     namespaceScope_.clear();
+    fn_.clear();
 }
 
 /*!
@@ -1673,17 +1681,17 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
         args.push_back(pchName_.constData());
     }
     CXTranslationUnit tu;
-    QByteArray fn;
+    fn_.clear();
     for (const auto &ns : qAsConst(namespaceScope_))
-        fn.prepend("namespace " + ns.toUtf8() + " {");
-    fn += fnArg.toUtf8();
-    if (!fn.endsWith(";"))
-        fn += "{ }";
-    fn.append(namespaceScope_.size(), '}');
+        fn_.prepend("namespace " + ns.toUtf8() + " {");
+    fn_ += fnArg.toUtf8();
+    if (!fn_.endsWith(";"))
+        fn_ += "{ }";
+    fn_.append(namespaceScope_.size(), '}');
 
-    const char *dummyFileName = "/fn_dummyfile.cpp";
-    CXUnsavedFile unsavedFile { dummyFileName, fn.constData(),
-                                static_cast<unsigned long>(fn.size()) };
+    const char *dummyFileName = fnDummyFileName;
+    CXUnsavedFile unsavedFile { dummyFileName, fn_.constData(),
+                                static_cast<unsigned long>(fn_.size()) };
     CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, args.data(), args.size(),
                                                   &unsavedFile, 1, flags, &tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << args
