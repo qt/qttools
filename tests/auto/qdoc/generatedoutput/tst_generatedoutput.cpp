@@ -34,6 +34,9 @@ class tst_generatedOutput : public QObject
 {
     Q_OBJECT
 
+public:
+    void setRegenerate() { m_regen = true; }
+
 private slots:
     void initTestCase();
     void init();
@@ -73,6 +76,8 @@ private slots:
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
+    QDir m_expectedDir;
+    bool m_regen = false;
 
     void runQDocProcess(const QStringList &arguments);
     void compareLineByLine(const QStringList &expectedFiles);
@@ -87,6 +92,7 @@ void tst_generatedOutput::initTestCase()
     const auto binpath = QLibraryInfo::location(QLibraryInfo::BinariesPath);
     const auto extension = QSysInfo::productType() == "windows" ? ".exe" : "";
     m_qdoc = binpath + QLatin1String("/qdoc") + extension;
+    m_expectedDir.setPath(QFINDTESTDATA(".") + QLatin1String("/expected_output"));
 }
 
 void tst_generatedOutput::init()
@@ -125,8 +131,8 @@ void tst_generatedOutput::runQDocProcess(const QStringList &arguments)
 void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 {
     for (const auto &file : expectedFiles) {
-        QString expected(QFINDTESTDATA("/expected_output/" + file));
-        QString actual(m_outputDir->path() + "/" + file);
+        QString expected(m_expectedDir.filePath(file));
+        QString actual(m_outputDir->filePath(file));
 
         QFile expectedFile(expected);
         if (!expectedFile.open(QIODevice::ReadOnly))
@@ -167,6 +173,19 @@ void tst_generatedOutput::testAndCompare(const char *input, const char *outNames
     if (outputPathPrefix)
         for (auto &expectedOut : expectedOuts)
             expectedOut = QString(outputPathPrefix) + "/" + expectedOut;
+
+    if (m_regen) {
+        QVERIFY(m_expectedDir.mkpath(m_expectedDir.path()));
+        for (const auto &file : qAsConst(expectedOuts)) {
+            QFileInfo fileInfo(m_expectedDir.filePath(file));
+            fileInfo.dir().remove(fileInfo.fileName()); // Allowed to fail
+            QVERIFY(m_expectedDir.mkpath(fileInfo.dir().path()));
+            QVERIFY(QFile::copy(m_outputDir->filePath(file),
+                                fileInfo.filePath()));
+        }
+        QSKIP("Regenerated expected output only.");
+        return;
+    }
 
     compareLineByLine(expectedOuts);
 }
@@ -400,6 +419,15 @@ void tst_generatedOutput::nestedMacro()
                    "nestedmacro/testcpp-module.html");
 }
 
-QTEST_APPLESS_MAIN(tst_generatedOutput)
+int main(int argc, char *argv[])
+{
+    tst_generatedOutput tc;
+    // Re-populate expected data and skip tests if option -regenerate is set
+    if (argc == 2 && QByteArray(argv[1]) == "-regenerate") {
+        tc.setRegenerate();
+        --argc;
+    }
+    return QTest::qExec(&tc, argc, argv);
+}
 
 #include "tst_generatedoutput.moc"
