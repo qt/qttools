@@ -67,7 +67,6 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow();
-    void showDocumentation(const QString &file);
 
 private slots:
     void about();

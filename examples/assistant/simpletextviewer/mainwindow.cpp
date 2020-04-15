@@ -112,26 +112,26 @@ void MainWindow::createActions()
 {
     assistantAct = new QAction(tr("Help Contents"), this);
     assistantAct->setShortcut(QKeySequence::HelpContents);
-    connect(assistantAct, SIGNAL(triggered()), this, SLOT(showDocumentation()));
+    connect(assistantAct, &QAction::triggered, this, &MainWindow::showDocumentation);
 //! [4]
 
     openAct = new QAction(tr("&Open..."), this);
     openAct->setShortcut(QKeySequence::Open);
-    connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+    connect(openAct, &QAction::triggered, this, &MainWindow::open);
 
     clearAct = new QAction(tr("&Clear"), this);
     clearAct->setShortcut(tr("Ctrl+C"));
-    connect(clearAct, SIGNAL(triggered()), textViewer, SLOT(clear()));
+    connect(clearAct, &QAction::triggered, textViewer, &QTextEdit::clear);
 
     exitAct = new QAction(tr("E&xit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+    connect(exitAct, &QAction::triggered, this, &QWidget::close);
 
     aboutAct = new QAction(tr("&About"), this);
-    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+    connect(aboutAct, &QAction::triggered, this, &MainWindow::about);
 
     aboutQtAct = new QAction(tr("About &Qt"), this);
-    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(aboutQtAct, &QAction::triggered, QApplication::aboutQt);
 //! [5]
 }
 //! [5]
