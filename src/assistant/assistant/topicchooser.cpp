@@ -35,9 +35,11 @@
 #include <QSortFilterProxyModel>
 #include <QUrl>
 
+#include <QtHelp/QHelpLink>
+
 QT_BEGIN_NAMESPACE
 
-TopicChooser::TopicChooser(QWidget *parent, const QString &keyword, const QMap<QString, QUrl> &links)
+TopicChooser::TopicChooser(QWidget *parent, const QString &keyword, const QList<QHelpLink> &docs)
     : QDialog(parent)
     , m_filterModel(new QSortFilterProxyModel(this))
 {
@@ -53,10 +55,10 @@ TopicChooser::TopicChooser(QWidget *parent, const QString &keyword, const QMap<Q
     m_filterModel->setSourceModel(model);
     m_filterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
-    for (auto it = links.cbegin(), end = links.cend(); it != end; ++it) {
-        m_links.append(it.value());
-        QStandardItem *item = new QStandardItem(it.key());
-        item->setToolTip(it.value().toString());
+    for (const auto &doc : docs) {
+        m_links.append(doc.url);
+        QStandardItem *item = new QStandardItem(doc.title);
+        item->setToolTip(doc.url.toString());
         model->appendRow(item);
     }
 

@@ -67,6 +67,8 @@ private slots:
     void singleExec();
     void preparePhase();
     void generatePhase();
+    void noAutoList();
+    void nestedMacro();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -203,6 +205,7 @@ void tst_generatedOutput::htmlFromQml()
 {
     testAndCompare("testdata/configs/testqml.qdocconf",
                    "test-componentset-example.html "
+                   "test-cmaketest-example.html "
                    "uicomponents-qmlmodule.html "
                    "qdoc-test-qmlmodule.html "
                    "qml-qdoc-test-abstractparent.html "
@@ -292,6 +295,7 @@ void tst_generatedOutput::examplesManifestXmlAndQhp()
 {
     testAndCompare("testdata/configs/examples-qhp.qdocconf",
                    "examples-manifest.xml "
+                   "demos-manifest.xml "
                    "test.qhp");
 }
 
@@ -376,6 +380,24 @@ void tst_generatedOutput::generatePhase()
                    "testqdoc-test-members.html "
                    "testqdoc.html",
                    "-generate");
+}
+
+void tst_generatedOutput::noAutoList()
+{
+    testAndCompare("testdata/configs/noautolist.qdocconf",
+                   "noautolist/testcpp-module.html "
+                   "noautolist/test-componentset-example.html "
+                   "noautolist/qdoc-test-qmlmodule.html "
+                   "noautolist-docbook/testcpp-module.xml "
+                   "noautolist-docbook/test-componentset-example.xml "
+                   "noautolist-docbook/qdoc-test-qmlmodule.xml");
+}
+
+
+void tst_generatedOutput::nestedMacro()
+{
+    testAndCompare("testdata/configs/nestedmacro.qdocconf",
+                   "nestedmacro/testcpp-module.html");
 }
 
 QTEST_APPLESS_MAIN(tst_generatedOutput)

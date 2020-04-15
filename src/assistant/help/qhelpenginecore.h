@@ -51,13 +51,16 @@ QT_BEGIN_NAMESPACE
 
 class QHelpEngineCorePrivate;
 class QHelpFilterEngine;
+struct QHelpLink;
 
 class QHELP_EXPORT QHelpEngineCore : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool autoSaveFilter READ autoSaveFilter WRITE setAutoSaveFilter)
     Q_PROPERTY(QString collectionFile READ collectionFile WRITE setCollectionFile)
+#if QT_DEPRECATED_SINCE(5, 15)
     Q_PROPERTY(QString currentFilter READ currentFilter WRITE setCurrentFilter)
+#endif
 
 public:
     explicit QHelpEngineCore(const QString &collectionFile, QObject *parent = nullptr);
@@ -102,10 +105,17 @@ public:
                       const QString &extensionFilter = QString());
     QUrl findFile(const QUrl &url) const;
 
+#if QT_DEPRECATED_SINCE(5, 15)
+    QT_DEPRECATED_X("Use documentsForIdentifier() instead")
     QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
-    QMap<QString, QUrl> linksForIdentifier(const QString &id, const QString &filterName) const;
+    QT_DEPRECATED_X("Use documentsForKeyword() instead")
     QMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
-    QMap<QString, QUrl> linksForKeyword(const QString &keyword, const QString &filterName) const;
+#endif
+
+    QList<QHelpLink> documentsForIdentifier(const QString &id) const;
+    QList<QHelpLink> documentsForIdentifier(const QString &id, const QString &filterName) const;
+    QList<QHelpLink> documentsForKeyword(const QString &keyword) const;
+    QList<QHelpLink> documentsForKeyword(const QString &keyword, const QString &filterName) const;
 
     bool removeCustomValue(const QString &key);
     QVariant customValue(const QString &key,

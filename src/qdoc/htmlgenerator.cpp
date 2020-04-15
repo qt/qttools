@@ -1492,23 +1492,24 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
         generateStatus(cn, marker);
         generateSince(cn, marker);
 
-        NodeMultiMap nmm;
-        cn->getMemberNamespaces(nmm);
-        if (!nmm.isEmpty()) {
-            ref = registerRef("namespaces");
-            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
-            out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
-            generateAnnotatedList(cn, marker, nmm);
+        if (!cn->noAutoList()) {
+            NodeMultiMap nmm;
+            cn->getMemberNamespaces(nmm);
+            if (!nmm.isEmpty()) {
+                ref = registerRef("namespaces");
+                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+                out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
+                generateAnnotatedList(cn, marker, nmm);
+            }
+            nmm.clear();
+            cn->getMemberClasses(nmm);
+            if (!nmm.isEmpty()) {
+                ref = registerRef("classes");
+                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+                out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";
+                generateAnnotatedList(cn, marker, nmm);
+            }
         }
-        nmm.clear();
-        cn->getMemberClasses(nmm);
-        if (!nmm.isEmpty()) {
-            ref = registerRef("classes");
-            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
-            out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";
-            generateAnnotatedList(cn, marker, nmm);
-        }
-        nmm.clear();
     }
 
     Text brief = cn->doc().briefText();
@@ -2123,13 +2124,15 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
     out() << "<ul>\n";
 
     if (node->isModule()) {
-        if (node->hasNamespaces()) {
-            out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
-                  << registerRef("namespaces") << "\">Namespaces</a></li>\n";
-        }
-        if (node->hasClasses()) {
-            out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
-                  << registerRef("classes") << "\">Classes</a></li>\n";
+        if (!static_cast<const CollectionNode *>(node)->noAutoList()) {
+            if (node->hasNamespaces()) {
+                out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
+                      << registerRef("namespaces") << "\">Namespaces</a></li>\n";
+            }
+            if (node->hasClasses()) {
+                out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
+                      << registerRef("classes") << "\">Classes</a></li>\n";
+            }
         }
         out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#" << registerRef("details")
               << "\">Detailed Description</a></li>\n";
@@ -3758,33 +3761,9 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         writer.writeAttribute("name", en->title());
         QString docUrl = manifestDir + fileBase(en) + ".html";
         writer.writeAttribute("docUrl", docUrl);
-        QStringList proFiles;
         const auto exampleFiles = en->files();
-        for (const QString &file : exampleFiles) {
-            if (file.endsWith(".pro") || file.endsWith(".qmlproject")
-                || file.endsWith(".pyproject"))
-                proFiles << file;
-        }
-        if (!proFiles.isEmpty()) {
-            if (proFiles.size() == 1) {
-                writer.writeAttribute("projectPath", installPath + proFiles[0]);
-            } else {
-                QString exampleName = en->name().split('/').last();
-                bool proWithExampleNameFound = false;
-                for (int j = 0; j < proFiles.size(); j++) {
-                    if (proFiles[j].endsWith(QStringLiteral("%1/%1.pro").arg(exampleName))
-                        || proFiles[j].endsWith(QStringLiteral("%1/%1.qmlproject").arg(exampleName))
-                        || proFiles[j].endsWith(
-                                QStringLiteral("%1/%1.pyproject").arg(exampleName))) {
-                        writer.writeAttribute("projectPath", installPath + proFiles[j]);
-                        proWithExampleNameFound = true;
-                        break;
-                    }
-                }
-                if (!proWithExampleNameFound)
-                    writer.writeAttribute("projectPath", installPath + proFiles[0]);
-            }
-        }
+        if (!en->projectFile().isEmpty())
+            writer.writeAttribute("projectPath", installPath + en->projectFile());
         if (!en->imageFileName().isEmpty()) {
             writer.writeAttribute("imageUrl", manifestDir + en->imageFileName());
             usedAttributes << "imageUrl";

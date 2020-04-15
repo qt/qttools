@@ -90,7 +90,6 @@
 
 /*!
     \page designer-to-know.html
-    \contentspage {Qt Designer Manual}{Contents}
 
 
     \title Getting to Know Qt Designer
@@ -258,7 +257,6 @@
 
 /*!
     \page designer-quick-start.html
-    \contentspage {Qt Designer Manual}{Contents}
 
 
     \title A Quick Start to Qt Designer
@@ -398,7 +396,6 @@
 /*!
     \page designer-editing-mode.html
     \previouspage Getting to Know Qt Designer
-    \contentspage {Qt Designer Manual}{Contents}
     \nextpage Using Layouts in Qt Designer
 
     \title Qt Designer's Editing Modes
@@ -447,7 +444,6 @@
 /*!
     \page designer-widget-mode.html
     \previouspage Qt Designer's Editing Modes
-    \contentspage {Qt Designer Manual}{Contents}
     \nextpage Qt Designer's Signals and Slots Editing Mode
 
     \title Qt Designer's Widget Editing Mode
@@ -687,7 +683,6 @@
 /*!
     \page designer-layouts.html
     \previouspage Qt Designer's Widget Editing Mode
-    \contentspage
     \nextpage Qt Designer's Signals and Slots Editing Mode
 
     \title Using Layouts in Qt Designer
@@ -890,7 +885,6 @@
 
 /*!
     \page designer-preview.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Using Layouts in Qt Designer
     \nextpage Qt Designer's Buddy Editing Mode
     \title Saving, Previewing and Printing Forms in Qt Designer
@@ -971,7 +965,6 @@
 
 /*!
     \page designer-connection-mode.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Using Layouts in Qt Designer
     \nextpage Qt Designer's Buddy Editing Mode
 
@@ -1105,7 +1098,6 @@
 
 /*!
     \page designer-buddy-mode.html
-    \contentspage{Qt Designer Manual}{Contents}
     \previouspage Qt Designer's Signals and Slots Editing Mode
     \nextpage Qt Designer's Tab Order Editing Mode
 
@@ -1159,7 +1151,6 @@
 
 /*!
     \page designer-tab-order.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Qt Designer's Buddy Editing Mode
     \nextpage Using Containers in Qt Designer
 
@@ -1208,7 +1199,6 @@
 
 /*!
     \page designer-using-containers.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Qt Designer's Tab Order Editing Mode
     \nextpage Creating Main Windows in Qt Designer
 
@@ -1346,7 +1336,6 @@
 
 /*!
     \page designer-creating-mainwindows.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Using Containers in Qt Designer
     \nextpage Editing Resources with Qt Designer
 
@@ -1601,7 +1590,6 @@
 
 /*!
     \page designer-resources.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Creating Main Windows in Qt Designer
     \nextpage Using Stylesheets with Qt Designer
 
@@ -1706,7 +1694,6 @@ pixmap property in the property editor.
 
 /*!
     \page designer-stylesheet.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Editing Resources with Qt Designer
     \nextpage Using a Designer UI File in Your Application
 
@@ -1734,7 +1721,6 @@ pixmap property in the property editor.
 /*!
     \page designer-using-a-ui-file.html
     \previouspage Using Stylesheets with Qt Designer
-    \contentspage {Qt Designer Manual}{Contents}
     \nextpage Using Custom Widgets with Qt Designer
 
     \title Using a Designer UI File in Your Application
@@ -2128,7 +2114,6 @@ pixmap property in the property editor.
 
 /*!
     \page designer-customizing-forms.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Using Stylesheets with Qt Designer
     \nextpage Using Custom Widgets with Qt Designer
 
@@ -2185,7 +2170,6 @@ pixmap property in the property editor.
 
 /*!
     \page designer-using-custom-widgets.html
-    \contentspage {Qt Designer Manual}{Contents}
     \previouspage Customizing Qt Designer Forms
     \nextpage Creating Custom Widgets for Qt Designer
 
@@ -2281,7 +2265,6 @@ pixmap property in the property editor.
 /*!
     \page designer-creating-custom-widgets.html
     \previouspage Using Custom Widgets with Qt Designer
-    \contentspage {Qt Designer Manual}{Contents}
     \nextpage Creating Custom Widget Extensions
 
     \title Creating Custom Widgets for Qt Designer
@@ -2642,7 +2625,6 @@ pixmap property in the property editor.
     \page designer-creating-custom-widgets-extensions.html
     \previouspage Creating Custom Widgets for Qt Designer
     \nextpage Qt Designer's UI File Format
-    \contentspage {Qt Designer Manual}{Contents}
 
     \title Creating Custom Widget Extensions
 
@@ -2812,7 +2794,6 @@ pixmap property in the property editor.
 /*!
     \page designer-ui-file-format.html
     \previouspage Creating Custom Widget Extensions
-    \contentspage {Qt Designer Manual}{Contents}
 
     \title Qt Designer's UI File Format
 

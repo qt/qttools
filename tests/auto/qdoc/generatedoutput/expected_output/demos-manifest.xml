@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<instructionals module="Test">
+    <demos>
+        <demo name="Demo" docUrl="qthelp://org.qt-project.test.001/test/test-demos-demo-example.html" projectPath="test/demos/demo/demo.pro" isTest="true">
+            <description><![CDATA[No description available]]></description>
+            <tags>demo,test</tags>
+        </demo>
+    </demos>
+</instructionals>

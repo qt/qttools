@@ -155,7 +155,7 @@ FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
     m_ui.fieldClassComboBox->addItems(fieldWidgetClasses(core));
     m_ui.fieldClassComboBox->setCurrentIndex(0);
     connect(m_ui.fieldClassComboBox,
-            QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+            QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &FormLayoutRowDialog::fieldClassChanged);
 
     updateOkButton();

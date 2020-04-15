@@ -90,6 +90,7 @@
     \li \l {Cpp.ignoredirectives-variable} {Cpp.ignoredirectives}
     \li \l {Cpp.ignoretokens-variable} {Cpp.ignoretokens}
     \li \l {defines-variable} {defines}
+    \li \l {depends-variable} {depends}
     \li \l {edition-variable} {edition}
     \li \l {exampledirs-variable} {exampledirs}
     \li \l {examples-variable} {examples}
@@ -109,6 +110,7 @@
     \li \l {imagedirs-variable} {imagedirs}
     \li \l {images-variable} {images}
     \li \l {images.fileextensions-variable} {images.fileextensions}
+    \li \l {indexes-variable} {indexes}
     \li \l {language-variable} {language}
     \li \l {locationinfo-variable} {locationinfo}
     \li \l {macro-variable} {macro}
@@ -118,6 +120,7 @@
     \li \l {outputformats-variable} {outputformats}
     \li \l {outputprefixes-variable} {outputprefixes}
     \li \l {outputsuffixes-variable} {outputsuffixes}
+    \li \l {project-variable} {project}
     \li \l {sourcedirs-variable} {sourcedirs}
     \li \l {sources-variable} {sources}
     \li \l {sources.fileextensions-variable} {sources.fileextensions}
@@ -249,6 +252,58 @@
     files defined in the qtgui.qdocconf file.
 
     See also \l {falsehoods-variable} {falsehoods} and \l {if-command} {\\if}.
+
+    \target depends-variable
+    \section1 depends
+
+    The \c depends variable defines a list of other documentation projects
+    that this project depends on for resolving link targets for type
+    inheritance and anything else the documentation needs to link to.
+
+    Like Qt itself, documentation for Qt is distributed across multiple
+    modules. In a multi-module documentation project, the minimum set
+    of dependencies for a single module consists of actual build
+    dependencies. In addition, if there is a documentation project
+    (module) that acts as a top-level entry point for the entire
+    documentation set and provides \l {navigation-variable}[navigation}
+    links, each module documentation should include it as a dependency.
+
+    When QDoc generates documentation for a project, it will also generate
+    an \c .index file containing URLs to each linkable entity in the project.
+    Each dependency is a (lowercase) name of a project. This name must
+    match with the base name of the index file generated for that
+    project.
+
+    \badcode
+    depends = \
+        qtdoc \
+        qtcore \
+        qtquick
+    \endcode
+
+    When invoking QDoc on a project that has dependencies and uses the
+    \c depends variable, one or more \c -indexdir path(s) must be passed
+    as command line option(s). QDoc uses these paths to search for
+    the dependencies' index files.
+
+    \badcode
+    qdoc mydoc.qdocconf -outputdir $PWD/html -indexdir $QT_INSTALL_DOCS
+    \endcode
+
+    With above, QDoc will search for a file
+    \c {$T_INSTALL_DOCS/qtdoc/qtdoc.index} for a dependency to \c qtdoc.
+    If an index file for a dependency is not found, QDoc will output a
+    warning.
+
+    The \c depends command accepts also a special value of '*'. This
+    instructs QDoc to load all index files found in specified index
+    directories; that is, "depends on everything".
+
+    \badcode
+    depends = *
+    \endcode
+
+    See also \l indexes, \l project, and \l url.
 
     \target edition-variable
     \section1 edition
@@ -1729,24 +1784,30 @@
     \target indexes-variable
     \section1 indexes
 
-    The \c indexes variable lists the index files that will be used to
-    generate references.
-
-    For example. to make a derived Qt project contain links to the Qt
-    Reference documentation, you need to specify the associated index
-    file:
+    The \l {indexes-variable}[indexes} variable defines a set of paths
+    to index files to load.
 
     \badcode
-        indexes = $QTDIR/doc/html/qt.index
+    indexes = \
+        $QT_INSTALL_DOCS/qtcore/qtcore.index \
+        $SOME_OTHER_PROJECT/doc/foo.index
     \endcode
 
-    See also \l project and \l url.
+    The \c indexes variable provides an alternative to \l depends for
+    defining project's dependencies. As direct paths are provided, no
+    \c -indexdir command line option(s) are required when invoking QDoc.
+
+    It is possible to define dependencies using either variable. Qt
+    documentation only uses the \c depends variable.
+
+    See also \l depends, \l project and \l url.
 
     \target project-variable
     \section1 project
 
     The \c project variable provides a name for the project associated
-    with the \c .qdocconf file.
+    with the \c .qdocconf file. This is a mandatory variable that all
+    projects must set.
 
     The project's name is used to form a file name for the associated
     project's \e index file.
@@ -1758,12 +1819,16 @@
     This will cause an index file called \c qtcreator.index to be
     created.
 
-    See also \l description and \l indexes.
+    If the project name contains whitespace or special characters,
+    these are replaced with dashes ('-') in the generated index file
+    name.
+
+    See also \l depends, \l indexes, and \l description.
 
     \target url-variable
     \section1 url
 
-    The \c url variable holds the base URL for the reference
+    The \c url variable holds the base URL for the
     documentation associated with the current project.
 
     The URL is stored in the generated index file for the
@@ -1772,18 +1837,18 @@
     other things listed in the index.
 
     \badcode
-    project     = Qt
-    description = Qt Reference Documentation
+    project     = QtCore
+    description = Qt Core Reference Documentation
     url         = https://doc.qt.io/qt/
 
-         ...
+    ...
     \endcode
 
-    This makes sure that whenever \c qt.index is used to generate
-    references to for example Qt classes, the base URL is \c
-    https://doc.qt.io/qt/.
+    This ensures that whenever QDoc generates
+    references to entities in the Qt Core module, the base URL is
+    \c https://doc.qt.io/qt/.
 
-    See also \l indexes and \l {url.examples}.
+    See also \l depends, \l indexes and \l {url.examples}.
 
     \target url.examples-variable
     \section1 url.examples
@@ -1843,23 +1908,24 @@
     This feature makes use of the comprehensive indexes generated by
     QDoc when it creates the Qt reference documentation.
 
-    For example, \l qtgui.qdocconf (the configuration file for Qt)
+    For example, \l qtgui.qdocconf (the configuration file for Qt GUI)
     contains the following variable definitions:
 
     \badcode
-        project     = Qt
-        description = Qt Reference Documentation
+        project     = QtGui
+        description = Qt GUI Reference Documentation
         url         = http://doc.qt.io/qt/
 
         ...
     \endcode
 
     The \l project variable name is used to form a file name for the
-    index file; in this case the \c qt.index file is created. The \l
+    index file; in this case the \c qtgui.index file is created. The \l
     url is stored in the index file. Afterwards, QDoc will use this
     as the base URL when constructing links to classes, functions,
     and other things listed in the index.
 
+    See also \l depends, \l indexes, \l project, and \l url.
 */
 
 /*!

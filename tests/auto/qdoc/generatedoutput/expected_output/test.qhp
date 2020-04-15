@@ -8,6 +8,8 @@
             <section ref="uicomponents-qmlmodule.html" title="UI Components">
                 <section ref="uicomponents-qmlmodule.html" title="Test">
                     <section ref="qdoc-test-qmlmodule.html" title=""/>
+                    <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
+                    <section ref="test-demos-demo-example.html" title="Demo"/>
                     <section ref="testcpp-module.html" title="QDoc Test C++ Classes"/>
                     <section ref="test-componentset-example.html" title="QML Documentation Example"/>
                     <section ref="uicomponents-qmlmodule.html" title="UI Components"/>
@@ -119,11 +121,15 @@
             <file>qml-uicomponents-switch.html</file>
             <file>qml-uicomponents-tabwidget-members.html</file>
             <file>qml-uicomponents-tabwidget.html</file>
+            <file>test-cmaketest-cmakelists-txt.html</file>
+            <file>test-cmaketest-example.html</file>
+            <file>test-cmaketest-main-cpp.html</file>
             <file>test-componentset-componentset-pro.html</file>
             <file>test-componentset-example.html</file>
             <file>test-componentset-progressbar-qml.html</file>
             <file>test-componentset-switch-qml.html</file>
             <file>test-componentset-tabwidget-qml.html</file>
+            <file>test-demos-demo-example.html</file>
             <file>testcpp-module.html</file>
             <file>testqdoc-test-members.html</file>
             <file>testqdoc-test-obsolete.html</file>

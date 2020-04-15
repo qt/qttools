@@ -44,6 +44,8 @@
 #include <QtWidgets/QListWidgetItem>
 
 #include <QtHelp/QHelpIndexWidget>
+#include <QtHelp/QHelpEngineCore>
+#include <QtHelp/QHelpLink>
 
 QT_BEGIN_NAMESPACE
 
@@ -71,10 +73,12 @@ IndexWindow::IndexWindow(QWidget *parent)
             this, &IndexWindow::disableSearchLineEdit);
     connect(helpEngine.indexModel(), &QHelpIndexModel::indexCreated,
             this, &IndexWindow::enableSearchLineEdit);
-    connect(m_indexWidget, &QHelpIndexWidget::linkActivated,
-            this, &IndexWindow::linkActivated);
-    connect(m_indexWidget, &QHelpIndexWidget::linksActivated,
-            this, &IndexWindow::linksActivated);
+    connect(m_indexWidget, &QHelpIndexWidget::documentActivated,
+            this, [this](const QHelpLink &link) {
+        emit linkActivated(link.url);
+    });
+    connect(m_indexWidget, &QHelpIndexWidget::documentsActivated,
+            this, &IndexWindow::documentsActivated);
     connect(m_searchLineEdit, &QLineEdit::returnPressed,
             m_indexWidget, &QHelpIndexWidget::activateCurrentItem);
     layout->addWidget(m_indexWidget);
@@ -196,15 +200,15 @@ void IndexWindow::open(QHelpIndexWidget* indexWidget, const QModelIndex &index)
     QHelpIndexModel *model = qobject_cast<QHelpIndexModel*>(indexWidget->model());
     if (model) {
         const QString keyword = model->data(index, Qt::DisplayRole).toString();
-        const QMap<QString, QUrl> links = model->linksForKeyword(keyword);
+        const QList<QHelpLink> docs = model->helpEngine()->documentsForKeyword(keyword);
 
         QUrl url;
-        if (links.count() > 1) {
-            TopicChooser tc(this, keyword, links);
+        if (docs.count() > 1) {
+            TopicChooser tc(this, keyword, docs);
             if (tc.exec() == QDialog::Accepted)
                 url = tc.link();
-        } else if (!links.isEmpty()) {
-            url = links.first();
+        } else if (!docs.isEmpty()) {
+            url = docs.first().url;
         } else {
             return;
         }

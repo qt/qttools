@@ -60,7 +60,7 @@ BookmarkDialog::BookmarkDialog(BookmarkModel *sourceModel, const QString &title,
     bookmarkProxyModel = new BookmarkFilterModel(this);
     bookmarkProxyModel->setSourceModel(bookmarkModel);
     ui.bookmarkFolders->setModel(bookmarkProxyModel);
-    connect(ui.bookmarkFolders, QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+    connect(ui.bookmarkFolders, &QComboBox::currentIndexChanged,
             this, QOverload<int>::of(&BookmarkDialog::currentIndexChanged));
 
     bookmarkTreeModel = new BookmarkTreeModel(this);

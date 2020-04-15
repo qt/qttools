@@ -110,7 +110,7 @@ void QDocIndexFiles::destroyQDocIndexFiles()
 void QDocIndexFiles::readIndexes(const QStringList &indexFiles)
 {
     for (const QString &file : indexFiles) {
-        qCInfo(lcQdoc) << "Loading index file: " << file;
+        qCDebug(lcQdoc) << "Loading index file: " << file;
         readIndexFile(file);
     }
 }
@@ -1522,7 +1522,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     if (!file.open(QFile::WriteOnly | QFile::Text))
         return;
 
-    qCInfo(lcQdoc) << "Writing index file:" << fileName;
+    qCDebug(lcQdoc) << "Writing index file:" << fileName;
 
     gen_ = g;
     QXmlStreamWriter writer(&file);

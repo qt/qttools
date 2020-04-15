@@ -42,20 +42,22 @@ int main(int argc, char **argv)
         qDebug() << "Usage: macdeployqt app-bundle [options]";
         qDebug() << "";
         qDebug() << "Options:";
-        qDebug() << "   -verbose=<0-3>     : 0 = no output, 1 = error/warning (default), 2 = normal, 3 = debug";
-        qDebug() << "   -no-plugins        : Skip plugin deployment";
-        qDebug() << "   -dmg               : Create a .dmg disk image";
-        qDebug() << "   -no-strip          : Don't run 'strip' on the binaries";
-        qDebug() << "   -use-debug-libs    : Deploy with debug versions of frameworks and plugins (implies -no-strip)";
-        qDebug() << "   -executable=<path> : Let the given executable use the deployed frameworks too";
-        qDebug() << "   -qmldir=<path>     : Scan for QML imports in the given path";
-        qDebug() << "   -qmlimport=<path>  : Add the given path to the QML module search locations";
-        qDebug() << "   -always-overwrite  : Copy files even if the target file exists";
-        qDebug() << "   -codesign=<ident>  : Run codesign with the given identity on all executables";
-        qDebug() << "   -hardened-runtime  : Enable Hardened Runtime when code signing";
-        qDebug() << "   -appstore-compliant: Skip deployment of components that use private API";
-        qDebug() << "   -libpath=<path>    : Add the given path to the library search path";
-        qDebug() << "   -fs=<filesystem>   : Set the filesystem used for the .dmg disk image (defaults to HFS+)";
+        qDebug() << "   -verbose=<0-3>                : 0 = no output, 1 = error/warning (default), 2 = normal, 3 = debug";
+        qDebug() << "   -no-plugins                   : Skip plugin deployment";
+        qDebug() << "   -dmg                          : Create a .dmg disk image";
+        qDebug() << "   -no-strip                     : Don't run 'strip' on the binaries";
+        qDebug() << "   -use-debug-libs               : Deploy with debug versions of frameworks and plugins (implies -no-strip)";
+        qDebug() << "   -executable=<path>            : Let the given executable use the deployed frameworks too";
+        qDebug() << "   -qmldir=<path>                : Scan for QML imports in the given path";
+        qDebug() << "   -qmlimport=<path>             : Add the given path to the QML module search locations";
+        qDebug() << "   -always-overwrite             : Copy files even if the target file exists";
+        qDebug() << "   -codesign=<ident>             : Run codesign with the given identity on all executables";
+        qDebug() << "   -hardened-runtime             : Enable Hardened Runtime when code signing";
+        qDebug() << "   -timestamp                    : Include a secure timestamp when code signing (requires internet connection)";
+        qDebug() << "   -sign-for-notarization=<ident>: Activate the necessary options for notarization (requires internet connection)";
+        qDebug() << "   -appstore-compliant           : Skip deployment of components that use private API";
+        qDebug() << "   -libpath=<path>               : Add the given path to the library search path";
+        qDebug() << "   -fs=<filesystem>              : Set the filesystem used for the .dmg disk image (defaults to HFS+)";
         qDebug() << "";
         qDebug() << "macdeployqt takes an application bundle as input and makes it";
         qDebug() << "self-contained by copying in the Qt frameworks and plugins that";
@@ -100,6 +102,7 @@ int main(int argc, char **argv)
     extern bool hardenedRuntime;
     extern bool appstoreCompliant;
     extern bool deployFramework;
+    extern bool secureTimestamp;
 
     for (int i = 2; i < argc; ++i) {
         QByteArray argument = QByteArray(argv[i]);
@@ -166,9 +169,23 @@ int main(int argc, char **argv)
                 runCodesign = true;
                 codesignIdentiy = argument.mid(index+1);
             }
+        } else if (argument.startsWith(QByteArray("-sign-for-notarization"))) {
+            LogDebug() << "Argument found:" << argument;
+            int index = argument.indexOf("=");
+            if (index < 0 || index >= argument.size()) {
+                LogError() << "Missing code signing identity";
+            } else {
+                runCodesign = true;
+                hardenedRuntime = true;
+                secureTimestamp = true;
+                codesignIdentiy = argument.mid(index+1);
+            }
         } else if (argument.startsWith(QByteArray("-hardened-runtime"))) {
             LogDebug() << "Argument found:" << argument;
             hardenedRuntime = true;
+        } else if (argument.startsWith(QByteArray("-timestamp"))) {
+            LogDebug() << "Argument found:" << argument;
+            secureTimestamp = true;
         } else if (argument == QByteArray("-appstore-compliant")) {
             LogDebug() << "Argument found:" << argument;
             appstoreCompliant = true;

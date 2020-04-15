@@ -34,6 +34,12 @@ namespace TestQDoc {
     \qtvariable testcpp
     \title QDoc Test C++ Classes
     \brief A test module page.
+
+    \testnoautolist
+
+\if defined(test_nestedmacro)
+    \versionnote {module} {\ver}
+\endif
 */
 
 /*!

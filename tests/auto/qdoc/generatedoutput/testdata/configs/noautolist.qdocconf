@@ -1,0 +1,13 @@
+include(testqml.qdocconf)
+defines += test_noautolist
+
+outputformats = HTML DocBook
+
+HTML.nosubdirs          = true
+DocBook.nosubdirs       = true
+HTML.outputsubdir       = noautolist
+DocBook.outputsubdir    = noautolist-docbook
+
+# TODO: DocBook generator has trouble handling shared comment nodes
+# - allow two warnings related to these
+warninglimit = 2

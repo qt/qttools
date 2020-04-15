@@ -77,7 +77,6 @@
     \title Overview of the Translation Process
     \ingroup internationalization
 
-    \contentspage {Qt Linguist Manual}{Contents}
     \previouspage Qt Linguist Manual
     \nextpage Qt Linguist Manual: Release Manager
 
@@ -146,7 +145,6 @@
     \title Qt Linguist Manual: Release Manager
     \ingroup internationalization
 
-    \contentspage {Qt Linguist Manual}{Contents}
     \previouspage Overview of the Translation Process
     \nextpage Qt Linguist Manual: Translators
 
@@ -321,7 +319,6 @@
     \title Qt Linguist Manual: Translators
     \ingroup internationalization
 
-    \contentspage {Qt Linguist Manual}{Contents}
     \previouspage Qt Linguist Manual: Release Manager
     \nextpage Qt Linguist Manual: Developers
 
@@ -876,7 +873,6 @@
     \title Qt Linguist Manual: Developers
     \ingroup internationalization
 
-    \contentspage {Qt Linguist Manual}{Contents}
     \previouspage Qt Linguist Manual: Translators
     \nextpage Qt Linguist Manual: TS File Format
 
@@ -1047,7 +1043,6 @@
     \title Qt Linguist Manual: TS File Format
     \ingroup internationalization
 
-    \contentspage {Qt Linguist Manual}{Contents}
     \previouspage Qt Linguist Manual: Developers
     \nextpage Qt Linguist Manual: Text ID Based Translations
 
@@ -1065,7 +1060,6 @@
     \title Qt Linguist Manual: Text ID Based Translations
     \ingroup internationalization
 
-    \contentspage {Qt Linguist Manual}{Contents}
     \previouspage Qt Linguist Manual: TS File Format
 
     \brief Text ID based internationalization provides support for large scale

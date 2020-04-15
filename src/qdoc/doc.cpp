@@ -2086,7 +2086,7 @@ void DocParser::expandMacro(const QString &name, const QString &def, int numPara
 
         for (int i = 0; i < numParams; ++i) {
             if (numParams == 1 || isLeftBraceAhead()) {
-                args << getArgument(true);
+                args << getArgument();
             } else {
                 location().warning(tr("Macro '\\%1' invoked with too few"
                                       " arguments (expected %2, got %3)")

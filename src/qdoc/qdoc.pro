@@ -13,7 +13,7 @@ qtHaveModule(qmldevtools-private) {
 
 DEFINES += QT_NO_FOREACH
 
-include($$OUT_PWD/../global/qttools-config.pri)
+include($$OUT_PWD/../../src/global/qttools-config.pri)
 
 LIBS += $$CLANG_LIBS
 !contains(QMAKE_DEFAULT_INCDIRS, $$CLANG_INCLUDEPATH): INCLUDEPATH += $$CLANG_INCLUDEPATH

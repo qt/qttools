@@ -4108,21 +4108,22 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
         generateStatus(cn);
         generateSince(cn);
 
-        NodeMultiMap nmm;
-        cn->getMemberNamespaces(nmm);
-        if (!nmm.isEmpty()) {
-            startSection(registerRef("namespaces"), "Namespaces");
-            generateAnnotatedList(cn, nmm, "namespaces");
-            endSection();
+        if (!cn->noAutoList()) {
+            NodeMultiMap nmm;
+            cn->getMemberNamespaces(nmm);
+            if (!nmm.isEmpty()) {
+                startSection(registerRef("namespaces"), "Namespaces");
+                generateAnnotatedList(cn, nmm, "namespaces");
+                endSection();
+            }
+            nmm.clear();
+            cn->getMemberClasses(nmm);
+            if (!nmm.isEmpty()) {
+                startSection(registerRef("classes"), "Classes");
+                generateAnnotatedList(cn, nmm, "classes");
+                endSection();
+            }
         }
-        nmm.clear();
-        cn->getMemberClasses(nmm);
-        if (!nmm.isEmpty()) {
-            startSection(registerRef("classes"), "Classes");
-            generateAnnotatedList(cn, nmm, "classes");
-            endSection();
-        }
-        nmm.clear();
     }
 
     Text brief = cn->doc().briefText();

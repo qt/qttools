@@ -27,7 +27,7 @@ qtConfig(commandlineparser) {
 
 
 SUBDIRS += global
-include($$OUT_PWD/global/qttools-config.pri)
+include($$OUT_PWD/../src/global/qttools-config.pri)
 QT_FOR_CONFIG += tools-private
 qtConfig(clang): qtConfig(thread): qtConfig(commandlineparser): SUBDIRS += qdoc
 

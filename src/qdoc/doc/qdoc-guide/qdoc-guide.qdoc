@@ -205,18 +205,17 @@
     The \l {Format-specific Configuration Variables} article outlines the usage
     of each variable.
 
-    \section2 Qt Index Reference
+    \section2 QDoc Index Files
 
-    Documentation projects can link to Qt APIs and other articles by specifying
-    the path to the \c qt.index file. When qdoc generates the Qt Reference
-    Documentation, it will also generate an index file, containing the URLs to
-    the articles. Other projects can use the links in the index file so that
-    they can link to other articles and API documentation within Qt.
+    Documentation projects can link to targets in other projects by specifying
+    a set of dependencies, or a set of direct paths to to index file(s) this
+    project depends on. When QDoc generates documentation for a project,
+    it will also generate an \c .index file containing URLs to each linkable
+    entity in the project. Other projects can then define a dependency to the
+    index file in order to link to the documentation within that project.
 
-    \badcode
-        indexes = $QT_INSTALL_DOCS/html/qt.index $OTHER_PROJECT/html/qt.index
-    \endcode
-    It is possible to specify multiple index files from several projects.
+    \b {See also}: \l {depends-variable}{depends} and
+                   \l {indexes-variable}{indexes}.
 
     \section1 Macros and Other Configurations
 
@@ -229,6 +228,8 @@
     The snippet code will replace any instances of \c{\\pi} with \c &Pi; in the
     HTML file, which will appear as the Greek \pi symbol when viewed in
     browsers.
+
+    \b {See also:} \l {macro-variable}{macro}.
 
     \section2 QML Additions
 

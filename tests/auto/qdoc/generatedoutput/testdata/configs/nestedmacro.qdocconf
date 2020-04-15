@@ -1,0 +1,9 @@
+include(testcpp.qdocconf)
+defines += test_nestedmacro
+
+macro.ver               = "5.15.0"
+macro.ver.match         = "^(\\d+\\.\\d+)"
+macro.versionnote.HTML  = "<p><b>This \1 was introduced in version \2.</b></p>\n"
+
+HTML.nosubdirs          = true
+HTML.outputsubdir       = nestedmacro

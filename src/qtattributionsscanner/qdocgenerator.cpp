@@ -70,7 +70,6 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
                      LogLevel logLevel)
 {
     out << "/*!\n\n";
-    out << "\\contentspage attributions.html\n";
     for (const QString &part: package.qtParts)
         out << "\\ingroup attributions-" << part << "\n";
 

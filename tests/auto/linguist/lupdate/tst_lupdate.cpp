@@ -222,6 +222,9 @@ void tst_lupdate::good_data()
 #ifndef Q_OS_WIN
     dirs.removeAll(QLatin1String("backslashes"));
 #endif
+#ifndef Q_OS_MACOS
+    dirs.removeAll(QLatin1String("parseobjc"));
+#endif
 
     for (const QString &dir : qAsConst(dirs))
         QTest::newRow(dir.toLocal8Bit()) << dir;

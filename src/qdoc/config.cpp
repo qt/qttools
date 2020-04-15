@@ -239,14 +239,14 @@ QStringList MetaStack::getExpanded(const Location &location)
 }
 
 const QString Config::dot = QLatin1String(".");
-bool Config::debug_ = false;
+bool Config::m_debug = false;
 bool Config::generateExamples = true;
 QString Config::overrideOutputDir;
 QString Config::installDir;
 QSet<QString> Config::overrideOutputFormats;
-QMap<QString, QString> Config::extractedDirs;
-QStack<QString> Config::workingDirs_;
-QMap<QString, QStringList> Config::includeFilesMap_;
+QMap<QString, QString> Config::m_extractedDirs;
+QStack<QString> Config::m_workingDirs;
+QMap<QString, QStringList> Config::m_includeFilesMap;
 
 /*!
   \class Config
@@ -263,7 +263,7 @@ QMap<QString, QStringList> Config::includeFilesMap_;
  */
 void Config::init(const QString &programName, const QStringList &args)
 {
-    prog = programName;
+    m_prog = programName;
     processCommandLineOptions(args);
     reset();
 }
@@ -278,9 +278,9 @@ Config::~Config()
  */
 void Config::clear()
 {
-    loc = lastLocation_ = Location();
-    configVars_.clear();
-    includeFilesMap_.clear();
+    m_location = m_lastLocation = Location();
+    m_configVars.clear();
+    m_includeFilesMap.clear();
 }
 
 /*!
@@ -327,21 +327,25 @@ void Config::reset()
 void Config::load(const QString &fileName)
 {
     // Reset if a previous project was loaded
-    if (configVars_.contains(CONFIG_PROJECT))
+    if (m_configVars.contains(CONFIG_PROJECT))
         reset();
 
     load(Location(), fileName);
-    if (loc.isEmpty())
-        loc = Location(fileName);
+    if (m_location.isEmpty())
+        m_location = Location(fileName);
     else
-        loc.setEtc(true);
-    lastLocation_ = Location();
+        m_location.setEtc(true);
+    m_lastLocation = Location();
 
     // Add defines and includepaths from command line to their
     // respective configuration variables. Values set here are
     // always added to what's defined in configuration file.
     insertStringList(CONFIG_DEFINES, m_defines);
     insertStringList(CONFIG_INCLUDEPATHS, m_includePaths);
+
+    // Prefetch values that are used internally
+    m_exampleFiles = getCanonicalPathList(CONFIG_EXAMPLES);
+    m_exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
 }
 
 /*!
@@ -349,7 +353,7 @@ void Config::load(const QString &fileName)
  */
 void Config::setStringList(const QString &var, const QStringList &values)
 {
-    configVars_.replace(var, ConfigVar(var, values, QDir::currentPath()));
+    m_configVars.replace(var, ConfigVar(var, values, QDir::currentPath()));
 }
 
 /*!
@@ -358,7 +362,7 @@ void Config::setStringList(const QString &var, const QStringList &values)
 */
 void Config::insertStringList(const QString &var, const QStringList &values)
 {
-    configVars_.insert(var, ConfigVar(var, values, QDir::currentPath()));
+    m_configVars.insert(var, ConfigVar(var, values, QDir::currentPath()));
 }
 
 /*!
@@ -383,7 +387,7 @@ void Config::processCommandLineOptions(const QStringList &args)
     for (const auto &format : outputFormats)
         overrideOutputFormats.insert(format);
 
-    debug_ = m_parser.isSet(m_parser.debugOption);
+    m_debug = m_parser.isSet(m_parser.debugOption);
 
     if (m_parser.isSet(m_parser.prepareOption))
         m_qdocPass = Prepare;
@@ -512,21 +516,21 @@ QSet<QString> Config::getOutputFormats() const
  */
 QString Config::getString(const QString &var, const QString &defaultString) const
 {
-    QList<ConfigVar> configVars = configVars_.values(var);
+    QList<ConfigVar> configVars = m_configVars.values(var);
     if (!configVars.empty()) {
         QString value("");
         int i = configVars.size() - 1;
         while (i >= 0) {
             const ConfigVar &cv = configVars[i];
-            if (!cv.location_.isEmpty())
-                const_cast<Config *>(this)->lastLocation_ = cv.location_;
-            if (!cv.values_.isEmpty()) {
-                if (!cv.plus_)
+            if (!cv.m_location.isEmpty())
+                const_cast<Config *>(this)->m_lastLocation = cv.m_location;
+            if (!cv.m_values.isEmpty()) {
+                if (!cv.m_plus)
                     value.clear();
-                for (int j = 0; j < cv.values_.size(); ++j) {
+                for (int j = 0; j < cv.m_values.size(); ++j) {
                     if (!value.isEmpty() && !value.endsWith(QChar('\n')))
                         value.append(QChar(' '));
-                    value.append(cv.values_[j]);
+                    value.append(cv.m_values[j]);
                 }
             }
             --i;
@@ -562,17 +566,17 @@ QSet<QString> Config::getStringSet(const QString &var) const
  */
 QStringList Config::getStringList(const QString &var) const
 {
-    QList<ConfigVar> configVars = configVars_.values(var);
+    QList<ConfigVar> configVars = m_configVars.values(var);
     QStringList values;
     if (!configVars.empty()) {
         int i = configVars.size() - 1;
         while (i >= 0) {
-            if (!configVars[i].location_.isEmpty())
-                const_cast<Config *>(this)->lastLocation_ = configVars[i].location_;
-            if (configVars[i].plus_)
-                values.append(configVars[i].values_);
+            if (!configVars[i].m_location.isEmpty())
+                const_cast<Config *>(this)->m_lastLocation = configVars[i].m_location;
+            if (configVars[i].m_plus)
+                values.append(configVars[i].m_values);
             else
-                values = configVars[i].values_;
+                values = configVars[i].m_values;
             --i;
         }
     }
@@ -597,17 +601,17 @@ QStringList Config::getStringList(const QString &var) const
 QStringList Config::getCanonicalPathList(const QString &var, bool validate) const
 {
     QStringList t;
-    QList<ConfigVar> configVars = configVars_.values(var);
+    QList<ConfigVar> configVars = m_configVars.values(var);
     if (!configVars.empty()) {
         int i = configVars.size() - 1;
         while (i >= 0) {
             const ConfigVar &cv = configVars[i];
-            if (!cv.location_.isEmpty())
-                const_cast<Config *>(this)->lastLocation_ = cv.location_;
-            if (!cv.plus_)
+            if (!cv.m_location.isEmpty())
+                const_cast<Config *>(this)->m_lastLocation = cv.m_location;
+            if (!cv.m_plus)
                 t.clear();
-            const QString d = cv.currentPath_;
-            const QStringList &sl = cv.values_;
+            const QString d = cv.m_currentPath;
+            const QStringList &sl = cv.m_values;
             if (!sl.isEmpty()) {
                 t.reserve(t.size() + sl.size());
                 for (int i = 0; i < sl.size(); ++i) {
@@ -616,7 +620,7 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
                     if (dir.isRelative())
                         dir.setPath(d + QLatin1Char('/') + path);
                     if (validate && !QFileInfo::exists(dir.path()))
-                        lastLocation_.warning(tr("Cannot find file or directory: %1").arg(path));
+                        m_lastLocation.warning(tr("Cannot find file or directory: %1").arg(path));
                     else {
                         QString canonicalPath = dir.canonicalPath();
                         if (!canonicalPath.isEmpty())
@@ -681,7 +685,7 @@ QSet<QString> Config::subVars(const QString &var) const
 {
     QSet<QString> result;
     QString varDot = var + QLatin1Char('.');
-    for (auto it = configVars_.constBegin(); it != configVars_.constEnd(); ++it) {
+    for (auto it = m_configVars.constBegin(); it != m_configVars.constEnd(); ++it) {
         if (it.key().startsWith(varDot)) {
             QString subVar = it.key().mid(varDot.length());
             int dot = subVar.indexOf(QLatin1Char('.'));
@@ -702,7 +706,7 @@ QSet<QString> Config::subVars(const QString &var) const
 void Config::subVarsAndValues(const QString &var, ConfigVarMultimap &t) const
 {
     QString varDot = var + QLatin1Char('.');
-    for (auto it = configVars_.constBegin(); it != configVars_.constEnd(); ++it) {
+    for (auto it = m_configVars.constBegin(); it != m_configVars.constEnd(); ++it) {
         if (it.key().startsWith(varDot)) {
             QString subVar = it.key().mid(varDot.length());
             int dot = subVar.indexOf(QLatin1Char('.'));
@@ -721,7 +725,7 @@ QString Config::getIncludeFilePath(const QString &fileName) const
     QString ext = fileName.mid(fileName.lastIndexOf('.'));
     ext.prepend('*');
 
-    if (!includeFilesMap_.contains(ext)) {
+    if (!m_includeFilesMap.contains(ext)) {
         QSet<QString> t;
         QStringList result;
         const auto sourceDirs = getCanonicalPathList(CONFIG_SOURCEDIRS);
@@ -731,9 +735,9 @@ QString Config::getIncludeFilePath(const QString &fileName) const
         const auto exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
         for (const auto &dir : exampleDirs)
             result += getFilesHere(dir, ext, location(), t, t);
-        includeFilesMap_.insert(ext, result);
+        m_includeFilesMap.insert(ext, result);
     }
-    const QStringList &paths = (*includeFilesMap_.find(ext));
+    const QStringList &paths = (*m_includeFilesMap.find(ext));
     for (const auto &path : paths) {
         if (path.endsWith(fileName))
             return path;
@@ -789,6 +793,32 @@ QStringList Config::getExampleImageFiles(const QSet<QString> &excludedDirs,
 }
 
 /*!
+    Returns the path to the project file for \a examplePath, or an empty string
+    if no project file was found.
+ */
+QString Config::getExampleProjectFile(const QString &examplePath)
+{
+    QFileInfo fileInfo(examplePath);
+    QStringList validNames;
+    validNames << fileInfo.fileName() + QLatin1String(".pro")
+               << fileInfo.fileName() + QLatin1String(".qmlproject")
+               << fileInfo.fileName() + QLatin1String(".pyproject")
+               << QLatin1String("CMakeLists.txt")
+               << QLatin1String("qbuild.pro"); // legacy
+
+    QString projectFile;
+
+    for (const auto &name : qAsConst(validNames)) {
+        projectFile = Config::findFile(Location(), m_exampleFiles, m_exampleDirs,
+                                       examplePath + QLatin1Char('/') + name);
+        if (!projectFile.isEmpty())
+            return projectFile;
+    }
+
+    return projectFile;
+}
+
+/*!
   \a fileName is the path of the file to find.
 
   \a files and \a dirs are the lists where we must find the
@@ -839,7 +869,7 @@ QString Config::findFile(const Location &location, const QStringList &files,
             userFriendlyFilePath->append(*c);
 
             if (isArchive) {
-                QString extracted = extractedDirs[fileInfo.filePath()];
+                QString extracted = m_extractedDirs[fileInfo.filePath()];
                 ++c;
                 fileInfo.setFile(QDir(extracted), *c);
             } else {
@@ -987,9 +1017,10 @@ QStringList Config::loadMaster(const QString &fileName)
     stream.setCodec("UTF-8");
 #endif
     QStringList qdocFiles;
+    QDir configDir(QFileInfo(fileName).canonicalPath());
     QString line = stream.readLine();
     while (!line.isNull()) {
-        qdocFiles.append(line);
+        qdocFiles.append(QFileInfo(configDir, line).filePath());
         line = stream.readLine();
     }
     fin.close();
@@ -1214,9 +1245,9 @@ void Config::load(Location location, const QString &fileName)
                         keyLoc.fatal(tr("Invalid key '%1'").arg(key));
 
                     ConfigVarMultimap::Iterator i;
-                    i = configVars_.insert(key,
+                    i = m_configVars.insert(key,
                                            ConfigVar(key, rhsValues, QDir::currentPath(), keyLoc));
-                    i.value().plus_ = plus;
+                    i.value().m_plus = plus;
                 }
             }
         } else {
@@ -1224,8 +1255,8 @@ void Config::load(Location location, const QString &fileName)
         }
     }
     popWorkingDir();
-    if (!workingDirs_.isEmpty())
-        QDir::setCurrent(workingDirs_.top());
+    if (!m_workingDirs.isEmpty())
+        QDir::setCurrent(m_workingDirs.top());
 }
 
 bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles)
@@ -1279,7 +1310,7 @@ QStringList Config::getFilesHere(const QString &uncleanDir, const QString &nameF
  */
 void Config::pushWorkingDir(const QString &dir)
 {
-    workingDirs_.push(dir);
+    m_workingDirs.push(dir);
 }
 
 /*!
@@ -1288,8 +1319,8 @@ void Config::pushWorkingDir(const QString &dir)
  */
 QString Config::popWorkingDir()
 {
-    if (!workingDirs_.isEmpty())
-        return workingDirs_.pop();
+    if (!m_workingDirs.isEmpty())
+        return m_workingDirs.pop();
 
     qDebug() << "RETURNED EMPTY WORKING DIR";
     return QString();

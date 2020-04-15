@@ -47,6 +47,7 @@ class QHelpIndexWidget;
 class QHelpSearchEngine;
 class QHelpFilterEngine;
 class QHelpEngineCore;
+struct QHelpLink;
 
 enum {
     ShowHomePage = 0,
@@ -80,7 +81,7 @@ public:
     bool unregisterDocumentation(const QString &namespaceName);
     QUrl findFile(const QUrl &url) const;
     QByteArray fileData(const QUrl &url) const;
-    QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
+    QList<QHelpLink> documentsForIdentifier(const QString &id) const;
     QString error() const;
 
     QHelpFilterEngine *filterEngine() const;

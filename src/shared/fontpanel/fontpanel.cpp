@@ -68,7 +68,7 @@ FontPanel::FontPanel(QWidget *parentWidget) :
     writingSystems.push_front(QFontDatabase::Any);
     for (QFontDatabase::WritingSystem ws : qAsConst(writingSystems))
         m_writingSystemComboBox->addItem(QFontDatabase::writingSystemName(ws), QVariant(ws));
-    connect(m_writingSystemComboBox, QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+    connect(m_writingSystemComboBox, &QComboBox::currentIndexChanged,
             this, &FontPanel::slotWritingSystemChanged);
     formLayout->addRow(tr("&Writing system"), m_writingSystemComboBox);
 
@@ -77,12 +77,12 @@ FontPanel::FontPanel(QWidget *parentWidget) :
     formLayout->addRow(tr("&Family"), m_familyComboBox);
 
     m_styleComboBox->setEditable(false);
-    connect(m_styleComboBox, QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+    connect(m_styleComboBox, &QComboBox::currentIndexChanged,
             this, &FontPanel::slotStyleChanged);
     formLayout->addRow(tr("&Style"), m_styleComboBox);
 
     m_pointSizeComboBox->setEditable(false);
-    connect(m_pointSizeComboBox, QOverload<int, const QString &>::of(&QComboBox::currentIndexChanged),
+    connect(m_pointSizeComboBox, &QComboBox::currentIndexChanged,
             this, &FontPanel::slotPointSizeChanged);
     formLayout->addRow(tr("&Point size"), m_pointSizeComboBox);
 

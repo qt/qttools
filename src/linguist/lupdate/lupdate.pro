@@ -1,13 +1,15 @@
 option(host_build)
 QT = core-private tools-private
 
+# Needed to get access to all the CLANG_FOO assignments.
+include($$OUT_PWD/../../../src/global/qttools-config.pri)
+
 qtHaveModule(qmldevtools-private) {
     QT += qmldevtools-private
 } else {
     DEFINES += QT_NO_QML
 }
 
-include($$OUT_PWD/../../global/qttools-config.pri)
 qtConfig(clangcpp) {
     LIBS += $$CLANGCPP_LIBS $$CLANG_LIBS
 

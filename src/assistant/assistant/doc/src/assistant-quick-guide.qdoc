@@ -27,7 +27,6 @@
 
 /*!
     \if !defined(ASSISTANT_INTERNAL)
-    \contentspage {Qt Assistant Manual}{Contents}
     \previouspage Qt Assistant Manual
     \endif
     \page assistant-quick-guide.html
@@ -99,7 +98,6 @@
 
 /*!
     \if !defined(ASSISTANT_INTERNAL)
-    \contentspage {Qt Assistant Manual}{Contents}
     \nextpage Customizing Qt Assistant
     \endif
     \page assistant-details.html

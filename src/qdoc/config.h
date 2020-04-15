@@ -66,22 +66,22 @@ protected:
  */
 struct ConfigVar
 {
-    bool plus_;
-    QString name_;
-    QStringList values_;
-    QString currentPath_;
-    Location location_;
+    bool m_plus {};
+    QString m_name {};
+    QStringList m_values {};
+    QString m_currentPath {};
+    Location m_location {};
 
-    ConfigVar() : plus_(false) {}
+    ConfigVar() : m_plus(false) {}
 
     ConfigVar(const QString &name, const QStringList &values, const QString &dir)
-        : plus_(true), name_(name), values_(values), currentPath_(dir)
+        : m_plus(true), m_name(name), m_values(values), m_currentPath(dir)
     {
     }
 
     ConfigVar(const QString &name, const QStringList &values, const QString &dir,
               const Location &loc)
-        : plus_(false), name_(name), values_(values), currentPath_(dir), location_(loc)
+        : m_plus(false), m_name(name), m_values(values), m_currentPath(dir), m_location(loc)
     {
     }
 };
@@ -101,7 +101,7 @@ public:
     enum QDocPass { Neither, Prepare, Generate };
 
     void init(const QString &programName, const QStringList &args);
-    bool getDebug() const { return debug_; }
+    bool getDebug() const { return m_debug; }
 
     void clear();
     void reset();
@@ -111,9 +111,9 @@ public:
 
     void showHelp(int exitCode = 0) { m_parser.showHelp(exitCode); }
     QStringList qdocFiles() const { return m_parser.positionalArguments(); }
-    const QString &programName() const { return prog; }
-    const Location &location() const { return loc; }
-    const Location &lastLocation() const { return lastLocation_; }
+    const QString &programName() const { return m_prog; }
+    const Location &location() const { return m_location; }
+    const Location &lastLocation() const { return m_lastLocation; }
     bool getBool(const QString &var) const;
     int getInt(const QString &var) const;
 
@@ -135,6 +135,7 @@ public:
                                     const QSet<QString> &excludedFiles);
     QStringList getExampleImageFiles(const QSet<QString> &excludedDirs,
                                      const QSet<QString> &excludedFiles);
+    QString getExampleProjectFile(const QString &examplePath);
 
     static QStringList loadMaster(const QString &fileName);
     static bool isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles);
@@ -185,29 +186,31 @@ private:
     void setIncludePaths();
     void setIndexDirs();
 
-    QStringList m_dependModules;
-    QStringList m_defines;
-    QStringList m_includePaths;
-    QStringList m_indexDirs;
-    QString m_currentDir;
-    QString m_previousCurrentDir;
+    QStringList m_dependModules {};
+    QStringList m_defines {};
+    QStringList m_includePaths {};
+    QStringList m_indexDirs {};
+    QStringList m_exampleFiles {};
+    QStringList m_exampleDirs {};
+    QString m_currentDir {};
+    QString m_previousCurrentDir {};
 
-    static bool debug_;
+    static bool m_debug;
     static bool isMetaKeyChar(QChar ch);
     void load(Location location, const QString &fileName);
 
-    QString prog;
-    Location loc;
-    Location lastLocation_;
-    ConfigVarMultimap configVars_;
+    QString m_prog {};
+    Location m_location {};
+    Location m_lastLocation {};
+    ConfigVarMultimap m_configVars {};
 
-    static QMap<QString, QString> uncompressedFiles;
-    static QMap<QString, QString> extractedDirs;
-    static QStack<QString> workingDirs_;
-    static QMap<QString, QStringList> includeFilesMap_;
-    QDocCommandLineParser m_parser;
+    static QMap<QString, QString> m_uncompressedFiles;
+    static QMap<QString, QString> m_extractedDirs;
+    static QStack<QString> m_workingDirs;
+    static QMap<QString, QStringList> m_includeFilesMap;
+    QDocCommandLineParser m_parser {};
 
-    QDocPass m_qdocPass = Neither;
+    QDocPass m_qdocPass { Neither };
 };
 
 struct ConfigStrings
