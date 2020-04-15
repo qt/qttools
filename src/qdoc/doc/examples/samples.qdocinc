@@ -62,10 +62,10 @@
     \page generic-guide.html
     \title Generic QDoc Guide
     \nextpage Creating QDoc Configuration Files
-    There are three essential materials for generating documentation with qdoc:
+    There are three essential materials for generating documentation with QDoc:
 
     \list
-        \li \c qdoc binary
+        \li \c QDoc binary (\c {qdoc})
         \li \c qdocconf configuration files
         \li \c Documentation in \c C++, \c QML, and \c .qdoc files
     \endlist

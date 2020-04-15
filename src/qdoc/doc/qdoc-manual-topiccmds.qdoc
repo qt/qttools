@@ -942,7 +942,7 @@
 
     \li api - This is the type of page used for C++ class references and
     QML type references. You should never use this one for the pages
-    you write, because this one is reserved for qdoc.
+    you write, because this one is reserved for QDoc.
 
     \endlist
 
