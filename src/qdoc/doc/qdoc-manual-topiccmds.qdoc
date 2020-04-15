@@ -664,6 +664,8 @@
                ...
            \endquotation
 
+    See also \l {inheaderfile-command}{\\inheaderfile}.
+
     \target macro-command
     \section1 \\macro
 
