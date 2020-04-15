@@ -637,6 +637,10 @@
     install the \c libclang-dev package and its dependencies. For running QDoc,
     the \c libclang package is required.
 
+    \note On Windows, after installing the pre-built LLVM you must restart your
+    build shell to ensure that LLVM's binary directory is added to the PATH
+    variable. This is needed to be able to run qdoc.
+
     \section1 Set Clang location automatically
 
     The Qt build system uses the tool \c llvm-config to discover the location
