@@ -185,7 +185,7 @@ void FindFileDialog::createComboBoxes()
 
     directoryComboBox->setMinimumContentsLength(30);
     directoryComboBox->setSizeAdjustPolicy(
-            QComboBox::AdjustToMinimumContentsLength);
+            QComboBox::AdjustToContents);
     directoryComboBox->setSizePolicy(QSizePolicy::Expanding,
                                      QSizePolicy::Preferred);
 
