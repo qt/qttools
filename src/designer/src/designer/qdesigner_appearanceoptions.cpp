@@ -65,7 +65,7 @@ QDesignerAppearanceOptionsWidget::QDesignerAppearanceOptionsWidget(QWidget *pare
 
     m_ui->m_uiModeCombo->addItem(tr("Docked Window"), QVariant(DockedMode));
     m_ui->m_uiModeCombo->addItem(tr("Multiple Top-Level Windows"), QVariant(TopLevelMode));
-    connect(m_ui->m_uiModeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+    connect(m_ui->m_uiModeCombo, &QComboBox::currentIndexChanged,
             this, &QDesignerAppearanceOptionsWidget::slotUiModeComboChanged);
 
     m_ui->m_fontPanel->setCheckable(true);

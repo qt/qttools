@@ -739,7 +739,7 @@ void MainWindow::setupFilterToolbar()
 
     connect(&helpEngine, &HelpEngineWrapper::setupFinished,
             this, &MainWindow::setupFilterCombo, Qt::QueuedConnection);
-    connect(m_filterCombo, QOverload<int>::of(&QComboBox::activated),
+    connect(m_filterCombo, &QComboBox::activated,
             this, &MainWindow::filterDocumentation);
     connect(helpEngine.filterEngine(), &QHelpFilterEngine::filterActivated,
             this, &MainWindow::currentFilterChanged);

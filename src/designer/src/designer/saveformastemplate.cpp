@@ -60,7 +60,7 @@ SaveFormAsTemplate::SaveFormAsTemplate(QDesignerFormEditorInterface *core,
     m_addPathIndex = ui.categoryCombo->count() - 1;
     connect(ui.templateNameEdit, &QLineEdit::textChanged,
             this, &SaveFormAsTemplate::updateOKButton);
-    connect(ui.categoryCombo, QOverload<int>::of(&QComboBox::activated),
+    connect(ui.categoryCombo, &QComboBox::activated,
             this, &SaveFormAsTemplate::checkToAddPath);
 }
 

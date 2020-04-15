@@ -518,7 +518,7 @@ InlineEditor::InlineEditor(QWidget *parent) :
     setModel(m_model = new InlineEditorModel(0, 4, this));
     setFrame(false);
     m_idx = -1;
-    connect(this, QOverload<int>::of(&QComboBox::activated),
+    connect(this, &QComboBox::activated,
             this, &InlineEditor::checkSelection);
 }
 
@@ -656,7 +656,7 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
         break;
     }
 
-    connect(inline_editor, QOverload<int>::of(&QComboBox::activated),
+    connect(inline_editor, &QComboBox::activated,
             this, &ConnectionDelegate::emitCommitData);
 
     return inline_editor;
