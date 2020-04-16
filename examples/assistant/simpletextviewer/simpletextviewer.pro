@@ -8,6 +8,8 @@ SOURCES       = main.cpp \
                 assistant.cpp \
                 textedit.cpp
 
+DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
 QT += widgets
 
 target.path = $$[QT_INSTALL_EXAMPLES]/assistant/simpletextviewer

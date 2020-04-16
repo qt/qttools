@@ -50,11 +50,13 @@
 
 #include "assistant.h"
 
+#include <QApplication>
 #include <QByteArray>
 #include <QDir>
 #include <QLibraryInfo>
 #include <QMessageBox>
 #include <QProcess>
+#include <QStandardPaths>
 
 Assistant::Assistant()
     : proc(0)
@@ -85,6 +87,23 @@ void Assistant::showDocumentation(const QString &page)
 }
 //! [1]
 
+QString documentationDirectory()
+{
+    QStringList paths;
+#ifdef SRCDIR
+    paths.append(QLatin1String(SRCDIR));
+#endif
+    paths.append(QLibraryInfo::location(QLibraryInfo::ExamplesPath));
+    paths.append(QCoreApplication::applicationDirPath());
+    paths.append(QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
+    for (const auto &dir : qAsConst(paths)) {
+        const QString path = dir + QLatin1String("/documentation");
+        if (QFileInfo::exists(path))
+            return path;
+    }
+    return QString();
+}
+
 //! [2]
 bool Assistant::startAssistant()
 {
@@ -99,21 +118,29 @@ bool Assistant::startAssistant()
         app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");
 #endif
 
-        QStringList args;
-        args << QLatin1String("-collectionFile")
-            << QLibraryInfo::location(QLibraryInfo::ExamplesPath)
-            + QLatin1String("/assistant/simpletextviewer/documentation/simpletextviewer.qhc")
-            << QLatin1String("-enableRemoteControl");
+        const QString collectionDirectory = documentationDirectory();
+        if (collectionDirectory.isEmpty()) {
+            showError(tr("The documentation directory cannot be found"));
+            return false;
+        }
+
+        QStringList args{QLatin1String("-collectionFile"),
+                         collectionDirectory + QLatin1String("/simpletextviewer.qhc"),
+                         QLatin1String("-enableRemoteControl")};
 
         proc->start(app, args);
 
         if (!proc->waitForStarted()) {
-            QMessageBox::critical(nullptr,
-                                  tr("Simple Text Viewer"),
-                                  tr("Unable to launch Qt Assistant (%1)").arg(app));
+            showError(tr("Unable to launch Qt Assistant (%1): %2").arg(app, proc->errorString()));
             return false;
         }
     }
     return true;
 }
 //! [2]
+
+void Assistant::showError(const QString &message)
+{
+    QMessageBox::critical(QApplication::activeWindow(),
+                          tr("Simple Text Viewer"), message);
+}
