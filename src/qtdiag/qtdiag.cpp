@@ -197,7 +197,7 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
             << "\nVersion: " << reinterpret_cast<const char *>(functions.glGetString(GL_VERSION))
             << "\nShading language: " << reinterpret_cast<const char *>(functions.glGetString(GL_SHADING_LANGUAGE_VERSION))
             <<  "\nFormat: " << context.format();
-#  ifndef QT_OPENGL_ES_2
+#  if !QT_CONFIG(opengles2)
         GLint majorVersion;
         functions.glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
         GLint minorVersion;
@@ -220,7 +220,7 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
             }
         }
         str << '\n';
-#  endif // !QT_OPENGL_ES_2
+#  endif // !QT_CONFIG(opengles2)
         if (listExtensions) {
             QByteArrayList extensionList = context.extensions().values();
             std::sort(extensionList.begin(), extensionList.end());
