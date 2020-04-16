@@ -69,6 +69,7 @@ public:
 
 private:
     bool startAssistant();
+    void showError(const QString &message);
     QProcess *proc;
 };
 
