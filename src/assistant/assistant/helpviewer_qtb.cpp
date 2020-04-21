@@ -38,6 +38,7 @@
 
 #include <QtGui/QContextMenuEvent>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QScrollBar>
 #ifndef QT_NO_CLIPBOARD
 #include <QtGui/QClipboard>
 #endif
@@ -312,6 +313,14 @@ void HelpViewer::mouseReleaseEvent(QMouseEvent *e)
     QTextBrowser::mouseReleaseEvent(e);
 }
 
+
+void HelpViewer::resizeEvent(QResizeEvent *e)
+{
+    const int topTextPosition = cursorForPosition({width() / 2, 0}).position();
+    QTextBrowser::resizeEvent(e);
+    scrollToTextPosition(topTextPosition);
+}
+
 // -- private slots
 
 void HelpViewer::actionChanged()
@@ -375,6 +384,18 @@ QVariant HelpViewer::loadResource(int type, const QUrl &name)
         }
     }
     return ba;
+}
+
+
+void HelpViewer::scrollToTextPosition(int position)
+{
+    QTextCursor tc(document());
+    tc.setPosition(position);
+    const int dy = cursorRect(tc).top();
+    if (verticalScrollBar()) {
+        verticalScrollBar()->setValue(
+                    std::min(verticalScrollBar()->value() + dy, verticalScrollBar()->maximum()));
+    }
 }
 
 QT_END_NAMESPACE

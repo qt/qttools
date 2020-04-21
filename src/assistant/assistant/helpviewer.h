@@ -130,6 +130,7 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void resizeEvent(QResizeEvent *e) override;
 
 private slots:
     void actionChanged();
@@ -141,6 +142,7 @@ private:
     void contextMenuEvent(QContextMenuEvent *event) override;
     QVariant loadResource(int type, const QUrl &name) TEXTBROWSER_OVERRIDE;
     bool handleForwardBackwardMouseButtons(QMouseEvent *e);
+    void scrollToTextPosition(int position);
 
 private:
     HelpViewerPrivate *d;
