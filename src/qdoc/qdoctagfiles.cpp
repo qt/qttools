@@ -183,6 +183,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             nodeName = "member";
             kind = "enumeration";
             break;
+        case Node::TypeAlias: // Treated as typedef
         case Node::Typedef:
             nodeName = "member";
             kind = "typedef";
@@ -309,6 +310,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
                 writer.writeEndElement(); // member
             }
         } break;
+        case Node::TypeAlias: // Treated as typedef
         case Node::Typedef: {
             const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
             if (typedefNode->associatedEnum())

@@ -61,7 +61,10 @@
             <keyword name="Switch" id="QML.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="TabWidget" id="QML.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
             <keyword name="Test" id="TestQDoc::Test" ref="testqdoc-test.html"/>
+            <keyword name="Test::SomeType" id="Test::SomeType" ref="testqdoc-test.html#SomeType-typedef"/>
             <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
+            <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-alias"/>
+            <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-alias"/>
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
             <keyword name="Type" id="QML.Type" ref="qml-qdoc-test-type.html"/>
             <keyword name="UI Components" id="UI Components" ref="uicomponents-qmlmodule.html"/>

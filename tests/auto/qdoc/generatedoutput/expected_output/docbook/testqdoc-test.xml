@@ -32,6 +32,19 @@
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 </db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="SomeType-typedef">
+<db:title>Test::typedef SomeType</db:title>
+<db:typedefsynopsis>
+<db:type>SomeType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:typedefsynopsis>
+<db:para>A typedef.</db:para>
+</db:section>
+</db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="overload">

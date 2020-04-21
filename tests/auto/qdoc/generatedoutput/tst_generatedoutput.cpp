@@ -217,6 +217,8 @@ void tst_generatedOutput::htmlFromCpp()
                    "testcpp-module.html "
                    "testqdoc-test.html "
                    "testqdoc-test-members.html "
+                   "testqdoc-testderived.html "
+                   "testqdoc-testderived-members.html "
                    "testqdoc.html");
 }
 

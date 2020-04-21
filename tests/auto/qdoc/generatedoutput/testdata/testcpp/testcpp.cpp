@@ -155,6 +155,11 @@ void Test::virtualFun()
 }
 
 /*!
+    \typedef Test::SomeType
+    \brief A typedef.
+*/
+
+/*!
     \reimp
 */
 void TestDerived::virtualFun()
@@ -170,6 +175,16 @@ void TestDerived::virtualFun()
 
     Overloads that share a documentation comment, optionally taking
     a parameter \a b.
+*/
+
+/*!
+    \typealias TestDerived::DerivedType
+    An aliased typedef.
+*/
+
+/*!
+    \typedef TestDerived::NotTypedef
+    I'm an alias, not a typedef.
 */
 
 /*!

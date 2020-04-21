@@ -81,7 +81,8 @@ protected:
     bool generateStatus(const Node *node);
     bool generateThreadSafeness(const Node *node);
     bool generateSince(const Node *node);
-    void generateAddendum(const Node *node, Generator::Addendum type, CodeMarker *marker = nullptr) override;
+    void generateAddendum(const Node *node, Generator::Addendum type, CodeMarker *marker = nullptr,
+                          bool generateNote = true) override;
     using Generator::generateBody;
     void generateBody(const Node *node);
 

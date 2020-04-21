@@ -8,6 +8,16 @@
             <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override">
                 <description/>
             </function>
+            <alias name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-alias" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType">
+                <description>
+                    <para>An aliased typedef.</para>
+                </description>
+            </alias>
+            <alias name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-alias" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int">
+                <description>
+                    <para>I'm an alias, not a typedef.</para>
+                </description>
+            </alias>
         </class>
     </document>
 </WebXML>

@@ -56,6 +56,11 @@
                     <para>Function that must be reimplemented.</para>
                 </description>
             </function>
+            <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true">
+                <description>
+                    <brief>A typedef.</brief>
+                </description>
+            </typedef>
         </class>
     </document>
 </WebXML>

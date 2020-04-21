@@ -94,7 +94,7 @@ void Node::initialize()
     goals_.insert("example", Node::Example);
     goals_.insert("externalpage", Node::ExternalPage);
     goals_.insert("typedef", Node::Typedef);
-    goals_.insert("typealias", Node::Typedef);
+    goals_.insert("typealias", Node::TypeAlias);
     goals_.insert("function", Node::Function);
     goals_.insert("proxy", Node::Proxy);
     goals_.insert("property", Node::Property);
@@ -938,6 +938,8 @@ QString Node::nodeTypeString(NodeType t)
         return QLatin1String("example");
     case ExternalPage:
         return QLatin1String("external page");
+    case TypeAlias:
+        return QLatin1String("alias");
     case Typedef:
         return QLatin1String("typedef");
     case Function:

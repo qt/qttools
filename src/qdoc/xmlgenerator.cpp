@@ -76,6 +76,7 @@ int XmlGenerator::hOffset(const Node *node)
     case Node::Page:
         return 1;
     case Node::Enum:
+    case Node::TypeAlias:
     case Node::Typedef:
     case Node::Function:
     case Node::Property:
@@ -238,6 +239,9 @@ QString XmlGenerator::refForNode(const Node *node)
     switch (node->nodeType()) {
     case Node::Enum:
         ref = node->name() + "-enum";
+        break;
+    case Node::TypeAlias:
+        ref = node->name() + "-alias";
         break;
     case Node::Typedef: {
         const auto tdn = static_cast<const TypedefNode *>(node);
@@ -450,6 +454,8 @@ QString XmlGenerator::targetType(const Node *node)
         return QStringLiteral("page");
     case Node::Enum:
         return QStringLiteral("enum");
+    case Node::TypeAlias:
+        return QStringLiteral("alias");
     case Node::Typedef:
         return QStringLiteral("typedef");
     case Node::Property:

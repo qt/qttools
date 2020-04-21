@@ -1410,6 +1410,40 @@
     {\\instantiates} to specify that a Transform is instantiated by
     the C++ class QGraphicsTransform. A \\qmltype comment should
 
+    \target typealias-command
+    \section1 \\typealias
+
+    The \\typealias command is similar to \l {typedef-command}{\\typedef},
+    but specific to documenting a C++ type alias:
+
+    \code
+    class Foo
+    {
+    public:
+        using ptr = void*;
+    // ...
+    }
+    \endcode
+
+    This can be documented as
+
+    \badcode *
+    /\1!
+        \typealias Foo::ptr
+    \1/
+    \endcode
+
+    QDoc will automatically generate a sentence in the documentation describing
+    the alias:
+
+    \quotation
+    This is a type alias for \c {void*}.
+    \endquotation
+
+    The \\typealias command was introduced in QDoc 5.15.
+
+    See also \l {typedef-command}{\\typedef}.
+
     \target typedef-command
     \section1 \\typedef
 
@@ -1497,6 +1531,8 @@
 
         Qt-style synonym for QList::iterator.
     \endquotation
+
+    See also \l {typealias-command}{\\typealias}.
 
     \target variable-command
     \section1 \\variable

@@ -102,7 +102,7 @@ void CppCodeParser::initializeParser()
     nodeTypeMap_.insert(COMMAND_STRUCT, Node::Struct);
     nodeTypeMap_.insert(COMMAND_UNION, Node::Union);
     nodeTypeMap_.insert(COMMAND_ENUM, Node::Enum);
-    nodeTypeMap_.insert(COMMAND_TYPEALIAS, Node::Typedef);
+    nodeTypeMap_.insert(COMMAND_TYPEALIAS, Node::TypeAlias);
     nodeTypeMap_.insert(COMMAND_TYPEDEF, Node::Typedef);
     nodeTypeMap_.insert(COMMAND_PROPERTY, Node::Property);
     nodeTypeMap_.insert(COMMAND_VARIABLE, Node::Variable);
@@ -112,7 +112,7 @@ void CppCodeParser::initializeParser()
     nodeTypeTestFuncMap_.insert(COMMAND_STRUCT, &Node::isStruct);
     nodeTypeTestFuncMap_.insert(COMMAND_UNION, &Node::isUnion);
     nodeTypeTestFuncMap_.insert(COMMAND_ENUM, &Node::isEnumType);
-    nodeTypeTestFuncMap_.insert(COMMAND_TYPEALIAS, &Node::isTypedef);
+    nodeTypeTestFuncMap_.insert(COMMAND_TYPEALIAS, &Node::isTypeAlias);
     nodeTypeTestFuncMap_.insert(COMMAND_TYPEDEF, &Node::isTypedef);
     nodeTypeTestFuncMap_.insert(COMMAND_PROPERTY, &Node::isProperty);
     nodeTypeTestFuncMap_.insert(COMMAND_VARIABLE, &Node::isVariable);
