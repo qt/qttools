@@ -89,6 +89,7 @@ private:
         QSet<QString> tags;
     };
 
+    QString retrieveInstallPath(const ExampleNode *exampleNode);
     void generateNavigationBar(const QString &title, const Node *node, CodeMarker *marker,
                                const QString &buildversion, bool tableItems = false);
     void generateHeader(const QString &title, const Node *node = nullptr,
