@@ -3841,6 +3841,21 @@ void HtmlGenerator::generateManifestFiles()
 }
 
 /*!
+  Retrieve the install path for the \a example as specified with
+  the \meta command, or fall back to the one defined in .qdocconf.
+ */
+QString HtmlGenerator::retrieveInstallPath(const ExampleNode *example)
+{
+    QString installPath = example->doc().metaTagMap().value(QLatin1String("installpath"));
+    if (installPath.isEmpty())
+        installPath = examplesPath;
+    if (!installPath.isEmpty() && !installPath.endsWith(QLatin1Char('/')))
+        installPath += QLatin1Char('/');
+
+    return installPath;
+}
+
+/*!
   This function is called by generateManifestFiles(), once
   for each manifest file to be generated. \a manifest is the
   type of manifest file.
@@ -3889,13 +3904,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             continue;
         }
 
-        // Retrieve the install path specified with \meta command,
-        // or fall back to the one defined in .qdocconf
-        QString installPath = en->doc().metaTagMap().value(QLatin1String("installpath"));
-        if (installPath.isEmpty())
-            installPath = examplesPath;
-        if (!installPath.isEmpty() && !installPath.endsWith(QLatin1Char('/')))
-            installPath += QLatin1Char('/');
+        const QString installPath = retrieveInstallPath(en);
         // attributes that are always written for the element
         usedAttributes.clear();
         usedAttributes << "name"
