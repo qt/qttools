@@ -185,19 +185,6 @@ void HtmlGenerator::initializeGenerator()
     if (naturalLanguage.isEmpty())
         naturalLanguage = QLatin1String("en");
 
-    const QSet<QString> editionNames = config->subVars(CONFIG_EDITION);
-    for (const auto &editionName : editionNames) {
-        QStringList editionModules = config->getStringList(CONFIG_EDITION + Config::dot
-                                                           + editionName + Config::dot + "modules");
-        QStringList editionGroups = config->getStringList(CONFIG_EDITION + Config::dot + editionName
-                                                          + Config::dot + "groups");
-
-        if (!editionModules.isEmpty())
-            editionModuleMap[editionName] = editionModules;
-        if (!editionGroups.isEmpty())
-            editionGroupMap[editionName] = editionGroups;
-    }
-
     codeIndent = config->getInt(CONFIG_CODEINDENT); // QTBUG-27798
     codePrefix = config->getString(CONFIG_CODEPREFIX);
     codeSuffix = config->getString(CONFIG_CODESUFFIX);

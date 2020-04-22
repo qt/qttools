@@ -62,6 +62,7 @@ public:
     void parseSourceFile(const Location &location, const QString &filePath) override;
     void precompileHeaders() override;
     Node *parseFnArg(const Location &location, const QString &fnArg) override;
+    static const QByteArray &fn() { return fn_; }
 
 private:
     void getDefaultArgs();
@@ -79,6 +80,7 @@ private:
     std::vector<const char *> args_;
     QVector<QByteArray> moreArgs_;
     QStringList namespaceScope_;
+    static QByteArray fn_;
 };
 
 QT_END_NAMESPACE

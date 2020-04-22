@@ -22,7 +22,7 @@
                     <parameter type="bool" name="b" default=""/>
                 </function>
                 <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
-                    <parameter type="int" name="v" default=""/>
+                    <parameter type="int" name="v" default="0"/>
                 </function>
                 <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)">
                     <parameter type="int" name="i" default=""/>

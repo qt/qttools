@@ -37,7 +37,8 @@
     \list
     \li Is this class thread-safe?
     \li Is this function reentrant?
-    \li Of which module is this class a member ?
+    \li Of which module is this class a member?
+    \li Which include statement is needed to use this class?
     \endlist
 
     Context commands can appear anywhere in a QDoc comment,
@@ -47,6 +48,7 @@
     \list
       \li \l {abstract-command} {\\abstract}
       \li \l {ingroup-command}{\\ingroup},
+      \li \l {inheaderfile-command}{\\inheaderfile},
       \li \l {inherits-command}{\\inherits},
       \li \l {inmodule-command}{\\inmodule},
       \li \l {internal-command}{\\internal},
@@ -57,6 +59,7 @@
       \li \l {preliminary-command}{\\preliminary},
       \li \l {previouspage-command}{\\previouspage},
       \li \l {qmlabstract-command} {\\qmlabstract}
+      \li \l {readonly-command} {\\readonly}
       \li \l {reentrant-command}{\\reentrant},
       \li \l {reimp-command}{\\reimp},
       \li \l {relates-command}{\\relates},
@@ -243,6 +246,31 @@
     * /
     \endcode
 
+    \target inheaderfile-command
+    \section1 \\inheaderfile
+
+    The \\inheaderfile meta-command is used for overriding the include statement
+    generated for a C++ class, namespace, or header file reference documentation.
+
+    By default, QDoc documents a \c {\class SomeClass} to be available with
+    a following include statement:
+
+    \code
+    #include <SomeClass>
+    \endcode
+
+    If the actual include statement differs from the default, this can be
+    documented as
+
+    \badcode
+    \class SomeClass
+    \inheaderfile Tools/SomeClass
+    ...
+    \endcode
+
+    See also \l {class-command}{\\class} and
+             \l {headerfile-command}{\\headerfile}.
+
     \target obsolete-command
     \section1 \\obsolete
 
@@ -378,6 +406,12 @@
        \li ...
        \endlist
     \endquotation
+
+    \target readonly-command
+    \section1 \\readonly
+
+    The \\readonly command is used in conjunction with a \l {qmlproperty-command}
+    {\\qmlproperty} command to mark the QML property as read-only.
 
     \target since-command
     \section1 \\since

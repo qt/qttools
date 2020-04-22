@@ -32,14 +32,14 @@
 
     \title QA Pages
 
-    qdoc can generate some extra HTML pages that can be useful for
-    debugging qdoc documentation. These \e QA pages make it easier for
+    QDoc can generate some extra HTML pages that can be useful for
+    debugging QDoc documentation. These \e QA pages make it easier for
     those who write documentation to find links that either go to the
     wrong targets or don't go anywhere at all.
 
     \section2 Generating the QA Pages
 
-    Add \c {-write-qa-pages} to the command line to tell qdoc to
+    Add \c {-write-qa-pages} to the command line to tell QDoc to
     generate the QA pages. If this option is not provided, the QA
     pages will not be generated, and previolusly generated QA pages
     will be deleted.
@@ -49,7 +49,7 @@
     The main QA page for a module is not linked into the module's
     generated documentation, but it is located in the same output
     directory. To find the top-level QA page for module \e {xxx}, set
-    your browser to the qdoc output directory for module \e {xxx}.
+    your browser to the QDoc output directory for module \e {xxx}.
     Several files whose names begin with \e {aaa} appear at the top of
     the list. These are the QA pages for module \e{xxx}. The file
     names begin with \e {aaa} to ensure that they are easy to find at
@@ -83,11 +83,11 @@
     QtCore to QtQuick.  The first column of each table entry contains
     a link to some link in QtCore. The link text as it appears in
     QtCore is shown. The second and third columns contain the source
-    file name and line number for where qdoc saw the link in a qdoc
+    file name and line number for where QDoc saw the link in a qdoc
     comment.
 
     \note The line number will normally refer to the first line of the
-    comment where qdoc saw the link.
+    comment where QDoc saw the link.
 
     Clicking on a link in the table takes you to that link in the
     documentation. There the link will be marked with three red

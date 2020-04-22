@@ -124,13 +124,7 @@ void Test::someFunctionDefaultArg(int i, bool b = false)
     return;
 }
 
-/*!
-    Function that takes a parameter \a v.
-    Also returns the value of \a v.
-\if defined(test_ignoresince)
-    \since Test 1.0
-\endif
-*/
+// Documented below with an \fn command. Unnecessary but we support it, and it's used.
 int Test::someFunction(int v)
 {
     return v;
@@ -140,6 +134,16 @@ int Test::someFunction(int v)
     \fn void TestQDoc::Test::inlineFunction()
 
     \brief An inline function, documented using the \CMDFN QDoc command.
+*/
+
+/*!
+    \fn int Test::someFunction(int v = 0)
+
+    Function that takes a parameter \a v.
+    Also returns the value of \a v.
+\if defined(test_ignoresince)
+    \since Test 1.0
+\endif
 */
 
 /*!

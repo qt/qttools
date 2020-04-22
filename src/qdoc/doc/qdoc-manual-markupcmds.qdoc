@@ -206,9 +206,9 @@
     text (which may include other QDoc commands) to which special
     formatting attributes should be applied.
 
-    An argument must be provided in curly braces, as in the qdoc
+    An argument must be provided in curly braces, as in the QDoc
     comment shown below. The argument is not interpreted but is used
-    as attribute(s) of the tag that is output by qdoc.
+    as attribute(s) of the tag that is output by QDoc.
 
     For example, we might want to render an inline image so that it
     floats to the right of the current block of text:
@@ -222,7 +222,7 @@
       * /
     \endcode
 
-    If qdoc is generating HTML, it will translate these commands to:
+    If QDoc is generating HTML, it will translate these commands to:
 
     \code
       <div class="float-right"><p><img src="images/qml-column.png" /></p></div>
@@ -1699,7 +1699,7 @@
     ...
     \endcode
 
-    By default, qdoc looks for \c{//!} as a code snippet marker.
+    By default, QDoc looks for \c{//!} as a code snippet marker.
     For \c{.pro}, \c{.py}, \c{.cmake}, and \c{CMakeLists.txt}
     files, \c {#!} is detected. Finally, \c{<!--} is accepted in
     \c{.html}, \c{.qrc}, \c{.ui}, \c{.xml}, \c{.dita}, and \c{.xq} files.
@@ -1805,7 +1805,7 @@
 
     \li \c {\l QWidget::removeAction(QAction* action)} - The signature
     of a function with parameters. If an exact match is not found, the
-    link is not satisfied and qdoc reports a \e {Can't link to...} error.
+    link is not satisfied and QDoc reports a \e {Can't link to...} error.
 
     \li \c {\l <QtGlobal>} - The subject of a \l {headerfile-command}
     {\\headerfile} command.
@@ -1850,7 +1850,7 @@
     \section2 Fixing Ambiguous Links
 
     Because of the modularization of Qt beginning with Qt 5.0, The
-    possibility that qdoc will have to deal with ambiguous links has
+    possibility that QDoc will have to deal with ambiguous links has
     increased. An ambiguous link is one that has a matching target in
     more than one Qt module, e.g. the same section title can appear in
     more than one Qt module, or the name of a C++ class in one module
@@ -1859,7 +1859,7 @@
     namespace in QtCore and a QML type in QtQml.
 
     Suppose we want to link to the \l {Qt} {Qt C++ namespace}.  At the
-    time qdoc generated this HTML page, that link was correct.  Does
+    time QDoc generated this HTML page, that link was correct.  Does
     it still go to the C++ namespace? Qdoc generated that link from
     this link command:
 
@@ -1868,22 +1868,22 @@
     \endlist
 
     Now suppose we want to link to the \l [QML] {Qt} {Qt QML type}.
-    At the time qdoc generated this HTML page, that link was also
+    At the time QDoc generated this HTML page, that link was also
     correct, but we had to use this link command:
 
     \list
         \li \c {\l [QML] {Qt} {Qt QML type}}
     \endlist
 
-    The \e {QML} in \e {square brackets} tells qdoc to accept a
+    The \e {QML} in \e {square brackets} tells QDoc to accept a
     matching target only if the traget is on a QML page. Qdoc actually
     finds the C++ namespace target first, but since that target is on
-    a C++ page, qdoc ignores it and keeps looking until it finds the
+    a C++ page, QDoc ignores it and keeps looking until it finds the
     same target on a QML page.
 
     Without the guidance in the \e{\\l command} in the optional \e
-    {square bracket} argument, qdoc links to the first matching target
-    it finds. qdoc can't warn that the link was ambiguous in such
+    {square bracket} argument, QDoc links to the first matching target
+    it finds. QDoc can't warn that the link was ambiguous in such
     cases because it doesn't know that another matching target exists.
 
     \section2 What arguments can appear in square brackets?
@@ -1895,13 +1895,13 @@
 
     The \e {square bracket} argument is only allowed in the \c {\l
     (link)} command. The example above shows how \c QML is used as the
-    \e {square brackets} argument to force qdoc to match a QML target.
+    \e {square brackets} argument to force QDoc to match a QML target.
     Most often, this will be a QML type, but it can also be a QML
     member function of property.
 
-    In the example, qdoc didn't need a \e {square bracket} argument to
+    In the example, QDoc didn't need a \e {square bracket} argument to
     find the Qt C++ namespace page, because that one was the first
-    matching target qdoc found anyway. However, to force qdoc to find
+    matching target QDoc found anyway. However, to force QDoc to find
     a C++ target when a matching QML target gets in the way, \c CPP
     can be used as the \e {square bracket} argument. For example:
 
@@ -1909,11 +1909,11 @@
         \li \c {\l [CPP] {Qt} {Qt C++ namespace}}
     \endlist
 
-    ...will force qdoc to ignore the Qt QML type and continue
+    ...will force QDoc to ignore the Qt QML type and continue
     searching until it matches the Qt C++ namespace.
 
     If the link target is neither a C++ nor a QML entity, \c {DOC} can
-    be used as the \e {square bracket} argument to prevent qdoc from
+    be used as the \e {square bracket} argument to prevent QDoc from
     matching either of those. At this writing, there were no cases of
     ambiguous links where using \c {DOC} was required.
 
@@ -1928,7 +1928,7 @@
     \endlist
 
     When a module name is used as the \e {square bracket} argument,
-    qdoc will search for link the target in that module only. This
+    QDoc will search for link the target in that module only. This
     makes searching for link targets more efficient.
 
     Finally, the module name and entity type arguments can be
@@ -2710,7 +2710,7 @@
                \li Tutorial and Examples
            \endlist
 
-    \warning There appears to be a bug in qdoc here. If you include
+    \warning There appears to be a bug in QDoc here. If you include
     any of the argument types, you get a numeric list. We're looking
     into it.
 
@@ -3796,12 +3796,12 @@
 
     The command must stand on its own line. See \l {Qt Sensors QML Types} for
     an example. The page is generated from \c {qtsensors5.qdoc}. There you will
-    find a qdoc comment containing the \c{\qmlmodule} command for the QtSensors
-    module. The same qdoc comment contains two \c {\annotated-list} commands to
+    find a QDoc comment containing the \c{\qmlmodule} command for the QtSensors
+    module. The same QDoc comment contains two \c {\annotated-list} commands to
     list the QML types in two separate groups. The QML types have been divided
     into these two groups because it makes more sense to list them this way than
     it does to list them in a single alphabetical list. At the bottom of the
-    comment, \c {\noautolist} has been used to tell qdoc not to generate the
+    comment, \c {\noautolist} has been used to tell QDoc not to generate the
     automatic annotated list.
 
     This command was introduced in QDoc 5.6.
@@ -3916,7 +3916,7 @@
                \endraw
            \endquotation
 
-    \note But you can achieve the exact same thing using qdoc
+    \note But you can achieve the exact same thing using QDoc
     commands. In this case, all you have to do is include the color
     styles in your style.css file. Then you can write:
 

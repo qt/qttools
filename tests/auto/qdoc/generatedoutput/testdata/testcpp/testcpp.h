@@ -41,7 +41,7 @@ public:
         OmittedValue = 99
     };
 #endif
-    int someFunction(int v);
+    int someFunction(int v = 0);
     void someFunctionDefaultArg(int i, bool b);
     void obsoleteMember();
     void anotherObsoleteMember();

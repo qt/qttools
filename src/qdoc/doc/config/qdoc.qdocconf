@@ -65,4 +65,6 @@ depends += \
     qtwidgets \
     qtxml
 
+ignorewords += QDoc
+
 navigation.landingpage = "QDoc Manual"
