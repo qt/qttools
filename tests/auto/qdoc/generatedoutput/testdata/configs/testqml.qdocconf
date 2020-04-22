@@ -21,3 +21,5 @@ examples.fileextensions = "*.qml *.cpp"
 
 macro.begincomment      = "\\c{/*}"
 macro.QDocTestVer       = "1.1"
+
+warninglimit += 1

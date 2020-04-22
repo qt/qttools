@@ -510,12 +510,14 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         writer.writeStartElement("image");
         writer.writeAttribute("href", imageFileName(relative, atom->string()));
         writer.writeEndElement();
+        setImageFileName(relative, atom->string());
         break;
 
     case Atom::InlineImage:
         writer.writeStartElement("inlineimage");
         writer.writeAttribute("href", imageFileName(relative, atom->string()));
         writer.writeEndElement();
+        setImageFileName(relative, atom->string());
         break;
 
     case Atom::ImageText:

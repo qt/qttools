@@ -3746,9 +3746,13 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         QString docUrl = m_manifestDir + fileBase(en) + ".html";
         writer.writeAttribute("docUrl", docUrl);
         const auto exampleFiles = en->files();
-        if (!en->projectFile().isEmpty())
+        if (en->projectFile().isEmpty())
+            Location().warning("Example does not have a project file: ", en->name());
+        else
             writer.writeAttribute("projectPath", installPath + en->projectFile());
-        if (!en->imageFileName().isEmpty()) {
+        if (en->imageFileName().isEmpty()) {
+            Location().warning("Example does not have an image file: ", en->name());
+        } else {
             writer.writeAttribute("imageUrl", m_manifestDir + en->imageFileName());
             usedAttributes << "imageUrl";
         }

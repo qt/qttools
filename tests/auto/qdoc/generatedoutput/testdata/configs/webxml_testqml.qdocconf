@@ -1,3 +1,2 @@
-include(config.qdocconf)
 include(testqml.qdocconf)
 include(webxml.qdocconf)

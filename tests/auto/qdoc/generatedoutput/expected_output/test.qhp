@@ -116,6 +116,7 @@
             <keyword name="virtualFun" id="TestDerived::virtualFun" ref="testqdoc-testderived.html#virtualFun"/>
         </keywords>
         <files>
+            <file>images/leonardo-da-vinci.png</file>
             <file>qdoc-test-qmlmodule.html</file>
             <file>qml-int.html</file>
             <file>qml-qdoc-test-abstractparent-members.html</file>

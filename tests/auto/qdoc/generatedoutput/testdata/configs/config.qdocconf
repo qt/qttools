@@ -1,5 +1,8 @@
 # Shared configuration for all tests
 
+# images
+imagedirs = ../images
+
 # zero warning policy
 warninglimit = 0
 warninglimit.enabled = true

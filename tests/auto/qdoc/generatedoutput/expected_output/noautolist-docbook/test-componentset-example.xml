@@ -8,7 +8,7 @@
 <db:para>Example for documenting QML types.</db:para>
 </db:abstract>
 </db:info>
-<db:para>This example demonstrates one of the ways to document QML types.</db:para>
+<db:para>This example demonstrates one of the ways to document QML types. It also generates a warning about a missing example image, on purpose.</db:para>
 <db:para>In particular, there are sample types that are documented with QDoc commands comments. There are documentation comments for the QML types and their public interfaces. The types are grouped into a module, the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>
 <db:para>The uicomponents.qdoc file generates the overview page for the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module page.</db:para>
 <db:para>The generated documentation is available in the <db:link xlink:href="uicomponents-qmlmodule.xml">UI Components</db:link> module.</db:para>

@@ -35,7 +35,8 @@
     \meta tag {test,sample}
     \meta installpath tutorials
 
-    This example demonstrates one of the ways to document QML types.
+    This example demonstrates one of the ways to document QML types. It also
+    generates a warning about a missing example image, on purpose.
 
     In particular, there are sample types that are documented with QDoc
     commands comments. There are documentation comments for the QML types

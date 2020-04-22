@@ -8,7 +8,7 @@
             <contents name="qml-types-with-c-implementation" title="QML Types with C++ Implementation" level="1"/>
             <description>
                 <brief>Example for documenting QML types.</brief>
-                <para>This example demonstrates one of the ways to document QML types.</para>
+                <para>This example demonstrates one of the ways to document QML types. It also generates a warning about a missing example image, on purpose.</para>
                 <para>In particular, there are sample types that are documented with QDoc commands comments. There are documentation comments for the QML types and their public interfaces. The types are grouped into a module, the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module.</para>
                 <para>The uicomponents.qdoc file generates the overview page for the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module page.</para>
                 <para>The generated documentation is available in the <link raw="UI Components" href="uicomponents-qmlmodule.html" type="">UI Components</link> module.</para>
