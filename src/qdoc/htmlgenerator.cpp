@@ -3925,8 +3925,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
 
         QString fullName = project + QLatin1Char('/') + en->title();
         QSet<QString> tags;
-        for (int idx = 0; idx < manifestMetaContent.size(); ++idx) {
-            const auto names = manifestMetaContent[idx].names;
+        for (const auto &index : manifestMetaContent) {
+            const auto &names = index.names;
             for (const QString &name : names) {
                 bool match = false;
                 int wildcard = name.indexOf(QChar('*'));
@@ -3941,8 +3941,8 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
                     match = fullName.startsWith(name.left(wildcard));
                 }
                 if (match) {
-                    tags += manifestMetaContent[idx].tags;
-                    const auto attributes = manifestMetaContent[idx].attributes;
+                    tags += index.tags;
+                    const auto attributes = index.attributes;
                     for (const QString &attr : attributes) {
                         QLatin1Char div(':');
                         QStringList attrList = attr.split(div);

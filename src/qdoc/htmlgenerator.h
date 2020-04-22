@@ -50,7 +50,6 @@ class HtmlGenerator : public XmlGenerator
     Q_DECLARE_TR_FUNCTIONS(QDoc::HtmlGenerator)
 
 public:
-public:
     HtmlGenerator();
     ~HtmlGenerator() override;
 
