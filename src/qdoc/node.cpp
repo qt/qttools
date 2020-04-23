@@ -1537,12 +1537,6 @@ QString Node::physicalModuleName() const
   Sets the node's physical module \a name.
 */
 
-/*! \fn void Node::setTemplateStuff(const QString &t)
-  If the node represents a template class or member, this function
-  is called to save the text \a t of the template clause so it can
-  be reconstructed for the generated documentation.
-*/
-
 /*! \fn void Node::setReconstitutedBrief(const QString &t)
   When reading an index file, this function is called with the
   reconstituted brief clause \a t to set the node's brief clause.
@@ -1816,10 +1810,6 @@ QString Node::physicalModuleName() const
 /*! \fn QString Node::templateStuff() const
   Returns the node's template parameters string, if this node
   represents a templated element.
- */
-
-/*! \fn const QString &Node::reconstitutedBrief() const
-  Returns the node's reconstituted brief data member.
  */
 
 /*! \fn bool Node::isSharingComment() const

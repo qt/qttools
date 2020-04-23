@@ -249,7 +249,7 @@ QString Location::canonicalRelativePath(const QString &path)
 */
 
 /*!
-  Writes \a message and \a detals to stderr as a formatted
+  Writes \a message and \a details to stderr as a formatted
   warning message. Does not write the message if qdoc is in
   the Prepare phase.
  */
@@ -261,7 +261,7 @@ void Location::warning(const QString &message, const QString &details) const
 }
 
 /*!
-  Writes \a message and \a detals to stderr as a formatted
+  Writes \a message and \a details to stderr as a formatted
   error message. Does not write the message if qdoc is in
   the Prepare phase.
  */
@@ -291,7 +291,7 @@ int Location::exitCode()
 }
 
 /*!
-  Writes \a message and \a detals to stderr as a formatted
+  Writes \a message and \a details to stderr as a formatted
   error message and then exits the program. qdoc prints fatal
   errors in either phase (Prepare or Generate).
  */
@@ -305,7 +305,7 @@ void Location::fatal(const QString &message, const QString &details) const
 }
 
 /*!
-  Writes \a message and \a detals to stderr as a formatted
+  Writes \a message and \a details to stderr as a formatted
   report message.
  */
 void Location::report(const QString &message, const QString &details) const
