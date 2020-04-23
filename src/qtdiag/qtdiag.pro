@@ -4,6 +4,7 @@ requires(qtConfig(qtdiag))
 
 CONFIG += console
 QT += core-private gui-private
+qtConfig(opengl): QT += opengl
 
 qtHaveModule(widgets): QT += widgets
 

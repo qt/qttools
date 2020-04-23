@@ -37,7 +37,9 @@
 #ifndef QT_NO_OPENGL
 #  include <QtGui/QOpenGLContext>
 #  include <QtGui/QOpenGLFunctions>
-#  include <QtGui/QOpenGLVersionProfile>
+#  include <QtOpenGL/QOpenGLVersionProfile>
+#  include <QtOpenGL/QOpenGLVersionFunctions>
+#  include <QtOpenGL/QOpenGLVersionFunctionsFactory>
 #endif // QT_NO_OPENGL
 #if QT_CONFIG(vulkan)
 #  include <QtGui/QVulkanInstance>
@@ -209,12 +211,12 @@ void dumpGlInfo(QTextStream &str, bool listExtensions)
             QOpenGLVersionProfile profile;
             profile.setVersion(majorVersion, minorVersion);
             profile.setProfile(QSurfaceFormat::CoreProfile);
-            if (QAbstractOpenGLFunctions *f = context.versionFunctions(profile)) {
+            if (auto f = QOpenGLVersionFunctionsFactory::get(profile, &context)) {
                 if (f->initializeOpenGLFunctions())
                     str << ", Core (" << openGlVersionFunctionsName << "_Core)";
             }
             profile.setProfile(QSurfaceFormat::CompatibilityProfile);
-            if (QAbstractOpenGLFunctions *f = context.versionFunctions(profile)) {
+            if (auto f = QOpenGLVersionFunctionsFactory::get(profile, &context)) {
                 if (f->initializeOpenGLFunctions())
                     str << ", Compatibility (" << openGlVersionFunctionsName << "_Compatibility)";
             }
