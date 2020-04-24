@@ -57,6 +57,7 @@ defineTest(qtConfTest_libclang) {
     # Assume libclang is installed on the target system
     isEmpty(LLVM_INSTALL_DIR) {
         llvmConfigCandidates = \
+            llvm-config-10 \
             llvm-config-9 \
             llvm-config-8 \
             llvm-config-7 \
@@ -137,206 +138,96 @@ defineTest(qtConfTest_libclang) {
         else: \
             CLANG_LIBS += -lclang
     } else {
-        msvc {
-            CLANG_DEFINES += CINDEX_LINKAGE=
-            CLANG_LIBS += -llibclang_static -ladvapi32 -lshell32 -lMincore
-        } else {
-            !equals(QMAKE_HOST.os, Darwin): CLANG_LIBS+=-Wl,--start-group
-            CLANG_LIBS += -lclangAnalysis \
-                        -lclangApplyReplacements \
-                        -lclangARCMigrate \
-                        -lclangAST \
-                        -lclangASTMatchers \
-                        -lclangBasic \
-                        -lclangChangeNamespace \
-                        -lclangCodeGen \
-                        -lclangCrossTU \
-                        -lclangDaemon \
-                        -lclangDriver \
-                        -lclangDynamicASTMatchers \
-                        -lclangEdit \
-                        -lclangFormat \
-                        -lclangFrontend \
-                        -lclangFrontendTool \
-                        -lclangHandleCXX \
-                        -lclangIncludeFixer \
-                        -lclangIncludeFixerPlugin \
-                        -lclangIndex \
-                        -lclangLex \
-                        -lclangMove \
-                        -lclangParse \
-                        -lclangQuery \
-                        -lclangReorderFields \
-                        -lclangRewrite \
-                        -lclangRewriteFrontend \
-                        -lclangSema \
-                        -lclangSerialization \
-                        -lclang_static \
-                        -lclangStaticAnalyzerCheckers \
-                        -lclangStaticAnalyzerCore \
-                        -lclangStaticAnalyzerFrontend \
-                        -lclangTidy \
-                        -lclangTidyAndroidModule \
-                        -lclangTidyBoostModule \
-                        -lclangTidyBugproneModule \
-                        -lclangTidyCERTModule \
-                        -lclangTidyCppCoreGuidelinesModule \
-                        -lclangTidyFuchsiaModule \
-                        -lclangTidyGoogleModule \
-                        -lclangTidyHICPPModule \
-                        -lclangTidyLLVMModule \
-                        -lclangTidyMiscModule \
-                        -lclangTidyModernizeModule \
-                        -lclangTidyMPIModule \
-                        -lclangTidyObjCModule \
-                        -lclangTidyPerformanceModule \
-                        -lclangTidyPlugin \
-                        -lclangTidyReadabilityModule \
-                        -lclangTidyUtils \
-                        -lclangTooling \
-                        -lclangToolingASTDiff \
-                        -lclangToolingCore \
-                        -lclangToolingRefactor \
-                        -lfindAllSymbols \
-                        -lLLVMAArch64AsmParser \
-                        -lLLVMAArch64AsmPrinter \
-                        -lLLVMAArch64CodeGen \
-                        -lLLVMAArch64Desc \
-                        -lLLVMAArch64Disassembler \
-                        -lLLVMAArch64Info \
-                        -lLLVMAArch64Utils \
-                        -lLLVMAMDGPUAsmParser \
-                        -lLLVMAMDGPUAsmPrinter \
-                        -lLLVMAMDGPUCodeGen \
-                        -lLLVMAMDGPUDesc \
-                        -lLLVMAMDGPUDisassembler \
-                        -lLLVMAMDGPUInfo \
-                        -lLLVMAMDGPUUtils \
-                        -lLLVMAnalysis \
-                        -lLLVMARMAsmParser \
-                        -lLLVMARMAsmPrinter \
-                        -lLLVMARMCodeGen \
-                        -lLLVMARMDesc \
-                        -lLLVMARMDisassembler \
-                        -lLLVMARMInfo \
-                        -lLLVMARMUtils \
-                        -lLLVMAsmParser \
-                        -lLLVMAsmPrinter \
-                        -lLLVMBinaryFormat \
-                        -lLLVMBitReader \
-                        -lLLVMBitWriter \
-                        -lLLVMBPFAsmParser \
-                        -lLLVMBPFAsmPrinter \
-                        -lLLVMBPFCodeGen \
-                        -lLLVMBPFDesc \
-                        -lLLVMBPFDisassembler \
-                        -lLLVMBPFInfo \
-                        -lLLVMCodeGen \
-                        -lLLVMCore \
-                        -lLLVMCoroutines \
-                        -lLLVMCoverage \
-                        -lLLVMDebugInfoCodeView \
-                        -lLLVMDebugInfoDWARF \
-                        -lLLVMDebugInfoMSF \
-                        -lLLVMDebugInfoPDB \
-                        -lLLVMDemangle \
-                        -lLLVMDlltoolDriver \
-                        -lLLVMExecutionEngine \
-                        -lLLVMFuzzMutate \
-                        -lLLVMGlobalISel \
-                        -lLLVMHexagonAsmParser \
-                        -lLLVMHexagonCodeGen \
-                        -lLLVMHexagonDesc \
-                        -lLLVMHexagonDisassembler \
-                        -lLLVMHexagonInfo \
-                        -lLLVMInstCombine \
-                        -lLLVMInstrumentation \
-                        -lLLVMInterpreter \
-                        -lLLVMipo \
-                        -lLLVMIRReader \
-                        -lLLVMLanaiAsmParser \
-                        -lLLVMLanaiAsmPrinter \
-                        -lLLVMLanaiCodeGen \
-                        -lLLVMLanaiDesc \
-                        -lLLVMLanaiDisassembler \
-                        -lLLVMLanaiInfo \
-                        -lLLVMLibDriver \
-                        -lLLVMLineEditor \
-                        -lLLVMLinker \
-                        -lLLVMLTO \
-                        -lLLVMMC \
-                        -lLLVMMCDisassembler \
-                        -lLLVMMCJIT \
-                        -lLLVMMCParser \
-                        -lLLVMMipsAsmParser \
-                        -lLLVMMipsAsmPrinter \
-                        -lLLVMMipsCodeGen \
-                        -lLLVMMipsDesc \
-                        -lLLVMMipsDisassembler \
-                        -lLLVMMipsInfo \
-                        -lLLVMMIRParser \
-                        -lLLVMMSP430AsmPrinter \
-                        -lLLVMMSP430CodeGen \
-                        -lLLVMMSP430Desc \
-                        -lLLVMMSP430Info \
-                        -lLLVMNVPTXAsmPrinter \
-                        -lLLVMNVPTXCodeGen \
-                        -lLLVMNVPTXDesc \
-                        -lLLVMNVPTXInfo \
-                        -lLLVMObjCARCOpts \
-                        -lLLVMObject \
-                        -lLLVMObjectYAML \
-                        -lLLVMOption \
-                        -lLLVMOrcJIT \
-                        -lLLVMPasses \
-                        -lLLVMPowerPCAsmParser \
-                        -lLLVMPowerPCAsmPrinter \
-                        -lLLVMPowerPCCodeGen \
-                        -lLLVMPowerPCDesc \
-                        -lLLVMPowerPCDisassembler \
-                        -lLLVMPowerPCInfo \
-                        -lLLVMProfileData \
-                        -lLLVMRuntimeDyld \
-                        -lLLVMScalarOpts \
-                        -lLLVMSelectionDAG \
-                        -lLLVMSparcAsmParser \
-                        -lLLVMSparcAsmPrinter \
-                        -lLLVMSparcCodeGen \
-                        -lLLVMSparcDesc \
-                        -lLLVMSparcDisassembler \
-                        -lLLVMSparcInfo \
-                        -lLLVMSupport \
-                        -lLLVMSymbolize \
-                        -lLLVMSystemZAsmParser \
-                        -lLLVMSystemZAsmPrinter \
-                        -lLLVMSystemZCodeGen \
-                        -lLLVMSystemZDesc \
-                        -lLLVMSystemZDisassembler \
-                        -lLLVMSystemZInfo \
-                        -lLLVMTableGen \
-                        -lLLVMTarget \
-                        -lLLVMTransformUtils \
-                        -lLLVMVectorize \
-                        -lLLVMWindowsManifest \
-                        -lLLVMX86AsmParser \
-                        -lLLVMX86AsmPrinter \
-                        -lLLVMX86CodeGen \
-                        -lLLVMX86Desc \
-                        -lLLVMX86Disassembler \
-                        -lLLVMX86Info \
-                        -lLLVMX86Utils \
-                        -lLLVMXCoreAsmPrinter \
-                        -lLLVMXCoreCodeGen \
-                        -lLLVMXCoreDesc \
-                        -lLLVMXCoreDisassembler \
-                        -lLLVMXCoreInfo \
-                        -lLLVMXRay
-            !equals(QMAKE_HOST.os, Darwin): CLANG_LIBS+=-Wl,--end-group
-            CLANG_LIBS += -lz
-            equals(QMAKE_HOST.os, Windows): CLANG_LIBS += -lpsapi -lshell32 -lole32 -luuid -ladvapi32 -lversion
-            else: CLANG_LIBS += -ldl
-            equals(QMAKE_HOST.os, Darwin): CLANG_LIBS += -lcurses -lm -lxml2
+        win32 {
+            versionIsAtLeast($$CLANG_VERSION, "10.0.0") {
+                CLANG_DEFINES += CINDEX_NO_EXPORTS
+            } else {
+                CLANG_DEFINES += CINDEX_LINKAGE=
+            }
         }
+        !equals(QMAKE_HOST.os, Darwin):!msvc: CLANG_LIBS+=-Wl,--start-group
+        CLANG_LIBS += -lclangAnalysis \
+                -lclangARCMigrate \
+                -lclangAST \
+                -lclangASTMatchers \
+                -lclangBasic \
+                -lclangCodeGen \
+                -lclangCrossTU \
+                -lclangDriver \
+                -lclangDynamicASTMatchers \
+                -lclangEdit \
+                -lclangFormat \
+                -lclangFrontend \
+                -lclangFrontendTool \
+                -lclangHandleCXX \
+                -lclangIndex \
+                -lclangLex \
+                -lclangParse \
+                -lclangRewrite \
+                -lclangRewriteFrontend \
+                -lclangSema \
+                -lclangSerialization \
+                -lclangStaticAnalyzerCheckers \
+                -lclangStaticAnalyzerCore \
+                -lclangStaticAnalyzerFrontend \
+                -lclangTooling \
+                -lclangToolingASTDiff \
+                -lclangToolingCore
+
+        versionIsAtLeast($$CLANG_VERSION, "10.0.0") {
+            equals(QMAKE_HOST.os, Windows): \
+                CLANG_LIBS += -llibclang
+            else: \
+                CLANG_LIBS += -lclang
+
+            CLANG_LIBS += -lclangToolingInclusions
+        } else {
+            equals(QMAKE_HOST.os, Windows): \
+                CLANG_LIBS += -llibclang_static
+            else: \
+                CLANG_LIBS += -lclang_static
+
+            CLANG_LIBS += \
+                    -lclangApplyReplacements \
+                    -lclangChangeNamespace \
+                    -lclangDaemon \
+                    -lclangIncludeFixer \
+                    -lclangIncludeFixerPlugin \
+                    -lclangMove \
+                    -lclangQuery \
+                    -lclangReorderFields \
+                    -lclangTidy \
+                    -lclangTidyAndroidModule \
+                    -lclangTidyBoostModule \
+                    -lclangTidyBugproneModule \
+                    -lclangTidyCERTModule \
+                    -lclangTidyCppCoreGuidelinesModule \
+                    -lclangTidyFuchsiaModule \
+                    -lclangTidyGoogleModule \
+                    -lclangTidyHICPPModule \
+                    -lclangTidyLLVMModule \
+                    -lclangTidyMiscModule \
+                    -lclangTidyModernizeModule \
+                    -lclangTidyMPIModule \
+                    -lclangTidyObjCModule \
+                    -lclangTidyPerformanceModule \
+                    -lclangTidyPlugin \
+                    -lclangTidyReadabilityModule \
+                    -lclangTidyUtils \
+                    -lclangToolingRefactor \
+                    -lfindAllSymbols
+        }
+
+        msvc {
+            LLVM_LIBS_STRING += $$system("$$llvm_config --libnames")
+        } else {
+            LLVM_LIBS_STRING += $$system("$$llvm_config --libs")
+        }
+        LLVM_LIBS_STRING += $$system("$$llvm_config --system-libs")
+        CLANG_LIBS += $$split(LLVM_LIBS_STRING, " ")
+
+        !equals(QMAKE_HOST.os, Darwin):!msvc: CLANG_LIBS+=-Wl,--end-group
+        equals(QMAKE_HOST.os, Windows): CLANG_LIBS += -lversion
     }
 
     !versionIsAtLeast($$CLANG_VERSION, "3.9.0") {
