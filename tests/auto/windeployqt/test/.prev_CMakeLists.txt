@@ -5,7 +5,7 @@
 #####################################################################
 
 qt_add_test(tst_windeployqt
-    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../" # special case
+    OUTPUT_DIRECTORY ".."
     SOURCES
         ../tst_windeployqt.cpp
 )
