@@ -337,6 +337,8 @@ void Config::load(const QString &fileName)
         m_location.setEtc(true);
     m_lastLocation = Location();
 
+    expandVariables();
+
     // Add defines and includepaths from command line to their
     // respective configuration variables. Values set here are
     // always added to what's defined in configuration file.
@@ -346,6 +348,42 @@ void Config::load(const QString &fileName)
     // Prefetch values that are used internally
     m_exampleFiles = getCanonicalPathList(CONFIG_EXAMPLES);
     m_exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
+}
+
+/*!
+    Expands other config variables referred to in all stored ConfigVars.
+*/
+void Config::expandVariables()
+{
+     for (auto &configVar : m_configVars) {
+        for (auto it = configVar.m_expandVars.crbegin(); it != configVar.m_expandVars.crend(); ++it) {
+            Q_ASSERT(it->m_valueIndex < configVar.m_values.size());
+            QList<ConfigVar> values = m_configVars.values(it->m_var);
+            std::reverse(values.begin(), values.end());
+            const ConfigVar *nestedVal {};
+            for (const auto &configVal : qAsConst(values)) {
+                nestedVal = configVal.m_plus ? nestedVal : nullptr;
+                nestedVal = !configVal.m_expandVars.empty() ? &configVal : nestedVal;
+            }
+            if (nestedVal) {
+                 configVar.m_location.fatal(tr("Nested variable expansion not allowed"),
+                                            tr("When expanding '%1' at %2:%3")
+                                                .arg(nestedVal->m_name)
+                                                .arg(nestedVal->m_location.filePath())
+                                                .arg(nestedVal->m_location.lineNo()));
+            } else if (values.isEmpty()) {
+                configVar.m_location.fatal(tr("Environment or configuration variable '%1' undefined")
+                        .arg(it->m_var));
+            }
+            QString expanded;
+            if (it->m_delim.isNull())
+                expanded = getStringList(it->m_var).join(QString());
+            else
+                expanded = getStringList(it->m_var).join(it->m_delim);
+            configVar.m_values[it->m_valueIndex].insert(it->m_index, expanded);
+        }
+        configVar.m_expandVars.clear();
+     }
 }
 
 /*!
@@ -1099,10 +1137,12 @@ void Config::load(Location location, const QString &fileName)
             bool plus = false;
             QString stringValue;
             QStringList rhsValues;
+            QVector<ExpandVar> expandVars;
             QString word;
             bool inQuote = false;
             bool prevWordQuoted = true;
             bool metWord = false;
+            bool needsExpansion = false;
 
             MetaStack stack;
             do {
@@ -1192,13 +1232,14 @@ void Config::load(Location location, const QString &fileName)
                                 location.fatal(tr("Unterminated string"));
                             PUT_CHAR();
                         } else {
-                            if (!word.isEmpty()) {
+                            if (!word.isEmpty() || needsExpansion) {
                                 if (metWord)
                                     stringValue += QLatin1Char(' ');
                                 stringValue += word;
                                 rhsValues << word;
                                 metWord = true;
                                 word.clear();
+                                needsExpansion = false;
                                 prevWordQuoted = false;
                             }
                             if (cc == '\n' || cc == '#')
@@ -1210,25 +1251,46 @@ void Config::load(Location location, const QString &fileName)
                             if (!prevWordQuoted)
                                 stringValue += QLatin1Char(' ');
                             stringValue += word;
-                            if (!word.isEmpty())
+                            if (!word.isEmpty() || needsExpansion)
                                 rhsValues << word;
                             metWord = true;
                             word.clear();
+                            needsExpansion = false;
                             prevWordQuoted = true;
                         }
                         inQuote = !inQuote;
                         SKIP_CHAR();
                     } else if (cc == '$') {
                         QString var;
+                        QChar delim(' ');
+                        bool braces = false;
                         SKIP_CHAR();
+                        if (cc == '{') {
+                            SKIP_CHAR();
+                            braces = true;
+                        }
                         while (c.isLetterOrNumber() || cc == '_') {
                             var += c;
                             SKIP_CHAR();
                         }
+                        if (braces) {
+                            if (cc == ',') {
+                                SKIP_CHAR();
+                                delim = c;
+                                SKIP_CHAR();
+                            }
+                            if (cc == '}')
+                                SKIP_CHAR();
+                            else if (delim == '}')
+                                delim = QChar(); // null delimiter
+                            else
+                                location.fatal(tr("Missing '}'"));
+                        }
                         if (!var.isEmpty()) {
                             const QByteArray val = qgetenv(var.toLatin1().constData());
                             if (val.isNull()) {
-                                location.fatal(tr("Environment variable '%1' undefined").arg(var));
+                                expandVars << ExpandVar(rhsValues.size(), word.size(), var, delim);
+                                needsExpansion = true;
                             } else {
                                 word += QString::fromLatin1(val);
                             }
@@ -1245,7 +1307,7 @@ void Config::load(Location location, const QString &fileName)
 
                     ConfigVarMultimap::Iterator i;
                     i = m_configVars.insert(key,
-                                           ConfigVar(key, rhsValues, QDir::currentPath(), keyLoc));
+                                           ConfigVar(key, rhsValues, QDir::currentPath(), keyLoc, expandVars));
                     i.value().m_plus = plus;
                 }
             }

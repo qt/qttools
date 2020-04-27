@@ -1,0 +1,10 @@
+project = ExpandVars
+
+{data,data1,data2}   = foo
+data1               += bar
+data2               += "bar baz"
+
+expanded1 = $data
+expanded2 = ${data1,,}
+expanded3 = "${data1,} ${data2,}"
+literally = \$data \${data}

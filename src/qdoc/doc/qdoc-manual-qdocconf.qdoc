@@ -56,14 +56,17 @@
     Qt online documentation. See the \l {Supporting Derived projects}
     section.
 
+    A valid configuration variable name can include upper and lower case
+    letters, numbers, and an underscore, '_'.
+
     The value of a configuration variable can be set using either '='
     or '+='. The difference is that '=' overrides the previous value,
     while '+=' adds a new value to the current one.
 
-    Some configuration variables accept a list of strings as their
-    value, for example:
+    Values of some configuration variables are interpreted as a list of
+    strings, for example:
     \l {sourcedirs-variable}
-    {\c{sourcedirs}}, while others accept only a single string. Double
+    {\c{sourcedirs}}, while others are treated as a single string. Double
     quotes around a value string are optional, but including them allows
     you to use special characters like '=' and ' \" ' within the value
     string, for example:
@@ -76,10 +79,67 @@
     line but the last:
 
     \badcode
+    sourcedirs = kernel tools widgets
+    \endcode
+
+    This can be written as:
+    \badcode
     sourcedirs = kernel \
                  tools \
                  widgets
     \endcode
+
+    If a value spans multiple lines but is interpreted as a single string,
+    the lines are joined with spaces.
+
+    \section1 Expansion of Configuration Values
+
+    QDoc supports expanding environment variables within configuration files.
+    For example, Qt modules rely on the environment variable QT_INSTALL_DOCS
+    to include definitions related to all Qt module documentation projects:
+
+    \badcode
+    include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
+    \endcode
+
+    A variable to expand is prefixed with '$'. To use the literal character
+    '$' within a value string, escape it with a backslash: '\\$'.
+
+    Since QDoc 6.0, values can be expanded also from other configuration
+    variables. In addition to the \c {$variable} syntax, also \c {${variable}}
+    is valid. The latter eliminates the need to separate the variable
+    name with whitespace or non-variable characters. For example:
+
+    \badcode
+    baseurl = https://doc.qt.io/
+    ...
+    url = ${baseurl}qtcreator
+    \endcode
+
+    If the target variable refers to a list of strings, they will be
+    joined using spaces in the expanded value:
+
+    \badcode
+    vars = foo \
+           bar \
+           baz
+
+    items = "Items: $vars"          # Expands to "Items: foo bar baz"
+    \endcode
+
+    Controlling which character is used for joining the string list is also
+    possible:
+
+    \badcode
+    items = "Items: ${vars,|}"      # Expands to "Items: foo|bar|baz"
+    items = "Items: ${vars,,}"      # Expands to "Items: foo,bar,baz"
+    items = "Items: ${vars,}"       # Expands to "Items: foobarbaz"
+    \endcode
+
+    As the expansion is performed after reading in all variables, the order
+    in which they are defined does not matter.
+
+    \note Nested variable expansion is not supported.
 
     \section1 Configuration Variables
 

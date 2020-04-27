@@ -61,6 +61,24 @@ protected:
 };
 
 /*
+ Contains information about a location
+ where a ConfigVar string needs to be expanded
+ from another config variable.
+*/
+struct ExpandVar
+{
+    int m_valueIndex {};
+    int m_index {};
+    QString m_var {};
+    QChar m_delim {};
+
+    ExpandVar(int valueIndex, int index, const QString &var, const QChar &delim)
+        : m_valueIndex(valueIndex), m_index(index), m_var(var), m_delim(delim)
+    {
+    }
+};
+
+/*
   This struct contains all the information for
   one config variable found in a qdocconf file.
  */
@@ -71,6 +89,7 @@ struct ConfigVar
     QStringList m_values {};
     QString m_currentPath {};
     Location m_location {};
+    QVector<ExpandVar> m_expandVars {};
 
     ConfigVar() : m_plus(false) {}
 
@@ -80,8 +99,9 @@ struct ConfigVar
     }
 
     ConfigVar(const QString &name, const QStringList &values, const QString &dir,
-              const Location &loc)
-        : m_plus(false), m_name(name), m_values(values), m_currentPath(dir), m_location(loc)
+              const Location &loc, const QVector<ExpandVar> &expandVars)
+        : m_plus(false), m_name(name), m_values(values), m_currentPath(dir),
+          m_location(loc), m_expandVars(expandVars)
     {
     }
 };
@@ -185,6 +205,7 @@ private:
     void processCommandLineOptions(const QStringList &args);
     void setIncludePaths();
     void setIndexDirs();
+    void expandVariables();
 
     QStringList m_dependModules {};
     QStringList m_defines {};

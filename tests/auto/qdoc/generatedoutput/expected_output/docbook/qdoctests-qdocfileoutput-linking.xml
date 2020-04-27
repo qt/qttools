@@ -3,6 +3,7 @@
 <db:info>
 <db:title>Testing QDoc's link command</db:title>
 <db:productname>OutputFromQDocFiles</db:productname>
+<db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>This is a page for testing QDoc's link command.</db:para>

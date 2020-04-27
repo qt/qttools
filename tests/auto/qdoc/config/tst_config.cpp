@@ -46,6 +46,7 @@ private slots:
     void classMembersInitializeToFalseOrEmpty();
     void includePathsFromCommandLine();
     void getExampleProjectFile();
+    void expandVars();
 };
 
 void tst_Config::classMembersInitializeToFalseOrEmpty()
@@ -108,6 +109,19 @@ void::tst_Config::getExampleProjectFile()
              rootDir.absoluteFilePath("example4/CMakeLists.txt"));
 }
 
+void::tst_Config::expandVars()
+{
+    QStringList commandLineArgs = { QStringLiteral("./qdoc") };
+    Config::instance().init("QDoc Test", commandLineArgs);
+    auto &config = Config::instance();
+
+    config.load(QFINDTESTDATA("/testdata/configs/expandvars.qdocconf"));
+
+    QCOMPARE(config.getString("expanded1"), "foo");
+    QCOMPARE(config.getString("expanded2"), "foo,bar");
+    QCOMPARE(config.getString("expanded3"), "foobar foobar baz");
+    QCOMPARE(config.getString("literally"), "$data ${data}");
+}
 
 QTEST_APPLESS_MAIN(tst_Config)
 
