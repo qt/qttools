@@ -141,7 +141,7 @@ void NewForm::slotCurrentTemplateChanged(bool templateSelected)
 
 void NewForm::slotTemplateActivated()
 {
-    m_createButton->animateClick(0);
+    m_createButton->animateClick();
 }
 
 void NewForm::slotButtonBoxClicked(QAbstractButton *btn)
