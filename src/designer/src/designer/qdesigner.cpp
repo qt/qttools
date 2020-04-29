@@ -188,6 +188,10 @@ static inline QDesigner::ParseArgumentsResult
     const QCommandLineOption internalDynamicPropertyOption(QStringLiteral("enableinternaldynamicproperties"),
                                           QStringLiteral("Enable internal dynamic properties"));
     parser.addOption(internalDynamicPropertyOption);
+    const QCommandLineOption noScalingOption(QStringLiteral("no-scaling"),
+                                             QStringLiteral("Disable High DPI scaling"));
+    parser.addOption(noScalingOption);
+
     parser.addPositionalArgument(QStringLiteral("files"),
                                  QStringLiteral("The UI files to open."));
 

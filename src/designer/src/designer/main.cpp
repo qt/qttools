@@ -34,12 +34,26 @@
 
 QT_USE_NAMESPACE
 
+static bool isOptionSet(int argc, char *argv[], const char *option)
+{
+    for (int i = 1; i < argc; ++i) {
+        if (qstrcmp(argv[i], option) == 0)
+            return true;
+    }
+    return false;
+}
+
 int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(designer);
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    // Attributes to be set before QApplication is constructed.
+    if (isOptionSet(argc, argv, "--no-scaling")) {
+        QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
+    } else {
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    }
 
     // required for QWebEngineView
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
