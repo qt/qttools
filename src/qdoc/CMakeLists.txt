@@ -15,6 +15,7 @@ qt_add_tool(qdoc
         config.cpp config.h
         cppcodemarker.cpp cppcodemarker.h
         cppcodeparser.cpp cppcodeparser.h
+        ditaref.h
         doc.cpp doc.h
         docbookgenerator.cpp docbookgenerator.h
         editdistance.cpp editdistance.h

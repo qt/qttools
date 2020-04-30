@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -35,6 +35,8 @@
 
 #include "location.h"
 
+#include "ditaref.h"
+
 #include <QtCore/qmap.h>
 #include <QtCore/qset.h>
 #include <QtCore/qstring.h>
@@ -46,7 +48,6 @@ class CodeMarker;
 class DocPrivate;
 class Quoter;
 class Text;
-class DitaRef;
 
 typedef QPair<QString, Location> ArgLocPair;
 typedef QVector<ArgLocPair> ArgList;
@@ -67,49 +68,6 @@ struct Topic
     }
 };
 typedef QVector<Topic> TopicList;
-
-typedef QVector<DitaRef *> DitaRefList;
-
-class DitaRef
-{
-public:
-    DitaRef() = default;
-    virtual ~DitaRef() = default;
-
-    const QString &navtitle() const { return navtitle_; }
-    const QString &href() const { return href_; }
-    void setNavtitle(const QString &t) { navtitle_ = t; }
-    void setHref(const QString &t) { href_ = t; }
-    virtual bool isMapRef() const = 0;
-    virtual const DitaRefList *subrefs() const { return nullptr; }
-    virtual void appendSubref(DitaRef *) {}
-
-private:
-    QString navtitle_;
-    QString href_;
-};
-
-class TopicRef : public DitaRef
-{
-public:
-    TopicRef() = default;
-    ~TopicRef() override;
-
-    bool isMapRef() const override { return false; }
-    const DitaRefList *subrefs() const override { return &subrefs_; }
-    void appendSubref(DitaRef *t) override { subrefs_.append(t); }
-
-private:
-    DitaRefList subrefs_;
-};
-
-class MapRef : public DitaRef
-{
-public:
-    MapRef() = default;
-
-    bool isMapRef() const override { return true; }
-};
 
 class Doc
 {
