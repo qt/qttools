@@ -381,6 +381,7 @@ bool QHelpCollectionHandler::copyCollectionFile(const QString &fileName)
 
     if (!createTables(copyQuery) || !recreateIndexAndNamespaceFilterTables(copyQuery)) {
         emit error(tr("Cannot copy collection file: %1").arg(colFile));
+        delete copyQuery;
         return false;
     }
 
