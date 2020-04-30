@@ -31,7 +31,7 @@
 #include "qdocdatabase.h"
 #include "tokenizer.h"
 
-#include <errno.h>
+#include <cerrno>
 
 QT_BEGIN_NAMESPACE
 

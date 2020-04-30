@@ -34,7 +34,7 @@
 
 #include <QtCore/qregexp.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

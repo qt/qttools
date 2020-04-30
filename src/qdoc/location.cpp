@@ -29,16 +29,15 @@
 #include "location.h"
 
 #include "config.h"
-#include "generator.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qregexp.h>
 #include <QtCore/QTime>
 
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <climits>
+#include <cstdio>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

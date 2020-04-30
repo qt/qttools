@@ -32,12 +32,10 @@
 #include "config.h"
 #include "cppcodeparser.h"
 #include "generator.h"
-#include "puredocparser.h"
 #include "qdocdatabase.h"
 #include "tokenizer.h"
 #include "tree.h"
 
-#include <QtCore/qdebug.h>
 #include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
 

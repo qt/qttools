@@ -33,11 +33,9 @@
 #include "jscodemarker.h"
 
 #include "atom.h"
-#include "generator.h"
 #include "node.h"
 #include "qmlmarkupvisitor.h"
 #include "text.h"
-#include "tree.h"
 
 #ifndef QT_NO_DECLARATIVE
 #    include <private/qqmljsast_p.h>

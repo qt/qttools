@@ -41,8 +41,6 @@
 #include <QtCore/qfile.h>
 
 #include <algorithm>
-#include <errno.h>
-#include <stdio.h>
 
 QT_BEGIN_NAMESPACE
 

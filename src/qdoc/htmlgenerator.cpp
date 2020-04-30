@@ -50,7 +50,7 @@
 #include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
 
-#include <ctype.h>
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 

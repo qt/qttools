@@ -40,15 +40,14 @@
 #include "tokenizer.h"
 
 #include <QtCore/qdatetime.h>
-#include <QtCore/qdebug.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qregexp.h>
 #include <QtCore/qtextstream.h>
 
-#include <ctype.h>
-#include <limits.h>
+#include <cctype>
+#include <climits>
 
 QT_BEGIN_NAMESPACE
 

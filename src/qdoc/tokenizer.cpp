@@ -37,8 +37,8 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qtextcodec.h>
 
-#include <ctype.h>
-#include <string.h>
+#include <cctype>
+#include <cstring>
 
 QT_BEGIN_NAMESPACE
 

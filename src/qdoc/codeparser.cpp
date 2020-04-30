@@ -36,9 +36,6 @@
 #include "generator.h"
 #include "node.h"
 #include "qdocdatabase.h"
-#include "tree.h"
-
-#include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE
 

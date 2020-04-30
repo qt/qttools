@@ -35,10 +35,6 @@
 #include "qdocdatabase.h"
 #include "text.h"
 
-#include <QtCore/qdebug.h>
-
-#include <limits.h>
-
 QT_BEGIN_NAMESPACE
 
 /*!

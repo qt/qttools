@@ -36,8 +36,6 @@
 #include "node.h"
 #include "qmlmarkupvisitor.h"
 #include "text.h"
-#include "tree.h"
-#include "generator.h"
 
 #ifndef QT_NO_DECLARATIVE
 #    include <private/qqmljsast_p.h>

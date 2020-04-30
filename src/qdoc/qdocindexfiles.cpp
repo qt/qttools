@@ -34,9 +34,7 @@
 #include "location.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
-#include "qdoctagfiles.h"
 
-#include <QtCore/qdebug.h>
 #include <QtCore/qxmlstream.h>
 
 #include <algorithm>

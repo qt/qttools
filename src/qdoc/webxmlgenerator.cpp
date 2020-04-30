@@ -34,7 +34,6 @@
 #include "qdocdatabase.h"
 #include "separator.h"
 #include "quoter.h"
-#include "tree.h"
 
 #include <QtCore/qxmlstream.h>
 

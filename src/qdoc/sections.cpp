@@ -32,10 +32,7 @@
 #include "generator.h"
 #include "loggingcategory.h"
 
-#include <QtCore/qdebug.h>
 #include <QtCore/qobjectdefs.h>
-
-#include <stdio.h>
 
 QT_BEGIN_NAMESPACE
 

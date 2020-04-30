@@ -31,10 +31,9 @@
 #include "location.h"
 #include "qdocdatabase.h"
 
-#include <QtCore/qdebug.h>
 #include <QtCore/qregexp.h>
 
-#include <stdio.h>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

@@ -28,17 +28,10 @@
 
 #include "qdoctagfiles.h"
 
-#include "atom.h"
-#include "doc.h"
 #include "htmlgenerator.h"
 #include "location.h"
 #include "node.h"
 #include "qdocdatabase.h"
-#include "text.h"
-
-#include <QtCore/qdebug.h>
-
-#include <limits.h>
 
 QT_BEGIN_NAMESPACE
 

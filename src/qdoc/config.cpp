@@ -33,14 +33,11 @@
 #include "config.h"
 #include "loggingcategory.h"
 
-#include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qtemporaryfile.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qvariant.h>
-
-#include <stdlib.h>
 
 QT_BEGIN_NAMESPACE
 

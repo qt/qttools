@@ -57,8 +57,7 @@
 
 #include <clang-c/Index.h>
 
-#include <errno.h>
-#include <stdio.h>
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 

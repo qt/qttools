@@ -31,10 +31,9 @@
 #include "codeparser.h"
 #include "config.h"
 #include "cppcodemarker.h"
-#include "cppcodeparser.h"
 #include "doc.h"
-#include "htmlgenerator.h"
 #include "docbookgenerator.h"
+#include "htmlgenerator.h"
 #include "jscodemarker.h"
 #include "location.h"
 #include "loggingcategory.h"
@@ -48,12 +47,9 @@
 #include "tree.h"
 #include "webxmlgenerator.h"
 
-#include <QtCore/qcommandlineoption.h>
-#include <QtCore/qcommandlineparser.h>
 #include <QtCore/qdatetime.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qglobal.h>
-#include <QtCore/qglobalstatic.h>
 #include <QtCore/qhashfunctions.h>
 
 #ifndef QT_BOOTSTRAPPED
@@ -61,7 +57,7 @@
 #endif
 
 #include <algorithm>
-#include <stdlib.h>
+#include <cstdlib>
 
 QT_BEGIN_NAMESPACE
 

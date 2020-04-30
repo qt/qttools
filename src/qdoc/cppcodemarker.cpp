@@ -32,14 +32,11 @@
 
 #include "cppcodemarker.h"
 
-#include "generator.h"
 #include "text.h"
 #include "tree.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qregexp.h>
-
-#include <ctype.h>
 
 QT_BEGIN_NAMESPACE
 
