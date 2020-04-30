@@ -134,7 +134,7 @@ public:
 
     friend class LinkAtom;
 
-    Atom(AtomType type, const QString &string = "") : type_(type), strs(string) {}
+    explicit Atom(AtomType type, const QString &string = "") : type_(type), strs(string) {}
 
     Atom(AtomType type, const QString &p1, const QString &p2) : type_(type), strs(p1)
     {
@@ -197,7 +197,7 @@ public:
     LinkAtom(const QString &p1, const QString &p2);
     LinkAtom(const LinkAtom &t);
     LinkAtom(Atom *previous, const LinkAtom &t);
-    ~LinkAtom() override {}
+    ~LinkAtom() override = default;
 
     bool isLinkAtom() const override { return true; }
     Node::Genus genus() override
