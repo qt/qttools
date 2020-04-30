@@ -148,11 +148,7 @@ const Node *CodeMarker::nodeForString(const QString &string)
 
 QString CodeMarker::stringForNode(const Node *node)
 {
-    if (sizeof(const Node *) == sizeof(ulong)) {
-        return QString::number(reinterpret_cast<quintptr>(node));
-    } else {
-        return QString::number(reinterpret_cast<qulonglong>(node));
-    }
+    return QString::number(reinterpret_cast<quintptr>(node));
 }
 
 static const QString samp = QLatin1String("&amp;");
@@ -378,8 +374,6 @@ QStringList CodeMarker::macRefsForNode(Node *node)
         result += QLatin1String("tdef/") + macName(node);
         break;
     case Node::Function: {
-        bool isMacro = false;
-        Q_UNUSED(isMacro);
         const FunctionNode *func = static_cast<const FunctionNode *>(node);
 
         // overloads are too clever for the Xcode documentation browser
@@ -406,8 +400,8 @@ QStringList CodeMarker::macRefsForNode(Node *node)
     case Node::Property: {
         const NodeList list = static_cast<const PropertyNode *>(node)->functions();
         QStringList stringList;
-        for (auto *node : list) {
-            stringList += macRefsForNode(node);
+        for (auto *propertyNode : list) {
+            stringList += macRefsForNode(propertyNode);
         }
         return stringList;
     }
