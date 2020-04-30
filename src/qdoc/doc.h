@@ -134,20 +134,15 @@ public:
     ~Doc();
 
     Doc &operator=(const Doc &doc);
-    void simplifyEnumDoc();
-    void setBody(const Text &body);
-    const DitaRefList &ditamap() const;
 
     const Location &location() const;
     const Location &startLocation() const;
-    const Location &endLocation() const;
     bool isEmpty() const;
     const QString &source() const;
     const Text &body() const;
     Text briefText(bool inclusive = false) const;
     Text trimmedBriefText(const QString &className) const;
     Text legaleseText() const;
-    Sections granularity() const;
     const QSet<QString> &parameterNames() const;
     const QStringList &enumItemNames() const;
     const QStringList &omitEnumItemNames() const;

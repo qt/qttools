@@ -2756,39 +2756,6 @@ Doc &Doc::operator=(const Doc &doc)
     return *this;
 }
 
-void Doc::simplifyEnumDoc()
-{
-    if (priv) {
-        if (priv->isEnumDocSimplifiable()) {
-            detach();
-
-            Text newText;
-
-            Atom *atom = priv->text.firstAtom();
-            while (atom) {
-                if ((atom->type() == Atom::ListLeft) && (atom->string() == ATOM_LIST_VALUE)) {
-                    while (atom
-                           && ((atom->type() != Atom::ListRight)
-                               || (atom->string() != ATOM_LIST_VALUE)))
-                        atom = atom->next();
-                    if (atom)
-                        atom = atom->next();
-                } else {
-                    newText << *atom;
-                    atom = atom->next();
-                }
-            }
-            priv->text = newText;
-        }
-    }
-}
-
-void Doc::setBody(const Text &text)
-{
-    detach();
-    priv->text = text;
-}
-
 /*!
   Returns the starting location of a qdoc comment.
  */
@@ -2804,15 +2771,6 @@ const Location &Doc::location() const
 const Location &Doc::startLocation() const
 {
     return location();
-}
-
-/*!
-  Returns the ending location of a qdoc comment.
- */
-const Location &Doc::endLocation() const
-{
-    static const Location dummy;
-    return priv == nullptr ? dummy : priv->end_loc;
 }
 
 const QString &Doc::source() const
@@ -2904,15 +2862,6 @@ Text Doc::legaleseText() const
         return Text();
     else
         return body().subText(Atom::LegaleseLeft, Atom::LegaleseRight);
-}
-
-Doc::Sections Doc::granularity() const
-{
-    if (priv == nullptr || priv->extra == nullptr) {
-        return DocPrivateExtra().granularity_;
-    } else {
-        return priv->extra->granularity_;
-    }
 }
 
 const QSet<QString> &Doc::parameterNames() const
@@ -3269,15 +3218,6 @@ void Doc::detach()
 TopicRef::~TopicRef()
 {
     qDeleteAll(subrefs_);
-}
-
-/*!
-  Returns a reference to the structure that will be used
-  for generating a DITA mao.
- */
-const DitaRefList &Doc::ditamap() const
-{
-    return priv->ditamap_;
 }
 
 QT_END_NAMESPACE
