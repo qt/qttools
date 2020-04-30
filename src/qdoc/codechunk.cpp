@@ -133,16 +133,4 @@ void CodeChunk::append(const QString &lexeme)
     s += lexeme;
 }
 
-/*!
-  Converts the string with a regular expression that I think
-  removes the angle brackets parts and then splits it on "::".
-  The result is returned as a string list.
- */
-QStringList CodeChunk::toPath() const
-{
-    QString t = s;
-    t.remove(QRegExp(QLatin1String("<([^<>]|<([^<>]|<[^<>]*>)*>)*>")));
-    return t.split(QLatin1String("::"));
-}
-
 QT_END_NAMESPACE

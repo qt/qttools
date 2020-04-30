@@ -43,7 +43,6 @@ class CodeChunk
 {
 public:
     CodeChunk() : hotspot(-1) {}
-    CodeChunk(const QString &str) : s(str), hotspot(-1) {}
 
     void append(const QString &lexeme);
     void appendHotspot()
@@ -55,7 +54,6 @@ public:
     bool isEmpty() const { return s.isEmpty(); }
     void clear() { s.clear(); }
     QString toString() const { return s; }
-    QStringList toPath() const;
     QString left() const { return s.left(hotspot == -1 ? s.length() : hotspot); }
     QString right() const { return s.mid(hotspot == -1 ? s.length() : hotspot); }
 
