@@ -57,7 +57,7 @@ struct Topic
 {
     QString topic;
     QString args;
-    Topic() {}
+    Topic() = default;
     Topic(QString &t, const QString &a) : topic(t), args(a) {}
     bool isEmpty() const { return topic.isEmpty(); }
     void clear()
@@ -73,8 +73,8 @@ typedef QVector<DitaRef *> DitaRefList;
 class DitaRef
 {
 public:
-    DitaRef() {}
-    virtual ~DitaRef() {}
+    DitaRef() = default;
+    virtual ~DitaRef() = default;
 
     const QString &navtitle() const { return navtitle_; }
     const QString &href() const { return href_; }
@@ -92,7 +92,7 @@ private:
 class TopicRef : public DitaRef
 {
 public:
-    TopicRef() {}
+    TopicRef() = default;
     ~TopicRef() override;
 
     bool isMapRef() const override { return false; }
@@ -106,7 +106,7 @@ private:
 class MapRef : public DitaRef
 {
 public:
-    MapRef() {}
+    MapRef() = default;
 
     bool isMapRef() const override { return true; }
 };
@@ -127,7 +127,7 @@ public:
         Section4 = 4
     };
 
-    Doc() : priv(nullptr) {}
+    Doc() = default;
     Doc(const Location &start_loc, const Location &end_loc, const QString &source,
         const QSet<QString> &metaCommandSet, const QSet<QString> &topics);
     Doc(const Doc &doc);
@@ -178,7 +178,7 @@ public:
 
 private:
     void detach();
-    DocPrivate *priv;
+    DocPrivate *priv { nullptr };
 };
 Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
 typedef QVector<Doc> DocList;
