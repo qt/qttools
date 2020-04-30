@@ -602,27 +602,27 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
 {
     QStringList t;
     QList<ConfigVar> configVars = m_configVars.values(var);
+    std::reverse(configVars.begin(), configVars.end());
     if (!configVars.empty()) {
-        int i = configVars.size() - 1;
-        while (i >= 0) {
-            const ConfigVar &cv = configVars[i];
+        for (const auto &cv : qAsConst(configVars)) {
             if (!cv.m_location.isEmpty())
                 const_cast<Config *>(this)->m_lastLocation = cv.m_location;
             if (!cv.m_plus)
                 t.clear();
-            const QString d = cv.m_currentPath;
-            const QStringList &sl = cv.m_values;
-            if (!sl.isEmpty()) {
-                t.reserve(t.size() + sl.size());
-                for (int i = 0; i < sl.size(); ++i) {
-                    QDir dir(sl[i].simplified());
-                    QString path = dir.path();
+            const QString currentPath = cv.m_currentPath;
+            const QStringList &values = cv.m_values;
+            if (!values.isEmpty()) {
+                t.reserve(t.size() + values.size());
+                for (const auto &i : values) {
+                    QDir dir(i.simplified());
+                    const QString path = dir.path();
+
                     if (dir.isRelative())
-                        dir.setPath(d + QLatin1Char('/') + path);
+                        dir.setPath(currentPath + QLatin1Char('/') + path);
                     if (validate && !QFileInfo::exists(dir.path()))
                         m_lastLocation.warning(tr("Cannot find file or directory: %1").arg(path));
                     else {
-                        QString canonicalPath = dir.canonicalPath();
+                        const QString canonicalPath = dir.canonicalPath();
                         if (!canonicalPath.isEmpty())
                             t.append(canonicalPath);
                         else if (path.contains(QLatin1Char('*')) || path.contains(QLatin1Char('?')))
@@ -630,7 +630,6 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
                     }
                 }
             }
-            --i;
         }
     }
     return t;
