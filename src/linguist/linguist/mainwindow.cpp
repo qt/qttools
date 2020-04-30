@@ -1274,9 +1274,6 @@ void MainWindow::printPhraseBook(QAction *action)
 
 void MainWindow::addToPhraseBook()
 {
-    MessageItem *currentMessage = m_dataModel->messageItem(m_currentIndex);
-    Phrase *phrase = new Phrase(currentMessage->text(), currentMessage->translation(),
-                                QString(), nullptr);
     QStringList phraseBookList;
     QHash<QString, PhraseBook *> phraseBookHash;
     foreach (PhraseBook *pb, m_phraseBooks) {
@@ -1295,20 +1292,31 @@ void MainWindow::addToPhraseBook()
     if (phraseBookList.isEmpty()) {
         QMessageBox::warning(this, tr("Add to phrase book"),
               tr("No appropriate phrasebook found."));
-    } else if (phraseBookList.size() == 1) {
+        return;
+    }
+
+    QString selectedPhraseBook;
+    if (phraseBookList.size() == 1) {
+        selectedPhraseBook = phraseBookList.at(0);
         if (QMessageBox::information(this, tr("Add to phrase book"),
-              tr("Adding entry to phrasebook %1").arg(phraseBookList.at(0)),
+              tr("Adding entry to phrasebook %1").arg(selectedPhraseBook),
                QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok)
-                              == QMessageBox::Ok)
-            phraseBookHash.value(phraseBookList.at(0))->append(phrase);
+                              != QMessageBox::Ok)
+            return;
     } else {
         bool okPressed = false;
-        QString selection = QInputDialog::getItem(this, tr("Add to phrase book"),
+        QString selectedPhraseBook = QInputDialog::getItem(this, tr("Add to phrase book"),
                                 tr("Select phrase book to add to"),
                                 phraseBookList, 0, false, &okPressed);
-        if (okPressed)
-            phraseBookHash.value(selection)->append(phrase);
+        if (!okPressed)
+            return;
     }
+
+    MessageItem *currentMessage = m_dataModel->messageItem(m_currentIndex);
+    Phrase *phrase = new Phrase(currentMessage->text(), currentMessage->translation(),
+                                QString(), nullptr);
+
+    phraseBookHash.value(selectedPhraseBook)->append(phrase);
 }
 
 void MainWindow::resetSorting()
