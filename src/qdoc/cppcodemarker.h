@@ -38,8 +38,8 @@ class CppCodeMarker : public CodeMarker
     Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeMarker)
 
 public:
-    CppCodeMarker();
-    ~CppCodeMarker() override;
+    CppCodeMarker() = default;
+    ~CppCodeMarker() override = default;
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;

@@ -41,22 +41,6 @@
 QT_BEGIN_NAMESPACE
 
 /*!
-  The constructor does nothing.
- */
-CppCodeMarker::CppCodeMarker()
-{
-    // nothing.
-}
-
-/*!
-  The destructor does nothing.
- */
-CppCodeMarker::~CppCodeMarker()
-{
-    // nothing.
-}
-
-/*!
   Returns \c true.
  */
 bool CppCodeMarker::recognizeCode(const QString & /* code */)
