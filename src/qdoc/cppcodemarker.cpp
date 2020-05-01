@@ -118,7 +118,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
     case Node::Function:
         func = (const FunctionNode *)node;
         if (style == Section::Details) {
-            QString templateDecl = node->templateDecl();
+            const QString &templateDecl = node->templateDecl();
             if (!templateDecl.isEmpty())
                 synopsis = templateDecl + QLatin1Char(' ');
         }
