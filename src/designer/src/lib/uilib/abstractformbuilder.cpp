@@ -1938,7 +1938,7 @@ void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemVi
     if (const QTreeView *treeView = qobject_cast<const QTreeView*>(itemView)) {
         auto viewProperties = ui_widget->elementAttribute();
         const auto &headerProperties = computeProperties(treeView->header());
-        for (const QString &realPropertyName : realPropertyNames) {
+        for (QString realPropertyName : realPropertyNames) {
             const QString upperPropertyName = realPropertyName.at(0).toUpper()
                                               + realPropertyName.mid(1);
             const QString fakePropertyName = QStringLiteral("header") + upperPropertyName;
@@ -1960,7 +1960,7 @@ void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemVi
             const auto &headerProperties = headerPrefix == QStringLiteral("horizontalHeader")
                 ? computeProperties(tableView->horizontalHeader())
                 : computeProperties(tableView->verticalHeader());
-            for (const QString &realPropertyName : realPropertyNames) {
+            for (QString realPropertyName : realPropertyNames) {
                 const QString upperPropertyName = realPropertyName.at(0).toUpper()
                                                   + realPropertyName.mid(1);
                 const QString fakePropertyName = headerPrefix + upperPropertyName;
@@ -2316,7 +2316,7 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
     if (QTreeView *treeView = qobject_cast<QTreeView*>(itemView)) {
         const auto &allAttributes = ui_widget->elementAttribute();
         QVector<DomProperty *> headerProperties;
-        for (const QString &realPropertyName : realPropertyNames) {
+        for (QString realPropertyName : realPropertyNames) {
             const QString upperPropertyName = realPropertyName.at(0).toUpper()
                                               + realPropertyName.mid(1);
             const QString fakePropertyName = QStringLiteral("header") + upperPropertyName;
@@ -2336,7 +2336,7 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
         const auto &allAttributes = ui_widget->elementAttribute();
         for (const QString &headerPrefix : headerPrefixes) {
             QVector<DomProperty*> headerProperties;
-            for (const QString &realPropertyName : realPropertyNames) {
+            for (QString realPropertyName : realPropertyNames) {
                 const QString upperPropertyName = realPropertyName.at(0).toUpper()
                                                   + realPropertyName.mid(1);
                 const QString fakePropertyName = headerPrefix + upperPropertyName;
