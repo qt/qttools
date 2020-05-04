@@ -84,32 +84,49 @@ struct ExpandVar
  */
 struct ConfigVar
 {
-    bool m_plus {};
     QString m_name {};
-    QStringList m_values {};
-    QString m_currentPath {};
+
+    struct ConfigValue {
+        QString m_value;
+        QString m_path;
+    };
+
+    QVector<ConfigValue> m_values {};
     Location m_location {};
     QVector<ExpandVar> m_expandVars {};
 
-    ConfigVar() : m_plus(false) {}
-
-    ConfigVar(const QString &name, const QStringList &values, const QString &dir)
-        : m_plus(true), m_name(name), m_values(values), m_currentPath(dir)
-    {
-    }
+    ConfigVar() = default;
 
     ConfigVar(const QString &name, const QStringList &values, const QString &dir,
-              const Location &loc, const QVector<ExpandVar> &expandVars)
-        : m_plus(false), m_name(name), m_values(values), m_currentPath(dir),
-          m_location(loc), m_expandVars(expandVars)
+              const Location &loc = Location(),
+              const QVector<ExpandVar> &expandVars = QVector<ExpandVar>())
+        : m_name(name), m_location(loc), m_expandVars(expandVars)
     {
+        for (const auto &v : values)
+            m_values << ConfigValue {v, dir};
+    }
+
+    /*
+      Appends values to this ConfigVar, and adjusts the ExpandVar
+      parameters so they continue to refer to the correct values.
+    */
+    void append(const ConfigVar &other)
+    {
+        m_expandVars << other.m_expandVars;
+        QVector<ExpandVar>::Iterator it = m_expandVars.end();
+        it -= other.m_expandVars.size();
+        std::for_each(it, m_expandVars.end(), [this](ExpandVar &v) {
+            v.m_valueIndex += m_values.size();
+        });
+        m_values << other.m_values;
+        m_location = other.m_location;
     }
 };
 
 /*
   In this multimap, the key is a config variable name.
  */
-typedef QMultiMap<QString, ConfigVar> ConfigVarMultimap;
+typedef QMap<QString, ConfigVar> ConfigVarMap;
 
 class Config : public Singleton<Config>
 {
@@ -146,7 +163,7 @@ public:
     QRegExp getRegExp(const QString &var) const;
     QVector<QRegExp> getRegExpList(const QString &var) const;
     QSet<QString> subVars(const QString &var) const;
-    void subVarsAndValues(const QString &var, ConfigVarMultimap &t) const;
+    void subVarsAndValues(const QString &var, ConfigVarMap &map) const;
     QStringList getAllFiles(const QString &filesVar, const QString &dirsVar,
                             const QSet<QString> &excludedDirs = QSet<QString>(),
                             const QSet<QString> &excludedFiles = QSet<QString>());
@@ -206,6 +223,11 @@ private:
     void setIncludePaths();
     void setIndexDirs();
     void expandVariables();
+    inline void updateLocation(const ConfigVar &cv) const
+    {
+        if (!cv.m_location.isEmpty())
+            const_cast<Config *>(this)->m_lastLocation = cv.m_location;
+    }
 
     QStringList m_dependModules {};
     QStringList m_defines {};
@@ -223,7 +245,7 @@ private:
     QString m_prog {};
     Location m_location {};
     Location m_lastLocation {};
-    ConfigVarMultimap m_configVars {};
+    ConfigVarMap m_configVars {};
 
     static QMap<QString, QString> m_uncompressedFiles;
     static QMap<QString, QString> m_extractedDirs;

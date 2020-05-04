@@ -355,29 +355,24 @@ void Config::expandVariables()
      for (auto &configVar : m_configVars) {
         for (auto it = configVar.m_expandVars.crbegin(); it != configVar.m_expandVars.crend(); ++it) {
             Q_ASSERT(it->m_valueIndex < configVar.m_values.size());
-            QList<ConfigVar> values = m_configVars.values(it->m_var);
-            std::reverse(values.begin(), values.end());
-            const ConfigVar *nestedVal {};
-            for (const auto &configVal : qAsConst(values)) {
-                nestedVal = configVal.m_plus ? nestedVal : nullptr;
-                nestedVal = !configVal.m_expandVars.empty() ? &configVal : nestedVal;
-            }
-            if (nestedVal) {
-                 configVar.m_location.fatal(tr("Nested variable expansion not allowed"),
-                                            tr("When expanding '%1' at %2:%3")
-                                                .arg(nestedVal->m_name)
-                                                .arg(nestedVal->m_location.filePath())
-                                                .arg(nestedVal->m_location.lineNo()));
-            } else if (values.isEmpty()) {
+            const QString &key = it->m_var;
+            const auto &refVar = m_configVars.value(key);
+            if (refVar.m_name.isEmpty()) {
                 configVar.m_location.fatal(tr("Environment or configuration variable '%1' undefined")
                         .arg(it->m_var));
+            } else if (!refVar.m_expandVars.empty()) {
+                 configVar.m_location.fatal(tr("Nested variable expansion not allowed"),
+                                            tr("When expanding '%1' at %2:%3")
+                                                .arg(refVar.m_name)
+                                                .arg(refVar.m_location.filePath())
+                                                .arg(refVar.m_location.lineNo()));
             }
             QString expanded;
             if (it->m_delim.isNull())
-                expanded = getStringList(it->m_var).join(QString());
+                expanded = getStringList(key).join(QString());
             else
-                expanded = getStringList(it->m_var).join(it->m_delim);
-            configVar.m_values[it->m_valueIndex].insert(it->m_index, expanded);
+                expanded = getStringList(key).join(it->m_delim);
+            configVar.m_values[it->m_valueIndex].m_value.insert(it->m_index, expanded);
         }
         configVar.m_expandVars.clear();
      }
@@ -388,7 +383,7 @@ void Config::expandVariables()
  */
 void Config::setStringList(const QString &var, const QStringList &values)
 {
-    m_configVars.replace(var, ConfigVar(var, values, QDir::currentPath()));
+    m_configVars.insert(var, ConfigVar(var, values, QDir::currentPath()));
 }
 
 /*!
@@ -397,7 +392,7 @@ void Config::setStringList(const QString &var, const QStringList &values)
 */
 void Config::insertStringList(const QString &var, const QStringList &values)
 {
-    m_configVars.insert(var, ConfigVar(var, values, QDir::currentPath()));
+    m_configVars[var].append(ConfigVar(var, values, QDir::currentPath()));
 }
 
 /*!
@@ -534,15 +529,12 @@ QSet<QString> Config::getOutputFormats() const
 }
 
 /*!
-  First, this function looks up the configuration variable \a var
-  in the location map and, if found, sets the internal variable
-  \c{lastLocation_} to the Location that \a var maps to.
+  Returns the value of a configuration variable \a var
+  as a string. If \a var is defined, updates the internal
+  location to the location of \a var for the purposes of
+  error reporting.
 
-  Then it looks up the configuration variable \a var in the string
-  map and returns the string that \a var maps to.
-
-  If \a var is not contained in the location map it returns
-  \a defaultString.
+  If \a var is not defined, returns \a defaultString.
 
   \note By default, \a defaultString is a null string. If \a var
   is found but contains an empty string, that is returned instead.
@@ -551,28 +543,19 @@ QSet<QString> Config::getOutputFormats() const
  */
 QString Config::getString(const QString &var, const QString &defaultString) const
 {
-    QList<ConfigVar> configVars = m_configVars.values(var);
-    if (!configVars.empty()) {
-        QString value("");
-        int i = configVars.size() - 1;
-        while (i >= 0) {
-            const ConfigVar &cv = configVars[i];
-            if (!cv.m_location.isEmpty())
-                const_cast<Config *>(this)->m_lastLocation = cv.m_location;
-            if (!cv.m_values.isEmpty()) {
-                if (!cv.m_plus)
-                    value.clear();
-                for (int j = 0; j < cv.m_values.size(); ++j) {
-                    if (!value.isEmpty() && !value.endsWith(QChar('\n')))
-                        value.append(QChar(' '));
-                    value.append(cv.m_values[j]);
-                }
-            }
-            --i;
-        }
-        return value;
+    const auto &configVar = m_configVars.value(var);
+
+    if (configVar.m_name.isEmpty())
+        return defaultString;
+    updateLocation(configVar);
+
+    QString result;
+    for (const auto &value : configVar.m_values) {
+        if (!result.isEmpty() && !result.endsWith(QChar('\n')))
+            result.append(QChar(' '));
+        result.append(value.m_value);
     }
-    return defaultString;
+    return result;
 }
 
 /*!
@@ -587,87 +570,53 @@ QSet<QString> Config::getStringSet(const QString &var) const
 }
 
 /*!
-  First, this function looks up the configuration variable \a var
-  in the location map. If found, it sets the internal variable
-  \c{lastLocation_} to the Location that \a var maps to.
-
-  Then it looks up the configuration variable \a var in the map of
-  configuration variable records. If found, it gets a list of all
-  the records for \a var. Then it appends all the values for \a var
-  to a list and returns the list. As it appends the values from each
-  record, if the \a var used '=' instead of '+=' the list is cleared
-  before the values are appended. \note '+=' should always be used.
-  The final list is returned.
+  Returns the string list contained in the configuration variable
+  \a var. If \a var is defined, updates the internal location
+  to the location of \a var for the purposes of error reporting.
  */
 QStringList Config::getStringList(const QString &var) const
 {
-    QList<ConfigVar> configVars = m_configVars.values(var);
-    QStringList values;
-    if (!configVars.empty()) {
-        int i = configVars.size() - 1;
-        while (i >= 0) {
-            if (!configVars[i].m_location.isEmpty())
-                const_cast<Config *>(this)->m_lastLocation = configVars[i].m_location;
-            if (configVars[i].m_plus)
-                values.append(configVars[i].m_values);
-            else
-                values = configVars[i].m_values;
-            --i;
-        }
-    }
-    return values;
+    const auto &configVar = m_configVars.value(var);
+    updateLocation(configVar);
+
+    QStringList result;
+    for (const auto &value : configVar.m_values)
+        result << value.m_value;
+    return result;
 }
 
 /*!
    Returns the a path list where all paths from the config variable \a var
-   are canonicalized. If \a validate is true, a warning for invalid paths is
-   generated.
-
-   First, this function looks up the configuration variable \a var
-   in the location map and, if found, sets the internal variable
-   \c{lastLocation_} the Location that \a var maps to.
-
-   Then it looks up the configuration variable \a var in the string
-   list map, which maps to one or more records that each contains a
-   list of file paths.
+   are canonicalized. If \a validate is true, outputs a warning for invalid
+   paths. If \a var is defined, updates the internal location to the
+   location of \a var for the purposes of error reporting.
 
    \sa Location::canonicalRelativePath()
  */
 QStringList Config::getCanonicalPathList(const QString &var, bool validate) const
 {
-    QStringList t;
-    QList<ConfigVar> configVars = m_configVars.values(var);
-    std::reverse(configVars.begin(), configVars.end());
-    if (!configVars.empty()) {
-        for (const auto &cv : qAsConst(configVars)) {
-            if (!cv.m_location.isEmpty())
-                const_cast<Config *>(this)->m_lastLocation = cv.m_location;
-            if (!cv.m_plus)
-                t.clear();
-            const QString currentPath = cv.m_currentPath;
-            const QStringList &values = cv.m_values;
-            if (!values.isEmpty()) {
-                t.reserve(t.size() + values.size());
-                for (const auto &i : values) {
-                    QDir dir(i.simplified());
-                    const QString path = dir.path();
+    QStringList result;
+    const auto &configVar = m_configVars.value(var);
+    updateLocation(configVar);
 
-                    if (dir.isRelative())
-                        dir.setPath(currentPath + QLatin1Char('/') + path);
-                    if (validate && !QFileInfo::exists(dir.path()))
-                        m_lastLocation.warning(tr("Cannot find file or directory: %1").arg(path));
-                    else {
-                        const QString canonicalPath = dir.canonicalPath();
-                        if (!canonicalPath.isEmpty())
-                            t.append(canonicalPath);
-                        else if (path.contains(QLatin1Char('*')) || path.contains(QLatin1Char('?')))
-                            t.append(path);
-                    }
-                }
-            }
+    for (const auto &value : configVar.m_values) {
+        const QString &currentPath = value.m_path;
+        QDir dir(value.m_value.simplified());
+        const QString path = dir.path();
+
+        if (dir.isRelative())
+            dir.setPath(currentPath + QLatin1Char('/') + path);
+        if (validate && !QFileInfo::exists(dir.path()))
+            m_lastLocation.warning(tr("Cannot find file or directory: %1").arg(path));
+        else {
+            const QString canonicalPath = dir.canonicalPath();
+            if (!canonicalPath.isEmpty())
+                result.append(canonicalPath);
+            else if (path.contains(QLatin1Char('*')) || path.contains(QLatin1Char('?')))
+                result.append(path);
         }
     }
-    return t;
+    return result;
 }
 
 /*!
@@ -725,19 +674,18 @@ QSet<QString> Config::subVars(const QString &var) const
             int dot = subVar.indexOf(QLatin1Char('.'));
             if (dot != -1)
                 subVar.truncate(dot);
-            if (!result.contains(subVar))
-                result.insert(subVar);
+            result.insert(subVar);
         }
     }
     return result;
 }
 
 /*!
-  Same as subVars(), but in this case we return a config var
-  multimap with the matching keys (stripped of the prefix \a var
-  and mapped to their values. The pairs are inserted into \a t
+  Same as subVars(), but returns a ConfigVarMap \a map with the
+  matching keys (stripped of the prefix \a var and mapped to
+  their values.
  */
-void Config::subVarsAndValues(const QString &var, ConfigVarMultimap &t) const
+void Config::subVarsAndValues(const QString &var, ConfigVarMap &map) const
 {
     QString varDot = var + QLatin1Char('.');
     for (auto it = m_configVars.constBegin(); it != m_configVars.constEnd(); ++it) {
@@ -746,7 +694,7 @@ void Config::subVarsAndValues(const QString &var, ConfigVarMultimap &t) const
             int dot = subVar.indexOf(QLatin1Char('.'));
             if (dot != -1)
                 subVar.truncate(dot);
-            t.insert(subVar, it.value());
+            map.insert(subVar, it.value());
         }
     }
 }
@@ -1132,13 +1080,10 @@ void Config::load(Location location, const QString &fileName)
         } else if (isMetaKeyChar(c)) {
             Location keyLoc = location;
             bool plus = false;
-            QString stringValue;
             QStringList rhsValues;
             QVector<ExpandVar> expandVars;
             QString word;
             bool inQuote = false;
-            bool prevWordQuoted = true;
-            bool metWord = false;
             bool needsExpansion = false;
 
             MetaStack stack;
@@ -1230,14 +1175,9 @@ void Config::load(Location location, const QString &fileName)
                             PUT_CHAR();
                         } else {
                             if (!word.isEmpty() || needsExpansion) {
-                                if (metWord)
-                                    stringValue += QLatin1Char(' ');
-                                stringValue += word;
                                 rhsValues << word;
-                                metWord = true;
                                 word.clear();
                                 needsExpansion = false;
-                                prevWordQuoted = false;
                             }
                             if (cc == '\n' || cc == '#')
                                 break;
@@ -1245,15 +1185,10 @@ void Config::load(Location location, const QString &fileName)
                         }
                     } else if (cc == '"') {
                         if (inQuote) {
-                            if (!prevWordQuoted)
-                                stringValue += QLatin1Char(' ');
-                            stringValue += word;
                             if (!word.isEmpty() || needsExpansion)
                                 rhsValues << word;
-                            metWord = true;
                             word.clear();
                             needsExpansion = false;
-                            prevWordQuoted = true;
                         }
                         inQuote = !inQuote;
                         SKIP_CHAR();
@@ -1302,10 +1237,12 @@ void Config::load(Location location, const QString &fileName)
                     if (!keySyntax.exactMatch(key))
                         keyLoc.fatal(tr("Invalid key '%1'").arg(key));
 
-                    ConfigVarMultimap::Iterator i;
-                    i = m_configVars.insert(key,
-                                           ConfigVar(key, rhsValues, QDir::currentPath(), keyLoc, expandVars));
-                    i.value().m_plus = plus;
+                    ConfigVar configVar(key, rhsValues, QDir::currentPath(), keyLoc, expandVars);
+                    if (plus && m_configVars.contains(key)) {
+                        m_configVars[key].append(configVar);
+                    } else {
+                        m_configVars.insert(key, configVar);
+                    }
                 }
             }
         } else {
