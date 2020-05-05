@@ -46,7 +46,7 @@ class Location
 
 public:
     Location();
-    Location(const QString &filePath);
+    explicit Location(const QString &filePath);
     Location(const Location &other);
     ~Location() { delete stk; }
 
