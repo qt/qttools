@@ -2608,23 +2608,22 @@ QString DocParser::untabifyEtc(const QString &str)
     result.reserve(str.length());
     int column = 0;
 
-    for (int i = 0; i < str.length(); ++i) {
-        const QChar c = str.at(i);
-        if (c == QLatin1Char('\r'))
+    for (const auto &character : str) {
+        if (character == QLatin1Char('\r'))
             continue;
-        if (c == QLatin1Char('\t')) {
+        if (character == QLatin1Char('\t')) {
             result += &"        "[column % tabSize];
             column = ((column / tabSize) + 1) * tabSize;
             continue;
         }
-        if (c == QLatin1Char('\n')) {
+        if (character == QLatin1Char('\n')) {
             while (result.endsWith(QLatin1Char(' ')))
                 result.chop(1);
-            result += c;
+            result += character;
             column = 0;
             continue;
         }
-        result += c;
+        result += character;
         ++column;
     }
 
@@ -2641,11 +2640,11 @@ int DocParser::indentLevel(const QString &str)
     int minIndent = INT_MAX;
     int column = 0;
 
-    for (int i = 0; i < str.length(); ++i) {
-        if (str[i] == '\n') {
+    for (const auto &character : str) {
+        if (character == '\n') {
             column = 0;
         } else {
-            if (str[i] != ' ' && column < minIndent)
+            if (character != ' ' && column < minIndent)
                 minIndent = column;
             ++column;
         }
@@ -2658,20 +2657,20 @@ QString DocParser::unindent(int level, const QString &str)
     if (level == 0)
         return str;
 
-    QString t;
+    QString result;
     int column = 0;
 
-    for (int i = 0; i < str.length(); ++i) {
-        if (str[i] == QLatin1Char('\n')) {
-            t += '\n';
+    for (const auto &character : str) {
+        if (character == QLatin1Char('\n')) {
+            result += '\n';
             column = 0;
         } else {
             if (column >= level)
-                t += str[i];
+                result += character;
             ++column;
         }
     }
-    return t;
+    return result;
 }
 
 QString DocParser::slashed(const QString &str)
