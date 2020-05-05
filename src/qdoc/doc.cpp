@@ -62,7 +62,7 @@ struct Macro
     QString defaultDef;
     Location defaultDefLocation;
     QStringMap otherDefs;
-    int numParams;
+    int numParams {};
 };
 
 enum {
@@ -485,33 +485,33 @@ private:
     QStack<int> openedInputs;
 
     QString input_;
-    int pos;
-    int backslashPos;
-    int endPos;
-    int len;
+    int pos {};
+    int backslashPos {};
+    int endPos {};
+    int len {};
     Location cachedLoc;
-    int cachedPos;
+    int cachedPos {};
 
-    DocPrivate *priv;
+    DocPrivate *priv {};
     enum ParagraphState { OutsideParagraph, InSingleLineParagraph, InMultiLineParagraph };
-    ParagraphState paraState;
-    bool inTableHeader;
-    bool inTableRow;
-    bool inTableItem;
-    bool indexStartedPara; // ### rename
-    Atom::AtomType pendingParaLeftType;
-    Atom::AtomType pendingParaRightType;
+    ParagraphState paraState {};
+    bool inTableHeader {};
+    bool inTableRow {};
+    bool inTableItem {};
+    bool indexStartedPara {}; // ### rename
+    Atom::AtomType pendingParaLeftType {};
+    Atom::AtomType pendingParaRightType {};
     QString pendingParaString;
 
-    int braceDepth;
-    Doc::Sections currentSection;
+    int braceDepth {};
+    Doc::Sections currentSection {};
     QMap<QString, Location> targetMap_;
     QMap<int, QString> pendingFormats;
     QStack<int> openedCommands;
     QStack<OpenedList> openedLists;
     Quoter quoter;
     QStack<DitaRef *> ditarefs_;
-    Atom *lastAtom;
+    Atom *lastAtom {};
 };
 
 int DocParser::tabSize;
