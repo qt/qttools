@@ -69,16 +69,7 @@ public:
     DocPrivateExtra() : granularity_(Doc::Part), section_(Doc::NoSection) {}
 };
 
-struct Shared // ### get rid of
-{
-    Shared() : count(1) {}
-    void ref() { ++count; }
-    bool deref() { return (--count == 0); }
-
-    int count;
-};
-
-class DocPrivate : public Shared
+class DocPrivate
 {
 public:
     explicit DocPrivate(const Location &start = Location(), const Location &end = Location(),
@@ -92,7 +83,10 @@ public:
 
     void addAlso(const Text &also);
     void constructExtra();
+    void ref() { ++count; }
+    bool deref() { return (--count == 0); }
 
+    int count { 1 };
     // ### move some of this in DocPrivateExtra
     Location start_loc;
     Location end_loc;
