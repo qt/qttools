@@ -447,7 +447,6 @@ private:
     void appendWord(const QString &word);
     void appendToCode(const QString &code);
     void appendToCode(const QString &code, Atom::AtomType defaultType);
-    void startNewPara();
     void enterPara(Atom::AtomType leftType = Atom::ParaLeft,
                    Atom::AtomType rightType = Atom::ParaRight, const QString &string = QString());
     void leavePara();
@@ -468,7 +467,6 @@ private:
     QString getMetaCommandArgument(const QString &cmdStr);
     QString getUntilEnd(int cmd);
     QString getCode(int cmd, CodeMarker *marker, const QString &argStr = QString());
-    QString getUnmarkedCode(int cmd);
 
     inline bool isAutoLinkString(const QString &word);
     bool isAutoLinkString(const QString &word, int &curPos);
@@ -1926,12 +1924,6 @@ void DocParser::appendToCode(const QString &markedCode, Atom::AtomType defaultTy
     }
 }
 
-void DocParser::startNewPara()
-{
-    leavePara();
-    enterPara();
-}
-
 void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, const QString &string)
 {
     if (paraState == OutsideParagraph) {
@@ -2457,15 +2449,6 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
     if (marker == nullptr)
         marker = CodeMarker::markerForCode(code);
     return marker->markedUpCode(code, nullptr, location());
-}
-
-/*!
-  Was used only for generating doxygen output.
- */
-QString DocParser::getUnmarkedCode(int cmd)
-{
-    QString code = getUntilEnd(cmd);
-    return code;
 }
 
 bool DocParser::isBlankLine()
