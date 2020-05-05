@@ -17,6 +17,7 @@ qt_add_tool(qdoc
         ditaref.h
         doc.cpp doc.h
         docbookgenerator.cpp docbookgenerator.h
+        docprivate.cpp docprivate.h
         editdistance.cpp editdistance.h
         generator.cpp generator.h
         helpprojectwriter.cpp helpprojectwriter.h

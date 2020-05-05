@@ -31,6 +31,7 @@
 #include "atom.h"
 #include "config.h"
 #include "codemarker.h"
+#include "docprivate.h"
 #include "editdistance.h"
 #include "generator.h"
 #include "loggingcategory.h"
@@ -39,7 +40,6 @@
 #include "text.h"
 #include "tokenizer.h"
 
-#include <QtCore/qdatetime.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
@@ -291,117 +291,12 @@ Q_GLOBAL_STATIC(QStringMap, aliasMap)
 Q_GLOBAL_STATIC(QHash_QString_int, cmdHash)
 Q_GLOBAL_STATIC(QHash_QString_Macro, macroHash)
 
-class DocPrivateExtra
-{
-public:
-    Doc::Sections granularity_;
-    Doc::Sections section_; // ###
-    QVector<Atom *> tableOfContents_;
-    QVector<int> tableOfContentsLevels_;
-    QVector<Atom *> keywords_;
-    QVector<Atom *> targets_;
-    QStringMultiMap metaMap_;
-
-    DocPrivateExtra() : granularity_(Doc::Part), section_(Doc::NoSection) {}
-};
-
-struct Shared // ### get rid of
-{
-    Shared() : count(1) {}
-    void ref() { ++count; }
-    bool deref() { return (--count == 0); }
-
-    int count;
-};
-
 static QString cleanLink(const QString &link)
 {
     int colonPos = link.indexOf(':');
     if ((colonPos == -1) || (!link.startsWith("file:") && !link.startsWith("mailto:")))
         return link;
     return link.mid(colonPos + 1).simplified();
-}
-
-typedef QMap<QString, ArgList> CommandMap;
-
-class DocPrivate : public Shared
-{
-public:
-    DocPrivate(const Location &start = Location(), const Location &end = Location(),
-               const QString &source = QString());
-    ~DocPrivate();
-
-    void addAlso(const Text &also);
-    void constructExtra();
-    bool isEnumDocSimplifiable() const;
-
-    // ### move some of this in DocPrivateExtra
-    Location start_loc;
-    Location end_loc;
-    QString src;
-    Text text;
-    QSet<QString> params;
-    QVector<Text> alsoList;
-    QStringList enumItemList;
-    QStringList omitEnumItemList;
-    QSet<QString> metacommandsUsed;
-    CommandMap metaCommandMap;
-    bool hasLegalese : 1;
-    bool hasSectioningUnits : 1;
-    DocPrivateExtra *extra;
-    TopicList topics_;
-    DitaRefList ditamap_;
-};
-
-DocPrivate::DocPrivate(const Location &start, const Location &end, const QString &source)
-    : start_loc(start),
-      end_loc(end),
-      src(source),
-      hasLegalese(false),
-      hasSectioningUnits(false),
-      extra(nullptr)
-{
-    // nothing.
-}
-
-/*!
-  If the doc is a ditamap, the destructor deletes each element
-  in the ditamap structure. These were allocated as needed.
- */
-DocPrivate::~DocPrivate()
-{
-    delete extra;
-    qDeleteAll(ditamap_);
-}
-
-void DocPrivate::addAlso(const Text &also)
-{
-    alsoList.append(also);
-}
-
-void DocPrivate::constructExtra()
-{
-    if (extra == nullptr)
-        extra = new DocPrivateExtra;
-}
-
-bool DocPrivate::isEnumDocSimplifiable() const
-{
-    bool justMetColon = false;
-    int numValueTables = 0;
-
-    const Atom *atom = text.firstAtom();
-    while (atom) {
-        if (atom->type() == Atom::AutoLink || atom->type() == Atom::String) {
-            justMetColon = atom->string().endsWith(QLatin1Char(':'));
-        } else if ((atom->type() == Atom::ListLeft) && (atom->string() == ATOM_LIST_VALUE)) {
-            if (justMetColon || numValueTables > 0)
-                return false;
-            ++numValueTables;
-        }
-        atom = atom->next();
-    }
-    return true;
 }
 
 class DocParser
