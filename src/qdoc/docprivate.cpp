@@ -57,23 +57,4 @@ void DocPrivate::constructExtra()
         extra = new DocPrivateExtra;
 }
 
-bool DocPrivate::isEnumDocSimplifiable() const
-{
-    bool justMetColon = false;
-    int numValueTables = 0;
-
-    const Atom *atom = text.firstAtom();
-    while (atom) {
-        if (atom->type() == Atom::AutoLink || atom->type() == Atom::String) {
-            justMetColon = atom->string().endsWith(QLatin1Char(':'));
-        } else if ((atom->type() == Atom::ListLeft) && (atom->string() == ATOM_LIST_VALUE)) {
-            if (justMetColon || numValueTables > 0)
-                return false;
-            ++numValueTables;
-        }
-        atom = atom->next();
-    }
-    return true;
-}
-
 QT_END_NAMESPACE

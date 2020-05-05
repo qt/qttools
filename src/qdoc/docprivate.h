@@ -92,7 +92,6 @@ public:
 
     void addAlso(const Text &also);
     void constructExtra();
-    bool isEnumDocSimplifiable() const;
 
     // ### move some of this in DocPrivateExtra
     Location start_loc;
