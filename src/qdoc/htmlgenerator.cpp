@@ -3729,12 +3729,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
     bool proceed = false;
     for (auto map = exampleNodeMap.begin(); map != exampleNodeMap.end(); ++map) {
         const ExampleNode *en = map.value();
-        if (demos) {
-            if (en->name().startsWith("demos")) {
-                proceed = true;
-                break;
-            }
-        } else if (!en->name().startsWith("demos")) {
+        if (demos == en->name().startsWith("demos")) {
             proceed = true;
             break;
         }
