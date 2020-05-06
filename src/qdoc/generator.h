@@ -142,7 +142,6 @@ protected:
     void generateStatus(const Node *node, CodeMarker *marker);
     virtual void generateAddendum(const Node *node, Addendum type, CodeMarker *marker);
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
-    QString getMetadataElement(const Aggregate *inner, const QString &t);
     QStringList getMetadataElements(const Aggregate *inner, const QString &t);
     void generateOverloadedSignal(const Node *node, CodeMarker *marker);
     static QString getOverloadedSignalCode(const Node *node);

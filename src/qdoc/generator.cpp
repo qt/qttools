@@ -1654,26 +1654,6 @@ Generator *Generator::generatorForFormat(const QString &format)
 }
 
 /*!
-  Looks up the tag \a tag in the map of metadata values for the
-  current topic in \a inner. If a value for the tag is found,
-  the value is returned.
-
-  \note If \a tag is found in the metadata map, it is erased.
-  i.e. Once you call this function for a particular \a tag,
-  you consume \a tag.
- */
-QString Generator::getMetadataElement(const Aggregate *inner, const QString &tag)
-{
-    QString s;
-    QStringMultiMap &metaTagMap = const_cast<QStringMultiMap &>(inner->doc().metaTagMap());
-    for (auto it = metaTagMap.find(tag); it != metaTagMap.end();) {
-        s = it.value();
-        metaTagMap.erase(it);
-    }
-    return s;
-}
-
-/*!
   Looks up the tag \a t in the map of metadata values for the
   current topic in \a inner. If values for the tag are found,
   they are returned in a string list.
