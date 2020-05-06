@@ -1,0 +1,2 @@
+sourcedirs += does/not/exist
+sourcedirs = includes

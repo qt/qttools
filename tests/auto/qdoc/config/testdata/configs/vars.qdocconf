@@ -1,0 +1,17 @@
+project = Variables
+
+untrue = false
+true = "Sir Yes, Sir!"
+
+void =
+int = 1
+int += 1
+
+list = \
+    testing line \
+    "by\n" \
+    "line"
+
+some.thing =
+some.where =
+some.time =
