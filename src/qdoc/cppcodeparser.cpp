@@ -945,7 +945,7 @@ void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
 
 bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
 {
-    QSet<QString> topicCommandsUsed = topicCommands() & doc.metaCommandsUsed();
+    const QSet<QString> topicCommandsUsed = topicCommands() & doc.metaCommandsUsed();
     if (topicCommandsUsed.count() > 1) {
         bool ok = true;
         for (const auto &t : topicCommandsUsed) {

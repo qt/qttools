@@ -52,12 +52,6 @@
 
 QT_BEGIN_NAMESPACE
 
-Q_GLOBAL_STATIC(QSet<QString>, null_Set_QString)
-Q_GLOBAL_STATIC(TopicList, nullTopicList)
-Q_GLOBAL_STATIC(QStringList, null_QStringList)
-Q_GLOBAL_STATIC(QVector<Text>, null_QVector_Text)
-Q_GLOBAL_STATIC(QStringMultiMap, null_QStringMultiMap)
-
 enum {
     CMD_A,
     CMD_ANNOTATEDLIST,
@@ -2733,24 +2727,24 @@ Text Doc::legaleseText() const
         return body().subText(Atom::LegaleseLeft, Atom::LegaleseRight);
 }
 
-const QSet<QString> &Doc::parameterNames() const
+QSet<QString> Doc::parameterNames() const
 {
-    return priv == nullptr ? *null_Set_QString() : priv->params;
+    return priv == nullptr ? QSet<QString>() : priv->params;
 }
 
-const QStringList &Doc::enumItemNames() const
+QStringList Doc::enumItemNames() const
 {
-    return priv == nullptr ? *null_QStringList() : priv->enumItemList;
+    return priv == nullptr ? QStringList() : priv->enumItemList;
 }
 
-const QStringList &Doc::omitEnumItemNames() const
+QStringList Doc::omitEnumItemNames() const
 {
-    return priv == nullptr ? *null_QStringList() : priv->omitEnumItemList;
+    return priv == nullptr ? QStringList() : priv->omitEnumItemList;
 }
 
-const QSet<QString> &Doc::metaCommandsUsed() const
+QSet<QString> Doc::metaCommandsUsed() const
 {
-    return priv == nullptr ? *null_Set_QString() : priv->metacommandsUsed;
+    return priv == nullptr ? QSet<QString>() : priv->metacommandsUsed;
 }
 
 /*!
@@ -2776,9 +2770,9 @@ bool Doc::isMarkedReimp() const
   current qdoc comment. Normally there is only one, but there
   can be multiple \e{qmlproperty} commands, for example.
  */
-const TopicList &Doc::topicsUsed() const
+TopicList Doc::topicsUsed() const
 {
-    return priv == nullptr ? *nullTopicList() : priv->topics_;
+    return priv == nullptr ? TopicList() : priv->topics_;
 }
 
 ArgList Doc::metaCommandArgs(const QString &metacommand) const
@@ -2786,9 +2780,9 @@ ArgList Doc::metaCommandArgs(const QString &metacommand) const
     return priv == nullptr ? ArgList() : priv->metaCommandMap.value(metacommand);
 }
 
-const QVector<Text> &Doc::alsoList() const
+QVector<Text> Doc::alsoList() const
 {
-    return priv == nullptr ? *null_QVector_Text() : priv->alsoList;
+    return priv == nullptr ? QVector<Text>() : priv->alsoList;
 }
 
 bool Doc::hasTableOfContents() const
@@ -2830,9 +2824,9 @@ const QVector<Atom *> &Doc::targets() const
     return priv->extra->targets_;
 }
 
-const QStringMultiMap &Doc::metaTagMap() const
+QStringMultiMap *Doc::metaTagMap() const
 {
-    return priv && priv->extra ? priv->extra->metaMap_ : *null_QStringMultiMap();
+    return priv && priv->extra ? &priv->extra->metaMap_ : nullptr;
 }
 
 void Doc::initialize()

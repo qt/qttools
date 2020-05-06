@@ -87,13 +87,13 @@ public:
     Text briefText(bool inclusive = false) const;
     Text trimmedBriefText(const QString &className) const;
     Text legaleseText() const;
-    const QSet<QString> &parameterNames() const;
-    const QStringList &enumItemNames() const;
-    const QStringList &omitEnumItemNames() const;
-    const QSet<QString> &metaCommandsUsed() const;
-    const TopicList &topicsUsed() const;
+    QSet<QString> parameterNames() const;
+    QStringList enumItemNames() const;
+    QStringList omitEnumItemNames() const;
+    QSet<QString> metaCommandsUsed() const;
+    TopicList topicsUsed() const;
     ArgList metaCommandArgs(const QString &metaCommand) const;
-    const QVector<Text> &alsoList() const;
+    QVector<Text> alsoList() const;
     bool hasTableOfContents() const;
     bool hasKeywords() const;
     bool hasTargets() const;
@@ -103,7 +103,7 @@ public:
     const QVector<int> &tableOfContentsLevels() const;
     const QVector<Atom *> &keywords() const;
     const QVector<Atom *> &targets() const;
-    const QStringMultiMap &metaTagMap() const;
+    QStringMultiMap *metaTagMap() const;
 
     static void initialize();
     static void terminate();

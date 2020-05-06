@@ -968,7 +968,10 @@ void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
     }
 
     // Construct a path to the example; <install path>/<example name>
-    QString pathRoot = en->doc().metaTagMap().value(QLatin1String("installpath"));
+    QString pathRoot;
+    QStringMultiMap *metaTagMap = en->doc().metaTagMap();
+    if (metaTagMap)
+        pathRoot = metaTagMap->value(QLatin1String("installpath"));
     if (pathRoot.isEmpty())
         pathRoot = Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH);
     QStringList path = QStringList() << pathRoot << en->name();
@@ -1664,12 +1667,13 @@ Generator *Generator::generatorForFormat(const QString &format)
  */
 QStringList Generator::getMetadataElements(const Aggregate *inner, const QString &t)
 {
-    QStringList s;
-    QStringMultiMap &metaTagMap = const_cast<QStringMultiMap &>(inner->doc().metaTagMap());
-    s = metaTagMap.values(t);
-    if (!s.isEmpty())
-        metaTagMap.remove(t);
-    return s;
+    QStringList result;
+    QStringMultiMap *metaTagMap = inner->doc().metaTagMap();
+    if (metaTagMap)
+        result = metaTagMap->values(t);
+    if (!result.isEmpty())
+        metaTagMap->remove(t);
+    return result;
 }
 
 /*!
