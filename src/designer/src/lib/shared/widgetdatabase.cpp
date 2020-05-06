@@ -643,7 +643,7 @@ QString WidgetDataBase::formTemplate(const QDesignerFormEditorInterface *core, c
 // Set a fixed size on a XML template
 QString WidgetDataBase::scaleFormTemplate(const QString &xml, const QSize &size, bool fixed)
 {
-    DomUI *domUI = QDesignerWidgetBox::xmlToUi(QStringLiteral("Form"), xml, false);
+    QScopedPointer<DomUI> domUI(QDesignerWidgetBox::xmlToUi(QStringLiteral("Form"), xml, false));
     if (!domUI)
         return QString();
     DomWidget *domWidget = domUI->elementWidget();
@@ -721,7 +721,6 @@ QString WidgetDataBase::scaleFormTemplate(const QString &xml, const QSize &size,
         writer.writeEndDocument();
     }
 
-    delete domUI;
     return rc;
 }
 
