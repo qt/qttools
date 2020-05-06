@@ -225,8 +225,8 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
 
     if (!alsoList.isEmpty()) {
         writer.writeStartElement("see-also");
-        for (int i = 0; i < alsoList.size(); ++i) {
-            const Atom *atom = alsoList.at(i).firstAtom();
+        for (const auto &item : alsoList) {
+            const auto *atom = item.firstAtom();
             while (atom)
                 atom = addAtomElements(writer, atom, node, marker_);
         }
