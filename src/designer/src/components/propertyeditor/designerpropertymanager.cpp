@@ -2033,7 +2033,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
         m_urlValues[property] = QUrl();
         break;
     case QVariant::ByteArray:
-        m_byteArrayValues[property] = nullptr;
+        m_byteArrayValues[property] = QByteArray();
         break;
     case QVariant::Brush:
         m_brushManager.initializeProperty(this, property, enumTypeId());
