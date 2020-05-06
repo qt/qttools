@@ -43,6 +43,17 @@ Item {
     id: testCase
 
     /*!
+        \qmlsignal QDocTest::completed
+    */
+    signal completed
+
+    /*!
+        \qmlsignal DocTest::test(var bar)
+        Signal with parameter \a bar.
+    */
+    signal foo(var bar)
+
+    /*!
         \qmlproperty string DocTest::name
 
         Name of the test.

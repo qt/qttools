@@ -70,6 +70,7 @@
             <keyword name="anotherObsoleteMember" id="Test::anotherObsoleteMember" ref="testqdoc-test-obsolete.html#anotherObsoleteMember"/>
             <keyword name="children" id="AbstractParent::children" ref="qml-qdoc-test-abstractparent.html#children-prop"/>
             <keyword name="color" id="ProgressBar::color" ref="qml-uicomponents-progressbar.html#color-prop"/>
+            <keyword name="completed" id="DocTest::completed" ref="qml-qdoc-test-doctest.html#completed-signal"/>
             <keyword name="completed" id="Type::completed" ref="qml-qdoc-test-type.html#completed-signal"/>
             <keyword name="configured" id="Type::configured" ref="qml-qdoc-test-type.html#configured-signal"/>
             <keyword name="copy" id="Type::copy" ref="qml-qdoc-test-type.html#copy-method"/>
@@ -79,6 +80,7 @@
             <keyword name="enable" id="Type::enable" ref="qml-qdoc-test-type.html#enable-method"/>
             <keyword name="fail" id="DocTest::fail" ref="qml-qdoc-test-doctest.html#fail-method"/>
             <keyword name="fifth" id="Type::fifth" ref="qml-qdoc-test-type.html#fifth-prop"/>
+            <keyword name="foo" id="DocTest::foo" ref="qml-qdoc-test-doctest.html#foo-signal"/>
             <keyword name="fourth" id="Type::fourth" ref="qml-qdoc-test-type.html#fourth-prop"/>
             <keyword name="group.first" id="Type::group.first" ref="qml-qdoc-test-type.html#group.first-prop"/>
             <keyword name="group.second" id="Type::group.second" ref="qml-qdoc-test-type.html#group.second-prop"/>
