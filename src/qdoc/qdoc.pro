@@ -48,6 +48,7 @@ HEADERS += atom.h \
            htmlgenerator.h \
            location.h \
            loggingcategory.h \
+           macro.h \
            node.h \
            openedlist.h \
            parameters.h \
@@ -60,6 +61,7 @@ HEADERS += atom.h \
            separator.h \
            text.h \
            tokenizer.h \
+           topic.h \
            tree.h \
            xmlgenerator.h \
            webxmlgenerator.h \

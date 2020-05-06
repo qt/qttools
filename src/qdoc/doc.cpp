@@ -35,6 +35,7 @@
 #include "editdistance.h"
 #include "generator.h"
 #include "loggingcategory.h"
+#include "macro.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "text.h"
@@ -56,14 +57,6 @@ Q_GLOBAL_STATIC(TopicList, nullTopicList)
 Q_GLOBAL_STATIC(QStringList, null_QStringList)
 Q_GLOBAL_STATIC(QVector<Text>, null_QVector_Text)
 Q_GLOBAL_STATIC(QStringMultiMap, null_QStringMultiMap)
-
-struct Macro
-{
-    QString defaultDef;
-    Location defaultDefLocation;
-    QStringMap otherDefs;
-    int numParams {};
-};
 
 enum {
     CMD_A,

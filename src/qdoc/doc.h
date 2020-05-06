@@ -36,6 +36,7 @@
 #include "location.h"
 
 #include "ditaref.h"
+#include "topic.h"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qset.h>
@@ -53,21 +54,6 @@ typedef QPair<QString, Location> ArgLocPair;
 typedef QVector<ArgLocPair> ArgList;
 typedef QMap<QString, QString> QStringMap;
 typedef QMultiMap<QString, QString> QStringMultiMap;
-
-struct Topic
-{
-    QString topic;
-    QString args;
-    Topic() = default;
-    Topic(QString &t, const QString &a) : topic(t), args(a) {}
-    bool isEmpty() const { return topic.isEmpty(); }
-    void clear()
-    {
-        topic.clear();
-        args.clear();
-    }
-};
-typedef QVector<Topic> TopicList;
 
 class Doc
 {

@@ -26,6 +26,7 @@ qt_add_tool(qdoc
         jscodemarker.cpp jscodemarker.h
         location.cpp location.h
         loggingcategory.h
+        macro.h
         main.cpp
         node.cpp node.h
         openedlist.cpp openedlist.h
@@ -44,6 +45,7 @@ qt_add_tool(qdoc
         separator.cpp separator.h
         text.cpp text.h
         tokenizer.cpp tokenizer.h
+        topic.h
         tree.cpp tree.h
         utilities.cpp utilities.h
         webxmlgenerator.cpp webxmlgenerator.h
