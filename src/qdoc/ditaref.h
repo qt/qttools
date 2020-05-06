@@ -34,6 +34,8 @@
 #include <QtCore/qset.h>
 #include <QtCore/qstring.h>
 
+QT_BEGIN_NAMESPACE
+
 class DitaRef
 {
 public:
@@ -75,5 +77,7 @@ public:
 
     bool isMapRef() const override { return true; }
 };
+
+QT_END_NAMESPACE
 
 #endif // DITAREF_H
