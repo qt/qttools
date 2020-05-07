@@ -6,7 +6,11 @@
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>QML Types for the Test module.</db:para>
+<db:para><db:emphasis role="bold">This module is under development and is subject to change.</db:emphasis></db:para>
+<db:para>This module was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
+<db:para><db:emphasis role="bold">This module is under development and is subject to change.</db:emphasis></db:para>
+<db:para>This module was introduced in Qt 1.1.</db:para>
 <db:anchor xml:id="details"/>
 </db:article>

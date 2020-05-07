@@ -4101,13 +4101,16 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
     // Element synopsis.
     generateDocBookSynopsis(cn);
 
-    // Actual content.
-    if (cn->isModule()) {
-        // Generate brief text and status for modules.
-        generateBrief(cn);
+    // Generate brief for C++ modules, status for all modules.
+    if (cn->genus() != Node::DOC && cn->genus() != Node::DontCare) {
+        if (cn->isModule())
+            generateBrief(cn);
         generateStatus(cn);
         generateSince(cn);
+    }
 
+    // Actual content.
+    if (cn->isModule()) {
         if (!cn->noAutoList()) {
             NodeMultiMap nmm;
             cn->getMemberNamespaces(nmm);
@@ -4126,9 +4129,8 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
         }
     }
 
-    Text brief = cn->doc().briefText();
     bool generatedTitle = false;
-    if (cn->isModule() && !brief.isEmpty()) {
+    if (cn->isModule() && !cn->doc().briefText().isEmpty()) {
         startSection(registerRef("details"), "Detailed Description");
         generatedTitle = true;
     } else {
