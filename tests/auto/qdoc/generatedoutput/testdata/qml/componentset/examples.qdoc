@@ -93,7 +93,7 @@
 /*!
     \qmlmodule UIComponents 1.0
     \title UI Components
-    \brief Basic set of UI components
+    \brief Basic set of UI components.
 
     This is a listing of a list of UI components implemented by QML types. These
     files are available for general import and they are based on the

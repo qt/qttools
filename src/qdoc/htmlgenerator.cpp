@@ -1486,12 +1486,15 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     generateKeywordAnchors(cn);
     generateTitle(fullTitle, Text() << cn->subtitle(), subTitleSize, cn, marker);
 
-    if (cn->isModule()) {
-        // Generate brief text and status for modules.
-        generateBrief(cn, marker);
+    // Generate brief for C++ modules, status for all modules.
+    if (cn->genus() != Node::DOC && cn->genus() != Node::DontCare) {
+        if (cn->isModule())
+            generateBrief(cn, marker);
         generateStatus(cn, marker);
         generateSince(cn, marker);
+    }
 
+    if (cn->isModule()) {
         if (!cn->noAutoList()) {
             NodeMultiMap nmm;
             cn->getMemberNamespaces(nmm);
@@ -1512,8 +1515,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
         }
     }
 
-    Text brief = cn->doc().briefText();
-    if (cn->isModule() && !brief.isEmpty()) {
+    if (cn->isModule() && !cn->doc().briefText().isEmpty()) {
         generateExtractionMark(cn, DetailedDescriptionMark);
         ref = registerRef("details");
         out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
