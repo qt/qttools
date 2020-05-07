@@ -118,6 +118,7 @@ public:
 private:
     void detach();
     DocPrivate *priv { nullptr };
+    static DocUtilities &m_utilities;
 };
 Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
 typedef QVector<Doc> DocList;

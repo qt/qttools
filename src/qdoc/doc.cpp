@@ -52,6 +52,8 @@
 
 QT_BEGIN_NAMESPACE
 
+DocUtilities &Doc::m_utilities = DocUtilities::instance();
+
 enum {
     CMD_A,
     CMD_ANNOTATEDLIST,
@@ -271,10 +273,6 @@ static struct
              { "endjs", CMD_ENDJS, nullptr },
              { nullptr, 0, nullptr } };
 
-Q_GLOBAL_STATIC(QStringMap, aliasMap)
-Q_GLOBAL_STATIC(QHash_QString_int, cmdHash)
-Q_GLOBAL_STATIC(QHash_QString_Macro, macroHash)
-
 static QString cleanLink(const QString &link)
 {
     int colonPos = link.indexOf(':');
@@ -389,6 +387,8 @@ private:
     Quoter quoter;
     QStack<DitaRef *> ditarefs_;
     Atom *lastAtom {};
+
+    DocUtilities &m_utilities = DocUtilities::instance();
 };
 
 int DocParser::tabSize;
@@ -473,7 +473,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 if (!quoting || !isQuote(priv->text.lastAtom()))
                     lastAtom = priv->text.lastAtom();
 
-                int cmd = cmdHash()->value(cmdStr, NOT_A_CMD);
+                int cmd = m_utilities.cmdHash.value(cmdStr, NOT_A_CMD);
                 switch (cmd) {
                 case CMD_A:
                     enterPara();
@@ -1213,8 +1213,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                             if (!cmdStr.endsWith(QLatin1String("propertygroup")))
                                 priv->topics_.append(Topic(cmdStr, arg));
                         }
-                    } else if (macroHash()->contains(cmdStr)) {
-                        const Macro &macro = macroHash()->value(cmdStr);
+                    } else if (m_utilities.macroHash.contains(cmdStr)) {
+                        const Macro &macro = m_utilities.macroHash.value(cmdStr);
                         int numPendingFi = 0;
                         int numFormatDefs = 0;
                         QString matchExpr;
@@ -1413,11 +1413,11 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet, co
         ++i;
     }
 
-    if (aliasMap()->contains(str))
+    if (m_utilities.aliasMap.contains(str))
         return tr("The command '\\%1' was renamed '\\%2' by the configuration"
                   " file. Use the new name.")
                 .arg(str)
-                .arg((*aliasMap())[str]);
+                .arg(m_utilities.aliasMap[str]);
 
     QString best = nearestName(str, commandSet);
     if (best.isEmpty())
@@ -1920,8 +1920,8 @@ bool DocParser::expandMacro()
 
     endPos = pos;
     if (!cmdStr.isEmpty()) {
-        if (macroHash()->contains(cmdStr)) {
-            const Macro &macro = macroHash()->value(cmdStr);
+        if (m_utilities.macroHash.contains(cmdStr)) {
+            const Macro &macro = m_utilities.macroHash.value(cmdStr);
             if (!macro.defaultDef.isEmpty()) {
                 QString expanded = expandMacroToString(cmdStr, macro.defaultDef, macro.numParams,
                                                        macro.otherDefs.value("match"));
@@ -2852,13 +2852,13 @@ void Doc::initialize()
         } else {
             reverseAliasMap.insert(alias, a);
         }
-        aliasMap()->insert(a, alias);
+        m_utilities.aliasMap.insert(a, alias);
     }
 
     int i = 0;
     while (cmds[i].english) {
         cmds[i].alias = new QString(alias(cmds[i].english));
-        cmdHash()->insert(*cmds[i].alias, cmds[i].no);
+        m_utilities.cmdHash.insert(*cmds[i].alias, cmds[i].no);
 
         if (cmds[i].no != i)
             Location::internalError(tr("command %1 missing").arg(i));
@@ -2905,7 +2905,7 @@ void Doc::initialize()
             }
         }
         if (macro.numParams != -1)
-            macroHash()->insert(macroName, macro);
+            m_utilities.macroHash.insert(macroName, macro);
     }
     // If any of the formats define quotinginformation, activate quoting
     DocParser::quoting = config.getBool(CONFIG_QUOTINGINFORMATION);
@@ -2923,9 +2923,9 @@ void Doc::terminate()
     DocParser::exampleDirs.clear();
     DocParser::sourceFiles.clear();
     DocParser::sourceDirs.clear();
-    aliasMap()->clear();
-    cmdHash()->clear();
-    macroHash()->clear();
+    m_utilities.aliasMap.clear();
+    m_utilities.cmdHash.clear();
+    m_utilities.macroHash.clear();
 
     int i = 0;
     while (cmds[i].english) {
@@ -2937,7 +2937,7 @@ void Doc::terminate()
 
 QString Doc::alias(const QString &english)
 {
-    return aliasMap()->value(english, english);
+    return m_utilities.aliasMap.value(english, english);
 }
 
 /*!
