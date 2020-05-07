@@ -271,9 +271,6 @@ static struct
              { "endjs", CMD_ENDJS, nullptr },
              { nullptr, 0, nullptr } };
 
-typedef QHash<QString, int> QHash_QString_int;
-typedef QHash<QString, Macro> QHash_QString_Macro;
-
 Q_GLOBAL_STATIC(QStringMap, aliasMap)
 Q_GLOBAL_STATIC(QHash_QString_int, cmdHash)
 Q_GLOBAL_STATIC(QHash_QString_Macro, macroHash)

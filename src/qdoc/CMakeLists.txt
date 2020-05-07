@@ -19,6 +19,7 @@ qt_add_tool(qdoc
         doc.cpp doc.h
         docbookgenerator.cpp docbookgenerator.h
         docprivate.cpp docprivate.h
+        docutilities.h
         editdistance.cpp editdistance.h
         generator.cpp generator.h
         helpprojectwriter.cpp helpprojectwriter.h

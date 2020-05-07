@@ -41,6 +41,7 @@ HEADERS += atom.h \
            doc.h \
            docbookgenerator.h \
            docprivate.h \
+           docutilities.h \
            ditaref.h \
            editdistance.h \
            generator.h \

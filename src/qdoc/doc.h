@@ -36,6 +36,7 @@
 #include "location.h"
 
 #include "ditaref.h"
+#include "docutilities.h"
 #include "topic.h"
 
 #include <QtCore/qmap.h>
@@ -52,7 +53,6 @@ class Text;
 
 typedef QPair<QString, Location> ArgLocPair;
 typedef QVector<ArgLocPair> ArgList;
-typedef QMap<QString, QString> QStringMap;
 typedef QMultiMap<QString, QString> QStringMultiMap;
 
 class Doc
