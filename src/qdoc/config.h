@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -35,6 +35,7 @@
 
 #include "location.h"
 #include "qdoccommandlineparser.h"
+#include "singleton.h"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qpair.h>
@@ -43,22 +44,6 @@
 #include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
-
-template<typename T>
-class Singleton
-{
-public:
-    Singleton(const Singleton &) = delete;
-    Singleton &operator=(const Singleton &) = delete;
-    static T &instance()
-    {
-        static T instance;
-        return instance;
-    }
-
-protected:
-    Singleton() = default;
-};
 
 /*
  Contains information about a location

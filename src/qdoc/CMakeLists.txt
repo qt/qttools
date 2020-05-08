@@ -43,6 +43,7 @@ qt_add_tool(qdoc
         quoter.cpp quoter.h
         sections.cpp sections.h
         separator.cpp separator.h
+        singleton.h
         text.cpp text.h
         tokenizer.cpp tokenizer.h
         topic.h

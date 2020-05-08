@@ -59,6 +59,7 @@ HEADERS += atom.h \
            quoter.h \
            sections.h \
            separator.h \
+           singleton.h \
            text.h \
            tokenizer.h \
            topic.h \
