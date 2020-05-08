@@ -631,15 +631,25 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     auto kind = clang_getCursorKind(cursor);
     QString templateString;
     switch (kind) {
+    case CXCursor_TypeAliasTemplateDecl:
     case CXCursor_TypeAliasDecl: {
         QString aliasDecl = getSpelling(clang_getCursorExtent(cursor)).simplified();
         QStringList typeAlias = aliasDecl.split(QLatin1Char('='));
         if (typeAlias.size() == 2) {
-            typeAlias[0] = typeAlias[0].trimmed().split(QLatin1Char(' ')).last();
-            typeAlias[1] = typeAlias[1].trimmed();
-            TypeAliasNode *ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
-            ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
-            ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+            typeAlias[0] = typeAlias[0].trimmed();
+            const QLatin1String usingString("using ");
+            int usingPos = typeAlias[0].indexOf(usingString);
+            if (usingPos != -1) {
+                if (kind == CXCursor_TypeAliasTemplateDecl)
+                    templateString = typeAlias[0].left(usingPos).trimmed();
+                typeAlias[0].remove(0, usingPos + usingString.size());
+                typeAlias[0] = typeAlias[0].split(QLatin1Char(' ')).first();
+                typeAlias[1] = typeAlias[1].trimmed();
+                TypeAliasNode *ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
+                ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
+                ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+                ta->setTemplateDecl(templateString);
+            }
         }
         return CXChildVisit_Continue;
     }
@@ -666,13 +676,15 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             return CXChildVisit_Continue;
         }
 
-        Node::NodeType type;
-        if (kind == CXCursor_ClassDecl || kind == CXCursor_ClassTemplate)
-            type = Node::Class;
-        else if (kind == CXCursor_StructDecl)
+        CXCursorKind actualKind = (kind == CXCursor_ClassTemplate) ?
+                 clang_getTemplateCursorKind(cursor) : kind;
+
+        Node::NodeType type = Node::Class;
+        if (actualKind == CXCursor_StructDecl)
             type = Node::Struct;
-        else
+        else if (actualKind == CXCursor_UnionDecl)
             type = Node::Union;
+
         ClassNode *classe = new ClassNode(type, semanticParent, className);
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));

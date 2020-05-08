@@ -196,4 +196,22 @@ void TestDerived::virtualFun()
 \endif
 */
 
+/*!
+\if defined(test_template)
+    \struct TestQDoc::Test::Struct
+    \inmodule TestCPP
+    \brief Templated struct.
+\else
+    \nothing
+\endif
+*/
+
+/*!
+\if defined(test_template)
+    \typealias TestQDoc::Test::Specialized
+\else
+    \nothing
+\endif
+*/
+
 } // namespace TestQDoc

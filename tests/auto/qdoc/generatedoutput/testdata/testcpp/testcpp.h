@@ -33,6 +33,13 @@ namespace TestQDoc {
 
 class Test {
 public:
+
+#ifdef test_template
+template<typename D, typename T> struct Struct {};
+template<typename T>
+using Specialized = Struct<int, T>;
+#endif
+
 #ifdef test_scopedenum
     enum class ScopedEnum : unsigned char {
         This = 0x01,

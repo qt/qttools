@@ -129,10 +129,11 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
 
     switch (node->nodeType()) {
     case Node::Namespace:
-        synopsis = "namespace " + name;
-        break;
     case Node::Class:
-        synopsis = "class " + name;
+    case Node::Struct:
+    case Node::Union:
+        synopsis = Node::nodeTypeString(node->nodeType());
+        synopsis += QLatin1Char(' ') + name;
         break;
     case Node::Function:
         func = (const FunctionNode *)node;
@@ -255,8 +256,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
     case Node::TypeAlias:
         if (style == Section::Summary)
             synopsis = "(alias) ";
-        else if (style == Section::Details)
+        else if (style == Section::Details) {
             extra = QStringLiteral("[alias] ");
+            QString templateDecl = node->templateDecl();
+            if (!templateDecl.isEmpty())
+                synopsis = templateDecl + QLatin1Char(' ');
+        }
         synopsis += name;
         break;
     case Node::Typedef:
