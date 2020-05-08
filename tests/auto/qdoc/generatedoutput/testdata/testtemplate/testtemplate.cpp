@@ -41,6 +41,7 @@
 */
 
 /*!
+    //! Baz is a struct, QDoc auto-converts this to the correct type
     \class Baz
     \inmodule TestCPP
     \brief Class template template.
