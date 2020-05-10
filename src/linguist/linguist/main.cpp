@@ -119,10 +119,9 @@ int main(int argc, char **argv)
 
     QTranslator translator;
     QTranslator qtTranslator;
-    QString sysLocale = QLocale::system().name();
-    if (translator.load(QLatin1String("linguist_") + sysLocale, resourceDir)) {
+    if (translator.load(QLocale(), QLatin1String("linguist"), QLatin1String("_"), resourceDir)) {
         app.installTranslator(&translator);
-        if (qtTranslator.load(QLatin1String("qt_") + sysLocale, resourceDir))
+        if (qtTranslator.load(QLocale(), QLatin1String("qt"), QLatin1String("_"), resourceDir))
             app.installTranslator(&qtTranslator);
         else
             app.removeTranslator(&translator);

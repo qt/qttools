@@ -239,12 +239,11 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
     if (options.enableInternalDynamicProperties)
         QDesignerPropertySheet::setInternalDynamicPropertiesEnabled(true);
 
-    const QString localSysName = QLocale::system().name();
     QScopedPointer<QTranslator> designerTranslator(new QTranslator(this));
-    if (designerTranslator->load(QStringLiteral("designer_") + localSysName, options.resourceDir)) {
+    if (designerTranslator->load(QLocale(), QStringLiteral("designer"), QStringLiteral("_"), options.resourceDir)) {
         installTranslator(designerTranslator.take());
         QScopedPointer<QTranslator> qtTranslator(new QTranslator(this));
-        if (qtTranslator->load(QStringLiteral("qt_") + localSysName, options.resourceDir))
+        if (qtTranslator->load(QLocale(), QStringLiteral("qt"), QStringLiteral("_"), options.resourceDir))
             installTranslator(qtTranslator.take());
     }
 
