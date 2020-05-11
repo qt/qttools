@@ -782,7 +782,6 @@ QString qtDiag(unsigned flags)
         str << "\n  Primary orientation: " << screen->primaryOrientation()
             << " Orientation: " << screen->orientation()
             << " Native orientation: " << screen->nativeOrientation()
-            << " OrientationUpdateMask: " << screen->orientationUpdateMask()
             << "\n\n";
     }
 
