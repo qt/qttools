@@ -606,6 +606,8 @@ QString Node::plainFullName(const Node *relative) const
 {
     if (name_.isEmpty())
         return QLatin1String("global");
+    if (isHeader())
+        return plainName();
 
     QStringList parts;
     const Node *node = this;

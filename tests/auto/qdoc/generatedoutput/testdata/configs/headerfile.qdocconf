@@ -1,0 +1,17 @@
+project = HeaderFile
+moduleheader = testheader.h
+
+{includepaths,sourcedirs,headerdirs} += ../headerfile
+
+sources.fileextensions = "*.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+outputformats = HTML DocBook
+HTML.nosubdirs = true
+HTML.outputsubdir = headerfile
+DocBook.nosubdirs = true
+DocBook.outputsubdir = headerfile-docbook
+
+# zero warning tolerance
+warninglimit = 0
+warninglimit.enabled = true

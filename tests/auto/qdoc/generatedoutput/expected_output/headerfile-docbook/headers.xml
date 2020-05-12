@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Headers</db:title>
+<db:productname>HeaderFile</db:productname>
+<db:titleabbrev>HeaderFile Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>HeaderFile Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:anchor xml:id="details"/>
+<db:variablelist role="members">
+<db:varlistentry>
+<db:term><db:link xlink:href="testheader.xml" xlink:role="">&lt;TestHeader&gt;</db:link></db:term>
+<db:listitem>
+<db:para>A header file.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:article>
