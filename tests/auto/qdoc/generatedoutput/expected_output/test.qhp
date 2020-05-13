@@ -79,6 +79,7 @@
             <keyword name="disable" id="Type::disable" ref="qml-qdoc-test-type.html#disable-method"/>
             <keyword name="enable" id="Type::enable" ref="qml-qdoc-test-type.html#enable-method"/>
             <keyword name="fail" id="DocTest::fail" ref="qml-qdoc-test-doctest.html#fail-method"/>
+            <keyword name="fail_hard" id="DocTest::fail_hard" ref="qml-qdoc-test-doctest.html#fail_hard-method"/>
             <keyword name="fifth" id="Type::fifth" ref="qml-qdoc-test-type.html#fifth-prop"/>
             <keyword name="foo" id="DocTest::foo" ref="qml-qdoc-test-doctest.html#foo-signal"/>
             <keyword name="fourth" id="Type::fourth" ref="qml-qdoc-test-type.html#fourth-prop"/>

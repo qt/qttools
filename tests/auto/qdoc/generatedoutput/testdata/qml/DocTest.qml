@@ -92,4 +92,14 @@ Item {
         if (msg === undefined)
             msg = "";
     }
+
+    /*!
+    \brief Fails the current test case, hard.
+    \list
+        \li Prints out \a msg.
+        \li Accepts a random \a option.
+    \endlist
+    */
+    function fail_hard(msg = "facepalm", option = 123) {
+    }
 }
