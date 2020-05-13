@@ -12,7 +12,7 @@ project(QtTools # special case
 # special case begin
 set(QT_REPO_NOT_WARNINGS_CLEAN TRUE)
 find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core Network)
-find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS DBus Xml Widgets Quick QuickWidgets QmlDevTools Sql PrintSupport OpenGL OpenGLWidgets)
+find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS AxContainer DBus Xml Widgets Quick QuickWidgets QmlDevTools Sql PrintSupport OpenGL OpenGLWidgets)
 # special case end
 
 qt_build_repo()
