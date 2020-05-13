@@ -37,7 +37,7 @@
 
 #include <QtCore/qplugin.h>
 #include <QtGui/qicon.h>
-#include <ActiveQt/QAxWidget>
+#include <QtAxContainer/QAxWidget>
 
 QT_BEGIN_NAMESPACE
 

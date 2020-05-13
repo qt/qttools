@@ -35,8 +35,7 @@
 #include <QtDesigner/abstractformeditor.h>
 #include <QtDesigner/qextensionmanager.h>
 
-#include <ActiveQt/qaxselect.h>
-#include <ActiveQt/qaxtypes.h>
+#include <QtAxContainer/qaxselect.h>
 
 #include <QtWidgets/qmessagebox.h>
 #include <QtGui/qundostack.h>

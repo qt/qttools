@@ -34,11 +34,10 @@
 #include <QtGui/qpainter.h>
 #include <QtGui/qevent.h>
 
-#include <ActiveQt/QAxWidget>
+#include <QtAxContainer/QAxWidget>
 
 #include <qt_windows.h>
 #include <olectl.h>
-#include <qaxtypes.h>
 
 enum { debugAxWidget = 0 };
 
