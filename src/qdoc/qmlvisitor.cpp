@@ -686,7 +686,14 @@ bool QmlDocVisitor::visit(QQmlJS::AST::FunctionDeclaration *fd)
         if (formals) {
             QQmlJS::AST::FormalParameterList *fp = formals;
             do {
-                parameters.append(QString(), QString(), fp->element->bindingIdentifier.toString());
+                QString defaultValue;
+                auto initializer = fp->element->initializer;
+                if (initializer) {
+                    auto loc = initializer->firstSourceLocation();
+                    defaultValue = document.mid(loc.begin(), loc.length);
+                }
+                parameters.append(QString(), fp->element->bindingIdentifier.toString(),
+                        defaultValue);
                 fp = fp->next;
             } while (fp && fp != formals);
         }

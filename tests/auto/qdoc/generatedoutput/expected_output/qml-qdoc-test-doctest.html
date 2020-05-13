@@ -43,6 +43,7 @@
 <h2 id="methods">Methods</h2>
 <ul>
 <li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#fail-method">fail</a></b></b>(<i>message</i>)</li>
+<li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#fail_hard-method">fail_hard</a></b></b>(<i>msg</i>, <i>option</i>)</li>
 </ul>
 <!-- $$$DocTest-description -->
 <a name="details"></a>
@@ -110,6 +111,20 @@
 <div class="qmldoc"><p>Fails the current test case, with the optional <i>message</i>.</p>
 <p>This method was introduced in QDoc.Test 1.0.</p>
 </div></div><!-- @@@fail -->
+<br/>
+<!-- $$$fail_hard[overload1]$$$fail_hard -->
+<div class="qmlitem"><div class="qmlproto">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="fail_hard-method">
+<td class="tblQmlFuncNode"><p>
+<a name="fail_hard-method"></a><span class="name">fail_hard</span>(<i>msg</i> = &quot;facepalm&quot;, <i>option</i> = 123)</p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>Fails the current test case, hard.</p>
+<ul>
+<li>Prints out <i>msg</i>.</li>
+<li>Accepts a random <i>option</i>.</li>
+</ul>
+</div></div><!-- @@@fail_hard -->
 <br/>
 </body>
 </html>

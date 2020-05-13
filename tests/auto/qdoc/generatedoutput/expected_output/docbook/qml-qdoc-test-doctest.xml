@@ -88,5 +88,17 @@
 <db:para>Fails the current test case, with the optional <db:code role="parameter">message</db:code>.</db:para>
 <db:para>This method was introduced in QDoc.Test 1.0.</db:para>
 </db:section>
+<db:section xml:id="fail_hard-method">
+<db:title>fail_hard(<db:emphasis>msg</db:emphasis> = &quot;facepalm&quot;, <db:emphasis>option</db:emphasis> = 123)</db:title>
+<db:para>Fails the current test case, hard.</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para>Prints out <db:code role="parameter">msg</db:code>.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Accepts a random <db:code role="parameter">option</db:code>.</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
 </db:section>
 </db:article>
