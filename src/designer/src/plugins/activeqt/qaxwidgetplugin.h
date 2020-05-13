@@ -42,7 +42,7 @@ class QAxWidgetPlugin : public QObject, public QDesignerCustomWidgetInterface
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidget" FILE "activeqt.json")
     Q_INTERFACES(QDesignerCustomWidgetInterface)
 public:
-    explicit QAxWidgetPlugin(QObject *parent = 0);
+    explicit QAxWidgetPlugin(QObject *parent = nullptr);
 
     QString name() const override;
     QString group() const override;
@@ -57,7 +57,7 @@ public:
     QString domXml() const override;
 
 private:
-    QDesignerFormEditorInterface *m_core;
+    QDesignerFormEditorInterface *m_core = nullptr;
 };
 
 QT_END_NAMESPACE

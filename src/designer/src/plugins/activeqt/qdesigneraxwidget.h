@@ -84,9 +84,9 @@ protected:
     QAxWidget *axobject() const { return m_axobject; }
 
 private:
-    const QSize m_defaultSize;
-    unsigned m_drawFlags;
-    QAxWidget *m_axobject;
+    const QSize m_defaultSize { 80, 70 };
+    unsigned m_drawFlags = DrawIndicator | DrawFrame | DrawControl;
+    QAxWidget *m_axobject = nullptr;
     QPixmap m_axImage;
 };
 
