@@ -41,7 +41,7 @@ class QAxWidgetTaskMenu: public QObject, public QDesignerTaskMenuExtension
     Q_OBJECT
     Q_INTERFACES(QDesignerTaskMenuExtension)
 public:
-    explicit QAxWidgetTaskMenu(QDesignerAxWidget *object, QObject *parent = 0);
+    explicit QAxWidgetTaskMenu(QDesignerAxWidget *object, QObject *parent = nullptr);
     virtual ~QAxWidgetTaskMenu();
     QList<QAction*> taskActions() const override;
 

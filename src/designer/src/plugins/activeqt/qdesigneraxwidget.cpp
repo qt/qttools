@@ -78,9 +78,6 @@ const char *widgetIconXPM[]={
 
 QDesignerAxWidget::QDesignerAxWidget(QWidget *parent) :
     QWidget(parent),
-    m_defaultSize(80, 70),
-    m_drawFlags(DrawIndicator|DrawFrame|DrawControl),
-    m_axobject(0),
     m_axImage(widgetIcon())
 {
 }
@@ -117,7 +114,7 @@ void QDesignerAxWidget::resetControl()
     if (!m_axobject)
         return;
     delete m_axobject;
-    m_axobject = 0;
+    m_axobject = nullptr;
     update();
 }
 
@@ -131,7 +128,7 @@ bool QDesignerAxWidget::loadControl(const QString &clsid)
 
     if (!m_axobject->setControl(clsid)) {
         delete m_axobject;
-        m_axobject = 0;
+        m_axobject = nullptr;
         return false;
     }
     update();
@@ -190,9 +187,7 @@ QDesignerAxPluginWidget::QDesignerAxPluginWidget(QWidget *parent) :
 {
 }
 
-QDesignerAxPluginWidget::~QDesignerAxPluginWidget()
-{
-}
+QDesignerAxPluginWidget::~QDesignerAxPluginWidget() = default;
 
 const QMetaObject *QDesignerAxPluginWidget::metaObject() const
 {

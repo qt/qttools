@@ -86,8 +86,9 @@ bool SetControlCommand::apply(const QString &clsid)
     if (m_oldClsid == m_newClsid)
         return true;
 
-    QObject *ext = m_formWindow->core()->extensionManager()->extension(m_axWidget, Q_TYPEID(QDesignerPropertySheetExtension));
-    QAxWidgetPropertySheet *sheet = qobject_cast<QAxWidgetPropertySheet*>(ext);
+    QObject *ext = m_formWindow->core()->extensionManager()->extension(
+            m_axWidget, Q_TYPEID(QDesignerPropertySheetExtension));
+    auto sheet = qobject_cast<QAxWidgetPropertySheet *>(ext);
     if (!sheet)
         return false;
 
@@ -113,9 +114,7 @@ QAxWidgetTaskMenu::QAxWidgetTaskMenu(QDesignerAxWidget *object, QObject *parent)
     m_taskActions.push_back(m_resetAction);
 }
 
-QAxWidgetTaskMenu::~QAxWidgetTaskMenu()
-{
-}
+QAxWidgetTaskMenu::~QAxWidgetTaskMenu() = default;
 
 QList<QAction*> QAxWidgetTaskMenu::taskActions() const
 {
@@ -127,48 +126,46 @@ QList<QAction*> QAxWidgetTaskMenu::taskActions() const
 
 void QAxWidgetTaskMenu::resetActiveXControl()
 {
-    QDesignerFormWindowInterface *formWin = QDesignerFormWindowInterface::findFormWindow(m_axwidget);
-    Q_ASSERT(formWin != 0);
+    auto formWin = QDesignerFormWindowInterface::findFormWindow(m_axwidget);
+    Q_ASSERT(formWin != nullptr);
     formWin->commandHistory()->push(new SetControlCommand(m_axwidget, formWin));
 }
 
 void QAxWidgetTaskMenu::setActiveXControl()
 {
-    QAxSelect *dialog = new QAxSelect(m_axwidget->topLevelWidget());
-    if (dialog->exec())    {
-        QUuid clsid = dialog->clsid();
-        QString key;
+    QAxSelect dialog(m_axwidget->topLevelWidget());
+    if (dialog.exec() != QDialog::Accepted)
+        return;
 
-        IClassFactory2 *cf2 = 0;
-        CoGetClassObject(clsid, CLSCTX_SERVER, 0, IID_IClassFactory2, (void**)&cf2);
+    QUuid clsid = dialog.clsid();
+    QString key;
 
-        if (cf2)  {
-            BSTR bKey;
-            HRESULT hres = cf2->RequestLicKey(0, &bKey);
-            if (hres == CLASS_E_NOTLICENSED) {
-                QMessageBox::warning(m_axwidget->topLevelWidget(), tr("Licensed Control"),
-                                     tr("The control requires a design-time license"));
-                clsid = QUuid();
-            } else {
-                key = QString::fromWCharArray(bKey);
-            }
+    IClassFactory2 *cf2 = nullptr;
+    CoGetClassObject(clsid, CLSCTX_SERVER, 0, IID_IClassFactory2, reinterpret_cast<void **>(&cf2));
 
+    if (cf2) {
+        BSTR bKey;
+        HRESULT hres = cf2->RequestLicKey(0, &bKey);
+        if (hres == CLASS_E_NOTLICENSED) {
+            QMessageBox::warning(m_axwidget->topLevelWidget(), tr("Licensed Control"),
+                                 tr("The control requires a design-time license"));
             cf2->Release();
+            return;
         }
 
-        if (!clsid.isNull())  {
-            QDesignerFormWindowInterface *formWin = QDesignerFormWindowInterface::findFormWindow(m_axwidget);
-
-            Q_ASSERT(formWin != 0);
-            QString value = clsid.toString();
-            if (!key.isEmpty()) {
-                value += QLatin1Char(':');
-                value += key;
-            }
-            formWin->commandHistory()->push(new SetControlCommand(m_axwidget, formWin, value));
-        }
+        key = QString::fromWCharArray(bKey);
+        cf2->Release();
     }
-    delete dialog;
+
+    auto formWin = QDesignerFormWindowInterface::findFormWindow(m_axwidget);
+
+    Q_ASSERT(formWin != nullptr);
+    QString value = clsid.toString();
+    if (!key.isEmpty()) {
+        value += QLatin1Char(':');
+        value += key;
+    }
+    formWin->commandHistory()->push(new SetControlCommand(m_axwidget, formWin, value));
 }
 
 QT_END_NAMESPACE

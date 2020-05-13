@@ -42,8 +42,7 @@
 QT_BEGIN_NAMESPACE
 
 QAxWidgetPlugin::QAxWidgetPlugin(QObject *parent) :
-    QObject(parent),
-    m_core(0)
+    QObject(parent)
 {
 }
 
@@ -85,8 +84,9 @@ bool QAxWidgetPlugin::isContainer() const
 QWidget *QAxWidgetPlugin::createWidget(QWidget *parent)
 {
     // Construction from Widget box or on a form?
-    const bool isFormEditor = parent != 0 && QDesignerFormWindowInterface::findFormWindow(parent) != 0;
-    QDesignerAxWidget *rc = new QDesignerAxPluginWidget(parent);
+    const bool isFormEditor = parent != nullptr
+        && QDesignerFormWindowInterface::findFormWindow(parent) != nullptr;
+    auto rc = new QDesignerAxPluginWidget(parent);
     if (!isFormEditor)
         rc->setDrawFlags(QDesignerAxWidget::DrawFrame|QDesignerAxWidget::DrawControl);
     return rc;
@@ -94,12 +94,12 @@ QWidget *QAxWidgetPlugin::createWidget(QWidget *parent)
 
 bool QAxWidgetPlugin::isInitialized() const
 {
-    return m_core != 0;
+    return m_core != nullptr;
 }
 
 void QAxWidgetPlugin::initialize(QDesignerFormEditorInterface *core)
 {
-    if (m_core != 0)
+    if (m_core != nullptr)
         return;
 
     m_core = core;
@@ -113,19 +113,18 @@ void QAxWidgetPlugin::initialize(QDesignerFormEditorInterface *core)
 
 QString QAxWidgetPlugin::domXml() const
 {
-    return QStringLiteral("\
-<ui language=\"c++\">\
-    <widget class=\"QAxWidget\" name=\"axWidget\">\
-        <property name=\"geometry\">\
-            <rect>\
-                <x>0</x>\
-                <y>0</y>\
-                <width>80</width>\
-                <height>70</height>\
-            </rect>\
-        </property>\
-    </widget>\
-</ui>");
+    return QStringLiteral(R"(<ui language="c++">
+    <widget class="QAxWidget" name="axWidget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>80</width>
+                <height>70</height>
+            </rect>
+        </property>
+    </widget>
+</ui>)");
 }
 
 QT_END_NAMESPACE
