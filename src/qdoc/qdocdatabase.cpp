@@ -1125,10 +1125,11 @@ void QDocDatabase::resolveStuff()
         primaryTree()->resolveCppToQmlLinks();
         primaryTree()->resolveUsingClauses();
     }
-    if (config.generating()) {
+    if (!config.preparing()) {
         resolveNamespaces();
         resolveProxies();
         resolveBaseClasses();
+        updateNavigation();
     }
     if (config.dualExec())
         QDocIndexFiles::destroyQDocIndexFiles();
@@ -1582,6 +1583,73 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
         }
     }
     return node;
+}
+
+/*!
+    Updates navigation (previous/next page links) for pages listed
+    in the TOC, specified by the \c navigation.toctitles configuration
+    variable.
+*/
+void QDocDatabase::updateNavigation()
+{
+    // Restrict searching only to the local (primary) tree
+    QVector<Tree *> searchOrder = this->searchOrder();
+    setLocalSearch();
+
+    const auto tocTitles =
+            Config::instance().getStringList(CONFIG_NAVIGATION +
+                                             Config::dot +
+                                             CONFIG_TOCTITLES);
+
+    for (const auto &tocTitle : tocTitles) {
+        if (const auto tocPage = findNodeForTarget(tocTitle, nullptr)) {
+            Text body = tocPage->doc().body();
+            auto *atom = body.firstAtom();
+            std::pair<Node *, Atom *> prev { nullptr, nullptr };
+            bool inItem = false;
+            while (atom) {
+                switch (atom->type()) {
+                case Atom::ListItemLeft:
+                    inItem = true;
+                    break;
+                case Atom::ListItemRight:
+                    inItem = false;
+                    break;
+                case Atom::Link: {
+                    if (!inItem)
+                        break;
+                    QString ref;
+                    auto page = const_cast<Node *>(findNodeForAtom(atom, nullptr, ref));
+                    if (page && page->isPageNode()) {
+                        if (prev.first) {
+                            prev.first->setLink(Node::NextLink,
+                                                page->title(),
+                                                atom->linkText());
+                            page->setLink(Node::PreviousLink,
+                                          prev.first->title(),
+                                          prev.second->linkText());
+                        }
+                        prev = { page, atom };
+                    }
+                }
+                    break;
+                default:
+                    break;
+                }
+
+                if (atom == body.lastAtom())
+                    break;
+                atom = atom->next();
+            }
+        } else {
+            Config::instance().lastLocation()
+                    .warning(tr("Failed to find table of contents with title '%1'")
+                    .arg(tocTitle));
+        }
+    }
+
+    // Restore search order
+    setSearchOrder(searchOrder);
 }
 
 QT_END_NAMESPACE

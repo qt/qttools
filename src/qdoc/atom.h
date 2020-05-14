@@ -174,6 +174,7 @@ public:
     const QString &string(int i) const { return strs[i]; }
     int count() const { return strs.size(); }
     void dump() const;
+    QString linkText() const;
     const QStringList &strings() const { return strs; }
 
     virtual bool isLinkAtom() const { return false; }

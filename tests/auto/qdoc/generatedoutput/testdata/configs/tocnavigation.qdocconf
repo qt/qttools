@@ -1,0 +1,4 @@
+include(test.qdocconf)
+
+defines =
+navigation.toctitles = "Table of Contents"

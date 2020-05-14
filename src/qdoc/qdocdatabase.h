@@ -400,6 +400,7 @@ public:
     void resolveNamespaces();
     void resolveProxies();
     void resolveBaseClasses();
+    void updateNavigation();
 
 private:
     friend class Tree;

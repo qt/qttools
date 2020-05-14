@@ -1055,6 +1055,12 @@
       \row \li \c navigation.qmltypestitle
            \li (Optional) User-visible title for the QML types page.
                Default is "QML Types".
+      \row \li \c navigation.toctitles (Since QDoc 6.0)
+           \li Page title(s) containing a \l {list-command}{\\list} structure that
+               acts as a table of contents (TOC). QDoc generates navigation links
+               for pages listed in the TOC, without the need for
+               \l {nextpage-command}{\\nextpage} and \l {previouspage-command}
+               {\\previouspage} commands.
     \endtable
 
     For example:

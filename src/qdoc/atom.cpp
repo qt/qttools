@@ -368,6 +368,27 @@ void Atom::dump() const
 }
 
 /*!
+    For a link atom, returns the string representing the link text
+    if one exist in the list of atoms.
+*/
+QString Atom::linkText() const
+{
+    Q_ASSERT(type_ == Atom::Link);
+    QString result;
+
+    if (next() &&  next()->string() == ATOM_FORMATTING_LINK) {
+        auto *atom = next()->next();
+        while (atom && atom->type() != Atom::FormattingRight) {
+            result += atom->string();
+            atom = atom->next();
+        }
+        return result;
+    }
+
+    return string();
+}
+
+/*!
   The only constructor for LinkAtom. It creates an Atom of
   type Atom::Link. \a p1 being the link target. \a p2 is the
   parameters in square brackets. Normally there is just one

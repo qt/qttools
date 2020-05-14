@@ -117,6 +117,7 @@ QString ConfigStrings::SYNTAXHIGHLIGHTING = QStringLiteral("syntaxhighlighting")
 QString ConfigStrings::TABSIZE = QStringLiteral("tabsize");
 QString ConfigStrings::TAGFILE = QStringLiteral("tagfile");
 QString ConfigStrings::TIMESTAMPS = QStringLiteral("timestamps");
+QString ConfigStrings::TOCTITLES = QStringLiteral("toctitles");
 QString ConfigStrings::TRANSLATORS = QStringLiteral("translators");
 QString ConfigStrings::URL = QStringLiteral("url");
 QString ConfigStrings::VERSION = QStringLiteral("version");

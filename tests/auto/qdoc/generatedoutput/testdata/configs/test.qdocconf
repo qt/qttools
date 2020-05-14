@@ -7,6 +7,9 @@ sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc
 
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"
+macro.PROD = QDoc
+
+defines = test_navigation
 
 # zero warning tolerance
 warninglimit = 0

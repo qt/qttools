@@ -6,6 +6,7 @@
             <contents name="further-information" title="Further information" level="1"/>
             <contents name="linking" title="Linking" level="1"/>
             <description>
+                <relation href="qdoctests-qdocfileoutput-linking.html" type="page" meta="next" description="Testing QDoc's link command"/>
                 <brief>This is a simple page for testing purposes only.</brief>
                 <para>QDoc generates documentation for software projects. It does this by extracting <italic>QDoc comments</italic> from project source files. QDoc comments are signified by a C-style-like comment tag followed by an exclamation point, like this: <teletype type="highlighted">/*!</teletype> <teletype type="highlighted">This text is contained within QDoc comment tags.</teletype> <teletype type="highlighted">*/</teletype>.</para>
                 <section id="supported-file-types">

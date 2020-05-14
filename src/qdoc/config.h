@@ -332,6 +332,7 @@ struct ConfigStrings
     static QString TABSIZE;
     static QString TAGFILE;
     static QString TIMESTAMPS;
+    static QString TOCTITLES;
     static QString TRANSLATORS;
     static QString URL;
     static QString VERSION;
@@ -418,6 +419,7 @@ struct ConfigStrings
 #define CONFIG_TABSIZE ConfigStrings::TABSIZE
 #define CONFIG_TAGFILE ConfigStrings::TAGFILE
 #define CONFIG_TIMESTAMPS ConfigStrings::TIMESTAMPS
+#define CONFIG_TOCTITLES ConfigStrings::TOCTITLES
 #define CONFIG_TRANSLATORS ConfigStrings::TRANSLATORS
 #define CONFIG_URL ConfigStrings::URL
 #define CONFIG_VERSION ConfigStrings::VERSION

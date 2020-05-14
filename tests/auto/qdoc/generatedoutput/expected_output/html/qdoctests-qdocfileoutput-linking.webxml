@@ -6,6 +6,8 @@
             <keyword name="qdoc-linking-test" title="QDoc Linking Test"/>
             <contents name="link-targets" title="Link targets" level="1"/>
             <description>
+                <relation href="toc.html" type="page" meta="next" description="Table of Contents"/>
+                <relation href="qdoctests-qdocfileoutput.html" type="page" meta="previous" description="Testing QDoc output from .qdoc files"/>
                 <brief>This is a page for testing QDoc's link command.</brief>
                 <target name="link-test-target"/>
                 <section id="link-targets">

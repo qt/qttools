@@ -26,8 +26,12 @@
 ****************************************************************************/
 
 /*!
+\if defined(test_navigation)
+    \nextpage {qdoctests-qdocfileoutput-linking.html}{QDoc Linking Test}
+\endif
+
     \page qdoctests-qdocfileoutput.html
-    \title Testing QDoc output from .qdoc files
+    \title Testing \PROD output from .qdoc files
     \brief This is a simple page for testing purposes only.
 
     QDoc generates documentation for software projects. It does this by
@@ -69,6 +73,11 @@
 */
 
 /*!
+\if defined(test_navigation)
+    \previouspage qdoctests-qdocfileoutput.html \PROD Testing
+    \nextpage Table of Contents
+\endif
+
     \keyword QDoc Linking Test
     \page qdoctests-qdocfileoutput-linking.html
     \title Testing QDoc's link command
@@ -80,4 +89,19 @@
     Valid parameters for the link command (\c {\l}) are page and section
     titles, targets defined with \\target or \\keyword commands, and API
     reference keywords (types, methods, namespaces, and so on).
+*/
+
+/*!
+\if defined(test_navigation)
+    \previouspage {Testing QDoc's link command}{QDoc Linking Test}
+\endif
+
+    \page toc.html
+    \title Table of Contents
+
+    \list
+        \li \l {Testing \PROD output from .qdoc files}{\PROD Testing}
+        \li \l {QDoc Linking Test}
+        \li \l {Table of Contents}
+    \endlist
 */

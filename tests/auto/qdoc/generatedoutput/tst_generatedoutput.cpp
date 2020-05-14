@@ -56,6 +56,7 @@ private slots:
     void docBookFromQml();
 
     // Output format independent tests
+    void autoNavigation();
     void examplesManifestXmlAndQhp();
     void ignoresinceVariable();
     void templateParameters();
@@ -190,7 +191,8 @@ void tst_generatedOutput::htmlFromQDocFile()
 {
     testAndCompare("testdata/configs/test.qdocconf",
                    "qdoctests-qdocfileoutput.html "
-                   "qdoctests-qdocfileoutput-linking.html");
+                   "qdoctests-qdocfileoutput-linking.html "
+                   "toc.html");
 }
 
 void tst_generatedOutput::htmlFromCpp()
@@ -290,6 +292,15 @@ void tst_generatedOutput::docBookFromQml()
                    "docbook/qml-uicomponents-switch.xml "
                    "docbook/qml-uicomponents-tabwidget.xml "
                    "docbook/qml-int.xml");
+}
+
+void tst_generatedOutput::autoNavigation()
+{
+    // Same expected files as htmlFromQdocFile, but with auto-generated navigation links
+    testAndCompare("testdata/configs/tocnavigation.qdocconf",
+                   "qdoctests-qdocfileoutput.html "
+                   "qdoctests-qdocfileoutput-linking.html "
+                   "toc.html");
 }
 
 void tst_generatedOutput::examplesManifestXmlAndQhp()
