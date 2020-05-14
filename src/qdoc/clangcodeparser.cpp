@@ -632,18 +632,14 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     QString templateString;
     switch (kind) {
     case CXCursor_TypeAliasDecl: {
-        QString spelling = getSpelling(clang_getCursorExtent(cursor));
-        QStringList typeAlias = spelling.split(QChar('='));
+        QString aliasDecl = getSpelling(clang_getCursorExtent(cursor)).simplified();
+        QStringList typeAlias = aliasDecl.split(QLatin1Char('='));
         if (typeAlias.size() == 2) {
-            typeAlias[0] = typeAlias[0].trimmed();
+            typeAlias[0] = typeAlias[0].trimmed().split(QLatin1Char(' ')).last();
             typeAlias[1] = typeAlias[1].trimmed();
-            int lastBlank = typeAlias[0].lastIndexOf(QChar(' '));
-            if (lastBlank > 0) {
-                typeAlias[0] = typeAlias[0].right(typeAlias[0].size() - (lastBlank + 1));
-                TypeAliasNode *ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
-                ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
-                ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
-            }
+            TypeAliasNode *ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
+            ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
+            ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         }
         return CXChildVisit_Continue;
     }

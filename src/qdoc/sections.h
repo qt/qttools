@@ -180,6 +180,7 @@ public:
         QmlAttachedMethods = 6,
         ProtectedTypes = 7,
         SinceTypedefs = 7,
+        SinceTypeAliases = 7,
         ProtectedFunctions = 8,
         SinceProperties = 8,
         ProtectedSlots = 9,

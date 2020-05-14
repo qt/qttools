@@ -86,6 +86,7 @@ public:
         ExternalPage,
         Function,
         Typedef,
+        TypeAlias,
         Property,
         Variable,
         Group,
@@ -198,8 +199,8 @@ public:
     bool isRelatedNonmember() const { return relatedNonmember_; }
     bool isStruct() const { return nodeType_ == Struct; }
     bool isSharedCommentNode() const { return nodeType_ == SharedComment; }
-    bool isTypeAlias() const { return nodeType_ == Typedef; }
-    bool isTypedef() const { return nodeType_ == Typedef; }
+    bool isTypeAlias() const { return nodeType_ == TypeAlias; }
+    bool isTypedef() const { return nodeType_ == Typedef || nodeType_ == TypeAlias; }
     bool isUnion() const { return nodeType_ == Union; }
     bool isVariable() const { return nodeType_ == Variable; }
     bool isGenericCollection() const { return (nodeType_ == Node::Collection); }
@@ -892,8 +893,8 @@ private:
 class TypedefNode : public Node
 {
 public:
-    TypedefNode(Aggregate *parent, const QString &name)
-        : Node(Typedef, parent, name), associatedEnum_(nullptr)
+    TypedefNode(Aggregate *parent, const QString &name, NodeType type = Typedef)
+        : Node(type, parent, name), associatedEnum_(nullptr)
     {
     }
 
@@ -912,16 +913,21 @@ private:
 class TypeAliasNode : public TypedefNode
 {
 public:
-    TypeAliasNode(Aggregate *parent, const QString &name, const QString &aliasedType)
-        : TypedefNode(parent, name), aliasedType_(aliasedType)
+    TypeAliasNode(Aggregate *parent,
+                  const QString &name,
+                  const QString &aliasedType)
+        : TypedefNode(parent, name, NodeType::TypeAlias), aliasedType_(aliasedType)
     {
     }
 
-    QString aliasedType() { return aliasedType_; }
+    const QString &aliasedType() const { return aliasedType_; }
+    const Node *aliasedNode() const { return aliasedNode_; }
+    void setAliasedNode(const Node *node) { aliasedNode_ = node; }
     Node *clone(Aggregate *parent) override;
 
 private:
     QString aliasedType_;
+    const Node *aliasedNode_ {};
 };
 
 inline void EnumNode::setFlagsType(TypedefNode *t)

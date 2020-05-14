@@ -373,6 +373,9 @@ Sections::Sections(const NodeMultiMap &nsmap) : aggregate_(nullptr)
         case Node::Typedef:
             sections[SinceTypedefs].appendMember(node);
             break;
+        case Node::TypeAlias:
+            sections[SinceTypeAliases].appendMember(node);
+            break;
         case Node::Function: {
             const FunctionNode *fn = static_cast<const FunctionNode *>(node);
             switch (fn->metaness()) {
@@ -552,6 +555,7 @@ void Sections::initSections()
         v[SinceMacros].init("    New Macros");
         v[SinceEnumTypes].init("    New Enum Types");
         v[SinceTypedefs].init("    New Typedefs");
+        v[SinceTypeAliases].init("    New Type Aliases");
         v[SinceProperties].init("    New Properties");
         v[SinceVariables].init("    New Variables");
         v[SinceQmlTypes].init("    New QML Types");
@@ -623,6 +627,7 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n, Node *t)
         return;
     case Node::Enum:
     case Node::Typedef:
+    case Node::TypeAlias:
         v[StdTypes].insert(n);
         return;
     case Node::Function: {

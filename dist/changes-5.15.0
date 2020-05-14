@@ -1,0 +1,58 @@
+Qt 5.15 introduces many new features and improvements as well as bugfixes
+over the 5.14.x series. For more details, refer to the online documentation
+included in this distribution. The documentation is also available online:
+
+https://doc.qt.io/qt-5/index.html
+
+The Qt version 5.15 series is binary compatible with the 5.14.x series.
+Applications compiled for 5.14 will continue to run with 5.15.
+
+Some of the changes listed in this file include issue tracking numbers
+corresponding to tasks in the Qt Bug Tracker:
+
+https://bugreports.qt.io/
+
+Each of these identifiers can be entered in the bug tracker to obtain more
+information about a particular change.
+
+****************************************************************************
+*                                  QtHelp                                  *
+****************************************************************************
+
+ - QHelpLink data structure has been introduced and used in newly added
+   documentsForIdentifier() and documentsForKeyword() methods.
+ - Deprecated linksForIdentifier() and linksForKeyword() methods
+   in favor of the methods above.
+ - The QHelpFilterSettings class has been added, describing all
+   the available filter details.
+ - The QHelpFilterSettingsWidget class has been added, serving
+   as an editor for all available filters.
+
+****************************************************************************
+*                               Qt Designer                                *
+****************************************************************************
+
+ - The palette editor dialog has been overhauled.
+
+****************************************************************************
+*                               macdeployqt                                *
+****************************************************************************
+
+ - Added "-hardened-runtime" option to support app notarization.
+
+****************************************************************************
+*                                   qdoc                                   *
+****************************************************************************
+
+ - QDoc now supports DocBook as an output format.
+ - Introduced configuration variable 'locationinfo' to drop host-specific
+   paths from the generated output.
+ - Added capability to display class/method template parameters in the
+   generated documentation.
+ - QDoc now generates correct documentation for enum classes.
+ - QDoc is now aware of the namespace scope of an \fn command without
+   requiring fully qualified paths.
+ - Generate output for arguments passed to the \obsolete command.
+ - [QTBUG-37355] QDoc now generates a note for the name of the
+   corresponding handler in \qmlsignal documentation.
+ - Added support for CMake-based example projects.

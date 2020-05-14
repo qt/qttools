@@ -151,7 +151,7 @@ private: // The rest of the class is private.
     void resolvePropertyOverriddenFromPtrs(Aggregate *n);
     void resolveProperties();
     void resolveCppToQmlLinks();
-    void resolveUsingClauses();
+    void resolveUsingClauses(Aggregate *parent = nullptr);
     void removePrivateAndInternalBases(NamespaceNode *rootNode);
     NamespaceNode *root() { return &root_; }
     const NamespaceNode *root() const { return &root_; }

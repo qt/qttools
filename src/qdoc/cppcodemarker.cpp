@@ -252,6 +252,13 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
             synopsis += QLatin1Char('}');
         }
         break;
+    case Node::TypeAlias:
+        if (style == Section::Summary)
+            synopsis = "(alias) ";
+        else if (style == Section::Details)
+            extra = QStringLiteral("[alias] ");
+        synopsis += name;
+        break;
     case Node::Typedef:
         typedeff = static_cast<const TypedefNode *>(node);
         if (typedeff->associatedEnum()) {

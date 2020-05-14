@@ -41,6 +41,9 @@ public:
         OmittedValue = 99
     };
 #endif
+    typedef struct {
+        int data;
+    } SomeType;
     int someFunction(int v = 0);
     void someFunctionDefaultArg(int i, bool b);
     void obsoleteMember();
@@ -61,6 +64,8 @@ protected:
 
 class TestDerived : public Test {
 public:
+    using DerivedType = Test::SomeType;
+    using NotTypedef = int;
     void virtualFun() override;
 };
 

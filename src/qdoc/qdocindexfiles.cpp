@@ -454,6 +454,13 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(parent->name().toLower() + ".html");
 
+    } else if (elementName == QLatin1String("alias")) {
+        node = new TypeAliasNode(parent, name, attributes.value(QLatin1String("aliasedtype")).toString());
+        if (!indexUrl.isEmpty())
+            location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
+        else if (!indexUrl.isNull())
+            location = Location(parent->name().toLower() + ".html");
+
     } else if (elementName == QLatin1String("property")) {
         node = new PropertyNode(parent, name);
 
@@ -864,6 +871,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case Node::Typedef:
         nodeName = "typedef";
         break;
+    case Node::TypeAlias:
+        nodeName = "alias";
+        break;
     case Node::Property:
         nodeName = "property";
         break;
@@ -1196,6 +1206,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (typedefNode->associatedEnum())
             writer.writeAttribute("enum", typedefNode->associatedEnum()->fullDocumentName());
     } break;
+    case Node::TypeAlias:
+        writer.writeAttribute("aliasedtype", static_cast<const TypeAliasNode *>(node)->aliasedType());
+        break;
     case Node::Function: // Now processed in generateFunctionSection()
     default:
         break;

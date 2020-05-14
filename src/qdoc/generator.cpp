@@ -644,6 +644,9 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::Enum:
         anchorRef = QLatin1Char('#') + node->name() + "-enum";
         break;
+    case Node::TypeAlias:
+        anchorRef = QLatin1Char('#') + node->name() + "-alias";
+        break;
     case Node::Typedef: {
         const TypedefNode *tdef = static_cast<const TypedefNode *>(node);
         if (tdef->associatedEnum()) {
@@ -818,10 +821,11 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                         tr("No documentation for '%1'").arg(node->plainSignature()));
         }
     } else if (!node->isSharingComment()) {
-        if (fn) {
-            if (!fn->overridesThis().isEmpty())
-                generateReimplementsClause(fn, marker);
-        }
+        // Reimplements clause and type alias info precede body text
+        if (fn && !fn->overridesThis().isEmpty())
+            generateReimplementsClause(fn, marker);
+        else if (node->isTypeAlias())
+            generateAddendum(node, TypeAlias, marker, false);
 
         if (!generateText(node->doc().body(), node, marker)) {
             if (node->isMarkedReimp())
@@ -1357,12 +1361,17 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
   Generates an addendum note of type \a type for \a node, using \a marker
   as the code marker.
 */
-void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker)
+void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker,
+                                 bool generateNote)
 {
     Q_ASSERT(node && !node->name().isEmpty());
     Text text;
-    text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-         << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
+    text << Atom::ParaLeft;
+
+    if (generateNote) {
+        text  << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
+              << "Note: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
+    }
 
     switch (type) {
     case Invokable:
@@ -1416,6 +1425,22 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
             text << msg << " for property " << Atom(Atom::Link, pn->name())
              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << pn->name()
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ". ";
+        }
+        break;
+    }
+    case TypeAlias:
+    {
+        if (!node->isTypeAlias())
+            return;
+        const auto *ta = static_cast<const TypeAliasNode *>(node);
+        text << "This is a type alias for ";
+        if (ta->aliasedNode() && ta->aliasedNode()->isInAPI()) {
+            text << Atom(Atom::LinkNode, CodeMarker::stringForNode(ta->aliasedNode()))
+                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                 << Atom(Atom::String, ta->aliasedNode()->plainFullName(ta->parent()))
+                 << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ".";
+        } else {
+            text << Atom(Atom::String, ta->aliasedType()) << ".";
         }
         break;
     }
@@ -2195,6 +2220,8 @@ QString Generator::typeString(const Node *node)
         return "enum";
     case Node::Typedef:
         return "typedef";
+    case Node::TypeAlias:
+        return "alias";
     case Node::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {

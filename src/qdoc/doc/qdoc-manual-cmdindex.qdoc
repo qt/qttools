@@ -144,6 +144,7 @@
     \li \l {threadsafe-command} {\\threadsafe}
     \li \l {title-command} {\\title}
     \li \l {tt-command} {\\tt}
+    \li \l {typealias-command} {\\typealias}
     \li \l {typedef-command} {\\typedef}
     \li \l {uicontrol-command} {\\uicontrol}
     \li \l {underline-command} {\\underline}
