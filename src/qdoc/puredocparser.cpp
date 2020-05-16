@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -35,8 +35,6 @@
 
 QT_BEGIN_NAMESPACE
 
-PureDocParser *PureDocParser::pureParser_ = nullptr;
-
 /*!
   Returns a list of the kinds of files that the pure doc
   parser is meant to parse. The elements of the list are
@@ -69,8 +67,8 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
 
     Location fileLocation(filePath);
     Tokenizer fileTokenizer(fileLocation, in);
-    tokenizer_ = &fileTokenizer;
-    tok_ = tokenizer_->getToken();
+    m_tokenizer = &fileTokenizer;
+    m_token = m_tokenizer->getToken();
 
     /*
       The set of open namespaces is cleared before parsing
@@ -92,14 +90,14 @@ bool PureDocParser::processQdocComments()
 {
     const QSet<QString> &commands = topicCommands() + metaCommands();
 
-    while (tok_ != Tok_Eoi) {
-        if (tok_ == Tok_Doc) {
-            QString comment = tokenizer_->lexeme(); // returns an entire qdoc comment.
-            Location start_loc(tokenizer_->location());
-            tok_ = tokenizer_->getToken();
+    while (m_token != Tok_Eoi) {
+        if (m_token == Tok_Doc) {
+            QString comment = m_tokenizer->lexeme(); // returns an entire qdoc comment.
+            Location start_loc(m_tokenizer->location());
+            m_token = m_tokenizer->getToken();
 
             Doc::trimCStyleComment(start_loc, comment);
-            Location end_loc(tokenizer_->location());
+            Location end_loc(m_tokenizer->location());
 
             // Doc constructor parses the comment.
             Doc doc(start_loc, end_loc, comment, commands, topicCommands());
@@ -121,7 +119,7 @@ bool PureDocParser::processQdocComments()
             processTopicArgs(doc, topic, nodes, docs);
             processMetaCommands(nodes, docs);
         } else {
-            tok_ = tokenizer_->getToken();
+            m_token = m_tokenizer->getToken();
         }
     }
     return true;
