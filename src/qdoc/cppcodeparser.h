@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -48,10 +48,6 @@ class CppCodeParser : public CodeParser
         bool isAttached; // If true, the method is attached.
         bool isMacro; // If true, we are parsing a macro signature.
         ExtraFuncData() : root(nullptr), type(Node::Function), isAttached(false), isMacro(false) {}
-        ExtraFuncData(Aggregate *r, Node::NodeType t, bool a)
-            : root(r), type(t), isAttached(a), isMacro(false)
-        {
-        }
     };
 
 public:
@@ -90,14 +86,14 @@ private:
 
 protected:
     typedef bool (Node::*NodeTypeTestFunc)() const;
-    QMap<QString, NodeTypeTestFunc> nodeTypeTestFuncMap_;
-    QMap<QString, Node::NodeType> nodeTypeMap_;
+    QMap<QString, NodeTypeTestFunc> m_nodeTypeTestFuncMap;
+    QMap<QString, Node::NodeType> m_nodeTypeMap;
 
 private:
-    static QSet<QString> excludeDirs;
-    static QSet<QString> excludeFiles;
-    QString exampleNameFilter;
-    QString exampleImageFilter;
+    static QSet<QString> m_excludeDirs;
+    static QSet<QString> m_excludeFiles;
+    QString m_exampleNameFilter;
+    QString m_exampleImageFilter;
 };
 
 QT_END_NAMESPACE
