@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  htmlgenerator.cpp
-*/
-
 #include "htmlgenerator.h"
 
 #include "config.h"
@@ -55,12 +51,10 @@
 QT_BEGIN_NAMESPACE
 
 int HtmlGenerator::id = 0;
-bool HtmlGenerator::debugging_on = false;
 
 QString HtmlGenerator::divNavTop;
 
 static bool showBrokenLinks = false;
-
 
 static void addLink(const QString &linkTarget, const QStringRef &nestedStuff, QString *res)
 {
@@ -3567,70 +3561,6 @@ void HtmlGenerator::generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker)
     }
 }
 
-/*!
-  Output the "[Xxx instantiates the C++ class QmlGraphicsXxx]"
-  line for the QML element, if there should be one.
-
-  If there is no class node, or if the class node status
-  is set to Node::Internal, do nothing.
- */
-void HtmlGenerator::generateQmlInstantiates(QmlTypeNode *qcn, CodeMarker *marker)
-{
-    ClassNode *cn = qcn->classNode();
-    if (cn && !cn->isInternal()) {
-        Text text;
-        text << Atom::ParaLeft;
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        QString name = qcn->name();
-        /*
-          Remove the "QML:" prefix, if present.
-          It shouldn't be present anymore.
-        */
-        if (name.startsWith(QLatin1String("QML:")))
-            name = name.mid(4); // remove the "QML:" prefix
-        text << Atom(Atom::String, name);
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        text << " instantiates the C++ class ";
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        text << Atom(Atom::String, cn->name());
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        text << Atom::ParaRight;
-        generateText(text, qcn, marker);
-    }
-}
-
-/*!
-  Output the "[QmlGraphicsXxx is instantiated by QML Type Xxx]"
-  line for the class, if there should be one.
-
-  If there is no QML element, or if the class node status
-  is set to Node::Internal, do nothing.
- */
-void HtmlGenerator::generateInstantiatedBy(ClassNode *cn, CodeMarker *marker)
-{
-    if (cn && !cn->isInternal() && cn->qmlElement() != nullptr) {
-        const QmlTypeNode *qcn = cn->qmlElement();
-        Text text;
-        text << Atom::ParaLeft;
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        text << Atom(Atom::String, cn->name());
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        if (qcn->isQmlType())
-            text << " is instantiated by QML Type ";
-        else
-            text << " is instantiated by Javascript Type ";
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        text << Atom(Atom::String, qcn->name());
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        text << Atom::ParaRight;
-        generateText(text, cn, marker);
-    }
-}
-
 void HtmlGenerator::generateExtractionMark(const Node *node, ExtractionMarkType markType)
 {
     if (markType != EndMark) {
@@ -3932,97 +3862,6 @@ void HtmlGenerator::readManifestMetaContent()
         filter.tags = config.getStringSet(prefix + QStringLiteral("tags"));
         manifestMetaContent.append(filter);
     }
-}
-
-/*!
-  Find global entities that have documentation but no
-  \e{relates} comand. Report these as errors if they
-  are not also marked \e {internal}.
- */
-void HtmlGenerator::reportOrphans(const Aggregate *parent)
-{
-    const NodeList &children = parent->childNodes();
-    if (children.size() == 0)
-        return;
-
-    QString message = "has documentation but no \\relates command";
-    for (const auto *child : children) {
-        if (!child || child->isInternal() || child->doc().isEmpty() || !child->isRelatedNonmember())
-            continue;
-        switch (child->nodeType()) {
-        case Node::Enum:
-            child->location().warning(tr("Global enum, %1, %2").arg(child->name()).arg(message));
-            break;
-        case Node::Typedef:
-            child->location().warning(tr("Global typedef, %1, %2").arg(child->name()).arg(message));
-            break;
-        case Node::Function: {
-            const FunctionNode *fn = static_cast<const FunctionNode *>(child);
-            switch (fn->metaness()) {
-            case FunctionNode::QmlSignal:
-                child->location().warning(
-                        tr("Global QML, signal, %1 %2").arg(child->name()).arg(message));
-                break;
-            case FunctionNode::QmlSignalHandler:
-                child->location().warning(
-                        tr("Global QML signal handler, %1, %2").arg(child->name()).arg(message));
-                break;
-            case FunctionNode::QmlMethod:
-                child->location().warning(
-                        tr("Global QML method, %1, %2").arg(child->name()).arg(message));
-                break;
-            case FunctionNode::JsSignal:
-                child->location().warning(
-                        tr("Global JS, signal, %1 %2").arg(child->name()).arg(message));
-                break;
-            case FunctionNode::JsSignalHandler:
-                child->location().warning(
-                        tr("Global JS signal handler, %1, %2").arg(child->name()).arg(message));
-                break;
-            case FunctionNode::JsMethod:
-                child->location().warning(
-                        tr("Global JS method, %1, %2").arg(child->name()).arg(message));
-                break;
-            default:
-                if (fn->isMacro())
-                    child->location().warning(
-                            tr("Global macro, %1, %2").arg(child->name()).arg(message));
-                else
-                    child->location().warning(
-                            tr("Global function, %1(), %2").arg(child->name()).arg(message));
-                break;
-            }
-            break;
-        }
-        case Node::Variable:
-            child->location().warning(
-                    tr("Global variable, %1, %2").arg(child->name()).arg(message));
-            break;
-        case Node::JsProperty:
-            child->location().warning(
-                    tr("Global JS property, %1, %2").arg(child->name()).arg(message));
-            break;
-        case Node::QmlProperty:
-            child->location().warning(
-                    tr("Global QML property, %1, %2").arg(child->name()).arg(message));
-            break;
-        default:
-            break;
-        }
-    }
-}
-
-/*!
-  Returns a reference to the XML stream writer currently in use.
-  There is one XML stream writer open for each XML file being
-  written, and they are kept on a stack. The one on top of the
-  stack is the one being written to at the moment. In the HTML
-  output generator, it is perhaps impossible for there to ever
-  be more than one writer open.
- */
-QXmlStreamWriter &HtmlGenerator::xmlWriter()
-{
-    return *xmlWriterStack.top();
 }
 
 QT_END_NAMESPACE

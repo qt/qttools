@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  htmlgenerator.h
-*/
-
 #ifndef HTMLGENERATOR_H
 #define HTMLGENERATOR_H
 
@@ -126,8 +122,6 @@ private:
     void generateQmlItem(const Node *node, const Node *relative, CodeMarker *marker, bool summary);
     void generateDetailedQmlMember(Node *node, const Aggregate *relative, CodeMarker *marker);
     void generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker) override;
-    void generateQmlInstantiates(QmlTypeNode *qcn, CodeMarker *marker);
-    void generateInstantiatedBy(ClassNode *cn, CodeMarker *marker);
 
     void generateSection(const NodeVector &nv, const Node *relative, CodeMarker *marker);
     void generateSynopsis(const Node *node, const Node *relative, CodeMarker *marker,
@@ -151,9 +145,6 @@ private:
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     void generateExtractionMark(const Node *node, ExtractionMarkType markType);
-    void reportOrphans(const Aggregate *parent);
-
-    QXmlStreamWriter &xmlWriter();
 
     int codeIndent;
     QString codePrefix;
@@ -179,10 +170,7 @@ private:
     QString navigationSeparator;
     QString manifestDir;
     QString examplesPath;
-    QStringList stylesheets;
-    QStringList customHeadElements;
     bool obsoleteLinks;
-    QStack<QXmlStreamWriter *> xmlWriterStack;
     static int id;
     QVector<ManifestMetaFilter> manifestMetaContent;
     QString homepage;
@@ -200,7 +188,6 @@ private:
     Config *config;
 
 public:
-    static bool debugging_on;
     static QString divNavTop;
 };
 
@@ -212,7 +199,6 @@ public:
 #define HTMLGENERATOR_PROLOGUE "prologue"
 #define HTMLGENERATOR_NONAVIGATIONBAR "nonavigationbar"
 #define HTMLGENERATOR_NAVIGATIONSEPARATOR "navigationseparator"
-#define HTMLGENERATOR_NOSUBDIRS "nosubdirs"
 #define HTMLGENERATOR_TOCDEPTH "tocdepth"
 
 QT_END_NAMESPACE
