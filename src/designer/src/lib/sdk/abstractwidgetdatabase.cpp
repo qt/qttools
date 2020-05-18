@@ -333,13 +333,13 @@ bool QDesignerWidgetDataBaseInterface::isCustom(QObject *object, bool resolveNam
 */
 
 /*!
-    \fn virtual void QDesignerWidgetDataBaseItemInterface::setDefaultPropertyValues(const QVector<QVariant> &list) = 0
+    \fn virtual void QDesignerWidgetDataBaseItemInterface::setDefaultPropertyValues(const QList<QVariant> &list) = 0
 
     Sets the default property values for the widget to the given \a list.
 */
 
 /*!
-    \fn virtual QVector<QVariant> QDesignerWidgetDataBaseItemInterface::defaultPropertyValues() const = 0
+    \fn virtual QList<QVariant> QDesignerWidgetDataBaseItemInterface::defaultPropertyValues() const = 0
 
     Returns a list of default values to be used as properties for the item.
 */

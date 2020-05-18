@@ -77,7 +77,7 @@ public:
     double fromViewport(int x) const;
     double toViewport(double x) const;
     QtGradientStop *stopAt(const QPoint &viewportPos) const;
-    QVector<QtGradientStop *> stopsAt(const QPoint &viewportPos) const;
+    QList<QtGradientStop *> stopsAt(const QPoint &viewportPos) const;
     void setupMove(QtGradientStop *stop, int x);
     void ensureVisible(double x); // x = stop position
     void ensureVisible(QtGradientStop *stop);
@@ -105,7 +105,7 @@ public:
     QRubberBand *m_rubber;
     QPoint m_clickPos;
 
-    QVector<QtGradientStop *> m_stops;
+    QList<QtGradientStop *> m_stops;
 
     bool m_moving;
     int m_moveOffset;
@@ -147,9 +147,9 @@ QtGradientStop *QtGradientStopsWidgetPrivate::stopAt(const QPoint &viewportPos) 
     return 0;
 }
 
-QVector<QtGradientStop *> QtGradientStopsWidgetPrivate::stopsAt(const QPoint &viewportPos) const
+QList<QtGradientStop *> QtGradientStopsWidgetPrivate::stopsAt(const QPoint &viewportPos) const
 {
-    QVector<QtGradientStop *> stops;
+    QList<QtGradientStop *> stops;
     double posY = m_handleSize / 2;
     for (QtGradientStop *stop : m_stops) {
         double posX = toViewport(stop->position());

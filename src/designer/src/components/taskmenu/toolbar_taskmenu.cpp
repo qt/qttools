@@ -54,7 +54,7 @@ namespace qdesigner_internal {
         return nullptr;
     }
 
-    QVector<QAction*> ToolBarTaskMenu::taskActions() const
+    QList<QAction*> ToolBarTaskMenu::taskActions() const
     {
         if (ToolBarEventFilter *ef = ToolBarEventFilter::eventFilterOf(m_toolBar))
             return ef->contextMenuActions();
@@ -76,9 +76,9 @@ namespace qdesigner_internal {
         return nullptr;
     }
 
-    QVector<QAction*> StatusBarTaskMenu::taskActions() const
+    QList<QAction*> StatusBarTaskMenu::taskActions() const
     {
-        QVector<QAction*> rc;
+        QList<QAction*> rc;
         rc.push_back(m_removeAction);
         m_promotionTaskMenu->addActions(PromotionTaskMenu::LeadingSeparator, rc);
         return rc;

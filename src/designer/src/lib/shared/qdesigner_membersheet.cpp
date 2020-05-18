@@ -34,11 +34,14 @@
 #include <QtWidgets/qwidget.h>
 QT_BEGIN_NAMESPACE
 
-static QVector<QByteArray> stringListToByteArray(const QStringList &l)
+static QList<QByteArray> stringListToByteArray(const QStringList &l)
 {
-    QVector<QByteArray> rc;
-    for (const QString &s : l)
-        rc.append(s.toUtf8());
+    if (l.isEmpty())
+        return QList<QByteArray>();
+    QList<QByteArray> rc;
+    const QStringList::const_iterator cend = l.constEnd();
+    for (QStringList::const_iterator it = l.constBegin(); it != cend; ++it)
+        rc += it->toUtf8();
     return rc;
 }
 
@@ -184,12 +187,12 @@ bool QDesignerMemberSheet::inheritedFromWidget(int index) const
 }
 
 
-QVector<QByteArray> QDesignerMemberSheet::parameterTypes(int index) const
+QList<QByteArray> QDesignerMemberSheet::parameterTypes(int index) const
 {
     return stringListToByteArray(d->m_meta->method(index)->parameterTypes());
 }
 
-QVector<QByteArray> QDesignerMemberSheet::parameterNames(int index) const
+QList<QByteArray> QDesignerMemberSheet::parameterNames(int index) const
 {
     return stringListToByteArray(d->m_meta->method(index)->parameterNames());
 }

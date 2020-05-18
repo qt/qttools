@@ -693,7 +693,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
         createFakeProperty(QStringLiteral("floating"));
     }
 
-    using ByteArrayList = QVector<QByteArray>;
+    using ByteArrayList = QList<QByteArray>;
     const ByteArrayList names = object->dynamicPropertyNames();
     if (!names.isEmpty()) {
         const ByteArrayList::const_iterator cend =  names.constEnd();

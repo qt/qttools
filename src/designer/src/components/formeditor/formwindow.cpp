@@ -725,7 +725,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
         sel.prepend(current);
     }
 
-    QVector<QDesignerDnDItemInterface*> item_list;
+    QList<QDesignerDnDItemInterface*> item_list;
     const QPoint globalPos = mapToGlobal(m_startPos);
     const QDesignerDnDItemInterface::DropType dropType = (mouseFlags(e->modifiers()) & CopyDragModifier) ?
                             QDesignerDnDItemInterface::CopyDrop : QDesignerDnDItemInterface::MoveDrop;
@@ -2829,7 +2829,7 @@ bool FormWindow::dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &g
     return true;
 }
 
-bool FormWindow::dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list, QWidget *target,
+bool FormWindow::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, QWidget *target,
                              const QPoint &global_mouse_pos)
 {
 

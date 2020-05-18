@@ -261,14 +261,14 @@ struct QDESIGNER_UILIB_EXPORT QFormBuilderStrings {
     const QString scriptChildWidgetsVariable;
 
     using RoleNName = QPair<Qt::ItemDataRole, QString>;
-    QVector<RoleNName> itemRoles;
+    QList<RoleNName> itemRoles;
     QHash<QString, Qt::ItemDataRole> treeItemRoleHash;
 
     // first.first is primary role, first.second is shadow role.
     // Shadow is used for either the translation source or the designer
     // representation of the string value.
     using TextRoleNName = QPair<QPair<Qt::ItemDataRole, Qt::ItemDataRole>, QString>;
-    QVector<TextRoleNName> itemTextRoles;
+    QList<TextRoleNName> itemTextRoles;
     QHash<QString, QPair<Qt::ItemDataRole, Qt::ItemDataRole> > treeItemTextRoleHash;
 };
 #ifdef QFORMINTERNAL_NAMESPACE

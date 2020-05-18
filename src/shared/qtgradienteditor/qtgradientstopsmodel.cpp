@@ -162,7 +162,7 @@ QColor QtGradientStopsModel::color(qreal pos) const
     return newColor;
 }
 
-QVector<QtGradientStop *> QtGradientStopsModel::selectedStops() const
+QList<QtGradientStop *> QtGradientStopsModel::selectedStops() const
 {
     return d_ptr->m_selection.keys();
 }

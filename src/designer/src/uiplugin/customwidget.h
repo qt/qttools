@@ -75,7 +75,7 @@ class QDesignerCustomWidgetCollectionInterface
 public:
     virtual ~QDesignerCustomWidgetCollectionInterface() {}
 
-    virtual QVector<QDesignerCustomWidgetInterface*> customWidgets() const = 0;
+    virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const = 0;
 };
 
 #define QDesignerCustomWidgetCollectionInterface_iid "org.qt-project.Qt.QDesignerCustomWidgetCollectionInterface"

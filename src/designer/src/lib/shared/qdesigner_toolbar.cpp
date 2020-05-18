@@ -56,7 +56,7 @@ Q_DECLARE_METATYPE(QAction*)
 
 QT_BEGIN_NAMESPACE
 
-using ActionList = QVector<QAction *>;
+using ActionList = QList<QAction *>;
 
 namespace qdesigner_internal {
 // ------------------- ToolBarEventFilter

@@ -99,7 +99,7 @@ class QDESIGNER_SHARED_EXPORT QDesignerPluginManager: public QObject
 {
     Q_OBJECT
 public:
-    using CustomWidgetList = QVector<QDesignerCustomWidgetInterface *>;
+    using CustomWidgetList = QList<QDesignerCustomWidgetInterface *>;
 
     explicit QDesignerPluginManager(QDesignerFormEditorInterface *core);
     ~QDesignerPluginManager() override;

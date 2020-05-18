@@ -132,7 +132,7 @@ void WidgetBox::handleMousePress(const QString &name, const QString &xml, const 
     DomUI *ui = xmlToUi(name, xml, true);
     if (ui == nullptr)
         return;
-    QVector<QDesignerDnDItemInterface*> item_list;
+    QList<QDesignerDnDItemInterface*> item_list;
     item_list.append(new WidgetBoxDnDItem(core(), ui, global_mouse_pos));
     m_core->formWindowManager()->dragItems(item_list);
 }
@@ -177,7 +177,7 @@ void WidgetBox::removeWidget(int cat_idx, int wgt_idx)
     m_view->removeWidget(cat_idx, wgt_idx);
 }
 
-void WidgetBox::dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list, const QPoint&)
+void WidgetBox::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint&)
 {
     m_view->dropWidgets(item_list);
 }

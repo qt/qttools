@@ -122,7 +122,7 @@ static QActionGroup *createActionGroup(QObject *parent, bool exclusive = false) 
     return rc;
 }
 
-static void fixActionContext(const QVector<QAction *> &actions)
+static void fixActionContext(const QList<QAction *> &actions)
 {
     for (QAction *a : actions)
         a->setShortcutContext(Qt::ApplicationShortcut);
@@ -317,7 +317,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 //
 
     m_editWidgetsAction->setCheckable(true);
-    QVector<QKeySequence> shortcuts;
+    QList<QKeySequence> shortcuts;
     shortcuts.append(QKeySequence(Qt::Key_F3));
     shortcuts.append(QKeySequence(Qt::Key_Escape));
     m_editWidgetsAction->setShortcuts(shortcuts);

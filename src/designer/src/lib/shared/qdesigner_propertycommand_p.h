@@ -148,7 +148,7 @@ public:
 
 protected:
     using PropertyHelperPtr = QSharedPointer<PropertyHelper>;
-    using PropertyHelperList = QVector<PropertyHelperPtr>;
+    using PropertyHelperList = QList<PropertyHelperPtr>;
 
     // add an object
     bool add(QObject *object, const QString &propertyName);
@@ -259,14 +259,14 @@ class QDESIGNER_SHARED_EXPORT AddDynamicPropertyCommand: public QDesignerFormWin
 public:
     explicit AddDynamicPropertyCommand(QDesignerFormWindowInterface *formWindow);
 
-    bool init(const QVector<QObject *> &selection, QObject *current, const QString &propertyName, const QVariant &value);
+    bool init(const QList<QObject *> &selection, QObject *current, const QString &propertyName, const QVariant &value);
 
     void redo() override;
     void undo() override;
 private:
     void setDescription();
     QString m_propertyName;
-    QVector<QObject *> m_selection;
+    QList<QObject *> m_selection;
     QVariant m_value;
 };
 
@@ -276,7 +276,7 @@ class QDESIGNER_SHARED_EXPORT RemoveDynamicPropertyCommand: public QDesignerForm
 public:
     explicit RemoveDynamicPropertyCommand(QDesignerFormWindowInterface *formWindow);
 
-    bool init(const QVector<QObject *> &selection, QObject *current, const QString &propertyName);
+    bool init(const QList<QObject *> &selection, QObject *current, const QString &propertyName);
 
     void redo() override;
     void undo() override;

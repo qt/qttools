@@ -51,7 +51,7 @@ public:
     ~ComboBoxTaskMenu() override;
 
     QAction *preferredEditAction() const override;
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void editItems();
@@ -61,7 +61,7 @@ private:
     QComboBox *m_comboBox;
     QPointer<QDesignerFormWindowInterface> m_formWindow;
     QPointer<QLineEdit> m_editor;
-    mutable QVector<QAction*> m_taskActions;
+    mutable QList<QAction*> m_taskActions;
     QAction *m_editItemsAction;
 };
 

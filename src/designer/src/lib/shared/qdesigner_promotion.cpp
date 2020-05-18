@@ -164,7 +164,7 @@ namespace qdesigner_internal {
         return true;
     }
 
-    QVector<QDesignerWidgetDataBaseItemInterface *> QDesignerPromotion::promotionBaseClasses() const
+    QList<QDesignerWidgetDataBaseItemInterface *> QDesignerPromotion::promotionBaseClasses() const
     {
         using SortedDatabaseItemMap = QMap<QString, QDesignerWidgetDataBaseItemInterface *>;
         SortedDatabaseItemMap sortedDatabaseItemMap;

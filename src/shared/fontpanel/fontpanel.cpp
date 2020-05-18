@@ -118,7 +118,7 @@ void FontPanel::setSelectedFont(const QFont &f)
     m_familyComboBox->setCurrentFont(f);
     if (m_familyComboBox->currentIndex() < 0) {
         // family not in writing system - find the corresponding one?
-        QVector<QFontDatabase::WritingSystem> familyWritingSystems = m_fontDatabase.writingSystems(f.family());
+        QList<QFontDatabase::WritingSystem> familyWritingSystems = m_fontDatabase.writingSystems(f.family());
         if (familyWritingSystems.isEmpty())
             return;
 

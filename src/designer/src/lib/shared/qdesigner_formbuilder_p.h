@@ -111,7 +111,7 @@ protected:
     virtual QIcon nameToIcon(const QString &filePath, const QString &qrcPath);
     virtual QPixmap nameToPixmap(const QString &filePath, const QString &qrcPath);
 
-    void applyProperties(QObject *o, const QVector<DomProperty*> &properties) override;
+    void applyProperties(QObject *o, const QList<DomProperty*> &properties) override;
 
     void loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget) override;
 

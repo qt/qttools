@@ -76,7 +76,7 @@ protected:
     QWidget *defaultEditor() const;
 
 private:
-    QVector<QDesignerFormWindowToolInterface*> m_tools;
+    QList<QDesignerFormWindowToolInterface*> m_tools;
     QWidget *m_formContainer;
     QStackedLayout *m_formContainerLayout;
     QStackedLayout *m_layout;

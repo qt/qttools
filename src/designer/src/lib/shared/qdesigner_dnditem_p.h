@@ -91,7 +91,7 @@ class  QDESIGNER_SHARED_EXPORT QDesignerMimeData : public QMimeData {
     Q_OBJECT
 
 public:
-    using QDesignerDnDItems = QVector<QDesignerDnDItemInterface *>;
+    using QDesignerDnDItems = QList<QDesignerDnDItemInterface *>;
 
     ~QDesignerMimeData() override;
 

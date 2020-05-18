@@ -85,8 +85,8 @@ public:
     virtual QString extends() const = 0;
     virtual void setExtends(const QString &s) = 0;
 
-    virtual void setDefaultPropertyValues(const QVector<QVariant> &list) = 0;
-    virtual QVector<QVariant> defaultPropertyValues() const = 0;
+    virtual void setDefaultPropertyValues(const QList<QVariant> &list) = 0;
+    virtual QList<QVariant> defaultPropertyValues() const = 0;
 };
 
 class QDESIGNER_SDK_EXPORT QDesignerWidgetDataBaseInterface: public QObject
@@ -115,7 +115,7 @@ Q_SIGNALS:
     void changed();
 
 protected:
-    QVector<QDesignerWidgetDataBaseItemInterface *> m_items;
+    QList<QDesignerWidgetDataBaseItemInterface *> m_items;
 };
 
 QT_END_NAMESPACE

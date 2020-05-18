@@ -46,10 +46,10 @@ public:
     explicit LineEditTaskMenu(QLineEdit *button, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
-    QVector<QAction*> m_taskActions;
+    QList<QAction*> m_taskActions;
     QAction *m_editTextAction;
 };
 

@@ -81,7 +81,7 @@ public:
 
 private:
     using PropertyToPropertyMap = QMap<QtProperty *, QtProperty *>;
-    using PropertyList = QVector<QtProperty *>;
+    using PropertyList = QList<QtProperty *>;
     using PropertyToSubPropertiesMap = QMap<QtProperty *, PropertyList>;
 
     void removeAntialiasingProperty(QtProperty *);

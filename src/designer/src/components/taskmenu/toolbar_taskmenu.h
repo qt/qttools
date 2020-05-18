@@ -50,7 +50,7 @@ public:
     explicit ToolBarTaskMenu(QToolBar *tb, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QToolBar *m_toolBar;
@@ -65,7 +65,7 @@ public:
     explicit StatusBarTaskMenu(QStatusBar *tb, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void removeStatusBar();

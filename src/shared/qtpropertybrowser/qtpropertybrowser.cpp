@@ -55,7 +55,7 @@ public:
     QtProperty *q_ptr;
 
     QSet<QtProperty *> m_parentItems;
-    QVector<QtProperty *> m_subItems;
+    QList<QtProperty *> m_subItems;
 
     QString m_valueToolTip;
     QString m_descriptionToolTip;
@@ -181,7 +181,7 @@ QtProperty::~QtProperty()
 
     \sa insertSubProperty(), removeSubProperty()
 */
-QVector<QtProperty *> QtProperty::subProperties() const
+QList<QtProperty *> QtProperty::subProperties() const
 {
     return d_ptr->m_subItems;
 }
@@ -1100,7 +1100,7 @@ public:
 
     QtBrowserItem *q_ptr;
 
-    QVector<QtBrowserItem *> m_children;
+    QList<QtBrowserItem *> m_children;
 
 };
 
@@ -1176,7 +1176,7 @@ QtBrowserItem *QtBrowserItem::parent() const
     The \e childrenItems list represents the same list as \e childrenProperties.
 */
 
-QVector<QtBrowserItem *> QtBrowserItem::children() const
+QList<QtBrowserItem *> QtBrowserItem::children() const
 {
     return d_ptr->m_children;
 }
@@ -1206,7 +1206,7 @@ QtBrowserItem::~QtBrowserItem()
 typedef QMap<QtAbstractPropertyBrowser *, QMap<QtAbstractPropertyManager *,
                             QtAbstractEditorFactoryBase *> > Map1;
 typedef QMap<QtAbstractPropertyManager *, QMap<QtAbstractEditorFactoryBase *,
-                            QVector<QtAbstractPropertyBrowser *> > > Map2;
+                            QList<QtAbstractPropertyBrowser *> > > Map2;
 Q_GLOBAL_STATIC(Map1, m_viewToManagerToFactory)
 Q_GLOBAL_STATIC(Map2, m_managerToFactoryToViews)
 
@@ -1233,13 +1233,13 @@ public:
     void slotPropertyDestroyed(QtProperty *property);
     void slotPropertyDataChanged(QtProperty *property);
 
-    QVector<QtProperty *> m_subItems;
-    QMap<QtAbstractPropertyManager *, QVector<QtProperty *> > m_managerToProperties;
-    QMap<QtProperty *, QVector<QtProperty *> > m_propertyToParents;
+    QList<QtProperty *> m_subItems;
+    QMap<QtAbstractPropertyManager *, QList<QtProperty *> > m_managerToProperties;
+    QMap<QtProperty *, QList<QtProperty *> > m_propertyToParents;
 
     QMap<QtProperty *, QtBrowserItem *> m_topLevelPropertyToIndex;
-    QVector<QtBrowserItem *> m_topLevelIndexes;
-    QMap<QtProperty *, QVector<QtBrowserItem *> > m_propertyToIndexes;
+    QList<QtBrowserItem *> m_topLevelIndexes;
+    QMap<QtProperty *, QList<QtBrowserItem *> > m_propertyToIndexes;
 
     QtBrowserItem *m_currentItem;
 };
@@ -1373,7 +1373,7 @@ QtBrowserItem *QtAbstractPropertyBrowserPrivate::createBrowserIndex(QtProperty *
 
 void QtAbstractPropertyBrowserPrivate::removeBrowserIndexes(QtProperty *property, QtProperty *parentProperty)
 {
-    QVector<QtBrowserItem *> toRemove;
+    QList<QtBrowserItem *> toRemove;
     const auto it = m_propertyToIndexes.constFind(property);
     if (it == m_propertyToIndexes.constEnd())
         return;
@@ -1671,7 +1671,7 @@ QtAbstractPropertyBrowser::~QtAbstractPropertyBrowser()
 
     \sa addProperty(), insertProperty(), removeProperty()
 */
-QVector<QtProperty *> QtAbstractPropertyBrowser::properties() const
+QList<QtProperty *> QtAbstractPropertyBrowser::properties() const
 {
     return d_ptr->m_subItems;
 }
@@ -1685,7 +1685,7 @@ QVector<QtProperty *> QtAbstractPropertyBrowser::properties() const
     \sa topLevelItem()
 */
 
-QVector<QtBrowserItem *> QtAbstractPropertyBrowser::items(QtProperty *property) const
+QList<QtBrowserItem *> QtAbstractPropertyBrowser::items(QtProperty *property) const
 {
     return d_ptr->m_propertyToIndexes.value(property);
 }
@@ -1710,7 +1710,7 @@ QtBrowserItem *QtAbstractPropertyBrowser::topLevelItem(QtProperty *property) con
     \sa topLevelItem()
 */
 
-QVector<QtBrowserItem *> QtAbstractPropertyBrowser::topLevelItems() const
+QList<QtBrowserItem *> QtAbstractPropertyBrowser::topLevelItems() const
 {
     return d_ptr->m_topLevelIndexes;
 }

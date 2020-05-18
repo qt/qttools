@@ -466,14 +466,14 @@ void QDesignerTaskMenu::removeStatusBar()
     }
 }
 
-QVector<QAction*> QDesignerTaskMenu::taskActions() const
+QList<QAction*> QDesignerTaskMenu::taskActions() const
 {
     QDesignerFormWindowInterface *formWindow = QDesignerFormWindowInterface::findFormWindow(widget());
     Q_ASSERT(formWindow);
 
     const bool isMainContainer = formWindow->mainContainer() == widget();
 
-    QVector<QAction*> actions;
+    QList<QAction*> actions;
 
     if (const QMainWindow *mw = qobject_cast<const QMainWindow*>(formWindow->mainContainer()))  {
         if (isMainContainer || mw->centralWidget() == widget()) {

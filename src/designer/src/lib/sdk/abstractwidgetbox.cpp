@@ -158,7 +158,7 @@ int QDesignerWidgetBoxInterface::findOrInsertCategory(const QString &categoryNam
 
 /*!
     \internal
-    \fn void QDesignerWidgetBoxInterface::dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos)
+    \fn void QDesignerWidgetBoxInterface::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos)
 
 */
 

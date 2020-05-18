@@ -83,7 +83,7 @@ public:
     // Defaults to "Demote to %1".arg(class).
     void setDemoteLabel(const QString &demoteLabel);
 
-    using ActionList = QVector<QAction *>;
+    using ActionList = QList<QAction *>;
 
     enum AddFlags { LeadingSeparator = 1, TrailingSeparator = 2, SuppressGlobalEdit = 4};
 
@@ -120,7 +120,7 @@ private:
     QPointer<QWidget> m_widget;
 
     // Per-Widget actions
-    QVector<QAction *> m_promotionActions;
+    QList<QAction *> m_promotionActions;
 
     QAction *m_globalEditAction;
     QAction *m_EditPromoteToAction;

@@ -71,7 +71,7 @@ QDesignerMetaDataBaseInterface::~QDesignerMetaDataBaseInterface() = default;
 */
 
 /*!
-    \fn QVector<QObject*> QDesignerMetaDataBaseInterface::objects() const
+    \fn QList<QObject*> QDesignerMetaDataBaseInterface::objects() const
 
     Returns the list of objects that have corresponding items in the meta database.
 */
@@ -119,7 +119,7 @@ QDesignerMetaDataBaseInterface::~QDesignerMetaDataBaseInterface() = default;
 */
 
 /*!
-    \fn QVector<QWidget*> QDesignerMetaDataBaseItemInterface::tabOrder() const
+    \fn QList<QWidget*> QDesignerMetaDataBaseItemInterface::tabOrder() const
 
     Returns a list of widgets in the order defined by the form's tab order.
 
@@ -128,7 +128,7 @@ QDesignerMetaDataBaseInterface::~QDesignerMetaDataBaseInterface() = default;
 
 
 /*!
-    \fn void QDesignerMetaDataBaseItemInterface::setTabOrder(const QVector<QWidget*> &tabOrder)
+    \fn void QDesignerMetaDataBaseItemInterface::setTabOrder(const QList<QWidget*> &tabOrder)
 
     Sets the tab order in the form using the list of widgets defined by \a tabOrder.
 

@@ -72,7 +72,7 @@ public:
         QSharedDataPointer<QDesignerWidgetBoxWidgetData> m_data;
     };
 
-    using WidgetList = QVector<Widget>;
+    using WidgetList = QList<Widget>;
 
     class Category
     {
@@ -99,7 +99,7 @@ public:
         WidgetList m_widget_list;
     };
 
-    using CategoryList = QVector<Category>;
+    using CategoryList = QList<Category>;
 
     explicit QDesignerWidgetBoxInterface(QWidget *parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
     virtual ~QDesignerWidgetBoxInterface();
@@ -116,7 +116,7 @@ public:
 
     int findOrInsertCategory(const QString &categoryName);
 
-    virtual void dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list,
+    virtual void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list,
                                 const QPoint &global_mouse_pos) = 0;
 
     virtual void setFileName(const QString &file_name) = 0;

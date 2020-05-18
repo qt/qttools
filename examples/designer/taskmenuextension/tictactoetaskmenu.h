@@ -70,7 +70,7 @@ public:
     explicit TicTacToeTaskMenu(TicTacToe *tic, QObject *parent);
 
     QAction *preferredEditAction() const override;
-    QVector<QAction *> taskActions() const override;
+    QList<QAction *> taskActions() const override;
 
 private slots:
     void editState();

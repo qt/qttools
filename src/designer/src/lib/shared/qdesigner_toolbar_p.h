@@ -86,7 +86,7 @@ public:
     bool eventFilter (QObject *watched, QEvent *event) override;
 
     // Helper for task menu extension
-    QVector<QAction *> contextMenuActions(const QPoint &globalPos = QPoint(-1, -1));
+    QList<QAction *> contextMenuActions(const QPoint &globalPos = QPoint(-1, -1));
 
     static ToolBarEventFilter *eventFilterOf(const QToolBar *tb);
 

@@ -189,7 +189,7 @@ public:
     void resizeWidget(QWidget *widget, const QRect &geometry);
 
     bool dropDockWidget(QDesignerDnDItemInterface *item, const QPoint &global_mouse_pos);
-    bool dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list, QWidget *target,
+    bool dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, QWidget *target,
                      const QPoint &global_mouse_pos) override;
 
     QWidget *findContainer(QWidget *w, bool excludeLayout) const override;

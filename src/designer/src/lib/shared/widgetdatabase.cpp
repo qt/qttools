@@ -188,12 +188,12 @@ void WidgetDataBaseItem::setExtends(const QString &s)
     m_extends = s;
 }
 
-void WidgetDataBaseItem::setDefaultPropertyValues(const QVector<QVariant> &list)
+void WidgetDataBaseItem::setDefaultPropertyValues(const QList<QVariant> &list)
 {
     m_defaultPropertyValues = list;
 }
 
-QVector<QVariant> WidgetDataBaseItem::defaultPropertyValues() const
+QList<QVariant> WidgetDataBaseItem::defaultPropertyValues() const
 {
     return m_defaultPropertyValues;
 }
@@ -348,7 +348,7 @@ static WidgetDataBaseItem *createCustomWidgetItem(const QDesignerCustomWidgetInt
 void WidgetDataBase::loadPlugins()
 {
     typedef QMap<QString, int> NameIndexMap;
-    using ItemList = QVector<QDesignerWidgetDataBaseItemInterface *>;
+    using ItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
     using NameSet = QSet<QString>;
     // 1) create a map of existing custom classes
     NameIndexMap existingCustomClasses;
@@ -417,7 +417,7 @@ void WidgetDataBase::remove(int index)
     delete m_items.takeAt(index);
 }
 
-QVector<QVariant> WidgetDataBase::defaultPropertyValues(const QString &name)
+QList<QVariant> WidgetDataBase::defaultPropertyValues(const QString &name)
 {
     WidgetFactory *factory = qobject_cast<WidgetFactory *>(m_core->widgetFactory());
     Q_ASSERT(factory);
@@ -537,7 +537,7 @@ QStringList WidgetDataBase::customFormWidgetClasses(const QDesignerFormEditorInt
 // properties to be suitable for new forms
 static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const QString &className, const QString &objectName)
 {
-    using PropertyList = QVector<DomProperty *>;
+    using PropertyList = QList<DomProperty *>;
 
     QDesignerWidgetBoxInterface::Widget widget;
     const bool found = QDesignerWidgetBox::findWidget(core->widgetBox(), className, QString(), &widget);

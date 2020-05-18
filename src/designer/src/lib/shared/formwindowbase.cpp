@@ -462,7 +462,7 @@ void FormWindowBase::deleteWidgetList(const QWidgetList &widget_list)
 
 QMenu *FormWindowBase::createExtensionTaskMenu(QDesignerFormWindowInterface *fw, QObject *o, bool trailingSeparator)
 {
-    using ActionList = QVector<QAction *>;
+    using ActionList = QList<QAction *>;
     ActionList actions;
     // 1) Standard public extension
     QExtensionManager *em = fw->core()->extensionManager();

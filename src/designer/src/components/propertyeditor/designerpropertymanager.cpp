@@ -1292,7 +1292,7 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
         }
         pfit.value().clear();
 
-        QVector<uint> values;
+        QList<uint> values;
 
         for (const QPair<QString, uint> &pair : flags) {
             const QString flagName = pair.first;
@@ -2041,7 +2041,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
     default:
         if (type == designerFlagTypeId()) {
             m_flagValues[property] = FlagData();
-            m_propertyToFlags[property] = QVector<QtProperty *>();
+            m_propertyToFlags[property] = QList<QtProperty *>();
         }  else if (type == designerAlignmentTypeId()) {
             const uint align = Qt::AlignLeft | Qt::AlignVCenter;
             m_alignValues[property] = align;
@@ -2267,7 +2267,7 @@ void DesignerEditorFactory::disconnectPropertyManager(QtVariantPropertyManager *
 }
 
 // A helper that calls a setter with a value on a pointer list of editor objects.
-// Could use QVector<Editor*> instead of EditorContainer/Editor, but that crashes VS 6.
+// Could use QList<Editor*> instead of EditorContainer/Editor, but that crashes VS 6.
 template <class EditorContainer, class Editor, class SetterParameter, class Value>
 static inline void applyToEditors(const EditorContainer &list, void (Editor::*setter)(SetterParameter), const Value &value)
 {
@@ -2545,7 +2545,7 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
 
 template <class Editor>
 bool removeEditor(QObject *object,
-                QMap<QtProperty *, QVector<Editor> > *propertyToEditors,
+                QMap<QtProperty *, QList<Editor> > *propertyToEditors,
                 QMap<Editor, QtProperty *> *editorToProperty)
 {
     if (!propertyToEditors)

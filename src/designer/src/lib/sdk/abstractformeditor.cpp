@@ -96,7 +96,7 @@ public:
     QDesignerDialogGuiInterface *m_dialogGui = nullptr;
     QPointer<QtResourceModel> m_resourceModel;
     QPointer<QtGradientManager> m_gradientManager; // instantiated and deleted by designer_integration
-    QVector<QDesignerOptionsPageInterface*> m_optionsPages;
+    QList<QDesignerOptionsPageInterface*> m_optionsPages;
 };
 
 QDesignerFormEditorInterfacePrivate::QDesignerFormEditorInterfacePrivate() = default;
@@ -399,7 +399,7 @@ void QDesignerFormEditorInterface::setIntegration(QDesignerIntegrationInterface 
     \since 4.5
     Returns the list of options pages that allow the user to configure \QD components.
 */
-QVector<QDesignerOptionsPageInterface*> QDesignerFormEditorInterface::optionsPages() const
+QList<QDesignerOptionsPageInterface*> QDesignerFormEditorInterface::optionsPages() const
 {
     return d->m_optionsPages;
 }
@@ -409,7 +409,7 @@ QVector<QDesignerOptionsPageInterface*> QDesignerFormEditorInterface::optionsPag
     \since 4.5
     Sets the list of options pages that allow the user to configure \QD components.
 */
-void QDesignerFormEditorInterface::setOptionsPages(const QVector<QDesignerOptionsPageInterface*> &optionsPages)
+void QDesignerFormEditorInterface::setOptionsPages(const QList<QDesignerOptionsPageInterface*> &optionsPages)
 {
     d->m_optionsPages = optionsPages;
 }

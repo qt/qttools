@@ -51,7 +51,7 @@ public:
     explicit LayoutWidgetTaskMenu(QLayoutWidget *w, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QLayoutWidget *m_widget;
@@ -68,7 +68,7 @@ public:
     explicit SpacerTaskMenu(Spacer *bar, QObject *parent = nullptr);
 
     QAction *preferredEditAction() const override;
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 };
 

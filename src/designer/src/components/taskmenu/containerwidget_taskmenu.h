@@ -60,7 +60,7 @@ public:
     ~ContainerWidgetTaskMenu() override;
 
     QAction *preferredEditAction() const override;
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void removeCurrentPage();
@@ -69,7 +69,7 @@ private slots:
 
 protected:
     QDesignerContainerExtension *containerExtension() const;
-    QVector<QAction*> &containerActions() { return m_taskActions; }
+    QList<QAction*> &containerActions() { return m_taskActions; }
     int pageCount() const;
 
 private:
@@ -85,7 +85,7 @@ private:
     PromotionTaskMenu *m_pagePromotionTaskMenu;
     QAction *m_pageMenuAction;
     QMenu *m_pageMenu;
-    QVector<QAction*> m_taskActions;
+    QList<QAction*> m_taskActions;
     QAction *m_actionInsertPageAfter;
     QAction *m_actionInsertPage;
     QAction *m_actionDeletePage;
@@ -99,7 +99,7 @@ class WizardContainerWidgetTaskMenu : public ContainerWidgetTaskMenu {
 public:
     explicit WizardContainerWidgetTaskMenu(QWizard *w, QObject *parent = nullptr);
 
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private:
     QAction *m_nextAction;
@@ -114,7 +114,7 @@ class MdiContainerWidgetTaskMenu : public ContainerWidgetTaskMenu {
 public:
     explicit MdiContainerWidgetTaskMenu(QMdiArea *m, QObject *parent = nullptr);
 
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 private:
     void initializeActions();
 

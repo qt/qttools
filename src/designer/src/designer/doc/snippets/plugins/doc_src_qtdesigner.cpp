@@ -183,7 +183,7 @@ public:
     MyTaskMenuExtension(MyCustomWidget *widget, QObject *parent);
 
     QAction *preferredEditAction() const;
-    QVector<QAction *> taskActions() const;
+    QList<QAction *> taskActions() const;
 
 private slots:
     void mySlot();
@@ -246,10 +246,10 @@ class MyCustomWidgets: public QObject, public QDesignerCustomWidgetCollectionInt
 public:
     MyCustomWidgets(QObject *parent = 0);
 
-    QVector<QDesignerCustomWidgetInterface*> customWidgets() const override;
+    QList<QDesignerCustomWidgetInterface*> customWidgets() const override;
 
 private:
-    QVector<QDesignerCustomWidgetInterface*> widgets;
+    QList<QDesignerCustomWidgetInterface*> widgets;
 };
 //! [12]
 
@@ -263,7 +263,7 @@ MyCustomWidgets::MyCustomWidgets(QObject *parent)
     widgets.append(new CustomWidgetThreeInterface(this));
 }
 
-QVector<QDesignerCustomWidgetInterface*> MyCustomWidgets::customWidgets() const
+QList<QDesignerCustomWidgetInterface*> MyCustomWidgets::customWidgets() const
 {
     return widgets;
 }

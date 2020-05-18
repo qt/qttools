@@ -88,7 +88,7 @@ public:
     QString resourceLocation() const;
     QtResourceModel *resourceModel() const;
     QtGradientManager *gradientManager() const;
-    QVector<QDesignerOptionsPageInterface*> optionsPages() const;
+    QList<QDesignerOptionsPageInterface*> optionsPages() const;
 
     void setTopLevel(QWidget *topLevel);
     void setWidgetBox(QDesignerWidgetBoxInterface *widgetBox);
@@ -102,7 +102,7 @@ public:
     void setSettingsManager(QDesignerSettingsInterface *settingsManager);
     void setResourceModel(QtResourceModel *model);
     void setGradientManager(QtGradientManager *manager);
-    void setOptionsPages(const QVector<QDesignerOptionsPageInterface*> &optionsPages);
+    void setOptionsPages(const QList<QDesignerOptionsPageInterface*> &optionsPages);
 
     QObjectList pluginInstances() const;
 

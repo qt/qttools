@@ -901,7 +901,7 @@ void WidgetBoxTreeWidget::contextMenuEvent(QContextMenuEvent *e)
     menu.exec(mapToGlobal(e->pos()));
 }
 
-void WidgetBoxTreeWidget::dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list)
+void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list)
 {
     QTreeWidgetItem *scratch_item = nullptr;
     WidgetBoxCategoryListView *categoryView = nullptr;

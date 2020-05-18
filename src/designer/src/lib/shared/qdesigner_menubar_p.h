@@ -91,7 +91,7 @@ public:
     void moveDown();
 
     // Helpers for MenuTaskMenu/MenuBarTaskMenu extensions
-    QVector<QAction *> contextMenuActions();
+    QList<QAction *> contextMenuActions();
     void deleteMenuAction(QAction *action);
 
 private slots:

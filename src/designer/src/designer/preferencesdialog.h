@@ -61,7 +61,7 @@ private:
 
     Ui::PreferencesDialog *m_ui;
     QDesignerFormEditorInterface *m_core;
-    QVector<QDesignerOptionsPageInterface*> m_optionsPages;
+    QList<QDesignerOptionsPageInterface*> m_optionsPages;
 };
 
 QT_END_NAMESPACE

@@ -65,8 +65,8 @@ public:
     virtual QString declaredInClass(int index) const = 0;
 
     virtual QString signature(int index) const = 0;
-    virtual QVector<QByteArray> parameterTypes(int index) const = 0;
-    virtual QVector<QByteArray> parameterNames(int index) const = 0;
+    virtual QList<QByteArray> parameterTypes(int index) const = 0;
+    virtual QList<QByteArray> parameterNames(int index) const = 0;
 };
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerMemberSheetExtension, "org.qt-project.Qt.Designer.MemberSheet")
 

@@ -122,7 +122,7 @@ signals:
     void contextMenuRequested(QMenu *menu, QAction *item);
 
 private:
-    using ActionList = QVector<QAction *>;
+    using ActionList = QList<QAction *>;
     void deleteActions(QDesignerFormWindowInterface *formWindow, const ActionList &);
 #if QT_CONFIG(clipboard)
     void copyActions(QDesignerFormWindowInterface *formWindow, const ActionList &);

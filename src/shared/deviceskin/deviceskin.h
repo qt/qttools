@@ -91,7 +91,7 @@ struct DeviceSkinParameters {
     int screenDepth;
     QPoint cursorHot;
     QVector<DeviceSkinButtonArea> buttonAreas;
-    QVector<int> toggleAreaList;
+    QList<int> toggleAreaList;
 
     int joystick;
     QString prefix;

@@ -39,7 +39,7 @@
 QT_BEGIN_NAMESPACE
 
 namespace {
-    using StandardItemList = QVector<QStandardItem *>;
+    using StandardItemList = QList<QStandardItem *>;
 
     // Model columns.
     enum { ClassNameColumn, IncludeFileColumn, IncludeTypeColumn, ReferencedColumn, NumColumns };

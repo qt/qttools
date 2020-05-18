@@ -43,7 +43,7 @@ class QAxWidgetTaskMenu: public QObject, public QDesignerTaskMenuExtension
 public:
     explicit QAxWidgetTaskMenu(QDesignerAxWidget *object, QObject *parent = nullptr);
     virtual ~QAxWidgetTaskMenu();
-    QVector<QAction*> taskActions() const override;
+    QList<QAction*> taskActions() const override;
 
 private slots:
     void setActiveXControl();
@@ -53,7 +53,7 @@ private:
     QDesignerAxWidget *m_axwidget;
     QAction *m_setAction;
     QAction *m_resetAction;
-    QVector<QAction*> m_taskActions;
+    QList<QAction*> m_taskActions;
 };
 
 typedef qdesigner_internal::ExtensionFactory<QDesignerTaskMenuExtension, QDesignerAxWidget, QAxWidgetTaskMenu>  ActiveXTaskMenuFactory;

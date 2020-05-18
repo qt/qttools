@@ -92,7 +92,7 @@ Qt::DockWidgetArea dockWidgetArea(QDockWidget *me)
     if (const QMainWindow *mw = qobject_cast<const QMainWindow*>(me->parentWidget())) {
         // Make sure that me is actually managed by mw, otherwise
         // QMainWindow::dockWidgetArea() will be VERY upset
-        QVector<QLayout*> candidates;
+        QList<QLayout*> candidates;
         if (mw->layout()) {
             candidates.append(mw->layout());
             candidates += mw->layout()->findChildren<QLayout*>();

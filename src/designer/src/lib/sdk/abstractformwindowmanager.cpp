@@ -505,7 +505,7 @@ QAction *QDesignerFormWindowManagerInterface::actionRedo() const
 */
 
 /*!
-    \fn void QDesignerFormWindowManagerInterface::dragItems(const QVector<QDesignerDnDItemInterface*> &item_list)
+    \fn void QDesignerFormWindowManagerInterface::dragItems(const QList<QDesignerDnDItemInterface*> &item_list)
 
     \internal
 */

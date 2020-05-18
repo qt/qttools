@@ -66,7 +66,7 @@ QAction *TreeWidgetTaskMenu::preferredEditAction() const
     return m_editItemsAction;
 }
 
-QVector<QAction*> TreeWidgetTaskMenu::taskActions() const
+QList<QAction*> TreeWidgetTaskMenu::taskActions() const
 {
     return m_taskActions + QDesignerTaskMenu::taskActions();
 }

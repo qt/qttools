@@ -57,7 +57,7 @@ public:
     QDesignerLayoutDecorationExtension() = default;
     virtual ~QDesignerLayoutDecorationExtension() = default;
 
-    virtual QVector<QWidget*> widgets(QLayout *layout) const = 0;
+    virtual QList<QWidget*> widgets(QLayout *layout) const = 0;
 
     virtual QRect itemInfo(int index) const = 0;
     virtual int indexOf(QWidget *widget) const = 0;

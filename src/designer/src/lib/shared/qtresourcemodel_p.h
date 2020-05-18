@@ -91,7 +91,7 @@ public:
     bool isModified(const QString &path) const; // only for paths which are on loadedQrcFiles() list
     void setModified(const QString &path);      // only for paths which are on loadedQrcPaths() list
 
-    QVector<QtResourceSet *> resourceSets() const;
+    QList<QtResourceSet *> resourceSets() const;
 
     QtResourceSet *currentResourceSet() const;
     void setCurrentResourceSet(QtResourceSet *resourceSet, int *errorCount = nullptr, QString *errorMessages = nullptr);

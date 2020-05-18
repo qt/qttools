@@ -76,7 +76,7 @@ namespace qdesigner_internal {
             ExtensionContainer   // QTabWidget and the like, container extension
         };
 
-        using StandardItemList = QVector<QStandardItem *>;
+        using StandardItemList = QList<QStandardItem *>;
 
         explicit ObjectData(QObject *parent, QObject *object, const ModelRecursionContext &ctx);
         ObjectData();
@@ -121,7 +121,7 @@ namespace qdesigner_internal {
     // internally for its updates.
     class ObjectInspectorModel : public QStandardItemModel {
     public:
-        using StandardItemList = QVector<QStandardItem *>;
+        using StandardItemList = QList<QStandardItem *>;
         enum { ObjectNameColumn, ClassNameColumn, NumColumns };
 
         explicit ObjectInspectorModel(QObject *parent);

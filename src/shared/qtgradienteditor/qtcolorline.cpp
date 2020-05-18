@@ -421,7 +421,7 @@ QPixmap QtColorLinePrivate::hueGradientPixmap(int size, Qt::Orientation orientat
         gradW = 0;
         w = 1;
     }
-    QVector<QColor> colorList;
+    QList<QColor> colorList;
     colorList << QColor::fromHsv(0, saturation, value, alpha);
     colorList << QColor::fromHsv(60, saturation, value, alpha);
     colorList << QColor::fromHsv(120, saturation, value, alpha);

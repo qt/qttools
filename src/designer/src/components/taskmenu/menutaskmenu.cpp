@@ -52,9 +52,9 @@ namespace qdesigner_internal {
         return nullptr;
     }
 
-    QVector<QAction*> MenuTaskMenu::taskActions() const
+    QList<QAction*> MenuTaskMenu::taskActions() const
     {
-        QVector<QAction*> rc;
+        QList<QAction*> rc;
         rc.push_back(m_removeAction);
         m_promotionTaskMenu->addActions(PromotionTaskMenu::LeadingSeparator, rc);
         return rc;
@@ -85,7 +85,7 @@ namespace qdesigner_internal {
         return nullptr;
     }
 
-    QVector<QAction*> MenuBarTaskMenu::taskActions() const
+    QList<QAction*> MenuBarTaskMenu::taskActions() const
     {
         return m_bar->contextMenuActions();
     }

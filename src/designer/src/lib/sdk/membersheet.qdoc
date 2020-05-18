@@ -231,7 +231,7 @@
 */
 
 /*!
-    \fn QVector<QByteArray> QDesignerMemberSheetExtension::parameterTypes(int index) const
+    \fn QList<QByteArray> QDesignerMemberSheetExtension::parameterTypes(int index) const
 
     Returns the parameter types of the member function with the given
     \a index, as a QByteArray list.
@@ -240,7 +240,7 @@
 */
 
 /*!
-    \fn QVector<QByteArray> QDesignerMemberSheetExtension::parameterNames(int index) const
+    \fn QList<QByteArray> QDesignerMemberSheetExtension::parameterNames(int index) const
 
     Returns the parameter names of the member function with the given
     \a index, as a QByteArray list.

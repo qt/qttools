@@ -70,7 +70,7 @@ namespace qdesigner_internal {
 
         bool setPromotedClassIncludeFile(const QString &className, const QString &includeFile, QString *errorMessage) override;
 
-        QVector<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const override;
+        QList<QDesignerWidgetDataBaseItemInterface *> promotionBaseClasses() const override;
 
     private:
         bool canBePromoted(const QDesignerWidgetDataBaseItemInterface *) const;

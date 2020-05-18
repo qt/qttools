@@ -118,7 +118,7 @@ QAxWidgetTaskMenu::QAxWidgetTaskMenu(QDesignerAxWidget *object, QObject *parent)
 
 QAxWidgetTaskMenu::~QAxWidgetTaskMenu() = default;
 
-QVector<QAction*> QAxWidgetTaskMenu::taskActions() const
+QList<QAction*> QAxWidgetTaskMenu::taskActions() const
 {
     const bool loaded = m_axwidget->loaded();
     m_setAction->setEnabled(!loaded);

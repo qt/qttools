@@ -494,11 +494,11 @@ void QFormBuilder::updateCustomWidgets()
 }
 
 /*!
-    \fn QVector<QDesignerCustomWidgetInterface*> QFormBuilder::customWidgets() const
+    \fn QList<QDesignerCustomWidgetInterface*> QFormBuilder::customWidgets() const
 
     Returns a list of the available plugins.
 */
-QVector<QDesignerCustomWidgetInterface*> QFormBuilder::customWidgets() const
+QList<QDesignerCustomWidgetInterface*> QFormBuilder::customWidgets() const
 {
     return d->m_customWidgets.values();
 }
@@ -507,7 +507,7 @@ QVector<QDesignerCustomWidgetInterface*> QFormBuilder::customWidgets() const
     \internal
 */
 
-void QFormBuilder::applyProperties(QObject *o, const QVector<DomProperty*> &properties)
+void QFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &properties)
 {
 
     if (properties.isEmpty())

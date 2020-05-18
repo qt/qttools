@@ -75,7 +75,7 @@ public:
         QWidget *container{nullptr}; // container which is expanded when the button is clicked
         QGridLayout *layout{nullptr}; // layout in container
         WidgetItem *parent{nullptr};
-        QVector<WidgetItem *> children;
+        QList<WidgetItem *> children;
         bool expanded{false};
     };
 private:
@@ -93,8 +93,8 @@ private:
     QMap<QWidget *, WidgetItem *> m_widgetToItem;
     QMap<QObject *, WidgetItem *> m_buttonToItem;
     QGridLayout *m_mainLayout;
-    QVector<WidgetItem *> m_children;
-    QVector<WidgetItem *> m_recreateQueue;
+    QList<WidgetItem *> m_children;
+    QList<WidgetItem *> m_recreateQueue;
 };
 
 QToolButton *QtButtonPropertyBrowserPrivate::createButton(QWidget *parent) const
@@ -116,7 +116,7 @@ QToolButton *QtButtonPropertyBrowserPrivate::createButton(QWidget *parent) const
 
 int QtButtonPropertyBrowserPrivate::gridRow(WidgetItem *item) const
 {
-    QVector<WidgetItem *> siblings;
+    QList<WidgetItem *> siblings;
     if (item->parent)
         siblings = item->parent->children;
     else

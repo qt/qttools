@@ -61,7 +61,7 @@ public:
     void addWidget(int cat_idx, const Widget &wgt) override;
     void removeWidget(int cat_idx, int wgt_idx) override;
 
-    void dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos) override;
+    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list, const QPoint &global_mouse_pos) override;
 
     void setFileName(const QString &file_name) override;
     QString fileName() const override;

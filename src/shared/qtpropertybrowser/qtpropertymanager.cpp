@@ -407,7 +407,7 @@ private:
     QMetaEnum m_policyEnum;
 };
 
-static QVector<QLocale::Country> sortCountries(const QVector<QLocale::Country> &countries)
+static QList<QLocale::Country> sortCountries(const QList<QLocale::Country> &countries)
 {
     QMultiMap<QString, QLocale::Country> nameToCountry;
     for (QLocale::Country country : countries)
@@ -431,7 +431,7 @@ void QtMetaEnumProvider::initLocale()
 
     const auto languages = nameToLanguage.values();
     for (QLocale::Language language : languages) {
-        QVector<QLocale::Country> countries;
+        QList<QLocale::Country> countries;
         countries = QLocale::countriesForLanguage(language);
         if (countries.isEmpty() && language == system.language())
             countries << system.country();
@@ -4880,7 +4880,7 @@ public:
 
     QtBoolPropertyManager *m_boolPropertyManager;
 
-    QMap<const QtProperty *, QVector<QtProperty *> > m_propertyToFlags;
+    QMap<const QtProperty *, QList<QtProperty *> > m_propertyToFlags;
 
     QMap<const QtProperty *, QtProperty *> m_flagToProperty;
 };
@@ -5165,7 +5165,7 @@ void QtFlagPropertyManager::initializeProperty(QtProperty *property)
 {
     d_ptr->m_values[property] = QtFlagPropertyManagerPrivate::Data();
 
-    d_ptr->m_propertyToFlags[property] = QVector<QtProperty *>();
+    d_ptr->m_propertyToFlags[property] = QList<QtProperty *>();
 }
 
 /*!

@@ -72,7 +72,7 @@ public:
     void addWidget(int cat_idx, const Widget &wgt);
     void removeWidget(int cat_idx, int wgt_idx);
 
-    void dropWidgets(const QVector<QDesignerDnDItemInterface*> &item_list);
+    void dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list);
 
     void setFileName(const QString &file_name);
     QString fileName() const;

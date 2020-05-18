@@ -91,7 +91,7 @@ QAction *LabelTaskMenu::preferredEditAction() const
     return Qt::mightBeRichText(m_label->text()) ? m_editRichTextAction : m_editPlainTextAction;
 }
 
-QVector<QAction*> LabelTaskMenu::taskActions() const
+QList<QAction*> LabelTaskMenu::taskActions() const
 {
     return m_taskActions + QDesignerTaskMenu::taskActions();
 }

@@ -80,8 +80,8 @@ public:
     QString declaredInClass(int index) const override;
 
     QString signature(int index) const override;
-    QVector<QByteArray> parameterTypes(int index) const override;
-    QVector<QByteArray> parameterNames(int index) const override;
+    QList<QByteArray> parameterTypes(int index) const override;
+    QList<QByteArray> parameterNames(int index) const override;
 
 private:
     QDesignerMemberSheetPrivate *d;
