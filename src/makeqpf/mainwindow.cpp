@@ -38,7 +38,6 @@
 #include <QCompleter>
 #include <QDirModel>
 #include <QRegularExpression>
-#include <QTextCodec>
 
 QT_BEGIN_NAMESPACE
 
@@ -210,7 +209,6 @@ void MainWindow::on_sampleFile_editingFinished()
         return;
     }
     QTextStream stream(&f);
-    stream.setCodec(QTextCodec::codecForName("utf-8"));
     stream.setAutoDetectUnicode(true);
     QString text = stream.readAll();
 
