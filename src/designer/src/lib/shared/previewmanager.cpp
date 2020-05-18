@@ -55,6 +55,7 @@
 #include <QtGui/qactiongroup.h>
 #include <QtGui/qcursor.h>
 #include <QtGui/qtransform.h>
+#include <QtGui/qscreen.h>
 
 #include <QtCore/qmap.h>
 #include <QtCore/qdebug.h>
@@ -780,7 +781,7 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
         if (QWidget *lastPreview = d->m_previews.constLast().m_widget) {
             QDesktopWidget *desktop = qApp->desktop();
             const QRect lastPreviewGeometry = lastPreview->frameGeometry();
-            const QRect availGeometry = desktop->availableGeometry(lastPreview);
+            const QRect availGeometry = lastPreview->screen()->availableGeometry();
             const QPoint newPos = lastPreviewGeometry.topRight() + QPoint(Spacing, 0);
             if (newPos.x() +  size.width() < availGeometry.right())
                 widget->move(newPos);

@@ -53,6 +53,7 @@
 #include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qtreewidget.h>
 #include <QtGui/qpainter.h>
+#include <QtGui/qscreen.h>
 #include <QtWidgets/qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
@@ -311,7 +312,7 @@ QImage NewFormWidget::grabForm(QDesignerFormEditorInterface *core,
 
 QPixmap NewFormWidget::formPreviewPixmap(QIODevice &file, const QString &workingDir) const
 {
-    const QSizeF screenSize(QApplication::desktop()->screenGeometry(this).size());
+    const QSizeF screenSize(screen()->geometry().size());
     const int previewSize = qRound(screenSize.width() / 7.5); // 256 on 1920px screens.
     const int margin = previewSize / 32 - 1; // 7 on 1920px screens.
     const int shadow = margin;

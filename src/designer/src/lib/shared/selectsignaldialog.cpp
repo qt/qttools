@@ -41,6 +41,7 @@
 #include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtGui/qstandarditemmodel.h>
+#include <QtGui/qscreen.h>
 #include <QtCore/qitemselectionmodel.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qvector.h>
@@ -69,7 +70,7 @@ SelectSignalDialog::SelectSignalDialog(QWidget *parent)
             this, &SelectSignalDialog::currentChanged);
     connect(m_ui->signalList, &QTreeView::activated,
             this, &SelectSignalDialog::activated);
-    const QRect availableGeometry = QApplication::desktop()->availableGeometry(this);
+    const QRect availableGeometry = screen()->geometry();
     resize(availableGeometry.width() / 5, availableGeometry.height() / 2);
 }
 

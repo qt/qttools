@@ -75,6 +75,7 @@
 #include <QtGui/qicon.h>
 #include <QtGui/qimage.h>
 #include <QtGui/qpixmap.h>
+#include <QtGui/qscreen.h>
 #if defined(QT_PRINTSUPPORT_LIB) // Some platforms may not build QtPrintSupport
 #  include <QtPrintSupport/qtprintsupportglobal.h>
 #  if QT_CONFIG(printer) && QT_CONFIG(printdialog)
@@ -1138,7 +1139,7 @@ QString QDesignerActions::fixResourceFileBackupPath(QDesignerFormWindowInterface
 QRect QDesignerActions::fixDialogRect(const QRect &rect) const
 {
     QRect frameGeometry;
-    const QRect availableGeometry = QApplication::desktop()->availableGeometry(core()->topLevel());
+    const QRect availableGeometry = core()->topLevel()->screen()->geometry();
 
     if (workbench()->mode() == DockedMode) {
         frameGeometry = core()->topLevel()->frameGeometry();
