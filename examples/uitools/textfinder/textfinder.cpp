@@ -75,7 +75,6 @@ static QString loadTextFile()
     QFile inputFile(":/forms/input.txt");
     inputFile.open(QIODevice::ReadOnly);
     QTextStream in(&inputFile);
-    in.setCodec("UTF-8");
     return in.readAll();
 }
 //! [5]
