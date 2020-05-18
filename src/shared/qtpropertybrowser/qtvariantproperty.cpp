@@ -961,7 +961,7 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToPropertyManager[QVariant::String] = stringPropertyManager;
     d_ptr->m_typeToValueType[QVariant::String] = QVariant::String;
     d_ptr->m_typeToAttributeToAttributeType[QVariant::String][d_ptr->m_regExpAttribute] =
-            QVariant::RegExp;
+            QVariant::RegularExpression;
     connect(stringPropertyManager, SIGNAL(valueChanged(QtProperty*,QString)),
                 this, SLOT(slotValueChanged(QtProperty*,QString)));
     connect(stringPropertyManager, SIGNAL(regExpChanged(QtProperty*,QRegularExpression)),
