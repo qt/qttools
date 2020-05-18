@@ -3317,6 +3317,35 @@
     \e{\\class} or \e{\\qmltype} comment.
 
 
+    \target qtcmakepackage-command
+    \section1 \\qtcmakepackage
+
+    Use the \\qtcmakepackage command to add CMake package information to classes
+    and namespaces. This information will then appear in a table at the top of
+    the class or namespace documentation page. For example:
+
+        \code
+        / *!
+            \namespace Foo
+            \inheaderfile Bar
+            \qtcmakepackage Baz
+            \brief A namespace.
+
+            [...]
+        * /
+        \endcode
+
+    QDoc will output this as
+
+    \raw HTML
+        <h1 class="title">Foo Namespace</h1>
+        <p>A namespace. <a href="#details">More...</a></p>
+        <div class="table"><table class="alignedsummary">
+        <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span>
+        </td></tr><tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 COMPONENT Baz)</td></tr>
+    \endraw
+
+
     \target generatelist-command
     \section1 \\generatelist
 

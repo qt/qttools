@@ -628,6 +628,11 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             doc.location().warning(
                     tr("Command '\\%1' is only meaningful in '\\module' and '\\qmlmodule'.")
                             .arg(COMMAND_QTVARIABLE));
+    } else if (command == COMMAND_QTCMAKEPACKAGE) {
+        node->setQtCMakeComponent(arg);
+        if (!node->isModule())
+            doc.location().warning(tr("Command '\\%1' is only meaningful in '\\module'.")
+                                           .arg(COMMAND_QTCMAKEPACKAGE));
     } else if (command == COMMAND_NOAUTOLIST) {
         node->setNoAutoList(true);
     }

@@ -1844,15 +1844,17 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     const QString inheritsText = "Inherits";
     const QString instantiatedByText = "Instantiated By";
     const QString qtVariableText = "qmake";
+    const QString cmakeText = "CMake";
 
     // The order of the requisites matter
-    const QStringList requisiteorder { headerText,         qtVariableText, sinceText,
-                                       instantiatedByText, inheritsText,   inheritedBytext };
+    const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText, sinceText,
+                                       instantiatedByText, inheritsText, inheritedBytext };
 
     addIncludeFilesToMap(aggregate, marker, requisites, &text, headerText);
     addSinceToMap(aggregate, requisites, &text, sinceText);
 
     if (aggregate->isClassNode() || aggregate->isNamespace()) {
+        addCMakeInfoToMap(aggregate, requisites, &text, cmakeText);
         addQtVariableToMap(aggregate, requisites, &text, qtVariableText);
     }
 
@@ -1960,6 +1962,30 @@ void HtmlGenerator::addInstantiatedByToMap(QMap<QString, Text> &requisites, Text
               << Atom(Atom::String, classe->qmlElement()->name())
               << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
         requisites.insert(instantiatedByText, *text);
+    }
+}
+
+/*!
+ * \internal
+ *  Adds the CMake package and link library information to the map.
+ */
+void HtmlGenerator::addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites,
+                                      Text *text, const QString &CMakeInfo) const
+{
+    if (!aggregate->physicalModuleName().isEmpty() && text != nullptr) {
+        const CollectionNode *cn =
+                qdb_->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
+        if (cn && !cn->qtCMakeComponent().isEmpty()) {
+            text->clear();
+            const auto qtMajorVersion = QString::number(QT_VERSION_MAJOR);
+            const QString findPackageText = "find_package(Qt" + qtMajorVersion + " COMPONENT "
+                    + cn->qtCMakeComponent() + ")";
+            const QString targetLinkLibrariesText =
+                    "target_link_libraries(mytarget PUBLIC Qt::" + cn->qtCMakeComponent() + ")";
+            const Atom lineBreak = Atom(Atom::RawString, " <br/>\n");
+            *text << findPackageText << lineBreak << targetLinkLibrariesText;
+            requisites.insert(CMakeInfo, *text);
+        }
     }
 }
 

@@ -16,6 +16,13 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
+<db:term>CMake</db:term>
+<db:listitem>
+<db:para>find_package(Qt6 COMPONENT QDocTest)</db:para>
+<db:para>target_link_libraries(mytarget PUBLIC Qt::QDocTest)</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
 <db:term>qmake</db:term>
 <db:listitem>
 <db:para>QT += testcpp</db:para>

@@ -32,6 +32,7 @@ namespace TestQDoc {
 /*!
     \module TestCPP
     \qtvariable testcpp
+    \qtcmakepackage QDocTest
     \title QDoc Test C++ Classes
     \brief A test module page.
 

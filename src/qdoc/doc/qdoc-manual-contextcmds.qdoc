@@ -57,6 +57,7 @@
       \li \l {preliminary-command}{\\preliminary},
       \li \l {previouspage-command}{\\previouspage},
       \li \l {qmlabstract-command} {\\qmlabstract}
+      \li \l {qtcmakepackage-command} {\\qtcmakepackage}
       \li \l {reentrant-command}{\\reentrant},
       \li \l {reimp-command}{\\reimp},
       \li \l {relates-command}{\\relates},

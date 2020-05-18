@@ -158,6 +158,7 @@ private:
 #define COMMAND_QMLREADONLY Doc::alias(QLatin1String("readonly"))
 #define COMMAND_QMLSIGNAL Doc::alias(QLatin1String("qmlsignal"))
 #define COMMAND_QMLTYPE Doc::alias(QLatin1String("qmltype"))
+#define COMMAND_QTCMAKEPACKAGE Doc::alias(QLatin1String("qtcmakepackage"))
 #define COMMAND_QTVARIABLE Doc::alias(QLatin1String("qtvariable"))
 #define COMMAND_REENTRANT Doc::alias(QLatin1String("reentrant"))
 #define COMMAND_REIMP Doc::alias(QLatin1String("reimp"))

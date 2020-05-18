@@ -298,6 +298,8 @@ public:
     virtual void setObsoleteLink(const QString &) {}
     virtual void setQtVariable(const QString &) {}
     virtual QString qtVariable() const { return QString(); }
+    virtual void setQtCMakeComponent(const QString &) {}
+    virtual QString qtCMakeComponent() const { return QString(); }
     virtual bool hasTag(const QString &) const { return false; }
 
     const QMap<LinkType, QPair<QString, QString>> &links() const { return linkMap_; }
@@ -1261,6 +1263,8 @@ public:
     bool isCollectionNode() const override { return true; }
     QString qtVariable() const override { return qtVariable_; }
     void setQtVariable(const QString &v) override { qtVariable_ = v; }
+    QString qtCMakeComponent() const override { return qtCMakeComponent_; }
+    void setQtCMakeComponent(const QString &target) override { qtCMakeComponent_ = target; }
     void addMember(Node *node) override;
     bool hasMembers() const override;
     bool hasNamespaces() const override;
@@ -1295,6 +1299,7 @@ private:
     QString logicalModuleVersionMajor_;
     QString logicalModuleVersionMinor_;
     QString qtVariable_;
+    QString qtCMakeComponent_;
 };
 
 QT_END_NAMESPACE

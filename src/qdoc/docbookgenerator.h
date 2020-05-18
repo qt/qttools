@@ -154,6 +154,7 @@ private:
     void generateStartRequisite(const QString &description);
     void generateEndRequisite();
     void generateRequisite(const QString &description, const QString &value);
+    void generateCMakeRequisite(const QStringList &values);
     void generateSynopsisInfo(const QString &key, const QString &value);
     void generateModifier(const QString &value);
 
