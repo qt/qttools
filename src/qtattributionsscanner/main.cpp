@@ -161,7 +161,6 @@ int main(int argc, char *argv[])
 
     // Generate the output and write it
     QString generator = parser.value(generatorOption);
-    out.setCodec("UTF-8");
     if (generator == QLatin1String("qdoc")) {
         QString baseDirectory = parser.value(baseDirOption);
         if (baseDirectory.isEmpty()) {
