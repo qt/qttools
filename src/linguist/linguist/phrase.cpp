@@ -34,7 +34,6 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMessageBox>
-#include <QTextCodec>
 #include <QTextStream>
 #include <QXmlStreamReader>
 
@@ -269,7 +268,6 @@ bool PhraseBook::save(const QString &fileName)
     m_fileName = fileName;
 
     QTextStream t(&f);
-    t.setCodec( QTextCodec::codecForName("UTF-8") );
 
     t << "<!DOCTYPE QPH>\n<QPH";
     if (sourceLanguage() != QLocale::C)

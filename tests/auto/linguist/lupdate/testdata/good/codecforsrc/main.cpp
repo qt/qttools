@@ -29,7 +29,7 @@
 #include <QApplication>
 #include <QtGui>
 #include <QtCore>
-#include <QTextCodec>
+
 
 int main(int argc, char **argv)
 {

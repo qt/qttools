@@ -30,7 +30,6 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
-#include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
 #include <QtCore/QXmlStreamReader>
@@ -147,7 +146,6 @@ static QString protect(const QString &str)
 static bool saveQPH(const Translator &translator, QIODevice &dev, ConversionData &)
 {
     QTextStream t(&dev);
-    t.setCodec(QTextCodec::codecForName("UTF-8"));
     t << "<!DOCTYPE QPH>\n<QPH";
     QString languageCode = translator.languageCode();
     if (!languageCode.isEmpty() && languageCode != QLatin1String("C"))

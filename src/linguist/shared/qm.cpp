@@ -38,7 +38,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QMap>
 #include <QtCore/QString>
-#include <QtCore/QTextCodec>
 
 QT_BEGIN_NAMESPACE
 
@@ -456,10 +455,9 @@ static quint32 read32(const uchar *data)
 
 static void fromBytes(const char *str, int len, QString *out, bool *utf8Fail)
 {
-    static QTextCodec *utf8Codec = QTextCodec::codecForName("UTF-8");
-    QTextCodec::ConverterState cvtState;
-    *out = utf8Codec->toUnicode(str, len, &cvtState);
-    *utf8Fail = cvtState.invalidChars;
+    QStringDecoder toUnicode(QStringDecoder::Utf8, QStringDecoder::Flag::Stateless);
+    *out = toUnicode(str, len);
+    *utf8Fail = toUnicode.hasError();
 }
 
 bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
@@ -623,7 +621,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
         translator.append(msg);
     }
     if (utf8Fail) {
-        cd.appendError(QLatin1String("Cannot read file with UTF-8 codec"));
+        cd.appendError(QLatin1String("Error: File contains invalid UTF-8 sequences."));
         return false;
     }
     return ok;

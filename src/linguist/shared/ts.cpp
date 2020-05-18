@@ -31,7 +31,6 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QDebug>
 #include <QtCore/QRegularExpression>
-#include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
 #include <QtCore/QXmlStreamReader>
@@ -191,7 +190,6 @@ bool TSReader::read(Translator &translator)
     STRING(catalog);
     STRING(comment);
     STRING(context);
-    STRING(defaultcodec);
     STRING(dependencies);
     STRING(dependency);
     STRING(extracomment);
@@ -250,11 +248,6 @@ bool TSReader::read(Translator &translator)
                     break;
                 } else if (isWhiteSpace()) {
                     // ignore these, just whitespace
-                } else if (elementStarts(strdefaultcodec)) {
-                    // <defaultcodec>
-                    readElementText();
-                    m_cd.appendError(QString::fromLatin1("Warning: ignoring <defaultcodec> element"));
-                    // </defaultcodec>
                 } else if (isStartElement()
                         && name().toString().startsWith(strextrans)) {
                     // <extra-...>
@@ -516,8 +509,6 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
 {
     bool result = true;
     QTextStream t(&dev);
-    t.setCodec(QTextCodec::codecForName("UTF-8"));
-    //qDebug() << translator.codecName();
 
     // The xml prolog allows processors to easily detect the correct encoding
     t << "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE TS>\n";

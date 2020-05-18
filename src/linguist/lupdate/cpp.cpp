@@ -31,7 +31,6 @@
 #include <translator.h>
 #include <QtCore/QBitArray>
 #include <QtCore/QStack>
-#include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 #include <QtCore/QRegularExpression>
 
@@ -212,7 +211,7 @@ private:
     int yyParenLineNo;
 
     // the string to read from and current position in the string
-    QTextCodec *yySourceCodec;
+    QStringConverter::Encoding yySourceEncoding = QStringConverter::Utf8;
     QString yyInStr;
     const ushort *yyInPtr;
 
@@ -275,14 +274,14 @@ void CppParser::setInput(const QString &in)
 {
     yyInStr = in;
     yyFileName = QString();
-    yySourceCodec = 0;
+    yySourceEncoding = QStringConverter::Utf8;
 }
 
 void CppParser::setInput(QTextStream &ts, const QString &fileName)
 {
     yyInStr = ts.readAll();
     yyFileName = fileName;
-    yySourceCodec = ts.codec();
+    yySourceEncoding = ts.encoding();
 }
 
 /*
@@ -1305,7 +1304,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
     }
 
     QTextStream ts(&f);
-    ts.setCodec(yySourceCodec);
+    ts.setEncoding(yySourceEncoding);
     ts.setAutoDetectUnicode(true);
 
     inclusions.insert(cleanFile);
@@ -1391,12 +1390,12 @@ bool CppParser::matchEncoding()
         if (yyTok == Tok_ColonColon)
             yyTok = getToken();
     }
-    if (yyWord == strUnicodeUTF8 || yyWord == strDefaultCodec || yyWord == strCodecForTr) {
+    if (yyWord == strUnicodeUTF8) {
         yyTok = getToken();
         return true;
     }
-    if (yyWord == strLatin1)
-        yyMsg() << qPrintable(LU::tr("Unsupported encoding Latin1\n"));
+    if (yyWord == strLatin1 || yyWord == strDefaultCodec || yyWord == strCodecForTr)
+        yyMsg() << qPrintable(LU::tr("Unsupported encoding Latin1/DefaultCodec/CodecForTr\n"));
     return false;
 }
 
@@ -2229,7 +2228,7 @@ const ParseResults *CppParser::recordResults(bool isHeader)
 
 void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd)
 {
-    QTextCodec *codec = QTextCodec::codecForName(cd.m_sourceIsUtf16 ? "UTF-16" : "UTF-8");
+    QStringConverter::Encoding e = cd.m_sourceIsUtf16 ? QStringConverter::Utf16 : QStringConverter::Utf8;
 
     foreach (const QString &filename, filenames) {
         if (!CppFiles::getResults(filename).isEmpty() || CppFiles::isBlacklisted(filename))
@@ -2243,7 +2242,7 @@ void loadCPP(Translator &translator, const QStringList &filenames, ConversionDat
 
         CppParser parser;
         QTextStream ts(&file);
-        ts.setCodec(codec);
+        ts.setEncoding(e);
         ts.setAutoDetectUnicode(true);
         parser.setInput(ts, filename);
         Translator *tor = new Translator;

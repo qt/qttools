@@ -469,8 +469,6 @@ static bool load(Translator &translator, const QString &filename, ConversionData
         code = QTextStream(&file).readAll();
     } else {
         QTextStream ts(&file);
-        ts.setCodec("UTF-8");
-        ts.setAutoDetectUnicode(true);
         code = ts.readAll();
     }
 
