@@ -1845,103 +1845,171 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     const QString instantiatedByText = "Instantiated By";
     const QString qtVariableText = "qmake";
 
-    // add the include files to the map
-    if (!aggregate->includeFiles().isEmpty()) {
-        text.clear();
-        text << highlightedCode(
-                indent(codeIndent, marker->markedUpIncludes(aggregate->includeFiles())), aggregate);
-        requisites.insert(headerText, text);
-    }
-
     // The order of the requisites matter
-    QStringList requisiteorder;
-    requisiteorder << headerText << qtVariableText << sinceText << instantiatedByText
-                   << inheritsText << inheritedBytext;
+    const QStringList requisiteorder { headerText,         qtVariableText, sinceText,
+                                       instantiatedByText, inheritsText,   inheritedBytext };
 
-    // add the since and project into the map
-    if (!aggregate->since().isEmpty()) {
-        text.clear();
-        text << formatSince(aggregate) << Atom::ParaRight;
-        requisites.insert(sinceText, text);
-    }
+    addIncludeFilesToMap(aggregate, marker, requisites, &text, headerText);
+    addSinceToMap(aggregate, requisites, &text, sinceText);
 
     if (aggregate->isClassNode() || aggregate->isNamespace()) {
-        // add the QT variable to the map
-        if (!aggregate->physicalModuleName().isEmpty()) {
-            const CollectionNode *cn =
-                    qdb_->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
-            if (cn && !cn->qtVariable().isEmpty()) {
-                text.clear();
-                text << "QT += " + cn->qtVariable();
-                requisites.insert(qtVariableText, text);
-            }
-        }
+        addQtVariableToMap(aggregate, requisites, &text, qtVariableText);
     }
 
     if (aggregate->isClassNode()) {
-        ClassNode *classe = static_cast<ClassNode *>(aggregate);
-        if (classe->qmlElement() != nullptr && !classe->isInternal()) {
-            text.clear();
-            text << Atom(Atom::LinkNode, CodeMarker::stringForNode(classe->qmlElement()))
-                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                 << Atom(Atom::String, classe->qmlElement()->name())
-                 << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-            requisites.insert(instantiatedByText, text);
-        }
+        auto *classe = dynamic_cast<ClassNode *>(aggregate);
+        if (classe->qmlElement() != nullptr && !classe->isInternal())
+            addInstantiatedByToMap(requisites, &text, instantiatedByText, classe);
 
-        // add the inherits to the map
-        if (!classe->baseClasses().isEmpty()) {
-            int index = 0;
-            text.clear();
-            const auto baseClasses = classe->baseClasses();
-            for (const auto &cls : baseClasses) {
-                if (cls.node_) {
-                    appendFullName(text, cls.node_, classe);
-
-                    if (cls.access_ == Node::Protected) {
-                        text << " (protected)";
-                    } else if (cls.access_ == Node::Private) {
-                        text << " (private)";
-                    }
-                    text << comma(index++, classe->baseClasses().count());
-                }
-            }
-            text << Atom::ParaRight;
-            if (index > 0)
-                requisites.insert(inheritsText, text);
-        }
-
-        // add the inherited-by to the map
-        if (!classe->derivedClasses().isEmpty()) {
-            text.clear();
-            text << Atom::ParaLeft;
-            int count = appendSortedNames(text, classe, classe->derivedClasses());
-            text << Atom::ParaRight;
-            if (count > 0)
-                requisites.insert(inheritedBytext, text);
-        }
+        addInheritsToMap(requisites, &text, inheritsText, classe);
+        addInheritedByToMap(requisites, &text, inheritedBytext, classe);
     }
 
     if (!requisites.isEmpty()) {
         // generate the table
-        out() << "<div class=\"table\"><table class=\"alignedsummary\">\n";
+        generateTheTable(requisiteorder, requisites, headerText, aggregate, marker);
+    }
+}
 
-        for (auto it = requisiteorder.constBegin(); it != requisiteorder.constEnd(); ++it) {
+/*!
+ * \internal
+ */
+void HtmlGenerator::generateTheTable(const QStringList &requisiteOrder,
+                                     const QMap<QString, Text> &requisites,
+                                     const QString &headerText, const Aggregate *aggregate,
+                                     CodeMarker *marker)
+{
+    out() << "<div class=\"table\"><table class=\"alignedsummary\">\n";
 
-            if (requisites.contains(*it)) {
-                out() << "<tr>"
-                      << "<td class=\"memItemLeft rightAlign topAlign\"> " << *it
-                      << ":"
-                         "</td><td class=\"memItemRight bottomAlign\"> ";
+    for (auto it = requisiteOrder.constBegin(); it != requisiteOrder.constEnd(); ++it) {
 
-                if (*it == headerText)
-                    out() << requisites.value(*it).toString();
-                else
-                    generateText(requisites.value(*it), aggregate, marker);
-                out() << "</td></tr>";
+        if (requisites.contains(*it)) {
+            out() << "<tr>"
+                  << "<td class=\"memItemLeft rightAlign topAlign\"> " << *it
+                  << ":"
+                     "</td><td class=\"memItemRight bottomAlign\"> ";
+
+            if (*it == headerText)
+                out() << requisites.value(*it).toString();
+            else
+                generateText(requisites.value(*it), aggregate, marker);
+            out() << "</td></tr>";
+        }
+    }
+    out() << "</table></div>";
+}
+
+/*!
+ * \internal
+ * Adds inherited by information to the map.
+ */
+void HtmlGenerator::addInheritedByToMap(QMap<QString, Text> &requisites, Text *text,
+                                        const QString &inheritedBytext, ClassNode *classe)
+{
+    if (!classe->derivedClasses().isEmpty()) {
+        text->clear();
+        *text << Atom::ParaLeft;
+        int count = appendSortedNames(*text, classe, classe->derivedClasses());
+        *text << Atom::ParaRight;
+        if (count > 0)
+            requisites.insert(inheritedBytext, *text);
+    }
+}
+
+/*!
+ * \internal
+ * Adds base classes to the map.
+ */
+void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text,
+                                     const QString &inheritsText, ClassNode *classe)
+{
+    if (!classe->baseClasses().isEmpty()) {
+        int index = 0;
+        text->clear();
+        const auto baseClasses = classe->baseClasses();
+        for (const auto &cls : baseClasses) {
+            if (cls.node_) {
+                appendFullName(*text, cls.node_, classe);
+
+                if (cls.access_ == Node::Protected) {
+                    *text << " (protected)";
+                } else if (cls.access_ == Node::Private) {
+                    *text << " (private)";
+                }
+                *text << comma(index++, classe->baseClasses().count());
             }
         }
-        out() << "</table></div>";
+        *text << Atom::ParaRight;
+        if (index > 0)
+            requisites.insert(inheritsText, *text);
+    }
+}
+
+/*!
+ * \internal
+ * Add the instantiated by information to the map.
+ */
+void HtmlGenerator::addInstantiatedByToMap(QMap<QString, Text> &requisites, Text *text,
+                                           const QString &instantiatedByText,
+                                           ClassNode *classe) const
+{
+    if (text != nullptr) {
+        text->clear();
+        *text << Atom(Atom::LinkNode, CodeMarker::stringForNode(classe->qmlElement()))
+              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+              << Atom(Atom::String, classe->qmlElement()->name())
+              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        requisites.insert(instantiatedByText, *text);
+    }
+}
+
+/*!
+ * \internal
+ * Adds the Qt variable (from the \\qtvariable command) to the map.
+ */
+void HtmlGenerator::addQtVariableToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites,
+                                       Text *text, const QString &qtVariableText) const
+{
+    if (!aggregate->physicalModuleName().isEmpty()) {
+        const CollectionNode *cn =
+                qdb_->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
+
+        if (cn && !cn->qtVariable().isEmpty()) {
+            text->clear();
+            *text << "QT += " + cn->qtVariable();
+            requisites.insert(qtVariableText, *text);
+        }
+    }
+}
+
+/*!
+ * \internal
+ * Adds the since information (from the \\since command) to the map.
+ *
+ */
+void HtmlGenerator::addSinceToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites,
+                                  Text *text, const QString &sinceText) const
+{
+    if (!aggregate->since().isEmpty() && text != nullptr) {
+        text->clear();
+        *text << formatSince(aggregate) << Atom::ParaRight;
+        requisites.insert(sinceText, *text);
+    }
+}
+
+/*!
+ * \internal
+ * Adds the includes (from the \\includefile command) to the map.
+ */
+void HtmlGenerator::addIncludeFilesToMap(const Aggregate *aggregate, CodeMarker *marker,
+                                         QMap<QString, Text> &requisites, Text *text,
+                                         const QString &headerText)
+{
+    if (!aggregate->includeFiles().isEmpty() && text != nullptr) {
+        text->clear();
+        *text << highlightedCode(
+                indent(codeIndent, marker->markedUpIncludes(aggregate->includeFiles())), aggregate);
+        requisites.insert(headerText, *text);
     }
 }
 

@@ -145,6 +145,22 @@ private:
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     void generateExtractionMark(const Node *node, ExtractionMarkType markType);
+    void addIncludeFilesToMap(const Aggregate *aggregate, CodeMarker *marker,
+                              QMap<QString, Text> &requisites, Text *text,
+                              const QString &headerText);
+    void addSinceToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,
+                       const QString &sinceText) const;
+    void addQtVariableToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,
+                            const QString &qtVariableText) const;
+    void addInstantiatedByToMap(QMap<QString, Text> &requisites, Text *text,
+                                const QString &instantiatedByText, ClassNode *classe) const;
+    void addInheritsToMap(QMap<QString, Text> &requisites, Text *text, const QString &inheritsText,
+                          ClassNode *classe);
+    void addInheritedByToMap(QMap<QString, Text> &requisites, Text *text,
+                             const QString &inheritedBytext, ClassNode *classe);
+    void generateTheTable(const QStringList &requisiteOrder, const QMap<QString, Text> &requisites,
+                          const QString &headerText, const Aggregate *aggregate,
+                          CodeMarker *marker);
 
     int codeIndent;
     QString codePrefix;
