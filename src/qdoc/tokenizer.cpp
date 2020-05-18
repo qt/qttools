@@ -35,7 +35,7 @@
 #include <QtCore/qhash.h>
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qstring.h>
-#include <QtCore/qtextcodec.h>
+#include <QtCore/qstringconverter.h>
 
 #include <cctype>
 #include <cstring>
@@ -118,9 +118,7 @@ static QRegularExpression *definedX = nullptr;
 static QRegularExpression *defines = nullptr;
 static QRegularExpression *falsehoods = nullptr;
 
-#ifndef QT_NO_TEXTCODEC
-static QTextCodec *sourceCodec = nullptr;
-#endif
+static QStringDecoder sourceDecoder;
 
 /*
   This function is a perfect hash function for the 37 keywords of C99
@@ -509,10 +507,12 @@ void Tokenizer::initialize()
 
     QString sourceEncoding = config.getString(CONFIG_SOURCEENCODING);
     if (sourceEncoding.isEmpty())
-        sourceEncoding = QLatin1String("ISO-8859-1");
-#ifndef QT_NO_TEXTCODEC
-    sourceCodec = QTextCodec::codecForName(sourceEncoding.toLocal8Bit());
-#endif
+        sourceEncoding = QLatin1String("UTF-8");
+    sourceDecoder = QStringDecoder(sourceEncoding.toUtf8());
+    if (!sourceDecoder.isValid()) {
+        qWarning() << "Source encoding" << sourceEncoding << "is not supported. Using UTF-8.";
+        sourceDecoder = QStringDecoder::Utf8;
+    }
 
     comment = new QRegularExpression("/(?:\\*.*\\*/|/.*\n|/[^\n]*$)", QRegularExpression::InvertedGreedinessOption);
     versionX = new QRegularExpression("$cannot possibly match^");
@@ -794,20 +794,12 @@ bool Tokenizer::isTrue(const QString &condition)
 
 QString Tokenizer::lexeme() const
 {
-#ifndef QT_NO_TEXTCODEC
-    return sourceCodec->toUnicode(yyLex);
-#else
-    return QString::fromUtf8(yyLex);
-#endif
+    return sourceDecoder(yyLex);
 }
 
 QString Tokenizer::previousLexeme() const
 {
-#ifndef QT_NO_TEXTCODEC
-    return sourceCodec->toUnicode(yyPrevLex);
-#else
-    return QString::fromUtf8(yyPrevLex);
-#endif
+    return sourceDecoder(yyPrevLex);
 }
 
 QT_END_NAMESPACE

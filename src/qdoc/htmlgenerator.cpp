@@ -46,7 +46,6 @@
 #include <QtCore/qiterator.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
-#include <QtCore/qtextcodec.h>
 #include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
 #include <QtCore/qregularexpression.h>
@@ -169,13 +168,6 @@ void HtmlGenerator::initializeGenerator()
 
     projectUrl = config->getString(CONFIG_URL);
     tagFile_ = config->getString(CONFIG_TAGFILE);
-
-#ifndef QT_NO_TEXTCODEC
-    outputEncoding = config->getString(CONFIG_OUTPUTENCODING);
-    if (outputEncoding.isEmpty())
-        outputEncoding = QLatin1String("UTF-8");
-    outputCodec = QTextCodec::codecForName(outputEncoding.toLocal8Bit());
-#endif
 
     naturalLanguage = config->getString(CONFIG_NATURALLANGUAGE);
     if (naturalLanguage.isEmpty())
@@ -3201,14 +3193,10 @@ void HtmlGenerator::generateLink(const Atom *atom, CodeMarker *marker)
 
 QString HtmlGenerator::protectEnc(const QString &string)
 {
-#ifndef QT_NO_TEXTCODEC
-    return protect(string, outputEncoding);
-#else
     return protect(string);
-#endif
 }
 
-QString HtmlGenerator::protect(const QString &string, const QString &outputEncoding)
+QString HtmlGenerator::protect(const QString &string)
 {
 #define APPEND(x)                                                                                  \
     if (html.isEmpty()) {                                                                          \
@@ -3231,8 +3219,7 @@ QString HtmlGenerator::protect(const QString &string, const QString &outputEncod
             APPEND("&gt;");
         } else if (ch == QLatin1Char('"')) {
             APPEND("&quot;");
-        } else if ((outputEncoding == QLatin1String("ISO-8859-1") && ch.unicode() > 0x007F)
-                   || (ch == QLatin1Char('*') && i + 1 < n && string.at(i) == QLatin1Char('/'))
+        } else if ((ch == QLatin1Char('*') && i + 1 < n && string.at(i) == QLatin1Char('/'))
                    || (ch == QLatin1Char('.') && i > 2 && string.at(i - 2) == QLatin1Char('.'))) {
             // we escape '*/' and the last dot in 'e.g.' and 'i.e.' for the Javadoc generator
             APPEND("&#x");

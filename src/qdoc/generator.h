@@ -160,10 +160,6 @@ protected:
     QMap<QString, QStringList> editionGroupMap;
     QMap<QString, QStringList> editionModuleMap;
     QString naturalLanguage;
-#ifndef QT_NO_TEXTCODEC
-    QTextCodec *outputCodec;
-    QString outputEncoding;
-#endif
     QString tagFile_;
     QStack<QTextStream *> outStreamStack;
 

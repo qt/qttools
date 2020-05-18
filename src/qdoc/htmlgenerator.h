@@ -60,7 +60,7 @@ public:
     void generateManifestFiles();
 
     QString protectEnc(const QString &string);
-    static QString protect(const QString &string, const QString &encoding = "ISO-8859-1");
+    static QString protect(const QString &string);
 
 protected:
     void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;

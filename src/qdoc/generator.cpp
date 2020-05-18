@@ -279,10 +279,6 @@ void Generator::beginFilePage(const Node *node, const QString &fileName)
 {
     QFile *outFile = openSubPageFile(node, fileName);
     QTextStream *out = new QTextStream(outFile);
-#ifndef QT_NO_TEXTCODEC
-    if (outputCodec)
-        out->setCodec(outputCodec);
-#endif
     outStreamStack.push(out);
 }
 

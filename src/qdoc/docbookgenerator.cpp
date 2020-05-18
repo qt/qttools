@@ -29,7 +29,6 @@
 #include <cctype>
 #include <qlist.h>
 #include <qiterator.h>
-#include <qtextcodec.h>
 #include <quuid.h>
 #include <qurl.h>
 #include <qmap.h>
