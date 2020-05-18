@@ -142,7 +142,7 @@ QStringList findSharedLibraries(const QDir &directory, Platform platform,
 QString winErrorMessage(unsigned long error)
 {
     QString rc = QString::fromLatin1("#%1: ").arg(error);
-    ushort *lpMsgBuf;
+    char16_t *lpMsgBuf;
 
     const DWORD len = FormatMessage(
             FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
