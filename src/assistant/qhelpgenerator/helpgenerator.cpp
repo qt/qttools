@@ -50,7 +50,7 @@
 #include <QtCore/QSet>
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>
-#include <QtCore/QTextCodec>
+#include <QtCore/QStringConverter>
 #include <QtCore/QDataStream>
 #include <QtSql/QSqlQuery>
 
@@ -484,10 +484,10 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
         QByteArray data = fi.readAll();
         if (fileName.endsWith(QLatin1String(".html"))
             || fileName.endsWith(QLatin1String(".htm"))) {
-                charSet = QHelpGlobal::codecFromData(data);
-                QTextStream stream(&data);
-                stream.setCodec(QTextCodec::codecForName(charSet.toLatin1().constData()));
-                title = QHelpGlobal::documentTitle(stream.readAll());
+                auto encoding = QStringDecoder::encodingForHtml(data.constData(), data.size());
+                if (!encoding)
+                    encoding = QStringDecoder::Utf8;
+                title = QHelpGlobal::documentTitle(QStringDecoder(*encoding)(data));
         } else {
             title = fileName.mid(fileName.lastIndexOf(QLatin1Char('/')) + 1);
         }
@@ -808,10 +808,11 @@ bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
             continue;
         }
         const QRegularExpression linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
-        QTextStream stream(&htmlFile);
-        const QString codec = QHelpGlobal::codecFromData(htmlFile.read(1000));
-        stream.setCodec(QTextCodec::codecForName(codec.toLatin1().constData()));
-        const QString &content = stream.readAll();
+        QByteArray data = htmlFile.readAll();
+        auto encoding = QStringDecoder::encodingForHtml(data.constData(), data.size());
+        if (!encoding)
+            encoding = QStringDecoder::Utf8;
+        const QString &content = QStringDecoder(*encoding)(data);
         QStringList invalidLinks;
         QRegularExpressionMatch match;
         int pos = 0;

@@ -59,11 +59,6 @@ class QHELP_EXPORT QHelpGlobal {
 public:
     static QString uniquifyConnectionName(const QString &name, void *pointer);
     static QString documentTitle(const QString &content);
-    static QString codecFromData(const QByteArray &data);
-
-private:
-    static QString codecFromHtmlData(const QByteArray &data);
-    static QString codecFromXmlData(const QByteArray &data);
 };
 
 QT_END_NAMESPACE

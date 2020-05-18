@@ -45,7 +45,7 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
-#include <QtCore/QTextCodec>
+#include <QtCore/QStringDecoder>
 #include <QtCore/QTextStream>
 #include <QtCore/QSet>
 #include <QtCore/QUrl>
@@ -502,8 +502,9 @@ void QHelpSearchIndexWriter::run()
                 }
 
                 QTextStream s(data);
-                const QString &en = QHelpGlobal::codecFromData(data);
-                s.setCodec(QTextCodec::codecForName(en.toLatin1().constData()));
+                auto encoding = QStringDecoder::encodingForHtml(data.constData(), data.size());
+                if (encoding)
+                    s.setEncoding(*encoding);
 
                 const QString &text = s.readAll();
                 if (text.isEmpty())
