@@ -148,6 +148,8 @@ contains(CMAKE_BIN_DIR, "^\\.\\./.*") {
 
 load(qt_build_paths)
 
+equals(QMAKE_HOST.os, Windows): CMAKE_BIN_SUFFIX = ".exe"
+
 cmake_qdoc_config_file.input = $$PWD/Qt5DocToolsConfig.cmake.in
 cmake_qdoc_config_version_file.input = $$[QT_HOST_DATA/src]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in
 CMAKE_PACKAGE_VERSION = $$MODULE_VERSION
