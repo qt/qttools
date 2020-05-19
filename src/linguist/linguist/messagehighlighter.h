@@ -44,7 +44,7 @@ public:
     MessageHighlighter(QTextEdit *textEdit);
 
 protected:
-    void highlightBlock(const QString &text);
+    void highlightBlock(const QString &text) override;
 
 private:
     enum Construct {

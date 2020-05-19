@@ -52,9 +52,9 @@ public:
     QtGradientWidget(QWidget *parent = 0);
     ~QtGradientWidget();
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
-    int heightForWidth(int w) const;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
+    int heightForWidth(int w) const override;
 
     bool isBackgroundCheckered() const;
     void setBackgroundCheckered(bool checkered);
@@ -101,11 +101,11 @@ signals:
     void angleConicalChanged(qreal angle);
 
 protected:
-    void paintEvent(QPaintEvent *e);
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
-    void mouseDoubleClickEvent(QMouseEvent *e);
+    void paintEvent(QPaintEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void mouseDoubleClickEvent(QMouseEvent *e) override;
 
 private:
     QScopedPointer<class QtGradientWidgetPrivate> d_ptr;

@@ -55,9 +55,9 @@ public:
     ~QtGroupBoxPropertyBrowser();
 
 protected:
-    virtual void itemInserted(QtBrowserItem *item, QtBrowserItem *afterItem);
-    virtual void itemRemoved(QtBrowserItem *item);
-    virtual void itemChanged(QtBrowserItem *item);
+    void itemInserted(QtBrowserItem *item, QtBrowserItem *afterItem) override;
+    void itemRemoved(QtBrowserItem *item) override;
+    void itemChanged(QtBrowserItem *item) override;
 
 private:
 

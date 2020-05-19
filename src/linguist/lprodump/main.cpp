@@ -121,13 +121,13 @@ static void print(const QString &fileName, int lineNo, const QString &msg)
 
 class EvalHandler : public QMakeHandler {
 public:
-    virtual void message(int type, const QString &msg, const QString &fileName, int lineNo)
+    void message(int type, const QString &msg, const QString &fileName, int lineNo) override
     {
         if (verbose && !(type & CumulativeEvalMessage) && (type & CategoryMask) == ErrorMessage)
             print(fileName, lineNo, msg);
     }
 
-    virtual void fileMessage(int type, const QString &msg)
+    void fileMessage(int type, const QString &msg) override
     {
         if (verbose && !(type & CumulativeEvalMessage) && (type & CategoryMask) == ErrorMessage) {
             // "Downgrade" errors, as we don't really care for them
@@ -135,8 +135,8 @@ public:
         }
     }
 
-    virtual void aboutToEval(ProFile *, ProFile *, EvalFileType) {}
-    virtual void doneWithEval(ProFile *) {}
+    void aboutToEval(ProFile *, ProFile *, EvalFileType) override {}
+    void doneWithEval(ProFile *) override {}
 
     bool verbose = true;
 };

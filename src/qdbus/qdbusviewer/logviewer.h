@@ -38,7 +38,7 @@ public:
     explicit LogViewer(QWidget *parent = 0);
 
 protected:
-    virtual void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 };
 
 #endif // LOGVIEWER_H

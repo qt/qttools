@@ -76,7 +76,7 @@ private slots:
     void setOkButtonEnabled(bool);
     void nameChanged(const QString &name);
     void save();
-    void open();
+    void open() override;
 
 private:
     void critical(const QString &title, const QString &msg);

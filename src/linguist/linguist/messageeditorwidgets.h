@@ -59,8 +59,8 @@ class ExpandingTextEdit : public QTextEdit
 
 public:
     ExpandingTextEdit(QWidget *parent = 0);
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
 private slots:
     void updateHeight(const QSizeF &documentSize);
@@ -147,7 +147,7 @@ signals:
     void cursorPositionChanged();
 
 protected:
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private slots:
     void slotTextChanged();

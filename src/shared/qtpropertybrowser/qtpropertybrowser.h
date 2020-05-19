@@ -146,7 +146,7 @@ class QtAbstractEditorFactory : public QtAbstractEditorFactoryBase
 {
 public:
     explicit QtAbstractEditorFactory(QObject *parent) : QtAbstractEditorFactoryBase(parent) {}
-    QWidget *createEditor(QtProperty *property, QWidget *parent)
+    QWidget *createEditor(QtProperty *property, QWidget *parent) override
     {
         for (PropertyManager *manager : qAsConst(m_managers)) {
             if (manager == property->propertyManager()) {
@@ -192,7 +192,7 @@ protected:
     virtual QWidget *createEditor(PropertyManager *manager, QtProperty *property,
                 QWidget *parent) = 0;
     virtual void disconnectPropertyManager(PropertyManager *manager) = 0;
-    void managerDestroyed(QObject *manager)
+    void managerDestroyed(QObject *manager) override
     {
         for (PropertyManager *m : qAsConst(m_managers)) {
             if (m == manager) {
@@ -202,7 +202,7 @@ protected:
         }
     }
 private:
-    void breakConnection(QtAbstractPropertyManager *manager)
+    void breakConnection(QtAbstractPropertyManager *manager) override
     {
         for (PropertyManager *m : qAsConst(m_managers)) {
             if (m == manager) {

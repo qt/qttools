@@ -86,9 +86,9 @@ signals:
 
 protected:
     // QObject
-    virtual void contextMenuEvent(QContextMenuEvent *event);
+    void contextMenuEvent(QContextMenuEvent *event) override;
     // QAbstractItemView
-    virtual void mouseDoubleClickEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private slots:
     void guessShortcut(int nkey);

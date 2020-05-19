@@ -47,7 +47,7 @@ public:
     PhraseBookBox(PhraseBook *phraseBook, QWidget *parent = 0);
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
     void newPhrase();

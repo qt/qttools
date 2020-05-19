@@ -65,7 +65,7 @@ public:
     }
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event)
+    bool eventFilter(QObject *object, QEvent *event) override
     {
         if (object == qApp && event->type() == QEvent::FileOpen) {
             QFileOpenEvent *e = static_cast<QFileOpenEvent*>(event);

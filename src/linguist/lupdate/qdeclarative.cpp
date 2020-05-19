@@ -91,7 +91,7 @@ protected:
     void accept(AST::Node *node)
     { AST::Node::acceptChild(node, this); }
 
-    void endVisit(AST::CallExpression *node)
+    void endVisit(AST::CallExpression *node) override
     {
         QString name;
         AST::ExpressionNode *base = node->base;
@@ -220,7 +220,7 @@ protected:
         }
     }
 
-    virtual void postVisit(AST::Node *node);
+    void postVisit(AST::Node *node) override;
 
 private:
     std::ostream &yyMsg(int line)

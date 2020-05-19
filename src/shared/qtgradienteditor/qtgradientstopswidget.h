@@ -55,8 +55,8 @@ public:
     QtGradientStopsWidget(QWidget *parent = 0);
     ~QtGradientStopsWidget();
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
+    QSize minimumSizeHint() const override;
+    QSize sizeHint() const override;
 
     bool isBackgroundCheckered() const;
     void setBackgroundCheckered(bool checkered);
@@ -71,21 +71,21 @@ signals:
     void zoomChanged(double zoom);
 
 protected:
-    void paintEvent(QPaintEvent *e);
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
-    void mouseMoveEvent(QMouseEvent *e);
-    void mouseDoubleClickEvent(QMouseEvent *e);
-    void keyPressEvent(QKeyEvent *e);
-    void focusInEvent(QFocusEvent *e);
-    void focusOutEvent(QFocusEvent *e);
-    void contextMenuEvent(QContextMenuEvent *e);
-    void wheelEvent(QWheelEvent *e);
+    void paintEvent(QPaintEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void mouseDoubleClickEvent(QMouseEvent *e) override;
+    void keyPressEvent(QKeyEvent *e) override;
+    void focusInEvent(QFocusEvent *e) override;
+    void focusOutEvent(QFocusEvent *e) override;
+    void contextMenuEvent(QContextMenuEvent *e) override;
+    void wheelEvent(QWheelEvent *e) override;
 #ifndef QT_NO_DRAGANDDROP
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event);
-    void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 #endif
 
 private:

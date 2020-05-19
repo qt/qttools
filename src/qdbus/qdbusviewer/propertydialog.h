@@ -45,7 +45,7 @@ public:
 
     QList<QVariant> values() const;
 
-    int exec();
+    int exec() override;
 
 private:
     QLabel *label;

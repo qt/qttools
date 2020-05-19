@@ -58,7 +58,7 @@ signals:
     void activated(int mode);
 
 protected:
-    virtual void showEvent(QShowEvent *event);
+    void showEvent(QShowEvent *event) override;
 
 private slots:
     void emitFindNext();

@@ -49,7 +49,7 @@ public:
     void setPhraseBook(PhraseBook *phraseBook);
 
 private:
-    virtual void showEvent(QShowEvent *e);
+    void showEvent(QShowEvent *e) override;
 
 private slots:
     void on_buttonBox_accepted();

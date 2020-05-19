@@ -63,7 +63,7 @@ public:
         : QDBusModel(service, connection)
     {}
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
     {
         if (role == Qt::FontRole && itemType(index) == InterfaceItem) {
             QFont f;

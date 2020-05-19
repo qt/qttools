@@ -242,10 +242,10 @@ public:
     bool init(QObject *object, const QString &propertyName);
     bool init(const QObjectList &list, const QString &propertyName, QObject *referenceObject = nullptr);
 
-    virtual void redo();
+    void redo() override;
 
 protected:
-    virtual bool mergeWith(const QUndoCommand *) { return false; }
+    bool mergeWith(const QUndoCommand *) override { return false; }
 
 private:
     void setDescription();
@@ -261,8 +261,8 @@ public:
 
     bool init(const QVector<QObject *> &selection, QObject *current, const QString &propertyName, const QVariant &value);
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     void setDescription();
     QString m_propertyName;
@@ -278,8 +278,8 @@ public:
 
     bool init(const QVector<QObject *> &selection, QObject *current, const QString &propertyName);
 
-    virtual void redo();
-    virtual void undo();
+    void redo() override;
+    void undo() override;
 private:
     void setDescription();
     QString m_propertyName;

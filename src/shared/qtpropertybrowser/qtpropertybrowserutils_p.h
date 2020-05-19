@@ -118,7 +118,7 @@ Q_SIGNALS:
     void toggled(bool);
 
 protected:
-    void mousePressEvent(QMouseEvent * event);
+    void mousePressEvent(QMouseEvent * event) override;
 
 private:
     QCheckBox *m_checkBox;

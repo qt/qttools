@@ -98,7 +98,7 @@ signals:
     void fileDropped(const QString &);
 
 protected:
-    bool event (QEvent *event);
+    bool event (QEvent *event) override;
 
 private:
     QStringList uiFiles(const QMimeData *d) const;

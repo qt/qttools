@@ -174,7 +174,7 @@ public:
     ContextItemDelegate(QObject *parent, MultiDataModel *model) : QItemDelegate(parent), m_dataModel(model) {}
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-        const QModelIndex &index) const
+        const QModelIndex &index) const override
     {
         const QAbstractItemModel *model = index.model();
         Q_ASSERT(model);
@@ -207,7 +207,7 @@ class SortedMessagesModel : public QSortFilterProxyModel
 public:
     SortedMessagesModel(QObject *parent, MultiDataModel *model) : QSortFilterProxyModel(parent), m_dataModel(model) {}
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override
     {
         if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
             switch (section - m_dataModel->modelCount()) {
@@ -231,7 +231,7 @@ class SortedContextsModel : public QSortFilterProxyModel
 public:
     SortedContextsModel(QObject *parent, MultiDataModel *model) : QSortFilterProxyModel(parent), m_dataModel(model) {}
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override
     {
         if (role == Qt::DisplayRole && orientation == Qt::Horizontal)
             switch (section - m_dataModel->modelCount()) {
@@ -257,7 +257,7 @@ public:
     FocusWatcher(MessageEditor *msgedit, QObject *parent) : QObject(parent), m_messageEditor(msgedit) {}
 
 protected:
-    bool eventFilter(QObject *object, QEvent *event);
+    bool eventFilter(QObject *object, QEvent *event) override;
 
 private:
     MessageEditor *m_messageEditor;
