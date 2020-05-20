@@ -1724,6 +1724,7 @@ pixmap property in the property editor.
     \previouspage Using Stylesheets with Qt Designer
     \nextpage Using a Designer UI File in Your Qt for Python Application
 
+    \keyword Using a Designer UI File in Your Application
     \title Using a Designer UI File in Your C++ Application
 
     Qt Designer UI files represent the widget tree of the form in XML format. The

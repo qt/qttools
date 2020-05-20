@@ -36,9 +36,7 @@ qhp.QDoc.subprojects.overviews.indexTitle = QDoc Manual
 qhp.QDoc.subprojects.overviews.selectors = doc:page
 
 depends += \
-    activeqt \
     qtassistant \
-    qtbluetooth \
     qtconcurrent \
     qtcore \
     qtdbus \
@@ -47,17 +45,13 @@ depends += \
     qthelp \
     qtimageformats \
     qtgui \
-    qtlocation \
     qtlinguist \
-    qtmultimedia \
     qtnetwork \
     qtopengl \
     qtprintsupport \
     qtqml \
     qtquick \
-    qtscript \
-    qtscripttools \
-    qtsensors \
+    qtquickcontrols \
     qtsql \
     qtsvg \
     qttestlib \

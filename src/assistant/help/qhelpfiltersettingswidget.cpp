@@ -413,7 +413,7 @@ void QHelpFilterSettingsWidget::readSettings(const QHelpFilterEngine *filterEngi
 /*!
     Writes the filter settings, currently presented in this filter settings
     widget, to the \a filterEngine. The old settings stored in the filter
-    engine will be overwritten.
+    engine will be overwritten. Returns \c true on success.
 */
 bool QHelpFilterSettingsWidget::applySettings(QHelpFilterEngine *filterEngine) const
 {

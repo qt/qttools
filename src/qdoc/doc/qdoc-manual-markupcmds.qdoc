@@ -3794,15 +3794,12 @@
     also be used with the \l {group-command}{\\group} command to omit
     the list of group members, when they are listed manually.
 
-    The command must stand on its own line. See \l {Qt Sensors QML Types} for
-    an example. The page is generated from \c {qtsensors5.qdoc}. There you will
-    find a qdoc comment containing the \c{\qmlmodule} command for the QtSensors
-    module. The same qdoc comment contains two \c {\annotated-list} commands to
-    list the QML types in two separate groups. The QML types have been divided
-    into these two groups because it makes more sense to list them this way than
-    it does to list them in a single alphabetical list. At the bottom of the
-    comment, \c {\noautolist} has been used to tell qdoc not to generate the
-    automatic annotated list.
+    The command must stand on its own line. See \l {Qt Quick Controls QML Types}
+    for an example. The page is generated from \c {qtquickcontrols2-qmlmodule.qdoc}.
+    There you will find a QDoc comment containing the \c{\qmlmodule} command for
+    the QtQuick.Controls module. The same comment contains a \c {\noautolist}
+    command to disable automatic list generation, and a \l {generatelist-command}
+    {\\generatelist} to list the QML types in a specific section of the document.
 
     This command was introduced in QDoc 5.6.
 
