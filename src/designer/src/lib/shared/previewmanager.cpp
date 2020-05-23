@@ -43,7 +43,6 @@
 
 #include <QtWidgets/qwidget.h>
 #include <QtGui/qevent.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qmainwindow.h>
 #include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qapplication.h>
@@ -779,7 +778,6 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
         widget->move(fw->mapToGlobal(QPoint(Spacing, Spacing)));
     } else {
         if (QWidget *lastPreview = d->m_previews.constLast().m_widget) {
-            QDesktopWidget *desktop = qApp->desktop();
             const QRect lastPreviewGeometry = lastPreview->frameGeometry();
             const QRect availGeometry = lastPreview->screen()->availableGeometry();
             const QPoint newPos = lastPreviewGeometry.topRight() + QPoint(Spacing, 0);
