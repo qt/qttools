@@ -252,12 +252,6 @@ struct Options {
         DebugDetectionForceRelease
     };
 
-    enum AngleDetection {
-        AngleDetectionAuto,
-        AngleDetectionForceOn,
-        AngleDetectionForceOff
-    };
-
     bool plugins = true;
     bool libraries = true;
     bool quickImports = true;
@@ -265,7 +259,6 @@ struct Options {
     bool systemD3dCompiler = true;
     bool compilerRunTime = false;
     unsigned disabledPlugins = 0;
-    AngleDetection angleDetection = AngleDetectionAuto;
     bool softwareRasterizer = true;
     Platform platform = WindowsDesktopMsvc;
     quint64 additionalLibraries = 0;
@@ -327,7 +320,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->setApplicationDescription(QStringLiteral("Qt Deploy Tool ") + QLatin1String(QT_VERSION_STR)
         + QLatin1String("\n\nThe simplest way to use windeployqt is to add the bin directory of your Qt\n"
         "installation (e.g. <QT_DIR\\bin>) to the PATH variable and then run:\n  windeployqt <path-to-app-binary>\n"
-        "If ICU, ANGLE, etc. are not in the bin directory, they need to be in the PATH\nvariable. "
+        "If ICU, etc. are not in the bin directory, they need to be in the PATH\nvariable. "
         "If your application uses Qt Quick, run:\n  windeployqt --qmldir <path-to-app-qml-files> <path-to-app-binary>"));
     const QCommandLineOption helpOption = parser->addHelpOption();
     parser->addVersionOption();
@@ -433,14 +426,6 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                   QStringLiteral("Print to stdout in JSON format."));
     parser->addOption(jsonOption);
 
-    QCommandLineOption angleOption(QStringLiteral("angle"),
-                                   QStringLiteral("Force deployment of ANGLE."));
-    parser->addOption(angleOption);
-
-    QCommandLineOption noAngleOption(QStringLiteral("no-angle"),
-                                     QStringLiteral("Disable deployment of ANGLE."));
-    parser->addOption(noAngleOption);
-
     QCommandLineOption suppressSoftwareRasterizerOption(QStringLiteral("no-opengl-sw"),
                                                         QStringLiteral("Do not deploy the software rasterizer library."));
     parser->addOption(suppressSoftwareRasterizerOption);
@@ -533,17 +518,6 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
             options->deployPdb = true;
         else
             std::wcerr << "Warning: --" << deployPdbOption.names().first() << " is not supported on this platform.\n";
-    }
-
-    switch (parseExclusiveOptions(parser, angleOption, noAngleOption)) {
-    case OptionAuto:
-        break;
-    case OptionEnabled:
-        options->angleDetection = Options::AngleDetectionForceOn;
-        break;
-    case OptionDisabled:
-        options->angleDetection = Options::AngleDetectionForceOff;
-        break;
     }
 
     if (parser->isSet(suppressSoftwareRasterizerOption))
@@ -1390,7 +1364,6 @@ static DeployResult deploy(const Options &options,
         }
     }
 
-    // Find the plugins and check whether ANGLE, D3D are required on the platform plugin.
     QString platformPlugin;
     // Sort apart Qt 5 libraries in the ones that are represented by the
     // QtModule enumeration (and thus controlled by flags) and others.
@@ -1436,49 +1409,21 @@ static DeployResult deploy(const Options &options,
         return result;
     }
 
-    // Check for ANGLE on the Qt6Gui library.
     if (options.platform.testFlag(WindowsBased) && !qtGuiLibrary.isEmpty())  {
-        QString libGlesName = QStringLiteral("libGLESv2");
-        if (result.isDebug && platformHasDebugSuffix(options.platform))
-            libGlesName += QLatin1Char('d');
-        libGlesName += QLatin1String(windowsSharedLibrarySuffix);
-        QString libCombinedQtAngleName = QStringLiteral("QtANGLE");
-        if (result.isDebug && platformHasDebugSuffix(options.platform))
-            libCombinedQtAngleName += QLatin1Char('d');
-        libCombinedQtAngleName += QLatin1String(windowsSharedLibrarySuffix);
         const QStringList guiLibraries = findDependentLibraries(qtGuiLibrary, options.platform, errorMessage);
-        const bool dependsOnAngle = !guiLibraries.filter(libGlesName, Qt::CaseInsensitive).isEmpty();
-        const bool dependsOnCombinedAngle = !guiLibraries.filter(libCombinedQtAngleName, Qt::CaseInsensitive).isEmpty();
         const bool dependsOnOpenGl = !guiLibraries.filter(QStringLiteral("opengl32"), Qt::CaseInsensitive).isEmpty();
-        if (options.angleDetection != Options::AngleDetectionForceOff
-            && (dependsOnAngle || dependsOnCombinedAngle || !dependsOnOpenGl || options.angleDetection == Options::AngleDetectionForceOn)) {
-            const QString combinedAngleFullPath = qtBinDir + slash + libCombinedQtAngleName;
-            if (QFileInfo::exists(combinedAngleFullPath)) {
-                deployedQtLibraries.append(combinedAngleFullPath);
-            } else {
-                const QString libGlesFullPath = qtBinDir + slash + libGlesName;
-                deployedQtLibraries.append(libGlesFullPath);
-                QString libEglFullPath = qtBinDir + slash + QStringLiteral("libEGL");
-                if (result.isDebug && platformHasDebugSuffix(options.platform))
-                    libEglFullPath += QLatin1Char('d');
-                libEglFullPath += QLatin1String(windowsSharedLibrarySuffix);
-                deployedQtLibraries.append(libEglFullPath);
-            }
-            // Find the system D3d Compiler matching the D3D library.
-            // Any arm64 OS will be new enough to be shipped with the D3DCompiler inbox.
-            if (options.systemD3dCompiler && !options.isWinRt() && machineArch != IMAGE_FILE_MACHINE_ARM64) {
-                const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
-                if (d3dCompiler.isEmpty()) {
-                    std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
-                } else {
-                    deployedQtLibraries.push_back(d3dCompiler);
-                }
-            }
-        } // deployAngle
         if (options.softwareRasterizer && !dependsOnOpenGl) {
             const QFileInfo softwareRasterizer(qtBinDir + slash + QStringLiteral("opengl32sw") + QLatin1String(windowsSharedLibrarySuffix));
             if (softwareRasterizer.isFile())
                 deployedQtLibraries.append(softwareRasterizer.absoluteFilePath());
+        }
+        if (options.systemD3dCompiler && !options.isWinRt() && machineArch != IMAGE_FILE_MACHINE_ARM64) {
+            const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
+            if (d3dCompiler.isEmpty()) {
+                std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
+            } else {
+                deployedQtLibraries.push_back(d3dCompiler);
+            }
         }
     } // Windows
 
