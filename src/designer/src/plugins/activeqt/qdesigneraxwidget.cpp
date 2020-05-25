@@ -206,6 +206,12 @@ static QString msgComException(const QObject *o, const QMetaObject::Call call, i
 
 #endif // QT_NO_EXCEPTIONS
 
+static bool isInheritedCall(const QMetaObject *mo, QMetaObject::Call call, int id)
+{
+    return call == QMetaObject::InvokeMetaMethod
+        ? (id < mo->methodOffset()) : (id < mo->propertyOffset());
+}
+
 int QDesignerAxPluginWidget::qt_metacall(QMetaObject::Call call, int signal, void **argv)
 {
     QAxWidget *aw = axobject();
@@ -215,10 +221,11 @@ int QDesignerAxPluginWidget::qt_metacall(QMetaObject::Call call, int signal, voi
 
     const QMetaObject *mo = metaObject();
     // Have base class handle inherited stuff (geometry, enabled...)
-    const bool inherited = call == QMetaObject::InvokeMetaMethod ?
-                           (signal < mo->methodOffset()) : (signal < mo->propertyOffset());
-    if (inherited)
-        return QDesignerAxWidget::qt_metacall(call, signal, argv);
+    if (isInheritedCall(mo, call, signal))  {
+        // Skip over QAxBaseWidget
+        return isInheritedCall(mo->superClass(), call, signal)
+            ? QDesignerAxWidget::qt_metacall(call, signal, argv) : -1;
+    }
 
     int rc = -1;
 #ifndef QT_NO_EXCEPTIONS

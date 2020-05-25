@@ -70,6 +70,12 @@ bool QAxWidgetPropertySheet::isEnabled(int index) const
     return QDesignerPropertySheet::isEnabled(index);
 }
 
+bool QAxWidgetPropertySheet::isVisible(int index) const
+{
+    // classContext is ulong, which the property editor does not support
+    return propertyName(index) != QLatin1String("classContext");
+}
+
 bool QAxWidgetPropertySheet::dynamicPropertiesAllowed() const
 {
     return false;

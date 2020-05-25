@@ -53,6 +53,7 @@ public:
     explicit QAxWidgetPropertySheet(QDesignerAxWidget *object, QObject *parent = 0);
 
     bool isEnabled(int index) const override;
+    bool isVisible(int index) const override;
     QVariant property(int index) const override;
     void setProperty(int index, const QVariant &value) override;
     bool reset(int index) override;
