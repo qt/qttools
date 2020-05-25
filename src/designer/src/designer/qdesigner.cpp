@@ -68,7 +68,7 @@ static void designerMessageHandler(QtMsgType type, const QMessageLogContext &con
         previousMessageHandler(type, context, msg);
         return;
     }
-    designerApp->showErrorMessage(qPrintable(msg));
+    designerApp->showErrorMessage(msg);
 }
 
 QDesigner::QDesigner(int &argc, char **argv)
@@ -94,10 +94,11 @@ QDesigner::~QDesigner()
     delete m_client;
 }
 
-void QDesigner::showErrorMessage(const char *message)
+void QDesigner::showErrorMessage(const QString &message)
 {
     // strip the prefix
-    const QString qMessage = QString::fromUtf8(message + qstrlen(designerWarningPrefix));
+    const QString qMessage =
+        message.right(message.size() - int(qstrlen(designerWarningPrefix)));
     // If there is no main window yet, just store the message.
     // The QErrorMessage would otherwise be hidden by the main window.
     if (m_mainWindow) {
