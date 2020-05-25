@@ -320,7 +320,8 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     shortcuts.append(QKeySequence(Qt::Key_Escape));
     m_editWidgetsAction->setShortcuts(shortcuts);
     QIcon fallback(m_core->resourceLocation() + QStringLiteral("/widgettool.png"));
-    m_editWidgetsAction->setIcon(QIcon::fromTheme("designer-edit-widget", fallback));
+    m_editWidgetsAction->setIcon(QIcon::fromTheme(QStringLiteral("designer-edit-widget"),
+                                                  fallback));
     connect(m_editWidgetsAction, &QAction::triggered, this, &QDesignerActions::editWidgetsSlot);
     m_editWidgetsAction->setChecked(true);
     m_editWidgetsAction->setEnabled(false);
@@ -504,13 +505,15 @@ QAction *QDesignerActions::createRecentFilesMenu()
     }
     updateRecentFileActions();
     menu->addSeparator();
-    act = new QAction(QIcon::fromTheme("edit-clear"), tr("Clear &Menu"), this);
+    act = new QAction(QIcon::fromTheme(QStringLiteral("edit-clear")),
+                      tr("Clear &Menu"), this);
     act->setObjectName(QStringLiteral("__qt_action_clear_menu_"));
     connect(act, &QAction::triggered, this, &QDesignerActions::clearRecentFiles);
     m_recentFilesActions->addAction(act);
     menu->addAction(act);
 
-    act = new QAction(QIcon::fromTheme("document-open-recent"), tr("&Recent Forms"), this);
+    act = new QAction(QIcon::fromTheme(QStringLiteral("document-open-recent")),
+                      tr("&Recent Forms"), this);
     act->setMenu(menu);
     return act;
 }

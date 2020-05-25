@@ -73,7 +73,7 @@ signals:
     void initialized();
 
 public slots:
-    void showErrorMessage(const char *message);
+    void showErrorMessage(const QString &message);
 
 private slots:
     void callCreateForm();
