@@ -313,6 +313,7 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         { "BGRA8", QRhiTexture::BGRA8 },
         { "R8", QRhiTexture::R8 },
         { "R16", QRhiTexture::R16 },
+        { "RG8", QRhiTexture::RG8 },
         { "RED_OR_ALPHA8", QRhiTexture::RED_OR_ALPHA8 },
         { "RGBA16F", QRhiTexture::RGBA16F },
         { "RGBA32F", QRhiTexture::RGBA32F },
