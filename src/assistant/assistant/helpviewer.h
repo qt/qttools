@@ -130,7 +130,9 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+#if defined(BROWSER_QTEXTBROWSER)
     void resizeEvent(QResizeEvent *e) override;
+#endif
 
 private slots:
     void actionChanged();
