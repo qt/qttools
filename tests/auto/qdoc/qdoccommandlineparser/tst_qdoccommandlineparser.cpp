@@ -119,7 +119,6 @@ void tst_QDocCommandLineParser::process()
     QVERIFY(!parser.isSet(parser.generateOption));
     QVERIFY(!parser.isSet(parser.logProgressOption));
     QVERIFY(!parser.isSet(parser.singleExecOption));
-    QVERIFY(!parser.isSet(parser.writeQaPagesOption));
     QVERIFY(!parser.isSet(parser.frameworkOption));
 
     const QStringList expectedPositionalArgument = {
@@ -130,9 +129,8 @@ void tst_QDocCommandLineParser::process()
 
 void tst_QDocCommandLineParser::argumentsFromCommandLineAndFile()
 {
-    const QStringList arguments =
-        QStringLiteral("/src/qt5/qtbase/bin/qdoc "
-                       "@tst_arguments.txt").split(" ");
+    const QString atFilePath("@" + QFINDTESTDATA("tst_arguments.txt"));
+    const QStringList arguments { "/src/qt5/qtbase/bin/qdoc", atFilePath };
 
     QDocCommandLineParser parser;
     parser.process(arguments);
@@ -180,7 +178,6 @@ void tst_QDocCommandLineParser::argumentsFromCommandLineAndFile()
     QVERIFY(!parser.isSet(parser.generateOption));
     QVERIFY(!parser.isSet(parser.logProgressOption));
     QVERIFY(!parser.isSet(parser.singleExecOption));
-    QVERIFY(!parser.isSet(parser.writeQaPagesOption));
     QVERIFY(!parser.isSet(parser.frameworkOption));
 
     QCOMPARE(parser.positionalArguments(), expectedPositionalArgument);

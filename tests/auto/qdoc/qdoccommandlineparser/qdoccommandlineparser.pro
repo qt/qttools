@@ -9,3 +9,6 @@ HEADERS += \
 SOURCES += \
     $$PWD/../../../../src/qdoc/qdoccommandlineparser.cpp \
     tst_qdoccommandlineparser.cpp
+
+RESOURCES += \
+    tst_qdoccommandlineparser.qrc

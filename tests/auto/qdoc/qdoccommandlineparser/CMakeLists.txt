@@ -12,3 +12,16 @@ qt_add_test(tst_qdoccommandlineparser
     INCLUDE_DIRECTORIES
         ../../../../src/qdoc
 )
+
+# Resources:
+set(tst_qdoccommandlineparser_resource_files
+    "tst_arguments.txt"
+)
+
+qt_add_resource(tst_qdoccommandlineparser "tst_qdoccommandlineparser"
+    PREFIX
+        "/"
+    FILES
+        ${tst_qdoccommandlineparser_resource_files}
+)
+
