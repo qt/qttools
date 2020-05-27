@@ -854,6 +854,7 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"qtwebengine", QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule},
     {"styles", QtWidgetsModule},
     {"sceneparsers", Qt3DRendererModule},
+    {"renderers", Qt3DRendererModule},
     {"renderplugins", Qt3DRendererModule},
     {"geometryloaders", Qt3DRendererModule},
     {"webview", QtWebViewModule}
