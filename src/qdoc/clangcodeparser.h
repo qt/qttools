@@ -48,8 +48,6 @@ QT_BEGIN_NAMESPACE
 
 class ClangCodeParser : public CppCodeParser
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::ClangCodeParser)
-
 public:
     ~ClangCodeParser() override;
 

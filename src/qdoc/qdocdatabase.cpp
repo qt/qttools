@@ -1192,8 +1192,9 @@ void QDocDatabase::resolveNamespaces()
                     NamespaceNode *NS = static_cast<NamespaceNode *>(node);
                     if (NS->hadDoc() && NS != ns) {
                         ns->doc().location().warning(
-                                tr("Namespace %1 documented more than once").arg(NS->name()));
-                        NS->doc().location().warning(tr("...also seen here"));
+                                QStringLiteral("Namespace %1 documented more than once")
+                                        .arg(NS->name()));
+                        NS->doc().location().warning(QStringLiteral("...also seen here"));
                     }
                 }
 
@@ -1642,9 +1643,9 @@ void QDocDatabase::updateNavigation()
                 atom = atom->next();
             }
         } else {
-            Config::instance().lastLocation()
-                    .warning(tr("Failed to find table of contents with title '%1'")
-                    .arg(tocTitle));
+            Config::instance().lastLocation().warning(
+                    QStringLiteral("Failed to find table of contents with title '%1'")
+                            .arg(tocTitle));
         }
     }
 

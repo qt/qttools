@@ -297,7 +297,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                     project.keywords.append(details);
                 } else
                     node->doc().location().warning(
-                            tr("Bad keyword in %1").arg(gen_->fullDocumentLocation(node, false)));
+                            QStringLiteral("Bad keyword in %1")
+                                    .arg(gen_->fullDocumentLocation(node, false)));
             }
         }
         project.keywords.append(keywordDetails(node));
@@ -347,7 +348,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                         project.keywords.append(details);
                     } else
                         cn->doc().location().warning(
-                                tr("Bad keyword in %1")
+                                QStringLiteral("Bad keyword in %1")
                                         .arg(gen_->fullDocumentLocation(node, false)));
                 }
             }
@@ -422,7 +423,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                         project.keywords.append(details);
                     } else {
                         QString loc = gen_->fullDocumentLocation(node, false);
-                        pn->doc().location().warning(tr("Bad keyword in %1").arg(loc));
+                        pn->doc().location().warning(QStringLiteral("Bad keyword in %1").arg(loc));
                     }
                 }
             }
@@ -537,11 +538,11 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
         && (derivedClass || node->isQmlType() || node->isJsType()
             || !project.memberStatus[node].isEmpty())) {
         QString membersPath = href + QStringLiteral("-members.html");
-        writeSection(writer, membersPath, tr("List of all members"));
+        writeSection(writer, membersPath, QStringLiteral("List of all members"));
     }
     if (project.memberStatus[node].contains(Node::Obsolete)) {
         QString obsoletePath = href + QStringLiteral("-obsolete.html");
-        writeSection(writer, obsoletePath, tr("Obsolete members"));
+        writeSection(writer, obsoletePath, QStringLiteral("Obsolete members"));
     }
 }
 
@@ -565,10 +566,14 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);
         if (node->parent() && !node->parent()->name().isEmpty())
-            writer.writeAttribute(
-                    "title", tr("%1::%2 %3 Reference").arg(node->parent()->name()).arg(objName).arg(typeStr));
+            writer.writeAttribute("title",
+                                  QStringLiteral("%1::%2 %3 Reference")
+                                          .arg(node->parent()->name())
+                                          .arg(objName)
+                                          .arg(typeStr));
         else
-            writer.writeAttribute("title", tr("%1 %2 Reference").arg(objName).arg(typeStr));
+            writer.writeAttribute("title",
+                                  QStringLiteral("%1 %2 Reference").arg(objName).arg(typeStr));
 
         addMembers(project, writer, node);
         writer.writeEndElement(); // section
@@ -719,7 +724,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
                 }
             } else
                 rootNode->doc().location().warning(
-                        tr("Failed to find index: %1").arg(subproject.indexTitle));
+                        QStringLiteral("Failed to find index: %1").arg(subproject.indexTitle));
 
         } else {
 

@@ -168,7 +168,8 @@ void Quoter::quoteFromFile(const QString &userFriendlyFilePath, const QString &p
     plainLines = splitLines(plainCode);
     markedLines = splitLines(markedCode);
     if (markedLines.count() != plainLines.count()) {
-        codeLocation.warning(tr("Something is wrong with qdoc's handling of marked code"));
+        codeLocation.warning(
+                QStringLiteral("Something is wrong with qdoc's handling of marked code"));
         markedLines = plainLines;
     }
 
@@ -189,7 +190,7 @@ QString Quoter::quoteLine(const Location &docLocation, const QString &command,
     }
 
     if (pattern.isEmpty()) {
-        docLocation.warning(tr("Missing pattern after '\\%1'").arg(command));
+        docLocation.warning(QStringLiteral("Missing pattern after '\\%1'").arg(command));
         return QString();
     }
 
@@ -197,8 +198,8 @@ QString Quoter::quoteLine(const Location &docLocation, const QString &command,
         return getLine();
 
     if (!silent) {
-        docLocation.warning(tr("Command '\\%1' failed").arg(command));
-        codeLocation.warning(tr("Pattern '%1' didn't match here").arg(pattern));
+        docLocation.warning(QStringLiteral("Command '\\%1' failed").arg(command));
+        codeLocation.warning(QStringLiteral("Pattern '%1' didn't match here").arg(pattern));
         silent = true;
     }
     return QString();
@@ -305,7 +306,8 @@ bool Quoter::match(const Location &docLocation, const QString &pattern0, const Q
         && pattern.length() > 2) {
         QRegularExpression rx(pattern.mid(1, pattern.length() - 2));
         if (!silent && !rx.isValid()) {
-            docLocation.warning(tr("Invalid regular expression '%1'").arg(rx.pattern()));
+            docLocation.warning(
+                    QStringLiteral("Invalid regular expression '%1'").arg(rx.pattern()));
             silent = true;
         }
         return str.indexOf(rx) != -1;
@@ -319,9 +321,9 @@ void Quoter::failedAtEnd(const Location &docLocation, const QString &command)
 {
     if (!silent && !command.isEmpty()) {
         if (codeLocation.filePath().isEmpty()) {
-            docLocation.warning(tr("Unexpected '\\%1'").arg(command));
+            docLocation.warning(QStringLiteral("Unexpected '\\%1'").arg(command));
         } else {
-            docLocation.warning(tr("Command '\\%1' failed at end of file '%2'")
+            docLocation.warning(QStringLiteral("Command '\\%1' failed at end of file '%2'")
                                         .arg(command)
                                         .arg(codeLocation.filePath()));
         }

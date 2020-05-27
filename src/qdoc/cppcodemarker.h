@@ -35,8 +35,6 @@ QT_BEGIN_NAMESPACE
 
 class CppCodeMarker : public CodeMarker
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeMarker)
-
 public:
     CppCodeMarker() = default;
     ~CppCodeMarker() override = default;

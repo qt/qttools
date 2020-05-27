@@ -49,8 +49,6 @@ class CodeMarker;
 
 class DocParser
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::DocParser)
-
 public:
     void parse(const QString &source, DocPrivate *docPrivate, const QSet<QString> &metaCommandSet,
                const QSet<QString> &possibleTopics);

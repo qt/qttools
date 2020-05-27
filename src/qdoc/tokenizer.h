@@ -148,8 +148,6 @@ enum {
 
 class Tokenizer
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::Tokenizer)
-
 public:
     Tokenizer(const Location &loc, const QByteArray &in);
     Tokenizer(const Location &loc, QFile &file);

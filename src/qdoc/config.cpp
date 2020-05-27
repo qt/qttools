@@ -170,8 +170,6 @@ void MetaStackEntry::close()
 */
 class MetaStack : private QStack<MetaStackEntry>
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::MetaStack)
-
 public:
     MetaStack();
 
@@ -201,7 +199,7 @@ void MetaStack::process(QChar ch, const Location &location)
         top().open();
     } else if (ch == QLatin1Char('}')) {
         if (count() == 1)
-            location.fatal(tr("Unexpected '}'"));
+            location.fatal(QStringLiteral("Unexpected '}'"));
 
         top().close();
         const QStringList suffixes = pop().accum;
@@ -230,7 +228,7 @@ void MetaStack::process(QChar ch, const Location &location)
 QStringList MetaStack::getExpanded(const Location &location)
 {
     if (count() > 1)
-        location.fatal(tr("Missing '}'"));
+        location.fatal(QStringLiteral("Missing '}'"));
 
     top().close();
     return top().accum;
@@ -359,14 +357,15 @@ void Config::expandVariables()
             const QString &key = it->m_var;
             const auto &refVar = m_configVars.value(key);
             if (refVar.m_name.isEmpty()) {
-                configVar.m_location.fatal(tr("Environment or configuration variable '%1' undefined")
-                        .arg(it->m_var));
+                configVar.m_location.fatal(
+                        QStringLiteral("Environment or configuration variable '%1' undefined")
+                                .arg(it->m_var));
             } else if (!refVar.m_expandVars.empty()) {
-                 configVar.m_location.fatal(tr("Nested variable expansion not allowed"),
-                                            tr("When expanding '%1' at %2:%3")
-                                                .arg(refVar.m_name)
-                                                .arg(refVar.m_location.filePath())
-                                                .arg(refVar.m_location.lineNo()));
+                configVar.m_location.fatal(QStringLiteral("Nested variable expansion not allowed"),
+                                           QStringLiteral("When expanding '%1' at %2:%3")
+                                                   .arg(refVar.m_name)
+                                                   .arg(refVar.m_location.filePath())
+                                                   .arg(refVar.m_location.lineNo()));
             }
             QString expanded;
             if (it->m_delim.isNull())
@@ -608,7 +607,7 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
         if (dir.isRelative())
             dir.setPath(currentPath + QLatin1Char('/') + path);
         if (validate && !QFileInfo::exists(dir.path()))
-            m_lastLocation.warning(tr("Cannot find file or directory: %1").arg(path));
+            m_lastLocation.warning(QStringLiteral("Cannot find file or directory: %1").arg(path));
         else {
             const QString canonicalPath = dir.canonicalPath();
             if (!canonicalPath.isEmpty())
@@ -828,7 +827,7 @@ QString Config::findFile(const Location &location, const QStringList &files,
         if (file == firstComponent || file.endsWith(QLatin1Char('/') + firstComponent)) {
             fileInfo.setFile(file);
             if (!fileInfo.exists())
-                location.fatal(tr("File '%1' does not exist").arg(file));
+                location.fatal(QStringLiteral("File '%1' does not exist").arg(file));
             break;
         }
     }
@@ -892,7 +891,7 @@ QString Config::copyFile(const Location &location, const QString &sourceFilePath
 {
     QFile inFile(sourceFilePath);
     if (!inFile.open(QFile::ReadOnly)) {
-        location.warning(tr("Cannot open input file for copy: '%1': %2")
+        location.warning(QStringLiteral("Cannot open input file for copy: '%1': %2")
                                  .arg(sourceFilePath)
                                  .arg(inFile.errorString()));
         return QString();
@@ -908,7 +907,7 @@ QString Config::copyFile(const Location &location, const QString &sourceFilePath
         outFileName = targetDirPath + outFileName;
     QFile outFile(outFileName);
     if (!outFile.open(QFile::WriteOnly)) {
-        location.warning(tr("Cannot open output file for copy: '%1': %2")
+        location.warning(QStringLiteral("Cannot open output file for copy: '%1': %2")
                                  .arg(outFileName)
                                  .arg(outFile.errorString()));
         return QString();
@@ -991,7 +990,7 @@ QStringList Config::loadMaster(const QString &fileName)
                             + fileName.right(fileName.length() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
-            location.fatal(tr("Cannot open master qdocconf file '%1': %2")
+            location.fatal(QStringLiteral("Cannot open master qdocconf file '%1': %2")
                                    .arg(fileName)
                                    .arg(fin.errorString()));
     }
@@ -1038,7 +1037,7 @@ void Config::load(Location location, const QString &fileName)
     SKIP_CHAR();
 
     if (location.depth() > 16)
-        location.fatal(tr("Too many nested includes"));
+        location.fatal(QStringLiteral("Too many nested includes"));
 
     QFile fin(fileInfo.fileName());
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
@@ -1048,7 +1047,9 @@ void Config::load(Location location, const QString &fileName)
                             + fileName.right(fileName.length() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
-            location.fatal(tr("Cannot open file '%1': %2").arg(fileName).arg(fin.errorString()));
+            location.fatal(QStringLiteral("Cannot open file '%1': %2")
+                                   .arg(fileName)
+                                   .arg(fin.errorString()));
     }
 
     QTextStream stream(&fin);
@@ -1094,7 +1095,7 @@ void Config::load(Location location, const QString &fileName)
                 QString includeFile;
 
                 if (cc != '(')
-                    location.fatal(tr("Bad include syntax"));
+                    location.fatal(QStringLiteral("Bad include syntax"));
                 SKIP_CHAR();
                 SKIP_SPACES();
 
@@ -1110,7 +1111,8 @@ void Config::load(Location location, const QString &fileName)
                         if (!var.isEmpty()) {
                             const QByteArray val = qgetenv(var.toLatin1().data());
                             if (val.isNull()) {
-                                location.fatal(tr("Environment variable '%1' undefined").arg(var));
+                                location.fatal(QStringLiteral("Environment variable '%1' undefined")
+                                                       .arg(var));
                             } else {
                                 includeFile += QString::fromLatin1(val);
                             }
@@ -1122,11 +1124,11 @@ void Config::load(Location location, const QString &fileName)
                 }
                 SKIP_SPACES();
                 if (cc != ')')
-                    location.fatal(tr("Bad include syntax"));
+                    location.fatal(QStringLiteral("Bad include syntax"));
                 SKIP_CHAR();
                 SKIP_SPACES();
                 if (cc != '#' && cc != '\n')
-                    location.fatal(tr("Trailing garbage"));
+                    location.fatal(QStringLiteral("Trailing garbage"));
 
                 /*
                   Here is the recursive call.
@@ -1142,7 +1144,7 @@ void Config::load(Location location, const QString &fileName)
                     SKIP_CHAR();
                 }
                 if (cc != '=')
-                    location.fatal(tr("Expected '=' or '+=' after key"));
+                    location.fatal(QStringLiteral("Expected '=' or '+=' after key"));
                 SKIP_CHAR();
                 SKIP_SPACES();
 
@@ -1166,7 +1168,7 @@ void Config::load(Location location, const QString &fileName)
                     } else if (c.isSpace() || cc == '#') {
                         if (inQuote) {
                             if (cc == '\n')
-                                location.fatal(tr("Unterminated string"));
+                                location.fatal(QStringLiteral("Unterminated string"));
                             PUT_CHAR();
                         } else {
                             if (!word.isEmpty() || needsExpansion) {
@@ -1211,7 +1213,7 @@ void Config::load(Location location, const QString &fileName)
                             else if (delim == '}')
                                 delim = QChar(); // null delimiter
                             else
-                                location.fatal(tr("Missing '}'"));
+                                location.fatal(QStringLiteral("Missing '}'"));
                         }
                         if (!var.isEmpty()) {
                             const QByteArray val = qgetenv(var.toLatin1().constData());
@@ -1224,13 +1226,13 @@ void Config::load(Location location, const QString &fileName)
                         }
                     } else {
                         if (!inQuote && cc == '=')
-                            location.fatal(tr("Unexpected '='"));
+                            location.fatal(QStringLiteral("Unexpected '='"));
                         PUT_CHAR();
                     }
                 }
                 for (const auto &key : keys) {
                     if (!keySyntax.match(key).hasMatch())
-                        keyLoc.fatal(tr("Invalid key '%1'").arg(key));
+                        keyLoc.fatal(QStringLiteral("Invalid key '%1'").arg(key));
 
                     ConfigVar configVar(key, rhsValues, QDir::currentPath(), keyLoc, expandVars);
                     if (plus && m_configVars.contains(key)) {
@@ -1241,7 +1243,7 @@ void Config::load(Location location, const QString &fileName)
                 }
             }
         } else {
-            location.fatal(tr("Unexpected character '%1' at beginning of line").arg(c));
+            location.fatal(QStringLiteral("Unexpected character '%1' at beginning of line").arg(c));
         }
     }
     popWorkingDir();

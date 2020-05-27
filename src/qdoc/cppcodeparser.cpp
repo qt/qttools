@@ -207,7 +207,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         if (node == nullptr) {
             if (isWorthWarningAbout(doc)) {
                 doc.location().warning(
-                        tr("Cannot find '%1' specified with '\\%2' in any header file")
+                        QStringLiteral("Cannot find '%1' specified with '\\%2' in any header file")
                                 .arg(arg.first)
                                 .arg(command));
             }
@@ -366,11 +366,10 @@ bool CppCodeParser::splitQmlPropertyArg(const QString &arg, QString &type, QStri
             name = colonSplit[1];
             return true;
         }
-        QString msg = "Unrecognizable QML module/component qualifier for " + arg;
-        location.warning(tr(msg.toLatin1().data()));
+        location.warning(
+                QStringLiteral("Unrecognizable QML module/component qualifier for %1").arg(arg));
     } else {
-        QString msg = "Missing property type for " + arg;
-        location.warning(tr(msg.toLatin1().data()));
+        location.warning(QStringLiteral("Missing property type for %1").arg(arg));
     }
     return false;
 }
@@ -412,14 +411,16 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
             bool attached = cmd.contains(QLatin1String("attached"));
             if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
                 if (qmlType != qdb_->findQmlType(module, qmlTypeName)) {
-                    QString msg = tr("All properties in a group must belong to the same type: '%1'")
-                                          .arg(arg);
-                    doc.startLocation().warning(msg);
+                    doc.startLocation().warning(
+                            QStringLiteral(
+                                    "All properties in a group must belong to the same type: '%1'")
+                                    .arg(arg));
                     continue;
                 }
                 if (qmlType->hasQmlProperty(property, attached) != nullptr) {
-                    QString msg = tr("QML property documented multiple times: '%1'").arg(arg);
-                    doc.startLocation().warning(msg);
+                    doc.startLocation().warning(
+                            QStringLiteral("QML property documented multiple times: '%1'")
+                                    .arg(arg));
                     continue;
                 }
                 auto *qpn = new QmlPropertyNode(qmlType, property, type, attached);
@@ -431,7 +432,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
             }
         } else {
             doc.startLocation().warning(
-                    tr("Command '\\%1'; not allowed with QML/JS property commands").arg(cmd));
+                    QStringLiteral("Command '\\%1'; not allowed with QML/JS property commands")
+                            .arg(cmd));
         }
     }
 
@@ -474,7 +476,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (node->isAggregate())
             static_cast<Aggregate *>(node)->addIncludeFile(arg);
         else
-            doc.location().warning(tr("Ignored '\\%1'").arg(COMMAND_INHEADERFILE));
+            doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_INHEADERFILE));
     } else if (command == COMMAND_OVERLOAD) {
         /*
           Note that this might set the overload flag of the
@@ -487,7 +489,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         else if (node->isSharedCommentNode())
             static_cast<SharedCommentNode *>(node)->setOverloadFlags();
         else
-            doc.location().warning(tr("Ignored '\\%1'").arg(COMMAND_OVERLOAD));
+            doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_OVERLOAD));
     } else if (command == COMMAND_REIMP) {
         if (node->parent() && !node->parent()->isInternal()) {
             if (node->isFunction()) {
@@ -497,17 +499,19 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                 // If the name of the overridden function isn't
                 // set, issue a warning.
                 if (fn->overridesThis().isEmpty() && isWorthWarningAbout(doc)) {
-                    doc.location().warning(tr("Cannot find base function for '\\%1' in %2()")
-                                                   .arg(COMMAND_REIMP)
-                                                   .arg(node->name()),
-                                           tr("The function either doesn't exist in any "
-                                              "base class with the same signature or it "
-                                              "exists but isn't virtual."));
+                    doc.location().warning(
+                            QStringLiteral("Cannot find base function for '\\%1' in %2()")
+                                    .arg(COMMAND_REIMP)
+                                    .arg(node->name()),
+                            QStringLiteral("The function either doesn't exist in any "
+                                           "base class with the same signature or it "
+                                           "exists but isn't virtual."));
                 }
                 fn->setReimpFlag();
             } else {
-                doc.location().warning(
-                        tr("Ignored '\\%1' in %2").arg(COMMAND_REIMP).arg(node->name()));
+                doc.location().warning(QStringLiteral("Ignored '\\%1' in %2")
+                                               .arg(COMMAND_REIMP)
+                                               .arg(node->name()));
             }
         }
     } else if (command == COMMAND_RELATES) {
@@ -517,16 +521,16 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             aggregate = new ProxyNode(node->root(), arg);
 
         if (node->parent() == aggregate) { // node is already a child of aggregate
-            doc.location().warning(
-                    tr("Invalid '\\%1' (already a member of '%2')").arg(COMMAND_RELATES, arg));
+            doc.location().warning(QStringLiteral("Invalid '\\%1' (already a member of '%2')")
+                                           .arg(COMMAND_RELATES, arg));
         } else {
             if (node->isAggregate()) {
-                doc.location().warning(tr("Invalid '\\%1' not allowed in '\\%2'")
+                doc.location().warning(QStringLiteral("Invalid '\\%1' not allowed in '\\%2'")
                                                .arg(COMMAND_RELATES, node->nodeTypeString()));
             } else if (!node->isRelatedNonmember() &&
                        !node->parent()->isNamespace() && !node->parent()->isHeader()) {
                 if (!doc.isInternal()) {
-                    doc.location().warning(tr("Invalid '\\%1' ('%2' must be global)")
+                    doc.location().warning(QStringLiteral("Invalid '\\%1' ('%2' must be global)")
                                                    .arg(COMMAND_RELATES, node->name()));
                 }
             } else if (!node->isRelatedNonmember() && !node->parent()->isHeader()) {
@@ -540,8 +544,9 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                  */
                 Node *clone = node->clone(aggregate);
                 if (clone == nullptr) {
-                    doc.location().warning(tr("Invalid '\\%1' (multiple uses not allowed in '%2')")
-                                                   .arg(COMMAND_RELATES, node->nodeTypeString()));
+                    doc.location().warning(
+                            QStringLiteral("Invalid '\\%1' (multiple uses not allowed in '%2')")
+                                    .arg(COMMAND_RELATES, node->nodeTypeString()));
                 } else {
                     clone->setRelatedNonmember(true);
                 }
@@ -555,7 +560,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         setLink(node, Node::StartLink, arg);
     } else if (command == COMMAND_QMLINHERITS) {
         if (node->name() == arg)
-            doc.location().warning(tr("%1 tries to inherit itself").arg(arg));
+            doc.location().warning(QStringLiteral("%1 tries to inherit itself").arg(arg));
         else if (node->isQmlType() || node->isJsType()) {
             auto *qmlType = static_cast<QmlTypeNode *>(node);
             qmlType->setQmlBaseName(arg);
@@ -566,9 +571,10 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             if (classNode)
                 node->setClassNode(classNode);
             else
-                doc.location().warning(tr("C++ class %1 not found: \\instantiates %1").arg(arg));
+                doc.location().warning(
+                        QStringLiteral("C++ class %1 not found: \\instantiates %1").arg(arg));
         } else
-            doc.location().warning(tr("\\instantiates is only allowed in \\qmltype"));
+            doc.location().warning(QStringLiteral("\\instantiates is only allowed in \\qmltype"));
     } else if (command == COMMAND_QMLDEFAULT) {
         node->markDefault();
     } else if (command == COMMAND_QMLREADONLY) {
@@ -589,7 +595,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         qdb_->addToJsModule(arg, node);
     } else if (command == COMMAND_MAINCLASS) {
         node->doc().location().warning(
-                tr("'\\mainclass' is deprecated. Consider '\\ingroup mainclasses'"));
+                QStringLiteral("'\\mainclass' is deprecated. Consider '\\ingroup mainclasses'"));
     } else if (command == COMMAND_OBSOLETE) {
         node->setStatus(Node::Obsolete);
     } else if (command == COMMAND_NONREENTRANT) {
@@ -611,23 +617,25 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         node->setThreadSafeness(Node::ThreadSafe);
     } else if (command == COMMAND_TITLE) {
         if (!node->setTitle(arg))
-            doc.location().warning(tr("Ignored '\\%1'").arg(COMMAND_TITLE));
+            doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_TITLE));
         else if (node->isExample())
             qdb_->addExampleNode(static_cast<ExampleNode *>(node));
     } else if (command == COMMAND_SUBTITLE) {
         if (!node->setSubtitle(arg))
-            doc.location().warning(tr("Ignored '\\%1'").arg(COMMAND_SUBTITLE));
+            doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_SUBTITLE));
     } else if (command == COMMAND_QTVARIABLE) {
         node->setQtVariable(arg);
         if (!node->isModule() && !node->isQmlModule())
             doc.location().warning(
-                    tr("Command '\\%1' is only meaningful in '\\module' and '\\qmlmodule'.")
+                    QStringLiteral(
+                            "Command '\\%1' is only meaningful in '\\module' and '\\qmlmodule'.")
                             .arg(COMMAND_QTVARIABLE));
     } else if (command == COMMAND_QTCMAKEPACKAGE) {
         node->setQtCMakeComponent(arg);
         if (!node->isModule())
-            doc.location().warning(tr("Command '\\%1' is only meaningful in '\\module'.")
-                                           .arg(COMMAND_QTCMAKEPACKAGE));
+            doc.location().warning(
+                    QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
+                            .arg(COMMAND_QTCMAKEPACKAGE));
     } else if (command == COMMAND_NOAUTOLIST) {
         node->setNoAutoList(true);
     }
@@ -672,7 +680,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     QStringList colonSplit(funcName.split("::"));
     if (colonSplit.size() < 2) {
         QString msg = "Unrecognizable QML module/component qualifier for " + funcArg;
-        location.warning(tr(msg.toLatin1().data()));
+        location.warning(msg.toLatin1().data());
         return nullptr;
     }
     QString moduleName;
@@ -755,8 +763,8 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     macro->setReturnType(returnType);
     macro->setParameters(params);
     if (oldMacroNode && macro->compare(oldMacroNode)) {
-        location.warning(tr("\\macro %1 documented more than once").arg(macroArg));
-        oldMacroNode->doc().location().warning(tr("(The previous doc is here)"));
+        location.warning(QStringLiteral("\\macro %1 documented more than once").arg(macroArg));
+        oldMacroNode->doc().location().warning(QStringLiteral("(The previous doc is here)"));
     }
     return macro;
 }
@@ -769,7 +777,8 @@ void CppCodeParser::setExampleFileLists(ExampleNode *en)
         QString details = QLatin1String("Example directories: ")
                 + config.getCanonicalPathList(CONFIG_EXAMPLEDIRS).join(QLatin1Char(' '));
         en->location().warning(
-                tr("Cannot find project file for example '%1'").arg(en->name()), details);
+                QStringLiteral("Cannot find project file for example '%1'").arg(en->name()),
+                details);
         return;
     }
 
@@ -962,7 +971,8 @@ bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
         Q_ASSERT(i >= 0); // we had at least two commas
         topicList[i] = ' ';
         topicList.insert(i + 1, "and");
-        doc.location().warning(tr("Multiple topic commands found in comment:%1").arg(topicList));
+        doc.location().warning(
+                QStringLiteral("Multiple topic commands found in comment:%1").arg(topicList));
         return true;
     }
     return false;

@@ -37,8 +37,6 @@ class Location;
 
 class PureDocParser : public CppCodeParser
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::PureDocParser)
-
 public:
     PureDocParser() : tokenizer_(nullptr), tok_(0) { pureParser_ = this; }
     ~PureDocParser() override { pureParser_ = nullptr; }

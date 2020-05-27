@@ -289,8 +289,8 @@ void CodeParser::checkModuleInclusion(Node *n)
             }
 
             qdb_->addToModule(Generator::defaultModuleName(), n);
-            n->doc().location().warning(tr("%1 %2 has no \\inmodule command; "
-                                           "using project name by default: %3")
+            n->doc().location().warning(QStringLiteral("%1 %2 has no \\inmodule command; "
+                                                       "using project name by default: %3")
                                                 .arg(word)
                                                 .arg(n->name())
                                                 .arg(Generator::defaultModuleName()));

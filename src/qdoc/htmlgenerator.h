@@ -43,8 +43,6 @@ class HelpProjectWriter;
 
 class HtmlGenerator : public XmlGenerator
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::HtmlGenerator)
-
 public:
     HtmlGenerator();
     ~HtmlGenerator() override;

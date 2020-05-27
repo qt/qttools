@@ -68,8 +68,6 @@ struct QmlPropArgs
 #ifndef QT_NO_DECLARATIVE
 class QmlDocVisitor : public QQmlJS::AST::Visitor
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::QmlDocVisitor)
-
 public:
     QmlDocVisitor(const QString &filePath, const QString &code, QQmlJS::Engine *engine,
                   const QSet<QString> &commands, const QSet<QString> &topics);

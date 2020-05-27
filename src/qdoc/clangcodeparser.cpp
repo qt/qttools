@@ -1033,7 +1033,7 @@ void ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
                 if (ok)
                     property->setRevision(revision);
                 else
-                    loc.warning(ClangCodeParser::tr("Invalid revision number: %1").arg(value));
+                    loc.warning(QStringLiteral("Invalid revision number: %1").arg(value));
             } else if (key == "SCRIPTABLE") {
                 QString v = value.toLower();
                 if (v == "true")
@@ -1567,13 +1567,14 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                         future = true;
                 }
                 if (!future) {
-                    doc.location().warning(tr("Cannot tie this documentation to anything"),
-                                           tr("qdoc found a /*! ... */ comment, but there was no "
-                                              "topic command (e.g., '\\%1', '\\%2') in the "
-                                              "comment and no function definition following "
-                                              "the comment.")
-                                                   .arg(COMMAND_FN)
-                                                   .arg(COMMAND_PAGE));
+                    doc.location().warning(
+                            QStringLiteral("Cannot tie this documentation to anything"),
+                            QStringLiteral("qdoc found a /*! ... */ comment, but there was no "
+                                           "topic command (e.g., '\\%1', '\\%2') in the "
+                                           "comment and no function definition following "
+                                           "the comment.")
+                                    .arg(COMMAND_FN)
+                                    .arg(COMMAND_PAGE));
                 }
             }
         } else {
@@ -1620,9 +1621,9 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
             QString tag = fnArg.left(end + 1);
             fnNode = qdb_->findFunctionNodeForTag(tag);
             if (!fnNode) {
-                location.error(ClangCodeParser::tr(
-                                       "tag \\fn %1 not used in any include file in current module")
-                                       .arg(tag));
+                location.error(
+                        QStringLiteral("tag \\fn %1 not used in any include file in current module")
+                                .arg(tag));
             } else {
                 /*
                   The function node was found. Use the formal
@@ -1692,7 +1693,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << args
                     << ") returns" << err;
     if (err || !tu) {
-        location.error(ClangCodeParser::tr("clang could not parse \\fn %1").arg(fnArg));
+        location.error(QStringLiteral("clang could not parse \\fn %1").arg(fnArg));
         clang_disposeTranslationUnit(tu);
         clang_disposeIndex(index);
         return fnNode;
@@ -1734,11 +1735,11 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                     }
                 }
                 if (report) {
-                    location.warning(ClangCodeParser::tr("clang found diagnostics parsing \\fn %1")
-                                             .arg(fnArg));
+                    location.warning(
+                            QStringLiteral("clang found diagnostics parsing \\fn %1").arg(fnArg));
                     for (unsigned i = 0; i < diagnosticCount; ++i) {
                         CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
-                        location.report(tr("    %1").arg(
+                        location.report(QStringLiteral("    %1").arg(
                                 fromCXString(clang_formatDiagnostic(diagnostic, 0))));
                     }
                 }

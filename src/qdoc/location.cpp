@@ -283,7 +283,7 @@ int Location::exitCode()
 
     Location().emitMessage(
             Error,
-            tr("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
+            QStringLiteral("Documentation warnings (%1) exceeded the limit (%2) for '%3'.")
                     .arg(QString::number(warningCount), QString::number(warningLimit), project),
             QString());
     return warningCount;
@@ -333,7 +333,8 @@ void Location::initialize()
     if (regExp.isValid()) {
         spuriousRegExp = new QRegularExpression(regExp);
     } else {
-        config.lastLocation().warning(tr("Invalid regular expression '%1'").arg(regExp.pattern()));
+        config.lastLocation().warning(
+                QStringLiteral("Invalid regular expression '%1'").arg(regExp.pattern()));
     }
 }
 
@@ -362,9 +363,9 @@ void Location::information(const QString &message)
  */
 void Location::internalError(const QString &hint)
 {
-    Location().fatal(tr("Internal error (%1)").arg(hint),
-                     tr("There is a bug in %1. Seek advice from your local"
-                        " %2 guru.")
+    Location().fatal(QStringLiteral("Internal error (%1)").arg(hint),
+                     QStringLiteral("There is a bug in %1. Seek advice from your local"
+                                    " %2 guru.")
                              .arg(programName)
                              .arg(programName));
 }
@@ -388,16 +389,16 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
     result.replace("\n", "\n    ");
     if (isEmpty()) {
         if (type == Error)
-            result.prepend(tr(": error: "));
+            result.prepend(QStringLiteral(": error: "));
         else if (type == Warning) {
-            result.prepend(tr(": warning: "));
+            result.prepend(QStringLiteral(": warning: "));
             ++warningCount;
         }
     } else {
         if (type == Error)
-            result.prepend(tr(": (qdoc) error: "));
+            result.prepend(QStringLiteral(": (qdoc) error: "));
         else if (type == Warning) {
-            result.prepend(tr(": (qdoc) warning: "));
+            result.prepend(QStringLiteral(": (qdoc) warning: "));
             ++warningCount;
         }
     }
@@ -422,19 +423,17 @@ QString Location::toString() const
         loc2.setEtc(false);
         loc2.pop();
         if (!loc2.isEmpty()) {
-            QString blah = tr("In file included from ");
+            QString blah = QStringLiteral("In file included from ");
             for (;;) {
                 str += blah;
                 str += loc2.top();
                 loc2.pop();
                 if (loc2.isEmpty())
                     break;
-                str += tr(",");
-                str += QLatin1Char('\n');
+                str += QStringLiteral(",\n");
                 blah.fill(' ');
             }
-            str += tr(":");
-            str += QLatin1Char('\n');
+            str += QStringLiteral(":\n");
         }
         str += top();
     }

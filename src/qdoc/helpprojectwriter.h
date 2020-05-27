@@ -77,8 +77,6 @@ struct HelpProject
 
 class HelpProjectWriter
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::HelpProjectWriter)
-
 public:
     HelpProjectWriter(const QString &defaultFileName, Generator *g);
     void reset(const QString &defaultFileName, Generator *g);

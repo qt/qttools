@@ -322,8 +322,9 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
             if (Generator::qmlTypeContext()->inherits(node->parent())) {
                 fn = fileName(Generator::qmlTypeContext());
             } else if (node->parent()->isInternal()) {
-                node->doc().location().warning(tr("Cannot link to property in internal type '%1'")
-                                                       .arg(node->parent()->name()));
+                node->doc().location().warning(
+                        QStringLiteral("Cannot link to property in internal type '%1'")
+                                .arg(node->parent()->name()));
                 return QString();
             }
         }

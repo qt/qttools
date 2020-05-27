@@ -66,7 +66,7 @@ OpenedList::OpenedList(const Location &location, const QString &hint) : sty(Bull
         pref = match.captured(1);
         suff = match.captured(3);
     } else if (!hint.isEmpty()) {
-        location.warning(tr("Unrecognized list style '%1'").arg(hint));
+        location.warning(QStringLiteral("Unrecognized list style '%1'").arg(hint));
     }
     nex = ini - 1;
 }

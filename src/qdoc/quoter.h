@@ -42,8 +42,6 @@ QT_BEGIN_NAMESPACE
 
 class Quoter
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::Quoter)
-
 public:
     Quoter();
 

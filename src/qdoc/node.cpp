@@ -680,8 +680,8 @@ bool Node::match(const QVector<int> &types) const
 void Node::setDoc(const Doc &doc, bool replace)
 {
     if (!doc_.isEmpty() && !replace && !doc.isMarkedReimp()) {
-        doc.location().warning(tr("Overrides a previous doc"));
-        doc_.location().warning(tr("(The previous doc is here)"));
+        doc.location().warning(QStringLiteral("Overrides a previous doc"));
+        doc_.location().warning(QStringLiteral("(The previous doc is here)"));
     }
     doc_ = doc;
 }
@@ -3069,12 +3069,15 @@ void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
             QString msg1 = node->name();
             if (node->isFunction())
                 msg1 += "()";
-            msg1 += tr(" is documented, but namespace %1 is not documented in any module.")
+            msg1 += QStringLiteral(
+                            " is documented, but namespace %1 is not documented in any module.")
                             .arg(name());
-            QString msg2 = tr("Add /*! '\\%1 %2' ... */ or remove the qdoc comment marker (!) at "
-                              "that line number.")
-                                   .arg(COMMAND_NAMESPACE)
-                                   .arg(name());
+            QString msg2 =
+                    QStringLiteral(
+                            "Add /*! '\\%1 %2' ... */ or remove the qdoc comment marker (!) at "
+                            "that line number.")
+                            .arg(COMMAND_NAMESPACE)
+                            .arg(name());
 
             node->doc().location().warning(msg1, msg2);
         }
@@ -4644,16 +4647,17 @@ bool QmlPropertyNode::isWritable()
                     return pn->isWritable();
                 else
                     defLocation().warning(
-                            tr("No Q_PROPERTY for QML property %1::%2::%3 "
-                               "in C++ class documented as QML type: "
-                               "(property not found in the C++ class or its base classes)")
+                            QStringLiteral(
+                                    "No Q_PROPERTY for QML property %1::%2::%3 "
+                                    "in C++ class documented as QML type: "
+                                    "(property not found in the C++ class or its base classes)")
                                     .arg(logicalModuleName())
                                     .arg(qmlTypeName())
                                     .arg(name()));
             } else
-                defLocation().warning(tr("No Q_PROPERTY for QML property %1::%2::%3 "
-                                         "in C++ class documented as QML type: "
-                                         "(C++ class not specified or not found).")
+                defLocation().warning(QStringLiteral("No Q_PROPERTY for QML property %1::%2::%3 "
+                                                     "in C++ class documented as QML type: "
+                                                     "(C++ class not specified or not found).")
                                               .arg(logicalModuleName())
                                               .arg(qmlTypeName())
                                               .arg(name()));

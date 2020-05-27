@@ -179,8 +179,9 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
 
             if (atom->type() == Atom::FormatEndif) {
                 if (generate && numAtoms0 == numAtoms) {
-                    relative->location().warning(
-                            tr("Output format %1 not handled %2").arg(format()).arg(outFileName()));
+                    relative->location().warning(QStringLiteral("Output format %1 not handled %2")
+                                                         .arg(format())
+                                                         .arg(outFileName()));
                     Atom unhandledFormatAtom(Atom::UnhandledFormat, format());
                     generateAtomList(&unhandledFormatAtom, relative, generate, numAtoms);
                 }
@@ -793,7 +794,7 @@ int DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeM
             if (args.size() % 2) {
                 // Problem...
                 relative->doc().location().warning(
-                        tr("Error when parsing attributes for the table: got \"%1\"")
+                        QStringLiteral("Error when parsing attributes for the table: got \"%1\"")
                                 .arg(atom->string()));
             }
             for (int i = 0; i + 1 < args.size(); i += 2)
@@ -2755,8 +2756,9 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     } else if (node->isTypedef()) {
         writer->writeTextElement(dbNamespace, "type", node->plainName());
     } else {
-        node->doc().location().warning(tr("Unexpected node type in generateDocBookSynopsis: %1")
-                                               .arg(node->nodeTypeString()));
+        node->doc().location().warning(
+                QStringLiteral("Unexpected node type in generateDocBookSynopsis: %1")
+                        .arg(node->nodeTypeString()));
         newLine();
     }
 

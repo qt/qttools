@@ -57,8 +57,6 @@ typedef QMultiMap<QString, QString> QStringMultiMap;
 
 class Doc
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::Doc)
-
 public:
     // the order is important
     enum Sections {

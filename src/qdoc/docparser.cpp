@@ -296,7 +296,7 @@ void DocParser::initialize(const Config &config)
         m_utilities.cmdHash.insert(*cmds[i].alias, cmds[i].no);
 
         if (cmds[i].no != i)
-            Location::internalError(tr("command %1 missing").arg(i));
+            Location::internalError(QStringLiteral("command %1 missing").arg(i));
         ++i;
     }
 
@@ -416,7 +416,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     append(Atom::BR);
                     break;
                 case CMD_BOLD:
-                    location().warning(tr("'\\bold' is deprecated. Use '\\b'"));
+                    location().warning(QStringLiteral("'\\bold' is deprecated. Use '\\b'"));
                     Q_FALLTHROUGH();
                 case CMD_B:
                     startFormat(ATOM_FORMATTING_BOLD, cmd);
@@ -504,7 +504,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         if (numPreprocessorSkipping)
                             skipToNextPreprocessorCommand();
                     } else {
-                        location().warning(tr("Unexpected '\\%1'").arg(cmdName(CMD_ELSE)));
+                        location().warning(
+                                QStringLiteral("Unexpected '\\%1'").arg(cmdName(CMD_ELSE)));
                     }
                     break;
                 case CMD_ENDCODE:
@@ -534,7 +535,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         if (numPreprocessorSkipping)
                             skipToNextPreprocessorCommand();
                     } else {
-                        location().warning(tr("Unexpected '\\%1'").arg(cmdName(CMD_ENDIF)));
+                        location().warning(
+                                QStringLiteral("Unexpected '\\%1'").arg(cmdName(CMD_ENDIF)));
                     }
                     break;
                 case CMD_ENDLEGALESE:
@@ -576,7 +578,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                     break;
                 case CMD_ENDRAW:
-                    location().warning(tr("Unexpected '\\%1'").arg(cmdName(CMD_ENDRAW)));
+                    location().warning(
+                            QStringLiteral("Unexpected '\\%1'").arg(cmdName(CMD_ENDRAW)));
                     break;
                 case CMD_ENDSECTION1:
                     endSection(Doc::Section1, cmd);
@@ -633,17 +636,17 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         m_inTableHeader = true;
                     } else {
                         if (m_openedCommands.contains(CMD_TABLE))
-                            location().warning(tr("Cannot use '\\%1' within '\\%2'")
+                            location().warning(QStringLiteral("Cannot use '\\%1' within '\\%2'")
                                                        .arg(cmdName(CMD_HEADER))
                                                        .arg(cmdName(m_openedCommands.top())));
                         else
-                            location().warning(tr("Cannot use '\\%1' outside of '\\%2'")
+                            location().warning(QStringLiteral("Cannot use '\\%1' outside of '\\%2'")
                                                        .arg(cmdName(CMD_HEADER))
                                                        .arg(cmdName(CMD_TABLE)));
                     }
                     break;
                 case CMD_I:
-                    location().warning(tr(
+                    location().warning(QStringLiteral(
                             "'\\i' is deprecated. Use '\\e' for italic or '\\li' for list item"));
                     Q_FALLTHROUGH();
                 case CMD_E:
@@ -707,8 +710,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         append(p1, p2);
                         if (!p2.isEmpty() && !(m_private->text.lastAtom()->error().isEmpty()))
                             location().warning(
-                                    tr("Check parameter in '[ ]' of '\\l' command: '%1', "
-                                       "possible misspelling, or unrecognized module name")
+                                    QStringLiteral(
+                                            "Check parameter in '[ ]' of '\\l' command: '%1', "
+                                            "possible misspelling, or unrecognized module name")
                                             .arg(m_private->text.lastAtom()->error()));
                         if (isLeftBraceAhead()) {
                             currentLinkAtom = m_private->text.lastAtom();
@@ -723,8 +727,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         append(p1, p2);
                         if (!p2.isEmpty() && !(m_private->text.lastAtom()->error().isEmpty()))
                             location().warning(
-                                    tr("Check parameter in '[ ]' of '\\l' command: '%1', "
-                                       "possible misspelling, or unrecognized module name")
+                                    QStringLiteral(
+                                            "Check parameter in '[ ]' of '\\l' command: '%1', "
+                                            "possible misspelling, or unrecognized module name")
                                             .arg(m_private->text.lastAtom()->error()));
                         append(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
                         append(Atom::String, cleanLink(p1));
@@ -779,14 +784,15 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     m_private->extra->metaMap_.insert(p1, getArgument());
                     break;
                 case CMD_NEWCODE:
-                    location().warning(tr("Unexpected '\\%1'").arg(cmdName(CMD_NEWCODE)));
+                    location().warning(
+                            QStringLiteral("Unexpected '\\%1'").arg(cmdName(CMD_NEWCODE)));
                     break;
                 case CMD_NOTE:
                     leavePara();
                     enterPara(Atom::NoteLeft, Atom::NoteRight);
                     break;
                 case CMD_O:
-                    location().warning(tr("'\\o' is deprecated. Use '\\li'"));
+                    location().warning(QStringLiteral("'\\o' is deprecated. Use '\\li'"));
                     Q_FALLTHROUGH();
                 case CMD_LI:
                     leavePara();
@@ -809,10 +815,11 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         }
 
                         if (!m_inTableHeader && !m_inTableRow) {
-                            location().warning(tr("Missing '\\%1' or '\\%2' before '\\%3'")
-                                                       .arg(cmdName(CMD_HEADER))
-                                                       .arg(cmdName(CMD_ROW))
-                                                       .arg(cmdName(CMD_LI)));
+                            location().warning(
+                                    QStringLiteral("Missing '\\%1' or '\\%2' before '\\%3'")
+                                            .arg(cmdName(CMD_HEADER))
+                                            .arg(cmdName(CMD_ROW))
+                                            .arg(cmdName(CMD_LI)));
                             append(Atom::TableRowLeft);
                             m_inTableRow = true;
                         } else if (m_inTableItem) {
@@ -823,10 +830,11 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         append(Atom::TableItemLeft, p1, p2);
                         m_inTableItem = true;
                     } else
-                        location().warning(tr("Command '\\%1' outside of '\\%2' and '\\%3'")
-                                                   .arg(cmdName(cmd))
-                                                   .arg(cmdName(CMD_LIST))
-                                                   .arg(cmdName(CMD_TABLE)));
+                        location().warning(
+                                QStringLiteral("Command '\\%1' outside of '\\%2' and '\\%3'")
+                                        .arg(cmdName(cmd))
+                                        .arg(cmdName(CMD_LIST))
+                                        .arg(cmdName(CMD_TABLE)));
                     break;
                 case CMD_OLDCODE:
                     leavePara();
@@ -920,8 +928,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     leavePara();
                     p1 = getRestOfLine();
                     if (p1.isEmpty())
-                        location().warning(
-                                tr("Missing format name after '\\%1'").arg(cmdName(CMD_RAW)));
+                        location().warning(QStringLiteral("Missing format name after '\\%1'")
+                                                   .arg(cmdName(CMD_RAW)));
                     append(Atom::FormatIf, p1);
                     append(Atom::RawString, untabifyEtc(getUntilEnd(cmd)));
                     append(Atom::FormatElse);
@@ -937,11 +945,11 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         m_inTableRow = true;
                     } else {
                         if (m_openedCommands.contains(CMD_TABLE))
-                            location().warning(tr("Cannot use '\\%1' within '\\%2'")
+                            location().warning(QStringLiteral("Cannot use '\\%1' within '\\%2'")
                                                        .arg(cmdName(CMD_ROW))
                                                        .arg(cmdName(m_openedCommands.top())));
                         else
-                            location().warning(tr("Cannot use '\\%1' outside of '\\%2'")
+                            location().warning(QStringLiteral("Cannot use '\\%1' outside of '\\%2'")
                                                        .arg(cmdName(CMD_ROW))
                                                        .arg(cmdName(CMD_TABLE)));
                     }
@@ -1057,8 +1065,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     bool ok;
                     uint unicodeChar = p1.toUInt(&ok, 0);
                     if (!ok || (unicodeChar == 0x0000) || (unicodeChar > 0xFFFE))
-                        location().warning(tr("Invalid Unicode character '%1' specified with '%2'")
-                                                   .arg(p1, cmdName(CMD_UNICODE)));
+                        location().warning(
+                                QStringLiteral("Invalid Unicode character '%1' specified with '%2'")
+                                        .arg(p1, cmdName(CMD_UNICODE)));
                     else
                         append(Atom::String, QChar(unicodeChar));
                     break;
@@ -1162,9 +1171,10 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
 
                         if (!macro.defaultDef.isEmpty()) {
                             if (numFormatDefs > 0) {
-                                macro.defaultDefLocation.warning(tr("Macro cannot have both "
-                                                                    "format-specific and qdoc-"
-                                                                    "syntax definitions"));
+                                macro.defaultDefLocation.warning(
+                                        QStringLiteral("Macro cannot have both "
+                                                       "format-specific and qdoc-"
+                                                       "syntax definitions"));
                             } else {
                                 QString expanded = expandMacroToString(cmdStr, macro.defaultDef,
                                                                        macro.numParams, matchExpr);
@@ -1180,7 +1190,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         if (!cmdStr.endsWith("propertygroup")) {
                             // The QML and JS property group commands are no longer required
                             // for grouping QML and JS properties. They are allowed but ignored.
-                            location().warning(tr("Unknown command '\\%1'").arg(cmdStr),
+                            location().warning(QStringLiteral("Unknown command '\\%1'").arg(cmdStr),
                                                detailsUnknownCommand(metaCommandSet, cmdStr));
                         }
                         enterPara();
@@ -1300,9 +1310,10 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
     }
 
     if (m_openedCommands.top() != CMD_OMIT) {
-        location().warning(tr("Missing '\\%1'").arg(endCmdName(m_openedCommands.top())));
+        location().warning(
+                QStringLiteral("Missing '\\%1'").arg(endCmdName(m_openedCommands.top())));
     } else if (preprocessorSkipping.count() > 0) {
-        location().warning(tr("Missing '\\%1'").arg(cmdName(CMD_ENDIF)));
+        location().warning(QStringLiteral("Missing '\\%1'").arg(cmdName(CMD_ENDIF)));
     }
 
     if (m_currentSection > Doc::NoSection) {
@@ -1339,22 +1350,22 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet, co
     }
 
     if (m_utilities.aliasMap.contains(str))
-        return tr("The command '\\%1' was renamed '\\%2' by the configuration"
-                  " file. Use the new name.")
+        return QStringLiteral("The command '\\%1' was renamed '\\%2' by the configuration"
+                              " file. Use the new name.")
                 .arg(str)
                 .arg(m_utilities.aliasMap[str]);
 
     QString best = nearestName(str, commandSet);
     if (best.isEmpty())
         return QString();
-    return tr("Maybe you meant '\\%1'?").arg(best);
+    return QStringLiteral("Maybe you meant '\\%1'?").arg(best);
 }
 
 void DocParser::insertTarget(const QString &target, bool keyword)
 {
     if (m_targetMap.contains(target)) {
-        location().warning(tr("Duplicate target name '%1'").arg(target));
-        m_targetMap[target].warning(tr("(The previous occurrence is here)"));
+        location().warning(QStringLiteral("Duplicate target name '%1'").arg(target));
+        m_targetMap[target].warning(QStringLiteral("(The previous occurrence is here)"));
     } else {
         m_targetMap.insert(target, location());
         m_private->constructExtra();
@@ -1371,16 +1382,17 @@ void DocParser::insertTarget(const QString &target, bool keyword)
 void DocParser::include(const QString &fileName, const QString &identifier)
 {
     if (location().depth() > 16)
-        location().fatal(tr("Too many nested '\\%1's").arg(cmdName(CMD_INCLUDE)));
+        location().fatal(QStringLiteral("Too many nested '\\%1's").arg(cmdName(CMD_INCLUDE)));
 
     QString userFriendlyFilePath;
     QString filePath = Config::instance().getIncludeFilePath(fileName);
     if (filePath.isEmpty()) {
-        location().warning(tr("Cannot find qdoc include file '%1'").arg(fileName));
+        location().warning(QStringLiteral("Cannot find qdoc include file '%1'").arg(fileName));
     } else {
         QFile inFile(filePath);
         if (!inFile.open(QFile::ReadOnly)) {
-            location().warning(tr("Cannot open qdoc include file '%1'").arg(userFriendlyFilePath));
+            location().warning(
+                    QStringLiteral("Cannot open qdoc include file '%1'").arg(userFriendlyFilePath));
         } else {
             location().push(userFriendlyFilePath);
 
@@ -1406,7 +1418,7 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                     ++i;
                 }
                 if (startLine < 0) {
-                    location().warning(tr("Cannot find '%1' in '%2'")
+                    location().warning(QStringLiteral("Cannot find '%1' in '%2'")
                                                .arg(identifier)
                                                .arg(userFriendlyFilePath));
                     return;
@@ -1425,7 +1437,7 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                     ++i;
                 } while (i < lineBuffer.size());
                 if (result.isEmpty()) {
-                    location().warning(tr("Empty qdoc snippet '%1' in '%2'")
+                    location().warning(QStringLiteral("Empty qdoc snippet '%1' in '%2'")
                                                .arg(identifier)
                                                .arg(userFriendlyFilePath));
                 } else {
@@ -1444,7 +1456,7 @@ void DocParser::startFormat(const QString &format, int cmd)
 
     for (const auto &item : qAsConst(m_pendingFormats)) {
         if (item == format) {
-            location().warning(tr("Cannot nest '\\%1' commands").arg(cmdName(cmd)));
+            location().warning(QStringLiteral("Cannot nest '\\%1' commands").arg(cmdName(cmd)));
             return;
         }
     }
@@ -1491,7 +1503,8 @@ bool DocParser::openCommand(int cmd)
     if (ok) {
         m_openedCommands.push(cmd);
     } else {
-        location().warning(tr("Can't use '\\%1' in '\\%2'").arg(cmdName(cmd)).arg(cmdName(outer)));
+        location().warning(
+                QStringLiteral("Can't use '\\%1' in '\\%2'").arg(cmdName(cmd)).arg(cmdName(outer)));
     }
     return ok;
 }
@@ -1571,13 +1584,13 @@ bool DocParser::closeCommand(int endCmd)
 
         if (contains) {
             while (endCmdFor(m_openedCommands.top()) != endCmd && m_openedCommands.size() > 1) {
-                location().warning(tr("Missing '\\%1' before '\\%2'")
+                location().warning(QStringLiteral("Missing '\\%1' before '\\%2'")
                                            .arg(endCmdName(m_openedCommands.top()))
                                            .arg(cmdName(endCmd)));
                 m_openedCommands.pop();
             }
         } else {
-            location().warning(tr("Unexpected '\\%1'").arg(cmdName(endCmd)));
+            location().warning(QStringLiteral("Unexpected '\\%1'").arg(cmdName(endCmd)));
         }
         return false;
     }
@@ -1649,7 +1662,7 @@ void DocParser::parseAlso()
             m_position++;
             skipSpacesOrOneEndl();
         } else if (m_position >= m_inputLength || m_input[m_position] != '\n') {
-            location().warning(tr("Missing comma in '\\%1'").arg(cmdName(CMD_SA)));
+            location().warning(QStringLiteral("Missing comma in '\\%1'").arg(cmdName(CMD_SA)));
         }
     }
 }
@@ -1759,7 +1772,7 @@ void DocParser::leavePara()
 {
     if (m_paragraphState != OutsideParagraph) {
         if (!m_pendingFormats.isEmpty()) {
-            location().warning(tr("Missing '}'"));
+            location().warning(QStringLiteral("Missing '}'"));
             m_pendingFormats.clear();
         }
 
@@ -1859,10 +1872,11 @@ bool DocParser::expandMacro()
                 m_position = backslashPos;
                 return true;
             } else {
-                location().warning(tr("Macro '%1' does not have a default definition").arg(cmdStr));
+                location().warning(QStringLiteral("Macro '%1' does not have a default definition")
+                                           .arg(cmdStr));
             }
         } else {
-            location().warning(tr("Unknown macro '%1'").arg(cmdStr));
+            location().warning(QStringLiteral("Unknown macro '%1'").arg(cmdStr));
             m_position = ++backslashPos;
         }
     } else if (m_input[m_position].isSpace()) {
@@ -1887,8 +1901,8 @@ void DocParser::expandMacro(const QString &name, const QString &def, int numPara
             if (numParams == 1 || isLeftBraceAhead()) {
                 args << getArgument();
             } else {
-                location().warning(tr("Macro '\\%1' invoked with too few"
-                                      " arguments (expected %2, got %3)")
+                location().warning(QStringLiteral("Macro '\\%1' invoked with too few"
+                                                  " arguments (expected %2, got %3)")
                                            .arg(name)
                                            .arg(numParams)
                                            .arg(i));
@@ -1929,8 +1943,8 @@ QString DocParser::expandMacroToString(const QString &name, const QString &def, 
             if (numParams == 1 || isLeftBraceAhead()) {
                 args << getArgument(true);
             } else {
-                location().warning(tr("Macro '\\%1' invoked with too few"
-                                      " arguments (expected %2, got %3)")
+                location().warning(QStringLiteral("Macro '\\%1' invoked with too few"
+                                                  " arguments (expected %2, got %3)")
                                            .arg(name)
                                            .arg(numParams)
                                            .arg(i));
@@ -1982,7 +1996,7 @@ Doc::Sections DocParser::getSectioningUnit()
     } else if (name.isEmpty()) {
         return Doc::NoSection;
     } else {
-        location().warning(tr("Invalid section '%1'").arg(name));
+        location().warning(QStringLiteral("Invalid section '%1'").arg(name));
         return Doc::NoSection;
     }
 }
@@ -2028,7 +2042,7 @@ QString DocParser::getBracedArgument(bool verbatim)
             }
         }
         if (delimDepth > 0)
-            location().warning(tr("Missing '}'"));
+            location().warning(QStringLiteral("Missing '}'"));
     }
     m_endPosition = m_position;
     return arg;
@@ -2133,7 +2147,7 @@ QString DocParser::getBracketedArgument()
             }
         }
         if (delimDepth > 0)
-            location().warning(tr("Missing ']'"));
+            location().warning(QStringLiteral("Missing ']'"));
     }
     return arg;
 }
@@ -2211,7 +2225,7 @@ QString DocParser::getMetaCommandArgument(const QString &cmdStr)
     }
     if (m_position == m_input.size() && parenDepth > 0) {
         m_position = begin;
-        location().warning(tr("Unbalanced parentheses in '%1'").arg(cmdStr));
+        location().warning(QStringLiteral("Unbalanced parentheses in '%1'").arg(cmdStr));
     }
 
     QString t = m_input.mid(begin, m_position - begin).simplified();
@@ -2227,7 +2241,7 @@ QString DocParser::getUntilEnd(int cmd)
     auto match = rx.match(m_input, m_position);
 
     if (!match.hasMatch()) {
-        location().warning(tr("Missing '\\%1'").arg(cmdName(endCmd)));
+        location().warning(QStringLiteral("Missing '\\%1'").arg(cmdName(endCmd)));
         m_position = m_input.length();
     } else {
         int end = match.capturedStart();

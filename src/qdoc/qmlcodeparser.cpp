@@ -113,7 +113,7 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
     QFile in(filePath);
     currentFile_ = filePath;
     if (!in.open(QIODevice::ReadOnly)) {
-        location.error(tr("Cannot open QML file '%1'").arg(filePath));
+        location.error(QStringLiteral("Cannot open QML file '%1'").arg(filePath));
         currentFile_.clear();
         return;
     }

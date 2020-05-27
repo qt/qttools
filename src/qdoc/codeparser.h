@@ -41,8 +41,6 @@ class QDocDatabase;
 
 class CodeParser
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeParser)
-
 public:
     CodeParser();
     virtual ~CodeParser();

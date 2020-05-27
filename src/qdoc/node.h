@@ -70,8 +70,6 @@ typedef QVector<CollectionNode *> CollectionList;
 
 class Node
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::Node)
-
 public:
     enum NodeType : unsigned char {
         NoType,
@@ -810,8 +808,6 @@ public:
 
 class QmlPropertyNode : public Node
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::QmlPropertyNode)
-
 public:
     QmlPropertyNode(Aggregate *parent, const QString &name, const QString &type, bool attached);
 

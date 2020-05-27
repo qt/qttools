@@ -60,7 +60,9 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
     QFile in(filePath);
     currentFile_ = filePath;
     if (!in.open(QIODevice::ReadOnly)) {
-        location.error(tr("Can't open source file '%1' (%2)").arg(filePath).arg(strerror(errno)));
+        location.error(QStringLiteral("Can't open source file '%1' (%2)")
+                               .arg(filePath)
+                               .arg(strerror(errno)));
         currentFile_.clear();
         return;
     }
@@ -103,8 +105,8 @@ bool PureDocParser::processQdocComments()
             Doc doc(start_loc, end_loc, comment, commands, topicCommands());
             const TopicList &topics = doc.topicsUsed();
             if (topics.isEmpty()) {
-                doc.location().warning(tr("This qdoc comment contains no topic command "
-                                          "(e.g., '\\%1', '\\%2').")
+                doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "
+                                                      "(e.g., '\\%1', '\\%2').")
                                                .arg(COMMAND_MODULE)
                                                .arg(COMMAND_PAGE));
                 continue;

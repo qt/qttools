@@ -407,11 +407,10 @@ bool QmlDocVisitor::splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlP
             qpa.name_ = colonSplit[0];
             return true;
         }
-        QString msg = "Unrecognizable QML module/component qualifier for " + arg;
-        doc.location().warning(tr(msg.toLatin1().data()));
+        doc.location().warning(
+                QStringLiteral("Unrecognizable QML module/component qualifier for %1.").arg(arg));
     } else {
-        QString msg = "Missing property type for " + arg;
-        doc.location().warning(tr(msg.toLatin1().data()));
+        doc.location().warning(QStringLiteral("Missing property type for %1.").arg(arg));
     }
     return false;
 }
@@ -437,7 +436,8 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                 qdb->addToQmlModule(args[0].first, node);
             } else if (command == COMMAND_QMLINHERITS) {
                 if (node->name() == args[0].first)
-                    doc.location().warning(tr("%1 tries to inherit itself").arg(args[0].first));
+                    doc.location().warning(
+                            QStringLiteral("%1 tries to inherit itself").arg(args[0].first));
                 else if (node->isQmlType() || node->isJsType()) {
                     QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(node);
                     qmlType->setQmlBaseName(args[0].first);
@@ -461,7 +461,8 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
             } else if (command == COMMAND_WRAPPER) {
                 node->setWrapper();
             } else {
-                doc.location().warning(tr("The \\%1 command is ignored in QML files").arg(command));
+                doc.location().warning(
+                        QStringLiteral("The \\%1 command is ignored in QML files").arg(command));
             }
         }
     }

@@ -235,8 +235,9 @@ int Tokenizer::getToken()
                 yyCh = getChar();
 
                 if (yyCh == EOF)
-                    yyTokLoc.warning(tr("Unterminated C++ string literal"),
-                                     tr("Maybe you forgot '/*!' at the beginning of the file?"));
+                    yyTokLoc.warning(
+                            QStringLiteral("Unterminated C++ string literal"),
+                            QStringLiteral("Maybe you forgot '/*!' at the beginning of the file?"));
                 else
                     return Tok_String;
                 break;
@@ -270,7 +271,7 @@ int Tokenizer::getToken()
                 } while (yyCh != EOF && yyCh != '\'');
 
                 if (yyCh == EOF) {
-                    yyTokLoc.warning(tr("Unterminated C++ character literal"));
+                    yyTokLoc.warning(QStringLiteral("Unterminated C++ character literal"));
                 } else {
                     yyCh = getChar();
                     return Tok_Number;
@@ -365,7 +366,7 @@ int Tokenizer::getToken()
 
                     while (!metAsterSlash) {
                         if (yyCh == EOF) {
-                            yyTokLoc.warning(tr("Unterminated C++ comment"));
+                            yyTokLoc.warning(QStringLiteral("Unterminated C++ comment"));
                             break;
                         } else {
                             if (yyCh == '*') {
@@ -479,8 +480,8 @@ int Tokenizer::getToken()
                 if (yyNumPreprocessorSkipping == 0
                     && !(yyTokLoc.fileName().endsWith(".qdoc")
                          || yyTokLoc.fileName().endsWith(".js"))) {
-                    yyTokLoc.warning(
-                            tr("Hostile character 0x%1 in C++ source").arg((uchar)yyCh, 1, 16));
+                    yyTokLoc.warning(QStringLiteral("Hostile character 0x%1 in C++ source")
+                                             .arg((uchar)yyCh, 1, 16));
                 }
                 yyCh = getChar();
             }
@@ -488,7 +489,7 @@ int Tokenizer::getToken()
     }
 
     if (yyPreprocessorSkipping.count() > 1) {
-        yyTokLoc.warning(tr("Expected #endif before end of file"));
+        yyTokLoc.warning(QStringLiteral("Expected #endif before end of file"));
         // clear it out or we get an infinite loop!
         while (!yyPreprocessorSkipping.isEmpty()) {
             popSkipping();
@@ -721,7 +722,7 @@ void Tokenizer::pushSkipping(bool skip)
 bool Tokenizer::popSkipping()
 {
     if (yyPreprocessorSkipping.isEmpty()) {
-        yyTokLoc.warning(tr("Unexpected #elif, #else or #endif"));
+        yyTokLoc.warning(QStringLiteral("Unexpected #elif, #else or #endif"));
         return true;
     }
 

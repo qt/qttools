@@ -299,8 +299,8 @@ void Doc::initialize()
     for (const auto &a : config.subVars(CONFIG_ALIAS)) {
         QString alias = config.getString(CONFIG_ALIAS + Config::dot + a);
         if (reverseAliasMap.contains(alias)) {
-            config.lastLocation().warning(tr("Command name '\\%1' cannot stand"
-                                             " for both '\\%2' and '\\%3'")
+            config.lastLocation().warning(QStringLiteral("Command name '\\%1' cannot stand"
+                                                         " for both '\\%2' and '\\%3'")
                                                   .arg(alias)
                                                   .arg(reverseAliasMap[alias])
                                                   .arg(a));
@@ -330,13 +330,13 @@ void Doc::initialize()
                     macro.numParams = m;
                 else if (macro.numParams != m) {
                     if (!silent) {
-                        QString other = tr("default");
+                        QString other = QStringLiteral("default");
                         if (macro.defaultDef.isEmpty())
                             other = macro.otherDefs.constBegin().key();
-                        config.lastLocation().warning(tr("Macro '\\%1' takes"
-                                                         " inconsistent number"
-                                                         " of arguments (%2"
-                                                         " %3, %4 %5)")
+                        config.lastLocation().warning(QStringLiteral("Macro '\\%1' takes"
+                                                                     " inconsistent number"
+                                                                     " of arguments (%2"
+                                                                     " %3, %4 %5)")
                                                               .arg(macroName)
                                                               .arg(f)
                                                               .arg(m)
@@ -431,11 +431,13 @@ CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, const Q
         if (!DocParser::exampleFiles.isEmpty())
             details += QLatin1String(", example files: ")
                     + DocParser::exampleFiles.join(QLatin1Char(' '));
-        location.warning(tr("Cannot find file to quote from: '%1'").arg(fileName), details);
+        location.warning(QStringLiteral("Cannot find file to quote from: '%1'").arg(fileName),
+                         details);
     } else {
         QFile inFile(filePath);
         if (!inFile.open(QFile::ReadOnly)) {
-            location.warning(tr("Cannot open file to quote from: '%1'").arg(userFriendlyFilePath));
+            location.warning(QStringLiteral("Cannot open file to quote from: '%1'")
+                                     .arg(userFriendlyFilePath));
         } else {
             QTextStream inStream(&inFile);
             code = DocParser::untabifyEtc(inStream.readAll());

@@ -52,8 +52,6 @@ namespace QQmlJS {
 
 class QmlCodeMarker : public CppCodeMarker
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::QmlCodeMarker)
-
 public:
     QmlCodeMarker();
     ~QmlCodeMarker() override;

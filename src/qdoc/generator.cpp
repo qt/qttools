@@ -256,11 +256,12 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
     auto outPath = redirectDocumentationToDevNull_ ? QStringLiteral("/dev/null") : path;
     auto outFile = new QFile(outPath);
     if (!redirectDocumentationToDevNull_ && outFile->exists()) {
-        node->location().error(
-                tr("Output file already exists; overwriting %1").arg(outFile->fileName()));
+        node->location().error(QStringLiteral("Output file already exists; overwriting %1")
+                                       .arg(outFile->fileName()));
     }
     if (!outFile->open(QFile::WriteOnly)) {
-        node->location().fatal(tr("Cannot open output file '%1'").arg(outFile->fileName()));
+        node->location().fatal(
+                QStringLiteral("Cannot open output file '%1'").arg(outFile->fileName()));
     }
     qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
     outFileNames_ << fileName;
@@ -731,8 +732,9 @@ const Atom *Generator::generateAtomList(const Atom *atom, const Node *relative, 
 
             if (atom->type() == Atom::FormatEndif) {
                 if (generate && numAtoms0 == numAtoms) {
-                    relative->location().warning(
-                            tr("Output format %1 not handled %2").arg(format()).arg(outFileName()));
+                    relative->location().warning(QStringLiteral("Output format %1 not handled %2")
+                                                         .arg(format())
+                                                         .arg(outFileName()));
                     Atom unhandledFormatAtom(Atom::UnhandledFormat, format());
                     generateAtomList(&unhandledFormatAtom, relative, marker, generate, numAtoms);
                 }
@@ -808,14 +810,14 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 out() << "</p>";
             } else if (!node->isWrapper() && !node->isMarkedReimp()) {
                 if (!fn->isIgnored()) // undocumented functions added by Q_OBJECT
-                    node->location().warning(
-                            tr("No documentation for '%1'").arg(node->plainSignature()));
+                    node->location().warning(QStringLiteral("No documentation for '%1'")
+                                                     .arg(node->plainSignature()));
             }
         } else if (!node->isWrapper() && !node->isMarkedReimp()) {
             // Don't require documentation of things defined in Q_GADGET
             if (node->name() != QLatin1String("QtGadgetHelper"))
                 node->location().warning(
-                        tr("No documentation for '%1'").arg(node->plainSignature()));
+                        QStringLiteral("No documentation for '%1'").arg(node->plainSignature()));
         }
     } else if (!node->isSharingComment()) {
         // Reimplements clause and type alias info precede body text
@@ -859,16 +861,18 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                         QString details;
                         QString best = nearestName(it, definedItems);
                         if (!best.isEmpty() && !documentedItems.contains(best))
-                            details = tr("Maybe you meant '%1'?").arg(best);
+                            details = QStringLiteral("Maybe you meant '%1'?").arg(best);
 
-                        node->doc().location().warning(tr("No such enum item '%1' in %2")
-                                                               .arg(it)
-                                                               .arg(node->plainFullName()),
-                                                       details);
+                        node->doc().location().warning(
+                                QStringLiteral("No such enum item '%1' in %2")
+                                        .arg(it)
+                                        .arg(node->plainFullName()),
+                                details);
                     } else if (!documentedItems.contains(it)) {
-                        node->doc().location().warning(tr("Undocumented enum item '%1' in %2")
-                                                               .arg(it)
-                                                               .arg(node->plainFullName()));
+                        node->doc().location().warning(
+                                QStringLiteral("Undocumented enum item '%1' in %2")
+                                        .arg(it)
+                                        .arg(node->plainFullName()));
                     }
                 }
             }
@@ -880,9 +884,10 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                     if (!documentedNames.contains(name)) {
                         if (fn->isActive() || fn->isPreliminary()) {
                             if (!fn->isMarkedReimp() && !fn->isOverload()) {
-                                fn->doc().location().warning(tr("Undocumented parameter '%1' in %2")
-                                                                     .arg(name)
-                                                                     .arg(node->plainFullName()));
+                                fn->doc().location().warning(
+                                        QStringLiteral("Undocumented parameter '%1' in %2")
+                                                .arg(name)
+                                                .arg(node->plainFullName()));
                             }
                         }
                     }
@@ -892,8 +897,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                         QString best = nearestName(name, declaredNames);
                         QString details;
                         if (!best.isEmpty())
-                            details = tr("Maybe you meant '%1'?").arg(best);
-                        fn->doc().location().warning(tr("No such parameter '%1' in %2")
+                            details = QStringLiteral("Maybe you meant '%1'?").arg(best);
+                        fn->doc().location().warning(QStringLiteral("No such parameter '%1' in %2")
                                                              .arg(name)
                                                              .arg(fn->plainFullName()),
                                                      details);
@@ -909,8 +914,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
                 && !fn->isOverload()) {
                 if (!fn->doc().body().contains("return"))
                     node->doc().location().warning(
-                            tr("Undocumented return value "
-                               "(hint: use 'return' or 'returns' in the text"));
+                            QStringLiteral("Undocumented return value "
+                                           "(hint: use 'return' or 'returns' in the text"));
             }
         }
     }
@@ -998,7 +1003,7 @@ void Generator::addImageToCopy(const ExampleNode *en, const QString &file)
     userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
     QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
     if (!dirInfo.mkpath(imgOutDir))
-        en->location().fatal(tr("Cannot create output directory '%1'").arg(imgOutDir));
+        en->location().fatal(QStringLiteral("Cannot create output directory '%1'").arg(imgOutDir));
     Config::copyFile(en->location(), srcPath, file, imgOutDir);
 }
 
@@ -1275,7 +1280,7 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
                     generateText(text, fn, marker);
                 } else {
                     fn->doc().location().warning(
-                            tr("Illegal \\reimp; no documented virtual function for %1")
+                            QStringLiteral("Illegal \\reimp; no documented virtual function for %1")
                                     .arg(overrides->plainSignature()));
                 }
                 return;
@@ -1777,16 +1782,16 @@ void Generator::initialize()
                 int numParams = Config::numParams(def);
                 int numOccs = def.count("\1");
                 if (numParams != 1) {
-                    config.lastLocation().warning(tr("Formatting '%1' must "
-                                                     "have exactly one "
-                                                     "parameter (found %2)")
+                    config.lastLocation().warning(QStringLiteral("Formatting '%1' must "
+                                                                 "have exactly one "
+                                                                 "parameter (found %2)")
                                                           .arg(n)
                                                           .arg(numParams));
                 } else if (numOccs > 1) {
-                    config.lastLocation().fatal(tr("Formatting '%1' must "
-                                                   "contain exactly one "
-                                                   "occurrence of '\\1' "
-                                                   "(found %2)")
+                    config.lastLocation().fatal(QStringLiteral("Formatting '%1' must "
+                                                               "contain exactly one "
+                                                               "occurrence of '\\1' "
+                                                               "(found %2)")
                                                         .arg(n)
                                                         .arg(numOccs));
                 } else {
@@ -1833,7 +1838,7 @@ void Generator::copyTemplateFiles(const QString &configVar, const QString &subDi
         QString templateDir = outDir_ + QLatin1Char('/') + subDir;
         if (!dirInfo.exists(templateDir) && !dirInfo.mkdir(templateDir)) {
             config.lastLocation().fatal(
-                    tr("Cannot create %1 directory '%2'").arg(subDir, templateDir));
+                    QStringLiteral("Cannot create %1 directory '%2'").arg(subDir, templateDir));
         } else {
             for (const auto &file : files) {
                 if (!file.isEmpty())
@@ -1861,8 +1866,8 @@ void Generator::initializeFormat()
 
     outDir_ = config.getOutputDir(format());
     if (outDir_.isEmpty()) {
-        config.lastLocation().fatal(tr("No output directory specified in "
-                                       "configuration file or on the command line"));
+        config.lastLocation().fatal(QStringLiteral("No output directory specified in "
+                                                   "configuration file or on the command line"));
     } else {
         outSubdir_ = outDir_.mid(outDir_.lastIndexOf('/') + 1);
     }
@@ -1871,10 +1876,12 @@ void Generator::initializeFormat()
     if (dirInfo.exists(outDir_)) {
         if (!config.generating() && Generator::useOutputSubdirs()) {
             if (!Config::removeDirContents(outDir_))
-                config.lastLocation().error(tr("Cannot empty output directory '%1'").arg(outDir_));
+                config.lastLocation().error(
+                        QStringLiteral("Cannot empty output directory '%1'").arg(outDir_));
         }
     } else if (!dirInfo.mkpath(outDir_)) {
-        config.lastLocation().fatal(tr("Cannot create output directory '%1'").arg(outDir_));
+        config.lastLocation().fatal(
+                QStringLiteral("Cannot create output directory '%1'").arg(outDir_));
     }
 
     // Output directory exists, which is enough for prepare phase.
@@ -1883,7 +1890,7 @@ void Generator::initializeFormat()
 
     if (!dirInfo.exists(outDir_ + "/images") && !dirInfo.mkdir(outDir_ + "/images"))
         config.lastLocation().fatal(
-                tr("Cannot create images directory '%1'").arg(outDir_ + "/images"));
+                QStringLiteral("Cannot create images directory '%1'").arg(outDir_ + "/images"));
 
     copyTemplateFiles(format() + Config::dot + CONFIG_STYLESHEETS, "style");
     copyTemplateFiles(format() + Config::dot + CONFIG_SCRIPTS, "scripts");
@@ -2238,8 +2245,9 @@ QString Generator::typeString(const Node *node)
 
 void Generator::unknownAtom(const Atom *atom)
 {
-    Location::internalError(
-            tr("unknown atom type '%1' in %2 generator").arg(atom->typeString()).arg(format()));
+    Location::internalError(QStringLiteral("unknown atom type '%1' in %2 generator")
+                                    .arg(atom->typeString())
+                                    .arg(format()));
 }
 
 QT_END_NAMESPACE

@@ -322,7 +322,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             if (link.isEmpty()) {
                 if (autolinkErrors())
                     relative->doc().location().warning(
-                            tr("Can't autolink to '%1'").arg(atom->string()));
+                            QStringLiteral("Can't autolink to '%1'").arg(atom->string()));
             } else if (node && node->isObsolete()) {
                 if ((relative->parent() != node) && !relative->isObsolete())
                     link.clear();
@@ -616,7 +616,8 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         if (atom->type() == Atom::Image)
             out() << "<p class=\"centerAlign\">";
         if (fileName.isEmpty()) {
-            relative->location().warning(tr("Missing image: %1").arg(protectEnc(atom->string())));
+            relative->location().warning(
+                    QStringLiteral("Missing image: %1").arg(protectEnc(atom->string())));
             out() << "<font color=\"red\">[Missing image " << protectEnc(atom->string())
                   << "]</font>";
         } else {
@@ -668,7 +669,8 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         const Node *node = nullptr;
         QString link = getLink(atom, relative, &node);
         if (link.isEmpty() && (node != relative) && !noLinkErrors()) {
-            relative->doc().location().warning(tr("Can't link to '%1'").arg(atom->string()));
+            relative->doc().location().warning(
+                    QStringLiteral("Can't link to '%1'").arg(atom->string()));
         } else {
             node = nullptr;
         }
@@ -678,14 +680,16 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
     case Atom::ExampleFileLink: {
         QString link = linkForExampleFile(atom->string(), relative);
         if (link.isEmpty() && !noLinkErrors())
-            relative->doc().location().warning(tr("Can't link to '%1'").arg(atom->string()));
+            relative->doc().location().warning(
+                    QStringLiteral("Can't link to '%1'").arg(atom->string()));
         beginLink(link);
         skipAhead = 1;
     } break;
     case Atom::ExampleImageLink: {
         QString link = atom->string();
         if (link.isEmpty() && !noLinkErrors())
-            relative->doc().location().warning(tr("Can't link to '%1'").arg(atom->string()));
+            relative->doc().location().warning(
+                    QStringLiteral("Can't link to '%1'").arg(atom->string()));
         link = "images/used-in-examples/" + link;
         beginLink(link);
         skipAhead = 1;
@@ -1112,7 +1116,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         if (aggregate->isClassNode())
             command = "\'\\class\' comment";
         aggregate->location().warning(
-                tr("No %1 for '%2'").arg(command).arg(aggregate->plainSignature()));
+                QStringLiteral("No %1 for '%2'").arg(command).arg(aggregate->plainSignature()));
     } else {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
         out() << "<div class=\"descr\">\n" // QTBUG-9504
@@ -1731,7 +1735,8 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
             linkPair = node->links()[Node::PreviousLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
             if (linkNode == nullptr)
-                node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
+                node->doc().location().warning(
+                        QStringLiteral("Cannot link to '%1'").arg(linkPair.first));
             if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
@@ -1751,7 +1756,8 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
             linkPair = node->links()[Node::NextLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
             if (linkNode == nullptr)
-                node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
+                node->doc().location().warning(
+                        QStringLiteral("Cannot link to '%1'").arg(linkPair.first));
             if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
@@ -1773,7 +1779,8 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
             linkPair = node->links()[Node::StartLink];
             linkNode = qdb_->findNodeForTarget(linkPair.first, node);
             if (linkNode == nullptr)
-                node->doc().location().warning(tr("Cannot link to '%1'").arg(linkPair.first));
+                node->doc().location().warning(
+                        QStringLiteral("Cannot link to '%1'").arg(linkPair.first));
             if (linkNode == nullptr || linkNode == node)
                 anchorPair = linkPair;
             else
@@ -2053,11 +2060,11 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
                 collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
 
         if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
-            qcn->doc().location().warning(tr("Could not resolve QML import "
-                                             "statement for type '%1'")
+            qcn->doc().location().warning(QStringLiteral("Could not resolve QML import "
+                                                         "statement for type '%1'")
                                                   .arg(qcn->name()),
-                                          tr("Maybe you forgot to use the "
-                                             "'\\%1' command?")
+                                          QStringLiteral("Maybe you forgot to use the "
+                                                         "'\\%1' command?")
                                                   .arg(COMMAND_INQMLMODULE));
 
         text.clear();
@@ -2144,7 +2151,7 @@ void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker, const No
         if (!brief.lastAtom()->string().endsWith('.')) {
             brief << Atom(Atom::String, ".");
             node->doc().location().warning(
-                    tr("'\\brief' statement does not end with a full stop."));
+                    QStringLiteral("'\\brief' statement does not end with a full stop."));
         }
         generateExtractionMark(node, BriefMark);
         out() << "<p>";
@@ -2896,9 +2903,10 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
           \qmlmodule, or \jsmodule
         */
         if (relative && !relative->isCollectionNode()) {
-            relative->doc().location().warning(tr("\\generatelist {%1} is only allowed in \\group, "
-                                                  "\\module, \\qmlmodule, and \\jsmodule comments.")
-                                                       .arg(selector));
+            relative->doc().location().warning(
+                    QStringLiteral("\\generatelist {%1} is only allowed in \\group, "
+                                   "\\module, \\qmlmodule, and \\jsmodule comments.")
+                            .arg(selector));
             return;
         }
         Node *n = const_cast<Node *>(relative);

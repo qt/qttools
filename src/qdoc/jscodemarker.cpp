@@ -123,16 +123,18 @@ QString JsCodeMarker::addMarkUp(const QString &code, const Node * /* relative */
         QmlMarkupVisitor visitor(code, pragmas, &engine);
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError()) {
-            location.warning(location.fileName()
-                             + tr("Unable to analyze JavaScript. The output is incomplete."));
+            location.warning(
+                    location.fileName()
+                    + QStringLiteral("Unable to analyze JavaScript. The output is incomplete."));
         }
         output = visitor.markedUpCode();
     } else {
-        location.warning(location.fileName()
-                         + tr("Unable to parse JavaScript: \"%1\" at line %2, column %3")
-                                   .arg(parser.errorMessage())
-                                   .arg(parser.errorLineNumber())
-                                   .arg(parser.errorColumnNumber()));
+        location.warning(
+                location.fileName()
+                + QStringLiteral("Unable to parse JavaScript: \"%1\" at line %2, column %3")
+                          .arg(parser.errorMessage())
+                          .arg(parser.errorLineNumber())
+                          .arg(parser.errorColumnNumber()));
         output = protect(code);
     }
     return output;

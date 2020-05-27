@@ -49,8 +49,6 @@ class QDocDatabase;
 
 class Generator
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::Generator)
-
 public:
     enum ListType { Generic, Obsolete };
     enum Addendum { Invokable, PrivateSignal, QmlSignalHandler, AssociatedProperties, TypeAlias };

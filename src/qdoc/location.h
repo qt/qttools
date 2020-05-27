@@ -42,8 +42,6 @@ class QRegularExpression;
 
 class Location
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::Location)
-
 public:
     Location();
     explicit Location(const QString &filePath);

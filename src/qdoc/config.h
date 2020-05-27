@@ -115,8 +115,6 @@ typedef QMap<QString, ConfigVar> ConfigVarMap;
 
 class Config : public Singleton<Config>
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::Config)
-
 public:
     ~Config();
 

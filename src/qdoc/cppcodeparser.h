@@ -39,8 +39,6 @@ class Aggregate;
 
 class CppCodeParser : public CodeParser
 {
-    Q_DECLARE_TR_FUNCTIONS(QDoc::CppCodeParser)
-
     struct ExtraFuncData
     {
         Aggregate *root; // Used as the parent.
