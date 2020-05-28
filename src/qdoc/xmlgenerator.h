@@ -61,7 +61,7 @@ protected:
     QString getLink(const Atom *atom, const Node *relative, const Node **node);
     QString getAutoLink(const Atom *atom, const Node *relative, const Node **node);
 
-    const QPair<QString, QString> anchorForNode(const Node *node);
+    QPair<QString, QString> anchorForNode(const Node *node);
 
     static QString targetType(const Node *node);
 };

@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  xmlgenerator.cpp
-*/
-
 #include "xmlgenerator.h"
 #include "qdocdatabase.h"
 
@@ -316,7 +312,7 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
         return QString();
 
     QString fn = fileName(node);
-    if (node && node->parent() && (node->parent()->isQmlType() || node->parent()->isJsType())
+    if (node->parent() && (node->parent()->isQmlType() || node->parent()->isJsType())
         && node->parent()->isAbstract()) {
         if (Generator::qmlTypeContext()) {
             if (Generator::qmlTypeContext()->inherits(node->parent())) {
@@ -346,7 +342,7 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
       the link must go up to the parent directory and then
       back down into the other subdirectory.
      */
-    if (node && relative && (node != relative)) {
+    if (relative && (node != relative)) {
         if (useOutputSubdirs() && !node->isExternalPage()
             && node->outputSubdirectory() != relative->outputSubdirectory()) {
             if (link.startsWith(QString(node->outputSubdirectory() + QLatin1Char('/')))) {
@@ -419,7 +415,7 @@ QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const 
     return link;
 }
 
-const QPair<QString, QString> XmlGenerator::anchorForNode(const Node *node)
+QPair<QString, QString> XmlGenerator::anchorForNode(const Node *node)
 {
     QPair<QString, QString> anchorPair;
 
