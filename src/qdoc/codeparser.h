@@ -125,7 +125,6 @@ private:
 #define COMMAND_LIFECYCLEVERSION Doc::alias(QLatin1String("lifecycleversion"))
 #define COMMAND_LIFECYCLEWSTATUS Doc::alias(QLatin1String("lifecyclestatus"))
 #define COMMAND_MACRO Doc::alias(QLatin1String("macro"))
-#define COMMAND_MAINCLASS Doc::alias(QLatin1String("mainclass"))
 #define COMMAND_MODULE Doc::alias(QLatin1String("module"))
 #define COMMAND_NAMESPACE Doc::alias(QLatin1String("namespace"))
 #define COMMAND_NEXTPAGE Doc::alias(QLatin1String("nextpage"))

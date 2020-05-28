@@ -607,9 +607,6 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         qdb_->addToQmlModule(arg, node);
     } else if (command == COMMAND_INJSMODULE) {
         qdb_->addToJsModule(arg, node);
-    } else if (command == COMMAND_MAINCLASS) {
-        node->doc().location().warning(
-                QStringLiteral("'\\mainclass' is deprecated. Consider '\\ingroup mainclasses'"));
     } else if (command == COMMAND_OBSOLETE) {
         node->setStatus(Node::Obsolete);
     } else if (command == COMMAND_NONREENTRANT) {
