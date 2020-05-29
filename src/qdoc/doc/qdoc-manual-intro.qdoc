@@ -88,7 +88,7 @@
 
     \section1 Running QDoc
 
-    The name of the QDoc program is \c {qdoc}. To run qdoc from the
+    The name of the QDoc program is \c {qdoc}. To run QDoc from the
     command line, give it the name of a configuration file:
 
     \quotation
@@ -284,7 +284,7 @@
 
     For each QDoc comment it finds, it searches the master tree for
     the item where the documentation belongs. Then it interprets the
-    qdoc commands in the comment and stores the interpreted commands
+    QDoc commands in the comment and stores the interpreted commands
     and the comment text in the tree node for the item.
 
     Finally, QDoc traverses the master tree. For each node, if the

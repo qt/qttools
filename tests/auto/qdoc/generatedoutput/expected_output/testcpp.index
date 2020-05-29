@@ -22,16 +22,19 @@
                     <parameter type="bool" name="b" default=""/>
                 </function>
                 <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
-                    <parameter type="int" name="v" default=""/>
+                    <parameter type="int" name="v" default="0"/>
                 </function>
                 <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)">
                     <parameter type="int" name="i" default=""/>
                     <parameter type="bool" name="b" default="false"/>
                 </function>
                 <function name="virtualFun" fullname="TestQDoc::Test::virtualFun" href="testqdoc-test.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="false" type="void" signature="void virtualFun()"/>
+                <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true"/>
             </class>
             <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A derived class in a namespace">
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override"/>
+                <alias name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-alias" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType"/>
+                <alias name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-alias" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
             </class>
         </namespace>
         <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" module="TestCPP" members="TestQDoc,Test,TestDerived" brief="A test module page"/>

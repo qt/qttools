@@ -2130,10 +2130,11 @@ void DocBookGenerator::generateBody(const Node *node)
                 writer->writeTextElement(dbNamespace, "para", t);
         }
     } else if (!node->isSharingComment()) {
-        if (fn) {
-            if (!fn->overridesThis().isEmpty())
-                generateReimplementsClause(fn);
-        }
+        // Reimplements clause and type alias info precede body text
+        if (fn && !fn->overridesThis().isEmpty())
+            generateReimplementsClause(fn);
+        else if (node->isTypeAlias())
+            generateAddendum(node, TypeAlias, nullptr, false);
 
         if (!generateText(node->doc().body(), node)) {
             if (node->isMarkedReimp())
@@ -2751,6 +2752,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         else if (functionNode->isDefault())
             signature += " = default";
         generateSynopsisInfo("signature", signature);
+    } else if (node->isTypedef()) {
+        writer->writeTextElement(dbNamespace, "type", node->plainName());
     } else {
         node->doc().location().warning(tr("Unexpected node type in generateDocBookSynopsis: %1")
                                                .arg(node->nodeTypeString()));
@@ -3193,10 +3196,10 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
 
     // First generate the extra part if needed (condition from HtmlGenerator::generateSynopsis).
     if (generateExtra) {
-        if (node->nodeType() == Node::Function) {
-            const auto func = static_cast<const FunctionNode *>(node);
-            if (style != Section::Summary && style != Section::Accessors) {
-                QStringList bracketed;
+        if (style != Section::Summary && style != Section::Accessors) {
+            QStringList bracketed;
+            if (node->isFunction()) {
+                const auto func = static_cast<const FunctionNode *>(node);
                 if (func->isStatic()) {
                     bracketed += "static";
                 } else if (!func->isNonvirtual()) {
@@ -3218,11 +3221,12 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
                     bracketed += "signal";
                 else if (func->isSlot())
                     bracketed += "slot";
-
-                if (!bracketed.isEmpty())
-                    writer->writeCharacters(QLatin1Char('[') + bracketed.join(' ')
-                                            + QStringLiteral("] "));
+            } else if (node->isTypeAlias()) {
+                bracketed += "alias";
             }
+            if (!bracketed.isEmpty())
+                writer->writeCharacters(QLatin1Char('[') + bracketed.join(' ')
+                                        + QStringLiteral("] "));
         }
 
         if (style == Section::Summary) {
@@ -3233,6 +3237,8 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
                 extra = "(deprecated) ";
             else if (node->isObsolete())
                 extra = "(obsolete) ";
+            else if (node->isTypeAlias())
+                extra = "(alias) ";
 
             if (!extra.isEmpty())
                 writer->writeCharacters(extra);
@@ -3443,12 +3449,15 @@ void DocBookGenerator::generateOverloadedSignal(const Node *node)
   Generates an addendum note of type \a type for \a node. \a marker
   is unused in this generator.
 */
-void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker)
+void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMarker *marker,
+                                        bool generateNote)
 {
     Q_UNUSED(marker);
     Q_ASSERT(node && !node->name().isEmpty());
-    writer->writeStartElement(dbNamespace, "note");
-    newLine();
+    if (generateNote) {
+        writer->writeStartElement(dbNamespace, "note");
+        newLine();
+    }
     switch (type) {
     case Invokable:
         writer->writeStartElement(dbNamespace, "para");
@@ -3511,12 +3520,33 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         }
         break;
     }
+    case TypeAlias:
+    {
+        if (!node->isTypeAlias())
+            return;
+        writer->writeStartElement(dbNamespace, "para");
+        const auto *ta = static_cast<const TypeAliasNode *>(node);
+        writer->writeCharacters("This is a type alias for ");
+        if (ta->aliasedNode() && ta->aliasedNode()->isInAPI())
+            generateSimpleLink(linkForNode(ta->aliasedNode(), nullptr),
+                    ta->aliasedNode()->plainFullName(ta->parent()));
+        else
+            writer->writeTextElement(dbNamespace, "code", ta->aliasedType());
+
+        writer->writeCharacters(".");
+        writer->writeEndElement(); // para
+        newLine();
+        break;
+    }
+
     default:
         break;
     }
 
-    writer->writeEndElement(); // note
-    newLine();
+    if (generateNote) {
+        writer->writeEndElement(); // note
+        newLine();
+    }
 }
 
 void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *relative)

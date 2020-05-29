@@ -68,6 +68,7 @@
     \li \l {image-command} {\\image}
     \li \l {include-command} {\\include}
     \li \l {ingroup-command} {\\ingroup}
+    \li \l {inheaderfile-command}{\\inheaderfile}
     \li \l {inherits-command}{\\inherits}
     \li \l {inlineimage-command} {\\inlineimage}
     \li \l {inmodule-command} {\\inmodule}
@@ -118,6 +119,7 @@
     \li \l {quotefile-command} {\\quotefile}
     \li \l {quotefromfile-command} {\\quotefromfile}
     \li \l {raw-command} {\\raw}
+    \li \l {readonly-command} {\\readonly}
     \li \l {reentrant-command} {\\reentrant}
     \li \l {reimp-command} {\\reimp}
     \li \l {relates-command} {\\relates}
@@ -143,6 +145,7 @@
     \li \l {threadsafe-command} {\\threadsafe}
     \li \l {title-command} {\\title}
     \li \l {tt-command} {\\tt}
+    \li \l {typealias-command} {\\typealias}
     \li \l {typedef-command} {\\typedef}
     \li \l {uicontrol-command} {\\uicontrol}
     \li \l {underline-command} {\\underline}

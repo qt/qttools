@@ -256,7 +256,6 @@ struct ConfigStrings
     static QString DEPENDS;
     static QString DESCRIPTION;
     static QString DOCBOOKEXTENSIONS;
-    static QString EDITION;
     static QString ENDHEADER;
     static QString EXAMPLEDIRS;
     static QString EXAMPLES;
@@ -343,7 +342,6 @@ struct ConfigStrings
 #define CONFIG_DEPENDS ConfigStrings::DEPENDS
 #define CONFIG_DESCRIPTION ConfigStrings::DESCRIPTION
 #define CONFIG_DOCBOOKEXTENSIONS ConfigStrings::DOCBOOKEXTENSIONS
-#define CONFIG_EDITION ConfigStrings::EDITION
 #define CONFIG_ENDHEADER ConfigStrings::ENDHEADER
 #define CONFIG_EXAMPLEDIRS ConfigStrings::EXAMPLEDIRS
 #define CONFIG_EXAMPLES ConfigStrings::EXAMPLES

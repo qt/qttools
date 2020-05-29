@@ -125,13 +125,7 @@ void Test::someFunctionDefaultArg(int i, bool b = false)
     return;
 }
 
-/*!
-    Function that takes a parameter \a v.
-    Also returns the value of \a v.
-\if defined(test_ignoresince)
-    \since Test 1.0
-\endif
-*/
+// Documented below with an \fn command. Unnecessary but we support it, and it's used.
 int Test::someFunction(int v)
 {
     return v;
@@ -144,12 +138,27 @@ int Test::someFunction(int v)
 */
 
 /*!
+    \fn int Test::someFunction(int v = 0)
+
+    Function that takes a parameter \a v.
+    Also returns the value of \a v.
+\if defined(test_ignoresince)
+    \since Test 1.0
+\endif
+*/
+
+/*!
     Function that must be reimplemented.
 */
 void Test::virtualFun()
 {
     return;
 }
+
+/*!
+    \typedef Test::SomeType
+    \brief A typedef.
+*/
 
 /*!
     \reimp
@@ -167,6 +176,16 @@ void TestDerived::virtualFun()
 
     Overloads that share a documentation comment, optionally taking
     a parameter \a b.
+*/
+
+/*!
+    \typealias TestDerived::DerivedType
+    An aliased typedef.
+*/
+
+/*!
+    \typedef TestDerived::NotTypedef
+    I'm an alias, not a typedef.
 */
 
 /*!

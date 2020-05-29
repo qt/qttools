@@ -39,7 +39,7 @@
                 <description/>
             </function>
             <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
-                <parameter type="int" name="v" default=""/>
+                <parameter type="int" name="v" default="0"/>
                 <description>
                     <para>Function that takes a parameter <argument>v</argument>. Also returns the value of <argument>v</argument>.</para>
                 </description>
@@ -56,6 +56,11 @@
                     <para>Function that must be reimplemented.</para>
                 </description>
             </function>
+            <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true">
+                <description>
+                    <brief>A typedef.</brief>
+                </description>
+            </typedef>
         </class>
     </document>
 </WebXML>

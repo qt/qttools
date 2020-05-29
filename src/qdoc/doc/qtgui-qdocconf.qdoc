@@ -273,7 +273,7 @@ Add the specified directories to the list of directories containing the \e .cpp 
 \endcode
 
 The \c excludedirs variable is for listing directories that should not be processed
-by qdoc, even if the same directories are included by the \c sourcedirs or \c headerdirs
+by QDoc, even if the same directories are included by the \c sourcedirs or \c headerdirs
 variables.
 
 When executed, QDoc will ignore the directories listed.

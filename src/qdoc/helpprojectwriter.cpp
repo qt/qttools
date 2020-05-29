@@ -137,6 +137,7 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     typeHash["example"] = Node::Example;
     typeHash["externalpage"] = Node::ExternalPage;
     typeHash["typedef"] = Node::Typedef;
+    typeHash["typealias"] = Node::TypeAlias;
     typeHash["function"] = Node::Function;
     typeHash["property"] = Node::Property;
     typeHash["variable"] = Node::Variable;
@@ -389,7 +390,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         if (node->parent())
             project.memberStatus[node->parent()].insert(node->status());
     } break;
-
+    case Node::TypeAlias:
     case Node::Typedef: {
         const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
         QStringList typedefDetails = keywordDetails(node);

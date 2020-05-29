@@ -11,6 +11,7 @@
 <div class="toc">
 <h3><a name="toc">Contents</a></h3>
 <ul>
+<li class="level1"><a href="#public-types">Public Types</a></li>
 <li class="level1"><a href="#public-functions">Public Functions</a></li>
 <li class="level1"><a href="#protected-functions">Protected Functions</a></li>
 <li class="level1"><a href="#macros">Macros</a></li>
@@ -31,11 +32,16 @@ target_link_libraries(mytarget PUBLIC Qt::QDocTest)</td></tr><tr><td class="memI
 <li><a href="testqdoc-test-members.html">List of all members, including inherited members</a></li>
 <li><a href="testqdoc-test-obsolete.html">Obsolete members</a></li>
 </ul>
+<a name="public-types"></a>
+<h2 id="public-types">Public Types</h2>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> typedef </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#SomeType-typedef">SomeType</a></b></td></tr>
+</table></div>
 <a name="public-functions"></a>
 <h2 id="public-functions">Public Functions</h2>
 <div class="table"><table class="alignedsummary">
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#inlineFunction">inlineFunction</a></b>()</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int <i>v</i>)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int <i>v</i> = 0)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunctionDefaultArg">someFunctionDefaultArg</a></b>(int <i>i</i>, bool <i>b</i> = false)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#virtualFun">virtualFun</a></b>()</td></tr>
 </table></div>
@@ -56,6 +62,13 @@ target_link_libraries(mytarget PUBLIC Qt::QDocTest)</td></tr><tr><td class="memI
 <h2 id="details">Detailed Description</h2>
 </div>
 <!-- @@@Test -->
+<div class="types">
+<h2>Member Type Documentation</h2>
+<!-- $$$SomeType -->
+<h3 class="fn" id="SomeType-typedef"><a name="SomeType-typedef"></a>typedef Test::<span class="name">SomeType</span></h3>
+<p>A typedef.</p>
+<!-- @@@SomeType -->
+</div>
 <div class="func">
 <h2>Member Function Documentation</h2>
 <!-- $$$ -->
@@ -69,7 +82,7 @@ target_link_libraries(mytarget PUBLIC Qt::QDocTest)</td></tr><tr><td class="memI
 <p>An inline function, documented using the \fn QDoc command.</p>
 <!-- @@@inlineFunction -->
 <!-- $$$someFunction[overload1]$$$someFunctionint -->
-<h3 class="fn" id="someFunction"><a name="someFunction"></a><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span> <i>v</i>)</h3>
+<h3 class="fn" id="someFunction"><a name="someFunction"></a><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span> <i>v</i> = 0)</h3>
 <p>Function that takes a parameter <i>v</i>. Also returns the value of <i>v</i>.</p>
 <p>This function was introduced in Test 1.0.</p>
 <!-- @@@someFunction -->
