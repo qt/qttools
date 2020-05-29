@@ -1529,14 +1529,10 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
 
     Tree *domain = nullptr;
     Node::Genus genus = Node::DontCare;
-    // Reserved for future use
-    // Node::NodeType goal = Node::NoType;
 
     if (atom->isLinkAtom()) {
         domain = atom->domain();
         genus = atom->genus();
-        // Reserved for future use
-        // goal = atom->goal();
     }
 
     if (first.isEmpty())
