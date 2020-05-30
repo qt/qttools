@@ -69,6 +69,7 @@ HEADERS += atom.h \
            topic.h \
            tree.h \
            utilities.h \
+           variablenode.h \
            webxmlgenerator.h \
            xmlgenerator.h
 
@@ -105,6 +106,7 @@ SOURCES += atom.cpp \
            tokenizer.cpp \
            tree.cpp \
            utilities.cpp \
+           variablenode.cpp \
            webxmlgenerator.cpp \
            xmlgenerator.cpp \
            yyindent.cpp

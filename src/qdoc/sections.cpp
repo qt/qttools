@@ -31,6 +31,7 @@
 #include "config.h"
 #include "generator.h"
 #include "loggingcategory.h"
+#include "variablenode.h"
 
 #include <QtCore/qobjectdefs.h>
 

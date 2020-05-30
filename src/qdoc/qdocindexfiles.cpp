@@ -34,6 +34,7 @@
 #include "location.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
+#include "variablenode.h"
 
 #include <QtCore/qxmlstream.h>
 

@@ -34,6 +34,7 @@
 
 #include "text.h"
 #include "tree.h"
+#include "variablenode.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qregularexpression.h>

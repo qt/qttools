@@ -53,6 +53,7 @@ qt_add_tool(qdoc
         topic.h
         tree.cpp tree.h
         utilities.cpp utilities.h
+        variablenode.cpp variablenode.h
         webxmlgenerator.cpp webxmlgenerator.h
         xmlgenerator.cpp xmlgenerator.h
         yyindent.cpp

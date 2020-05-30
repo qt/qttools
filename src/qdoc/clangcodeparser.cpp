@@ -48,6 +48,7 @@
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
 #include "utilities.h"
+#include "variablenode.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qelapsedtimer.h>

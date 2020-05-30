@@ -4272,18 +4272,6 @@ PropertyNode::FunctionRole PropertyNode::role(const FunctionNode *fn) const
 }
 
 /*!
-  Clone this node on the heap and make the clone a child of
-  \a parent. Return the pointer to the clone.
- */
-Node *VariableNode::clone(Aggregate *parent)
-{
-    VariableNode *vn = new VariableNode(*this); // shallow copy
-    vn->setParent(nullptr);
-    parent->addChild(vn);
-    return vn;
-}
-
-/*!
   Print some information used for debugging qdoc. Only used when debugging.
  */
 void FunctionNode::debug() const

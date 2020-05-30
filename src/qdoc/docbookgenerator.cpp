@@ -35,6 +35,7 @@
 #include "quoter.h"
 #include "qdocdatabase.h"
 #include "separator.h"
+#include "variablenode.h"
 
 #include <QtCore/qiterator.h>
 #include <QtCore/qlist.h>

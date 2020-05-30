@@ -1214,33 +1214,6 @@ inline NodeList PropertyNode::functions() const
     return list;
 }
 
-class VariableNode : public Node
-{
-public:
-    VariableNode(Aggregate *parent, const QString &name);
-
-    void setLeftType(const QString &leftType) { leftType_ = leftType; }
-    void setRightType(const QString &rightType) { rightType_ = rightType; }
-    void setStatic(bool b) { static_ = b; }
-
-    const QString &leftType() const { return leftType_; }
-    const QString &rightType() const { return rightType_; }
-    QString dataType() const { return leftType_ + rightType_; }
-    bool isStatic() const override { return static_; }
-    Node *clone(Aggregate *parent) override;
-
-private:
-    QString leftType_;
-    QString rightType_;
-    bool static_;
-};
-
-inline VariableNode::VariableNode(Aggregate *parent, const QString &name)
-    : Node(Variable, parent, name), static_(false)
-{
-    setGenus(Node::CPP);
-}
-
 class CollectionNode : public PageNode
 {
 public:
