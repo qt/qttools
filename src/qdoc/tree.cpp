@@ -29,6 +29,7 @@
 #include "tree.h"
 
 #include "doc.h"
+#include "functionnode.h"
 #include "htmlgenerator.h"
 #include "location.h"
 #include "node.h"

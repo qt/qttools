@@ -30,6 +30,7 @@
 
 #include "codemarker.h"
 #include "config.h"
+#include "functionnode.h"
 #include "generator.h"
 #include "node.h"
 #include "propertynode.h"

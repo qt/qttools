@@ -30,6 +30,7 @@
 
 #include "atom.h"
 #include "config.h"
+#include "functionnode.h"
 #include "htmlgenerator.h"
 #include "node.h"
 #include "qdocdatabase.h"

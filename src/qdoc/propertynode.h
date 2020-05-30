@@ -29,6 +29,7 @@
 #ifndef PROPERTYNODE_H
 #define PROPERTYNODE_H
 
+#include "functionnode.h"
 #include "node.h"
 
 #include <QtCore/qglobal.h>

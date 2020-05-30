@@ -30,6 +30,7 @@
 
 #include "atom.h"
 #include "config.h"
+#include "functionnode.h"
 #include "generator.h"
 #include "location.h"
 #include "loggingcategory.h"

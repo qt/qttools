@@ -31,6 +31,7 @@
 #include "config.h"
 #include "codemarker.h"
 #include "codeparser.h"
+#include "functionnode.h"
 #include "helpprojectwriter.h"
 #include "node.h"
 #include "propertynode.h"

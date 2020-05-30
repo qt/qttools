@@ -27,6 +27,8 @@
 ****************************************************************************/
 
 #include "xmlgenerator.h"
+
+#include "functionnode.h"
 #include "qdocdatabase.h"
 
 QT_BEGIN_NAMESPACE

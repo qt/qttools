@@ -24,6 +24,7 @@ qt_add_tool(qdoc
         docutilities.h
         editdistance.cpp editdistance.h
         enumitem.h
+        functionnode.cpp functionnode.h
         generator.cpp generator.h
         helpprojectwriter.cpp helpprojectwriter.h
         htmlgenerator.cpp htmlgenerator.h

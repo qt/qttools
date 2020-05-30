@@ -29,6 +29,7 @@
 #include "cppcodeparser.h"
 
 #include "config.h"
+#include "functionnode.h"
 #include "generator.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"

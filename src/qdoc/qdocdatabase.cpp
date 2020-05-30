@@ -29,6 +29,7 @@
 #include "qdocdatabase.h"
 
 #include "atom.h"
+#include "functionnode.h"
 #include "generator.h"
 #include "qdocindexfiles.h"
 #include "qdoctagfiles.h"

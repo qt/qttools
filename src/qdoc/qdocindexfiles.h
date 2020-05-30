@@ -35,6 +35,7 @@
 QT_BEGIN_NAMESPACE
 
 class Atom;
+class FunctionNode;
 class Generator;
 class QStringList;
 class QDocDatabase;

@@ -30,6 +30,7 @@
 
 #include "codechunk.h"
 #include "codeparser.h"
+#include "functionnode.h"
 #include "node.h"
 #include "qdocdatabase.h"
 #include "tokenizer.h"

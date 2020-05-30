@@ -38,6 +38,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class FunctionNode;
+
 class DocBookGenerator : public XmlGenerator
 {
 public:
