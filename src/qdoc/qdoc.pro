@@ -45,6 +45,7 @@ HEADERS += atom.h \
            docprivate.h \
            docutilities.h \
            editdistance.h \
+           enumitem.h \
            generator.h \
            helpprojectwriter.h \
            htmlgenerator.h \

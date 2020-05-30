@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_add_tool(qdoc
+    TARGET_DESCRIPTION "Qt Documentation Compiler"
     SOURCES
         atom.cpp atom.h
         clangcodeparser.cpp clangcodeparser.h
@@ -21,6 +22,7 @@ qt_add_tool(qdoc
         docprivate.cpp docprivate.h
         docutilities.h
         editdistance.cpp editdistance.h
+        enumitem.h
         generator.cpp generator.h
         helpprojectwriter.cpp helpprojectwriter.h
         htmlgenerator.cpp htmlgenerator.h
@@ -116,6 +118,9 @@ qt_extend_target(qdoc CONDITION win32-icc_x_ OR win32-msvc_x_
 #### Keys ignored in scope 11:.:.:qdoc.pro:CMAKE_BIN_DIR___contains___^\\.\\./._x_:
 # CMAKE_BIN_DIR = "$$[QT_HOST_BINS]/"
 # CMAKE_BIN_DIR_IS_ABSOLUTE = "True"
+
+#### Keys ignored in scope 12:.:.:qdoc.pro:QMAKE_HOST.os___equals___Windows:
+# CMAKE_BIN_SUFFIX = ".exe"
 qt_add_docs(qdoc
     doc/config/qdoc.qdocconf
 )

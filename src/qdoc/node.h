@@ -30,6 +30,7 @@
 #define NODE_H
 
 #include "doc.h"
+#include "enumitem.h"
 #include "parameters.h"
 
 #include <QtCore/qdir.h>
@@ -846,20 +847,6 @@ private:
     bool isdefault_;
     bool attached_;
     FlagValue readOnly_;
-};
-
-class EnumItem
-{
-public:
-    EnumItem() {}
-    EnumItem(const QString &name, const QString &value) : name_(name), value_(value) {}
-
-    const QString &name() const { return name_; }
-    const QString &value() const { return value_; }
-
-private:
-    QString name_;
-    QString value_;
 };
 
 class EnumNode : public Node
