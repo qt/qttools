@@ -26,23 +26,25 @@
 **
 ****************************************************************************/
 
-#include <cctype>
-#include <qlist.h>
-#include <qiterator.h>
-#include <quuid.h>
-#include <qurl.h>
-#include <qmap.h>
-#include <QtCore/qversionnumber.h>
-#include <QtCore/qregularexpression.h>
+#include "docbookgenerator.h"
 
 #include "codemarker.h"
 #include "config.h"
 #include "generator.h"
-#include "docbookgenerator.h"
 #include "node.h"
 #include "quoter.h"
 #include "qdocdatabase.h"
 #include "separator.h"
+
+#include <QtCore/qiterator.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
+#include <QtCore/quuid.h>
+#include <QtCore/qurl.h>
+#include <QtCore/qregularexpression.h>
+#include <QtCore/qversionnumber.h>
+
+#include <cctype>
 
 QT_BEGIN_NAMESPACE
 

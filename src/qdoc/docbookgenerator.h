@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  docbookgenerator.h
-*/
-
 #ifndef DOCBOOKGENERATOR_H
 #define DOCBOOKGENERATOR_H
 
