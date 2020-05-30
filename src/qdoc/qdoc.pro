@@ -65,6 +65,7 @@ HEADERS += atom.h \
            quoter.h \
            sections.h \
            separator.h \
+           sharedcommentnode.h \
            singleton.h \
            text.h \
            tokenizer.h \
@@ -106,6 +107,7 @@ SOURCES += atom.cpp \
            quoter.cpp \
            sections.cpp \
            separator.cpp \
+           sharedcommentnode.cpp \
            text.cpp \
            tokenizer.cpp \
            tree.cpp \

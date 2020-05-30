@@ -35,6 +35,7 @@
 #include "generator.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "sharedcommentnode.h"
 #include "tokenizer.h"
 #include "tree.h"
 
@@ -4190,41 +4191,6 @@ void CollectionNode::setLogicalModuleInfo(const QStringList &info)
         else
             logicalModuleVersionMinor_ = "0";
     }
-}
-
-/*!
-  Searches the shared comment node's member nodes for function
-  nodes. Each function node's overload flag is set.
- */
-void SharedCommentNode::setOverloadFlags()
-{
-    for (Node *n : collective_) {
-        if (n->isFunction())
-            static_cast<FunctionNode *>(n)->setOverloadFlag();
-    }
-}
-
-/*!
-  Clone this node on the heap and make the clone a child of
-  \a parent. Return the pointer to the clone.
- */
-Node *SharedCommentNode::clone(Aggregate *parent)
-{
-    SharedCommentNode *scn = new SharedCommentNode(*this); // shallow copy
-    scn->setParent(nullptr);
-    parent->addChild(scn);
-    return scn;
-}
-
-/*!
-  Sets the related nonmember flag in this node and in each
-  node in the shared comment's collective.
- */
-void SharedCommentNode::setRelatedNonmember(bool b)
-{
-    Node::setRelatedNonmember(b);
-    for (Node *n : collective_)
-        n->setRelatedNonmember(b);
 }
 
 QT_END_NAMESPACE

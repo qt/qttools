@@ -48,6 +48,7 @@ qt_add_tool(qdoc
         quoter.cpp quoter.h
         sections.cpp sections.h
         separator.cpp separator.h
+        sharedcommentnode.cpp sharedcommentnode.h
         singleton.h
         text.cpp text.h
         tokenizer.cpp tokenizer.h

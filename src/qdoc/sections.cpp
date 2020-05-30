@@ -32,6 +32,7 @@
 #include "functionnode.h"
 #include "generator.h"
 #include "loggingcategory.h"
+#include "sharedcommentnode.h"
 #include "variablenode.h"
 
 #include <QtCore/qobjectdefs.h>

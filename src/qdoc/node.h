@@ -921,43 +921,6 @@ inline void EnumNode::setFlagsType(TypedefNode *t)
     t->setAssociatedEnum(this);
 }
 
-class SharedCommentNode : public Node
-{
-public:
-    SharedCommentNode(Node *n) : Node(Node::SharedComment, n->parent(), QString())
-    {
-        collective_.reserve(1);
-        append(n);
-    }
-    SharedCommentNode(QmlTypeNode *parent, int count, QString &group)
-        : Node(Node::SharedComment, parent, group)
-    {
-        collective_.reserve(count);
-    }
-    ~SharedCommentNode() override { collective_.clear(); }
-
-    bool isPropertyGroup() const override
-    {
-        return !name().isEmpty() && !collective_.isEmpty()
-                && (collective_.at(0)->isQmlProperty() || collective_.at(0)->isJsProperty());
-    }
-    int count() const { return collective_.size(); }
-    void append(Node *n)
-    {
-        collective_.append(n);
-        n->setSharedCommentNode(this);
-        setGenus(n->genus());
-    }
-    void sort() { std::sort(collective_.begin(), collective_.end(), Node::nodeNameLessThan); }
-    const QVector<Node *> &collective() const { return collective_; }
-    void setOverloadFlags();
-    void setRelatedNonmember(bool b) override;
-    Node *clone(Aggregate *parent) override;
-
-private:
-    QVector<Node *> collective_;
-};
-
 class CollectionNode : public PageNode
 {
 public:

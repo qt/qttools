@@ -43,6 +43,7 @@
 #include "qdocdatabase.h"
 #include "quoter.h"
 #include "separator.h"
+#include "sharedcommentnode.h"
 #include "tokenizer.h"
 
 #include <QtCore/qdebug.h>

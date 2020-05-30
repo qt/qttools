@@ -33,6 +33,7 @@
 #include "generator.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
+#include "sharedcommentnode.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qfile.h>
