@@ -33,6 +33,7 @@
 #include "functionnode.h"
 #include "node.h"
 #include "qdocdatabase.h"
+#include "qmlpropertynode.h"
 #include "tokenizer.h"
 
 #include <QtCore/qdebug.h>

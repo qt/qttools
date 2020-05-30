@@ -35,6 +35,7 @@
 #include "enumnode.h"
 #include "functionnode.h"
 #include "propertynode.h"
+#include "qmlpropertynode.h"
 #include "text.h"
 #include "tree.h"
 #include "typedefnode.h"

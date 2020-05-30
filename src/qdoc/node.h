@@ -807,48 +807,6 @@ public:
     bool isFirstClassAggregate() const override { return true; }
 };
 
-class QmlPropertyNode : public Node
-{
-public:
-    QmlPropertyNode(Aggregate *parent, const QString &name, const QString &type, bool attached);
-
-    void setDataType(const QString &dataType) override { type_ = dataType; }
-    void setStored(bool stored) { stored_ = toFlagValue(stored); }
-    void setDesignable(bool designable) { designable_ = toFlagValue(designable); }
-
-    const QString &dataType() const { return type_; }
-    QString qualifiedDataType() const { return type_; }
-    bool isReadOnlySet() const { return (readOnly_ != FlagValueDefault); }
-    bool isStored() const { return fromFlagValue(stored_, true); }
-    bool isDesignable() const { return fromFlagValue(designable_, false); }
-    bool isWritable();
-    bool isDefault() const override { return isdefault_; }
-    bool isReadOnly() const override { return fromFlagValue(readOnly_, false); }
-    bool isAlias() const override { return isAlias_; }
-    bool isAttached() const override { return attached_; }
-    bool isQtQuickNode() const override { return parent()->isQtQuickNode(); }
-    QString qmlTypeName() const override { return parent()->qmlTypeName(); }
-    QString logicalModuleName() const override { return parent()->logicalModuleName(); }
-    QString logicalModuleVersion() const override { return parent()->logicalModuleVersion(); }
-    QString logicalModuleIdentifier() const override { return parent()->logicalModuleIdentifier(); }
-    QString element() const override { return parent()->name(); }
-
-    void markDefault() override { isdefault_ = true; }
-    void markReadOnly(bool flag) override { readOnly_ = toFlagValue(flag); }
-
-private:
-    PropertyNode *findCorrespondingCppProperty();
-
-private:
-    QString type_;
-    FlagValue stored_;
-    FlagValue designable_;
-    bool isAlias_;
-    bool isdefault_;
-    bool attached_;
-    FlagValue readOnly_;
-};
-
 class CollectionNode : public PageNode
 {
 public:

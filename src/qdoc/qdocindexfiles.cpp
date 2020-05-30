@@ -37,6 +37,7 @@
 #include "loggingcategory.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "qmlpropertynode.h"
 #include "typedefnode.h"
 #include "variablenode.h"
 

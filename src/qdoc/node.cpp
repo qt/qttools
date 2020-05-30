@@ -36,6 +36,7 @@
 #include "generator.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
 #include "tokenizer.h"
 #include "tree.h"
@@ -3809,121 +3810,6 @@ QmlBasicTypeNode::QmlBasicTypeNode(Aggregate *parent, const QString &name, Node:
     : Aggregate(type, parent, name)
 {
     setTitle(name);
-}
-
-/*!
-  Constructor for the QML property node.
- */
-QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, const QString &type,
-                                 bool attached)
-    : Node(parent->isJsType() ? JsProperty : QmlProperty, parent, name),
-      type_(type),
-      stored_(FlagValueDefault),
-      designable_(FlagValueDefault),
-      isAlias_(false),
-      isdefault_(false),
-      attached_(attached),
-      readOnly_(FlagValueDefault)
-{
-    if (type_ == QString("alias"))
-        isAlias_ = true;
-    if (name.startsWith("__"))
-        setStatus(Internal);
-}
-
-/*!
-  Returns \c true if a QML property or attached property is
-  not read-only. The algorithm for figuring this out is long
-  amd tedious and almost certainly will break. It currently
-  doesn't work for the qmlproperty:
-
-  \code
-      bool PropertyChanges::explicit,
-  \endcode
-
-  ...because the tokenizer gets confused on \e{explicit}.
- */
-bool QmlPropertyNode::isWritable()
-{
-    if (readOnly_ != FlagValueDefault)
-        return !fromFlagValue(readOnly_, false);
-
-    QmlTypeNode *qcn = qmlTypeNode();
-    if (qcn) {
-        if (qcn->cppClassRequired()) {
-            if (qcn->classNode()) {
-                PropertyNode *pn = findCorrespondingCppProperty();
-                if (pn)
-                    return pn->isWritable();
-                else
-                    defLocation().warning(
-                            QStringLiteral(
-                                    "No Q_PROPERTY for QML property %1::%2::%3 "
-                                    "in C++ class documented as QML type: "
-                                    "(property not found in the C++ class or its base classes)")
-                                    .arg(logicalModuleName())
-                                    .arg(qmlTypeName())
-                                    .arg(name()));
-            } else
-                defLocation().warning(QStringLiteral("No Q_PROPERTY for QML property %1::%2::%3 "
-                                                     "in C++ class documented as QML type: "
-                                                     "(C++ class not specified or not found).")
-                                              .arg(logicalModuleName())
-                                              .arg(qmlTypeName())
-                                              .arg(name()));
-        }
-    }
-    return true;
-}
-
-/*!
-  Returns a pointer this QML property's corresponding C++
-  property, if it has one.
- */
-PropertyNode *QmlPropertyNode::findCorrespondingCppProperty()
-{
-    PropertyNode *pn;
-    Node *n = parent();
-    while (n && !(n->isQmlType() || n->isJsType()))
-        n = n->parent();
-    if (n) {
-        QmlTypeNode *qcn = static_cast<QmlTypeNode *>(n);
-        ClassNode *cn = qcn->classNode();
-        if (cn) {
-            /*
-              If there is a dot in the property name, first
-              find the C++ property corresponding to the QML
-              property group.
-             */
-            QStringList dotSplit = name().split(QChar('.'));
-            pn = cn->findPropertyNode(dotSplit[0]);
-            if (pn) {
-                /*
-                  Now find the C++ property corresponding to
-                  the QML property in the QML property group,
-                  <group>.<property>.
-                 */
-                if (dotSplit.size() > 1) {
-                    QStringList path(extractClassName(pn->qualifiedDataType()));
-                    Node *nn = QDocDatabase::qdocDB()->findClassNode(path);
-                    if (nn) {
-                        ClassNode *cn = static_cast<ClassNode *>(nn);
-                        PropertyNode *pn2 = cn->findPropertyNode(dotSplit[1]);
-                        /*
-                          If found, return the C++ property
-                          corresponding to the QML property.
-                          Otherwise, return the C++ property
-                          corresponding to the QML property
-                          group.
-                         */
-                        return (pn2 ? pn2 : pn);
-                    }
-                } else
-                    return pn;
-            }
-        }
-    }
-    return nullptr;
 }
 
 /*!

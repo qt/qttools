@@ -63,6 +63,7 @@ HEADERS += atom.h \
            qdocdatabase.h \
            qdocindexfiles.h \
            qdoctagfiles.h \
+           qmlpropertynode.h \
            quoter.h \
            sections.h \
            separator.h \
@@ -107,6 +108,7 @@ SOURCES += atom.cpp \
            qdocdatabase.cpp \
            qdocindexfiles.cpp \
            qdoctagfiles.cpp \
+           qmlpropertynode.cpp \
            quoter.cpp \
            sections.cpp \
            separator.cpp \

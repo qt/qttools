@@ -37,6 +37,7 @@
 #include "node.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "qmlpropertynode.h"
 #include "separator.h"
 #include "sharedcommentnode.h"
 #include "tree.h"

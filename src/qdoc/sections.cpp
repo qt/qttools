@@ -33,6 +33,7 @@
 #include "functionnode.h"
 #include "generator.h"
 #include "loggingcategory.h"
+#include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
 #include "typedefnode.h"
 #include "variablenode.h"
