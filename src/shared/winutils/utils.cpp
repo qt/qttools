@@ -801,7 +801,7 @@ static inline MsvcDebugRuntimeResult checkMsvcDebugRuntime(const QStringList &de
             pos = -1 == lastDotPos ? 0 : lastDotPos - 1;
         }
 
-        if (lib.contains(QLatin1String("_app"), Qt::CaseInsensitive))
+        if (pos > 0 && lib.contains(QLatin1String("_app"), Qt::CaseInsensitive))
             pos -= 4;
 
         if (pos) {
