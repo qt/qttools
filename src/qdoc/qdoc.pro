@@ -38,12 +38,12 @@ HEADERS += atom.h \
            config.h \
            cppcodemarker.h \
            cppcodeparser.h \
+           ditaref.h \
            doc.h \
            docbookgenerator.h \
            docparser.h \
            docprivate.h \
            docutilities.h \
-           ditaref.h \
            editdistance.h \
            generator.h \
            helpprojectwriter.h \
@@ -55,9 +55,10 @@ HEADERS += atom.h \
            openedlist.h \
            parameters.h \
            puredocparser.h \
+           qdoccommandlineparser.h \
            qdocdatabase.h \
-           qdoctagfiles.h \
            qdocindexfiles.h \
+           qdoctagfiles.h \
            quoter.h \
            sections.h \
            separator.h \
@@ -66,10 +67,9 @@ HEADERS += atom.h \
            tokenizer.h \
            topic.h \
            tree.h \
-           xmlgenerator.h \
+           utilities.h \
            webxmlgenerator.h \
-           qdoccommandlineparser.h \
-           utilities.h
+           xmlgenerator.h
 
 SOURCES += atom.cpp \
            clangcodeparser.cpp \
@@ -93,20 +93,20 @@ SOURCES += atom.cpp \
            openedlist.cpp \
            parameters.cpp \
            puredocparser.cpp \
+           qdoccommandlineparser.cpp \
            qdocdatabase.cpp \
-           qdoctagfiles.cpp \
            qdocindexfiles.cpp \
+           qdoctagfiles.cpp \
            quoter.cpp \
            sections.cpp \
            separator.cpp \
            text.cpp \
            tokenizer.cpp \
            tree.cpp \
-           xmlgenerator.cpp \
-           yyindent.cpp \
+           utilities.cpp \
            webxmlgenerator.cpp \
-           qdoccommandlineparser.cpp \
-           utilities.cpp
+           xmlgenerator.cpp \
+           yyindent.cpp
 
 ### QML/JS Parser ###
 
