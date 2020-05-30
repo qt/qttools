@@ -55,6 +55,7 @@ qt_add_tool(qdoc
         tokenizer.cpp tokenizer.h
         topic.h
         tree.cpp tree.h
+        typedefnode.cpp typedefnode.h
         utilities.cpp utilities.h
         variablenode.cpp variablenode.h
         webxmlgenerator.cpp webxmlgenerator.h

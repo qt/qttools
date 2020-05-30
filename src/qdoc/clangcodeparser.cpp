@@ -49,6 +49,7 @@
 #include "loggingcategory.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "typedefnode.h"
 #include "utilities.h"
 #include "variablenode.h"
 

@@ -34,6 +34,7 @@
 #include "htmlgenerator.h"
 #include "node.h"
 #include "qdocdatabase.h"
+#include "typedefnode.h"
 
 #include <QtCore/qcryptographichash.h>
 #include <QtCore/qdebug.h>

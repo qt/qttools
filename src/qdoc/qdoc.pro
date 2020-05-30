@@ -71,6 +71,7 @@ HEADERS += atom.h \
            tokenizer.h \
            topic.h \
            tree.h \
+           typedefnode.h \
            utilities.h \
            variablenode.h \
            webxmlgenerator.h \
@@ -111,6 +112,7 @@ SOURCES += atom.cpp \
            text.cpp \
            tokenizer.cpp \
            tree.cpp \
+           typedefnode.cpp \
            utilities.cpp \
            variablenode.cpp \
            webxmlgenerator.cpp \

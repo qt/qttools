@@ -875,52 +875,6 @@ private:
     bool isScoped_;
 };
 
-class TypedefNode : public Node
-{
-public:
-    TypedefNode(Aggregate *parent, const QString &name, NodeType type = Typedef)
-        : Node(type, parent, name), associatedEnum_(nullptr)
-    {
-    }
-
-    bool hasAssociatedEnum() const { return associatedEnum_ != nullptr; }
-    const EnumNode *associatedEnum() const { return associatedEnum_; }
-    Node *clone(Aggregate *parent) override;
-
-private:
-    void setAssociatedEnum(const EnumNode *t);
-
-    friend class EnumNode;
-
-    const EnumNode *associatedEnum_;
-};
-
-class TypeAliasNode : public TypedefNode
-{
-public:
-    TypeAliasNode(Aggregate *parent,
-                  const QString &name,
-                  const QString &aliasedType)
-        : TypedefNode(parent, name, NodeType::TypeAlias), aliasedType_(aliasedType)
-    {
-    }
-
-    const QString &aliasedType() const { return aliasedType_; }
-    const Node *aliasedNode() const { return aliasedNode_; }
-    void setAliasedNode(const Node *node) { aliasedNode_ = node; }
-    Node *clone(Aggregate *parent) override;
-
-private:
-    QString aliasedType_;
-    const Node *aliasedNode_ {};
-};
-
-inline void EnumNode::setFlagsType(TypedefNode *t)
-{
-    flagsType_ = t;
-    t->setAssociatedEnum(this);
-}
-
 class CollectionNode : public PageNode
 {
 public:

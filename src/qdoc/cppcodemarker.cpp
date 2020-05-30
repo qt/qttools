@@ -36,6 +36,7 @@
 #include "propertynode.h"
 #include "text.h"
 #include "tree.h"
+#include "typedefnode.h"
 #include "variablenode.h"
 
 #include <QtCore/qdebug.h>

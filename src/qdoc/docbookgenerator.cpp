@@ -38,6 +38,7 @@
 #include "qdocdatabase.h"
 #include "separator.h"
 #include "sharedcommentnode.h"
+#include "typedefnode.h"
 #include "variablenode.h"
 
 #include <QtCore/qiterator.h>

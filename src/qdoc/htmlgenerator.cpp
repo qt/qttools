@@ -39,6 +39,7 @@
 #include "separator.h"
 #include "sharedcommentnode.h"
 #include "tree.h"
+#include "typedefnode.h"
 #include "quoter.h"
 
 #include <QtCore/qdebug.h>

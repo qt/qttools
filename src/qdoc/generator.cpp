@@ -45,6 +45,7 @@
 #include "separator.h"
 #include "sharedcommentnode.h"
 #include "tokenizer.h"
+#include "typedefnode.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>

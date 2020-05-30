@@ -38,6 +38,7 @@
 #include "sharedcommentnode.h"
 #include "tokenizer.h"
 #include "tree.h"
+#include "typedefnode.h"
 
 #include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
@@ -3728,45 +3729,6 @@ Node *EnumNode::clone(Aggregate *parent)
     en->setParent(nullptr);
     parent->addChild(en);
     return en;
-}
-
-/*!
-  \class TypedefNode
- */
-
-/*!
- */
-void TypedefNode::setAssociatedEnum(const EnumNode *enume)
-{
-    associatedEnum_ = enume;
-}
-
-/*!
-  Clone this node on the heap and make the clone a child of
-  \a parent. Return the pointer to the clone.
- */
-Node *TypedefNode::clone(Aggregate *parent)
-{
-    TypedefNode *tn = new TypedefNode(*this); // shallow copy
-    tn->setParent(nullptr);
-    parent->addChild(tn);
-    return tn;
-}
-
-/*!
-  \class TypeAliasNode
- */
-
-/*!
-  Clone this node on the heap and make the clone a child of
-  \a parent. Return the pointer to the clone.
- */
-Node *TypeAliasNode::clone(Aggregate *parent)
-{
-    TypeAliasNode *tan = new TypeAliasNode(*this); // shallow copy
-    tan->setParent(nullptr);
-    parent->addChild(tan);
-    return tan;
 }
 
 bool QmlTypeNode::qmlOnly = false;

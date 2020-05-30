@@ -34,6 +34,7 @@
 #include "node.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "typedefnode.h"
 
 QT_BEGIN_NAMESPACE
 

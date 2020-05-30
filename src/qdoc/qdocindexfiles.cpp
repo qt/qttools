@@ -36,6 +36,7 @@
 #include "loggingcategory.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "typedefnode.h"
 #include "variablenode.h"
 
 #include <QtCore/qxmlstream.h>
