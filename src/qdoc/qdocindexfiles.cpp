@@ -33,6 +33,7 @@
 #include "generator.h"
 #include "location.h"
 #include "loggingcategory.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 #include "variablenode.h"
 

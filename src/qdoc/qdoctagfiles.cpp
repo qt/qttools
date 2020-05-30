@@ -31,6 +31,7 @@
 #include "htmlgenerator.h"
 #include "location.h"
 #include "node.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 
 QT_BEGIN_NAMESPACE

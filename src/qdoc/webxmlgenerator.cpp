@@ -31,6 +31,7 @@
 #include "config.h"
 #include "helpprojectwriter.h"
 #include "node.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 #include "separator.h"
 #include "quoter.h"

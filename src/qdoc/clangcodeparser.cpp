@@ -46,6 +46,7 @@
 #include "codechunk.h"
 #include "config.h"
 #include "loggingcategory.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 #include "utilities.h"
 #include "variablenode.h"

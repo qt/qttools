@@ -32,6 +32,7 @@
 #include "config.h"
 #include "generator.h"
 #include "node.h"
+#include "propertynode.h"
 #include "quoter.h"
 #include "qdocdatabase.h"
 #include "separator.h"

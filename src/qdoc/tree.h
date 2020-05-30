@@ -34,6 +34,7 @@
 #define TREE_H
 
 #include "node.h"
+#include "propertynode.h"
 
 #include <QtCore/qstack.h>
 

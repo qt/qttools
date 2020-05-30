@@ -33,6 +33,7 @@
 #include "codeparser.h"
 #include "helpprojectwriter.h"
 #include "node.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 #include "separator.h"
 #include "tree.h"

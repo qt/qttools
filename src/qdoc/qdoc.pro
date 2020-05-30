@@ -55,6 +55,7 @@ HEADERS += atom.h \
            node.h \
            openedlist.h \
            parameters.h \
+           propertynode.h \
            puredocparser.h \
            qdoccommandlineparser.h \
            qdocdatabase.h \
@@ -94,6 +95,7 @@ SOURCES += atom.cpp \
            node.cpp \
            openedlist.cpp \
            parameters.cpp \
+           propertynode.cpp \
            puredocparser.cpp \
            qdoccommandlineparser.cpp \
            qdocdatabase.cpp \

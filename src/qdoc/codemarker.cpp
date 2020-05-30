@@ -30,6 +30,7 @@
 
 #include "config.h"
 #include "node.h"
+#include "propertynode.h"
 
 #include <QtCore/qobjectdefs.h>
 

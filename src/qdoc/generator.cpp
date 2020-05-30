@@ -38,6 +38,7 @@
 #include "loggingcategory.h"
 #include "node.h"
 #include "openedlist.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 #include "quoter.h"
 #include "separator.h"

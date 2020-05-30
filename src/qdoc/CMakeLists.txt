@@ -35,6 +35,7 @@ qt_add_tool(qdoc
         node.cpp node.h
         openedlist.cpp openedlist.h
         parameters.cpp parameters.h
+        propertynode.cpp propertynode.h
         puredocparser.cpp puredocparser.h
         qdoccommandlineparser.cpp qdoccommandlineparser.h
         qdocdatabase.cpp qdocdatabase.h

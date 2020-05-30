@@ -32,6 +32,7 @@
 #include "config.h"
 #include "cppcodeparser.h"
 #include "generator.h"
+#include "propertynode.h"
 #include "qdocdatabase.h"
 #include "tokenizer.h"
 #include "tree.h"
@@ -4259,19 +4260,6 @@ QString FunctionNode::signature(bool values, bool noReturnType, bool templatePar
 }
 
 /*!
-  Returns true if function \a fn has role \a r for this
-  property.
- */
-PropertyNode::FunctionRole PropertyNode::role(const FunctionNode *fn) const
-{
-    for (int i = 0; i < 4; i++) {
-        if (functions_[i].contains(const_cast<FunctionNode *>(fn)))
-            return (FunctionRole)i;
-    }
-    return Notifier;
-}
-
-/*!
   Print some information used for debugging qdoc. Only used when debugging.
  */
 void FunctionNode::debug() const
@@ -4357,107 +4345,6 @@ bool FunctionNode::hasOverloads() const
         return true;
     if (parent())
         return parent()->hasOverloads(this);
-    return false;
-}
-
-/*!
-  \class PropertyNode
-
-  This class describes one instance of using the Q_PROPERTY macro.
- */
-
-/*!
-  The constructor sets the \a parent and the \a name, but
-  everything else is set to default values.
- */
-PropertyNode::PropertyNode(Aggregate *parent, const QString &name)
-    : Node(Property, parent, name),
-      stored_(FlagValueDefault),
-      designable_(FlagValueDefault),
-      scriptable_(FlagValueDefault),
-      writable_(FlagValueDefault),
-      user_(FlagValueDefault),
-      const_(false),
-      final_(false),
-      revision_(-1),
-      overrides_(nullptr)
-{
-    // nothing
-}
-
-/*!
-  Sets this property's \e {overridden from} property to
-  \a baseProperty, which indicates that this property
-  overrides \a baseProperty. To begin with, all the values
-  in this property are set to the corresponding values in
-  \a baseProperty.
-
-  We probably should ensure that the constant and final
-  attributes are not being overridden improperly.
- */
-void PropertyNode::setOverriddenFrom(const PropertyNode *baseProperty)
-{
-    for (int i = 0; i < NumFunctionRoles; ++i) {
-        if (functions_[i].isEmpty())
-            functions_[i] = baseProperty->functions_[i];
-    }
-    if (stored_ == FlagValueDefault)
-        stored_ = baseProperty->stored_;
-    if (designable_ == FlagValueDefault)
-        designable_ = baseProperty->designable_;
-    if (scriptable_ == FlagValueDefault)
-        scriptable_ = baseProperty->scriptable_;
-    if (writable_ == FlagValueDefault)
-        writable_ = baseProperty->writable_;
-    if (user_ == FlagValueDefault)
-        user_ = baseProperty->user_;
-    overrides_ = baseProperty;
-}
-
-/*!
-  Returns a string containing the data type qualified with "const" either
-  prepended to the data type or appended to it, or without the const
-  qualification, depending circumstances in the PropertyNode internal state.
- */
-QString PropertyNode::qualifiedDataType() const
-{
-    if (setters().isEmpty() && resetters().isEmpty()) {
-        if (type_.contains(QLatin1Char('*')) || type_.contains(QLatin1Char('&'))) {
-            // 'QWidget *' becomes 'QWidget *' const
-            return type_ + " const";
-        } else {
-            /*
-              'int' becomes 'const int' ('int const' is
-              correct C++, but looks wrong)
-             */
-            return "const " + type_;
-        }
-    } else {
-        return type_;
-    }
-}
-
-/*!
-  Returns true if this property has an access function named \a name.
- */
-bool PropertyNode::hasAccessFunction(const QString &name) const
-{
-    for (const auto &getter : getters()) {
-        if (getter->name() == name)
-            return true;
-    }
-    for (const auto &setter : setters()) {
-        if (setter->name() == name)
-            return true;
-    }
-    for (const auto &resetter : resetters()) {
-        if (resetter->name() == name)
-            return true;
-    }
-    for (const auto &notifier : notifiers()) {
-        if (notifier->name() == name)
-            return true;
-    }
     return false;
 }
 
