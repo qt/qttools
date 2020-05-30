@@ -28,6 +28,7 @@
 
 #include "qdoctagfiles.h"
 
+#include "enumnode.h"
 #include "functionnode.h"
 #include "htmlgenerator.h"
 #include "location.h"

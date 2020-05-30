@@ -35,6 +35,7 @@
 #include "config.h"
 #include "doc.h"
 #include "editdistance.h"
+#include "enumnode.h"
 #include "functionnode.h"
 #include "loggingcategory.h"
 #include "node.h"

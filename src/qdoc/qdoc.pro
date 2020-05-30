@@ -46,6 +46,7 @@ HEADERS += atom.h \
            docutilities.h \
            editdistance.h \
            enumitem.h \
+           enumnode.h \
            functionnode.h \
            generator.h \
            helpprojectwriter.h \
@@ -90,6 +91,7 @@ SOURCES += atom.cpp \
            docparser.cpp \
            docprivate.cpp \
            editdistance.cpp \
+           enumnode.cpp \
            functionnode.cpp \
            generator.cpp \
            helpprojectwriter.cpp \

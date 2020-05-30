@@ -29,6 +29,7 @@
 #include "sections.h"
 
 #include "config.h"
+#include "enumnode.h"
 #include "functionnode.h"
 #include "generator.h"
 #include "loggingcategory.h"

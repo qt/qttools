@@ -26,61 +26,60 @@
 **
 ****************************************************************************/
 
-#ifndef TYPEDEFNODE_H
-#define TYPEDEFNODE_H
-
 #include "enumnode.h"
-#include "node.h"
-
-#include <QtCore/qglobal.h>
-#include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 
-class TypedefNode : public Node
+/*!
+  \class EnumNode
+ */
+
+/*!
+  Add \a item to the enum type's item list.
+ */
+void EnumNode::addItem(const EnumItem &item)
 {
-public:
-    TypedefNode(Aggregate *parent, const QString &name, NodeType type = Typedef)
-        : Node(type, parent, name)
-    {
+    m_items.append(item);
+    m_names.insert(item.name());
+}
+
+/*!
+  Returns the access level of the enumeration item named \a name.
+  Apparently it is private if it has been omitted by qdoc's
+  omitvalue command. Otherwise it is public.
+ */
+Node::Access EnumNode::itemAccess(const QString &name) const
+{
+    if (doc().omitEnumItemNames().contains(name))
+        return Private;
+    return Public;
+}
+
+/*!
+  Returns the enum value associated with the enum \a name.
+ */
+QString EnumNode::itemValue(const QString &name) const
+{
+    for (const auto &item : qAsConst(m_items)) {
+        if (item.name() == name)
+            return item.value();
     }
+    return QString();
+}
 
-    bool hasAssociatedEnum() const { return m_associatedEnum != nullptr; }
-    const EnumNode *associatedEnum() const { return m_associatedEnum; }
-    Node *clone(Aggregate *parent) override;
+/*!
+  Clone this node on the heap and make the clone a child of
+  \a parent.
 
-private:
-    void setAssociatedEnum(const EnumNode *t);
-
-    friend class EnumNode;
-
-    const EnumNode *m_associatedEnum { nullptr };
-};
-
-class TypeAliasNode : public TypedefNode
+  Returns a pointer to the clone.
+ */
+Node *EnumNode::clone(Aggregate *parent)
 {
-public:
-    TypeAliasNode(Aggregate *parent, const QString &name, const QString &aliasedType)
-        : TypedefNode(parent, name, NodeType::TypeAlias), m_aliasedType(aliasedType)
-    {
-    }
+    auto *en = new EnumNode(*this); // shallow copy
+    en->setParent(nullptr);
+    parent->addChild(en);
 
-    const QString &aliasedType() const { return m_aliasedType; }
-    const Node *aliasedNode() const { return m_aliasedNode; }
-    void setAliasedNode(const Node *node) { m_aliasedNode = node; }
-    Node *clone(Aggregate *parent) override;
-
-private:
-    QString m_aliasedType {};
-    const Node *m_aliasedNode { nullptr };
-};
-
-inline void EnumNode::setFlagsType(TypedefNode *typedefNode)
-{
-    m_flagsType = typedefNode;
-    typedefNode->setAssociatedEnum(this);
+    return en;
 }
 
 QT_END_NAMESPACE
-
-#endif // TYPEDEFNODE_H

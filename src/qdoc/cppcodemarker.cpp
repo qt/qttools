@@ -32,6 +32,7 @@
 
 #include "cppcodemarker.h"
 
+#include "enumnode.h"
 #include "functionnode.h"
 #include "propertynode.h"
 #include "text.h"

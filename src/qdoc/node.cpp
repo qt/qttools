@@ -31,6 +31,7 @@
 #include "codemarker.h"
 #include "config.h"
 #include "cppcodeparser.h"
+#include "enumnode.h"
 #include "functionnode.h"
 #include "generator.h"
 #include "propertynode.h"
@@ -3681,55 +3682,6 @@ bool PageNode::setTitle(const QString &title)
   It's \a name is the argument from the \c {\\externalpage} command. The node
   type is Node::ExternalPage, and the page type is Node::ArticlePage.
  */
-
-/*!
-  \class EnumNode
- */
-
-/*!
-  Add \a item to the enum type's item list.
- */
-void EnumNode::addItem(const EnumItem &item)
-{
-    items_.append(item);
-    names_.insert(item.name());
-}
-
-/*!
-  Returns the access level of the enumeration item named \a name.
-  Apparently it is private if it has been omitted by qdoc's
-  omitvalue command. Otherwise it is public.
- */
-Node::Access EnumNode::itemAccess(const QString &name) const
-{
-    if (doc().omitEnumItemNames().contains(name))
-        return Private;
-    return Public;
-}
-
-/*!
-  Returns the enum value associated with the enum \a name.
- */
-QString EnumNode::itemValue(const QString &name) const
-{
-    for (const auto &item : qAsConst(items_)) {
-        if (item.name() == name)
-            return item.value();
-    }
-    return QString();
-}
-
-/*!
-  Clone this node on the heap and make the clone a child of
-  \a parent. Return the pointer to the clone.
- */
-Node *EnumNode::clone(Aggregate *parent)
-{
-    EnumNode *en = new EnumNode(*this); // shallow copy
-    en->setParent(nullptr);
-    parent->addChild(en);
-    return en;
-}
 
 bool QmlTypeNode::qmlOnly = false;
 QMultiMap<const Node *, Node *> QmlTypeNode::inheritedBy;
