@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -40,21 +40,21 @@
 
 QT_BEGIN_NAMESPACE
 
-class Node;
-class Tree;
-class EnumNode;
-class PageNode;
-class ClassNode;
 class Aggregate;
-class ExampleNode;
-class TypedefNode;
-class QmlTypeNode;
-class QDocDatabase;
-class FunctionNode;
-class PropertyNode;
+class ClassNode;
 class CollectionNode;
+class EnumNode;
+class ExampleNode;
+class FunctionNode;
+class Node;
+class QDocDatabase;
+class QmlTypeNode;
+class PageNode;
+class PropertyNode;
 class QmlPropertyNode;
 class SharedCommentNode;
+class Tree;
+class TypedefNode;
 
 typedef QMap<QString, FunctionNode *> FunctionMap;
 typedef QList<Node *> NodeList;
