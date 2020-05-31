@@ -30,6 +30,7 @@
 #define QDOCDATABASE_H
 
 #include "config.h"
+#include "examplenode.h"
 #include "propertynode.h"
 #include "text.h"
 #include "tree.h"

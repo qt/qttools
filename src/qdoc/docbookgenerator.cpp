@@ -34,6 +34,7 @@
 #include "collectionnode.h"
 #include "config.h"
 #include "enumnode.h"
+#include "examplenode.h"
 #include "functionnode.h"
 #include "generator.h"
 #include "node.h"

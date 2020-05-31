@@ -43,6 +43,7 @@ typedef QMultiMap<QString, Node *> NodeMultiMap;
 typedef QMap<Node *, NodeMultiMap> ParentMaps;
 
 class CodeMarker;
+class ExampleNode;
 class FunctionNode;
 class Location;
 class Node;

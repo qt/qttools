@@ -39,6 +39,7 @@
 QT_BEGIN_NAMESPACE
 
 class Config;
+class ExampleNode;
 class HelpProjectWriter;
 
 class HtmlGenerator : public XmlGenerator

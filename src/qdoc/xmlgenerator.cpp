@@ -29,6 +29,7 @@
 #include "xmlgenerator.h"
 
 #include "enumnode.h"
+#include "examplenode.h"
 #include "functionnode.h"
 #include "qdocdatabase.h"
 #include "typedefnode.h"

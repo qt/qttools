@@ -34,6 +34,7 @@
 QT_BEGIN_NAMESPACE
 
 class ClassNode;
+class ExampleNode;
 class FunctionNode;
 class Aggregate;
 

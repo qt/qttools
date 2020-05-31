@@ -50,6 +50,7 @@ HEADERS += access.h \
            editdistance.h \
            enumitem.h \
            enumnode.h \
+           examplenode.h \
            functionnode.h \
            generator.h \
            headernode.h \

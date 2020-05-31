@@ -31,6 +31,7 @@
 #include "access.h"
 #include "collectionnode.h"
 #include "config.h"
+#include "examplenode.h"
 #include "functionnode.h"
 #include "generator.h"
 #include "headernode.h"

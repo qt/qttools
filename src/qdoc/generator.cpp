@@ -39,6 +39,7 @@
 #include "doc.h"
 #include "editdistance.h"
 #include "enumnode.h"
+#include "examplenode.h"
 #include "functionnode.h"
 #include "loggingcategory.h"
 #include "node.h"

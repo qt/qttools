@@ -540,31 +540,6 @@ protected:
     FunctionMap functionMap_;
 };
 
-class ExampleNode : public PageNode
-{
-public:
-    ExampleNode(Aggregate *parent, const QString &name) : PageNode(Node::Example, parent, name) {}
-    QString imageFileName() const override { return imageFileName_; }
-    void setImageFileName(const QString &ifn) override { imageFileName_ = ifn; }
-    const QStringList &files() const { return files_; }
-    const QStringList &images() const { return images_; }
-    const QString &projectFile() const { return projectFile_; }
-    void setFiles(const QStringList files, const QString &projectFile)
-    {
-        files_ = files;
-        projectFile_ = projectFile;
-    }
-    void setImages(const QStringList images) { images_ = images; }
-    void appendFile(QString &file) { files_.append(file); }
-    void appendImage(QString &image) { images_.append(image); }
-
-private:
-    QString imageFileName_;
-    QString projectFile_;
-    QStringList files_;
-    QStringList images_;
-};
-
 QT_END_NAMESPACE
 
 #endif

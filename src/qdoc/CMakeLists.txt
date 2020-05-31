@@ -28,6 +28,7 @@ qt_add_tool(qdoc
         editdistance.cpp editdistance.h
         enumitem.h
         enumnode.cpp enumnode.h
+        examplenode.h
         functionnode.cpp functionnode.h
         generator.cpp generator.h
         headernode.cpp headernode.h
