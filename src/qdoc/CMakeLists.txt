@@ -60,6 +60,7 @@ qt_add_tool(qdoc
         topic.h
         tree.cpp tree.h
         typedefnode.cpp typedefnode.h
+        usingclause.cpp usingclause.h
         utilities.cpp utilities.h
         variablenode.cpp variablenode.h
         webxmlgenerator.cpp webxmlgenerator.h

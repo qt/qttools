@@ -76,6 +76,7 @@ HEADERS += access.h \
            topic.h \
            tree.h \
            typedefnode.h \
+           usingclause.h \
            utilities.h \
            variablenode.h \
            webxmlgenerator.h \
@@ -120,6 +121,7 @@ SOURCES += atom.cpp \
            tokenizer.cpp \
            tree.cpp \
            typedefnode.cpp \
+           usingclause.cpp \
            utilities.cpp \
            variablenode.cpp \
            webxmlgenerator.cpp \

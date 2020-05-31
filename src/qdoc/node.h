@@ -34,6 +34,7 @@
 #include "enumitem.h"
 #include "parameters.h"
 #include "relatedclass.h"
+#include "usingclause.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qmap.h>
@@ -579,18 +580,6 @@ private:
     QString whereDocumented_;
     NamespaceNode *docNode_;
     NodeList includedChildren_;
-};
-
-struct UsingClause
-{
-    UsingClause() {}
-    UsingClause(const QString &signature) : node_(nullptr), signature_(signature) {}
-    const QString &signature() const { return signature_; }
-    const Node *node() { return node_; }
-    void setNode(const Node *n) { node_ = n; }
-
-    const Node *node_;
-    QString signature_;
 };
 
 class ClassNode : public Aggregate

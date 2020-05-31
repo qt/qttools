@@ -37,6 +37,7 @@
 #include "qdocdatabase.h"
 #include "text.h"
 #include "typedefnode.h"
+#include "usingclause.h"
 
 QT_BEGIN_NAMESPACE
 
