@@ -51,6 +51,7 @@ HEADERS += access.h \
            enumitem.h \
            enumnode.h \
            examplenode.h \
+           externalpagenode.h \
            functionnode.h \
            generator.h \
            headernode.h \
@@ -106,6 +107,7 @@ SOURCES += atom.cpp \
            docprivate.cpp \
            editdistance.cpp \
            enumnode.cpp \
+           externalpagenode.cpp \
            functionnode.cpp \
            generator.cpp \
            headernode.cpp \

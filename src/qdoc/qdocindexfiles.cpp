@@ -35,6 +35,7 @@
 #include "config.h"
 #include "enumnode.h"
 #include "examplenode.h"
+#include "externalpagenode.h"
 #include "functionnode.h"
 #include "generator.h"
 #include "headernode.h"

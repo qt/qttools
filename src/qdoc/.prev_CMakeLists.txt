@@ -28,6 +28,7 @@ qt_add_tool(qdoc
         enumitem.h
         enumnode.cpp enumnode.h
         examplenode.h
+        externalpagenode.cpp externalpagenode.h
         functionnode.cpp functionnode.h
         generator.cpp generator.h
         headernode.cpp headernode.h

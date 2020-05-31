@@ -451,17 +451,6 @@ protected:
     QStringList groupNames_;
 };
 
-class ExternalPageNode : public PageNode
-{
-public:
-    ExternalPageNode(Aggregate *parent, const QString &url)
-        : PageNode(Node::ExternalPage, parent, url)
-    {
-        setPageType(Node::ArticlePage);
-        setUrl(url);
-    }
-};
-
 class Aggregate : public PageNode
 {
 public:
