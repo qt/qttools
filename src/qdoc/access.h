@@ -26,48 +26,15 @@
 **
 ****************************************************************************/
 
-#ifndef ENUMNODE_H
-#define ENUMNODE_H
-
-#include "access.h"
-#include "node.h"
-#include "typedefnode.h"
-
 #include <QtCore/qglobal.h>
-#include <QtCore/qset.h>
-#include <QtCore/qstring.h>
-#include <QtCore/qvector.h>
+
+#ifndef ACCESS_H
+#define ACCESS_H
 
 QT_BEGIN_NAMESPACE
 
-class Aggregate;
-
-class EnumNode : public Node
-{
-public:
-    EnumNode(Aggregate *parent, const QString &name, bool isScoped = false)
-        : Node(Enum, parent, name), m_isScoped(isScoped)
-    {
-    }
-
-    void addItem(const EnumItem &item);
-    void setFlagsType(TypedefNode *typedefNode);
-    bool hasItem(const QString &name) const { return m_names.contains(name); }
-    bool isScoped() const { return m_isScoped; }
-
-    const QVector<EnumItem> &items() const { return m_items; }
-    Access itemAccess(const QString &name) const;
-    const TypedefNode *flagsType() const { return m_flagsType; }
-    QString itemValue(const QString &name) const;
-    Node *clone(Aggregate *parent) override;
-
-private:
-    QVector<EnumItem> m_items {};
-    QSet<QString> m_names {};
-    const TypedefNode *m_flagsType { nullptr };
-    bool m_isScoped { false };
-};
+enum class Access : unsigned char { Public, Protected, Private };
 
 QT_END_NAMESPACE
 
-#endif // ENUMNODE_H
+#endif // ACCESS_H

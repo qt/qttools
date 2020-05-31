@@ -28,6 +28,8 @@
 
 #include "enumnode.h"
 
+#include "typedefnode.h"
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -48,11 +50,11 @@ void EnumNode::addItem(const EnumItem &item)
   Apparently it is private if it has been omitted by qdoc's
   omitvalue command. Otherwise it is public.
  */
-Node::Access EnumNode::itemAccess(const QString &name) const
+Access EnumNode::itemAccess(const QString &name) const
 {
     if (doc().omitEnumItemNames().contains(name))
-        return Private;
-    return Public;
+        return Access::Private;
+    return Access::Public;
 }
 
 /*!

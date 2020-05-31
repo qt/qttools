@@ -8,6 +8,7 @@ qt_add_tool(qdoc
     TARGET_DESCRIPTION "Qt Documentation Compiler"
     TOOLS_TARGET Tools # special case
     SOURCES
+        access.h
         atom.cpp atom.h
         clangcodeparser.cpp clangcodeparser.h
         codechunk.cpp codechunk.h

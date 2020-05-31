@@ -28,6 +28,7 @@
 
 #include "htmlgenerator.h"
 
+#include "access.h"
 #include "config.h"
 #include "codemarker.h"
 #include "codeparser.h"
@@ -1143,7 +1144,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
         const QVector<Node *> members = section.members();
         for (const auto &member : members) {
-            if (member->access() == Node::Private) // ### check necessary?
+            if (member->access() == Access::Private) // ### check necessary?
                 continue;
             if (!headerGenerated) {
                 if (!section.divClass().isEmpty())
@@ -1933,9 +1934,9 @@ void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text
             if (cls.node_) {
                 appendFullName(*text, cls.node_, classe);
 
-                if (cls.access_ == Node::Protected) {
+                if (cls.access_ == Access::Protected) {
                     *text << " (protected)";
-                } else if (cls.access_ == Node::Private) {
+                } else if (cls.access_ == Access::Private) {
                     *text << " (private)";
                 }
                 *text << comma(index++, classe->baseClasses().count());
@@ -2345,7 +2346,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             out() << "<ul>\n";
             for (int j = 0; j < keys.size(); j++) {
                 Node *node = nodes[j];
-                if (node->access() == Node::Private || node->isInternal())
+                if (node->access() == Access::Private || node->isInternal())
                     continue;
                 if (node->isSharingComment() && node->sharedCommentNode()->isPropertyGroup())
                     continue;
@@ -2416,7 +2417,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
 
         const NodeVector &members = section->obsoleteMembers();
         for (const auto &member : members) {
-            if (member->access() != Node::Private)
+            if (member->access() != Access::Private)
                 generateDetailedMember(member, aggregate, marker);
         }
     }
@@ -2942,7 +2943,7 @@ void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, 
 
         int i = 0;
         for (const auto &member : nv) {
-            if (member->access() == Node::Private)
+            if (member->access() == Access::Private)
                 continue;
 
             if (alignNames) {
@@ -2998,7 +2999,7 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
 
         int i = 0;
         for (const auto &member : members) {
-            if (member->access() == Node::Private)
+            if (member->access() == Access::Private)
                 continue;
 
             if (alignNames) {

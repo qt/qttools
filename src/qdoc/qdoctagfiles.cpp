@@ -28,6 +28,7 @@
 
 #include "qdoctagfiles.h"
 
+#include "access.h"
 #include "enumnode.h"
 #include "functionnode.h"
 #include "htmlgenerator.h"
@@ -208,13 +209,13 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
 
         QString access;
         switch (node->access()) {
-        case Node::Public:
+        case Access::Public:
             access = "public";
             break;
-        case Node::Protected:
+        case Access::Protected:
             access = "protected";
             break;
-        case Node::Private:
+        case Access::Private:
         default:
             continue;
         }

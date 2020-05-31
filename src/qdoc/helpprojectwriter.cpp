@@ -28,6 +28,7 @@
 
 #include "helpprojectwriter.h"
 
+#include "access.h"
 #include "atom.h"
 #include "config.h"
 #include "enumnode.h"
@@ -319,7 +320,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
             for (const auto &item : items) {
                 QStringList details;
 
-                if (enumNode->itemAccess(item.name()) == Node::Private)
+                if (enumNode->itemAccess(item.name()) == Access::Private)
                     continue;
 
                 if (!node->parent()->name().isEmpty()) {

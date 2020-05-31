@@ -30,7 +30,8 @@ win32-icc*|win32-msvc*:{
     QMAKE_LFLAGS += /STACK:4194304
 }
 
-HEADERS += atom.h \
+HEADERS += access.h \
+           atom.h \
            clangcodeparser.h \
            codechunk.h \
            codemarker.h \

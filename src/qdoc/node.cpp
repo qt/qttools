@@ -265,7 +265,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 */
 
 /*!
-  \enum Node::Access
+  \enum Access
 
   An unsigned char value that indicates the C++ access level.
 
@@ -699,7 +699,7 @@ void Node::setDoc(const Doc &doc, bool replace)
  */
 Node::Node(NodeType type, Aggregate *parent, const QString &name)
     : nodeType_(type),
-      access_(Public),
+      access_(Access::Public),
       safeness_(UnspecifiedSafeness),
       pageType_(NoPageType),
       status_(Active),
@@ -1083,11 +1083,11 @@ void Node::setSince(const QString &since)
 QString Node::accessString() const
 {
     switch (access_) {
-    case Protected:
+    case Access::Protected:
         return QLatin1String("protected");
-    case Private:
+    case Access::Private:
         return QLatin1String("private");
-    case Public:
+    case Access::Public:
     default:
         break;
     }
@@ -2143,7 +2143,7 @@ void Aggregate::markUndocumentedChildrenInternal()
                     if (static_cast<TypedefNode *>(child)->hasAssociatedEnum())
                         continue;
                 }
-                child->setAccess(Node::Private);
+                child->setAccess(Access::Private);
                 child->setStatus(Node::Internal);
             }
         }
@@ -3221,13 +3221,13 @@ void NamespaceNode::includeChild(Node *child)
   instances of RelatedClass in containers.
  */
 
-/*! \fn RelatedClass::RelatedClass(Node::Access access, ClassNode *node)
+/*! \fn RelatedClass::RelatedClass(Access access, ClassNode *node)
   This is the constructor used when the related class has been resolved.
   In other words, when the ClassNode has been created so that \a node is
   not \c nullptr.
 */
 
-/*! \fn RelatedClass::RelatedClass(Node::Access access, const QStringList &path, const QString &signature)
+/*! \fn RelatedClass::RelatedClass(Access access, const QStringList &path, const QString &signature)
   This is the constructor used when the related class has not bee resolved,
   because it hasn't been created yet. In that case, we store the qualified
   \a path name of the class and the \a signature of the class, which I think
@@ -3238,7 +3238,7 @@ void NamespaceNode::includeChild(Node *child)
 */
 
 /*! \fn bool RelatedClass::isPrivate() const
-  Returns \c true if this RelatedClass is marked as Node::Private.
+  Returns \c true if this RelatedClass is marked as Access::Private.
 */
 
 /*!
@@ -3247,11 +3247,11 @@ void NamespaceNode::includeChild(Node *child)
 QString RelatedClass::accessString() const
 {
     switch (access_) {
-    case Node::Protected:
+    case Access::Protected:
         return QLatin1String("protected");
-    case Node::Private:
+    case Access::Private:
         return QLatin1String("private");
-    case Node::Public:
+    case Access::Public:
     default:
         break;
     }

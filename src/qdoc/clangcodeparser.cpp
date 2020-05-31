@@ -43,6 +43,7 @@
 
 #include "clangcodeparser.h"
 
+#include "access.h"
 #include "codechunk.h"
 #include "config.h"
 #include "enumnode.h"
@@ -181,17 +182,17 @@ static Location fromCXSourceLocation(CXSourceLocation location)
 /*!
     convert a CX_CXXAccessSpecifier to Node::Access
  */
-static Node::Access fromCX_CXXAccessSpecifier(CX_CXXAccessSpecifier spec)
+static Access fromCX_CXXAccessSpecifier(CX_CXXAccessSpecifier spec)
 {
     switch (spec) {
     case CX_CXXPrivate:
-        return Node::Private;
+        return Access::Private;
     case CX_CXXProtected:
-        return Node::Protected;
+        return Access::Protected;
     case CX_CXXPublic:
-        return Node::Public;
+        return Access::Public;
     default:
-        return Node::Public;
+        return Access::Public;
     }
 }
 
@@ -725,7 +726,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
                     parent_->findNonfunctionChild(namespaceName, &Node::isNamespace));
         if (!ns) {
             ns = new NamespaceNode(parent_, namespaceName);
-            ns->setAccess(Node::Public);
+            ns->setAccess(Access::Public);
             ns->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
         }
         QScopedValueRollback<Aggregate *> setParent(parent_, ns);
@@ -1008,7 +1009,7 @@ void ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
         name.remove(0, 1);
     }
     auto *property = new PropertyNode(parent_, name);
-    property->setAccess(Node::Public);
+    property->setAccess(Access::Public);
     property->setLocation(loc);
     property->setDataType(type);
     int i = 2;

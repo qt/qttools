@@ -28,6 +28,7 @@
 
 #include "docbookgenerator.h"
 
+#include "access.h"
 #include "codemarker.h"
 #include "config.h"
 #include "enumnode.h"
@@ -1576,7 +1577,7 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
         const NodeVector &members = details_spv.at(i)->obsoleteMembers();
         NodeVector::ConstIterator m = members.constBegin();
         while (m != members.constEnd()) {
-            if ((*m)->access() != Node::Private)
+            if ((*m)->access() != Access::Private)
                 generateDetailedMember(*m, aggregate);
             ++m;
         }
@@ -1724,7 +1725,7 @@ void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QVector<Re
     QVector<RelatedClass>::ConstIterator r = rc.constBegin();
     while (r != rc.constEnd()) {
         ClassNode *rcn = (*r).node_;
-        if (rcn && rcn->access() == Node::Public && rcn->status() != Node::Internal
+        if (rcn && rcn->access() == Access::Public && rcn->status() != Node::Internal
             && !rcn->doc().isEmpty()) {
             classMap[rcn->plainFullName(cn).toLower()] = rcn;
         }
@@ -1821,9 +1822,9 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
                 if ((*r).node_) {
                     generateFullName((*r).node_, classe);
 
-                    if ((*r).access_ == Node::Protected)
+                    if ((*r).access_ == Access::Protected)
                         writer->writeCharacters(" (protected)");
-                    else if ((*r).access_ == Node::Private)
+                    else if ((*r).access_ == Access::Private)
                         writer->writeCharacters(" (private)");
                     writer->writeCharacters(comma(index++, classe->baseClasses().count()));
                 }
@@ -2521,7 +2522,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
         bool headerGenerated = false;
         NodeVector::ConstIterator member = section->members().constBegin();
         while (member != section->members().constEnd()) {
-            if ((*member)->access() == Node::Private) { // ### check necessary?
+            if ((*member)->access() == Access::Private) { // ### check necessary?
                 ++member;
                 continue;
             }
@@ -2774,13 +2775,13 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     // Accessibility status.
     if (!node->isPageNode() && !node->isCollectionNode()) {
         switch (node->access()) {
-        case Node::Public:
+        case Access::Public:
             generateSynopsisInfo("access", "public");
             break;
-        case Node::Protected:
+        case Access::Protected:
             generateSynopsisInfo("access", "protected");
             break;
-        case Node::Private:
+        case Access::Private:
             generateSynopsisInfo("access", "private");
             break;
         default:
@@ -2871,9 +2872,9 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                     if ((*r).node_) {
                         generateFullName((*r).node_, classe);
 
-                        if ((*r).access_ == Node::Protected) {
+                        if ((*r).access_ == Access::Protected) {
                             writer->writeCharacters(" (protected)");
-                        } else if ((*r).access_ == Node::Private) {
+                        } else if ((*r).access_ == Access::Private) {
                             writer->writeCharacters(" (private)");
                         }
                         writer->writeCharacters(comma(index++, classe->baseClasses().count()));
@@ -3223,9 +3224,9 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
                     bracketed += "virtual";
                 }
 
-                if (func->access() == Node::Protected)
+                if (func->access() == Access::Protected)
                     bracketed += "protected";
-                else if (func->access() == Node::Private)
+                else if (func->access() == Access::Private)
                     bracketed += "private";
 
                 if (func->isSignal())
@@ -3695,7 +3696,7 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
         int i = 0;
         NodeVector::ConstIterator m = members.constBegin();
         while (m != members.constEnd()) {
-            if ((*m)->access() == Node::Private) {
+            if ((*m)->access() == Access::Private) {
                 ++m;
                 continue;
             }

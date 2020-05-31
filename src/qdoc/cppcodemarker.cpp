@@ -32,6 +32,7 @@
 
 #include "cppcodemarker.h"
 
+#include "access.h"
 #include "enumnode.h"
 #include "functionnode.h"
 #include "propertynode.h"
@@ -194,9 +195,9 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                 bracketed += "virtual";
             }
 
-            if (func->access() == Node::Protected)
+            if (func->access() == Access::Protected)
                 bracketed += "protected";
-            else if (func->access() == Node::Private)
+            else if (func->access() == Access::Private)
                 bracketed += "private";
 
             if (func->isSignal())

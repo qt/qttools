@@ -29,6 +29,7 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "access.h"
 #include "doc.h"
 #include "enumitem.h"
 #include "parameters.h"
@@ -105,8 +106,6 @@ public:
     };
 
     enum Genus : unsigned char { DontCare, CPP, JS, QML, DOC };
-
-    enum Access : unsigned char { Public, Protected, Private };
 
     enum Status : unsigned char {
         Obsolete,
@@ -185,11 +184,11 @@ public:
     bool isNamespace() const { return nodeType_ == Namespace; }
     bool isPage() const { return nodeType_ == Page; }
     bool isPreliminary() const { return (status_ == Preliminary); }
-    bool isPrivate() const { return access_ == Private; }
+    bool isPrivate() const { return access_ == Access::Private; }
     bool isProperty() const { return nodeType_ == Property; }
     bool isProxyNode() const { return nodeType_ == Proxy; }
-    bool isPublic() const { return access_ == Public; }
-    bool isProtected() const { return access_ == Protected; }
+    bool isPublic() const { return access_ == Access::Public; }
+    bool isProtected() const { return access_ == Access::Protected; }
     bool isQmlBasicType() const { return nodeType_ == QmlBasicType; }
     bool isQmlModule() const { return nodeType_ == QmlModule; }
     bool isQmlNode() const { return genus() == QML; }
@@ -281,7 +280,7 @@ public:
 
     void markInternal()
     {
-        setAccess(Private);
+        setAccess(Access::Private);
         setStatus(Internal);
     }
     virtual void markDefault() {}
@@ -585,16 +584,16 @@ struct RelatedClass
 {
     RelatedClass() {}
     // constructor for resolved base class
-    RelatedClass(Node::Access access, ClassNode *node) : access_(access), node_(node) {}
+    RelatedClass(Access access, ClassNode *node) : access_(access), node_(node) {}
     // constructor for unresolved base class
-    RelatedClass(Node::Access access, const QStringList &path, const QString &signature)
+    RelatedClass(Access access, const QStringList &path, const QString &signature)
         : access_(access), node_(nullptr), path_(path), signature_(signature)
     {
     }
     QString accessString() const;
-    bool isPrivate() const { return (access_ == Node::Private); }
+    bool isPrivate() const { return (access_ == Access::Private); }
 
-    Node::Access access_;
+    Access access_;
     ClassNode *node_;
     QStringList path_;
     QString signature_;

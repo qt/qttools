@@ -28,6 +28,7 @@
 
 #include "qdocindexfiles.h"
 
+#include "access.h"
 #include "atom.h"
 #include "config.h"
 #include "enumnode.h"
@@ -563,13 +564,13 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
     {
         QString access = attributes.value(QLatin1String("access")).toString();
         if (access == "public")
-            node->setAccess(Node::Public);
+            node->setAccess(Access::Public);
         else if (access == "protected")
-            node->setAccess(Node::Protected);
+            node->setAccess(Access::Protected);
         else if ((access == "private") || (access == "internal"))
-            node->setAccess(Node::Private);
+            node->setAccess(Access::Private);
         else
-            node->setAccess(Node::Public);
+            node->setAccess(Access::Public);
         if (attributes.hasAttribute(QLatin1String("related")))
             node->setRelatedNonmember(attributes.value(QLatin1String("related"))
                                       == QLatin1String("true"));
@@ -713,24 +714,24 @@ void QDocIndexFiles::resolveIndex()
             QStringList basePath = base.split(QString("::"));
             Node *n = qdb_->findClassNode(basePath);
             if (n)
-                pair.first->addResolvedBaseClass(Node::Public, static_cast<ClassNode *>(n));
+                pair.first->addResolvedBaseClass(Access::Public, static_cast<ClassNode *>(n));
             else
-                pair.first->addUnresolvedBaseClass(Node::Public, basePath, QString());
+                pair.first->addUnresolvedBaseClass(Access::Public, basePath, QString());
         }
     }
     // No longer needed.
     basesList_.clear();
 }
 
-static const QString getAccessString(Node::Access t)
+static const QString getAccessString(Access t)
 {
 
     switch (t) {
-    case Node::Public:
+    case Access::Public:
         return QLatin1String("public");
-    case Node::Protected:
+    case Access::Protected:
         return QLatin1String("protected");
-    case Node::Private:
+    case Access::Private:
         return QLatin1String("private");
     default:
         break;

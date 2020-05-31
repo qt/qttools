@@ -31,6 +31,7 @@
 */
 #include "generator.h"
 
+#include "access.h"
 #include "codemarker.h"
 #include "config.h"
 #include "doc.h"
@@ -1088,9 +1089,9 @@ void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
             if (cls.node_) {
                 appendFullName(text, cls.node_, classe);
 
-                if (cls.access_ == Node::Protected) {
+                if (cls.access_ == Access::Protected) {
                     text << " (protected)";
-                } else if (cls.access_ == Node::Private) {
+                } else if (cls.access_ == Access::Private) {
                     text << " (private)";
                 }
                 text << separator(index++, classe->baseClasses().count());
@@ -2138,7 +2139,7 @@ void Generator::supplementAlsoList(const Node *node, QVector<Text> &alsoList)
                 alternateFunc = fn->parent()->findFunctionChild(alternateName, QString());
             }
 
-            if (alternateFunc && alternateFunc->access() != Node::Private) {
+            if (alternateFunc && alternateFunc->access() != Access::Private) {
                 int i;
                 for (i = 0; i < alsoList.size(); ++i) {
                     if (alsoList.at(i).toString().contains(alternateName))

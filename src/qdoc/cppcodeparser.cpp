@@ -28,6 +28,7 @@
 
 #include "cppcodeparser.h"
 
+#include "access.h"
 #include "config.h"
 #include "functionnode.h"
 #include "generator.h"
@@ -713,7 +714,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     FunctionNode::Metaness metaness = FunctionNode::getMetanessFromTopic(topic);
     bool attached = topic.contains(QLatin1String("attached"));
     auto *fn = new FunctionNode(metaness, aggregate, funcName, attached);
-    fn->setAccess(Node::Public);
+    fn->setAccess(Access::Public);
     fn->setLocation(location);
     fn->setReturnType(returnType);
     fn->setParameters(params);
@@ -761,7 +762,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     if (params.isEmpty())
         metaness = FunctionNode::MacroWithoutParams;
     auto *macro = new FunctionNode(metaness, qdb_->primaryTreeRoot(), macroName);
-    macro->setAccess(Node::Public);
+    macro->setAccess(Access::Public);
     macro->setLocation(location);
     macro->setReturnType(returnType);
     macro->setParameters(params);
