@@ -82,4 +82,10 @@ Node *EnumNode::clone(Aggregate *parent)
     return en;
 }
 
+void EnumNode::setFlagsType(TypedefNode *typedefNode)
+{
+    m_flagsType = typedefNode;
+    typedefNode->setAssociatedEnum(this);
+}
+
 QT_END_NAMESPACE

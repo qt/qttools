@@ -30,7 +30,6 @@
 #define ENUMNODE_H
 
 #include "node.h"
-
 #include "typedefnode.h"
 
 #include <QtCore/qglobal.h>

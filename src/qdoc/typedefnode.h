@@ -75,12 +75,6 @@ private:
     const Node *m_aliasedNode { nullptr };
 };
 
-inline void EnumNode::setFlagsType(TypedefNode *typedefNode)
-{
-    m_flagsType = typedefNode;
-    typedefNode->setAssociatedEnum(this);
-}
-
 QT_END_NAMESPACE
 
 #endif // TYPEDEFNODE_H
