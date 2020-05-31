@@ -32,6 +32,7 @@
 #include "access.h"
 #include "doc.h"
 #include "enumitem.h"
+#include "importrec.h"
 #include "parameters.h"
 #include "relatedclass.h"
 #include "usingclause.h"
@@ -692,25 +693,6 @@ private:
     QString projectFile_;
     QStringList files_;
     QStringList images_;
-};
-
-struct ImportRec
-{
-    QString name_; // module name
-    QString version_; // <major> . <minor>
-    QString importId_; // "as" name
-    QString importUri_; // subdirectory of module directory
-
-    ImportRec(const QString &name, const QString &version, const QString &importId,
-              const QString &importUri)
-        : name_(name), version_(version), importId_(importId), importUri_(importUri)
-    {
-    }
-    QString &name() { return name_; }
-    QString &version() { return version_; }
-    QString &importId() { return importId_; }
-    QString &importUri() { return importUri_; }
-    bool isEmpty() const { return name_.isEmpty(); }
 };
 
 typedef QVector<ImportRec> ImportList;

@@ -52,6 +52,7 @@ HEADERS += access.h \
            generator.h \
            helpprojectwriter.h \
            htmlgenerator.h \
+           importrec.h \
            location.h \
            loggingcategory.h \
            macro.h \

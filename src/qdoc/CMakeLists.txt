@@ -30,6 +30,7 @@ qt_add_tool(qdoc
         generator.cpp generator.h
         helpprojectwriter.cpp helpprojectwriter.h
         htmlgenerator.cpp htmlgenerator.h
+        importrec.h
         jscodemarker.cpp jscodemarker.h
         location.cpp location.h
         loggingcategory.h

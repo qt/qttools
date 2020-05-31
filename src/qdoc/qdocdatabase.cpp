@@ -827,10 +827,10 @@ QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &import, const QString &n
         QStringList dotSplit;
         dotSplit = name.split(QLatin1Char('.'));
         QString qmName;
-        if (import.importUri_.isEmpty())
-            qmName = import.name_;
+        if (import.m_importUri.isEmpty())
+            qmName = import.m_moduleName;
         else
-            qmName = import.importUri_;
+            qmName = import.m_importUri;
         for (int i = 0; i < dotSplit.size(); ++i) {
             QString qualifiedName = qmName + "::" + dotSplit[i];
             QmlTypeNode *qcn = forest_.lookupQmlType(qualifiedName);

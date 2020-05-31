@@ -2818,7 +2818,7 @@ void Aggregate::resolveQmlInheritance()
                 for (int i = 0; i < imports.size(); ++i) {
                     base = QDocDatabase::qdocDB()->findQmlType(imports[i], type->qmlBaseName());
                     if (base && (base != type)) {
-                        if (base->logicalModuleVersion()[0] != imports[i].version_[0])
+                        if (base->logicalModuleVersion()[0] != imports[i].m_majorMinorVersion[0])
                             base = nullptr; // Safeguard for QTBUG-53529
                         break;
                     }
