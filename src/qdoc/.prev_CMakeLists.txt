@@ -10,6 +10,7 @@ qt_add_tool(qdoc
         access.h
         atom.cpp atom.h
         clangcodeparser.cpp clangcodeparser.h
+        classnode.cpp classnode.h
         codechunk.cpp codechunk.h
         codemarker.cpp codemarker.h
         codeparser.cpp codeparser.h

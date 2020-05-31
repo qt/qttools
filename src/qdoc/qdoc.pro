@@ -33,6 +33,7 @@ win32-icc*|win32-msvc*:{
 HEADERS += access.h \
            atom.h \
            clangcodeparser.h \
+           classnode.h \
            codechunk.h \
            codemarker.h \
            codeparser.h \
@@ -87,6 +88,7 @@ HEADERS += access.h \
 
 SOURCES += atom.cpp \
            clangcodeparser.cpp \
+           classnode.cpp \
            codechunk.cpp \
            codemarker.cpp \
            codeparser.cpp \

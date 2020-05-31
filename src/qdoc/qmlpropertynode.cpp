@@ -28,6 +28,7 @@
 
 #include "qmlpropertynode.h"
 
+#include "classnode.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
 

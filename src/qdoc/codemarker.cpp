@@ -28,6 +28,7 @@
 
 #include "codemarker.h"
 
+#include "classnode.h"
 #include "config.h"
 #include "functionnode.h"
 #include "node.h"

@@ -29,6 +29,7 @@
 #include "docbookgenerator.h"
 
 #include "access.h"
+#include "classnode.h"
 #include "codemarker.h"
 #include "config.h"
 #include "enumnode.h"

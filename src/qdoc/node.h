@@ -583,62 +583,6 @@ private:
     NodeList includedChildren_;
 };
 
-class ClassNode : public Aggregate
-{
-public:
-    ClassNode(NodeType type, Aggregate *parent, const QString &name)
-        : Aggregate(type, parent, name), abstract_(false), wrapper_(false), qmlelement(nullptr)
-    {
-    }
-    bool isFirstClassAggregate() const override { return true; }
-    bool isClassNode() const override { return true; }
-    bool isRelatableType() const override { return true; }
-    bool isWrapper() const override { return wrapper_; }
-    QString obsoleteLink() const override { return obsoleteLink_; }
-    void setObsoleteLink(const QString &t) override { obsoleteLink_ = t; }
-    void setWrapper() override { wrapper_ = true; }
-
-    void addResolvedBaseClass(Access access, ClassNode *node);
-    void addDerivedClass(Access access, ClassNode *node);
-    void addUnresolvedBaseClass(Access access, const QStringList &path, const QString &signature);
-    void addUnresolvedUsingClause(const QString &signature);
-    void removePrivateAndInternalBases();
-    void resolvePropertyOverriddenFromPtrs(PropertyNode *pn);
-
-    QVector<RelatedClass> &baseClasses() { return bases_; }
-    QVector<RelatedClass> &derivedClasses() { return derived_; }
-    QVector<RelatedClass> &ignoredBaseClasses() { return ignoredBases_; }
-    QVector<UsingClause> &usingClauses() { return usingClauses_; }
-
-    const QVector<RelatedClass> &baseClasses() const { return bases_; }
-    const QVector<RelatedClass> &derivedClasses() const { return derived_; }
-    const QVector<RelatedClass> &ignoredBaseClasses() const { return ignoredBases_; }
-    const QVector<UsingClause> &usingClauses() const { return usingClauses_; }
-
-    QmlTypeNode *qmlElement() { return qmlelement; }
-    void setQmlElement(QmlTypeNode *qcn) { qmlelement = qcn; }
-    bool isAbstract() const override { return abstract_; }
-    void setAbstract(bool b) override { abstract_ = b; }
-    PropertyNode *findPropertyNode(const QString &name);
-    QmlTypeNode *findQmlBaseNode();
-    FunctionNode *findOverriddenFunction(const FunctionNode *fn);
-    PropertyNode *findOverriddenProperty(const FunctionNode *fn);
-    bool docMustBeGenerated() const override;
-
-private:
-    void promotePublicBases(const QVector<RelatedClass> &bases);
-
-private:
-    QVector<RelatedClass> bases_;
-    QVector<RelatedClass> derived_;
-    QVector<RelatedClass> ignoredBases_;
-    QVector<UsingClause> usingClauses_;
-    bool abstract_;
-    bool wrapper_;
-    QString obsoleteLink_;
-    QmlTypeNode *qmlelement;
-};
-
 class ExampleNode : public PageNode
 {
 public:

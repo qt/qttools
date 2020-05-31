@@ -29,6 +29,7 @@
 #include "htmlgenerator.h"
 
 #include "access.h"
+#include "classnode.h"
 #include "config.h"
 #include "codemarker.h"
 #include "codeparser.h"

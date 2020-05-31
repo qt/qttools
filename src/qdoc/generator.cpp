@@ -32,6 +32,7 @@
 #include "generator.h"
 
 #include "access.h"
+#include "classnode.h"
 #include "codemarker.h"
 #include "config.h"
 #include "doc.h"
