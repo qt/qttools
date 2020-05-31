@@ -29,8 +29,15 @@
 #include "sharedcommentnode.h"
 
 #include "functionnode.h"
+#include "qmltypenode.h"
 
 QT_BEGIN_NAMESPACE
+
+SharedCommentNode::SharedCommentNode(QmlTypeNode *parent, int count, QString &group)
+    : Node(Node::SharedComment, parent, group)
+{
+    m_collective.reserve(count);
+}
 
 /*!
   Searches the shared comment node's member nodes for function

@@ -65,6 +65,7 @@ HEADERS += access.h \
            qdocdatabase.h \
            qdocindexfiles.h \
            qdoctagfiles.h \
+           qmltypenode.h \
            qmlpropertynode.h \
            quoter.h \
            relatedclass.h \
@@ -112,6 +113,7 @@ SOURCES += atom.cpp \
            qdocdatabase.cpp \
            qdocindexfiles.cpp \
            qdoctagfiles.cpp \
+           qmltypenode.cpp \
            qmlpropertynode.cpp \
            quoter.cpp \
            relatedclass.cpp \

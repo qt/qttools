@@ -36,6 +36,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class QmlTypeNode;
+
 class SharedCommentNode : public Node
 {
 public:
@@ -44,11 +46,7 @@ public:
         m_collective.reserve(1);
         append(node);
     }
-    SharedCommentNode(QmlTypeNode *parent, int count, QString &group)
-        : Node(Node::SharedComment, parent, group)
-    {
-        m_collective.reserve(count);
-    }
+    SharedCommentNode(QmlTypeNode *parent, int count, QString &group);
     ~SharedCommentNode() override { m_collective.clear(); }
 
     bool isPropertyGroup() const override

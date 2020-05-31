@@ -30,6 +30,7 @@
 #define QMLVISITOR_H
 
 #include "node.h"
+#include "qmltypenode.h"
 
 #include <QtCore/qstring.h>
 

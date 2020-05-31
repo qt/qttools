@@ -47,6 +47,7 @@ class FunctionNode;
 class Location;
 class Node;
 class QDocDatabase;
+class QmlBasicTypeNode;
 
 class Generator
 {

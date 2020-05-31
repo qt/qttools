@@ -36,6 +36,7 @@
 #include "generator.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "qmltypenode.h"
 #include "qmlpropertynode.h"
 #include "relatedclass.h"
 #include "sharedcommentnode.h"
@@ -3596,134 +3597,6 @@ bool PageNode::setTitle(const QString &title)
   It's \a name is the argument from the \c {\\externalpage} command. The node
   type is Node::ExternalPage, and the page type is Node::ArticlePage.
  */
-
-bool QmlTypeNode::qmlOnly = false;
-QMultiMap<const Node *, Node *> QmlTypeNode::inheritedBy;
-
-/*!
-  Constructs a Qml type node or a Js type node depending on
-  the value of \a type, which is Node::QmlType by default,
-  but which can also be Node::JsType. The new node has the
-  given \a parent and \a name.
- */
-QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
-    : Aggregate(type, parent, name),
-      abstract_(false),
-      cnodeRequired_(false),
-      wrapper_(false),
-      cnode_(nullptr),
-      logicalModule_(nullptr),
-      qmlBaseNode_(nullptr)
-{
-    int i = 0;
-    if (name.startsWith("QML:")) {
-        qDebug() << "BOGUS QML qualifier:" << name;
-        i = 4;
-    }
-    setTitle(name.mid(i));
-}
-
-/*!
-  Clear the static maps so that subsequent runs don't try to use
-  contents from a previous run.
- */
-void QmlTypeNode::terminate()
-{
-    inheritedBy.clear();
-}
-
-/*!
-  Record the fact that QML class \a base is inherited by
-  QML class \a sub.
- */
-void QmlTypeNode::addInheritedBy(const Node *base, Node *sub)
-{
-    if (sub->isInternal())
-        return;
-    if (!inheritedBy.contains(base, sub))
-        inheritedBy.insert(base, sub);
-}
-
-/*!
-  Loads the list \a subs with the nodes of all the subclasses of \a base.
- */
-void QmlTypeNode::subclasses(const Node *base, NodeList &subs)
-{
-    subs.clear();
-    if (inheritedBy.count(base) > 0) {
-        subs = inheritedBy.values(base);
-    }
-}
-
-/*!
-  If this QML type node has a base type node,
-  return the fully qualified name of that QML
-  type, i.e. <QML-module-name>::<QML-type-name>.
- */
-QString QmlTypeNode::qmlFullBaseName() const
-{
-    QString result;
-    if (qmlBaseNode_) {
-        result = qmlBaseNode_->logicalModuleName() + "::" + qmlBaseNode_->name();
-    }
-    return result;
-}
-
-/*!
-  If the QML type's QML module pointer is set, return the QML
-  module name from the QML module node. Otherwise, return the
-  empty string.
- */
-QString QmlTypeNode::logicalModuleName() const
-{
-    return (logicalModule_ ? logicalModule_->logicalModuleName() : QString());
-}
-
-/*!
-  If the QML type's QML module pointer is set, return the QML
-  module version from the QML module node. Otherwise, return
-  the empty string.
- */
-QString QmlTypeNode::logicalModuleVersion() const
-{
-    return (logicalModule_ ? logicalModule_->logicalModuleVersion() : QString());
-}
-
-/*!
-  If the QML type's QML module pointer is set, return the QML
-  module identifier from the QML module node. Otherwise, return
-  the empty string.
- */
-QString QmlTypeNode::logicalModuleIdentifier() const
-{
-    return (logicalModule_ ? logicalModule_->logicalModuleIdentifier() : QString());
-}
-
-/*!
-  Returns true if this QML type inherits \a type.
- */
-bool QmlTypeNode::inherits(Aggregate *type)
-{
-    QmlTypeNode *qtn = qmlBaseNode();
-    while (qtn != nullptr) {
-        if (qtn == type)
-            return true;
-        qtn = qtn->qmlBaseNode();
-    }
-    return false;
-}
-
-/*!
-  Constructs either a Qml basic type node or a Javascript
-  basic type node, depending on the value pf \a type, which
-  must be either Node::QmlBasicType or Node::JsBasicType.
-  The new node has the given \a parent and \a name.
- */
-QmlBasicTypeNode::QmlBasicTypeNode(Aggregate *parent, const QString &name, Node::NodeType type)
-    : Aggregate(type, parent, name)
-{
-    setTitle(name);
-}
 
 /*!
   \class ProxyNode

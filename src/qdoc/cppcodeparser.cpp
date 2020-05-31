@@ -34,6 +34,7 @@
 #include "generator.h"
 #include "loggingcategory.h"
 #include "qdocdatabase.h"
+#include "qmltypenode.h"
 #include "qmlpropertynode.h"
 #include "sharedcommentnode.h"
 

@@ -48,6 +48,7 @@ qt_add_tool(qdoc
         qmlcodeparser.cpp qmlcodeparser.h
         qmlmarkupvisitor.cpp qmlmarkupvisitor.h
         qmlpropertynode.cpp qmlpropertynode.h
+        qmltypenode.cpp qmltypenode.h
         qmlvisitor.cpp qmlvisitor.h
         quoter.cpp quoter.h
         relatedclass.cpp relatedclass.h

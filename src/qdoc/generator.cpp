@@ -43,6 +43,7 @@
 #include "openedlist.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
+#include "qmltypenode.h"
 #include "quoter.h"
 #include "separator.h"
 #include "sharedcommentnode.h"

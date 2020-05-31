@@ -34,6 +34,7 @@
 #include "docparser.h"
 #include "docprivate.h"
 #include "generator.h"
+#include "qmltypenode.h"
 #include "quoter.h"
 #include "text.h"
 
