@@ -28,6 +28,7 @@
 
 #include "webxmlgenerator.h"
 
+#include "collectionnode.h"
 #include "config.h"
 #include "helpprojectwriter.h"
 #include "node.h"

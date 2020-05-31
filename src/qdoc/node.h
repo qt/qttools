@@ -565,56 +565,6 @@ private:
     QStringList images_;
 };
 
-class CollectionNode : public PageNode
-{
-public:
-    CollectionNode(NodeType type, Aggregate *parent, const QString &name)
-        : PageNode(type, parent, name), seen_(false)
-    {
-    }
-
-    bool isCollectionNode() const override { return true; }
-    QString qtVariable() const override { return qtVariable_; }
-    void setQtVariable(const QString &v) override { qtVariable_ = v; }
-    QString qtCMakeComponent() const override { return qtCMakeComponent_; }
-    void setQtCMakeComponent(const QString &target) override { qtCMakeComponent_ = target; }
-    void addMember(Node *node) override;
-    bool hasMembers() const override;
-    bool hasNamespaces() const override;
-    bool hasClasses() const override;
-    void getMemberNamespaces(NodeMap &out) override;
-    void getMemberClasses(NodeMap &out) const override;
-    bool wasSeen() const override { return seen_; }
-
-    QString fullTitle() const override { return title(); }
-    QString logicalModuleName() const override { return logicalModuleName_; }
-    QString logicalModuleVersion() const override
-    {
-        return logicalModuleVersionMajor_ + QLatin1Char('.') + logicalModuleVersionMinor_;
-    }
-    QString logicalModuleIdentifier() const override
-    {
-        return logicalModuleName_ + logicalModuleVersionMajor_;
-    }
-    void setLogicalModuleInfo(const QString &arg) override;
-    void setLogicalModuleInfo(const QStringList &info) override;
-
-    const NodeList &members() const { return members_; }
-    void printMembers(const QString &title);
-
-    void markSeen() { seen_ = true; }
-    void markNotSeen() { seen_ = false; }
-
-private:
-    bool seen_;
-    NodeList members_;
-    QString logicalModuleName_;
-    QString logicalModuleVersionMajor_;
-    QString logicalModuleVersionMinor_;
-    QString qtVariable_;
-    QString qtCMakeComponent_;
-};
-
 QT_END_NAMESPACE
 
 #endif

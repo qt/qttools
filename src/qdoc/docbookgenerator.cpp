@@ -31,6 +31,7 @@
 #include "access.h"
 #include "classnode.h"
 #include "codemarker.h"
+#include "collectionnode.h"
 #include "config.h"
 #include "enumnode.h"
 #include "functionnode.h"

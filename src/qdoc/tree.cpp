@@ -29,6 +29,7 @@
 #include "tree.h"
 
 #include "classnode.h"
+#include "collectionnode.h"
 #include "doc.h"
 #include "enumnode.h"
 #include "functionnode.h"

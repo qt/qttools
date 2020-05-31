@@ -15,6 +15,7 @@ qt_add_tool(qdoc
         codechunk.cpp codechunk.h
         codemarker.cpp codemarker.h
         codeparser.cpp codeparser.h
+        collectionnode.cpp collectionnode.h
         config.cpp config.h
         cppcodemarker.cpp cppcodemarker.h
         cppcodeparser.cpp cppcodeparser.h

@@ -30,6 +30,7 @@
 
 #include "access.h"
 #include "classnode.h"
+#include "collectionnode.h"
 #include "config.h"
 #include "codemarker.h"
 #include "codeparser.h"

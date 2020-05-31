@@ -37,6 +37,7 @@ HEADERS += access.h \
            codechunk.h \
            codemarker.h \
            codeparser.h \
+           collectionnode.h \
            config.h \
            cppcodemarker.h \
            cppcodeparser.h \
@@ -94,6 +95,7 @@ SOURCES += atom.cpp \
            codechunk.cpp \
            codemarker.cpp \
            codeparser.cpp \
+           collectionnode.cpp \
            config.cpp \
            cppcodemarker.cpp \
            cppcodeparser.cpp \

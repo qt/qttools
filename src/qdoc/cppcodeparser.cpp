@@ -29,6 +29,7 @@
 #include "cppcodeparser.h"
 
 #include "access.h"
+#include "collectionnode.h"
 #include "config.h"
 #include "functionnode.h"
 #include "generator.h"
