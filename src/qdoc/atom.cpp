@@ -29,6 +29,7 @@
 #include "atom.h"
 
 #include "location.h"
+#include "proxynode.h"
 #include "qdocdatabase.h"
 
 #include <QtCore/qregularexpression.h>

@@ -540,14 +540,6 @@ protected:
     FunctionMap functionMap_;
 };
 
-class ProxyNode : public Aggregate
-{
-public:
-    ProxyNode(Aggregate *parent, const QString &name);
-    bool docMustBeGenerated() const override { return true; }
-    bool isRelatableType() const override { return true; }
-};
-
 class ExampleNode : public PageNode
 {
 public:

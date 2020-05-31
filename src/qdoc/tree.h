@@ -36,6 +36,7 @@
 #include "namespacenode.h"
 #include "node.h"
 #include "propertynode.h"
+#include "proxynode.h"
 #include "qmltypenode.h"
 
 #include <QtCore/qstack.h>

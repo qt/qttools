@@ -63,6 +63,7 @@ HEADERS += access.h \
            openedlist.h \
            parameters.h \
            propertynode.h \
+           proxynode.h \
            puredocparser.h \
            qdoccommandlineparser.h \
            qdocdatabase.h \
@@ -114,6 +115,7 @@ SOURCES += atom.cpp \
            openedlist.cpp \
            parameters.cpp \
            propertynode.cpp \
+           proxynode.cpp \
            puredocparser.cpp \
            qdoccommandlineparser.cpp \
            qdocdatabase.cpp \

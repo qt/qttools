@@ -35,7 +35,9 @@
 #include "config.h"
 #include "generator.h"
 #include "node.h"
+#include "proxynode.h"
 #include "qdocdatabase.h"
+
 #include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
