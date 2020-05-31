@@ -548,41 +548,6 @@ public:
     bool isRelatableType() const override { return true; }
 };
 
-class NamespaceNode : public Aggregate
-{
-public:
-    NamespaceNode(Aggregate *parent, const QString &name)
-        : Aggregate(Namespace, parent, name), seen_(false), tree_(nullptr), docNode_(nullptr)
-    {
-    }
-    ~NamespaceNode() override;
-    Tree *tree() const override { return (parent() ? parent()->tree() : tree_); }
-
-    bool isFirstClassAggregate() const override { return true; }
-    bool isRelatableType() const override { return true; }
-    bool wasSeen() const override { return seen_; }
-    void markSeen() { seen_ = true; }
-    void markNotSeen() { seen_ = false; }
-    void setTree(Tree *t) { tree_ = t; }
-    const NodeList &includedChildren() const;
-    void includeChild(Node *child);
-    QString whereDocumented() const { return whereDocumented_; }
-    void setWhereDocumented(const QString &t) { whereDocumented_ = t; }
-    bool isDocumentedHere() const;
-    bool hasDocumentedChildren() const;
-    void reportDocumentedChildrenInUndocumentedNamespace() const;
-    bool docMustBeGenerated() const override;
-    void setDocNode(NamespaceNode *ns) { docNode_ = ns; }
-    NamespaceNode *docNode() const { return docNode_; }
-
-private:
-    bool seen_;
-    Tree *tree_;
-    QString whereDocumented_;
-    NamespaceNode *docNode_;
-    NodeList includedChildren_;
-};
-
 class ExampleNode : public PageNode
 {
 public:

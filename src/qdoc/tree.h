@@ -33,6 +33,7 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include "namespacenode.h"
 #include "node.h"
 #include "propertynode.h"
 #include "qmltypenode.h"

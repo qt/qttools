@@ -58,6 +58,7 @@ HEADERS += access.h \
            location.h \
            loggingcategory.h \
            macro.h \
+           namespacenode.h \
            node.h \
            openedlist.h \
            parameters.h \
@@ -108,6 +109,7 @@ SOURCES += atom.cpp \
            htmlgenerator.cpp \
            location.cpp \
            main.cpp \
+           namespacenode.cpp \
            node.cpp \
            openedlist.cpp \
            parameters.cpp \

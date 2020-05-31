@@ -38,6 +38,7 @@ qt_add_tool(qdoc
         loggingcategory.h
         macro.h
         main.cpp
+        namespacenode.cpp namespacenode.h
         node.cpp node.h
         openedlist.cpp openedlist.h
         parameters.cpp parameters.h
