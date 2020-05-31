@@ -188,7 +188,7 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QVector<
 {
     QMap<QString, Text> classMap;
     for (const auto &relatedClass : rc) {
-        ClassNode *rcn = relatedClass.node_;
+        ClassNode *rcn = relatedClass.m_node;
         if (rcn && rcn->isInAPI()) {
             Text className;
             appendFullName(className, rcn, cn);
@@ -1086,12 +1086,12 @@ void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
         int index = 0;
         const QVector<RelatedClass> &baseClasses = classe->baseClasses();
         for (const auto &cls : baseClasses) {
-            if (cls.node_) {
-                appendFullName(text, cls.node_, classe);
+            if (cls.m_node) {
+                appendFullName(text, cls.m_node, classe);
 
-                if (cls.access_ == Access::Protected) {
+                if (cls.m_access == Access::Protected) {
                     text << " (protected)";
-                } else if (cls.access_ == Access::Private) {
+                } else if (cls.m_access == Access::Private) {
                     text << " (private)";
                 }
                 text << separator(index++, classe->baseClasses().count());

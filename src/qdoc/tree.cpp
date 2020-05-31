@@ -223,8 +223,8 @@ void Tree::resolveBaseClasses(Aggregate *n)
             ClassNode *cn = static_cast<ClassNode *>(*it);
             QVector<RelatedClass> &bases = cn->baseClasses();
             for (auto &base : bases) {
-                if (base.node_ == nullptr) {
-                    Node *n = qdb_->findClassNode(base.path_);
+                if (base.m_node == nullptr) {
+                    Node *n = qdb_->findClassNode(base.m_path);
                     /*
                       If the node for the base class was not found,
                       the reason might be that the subclass is in a
@@ -240,12 +240,12 @@ void Tree::resolveBaseClasses(Aggregate *n)
                         if (parent != nullptr)
                             // Exclude the root namespace
                             if (parent->isNamespace() && !parent->name().isEmpty())
-                                n = findClassNode(base.path_, parent);
+                                n = findClassNode(base.m_path, parent);
                     }
                     if (n != nullptr) {
                         ClassNode *bcn = static_cast<ClassNode *>(n);
-                        base.node_ = bcn;
-                        bcn->addDerivedClass(base.access_, cn);
+                        base.m_node = bcn;
+                        bcn->addDerivedClass(base.m_access, cn);
                     }
                 }
             }
@@ -396,9 +396,9 @@ ClassList Tree::allBaseClasses(const ClassNode *classNode) const
     ClassList result;
     const auto &baseClasses = classNode->baseClasses();
     for (const auto &relatedClass : baseClasses) {
-        if (relatedClass.node_ != nullptr) {
-            result += relatedClass.node_;
-            result += allBaseClasses(relatedClass.node_);
+        if (relatedClass.m_node != nullptr) {
+            result += relatedClass.m_node;
+            result += allBaseClasses(relatedClass.m_node);
         }
     }
     return result;

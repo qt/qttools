@@ -50,6 +50,7 @@ qt_add_tool(qdoc
         qmlpropertynode.cpp qmlpropertynode.h
         qmlvisitor.cpp qmlvisitor.h
         quoter.cpp quoter.h
+        relatedclass.cpp relatedclass.h
         sections.cpp sections.h
         separator.cpp separator.h
         sharedcommentnode.cpp sharedcommentnode.h

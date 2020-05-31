@@ -138,7 +138,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
             const ClassNode *classNode = static_cast<const ClassNode *>(node);
             const QVector<RelatedClass> bases = classNode->baseClasses();
             for (const auto &related : bases) {
-                ClassNode *n = related.node_;
+                ClassNode *n = related.m_node;
                 if (n)
                     writer.writeTextElement("base", n->name());
             }

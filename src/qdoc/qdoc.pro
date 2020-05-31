@@ -66,6 +66,7 @@ HEADERS += access.h \
            qdoctagfiles.h \
            qmlpropertynode.h \
            quoter.h \
+           relatedclass.h \
            sections.h \
            separator.h \
            sharedcommentnode.h \
@@ -111,6 +112,7 @@ SOURCES += atom.cpp \
            qdoctagfiles.cpp \
            qmlpropertynode.cpp \
            quoter.cpp \
+           relatedclass.cpp \
            sections.cpp \
            separator.cpp \
            sharedcommentnode.cpp \

@@ -920,8 +920,8 @@ void DocBookGenerator::generateClassHierarchy(const Node *relative, NodeMap &cla
 
             NodeMap newTop;
             for (const RelatedClass &d : child->derivedClasses()) {
-                if (d.node_ && !d.isPrivate() && !d.node_->isInternal() && d.node_->hasDoc())
-                    newTop.insert(d.node_->name(), d.node_);
+                if (d.m_node && !d.isPrivate() && !d.m_node->isInternal() && d.m_node->hasDoc())
+                    newTop.insert(d.m_node->name(), d.m_node);
             }
             if (!newTop.isEmpty()) {
                 stack.push(newTop);
@@ -1724,7 +1724,7 @@ void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QVector<Re
     QMap<QString, ClassNode *> classMap;
     QVector<RelatedClass>::ConstIterator r = rc.constBegin();
     while (r != rc.constEnd()) {
-        ClassNode *rcn = (*r).node_;
+        ClassNode *rcn = (*r).m_node;
         if (rcn && rcn->access() == Access::Public && rcn->status() != Node::Internal
             && !rcn->doc().isEmpty()) {
             classMap[rcn->plainFullName(cn).toLower()] = rcn;
@@ -1819,12 +1819,12 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
             r = classe->baseClasses().constBegin();
             int index = 0;
             while (r != classe->baseClasses().constEnd()) {
-                if ((*r).node_) {
-                    generateFullName((*r).node_, classe);
+                if ((*r).m_node) {
+                    generateFullName((*r).m_node, classe);
 
-                    if ((*r).access_ == Access::Protected)
+                    if ((*r).m_access == Access::Protected)
                         writer->writeCharacters(" (protected)");
-                    else if ((*r).access_ == Access::Private)
+                    else if ((*r).m_access == Access::Private)
                         writer->writeCharacters(" (private)");
                     writer->writeCharacters(comma(index++, classe->baseClasses().count()));
                 }
@@ -2869,12 +2869,12 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                 r = classe->baseClasses().constBegin();
                 int index = 0;
                 while (r != classe->baseClasses().constEnd()) {
-                    if ((*r).node_) {
-                        generateFullName((*r).node_, classe);
+                    if ((*r).m_node) {
+                        generateFullName((*r).m_node, classe);
 
-                        if ((*r).access_ == Access::Protected) {
+                        if ((*r).m_access == Access::Protected) {
                             writer->writeCharacters(" (protected)");
-                        } else if ((*r).access_ == Access::Private) {
+                        } else if ((*r).m_access == Access::Private) {
                             writer->writeCharacters(" (private)");
                         }
                         writer->writeCharacters(comma(index++, classe->baseClasses().count()));

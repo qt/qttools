@@ -33,6 +33,7 @@
 #include "doc.h"
 #include "enumitem.h"
 #include "parameters.h"
+#include "relatedclass.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qmap.h>
@@ -578,25 +579,6 @@ private:
     QString whereDocumented_;
     NamespaceNode *docNode_;
     NodeList includedChildren_;
-};
-
-struct RelatedClass
-{
-    RelatedClass() {}
-    // constructor for resolved base class
-    RelatedClass(Access access, ClassNode *node) : access_(access), node_(node) {}
-    // constructor for unresolved base class
-    RelatedClass(Access access, const QStringList &path, const QString &signature)
-        : access_(access), node_(nullptr), path_(path), signature_(signature)
-    {
-    }
-    QString accessString() const;
-    bool isPrivate() const { return (access_ == Access::Private); }
-
-    Access access_;
-    ClassNode *node_;
-    QStringList path_;
-    QString signature_;
 };
 
 struct UsingClause

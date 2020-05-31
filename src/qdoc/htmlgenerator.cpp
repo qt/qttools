@@ -1931,12 +1931,12 @@ void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text
         text->clear();
         const auto baseClasses = classe->baseClasses();
         for (const auto &cls : baseClasses) {
-            if (cls.node_) {
-                appendFullName(*text, cls.node_, classe);
+            if (cls.m_node) {
+                appendFullName(*text, cls.m_node, classe);
 
-                if (cls.access_ == Access::Protected) {
+                if (cls.m_access == Access::Protected) {
                     *text << " (protected)";
-                } else if (cls.access_ == Access::Private) {
+                } else if (cls.m_access == Access::Private) {
                     *text << " (private)";
                 }
                 *text << comma(index++, classe->baseClasses().count());
@@ -2514,8 +2514,8 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap &classM
             NodeMap newTop;
             const auto derivedClasses = child->derivedClasses();
             for (const RelatedClass &d : derivedClasses) {
-                if (d.node_ && d.node_->isInAPI())
-                    newTop.insert(d.node_->name(), d.node_);
+                if (d.m_node && d.m_node->isInAPI())
+                    newTop.insert(d.m_node->name(), d.m_node);
             }
             if (!newTop.isEmpty()) {
                 stack.push(newTop);

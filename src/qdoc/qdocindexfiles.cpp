@@ -974,11 +974,11 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const QVector<RelatedClass> bases = classNode->baseClasses();
         QSet<QString> baseStrings;
         for (const auto &related : bases) {
-            ClassNode *n = related.node_;
+            ClassNode *n = related.m_node;
             if (n)
                 baseStrings.insert(n->fullName());
-            else if (!related.path_.isEmpty())
-                baseStrings.insert(related.path_.join(QLatin1String("::")));
+            else if (!related.m_path.isEmpty())
+                baseStrings.insert(related.m_path.join(QLatin1String("::")));
         }
         if (!baseStrings.isEmpty()) {
             QStringList baseStringsAsList = baseStrings.values();

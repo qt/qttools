@@ -37,6 +37,7 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"
+#include "relatedclass.h"
 #include "sharedcommentnode.h"
 #include "tokenizer.h"
 #include "tree.h"
@@ -2909,9 +2910,9 @@ void ClassNode::promotePublicBases(const QVector<RelatedClass> &bases)
 {
     if (!bases.isEmpty()) {
         for (int i = bases.size() - 1; i >= 0; --i) {
-            ClassNode *bc = bases.at(i).node_;
+            ClassNode *bc = bases.at(i).m_node;
             if (bc == nullptr)
-                bc = QDocDatabase::qdocDB()->findClassNode(bases.at(i).path_);
+                bc = QDocDatabase::qdocDB()->findClassNode(bases.at(i).m_path);
             if (bc != nullptr) {
                 if (bc->isPrivate() || bc->isInternal())
                     promotePublicBases(bc->baseClasses());
@@ -2935,9 +2936,9 @@ void ClassNode::removePrivateAndInternalBases()
 
     // Remove private and duplicate base classes.
     while (i < bases_.size()) {
-        ClassNode *bc = bases_.at(i).node_;
+        ClassNode *bc = bases_.at(i).m_node;
         if (bc == nullptr)
-            bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).path_);
+            bc = QDocDatabase::qdocDB()->findClassNode(bases_.at(i).m_path);
         if (bc != nullptr
             && (bc->isPrivate() || bc->isInternal() || bc->isDontDocument()
                 || found.contains(bc))) {
@@ -2953,7 +2954,7 @@ void ClassNode::removePrivateAndInternalBases()
 
     i = 0;
     while (i < derived_.size()) {
-        ClassNode *dc = derived_.at(i).node_;
+        ClassNode *dc = derived_.at(i).m_node;
         if (dc != nullptr && (dc->isPrivate() || dc->isInternal() || dc->isDontDocument())) {
             derived_.removeAt(i);
             const QVector<RelatedClass> &dd = dc->derivedClasses();
@@ -2970,7 +2971,7 @@ void ClassNode::removePrivateAndInternalBases()
 void ClassNode::resolvePropertyOverriddenFromPtrs(PropertyNode *pn)
 {
     for (const auto &baseClass : qAsConst(baseClasses())) {
-        ClassNode *cn = baseClass.node_;
+        ClassNode *cn = baseClass.m_node;
         if (cn) {
             Node *n = cn->findNonfunctionChild(pn->name(), &Node::isProperty);
             if (n) {
@@ -3207,58 +3208,6 @@ void NamespaceNode::includeChild(Node *child)
  */
 
 /*!
-  \struct RelatedClass
-  \brief A struct for indicating that a ClassNode is related in some way to another ClassNode.
-
-  This struct has nothing to do with the \c {\\relates} command. This struct
-  is used for indicating that a ClassNode is a base class of another ClassNode,
-  is a derived class of another ClassNode, or is an ignored base class of
-  another ClassNode. This struct is only used in ClassNode.
-*/
-
-/*! \fn RelatedClass::RelatedClass()
-  The default constructor does nothing. It is only used for allocating empty
-  instances of RelatedClass in containers.
- */
-
-/*! \fn RelatedClass::RelatedClass(Access access, ClassNode *node)
-  This is the constructor used when the related class has been resolved.
-  In other words, when the ClassNode has been created so that \a node is
-  not \c nullptr.
-*/
-
-/*! \fn RelatedClass::RelatedClass(Access access, const QStringList &path, const QString &signature)
-  This is the constructor used when the related class has not bee resolved,
-  because it hasn't been created yet. In that case, we store the qualified
-  \a path name of the class and the \a signature of the class, which I think
-  is just the name of the class.
-
-  \note We might be able to simplify the whole RelatedClass concept. Maybe we
-  can get rid of it completely.
-*/
-
-/*! \fn bool RelatedClass::isPrivate() const
-  Returns \c true if this RelatedClass is marked as Access::Private.
-*/
-
-/*!
-  Returns a string representing the access specifier.
- */
-QString RelatedClass::accessString() const
-{
-    switch (access_) {
-    case Access::Protected:
-        return QLatin1String("protected");
-    case Access::Private:
-        return QLatin1String("private");
-    case Access::Public:
-    default:
-        break;
-    }
-    return QLatin1String("public");
-}
-
-/*!
   \struct UsingClause
   \brief This is supposed to describe a using clause, but I think it is not used.
 
@@ -3362,7 +3311,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
     const QVector<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {
-            ClassNode *cn = bases[i].node_;
+            ClassNode *cn = bases[i].m_node;
             if (cn) {
                 pn = cn->findPropertyNode(name);
                 if (pn)
@@ -3373,7 +3322,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
     const QVector<RelatedClass> &ignoredBases = ignoredBaseClasses();
     if (!ignoredBases.isEmpty()) {
         for (int i = 0; i < ignoredBases.size(); ++i) {
-            ClassNode *cn = ignoredBases[i].node_;
+            ClassNode *cn = ignoredBases[i].m_node;
             if (cn) {
                 pn = cn->findPropertyNode(name);
                 if (pn)
@@ -3398,13 +3347,13 @@ QmlTypeNode *ClassNode::findQmlBaseNode()
 
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {
-            ClassNode *cn = bases[i].node_;
+            ClassNode *cn = bases[i].m_node;
             if (cn && cn->qmlElement()) {
                 return cn->qmlElement();
             }
         }
         for (int i = 0; i < bases.size(); ++i) {
-            ClassNode *cn = bases[i].node_;
+            ClassNode *cn = bases[i].m_node;
             if (cn) {
                 result = cn->findQmlBaseNode();
                 if (result != nullptr) {
@@ -3429,10 +3378,10 @@ QmlTypeNode *ClassNode::findQmlBaseNode()
 FunctionNode *ClassNode::findOverriddenFunction(const FunctionNode *fn)
 {
     for (auto &bc : bases_) {
-        ClassNode *cn = bc.node_;
+        ClassNode *cn = bc.m_node;
         if (cn == nullptr) {
-            cn = QDocDatabase::qdocDB()->findClassNode(bc.path_);
-            bc.node_ = cn;
+            cn = QDocDatabase::qdocDB()->findClassNode(bc.m_path);
+            bc.m_node = cn;
         }
         if (cn != nullptr) {
             FunctionNode *result = cn->findFunctionChild(fn);
@@ -3457,10 +3406,10 @@ FunctionNode *ClassNode::findOverriddenFunction(const FunctionNode *fn)
 PropertyNode *ClassNode::findOverriddenProperty(const FunctionNode *fn)
 {
     for (auto &baseClass : bases_) {
-        ClassNode *cn = baseClass.node_;
+        ClassNode *cn = baseClass.m_node;
         if (cn == nullptr) {
-            cn = QDocDatabase::qdocDB()->findClassNode(baseClass.path_);
-            baseClass.node_ = cn;
+            cn = QDocDatabase::qdocDB()->findClassNode(baseClass.m_path);
+            baseClass.m_node = cn;
         }
         if (cn != nullptr) {
             const NodeList &children = cn->childNodes();
