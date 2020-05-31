@@ -3412,44 +3412,6 @@ bool ClassNode::docMustBeGenerated() const
 }
 
 /*!
-  \class Headerode
-  \brief This class represents a C++ header file.
- */
-
-HeaderNode::HeaderNode(Aggregate *parent, const QString &name) : Aggregate(HeaderFile, parent, name)
-{
-    // Add the include file with enclosing angle brackets removed
-    if (name.startsWith(QChar('<')) && name.length() > 2)
-        Aggregate::addIncludeFile(name.mid(1).chopped(1));
-    else
-        Aggregate::addIncludeFile(name);
-}
-
-/*!
-  Returns true if this header file node is not private and
-  contains at least one public child node with documentation.
- */
-bool HeaderNode::docMustBeGenerated() const
-{
-    if (isInAPI())
-        return true;
-    return (hasDocumentedChildren() ? true : false);
-}
-
-/*!
-  Returns true if this header file node contains at least one
-  child that has documentation and is not private or internal.
- */
-bool HeaderNode::hasDocumentedChildren() const
-{
-    for (const auto *node : qAsConst(children_)) {
-        if (node->isInAPI())
-            return true;
-    }
-    return false;
-}
-
-/*!
   \class PageNode
   \brief A PageNode is a Node that generates a documentation page.
 

@@ -639,37 +639,6 @@ private:
     QmlTypeNode *qmlelement;
 };
 
-class HeaderNode : public Aggregate
-{
-public:
-    HeaderNode(Aggregate *parent, const QString &name);
-    bool docMustBeGenerated() const override;
-    bool isFirstClassAggregate() const override { return true; }
-    bool isRelatableType() const override { return true; }
-    QString title() const override { return (title_.isEmpty() ? name() : title_); }
-    QString subtitle() const override { return subtitle_; }
-    QString fullTitle() const override
-    {
-        return (title_.isEmpty() ? name() : name() + " - " + title_);
-    }
-    bool setTitle(const QString &title) override
-    {
-        title_ = title;
-        return true;
-    }
-    bool setSubtitle(const QString &subtitle) override
-    {
-        subtitle_ = subtitle;
-        return true;
-    }
-    QString nameForLists() const override { return title(); }
-    bool hasDocumentedChildren() const;
-
-private:
-    QString title_;
-    QString subtitle_;
-};
-
 class ExampleNode : public PageNode
 {
 public:

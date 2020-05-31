@@ -28,6 +28,7 @@ qt_add_tool(qdoc
         enumnode.cpp enumnode.h
         functionnode.cpp functionnode.h
         generator.cpp generator.h
+        headernode.cpp headernode.h
         helpprojectwriter.cpp helpprojectwriter.h
         htmlgenerator.cpp htmlgenerator.h
         importrec.h

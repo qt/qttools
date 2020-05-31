@@ -50,6 +50,7 @@ HEADERS += access.h \
            enumnode.h \
            functionnode.h \
            generator.h \
+           headernode.h \
            helpprojectwriter.h \
            htmlgenerator.h \
            importrec.h \
@@ -100,6 +101,7 @@ SOURCES += atom.cpp \
            enumnode.cpp \
            functionnode.cpp \
            generator.cpp \
+           headernode.cpp \
            helpprojectwriter.cpp \
            htmlgenerator.cpp \
            location.cpp \

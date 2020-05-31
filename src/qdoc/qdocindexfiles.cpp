@@ -34,6 +34,7 @@
 #include "enumnode.h"
 #include "functionnode.h"
 #include "generator.h"
+#include "headernode.h"
 #include "location.h"
 #include "loggingcategory.h"
 #include "propertynode.h"
