@@ -29,7 +29,7 @@
 #ifndef COLLECTIONNODE_H
 #define COLLECTIONNODE_H
 
-#include "node.h"
+#include "pagenode.h"
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>

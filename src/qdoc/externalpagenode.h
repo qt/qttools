@@ -29,7 +29,7 @@
 #ifndef EXTERNALPAGENODE_H
 #define EXTERNALPAGENODE_H
 
-#include "node.h"
+#include "pagenode.h"
 
 #include <QtCore/qglobal.h>
 

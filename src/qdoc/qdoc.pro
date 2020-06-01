@@ -65,6 +65,7 @@ HEADERS += access.h \
            namespacenode.h \
            node.h \
            openedlist.h \
+           pagenode.h \
            parameters.h \
            propertynode.h \
            proxynode.h \
@@ -120,6 +121,7 @@ SOURCES += aggregate.cpp \
            namespacenode.cpp \
            node.cpp \
            openedlist.cpp \
+           pagenode.cpp \
            parameters.cpp \
            propertynode.cpp \
            proxynode.cpp \

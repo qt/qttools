@@ -29,7 +29,7 @@
 #ifndef AGGREGATE_H
 #define AGGREGATE_H
 
-#include "node.h"
+#include "pagenode.h"
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qstringlist.h>

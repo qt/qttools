@@ -399,58 +399,6 @@ private:
     static QMap<QString, Node::NodeType> goals_;
 };
 
-class PageNode : public Node
-{
-public:
-    PageNode(Aggregate *parent, const QString &name) : Node(Page, parent, name), noAutoList_(false)
-    {
-    }
-    PageNode(NodeType type, Aggregate *parent, const QString &name)
-        : Node(type, parent, name), noAutoList_(false)
-    {
-    }
-    PageNode(Aggregate *parent, const QString &name, PageType ptype)
-        : Node(Page, parent, name), noAutoList_(false)
-    {
-        setPageType(ptype);
-    }
-
-    bool isPageNode() const override { return true; }
-    bool isTextPageNode() const override { return !isAggregate(); } // PageNode but not Aggregate
-
-    QString title() const override { return title_; }
-    QString subtitle() const override { return subtitle_; }
-    QString fullTitle() const override;
-    bool setTitle(const QString &title) override;
-    bool setSubtitle(const QString &subtitle) override
-    {
-        subtitle_ = subtitle;
-        return true;
-    }
-    QString nameForLists() const override { return title(); }
-
-    virtual QString imageFileName() const { return QString(); }
-    virtual void setImageFileName(const QString &) {}
-
-    bool noAutoList() const { return noAutoList_; }
-    void setNoAutoList(bool b) override { noAutoList_ = b; }
-    const QStringList &groupNames() const { return groupNames_; }
-    void appendGroupName(const QString &t) override { groupNames_.append(t); }
-
-    void setOutputFileName(const QString &f) override { outputFileName_ = f; }
-    QString outputFileName() const override { return outputFileName_; }
-
-protected:
-    friend class Node;
-
-protected:
-    bool noAutoList_;
-    QString title_;
-    QString subtitle_;
-    QString outputFileName_;
-    QStringList groupNames_;
-};
-
 QT_END_NAMESPACE
 
 #endif

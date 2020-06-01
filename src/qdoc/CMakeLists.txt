@@ -45,6 +45,7 @@ qt_add_tool(qdoc
         namespacenode.cpp namespacenode.h
         node.cpp node.h
         openedlist.cpp openedlist.h
+        pagenode.cpp pagenode.h
         parameters.cpp parameters.h
         propertynode.cpp propertynode.h
         proxynode.cpp proxynode.h
