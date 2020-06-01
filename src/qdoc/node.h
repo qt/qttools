@@ -143,7 +143,7 @@ public:
 
     enum FlagValue { FlagValueDefault = -1, FlagValueFalse = 0, FlagValueTrue = 1 };
 
-    virtual ~Node() {}
+    virtual ~Node() = default;
     virtual Node *clone(Aggregate *) { return nullptr; } // currently only FunctionNode
     virtual Tree *tree() const;
     Aggregate *root() const;
@@ -369,31 +369,31 @@ protected:
     Node(NodeType type, Aggregate *parent, const QString &name);
 
 private:
-    NodeType nodeType_;
-    Genus genus_;
-    Access access_;
-    ThreadSafeness safeness_;
-    PageType pageType_;
-    Status status_;
+    NodeType nodeType_ {};
+    Genus genus_ {};
+    Access access_ { Access::Public };
+    ThreadSafeness safeness_ { UnspecifiedSafeness };
+    PageType pageType_ { NoPageType };
+    Status status_ { Active };
     bool indexNodeFlag_ : 1;
     bool relatedNonmember_ : 1;
     bool hadDoc_ : 1;
 
-    Aggregate *parent_;
-    SharedCommentNode *sharedCommentNode_;
-    QString name_;
-    Location declLocation_;
-    Location defLocation_;
-    Doc doc_;
-    QMap<LinkType, QPair<QString, QString>> linkMap_;
-    QString fileNameBase_;
-    QString physicalModuleName_;
-    QString url_;
-    QString since_;
-    QString templateDecl_;
-    QString reconstitutedBrief_;
+    Aggregate *parent_ { nullptr };
+    SharedCommentNode *sharedCommentNode_ { nullptr };
+    QString name_ {};
+    Location declLocation_ {};
+    Location defLocation_ {};
+    Doc doc_ {};
+    QMap<LinkType, QPair<QString, QString>> linkMap_ {};
+    QString fileNameBase_ {};
+    QString physicalModuleName_ {};
+    QString url_ {};
+    QString since_ {};
+    QString templateDecl_ {};
+    QString reconstitutedBrief_ {};
     // mutable QString uuid_;
-    QString outSubDir_;
+    QString outSubDir_ {};
     static QStringMap operators_;
     static int propertyGroupCount_;
     static QMap<QString, Node::NodeType> goals_;

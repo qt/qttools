@@ -697,15 +697,10 @@ void Node::setDoc(const Doc &doc, bool replace)
  */
 Node::Node(NodeType type, Aggregate *parent, const QString &name)
     : nodeType_(type),
-      access_(Access::Public),
-      safeness_(UnspecifiedSafeness),
-      pageType_(NoPageType),
-      status_(Active),
       indexNodeFlag_(false),
       relatedNonmember_(false),
       hadDoc_(false),
       parent_(parent),
-      sharedCommentNode_(nullptr),
       name_(name)
 {
     if (parent_)
