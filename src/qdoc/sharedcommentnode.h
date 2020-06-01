@@ -36,6 +36,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class Aggregate;
 class QmlTypeNode;
 
 class SharedCommentNode : public Node

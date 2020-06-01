@@ -28,6 +28,7 @@
 
 #include "sharedcommentnode.h"
 
+#include "aggregate.h"
 #include "functionnode.h"
 #include "qmltypenode.h"
 

@@ -29,6 +29,7 @@
 #include "qdoctagfiles.h"
 
 #include "access.h"
+#include "aggregate.h"
 #include "classnode.h"
 #include "enumnode.h"
 #include "functionnode.h"

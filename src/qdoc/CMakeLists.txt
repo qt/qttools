@@ -9,6 +9,7 @@ qt_add_tool(qdoc
     TOOLS_TARGET Tools # special case
     SOURCES
         access.h
+        aggregate.cpp aggregate.h
         atom.cpp atom.h
         clangcodeparser.cpp clangcodeparser.h
         classnode.cpp classnode.h

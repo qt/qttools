@@ -37,6 +37,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class Aggregate;
+
 class TypedefNode : public Node
 {
 public:

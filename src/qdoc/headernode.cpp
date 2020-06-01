@@ -61,7 +61,7 @@ bool HeaderNode::docMustBeGenerated() const
  */
 bool HeaderNode::hasDocumentedChildren() const
 {
-    for (const auto *node : qAsConst(children_)) {
+    for (const auto *node : qAsConst(m_children)) {
         if (node->isInAPI())
             return true;
     }

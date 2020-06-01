@@ -28,6 +28,7 @@
 
 #include "enumnode.h"
 
+#include "aggregate.h"
 #include "typedefnode.h"
 
 QT_BEGIN_NAMESPACE

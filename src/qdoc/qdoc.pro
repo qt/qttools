@@ -31,6 +31,7 @@ win32-icc*|win32-msvc*:{
 }
 
 HEADERS += access.h \
+           aggregate.h \
            atom.h \
            clangcodeparser.h \
            classnode.h \
@@ -91,7 +92,8 @@ HEADERS += access.h \
            webxmlgenerator.h \
            xmlgenerator.h
 
-SOURCES += atom.cpp \
+SOURCES += aggregate.cpp \
+           atom.cpp \
            clangcodeparser.cpp \
            classnode.cpp \
            codechunk.cpp \

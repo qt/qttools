@@ -29,6 +29,7 @@
 #include "docbookgenerator.h"
 
 #include "access.h"
+#include "aggregate.h"
 #include "classnode.h"
 #include "codemarker.h"
 #include "collectionnode.h"

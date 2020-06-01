@@ -29,6 +29,7 @@
 #ifndef QMLPROPERTYNODE_H
 #define QMLPROPERTYNODE_H
 
+#include "aggregate.h"
 #include "node.h"
 
 #include <QtCore/qglobal.h>

@@ -29,7 +29,7 @@
 #ifndef CLASSNODE_H
 #define CLASSNODE_H
 
-#include "node.h"
+#include "aggregate.h"
 #include "relatedclass.h"
 #include "usingclause.h"
 

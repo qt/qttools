@@ -38,6 +38,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class Aggregate;
+
 class WebXMLGenerator : public HtmlGenerator, public IndexSectionWriter
 {
 public:

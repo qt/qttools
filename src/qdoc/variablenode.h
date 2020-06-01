@@ -29,6 +29,7 @@
 #ifndef VARIABLENODE_H
 #define VARIABLENODE_H
 
+#include "aggregate.h"
 #include "node.h"
 
 #include <QtCore/qglobal.h>

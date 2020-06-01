@@ -29,7 +29,7 @@
 #ifndef HEADERNODE_H
 #define HEADERNODE_H
 
-#include "node.h"
+#include "aggregate.h"
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>

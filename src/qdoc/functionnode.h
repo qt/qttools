@@ -29,6 +29,7 @@
 #ifndef FUNCTIONNODE_H
 #define FUNCTIONNODE_H
 
+#include "aggregate.h"
 #include "node.h"
 #include "parameters.h"
 

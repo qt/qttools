@@ -28,6 +28,7 @@
 
 #include "sections.h"
 
+#include "aggregate.h"
 #include "classnode.h"
 #include "config.h"
 #include "enumnode.h"

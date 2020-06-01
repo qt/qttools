@@ -29,7 +29,7 @@
 #ifndef PROXYNODE_H
 #define PROXYNODE_H
 
-#include "node.h"
+#include "aggregate.h"
 
 #include <QtCore/qglobal.h>
 

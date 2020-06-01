@@ -38,6 +38,7 @@
 
 QT_BEGIN_NAMESPACE
 
+class Aggregate;
 class Config;
 class ExampleNode;
 class HelpProjectWriter;

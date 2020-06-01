@@ -28,6 +28,8 @@
 
 #include "typedefnode.h"
 
+#include "aggregate.h"
+
 QT_BEGIN_NAMESPACE
 
 /*!

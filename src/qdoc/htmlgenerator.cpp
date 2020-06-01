@@ -29,6 +29,7 @@
 #include "htmlgenerator.h"
 
 #include "access.h"
+#include "aggregate.h"
 #include "classnode.h"
 #include "collectionnode.h"
 #include "config.h"

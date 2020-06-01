@@ -28,6 +28,7 @@
 
 #include "qmlvisitor.h"
 
+#include "aggregate.h"
 #include "codechunk.h"
 #include "codeparser.h"
 #include "functionnode.h"

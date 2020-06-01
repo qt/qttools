@@ -59,9 +59,9 @@ QT_BEGIN_NAMESPACE
  */
 NamespaceNode::~NamespaceNode()
 {
-    for (int i = 0; i < children_.size(); ++i) {
-        if (children_[i]->parent() != this)
-            children_[i] = nullptr;
+    for (int i = 0; i < m_children.size(); ++i) {
+        if (m_children[i]->parent() != this)
+            m_children[i] = nullptr;
     }
 }
 
@@ -84,7 +84,7 @@ bool NamespaceNode::isDocumentedHere() const
  */
 bool NamespaceNode::hasDocumentedChildren() const
 {
-    for (const auto *node : qAsConst(children_)) {
+    for (const auto *node : qAsConst(m_children)) {
         if (node->isInAPI())
             return true;
     }
@@ -98,7 +98,7 @@ bool NamespaceNode::hasDocumentedChildren() const
  */
 void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
 {
-    for (const auto *node : qAsConst(children_)) {
+    for (const auto *node : qAsConst(m_children)) {
         if (node->isInAPI()) {
             QString msg1 = node->name();
             if (node->isFunction())

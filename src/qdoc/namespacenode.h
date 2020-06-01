@@ -29,7 +29,7 @@
 #ifndef NAMESPACENODE_H
 #define NAMESPACENODE_H
 
-#include "node.h"
+#include "aggregate.h"
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>

@@ -29,6 +29,7 @@
 #include "helpprojectwriter.h"
 
 #include "access.h"
+#include "aggregate.h"
 #include "atom.h"
 #include "classnode.h"
 #include "collectionnode.h"

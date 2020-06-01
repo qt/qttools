@@ -30,7 +30,7 @@
 #define QMLTYPENODE_H
 
 #include "importrec.h"
-#include "node.h"
+#include "aggregate.h"
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>

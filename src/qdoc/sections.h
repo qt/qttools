@@ -35,6 +35,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class Aggregate;
+
 typedef QMultiMap<QString, Node *> MemberMap; // the string is the member signature
 typedef QPair<const QmlTypeNode *, MemberMap> ClassMap; // the node is the QML type
 typedef QVector<ClassMap *> ClassMapList;

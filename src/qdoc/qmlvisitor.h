@@ -50,6 +50,8 @@ namespace QQmlJS {
 #    endif
 #endif
 
+class Aggregate;
+
 struct QmlPropArgs
 {
     QString type_;
