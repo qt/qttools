@@ -47,8 +47,8 @@
 
 QT_BEGIN_NAMESPACE
 
-QStringMap Node::operators_;
-QMap<QString, Node::NodeType> Node::goals_;
+QStringMap Node::operators;
+QMap<QString, Node::NodeType> Node::goals;
 
 /*!
   \class Node
@@ -84,33 +84,33 @@ QMap<QString, Node::NodeType> Node::goals_;
  */
 void Node::initialize()
 {
-    goals_.insert("namespace", Node::Namespace);
-    goals_.insert("class", Node::Class);
-    goals_.insert("struct", Node::Struct);
-    goals_.insert("union", Node::Union);
-    goals_.insert("header", Node::HeaderFile);
-    goals_.insert("headerfile", Node::HeaderFile);
-    goals_.insert("page", Node::Page);
-    goals_.insert("enum", Node::Enum);
-    goals_.insert("example", Node::Example);
-    goals_.insert("externalpage", Node::ExternalPage);
-    goals_.insert("typedef", Node::Typedef);
-    goals_.insert("typealias", Node::TypeAlias);
-    goals_.insert("function", Node::Function);
-    goals_.insert("proxy", Node::Proxy);
-    goals_.insert("property", Node::Property);
-    goals_.insert("variable", Node::Variable);
-    goals_.insert("group", Node::Group);
-    goals_.insert("module", Node::Module);
-    goals_.insert("qmltype", Node::QmlType);
-    goals_.insert("qmlmodule", Node::QmlModule);
-    goals_.insert("qmlproperty", Node::QmlProperty);
-    goals_.insert("qmlsignal", Node::Function);
-    goals_.insert("qmlsignalhandler", Node::Function);
-    goals_.insert("qmlmethod", Node::Function);
-    goals_.insert("qmlbasictype", Node::QmlBasicType);
-    goals_.insert("sharedcomment", Node::SharedComment);
-    goals_.insert("collection", Node::Collection);
+    goals.insert("namespace", Node::Namespace);
+    goals.insert("class", Node::Class);
+    goals.insert("struct", Node::Struct);
+    goals.insert("union", Node::Union);
+    goals.insert("header", Node::HeaderFile);
+    goals.insert("headerfile", Node::HeaderFile);
+    goals.insert("page", Node::Page);
+    goals.insert("enum", Node::Enum);
+    goals.insert("example", Node::Example);
+    goals.insert("externalpage", Node::ExternalPage);
+    goals.insert("typedef", Node::Typedef);
+    goals.insert("typealias", Node::TypeAlias);
+    goals.insert("function", Node::Function);
+    goals.insert("proxy", Node::Proxy);
+    goals.insert("property", Node::Property);
+    goals.insert("variable", Node::Variable);
+    goals.insert("group", Node::Group);
+    goals.insert("module", Node::Module);
+    goals.insert("qmltype", Node::QmlType);
+    goals.insert("qmlmodule", Node::QmlModule);
+    goals.insert("qmlproperty", Node::QmlProperty);
+    goals.insert("qmlsignal", Node::Function);
+    goals.insert("qmlsignalhandler", Node::Function);
+    goals.insert("qmlmethod", Node::Function);
+    goals.insert("qmlbasictype", Node::QmlBasicType);
+    goals.insert("sharedcomment", Node::SharedComment);
+    goals.insert("collection", Node::Collection);
 }
 
 /*!
@@ -130,8 +130,8 @@ void Node::initialize()
  */
 bool Node::changeType(NodeType from, NodeType to)
 {
-    if (nodeType_ == from) {
-        nodeType_ = to;
+    if (m_nodeType == from) {
+        m_nodeType = to;
         switch (to) {
         case QmlType:
         case QmlModule:
@@ -594,8 +594,8 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 QString Node::plainName() const
 {
     if (isFunction() && !isMacro())
-        return name_ + QLatin1String("()");
-    return name_;
+        return m_name + QLatin1String("()");
+    return m_name;
 }
 
 /*!
@@ -607,7 +607,7 @@ QString Node::plainName() const
  */
 QString Node::plainFullName(const Node *relative) const
 {
-    if (name_.isEmpty())
+    if (m_name.isEmpty())
         return QLatin1String("global");
     if (isHeader())
         return plainName();
@@ -631,7 +631,7 @@ QString Node::plainFullName(const Node *relative) const
  */
 QString Node::plainSignature() const
 {
-    if (name_.isEmpty())
+    if (m_name.isEmpty())
         return QLatin1String("global");
 
     QString fullName;
@@ -682,11 +682,11 @@ bool Node::match(const QVector<int> &types) const
  */
 void Node::setDoc(const Doc &doc, bool replace)
 {
-    if (!doc_.isEmpty() && !replace && !doc.isMarkedReimp()) {
+    if (!m_doc.isEmpty() && !replace && !doc.isMarkedReimp()) {
         doc.location().warning(QStringLiteral("Overrides a previous doc"));
-        doc_.location().warning(QStringLiteral("(The previous doc is here)"));
+        m_doc.location().warning(QStringLiteral("(The previous doc is here)"));
     }
-    doc_ = doc;
+    m_doc = doc;
 }
 
 /*!
@@ -695,59 +695,59 @@ void Node::setDoc(const Doc &doc, bool replace)
   parent's child list.
  */
 Node::Node(NodeType type, Aggregate *parent, const QString &name)
-    : nodeType_(type),
-      indexNodeFlag_(false),
-      relatedNonmember_(false),
-      hadDoc_(false),
-      parent_(parent),
-      name_(name)
+    : m_nodeType(type),
+      m_indexNodeFlag(false),
+      m_relatedNonmember(false),
+      m_hadDoc(false),
+      m_parent(parent),
+      m_name(name)
 {
-    if (parent_)
-        parent_->addChild(this);
-    outSubDir_ = Generator::outputSubdir();
-    if (operators_.isEmpty()) {
-        operators_.insert("++", "inc");
-        operators_.insert("--", "dec");
-        operators_.insert("==", "eq");
-        operators_.insert("!=", "ne");
-        operators_.insert("<<", "lt-lt");
-        operators_.insert(">>", "gt-gt");
-        operators_.insert("+=", "plus-assign");
-        operators_.insert("-=", "minus-assign");
-        operators_.insert("*=", "mult-assign");
-        operators_.insert("/=", "div-assign");
-        operators_.insert("%=", "mod-assign");
-        operators_.insert("&=", "bitwise-and-assign");
-        operators_.insert("|=", "bitwise-or-assign");
-        operators_.insert("^=", "bitwise-xor-assign");
-        operators_.insert("<<=", "bitwise-left-shift-assign");
-        operators_.insert(">>=", "bitwise-right-shift-assign");
-        operators_.insert("||", "logical-or");
-        operators_.insert("&&", "logical-and");
-        operators_.insert("()", "call");
-        operators_.insert("[]", "subscript");
-        operators_.insert("->", "pointer");
-        operators_.insert("->*", "pointer-star");
-        operators_.insert("+", "plus");
-        operators_.insert("-", "minus");
-        operators_.insert("*", "mult");
-        operators_.insert("/", "div");
-        operators_.insert("%", "mod");
-        operators_.insert("|", "bitwise-or");
-        operators_.insert("&", "bitwise-and");
-        operators_.insert("^", "bitwise-xor");
-        operators_.insert("!", "not");
-        operators_.insert("~", "bitwise-not");
-        operators_.insert("<=", "lt-eq");
-        operators_.insert(">=", "gt-eq");
-        operators_.insert("<", "lt");
-        operators_.insert(">", "gt");
-        operators_.insert("=", "assign");
-        operators_.insert(",", "comma");
-        operators_.insert("delete[]", "delete-array");
-        operators_.insert("delete", "delete");
-        operators_.insert("new[]", "new-array");
-        operators_.insert("new", "new");
+    if (m_parent)
+        m_parent->addChild(this);
+    m_outSubDir = Generator::outputSubdir();
+    if (operators.isEmpty()) {
+        operators.insert("++", "inc");
+        operators.insert("--", "dec");
+        operators.insert("==", "eq");
+        operators.insert("!=", "ne");
+        operators.insert("<<", "lt-lt");
+        operators.insert(">>", "gt-gt");
+        operators.insert("+=", "plus-assign");
+        operators.insert("-=", "minus-assign");
+        operators.insert("*=", "mult-assign");
+        operators.insert("/=", "div-assign");
+        operators.insert("%=", "mod-assign");
+        operators.insert("&=", "bitwise-and-assign");
+        operators.insert("|=", "bitwise-or-assign");
+        operators.insert("^=", "bitwise-xor-assign");
+        operators.insert("<<=", "bitwise-left-shift-assign");
+        operators.insert(">>=", "bitwise-right-shift-assign");
+        operators.insert("||", "logical-or");
+        operators.insert("&&", "logical-and");
+        operators.insert("()", "call");
+        operators.insert("[]", "subscript");
+        operators.insert("->", "pointer");
+        operators.insert("->*", "pointer-star");
+        operators.insert("+", "plus");
+        operators.insert("-", "minus");
+        operators.insert("*", "mult");
+        operators.insert("/", "div");
+        operators.insert("%", "mod");
+        operators.insert("|", "bitwise-or");
+        operators.insert("&", "bitwise-and");
+        operators.insert("^", "bitwise-xor");
+        operators.insert("!", "not");
+        operators.insert("~", "bitwise-not");
+        operators.insert("<=", "lt-eq");
+        operators.insert(">=", "gt-eq");
+        operators.insert("<", "lt");
+        operators.insert(">", "gt");
+        operators.insert("=", "assign");
+        operators.insert(",", "comma");
+        operators.insert("delete[]", "delete-array");
+        operators.insert("delete", "delete");
+        operators.insert("new[]", "new-array");
+        operators.insert("new", "new");
     }
     setPageType(getPageType(type));
     setGenus(getGenus(type));
@@ -950,19 +950,19 @@ QString Node::nodeTypeString(NodeType t)
 void Node::setPageType(const QString &t)
 {
     if ((t == "API") || (t == "api"))
-        pageType_ = ApiPage;
+        m_pageType = ApiPage;
     else if (t == "howto")
-        pageType_ = HowToPage;
+        m_pageType = HowToPage;
     else if (t == "overview")
-        pageType_ = OverviewPage;
+        m_pageType = OverviewPage;
     else if (t == "tutorial")
-        pageType_ = TutorialPage;
+        m_pageType = TutorialPage;
     else if (t == "faq")
-        pageType_ = FAQPage;
+        m_pageType = FAQPage;
     else if (t == "article")
-        pageType_ = ArticlePage;
+        m_pageType = ArticlePage;
     else if (t == "example")
-        pageType_ = ExamplePage;
+        m_pageType = ExamplePage;
 }
 
 /*! Converts the boolean value \a b to an enum representation
@@ -1007,7 +1007,7 @@ void Node::setLink(LinkType linkType, const QString &link, const QString &desc)
     QPair<QString, QString> linkPair;
     linkPair.first = link;
     linkPair.second = desc;
-    linkMap_[linkType] = linkPair;
+    m_linkMap[linkType] = linkPair;
 }
 
 /*!
@@ -1029,7 +1029,7 @@ void Node::setSince(const QString &since)
     if (!cutoff.isNull() && QVersionNumber::fromString(parts.last()).normalized() < cutoff)
         return;
 
-    since_ = parts.join(QLatin1Char(' '));
+    m_since = parts.join(QLatin1Char(' '));
 }
 
 /*!
@@ -1037,7 +1037,7 @@ void Node::setSince(const QString &since)
  */
 QString Node::accessString() const
 {
-    switch (access_) {
+    switch (m_access) {
     case Access::Protected:
         return QLatin1String("protected");
     case Access::Private:
@@ -1082,9 +1082,9 @@ QString Node::extractClassName(const QString &string) const
  */
 Node::ThreadSafeness Node::threadSafeness() const
 {
-    if (parent_ && safeness_ == parent_->inheritedThreadSafeness())
+    if (m_parent && m_safeness == m_parent->inheritedThreadSafeness())
         return UnspecifiedSafeness;
-    return safeness_;
+    return m_safeness;
 }
 
 /*!
@@ -1094,9 +1094,9 @@ Node::ThreadSafeness Node::threadSafeness() const
  */
 Node::ThreadSafeness Node::inheritedThreadSafeness() const
 {
-    if (parent_ && safeness_ == UnspecifiedSafeness)
-        return parent_->inheritedThreadSafeness();
-    return safeness_;
+    if (m_parent && m_safeness == UnspecifiedSafeness)
+        return m_parent->inheritedThreadSafeness();
+    return m_safeness;
 }
 
 /*!
@@ -1177,12 +1177,12 @@ void Node::setLocation(const Location &t)
 {
     QString suffix = t.fileSuffix();
     if (suffix == "h")
-        declLocation_ = t;
+        m_declLocation = t;
     else if (suffix == "cpp")
-        defLocation_ = t;
+        m_defLocation = t;
     else {
-        declLocation_ = t;
-        defLocation_ = t;
+        m_declLocation = t;
+        m_defLocation = t;
     }
 }
 
@@ -1192,7 +1192,7 @@ void Node::setLocation(const Location &t)
  */
 bool Node::hasSharedDoc() const
 {
-    return (sharedCommentNode_ && sharedCommentNode_->hasDoc());
+    return (m_sharedCommentNode && m_sharedCommentNode->hasDoc());
 }
 
 /*!
@@ -1201,9 +1201,9 @@ bool Node::hasSharedDoc() const
  */
 QString Node::qualifyCppName()
 {
-    if (parent_ && parent_->isNamespace() && !parent_->name().isEmpty())
-        return parent_->name() + "::" + name_;
-    return name_;
+    if (m_parent && m_parent->isNamespace() && !m_parent->name().isEmpty())
+        return m_parent->name() + "::" + m_name;
+    return m_name;
 }
 
 /*!
@@ -1212,9 +1212,9 @@ QString Node::qualifyCppName()
  */
 QString Node::qualifyWithParentName()
 {
-    if (parent_ && !parent_->name().isEmpty())
-        return parent_->name() + "::" + name_;
-    return name_;
+    if (m_parent && !m_parent->name().isEmpty())
+        return m_parent->name() + "::" + m_name;
+    return m_name;
 }
 
 /*!
@@ -1223,10 +1223,10 @@ QString Node::qualifyWithParentName()
  */
 QString Node::qualifyQmlName()
 {
-    QString qualifiedName = name_;
-    if (name_.startsWith(QLatin1String("QML:")))
-        qualifiedName = name_.mid(4);
-    qualifiedName = logicalModuleName() + "::" + name_;
+    QString qualifiedName = m_name;
+    if (m_name.startsWith(QLatin1String("QML:")))
+        qualifiedName = m_name.mid(4);
+    qualifiedName = logicalModuleName() + "::" + m_name;
     return qualifiedName;
 }
 
@@ -1236,7 +1236,7 @@ QString Node::qualifyQmlName()
  */
 QString Node::unqualifyQmlName()
 {
-    QString qmlTypeName = name_.toLower();
+    QString qmlTypeName = m_name.toLower();
     if (qmlTypeName.startsWith(QLatin1String("qml:")))
         qmlTypeName = qmlTypeName.mid(4);
     return qmlTypeName;
@@ -1249,7 +1249,7 @@ QString Node::unqualifyQmlName()
  */
 bool Node::isWrapper() const
 {
-    return (parent_ ? parent_->isWrapper() : false);
+    return (m_parent ? m_parent->isWrapper() : false);
 }
 
 /*!
@@ -1302,8 +1302,8 @@ QString Node::fullDocumentName() const
  */
 QString Node::physicalModuleName() const
 {
-    if (!physicalModuleName_.isEmpty())
-        return physicalModuleName_;
+    if (!m_physicalModuleName.isEmpty())
+        return m_physicalModuleName;
 
     QString path = location().filePath();
     QString pattern = QString("src") + QDir::separator();
