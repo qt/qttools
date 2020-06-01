@@ -47,7 +47,6 @@
 
 QT_BEGIN_NAMESPACE
 
-int Node::propertyGroupCount_ = 0;
 QStringMap Node::operators_;
 QMap<QString, Node::NodeType> Node::goals_;
 
@@ -172,8 +171,8 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
     }
 
     if (n1->isFunction() && n2->isFunction()) {
-        const FunctionNode *f1 = static_cast<const FunctionNode *>(n1);
-        const FunctionNode *f2 = static_cast<const FunctionNode *>(n2);
+        const auto *f1 = static_cast<const FunctionNode *>(n1);
+        const auto *f2 = static_cast<const FunctionNode *>(n2);
 
         LT_RETURN_IF_NOT_EQUAL(f1->isConst(), f2->isConst());
         LT_RETURN_IF_NOT_EQUAL(f1->signature(false, false), f2->signature(false, false));
@@ -863,50 +862,13 @@ Node::Genus Node::getGenus(Node::NodeType t)
  */
 
 /*!
-  Returns this node's page type as a string, for use as an
-  attribute value in XML or HTML.
- */
-QString Node::pageTypeString() const
-{
-    return pageTypeString(pageType_);
-}
-
-/*!
-  Returns the page type \a t as a string, for use as an
-  attribute value in XML or HTML.
- */
-QString Node::pageTypeString(PageType t)
-{
-    switch (t) {
-    case Node::AttributionPage:
-        return QLatin1String("attribution");
-    case Node::ApiPage:
-        return QLatin1String("api");
-    case Node::ArticlePage:
-        return QLatin1String("article");
-    case Node::ExamplePage:
-        return QLatin1String("example");
-    case Node::HowToPage:
-        return QLatin1String("howto");
-    case Node::OverviewPage:
-        return QLatin1String("overview");
-    case Node::TutorialPage:
-        return QLatin1String("tutorial");
-    case Node::FAQPage:
-        return QLatin1String("faq");
-    default:
-        return QLatin1String("article");
-    }
-}
-
-/*!
   Returns this node's type as a string for use as an
   attribute value in XML or HTML.
  */
 QString Node::nodeTypeString() const
 {
     if (isFunction()) {
-        const FunctionNode *fn = static_cast<const FunctionNode *>(this);
+        const auto *fn = static_cast<const FunctionNode *>(this);
         return fn->kindString();
     }
     return nodeTypeString(nodeType());
@@ -1178,9 +1140,7 @@ bool Node::isInternal() const
 {
     if (status() == Internal)
         return true;
-    if (parent() && parent()->status() == Internal)
-        return true;
-    return false;
+    return parent() && parent()->status() == Internal;
 }
 
 /*! \fn void Node::markInternal()
@@ -1328,71 +1288,6 @@ QString Node::fullDocumentName() const
         concatenator = QLatin1Char('#');
 
     return pieces.join(concatenator);
-}
-
-/*!
-  Returns the \a str as an NCName, which means the name can
-  be used as the value of an \e id attribute. Search for NCName
-  on the internet for details of what can be an NCName.
- */
-QString Node::cleanId(const QString &str)
-{
-    QString clean;
-    QString name = str.simplified();
-
-    if (name.isEmpty())
-        return clean;
-
-    name = name.replace("::", "-");
-    name = name.replace(QLatin1Char(' '), QLatin1Char('-'));
-    name = name.replace("()", "-call");
-
-    clean.reserve(name.size() + 20);
-    if (!str.startsWith("id-"))
-        clean = "id-";
-    const QChar c = name[0];
-    const uint u = c.unicode();
-
-    if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9')) {
-        clean += c;
-    } else if (u == '~') {
-        clean += "dtor.";
-    } else if (u == '_') {
-        clean += "underscore.";
-    } else {
-        clean += QLatin1Char('a');
-    }
-
-    for (int i = 1; i < name.length(); i++) {
-        const QChar c = name[i];
-        const uint u = c.unicode();
-        if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9') || u == '-'
-            || u == '_' || u == '.') {
-            clean += c;
-        } else if (c.isSpace() || u == ':') {
-            clean += QLatin1Char('-');
-        } else if (u == '!') {
-            clean += "-not";
-        } else if (u == '&') {
-            clean += "-and";
-        } else if (u == '<') {
-            clean += "-lt";
-        } else if (u == '=') {
-            clean += "-eq";
-        } else if (u == '>') {
-            clean += "-gt";
-        } else if (u == '#') {
-            clean += "-hash";
-        } else if (u == '(') {
-            clean += QLatin1Char('-');
-        } else if (u == ')') {
-            clean += QLatin1Char('-');
-        } else {
-            clean += QLatin1Char('-');
-            clean += QString::number((int)u, 16);
-        }
-    }
-    return clean;
 }
 
 /*!
@@ -1548,8 +1443,8 @@ QString Node::physicalModuleName() const
   Sets the node's parent pointer to \a n. Such a thing
   is not lightly done. All the calls to this function
   are in other member functions of Node subclasses. See
-  the code in node.cpp to understand when this function
-  can be called safely and why it is called.
+  the code in the subclass implementations to understand
+  when this function can be called safely and why it is called.
 */
 
 /*! \fn void Node::setIndexNodeFlag(bool isIndexNode = true)
@@ -1704,7 +1599,7 @@ QString Node::physicalModuleName() const
  */
 
 /*! \fn Aggregate *Node::parent() const
-  Returns the node's paprent pointer.
+  Returns the node's parent pointer.
 */
 
 /*! \fn const QString &Node::name() const

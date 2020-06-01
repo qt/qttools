@@ -71,7 +71,6 @@ typedef QMultiMap<QString, Node *> NodeMultiMap;
 typedef QMap<QString, NodeMultiMap> NodeMultiMapMap;
 typedef QMap<QString, CollectionNode *> CNMap;
 typedef QMultiMap<QString, CollectionNode *> CNMultiMap;
-typedef QVector<CollectionNode *> CollectionList;
 
 class Node
 {
@@ -157,7 +156,6 @@ public:
     static Genus getGenus(NodeType t);
 
     PageType pageType() const { return pageType_; }
-    QString pageTypeString() const;
     void setPageType(PageType t) { pageType_ = t; }
     void setPageType(const QString &t);
     static PageType getPageType(NodeType t);
@@ -325,14 +323,12 @@ public:
     QString since() const { return since_; }
     const QString &templateDecl() const { return templateDecl_; }
     const QString &reconstitutedBrief() const { return reconstitutedBrief_; }
-    QString nodeSubtypeString() const;
 
     bool isSharingComment() const { return (sharedCommentNode_ != nullptr); }
     bool hasSharedDoc() const;
     void setSharedCommentNode(SharedCommentNode *t) { sharedCommentNode_ = t; }
     SharedCommentNode *sharedCommentNode() { return sharedCommentNode_; }
 
-    // QString guid() const;
     QString extractClassName(const QString &string) const;
     virtual QString qmlTypeName() const { return name_; }
     virtual QString qmlFullBaseName() const { return QString(); }
@@ -355,12 +351,9 @@ public:
     QString unqualifyQmlName();
     QString qualifyWithParentName();
 
-    static QString cleanId(const QString &str);
     static FlagValue toFlagValue(bool b);
     static bool fromFlagValue(FlagValue fv, bool defaultValue);
-    static QString pageTypeString(PageType t);
     static QString nodeTypeString(NodeType t);
-    static QString nodeSubtypeString(unsigned char t);
     static void initialize();
     static NodeType goal(const QString &t) { return goals_.value(t); }
     static bool nodeNameLessThan(const Node *first, const Node *second);
@@ -392,10 +385,8 @@ private:
     QString since_ {};
     QString templateDecl_ {};
     QString reconstitutedBrief_ {};
-    // mutable QString uuid_;
     QString outSubDir_ {};
     static QStringMap operators_;
-    static int propertyGroupCount_;
     static QMap<QString, Node::NodeType> goals_;
 };
 
