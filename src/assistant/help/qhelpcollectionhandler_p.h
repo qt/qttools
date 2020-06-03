@@ -60,12 +60,12 @@
 #include <QtSql/QSqlQuery>
 
 #include "qhelpdbreader_p.h"
+#include "qhelplink.h"
 
 QT_BEGIN_NAMESPACE
 
 class QVersionNumber;
 class QHelpFilterData;
-struct QHelpLink;
 
 class QHelpCollectionHandler : public QObject
 {

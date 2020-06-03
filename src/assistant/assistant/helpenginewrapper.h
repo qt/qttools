@@ -37,6 +37,8 @@
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
 
+#include "qhelplink.h"
+
 QT_BEGIN_NAMESPACE
 
 class QFileSystemWatcher;
@@ -47,7 +49,6 @@ class QHelpIndexWidget;
 class QHelpSearchEngine;
 class QHelpFilterEngine;
 class QHelpEngineCore;
-struct QHelpLink;
 
 enum {
     ShowHomePage = 0,
