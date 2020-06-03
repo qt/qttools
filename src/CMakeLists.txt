@@ -1,9 +1,17 @@
 # Generated from src.pro.
 
+# special case begin
+# Need to stop building these apps by default because they would fail
+# in device_and_simulator builds.
+if(IOS)
+   set(_qt_additional_tools_to_exclude qtplugininfo qtpaths)
+endif()
+# special case end
 
 qt_exclude_tool_directories_from_default_target(
     distancefieldgenerator
     pixeltool
+    ${_qt_additional_tools_to_exclude} # special case
 )
 
 add_subdirectory(global) # special case add as first directory
