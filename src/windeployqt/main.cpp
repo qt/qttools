@@ -832,6 +832,7 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"renderers", Qt3DRendererModule},
     {"renderplugins", Qt3DRendererModule},
     {"geometryloaders", Qt3DRendererModule},
+    {"renderers", Qt3DRendererModule},
     {"webview", QtWebViewModule}
 };
 
