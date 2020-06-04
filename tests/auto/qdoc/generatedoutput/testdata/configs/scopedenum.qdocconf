@@ -3,5 +3,10 @@ defines += test_scopedenum
 
 sources += ../scopedenum/scopedenum.qdoc
 
-HTML.nosubdirs    = true
-HTML.outputsubdir = scopedenum
+outputformats = HTML DocBook
+
+{HTML.nosubdirs,DocBook.nosubdirs}  = true
+HTML.outputsubdir                   = scopedenum
+DocBook.outputsubdir                = scopedenum-docbook
+
+warninglimit += 2

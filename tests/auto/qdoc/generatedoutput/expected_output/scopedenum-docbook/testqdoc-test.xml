@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Test Class</db:title>
+<db:subtitle>TestQDoc::Test</db:subtitle>
+<db:productname>TestCPP</db:productname>
+<db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A class in a namespace.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Test</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>qmake</db:term>
+<db:listitem>
+<db:para>QT += testcpp</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherited By</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestQDoc::TestDerived</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="ScopedEnum-enum">
+<db:title>Test::enum ScopedEnum</db:title>
+<db:enumsynopsis>
+<db:enumname>ScopedEnum</db:enumname>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+<db:enumitem db:enumidentifier="This" db:enumvalue="0x01"/>
+<db:enumitem db:enumidentifier="That" db:enumvalue="0x02"/>
+<db:enumitem db:enumidentifier="All" db:enumvalue="This | That"/>
+<db:enumitem db:enumidentifier="OmittedValue" db:enumvalue="99"/>
+</db:enumsynopsis>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Value</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">ScopedEnum</db:link></db:emphasis>::This</db:code></db:para>
+</db:td>
+<db:td><db:code>0x01</db:code></db:td>
+<db:td>
+<db:para>Something</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">ScopedEnum</db:link></db:emphasis>::That</db:code></db:para>
+</db:td>
+<db:td><db:code>0x02</db:code></db:td>
+<db:td>
+<db:para>Something else</db:para>
+</db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">ScopedEnum</db:link></db:emphasis>::All</db:code></db:para>
+</db:td>
+<db:td><db:code>This | That</db:code></db:td>
+<db:td>
+<db:para>Everything</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+<db:section xml:id="SomeType-typedef">
+<db:title>Test::typedef SomeType</db:title>
+<db:typedefsynopsis>
+<db:type>SomeType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:typedefsynopsis>
+<db:para>A typedef.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="overload">
+<db:title>[protected] Test::void overload()</db:title>
+<db:bridgehead renderas="sect2" xml:id="overload-1">[protected] Test::void overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
+<db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
+<db:para>This function was introduced in Test 1.2.</db:para>
+</db:section>
+<db:section xml:id="inlineFunction">
+<db:title>Test::void inlineFunction()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>inlineFunction</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void inlineFunction()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>An inline function, documented using the \fn QDoc command.</db:para>
+</db:section>
+<db:section xml:id="someFunction">
+<db:title>Test::int someFunction(int <db:emphasis>v</db:emphasis> = 0)</db:title>
+<db:methodsynopsis>
+<db:type>int</db:type>
+<db:methodname>someFunction</db:methodname>
+<db:methodparam>
+<db:type>int</db:type>
+<db:parameter>v</db:parameter>
+<db:initializer>0</db:initializer>
+</db:methodparam>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">int someFunction(int v)</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
+</db:section>
+<db:section xml:id="someFunctionDefaultArg">
+<db:title>Test::void someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>someFunctionDefaultArg</db:methodname>
+<db:methodparam>
+<db:type>int</db:type>
+<db:parameter>i</db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>bool</db:type>
+<db:parameter>b</db:parameter>
+<db:initializer>false</db:initializer>
+</db:methodparam>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void someFunctionDefaultArg(int i, bool b)</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+<db:section xml:id="virtualFun">
+<db:title>[virtual] Test::void virtualFun()</db:title>
+<db:methodsynopsis>
+<db:modifier>virtual</db:modifier>
+<db:void/>
+<db:methodname>virtualFun</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void virtualFun()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Function that must be reimplemented.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="macro-documentation">
+<db:title>Macro Documentation</db:title>
+<db:section xml:id="QDOCTEST_MACRO2">
+<db:title>QDOCTEST_MACRO2(<db:emphasis>x</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:methodname>QDOCTEST_MACR</db:methodname>
+<db:methodparam>
+<db:type></db:type>
+<db:parameter>x</db:parameter>
+</db:methodparam>
+<db:synopsisinfo db:role="meta">macrowithparams</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">QDOCTEST_MACRO2( x)</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>A macro with argument <db:code role="parameter">x</db:code>.</db:para>
+<db:para>This function was introduced in Test 1.1.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="obsolete">
+<db:title>Obsolete Members for Test</db:title>
+<db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-test.xml">Test</db:link> are obsolete.</db:emphasis> They are provided to keep old source code working. We strongly advise against using them in new code.</db:para>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="anotherObsoleteMember">
+<db:title>Test::void anotherObsoleteMember()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>anotherObsoleteMember</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void anotherObsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">obsolete</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is obsolete. It is provided to keep old source code working. We strongly advise against using it in new code.</db:para>
+<db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
+</db:section>
+<db:section xml:id="deprecatedMember">
+<db:title>Test::void deprecatedMember()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>deprecatedMember</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void deprecatedMember()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">obsolete</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is obsolete. It is provided to keep old source code working. We strongly advise against using it in new code.</db:para>
+<db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
+</db:section>
+<db:section xml:id="obsoleteMember">
+<db:title>Test::void obsoleteMember()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>obsoleteMember</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void obsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">obsolete</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is obsolete. It is provided to keep old source code working. We strongly advise against using it in new code.</db:para>
+<db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
+</db:section>
+</db:section>
+</db:section>
+</db:article>

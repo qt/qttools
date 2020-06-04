@@ -340,7 +340,9 @@ void tst_generatedOutput::templateParameters()
 
 void tst_generatedOutput::scopedEnum()
 {
-    testAndCompare("testdata/configs/scopedenum.qdocconf", "scopedenum/testqdoc-test.html");
+    testAndCompare("testdata/configs/scopedenum.qdocconf",
+                   "scopedenum/testqdoc-test.html "
+                   "scopedenum-docbook/testqdoc-test.xml");
 }
 
 void tst_generatedOutput::dontDocument()
