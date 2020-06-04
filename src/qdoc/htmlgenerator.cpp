@@ -2902,10 +2902,10 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
                             .arg(selector));
             return;
         }
-        Node *n = const_cast<Node *>(relative);
-        CollectionNode *cn = static_cast<CollectionNode *>(n);
-        m_qdb->mergeCollections(cn);
-        generateAnnotatedList(cn, marker, cn->members());
+        auto *node = const_cast<Node *>(relative);
+        auto *collectionNode = static_cast<CollectionNode *>(node);
+        m_qdb->mergeCollections(collectionNode);
+        generateAnnotatedList(collectionNode, marker, collectionNode->members());
     }
 }
 

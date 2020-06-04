@@ -1495,6 +1495,9 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
  */
 void QDocDatabase::mergeCollections(CollectionNode *c)
 {
+    if (c == nullptr)
+        return;
+
     for (auto *tree : searchOrder()) {
         CollectionNode *cn = tree->getCollection(c->name(), c->nodeType());
         if (cn && cn != c) {
