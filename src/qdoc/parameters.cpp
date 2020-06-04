@@ -458,9 +458,8 @@ QString Parameters::rawSignature(bool names, bool values) const
   Parse the parameter \a signature by splitting the string,
   and store the individual parameters in the parameter vector.
 
-  This method of parsing the parameter signature probably
-  doesn't work for all cases. Investigate doing using the
-  more robust way in parse().
+  This method of parsing is naive but sufficient for QML methods
+  and macros.
  */
 void Parameters::set(const QString &signature)
 {
@@ -468,25 +467,14 @@ void Parameters::set(const QString &signature)
     if (!signature.isEmpty()) {
         QStringList commaSplit = signature.split(',');
         parameters_.resize(commaSplit.size());
-        for (int i = 0; i < commaSplit.size(); i++) {
-            QStringList blankSplit = commaSplit[i].split(' ');
-            QString pName = blankSplit.last();
-            blankSplit.removeLast();
-            QString pType;
-            if (blankSplit.size() > 1)
-                pType = blankSplit.join(' ');
+        int i = 0;
+        for (const auto &item : qAsConst(commaSplit)) {
+            QStringList blankSplit = item.split(' ');
+            QString pName = blankSplit.takeLast();
+            QString pType = blankSplit.join(' ');
             if (pType.isEmpty() && pName == QLatin1String("..."))
                 qSwap(pType, pName);
-            else {
-                int i = 0;
-                while (i < pName.length() && !pName.at(i).isLetter())
-                    i++;
-                if (i > 0) {
-                    pType += QChar(' ') + pName.left(i);
-                    pName = pName.mid(i);
-                }
-            }
-            parameters_[i].set(pType, pName);
+            parameters_[i++].set(pType, pName);
         }
     }
 }
