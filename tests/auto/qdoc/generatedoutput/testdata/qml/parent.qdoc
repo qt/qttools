@@ -40,8 +40,8 @@
 */
 
 /*!
-    \qmlmethod void AbstractParent::rear(Child child)
-    \brief Do some abstract parenting on \a child.
+    \qmlmethod void AbstractParent::rear(Child child, var method)
+    \brief Do some abstract parenting on \a child using a specific \a method.
 */
 
 /*!
