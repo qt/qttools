@@ -53,9 +53,9 @@ private:
     void generateTagFile(const QString &fileName, Generator *g);
 
 private:
-    static QDocTagFiles *qdocTagFiles_;
-    QDocDatabase *qdb_;
-    Generator *gen_;
+    static QDocTagFiles *s_qdocTagFiles;
+    QDocDatabase *m_qdb { nullptr };
+    Generator *m_generator { nullptr };
 };
 
 QT_END_NAMESPACE

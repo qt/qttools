@@ -48,7 +48,7 @@ QT_BEGIN_NAMESPACE
   This class handles the generation of the qdoc tag file.
  */
 
-QDocTagFiles *QDocTagFiles::qdocTagFiles_ = nullptr;
+QDocTagFiles *QDocTagFiles::s_qdocTagFiles = nullptr;
 
 /*!
   Constructs the singleton. \a qdb is the pointer to the
@@ -57,7 +57,7 @@ QDocTagFiles *QDocTagFiles::qdocTagFiles_ = nullptr;
  */
 QDocTagFiles::QDocTagFiles()
 {
-    qdb_ = QDocDatabase::qdocDB();
+    m_qdb = QDocDatabase::qdocDB();
 }
 
 /*!
@@ -65,7 +65,7 @@ QDocTagFiles::QDocTagFiles()
  */
 QDocTagFiles::~QDocTagFiles()
 {
-    qdb_ = nullptr;
+    m_qdb = nullptr;
 }
 
 /*!
@@ -74,9 +74,9 @@ QDocTagFiles::~QDocTagFiles()
  */
 QDocTagFiles *QDocTagFiles::qdocTagFiles()
 {
-    if (qdocTagFiles_ == nullptr)
-        qdocTagFiles_ = new QDocTagFiles;
-    return qdocTagFiles_;
+    if (s_qdocTagFiles == nullptr)
+        s_qdocTagFiles = new QDocTagFiles;
+    return s_qdocTagFiles;
 }
 
 /*!
@@ -84,9 +84,9 @@ QDocTagFiles *QDocTagFiles::qdocTagFiles()
  */
 void QDocTagFiles::destroyQDocTagFiles()
 {
-    if (qdocTagFiles_ != nullptr) {
-        delete qdocTagFiles_;
-        qdocTagFiles_ = nullptr;
+    if (s_qdocTagFiles != nullptr) {
+        delete s_qdocTagFiles;
+        s_qdocTagFiles = nullptr;
     }
 }
 
@@ -116,7 +116,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
         default:
             continue;
         }
-        const Aggregate *aggregate = static_cast<const Aggregate *>(node);
+        const auto *aggregate = static_cast<const Aggregate *>(node);
 
         QString access = "public";
         if (node->isProtected())
@@ -125,7 +125,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
         QString objName = node->name();
 
         // Special case: only the root node should have an empty name.
-        if (objName.isEmpty() && node != qdb_->primaryTreeRoot())
+        if (objName.isEmpty() && node != m_qdb->primaryTreeRoot())
             continue;
 
         // *** Write the starting tag for the element here. ***
@@ -134,11 +134,11 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
 
         if (node->isClassNode()) {
             writer.writeTextElement("name", node->fullDocumentName());
-            writer.writeTextElement("filename", gen_->fullDocumentLocation(node, false));
+            writer.writeTextElement("filename", m_generator->fullDocumentLocation(node, false));
 
             // Classes contain information about their base classes.
-            const ClassNode *classNode = static_cast<const ClassNode *>(node);
-            const QVector<RelatedClass> bases = classNode->baseClasses();
+            const auto *classNode = static_cast<const ClassNode *>(node);
+            const QVector<RelatedClass> &bases = classNode->baseClasses();
             for (const auto &related : bases) {
                 ClassNode *n = related.m_node;
                 if (n)
@@ -153,7 +153,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
             generateTagFileCompounds(writer, aggregate);
         } else {
             writer.writeTextElement("name", node->fullDocumentName());
-            writer.writeTextElement("filename", gen_->fullDocumentLocation(node, false));
+            writer.writeTextElement("filename", m_generator->fullDocumentLocation(node, false));
 
             // Recurse to write all members.
             generateTagFileMembers(writer, aggregate);
@@ -225,7 +225,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
         QString objName = node->name();
 
         // Special case: only the root node should have an empty name.
-        if (objName.isEmpty() && node != qdb_->primaryTreeRoot())
+        if (objName.isEmpty() && node != m_qdb->primaryTreeRoot())
             continue;
 
         // *** Write the starting tag for the element here. ***
@@ -250,7 +250,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
               the type of function being described.
             */
 
-            const FunctionNode *functionNode = static_cast<const FunctionNode *>(node);
+            const auto *functionNode = static_cast<const FunctionNode *>(node);
             writer.writeAttribute("protection", access);
             writer.writeAttribute("virtualness", functionNode->virtualness());
             writer.writeAttribute("static", functionNode->isStatic() ? "yes" : "no");
@@ -262,7 +262,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
 
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             QString signature = functionNode->signature(false, false);
@@ -280,11 +280,11 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             writer.writeEndElement(); // member
             break;
         case Node::Property: {
-            const PropertyNode *propertyNode = static_cast<const PropertyNode *>(node);
+            const auto *propertyNode = static_cast<const PropertyNode *>(node);
             writer.writeAttribute("type", propertyNode->dataType());
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             writer.writeTextElement("arglist", QString());
@@ -292,10 +292,10 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
             writer.writeEndElement(); // member
             break;
         case Node::Enum: {
-            const EnumNode *enumNode = static_cast<const EnumNode *>(node);
+            const auto *enumNode = static_cast<const EnumNode *>(node);
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             writer.writeEndElement(); // member
@@ -312,14 +312,14 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
         } break;
         case Node::TypeAlias: // Treated as typedef
         case Node::Typedef: {
-            const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
+            const auto *typedefNode = static_cast<const TypedefNode *>(node);
             if (typedefNode->associatedEnum())
                 writer.writeAttribute("type", typedefNode->associatedEnum()->fullDocumentName());
             else
                 writer.writeAttribute("type", QString());
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    gen_->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             writer.writeTextElement("arglist", QString());
@@ -345,19 +345,19 @@ void QDocTagFiles::generateTagFile(const QString &fileName, Generator *g)
     // If no path was specified or it doesn't exist,
     // default to the output directory
     if (fileInfo.fileName() == fileName || !fileInfo.dir().exists())
-        file.setFileName(gen_->outputDir() + QLatin1Char('/') + fileInfo.fileName());
+        file.setFileName(m_generator->outputDir() + QLatin1Char('/') + fileInfo.fileName());
 
     if (!file.open(QFile::WriteOnly | QFile::Text)) {
         Location().warning(QString("Failed to open %1 for writing.").arg(file.fileName()));
         return;
     }
 
-    gen_ = g;
+    m_generator = g;
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);
     writer.writeStartDocument();
     writer.writeStartElement("tagfile");
-    generateTagFileCompounds(writer, qdb_->primaryTreeRoot());
+    generateTagFileCompounds(writer, m_qdb->primaryTreeRoot());
     writer.writeEndElement(); // tagfile
     writer.writeEndDocument();
     file.close();
