@@ -43,7 +43,7 @@ class Aggregate;
 class WebXMLGenerator : public HtmlGenerator, public IndexSectionWriter
 {
 public:
-    explicit WebXMLGenerator() {}
+    WebXMLGenerator() = default;
 
     void initializeGenerator() override;
     void terminateGenerator() override;
@@ -73,14 +73,12 @@ private:
                    const QString &link);
     void endLink(QXmlStreamWriter &writer);
 
-    bool inLink;
-    bool inContents;
-    bool inSectionHeading;
-    bool hasQuotingInformation;
-    int numTableRows;
-    QString quoteCommand;
-    QScopedPointer<QXmlStreamWriter> currentWriter;
-    bool supplement = false;
+    bool m_inLink { false };
+    bool m_inSectionHeading { false };
+    bool m_hasQuotingInformation { false };
+    QString quoteCommand {};
+    QScopedPointer<QXmlStreamWriter> currentWriter {};
+    bool m_supplement { false };
 };
 
 QT_END_NAMESPACE
