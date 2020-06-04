@@ -298,7 +298,6 @@ struct ConfigStrings
     static QString REDIRECTDOCUMENTATIONTODEVNULL;
     static QString QHP;
     static QString QUOTINGINFORMATION;
-    static QString SCRIPTDIRS;
     static QString SCRIPTS;
     static QString SHOWINTERNAL;
     static QString SINGLEEXEC;
@@ -306,9 +305,7 @@ struct ConfigStrings
     static QString SOURCEENCODING;
     static QString SOURCES;
     static QString SPURIOUS;
-    static QString STYLEDIRS;
     static QString STYLE;
-    static QString STYLES;
     static QString STYLESHEETS;
     static QString SYNTAXHIGHLIGHTING;
     static QString TABSIZE;
@@ -384,7 +381,6 @@ struct ConfigStrings
 #define CONFIG_REDIRECTDOCUMENTATIONTODEVNULL ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL
 #define CONFIG_QHP ConfigStrings::QHP
 #define CONFIG_QUOTINGINFORMATION ConfigStrings::QUOTINGINFORMATION
-#define CONFIG_SCRIPTDIRS ConfigStrings::SCRIPTDIRS
 #define CONFIG_SCRIPTS ConfigStrings::SCRIPTS
 #define CONFIG_SHOWINTERNAL ConfigStrings::SHOWINTERNAL
 #define CONFIG_SINGLEEXEC ConfigStrings::SINGLEEXEC
@@ -392,9 +388,7 @@ struct ConfigStrings
 #define CONFIG_SOURCEENCODING ConfigStrings::SOURCEENCODING
 #define CONFIG_SOURCES ConfigStrings::SOURCES
 #define CONFIG_SPURIOUS ConfigStrings::SPURIOUS
-#define CONFIG_STYLEDIRS ConfigStrings::STYLEDIRS
 #define CONFIG_STYLE ConfigStrings::STYLE
-#define CONFIG_STYLES ConfigStrings::STYLES
 #define CONFIG_STYLESHEETS ConfigStrings::STYLESHEETS
 #define CONFIG_SYNTAXHIGHLIGHTING ConfigStrings::SYNTAXHIGHLIGHTING
 #define CONFIG_TABSIZE ConfigStrings::TABSIZE

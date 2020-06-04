@@ -195,14 +195,9 @@ private:
     static QSet<QString> outputFormats;
     static QHash<QString, QString> outputPrefixes;
     static QHash<QString, QString> outputSuffixes;
-    static QStringList scriptDirs;
-    static QStringList scriptFiles;
-    static QStringList styleDirs;
-    static QStringList styleFiles;
     static bool noLinkErrors_;
     static bool autolinkErrors_;
     static bool redirectDocumentationToDevNull_;
-    static bool qdocSingleExec_;
     static bool useOutputSubdirs_;
     static QmlTypeNode *qmlTypeContext_;
 

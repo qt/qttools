@@ -100,7 +100,6 @@ QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL =
         QStringLiteral("redirectdocumentationtodevnull");
 QString ConfigStrings::QHP = QStringLiteral("qhp");
 QString ConfigStrings::QUOTINGINFORMATION = QStringLiteral("quotinginformation");
-QString ConfigStrings::SCRIPTDIRS = QStringLiteral("scriptdirs");
 QString ConfigStrings::SCRIPTS = QStringLiteral("scripts");
 QString ConfigStrings::SHOWINTERNAL = QStringLiteral("showinternal");
 QString ConfigStrings::SINGLEEXEC = QStringLiteral("singleexec");
@@ -108,9 +107,7 @@ QString ConfigStrings::SOURCEDIRS = QStringLiteral("sourcedirs");
 QString ConfigStrings::SOURCEENCODING = QStringLiteral("sourceencoding");
 QString ConfigStrings::SOURCES = QStringLiteral("sources");
 QString ConfigStrings::SPURIOUS = QStringLiteral("spurious");
-QString ConfigStrings::STYLEDIRS = QStringLiteral("styledirs");
 QString ConfigStrings::STYLE = QStringLiteral("style");
-QString ConfigStrings::STYLES = QStringLiteral("styles");
 QString ConfigStrings::STYLESHEETS = QStringLiteral("stylesheets");
 QString ConfigStrings::SYNTAXHIGHLIGHTING = QStringLiteral("syntaxhighlighting");
 QString ConfigStrings::TABSIZE = QStringLiteral("tabsize");

@@ -80,14 +80,9 @@ QSet<QString> Generator::outputFormats;
 QHash<QString, QString> Generator::outputPrefixes;
 QHash<QString, QString> Generator::outputSuffixes;
 QString Generator::project_;
-QStringList Generator::scriptDirs;
-QStringList Generator::scriptFiles;
-QStringList Generator::styleDirs;
-QStringList Generator::styleFiles;
 bool Generator::noLinkErrors_ = false;
 bool Generator::autolinkErrors_ = false;
 bool Generator::redirectDocumentationToDevNull_ = false;
-bool Generator::qdocSingleExec_ = false;
 bool Generator::useOutputSubdirs_ = true;
 QmlTypeNode *Generator::qmlTypeContext_ = nullptr;
 
@@ -1767,10 +1762,6 @@ void Generator::initialize()
 
     imageFiles = config.getCanonicalPathList(CONFIG_IMAGES);
     imageDirs = config.getCanonicalPathList(CONFIG_IMAGEDIRS);
-    scriptFiles = config.getCanonicalPathList(CONFIG_SCRIPTS);
-    scriptDirs = config.getCanonicalPathList(CONFIG_SCRIPTDIRS);
-    styleFiles = config.getCanonicalPathList(CONFIG_STYLES);
-    styleDirs = config.getCanonicalPathList(CONFIG_STYLEDIRS);
     exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
     exampleImgExts = config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_IMAGEEXTENSIONS);
 
@@ -1927,12 +1918,11 @@ void Generator::augmentImageDirs(QSet<QString> &moreImageDirs)
 }
 
 /*!
-  Sets the generator's pointer to the Config instance.
+  Updates the generator's m_showInternal from the Config.
  */
 void Generator::initializeGenerator()
 {
     showInternal_ = Config::instance().getBool(CONFIG_SHOWINTERNAL);
-    singleExec_ = Config::instance().getBool(CONFIG_SINGLEEXEC);
 }
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)
