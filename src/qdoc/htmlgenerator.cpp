@@ -84,11 +84,7 @@ static void addLink(const QString &linkTarget, const QStringRef &nestedStuff, QS
   Constructs the HTML output generator.
  */
 HtmlGenerator::HtmlGenerator()
-    : codeIndent(0),
-      helpProjectWriter(nullptr),
-      inObsoleteLink(false),
-      funcLeftParen("\\S(\\()"),
-      obsoleteLinks(false)
+    : codeIndent(0), helpProjectWriter(nullptr), inObsoleteLink(false), funcLeftParen("\\S(\\()")
 {
 }
 
@@ -129,7 +125,6 @@ void HtmlGenerator::initializeGenerator()
 
     Generator::initializeGenerator();
     config = &Config::instance();
-    obsoleteLinks = config->getBool(CONFIG_OBSOLETELINKS);
     setImageFileExtensions(QStringList() << "png"
                                          << "jpg"
                                          << "jpeg"
@@ -147,7 +142,6 @@ void HtmlGenerator::initializeGenerator()
         i++;
     }
 
-    style = config->getString(HtmlGenerator::format() + Config::dot + CONFIG_STYLE);
     endHeader = config->getString(HtmlGenerator::format() + Config::dot + CONFIG_ENDHEADER);
     postHeader =
             config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_POSTHEADER);

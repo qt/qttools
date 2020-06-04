@@ -89,7 +89,6 @@ QString ConfigStrings::MODULEHEADER = QStringLiteral("moduleheader");
 QString ConfigStrings::NATURALLANGUAGE = QStringLiteral("naturallanguage");
 QString ConfigStrings::NAVIGATION = QStringLiteral("navigation");
 QString ConfigStrings::NOLINKERRORS = QStringLiteral("nolinkerrors");
-QString ConfigStrings::OBSOLETELINKS = QStringLiteral("obsoletelinks");
 QString ConfigStrings::OUTPUTDIR = QStringLiteral("outputdir");
 QString ConfigStrings::OUTPUTENCODING = QStringLiteral("outputencoding");
 QString ConfigStrings::OUTPUTFORMATS = QStringLiteral("outputformats");
@@ -107,7 +106,6 @@ QString ConfigStrings::SOURCEDIRS = QStringLiteral("sourcedirs");
 QString ConfigStrings::SOURCEENCODING = QStringLiteral("sourceencoding");
 QString ConfigStrings::SOURCES = QStringLiteral("sources");
 QString ConfigStrings::SPURIOUS = QStringLiteral("spurious");
-QString ConfigStrings::STYLE = QStringLiteral("style");
 QString ConfigStrings::STYLESHEETS = QStringLiteral("stylesheets");
 QString ConfigStrings::SYNTAXHIGHLIGHTING = QStringLiteral("syntaxhighlighting");
 QString ConfigStrings::TABSIZE = QStringLiteral("tabsize");
@@ -302,7 +300,6 @@ void Config::reset()
     SET(CONFIG_SINGLEEXEC, singleExecOption);
     SET(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, redirectDocumentationToDevNullOption);
     SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
-    SET(CONFIG_OBSOLETELINKS, obsoleteLinksOption);
 #undef SET
     setListFlag(CONFIG_NOLINKERRORS,
                 m_parser.isSet(m_parser.noLinkErrorsOption)

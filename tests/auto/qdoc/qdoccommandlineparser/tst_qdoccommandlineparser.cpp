@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -113,7 +113,6 @@ void tst_QDocCommandLineParser::process()
     QVERIFY(!parser.isSet(parser.showInternalOption));
     QVERIFY(!parser.isSet(parser.redirectDocumentationToDevNullOption));
     QVERIFY(!parser.isSet(parser.noExamplesOption));
-    QVERIFY(!parser.isSet(parser.obsoleteLinksOption));
     QVERIFY(!parser.isSet(parser.autoLinkErrorsOption));
     QVERIFY(!parser.isSet(parser.debugOption));
     QVERIFY(!parser.isSet(parser.generateOption));
@@ -172,7 +171,6 @@ void tst_QDocCommandLineParser::argumentsFromCommandLineAndFile()
     QVERIFY(!parser.isSet(parser.showInternalOption));
     QVERIFY(!parser.isSet(parser.redirectDocumentationToDevNullOption));
     QVERIFY(!parser.isSet(parser.noExamplesOption));
-    QVERIFY(!parser.isSet(parser.obsoleteLinksOption));
     QVERIFY(!parser.isSet(parser.autoLinkErrorsOption));
     QVERIFY(!parser.isSet(parser.debugOption));
     QVERIFY(!parser.isSet(parser.generateOption));

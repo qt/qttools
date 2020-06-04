@@ -188,7 +188,6 @@ private:
     QString navigationSeparator;
     QString manifestDir;
     QString examplesPath;
-    bool obsoleteLinks;
     static int id;
     QVector<ManifestMetaFilter> manifestMetaContent;
     QString homepage;

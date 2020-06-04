@@ -288,7 +288,6 @@ struct ConfigStrings
     static QString NATURALLANGUAGE;
     static QString NAVIGATION;
     static QString NOLINKERRORS;
-    static QString OBSOLETELINKS;
     static QString OUTPUTDIR;
     static QString OUTPUTENCODING;
     static QString OUTPUTFORMATS;
@@ -305,7 +304,6 @@ struct ConfigStrings
     static QString SOURCEENCODING;
     static QString SOURCES;
     static QString SPURIOUS;
-    static QString STYLE;
     static QString STYLESHEETS;
     static QString SYNTAXHIGHLIGHTING;
     static QString TABSIZE;
@@ -371,7 +369,6 @@ struct ConfigStrings
 #define CONFIG_NATURALLANGUAGE ConfigStrings::NATURALLANGUAGE
 #define CONFIG_NAVIGATION ConfigStrings::NAVIGATION
 #define CONFIG_NOLINKERRORS ConfigStrings::NOLINKERRORS
-#define CONFIG_OBSOLETELINKS ConfigStrings::OBSOLETELINKS
 #define CONFIG_OUTPUTDIR ConfigStrings::OUTPUTDIR
 #define CONFIG_OUTPUTENCODING ConfigStrings::OUTPUTENCODING
 #define CONFIG_OUTPUTFORMATS ConfigStrings::OUTPUTFORMATS
@@ -388,7 +385,6 @@ struct ConfigStrings
 #define CONFIG_SOURCEENCODING ConfigStrings::SOURCEENCODING
 #define CONFIG_SOURCES ConfigStrings::SOURCES
 #define CONFIG_SPURIOUS ConfigStrings::SPURIOUS
-#define CONFIG_STYLE ConfigStrings::STYLE
 #define CONFIG_STYLESHEETS ConfigStrings::STYLESHEETS
 #define CONFIG_SYNTAXHIGHLIGHTING ConfigStrings::SYNTAXHIGHLIGHTING
 #define CONFIG_TABSIZE ConfigStrings::TABSIZE

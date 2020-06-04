@@ -45,7 +45,6 @@ QDocCommandLineParser::QDocCommandLineParser()
       noExamplesOption(QStringList() << QStringLiteral("no-examples")),
       indexDirOption(QStringList() << QStringLiteral("indexdir")),
       installDirOption(QStringList() << QStringLiteral("installdir")),
-      obsoleteLinksOption(QStringList() << QStringLiteral("obsoletelinks")),
       outputDirOption(QStringList() << QStringLiteral("outputdir")),
       outputFormatOption(QStringList() << QStringLiteral("outputformat")),
       noLinkErrorsOption(QStringList() << QStringLiteral("no-link-errors")),
@@ -108,10 +107,6 @@ QDocCommandLineParser::QDocCommandLineParser()
             "Specify the directory where the output will be after running \"make install\""));
     installDirOption.setValueName(QStringLiteral("dir"));
     addOption(installDirOption);
-
-    obsoleteLinksOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Report links from obsolete items to non-obsolete items"));
-    addOption(obsoleteLinksOption);
 
     outputDirOption.setDescription(QCoreApplication::translate(
             "qdoc", "Specify output directory, overrides setting in qdocconf file"));
