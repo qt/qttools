@@ -3025,11 +3025,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     if (enumNode) {
         for (const EnumItem &item : enumNode->items()) {
             writer->writeStartElement(dbNamespace, "enumitem");
-            newLine();
             writer->writeAttribute(dbNamespace, "enumidentifier", item.name());
-            newLine();
             writer->writeAttribute(dbNamespace, "enumvalue", item.value());
-            newLine();
             writer->writeEndElement(); // enumitem
             newLine();
         }
@@ -3415,18 +3412,21 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
 
     QVector<const Node *> parents;
     const Node *node = relative->parent();
-    while (node->parent()) {
+    while (!node->isHeader() && node->parent()) {
         parents.prepend(node);
         if (node->parent() == relative || node->parent()->name().isEmpty())
             break;
         node = node->parent();
     }
+    if (static_cast<const EnumNode *>(relative)->isScoped())
+        parents << relative;
 
     writer->writeStartElement(dbNamespace, "code");
     for (auto parent : parents) {
         generateSynopsisName(parent, relative, true);
         writer->writeCharacters("::");
     }
+
     writer->writeCharacters(enumValue);
     writer->writeEndElement(); // code
 }
