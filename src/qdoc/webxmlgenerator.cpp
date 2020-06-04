@@ -256,7 +256,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     if (!node->url().isNull() || node->isExternalPage() || node->isIndexNode())
         return;
 
-    if (node->isInternal() && !showInternal_)
+    if (node->isInternal() && !m_showInternal)
         return;
 
     if (node->parent()) {
@@ -265,7 +265,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
         else if (node->isCollectionNode()) {
             if (node->wasSeen()) {
                 // see remarks in base class impl.
-                qdb_->mergeCollections(static_cast<CollectionNode *>(node));
+                m_qdb->mergeCollections(static_cast<CollectionNode *>(node));
                 generatePageNode(static_cast<PageNode *>(node), nullptr);
             }
         } else if (node->isTextPageNode())
@@ -293,7 +293,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
 
     switch (atom->type()) {
     case Atom::AnnotatedList: {
-        const CollectionNode *cn = qdb_->getCollectionNode(atom->string(), Node::Group);
+        const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), Node::Group);
         if (cn)
             generateAnnotatedList(writer, relative, cn->members());
     } break;
@@ -406,7 +406,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         break;
 
     case Atom::CodeQuoteArgument:
-        if (quoting_) {
+        if (m_quoting) {
             if (quoteCommand == "dots") {
                 writer.writeAttribute("indent", atom->string());
                 writer.writeCharacters("...");
@@ -419,7 +419,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         break;
 
     case Atom::CodeQuoteCommand:
-        if (quoting_) {
+        if (m_quoting) {
             quoteCommand = atom->string();
             writer.writeStartElement(quoteCommand);
         }
@@ -658,13 +658,13 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         break;
 
     case Atom::SnippetCommand:
-        if (quoting_) {
+        if (m_quoting) {
             writer.writeStartElement(atom->string());
         }
         break;
 
     case Atom::SnippetIdentifier:
-        if (quoting_) {
+        if (m_quoting) {
             writer.writeAttribute("identifier", atom->string());
             writer.writeEndElement();
             keepQuoting = true;
@@ -672,7 +672,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         break;
 
     case Atom::SnippetLocation:
-        if (quoting_) {
+        if (m_quoting) {
             const QString location = atom->string();
             writer.writeAttribute("location", location);
             const QString resolved = Doc::resolveFile(Location(), location);
@@ -802,7 +802,7 @@ void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *no
 
         for (auto it = node->links().cbegin(); it != node->links().cend(); ++it) {
 
-            linkNode = qdb_->findNodeForTarget(it.value().first, node);
+            linkNode = m_qdb->findNodeForTarget(it.value().first, node);
 
             if (!linkNode)
                 linkNode = node;

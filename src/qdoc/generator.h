@@ -205,18 +205,17 @@ private:
     static void copyTemplateFiles(const QString &configVar, const QString &subDir);
 
 protected:
-    QDocDatabase *qdb_;
-    bool inLink_;
-    bool inContents_;
-    bool inSectionHeading_;
-    bool inTableHeader_;
-    bool threeColumnEnumValueTable_;
-    bool showInternal_;
-    bool singleExec_;
-    bool quoting_;
-    int numTableRows_;
-    QString link_;
-    QString sectionNumber_;
+    QDocDatabase *m_qdb { nullptr };
+    bool m_inLink { false };
+    bool m_inContents { false };
+    bool m_inSectionHeading { false };
+    bool m_inTableHeader { false };
+    bool m_threeColumnEnumValueTable { true };
+    bool m_showInternal { false };
+    bool m_quoting { false };
+    int m_numTableRows { 0 };
+    QString m_link {};
+    QString m_sectionNumber {};
 };
 
 QT_END_NAMESPACE

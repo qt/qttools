@@ -430,7 +430,7 @@ NodeMultiMapMap QDocDatabase::newSinceMaps_;
 /*!
   Constructs the singleton qdoc database object. The singleton
   constructs the \a forest_ object, which is also a singleton.
-  \a showInternal_ is normally false. If it is true, qdoc will
+  \a m_showInternal is normally false. If it is true, qdoc will
   write documentation for nodes marked \c internal.
 
   \a singleExec_ is false when qdoc is being used in the standard

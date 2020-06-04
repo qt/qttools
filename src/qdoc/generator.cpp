@@ -99,16 +99,8 @@ static QLatin1String quot("&quot;");
   available to the generator subclasses.
  */
 Generator::Generator()
-    : inLink_(false),
-      inContents_(false),
-      inSectionHeading_(false),
-      inTableHeader_(false),
-      threeColumnEnumValueTable_(true),
-      showInternal_(false),
-      singleExec_(false),
-      numTableRows_(0)
 {
-    qdb_ = QDocDatabase::qdocDB();
+    m_qdb = QDocDatabase::qdocDB();
     generators.prepend(this);
 }
 
@@ -395,7 +387,7 @@ QString Generator::fileBase(const Node *node) const
           module name.
         */
         if (!node->logicalModuleName().isEmpty()
-            && (!node->logicalModule()->isInternal() || showInternal_))
+            && (!node->logicalModule()->isInternal() || m_showInternal))
             base.prepend(node->logicalModuleName() + outputSuffix(node) + QLatin1Char('-'));
 
         base.prepend(outputPrefix(node));
@@ -1111,7 +1103,7 @@ void Generator::generateDocumentation(Node *node)
         return;
     if (node->isIndexNode())
         return;
-    if (node->isInternal() && !showInternal_)
+    if (node->isInternal() && !m_showInternal)
         return;
     if (node->isExternalPage())
         return;
@@ -1147,7 +1139,7 @@ void Generator::generateDocumentation(Node *node)
             */
             CollectionNode *cn = static_cast<CollectionNode *>(node);
             if (cn->wasSeen()) {
-                qdb_->mergeCollections(cn);
+                m_qdb->mergeCollections(cn);
                 beginSubPage(node, fileName(node));
                 generateCollectionNode(cn, marker);
                 endSubPage();
@@ -1677,7 +1669,7 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
 void Generator::generateDocs()
 {
     currentGenerator_ = this;
-    generateDocumentation(qdb_->primaryTreeRoot());
+    generateDocumentation(m_qdb->primaryTreeRoot());
 }
 
 Generator *Generator::generatorForFormat(const QString &format)
@@ -1900,9 +1892,9 @@ void Generator::initializeFormat()
 
     // Use a format-specific .quotinginformation if defined, otherwise a global value
     if (config.subVars(format()).contains(CONFIG_QUOTINGINFORMATION))
-        quoting_ = config.getBool(format() + Config::dot + CONFIG_QUOTINGINFORMATION);
+        m_quoting = config.getBool(format() + Config::dot + CONFIG_QUOTINGINFORMATION);
     else
-        quoting_ = config.getBool(CONFIG_QUOTINGINFORMATION);
+        m_quoting = config.getBool(CONFIG_QUOTINGINFORMATION);
 }
 
 /*!
@@ -1922,7 +1914,7 @@ void Generator::augmentImageDirs(QSet<QString> &moreImageDirs)
  */
 void Generator::initializeGenerator()
 {
-    showInternal_ = Config::instance().getBool(CONFIG_SHOWINTERNAL);
+    m_showInternal = Config::instance().getBool(CONFIG_SHOWINTERNAL);
 }
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)
@@ -2096,14 +2088,14 @@ int Generator::skipAtoms(const Atom *atom, Atom::AtomType type) const
  */
 void Generator::initializeTextOutput()
 {
-    inLink_ = false;
-    inContents_ = false;
-    inSectionHeading_ = false;
-    inTableHeader_ = false;
-    numTableRows_ = 0;
-    threeColumnEnumValueTable_ = true;
-    link_.clear();
-    sectionNumber_.clear();
+    m_inLink = false;
+    m_inContents = false;
+    m_inSectionHeading = false;
+    m_inTableHeader = false;
+    m_numTableRows = 0;
+    m_threeColumnEnumValueTable = true;
+    m_link.clear();
+    m_sectionNumber.clear();
 }
 
 void Generator::supplementAlsoList(const Node *node, QVector<Text> &alsoList)

@@ -409,7 +409,7 @@ QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const 
 {
     QString ref;
 
-    *node = qdb_->findNodeForAtom(atom, relative, ref);
+    *node = m_qdb->findNodeForAtom(atom, relative, ref);
     if (!(*node))
         return QString();
 
