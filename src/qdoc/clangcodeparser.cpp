@@ -72,7 +72,7 @@ QT_BEGIN_NAMESPACE
 static CXTranslationUnit_Flags flags_ = static_cast<CXTranslationUnit_Flags>(0);
 static CXIndex index_ = nullptr;
 
-QByteArray ClangCodeParser::fn_;
+QByteArray ClangCodeParser::s_fn;
 constexpr const char *fnDummyFileName = "/fn_dummyfile.cpp";
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -1125,11 +1125,11 @@ ClangCodeParser::~ClangCodeParser()
 void ClangCodeParser::initializeParser()
 {
     Config &config = Config::instance();
-    printParsingErrors_ = 1;
-    version_ = config.getString(CONFIG_VERSION);
+    m_printParsingErrors = 1;
+    m_version = config.getString(CONFIG_VERSION);
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
     QSet<QString> seen;
-    includePaths_.clear();
+    m_includePaths.clear();
     // Remove empty paths and duplicates and add -I and canonicalize if necessary
     for (const auto &p : args) {
         QByteArray option;
@@ -1152,13 +1152,13 @@ void ClangCodeParser::initializeParser()
         if (fi.exists())
             path = fi.canonicalFilePath().toUtf8();
         path.prepend(option);
-        includePaths_.append(path);
+        m_includePaths.append(path);
     }
     CppCodeParser::initializeParser();
-    pchFileDir_.reset(nullptr);
-    allHeaders_.clear();
-    pchName_.clear();
-    defines_.clear();
+    m_pchFileDir.reset(nullptr);
+    m_allHeaders.clear();
+    m_pchName.clear();
+    m_defines.clear();
     QSet<QString> accepted;
     {
         const QStringList tmpDefines = config.getStringList(CONFIG_CLANGDEFINES);
@@ -1166,7 +1166,7 @@ void ClangCodeParser::initializeParser()
             if (!accepted.contains(def)) {
                 QByteArray tmp("-D");
                 tmp.append(def.toUtf8());
-                defines_.append(tmp.constData());
+                m_defines.append(tmp.constData());
                 accepted.insert(def);
             }
         }
@@ -1177,7 +1177,7 @@ void ClangCodeParser::initializeParser()
             if (!accepted.contains(def) && !def.contains(QChar('*'))) {
                 QByteArray tmp("-D");
                 tmp.append(def.toUtf8());
-                defines_.append(tmp.constData());
+                m_defines.append(tmp.constData());
                 accepted.insert(def);
             }
         }
@@ -1234,7 +1234,7 @@ QStringList ClangCodeParser::sourceFileNameFilter()
 void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QString &filePath)
 {
     QFileInfo fi(filePath);
-    allHeaders_.insert(fi.fileName(), fi.canonicalPath());
+    m_allHeaders.insert(fi.fileName(), fi.canonicalPath());
 }
 
 static const char *defaultArgs_[] = {
@@ -1265,11 +1265,11 @@ static const char *defaultArgs_[] = {
  */
 void ClangCodeParser::getDefaultArgs()
 {
-    args_.clear();
-    args_.insert(args_.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
+    m_args.clear();
+    m_args.insert(m_args.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
     // Add the defines from the qdocconf file.
-    for (const auto &p : qAsConst(defines_))
-        args_.push_back(p.constData());
+    for (const auto &p : qAsConst(m_defines))
+        m_args.push_back(p.constData());
 }
 
 static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &allHeaders)
@@ -1304,7 +1304,7 @@ static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString>
 bool ClangCodeParser::getMoreArgs()
 {
     bool guessedIncludePaths = false;
-    if (includePaths_.isEmpty()) {
+    if (m_includePaths.isEmpty()) {
         /*
           The include paths provided are inadequate. Make a list
           of reasonable places to look for include files and use
@@ -1316,10 +1316,10 @@ bool ClangCodeParser::getMoreArgs()
 
         QByteArray version = qdb_->version().toUtf8();
         QString basicIncludeDir = QDir::cleanPath(QString(Config::installDir + "/../include"));
-        moreArgs_ += "-I" + basicIncludeDir.toLatin1();
-        moreArgs_ += includePathsFromHeaders(allHeaders_);
+        m_moreArgs += "-I" + basicIncludeDir.toLatin1();
+        m_moreArgs += includePathsFromHeaders(m_allHeaders);
     } else {
-        moreArgs_ = includePaths_;
+        m_moreArgs = m_includePaths;
     }
 
     return guessedIncludePaths;
@@ -1332,9 +1332,9 @@ bool ClangCodeParser::getMoreArgs()
  */
 void ClangCodeParser::buildPCH()
 {
-    if (!pchFileDir_ && !moduleHeader().isEmpty()) {
-        pchFileDir_.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
-        if (pchFileDir_->isValid()) {
+    if (!m_pchFileDir && !moduleHeader().isEmpty()) {
+        m_pchFileDir.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
+        if (m_pchFileDir->isValid()) {
             const QByteArray module = moduleHeader().toUtf8();
             QByteArray header;
             QByteArray privateHeaderDir;
@@ -1377,35 +1377,35 @@ void ClangCodeParser::buildPCH()
 
             // First, search for an include path that contains the module name, then any path
             QByteArray candidate;
-            auto it = std::find_if(includePaths_.begin(), includePaths_.end(),
+            auto it = std::find_if(m_includePaths.begin(), m_includePaths.end(),
                                    FindPredicate(candidate, module, FindPredicate::Module));
-            if (it == includePaths_.end())
-                it = std::find_if(includePaths_.begin(), includePaths_.end(),
+            if (it == m_includePaths.end())
+                it = std::find_if(m_includePaths.begin(), m_includePaths.end(),
                                   FindPredicate(candidate, module, FindPredicate::Any));
-            if (it != includePaths_.end())
+            if (it != m_includePaths.end())
                 header = candidate;
 
             // Find the path to module's private headers - currently unused
-            it = std::find_if(includePaths_.begin(), includePaths_.end(),
+            it = std::find_if(m_includePaths.begin(), m_includePaths.end(),
                               FindPredicate(candidate, module, FindPredicate::Private));
-            if (it != includePaths_.end())
+            if (it != m_includePaths.end())
                 privateHeaderDir = candidate;
 
             if (header.isEmpty()) {
                 qWarning() << "(qdoc) Could not find the module header in include paths for module"
-                           << module << "  (include paths: " << includePaths_ << ")";
+                           << module << "  (include paths: " << m_includePaths << ")";
                 qWarning() << "       Artificial module header built from header dirs in qdocconf "
                               "file";
             }
-            args_.push_back("-xc++");
+            m_args.push_back("-xc++");
             CXTranslationUnit tu;
-            QString tmpHeader = pchFileDir_->path() + "/" + module;
+            QString tmpHeader = m_pchFileDir->path() + "/" + module;
             QFile tmpHeaderFile(tmpHeader);
             if (tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
                 QTextStream out(&tmpHeaderFile);
                 if (header.isEmpty()) {
-                    for (auto it = allHeaders_.constKeyValueBegin();
-                         it != allHeaders_.constKeyValueEnd(); ++it) {
+                    for (auto it = m_allHeaders.constKeyValueBegin();
+                         it != m_allHeaders.constKeyValueEnd(); ++it) {
                         if (!(*it).first.endsWith(QLatin1String("_p.h"))
                             && !(*it).first.startsWith(QLatin1String("moc_"))) {
                             QString line = QLatin1String("#include \"") + (*it).second
@@ -1428,35 +1428,35 @@ void ClangCodeParser::buildPCH()
                 }
                 tmpHeaderFile.close();
             }
-            if (printParsingErrors_ == 0)
+            if (m_printParsingErrors == 0)
                 qCWarning(lcQdoc) << "clang not printing errors; include paths were guessed";
             CXErrorCode err =
-                    clang_parseTranslationUnit2(index_, tmpHeader.toLatin1().data(), args_.data(),
-                                                static_cast<int>(args_.size()), nullptr, 0,
+                    clang_parseTranslationUnit2(index_, tmpHeader.toLatin1().data(), m_args.data(),
+                                                static_cast<int>(m_args.size()), nullptr, 0,
                                                 flags_ | CXTranslationUnit_ForSerialization, &tu);
-            qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << args_
+            qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << m_args
                             << ") returns" << err;
             if (!err && tu) {
-                pchName_ = pchFileDir_->path().toUtf8() + "/" + module + ".pch";
-                auto error = clang_saveTranslationUnit(tu, pchName_.constData(),
+                m_pchName = m_pchFileDir->path().toUtf8() + "/" + module + ".pch";
+                auto error = clang_saveTranslationUnit(tu, m_pchName.constData(),
                                                        clang_defaultSaveOptions(tu));
                 if (error) {
                     qCCritical(lcQdoc) << "Could not save PCH file for" << moduleHeader();
-                    pchName_.clear();
+                    m_pchName.clear();
                 } else {
                     // Visit the header now, as token from pre-compiled header won't be visited
                     // later
                     CXCursor cur = clang_getTranslationUnitCursor(tu);
-                    ClangVisitor visitor(qdb_, allHeaders_);
+                    ClangVisitor visitor(qdb_, m_allHeaders);
                     visitor.visitChildren(cur);
                     qCDebug(lcQdoc) << "PCH built and visited for" << moduleHeader();
                 }
                 clang_disposeTranslationUnit(tu);
             } else {
-                pchFileDir_->remove();
+                m_pchFileDir->remove();
                 qCCritical(lcQdoc) << "Could not create PCH file for " << moduleHeader();
             }
-            args_.pop_back(); // remove the "-xc++";
+            m_args.pop_back(); // remove the "-xc++";
         }
     }
 }
@@ -1468,15 +1468,15 @@ void ClangCodeParser::precompileHeaders()
 {
     getDefaultArgs();
     if (getMoreArgs())
-        printParsingErrors_ = 0;
-    for (const auto &p : qAsConst(moreArgs_))
-        args_.push_back(p.constData());
+        m_printParsingErrors = 0;
+    for (const auto &p : qAsConst(m_moreArgs))
+        m_args.push_back(p.constData());
 
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);
     // 1 as 2nd parameter tells clang to report parser errors.
-    index_ = clang_createIndex(1, printParsingErrors_);
+    index_ = clang_createIndex(1, m_printParsingErrors);
     buildPCH();
     clang_disposeIndex(index_);
 }
@@ -1509,20 +1509,20 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     index_ = clang_createIndex(1, 0);
 
     getDefaultArgs();
-    if (!pchName_.isEmpty() && !filePath.endsWith(".mm")) {
-        args_.push_back("-w");
-        args_.push_back("-include-pch");
-        args_.push_back(pchName_.constData());
+    if (!m_pchName.isEmpty() && !filePath.endsWith(".mm")) {
+        m_args.push_back("-w");
+        m_args.push_back("-include-pch");
+        m_args.push_back(m_pchName.constData());
     }
     getMoreArgs();
-    for (const auto &p : qAsConst(moreArgs_))
-        args_.push_back(p.constData());
+    for (const auto &p : qAsConst(m_moreArgs))
+        m_args.push_back(p.constData());
 
     CXTranslationUnit tu;
     CXErrorCode err =
-            clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), args_.data(),
-                                        static_cast<int>(args_.size()), nullptr, 0, flags_, &tu);
-    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << filePath << args_
+            clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), m_args.data(),
+                                        static_cast<int>(m_args.size()), nullptr, 0, flags_, &tu);
+    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << filePath << m_args
                     << ") returns" << err;
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
@@ -1531,7 +1531,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     }
 
     CXCursor tuCur = clang_getTranslationUnitCursor(tu);
-    ClangVisitor visitor(qdb_, allHeaders_);
+    ClangVisitor visitor(qdb_, m_allHeaders);
     visitor.visitChildren(tuCur);
 
     CXToken *tokens;
@@ -1581,7 +1581,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                 bool future = false;
                 if (doc.metaCommandsUsed().contains(COMMAND_SINCE)) {
                     QString sinceVersion = doc.metaCommandArgs(COMMAND_SINCE)[0].first;
-                    if (getUnpatchedVersion(sinceVersion) > getUnpatchedVersion(version_))
+                    if (getUnpatchedVersion(sinceVersion) > getUnpatchedVersion(m_version))
                         future = true;
                 }
                 if (!future) {
@@ -1597,14 +1597,14 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
             }
         } else {
             // Store the namespace scope from lexical parents of the comment
-            namespaceScope_.clear();
+            m_namespaceScope.clear();
             CXCursor cur = clang_getCursor(tu, commentLoc);
             while (true) {
                 CXCursorKind kind = clang_getCursorKind(cur);
                 if (clang_isTranslationUnit(kind) || clang_isInvalid(kind))
                     break;
                 if (kind == CXCursor_Namespace)
-                    namespaceScope_ << fromCXString(clang_getCursorSpelling(cur));
+                    m_namespaceScope << fromCXString(clang_getCursorSpelling(cur));
                 cur = clang_getCursorLexicalParent(cur);
             }
             processTopicArgs(doc, topic, nodes, docs);
@@ -1615,8 +1615,8 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     clang_disposeTokens(tu, tokens, numTokens);
     clang_disposeTranslationUnit(tu);
     clang_disposeIndex(index_);
-    namespaceScope_.clear();
-    fn_.clear();
+    m_namespaceScope.clear();
+    s_fn.clear();
 }
 
 /*!
@@ -1687,25 +1687,25 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
 
     std::vector<const char *> args(std::begin(defaultArgs_), std::end(defaultArgs_));
     // Add the defines from the qdocconf file.
-    for (const auto &p : qAsConst(defines_))
+    for (const auto &p : qAsConst(m_defines))
         args.push_back(p.constData());
-    if (!pchName_.isEmpty()) {
+    if (!m_pchName.isEmpty()) {
         args.push_back("-w");
         args.push_back("-include-pch");
-        args.push_back(pchName_.constData());
+        args.push_back(m_pchName.constData());
     }
     CXTranslationUnit tu;
-    fn_.clear();
-    for (const auto &ns : qAsConst(namespaceScope_))
-        fn_.prepend("namespace " + ns.toUtf8() + " {");
-    fn_ += fnArg.toUtf8();
-    if (!fn_.endsWith(";"))
-        fn_ += "{ }";
-    fn_.append(namespaceScope_.size(), '}');
+    s_fn.clear();
+    for (const auto &ns : qAsConst(m_namespaceScope))
+        s_fn.prepend("namespace " + ns.toUtf8() + " {");
+    s_fn += fnArg.toUtf8();
+    if (!s_fn.endsWith(";"))
+        s_fn += "{ }";
+    s_fn.append(m_namespaceScope.size(), '}');
 
     const char *dummyFileName = fnDummyFileName;
-    CXUnsavedFile unsavedFile { dummyFileName, fn_.constData(),
-                                static_cast<unsigned long>(fn_.size()) };
+    CXUnsavedFile unsavedFile { dummyFileName, s_fn.constData(),
+                                static_cast<unsigned long>(s_fn.size()) };
     CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, args.data(), args.size(),
                                                   &unsavedFile, 1, flags, &tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << args
@@ -1723,7 +1723,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
           the diagnostics if they stop us finding the node.
          */
         CXCursor cur = clang_getTranslationUnitCursor(tu);
-        ClangVisitor visitor(qdb_, allHeaders_);
+        ClangVisitor visitor(qdb_, m_allHeaders);
         bool ignoreSignature = false;
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
         /*

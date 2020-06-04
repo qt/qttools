@@ -60,7 +60,7 @@ public:
     void parseSourceFile(const Location &location, const QString &filePath) override;
     void precompileHeaders() override;
     Node *parseFnArg(const Location &location, const QString &fnArg) override;
-    static const QByteArray &fn() { return fn_; }
+    static const QByteArray &fn() { return s_fn; }
 
 private:
     void getDefaultArgs();
@@ -68,17 +68,17 @@ private:
     void buildPCH();
 
 private:
-    int printParsingErrors_;
-    QString version_;
-    QHash<QString, QString> allHeaders_; // file name->path
-    QVector<QByteArray> includePaths_;
-    QScopedPointer<QTemporaryDir> pchFileDir_;
-    QByteArray pchName_;
-    QVector<QByteArray> defines_;
-    std::vector<const char *> args_;
-    QVector<QByteArray> moreArgs_;
-    QStringList namespaceScope_;
-    static QByteArray fn_;
+    int m_printParsingErrors {};
+    QString m_version {};
+    QHash<QString, QString> m_allHeaders {}; // file name->path
+    QVector<QByteArray> m_includePaths {};
+    QScopedPointer<QTemporaryDir> m_pchFileDir {};
+    QByteArray m_pchName {};
+    QVector<QByteArray> m_defines {};
+    std::vector<const char *> m_args {};
+    QVector<QByteArray> m_moreArgs {};
+    QStringList m_namespaceScope {};
+    static QByteArray s_fn;
 };
 
 QT_END_NAMESPACE
