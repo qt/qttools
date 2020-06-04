@@ -51,6 +51,7 @@ struct QHelpLink;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+    Q_MOC_INCLUDE(<QtHelp/qhelplink.h>)
 
 public:
     explicit MainWindow(CmdLineParser *cmdLine, QWidget *parent = nullptr);

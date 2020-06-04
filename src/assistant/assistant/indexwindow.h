@@ -42,6 +42,7 @@ struct QHelpLink;
 class IndexWindow : public QWidget
 {
     Q_OBJECT
+    Q_MOC_INCLUDE(<QtHelp/qhelplink.h>)
 
 public:
     IndexWindow(QWidget *parent = nullptr);

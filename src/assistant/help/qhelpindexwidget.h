@@ -88,6 +88,7 @@ private:
 class QHELP_EXPORT QHelpIndexWidget : public QListView
 {
     Q_OBJECT
+    Q_MOC_INCLUDE(<QtHelp/qhelplink.h>)
 
 Q_SIGNALS:
 #if QT_DEPRECATED_SINCE(5, 15)
