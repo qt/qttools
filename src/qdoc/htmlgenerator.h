@@ -46,7 +46,7 @@ class HelpProjectWriter;
 class HtmlGenerator : public XmlGenerator
 {
 public:
-    HtmlGenerator();
+    HtmlGenerator() = default;
     ~HtmlGenerator() override;
 
     void initializeGenerator() override;
@@ -60,7 +60,7 @@ public:
 
 protected:
     void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
-    virtual int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
+    int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker) override;
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker) override;
@@ -164,45 +164,44 @@ private:
                           const QString &headerText, const Aggregate *aggregate,
                           CodeMarker *marker);
 
-    int codeIndent;
-    QString codePrefix;
-    QString codeSuffix;
-    HelpProjectWriter *helpProjectWriter;
-    bool inObsoleteLink;
-    QRegularExpression funcLeftParen;
-    QString style;
-    QString headerScripts;
-    QString headerStyles;
-    QString endHeader;
-    QString postHeader;
-    QString postPostHeader;
-    QString prologue;
-    QString footer;
-    QString address;
-    bool pleaseGenerateMacRef;
-    bool noNavigationBar;
-    QString project;
-    QString projectDescription;
-    QString projectUrl;
-    QString navigationLinks;
-    QString navigationSeparator;
-    QString manifestDir;
-    QString examplesPath;
+    int m_codeIndent { 0 };
+    QString m_codePrefix {};
+    QString m_codeSuffix {};
+    HelpProjectWriter *m_helpProjectWriter { nullptr };
+    bool m_inObsoleteLink { false };
+    QRegularExpression m_funcLeftParen { "\\S(\\()" };
+    QString m_headerScripts {};
+    QString m_headerStyles {};
+    QString m_endHeader {};
+    QString m_postHeader {};
+    QString m_postPostHeader {};
+    QString m_prologue {};
+    QString m_footer {};
+    QString m_address {};
+    bool m_pleaseGenerateMacRef { false };
+    bool m_noNavigationBar { false };
+    QString m_project {};
+    QString m_projectDescription {};
+    QString m_projectUrl {};
+    QString m_navigationLinks {};
+    QString m_navigationSeparator {};
+    QString m_manifestDir {};
+    QString m_examplesPath {};
     static int id;
-    QVector<ManifestMetaFilter> manifestMetaContent;
-    QString homepage;
-    QString hometitle;
-    QString landingpage;
-    QString landingtitle;
-    QString cppclassespage;
-    QString cppclassestitle;
-    QString qmltypespage;
-    QString qmltypestitle;
-    QString buildversion;
-    QString qflagsHref_;
-    int tocDepth;
+    QVector<ManifestMetaFilter> m_manifestMetaContent {};
+    QString m_homepage {};
+    QString m_hometitle {};
+    QString m_landingpage {};
+    QString m_landingtitle {};
+    QString m_cppclassespage {};
+    QString m_cppclassestitle {};
+    QString m_qmltypespage {};
+    QString m_qmltypestitle {};
+    QString m_buildversion {};
+    QString m_qflagsHref {};
+    int tocDepth {};
 
-    Config *config;
+    Config *config { nullptr };
 
 public:
     static QString divNavTop;
