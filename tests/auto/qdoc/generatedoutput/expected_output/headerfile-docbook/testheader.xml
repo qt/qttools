@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
-<db:title></db:title>
+<db:title>&lt;TestHeader&gt; - Test Header</db:title>
 <db:productname>HeaderFile</db:productname>
 <db:titleabbrev>HeaderFile Reference Documentation</db:titleabbrev>
 <db:abstract>
@@ -18,5 +18,73 @@
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="type-documentation">
+<db:title>Type Documentation</db:title>
+<db:section xml:id="Globals-enum">
+<db:title>enum Globals</db:title>
+<db:enumsynopsis>
+<db:enumname>Globals</db:enumname>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">HeaderFile</db:synopsisinfo>
+<db:enumitem db:enumidentifier="Glo" db:enumvalue="0"/>
+<db:enumitem db:enumidentifier="Bal" db:enumvalue="1"/>
+</db:enumsynopsis>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code>Glo</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code>Bal</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+</db:section>
+<db:section xml:id="variable-documentation">
+<db:title>Variable Documentation</db:title>
+<db:section xml:id="globalVar-var">
+<db:title>const int globalVar</db:title>
+<db:fieldsynopsis>
+<db:type>const int</db:type>
+<db:varname>globalVar</db:varname>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">HeaderFile</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Global variable.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="function-documentation">
+<db:title>Function Documentation</db:title>
+<db:section xml:id="globalFunc">
+<db:title>void globalFunc()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>globalFunc</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void globalFunc()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">HeaderFile</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Global function.</db:para>
+</db:section>
 </db:section>
 </db:article>
