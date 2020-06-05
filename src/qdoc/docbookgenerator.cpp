@@ -4279,6 +4279,9 @@ void DocBookGenerator::generateGenericCollectionPage(CollectionNode *cn)
 
 void DocBookGenerator::generateFullName(const Node *node, const Node *relative)
 {
+    Q_ASSERT(node);
+    Q_ASSERT(relative);
+
     // From Generator::appendFullName.
     writer->writeStartElement(dbNamespace, "link");
     writer->writeAttribute(xlinkNamespace, "href", fullDocumentLocation(node));
@@ -4290,6 +4293,9 @@ void DocBookGenerator::generateFullName(const Node *node, const Node *relative)
 void DocBookGenerator::generateFullName(const Node *apparentNode, const QString &fullName,
                                         const Node *actualNode)
 {
+    Q_ASSERT(apparentNode);
+    Q_ASSERT(actualNode);
+
     // From Generator::appendFullName.
     if (actualNode == nullptr)
         actualNode = apparentNode;
