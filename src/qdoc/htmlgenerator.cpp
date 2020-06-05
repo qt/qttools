@@ -143,8 +143,6 @@ void HtmlGenerator::initializeGenerator()
 
     m_footer = config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_FOOTER);
     m_address = config->getString(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_ADDRESS);
-    m_pleaseGenerateMacRef =
-            config->getBool(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_GENERATEMACREFS);
     m_noNavigationBar =
             config->getBool(HtmlGenerator::format() + Config::dot + HTMLGENERATOR_NONAVIGATIONBAR);
     m_navigationSeparator = config->getString(HtmlGenerator::format() + Config::dot
@@ -1710,11 +1708,6 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         out() << "</head>\n<body>\n";
     else
         out() << m_endHeader;
-
-#ifdef GENERATE_MAC_REFS
-    if (mainPage)
-        generateMacRef(node, marker);
-#endif
 
     out() << QString(m_postHeader).replace("\\" + COMMAND_VERSION, m_qdb->version());
     bool usingTable = m_postHeader.trimmed().endsWith(QLatin1String("<tr>"));
@@ -3353,9 +3346,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
                                            CodeMarker *marker)
 {
     const EnumNode *etn;
-#ifdef GENERATE_MAC_REFS
-    generateMacRef(node, marker);
-#endif
     generateExtractionMark(node, MemberMark);
     generateKeywordAnchors(node);
     QString nodeRef = nullptr;
@@ -3377,9 +3367,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
     } else {
         nodeRef = refForNode(node);
         if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
-#ifdef GENERATE_MAC_REFS
-            generateMacRef(etn->flagsType(), marker);
-#endif
             out() << "<h3 class=\"flags\" id=\"" << nodeRef << "\">";
             out() << "<a name=\"" + nodeRef + "\"></a>";
             generateSynopsis(etn, relative, marker, Section::Details);
@@ -3432,22 +3419,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
     generateAlsoList(node, marker);
     generateExtractionMark(node, EndMark);
 }
-
-#ifdef GENERATE_MAC_REFS
-/*
-  No longer valid.
- */
-void HtmlGenerator::generateMacRef(const Node *node, CodeMarker *marker)
-{
-    if (!m_pleaseGenerateMacRef || marker == 0)
-        return;
-
-    const QStringList macRefs = marker->macRefsForNode(node);
-    for (const auto &macRef : macRefs)
-        out() << "<a name=\""
-              << "//apple_ref/" << macRef << "\"></a>\n";
-}
-#endif
 
 /*!
   This version of the function is called when outputting the link
@@ -3537,9 +3508,6 @@ void HtmlGenerator::generateQmlSummary(const NodeVector &members, const Node *re
 void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relative,
                                               CodeMarker *marker)
 {
-#ifdef GENERATE_MAC_REFS
-    generateMacRef(node, marker);
-#endif
     generateExtractionMark(node, MemberMark);
     generateKeywordAnchors(node);
 

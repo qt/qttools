@@ -138,9 +138,7 @@ private:
 
     QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
-#ifdef GENERATE_MAC_REFS
-    void generateMacRef(const Node *node, CodeMarker *marker);
-#endif
+
     void beginLink(const QString &link);
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
@@ -178,7 +176,6 @@ private:
     QString m_prologue {};
     QString m_footer {};
     QString m_address {};
-    bool m_pleaseGenerateMacRef { false };
     bool m_noNavigationBar { false };
     QString m_project {};
     QString m_projectDescription {};
@@ -209,7 +206,6 @@ public:
 
 #define HTMLGENERATOR_ADDRESS "address"
 #define HTMLGENERATOR_FOOTER "footer"
-#define HTMLGENERATOR_GENERATEMACREFS "generatemacrefs" // ### document me
 #define HTMLGENERATOR_POSTHEADER "postheader"
 #define HTMLGENERATOR_POSTPOSTHEADER "postpostheader"
 #define HTMLGENERATOR_PROLOGUE "prologue"

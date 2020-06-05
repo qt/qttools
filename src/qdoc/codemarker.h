@@ -69,7 +69,6 @@ public:
     virtual QString markedUpIncludes(const QStringList & /*includes*/) { return QString(); }
     virtual QString functionBeginRegExp(const QString & /*funcName*/) { return QString(); }
     virtual QString functionEndRegExp(const QString & /*funcName*/) { return QString(); }
-    virtual QStringList macRefsForNode(Node *node);
 
     static void initialize();
     static void terminate();
@@ -89,8 +88,6 @@ protected:
     QString linkTag(const Node *node, const QString &body);
 
 private:
-    QString macName(const Node *parent, const QString &name = QString());
-
     static QString defaultLang;
     static QVector<CodeMarker *> markers;
 };
