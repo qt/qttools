@@ -289,7 +289,6 @@ struct ConfigStrings
     static QString NAVIGATION;
     static QString NOLINKERRORS;
     static QString OUTPUTDIR;
-    static QString OUTPUTENCODING;
     static QString OUTPUTFORMATS;
     static QString OUTPUTPREFIXES;
     static QString OUTPUTSUFFIXES;
@@ -370,7 +369,6 @@ struct ConfigStrings
 #define CONFIG_NAVIGATION ConfigStrings::NAVIGATION
 #define CONFIG_NOLINKERRORS ConfigStrings::NOLINKERRORS
 #define CONFIG_OUTPUTDIR ConfigStrings::OUTPUTDIR
-#define CONFIG_OUTPUTENCODING ConfigStrings::OUTPUTENCODING
 #define CONFIG_OUTPUTFORMATS ConfigStrings::OUTPUTFORMATS
 #define CONFIG_OUTPUTPREFIXES ConfigStrings::OUTPUTPREFIXES
 #define CONFIG_OUTPUTSUFFIXES ConfigStrings::OUTPUTSUFFIXES
