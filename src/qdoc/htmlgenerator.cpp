@@ -3524,10 +3524,21 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         if (!n->isReadOnlySet() && n->declarativeCppNode())
             n->markReadOnly(!n->isWritable());
 
-        if (n->isReadOnly())
-            out() << "<span class=\"qmlreadonly\">[read-only] </span>";
+        QStringList extra;
         if (n->isDefault())
-            out() << "<span class=\"qmldefault\">[default] </span>";
+            extra << "default";
+        else if (n->isReadOnly())
+            extra << "read-only";
+
+        if (!n->since().isEmpty()) {
+            if (!extra.isEmpty())
+                extra.last().append(',');
+            extra << "since " + n->since();
+        }
+
+        if (!extra.isEmpty())
+            out() << QString("<span class=\"qmlextra\">[%1] </span>")
+                    .arg(extra.join(QLatin1Char(' ')));
 
         generateQmlItem(n, relative, marker, false);
         out() << qmlItemEnd;

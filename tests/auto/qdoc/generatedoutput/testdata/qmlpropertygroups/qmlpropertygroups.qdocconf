@@ -2,5 +2,10 @@ include(../configs/testqml.qdocconf)
 
 sourcedirs += .
 
-HTML.nosubdirs = true
-HTML.outputsubdir = qmlpropertygroups
+outputformats = HTML DocBook
+
+{HTML.nosubdirs,DocBook.nosubdirs}  = true
+HTML.outputsubdir                   = qmlpropertygroups
+DocBook.outputsubdir                = qmlpropertygroups-docbook
+
+warninglimit += 2

@@ -298,6 +298,37 @@
         \li \l{page-command}{\\page} - for creating a page.
     \endlist
 
+    A QDoc comment can contain multiple topic commands in the same category, with
+    some restrictions. This way, it's possible to write a single comment that
+    documents all overloads of a function (using multiple \l {fn-command}{\\fn}
+    commands), or all properties in a QML property group (using
+    \l {qmlproperty-command}{\\qmlproperty} commands) in one go.
+
+    If a QDoc comment contains multiple topic commands, it's possible to
+    provide additional \e {context commands} for individual topics in
+    follow-up comments:
+
+    \badcode *
+    /\1!
+        \qmlproperty string Type::element.name
+        \qmlproperty int Type::element.id
+
+        \brief Holds the element name and id.
+    \1/
+
+    /\1!
+        \qmlproperty int Type::element.id
+        \readonly
+    \1/
+    \endcode
+
+    Here, the follow-up comment marks the \e element.id property as read-only,
+    while \e element.name remains writable.
+
+    \note A follow-up comment cannot contain any additional text, only
+          \l {writing-context}{context commands} that document the context of
+          the item.
+
     The \l{page-command}{\\page} command is for creating articles that are not
     part of source documentation. The command can also accept two arguments: the
     file name of the article and the documentation type. The possible types are:
@@ -306,6 +337,7 @@
     \li \c overview
     \li \c tutorial
     \li \c faq
+    \li \c attribution - used for documenting license attributions
     \li \c article - \e default when there is no type
     \endlist
 

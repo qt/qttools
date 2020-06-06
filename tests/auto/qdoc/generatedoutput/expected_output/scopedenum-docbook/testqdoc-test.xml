@@ -106,7 +106,7 @@
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="overload">
 <db:title>[protected] Test::void overload()</db:title>
-<db:bridgehead renderas="sect2" xml:id="overload-1">[protected] Test::void overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
+<db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] Test::void overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
 <db:synopsis>
 
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
@@ -115,7 +115,6 @@
 <db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:synopsis>
 <db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
-<db:para>This function was introduced in Test 1.2.</db:para>
 </db:section>
 <db:section xml:id="inlineFunction">
 <db:title>Test::void inlineFunction()</db:title>
@@ -194,7 +193,7 @@
 <db:section xml:id="macro-documentation">
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO2">
-<db:title>QDOCTEST_MACRO2(<db:emphasis>x</db:emphasis>)</db:title>
+<db:title>[since Test 1.1] QDOCTEST_MACRO2(<db:emphasis>x</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:methodname>QDOCTEST_MACR</db:methodname>
 <db:methodparam>

@@ -84,7 +84,7 @@
 <db:section xml:id="method-documentation">
 <db:title>Method Documentation</db:title>
 <db:section xml:id="fail-method">
-<db:title>fail(<db:emphasis>message</db:emphasis> = &quot;oops&quot;)</db:title>
+<db:title>[since QDoc.Test 1.0] fail(<db:emphasis>message</db:emphasis> = &quot;oops&quot;)</db:title>
 <db:para>Fails the current test case, with the optional <db:code role="parameter">message</db:code>.</db:para>
 <db:para>This method was introduced in QDoc.Test 1.0.</db:para>
 </db:section>

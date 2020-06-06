@@ -151,6 +151,71 @@ QString CodeMarker::stringForNode(const Node *node)
     return QString::number(reinterpret_cast<quintptr>(node));
 }
 
+/*!
+    Returns the 'extra' synopsis string for \a node with status information,
+    using a specified section \a style.
+*/
+QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
+{
+    QStringList extra;
+    if (style == Section::Details) {
+        switch (node->nodeType()) {
+        case Node::Function: {
+            const auto *func = static_cast<const FunctionNode *>(node);
+            if (func->isStatic()) {
+                extra << "static";
+            } else if (!func->isNonvirtual()) {
+                if (func->isFinal())
+                    extra << "final";
+                if (func->isOverride())
+                    extra << "override";
+                if (func->isPureVirtual())
+                    extra << "pure";
+                extra << "virtual";
+            }
+
+            if (func->access() == Access::Protected)
+                extra << "protected";
+            else if (func->access() == Access::Private)
+                extra << "private";
+
+            if (func->isSignal())
+                extra << "signal";
+            else if (func->isSlot())
+                extra << "slot";
+        }
+        break;
+        case Node::TypeAlias:
+            extra << "alias";
+            break;
+        default:
+            break;
+        }
+    } else if (style == Section::Summary) {
+        if (node->isPreliminary())
+            extra << "preliminary";
+        else if (node->isDeprecated())
+            extra <<  "deprecated";
+        else if (node->isObsolete())
+            extra << "obsolete";
+    }
+
+    if (style == Section::Details && !node->since().isEmpty()) {
+        if (!extra.isEmpty())
+            extra.last() += QLatin1Char(',');
+        extra << "since" << node->since();
+    }
+
+    QString extraStr = extra.join(QLatin1Char(' '));
+    if (!extraStr.isEmpty()) {
+        extraStr.prepend(style == Section::Details ? '[' : '(');
+        extraStr.append(style == Section::Details ? ']' : ')');
+        extraStr.append(' ');
+    }
+
+    return extraStr;
+}
+
 static const QString samp = QLatin1String("&amp;");
 static const QString slt = QLatin1String("&lt;");
 static const QString sgt = QLatin1String("&gt;");

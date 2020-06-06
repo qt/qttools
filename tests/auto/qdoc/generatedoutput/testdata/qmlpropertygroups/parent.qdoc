@@ -40,6 +40,16 @@
 */
 
 /*!
+    \qmlproperty int Parent::group.b
+    \readonly
+*/
+
+/*!
+    \qmlproperty int Parent::group.c
+    \since 2.0
+*/
+
+/*!
     \qmltype AnotherChild
     \inqmlmodule QDoc.Test
     \inherits Parent

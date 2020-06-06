@@ -3218,56 +3218,8 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     // From CppCodeMarker::markedUpSynopsis, reversed the generation of "extra" and "synopsis".
     const int MaxEnumValues = 6;
 
-    // First generate the extra part if needed (condition from HtmlGenerator::generateSynopsis).
-    if (generateExtra) {
-        if (style != Section::Summary && style != Section::Accessors) {
-            QStringList bracketed;
-            if (node->isFunction()) {
-                const auto func = static_cast<const FunctionNode *>(node);
-                if (func->isStatic()) {
-                    bracketed += "static";
-                } else if (!func->isNonvirtual()) {
-                    if (func->isFinal())
-                        bracketed += "final";
-                    if (func->isOverride())
-                        bracketed += "override";
-                    if (func->isPureVirtual())
-                        bracketed += "pure";
-                    bracketed += "virtual";
-                }
-
-                if (func->access() == Access::Protected)
-                    bracketed += "protected";
-                else if (func->access() == Access::Private)
-                    bracketed += "private";
-
-                if (func->isSignal())
-                    bracketed += "signal";
-                else if (func->isSlot())
-                    bracketed += "slot";
-            } else if (node->isTypeAlias()) {
-                bracketed += "alias";
-            }
-            if (!bracketed.isEmpty())
-                writer->writeCharacters(QLatin1Char('[') + bracketed.join(' ')
-                                        + QStringLiteral("] "));
-        }
-
-        if (style == Section::Summary) {
-            QString extra;
-            if (node->isPreliminary())
-                extra = "(preliminary) ";
-            else if (node->isDeprecated())
-                extra = "(deprecated) ";
-            else if (node->isObsolete())
-                extra = "(obsolete) ";
-            else if (node->isTypeAlias())
-                extra = "(alias) ";
-
-            if (!extra.isEmpty())
-                writer->writeCharacters(extra);
-        }
-    }
+    if (generateExtra)
+        writer->writeCharacters(CodeMarker::extraSynopsis(node, style));
 
     // Then generate the synopsis.
     if (style == Section::Details) {
@@ -3938,10 +3890,19 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
             n->markReadOnly(!n->isWritable());
 
         QString title;
-        if (!n->isWritable())
-            title += "[read-only] ";
+        QStringList extra;
         if (n->isDefault())
-            title += "[default] ";
+            extra << "default";
+        else if (n->isReadOnly())
+            extra << "read-only";
+
+        if (!n->since().isEmpty()) {
+            if (!extra.isEmpty())
+                extra.last().append(',');
+            extra << "since " + n->since();
+        }
+        if (!extra.isEmpty())
+            title = QString("[%1] ").arg(extra.join(QLatin1Char(' ')));
 
         // Finalise generation of name, as per CppCodeMarker::markedUpQmlItem.
         if (n->isAttached())

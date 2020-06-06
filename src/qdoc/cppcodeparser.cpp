@@ -427,10 +427,14 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
                                     .arg(arg));
                     continue;
                 }
-                if (qmlType->hasQmlProperty(property, attached) != nullptr) {
-                    doc.startLocation().warning(
-                            QStringLiteral("QML property documented multiple times: '%1'")
-                                    .arg(arg));
+                QmlPropertyNode *existingProperty = qmlType->hasQmlProperty(property, attached);
+                if (existingProperty) {
+                    processMetaCommands(doc, existingProperty);
+                    if (!doc.body().isEmpty()) {
+                        doc.startLocation().warning(
+                                QStringLiteral("QML property documented multiple times: '%1'")
+                                        .arg(arg));
+                    }
                     continue;
                 }
                 auto *qpn = new QmlPropertyNode(qmlType, property, type, attached);

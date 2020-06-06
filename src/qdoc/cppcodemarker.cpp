@@ -100,7 +100,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
     const EnumNode *enume;
     const TypedefNode *typedeff;
     QString synopsis;
-    QString extra;
     QString name;
 
     name = taggedNode(node);
@@ -183,30 +182,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                 synopsis.append(" &");
             else if (func->isRefRef())
                 synopsis.append(" &&");
-            QStringList bracketed;
-            if (func->isStatic()) {
-                bracketed += "static";
-            } else if (!func->isNonvirtual()) {
-                if (func->isFinal())
-                    bracketed += "final";
-                if (func->isOverride())
-                    bracketed += "override";
-                if (func->isPureVirtual())
-                    bracketed += "pure";
-                bracketed += "virtual";
-            }
-
-            if (func->access() == Access::Protected)
-                bracketed += "protected";
-            else if (func->access() == Access::Private)
-                bracketed += "private";
-
-            if (func->isSignal())
-                bracketed += "signal";
-            else if (func->isSlot())
-                bracketed += "slot";
-            if (!bracketed.isEmpty())
-                extra += QLatin1Char('[') + bracketed.join(' ') + QStringLiteral("] ");
         }
         break;
     case Node::Enum:
@@ -246,7 +221,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         if (style == Section::Summary)
             synopsis = "(alias) ";
         else if (style == Section::Details) {
-            extra = QStringLiteral("[alias] ");
             QString templateDecl = node->templateDecl();
             if (!templateDecl.isEmpty())
                 synopsis = templateDecl + QLatin1Char(' ');
@@ -277,19 +251,12 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         synopsis = name;
     }
 
-    if (style == Section::Summary) {
-        if (node->isPreliminary())
-            extra += "(preliminary) ";
-        else if (node->isDeprecated())
-            extra += "(deprecated) ";
-        else if (node->isObsolete())
-            extra += "(obsolete) ";
-    }
-
+    QString extra = CodeMarker::extraSynopsis(node, style);
     if (!extra.isEmpty()) {
         extra.prepend("<@extra>");
         extra.append("</@extra>");
     }
+
     return extra + synopsis;
 }
 

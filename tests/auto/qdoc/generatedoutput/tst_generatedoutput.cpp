@@ -368,7 +368,9 @@ void tst_generatedOutput::dontDocument()
 void tst_generatedOutput::inheritedQmlPropertyGroups()
 {
     testAndCompare("testdata/qmlpropertygroups/qmlpropertygroups.qdocconf",
-                   "qmlpropertygroups/qml-qdoc-test-anotherchild-members.html");
+                   "qmlpropertygroups/qml-qdoc-test-anotherchild-members.html "
+                   "qmlpropertygroups/qml-qdoc-test-parent.html "
+                   "qmlpropertygroups-docbook/qml-qdoc-test-parent.xml");
 }
 
 void tst_generatedOutput::crossModuleLinking()
