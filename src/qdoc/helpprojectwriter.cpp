@@ -267,6 +267,8 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                     const CollectionNode *cn = static_cast<const CollectionNode *>(node);
                     const auto members = cn->members();
                     for (const Node *m : members) {
+                        if (!m->isInAPI())
+                            continue;
                         QString memberName =
                                 m->isTextPageNode() ? m->fullTitle() : m->fullDocumentName();
                         project.subprojects[i].nodes[memberName] = m;

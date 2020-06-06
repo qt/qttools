@@ -1028,12 +1028,20 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeMul
 void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeList &nodeList,
                                              const QString &selector)
 {
+    // Do nothing if all items are internal or obsolete
+    if (std::all_of(nodeList.cbegin(), nodeList.cend(), [](const Node *n) {
+        return n->isInternal() || n->isObsolete(); })) {
+        return;
+    }
+
     // From WebXMLGenerator::generateAnnotatedList.
     writer->writeStartElement(dbNamespace, "variablelist");
     writer->writeAttribute("role", selector);
     newLine();
 
-    for (auto node : nodeList) {
+    for (const auto node : nodeList) {
+        if (node->isInternal() || node->isObsolete())
+            continue;
         writer->writeStartElement(dbNamespace, "varlistentry");
         newLine();
         writer->writeStartElement(dbNamespace, "term");

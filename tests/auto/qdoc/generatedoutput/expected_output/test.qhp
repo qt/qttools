@@ -37,6 +37,9 @@
                     <section ref="qml-qdoc-test-type.html" title="Type Type Reference">
                         <section ref="qml-qdoc-test-type-members.html" title="List of all members"/>
                     </section>
+                    <section ref="qml-qdoc-test-yetanotherchild.html" title="YetAnotherChild Type Reference">
+                        <section ref="qml-qdoc-test-yetanotherchild-members.html" title="List of all members"/>
+                    </section>
                     <section ref="qml-uicomponents-progressbar.html" title="ProgressBar Type Reference">
                         <section ref="qml-uicomponents-progressbar-members.html" title="List of all members"/>
                     </section>
@@ -68,6 +71,7 @@
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
             <keyword name="Type" id="QML.Type" ref="qml-qdoc-test-type.html"/>
             <keyword name="UI Components" id="UI Components" ref="uicomponents-qmlmodule.html"/>
+            <keyword name="YetAnotherChild" id="QML.YetAnotherChild" ref="qml-qdoc-test-yetanotherchild.html"/>
             <keyword name="abs" id="int::abs" ref="qml-int.html#abs-method"/>
             <keyword name="active" id="DocTest::active" ref="qml-qdoc-test-doctest.html#active-prop"/>
             <keyword name="anotherObsoleteMember" id="Test::anotherObsoleteMember" ref="testqdoc-test-obsolete.html#anotherObsoleteMember"/>
@@ -121,6 +125,8 @@
             <file>qml-qdoc-test-doctest.html</file>
             <file>qml-qdoc-test-type-members.html</file>
             <file>qml-qdoc-test-type.html</file>
+            <file>qml-qdoc-test-yetanotherchild-members.html</file>
+            <file>qml-qdoc-test-yetanotherchild.html</file>
             <file>qml-uicomponents-progressbar-members.html</file>
             <file>qml-uicomponents-progressbar.html</file>
             <file>qml-uicomponents-switch-members.html</file>

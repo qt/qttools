@@ -62,3 +62,23 @@
     \qmlmethod int int::abs()
     Returns the absolute value of this integer.
 */
+
+/*!
+    \qmltype InternParent
+    \inqmlmodule QDoc.Test
+    \internal
+    \qmlabstract
+    \brief Internal abstract base QML type.
+*/
+
+/*!
+    \qmlproperty int InternParent::prop
+    \brief Propagated to inheriting type docs.
+*/
+
+/*!
+    \qmltype YetAnotherChild
+    \inherits InternParent
+    \inqmlmodule QDoc.Test
+    \brief A type inheriting from internal abstract parent.
+*/

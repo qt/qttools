@@ -1506,9 +1506,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     generateExtractionMark(cn, EndMark);
 
     if (!cn->noAutoList()) {
-        if (cn->isGroup())
-            generateAnnotatedList(cn, marker, cn->members());
-        else if (cn->isQmlModule() || cn->isJsModule())
+        if (cn->isGroup() || cn->isQmlModule() || cn->isJsModule())
             generateAnnotatedList(cn, marker, cn->members());
     }
     generateFooter(cn);

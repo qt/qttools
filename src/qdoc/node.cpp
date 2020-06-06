@@ -1140,7 +1140,7 @@ bool Node::isInternal() const
 {
     if (status() == Internal)
         return true;
-    return parent() && parent()->status() == Internal;
+    return parent() && parent()->status() == Internal && !parent()->isAbstract();
 }
 
 /*! \fn void Node::markInternal()

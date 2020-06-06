@@ -72,7 +72,6 @@ public:
     void setImportList(const ImportList &il) { m_importList = il; }
     const QString &qmlBaseName() const { return m_qmlBaseName; }
     void setQmlBaseName(const QString &name) { m_qmlBaseName = name; }
-    bool qmlBaseNodeNotSet() const { return (m_qmlBaseNode == nullptr); }
     QmlTypeNode *qmlBaseNode() const override { return m_qmlBaseNode; }
     void setQmlBaseNode(QmlTypeNode *b) { m_qmlBaseNode = b; }
     void requireCppClass() { m_classNodeRequired = true; }
