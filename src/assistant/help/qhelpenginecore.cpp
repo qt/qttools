@@ -119,13 +119,14 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
     The management of the filters, including adding new filters,
     changing filter definitions, or removing existing filters,
     is done through the QHelpFilterEngine class, which can be accessed
-    by the filterEngine() method. This replaces older filter API that is
-    deprecated since Qt 5.13. Please call setUsesFilterEngine() with
-    \c true to enable the new functionality.
+    by the filterEngine() method.
 
+    \note QHelpFilterEngine replaces the older filter API that is
+    deprecated since Qt 5.13. Call setUsesFilterEngine() with \c true to
+    enable the new functionality.
 
     The help engine also offers the possibility to set and read values
-    in a persistant way comparable to ini files or Windows registry
+    in a persistent way comparable to ini files or Windows registry
     entries. For more information see setValue() or value().
 
     This class does not offer any GUI components or functionality for
