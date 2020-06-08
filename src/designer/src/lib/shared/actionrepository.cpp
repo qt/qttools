@@ -292,7 +292,7 @@ static bool handleImageDragEnterMoveEvent(QDropEvent *event)
 
 static void handleImageDropEvent(const QAbstractItemView *iv, QDropEvent *event, ActionModel *am)
 {
-    const QModelIndex index = iv->indexAt(event->pos());
+    const QModelIndex index = iv->indexAt(event->position().toPoint());
     if (!index.isValid()) {
         event->ignore();
         return;

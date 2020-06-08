@@ -246,7 +246,7 @@ void WidgetBox::dropEvent(QDropEvent * event)
     if (!mimeData)
         return;
 
-    dropWidgets(mimeData->items(), event->pos());
+    dropWidgets(mimeData->items(), event->position().toPoint());
     QDesignerMimeData::removeMovedWidgetsFromSourceForm(mimeData->items());
 }
 

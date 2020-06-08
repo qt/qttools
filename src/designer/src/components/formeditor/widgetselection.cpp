@@ -176,7 +176,7 @@ void WidgetHandle::mousePressEvent(QMouseEvent *e)
 
     QWidget *container = m_widget->parentWidget();
 
-    m_origPressPos = container->mapFromGlobal(e->globalPos());
+    m_origPressPos = container->mapFromGlobal(e->globalPosition().toPoint());
     m_geom = m_origGeom = m_widget->geometry();
 
     switch (WidgetSelection::widgetState(m_formWindow->core(), m_widget)) {
@@ -200,7 +200,7 @@ void WidgetHandle::mouseMoveEvent(QMouseEvent *e)
 
     QWidget *container = m_widget->parentWidget();
 
-    const QPoint rp = container->mapFromGlobal(e->globalPos());
+    const QPoint rp = container->mapFromGlobal(e->globalPosition().toPoint());
     const QPoint d = rp - m_origPressPos;
 
     const QRect pr = container->rect();

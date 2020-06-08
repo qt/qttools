@@ -89,7 +89,7 @@ bool WidgetEditorTool::mainWindowSeparatorEvent(QWidget *widget, QEvent *event)
     QMouseEvent *e = static_cast<QMouseEvent*>(event);
 
     if (event->type() == QEvent::MouseButtonPress) {
-        if (mw->isSeparator(e->pos())) {
+        if (mw->isSeparator(e->position().toPoint())) {
             m_separator_drag_mw = mw;
             return true;
         }
@@ -256,7 +256,7 @@ bool WidgetEditorTool::handleDragEnterMoveEvent(QWidget *widget, QWidget * /*man
             m_lastDropTarget = mw->centralWidget();
     } else {
         // If custom widgets have acceptDrops=true, the event occurs for them
-        const QPoint formPos = widget != m_formWindow ? widget->mapTo(m_formWindow, e->pos()) : e->pos();
+        const QPoint formPos = widget != m_formWindow ? widget->mapTo(m_formWindow, e->position().toPoint()) : e->position().toPoint();
         globalPos = m_formWindow->mapToGlobal(formPos);
         const FormWindowBase::WidgetUnderMouseMode wum = mimeData->items().size() == 1 ? FormWindowBase::FindSingleSelectionDropTarget : FormWindowBase::FindMultiSelectionDropTarget;
         QWidget *dropTarget = m_formWindow->widgetUnderMouse(formPos, wum);
@@ -287,7 +287,7 @@ bool WidgetEditorTool::handleDropEvent(QWidget *widget, QWidget *, QDropEvent *e
         return true;
     }
     // FormWindow determines the position from the decoration.
-    const QPoint globalPos = widget->mapToGlobal(e->pos());
+    const QPoint globalPos = widget->mapToGlobal(e->position().toPoint());
     mimeData->moveDecoration(globalPos);
     if (m_specialDockDrag) {
         if (!m_formWindow->dropDockWidget(mimeData->items().at(0), globalPos)) {

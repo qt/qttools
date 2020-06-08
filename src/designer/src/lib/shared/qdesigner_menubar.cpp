@@ -168,7 +168,7 @@ bool QDesignerMenuBar::handleEvent(QWidget *widget, QEvent *event)
 
 bool QDesignerMenuBar::handleMouseDoubleClickEvent(QWidget *, QMouseEvent *event)
 {
-    if (!rect().contains(event->pos()))
+    if (!rect().contains(event->position().toPoint()))
         return true;
 
     if ((event->buttons() & Qt::LeftButton) != Qt::LeftButton)
@@ -178,7 +178,7 @@ bool QDesignerMenuBar::handleMouseDoubleClickEvent(QWidget *, QMouseEvent *event
 
     m_startPosition = QPoint();
 
-    m_currentIndex = actionIndexAt(this, event->pos(), Qt::Horizontal);
+    m_currentIndex = actionIndexAt(this, event->position().toPoint(), Qt::Horizontal);
     if (m_currentIndex != -1) {
         showLineEdit();
     }
@@ -327,7 +327,7 @@ bool QDesignerMenuBar::handleMousePressEvent(QWidget *, QMouseEvent *event)
     if (event->button() != Qt::LeftButton)
         return true;
 
-    m_startPosition = event->pos();
+    m_startPosition = event->position().toPoint();
     const int newIndex = actionIndexAt(this, m_startPosition, Qt::Horizontal);
     const bool changed = newIndex != m_currentIndex;
     m_currentIndex =  newIndex;
@@ -344,7 +344,7 @@ bool QDesignerMenuBar::handleMouseReleaseEvent(QWidget *, QMouseEvent *event)
         return true;
 
     event->accept();
-    m_currentIndex = actionIndexAt(this, event->pos(), Qt::Horizontal);
+    m_currentIndex = actionIndexAt(this, event->position().toPoint(), Qt::Horizontal);
     if (!m_editor->isVisible() && m_currentIndex != -1 && m_currentIndex < realActionCount())
         showMenu();
 
@@ -359,7 +359,7 @@ bool QDesignerMenuBar::handleMouseMoveEvent(QWidget *, QMouseEvent *event)
     if (m_startPosition.isNull())
         return true;
 
-    const QPoint pos = mapFromGlobal(event->globalPos());
+    const QPoint pos = mapFromGlobal(event->globalPosition().toPoint());
 
     if ((pos - m_startPosition).manhattanLength() < qApp->startDragDistance())
         return true;
@@ -621,7 +621,7 @@ void QDesignerMenuBar::dragEnterEvent(QDragEnterEvent *event)
     case AcceptActionDrag:
         m_dragging = true;
         d->accept(event);
-        adjustIndicator(event->pos());
+        adjustIndicator(event->position().toPoint());
         break;
     }
 }
@@ -641,11 +641,11 @@ void QDesignerMenuBar::dragMoveEvent(QDragMoveEvent *event)
         break;
     case ActionDragOnSubMenu:
         event->ignore();
-        showMenu(findAction(event->pos()));
+        showMenu(findAction(event->position().toPoint()));
         break;
     case AcceptActionDrag:
         d->accept(event);
-        adjustIndicator(event->pos());
+        adjustIndicator(event->position().toPoint());
         break;
     }
 }
@@ -666,7 +666,7 @@ void QDesignerMenuBar::dropEvent(QDropEvent *event)
         QAction *action = d->actionList().first();
         if (checkAction(action) == AcceptActionDrag) {
             event->acceptProposedAction();
-            int index = findAction(event->pos());
+            int index = findAction(event->position().toPoint());
             index = qMin(index, actions().count() - 1);
 
             QDesignerFormWindowInterface *fw = formWindow();

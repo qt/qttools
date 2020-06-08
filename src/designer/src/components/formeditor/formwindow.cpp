@@ -601,7 +601,7 @@ bool FormWindow::handleMousePressEvent(QWidget * widget, QWidget *managedWidget,
     if (buttons != Qt::LeftButton && buttons != Qt::MidButton)
         return true;
 
-    m_startPos = mapFromGlobal(e->globalPos());
+    m_startPos = mapFromGlobal(e->globalPosition().toPoint());
 
     if (debugFormWindow)
         qDebug() << "handleMousePressEvent:" <<  widget << ',' << managedWidget;
@@ -612,7 +612,7 @@ bool FormWindow::handleMousePressEvent(QWidget * widget, QWidget *managedWidget,
 
         m_mouseState = MouseDrawRubber;
         m_currRect = QRect();
-        startRectDraw(mapFromGlobal(e->globalPos()), this, Rubber);
+        startRectDraw(mapFromGlobal(e->globalPosition().toPoint()), this, Rubber);
         return true;
     }
     if (buttons != Qt::LeftButton)
@@ -663,7 +663,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
     if (m_startPos.isNull())
         return true;
 
-    const QPoint pos = mapFromGlobal(e->globalPos());
+    const QPoint pos = mapFromGlobal(e->globalPosition().toPoint());
 
     switch (m_mouseState) {
     case MouseDrawRubber:  // Rubber band with left/middle mouse

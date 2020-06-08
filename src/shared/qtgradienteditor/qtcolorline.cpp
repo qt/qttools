@@ -916,7 +916,7 @@ void QtColorLinePrivate::mousePressEvent(QMouseEvent *event)
         return;
 
     QList<QRect> r = rects(m_point);
-    QPoint clickPos = event->pos();
+    QPoint clickPos = event->position().toPoint();
 
     QPoint posOnField = r[1].topLeft() - QPoint(m_indicatorSpace, m_indicatorSpace);
     m_clickOffset = posOnField - clickPos;
@@ -931,7 +931,7 @@ void QtColorLinePrivate::mouseMoveEvent(QMouseEvent *event)
 {
     if (!m_dragging)
         return;
-    QPoint newPos = event->pos();
+    QPoint newPos = event->position().toPoint();
 
     QSize fieldSize = q_ptr->geometry().size() -
             QSize(m_indicatorSize + 2 * m_indicatorSpace - 1, m_indicatorSize + 2 * m_indicatorSpace - 1);
@@ -970,7 +970,7 @@ void QtColorLinePrivate::mouseDoubleClickEvent(QMouseEvent *event)
         return;
 
     QList<QRect> r = rects(m_point);
-    QPoint clickPos = event->pos();
+    QPoint clickPos = event->position().toPoint();
     if (!r[0].contains(clickPos) && !r[2].contains(clickPos))
         return;
     QPoint newPosOnField = clickPos;

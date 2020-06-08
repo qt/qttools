@@ -262,7 +262,7 @@ void TabOrderEditor::mouseMoveEvent(QMouseEvent *e)
 {
     e->accept();
 #if QT_CONFIG(cursor)
-    if (m_indicator_region.contains(e->pos()))
+    if (m_indicator_region.contains(e->position().toPoint()))
         setCursor(Qt::PointingHandCursor);
     else
         setCursor(QCursor());
@@ -288,19 +288,19 @@ void TabOrderEditor::mousePressEvent(QMouseEvent *e)
 {
     e->accept();
 
-    if (!m_indicator_region.contains(e->pos())) {
-        if (QWidget *child = m_bg_widget->childAt(e->pos())) {
+    if (!m_indicator_region.contains(e->position().toPoint())) {
+        if (QWidget *child = m_bg_widget->childAt(e->position().toPoint())) {
             QDesignerFormEditorInterface *core = m_form_window->core();
             if (core->widgetFactory()->isPassiveInteractor(child)) {
 
                 QMouseEvent event(QEvent::MouseButtonPress,
-                                    child->mapFromGlobal(e->globalPos()),
+                                    child->mapFromGlobal(e->globalPosition().toPoint()),
                                     e->button(), e->buttons(), e->modifiers());
 
                 qApp->sendEvent(child, &event);
 
                 QMouseEvent event2(QEvent::MouseButtonRelease,
-                                    child->mapFromGlobal(e->globalPos()),
+                                    child->mapFromGlobal(e->globalPosition().toPoint()),
                                     e->button(), e->buttons(), e->modifiers());
 
                 qApp->sendEvent(child, &event2);
@@ -314,7 +314,7 @@ void TabOrderEditor::mousePressEvent(QMouseEvent *e)
     if (e->button() != Qt::LeftButton)
         return;
 
-    const int target_index = widgetIndexAt(e->pos());
+    const int target_index = widgetIndexAt(e->position().toPoint());
     if (target_index == -1)
         return;
 
@@ -375,7 +375,7 @@ void TabOrderEditor::mouseDoubleClickEvent(QMouseEvent *e)
     if (e->button() != Qt::LeftButton)
         return;
 
-    const int target_index = widgetIndexAt(e->pos());
+    const int target_index = widgetIndexAt(e->position().toPoint());
     if (target_index >= 0)
         return;
 

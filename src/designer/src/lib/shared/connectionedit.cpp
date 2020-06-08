@@ -1144,7 +1144,7 @@ void ConnectionEdit::mousePressEvent(QMouseEvent *e)
     // otherwise, widgets covered by the connection labels cannot be accessed
     Connection *con_under_mouse = nullptr;
     if (!m_widget_under_mouse || m_widget_under_mouse == m_bg_widget)
-        con_under_mouse = connectionAt(e->pos());
+        con_under_mouse = connectionAt(e->position().toPoint());
 
     m_start_connection_on_drag = false;
     const bool toggleSelection = e->modifiers().testFlag(Qt::ControlModifier);
@@ -1158,7 +1158,7 @@ void ConnectionEdit::mousePressEvent(QMouseEvent *e)
         case Editing:
             if (!m_end_point_under_mouse.isNull()) {
                 if (!toggleSelection)
-                    startDrag(m_end_point_under_mouse, e->pos());
+                    startDrag(m_end_point_under_mouse, e->position().toPoint());
             } else if (con_under_mouse != nullptr) {
                 if (toggleSelection) {
                     setSelected(con_under_mouse, !selected(con_under_mouse));
@@ -1214,7 +1214,7 @@ void ConnectionEdit::mouseReleaseEvent(QMouseEvent *e)
             if (m_widget_under_mouse.isNull())
                 abortConnection();
             else
-                endConnection(m_widget_under_mouse, e->pos());
+                endConnection(m_widget_under_mouse, e->position().toPoint());
 #if QT_CONFIG(cursor)
             setCursor(QCursor());
 #endif
@@ -1222,7 +1222,7 @@ void ConnectionEdit::mouseReleaseEvent(QMouseEvent *e)
         case Editing:
             break;
         case Dragging:
-            endDrag(e->pos());
+            endDrag(e->position().toPoint());
             break;
     }
 }
@@ -1262,24 +1262,24 @@ void ConnectionEdit::findObjectsUnderMouse(const QPoint &pos)
 
 void ConnectionEdit::mouseMoveEvent(QMouseEvent *e)
 {
-    findObjectsUnderMouse(e->pos());
+    findObjectsUnderMouse(e->position().toPoint());
     switch (state()) {
         case Connecting:
-            continueConnection(m_widget_under_mouse, e->pos());
+            continueConnection(m_widget_under_mouse, e->position().toPoint());
             break;
         case Editing:
             if ((e->buttons() & Qt::LeftButton)
                     && m_start_connection_on_drag
                     && !m_widget_under_mouse.isNull()) {
                 m_start_connection_on_drag = false;
-                startConnection(m_widget_under_mouse, e->pos());
+                startConnection(m_widget_under_mouse, e->position().toPoint());
 #if QT_CONFIG(cursor)
                 setCursor(Qt::CrossCursor);
 #endif
             }
             break;
         case Dragging:
-            continueDrag(e->pos());
+            continueDrag(e->position().toPoint());
             break;
     }
 
