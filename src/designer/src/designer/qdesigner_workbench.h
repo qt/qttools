@@ -33,9 +33,9 @@
 
 #include <QtCore/qobject.h>
 #include <QtCore/qhash.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qset.h>
 #include <QtCore/qrect.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -158,15 +158,15 @@ private:
 
     struct TopLevelData {
         ToolBarManager *toolbarManager;
-        QVector<QToolBar *> toolbars;
+        QList<QToolBar *> toolbars;
     };
     TopLevelData m_topLevelData;
 
     UIMode m_mode = NeutralMode;
     DockedMainWindow *m_dockedMainWindow = nullptr;
 
-    QVector<QDesignerToolWindow *> m_toolWindows;
-    QVector<QDesignerFormWindow *> m_formWindows;
+    QList<QDesignerToolWindow *> m_toolWindows;
+    QList<QDesignerFormWindow *> m_formWindows;
 
     QMenu *m_toolbarMenu;
 

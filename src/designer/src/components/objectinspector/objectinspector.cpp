@@ -61,9 +61,9 @@
 #include <QtWidgets/qstyleditemdelegate.h>
 #include <QtGui/qevent.h>
 
-#include <QtCore/qsortfilterproxymodel.h>
-#include <QtCore/qvector.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qsortfilterproxymodel.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -90,7 +90,7 @@ namespace {
         // A widget managed by the form window cursor
         ManagedWidgetSelection };
 
-    using QObjectVector = QVector<QObject *>;
+    using QObjectVector = QList<QObject *>;
 }
 
 static inline SelectionType selectionType(const QDesignerFormWindowInterface *fw, QObject *o)

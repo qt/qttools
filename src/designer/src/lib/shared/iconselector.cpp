@@ -57,8 +57,7 @@
 #include <QtGui/qvalidator.h>
 
 #include <QtCore/qdebug.h>
-#include <QtCore/qvector.h>
-
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -192,7 +191,7 @@ public:
     void slotResetAllActivated();
     void slotUpdate();
 
-    QVector<QPair<QPair<QIcon::Mode, QIcon::State>, QString> > m_stateToName; // could be static map
+    QList<QPair<QPair<QIcon::Mode, QIcon::State>, QString> > m_stateToName; // could be static map
 
     QMap<QPair<QIcon::Mode, QIcon::State>, int>  m_stateToIndex;
     QMap<int, QPair<QIcon::Mode, QIcon::State> > m_indexToState;

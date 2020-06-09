@@ -28,9 +28,9 @@
 
 #include "qdesigner_introspection_p.h"
 
+#include <QtCore/qlist.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qstringlist.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -272,13 +272,13 @@ namespace  {
         const qdesigner_internal::QDesignerIntrospection *m_introspection;
         const QMetaObject *m_metaObject;
 
-        using Enumerators = QVector<QDesignerMetaEnumInterface *>;
+        using Enumerators = QList<QDesignerMetaEnumInterface *>;
         Enumerators m_enumerators;
 
-        using Methods = QVector<QDesignerMetaMethodInterface *>;
+        using Methods = QList<QDesignerMetaMethodInterface *>;
         Methods m_methods;
 
-        using Properties = QVector<QDesignerMetaPropertyInterface *>;
+        using Properties = QList<QDesignerMetaPropertyInterface *>;
         Properties m_properties;
 
         QDesignerMetaPropertyInterface *m_userProperty;

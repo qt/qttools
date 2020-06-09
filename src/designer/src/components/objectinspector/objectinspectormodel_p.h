@@ -48,7 +48,6 @@
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qpointer.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -115,7 +114,7 @@ namespace qdesigner_internal {
     inline bool operator==(const ObjectData &e1, const ObjectData &e2) { return e1.equals(e2); }
     inline bool operator!=(const ObjectData &e1, const ObjectData &e2) { return !e1.equals(e2); }
 
-    using ObjectModel = QVector<ObjectData>;
+    using ObjectModel = QList<ObjectData>;
 
     // QStandardItemModel for ObjectInspector. Uses ObjectData/ObjectModel
     // internally for its updates.

@@ -70,7 +70,7 @@ ZoomSettingsWidget::ZoomSettingsWidget(QWidget *parent) :
     m_zoomCombo(new QComboBox)
 {
     m_zoomCombo->setEditable(false);
-    const QVector<int> &zoomValues = ZoomMenu::zoomValues();
+    const QList<int> &zoomValues = ZoomMenu::zoomValues();
     for (int z : zoomValues) {
         //: Zoom percentage
         m_zoomCombo->addItem(QCoreApplication::translate("FormEditorOptionsPage", "%1 %").arg(z), QVariant(z));

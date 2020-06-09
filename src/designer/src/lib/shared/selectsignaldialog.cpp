@@ -40,11 +40,13 @@
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qpushbutton.h>
-#include <QtGui/qstandarditemmodel.h>
+
 #include <QtGui/qscreen.h>
+#include <QtGui/qstandarditemmodel.h>
+
 #include <QtCore/qitemselectionmodel.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qvariant.h>
-#include <QtCore/qvector.h>
 
 #include <algorithm>
 
@@ -54,7 +56,7 @@ namespace qdesigner_internal {
 
 enum { MethodRole = Qt::UserRole + 1 };
 
-using Methods = QVector<SelectSignalDialog::Method>;
+using Methods = QList<SelectSignalDialog::Method>;
 
 SelectSignalDialog::SelectSignalDialog(QWidget *parent)
     : QDialog(parent)

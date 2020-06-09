@@ -137,7 +137,7 @@ private:
 
     QPalette m_palette;
     QPalette m_parentPalette;
-    QVector<RoleEntry> m_roleEntries;
+    QList<RoleEntry> m_roleEntries;
     bool m_compute = true;
 };
 

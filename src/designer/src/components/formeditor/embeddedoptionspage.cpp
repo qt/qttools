@@ -52,7 +52,7 @@
 #include <QtWidgets/qgroupbox.h>
 
 #include <QtCore/qset.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
 
 #include <algorithm>
 
@@ -60,7 +60,7 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
-using DeviceProfileList = QVector<DeviceProfile>;
+using DeviceProfileList = QList<DeviceProfile>;
 
 enum { profileComboIndexOffset = 1 };
 

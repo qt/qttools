@@ -546,7 +546,7 @@ DomColorGroup *QFormBuilderExtra::saveColorGroup(const QPalette &palette,
     const QMetaEnum colorRole_enum = metaEnum<QAbstractFormBuilderGadget>("colorRole");
 
     DomColorGroup *group = new DomColorGroup();
-    QVector<DomColorRole *> colorRoles;
+    QList<DomColorRole *> colorRoles;
 
     const uint mask = palette.resolve();
     for (int role = QPalette::WindowText; role < QPalette::NColorRoles; ++role) {
@@ -675,7 +675,7 @@ DomBrush *QFormBuilderExtra::saveBrush(const QBrush &br)
         gradient->setAttributeType(QLatin1String(gradientType_enum.valueToKey(type)));
         gradient->setAttributeSpread(QLatin1String(gradientSpread_enum.valueToKey(gr->spread())));
         gradient->setAttributeCoordinateMode(QLatin1String(gradientCoordinate_enum.valueToKey(gr->coordinateMode())));
-        QVector<DomGradientStop *> stops;
+        QList<DomGradientStop *> stops;
         const QGradientStops st = gr->stops();
         for (const QGradientStop &pair : st) {
             DomGradientStop *stop = new DomGradientStop();

@@ -95,7 +95,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qbuffer.h>
 #include <QtCore/qtimer.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qxmlstream.h>
 
 Q_DECLARE_METATYPE(QWidget*)
@@ -165,7 +165,7 @@ public:
 
 private:
 
-    using SelectionPool = QVector<WidgetSelection *>;
+    using SelectionPool = QList<WidgetSelection *>;
     SelectionPool m_selectionPool;
 
     typedef QHash<QWidget *, WidgetSelection *> SelectionHash;
@@ -2422,8 +2422,7 @@ void FormWindow::simplifySelection(QWidgetList *sel) const
         sel->push_back(mainC);
         return;
     }
-    using WidgetVector = QVector<QWidget *>;
-    WidgetVector toBeRemoved;
+    QWidgetList toBeRemoved;
     toBeRemoved.reserve(sel->size());
     const QWidgetList::const_iterator scend = sel->constEnd();
     for (QWidgetList::const_iterator it = sel->constBegin(); it != scend; ++it) {
@@ -2442,8 +2441,8 @@ void FormWindow::simplifySelection(QWidgetList *sel) const
     // Now we can actually remove the widgets that were marked
     // for removal in the previous pass.
     if (!toBeRemoved.isEmpty()) {
-        const WidgetVector::const_iterator rcend = toBeRemoved.constEnd();
-        for (WidgetVector::const_iterator it = toBeRemoved.constBegin(); it != rcend; ++it)
+        const QWidgetList::const_iterator rcend = toBeRemoved.constEnd();
+        for (QWidgetList::const_iterator it = toBeRemoved.constBegin(); it != rcend; ++it)
             sel->removeAll(*it);
     }
 }

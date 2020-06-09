@@ -534,7 +534,7 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
     if (!m_formWindow->includeHints().isEmpty()) {
         const QString local = QStringLiteral("local");
         const QString global = QStringLiteral("global");
-        QVector<DomInclude *> ui_includes;
+        QList<DomInclude *> ui_includes;
         const QStringList &includeHints = m_formWindow->includeHints();
         ui_includes.reserve(includeHints.size());
         for (QString includeHint : includeHints) {
@@ -801,7 +801,7 @@ QWidget *QDesignerResource::create(DomWidget *ui_widget, QWidget *parentWidget)
 
     // save the actions
     const auto &actionRefs = ui_widget->elementAddAction();
-    ui_widget->setElementAddAction(QVector<DomActionRef *>());
+    ui_widget->setElementAddAction(QList<DomActionRef *>());
 
     QWidget *w = QAbstractFormBuilder::create(ui_widget, parentWidget);
 
@@ -1295,7 +1295,7 @@ inline QString msgUnmanagedPage(QDesignerFormEditorInterface *core,
 DomWidget *QDesignerResource::saveWidget(QWidget *widget, QDesignerContainerExtension *container, DomWidget *ui_parentWidget)
 {
     DomWidget *ui_widget = QAbstractFormBuilder::createDom(widget, ui_parentWidget, false);
-    QVector<DomWidget *> ui_widget_list;
+    QList<DomWidget *> ui_widget_list;
 
     for (int i=0; i<container->count(); ++i) {
         QWidget *page = container->widget(i);
@@ -1316,7 +1316,7 @@ DomWidget *QDesignerResource::saveWidget(QWidget *widget, QDesignerContainerExte
 DomWidget *QDesignerResource::saveWidget(QStackedWidget *widget, DomWidget *ui_parentWidget)
 {
     DomWidget *ui_widget = QAbstractFormBuilder::createDom(widget, ui_parentWidget, false);
-    QVector<DomWidget *> ui_widget_list;
+    QList<DomWidget *> ui_widget_list;
     if (QDesignerContainerExtension *container = qt_extension<QDesignerContainerExtension*>(core()->extensionManager(), widget)) {
         for (int i=0; i<container->count(); ++i) {
             QWidget *page = container->widget(i);
@@ -1375,7 +1375,7 @@ DomWidget *QDesignerResource::saveWidget(QDesignerDockWidget *dockWidget, DomWid
 DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_parentWidget)
 {
     DomWidget *ui_widget = QAbstractFormBuilder::createDom(widget, ui_parentWidget, false);
-    QVector<DomWidget *> ui_widget_list;
+    QList<DomWidget *> ui_widget_list;
 
     if (QDesignerContainerExtension *container = qt_extension<QDesignerContainerExtension*>(core()->extensionManager(), widget)) {
         const int current = widget->currentIndex();
@@ -1442,7 +1442,7 @@ DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_paren
 DomWidget *QDesignerResource::saveWidget(QToolBox *widget, DomWidget *ui_parentWidget)
 {
     DomWidget *ui_widget = QAbstractFormBuilder::createDom(widget, ui_parentWidget, false);
-    QVector<DomWidget *> ui_widget_list;
+    QList<DomWidget *> ui_widget_list;
 
     if (QDesignerContainerExtension *container = qt_extension<QDesignerContainerExtension*>(core()->extensionManager(), widget)) {
         const int current = widget->currentIndex();
@@ -1694,7 +1694,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     bool hasItems = false;
     // Widgets
     if (!selection.m_widgets.isEmpty()) {
-        QVector<DomWidget *> ui_widget_list;
+        QList<DomWidget *> ui_widget_list;
         const int size = selection.m_widgets.size();
         for (int i=0; i< size; ++i) {
             QWidget *w = selection.m_widgets.at(i);
@@ -1711,7 +1711,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     }
     // actions
     if (!selection.m_actions.isEmpty()) {
-        QVector<DomAction *> domActions;
+        QList<DomAction *> domActions;
         for (QAction* action : qAsConst(selection.m_actions)) {
             if (DomAction *domAction = createDom(action))
                 domActions += domAction;
@@ -2116,7 +2116,7 @@ DomResources *QDesignerResource::saveResources()
 DomResources *QDesignerResource::saveResources(const QStringList &qrcPaths)
 {
     QtResourceSet *resourceSet = m_formWindow->resourceSet();
-    QVector<DomResource *> dom_include;
+    QList<DomResource *> dom_include;
     if (resourceSet) {
         const QStringList activePaths = resourceSet->activeResourceFilePaths();
         for (const QString &path : activePaths) {

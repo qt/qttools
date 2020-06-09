@@ -57,7 +57,7 @@ static const char *skinExtensionC = "skin";
 
 // Pair of skin name, path
 typedef QPair<QString, QString> SkinNamePath;
-using Skins = QVector<SkinNamePath>;
+using Skins = QList<SkinNamePath>;
 enum { SkinComboNoneIndex = 0 };
 
 // find default skins (resources)

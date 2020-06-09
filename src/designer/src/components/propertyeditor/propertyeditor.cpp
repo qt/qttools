@@ -214,7 +214,7 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     m_buttonAction(new QAction(tr("Drop Down Button View"), this)),
     m_classLabel(new ElidingLabel)
 {
-    QVector<QColor> colors;
+    QList<QColor> colors;
     colors.reserve(6);
     colors.push_back(QColor(255, 230, 191));
     colors.push_back(QColor(255, 255, 191));

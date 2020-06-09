@@ -100,11 +100,11 @@ void MainWindowBase::closeEvent(QCloseEvent *e)
     }
 }
 
-QVector<QToolBar *> MainWindowBase::createToolBars(const QDesignerActions *actions, bool singleToolBar)
+QList<QToolBar *> MainWindowBase::createToolBars(const QDesignerActions *actions, bool singleToolBar)
 {
     // Note that whenever you want to add a new tool bar here, you also have to update the default
     // action groups added to the toolbar manager in the mainwindow constructor
-    QVector<QToolBar *> rc;
+    QList<QToolBar *> rc;
     if (singleToolBar) {
         //: Not currently used (main tool bar)
         QToolBar *main = createToolBar(tr("Main"), QStringLiteral("mainToolBar"), actions->fileActions()->actions());
@@ -205,8 +205,8 @@ ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
                                          QWidget *parent,
                                          QMenu *toolBarMenu,
                                          const QDesignerActions *actions,
-                                         const QVector<QToolBar *> &toolbars,
-                                         const QVector<QDesignerToolWindow *> &toolWindows) :
+                                         const QList<QToolBar *> &toolbars,
+                                         const QList<QDesignerToolWindow *> &toolWindows) :
     QObject(parent),
     m_configureableMainWindow(configureableMainWindow),
     m_parent(parent),
@@ -293,13 +293,13 @@ bool ToolBarManager::restoreState(const QByteArray &state, int version)
 
 DockedMainWindow::DockedMainWindow(QDesignerWorkbench *wb,
                                    QMenu *toolBarMenu,
-                                   const QVector<QDesignerToolWindow *> &toolWindows) :
+                                   const QList<QDesignerToolWindow *> &toolWindows) :
     m_toolBarManager(nullptr)
 {
     setObjectName(QStringLiteral("MDIWindow"));
     setWindowTitle(mainWindowTitle());
 
-    const QVector<QToolBar *> toolbars = createToolBars(wb->actionManager(), false);
+    const QList<QToolBar *> toolbars = createToolBars(wb->actionManager(), false);
     for (QToolBar *tb : toolbars)
         addToolBar(tb);
     DockedMdiArea *dma = new DockedMdiArea(wb->actionManager()->uiExtension());

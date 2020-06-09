@@ -40,10 +40,11 @@
 #ifndef QSIMPLERESOURCE_H
 #define QSIMPLERESOURCE_H
 
-#include "shared_global_p.h"
 #include "abstractformbuilder.h"
+#include "shared_global_p.h"
+
+#include <QtCore/qlist.h>
 #include <QtCore/qstringlist.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -91,7 +92,7 @@ protected:
 
 private:
     static void addCustomWidgetsToWidgetDatabase(const QDesignerFormEditorInterface *core,
-                                                 QVector<DomCustomWidget *> &custom_widget_list);
+                                                 QList<DomCustomWidget *> &custom_widget_list);
     static void addFakeMethodsToWidgetDataBase(const DomCustomWidget *domCustomWidget, WidgetDataBaseItem *item);
 
     static bool m_warningsEnabled;

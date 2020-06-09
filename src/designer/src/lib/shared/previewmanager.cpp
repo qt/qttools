@@ -26,40 +26,39 @@
 **
 ****************************************************************************/
 
+#include "formwindowbase_p.h"
 #include "previewmanager_p.h"
 #include "qdesigner_formbuilder_p.h"
 #include "shared_settings_p.h"
-#include "shared_settings_p.h"
-#include "zoomwidget_p.h"
-#include "formwindowbase_p.h"
 #include "widgetfactory_p.h"
+#include "zoomwidget_p.h"
 
 #include <deviceskin.h>
 
-#include <QtDesigner/abstractformwindow.h>
 #include <QtDesigner/abstractformeditor.h>
+#include <QtDesigner/abstractformwindow.h>
 #include <QtDesigner/abstractformwindowmanager.h>
 #include <QtDesigner/abstractsettings.h>
 
-#include <QtWidgets/qwidget.h>
-#include <QtGui/qevent.h>
-#include <QtWidgets/qmainwindow.h>
-#include <QtWidgets/qdockwidget.h>
 #include <QtWidgets/qapplication.h>
-#include <QtGui/qpixmap.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qdialog.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qmainwindow.h>
 #include <QtWidgets/qmenu.h>
+
 #include <QtGui/qaction.h>
 #include <QtGui/qactiongroup.h>
 #include <QtGui/qcursor.h>
-#include <QtGui/qtransform.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qpixmap.h>
 #include <QtGui/qscreen.h>
+#include <QtGui/qtransform.h>
 
-#include <QtCore/qmap.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qshareddata.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -556,7 +555,7 @@ public:
 
     QPointer<QWidget> m_activePreview;
 
-    using PreviewDataList = QVector<PreviewData>;
+    using PreviewDataList = QList<PreviewData>;
 
     PreviewDataList m_previews;
 

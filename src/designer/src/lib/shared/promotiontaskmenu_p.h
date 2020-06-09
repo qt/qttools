@@ -42,10 +42,9 @@
 
 #include "shared_global_p.h"
 
+#include <QtCore/qlist.h>
 #include <QtCore/qobject.h>
 #include <QtCore/qpointer.h>
-#include <QtCore/qlist.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -112,7 +111,7 @@ private:
     PromotionState createPromotionActions(QDesignerFormWindowInterface *formWindow);
     QDesignerFormWindowInterface *formWindow() const;
 
-    using PromotionSelectionList = QVector<QPointer<QWidget> >;
+    using PromotionSelectionList = QList<QPointer<QWidget> >;
     PromotionSelectionList promotionSelectionList(QDesignerFormWindowInterface *formWindow) const;
 
     Mode m_mode;

@@ -32,23 +32,24 @@
 
 #include <QtDesigner/abstractsettings.h>
 
-#include <QtWidgets/qtreeview.h>
-#include <QtWidgets/qtoolbutton.h>
-#include <QtWidgets/qboxlayout.h>
-#include <QtWidgets/qlayoutitem.h>
-#include <QtWidgets/qfiledialog.h>
-#include <QtGui/qstandarditemmodel.h>
-#include <QtWidgets/qmessagebox.h>
 #include <QtGui/qfontdatabase.h>
-#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtGui/qstandarditemmodel.h>
 
-#include <QtCore/qsettings.h>
-#include <QtCore/qcoreapplication.h>
-#include <QtCore/qstringlist.h>
-#include <QtCore/qfileinfo.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qdialogbuttonbox.h>
+#include <QtWidgets/qfiledialog.h>
+#include <QtWidgets/qlayoutitem.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qtreeview.h>
+
 #include <QtCore/qalgorithms.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qcoreapplication.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qlist.h>
+#include <QtCore/qsettings.h>
+#include <QtCore/qstringlist.h>
 
 #include <algorithm>
 
@@ -82,7 +83,7 @@ public:
 
     // Store loaded fonts as pair of file name and Id
     using FileNameFontIdPair = QPair<QString,int>;
-    using FileNameFontIdPairs = QVector<FileNameFontIdPair>;
+    using FileNameFontIdPairs = QList<FileNameFontIdPair>;
     const FileNameFontIdPairs &fonts() const;
 
 private:
@@ -336,7 +337,7 @@ static void removeFonts(const QModelIndexList &selectedIndexes, AppFontModel *mo
 
     // Reverse sort top level rows and remove
     AppFontManager &fmgr = AppFontManager::instance();
-    QVector<int> rows;
+    QList<int> rows;
     rows.reserve(selectedIndexes.size());
 
     QString errorMessage;

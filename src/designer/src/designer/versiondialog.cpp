@@ -26,15 +26,18 @@
 **
 ****************************************************************************/
 
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
+
 #include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+#include <QtGui/qpainterpath.h>
+
+#include <QtWidgets/qdialogbuttonbox.h>
 #include <QtWidgets/qgridlayout.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qpushbutton.h>
-#include <QtWidgets/qdialogbuttonbox.h>
-#include <QtGui/qpainter.h>
-#include <QtGui/qpainterpath.h>
 #include <QtWidgets/qstyleoption.h>
+
 #include "versiondialog.h"
 
 QT_BEGIN_NAMESPACE
@@ -54,8 +57,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *me) override;
     void paintEvent(QPaintEvent *pe) override;
 private:
-    QVector<QPoint> hitPoints;
-    QVector<QPoint> missPoints;
+    QList<QPoint> hitPoints;
+    QList<QPoint> missPoints;
     QPainterPath m_path;
     bool secondStage = false;
     bool m_pushed = false;

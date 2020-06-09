@@ -688,7 +688,7 @@ QDesignerFormWindow *QDesignerWorkbench::findFormWindow(QWidget *widget) const
 bool QDesignerWorkbench::handleClose()
 {
     m_state = StateClosing;
-    QVector<QDesignerFormWindow *> dirtyForms;
+    QList<QDesignerFormWindow *> dirtyForms;
     for (QDesignerFormWindow *w : qAsConst(m_formWindows)) {
         if (w->editor()->isDirty())
             dirtyForms << w;

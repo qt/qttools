@@ -28,11 +28,13 @@
 
 #include "grid_p.h"
 
+#include <QtCore/qlist.h>
 #include <QtCore/qstring.h>
-#include <QtCore/qvector.h>
-#include <QtGui/qpainter.h>
-#include <QtWidgets/qwidget.h>
+
 #include <QtGui/qevent.h>
+#include <QtGui/qpainter.h>
+
+#include <QtWidgets/qwidget.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -125,7 +127,7 @@ void Grid::paint(QPainter &p, const QWidget *widget, QPaintEvent *e) const
         const int xend = e->rect().right();
         const int yend = e->rect().bottom();
 
-        using Points = QVector<QPointF>;
+        using Points = QList<QPointF>;
         static Points points;
         points.clear();
 

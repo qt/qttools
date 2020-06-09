@@ -44,7 +44,8 @@
 
 #include <QtWidgets/qgraphicsview.h>
 #include <QtWidgets/qgraphicsproxywidget.h>
-#include <QtCore/qvector.h>
+
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -68,7 +69,7 @@ public:
     int zoom() const;
 
     // Return a list of available zoom values.
-    static QVector<int> zoomValues();
+    static QList<int> zoomValues();
 
 public slots:
     void setZoom(int percent);

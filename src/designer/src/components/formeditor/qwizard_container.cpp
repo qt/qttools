@@ -33,11 +33,11 @@
 
 #include <QtWidgets/qwizard.h>
 #include <QtCore/qdebug.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 
-using WizardPageList = QVector<QWizardPage *>;
+using WizardPageList = QList<QWizardPage *>;
 
 namespace qdesigner_internal {
 

@@ -1108,7 +1108,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
     if (recursive) {
         if (QLayout *layout = widget->layout()) {
             if (DomLayout *ui_layout = createDom(layout, nullptr, ui_parentWidget)) {
-                QVector<DomLayout *> ui_layouts;
+                QList<DomLayout *> ui_layouts;
                 ui_layouts.append(ui_layout);
 
                 ui_widget->setElementLayout(ui_layouts);
@@ -1117,9 +1117,9 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
     }
 
     // widgets, actions and action groups
-    QVector<DomWidget *> ui_widgets;
-    QVector<DomAction *> ui_actions;
-    QVector<DomActionGroup *> ui_action_groups;
+    QList<DomWidget *> ui_widgets;
+    QList<DomAction *> ui_actions;
+    QList<DomActionGroup *> ui_action_groups;
 
     QObjectList children;
 
@@ -1189,7 +1189,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
     }
 
     // add-action
-    QVector<DomActionRef *> ui_action_refs;
+    QList<DomActionRef *> ui_action_refs;
     const auto &actions = widget->actions();
     ui_action_refs.reserve(actions.size());
     for (QAction *action : actions) {
@@ -1343,7 +1343,7 @@ DomLayout *QAbstractFormBuilder::createDom(QLayout *layout, DomLayout *ui_layout
         newList = saveLayoutEntries(layout);
     }
 
-    QVector<DomLayoutItem *> ui_items;
+    QList<DomLayoutItem *> ui_items;
     ui_items.reserve(newList.size());
     for (const FormBuilderSaveLayoutEntry &item : qAsConst(newList)) {
         if (DomLayoutItem *ui_item = createDom(item.item, lay, ui_parentWidget)) {
@@ -1583,7 +1583,7 @@ DomButtonGroups *QAbstractFormBuilder::saveButtonGroups(const QWidget *mainConta
     const QObjectList &mchildren = mainContainer->children();
     if (mchildren.isEmpty())
         return nullptr;
-    QVector<DomButtonGroup *> domGroups;
+    QList<DomButtonGroup *> domGroups;
     for (QObject *o : mchildren) {
         if (auto bg = qobject_cast<QButtonGroup *>(o))
             if (DomButtonGroup* dg = createDom(bg))
@@ -1706,7 +1706,7 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
 {
     Q_UNUSED(ui_parentWidget);
 
-    QVector<DomColumn *> columns;
+    QList<DomColumn *> columns;
     DomProperty *p;
     QVariant v;
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
@@ -1797,7 +1797,7 @@ void QAbstractFormBuilder::saveTableWidgetExtraInfo(QTableWidget *tableWidget, D
     Q_UNUSED(ui_parentWidget);
 
     // save the horizontal header
-    QVector<DomColumn *> columns;
+    QList<DomColumn *> columns;
     for (int c = 0; c < tableWidget->columnCount(); c++) {
         QList<DomProperty*> properties;
         QTableWidgetItem *item = tableWidget->horizontalHeaderItem(c);
@@ -1811,7 +1811,7 @@ void QAbstractFormBuilder::saveTableWidgetExtraInfo(QTableWidget *tableWidget, D
     ui_widget->setElementColumn(columns);
 
     // save the vertical header
-    QVector<DomRow *> rows;
+    QList<DomRow *> rows;
     for (int r = 0; r < tableWidget->rowCount(); r++) {
         QList<DomProperty*> properties;
         QTableWidgetItem *item = tableWidget->verticalHeaderItem(r);
@@ -2471,7 +2471,7 @@ DomActionGroup *QAbstractFormBuilder::createDom(QActionGroup *actionGroup)
 
     ui_action_group->setElementProperty(computeProperties(actionGroup));
 
-    QVector<DomAction *> ui_actions;
+    QList<DomAction *> ui_actions;
 
     const auto &actions = actionGroup->actions();
     ui_actions.reserve(actions.size());

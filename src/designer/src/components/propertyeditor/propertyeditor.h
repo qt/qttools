@@ -32,9 +32,9 @@
 #include "propertyeditor_global.h"
 #include <qdesigner_propertyeditor_p.h>
 
-#include <QtCore/qpointer.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qpointer.h>
 #include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
@@ -180,7 +180,7 @@ private:
     QMap<QString, bool> m_expansionState;
 
     QString m_filterPattern;
-    QVector<QPair<QColor, QColor> > m_colors;
+    QList<QPair<QColor, QColor> > m_colors;
     QPair<QColor, QColor> m_dynamicColor;
     QPair<QColor, QColor> m_layoutColor;
 

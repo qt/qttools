@@ -269,7 +269,7 @@ namespace qdesigner_internal {
                               ObjectModel &model,
                               const ModelRecursionContext &ctx)
     {
-        using ButtonGroupList = QVector<QButtonGroup *>;
+        using ButtonGroupList = QList<QButtonGroup *>;
         // 1) Create entry
         const ObjectData entry(parent, object, ctx);
         model.push_back(entry);

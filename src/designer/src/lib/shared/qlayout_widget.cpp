@@ -199,7 +199,7 @@ static bool removeEmptyCellsOnGrid(GridLikeLayout *grid, const QRect &area)
 {
     // check if there are any items in the way. Should be only spacers
     // Unique out items that span rows/columns.
-    QVector<int> indexesToBeRemoved;
+    QList<int> indexesToBeRemoved;
     indexesToBeRemoved.reserve(grid->count());
     const int rightColumn = area.x() + area.width();
     const int bottomRow = area.y() + area.height();
@@ -460,12 +460,12 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         void simplify(const QDesignerFormEditorInterface *, QWidget *, const QRect &) override {}
 
         // Helper for restoring layout states
-        using LayoutItemVector = QVector<QLayoutItem *>;
+        using LayoutItemVector = QList<QLayoutItem *>;
         static LayoutItemVector disassembleLayout(QLayout *lt);
         static QLayoutItem *findItemOfWidget(const LayoutItemVector &lv, QWidget *w);
 
     private:
-        using BoxLayoutState = QVector<QWidget *>;
+        using BoxLayoutState = QList<QWidget *>;
 
         static BoxLayoutState state(const QBoxLayout*lt);
 
@@ -604,7 +604,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         };
         // Horiontal, Vertical pair of state
         typedef QPair<DimensionCellState, DimensionCellState> CellState;
-        using CellStates = QVector<CellState>;
+        using CellStates = QList<CellState>;
 
         // Figure out states of a cell and return as a flat vector of
         // [column1, column2,...] (address as  row * columnCount + col)
@@ -772,8 +772,8 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     bool GridLayoutState::simplify(const QRect &r, bool testOnly)
     {
         // figure out free rows/columns.
-        QVector<bool> occupiedRows(rowCount, false);
-        QVector<bool> occupiedColumns(colCount, false);
+        QList<bool> occupiedRows(rowCount, false);
+        QList<bool> occupiedColumns(colCount, false);
         // Mark everything outside restriction rectangle as occupied
         const int restrictionLeftColumn = r.x();
         const int restrictionRightColumn = restrictionLeftColumn + r.width();
@@ -1010,7 +1010,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     class FormLayoutHelper : public  LayoutHelper {
     public:
         typedef QPair<QWidget *, QWidget *> WidgetPair;
-        using FormLayoutState = QVector<WidgetPair>;
+        using FormLayoutState = QList<WidgetPair>;
 
         FormLayoutHelper() = default;
 
@@ -1175,7 +1175,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     void FormLayoutHelper::simplify(const QDesignerFormEditorInterface *core, QWidget *widgetWithManagedLayout, const QRect &restrictionArea)
     {
         using LayoutItemPair = QPair<QLayoutItem*, QLayoutItem*>;
-        using LayoutItemPairs = QVector<LayoutItemPair>;
+        using LayoutItemPairs = QList<LayoutItemPair>;
 
         QFormLayout *formLayout = qobject_cast<QFormLayout *>(LayoutInfo::managedLayout(core, widgetWithManagedLayout));
         Q_ASSERT(formLayout);
