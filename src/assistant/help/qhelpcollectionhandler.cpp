@@ -47,8 +47,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QList>
 #include <QtCore/QTimer>
-#include <QtCore/QVector>
 #include <QtCore/QVersionNumber>
 
 #include <QtHelp/QHelpLink>
@@ -237,7 +237,7 @@ bool QHelpCollectionHandler::openCollectionFile()
         timeStamps.append(timeStamp);
     }
 
-    QVector<TimeStamp> toRemove;
+    QList<TimeStamp> toRemove;
     for (const TimeStamp &timeStamp : timeStamps) {
         if (!isTimeStampCorrect(timeStamp))
             toRemove.append(timeStamp);
@@ -1180,7 +1180,7 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
     if (!m_query->exec())
         return QString();
 
-    QVector<QString> namespaceList;
+    QList<QString> namespaceList;
     while (m_query->next())
         namespaceList.append(m_query->value(0).toString());
 
@@ -1235,7 +1235,7 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
     if (!m_query->exec())
         return QString();
 
-    QVector<QString> namespaceList;
+    QList<QString> namespaceList;
     while (m_query->next())
         namespaceList.append(m_query->value(0).toString());
 

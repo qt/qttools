@@ -70,7 +70,7 @@ public:
         setContextMenuPolicy(Qt::NoContextMenu);
     }
 
-    void showResultPage(const QVector<QHelpSearchResult> results, bool isIndexing)
+    void showResultPage(const QList<QHelpSearchResult> results, bool isIndexing)
     {
         QString htmlFile;
         QTextStream str(&htmlFile);

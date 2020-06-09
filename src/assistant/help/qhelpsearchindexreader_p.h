@@ -56,7 +56,6 @@
 #include <QtCore/QList>
 #include <QtCore/QMutex>
 #include <QtCore/QThread>
-#include <QtCore/QVector>
 
 QT_BEGIN_NAMESPACE
 
@@ -77,7 +76,7 @@ public:
                 const QString &searchInput,
                 bool usesFilterEngine = false);
     int searchResultCount() const;
-    QVector<QHelpSearchResult> searchResults(int start, int end) const;
+    QList<QHelpSearchResult> searchResults(int start, int end) const;
 
 signals:
     void searchingStarted();
@@ -85,7 +84,7 @@ signals:
 
 protected:
     mutable QMutex m_mutex;
-    QVector<QHelpSearchResult> m_searchResults;
+    QList<QHelpSearchResult> m_searchResults;
     bool m_cancel = false;
     QString m_collectionFile;
     QString m_searchInput;

@@ -135,7 +135,7 @@ static void bindNamespacesAndAttributes(QSqlQuery *query, const QStringList &nam
         query->addBindValue(ns);
 }
 
-QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
+QList<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
                                          const QString &tableName,
                                          const QString &searchInput) const
 {
@@ -154,7 +154,7 @@ QVector<QHelpSearchResult> Reader::queryTable(const QSqlDatabase &db,
     query.addBindValue(searchInput);
     query.exec();
 
-    QVector<QHelpSearchResult> results;
+    QList<QHelpSearchResult> results;
 
     while (query.next()) {
         const QString &url = query.value(QLatin1String("url")).toString();
@@ -175,13 +175,13 @@ void Reader::searchInDB(const QString &searchInput)
         db.setDatabaseName(m_indexPath + QLatin1String("/fts"));
 
         if (db.open()) {
-            const QVector<QHelpSearchResult> titleResults = queryTable(db,
+            const QList<QHelpSearchResult> titleResults = queryTable(db,
                                              QLatin1String("titles"), searchInput);
-            const QVector<QHelpSearchResult> contentResults = queryTable(db,
+            const QList<QHelpSearchResult> contentResults = queryTable(db,
                                              QLatin1String("contents"), searchInput);
 
             // merge results form title and contents searches
-            m_searchResults = QVector<QHelpSearchResult>();
+            m_searchResults = QList<QHelpSearchResult>();
 
             QSet<QUrl> urls;
 
@@ -205,7 +205,7 @@ void Reader::searchInDB(const QString &searchInput)
     QSqlDatabase::removeDatabase(uniqueId);
 }
 
-QVector<QHelpSearchResult> Reader::searchResults() const
+QList<QHelpSearchResult> Reader::searchResults() const
 {
     return m_searchResults;
 }

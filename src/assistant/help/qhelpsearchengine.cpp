@@ -178,11 +178,11 @@ private:
         return indexReader ? indexReader->searchResultCount() : 0;
     }
 
-    QVector<QHelpSearchResult> searchResults(int start, int end) const
+    QList<QHelpSearchResult> searchResults(int start, int end) const
     {
         return indexReader ?
                indexReader->searchResults(start, end) :
-               QVector<QHelpSearchResult>();
+               QList<QHelpSearchResult>();
     }
 
     void updateIndex(bool reindex = false)
@@ -490,7 +490,7 @@ QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) 
     Returns a list of search results within the range from the index
     specified by \a start to the index specified by \a end.
 */
-QVector<QHelpSearchResult> QHelpSearchEngine::searchResults(int start, int end) const
+QList<QHelpSearchResult> QHelpSearchEngine::searchResults(int start, int end) const
 {
     return d->searchResults(start, end);
 }

@@ -76,7 +76,7 @@ int QHelpSearchIndexReader::searchResultCount() const
     return m_searchResults.count();
 }
 
-QVector<QHelpSearchResult> QHelpSearchIndexReader::searchResults(int start,
+QList<QHelpSearchResult> QHelpSearchIndexReader::searchResults(int start,
                                                                  int end) const
 {
     QMutexLocker lock(&m_mutex);

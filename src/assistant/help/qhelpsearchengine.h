@@ -110,7 +110,7 @@ public:
 #endif
 
     int searchResultCount() const;
-    QVector<QHelpSearchResult> searchResults(int start, int end) const;
+    QList<QHelpSearchResult> searchResults(int start, int end) const;
     QString searchInput() const;
 
 public Q_SLOTS:

@@ -68,16 +68,16 @@ public:
     void setFilterEngineNamespaceList(const QStringList &namespaceList);
 
     void searchInDB(const QString &term);
-    QVector<QHelpSearchResult> searchResults() const;
+    QList<QHelpSearchResult> searchResults() const;
 
 private:
-    QVector<QHelpSearchResult> queryTable(const QSqlDatabase &db,
+    QList<QHelpSearchResult> queryTable(const QSqlDatabase &db,
                                           const QString &tableName,
                                           const QString &searchInput) const;
 
     QMultiMap<QString, QStringList> m_namespaceAttributes;
     QStringList m_filterEngineNamespaceList;
-    QVector<QHelpSearchResult> m_searchResults;
+    QList<QHelpSearchResult> m_searchResults;
     QString m_indexPath;
     bool m_useFilterEngine = false;
 };

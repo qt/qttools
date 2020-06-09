@@ -30,7 +30,7 @@
 #define BOOKMARKITEM_H
 
 #include <QtCore/QVariant>
-#include <QtCore/QVector>
+#include <QtCore/QList>
 
 QT_BEGIN_NAMESPACE
 
@@ -40,7 +40,7 @@ enum {
     UserRoleExpanded = Qt::UserRole + 150
 };
 
-typedef QVector<QVariant> DataVector;
+typedef QList<QVariant> DataVector;
 
 class BookmarkItem
 {

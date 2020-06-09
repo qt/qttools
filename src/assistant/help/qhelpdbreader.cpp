@@ -40,9 +40,9 @@
 #include "qhelpdbreader_p.h"
 #include "qhelp_global.h"
 
-#include <QtCore/QVariant>
-#include <QtCore/QVector>
 #include <QtCore/QFile>
+#include <QtCore/QList>
+#include <QtCore/QVariant>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 
@@ -222,7 +222,7 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
 
     // Maybe some are unused and specified erroneously in the named filter only,
     // like it was in case of qtlocation.qch <= qt 5.9
-    QVector<int> usedAttributeIds;
+    QList<int> usedAttributeIds;
     for (auto it = attributeIds.cbegin(), end = attributeIds.cend(); it != end; ++it) {
         const int attributeId = it.key();
         if (isAttributeUsed(m_query, QLatin1String("IndexFilterTable"), attributeId)
