@@ -85,7 +85,7 @@ private:
     QDocDatabase *qdb_;
     Generator *gen_;
     QString project_;
-    QVector<QPair<ClassNode *, QString>> basesList_;
+    QList<QPair<ClassNode *, QString>> basesList_;
     bool storeLocationInfo_;
 };
 

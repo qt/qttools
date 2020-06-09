@@ -52,7 +52,7 @@ class Quoter;
 class Text;
 
 typedef QPair<QString, Location> ArgLocPair;
-typedef QVector<ArgLocPair> ArgList;
+typedef QList<ArgLocPair> ArgList;
 typedef QMultiMap<QString, QString> QStringMultiMap;
 
 class Doc
@@ -91,16 +91,16 @@ public:
     QSet<QString> metaCommandsUsed() const;
     TopicList topicsUsed() const;
     ArgList metaCommandArgs(const QString &metaCommand) const;
-    QVector<Text> alsoList() const;
+    QList<Text> alsoList() const;
     bool hasTableOfContents() const;
     bool hasKeywords() const;
     bool hasTargets() const;
     bool isInternal() const;
     bool isMarkedReimp() const;
-    const QVector<Atom *> &tableOfContents() const;
-    const QVector<int> &tableOfContentsLevels() const;
-    const QVector<Atom *> &keywords() const;
-    const QVector<Atom *> &targets() const;
+    const QList<Atom *> &tableOfContents() const;
+    const QList<int> &tableOfContentsLevels() const;
+    const QList<Atom *> &keywords() const;
+    const QList<Atom *> &targets() const;
     QStringMultiMap *metaTagMap() const;
 
     static void initialize();
@@ -119,7 +119,7 @@ private:
     static DocUtilities &m_utilities;
 };
 Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
-typedef QVector<Doc> DocList;
+typedef QList<Doc> DocList;
 
 QT_END_NAMESPACE
 

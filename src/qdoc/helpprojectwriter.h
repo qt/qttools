@@ -64,13 +64,13 @@ struct HelpProject
     QString fileName;
     QString indexRoot;
     QString indexTitle;
-    QVector<QStringList> keywords;
+    QList<QStringList> keywords;
     QSet<QString> files;
     QSet<QString> extraFiles;
     QSet<QString> filterAttributes;
     QHash<QString, QSet<QString>> customFilters;
     QSet<QString> excluded;
-    QVector<SubProject> subprojects;
+    QList<SubProject> subprojects;
     QHash<const Node *, NodeStatusSet> memberStatus;
     bool includeIndexNodes;
 };
@@ -99,7 +99,7 @@ private:
     Generator *gen_;
 
     QString outputDir;
-    QVector<HelpProject> projects;
+    QList<HelpProject> projects;
 };
 
 QT_END_NAMESPACE

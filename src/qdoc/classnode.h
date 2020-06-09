@@ -34,8 +34,8 @@
 #include "usingclause.h"
 
 #include <QtCore/qglobal.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qstring.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -64,15 +64,15 @@ public:
     void removePrivateAndInternalBases();
     void resolvePropertyOverriddenFromPtrs(PropertyNode *pn);
 
-    QVector<RelatedClass> &baseClasses() { return m_bases; }
-    QVector<RelatedClass> &derivedClasses() { return m_derived; }
-    QVector<RelatedClass> &ignoredBaseClasses() { return m_ignoredBases; }
-    QVector<UsingClause> &usingClauses() { return m_usingClauses; }
+    QList<RelatedClass> &baseClasses() { return m_bases; }
+    QList<RelatedClass> &derivedClasses() { return m_derived; }
+    QList<RelatedClass> &ignoredBaseClasses() { return m_ignoredBases; }
+    QList<UsingClause> &usingClauses() { return m_usingClauses; }
 
-    const QVector<RelatedClass> &baseClasses() const { return m_bases; }
-    const QVector<RelatedClass> &derivedClasses() const { return m_derived; }
-    const QVector<RelatedClass> &ignoredBaseClasses() const { return m_ignoredBases; }
-    const QVector<UsingClause> &usingClauses() const { return m_usingClauses; }
+    const QList<RelatedClass> &baseClasses() const { return m_bases; }
+    const QList<RelatedClass> &derivedClasses() const { return m_derived; }
+    const QList<RelatedClass> &ignoredBaseClasses() const { return m_ignoredBases; }
+    const QList<UsingClause> &usingClauses() const { return m_usingClauses; }
 
     QmlTypeNode *qmlElement() { return m_qmlElement; }
     void setQmlElement(QmlTypeNode *qcn) { m_qmlElement = qcn; }
@@ -85,13 +85,13 @@ public:
     bool docMustBeGenerated() const override;
 
 private:
-    void promotePublicBases(const QVector<RelatedClass> &bases);
+    void promotePublicBases(const QList<RelatedClass> &bases);
 
 private:
-    QVector<RelatedClass> m_bases {};
-    QVector<RelatedClass> m_derived {};
-    QVector<RelatedClass> m_ignoredBases {};
-    QVector<UsingClause> m_usingClauses {};
+    QList<RelatedClass> m_bases {};
+    QList<RelatedClass> m_derived {};
+    QList<RelatedClass> m_ignoredBases {};
+    QList<UsingClause> m_usingClauses {};
     bool m_abstract { false };
     bool m_wrapper { false };
     QString m_obsoleteLink {};

@@ -75,7 +75,7 @@ protected:
     void generateDocBookSynopsis(const Node *node);
     void generateRequisites(const Aggregate *inner);
     void generateQmlRequisites(const QmlTypeNode *qcn);
-    void generateSortedNames(const ClassNode *cn, const QVector<RelatedClass> &rc);
+    void generateSortedNames(const ClassNode *cn, const QList<RelatedClass> &rc);
     void generateSortedQmlNames(const Node *base, const NodeList &subs);
     bool generateStatus(const Node *node);
     bool generateThreadSafeness(const Node *node);

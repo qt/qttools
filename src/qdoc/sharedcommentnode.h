@@ -32,7 +32,7 @@
 #include "node.h"
 
 #include <QtCore/qglobal.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -63,13 +63,13 @@ public:
         setGenus(node->genus());
     }
     void sort() { std::sort(m_collective.begin(), m_collective.end(), Node::nodeNameLessThan); }
-    const QVector<Node *> &collective() const { return m_collective; }
+    const QList<Node *> &collective() const { return m_collective; }
     void setOverloadFlags();
     void setRelatedNonmember(bool value) override;
     Node *clone(Aggregate *parent) override;
 
 private:
-    QVector<Node *> m_collective {};
+    QList<Node *> m_collective {};
 };
 
 QT_END_NAMESPACE

@@ -548,7 +548,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
 
         Sections sections(nsmap);
         out() << "<ul>\n";
-        const QVector<Section> sinceSections = sections.sinceSections();
+        const QList<Section> sinceSections = sections.sinceSections();
         for (const auto &section : sinceSections) {
             if (!section.members().isEmpty()) {
                 out() << "<li>"
@@ -570,7 +570,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 else if (idx == Sections::SinceMemberFunctions) {
                     ParentMaps parentmaps;
                     ParentMaps::iterator pmap;
-                    const QVector<Node *> members = section.members();
+                    const QList<Node *> members = section.members();
                     for (const auto &member : members) {
                         Node *parent = (*member).parent();
                         pmap = parentmaps.find(parent);
@@ -1132,7 +1132,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         if (section.isEmpty())
             continue;
 
-        const QVector<Node *> members = section.members();
+        const QList<Node *> members = section.members();
         for (const auto &member : members) {
             if (member->access() == Access::Private) // ### check necessary?
                 continue;
@@ -1239,7 +1239,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
             out() << "<div class=\"" << section.divClass() << "\">\n"; // QTBUG-9504
         out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
 
-        const QVector<Node *> &members = section.members();
+        const QList<Node *> &members = section.members();
         for (const auto &member : members) {
             if (!member->isPrivate()) { // ### check necessary?
                 if (!member->isClassNode())
@@ -1316,7 +1316,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
         out() << "</ul>\n";
     }
 
-    const QVector<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
+    const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
     for (const auto &section : stdQmlTypeSummarySections) {
         if (!section.isEmpty()) {
             QString ref = registerRef(section.title().toLower());
@@ -1339,11 +1339,11 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     generateAlsoList(qcn, marker);
     generateExtractionMark(qcn, EndMark);
 
-    const QVector<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
+    const QList<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
     for (const auto &section : stdQmlTypeDetailsSections) {
         if (!section.isEmpty()) {
             out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
-            const QVector<Node *> members = section.members();
+            const QList<Node *> members = section.members();
             for (const auto member : members) {
                 generateDetailedQmlMember(member, qcn, marker);
                 out() << "<br/>\n";
@@ -1375,7 +1375,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker 
     generateKeywordAnchors(qbtn);
     generateTitle(htmlTitle, Text() << qbtn->subtitle(), subTitleSize, qbtn, marker);
 
-    const QVector<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
+    const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
     for (const auto &section : stdQmlTypeSummarySections) {
         if (!section.isEmpty()) {
             QString ref = registerRef(section.title().toLower());
@@ -1394,11 +1394,11 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker 
     generateAlsoList(qbtn, marker);
     generateExtractionMark(qbtn, EndMark);
 
-    const QVector<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
+    const QList<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
     for (const auto &section : stdQmlTypeDetailsSections) {
         if (!section.isEmpty()) {
             out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
-            const QVector<Node *> members = section.members();
+            const QList<Node *> members = section.members();
             for (const auto member : members) {
                 generateDetailedQmlMember(member, qbtn, marker);
                 out() << "<br/>\n";
@@ -2166,9 +2166,9 @@ void HtmlGenerator::generateBrief(const Node *node, CodeMarker *marker, const No
   Generates a table of contents beginning at \a node.
  */
 void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker,
-                                            QVector<Section> *sections)
+                                            QList<Section> *sections)
 {
-    QVector<Atom *> toc;
+    QList<Atom *> toc;
     if (node->doc().hasTableOfContents())
         toc = node->doc().tableOfContents();
     if (tocDepth == 0 || (toc.isEmpty() && !sections && !node->isModule())) {
@@ -2345,7 +2345,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
                     // Indent property group members
                     if (n->isPropertyGroup()) {
                         out() << "<ul>\n";
-                        const QVector<Node *> &collective =
+                        const QList<Node *> &collective =
                                 static_cast<SharedCommentNode *>(n)->collective();
                         std::for_each(collective.begin(), collective.end(), generate);
                         out() << "</ul>\n";
@@ -3044,7 +3044,7 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
 
 void HtmlGenerator::generateSectionInheritedList(const Section &section, const Node *relative)
 {
-    const QVector<QPair<Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
+    const QList<QPair<Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
     for (const auto &member : inheritedMembers) {
         out() << "<li class=\"fn\">";
         out() << member.second << ' ';
@@ -3349,7 +3349,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
     QString nodeRef = nullptr;
     if (node->isSharedCommentNode()) {
         const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode *>(node);
-        const QVector<Node *> &collective = scn->collective();
+        const QList<Node *> &collective = scn->collective();
         if (collective.size() > 1)
             out() << "<div class=\"fngroup\">\n";
         for (const auto *node : collective) {
@@ -3482,7 +3482,7 @@ void HtmlGenerator::generateQmlSummary(const NodeVector &members, const Node *re
                 const SharedCommentNode *scn = static_cast<const SharedCommentNode *>(member);
                 if (scn->count() > 0) {
                     out() << "<ul>\n";
-                    const QVector<Node *> sharedNodes = scn->collective();
+                    const QList<Node *> sharedNodes = scn->collective();
                     for (const auto &node : sharedNodes) {
                         if (node->isQmlProperty() || node->isJsProperty()) {
                             out() << "<li class=\"fn\">";
@@ -3562,7 +3562,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
             out() << "<b>" << scn->name() << " group</b>";
             out() << "</p></th></tr>\n";
         }
-        const QVector<Node *> sharedNodes = scn->collective();
+        const QList<Node *> sharedNodes = scn->collective();
         for (const auto &node : sharedNodes) {
             if (node->isQmlProperty() || node->isJsProperty())
                 generateQmlProperty(static_cast<QmlPropertyNode *>(node));
@@ -3574,7 +3574,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         out() << qmlItemFooter;
     } else if (node->isSharedCommentNode()) {
         const SharedCommentNode *scn = reinterpret_cast<const SharedCommentNode *>(node);
-        const QVector<Node *> &sharedNodes = scn->collective();
+        const QList<Node *> &sharedNodes = scn->collective();
         if (sharedNodes.size() > 1)
             out() << "<div class=\"fngroup\">\n";
         out() << qmlItemHeader;

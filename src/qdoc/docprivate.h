@@ -60,10 +60,10 @@ class DocPrivateExtra
 public:
     Doc::Sections granularity_;
     Doc::Sections section_;
-    QVector<Atom *> tableOfContents_;
-    QVector<int> tableOfContentsLevels_;
-    QVector<Atom *> keywords_;
-    QVector<Atom *> targets_;
+    QList<Atom *> tableOfContents_;
+    QList<int> tableOfContentsLevels_;
+    QList<Atom *> keywords_;
+    QList<Atom *> targets_;
     QStringMultiMap metaMap_;
 
     DocPrivateExtra() : granularity_(Doc::Part), section_(Doc::NoSection) {}
@@ -93,7 +93,7 @@ public:
     QString src;
     Text text;
     QSet<QString> params;
-    QVector<Text> alsoList;
+    QList<Text> alsoList;
     QStringList enumItemList;
     QStringList omitEnumItemList;
     QSet<QString> metacommandsUsed;

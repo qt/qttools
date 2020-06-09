@@ -905,7 +905,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                 docs.append(doc);
             }
         } else if (args.size() > 1) {
-            QVector<SharedCommentNode *> sharedCommentNodes;
+            QList<SharedCommentNode *> sharedCommentNodes;
             for (const auto &arg : qAsConst(args)) {
                 node = nullptr;
                 if (topic == COMMAND_FN) {
@@ -943,7 +943,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
 
 void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
 {
-    QVector<Doc>::Iterator d = docs.begin();
+    QList<Doc>::Iterator d = docs.begin();
     for (const auto &node : nodes) {
         if (node != nullptr) {
             processMetaCommands(*d, node);

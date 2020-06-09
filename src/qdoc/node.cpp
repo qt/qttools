@@ -663,7 +663,7 @@ QString Node::fullName(const Node *relative) const
   If a match is found, return true. If no match is found,
   return false.
  */
-bool Node::match(const QVector<int> &types) const
+bool Node::match(const QList<int> &types) const
 {
     for (int i = 0; i < types.size(); ++i) {
         if (nodeType() == types.at(i))

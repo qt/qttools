@@ -47,7 +47,7 @@ public:
     void setNavtitle(const QString &title) { m_navTitle = title; }
     void setHref(const QString &t) { m_href = t; }
     virtual bool isMapRef() const = 0;
-    virtual const QVector<DitaRef *> *subrefs() const { return nullptr; }
+    virtual const QList<DitaRef *> *subrefs() const { return nullptr; }
     virtual void appendSubref(DitaRef *) {}
 
 private:
@@ -55,7 +55,7 @@ private:
     QString m_href;
 };
 
-typedef QVector<DitaRef *> DitaRefList;
+typedef QList<DitaRef *> DitaRefList;
 
 class TopicRef : public DitaRef
 {
@@ -63,7 +63,7 @@ public:
     TopicRef() = default;
     ~TopicRef() override { qDeleteAll(m_subRefs); };
     bool isMapRef() const override { return false; }
-    const QVector<DitaRef *> *subrefs() const override { return &m_subRefs; }
+    const QList<DitaRef *> *subrefs() const override { return &m_subRefs; }
     void appendSubref(DitaRef *t) override { m_subRefs.append(t); }
 
 private:

@@ -55,7 +55,7 @@ class QmlMarkupVisitor : public QQmlJS::AST::Visitor
 public:
     enum ExtraType { Comment, Pragma };
 
-    QmlMarkupVisitor(const QString &code, const QVector<QQmlJS::SourceLocation> &pragmas,
+    QmlMarkupVisitor(const QString &code, const QList<QQmlJS::SourceLocation> &pragmas,
                      QQmlJS::Engine *engine);
     virtual ~QmlMarkupVisitor();
 
@@ -160,8 +160,8 @@ private:
     void throwRecursionDepthError() final;
 
     QQmlJS::Engine *engine;
-    QVector<ExtraType> extraTypes;
-    QVector<QQmlJS::SourceLocation> extraLocations;
+    QList<ExtraType> extraTypes;
+    QList<QQmlJS::SourceLocation> extraLocations;
     QString source;
     QString output;
     quint32 cursor;

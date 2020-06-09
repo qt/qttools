@@ -49,18 +49,15 @@ QT_BEGIN_NAMESPACE
 // Aggregate *Sections::aggregate_ = nullptr;
 
 static bool sectionsInitialized = false;
-QVector<Section> Sections::stdSummarySections_(7, Section(Section::Summary, Section::Active));
-QVector<Section> Sections::stdDetailsSections_(7, Section(Section::Details, Section::Active));
-QVector<Section> Sections::stdCppClassSummarySections_(18,
-                                                       Section(Section::Summary, Section::Active));
-QVector<Section> Sections::stdCppClassDetailsSections_(6,
-                                                       Section(Section::Details, Section::Active));
-QVector<Section> Sections::sinceSections_(15, Section(Section::Details, Section::Active));
-QVector<Section> Sections::allMembers_(1, Section(Section::AllMembers, Section::Active));
-QVector<Section> Sections::stdQmlTypeSummarySections_(7,
-                                                      Section(Section::Summary, Section::Active));
-QVector<Section> Sections::stdQmlTypeDetailsSections_(7,
-                                                      Section(Section::Details, Section::Active));
+QList<Section> Sections::stdSummarySections_(7, Section(Section::Summary, Section::Active));
+QList<Section> Sections::stdDetailsSections_(7, Section(Section::Details, Section::Active));
+QList<Section> Sections::stdCppClassSummarySections_(18,
+                                                     Section(Section::Summary, Section::Active));
+QList<Section> Sections::stdCppClassDetailsSections_(6, Section(Section::Details, Section::Active));
+QList<Section> Sections::sinceSections_(15, Section(Section::Details, Section::Active));
+QList<Section> Sections::allMembers_(1, Section(Section::AllMembers, Section::Active));
+QList<Section> Sections::stdQmlTypeSummarySections_(7, Section(Section::Summary, Section::Active));
+QList<Section> Sections::stdQmlTypeDetailsSections_(7, Section(Section::Details, Section::Active));
 
 /*!
   \class Section
@@ -484,10 +481,10 @@ void Sections::initAggregate(SectionVector &v, Aggregate *aggregate)
 
 /*!
   This function is called once to initialize all the instances
-  of QVector<Section>. The vectors have already been constructed
+  of QList<Section>. The lists have already been constructed
   with the correct number of Section entries in each. Each Section
   entry has already been constructed with the correct values of
-  Style and Status for the vector it is in. This function adds the
+  Style and Status for the list it is in. This function adds the
   correct text strings to each section in each vector.
  */
 void Sections::initSections()
@@ -498,7 +495,7 @@ void Sections::initSections()
 
     allMembers_[0].init("member", "members");
     {
-        QVector<Section> &v = stdCppClassSummarySections_;
+        QList<Section> &v = stdCppClassSummarySections_;
         v[0].init("Public Types", "public type", "public types");
         v[1].init("Properties", "property", "properties");
         v[2].init("Public Functions", "public function", "public functions");
@@ -521,7 +518,7 @@ void Sections::initSections()
     }
 
     {
-        QVector<Section> &v = stdCppClassDetailsSections_;
+        QList<Section> &v = stdCppClassDetailsSections_;
         v[0].init("Member Type Documentation", "types", "member", "members");
         v[1].init("Property Documentation", "prop", "member", "members");
         v[2].init("Member Function Documentation", "func", "member", "members");
@@ -531,7 +528,7 @@ void Sections::initSections()
     }
 
     {
-        QVector<Section> &v = stdSummarySections_;
+        QList<Section> &v = stdSummarySections_;
         v[0].init("Namespaces", "namespace", "namespaces");
         v[1].init("Classes", "class", "classes");
         v[2].init("Types", "type", "types");
@@ -542,7 +539,7 @@ void Sections::initSections()
     }
 
     {
-        QVector<Section> &v = stdDetailsSections_;
+        QList<Section> &v = stdDetailsSections_;
         v[0].init("Namespaces", "nmspace", "namespace", "namespaces");
         v[1].init("Classes", "classes", "class", "classes");
         v[2].init("Type Documentation", "types", "type", "types");
@@ -553,7 +550,7 @@ void Sections::initSections()
     }
 
     {
-        QVector<Section> &v = sinceSections_;
+        QList<Section> &v = sinceSections_;
         v[SinceNamespaces].init("    New Namespaces");
         v[SinceClasses].init("    New Classes");
         v[SinceMemberFunctions].init("    New Member Functions");
@@ -573,7 +570,7 @@ void Sections::initSections()
     }
 
     {
-        QVector<Section> &v = stdQmlTypeSummarySections_;
+        QList<Section> &v = stdQmlTypeSummarySections_;
         v[0].init("Properties", "property", "properties");
         v[1].init("Attached Properties", "attached property", "attached properties");
         v[2].init("Signals", "signal", "signals");
@@ -584,7 +581,7 @@ void Sections::initSections()
     }
 
     {
-        QVector<Section> &v = stdQmlTypeDetailsSections_;
+        QList<Section> &v = stdQmlTypeDetailsSections_;
         v[0].init("Property Documentation", "qmlprop", "member", "members");
         v[1].init("Attached Property Documentation", "qmlattprop", "member", "members");
         v[2].init("Signal Documentation", "qmlsig", "signal", "signals");
@@ -598,7 +595,7 @@ void Sections::initSections()
 /*!
   Reset each Section in vector \a v to its initialized state.
  */
-void Sections::clear(QVector<Section> &v)
+void Sections::clear(QList<Section> &v)
 {
     for (int i = 0; i < v.size(); ++i)
         v[i].clear();
@@ -607,7 +604,7 @@ void Sections::clear(QVector<Section> &v)
 /*!
   Linearize the maps in each Section in \a v.
  */
-void Sections::reduce(QVector<Section> &v)
+void Sections::reduce(QList<Section> &v)
 {
     for (int i = 0; i < v.size(); ++i)
         v[i].reduce();
@@ -942,7 +939,7 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
 
 static void pushBaseClasses(QStack<ClassNode *> &stack, ClassNode *cn)
 {
-    const QVector<RelatedClass> baseClasses = cn->baseClasses();
+    const QList<RelatedClass> baseClasses = cn->baseClasses();
     for (const auto &cls : baseClasses) {
         if (cls.m_node)
             stack.prepend(cls.m_node);

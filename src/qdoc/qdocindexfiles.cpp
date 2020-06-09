@@ -976,7 +976,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case Node::Union: {
         // Classes contain information about their base classes.
         const ClassNode *classNode = static_cast<const ClassNode *>(node);
-        const QVector<RelatedClass> bases = classNode->baseClasses();
+        const QList<RelatedClass> bases = classNode->baseClasses();
         QSet<QString> baseStrings;
         for (const auto &related : bases) {
             ClassNode *n = related.m_node;

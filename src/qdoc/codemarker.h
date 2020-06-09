@@ -90,7 +90,7 @@ protected:
 
 private:
     static QString defaultLang;
-    static QVector<CodeMarker *> markers;
+    static QList<CodeMarker *> markers;
 };
 
 QT_END_NAMESPACE

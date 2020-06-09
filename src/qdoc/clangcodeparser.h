@@ -71,12 +71,12 @@ private:
     int m_printParsingErrors {};
     QString m_version {};
     QHash<QString, QString> m_allHeaders {}; // file name->path
-    QVector<QByteArray> m_includePaths {};
+    QList<QByteArray> m_includePaths {};
     QScopedPointer<QTemporaryDir> m_pchFileDir {};
     QByteArray m_pchName {};
-    QVector<QByteArray> m_defines {};
+    QList<QByteArray> m_defines {};
     std::vector<const char *> m_args {};
-    QVector<QByteArray> m_moreArgs {};
+    QList<QByteArray> m_moreArgs {};
     QStringList m_namespaceScope {};
     static QByteArray s_fn;
 };

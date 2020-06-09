@@ -41,7 +41,7 @@ QT_BEGIN_NAMESPACE
 
 #ifndef QT_NO_DECLARATIVE
 QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
-                                   const QVector<QQmlJS::SourceLocation> &pragmas,
+                                   const QList<QQmlJS::SourceLocation> &pragmas,
                                    QQmlJS::Engine *engine)
 {
     this->source = source;

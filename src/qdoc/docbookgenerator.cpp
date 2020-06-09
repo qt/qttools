@@ -1731,11 +1731,11 @@ void DocBookGenerator::generateCMakeRequisite(const QStringList &values)
     generateEndRequisite();
 }
 
-void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QVector<RelatedClass> &rc)
+void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QList<RelatedClass> &rc)
 {
     // From Generator::appendSortedNames.
     QMap<QString, ClassNode *> classMap;
-    QVector<RelatedClass>::ConstIterator r = rc.constBegin();
+    QList<RelatedClass>::ConstIterator r = rc.constBegin();
     while (r != rc.constEnd()) {
         ClassNode *rcn = (*r).m_node;
         if (rcn && rcn->access() == Access::Public && rcn->status() != Node::Internal
@@ -1825,7 +1825,7 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
         }
 
         // Inherits.
-        QVector<RelatedClass>::ConstIterator r;
+        QList<RelatedClass>::ConstIterator r;
         if (!classe->baseClasses().isEmpty()) {
             generateStartRequisite("Inherits");
 
@@ -2367,7 +2367,7 @@ void DocBookGenerator::generateAlsoList(const Node *node, CodeMarker *marker)
 {
     Q_UNUSED(marker);
     // From Generator::generateAlsoList.
-    QVector<Text> alsoList = node->doc().alsoList();
+    QList<Text> alsoList = node->doc().alsoList();
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {
@@ -2876,7 +2876,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             }
 
             // Inherits.
-            QVector<RelatedClass>::ConstIterator r;
+            QList<RelatedClass>::ConstIterator r;
             if (!classe->baseClasses().isEmpty()) {
                 writer->writeStartElement(dbNamespace, "synopsisinfo");
                 writer->writeAttribute(dbNamespace, "role", "inherits");
@@ -3372,7 +3372,7 @@ void DocBookGenerator::generateEnumValue(const QString &enumValue, const Node *r
         return;
     }
 
-    QVector<const Node *> parents;
+    QList<const Node *> parents;
     const Node *node = relative->parent();
     while (!node->isHeader() && node->parent()) {
         parents.prepend(node);
@@ -3534,7 +3534,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
     writer->writeStartElement(dbNamespace, "section");
     if (node->isSharedCommentNode()) {
         const auto scn = reinterpret_cast<const SharedCommentNode *>(node);
-        const QVector<Node *> &collective = scn->collective();
+        const QList<Node *> &collective = scn->collective();
 
         bool firstFunction = true;
         for (const Node *n : collective) {
@@ -3715,7 +3715,7 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
 void DocBookGenerator::generateSectionInheritedList(const Section &section, const Node *relative)
 {
     // From HtmlGenerator::generateSectionInheritedList.
-    QVector<QPair<Aggregate *, int>>::ConstIterator p = section.inheritedMembers().constBegin();
+    QList<QPair<Aggregate *, int>>::ConstIterator p = section.inheritedMembers().constBegin();
     while (p != section.inheritedMembers().constEnd()) {
         writer->writeStartElement(dbNamespace, "listitem");
         writer->writeCharacters(QString((*p).second) + " ");
@@ -3930,7 +3930,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         // This last call creates a title for this section. In other words,
         // titles are forbidden for the rest of the section.
 
-        const QVector<Node *> sharedNodes = scn->collective();
+        const QList<Node *> sharedNodes = scn->collective();
         for (const auto &node : sharedNodes) {
             if (node->isQmlProperty() || node->isJsProperty()) {
                 auto *qpn = static_cast<QmlPropertyNode *>(node);
@@ -3951,7 +3951,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         generateDocBookSynopsis(qpn);
     } else if (node->isSharedCommentNode()) {
         const auto scn = reinterpret_cast<const SharedCommentNode *>(node);
-        const QVector<Node *> &sharedNodes = scn->collective();
+        const QList<Node *> &sharedNodes = scn->collective();
 
         // In the section, generate a title for the first node, then bridgeheads for
         // the next ones.
@@ -4116,7 +4116,7 @@ void DocBookGenerator::generateProxyPage(Aggregate *aggregate)
 
         startSection(section.title().toLower(), section.title());
 
-        const QVector<Node *> &members = section.members();
+        const QList<Node *> &members = section.members();
         for (const auto &member : members) {
             if (!member->isPrivate()) { // ### check necessary?
                 if (!member->isClassNode()) {

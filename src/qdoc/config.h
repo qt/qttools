@@ -76,15 +76,15 @@ struct ConfigVar
         QString m_path;
     };
 
-    QVector<ConfigValue> m_values {};
+    QList<ConfigValue> m_values {};
     Location m_location {};
-    QVector<ExpandVar> m_expandVars {};
+    QList<ExpandVar> m_expandVars {};
 
     ConfigVar() = default;
 
     ConfigVar(const QString &name, const QStringList &values, const QString &dir,
               const Location &loc = Location(),
-              const QVector<ExpandVar> &expandVars = QVector<ExpandVar>())
+              const QList<ExpandVar> &expandVars = QList<ExpandVar>())
         : m_name(name), m_location(loc), m_expandVars(expandVars)
     {
         for (const auto &v : values)
@@ -98,7 +98,7 @@ struct ConfigVar
     void append(const ConfigVar &other)
     {
         m_expandVars << other.m_expandVars;
-        QVector<ExpandVar>::Iterator it = m_expandVars.end();
+        QList<ExpandVar>::Iterator it = m_expandVars.end();
         it -= other.m_expandVars.size();
         std::for_each(it, m_expandVars.end(), [this](ExpandVar &v) {
             v.m_valueIndex += m_values.size();
@@ -144,7 +144,7 @@ public:
     QStringList getStringList(const QString &var) const;
     QStringList getCanonicalPathList(const QString &var, bool validate = false) const;
     QRegularExpression getRegExp(const QString &var) const;
-    QVector<QRegularExpression> getRegExpList(const QString &var) const;
+    QList<QRegularExpression> getRegExpList(const QString &var) const;
     QSet<QString> subVars(const QString &var) const;
     void subVarsAndValues(const QString &var, ConfigVarMap &map) const;
     QStringList getAllFiles(const QString &filesVar, const QString &dirsVar,

@@ -38,10 +38,10 @@
 #include "usingclause.h"
 
 #include <QtCore/qdir.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qpair.h>
 #include <QtCore/qstringlist.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -63,8 +63,8 @@ class TypedefNode;
 
 typedef QMap<QString, FunctionNode *> FunctionMap;
 typedef QList<Node *> NodeList;
-typedef QVector<ClassNode *> ClassList;
-typedef QVector<Node *> NodeVector;
+typedef QList<ClassNode *> ClassList;
+typedef QList<Node *> NodeVector;
 typedef QMap<QString, Node *> NodeMap;
 typedef QMap<QString, NodeMap> NodeMapMap;
 typedef QMultiMap<QString, Node *> NodeMultiMap;
@@ -287,7 +287,7 @@ public:
     virtual void markDefault() {}
     virtual void markReadOnly(bool) {}
 
-    bool match(const QVector<int> &types) const;
+    bool match(const QList<int> &types) const;
     Aggregate *parent() const { return m_parent; }
     const QString &name() const { return m_name; }
     QString physicalModuleName() const;

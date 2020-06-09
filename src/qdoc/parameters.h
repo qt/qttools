@@ -29,9 +29,9 @@
 #ifndef PARAMETERS_H
 #define PARAMETERS_H
 
+#include <QtCore/qlist.h>
 #include <QtCore/qregularexpression.h>
 #include <QtCore/qset.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -78,7 +78,7 @@ public:
     QString defaultValue_;
 };
 
-typedef QVector<Parameter> ParameterVector;
+typedef QList<Parameter> ParameterVector;
 
 class Parameters
 {

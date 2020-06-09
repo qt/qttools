@@ -1272,9 +1272,9 @@ void ClangCodeParser::getDefaultArgs()
         m_args.push_back(p.constData());
 }
 
-static QVector<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &allHeaders)
+static QList<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &allHeaders)
 {
-    QVector<QByteArray> result;
+    QList<QByteArray> result;
     for (auto it = allHeaders.cbegin(); it != allHeaders.cend(); ++it) {
         const QByteArray path = "-I" + it.value().toLatin1();
         const QByteArray parent =

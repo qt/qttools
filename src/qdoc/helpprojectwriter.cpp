@@ -615,7 +615,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     const Node *rootNode;
 
     // Restrict searching only to the local (primary) tree
-    QVector<Tree *> searchOrder = qdb_->searchOrder();
+    QList<Tree *> searchOrder = qdb_->searchOrder();
     qdb_->setLocalSearch();
 
     if (!project.indexRoot.isEmpty())

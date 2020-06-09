@@ -47,7 +47,7 @@ public:
     QString topic;
     QString args;
 };
-typedef QVector<Topic> TopicList;
+typedef QList<Topic> TopicList;
 
 QT_END_NAMESPACE
 

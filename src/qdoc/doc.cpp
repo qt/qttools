@@ -240,9 +240,9 @@ ArgList Doc::metaCommandArgs(const QString &metacommand) const
     return priv == nullptr ? ArgList() : priv->metaCommandMap.value(metacommand);
 }
 
-QVector<Text> Doc::alsoList() const
+QList<Text> Doc::alsoList() const
 {
-    return priv == nullptr ? QVector<Text>() : priv->alsoList;
+    return priv == nullptr ? QList<Text>() : priv->alsoList;
 }
 
 bool Doc::hasTableOfContents() const
@@ -260,25 +260,25 @@ bool Doc::hasTargets() const
     return priv && priv->extra && !priv->extra->targets_.isEmpty();
 }
 
-const QVector<Atom *> &Doc::tableOfContents() const
+const QList<Atom *> &Doc::tableOfContents() const
 {
     priv->constructExtra();
     return priv->extra->tableOfContents_;
 }
 
-const QVector<int> &Doc::tableOfContentsLevels() const
+const QList<int> &Doc::tableOfContentsLevels() const
 {
     priv->constructExtra();
     return priv->extra->tableOfContentsLevels_;
 }
 
-const QVector<Atom *> &Doc::keywords() const
+const QList<Atom *> &Doc::keywords() const
 {
     priv->constructExtra();
     return priv->extra->keywords_;
 }
 
-const QVector<Atom *> &Doc::targets() const
+const QList<Atom *> &Doc::targets() const
 {
     priv->constructExtra();
     return priv->extra->targets_;

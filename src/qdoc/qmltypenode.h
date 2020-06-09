@@ -33,15 +33,15 @@
 #include "aggregate.h"
 
 #include <QtCore/qglobal.h>
+#include <QtCore/qlist.h>
 #include <QtCore/qstring.h>
-#include <QtCore/qvector.h>
 
 QT_BEGIN_NAMESPACE
 
 class ClassNode;
 class CollectionNode;
 
-typedef QVector<ImportRec> ImportList;
+typedef QList<ImportRec> ImportList;
 
 class QmlTypeNode : public Aggregate
 {

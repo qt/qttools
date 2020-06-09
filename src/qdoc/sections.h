@@ -39,11 +39,11 @@ class Aggregate;
 
 typedef QMultiMap<QString, Node *> MemberMap; // the string is the member signature
 typedef QPair<const QmlTypeNode *, MemberMap> ClassMap; // the node is the QML type
-typedef QVector<ClassMap *> ClassMapList;
+typedef QList<ClassMap *> ClassMapList;
 
 typedef QPair<QStringList, NodeVector> KeysAndNodes;
 typedef QPair<const QmlTypeNode *, KeysAndNodes> ClassKeysNodes;
-typedef QVector<ClassKeysNodes *> ClassKeysNodesList;
+typedef QList<ClassKeysNodes *> ClassKeysNodesList;
 
 class Section
 {
@@ -105,7 +105,7 @@ public:
     const QStringList &keys(Status t) const { return (t == Obsolete ? obsoleteKeys_ : keys_); }
     const NodeVector &members() const { return members_; }
     const NodeVector &reimplementedMembers() const { return reimplementedMembers_; }
-    const QVector<QPair<Aggregate *, int>> &inheritedMembers() const { return inheritedMembers_; }
+    const QList<QPair<Aggregate *, int>> &inheritedMembers() const { return inheritedMembers_; }
     ClassKeysNodesList &classKeysNodesList() { return classKeysNodesList_; }
     const NodeVector &obsoleteMembers() const { return obsoleteMembers_; }
     void appendMembers(const NodeVector &nv) { members_.append(nv); }
@@ -129,7 +129,7 @@ private:
     NodeVector members_;
     NodeVector obsoleteMembers_;
     NodeVector reimplementedMembers_;
-    QVector<QPair<Aggregate *, int>> inheritedMembers_;
+    QList<QPair<Aggregate *, int>> inheritedMembers_;
     ClassKeysNodesList classKeysNodesList_;
 
     QMultiMap<QString, Node *> memberMap_;
@@ -138,8 +138,8 @@ private:
     ClassMapList classMapList_;
 };
 
-typedef QVector<Section> SectionVector;
-typedef QVector<const Section *> SectionPtrVector;
+typedef QList<Section> SectionVector;
+typedef QList<const Section *> SectionPtrVector;
 
 class Sections
 {

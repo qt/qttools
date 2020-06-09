@@ -80,7 +80,7 @@ protected:
     QDocDatabase *qdb_;
 
 private:
-    static QVector<CodeParser *> parsers;
+    static QList<CodeParser *> parsers;
     static bool showInternal_;
     static bool singleExec_;
 };

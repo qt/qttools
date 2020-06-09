@@ -93,7 +93,7 @@ typedef QMultiMap<QString, TargetRec *> TargetMap;
 typedef QMultiMap<QString, PageNode *> PageNodeMultiMap;
 typedef QMap<QString, QmlTypeNode *> QmlTypeMap;
 typedef QMultiMap<QString, const ExampleNode *> ExampleNodeMap;
-typedef QVector<TargetLoc *> TargetList;
+typedef QList<TargetLoc *> TargetList;
 typedef QMap<QString, TargetList *> TargetListMap;
 
 class Tree

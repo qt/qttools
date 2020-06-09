@@ -642,10 +642,10 @@ QRegularExpression Config::getRegExp(const QString &var) const
   map, converts the string list to a list of regular expressions,
   and returns it.
  */
-QVector<QRegularExpression> Config::getRegExpList(const QString &var) const
+QList<QRegularExpression> Config::getRegExpList(const QString &var) const
 {
     const QStringList strs = getStringList(var);
-    QVector<QRegularExpression> regExps;
+    QList<QRegularExpression> regExps;
     for (const auto &str : strs)
         regExps += QRegularExpression(str);
     return regExps;
@@ -1070,7 +1070,7 @@ void Config::load(Location location, const QString &fileName)
             Location keyLoc = location;
             bool plus = false;
             QStringList rhsValues;
-            QVector<ExpandVar> expandVars;
+            QList<ExpandVar> expandVars;
             QString word;
             bool inQuote = false;
             bool needsExpansion = false;

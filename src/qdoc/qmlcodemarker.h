@@ -71,7 +71,7 @@ public:
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
 #ifndef QT_NO_DECLARATIVE
-    QVector<QQmlJS::SourceLocation> extractPragmas(QString &script);
+    QList<QQmlJS::SourceLocation> extractPragmas(QString &script);
 #endif
 
 private:

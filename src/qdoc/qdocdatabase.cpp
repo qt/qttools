@@ -252,7 +252,7 @@ void QDocForest::setSearchOrder(const QStringList &t)
   ordering required in this temporary search order is that
   the current tree must be searched first.
  */
-const QVector<Tree *> &QDocForest::searchOrder()
+const QList<Tree *> &QDocForest::searchOrder()
 {
     if (searchOrder_.isEmpty())
         return indexSearchOrder();
@@ -274,7 +274,7 @@ const QVector<Tree *> &QDocForest::searchOrder()
   one being read now. That one is prepended to the front of
   the vector.
  */
-const QVector<Tree *> &QDocForest::indexSearchOrder()
+const QList<Tree *> &QDocForest::indexSearchOrder()
 {
     if (forest_.size() > indexSearchOrder_.size())
         indexSearchOrder_.prepend(primaryTree_);
@@ -365,7 +365,7 @@ void QDocForest::printLinkCounts(const QString &project)
   Print the list of module names ordered according
   to how many successful searches each tree had.
  */
-QString QDocForest::getLinkCounts(QStringList &strings, QVector<int> &counts)
+QString QDocForest::getLinkCounts(QStringList &strings, QList<int> &counts)
 {
     QMultiMap<int, QString> m;
     for (const auto *tree : searchOrder()) {
@@ -1599,7 +1599,7 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
 void QDocDatabase::updateNavigation()
 {
     // Restrict searching only to the local (primary) tree
-    QVector<Tree *> searchOrder = this->searchOrder();
+    QList<Tree *> searchOrder = this->searchOrder();
     setLocalSearch();
 
     const auto tocTitles =

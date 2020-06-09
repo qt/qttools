@@ -98,7 +98,7 @@ private:
     void generateBrief(const Node *node, CodeMarker *marker, const Node *relative = nullptr,
                        bool addLink = true);
     void generateTableOfContents(const Node *node, CodeMarker *marker,
-                                 QVector<Section> *sections = nullptr);
+                                 QList<Section> *sections = nullptr);
     void generateSidebar();
     QString generateAllMembersFile(const Section &section, CodeMarker *marker);
     QString generateAllQmlMembersFile(const Sections &sections, CodeMarker *marker);
@@ -185,7 +185,7 @@ private:
     QString m_manifestDir {};
     QString m_examplesPath {};
     static int id;
-    QVector<ManifestMetaFilter> m_manifestMetaContent {};
+    QList<ManifestMetaFilter> m_manifestMetaContent {};
     QString m_homepage {};
     QString m_hometitle {};
     QString m_landingpage {};

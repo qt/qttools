@@ -72,8 +72,8 @@ private:
     NamespaceNode *primaryTreeRoot() { return (primaryTree_ ? primaryTree_->root() : nullptr); }
     bool isEmpty() { return searchOrder().isEmpty(); }
     bool done() { return (currentIndex_ >= searchOrder().size()); }
-    const QVector<Tree *> &searchOrder();
-    const QVector<Tree *> &indexSearchOrder();
+    const QList<Tree *> &searchOrder();
+    const QList<Tree *> &indexSearchOrder();
     void setSearchOrder(const QStringList &t);
     bool isLoaded(const QString &fn)
     {
@@ -191,7 +191,7 @@ private:
             tree->clearLinkCount();
     }
     void printLinkCounts(const QString &project);
-    QString getLinkCounts(QStringList &strings, QVector<int> &counts);
+    QString getLinkCounts(QStringList &strings, QList<int> &counts);
     void newPrimaryTree(const QString &module);
     void setPrimaryTree(const QString &t);
     NamespaceNode *newIndexTree(const QString &module);
@@ -201,9 +201,9 @@ private:
     Tree *primaryTree_;
     int currentIndex_;
     QMap<QString, Tree *> forest_;
-    QVector<Tree *> searchOrder_;
-    QVector<Tree *> indexSearchOrder_;
-    QVector<QString> moduleNames_;
+    QList<Tree *> searchOrder_;
+    QList<Tree *> indexSearchOrder_;
+    QList<QString> moduleNames_;
 };
 
 class QDocDatabase
@@ -383,9 +383,9 @@ public:
     void newPrimaryTree(const QString &module) { forest_.newPrimaryTree(module); }
     void setPrimaryTree(const QString &t) { forest_.setPrimaryTree(t); }
     NamespaceNode *newIndexTree(const QString &module) { return forest_.newIndexTree(module); }
-    const QVector<Tree *> &searchOrder() { return forest_.searchOrder(); }
-    void setLocalSearch() { forest_.searchOrder_ = QVector<Tree *>(1, primaryTree()); }
-    void setSearchOrder(const QVector<Tree *> &searchOrder) { forest_.searchOrder_ = searchOrder; }
+    const QList<Tree *> &searchOrder() { return forest_.searchOrder(); }
+    void setLocalSearch() { forest_.searchOrder_ = QList<Tree *>(1, primaryTree()); }
+    void setSearchOrder(const QList<Tree *> &searchOrder) { forest_.searchOrder_ = searchOrder; }
     void setSearchOrder(QStringList &t) { forest_.setSearchOrder(t); }
     void mergeCollections(Node::NodeType type, CNMap &cnm, const Node *relative);
     void mergeCollections(CollectionNode *c);
@@ -393,7 +393,7 @@ public:
     void incrementLinkCount(const Node *t) { t->tree()->incrementLinkCount(); }
     void clearLinkCounts() { forest_.clearLinkCounts(); }
     void printLinkCounts(const QString &t) { forest_.printLinkCounts(t); }
-    QString getLinkCounts(QStringList &strings, QVector<int> &counts)
+    QString getLinkCounts(QStringList &strings, QList<int> &counts)
     {
         return forest_.getLinkCounts(strings, counts);
     }

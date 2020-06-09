@@ -224,7 +224,7 @@ void Tree::resolveBaseClasses(Aggregate *n)
     for (auto it = n->constBegin(); it != n->constEnd(); ++it) {
         if ((*it)->isClassNode()) {
             ClassNode *cn = static_cast<ClassNode *>(*it);
-            QVector<RelatedClass> &bases = cn->baseClasses();
+            QList<RelatedClass> &bases = cn->baseClasses();
             for (auto &base : bases) {
                 if (base.m_node == nullptr) {
                     Node *n = qdb_->findClassNode(base.m_path);
@@ -352,7 +352,7 @@ void Tree::resolveUsingClauses(Aggregate *parent)
     for (auto *child : parent->childNodes()) {
         if (child->isClassNode()) {
             ClassNode *cn = static_cast<ClassNode *>(child);
-            QVector<UsingClause> &usingClauses = cn->usingClauses();
+            QList<UsingClause> &usingClauses = cn->usingClauses();
             for (auto &usingClause : usingClauses) {
                 if (usingClause.node() == nullptr) {
                     const Node *n = qdb_->findFunctionNode(usingClause.signature(), cn, Node::CPP);
@@ -772,7 +772,7 @@ void Tree::resolveTargets(Aggregate *root)
         }
 
         if (child->doc().hasTableOfContents()) {
-            const QVector<Atom *> &toc = child->doc().tableOfContents();
+            const QList<Atom *> &toc = child->doc().tableOfContents();
             for (int i = 0; i < toc.size(); ++i) {
                 QString ref = refForAtom(toc.at(i));
                 QString title = Text::sectionHeading(toc.at(i)).toString();
@@ -785,7 +785,7 @@ void Tree::resolveTargets(Aggregate *root)
             }
         }
         if (child->doc().hasKeywords()) {
-            const QVector<Atom *> &keywords = child->doc().keywords();
+            const QList<Atom *> &keywords = child->doc().keywords();
             for (int i = 0; i < keywords.size(); ++i) {
                 QString ref = refForAtom(keywords.at(i));
                 QString title = keywords.at(i)->string();
@@ -797,7 +797,7 @@ void Tree::resolveTargets(Aggregate *root)
             }
         }
         if (child->doc().hasTargets()) {
-            const QVector<Atom *> &targets = child->doc().targets();
+            const QList<Atom *> &targets = child->doc().targets();
             for (int i = 0; i < targets.size(); ++i) {
                 QString ref = refForAtom(targets.at(i));
                 QString title = targets.at(i)->string();
@@ -823,7 +823,7 @@ const Node *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus
 {
     int numBestTargets = 0;
     TargetRec *bestTarget = nullptr;
-    QVector<TargetRec *> bestTargetList;
+    QList<TargetRec *> bestTargetList;
 
     QString key = target;
     for (auto it = nodesByTargetTitle_.find(key); it != nodesByTargetTitle_.constEnd(); ++it) {

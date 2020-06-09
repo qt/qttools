@@ -100,7 +100,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 
     PropertyNode *pn = nullptr;
 
-    const QVector<RelatedClass> &bases = baseClasses();
+    const QList<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {
             ClassNode *cn = bases[i].m_node;
@@ -111,7 +111,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
             }
         }
     }
-    const QVector<RelatedClass> &ignoredBases = ignoredBaseClasses();
+    const QList<RelatedClass> &ignoredBases = ignoredBaseClasses();
     if (!ignoredBases.isEmpty()) {
         for (int i = 0; i < ignoredBases.size(); ++i) {
             ClassNode *cn = ignoredBases[i].m_node;
@@ -135,7 +135,7 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 QmlTypeNode *ClassNode::findQmlBaseNode()
 {
     QmlTypeNode *result = nullptr;
-    const QVector<RelatedClass> &bases = baseClasses();
+    const QList<RelatedClass> &bases = baseClasses();
 
     if (!bases.isEmpty()) {
         for (int i = 0; i < bases.size(); ++i) {
@@ -247,7 +247,7 @@ bool ClassNode::docMustBeGenerated() const
   is called recursively with the list of base classes from
   that private or internal class node.
  */
-void ClassNode::promotePublicBases(const QVector<RelatedClass> &bases)
+void ClassNode::promotePublicBases(const QList<RelatedClass> &bases)
 {
     if (!bases.isEmpty()) {
         for (int i = bases.size() - 1; i >= 0; --i) {
@@ -298,7 +298,7 @@ void ClassNode::removePrivateAndInternalBases()
         ClassNode *dc = m_derived.at(i).m_node;
         if (dc != nullptr && (dc->isPrivate() || dc->isInternal() || dc->isDontDocument())) {
             m_derived.removeAt(i);
-            const QVector<RelatedClass> &dd = dc->derivedClasses();
+            const QList<RelatedClass> &dd = dc->derivedClasses();
             for (int j = dd.size() - 1; j >= 0; --j)
                 m_derived.insert(i, dd.at(j));
         } else {
