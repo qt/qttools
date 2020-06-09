@@ -29,17 +29,17 @@
 #include "utils.h"
 #include "qmlutils.h"
 
+#include <QtCore/QCommandLineOption>
+#include <QtCore/QCommandLineParser>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QJsonArray>
-#include <QtCore/QCommandLineParser>
-#include <QtCore/QCommandLineOption>
+#include <QtCore/QList>
 #include <QtCore/QOperatingSystemVersion>
 #include <QtCore/QSharedPointer>
-#include <QtCore/QVector>
 
 #ifdef Q_OS_WIN
 #include <QtCore/qt_windows.h>
@@ -314,7 +314,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                  Options *options, QString *errorMessage)
 {
     using CommandLineOptionPtr = QSharedPointer<QCommandLineOption>;
-    using OptionPtrVector = QVector<CommandLineOptionPtr>;
+    using OptionPtrVector = QList<CommandLineOptionPtr>;
 
     parser->setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser->setApplicationDescription(QStringLiteral("Qt Deploy Tool ") + QLatin1String(QT_VERSION_STR)

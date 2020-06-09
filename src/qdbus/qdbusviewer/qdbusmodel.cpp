@@ -28,12 +28,14 @@
 
 #include "qdbusmodel.h"
 
-#include <QtCore/qvector.h>
 #include <QtCore/QDebug>
-#include <QtXml/QDomDocument>
+#include <QtCore/QList>
+
 #include <QtDBus/QDBusObjectPath>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
+
+#include <QtXml/QDomDocument>
 
 struct QDBusItem
 {
@@ -62,7 +64,7 @@ struct QDBusItem
 
     QDBusModel::Type type;
     QDBusItem *parent;
-    QVector<QDBusItem *> children;
+    QList<QDBusItem *> children;
     bool isPrefetched;
     QString name;
     QString caption;

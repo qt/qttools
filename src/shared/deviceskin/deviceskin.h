@@ -41,10 +41,12 @@
 #define SKIN_H
 
 #include <QtWidgets/QWidget>
+
+#include <QtGui/QPixmap>
 #include <QtGui/QPolygon>
 #include <QtGui/QRegion>
-#include <QtGui/QPixmap>
-#include <QtCore/QVector>
+
+#include <QtCore/QList>
 
 QT_BEGIN_NAMESPACE
 
@@ -90,7 +92,7 @@ struct DeviceSkinParameters {
     QRect closedScreenRect;
     int screenDepth;
     QPoint cursorHot;
-    QVector<DeviceSkinButtonArea> buttonAreas;
+    QList<DeviceSkinButtonArea> buttonAreas;
     QList<int> toggleAreaList;
 
     int joystick;
@@ -143,7 +145,7 @@ private:
     void endPress();
 
     const DeviceSkinParameters m_parameters;
-    QVector<QRegion> buttonRegions;
+    QList<QRegion> buttonRegions;
     QPixmap skinImageUp;
     QPixmap skinImageDown;
     QPixmap skinImageClosed;

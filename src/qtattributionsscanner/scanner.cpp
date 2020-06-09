@@ -224,9 +224,9 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
     return p;
 }
 
-QVector<Package> readFile(const QString &filePath, LogLevel logLevel)
+QList<Package> readFile(const QString &filePath, LogLevel logLevel)
 {
-    QVector<Package> packages;
+    QList<Package> packages;
 
     if (logLevel == VerboseLog) {
         std::cerr << qPrintable(tr("Reading file %1...").arg(
@@ -237,7 +237,7 @@ QVector<Package> readFile(const QString &filePath, LogLevel logLevel)
         if (logLevel != SilentLog)
             std::cerr << qPrintable(tr("Could not open file %1.").arg(
                                         QDir::toNativeSeparators(file.fileName()))) << std::endl;
-        return QVector<Package>();
+        return QList<Package>();
     }
 
     if (filePath.endsWith(QLatin1String(".json"))) {
@@ -249,7 +249,7 @@ QVector<Package> readFile(const QString &filePath, LogLevel logLevel)
                                             QDir::toNativeSeparators(file.fileName()),
                                             jsonParseError.errorString()))
                           << std::endl;
-            return QVector<Package>();
+            return QList<Package>();
         }
 
         if (document.isObject()) {
@@ -286,10 +286,10 @@ QVector<Package> readFile(const QString &filePath, LogLevel logLevel)
     return packages;
 }
 
-QVector<Package> scanDirectory(const QString &directory, InputFormats inputFormats, LogLevel logLevel)
+QList<Package> scanDirectory(const QString &directory, InputFormats inputFormats, LogLevel logLevel)
 {
     QDir dir(directory);
-    QVector<Package> packages;
+    QList<Package> packages;
 
     QStringList nameFilters = QStringList();
     if (inputFormats & InputFormat::QtAttributions)

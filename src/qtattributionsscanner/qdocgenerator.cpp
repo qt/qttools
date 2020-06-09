@@ -154,7 +154,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
     out << "*/\n";
 }
 
-void generate(QTextStream &out, const QVector<Package> &packages, const QString &baseDirectory,
+void generate(QTextStream &out, const QList<Package> &packages, const QString &baseDirectory,
               LogLevel logLevel)
 {
     if (logLevel == VerboseLog)

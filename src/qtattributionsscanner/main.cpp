@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
     }
 
     // Parse the attribution files
-    QVector<Package> packages;
+    QList<Package> packages;
     const QFileInfo pathInfo(path);
     if (pathInfo.isDir()) {
         if (logLevel == VerboseLog)

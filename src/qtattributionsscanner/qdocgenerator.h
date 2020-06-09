@@ -33,11 +33,11 @@
 #include "package.h"
 
 #include <QtCore/qtextstream.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
 
 namespace QDocGenerator {
 
-void generate(QTextStream &out, const QVector<Package> &packages, const QString &baseDirectory,
+void generate(QTextStream &out, const QList<Package> &packages, const QString &baseDirectory,
               LogLevel logLevel);
 
 } // namespace QDocGenerator

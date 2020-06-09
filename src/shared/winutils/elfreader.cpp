@@ -399,7 +399,7 @@ QList<QByteArray> ElfReader::dependencies()
     quint64 dynamicOffset = 0;
     quint64 dynamicSize = 0;
 
-    const QVector<ElfSectionHeader> &headers = readHeaders().sectionHeaders;
+    const QList<ElfSectionHeader> &headers = readHeaders().sectionHeaders;
     for (const ElfSectionHeader &eh : headers) {
         if (eh.name  == QByteArrayLiteral(".dynstr")) {
             dynStrOffset = eh.offset;

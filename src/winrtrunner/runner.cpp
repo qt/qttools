@@ -73,7 +73,7 @@ public:
         // final output location. Might be equal to localOutputFile or stdout (-)
         QString finalOutputFile;
     };
-    QVector<TestPaths> testPaths;
+    QList<TestPaths> testPaths;
 
     QString profile;
     QScopedPointer<RunnerEngine> engine;

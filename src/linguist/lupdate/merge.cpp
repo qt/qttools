@@ -33,9 +33,9 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include <QtCore/QList>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
-#include <QtCore/QVector>
 
 QT_BEGIN_NAMESPACE
 
@@ -93,8 +93,8 @@ static QString translationAttempt(const QString &oldTranslation,
     QString attempt;
     QStringList oldNumbers;
     QStringList newNumbers;
-    QVector<bool> met(p);
-    QVector<int> matchedYet(p);
+    QList<bool> met(p);
+    QList<int> matchedYet(p);
     int i, j;
     int k = 0, ell, best;
     int m, n;
@@ -209,7 +209,7 @@ static QString translationAttempt(const QString &oldTranslation,
 int applyNumberHeuristic(Translator &tor)
 {
     QMap<QString, QPair<QString, QString> > translated;
-    QVector<bool> untranslated(tor.messageCount());
+    QList<bool> untranslated(tor.messageCount());
     int inserted = 0;
 
     for (int i = 0; i < tor.messageCount(); ++i) {
@@ -258,7 +258,7 @@ int applySameTextHeuristic(Translator &tor)
 {
     QMap<QString, QStringList> translated;
     QMap<QString, bool> avoid; // Want a QTreeSet, in fact
-    QVector<bool> untranslated(tor.messageCount());
+    QList<bool> untranslated(tor.messageCount());
     int inserted = 0;
 
     for (int i = 0; i < tor.messageCount(); ++i) {

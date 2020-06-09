@@ -33,11 +33,11 @@
 #include "package.h"
 
 #include <QtCore/qtextstream.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
 
 namespace JsonGenerator {
 
-void generate(QTextStream &out, const QVector<Package> &packages, LogLevel logLevel);
+void generate(QTextStream &out, const QList<Package> &packages, LogLevel logLevel);
 
 } // namespace JsonGenerator
 

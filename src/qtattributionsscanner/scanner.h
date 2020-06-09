@@ -33,7 +33,7 @@
 #include "package.h"
 
 #include <QtCore/qstring.h>
-#include <QtCore/qvector.h>
+#include <QtCore/qlist.h>
 
 namespace Scanner {
 
@@ -44,8 +44,8 @@ enum class InputFormat {
 Q_DECLARE_FLAGS(InputFormats, InputFormat)
 Q_DECLARE_OPERATORS_FOR_FLAGS(InputFormats)
 
-QVector<Package> readFile(const QString &filePath, LogLevel logLevel);
-QVector<Package> scanDirectory(const QString &directory, InputFormats inputFormats, LogLevel logLevel);
+QList<Package> readFile(const QString &filePath, LogLevel logLevel);
+QList<Package> scanDirectory(const QString &directory, InputFormats inputFormats, LogLevel logLevel);
 
 }
 

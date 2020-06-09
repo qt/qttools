@@ -63,7 +63,7 @@ static QJsonObject generate(Package package)
     return obj;
 }
 
-void generate(QTextStream &out, const QVector<Package> &packages, LogLevel logLevel)
+void generate(QTextStream &out, const QList<Package> &packages, LogLevel logLevel)
 {
     if (logLevel == VerboseLog)
         std::cerr << qPrintable(tr("Generating json...\n"));

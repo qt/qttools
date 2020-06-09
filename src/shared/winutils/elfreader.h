@@ -29,9 +29,9 @@
 #ifndef ELFREADER_H
 #define ELFREADER_H
 
-#include <QtCore/QtEndian>
+#include <QtCore/QList>
 #include <QtCore/QString>
-#include <QtCore/QVector>
+#include <QtCore/QtEndian>
 
 QT_BEGIN_NAMESPACE
 
@@ -146,8 +146,8 @@ public:
     QByteArray debugLink;
     QByteArray buildId;
     DebugSymbolsType symbolsType;
-    QVector<ElfSectionHeader> sectionHeaders;
-    QVector<ElfProgramHeader> programHeaders;
+    QList<ElfSectionHeader> sectionHeaders;
+    QList<ElfProgramHeader> programHeaders;
 };
 
 class ElfReader

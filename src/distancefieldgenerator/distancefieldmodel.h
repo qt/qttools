@@ -224,8 +224,8 @@ private:
     DistanceFieldModelWorker *m_worker;
     QScopedPointer<QThread> m_workerThread;
     quint16 m_glyphCount;
-    QVector<QImage> m_distanceFields;
-    QVector<QPainterPath> m_paths;
+    QList<QImage> m_distanceFields;
+    QList<QPainterPath> m_paths;
     QMultiHash<UnicodeRange, glyph_t> m_glyphsPerUnicodeRange;
     QHash<quint32, glyph_t> m_glyphsPerUcs4;
     bool m_doubleGlyphResolution;
