@@ -29,7 +29,6 @@
 #include "qpixeltool.h"
 
 #include <qapplication.h>
-#include <qdesktopwidget.h>
 #include <qdir.h>
 #include <qapplication.h>
 #include <qscreen.h>
@@ -534,9 +533,8 @@ void QPixelTool::grabScreen()
     int y = mousePos.y() - h/2;
 
     const QBrush darkBrush = palette().color(QPalette::Dark);
-    const QDesktopWidget *desktopWidget = QApplication::desktop();
     if (QScreen *screen = this->screen()) {
-        m_buffer = screen->grabWindow(desktopWidget->winId(), x, y, w, h);
+        m_buffer = screen->grabWindow(0, x, y, w, h);
     } else {
         m_buffer = QPixmap(w, h);
         m_buffer.fill(darkBrush.color());
