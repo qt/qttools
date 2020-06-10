@@ -145,8 +145,7 @@ SOURCES += aggregate.cpp \
            utilities.cpp \
            variablenode.cpp \
            webxmlgenerator.cpp \
-           xmlgenerator.cpp \
-           yyindent.cpp
+           xmlgenerator.cpp
 
 ### QML/JS Parser ###
 
