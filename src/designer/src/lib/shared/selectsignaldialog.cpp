@@ -38,7 +38,6 @@
 #include "widgetdatabase_p.h"
 
 #include <QtWidgets/qapplication.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qpushbutton.h>
 
 #include <QtGui/qscreen.h>

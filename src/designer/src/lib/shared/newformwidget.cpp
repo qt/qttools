@@ -49,7 +49,6 @@
 #include <QtCore/qtextstream.h>
 
 #include <QtWidgets/qapplication.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qtreewidget.h>
 #include <QtGui/qpainter.h>

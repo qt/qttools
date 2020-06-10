@@ -67,7 +67,6 @@
 #include <QtWidgets/qmdisubwindow.h>
 #include <QtWidgets/qpushbutton.h>
 #include <QtWidgets/qstatusbar.h>
-#include <QtWidgets/qdesktopwidget.h>
 
 #include <QtGui/qaction.h>
 #include <QtGui/qactiongroup.h>

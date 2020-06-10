@@ -54,7 +54,6 @@
 #include <QBitmap>
 #include <QCloseEvent>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QDockWidget>
 #include <QFile>
 #include <QFileDialog>
@@ -73,6 +72,7 @@
 #include <QPrinter>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QScreen>
 #include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStackedWidget>
@@ -486,7 +486,7 @@ MainWindow::MainWindow()
     connect(m_translateDialog, SIGNAL(requestMatchUpdate(bool&)), SLOT(updateTranslateHit(bool&)));
     connect(m_translateDialog, SIGNAL(activated(int)), SLOT(translate(int)));
 
-    QSize as(qApp->desktop()->size());
+    QSize as(screen()->size());
     as -= QSize(30, 30);
     resize(QSize(1000, 800).boundedTo(as));
     show();

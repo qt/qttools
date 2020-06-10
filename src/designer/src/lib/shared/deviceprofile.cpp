@@ -34,10 +34,11 @@
 
 #include <QtWidgets/qapplication.h>
 #include <QtGui/qfont.h>
-#include <QtWidgets/qdesktopwidget.h>
 #include <QtWidgets/qstyle.h>
 #include <QtWidgets/qstylefactory.h>
 #include <QtWidgets/qapplication.h>
+
+#include <QtGui/qscreen.h>
 
 #include <QtCore/qshareddata.h>
 #include <QtCore/qtextstream.h>
@@ -202,9 +203,9 @@ void DeviceProfile::setName(const QString &n)
 
 void DeviceProfile::systemResolution(int *dpiX, int *dpiY)
 {
-    const QDesktopWidget *dw = qApp->desktop();
-    *dpiX = dw->logicalDpiX();
-    *dpiY = dw->logicalDpiY();
+    auto s = qApp->primaryScreen();
+    *dpiX = s->logicalDotsPerInchX();
+    *dpiY = s->logicalDotsPerInchY();
 }
 
 class FriendlyWidget : public QWidget {
