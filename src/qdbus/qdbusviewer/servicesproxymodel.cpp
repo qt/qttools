@@ -52,8 +52,8 @@ bool ServicesProxyModel::lessThan(const QModelIndex &left,
     const bool isNumber2 = s2.startsWith(QLatin1String(":1."));
     if (isNumber1 == isNumber2) {
         if (isNumber1) {
-            int number1 = s1.midRef(3).toInt();
-            int number2 = s2.midRef(3).toInt();
+            int number1 = QStringView{s1}.mid(3).toInt();
+            int number2 = QStringView{s2}.mid(3).toInt();
             return number1 < number2;
         } else {
             return s1.compare(s2, Qt::CaseInsensitive) < 0;

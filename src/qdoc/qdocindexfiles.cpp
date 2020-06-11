@@ -193,7 +193,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
                                       const QString &indexUrl)
 {
     QXmlStreamAttributes attributes = reader.attributes();
-    QStringRef elementName = reader.name();
+    QStringView elementName = reader.name();
 
     QString name = attributes.value(QLatin1String("name")).toString();
     QString href = attributes.value(QLatin1String("href")).toString();

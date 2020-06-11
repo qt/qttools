@@ -173,7 +173,7 @@ const QSet<QString> &CodeParser::commonMetaCommands()
 /*!
   \internal
  */
-void CodeParser::extractPageLinkAndDesc(const QString &arg, QString *link, QString *desc)
+void CodeParser::extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc)
 {
     QRegularExpression bracedRegExp(QRegularExpression::anchoredPattern(QLatin1String("\\{([^{}]*)\\}(?:\\{([^{}]*)\\})?")));
     auto match = bracedRegExp.match(arg);
@@ -185,11 +185,11 @@ void CodeParser::extractPageLinkAndDesc(const QString &arg, QString *link, QStri
     } else {
         int spaceAt = arg.indexOf(QLatin1Char(' '));
         if (arg.contains(QLatin1String(".html")) && spaceAt != -1) {
-            *link = arg.leftRef(spaceAt).trimmed().toString();
-            *desc = arg.midRef(spaceAt).trimmed().toString();
+            *link = arg.left(spaceAt).trimmed().toString();
+            *desc = arg.mid(spaceAt).trimmed().toString();
         } else {
-            *link = arg;
-            *desc = arg;
+            *link = arg.toString();
+            *desc = *link;
         }
     }
 }

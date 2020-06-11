@@ -582,7 +582,7 @@ template<typename T>
 QString qualifiedIdToString(T node);
 
 template<>
-QString qualifiedIdToString(QStringRef node)
+QString qualifiedIdToString(QStringView node)
 {
     return node.toString();
 }

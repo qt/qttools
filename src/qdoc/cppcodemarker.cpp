@@ -462,7 +462,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
 
     QString code = in;
     QString out;
-    QStringRef text;
+    QStringView text;
     int braceDepth = 0;
     int parenDepth = 0;
     int i = 0;
@@ -636,7 +636,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
             }
         }
 
-        text = code.midRef(start, finish - start);
+        text = QStringView{code}.mid(start, finish - start);
         start = finish;
 
         if (!tag.isEmpty()) {
@@ -660,7 +660,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
     }
 
     if (start < code.length()) {
-        appendProtectedString(&out, code.midRef(start));
+        appendProtectedString(&out, QStringView{code}.mid(start));
     }
 
     return out;

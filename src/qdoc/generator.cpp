@@ -1959,7 +1959,7 @@ QString Generator::outputSuffix(const Node *node)
 }
 
 bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n,
-                         QStringRef *contents, QStringRef *par1, bool debug)
+                         QStringView *contents, QStringView *par1, bool debug)
 {
 #define SKIP_CHAR(c)                                                                               \
     if (debug)                                                                                     \
@@ -1982,7 +1982,7 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
     // SKIP_CHAR('<');
     // SKIP_CHAR('@');
 
-    if (tag != QStringRef(&src, i, tag.length())) {
+    if (tag != QStringView(src).mid(i, tag.length())) {
         return false;
     }
 
@@ -2008,7 +2008,7 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
             j = i;
             while (i < n && src[i] != '"')
                 ++i;
-            *par1 = QStringRef(&src, j, i - j);
+            *par1 = QStringView(src).mid(j, i - j);
             SKIP_CHAR('"');
             SKIP_SPACE;
         } else {
@@ -2030,14 +2030,14 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
             continue;
         if (src[i + 2] != '@')
             continue;
-        if (tag != QStringRef(&src, i + 3, tag.length()))
+        if (tag != QStringView(src).mid(i + 3, tag.length()))
             continue;
         if (src[i + 3 + tag.length()] != '>')
             continue;
         break;
     }
 
-    *contents = QStringRef(&src, j, i - j);
+    *contents = QStringView(src).mid(j, i - j);
 
     i += tag.length() + 4;
 

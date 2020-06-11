@@ -83,7 +83,7 @@ public:
 
 protected:
     static QString protect(const QString &string);
-    static void appendProtectedString(QString *output, const QStringRef &str);
+    static void appendProtectedString(QString *output, QStringView str);
     QString taggedNode(const Node *node);
     QString taggedQmlNode(const Node *node);
     QString linkTag(const Node *node, const QString &body);

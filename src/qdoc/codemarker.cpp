@@ -248,7 +248,7 @@ QString CodeMarker::protect(const QString &str)
     return marked;
 }
 
-void CodeMarker::appendProtectedString(QString *output, const QStringRef &str)
+void CodeMarker::appendProtectedString(QString *output, QStringView str)
 {
     int n = str.length();
     output->reserve(output->size() + n * 2 + 30);

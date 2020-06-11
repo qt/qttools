@@ -544,15 +544,15 @@ private:
     {
         auto parent = parent_->parent();
         if (parent && parent->isClassNode()) {
-            QStringRef typeNameConstRemoved(&typeName);
+            QStringView typeNameConstRemoved(typeName);
             if (typeNameConstRemoved.startsWith(QLatin1String("const ")))
-                typeNameConstRemoved = typeName.midRef(6);
+                typeNameConstRemoved = typeNameConstRemoved.mid(6);
 
             auto parentName = parent->fullName();
             if (typeNameConstRemoved.startsWith(parentName)
                 && typeNameConstRemoved.mid(parentName.size(), 2) == QLatin1String("::")) {
                 QString result = typeName;
-                result.remove(typeNameConstRemoved.position(), parentName.size() + 2);
+                result.remove(typeName.indexOf(typeNameConstRemoved), parentName.size() + 2);
                 return result;
             }
         }
@@ -977,7 +977,7 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
                 if (clang_isExpression(clang_getCursorKind(cur))) {
                     QString defaultValue = getSpelling(clang_getCursorExtent(cur));
                     if (defaultValue.startsWith('=')) // In some cases, the = is part of the range.
-                        defaultValue = defaultValue.midRef(1).trimmed().toString();
+                        defaultValue = QStringView{defaultValue}.mid(1).trimmed().toString();
                     if (defaultValue.isEmpty())
                         defaultValue = QStringLiteral("...");
                     parameters[i].setDefaultValue(defaultValue);

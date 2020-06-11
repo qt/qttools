@@ -67,7 +67,7 @@ QString HtmlGenerator::divNavTop;
 
 static bool showBrokenLinks = false;
 
-static void addLink(const QString &linkTarget, const QStringRef &nestedStuff, QString *res)
+static void addLink(const QString &linkTarget, QStringView nestedStuff, QString *res)
 {
     if (!linkTarget.isEmpty()) {
         *res += QLatin1String("<a href=\"");
@@ -3104,8 +3104,8 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
     QString src = markedCode;
     QString html;
     html.reserve(src.size());
-    QStringRef arg;
-    QStringRef par1;
+    QStringView arg;
+    QStringView par1;
 
     const QChar charLangle = '<';
     const QChar charAt = '@';
@@ -3136,9 +3136,9 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                 const FunctionNode *fn = m_qdb->findFunctionNode(par1.toString(), relative, genus);
                 QString link = linkForNode(fn, relative);
                 addLink(link, arg, &html);
-                par1 = QStringRef();
+                par1 = QStringView();
             } else if (parseArg(src, typeTag, &i, srcSize, &arg, &par1)) {
-                par1 = QStringRef();
+                par1 = QStringView();
                 const Node *n = m_qdb->findTypeNode(arg.toString(), relative, genus);
                 html += QLatin1String("<span class=\"type\">");
                 if (n && (n->isQmlBasicType() || n->isJsBasicType())) {
@@ -3150,7 +3150,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                     addLink(linkForNode(n, relative), arg, &html);
                 html += QLatin1String("</span>");
             } else if (parseArg(src, headerTag, &i, srcSize, &arg, &par1)) {
-                par1 = QStringRef();
+                par1 = QStringView();
                 if (arg.startsWith(QLatin1Char('&')))
                     html += arg;
                 else {
@@ -3204,7 +3204,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                 bool handled = false;
                 for (int k = 0; k != nTags; ++k) {
                     const QLatin1String &tag = spanTags[2 * k];
-                    if (i + tag.size() <= src.length() && tag == QStringRef(&src, i, tag.size())) {
+                    if (i + tag.size() <= src.length() && tag == QStringView(src).mid(i, tag.size())) {
                         html += spanTags[2 * k + 1];
                         i += tag.size();
                         handled = true;
@@ -3223,7 +3223,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                 bool handled = false;
                 for (int k = 0; k != nTags; ++k) {
                     const QLatin1String &tag = spanTags[2 * k];
-                    if (i + tag.size() <= src.length() && tag == QStringRef(&src, i, tag.size())) {
+                    if (i + tag.size() <= src.length() && tag == QStringView(src).mid(i, tag.size())) {
                         html += QLatin1String("</span>");
                         i += tag.size();
                         handled = true;

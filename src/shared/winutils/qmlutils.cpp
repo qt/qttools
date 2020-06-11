@@ -51,7 +51,7 @@ QString QmlImportScanResult::Module::installPath(const QString &root) const
     const int lastSlashPos = relativePath.lastIndexOf(QLatin1Char('/'));
     if (lastSlashPos != -1) {
         result += QLatin1Char('/');
-        result += relativePath.leftRef(lastSlashPos);
+        result += QStringView{relativePath}.left(lastSlashPos);
     }
     return result;
 }

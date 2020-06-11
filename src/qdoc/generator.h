@@ -151,8 +151,8 @@ protected:
     QString indent(int level, const QString &markedCode);
     QTextStream &out();
     QString outFileName();
-    bool parseArg(const QString &src, const QString &tag, int *pos, int n, QStringRef *contents,
-                  QStringRef *par1 = nullptr, bool debug = false);
+    bool parseArg(const QString &src, const QString &tag, int *pos, int n, QStringView *contents,
+                  QStringView *par1 = nullptr, bool debug = false);
     void setImageFileExtensions(const QStringList &extensions);
     void unknownAtom(const Atom *atom);
     int appendSortedQmlNames(Text &text, const Node *base, const NodeList &subs);

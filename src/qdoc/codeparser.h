@@ -73,7 +73,7 @@ public:
 
 protected:
     const QSet<QString> &commonMetaCommands();
-    static void extractPageLinkAndDesc(const QString &arg, QString *link, QString *desc);
+    static void extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc);
     static bool showInternal() { return showInternal_; }
     QString moduleHeader_;
     QString currentFile_;

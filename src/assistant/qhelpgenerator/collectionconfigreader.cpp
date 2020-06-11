@@ -126,7 +126,7 @@ void CollectionConfigReader::readAssistantSettings()
                 readMenuTexts();
             } else if (name() == QLatin1String("aboutDialog")) {
                 readAboutDialog();
-            } else if (name() == "cacheDirectory") {
+            } else if (name() == u"cacheDirectory") {
                 m_cacheDirRelativeToCollection =
                     attributes().value(QLatin1String("base"))
                     == QLatin1String("collection");

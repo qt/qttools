@@ -370,11 +370,11 @@ public:
     ~XLIFFHandler() override = default;
 
 private:
-    bool startElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                      const QStringRef &qName, const QXmlStreamAttributes &atts) override;
-    bool endElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                    const QStringRef &qName) override;
-    bool characters(const QStringRef &ch) override;
+    bool startElement(QStringView namespaceURI, QStringView localName,
+                      QStringView qName, const QXmlStreamAttributes &atts) override;
+    bool endElement(QStringView namespaceURI, QStringView localName,
+                    QStringView qName) override;
+    bool characters(QStringView ch) override;
     bool fatalError(qint64 line, qint64 column, const QString &message) override;
 
     bool endDocument() override;
@@ -482,8 +482,8 @@ bool XLIFFHandler::hasContext(XliffContext ctx) const
     return false;
 }
 
-bool XLIFFHandler::startElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                                const QStringRef &qName, const QXmlStreamAttributes &atts)
+bool XLIFFHandler::startElement(QStringView namespaceURI, QStringView localName,
+                                QStringView qName, const QXmlStreamAttributes &atts)
 {
     Q_UNUSED(qName);
     if (namespaceURI == m_URITT)
@@ -572,8 +572,8 @@ bail:
     return true;
 }
 
-bool XLIFFHandler::endElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                              const QStringRef &qName)
+bool XLIFFHandler::endElement(QStringView namespaceURI, QStringView localName,
+                              QStringView qName)
 {
     Q_UNUSED(qName);
     if (namespaceURI == m_URITT) {
@@ -662,11 +662,11 @@ bool XLIFFHandler::endElement(const QStringRef &namespaceURI, const QStringRef &
     return true;
 }
 
-bool XLIFFHandler::characters(const QStringRef &ch)
+bool XLIFFHandler::characters(QStringView ch)
 {
     if (currentContext() == XC_ph) {
         // handle the content of <ph> elements
-        for (int i = 0; i < ch.count(); ++i) {
+        for (int i = 0; i < ch.size(); ++i) {
             QChar chr = ch.at(i);
             if (accum.endsWith(QLatin1Char('\\')))
                 accum[accum.size() - 1] = QLatin1Char(charFromEscape(chr.toLatin1()));

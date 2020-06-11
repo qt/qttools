@@ -344,11 +344,11 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             if (str.endsWith('.'))
                 str.chop(1);
 
-            const QList<QStringRef> words = str.splitRef(' ');
+            const QVector<QStringView> words = QStringView{str}.split(' ');
             if (!words.isEmpty()) {
-                const QStringRef &first(words.at(0));
-                if (!(first == "contains" || first == "specifies" || first == "describes"
-                      || first == "defines" || first == "holds" || first == "determines"))
+                QStringView first(words.at(0));
+                if (!(first == u"contains" || first == u"specifies" || first == u"describes"
+                      || first == u"defines" || first == u"holds" || first == u"determines"))
                     writer.writeCharacters(" holds ");
                 else
                     writer.writeCharacters(" ");

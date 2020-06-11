@@ -375,7 +375,7 @@ inline bool parsePerCellProperty(Layout *l, int count, void (Layout::*setter)(in
         clearPerCellValue(l, count, setter, defaultValue);
         return true;
     }
-    const auto list = s.splitRef(QLatin1Char(','));
+    const auto list = QStringView{s}.split(QLatin1Char(','));
     if (list.isEmpty()) {
         clearPerCellValue(l, count, setter, defaultValue);
         return true;

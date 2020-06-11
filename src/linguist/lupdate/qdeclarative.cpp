@@ -344,7 +344,7 @@ void FindTrCalls::processComment(const SourceLocation &loc)
     if (!loc.length)
         return;
 
-    const QStringRef commentStr = engine->midRef(loc.begin(), loc.length);
+    const QStringView commentStr = engine->midRef(loc.begin(), loc.length);
     const QChar *chars = commentStr.constData();
     const int length = commentStr.length();
 

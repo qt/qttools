@@ -366,7 +366,7 @@ bool TSReader::read(Translator &translator)
                                 } else if (elementStarts(strtranslation)) {
                                     // <translation>
                                     QXmlStreamAttributes atts = attributes();
-                                    QStringRef type = atts.value(strtype);
+                                    QStringView type = atts.value(strtype);
                                     if (type == strunfinished)
                                         msg.setType(TranslatorMessage::Unfinished);
                                     else if (type == strvanished)

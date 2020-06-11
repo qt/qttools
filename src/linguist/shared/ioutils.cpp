@@ -86,14 +86,14 @@ bool IoUtils::isRelativePath(const QString &path)
     return true;
 }
 
-QStringRef IoUtils::pathName(const QString &fileName)
+QStringView IoUtils::pathName(QStringView fileName)
 {
-    return fileName.leftRef(fileName.lastIndexOf(QLatin1Char('/')) + 1);
+    return fileName.left(fileName.lastIndexOf(QLatin1Char('/')) + 1);
 }
 
-QStringRef IoUtils::fileName(const QString &fileName)
+QStringView IoUtils::fileName(QStringView fileName)
 {
-    return fileName.midRef(fileName.lastIndexOf(QLatin1Char('/')) + 1);
+    return fileName.mid(fileName.lastIndexOf(QLatin1Char('/')) + 1);
 }
 
 QString IoUtils::resolvePath(const QString &baseDir, const QString &fileName)

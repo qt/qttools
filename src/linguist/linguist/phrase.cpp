@@ -114,11 +114,11 @@ public:
     QString sourceLanguage() const { return m_sourceLanguage; }
 
 private:
-    bool startElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                      const QStringRef &qName, const QXmlStreamAttributes &atts) override;
-    bool endElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                    const QStringRef &qName) override;
-    bool characters(const QStringRef &ch) override;
+    bool startElement(QStringView namespaceURI, QStringView localName,
+                      QStringView qName, const QXmlStreamAttributes &atts) override;
+    bool endElement(QStringView namespaceURI, QStringView localName,
+                    QStringView qName) override;
+    bool characters(QStringView ch) override;
     bool fatalError(qint64 line, qint64 column, const QString &message) override;
 
     PhraseBook *pb;
@@ -132,8 +132,8 @@ private:
     int ferrorCount;
 };
 
-bool QphHandler::startElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                              const QStringRef &qName, const QXmlStreamAttributes &atts)
+bool QphHandler::startElement(QStringView namespaceURI, QStringView localName,
+                              QStringView qName, const QXmlStreamAttributes &atts)
 {
     Q_UNUSED(namespaceURI)
     Q_UNUSED(localName)
@@ -150,8 +150,8 @@ bool QphHandler::startElement(const QStringRef &namespaceURI, const QStringRef &
     return true;
 }
 
-bool QphHandler::endElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                            const QStringRef &qName)
+bool QphHandler::endElement(QStringView namespaceURI, QStringView localName,
+                            QStringView qName)
 {
     Q_UNUSED(namespaceURI)
     Q_UNUSED(localName)
@@ -167,7 +167,7 @@ bool QphHandler::endElement(const QStringRef &namespaceURI, const QStringRef &lo
     return true;
 }
 
-bool QphHandler::characters(const QStringRef &ch)
+bool QphHandler::characters(QStringView ch)
 {
     accum += ch;
     return true;

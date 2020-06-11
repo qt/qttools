@@ -332,7 +332,7 @@ enum ParseStage { ParseBeginning, ParseWithinRoot,
                   ParseName, ParseFontFamily, ParseFontPointSize, ParseDPIX,  ParseDPIY,  ParseStyle,
                   ParseError };
 
-static ParseStage nextStage(ParseStage currentStage, const QStringRef &startElement)
+static ParseStage nextStage(ParseStage currentStage, QStringView startElement)
 {
     switch (currentStage) {
     case ParseBeginning:

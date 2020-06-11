@@ -68,8 +68,8 @@ bool XmlParser::parse()
     return true;
 }
 
-bool XmlParser::startElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                             const QStringRef &qName, const QXmlStreamAttributes &atts)
+bool XmlParser::startElement(QStringView namespaceURI, QStringView localName,
+                             QStringView qName, const QXmlStreamAttributes &atts)
 {
     Q_UNUSED(namespaceURI)
     Q_UNUSED(localName)
@@ -78,8 +78,8 @@ bool XmlParser::startElement(const QStringRef &namespaceURI, const QStringRef &l
     return true;
 }
 
-bool XmlParser::endElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                           const QStringRef &qName)
+bool XmlParser::endElement(QStringView namespaceURI, QStringView localName,
+                           QStringView qName)
 {
     Q_UNUSED(namespaceURI)
     Q_UNUSED(localName)
@@ -87,7 +87,7 @@ bool XmlParser::endElement(const QStringRef &namespaceURI, const QStringRef &loc
     return true;
 }
 
-bool XmlParser::characters(const QStringRef &text)
+bool XmlParser::characters(QStringView text)
 {
     Q_UNUSED(text)
     return true;

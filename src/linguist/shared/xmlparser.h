@@ -46,11 +46,11 @@ public:
     bool parse();
 
 protected:
-    virtual bool startElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                              const QStringRef &qName, const QXmlStreamAttributes &atts);
-    virtual bool endElement(const QStringRef &namespaceURI, const QStringRef &localName,
-                            const QStringRef &qName);
-    virtual bool characters(const QStringRef &text);
+    virtual bool startElement(QStringView namespaceURI, QStringView localName,
+                              QStringView qName, const QXmlStreamAttributes &atts);
+    virtual bool endElement(QStringView namespaceURI, QStringView localName,
+                            QStringView qName);
+    virtual bool characters(QStringView text);
     virtual bool endDocument();
     virtual bool fatalError(qint64 line, qint64 column, const QString &message);
 
