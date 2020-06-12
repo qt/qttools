@@ -18,9 +18,11 @@ add_subdirectory(global) # special case add as first directory
 add_subdirectory(linguist)
 # add_subdirectory(global) # special case remove
 if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets)
-    add_subdirectory(assistant)
     add_subdirectory(designer)
     add_subdirectory(pixeltool)
+endif()
+if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets AND (FEATURE_sql_sqlite OR QT_BUILD_SHARED_LIBS)) # special case
+    add_subdirectory(assistant)
 endif()
 if(QT_FEATURE_png AND QT_FEATURE_thread AND QT_FEATURE_toolbutton AND TARGET Qt::Quick AND TARGET Qt::Widgets)
     add_subdirectory(distancefieldgenerator)

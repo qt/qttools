@@ -6,9 +6,10 @@ qtHaveModule(widgets) {
     } else {
         QT_FOR_CONFIG += widgets
         qtConfig(pushbutton):qtConfig(toolbutton) {
-            SUBDIRS = assistant \
-                      designer \
+            SUBDIRS = designer \
                       pixeltool
+
+            !static|contains(QT_PLUGINS, qtsqlite): SUBDIRS += assistant
 
             linguist.depends = designer
         }
