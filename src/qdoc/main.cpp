@@ -90,11 +90,13 @@ static void loadIndexFiles(const QSet<QString> &formats)
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QStringList indexFiles;
     const QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
+    bool warn = !config.getBool(CONFIG_NOLINKERRORS);
+
     for (const auto &index : configIndexes) {
         QFileInfo fi(index);
         if (fi.exists() && fi.isFile())
             indexFiles << index;
-        else
+        else if (warn)
             Location().warning(QString("Index file not found: %1").arg(index));
     }
 
@@ -192,13 +194,15 @@ static void loadIndexFiles(const QSet<QString> &formats)
                     indexPaths.reserve(foundIndices.size());
                     for (const auto &found : qAsConst(foundIndices))
                         indexPaths << found.absoluteFilePath();
-                    Location().warning(
-                            QString("Multiple index files found for dependency \"%1\":\n%2")
-                                    .arg(module, indexPaths.join('\n')));
-                    Location().warning(
-                            QString("Using %1 as index file for dependency \"%2\"")
-                                    .arg(foundIndices[foundIndices.size() - 1].absoluteFilePath(),
-                                         module));
+                    if (warn) {
+                        Location().warning(
+                                QString("Multiple index files found for dependency \"%1\":\n%2")
+                                        .arg(module, indexPaths.join('\n')));
+                        Location().warning(
+                                QString("Using %1 as index file for dependency \"%2\"")
+                                        .arg(foundIndices[foundIndices.size() - 1].absoluteFilePath(),
+                                             module));
+                    }
                     indexToAdd = foundIndices[foundIndices.size() - 1].absoluteFilePath();
                 } else if (foundIndices.size() == 1) {
                     indexToAdd = foundIndices[0].absoluteFilePath();
@@ -206,13 +210,13 @@ static void loadIndexFiles(const QSet<QString> &formats)
                 if (!indexToAdd.isEmpty()) {
                     if (!indexFiles.contains(indexToAdd))
                         indexFiles << indexToAdd;
-                } else if (!asteriskUsed) {
+                } else if (!asteriskUsed && warn) {
                     Location().warning(
                             QString("\"%1\" Cannot locate index file for dependency \"%2\"")
                                     .arg(config.getString(CONFIG_PROJECT), module));
                 }
             }
-        } else {
+        } else if (warn) {
             Location().warning(
                     QLatin1String("Dependent modules specified, but no index directories were set. "
                                   "There will probably be errors for missing links."));

@@ -1724,7 +1724,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         if (node->links().contains(Node::PreviousLink)) {
             linkPair = node->links()[Node::PreviousLink];
             linkNode = m_qdb->findNodeForTarget(linkPair.first, node);
-            if (linkNode == nullptr)
+            if (linkNode == nullptr && !noLinkErrors())
                 node->doc().location().warning(
                         QStringLiteral("Cannot link to '%1'").arg(linkPair.first));
             if (linkNode == nullptr || linkNode == node)
@@ -1745,7 +1745,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         if (node->links().contains(Node::NextLink)) {
             linkPair = node->links()[Node::NextLink];
             linkNode = m_qdb->findNodeForTarget(linkPair.first, node);
-            if (linkNode == nullptr)
+            if (linkNode == nullptr && !noLinkErrors())
                 node->doc().location().warning(
                         QStringLiteral("Cannot link to '%1'").arg(linkPair.first));
             if (linkNode == nullptr || linkNode == node)
@@ -1768,7 +1768,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         if (node->links().contains(Node::StartLink)) {
             linkPair = node->links()[Node::StartLink];
             linkNode = m_qdb->findNodeForTarget(linkPair.first, node);
-            if (linkNode == nullptr)
+            if (linkNode == nullptr && !noLinkErrors())
                 node->doc().location().warning(
                         QStringLiteral("Cannot link to '%1'").arg(linkPair.first));
             if (linkNode == nullptr || linkNode == node)
