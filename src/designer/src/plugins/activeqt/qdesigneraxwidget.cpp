@@ -235,11 +235,6 @@ int QDesignerAxPluginWidget::qt_metacall(QMetaObject::Call call, int signal, voi
                if (call != QMetaObject::InvokeMetaMethod)
                    qDebug() << objectName() << call << signal << mo->property(signal).name();
         switch (call) {
-        case QMetaObject::QueryPropertyStored: // Pretend all changed properties are stored for them to be saved
-            if (m_propValues.contains(signal))
-                if (argv[0])
-                    *reinterpret_cast< bool*>(argv[0]) = true;
-            break;
         case QMetaObject::ResetProperty:
             rc = aw->qt_metacall(call, signal, argv);
             update();
