@@ -396,7 +396,7 @@ void QtGradientWidget::mouseMoveEvent(QMouseEvent *e)
     if (d_ptr->m_dragHandle == QtGradientWidgetPrivate::NoHandle)
         return;
 
-    const QPointF newPos = e->localPos() - d_ptr->m_dragOffset;
+    const QPointF newPos = e->position() - d_ptr->m_dragOffset;
     QPointF newPoint = d_ptr->fromViewport(newPos);
     if (newPoint.x() < 0)
         newPoint.setX(0);

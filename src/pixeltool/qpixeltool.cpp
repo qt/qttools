@@ -348,8 +348,9 @@ void QPixelTool::mouseMoveEvent(QMouseEvent *e)
     if (m_mouseDown)
         m_dragCurrent = e->pos();
 
-    int x = e->x() / m_zoom;
-    int y = e->y() / m_zoom;
+    const auto pos = e->position().toPoint();
+    const int x = pos.x() / m_zoom;
+    const int y = pos.y() / m_zoom;
 
     QImage im = m_buffer.toImage().convertToFormat(QImage::Format_ARGB32);
     if (x < im.width() && y < im.height() && x >= 0 && y >= 0) {
