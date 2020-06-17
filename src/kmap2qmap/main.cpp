@@ -31,10 +31,10 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
-#include <QTextCodec>
 #include <QList>
 #include <QVector>
 #include <QByteArray>
+#include <QStringDecoder>
 #include <QStringList>
 #include <QTextStream>
 
@@ -410,8 +410,8 @@ public:
     int parseWarningCount() const   { return m_warning_count; }
 
 private:
-    bool parseSymbol(const QByteArray &str, const QTextCodec *codec, quint16 &unicode, quint32 &qtcode, quint8 &flags, quint16 &special);
-    bool parseCompose(const QByteArray &str, const QTextCodec *codec, quint16 &unicode);
+    bool parseSymbol(const QByteArray &str, quint16 &unicode, quint32 &qtcode, quint8 &flags, quint16 &special);
+    bool parseCompose(const QByteArray &str, QStringDecoder &codec, quint16 &unicode);
     bool parseModifier(const QByteArray &str, quint8 &modifier);
 
     void updateMapping(quint16 keycode = 0, quint8 modifiers = 0, quint16 unicode = 0xffff, quint32 qtcode = Qt::Key_unknown, quint8 flags = 0, quint16 = 0);
@@ -581,7 +581,7 @@ bool KeymapParser::parseKmap(QFile *f)
     QByteArray line;
     int lineno = 0;
     QList<int> keymaps;
-    QTextCodec *codec = QTextCodec::codecForName("iso8859-1");
+    auto codec = QStringDecoder(QStringDecoder::Latin1);
 
     for (int i = 0; i <= 256; ++i)
         keymaps << i;
@@ -659,13 +659,13 @@ bool KeymapParser::parseKmap(QFile *f)
         }
         else if (tokens[0] == "charset") {
             if (tokens.count() == 2) {
-                codec = QTextCodec::codecForName(tokens[1]);
-                if (!codec) {
+                codec = QStringDecoder(tokens[1]);
+                if (!codec.isValid()) {
                     parseWarning("could not parse codec definition");
-                    codec = QTextCodec::codecForName("iso8859-1");
+                    codec = QStringDecoder(QStringDecoder::Latin1);
                 }
             } else
-                parseWarning("codec doesn't habe exactly one argument");
+                parseWarning("codec doesn't have exactly one argument");
         }
         else if (tokens[0] == "strings") {
             // simply ignore those - they have no meaning for us
@@ -726,7 +726,7 @@ bool KeymapParser::parseKmap(QFile *f)
                     quint16 unicode;
                     quint16 special;
                     quint8 flags;
-                    if (!parseSymbol(tokens[i + kcpos + 3], codec, unicode, qtcode, flags, special)) {
+                    if (!parseSymbol(tokens[i + kcpos + 3], unicode, qtcode, flags, special)) {
                         parseWarning((QByteArray("symbol could not be parsed: ") + tokens[i + kcpos + 3]).constData());
                         break;
                     }
@@ -830,13 +830,13 @@ bool KeymapParser::parseModifier(const QByteArray &str, quint8 &modifier)
 }
 
 
-bool KeymapParser::parseCompose(const QByteArray &str, const QTextCodec *codec, quint16 &unicode)
+bool KeymapParser::parseCompose(const QByteArray &str, QStringDecoder &codec, quint16 &unicode)
 {
     if (str == "'\\''") {
         unicode = '\'';
         return true;
     } else if (str.length() == 3 && str.startsWith('\'') && str.endsWith('\'')) {
-        QString temp = codec->toUnicode(str.constData() + 1, str.length() - 2);
+        QString temp = codec(str.constData() + 1, str.length() - 2);
         if (temp.length() != 1)
             return false;
         unicode = temp[0].unicode();
@@ -848,7 +848,7 @@ bool KeymapParser::parseCompose(const QByteArray &str, const QTextCodec *codec, 
         char c[2];
         c[0] = char(code);
         c[1] = 0;
-        QString temp = codec->toUnicode(c);
+        QString temp = codec(c, 2);
         if (temp.length() != 1)
             return false;
         unicode = temp[0].unicode();
@@ -857,7 +857,7 @@ bool KeymapParser::parseCompose(const QByteArray &str, const QTextCodec *codec, 
 }
 
 
-bool KeymapParser::parseSymbol(const QByteArray &str, const QTextCodec * /*codec*/, quint16 &unicode, quint32 &qtcode, quint8 &flags, quint16 &special)
+bool KeymapParser::parseSymbol(const QByteArray &str, quint16 &unicode, quint32 &qtcode, quint8 &flags, quint16 &special)
 {
     flags = (str[0] == '+') ? QEvdevKeyboardMap::IsLetter : 0;
     QByteArray sym = (flags & QEvdevKeyboardMap::IsLetter) ? str.right(str.length() - 1) : str;
