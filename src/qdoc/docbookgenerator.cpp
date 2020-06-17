@@ -2552,8 +2552,9 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     if (config->getBool(CONFIG_DOCBOOKEXTENSIONS))
         return;
 
-    // Nothing to export in some cases.
-    if (node->isGroup() || node->isGroup() || node->isPropertyGroup() || node->isModule()
+    // Nothing to export in some cases. Note that isSharedCommentNode() returns
+    // true also for QML property groups.
+    if (node->isGroup() || node->isGroup() || node->isSharedCommentNode() || node->isModule()
         || node->isJsModule() || node->isQmlModule() || node->isPageNode())
         return;
 
