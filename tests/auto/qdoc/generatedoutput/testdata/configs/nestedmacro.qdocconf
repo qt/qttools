@@ -1,3 +1,4 @@
+include(config.qdocconf)
 include(testcpp.qdocconf)
 defines += test_nestedmacro
 

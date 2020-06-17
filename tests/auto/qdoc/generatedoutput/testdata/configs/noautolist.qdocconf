@@ -1,3 +1,4 @@
+include(config.qdocconf)
 include(testqml.qdocconf)
 defines += test_noautolist
 

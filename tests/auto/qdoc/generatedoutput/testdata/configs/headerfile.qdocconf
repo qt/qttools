@@ -1,3 +1,4 @@
+include(config.qdocconf)
 project = HeaderFile
 moduleheader = testheader.h
 
@@ -11,7 +12,3 @@ HTML.nosubdirs = true
 HTML.outputsubdir = headerfile
 DocBook.nosubdirs = true
 DocBook.outputsubdir = headerfile-docbook
-
-# zero warning tolerance
-warninglimit = 0
-warninglimit.enabled = true

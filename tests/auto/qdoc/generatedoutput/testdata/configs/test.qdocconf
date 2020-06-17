@@ -1,3 +1,4 @@
+include(config.qdocconf)
 project = OutputFromQDocFiles
 description = "A test project for QDoc build artifacts"
 buildversion = "$project - $description"
@@ -10,7 +11,3 @@ macro.endqdoc = "\\c */"
 macro.PROD = QDoc
 
 defines = test_navigation
-
-# zero warning tolerance
-warninglimit = 0
-warninglimit.enabled = true

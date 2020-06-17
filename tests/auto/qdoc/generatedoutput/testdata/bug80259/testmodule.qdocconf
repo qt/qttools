@@ -1,3 +1,4 @@
+include(../configs/config.qdocconf)
 project = TestModule
 
 moduleheader = TestModule.h
