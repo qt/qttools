@@ -115,8 +115,8 @@ static void loadIndexFiles(const QSet<QString> &formats)
         }
     }
 
-    if (config.dependModules().size() > 0) {
-        if (config.indexDirs().size() > 0) {
+    if (!config.dependModules().empty()) {
+        if (!config.indexDirs().empty()) {
             for (auto &dir : config.indexDirs()) {
                 if (dir.startsWith("..")) {
                     const QString prefix(QDir(config.currentDir())
@@ -212,7 +212,7 @@ static void loadIndexFiles(const QSet<QString> &formats)
                         indexFiles << indexToAdd;
                 } else if (!asteriskUsed && warn) {
                     Location().warning(
-                            QString("\"%1\" Cannot locate index file for dependency \"%2\"")
+                            QString(R"("%1" Cannot locate index file for dependency "%2")")
                                     .arg(config.getString(CONFIG_PROJECT), module));
                 }
             }
@@ -306,25 +306,25 @@ static void processQdocconfFile(const QString &fileName)
       -prepare/-generate mode and -singleexec mode.
      */
     const QStringList fileNames = config.getStringList(CONFIG_TRANSLATORS);
-    for (const auto &fileName : fileNames) {
+    for (const auto &file : fileNames) {
         bool found = false;
         if (!translators.isEmpty()) {
             for (const auto &translator : translators) {
-                if (translator.first == fileName) {
+                if (translator.first == file) {
                     found = true;
                     break;
                 }
             }
         }
         if (!found) {
-            QTranslator *translator = new QTranslator(nullptr);
-            if (!translator->load(fileName)) {
+            auto *translator = new QTranslator(nullptr);
+            if (!translator->load(file)) {
                 config.lastLocation().error(
                         QCoreApplication::translate("QDoc", "Cannot load translator '%1'")
-                                .arg(fileName));
+                                .arg(file));
             } else {
                 QCoreApplication::instance()->installTranslator(translator);
-                translators.append(Translator(fileName, translator));
+                translators.append(Translator(file, translator));
             }
         }
     }
