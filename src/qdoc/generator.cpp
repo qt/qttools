@@ -220,21 +220,6 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
 }
 
 /*!
-  For debugging qdoc.
- */
-void Generator::writeOutFileNames()
-{
-    QFile files("outputlist.txt");
-    if (!files.open(QFile::WriteOnly))
-        return;
-    QTextStream filesout(&files);
-    const auto names = outFileNames_;
-    for (const auto &file : names) {
-        filesout << file << "\n";
-    }
-}
-
-/*!
   Creates the file named \a fileName in the output directory
   and returns a QFile pointing to this file. In particular,
   this method deals with errors when opening the file:

@@ -79,7 +79,6 @@ public:
     static const QString &outputSubdir() { return outSubdir_; }
     static void terminate();
     static const QStringList &outputFileNames() { return outFileNames_; }
-    static void writeOutFileNames();
     static void augmentImageDirs(QSet<QString> &moreImageDirs);
     static bool noLinkErrors() { return noLinkErrors_; }
     static bool autolinkErrors() { return autolinkErrors_; }
