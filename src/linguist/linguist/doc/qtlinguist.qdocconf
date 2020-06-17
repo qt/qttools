@@ -37,3 +37,5 @@ imagedirs               = images
 depends                 += qtdoc qtqml qtquick qtcore qtgui qmake
 
 navigation.landingpage = "Qt Linguist Manual"
+
+warninglimit = 0

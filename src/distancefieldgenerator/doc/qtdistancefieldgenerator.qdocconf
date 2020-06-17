@@ -27,3 +27,5 @@ imagedirs               = images
 depends                 += qtdoc qtqml qtquick qtcore qtgui qmake
 
 navigation.landingpage = "Qt Distance Field Generator Manual"
+
+warninglimit = 0

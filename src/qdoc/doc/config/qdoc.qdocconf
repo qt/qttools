@@ -60,3 +60,5 @@ depends += \
 ignorewords += QDoc
 
 navigation.landingpage = "QDoc Manual"
+
+warninglimit = 0

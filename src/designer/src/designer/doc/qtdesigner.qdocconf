@@ -47,3 +47,5 @@ depends                 += qtdoc qtgui qtwidgets qtcore qtuitools qtquick qmake
 
 navigation.landingpage = "Qt Designer Manual"
 navigation.cppclassespage = "Qt Designer C++ Classes"
+
+warninglimit = 0
