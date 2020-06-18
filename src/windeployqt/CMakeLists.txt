@@ -4,7 +4,7 @@
 ## windeployqt Tool:
 #####################################################################
 
-qt_add_tool(windeployqt
+qt_add_executable(windeployqt # special case
     #BOOTSTRAP # special case remove
     SOURCES
         ../shared/winutils/elfreader.cpp ../shared/winutils/elfreader.h
@@ -24,7 +24,9 @@ qt_add_tool(windeployqt
 
 #### Keys ignored in scope 1:.:.:windeployqt.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Windows Deployment Tool"
+# QT_FOR_CONFIG = "tools-private"
 # _OPTION = "host_build"
+# _REQUIREMENTS = "qtConfig(windeployqt)"
 
 ## Scopes:
 #####################################################################

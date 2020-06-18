@@ -4,8 +4,10 @@
 ## windeployqt Tool:
 #####################################################################
 
-qt_add_tool(windeployqt
+qt_get_tool_target_name(target_name windeployqt)
+qt_add_tool(${target_name}
     BOOTSTRAP
+    TARGET_DESCRIPTION "Qt Windows Deployment Tool"
     SOURCES
         ../shared/winutils/elfreader.cpp ../shared/winutils/elfreader.h
         ../shared/winutils/qmlutils.cpp ../shared/winutils/qmlutils.h
@@ -23,17 +25,19 @@ qt_add_tool(windeployqt
 
 #### Keys ignored in scope 1:.:.:windeployqt.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Windows Deployment Tool"
+# QT_FOR_CONFIG = "tools-private"
 # _OPTION = "host_build"
+# _REQUIREMENTS = "qtConfig(windeployqt)"
 
 ## Scopes:
 #####################################################################
 
-qt_extend_target(windeployqt CONDITION WIN32
+qt_extend_target(${target_name} CONDITION WIN32
     PUBLIC_LIBRARIES
         shlwapi
 )
 
-qt_extend_target(windeployqt CONDITION QT_FEATURE_relocatable
+qt_extend_target(${target_name} CONDITION QT_FEATURE_relocatable
     DEFINES
         QT_RELOCATABLE
 )

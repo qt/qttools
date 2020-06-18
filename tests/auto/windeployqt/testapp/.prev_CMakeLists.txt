@@ -4,7 +4,7 @@
 ## testapp Binary:
 #####################################################################
 
-qt_add_executable(windeploy_testapp # special case
+qt_add_executable(testapp
     GUI
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/"
     SOURCES
@@ -12,10 +12,3 @@ qt_add_executable(windeploy_testapp # special case
     PUBLIC_LIBRARIES
         Qt::Gui
 )
-
-# special case begin
-set_target_properties(windeploy_testapp
-    PROPERTIES
-        OUTPUT_NAME testapp
-)
-# special case end
