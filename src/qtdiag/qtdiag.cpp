@@ -46,7 +46,7 @@
 #  include <QtGui/QVulkanWindow>
 #endif // vulkan
 #include <QtGui/QWindow>
-#include <QtGui/QTouchDevice>
+#include <QtGui/QInputDevice>
 
 #ifdef NETWORK_DIAG
 #  include <QSslSocket>
@@ -786,28 +786,44 @@ QString qtDiag(unsigned flags)
             << "\n\n";
     }
 
-    const QList<const QTouchDevice *> touchDevices = QTouchDevice::devices();
-    if (!touchDevices.isEmpty()) {
-        str << "Touch devices: " << touchDevices.size() << '\n';
-        for (const QTouchDevice *device : touchDevices) {
-            str << "  " << (device->type() == QTouchDevice::TouchScreen ? "TouchScreen" : "TouchPad")
-                << " \"" << device->name() << "\", max " << device->maximumTouchPoints()
-                << " touch points, capabilities:";
-            const QTouchDevice::Capabilities capabilities = device->capabilities();
-            if (capabilities & QTouchDevice::Position)
+    const auto inputDevices = QInputDevice::devices();
+    if (!inputDevices.isEmpty()) {
+        str << "Input devices: " << inputDevices.size() << '\n';
+        for (auto device : inputDevices) {
+            str << "  " << formatValueQDebug(device->type())
+                << " \"" << device->name() << "\", ";
+            if (!device->seatName().isEmpty())
+                str << '"' << device->seatName() << '"';
+            str << " capabilities:";
+            const auto capabilities = device->capabilities();
+            if (capabilities.testFlag(QInputDevice::Capability::Position))
                 str << " Position";
-            if (capabilities & QTouchDevice::Area)
+            if (capabilities.testFlag(QInputDevice::Capability::Area))
                 str << " Area";
-            if (capabilities & QTouchDevice::Pressure)
+            if (capabilities.testFlag(QInputDevice::Capability::Pressure))
                 str << " Pressure";
-            if (capabilities & QTouchDevice::Velocity)
+            if (capabilities.testFlag(QInputDevice::Capability::Velocity))
                 str << " Velocity";
-            if (capabilities & QTouchDevice::RawPositions)
+            if (capabilities.testFlag(QInputDevice::Capability::RawPositions))
                 str << " RawPositions";
-            if (capabilities & QTouchDevice::NormalizedPosition)
+            if (capabilities.testFlag(QInputDevice::Capability::NormalizedPosition))
                 str << " NormalizedPosition";
-            if (capabilities & QTouchDevice::MouseEmulation)
+            if (capabilities.testFlag(QInputDevice::Capability::MouseEmulation))
                 str << " MouseEmulation";
+            if (capabilities.testFlag(QInputDevice::Capability::Scroll))
+                str << " Scroll";
+            if (capabilities.testFlag(QInputDevice::Capability::Hover))
+                str << " Hover";
+            if (capabilities.testFlag(QInputDevice::Capability::Rotation))
+                str << " Rotation";
+            if (capabilities.testFlag(QInputDevice::Capability::XTilt))
+                str << " XTilt";
+            if (capabilities.testFlag(QInputDevice::Capability::YTilt))
+                str << " YTilt";
+            if (capabilities.testFlag(QInputDevice::Capability::TangentialPressure))
+                str << " TangentialPressure";
+            if (capabilities.testFlag(QInputDevice::Capability::ZPosition))
+                str << " ZPosition";
             str << '\n';
         }
         str << "\n\n";
