@@ -344,7 +344,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             if (str.endsWith('.'))
                 str.chop(1);
 
-            const QVector<QStringView> words = QStringView{str}.split(' ');
+            const QList<QStringView> words = QStringView{str}.split(' ');
             if (!words.isEmpty()) {
                 QStringView first(words.at(0));
                 if (!(first == u"contains" || first == u"specifies" || first == u"describes"
