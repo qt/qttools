@@ -4,7 +4,7 @@
 ## QView3DPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(QView3DPlugin
+qt_internal_add_plugin(QView3DPlugin
     OUTPUT_NAME view3d
     TYPE designer
     SOURCES

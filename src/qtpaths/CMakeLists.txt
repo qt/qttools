@@ -10,5 +10,9 @@ qt_add_executable(qtpaths
         qtpaths.cpp
 )
 
+#### Keys ignored in scope 1:.:.:qtpaths.pro:<TRUE>:
+# QT_FOR_CONFIG = "tools-private"
+# _REQUIREMENTS = "qtConfig(qtpaths)"
+
 ## Scopes:
 #####################################################################

@@ -4,8 +4,10 @@
 ## winrtrunner Tool:
 #####################################################################
 
-qt_add_tool(winrtrunner
+qt_get_tool_target_name(target_name winrtrunner)
+qt_add_tool(${target_name}
     BOOTSTRAP
+    TARGET_DESCRIPTION "Qt WinRT Runner"
     SOURCES
         ../shared/corecon/ccapi.h
         ../shared/corecon/ccapi_11.h
@@ -38,4 +40,6 @@ qt_add_tool(winrtrunner
 
 #### Keys ignored in scope 1:.:.:winrtrunner.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt WinRT Runner"
+# QT_FOR_CONFIG = "tools-private"
 # _OPTION = "host_build"
+# _REQUIREMENTS = "qtConfig(winrtrunner)"

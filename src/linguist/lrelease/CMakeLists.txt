@@ -4,7 +4,9 @@
 ## lrelease Tool:
 #####################################################################
 
-qt_add_tool(lrelease
+qt_get_tool_target_name(target_name lrelease)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Translation File Compiler"
     TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/numerus.cpp

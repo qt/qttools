@@ -33,3 +33,7 @@ qt_add_resource(makeqpf "makeqpf"
         ${makeqpf_resource_files}
 )
 
+
+#### Keys ignored in scope 1:.:.:makeqpf.pro:<TRUE>:
+# QT_FOR_CONFIG = "tools-private"
+# _REQUIREMENTS = "qtConfig(makeqpf)"

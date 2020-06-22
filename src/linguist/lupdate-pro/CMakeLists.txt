@@ -4,7 +4,9 @@
 ## lupdate-pro Tool:
 #####################################################################
 
-qt_add_tool(lupdate-pro
+qt_get_tool_target_name(target_name lupdate-pro)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Translation File Update Tool for QMake Projects"
     TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/runqttool.cpp ../shared/runqttool.h
@@ -26,5 +28,5 @@ qt_add_tool(lupdate-pro
 ## Scopes:
 #####################################################################
 
-#### Keys ignored in scope 2:.:.:lupdate-pro.pro:mingw:
+#### Keys ignored in scope 2:.:.:lupdate-pro.pro:MINGW:
 # RC_FILE = "lupdate-pro.rc"

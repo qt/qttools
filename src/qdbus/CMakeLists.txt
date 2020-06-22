@@ -1,5 +1,8 @@
 # Generated from qdbus.pro.
 
+if(NOT QT_FEATURE_qdbus)
+    return()
+endif()
 if(QT_FEATURE_dom)
     add_subdirectory(qdbus)
 endif()

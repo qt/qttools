@@ -4,7 +4,9 @@
 ## qcollectiongenerator Tool:
 #####################################################################
 
-qt_add_tool(qcollectiongenerator
+qt_get_tool_target_name(target_name qcollectiongenerator)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Help Collection File Generator"
     TOOLS_TARGET Tools # special case
     SOURCES
         main.c

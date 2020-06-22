@@ -4,7 +4,7 @@
 ## QQuickWidgetPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(QQuickWidgetPlugin
+qt_internal_add_plugin(QQuickWidgetPlugin
     OUTPUT_NAME qquickwidget
     TYPE designer
     SOURCES

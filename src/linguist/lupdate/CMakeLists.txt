@@ -4,7 +4,9 @@
 ## lupdate Tool:
 #####################################################################
 
-qt_add_tool(lupdate
+qt_get_tool_target_name(target_name lupdate)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Translation File Update Tool"
     TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/numerus.cpp
@@ -46,19 +48,19 @@ qt_add_tool(lupdate
 ## Scopes:
 #####################################################################
 
-qt_extend_target(lupdate CONDITION TARGET Qt::QmlDevToolsPrivate
+qt_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
     SOURCES
         qdeclarative.cpp
     PUBLIC_LIBRARIES
         Qt::QmlDevToolsPrivate
 )
 
-qt_extend_target(lupdate CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+qt_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
     DEFINES
         QT_NO_QML
 )
 
-qt_extend_target(lupdate CONDITION QT_FEATURE_clangcpp
+qt_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
     SOURCES
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h
@@ -86,5 +88,5 @@ qt_extend_target(lupdate CONDITION QT_FEATURE_clangcpp
 #### Keys ignored in scope 6:.:.:lupdate.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:
 # QMAKE_RPATHDIR = "$$CLANG_LIBDIR"
 
-#### Keys ignored in scope 9:.:.:lupdate.pro:mingw:
+#### Keys ignored in scope 9:.:.:lupdate.pro:MINGW:
 # RC_FILE = "lupdate.rc"

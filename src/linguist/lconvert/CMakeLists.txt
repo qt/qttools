@@ -4,7 +4,9 @@
 ## lconvert Tool:
 #####################################################################
 
-qt_add_tool(lconvert
+qt_get_tool_target_name(target_name lconvert)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Translation File Converter"
     TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/numerus.cpp

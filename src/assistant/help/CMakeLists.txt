@@ -19,6 +19,7 @@ qt_add_module(Help
         qhelpfiltersettings.cpp qhelpfiltersettings_p.h
         qhelpfiltersettingswidget.cpp qhelpfiltersettingswidget.h qhelpfiltersettingswidget.ui
         qhelpindexwidget.cpp qhelpindexwidget.h
+        qhelplink.cpp qhelplink.h
         qhelpsearchengine.cpp qhelpsearchengine.h
         qhelpsearchindexreader.cpp qhelpsearchindexreader_p.h
         qhelpsearchindexreader_default.cpp qhelpsearchindexreader_default_p.h

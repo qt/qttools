@@ -10,3 +10,7 @@ qt_add_executable(kmap2qmap
     PUBLIC_LIBRARIES
         Qt::InputSupportPrivate
 )
+
+#### Keys ignored in scope 1:.:.:kmap2qmap.pro:<TRUE>:
+# QT_FOR_CONFIG = "tools-private"
+# _REQUIREMENTS = "qtConfig(kmap2qmap)"

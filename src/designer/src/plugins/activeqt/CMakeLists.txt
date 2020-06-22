@@ -4,7 +4,7 @@
 ## QAxWidgetPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(QAxWidgetPlugin
+qt_internal_add_plugin(QAxWidgetPlugin
     OUTPUT_NAME qaxwidget
     TYPE designer
     SOURCES

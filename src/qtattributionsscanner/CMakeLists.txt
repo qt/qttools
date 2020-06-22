@@ -4,7 +4,9 @@
 ## qtattributionsscanner Tool:
 #####################################################################
 
-qt_add_tool(qtattributionsscanner
+qt_get_tool_target_name(target_name qtattributionsscanner)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Source Code Attribution Scanner"
     TOOLS_TARGET Tools # special case
     SOURCES
         jsongenerator.cpp jsongenerator.h
@@ -29,7 +31,9 @@ qt_add_tool(qtattributionsscanner
 # INSTALLS = "cmake_qattributionsscanner_tools_files"
 # QMAKE_SUBSTITUTES = "cmake_qattributionsscanner_config_file" "cmake_qattributionsscanner_config_version_file"
 # QMAKE_TARGET_DESCRIPTION = "Qt Source Code Attribution Scanner"
+# QT_FOR_CONFIG = "tools-private"
 # _OPTION = "host_build"
+# _REQUIREMENTS = "qtConfig(qtattributionsscanner)"
 # cmake_qattributionsscanner_config_file.input = "$$PWD/Qt5AttributionsScannerTools.cmake.in"
 # cmake_qattributionsscanner_config_file.output = "$$MODULE_BASE_OUTDIR/lib/cmake/Qt5AttributionsScannerTools/Qt5AttributionsScannerToolsConfig.cmake"
 # cmake_qattributionsscanner_config_version_file.input = "$$[QT_HOST_DATA/src]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in"
@@ -54,3 +58,6 @@ qt_add_tool(qtattributionsscanner
 #### Keys ignored in scope 5:.:.:qtattributionsscanner.pro:CMAKE_BIN_DIR___contains___^\\.\\./._x_:
 # CMAKE_BIN_DIR = "$$[QT_HOST_BINS]/"
 # CMAKE_BIN_DIR_IS_ABSOLUTE = "True"
+
+#### Keys ignored in scope 6:.:.:qtattributionsscanner.pro:QMAKE_HOST.os___equals___Windows:
+# CMAKE_BIN_SUFFIX = ".exe"

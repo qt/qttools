@@ -16,6 +16,10 @@ qt_add_executable(pixeltool
         Qt::Widgets
 )
 
+#### Keys ignored in scope 1:.:.:pixeltool.pro:<TRUE>:
+# QT_FOR_CONFIG = "tools-private"
+# _REQUIREMENTS = "qtConfig(pixeltool)"
+
 ## Scopes:
 #####################################################################
 

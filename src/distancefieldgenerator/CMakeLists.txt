@@ -27,6 +27,8 @@ qt_add_executable(qdistancefieldgenerator
 
 #### Keys ignored in scope 1:.:.:distancefieldgenerator.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Distance Field Generator"
+# QT_FOR_CONFIG = "tools-private"
+# _REQUIREMENTS = "qtConfig(distancefieldgenerator)"
 qt_add_docs(qdistancefieldgenerator
     doc/qtdistancefieldgenerator.qdocconf
 )

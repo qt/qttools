@@ -4,7 +4,9 @@
 ## lprodump Tool:
 #####################################################################
 
-qt_add_tool(lprodump
+qt_get_tool_target_name(target_name lprodump)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Linguist QMake Project Dump Tool"
     TOOLS_TARGET Linguist # special case
     SOURCES
         ../shared/ioutils.cpp ../shared/ioutils.h
@@ -38,7 +40,7 @@ set(proparser_resource_files
     "exclusive_builds.prf"
 )
 
-qt_add_resource(lprodump "proparser"
+qt_add_resource(${target_name} "proparser"
     PREFIX
         "/qmake/override_features"
     BASE

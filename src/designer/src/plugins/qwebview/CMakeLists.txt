@@ -4,7 +4,7 @@
 ## QWebViewPlugin Plugin:
 #####################################################################
 
-qt_add_plugin(QWebViewPlugin
+qt_internal_add_plugin(QWebViewPlugin
     OUTPUT_NAME qwebview
     TYPE designer
     SOURCES

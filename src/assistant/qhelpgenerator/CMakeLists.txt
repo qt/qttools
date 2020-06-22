@@ -4,7 +4,9 @@
 ## qhelpgenerator Tool:
 #####################################################################
 
-qt_add_tool(qhelpgenerator
+qt_get_tool_target_name(target_name qhelpgenerator)
+qt_add_tool(${target_name}
+    TARGET_DESCRIPTION "Qt Compressed Help File Generator"
     TOOLS_TARGET Tools # special case
     SOURCES
         ../shared/collectionconfiguration.cpp ../shared/collectionconfiguration.h
@@ -22,3 +24,4 @@ qt_add_tool(qhelpgenerator
 #### Keys ignored in scope 1:.:.:qhelpgenerator.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Compressed Help File Generator"
 # QTPLUGIN.platforms = "qminimal"
+# QTPLUGIN.sqldrivers = "qsqlite"

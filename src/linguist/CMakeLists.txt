@@ -5,6 +5,9 @@ qt_exclude_tool_directories_from_default_target(
     linguist
 )
 
+if(NOT QT_FEATURE_linguist)
+    return()
+endif()
 add_subdirectory(lconvert)
 add_subdirectory(lprodump)
 add_subdirectory(lrelease)
