@@ -52,8 +52,11 @@ void OpenPagesDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 {
     TRACE_OBJ
     if (option.state & QStyle::State_MouseOver) {
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
         if ((QApplication::mouseButtons() & Qt::LeftButton) == 0)
             pressedIndex = QModelIndex();
+QT_WARNING_POP
         QBrush brush = option.palette.alternateBase();
         if (index == pressedIndex)
             brush = option.palette.dark();
