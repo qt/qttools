@@ -135,7 +135,7 @@ void VersionLabel::paintEvent(QPaintEvent *pe)
     if (secondStage) {
         QPainter p(this);
         QStyleOptionButton opt;
-        opt.init(this);
+        opt.initFrom(this);
         if (!m_pushed)
             opt.state |= QStyle::State_Raised;
         else

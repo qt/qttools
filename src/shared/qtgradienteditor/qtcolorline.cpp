@@ -878,7 +878,7 @@ void QtColorLinePrivate::paintEvent(QPaintEvent *)
     r[1].adjust(br, br, -br, -br);
     if (r[1].adjusted(lw, lw, -lw, -lw).isValid()) {
         QStyleOptionFrame opt;
-        opt.init(q_ptr);
+        opt.initFrom(q_ptr);
         opt.rect = r[1];
         opt.lineWidth = 2;
         opt.midLineWidth = 1;

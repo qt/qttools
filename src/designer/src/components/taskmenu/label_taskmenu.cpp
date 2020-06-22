@@ -61,7 +61,7 @@ LabelTaskMenuInlineEditor::LabelTaskMenuInlineEditor(QLabel *w, QObject *parent)
 QRect LabelTaskMenuInlineEditor::editRectangle() const
 {
     QStyleOptionButton opt;
-    opt.init(widget());
+    opt.initFrom(widget());
     return opt.rect;
 }
 

@@ -390,7 +390,7 @@ QRect ButtonTextTaskMenuInlineEditor::editRectangle() const
 {
     QWidget *w = widget();
     QStyleOptionButton opt;
-    opt.init(w);
+    opt.initFrom(w);
     return w->style()->subElementRect(QStyle::SE_PushButtonContents, &opt, w);
 }
 
@@ -413,7 +413,7 @@ QRect LinkDescriptionTaskMenuInlineEditor::editRectangle() const
 {
     QWidget *w = widget(); // TODO: What is the exact description area?
     QStyleOptionButton opt;
-    opt.init(w);
+    opt.initFrom(w);
     return w->style()->subElementRect(QStyle::SE_PushButtonContents, &opt, w);
 }
 

@@ -58,7 +58,7 @@ LineEditTaskMenuInlineEditor::LineEditTaskMenuInlineEditor(QLineEdit *w, QObject
 QRect LineEditTaskMenuInlineEditor::editRectangle() const
 {
     QStyleOption opt;
-    opt.init(widget());
+    opt.initFrom(widget());
     return opt.rect;
 }
 
