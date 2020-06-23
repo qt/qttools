@@ -14,6 +14,12 @@ qt_exclude_tool_directories_from_default_target(
     ${_qt_additional_tools_to_exclude} # special case
 )
 
+# special case begin
+# Evaluate features to decide what to build.
+# The config files will be written in the src/global module.
+qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/../configure.cmake")
+# special case end
+
 add_subdirectory(global) # special case add as first directory
 add_subdirectory(linguist)
 # add_subdirectory(global) # special case remove
