@@ -29,6 +29,7 @@
     \module QtDesigner
     \title Qt Designer C++ Classes
     \ingroup modules
+    \qtcmakepackage Designer
     \qtvariable designer
 
     \brief Provides classes to create your own custom widget plugins for

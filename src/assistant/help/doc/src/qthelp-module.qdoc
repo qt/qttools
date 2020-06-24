@@ -29,6 +29,7 @@
     \module QtHelp
     \title Qt Help C++ Classes
     \ingroup modules
+    \qtcmakepackage Help
     \qtvariable help
 
     \brief Provides classes for integrating online documentation in
