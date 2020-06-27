@@ -135,8 +135,8 @@ private:
 bool QphHandler::startElement(QStringView namespaceURI, QStringView localName,
                               QStringView qName, const QXmlStreamAttributes &atts)
 {
-    Q_UNUSED(namespaceURI)
-    Q_UNUSED(localName)
+    Q_UNUSED(namespaceURI);
+    Q_UNUSED(localName);
 
     if (qName == QLatin1String("QPH")) {
         m_language = atts.value(QLatin1String("language")).toString();
@@ -153,8 +153,8 @@ bool QphHandler::startElement(QStringView namespaceURI, QStringView localName,
 bool QphHandler::endElement(QStringView namespaceURI, QStringView localName,
                             QStringView qName)
 {
-    Q_UNUSED(namespaceURI)
-    Q_UNUSED(localName)
+    Q_UNUSED(namespaceURI);
+    Q_UNUSED(localName);
 
     if (qName == QLatin1String("source"))
         source = accum;
