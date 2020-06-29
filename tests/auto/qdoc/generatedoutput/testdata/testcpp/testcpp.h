@@ -56,6 +56,11 @@ using Specialized = Struct<int, T>;
     void obsoleteMember();
     void anotherObsoleteMember();
     void deprecatedMember();
+    void func(bool) {};
+    //! [funcPtr]
+    void (*funcPtr(bool b, const char *s))(bool) {
+        return func;
+    }
     inline void inlineFunction() {};
     virtual void virtualFun();
 

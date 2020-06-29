@@ -970,22 +970,23 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
             if (i >= parameters.count())
                 return CXChildVisit_Break; // Attributes comes before parameters so we can break.
             QString name = fromCXString(clang_getCursorSpelling(cur));
-            if (!name.isEmpty())
+            if (!name.isEmpty()) {
                 parameters[i].setName(name);
-            // Find the default value
-            visitChildrenLambda(cur, [&](CXCursor cur) {
-                if (clang_isExpression(clang_getCursorKind(cur))) {
-                    QString defaultValue = getSpelling(clang_getCursorExtent(cur));
-                    if (defaultValue.startsWith('=')) // In some cases, the = is part of the range.
-                        defaultValue = QStringView{defaultValue}.mid(1).trimmed().toString();
-                    if (defaultValue.isEmpty())
-                        defaultValue = QStringLiteral("...");
-                    parameters[i].setDefaultValue(defaultValue);
-                    return CXChildVisit_Break;
-                }
-                return CXChildVisit_Continue;
-            });
-            ++i;
+                // Find the default value
+                visitChildrenLambda(cur, [&](CXCursor cur) {
+                    if (clang_isExpression(clang_getCursorKind(cur))) {
+                        QString defaultValue = getSpelling(clang_getCursorExtent(cur));
+                        if (defaultValue.startsWith('=')) // In some cases, the = is part of the range.
+                            defaultValue = QStringView{defaultValue}.mid(1).trimmed().toString();
+                        if (defaultValue.isEmpty())
+                            defaultValue = QStringLiteral("...");
+                        parameters[i].setDefaultValue(defaultValue);
+                        return CXChildVisit_Break;
+                    }
+                    return CXChildVisit_Continue;
+                });
+                ++i;
+            }
         }
         return CXChildVisit_Continue;
     });

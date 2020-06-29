@@ -15,6 +15,13 @@
                 </function>
                 <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void anotherObsoleteMember()"/>
                 <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void deprecatedMember()"/>
+                <function name="func" fullname="TestQDoc::Test::func" href="testqdoc-test.html#func" status="internal" access="private" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void func(bool )">
+                    <parameter type="bool" name="" default=""/>
+                </function>
+                <function name="funcPtr" fullname="TestQDoc::Test::funcPtr" href="testqdoc-test.html#funcPtr" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void (*)(bool)" signature="void (*)(bool) funcPtr(bool b, const char *s)">
+                    <parameter type="bool" name="b" default=""/>
+                    <parameter type="const char *" name="s" default=""/>
+                </function>
                 <function name="inlineFunction" fullname="TestQDoc::Test::inlineFunction" href="testqdoc-test.html#inlineFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" brief="An inline function, documented using the \fn QDoc command" signature="void inlineFunction()"/>
                 <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void obsoleteMember()"/>
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void overload()"/>
