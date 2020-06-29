@@ -178,7 +178,7 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
         require--;
         ai++;
     }
-    QByteArray diff;
+    QString diff;
     for (int j = qMax(0, oai - 3); j < oai; j++)
         diff += actual.at(j) + '\n';
     diff += "<<<<<<< got\n";

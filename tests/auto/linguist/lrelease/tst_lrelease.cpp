@@ -83,7 +83,7 @@ void tst_lrelease::doCompare(const QStringList &actual, const QString &expectedF
             break;
         }
     }
-    QByteArray diff;
+    QString diff;
     for (int j = qMax(0, i - 3); j < i; j++)
         diff += expected.at(j) + '\n';
     diff += "<<<<<<< got\n";
