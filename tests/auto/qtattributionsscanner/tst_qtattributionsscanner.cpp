@@ -123,7 +123,7 @@ void tst_qtattributionsscanner::test()
 
     { // compare error output
         QByteArray stdErr = proc.readAllStandardError();
-        stdErr.replace(QDir::separator(), "/");
+        stdErr.replace(QDir::separator().toLatin1(), "/");
 
         QByteArray expectedErrorOutput;
         readExpectedFile(dir, stderr_file, &expectedErrorOutput);
