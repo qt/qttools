@@ -44,7 +44,6 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
-#include <QtCore/qregexp.h>
 #include <QtCore/qtextstream.h>
 
 #include <cctype>

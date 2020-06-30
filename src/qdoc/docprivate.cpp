@@ -32,7 +32,6 @@
 #include "text.h"
 
 #include <QtCore/qhash.h>
-#include <QtCore/qregexp.h>
 
 QT_BEGIN_NAMESPACE
 
