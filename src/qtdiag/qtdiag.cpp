@@ -804,8 +804,6 @@ QString qtDiag(unsigned flags)
                 str << " Pressure";
             if (capabilities.testFlag(QInputDevice::Capability::Velocity))
                 str << " Velocity";
-            if (capabilities.testFlag(QInputDevice::Capability::RawPositions))
-                str << " RawPositions";
             if (capabilities.testFlag(QInputDevice::Capability::NormalizedPosition))
                 str << " NormalizedPosition";
             if (capabilities.testFlag(QInputDevice::Capability::MouseEmulation))
