@@ -1516,20 +1516,20 @@
 
     \code
     / *!
-        \typedef QVector::Iterator
+        \typedef QList::Iterator
 
-        Qt-style synonym for QVector::iterator.
+        Qt-style synonym for QList::iterator.
     * /
     \endcode
 
-    QDoc includes this one on the reference page for class QVector as:
+    QDoc includes this one on the reference page for class QList as:
 
     \quotation
         \raw HTML
-        <h3>typedef QVector::Iterator</h3>
+        <h3>typedef QList::Iterator</h3>
         \endraw
 
-        Qt-style synonym for QVector::iterator.
+        Qt-style synonym for QList::iterator.
     \endquotation
 
     See also \l {typealias-command}{\\typealias}.

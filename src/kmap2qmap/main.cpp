@@ -32,7 +32,6 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QList>
-#include <QVector>
 #include <QByteArray>
 #include <QStringDecoder>
 #include <QStringList>
@@ -441,7 +440,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    QVector<QFile *> kmaps(argc - header - 2);
+    QList<QFile *> kmaps(argc - header - 2);
     for (int i = 0; i < kmaps.size(); ++i) {
         kmaps [i] = new QFile(QString::fromLocal8Bit(argv[i + 1 + header]));
 
