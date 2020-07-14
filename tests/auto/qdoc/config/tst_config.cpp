@@ -169,12 +169,14 @@ void::tst_Config::getExampleProjectFile()
 
 void::tst_Config::expandVars()
 {
+    qputenv("QDOC_TSTCONFIG_LIST", QByteArray("a b c"));
     auto &config = initConfig("/testdata/configs/expandvars.qdocconf");
 
     QCOMPARE(config.getString("expanded1"), "foo");
     QCOMPARE(config.getString("expanded2"), "foo,bar");
     QCOMPARE(config.getString("expanded3"), "foobar foobar baz");
     QCOMPARE(config.getString("literally"), "$data ${data}");
+    QCOMPARE(config.getString("csvlist"), "a,b,c");
 }
 
 QTEST_APPLESS_MAIN(tst_Config)

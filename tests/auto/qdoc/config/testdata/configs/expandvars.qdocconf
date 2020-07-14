@@ -8,3 +8,6 @@ expanded1 = $data
 expanded2 = ${data1,,}
 expanded3 = "${data1,} ${data2,}"
 literally = \$data \${data}
+
+listdata = ${QDOC_TSTCONFIG_LIST}
+csvlist = ${listdata,,}

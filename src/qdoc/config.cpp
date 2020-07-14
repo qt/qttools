@@ -1213,7 +1213,11 @@ void Config::load(Location location, const QString &fileName)
                             if (val.isNull()) {
                                 expandVars << ExpandVar(rhsValues.size(), word.size(), var, delim);
                                 needsExpansion = true;
-                            } else {
+                            } else if (braces) { // ${VAR} inserts content from an env. variable for processing
+                                text.insert(i, QString::fromLatin1(val));
+                                c = text.at(i);
+                                cc = c.unicode();
+                            } else { // while $VAR simply reads the value and stores it to a config variable.
                                 word += QString::fromLatin1(val);
                             }
                         }

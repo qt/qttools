@@ -141,6 +141,24 @@
 
     \note Nested variable expansion is not supported.
 
+    \section2 Expanding Environment Variables
+
+    When expanding environment variables, the \c {${variable}} syntax has
+    different behavior compared to \c {$variable}. The former expands the
+    content of the variable in place to be parsed as part of the
+    configuration file, while the latter simply assigns the content as a
+    value for the current configuration variable. This has implications if
+    the environment variable contains a list of elements separated by
+    whitespace, or other formatting recognized by QDoc.
+
+    For example, if the value of an environment variable \c SRCDIRS is
+    \c {"../src/a ../src/b"}, then
+
+    \badcode
+    sourcedirs  = $SRCDIRS      # Fail - value is interpreted as a single path.
+    sourcedirs  = ${SRCDIRS}    # Ok - whitespace is used as a delimiter.
+    \endcode
+
     \section1 Configuration Variables
 
     \section1 Variable List
