@@ -1023,6 +1023,8 @@ void ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
             property->setConstant();
         } else if (key == "FINAL") {
             property->setFinal();
+        } else if (key == "REQUIRED") {
+            property->setRequired();
         }
         if (i < part.size()) {
             QString value = part.at(i++);

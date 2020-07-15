@@ -593,6 +593,11 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         node->markDefault();
     } else if (command == COMMAND_QMLREADONLY) {
         node->markReadOnly(true);
+    }  else if (command == COMMAND_QMLREQUIRED) {
+        if (!node->isQmlProperty())
+            doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_QMLREQUIRED));
+        else
+            static_cast<QmlPropertyNode *>(node)->setRequired();
     } else if ((command == COMMAND_QMLABSTRACT) || (command == COMMAND_ABSTRACT)) {
         if (node->isQmlType() || node->isJsType())
             node->setAbstract(true);

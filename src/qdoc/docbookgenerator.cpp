@@ -2685,7 +2685,10 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             writer->writeTextElement(dbNamespace, "modifier", "writable");
             newLine();
         }
-
+        if ((const_cast<QmlPropertyNode *>(qpn))->isRequired()) {
+            writer->writeTextElement(dbNamespace, "modifier", "required");
+            newLine();
+        }
         if (qpn->isReadOnly()) {
             generateModifier("[read-only]");
             newLine();
@@ -3896,6 +3899,8 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
             extra << "default";
         else if (n->isReadOnly())
             extra << "read-only";
+        else if (n->isRequired())
+            extra << "required";
 
         if (!n->since().isEmpty()) {
             if (!extra.isEmpty())

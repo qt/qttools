@@ -45,6 +45,7 @@ public:
     void setDataType(const QString &dataType) override { m_type = dataType; }
     void setStored(bool stored) { m_stored = toFlagValue(stored); }
     void setDesignable(bool designable) { m_designable = toFlagValue(designable); }
+    void setRequired() { m_required = toFlagValue(true); }
 
     const QString &dataType() const { return m_type; }
     QString qualifiedDataType() const { return m_type; }
@@ -52,6 +53,7 @@ public:
     bool isStored() const { return fromFlagValue(m_stored, true); }
     bool isDesignable() const { return fromFlagValue(m_designable, false); }
     bool isWritable();
+    bool isRequired();
     bool isDefault() const override { return m_isDefault; }
     bool isReadOnly() const override { return fromFlagValue(readOnly_, false); }
     bool isAlias() const override { return m_isAlias; }
@@ -77,6 +79,7 @@ private:
     bool m_isDefault { false };
     bool m_attached {};
     FlagValue readOnly_ { FlagValueDefault };
+    FlagValue m_required { FlagValueDefault };
 };
 
 QT_END_NAMESPACE

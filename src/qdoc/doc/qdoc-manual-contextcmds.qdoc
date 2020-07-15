@@ -64,6 +64,7 @@
       \li \l {reentrant-command}{\\reentrant},
       \li \l {reimp-command}{\\reimp},
       \li \l {relates-command}{\\relates},
+      \li \l {required-command} {\\required}
       \li \l {since-command}{\\since},
       \li \l {startpage-command}{\\startpage},
       \li \l {subtitle-command}{\\subtitle}
@@ -413,6 +414,14 @@
 
     The \\readonly command is used in conjunction with a \l {qmlproperty-command}
     {\\qmlproperty} command to mark the QML property as read-only.
+
+    \target required-command
+    \section1 \\required
+
+    The \\required command is used in conjunction with a \l {qmlproperty-command}
+    {\\qmlproperty} command to mark the QML property as required.
+
+    \b {See also} \l {The Property System}.
 
     \target since-command
     \section1 \\since

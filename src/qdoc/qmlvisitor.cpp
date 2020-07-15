@@ -449,6 +449,9 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                 node->markDefault();
             } else if (command == COMMAND_QMLREADONLY) {
                 node->markReadOnly(1);
+            } else if (command == COMMAND_QMLREQUIRED) {
+                if (node->isQmlProperty())
+                    static_cast<QmlPropertyNode *>(node)->setRequired();
             } else if ((command == COMMAND_INGROUP) && !args.isEmpty()) {
                 for (const auto &argument : args)
                     QDocDatabase::qdocDB()->addToGroup(argument.first, node);
@@ -646,6 +649,8 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                 qmlPropNode->markReadOnly(member->isReadonlyMember);
                 if (member->isDefaultMember)
                     qmlPropNode->markDefault();
+                if (member->requiredToken.isValid())
+                    qmlPropNode->setRequired();
                 applyDocumentation(member->firstSourceLocation(), qmlPropNode);
             }
         }

@@ -64,7 +64,7 @@ Item {
         }
         \endqml
     */
-    property string name
+    required property string name
 
     /*!
         Whether the test is active.

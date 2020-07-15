@@ -324,6 +324,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             readonly = true;
         auto *qmlPropertyNode = new QmlPropertyNode(parent, name, type, attached);
         qmlPropertyNode->markReadOnly(readonly);
+        if (attributes.value(QLatin1String("required")) == QLatin1String("true"))
+            qmlPropertyNode->setRequired();
         node = qmlPropertyNode;
     } else if (elementName == QLatin1String("jsproperty")) {
         QString type = attributes.value(QLatin1String("type")).toString();
@@ -1136,6 +1138,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         writer.writeAttribute("type", qmlPropertyNode->dataType());
         writer.writeAttribute("attached", qmlPropertyNode->isAttached() ? "true" : "false");
         writer.writeAttribute("writable", qmlPropertyNode->isWritable() ? "true" : "false");
+        if (qmlPropertyNode->isRequired())
+            writer.writeAttribute("required", "true");
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;

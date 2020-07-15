@@ -95,6 +95,19 @@ bool QmlPropertyNode::isWritable()
 }
 
 /*!
+    Returns \c true if this QML property is marked with \required or the
+    corresponding C++ property uses the REQUIRED keyword.
+*/
+bool QmlPropertyNode::isRequired()
+{
+    if (m_required != FlagValueDefault)
+        return fromFlagValue(m_required, false);
+
+    PropertyNode *pn = findCorrespondingCppProperty();
+    return pn ? pn->isRequired() : false;
+}
+
+/*!
   Returns a pointer this QML property's corresponding C++
   property, if it has one.
  */

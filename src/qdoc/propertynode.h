@@ -60,6 +60,7 @@ public:
     void setRuntimeScrFunc(const QString &scrf) { m_runtimeScrFunc = scrf; }
     void setConstant() { m_const = true; }
     void setFinal() { m_final = true; }
+    void setRequired() { m_required = true; }
     void setRevision(int revision) { m_revision = revision; }
 
     const QString &dataType() const { return m_type; }
@@ -81,6 +82,7 @@ public:
     bool isUser() const { return fromFlagValue(m_user, userDefault()); }
     bool isConstant() const { return m_const; }
     bool isFinal() const { return m_final; }
+    bool isRequired() const { return m_required; }
     const PropertyNode *overriddenFrom() const { return m_overrides; }
 
     bool storedDefault() const { return true; }
@@ -101,6 +103,7 @@ private:
     FlagValue m_user { FlagValueDefault };
     bool m_const { false };
     bool m_final { false };
+    bool m_required { false };
     int m_revision { -1 };
     const PropertyNode *m_overrides { nullptr };
 };

@@ -153,6 +153,7 @@ private:
 #define COMMAND_QMLPROPERTY Doc::alias(QLatin1String("qmlproperty"))
 #define COMMAND_QMLPROPERTYGROUP Doc::alias(QLatin1String("qmlpropertygroup"))
 #define COMMAND_QMLREADONLY Doc::alias(QLatin1String("readonly"))
+#define COMMAND_QMLREQUIRED Doc::alias(QLatin1String("required"))
 #define COMMAND_QMLSIGNAL Doc::alias(QLatin1String("qmlsignal"))
 #define COMMAND_QMLTYPE Doc::alias(QLatin1String("qmltype"))
 #define COMMAND_QTCMAKEPACKAGE Doc::alias(QLatin1String("qtcmakepackage"))

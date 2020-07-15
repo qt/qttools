@@ -123,6 +123,7 @@
     \li \l {reentrant-command} {\\reentrant}
     \li \l {reimp-command} {\\reimp}
     \li \l {relates-command} {\\relates}
+    \li \l {required-command} {\\required}
     \li \l {row-command} {\\row}
     \li \l {sa-command} {\\sa}
     \li \l {sectionOne-command} {\\section1}

@@ -52,6 +52,7 @@
 
 /*!
     \qmlproperty string QDoc.Test::Type::name
+    \required
     \brief Name of the Test.
 */
 

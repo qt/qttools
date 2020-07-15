@@ -48,11 +48,12 @@
 </db:simplelist>
 </db:para></db:section>
 <db:section xml:id="name-prop">
-<db:title>name : string</db:title>
+<db:title>[required] name : string</db:title>
 <db:fieldsynopsis>
 <db:type>string</db:type>
 <db:varname>name</db:varname>
 <db:modifier>writable</db:modifier>
+<db:modifier>required</db:modifier>
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
