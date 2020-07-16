@@ -140,20 +140,20 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         out << package.license << ".\n\n";
     }
 
-    if (!package.licenseFile.isEmpty()) {
-        QFile file(package.licenseFile);
+    foreach (const QString &licenseFile, package.licenseFiles) {
+        QFile file(licenseFile);
         if (!file.open(QIODevice::ReadOnly)) {
-            if (logLevel != SilentLog)
-                std::cerr << qPrintable(
-                    tr("Path %1 : cannot open license file %2.")
-                        .arg(QDir::toNativeSeparators(package.path))
-                        .arg(QDir::toNativeSeparators(package.licenseFile))
-                ) << "*/\n";
+            if (logLevel != SilentLog) {
+                std::cerr << qPrintable(tr("Path %1 : cannot open license file %2.\n")
+                                                .arg(QDir::toNativeSeparators(package.path))
+                                                .arg(QDir::toNativeSeparators(licenseFile)));
+                out << "*/\n";
+            }
             return;
         }
         out << "\\badcode\n";
         out << QString::fromUtf8(file.readAll()).trimmed();
-        out << "\n\\endcode\n";
+        out << "\n\\endcode\n\n";
     }
     out << "*/\n";
 }
