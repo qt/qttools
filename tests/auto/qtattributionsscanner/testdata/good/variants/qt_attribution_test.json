@@ -1,0 +1,9 @@
+{
+  "Id": "variants",
+  "Name": "Variants Test",
+
+  "QDocModule": "qtest",
+  "QtUsage": "Usage",
+  "License": "License",
+  "LicenseFiles": [ "LICENSE1.txt", "LICENSE2.txt" ]
+}

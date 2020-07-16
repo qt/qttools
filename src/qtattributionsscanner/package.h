@@ -50,7 +50,7 @@ struct Package {
 
     QString license; // The license under which the package is distributed. Mandatory.
     QString licenseId; // see https://spdx.org/licenses/. Optional.
-    QString licenseFile; // path to file containing the license text. Optional.
+    QStringList licenseFiles; // path to files containing the license text. Optional.
 
     QString copyright; // A list of copyright owners. Mandatory.
 

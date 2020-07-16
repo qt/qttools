@@ -10,6 +10,9 @@ DISTFILES += \
     testdata/good/complete/qt_attribution_test.json \
     testdata/good/complete/expected.json \
     testdata/good/complete/expected.error \
+    testdata/good/variants/qt_attribution_test.json \
+    testdata/good/variants/expected.json \
+    testdata/good/variants/expected.error \
     testdata/warnings/incomplete/qt_attribution_test.json \
     testdata/warnings/incomplete/expected.json \
     testdata/warnings/incomplete/expected.error \

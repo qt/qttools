@@ -37,6 +37,7 @@
 #include <QtCore/qvariant.h>
 
 #include <iostream>
+#include <optional>
 
 namespace Scanner {
 
@@ -80,6 +81,19 @@ static void validatePackage(Package &p, const QString &filePath, LogLevel logLev
     }
 }
 
+static std::optional<QStringList> toStringList(const QJsonValue &value)
+{
+    if (!value.isArray())
+        return std::nullopt;
+    QStringList result;
+    for (auto iter : value.toArray()) {
+        if (iter.type() != QJsonValue::String)
+            return std::nullopt;
+        result.push_back(iter.toString());
+    }
+    return result;
+}
+
 // Transforms a JSON object into a Package object
 static Package readPackage(const QJsonObject &object, const QString &filePath, LogLevel logLevel)
 {
@@ -90,7 +104,8 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
     for (auto iter = object.constBegin(); iter != object.constEnd(); ++iter) {
         const QString key = iter.key();
 
-        if (!iter.value().isString() && key != QLatin1String("QtParts")) {
+        if (!iter.value().isString() && key != QLatin1String("QtParts")
+            && key != QLatin1String("LicenseFiles")) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
                                             QDir::toNativeSeparators(filePath), key)) << std::endl;
@@ -116,7 +131,16 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
         } else if (key == QLatin1String("LicenseId")) {
             p.licenseId = value;
         } else if (key == QLatin1String("LicenseFile")) {
-            p.licenseFile = QDir(directory).absoluteFilePath(value);
+            p.licenseFiles = QStringList(QDir(directory).absoluteFilePath(value));
+        } else if (key == QLatin1String("LicenseFiles")) {
+            auto strings = toStringList(iter.value());
+            if (!strings && (logLevel != SilentLog))
+                std::cerr << qPrintable(tr("File %1: Expected JSON array of strings in %2.")
+                                                .arg(QDir::toNativeSeparators(filePath), key))
+                          << std::endl;
+            const QDir dir(directory);
+            for (auto iter : strings.value())
+                p.licenseFiles.push_back(dir.absoluteFilePath(iter));
         } else if (key == QLatin1String("Copyright")) {
             p.copyright = value;
         } else if (key == QLatin1String("PackageComment")) {
@@ -128,15 +152,12 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
         } else if (key == QLatin1String("QtUsage")) {
             p.qtUsage = value;
         } else if (key == QLatin1String("QtParts")) {
-            const QVariantList variantList = iter.value().toArray().toVariantList();
-            for (const QVariant &v: variantList) {
-                if (v.type() != QVariant::String && logLevel != SilentLog) {
-                    std::cerr << qPrintable(tr("File %1: Expected JSON string in array of %2.").arg(
-                                                QDir::toNativeSeparators(filePath), key))
-                              << std::endl;
-                }
-                p.qtParts.append(v.toString());
-            }
+            auto parts = toStringList(iter.value());
+            if (!parts && (logLevel != SilentLog))
+                std::cerr << qPrintable(tr("File %1: Expected JSON array of strings in %2.")
+                                                .arg(QDir::toNativeSeparators(filePath), key))
+                          << std::endl;
+            p.qtParts = parts.value();
         } else {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Unknown key %2.").arg(
@@ -206,7 +227,7 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
 
     QString licenseFile = fields[QStringLiteral("License File")];
     if (licenseFile != QString() && licenseFile != QLatin1String("NOT_SHIPPED")) {
-        p.licenseFile = QDir(directory).absoluteFilePath(licenseFile);
+        p.licenseFiles = QStringList(QDir(directory).absoluteFilePath(licenseFile));
     } else {
         // Look for a LICENSE or COPYING file as a fallback
         QDir dir = directory;
@@ -216,7 +237,7 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
 
         const QFileInfoList entries = dir.entryInfoList();
         if (!entries.empty())
-            p.licenseFile = entries.at(0).absoluteFilePath();
+            p.licenseFiles = QStringList(entries.at(0).absoluteFilePath());
     }
 
     validatePackage(p, filePath, logLevel);

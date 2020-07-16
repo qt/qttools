@@ -1,0 +1,25 @@
+[
+    {
+        "Copyright": "",
+        "Description": "",
+        "DownloadLocation": "",
+        "Files": "",
+        "Homepage": "",
+        "Id": "variants",
+        "License": "License",
+        "LicenseFiles": [
+            "%{PWD}/LICENSE1.txt",
+            "%{PWD}/LICENSE2.txt"
+        ],
+        "LicenseId": "",
+        "Name": "Variants Test",
+        "PackageComment": "",
+        "Path": "%{PWD}",
+        "QDocModule": "qtest",
+        "QtParts": [
+            "libs"
+        ],
+        "QtUsage": "Usage",
+        "Version": ""
+    }
+]
