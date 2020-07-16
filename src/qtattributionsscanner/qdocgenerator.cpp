@@ -127,8 +127,26 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
 
     out << "\n\n";
 
+    QString copyright;
     if (!package.copyright.isEmpty())
-        out << "\n\\badcode\n" << package.copyright << "\n\\endcode\n\n";
+        copyright = package.copyright;
+
+    if (!package.copyrightFile.isEmpty()) {
+        const QDir packageDir(package.path);
+        QFile file(QDir(package.path).absoluteFilePath(package.copyrightFile));
+        if (!file.open(QIODevice::ReadOnly)) {
+            if (logLevel != SilentLog) {
+                std::cerr << qPrintable(
+                        tr("Path %1 : cannot open copyright file %2.\n")
+                                .arg(QDir::toNativeSeparators(package.path))
+                                .arg(QDir::toNativeSeparators(package.copyrightFile)));
+                copyright = QString::fromUtf8(file.readAll());
+            }
+        }
+    }
+
+    if (!copyright.isEmpty())
+        out << "\n\\badcode\n" << copyright << "\n\\endcode\n\n";
 
     if (isSpdxLicenseId(package.licenseId) && package.licenseId != QLatin1String("NONE"))
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"

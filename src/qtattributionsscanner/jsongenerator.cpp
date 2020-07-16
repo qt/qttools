@@ -64,6 +64,7 @@ static QJsonObject generate(Package package)
                    QJsonArray::fromStringList(package.licenseFiles));
 
     obj.insert(QStringLiteral("Copyright"), package.copyright);
+    obj.insert(QStringLiteral("CopyrightFile"), package.copyrightFile);
     obj.insert(QStringLiteral("PackageComment"), package.packageComment);
 
     return obj;

@@ -1,7 +1,10 @@
 [
     {
         "Copyright": "",
+        "CopyrightFile": "",
         "Description": "",
+        "DownloadLocation": "",
+        "Files": "",
         "Homepage": "",
         "Id": "",
         "License": "",
@@ -10,11 +13,11 @@
         "Name": "",
         "PackageComment": "",
         "Path": "%{PWD}",
-        "Files": "",
         "QDocModule": "",
-        "QtParts": [ "libs" ],
+        "QtParts": [
+            "libs"
+        ],
         "QtUsage": "",
-        "Version": "",
-        "DownloadLocation": ""
+        "Version": ""
     }
 ]

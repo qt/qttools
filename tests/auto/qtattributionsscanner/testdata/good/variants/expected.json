@@ -1,6 +1,7 @@
 [
     {
         "Copyright": "",
+        "CopyrightFile": "%{PWD}/COPYRIGHT.txt",
         "Description": "",
         "DownloadLocation": "",
         "Files": "",

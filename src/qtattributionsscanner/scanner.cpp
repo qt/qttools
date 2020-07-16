@@ -65,6 +65,13 @@ static void validatePackage(Package &p, const QString &filePath, LogLevel logLev
         if (p.license.isEmpty())
             missingPropertyWarning(filePath, QStringLiteral("License"));
 
+        if (!p.copyright.isEmpty() && !p.copyrightFile.isEmpty()) {
+            std::cerr << qPrintable(tr("File %1: Properties 'Copyright' and 'CopyrightFile' are "
+                                       "mutually exclusive.")
+                                            .arg(QDir::toNativeSeparators(filePath)))
+                      << std::endl;
+        }
+
         for (const QString &part : qAsConst(p.qtParts)) {
             if (part != QLatin1String("examples")
                     && part != QLatin1String("tests")
@@ -143,6 +150,8 @@ static Package readPackage(const QJsonObject &object, const QString &filePath, L
                 p.licenseFiles.push_back(dir.absoluteFilePath(iter));
         } else if (key == QLatin1String("Copyright")) {
             p.copyright = value;
+        } else if (key == QLatin1String("CopyrightFile")) {
+            p.copyrightFile = QDir(directory).absoluteFilePath(value);
         } else if (key == QLatin1String("PackageComment")) {
             p.packageComment = value;
         } else if (key == QLatin1String("QDocModule")) {

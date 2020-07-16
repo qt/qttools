@@ -1,6 +1,7 @@
 [
     {
         "Copyright": "",
+        "CopyrightFile": "",
         "Description": "Hello world!\nLine 2",
         "DownloadLocation": "",
         "Files": "",
@@ -21,6 +22,7 @@
     },
     {
         "Copyright": "Copyright",
+        "CopyrightFile": "",
         "Description": "Multi\nLine\nDescription",
         "DownloadLocation": "www.qt.io/1.0",
         "Files": "",
@@ -41,6 +43,7 @@
     },
     {
         "Copyright": "Copyright",
+        "CopyrightFile": "",
         "Description": "",
         "DownloadLocation": "",
         "Files": "",
@@ -61,6 +64,7 @@
     },
     {
         "Copyright": "",
+        "CopyrightFile": "%{PWD}/variants/COPYRIGHT.txt",
         "Description": "",
         "DownloadLocation": "",
         "Files": "",

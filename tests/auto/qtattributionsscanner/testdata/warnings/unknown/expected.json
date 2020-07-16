@@ -1,7 +1,10 @@
 [
     {
         "Copyright": "Copyright",
+        "CopyrightFile": "",
         "Description": "",
+        "DownloadLocation": "",
+        "Files": "",
         "Homepage": "",
         "Id": "unknown",
         "License": "License",
@@ -10,11 +13,11 @@
         "Name": "Unknown",
         "PackageComment": "",
         "Path": "%{PWD}",
-        "Files": "",
         "QDocModule": "qtest",
-        "QtParts": [ "libs" ],
+        "QtParts": [
+            "libs"
+        ],
         "QtUsage": "Usage",
-        "Version": "",
-        "DownloadLocation": ""
+        "Version": ""
     }
 ]
