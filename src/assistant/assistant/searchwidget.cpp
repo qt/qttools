@@ -149,8 +149,8 @@ bool SearchWidget::eventFilter(QObject* o, QEvent *e)
         QUrl link = resultWidget->linkAt(me->pos());
         if (!link.isEmpty() || link.isValid()) {
             bool controlPressed = me->modifiers() & Qt::ControlModifier;
-            if((me->button() == Qt::LeftButton && controlPressed)
-                || (me->button() == Qt::MidButton)) {
+            if ((me->button() == Qt::LeftButton && controlPressed)
+                || (me->button() == Qt::MiddleButton)) {
                     emit requestShowLinkInNewTab(link);
             }
         }

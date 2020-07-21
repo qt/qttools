@@ -312,7 +312,7 @@ void HelpViewer::mouseReleaseEvent(QMouseEvent *e)
 
     bool controlPressed = e->modifiers() & Qt::ControlModifier;
     if ((controlPressed && d->hasAnchorAt(this, e->pos())) ||
-        (e->button() == Qt::MidButton && d->hasAnchorAt(this, e->pos()))) {
+        (e->button() == Qt::MiddleButton && d->hasAnchorAt(this, e->pos()))) {
         d->openLinkInNewPage();
         return;
     }

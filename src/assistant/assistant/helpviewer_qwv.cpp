@@ -124,11 +124,12 @@ bool HelpPage::acceptNavigationRequest(QWebFrame *,
     }
 
     if (type == QWebPage::NavigationTypeLinkClicked
-        && (m_keyboardModifiers & Qt::ControlModifier || m_pressedButtons == Qt::MidButton)) {
-            m_pressedButtons = Qt::NoButton;
-            m_keyboardModifiers = Qt::NoModifier;
-            OpenPagesManager::instance()->createPage(url);
-            return false;
+        && (m_keyboardModifiers & Qt::ControlModifier
+            || m_pressedButtons == Qt::MiddleButton)) {
+        m_pressedButtons = Qt::NoButton;
+        m_keyboardModifiers = Qt::NoModifier;
+        OpenPagesManager::instance()->createPage(url);
+        return false;
     }
 
     m_loadingUrl = url; // because of async page loading, we will hit some kind
