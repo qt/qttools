@@ -596,7 +596,7 @@ bool FormWindow::handleMousePressEvent(QWidget * widget, QWidget *managedWidget,
         core()->formWindowManager()->setActiveFormWindow(this);
 
     const Qt::MouseButtons buttons = e->buttons();
-    if (buttons != Qt::LeftButton && buttons != Qt::MidButton)
+    if (buttons != Qt::LeftButton && buttons != Qt::MiddleButton)
         return true;
 
     m_startPos = mapFromGlobal(e->globalPos());
@@ -604,7 +604,7 @@ bool FormWindow::handleMousePressEvent(QWidget * widget, QWidget *managedWidget,
     if (debugFormWindow)
         qDebug() << "handleMousePressEvent:" <<  widget << ',' << managedWidget;
 
-    if (buttons == Qt::MidButton || isMainContainer(managedWidget)) { // press was on the formwindow
+    if (buttons == Qt::MiddleButton || isMainContainer(managedWidget)) { // press was on the formwindow
         clearObjectInspectorSelection(m_core);  // We might have a toolbar or non-widget selected in the object inspector.
         clearSelection(false);
 
@@ -788,7 +788,7 @@ bool FormWindow::handleMouseReleaseEvent(QWidget *w, QWidget *mw, QMouseEvent *e
      * MousePressEvent. */
     switch (e->button()) {
     case Qt::LeftButton:
-    case Qt::MidButton:
+    case Qt::MiddleButton:
     case Qt::RightButton:
         emitSelectionChanged();
         break;

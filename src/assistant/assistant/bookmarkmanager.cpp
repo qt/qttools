@@ -270,14 +270,14 @@ bool BookmarkManager::eventFilter(QObject *object, QEvent *event)
     if (event->type() == QEvent::MouseButtonRelease && !isWidget) {
         QMouseEvent *me = static_cast<QMouseEvent*>(event);
         switch (me->button()) {
-            case Qt::LeftButton: {
+            case Qt::LeftButton:
                 if (me->modifiers() & Qt::ControlModifier)
                     setSourceFromIndex(bookmarkTreeView->currentIndex(), true);
-            }   break;
+                break;
 
-            case Qt::MidButton: {
+            case Qt::MiddleButton:
                 setSourceFromIndex(bookmarkTreeView->currentIndex(), true);
-            }   break;
+                break;
 
             default: break;
         }
