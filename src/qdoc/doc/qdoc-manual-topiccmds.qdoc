@@ -1488,7 +1488,7 @@
             void myMsgHandler(QtMsgType, const char *);
         \ endcode
 
-        \sa QtMsgType, qInstallMsgHandler()
+        \sa QtMsgType, qInstallMessageHandler()
     * /
     \endcode
 
@@ -1508,7 +1508,7 @@
         </tt>
         \endraw
 
-        See also QtMsgType and qInstallMsgHandler().
+        See also QtMsgType and qInstallMessageHandler().
     \endquotation
 
     Other typedefs are located on the reference page for the class
