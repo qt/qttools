@@ -56,14 +56,7 @@ public:
     const QString &defaultValue() const { return defaultValue_; }
     void setDefaultValue(const QString &t) { defaultValue_ = t; }
 
-    void set(const QString &type, const QString &name)
-    {
-        type_ = type;
-        name_ = name;
-        defaultValue_.clear();
-    }
-
-    void set(const QString &type, const QString &name, const QString &defaultValue)
+    void set(const QString &type, const QString &name, const QString &defaultValue = QString())
     {
         type_ = type;
         name_ = name;

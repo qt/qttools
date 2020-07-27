@@ -470,12 +470,19 @@ void Parameters::set(const QString &signature)
         parameters_.resize(commaSplit.size());
         int i = 0;
         for (const auto &item : qAsConst(commaSplit)) {
-            QStringList blankSplit = item.split(' ');
+            QStringList blankSplit = item.split(' ', Qt::SkipEmptyParts);
+            QString pDefault;
+            int defaultIdx = blankSplit.indexOf(QStringLiteral("="));
+            if (defaultIdx != -1) {
+                if (++defaultIdx < blankSplit.size())
+                    pDefault = blankSplit.mid(defaultIdx).join(' ');
+                blankSplit = blankSplit.mid(0, defaultIdx - 1);
+            }
             QString pName = blankSplit.takeLast();
             QString pType = blankSplit.join(' ');
             if (pType.isEmpty() && pName == QLatin1String("..."))
                 qSwap(pType, pName);
-            parameters_[i++].set(pType, pName);
+            parameters_[i++].set(pType, pName, pDefault);
         }
     }
 }
