@@ -46,7 +46,7 @@
 <db:section xml:id="method-documentation">
 <db:title>Method Documentation</db:title>
 <db:section xml:id="rear-method">
-<db:title>void rear(Child <db:emphasis>child</db:emphasis>,  var <db:emphasis>method</db:emphasis>)</db:title>
+<db:title>void rear(Child <db:emphasis>child</db:emphasis>, var <db:emphasis>method</db:emphasis> = Strict)</db:title>
 <db:para>Do some abstract parenting on <db:code role="parameter">child</db:code> using a specific <db:code role="parameter">method</db:code>.</db:para>
 </db:section>
 </db:section>
