@@ -64,7 +64,8 @@ int main(int argc, char *argv[])
 //! [5]
     QTranslator translator;
 //! [5] //! [6]
-    translator.load("hellotr_la");
+    if (!translator.load("hellotr_la"))
+        return 1;
 //! [6] //! [7]
     app.installTranslator(&translator);
 //! [4] //! [7]
