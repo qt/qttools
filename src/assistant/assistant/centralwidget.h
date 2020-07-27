@@ -30,6 +30,7 @@
 #define CENTRALWIDGET_H
 
 #include <QtCore/QUrl>
+#include <QtCore/QHash>
 
 #include <QtWidgets/QTabBar>
 #include <QtWidgets/QWidget>
