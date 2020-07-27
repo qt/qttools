@@ -2710,10 +2710,6 @@
                \li Tutorial and Examples
            \endlist
 
-    \warning There appears to be a bug in QDoc here. If you include
-    any of the argument types, you get a numeric list. We're looking
-    into it.
-
     If you provide 'A' as an argument to the \\list command, the
     bullets are replaced with characters in alphabetical order:
 
