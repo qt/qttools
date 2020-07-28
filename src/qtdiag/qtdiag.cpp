@@ -73,7 +73,7 @@
 #include <qpa/qplatformscreen.h>
 #include <qpa/qplatformtheme.h>
 #include <qpa/qplatformthemefactory_p.h>
-#include <qpa/qplatformnativeinterface.h>
+#include <qpa/qplatformintegration.h>
 #include <private/qhighdpiscaling_p.h>
 
 #include <QtGui/private/qrhi_p.h>
@@ -843,9 +843,11 @@ QString qtDiag(unsigned flags)
     }
 #endif // vulkan
 
+#ifdef Q_OS_WIN
     // On Windows, this will provide addition GPU info similar to the output of dxdiag.
-    if (const QPlatformNativeInterface *ni = QGuiApplication::platformNativeInterface()) {
-        const QVariant gpuInfoV = ni->property("gpuList");
+    using QWindowsApplication = QPlatformInterface::Private::QWindowsApplication;
+    if (auto nativeWindowsApp = dynamic_cast<QWindowsApplication *>(QGuiApplicationPrivate::platformIntegration())) {
+        const QVariant gpuInfoV = nativeWindowsApp->gpuList();
         if (gpuInfoV.type() == QVariant::List) {
             const auto gpuList = gpuInfoV.toList();
             for (int i = 0; i < gpuList.size(); ++i) {
@@ -857,6 +859,7 @@ QString qtDiag(unsigned flags)
             str << "\n";
         }
     }
+#endif // Q_OS_WIN
 
     if (flags & QtDiagRhi) {
         dumpRhiInfo(str);
