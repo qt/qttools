@@ -141,14 +141,6 @@ if(APPLE)
     target_sources(designer PRIVATE
         designer.icns
     )
-    # special case end
-    # Set values to be replaced in the custom Info_mac.plist.
-    # Also package the uifile.icns.
-    set(ICON "designer.icns")
-    set(EXECUTABLE "Designer")
-    set_source_files_properties(uifile.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-    target_sources(designer PRIVATE uifile.icns)
-    # special case end
 endif()
 
 #### Keys ignored in scope 6:.:.:designer.pro:APPLE:

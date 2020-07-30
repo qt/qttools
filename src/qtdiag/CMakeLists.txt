@@ -1,10 +1,10 @@
 # Generated from qtdiag.pro.
 
 #####################################################################
-## qtdiag Binary:
+## qtdiag App:
 #####################################################################
 
-qt_add_executable(qtdiag
+qt_internal_add_app(qtdiag
     SOURCES
         main.cpp
         qtdiag.cpp qtdiag.h
@@ -12,6 +12,9 @@ qt_add_executable(qtdiag
         Qt::CorePrivate
         # Qt::Gui # special case QTBUG-83498
         # Qt::GuiPrivate # special case QTBUG-83498
+)
+set_target_properties(qtdiag PROPERTIES
+    WIN32_EXECUTABLE FALSE
 )
 
 #### Keys ignored in scope 1:.:.:qtdiag.pro:<TRUE>:

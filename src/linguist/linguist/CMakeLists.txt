@@ -1,11 +1,10 @@
 # Generated from linguist.pro.
 
 #####################################################################
-## linguist Binary:
+## linguist App:
 #####################################################################
 
-qt_add_executable(linguist
-    GUI
+qt_internal_add_app(linguist
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
@@ -126,10 +125,13 @@ qt_add_resource(linguist "linguist"
         ${linguist_resource_files}
 )
 
+set_target_properties(linguist PROPERTIES
+    QT_TARGET_DESCRIPTION "Qt Linguist"
+)
 
 #### Keys ignored in scope 1:.:.:linguist.pro:<TRUE>:
+# INSTALLS = "phrasebooks"
 # PROJECTNAME = "Qt" "Linguist"
-# QMAKE_TARGET_DESCRIPTION = "Qt" "Linguist"
 # phrasebooks.files = "$$PWD/../phrasebooks/*"
 # phrasebooks.path = "$$[QT_INSTALL_DATA]/phrasebooks"
 
@@ -141,16 +143,38 @@ qt_extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
         QT_OPENSOURCE
 )
 
-#### Keys ignored in scope 3:.:.:linguist.pro:WIN32:
-# RC_ICONS = "linguist.ico"
-# VERSION = "$${QT_VERSION}.0"
+if(WIN32)
+    set_target_properties(linguist PROPERTIES
+        QT_TARGET_RC_ICONS "${CMAKE_CURRENT_SOURCE_DIR}/linguist.ico"
+    )
+endif()
 
-#### Keys ignored in scope 4:.:.:linguist.pro:else:
-# VERSION = "$${QT_VERSION}"
+if(WIN32)
+    set_target_properties(linguist PROPERTIES
+        QT_TARGET_VERSION "${PROJECT_VERSION}.0"
+    )
+endif()
 
-#### Keys ignored in scope 5:.:.:linguist.pro:APPLE:
-# ICON = "linguist.icns"
-# QMAKE_INFO_PLIST = "Info_mac.plist"
+if(UNIX)
+    set_target_properties(linguist PROPERTIES
+        QT_TARGET_VERSION "${PROJECT_VERSION}"
+    )
+endif()
+
+if(APPLE)
+    set_target_properties(linguist PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info_mac.plist"
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_ICON_FILE "linguist.icns"
+        OUTPUT_NAME "Linguist"
+    )
+    set_source_files_properties(linguist.icns PROPERTIES
+        MACOSX_PACKAGE_LOCATION Resources
+    )
+    target_sources(linguist PRIVATE
+        linguist.icns
+    )
+endif()
 qt_add_docs(linguist
     doc/qtlinguist.qdocconf
 )

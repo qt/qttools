@@ -1,11 +1,10 @@
 # Generated from distancefieldgenerator.pro.
 
 #####################################################################
-## qdistancefieldgenerator Binary:
+## qdistancefieldgenerator App:
 #####################################################################
 
-qt_add_executable(qdistancefieldgenerator
-    GUI
+qt_internal_add_app(qdistancefieldgenerator
     SOURCES
         distancefieldmodel.cpp distancefieldmodel.h
         distancefieldmodelworker.cpp distancefieldmodelworker.h
@@ -24,9 +23,11 @@ qt_add_executable(qdistancefieldgenerator
     ENABLE_AUTOGEN_TOOLS
         uic
 )
+set_target_properties(qdistancefieldgenerator PROPERTIES
+    QT_TARGET_DESCRIPTION "Qt Distance Field Generator"
+)
 
 #### Keys ignored in scope 1:.:.:distancefieldgenerator.pro:<TRUE>:
-# QMAKE_TARGET_DESCRIPTION = "Qt Distance Field Generator"
 # QT_FOR_CONFIG = "tools-private"
 # _REQUIREMENTS = "qtConfig(distancefieldgenerator)"
 qt_add_docs(qdistancefieldgenerator

@@ -1,11 +1,10 @@
 # Generated from qtpaths.pro.
 
 #####################################################################
-## qtpaths Binary:
+## qtpaths App:
 #####################################################################
 
-qt_add_executable(qtpaths
-    GUI
+qt_internal_add_app(qtpaths
     SOURCES
         qtpaths.cpp
 )
@@ -16,3 +15,9 @@ qt_add_executable(qtpaths
 
 ## Scopes:
 #####################################################################
+
+if(WIN32)
+    set_target_properties(qtpaths PROPERTIES
+        WIN32_EXECUTABLE FALSE
+    )
+endif()

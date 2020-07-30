@@ -1,11 +1,10 @@
 # Generated from macdeployqt.pro.
 
 #####################################################################
-## macdeployqt Binary:
+## macdeployqt App:
 #####################################################################
 
-qt_add_executable(macdeployqt
-    GUI
+qt_internal_add_app(macdeployqt
     SOURCES
         ../shared/shared.cpp
         main.cpp

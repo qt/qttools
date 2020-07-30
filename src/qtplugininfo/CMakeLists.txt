@@ -1,12 +1,15 @@
 # Generated from qtplugininfo.pro.
 
 #####################################################################
-## qtplugininfo Binary:
+## qtplugininfo App:
 #####################################################################
 
-qt_add_executable(qtplugininfo
+qt_internal_add_app(qtplugininfo
     SOURCES
         qtplugininfo.cpp
+)
+set_target_properties(qtplugininfo PROPERTIES
+    WIN32_EXECUTABLE FALSE
 )
 
 #### Keys ignored in scope 1:.:.:qtplugininfo.pro:<TRUE>:

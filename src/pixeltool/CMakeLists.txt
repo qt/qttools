@@ -1,11 +1,10 @@
 # Generated from pixeltool.pro.
 
 #####################################################################
-## pixeltool Binary:
+## pixeltool App:
 #####################################################################
 
-qt_add_executable(pixeltool
-    GUI
+qt_internal_add_app(pixeltool
     SOURCES
         main.cpp
         qpixeltool.cpp qpixeltool.h
@@ -23,5 +22,9 @@ qt_add_executable(pixeltool
 ## Scopes:
 #####################################################################
 
-#### Keys ignored in scope 2:.:.:pixeltool.pro:APPLE:
-# QMAKE_INFO_PLIST = "Info_mac.plist"
+if(APPLE)
+    set_target_properties(pixeltool PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info_mac.plist"
+        MACOSX_BUNDLE TRUE
+    )
+endif()

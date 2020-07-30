@@ -1,11 +1,10 @@
 # Generated from assistant.pro.
 
 #####################################################################
-## assistant Binary:
+## assistant App:
 #####################################################################
 
-qt_add_executable(assistant
-    GUI
+qt_internal_add_app(assistant
     SOURCES
         ../../shared/fontpanel/fontpanel.cpp ../../shared/fontpanel/fontpanel.h
         ../shared/collectionconfiguration.cpp ../shared/collectionconfiguration.h
@@ -107,10 +106,12 @@ qt_add_resource(assistant "assistant_images"
         ${assistant_images_resource_files}
 )
 
+set_target_properties(assistant PROPERTIES
+    QT_TARGET_DESCRIPTION "Qt Assistant"
+)
 
 #### Keys ignored in scope 1:.:.:assistant.pro:<TRUE>:
 # PROJECTNAME = "Assistant"
-# QMAKE_TARGET_DESCRIPTION = "Qt" "Assistant"
 
 ## Scopes:
 #####################################################################
@@ -142,6 +143,18 @@ qt_extend_target(assistant CONDITION NOT BROWSER___equals___qtwebkit
         BROWSER_QTEXTBROWSER
 )
 
+if(WIN32)
+    set_target_properties(assistant PROPERTIES
+        QT_TARGET_RC_ICONS "${CMAKE_CURRENT_SOURCE_DIR}/assistant.ico"
+    )
+endif()
+
+if(WIN32)
+    set_target_properties(assistant PROPERTIES
+        QT_TARGET_VERSION "${PROJECT_VERSION}.0"
+    )
+endif()
+
 qt_extend_target(assistant CONDITION WIN32
     SOURCES
         stdinlistener_win.cpp stdinlistener_win.h
@@ -149,14 +162,36 @@ qt_extend_target(assistant CONDITION WIN32
         shell32
 )
 
+if(UNIX)
+    set_target_properties(assistant PROPERTIES
+        QT_TARGET_VERSION "${PROJECT_VERSION}"
+    )
+endif()
+
 qt_extend_target(assistant CONDITION UNIX
     SOURCES
         stdinlistener.cpp stdinlistener.h
 )
 
-#### Keys ignored in scope 11:.:.:assistant.pro:APPLE:
-# ICON = "assistant.icns"
-# QMAKE_INFO_PLIST = "Info_mac.plist"
+if(APPLE)
+    set_target_properties(assistant PROPERTIES
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Info_mac.plist"
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_ICON_FILE "assistant.icns"
+        OUTPUT_NAME "Assistant"
+    )
+    set_source_files_properties(assistant.icns PROPERTIES
+        MACOSX_PACKAGE_LOCATION Resources
+    )
+    target_sources(assistant PRIVATE
+        assistant.icns
+    )
+    # special case end
+    # Set values to be replaced in the custom Info_mac.plist.
+    set(ICON "assistant.icns")
+    set(EXECUTABLE "Assistant")
+    # special case end
+endif()
 qt_add_docs(assistant
     doc/qtassistant.qdocconf
 )

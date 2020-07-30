@@ -1,11 +1,10 @@
 # Generated from qev.pro.
 
 #####################################################################
-## qev Binary:
+## qev App:
 #####################################################################
 
-qt_add_executable(qev
-    GUI
+qt_internal_add_app(qev
     SOURCES
         qev.cpp
     PUBLIC_LIBRARIES

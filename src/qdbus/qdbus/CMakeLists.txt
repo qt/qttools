@@ -1,11 +1,10 @@
 # Generated from qdbus.pro.
 
 #####################################################################
-## qdbus Binary:
+## qdbus App:
 #####################################################################
 
-qt_add_executable(qdbus
-    GUI
+qt_internal_add_app(qdbus
     SOURCES
         qdbus.cpp
     PUBLIC_LIBRARIES
@@ -15,3 +14,9 @@ qt_add_executable(qdbus
 
 ## Scopes:
 #####################################################################
+
+if(WIN32)
+    set_target_properties(qdbus PROPERTIES
+        WIN32_EXECUTABLE FALSE
+    )
+endif()

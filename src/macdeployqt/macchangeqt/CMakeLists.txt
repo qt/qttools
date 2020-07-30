@@ -1,11 +1,10 @@
 # Generated from macchangeqt.pro.
 
 #####################################################################
-## macchangeqt Binary:
+## macchangeqt App:
 #####################################################################
 
-qt_add_executable(macchangeqt
-    GUI
+qt_internal_add_app(macchangeqt
     SOURCES
         ../shared/shared.cpp
         main.cpp
