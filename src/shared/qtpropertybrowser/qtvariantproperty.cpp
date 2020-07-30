@@ -299,9 +299,9 @@ public:
     void slotValueChanged(QtProperty *property, bool val);
     void slotValueChanged(QtProperty *property, const QString &val);
     void slotRegExpChanged(QtProperty *property, const QRegularExpression &regExp);
-    void slotValueChanged(QtProperty *property, const QDate &val);
-    void slotRangeChanged(QtProperty *property, const QDate &min, const QDate &max);
-    void slotValueChanged(QtProperty *property, const QTime &val);
+    void slotValueChanged(QtProperty *property, QDate val);
+    void slotRangeChanged(QtProperty *property, QDate min, QDate max);
+    void slotValueChanged(QtProperty *property, QTime val);
     void slotValueChanged(QtProperty *property, const QDateTime &val);
     void slotValueChanged(QtProperty *property, const QKeySequence &val);
     void slotValueChanged(QtProperty *property, const QChar &val);
@@ -521,12 +521,12 @@ void QtVariantPropertyManagerPrivate::slotRegExpChanged(QtProperty *property, co
         emit q_ptr->attributeChanged(varProp, m_regExpAttribute, QVariant(regExp));
 }
 
-void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, const QDate &val)
+void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, QDate val)
 {
     valueChanged(property, QVariant(val));
 }
 
-void QtVariantPropertyManagerPrivate::slotRangeChanged(QtProperty *property, const QDate &min, const QDate &max)
+void QtVariantPropertyManagerPrivate::slotRangeChanged(QtProperty *property, QDate min, QDate max)
 {
     if (QtVariantProperty *varProp = m_internalToProperty.value(property, 0)) {
         emit q_ptr->attributeChanged(varProp, m_minimumAttribute, QVariant(min));
@@ -534,7 +534,7 @@ void QtVariantPropertyManagerPrivate::slotRangeChanged(QtProperty *property, con
     }
 }
 
-void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, const QTime &val)
+void QtVariantPropertyManagerPrivate::slotValueChanged(QtProperty *property, QTime val)
 {
     valueChanged(property, QVariant(val));
 }

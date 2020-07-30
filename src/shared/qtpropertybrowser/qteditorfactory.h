@@ -205,10 +205,9 @@ private:
     QScopedPointer<QtDateEditFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtDateEditFactory)
     Q_DISABLE_COPY_MOVE(QtDateEditFactory)
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QDate &))
-    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *,
-                        const QDate &, const QDate &))
-    Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QDate &))
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, QDate))
+    Q_PRIVATE_SLOT(d_func(), void slotRangeChanged(QtProperty *, QDate, QDate))
+    Q_PRIVATE_SLOT(d_func(), void slotSetValue(QDate))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
 };
 
@@ -229,8 +228,8 @@ private:
     QScopedPointer<QtTimeEditFactoryPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtTimeEditFactory)
     Q_DISABLE_COPY_MOVE(QtTimeEditFactory)
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, const QTime &))
-    Q_PRIVATE_SLOT(d_func(), void slotSetValue(const QTime &))
+    Q_PRIVATE_SLOT(d_func(), void slotPropertyChanged(QtProperty *, QTime))
+    Q_PRIVATE_SLOT(d_func(), void slotSetValue(QTime))
     Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed(QObject *))
 };
 

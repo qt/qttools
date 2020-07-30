@@ -203,13 +203,13 @@ public:
     QDate maximum(const QtProperty *property) const;
 
 public Q_SLOTS:
-    void setValue(QtProperty *property, const QDate &val);
-    void setMinimum(QtProperty *property, const QDate &minVal);
-    void setMaximum(QtProperty *property, const QDate &maxVal);
-    void setRange(QtProperty *property, const QDate &minVal, const QDate &maxVal);
+    void setValue(QtProperty *property, QDate val);
+    void setMinimum(QtProperty *property, QDate minVal);
+    void setMaximum(QtProperty *property, QDate maxVal);
+    void setRange(QtProperty *property, QDate minVal, QDate maxVal);
 Q_SIGNALS:
-    void valueChanged(QtProperty *property, const QDate &val);
-    void rangeChanged(QtProperty *property, const QDate &minVal, const QDate &maxVal);
+    void valueChanged(QtProperty *property, QDate val);
+    void rangeChanged(QtProperty *property, QDate minVal, QDate maxVal);
 protected:
     QString valueText(const QtProperty *property) const override;
     void initializeProperty(QtProperty *property) override;
@@ -232,9 +232,9 @@ public:
     QTime value(const QtProperty *property) const;
 
 public Q_SLOTS:
-    void setValue(QtProperty *property, const QTime &val);
+    void setValue(QtProperty *property, QTime val);
 Q_SIGNALS:
-    void valueChanged(QtProperty *property, const QTime &val);
+    void valueChanged(QtProperty *property, QTime val);
 protected:
     QString valueText(const QtProperty *property) const override;
     void initializeProperty(QtProperty *property) override;
