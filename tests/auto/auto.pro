@@ -30,4 +30,4 @@ cross_compile:SUBDIRS -= qhelpcontentmodel qhelpenginecore qhelpindexmodel qhelp
     qhelpprojectdata \
 
 !qtConfig(process): SUBDIRS -= qtattributionsscanner linguist qtdiag windeployqt
-!win32|winrt: SUBDIRS -= windeployqt
+!win32: SUBDIRS -= windeployqt

@@ -111,13 +111,7 @@
         "windeployqt": {
             "label": "Windows deployment tool",
             "purpose": "The Windows deployment tool is designed to automate the process of creating a deployable folder containing the Qt-related dependencies (libraries, QML imports, plugins, and translations) required to run the application from that folder. It creates a sandbox for Universal Windows Platform (UWP) or an installation tree for Windows desktop applications, which can be easily bundled into an installation package.",
-            "condition": "config.win32 || config.winrt",
-            "output": [ "privateFeature" ]
-        },
-        "winrtrunner": {
-            "label": "WinRT Runner Tool",
-            "purpose": "The WinRT Runner Tool installs, runs, and collects test results for packages made with Qt.",
-            "condition": "config.winrt",
+            "condition": "config.win32",
             "output": [ "privateFeature" ]
         }
     },
@@ -157,8 +151,7 @@ On Windows, you must set LLVM_INSTALL_DIR to the installation path."
                 "qtdiag",
                 "qtpaths",
                 "qtplugininfo",
-                "windeployqt",
-                "winrtrunner"
+                "windeployqt"
             ]
         }
     ]

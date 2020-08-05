@@ -212,10 +212,6 @@ static Platform platformFromMkSpec(const QString &xSpec)
             return WindowsDesktopClangMsvc;
         return xSpec.contains(QLatin1String("g++")) ? WindowsDesktopMinGW : WindowsDesktopMsvc;
     }
-    if (xSpec.startsWith(QLatin1String("winrt-x")))
-        return WinRtIntelMsvc;
-    if (xSpec.startsWith(QLatin1String("winrt-arm")))
-        return WinRtArmMsvc;
     return UnknownPlatform;
 }
 
@@ -278,8 +274,6 @@ struct Options {
     bool dryRun = false;
     bool patchQt = true;
     bool ignoreLibraryErrors = false;
-
-    inline bool isWinRt() const { return platform.testFlag(WinRt); }
 };
 
 // Return binary from folder
@@ -902,10 +896,6 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 case WindowsDesktopMinGW:
                     filter = QStringLiteral("qwindows");
                     break;
-                case WinRtIntelMsvc:
-                case WinRtArmMsvc:
-                    filter = QStringLiteral("qwinrt");
-                    break;
                 case Unix:
                     filter = QStringLiteral("libqxcb");
                     break;
@@ -1002,8 +992,7 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
         arguments.append(QDir::toNativeSeparators(targetFilePath));
         const QFileInfoList &langQmFiles = sourceDir.entryInfoList(translationNameFilters(usedQtModules, prefix));
         for (const QFileInfo &langQmFileFi : langQmFiles) {
-            // winrt relies on a proper list of deployed files. We cannot cheat an mention files we do not ship here.
-            if (options.json && !options.isWinRt()) {
+            if (options.json) {
                 options.json->addFile(langQmFileFi.absoluteFilePath(),
                                       absoluteTarget);
             }
@@ -1418,7 +1407,7 @@ static DeployResult deploy(const Options &options,
             if (softwareRasterizer.isFile())
                 deployedQtLibraries.append(softwareRasterizer.absoluteFilePath());
         }
-        if (options.systemD3dCompiler && !options.isWinRt() && machineArch != IMAGE_FILE_MACHINE_ARM64) {
+        if (options.systemD3dCompiler && machineArch != IMAGE_FILE_MACHINE_ARM64) {
             const QString d3dCompiler = findD3dCompiler(options.platform, qtBinDir, wordSize);
             if (d3dCompiler.isEmpty()) {
                 std::wcerr << "Warning: Cannot find any version of the d3dcompiler DLL.\n";
@@ -1427,33 +1416,6 @@ static DeployResult deploy(const Options &options,
             }
         }
     } // Windows
-
-    // We need to copy ucrtbased.dll on WinRT as this library is not part of
-    // the c runtime package. VS 2015 does the same when deploying to a device
-    // or creating an appx.
-    if (result.isDebug && options.platform == WinRtArmMsvc
-             && qmakeVariables.value(QStringLiteral("QMAKE_XSPEC")).endsWith(QLatin1String("msvc2015"))) {
-        const QString extensionPath = QString::fromLocal8Bit(qgetenv("ExtensionSdkDir"));
-        const QString ucrtVersion = QString::fromLocal8Bit(qgetenv("UCRTVersion"));
-        if (extensionPath.isEmpty() || ucrtVersion.isEmpty()) {
-            std::wcerr << "Warning: Cannot find ucrtbased.dll as either "
-                << "ExtensionSdkDir or UCRTVersion is not set in "
-                << "your environment.\n";
-        } else {
-            const QString ucrtbasedLib = extensionPath
-                    + QStringLiteral("/Microsoft.UniversalCRT.Debug/")
-                    + ucrtVersion
-                    + QStringLiteral("/Redist/Debug/arm/ucrtbased.dll");
-            const QFileInfo ucrtPath(ucrtbasedLib);
-            if (ucrtPath.exists() && ucrtPath.isFile()) {
-                deployedQtLibraries.append(ucrtPath.absoluteFilePath());
-            } else {
-                std::wcerr << "Warning: Cannot find ucrtbased.dll at "
-                           << QDir::toNativeSeparators(ucrtbasedLib)
-                           << " or it is not a file.\n";
-            }
-        }
-    }
 
     // Update libraries
     if (options.libraries) {
@@ -1467,7 +1429,7 @@ static DeployResult deploy(const Options &options,
                 return result;
         }
 
-        if (options.patchQt  && !options.dryRun && !options.isWinRt()) {
+        if (options.patchQt  && !options.dryRun) {
             const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt6Core", qtLibInfix,
                                                               options.platform, result.isDebug)).fileName();
 #ifndef QT_RELOCATABLE

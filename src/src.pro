@@ -40,9 +40,8 @@ macos {
 
 qtHaveModule(dbus): SUBDIRS += qdbus
 
-win32|winrt:SUBDIRS += windeployqt
-winrt:SUBDIRS += winrtrunner
-qtHaveModule(gui):qtConfig(commandlineparser):!wasm:!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
+win32:SUBDIRS += windeployqt
+qtHaveModule(gui):qtConfig(commandlineparser):!wasm:!android:!uikit:!qnx: SUBDIRS += qtdiag
 
 qtNomakeTools( \
     distancefieldgenerator \
@@ -54,6 +53,5 @@ qtNomakeTools( \
 cross_compile:isEmpty(QMAKE_HOST_CXX.INCDIRS) {
     qdoc.depends += qtattributionsscanner
     windeployqt.depends += qtattributionsscanner
-    winrtrunner.depends += qtattributionsscanner
     linguist.depends += qtattributionsscanner
 }

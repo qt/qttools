@@ -46,7 +46,6 @@ enum PlatformFlag {
     // OS
     WindowsBased = 0x00001,
     UnixBased    = 0x00002,
-    WinRt        = 0x00004,
     // CPU
     IntelBased   = 0x00010,
     ArmBased     = 0x00020,
@@ -60,8 +59,6 @@ enum PlatformFlag {
     WindowsDesktopMinGW = WindowsBased + IntelBased + MinGW,
     WindowsDesktopClangMsvc = WindowsBased + IntelBased + ClangMsvc,
     WindowsDesktopClangMinGW = WindowsBased + IntelBased + ClangMinGW,
-    WinRtIntelMsvc = WindowsBased + WinRt + IntelBased + Msvc,
-    WinRtArmMsvc = WindowsBased + WinRt + ArmBased + Msvc,
     Unix = UnixBased,
     UnknownPlatform
 };

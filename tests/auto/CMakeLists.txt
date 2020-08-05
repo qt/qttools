@@ -19,6 +19,6 @@ endif()
 #add_subdirectory(cmake)
 #add_subdirectory(installed_cmake)
 # special case end
-if(QT_FEATURE_process AND WIN32 AND NOT CMAKE_CROSSCOMPILING AND NOT WINRT)
+if(QT_FEATURE_process AND WIN32 AND NOT CMAKE_CROSSCOMPILING)
     add_subdirectory(windeployqt)
 endif()
