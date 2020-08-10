@@ -1,0 +1,10 @@
+include(testcpp.qdocconf)
+
+defines += test_properties
+
+sources += ../testcpp/properties.qdoc
+
+outputformats                       = HTML DocBook
+{HTML.nosubdirs,DocBook.nosubdirs}  = true
+HTML.outputsubdir                   = properties
+DocBook.outputsubdir                = properties-docbook

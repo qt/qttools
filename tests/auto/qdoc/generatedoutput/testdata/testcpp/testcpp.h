@@ -26,6 +26,13 @@
 **
 ****************************************************************************/
 #pragma once
+
+#ifdef test_properties
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qproperty.h>
+#include <QtCore/qstring.h>
+#endif
+
 #define QDOCTEST_MACRO test
 #define QDOCTEST_MACRO2(x) (x) < 0 ? 0 : (x))
 
@@ -75,10 +82,35 @@ protected:
 };
 
 class TestDerived : public Test {
+#ifdef test_properties
+    Q_OBJECT
+
+    Q_PROPERTY(QString bindableProp READ bindableProp WRITE setBindableProp NOTIFY bindablePropChanged BINDABLE bindableProp)
+    Q_PROPERTY(QString someProp READ someProp BINDABLE somBindableProp)
+    Q_PROPERTY(int *intProp READ getInt STORED false CONSTANT FINAL)
+    QDOC_PROPERTY(bool boolProp READ boolProp WRITE setBoolProp NOTIFY boolPropChanged RESET resetBoolProp REVISION 1)
+#endif
+
 public:
     using DerivedType = Test::SomeType;
     using NotTypedef = int;
     void virtualFun() override;
+#ifdef test_properties
+    QBindable<QString> bindableProp();
+    QBindable<QString> someBindableProp();
+    const QString &someProp();
+    int *getInt();
+    bool boolProp();
+
+Q_SIGNALS:
+    void bindablePropChanged();
+    Q_REVISION(1) void boolPropChanged();
+
+public Q_SLOTS:
+    void setBindableProp(const QString &s);
+    void setBoolProp(bool b);
+    void resetBoolProp();
+#endif
 };
 
 } // namespace TestQDoc

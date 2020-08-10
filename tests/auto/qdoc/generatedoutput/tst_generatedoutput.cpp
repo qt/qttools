@@ -75,11 +75,13 @@ private slots:
     void nestedMacro();
     void headerFile();
     void usingDirective();
+    void properties();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
     QString m_qdoc;
     QDir m_expectedDir;
+    QString m_extraParams;
     bool m_regen = false;
 
     void runQDocProcess(const QStringList &arguments);
@@ -96,6 +98,16 @@ void tst_generatedOutput::initTestCase()
     const auto extension = QSysInfo::productType() == "windows" ? ".exe" : "";
     m_qdoc = binpath + QLatin1String("/qdoc") + extension;
     m_expectedDir.setPath(QFINDTESTDATA(".") + QLatin1String("/expected_output"));
+
+    // Resolve the path to the file containing extra parameters
+    m_extraParams = QFileInfo(QTest::currentAppName()).dir().filePath("qdocincludepaths.inc");
+    if (!QFileInfo::exists(m_extraParams)) {
+        const QString warningMessage = "Cannot locate " + m_extraParams;
+        QWARN(qPrintable(warningMessage));
+        m_extraParams.clear();
+    } else {
+        m_extraParams.insert(0, '@');
+    }
 }
 
 void tst_generatedOutput::init()
@@ -457,6 +469,21 @@ void tst_generatedOutput::headerFile()
 void tst_generatedOutput::usingDirective()
 {
     testAndCompare("testdata/configs/usingdirective.qdocconf", "space.html");
+}
+
+void tst_generatedOutput::properties()
+{
+    if (m_extraParams.isEmpty() && !m_regen) {
+        QSKIP("Required include paths not available");
+        return;
+    }
+
+    testAndCompare("testdata/configs/properties.qdocconf",
+                   "properties/testqdoc-testderived.html "
+                   "properties/testqdoc-testderived-members.html "
+                   "properties/testcpp.index "
+                   "properties-docbook/testqdoc-testderived.xml",
+                   m_extraParams.toLatin1().data());
 }
 
 int main(int argc, char *argv[])
