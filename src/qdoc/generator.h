@@ -55,7 +55,15 @@ class Generator
 {
 public:
     enum ListType { Generic, Obsolete };
-    enum Addendum { Invokable, PrivateSignal, QmlSignalHandler, AssociatedProperties, TypeAlias };
+
+    enum Addendum {
+        Invokable,
+        PrivateSignal,
+        QmlSignalHandler,
+        AssociatedProperties,
+        TypeAlias,
+        BindableProperty
+    };
 
     Generator();
     virtual ~Generator();

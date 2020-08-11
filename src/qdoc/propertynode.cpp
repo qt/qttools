@@ -83,6 +83,9 @@ void PropertyNode::setOverriddenFrom(const PropertyNode *baseProperty)
  */
 QString PropertyNode::qualifiedDataType() const
 {
+    if (m_propertyType != Standard)
+        return m_type;
+
     if (setters().isEmpty() && resetters().isEmpty()) {
         if (m_type.contains(QLatin1Char('*')) || m_type.contains(QLatin1Char('&'))) {
             // 'QWidget *' becomes 'QWidget *' const

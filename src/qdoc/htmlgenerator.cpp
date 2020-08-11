@@ -3376,23 +3376,25 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
 
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
-        Section section(Section::Accessors, Section::Active);
+        if (property->propertyType() == PropertyNode::Standard) {
+            Section section(Section::Accessors, Section::Active);
 
-        section.appendMembers(property->getters().toVector());
-        section.appendMembers(property->setters().toVector());
-        section.appendMembers(property->resetters().toVector());
+            section.appendMembers(property->getters().toVector());
+            section.appendMembers(property->setters().toVector());
+            section.appendMembers(property->resetters().toVector());
 
-        if (!section.members().isEmpty()) {
-            out() << "<p><b>Access functions:</b></p>\n";
-            generateSectionList(section, node, marker);
-        }
+            if (!section.members().isEmpty()) {
+                out() << "<p><b>Access functions:</b></p>\n";
+                generateSectionList(section, node, marker);
+            }
 
-        Section notifiers(Section::Accessors, Section::Active);
-        notifiers.appendMembers(property->notifiers().toVector());
+            Section notifiers(Section::Accessors, Section::Active);
+            notifiers.appendMembers(property->notifiers().toVector());
 
-        if (!notifiers.members().isEmpty()) {
-            out() << "<p><b>Notifier signal:</b></p>\n";
-            generateSectionList(notifiers, node, marker);
+            if (!notifiers.members().isEmpty()) {
+                out() << "<p><b>Notifier signal:</b></p>\n";
+                generateSectionList(notifiers, node, marker);
+            }
         }
     } else if (node->isEnumType()) {
         const auto *enumTypeNode = static_cast<const EnumNode *>(node);

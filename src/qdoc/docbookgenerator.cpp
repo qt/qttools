@@ -2150,7 +2150,10 @@ void DocBookGenerator::generateBody(const Node *node)
             generateReimplementsClause(fn);
         else if (node->isTypeAlias())
             generateAddendum(node, TypeAlias, nullptr, false);
-
+        else if (node->isProperty()) {
+            if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::Standard)
+                generateAddendum(node, BindableProperty, nullptr, false);
+        }
         if (!generateText(node->doc().body(), node)) {
             if (node->isMarkedReimp())
                 return;
@@ -3512,7 +3515,19 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         newLine();
         break;
     }
-
+    case BindableProperty:
+    {
+        const Node *linkNode;
+        Atom linkAtom = Atom(Atom::Link, "QProperty");
+        QString link = getAutoLink(&linkAtom, node, &linkNode);
+        writer->writeStartElement(dbNamespace, "para");
+        writer->writeCharacters("This property supports ");
+        generateSimpleLink(link, "QProperty");
+        writer->writeCharacters(" bindings.");
+        writer->writeEndElement(); // para
+        newLine();
+        break;
+    }
     default:
         break;
     }
@@ -3589,41 +3604,43 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
 
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
-        Section section(Section::Accessors, Section::Active);
+        if (property->propertyType() == PropertyNode::Standard) {
+            Section section(Section::Accessors, Section::Active);
 
-        section.appendMembers(property->getters().toVector());
-        section.appendMembers(property->setters().toVector());
-        section.appendMembers(property->resetters().toVector());
+            section.appendMembers(property->getters().toVector());
+            section.appendMembers(property->setters().toVector());
+            section.appendMembers(property->resetters().toVector());
 
-        if (!section.members().isEmpty()) {
-            writer->writeStartElement(dbNamespace, "para");
-            newLine();
-            writer->writeStartElement(dbNamespace, "emphasis");
-            writer->writeAttribute("role", "bold");
-            writer->writeCharacters("Access functions:");
-            newLine();
-            writer->writeEndElement(); // emphasis
-            newLine();
-            writer->writeEndElement(); // para
-            newLine();
-            generateSectionList(section, node);
-        }
+            if (!section.members().isEmpty()) {
+                writer->writeStartElement(dbNamespace, "para");
+                newLine();
+                writer->writeStartElement(dbNamespace, "emphasis");
+                writer->writeAttribute("role", "bold");
+                writer->writeCharacters("Access functions:");
+                newLine();
+                writer->writeEndElement(); // emphasis
+                newLine();
+                writer->writeEndElement(); // para
+                newLine();
+                generateSectionList(section, node);
+            }
 
-        Section notifiers(Section::Accessors, Section::Active);
-        notifiers.appendMembers(property->notifiers().toVector());
+            Section notifiers(Section::Accessors, Section::Active);
+            notifiers.appendMembers(property->notifiers().toVector());
 
-        if (!notifiers.members().isEmpty()) {
-            writer->writeStartElement(dbNamespace, "para");
-            newLine();
-            writer->writeStartElement(dbNamespace, "emphasis");
-            writer->writeAttribute("role", "bold");
-            writer->writeCharacters("Notifier signal:");
-            newLine();
-            writer->writeEndElement(); // emphasis
-            newLine();
-            writer->writeEndElement(); // para
-            newLine();
-            generateSectionList(notifiers, node);
+            if (!notifiers.members().isEmpty()) {
+                writer->writeStartElement(dbNamespace, "para");
+                newLine();
+                writer->writeStartElement(dbNamespace, "emphasis");
+                writer->writeAttribute("role", "bold");
+                writer->writeCharacters("Notifier signal:");
+                newLine();
+                writer->writeEndElement(); // emphasis
+                newLine();
+                writer->writeEndElement(); // para
+                newLine();
+                generateSectionList(notifiers, node);
+            }
         }
     } else if (node->isEnumType()) {
         const auto en = static_cast<const EnumNode *>(node);

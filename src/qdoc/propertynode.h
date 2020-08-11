@@ -42,6 +42,7 @@ class Aggregate;
 class PropertyNode : public Node
 {
 public:
+    enum PropertyType { Standard, Bindable };
     enum FunctionRole { Getter, Setter, Resetter, Notifier };
     enum { NumFunctionRoles = Notifier + 1 };
 
@@ -61,6 +62,7 @@ public:
     void setConstant() { m_const = true; }
     void setFinal() { m_final = true; }
     void setRequired() { m_required = true; }
+    void setPropertyType(PropertyType type) { m_propertyType = type; }
     void setRevision(int revision) { m_revision = revision; }
 
     const QString &dataType() const { return m_type; }
@@ -83,6 +85,7 @@ public:
     bool isConstant() const { return m_const; }
     bool isFinal() const { return m_final; }
     bool isRequired() const { return m_required; }
+    PropertyType propertyType() const { return m_propertyType; }
     const PropertyNode *overriddenFrom() const { return m_overrides; }
 
     bool storedDefault() const { return true; }
@@ -93,6 +96,7 @@ public:
 
 private:
     QString m_type {};
+    PropertyType m_propertyType { Standard };
     QString m_runtimeDesFunc {};
     QString m_runtimeScrFunc {};
     NodeList m_functions[NumFunctionRoles] {};

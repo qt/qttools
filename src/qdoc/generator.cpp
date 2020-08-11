@@ -808,6 +808,10 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             generateReimplementsClause(fn, marker);
         else if (node->isTypeAlias())
             generateAddendum(node, TypeAlias, marker, false);
+        else if (node->isProperty()) {
+            if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::Standard)
+                generateAddendum(node, BindableProperty, marker);
+        }
 
         if (!generateText(node->doc().body(), node, marker)) {
             if (node->isMarkedReimp())
@@ -1417,6 +1421,15 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         } else {
             text << Atom(Atom::String, ta->aliasedType()) << ".";
         }
+        break;
+    }
+    case BindableProperty:
+    {
+        text << "This property supports "
+             << Atom(Atom::Link, "QProperty")
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << "QProperty"
+             << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
+        text << " bindings.";
         break;
     }
     default:

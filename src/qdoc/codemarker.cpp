@@ -188,6 +188,14 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
         case Node::TypeAlias:
             extra << "alias";
             break;
+        case Node::Property: {
+            auto propertyNode = static_cast<const PropertyNode *>(node);
+            if (propertyNode->propertyType() == PropertyNode::Bindable)
+                extra << "bindable";
+            if (!propertyNode->isWritable())
+                extra << "read-only";
+        }
+        break;
         default:
             break;
         }
