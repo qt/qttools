@@ -3607,8 +3607,11 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
         if (!section.members().isEmpty()) {
             writer->writeStartElement(dbNamespace, "para");
             newLine();
-            writer->writeTextElement(dbNamespace, "emphasis", "Access functions:");
+            writer->writeStartElement(dbNamespace, "emphasis");
             writer->writeAttribute("role", "bold");
+            writer->writeCharacters("Access functions:");
+            newLine();
+            writer->writeEndElement(); // emphasis
             newLine();
             writer->writeEndElement(); // para
             newLine();
@@ -3621,8 +3624,11 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
         if (!notifiers.members().isEmpty()) {
             writer->writeStartElement(dbNamespace, "para");
             newLine();
-            writer->writeTextElement(dbNamespace, "emphasis", "Notifier signal:");
+            writer->writeStartElement(dbNamespace, "emphasis");
             writer->writeAttribute("role", "bold");
+            writer->writeCharacters("Notifier signal:");
+            newLine();
+            writer->writeEndElement(); // emphasis
             newLine();
             writer->writeEndElement(); // para
             newLine();
