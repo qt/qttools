@@ -80,7 +80,7 @@ namespace TestQDoc {
 */
 
 /*!
-    \macro QDOCTEST_MACRO2(x)
+    \macro QDOCTEST_MACRO2(int &x)
     \relates TestQDoc::Test
     \since Test 1.1
     \brief A macro with argument \a x.

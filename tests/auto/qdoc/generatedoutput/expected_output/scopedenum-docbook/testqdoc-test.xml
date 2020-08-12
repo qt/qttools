@@ -208,15 +208,15 @@
 <db:section xml:id="macro-documentation">
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO2">
-<db:title>[since Test 1.1] QDOCTEST_MACRO2(<db:emphasis>x</db:emphasis>)</db:title>
+<db:title>[since Test 1.1] QDOCTEST_MACRO2(int &amp;amp;<db:emphasis>x</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:methodname>QDOCTEST_MACR</db:methodname>
 <db:methodparam>
-<db:type></db:type>
+<db:type>int &amp;</db:type>
 <db:parameter>x</db:parameter>
 </db:methodparam>
 <db:synopsisinfo db:role="meta">macrowithparams</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">QDOCTEST_MACRO2( x)</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">QDOCTEST_MACRO2(int &amp;x)</db:synopsisinfo>
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
