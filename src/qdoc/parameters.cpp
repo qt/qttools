@@ -481,6 +481,15 @@ void Parameters::set(const QString &signature)
             QString pType = blankSplit.join(' ');
             if (pType.isEmpty() && pName == QLatin1String("..."))
                 qSwap(pType, pName);
+            else {
+                int j = 0;
+                while (j < pName.length() && !pName.at(j).isLetter())
+                    j++;
+                if (j > 0) {
+                    pType += QChar(' ') + pName.left(j);
+                    pName = pName.mid(j);
+                }
+            }
             parameters_[i++].set(pType, pName, pDefault);
         }
     }
