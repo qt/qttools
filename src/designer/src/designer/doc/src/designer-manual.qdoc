@@ -1720,7 +1720,7 @@ pixmap property in the property editor.
 
 
 /*!
-    \page designer-using-a-ui-file-cpp.html
+    \page designer-using-a-ui-file.html
     \previouspage Using Stylesheets with Qt Designer
     \nextpage Using a Designer UI File in Your Qt for Python Application
 
