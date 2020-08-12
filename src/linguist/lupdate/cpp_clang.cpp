@@ -32,7 +32,7 @@
 #include "synchronized.h"
 #include "translator.h"
 
-#include <QtCore/qthread.h>
+#include <thread>
 
 #include <clang/Tooling/CommonOptionsParser.h>
 #include <llvm/Option/Option.h>
@@ -143,7 +143,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     std::vector<std::thread> producers;
     ReadSynchronizedRef<std::string> ppSources(sourcesPP);
     WriteSynchronizedRef<TranslationRelatedStore> ppStore(stores.Preprocessor);
-    int idealProducerCount = std::min(int(sourcesPP.size()), QThread::idealThreadCount());
+    int idealProducerCount = std::min(int(sourcesPP.size()), int(std::thread::hardware_concurrency()));
 
     for (int i = 0; i < idealProducerCount; ++i) {
         std::thread producer([&ppSources, &optionsParser, &ppStore]() {
@@ -161,7 +161,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     producers.clear();
 
     ReadSynchronizedRef<std::string> astSources(sourcesAst);
-    idealProducerCount = std::min(int(sourcesAst.size()), QThread::idealThreadCount());
+    idealProducerCount = std::min(int(sourcesAst.size()), int(std::thread::hardware_concurrency()));
     for (int i = 0; i < idealProducerCount; ++i) {
         std::thread producer([&astSources, &optionsParser, &stores]() {
             std::string file;
@@ -275,7 +275,7 @@ TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStor
 
 #define START_THREADS(RSV, WSV) \
     std::vector<std::thread> producers; \
-    const int idealProducerCount = std::min(RSV.size(), QThread::idealThreadCount()); \
+    const int idealProducerCount = std::min(RSV.size(), int(std::thread::hardware_concurrency())); \
     \
     for (int i = 0; i < idealProducerCount; ++i) { \
         std::thread producer([&]() { \

@@ -31,6 +31,7 @@
 
 #include <QtCore/qmutex.h>
 
+#include <atomic>
 #include <vector>
 
 QT_BEGIN_NAMESPACE

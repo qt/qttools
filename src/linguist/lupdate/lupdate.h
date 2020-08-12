@@ -29,7 +29,7 @@
 #ifndef LUPDATE_H
 #define LUPDATE_H
 
-#include "qglobal.h"
+#include <QtCore/qtcore-config.h>
 #include <QtTools/private/qttools-config_p.h>
 
 #include <QtCore/QList>
