@@ -203,7 +203,7 @@ defineTest(qtConfTest_libclang) {
 
     LLVM_INSTALL_DIR = $$FindCleanLLVMInstallDir()
     isEmpty(LLVM_INSTALL_DIR) {
-        win32 {
+        equals(QMAKE_HOST.os, Windows) {
             return(false)
         }
     }
@@ -284,7 +284,7 @@ defineTest(qtConfTest_libclang) {
     } else {
         # CI
         HAS_CLANGCPP = true #just assuming for now
-        win32 {
+        equals(QMAKE_HOST.os, Windows) {
             versionIsAtLeast($$CLANG_VERSION, "10.0.0") {
                 CLANG_DEFINES += CINDEX_NO_EXPORTS
             } else {
