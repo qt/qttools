@@ -2,7 +2,7 @@
 
 # zero warning policy
 warninglimit = 0
-warninglimit.enable = true
+warninglimit.enabled = true
 
 # don't write host system-specific paths to index files
 locationinfo = false
