@@ -622,10 +622,10 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
     the current filter, and therefore only the identifiers registered for
     the current filter will be returned.
 */
-QMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
+QMultiMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
 {
     if (!d->setup())
-        return QMap<QString, QUrl>();
+        return QMultiMap<QString, QUrl>();
 
     if (d->usesFilterEngine)
         return d->collectionHandler->linksForIdentifier(id, d->filterEngine->activeFilter());
@@ -676,10 +676,10 @@ QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id, cons
     on the current filter, and therefore only the keywords registered for
     the current filter will be returned.
 */
-QMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
+QMultiMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
 {
     if (!d->setup())
-        return QMap<QString, QUrl>();
+        return QMultiMap<QString, QUrl>();
 
     if (d->usesFilterEngine)
         return d->collectionHandler->linksForKeyword(keyword, d->filterEngine->activeFilter());

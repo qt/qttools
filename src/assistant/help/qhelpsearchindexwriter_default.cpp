@@ -458,12 +458,12 @@ void QHelpSearchIndexWriter::run()
         for (const QStringList &attributes : attributeSets) {
             const QString &attributesString = attributes.join(QLatin1Char('|'));
 
-            const QMap<QString, QByteArray> htmlFiles
-                    = reader.filesData(attributes, QLatin1String("html"));
-            const QMap<QString, QByteArray> htmFiles
-                    = reader.filesData(attributes, QLatin1String("htm"));
-            const QMap<QString, QByteArray> txtFiles
-                    = reader.filesData(attributes, QLatin1String("txt"));
+            const QMultiMap<QString, QByteArray> htmlFiles =
+                    reader.filesData(attributes, QLatin1String("html"));
+            const QMultiMap<QString, QByteArray> htmFiles =
+                    reader.filesData(attributes, QLatin1String("htm"));
+            const QMultiMap<QString, QByteArray> txtFiles =
+                    reader.filesData(attributes, QLatin1String("txt"));
 
             QMultiMap<QString, QByteArray> files = htmlFiles;
             files.unite(htmFiles);

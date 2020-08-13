@@ -115,8 +115,8 @@ public:
     QString version() const;
     IndexTable indexTable() const;
     QList<QStringList> filterAttributeSets() const;
-    QMap<QString, QByteArray> filesData(const QStringList &filterAttributes,
-        const QString &extensionFilter = QString()) const;
+    QMultiMap<QString, QByteArray> filesData(const QStringList &filterAttributes,
+                                             const QString &extensionFilter = QString()) const;
     QByteArray fileData(const QString &virtualFolder,
         const QString &filePath) const;
 

@@ -240,7 +240,7 @@ QHelpEngineCore *QHelpIndexModel::helpEngine() const
 */
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
-QMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) const
+QMultiMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) const
 {
     return d->helpEngine->q->linksForKeyword(keyword);
 }
@@ -395,9 +395,9 @@ void QHelpIndexWidget::showLink(const QModelIndex &index)
         emit documentsActivated(docs, name);
         QT_WARNING_PUSH
         QT_WARNING_DISABLE_DEPRECATED
-        QMap<QString, QUrl> links;
+        QMultiMap<QString, QUrl> links;
         for (const auto &doc : docs)
-            static_cast<QMultiMap<QString, QUrl> &>(links).insert(doc.title, doc.url);
+            links.insert(doc.title, doc.url);
         emit linksActivated(links, name);
         QT_WARNING_POP
     } else if (!docs.isEmpty()) {

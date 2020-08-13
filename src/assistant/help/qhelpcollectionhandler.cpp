@@ -2301,23 +2301,25 @@ static QUrl buildQUrl(const QString &ns, const QString &folder,
     return url;
 }
 
-QMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(const QString &id,
-                    const QStringList &filterAttributes) const
+QMultiMap<QString, QUrl>
+QHelpCollectionHandler::linksForIdentifier(const QString &id,
+                                           const QStringList &filterAttributes) const
 {
     return linksForField(QLatin1String("Identifier"), id, filterAttributes);
 }
 
-QMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(const QString &keyword,
-                    const QStringList &filterAttributes) const
+QMultiMap<QString, QUrl>
+QHelpCollectionHandler::linksForKeyword(const QString &keyword,
+                                        const QStringList &filterAttributes) const
 {
     return linksForField(QLatin1String("Name"), keyword, filterAttributes);
 }
 
-QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
-                    const QString &fieldValue,
-                    const QStringList &filterAttributes) const
+QMultiMap<QString, QUrl>
+QHelpCollectionHandler::linksForField(const QString &fieldName, const QString &fieldValue,
+                                      const QStringList &filterAttributes) const
 {
-    QMap<QString, QUrl> linkMap;
+    QMultiMap<QString, QUrl> linkMap;
 
     if (!isDBOpened())
         return linkMap;
@@ -2357,23 +2359,21 @@ QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldNa
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + QLatin1String(" : ") + m_query->value(3).toString();
 
-        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(title, buildQUrl(
-                                             m_query->value(1).toString(),
-                                             m_query->value(2).toString(),
-                                             m_query->value(3).toString(),
-                                             m_query->value(4).toString()));
+        linkMap.insert(title,
+                       buildQUrl(m_query->value(1).toString(), m_query->value(2).toString(),
+                                 m_query->value(3).toString(), m_query->value(4).toString()));
     }
     return linkMap;
 }
 
-QMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(const QString &id,
-                    const QString &filterName) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(const QString &id,
+                                                                    const QString &filterName) const
 {
     return linksForField(QLatin1String("Identifier"), id, filterName);
 }
 
-QMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(const QString &keyword,
-                    const QString &filterName) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(const QString &keyword,
+                                                                 const QString &filterName) const
 {
     return linksForField(QLatin1String("Name"), keyword, filterName);
 }
@@ -2390,14 +2390,14 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(const QString &keyw
     return documentsForField(QLatin1String("Name"), keyword, filterName);
 }
 
-QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
-                    const QString &fieldValue,
-                    const QString &filterName) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
+                                                               const QString &fieldValue,
+                                                               const QString &filterName) const
 {
-    QMap<QString, QUrl> linkMap;
+    QMultiMap<QString, QUrl> linkMap;
     const auto documents = documentsForField(fieldName, fieldValue, filterName);
     for (const auto &document : documents)
-        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(document.title, document.url);
+        linkMap.insert(document.title, document.url);
 
     return linkMap;
 }

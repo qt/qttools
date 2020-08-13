@@ -147,20 +147,19 @@ public:
     QList<QStringList> filterAttributeSets(const QString &namespaceName) const;
 
     // use linksForIdentifier(const QString &, const QString &) instead
-    QMap<QString, QUrl> linksForIdentifier(const QString &id,
-                                           const QStringList &filterAttributes) const;
+    QMultiMap<QString, QUrl> linksForIdentifier(const QString &id,
+                                                const QStringList &filterAttributes) const;
 
     // use linksForKeyword(const QString &, const QString &) instead
-    QMap<QString, QUrl> linksForKeyword(const QString &keyword,
-                                        const QStringList &filterAttributes) const;
+    QMultiMap<QString, QUrl> linksForKeyword(const QString &keyword,
+                                             const QStringList &filterAttributes) const;
 
     // use documentsForIdentifier instead
-    QMap<QString, QUrl> linksForIdentifier(const QString &id,
-                                           const QString &filterName) const;
+    QMultiMap<QString, QUrl> linksForIdentifier(const QString &id, const QString &filterName) const;
 
     // use documentsForKeyword instead
-    QMap<QString, QUrl> linksForKeyword(const QString &keyword,
-                                        const QString &filterName) const;
+    QMultiMap<QString, QUrl> linksForKeyword(const QString &keyword,
+                                             const QString &filterName) const;
     // *** Legacy block end ***
 
     QStringList filters() const;
@@ -218,14 +217,12 @@ signals:
 
 private:
     // legacy stuff
-    QMap<QString, QUrl> linksForField(const QString &fieldName,
-                                      const QString &fieldValue,
-                                      const QStringList &filterAttributes) const;
+    QMultiMap<QString, QUrl> linksForField(const QString &fieldName, const QString &fieldValue,
+                                           const QStringList &filterAttributes) const;
 
     QString namespaceVersion(const QString &namespaceName) const;
-    QMap<QString, QUrl> linksForField(const QString &fieldName,
-                                      const QString &fieldValue,
-                                      const QString &filterName) const;
+    QMultiMap<QString, QUrl> linksForField(const QString &fieldName, const QString &fieldValue,
+                                           const QString &filterName) const;
     QList<QHelpLink> documentsForField(const QString &fieldName,
                                        const QString &fieldValue,
                                        const QString &filterName) const;

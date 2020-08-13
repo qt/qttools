@@ -481,11 +481,10 @@ QStringList QHelpDBReader::filterAttributes(const QString &filterName) const
     return lst;
 }
 
-QMap<QString, QByteArray> QHelpDBReader::filesData(
-        const QStringList &filterAttributes,
-        const QString &extensionFilter) const
+QMultiMap<QString, QByteArray> QHelpDBReader::filesData(const QStringList &filterAttributes,
+                                                        const QString &extensionFilter) const
 {
-    QMap<QString, QByteArray> result;
+    QMultiMap<QString, QByteArray> result;
     if (!m_query)
         return result;
 

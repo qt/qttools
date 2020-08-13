@@ -107,9 +107,9 @@ public:
 
 #if QT_DEPRECATED_SINCE(5, 15)
     QT_DEPRECATED_X("Use documentsForIdentifier() instead")
-    QMap<QString, QUrl> linksForIdentifier(const QString &id) const;
+    QMultiMap<QString, QUrl> linksForIdentifier(const QString &id) const;
     QT_DEPRECATED_X("Use documentsForKeyword() instead")
-    QMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
+    QMultiMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
 #endif
 
     QList<QHelpLink> documentsForIdentifier(const QString &id) const;
