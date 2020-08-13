@@ -105,11 +105,7 @@ QFont FontPanel::selectedFont() const
     else
         rc.setStyle(QFont::StyleNormal);
     rc.setBold(m_fontDatabase.bold(family, styleDescription));
-
-    // Weight < 0 asserts...
-    const int weight = m_fontDatabase.weight(family, styleDescription);
-    if (weight >= 0)
-        rc.setWeight(weight);
+    rc.setWeight(QFont::Weight(m_fontDatabase.weight(family, styleDescription)));
     return rc;
 }
 

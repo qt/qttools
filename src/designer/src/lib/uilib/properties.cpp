@@ -228,8 +228,6 @@ QVariant domPropertyToVariant(const DomProperty *p)
             f.setFamily(font->elementFamily());
         if (font->hasElementPointSize() && font->elementPointSize() > 0)
             f.setPointSize(font->elementPointSize());
-        if (font->hasElementWeight() && font->elementWeight() > 0)
-            f.setWeight(font->elementWeight());
         if (font->hasElementItalic())
             f.setItalic(font->elementItalic());
         if (font->hasElementBold())
@@ -448,10 +446,8 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         DomFont *fnt = new DomFont();
         const QFont font = qvariant_cast<QFont>(v);
         const uint mask = font.resolveMask();
-        if (mask & QFont::WeightResolved) {
+        if (mask & QFont::WeightResolved)
             fnt->setElementBold(font.bold());
-            fnt->setElementWeight(font.weight());
-        }
         if (mask & QFont::FamilyResolved)
             fnt->setElementFamily(font.family());
         if (mask & QFont::StyleResolved)
