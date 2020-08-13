@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -104,4 +104,114 @@
         \li \l {QDoc Linking Test}
         \li \l {Table of Contents}
     \endlist
+*/
+
+/*!
+    \page qdoctests-qdocfileoutput-exhaustive.html 
+    \title Exhaustive testing of QDoc commands
+    \brief This page is a dumping ground for QDoc commands under test.
+
+    \section1 This is a section1
+    \section2 This is a section2
+    \section3 This is a section3
+    \section4 This is a section4
+    \endsection4
+    \endsection3
+    \endsection2
+    \endsection1
+
+    \badcode
+        This is bad code
+    \endcode
+    
+    This text should have a line break riiiiight \br noooow.
+
+    \b{All your text belong to bold}
+    ...And this is an examble of only \b bold being, well, bold.
+
+    \dots
+
+    \js
+        // If I knew JavaScript, this is where I would write it.
+    \endjs
+
+    \qmltext
+        And if I knew qmltext, I guess this is where that would go.
+    \endqmltext
+
+    \caption This a caption
+
+    \legalese
+        Lorem legal ipsum
+    \endlegalese
+
+    \footnote
+    This is where I put my footnotes.
+    \endfootnote
+
+    \link 
+        https://www.qt.io
+    \endlink
+
+    \quotation
+    This is a quotation.
+    \endquotation
+
+    \raw HTML
+        <html><body>This is <b>raw</b>. Like the <h1>Eddie Murphy</h1> movie. Just not as funny.</body></html>
+    \endraw
+
+    \sidebar
+    Look, ma! I made a sidebar!
+    \endsidebar
+
+    \table
+    \row \li Table item in a table row
+    \row \li Another item in a different row
+    \endtable
+
+    \granularity
+
+    \important This is really important.
+
+    \oldcode
+        This is old code.
+    \newcode
+        This is new and shiny!
+    \endcode
+
+    \note The code above doesn't compile
+
+    \hr
+
+    \warning The following commands have yet to be tested:
+    sincelist
+    header
+    index
+    topicref // or just don’t care, remove it
+    image
+    inlineimage
+    printline
+    printto
+    printuntil  // what’s the difference between printto and printuntil???
+    quotefile
+    quotefromfile
+    quotefunction
+    skipline
+    skipto
+    skipuntil
+    span
+    snippet
+    codeline
+    overload
+    sub
+    sup
+    tableofcontents
+    tt
+    uicontrol
+    endmapref
+    endomit
+    underline
+    unicode
+
 */

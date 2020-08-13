@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Exhaustive testing of QDoc commands</db:title>
+<db:productname>OutputFromQDocFiles</db:productname>
+<db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>This page is a dumping ground for QDoc commands under test.</db:para>
+</db:abstract>
+</db:info>
+<db:section xml:id="this-is-a-section1">
+<db:title>This is a section1</db:title>
+<db:section xml:id="this-is-a-section2">
+<db:title>This is a section2</db:title>
+<db:section xml:id="this-is-a-section3">
+<db:title>This is a section3</db:title>
+<db:section xml:id="this-is-a-section4">
+<db:title>This is a section4</db:title>
+<db:programlisting language="cpp" role="bad">This is bad code
+</db:programlisting>
+<db:para>This text should have a line break riiiiight  noooow.</db:para>
+<db:para><db:emphasis role="bold">All your text belong to bold</db:emphasis> ...And this is an examble of only <db:emphasis role="bold">bold</db:emphasis> being, well, bold.</db:para>
+<db:programlisting language="cpp">    ...
+</db:programlisting>
+<db:programlisting language="js">&lt;@comment&gt;// If I knew JavaScript, this is where I would write it.&lt;/@comment&gt;
+</db:programlisting>
+<db:para>And if I knew qmltext, I guess this is where that would go. </db:para>
+<db:title>This a caption</db:title>
+<db:para>Lorem legal ipsum</db:para>
+<db:para><db:footnote>
+<db:para><db:para>This is where I put my footnotes.</db:para>
+</db:para>
+</db:footnote><db:para><db:link xlink:href="https://www.qt.io"/></db:para>
+<db:blockquote><db:para>This is a quotation.</db:para>
+</db:blockquote>
+        &lt;html&gt;&lt;body&gt;This is &lt;b&gt;raw&lt;/b&gt;. Like the &lt;h1&gt;Eddie Murphy&lt;/h1&gt; movie. Just not as funny.&lt;/body&gt;&lt;/html&gt;
+    <db:sidebar><db:para>Look, ma! I made a sidebar!</db:para>
+</db:sidebar>
+<db:informaltable style="generic">
+<db:tr valign="top">
+<db:td>
+<db:para>Table item in a table row</db:para>
+</db:td>
+</db:tr>
+<db:tr valign="top">
+<db:td>
+<db:para>Another item in a different row</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+<db:important>
+<db:para>This is really important.</db:para>
+</db:important>
+<db:para>For example, if you have code like</db:para>
+<db:programlisting language="cpp" role="bad">This is old code&lt;@op&gt;.&lt;/@op&gt;
+</db:programlisting>
+<db:para>you can rewrite it as</db:para>
+<db:programlisting language="cpp" role="new">This is &lt;@keyword&gt;new&lt;/@keyword&gt; and shiny&lt;@op&gt;!&lt;/@op&gt;
+</db:programlisting>
+<db:note>
+<db:para>The code above doesn't compile</db:para>
+</db:note>
+<db:para><db:emphasis role="bold">Warning:</db:emphasis> The following commands have yet to be tested: sincelist header index topicref // or just don’t care, remove it image inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile quotefunction skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</db:para>
+</db:para>
+</db:section>
+</db:section>
+</db:section>
+</db:section></db:article>

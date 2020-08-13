@@ -211,6 +211,7 @@ void tst_generatedOutput::htmlFromQDocFile()
     testAndCompare("testdata/configs/test.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html "
+                   "qdoctests-qdocfileoutput-exhaustive.html "
                    "toc.html");
 }
 
@@ -257,7 +258,8 @@ void tst_generatedOutput::webXmlFromQDocFile()
 {
     testAndCompare("testdata/configs/webxml_test.qdocconf",
                    "html/qdoctests-qdocfileoutput.webxml "
-                   "html/qdoctests-qdocfileoutput-linking.webxml");
+                   "html/qdoctests-qdocfileoutput-linking.webxml "
+                   "html/qdoctests-qdocfileoutput-exhaustive.webxml");
 }
 
 void tst_generatedOutput::webXmlFromCpp()
@@ -288,7 +290,8 @@ void tst_generatedOutput::docBookFromQDocFile()
 {
     testAndCompare("testdata/configs/docbook_test.qdocconf",
                    "docbook/qdoctests-qdocfileoutput.xml "
-                   "docbook/qdoctests-qdocfileoutput-linking.xml");
+                   "docbook/qdoctests-qdocfileoutput-linking.xml "
+                   "docbook/qdoctests-qdocfileoutput-exhaustive.xml");
 }
 
 void tst_generatedOutput::docBookFromCpp()
@@ -323,6 +326,7 @@ void tst_generatedOutput::autoNavigation()
     testAndCompare("testdata/configs/tocnavigation.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html "
+                   "qdoctests-qdocfileoutput-exhaustive.html "
                    "toc.html");
 }
 
