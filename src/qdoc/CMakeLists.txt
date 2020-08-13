@@ -1,5 +1,12 @@
 # Generated from qdoc.pro.
 
+# special case begin
+if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
+    message(WARNING "qdoc will not be built in this configuration.")
+    return()
+endif()
+# special case end
+
 #####################################################################
 ## qdoc Tool:
 #####################################################################

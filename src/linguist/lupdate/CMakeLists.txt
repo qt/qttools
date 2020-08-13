@@ -1,5 +1,12 @@
 # Generated from lupdate.pro.
 
+# special case begin
+if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
+    message(WARNING "lupdate will not be built in this configuration.")
+    return()
+endif()
+# special case end
+
 #####################################################################
 ## lupdate Tool:
 #####################################################################
