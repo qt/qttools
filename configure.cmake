@@ -16,8 +16,10 @@
 # Presumably because 6.0 ClangConfig.cmake files are not good enough?
 # In any case explicitly request a minimum version of 8.x for now, otherwise
 # building with CMake will fail at compilation time.
+# FIXME: Temporarily don't provide the targets, to circumevent a global promotion issue
+# regarding Threads::Threads.
+qt_find_package(WrapLibClang 8)
 # special case end
-qt_find_package(WrapLibClang 8 PROVIDED_TARGETS WrapLibClang::WrapLibClang) # special case
 
 if(TARGET WrapLibClang::WrapLibClang)
     set(TEST_libclang "ON" CACHE BOOL "Required libclang version found." FORCE)
