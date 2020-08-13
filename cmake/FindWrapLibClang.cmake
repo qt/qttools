@@ -53,6 +53,7 @@ if(TARGET libclang AND TARGET clangHandleCXX AND __wrap_lib_clang_requested_vers
       if (NOT TARGET Threads::Threads)
         find_package(Threads)
       endif()
+      qt_internal_disable_find_package_global_promotion(Threads::Threads)
       target_link_libraries(WrapLibClang::WrapLibClang
                             INTERFACE libclang clangHandleCXX Threads::Threads)
 
