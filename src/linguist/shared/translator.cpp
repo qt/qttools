@@ -521,7 +521,7 @@ struct TranslatorMessageIdPtr {
 
 Q_DECLARE_TYPEINFO(TranslatorMessageIdPtr, Q_MOVABLE_TYPE);
 
-inline int qHash(TranslatorMessageIdPtr tmp)
+inline size_t qHash(TranslatorMessageIdPtr tmp)
 {
     return qHash(tmp->id());
 }
@@ -547,9 +547,9 @@ struct TranslatorMessageContentPtr {
 
 Q_DECLARE_TYPEINFO(TranslatorMessageContentPtr, Q_MOVABLE_TYPE);
 
-inline int qHash(TranslatorMessageContentPtr tmp)
+inline size_t qHash(TranslatorMessageContentPtr tmp)
 {
-    int hash = qHash(tmp->context()) ^ qHash(tmp->sourceText());
+    size_t hash = qHash(tmp->context()) ^ qHash(tmp->sourceText());
     if (!tmp->sourceText().isEmpty())
         // Special treatment for context comments (empty source).
         hash ^= qHash(tmp->comment());

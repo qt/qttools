@@ -106,7 +106,10 @@ public:
     QString context, source, comment;
 };
 Q_DECLARE_TYPEINFO(TMMKey, Q_MOVABLE_TYPE);
-inline uint qHash(const TMMKey &key) { return qHash(key.context) ^ qHash(key.source) ^ qHash(key.comment); }
+inline size_t qHash(const TMMKey &key)
+{
+    return qHash(key.context) ^ qHash(key.source) ^ qHash(key.comment);
+}
 
 class Translator
 {

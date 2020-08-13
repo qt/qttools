@@ -55,9 +55,9 @@
 QT_BEGIN_NAMESPACE
 
 #if defined(Q_CC_SUN) || defined(Q_CC_HPACC) || defined(Q_CC_XLC)
-int qHash(const QUiTranslatableStringValue &tsv)
+size_t qHash(const QUiTranslatableStringValue &tsv)
 #else
-static int qHash(const QUiTranslatableStringValue &tsv)
+static size_t qHash(const QUiTranslatableStringValue &tsv)
 #endif
 {
     return qHash(tsv.value()) ^ qHash(tsv.qualifier());

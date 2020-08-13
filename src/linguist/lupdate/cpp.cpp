@@ -45,16 +45,14 @@ static QString MagicComment(QLatin1String("TRANSLATOR"));
 
 //#define DIAGNOSE_RETRANSLATABILITY // FIXME: should make a runtime option of this
 
-
-uint qHash(const HashString &str)
+size_t qHash(const HashString &str)
 {
     if (str.m_hash & 0x80000000)
         str.m_hash = qHash(str.m_str) & 0x7fffffff;
     return str.m_hash;
 }
 
-
-uint qHash(const HashStringList &list)
+size_t qHash(const HashStringList &list)
 {
     if (list.m_hash & 0x80000000) {
         uint hash = 0;
