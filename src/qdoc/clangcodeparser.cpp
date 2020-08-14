@@ -1094,14 +1094,14 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
 
     // make sure the previous decl was finished.
     if (decl_it != declMap_.begin()) {
-        CXSourceLocation prevDeclEnd = clang_getRangeEnd(clang_getCursorExtent(*(decl_it - 1)));
+        CXSourceLocation prevDeclEnd = clang_getRangeEnd(clang_getCursorExtent(*(std::prev(decl_it))));
         unsigned int prevDeclLine;
         clang_getPresumedLocation(prevDeclEnd, nullptr, &prevDeclLine, nullptr);
         if (prevDeclLine >= docloc.line) {
             // The previous declaration was still going. This is only valid if the previous
             // declaration is a parent of the next declaration.
             auto parent = clang_getCursorLexicalParent(*decl_it);
-            if (!clang_equalCursors(parent, *(decl_it - 1)))
+            if (!clang_equalCursors(parent, *(std::prev(decl_it))))
                 return nullptr;
         }
     }
