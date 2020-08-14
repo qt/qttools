@@ -70,7 +70,7 @@ HelpBrowser::HelpBrowser(QWidget *parent)
 void HelpBrowser::showHelpForKeyword(const QString &id)
 {
     if (m_helpEngine) {
-        QMap<QString, QUrl> links = m_helpEngine->linksForIdentifier(id);
+        QMultiMap<QString, QUrl> links = m_helpEngine->linksForIdentifier(id);
         if (links.count())
             setSource(links.constBegin().value());
     }
