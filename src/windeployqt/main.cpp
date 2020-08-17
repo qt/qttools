@@ -274,6 +274,7 @@ struct Options {
     QStringList qmlImportPaths; // Custom QML module locations.
     QString directory;
     QString translationsDirectory; // Translations target directory
+    QStringList languages;
     QString libraryDirectory;
     QString pluginDirectory;
     QStringList binaries;
@@ -399,6 +400,12 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                            QStringLiteral("Skip deployment of Qt Quick imports."));
     parser->addOption(noQuickImportOption);
 
+
+    QCommandLineOption translationOption(QStringLiteral("translations"),
+                                         QStringLiteral("A comma-separated list of languages to deploy (de,fi)."),
+                                         QStringLiteral("languages"));
+    parser->addOption(translationOption);
+
     QCommandLineOption noTranslationOption(QStringLiteral("no-translations"),
                                            QStringLiteral("Skip deployment of translations."));
     parser->addOption(noTranslationOption);
@@ -497,6 +504,8 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     options->plugins = !parser->isSet(noPluginsOption);
     options->libraries = !parser->isSet(noLibraryOption);
     options->translations = !parser->isSet(noTranslationOption);
+    if (parser->isSet(translationOption))
+        options->languages = parser->value(translationOption).split(QLatin1Char(','));
     options->systemD3dCompiler = !parser->isSet(noSystemD3DCompilerOption);
     options->quickImports = !parser->isSet(noQuickImportOption);
 
@@ -1003,9 +1012,9 @@ static bool deployTranslations(const QString &sourcePath, quint64 usedQtModules,
     const QStringList qmFilter = QStringList(QStringLiteral("qtbase_*.qm"));
     const QFileInfoList &qmFiles = sourceDir.entryInfoList(qmFilter);
     for (const QFileInfo &qmFi : qmFiles) {
-        QString qmFile = qmFi.baseName();
-        qmFile.remove(0, 7);
-        prefixes.push_back(qmFile);
+        const QString prefix = qmFi.baseName().mid(7);
+        if (options.languages.isEmpty() || options.languages.contains(prefix))
+            prefixes.append(prefix);
     }
     if (prefixes.isEmpty()) {
         std::wcerr << "Warning: Could not find any translations in "
