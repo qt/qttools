@@ -99,8 +99,6 @@ private:
 
     void generateAnnotatedList(const Node *relative, const NodeList &nodeList,
                                const QString &selector);
-    void generateAnnotatedList(const Node *relative, const NodeMultiMap &nmm,
-                               const QString &selector);
     void generateAnnotatedLists(const Node *relative, const NodeMultiMap &nmm,
                                 const QString &selector);
     void generateCompactList(ListType listType, const Node *relative, const NodeMultiMap &nmm,
@@ -128,7 +126,7 @@ private:
     void generateSignatureList(const NodeList &nodes);
     void generateMaintainerList(const Aggregate *node, CodeMarker *marker = nullptr) override;
     void generateReimplementsClause(const FunctionNode *fn);
-    void generateClassHierarchy(const Node *relative, NodeMap &classMap);
+    void generateClassHierarchy(const Node *relative, NodeMultiMap &classMap);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative);
     void generateExampleFilePage(const Node *en, const QString &file,

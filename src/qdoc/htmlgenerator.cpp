@@ -457,7 +457,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
     } break;
     case Atom::GeneratedList:
         if (atom->string() == QLatin1String("annotatedclasses")) {
-            generateAnnotatedList(relative, marker, m_qdb->getCppClasses());
+            generateAnnotatedList(relative, marker, m_qdb->getCppClasses().values());
         } else if (atom->string() == QLatin1String("annotatedexamples")) {
             generateAnnotatedLists(relative, marker, m_qdb->getExamples());
         } else if (atom->string() == QLatin1String("annotatedattributions")) {
@@ -483,7 +483,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                     NodeMap m;
                     cn->getMemberClasses(m);
                     if (!m.isEmpty()) {
-                        generateAnnotatedList(relative, marker, m);
+                        generateAnnotatedList(relative, marker, m.values());
                     }
                 } else
                     generateAnnotatedList(relative, marker, cn->members());
@@ -513,7 +513,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         } else if (atom->string() == QLatin1String("functionindex")) {
             generateFunctionIndex(relative);
         } else if (atom->string() == QLatin1String("attributions")) {
-            generateAnnotatedList(relative, marker, m_qdb->getAttributions());
+            generateAnnotatedList(relative, marker, m_qdb->getAttributions().values());
         } else if (atom->string() == QLatin1String("legalese")) {
             generateLegaleseList(relative, marker);
         } else if (atom->string() == QLatin1String("overviews")) {
@@ -523,7 +523,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         } else if (atom->string() == QLatin1String("qml-modules")) {
             generateList(relative, marker, "qml-modules");
         } else if (atom->string() == QLatin1String("namespaces")) {
-            generateAnnotatedList(relative, marker, m_qdb->getNamespaces());
+            generateAnnotatedList(relative, marker, m_qdb->getNamespaces().values());
         } else if (atom->string() == QLatin1String("related")) {
             generateList(relative, marker, "related");
         } else {
@@ -543,8 +543,8 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         if (nsmap.isEmpty())
             break;
 
-        const NodeMap &ncmap = m_qdb->getClassMap(atom->string());
-        const NodeMap &nqcmap = m_qdb->getQmlTypeMap(atom->string());
+        const NodeMultiMap &ncmap = m_qdb->getClassMap(atom->string());
+        const NodeMultiMap &nqcmap = m_qdb->getQmlTypeMap(atom->string());
 
         Sections sections(nsmap);
         out() << "<ul>\n";
@@ -1467,13 +1467,13 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
 
     if (cn->isModule()) {
         if (!cn->noAutoList()) {
-            NodeMultiMap nmm;
+            NodeMap nmm;
             cn->getMemberNamespaces(nmm);
             if (!nmm.isEmpty()) {
                 ref = registerRef("namespaces");
                 out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
                 out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
-                generateAnnotatedList(cn, marker, nmm);
+                generateAnnotatedList(cn, marker, nmm.values());
             }
             nmm.clear();
             cn->getMemberClasses(nmm);
@@ -1481,7 +1481,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
                 ref = registerRef("classes");
                 out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
                 out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";
-                generateAnnotatedList(cn, marker, nmm);
+                generateAnnotatedList(cn, marker, nmm.values());
             }
         }
     }
@@ -2468,7 +2468,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
     return fileName;
 }
 
-void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap &classMap)
+void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMultiMap &classMap)
 {
     if (classMap.isEmpty())
         return;
@@ -2510,22 +2510,15 @@ void HtmlGenerator::generateClassHierarchy(const Node *relative, NodeMap &classM
 }
 
 /*!
-  Output an annotated list of the nodes in \a nodeMap.
+  Outputs an annotated list of the nodes in \a unsortedNodes.
   A two-column table is output.
- */
-void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *marker,
-                                          const NodeMultiMap &nmm)
-{
-    if (nmm.isEmpty() || relative == nullptr)
-        return;
-    generateAnnotatedList(relative, marker, nmm.values());
-}
-
-/*!
  */
 void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *marker,
                                           const NodeList &unsortedNodes)
 {
+    if (unsortedNodes.isEmpty() || relative == nullptr)
+        return;
+
     NodeMultiMap nmm;
     bool allInternal = true;
     for (auto *node : unsortedNodes) {
@@ -2801,8 +2794,7 @@ void HtmlGenerator::generateFunctionIndex(const Node *relative)
 void HtmlGenerator::generateLegaleseList(const Node *relative, CodeMarker *marker)
 {
     TextToNodeMap &legaleseTexts = m_qdb->getLegaleseTexts();
-    QMap<Text, const Node *>::ConstIterator it = legaleseTexts.constBegin();
-    while (it != legaleseTexts.constEnd()) {
+    for (auto it = legaleseTexts.cbegin(), end = legaleseTexts.cend(); it != end; ++it) {
         Text text = it.key();
         generateText(text, relative, marker);
         out() << "<ul>\n";

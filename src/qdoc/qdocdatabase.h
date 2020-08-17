@@ -258,8 +258,8 @@ public:
     static NodeMultiMap &qmlBasicTypes() { return qmlBasicTypes_; }
     static NodeMultiMap &qmlTypes() { return qmlTypes_; }
     static NodeMultiMap &examples() { return examples_; }
-    static NodeMapMap &newClassMaps() { return newClassMaps_; }
-    static NodeMapMap &newQmlTypeMaps() { return newQmlTypeMaps_; }
+    static NodeMultiMapMap &newClassMaps() { return newClassMaps_; }
+    static NodeMultiMapMap &newQmlTypeMaps() { return newQmlTypeMaps_; }
     static NodeMultiMapMap &newSinceMaps() { return newSinceMaps_; }
 
 private:
@@ -286,9 +286,9 @@ public:
     NodeMultiMap &getAttributions();
     NodeMapMap &getFunctionIndex();
     TextToNodeMap &getLegaleseTexts();
-    const NodeMap &getClassMap(const QString &key);
-    const NodeMap &getQmlTypeMap(const QString &key);
-    const NodeMap &getSinceMap(const QString &key);
+    const NodeMultiMap &getClassMap(const QString &key);
+    const NodeMultiMap &getQmlTypeMap(const QString &key);
+    const NodeMultiMap &getSinceMap(const QString &key);
 
     /*******************************************************************
       Many of these will be either eliminated or replaced.
@@ -435,8 +435,8 @@ private:
     static NodeMultiMap qmlBasicTypes_;
     static NodeMultiMap qmlTypes_;
     static NodeMultiMap examples_;
-    static NodeMapMap newClassMaps_;
-    static NodeMapMap newQmlTypeMaps_;
+    static NodeMultiMapMap newClassMaps_;
+    static NodeMultiMapMap newQmlTypeMaps_;
     static NodeMultiMapMap newSinceMaps_;
 
     bool showInternal_;

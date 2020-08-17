@@ -104,9 +104,7 @@ private:
     QString generateAllQmlMembersFile(const Sections &sections, CodeMarker *marker);
     QString generateObsoleteMembersFile(const Sections &sections, CodeMarker *marker);
     QString generateObsoleteQmlMembersFile(const Sections &sections, CodeMarker *marker);
-    void generateClassHierarchy(const Node *relative, NodeMap &classMap);
-    void generateAnnotatedList(const Node *relative, CodeMarker *marker,
-                               const NodeMultiMap &nodeMap);
+    void generateClassHierarchy(const Node *relative, NodeMultiMap &classMap);
     void generateAnnotatedLists(const Node *relative, CodeMarker *marker,
                                 const NodeMultiMap &nodeMap);
     void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeList &nodes);

@@ -386,7 +386,7 @@ int DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeM
                     ? m_qdb->getCppClasses()
                     : atom->string() == QLatin1String("attributions") ? m_qdb->getAttributions()
                                                                       : m_qdb->getNamespaces();
-            generateAnnotatedList(relative, things, atom->string());
+            generateAnnotatedList(relative, things.values(), atom->string());
         } else if (atom->string() == QLatin1String("annotatedexamples")
                    || atom->string() == QLatin1String("annotatedattributions")) {
             const NodeMultiMap things = atom->string() == QLatin1String("annotatedexamples")
@@ -414,7 +414,7 @@ int DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeM
                     NodeMap m;
                     cn->getMemberClasses(m);
                     if (!m.isEmpty())
-                        generateAnnotatedList(relative, m, atom->string());
+                        generateAnnotatedList(relative, m.values(), atom->string());
                 } else {
                     generateAnnotatedList(relative, cn->members(), atom->string());
                 }
@@ -885,19 +885,17 @@ int DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeM
     return skipAhead;
 }
 
-void DocBookGenerator::generateClassHierarchy(const Node *relative, NodeMap &classMap)
+void DocBookGenerator::generateClassHierarchy(const Node *relative, NodeMultiMap &classMap)
 {
     // From HtmlGenerator::generateClassHierarchy.
     if (classMap.isEmpty())
         return;
 
     NodeMap topLevel;
-    NodeMap::Iterator c = classMap.begin();
-    while (c != classMap.end()) {
-        auto *classe = static_cast<ClassNode *>(*c);
-        if (classe->baseClasses().isEmpty())
-            topLevel.insert(classe->name(), classe);
-        ++c;
+    for (Node *c : classMap) {
+        auto *classNode = static_cast<ClassNode *>(c);
+        if (classNode->baseClasses().isEmpty())
+            topLevel.insert(classNode->name(), classNode);
     }
 
     QStack<NodeMap> stack;
@@ -1013,21 +1011,15 @@ void DocBookGenerator::generateList(const Node *relative, const QString &selecto
 }
 
 /*!
-  Output an annotated list of the nodes in \a nodeMap.
+  Outputs an annotated list of the nodes in \a nodeList.
   A two-column table is output.
  */
-void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeMultiMap &nmm,
-                                             const QString &selector)
-{
-    // From HtmlGenerator::generateAnnotatedList
-    if (nmm.isEmpty())
-        return;
-    generateAnnotatedList(relative, nmm.values(), selector);
-}
-
 void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeList &nodeList,
                                              const QString &selector)
 {
+    if (nodeList.isEmpty())
+        return;
+
     // Do nothing if all items are internal or obsolete
     if (std::all_of(nodeList.cbegin(), nodeList.cend(), [](const Node *n) {
         return n->isInternal() || n->isObsolete(); })) {
@@ -1317,8 +1309,7 @@ void DocBookGenerator::generateLegaleseList(const Node *relative)
 {
     // From HtmlGenerator::generateLegaleseList.
     TextToNodeMap &legaleseTexts = m_qdb->getLegaleseTexts();
-    QMap<Text, const Node *>::ConstIterator it = legaleseTexts.constBegin();
-    while (it != legaleseTexts.constEnd()) {
+    for (auto it = legaleseTexts.cbegin(), end = legaleseTexts.cend(); it != end; ++it) {
         Text text = it.key();
         generateText(text, relative);
         writer->writeStartElement(dbNamespace, "itemizedlist");
@@ -4178,18 +4169,18 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
     // Actual content.
     if (cn->isModule()) {
         if (!cn->noAutoList()) {
-            NodeMultiMap nmm;
+            NodeMap nmm;
             cn->getMemberNamespaces(nmm);
             if (!nmm.isEmpty()) {
                 startSection(registerRef("namespaces"), "Namespaces");
-                generateAnnotatedList(cn, nmm, "namespaces");
+                generateAnnotatedList(cn, nmm.values(), "namespaces");
                 endSection();
             }
             nmm.clear();
             cn->getMemberClasses(nmm);
             if (!nmm.isEmpty()) {
                 startSection(registerRef("classes"), "Classes");
-                generateAnnotatedList(cn, nmm, "classes");
+                generateAnnotatedList(cn, nmm.values(), "classes");
                 endSection();
             }
         }

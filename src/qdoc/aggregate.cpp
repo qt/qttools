@@ -864,15 +864,15 @@ void Aggregate::findAllSince()
         if (!node->isPrivate() && !sinceString.isEmpty()) {
             auto nsmap = QDocDatabase::newSinceMaps().find(sinceString);
             if (nsmap == QDocDatabase::newSinceMaps().end())
-                nsmap = QDocDatabase::newSinceMaps().insert(sinceString, NodeMultiMap());
+                nsmap = QDocDatabase::newSinceMaps().insert(sinceString, {});
 
             auto ncmap = QDocDatabase::newClassMaps().find(sinceString);
             if (ncmap == QDocDatabase::newClassMaps().end())
-                ncmap = QDocDatabase::newClassMaps().insert(sinceString, NodeMap());
+                ncmap = QDocDatabase::newClassMaps().insert(sinceString, {});
 
             auto nqcmap = QDocDatabase::newQmlTypeMaps().find(sinceString);
             if (nqcmap == QDocDatabase::newQmlTypeMaps().end())
-                nqcmap = QDocDatabase::newQmlTypeMaps().insert(sinceString, NodeMap());
+                nqcmap = QDocDatabase::newQmlTypeMaps().insert(sinceString, {});
 
             if (node->isFunction()) {
                 // Insert functions into the general since map.

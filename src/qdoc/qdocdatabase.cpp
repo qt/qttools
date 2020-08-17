@@ -41,7 +41,6 @@
 
 QT_BEGIN_NAMESPACE
 
-static NodeMap emptyNodeMap_;
 static NodeMultiMap emptyNodeMultiMap_;
 bool QDocDatabase::debug = false;
 
@@ -423,8 +422,8 @@ NodeMultiMap QDocDatabase::cppClasses_;
 NodeMultiMap QDocDatabase::qmlBasicTypes_;
 NodeMultiMap QDocDatabase::qmlTypes_;
 NodeMultiMap QDocDatabase::examples_;
-NodeMapMap QDocDatabase::newClassMaps_;
-NodeMapMap QDocDatabase::newQmlTypeMaps_;
+NodeMultiMapMap QDocDatabase::newClassMaps_;
+NodeMultiMapMap QDocDatabase::newQmlTypeMaps_;
 NodeMultiMapMap QDocDatabase::newSinceMaps_;
 
 /*!
@@ -1058,14 +1057,14 @@ void QDocDatabase::findAllLegaleseTexts(Aggregate *node)
   reference to the value, which is a NodeMap. If \a key is not
   found, return a reference to an empty NodeMap.
  */
-const NodeMap &QDocDatabase::getClassMap(const QString &key)
+const NodeMultiMap &QDocDatabase::getClassMap(const QString &key)
 {
     if (newSinceMaps_.isEmpty() && newClassMaps_.isEmpty() && newQmlTypeMaps_.isEmpty())
         processForest(&QDocDatabase::findAllSince);
     auto it = newClassMaps_.constFind(key);
     if (it != newClassMaps_.constEnd())
         return it.value();
-    return emptyNodeMap_;
+    return emptyNodeMultiMap_;
 }
 
 /*!
@@ -1073,14 +1072,14 @@ const NodeMap &QDocDatabase::getClassMap(const QString &key)
   reference to the value, which is a NodeMap. If the \a key is not
   found, return a reference to an empty NodeMap.
  */
-const NodeMap &QDocDatabase::getQmlTypeMap(const QString &key)
+const NodeMultiMap &QDocDatabase::getQmlTypeMap(const QString &key)
 {
     if (newSinceMaps_.isEmpty() && newClassMaps_.isEmpty() && newQmlTypeMaps_.isEmpty())
         processForest(&QDocDatabase::findAllSince);
     auto it = newQmlTypeMaps_.constFind(key);
     if (it != newQmlTypeMaps_.constEnd())
         return it.value();
-    return emptyNodeMap_;
+    return emptyNodeMultiMap_;
 }
 
 /*!
@@ -1088,7 +1087,7 @@ const NodeMap &QDocDatabase::getQmlTypeMap(const QString &key)
   a reference to the value, which is a NodeMultiMap. If \a key
   is not found, return a reference to an empty NodeMultiMap.
  */
-const NodeMap &QDocDatabase::getSinceMap(const QString &key)
+const NodeMultiMap &QDocDatabase::getSinceMap(const QString &key)
 {
     if (newSinceMaps_.isEmpty() && newClassMaps_.isEmpty() && newQmlTypeMaps_.isEmpty())
         processForest(&QDocDatabase::findAllSince);
