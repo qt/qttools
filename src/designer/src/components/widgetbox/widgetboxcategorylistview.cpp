@@ -41,6 +41,7 @@
 #include <QtCore/qsortfilterproxymodel.h>
 
 #include <QtCore/qabstractitemmodel.h>
+#include <QtCore/qiodevice.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qregularexpression.h>

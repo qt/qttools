@@ -28,6 +28,7 @@
 #include "bookmarkmodel.h"
 #include "bookmarkitem.h"
 
+#include <QtCore/QIODevice>
 #include <QtCore/QMimeData>
 #include <QtCore/QStack>
 

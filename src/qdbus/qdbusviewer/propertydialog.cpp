@@ -77,7 +77,7 @@ void PropertyDialog::addProperty(const QString &aname, int type)
     propertyTable->setItem(rowCount, 0, nameItem);
 
     QTableWidgetItem *valueItem = new QTableWidgetItem;
-    valueItem->setData(Qt::DisplayRole, QVariant(type, /* copy */ 0));
+    valueItem->setData(Qt::DisplayRole, QVariant(QMetaType(type), /* copy */ 0));
     propertyTable->setItem(rowCount, 1, valueItem);
 }
 

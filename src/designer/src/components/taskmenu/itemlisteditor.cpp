@@ -215,7 +215,7 @@ void AbstractItemEditor::resetProperty(QtProperty *property)
     if (role == ItemFlagsShadowRole)
         prop->setValue(QVariant::fromValue(defaultItemFlags()));
     else
-        prop->setValue(QVariant(prop->valueType(), nullptr));
+        prop->setValue(QVariant(QMetaType(prop->valueType()), nullptr));
     prop->setModified(false);
 
     setItemData(role, QVariant());
@@ -247,7 +247,7 @@ void AbstractItemEditor::updateBrowser()
             if (role == ItemFlagsShadowRole)
                 val = QVariant::fromValue(defaultItemFlags());
             else
-                val = QVariant(int(prop->value().userType()), nullptr);
+                val = QVariant(QMetaType(prop->value().userType()), nullptr);
             prop->setModified(false);
         } else {
             prop->setModified(true);
