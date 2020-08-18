@@ -349,7 +349,8 @@ void tst_generatedOutput::dontDocument()
 {
     testAndCompare("testdata/dontdocument/dontdocument.qdocconf",
                    "dontdocument/classes.html "
-                   "dontdocument/seenclass.html");
+                   "dontdocument/seenclass.html "
+                   "dontdocument/dontdocument.qhp");
 }
 
 void tst_generatedOutput::inheritedQmlPropertyGroups()

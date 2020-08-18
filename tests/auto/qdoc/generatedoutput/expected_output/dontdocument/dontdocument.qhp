@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>org.qt-project.dontdocument.001</namespace>
+    <virtualFolder>test</virtualFolder>
+    <metaData name="version" value=""/>
+    <filterSection>
+        <toc>
+            <section ref="testcpp-module.html" title="QDoc Test C++ Classes">
+                <section ref="testcpp-module.html" title="Classes">
+                    <section ref="seenclass.html" title="SeenClass Class Reference"/>
+                    <section ref="testqdoc-test.html" title="TestQDoc::Test Class Reference">
+                        <section ref="testqdoc-test-members.html" title="List of all members"/>
+                        <section ref="testqdoc-test-obsolete.html" title="Obsolete members"/>
+                    </section>
+                    <section ref="testqdoc-testderived.html" title="TestQDoc::TestDerived Class Reference">
+                        <section ref="testqdoc-testderived-members.html" title="List of all members"/>
+                    </section>
+                </section>
+            </section>
+        </toc>
+        <keywords>
+            <keyword name="Classes" id="Classes" ref="classes.html"/>
+            <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
+            <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
+            <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
+            <keyword name="SeenClass" id="SeenClass" ref="seenclass.html"/>
+            <keyword name="Test" id="TestQDoc::Test" ref="testqdoc-test.html"/>
+            <keyword name="Test::SomeType" id="Test::SomeType" ref="testqdoc-test.html#SomeType-typedef"/>
+            <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
+            <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-alias"/>
+            <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-alias"/>
+            <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
+            <keyword name="anotherObsoleteMember" id="Test::anotherObsoleteMember" ref="testqdoc-test-obsolete.html#anotherObsoleteMember"/>
+            <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test-obsolete.html#deprecatedMember"/>
+            <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
+            <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
+            <keyword name="overload" id="Test::overload" ref="testqdoc-test.html#overload"/>
+            <keyword name="someFunction" id="Test::someFunction" ref="testqdoc-test.html#someFunction"/>
+            <keyword name="someFunctionDefaultArg" id="Test::someFunctionDefaultArg" ref="testqdoc-test.html#someFunctionDefaultArg"/>
+            <keyword name="virtualFun" id="Test::virtualFun" ref="testqdoc-test.html#virtualFun"/>
+            <keyword name="virtualFun" id="TestDerived::virtualFun" ref="testqdoc-testderived.html#virtualFun"/>
+        </keywords>
+        <files>
+            <file>classes.html</file>
+            <file>seenclass.html</file>
+            <file>testcpp-module.html</file>
+            <file>testqdoc-test-members.html</file>
+            <file>testqdoc-test-obsolete.html</file>
+            <file>testqdoc-test.html</file>
+            <file>testqdoc-testderived-members.html</file>
+            <file>testqdoc-testderived.html</file>
+            <file>testqdoc.html</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

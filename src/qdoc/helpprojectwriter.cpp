@@ -234,7 +234,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     if (!node->url().isEmpty() && !(project.includeIndexNodes && !node->url().startsWith("http")))
         return false;
 
-    if (node->isPrivate() || node->isInternal())
+    if (node->isPrivate() || node->isInternal() || node->isDontDocument())
         return false;
 
     if (node->name().isEmpty())
