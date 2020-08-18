@@ -3,5 +3,19 @@ include(../configs/testcpp.qdocconf)
 headers += dont.h
 sources += dont.cpp test.qdoc
 
+qhp.projects                    = DontDocument
+
+qhp.DontDocument.file           = dontdocument.qhp
+qhp.DontDocument.namespace      = org.qt-project.dontdocument.001
+qhp.DontDocument.virtualFolder  = test
+qhp.DontDocument.indexTitle     = QDoc Test C++ Classes
+qhp.DontDocument.indexRoot      =
+
+qhp.DontDocument.subprojects                        = classes
+qhp.DontDocument.subprojects.classes.title          = Classes
+qhp.DontDocument.subprojects.classes.indexTitle     = QDoc Test C++ Classes
+qhp.DontDocument.subprojects.classes.selectors      = class
+qhp.DontDocument.subprojects.classes.sortPages      = true
+
 HTML.nosubdirs = true
 HTML.outputsubdir = dontdocument
