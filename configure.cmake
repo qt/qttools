@@ -62,10 +62,6 @@ qt_feature("macdeployqt" PRIVATE
     PURPOSE "The Mac deployment tool automates the process of creating a deployable application bundle that contains the Qt libraries as private frameworks."
     CONDITION APPLE
 )
-qt_feature("makeqpf" PRIVATE
-    LABEL "makeqpf"
-    PURPOSE "makeqpf is a tool to generate pre-rendered fonts in QPF2 format for use on Embedded Linux."
-)
 qt_feature("pixeltool" PRIVATE
     LABEL "pixeltool"
     PURPOSE "The Qt Pixel Zooming Tool is a graphical application that magnifies the screen around the mouse pointer so you can look more closely at individual pixels."
@@ -108,7 +104,6 @@ qt_configure_add_summary_entry(ARGS "distancefieldgenerator")
 qt_configure_add_summary_entry(ARGS "kmap2qmap")
 qt_configure_add_summary_entry(ARGS "linguist")
 qt_configure_add_summary_entry(ARGS "macdeployqt")
-qt_configure_add_summary_entry(ARGS "makeqpf")
 qt_configure_add_summary_entry(ARGS "pixeltool")
 qt_configure_add_summary_entry(ARGS "qdbus")
 qt_configure_add_summary_entry(ARGS "qev")

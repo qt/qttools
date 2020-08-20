@@ -68,11 +68,6 @@
             "condition": "config.darwin",
             "output": [ "privateFeature" ]
         },
-        "makeqpf": {
-            "label": "makeqpf",
-            "purpose": "makeqpf is a tool to generate pre-rendered fonts in QPF2 format for use on Embedded Linux.",
-            "output": [ "privateFeature" ]
-        },
         "pixeltool": {
             "label": "pixeltool",
             "purpose": "The Qt Pixel Zooming Tool is a graphical application that magnifies the screen around the mouse pointer so you can look more closely at individual pixels.",
@@ -143,7 +138,6 @@ On Windows, you must set LLVM_INSTALL_DIR to the installation path."
                 "kmap2qmap",
                 "linguist",
                 "macdeployqt",
-                "makeqpf",
                 "pixeltool",
                 "qdbus",
                 "qev",
