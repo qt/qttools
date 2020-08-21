@@ -1657,7 +1657,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                                     if (blankSplit.size() > 0) {
                                         QString pName = blankSplit.last();
                                         int j = 0;
-                                        while (j < pName.length() && !pName.at(i).isLetter())
+                                        while (j < pName.length() && !pName.at(j).isLetter())
                                             ++j;
                                         if (j > 0)
                                             pName = pName.mid(j);
