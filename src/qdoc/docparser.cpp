@@ -524,7 +524,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (closeCommand(cmd)) {
                         leavePara();
                         append(Atom::FootnoteRight);
-                        m_paragraphState = InMultiLineParagraph; // ###
                     }
                     break;
                 case CMD_ENDIF:
@@ -609,7 +608,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (openCommand(cmd)) {
                         enterPara();
                         append(Atom::FootnoteLeft);
-                        m_paragraphState = OutsideParagraph;
                     }
                     break;
                 case CMD_ANNOTATEDLIST:

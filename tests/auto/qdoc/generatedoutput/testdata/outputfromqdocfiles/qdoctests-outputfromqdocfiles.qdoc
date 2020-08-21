@@ -145,14 +145,6 @@
         Lorem legal ipsum
     \endlegalese
 
-    \footnote
-    This is where I put my footnotes.
-    \endfootnote
-
-    \link 
-        https://www.qt.io
-    \endlink
-
     \quotation
     This is a quotation.
     \endquotation
@@ -185,6 +177,9 @@
     \hr
 
     \warning The following commands have yet to be tested:
+    footnote
+    link
+    //! Check why above two (when used in this order) cause missing linefeeds on Windows/webxml
     sincelist
     header
     index

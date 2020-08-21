@@ -28,10 +28,6 @@
 <db:para>And if I knew qmltext, I guess this is where that would go. </db:para>
 <db:title>This a caption</db:title>
 <db:para>Lorem legal ipsum</db:para>
-<db:para><db:footnote>
-<db:para><db:para>This is where I put my footnotes.</db:para>
-</db:para>
-</db:footnote><db:para><db:link xlink:href="https://www.qt.io"/></db:para>
 <db:blockquote><db:para>This is a quotation.</db:para>
 </db:blockquote>
         &lt;html&gt;&lt;body&gt;This is &lt;b&gt;raw&lt;/b&gt;. Like the &lt;h1&gt;Eddie Murphy&lt;/h1&gt; movie. Just not as funny.&lt;/body&gt;&lt;/html&gt;
@@ -61,9 +57,9 @@
 <db:note>
 <db:para>The code above doesn't compile</db:para>
 </db:note>
-<db:para><db:emphasis role="bold">Warning:</db:emphasis> The following commands have yet to be tested: sincelist header index topicref // or just don’t care, remove it image inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile quotefunction skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</db:para>
-</db:para>
+<db:para><db:emphasis role="bold">Warning:</db:emphasis> The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it image inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile quotefunction skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</db:para>
 </db:section>
 </db:section>
 </db:section>
-</db:section></db:article>
+</db:section>
+</db:article>
