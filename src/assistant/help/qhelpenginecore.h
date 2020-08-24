@@ -105,13 +105,6 @@ public:
                       const QString &extensionFilter = QString());
     QUrl findFile(const QUrl &url) const;
 
-#if QT_DEPRECATED_SINCE(5, 15)
-    QT_DEPRECATED_X("Use documentsForIdentifier() instead")
-    QMultiMap<QString, QUrl> linksForIdentifier(const QString &id) const;
-    QT_DEPRECATED_X("Use documentsForKeyword() instead")
-    QMultiMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
-#endif
-
     QList<QHelpLink> documentsForIdentifier(const QString &id) const;
     QList<QHelpLink> documentsForIdentifier(const QString &id, const QString &filterName) const;
     QList<QHelpLink> documentsForKeyword(const QString &keyword) const;

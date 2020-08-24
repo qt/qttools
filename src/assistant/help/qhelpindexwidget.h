@@ -63,10 +63,6 @@ public:
     QModelIndex filter(const QString &filter,
         const QString &wildcard = QString());
 
-#if QT_DEPRECATED_SINCE(5, 15)
-    QT_DEPRECATED_X("Use QHelpEngineCore::documentsForKeyword() instead")
-    QMultiMap<QString, QUrl> linksForKeyword(const QString &keyword) const;
-#endif
     bool isCreatingIndex() const;
     QHelpEngineCore *helpEngine() const;
 

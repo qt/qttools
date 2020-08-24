@@ -233,20 +233,6 @@ QHelpEngineCore *QHelpIndexModel::helpEngine() const
     return d->helpEngine->q;
 }
 
-#if QT_DEPRECATED_SINCE(5, 15)
-/*!
-    \obsolete
-    Use QHelpEngineCore::documentsForKeyword() instead.
-*/
-QT_WARNING_PUSH
-QT_WARNING_DISABLE_DEPRECATED
-QMultiMap<QString, QUrl> QHelpIndexModel::linksForKeyword(const QString &keyword) const
-{
-    return d->helpEngine->q->linksForKeyword(keyword);
-}
-QT_WARNING_POP
-#endif
-
 /*!
     Filters the indices and returns the model index of the best
     matching keyword. In a first step, only the keywords containing

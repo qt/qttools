@@ -64,8 +64,6 @@ private slots:
     void files();
     void fileData();
 
-    void linksForIdentifier();
-
     void customValue();
     void setCustomValue();
     void removeCustomValue();
@@ -375,27 +373,6 @@ void tst_QHelpEngineCore::fileData()
         QFAIL("Cannot open original file!");
     QTextStream ts(&f);
     QCOMPARE(s.readAll(), ts.readAll());
-}
-
-void tst_QHelpEngineCore::linksForIdentifier()
-{
-    QHelpEngineCore help(m_colFile, 0);
-    QCOMPARE(help.setupData(), true);
-    QMap<QString, QUrl> map;
-    map = help.linksForIdentifier("Test::foo");
-    QCOMPARE(map.contains("Test Manual"), true);
-    QCOMPARE(map.count(), 1);
-    QCOMPARE(map.value("Test Manual"),
-        QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/test.html#foo"));
-
-    help.setCurrentFilter("Custom Filter 2");
-    map = help.linksForIdentifier("People::newton");
-    QCOMPARE(map.isEmpty(), true);
-    map = help.linksForIdentifier("Fancy::foobar");
-    QCOMPARE(map.contains("Fancy"), true);
-    QCOMPARE(map.count(), 1);
-    QCOMPARE(map.value("Fancy"),
-        QUrl("qthelp://trolltech.com.1.0.0.test/testFolder/fancy.html#foobar"));
 }
 
 void tst_QHelpEngineCore::customValue()

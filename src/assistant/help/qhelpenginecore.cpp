@@ -611,30 +611,6 @@ QByteArray QHelpEngineCore::fileData(const QUrl &url) const
     return d->collectionHandler->fileData(url);
 }
 
-#if QT_DEPRECATED_SINCE(5, 15)
-/*!
-    \obsolete
-
-    Use documentsForIdentifier() instead.
-
-    Returns a map of the documents found for the \a id. The map contains the
-    document titles and their URLs. The returned map contents depend on
-    the current filter, and therefore only the identifiers registered for
-    the current filter will be returned.
-*/
-QMultiMap<QString, QUrl> QHelpEngineCore::linksForIdentifier(const QString &id) const
-{
-    if (!d->setup())
-        return QMultiMap<QString, QUrl>();
-
-    if (d->usesFilterEngine)
-        return d->collectionHandler->linksForIdentifier(id, d->filterEngine->activeFilter());
-
-    // obsolete
-    return d->collectionHandler->linksForIdentifier(id, filterAttributes(d->currentFilter));
-}
-#endif
-
 /*!
     \since 5.15
 
@@ -664,30 +640,6 @@ QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id, cons
 
     return d->collectionHandler->documentsForIdentifier(id, filterName);
 }
-
-#if QT_DEPRECATED_SINCE(5, 15)
-/*!
-    \obsolete
-
-    Use documentsForKeyword() instead.
-
-    Returns a map of all the documents found for the \a keyword. The map
-    contains the document titles and URLs. The returned map contents depend
-    on the current filter, and therefore only the keywords registered for
-    the current filter will be returned.
-*/
-QMultiMap<QString, QUrl> QHelpEngineCore::linksForKeyword(const QString &keyword) const
-{
-    if (!d->setup())
-        return QMultiMap<QString, QUrl>();
-
-    if (d->usesFilterEngine)
-        return d->collectionHandler->linksForKeyword(keyword, d->filterEngine->activeFilter());
-
-    // obsolete
-    return d->collectionHandler->linksForKeyword(keyword, filterAttributes(d->currentFilter));
-}
-#endif
 
 /*!
     \since 5.15
