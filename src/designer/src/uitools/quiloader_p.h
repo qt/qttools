@@ -69,7 +69,7 @@ QT_FORWARD_DECLARE_CLASS(QDataStream)
 
 QT_BEGIN_NAMESPACE
 
-class QUiTranslatableStringValue
+class Q_UITOOLS_EXPORT QUiTranslatableStringValue
 {
 public:
     QByteArray value() const { return m_value; }
@@ -80,11 +80,14 @@ public:
     QString translate(const QByteArray &className, bool idBased) const;
 
 private:
-    friend QDataStream &operator>>(QDataStream &in, QUiTranslatableStringValue &s);
-
     QByteArray m_value;
     QByteArray m_qualifier; // Comment or ID for id-based tr().
 };
+
+#ifndef QT_NO_DATASTREAM
+Q_UITOOLS_EXPORT QDataStream &operator<<(QDataStream &out, const QUiTranslatableStringValue &s);
+Q_UITOOLS_EXPORT QDataStream &operator>>(QDataStream &in, QUiTranslatableStringValue &s);
+#endif // QT_NO_DATASTREAM
 
 struct QUiItemRolePair {
     int realRole;

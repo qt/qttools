@@ -87,7 +87,10 @@ QDataStream &operator<<(QDataStream &out, const QUiTranslatableStringValue &s)
 
 QDataStream &operator>>(QDataStream &in, QUiTranslatableStringValue &s)
 {
-    in >> s.m_qualifier >> s.m_value;
+    QByteArray qualifier, value;
+    in >> qualifier >> value;
+    s.setQualifier(qualifier);
+    s.setValue(value);
     return in;
 }
 #endif // QT_NO_DATASTREAM
@@ -650,7 +653,6 @@ QUiLoader::QUiLoader(QObject *parent)
     static int metaTypeId = 0;
     if (!metaTypeId) {
         metaTypeId = qRegisterMetaType<QUiTranslatableStringValue>("QUiTranslatableStringValue");
-        qRegisterMetaTypeStreamOperators<QUiTranslatableStringValue>("QUiTranslatableStringValue");
     }
 #endif // QT_NO_DATASTREAM
     d->builder.loader = this;
