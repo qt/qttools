@@ -148,11 +148,15 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
     if (!copyright.isEmpty())
         out << "\n\\badcode\n" << copyright << "\n\\endcode\n\n";
 
-    if (isSpdxLicenseId(package.licenseId) && package.licenseId != QLatin1String("NONE"))
+    if (isSpdxLicenseId(package.licenseId) && package.licenseId != QLatin1String("NONE")) {
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"
             << "{" << package.license << "}.\n\n";
-    else
+    } else if (package.licenseId.startsWith(QLatin1String("urn:dje:license:"))) {
+        out << "\\l{https://enterprise.dejacode.com/licenses/public/" << package.licenseId.mid(16)
+            << "/}{" << package.license << "}.\n\n";
+    } else {
         out << package.license << ".\n\n";
+    }
 
     foreach (const QString &licenseFile, package.licenseFiles) {
         QFile file(licenseFile);
