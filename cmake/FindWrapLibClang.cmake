@@ -27,7 +27,7 @@ if(WrapLibClang_FIND_VERSION AND LLVM_PACKAGE_VERSION
     set(__wrap_lib_clang_requested_version_found TRUE)
 endif()
 
-if(TARGET libclang AND TARGET clangHandleCXX AND __wrap_lib_clang_requested_version_found)
+if(TARGET libclang AND (TARGET clang-cpp OR TARGET clangHandleCXX) AND __wrap_lib_clang_requested_version_found)
   set(WrapLibClang_FOUND TRUE)
 
   get_target_property(type libclang TYPE)
@@ -47,7 +47,10 @@ if(TARGET libclang AND TARGET clangHandleCXX AND __wrap_lib_clang_requested_vers
       endif()
       qt_internal_disable_find_package_global_promotion(Threads::Threads)
       target_link_libraries(WrapLibClang::WrapLibClang
-                            INTERFACE libclang clangHandleCXX Threads::Threads)
+                            INTERFACE libclang
+                                      $<IF:$<TARGET_EXISTS:clang-cpp>,clang-cpp LLVM,clangHandleCXX> # lupdate must link to LLVM when using clang-cpp
+                                      Threads::Threads
+                           )
 
       foreach(version MAJOR MINOR PATCH)
         set(QT_LIB_CLANG_VERSION_${version} ${LLVM_VERSION_${version}} CACHE STRING "" FORCE)
