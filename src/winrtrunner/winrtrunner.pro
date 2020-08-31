@@ -11,20 +11,17 @@ SOURCES += \
     main.cpp \
     runner.cpp \
     appxengine.cpp \
-    appxlocalengine.cpp \
-    appxphoneengine.cpp
+    appxlocalengine.cpp
 
 HEADERS += \
     runner.h \
     runnerengine.h \
     appxengine.h \
     appxengine_p.h \
-    appxlocalengine.h \
-    appxphoneengine.h
+    appxlocalengine.h
 
 LIBS += -lruntimeobject -lwsclient -lShlwapi -lurlmon -lxmllite -lcrypt32
 
-include(../shared/corecon/corecon.pri)
 include(../shared/winutils/winutils.pri)
 
 QMAKE_TARGET_DESCRIPTION = "Qt WinRT Runner"

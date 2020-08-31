@@ -41,9 +41,6 @@
 
 #include "runnerengine.h"
 
-#ifndef RTRUNNER_NO_APPXPHONE
-#include "appxphoneengine.h"
-#endif
 #ifndef RTRUNNER_NO_APPXLOCAL
 #include "appxlocalengine.h"
 #endif
@@ -94,9 +91,6 @@ QMap<QString, QStringList> Runner::deviceNames()
 #ifndef RTRUNNER_NO_APPXLOCAL
     deviceNames.insert(QStringLiteral("Appx"), AppxLocalEngine::deviceNames());
 #endif
-#ifndef RTRUNNER_NO_APPXPHONE
-    deviceNames.insert(QStringLiteral("Phone"), AppxPhoneEngine::deviceNames());
-#endif
     return deviceNames;
 }
 
@@ -124,22 +118,6 @@ Runner::Runner(const QString &app, const QStringList &arguments,
             d->engine.reset(engine);
             d->isValid = true;
             qCWarning(lcWinRtRunner) << "Using the Appx profile.";
-            return;
-        }
-    }
-#endif
-#ifndef RTRUNNER_NO_APPXPHONE
-    if (!deviceIndexKnown) {
-        d->deviceIndex = AppxPhoneEngine::deviceNames().indexOf(deviceName);
-        if (d->deviceIndex < 0)
-            d->deviceIndex = 0;
-    }
-    if ((d->profile.isEmpty() || d->profile.toLower() == QStringLiteral("appxphone"))
-            && AppxPhoneEngine::canHandle(this)) {
-        if (RunnerEngine *engine = AppxPhoneEngine::create(this)) {
-            d->engine.reset(engine);
-            d->isValid = true;
-            qCWarning(lcWinRtRunner) << "Using the AppxPhone profile.";
             return;
         }
     }
