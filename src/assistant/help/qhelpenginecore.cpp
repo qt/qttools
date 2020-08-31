@@ -635,10 +635,13 @@ QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id) cons
 */
 QList<QHelpLink> QHelpEngineCore::documentsForIdentifier(const QString &id, const QString &filterName) const
 {
-    if (!d->setup() || !d->usesFilterEngine)
+    if (!d->setup())
         return QList<QHelpLink>();
 
-    return d->collectionHandler->documentsForIdentifier(id, filterName);
+    if (d->usesFilterEngine)
+        return d->collectionHandler->documentsForIdentifier(id, filterName);
+
+    return d->collectionHandler->documentsForIdentifier(id, filterAttributes(filterName));
 }
 
 /*!
@@ -665,10 +668,13 @@ QList<QHelpLink> QHelpEngineCore::documentsForKeyword(const QString &keyword) co
 */
 QList<QHelpLink> QHelpEngineCore::documentsForKeyword(const QString &keyword, const QString &filterName) const
 {
-    if (!d->setup() || !d->usesFilterEngine)
+    if (!d->setup())
         return QList<QHelpLink>();
 
-    return d->collectionHandler->documentsForKeyword(keyword, filterName);
+    if (d->usesFilterEngine)
+        return d->collectionHandler->documentsForKeyword(keyword, filterName);
+
+    return d->collectionHandler->documentsForKeyword(keyword, filterAttributes(filterName));
 }
 
 /*!

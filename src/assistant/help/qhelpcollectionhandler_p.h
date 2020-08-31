@@ -207,6 +207,10 @@ public:
                                             const QString &filterName) const;
     QList<QHelpLink> documentsForKeyword(const QString &keyword,
                                          const QString &filterName) const;
+    QList<QHelpLink> documentsForIdentifier(const QString &id,
+                                            const QStringList &filterAttributes) const;
+    QList<QHelpLink> documentsForKeyword(const QString &keyword,
+                                         const QStringList &filterAttributes) const;
 
     QStringList namespacesForFilter(const QString &filterName) const;
 
@@ -217,8 +221,12 @@ signals:
 
 private:
     // legacy stuff
-    QMultiMap<QString, QUrl> linksForField(const QString &fieldName, const QString &fieldValue,
+    QMultiMap<QString, QUrl> linksForField(const QString &fieldName,
+                                           const QString &fieldValue,
                                            const QStringList &filterAttributes) const;
+    QList<QHelpLink> documentsForField(const QString &fieldName,
+                                       const QString &fieldValue,
+                                       const QStringList &filterAttributes) const;
 
     QString namespaceVersion(const QString &namespaceName) const;
     QMultiMap<QString, QUrl> linksForField(const QString &fieldName, const QString &fieldValue,

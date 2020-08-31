@@ -2301,28 +2301,56 @@ static QUrl buildQUrl(const QString &ns, const QString &folder,
     return url;
 }
 
-QMultiMap<QString, QUrl>
-QHelpCollectionHandler::linksForIdentifier(const QString &id,
-                                           const QStringList &filterAttributes) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(
+        const QString &id,
+        const QStringList &filterAttributes) const
 {
     return linksForField(QLatin1String("Identifier"), id, filterAttributes);
 }
 
-QMultiMap<QString, QUrl>
-QHelpCollectionHandler::linksForKeyword(const QString &keyword,
-                                        const QStringList &filterAttributes) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(
+        const QString &keyword,
+        const QStringList &filterAttributes) const
 {
     return linksForField(QLatin1String("Name"), keyword, filterAttributes);
 }
 
-QMultiMap<QString, QUrl>
-QHelpCollectionHandler::linksForField(const QString &fieldName, const QString &fieldValue,
-                                      const QStringList &filterAttributes) const
+QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(
+        const QString &id,
+        const QStringList &filterAttributes) const
+{
+    return documentsForField(QLatin1String("Identifier"), id, filterAttributes);
+}
+
+QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(
+        const QString &keyword,
+        const QStringList &filterAttributes) const
+{
+    return documentsForField(QLatin1String("Name"), keyword, filterAttributes);
+}
+
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(
+        const QString &fieldName,
+        const QString &fieldValue,
+        const QStringList &filterAttributes) const
 {
     QMultiMap<QString, QUrl> linkMap;
+    const auto documents = documentsForField(fieldName, fieldValue, filterAttributes);
+    for (const auto &document : documents)
+        linkMap.insert(document.title, document.url);
+
+    return linkMap;
+}
+
+QList<QHelpLink> QHelpCollectionHandler::documentsForField(
+        const QString &fieldName,
+        const QString &fieldValue,
+        const QStringList &filterAttributes) const
+{
+    QList<QHelpLink> docList;
 
     if (!isDBOpened())
-        return linkMap;
+        return docList;
 
     const QString filterlessQuery = QString::fromLatin1(
                 "SELECT "
@@ -2359,40 +2387,47 @@ QHelpCollectionHandler::linksForField(const QString &fieldName, const QString &f
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + QLatin1String(" : ") + m_query->value(3).toString();
 
-        linkMap.insert(title,
-                       buildQUrl(m_query->value(1).toString(), m_query->value(2).toString(),
-                                 m_query->value(3).toString(), m_query->value(4).toString()));
+        const QUrl url = buildQUrl(m_query->value(1).toString(),
+                                   m_query->value(2).toString(),
+                                   m_query->value(3).toString(),
+                                   m_query->value(4).toString());
+        docList.append(QHelpLink {url, title});
     }
-    return linkMap;
+    return docList;
 }
 
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(const QString &id,
-                                                                    const QString &filterName) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(
+        const QString &id,
+        const QString &filterName) const
 {
     return linksForField(QLatin1String("Identifier"), id, filterName);
 }
 
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(const QString &keyword,
-                                                                 const QString &filterName) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(
+        const QString &keyword,
+        const QString &filterName) const
 {
     return linksForField(QLatin1String("Name"), keyword, filterName);
 }
 
-QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(const QString &id,
-                         const QString &filterName) const
+QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(
+        const QString &id,
+        const QString &filterName) const
 {
     return documentsForField(QLatin1String("Identifier"), id, filterName);
 }
 
-QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(const QString &keyword,
-                         const QString &filterName) const
+QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(
+        const QString &keyword,
+        const QString &filterName) const
 {
     return documentsForField(QLatin1String("Name"), keyword, filterName);
 }
 
-QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
-                                                               const QString &fieldValue,
-                                                               const QString &filterName) const
+QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(
+        const QString &fieldName,
+        const QString &fieldValue,
+        const QString &filterName) const
 {
     QMultiMap<QString, QUrl> linkMap;
     const auto documents = documentsForField(fieldName, fieldValue, filterName);
@@ -2402,9 +2437,10 @@ QMultiMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fi
     return linkMap;
 }
 
-QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldName,
-                                           const QString &fieldValue,
-                                           const QString &filterName) const
+QList<QHelpLink> QHelpCollectionHandler::documentsForField(
+        const QString &fieldName,
+        const QString &fieldValue,
+        const QString &filterName) const
 {
     QList<QHelpLink> docList;
 
