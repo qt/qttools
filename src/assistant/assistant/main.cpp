@@ -274,7 +274,6 @@ static ExitStatus preliminarySetup(CmdLineParser *cmd)
     QScopedPointer<QHelpEngineCore> collection;
     if (collectionFileGiven) {
         collection.reset(new QHelpEngineCore(collectionFile));
-        collection->setProperty("_q_readonly", QVariant::fromValue<bool>(true));
         if (!collection->setupData()) {
             cmd->showMessage(QCoreApplication::translate("Assistant",
                              "Error reading collection file '%1': %2.")

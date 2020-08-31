@@ -81,7 +81,7 @@ bool QHelpEngineCorePrivate::setup()
 
     const QVariant readOnlyVariant = q->property("_q_readonly");
     const bool readOnly = readOnlyVariant.isValid()
-            ? readOnlyVariant.toBool() : false;
+            ? readOnlyVariant.toBool() : q->isReadOnly();
     collectionHandler->setReadOnly(readOnly);
     const bool opened = collectionHandler->openCollectionFile();
     if (opened)
@@ -124,6 +124,18 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
     \note QHelpFilterEngine replaces the older filter API that is
     deprecated since Qt 5.13. Call setUsesFilterEngine() with \c true to
     enable the new functionality.
+
+    The core help engine has two modes:
+    \list
+        \li Read-only mode, where the help collection file is not changed
+            unless explicitly requested. This also works if the
+            collection file is in a read-only location,
+            and is the default.
+        \li Fully writable mode, which requires the help collection
+            file to be writable.
+    \endlist
+    The mode can be changed by calling setReadOnly() method, prior to
+    calling setupData().
 
     The help engine also offers the possibility to set and read values
     in a persistent way comparable to ini files or Windows registry
@@ -232,6 +244,31 @@ void QHelpEngineCore::setCollectionFile(const QString &fileName)
     }
     d->init(fileName, this);
     d->needsSetup = true;
+}
+
+/*!
+    \property QHelpEngineCore::readOnly
+    \brief whether the help engine is read-only.
+    \since 6.0
+
+    In read-only mode, the user can use the help engine
+    with a collection file installed in a read-only location.
+    In this case, some functionality won't be accessible,
+    like registering additional documentation, filter editing,
+    or any action that would require changes to the
+    collection file. Setting it to \c false enables the full
+    functionality of the help engine.
+
+    By default, this property is \c true.
+*/
+bool QHelpEngineCore::isReadOnly() const
+{
+    return d->readOnly;
+}
+
+void QHelpEngineCore::setReadOnly(bool enable)
+{
+    d->readOnly = enable;
 }
 
 /*!

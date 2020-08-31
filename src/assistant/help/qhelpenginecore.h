@@ -58,6 +58,7 @@ class QHELP_EXPORT QHelpEngineCore : public QObject
     Q_OBJECT
     Q_PROPERTY(bool autoSaveFilter READ autoSaveFilter WRITE setAutoSaveFilter)
     Q_PROPERTY(QString collectionFile READ collectionFile WRITE setCollectionFile)
+    Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
 #if QT_DEPRECATED_SINCE(5, 15)
     Q_PROPERTY(QString currentFilter READ currentFilter WRITE setCurrentFilter)
 #endif
@@ -65,6 +66,9 @@ class QHELP_EXPORT QHelpEngineCore : public QObject
 public:
     explicit QHelpEngineCore(const QString &collectionFile, QObject *parent = nullptr);
     virtual ~QHelpEngineCore();
+
+    bool isReadOnly() const;
+    void setReadOnly(bool enable);
 
     QHelpFilterEngine *filterEngine() const;
 

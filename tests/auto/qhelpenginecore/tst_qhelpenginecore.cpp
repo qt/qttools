@@ -204,6 +204,7 @@ void tst_QHelpEngineCore::registerDocumentation()
         QDir::current().remove(m_colFile);
     {
         QHelpEngineCore c(m_colFile);
+        c.setReadOnly(false);
         QCOMPARE(c.setupData(), true);
         c.registerDocumentation(m_path + "/data/qmake-3.3.8.qch");
         QCOMPARE(c.registeredDocumentations().count(), 1);
@@ -235,6 +236,7 @@ void tst_QHelpEngineCore::registerDocumentation()
 void tst_QHelpEngineCore::unregisterDocumentation()
 {
     QHelpEngineCore c(m_colFile);
+    c.setReadOnly(false);
     QCOMPARE(c.setupData(), true);
     QCOMPARE(c.registeredDocumentations().count(), 3);
     c.unregisterDocumentation("trolltech.com.3-3-8.qmake");
@@ -322,6 +324,7 @@ void tst_QHelpEngineCore::setCurrentFilter()
 void tst_QHelpEngineCore::filterAttributeSets()
 {
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     QList<QStringList> lst = help.filterAttributeSets("trolltech.com.1.0.0.test");
     QCOMPARE(lst.count(), 2);
@@ -333,6 +336,7 @@ void tst_QHelpEngineCore::filterAttributeSets()
 void tst_QHelpEngineCore::files()
 {
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     QList<QUrl> lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList());
@@ -363,6 +367,7 @@ void tst_QHelpEngineCore::files()
 void tst_QHelpEngineCore::fileData()
 {
     QHelpEngineCore help(m_colFile, 0);
+    help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     QByteArray ba = help.fileData(QUrl("NotExisting"));
     QCOMPARE(ba.size(), 0);

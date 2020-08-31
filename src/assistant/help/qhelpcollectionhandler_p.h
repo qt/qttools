@@ -257,7 +257,7 @@ private:
     QString m_connectionName;
     QSqlQuery *m_query = nullptr;
     bool m_vacuumScheduled = false;
-    bool m_readOnly = false;
+    bool m_readOnly = true;
 };
 
 QT_END_NAMESPACE

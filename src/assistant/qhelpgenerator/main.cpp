@@ -102,6 +102,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
     }
 
     QHelpEngineCore helpEngine(outputFile);
+    helpEngine.setReadOnly(false);
     if (!helpEngine.setupData()) {
         fprintf(stderr, "%s\n", qPrintable(helpEngine.error()));
         return 1;

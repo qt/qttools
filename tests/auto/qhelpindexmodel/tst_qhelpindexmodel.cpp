@@ -97,6 +97,7 @@ void tst_QHelpIndexModel::init()
 void tst_QHelpIndexModel::setupIndex()
 {
     QHelpEngine h(m_colFile, 0);
+    h.setReadOnly(false);
     QHelpIndexModel *m = h.indexModel();
     SignalWaiter w;
     connect(m, SIGNAL(indexCreated()),
@@ -128,6 +129,7 @@ void tst_QHelpIndexModel::setupIndex()
 void tst_QHelpIndexModel::filter()
 {
     QHelpEngine h(m_colFile, 0);
+    h.setReadOnly(false);
     QHelpIndexModel *m = h.indexModel();
     SignalWaiter w;
     connect(m, SIGNAL(indexCreated()),

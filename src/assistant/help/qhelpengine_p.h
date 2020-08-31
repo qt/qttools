@@ -89,6 +89,7 @@ public:
     bool needsSetup = true;
     bool autoSaveFilter = true;
     bool usesFilterEngine = false;
+    bool readOnly = true;
 
 protected:
     QHelpEngineCore *q;

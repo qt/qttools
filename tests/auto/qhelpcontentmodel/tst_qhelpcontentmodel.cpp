@@ -98,6 +98,7 @@ void tst_QHelpContentModel::init()
 void tst_QHelpContentModel::setupContents()
 {
     QHelpEngine h(m_colFile, 0);
+    h.setReadOnly(false);
     QHelpContentModel *m = h.contentModel();
     SignalWaiter w;
     connect(m, SIGNAL(contentsCreated()),
@@ -123,6 +124,7 @@ void tst_QHelpContentModel::setupContents()
 void tst_QHelpContentModel::contentItemAt()
 {
     QHelpEngine h(m_colFile, 0);
+    h.setReadOnly(false);
     QHelpContentModel *m = h.contentModel();
     SignalWaiter w;
     connect(m, SIGNAL(contentsCreated()),
