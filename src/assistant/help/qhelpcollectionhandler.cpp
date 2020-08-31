@@ -2313,14 +2313,38 @@ QMap<QString, QUrl> QHelpCollectionHandler::linksForKeyword(const QString &keywo
     return linksForField(QLatin1String("Name"), keyword, filterAttributes);
 }
 
+QList<QHelpLink> QHelpCollectionHandler::documentsForIdentifier(const QString &id,
+                         const QStringList &filterAttributes) const
+{
+    return documentsForField(QLatin1String("Identifier"), id, filterAttributes);
+}
+
+QList<QHelpLink> QHelpCollectionHandler::documentsForKeyword(const QString &keyword,
+                         const QStringList &filterAttributes) const
+{
+    return documentsForField(QLatin1String("Name"), keyword, filterAttributes);
+}
+
 QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldName,
                     const QString &fieldValue,
                     const QStringList &filterAttributes) const
 {
     QMap<QString, QUrl> linkMap;
+    const auto documents = documentsForField(fieldName, fieldValue, filterAttributes);
+    for (const auto &document : documents)
+        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(document.title, document.url);
+
+    return linkMap;
+}
+
+QList<QHelpLink> QHelpCollectionHandler::documentsForField(const QString &fieldName,
+                    const QString &fieldValue,
+                    const QStringList &filterAttributes) const
+{
+    QList<QHelpLink> docList;
 
     if (!isDBOpened())
-        return linkMap;
+        return docList;
 
     const QString filterlessQuery = QString::fromLatin1(
                 "SELECT "
@@ -2357,13 +2381,13 @@ QMap<QString, QUrl> QHelpCollectionHandler::linksForField(const QString &fieldNa
         if (title.isEmpty()) // generate a title + corresponding path
             title = fieldValue + QLatin1String(" : ") + m_query->value(3).toString();
 
-        static_cast<QMultiMap<QString, QUrl> &>(linkMap).insert(title, buildQUrl(
-                                             m_query->value(1).toString(),
-                                             m_query->value(2).toString(),
-                                             m_query->value(3).toString(),
-                                             m_query->value(4).toString()));
+        const QUrl url = buildQUrl(m_query->value(1).toString(),
+                                   m_query->value(2).toString(),
+                                   m_query->value(3).toString(),
+                                   m_query->value(4).toString());
+        docList.append(QHelpLink {url, title});
     }
-    return linkMap;
+    return docList;
 }
 
 QMap<QString, QUrl> QHelpCollectionHandler::linksForIdentifier(const QString &id,
