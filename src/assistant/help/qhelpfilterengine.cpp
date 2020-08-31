@@ -70,10 +70,15 @@ bool QHelpFilterEnginePrivate::setup()
     if (!m_needsSetup)
         return true;
 
-    if (!m_helpEngine->setupData())
-        return false;
-
+    // Prevent endless loop when connected to setupFinished() signal
+    // and using from there QHelpFilterEngine, causing setup() to be
+    // called in turn.
     m_needsSetup = false;
+
+    if (!m_helpEngine->setupData()) {
+        m_needsSetup = true;
+        return false;
+    }
 
     const QString filter = m_collectionHandler->customValue(
                 QLatin1String(ActiveFilter), QString()).toString();
