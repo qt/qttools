@@ -109,7 +109,7 @@ private:
                                 const NodeMultiMap &nodeMap);
     void generateAnnotatedList(const Node *relative, CodeMarker *marker, const NodeList &nodes);
     void generateCompactList(ListType listType, const Node *relative, const NodeMultiMap &classMap,
-                             bool includeAlphabet, QString commonPrefix);
+                             bool includeAlphabet, const QString &commonPrefix);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative, CodeMarker *marker);
     bool generateGroupList(CollectionNode *cn);
