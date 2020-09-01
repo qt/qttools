@@ -1040,19 +1040,6 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
         generateText(text, en, marker);
 }
 
-void Generator::generateInheritedBy(const ClassNode *classe, CodeMarker *marker)
-{
-    if (!classe->derivedClasses().isEmpty()) {
-        Text text;
-        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-             << "Inherited by: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
-
-        appendSortedNames(text, classe, classe->derivedClasses());
-        text << Atom::ParaRight;
-        generateText(text, classe, marker);
-    }
-}
-
 void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
 {
     if (!classe->baseClasses().isEmpty()) {
