@@ -5841,7 +5841,7 @@ void QtFontPropertyManager::setValue(QtProperty *property, const QFont &val)
         return;
 
     const QFont oldVal = it.value();
-    if (oldVal == val && oldVal.resolve() == val.resolve())
+    if (oldVal == val && oldVal.resolveMask() == val.resolveMask())
         return;
 
     it.value() = val;

@@ -447,7 +447,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
     case QVariant::Font: {
         DomFont *fnt = new DomFont();
         const QFont font = qvariant_cast<QFont>(v);
-        const uint mask = font.resolve();
+        const uint mask = font.resolveMask();
         if (mask & QFont::WeightResolved) {
             fnt->setElementBold(font.bold());
             fnt->setElementWeight(font.weight());

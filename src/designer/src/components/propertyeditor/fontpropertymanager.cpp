@@ -176,11 +176,11 @@ namespace qdesigner_internal {
 
         QVariant v = fontProperty->value();
         QFont font = qvariant_cast<QFont>(v);
-        unsigned mask = font.resolve();
+        unsigned mask = font.resolveMask();
         const unsigned flag = fontFlag(m_fontSubPropertyToFlag.value(property));
 
         mask &= ~flag;
-        font.resolve(mask);
+        font.setResolveMask(mask);
         v.setValue(font);
         fontProperty->setValue(v);
         return true;
@@ -254,7 +254,7 @@ namespace qdesigner_internal {
         const PropertyList &subProperties = it.value();
 
         QFont font = qvariant_cast<QFont>(value);
-        const unsigned mask = font.resolve();
+        const unsigned mask = font.resolveMask();
 
         const int count = subProperties.size();
         for (int index = 0; index < count; index++) {

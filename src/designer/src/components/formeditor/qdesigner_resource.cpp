@@ -484,7 +484,7 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
 
     const QVariant classVar = sheet->property(sheet->indexOf(QStringLiteral("objectName")));
     QString classStr;
-    if (classVar.canConvert(QVariant::String))
+    if (classVar.canConvert<QString>())
         classStr = classVar.toString();
     else
         classStr = qvariant_cast<PropertySheetStringValue>(classVar).value();

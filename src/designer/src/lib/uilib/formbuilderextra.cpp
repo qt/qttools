@@ -548,7 +548,7 @@ DomColorGroup *QFormBuilderExtra::saveColorGroup(const QPalette &palette,
     DomColorGroup *group = new DomColorGroup();
     QList<DomColorRole *> colorRoles;
 
-    const uint mask = palette.resolve();
+    const uint mask = palette.resolveMask();
     for (int role = QPalette::WindowText; role < QPalette::NColorRoles; ++role) {
         if (mask & (1 << role)) {
             const QBrush &br = palette.brush(colorGroup, QPalette::ColorRole(role));

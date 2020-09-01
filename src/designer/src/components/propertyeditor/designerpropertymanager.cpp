@@ -1374,9 +1374,9 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
 
         data.superPalette = superPalette;
         // resolve here
-        const uint mask = data.val.resolve();
+        const uint mask = data.val.resolveMask();
         data.val = data.val.resolve(superPalette);
-        data.val.resolve(mask);
+        data.val.setResolveMask(mask);
 
         it.value() = data;
 
@@ -1535,7 +1535,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
     }
     if (m_paletteValues.contains(const_cast<QtProperty *>(property))) {
         const PaletteData data = m_paletteValues.value(const_cast<QtProperty *>(property));
-        const uint mask = data.val.resolve();
+        const uint mask = data.val.resolveMask();
         if (mask)
             return tr("Customized (%n roles)", nullptr, bitCount(mask));
         static const QString inherited = tr("Inherited");
@@ -1742,7 +1742,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
     const PropertyFlagDataMap::iterator fit = m_flagValues.find(property);
 
     if (fit !=  m_flagValues.end()) {
-        if (value.type() != QVariant::UInt && !value.canConvert(QVariant::UInt))
+        if (value.type() != QVariant::UInt && !value.canConvert<uint>())
             return;
 
         const uint v = value.toUInt();
@@ -1794,7 +1794,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         return;
     }
     if (m_alignValues.contains(property)) {
-        if (value.type() != QVariant::UInt && !value.canConvert(QVariant::UInt))
+        if (value.type() != QVariant::UInt && !value.canConvert<uint>())
             return;
 
         const uint v = value.toUInt();
@@ -1820,18 +1820,18 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         return;
     }
     if (m_paletteValues.contains(property)) {
-        if (value.type() != QVariant::Palette && !value.canConvert(QVariant::Palette))
+        if (value.type() != QVariant::Palette && !value.canConvert<QPalette>())
             return;
 
         QPalette p = qvariant_cast<QPalette>(value);
 
         PaletteData data = m_paletteValues.value(property);
 
-        const uint mask = p.resolve();
+        const uint mask = p.resolveMask();
         p = p.resolve(data.superPalette);
-        p.resolve(mask);
+        p.setResolveMask(mask);
 
-        if (data.val == p && data.val.resolve() == p.resolve())
+        if (data.val == p && data.val.resolveMask() == p.resolveMask())
             return;
 
         data.val = p;
@@ -1915,7 +1915,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         return;
     }
     if (m_uintValues.contains(property)) {
-        if (value.type() != QVariant::UInt && !value.canConvert(QVariant::UInt))
+        if (value.type() != QVariant::UInt && !value.canConvert<uint>())
             return;
 
         const uint v = value.toUInt(nullptr);
@@ -1932,7 +1932,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         return;
     }
     if (m_longLongValues.contains(property)) {
-        if (value.type() != QVariant::LongLong && !value.canConvert(QVariant::LongLong))
+        if (value.type() != QVariant::LongLong && !value.canConvert<qlonglong>())
             return;
 
         const qlonglong v = value.toLongLong(nullptr);
@@ -1949,7 +1949,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         return;
     }
     if (m_uLongLongValues.contains(property)) {
-        if (value.type() != QVariant::ULongLong && !value.canConvert(QVariant::ULongLong))
+        if (value.type() != QVariant::ULongLong && !value.canConvert<qulonglong>())
             return;
 
         qulonglong v = value.toULongLong(nullptr);
@@ -1966,7 +1966,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         return;
     }
     if (m_urlValues.contains(property)) {
-        if (value.type() != QVariant::Url && !value.canConvert(QVariant::Url))
+        if (value.type() != QVariant::Url && !value.canConvert<QUrl>())
             return;
 
         const QUrl v = value.toUrl();
@@ -1983,7 +1983,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         return;
     }
     if (m_byteArrayValues.contains(property)) {
-        if (value.type() != QVariant::ByteArray && !value.canConvert(QVariant::ByteArray))
+        if (value.type() != QVariant::ByteArray && !value.canConvert<QByteArray>())
             return;
 
         const QByteArray v = value.toByteArray();

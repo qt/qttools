@@ -242,7 +242,7 @@ static void applyFont(const QString &family, int size, DeviceProfile::ApplyMode 
     case DeviceProfile::ApplyPreview: {
         // Preview: Apply only subproperties that have not been changed by designer properties
         bool apply = false;
-        const uint resolve = currentFont.resolve();
+        const uint resolve = currentFont.resolveMask();
         if (!(resolve & QFont::FamilyResolved)) {
             currentFont.setFamily(family);
             apply = true;

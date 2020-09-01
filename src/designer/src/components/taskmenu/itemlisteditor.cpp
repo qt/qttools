@@ -169,7 +169,7 @@ void AbstractItemEditor::propertyChanged(QtProperty *property)
 
     if ((role == ItemFlagsShadowRole && prop->value().toInt() == defaultItemFlags())
         || (role == Qt::DecorationPropertyRole && !qvariant_cast<PropertySheetIconValue>(prop->value()).mask())
-        || (role == Qt::FontRole && !qvariant_cast<QFont>(prop->value()).resolve())) {
+        || (role == Qt::FontRole && !qvariant_cast<QFont>(prop->value()).resolveMask())) {
         prop->setModified(false);
         setItemData(role, QVariant());
     } else {
