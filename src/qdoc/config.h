@@ -122,6 +122,7 @@ public:
 
     void init(const QString &programName, const QStringList &args);
     bool getDebug() const { return m_debug; }
+    bool showInternal() const { return m_showInternal; }
 
     void clear();
     void reset();
@@ -221,6 +222,7 @@ private:
     QString m_currentDir {};
     QString m_previousCurrentDir {};
 
+    bool m_showInternal { false };
     static bool m_debug;
     static bool isMetaKeyChar(QChar ch);
     void load(Location location, const QString &fileName);

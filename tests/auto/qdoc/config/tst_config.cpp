@@ -81,6 +81,7 @@ Config &tst_Config::initConfig(const QStringList &args, const char *qdocconf)
 void tst_Config::classMembersInitializeToFalseOrEmpty()
 {
     auto &config = initConfig();
+    QCOMPARE(config.showInternal(), false);
     QCOMPARE(config.singleExec(), false);
 
     QVERIFY(config.defines().isEmpty());

@@ -300,6 +300,7 @@ void Config::reset()
     SET(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, redirectDocumentationToDevNullOption);
     SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
 #undef SET
+    m_showInternal = getBool(CONFIG_SHOWINTERNAL);
     setListFlag(CONFIG_NOLINKERRORS,
                 m_parser.isSet(m_parser.noLinkErrorsOption)
                         || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
@@ -411,6 +412,7 @@ void Config::processCommandLineOptions(const QStringList &args)
         overrideOutputFormats.insert(format);
 
     m_debug = m_parser.isSet(m_parser.debugOption);
+    m_showInternal = m_parser.isSet(m_parser.showInternalOption);
 
     if (m_parser.isSet(m_parser.prepareOption))
         m_qdocPass = Prepare;

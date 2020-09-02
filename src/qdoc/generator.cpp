@@ -1899,7 +1899,7 @@ void Generator::augmentImageDirs(QSet<QString> &moreImageDirs)
  */
 void Generator::initializeGenerator()
 {
-    m_showInternal = Config::instance().getBool(CONFIG_SHOWINTERNAL);
+    m_showInternal = Config::instance().showInternal();
 }
 
 bool Generator::matchAhead(const Atom *atom, Atom::AtomType expectedAtomType)

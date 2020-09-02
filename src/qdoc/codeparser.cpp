@@ -70,7 +70,7 @@ CodeParser::~CodeParser()
  */
 void CodeParser::initializeParser()
 {
-    showInternal_ = Config::instance().getBool(CONFIG_SHOWINTERNAL);
+    showInternal_ = Config::instance().showInternal();
     singleExec_ = Config::instance().getBool(CONFIG_SINGLEEXEC);
 }
 
