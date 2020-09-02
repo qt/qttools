@@ -258,7 +258,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     if (!node->url().isNull() || node->isExternalPage() || node->isIndexNode())
         return;
 
-    if (node->isInternal() && !m_showInternal)
+    if (node->isInternal() && !Config::instance().showInternal())
         return;
 
     if (node->parent()) {

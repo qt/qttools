@@ -326,7 +326,7 @@ static void transmogrify(QString &input, QString &output)
         output.chop(1);
 }
 
-QString Generator::fileBase(const Node *node) const
+QString Generator::fileBase(const Node *node)
 {
     if (!node->isPageNode() && !node->isCollectionNode())
         node = node->parent();
@@ -372,7 +372,7 @@ QString Generator::fileBase(const Node *node) const
           module name.
         */
         if (!node->logicalModuleName().isEmpty()
-            && (!node->logicalModule()->isInternal() || m_showInternal))
+            && (!node->logicalModule()->isInternal() || Config::instance().showInternal()))
             base.prepend(node->logicalModuleName() + outputSuffix(node) + QLatin1Char('-'));
 
         base.prepend(outputPrefix(node));

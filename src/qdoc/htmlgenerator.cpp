@@ -2269,7 +2269,7 @@ QString HtmlGenerator::generateAllMembersFile(const Section &section, CodeMarker
         return QString();
 
     const Aggregate *aggregate = section.aggregate();
-    QString fileName = fileBase(aggregate) + "-members." + fileExtension();
+    QString fileName = appendObsoleteToFileBase(aggregate) + "-members." + fileExtension();
     beginSubPage(aggregate, fileName);
     QString title = "List of All Members for " + aggregate->name();
     generateHeader(title, aggregate, marker);
@@ -2299,7 +2299,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
         return QString();
 
     const Aggregate *aggregate = sections.aggregate();
-    QString fileName = fileBase(aggregate) + "-members." + fileExtension();
+    QString fileName = appendObsoleteToFileBase(aggregate) + "-members." + fileExtension();
     beginSubPage(aggregate, fileName);
     QString title = "List of All Members for " + aggregate->name();
     generateHeader(title, aggregate, marker);
@@ -2369,7 +2369,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
 
     Aggregate *aggregate = sections.aggregate();
     QString title = "Obsolete Members for " + aggregate->name();
-    QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
+    QString fileName = appendObsoleteToFileBase(aggregate) + "-obsolete." + fileExtension();
     QString link;
     if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
         link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
@@ -2425,7 +2425,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
 
     Aggregate *aggregate = sections.aggregate();
     QString title = "Obsolete Members for " + aggregate->name();
-    QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
+    QString fileName = appendObsoleteToFileBase(aggregate) + "-obsolete." + fileExtension();
     QString link;
     if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
         link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
@@ -2712,7 +2712,8 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
                 */
                 out() << "<a href=\"" << linkForNode(it.value(), relative) << "\">";
             } else if (listType == Obsolete) {
-                QString fileName = fileBase(it.value()) + "-obsolete." + fileExtension();
+                QString fileName =
+                        appendObsoleteToFileBase(it.value()) + "-obsolete." + fileExtension();
                 QString link;
                 if (useOutputSubdirs()) {
                     link = QString("../" + it.value()->outputSubdirectory() + QLatin1Char('/'));
@@ -3301,7 +3302,7 @@ QString HtmlGenerator::protect(const QString &string)
 #undef APPEND
 }
 
-QString HtmlGenerator::fileBase(const Node *node) const
+QString HtmlGenerator::appendObsoleteToFileBase(const Node *node) const
 {
     QString result = Generator::fileBase(node);
     if (!node->isAggregate() && node->isObsolete())
@@ -3741,7 +3742,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
 
         writer.writeStartElement(element);
         writer.writeAttribute("name", en->title());
-        QString docUrl = m_manifestDir + fileBase(en) + ".html";
+        QString docUrl = m_manifestDir + appendObsoleteToFileBase(en) + ".html";
         writer.writeAttribute("docUrl", docUrl);
         const auto exampleFiles = en->files();
         if (en->projectFile().isEmpty())

@@ -89,6 +89,7 @@ public:
     static QmlTypeNode *qmlTypeContext() { return qmlTypeContext_; }
     static QString cleanRef(const QString &ref);
     static QString plainCode(const QString &markedCode);
+    static QString fileBase(const Node *node);
 
 protected:
     static QFile *openSubPageFile(const Node *node, const QString &fileName);
@@ -96,7 +97,6 @@ protected:
     void endFilePage() { endSubPage(); } // for symmetry
     void beginSubPage(const Node *node, const QString &fileName);
     void endSubPage();
-    virtual QString fileBase(const Node *node) const;
     virtual QString fileExtension() const = 0;
     virtual void generateExampleFilePage(const Node *, const QString &, CodeMarker *) {}
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
