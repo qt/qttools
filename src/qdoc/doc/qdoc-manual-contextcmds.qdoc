@@ -143,7 +143,7 @@
     \section2 \\previouspage
 
     The \\previouspage command links the current page to the previous
-    page in a sequence.a The command has two arguments, each enclosed
+    page in a sequence. The command has two arguments, each enclosed
     by curly braces: the first is the link target (the title of
     the previous page), the second is the link text. If the page's
     title is equivalent to the link text, the second argument can be
