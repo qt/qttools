@@ -54,6 +54,8 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
+    case TrFunctionAliasManager::Function_QT_TR_NOOP:
+    case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
         qCDebug(lcClang) << "MacroExpands: Function name:" << funcName;
         break;
     }
@@ -84,6 +86,8 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
                 case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
                 case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
                 case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
+                case TrFunctionAliasManager::Function_QT_TR_NOOP:
+                case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
                     if (!clang::tok::isStringLiteral(kind))
                        errorArgument = true;
                     break;
@@ -96,6 +100,7 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
                     temp += QString::fromStdString(m_preprocessor.getSpelling(preExpArgument));
             }
             arguments[i] = temp;
+            qCDebug(lcClang) << "*********** macro argument : " << temp;
         }
         storeMacroArguments(arguments, &store);
     }
@@ -113,6 +118,11 @@ void LupdatePPCallbacks::storeMacroArguments(const std::vector<QString> &args,
             store->contextArg = args[0];
         break;
     // two arguments: the context and the source
+    case TrFunctionAliasManager::Function_QT_TR_NOOP:
+    case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
+        if (args.size() >= 1) {
+            store->lupdateSource = args[0];
+        }
     case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
         Q_FALLTHROUGH();

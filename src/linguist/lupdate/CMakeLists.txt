@@ -92,6 +92,12 @@ qt_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
         WrapLibClang::WrapLibClang # special case
 )
 
+# special case begin
+if(QT_FEATURE_clangcpp)
+    set_property(SOURCE clangtoolastreader.cpp PROPERTY SKIP_AUTOMOC ON)
+endif()
+# special case end
+
 #### Keys ignored in scope 6:.:.:lupdate.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:
 # QMAKE_RPATHDIR = "$$CLANG_LIBDIR"
 

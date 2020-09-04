@@ -30,7 +30,6 @@
 #define CLANG_TOOL_AST_READER_H
 
 #include "cpp_clang.h"
-
 #if defined(Q_CC_MSVC)
 # pragma warning(push)
 # pragma warning(disable: 4100)
@@ -48,6 +47,7 @@
 # pragma warning(pop)
 #endif
 
+#include <iostream>
 #include <memory>
 
 QT_BEGIN_NAMESPACE

@@ -33,33 +33,173 @@ QT_BEGIN_NAMESPACE
 
 namespace LupdatePrivate
 {
-    /*
-        Retrieves the context for the NOOP macros using the context of
-        the NamedDeclaration within which the Macro is.
-        The context is stripped of the function or method part as it used not to be retrieved
-        in the previous cpp parser.
-    */
-    QString contextForNoopMacro(clang::NamedDecl *namedDecl)
+    void exploreChildrenForFirstStringLiteral(clang::Stmt* stmt, QString &context)
     {
-        QStringList context;
-        const clang::DeclContext *decl = namedDecl->getDeclContext();
-        while (decl) {
-            if (clang::isa<clang::NamedDecl>(decl) && !decl->isFunctionOrMethod()) {
-                if (const auto *namespaceDecl = clang::dyn_cast<clang::NamespaceDecl>(decl)) {
-                    context.prepend(namespaceDecl->isAnonymousNamespace()
-                        ? QStringLiteral("(anonymous namespace)")
-                        : QString::fromStdString(namespaceDecl->getDeclName().getAsString()));
-                } else if (const auto *recordDecl = clang::dyn_cast<clang::RecordDecl>(decl)) {
-                    static const QString anonymous = QStringLiteral("(anonymous %1)");
-                    context.prepend(recordDecl->getIdentifier()
-                        ? QString::fromStdString(recordDecl->getDeclName().getAsString())
-                        : anonymous.arg(QLatin1String(recordDecl->getKindName().data())));
-                }
+        // only exploring the children until the context has been found.
+        if (!stmt || !context.isEmpty())
+            return;
+
+        for (auto it = stmt->child_begin() ; it !=stmt->child_end() ; it++) {
+            if (!context.isEmpty())
+                break;
+            clang::Stmt *child = *it;
+            clang::StringLiteral *stringLit = llvm::dyn_cast_or_null<clang::StringLiteral>(child);
+            if (stringLit) {
+                context = QString::fromStdString(stringLit->getString());
+                return;
             }
-            decl = decl->getParent();
+            exploreChildrenForFirstStringLiteral(child, context);
         }
-        return context.join(QStringLiteral("::"));
+        return;
     }
+
+    // Checks if the tr method is supported by the CXXRecordDecl
+    // Either because Q_OBJECT or Q_DECLARE_FUNCTIONS(MyContext) is declared with this CXXRecordDecl
+    // In case of Q_DECLARE_FUNCTIONS the context is read in the tr Method children with function exploreChildrenForFirstStringLiteral
+    // Q_DECLARE_FUNCTIONS trace in the AST is:
+    // - a public AccessSpecDecl pointing to src/corelib/kernel/qcoreapplication.h
+    // - a CXXMethodDecl called tr with a children that is a StringLiteral. This is the context
+    // Q_OBJECT trace in the AST is:
+    // - a public AccessSpecDecl pointing to src/corelib/kernel/qtmetamacros.h
+    // - a CXXMethodDecl called tr WITHOUT a StringLiteral among its children.
+    bool isQObjectOrQDeclareTrFunctionMacroDeclared(clang::CXXRecordDecl *recordDecl, QString &context, const clang::SourceManager &sm)
+    {
+        if (!recordDecl)
+            return false;
+
+        bool tr_method_present = false;
+        bool access_for_qobject = false;
+        bool access_for_qdeclaretrfunction = false;
+
+        for (auto decl : recordDecl->decls()) {
+            clang::AccessSpecDecl *accessSpec = llvm::dyn_cast<clang::AccessSpecDecl>(decl);
+            clang::CXXMethodDecl *method = llvm::dyn_cast<clang::CXXMethodDecl>(decl);
+
+            if (!accessSpec && !method)
+                continue;
+            if (method) {
+                // Look for method with name 'tr'
+                std::string name = method->getNameAsString();
+                if (name == "tr") {
+                    tr_method_present = true;
+                    // if nothing is found and the context remains empty, it's ok, it's probably a Q_OBJECT.
+                    exploreChildrenForFirstStringLiteral(method->getBody(), context);
+                }
+            } else if (accessSpec) {
+                QString location = accessSpec->getBeginLoc().isValid() ?
+                            QString::fromStdString(accessSpec->getBeginLoc().printToString(sm)) : QString();
+                const QString accessForQDeclareTrFunctions = QStringLiteral("src/corelib/kernel/qcoreapplication.h");
+                const QString accessForQObject = QStringLiteral("src/corelib/kernel/qtmetamacros.h");
+                if (location.contains(accessForQDeclareTrFunctions))
+                    access_for_qdeclaretrfunction = true;
+                if (location.contains(accessForQObject))
+                    access_for_qobject = true;
+            }
+        }
+
+        bool access_to_qtbase = false;
+        // if the context is still empty then it cannot be a Q_DECLARE_TR_FUNCTION.
+        if (context.isEmpty())
+            access_to_qtbase = access_for_qobject;
+        else
+            access_to_qtbase = access_for_qdeclaretrfunction;
+
+        return tr_method_present && access_to_qtbase;
+    }
+
+    QString exploreBases(clang::CXXRecordDecl *recordDecl, const clang::SourceManager &sm);
+    QString lookForContext(clang::CXXRecordDecl *recordDecl, const clang::SourceManager &sm)
+    {
+        QString context;
+        if (isQObjectOrQDeclareTrFunctionMacroDeclared(recordDecl, context, sm)) {
+            return context.isEmpty() ? QString::fromStdString(recordDecl->getQualifiedNameAsString()) : context;
+        } else {
+            // explore the bases of this CXXRecordDecl
+            // the base class AA takes precedent over B (reproducing tr context behavior)
+            /*
+             class AA {Q_OBJECT};
+             class A : public AA {};
+             class B {
+                 Q_OBJECT
+                 class C : public A
+                 {
+                     QString c_tr = tr("context is AA");
+                     const char * c_noop = QT_TR_NOOP("context should be AA");
+                 }
+             };
+            */
+            // For recordDecl corresponding to class C, the following gives access to class A
+            context = exploreBases(recordDecl, sm);
+            if (!context.isEmpty())
+                return context;
+        }
+    }
+
+    // Gives access to the class or struct the CXXRecordDecl is inheriting from
+    QString exploreBases(clang::CXXRecordDecl *recordDecl, const clang::SourceManager &sm)
+    {
+        QString context;
+        for (auto base : recordDecl->bases()) {
+            const clang::Type *type = base.getType().getTypePtrOrNull();
+            if (!type) continue;
+            clang::CXXRecordDecl *baseDecl = type->getAsCXXRecordDecl();
+            if (!baseDecl)
+                continue;
+            context = lookForContext(baseDecl, sm);
+            if (!context.isEmpty())
+                return context;
+        }
+        return context;
+    }
+
+    // QT_TR_NOOP location is within the the NamedDecl range
+    // Look for the RecordDecl (class or struct) the NamedDecl belongs to
+    // and the related classes until Q_OBJECT macro declaration or Q_DECLARE_TR_FUNCTIONS is found.
+    // The first class where Q_OBJECT or Q_DECLARE_TR_FUNCTIONS is declared is the context.
+    // The goal is to reproduce the behavior exibited by the new parser for tr function.
+    // tr function and QT_TR_NOOP, when next to each other in code, should always have the same context!
+    //
+    // The old parser does not do this.
+    // If a Q_OBJECT macro cannot be found in the first class
+    // a warning is emitted and the class is used as context regardless.
+    // This is the behavior for tr function and QT_TR_NOOP
+    // This is not correct.
+    QString contextForNoopMacro(clang::NamedDecl *namedDecl, const clang::SourceManager &sm)
+    {
+        QString context;
+        clang::DeclContext *decl = namedDecl->getDeclContext();
+        if (!decl)
+            return context;
+        while (decl) {
+            qCDebug(lcClang) << "--------------------- decl kind name: " << decl->getDeclKindName();
+            if (clang::isa<clang::CXXRecordDecl>(decl)) {
+                clang::CXXRecordDecl *recordDecl = llvm::dyn_cast<clang::CXXRecordDecl>(decl);
+
+                context = lookForContext(recordDecl, sm);
+                if (!context.isEmpty())
+                    return context;
+            }
+            decl = decl->getParent(); // Brings to the class or struct decl is nested in, if it exists.
+        }
+
+        // If no context has been found: do not emit a warning here.
+        // because more than one NamedDecl can include the QT_TR_NOOP macro location
+        // in the following, class A and class B and c_noop will.
+        /*
+        class A {
+            class B
+            {
+                Q_OBJECT
+                const char * c_noop = QT_TR_NOOP("context is B");
+            }
+        };
+        */
+        // calling contextForNoopMacro on NamedDecl corresponding to class A
+        // no context will be found, but it's ok because the context will be found
+        // when the function is called on c_noop.
+        return context;
+    }
+
 
     QString contextForFunctionDecl(clang::FunctionDecl *func, const std::string &funcName)
     {
@@ -623,16 +763,8 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
         if (!sourceLoc.isValid())
             continue;
         if (LupdatePrivate::isPointWithin(namedDeclaration->getSourceRange(), sourceLoc, sm)) {
-            /*
-                void N3::C1::C12::C121::f2()
-                {
-                    const char test_NOOP[] = QT_TR_NOOP("A QT_TR_NOOP N3::C1::C13");
-                }
-                In such case namedDeclaration->getQualifiedNameAsString() will give only
-                test_NOOP as context.
-                This is why the following function is needed
-            */
-            store.contextRetrievedTempNOOP = LupdatePrivate::contextForNoopMacro(namedDeclaration);
+
+            store.contextRetrieved = LupdatePrivate::contextForNoopMacro(namedDeclaration, sm);
             qCDebug(lcClang) << "------------------------------------------NOOP Macro in range ---";
             qCDebug(lcClang) << "Range " << namedDeclaration->getSourceRange().printToString(sm);
             qCDebug(lcClang) << "Point " << sourceLoc.printToString(sm);
@@ -644,8 +776,8 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
             qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
                 << namedDeclaration->getQualifiedNameAsString();
             qCDebug(lcClang) << " Context LupdatePrivate::contextForNoopMacro          "
-                << store.contextRetrievedTempNOOP;
-            qCDebug(lcClang) << " Context Retrieved       " << store.contextRetrievedTempNOOP;
+                << store.contextRetrieved;
+            qCDebug(lcClang) << " Context Retrieved       " << store.contextRetrieved;
             qCDebug(lcClang) << "=================================================================";
             store.printStore();
         }
@@ -668,8 +800,6 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
                 << sourceLoc.printToString(sm);
             qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
                 << store.contextRetrieved;
-            qCDebug(lcClang) << " Context LupdatePrivate::contextForNoopMacro          "
-                << LupdatePrivate::contextForNoopMacro(namedDeclaration);
             qCDebug(lcClang) << " Context Retrieved       " << store.contextRetrieved;
             qCDebug(lcClang) << "=================================================================";
             store.printStore();
@@ -683,7 +813,15 @@ void LupdateVisitor::generateOuput()
     m_noopTranslationMacroAll.erase(std::remove_if(m_noopTranslationMacroAll.begin(),
           m_noopTranslationMacroAll.end(), [](const TranslationRelatedStore &store) {
               // only fill if a context has been retrieved in the file we're currently visiting
-              return store.contextRetrievedTempNOOP.isEmpty() && store.contextArg.isEmpty();
+              // emit warning if both context are empty
+              if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()) {
+                  std::cerr << qPrintable(store.lupdateLocationFile) << ":";
+                  std::cerr << store.lupdateLocationLine << ":";
+                  std::cerr << store.locationCol << ": ";
+                  std::cerr << " \'" << qPrintable(store.funcName) << "\' cannot be called without context.";
+                  std::cerr << " The call is ignored (missing Q_OBJECT maybe?)\n";
+              }
+              return store.contextRetrieved.isEmpty() && store.contextArg.isEmpty();
       }), m_noopTranslationMacroAll.end());
 
     m_stores->QNoopTranlsationWithContext.emplace_bulk(std::move(m_noopTranslationMacroAll));

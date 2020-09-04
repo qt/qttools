@@ -74,7 +74,6 @@ struct TranslationRelatedStore
     qint64 locationCol = -1;
     QString contextArg;
     QString contextRetrieved;
-    QString contextRetrievedTempNOOP;
     QString lupdateSource;
     QString lupdateLocationFile;
     qint64 lupdateLocationLine = -1;
@@ -255,8 +254,8 @@ namespace ClangCppParser
 
     void correctAstTranslationContext(ReadSynchronizedRef<TranslationRelatedStore> &ast,
         WriteSynchronizedRef<TranslationRelatedStore> &newAst, const TranslationStores &qDecl);
-    void correctNoopTanslationContext(ReadSynchronizedRef<TranslationRelatedStore> &qNoop,
-        WriteSynchronizedRef<TranslationRelatedStore> &newQNoop, const TranslationStores &qDecl);
+    void finalize(ReadSynchronizedRef<TranslationRelatedStore> &ast,
+        WriteSynchronizedRef<TranslationRelatedStore> &newAst);
 
     bool containsTranslationInformation(llvm::StringRef ba);
 }

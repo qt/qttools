@@ -109,9 +109,11 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
 {
     // pre-process the files by a simple text search if there is any occurrence
     // of things we are interested in
+    qCDebug(lcClang) << "Load CPP \n";
     std::vector<std::string> sources, sourcesAst, sourcesPP;
     for (const QString &filename : files) {
         QFile file(filename);
+        qCDebug(lcClang) << "File: " << filename << " \n";
         if (file.open(QIODevice::ReadOnly)) {
             if (const uchar *memory = file.map(0, file.size())) {
                 const auto ba = llvm::StringRef((const char*) (memory), file.size());
@@ -184,7 +186,9 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     ClangCppParser::correctAstTranslationContext(rsv, wsv, qdecl);
 
     rsv.reset(qnoop);
-    ClangCppParser::correctNoopTanslationContext(rsv, wsv, qdecl);
+    //unlike ast translation context, qnoop context don't need to be corrected
+    //(because Q_DECLARE_TR_FUNCTION context is already applied).
+    ClangCppParser::finalize(rsv, wsv);
 
     for (const auto &store : finalStores)
         ClangCppParser::fillTranslator(store, translator, cd);
@@ -195,6 +199,9 @@ void ClangCppParser::fillTranslator(const TranslationRelatedStore &store, Transl
 {
     if (!store.isValid())
         return;
+    qCDebug(lcClang) << "---------------------------------------------------------------Filling translator for " << store.funcName;
+    qCDebug(lcClang) << " contextRetrieved " << store.contextRetrieved;
+    qCDebug(lcClang) << " source   " << store.lupdateSource;
 
     bool plural = false;
     switch (trFunctionAliasManager.trFunctionByName(store.funcName)) {
@@ -296,6 +303,13 @@ TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStor
     for (auto &producer : producers) \
         producer.join();
 
+void ClangCppParser::finalize(ReadSynchronizedRef<TranslationRelatedStore> &ast,
+    WriteSynchronizedRef<TranslationRelatedStore> &newAst)
+{
+    START_THREADS(ast, newAst)
+    JOIN_THREADS(newAst)
+}
+
 void ClangCppParser::correctAstTranslationContext(ReadSynchronizedRef<TranslationRelatedStore> &ast,
     WriteSynchronizedRef<TranslationRelatedStore> &newAst, const TranslationStores &qDecl)
 {
@@ -316,47 +330,18 @@ void ClangCppParser::correctAstTranslationContext(ReadSynchronizedRef<Translatio
             continue;
         if (!declareStore.contextRetrieved.startsWith(store.contextRetrieved))
             continue;
-        if (store.contextRetrieved.size() == declareStore.contextRetrieved.size()) {
+        if (store.contextRetrieved == declareStore.contextRetrieved) {
             qCDebug(lcClang) << "* Tr call context retrieved " << store.contextRetrieved;
+            qCDebug(lcClang) << "* Tr call source            " << store.lupdateSource;
             qCDebug(lcClang) << "* DECLARE context retrieved " << declareStore.contextRetrieved;
             qCDebug(lcClang) << "* DECLARE context Arg       " << declareStore.contextArg;
-            store.contextArg = declareStore.contextArg;
+            store.contextRetrieved = declareStore.contextArg;
+            // store.contextArg should never be overwritten.
+            break;
         }
     }
 
     JOIN_THREADS(newAst)
-}
-
-void ClangCppParser::correctNoopTanslationContext(ReadSynchronizedRef<TranslationRelatedStore> &qNoop,
-    WriteSynchronizedRef<TranslationRelatedStore> &newQNoop, const TranslationStores &qDecl)
-{
-    START_THREADS(qNoop, newQNoop)
-
-    qCDebug(lcClang) << "----------------------------";
-    qCDebug(lcClang) << "NOOP call context retrieved Temp" << store.contextRetrievedTempNOOP;
-    qCDebug(lcClang) << "NOOP call source            " << store.lupdateSource;
-
-    for (const auto &qDeclare : qDecl) {
-        bool firstCheck = false;
-        bool secondCheck = false;
-        qCDebug(lcClang) << "- DECLARE context retrieved " << qDeclare.contextRetrieved;
-        qCDebug(lcClang) << "- DECLARE context Arg       " << qDeclare.contextArg;
-        if (store.contextRetrievedTempNOOP.startsWith(qDeclare.contextRetrieved)) {
-            firstCheck = (store.contextRetrievedTempNOOP.size() == qDeclare.contextRetrieved.size()
-                || (store.contextRetrievedTempNOOP.at(qDeclare.contextRetrieved.size() + 1)
-                    == QLatin1Char(':')));
-            secondCheck = qDeclare.contextRetrieved.size() > store.contextRetrieved.size();
-            if (firstCheck && secondCheck) {
-                store.contextRetrieved = qDeclare.contextRetrieved;
-                store.contextArg = qDeclare.contextArg;
-                qCDebug(lcClang) << "* NOOP call context retrieved " << store.contextRetrieved;
-                qCDebug(lcClang) << "* DECLARE context retrieved   " << qDeclare.contextRetrieved;
-                qCDebug(lcClang) << "* DECLARE context Arg         " << qDeclare.contextArg;
-            }
-        }
-    }
-
-    JOIN_THREADS(newQNoop)
 }
 
 #undef START_THREADS
