@@ -442,7 +442,7 @@ QActionGroup *QDesignerActions::createHelpActions()
     QAction *mainHelpAction = new QAction(tr("Qt Designer &Help"), this);
     mainHelpAction->setObjectName(QStringLiteral("__qt_designer_help_action"));
     connect(mainHelpAction, &QAction::triggered, this, &QDesignerActions::showDesignerHelp);
-    mainHelpAction->setShortcut(Qt::CTRL + Qt::Key_Question);
+    mainHelpAction->setShortcut(Qt::CTRL | Qt::Key_Question);
     helpActions->addAction(mainHelpAction);
 
     helpActions->addAction(createSeparator(this));
