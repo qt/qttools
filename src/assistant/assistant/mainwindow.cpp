@@ -609,12 +609,12 @@ void MainWindow::setupActions()
     tmp = menu->addAction(tr("Next Page"),
             openPages, &OpenPagesManager::nextPage);
     tmp->setShortcuts(QList<QKeySequence>() << QKeySequence(tr("Ctrl+Alt+Right"))
-        << QKeySequence(Qt::CTRL + Qt::Key_PageDown));
+        << QKeySequence(Qt::CTRL | Qt::Key_PageDown));
 
     tmp = menu->addAction(tr("Previous Page"),
             openPages, &OpenPagesManager::previousPage);
     tmp->setShortcuts(QList<QKeySequence>() << QKeySequence(tr("Ctrl+Alt+Left"))
-        << QKeySequence(Qt::CTRL + Qt::Key_PageUp));
+        << QKeySequence(Qt::CTRL | Qt::Key_PageUp));
 
     const Qt::Modifier modifier =
 #ifdef Q_OS_MAC
@@ -623,10 +623,10 @@ void MainWindow::setupActions()
             Qt::CTRL;
 #endif
 
-    QShortcut *sct = new QShortcut(QKeySequence(modifier + Qt::Key_Tab), this);
+    QShortcut *sct = new QShortcut(QKeySequence(modifier | Qt::Key_Tab), this);
     connect(sct, &QShortcut::activated,
             openPages, &OpenPagesManager::nextPageWithSwitcher);
-    sct = new QShortcut(QKeySequence(modifier + Qt::SHIFT + Qt::Key_Tab), this);
+    sct = new QShortcut(QKeySequence(modifier | Qt::SHIFT | Qt::Key_Tab), this);
     connect(sct, &QShortcut::activated,
             openPages, &OpenPagesManager::previousPageWithSwitcher);
 

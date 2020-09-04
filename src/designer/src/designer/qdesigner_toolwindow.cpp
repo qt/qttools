@@ -171,7 +171,7 @@ PropertyEditorToolWindow::PropertyEditorToolWindow(QDesignerWorkbench *workbench
                         QStringLiteral("__qt_property_editor_action"),
                         Qt::RightDockWidgetArea)
 {
-    action()->setShortcut(Qt::CTRL + Qt::Key_I);
+    action()->setShortcut(Qt::CTRL | Qt::Key_I);
 
 }
 

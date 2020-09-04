@@ -48,7 +48,8 @@ public:
     GuessShortcut(int nkey, QWidget *parent, const char *member)
         : QShortcut(parent), nrkey(nkey)
     {
-        setKey(Qt::CTRL + (Qt::Key_1 + nrkey));
+        const auto key = static_cast<Qt::Key>(int(Qt::Key_1) + nrkey);
+        setKey(Qt::CTRL | key);
         connect(this, SIGNAL(activated()), this, SLOT(keyActivated()));
         connect(this, SIGNAL(activated(int)), parent, member);
     }
