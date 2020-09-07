@@ -9,7 +9,7 @@ qtHaveModule(widgets) {
             SUBDIRS = designer \
                       pixeltool
 
-            !static|contains(QT_PLUGINS, qtsqlite): SUBDIRS += assistant
+            !static|contains(QT_PLUGINS, qsqlite): SUBDIRS += assistant
 
             linguist.depends = designer
         }
