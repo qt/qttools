@@ -568,10 +568,11 @@ inline bool operator==(TranslatorMessageContentPtr tmp1, TranslatorMessageConten
 
 Translator::Duplicates Translator::resolveDuplicates()
 {
+    QList<int> duplicateIndices;
     Duplicates dups;
     QHash<TranslatorMessageIdPtr, int> idRefs;
     QHash<TranslatorMessageContentPtr, int> contentRefs;
-    for (int i = 0; i < m_messages.count();) {
+    for (int i = 0; i < m_messages.count(); ++i) {
         const TranslatorMessage &msg = m_messages.at(i);
         TranslatorMessage *omsg;
         int oi;
@@ -606,15 +607,19 @@ Translator::Duplicates Translator::resolveDuplicates()
         if (!msg.id().isEmpty())
             idRefs[TranslatorMessageIdPtr(msg)] = i;
         contentRefs[TranslatorMessageContentPtr(msg)] = i;
-        ++i;
         continue;
       gotDupe:
         pDup->insert(oi);
         if (!omsg->isTranslated() && msg.isTranslated())
             omsg->setTranslations(msg.translations());
         m_indexOk = false;
-        m_messages.removeAt(i);
+        // don't remove the duplicate entries yet to not mess up the pointers that
+        // are in the hashes
+        duplicateIndices.append(i);
     }
+    // now remove the duplicates from the messages
+    for (int i = duplicateIndices.size() - 1; i >= 0; --i)
+        m_messages.removeAt(duplicateIndices.at(i));
     return dups;
 }
 
