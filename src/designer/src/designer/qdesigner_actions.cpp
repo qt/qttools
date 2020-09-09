@@ -1333,7 +1333,9 @@ void QDesignerActions::printPreviewImage()
         return;
 
     const QSizeF pixmapSize = pixmap.size();
-    m_printer->setOrientation( pixmapSize.width() > pixmapSize.height() ?  QPrinter::Landscape :  QPrinter::Portrait);
+
+    m_printer->setPageOrientation(pixmapSize.width() > pixmapSize.height() ?
+                                  QPageLayout::Landscape : QPageLayout::Portrait);
 
     // Printer parameters
     QPrintDialog dialog(m_printer, fw);
