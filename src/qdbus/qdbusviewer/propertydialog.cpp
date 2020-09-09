@@ -69,7 +69,7 @@ void PropertyDialog::addProperty(const QString &aname, int type)
     if (name.isEmpty())
         name = QLatin1String("argument ") + QString::number(rowCount + 1);
     name += QLatin1String(" (");
-    name += QLatin1String(QMetaType::typeName(type));
+    name += QLatin1String(QMetaType(type).name());
     name += QLatin1String(")");
     QTableWidgetItem *nameItem = new QTableWidgetItem(name);
     nameItem->setFlags(nameItem->flags() &

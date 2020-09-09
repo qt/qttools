@@ -332,7 +332,7 @@ static int placeCall(const QString &service, const QString &path, const QString 
                     // UChar because it can't decide if it's a character or a number
                     p = QVariant::fromValue<uchar>(p.toUInt());
                 } else if (id < int(QMetaType::User) && id != int(QVariant::Map)) {
-                    p.convert(id);
+                    p.convert(QMetaType(id));
                     if (p.type() == QVariant::Invalid) {
                         fprintf(stderr, "Could not convert '%s' to type '%s'.\n",
                                 qPrintable(argument), types.at(i).constData());

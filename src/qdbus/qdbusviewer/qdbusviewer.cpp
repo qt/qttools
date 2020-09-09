@@ -274,7 +274,7 @@ void QDBusViewer::setProperty(const BusSignature &sig)
         return;
 
     QVariant value = input;
-    if (!value.convert(prop.type())) {
+    if (!value.convert(prop.metaType())) {
         QMessageBox::warning(this, tr("Unable to marshall"),
                 tr("Value conversion failed, unable to set property"));
         return;
@@ -293,7 +293,7 @@ static QString getDbusSignature(const QMetaMethod& method)
     // create a D-Bus type signature from QMetaMethod's parameters
     QString sig;
     for (int i = 0; i < method.parameterTypes().count(); ++i) {
-        int type = QMetaType::type(method.parameterTypes().at(i));
+        const int type = QMetaType::fromName(method.parameterTypes().at(i)).id();
         sig.append(QString::fromLatin1(QDBusMetaType::typeToSignature(type)));
     }
     return sig;
@@ -330,7 +330,7 @@ void QDBusViewer::callMethod(const BusSignature &sig)
         if (paramType.endsWith('&'))
             continue; // ignore OUT parameters
 
-        int type = QMetaType::type(paramType);
+        const int type = QMetaType::fromName(paramType).id();
         dialog.addProperty(QString::fromLatin1(paramNames.value(i)), type);
         types.append(type);
     }
@@ -349,9 +349,10 @@ void QDBusViewer::callMethod(const BusSignature &sig)
     for (int i = 0; i < args.count(); ++i) {
         QVariant a = args.at(i);
         int desttype = types.at(i);
-        if (desttype < int(QMetaType::User) && desttype != int(QVariant::Map)
-            && a.canConvert(desttype)) {
-            args[i].convert(desttype);
+        if (desttype < int(QMetaType::User) && desttype != int(QVariant::Map)) {
+            const QMetaType metaType(desttype);
+            if (a.canConvert(metaType))
+                args[i].convert(metaType);
         }
         // Special case - convert a value to a QDBusVariant if the
         // interface wants a variant

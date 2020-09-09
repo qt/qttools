@@ -868,7 +868,7 @@ static const char *typeName(int type)
     if (type == qMetaTypeId<PropertySheetStringValue>())
         type = QVariant::String;
     if (type < int(QVariant::UserType))
-        return QVariant::typeToName(static_cast<QVariant::Type>(type));
+        return QMetaType(type).name();
     if (type == qMetaTypeId<PropertySheetIconValue>())
         return "QIcon";
     if (type == qMetaTypeId<PropertySheetPixmapValue>())
