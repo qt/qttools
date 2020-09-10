@@ -79,7 +79,6 @@ enum {
     CMD_ENDSECTION4,
     CMD_ENDSIDEBAR,
     CMD_ENDTABLE,
-    CMD_ENDTOPICREF,
     CMD_FOOTNOTE,
     CMD_GENERATELIST,
     CMD_GRANULARITY,
@@ -99,7 +98,6 @@ enum {
     CMD_LI,
     CMD_LINK,
     CMD_LIST,
-    CMD_MAPREF,
     CMD_META,
     CMD_NEWCODE,
     CMD_NOTE,
@@ -134,7 +132,6 @@ enum {
     CMD_TABLE,
     CMD_TABLEOFCONTENTS,
     CMD_TARGET,
-    CMD_TOPICREF,
     CMD_TT,
     CMD_UICONTROL,
     CMD_UNDERLINE,
@@ -191,7 +188,6 @@ static struct
              { "endsection4", CMD_ENDSECTION4, nullptr }, // ### don't document for now
              { "endsidebar", CMD_ENDSIDEBAR, nullptr },
              { "endtable", CMD_ENDTABLE, nullptr },
-             { "endtopicref", CMD_ENDTOPICREF, nullptr },
              { "footnote", CMD_FOOTNOTE, nullptr },
              { "generatelist", CMD_GENERATELIST, nullptr },
              { "granularity", CMD_GRANULARITY, nullptr }, // ### don't document for now
@@ -211,7 +207,6 @@ static struct
              { "li", CMD_LI, nullptr },
              { "link", CMD_LINK, nullptr },
              { "list", CMD_LIST, nullptr },
-             { "mapref", CMD_MAPREF, nullptr },
              { "meta", CMD_META, nullptr },
              { "newcode", CMD_NEWCODE, nullptr },
              { "note", CMD_NOTE, nullptr },
@@ -246,7 +241,6 @@ static struct
              { "table", CMD_TABLE, nullptr },
              { "tableofcontents", CMD_TABLEOFCONTENTS, nullptr },
              { "target", CMD_TARGET, nullptr },
-             { "topicref", CMD_TOPICREF, nullptr },
              { "tt", CMD_TT, nullptr },
              { "uicontrol", CMD_UICONTROL, nullptr },
              { "underline", CMD_UNDERLINE, nullptr },
@@ -562,11 +556,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         m_openedLists.pop();
                     }
                     break;
-                case CMD_ENDMAPREF:
-                case CMD_ENDTOPICREF:
-                    if (closeCommand(cmd))
-                        m_ditarefs.pop();
-                    break;
                 case CMD_ENDOMIT:
                     closeCommand(cmd);
                     break;
@@ -754,26 +743,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (openCommand(cmd)) {
                         leavePara();
                         m_openedLists.push(OpenedList(location(), getOptionalArgument()));
-                    }
-                    break;
-                case CMD_TOPICREF:
-                case CMD_MAPREF:
-                    if (openCommand(cmd)) {
-                        DitaRef *t = nullptr;
-                        if (cmd == CMD_MAPREF)
-                            t = new MapRef();
-                        else
-                            t = new TopicRef();
-                        t->setNavtitle(getArgument(true));
-                        if (cmd == CMD_MAPREF)
-                            t->setHref(getArgument());
-                        else
-                            t->setHref(getOptionalArgument());
-                        if (m_ditarefs.isEmpty())
-                            m_private->ditamap_.append(t);
-                        else
-                            m_ditarefs.top()->appendSubref(t);
-                        m_ditarefs.push(t);
                     }
                     break;
                 case CMD_META:
@@ -1492,10 +1461,7 @@ bool DocParser::openCommand(int cmd)
             ok = (cmd == CMD_LIST || cmd == CMD_FOOTNOTE || cmd == CMD_QUOTATION);
         } else if (outer == CMD_FOOTNOTE || outer == CMD_LINK) {
             ok = false;
-        } else if (outer == CMD_TOPICREF)
-            ok = (cmd == CMD_TOPICREF || cmd == CMD_MAPREF);
-        else if (outer == CMD_MAPREF)
-            ok = false;
+        }
     }
 
     if (ok) {
@@ -2408,10 +2374,6 @@ int DocParser::endCmdFor(int cmd)
         return CMD_ENDSIDEBAR;
     case CMD_TABLE:
         return CMD_ENDTABLE;
-    case CMD_TOPICREF:
-        return CMD_ENDTOPICREF;
-    case CMD_MAPREF:
-        return CMD_ENDMAPREF;
     default:
         return cmd;
     }

@@ -99,7 +99,6 @@ public:
     CommandMap metaCommandMap;
     DocPrivateExtra *extra { nullptr };
     TopicList topics_;
-    DitaRefList ditamap_;
 
     bool hasLegalese : 1;
     bool hasSectioningUnits : 1;

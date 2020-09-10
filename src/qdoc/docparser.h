@@ -151,7 +151,6 @@ private:
     QStack<int> m_openedCommands;
     QStack<OpenedList> m_openedLists;
     Quoter m_quoter;
-    QStack<DitaRef *> m_ditarefs;
     Atom *m_lastAtom { nullptr };
 
     static DocUtilities &m_utilities;

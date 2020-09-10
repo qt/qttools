@@ -113,7 +113,7 @@ Quoter::Quoter() : silent(false)
           //! [<id>]
         * .pro, .py, CMake files:
           #! [<id>]
-        * .html, .qrc, .ui, .xq, .xml .dita files:
+        * .html, .qrc, .ui, .xq, .xml files:
           <!-- [<id>] -->
     */
     if (!commentHash.size()) {
@@ -124,7 +124,6 @@ Quoter::Quoter() : silent(false)
         commentHash["qrc"] = "<!--";
         commentHash["ui"] = "<!--";
         commentHash["xml"] = "<!--";
-        commentHash["dita"] = "<!--";
         commentHash["xq"] = "<!--";
     }
 }

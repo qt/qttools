@@ -65,10 +65,10 @@ static QSet<QString> metaCommands_;
 CppCodeParser::CppCodeParser()
 {
     if (topicCommands_.isEmpty()) {
-        topicCommands_ << COMMAND_CLASS << COMMAND_DITAMAP << COMMAND_DONTDOCUMENT << COMMAND_ENUM
-                       << COMMAND_EXAMPLE << COMMAND_EXTERNALPAGE << COMMAND_FN << COMMAND_GROUP
-                       << COMMAND_HEADERFILE << COMMAND_MACRO << COMMAND_MODULE << COMMAND_NAMESPACE
-                       << COMMAND_PAGE << COMMAND_PROPERTY << COMMAND_TYPEALIAS << COMMAND_TYPEDEF
+        topicCommands_ << COMMAND_CLASS << COMMAND_DONTDOCUMENT << COMMAND_ENUM << COMMAND_EXAMPLE
+                       << COMMAND_EXTERNALPAGE << COMMAND_FN << COMMAND_GROUP << COMMAND_HEADERFILE
+                       << COMMAND_MACRO << COMMAND_MODULE << COMMAND_NAMESPACE << COMMAND_PAGE
+                       << COMMAND_PROPERTY << COMMAND_TYPEALIAS << COMMAND_TYPEDEF
                        << COMMAND_VARIABLE << COMMAND_QMLTYPE << COMMAND_QMLPROPERTY
                        << COMMAND_QMLPROPERTYGROUP // mws 13/03/2019
                        << COMMAND_QMLATTACHEDPROPERTY << COMMAND_QMLSIGNAL
@@ -134,7 +134,7 @@ void CppCodeParser::initializeParser()
     if (!exampleFilePatterns.isEmpty())
         m_exampleNameFilter = exampleFilePatterns.join(' ');
     else
-        m_exampleNameFilter = "*.cpp *.h *.js *.xq *.svg *.xml *.dita *.ui";
+        m_exampleNameFilter = "*.cpp *.h *.js *.xq *.svg *.xml *.ui";
 
     QStringList exampleImagePatterns =
             config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_IMAGEEXTENSIONS);

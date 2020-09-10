@@ -28,7 +28,6 @@ qt_add_tool(${target_name}
         config.cpp config.h
         cppcodemarker.cpp cppcodemarker.h
         cppcodeparser.cpp cppcodeparser.h
-        ditaref.h
         doc.cpp doc.h
         docbookgenerator.cpp docbookgenerator.h
         docparser.cpp docparser.h

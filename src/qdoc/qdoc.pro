@@ -42,7 +42,6 @@ HEADERS += access.h \
            config.h \
            cppcodemarker.h \
            cppcodeparser.h \
-           ditaref.h \
            doc.h \
            docbookgenerator.h \
            docparser.h \

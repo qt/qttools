@@ -36,13 +36,11 @@
 QT_BEGIN_NAMESPACE
 
 /*!
-  If the doc is a ditamap, the destructor deletes each element
-  in the ditamap structure. These were allocated as needed.
+  Deletes the DocPrivateExtra.
  */
 DocPrivate::~DocPrivate()
 {
     delete extra;
-    qDeleteAll(ditamap_);
 }
 
 void DocPrivate::addAlso(const Text &also)

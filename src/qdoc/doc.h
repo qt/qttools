@@ -35,7 +35,6 @@
 
 #include "location.h"
 
-#include "ditaref.h"
 #include "docutilities.h"
 #include "topic.h"
 

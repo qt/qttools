@@ -95,7 +95,6 @@ private:
 #define COMMAND_COPYRYEAR Doc::alias(QLatin1String("copyryear"))
 #define COMMAND_DEPRECATED Doc::alias(QLatin1String("deprecated")) // ### don't document
 #define COMMAND_DONTDOCUMENT Doc::alias(QLatin1String("dontdocument"))
-#define COMMAND_DITAMAP Doc::alias(QLatin1String("ditamap"))
 #define COMMAND_ENUM Doc::alias(QLatin1String("enum"))
 #define COMMAND_EXAMPLE Doc::alias(QLatin1String("example"))
 #define COMMAND_EXTERNALPAGE Doc::alias(QLatin1String("externalpage"))
