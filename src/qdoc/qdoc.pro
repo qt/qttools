@@ -62,6 +62,7 @@ HEADERS += access.h \
            location.h \
            loggingcategory.h \
            macro.h \
+           manifestwriter.h \
            namespacenode.h \
            node.h \
            openedlist.h \
@@ -118,6 +119,7 @@ SOURCES += aggregate.cpp \
            htmlgenerator.cpp \
            location.cpp \
            main.cpp \
+           manifestwriter.cpp \
            namespacenode.cpp \
            node.cpp \
            openedlist.cpp \

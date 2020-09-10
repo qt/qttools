@@ -42,6 +42,7 @@ class Aggregate;
 class Config;
 class ExampleNode;
 class HelpProjectWriter;
+class ManifestWriter;
 
 class HtmlGenerator : public XmlGenerator
 {
@@ -53,7 +54,6 @@ public:
     void terminateGenerator() override;
     QString format() override;
     void generateDocs() override;
-    void generateManifestFiles();
 
     QString protectEnc(const QString &string);
     static QString protect(const QString &string);
@@ -69,9 +69,6 @@ protected:
     void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
     void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
     QString fileExtension() const override;
-
-    void generateManifestFile(const QString &manifest, const QString &element);
-    void readManifestMetaContent();
     void generateKeywordAnchors(const Node *node);
 
 private:
@@ -85,7 +82,6 @@ private:
         QSet<QString> tags;
     };
 
-    QString retrieveInstallPath(const ExampleNode *exampleNode);
     void generateNavigationBar(const QString &title, const Node *node, CodeMarker *marker,
                                const QString &buildversion, bool tableItems = false);
     void generateHeader(const QString &title, const Node *node = nullptr,
@@ -164,6 +160,7 @@ private:
     QString m_codePrefix {};
     QString m_codeSuffix {};
     HelpProjectWriter *m_helpProjectWriter { nullptr };
+    ManifestWriter *m_manifestWriter { nullptr };
     bool m_inObsoleteLink { false };
     QRegularExpression m_funcLeftParen { "\\S(\\()" };
     QString m_headerScripts {};

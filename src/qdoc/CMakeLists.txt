@@ -50,6 +50,7 @@ qt_add_tool(${target_name}
         loggingcategory.h
         macro.h
         main.cpp
+        manifestwriter.cpp manifestwriter.h
         namespacenode.cpp namespacenode.h
         node.cpp node.h
         openedlist.cpp openedlist.h
