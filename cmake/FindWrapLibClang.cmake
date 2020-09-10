@@ -5,25 +5,17 @@ endif()
 
 if(DEFINED ENV{LLVM_INSTALL_DIR})
     set(__qt_wrap_clang_backup_prefix "${CMAKE_PREFIX_PATH}")
-    set(__qt_wrap_clang_backup_root_path ${CMAKE_FIND_ROOT_PATH})
-
     list(PREPEND CMAKE_PREFIX_PATH "$ENV{LLVM_INSTALL_DIR}")
-    list(PREPEND CMAKE_FIND_ROOT_PATH "$ENV{LLVM_INSTALL_DIR}")
 elseif(DEFINED CACHE{LLVM_INSTALL_DIR})
     set(__qt_wrap_clang_backup_prefix "${CMAKE_PREFIX_PATH}")
-    set(__qt_wrap_clang_backup_root_path ${CMAKE_FIND_ROOT_PATH})
-
     list(PREPEND CMAKE_PREFIX_PATH "${LLVM_INSTALL_DIR}")
-    list(PREPEND CMAKE_FIND_ROOT_PATH "${LLVM_INSTALL_DIR}")
 endif()
 
 find_package(Clang CONFIG)
 
 if(__qt_wrap_clang_backup_prefix)
     set(CMAKE_PREFIX_PATH "${__qt_wrap_clang_backup_prefix}")
-    set(CMAKE_FIND_ROOT_PATH "${__qt_wrap_clang_backup_root_path}")
     unset(__qt_wrap_clang_backup_prefix)
-    unset(__qt_wrap_clang_backup_root_path)
 endif()
 
 set(WrapLibClang_FOUND FALSE)
