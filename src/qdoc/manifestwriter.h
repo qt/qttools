@@ -36,7 +36,7 @@ QT_BEGIN_NAMESPACE
 
 class ExampleNode;
 class QDocDatabase;
-
+class QXmlStreamWriter;
 class ManifestWriter
 {
     struct ManifestMetaFilter
@@ -51,15 +51,24 @@ public:
     void generateManifestFiles();
     void generateManifestFile(const QString &manifest, const QString &element);
     void readManifestMetaContent();
-    QString retrieveInstallPath(const ExampleNode *example);
+    QString retrieveExampleInstallationPath(const ExampleNode *example) const;
 
 private:
+    QSet<QString> m_tags {};
     QString m_manifestDir {};
     QString m_examplesPath {};
     QString m_outputDirectory {};
     QString m_project {};
     QDocDatabase *m_qdb { nullptr };
     QList<ManifestMetaFilter> m_manifestMetaContent {};
+
+    void addTitleWordsToTags(const ExampleNode *example);
+    void addWordsFromModuleNamesAsTags();
+    void includeTagsAddedWithMetaCommand(const ExampleNode *example);
+    void cleanUpTags();
+    void writeTagsElement(QXmlStreamWriter *writer);
+    void processManifestMetaContent(const QString &fullName, QStringList *usedAttributes,
+                                    QXmlStreamWriter *writer);
 };
 
 QT_END_NAMESPACE
