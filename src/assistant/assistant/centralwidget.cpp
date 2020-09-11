@@ -396,9 +396,9 @@ void CentralWidget::print()
     QPrintDialog dlg(m_printer, this);
 
     if (!currentHelpViewer()->selectedText().isEmpty())
-        dlg.addEnabledOption(QAbstractPrintDialog::PrintSelection);
-    dlg.addEnabledOption(QAbstractPrintDialog::PrintPageRange);
-    dlg.addEnabledOption(QAbstractPrintDialog::PrintCollateCopies);
+        dlg.setOption(QAbstractPrintDialog::PrintSelection);
+    dlg.setOption(QAbstractPrintDialog::PrintPageRange);
+    dlg.setOption(QAbstractPrintDialog::PrintCollateCopies);
     dlg.setWindowTitle(tr("Print Document"));
     if (dlg.exec() == QDialog::Accepted)
         currentHelpViewer()->print(m_printer);
