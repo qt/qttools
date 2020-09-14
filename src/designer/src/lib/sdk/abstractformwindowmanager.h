@@ -54,16 +54,18 @@ public:
 
     enum Action
     {
+#if QT_CONFIG(clipboard)
         CutAction = 100,
         CopyAction,
         PasteAction,
-        DeleteAction,
+#endif
+        DeleteAction = 103,
         SelectAllAction,
 
         LowerAction = 200,
         RaiseAction,
 
-        UndoAction =  300,
+        UndoAction = 300,
         RedoAction,
 
         HorizontalLayoutAction = 400,
@@ -78,7 +80,7 @@ public:
 
         DefaultPreviewAction = 500,
 
-        FormWindowSettingsDialogAction =  600
+        FormWindowSettingsDialogAction = 600
     };
 
     enum ActionGroup
@@ -89,9 +91,11 @@ public:
     virtual QAction *action(Action action) const = 0;
     virtual QActionGroup *actionGroup(ActionGroup actionGroup) const = 0;
 
+#if QT_CONFIG(clipboard)
     QAction *actionCut() const;
     QAction *actionCopy() const;
     QAction *actionPaste() const;
+#endif
     QAction *actionDelete() const;
     QAction *actionSelectAll() const;
     QAction *actionLower() const;

@@ -295,9 +295,11 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
 
     m_editActions->addAction(createSeparator(this));
 
+#if QT_CONFIG(clipboard)
     m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::CutAction));
     m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::CopyAction));
     m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::PasteAction));
+#endif
     m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::DeleteAction));
 
     m_editActions->addAction(formWindowManager->action(QDesignerFormWindowManagerInterface::SelectAllAction));

@@ -1786,6 +1786,7 @@ static inline QString pasteCommandDescription(int widgetCount, int actionCount)
     return FormWindow::tr("Paste (%1 widgets, %2 actions)").arg(widgetCount).arg(actionCount);
 }
 
+#if QT_CONFIG(clipboard)
 static void positionPastedWidgetsAtMousePosition(FormWindow *fw, const QPoint &contextMenuPosition, QWidget *parent, const QWidgetList &l)
 {
     // Try to position pasted widgets at mouse position (current mouse position for Ctrl-V or position of context menu)
@@ -1818,7 +1819,6 @@ static void positionPastedWidgetsAtMousePosition(FormWindow *fw, const QPoint &c
         (*it)->move((*it)->pos() + offset);
 }
 
-#if QT_CONFIG(clipboard)
 void FormWindow::paste(PasteMode pasteMode)
 {
     // Avoid QDesignerResource constructing widgets that are not used as
@@ -2303,11 +2303,15 @@ QMenu *FormWindow::createPopupMenu(QWidget *w)
             popup->addAction(manager->action(QDesignerFormWindowManagerInterface::RaiseAction));
             popup->addSeparator();
         }
+#if QT_CONFIG(clipboard)
         popup->addAction(manager->action(QDesignerFormWindowManagerInterface::CutAction));
         popup->addAction(manager->action(QDesignerFormWindowManagerInterface::CopyAction));
+#endif
     }
 
+#if QT_CONFIG(clipboard)
     popup->addAction(manager->action(QDesignerFormWindowManagerInterface::PasteAction));
+#endif
 
     if (QAction *selectAncestorAction = createSelectAncestorSubMenu(w))
         popup->addAction(selectAncestorAction);
