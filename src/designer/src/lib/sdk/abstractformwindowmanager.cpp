@@ -147,10 +147,12 @@ QDesignerFormWindowManagerInterface::~QDesignerFormWindowManagerInterface() = de
 
     Use action() instead.
 */
+#if QT_CONFIG(clipboard)
 QAction *QDesignerFormWindowManagerInterface::actionCut() const
 {
     return action(CutAction);
 }
+#endif
 
 /*!
     Allows you to intervene and control \QD's "copy" action. The
@@ -161,10 +163,12 @@ QAction *QDesignerFormWindowManagerInterface::actionCut() const
 
     Use action() instead.
 */
+#if QT_CONFIG(clipboard)
 QAction *QDesignerFormWindowManagerInterface::actionCopy() const
 {
     return action(CopyAction);
 }
+#endif
 
 /*!
     Allows you to intervene and control \QD's "paste" action. The
@@ -175,10 +179,12 @@ QAction *QDesignerFormWindowManagerInterface::actionCopy() const
 
     Use action() instead.
 */
+#if QT_CONFIG(clipboard)
 QAction *QDesignerFormWindowManagerInterface::actionPaste() const
 {
     return action(PasteAction);
 }
+#endif
 
 /*!
     Allows you to intervene and control \QD's "delete" action. The function
