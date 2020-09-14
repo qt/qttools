@@ -494,12 +494,12 @@ QString findInPath(const QString &file)
 
 const char *qmakeInfixKey = "QT_INFIX";
 
-QMap<QString, QString> queryQMakeAll(QString *errorMessage)
+QMap<QString, QString> queryQMakeAll(const QString &qmakeBinary, QString *errorMessage)
 {
+    const QString binary = !qmakeBinary.isEmpty() ? qmakeBinary : QStringLiteral("qmake");
     QByteArray stdOut;
     QByteArray stdErr;
     unsigned long exitCode = 0;
-    const QString binary = QStringLiteral("qmake");
     if (!runProcess(binary, QStringList(QStringLiteral("-query")), QString(), &exitCode, &stdOut, &stdErr, errorMessage))
         return QMap<QString, QString>();
     if (exitCode) {

@@ -263,6 +263,7 @@ struct Options {
     QStringList qmlDirectories; // Project's QML files.
     QStringList qmlImportPaths; // Custom QML module locations.
     QString directory;
+    QString qmakePath;
     QString translationsDirectory; // Translations target directory
     QStringList languages;
     QString libraryDirectory;
@@ -324,6 +325,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                  QStringLiteral("Use directory instead of binary directory."),
                                  QStringLiteral("directory"));
     parser->addOption(dirOption);
+
+    QCommandLineOption qmakeOption(QStringLiteral("qmake"),
+                                 QStringLiteral("Use specified qmake instead of qmake from PATH."),
+                                 QStringLiteral("path"));
+    parser->addOption(qmakeOption);
 
     QCommandLineOption libDirOption(QStringLiteral("libdir"),
                                     QStringLiteral("Copy libraries to path."),
@@ -590,6 +596,22 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
 
     if (parser->isSet(dirOption))
         options->directory = parser->value(dirOption);
+
+    if (parser->isSet(qmakeOption)) {
+        const QString qmakePath = QDir::cleanPath(parser->value(qmakeOption));
+        const QFileInfo fi(qmakePath);
+        if (!fi.exists()) {
+            *errorMessage = msgFileDoesNotExist(qmakePath);
+            return CommandLineParseError;
+        }
+
+        if (!fi.isExecutable()) {
+            *errorMessage = QLatin1Char('"') + QDir::toNativeSeparators(qmakePath)
+                    + QStringLiteral("\" is not an executable.");
+            return CommandLineParseError;
+        }
+        options->qmakePath = qmakePath;
+    }
 
     if (parser->isSet(qmlDirOption))
         options->qmlDirectories = parser->values(qmlDirOption);
@@ -1616,11 +1638,6 @@ int main(int argc, char **argv)
 
     Options options;
     QString errorMessage;
-    const QMap<QString, QString> qmakeVariables = queryQMakeAll(&errorMessage);
-    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
-    options.platform = platformFromMkSpec(xSpec);
-    if (options.platform == WindowsDesktopMinGW || options.platform == WindowsDesktopMsvc)
-        options.compilerRunTime = true;
 
     {   // Command line
         QCommandLineParser parser;
@@ -1635,6 +1652,12 @@ int main(int argc, char **argv)
         if (result & CommandLineParseHelpRequested)
             return 0;
     }
+
+    const QMap<QString, QString> qmakeVariables = queryQMakeAll(options.qmakePath, &errorMessage);
+    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
+    options.platform = platformFromMkSpec(xSpec);
+    if (options.platform == WindowsDesktopMinGW || options.platform == WindowsDesktopMsvc)
+        options.compilerRunTime = true;
 
     if (qmakeVariables.isEmpty() || xSpec.isEmpty() || !qmakeVariables.contains(QStringLiteral("QT_INSTALL_BINS"))) {
         std::wcerr << "Unable to query qmake: " << errorMessage << '\n';
