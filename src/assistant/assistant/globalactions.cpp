@@ -105,6 +105,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     separator->setSeparator(true);
     m_actionList << separator;
 
+#if QT_CONFIG(clipboard)
     m_copyAction = new QAction(tr("&Copy selected Text"), parent);
     m_copyAction->setPriority(QAction::LowPriority);
     m_copyAction->setIconText("&Copy");
@@ -113,6 +114,7 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_copyAction->setEnabled(false);
     connect(m_copyAction, &QAction::triggered, centralWidget, &CentralWidget::copy);
     m_actionList << m_copyAction;
+#endif
 
     m_printAction = new QAction(tr("&Print..."), parent);
     m_printAction->setPriority(QAction::LowPriority);
@@ -133,7 +135,9 @@ GlobalActions::GlobalActions(QObject *parent) : QObject(parent)
     m_nextAction->setIcon(QIcon::fromTheme(QStringLiteral("go-next") , m_nextAction->icon()));
     m_zoomInAction->setIcon(QIcon::fromTheme(QStringLiteral("zoom-in") , m_zoomInAction->icon()));
     m_zoomOutAction->setIcon(QIcon::fromTheme(QStringLiteral("zoom-out") , m_zoomOutAction->icon()));
+#if QT_CONFIG(clipboard)
     m_copyAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy") , m_copyAction->icon()));
+#endif
     m_findAction->setIcon(QIcon::fromTheme(QStringLiteral("edit-find") , m_findAction->icon()));
     m_homeAction->setIcon(QIcon::fromTheme(QStringLiteral("go-home") , m_homeAction->icon()));
     m_printAction->setIcon(QIcon::fromTheme(QStringLiteral("document-print") , m_printAction->icon()));
@@ -144,16 +148,20 @@ void GlobalActions::updateActions()
 {
     TRACE_OBJ
     CentralWidget *centralWidget = CentralWidget::instance();
+#if QT_CONFIG(clipboard)
     m_copyAction->setEnabled(centralWidget->hasSelection());
+#endif
     m_nextAction->setEnabled(centralWidget->isForwardAvailable());
     m_backAction->setEnabled(centralWidget->isBackwardAvailable());
 }
 
+#if QT_CONFIG(clipboard)
 void GlobalActions::setCopyAvailable(bool available)
 {
     TRACE_OBJ
     m_copyAction->setEnabled(available);
 }
+#endif
 
 #if defined(BROWSER_QTWEBKIT)
 

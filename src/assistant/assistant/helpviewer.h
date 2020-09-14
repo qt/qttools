@@ -101,7 +101,7 @@ public:
     static bool launchWithExternalApp(const QUrl &url);
 
 public slots:
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void copy();
 #endif
     void home() TEXTBROWSER_OVERRIDE;

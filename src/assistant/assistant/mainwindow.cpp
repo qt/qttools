@@ -555,7 +555,9 @@ void MainWindow::setupActions()
     tmp->setMenuRole(QAction::QuitRole);
 
     menu = menuBar()->addMenu(tr("&Edit"));
+#if QT_CONFIG(clipboard)
     menu->addAction(globalActions->copyAction());
+#endif
     menu->addAction(globalActions->findAction());
 
     QAction *findNextAction = menu->addAction(tr("Find &Next"),
@@ -649,7 +651,9 @@ void MainWindow::setupActions()
     navigationBar->addAction(globalActions->homeAction());
     navigationBar->addAction(m_syncAction);
     navigationBar->addSeparator();
+#if QT_CONFIG(clipboard)
     navigationBar->addAction(globalActions->copyAction());
+#endif
     navigationBar->addAction(globalActions->printAction());
     navigationBar->addAction(globalActions->findAction());
     navigationBar->addSeparator();
@@ -667,8 +671,10 @@ void MainWindow::setupActions()
 #endif
 
     // content viewer connections
+#if QT_CONFIG(clipboard)
     connect(m_centralWidget, &CentralWidget::copyAvailable,
             globalActions, &GlobalActions::setCopyAvailable);
+#endif
     connect(m_centralWidget, &CentralWidget::currentViewerChanged,
             globalActions, &GlobalActions::updateActions);
     connect(m_centralWidget, &CentralWidget::forwardAvailable,

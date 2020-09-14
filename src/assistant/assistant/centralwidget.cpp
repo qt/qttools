@@ -330,7 +330,7 @@ void CentralWidget::connectTabBar()
 
 // -- public slots
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void CentralWidget::copy()
 {
     TRACE_OBJ
@@ -597,8 +597,10 @@ void CentralWidget::connectSignals(HelpViewer *page)
     connect(page, &HelpViewer::printRequested,
             this, &CentralWidget::print);
 #endif
+#if QT_CONFIG(clipboard)
     connect(page, &HelpViewer::copyAvailable,
             this, &CentralWidget::copyAvailable);
+#endif
     connect(page, &HelpViewer::forwardAvailable,
             this, &CentralWidget::forwardAvailable);
     connect(page, &HelpViewer::backwardAvailable,

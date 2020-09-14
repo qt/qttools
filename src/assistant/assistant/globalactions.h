@@ -26,11 +26,12 @@
 **
 ****************************************************************************/
 
-#ifndef GLOBALACTION_H
-#define GLOBALACTION_H
+#ifndef GLOBALACTIONS_H
+#define GLOBALACTIONS_H
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
+#include <QtGui/qtguiglobal.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -50,12 +51,17 @@ public:
     QAction *homeAction() const { return m_homeAction; }
     QAction *zoomInAction() const { return m_zoomInAction; }
     QAction *zoomOutAction() const { return m_zoomOutAction; }
+#if QT_CONFIG(clipboard)
     QAction *copyAction() const { return m_copyAction; }
+#endif
     QAction *printAction() const { return m_printAction; }
     QAction *findAction() const { return m_findAction; }
 
-    Q_SLOT void updateActions();
-    Q_SLOT void setCopyAvailable(bool available);
+public slots:
+#if QT_CONFIG(clipboard)
+    void setCopyAvailable(bool available);
+#endif
+    void updateActions();
 
 #if defined(BROWSER_QTWEBKIT)
 private slots:
@@ -77,7 +83,9 @@ private:
     QAction *m_homeAction;
     QAction *m_zoomInAction;
     QAction *m_zoomOutAction;
+#if QT_CONFIG(clipboard)
     QAction *m_copyAction;
+#endif
     QAction *m_printAction;
     QAction *m_findAction;
 
@@ -89,4 +97,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // GLOBALACTION_H
+#endif // GLOBALACTIONS_H

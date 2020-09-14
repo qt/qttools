@@ -39,7 +39,7 @@
 #include <QtGui/QContextMenuEvent>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QScrollBar>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <QtGui/QClipboard>
 #endif
 #include <QtWidgets/QApplication>
@@ -238,7 +238,7 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 
 // -- public slots
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void HelpViewer::copy()
 {
     TRACE_OBJ
@@ -345,7 +345,9 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
 
     QMenu menu(QString(), nullptr);
     QUrl link;
+#if QT_CONFIG(clipboard)
     QAction *copyAnchorAction = nullptr;
+#endif
     if (d->hasAnchorAt(this, event->pos())) {
         link = anchorAt(event->pos());
         if (link.isRelative())
@@ -353,17 +355,19 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
         menu.addAction(tr("Open Link"), d, &HelpViewerPrivate::openLink);
         menu.addAction(tr("Open Link in New Tab\tCtrl+LMB"), d, &HelpViewerPrivate::openLinkInNewPage);
 
+#if QT_CONFIG(clipboard)
         if (!link.isEmpty() && link.isValid())
             copyAnchorAction = menu.addAction(tr("Copy &Link Location"));
+#endif
     } else if (!selectedText().isEmpty()) {
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
         menu.addAction(tr("Copy"), this, &HelpViewer::copy);
 #endif
     } else {
         menu.addAction(tr("Reload"), this, &HelpViewer::reload);
     }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     if (copyAnchorAction == menu.exec(event->globalPos()))
         QApplication::clipboard()->setText(link.toString());
 #endif
