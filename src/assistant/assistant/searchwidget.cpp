@@ -38,7 +38,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QLayout>
 #include <QtGui/QKeyEvent>
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 #include <QtGui/QClipboard>
 #endif
 #include <QtWidgets/QApplication>
@@ -184,15 +184,15 @@ void SearchWidget::contextMenuEvent(QContextMenuEvent *contextMenuEvent)
     QUrl link = browser->anchorAt(point);
 
     QKeySequence keySeq;
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     keySeq = QKeySequence::Copy;
     QAction *copyAction = menu.addAction(tr("&Copy") + QLatin1Char('\t') +
         keySeq.toString(QKeySequence::NativeText));
     copyAction->setEnabled(QTextCursor(browser->textCursor()).hasSelection());
-#endif
 
     QAction *copyAnchorAction = menu.addAction(tr("Copy &Link Location"));
     copyAnchorAction->setEnabled(!link.isEmpty() && link.isValid());
+#endif
 
     keySeq = QKeySequence(Qt::CTRL);
     QAction *newTabAction = menu.addAction(tr("Open Link in New Tab") +
@@ -207,7 +207,7 @@ void SearchWidget::contextMenuEvent(QContextMenuEvent *contextMenuEvent)
         QLatin1Char('\t') + keySeq.toString(QKeySequence::NativeText));
 
     QAction *usedAction = menu.exec(mapToGlobal(contextMenuEvent->pos()));
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     if (usedAction == copyAction) {
         QTextCursor cursor = browser->textCursor();
         if (!cursor.isNull() && cursor.hasSelection()) {

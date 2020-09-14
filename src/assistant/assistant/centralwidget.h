@@ -95,7 +95,7 @@ public:
     void connectTabBar();
 
 public slots:
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     void copy();
 #endif
     void home();
@@ -128,7 +128,9 @@ public slots:
 
 signals:
     void currentViewerChanged();
+#if QT_CONFIG(clipboard)
     void copyAvailable(bool yes);
+#endif
     void sourceChanged(const QUrl &url);
     void highlighted(const QUrl &link);
     void forwardAvailable(bool available);

@@ -101,7 +101,7 @@ void HelpPage::triggerAction(WebAction action, bool checked)
             break;
     }
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     if (action == CopyLinkToClipboard || action == CopyImageUrlToClipboard) {
         const QString link = QApplication::clipboard()->text();
         QApplication::clipboard()->setText(HelpEngineWrapper::instance().findFile(link).toString());
@@ -291,7 +291,7 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 
 // -- public slots
 
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
 void HelpViewer::copy()
 {
     TRACE_OBJ
@@ -317,7 +317,7 @@ void HelpViewer::keyPressEvent(QKeyEvent *e)
 {
     TRACE_OBJ
     // TODO: remove this once we support multiple keysequences per command
-#ifndef QT_NO_CLIPBOARD
+#if QT_CONFIG(clipboard)
     if (e->key() == Qt::Key_Insert && e->modifiers() == Qt::CTRL) {
         if (!selectedText().isEmpty())
             copy();
