@@ -235,7 +235,7 @@ void tst_lupdate::good_data()
     QSet<QString> ignoredTests = {
         "lacksqobject_clang_parser", "parsecontexts_clang_parser", "parsecpp2_clang_parser",
         "parsecpp_clang_parser",     "prefix_clang_parser",        "preprocess_clang_parser",
-    };
+        "parsecpp_clang_only"};
 
     // Add test rows for the "classic" lupdate
     for (const QString &dir : dirs) {
