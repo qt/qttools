@@ -35,20 +35,8 @@
 
 QT_USE_NAMESPACE
 
-static bool isOptionSet(int argc, char *argv[], const char *option)
-{
-    for (int i = 1; i < argc; ++i) {
-        if (!qstrcmp(argv[i], option))
-            return true;
-    }
-    return false;
-}
-
 int main(int argc, char **argv)
 {
-    if (isOptionSet(argc, argv, "--no-scaling"))
-        QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
-
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName(QLatin1String("PixelTool"));
     QCoreApplication::setApplicationVersion(QLatin1String(QT_VERSION_STR));
@@ -57,9 +45,6 @@ int main(int argc, char **argv)
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    QCommandLineOption noScalingDummy(QStringLiteral("no-scaling"),
-                                      QStringLiteral("Set Qt::AA_DisableHighDpiScaling."));
-    parser.addOption(noScalingDummy);
     parser.addPositionalArgument(QLatin1String("preview"),
                                  QLatin1String("The preview image to show."));
 

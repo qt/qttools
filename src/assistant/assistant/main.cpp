@@ -362,8 +362,6 @@ static ExitStatus preliminarySetup(CmdLineParser *cmd)
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     TRACE_OBJ
     QScopedPointer<QCoreApplication> a(createApplication(argc, argv));
 #if QT_CONFIG(library)
