@@ -131,7 +131,8 @@ static void buildTargets(QObject *o, TargetsHash *targets)
 {
     TranslatableEntry target;
 
-    foreach (const QByteArray &prop, o->dynamicPropertyNames()) {
+    const auto propNames = o->dynamicPropertyNames();
+    for (const QByteArray &prop : propNames) {
         if (prop.startsWith(PROP_GENERIC_PREFIX)) {
             const QByteArray propName = prop.mid(sizeof(PROP_GENERIC_PREFIX) - 1);
             INSERT_TARGET(o->property(prop),
@@ -200,14 +201,14 @@ static void buildTargets(QObject *o, TargetsHash *targets)
             registerTreeItem(treew->topLevelItem(i), targets);
 #endif
     }
-    foreach (QObject *co, o->children())
+    for (QObject *co : o->children())
         buildTargets(co, targets);
 }
 
 static void destroyTargets(TargetsHash *targets)
 {
-    for (TargetsHash::Iterator it = targets->begin(), end = targets->end(); it != end; ++it)
-        foreach (const TranslatableEntry &target, *it)
+    for (TargetsHash::ConstIterator it = targets->cbegin(), end = targets->cend(); it != end; ++it)
+        for (const TranslatableEntry &target : *it)
             if (target.type == TranslatableProperty)
                 delete target.prop.name;
     targets->clear();
@@ -279,7 +280,7 @@ static void retranslateTargets(
     if (text.isEmpty() && !tsv.value().isEmpty())
         text = QLatin1Char('#') + sourceText;
 
-    foreach (const TranslatableEntry &target, targets)
+    for (const TranslatableEntry &target : targets)
         retranslateTarget(target, text);
 }
 
@@ -376,7 +377,7 @@ static void highlightAction(QAction *a, bool on)
             a->setProperty(FONT_BACKUP_PROP, QVariant());
         }
     }
-    foreach (QWidget *w, a->associatedWidgets())
+    for (QWidget *w : a->associatedWidgets())
         highlightWidget(w, on);
 }
 
@@ -386,7 +387,7 @@ static void highlightWidget(QWidget *w, bool on)
     if (on) {
         if (!bak.isValid()) {
             QPalette pal = qApp->palette();
-            foreach (QObject *co, w->children())
+            for (QObject *co : w->children())
                 if (QWidget *cw = qobject_cast<QWidget *>(co))
                     cw->setPalette(cw->palette().resolve(pal));
             w->setProperty(PALETTE_BACKUP_PROP, QVariant::fromValue(w->palette().resolve(pal)));
@@ -478,7 +479,7 @@ static void highlightTarget(const TranslatableEntry &target, bool on)
 
 static void highlightTargets(const QList<TranslatableEntry> &targets, bool on)
 {
-    foreach (const TranslatableEntry &target, targets)
+    for (const TranslatableEntry &target : targets)
         highlightTarget(target, on);
 }
 

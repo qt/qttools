@@ -276,7 +276,8 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
     lines.append(QLatin1String("\n")); // sentinel.
     QString errorString;
 
-    foreach (const DiagnosticMessage &m, parser.diagnosticMessages()) {
+    const auto messages = parser.diagnosticMessages();
+    for (const DiagnosticMessage &m : messages) {
 
         if (m.isWarning())
             continue;

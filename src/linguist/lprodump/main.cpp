@@ -195,16 +195,16 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
 
     sourceFiles += getSources("FORMS", "VPATH_FORMS", baseVPaths, projectDir, visitor);
 
-    QStringList resourceFiles = getSources("RESOURCES", "VPATH_RESOURCES", baseVPaths, projectDir, visitor);
-    foreach (const QString &resource, resourceFiles)
+    const QStringList resourceFiles = getSources("RESOURCES", "VPATH_RESOURCES", baseVPaths, projectDir, visitor);
+    for (const QString &resource : resourceFiles)
         sourceFiles += getResources(resource, vfs);
 
     QStringList installs = visitor.values(QLatin1String("INSTALLS"))
                          + visitor.values(QLatin1String("DEPLOYMENT"));
     installs.removeDuplicates();
     QDir baseDir(projectDir);
-    foreach (const QString inst, installs) {
-        foreach (const QString &file, visitor.values(inst + QLatin1String(".files"))) {
+    for (const QString &inst : qAsConst(installs)) {
+        for (const QString &file : visitor.values(inst + QLatin1String(".files"))) {
             QFileInfo info(file);
             if (!info.isAbsolute())
                 info.setFile(baseDir.absoluteFilePath(file));
@@ -233,7 +233,7 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     sourceFiles.removeDuplicates();
     sourceFiles.sort();
 
-    foreach (const QString &ex, excludes) {
+    for (const QString &ex : excludes) {
         // TODO: take advantage of the file list being sorted
         QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
         for (QStringList::Iterator it = sourceFiles.begin(); it != sourceFiles.end(); ) {
@@ -260,7 +260,7 @@ QStringList getExcludes(const ProFileEvaluator &visitor, const QString &projectD
 
 static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subProjects)
 {
-    foreach (const QString &ex, visitor.values(QLatin1String("TR_EXCLUDE"))) {
+    for (const QString &ex : visitor.values(QLatin1String("TR_EXCLUDE"))) {
         QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
         for (QStringList::Iterator it = subProjects->begin(); it != subProjects->end(); ) {
             if (rx.match(*it).hasMatch())
@@ -289,7 +289,7 @@ static QJsonObject processProject(const QString &proFile, ProFileGlobals *option
         excludeProjects(visitor, &subProjects);
         QStringList subProFiles;
         QDir proDir(proPath);
-        foreach (const QString &subdir, subProjects) {
+        for (const QString &subdir : qAsConst(subProjects)) {
             QString realdir = visitor.value(subdir + QLatin1String(".subdir"));
             if (realdir.isEmpty())
                 realdir = visitor.value(subdir + QLatin1String(".file"));
@@ -325,7 +325,7 @@ static QJsonArray processProjects(bool topLevel, const QStringList &proFiles,
         ProFileGlobals *option, QMakeVfs *vfs, QMakeParser *parser, bool *fail)
 {
     QJsonArray result;
-    foreach (const QString &proFile, proFiles) {
+    for (const QString &proFile : proFiles) {
         if (!outDirMap.isEmpty())
             option->setDirectories(QFileInfo(proFile).path(), outDirMap[proFile]);
 

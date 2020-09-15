@@ -74,7 +74,7 @@ void TranslatorMessage::addReferenceUniq(const QString &fileName, int lineNumber
         if (fileName == m_fileName && lineNumber == m_lineNumber)
             return;
         if (!m_extraRefs.isEmpty()) { // Rather common case, so special-case it
-            foreach (const Reference &ref, m_extraRefs) {
+            for (const Reference &ref : qAsConst(m_extraRefs)) {
                 if (fileName == ref.fileName() && lineNumber == ref.lineNumber())
                     return;
             }

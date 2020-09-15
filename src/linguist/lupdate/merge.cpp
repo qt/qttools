@@ -325,7 +325,7 @@ Translator merge(
       The types of all the messages from the vernacular translator
       are updated according to the virgin translator.
     */
-    foreach (TranslatorMessage m, tor.messages()) {
+    for (TranslatorMessage m : tor.messages()) {
         TranslatorMessage::Type newType = TranslatorMessage::Finished;
 
         if (m.sourceText().isEmpty() && m.id().isEmpty()) {
@@ -446,7 +446,7 @@ Translator merge(
       Messages found only in the virgin translator are added to the
       vernacular translator.
     */
-    foreach (const TranslatorMessage &mv, virginTor.messages()) {
+    for (const TranslatorMessage &mv : virginTor.messages()) {
         if (mv.sourceText().isEmpty() && mv.id().isEmpty()) {
             if (tor.find(mv.context()) >= 0)
                 continue;
@@ -477,8 +477,8 @@ Translator merge(
     /*
       "Alien" translators can be used to augment the vernacular translator.
     */
-    foreach (const Translator &alf, aliens) {
-        foreach (TranslatorMessage mv, alf.messages()) {
+    for (const Translator &alf : aliens) {
+        for (TranslatorMessage mv : alf.messages()) {
             if (mv.sourceText().isEmpty() || !mv.isTranslated())
                 continue;
             int mvi = outTor.find(mv);

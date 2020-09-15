@@ -287,7 +287,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
 {
     m_dependencyArray.clear();
     QDataStream depstream(&m_dependencyArray, QIODevice::WriteOnly);
-    foreach (const QString &dep, m_dependencies)
+    for (const QString &dep : qAsConst(m_dependencies))
         depstream << dep;
 
     if (m_messages.isEmpty() && mode == SaveEverything)
@@ -631,7 +631,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
 
 static bool containsStripped(const Translator &translator, const TranslatorMessage &msg)
 {
-    foreach (const TranslatorMessage &tmsg, translator.messages())
+    for (const TranslatorMessage &tmsg : translator.messages())
         if (tmsg.sourceText() == msg.sourceText()
             && tmsg.context() == msg.context()
             && tmsg.comment().isEmpty())

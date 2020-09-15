@@ -56,7 +56,7 @@ size_t qHash(const HashStringList &list)
 {
     if (list.m_hash & 0x80000000) {
         uint hash = 0;
-        foreach (const HashString &qs, list.m_list) {
+        for (const HashString &qs : list.m_list) {
             hash ^= qHash(qs) ^ 0x6ad9f526;
             hash = ((hash << 13) & 0x7fffffff) | (hash >> 18);
         }
@@ -988,7 +988,7 @@ bool CppParser::visitNamespace(const NamespaceList &namespaces, int nsCount,
     if ((this->*callback)(ns, context))
         return true;
 supers:
-    foreach (const ParseResults *sup, rslt->includes)
+    for (const ParseResults *sup : rslt->includes)
         if (vr.tryVisit(sup->fileId)
             && visitNamespace(namespaces, nsCount, callback, context, vr, sup))
             return true;
@@ -1045,7 +1045,7 @@ bool CppParser::qualifyOneCallbackOwn(const Namespace *ns, void *context) const
 bool CppParser::qualifyOneCallbackUsing(const Namespace *ns, void *context) const
 {
     QualifyOneData *data = (QualifyOneData *)context;
-    foreach (const HashStringList &use, ns->usings)
+    for (const HashStringList &use : ns->usings)
         if (!data->visitedUsings->contains(use)) {
             data->visitedUsings->insert(use);
             if (qualifyOne(use.value(), use.value().count(), data->segment, data->resolved,
@@ -1130,7 +1130,7 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces,
     static QString strColons(QLatin1String("::"));
 
     NamespaceList segments;
-    foreach (const QString &str, quali.split(strColons)) // XXX slow, but needs to be fast(?)
+    for (const QString &str : quali.split(strColons)) // XXX slow, but needs to be fast(?)
         segments << HashString(str);
     return fullyQualify(namespaces, segments, isDeclaration, resolved, unresolved);
 }
@@ -1237,7 +1237,7 @@ void CppFiles::addIncludeCycle(const QSet<QString> &fileNames)
     cycle->fileNames = fileNames;
 
     QSet<IncludeCycle *> intersectingCycles;
-    foreach (const QString &fileName, fileNames) {
+    for (const QString &fileName : fileNames) {
         IncludeCycle *intersectingCycle = includeCycles().value(fileName);
 
         if (intersectingCycle && !intersectingCycles.contains(intersectingCycle)) {
@@ -1249,7 +1249,7 @@ void CppFiles::addIncludeCycle(const QSet<QString> &fileNames)
     }
     qDeleteAll(intersectingCycles);
 
-    foreach (const QString &fileName, cycle->fileNames)
+    for (const QString &fileName : qAsConst(cycle->fileNames))
         includeCycles().insert(fileName, cycle);
 }
 
@@ -1264,7 +1264,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
 {
     QString cleanFile = QDir::cleanPath(file);
 
-    foreach (const QString &ex, cd.m_excludes) {
+    for (const QString &ex : qAsConst(cd.m_excludes)) {
         QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
         if (rx.match(cleanFile).hasMatch())
             return;
@@ -1308,7 +1308,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
     inclusions.insert(cleanFile);
     if (isIndirect) {
         CppParser parser;
-        foreach (const QString &projectRoot, cd.m_projectRoots)
+        for (const QString &projectRoot : qAsConst(cd.m_projectRoots))
             if (cleanFile.startsWith(projectRoot)) {
                 parser.setTranslator(new Translator);
                 break;
@@ -1705,13 +1705,13 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
         }
         Q_FALLTHROUGH();
         case Tok_AngledInclude: {
-            QStringList cSources = cd.m_allCSources.values(yyWord);
+            const QStringList cSources = cd.m_allCSources.values(yyWord);
             if (!cSources.isEmpty()) {
-                foreach (const QString &cSource, cSources)
+                for (const QString &cSource : cSources)
                     processInclude(cSource, cd, includeStack, inclusions);
                 goto incOk;
             }
-            foreach (const QString &incPath, cd.m_includePath) {
+            for (const QString &incPath : qAsConst(cd.m_includePath)) {
                 text = QDir(incPath).absoluteFilePath(yyWord);
                 text.detach();
                 if (QFileInfo(text).isFile()) {
@@ -2228,7 +2228,7 @@ void loadCPP(Translator &translator, const QStringList &filenames, ConversionDat
 {
     QStringConverter::Encoding e = cd.m_sourceIsUtf16 ? QStringConverter::Utf16 : QStringConverter::Utf8;
 
-    foreach (const QString &filename, filenames) {
+    for (const QString &filename : filenames) {
         if (!CppFiles::getResults(filename).isEmpty() || CppFiles::isBlacklisted(filename))
             continue;
 
@@ -2250,10 +2250,10 @@ void loadCPP(Translator &translator, const QStringList &filenames, ConversionDat
         parser.recordResults(isHeader(filename));
     }
 
-    foreach (const QString &filename, filenames) {
+    for (const QString &filename : filenames) {
         if (!CppFiles::isBlacklisted(filename)) {
             if (const Translator *tor = CppFiles::getTranslator(filename)) {
-                foreach (const TranslatorMessage &msg, tor->messages())
+                for (const TranslatorMessage &msg : tor->messages())
                     translator.extend(msg, cd);
             }
         }

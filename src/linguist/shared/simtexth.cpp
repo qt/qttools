@@ -190,7 +190,7 @@ CandidateList similarTextHeuristicCandidates(const Translator *tor,
     CandidateList candidates;
     StringSimilarityMatcher matcher(text);
 
-    foreach (const TranslatorMessage &mtm, tor->messages()) {
+    for (const TranslatorMessage &mtm : tor->messages()) {
         if (mtm.type() == TranslatorMessage::Unfinished
             || mtm.translation().isEmpty())
             continue;

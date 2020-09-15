@@ -112,7 +112,7 @@ void TrFunctionAliasManager::ensureTrFunctionHashUpdated() const
 
     QHash<QString, TrFunction> nameToTrFunctionMap;
     for (int i = 0; i < NumTrFunctions; ++i)
-        foreach (const QString &alias, m_trFunctionAliases[i])
+        for (const QString &alias : m_trFunctionAliases[i])
             nameToTrFunctionMap[alias] = TrFunction(i);
     // commit:
     m_nameToTrFunctionMap.swap(nameToTrFunctionMap);
@@ -208,7 +208,7 @@ static void recursiveFileInfoList(const QDir &dir,
     const QSet<QString> &nameFilters, QDir::Filters filter,
     QFileInfoList *fileinfolist)
 {
-    foreach (const QFileInfo &fi, dir.entryInfoList(filter))
+    for (const QFileInfo &fi : dir.entryInfoList(filter))
         if (fi.isDir())
             recursiveFileInfoList(QDir(fi.absoluteFilePath()), nameFilters, filter, fileinfolist);
         else if (nameFilters.contains(fi.suffix()))
@@ -299,7 +299,7 @@ static void printUsage()
 
 static bool handleTrFunctionAliases(const QString &arg)
 {
-    foreach (const QString &pair, arg.split(QLatin1Char(','), Qt::SkipEmptyParts)) {
+    for (const QString &pair : arg.split(QLatin1Char(','), Qt::SkipEmptyParts)) {
         const int equalSign = pair.indexOf(QLatin1Char('='));
         if (equalSign < 0) {
             printErr(LU::tr("tr-function mapping '%1' in -tr-function-alias is missing the '='.\n").arg(pair));
@@ -340,7 +340,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
     }
 
     QList<Translator> aliens;
-    foreach (const QString &fileName, alienFiles) {
+    for (const QString &fileName : alienFiles) {
         ConversionData cd;
         Translator tor;
         if (!tor.load(fileName, cd, QLatin1String("auto"))) {
@@ -354,7 +354,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
 
     QDir dir;
     QString err;
-    foreach (const QString &fileName, tsFileNames) {
+    for (const QString &fileName : tsFileNames) {
         QString fn = dir.relativeFilePath(fileName);
         ConversionData cd;
         Translator tor;
@@ -476,11 +476,11 @@ static QStringList getResources(const QString &resourceFile)
 
 static bool processTs(Translator &fetchedTor, const QString &file, ConversionData &cd)
 {
-    foreach (const Translator::FileFormat &fmt, Translator::registeredFileFormats()) {
+    for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
         if (file.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive)) {
             Translator tor;
             if (tor.load(file, cd, fmt.extension)) {
-                foreach (TranslatorMessage msg, tor.messages()) {
+                for (TranslatorMessage msg : tor.messages()) {
                     msg.setType(TranslatorMessage::Unfinished);
                     msg.setTranslations(QStringList());
                     msg.setTranslatorComment(QString());
@@ -900,9 +900,9 @@ int main(int argc, char **argv)
             files << arg;
         }
         if (metTsFlag) {
-            foreach (const QString &file, files) {
+            for (const QString &file : qAsConst(files)) {
                 bool found = false;
-                foreach (const Translator::FileFormat &fmt, Translator::registeredFileFormats()) {
+                for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
                     if (file.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive)) {
                         QFileInfo fi(file);
                         if (!fi.exists() || fi.isWritable()) {
@@ -925,7 +925,7 @@ int main(int argc, char **argv)
         } else if (metXTsFlag) {
             alienFiles += files;
         } else {
-            foreach (const QString &file, files) {
+            for (const QString &file : qAsConst(files)) {
                 QFileInfo fi(file);
                 if (!fi.exists()) {
                     printErr(LU::tr("lupdate error: File '%1' does not exist.\n").arg(file));
@@ -940,7 +940,7 @@ int main(int argc, char **argv)
                     QDir dir = QDir(fi.filePath());
                     projectRoots.insert(dir.absolutePath() + QLatin1Char('/'));
                     if (extensionsNameFilters.isEmpty()) {
-                        foreach (QString ext, extensions.split(QLatin1Char(','))) {
+                        for (QString ext : extensions.split(QLatin1Char(','))) {
                             ext = ext.trimmed();
                             if (ext.startsWith(QLatin1Char('.')))
                                 ext.remove(0, 1);
@@ -953,7 +953,7 @@ int main(int argc, char **argv)
                     QFileInfoList fileinfolist;
                     recursiveFileInfoList(dir, extensionsNameFilters, filters, &fileinfolist);
                     int scanRootLen = dir.absolutePath().length();
-                    foreach (const QFileInfo &fi, fileinfolist) {
+                    for (const QFileInfo &fi : qAsConst(fileinfolist)) {
                         QString fn = QDir::cleanPath(fi.absoluteFilePath());
                         if (fn.endsWith(QLatin1String(".qrc"), Qt::CaseInsensitive)) {
                             resourceFiles << fn;

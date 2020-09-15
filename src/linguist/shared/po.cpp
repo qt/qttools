@@ -103,10 +103,10 @@ static QString poEscapedString(const QString &prefix, const QString &keyword,
             if (lines.count() != 1 ||
                 lines.first().length() > MAX_LEN - keyword.length() - prefix.length() - 3)
             {
-                QStringList olines = lines;
+                const QStringList olines = lines;
                 lines = QStringList(QString());
                 const int maxlen = MAX_LEN - prefix.length() - 2;
-                foreach (const QString &line, olines) {
+                for (const QString &line : olines) {
                     int off = 0;
                     while (off + maxlen < line.length()) {
                         int idx = line.lastIndexOf(QLatin1Char(' '), off + maxlen - 1) + 1;
@@ -138,7 +138,7 @@ static QString poEscapedString(const QString &prefix, const QString &keyword,
 static QString poEscapedLines(const QString &prefix, bool addSpace, const QStringList &lines)
 {
     QString out;
-    foreach (const QString &line, lines) {
+    for (const QString &line : lines) {
         out += prefix;
         if (addSpace && !line.isEmpty())
             out += QLatin1Char(' ' );
@@ -447,7 +447,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                 QHash<QString, QByteArray> extras;
                 QList<QByteArray> hdrOrder;
                 QByteArray pluralForms;
-                foreach (const QByteArray &hdr, item.msgStr.first().split('\n')) {
+                for (const QByteArray &hdr : item.msgStr.first().split('\n')) {
                     if (hdr.isEmpty())
                         continue;
                     int idx = hdr.indexOf(':');
@@ -546,7 +546,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
             msg.setContext(toUnicode(item.context));
             if (!item.references.isEmpty()) {
                 QString xrefs;
-                foreach (const QString &ref,
+                for (const QString &ref :
                          QString(toUnicode(item.references)).split(
                                  QRegularExpression(QLatin1String("\\s")), Qt::SkipEmptyParts)) {
                     int pos = ref.indexOf(QLatin1Char(':'));
@@ -575,7 +575,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
             msg.setTranslatorComment(toUnicode(item.translatorComments));
             msg.setPlural(item.isPlural || item.msgStr.size() > 1);
             QStringList translations;
-            foreach (const QByteArray &bstr, item.msgStr) {
+            for (const QByteArray &bstr : qAsConst(item.msgStr)) {
                 QString str = toUnicode(bstr);
                 str.replace(QChar(Translator::TextVariantSeparator),
                             QChar(Translator::BinaryVariantSeparator));
@@ -737,7 +737,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
     QTextStream out(&dev);
 
     bool qtContexts = false;
-    foreach (const TranslatorMessage &msg, translator.messages())
+    for (const TranslatorMessage &msg : translator.messages())
         if (!msg.context().isEmpty()) {
             qtContexts = true;
             break;
@@ -769,7 +769,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
     if (qtContexts)
         addPoHeader(headers, hdrOrder, "X-Qt-Contexts", QLatin1String("true"));
     QString hdrStr;
-    foreach (const QString &hdr, hdrOrder) {
+    for (const QString &hdr : qAsConst(hdrOrder)) {
         hdrStr += hdr;
         hdrStr += QLatin1String(": ");
         hdrStr += headers.value(makePoHeader(hdr));
@@ -777,7 +777,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
     }
     out << poEscapedString(QString(), QString::fromLatin1("msgstr"), true, hdrStr);
 
-    foreach (const TranslatorMessage &msg, translator.messages()) {
+    for (const TranslatorMessage &msg : translator.messages()) {
         out << Qt::endl;
 
         if (!msg.translatorComment().isEmpty())
@@ -792,7 +792,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
         QString xrefs = msg.extra(QLatin1String("po-references"));
         if (!msg.fileName().isEmpty() || !xrefs.isEmpty()) {
             QStringList refs;
-            foreach (const TranslatorMessage::Reference &ref, msg.allReferences())
+            for (const TranslatorMessage::Reference &ref : msg.allReferences())
                 refs.append(QString(QLatin1String("%2:%1"))
                                     .arg(ref.lineNumber()).arg(ref.fileName()));
             if (!xrefs.isEmpty())
@@ -809,8 +809,8 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
         TranslatorMessage::ExtraData::const_iterator itr =
                 msg.extras().find(QLatin1String("po-flags"));
         if (itr != msg.extras().end()) {
-            QStringList atoms = itr->split(QLatin1String(", "));
-            foreach (const QString &atom, atoms)
+            const QStringList atoms = itr->split(QLatin1String(", "));
+            for (const QString &atom : atoms)
                 if (atom.endsWith(str_format)) {
                     skipFormat = true;
                     break;

@@ -194,7 +194,8 @@ static void writeLineNumber(QTextStream &ts, const TranslatorMessage &msg, int i
     writeIndent(ts, indent);
     ts << "<context-group purpose=\"location\"><context context-type=\"linenumber\">"
        << msg.lineNumber() << "</context></context-group>\n";
-    foreach (const TranslatorMessage::Reference &ref, msg.extraReferences()) {
+    const auto refs = msg.extraReferences();
+    for (const TranslatorMessage::Reference &ref : refs) {
         writeIndent(ts, indent);
         ts << "<context-group purpose=\"location\">";
         if (ref.fileName() != msg.fileName())
@@ -764,7 +765,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
     QHash<QString, QHash<QString, QList<TranslatorMessage> > > messageOrder;
     QHash<QString, QList<QString> > contextOrder;
     QList<QString> fileOrder;
-    foreach (const TranslatorMessage &msg, translator.messages()) {
+    for (const TranslatorMessage &msg : translator.messages()) {
         QString fn = msg.fileName();
         if (fn.isEmpty() && msg.type() == TranslatorMessage::Obsolete)
             fn = QLatin1String(MAGIC_OBSOLETE_REFERENCE);
@@ -791,7 +792,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
         sourceLanguageCode.replace(QLatin1Char('_'), QLatin1Char('-'));
     QString languageCode = translator.languageCode();
     languageCode.replace(QLatin1Char('_'), QLatin1Char('-'));
-    foreach (const QString &fn, fileOrder) {
+    for (const QString &fn : qAsConst(fileOrder)) {
         writeIndent(ts, indent);
         ts << "<file original=\"" << fn << "\""
             << " datatype=\"" << dataType(messageOrder[fn].begin()->first()) << "\""
@@ -800,7 +801,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
             << "><body>\n";
         ++indent;
 
-        foreach (const QString &ctx, contextOrder[fn]) {
+        for (const QString &ctx : qAsConst(contextOrder[fn])) {
             if (!ctx.isEmpty()) {
                 writeIndent(ts, indent);
                 ts << "<group restype=\"" << restypeContext << "\""
@@ -808,7 +809,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
                 ++indent;
             }
 
-            foreach (const TranslatorMessage &msg, messageOrder[fn][ctx])
+            for (const TranslatorMessage &msg : qAsConst(messageOrder[fn][ctx]))
                 writeMessage(ts, msg, drops, indent);
 
             if (!ctx.isEmpty()) {

@@ -478,7 +478,7 @@ static void writeExtras(QTextStream &t, const char *indent,
         }
     }
     outs.sort();
-    foreach (const QString &out, outs)
+    for (const QString &out : qAsConst(outs))
         t << indent << out << Qt::endl;
 }
 
@@ -523,10 +523,10 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
         t << " sourcelanguage=\"" << languageCode << "\"";
     t << ">\n";
 
-    QStringList deps = translator.dependencies();
+    const QStringList deps = translator.dependencies();
     if (!deps.isEmpty()) {
         t << "<dependencies>\n";
-        foreach (const QString &dep, deps)
+        for (const QString &dep : deps)
             t << "<dependency catalog=\"" << dep << "\"/>\n";
         t << "</dependencies>\n";
     }
@@ -537,7 +537,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
     QHash<QString, QList<TranslatorMessage> > messageOrder;
     QList<QString> contextOrder;
-    foreach (const TranslatorMessage &msg, translator.messages()) {
+    for (const TranslatorMessage &msg : translator.messages()) {
         // no need for such noise
         if ((msg.type() == TranslatorMessage::Obsolete || msg.type() == TranslatorMessage::Vanished)
             && msg.translation().isEmpty()) {
@@ -554,12 +554,12 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
     QHash<QString, int> currentLine;
     QString currentFile;
-    foreach (const QString &context, contextOrder) {
+    for (const QString &context : qAsConst(contextOrder)) {
         t << "<context>\n"
              "    <name>"
           << protect(context)
           << "</name>\n";
-        foreach (const TranslatorMessage &msg, messageOrder[context]) {
+        for (const TranslatorMessage &msg : qAsConst(messageOrder[context])) {
             //msg.dump();
 
                 t << "    <message";
@@ -571,7 +571,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
                 if (translator.locationsType() != Translator::NoLocations) {
                     QString cfile = currentFile;
                     bool first = true;
-                    foreach (const TranslatorMessage::Reference &ref, msg.allReferences()) {
+                    for (const TranslatorMessage::Reference &ref : msg.allReferences()) {
                         QString fn = cd.m_targetDir.relativeFilePath(ref.fileName())
                                     .replace(QLatin1Char('\\'),QLatin1Char('/'));
                         int ln = ref.lineNumber();

@@ -211,7 +211,7 @@ void MessageEditor::messageModelAppended()
 
 void MessageEditor::allModelsDeleted()
 {
-    foreach (const MessageEditorData &med, m_editors)
+    for (const MessageEditorData &med : qAsConst(m_editors))
         med.container->deleteLater();
     m_editors.clear();
     m_currentModel = -1;
@@ -312,9 +312,9 @@ void MessageEditor::fixTabOrder()
 void MessageEditor::reallyFixTabOrder()
 {
     QWidget *prev = this;
-    foreach (const MessageEditorData &med, m_editors) {
-        foreach (FormMultiWidget *fmw, med.transTexts)
-            foreach (QTextEdit *te, fmw->getEditors()) {
+    for (const MessageEditorData &med : qAsConst(m_editors)) {
+        for (FormMultiWidget *fmw : med.transTexts)
+            for (QTextEdit *te : fmw->getEditors()) {
                 setTabOrder(prev, te);
                 prev = te;
             }
@@ -397,7 +397,7 @@ void MessageEditor::activeModelAndNumerus(int *model, int *numerus) const
 {
     for (int j = 0; j < m_editors.count(); ++j) {
         for (int i = 0; i < m_editors[j].transTexts.count(); ++i)
-            foreach (QTextEdit *te, m_editors[j].transTexts[i]->getEditors())
+            for (QTextEdit *te : m_editors[j].transTexts[i]->getEditors())
                 if (m_focusWidget == te) {
                     *model = j;
                     *numerus = i;
@@ -419,7 +419,7 @@ QTextEdit *MessageEditor::activeTranslation() const
         return 0;
     const QList<FormatTextEdit *> &editors =
             m_editors[m_currentModel].transTexts[m_currentNumerus]->getEditors();
-    foreach (QTextEdit *te, editors)
+    for (QTextEdit *te : editors)
         if (te->hasFocus())
             return te;
     return editors.first();
@@ -485,7 +485,7 @@ MessageEditorData *MessageEditor::modelForWidget(const QObject *o)
 {
     for (int j = 0; j < m_editors.count(); ++j) {
         for (int i = 0; i < m_editors[j].transTexts.count(); ++i)
-            foreach (QTextEdit *te, m_editors[j].transTexts[i]->getEditors())
+            for (QTextEdit *te : m_editors[j].transTexts[i]->getEditors())
                 if (te == o)
                     return &m_editors[j];
         if (m_editors[j].transCommentText->getEditor() == o)
@@ -568,7 +568,7 @@ void MessageEditor::showNothing()
     m_commentText->clearTranslation();
     for (int j = 0; j < m_editors.count(); ++j) {
         setEditingEnabled(j, false);
-        foreach (FormMultiWidget *widget, m_editors[j].transTexts)
+        for (FormMultiWidget *widget : qAsConst(m_editors[j].transTexts))
             widget->clearTranslation();
         m_editors[j].transCommentText->clearTranslation();
     }
@@ -683,7 +683,7 @@ void MessageEditor::setTranslation(int latestModel, const QString &translation)
 void MessageEditor::setEditingEnabled(int model, bool enabled)
 {
     MessageEditorData &ed = m_editors[model];
-    foreach (FormMultiWidget *widget, ed.transTexts)
+    for (FormMultiWidget *widget : qAsConst(ed.transTexts))
         widget->setEditingEnabled(enabled);
     ed.transCommentText->setEditingEnabled(enabled);
 
@@ -695,8 +695,8 @@ void MessageEditor::setEditingEnabled(int model, bool enabled)
 void MessageEditor::setLengthVariants(bool on)
 {
     m_lengthVariants = on;
-    foreach (const MessageEditorData &ed, m_editors)
-        foreach (FormMultiWidget *widget, ed.transTexts)
+    for (const MessageEditorData &ed : qAsConst(m_editors))
+        for (FormMultiWidget *widget : ed.transTexts)
             widget->setMultiEnabled(on);
 }
 
@@ -882,10 +882,10 @@ void MessageEditor::setVisualizeWhitespace(bool value)
     m_pluralSource->getEditor()->setVisualizeWhitespace(value);
     m_commentText->getEditor()->setVisualizeWhitespace(value);
 
-    foreach (const MessageEditorData &med, m_editors) {
+    for (const MessageEditorData &med : qAsConst(m_editors)) {
         med.transCommentText->getEditor()->setVisualizeWhitespace(value);
-        foreach (FormMultiWidget *widget, med.transTexts)
-            foreach (FormatTextEdit *te, widget->getEditors())
+        for (FormMultiWidget *widget : med.transTexts)
+            for (FormatTextEdit *te : widget->getEditors())
                 te->setVisualizeWhitespace(value);
     }
 }
@@ -912,9 +912,9 @@ void MessageEditor::applyFontSize()
     m_pluralSource->getEditor()->setFont(font);
     m_commentText->getEditor()->setFont(font);
 
-    foreach (MessageEditorData med, m_editors) {
-        for (int i = 0; i < med.transTexts.count(); ++i)
-            foreach (QTextEdit *te, med.transTexts[i]->getEditors())
+    for (const MessageEditorData &med : qAsConst(m_editors)) {
+        for (FormMultiWidget *fmw : med.transTexts)
+            for (QTextEdit *te : fmw->getEditors())
                 te->setFont(font);
         med.transCommentText->getEditor()->setFont(font);
     }

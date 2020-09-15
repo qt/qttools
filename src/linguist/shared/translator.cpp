@@ -212,7 +212,7 @@ void Translator::appendSorted(const TranslatorMessage &msg)
     // Working vars
     int prevLine = 0;
     int curIdx = 0;
-    foreach (const TranslatorMessage &mit, m_messages) {
+    for (const TranslatorMessage &mit : qAsConst(m_messages)) {
         bool sameFile = mit.fileName() == msg.fileName() && mit.context() == msg.context();
         int curLine;
         if (sameFile && (curLine = mit.lineNumber()) >= prevLine) {
@@ -257,7 +257,7 @@ static QString guessFormat(const QString &filename, const QString &format)
     if (format != QLatin1String("auto"))
         return format;
 
-    foreach (const Translator::FileFormat &fmt, Translator::registeredFileFormats()) {
+    for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
         if (filename.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive))
             return fmt.extension;
     }
@@ -294,7 +294,7 @@ bool Translator::load(const QString &filename, ConversionData &cd, const QString
 
     QString fmt = guessFormat(filename, format);
 
-    foreach (const FileFormat &format, registeredFileFormats()) {
+    for (const FileFormat &format : qAsConst(registeredFileFormats())) {
         if (fmt == format.extension) {
             if (format.loader)
                 return (*format.loader)(*this, file, cd);
@@ -335,7 +335,7 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
     QString fmt = guessFormat(filename, format);
     cd.m_targetDir = QFileInfo(filename).absoluteDir();
 
-    foreach (const FileFormat &format, registeredFileFormats()) {
+    for (const FileFormat &format : qAsConst(registeredFileFormats())) {
         if (fmt == format.extension) {
             if (format.saver)
                 return (*format.saver)(*this, file, cd);
@@ -385,8 +385,8 @@ int Translator::find(const QString &context,
     if (!refs.isEmpty()) {
         for (TMM::ConstIterator it = m_messages.constBegin(); it != m_messages.constEnd(); ++it) {
             if (it->context() == context && it->comment() == comment) {
-                foreach (const TranslatorMessage::Reference &itref, it->allReferences()) {
-                    foreach (const TranslatorMessage::Reference &ref, refs) {
+                for (const TranslatorMessage::Reference &itref : it->allReferences()) {
+                    for (const TranslatorMessage::Reference &ref : refs) {
                         if (itref == ref)
                             return it - m_messages.constBegin();
                     }
@@ -492,7 +492,7 @@ void Translator::dropUiLines()
     for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); ++it) {
         QHash<QString, int> have;
         QList<TranslatorMessage::Reference> refs;
-        foreach (const TranslatorMessage::Reference &itref, it->allReferences()) {
+        for (const TranslatorMessage::Reference &itref : it->allReferences()) {
             const QString &fn = itref.fileName();
             if (fn.endsWith(uiXt) || fn.endsWith(juiXt)) {
                 if (++have[fn] == 1)
@@ -632,9 +632,9 @@ void Translator::reportDuplicates(const Duplicates &dupes,
             std::cerr << "'\n(try -verbose for more info).\n";
         } else {
             std::cerr << "':\n";
-            foreach (int i, dupes.byId)
+            for (int i : dupes.byId)
                 std::cerr << "\n* ID: " << qPrintable(message(i).id()) << std::endl;
-            foreach (int j, dupes.byContents) {
+            for (int j : dupes.byContents) {
                 const TranslatorMessage &msg = message(j);
                 std::cerr << "\n* Context: " << qPrintable(msg.context())
                           << "\n* Source: " << qPrintable(msg.sourceText()) << std::endl;
@@ -651,9 +651,9 @@ void Translator::makeFileNamesAbsolute(const QDir &originalPath)
 {
     for (TMM::iterator it = m_messages.begin(); it != m_messages.end(); ++it) {
         TranslatorMessage &msg = *it;
-        TranslatorMessage::References refs = msg.allReferences();
+        const TranslatorMessage::References refs = msg.allReferences();
         msg.setReferences(TranslatorMessage::References());
-        foreach (const TranslatorMessage::Reference &ref, refs) {
+        for (const TranslatorMessage::Reference &ref : refs) {
             QString fileName = ref.fileName();
             QFileInfo fi (fileName);
             if (fi.isRelative())
@@ -663,7 +663,7 @@ void Translator::makeFileNamesAbsolute(const QDir &originalPath)
     }
 }
 
-QList<TranslatorMessage> Translator::messages() const
+const QList<TranslatorMessage> &Translator::messages() const
 {
     return m_messages;
 }
@@ -721,7 +721,7 @@ void Translator::normalizeTranslations(ConversionData &cd)
 QString Translator::guessLanguageCodeFromFileName(const QString &filename)
 {
     QString str = filename;
-    foreach (const FileFormat &format, registeredFileFormats()) {
+    for (const FileFormat &format : qAsConst(registeredFileFormats())) {
         if (str.endsWith(format.extension)) {
             str = str.left(str.size() - format.extension.size() - 1);
             break;

@@ -154,7 +154,7 @@ static bool saveQPH(const Translator &translator, QIODevice &dev, ConversionData
     if (!languageCode.isEmpty() && languageCode != QLatin1String("C"))
         t << " sourcelanguage=\"" << languageCode << "\"";
     t << ">\n";
-    foreach (const TranslatorMessage &msg, translator.messages()) {
+    for (const TranslatorMessage &msg : translator.messages()) {
         t << "<phrase>\n";
         t << "    <source>" << protect(msg.sourceText()) << "</source>\n";
         QString str = msg.translations().join(QLatin1Char('@'));

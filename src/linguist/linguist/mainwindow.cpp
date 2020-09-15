@@ -595,7 +595,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
 
     QList<OpenedFile> opened;
     bool closeOld = false;
-    foreach (QString name, names) {
+    for (QString name : names) {
         if (!waitCursor) {
             QApplication::setOverrideCursor(Qt::WaitCursor);
             waitCursor = true;
@@ -655,7 +655,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
                 {
                     case QMessageBox::Cancel:
                         delete dm;
-                        foreach (const OpenedFile &op, opened)
+                        for (const OpenedFile &op : qAsConst(opened))
                             delete op.dataModel;
                         return false;
                     case QMessageBox::Yes:
@@ -675,13 +675,13 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
             waitCursor = false;
         }
         if (!closeAll()) {
-            foreach (const OpenedFile &op, opened)
+            for (const OpenedFile &op : qAsConst(opened))
                 delete op.dataModel;
             return false;
         }
     }
 
-    foreach (const OpenedFile &op, opened) {
+    for (const OpenedFile &op : qAsConst(opened)) {
         if (op.langGuessed) {
             if (waitCursor) {
                 QApplication::restoreOverrideCursor();
@@ -699,7 +699,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
     m_contextView->setUpdatesEnabled(false);
     m_messageView->setUpdatesEnabled(false);
     int totalCount = 0;
-    foreach (const OpenedFile &op, opened) {
+    for (const OpenedFile &op : qAsConst(opened)) {
         m_phraseDict.append(QHash<QString, QList<Phrase *> >());
         m_dataModel->append(op.dataModel, op.readWrite);
         if (op.readWrite)
@@ -763,7 +763,7 @@ static QString fileFilters(bool allFirst)
     static const QString pattern(QLatin1String("%1 (*.%2);;"));
     QStringList allExtensions;
     QString filter;
-    foreach (const Translator::FileFormat &format, Translator::registeredFileFormats()) {
+    for (const Translator::FileFormat &format : qAsConst(Translator::registeredFileFormats())) {
         if (format.fileType == Translator::FileFormat::TranslationSource && format.priority >= 0) {
             filter.append(pattern.arg(format.description(), format.extension));
             allExtensions.append(QLatin1String("*.") + format.extension);
@@ -1020,7 +1020,8 @@ void MainWindow::findAgain()
                         if (searchItem(DataModel::Comments, m->extraComment()))
                             break;
                     }
-                    foreach (const QString &trans, m->translations())
+                    const auto translations = m->translations();
+                    for (const QString &trans : translations)
                         if (searchItem(DataModel::Translations, trans))
                             goto didfind;
                     if (searchItem(DataModel::Comments, m->translatorComment()))
@@ -1183,7 +1184,7 @@ void MainWindow::newPhraseBook()
 
 bool MainWindow::isPhraseBookOpen(const QString &name)
 {
-    foreach(const PhraseBook *pb, m_phraseBooks) {
+    for (const PhraseBook *pb : qAsConst(m_phraseBooks)) {
         if (pb->fileName() == name)
             return true;
     }
@@ -1252,7 +1253,8 @@ void MainWindow::printPhraseBook(QAction *action)
         statusBar()->showMessage(tr("Printing..."));
         PrintOut pout(printer());
         pout.setRule(PrintOut::ThinRule);
-        foreach (const Phrase *p, phraseBook->phrases()) {
+        const auto phrases = phraseBook->phrases();
+        for (const Phrase *p : phrases) {
             pout.setGuide(p->source());
             pout.addBox(29, p->source());
             pout.addBox(4);
@@ -1279,7 +1281,7 @@ void MainWindow::addToPhraseBook()
 {
     QStringList phraseBookList;
     QHash<QString, PhraseBook *> phraseBookHash;
-    foreach (PhraseBook *pb, m_phraseBooks) {
+    for (PhraseBook *pb : qAsConst(m_phraseBooks)) {
         if (pb->language() != QLocale::C && m_dataModel->language(m_currentIndex.model()) != QLocale::C) {
             if (pb->language() != m_dataModel->language(m_currentIndex.model()))
                 continue;
@@ -2378,7 +2380,7 @@ bool MainWindow::maybeSavePhraseBook(PhraseBook *pb)
 
 bool MainWindow::maybeSavePhraseBooks()
 {
-    foreach(PhraseBook *phraseBook, m_phraseBooks)
+    for (PhraseBook *phraseBook : qAsConst(m_phraseBooks))
         if (!maybeSavePhraseBook(phraseBook))
             return false;
     return true;
@@ -2419,7 +2421,7 @@ void MainWindow::updatePhraseDictInternal(int model)
     QHash<QString, QList<Phrase *> > &pd = m_phraseDict[model];
 
     pd.clear();
-    foreach (PhraseBook *pb, m_phraseBooks) {
+    for (PhraseBook *pb : qAsConst(m_phraseBooks)) {
         bool before;
         if (pb->language() != QLocale::C && m_dataModel->language(model) != QLocale::C) {
             if (pb->language() != m_dataModel->language(model))
@@ -2428,7 +2430,8 @@ void MainWindow::updatePhraseDictInternal(int model)
         } else {
             before = false;
         }
-        foreach (Phrase *p, pb->phrases()) {
+        const auto phrases = pb->phrases();
+        for (Phrase *p : phrases) {
             QString f = friendlyString(p->source());
             if (f.length() > 0) {
                 f = f.split(QLatin1Char(' ')).first();
@@ -2566,10 +2569,11 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
                 QStringList lookupWords = fsource.split(QLatin1Char(' '));
 
                 bool phraseFound;
-                foreach (const QString &s, lookupWords) {
+                for (const QString &s : qAsConst(lookupWords)) {
                     if (m_phraseDict[mi].contains(s)) {
                         phraseFound = true;
-                        foreach (const Phrase *p, m_phraseDict[mi].value(s)) {
+                        const auto phrases = m_phraseDict[mi].value(s);
+                        for (const Phrase *p : phrases) {
                             if (fsource == friendlyString(p->source())) {
                                 if (ftranslation.indexOf(friendlyString(p->target())) >= 0) {
                                     phraseFound = true;
@@ -2625,7 +2629,7 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
                     }
                 }
 
-                foreach (int i, placeMarkerIndexes) {
+                for (int i : qAsConst(placeMarkerIndexes)) {
                     if (i != 0) {
                         if (verbose)
                             m_errorsView->addError(mi, ErrorsView::PlaceMarkersDiffer);
@@ -2732,7 +2736,7 @@ void MainWindow::writeConfig()
 void MainWindow::setupRecentFilesMenu()
 {
     m_ui.menuRecentlyOpenedFiles->clear();
-    foreach (const QStringList &strList, recentFiles().filesLists())
+    for (const QStringList &strList : recentFiles().filesLists())
         if (strList.size() == 1) {
             const QString &str = strList.first();
             m_ui.menuRecentlyOpenedFiles->addAction(
@@ -2742,7 +2746,7 @@ void MainWindow::setupRecentFilesMenu()
                            MultiDataModel::condenseFileNames(
                                 MultiDataModel::prettifyFileNames(strList)));
             menu->addAction(tr("All"))->setData(strList);
-            foreach (const QString &str, strList)
+            for (const QString &str : strList)
                 menu->addAction(DataModel::prettifyFileName(str))->setData(str);
         }
 }
@@ -2815,7 +2819,7 @@ bool MainWindow::eventFilter(QObject *object, QEvent *event)
         if (!e->mimeData()->hasFormat(QLatin1String("text/uri-list")))
             return false;
         QStringList urls;
-        foreach (QUrl url, e->mimeData()->urls())
+        for (const QUrl &url : e->mimeData()->urls())
             if (!url.toLocalFile().isEmpty())
                 urls << url.toLocalFile();
         if (!urls.isEmpty())

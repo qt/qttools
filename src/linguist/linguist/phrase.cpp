@@ -276,7 +276,7 @@ bool PhraseBook::save(const QString &fileName)
     if (language() != QLocale::C)
         t << " language=\"" << Translator::makeLanguageCode(language(), country()) << '"';
     t << ">\n";
-    foreach (Phrase *p, m_phrases) {
+    for (Phrase *p : qAsConst(m_phrases)) {
         t << "<phrase>\n";
         t << "    <source>" << protect( p->source() ) << "</source>\n";
         t << "    <target>" << protect( p->target() ) << "</target>\n";
