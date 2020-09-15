@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1">
+<context>
+    <name>Foo</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="37"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="37"/>
+        <source>context Foo. noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>IN_NESTED</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="61"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="61"/>
+        <source>context IN_NESTED. tr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="62"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="62"/>
+        <source>context IN_NESTED. noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ONLY_Q</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="44"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="44"/>
+        <source>context ONLY_Q. noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="test_QT_TR_NOOP_context.cpp" line="45"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="45"/>
+        <source>context ONLY_Q. noop N</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
+<context>
+    <name>WithQDeclareTr::Nested</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="74"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="74"/>
+        <source>context WithQDeclareTr::Nested. tr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="75"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="75"/>
+        <source>context WithQDeclareTr::Nested. noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>my_arg</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="63"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="63"/>
+        <source>context my_arg. translate_noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>test2::BB</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="114"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="114"/>
+        <source>context test2::BB. tr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="115"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="115"/>
+        <source>context test2::BB. noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>test3::D</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="137"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="137"/>
+        <source>context test3::D. tr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="138"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="138"/>
+        <source>context test3::D. noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>test4::A::B::C</name>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="158"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="158"/>
+        <source>context is test4::A::B::C. tr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_QT_TR_NOOP_context.cpp" line="159"/>
+        <location filename="test_QT_TR_NOOP_context_bis.cpp" line="159"/>
+        <source>context is test4::A::B::C. noop</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+</TS>
