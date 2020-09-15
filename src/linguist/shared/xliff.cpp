@@ -177,7 +177,7 @@ static QString protect(const QString &str, bool makePhs = true)
 static void writeExtras(QTextStream &ts, int indent,
                         const TranslatorMessage::ExtraData &extras, QRegularExpression drops)
 {
-    for (Translator::ExtraData::ConstIterator it = extras.begin(); it != extras.end(); ++it) {
+    for (auto it = extras.cbegin(), end = extras.cend(); it != end; ++it) {
         if (!drops.match(it.key()).hasMatch()) {
             writeIndent(ts, indent);
             ts << "<trolltech:" << it.key() << '>'
@@ -238,15 +238,16 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
     QString msgidstr = !msg.id().isEmpty() ? msg.id() : QString::fromLatin1("_msg%1").arg(++msgid);
 
     QStringList translns = msg.translations();
-    QHash<QString, QString>::const_iterator it;
     QString pluralStr;
     QStringList sources(msg.sourceText());
-    if ((it = msg.extras().find(QString::fromLatin1("po-msgid_plural"))) != msg.extras().end())
+    const auto &extras = msg.extras();
+    const auto extrasEnd = extras.cend();
+    if (const auto it = extras.constFind(QString::fromLatin1("po-msgid_plural")); it != extrasEnd)
         sources.append(*it);
     QStringList oldsources;
     if (!msg.oldSourceText().isEmpty())
         oldsources.append(msg.oldSourceText());
-    if ((it = msg.extras().find(QString::fromLatin1("po-old_msgid_plural"))) != msg.extras().end()) {
+    if (const auto it = extras.constFind(QString::fromLatin1("po-old_msgid_plural")); it != extrasEnd) {
         if (oldsources.isEmpty()) {
             if (sources.count() == 2)
                 oldsources.append(QString());
@@ -256,10 +257,9 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
         oldsources.append(*it);
     }
 
-    QStringList::const_iterator
-        srcit = sources.begin(), srcend = sources.end(),
-        oldsrcit = oldsources.begin(), oldsrcend = oldsources.end(),
-        transit = translns.begin(), transend = translns.end();
+    auto srcit = sources.cbegin(), srcend = sources.cend(),
+         oldsrcit = oldsources.cbegin(), oldsrcend = oldsources.cend(),
+         transit = translns.cbegin(), transend = translns.cend();
     int plural = 0;
     QString source;
     while (srcit != srcend || oldsrcit != oldsrcend || transit != transend) {
@@ -795,7 +795,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
     for (const QString &fn : qAsConst(fileOrder)) {
         writeIndent(ts, indent);
         ts << "<file original=\"" << fn << "\""
-            << " datatype=\"" << dataType(messageOrder[fn].begin()->first()) << "\""
+            << " datatype=\"" << dataType(messageOrder[fn].cbegin()->first()) << "\""
             << " source-language=\"" << sourceLanguageCode.toLatin1() << "\""
             << " target-language=\"" << languageCode.toLatin1() << "\""
             << "><body>\n";

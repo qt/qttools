@@ -534,9 +534,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                     extras[QLatin1String("po-header_comment")] =
                             QByteArrayList_join(lines.mid(0, lastCmtLine + 1), '\n');
                 }
-                for (QHash<QString, QByteArray>::ConstIterator it = extras.constBegin(),
-                                                               end = extras.constEnd();
-                     it != end; ++it)
+                for (auto it = extras.cbegin(), end = extras.cend(); it != end; ++it)
                     translator.setExtra(it.key(), toUnicode(it.value()));
                 item = PoItem();
                 continue;
@@ -611,9 +609,8 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                     if (flags.removeOne(QLatin1String("fuzzy")))
                         item.isFuzzy = true;
                     flags.removeOne(QLatin1String("qt-format"));
-                    TranslatorMessage::ExtraData::const_iterator it =
-                            item.extra.find(QLatin1String("po-flags"));
-                    if (it != item.extra.end())
+                    const auto it = item.extra.constFind(QLatin1String("po-flags"));
+                    if (it != item.extra.cend())
                         flags.prepend(*it);
                     if (!flags.isEmpty())
                         item.extra[QLatin1String("po-flags")] = flags.join(QLatin1String(", "));
@@ -806,9 +803,8 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
         if ((msg.type() == TranslatorMessage::Unfinished
              || msg.type() == TranslatorMessage::Obsolete) && msg.isTranslated())
             flags.append(QLatin1String("fuzzy"));
-        TranslatorMessage::ExtraData::const_iterator itr =
-                msg.extras().find(QLatin1String("po-flags"));
-        if (itr != msg.extras().end()) {
+        const auto itr = msg.extras().constFind(QLatin1String("po-flags"));
+        if (itr != msg.extras().cend()) {
             const QStringList atoms = itr->split(QLatin1String(", "));
             for (const QString &atom : atoms)
                 if (atom.endsWith(str_format)) {

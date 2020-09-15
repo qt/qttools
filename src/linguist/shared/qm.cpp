@@ -293,7 +293,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
     if (m_messages.isEmpty() && mode == SaveEverything)
         return;
 
-    QMap<ByteTranslatorMessage, void *> messages = m_messages;
+    const auto messages = m_messages;
 
     // re-build contents
     m_messageArray.clear();
@@ -304,13 +304,11 @@ void Releaser::squeeze(TranslatorSaveMode mode)
     QMap<Offset, void *> offsets;
 
     QDataStream ms(&m_messageArray, QIODevice::WriteOnly);
-    QMap<ByteTranslatorMessage, void *>::const_iterator it, next;
     int cpPrev = 0, cpNext = 0;
-    for (it = messages.constBegin(); it != messages.constEnd(); ++it) {
+    for (auto it = messages.cbegin(), end = messages.cend(); it != end; ++it) {
         cpPrev = cpNext;
-        next = it;
-        ++next;
-        if (next == messages.constEnd())
+        const auto next = std::next(it);
+        if (next == end)
             cpNext = 0;
         else
             cpNext = commonPrefix(it.key(), next.key());
@@ -318,10 +316,9 @@ void Releaser::squeeze(TranslatorSaveMode mode)
         writeMessage(it.key(), ms, mode, Prefix(qMax(cpPrev, cpNext + 1)));
     }
 
-    QMap<Offset, void *>::Iterator offset;
-    offset = offsets.begin();
+    auto offset = offsets.cbegin();
     QDataStream ds(&m_offsetArray, QIODevice::WriteOnly);
-    while (offset != offsets.end()) {
+    while (offset != offsets.cend()) {
         Offset k = offset.key();
         ++offset;
         ds << quint32(k.h) << quint32(k.o);
@@ -329,7 +326,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
 
     if (mode == SaveStripped) {
         QMap<QByteArray, int> contextSet;
-        for (it = messages.constBegin(); it != messages.constEnd(); ++it)
+        for (auto it = messages.cbegin(), end = messages.cend(); it != end; ++it)
             ++contextSet[it.key().context()];
 
         quint16 hTableSize;
@@ -341,8 +338,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
             hTableSize = (contextSet.size() < 10000) ? 15013 : 3 * contextSet.size() / 2;
 
         QMultiMap<int, QByteArray> hashMap;
-        QMap<QByteArray, int>::const_iterator c;
-        for (c = contextSet.constBegin(); c != contextSet.constEnd(); ++c)
+        for (auto c = contextSet.cbegin(), end = contextSet.cend(); c != end; ++c)
             hashMap.insert(elfHash(c.key()) % hTableSize, c.key());
 
         /*
@@ -378,7 +374,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
         t << quint16(0); // the entry at offset 0 cannot be used
         uint upto = 2;
 
-        QMultiMap<int, QByteArray>::const_iterator entry = hashMap.constBegin();
+        auto entry = hashMap.constBegin();
         while (entry != hashMap.constEnd()) {
             int i = entry.key();
             hTable[i] = quint16(upto >> 1);

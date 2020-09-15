@@ -207,8 +207,8 @@ static void buildTargets(QObject *o, TargetsHash *targets)
 
 static void destroyTargets(TargetsHash *targets)
 {
-    for (TargetsHash::ConstIterator it = targets->cbegin(), end = targets->cend(); it != end; ++it)
-        for (const TranslatableEntry &target : *it)
+    for (const auto &targetList : qAsConst(*targets))
+        for (const TranslatableEntry &target : targetList)
             if (target.type == TranslatableProperty)
                 delete target.prop.name;
     targets->clear();
@@ -554,7 +554,7 @@ void FormPreviewView::setSourceContext(int model, MessageItem *messageItem)
     tsv.setQualifier(messageItem->comment().toUtf8());
     m_highlights = m_targets.value(tsv);
     if (m_lastModel != model) {
-        for (TargetsHash::Iterator it = m_targets.begin(), end = m_targets.end(); it != end; ++it)
+        for (auto it = m_targets.cbegin(), end = m_targets.cend(); it != end; ++it)
             retranslateTargets(*it, it.key(), m_dataModel->model(model), m_lastClassName);
         m_lastModel = model;
     } else {

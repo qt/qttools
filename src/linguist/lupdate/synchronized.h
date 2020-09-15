@@ -61,7 +61,7 @@ public:
     {
         QMutexLocker lock(&m_mutex);
         if (!m_vector.empty()) {
-            m_vector.insert(m_vector.end(), std::make_move_iterator(values.begin()),
+            m_vector.insert(m_vector.cend(), std::make_move_iterator(values.begin()),
                 std::make_move_iterator(values.end()));
         } else {
             m_vector = std::move(values);

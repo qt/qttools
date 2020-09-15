@@ -230,8 +230,7 @@ int applyNumberHeuristic(Translator &tor)
             TranslatorMessage &msg = tor.message(i);
             const QString &key = zeroKey(msg.sourceText());
             if (!key.isEmpty()) {
-                QMap<QString, QPair<QString, QString> >::ConstIterator t =
-                        translated.constFind(key);
+                const auto t = translated.constFind(key);
                 if (t != translated.constEnd() && t->first != msg.sourceText()) {
                     msg.setTranslation(translationAttempt(t->second, t->first,
                                                           msg.sourceText()));
@@ -268,7 +267,7 @@ int applySameTextHeuristic(Translator &tor)
                 untranslated[i] = true;
         } else {
             const QString &key = msg.sourceText();
-            QMap<QString, QStringList>::ConstIterator t = translated.constFind(key);
+            const auto t = translated.constFind(key);
             if (t != translated.constEnd()) {
                 /*
                   The same source text is translated at least two
@@ -287,7 +286,7 @@ int applySameTextHeuristic(Translator &tor)
     for (int i = 0; i < tor.messageCount(); ++i) {
         if (untranslated[i]) {
             TranslatorMessage &msg = tor.message(i);
-            QMap<QString, QStringList>::ConstIterator t = translated.constFind(msg.sourceText());
+            const auto t = translated.constFind(msg.sourceText());
             if (t != translated.constEnd()) {
                 msg.setTranslations(*t);
                 ++inserted;

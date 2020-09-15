@@ -470,7 +470,7 @@ static void writeExtras(QTextStream &t, const char *indent,
                         const TranslatorMessage::ExtraData &extras, QRegularExpression drops)
 {
     QStringList outs;
-    for (Translator::ExtraData::ConstIterator it = extras.begin(); it != extras.end(); ++it) {
+    for (auto it = extras.cbegin(), end = extras.cend(); it != end; ++it) {
         if (!drops.match(it.key()).hasMatch()) {
             outs << (QStringLiteral("<extra-") + it.key() + QLatin1Char('>')
                      + protect(it.value())

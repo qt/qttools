@@ -1023,7 +1023,7 @@ bool CppParser::qualifyOneCallbackOwn(const Namespace *ns, void *context) const
         *data->resolved << data->segment;
         return true;
     }
-    QHash<HashString, NamespaceList>::ConstIterator nsai = ns->aliases.constFind(data->segment);
+    auto nsai = ns->aliases.constFind(data->segment);
     if (nsai != ns->aliases.constEnd()) {
         const NamespaceList &nsl = *nsai;
         if (nsl.last().value().isEmpty()) { // Delayed alias resolution
@@ -2210,7 +2210,7 @@ const ParseResults *CppParser::recordResults(bool isHeader)
             && results->rootNamespace.aliases.isEmpty()
             && results->rootNamespace.usings.isEmpty()) {
             // This is a forwarding header. Slash it.
-            pr = *results->includes.begin();
+            pr = *results->includes.cbegin();
             delete results;
         } else {
             results->fileId = nextFileId++;

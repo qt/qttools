@@ -40,7 +40,6 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
-#include <QtCore/QDirIterator>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QLibraryInfo>
@@ -91,9 +90,8 @@ int TrFunctionAliasManager::trFunctionByName(const QString &trFunctionName) cons
 {
     ensureTrFunctionHashUpdated();
     // this function needs to be fast
-    const QHash<QString, TrFunction>::const_iterator it
-        = m_nameToTrFunctionMap.find(trFunctionName);
-    return it == m_nameToTrFunctionMap.end() ? -1 : *it;
+    const auto it = m_nameToTrFunctionMap.constFind(trFunctionName);
+    return it == m_nameToTrFunctionMap.cend() ? -1 : *it;
 }
 
 void TrFunctionAliasManager::modifyAlias(int trFunction, const QString &alias, Operation op)
@@ -500,26 +498,26 @@ static void processSources(Translator &fetchedTor,
     bool requireQmlSupport = false;
 #endif
     QStringList sourceFilesCpp;
-    for (QStringList::const_iterator it = sourceFiles.begin(); it != sourceFiles.end(); ++it) {
-        if (it->endsWith(QLatin1String(".java"), Qt::CaseInsensitive))
-            loadJava(fetchedTor, *it, cd);
-        else if (it->endsWith(QLatin1String(".ui"), Qt::CaseInsensitive)
-                 || it->endsWith(QLatin1String(".jui"), Qt::CaseInsensitive))
-            loadUI(fetchedTor, *it, cd);
+    for (const auto &sourceFile : sourceFiles) {
+        if (sourceFile.endsWith(QLatin1String(".java"), Qt::CaseInsensitive))
+            loadJava(fetchedTor, sourceFile, cd);
+        else if (sourceFile.endsWith(QLatin1String(".ui"), Qt::CaseInsensitive)
+                 || sourceFile.endsWith(QLatin1String(".jui"), Qt::CaseInsensitive))
+            loadUI(fetchedTor, sourceFile, cd);
 #ifndef QT_NO_QML
-        else if (it->endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
-                 || it->endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
-            loadQScript(fetchedTor, *it, cd);
-        else if (it->endsWith(QLatin1String(".qml"), Qt::CaseInsensitive))
-            loadQml(fetchedTor, *it, cd);
+        else if (sourceFile.endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
+                 || sourceFile.endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
+            loadQScript(fetchedTor, sourceFile, cd);
+        else if (sourceFile.endsWith(QLatin1String(".qml"), Qt::CaseInsensitive))
+            loadQml(fetchedTor, sourceFile, cd);
 #else
-        else if (it->endsWith(QLatin1String(".qml"), Qt::CaseInsensitive)
-                 || it->endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
-                 || it->endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
+        else if (sourceFile.endsWith(QLatin1String(".qml"), Qt::CaseInsensitive)
+                 || sourceFile.endsWith(QLatin1String(".js"), Qt::CaseInsensitive)
+                 || sourceFile.endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
             requireQmlSupport = true;
 #endif // QT_NO_QML
-        else if (!processTs(fetchedTor, *it, cd))
-            sourceFilesCpp << *it;
+        else if (!processTs(fetchedTor, sourceFile, cd))
+            sourceFilesCpp << sourceFile;
     }
 
 #ifdef QT_NO_QML

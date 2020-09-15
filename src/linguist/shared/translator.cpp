@@ -383,12 +383,12 @@ int Translator::find(const QString &context,
     const QString &comment, const TranslatorMessage::References &refs) const
 {
     if (!refs.isEmpty()) {
-        for (TMM::ConstIterator it = m_messages.constBegin(); it != m_messages.constEnd(); ++it) {
+        for (auto it = m_messages.cbegin(), end = m_messages.cend(); it != end; ++it) {
             if (it->context() == context && it->comment() == comment) {
-                for (const TranslatorMessage::Reference &itref : it->allReferences()) {
-                    for (const TranslatorMessage::Reference &ref : refs) {
+                for (const auto &itref : it->allReferences()) {
+                    for (const auto &ref : refs) {
                         if (itref == ref)
-                            return it - m_messages.constBegin();
+                            return it - m_messages.cbegin();
                     }
                 }
             }
@@ -405,7 +405,7 @@ int Translator::find(const QString &context) const
 
 void Translator::stripObsoleteMessages()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); )
+    for (auto it = m_messages.begin(); it != m_messages.end(); )
         if (it->type() == TranslatorMessage::Obsolete || it->type() == TranslatorMessage::Vanished)
             it = m_messages.erase(it);
         else
@@ -415,7 +415,7 @@ void Translator::stripObsoleteMessages()
 
 void Translator::stripFinishedMessages()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); )
+    for (auto it = m_messages.begin(); it != m_messages.end(); )
         if (it->type() == TranslatorMessage::Finished)
             it = m_messages.erase(it);
         else
@@ -425,7 +425,7 @@ void Translator::stripFinishedMessages()
 
 void Translator::stripUntranslatedMessages()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); )
+    for (auto it = m_messages.begin(); it != m_messages.end(); )
         if (!it->isTranslated())
             it = m_messages.erase(it);
         else
@@ -433,20 +433,18 @@ void Translator::stripUntranslatedMessages()
     m_indexOk = false;
 }
 
-bool Translator::translationsExist()
+bool Translator::translationsExist() const
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); ) {
-        if (it->isTranslated())
+    for (const auto &message : m_messages) {
+        if (message.isTranslated())
             return true;
-        else
-            ++it;
     }
     return false;
 }
 
 void Translator::stripEmptyContexts()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end();)
+    for (auto it = m_messages.begin(); it != m_messages.end(); )
         if (it->sourceText() == QLatin1String(ContextComment))
             it = m_messages.erase(it);
         else
@@ -456,7 +454,7 @@ void Translator::stripEmptyContexts()
 
 void Translator::stripNonPluralForms()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); )
+    for (auto it = m_messages.begin(); it != m_messages.end(); )
         if (!it->isPlural())
             it = m_messages.erase(it);
         else
@@ -466,7 +464,7 @@ void Translator::stripNonPluralForms()
 
 void Translator::stripIdenticalSourceTranslations()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); ) {
+    for (auto it = m_messages.begin(); it != m_messages.end(); ) {
         // we need to have just one translation, and it be equal to the source
         if (it->translations().count() == 1 && it->translation() == it->sourceText())
             it = m_messages.erase(it);
@@ -478,21 +476,21 @@ void Translator::stripIdenticalSourceTranslations()
 
 void Translator::dropTranslations()
 {
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); ++it) {
-        if (it->type() == TranslatorMessage::Finished)
-            it->setType(TranslatorMessage::Unfinished);
-        it->setTranslation(QString());
+    for (auto &message : m_messages) {
+        if (message.type() == TranslatorMessage::Finished)
+            message.setType(TranslatorMessage::Unfinished);
+        message.setTranslation(QString());
     }
 }
 
 void Translator::dropUiLines()
 {
-    QString uiXt = QLatin1String(".ui");
-    QString juiXt = QLatin1String(".jui");
-    for (TMM::Iterator it = m_messages.begin(); it != m_messages.end(); ++it) {
+    const QString uiXt = QLatin1String(".ui");
+    const QString juiXt = QLatin1String(".jui");
+    for (auto &message : m_messages) {
         QHash<QString, int> have;
         QList<TranslatorMessage::Reference> refs;
-        for (const TranslatorMessage::Reference &itref : it->allReferences()) {
+        for (const auto &itref : message.allReferences()) {
             const QString &fn = itref.fileName();
             if (fn.endsWith(uiXt) || fn.endsWith(juiXt)) {
                 if (++have[fn] == 1)
@@ -501,7 +499,7 @@ void Translator::dropUiLines()
                 refs.append(itref);
             }
         }
-        it->setReferences(refs);
+        message.setReferences(refs);
     }
 }
 
@@ -578,8 +576,7 @@ Translator::Duplicates Translator::resolveDuplicates()
         int oi;
         QSet<int> *pDup;
         if (!msg.id().isEmpty()) {
-            QHash<TranslatorMessageIdPtr, int>::ConstIterator it =
-                    idRefs.constFind(TranslatorMessageIdPtr(msg));
+            const auto it = idRefs.constFind(TranslatorMessageIdPtr(msg));
             if (it != idRefs.constEnd()) {
                 oi = *it;
                 omsg = &m_messages[oi];
@@ -588,8 +585,7 @@ Translator::Duplicates Translator::resolveDuplicates()
             }
         }
         {
-            QHash<TranslatorMessageContentPtr, int>::ConstIterator it =
-                    contentRefs.constFind(TranslatorMessageContentPtr(msg));
+            const auto it = contentRefs.constFind(TranslatorMessageContentPtr(msg));
             if (it != contentRefs.constEnd()) {
                 oi = *it;
                 omsg = &m_messages[oi];
@@ -649,8 +645,7 @@ void Translator::reportDuplicates(const Duplicates &dupes,
 // Used by lupdate to be able to search using absolute paths during merging
 void Translator::makeFileNamesAbsolute(const QDir &originalPath)
 {
-    for (TMM::iterator it = m_messages.begin(); it != m_messages.end(); ++it) {
-        TranslatorMessage &msg = *it;
+    for (auto &msg : m_messages) {
         const TranslatorMessage::References refs = msg.allReferences();
         msg.setReferences(TranslatorMessage::References());
         for (const TranslatorMessage::Reference &ref : refs) {

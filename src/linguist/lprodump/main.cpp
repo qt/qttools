@@ -236,7 +236,7 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
     for (const QString &ex : excludes) {
         // TODO: take advantage of the file list being sorted
         QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
-        for (QStringList::Iterator it = sourceFiles.begin(); it != sourceFiles.end(); ) {
+        for (auto it = sourceFiles.begin(); it != sourceFiles.end(); ) {
             if (rx.match(*it).hasMatch())
                 it = sourceFiles.erase(it);
             else
@@ -262,7 +262,7 @@ static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subPro
 {
     for (const QString &ex : visitor.values(QLatin1String("TR_EXCLUDE"))) {
         QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
-        for (QStringList::Iterator it = subProjects->begin(); it != subProjects->end(); ) {
+        for (auto it = subProjects->begin(); it != subProjects->end(); ) {
             if (rx.match(*it).hasMatch())
                 it = subProjects->erase(it);
             else

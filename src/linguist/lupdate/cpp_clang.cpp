@@ -128,8 +128,8 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
             sources.push_back(filename.toStdString());
         }
     }
-    sourcesPP.insert(sourcesPP.end(), sources.begin(), sources.end());
-    sourcesAst.insert(sourcesAst.end(), sources.begin(), sources.end());
+    sourcesPP.insert(sourcesPP.cend(), sources.cbegin(), sources.cend());
+    sourcesAst.insert(sourcesAst.cend(), sources.cbegin(), sources.cend());
 
     int argc = 4;
     // NEED 2 empty one to start!!! otherwise: LLVM::ERROR
