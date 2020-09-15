@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 #endif // Q_OS_MAC
 
     QStringList files;
-    QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
     QStringList args = app.arguments();
 
     for (int i = 1; i < args.count(); ++i) {

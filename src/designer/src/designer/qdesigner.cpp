@@ -160,7 +160,7 @@ static void showHelp(QCommandLineParser &parser, const QString &errorMessage = Q
 struct Options
 {
     QStringList files;
-    QString resourceDir{QLibraryInfo::location(QLibraryInfo::TranslationsPath)};
+    QString resourceDir{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
     bool server{false};
     quint16 clientPort{0};
     bool enableInternalDynamicProperties{false};

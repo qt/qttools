@@ -445,7 +445,7 @@ static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocat
     str << '\n';
 
 #define DUMP_LIBRARYPATH(str, loc) \
-    str << "  " << #loc << ": " << QDir::toNativeSeparators(QLibraryInfo::location(QLibraryInfo::loc)) << '\n';
+    str << "  " << #loc << ": " << QDir::toNativeSeparators(QLibraryInfo::path(QLibraryInfo::loc)) << '\n';
 
 // Helper to format a type via QDebug to be used for QFlags/Q_ENUM.
 template <class T>

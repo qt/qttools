@@ -719,7 +719,7 @@ namespace qdesigner_internal
     {
         QProcess uic;
         QStringList arguments;
-        QString binary = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QStringLiteral("/uic");
+        QString binary = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QStringLiteral("/uic");
         switch (language) {
         case UicLanguage::Cpp:
             break;

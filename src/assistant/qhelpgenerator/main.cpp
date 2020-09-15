@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
     QTranslator qtTranslator;
     QTranslator qt_helpTranslator;
     QString sysLocale = QLocale::system().name();
-    QString resourceDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
     if (translator.load(QLatin1String("assistant_") + sysLocale, resourceDir)
         && qtTranslator.load(QLatin1String("qt_") + sysLocale, resourceDir)
         && qt_helpTranslator.load(QLatin1String("qt_help_") + sysLocale, resourceDir)) {

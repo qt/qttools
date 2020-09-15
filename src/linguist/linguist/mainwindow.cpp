@@ -1336,7 +1336,7 @@ void MainWindow::manual()
         m_assistantProcess = new QProcess();
 
     if (m_assistantProcess->state() != QProcess::Running) {
-        QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
+        QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator();
 #if !defined(Q_OS_MAC)
         app += QLatin1String("assistant");
 #else

@@ -248,7 +248,7 @@ void setupTranslations()
 {
     TRACE_OBJ
     const QString &resourceDir
-        = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+        = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
     setupTranslation(QLatin1String("assistant"), resourceDir);
     setupTranslation(QLatin1String("qt"), resourceDir);
     setupTranslation(QLatin1String("qt_help"), resourceDir);
