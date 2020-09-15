@@ -69,6 +69,7 @@ bool QmlCodeMarker::recognizeCode(const QString &code)
 
     return parser.parse();
 #else
+    Q_UNUSED(code);
     return false;
 #endif
 }
@@ -192,6 +193,7 @@ QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative *
 
     return output;
 #else
+    Q_UNUSED(code);
     location.warning("QtDeclarative not installed; cannot parse QML or JS.");
     return QString();
 #endif
