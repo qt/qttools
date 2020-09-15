@@ -52,7 +52,6 @@ QT_BEGIN_NAMESPACE
 class QDesignerFormEditorInterface;
 class QDesignerSettingsInterface;
 
-class QStringList;
 class QSize;
 
 namespace qdesigner_internal {

@@ -42,7 +42,6 @@
 QT_BEGIN_NAMESPACE
 
 class ConversionData;
-class QStringList;
 class Translator;
 class TranslatorMessage;
 

@@ -46,7 +46,6 @@ QT_BEGIN_NAMESPACE
 
 class CollectionNode;
 class FunctionNode;
-class QStringList;
 class QDocDatabase;
 
 struct TargetRec
