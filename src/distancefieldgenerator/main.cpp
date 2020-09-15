@@ -35,7 +35,6 @@ QT_USE_NAMESPACE
 
 int main(int argc, char **argv)
 {
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
     app.setOrganizationName(QStringLiteral("QtProject"));
     app.setApplicationName(QStringLiteral("Qt Distance Field Generator"));
