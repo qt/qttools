@@ -48,10 +48,12 @@ signals:
     void findNext(const QString& text, DataModel::FindLocation where,
                   bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp);
 
+public slots:
+    void find();
+
 private slots:
     void emitFindNext();
     void verify();
-    void find();
 
 private:
     QRegularExpression m_regExp;

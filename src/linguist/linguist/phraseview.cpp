@@ -68,13 +68,14 @@ PhraseView::PhraseView(MultiDataModel *model, QList<QHash<QString, QList<Phrase 
     setItemsExpandable(false);
 
     for (int i = 0; i < 10; i++)
-        (void) new GuessShortcut(i, this, SLOT(guessShortcut(int)));
+        (void) new GuessShortcut(i, this, &PhraseView::guessShortcut);
 
     header()->setSectionResizeMode(QHeaderView::Interactive);
     header()->setSectionsClickable(true);
     header()->restoreState(QSettings().value(phraseViewHeaderKey()).toByteArray());
 
-    connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(selectPhrase(QModelIndex)));
+    connect(this, &QAbstractItemView::activated,
+            this, &PhraseView::selectPhrase);
 }
 
 PhraseView::~PhraseView()
@@ -104,15 +105,18 @@ void PhraseView::contextMenuEvent(QContextMenuEvent *event)
     QMenu *contextMenu = new QMenu(this);
 
     QAction *insertAction = new QAction(tr("Insert"), contextMenu);
-    connect(insertAction, SIGNAL(triggered()), this, SLOT(selectPhrase()));
+    connect(insertAction, &QAction::triggered,
+            this, &PhraseView::selectCurrentPhrase);
 
     QAction *editAction = new QAction(tr("Edit"), contextMenu);
-    connect(editAction, SIGNAL(triggered()), this, SLOT(editPhrase()));
+    connect(editAction, &QAction::triggered,
+            this, &PhraseView::editPhrase);
     Qt::ItemFlags isFromPhraseBook = model()->flags(index) & Qt::ItemIsEditable;
     editAction->setEnabled(isFromPhraseBook);
 
     QAction *gotoAction = new QAction(tr("Go to"), contextMenu);
-    connect(gotoAction, SIGNAL(triggered()), this, SLOT(gotoMessageFromGuess()));
+    connect(gotoAction, &QAction::triggered,
+            this, &PhraseView::gotoMessageFromGuess);
     gotoAction->setEnabled(!isFromPhraseBook);
 
     contextMenu->addAction(insertAction);
@@ -147,7 +151,7 @@ void PhraseView::selectPhrase(const QModelIndex &index)
     emit phraseSelected(m_modelIndex, m_phraseModel->phrase(index)->target());
 }
 
-void PhraseView::selectPhrase()
+void PhraseView::selectCurrentPhrase()
 {
     emit phraseSelected(m_modelIndex, m_phraseModel->phrase(currentIndex())->target());
 }

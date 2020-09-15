@@ -43,9 +43,12 @@ FindDialog::FindDialog(QWidget *parent)
 
     findNxt->setEnabled(false);
 
-    connect(findNxt, SIGNAL(clicked()), this, SLOT(emitFindNext()));
-    connect(useRegExp, SIGNAL(stateChanged(int)), this, SLOT(verify()));
-    connect(led, SIGNAL(textChanged(QString)), this, SLOT(verify()));
+    connect(findNxt, &QAbstractButton::clicked,
+            this, &FindDialog::emitFindNext);
+    connect(useRegExp, &QCheckBox::stateChanged,
+            this, &FindDialog::verify);
+    connect(led, &QLineEdit::textChanged,
+            this, &FindDialog::verify);
 
     led->setFocus();
 }

@@ -79,6 +79,9 @@ public:
     static RecentFiles &recentFiles();
     static QString friendlyString(const QString &str);
 
+public slots:
+    void updateViewMenu();
+
 protected:
     void readConfig();
     void writeConfig();
@@ -120,7 +123,6 @@ private slots:
     void about();
     void aboutQt();
 
-    void updateViewMenu();
     void fileAboutToShow();
     void editAboutToShow();
 
@@ -140,7 +142,7 @@ private slots:
     void updateLatestModel(const QModelIndex &index);
     void selectedContextChanged(const QModelIndex &sortedIndex, const QModelIndex &oldIndex);
     void selectedMessageChanged(const QModelIndex &sortedIndex, const QModelIndex &oldIndex);
-    void setCurrentMessage(int modelIndex, const Candidate &tm);
+    void setCurrentMessageFromGuess(int modelIndex, const Candidate &tm);
 
     // To synchronize from the message editor to the model ...
     void updateTranslation(const QStringList &translations);
@@ -165,8 +167,8 @@ private:
     QModelIndex prevContext(const QModelIndex &index) const;
     QModelIndex nextMessage(const QModelIndex &currentIndex, bool checkUnfinished = false) const;
     QModelIndex prevMessage(const QModelIndex &currentIndex, bool checkUnfinished = false) const;
-    bool next(bool checkUnfinished);
-    bool prev(bool checkUnfinished);
+    bool doNext(bool checkUnfinished);
+    bool doPrev(bool checkUnfinished);
 
     void updateStatistics();
     void initViewHeaders();
@@ -178,14 +180,14 @@ private:
     QModelIndex setMessageViewRoot(const QModelIndex &index);
     QModelIndex currentContextIndex() const;
     QModelIndex currentMessageIndex() const;
-    PhraseBook *openPhraseBook(const QString &name);
+    PhraseBook *doOpenPhraseBook(const QString &name);
     bool isPhraseBookOpen(const QString &name);
     bool savePhraseBook(QString *name, PhraseBook &pb);
     bool maybeSavePhraseBook(PhraseBook *phraseBook);
     bool maybeSavePhraseBooks();
     QStringList pickTranslationFiles();
-    void showTranslationSettings(int model);
-    void updateLatestModel(int model);
+    void doShowTranslationSettings(int model);
+    void doUpdateLatestModel(int model);
     void updateSourceView(int model, MessageItem *item);
     void updatePhraseBookActions();
     void updatePhraseDictInternal(int model);

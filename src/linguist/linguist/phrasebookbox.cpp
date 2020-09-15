@@ -68,19 +68,24 @@ PhraseBookBox::PhraseBookBox(PhraseBook *phraseBook, QWidget *parent)
     phraseList->header()->setDefaultSectionSize(150);
     phraseList->header()->setSectionResizeMode(QHeaderView::Interactive);
 
-    connect(sourceLed, SIGNAL(textChanged(QString)),
-            this, SLOT(sourceChanged(QString)));
-    connect(targetLed, SIGNAL(textChanged(QString)),
-            this, SLOT(targetChanged(QString)));
-    connect(definitionLed, SIGNAL(textChanged(QString)),
-            this, SLOT(definitionChanged(QString)));
-    connect(phraseList->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(selectionChanged()));
-    connect(newBut, SIGNAL(clicked()), this, SLOT(newPhrase()));
-    connect(removeBut, SIGNAL(clicked()), this, SLOT(removePhrase()));
-    connect(settingsBut, SIGNAL(clicked()), this, SLOT(settings()));
-    connect(saveBut, SIGNAL(clicked()), this, SLOT(save()));
-    connect(m_phraseBook, SIGNAL(modifiedChanged(bool)), this, SLOT(setWindowModified(bool)));
+    connect(sourceLed, &QLineEdit::textChanged,
+            this, &PhraseBookBox::sourceChanged);
+    connect(targetLed, &QLineEdit::textChanged,
+            this, &PhraseBookBox::targetChanged);
+    connect(definitionLed, &QLineEdit::textChanged,
+            this, &PhraseBookBox::definitionChanged);
+    connect(phraseList->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &PhraseBookBox::selectionChanged);
+    connect(newBut, &QAbstractButton::clicked,
+            this, &PhraseBookBox::newPhrase);
+    connect(removeBut, &QAbstractButton::clicked,
+            this, &PhraseBookBox::removePhrase);
+    connect(settingsBut, &QAbstractButton::clicked,
+            this, &PhraseBookBox::settings);
+    connect(saveBut, &QAbstractButton::clicked,
+            this, &PhraseBookBox::save);
+    connect(m_phraseBook, &PhraseBook::modifiedChanged,
+            this, &PhraseBookBox::setWindowModified);
 
     sourceLed->installEventFilter(this);
     targetLed->installEventFilter(this);

@@ -34,11 +34,16 @@ TranslateDialog::TranslateDialog(QWidget *parent)
   : QDialog(parent)
 {
     m_ui.setupUi(this);
-    connect(m_ui.findNxt, SIGNAL(clicked()), this, SLOT(emitFindNext()));
-    connect(m_ui.translate, SIGNAL(clicked()), this, SLOT(emitTranslateAndFindNext()));
-    connect(m_ui.translateAll, SIGNAL(clicked()), this, SLOT(emitTranslateAll()));
-    connect(m_ui.ledFindWhat, SIGNAL(textChanged(QString)), SLOT(verifyText()));
-    connect(m_ui.ckMatchCase, SIGNAL(toggled(bool)), SLOT(verifyText()));
+    connect(m_ui.findNxt, &QAbstractButton::clicked,
+            this, &TranslateDialog::emitFindNext);
+    connect(m_ui.translate, &QAbstractButton::clicked,
+            this, &TranslateDialog::emitTranslateAndFindNext);
+    connect(m_ui.translateAll, &QAbstractButton::clicked,
+            this, &TranslateDialog::emitTranslateAll);
+    connect(m_ui.ledFindWhat, &QLineEdit::textChanged,
+            this, &TranslateDialog::verifyText);
+    connect(m_ui.ckMatchCase, &QAbstractButton::toggled,
+            this, &TranslateDialog::verifyText);
 }
 
 void TranslateDialog::showEvent(QShowEvent *)

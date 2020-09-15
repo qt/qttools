@@ -69,9 +69,9 @@ public:
     void showMessage(const MultiDataIndex &index);
     void setNumerusForms(int model, const QStringList &numerusForms);
     bool eventFilter(QObject *, QEvent *) override;
-    void setTranslation(int model, const QString &translation, int numerus);
+    void setNumerusTranslation(int model, const QString &translation, int numerus);
     int activeModel() const { return (m_editors.count() != 1) ? m_currentModel : 0; }
-    void setEditorFocus(int model);
+    void setEditorFocusForModel(int model);
     void setUnfinishedEditorFocus();
     bool focusNextUnfinished();
     void setVisualizeWhitespace(bool value);

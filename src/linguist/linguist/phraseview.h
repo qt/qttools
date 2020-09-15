@@ -45,13 +45,16 @@ class GuessShortcut : public QShortcut
 {
     Q_OBJECT
 public:
-    GuessShortcut(int nkey, QWidget *parent, const char *member)
+    template<class Obj, typename Func>
+    GuessShortcut(int nkey, Obj *parent, Func member)
         : QShortcut(parent), nrkey(nkey)
     {
         const auto key = static_cast<Qt::Key>(int(Qt::Key_1) + nrkey);
         setKey(Qt::CTRL | key);
-        connect(this, SIGNAL(activated()), this, SLOT(keyActivated()));
-        connect(this, SIGNAL(activated(int)), parent, member);
+        connect(this, &GuessShortcut::activated,
+                this, &GuessShortcut::keyActivated);
+        connect(this, &GuessShortcut::activated,
+                parent, member);
     }
 
 private slots:
@@ -79,6 +82,9 @@ public slots:
     int getMaxCandidates() const { return m_maxCandidates; }
     void setMaxCandidates(const int max);
     static int getDefaultMaxCandidates() { return DefaultMaxCandidates; }
+    void moreGuesses();
+    void fewerGuesses();
+    void resetNumGuesses();
 
 signals:
     void phraseSelected(int latestModel, const QString &phrase);
@@ -94,12 +100,9 @@ protected:
 private slots:
     void guessShortcut(int nkey);
     void selectPhrase(const QModelIndex &index);
-    void selectPhrase();
+    void selectCurrentPhrase();
     void editPhrase();
     void gotoMessageFromGuess();
-    void moreGuesses();
-    void fewerGuesses();
-    void resetNumGuesses();
 
 private:
     QList<Phrase *> getPhrases(int model, const QString &sourceText);
