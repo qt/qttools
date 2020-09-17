@@ -74,6 +74,7 @@ private slots:
     void noAutoList();
     void nestedMacro();
     void headerFile();
+    void usingDirective();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -451,6 +452,11 @@ void tst_generatedOutput::headerFile()
                    "headerfile/headers.html "
                    "headerfile-docbook/testheader.xml "
                    "headerfile-docbook/headers.xml");
+}
+
+void tst_generatedOutput::usingDirective()
+{
+    testAndCompare("testdata/configs/usingdirective.qdocconf", "space.html");
 }
 
 int main(int argc, char *argv[])

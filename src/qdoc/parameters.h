@@ -65,7 +65,11 @@ public:
 
     QString signature(bool includeValue = false) const;
 
+    const QString &canonicalType() const { return canonicalType_; }
+    void setCanonicalType(const QString &t) { canonicalType_ = t; }
+
 public:
+    QString canonicalType_ {};
     QString type_;
     QString name_;
     QString defaultValue_;
@@ -92,6 +96,7 @@ public:
     int count() const { return parameters_.size(); }
     void reserve(int count) { parameters_.reserve(count); }
     const Parameter &at(int i) const { return parameters_.at(i); }
+    Parameter &last() { return parameters_.last(); }
     const Parameter &last() const { return parameters_.last(); }
     inline Parameter &operator[](int index) { return parameters_[index]; }
     void append(const QString &type, const QString &name, const QString &value);

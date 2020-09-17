@@ -339,19 +339,29 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                 continue;
             bool different = false;
             for (int i = 0; i < actualArg; ++i) {
+                CXType argType = clang_getArgType(funcType, i);
                 if (args.size() <= i)
-                    args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
-                QString t1 = parameters.at(i).type();
-                QString t2 = args.at(i);
-                auto p2 = parent;
-                while (p2 && t1 != t2) {
-                    QString parentScope = p2->name() + QLatin1String("::");
-                    t1 = t1.remove(parentScope);
-                    t2 = t2.remove(parentScope);
-                    p2 = p2->parent();
+                    args.append(fromCXString(clang_getTypeSpelling(argType)));
+                QString recordedType = parameters.at(i).type();
+                QString typeSpelling = args.at(i);
+                auto p = parent;
+                while (p && recordedType != typeSpelling) {
+                    QString parentScope = p->name() + QLatin1String("::");
+                    recordedType.remove(parentScope);
+                    typeSpelling.remove(parentScope);
+                    p = p->parent();
                 }
-                if (t1 != t2) {
-                    different = true;
+                different = recordedType != typeSpelling;
+
+                // Retry with a canonical type spelling
+                if (different && (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated)) {
+                    QStringView canonicalType = parameters.at(i).canonicalType();
+                    if (!canonicalType.isEmpty()) {
+                        different = canonicalType !=
+                            fromCXString(clang_getTypeSpelling(clang_getCanonicalType(argType)));
+                    }
+                }
+                if (different) {
                     break;
                 }
             }
@@ -370,79 +380,6 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
     default:
         return nullptr;
     }
-}
-
-/*!
-  Find the function node from the QDocDatabase \a qdb that
-  corrseponds to the declaration represented by the cursor
-  \a cur, if it exists.
- */
-static Node *findFunctionNodeForCursor(QDocDatabase *qdb, CXCursor cur)
-{
-    auto kind = clang_getCursorKind(cur);
-    if (clang_isInvalid(kind))
-        return nullptr;
-    if (kind == CXCursor_TranslationUnit)
-        return qdb->primaryTreeRoot();
-
-    Node *p = findNodeForCursor(qdb, clang_getCursorSemanticParent(cur));
-    if (p == nullptr || !p->isAggregate())
-        return nullptr;
-    auto parent = static_cast<Aggregate *>(p);
-
-    switch (kind) {
-    case CXCursor_FunctionDecl:
-    case CXCursor_FunctionTemplate:
-    case CXCursor_CXXMethod:
-    case CXCursor_Constructor:
-    case CXCursor_Destructor:
-    case CXCursor_ConversionFunction: {
-        NodeVector candidates;
-        parent->findChildren(functionName(cur), candidates);
-        if (candidates.isEmpty())
-            return nullptr;
-        CXType funcType = clang_getCursorType(cur);
-        auto numArg = clang_getNumArgTypes(funcType);
-        bool isVariadic = clang_isFunctionTypeVariadic(funcType);
-        QVarLengthArray<QString, 20> args;
-        for (Node *candidate : qAsConst(candidates)) {
-            if (!candidate->isFunction(Node::CPP))
-                continue;
-            auto fn = static_cast<FunctionNode *>(candidate);
-            const Parameters &parameters = fn->parameters();
-            if (parameters.count() != (numArg + isVariadic))
-                continue;
-            if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
-                continue;
-            if (isVariadic && parameters.last().type() != QLatin1String("..."))
-                continue;
-            bool different = false;
-            for (int i = 0; i < numArg; ++i) {
-                if (args.size() <= i)
-                    args.append(fromCXString(clang_getTypeSpelling(clang_getArgType(funcType, i))));
-                QString t1 = parameters.at(i).type();
-                QString t2 = args.at(i);
-                auto p2 = parent;
-                while (p2 && t1 != t2) {
-                    QString parentScope = p2->name() + QLatin1String("::");
-                    t1 = t1.remove(parentScope);
-                    t2 = t2.remove(parentScope);
-                    p2 = p2->parent();
-                }
-                if (t1 != t2) {
-                    different = true;
-                    break;
-                }
-            }
-            if (!different)
-                return fn;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-    return nullptr;
 }
 
 class ClangVisitor
@@ -619,7 +556,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
             *fnNode = nullptr;
             ignoreSignature = true;
         } else {
-            *fnNode = findFunctionNodeForCursor(qdb_, cursor);
+            *fnNode = findNodeForCursor(qdb_, cursor);
             if (*fnNode && (*fnNode)->isFunction(Node::CPP)) {
                 FunctionNode *fn = static_cast<FunctionNode *>(*fnNode);
                 readParameterNamesAndAttributes(fn, cursor);
@@ -825,6 +762,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
                     fn->setMetaness(FunctionNode::CAssign);
             }
             parameters.append(adjustTypeName(fromCXString(clang_getTypeSpelling(argType))));
+            if (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated) {
+                parameters.last().setCanonicalType(fromCXString(
+                    clang_getTypeSpelling(clang_getCanonicalType(argType))));
+            }
         }
         if (parameters.count() > 0) {
             if (parameters.last().type().endsWith(QLatin1String("::QPrivateSignal"))) {
