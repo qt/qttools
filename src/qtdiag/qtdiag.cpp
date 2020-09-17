@@ -302,6 +302,12 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         { "TriangleFanTopology", QRhi::TriangleFanTopology },
         { "ReadBackNonUniformBuffer", QRhi::ReadBackNonUniformBuffer },
         { "ReadBackNonBaseMipLevel", QRhi::ReadBackNonBaseMipLevel },
+        { "TexelFetch", QRhi::TexelFetch },
+        { "RenderToNonBaseMipLevel", QRhi::RenderToNonBaseMipLevel },
+        { "IntAttributes", QRhi::IntAttributes },
+        { "ScreenSpaceDerivatives", QRhi::ScreenSpaceDerivatives },
+        { "ReadBackAnyTextureFormat", QRhi::ReadBackAnyTextureFormat },
+
         { nullptr, QRhi::Feature(0) }
     };
     struct RhiTextureFormat {
@@ -355,6 +361,12 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         str << "  Max Texture Size: " << rhi->resourceLimit(QRhi::TextureSizeMax) << "\n";
         str << "  Max Color Attachments: " << rhi->resourceLimit(QRhi::MaxColorAttachments) << "\n";
         str << "  Frames in Flight: " << rhi->resourceLimit(QRhi::FramesInFlight) << "\n";
+        str << "  Async Readback Limit: " << rhi->resourceLimit(QRhi::MaxAsyncReadbackFrames) << "\n";
+        str << "  MaxThreadGroupsPerDimension: " << rhi->resourceLimit(QRhi::MaxThreadGroupsPerDimension) << "\n";
+        str << "  MaxThreadsPerThreadGroup: " << rhi->resourceLimit(QRhi::MaxThreadsPerThreadGroup) << "\n";
+        str << "  MaxThreadGroupX: " << rhi->resourceLimit(QRhi::MaxThreadGroupX) << "\n";
+        str << "  MaxThreadGroupY: " << rhi->resourceLimit(QRhi::MaxThreadGroupY) << "\n";
+        str << "  MaxThreadGroupZ: " << rhi->resourceLimit(QRhi::MaxThreadGroupZ) << "\n";
         str << "  Uniform Buffer Alignment: " << rhi->ubufAlignment() << "\n";
         QByteArrayList supportedSampleCounts;
         for (int s : rhi->supportedSampleCounts())
