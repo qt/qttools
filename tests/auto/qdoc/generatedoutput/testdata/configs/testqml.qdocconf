@@ -14,9 +14,6 @@ sourcedirs += ../qml
 # Exclude source files from other tests' subdirs
 excludedirs = ../bug80259
 
-sources.fileextensions = "*.qml *.cpp *.qdoc"
-headers.fileextensions = "*.h"
-
 examples.fileextensions = "*.qml *.cpp"
 
 macro.begincomment      = "\\c{/*}"

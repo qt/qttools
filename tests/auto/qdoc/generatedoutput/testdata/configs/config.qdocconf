@@ -1,5 +1,8 @@
 # Shared configuration for all tests
 
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
 # images
 imagedirs = ../images
 
