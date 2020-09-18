@@ -92,7 +92,7 @@ private:
 void tst_generatedOutput::initTestCase()
 {
     // Build the path to the QDoc binary the same way moc tests do for moc.
-    const auto binpath = QLibraryInfo::location(QLibraryInfo::BinariesPath);
+    const auto binpath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     const auto extension = QSysInfo::productType() == "windows" ? ".exe" : "";
     m_qdoc = binpath + QLatin1String("/qdoc") + extension;
     m_expectedDir.setPath(QFINDTESTDATA(".") + QLatin1String("/expected_output"));
