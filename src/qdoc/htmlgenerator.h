@@ -75,13 +75,6 @@ private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };
     enum ExtractionMarkType { BriefMark, DetailedDescriptionMark, MemberMark, EndMark };
 
-    struct ManifestMetaFilter
-    {
-        QSet<QString> names;
-        QSet<QString> attributes;
-        QSet<QString> tags;
-    };
-
     void generateNavigationBar(const QString &title, const Node *node, CodeMarker *marker,
                                const QString &buildversion, bool tableItems = false);
     void generateHeader(const QString &title, const Node *node = nullptr,
@@ -180,7 +173,6 @@ private:
     QString m_manifestDir {};
     QString m_examplesPath {};
     static int id;
-    QList<ManifestMetaFilter> m_manifestMetaContent {};
     QString m_homepage {};
     QString m_hometitle {};
     QString m_landingpage {};
