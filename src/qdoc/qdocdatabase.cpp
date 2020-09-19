@@ -113,7 +113,7 @@ NamespaceNode *QDocForest::firstRoot()
 /*!
   Increments the forest's current tree index. If the current
   tree index is still within the forest, the function returns
-  the root node of the current tree. Otherwise it returns 0.
+  the root node of the current tree. Otherwise it returns \nullptr.
  */
 NamespaceNode *QDocForest::nextRoot()
 {
@@ -124,7 +124,7 @@ NamespaceNode *QDocForest::nextRoot()
 /*!
   Initializes the forest prior to a traversal and
   returns a pointer to the primary tree. If the
-  forest is empty, it returns 0.
+  forest is empty, it returns \nullptr.
  */
 Tree *QDocForest::firstTree()
 {
@@ -135,7 +135,7 @@ Tree *QDocForest::firstTree()
 /*!
   Increments the forest's current tree index. If the current
   tree index is still within the forest, the function returns
-  the pointer to the current tree. Otherwise it returns 0.
+  the pointer to the current tree. Otherwise it returns \nullptr.
  */
 Tree *QDocForest::nextTree()
 {
