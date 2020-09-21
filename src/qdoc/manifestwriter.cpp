@@ -37,6 +37,23 @@
 QT_BEGIN_NAMESPACE
 
 /*!
+    \internal
+
+    For each attribute in a list of attributes, checks if the attribute is
+    found in \a usedAttributes. If it is not found, issues a warning that
+    the example with \a name is missing that attribute.
+ */
+void warnAboutUnusedAttributes(const QStringList &usedAttributes, const QString &name)
+{
+    const QStringList attributesToWarnFor = { "imageUrl", "projectPath" };
+
+    for (const auto &attribute : attributesToWarnFor) {
+        if (!usedAttributes.contains(attribute))
+            Location().warning(name + ": missing attribute " + attribute);
+    }
+}
+
+/*!
     \class ManifestWriter
     \internal
     \brief The ManifestWriter is responsible for writing manifest files.
@@ -119,21 +136,18 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
         // attributes that are always written for the element
         usedAttributes.clear();
         usedAttributes << "name"
-                       << "docUrl"
-                       << "projectPath";
+                       << "docUrl";
 
         writer.writeStartElement(element);
         writer.writeAttribute("name", en->title());
         QString docUrl = m_manifestDir + Generator::fileBase(en) + ".html";
         writer.writeAttribute("docUrl", docUrl);
         const auto exampleFiles = en->files();
-        if (en->projectFile().isEmpty())
-            Location().warning("Example does not have a project file: ", en->name());
-        else
+        if (!en->projectFile().isEmpty()) {
             writer.writeAttribute("projectPath", installPath + en->projectFile());
-        if (en->imageFileName().isEmpty()) {
-            Location().warning("Example does not have an image file: ", en->name());
-        } else {
+            usedAttributes << "projectPath";
+        }
+        if (!en->imageFileName().isEmpty()) {
             writer.writeAttribute("imageUrl", m_manifestDir + en->imageFileName());
             usedAttributes << "imageUrl";
         }
@@ -172,6 +186,7 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
                 }
             }
         }
+        warnAboutUnusedAttributes(usedAttributes, en->name());
 
         writer.writeStartElement("description");
         Text brief = en->doc().briefText();
