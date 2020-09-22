@@ -24,14 +24,14 @@ set_target_properties(qtdiag PROPERTIES
 ## Scopes:
 #####################################################################
 
-qt_extend_target(qtdiag CONDITION QT_FEATURE_opengl
+qt_internal_extend_target(qtdiag CONDITION QT_FEATURE_opengl
     PUBLIC_LIBRARIES
         Qt::OpenGL
         Qt::Gui # special case QTBUG-83498
         Qt::GuiPrivate # special case QTBUG-83498
 )
 
-qt_extend_target(qtdiag CONDITION TARGET Qt::Widgets
+qt_internal_extend_target(qtdiag CONDITION TARGET Qt::Widgets
     PUBLIC_LIBRARIES
         Qt::Widgets
         Qt::Gui # special case QTBUG-83498
@@ -40,14 +40,14 @@ qt_extend_target(qtdiag CONDITION TARGET Qt::Widgets
 
 # special case begin
 # QTBUG-83498
-qt_extend_target(qtdiag CONDITION NOT TARGET Qt::Widgets AND NOT QT_FEATURE_opengl
+qt_internal_extend_target(qtdiag CONDITION NOT TARGET Qt::Widgets AND NOT QT_FEATURE_opengl
     PUBLIC_LIBRARIES
         Qt::Gui
         Qt::GuiPrivate # special case QTBUG-83498
 )
 # special case end
 
-qt_extend_target(qtdiag CONDITION TARGET Qt::Network
+qt_internal_extend_target(qtdiag CONDITION TARGET Qt::Network
     DEFINES
         NETWORK_DIAG
     PUBLIC_LIBRARIES

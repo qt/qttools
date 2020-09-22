@@ -20,5 +20,5 @@ endif()
 
 # special case begin
 # Create a fake module that would emulate the Qt5::LinguistTools CMake Config package
-add_qt_module(Linguist NO_MODULE_HEADERS HEADER_MODULE)
+qt_internal_add_module(Linguist NO_MODULE_HEADERS HEADER_MODULE)
 # special case end

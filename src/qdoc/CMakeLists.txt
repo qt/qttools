@@ -12,7 +12,7 @@ endif()
 #####################################################################
 
 qt_get_tool_target_name(target_name qdoc)
-qt_add_tool(${target_name}
+qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Documentation Compiler"
     TOOLS_TARGET Tools # special case
     SOURCES
@@ -118,12 +118,12 @@ qt_add_tool(${target_name}
 #### Keys ignored in scope 2:.:.:qdoc.pro:NOT force_bootstrap:
 # _REQUIREMENTS = "qtConfig(xmlstreamwriter)"
 
-qt_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
     PUBLIC_LIBRARIES
         Qt::QmlDevToolsPrivate
 )
 
-qt_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
     DEFINES
         QT_NO_DECLARATIVE
 )
@@ -131,7 +131,7 @@ qt_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
 #### Keys ignored in scope 6:.:.:qdoc.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:
 # QMAKE_RPATHDIR = "$$CLANG_LIBDIR"
 
-qt_extend_target(${target_name} CONDITION win32-icc_x_ OR win32-msvc_x_
+qt_internal_extend_target(${target_name} CONDITION win32-icc_x_ OR win32-msvc_x_
     LINK_OPTIONS
         "/STACK:4194304"
 )
@@ -152,7 +152,7 @@ qt_extend_target(${target_name} CONDITION win32-icc_x_ OR win32-msvc_x_
 
 #### Keys ignored in scope 12:.:.:qdoc.pro:QMAKE_HOST.os___equals___Windows:
 # CMAKE_BIN_SUFFIX = ".exe"
-qt_add_docs(${target_name}
+qt_internal_add_docs(${target_name}
     doc/config/qdoc.qdocconf
 )
 

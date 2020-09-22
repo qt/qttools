@@ -4,7 +4,7 @@
 ## UiPlugin Module:
 #####################################################################
 
-qt_add_module(UiPlugin
+qt_internal_add_module(UiPlugin
     NO_PRIVATE_MODULE
     HEADER_MODULE
     QMAKE_MODULE_CONFIG designer_defines

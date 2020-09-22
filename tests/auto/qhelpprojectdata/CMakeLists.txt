@@ -4,7 +4,7 @@
 ## tst_qhelpprojectdata Test:
 #####################################################################
 
-qt_add_test(tst_qhelpprojectdata
+qt_internal_add_test(tst_qhelpprojectdata
     SOURCES
         ../../../src/assistant/qhelpgenerator/qhelpdatainterface.cpp ../../../src/assistant/qhelpgenerator/qhelpdatainterface_p.h
         ../../../src/assistant/qhelpgenerator/qhelpprojectdata.cpp ../../../src/assistant/qhelpgenerator/qhelpprojectdata_p.h

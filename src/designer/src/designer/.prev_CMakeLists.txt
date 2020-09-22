@@ -51,7 +51,7 @@ set(designer_resource_files
     "images/designer.png"
 )
 
-qt_add_resource(designer "designer"
+qt_internal_add_resource(designer "designer"
     PREFIX
         "/qt-project.org/designer"
     FILES
@@ -84,7 +84,7 @@ set(qttoolbardialog_resource_files
     "images/up.png"
 )
 
-qt_add_resource(designer "qttoolbardialog"
+qt_internal_add_resource(designer "qttoolbardialog"
     PREFIX
         "/qt-project.org/qttoolbardialog"
     BASE
@@ -100,12 +100,12 @@ set_target_properties(designer PROPERTIES
 ## Scopes:
 #####################################################################
 
-qt_extend_target(designer CONDITION TARGET Qt::PrintSupport
+qt_internal_extend_target(designer CONDITION TARGET Qt::PrintSupport
     PUBLIC_LIBRARIES
         Qt::PrintSupport
 )
 
-qt_extend_target(designer CONDITION QT_CONFIG___contains___static
+qt_internal_extend_target(designer CONDITION QT_CONFIG___contains___static
     DEFINES
         QT_DESIGNER_STATIC
 )
@@ -148,11 +148,11 @@ endif()
 # FILETYPES.path = "Contents/Resources"
 # QMAKE_BUNDLE_DATA = "FILETYPES"
 
-qt_extend_target(designer CONDITION UNIX AND NOT HAIKU AND NOT MACOS
+qt_internal_extend_target(designer CONDITION UNIX AND NOT HAIKU AND NOT MACOS
     PUBLIC_LIBRARIES
         m
 )
-qt_add_docs(designer
+qt_internal_add_docs(designer
     doc/qtdesigner.qdocconf
 )
 

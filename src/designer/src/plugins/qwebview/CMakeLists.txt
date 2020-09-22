@@ -22,7 +22,7 @@ set(qwebview_plugin_resource_files
     "images/qwebview.png"
 )
 
-qt_add_resource(QWebViewPlugin "qwebview_plugin"
+qt_internal_add_resource(QWebViewPlugin "qwebview_plugin"
     PREFIX
         "/qt-project.org/qwebview"
     FILES

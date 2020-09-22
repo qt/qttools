@@ -4,7 +4,7 @@
 ## tst_qtattributionsscanner Test:
 #####################################################################
 
-qt_add_test(tst_qtattributionsscanner
+qt_internal_add_test(tst_qtattributionsscanner
     SOURCES
         tst_qtattributionsscanner.cpp
 )

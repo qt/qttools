@@ -4,7 +4,7 @@
 ## Designer Module:
 #####################################################################
 
-qt_add_module(Designer
+qt_internal_add_module(Designer
     PLUGIN_TYPES designer
     SOURCES
         ../../../shared/deviceskin/deviceskin.cpp ../../../shared/deviceskin/deviceskin.h
@@ -188,7 +188,7 @@ set(ClamshellPhone_resource_files
     "ClamshellPhone.skin"
 )
 
-qt_add_resource(Designer "ClamshellPhone"
+qt_internal_add_resource(Designer "ClamshellPhone"
     PREFIX
         "/skins"
     BASE
@@ -203,7 +203,7 @@ set(SmartPhone2_resource_files
     "SmartPhone2.skin"
 )
 
-qt_add_resource(Designer "SmartPhone2"
+qt_internal_add_resource(Designer "SmartPhone2"
     PREFIX
         "/skins"
     BASE
@@ -218,7 +218,7 @@ set(SmartPhone_resource_files
     "SmartPhone.skin"
 )
 
-qt_add_resource(Designer "SmartPhone"
+qt_internal_add_resource(Designer "SmartPhone"
     PREFIX
         "/skins"
     BASE
@@ -233,7 +233,7 @@ set(SmartPhoneWithButtons_resource_files
     "SmartPhoneWithButtons.skin"
 )
 
-qt_add_resource(Designer "SmartPhoneWithButtons"
+qt_internal_add_resource(Designer "SmartPhoneWithButtons"
     PREFIX
         "/skins"
     BASE
@@ -248,7 +248,7 @@ set(TouchscreenPhone_resource_files
     "TouchscreenPhone.skin"
 )
 
-qt_add_resource(Designer "TouchscreenPhone"
+qt_internal_add_resource(Designer "TouchscreenPhone"
     PREFIX
         "/skins"
     BASE
@@ -263,7 +263,7 @@ set(PortableMedia_resource_files
     "PortableMedia.skin"
 )
 
-qt_add_resource(Designer "PortableMedia"
+qt_internal_add_resource(Designer "PortableMedia"
     PREFIX
         "/skins"
     BASE
@@ -278,7 +278,7 @@ set(S60-QVGA-Candybar_resource_files
     "S60-QVGA-Candybar.skin"
 )
 
-qt_add_resource(Designer "S60-QVGA-Candybar"
+qt_internal_add_resource(Designer "S60-QVGA-Candybar"
     PREFIX
         "/skins"
     BASE
@@ -293,7 +293,7 @@ set(S60-nHD-Touchscreen_resource_files
     "S60-nHD-Touchscreen.skin"
 )
 
-qt_add_resource(Designer "S60-nHD-Touchscreen"
+qt_internal_add_resource(Designer "S60-nHD-Touchscreen"
     PREFIX
         "/skins"
     BASE
@@ -340,7 +340,7 @@ set(findwidget_resource_files
     "images/wrap.png"
 )
 
-qt_add_resource(Designer "findwidget"
+qt_internal_add_resource(Designer "findwidget"
     PREFIX
         "/qt-project.org/shared"
     BASE
@@ -407,7 +407,7 @@ set(qtgradienteditor_resource_files
     "images/zoomout.png"
 )
 
-qt_add_resource(Designer "qtgradienteditor"
+qt_internal_add_resource(Designer "qtgradienteditor"
     PREFIX
         "/qt-project.org/qtgradienteditor"
     BASE
@@ -432,7 +432,7 @@ set(shared_resource_files
     "templates/forms/Widget.ui"
 )
 
-qt_add_resource(Designer "shared"
+qt_internal_add_resource(Designer "shared"
     PREFIX
         "/qt-project.org/designer"
     BASE
@@ -448,17 +448,17 @@ qt_add_resource(Designer "shared"
 ## Scopes:
 #####################################################################
 
-qt_extend_target(Designer CONDITION TARGET Qt::OpenGLWidgets
+qt_internal_extend_target(Designer CONDITION TARGET Qt::OpenGLWidgets
     PUBLIC_LIBRARIES
         Qt::OpenGLWidgets
 )
 
-qt_extend_target(Designer CONDITION static
+qt_internal_extend_target(Designer CONDITION static
     DEFINES
         QT_DESIGNER_STATIC
 )
 
-qt_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
+qt_internal_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.h
         ../../../shared/qtpropertybrowser/qteditorfactory.cpp ../../../shared/qtpropertybrowser/qteditorfactory.h
@@ -549,7 +549,7 @@ if(NOT QT_BUILD_SHARED_LIBS)
         "images/cursor-whatsthis.png"
     )
 
-    qt_add_resource(Designer "qtpropertybrowser"
+    qt_internal_add_resource(Designer "qtpropertybrowser"
         PREFIX
             "/qt-project.org/qtpropertybrowser"
         BASE
@@ -559,14 +559,14 @@ if(NOT QT_BUILD_SHARED_LIBS)
     )
 endif()
 
-qt_extend_target(Designer CONDITION QT_BUILD_SHARED_LIBS
+qt_internal_extend_target(Designer CONDITION QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../shared/qtpropertybrowser/qtpropertybrowserutils.cpp ../../../shared/qtpropertybrowser/qtpropertybrowserutils_p.h
     INCLUDE_DIRECTORIES
         ../../../shared/qtpropertybrowser
 )
 
-qt_extend_target(Designer CONDITION QT_FEATURE_opengl
+qt_internal_extend_target(Designer CONDITION QT_FEATURE_opengl
     LIBRARIES
         Qt::OpenGL
 )

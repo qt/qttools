@@ -26,7 +26,7 @@ set(qdbusviewer_resource_files
     "images/qdbusviewer.png"
 )
 
-qt_add_resource(qdbusviewer "qdbusviewer"
+qt_internal_add_resource(qdbusviewer "qdbusviewer"
     PREFIX
         "/qt-project.org/qdbusviewer"
     FILES

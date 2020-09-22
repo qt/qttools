@@ -22,7 +22,7 @@ set(qquickwidget_plugin_resource_files
     "images/qquickwidget.png"
 )
 
-qt_add_resource(QQuickWidgetPlugin "qquickwidget_plugin"
+qt_internal_add_resource(QQuickWidgetPlugin "qquickwidget_plugin"
     PREFIX
         "/qt-project.org/qquickwidget"
     FILES

@@ -4,7 +4,7 @@
 ## tst_qhelpindexmodel Test:
 #####################################################################
 
-qt_add_test(tst_qhelpindexmodel
+qt_internal_add_test(tst_qhelpindexmodel
     SOURCES
         tst_qhelpindexmodel.cpp
     DEFINES

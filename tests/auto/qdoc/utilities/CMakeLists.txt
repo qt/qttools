@@ -4,7 +4,7 @@
 ## tst_utilities Test:
 #####################################################################
 
-qt_add_test(tst_utilities
+qt_internal_add_test(tst_utilities
     SOURCES
         ../../../../src/qdoc/utilities.cpp ../../../../src/qdoc/utilities.h
         tst_utilities.cpp

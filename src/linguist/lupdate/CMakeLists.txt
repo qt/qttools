@@ -12,7 +12,7 @@ endif()
 #####################################################################
 
 qt_get_tool_target_name(target_name lupdate)
-qt_add_tool(${target_name}
+qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Translation File Update Tool"
     TOOLS_TARGET Linguist # special case
     SOURCES
@@ -55,19 +55,19 @@ qt_add_tool(${target_name}
 ## Scopes:
 #####################################################################
 
-qt_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
     SOURCES
         qdeclarative.cpp
     PUBLIC_LIBRARIES
         Qt::QmlDevToolsPrivate
 )
 
-qt_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
     DEFINES
         QT_NO_QML
 )
 
-qt_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
+qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
     SOURCES
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h

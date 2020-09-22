@@ -11,7 +11,7 @@ endif()
 ## tst_lupdate Test:
 #####################################################################
 
-qt_add_test(tst_lupdate
+qt_internal_add_test(tst_lupdate
     SOURCES
         tst_lupdate.cpp
 )

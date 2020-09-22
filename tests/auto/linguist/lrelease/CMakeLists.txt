@@ -4,7 +4,7 @@
 ## tst_lrelease Test:
 #####################################################################
 
-qt_add_test(tst_lrelease
+qt_internal_add_test(tst_lrelease
     SOURCES
         tst_lrelease.cpp
 )

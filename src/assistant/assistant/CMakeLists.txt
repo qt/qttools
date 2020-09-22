@@ -58,7 +58,7 @@ set(assistant_resource_files
     "assistant.qch"
 )
 
-qt_add_resource(assistant "assistant"
+qt_internal_add_resource(assistant "assistant"
     PREFIX
         "/qt-project.org/assistant"
     FILES
@@ -99,7 +99,7 @@ set(assistant_images_resource_files
     "images/wrap.png"
 )
 
-qt_add_resource(assistant "assistant_images"
+qt_internal_add_resource(assistant "assistant_images"
     PREFIX
         "/qt-project.org/assistant"
     FILES
@@ -122,12 +122,12 @@ set_target_properties(assistant PROPERTIES
 #### Keys ignored in scope 3:.:.:assistant.pro:else:
 # BROWSER = "qtextbrowser"
 
-qt_extend_target(assistant CONDITION TARGET Qt::PrintSupport
+qt_internal_extend_target(assistant CONDITION TARGET Qt::PrintSupport
     PUBLIC_LIBRARIES
         Qt::PrintSupport
 )
 
-qt_extend_target(assistant CONDITION BROWSER___equals___qtwebkit
+qt_internal_extend_target(assistant CONDITION BROWSER___equals___qtwebkit
     SOURCES
         helpviewer_qwv.cpp
     DEFINES
@@ -136,7 +136,7 @@ qt_extend_target(assistant CONDITION BROWSER___equals___qtwebkit
         Qt::WebKitWidgets
 )
 
-qt_extend_target(assistant CONDITION NOT BROWSER___equals___qtwebkit
+qt_internal_extend_target(assistant CONDITION NOT BROWSER___equals___qtwebkit
     SOURCES
         helpviewer_qtb.cpp
     DEFINES
@@ -155,7 +155,7 @@ if(WIN32)
     )
 endif()
 
-qt_extend_target(assistant CONDITION WIN32
+qt_internal_extend_target(assistant CONDITION WIN32
     SOURCES
         stdinlistener_win.cpp stdinlistener_win.h
     PUBLIC_LIBRARIES
@@ -168,7 +168,7 @@ if(UNIX)
     )
 endif()
 
-qt_extend_target(assistant CONDITION UNIX
+qt_internal_extend_target(assistant CONDITION UNIX
     SOURCES
         stdinlistener.cpp stdinlistener.h
 )
@@ -192,7 +192,7 @@ if(APPLE)
     set(EXECUTABLE "Assistant")
     # special case end
 endif()
-qt_add_docs(assistant
+qt_internal_add_docs(assistant
     doc/qtassistant.qdocconf
 )
 

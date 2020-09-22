@@ -4,7 +4,7 @@
 ## windeployqt Tool:
 #####################################################################
 
-qt_add_executable(windeployqt # special case
+qt_internal_add_executable(windeployqt # special case
     #BOOTSTRAP # special case remove
     SOURCES
         ../shared/winutils/elfreader.cpp ../shared/winutils/elfreader.h
@@ -31,12 +31,12 @@ qt_add_executable(windeployqt # special case
 ## Scopes:
 #####################################################################
 
-qt_extend_target(windeployqt CONDITION WIN32
+qt_internal_extend_target(windeployqt CONDITION WIN32 # special case
     PUBLIC_LIBRARIES
         shlwapi
 )
 
-qt_extend_target(windeployqt CONDITION QT_FEATURE_relocatable
+qt_internal_extend_target(windeployqt CONDITION QT_FEATURE_relocatable # special case
     DEFINES
         QT_RELOCATABLE
 )

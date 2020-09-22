@@ -30,7 +30,7 @@ set_target_properties(qdistancefieldgenerator PROPERTIES
 #### Keys ignored in scope 1:.:.:distancefieldgenerator.pro:<TRUE>:
 # QT_FOR_CONFIG = "tools-private"
 # _REQUIREMENTS = "qtConfig(distancefieldgenerator)"
-qt_add_docs(qdistancefieldgenerator
+qt_internal_add_docs(qdistancefieldgenerator
     doc/qtdistancefieldgenerator.qdocconf
 )
 

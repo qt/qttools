@@ -4,7 +4,7 @@
 ## DesignerComponents Module:
 #####################################################################
 
-qt_add_module(DesignerComponents
+qt_internal_add_module(DesignerComponents
     INTERNAL_MODULE
     SOURCES
         ../buddyeditor/buddyeditor.cpp ../buddyeditor/buddyeditor.h
@@ -133,7 +133,7 @@ set(propertyeditor_resource_files
     "fontmapping.xml"
 )
 
-qt_add_resource(DesignerComponents "propertyeditor"
+qt_internal_add_resource(DesignerComponents "propertyeditor"
     PREFIX
         "/qt-project.org/propertyeditor"
     BASE
@@ -832,7 +832,7 @@ set(formeditor_resource_files
     "images/win/widgettool.png"
 )
 
-qt_add_resource(DesignerComponents "formeditor"
+qt_internal_add_resource(DesignerComponents "formeditor"
     PREFIX
         "/qt-project.org/formeditor"
     BASE
@@ -847,7 +847,7 @@ set(formeditor1_resource_files
     "defaultbrushes.xml"
 )
 
-qt_add_resource(DesignerComponents "formeditor1"
+qt_internal_add_resource(DesignerComponents "formeditor1"
     PREFIX
         "/qt-project.org/brushes"
     BASE
@@ -862,7 +862,7 @@ set(widgetbox_resource_files
     "widgetbox.xml"
 )
 
-qt_add_resource(DesignerComponents "widgetbox"
+qt_internal_add_resource(DesignerComponents "widgetbox"
     PREFIX
         "/qt-project.org/widgetbox"
     BASE
@@ -878,19 +878,19 @@ qt_add_resource(DesignerComponents "widgetbox"
 ## Scopes:
 #####################################################################
 
-qt_extend_target(DesignerComponents CONDITION static
+qt_internal_extend_target(DesignerComponents CONDITION static
     DEFINES
         QT_DESIGNER_STATIC
 )
 
-qt_extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
+qt_internal_extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
     INCLUDE_DIRECTORIES
         ../../../../shared/findwidget
         ../../../../shared/qtgradienteditor
         ../../../../shared/qtpropertybrowser
 )
 
-qt_extend_target(DesignerComponents CONDITION QT_BUILD_SHARED_LIBS
+qt_internal_extend_target(DesignerComponents CONDITION QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../../shared/findwidget/abstractfindwidget.cpp ../../../../shared/findwidget/abstractfindwidget.h
         ../../../../shared/findwidget/itemviewfindwidget.cpp ../../../../shared/findwidget/itemviewfindwidget.h
@@ -951,7 +951,7 @@ if(QT_BUILD_SHARED_LIBS)
         "images/wrap.png"
     )
 
-    qt_add_resource(DesignerComponents "findwidget"
+    qt_internal_add_resource(DesignerComponents "findwidget"
         PREFIX
             "/qt-project.org/shared"
         BASE
@@ -1034,7 +1034,7 @@ if(QT_BUILD_SHARED_LIBS)
         "images/cursor-whatsthis.png"
     )
 
-    qt_add_resource(DesignerComponents "qtpropertybrowser"
+    qt_internal_add_resource(DesignerComponents "qtpropertybrowser"
         PREFIX
             "/qt-project.org/qtpropertybrowser"
         BASE

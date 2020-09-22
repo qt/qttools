@@ -4,7 +4,7 @@
 ## testapp Binary:
 #####################################################################
 
-qt_add_executable(windeploy_testapp # special case
+qt_internal_add_executable(windeploy_testapp # special case
     GUI
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/"
     SOURCES

@@ -4,7 +4,7 @@
 ## tst_config Test:
 #####################################################################
 
-qt_add_test(tst_config
+qt_internal_add_test(tst_config
     SOURCES
         ../../../../src/qdoc/config.cpp ../../../../src/qdoc/config.h
         ../../../../src/qdoc/location.cpp ../../../../src/qdoc/location.h

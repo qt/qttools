@@ -4,7 +4,7 @@
 ## tst_tdiag Test:
 #####################################################################
 
-qt_add_test(tst_tdiag
+qt_internal_add_test(tst_tdiag
     SOURCES
         tst_qtdiag.cpp
     DEFINES

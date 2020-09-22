@@ -4,7 +4,7 @@
 ## tst_qhelpenginecore Test:
 #####################################################################
 
-qt_add_test(tst_qhelpenginecore
+qt_internal_add_test(tst_qhelpenginecore
     SOURCES
         tst_qhelpenginecore.cpp
     DEFINES

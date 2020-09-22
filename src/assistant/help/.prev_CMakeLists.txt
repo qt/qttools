@@ -4,7 +4,7 @@
 ## Help Module:
 #####################################################################
 
-qt_add_module(Help
+qt_internal_add_module(Help
     SOURCES
         qcompressedhelpinfo.cpp qcompressedhelpinfo.h
         qfilternamedialog.cpp qfilternamedialog.ui qfilternamedialog_p.h
@@ -56,14 +56,14 @@ set(helpsystem_resource_files
     "images/win/plus.png"
 )
 
-qt_add_resource(Help "helpsystem"
+qt_internal_add_resource(Help "helpsystem"
     PREFIX
         "/qt-project.org/assistant"
     FILES
         ${helpsystem_resource_files}
 )
 
-qt_add_docs(Help
+qt_internal_add_docs(Help
     doc/qthelp.qdocconf
 )
 

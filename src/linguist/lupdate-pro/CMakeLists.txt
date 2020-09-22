@@ -5,7 +5,7 @@
 #####################################################################
 
 qt_get_tool_target_name(target_name lupdate-pro)
-qt_add_tool(${target_name}
+qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Translation File Update Tool for QMake Projects"
     TOOLS_TARGET Linguist # special case
     SOURCES

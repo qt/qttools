@@ -4,7 +4,7 @@
 ## tst_qdoccommandlineparser Test:
 #####################################################################
 
-qt_add_test(tst_qdoccommandlineparser
+qt_internal_add_test(tst_qdoccommandlineparser
     SOURCES
         ../../../../src/qdoc/qdoccommandlineparser.cpp ../../../../src/qdoc/qdoccommandlineparser.h
         tst_qdoccommandlineparser.cpp
@@ -17,7 +17,7 @@ set(tst_qdoccommandlineparser_resource_files
     "tst_arguments.txt"
 )
 
-qt_add_resource(tst_qdoccommandlineparser "tst_qdoccommandlineparser"
+qt_internal_add_resource(tst_qdoccommandlineparser "tst_qdoccommandlineparser"
     PREFIX
         "/"
     FILES

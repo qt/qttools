@@ -4,7 +4,7 @@
 ## tst_lconvert Test:
 #####################################################################
 
-qt_add_test(tst_lconvert
+qt_internal_add_test(tst_lconvert
     SOURCES
         tst_lconvert.cpp
 )

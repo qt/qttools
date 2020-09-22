@@ -4,7 +4,7 @@
 ## tst_qhelpcontentmodel Test:
 #####################################################################
 
-qt_add_test(tst_qhelpcontentmodel
+qt_internal_add_test(tst_qhelpcontentmodel
     SOURCES
         tst_qhelpcontentmodel.cpp
     DEFINES

@@ -4,7 +4,7 @@
 ## Tools Module:
 #####################################################################
 
-qt_add_module(Tools
+qt_internal_add_module(Tools
     INTERNAL_MODULE
     HEADER_MODULE
     # special case begin

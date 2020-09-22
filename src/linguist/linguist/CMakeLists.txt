@@ -118,7 +118,7 @@ set(linguist_resource_files
     "images/win/whatsthis.png"
 )
 
-qt_add_resource(linguist "linguist"
+qt_internal_add_resource(linguist "linguist"
     PREFIX
         "/"
     FILES
@@ -138,7 +138,7 @@ set_target_properties(linguist PROPERTIES
 ## Scopes:
 #####################################################################
 
-qt_extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
+qt_internal_extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
     DEFINES
         QT_OPENSOURCE
 )
@@ -175,7 +175,7 @@ if(APPLE)
         linguist.icns
     )
 endif()
-qt_add_docs(linguist
+qt_internal_add_docs(linguist
     doc/qtlinguist.qdocconf
 )
 

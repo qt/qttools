@@ -4,7 +4,7 @@
 ## tst_qhelpgenerator Test:
 #####################################################################
 
-qt_add_test(tst_qhelpgenerator
+qt_internal_add_test(tst_qhelpgenerator
     SOURCES
         ../../../src/assistant/qhelpgenerator/helpgenerator.cpp ../../../src/assistant/qhelpgenerator/helpgenerator.h
         ../../../src/assistant/qhelpgenerator/qhelpdatainterface.cpp ../../../src/assistant/qhelpgenerator/qhelpdatainterface_p.h
