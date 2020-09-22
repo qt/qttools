@@ -1353,38 +1353,6 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     return true;
 }
 
-void changeQtFrameworks(const QList<FrameworkInfo> frameworks, const QStringList &binaryPaths, const QString &absoluteQtPath)
-{
-    LogNormal() << "Changing" << binaryPaths << "to link against";
-    LogNormal() << "Qt in" << absoluteQtPath;
-    QString finalQtPath = absoluteQtPath;
-
-    if (!absoluteQtPath.startsWith("/Library/Frameworks"))
-        finalQtPath += "/lib/";
-
-    foreach (FrameworkInfo framework, frameworks) {
-        const QString oldBinaryId = framework.installName;
-        const QString newBinaryId = finalQtPath + framework.frameworkName +  framework.binaryPath;
-        foreach (const QString &binary, binaryPaths)
-            changeInstallName(oldBinaryId, newBinaryId, binary);
-    }
-}
-
-void changeQtFrameworks(const QString appPath, const QString &qtPath, bool useDebugLibs)
-{
-    const QString appBinaryPath = findAppBinary(appPath);
-    const QStringList libraryPaths = findAppLibraries(appPath);
-    const QList<FrameworkInfo> frameworks = getQtFrameworksForPaths(QStringList() << appBinaryPath << libraryPaths, appPath, getBinaryRPaths(appBinaryPath, true), useDebugLibs);
-    if (frameworks.isEmpty()) {
-        LogWarning();
-        LogWarning() << "Could not find any _external_ Qt frameworks to change in" << appPath;
-        return;
-    } else {
-        const QString absoluteQtPath = QDir(qtPath).absolutePath();
-        changeQtFrameworks(frameworks, QStringList() << appBinaryPath << libraryPaths, absoluteQtPath);
-    }
-}
-
 void codesignFile(const QString &identity, const QString &filePath)
 {
     if (!runCodesign)
