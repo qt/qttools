@@ -640,8 +640,7 @@ QStringList getBinaryDependencies(const QString executablePath,
 }
 
 // copies everything _inside_ sourcePath to destinationPath
-bool recursiveCopy(const QString &sourcePath, const QString &destinationPath,
-                   const QRegularExpression &ignoreRegExp = QRegularExpression())
+bool recursiveCopy(const QString &sourcePath, const QString &destinationPath)
 {
     if (!QDir(sourcePath).exists())
         return false;
@@ -650,10 +649,7 @@ bool recursiveCopy(const QString &sourcePath, const QString &destinationPath,
     LogNormal() << "copy:" << sourcePath << destinationPath;
 
     QStringList files = QDir(sourcePath).entryList(QStringList() << "*", QDir::Files | QDir::NoDotAndDotDot);
-    const bool hasValidRegExp = ignoreRegExp.isValid();
     foreach (QString file, files) {
-        if (hasValidRegExp && ignoreRegExp.match(file).hasMatch())
-            continue;
         const QString fileSourcePath = sourcePath + "/" + file;
         const QString fileDestinationPath = destinationPath + "/" + file;
         copyFilePrintStatus(fileSourcePath, fileDestinationPath);
@@ -786,9 +782,7 @@ QString copyFramework(const FrameworkInfo &framework, const QString path)
     // Copy Resouces/, Libraries/ and Helpers/
     const QString resourcesSourcePath = framework.frameworkPath + "/Resources";
     const QString resourcesDestianationPath = frameworkDestinationDirectory + "/Versions/" + framework.version + "/Resources";
-    // Ignore *.prl files that are in the Resources directory
-    recursiveCopy(resourcesSourcePath, resourcesDestianationPath,
-                  QRegularExpression("\\A(?:[^/]*\\.prl)\\z"));
+    recursiveCopy(resourcesSourcePath, resourcesDestianationPath);
     const QString librariesSourcePath = framework.frameworkPath + "/Libraries";
     const QString librariesDestianationPath = frameworkDestinationDirectory + "/Versions/" + framework.version + "/Libraries";
     bool createdLibraries = recursiveCopy(librariesSourcePath, librariesDestianationPath);
