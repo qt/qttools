@@ -77,11 +77,8 @@ private:
     void setSearchOrder(const QStringList &t);
     bool isLoaded(const QString &fn)
     {
-        for (const auto *tree : searchOrder()) {
-            if (fn == tree->indexFileName())
-                return true;
-        }
-        return false;
+        return std::any_of(searchOrder().constBegin(), searchOrder().constEnd(),
+                           [fn](Tree *tree) { return fn == tree->indexFileName(); });
     }
 
     const Node *findNode(const QStringList &path, const Node *relative, int findFlags,
