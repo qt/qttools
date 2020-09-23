@@ -292,7 +292,7 @@
 
     Example of topic commands:
     \list
-        \li \l{enum-command}{\\enum} - for enumeration documentation
+        \li \l{enum-command}{\\enum} - for enumeration documentation
         \li \l{class-command}{\\class} - for C++ class documentation
         \li \l{qmltype-command}{\\qmltype} - for QML type documentation
         \li \l{page-command}{\\page} - for creating a page.
@@ -352,15 +352,15 @@
     Context commands give QDoc a hint about the \e context of the topic. For
     example, if a C++ function is obsolete, then it should be marked obsolete
     with the \l{obsolete-command}{\\obsolete} command. Likewise,
-    \l{nextpage-command}{page navigation} and \l{title-command}{page title} 
+    \l{nextpage-command}{page navigation} and \l{title-command}{page title}
     give extra page information to QDoc.
 
     QDoc will create additional links or pages for these contexts. For example,
-    a group is created using the \l{group-command}{\\group} command and the
+    a group is created using the \l{group-command}{\\group} command and the
     members have the \l{ingroup-command}{\\ingroup} command. The group name is
     supplied as an argument.
 
-    The \l{Context Commands} page has a listing of all the available context
+    The \l{Context Commands} page has a listing of all the available context
     commands.
 
     \target writing-markup
@@ -603,7 +603,7 @@
 
     \snippet examples/samples.qdocinc sample-overview
 
-    The \l{writing-topic-commands}{writing topic commands} section has a listing
+    The \l{writing-topic-commands}{writing topic commands} section has a listing
     of the available \\page command arguments.
 
     \section1 Tutorials, How-To's, FAQ's
@@ -621,7 +621,7 @@
     argument, with the file name being the first.
     \snippet examples/samples.qdocinc sample-faq
 
-    The \l{writing-topic-commands}{writing topic commands} section has a listing
+    The \l{writing-topic-commands}{writing topic commands} section has a listing
     of the available \\page command arguments.
 
     \section1 Code Examples
