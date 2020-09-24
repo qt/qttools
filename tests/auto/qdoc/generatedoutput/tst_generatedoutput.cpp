@@ -136,9 +136,9 @@ void tst_generatedOutput::runQDocProcess(const QStringList &arguments)
 
     qInfo() << "QDoc exited with exit code" << qdocProcess.exitCode();
     if (output.size() > 0)
-        qInfo() << "Received output:\n" << output;
+        qInfo().nospace() << "Received output:\n" << qUtf8Printable(output);
     if (errors.size() > 0)
-        qInfo() << "Received errors:\n" << errors;
+        qInfo().nospace() << "Received errors:\n" << qUtf8Printable(errors);
 
     QFAIL("Running QDoc failed. See output above.");
 }
