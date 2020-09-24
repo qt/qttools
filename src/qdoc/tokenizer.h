@@ -156,7 +156,6 @@ public:
 
     int getToken();
     void setParsingFnOrMacro(bool macro) { parsingMacro = macro; }
-    bool parsingFnOrMacro() const { return parsingMacro; }
 
     const Location &location() const { return yyTokLoc; }
     QString previousLexeme() const;
