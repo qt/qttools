@@ -34,7 +34,7 @@
 #include "doc.h"
 #include "editdistance.h"
 #include "generator.h"
-#include "loggingcategory.h"
+#include "utilities.h"
 #include "openedlist.h"
 #include "quoter.h"
 #include "text.h"

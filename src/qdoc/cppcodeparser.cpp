@@ -36,7 +36,6 @@
 #include "functionnode.h"
 #include "generator.h"
 #include "headernode.h"
-#include "loggingcategory.h"
 #include "namespacenode.h"
 #include "qdocdatabase.h"
 #include "qmltypenode.h"

@@ -27,7 +27,10 @@
 ****************************************************************************/
 
 #include "utilities.h"
-#include "loggingcategory.h"
+
+QT_BEGIN_NAMESPACE
+
+Q_LOGGING_CATEGORY(lcQdoc, "qt.qdoc")
 
 /*!
     \namespace Utilities
@@ -57,3 +60,5 @@ bool debugging()
     return lcQdoc().isEnabled(QtDebugMsg);
 }
 }
+
+QT_END_NAMESPACE

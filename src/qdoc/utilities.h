@@ -30,11 +30,18 @@
 #define UTILITIES_H
 
 #include <QtCore/qstring.h>
+#include <QtCore/qloggingcategory.h>
+
+QT_BEGIN_NAMESPACE
+
+Q_DECLARE_LOGGING_CATEGORY(lcQdoc)
 
 namespace Utilities {
 void startDebugging(const QString &message);
 void stopDebugging(const QString &message);
 bool debugging();
 };
+
+QT_END_NAMESPACE
 
 #endif // UTILITIES_H

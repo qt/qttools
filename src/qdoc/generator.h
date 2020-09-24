@@ -30,6 +30,7 @@
 #define GENERATOR_H
 
 #include "text.h"
+#include "utilities.h"
 
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>

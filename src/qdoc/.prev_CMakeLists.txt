@@ -38,7 +38,6 @@ qt_add_tool(${target_name}
         importrec.h
         jscodemarker.cpp jscodemarker.h
         location.cpp location.h
-        loggingcategory.h
         macro.h
         main.cpp
         manifestwriter.cpp manifestwriter.h

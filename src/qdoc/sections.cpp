@@ -34,7 +34,7 @@
 #include "enumnode.h"
 #include "functionnode.h"
 #include "generator.h"
-#include "loggingcategory.h"
+#include "utilities.h"
 #include "namespacenode.h"
 #include "qmlpropertynode.h"
 #include "qmltypenode.h"

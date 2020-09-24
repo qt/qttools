@@ -7,10 +7,11 @@ HEADERS += \
     $$PWD/../../../../src/qdoc/config.h \
     $$PWD/../../../../src/qdoc/location.h \
     $$PWD/../../../../src/qdoc/qdoccommandlineparser.h \
-    $$PWD/../../../../src/qdoc/loggingcategory.h
+    $$PWD/../../../../src/qdoc/utilities.h
 
 SOURCES += \
     tst_config.cpp \
     $$PWD/../../../../src/qdoc/config.cpp \
     $$PWD/../../../../src/qdoc/location.cpp \
-    $$PWD/../../../../src/qdoc/qdoccommandlineparser.cpp
+    $$PWD/../../../../src/qdoc/qdoccommandlineparser.cpp \
+    $$PWD/../../../../src/qdoc/utilities.cpp

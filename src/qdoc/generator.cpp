@@ -42,7 +42,6 @@
 #include "enumnode.h"
 #include "examplenode.h"
 #include "functionnode.h"
-#include "loggingcategory.h"
 #include "node.h"
 #include "openedlist.h"
 #include "propertynode.h"

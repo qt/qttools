@@ -30,10 +30,6 @@
 
 #include <QtTest/QtTest>
 
-QT_BEGIN_NAMESPACE
-Q_LOGGING_CATEGORY(lcQdoc, "qt.test")
-QT_END_NAMESPACE
-
 class tst_Utilities : public QObject
 {
     Q_OBJECT
@@ -48,7 +44,7 @@ private slots:
 
 void tst_Utilities::loggingCategoryName()
 {
-    const QString expected = "qt.test";
+    const QString expected = "qt.qdoc";
     QCOMPARE(lcQdoc().categoryName(), expected);
 }
 

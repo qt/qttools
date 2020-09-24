@@ -36,7 +36,6 @@
 #include "htmlgenerator.h"
 #include "jscodemarker.h"
 #include "location.h"
-#include "loggingcategory.h"
 #include "puredocparser.h"
 #include "qdocdatabase.h"
 #include "qmlcodemarker.h"
@@ -60,8 +59,6 @@
 #include <cstdlib>
 
 QT_BEGIN_NAMESPACE
-
-Q_LOGGING_CATEGORY(lcQdoc, "qt.qdoc")
 
 bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 {

@@ -49,7 +49,6 @@
 #include "config.h"
 #include "enumnode.h"
 #include "functionnode.h"
-#include "loggingcategory.h"
 #include "namespacenode.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"

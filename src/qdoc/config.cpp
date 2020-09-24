@@ -31,7 +31,7 @@
 */
 
 #include "config.h"
-#include "loggingcategory.h"
+#include "utilities.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>

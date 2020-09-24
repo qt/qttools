@@ -34,10 +34,6 @@
 #include <QtCore/qstringlist.h>
 #include <QtTest/QtTest>
 
-QT_BEGIN_NAMESPACE
-Q_LOGGING_CATEGORY(lcQdoc, "qt.test")
-QT_END_NAMESPACE
-
 class tst_Config : public QObject
 {
     Q_OBJECT

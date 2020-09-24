@@ -28,7 +28,6 @@
 
 #include "qdoccommandlineparser.h"
 
-#include "loggingcategory.h"
 #include "utilities.h"
 
 #include <QtCore/qdebug.h>

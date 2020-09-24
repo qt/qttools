@@ -40,7 +40,7 @@
 #include "generator.h"
 #include "headernode.h"
 #include "location.h"
-#include "loggingcategory.h"
+#include "utilities.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"

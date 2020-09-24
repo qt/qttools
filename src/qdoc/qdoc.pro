@@ -59,7 +59,6 @@ HEADERS += access.h \
            htmlgenerator.h \
            importrec.h \
            location.h \
-           loggingcategory.h \
            macro.h \
            manifestwriter.h \
            namespacenode.h \
