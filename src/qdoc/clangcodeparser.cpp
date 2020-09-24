@@ -68,6 +68,10 @@
 
 QT_BEGIN_NAMESPACE
 
+// We're printing diagnostics in ClangCodeParser::printDiagnostics,
+// so avoid clang itself printing them.
+static const auto kClangDontDisplayDiagnostics = 0;
+
 static CXTranslationUnit_Flags flags_ = static_cast<CXTranslationUnit_Flags>(0);
 static CXIndex index_ = nullptr;
 
@@ -1078,7 +1082,6 @@ ClangCodeParser::~ClangCodeParser()
 void ClangCodeParser::initializeParser()
 {
     Config &config = Config::instance();
-    m_printParsingErrors = 1;
     m_version = config.getString(CONFIG_VERSION);
     const auto args = config.getStringList(CONFIG_INCLUDEPATHS);
     QSet<QString> seen;
@@ -1241,22 +1244,11 @@ static QList<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &
 }
 
 /*!
-  Load the include paths into \a moreArgs and return false.
-  If no include paths were provided, try to guess reasonable
-  include paths but return true, so the clang diagnostics
-  can be turned off during PCH creation.
-
-  The use case for returning true is the QtPlatformHeaders
-  module when running qdoc on macOS. For some reason, the
-  include paths are not passed to qdoc, so it guesses them.
-  This results in clang reporting a large number of errors
-  during the PCH build. The errors are useles, except that
-  it probably means the build system isn't working correctly
-  for QtPlatformHeaders when running qdoc.
+  Load the include paths into \a moreArgs. If no include paths
+  were provided, try to guess reasonable include paths.
  */
-bool ClangCodeParser::getMoreArgs()
+void ClangCodeParser::getMoreArgs()
 {
-    bool guessedIncludePaths = false;
     if (m_includePaths.isEmpty()) {
         /*
           The include paths provided are inadequate. Make a list
@@ -1264,7 +1256,6 @@ bool ClangCodeParser::getMoreArgs()
           that list instead.
          */
         qCWarning(lcQdoc) << "No include paths passed to qdoc; guessing reasonable include paths";
-        guessedIncludePaths = true;
         auto forest = qdb_->searchOrder();
 
         QByteArray version = qdb_->version().toUtf8();
@@ -1274,8 +1265,6 @@ bool ClangCodeParser::getMoreArgs()
     } else {
         m_moreArgs = m_includePaths;
     }
-
-    return guessedIncludePaths;
 }
 
 /*!
@@ -1381,14 +1370,16 @@ void ClangCodeParser::buildPCH()
                 }
                 tmpHeaderFile.close();
             }
-            if (m_printParsingErrors == 0)
-                qCWarning(lcQdoc) << "clang not printing errors; include paths were guessed";
+
             CXErrorCode err =
                     clang_parseTranslationUnit2(index_, tmpHeader.toLatin1().data(), m_args.data(),
                                                 static_cast<int>(m_args.size()), nullptr, 0,
                                                 flags_ | CXTranslationUnit_ForSerialization, &tu);
             qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << m_args
                             << ") returns" << err;
+
+            printDiagnostics(tu);
+
             if (!err && tu) {
                 m_pchName = m_pchFileDir->path().toUtf8() + "/" + module + ".pch";
                 auto error = clang_saveTranslationUnit(tu, m_pchName.constData(),
@@ -1420,16 +1411,16 @@ void ClangCodeParser::buildPCH()
 void ClangCodeParser::precompileHeaders()
 {
     getDefaultArgs();
-    if (getMoreArgs())
-        m_printParsingErrors = 0;
+    getMoreArgs();
     for (const auto &p : qAsConst(m_moreArgs))
         m_args.push_back(p.constData());
 
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);
-    // 1 as 2nd parameter tells clang to report parser errors.
-    index_ = clang_createIndex(1, m_printParsingErrors);
+
+    index_ = clang_createIndex(1, kClangDontDisplayDiagnostics);
+
     buildPCH();
     clang_disposeIndex(index_);
 }
@@ -1459,7 +1450,8 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);
-    index_ = clang_createIndex(1, 0);
+
+    index_ = clang_createIndex(1, kClangDontDisplayDiagnostics);
 
     getDefaultArgs();
     if (!m_pchName.isEmpty() && !filePath.endsWith(".mm")) {
@@ -1477,6 +1469,8 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                                         static_cast<int>(m_args.size()), nullptr, 0, flags_, &tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << filePath << m_args
                     << ") returns" << err;
+    printDiagnostics(tu);
+
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
         clang_disposeIndex(index_);
@@ -1635,8 +1629,8 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
     CXTranslationUnit_Flags flags = static_cast<CXTranslationUnit_Flags>(
             CXTranslationUnit_Incomplete | CXTranslationUnit_SkipFunctionBodies
             | CXTranslationUnit_KeepGoing);
-    // Change 2nd parameter to 1 to make clang report errors.
-    CXIndex index = clang_createIndex(1, Utilities::debugging() ? 1 : 0);
+
+    CXIndex index = clang_createIndex(1, kClangDontDisplayDiagnostics);
 
     std::vector<const char *> args(std::begin(defaultArgs_), std::end(defaultArgs_));
     // Add the defines from the qdocconf file.
@@ -1663,6 +1657,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                                                   &unsavedFile, 1, flags, &tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << args
                     << ") returns" << err;
+    printDiagnostics(tu);
     if (err || !tu) {
         location.error(QStringLiteral("clang could not parse \\fn %1").arg(fnArg));
         clang_disposeTranslationUnit(tu);
@@ -1707,12 +1702,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                 }
                 if (report) {
                     location.warning(
-                            QStringLiteral("clang found diagnostics parsing \\fn %1").arg(fnArg));
-                    for (unsigned i = 0; i < diagnosticCount; ++i) {
-                        CXDiagnostic diagnostic = clang_getDiagnostic(tu, i);
-                        location.report(QStringLiteral("    %1").arg(
-                                fromCXString(clang_formatDiagnostic(diagnostic, 0))));
-                    }
+                            QStringLiteral("clang couldn't find function when parsing \\fn %1").arg(fnArg));
                 }
             }
         }
@@ -1720,6 +1710,23 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
     clang_disposeTranslationUnit(tu);
     clang_disposeIndex(index);
     return fnNode;
+}
+
+void ClangCodeParser::printDiagnostics(const CXTranslationUnit &translationUnit) const
+{
+    if (!lcQdocClang().isDebugEnabled())
+        return;
+
+    static const auto displayOptions = CXDiagnosticDisplayOptions::CXDiagnostic_DisplaySourceLocation
+                                     | CXDiagnosticDisplayOptions::CXDiagnostic_DisplayColumn
+                                     | CXDiagnosticDisplayOptions::CXDiagnostic_DisplayOption;
+
+    for (unsigned i = 0, numDiagnostics = clang_getNumDiagnostics(translationUnit); i < numDiagnostics; ++i) {
+        auto diagnostic = clang_getDiagnostic(translationUnit, i);
+        auto formattedDiagnostic = clang_formatDiagnostic(diagnostic, displayOptions);
+        qCDebug(lcQdocClang) << clang_getCString(formattedDiagnostic);
+        clang_disposeString(formattedDiagnostic);
+    }
 }
 
 QT_END_NAMESPACE

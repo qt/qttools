@@ -31,6 +31,7 @@
 QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(lcQdoc, "qt.qdoc")
+Q_LOGGING_CATEGORY(lcQdocClang, "qt.qdoc.clang")
 
 /*!
     \namespace Utilities
@@ -41,6 +42,7 @@ namespace Utilities {
 static inline void setDebugEnabled(bool value)
 {
     const_cast<QLoggingCategory &>(lcQdoc()).setEnabled(QtDebugMsg, value);
+    const_cast<QLoggingCategory &>(lcQdocClang()).setEnabled(QtDebugMsg, value);
 }
 
 void startDebugging(const QString &message)

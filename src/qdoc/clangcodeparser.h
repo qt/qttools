@@ -44,6 +44,8 @@
 
 #include <QtCore/qtemporarydir.h>
 
+typedef struct CXTranslationUnitImpl *CXTranslationUnit;
+
 QT_BEGIN_NAMESPACE
 
 class ClangCodeParser : public CppCodeParser
@@ -63,12 +65,13 @@ public:
     static const QByteArray &fn() { return s_fn; }
 
 private:
-    void getDefaultArgs();
-    bool getMoreArgs();
+    void getDefaultArgs(); // FIXME: Clean up API
+    void getMoreArgs(); // FIXME: Clean up API
+
     void buildPCH();
 
-private:
-    int m_printParsingErrors {};
+    void printDiagnostics(const CXTranslationUnit &translationUnit) const;
+
     QString m_version {};
     QHash<QString, QString> m_allHeaders {}; // file name->path
     QList<QByteArray> m_includePaths {};
