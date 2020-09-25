@@ -36,7 +36,6 @@
 #include "qdoctagfiles.h"
 #include "tree.h"
 
-#include <QtCore/qdebug.h>
 #include <QtCore/qregularexpression.h>
 
 QT_BEGIN_NAMESPACE
