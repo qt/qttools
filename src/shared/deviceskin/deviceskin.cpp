@@ -784,15 +784,9 @@ CursorWindow::CursorWindow(const QImage &img, QPoint hot, QWidget* sk)
     QPixmap p;
     p = QPixmap::fromImage(img);
     if (!p.mask()) {
-        if (img.hasAlphaChannel()) {
-            QBitmap bm;
-            bm = QPixmap::fromImage(img.createAlphaMask());
-            p.setMask(bm);
-        } else {
-            QBitmap bm;
-            bm = QPixmap::fromImage(img.createHeuristicMask());
-            p.setMask(bm);
-        }
+        QBitmap bm = img.hasAlphaChannel() ? QBitmap::fromImage(img.createAlphaMask())
+                                           : QBitmap::fromImage(img.createHeuristicMask());
+        p.setMask(bm);
     }
     QPalette palette;
     palette.setBrush(backgroundRole(), QBrush(p));
