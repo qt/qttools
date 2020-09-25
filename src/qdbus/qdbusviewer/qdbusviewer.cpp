@@ -292,10 +292,8 @@ static QString getDbusSignature(const QMetaMethod& method)
 {
     // create a D-Bus type signature from QMetaMethod's parameters
     QString sig;
-    for (int i = 0; i < method.parameterTypes().count(); ++i) {
-        const int type = QMetaType::fromName(method.parameterTypes().at(i)).id();
-        sig.append(QString::fromLatin1(QDBusMetaType::typeToSignature(type)));
-    }
+    for (const auto &type : method.parameterTypes())
+        sig.append(QString::fromLatin1(QDBusMetaType::typeToSignature(QMetaType::fromName(type))));
     return sig;
 }
 
