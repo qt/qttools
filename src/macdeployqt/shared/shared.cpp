@@ -973,7 +973,7 @@ DeploymentInfo deployQtFrameworks(QList<FrameworkInfo> frameworks,
             deploymentInfo.isDebug = true;
 
         if (deploymentInfo.qtPath.isNull())
-            deploymentInfo.qtPath = QLibraryInfo::location(QLibraryInfo::PrefixPath);
+            deploymentInfo.qtPath = QLibraryInfo::path(QLibraryInfo::PrefixPath);
 
         if (framework.frameworkDirectory.startsWith(bundlePath)) {
             LogError()  << framework.frameworkName << "already deployed, skipping.";
@@ -1032,7 +1032,7 @@ DeploymentInfo deployQtFrameworks(const QString &appBundlePath, const QStringLis
    QStringList allBinaryPaths = QStringList() << applicationBundle.binaryPath << applicationBundle.libraryPaths
                                                  << additionalExecutables;
    QSet<QString> allLibraryPaths = getBinaryRPaths(applicationBundle.binaryPath, true);
-   allLibraryPaths.insert(QLibraryInfo::location(QLibraryInfo::LibrariesPath));
+   allLibraryPaths.insert(QLibraryInfo::path(QLibraryInfo::LibrariesPath));
    QList<FrameworkInfo> frameworks = getQtFrameworksForPaths(allBinaryPaths, appBundlePath, allLibraryPaths, useDebugLibs);
    if (frameworks.isEmpty() && !alwaysOwerwriteEnabled) {
         LogWarning();
@@ -1255,7 +1255,7 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     LogNormal() << "QML module search path(s) is" << qmlImportPaths;
 
     // Use qmlimportscanner from QLibraryInfo::BinariesPath
-    QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
+    QString qmlImportScannerPath = QDir::cleanPath(QLibraryInfo::path(QLibraryInfo::BinariesPath) + "/qmlimportscanner");
 
     // Fallback: Look relative to the macdeployqt binary
     if (!QFile(qmlImportScannerPath).exists())
@@ -1277,7 +1277,7 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     }
     for (const QString &importPath : qmlImportPaths)
         argumentList << "-importPath" << importPath;
-    QString qmlImportsPath = QLibraryInfo::location(QLibraryInfo::Qml2ImportsPath);
+    QString qmlImportsPath = QLibraryInfo::path(QLibraryInfo::Qml2ImportsPath);
     argumentList.append( "-importPath");
     argumentList.append(qmlImportsPath);
 
