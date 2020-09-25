@@ -139,6 +139,7 @@
             <file>test-cmaketest-example.html</file>
             <file>test-cmaketest-main-cpp.html</file>
             <file>test-componentset-componentset-pro.html</file>
+            <file>test-componentset-componentset-qml.html</file>
             <file>test-componentset-example.html</file>
             <file>test-componentset-progressbar-qml.html</file>
             <file>test-componentset-switch-qml.html</file>

@@ -32,7 +32,7 @@
 
     \testnoautolist
 
-    \meta tag {test,sample}
+    \meta tag {test,sample,(Qt)}
     \meta installpath tutorials
 
     This example demonstrates one of the ways to document QML types. It also

@@ -55,6 +55,11 @@ An aliased property of type int.</code>
                             <link raw="componentset/componentset.pro" href="test-componentset-componentset-pro.html" type="page" page="componentset.pro Example File">componentset/componentset.pro</link>
                         </para>
                     </item>
+                    <item>
+                        <para>
+                            <link raw="componentset/componentset.qml" href="test-componentset-componentset-qml.html" type="page" page="componentset.qml Example File">componentset/componentset.qml</link>
+                        </para>
+                    </item>
                 </list>
             </description>
         </page>
