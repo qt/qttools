@@ -3062,29 +3062,8 @@ void DocBookGenerator::typified(const QString &string, const Node *relative, boo
             }
             pendingWord.clear();
 
-            switch (ch.unicode()) {
-            case '\0':
-                break;
-                // This only breaks out of the switch, not the loop. This means that the loop
-                // deliberately overshoots by one character.
-            case '&':
-                result += QLatin1String("&amp;");
-                break;
-            case '<':
-                result += QLatin1String("&lt;");
-                break;
-            case '>':
-                result += QLatin1String("&gt;");
-                break;
-            case '\'':
-                result += QLatin1String("&apos;");
-                break;
-            case '"':
-                result += QLatin1String("&quot;");
-                break;
-            default:
+            if (ch.unicode() != '\0')
                 result += ch;
-            }
         }
     }
 
