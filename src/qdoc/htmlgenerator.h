@@ -170,8 +170,6 @@ private:
     QString m_projectUrl {};
     QString m_navigationLinks {};
     QString m_navigationSeparator {};
-    QString m_manifestDir {};
-    QString m_examplesPath {};
     static int id;
     QString m_homepage {};
     QString m_hometitle {};
