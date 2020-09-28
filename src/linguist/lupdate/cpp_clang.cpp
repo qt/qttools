@@ -145,9 +145,9 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     std::vector<std::thread> producers;
     ReadSynchronizedRef<std::string> ppSources(sourcesPP);
     WriteSynchronizedRef<TranslationRelatedStore> ppStore(stores.Preprocessor);
-    int idealProducerCount = std::min(int(sourcesPP.size()), int(std::thread::hardware_concurrency()));
+    size_t idealProducerCount = std::min(ppSources.size(), size_t(std::thread::hardware_concurrency()));
 
-    for (int i = 0; i < idealProducerCount; ++i) {
+    for (size_t i = 0; i < idealProducerCount; ++i) {
         std::thread producer([&ppSources, &optionsParser, &ppStore]() {
             std::string file;
             while (ppSources.next(&file)) {
@@ -163,8 +163,8 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     producers.clear();
 
     ReadSynchronizedRef<std::string> astSources(sourcesAst);
-    idealProducerCount = std::min(int(sourcesAst.size()), int(std::thread::hardware_concurrency()));
-    for (int i = 0; i < idealProducerCount; ++i) {
+    idealProducerCount = std::min(astSources.size(), size_t(std::thread::hardware_concurrency()));
+    for (size_t i = 0; i < idealProducerCount; ++i) {
         std::thread producer([&astSources, &optionsParser, &stores]() {
             std::string file;
             while (astSources.next(&file)) {
@@ -282,9 +282,9 @@ TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStor
 
 #define START_THREADS(RSV, WSV) \
     std::vector<std::thread> producers; \
-    const int idealProducerCount = std::min(RSV.size(), int(std::thread::hardware_concurrency())); \
+    const size_t idealProducerCount = std::min(RSV.size(), size_t(std::thread::hardware_concurrency())); \
     \
-    for (int i = 0; i < idealProducerCount; ++i) { \
+    for (size_t i = 0; i < idealProducerCount; ++i) { \
         std::thread producer([&]() { \
             TranslationRelatedStore store; \
             while (RSV.next(&store)) { \

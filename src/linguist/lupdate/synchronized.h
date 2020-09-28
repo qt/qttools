@@ -82,30 +82,30 @@ public:
         : m_vector(const_cast<std::vector<T> &>(vector))
     {}
 
-    int size() const
+    size_t size() const
     {
-        return int(m_vector.size());
+        return m_vector.size();
     }
 
     /* Unsafe, do not use inside threads. */
     void reset(const std::vector<T> &vector)
     {
-        m_next = -1;
+        m_next = 0;
         m_vector = const_cast<std::vector<T> &>(vector);
     }
 
     bool next(T *value) const
     {
-        m_next.fetch_add(1, std::memory_order_acquire);
-        const bool hasNext = m_next < m_vector.size();
+        const auto idx = m_next.fetch_add(1, std::memory_order_acquire);
+        const bool hasNext = idx < m_vector.size();
         if (hasNext)
-            *value = m_vector[m_next];
+            *value = m_vector[idx];
         return hasNext;
     }
 
 private:
     std::vector<T> &m_vector;
-    mutable std::atomic<int> m_next { -1 };
+    mutable std::atomic<size_t> m_next = 0;
 };
 
 QT_END_NAMESPACE
