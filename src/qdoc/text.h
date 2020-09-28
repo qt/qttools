@@ -69,7 +69,6 @@ public:
 
     static Text subText(const Atom *begin, const Atom *end = nullptr);
     static Text sectionHeading(const Atom *sectionBegin);
-    static const Atom *sectionHeadingAtom(const Atom *sectionLeft);
     static int compare(const Text &text1, const Text &text2);
 
 private:

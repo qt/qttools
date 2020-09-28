@@ -221,20 +221,6 @@ Text Text::sectionHeading(const Atom *sectionLeft)
     return Text();
 }
 
-const Atom *Text::sectionHeadingAtom(const Atom *sectionLeft)
-{
-    if (sectionLeft != nullptr) {
-        const Atom *begin = sectionLeft;
-        while (begin != nullptr && begin->type() != Atom::SectionHeadingLeft)
-            begin = begin->next();
-        if (begin != nullptr)
-            begin = begin->next();
-
-        return begin;
-    }
-    return nullptr;
-}
-
 void Text::dump() const
 {
     const Atom *atom = firstAtom();
