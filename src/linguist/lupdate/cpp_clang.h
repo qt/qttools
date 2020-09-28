@@ -196,7 +196,7 @@ namespace LupdatePrivate
         Depending on the given compulsory option, quotes can be unbalanced and
         still some text is returned. This is to mimic the old lupdate behavior.
     */
-    static QString cleanQuote(llvm::StringRef s, QuoteCompulsary quote)
+    inline QString cleanQuote(llvm::StringRef s, QuoteCompulsary quote)
     {
         if (s.empty())
             return {};
@@ -213,7 +213,7 @@ namespace LupdatePrivate
         for a given string literal coming from the source code. Do not use
         to clean the quotes around the lupdate translator specific comments.
     */
-    static QString cleanQuote(const std::string &token)
+    inline QString cleanQuote(const std::string &token)
     {
         if (token.empty())
             return {};
