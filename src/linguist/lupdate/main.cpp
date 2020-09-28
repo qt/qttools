@@ -50,7 +50,7 @@
 #include <iostream>
 
 bool useClangToParseCpp = false;
-QString commandLineCompileCommands; // for the path to the json file passed as a command line argument.
+QString commandLineCompilationDatabaseDir; // for the path to the json file passed as a command line argument.
                                     // Has priority over what is in the .pro file and passed to the project.
 
 // Can't have an array of QStaticStringData<N> for different N, so
@@ -280,14 +280,14 @@ static void printUsage()
         "           Specify the output file(s). This will override the TRANSLATIONS.\n"
         "    -version\n"
         "           Display the version of lupdate and exit.\n"
-        "    -clang-parser [compilation-database]\n"
+        "    -clang-parser [compilation-database-dir]\n"
         "           Use clang to parse cpp files. Otherwise a custom parser is used.\n"
         "           This option needs a clang compilation database (compile_commands.json)\n"
         "           for the files that needs to be parsed.\n"
-        "           The path to this file can be specified on the command line, \n"
-        "           directly after the -clang-parser option, or in the .pro file\n"
+        "           The path to the directory containing this file can be specified on the \n"
+        "           command line, directly after the -clang-parser option, or in the .pro file\n"
         "           by setting the variable LUPDATE_COMPILE_COMMANDS_PATH.\n"
-        "           A compilation database specified on the command line takes precedence.\n"
+        "           A directory specified on the command line takes precedence.\n"
         "           If no path is given, the compilation database will be searched\n"
         "           in all parent paths of the first input file.\n"
         "    @lst-file\n"
@@ -530,7 +530,7 @@ static void processSources(Translator &fetchedTor,
 
     if (useClangToParseCpp) {
 #if QT_CONFIG(clangcpp)
-        ClangCppParser::loadCPP(fetchedTor, sourceFilesCpp, cd);
+        ClangCppParser::loadCPP(fetchedTor, sourceFilesCpp, cd, fail);
 #else
         *fail = true;
         printErr(LU::tr("lupdate error: lupdate was built without clang support."));
@@ -604,10 +604,10 @@ private:
         cd.m_includePath = prj.includePaths;
         cd.m_excludes = prj.excluded;
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
-        if (commandLineCompileCommands.isEmpty())
-            cd.m_compileCommandsPath = prj.compileCommands;
+        if (commandLineCompilationDatabaseDir.isEmpty())
+            cd.m_compilationDatabaseDir = prj.compileCommands;
         else
-            cd.m_compileCommandsPath = commandLineCompileCommands;
+            cd.m_compilationDatabaseDir = commandLineCompilationDatabaseDir;
 
         QStringList tsFiles;
         if (prj.translations) {
@@ -869,7 +869,7 @@ int main(int argc, char **argv)
             // the option after -clang-parser is optional
             if ((i + 1) != argc && !args[i + 1].startsWith(QLatin1String("-"))) {
                  i++;
-                 commandLineCompileCommands = args[i];
+                 commandLineCompilationDatabaseDir = args[i];
              }
             continue;
         }
@@ -1036,7 +1036,7 @@ int main(int argc, char **argv)
         cd.m_projectRoots = projectRoots;
         cd.m_includePath = includePath;
         cd.m_allCSources = allCSources;
-        cd.m_compileCommandsPath = commandLineCompileCommands;
+        cd.m_compilationDatabaseDir = commandLineCompilationDatabaseDir;
         for (const QString &resource : qAsConst(resourceFiles))
             sourceFiles << getResources(resource);
         processSources(fetchedTor, sourceFiles, cd, &fail);

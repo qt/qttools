@@ -34,16 +34,13 @@
 
 #include <thread>
 
-#include <clang/Tooling/CommonOptionsParser.h>
-#include <llvm/Option/Option.h>
+#include <clang/Tooling/CompilationDatabase.h>
+
+using clang::tooling::CompilationDatabase;
 
 QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(lcClang, "qt.lupdate.clang");
-
-// This is a way to add options related to the customized clang tool
-// Needed as one of the arguments to create the OptionParser.
-static llvm::cl::OptionCategory MyToolCategory("my-tool options");
 
 // Makes sure all the comments will be parsed and part of the AST
 // Clang will run with the flag -fparse-all-comments
@@ -105,7 +102,8 @@ bool ClangCppParser::containsTranslationInformation(llvm::StringRef ba)
      return false;
 }
 
-void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd)
+void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd,
+                            bool *fail)
 {
     // pre-process the files by a simple text search if there is any occurrence
     // of things we are interested in
@@ -133,11 +131,24 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     sourcesPP.insert(sourcesPP.cend(), sources.cbegin(), sources.cend());
     sourcesAst.insert(sourcesAst.cend(), sources.cbegin(), sources.cend());
 
-    int argc = 4;
-    // NEED 2 empty one to start!!! otherwise: LLVM::ERROR
-    const QByteArray jsonPath = cd.m_compileCommandsPath.toLocal8Bit();
-    const char *argv[4] = { "", "", "-p", jsonPath.constData() };
-    clang::tooling::CommonOptionsParser optionsParser(argc, argv, MyToolCategory);
+    std::string errorMessage;
+    std::unique_ptr<CompilationDatabase> db;
+    if (cd.m_compilationDatabaseDir.isEmpty()) {
+        db = CompilationDatabase::autoDetectFromDirectory(".", errorMessage);
+        if (!db && !files.isEmpty()) {
+            db = CompilationDatabase::autoDetectFromSource(files.first().toStdString(),
+                                                           errorMessage);
+        }
+    } else {
+        db = CompilationDatabase::autoDetectFromDirectory(cd.m_compilationDatabaseDir.toStdString(),
+                                                          errorMessage);
+    }
+
+    if (!db) {
+        *fail = true;
+        cd.appendError(QString::fromStdString(errorMessage));
+        return;
+    }
 
     TranslationStores ast, qdecl, qnoop;
     Stores stores(ast, qdecl, qnoop);
@@ -148,10 +159,10 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     size_t idealProducerCount = std::min(ppSources.size(), size_t(std::thread::hardware_concurrency()));
 
     for (size_t i = 0; i < idealProducerCount; ++i) {
-        std::thread producer([&ppSources, &optionsParser, &ppStore]() {
+        std::thread producer([&ppSources, &db, &ppStore]() {
             std::string file;
             while (ppSources.next(&file)) {
-                clang::tooling::ClangTool tool(optionsParser.getCompilations(), file);
+                clang::tooling::ClangTool tool(*db, file);
                 tool.appendArgumentsAdjuster(getClangArgumentAdjuster());
                 tool.run(new LupdatePreprocessorActionFactory(&ppStore));
             }
@@ -165,10 +176,10 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     ReadSynchronizedRef<std::string> astSources(sourcesAst);
     idealProducerCount = std::min(astSources.size(), size_t(std::thread::hardware_concurrency()));
     for (size_t i = 0; i < idealProducerCount; ++i) {
-        std::thread producer([&astSources, &optionsParser, &stores]() {
+        std::thread producer([&astSources, &db, &stores]() {
             std::string file;
             while (astSources.next(&file)) {
-                clang::tooling::ClangTool tool(optionsParser.getCompilations(), file);
+                clang::tooling::ClangTool tool(*db, file);
                 tool.appendArgumentsAdjuster(getClangArgumentAdjuster());
                 tool.run(new LupdateToolActionFactory(&stores));
             }

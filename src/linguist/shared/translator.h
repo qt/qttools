@@ -80,7 +80,7 @@ public:
     QString m_unTrPrefix; // QM specific
     QString m_sourceFileName;
     QString m_targetFileName;
-    QString m_compileCommandsPath;
+    QString m_compilationDatabaseDir;
     QStringList m_excludes;
     QDir m_sourceDir;
     QDir m_targetDir; // FIXME: TS specific

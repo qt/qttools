@@ -246,7 +246,8 @@ namespace LupdatePrivate
 
 namespace ClangCppParser
 {
-    void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd);
+    void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd,
+                 bool *fail);
 
     void fillTranslator(const TranslationRelatedStore &store, Translator &tor, ConversionData &cd);
     TranslatorMessage translatorMessage(const TranslationRelatedStore &store,
