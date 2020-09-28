@@ -72,7 +72,6 @@ HEADERS += access.h \
            qdoccommandlineparser.h \
            qdocdatabase.h \
            qdocindexfiles.h \
-           qdoctagfiles.h \
            qmltypenode.h \
            qmlpropertynode.h \
            quoter.h \
@@ -81,6 +80,7 @@ HEADERS += access.h \
            separator.h \
            sharedcommentnode.h \
            singleton.h \
+           tagfilewriter.h \
            text.h \
            tokenizer.h \
            topic.h \
@@ -129,7 +129,6 @@ SOURCES += aggregate.cpp \
            qdoccommandlineparser.cpp \
            qdocdatabase.cpp \
            qdocindexfiles.cpp \
-           qdoctagfiles.cpp \
            qmltypenode.cpp \
            qmlpropertynode.cpp \
            quoter.cpp \
@@ -137,6 +136,7 @@ SOURCES += aggregate.cpp \
            sections.cpp \
            separator.cpp \
            sharedcommentnode.cpp \
+           tagfilewriter.cpp \
            text.cpp \
            tokenizer.cpp \
            tree.cpp \

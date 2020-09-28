@@ -363,7 +363,6 @@ public:
     void setVersion(const QString &v) { version_ = v; }
     QString version() const { return version_; }
 
-    void generateTagFile(const QString &name, Generator *g);
     void readIndexes(const QStringList &indexFiles);
     void generateIndex(const QString &fileName, const QString &url, const QString &title,
                        Generator *g);

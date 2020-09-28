@@ -46,6 +46,7 @@
 #include "qmlpropertynode.h"
 #include "separator.h"
 #include "sharedcommentnode.h"
+#include "tagfilewriter.h"
 #include "tree.h"
 #include "quoter.h"
 
@@ -262,7 +263,10 @@ void HtmlGenerator::generateDocs()
         /*
           Generate the XML tag file, if it was requested.
         */
-        m_qdb->generateTagFile(tagFile_, this);
+        if (!tagFile_.isEmpty()) {
+            TagFileWriter tagFileWriter;
+            tagFileWriter.generateTagFile(tagFile_, this);
+        }
     }
 }
 

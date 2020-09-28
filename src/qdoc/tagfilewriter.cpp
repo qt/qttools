@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,7 +26,7 @@
 **
 ****************************************************************************/
 
-#include "qdoctagfiles.h"
+#include "tagfilewriter.h"
 
 #include "access.h"
 #include "aggregate.h"
@@ -43,58 +43,23 @@
 QT_BEGIN_NAMESPACE
 
 /*!
-  \class QDocTagFiles
+  \class TagFileWriter
 
-  This class handles the generation of the qdoc tag file.
+  This class handles the generation of the QDoc tag files.
  */
 
-QDocTagFiles *QDocTagFiles::s_qdocTagFiles = nullptr;
-
 /*!
-  Constructs the singleton. \a qdb is the pointer to the
+  Default constructor. \a qdb is the pointer to the
   qdoc database that is used when reading and writing the
   index files.
  */
-QDocTagFiles::QDocTagFiles()
-{
-    m_qdb = QDocDatabase::qdocDB();
-}
-
-/*!
-  Destroys the singleton QDocTagFiles.
- */
-QDocTagFiles::~QDocTagFiles()
-{
-    m_qdb = nullptr;
-}
-
-/*!
-  Creates the singleton. Allows only one instance of the class
-  to be created. Returns a pointer to the singleton.
- */
-QDocTagFiles *QDocTagFiles::qdocTagFiles()
-{
-    if (s_qdocTagFiles == nullptr)
-        s_qdocTagFiles = new QDocTagFiles;
-    return s_qdocTagFiles;
-}
-
-/*!
-  Destroys the singleton.
- */
-void QDocTagFiles::destroyQDocTagFiles()
-{
-    if (s_qdocTagFiles != nullptr) {
-        delete s_qdocTagFiles;
-        s_qdocTagFiles = nullptr;
-    }
-}
+TagFileWriter::TagFileWriter() : m_qdb(QDocDatabase::qdocDB()) { }
 
 /*!
   Generate the tag file section with the given \a writer for the \a parent
   node.
  */
-void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *parent)
+void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *parent)
 {
     const auto &nonFunctionList = const_cast<Aggregate *>(parent)->nonfunctionList();
     for (const auto *node : nonFunctionList) {
@@ -169,7 +134,7 @@ void QDocTagFiles::generateTagFileCompounds(QXmlStreamWriter &writer, const Aggr
   Writes all the members of the \a parent node with the \a writer.
   The node represents a C++ class, namespace, etc.
  */
-void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *parent)
+void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *parent)
 {
     const auto &childNodes = parent->childNodes();
     for (const auto *node : childNodes) {
@@ -337,7 +302,7 @@ void QDocTagFiles::generateTagFileMembers(QXmlStreamWriter &writer, const Aggreg
 /*!
   Writes a tag file named \a fileName.
  */
-void QDocTagFiles::generateTagFile(const QString &fileName, Generator *g)
+void TagFileWriter::generateTagFile(const QString &fileName, Generator *g)
 {
     QFile file(fileName);
     QFileInfo fileInfo(fileName);

@@ -76,6 +76,7 @@ private slots:
     void headerFile();
     void usingDirective();
     void properties();
+    void testTagFile();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -199,7 +200,6 @@ void tst_generatedOutput::testAndCompare(const char *input, const char *outNames
                                 fileInfo.filePath()));
         }
         QSKIP("Regenerated expected output only.");
-        return;
     }
 
     compareLineByLine(expectedOuts);
@@ -475,7 +475,6 @@ void tst_generatedOutput::properties()
 {
     if (m_extraParams.isEmpty() && !m_regen) {
         QSKIP("Required include paths not available");
-        return;
     }
 
     testAndCompare("testdata/configs/properties.qdocconf",
@@ -484,6 +483,11 @@ void tst_generatedOutput::properties()
                    "properties/testcpp.index "
                    "properties-docbook/testqdoc-testderived.xml",
                    m_extraParams.toLatin1().data());
+}
+
+void tst_generatedOutput::testTagFile()
+{
+    testAndCompare("testdata/configs/tagfiles.qdocconf", "testtagfile.tags");
 }
 
 int main(int argc, char *argv[])

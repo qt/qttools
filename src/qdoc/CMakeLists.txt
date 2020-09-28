@@ -60,7 +60,6 @@ qt_add_tool(${target_name}
         qdoccommandlineparser.cpp qdoccommandlineparser.h
         qdocdatabase.cpp qdocdatabase.h
         qdocindexfiles.cpp qdocindexfiles.h
-        qdoctagfiles.cpp qdoctagfiles.h
         qmlcodemarker.cpp qmlcodemarker.h
         qmlcodeparser.cpp qmlcodeparser.h
         qmlmarkupvisitor.cpp qmlmarkupvisitor.h
@@ -73,6 +72,7 @@ qt_add_tool(${target_name}
         separator.cpp separator.h
         sharedcommentnode.cpp sharedcommentnode.h
         singleton.h
+        tagfilewriter.cpp tagfilewriter.h
         text.cpp text.h
         tokenizer.cpp tokenizer.h
         topic.h

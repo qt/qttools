@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,38 +26,33 @@
 **
 ****************************************************************************/
 
-#ifndef QDOCTAGFILES_H
-#define QDOCTAGFILES_H
+#ifndef TAGFILEWRITER_H
+#define TAGFILEWRITER_H
 
 #include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 
 class Aggregate;
-class QDocDatabase;
 class Generator;
+class QDocDatabase;
 
-class QDocTagFiles
+class TagFileWriter
 {
-    friend class QDocDatabase;
+public:
+    TagFileWriter();
+    ~TagFileWriter() = default;
+
+    void generateTagFile(const QString &fileName, Generator *generator);
 
 private:
-    static QDocTagFiles *qdocTagFiles();
-    static void destroyQDocTagFiles();
-
-    QDocTagFiles();
-    ~QDocTagFiles();
-
     void generateTagFileCompounds(QXmlStreamWriter &writer, const Aggregate *inner);
     void generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *inner);
-    void generateTagFile(const QString &fileName, Generator *g);
 
-private:
-    static QDocTagFiles *s_qdocTagFiles;
     QDocDatabase *m_qdb { nullptr };
     Generator *m_generator { nullptr };
 };
 
 QT_END_NAMESPACE
 
-#endif
+#endif // TAGFILEWRITER_H

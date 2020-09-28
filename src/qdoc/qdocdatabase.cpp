@@ -33,7 +33,6 @@
 #include "functionnode.h"
 #include "generator.h"
 #include "qdocindexfiles.h"
-#include "qdoctagfiles.h"
 #include "tree.h"
 
 #include <QtCore/qregularexpression.h>
@@ -1347,17 +1346,6 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
         node = findPageNodeByTitle(target);
     }
     return node;
-}
-
-/*!
-  Generates a tag file and writes it to \a name.
- */
-void QDocDatabase::generateTagFile(const QString &name, Generator *g)
-{
-    if (!name.isEmpty()) {
-        QDocTagFiles::qdocTagFiles()->generateTagFile(name, g);
-        QDocTagFiles::destroyQDocTagFiles();
-    }
 }
 
 /*!
