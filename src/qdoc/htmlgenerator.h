@@ -154,7 +154,6 @@ private:
     QString m_codeSuffix {};
     HelpProjectWriter *m_helpProjectWriter { nullptr };
     ManifestWriter *m_manifestWriter { nullptr };
-    bool m_inObsoleteLink { false };
     QRegularExpression m_funcLeftParen { "\\S(\\()" };
     QString m_headerScripts {};
     QString m_headerStyles {};

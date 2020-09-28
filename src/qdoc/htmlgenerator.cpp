@@ -662,7 +662,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::Link:
     case Atom::NavLink: {
-        m_inObsoleteLink = false;
         const Node *node = nullptr;
         QString link = getLink(atom, relative, &node);
         if (link.isEmpty() && (node != relative) && !noLinkErrors()) {
@@ -3448,18 +3447,13 @@ void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node 
 void HtmlGenerator::endLink()
 {
     if (m_inLink) {
-        if (m_link.isEmpty()) {
-            if (showBrokenLinks)
-                out() << "</i>";
+        if (m_link.isEmpty() && showBrokenLinks) {
+            out() << "</i>";
         } else {
-            if (m_inObsoleteLink) {
-                out() << "<sup>(obsolete)</sup>";
-            }
             out() << "</a>";
         }
     }
     m_inLink = false;
-    m_inObsoleteLink = false;
 }
 
 /*!
