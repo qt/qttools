@@ -495,7 +495,7 @@ static bool processTs(Translator &fetchedTor, const QString &file, ConversionDat
 }
 
 static void processSources(Translator &fetchedTor,
-                           const QStringList &sourceFiles, ConversionData &cd)
+                           const QStringList &sourceFiles, ConversionData &cd, bool *fail)
 {
 #ifdef QT_NO_QML
     bool requireQmlSupport = false;
@@ -531,6 +531,9 @@ static void processSources(Translator &fetchedTor,
     if (useClangToParseCpp) {
 #if QT_CONFIG(clangcpp)
         ClangCppParser::loadCPP(fetchedTor, sourceFilesCpp, cd);
+#else
+        *fail = true;
+        printErr(LU::tr("lupdate error: lupdate was built without clang support."));
 #endif
     }
     else
@@ -628,7 +631,7 @@ private:
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, false, &tor, fail);
-            processSources(tor, sources, cd);
+            processSources(tor, sources, cd, fail);
             updateTsFiles(tor, tsFiles, QStringList(), m_sourceLanguage, m_targetLanguage,
                           options, fail);
             return;
@@ -642,10 +645,10 @@ private:
             }
             Translator tor;
             processProjects(false, options, prj.subProjects, nestComplain, &tor, fail);
-            processSources(tor, sources, cd);
+            processSources(tor, sources, cd, fail);
         } else {
             processProjects(false, options, prj.subProjects, nestComplain, parentTor, fail);
-            processSources(*parentTor, sources, cd);
+            processSources(*parentTor, sources, cd, fail);
         }
     }
 
@@ -1036,7 +1039,7 @@ int main(int argc, char **argv)
         cd.m_compileCommandsPath = commandLineCompileCommands;
         for (const QString &resource : qAsConst(resourceFiles))
             sourceFiles << getResources(resource);
-        processSources(fetchedTor, sourceFiles, cd);
+        processSources(fetchedTor, sourceFiles, cd, &fail);
         updateTsFiles(fetchedTor, tsFileNames, alienFiles,
                       sourceLanguage, targetLanguage, options, &fail);
     } else {
