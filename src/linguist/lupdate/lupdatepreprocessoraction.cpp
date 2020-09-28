@@ -37,6 +37,8 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
     const clang::MacroDefinition &macroDefinition, clang::SourceRange sourceRange,
     const clang::MacroArgs *macroArgs)
 {
+    Q_UNUSED(macroDefinition);
+
     const auto &sm = m_preprocessor.getSourceManager();
     llvm::StringRef fileName = sm.getFilename(sourceRange.getBegin());
     if (fileName != m_inputFile)
@@ -153,6 +155,8 @@ void LupdatePPCallbacks::storeMacroArguments(const std::vector<QString> &args,
 void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
     clang::SourceLocation endifLoc)
 {
+    Q_UNUSED(endifLoc);
+
     const auto &sm = m_preprocessor.getSourceManager();
     llvm::StringRef fileName = sm.getFilename(sourceRange.getBegin());
     if (fileName != m_inputFile)
