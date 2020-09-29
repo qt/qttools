@@ -45,10 +45,10 @@ public:
         : m_vector(vector)
     {}
 
-    void emplace_back(T && value)
+    void emplace_back(T &&value)
     {
         QMutexLocker lock(&m_mutex);
-        m_vector.emplace_back(value);
+        m_vector.push_back(std::move(value));
     }
 
     void emplace_back(const T &value)
