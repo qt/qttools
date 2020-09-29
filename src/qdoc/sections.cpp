@@ -46,8 +46,6 @@
 
 QT_BEGIN_NAMESPACE
 
-// Aggregate *Sections::aggregate_ = nullptr;
-
 static bool sectionsInitialized = false;
 QList<Section> Sections::stdSummarySections_(7, Section(Section::Summary, Section::Active));
 QList<Section> Sections::stdDetailsSections_(7, Section(Section::Details, Section::Active));
