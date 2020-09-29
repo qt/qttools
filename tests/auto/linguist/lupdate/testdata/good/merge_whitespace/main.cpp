@@ -25,8 +25,8 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-#include <QApplication>
+#include <QtCore>
+#include <QtWidgets/QApplication>
 #include <QDebug>
 
 int main(int argc, char **argv)

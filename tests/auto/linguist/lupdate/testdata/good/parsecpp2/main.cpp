@@ -50,7 +50,7 @@ line c++ comment } (with brace)
 #define This is another // comment in } define \
      something } comment
 } // complain here
-
+#include <QtCore>
 
 
 // Nested class in same file
@@ -64,7 +64,7 @@ class TopLevel::Nested {
     void foo();
 };
 
-TopLevel::Nested::foo()
+void TopLevel::Nested::foo()
 {
     TopLevel::tr("TopLevel");
 }
@@ -76,7 +76,7 @@ class TopLevel2::Nested {
     void foo();
 };
 
-TopLevel2::Nested::foo()
+void TopLevel2::Nested::foo()
 {
     TopLevel2::tr("TopLevel2");
 }
@@ -99,26 +99,26 @@ void ToBeUsed::caller()
 {
     tr("NameSpace::ToBeUsed");
 }
+#include <QtWidgets/QApplication>
 
-
-
+bool me = false;
 // QTBUG-11818
 //% "Foo"
-QObject::tr("Hello World");
-QObject::tr("Hello World");
+QString s1 = QObject::tr("Hello World");
+QString s2 = QObject::tr("Hello World");
 //% "Bar"
-QApplication::translate("QObject", "Hello World");
-QApplication::translate("QObject", "Hello World");
+QString s3 = QApplication::translate("QObject", "Hello World");
+QString s4 = QApplication::translate("QObject", "Hello World");
 //% "Baz"
-clear = me;
-QObject::tr("Hello World");
+bool clear = me;
+QString s5 = QObject::tr("Hello World");
 
 
 
 // QTBUG-11843: complain about missing source in id-based messages
-qtTrId("no_source");
+QString s6 = qtTrId("no_source");
 
-QObject::tr(R"(simple one)" R"delim(enter
+QString s7 = QObject::tr(R"(simple one)" R"delim(enter
 )delim" R"delim(with delimiter )delim inside)delim" u8R"(with quote " inside)");
 
 QLatin1String not_translated(R"(
@@ -136,6 +136,6 @@ And whether pigs have wings."
 const QString nodelimiter(QObject::tr(R"(
                             This is a test string
 )"));
-const Qstring withdelimiter = QObject::tr(R"delim(
+const QString withdelimiter = QObject::tr(R"delim(
 This is a test string
 )delim");

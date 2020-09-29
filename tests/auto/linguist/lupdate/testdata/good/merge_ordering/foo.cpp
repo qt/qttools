@@ -26,7 +26,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
+#include <QtCore>
 // The first line in this file should always be empty, its part of the test!!
 class Foo : public QObject
 {
@@ -35,8 +35,8 @@ public:
     Foo();
 };
 
-Foo::Foo(MainWindow *parent)
-    : QObject(parent)
+Foo::Foo()
+    : QObject()
 {
     tr("This is the first entry.");
     tr("A second message."); tr("And a second one on the same line.");

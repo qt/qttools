@@ -27,17 +27,17 @@
 ****************************************************************************/
 
 #include "finddialog.h"
-#include "mainwindow.h"
-#include "tabbedbrowser.h"
-#include "helpwindow.h"
 
-#include <QTextBrowser>
+
+
+
+#include <QtWidgets/QTextBrowser>
 #include <QTextCursor>
-#include <QStatusBar>
-#include <QLineEdit>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QLineEdit>
 #include <QDateTime>
-#include <QGridLayout>
-
+#include <QtWidgets/QGridLayout>
+//#include <QtWidgets/QDialog>
 CaseSensitiveModel::CaseSensitiveModel(int rows, int columns, QObject *parent)
     : QStandardItemModel(rows, columns, parent)
 {}
@@ -50,56 +50,56 @@ QModelIndexList CaseSensitiveModel::match(const QModelIndex &start, int role, co
     return QStandardItemModel::match(start, role, value, hits, flags);
 }
 
-FindDialog::FindDialog(MainWindow *parent)
+FindDialog::FindDialog(QMainWindow *parent)
     : QDialog(parent)
 {
-    contentsWidget = new QWidget(this);
-    ui.setupUi(contentsWidget);
-    ui.comboFind->setModel(new CaseSensitiveModel(0, 1, ui.comboFind));
+    auto contentsWidget = new QWidget(this);
+    //ui.setupUi(contentsWidget);
+    //ui.comboFind->setModel(new CaseSensitiveModel(0, 1, ui.comboFind));
 
     QVBoxLayout *l = new QVBoxLayout(this);
     l->setContentsMargins(QMargins());
     l->setSpacing(0);
     l->addWidget(contentsWidget);
 
-    lastBrowser = 0;
-    onceFound = false;
-    findExpr.clear();
+    auto lastBrowser = 0;
+    auto onceFound = false;
+    //findExpr.clear();
 
-    sb = new QStatusBar(this);
+    auto sb = new QStatusBar(this);
     l->addWidget(sb);
 
     sb->showMessage(tr("Enter the text you want to find."));
 
-    connect(ui.findButton, SIGNAL(clicked()), this, SLOT(findButtonClicked()));
-    connect(ui.closeButton, SIGNAL(clicked()), this, SLOT(reject()));
+    //connect(ui.findButton, SIGNAL(clicked()), this, SLOT(findButtonClicked()));
+    //connect(ui.closeButton, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
-FindDialog::~FindDialog()
-{
-}
+//FindDialog::~FindDialog()
+//{
+//}
 
-void FindDialog::findButtonClicked()
-{
-    doFind(ui.radioForward->isChecked());
-}
+//void FindDialog::findButtonClicked()
+//{
+//    doFind(ui.radioForward->isChecked());
+//}
 
 void FindDialog::doFind(bool forward)
 {
-    QTextBrowser *browser = static_cast<QTextBrowser*>(mainWindow()->browsers()->currentBrowser());
-    sb->clearMessage();
+    QTextBrowser *browser = NULL;// = static_cast<QTextBrowser*>(mainWindow()->browsers()->currentBrowser());
+    //sb->clearMessage();
 
-    if (ui.comboFind->currentText() != findExpr || lastBrowser != browser)
-        onceFound = false;
-    findExpr = ui.comboFind->currentText();
+    //if (ui.comboFind->currentText() != findExpr || lastBrowser != browser)
+    //  onceFound = false;
+    //findExpr = ui.comboFind->currentText();
 
-    QTextDocument::FindFlags flags = 0;
+    QTextDocument::FindFlags flags;// = 0;
 
-    if (ui.checkCase->isChecked())
-        flags |= QTextDocument::FindCaseSensitively;
+    //if (ui.checkCase->isChecked())
+    //  flags |= QTextDocument::FindCaseSensitively;
 
-    if (ui.checkWords->isChecked())
-        flags |= QTextDocument::FindWholeWords;
+    //if (ui.checkWords->isChecked())
+    //  flags |= QTextDocument::FindWholeWords;
 
     QTextCursor c = browser->textCursor();
     if (!c.hasSelection()) {
@@ -114,28 +114,28 @@ void FindDialog::doFind(bool forward)
     QTextDocument::FindFlags options;
     if (forward == false)
         flags |= QTextDocument::FindBackward;
-
-    QTextCursor found = browser->document()->find(findExpr, c, flags);
+    bool onceFound = true;
+    QTextCursor found;// = browser->document()->find(findExpr, c, flags);
     if (found.isNull()) {
         if (onceFound) {
             if (forward)
-                statusMessage(tr("Search reached end of the document"));
+	        auto a = tr("Search reached end of the document");//statusMessage(tr("Search reached end of the document"));
             else
-                statusMessage(tr("Search reached start of the document"));
+	        auto aa = tr("Search reached start of the document");//statusMessage(tr("Search reached start of the document"));
         } else {
-            statusMessage(tr( "Text not found" ));
+	    auto aaa = tr( "Text not found" ); //statusMessage(tr( "Text not found" ));
         }
     } else {
         browser->setTextCursor(found);
     }
     onceFound |= !found.isNull();
-    lastBrowser = browser;
+    auto lastBrowser = browser;
 }
 
-bool FindDialog::hasFindExpression() const
+void FindDialog::hasFindExpression() const
 {
     // statusMessage(tr( "Should be obsolete" ));
 
     //% "This is some random text"
-    qtTrId("keep_id")
+  qtTrId("keep_id");
 }

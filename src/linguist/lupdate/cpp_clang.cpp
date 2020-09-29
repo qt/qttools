@@ -196,6 +196,7 @@ clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
         adjustedArgs.push_back("-DQ_COMPILER_UNIFORM_INIT");    // qtbase + clang-cl hack
 #endif
         adjustedArgs.push_back("-Wno-everything");
+        adjustedArgs.push_back("-std=gnu++17");
 
         for (QByteArray line : getIncludePathsFromCompiler()) {
             line = line.trimmed();
@@ -261,7 +262,6 @@ static bool generateCompilationDatabase(const QString &outputFilePath, const Con
     #ifndef Q_OS_WIN
             QLatin1String("-fPIC"),
     #endif
-            QLatin1String("-std=gnu++17"),
         };
 
 #if defined(Q_OS_MACOS) && QT_CONFIG(framework)

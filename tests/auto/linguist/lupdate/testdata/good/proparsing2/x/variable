@@ -25,7 +25,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
+#include "../include.h"
 QString func()
 {
     return QLineEdit::tr("x/variable");

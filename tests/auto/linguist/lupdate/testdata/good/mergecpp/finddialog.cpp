@@ -28,16 +28,18 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include <QtCore>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QMainWindow>
 
 class FindDialog : public QDialog
 {
     Q_OBJECT
 public:
-    FindDialog(MainWindow *parent);
+    FindDialog(QMainWindow *parent);
     void reset();
 };
-
-FindDialog::FindDialog(MainWindow *parent)
+FindDialog::FindDialog(QMainWindow *parent)
     : QDialog(parent)
 {
     QString trans = tr("Enter the text you want to find.");

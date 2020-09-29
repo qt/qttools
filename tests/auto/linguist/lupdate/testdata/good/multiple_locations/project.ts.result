@@ -28,8 +28,8 @@ even more commented</extracomment>
 <context>
     <name>context</name>
     <message>
-        <location filename="finddialog.cpp" line="29"/>
-        <location filename="finddialog.cpp" line="34"/>
+        <location filename="finddialog.cpp" line="36"/>
+        <location filename="finddialog.cpp" line="41"/>
         <location filename="main.cpp" line="33"/>
         <source>just a message</source>
         <extracomment>This is one comment

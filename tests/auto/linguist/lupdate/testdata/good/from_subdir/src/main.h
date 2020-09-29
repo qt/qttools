@@ -28,5 +28,5 @@
 
 // IMPORTANT!!!! If you want to add testdata to this file,
 // always add it to the end in order to not change the linenumbers of translations!!!
-
-QT_TRANSLATE_NOOP("QApplication", "string in main.h")
+#include <QtCore>
+char dummy[] = QT_TRANSLATE_NOOP("QApplication", "string in main.h");

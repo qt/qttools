@@ -185,6 +185,7 @@ namespace LupdatePrivate
                 clang::CXXRecordDecl *recordDecl = llvm::dyn_cast<clang::CXXRecordDecl>(decl);
 
                 context = lookForContext(recordDecl, sm);
+
                 if (!context.isEmpty())
                     return context;
             }

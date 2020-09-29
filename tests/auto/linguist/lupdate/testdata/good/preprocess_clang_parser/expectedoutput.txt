@@ -1,0 +1,1 @@
+Code with translation information has been skipped in file .*

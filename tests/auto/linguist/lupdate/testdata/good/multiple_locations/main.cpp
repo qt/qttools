@@ -25,38 +25,39 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-
-
+#include <QtCore>
+class DClass
+{
 
 //: This is a comment, too.
-QT_TRANSLATE_NOOP("context", "just a message");
-
-
-
+ const char *c_noop_translate = QT_TRANSLATE_NOOP("context", "just a message");
+  void func();
+};
+void DClass::func() {
 //: commented
-qtTrId("lollipop");
+  qtTrId("lollipop");
 
 //% "this is the source text"
 //~ meta so-meta
 //: even more commented
-qtTrId("lollipop");
+  qtTrId("lollipop");
 
 //% "this is contradicting source text"
-qtTrId("lollipop");
+  qtTrId("lollipop");
 
 //~ meta too-much-meta
-qtTrId("lollipop");
+  qtTrId("lollipop");
 
 
 
 //~ meta so-meta
-QObject::tr("another message", "here with a lot of noise in the comment so it is long enough");
+  auto a = QObject::tr("another message", "here with a lot of noise in the comment so it is long enough");
 
 //~ meta too-much-meta
-QObject::tr("another message", "here with a lot of noise in the comment so it is long enough");
+  auto aa = QObject::tr("another message", "here with a lot of noise in the comment so it is long enough"); // old parser: not picked up
 
 
 
 //: commented
 qtTrId("lollipop");
+}

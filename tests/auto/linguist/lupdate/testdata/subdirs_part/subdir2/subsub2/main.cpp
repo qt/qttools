@@ -25,9 +25,9 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
+#include <QtCore>
 
 QString foo()
 {
-	QCoreApplication::translate("subsub2","minimal test");
+    return QCoreApplication::translate("subsub2","minimal test");
 }
