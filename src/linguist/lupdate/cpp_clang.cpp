@@ -32,9 +32,15 @@
 #include "synchronized.h"
 #include "translator.h"
 
-#include <thread>
+#include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qjsonarray.h>
+#include <QtCore/qjsondocument.h>
+#include <QtCore/qjsonobject.h>
 
 #include <clang/Tooling/CompilationDatabase.h>
+
+#include <thread>
 
 using clang::tooling::CompilationDatabase;
 
@@ -102,6 +108,38 @@ bool ClangCppParser::containsTranslationInformation(llvm::StringRef ba)
      return false;
 }
 
+static bool generateCompilationDatabase(const QString &outputFilePath, const QStringList &sources,
+                                        const ConversionData &cd)
+{
+    QJsonArray commandObjects;
+    const QString buildDir = QDir::currentPath();
+    for (const auto source : sources) {
+        QFileInfo fi(source);
+        QJsonObject obj;
+        obj[QLatin1String("file")] = fi.fileName();
+        obj[QLatin1String("directory")] = buildDir;
+        QJsonArray args = {
+            QLatin1String("clang++"), QLatin1String("-o"),
+            QString(fi.completeBaseName() + QLatin1String(".o")),
+            fi.fileName(),
+            QLatin1String("-fPIC"),
+            QLatin1String("-std=gnu++17")
+        };
+        for (const QString &path : cd.m_includePath) {
+            QString arg = QLatin1String("-I") + path;
+            args.push_back(std::move(arg));
+        }
+        obj[QLatin1String("arguments")] = args;
+        commandObjects.append(std::move(obj));
+    }
+    QJsonDocument doc(commandObjects);
+    QFile file(outputFilePath);
+    if (!file.open(QIODevice::WriteOnly))
+        return false;
+    file.write(doc.toJson());
+    return true;
+}
+
 void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd,
                             bool *fail)
 {
@@ -142,6 +180,18 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     } else {
         db = CompilationDatabase::autoDetectFromDirectory(cd.m_compilationDatabaseDir.toStdString(),
                                                           errorMessage);
+    }
+
+    if (!db) {
+        const QString dbFilePath = QStringLiteral("compile_commands.json");
+        qCDebug(lcClang) << "Generating compilation database" << dbFilePath;
+        if (!generateCompilationDatabase(dbFilePath, files, cd)) {
+            *fail = true;
+            cd.appendError(LU::tr("Cannot generate compilation database."));
+            return;
+        }
+        errorMessage.clear();
+        db = CompilationDatabase::loadFromDirectory(".", errorMessage);
     }
 
     if (!db) {
