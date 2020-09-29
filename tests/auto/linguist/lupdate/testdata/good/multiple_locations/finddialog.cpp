@@ -26,9 +26,17 @@
 **
 ****************************************************************************/
 
-QT_TRANSLATE_NOOP("context", "just a message");
+#include <QtCore>
+
+
+class AClass
+{
+    Q_OBJECT
+
+    const char *c_noop_translate = QT_TRANSLATE_NOOP("context", "just a message");
 
 
 
 //: This is one comment
-QT_TRANSLATE_NOOP("context", "just a message");
+    const char *c_noop_translate2 = QT_TRANSLATE_NOOP("context", "just a message");
+};

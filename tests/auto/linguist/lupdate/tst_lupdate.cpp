@@ -30,12 +30,17 @@
 #include "../shared/simtexth.h"
 #endif
 
-#include <QtCore/QDir>
-#include <QtCore/QDebug>
-#include <QtCore/QFile>
 #include <QtCore/QByteArray>
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/private/qconfig_p.h>
+#include <QtCore/QSet>
 
 #include <QtTest/QtTest>
+#include <QtTools/private/qttools-config_p.h>
+
+#include <iostream>
 
 class tst_lupdate : public QObject
 {
@@ -200,8 +205,9 @@ void tst_lupdate::doCompare(QStringList actual, const QString &expectedFn, bool 
     diff += ">>>>>>> expected\n";
     for (int j = oam; j < qMin(oam + 3, actual.size()); j++)
         diff += actual.at(j) + '\n';
-    QFAIL(qPrintable((err ? "Output for " : "Result for ") + expectedFn + " does not meet expectations:\n" + diff));
-}
+    QFAIL(qPrintable((err ? "Output for " : "Result for ")
+                     + expectedFn + " does not meet expectations:\n" + diff));
+    }
 
 void tst_lupdate::doCompare(const QString &actualFn, const QString &expectedFn, bool err)
 {
@@ -215,6 +221,7 @@ void tst_lupdate::doCompare(const QString &actualFn, const QString &expectedFn, 
 void tst_lupdate::good_data()
 {
     QTest::addColumn<QString>("directory");
+    QTest::addColumn<bool>("useClangCpp");
 
     QDir parsingDir(m_basePath + "good");
     QStringList dirs = parsingDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
@@ -225,19 +232,48 @@ void tst_lupdate::good_data()
 #ifndef Q_OS_MACOS
     dirs.removeAll(QLatin1String("parseobjc"));
 #endif
+    QSet<QString> ignoredTests = {
+        "lacksqobject_clang_parser", "parsecontexts_clang_parser", "parsecpp2_clang_parser",
+        "parsecpp_clang_parser",     "prefix_clang_parser",        "preprocess_clang_parser",
+    };
 
-    for (const QString &dir : qAsConst(dirs))
-        QTest::newRow(dir.toLocal8Bit()) << dir;
+    // Add test rows for the "classic" lupdate
+    for (const QString &dir : dirs) {
+        if (ignoredTests.contains(dir))
+            continue;
+        QTest::newRow(dir.toLocal8Bit()) << dir << false;
+    }
+
+#if QT_CONFIG(clangcpp) && QT_CONFIG(widgets)
+    // Add test rows for the clang-based lupdate
+    ignoredTests = {
+        "lacksqobject",
+        "parsecontexts",
+        "parsecpp",
+        "parsecpp2",
+        "prefix",
+        "preprocess",
+        "proparsing2", // llvm8 cannot handle file name without extension
+        "respfile", //@lst not supported with the new parser yet (include not properly set in the compile_command.json)
+        "tr_function_alias", //alias defined in command line not supported with the new parser yet. (and need project file)
+        "cmdline_deeppath", //no project file, new parser does not support (yet) this way of launching lupdate
+        "cmdline_order", // no project, new parser do not pickup on macro defined but not used. Test not needed for new parser.
+        "cmdline_recurse", // recursive scan without project file not supported (yet) with the new parser
+    };
+    for (const QString &dir : dirs) {
+        if (ignoredTests.contains(dir))
+            continue;
+        QTest::newRow("clang-" + dir.toLocal8Bit()) << dir << true;
+    }
+#endif
 }
 
 void tst_lupdate::good()
 {
     QFETCH(QString, directory);
+    QFETCH(bool, useClangCpp);
 
     QString dir = m_basePath + "good/" + directory;
-
-    qDebug() << "Running test in" << dir;
-
     QString workDir = dir;
     QStringList generatedtsfiles(QLatin1String("project.ts"));
     QStringList lupdateArguments;
@@ -283,6 +319,8 @@ void tst_lupdate::good()
     if (lupdateArguments.isEmpty())
         lupdateArguments.append(QLatin1String("project.pro"));
     lupdateArguments.prepend("-silent");
+    if (useClangCpp)
+        lupdateArguments.append("-clang-parser");
 
     QProcess proc;
     proc.setWorkingDirectory(workDir);
@@ -308,9 +346,15 @@ void tst_lupdate::good()
             return;
     }
 
-    for (const QString &ts : qAsConst(generatedtsfiles))
+    for (const QString &ts : qAsConst(generatedtsfiles)) {
+        if (dir.endsWith("preprocess_clang_parser")) {
+            doCompare(workDir + QLatin1Char('/') + ts,
+                      dir + QLatin1Char('/') + ts + QLatin1String(".result"), true);
+        } else {
         doCompare(workDir + QLatin1Char('/') + ts,
                   dir + QLatin1Char('/') + ts + QLatin1String(".result"), false);
+        }
+    }
 }
 
 #if CHECK_SIMTEXTH

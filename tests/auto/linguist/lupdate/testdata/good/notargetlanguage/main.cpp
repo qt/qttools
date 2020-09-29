@@ -25,8 +25,8 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QApplication>
-#include <QPushButton>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QPushButton>
 #include <QTranslator>
 
 int main(int argc, char *argv[])

@@ -296,21 +296,6 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
-    <name>QApplication</name>
-    <message>
-        <location filename="main.cpp" line="38"/>
-        <source>QT_LAYOUT_DIRECTION</source>
-        <comment>Translate this string to the string &apos;LTR&apos; in left-to-right languages or to &apos;RTL&apos; in right-to-left languages (such as Hebrew and Arabic) to get proper widget layout.</comment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main.cpp" line="656"/>
-        <source>Context</source>
-        <comment>soft­hyphen</comment>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>QCoreApplication</name>
     <message>
         <location filename="finddialog.cpp" line="159"/>
@@ -336,6 +321,18 @@ backslashed \ stuff.</source>
     <message>
         <location filename="finddialog.cpp" line="165"/>
         <source>encoding, using QApplication</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="38"/>
+        <source>QT_LAYOUT_DIRECTION</source>
+        <comment>Translate this string to the string &apos;LTR&apos; in left-to-right languages or to &apos;RTL&apos; in right-to-left languages (such as Hebrew and Arabic) to get proper widget layout.</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="656"/>
+        <source>Context</source>
+        <comment>soft­hyphen</comment>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -411,20 +408,18 @@ backslashed \ stuff.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="included.cpp" line="29"/>
+        <location filename="included.cpp" line="30"/>
         <source>message from #included .cpp file</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QTranslator</name>
-    <message numerus="yes">
+    <message>
         <location filename="finddialog.cpp" line="168"/>
         <source>Key</source>
         <comment>disambiguation</comment>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-        </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main.cpp" line="80"/>

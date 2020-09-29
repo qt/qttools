@@ -14,4 +14,11 @@ endif()
 qt_internal_add_test(tst_lupdate
     SOURCES
         tst_lupdate.cpp
+    LIBRARIES
+        Qt::ToolsPrivate
+        Qt::CorePrivate
 )
+
+# The recursive tests take a bit longer for the clang-based parser.
+# Increase the test timeout.
+set_property(TEST tst_lupdate APPEND PROPERTY ENVIRONMENT "QTEST_FUNCTION_TIMEOUT=900000")

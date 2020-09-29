@@ -28,10 +28,11 @@
 
 // IMPORTANT!!!! If you want to add testdata to this file,
 // always add it to the end in order to not change the linenumbers of translations!!!
-
+#include <QtWidgets/QApplication>
 #include "main.h"
 
 int main(int argc, char **argv)
 {
-     return QApplication::tr("string in main.cpp");
+     QString s1 =  QApplication::tr("string in main.cpp");
+     return 0;
 }

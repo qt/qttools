@@ -30,19 +30,19 @@
 // always add it to the end in order to not change the linenumbers of translations!!!
 int main(int argc, char **argv)
 {
-    Size size = QSize(1,1);
+  //Size size = QSize(1,1);
 }
-
+#include <QtCore>
 QString qt_detectRTLLanguage()
 {
-     return QApplication::tr("QT_LAYOUT_DIRECTION",
+     return QCoreApplication::tr("QT_LAYOUT_DIRECTION",
                          "Translate this string to the string 'LTR' in left-to-right"
                          " languages or to 'RTL' in right-to-left languages (such as Hebrew"
-                         " and Arabic) to get proper widget layout.") == QLatin1String("RTL");
+                         " and Arabic) to get proper widget layout.");// == QLatin1String("RTL");
 }
 
 
-class Dialog2 : public QDialog
+class Dialog2
 {
     Q_OBJECT
     void func();
@@ -65,9 +65,9 @@ void Dialog2::func()
 
 
 
-    QCoreApplication::translate("Plurals, QCoreApplication", "%n house(s)", "Plurals and identifier", QCoreApplication::UnicodeUTF8, n);
-    QCoreApplication::translate("Plurals, QCoreApplication", "%n car(s)", "Plurals and literal number", QCoreApplication::UnicodeUTF8, 1);
-    QCoreApplication::translate("Plurals, QCoreApplication", "%n horse(s)", "Plurals and function call", QCoreApplication::UnicodeUTF8, getCount());
+    QCoreApplication::translate("Plurals, QCoreApplication", "%n house(s)", "Plurals and identifier", n);
+    QCoreApplication::translate("Plurals, QCoreApplication", "%n car(s)", "Plurals and literal number", 1);
+    QCoreApplication::translate("Plurals, QCoreApplication", "%n horse(s)", "Plurals and function call", getCount());
 
 
 
@@ -171,25 +171,25 @@ class Testing : QObject {
         /*: another extra-comment */
         return tr("another extra-commented string");
         /*: blah! */
-        return QApplication::translate("scope", "works in translate, too", "blabb", 0);
+        return QCoreApplication::translate("scope", "works in translate, too", "blabb", 0);
     }
 
 };
 
 //: extra comment for NOOP
 //: which spans multiple lines
-QT_TRANSLATE_NOOP("scope", "string") /*: complain & ignore */; // 4.4 says the line of this is at the next statement
+const char *c_1 = QT_TRANSLATE_NOOP("scope", "string") /*: complain & ignore */; // 4.4 says the line of this is at the next statement
 //: extra comment for NOOP3
-QT_TRANSLATE_NOOP3_UTF8("scope", "string", "comment"); // 4.4 doesn't see this
+const char *c_2[2] = QT_TRANSLATE_NOOP3_UTF8("scope", "string", "comment"); // 4.4 doesn't see this
 
-QT_TRANSLATE_NOOP("scope", "string " // this is an interleaved comment
+const char *c_3 = QT_TRANSLATE_NOOP("scope", "string " // this is an interleaved comment
                   "continuation on next line");
 
 
 class TestingTake17 : QObject {
     Q_OBJECT
 
-    int function(void)
+    void function(void)
     {
         //: random comment
         //= this_is_an_id
@@ -210,18 +210,18 @@ class TestingTake17 : QObject {
 //: again an extra comment, this time for id-based NOOP
 //% "This is supposed\tto be quoted \" newline\n"
 //% "backslashed \\ stuff."
-QT_TRID_NOOP("this_a_id");
+const char *c_4 = QT_TRID_NOOP("this_a_id");
 
 //~ some thing
 //% "This needs to be here. Really."
-QString test = qtTrId("this_another_id", n);
+QString test = qtTrId("this_another_id", 2);
 
 
 
 class YetAnotherTest : QObject {
     Q_OBJECT
 
-    int function(void)
+    void function(void)
     {
         //
         //:
@@ -238,14 +238,14 @@ class YetAnotherTest : QObject {
 
 
 //: This is a message without a source string
-QString test = qtTrId("yet_another_id");
+QString test1 = qtTrId("yet_another_id");
 
 
 
 // QTBUG-9276: context in static initializers
 class Bogus : QObject {
     Q_OBJECT
-
+    static const char * const s_stringss[];
     static const char * const s_strings[];
 };
 
@@ -253,14 +253,14 @@ const char * const Bogus::s_strings[] = {
     QT_TR_NOOP("this should be in Bogus")
 };
 
-const char * const Bogus::s_strings[SIZE] = {
+const char * const Bogus::s_stringss[] = {
     QT_TR_NOOP("this should be in Bogus")
 };
 
 void bogosity()
 {
     // no spaces here. test collateral damage from ignoring equal sign
-    Class::member=QObject::tr("just QObject");
+    QString toto=QObject::tr("just QObject");
 }
 
 
@@ -297,13 +297,13 @@ class LotsaFun : public QObject
 {
     Q_OBJECT
 public:
-    int operator<<(int left, int right);
+    LotsaFun *operator<<(int i);
 };
 
-int LotsaFun::operator<<(int left, int right)
+LotsaFun *LotsaFun::operator<<(int i)
 {
     tr("this is inside operator<<");
-    return left << right;
+    return this;
 }
 
 
@@ -343,7 +343,7 @@ void blubb()
 
 
 // QTBUG-9276 part 2: QT_TR_NOOP in static member initializers
-class TestClass
+class TestClass2
 {
     Q_DECLARE_TR_FUNCTIONS(TestClass);
 
@@ -351,26 +351,26 @@ public:
     static const char TEST_STRING[];
 };
 
-const char TestClass::TEST_STRING[] = QT_TR_NOOP("Test value");
+const char TestClass2::TEST_STRING[] = QT_TR_NOOP("Test value");
 
 
 
 // derivation from namespaced class
-class Class42 : public NameSchpase::YetMoreFun, Gui::BaseClass
+class Class42 : public NameSchpace::YetMoreFun, Gui::BaseClass
 {
     Q_OBJECT
-
+    void foo();
     Class42() :
-        NameSchpase::YetMoreFun(),
+        NameSchpace::YetMoreFun(),
         Gui::BaseClass()
     {
         tr("does that make sense?");
     }
+    void hello(int something, QString str);
 };
 
-Class42::Class42() :
-    NameSchpase::YetMoreFun(),
-    Gui::BaseClass()
+
+void Class42::foo()
 {
     tr("and does that?");
 }
@@ -378,7 +378,7 @@ Class42::Class42() :
 
 
 // QTBUG-11866: magic comment parsing is too greedy
-Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
+void Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
 {
 }
 
@@ -393,7 +393,7 @@ Class42::hello(int something /*= 17 */, QString str = Class42::tr("eyo"))
 
 
 // failure to update index on insertion messes up subsequent de-duplication
-int dupeFail()
+void dupeFail()
 {
     // First just the Id.
     qtTrId("dupe_id");
@@ -450,13 +450,13 @@ class Abc::NamespacedFinalClass final : public QObject
 void ternary()
 {
     const auto aaa =
-        obj.condition ?
+        true ?
         //: comment, aaa, true
         QObject::tr("ternary, true, aaa") :
         QObject::tr("ternary, failure, aaa");
 
     const auto bbb =
-        obj.condition ?
+        true ?
         //: comment, bbb, true
         QObject::tr("ternary, bbb, true") :
         //: comment, bbb, false
@@ -470,13 +470,13 @@ class TernaryClass : public QObject
     void f()
     {
         const auto ccc =
-            obj.condition ?
+            true ?
             //: comment, ccc, true
             tr("ternary, ccc, true") :
             tr("ternary, ccc, false");
 
         const auto ddd =
-            obj.condition ?
+            true ?
             //: comment, ddd, true
             tr("ternary, ddd, true") :
             //: comment, ddd, false
@@ -490,7 +490,7 @@ class TernaryClass : public QObject
 void nullptrInPlural()
 {
     QObject::tr("%n nullptr(s)", nullptr, 3);
-    QCoreApplication::translate("Plurals, nullptr", "%n car(s)", nullptr, QCoreApplication::UnicodeUTF8, 1);
+    QCoreApplication::translate("Plurals, nullptr", "%n car(s)", nullptr, 1);
 }
 
 class nullptrClass : public QObject
@@ -516,12 +516,12 @@ void nullMacroInPlural()
 
 // QTBUG-34128: lupdate ignores tr() calls in constructor if a member is
 // initialized with C++11 initializer list
-class ListInitializationClass : public NameSchpase::YetMoreFun, Gui::BaseClass
+class ListInitializationClass : public NameSchpace::YetMoreFun, Gui::BaseClass
 {
     Q_OBJECT
 
     ListInitializationClass() :
-        NameSchpase::YetMoreFun(),
+        NameSchpace::YetMoreFun(),
         Gui::BaseClass{ },
         a{ 0 },
         b(1),
@@ -539,14 +539,14 @@ class ListInitializationClass : public NameSchpase::YetMoreFun, Gui::BaseClass
     QString c;
 };
 
-ListInitializationClass::ListInitializationClass(int a) :
-    b{ { 2, 3 }[a] }
+ListInitializationClass::ListInitializationClass(int a)// :
+//    b{ { 2, 3 }}[a]
 {
     tr("ListInitializationClass out-of-class single member initializer");
 }
 
 ListInitializationClass::ListInitializationClass(int a, int b, int c) :
-    NameSchpase::YetMoreFun{ },
+    NameSchpace::YetMoreFun{ },
     Gui::BaseClass(),
     a{ 2 + (a/3) },
     b(b),
@@ -564,8 +564,8 @@ class LambdaMemberClass : public Gui::BaseClass
 
     LambdaMemberClass() :
         Gui::BaseClass(),
-        a{ [](){ std::cout << QObject::tr("Hello"); } },
-        b([](){ std::cout << "World\n"; })
+        a{ [](){ /*std::cout << */QObject::tr("Hello"); } },
+        b([](){ /*std::cout << "World\n";*/ })
     {
         tr("LambdaMemberClass in-class constructor");
     }
@@ -578,8 +578,8 @@ class LambdaMemberClass : public Gui::BaseClass
 
 LambdaMemberClass::LambdaMemberClass(void *) :
     Gui::BaseClass{ },
-    a([](){ std::cout << QObject::tr("Hallo "); }),
-    b{ [](){ std::cout << "Welt\n"; } }
+    a([](){ /*std::cout <<*/ QObject::tr("Hallo "); }),
+    b{ [](){ /*std::cout << "Welt\n";*/ } }
 {
     tr("LambdaMemberClass out-of-class constructor");
 }
@@ -641,19 +641,19 @@ class TranslatedAfterPrivate
 };
 
 #include<QObject>
-
-QObject::tr("message after system include without space");
-
+class AClass {
+    QString aa = QObject::tr("message after system include without space");
+};
 #include"qobject.h"
-
-QObject::tr("message after local include without space");
-
+class AAClass {
+    QString aa = QObject::tr("message after local include without space");
+};
 
 
 // QTBUG-35164: handling of \uNNNN escapes
 QString unicodeEscape()
 {
-    return QApplication::tr("Context", "soft\u00ADhyphen");
+    return QCoreApplication::tr("Context", "soft\u00ADhyphen");
 }
 
 
@@ -679,12 +679,12 @@ static const char * const test_string_n1[] = {
     QT_TRANSLATE_N_NOOP("scope", "string %n")
 };
 
-static const char * const test_string_n2[] = {
-    QT_TRANSLATE_N_NOOP3("scope", "string %n", "comment");
-};
-class testing {
-    Q_OBJECT
-    static const char * const test_string_n3[] = {
-        QT_TR_N_NOOP("%n test");
+static const char * const test_string_n2[] =
+    QT_TRANSLATE_N_NOOP3("scope", "string %n", "comment")
+;
+class testing { Q_OBJECT
+    void test(); };
+void testing::test() {    static const char * const test_string_n3[] = {
+        QT_TR_N_NOOP("%n test")
     };
-};
+}

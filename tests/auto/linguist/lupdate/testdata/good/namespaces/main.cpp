@@ -130,7 +130,7 @@ void foo()
     using namespace A;
 }
 
-void goo()
+QString goo()
 {
     return QObject::tr("Bla");
 }
@@ -182,4 +182,4 @@ void foo()
 }
 
 
-#include "main.moc"
+//#include "main.moc"

@@ -1,0 +1,3 @@
+.*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp2_clang_parser[/\\]main.cpp:107:0: //% cannot be used with tr\(\) / QT_TR_NOOP\(\)\. Ignoring
+.*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp2_clang_parser[/\\]main.cpp:110:0: //% cannot be used with translate\(\) / QT_TRANSLATE_NOOP\(\)\. Ignoring
+lupdate warning: Message with id 'no_source' has no source\.

@@ -1,0 +1,2 @@
+.*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp_clang_parser[/\\]main.cpp:406:0:  'translate' cannot be called without context or source. The call is ignored.
+lupdate warning: Message with id 'yet_another_id' has no source.
