@@ -236,7 +236,7 @@ void tst_lupdate::good()
 
     QString dir = m_basePath + "good/" + directory;
 
-    qDebug() << "Checking...";
+    qDebug() << "Running test in" << dir;
 
     QString workDir = dir;
     QStringList generatedtsfiles(QLatin1String("project.ts"));
