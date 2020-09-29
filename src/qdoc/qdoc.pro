@@ -77,7 +77,6 @@ HEADERS += access.h \
            quoter.h \
            relatedclass.h \
            sections.h \
-           separator.h \
            sharedcommentnode.h \
            singleton.h \
            tagfilewriter.h \
@@ -134,7 +133,6 @@ SOURCES += aggregate.cpp \
            quoter.cpp \
            relatedclass.cpp \
            sections.cpp \
-           separator.cpp \
            sharedcommentnode.cpp \
            tagfilewriter.cpp \
            text.cpp \

@@ -69,7 +69,6 @@ qt_internal_add_tool(${target_name}
         quoter.cpp quoter.h
         relatedclass.cpp relatedclass.h
         sections.cpp sections.h
-        separator.cpp separator.h
         sharedcommentnode.cpp sharedcommentnode.h
         singleton.h
         tagfilewriter.cpp tagfilewriter.h

@@ -35,7 +35,6 @@
 #include "node.h"
 #include "propertynode.h"
 #include "qdocdatabase.h"
-#include "separator.h"
 #include "quoter.h"
 
 #include <QtCore/qxmlstream.h>

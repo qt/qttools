@@ -41,6 +41,9 @@ namespace Utilities {
 void startDebugging(const QString &message);
 void stopDebugging(const QString &message);
 bool debugging();
+
+QString separator(int wordPosition, int numberOfWords);
+QString comma(int wordPosition, int numberOfWords);
 };
 
 QT_END_NAMESPACE

@@ -48,10 +48,10 @@
 #include "qdocdatabase.h"
 #include "qmltypenode.h"
 #include "quoter.h"
-#include "separator.h"
 #include "sharedcommentnode.h"
 #include "tokenizer.h"
 #include "typedefnode.h"
+#include "utilities.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
@@ -138,7 +138,7 @@ void Generator::appendFullNames(Text &text, const NodeList &nodes, const Node *r
     int index = 0;
     for (const auto &node : nodes) {
         appendFullName(text, node, relative);
-        text << comma(index++, nodes.count());
+        text << Utilities::comma(index++, nodes.count());
     }
 }
 
@@ -191,7 +191,7 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
     const QStringList classNames = classMap.keys();
     for (const auto &className : classNames) {
         text << classMap[className];
-        text << comma(index++, classNames.count());
+        text << Utilities::comma(index++, classNames.count());
     }
     return index;
 }
@@ -213,7 +213,7 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
     const QStringList names = classMap.keys();
     for (const auto &name : names) {
         text << classMap[name];
-        text << comma(index++, names.count());
+        text << Utilities::comma(index++, names.count());
     }
     return index;
 }
@@ -685,7 +685,7 @@ void Generator::generateAlsoList(const Node *node, CodeMarker *marker)
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
         for (int i = 0; i < alsoList.size(); ++i)
-            text << alsoList.at(i) << separator(i, alsoList.size());
+            text << alsoList.at(i) << Utilities::separator(i, alsoList.size());
 
         text << Atom::ParaRight;
         generateText(text, node, marker);
@@ -1061,7 +1061,7 @@ void Generator::generateInherits(const ClassNode *classe, CodeMarker *marker)
                 } else if (cls.m_access == Access::Private) {
                     text << " (private)";
                 }
-                text << separator(index++, classe->baseClasses().count());
+                text << Utilities::separator(index++, classe->baseClasses().count());
             }
         }
         text << Atom::ParaRight;
@@ -1181,7 +1181,7 @@ void Generator::generateMaintainerList(const Aggregate *node, CodeMarker *marker
              << "Maintained by: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
 
         for (int i = 0; i < sl.size(); ++i)
-            text << sl.at(i) << separator(i, sl.size());
+            text << sl.at(i) << Utilities::separator(i, sl.size());
 
         text << Atom::ParaRight;
         generateText(text, node, marker);

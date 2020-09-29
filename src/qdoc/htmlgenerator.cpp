@@ -36,7 +36,6 @@
 #include "codemarker.h"
 #include "codeparser.h"
 #include "enumnode.h"
-#include "examplenode.h"
 #include "functionnode.h"
 #include "helpprojectwriter.h"
 #include "manifestwriter.h"
@@ -44,7 +43,6 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"
-#include "separator.h"
 #include "sharedcommentnode.h"
 #include "tagfilewriter.h"
 #include "tree.h"
@@ -1921,7 +1919,7 @@ void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text
                 } else if (cls.m_access == Access::Private) {
                     *text << " (private)";
                 }
-                *text << comma(index++, classe->baseClasses().count());
+                *text << Utilities::comma(index++, classe->baseClasses().count());
             }
         }
         *text << Atom::ParaRight;

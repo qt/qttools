@@ -43,12 +43,10 @@
 #include "quoter.h"
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"
-#include "separator.h"
 #include "sharedcommentnode.h"
 #include "typedefnode.h"
 #include "variablenode.h"
 
-#include <QtCore/qiterator.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/quuid.h>
@@ -1742,7 +1740,7 @@ void DocBookGenerator::generateSortedNames(const ClassNode *cn, const QList<Rela
     int index = 0;
     for (const QString &className : classNames) {
         generateFullName(classMap.value(className), cn);
-        writer->writeCharacters(comma(index++, classNames.count()));
+        writer->writeCharacters(Utilities::comma(index++, classNames.count()));
     }
 }
 
@@ -1762,7 +1760,7 @@ void DocBookGenerator::generateSortedQmlNames(const Node *base, const NodeList &
 
     for (const QString &name : names) {
         generateFullName(classMap.value(name), base);
-        writer->writeCharacters(comma(index++, names.count()));
+        writer->writeCharacters(Utilities::comma(index++, names.count()));
     }
 }
 
@@ -1830,7 +1828,8 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
                         writer->writeCharacters(" (protected)");
                     else if ((*r).m_access == Access::Private)
                         writer->writeCharacters(" (private)");
-                    writer->writeCharacters(comma(index++, classe->baseClasses().count()));
+                    writer->writeCharacters(
+                            Utilities::comma(index++, classe->baseClasses().count()));
                 }
                 ++r;
             }
@@ -2890,7 +2889,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                         } else if ((*r).m_access == Access::Private) {
                             writer->writeCharacters(" (private)");
                         }
-                        writer->writeCharacters(comma(index++, classe->baseClasses().count()));
+                        writer->writeCharacters(
+                                Utilities::comma(index++, classe->baseClasses().count()));
                     }
                     ++r;
                 }
