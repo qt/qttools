@@ -1,6 +1,8 @@
 # Try to reference a variable that does not exist:
 MYVAR=$$THIS_VARIABLE_IS_NOT_DEFINED
 
+QT += widgets
+
 SOURCES += main.cpp
 
 win32 {
