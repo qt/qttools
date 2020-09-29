@@ -42,6 +42,13 @@
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                 </description>
             </function>
+            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+                <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
+                <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
+                <description>
+                    <para>Returns true if <argument>lhs</argument> and <argument>rhs</argument> are equal.</para>
+                </description>
+            </function>
             <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void overload()">
                 <description/>
             </function>

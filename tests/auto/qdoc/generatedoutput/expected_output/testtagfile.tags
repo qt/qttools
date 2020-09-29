@@ -165,6 +165,13 @@
             <anchor>virtualFun</anchor>
             <arglist>()</arglist>
         </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>bool</type>
+            <name>operator==</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>operator-eq-eq</anchor>
+            <arglist>(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</arglist>
+        </member>
         <member kind="function" protection="protected" virtualness="non" static="no">
             <type>void</type>
             <name>overload</name>

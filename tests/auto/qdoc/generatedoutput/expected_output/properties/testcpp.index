@@ -25,6 +25,10 @@
                 </function>
                 <function name="inlineFunction" fullname="TestQDoc::Test::inlineFunction" href="testqdoc-test.html#inlineFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" brief="An inline function, documented using the \fn QDoc command" signature="void inlineFunction()"/>
                 <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void obsoleteMember()"/>
+                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+                    <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
+                    <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
+                </function>
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void overload()"/>
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" documented="true" since="Test 1.2" meta="plain" virtual="non" const="false" static="false" final="false" override="false" overload="true" overload-number="1" type="void" signature="void overload(bool b)">
                     <parameter type="bool" name="b" default=""/>

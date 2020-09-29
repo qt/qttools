@@ -205,6 +205,31 @@
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
 </db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="operator-eq-eq">
+<db:title>bool operator==(const TestQDoc::Test &amp;<db:emphasis>lhs</db:emphasis>, const TestQDoc::Test &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>bool</db:type>
+<db:methodname>operator==</db:methodname>
+<db:methodparam>
+<db:type>const TestQDoc::Test &amp;</db:type>
+<db:parameter>lhs</db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>const TestQDoc::Test &amp;</db:type>
+<db:parameter>rhs</db:parameter>
+</db:methodparam>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Returns true if <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code> are equal.</db:para>
+</db:section>
+</db:section>
 <db:section xml:id="macro-documentation">
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO2">

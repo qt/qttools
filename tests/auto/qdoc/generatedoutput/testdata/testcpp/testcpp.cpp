@@ -167,6 +167,12 @@ void Test::virtualFun()
 }
 
 /*!
+    \fn bool Test::operator==(const Test &lhs, const Test &rhs)
+
+    Returns true if \a lhs and \a rhs are equal.
+*/
+
+/*!
     \typedef Test::SomeType
     \brief A typedef.
 */

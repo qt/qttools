@@ -71,6 +71,8 @@ using Specialized = Struct<int, T>;
     inline void inlineFunction() {};
     virtual void virtualFun();
 
+    friend bool operator==(const Test &lhs, const Test &rhs) { return false; }
+
 protected:
     void overload() {}
     void overload(bool b) { if (!b) return; }

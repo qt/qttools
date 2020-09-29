@@ -461,6 +461,7 @@ private:
 
     QDocDatabase *qdb_;
     Aggregate *parent_;
+    bool m_friendDecl { false };             // true if currently visiting a friend declaration
     const QHash<QString, QString> allHeaders_;
     QHash<CXFile, bool> isInterestingCache_; // doing a canonicalFilePath is slow, so keep a cache.
 
@@ -781,15 +782,14 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             parameters.append(QStringLiteral("..."));
         readParameterNamesAndAttributes(fn, cursor);
         fn->setTemplateDecl(templateString);
+        // Friend functions are not members
+        if (m_friendDecl)
+            fn->setRelatedNonmember(true);
         return CXChildVisit_Continue;
     }
 #if CINDEX_VERSION >= 36
     case CXCursor_FriendDecl: {
-        // Friend functions are declared in the enclosing namespace
-        Aggregate *ns = parent_;
-        while (ns && ns->isClassNode())
-            ns = ns->parent();
-        QScopedValueRollback<Aggregate *> setParent(parent_, ns);
+        QScopedValueRollback<bool> setFriend(m_friendDecl, true);
         // Visit the friend functions
         return visitChildren(cursor);
     }
