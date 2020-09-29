@@ -163,7 +163,7 @@ private:
         result.includePaths = stringListValue(obj, QLatin1String("includePaths"));
         result.sources = stringListValue(obj, QLatin1String("sources"));
         if (obj.contains(QLatin1String("translations")))
-            result.translations.reset(new QStringList(stringListValue(obj, QLatin1String("translations"))));
+            result.translations = stringListValue(obj, QLatin1String("translations"));
         result.subProjects = convertProjects(obj.value(QLatin1String("subProjects")).toArray());
         return result;
     }

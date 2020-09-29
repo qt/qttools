@@ -607,7 +607,7 @@ private:
             cd.m_compileCommandsPath = commandLineCompileCommands;
 
         QStringList tsFiles;
-        if (hasTranslations(prj)) {
+        if (prj.translations) {
             tsFiles = *prj.translations;
             if (parentTor) {
                 if (topLevel) {
