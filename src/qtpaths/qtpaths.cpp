@@ -89,20 +89,26 @@ static const struct StringEnum {
     const char *stringvalue;
     QStandardPaths::StandardLocation enumvalue;
 } lookupTableData[] = {
+    { "AppConfigLocation", QStandardPaths::AppConfigLocation },
+    { "AppDataLocation", QStandardPaths::AppDataLocation },
+    { "AppLocalDataLocation", QStandardPaths::AppLocalDataLocation },
     { "ApplicationsLocation", QStandardPaths::ApplicationsLocation },
+    { "CacheLocation", QStandardPaths::CacheLocation },
+    { "ConfigLocation", QStandardPaths::ConfigLocation },
+    { "DataLocation", QStandardPaths::DataLocation },
     { "DesktopLocation", QStandardPaths::DesktopLocation },
     { "DocumentsLocation", QStandardPaths::DocumentsLocation },
+    { "DownloadLocation", QStandardPaths::DownloadLocation },
     { "FontsLocation", QStandardPaths::FontsLocation },
-    { "MusicLocation", QStandardPaths::MusicLocation },
-    { "MoviesLocation", QStandardPaths::MoviesLocation },
-    { "PicturesLocation", QStandardPaths::PicturesLocation },
-    { "HomeLocation", QStandardPaths::HomeLocation },
     { "GenericCacheLocation", QStandardPaths::GenericCacheLocation },
-    { "GenericDataLocation", QStandardPaths::GenericDataLocation },
-    { "RuntimeLocation", QStandardPaths::RuntimeLocation },
-    { "ConfigLocation", QStandardPaths::ConfigLocation },
     { "GenericConfigLocation", QStandardPaths::GenericConfigLocation },
-    { "DownloadLocation", QStandardPaths::DownloadLocation }
+    { "GenericDataLocation", QStandardPaths::GenericDataLocation },
+    { "HomeLocation", QStandardPaths::HomeLocation },
+    { "MoviesLocation", QStandardPaths::MoviesLocation },
+    { "MusicLocation", QStandardPaths::MusicLocation },
+    { "PicturesLocation", QStandardPaths::PicturesLocation },
+    { "RuntimeLocation", QStandardPaths::RuntimeLocation },
+    { "TempLocation", QStandardPaths::TempLocation }
 };
 
 /**
