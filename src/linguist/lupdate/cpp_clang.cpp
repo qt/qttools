@@ -185,10 +185,10 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     ReadSynchronizedRef<TranslationRelatedStore> rsv(ast);
     ClangCppParser::correctAstTranslationContext(rsv, wsv, qdecl);
 
-    rsv.reset(qnoop);
+    ReadSynchronizedRef<TranslationRelatedStore> rsvQNoop(qnoop);
     //unlike ast translation context, qnoop context don't need to be corrected
     //(because Q_DECLARE_TR_FUNCTION context is already applied).
-    ClangCppParser::finalize(rsv, wsv);
+    ClangCppParser::finalize(rsvQNoop, wsv);
 
     for (const auto &store : finalStores)
         ClangCppParser::fillTranslator(store, translator, cd);

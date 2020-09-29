@@ -78,20 +78,13 @@ template<typename T> class ReadSynchronizedRef
     Q_DISABLE_COPY_MOVE(ReadSynchronizedRef)
 
 public:
-    ReadSynchronizedRef(const std::vector<T> &vector) Q_DECL_NOEXCEPT
-        : m_vector(const_cast<std::vector<T> &>(vector))
+    ReadSynchronizedRef(const std::vector<T> &v) noexcept
+        : m_vector(v)
     {}
 
     size_t size() const
     {
         return m_vector.size();
-    }
-
-    /* Unsafe, do not use inside threads. */
-    void reset(const std::vector<T> &vector)
-    {
-        m_next = 0;
-        m_vector = const_cast<std::vector<T> &>(vector);
     }
 
     bool next(T *value) const
@@ -104,7 +97,7 @@ public:
     }
 
 private:
-    std::vector<T> &m_vector;
+    const std::vector<T> &m_vector;
     mutable std::atomic<size_t> m_next = 0;
 };
 
