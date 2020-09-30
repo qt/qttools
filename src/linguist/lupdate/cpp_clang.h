@@ -249,7 +249,8 @@ namespace ClangCppParser
     void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd,
                  bool *fail);
 
-    void fillTranslator(const TranslationRelatedStore &store, Translator &tor, ConversionData &cd);
+    using TranslatorMessageVector = std::vector<TranslatorMessage>;
+    void collectMessages(TranslatorMessageVector &result, const TranslationRelatedStore &store);
     TranslatorMessage translatorMessage(const TranslationRelatedStore &store,
         const QString &id, bool plural, bool isID);
 

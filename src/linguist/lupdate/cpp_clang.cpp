@@ -40,6 +40,8 @@
 
 #include <clang/Tooling/CompilationDatabase.h>
 
+#include <algorithm>
+#include <limits>
 #include <thread>
 
 using clang::tooling::CompilationDatabase;
@@ -138,6 +140,26 @@ static bool generateCompilationDatabase(const QString &outputFilePath, const QSt
         return false;
     file.write(doc.toJson());
     return true;
+}
+
+
+// Sort messages in such a way that they appear in the same order like in the given file list.
+static void sortMessagesByFileOrder(ClangCppParser::TranslatorMessageVector &messages,
+                                    const QStringList &files)
+{
+    QHash<QString, QStringList::size_type> indexByPath;
+    for (const TranslatorMessage &m : messages)
+        indexByPath[m.fileName()] = std::numeric_limits<QStringList::size_type>::max();
+
+    for (QStringList::size_type i = 0; i < files.size(); ++i)
+        indexByPath[files[i]] = i;
+
+    std::stable_sort(messages.begin(), messages.end(),
+              [&](const TranslatorMessage &lhs, const TranslatorMessage &rhs) {
+                  auto i = indexByPath.value(lhs.fileName());
+                  auto k = indexByPath.value(rhs.fileName());
+                  return i <= k;
+              });
 }
 
 void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd,
@@ -251,12 +273,18 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     //(because Q_DECLARE_TR_FUNCTION context is already applied).
     ClangCppParser::finalize(rsvQNoop, wsv);
 
+    TranslatorMessageVector messages;
     for (const auto &store : finalStores)
-        ClangCppParser::fillTranslator(store, translator, cd);
+        ClangCppParser::collectMessages(messages, store);
+
+    sortMessagesByFileOrder(messages, files);
+
+    for (TranslatorMessage &msg : messages)
+        translator.extend(std::move(msg), cd);
 }
 
-void ClangCppParser::fillTranslator(const TranslationRelatedStore &store, Translator &translator,
-    ConversionData &cd)
+void ClangCppParser::collectMessages(TranslatorMessageVector &result,
+                                     const TranslationRelatedStore &store)
 {
     if (!store.isValid())
         return;
@@ -279,7 +307,7 @@ void ClangCppParser::fillTranslator(const TranslationRelatedStore &store, Transl
         if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty())
             qCDebug(lcClang) << "tr() cannot be called without context \n";
         else
-            translator.extend(translatorMessage(store, store.lupdateIdMetaData, plural, false), cd);
+            result.push_back(translatorMessage(store, store.lupdateIdMetaData, plural, false));
         break;
 
     // handle translate and findMessage
@@ -295,7 +323,7 @@ void ClangCppParser::fillTranslator(const TranslationRelatedStore &store, Transl
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
         if (!store.lupdateSourceWhenId.isEmpty())
             qCDebug(lcClang) << "//% is ignored when using translate function\n";
-        translator.extend(translatorMessage(store, store.lupdateIdMetaData, plural, false), cd);
+        result.push_back(translatorMessage(store, store.lupdateIdMetaData, plural, false));
         break;
 
     // handle qtTrId
@@ -306,12 +334,20 @@ void ClangCppParser::fillTranslator(const TranslationRelatedStore &store, Transl
     case TrFunctionAliasManager::Function_QT_TRID_NOOP:
         if (!store.lupdateIdMetaData.isEmpty())
             qCDebug(lcClang) << "//= is ignored when using qtTrId function \n";
-        translator.extend(translatorMessage(store, store.lupdateId, plural, true), cd);
+        result.push_back(translatorMessage(store, store.lupdateId, plural, true));
         break;
     default:
         if (store.funcName == QStringLiteral("TRANSLATOR"))
-             translator.extend(translatorMessage(store, store.lupdateIdMetaData, plural, false), cd);
+            result.push_back(translatorMessage(store, store.lupdateIdMetaData, plural, false));
     }
+}
+
+static QString ensureAbsolutePath(const QString &filePath)
+{
+    QFileInfo fi(filePath);
+    if (fi.isRelative())
+        return QDir::current().absoluteFilePath(filePath);
+    return filePath;
 }
 
 TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStore &store,
@@ -328,7 +364,7 @@ TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStor
             : store.lupdateSource),
         ParserTool::transcode(store.lupdateComment),
         QString(),
-        store.lupdateLocationFile,
+        ensureAbsolutePath(store.lupdateLocationFile),
         store.lupdateLocationLine,
         QStringList(),
         TranslatorMessage::Type::Unfinished,
