@@ -129,9 +129,7 @@ namespace LupdatePrivate
              };
             */
             // For recordDecl corresponding to class C, the following gives access to class A
-            context = exploreBases(recordDecl, sm);
-            if (!context.isEmpty())
-                return context;
+            return exploreBases(recordDecl, sm);
         }
     }
 
