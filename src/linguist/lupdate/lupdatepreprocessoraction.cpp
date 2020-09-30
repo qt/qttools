@@ -119,15 +119,13 @@ void LupdatePPCallbacks::storeMacroArguments(const std::vector<QString> &args,
         if (args.size() == 1)
             store->contextArg = args[0];
         break;
-    // two arguments: the context and the source
     case TrFunctionAliasManager::Function_QT_TR_NOOP:
     case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
-        if (args.size() >= 1) {
+        if (args.size() >= 1)
             store->lupdateSource = args[0];
-        }
+        break;
     case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
-        Q_FALLTHROUGH();
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
@@ -141,7 +139,6 @@ void LupdatePPCallbacks::storeMacroArguments(const std::vector<QString> &args,
         break;
     // only one argument (?) the message Id
     case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
-        Q_FALLTHROUGH();
     case TrFunctionAliasManager::Function_qtTrId:
     case TrFunctionAliasManager::Function_QT_TRID_NOOP:
         if (args.size() == 1)
