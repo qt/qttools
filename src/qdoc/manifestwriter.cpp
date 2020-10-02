@@ -65,6 +65,7 @@ void warnAboutUnusedAttributes(const QStringList &usedAttributes, const QString 
 
 void writeDescription(QXmlStreamWriter *writer, const ExampleNode *example)
 {
+    Q_ASSERT(writer && example);
     writer->writeStartElement("description");
     const Text brief = example->doc().briefText();
     if (!brief.isEmpty())
@@ -154,8 +155,7 @@ void ManifestWriter::processManifestMetaContent(const QString &fullName,
                                                 QStringList *usedAttributes,
                                                 QXmlStreamWriter *writer)
 {
-    if (!usedAttributes || !writer)
-        return;
+    Q_ASSERT(usedAttributes && writer);
 
     for (const auto &index : m_manifestMetaContent) {
         const auto &names = index.names;
@@ -303,7 +303,8 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
  */
 void ManifestWriter::writeTagsElement(QXmlStreamWriter *writer)
 {
-    if (!writer || m_tags.isEmpty())
+    Q_ASSERT(writer);
+    if (m_tags.isEmpty())
         return;
 
     writer->writeStartElement("tags");
@@ -346,8 +347,7 @@ void ManifestWriter::cleanUpTags()
  */
 void ManifestWriter::addTitleWordsToTags(const ExampleNode *example)
 {
-    if (!example)
-        return;
+    Q_ASSERT(example);
 
     const auto &titleWords = example->title().toLower().split(QLatin1Char(' '));
     m_tags += QSet<QString>(titleWords.cbegin(), titleWords.cend());
@@ -380,8 +380,7 @@ void ManifestWriter::addWordsFromModuleNamesAsTags()
  */
 void ManifestWriter::includeTagsAddedWithMetaCommand(const ExampleNode *example)
 {
-    if (!example)
-        return;
+    Q_ASSERT(example);
 
     const QStringMultiMap *metaTagMap = example->doc().metaTagMap();
     if (metaTagMap) {
