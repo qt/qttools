@@ -420,8 +420,11 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
 
     // we need line based lookahead below.
     QList<QByteArray> lines;
-    while (!dev.atEnd())
-        lines.append(dev.readLine().trimmed());
+    while (!dev.atEnd()) {
+        QByteArray line = dev.readLine().trimmed();
+        line.squeeze();
+        lines.append(line);
+    }
     lines.append(QByteArray());
 
     int l = 0, lastCmtLine = -1;
