@@ -1348,6 +1348,21 @@ const Node *QDocDatabase::findNodeForTarget(const QString &target, const Node *r
     return node;
 }
 
+QStringList QDocDatabase::groupNamesForNode(Node *node)
+{
+    QStringList result;
+    CNMap *m = primaryTree()->getCollectionMap(Node::Group);
+
+    if (!m)
+        return result;
+
+    for (auto it = m->cbegin(); it != m->cend(); ++it)
+        if (it.value()->members().contains(node))
+            result << it.key();
+
+    return result;
+}
+
 /*!
   Reads and parses the qdoc index files listed in \a indexFiles.
  */

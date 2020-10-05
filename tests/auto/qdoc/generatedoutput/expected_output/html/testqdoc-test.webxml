@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A class in a namespace">
+        <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" documented="true" groups="testgroup" module="TestCPP" brief="A class in a namespace">
             <description>
                 <brief>A class in a namespace.</brief>
             </description>
-            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
+            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                 <parameter type="int &amp;" name="x" default=""/>
                 <description>
                     <brief>A macro with argument <argument>x</argument>.</brief>
@@ -62,7 +62,7 @@
                     <para>Function that takes a parameter <argument>v</argument>. Also returns the value of <argument>v</argument>.</para>
                 </description>
             </function>
-            <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)">
+            <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)" groups="testgroup">
                 <parameter type="int" name="i" default=""/>
                 <parameter type="bool" name="b" default="false"/>
                 <description>

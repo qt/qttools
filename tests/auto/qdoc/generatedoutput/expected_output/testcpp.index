@@ -3,14 +3,14 @@
 <INDEX url="" title="TestCPP Reference Documentation" version="" project="TestCPP">
     <namespace name="" status="active" access="public" module="testcpp">
         <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
-        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
+        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
             <parameter type="int &amp;" name="x" default=""/>
         </function>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
             <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
-            <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A class in a namespace">
-                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
+            <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" documented="true" groups="testgroup" module="TestCPP" brief="A class in a namespace">
+                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
                 <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void anotherObsoleteMember()"/>
@@ -35,7 +35,7 @@
                 <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
                     <parameter type="int" name="v" default="0"/>
                 </function>
-                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)">
+                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)" groups="testgroup">
                     <parameter type="int" name="i" default=""/>
                     <parameter type="bool" name="b" default="false"/>
                 </function>
@@ -48,6 +48,7 @@
                 <alias name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-alias" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
             </class>
         </namespace>
+        <group name="testgroup" href="testgroup.html" status="internal" seen="false" title="" members="Test,QDOCTEST_MACRO2,someFunctionDefaultArg"/>
         <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" module="TestCPP" members="TestQDoc,Test,TestDerived" brief="A test module page"/>
     </namespace>
 </INDEX>

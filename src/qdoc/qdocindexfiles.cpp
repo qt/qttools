@@ -1003,6 +1003,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     if (node->hasDoc())
         writer.writeAttribute("documented", "true");
 
+    QStringList groups = qdb_->groupNamesForNode(node);
+    if (!groups.isEmpty())
+        writer.writeAttribute("groups", groups.join(QLatin1Char(',')));
+
     QString brief = node->doc().trimmedBriefText(node->name()).toString();
     switch (node->nodeType()) {
     case Node::Class:
@@ -1026,8 +1030,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         }
         if (!node->physicalModuleName().isEmpty())
             writer.writeAttribute("module", node->physicalModuleName());
-        if (!classNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", classNode->groupNames().join(QLatin1Char(',')));
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
@@ -1035,8 +1037,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const auto *headerNode = static_cast<const HeaderNode *>(node);
         if (!headerNode->physicalModuleName().isEmpty())
             writer.writeAttribute("module", headerNode->physicalModuleName());
-        if (!headerNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", headerNode->groupNames().join(QLatin1Char(',')));
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
         writer.writeAttribute("title", headerNode->title());
@@ -1047,8 +1047,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const auto *namespaceNode = static_cast<const NamespaceNode *>(node);
         if (!namespaceNode->physicalModuleName().isEmpty())
             writer.writeAttribute("module", namespaceNode->physicalModuleName());
-        if (!namespaceNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", namespaceNode->groupNames().join(QLatin1Char(',')));
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
@@ -1058,8 +1056,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         writer.writeAttribute("title", qmlTypeNode->title());
         writer.writeAttribute("fulltitle", qmlTypeNode->fullTitle());
         writer.writeAttribute("subtitle", qmlTypeNode->subtitle());
-        if (!qmlTypeNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", qmlTypeNode->groupNames().join(QLatin1Char(',')));
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
@@ -1095,8 +1091,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         writer.writeAttribute("subtitle", pageNode->subtitle());
         if (!node->physicalModuleName().isEmpty() && writeModuleName)
             writer.writeAttribute("module", node->physicalModuleName());
-        if (!pageNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", pageNode->groupNames().join(QLatin1Char(',')));
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
@@ -1108,8 +1102,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("subtitle", collectionNode->subtitle());
         if (!collectionNode->physicalModuleName().isEmpty())
             writer.writeAttribute("module", collectionNode->physicalModuleName());
-        if (!collectionNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", collectionNode->groupNames().join(QLatin1Char(',')));
         /*
           This is not read back in, so it probably
           shouldn't be written out in the first place.
@@ -1132,8 +1124,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("subtitle", collectionNode->subtitle());
         if (!collectionNode->physicalModuleName().isEmpty())
             writer.writeAttribute("module", collectionNode->physicalModuleName());
-        if (!collectionNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", collectionNode->groupNames().join(QLatin1Char(',')));
         /*
           This is not read back in, so it probably
           shouldn't be written out in the first place.
@@ -1157,8 +1147,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("subtitle", collectionNode->subtitle());
         if (!collectionNode->physicalModuleName().isEmpty())
             writer.writeAttribute("module", collectionNode->physicalModuleName());
-        if (!collectionNode->groupNames().isEmpty())
-            writer.writeAttribute("groups", collectionNode->groupNames().join(QLatin1Char(',')));
         /*
           This is not read back in, so it probably
           shouldn't be written out in the first place.
@@ -1450,6 +1438,10 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         if (fn->isPureVirtual())
             signature += " = 0";
         writer.writeAttribute("signature", signature);
+
+        QStringList groups = qdb_->groupNamesForNode(fn);
+        if (!groups.isEmpty())
+            writer.writeAttribute("groups", groups.join(QLatin1Char(',')));
 
         for (int i = 0; i < fn->parameters().count(); ++i) {
             const Parameter &parameter = fn->parameters().at(i);

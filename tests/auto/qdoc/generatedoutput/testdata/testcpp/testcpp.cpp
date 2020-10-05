@@ -62,6 +62,7 @@ namespace TestQDoc {
     //! omitted by ignoresince
     \since 1.1
 \endif
+    \ingroup testgroup
 */
 
 /*!
@@ -84,6 +85,7 @@ namespace TestQDoc {
     \relates TestQDoc::Test
     \since Test 1.1
     \brief A macro with argument \a x.
+    \ingroup testgroup
 */
 
 /*!
@@ -119,6 +121,7 @@ void Test::anotherObsoleteMember()
 \if defined(test_ignoresince)
     \since 2.0
 \endif
+    \ingroup testgroup
 */
 void Test::someFunctionDefaultArg(int i, bool b = false)
 {

@@ -340,6 +340,8 @@ public:
     }
     FunctionNode *findMacroNode(const QString &t) { return primaryTree()->findMacroNode(t); }
 
+    QStringList groupNamesForNode(Node *node);
+
 private:
     const Node *findNodeForTarget(QStringList &targetPath, const Node *relative, Node::Genus genus,
                                   QString &ref)

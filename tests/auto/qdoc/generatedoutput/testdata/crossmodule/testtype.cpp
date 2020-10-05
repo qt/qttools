@@ -45,6 +45,11 @@
       \li QDOCTEST_MACRO
     \endlist
 
+    \section1 Generated Lists
+
+    This is an annotated list of entries in a group:
+    \annotatedlist testgroup
+
     \sa {TestQDoc::Test::}{someFunction()}
 */
 
