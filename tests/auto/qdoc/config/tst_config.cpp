@@ -114,6 +114,7 @@ void tst_Config::variables()
     QCOMPARE(config.getBool("untrue"), false);
     QCOMPARE(config.getInt("int"), 2);
     QCOMPARE(config.getString("void"), QString());
+    QVERIFY(!config.getString("void").isNull());
     QCOMPARE(config.getString("void", "undefined"), QString());
     QCOMPARE(config.getString("undefined", "undefined"), "undefined");
     QVERIFY(config.getString("undefined").isNull());

@@ -544,7 +544,7 @@ QString Config::getString(const QString &var, const QString &defaultString) cons
         return defaultString;
     updateLocation(configVar);
 
-    QString result;
+    QString result(""); // an empty but non-null string
     for (const auto &value : configVar.m_values) {
         if (!result.isEmpty() && !result.endsWith(QChar('\n')))
             result.append(QChar(' '));
