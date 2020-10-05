@@ -175,7 +175,6 @@ public:
                             const QString &userFriendlySourceFilePath,
                             const QString &targetDirPath);
     static int numParams(const QString &value);
-    static bool removeDirContents(const QString &dir);
     static void pushWorkingDir(const QString &dir);
     static QString popWorkingDir();
 

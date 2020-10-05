@@ -1851,14 +1851,14 @@ void Generator::initializeFormat()
         outSubdir_ = outDir_.mid(outDir_.lastIndexOf('/') + 1);
     }
 
-    QDir dirInfo;
-    if (dirInfo.exists(outDir_)) {
+    QDir outputDir(outDir_);
+    if (outputDir.exists()) {
         if (!config.generating() && Generator::useOutputSubdirs()) {
-            if (!Config::removeDirContents(outDir_))
+            if (!outputDir.isEmpty())
                 config.lastLocation().error(
-                        QStringLiteral("Cannot empty output directory '%1'").arg(outDir_));
+                        QStringLiteral("Output directory '%1' exists but is not empty").arg(outDir_));
         }
-    } else if (!dirInfo.mkpath(outDir_)) {
+    } else if (!outputDir.mkpath(QStringLiteral("."))) {
         config.lastLocation().fatal(
                 QStringLiteral("Cannot create output directory '%1'").arg(outDir_));
     }
@@ -1867,9 +1867,10 @@ void Generator::initializeFormat()
     if (config.preparing())
         return;
 
-    if (!dirInfo.exists(outDir_ + "/images") && !dirInfo.mkdir(outDir_ + "/images"))
+    const QLatin1String imagesDir("images");
+    if (!outputDir.exists(imagesDir) && !outputDir.mkdir(imagesDir))
         config.lastLocation().fatal(
-                QStringLiteral("Cannot create images directory '%1'").arg(outDir_ + "/images"));
+                QStringLiteral("Cannot create images directory '%1'").arg(outputDir.filePath(imagesDir)));
 
     copyTemplateFiles(format() + Config::dot + CONFIG_STYLESHEETS, "style");
     copyTemplateFiles(format() + Config::dot + CONFIG_SCRIPTS, "scripts");

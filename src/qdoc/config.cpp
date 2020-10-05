@@ -931,36 +931,6 @@ int Config::numParams(const QString &value)
 }
 
 /*!
-  Removes everything from \a dir. This function is recursive.
-  It doesn't remove \a dir itself, but if it was called
-  recursively, then the caller will remove \a dir.
- */
-bool Config::removeDirContents(const QString &dir)
-{
-    QDir dirInfo(dir);
-    const QFileInfoList entries = dirInfo.entryInfoList();
-
-    bool ok = true;
-
-    for (const auto &entry : entries) {
-        if (entry.isFile()) {
-            if (!dirInfo.remove(entry.fileName()))
-                ok = false;
-        } else if (entry.isDir()) {
-            if (entry.fileName() != QLatin1String(".") && entry.fileName() != QLatin1String("..")) {
-                if (removeDirContents(entry.absoluteFilePath())) {
-                    if (!dirInfo.rmdir(entry.fileName()))
-                        ok = false;
-                } else {
-                    ok = false;
-                }
-            }
-        }
-    }
-    return ok;
-}
-
-/*!
   Returns \c true if \a ch is a letter, number, '_', '.',
   '{', '}', or ','.
  */
