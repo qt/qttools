@@ -237,14 +237,15 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 
     auto outPath = redirectDocumentationToDevNull_ ? QStringLiteral("/dev/null") : path;
     auto outFile = new QFile(outPath);
-    if (!redirectDocumentationToDevNull_ && outFile->exists()) {
-        node->location().error(QStringLiteral("Output file already exists; overwriting %1")
-                                       .arg(outFile->fileName()));
-    }
+
+    if (!redirectDocumentationToDevNull_ && outFile->exists())
+        qCDebug(lcQdoc) << "Output file already exists; overwriting" << qPrintable(outFile->fileName());
+
     if (!outFile->open(QFile::WriteOnly)) {
         node->location().fatal(
                 QStringLiteral("Cannot open output file '%1'").arg(outFile->fileName()));
     }
+
     qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
     outFileNames_ << fileName;
     return outFile;
