@@ -1356,17 +1356,12 @@ void ClangCodeParser::buildPCH()
                         }
                     }
                 } else {
-                    QFile headerFile(header);
-                    if (!headerFile.open(QFile::ReadOnly)) {
-                        qWarning() << "Could not read module header file" << header;
+                    QFileInfo headerFile(header);
+                    if (!headerFile.exists()) {
+                        qWarning() << "Could not find module header file" << header;
                         return;
                     }
-                    QTextStream in(&headerFile);
-                    while (!in.atEnd()) {
-                        QString line = in.readLine().simplified();
-                        if (line.startsWith(QLatin1String("#include")))
-                            out << line << "\n";
-                    }
+                    out << QLatin1String("#include \"") + header + QLatin1String("\"");
                 }
                 tmpHeaderFile.close();
             }
