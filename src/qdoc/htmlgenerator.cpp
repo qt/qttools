@@ -1041,10 +1041,14 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         out() << "</p>\n";
     } else
         generateBrief(aggregate, marker);
-    if (!aggregate->parent()->isClassNode())
+
+    const auto parentIsClass = aggregate->parent()->isClassNode();
+
+    if (!parentIsClass)
         generateRequisites(aggregate, marker);
     generateStatus(aggregate, marker);
-    generateSince(aggregate, marker);
+    if (parentIsClass)
+        generateSince(aggregate, marker);
 
     out() << "<ul>\n";
 
