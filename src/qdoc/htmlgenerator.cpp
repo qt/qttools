@@ -2016,10 +2016,14 @@ void HtmlGenerator::addIncludeFilesToMap(const Aggregate *aggregate, CodeMarker 
                                          QMap<QString, Text> &requisites, Text *text,
                                          const QString &headerText)
 {
-    if (!aggregate->includeFiles().isEmpty() && text != nullptr) {
+    QStringList includeFiles = aggregate->includeFiles();
+    includeFiles.erase(std::remove_if(includeFiles.begin(), includeFiles.end(),
+        [](auto includeFile) { return includeFile.isEmpty(); }), includeFiles.end());
+
+    if (!includeFiles.isEmpty() && text != nullptr) {
         text->clear();
         *text << highlightedCode(
-                indent(m_codeIndent, marker->markedUpIncludes(aggregate->includeFiles())),
+                indent(m_codeIndent, marker->markedUpIncludes(includeFiles)),
                 aggregate);
         requisites.insert(headerText, *text);
     }
