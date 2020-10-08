@@ -790,8 +790,7 @@ QString qtDiag(unsigned flags)
         str << ' ' << platformScreen->subpixelAntialiasingTypeHint() << "\n  ";
         if (QHighDpiScaling::isActive())
             str << "High DPI scaling factor: " << QHighDpiScaling::factor(screen) << ' ';
-        str << "DevicePixelRatio: " << screen->devicePixelRatio()
-            << " Pixel density: " << platformScreen->pixelDensity();
+        str << "DevicePixelRatio: " << screen->devicePixelRatio();
         str << "\n  Primary orientation: " << screen->primaryOrientation()
             << " Orientation: " << screen->orientation()
             << " Native orientation: " << screen->nativeOrientation()
