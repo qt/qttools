@@ -484,10 +484,10 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
         QByteArray data = fi.readAll();
         if (fileName.endsWith(QLatin1String(".html"))
             || fileName.endsWith(QLatin1String(".htm"))) {
-                auto encoding = QStringDecoder::encodingForHtml(data.constData(), data.size());
-                if (!encoding)
-                    encoding = QStringDecoder::Utf8;
-                title = QHelpGlobal::documentTitle(QStringDecoder(*encoding)(data));
+            auto encoding = QStringDecoder::encodingForHtml(data);
+            if (!encoding)
+                encoding = QStringDecoder::Utf8;
+            title = QHelpGlobal::documentTitle(QStringDecoder(*encoding)(data));
         } else {
             title = fileName.mid(fileName.lastIndexOf(QLatin1Char('/')) + 1);
         }
@@ -809,7 +809,7 @@ bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
         }
         const QRegularExpression linkPattern(QLatin1String("<(?:a href|img src)=\"?([^#\">]+)[#\">]"));
         QByteArray data = htmlFile.readAll();
-        auto encoding = QStringDecoder::encodingForHtml(data.constData(), data.size());
+        auto encoding = QStringDecoder::encodingForHtml(data);
         if (!encoding)
             encoding = QStringDecoder::Utf8;
         const QString &content = QStringDecoder(*encoding)(data);

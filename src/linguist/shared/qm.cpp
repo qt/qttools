@@ -452,7 +452,7 @@ static quint32 read32(const uchar *data)
 static void fromBytes(const char *str, int len, QString *out, bool *utf8Fail)
 {
     QStringDecoder toUnicode(QStringDecoder::Utf8, QStringDecoder::Flag::Stateless);
-    *out = toUnicode(str, len);
+    *out = toUnicode(QByteArrayView(str, len));
     *utf8Fail = toUnicode.hasError();
 }
 

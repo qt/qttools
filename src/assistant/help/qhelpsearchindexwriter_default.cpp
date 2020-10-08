@@ -502,7 +502,7 @@ void QHelpSearchIndexWriter::run()
                 }
 
                 QTextStream s(data);
-                auto encoding = QStringDecoder::encodingForHtml(data.constData(), data.size());
+                auto encoding = QStringDecoder::encodingForHtml(data);
                 if (encoding)
                     s.setEncoding(*encoding);
 
