@@ -69,6 +69,8 @@ private:
     void insertTarget(TargetRec::TargetType type, const QXmlStreamAttributes &attributes,
                       Node *node);
     void resolveIndex();
+    int indexForNode(Node *node);
+    bool adoptRelatedNode(Aggregate *adoptiveParent, int index);
 
     void generateIndex(const QString &fileName, const QString &url, const QString &title,
                        Generator *g);
@@ -85,6 +87,7 @@ private:
     Generator *gen_;
     QString project_;
     QList<QPair<ClassNode *, QString>> basesList_;
+    NodeList relatedNodes_;
     bool storeLocationInfo_;
 };
 

@@ -162,6 +162,7 @@ void QDocIndexFiles::readIndexFile(const QString &path)
     project_ = attrs.value(QLatin1String("project")).toString();
     QString indexTitle = attrs.value(QLatin1String("indexTitle")).toString();
     basesList_.clear();
+    relatedNodes_.clear();
 
     NamespaceNode *root = qdb_->newIndexTree(project_);
     if (!root) {
@@ -197,11 +198,17 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
     Node *node;
     Location location;
     Aggregate *parent = nullptr;
-
     bool hasReadChildren = false;
 
     if (current->isAggregate())
         parent = static_cast<Aggregate *>(current);
+
+    if (attributes.hasAttribute(QLatin1String("related"))) {
+        if (adoptRelatedNode(parent, attributes.value(QLatin1String("related")).toInt())) {
+            reader.skipCurrentElement();
+            return;
+        }
+    }
 
     QString filePath;
     int lineNo = 0;
@@ -576,9 +583,11 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             node->setAccess(Access::Private);
         else
             node->setAccess(Access::Public);
-        if (attributes.hasAttribute(QLatin1String("related")))
-            node->setRelatedNonmember(attributes.value(QLatin1String("related"))
-                                      == QLatin1String("true"));
+
+        if (attributes.hasAttribute(QLatin1String("related"))) {
+            node->setRelatedNonmember(true);
+            relatedNodes_ << node;
+        }
 
         if (attributes.hasAttribute(QLatin1String("threadsafety"))) {
             QString threadSafety = attributes.value(QLatin1String("threadsafety")).toString();
@@ -777,6 +786,35 @@ static const QString getThreadSafenessString(Node::ThreadSafeness t)
 }
 
 /*!
+    Returns the index of \a node in the list of related non-member nodes.
+*/
+int QDocIndexFiles::indexForNode(Node *node)
+{
+    int i = relatedNodes_.indexOf(node);
+    if (i == -1) {
+        i = relatedNodes_.size();
+        relatedNodes_ << node;
+    }
+    return i;
+}
+
+/*!
+    Adopts the related non-member node identified by \a index to the
+    parent \a adoptiveParent. Returns \c true if successful.
+*/
+bool QDocIndexFiles::adoptRelatedNode(Aggregate *adoptiveParent, int index)
+{
+    Node *related = relatedNodes_.value(index);
+
+    if (adoptiveParent && related) {
+        adoptiveParent->adoptChild(related);
+        return true;
+    }
+
+    return false;
+}
+
+/*!
   Generate the index section with the given \a writer for the \a node
   specified, returning true if an element was written, and returning
   false if an element is not written.
@@ -957,7 +995,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     }
 
     if (node->isRelatedNonmember())
-        writer.writeAttribute("related", "true");
+        writer.writeAttribute("related", QString::number(indexForNode(node)));
 
     if (!node->since().isEmpty())
         writer.writeAttribute("since", node->since());
@@ -1360,7 +1398,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     if (fn->hasDoc())
         writer.writeAttribute("documented", "true");
     if (fn->isRelatedNonmember())
-        writer.writeAttribute("related", "true");
+        writer.writeAttribute("related", QString::number(indexForNode(fn)));
     if (!fn->since().isEmpty())
         writer.writeAttribute("since", fn->since());
 
@@ -1549,6 +1587,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     qCDebug(lcQdoc) << "Writing index file:" << fileName;
 
     gen_ = g;
+    relatedNodes_.clear();
     QXmlStreamWriter writer(&file);
     writer.setAutoFormatting(true);
     writer.writeStartDocument();

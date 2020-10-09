@@ -5,7 +5,7 @@
             <description>
                 <brief>A class in a namespace.</brief>
             </description>
-            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="true" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
+            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
                 <parameter type="int &amp;" name="x" default=""/>
                 <description>
                     <brief>A macro with argument <argument>x</argument>.</brief>
@@ -42,7 +42,7 @@
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                 </description>
             </function>
-            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+            <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="2" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                 <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                 <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                 <description>

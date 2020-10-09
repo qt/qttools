@@ -2,16 +2,16 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="TestCPP Reference Documentation" version="" project="TestCPP">
     <namespace name="" status="active" access="public" module="testcpp">
-        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="true" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
-        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="true" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
+        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
+        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
             <parameter type="int &amp;" name="x" default=""/>
         </function>
         <page name="https://wiki.qt.io/QProperty" href="https://wiki.qt.io/QProperty" status="active" location="properties.qdoc" documented="true" subtype="externalpage" title="QProperty" fulltitle="QProperty" subtitle=""/>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
-            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="true" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
+            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
             <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A class in a namespace">
-                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="true" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
+                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
                 <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void anotherObsoleteMember()"/>
@@ -25,7 +25,7 @@
                 </function>
                 <function name="inlineFunction" fullname="TestQDoc::Test::inlineFunction" href="testqdoc-test.html#inlineFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" brief="An inline function, documented using the \fn QDoc command" signature="void inlineFunction()"/>
                 <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void obsoleteMember()"/>
-                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
+                <function name="operator==" href="testqdoc-test.html#operator-eq-eq" status="active" access="public" location="testcpp.h" documented="true" related="2" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="bool" signature="bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)">
                     <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                     <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                 </function>
