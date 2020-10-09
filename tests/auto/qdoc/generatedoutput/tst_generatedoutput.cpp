@@ -393,7 +393,10 @@ void tst_generatedOutput::inheritedQmlPropertyGroups()
 
 void tst_generatedOutput::crossModuleLinking()
 {
-    htmlFromCpp();
+    {
+        QScopedValueRollback<bool> skipRegen(m_regen, false);
+        htmlFromCpp();
+    }
     copyIndexFiles();
     QString indexDir = QLatin1String("-indexdir ") +  m_outputDir->path();
     testAndCompare("testdata/crossmodule/crossmodule.qdocconf",
