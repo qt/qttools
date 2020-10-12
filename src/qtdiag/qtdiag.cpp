@@ -856,7 +856,7 @@ QString qtDiag(unsigned flags)
 
 #ifdef Q_OS_WIN
     // On Windows, this will provide addition GPU info similar to the output of dxdiag.
-    using QWindowsApplication = QPlatformInterface::Private::QWindowsApplication;
+    using QWindowsApplication = QNativeInterface::Private::QWindowsApplication;
     if (auto nativeWindowsApp = dynamic_cast<QWindowsApplication *>(QGuiApplicationPrivate::platformIntegration())) {
         const QVariant gpuInfoV = nativeWindowsApp->gpuList();
         if (gpuInfoV.type() == QVariant::List) {
