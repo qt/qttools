@@ -802,9 +802,9 @@ QString qtDiag(unsigned flags)
         str << "Input devices: " << inputDevices.size() << '\n';
         for (auto device : inputDevices) {
             str << "  " << formatValueQDebug(device->type())
-                << " \"" << device->name() << "\", ";
+                << " \"" << device->name() << "\",";
             if (!device->seatName().isEmpty())
-                str << '"' << device->seatName() << '"';
+                str << " seat: \"" << device->seatName() << '"';
             str << " capabilities:";
             const auto capabilities = device->capabilities();
             if (capabilities.testFlag(QInputDevice::Capability::Position))
@@ -833,6 +833,11 @@ QString qtDiag(unsigned flags)
                 str << " TangentialPressure";
             if (capabilities.testFlag(QInputDevice::Capability::ZPosition))
                 str << " ZPosition";
+            if (!device->availableVirtualGeometry().isNull()) {
+                const auto r = device->availableVirtualGeometry();
+                str << " availableVirtualGeometry: " << r.width() << 'x' << r.height()
+                    << Qt::forcesign << r.x() << r.y() << Qt::noforcesign;
+            }
             str << '\n';
         }
         str << "\n\n";
