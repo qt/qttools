@@ -75,6 +75,7 @@ int XmlGenerator::hOffset(const Node *node)
     case Node::QmlBasicType:
     case Node::QmlType:
     case Node::Page:
+    case Node::Group:
         return 1;
     case Node::Enum:
     case Node::TypeAlias:
