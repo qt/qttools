@@ -34,6 +34,7 @@
 
 #include <QtCore/qloggingcategory.h>
 #include <QtCore/qregularexpression.h>
+#include <QtCore/qstring.h>
 
 #if defined(Q_CC_MSVC)
 # pragma warning(push)
@@ -43,8 +44,10 @@
 # pragma warning(disable: 4624)
 #endif
 
+#include <llvm/ADT/StringRef.h>
 #include <clang/Basic/SourceLocation.h>
 #include <clang/Basic/SourceManager.h>
+#include <clang/Basic/FileManager.h>
 
 #if defined(Q_CC_MSVC)
 # pragma warning(pop)
@@ -59,7 +62,13 @@ inline QDebug operator<<(QDebug out, const std::string& str)
     out << QString::fromStdString(str);
     return out;
 }
+
 Q_DECLARE_LOGGING_CATEGORY(lcClang)
+
+inline QString toQt(llvm::StringRef str)
+{
+    return QString::fromUtf8(str.data(), str.size());
+}
 
 #define LUPDATE_CLANG_VERSION_CHECK(major, minor, patch) ((major<<16)|(minor<<8)|(patch))
 #define LUPDATE_CLANG_VERSION LUPDATE_CLANG_VERSION_CHECK(LUPDATE_CLANG_VERSION_MAJOR, \
@@ -205,7 +214,7 @@ namespace LupdatePrivate
             return {};
         if (!s.consume_back("\"") && ((quote & Right) != 0))
             return {};
-        return QString::fromStdString(s);
+        return toQt(s);
     }
 
     /*

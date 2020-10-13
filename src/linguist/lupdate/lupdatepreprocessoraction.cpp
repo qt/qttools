@@ -65,7 +65,7 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
     TranslationRelatedStore store;
     store.callType = QStringLiteral("MacroExpands");
     store.funcName = funcName;
-    store.lupdateLocationFile = QString::fromStdString(fileName);
+    store.lupdateLocationFile = toQt(fileName);
     store.lupdateLocationLine = sm.getExpansionLineNumber(sourceRange.getBegin());
     store.locationCol = sm.getExpansionColumnNumber(sourceRange.getBegin());
 
@@ -162,7 +162,7 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
     const char *end = sm.getCharacterData(sourceRange.getEnd());
     llvm::StringRef skippedText = llvm::StringRef(begin, end - begin);
     if (ClangCppParser::containsTranslationInformation(skippedText)) {
-        qCDebug(lcClang) << "SourceRangeSkipped: skipped text:" << skippedText;
+        qCDebug(lcClang) << "SourceRangeSkipped: skipped text:" << skippedText.str();
         unsigned int beginLine = sm.getExpansionLineNumber(sourceRange.getBegin());
         unsigned int endLine = sm.getExpansionLineNumber(sourceRange.getEnd());
         qWarning("Code with translation information has been skipped "

@@ -45,7 +45,7 @@ namespace LupdatePrivate
             clang::Stmt *child = *it;
             clang::StringLiteral *stringLit = llvm::dyn_cast_or_null<clang::StringLiteral>(child);
             if (stringLit) {
-                context = QString::fromStdString(stringLit->getString());
+                context = toQt(stringLit->getString());
                 return;
             }
             exploreChildrenForFirstStringLiteral(child, context);
@@ -279,6 +279,24 @@ namespace LupdatePrivate
         return point == start || point == end || (sm.isBeforeInTranslationUnit(start, point)
             && sm.isBeforeInTranslationUnit(point, end));
     }
+
+    class BeforeThanCompare
+    {
+        const clang::SourceManager &SM;
+
+    public:
+        explicit BeforeThanCompare(const clang::SourceManager &SM) : SM(SM) { }
+
+        bool operator()(const clang::RawComment &LHS, const clang::RawComment &RHS)
+        {
+            return SM.isBeforeInTranslationUnit(LHS.getBeginLoc(), RHS.getBeginLoc());
+        }
+
+        bool operator()(const clang::RawComment *LHS, const clang::RawComment *RHS)
+        {
+            return operator()(*LHS, *RHS);
+        }
+    };
 }
 
 /*
@@ -416,7 +434,7 @@ void LupdateVisitor::processIsolatedComments()
 
 #if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
     const clang::FileID file = sourceMgr.getMainFileID();
-    const auto commentsInThisFile = m_context->getRawCommentList().getCommentsInFile(file);
+    const auto commentsInThisFile = m_context->Comments.getCommentsInFile(file);
     if (!commentsInThisFile)
         return;
 
@@ -445,9 +463,9 @@ void LupdateVisitor::processIsolatedComments()
         // The store is used here only to pass this information.
         TranslationRelatedStore store;
         store.lupdateLocationLine = sourceMgr.getPresumedLoc(rawComment->getBeginLoc()).getLine();
-        qCDebug(lcClang) << " raw Comment : \n"
-            << QString::fromStdString(rawComment->getRawText(sourceMgr));
-        setInfoFromRawComment(QString::fromStdString(rawComment->getRawText(sourceMgr)), &store);
+        QString comment = toQt(rawComment->getRawText(sourceMgr));
+        qCDebug(lcClang) << " raw Comment : \n" << comment;
+        setInfoFromRawComment(comment, &store);
     }
 }
 
@@ -475,7 +493,7 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
 
 #if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
     const clang::FileID file = sourceMgr.getDecomposedLoc(sourceLocation).first;
-    const auto commentsInThisFile = m_context->getRawCommentList().getCommentsInFile(file);
+    const auto commentsInThisFile = m_context->Comments.getCommentsInFile(file);
     if (!commentsInThisFile)
         return {};
 
@@ -496,7 +514,7 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
         clang::SourceRange(sourceLocation), m_context->getLangOpts().CommentOpts, false);
 
     // Create a functor object to compare the source location of the comment and the declaration.
-    const clang::BeforeThanCompare<clang::RawComment> compareSourceLocation(sourceMgr);
+    const LupdatePrivate::BeforeThanCompare compareSourceLocation(sourceMgr);
     //  Find the comment that occurs just after or within this declaration. Possible findings:
     //  QObject::tr(/* comment 1 */ "test"); //: comment 2   -> finds "//: comment 1"
     //  QObject::tr("test"); //: comment 1                   -> finds "//: comment 1"
@@ -518,7 +536,7 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
     const char *buffer = sourceMgr.getBufferData(declLocDecomp.first, &invalid).data();
     if (invalid) {
         qCDebug(lcClang).nospace() << "An error occurred fetching the source buffer of file: "
-            << sourceMgr.getFilename(sourceLocation);
+                                   << toQt(sourceMgr.getFilename(sourceLocation));
         return {};
     }
 
@@ -535,7 +553,7 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
         // If the comment and the declaration aren't in the same file, then they aren't related.
         if (declLocDecomp.first != commentEndDecomp.first) {
             qCDebug(lcClang) << "Comment and the declaration aren't in the same file. Comment '"
-                << (*comment)->getRawText(sourceMgr) << "' is ignored, return.";
+                             << toQt((*comment)->getRawText(sourceMgr)) << "' is ignored, return.";
             return retrievedRawComments;
         }
 
@@ -558,8 +576,9 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
         }
         if (sameLineComment && text.find_first_of(",") != llvm::StringRef::npos) {
             qCDebug(lcClang) << "Comment ends on same line as the declaration and is separated "
-            "from the tr call by a ','. Comment '"
-                << (*comment)->getRawText(sourceMgr) << "' is ignored, continue.";
+                                "from the tr call by a ','. Comment '"
+                             << toQt((*comment)->getRawText(sourceMgr))
+                             << "' is ignored, continue.";
             continue; // if there is a comment on the previous line it should be picked up
         }
 
@@ -571,7 +590,7 @@ std::vector<QString> LupdateVisitor::rawCommentsFromSourceLocation(
         }
 
         retrievedRawComments.emplace(retrievedRawComments.begin(),
-            QString::fromStdString((*comment)->getRawText(sourceMgr)));
+                                     toQt((*comment)->getRawText(sourceMgr)));
         lastDecompLoc = sourceMgr.getDecomposedLoc((*comment)->getSourceRange().getBegin()).second;
     } while (comment != rawComments.begin());
 
