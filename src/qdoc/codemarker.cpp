@@ -183,6 +183,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "signal";
             else if (func->isSlot())
                 extra << "slot";
+            else if (func->isDefault())
+                extra << "default";
         }
         break;
         case Node::TypeAlias:

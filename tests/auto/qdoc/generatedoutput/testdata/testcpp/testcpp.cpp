@@ -66,6 +66,18 @@ namespace TestQDoc {
 */
 
 /*!
+    \fn TestQDoc::Test::Test()
+
+    Default constructor.
+*/
+
+/*!
+    \fn Test &Test::operator=(Test &&other)
+
+    Move-assigns \a other.
+*/
+
+/*!
     \class TestQDoc::TestDerived
     \inmodule TestCPP
     \brief A derived class in a namespace.

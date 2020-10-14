@@ -84,6 +84,7 @@ public:
     void setVirtualness(Virtualness virtualness) { m_virtualness = virtualness; }
     void setVirtual() { m_virtualness = NormalVirtual; }
     void setConst(bool b) { m_const = b; }
+    void setDefault(bool b) { m_default = b; }
     void setStatic(bool b) { m_static = b; }
     void setReimpFlag() { m_reimpFlag = true; }
     void setOverridesThis(const QString &path) { m_overridesThis = path; }
@@ -91,6 +92,7 @@ public:
     const QString &returnType() const { return m_returnType; }
     QString virtualness() const;
     bool isConst() const { return m_const; }
+    bool isDefault() const override { return m_default; }
     bool isStatic() const override { return m_static; }
     bool isOverload() const { return m_overloadFlag; }
     bool isMarkedReimp() const override { return m_reimpFlag; }
@@ -120,7 +122,7 @@ public:
 
     bool isSpecialMemberFunction() const
     {
-        return (isDtor() || isCCtor() || isMCtor() || isCAssign() || isMAssign());
+        return (isCtor() || isDtor() || isCCtor() || isMCtor() || isCAssign() || isMAssign());
     }
     bool isNonvirtual() const { return (m_virtualness == NonVirtual); }
     bool isVirtual() const { return (m_virtualness == NormalVirtual); }
@@ -187,6 +189,7 @@ private:
     friend class PropertyNode;
 
     bool m_const : 1;
+    bool m_default : 1;
     bool m_static : 1;
     bool m_reimpFlag : 1;
     bool m_attached : 1;

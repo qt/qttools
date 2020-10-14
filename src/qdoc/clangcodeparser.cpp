@@ -385,6 +385,22 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
     }
 }
 
+static void setOverridesForFunction(FunctionNode *fn, CXCursor cursor)
+{
+    CXCursor *overridden;
+    unsigned int numOverridden = 0;
+    clang_getOverriddenCursors(cursor, &overridden, &numOverridden);
+    for (uint i = 0; i < numOverridden; ++i) {
+        QString path = reconstructQualifiedPathForCursor(overridden[i]);
+        if (!path.isEmpty()) {
+            fn->setOverride(true);
+            fn->setOverridesThis(path);
+            break;
+        }
+    }
+    clang_disposeOverriddenCursors(overridden);
+}
+
 class ClangVisitor
 {
 public:
@@ -507,6 +523,7 @@ private:
     CXChildVisitResult visitHeader(CXCursor cursor, CXSourceLocation loc);
     CXChildVisitResult visitFnSignature(CXCursor cursor, CXSourceLocation loc, Node **fnNode,
                                         bool &ignoreSignature);
+    void processFunction(FunctionNode *fn, CXCursor cursor);
     bool parseProperty(const QString &spelling, const Location &loc);
     void readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor);
     Aggregate *getSemanticParent(CXCursor cursor);
@@ -564,9 +581,26 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
             ignoreSignature = true;
         } else {
             *fnNode = findNodeForCursor(qdb_, cursor);
-            if (*fnNode && (*fnNode)->isFunction(Node::CPP)) {
+            if (*fnNode) {
+                if ((*fnNode)->isFunction(Node::CPP)) {
                 FunctionNode *fn = static_cast<FunctionNode *>(*fnNode);
                 readParameterNamesAndAttributes(fn, cursor);
+                }
+            } else { // Possibly an implicitly generated special member
+                QString name = functionName(cursor);
+                if (ignoredSymbol(name))
+                    return CXChildVisit_Continue;
+                Aggregate *semanticParent = getSemanticParent(cursor);
+                if (semanticParent && semanticParent->isClass()) {
+                    auto *candidate = new FunctionNode(nullptr, name);
+                    processFunction(candidate, cursor);
+                    if (!candidate->isSpecialMemberFunction()) {
+                        delete candidate;
+                        return CXChildVisit_Continue;
+                    }
+                    candidate->setDefault(true);
+                    semanticParent->addChild(*fnNode = candidate);
+                }
             }
         }
         break;
@@ -691,10 +725,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (ignoredSymbol(name))
             return CXChildVisit_Continue;
 
-        CXType funcType = clang_getCursorType(cursor);
-
         FunctionNode *fn = new FunctionNode(parent_, name);
-
         CXSourceRange range = clang_Cursor_getCommentRange(cursor);
         if (!clang_Range_isNull(range)) {
             QString comment = getSpelling(range);
@@ -707,84 +738,8 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
                 }
             }
         }
-        fn->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
-        fn->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
-        if (kind == CXCursor_Constructor
-            // a constructor template is classified as CXCursor_FunctionTemplate
-            || (kind == CXCursor_FunctionTemplate && name == parent_->name()))
-            fn->setMetaness(FunctionNode::Ctor);
-        else if (kind == CXCursor_Destructor)
-            fn->setMetaness(FunctionNode::Dtor);
-        else
-            fn->setReturnType(adjustTypeName(
-                    fromCXString(clang_getTypeSpelling(clang_getResultType(funcType)))));
-
-        fn->setStatic(clang_CXXMethod_isStatic(cursor));
-        fn->setConst(clang_CXXMethod_isConst(cursor));
-        fn->setVirtualness(!clang_CXXMethod_isVirtual(cursor)
-                                   ? FunctionNode::NonVirtual
-                                   : clang_CXXMethod_isPureVirtual(cursor)
-                                           ? FunctionNode::PureVirtual
-                                           : FunctionNode::NormalVirtual);
-        CXRefQualifierKind refQualKind = clang_Type_getCXXRefQualifier(funcType);
-        if (refQualKind == CXRefQualifier_LValue)
-            fn->setRef(true);
-        else if (refQualKind == CXRefQualifier_RValue)
-            fn->setRefRef(true);
-        // For virtual functions, determine what it overrides
-        // (except for destructor for which we do not want to classify as overridden)
-        if (!fn->isNonvirtual() && kind != CXCursor_Destructor) {
-            CXCursor *overridden;
-            unsigned int numOverridden = 0;
-            clang_getOverriddenCursors(cursor, &overridden, &numOverridden);
-            for (uint i = 0; i < numOverridden; ++i) {
-                QString path = reconstructQualifiedPathForCursor(overridden[i]);
-                if (!path.isEmpty()) {
-                    fn->setOverride(true);
-                    fn->setOverridesThis(path);
-                    break;
-                }
-            }
-            clang_disposeOverriddenCursors(overridden);
-        }
-        auto numArg = clang_getNumArgTypes(funcType);
-        Parameters &parameters = fn->parameters();
-        parameters.clear();
-        parameters.reserve(numArg);
-        for (int i = 0; i < numArg; ++i) {
-            CXType argType = clang_getArgType(funcType, i);
-            if (fn->isCtor()) {
-                if (fromCXString(clang_getTypeSpelling(clang_getPointeeType(argType))) == name) {
-                    if (argType.kind == CXType_RValueReference)
-                        fn->setMetaness(FunctionNode::MCtor);
-                    else if (argType.kind == CXType_LValueReference)
-                        fn->setMetaness(FunctionNode::CCtor);
-                }
-            } else if ((kind == CXCursor_CXXMethod) && (name == QLatin1String("operator="))) {
-                if (argType.kind == CXType_RValueReference)
-                    fn->setMetaness(FunctionNode::MAssign);
-                else if (argType.kind == CXType_LValueReference)
-                    fn->setMetaness(FunctionNode::CAssign);
-            }
-            parameters.append(adjustTypeName(fromCXString(clang_getTypeSpelling(argType))));
-            if (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated) {
-                parameters.last().setCanonicalType(fromCXString(
-                    clang_getTypeSpelling(clang_getCanonicalType(argType))));
-            }
-        }
-        if (parameters.count() > 0) {
-            if (parameters.last().type().endsWith(QLatin1String("::QPrivateSignal"))) {
-                parameters.pop_back(); // remove the QPrivateSignal argument
-                parameters.setPrivateSignal();
-            }
-        }
-        if (clang_isFunctionTypeVariadic(funcType))
-            parameters.append(QStringLiteral("..."));
-        readParameterNamesAndAttributes(fn, cursor);
+        processFunction(fn, cursor);
         fn->setTemplateDecl(templateString);
-        // Friend functions are not members
-        if (m_friendDecl)
-            fn->setRelatedNonmember(true);
         return CXChildVisit_Continue;
     }
 #if CINDEX_VERSION >= 36
@@ -931,6 +886,78 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
         }
         return CXChildVisit_Continue;
     });
+}
+
+void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
+{
+    CXCursorKind kind = clang_getCursorKind(cursor);
+    CXType funcType = clang_getCursorType(cursor);
+    fn->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
+    fn->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
+    if (kind == CXCursor_Constructor
+        // a constructor template is classified as CXCursor_FunctionTemplate
+        || (kind == CXCursor_FunctionTemplate && fn->name() == parent_->name()))
+        fn->setMetaness(FunctionNode::Ctor);
+    else if (kind == CXCursor_Destructor)
+        fn->setMetaness(FunctionNode::Dtor);
+    else
+        fn->setReturnType(adjustTypeName(
+                fromCXString(clang_getTypeSpelling(clang_getResultType(funcType)))));
+
+    fn->setStatic(clang_CXXMethod_isStatic(cursor));
+    fn->setConst(clang_CXXMethod_isConst(cursor));
+    fn->setVirtualness(!clang_CXXMethod_isVirtual(cursor)
+                               ? FunctionNode::NonVirtual
+                               : clang_CXXMethod_isPureVirtual(cursor)
+                                       ? FunctionNode::PureVirtual
+                                       : FunctionNode::NormalVirtual);
+    CXRefQualifierKind refQualKind = clang_Type_getCXXRefQualifier(funcType);
+    if (refQualKind == CXRefQualifier_LValue)
+        fn->setRef(true);
+    else if (refQualKind == CXRefQualifier_RValue)
+        fn->setRefRef(true);
+    // For virtual functions, determine what it overrides
+    // (except for destructor for which we do not want to classify as overridden)
+    if (!fn->isNonvirtual() && kind != CXCursor_Destructor)
+        setOverridesForFunction(fn, cursor);
+
+    int numArg = clang_getNumArgTypes(funcType);
+    Parameters &parameters = fn->parameters();
+    parameters.clear();
+    parameters.reserve(numArg);
+    for (int i = 0; i < numArg; ++i) {
+        CXType argType = clang_getArgType(funcType, i);
+        if (fn->isCtor()) {
+            if (fromCXString(clang_getTypeSpelling(clang_getPointeeType(argType))) == fn->name()) {
+                if (argType.kind == CXType_RValueReference)
+                    fn->setMetaness(FunctionNode::MCtor);
+                else if (argType.kind == CXType_LValueReference)
+                    fn->setMetaness(FunctionNode::CCtor);
+            }
+        } else if ((kind == CXCursor_CXXMethod) && (fn->name() == QLatin1String("operator="))) {
+            if (argType.kind == CXType_RValueReference)
+                fn->setMetaness(FunctionNode::MAssign);
+            else if (argType.kind == CXType_LValueReference)
+                fn->setMetaness(FunctionNode::CAssign);
+        }
+        parameters.append(adjustTypeName(fromCXString(clang_getTypeSpelling(argType))));
+        if (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated) {
+            parameters.last().setCanonicalType(fromCXString(
+                clang_getTypeSpelling(clang_getCanonicalType(argType))));
+        }
+    }
+    if (parameters.count() > 0) {
+        if (parameters.last().type().endsWith(QLatin1String("::QPrivateSignal"))) {
+            parameters.pop_back(); // remove the QPrivateSignal argument
+            parameters.setPrivateSignal();
+        }
+    }
+    if (clang_isFunctionTypeVariadic(funcType))
+        parameters.append(QStringLiteral("..."));
+    readParameterNamesAndAttributes(fn, cursor);
+    // Friend functions are not members
+    if (m_friendDecl)
+        fn->setRelatedNonmember(true);
 }
 
 bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)

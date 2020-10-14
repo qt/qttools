@@ -43,6 +43,8 @@ target_link_libraries(mytarget PUBLIC Qt::QDocTest)</td></tr><tr><td class="memI
 <a name="public-functions"></a>
 <h2 id="public-functions">Public Functions</h2>
 <div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#Test">Test</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> TestQDoc::Test &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#operator-eq">operator=</a></b>(TestQDoc::Test &amp;&amp;<i>other</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void (*)(bool) </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#funcPtr">funcPtr</a></b>(bool <i>b</i>, const char *<i>s</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#inlineFunction">inlineFunction</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int <i>v</i> = 0)</td></tr>
@@ -90,6 +92,14 @@ target_link_libraries(mytarget PUBLIC Qt::QDocTest)</td></tr><tr><td class="memI
 <h3 class="fn fngroupitem" id="overload"><a name="overload"></a><code>[protected] </code><span class="type">void</span> Test::<span class="name">overload</span>()</h3><h3 class="fn fngroupitem" id="overload-1"><a name="overload-1"></a><code>[protected, since Test 1.2] </code><span class="type">void</span> Test::<span class="name">overload</span>(<span class="type">bool</span> <i>b</i>)</h3></div>
 <p>Overloads that share a documentation comment, optionally taking a parameter <i>b</i>.</p>
 <!-- @@@ -->
+<!-- $$$Test[overload1]$$$Test -->
+<h3 class="fn" id="Test"><a name="Test"></a><code>[default] </code>Test::<span class="name">Test</span>()</h3>
+<p>Default constructor.</p>
+<!-- @@@Test -->
+<!-- $$$operator=[overload1]$$$operator=TestQDoc::Test&& -->
+<h3 class="fn" id="operator-eq"><a name="operator-eq"></a><code>[default] </code><span class="type"><a href="testqdoc-test.html">TestQDoc::Test</a></span> &amp;Test::<span class="name">operator=</span>(<span class="type"><a href="testqdoc-test.html">TestQDoc::Test</a></span> &amp;&amp;<i>other</i>)</h3>
+<p>Move-assigns <i>other</i>.</p>
+<!-- @@@operator= -->
 <!-- $$$funcPtr[overload1]$$$funcPtrboolconstchar* -->
 <h3 class="fn" id="funcPtr"><a name="funcPtr"></a><span class="type">void</span> (*)(<span class="type">bool</span>) Test::<span class="name">funcPtr</span>(<span class="type">bool</span> <i>b</i>, const <span class="type">char</span> *<i>s</i>)</h3>
 <p>Returns a pointer to a function that takes a boolean. Uses <i>b</i> and <i>s</i>.</p>

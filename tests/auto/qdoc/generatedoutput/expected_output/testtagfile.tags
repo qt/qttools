@@ -188,6 +188,20 @@
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
+            <name>Test</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>Test</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::Test &amp;</type>
+            <name>operator=</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>operator-eq</anchor>
+            <arglist>(TestQDoc::Test &amp;&amp;other)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
             <name>QDOCTEST_MACRO2</name>
             <anchorfile>testqdoc-test.html</anchorfile>
             <anchor>QDOCTEST_MACRO2</anchor>
