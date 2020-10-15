@@ -2197,7 +2197,15 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
     m_query->addBindValue(fileName);
     const QFileInfo fi(absoluteDocPath(fileName));
     m_query->addBindValue(fi.size());
-    m_query->addBindValue(fi.lastModified().toString(Qt::ISODate));
+    QDateTime lastModified = fi.lastModified();
+    if (qEnvironmentVariableIsSet("SOURCE_DATE_EPOCH")) {
+        const QString sourceDateEpochStr = qEnvironmentVariable("SOURCE_DATE_EPOCH");
+        bool ok;
+        const qlonglong sourceDateEpoch = sourceDateEpochStr.toLongLong(&ok);
+        if (ok && sourceDateEpoch < lastModified.toSecsSinceEpoch())
+            lastModified.setSecsSinceEpoch(sourceDateEpoch);
+    }
+    m_query->addBindValue(lastModified.toString(Qt::ISODate));
     if (!m_query->exec())
         return false;
 
