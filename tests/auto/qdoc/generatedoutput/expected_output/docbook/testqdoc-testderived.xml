@@ -41,7 +41,7 @@
 </db:section>
 <db:section xml:id="member-type-documentation">
 <db:title>Member Type Documentation</db:title>
-<db:section xml:id="DerivedType-alias">
+<db:section xml:id="DerivedType-typedef">
 <db:title>[alias] TestDerived::DerivedType</db:title>
 <db:typedefsynopsis>
 <db:type>DerivedType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
@@ -49,10 +49,9 @@
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
 <db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:typedefsynopsis>
-<db:para>This is a type alias for <db:link xlink:href="testqdoc-test.xml#SomeType-typedef">TestQDoc::Test::SomeType</db:link>.</db:para>
 <db:para>An aliased typedef.</db:para>
 </db:section>
-<db:section xml:id="NotTypedef-alias">
+<db:section xml:id="NotTypedef-typedef">
 <db:title>[alias] TestDerived::NotTypedef</db:title>
 <db:typedefsynopsis>
 <db:type>NotTypedef</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
@@ -60,7 +59,6 @@
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
 <db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:typedefsynopsis>
-<db:para>This is a type alias for <db:code>int</db:code>.</db:para>
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
 </db:section>

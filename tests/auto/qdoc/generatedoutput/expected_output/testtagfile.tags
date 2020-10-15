@@ -215,13 +215,13 @@
         <member kind="typedef" type="">
             <name>DerivedType</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>DerivedType-alias</anchor>
+            <anchor>DerivedType-typedef</anchor>
             <arglist></arglist>
         </member>
         <member kind="typedef" type="">
             <name>NotTypedef</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>NotTypedef-alias</anchor>
+            <anchor>NotTypedef-typedef</anchor>
             <arglist></arglist>
         </member>
         <member kind="function" protection="public" virtualness="virtual" static="no">

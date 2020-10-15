@@ -900,7 +900,6 @@ QString Node::nodeTypeString(NodeType t)
     case ExternalPage:
         return QLatin1String("external page");
     case TypeAlias:
-        return QLatin1String("alias");
     case Typedef:
         return QLatin1String("typedef");
     case Function:

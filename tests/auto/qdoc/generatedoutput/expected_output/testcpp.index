@@ -49,8 +49,8 @@
             </class>
             <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A derived class in a namespace">
                 <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override"/>
-                <alias name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-alias" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType"/>
-                <alias name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-alias" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
+                <typedef name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType"/>
+                <typedef name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
             </class>
         </namespace>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title="" members="Test,QDOCTEST_MACRO2,someFunctionDefaultArg"/>

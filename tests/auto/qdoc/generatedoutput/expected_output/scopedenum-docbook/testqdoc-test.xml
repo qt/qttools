@@ -92,7 +92,7 @@
 </db:informaltable>
 </db:section>
 <db:section xml:id="SomeType-typedef">
-<db:title>Test::typedef SomeType</db:title>
+<db:title>Test::SomeType</db:title>
 <db:typedefsynopsis>
 <db:type>SomeType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>

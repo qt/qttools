@@ -62,7 +62,6 @@ public:
         PrivateSignal,
         QmlSignalHandler,
         AssociatedProperties,
-        TypeAlias,
         BindableProperty
     };
 

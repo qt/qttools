@@ -2147,8 +2147,6 @@ void DocBookGenerator::generateBody(const Node *node)
         // Reimplements clause and type alias info precede body text
         if (fn && !fn->overridesThis().isEmpty())
             generateReimplementsClause(fn);
-        else if (node->isTypeAlias())
-            generateAddendum(node, TypeAlias, nullptr, false);
         else if (node->isProperty()) {
             if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::Standard)
                 generateAddendum(node, BindableProperty, nullptr, false);
@@ -3307,12 +3305,17 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
         }
         writer->writeCharacters(synopsis);
     } break;
+    case Node::TypeAlias: {
+        if (style == Section::Details) {
+            QString templateDecl = node->templateDecl();
+            if (!templateDecl.isEmpty())
+                writer->writeCharacters(templateDecl + QLatin1Char(' '));
+        }
+        generateSynopsisName(node, relative, generateNameLink);
+    } break;
     case Node::Typedef: {
-        const auto typedeff = static_cast<const TypedefNode *>(node);
-        if (typedeff->associatedEnum())
+        if (static_cast<const TypedefNode *>(node)->associatedEnum())
             writer->writeCharacters("flags ");
-        else
-            writer->writeCharacters("typedef ");
         generateSynopsisName(node, relative, generateNameLink);
     } break;
     case Node::Property: {
@@ -3474,24 +3477,6 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
             generateSimpleLink(linkForNode(pn, nullptr), pn->name());
             writer->writeCharacters(". ");
         }
-        break;
-    }
-    case TypeAlias:
-    {
-        if (!node->isTypeAlias())
-            return;
-        writer->writeStartElement(dbNamespace, "para");
-        const auto *ta = static_cast<const TypeAliasNode *>(node);
-        writer->writeCharacters("This is a type alias for ");
-        if (ta->aliasedNode() && ta->aliasedNode()->isInAPI())
-            generateSimpleLink(linkForNode(ta->aliasedNode(), nullptr),
-                    ta->aliasedNode()->plainFullName(ta->parent()));
-        else
-            writer->writeTextElement(dbNamespace, "code", ta->aliasedType());
-
-        writer->writeCharacters(".");
-        writer->writeEndElement(); // para
-        newLine();
         break;
     }
     case BindableProperty:

@@ -625,17 +625,14 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::Enum:
         anchorRef = QLatin1Char('#') + node->name() + "-enum";
         break;
-    case Node::TypeAlias:
-        anchorRef = QLatin1Char('#') + node->name() + "-alias";
-        break;
     case Node::Typedef: {
-        const TypedefNode *tdef = static_cast<const TypedefNode *>(node);
-        if (tdef->associatedEnum()) {
+        const auto *tdef = static_cast<const TypedefNode *>(node);
+        if (tdef->associatedEnum())
             return fullDocumentLocation(tdef->associatedEnum());
-        }
+    } Q_FALLTHROUGH();
+    case Node::TypeAlias:
         anchorRef = QLatin1Char('#') + node->name() + "-typedef";
         break;
-    }
     case Node::Property:
         anchorRef = QLatin1Char('#') + node->name() + "-prop";
         break;
@@ -806,8 +803,6 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         // Reimplements clause and type alias info precede body text
         if (fn && !fn->overridesThis().isEmpty())
             generateReimplementsClause(fn, marker);
-        else if (node->isTypeAlias())
-            generateAddendum(node, TypeAlias, marker, false);
         else if (node->isProperty()) {
             if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::Standard)
                 generateAddendum(node, BindableProperty, marker);
@@ -1404,22 +1399,6 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
             text << msg << " for property " << Atom(Atom::Link, pn->name())
              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << pn->name()
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ". ";
-        }
-        break;
-    }
-    case TypeAlias:
-    {
-        if (!node->isTypeAlias())
-            return;
-        const auto *ta = static_cast<const TypeAliasNode *>(node);
-        text << "This is a type alias for ";
-        if (ta->aliasedNode() && ta->aliasedNode()->isInAPI()) {
-            text << Atom(Atom::LinkNode, CodeMarker::stringForNode(ta->aliasedNode()))
-                 << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                 << Atom(Atom::String, ta->aliasedNode()->plainFullName(ta->parent()))
-                 << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ".";
-        } else {
-            text << Atom(Atom::String, ta->aliasedType()) << ".";
         }
         break;
     }
@@ -2186,9 +2165,8 @@ QString Generator::typeString(const Node *node)
     case Node::Enum:
         return "enum";
     case Node::Typedef:
-        return "typedef";
     case Node::TypeAlias:
-        return "alias";
+        return "typedef";
     case Node::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {

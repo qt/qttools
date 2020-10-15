@@ -98,7 +98,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
     const PropertyNode *property;
     const VariableNode *variable;
     const EnumNode *enume;
-    const TypedefNode *typedeff;
     QString synopsis;
     QString name;
 
@@ -213,22 +212,17 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         }
         break;
     case Node::TypeAlias:
-        if (style == Section::Summary)
-            synopsis = "(alias) ";
-        else if (style == Section::Details) {
+        if (style == Section::Details) {
             QString templateDecl = node->templateDecl();
             if (!templateDecl.isEmpty())
-                synopsis = templateDecl + QLatin1Char(' ');
+                synopsis += templateDecl + QLatin1Char(' ');
         }
         synopsis += name;
         break;
     case Node::Typedef:
-        typedeff = static_cast<const TypedefNode *>(node);
-        if (typedeff->associatedEnum()) {
-            synopsis = "flags " + name;
-        } else {
-            synopsis = "typedef " + name;
-        }
+        if (static_cast<const TypedefNode *>(node)->associatedEnum())
+            synopsis = "flags ";
+        synopsis += name;
         break;
     case Node::Property:
         property = static_cast<const PropertyNode *>(node);

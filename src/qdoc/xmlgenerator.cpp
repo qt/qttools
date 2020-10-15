@@ -242,15 +242,14 @@ QString XmlGenerator::refForNode(const Node *node)
     case Node::Enum:
         ref = node->name() + "-enum";
         break;
-    case Node::TypeAlias:
-        ref = node->name() + "-alias";
-        break;
     case Node::Typedef: {
-        const auto tdn = static_cast<const TypedefNode *>(node);
-        if (tdn->associatedEnum())
-            return refForNode(tdn->associatedEnum());
+        const auto *tdf = static_cast<const TypedefNode *>(node);
+        if (tdf->associatedEnum())
+            return refForNode(tdf->associatedEnum());
+    } Q_FALLTHROUGH();
+    case Node::TypeAlias:
         ref = node->name() + "-typedef";
-    } break;
+        break;
     case Node::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
