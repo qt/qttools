@@ -119,7 +119,7 @@
     To solve this dilemma, \QA creates user specific collection files which
     are more or less copied from the original collection file. The user-specific
     collection file will be saved in a subdirectory of the path returned by
-    QDesktopServices::DataLocation. The subdirectory, or \e{cache directory}
+    QDesktopServices::AppDataLocation. The subdirectory, or \e{cache directory}
     within this user-specific location, can be defined in the help collection
     project file. For example:
 
@@ -260,7 +260,7 @@
             relative to the directory the collection file resides in.
             If the attribute is set to "default" or if it is missing,
             the path is relative to the directory given by
-            QDesktopServices::DataLocation. The first form is useful for
+            QDesktopServices::AppDataLocation. The first form is useful for
             collections that are used in a \e mobile way, such as carried around
             on a USB stick.
         \row

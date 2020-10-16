@@ -81,9 +81,8 @@ Q_NORETURN static void error(const QString &message)
 
 
 /*
- * NOTE: that DataLocation and CacheLocation are missing as
- * they don't really make sense for a utility like this because
- * they include the application name.
+ * NOTE: CacheLocation is missing as they don't really make sense for a utility
+ * like this because they include the application name.
  */
 static const struct StringEnum {
     const char *stringvalue;
@@ -95,7 +94,6 @@ static const struct StringEnum {
     { "ApplicationsLocation", QStandardPaths::ApplicationsLocation },
     { "CacheLocation", QStandardPaths::CacheLocation },
     { "ConfigLocation", QStandardPaths::ConfigLocation },
-    { "DataLocation", QStandardPaths::DataLocation },
     { "DesktopLocation", QStandardPaths::DesktopLocation },
     { "DocumentsLocation", QStandardPaths::DocumentsLocation },
     { "DownloadLocation", QStandardPaths::DownloadLocation },

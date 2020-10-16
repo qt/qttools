@@ -150,7 +150,7 @@ assistant -collectionFile mycollection.qhc
 //! [8]
 
 //! [9]
-%QDesktopServices::DataLocation%/mycompany/myapplication/mycollection.qhc
+%QDesktopServices::AppDataLocation%/mycompany/myapplication/mycollection.qhc
 //! [9]
 
 //! [10]
