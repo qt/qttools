@@ -20,7 +20,7 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Widgets)
 find_package(Qt6 COMPONENTS UiTools)
 
-add_qt_gui_executable(calculatorbuilder
+qt_add_executable(calculatorbuilder
     calculatorform.cpp calculatorform.h
     main.cpp
 )

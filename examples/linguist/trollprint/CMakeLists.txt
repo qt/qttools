@@ -19,7 +19,7 @@ find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Widgets)
 
-add_qt_gui_executable(trollprint
+qt_add_executable(trollprint
     main.cpp
     mainwindow.cpp mainwindow.h
     printpanel.cpp printpanel.h

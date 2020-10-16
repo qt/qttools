@@ -20,7 +20,7 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Widgets)
 find_package(Qt6 COMPONENTS Designer)
 
-add_qt_gui_executable(containerextension
+qt_add_executable(containerextension
     multipagewidget.cpp multipagewidget.h
     multipagewidgetcontainerextension.cpp multipagewidgetcontainerextension.h
     multipagewidgetextensionfactory.cpp multipagewidgetextensionfactory.h

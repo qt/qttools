@@ -20,7 +20,7 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Help)
 find_package(Qt6 COMPONENTS Widgets)
 
-add_qt_gui_executable(contextsensitivehelp
+qt_add_executable(contextsensitivehelp
     helpbrowser.cpp helpbrowser.h
     main.cpp
     wateringconfigdialog.cpp wateringconfigdialog.h wateringconfigdialog.ui

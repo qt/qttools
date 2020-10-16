@@ -20,7 +20,7 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Widgets)
 find_package(Qt6 COMPONENTS UiTools)
 
-add_qt_gui_executable(worldtimeclockbuilder
+qt_add_executable(worldtimeclockbuilder
     main.cpp
 )
 target_link_libraries(worldtimeclockbuilder PUBLIC
