@@ -16,8 +16,17 @@ set(QT_REPO_NOT_WARNINGS_CLEAN TRUE)
 # Make sure we only use latest private CMake API, aka no compatibility wrappers.
 set(QT_NO_INTERNAL_COMPATIBILITY_FUNCTIONS TRUE)
 
+# add platform specific compontents
+set(optional_components "")
+if(WIN32)
+    list(APPEND optional_components AxContainer)
+ else()
+    list(APPEND optional_components DBus)
+endif()
+
 find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core Network)
-find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS AxContainer DBus Xml Widgets Quick QuickWidgets QmlDevTools Sql PrintSupport OpenGL OpenGLWidgets)
+find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Xml Widgets Quick QuickWidgets QmlDevTools
+                                                               Sql PrintSupport OpenGL OpenGLWidgets ${optional_components})
 # special case end
 
 qt_build_repo()
