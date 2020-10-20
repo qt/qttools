@@ -179,9 +179,11 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
             else if (func->access() == Access::Private)
                 extra << "private";
 
-            if (func->isSignal())
+            if (func->isSignal()) {
+                if (func->parameters().isPrivateSignal())
+                    extra << "private";
                 extra << "signal";
-            else if (func->isSlot())
+            } else if (func->isSlot())
                 extra << "slot";
             else if (func->isDefault())
                 extra << "default";
