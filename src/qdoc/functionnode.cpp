@@ -505,7 +505,7 @@ QString FunctionNode::signature(bool values, bool noReturnType, bool templatePar
         elements << templateDecl();
     if (!noReturnType)
         elements << m_returnType;
-    elements.removeAll({});
+    elements.removeAll(QString());
 
     if (!isMacroWithoutParams()) {
         elements << name() + QLatin1Char('(') + m_parameters.signature(values) + QLatin1Char(')');

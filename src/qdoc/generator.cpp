@@ -968,7 +968,7 @@ void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
     if (pathRoot.isEmpty())
         pathRoot = Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH);
     QStringList path = QStringList() << pathRoot << en->name();
-    path.removeAll({});
+    path.removeAll(QString());
 
     Text text;
     text << Atom::ParaLeft

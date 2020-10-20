@@ -2229,7 +2229,7 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
     // Construct a path to the example; <install path>/<example name>
     QStringList path = QStringList()
             << Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
-    path.removeAll({});
+    path.removeAll(QString());
 
     writer->writeStartElement(dbNamespace, "para");
     writer->writeStartElement(dbNamespace, "link");
