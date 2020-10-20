@@ -25,8 +25,9 @@ if(WIN32)
 endif()
 
 find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core Network)
-find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Xml Widgets Quick QuickWidgets QmlDevTools
-                                                               Sql PrintSupport OpenGL OpenGLWidgets ${optional_components})
+find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
+             Xml Widgets Quick QuickWidgets QmlDevTools
+             Sql PrintSupport OpenGL OpenGLWidgets ${optional_components})
 # special case end
 
 qt_build_repo()
