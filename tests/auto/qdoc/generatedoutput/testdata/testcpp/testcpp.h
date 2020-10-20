@@ -105,6 +105,7 @@ public:
     bool boolProp();
 
 Q_SIGNALS:
+    void emitSomething(QPrivateSignal);
     void bindablePropChanged();
     Q_REVISION(1) void boolPropChanged();
 

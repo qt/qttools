@@ -333,15 +333,14 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                 continue;
             auto fn = static_cast<FunctionNode *>(candidate);
             const Parameters &parameters = fn->parameters();
-            const int actualArg = numArg - parameters.isPrivateSignal();
-            if (parameters.count() != actualArg + isVariadic)
+            if (parameters.count() != numArg + isVariadic)
                 continue;
             if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
                 continue;
             if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
             bool different = false;
-            for (int i = 0; i < actualArg; ++i) {
+            for (int i = 0; i < numArg; ++i) {
                 CXType argType = clang_getArgType(funcType, i);
                 if (args.size() <= i)
                     args.append(fromCXString(clang_getTypeSpelling(argType)));
@@ -947,7 +946,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
         }
     }
     if (parameters.count() > 0) {
-        if (parameters.last().type().endsWith(QLatin1String("::QPrivateSignal"))) {
+        if (parameters.last().type().endsWith(QLatin1String("QPrivateSignal"))) {
             parameters.pop_back(); // remove the QPrivateSignal argument
             parameters.setPrivateSignal();
         }

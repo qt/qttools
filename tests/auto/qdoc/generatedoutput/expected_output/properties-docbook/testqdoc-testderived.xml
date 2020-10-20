@@ -165,6 +165,23 @@
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
+<db:section xml:id="emitSomething">
+<db:title>[signal] TestDerived::void emitSomething()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>emitSomething</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">signal</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void emitSomething()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Emitted when things happen.</db:para>
+<db:note>
+<db:para>This is a private signal. It can be used in signal connections but cannot be emitted by the user.</db:para></db:note>
+</db:section>
 <db:section xml:id="virtualFun">
 <db:title>[override virtual] TestDerived::void virtualFun()</db:title>
 <db:methodsynopsis>
