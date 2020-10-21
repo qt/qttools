@@ -139,8 +139,8 @@ public:
     int toInt(bool *ok = nullptr, int base = 10) const { return toQStringView().toInt(ok, base); }
     short toShort(bool *ok = nullptr, int base = 10) const { return toQStringView().toShort(ok, base); }
 
-    uint hash() const { return m_hash; }
-    static uint hash(const QChar *p, int n);
+    size_t hash() const { return m_hash; }
+    static size_t hash(const QChar *p, int n);
 
     ALWAYS_INLINE QStringView toQStringView() const { return QStringView(m_string).mid(m_offset, m_length); }
 
@@ -170,7 +170,7 @@ private:
     int m_file;
     mutable uint m_hash;
     QChar *prepareExtend(int extraLen, int thisTarget, int extraTarget);
-    uint updatedHash() const;
+    size_t updatedHash() const;
     friend size_t qHash(const ProString &str);
     friend QString operator+(const ProString &one, const ProString &two);
     friend class ProKey;
