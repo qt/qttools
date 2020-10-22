@@ -732,9 +732,9 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                 out() << "<a name=\"" << Doc::canonicalTitle(section.title()) << "\"></a>\n";
                 out() << "<h3>" << protectEnc(section.title()) << "</h3>\n";
                 if (idx == Sections::SinceClasses)
-                    generateCompactList(Generic, nullptr, ncmap, false, QStringLiteral("Q"));
+                    generateCompactList(Generic, relative, ncmap, false, QStringLiteral("Q"));
                 else if (idx == Sections::SinceQmlTypes)
-                    generateCompactList(Generic, nullptr, nqcmap, false, QStringLiteral(""));
+                    generateCompactList(Generic, relative, nqcmap, false, QStringLiteral(""));
                 else if (idx == Sections::SinceMemberFunctions) {
                     ParentMaps parentmaps;
                     ParentMaps::iterator pmap;
@@ -750,17 +750,17 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                         NodeVector nv = map->values().toVector();
                         out() << "<p>Class ";
 
-                        out() << "<a href=\"" << linkForNode(map.key(), nullptr) << "\">";
+                        out() << "<a href=\"" << linkForNode(map.key(), relative) << "\">";
                         QStringList pieces = map.key()->fullName().split("::");
                         out() << protectEnc(pieces.last());
                         out() << "</a>"
                               << ":</p>\n";
 
-                        generateSection(nv, nullptr, marker);
+                        generateSection(nv, relative, marker);
                         out() << "<br/>";
                     }
                 } else {
-                    generateSection(section.members(), nullptr, marker);
+                    generateSection(section.members(), relative, marker);
                 }
             }
             ++idx;
