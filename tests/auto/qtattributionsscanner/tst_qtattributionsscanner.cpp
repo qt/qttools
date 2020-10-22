@@ -56,7 +56,7 @@ private:
 
 tst_qtattributionsscanner::tst_qtattributionsscanner()
 {
-    QString binPath = QLibraryInfo::location(QLibraryInfo::BinariesPath);
+    QString binPath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     m_cmd = binPath + QLatin1String("/qtattributionsscanner");
     m_basePath = QFINDTESTDATA("testdata");
 }

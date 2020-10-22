@@ -39,7 +39,7 @@ class tst_lrelease : public QObject
 
 public:
     tst_lrelease()
-         : lrelease(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/lrelease")
+         : lrelease(QLibraryInfo::path(QLibraryInfo::BinariesPath) + "/lrelease")
          , dataDir(QFINDTESTDATA("testdata/"))
     {}
 

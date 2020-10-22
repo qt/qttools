@@ -62,7 +62,7 @@ private:
 
 tst_lupdate::tst_lupdate()
 {
-    QString binPath = QLibraryInfo::location(QLibraryInfo::BinariesPath);
+    QString binPath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     m_cmdLupdate = binPath + QLatin1String("/lupdate");
     m_basePath = QFINDTESTDATA("testdata/");
 }

@@ -36,7 +36,7 @@ class tst_lconvert : public QObject
 public:
     tst_lconvert()
       : dataDir(QFINDTESTDATA("data/"))
-      , lconvert(QLibraryInfo::location(QLibraryInfo::BinariesPath) + "/lconvert") {}
+      , lconvert(QLibraryInfo::path(QLibraryInfo::BinariesPath) + "/lconvert") {}
 
 private slots:
     void initTestCase();
