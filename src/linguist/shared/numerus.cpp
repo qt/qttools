@@ -162,7 +162,6 @@ static const QLocale::Language englishStyleLanguages[] = {
     QLocale::Bashkir,
     QLocale::Basque,
     QLocale::Bengali,
-    QLocale::Bihari,
     QLocale::Bulgarian,
     QLocale::Catalan,
     QLocale::Cornish,
@@ -206,7 +205,7 @@ static const QLocale::Language englishStyleLanguages[] = {
     // Missing: Nahuatl,
     QLocale::Nepali,
     QLocale::NorthernSotho,
-    QLocale::NorwegianBokmal, // same as Norwegian
+    QLocale::NorwegianBokmal,
     QLocale::NorwegianNynorsk,
     QLocale::Occitan,
     QLocale::Oriya,
@@ -232,7 +231,6 @@ static const QLocale::Language englishStyleLanguages[] = {
     QLocale::Tsonga,
     QLocale::Tswana,
     QLocale::Turkmen,
-    // QLocale::Twi, // mapped to Akan
     QLocale::Uigur,
     QLocale::Urdu,
     QLocale::Uzbek,
@@ -278,13 +276,11 @@ static const QLocale::Language russianStyleLanguages[] = {
     QLocale::Croatian,
     QLocale::Russian,
     QLocale::Serbian,
-    // QLocale::SerboCroatian, // deprecated, mapped to Serbian
     QLocale::Ukrainian,
     EOL
 };
 static const QLocale::Language polishLanguage[] = { QLocale::Polish, EOL };
 static const QLocale::Language romanianLanguages[] = {
-    // QLocale::Moldavian, // deprecated, mapped to Romanian
     QLocale::Romanian,
     EOL
 };
@@ -292,7 +288,7 @@ static const QLocale::Language slovenianLanguage[] = { QLocale::Slovenian, EOL }
 static const QLocale::Language malteseLanguage[] = { QLocale::Maltese, EOL };
 static const QLocale::Language welshLanguage[] = { QLocale::Welsh, EOL };
 static const QLocale::Language arabicLanguage[] = { QLocale::Arabic, EOL };
-static const QLocale::Language tagalogLanguage[] = { QLocale::Tagalog, EOL };
+static const QLocale::Language tagalogLanguage[] = { QLocale::Filipino, EOL };
 
 static const QLocale::Country frenchStyleCountries[] = {
     // keep synchronized with frenchStyleLanguages
