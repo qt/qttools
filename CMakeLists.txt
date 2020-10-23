@@ -32,3 +32,9 @@ find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
 
 qt_build_repo()
 
+# special case begin
+
+# Add tool dependencies that were deferred by qt_internal_add_docs.
+qt_internal_add_deferred_dependencies()
+
+# special case end
