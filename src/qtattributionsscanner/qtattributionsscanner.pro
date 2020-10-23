@@ -5,6 +5,8 @@ requires(qtConfig(qtattributionsscanner))
 option(host_build)
 CONFIG += console
 
+QT -= gui
+
 SOURCES += \
     jsongenerator.cpp \
     main.cpp \
