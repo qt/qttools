@@ -58,7 +58,7 @@ using Specialized = Struct<int, T>;
     typedef struct {
         int data;
     } SomeType;
-    int someFunction(int v = 0);
+    int someFunction(int, int v = 0);
     void someFunctionDefaultArg(int i, bool b);
     void obsoleteMember();
     void anotherObsoleteMember();

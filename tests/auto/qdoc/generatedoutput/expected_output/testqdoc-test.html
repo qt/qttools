@@ -45,7 +45,7 @@ target_link_libraries(mytarget PUBLIC Qt::QDocTest)</td></tr><tr><td class="memI
 <tr><td class="memItemLeft rightAlign topAlign"> TestQDoc::Test &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#operator-eq">operator=</a></b>(TestQDoc::Test &amp;&amp;<i>other</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void (*)(bool) </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#funcPtr">funcPtr</a></b>(bool <i>b</i>, const char *<i>s</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#inlineFunction">inlineFunction</a></b>()</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int <i>v</i> = 0)</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int, int <i>v</i> = 0)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunctionDefaultArg">someFunctionDefaultArg</a></b>(int <i>i</i>, bool <i>b</i> = false)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#virtualFun">virtualFun</a></b>()</td></tr>
 </table></div>
@@ -101,8 +101,8 @@ target_link_libraries(mytarget PUBLIC Qt::QDocTest)</td></tr><tr><td class="memI
 <h3 class="fn" id="inlineFunction"><a name="inlineFunction"></a><span class="type">void</span> Test::<span class="name">inlineFunction</span>()</h3>
 <p>An inline function, documented using the \fn QDoc command.</p>
 <!-- @@@inlineFunction -->
-<!-- $$$someFunction[overload1]$$$someFunctionint -->
-<h3 class="fn" id="someFunction"><a name="someFunction"></a><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span> <i>v</i> = 0)</h3>
+<!-- $$$someFunction[overload1]$$$someFunctionintint -->
+<h3 class="fn" id="someFunction"><a name="someFunction"></a><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span>, <span class="type">int</span> <i>v</i> = 0)</h3>
 <p>Function that takes a parameter <i>v</i>. Also returns the value of <i>v</i>.</p>
 <!-- @@@someFunction -->
 <!-- $$$someFunctionDefaultArg[overload1]$$$someFunctionDefaultArgintbool -->

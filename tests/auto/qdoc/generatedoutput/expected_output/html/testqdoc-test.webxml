@@ -26,7 +26,7 @@
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                 </description>
             </function>
-            <function name="func" fullname="TestQDoc::Test::func" href="testqdoc-test.html#func" status="internal" access="private" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void func(bool )">
+            <function name="func" fullname="TestQDoc::Test::func" href="testqdoc-test.html#func" status="internal" access="private" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void func(bool)">
                 <parameter type="bool" name="" default=""/>
                 <description/>
             </function>
@@ -67,7 +67,8 @@
                 <parameter type="bool" name="b" default=""/>
                 <description/>
             </function>
-            <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
+            <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int, int v)">
+                <parameter type="int" name="" default=""/>
                 <parameter type="int" name="v" default="0"/>
                 <description>
                     <para>Function that takes a parameter <argument>v</argument>. Also returns the value of <argument>v</argument>.</para>

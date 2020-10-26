@@ -182,17 +182,21 @@
 <db:para>An inline function, documented using the \fn QDoc command.</db:para>
 </db:section>
 <db:section xml:id="someFunction">
-<db:title>Test::int someFunction(int <db:emphasis>v</db:emphasis> = 0)</db:title>
+<db:title>Test::int someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
 <db:methodsynopsis>
 <db:type>int</db:type>
 <db:methodname>someFunction</db:methodname>
+<db:methodparam>
+<db:type>int</db:type>
+<db:parameter></db:parameter>
+</db:methodparam>
 <db:methodparam>
 <db:type>int</db:type>
 <db:parameter>v</db:parameter>
 <db:initializer>0</db:initializer>
 </db:methodparam>
 <db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">int someFunction(int v)</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">int someFunction(int, int v)</db:synopsisinfo>
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>

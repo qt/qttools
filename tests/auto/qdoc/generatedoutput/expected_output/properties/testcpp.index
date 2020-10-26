@@ -17,7 +17,7 @@
                 <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" documented="true" meta="constructor" virtual="non" const="false" static="false" final="false" override="false" type="" signature="Test()"/>
                 <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void anotherObsoleteMember()"/>
                 <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void deprecatedMember()"/>
-                <function name="func" fullname="TestQDoc::Test::func" href="testqdoc-test.html#func" status="internal" access="private" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void func(bool )">
+                <function name="func" fullname="TestQDoc::Test::func" href="testqdoc-test.html#func" status="internal" access="private" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void func(bool)">
                     <parameter type="bool" name="" default=""/>
                 </function>
                 <function name="funcPtr" fullname="TestQDoc::Test::funcPtr" href="testqdoc-test.html#funcPtr" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void (*)(bool)" signature="void (*)(bool) funcPtr(bool b, const char *s)">
@@ -37,7 +37,8 @@
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" documented="true" since="Test 1.2" meta="plain" virtual="non" const="false" static="false" final="false" override="false" overload="true" overload-number="1" type="void" signature="void overload(bool b)">
                     <parameter type="bool" name="b" default=""/>
                 </function>
-                <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int v)">
+                <function name="someFunction" fullname="TestQDoc::Test::someFunction" href="testqdoc-test.html#someFunction" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="int" signature="int someFunction(int, int v)">
+                    <parameter type="int" name="" default=""/>
                     <parameter type="int" name="v" default="0"/>
                 </function>
                 <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)" groups="testgroup">
@@ -55,7 +56,7 @@
                 <function name="emitSomething" fullname="TestQDoc::TestDerived::emitSomething" href="testqdoc-testderived.html#emitSomething" status="active" access="public" location="testcpp.h" documented="true" meta="signal" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void emitSomething()"/>
                 <function name="getInt" fullname="TestQDoc::TestDerived::getInt" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" associated-property="intProp" type="int *" signature="int * getInt()"/>
                 <function name="metaObject" fullname="TestQDoc::TestDerived::metaObject" href="testqdoc-testderived.html#metaObject" status="internal" access="private" location="testcpp.h" meta="plain" virtual="virtual" const="true" static="false" final="false" override="false" type="const QMetaObject *" signature="const QMetaObject * metaObject() const"/>
-                <function name="qt_metacall" fullname="TestQDoc::TestDerived::qt_metacall" href="testqdoc-testderived.html#qt_metacall" status="internal" access="private" location="testcpp.h" meta="plain" virtual="virtual" const="false" static="false" final="false" override="false" type="int" signature="int qt_metacall(QMetaObject::Call , int , void **)">
+                <function name="qt_metacall" fullname="TestQDoc::TestDerived::qt_metacall" href="testqdoc-testderived.html#qt_metacall" status="internal" access="private" location="testcpp.h" meta="plain" virtual="virtual" const="false" static="false" final="false" override="false" type="int" signature="int qt_metacall(QMetaObject::Call, int, void **)">
                     <parameter type="QMetaObject::Call" name="" default=""/>
                     <parameter type="int" name="" default=""/>
                     <parameter type="void **" name="" default=""/>
@@ -63,7 +64,7 @@
                 <function name="qt_metacast" fullname="TestQDoc::TestDerived::qt_metacast" href="testqdoc-testderived.html#qt_metacast" status="internal" access="private" location="testcpp.h" meta="plain" virtual="virtual" const="false" static="false" final="false" override="false" type="void *" signature="void * qt_metacast(const char *)">
                     <parameter type="const char *" name="" default=""/>
                 </function>
-                <function name="qt_static_metacall" fullname="TestQDoc::TestDerived::qt_static_metacall" href="testqdoc-testderived.html#qt_static_metacall" status="internal" access="private" location="testcpp.h" meta="plain" virtual="non" const="false" static="true" final="false" override="false" type="void" signature="void qt_static_metacall(QObject *, QMetaObject::Call , int , void **)">
+                <function name="qt_static_metacall" fullname="TestQDoc::TestDerived::qt_static_metacall" href="testqdoc-testderived.html#qt_static_metacall" status="internal" access="private" location="testcpp.h" meta="plain" virtual="non" const="false" static="true" final="false" override="false" type="void" signature="void qt_static_metacall(QObject *, QMetaObject::Call, int, void **)">
                     <parameter type="QObject *" name="" default=""/>
                     <parameter type="QMetaObject::Call" name="" default=""/>
                     <parameter type="int" name="" default=""/>

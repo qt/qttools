@@ -114,7 +114,7 @@
             <name>someFunction</name>
             <anchorfile>testqdoc-test.html</anchorfile>
             <anchor>someFunction</anchor>
-            <arglist>(int v)</arglist>
+            <arglist>(int, int v)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>

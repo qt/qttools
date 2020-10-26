@@ -143,15 +143,10 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
                     QString name = parameters.at(i).name();
                     QString type = parameters.at(i).type();
                     QString value = parameters.at(i).defaultValue();
-                    QString paramName;
-                    if (!name.isEmpty()) {
-                        synopsis += typified(type, true);
-                        paramName = name;
-                    } else {
-                        paramName = type;
-                    }
-                    if (style != Section::AllMembers || name.isEmpty())
-                        synopsis += "<@param>" + protect(paramName) + "</@param>";
+                    bool trailingSpace = style != Section::AllMembers && !name.isEmpty();
+                    synopsis += typified(type, trailingSpace);
+                    if (style != Section::AllMembers && !name.isEmpty())
+                        synopsis += "<@param>" + protect(name) + "</@param>";
                     if (style != Section::AllMembers && !value.isEmpty())
                         synopsis += " = " + protect(value);
                 }

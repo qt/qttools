@@ -880,8 +880,8 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
                     }
                     return CXChildVisit_Continue;
                 });
-                ++i;
             }
+            ++i;
         }
         return CXChildVisit_Continue;
     });
@@ -1602,9 +1602,9 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
       not be found. Return 0 in that case.
     */
     if (fnArg.startsWith('[')) {
-        int end = fnArg.indexOf(QChar(']', 0));
-        if (end > 1) {
-            QString tag = fnArg.left(end + 1);
+        int tagEnd = fnArg.indexOf(QChar(']', 0));
+        if (tagEnd > 1) {
+            QString tag = fnArg.left(++tagEnd);
             fnNode = qdb_->findFunctionNodeForTag(tag);
             if (!fnNode) {
                 location.error(
@@ -1613,11 +1613,12 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
             } else {
                 /*
                   The function node was found. Use the formal
-                  parameter names from the \FN command, because
+                  parameter names from the \fn command, because
                   they will be the names used in the documentation.
                  */
+                QString fnSignature = fnArg.mid(tagEnd);
                 FunctionNode *fn = static_cast<FunctionNode *>(fnNode);
-                QStringList leftParenSplit = fnArg.split('(');
+                QStringList leftParenSplit = fnSignature.mid(fnSignature.indexOf(fn->name())).split('(');
                 if (leftParenSplit.size() > 1) {
                     QStringList rightParenSplit = leftParenSplit[1].split(')');
                     if (rightParenSplit.size() > 0) {
@@ -1627,16 +1628,14 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                             Parameters &parameters = fn->parameters();
                             if (parameters.count() == commaSplit.size()) {
                                 for (int i = 0; i < parameters.count(); ++i) {
-                                    QStringList blankSplit = commaSplit[i].split(' ');
-                                    if (blankSplit.size() > 0) {
+                                    QStringList blankSplit = commaSplit[i].split(' ', Qt::SkipEmptyParts);
+                                    if (blankSplit.size() > 1) {
                                         QString pName = blankSplit.last();
-                                        int j = 0;
-                                        while (j < pName.length() && !pName.at(j).isLetter())
-                                            ++j;
-                                        if (j > 0)
-                                            pName = pName.mid(j);
-                                        if (!pName.isEmpty() && pName != parameters[i].name())
-                                            parameters[i].setName(pName);
+                                        // Remove any non-letters from the start of parameter name
+                                        auto it = std::find_if(std::begin(pName), std::end(pName),
+                                                [](const QChar &c) { return c.isLetter(); });
+                                        parameters[i].setName(
+                                                pName.remove(0, std::distance(std::begin(pName), it)));
                                     }
                                 }
                             }

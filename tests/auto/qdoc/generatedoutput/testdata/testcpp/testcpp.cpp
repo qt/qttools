@@ -152,7 +152,7 @@ void Test::someFunctionDefaultArg(int i, bool b = false)
 */
 
 // Documented below with an \fn command. Unnecessary but we support it, and it's used.
-int Test::someFunction(int v)
+int Test::someFunction(int, int v)
 {
     return v;
 }
@@ -164,7 +164,7 @@ int Test::someFunction(int v)
 */
 
 /*!
-    \fn int Test::someFunction(int v = 0)
+    \fn int Test::someFunction(int, int v = 0)
 
     Function that takes a parameter \a v.
     Also returns the value of \a v.
