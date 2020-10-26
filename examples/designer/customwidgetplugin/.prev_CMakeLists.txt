@@ -24,6 +24,10 @@ qt_add_executable(customwidgetplugin
     analogclock.cpp analogclock.h
     customwidgetplugin.cpp customwidgetplugin.h
 )
+set_target_properties(customwidgetplugin PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(customwidgetplugin PUBLIC
     Qt::Core
     Qt::Gui

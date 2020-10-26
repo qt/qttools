@@ -23,6 +23,10 @@ qt_add_executable(remotecontrol
     main.cpp
     remotecontrol.cpp remotecontrol.h remotecontrol.ui
 )
+set_target_properties(remotecontrol PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(remotecontrol PUBLIC
     Qt::Core
     Qt::Gui

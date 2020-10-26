@@ -29,6 +29,10 @@ target_sources(taskmenuextension PRIVATE
     tictactoetaskmenu.cpp tictactoetaskmenu.h
 )
 # special case end
+set_target_properties(taskmenuextension PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(taskmenuextension PUBLIC
     Qt::Core
     Qt::Designer

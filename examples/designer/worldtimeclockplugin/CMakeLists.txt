@@ -27,6 +27,10 @@ target_sources(worldtimeclockplugin PRIVATE
     worldtimeclockplugin.cpp worldtimeclockplugin.h
 )
 # special case end
+set_target_properties(worldtimeclockplugin PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(worldtimeclockplugin PUBLIC
     Qt::Core
     Qt::Gui

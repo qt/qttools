@@ -26,6 +26,10 @@ qt_add_executable(taskmenuextension
     tictactoeplugin.cpp tictactoeplugin.h
     tictactoetaskmenu.cpp tictactoetaskmenu.h
 )
+set_target_properties(taskmenuextension PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(taskmenuextension PUBLIC
     Qt::Core
     Qt::Designer

@@ -23,6 +23,10 @@ qt_add_executable(calculatorform
     calculatorform.cpp calculatorform.h calculatorform.ui
     main.cpp
 )
+set_target_properties(calculatorform PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(calculatorform PUBLIC
     Qt::Core
     Qt::Gui

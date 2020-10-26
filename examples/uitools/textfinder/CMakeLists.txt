@@ -24,6 +24,10 @@ qt_add_executable(textfinder
     main.cpp
     textfinder.cpp textfinder.h
 )
+set_target_properties(textfinder PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(textfinder PUBLIC
     Qt::Core
     Qt::Gui

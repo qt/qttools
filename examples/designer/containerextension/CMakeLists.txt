@@ -29,6 +29,10 @@ target_sources(containerextension PRIVATE
     multipagewidgetplugin.cpp multipagewidgetplugin.h
 )
 # special case end
+set_target_properties(containerextension PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(containerextension PUBLIC
     Qt::Core
     Qt::Designer

@@ -25,6 +25,10 @@ qt_add_executable(contextsensitivehelp
     main.cpp
     wateringconfigdialog.cpp wateringconfigdialog.h wateringconfigdialog.ui
 )
+set_target_properties(contextsensitivehelp PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(contextsensitivehelp PUBLIC
     Qt::Core
     Qt::Gui

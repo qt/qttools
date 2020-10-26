@@ -26,6 +26,10 @@ qt_add_executable(simpletextviewer
     mainwindow.cpp mainwindow.h
     textedit.cpp textedit.h
 )
+set_target_properties(simpletextviewer PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_compile_definitions(simpletextviewer PUBLIC
     SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
 )

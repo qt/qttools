@@ -24,6 +24,10 @@ qt_add_executable(trollprint
     mainwindow.cpp mainwindow.h
     printpanel.cpp printpanel.h
 )
+set_target_properties(trollprint PROPERTIES
+    WIN32_EXECUTABLE TRUE
+    MACOSX_BUNDLE TRUE
+)
 target_link_libraries(trollprint PUBLIC
     Qt::Core
     Qt::Gui
