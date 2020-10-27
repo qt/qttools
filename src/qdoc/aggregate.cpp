@@ -859,6 +859,8 @@ void Aggregate::findAllAttributions(NodeMultiMap &attributions)
 void Aggregate::findAllSince()
 {
     for (auto *node : qAsConst(m_children)) {
+        if (node->isRelatedNonmember() && node->parent() != this)
+            continue;
         QString sinceString = node->since();
         // Insert a new entry into each map for each new since string found.
         if (!node->isPrivate() && !sinceString.isEmpty()) {
