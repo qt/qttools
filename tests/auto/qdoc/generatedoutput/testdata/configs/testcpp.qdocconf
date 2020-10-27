@@ -4,6 +4,7 @@ includepaths += -I../testcpp
 
 headers = ../testcpp/testcpp.h
 sources = ../testcpp/testcpp.cpp
+exampledirs = ../testcpp/snippets
 
 macro.CMDFN = \\\\fn
 macro.nothing = \\dontdocument ()

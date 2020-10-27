@@ -29,6 +29,12 @@
 
 namespace TestQDoc {
 
+/*
+//! [random tag]
+\note This is just a test.
+//! [random tag]
+*/
+
 /*!
     \module TestCPP
     \qtvariable testcpp
@@ -37,6 +43,8 @@ namespace TestQDoc {
     \brief A test module page.
 
     \testnoautolist
+
+    \include testcpp.cpp random tag
 
 \if defined(test_nestedmacro)
     \versionnote {module} {\ver}

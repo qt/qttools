@@ -695,28 +695,34 @@ void Config::subVarsAndValues(const QString &var, ConfigVarMap &map) const
 }
 
 /*!
-  Get all .qdocinc files.
+  Searches for a path to \a fileName in 'sources', 'sourcedirs', and
+  'exampledirs' config variables and returns a full path to the first
+  match found. If the file is not found, returns an empty string.
  */
 QString Config::getIncludeFilePath(const QString &fileName) const
 {
-    QString ext = fileName.mid(fileName.lastIndexOf('.'));
-    ext.prepend('*');
+    QString ext = QFileInfo(fileName).suffix();
 
     if (!m_includeFilesMap.contains(ext)) {
-        QSet<QString> t;
-        QStringList result;
-        const auto sourceDirs = getCanonicalPathList(CONFIG_SOURCEDIRS);
-        for (const auto &dir : sourceDirs)
-            result += getFilesHere(dir, ext, location(), t, t);
-        // Append the include files from the exampledirs as well
-        const auto exampleDirs = getCanonicalPathList(CONFIG_EXAMPLEDIRS);
-        for (const auto &dir : exampleDirs)
-            result += getFilesHere(dir, ext, location(), t, t);
+        QStringList result = getCanonicalPathList(CONFIG_SOURCES);
+        result.erase(std::remove_if(result.begin(), result.end(),
+                     [&](const QString &s) { return !s.endsWith(ext); }),
+                    result.end());
+        const QStringList dirs =
+            getCanonicalPathList(CONFIG_SOURCEDIRS) +
+            getCanonicalPathList(CONFIG_EXAMPLEDIRS);
+
+        for (const auto &dir : dirs)
+            result += getFilesHere(dir, "*." + ext, location());
+        result.removeDuplicates();
         m_includeFilesMap.insert(ext, result);
     }
     const QStringList &paths = (*m_includeFilesMap.find(ext));
+    QString match = fileName;
+    if (!match.startsWith('/'))
+        match.prepend('/');
     for (const auto &path : paths) {
-        if (path.endsWith(fileName))
+        if (path.endsWith(match))
             return path;
     }
     return QString();

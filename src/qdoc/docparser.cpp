@@ -1350,8 +1350,6 @@ void DocParser::include(const QString &fileName, const QString &identifier)
 {
     if (location().depth() > 16)
         location().fatal(QStringLiteral("Too many nested '\\%1's").arg(cmdName(CMD_INCLUDE)));
-
-    QString userFriendlyFilePath;
     QString filePath = Config::instance().getIncludeFilePath(fileName);
     if (filePath.isEmpty()) {
         location().warning(QStringLiteral("Cannot find qdoc include file '%1'").arg(fileName));
@@ -1359,10 +1357,9 @@ void DocParser::include(const QString &fileName, const QString &identifier)
         QFile inFile(filePath);
         if (!inFile.open(QFile::ReadOnly)) {
             location().warning(
-                    QStringLiteral("Cannot open qdoc include file '%1'").arg(userFriendlyFilePath));
+                    QStringLiteral("Cannot open qdoc include file '%1'").arg(filePath));
         } else {
-            location().push(userFriendlyFilePath);
-
+            location().push(fileName);
             QTextStream inStream(&inFile);
             QString includedStuff = inStream.readAll();
             inFile.close();
@@ -1387,7 +1384,7 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                 if (startLine < 0) {
                     location().warning(QStringLiteral("Cannot find '%1' in '%2'")
                                                .arg(identifier)
-                                               .arg(userFriendlyFilePath));
+                                               .arg(filePath));
                     return;
                 }
                 QString result;
@@ -1406,7 +1403,7 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                 if (result.isEmpty()) {
                     location().warning(QStringLiteral("Empty qdoc snippet '%1' in '%2'")
                                                .arg(identifier)
-                                               .arg(userFriendlyFilePath));
+                                               .arg(filePath));
                 } else {
                     m_input.insert(m_position, result);
                     m_inputLength = m_input.length();

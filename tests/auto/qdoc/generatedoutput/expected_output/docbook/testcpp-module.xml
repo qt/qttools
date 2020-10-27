@@ -39,5 +39,8 @@
 </db:section>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
+<db:note>
+<db:para>This is just a test.</db:para>
+</db:note>
 </db:section>
 </db:article>
