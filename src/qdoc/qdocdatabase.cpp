@@ -1188,26 +1188,24 @@ void QDocDatabase::resolveNamespaces()
             }
             if (ns) {
                 for (auto *node : namespaces) {
-                    NamespaceNode *NS = static_cast<NamespaceNode *>(node);
-                    if (NS->hadDoc() && NS != ns) {
+                    auto *nsNode = static_cast<NamespaceNode *>(node);
+                    if (nsNode->hadDoc() && nsNode != ns) {
                         ns->doc().location().warning(
                                 QStringLiteral("Namespace %1 documented more than once")
-                                        .arg(NS->name()));
-                        NS->doc().location().warning(QStringLiteral("...also seen here"));
+                                        .arg(nsNode->name()));
+                        nsNode->doc().location().warning(QStringLiteral("...also seen here"));
                     }
                 }
-
             } else if (somewhere == nullptr) {
                 for (auto *node : namespaces) {
-                    NamespaceNode *NS = static_cast<NamespaceNode *>(node);
-                    NS->reportDocumentedChildrenInUndocumentedNamespace();
+                    if (!node->isIndexNode())
+                        static_cast<NamespaceNode *>(node)->reportDocumentedChildrenInUndocumentedNamespace();
                 }
-            }
-            if (somewhere) {
+            } else {
                 for (auto *node : namespaces) {
-                    NamespaceNode *NS = static_cast<NamespaceNode *>(node);
-                    if (NS != somewhere)
-                        NS->setDocNode(somewhere);
+                    auto *nsNode = static_cast<NamespaceNode *>(node);
+                    if (nsNode != somewhere)
+                        nsNode->setDocNode(somewhere);
                 }
             }
         }
@@ -1225,9 +1223,9 @@ void QDocDatabase::resolveNamespaces()
                 if (nameSpaceNode != ns) {
                     for (auto it = nameSpaceNode->constBegin(); it != nameSpaceNode->constEnd();
                          ++it) {
-                        Node *N = *it;
-                        if (N && N->isPublic() && !N->isInternal())
-                            ns->includeChild(N);
+                        Node *anotherNs = *it;
+                        if (anotherNs && anotherNs->isPublic() && !anotherNs->isInternal())
+                            ns->includeChild(anotherNs);
                     }
                 }
             }
