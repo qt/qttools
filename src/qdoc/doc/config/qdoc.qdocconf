@@ -43,7 +43,6 @@ depends += \
     qtdesigner \
     qtdoc \
     qthelp \
-    qtimageformats \
     qtgui \
     qtlinguist \
     qtnetwork \
