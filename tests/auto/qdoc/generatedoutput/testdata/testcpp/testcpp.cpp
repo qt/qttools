@@ -268,4 +268,13 @@ void TestDerived::virtualFun()
 \endif
 */
 
+/*!
+\if defined(test_template)
+    \class TestQDoc::Vec
+    \inmodule TestCPP
+    \brief Type alias that has its own reference.
+\else
+    \nothing
+\endif
+*/
 } // namespace TestQDoc

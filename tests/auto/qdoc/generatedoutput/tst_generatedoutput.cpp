@@ -363,6 +363,7 @@ void tst_generatedOutput::templateParameters()
     testAndCompare("testdata/configs/testtemplate.qdocconf",
                    "template/testqdoc-test.html "
                    "template/testqdoc-test-struct.html "
+                   "template/testqdoc-vec.html "
                    "template/foo.html "
                    "template/bar.html "
                    "template/baz.html");

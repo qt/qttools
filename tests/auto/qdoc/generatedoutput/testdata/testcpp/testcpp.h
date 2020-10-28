@@ -116,4 +116,11 @@ public Q_SLOTS:
 #endif
 };
 
+#ifdef test_template
+template <typename T>
+struct BaseVec {};
+template <typename T>
+using Vec = BaseVec<T>;
+#endif
+
 } // namespace TestQDoc

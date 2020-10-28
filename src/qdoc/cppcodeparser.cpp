@@ -29,6 +29,7 @@
 #include "cppcodeparser.h"
 
 #include "access.h"
+#include "classnode.h"
 #include "collectionnode.h"
 #include "config.h"
 #include "examplenode.h"
@@ -213,6 +214,19 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         node = qdb_->findNodeInOpenNamespace(path, m_nodeTypeTestFuncMap[command]);
         if (node == nullptr)
             node = qdb_->findNodeByNameAndType(path, m_nodeTypeTestFuncMap[command]);
+        // Allow representing a type alias as a class
+        if (node == nullptr && command == COMMAND_CLASS) {
+            node = qdb_->findNodeByNameAndType(path, &Node::isTypeAlias);
+            if (node) {
+                auto access = node->access();
+                auto loc = node->location();
+                auto templateDecl = node->templateDecl();
+                node = new ClassNode(Node::Class, node->parent(), node->name());
+                node->setAccess(access);
+                node->setLocation(loc);
+                node->setTemplateDecl(templateDecl);
+            }
+        }
         if (node == nullptr) {
             if (isWorthWarningAbout(doc)) {
                 doc.location().warning(
