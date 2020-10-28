@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -44,7 +44,7 @@
         \li \c Documentation in \c C++, \c QML, and \c .qdoc files
     \endlist
 
-    \note From Qt 5.11, \l{QDoc Manual}{QDoc} requires \l{http://clang.llvm.org}{Clang}
+    \note \l{QDoc Manual}{QDoc} requires \l{http://clang.llvm.org}{Clang}
     for parsing C++ header and source files, and for parsing the function
     signatures in \l {fn-command} {\\fn} commands. See \l {Installing Clang for QDoc}
     for details.
@@ -664,20 +664,22 @@
     Therefore, if you are going to build QDoc from source, you need to install
     \l{http://clang.llvm.org}{LLVM 8.0} or greater first.
 
-    You can get LLVM/Clang through various channels.
+    You can get Clang through various channels:
 
-    For Debian-based Linux distributions, it is sufficient to install the
-    \c libclang-dev package and its dependencies. For running QDoc, the
-    \c libclang package is required.
+    \list
+    \li Qt provides \l{http://download.qt.io/development_releases/prebuilt/libclang/qt}
+        {prebuilt Clang packages} that are also used for the Qt binaries in the online
+        installer. They allow to link LLVM/clang libraries statically, but only support Release
+        builds on Windows.
+    \li Linux distributions often provide a package called libclang-dev or libclang-devel.
+    \li On macOS, you can also use Homebrew's
+        \l{https://formulae.brew.sh/formula/llvm}{llvm formula}.
+    \endlist
 
-    You can also find pre-built binaries for most platforms
-    \l {http://releases.llvm.org/download.html}{here}.
+    \note the prebuilt binaries from \l{http://releases.llvm.org/download.html} cannot
+    be used, as they miss certain components required by QDoc.
 
-    If you install LLVM in a custom location you need to tell CMake where
+    If you install Clang in a custom location you need to tell CMake where
     to find it. This can be done by adding the installation path to
     the \c CMAKE_PREFIX_PATH CMake cache variable.
-
-    \note On Windows, after installing the pre-built LLVM you must restart your
-    build shell to ensure that LLVM's binary directory is added to the PATH
-    variable. This is needed to be able to run qdoc.
 */
