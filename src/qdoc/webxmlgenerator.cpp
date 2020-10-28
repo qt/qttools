@@ -778,7 +778,7 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom, cons
                 break;
             case Node::Property: {
                 const auto *propertyNode = static_cast<const PropertyNode *>(node);
-                if (propertyNode->getters().empty())
+                if (!propertyNode->getters().empty())
                     writer.writeAttribute("getter", propertyNode->getters().at(0)->fullName());
             } break;
             default:
