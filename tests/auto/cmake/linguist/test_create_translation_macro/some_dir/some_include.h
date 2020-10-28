@@ -29,8 +29,6 @@
 #ifndef SOME_INCLUDE_H
 #define SOME_INCLUDE_H
 
-enum {
-  Non_Empty_File
-};
+enum { Non_Empty_File };
 
 #endif

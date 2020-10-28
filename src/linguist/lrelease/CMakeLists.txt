@@ -28,6 +28,10 @@ qt_internal_add_tool(${target_name}
         ../shared
     PUBLIC_LIBRARIES
         Qt::CorePrivate
+    # special case begin
+    EXTRA_CMAKE_FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/../${QT_CMAKE_EXPORT_NAMESPACE}LinguistToolsMacros.cmake"
+    # special case end
 )
 
 #### Keys ignored in scope 1:.:.:lrelease.pro:<TRUE>:

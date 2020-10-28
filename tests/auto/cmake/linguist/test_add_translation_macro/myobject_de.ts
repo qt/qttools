@@ -2,11 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de_DE">
 <context>
-    <name>QObject</name>
+    <name>main</name>
     <message>
         <location filename="myi18nobject.cpp" line="49"/>
         <source>Hello, world!</source>
-        <translation type="unfinished"></translation>
+        <translation>Hallo, Welt!</translation>
     </message>
 </context>
 </TS>

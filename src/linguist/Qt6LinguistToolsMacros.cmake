@@ -1,4 +1,5 @@
 #=============================================================================
+# Copyright (C) 2020 The Qt Company Ltd.
 # Copyright 2005-2011 Kitware, Inc.
 # All rights reserved.
 #
@@ -32,7 +33,7 @@
 
 include(CMakeParseArguments)
 
-function(QT5_CREATE_TRANSLATION _qm_files)
+function(qt6_create_translation _qm_files)
     set(options)
     set(oneValueArgs)
     set(multiValueArgs OPTIONS)
@@ -91,12 +92,12 @@ function(QT5_CREATE_TRANSLATION _qm_files)
           file(WRITE ${_ts_lst_file} "${_lst_file_srcs}")
         endif()
         add_custom_command(OUTPUT ${_ts_file}
-            COMMAND ${Qt5_LUPDATE_EXECUTABLE}
+            COMMAND ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate
             ARGS ${_lupdate_options} "@${_ts_lst_file}" -ts ${_ts_file}
             DEPENDS ${_dependencies}
             VERBATIM)
     endforeach()
-    qt5_add_translation(${_qm_files} ${_my_tsfiles})
+    qt6_add_translation(${_qm_files} ${_my_tsfiles})
     set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
 endfunction()
 
@@ -112,7 +113,7 @@ if(NOT QT_NO_CREATE_VERSIONLESS_FUNCTIONS)
 endif()
 
 
-function(QT5_ADD_TRANSLATION _qm_files)
+function(qt6_add_translation _qm_files)
     set(options)
     set(oneValueArgs)
     set(multiValueArgs OPTIONS)
@@ -134,7 +135,7 @@ function(QT5_ADD_TRANSLATION _qm_files)
         endif()
 
         add_custom_command(OUTPUT ${qm}
-            COMMAND ${Qt5_LRELEASE_EXECUTABLE}
+            COMMAND ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease
             ARGS ${_LRELEASE_OPTIONS} ${_abs_FILE} -qm ${qm}
             DEPENDS ${_abs_FILE} VERBATIM
         )

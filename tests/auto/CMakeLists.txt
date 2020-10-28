@@ -16,8 +16,10 @@ if(TARGET Qt::Help AND NOT CMAKE_CROSSCOMPILING)
     add_subdirectory(qhelpprojectdata)
 endif()
 # special case begin
-#add_subdirectory(cmake)
-#add_subdirectory(installed_cmake)
+add_subdirectory(cmake)
+if (TARGET Qt::Linguist)
+    add_subdirectory(cmake/linguist)
+endif()
 # special case end
 if(QT_FEATURE_process AND WIN32 AND NOT CMAKE_CROSSCOMPILING)
     add_subdirectory(windeployqt)

@@ -1,5 +1,3 @@
-# special case skip regeneration
-
 # This is an automatic test for the CMake configuration files.
 # To run it manually,
 # 1) mkdir build   # Create a build directory
@@ -11,9 +9,10 @@
 #
 # The expected output is something like:
 #
-# 1/2 Test #1: test_uiplugin_module .............   Passed    6.33 sec
-#     Start 4: test_uiplugin_via_designer
-# 2/2 Test #2: test_uiplugin_via_designer .......   Passed    9.32 sec
+#     Start 1: test_add_translation_macro
+# 1/2 Test #1: test_add_translation_macro .......   Passed    3.13 sec
+#     Start 2: test_create_translation_macro
+# 2/2 Test #2: test_create_translation_macro ....   Passed    3.64 sec
 #
 #
 # Note that if Qt is not installed, or if it is installed to a
@@ -23,12 +22,11 @@
 
 cmake_minimum_required(VERSION 3.14)
 
-project(qttools_cmake_tests)
+project(qttools_cmake_tests_linguist)
 
 enable_testing()
 
-set(required_packages Core)
-set(optional_packages Widgets)
+set(required_packages Core LinguistTools)
 
 # Setup the test when called as a completely standalone project.
 if(TARGET Qt6::Core)
@@ -38,7 +36,6 @@ if(TARGET Qt6::Core)
 endif()
 
 find_package(Qt6 REQUIRED COMPONENTS ${required_packages})
-find_package(Qt6 OPTIONAL_COMPONENTS ${optional_packages})
 
 # Setup common test variables which were previously set by ctest_testcase_common.prf.
 set(CMAKE_MODULES_UNDER_TEST "${required_packages}")
@@ -57,7 +54,7 @@ endforeach()
 
 include("${_Qt6CTestMacros}")
 
-if (TARGET Qt6::Widgets)
-    _qt_internal_test_expect_pass(test_uiplugin_module)
-    _qt_internal_test_expect_pass(test_uiplugin_via_designer)
+_qt_internal_test_expect_pass(test_add_translation_macro)
+if (TARGET Qt6::lupdate)
+    _qt_internal_test_expect_pass(test_create_translation_macro)
 endif()

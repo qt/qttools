@@ -26,21 +26,26 @@
 **
 ****************************************************************************/
 
-#include <QDebug>
 #include <QCoreApplication>
 #include <QTranslator>
-
-#include "some_include.h"
+#include <QLocale>
 
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     QTranslator *myappTranslator = new QTranslator;
-    QString localeName = QLocale::system().name();
-    myappTranslator->load("myobject_" + localeName + ".qm", qApp->applicationDirPath());
-    myappTranslator->setObjectName("myobject_" + localeName);
+
+    QLocale::setDefault(QLocale("de"));
+
+    if (!myappTranslator->load(QLocale(), "myobject", "_", qApp->applicationDirPath()))
+        qFatal("Could not load translation file!");
+
     app.installTranslator(myappTranslator);
 
-    qDebug() << QObject::tr("Hello, world!");
+    QString text = QCoreApplication::translate("main", "Hello, world!");
+    if (text != QLatin1String("Hallo, Welt!"))
+        qFatal("Translation not found!");
+
+    std::fprintf(stdout, "%s\n", qPrintable(text));
     return 0;
 }
