@@ -116,11 +116,11 @@ void PreviewActionGroup::slotTriggered(QAction *a)
 {
     // Device or style according to data.
     const QVariant data = a->data();
-    switch (data.type()) {
-    case QVariant::String:
+    switch (data.metaType().id()) {
+    case QMetaType::QString:
         emit preview(data.toString(), -1);
         break;
-    case QVariant::Int:
+    case QMetaType::Int:
         emit preview(QString(), data.toInt());
         break;
     default:

@@ -259,11 +259,11 @@ QPixmap  NewFormWidget::formPreviewPixmap(const QTreeWidgetItem *item)
         // file or string?
         const QVariant fileName = item->data(0, TemplateNameRole);
         QPixmap rc;
-        if (fileName.type() == QVariant::String) {
+        if (fileName.metaType().id() == QMetaType::QString) {
             rc = formPreviewPixmap(fileName.toString());
         } else {
             const QVariant classNameV = item->data(0, ClassNameRole);
-            Q_ASSERT(classNameV.type() == QVariant::String);
+            Q_ASSERT(classNameV.metaType().id() == QMetaType::QString);
             const QString className = classNameV.toString();
             QByteArray data =  qdesigner_internal::WidgetDataBase::formTemplate(m_core, className, formName(className)).toUtf8();
             QBuffer buffer(&data);
@@ -492,7 +492,7 @@ QString NewFormWidget::itemToTemplate(const QTreeWidgetItem *item, QString *erro
     const QSize size = templateSize();
     // file name or string contents?
     const QVariant templateFileName = item->data(0, TemplateNameRole);
-    if (templateFileName.type() == QVariant::String) {
+    if (templateFileName.metaType().id() == QMetaType::QString) {
         const QString fileName = templateFileName.toString();
         // No fixed size: just open.
         if (size.isNull())

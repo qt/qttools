@@ -187,7 +187,7 @@ protected:
 
         QString m_propertyName;
         QString m_propertyGroup;
-        QVariant::Type m_propertyType = QVariant::Invalid;
+        int m_propertyType = QMetaType::UnknownType;
         SpecialProperty m_specialProperty = SP_None;
     };
     const PropertyDescription &propertyDescription() const { return  m_propertyDescription; }

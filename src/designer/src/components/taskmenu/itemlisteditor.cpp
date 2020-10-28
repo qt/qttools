@@ -412,7 +412,7 @@ void ItemListEditor::setItemData(int role, const QVariant &v)
         || role == Qt::FontRole)
             reLayout = true;
     QVariant newValue = v;
-    if (role == Qt::FontRole && newValue.type() == QVariant::Font) {
+    if (role == Qt::FontRole && newValue.metaType().id() == QMetaType::QFont) {
         QFont oldFont = ui.listWidget->font();
         QFont newFont = qvariant_cast<QFont>(newValue).resolve(oldFont);
         newValue = QVariant::fromValue(newFont);

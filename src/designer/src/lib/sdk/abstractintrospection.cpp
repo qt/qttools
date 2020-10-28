@@ -203,9 +203,11 @@ QDesignerMetaPropertyInterface::~QDesignerMetaPropertyInterface() = default;
 */
 
 /*!
-    \fn QVariant::Type QDesignerMetaPropertyInterface::type() const
+    \fn int QDesignerMetaPropertyInterface::type() const
 
     Returns the type of the property.
+
+    \sa QMetaType::Type
 */
 
 /*!

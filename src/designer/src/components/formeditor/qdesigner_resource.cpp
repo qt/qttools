@@ -668,7 +668,7 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
             const DomPropertyList::const_iterator cend = domPropertyList.constEnd();
             for (DomPropertyList::const_iterator it = domPropertyList.constBegin(); it != cend; ++it) {
                 const QVariant vprop = domPropertyToVariant(this, mainWidget->metaObject(), *it);
-                if (vprop.type() != QVariant::Invalid)
+                if (vprop.metaType().id() != QMetaType::UnknownType)
                     designerFormData.insert((*it)->attributeName(), vprop);
             }
         }
@@ -992,25 +992,25 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
             sheet->setProperty(index, v);
             sheet->setChanged(index, true);
         } else if (dynamicPropertiesAllowed) {
-            QVariant defaultValue = QVariant(v.type());
+            QVariant defaultValue = QVariant(v.metaType());
             bool isDefault = (v == defaultValue);
             if (v.canConvert<PropertySheetIconValue>()) {
-                defaultValue = QVariant(QVariant::Icon);
+                defaultValue = QVariant(QMetaType(QMetaType::QIcon));
                 isDefault = (qvariant_cast<PropertySheetIconValue>(v) == PropertySheetIconValue());
             } else if (v.canConvert<PropertySheetPixmapValue>()) {
-                defaultValue = QVariant(QVariant::Pixmap);
+                defaultValue = QVariant(QMetaType(QMetaType::QPixmap));
                 isDefault = (qvariant_cast<PropertySheetPixmapValue>(v) == PropertySheetPixmapValue());
             } else if (v.canConvert<PropertySheetStringValue>()) {
-                defaultValue = QVariant(QVariant::String);
+                defaultValue = QVariant(QMetaType(QMetaType::QString));
                 isDefault = (qvariant_cast<PropertySheetStringValue>(v) == PropertySheetStringValue());
             } else if (v.canConvert<PropertySheetStringListValue>()) {
-                defaultValue = QVariant(QVariant::StringList);
+                defaultValue = QVariant(QMetaType(QMetaType::QStringList));
                 isDefault = (qvariant_cast<PropertySheetStringListValue>(v) == PropertySheetStringListValue());
             } else if (v.canConvert<PropertySheetKeySequenceValue>()) {
-                defaultValue = QVariant(QVariant::KeySequence);
+                defaultValue = QVariant(QMetaType(QMetaType::QKeySequence));
                 isDefault = (qvariant_cast<PropertySheetKeySequenceValue>(v) == PropertySheetKeySequenceValue());
             }
-            if (defaultValue.type() != QVariant::UserType) {
+            if (defaultValue.metaType().id() != QMetaType::User) {
                 const int idx = dynamicSheet->addDynamicProperty(p->attributeName(), defaultValue);
                 if (idx != -1) {
                     sheet->setProperty(idx, v);

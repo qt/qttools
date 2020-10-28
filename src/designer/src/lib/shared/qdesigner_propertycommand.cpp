@@ -328,18 +328,20 @@ unsigned compareSubProperties(const QVariant & q1, const QVariant & q2, qdesigne
 {
     // Do not clobber new value in the comparison function in
     // case someone sets a QString on a PropertySheetStringValue.
-    if (q1.type() != q2.type())
+    const int t1  = q1.metaType().id();
+    const int t2  = q2.metaType().id();
+    if (t1 != t2)
         return SubPropertyAll;
-    switch (q1.type()) {
-    case QVariant::Rect:
+    switch (t1) {
+    case QMetaType::QRect:
         return compareSubProperties(q1.toRect(), q2.toRect());
-    case QVariant::Size:
+    case QMetaType::QSize:
         return compareSubProperties(q1.toSize(), q2.toSize());
-    case QVariant::SizePolicy:
+    case QMetaType::QSizePolicy:
         return compareSubProperties(qvariant_cast<QSizePolicy>(q1), qvariant_cast<QSizePolicy>(q2));
-    case QVariant::Font:
+    case QMetaType::QFont:
         return compareSubProperties(qvariant_cast<QFont>(q1), qvariant_cast<QFont>(q2));
-    case QVariant::Palette:
+    case QMetaType::QPalette:
         return compareSubProperties(qvariant_cast<QPalette>(q1), qvariant_cast<QPalette>(q2));
     default:
         if (q1.userType() == qMetaTypeId<qdesigner_internal::PropertySheetIconValue>())
@@ -527,14 +529,14 @@ PropertyHelper::Value applySubProperty(const QVariant &oldValue, const QVariant 
     if (mask == SubPropertyAll)
         return PropertyHelper::Value(newValue, changed);
 
-    switch (oldValue.type()) {
-    case QVariant::Rect:
+    switch (oldValue.metaType().id()) {
+    case QMetaType::QRect:
         return PropertyHelper::Value(applyRectSubProperty(oldValue.toRect(), newValue.toRect(), mask), changed);
-    case QVariant::Size:
+    case QMetaType::QSize:
         return PropertyHelper::Value(applySizeSubProperty(oldValue.toSize(), newValue.toSize(), mask), changed);
-    case QVariant::SizePolicy:
+    case QMetaType::QSizePolicy:
         return PropertyHelper::Value(QVariant::fromValue(applySizePolicySubProperty(qvariant_cast<QSizePolicy>(oldValue), qvariant_cast<QSizePolicy>(newValue), mask)), changed);
-    case QVariant::Font: {
+    case QMetaType::QFont: {
         // Changed flag in case of font and palette depends on resolve mask only, not on the passed "changed" value.
 
         // The first case: the user changed bold subproperty and then pressed reset button for this subproperty (not for
@@ -554,7 +556,7 @@ PropertyHelper::Value applySubProperty(const QVariant &oldValue, const QVariant 
         QFont font = applyFontSubProperty(qvariant_cast<QFont>(oldValue), qvariant_cast<QFont>(newValue), mask);
         return PropertyHelper::Value(QVariant::fromValue(font), font.resolveMask());
         }
-    case QVariant::Palette: {
+    case QMetaType::QPalette: {
         QPalette palette = applyPaletteSubProperty(qvariant_cast<QPalette>(oldValue), qvariant_cast<QPalette>(newValue), mask);
         return PropertyHelper::Value(QVariant::fromValue(palette), palette.resolveMask());
         }
@@ -887,7 +889,7 @@ QVariant PropertyHelper::findDefaultValue(QDesignerFormWindowInterface *fw) cons
     if (m_index < default_prop_values.size())
         return default_prop_values.at(m_index);
 
-    if (m_oldValue.first.type() == QVariant::Color)
+    if (m_oldValue.first.metaType().id() == QMetaType::QColor)
         return QColor();
 
     return m_oldValue.first; // Again, we just don't know
@@ -935,7 +937,7 @@ PropertyListCommand::PropertyDescription::PropertyDescription(const QString &pro
                                                               int index) :
     m_propertyName(propertyName),
     m_propertyGroup(propertySheet->propertyGroup(index)),
-    m_propertyType(propertySheet->property(index).type()),
+    m_propertyType(propertySheet->property(index).metaType().id()),
     m_specialProperty(getSpecialProperty(propertyName))
 {
 }

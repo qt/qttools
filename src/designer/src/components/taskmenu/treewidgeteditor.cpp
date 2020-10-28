@@ -108,10 +108,10 @@ static AbstractItemEditor::PropertyDefinition treeHeaderPropList[] = {
     { Qt::ToolTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "toolTip" },
     { Qt::StatusTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "statusTip" },
     { Qt::WhatsThisPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "whatsThis" },
-    { Qt::FontRole, QVariant::Font, nullptr, "font" },
+    { Qt::FontRole, QMetaType::QFont, nullptr, "font" },
     { Qt::TextAlignmentRole, 0, DesignerPropertyManager::designerAlignmentTypeId, "textAlignment" },
-    { Qt::BackgroundRole, QVariant::Color, nullptr, "background" },
-    { Qt::ForegroundRole, QVariant::Brush, nullptr, "foreground" },
+    { Qt::BackgroundRole, QMetaType::QColor, nullptr, "background" },
+    { Qt::ForegroundRole, QMetaType::QBrush, nullptr, "foreground" },
     { 0, 0, nullptr, nullptr }
 };
 
@@ -121,10 +121,10 @@ static AbstractItemEditor::PropertyDefinition treeItemColumnPropList[] = {
     { Qt::ToolTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "toolTip" },
     { Qt::StatusTipPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "statusTip" },
     { Qt::WhatsThisPropertyRole, 0, DesignerPropertyManager::designerStringTypeId, "whatsThis" },
-    { Qt::FontRole, QVariant::Font, nullptr, "font" },
+    { Qt::FontRole, QMetaType::QFont, nullptr, "font" },
     { Qt::TextAlignmentRole, 0, DesignerPropertyManager::designerAlignmentTypeId, "textAlignment" },
-    { Qt::BackgroundRole, QVariant::Brush, nullptr, "background" },
-    { Qt::ForegroundRole, QVariant::Brush, nullptr, "foreground" },
+    { Qt::BackgroundRole, QMetaType::QBrush, nullptr, "background" },
+    { Qt::ForegroundRole, QMetaType::QBrush, nullptr, "foreground" },
     { Qt::CheckStateRole, 0, QtVariantPropertyManager::enumTypeId, "checkState" },
     { 0, 0, nullptr, nullptr }
 };
@@ -181,7 +181,7 @@ void TreeWidgetEditor::setItemData(int role, const QVariant &v)
     const int col = (role == ItemFlagsShadowRole) ? 0 : ui.treeWidget->currentColumn();
     QVariant newValue = v;
     BoolBlocker block(m_updatingBrowser);
-    if (role == Qt::FontRole && newValue.type() == QVariant::Font) {
+    if (role == Qt::FontRole && newValue.metaType().id() == QMetaType::QFont) {
         QFont oldFont = ui.treeWidget->font();
         QFont newFont = qvariant_cast<QFont>(newValue).resolve(oldFont);
         newValue = QVariant::fromValue(newFont);

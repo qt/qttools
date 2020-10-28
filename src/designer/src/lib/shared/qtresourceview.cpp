@@ -847,7 +847,7 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
     settings->beginGroup(QLatin1String(ResourceViewDialogC));
 
     const QVariant geometry = settings->value(QLatin1String(Geometry));
-    if (geometry.type() == QVariant::ByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374.
+    if (geometry.metaType().id() == QMetaType::QByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374.
         restoreGeometry(geometry.toByteArray());
 
     settings->endGroup();

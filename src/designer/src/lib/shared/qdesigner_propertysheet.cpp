@@ -191,7 +191,7 @@ public:
 
     bool isReloadableProperty(int index) const;
     bool isResourceProperty(int index) const;
-    void addResourceProperty(int index, QVariant::Type type);
+    void addResourceProperty(int index, int type);
     QVariant resourceProperty(int index) const;
     void setResourceProperty(int index, const QVariant &value);
     QVariant emptyResourceProperty(int index) const; // of type PropertySheetPixmapValue / PropertySheetIconValue
@@ -270,7 +270,7 @@ bool QDesignerPropertySheetPrivate::isReloadableProperty(int index) const
     return isResourceProperty(index)
            || propertyType(index) == QDesignerPropertySheet::PropertyStyleSheet
            || propertyType(index) == QDesignerPropertySheet::PropertyText
-           || q->property(index).type() == QVariant::Url;
+           || q->property(index).metaType().id() == QMetaType::QUrl;
 }
 
 /*
@@ -285,11 +285,11 @@ bool QDesignerPropertySheetPrivate::isResourceProperty(int index) const
     return m_resourceProperties.contains(index);
 }
 
-void QDesignerPropertySheetPrivate::addResourceProperty(int index, QVariant::Type type)
+void QDesignerPropertySheetPrivate::addResourceProperty(int index, int type)
 {
-    if (type == QVariant::Pixmap)
+    if (type == QMetaType::QPixmap)
         m_resourceProperties.insert(index, QVariant::fromValue(qdesigner_internal::PropertySheetPixmapValue()));
-    else if (type == QVariant::Icon)
+    else if (type == QMetaType::QIcon)
         m_resourceProperties.insert(index, QVariant::fromValue(qdesigner_internal::PropertySheetIconValue()));
 }
 
@@ -598,7 +598,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
     for (int index=0; index<count(); ++index) {
         const QDesignerMetaPropertyInterface *p = d->m_meta->property(index);
         const QString name = p->name();
-        if (p->type() == QVariant::KeySequence) {
+        if (p->type() == QMetaType::QKeySequence) {
             createFakeProperty(name);
         } else {
             setVisible(index, false); // use the default for `real' properties
@@ -614,22 +614,22 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
         info.group = pgroup;
         info.propertyType = propertyTypeFromName(name);
 
-        const QVariant::Type type = p->type();
+        const int type = p->type();
         switch (type) {
-        case QVariant::Cursor:
-        case QVariant::Icon:
-        case QVariant::Pixmap:
+        case QMetaType::QCursor:
+        case QMetaType::QIcon:
+        case QMetaType::QPixmap:
             info.defaultValue = p->read(d->m_object);
-            if (type == QVariant::Icon || type == QVariant::Pixmap)
+            if (type == QMetaType::QIcon || type == QMetaType::QPixmap)
                 d->addResourceProperty(index, type);
             break;
-        case QVariant::String:
+        case QMetaType::QString:
             d->addStringProperty(index);
             break;
-        case QVariant::StringList:
+        case QMetaType::QStringList:
             d->addStringListProperty(index);
             break;
-        case QVariant::KeySequence:
+        case QMetaType::QKeySequence:
             d->addKeySequenceProperty(index);
             break;
         default:
@@ -748,17 +748,24 @@ int QDesignerPropertySheet::addDynamicProperty(const QString &propName, const QV
         return -1;
 
     QVariant v = value;
-    if (value.type() == QVariant::Icon)
+    switch (value.metaType().id()) {
+    case QMetaType::QIcon:
         v = QVariant::fromValue(qdesigner_internal::PropertySheetIconValue());
-    else if (value.type() == QVariant::Pixmap)
+        break;
+    case QMetaType::QPixmap:
         v = QVariant::fromValue(qdesigner_internal::PropertySheetPixmapValue());
-    else if (value.type() == QVariant::String)
+        break;
+    case QMetaType::QString:
         v = QVariant::fromValue(qdesigner_internal::PropertySheetStringValue(value.toString()));
-    else if (value.type() == QVariant::StringList)
+        break;
+    case QMetaType::QStringList:
         v = QVariant::fromValue(qdesigner_internal::PropertySheetStringListValue(value.toStringList()));
-    else if (value.type() == QVariant::KeySequence) {
+        break;
+    case QMetaType::QKeySequence: {
         const QKeySequence keySequence = qvariant_cast<QKeySequence>(value);
         v = QVariant::fromValue(qdesigner_internal::PropertySheetKeySequenceValue(keySequence));
+    }
+        break;
     }
 
     if (d->m_addIndex.contains(propName)) {
@@ -771,12 +778,18 @@ int QDesignerPropertySheet::addDynamicProperty(const QString &propName, const QV
         Info &info = d->ensureInfo(index);
         info.defaultValue = value;
         info.kind = QDesignerPropertySheetPrivate::DynamicProperty;
-        if (value.type() == QVariant::Icon || value.type() == QVariant::Pixmap)
-            d->addResourceProperty(idx, value.type());
-        else if (value.type() == QVariant::String)
+        switch (value.metaType().id()) {
+        case QMetaType::QIcon:
+        case QMetaType::QPixmap:
+            d->addResourceProperty(idx, value.metaType().id());
+            break;
+        case QMetaType::QString:
             d->addStringProperty(idx);
-        else if (value.type() == QVariant::KeySequence)
+            break;
+        case QMetaType::QKeySequence:
             d->addKeySequenceProperty(idx);
+            break;
+        }
         return idx;
     }
 
@@ -789,18 +802,18 @@ int QDesignerPropertySheet::addDynamicProperty(const QString &propName, const QV
     info.defaultValue = value;
     info.kind = QDesignerPropertySheetPrivate::DynamicProperty;
     setPropertyGroup(index, tr("Dynamic Properties"));
-    switch (value.type()) {
-    case QVariant::Icon:
-    case QVariant::Pixmap:
-        d->addResourceProperty(index, value.type());
+    switch (value.metaType().id()) {
+    case QMetaType::QIcon:
+    case QMetaType::QPixmap:
+        d->addResourceProperty(index, value.metaType().id());
         break;
-    case QVariant::String:
+    case QMetaType::QString:
         d->addStringProperty(index);
         break;
-    case QVariant::StringList:
+    case QMetaType::QStringList:
         d->addStringListProperty(index);
         break;
-    case QVariant::KeySequence:
+    case QMetaType::QKeySequence:
         d->addKeySequenceProperty(index);
         break;
     default:
@@ -912,12 +925,17 @@ int QDesignerPropertySheet::createFakeProperty(const QString &propertyName, cons
         info.visible = false;
         info.kind = QDesignerPropertySheetPrivate::FakeProperty;
         QVariant v = value.isValid() ? value : metaProperty(index);
-        if (v.type() == QVariant::String)
+        switch (v.metaType().id()) {
+        case QMetaType::QString:
             v = QVariant::fromValue(qdesigner_internal::PropertySheetStringValue());
-        if (v.type() == QVariant::StringList)
+            break;
+        case QMetaType::QStringList:
             v = QVariant::fromValue(qdesigner_internal::PropertySheetStringListValue());
-        if (v.type() == QVariant::KeySequence)
+            break;
+        case QMetaType::QKeySequence:
             v = QVariant::fromValue(qdesigner_internal::PropertySheetKeySequenceValue());
+            break;
+        }
         d->m_fakeProperties.insert(index, v);
         return index;
     }
@@ -1143,12 +1161,12 @@ void QDesignerPropertySheet::setFakeProperty(int index, const QVariant &value)
         qdesigner_internal::PropertySheetFlagValue f = qvariant_cast<qdesigner_internal::PropertySheetFlagValue>(v);
         f.value = value.toInt();
         v.setValue(f);
-        Q_ASSERT(value.type() == QVariant::Int);
+        Q_ASSERT(value.metaType().id() == QMetaType::Int);
     } else if (v.canConvert<qdesigner_internal::PropertySheetEnumValue>()) {
         qdesigner_internal::PropertySheetEnumValue e = qvariant_cast<qdesigner_internal::PropertySheetEnumValue>(v);
         e.value = value.toInt();
         v.setValue(e);
-        Q_ASSERT(value.type() == QVariant::Int);
+        Q_ASSERT(value.metaType().id() == QMetaType::Int);
     } else {
         v = value;
     }
@@ -1161,7 +1179,7 @@ void QDesignerPropertySheet::clearFakeProperties()
 
 // Buddy needs to be byte array, else uic won't work
 static QVariant toByteArray(const QVariant &value) {
-    if (value.type() == QVariant::ByteArray)
+    if (value.metaType().id() == QMetaType::QByteArray)
         return value;
     const QByteArray ba = value.toString().toUtf8();
     return QVariant(ba);

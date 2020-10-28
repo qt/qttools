@@ -463,7 +463,7 @@ namespace qdesigner_internal {
         const QVariant rc = QStandardItemModel::data(index, role);
         // Return <noname> if the string is empty for the display role
         // only (else, editing starts with <noname>).
-        if (role == Qt::DisplayRole && rc.type() == QVariant::String) {
+        if (role == Qt::DisplayRole && rc.metaType().id() == QMetaType::QString) {
             const QString s = rc.toString();
             if (s.isEmpty()) {
                 static const QString noName = QCoreApplication::translate("ObjectInspectorModel", "<noname>");

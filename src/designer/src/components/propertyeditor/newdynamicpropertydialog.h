@@ -64,7 +64,7 @@ public:
     ~NewDynamicPropertyDialog();
 
     void setReservedNames(const QStringList &names);
-    void setPropertyType(QVariant::Type t);
+    void setPropertyType(int  t);
 
     QString propertyName() const;
     QVariant propertyValue() const;

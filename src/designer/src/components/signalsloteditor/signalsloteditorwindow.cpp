@@ -308,7 +308,7 @@ bool ConnectionModel::setData(const QModelIndex &index, const QVariant &data, in
 {
     if (!index.isValid() || !m_editor)
         return false;
-    if (data.type() != QVariant::String)
+    if (data.metaType().id() != QMetaType::QString)
         return false;
 
     SignalSlotConnection *con = static_cast<SignalSlotConnection*>(m_editor->connection(index.row()));
@@ -592,7 +592,7 @@ ConnectionDelegate::ConnectionDelegate(QWidget *parent)
         factory = new QItemEditorFactory;
         QItemEditorCreatorBase *creator
             = new QItemEditorCreator<InlineEditor>("text");
-        factory->registerEditor(QVariant::String, creator);
+        factory->registerEditor(QMetaType::QString, creator);
     }
 
     setItemEditorFactory(factory);

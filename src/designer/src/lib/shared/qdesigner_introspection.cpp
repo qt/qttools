@@ -101,7 +101,7 @@ namespace  {
         AccessFlags accessFlags() const override { return m_access; }
         Attributes attributes() const override;
 
-        QVariant::Type type() const override { return m_property.type(); }
+        int type() const override            { return m_property.metaType().id(); }
         QString name() const override        { return m_name; }
         QString typeName() const override    { return m_typeName; }
         int userType() const override        { return m_property.userType(); }

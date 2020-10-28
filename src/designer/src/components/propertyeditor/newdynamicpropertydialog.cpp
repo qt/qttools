@@ -48,34 +48,62 @@ NewDynamicPropertyDialog::NewDynamicPropertyDialog(QDesignerDialogGuiInterface *
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
-    m_ui->m_comboBox->addItem(QStringLiteral("String"),      QVariant(QVariant::String));
-    m_ui->m_comboBox->addItem(QStringLiteral("StringList"),  QVariant(QVariant::StringList));
-    m_ui->m_comboBox->addItem(QStringLiteral("Char"),        QVariant(QVariant::Char));
-    m_ui->m_comboBox->addItem(QStringLiteral("ByteArray"),   QVariant(QVariant::ByteArray));
-    m_ui->m_comboBox->addItem(QStringLiteral("Url"),         QVariant(QVariant::Url));
-    m_ui->m_comboBox->addItem(QStringLiteral("Bool"),        QVariant(QVariant::Bool));
-    m_ui->m_comboBox->addItem(QStringLiteral("Int"),         QVariant(QVariant::Int));
-    m_ui->m_comboBox->addItem(QStringLiteral("UInt"),        QVariant(QVariant::UInt));
-    m_ui->m_comboBox->addItem(QStringLiteral("LongLong"),    QVariant(QVariant::LongLong));
-    m_ui->m_comboBox->addItem(QStringLiteral("ULongLong"),   QVariant(QVariant::ULongLong));
-    m_ui->m_comboBox->addItem(QStringLiteral("Double"),      QVariant(QVariant::Double));
-    m_ui->m_comboBox->addItem(QStringLiteral("Size"),        QVariant(QVariant::Size));
-    m_ui->m_comboBox->addItem(QStringLiteral("SizeF"),       QVariant(QVariant::SizeF));
-    m_ui->m_comboBox->addItem(QStringLiteral("Point"),       QVariant(QVariant::Point));
-    m_ui->m_comboBox->addItem(QStringLiteral("PointF"),      QVariant(QVariant::PointF));
-    m_ui->m_comboBox->addItem(QStringLiteral("Rect"),        QVariant(QVariant::Rect));
-    m_ui->m_comboBox->addItem(QStringLiteral("RectF"),       QVariant(QVariant::RectF));
-    m_ui->m_comboBox->addItem(QStringLiteral("Date"),        QVariant(QVariant::Date));
-    m_ui->m_comboBox->addItem(QStringLiteral("Time"),        QVariant(QVariant::Time));
-    m_ui->m_comboBox->addItem(QStringLiteral("DateTime"),    QVariant(QVariant::DateTime));
-    m_ui->m_comboBox->addItem(QStringLiteral("Font"),        QVariant(QVariant::Font));
-    m_ui->m_comboBox->addItem(QStringLiteral("Palette"),     QVariant(QVariant::Palette));
-    m_ui->m_comboBox->addItem(QStringLiteral("Color"),       QVariant(QVariant::Color));
-    m_ui->m_comboBox->addItem(QStringLiteral("Pixmap"),      QVariant(QVariant::Pixmap));
-    m_ui->m_comboBox->addItem(QStringLiteral("Icon"),        QVariant(QVariant::Icon));
-    m_ui->m_comboBox->addItem(QStringLiteral("Cursor"),      QVariant(QVariant::Cursor));
-    m_ui->m_comboBox->addItem(QStringLiteral("SizePolicy"),  QVariant(QVariant::SizePolicy));
-    m_ui->m_comboBox->addItem(QStringLiteral("KeySequence"), QVariant(QVariant::KeySequence));
+    m_ui->m_comboBox->addItem(QStringLiteral("String"),
+                              QVariant(QMetaType(QMetaType::QString)));
+    m_ui->m_comboBox->addItem(QStringLiteral("StringList"),
+                              QVariant(QMetaType(QMetaType::QStringList)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Char"),
+                              QVariant(QMetaType(QMetaType::QChar)));
+    m_ui->m_comboBox->addItem(QStringLiteral("ByteArray"),
+                              QVariant(QMetaType(QMetaType::QByteArray)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Url"),
+                              QVariant(QMetaType(QMetaType::QUrl)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Bool"),
+                              QVariant(QMetaType(QMetaType::Bool)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Int"),
+                              QVariant(QMetaType(QMetaType::Int)));
+    m_ui->m_comboBox->addItem(QStringLiteral("UInt"),
+                              QVariant(QMetaType(QMetaType::UInt)));
+    m_ui->m_comboBox->addItem(QStringLiteral("LongLong"),
+                              QVariant(QMetaType(QMetaType::LongLong)));
+    m_ui->m_comboBox->addItem(QStringLiteral("ULongLong"),
+                              QVariant(QMetaType(QMetaType::ULongLong)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Double"),
+                              QVariant(QMetaType(QMetaType::Double)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Size"),
+                              QVariant(QMetaType(QMetaType::QSize)));
+    m_ui->m_comboBox->addItem(QStringLiteral("SizeF"),
+                              QVariant(QMetaType(QMetaType::QSizeF)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Point"),
+                              QVariant(QMetaType(QMetaType::QPoint)));
+    m_ui->m_comboBox->addItem(QStringLiteral("PointF"),
+                              QVariant(QMetaType(QMetaType::QPointF)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Rect"),
+                              QVariant(QMetaType(QMetaType::QRect)));
+    m_ui->m_comboBox->addItem(QStringLiteral("RectF"),
+                              QVariant(QMetaType(QMetaType::QRectF)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Date"),
+                              QVariant(QMetaType(QMetaType::QDate)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Time"),
+                              QVariant(QMetaType(QMetaType::QTime)));
+    m_ui->m_comboBox->addItem(QStringLiteral("DateTime"),
+                              QVariant(QMetaType(QMetaType::QDateTime)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Font"),
+                              QVariant(QMetaType(QMetaType::QFont)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Palette"),
+                              QVariant(QMetaType(QMetaType::QPalette)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Color"),
+                              QVariant(QMetaType(QMetaType::QColor)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Pixmap"),
+                              QVariant(QMetaType(QMetaType::QPixmap)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Icon"),
+                              QVariant(QMetaType(QMetaType::QIcon)));
+    m_ui->m_comboBox->addItem(QStringLiteral("Cursor"),
+                              QVariant(QMetaType(QMetaType::QCursor)));
+    m_ui->m_comboBox->addItem(QStringLiteral("SizePolicy"),
+                              QVariant(QMetaType(QMetaType::QSizePolicy)));
+    m_ui->m_comboBox->addItem(QStringLiteral("KeySequence"),
+                              QVariant(QMetaType(QMetaType::QKeySequence)));
 
     m_ui->m_comboBox->setCurrentIndex(0); // String
     setOkButtonEnabled(false);
@@ -96,9 +124,9 @@ void NewDynamicPropertyDialog::setReservedNames(const QStringList &names)
     m_reservedNames = names;
 }
 
-void NewDynamicPropertyDialog::setPropertyType(QVariant::Type t)
+void NewDynamicPropertyDialog::setPropertyType(int t)
 {
-    const int index = m_ui->m_comboBox->findData(QVariant(t));
+    const int index = m_ui->m_comboBox->findData(QVariant(QMetaType(t)));
     if (index != -1)
         m_ui->m_comboBox->setCurrentIndex(index);
 }

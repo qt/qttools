@@ -79,7 +79,7 @@ namespace qdesigner_internal {
             resetMap[property] = true;
         }
 
-        if (type == QVariant::Font)
+        if (type == QMetaType::QFont)
             m_createdFontProperty = property;
     }
 
@@ -103,7 +103,7 @@ namespace qdesigner_internal {
                                                      int type,
                                                      int enumTypeId)
     {
-        if (type != QVariant::Font)
+        if (type != QMetaType::QFont)
             return;
 
         // This will cause a recursion

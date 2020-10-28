@@ -269,8 +269,10 @@ QVariant WidgetBoxCategoryModel::data(const QModelIndex &index, int role) const
 bool WidgetBoxCategoryModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     const int row = index.row();
-    if (role != Qt::EditRole || row < 0 || row >=  m_items.size() || value.type() != QVariant::String)
+    if (role != Qt::EditRole || row < 0 || row >=  m_items.size()
+        || value.metaType().id() != QMetaType::QString) {
         return false;
+    }
     // Set name and adapt Xml
     WidgetBoxCategoryEntry &item = m_items[row];
     const QString newName = value.toString();

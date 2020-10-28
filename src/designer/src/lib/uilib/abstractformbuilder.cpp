@@ -1454,7 +1454,7 @@ QList<DomProperty*> QAbstractFormBuilder::computeProperties(QObject *obj)
         const QVariant v = prop.read(obj);
 
         DomProperty *dom_prop = nullptr;
-        if (v.type() == QVariant::Int) {
+        if (v.metaType().id() == QMetaType::Int) {
             dom_prop = new DomProperty();
 
             if (prop.isFlagType())

@@ -155,9 +155,9 @@ bool QResourceBuilder::isResourceProperty(const DomProperty *p) const
 
 bool QResourceBuilder::isResourceType(const QVariant &value) const
 {
-    switch (value.type()) {
-        case QVariant::Pixmap:
-        case QVariant::Icon:
+    switch (value.metaType().id()) {
+        case QMetaType::QPixmap:
+        case QMetaType::QIcon:
             return true;
         default:
             break;

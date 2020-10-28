@@ -86,7 +86,7 @@ public:
     virtual AccessFlags accessFlags() const = 0;
     virtual Attributes attributes() const = 0;
 
-    virtual QVariant::Type type() const = 0;
+    virtual int type() const = 0;
     virtual QString name() const = 0;
     virtual QString typeName() const = 0;
     virtual int userType() const = 0;

@@ -145,7 +145,7 @@ void DPI_Chooser::setDPI(int dpiX, int dpiY)
     int predefinedIndex = -1;
     for (int i = 0; i < count; i++) {
         const QVariant data = m_predefinedCombo->itemData(i);
-        if (data.type() != QVariant::Invalid) {
+        if (data.metaType().id() != QMetaType::UnknownType) {
             const struct DPI_Entry *entry = qvariant_cast<const struct DPI_Entry *>(data);
             if (entry->dpiX == dpiX && entry->dpiY == dpiY) {
                 predefinedIndex = i;
@@ -178,7 +178,7 @@ void DPI_Chooser::syncSpinBoxes()
     const QVariant data = m_predefinedCombo->itemData(predefIdx);
 
     // Predefined mode in which spin boxes are disabled or user defined?
-    const bool userSetting = data.type() == QVariant::Invalid;
+    const bool userSetting = data.metaType().id() == QMetaType::UnknownType;
     m_dpiXSpinBox->setEnabled(userSetting);
     m_dpiYSpinBox->setEnabled(userSetting);
 
