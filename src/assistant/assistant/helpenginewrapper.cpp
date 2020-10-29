@@ -698,9 +698,9 @@ HelpEngineWrapperPrivate::HelpEngineWrapperPrivate(const QString &collectionFile
       m_qchWatcher(new QFileSystemWatcher(this))
 {
     TRACE_OBJ
-    initFileSystemWatchers();
     m_helpEngine->setReadOnly(false);
     m_helpEngine->setUsesFilterEngine(true);
+    initFileSystemWatchers();
 }
 
 void HelpEngineWrapperPrivate::initFileSystemWatchers()
