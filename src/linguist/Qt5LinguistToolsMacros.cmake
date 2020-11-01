@@ -94,7 +94,7 @@ function(QT5_CREATE_TRANSLATION _qm_files)
             COMMAND ${Qt5_LUPDATE_EXECUTABLE}
             ARGS ${_lupdate_options} "@${_ts_lst_file}" -ts ${_ts_file}
             DEPENDS ${_dependencies}
-            BYPRODUCTS ${_ts_lst_file} VERBATIM)
+            VERBATIM)
     endforeach()
     qt5_add_translation(${_qm_files} ${_my_tsfiles})
     set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
