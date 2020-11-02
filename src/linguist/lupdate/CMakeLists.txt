@@ -5,6 +5,10 @@ if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND CMAKE_GENERATOR STREQUAL "Ninj
     message(WARNING "lupdate will not be built in this configuration.")
     return()
 endif()
+
+if (MINGW)
+    set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY _qt_skip_separate_debug_info ON)
+endif()
 # special case end
 
 #####################################################################
