@@ -32,7 +32,17 @@ if(TARGET libclang AND ((TARGET clang-cpp AND TARGET LLVM) OR TARGET clangHandle
 
     get_target_property(type libclang TYPE)
     if (MSVC AND type STREQUAL "STATIC_LIBRARY")
-        if (NOT CMAKE_BUILD_TYPE MATCHES "(Release|MinSizeRel|RelWithDebInfo)")
+        get_property(__wrap_lib_clang_multi_config
+            GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+        if(__wrap_lib_clang_multi_config)
+            set(__wrap_lib_clang_configs ${CMAKE_CONFIGURATION_TYPES})
+        else()
+            set(__wrap_lib_clang_configs ${CMAKE_BUILD_TYPE})
+        endif()
+        set(__wrap_lib_clang_non_release_configs ${configs})
+        list(REMOVE_ITEM __wrap_lib_clang_non_release_configs
+            Release MinSizeRel RelWithDebInfo)
+        if(__wrap_lib_clang_non_release_configs STREQUAL __wrap_lib_clang_configs)
             message(STATUS "Static linkage against libclang with MSVC was requested, but the build is not a release build, therefore libclang cannot be used.")
             set(WrapLibClang_FOUND FALSE)
         endif()
