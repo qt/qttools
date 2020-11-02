@@ -92,7 +92,6 @@ private:
     void updatePointSizes(const QString &family, const QString &style);
     void delayedPreviewFontUpdate();
 
-    QFontDatabase m_fontDatabase;
     QLineEdit *m_previewLineEdit;
     QComboBox *m_writingSystemComboBox;
     QFontComboBox* m_familyComboBox;

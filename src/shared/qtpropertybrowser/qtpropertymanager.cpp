@@ -5512,8 +5512,6 @@ void QtSizePolicyPropertyManager::uninitializeProperty(QtProperty *property)
 // enumeration manager to re-set its strings and index values
 // for each property.
 
-Q_GLOBAL_STATIC(QFontDatabase, fontDatabase)
-
 class QtFontPropertyManagerPrivate
 {
     QtFontPropertyManager *q_ptr;
@@ -5656,7 +5654,7 @@ void QtFontPropertyManagerPrivate::slotFontDatabaseDelayedChange()
     typedef QMap<const QtProperty *, QtProperty *> PropertyPropertyMap;
     // rescan available font names
     const QStringList oldFamilies = m_familyNames;
-    m_familyNames = fontDatabase()->families();
+    m_familyNames = QFontDatabase::families();
 
     // Adapt all existing properties
     if (!m_propertyToFamily.isEmpty()) {
@@ -5875,7 +5873,7 @@ void QtFontPropertyManager::initializeProperty(QtProperty *property)
     QtProperty *familyProp = d_ptr->m_enumPropertyManager->addProperty();
     familyProp->setPropertyName(tr("Family"));
     if (d_ptr->m_familyNames.isEmpty())
-        d_ptr->m_familyNames = fontDatabase()->families();
+        d_ptr->m_familyNames = QFontDatabase::families();
     d_ptr->m_enumPropertyManager->setEnumNames(familyProp, d_ptr->m_familyNames);
     int idx = d_ptr->m_familyNames.indexOf(val.family());
     if (idx == -1)

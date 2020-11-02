@@ -736,8 +736,7 @@ QString qtDiag(unsigned flags)
               << "  Title font   : " << QFontDatabase::systemFont(QFontDatabase::TitleFont) << '\n'
               << "  Smallest font: " << QFontDatabase::systemFont(QFontDatabase::SmallestReadableFont) << '\n';
     if (flags & QtDiagFonts) {
-        QFontDatabase fontDatabase;
-        const QStringList families = fontDatabase.families();
+        const QStringList families = QFontDatabase::families();
         str << "\n  Families (" << families.size() << "):\n";
         for (int i = 0, count = families.size(); i < count; ++i)
             str << "    " << families.at(i) << '\n';
@@ -746,7 +745,7 @@ QString qtDiag(unsigned flags)
         str << "\n  Standard Sizes:";
         for (int i = 0, count = standardSizes.size(); i < count; ++i)
             str << ' ' << standardSizes.at(i);
-        QList<QFontDatabase::WritingSystem> writingSystems = fontDatabase.writingSystems();
+        QList<QFontDatabase::WritingSystem> writingSystems = QFontDatabase::writingSystems();
         str << "\n\n  Writing systems:\n";
         for (int i = 0, count = writingSystems.size(); i < count; ++i)
             str << "    " << formatValueQDebug(writingSystems.at(i)) << '\n';
