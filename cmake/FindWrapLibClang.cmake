@@ -1,6 +1,6 @@
 if(TARGET WrapLibClang::WrapLibClang)
-  set(WrapLibClang_FOUND TRUE)
-  return()
+    set(WrapLibClang_FOUND TRUE)
+    return()
 endif()
 
 if(DEFINED ENV{LLVM_INSTALL_DIR})
@@ -28,41 +28,41 @@ if(WrapLibClang_FIND_VERSION AND LLVM_PACKAGE_VERSION
 endif()
 
 if(TARGET libclang AND ((TARGET clang-cpp AND TARGET LLVM) OR TARGET clangHandleCXX) AND __wrap_lib_clang_requested_version_found)
-  set(WrapLibClang_FOUND TRUE)
+    set(WrapLibClang_FOUND TRUE)
 
-  get_target_property(type libclang TYPE)
-  if (MSVC AND type STREQUAL "STATIC_LIBRARY")
-    if (NOT CMAKE_BUILD_TYPE MATCHES "(Release|MinSizeRel|RelWithDebInfo)")
-      message(STATUS "Static linkage against libclang with MSVC was requested, but the build is not a release build, therefore libclang cannot be used.")
-      set(WrapLibClang_FOUND FALSE)
+    get_target_property(type libclang TYPE)
+    if (MSVC AND type STREQUAL "STATIC_LIBRARY")
+        if (NOT CMAKE_BUILD_TYPE MATCHES "(Release|MinSizeRel|RelWithDebInfo)")
+            message(STATUS "Static linkage against libclang with MSVC was requested, but the build is not a release build, therefore libclang cannot be used.")
+            set(WrapLibClang_FOUND FALSE)
+        endif()
     endif()
-  endif()
 
-  if(WrapLibClang_FOUND)
-      add_library(WrapLibClang::WrapLibClang IMPORTED INTERFACE)
+    if(WrapLibClang_FOUND)
+        add_library(WrapLibClang::WrapLibClang IMPORTED INTERFACE)
 
-      target_include_directories(WrapLibClang::WrapLibClang INTERFACE ${CLANG_INCLUDE_DIRS})
-      if (NOT TARGET Threads::Threads)
-        find_package(Threads)
-      endif()
-      qt_internal_disable_find_package_global_promotion(Threads::Threads)
-      # lupdate must also link to LLVM when using clang-cpp
-      set(__qt_clang_genex_condition "$<AND:$<TARGET_EXISTS:clang-cpp>,$<TARGET_EXISTS:LLVM>>")
-      set(__qt_clang_genex "$<IF:${__qt_clang_genex_condition},clang-cpp;LLVM,clangHandleCXX>")
-      target_link_libraries(WrapLibClang::WrapLibClang
-                            INTERFACE libclang
-                                      ${__qt_clang_genex}
-                                      Threads::Threads
-                           )
+        target_include_directories(WrapLibClang::WrapLibClang INTERFACE ${CLANG_INCLUDE_DIRS})
+        if (NOT TARGET Threads::Threads)
+            find_package(Threads)
+        endif()
+        qt_internal_disable_find_package_global_promotion(Threads::Threads)
+        # lupdate must also link to LLVM when using clang-cpp
+        set(__qt_clang_genex_condition "$<AND:$<TARGET_EXISTS:clang-cpp>,$<TARGET_EXISTS:LLVM>>")
+        set(__qt_clang_genex "$<IF:${__qt_clang_genex_condition},clang-cpp;LLVM,clangHandleCXX>")
+        target_link_libraries(WrapLibClang::WrapLibClang
+            INTERFACE libclang
+            ${__qt_clang_genex}
+            Threads::Threads
+            )
 
-      foreach(version MAJOR MINOR PATCH)
-        set(QT_LIB_CLANG_VERSION_${version} ${LLVM_VERSION_${version}} CACHE STRING "" FORCE)
-      endforeach()
-      set(QT_LIB_CLANG_VERSION ${LLVM_PACKAGE_VERSION} CACHE STRING "" FORCE)
-      set(QT_LIB_CLANG_LIBDIR "${LLVM_LIBRARY_DIRS}" CACHE STRING "" FORCE)
-      set(QT_LIBCLANG_RESOURCE_DIR
-          "\"${QT_LIB_CLANG_LIBDIR}/clang/${QT_LIB_CLANG_VERSION}/include\"" CACHE STRING "" FORCE)
-  endif()
+        foreach(version MAJOR MINOR PATCH)
+            set(QT_LIB_CLANG_VERSION_${version} ${LLVM_VERSION_${version}} CACHE STRING "" FORCE)
+        endforeach()
+        set(QT_LIB_CLANG_VERSION ${LLVM_PACKAGE_VERSION} CACHE STRING "" FORCE)
+        set(QT_LIB_CLANG_LIBDIR "${LLVM_LIBRARY_DIRS}" CACHE STRING "" FORCE)
+        set(QT_LIBCLANG_RESOURCE_DIR
+            "\"${QT_LIB_CLANG_LIBDIR}/clang/${QT_LIB_CLANG_VERSION}/include\"" CACHE STRING "" FORCE)
+    endif()
 endif()
 
 include(FindPackageHandleStandardArgs)
