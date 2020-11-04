@@ -151,44 +151,26 @@ ManifestWriter::ManifestWriter()
         m_examplesPath += QLatin1Char('/');
 }
 
-void ManifestWriter::processManifestMetaContent(const QString &fullName,
-                                                QStringList *usedAttributes,
-                                                QXmlStreamWriter *writer)
+template <typename F>
+void ManifestWriter::processManifestMetaContent(const QString &fullName, F matchFunc)
 {
-    Q_ASSERT(usedAttributes && writer);
-
     for (const auto &index : m_manifestMetaContent) {
         const auto &names = index.names;
         for (const QString &name : names) {
             bool match;
             int wildcard = name.indexOf(QChar('*'));
             switch (wildcard) {
-            case -1: // no wildcard, exact match
-                // matches manifestmeta.highlighted.names
+            case -1: // no wildcard used, exact match required
                 match = (fullName == name);
                 break;
-            case 0: // '*' matches all
-                // matches manifestmeta.module.names = *
+            case 0: // '*' matches all examples
                 match = true;
                 break;
             default: // match with wildcard at the end
                 match = fullName.startsWith(name.left(wildcard));
             }
-            if (match) {
-                m_tags += index.tags;
-                const auto attributes = index.attributes;
-                for (const QString &attribute : attributes) {
-                    const QLatin1Char div(':');
-                    QStringList attrList = attribute.split(div);
-                    if (attrList.count() == 1)
-                        attrList.append(QStringLiteral("true"));
-                    QString attrName = attrList.takeFirst();
-                    if (!usedAttributes->contains(attrName)) {
-                        writer->writeAttribute(attrName, attrList.join(div));
-                        *usedAttributes << attrName;
-                    }
-                }
-            }
+            if (match)
+                matchFunc(index);
         }
     }
 }
@@ -216,18 +198,11 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
     if (exampleNodeMap.isEmpty())
         return;
 
-    bool demos = false;
-    if (manifest == QLatin1String("demos"))
-        demos = true;
-
-    bool proceed = false;
-    for (const auto &example : exampleNodeMap) {
-        if (demos == example->name().startsWith("demos")) {
-            proceed = true;
-            break;
-        }
-    }
-    if (!proceed)
+    bool demos = (manifest == QLatin1String("demos"));
+    if (!std::any_of(exampleNodeMap.cbegin(), exampleNodeMap.cend(),
+        [demos](const ExampleNode *en) {
+            return demos == en->name().startsWith("demos");
+        }))
         return;
 
     const QString outputFileName = manifest + "-manifest.xml";
@@ -242,42 +217,52 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
     writer.writeAttribute("module", m_project);
     writer.writeStartElement(manifest);
 
-    QStringList usedAttributes;
+    QMap<QString, QString> usedAttributes;
     for (const auto &example : exampleNodeMap.values()) {
-        if (demos) {
-            if (!example->name().startsWith("demos"))
-                continue;
-        } else if (example->name().startsWith("demos"))
+        if (demos != example->name().startsWith("demos"))
             continue;
-
+        m_tags.clear();
         const QString installPath = retrieveExampleInstallationPath(example);
-
-        // attributes that are always written for the element
-        usedAttributes.clear();
-        usedAttributes << "name"
-                       << "docUrl";
-
-        writer.writeStartElement(element);
-        writer.writeAttribute("name", example->title());
-        QString docUrl = m_manifestDir + Generator::fileBase(example) + ".html";
-        writer.writeAttribute("docUrl", docUrl);
-
-        if (!example->projectFile().isEmpty()) {
-            writer.writeAttribute("projectPath", installPath + example->projectFile());
-            usedAttributes << "projectPath";
-        }
-        if (!example->imageFileName().isEmpty()) {
-            writer.writeAttribute("imageUrl", m_manifestDir + example->imageFileName());
-            usedAttributes << "imageUrl";
-        }
-
         const QString fullName = m_project + QLatin1Char('/') + example->title();
 
-        processManifestMetaContent(fullName, &usedAttributes, &writer);
-        warnAboutUnusedAttributes(usedAttributes, example->name());
+        processManifestMetaContent(fullName, [&](const ManifestMetaFilter &filter) {
+            m_tags += filter.tags;
+        });
+        includeTagsAddedWithMetaCommand(example);
+        // omit from the manifest if explicitly marked broken
+        if (m_tags.contains("broken"))
+            continue;
+
+        // attributes that are always written for the element
+        usedAttributes.insert("name", example->title());
+        usedAttributes.insert("docUrl", m_manifestDir + Generator::fileBase(example) + ".html");
+
+        if (!example->projectFile().isEmpty())
+            usedAttributes.insert("projectPath", installPath + example->projectFile());
+        if (!example->imageFileName().isEmpty())
+            usedAttributes.insert("imageUrl",  m_manifestDir + example->imageFileName());
+
+        processManifestMetaContent(fullName, [&](const ManifestMetaFilter &filter) {
+            const auto attributes = filter.attributes;
+                for (const auto &attribute : attributes) {
+                    const QLatin1Char div(':');
+                    QStringList attrList = attribute.split(div);
+                    if (attrList.count() == 1)
+                        attrList.append(QStringLiteral("true"));
+                    QString attrName = attrList.takeFirst();
+                    if (!usedAttributes.contains(attrName))
+                        usedAttributes.insert(attrName, attrList.join(div));
+                }
+        });
+
+        // write the example/demo element
+        writer.writeStartElement(element);
+        for (auto it = usedAttributes.cbegin(); it != usedAttributes.cend(); ++it)
+            writer.writeAttribute(it.key(), it.value());
+
+        warnAboutUnusedAttributes(usedAttributes.keys(), example->name());
         writeDescription(&writer, example);
         addWordsFromModuleNamesAsTags();
-        includeTagsAddedWithMetaCommand(example);
         addTitleWordsToTags(example);
         cleanUpTags();
         writeTagsElement(&writer);
@@ -287,7 +272,7 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
         const QMap<int, QString> filesToOpen = getFilesToOpen(files, exampleName);
         writeFilesToOpen(writer, installPath, filesToOpen);
 
-        writer.writeEndElement(); // example
+        writer.writeEndElement(); // example/demo
     }
 
     writer.writeEndElement(); // examples
@@ -312,7 +297,6 @@ void ManifestWriter::writeTagsElement(QXmlStreamWriter *writer)
     sortedTags.sort();
     writer->writeCharacters(sortedTags.join(","));
     writer->writeEndElement(); // tags
-    m_tags.clear();
 }
 
 /*!

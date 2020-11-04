@@ -67,8 +67,8 @@ private:
     void includeTagsAddedWithMetaCommand(const ExampleNode *example);
     void cleanUpTags();
     void writeTagsElement(QXmlStreamWriter *writer);
-    void processManifestMetaContent(const QString &fullName, QStringList *usedAttributes,
-                                    QXmlStreamWriter *writer);
+    template <typename F>
+    void processManifestMetaContent(const QString &fullName, F matchFunc);
 };
 
 QT_END_NAMESPACE

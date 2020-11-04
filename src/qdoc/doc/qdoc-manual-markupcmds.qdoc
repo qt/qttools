@@ -3793,6 +3793,15 @@
     This would result in the following tags: \e {tutorial,basic,hello,world}.
     Common words such as \e example are ignored.
 
+    \b {Excluding Examples}
+
+    Marking an example \e broken will exclude it from the generated manifest
+    file, effectively removing it from Qt Creator's Welcome mode.
+
+    \badcode
+        \meta tag broken
+    \endcode
+
     \b {Example Install Paths}
 
     The \\meta command combined with an argument \c installpath specifies the

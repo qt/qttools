@@ -10,6 +10,7 @@
                     <section ref="qdoc-test-qmlmodule.html" title=""/>
                     <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
                     <section ref="test-demos-demo-example.html" title="Demo"/>
+                    <section ref="test-demos-hidden-example.html" title="Hidden Demo"/>
                     <section ref="testcpp-module.html" title="QDoc Test C++ Classes"/>
                     <section ref="test-componentset-example.html" title="QML Documentation Example"/>
                     <section ref="uicomponents-qmlmodule.html" title="UI Components"/>
@@ -155,6 +156,7 @@
             <file>test-componentset-switch-qml.html</file>
             <file>test-componentset-tabwidget-qml.html</file>
             <file>test-demos-demo-example.html</file>
+            <file>test-demos-hidden-example.html</file>
             <file>testcpp-module.html</file>
             <file>testqdoc-test-members.html</file>
             <file>testqdoc-test-obsolete.html</file>
