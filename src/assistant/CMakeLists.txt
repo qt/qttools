@@ -8,7 +8,6 @@ endif()
 
 qt_exclude_tool_directories_from_default_target(
     qhelpgenerator
-    qcollectiongenerator
 )
 
 if(NOT TARGET Qt::Sql)
@@ -19,4 +18,3 @@ if(NOT QT_FEATURE_help)
 endif()
 add_subdirectory(help)
 add_subdirectory(qhelpgenerator)
-add_subdirectory(qcollectiongenerator)
