@@ -1,8 +1,4 @@
 TEMPLATE = subdirs
-qtHaveModule(widgets): SUBDIRS += help designer linguist uitools assistant
+qtHaveModule(widgets): SUBDIRS += help designer linguist uitools
 
-!qtConfig(process): SUBDIRS -= assistant designer
-
-qtNomakeTools( \
-    assistant \
-)
+!qtConfig(process): SUBDIRS -= designer

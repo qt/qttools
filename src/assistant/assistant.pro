@@ -2,21 +2,18 @@ requires(qtHaveModule(sql))
 
 include($$OUT_PWD/../../src/global/qttools-config.pri)
 QT_FOR_CONFIG += tools-private
-requires(qtConfig(assistant))
+requires(qtConfig(help))
 
 TEMPLATE = subdirs
 
 SUBDIRS += \
            help \
-           assistant \
            qhelpgenerator \
            qcollectiongenerator
 
-assistant.depends = help
 qhelpgenerator.depends = help
 
 qtNomakeTools( \
-    assistant \
     qhelpgenerator \
     qcollectiongenerator \
 )
