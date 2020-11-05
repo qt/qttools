@@ -115,11 +115,7 @@ void RecentFiles::readConfig()
 {
     m_strLists.clear();
     QVariant val = QSettings().value(configKey());
-    if (val.type() == QVariant::StringList) { // Backwards compat to Qt < 4.5
-        const auto stringList = val.toStringList();
-        for (const QString &s : stringList)
-            m_strLists << QStringList(QFileInfo(s).canonicalFilePath());
-    } else {
+    if (val.metaType().id() == QMetaType::QVariantList) {
         const auto list = val.toList();
         for (const QVariant &v : list)
             m_strLists << v.toStringList();
