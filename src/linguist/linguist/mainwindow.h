@@ -47,7 +47,6 @@ class QDialog;
 class QLabel;
 class QMenu;
 class QPrinter;
-class QProcess;
 class QIcon;
 class QSortFilterProxyModel;
 class QStackedWidget;
@@ -201,7 +200,6 @@ private:
 
     bool searchItem(DataModel::FindLocation where, const QString &searchWhat);
 
-    QProcess *m_assistantProcess;
     QTreeView *m_contextView;
     QTreeView *m_messageView;
     MultiDataModel *m_dataModel;
