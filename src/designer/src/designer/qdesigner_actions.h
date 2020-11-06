@@ -29,7 +29,6 @@
 #ifndef QDESIGNER_ACTIONS_H
 #define QDESIGNER_ACTIONS_H
 
-#include "assistantclient.h"
 #include "qdesigner_settings.h"
 
 #include <QtCore/qobject.h>
@@ -143,7 +142,8 @@ private:
     bool saveFormAs(QDesignerFormWindowInterface *fw);
     void updateRecentFileActions();
     void addRecentFile(const QString &fileName);
-    void showHelp(const QString &help);
+    bool showIdentifier(const QString &identifier);
+    bool showHelp(const QString &htmlFile);
     void closePreview();
     QRect fixDialogRect(const QRect &rect) const;
     QString fixResourceFileBackupPath(QDesignerFormWindowInterface *fwi, const QDir& backupDir);
@@ -158,7 +158,6 @@ private:
     QDesignerWorkbench *m_workbench;
     QDesignerFormEditorInterface *m_core;
     QDesignerSettings m_settings;
-    AssistantClient m_assistantClient;
     QString m_openDirectory;
     QString m_saveDirectory;
 
