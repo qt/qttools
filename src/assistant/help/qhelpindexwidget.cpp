@@ -320,19 +320,6 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
 */
 
 /*!
-    \fn void QHelpIndexWidget::linksActivated(const QMap<QString, QUrl> &links,
-        const QString &keyword)
-
-    \obsolete
-
-    Use documentsActivated() instead.
-
-    This signal is emitted when the item representing the \a keyword
-    is activated and the item has more than one link associated.
-    The \a links consist of the document titles and their URLs.
-*/
-
-/*!
     \fn void QHelpIndexWidget::documentActivated(const QHelpLink &document,
         const QString &keyword)
 

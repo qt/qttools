@@ -118,10 +118,9 @@
             \li \l {Qt Help Collection Project}
             \li .qhcp
             \li An XML file that contains references to the compressed help
-                files that should be included in the help collection. In
-                addition, it may contain information for customizing Qt
-                Assistant. This file can be passed to the help generator for
-                creating a help collection file.
+                files that should be included in the help collection. This file
+                can be passed to the help generator for creating a help collection
+                file.
 
         \row
             \li Qt Help Collection
@@ -174,31 +173,13 @@
     \c generate or \c register section, so any number of compressed
     help files can be generated and registered in one go.
 
-    \section1 Using Qt Help
+    \section1 Using QHelpEngine API
 
-    Accessing the help contents can be done in two ways: Using Qt
-    Assistant as documentation browser or using the QHelpEngine
-    API for embedding the help contents directly in an application.
+    QHelpEngine allows embedding the help contents directly in an
+    application.
 
-    \section2 Using Qt Assistant
-
-    \QA operates on a collection file which can be specified
-    before startup. If no collection file is given, a default one
-    will be created and used. In either case, it is possible to
-    register any Qt compressed help file and access the help contents.
-
-    When using Qt Assistant as the help browser for an application, it
-    should be possible to customize it to fit the application
-    better, so that it does not look like an independent, standalone
-    help browser. To achieve this, several additional properties can
-    be set in a Qt help collection file, to change for example the title
-    or application icon of Qt Assistant. For more information, see the
-    \l{Qt Assistant Manual}.
-
-    \section2 Using QHelpEngine API
-
-    Instead of showing the help in an external application like the
-    Qt Assistant, it is also possible to embed the online help in
+    Instead of showing the help in an external application such as a
+    web browser, it is also possible to embed the online help in
     the application. The contents can then be retrieved via the
     QHelpEngine class and can be displayed in nearly any form.
     Showing the help in a QTextBrowser is probably the most common way, but
@@ -227,7 +208,7 @@
     the table of contents, index keywords and help documents, it
     contains some extra information like a namespace to identify
     the help file. One help project stands for one documentation set,
-    for example the \l{Qt Assistant Manual}.
+    for example the \l{qmake Manual}.
 
     \section1 Qt Help Project File Format
 
@@ -340,8 +321,8 @@
     attribute \e name is used, the keyword specified there will appear in the
     visible index. That is, it will be accessible through the QHelpIndexModel
     class. If \e id is used, the keyword does not appear in the index and is
-    only accessible via \l QHelpEngineCore::linksForIdentifier(). \e name and
-    \e id can be specified at the same time.
+    only accessible via \l QHelpEngineCore::documentsForIdentifier(). \e name
+    and \e id can be specified at the same time.
 
     \section3 Files
 

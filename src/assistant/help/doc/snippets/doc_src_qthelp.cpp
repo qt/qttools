@@ -57,13 +57,13 @@ QHelpEngineCore helpEngine("mycollection.qhc");
 ...
 
 // get all file references for the identifier
-QMap<QString, QUrl> links =
-    helpEngine.linksForIdentifier(QLatin1String("MyDialog::ChangeButton"));
+QList<QHelpLink> links =
+    helpEngine.documentsForIdentifier(QLatin1String("MyDialog::ChangeButton"));
 
 // If help is available for this keyword, get the help data
 // of the first file reference.
 if (links.count()) {
-    QByteArray helpData = helpEngine->fileData(links.constBegin().value());
+    QByteArray helpData = helpEngine->fileData(links.constBegin()->url);
     // show the documentation to the user
     if (!helpData.isEmpty())
         displayHelp(helpData);
