@@ -1447,7 +1447,7 @@ static DeployResult deploy(const Options &options,
         }
 
         if (options.patchQt  && !options.dryRun) {
-            const QString qt5CoreName = QFileInfo(libraryPath(libraryLocation, "Qt6Core", qtLibInfix,
+            const QString qt6CoreName = QFileInfo(libraryPath(libraryLocation, "Qt6Core", qtLibInfix,
                                                               options.platform, result.isDebug)).fileName();
 #ifndef QT_RELOCATABLE
             if (!patchQtCore(targetPath + QLatin1Char('/') + qt6CoreName, errorMessage)) {
