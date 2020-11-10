@@ -99,7 +99,7 @@ void tst_generatedOutput::initTestCase()
     const auto binpath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     const auto extension = QSysInfo::productType() == "windows" ? ".exe" : "";
     m_qdoc = binpath + QLatin1String("/qdoc") + extension;
-    m_expectedDir.setPath(QFINDTESTDATA(".") + QLatin1String("/expected_output"));
+    m_expectedDir.setPath(QFINDTESTDATA("expected_output"));
 
     // Resolve the path to the file containing extra parameters
     m_extraParams = QFileInfo(QTest::currentAppName()).dir().filePath("qdocincludepaths.inc");
