@@ -278,6 +278,10 @@ QString XmlGenerator::refForNode(const Node *node)
             break;
         }
     } break;
+    case Node::SharedComment: {
+        if (!node->isPropertyGroup())
+            break;
+    } Q_FALLTHROUGH();
     case Node::JsProperty:
     case Node::QmlProperty:
         if (node->isAttached())
@@ -290,10 +294,6 @@ QString XmlGenerator::refForNode(const Node *node)
         break;
     case Node::Variable:
         ref = node->name() + "-var";
-        break;
-    case Node::SharedComment:
-        if (node->isPropertyGroup())
-            ref = node->name() + "-prop";
         break;
     default:
         break;

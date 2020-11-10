@@ -1,0 +1,7 @@
+# test linking to entities loaded from index
+project = IndexLinking
+
+depends = \
+    qmlpropertygroups
+
+sources = linking.qdoc

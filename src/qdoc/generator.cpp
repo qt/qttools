@@ -636,6 +636,10 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::Property:
         anchorRef = QLatin1Char('#') + node->name() + "-prop";
         break;
+    case Node::SharedComment: {
+        if (!node->isPropertyGroup())
+            break;
+    } Q_FALLTHROUGH();
     case Node::JsProperty:
     case Node::QmlProperty:
         if (node->isAttached())

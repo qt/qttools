@@ -67,6 +67,7 @@ private slots:
     void dontDocument();
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
+    void indexLinking();
     void includeFromExampleDirs();
     void singleExec();
     void preparePhase();
@@ -390,6 +391,19 @@ void tst_generatedOutput::inheritedQmlPropertyGroups()
                    "qmlpropertygroups/qml-qdoc-test-anotherchild-members.html "
                    "qmlpropertygroups/qml-qdoc-test-parent.html "
                    "qmlpropertygroups-docbook/qml-qdoc-test-parent.xml");
+}
+
+void tst_generatedOutput::indexLinking()
+{
+    {
+        QScopedValueRollback<bool> skipRegen(m_regen, false);
+        inheritedQmlPropertyGroups();
+    }
+    copyIndexFiles();
+    QString indexDir = QLatin1String("-indexdir ") +  m_outputDir->path();
+    testAndCompare("testdata/indexlinking/indexlinking.qdocconf",
+                   "index-linking.html",
+                   indexDir.toLatin1().data());
 }
 
 void tst_generatedOutput::crossModuleLinking()

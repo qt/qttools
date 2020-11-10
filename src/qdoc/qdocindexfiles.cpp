@@ -917,11 +917,17 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case Node::Variable:
         nodeName = "variable";
         break;
+    case Node::SharedComment:
+        if (!node->isPropertyGroup())
+            return false;
+        // Add an entry for property groups so that they can be linked to
+        nodeName = node->genus() == Node::QML ? "qmlproperty" : "jsproperty";
+        break;
     case Node::QmlProperty:
         nodeName = "qmlproperty";
         break;
     case Node::JsProperty:
-        nodeName = "jsProperty";
+        nodeName = "jsproperty";
         break;
     case Node::Proxy:
         nodeName = "proxy";
