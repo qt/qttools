@@ -3700,7 +3700,7 @@ void DocBookGenerator::generateSectionInheritedList(const Section &section, cons
     QList<QPair<Aggregate *, int>>::ConstIterator p = section.inheritedMembers().constBegin();
     while (p != section.inheritedMembers().constEnd()) {
         writer->writeStartElement(dbNamespace, "listitem");
-        writer->writeCharacters(QString((*p).second) + " ");
+        writer->writeCharacters(QString::number((*p).second) + u' ');
         if ((*p).second == 1)
             writer->writeCharacters(section.singular());
         else

@@ -635,7 +635,7 @@ int Tokenizer::getTokenAfterPreprocessor()
                 if (yyCh == '\r')
                     yyCh = getChar();
             }
-            condition += yyCh;
+            condition += QChar(yyCh);
             yyCh = getChar();
         }
         condition.remove(*comment);

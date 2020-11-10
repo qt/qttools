@@ -190,7 +190,7 @@ private:
             yyLex[yyLexLen++] = (char)yyCh;
             yyLex[yyLexLen] = '\0';
         }
-        yyCurLoc.advance(yyCh);
+        yyCurLoc.advance(QChar(yyCh));
         int ch = getch();
         if (ch == EOF)
             return EOF;

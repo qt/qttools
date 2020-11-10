@@ -121,7 +121,7 @@ QString OpenedList::toAlpha(int n)
 
     while (n > 0) {
         n--;
-        str.prepend((n % 26) + 'a');
+        str.prepend(QChar((n % 26) + 'a'));
         n /= 26;
     }
     return str;
