@@ -139,7 +139,7 @@ void QAxWidgetTaskMenu::setActiveXControl()
     if (dialog.exec() != QDialog::Accepted)
         return;
 
-    QUuid clsid = dialog.clsid();
+    const auto clsid = QUuid::fromString(dialog.clsid());
     QString key;
 
     IClassFactory2 *cf2 = nullptr;
