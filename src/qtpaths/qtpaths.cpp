@@ -132,7 +132,7 @@ static QStringList types()
 }
 
 /**
- * Tries to arse the location string into a reference to a StringEnum entry or alternatively
+ * Tries to parse the location string into a reference to a StringEnum entry or alternatively
  * calls \ref error with a error message
  */
 static const StringEnum &parseLocationOrError(const QString &locationString)
