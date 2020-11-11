@@ -82,7 +82,7 @@ static inline bool isAxWidget(const QObject *o)
 {
     // Is it one of  QDesignerAxWidget/QDesignerAxPluginWidget?
     static const char *axWidgetName = "QDesignerAx";
-    static const unsigned axWidgetNameLen = qstrlen(axWidgetName);
+    static const size_t axWidgetNameLen = qstrlen(axWidgetName);
     return qstrncmp(o->metaObject()->className(), axWidgetName, axWidgetNameLen) == 0;
 }
 #endif
