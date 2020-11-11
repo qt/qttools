@@ -73,27 +73,25 @@ enum QtModule
     QtNetworkModule           = 0x0000000000000800,
     QtNfcModule               = 0x0000000000001000,
     QtOpenGLModule            = 0x0000000000002000,
-    QtPositioningModule       = 0x0000000000004000,
-    QtPrintSupportModule      = 0x0000000000008000,
-    QtQmlModule               = 0x0000000000010000,
-    QtQuickModule             = 0x0000000000020000,
-    QtQuickParticlesModule    = 0x0000000000040000,
-    QtScriptModule            = 0x0000000000080000,
-    QtScriptToolsModule       = 0x0000000000100000,
-    QtSensorsModule           = 0x0000000000200000,
-    QtSerialPortModule        = 0x0000000000400000,
-    QtSqlModule               = 0x0000000000800000,
-    QtSvgModule               = 0x0000000001000000,
-    QtTestModule              = 0x0000000002000000,
-    QtWidgetsModule           = 0x0000000004000000,
-    QtWinExtrasModule         = 0x0000000008000000,
-    QtXmlModule               = 0x0000000010000000,
-    QtXmlPatternsModule       = 0x0000000020000000,
-    QtWebKitModule            = 0x0000000040000000,
-    QtWebKitWidgetsModule     = 0x0000000080000000,
+    QtOpenGLWidgetsModule     = 0x0000000000004000,
+    QtPositioningModule       = 0x0000000000008000,
+    QtPrintSupportModule      = 0x0000000000010000,
+    QtQmlModule               = 0x0000000000020000,
+    QtQuickModule             = 0x0000000000040000,
+    QtQuickParticlesModule    = 0x0000000000080000,
+    QtScriptModule            = 0x0000000000100000,
+    QtScriptToolsModule       = 0x0000000000200000,
+    QtSensorsModule           = 0x0000000000400000,
+    QtSerialPortModule        = 0x0000000000800000,
+    QtSqlModule               = 0x0000000001000000,
+    QtSvgModule               = 0x0000000002000000,
+    QtSvgWidgetsModule        = 0x0000000004000000,
+    QtTestModule              = 0x0000000008000000,
+    QtWidgetsModule           = 0x0000000010000000,
+    QtWinExtrasModule         = 0x0000000020000000,
+    QtXmlModule               = 0x0000000040000000,
     QtQuickWidgetsModule      = 0x0000000100000000,
     QtWebSocketsModule        = 0x0000000200000000,
-    QtEnginioModule           = 0x0000000400000000,
     QtWebEngineCoreModule     = 0x0000000800000000,
     QtWebEngineModule         = 0x0000001000000000,
     QtWebEngineWidgetsModule  = 0x0000002000000000,
@@ -127,7 +125,6 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtDeclarativeModule, "declarative", "Qt6Declarative", "qtquick1" },
     { QtDesignerModule, "designer", "Qt6Designer", nullptr },
     { QtDesignerComponents, "designercomponents", "Qt6DesignerComponents", nullptr },
-    { QtEnginioModule, "enginio", "Enginio", nullptr },
     { QtGamePadModule, "gamepad", "Qt6Gamepad", nullptr },
     { QtGuiModule, "gui", "Qt6Gui", "qtbase" },
     { QtHelpModule, "qthelp", "Qt6Help", "qt_help" },
@@ -137,6 +134,7 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtNetworkModule, "network", "Qt6Network", "qtbase" },
     { QtNfcModule, "nfc", "Qt6Nfc", nullptr },
     { QtOpenGLModule, "opengl", "Qt6OpenGL", nullptr },
+    { QtOpenGLWidgetsModule, "openglwidgets", "Qt6OpenGLWidgets", nullptr },
     { QtPositioningModule, "positioning", "Qt6Positioning", nullptr },
     { QtPrintSupportModule, "printsupport", "Qt6PrintSupport", nullptr },
     { QtQmlModule, "qml", "Qt6Qml", "qtdeclarative" },
@@ -150,14 +148,12 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtSerialPortModule, "serialport", "Qt6SerialPort", "qtserialport" },
     { QtSqlModule, "sql", "Qt6Sql", "qtbase" },
     { QtSvgModule, "svg", "Qt6Svg", nullptr },
+    { QtSvgWidgetsModule, "svgwidgets", "Qt6SvgWidgets", nullptr },
     { QtTestModule, "test", "Qt6Test", "qtbase" },
-    { QtWebKitModule, "webkit", "Qt6WebKit", nullptr },
-    { QtWebKitWidgetsModule, "webkitwidgets", "Qt6WebKitWidgets", nullptr },
     { QtWebSocketsModule, "websockets", "Qt6WebSockets", nullptr },
     { QtWidgetsModule, "widgets", "Qt6Widgets", "qtbase" },
     { QtWinExtrasModule, "winextras", "Qt6WinExtras", nullptr },
     { QtXmlModule, "xml", "Qt6Xml", "qtbase" },
-    { QtXmlPatternsModule, "xmlpatterns", "Qt6XmlPatterns", "qtxmlpatterns" },
     { QtWebEngineCoreModule, "webenginecore", "Qt6WebEngineCore", nullptr },
     { QtWebEngineModule, "webengine", "Qt6WebEngine", "qtwebengine" },
     { QtWebEngineWidgetsModule, "webenginewidgets", "Qt6WebEngineWidgets", nullptr },
@@ -179,7 +175,6 @@ enum QtPlugin {
     QtVirtualKeyboardPlugin = 0x1
 };
 
-static const char webKitProcessC[] = "QtWebProcess";
 static const char webEngineProcessC[] = "QtWebEngineProcess";
 
 static inline QString webProcessBinary(const char *binaryName, Platform p)
@@ -239,8 +234,6 @@ static ExlusiveOptionValue parseExclusiveOptions(const QCommandLineParser *parse
     return disabled ? OptionDisabled : OptionAuto;
 }
 
-static ExlusiveOptionValue optWebKit2 = OptionAuto;
-
 struct Options {
     enum DebugDetection {
         DebugDetectionAuto,
@@ -278,7 +271,7 @@ struct Options {
     bool ignoreLibraryErrors = false;
 };
 
-// Return binary from folder
+// Return binary to be deployed from folder, ignore pre-existing web engine process.
 static inline QString findBinary(const QString &directory, Platform platform)
 {
     const QStringList nameFilters = (platform & WindowsBased) ?
@@ -287,8 +280,7 @@ static inline QString findBinary(const QString &directory, Platform platform)
         QDir(QDir::cleanPath(directory)).entryInfoList(nameFilters, QDir::Files | QDir::Executable);
     for (const QFileInfo &binaryFi : binaries) {
         const QString binary = binaryFi.fileName();
-        if (!binary.contains(QLatin1String(webKitProcessC), Qt::CaseInsensitive)
-            && !binary.contains(QLatin1String(webEngineProcessC), Qt::CaseInsensitive)) {
+        if (!binary.contains(QLatin1String(webEngineProcessC), Qt::CaseInsensitive)) {
             return binaryFi.absoluteFilePath();
         }
     }
@@ -421,14 +413,6 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
                                              QStringLiteral("Do not deploy compiler runtime (Desktop only)."));
     parser->addOption(noCompilerRunTimeOption);
 
-    QCommandLineOption webKitOption(QStringLiteral("webkit2"),
-                                    QStringLiteral("Deployment of WebKit2 (web process)."));
-    parser->addOption(webKitOption);
-
-    QCommandLineOption noWebKitOption(QStringLiteral("no-webkit2"),
-                                      QStringLiteral("Skip deployment of WebKit2."));
-    parser->addOption(noWebKitOption);
-
     QCommandLineOption jsonOption(QStringLiteral("json"),
                                   QStringLiteral("Print to stdout in JSON format."));
     parser->addOption(jsonOption);
@@ -531,8 +515,6 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
 
     if (parser->isSet(suppressSoftwareRasterizerOption))
         options->softwareRasterizer = false;
-
-    optWebKit2 = parseExclusiveOptions(parser, webKitOption, noWebKitOption);
 
     if (parser->isSet(forceOption))
         options->updateFileFlags |= ForceUpdateFile;
@@ -830,7 +812,9 @@ struct PluginModuleMapping
 static const PluginModuleMapping pluginModuleMappings[] =
 {
     {"qml1tooling", QtDeclarativeModule},
+#if QT_VERSION >= QT_VERSION_CHECK(6, 1, 0)
     {"gamepads", QtGamePadModule},
+#endif
     {"accessible", QtGuiModule},
     {"iconengines", QtGuiModule},
     {"imageformats", QtGuiModule},
@@ -850,7 +834,9 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"sensorgestures", QtSensorsModule},
     {"canbus", QtSerialBusModule},
     {"sqldrivers", QtSqlModule},
+#if QT_VERSION >= QT_VERSION_CHECK(6, 1, 0)
     {"texttospeech", QtTextToSpeechModule},
+#endif
     {"qtwebengine", QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule},
     {"styles", QtWidgetsModule},
     {"sceneparsers", Qt3DRendererModule},
@@ -1526,8 +1512,6 @@ static DeployResult deploy(const Options &options,
             const QString quick1ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_IMPORTS"));
             const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, debugMatchMode, options.deployPdb ? QmlDirectoryFileEntryFunction::DeployPdb : 0);
             QStringList quick1Imports(QStringLiteral("Qt"));
-            if (result.deployedQtLibraries & QtWebKitModule)
-                quick1Imports << QStringLiteral("QtWebKit");
             for (const QString &quick1Import : qAsConst(quick1Imports)) {
                 const QString sourceFile = quick1ImportPath + slash + quick1Import;
                 if (!updateFile(sourceFile, qmlFileEntryFunction, options.directory, options.updateFileFlags, options.json, errorMessage))
@@ -1680,26 +1664,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (optWebKit2 == OptionEnabled)
-        options.additionalLibraries |= QtWebKitModule;
-
-
     const DeployResult result = deploy(options, qmakeVariables, &errorMessage);
     if (!result) {
         std::wcerr << errorMessage << '\n';
         return 1;
-    }
-
-    if ((optWebKit2 != OptionDisabled)
-        && (optWebKit2 == OptionEnabled
-            || ((result.deployedQtLibraries & QtWebKitModule)
-                && (result.directlyUsedQtLibraries & QtQuickModule)))) {
-        if (optVerboseLevel)
-            std::wcout << "Deploying: " << webKitProcessC << "...\n";
-        if (!deployWebProcess(qmakeVariables, webKitProcessC, options, &errorMessage)) {
-            std::wcerr << errorMessage << '\n';
-            return 1;
-        }
     }
 
     if (result.deployedQtLibraries & QtWebEngineCoreModule) {
