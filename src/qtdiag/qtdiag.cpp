@@ -863,7 +863,7 @@ QString qtDiag(unsigned flags)
     using QWindowsApplication = QNativeInterface::Private::QWindowsApplication;
     if (auto nativeWindowsApp = dynamic_cast<QWindowsApplication *>(QGuiApplicationPrivate::platformIntegration())) {
         const QVariant gpuInfoV = nativeWindowsApp->gpuList();
-        if (gpuInfoV.type() == QVariant::List) {
+        if (gpuInfoV.typeId() == QMetaType::QVariantList) {
             const auto gpuList = gpuInfoV.toList();
             for (int i = 0; i < gpuList.size(); ++i) {
                 const QString description =
