@@ -76,7 +76,7 @@ private:
 
     void storeMacroArguments(const std::vector<QString> &args, TranslationRelatedStore *store);
 
-    void SourceRangeSkipped(clang::SourceRange sourceRange, clang::SourceLocation endifLoc);
+    void SourceRangeSkipped(clang::SourceRange sourceRange, clang::SourceLocation endifLoc) override;
 
     std::string m_inputFile;
     clang::Preprocessor &m_preprocessor;
