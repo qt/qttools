@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2020 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -26,17 +26,21 @@
 ****************************************************************************/
 
 /*!
-\page qtlinguist-cmake-qt5-add-translation.html
+\page qtlinguist-cmake-qt-add-translation.html
 \ingroup cmake-macros-qtlinguisttools
 
-\title qt5_add_translation
+\title qt_add_translation
+\target qt6_add_translation
 
 \brief Compiles Qt Linguist .ts files into .qm files.
 
 \section1 Synopsis
 
 \badcode
-qt5_add_translation(<VAR> file1.ts [file2.ts ...]
+qt_add_translation(<VAR> file1.ts [file2.ts ...]
+                    [OPTIONS ...])
+
+qt6_add_translation(<VAR> file1.ts [file2.ts ...]
                     [OPTIONS ...])
 \endcode
 
@@ -59,26 +63,27 @@ of the source \c{.ts} file.
 Generating \c{helloworld_en.qm}, \c{helloworld_de.qm} in the build
 directory:
 
-\snippet cmake-macros/examples.cmake qt5_add_translation
+\snippet cmake-macros/examples.cmake qt_add_translation
 
 Generating \c{helloworld_en.qm}, \c{helloworld_de.qm} in a \c{l10n}
 sub-directory:
 
-\snippet cmake-macros/examples.cmake qt5_add_translation_output_location
+\snippet cmake-macros/examples.cmake qt_add_translation_output_location
 */
 
 /*!
-\page qtlinguist-cmake-qt5-create-translation.html
+\page qtlinguist-cmake-qt-create-translation.html
 \ingroup cmake-macros-qtlinguisttools
 
-\title qt5_create_translation
+\title qt_create_translation
+\target qt6_create_translation
 
 \brief Sets up the Qt Linguist translation toolchain.
 
 \section1 Synopsis
 
 \badcode
-qt5_create_translation(<VAR> ts-file-or-sources [ts-file-or-sources2 ...]
+qt6_create_translation(<VAR> ts-file-or-sources [ts-file-or-sources2 ...]
                        [OPTIONS ...])
 \endcode
 
@@ -110,5 +115,5 @@ generate or update \c{helloworld_en.ts} and \c{helloworld_de.ts} file using
 \c{lupdate}. Compile said files into \c{helloworld_en.qm} and \c{helloworld.de.qm}
 files in the build directory:
 
-\snippet cmake-macros/examples.cmake qt5_create_translation
+\snippet cmake-macros/examples.cmake qt_create_translation
 */
