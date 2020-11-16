@@ -310,30 +310,29 @@ static int placeCall(const QString &service, const QString &path, const QString 
             }
 
             for (int i = 0; !args.isEmpty() && i < types.count(); ++i) {
-                int id = QVariant::nameToType(types.at(i));
-                if (id == QVariant::UserType)
-                    id = QMetaType::type(types.at(i));
-                if (!id) {
+                const QMetaType metaType = QMetaType::fromName(types.at(i));
+                if (!metaType.isValid()) {
                     fprintf(stderr, "Cannot call method '%s' because type '%s' is unknown to this tool\n",
                             qPrintable(member), types.at(i).constData());
                     return 1;
                 }
+                const int id = metaType.id();
 
                 QVariant p;
                 QString argument;
-                if ((id == QVariant::List || id == QVariant::StringList)
+                if ((id == QMetaType::QVariantList || id == QMetaType::QStringList)
                      && args.at(0) == QLatin1String("("))
                     p = readList(args);
                 else
                     p = argument = args.takeFirst();
 
-                if (id == int(QMetaType::UChar)) {
+                if (id == QMetaType::UChar) {
                     // special case: QVariant::convert doesn't convert to/from
                     // UChar because it can't decide if it's a character or a number
                     p = QVariant::fromValue<uchar>(p.toUInt());
-                } else if (id < int(QMetaType::User) && id != int(QVariant::Map)) {
-                    p.convert(QMetaType(id));
-                    if (p.type() == QVariant::Invalid) {
+                } else if (id < QMetaType::User && id != QMetaType::QVariantMap) {
+                    p.convert(metaType);
+                    if (!p.isValid()) {
                         fprintf(stderr, "Could not convert '%s' to type '%s'.\n",
                                 qPrintable(argument), types.at(i).constData());
                         return 1 ;
