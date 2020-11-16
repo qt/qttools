@@ -930,21 +930,23 @@
 
     \list
 
+    \li api - This is the type of page used for C++ class references and
+    QML type references. You should never use this one for the pages
+    you write, because this one is reserved for QDoc.
+
+    \li attribution - A page describing (code) attributions.
+
+    \li example - A page that describes a working example.
+
     \li faq - A frequently asked question.
 
     \li howto - A user guide on how to use some components of the
     software.
 
-    \li example - A page that describes a working example.
-
     \li overview - For text pages that provide an overview of some
     important subject.
 
     \li tutorial - For text pages that are part of a tutorial.
-
-    \li api - This is the type of page used for C++ class references and
-    QML type references. You should never use this one for the pages
-    you write, because this one is reserved for QDoc.
 
     \endlist
 
