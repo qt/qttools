@@ -1472,13 +1472,11 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
                     }
                 }
             }
-            if (!n->members().isEmpty()) {
-                QString sortKey = n->fullTitle().toLower();
-                if (sortKey.startsWith("the "))
-                    sortKey.remove(0, 4);
-                sortKey.replace(singleDigit, "0\\1");
-                cnm.insert(sortKey, n);
-            }
+            QString sortKey = n->fullTitle().toLower();
+            if (sortKey.startsWith("the "))
+                sortKey.remove(0, 4);
+            sortKey.replace(singleDigit, "0\\1");
+            cnm.insert(sortKey, n);
         }
     }
 }

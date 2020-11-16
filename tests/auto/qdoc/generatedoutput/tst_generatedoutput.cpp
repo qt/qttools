@@ -243,6 +243,7 @@ void tst_generatedOutput::htmlFromCpp()
 void tst_generatedOutput::htmlFromQml()
 {
     testAndCompare("testdata/configs/testqml.qdocconf",
+                   "qmlmodules.html "
                    "test-componentset-example.html "
                    "test-cmaketest-example.html "
                    "uicomponents-qmlmodule.html "

@@ -11,8 +11,10 @@
                     <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
                     <section ref="test-demos-demo-example.html" title="Demo"/>
                     <section ref="test-demos-hidden-example.html" title="Hidden Demo"/>
+                    <section ref="test-empty-qmlmodule.html" title="No QML Types Here"/>
                     <section ref="testcpp-module.html" title="QDoc Test C++ Classes"/>
                     <section ref="test-componentset-example.html" title="QML Documentation Example"/>
+                    <section ref="qmlmodules.html" title="QML Modules"/>
                     <section ref="uicomponents-qmlmodule.html" title="UI Components"/>
                 </section>
                 <section ref="testcpp-module.html" title="Classes">
@@ -61,11 +63,13 @@
             <keyword name="Child" id="QML.QDoc.Test1.Child" ref="qml-qdoc-test-child.html"/>
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
+            <keyword name="No QML Types Here" id="No QML Types Here" ref="test-empty-qmlmodule.html"/>
             <keyword name="ProgressBar" id="QML.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="ProgressBar" id="QML.UIComponents1.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
             <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
             <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
+            <keyword name="QML Modules" id="QML Modules" ref="qmlmodules.html"/>
             <keyword name="Switch" id="QML.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="Switch" id="QML.UIComponents1.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="TabWidget" id="QML.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
@@ -146,6 +150,7 @@
             <file>qml-uicomponents-switch.html</file>
             <file>qml-uicomponents-tabwidget-members.html</file>
             <file>qml-uicomponents-tabwidget.html</file>
+            <file>qmlmodules.html</file>
             <file>test-cmaketest-cmakelists-txt.html</file>
             <file>test-cmaketest-example.html</file>
             <file>test-cmaketest-main-cpp.html</file>
@@ -157,6 +162,7 @@
             <file>test-componentset-tabwidget-qml.html</file>
             <file>test-demos-demo-example.html</file>
             <file>test-demos-hidden-example.html</file>
+            <file>test-empty-qmlmodule.html</file>
             <file>testcpp-module.html</file>
             <file>testqdoc-test-members.html</file>
             <file>testqdoc-test-obsolete.html</file>

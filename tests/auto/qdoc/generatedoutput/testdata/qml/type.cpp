@@ -38,6 +38,12 @@
 */
 
 /*!
+    \qmlmodule Test.Empty 1.0
+    \title No QML Types Here
+    \brief A QML module with no member types.
+*/
+
+/*!
     \qmltype Type
     \instantiates TestQDoc::Test
     \inqmlmodule QDoc.Test
