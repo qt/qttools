@@ -217,8 +217,8 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
     writer.writeAttribute("module", m_project);
     writer.writeStartElement(manifest);
 
-    QMap<QString, QString> usedAttributes;
     for (const auto &example : exampleNodeMap.values()) {
+        QMap<QString, QString> usedAttributes;
         if (demos != example->name().startsWith("demos"))
             continue;
         m_tags.clear();
