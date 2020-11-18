@@ -1113,8 +1113,12 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         QString command = "documentation";
         if (aggregate->isClassNode())
             command = R"('\class' comment)";
-        aggregate->location().warning(
-                QStringLiteral("No %1 for '%2'").arg(command).arg(aggregate->plainSignature()));
+        if (!ns || ns->isDocumentedHere()) {
+            aggregate->location().warning(
+                    QStringLiteral("No %1 for '%2'")
+                        .arg(command)
+                        .arg(aggregate->plainSignature()));
+        }
     } else {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
         out() << "<div class=\"descr\">\n" // QTBUG-9504
