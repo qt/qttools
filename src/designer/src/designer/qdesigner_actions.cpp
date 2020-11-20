@@ -1001,9 +1001,9 @@ bool QDesignerActions::showHelp(const QString &htmlFile)
 {
     const int qtVersion = QT_VERSION;
     QString url;
-    QTextStream(&url) << "http://doc.qt.io/qt-" << (qtVersion >> 16)
+    QTextStream(&url) << "https://doc.qt.io/qt-" << (qtVersion >> 16)
 // TODO: uncomment the line below just before Qt 6.0 release
-// we should have then http://doc.qt.io/qt-6.0/ link valid (like in case of 5.x series).
+// we should have then https://doc.qt.io/qt-6.0/ link valid (like in case of 5.x series).
 // Currently it redirects to Qt 6 snapshot.
 //                      << "." << ((qtVersion >> 8) & 0xFF)
                       << '/' << htmlFile;
