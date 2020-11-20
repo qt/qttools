@@ -447,7 +447,6 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
         for (int j = sizeof(keywordTable) / sizeof(QString) - 1; j; --j)
             keywords.insert(keywordTable[j]);
     }
-#define readChar() ch = QChar((i < code.length()) ? code[i++].cell() : EOF)
 
     QString code = in;
     QString out;
@@ -461,10 +460,17 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
     QRegularExpression classRegExp(QRegularExpression::anchoredPattern("Qt?(?:[A-Z3]+[a-z][A-Za-z]*|t)"));
     QRegularExpression functionRegExp(QRegularExpression::anchoredPattern("q([A-Z][a-z]+)+"));
     QRegularExpression findFunctionRegExp(QStringLiteral("^\\s*\\("));
+    bool atEOF = false;
+
+    auto readChar = [&]() {
+         if (i < code.length())
+            ch = code[i++];
+         else
+            atEOF = true;
+    };
 
     readChar();
-
-    while (ch != QChar(EOF)) {
+    while (!atEOF) {
         QString tag;
         bool target = false;
 
@@ -474,7 +480,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                 ident += ch;
                 finish = i;
                 readChar();
-            } while (ch.isLetterOrNumber() || ch == '_');
+            } while (!atEOF && (ch.isLetterOrNumber() || ch == '_'));
 
             if (classRegExp.match(ident).hasMatch()) {
                 tag = QStringLiteral("type");
@@ -494,7 +500,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
             do {
                 finish = i;
                 readChar();
-            } while (ch.isLetterOrNumber() || ch == '.');
+            } while (!atEOF && (ch.isLetterOrNumber() || ch == '.'));
             tag = QStringLiteral("number");
         } else {
             switch (ch.unicode()) {
@@ -523,7 +529,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                 finish = i;
                 readChar();
 
-                while (ch != QChar(EOF) && ch != '"') {
+                while (!atEOF && ch != '"') {
                     if (ch == '\\')
                         readChar();
                     readChar();
@@ -535,7 +541,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
             case '#':
                 finish = i;
                 readChar();
-                while (ch != QChar(EOF) && ch != '\n') {
+                while (!atEOF && ch != '\n') {
                     if (ch == '\\')
                         readChar();
                     finish = i;
@@ -547,7 +553,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                 finish = i;
                 readChar();
 
-                while (ch != QChar(EOF) && ch != '\'') {
+                while (!atEOF && ch != '\'') {
                     if (ch == '\\')
                         readChar();
                     readChar();
@@ -569,7 +575,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
             case ':':
                 finish = i;
                 readChar();
-                if (ch == ':') {
+                if (!atEOF && ch == ':') {
                     finish = i;
                     readChar();
                     tag = QStringLiteral("op");
@@ -578,11 +584,11 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
             case '/':
                 finish = i;
                 readChar();
-                if (ch == '/') {
+                if (!atEOF && ch == '/') {
                     do {
                         finish = i;
                         readChar();
-                    } while (ch != QChar(EOF) && ch != '\n');
+                    } while (!atEOF && ch != '\n');
                     tag = QStringLiteral("comment");
                 } else if (ch == '*') {
                     bool metAster = false;
@@ -592,9 +598,8 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                     readChar();
 
                     while (!metAsterSlash) {
-                        if (ch == QChar(EOF))
+                        if (atEOF)
                             break;
-
                         if (ch == '*')
                             metAster = true;
                         else if (metAster && ch == '/')
