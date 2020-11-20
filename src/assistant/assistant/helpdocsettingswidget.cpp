@@ -68,8 +68,9 @@ void HelpDocSettingsWidgetPrivate::addDocumentation()
 {
     Q_Q(HelpDocSettingsWidget);
 
-    const QStringList &fileNames = QFileDialog::getOpenFileNames(q,
-        q->tr("Add Documentation"), QString(), q->tr("Qt Compressed Help Files (*.qch)"));
+    const QStringList &fileNames =
+        QFileDialog::getOpenFileNames(q, HelpDocSettingsWidget::tr("Add Documentation"), {},
+                                      HelpDocSettingsWidget::tr("Qt Compressed Help Files (*.qch)"));
     if (fileNames.isEmpty())
         return;
 
