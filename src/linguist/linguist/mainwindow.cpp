@@ -1329,7 +1329,7 @@ void MainWindow::manual()
 {
     const int qtVersion = QT_VERSION;
     QString url;
-    QTextStream(&url) << "http://doc.qt.io/qt-" << (qtVersion >> 16) << "/qtlinguist-index.html";
+    QTextStream(&url) << "https://doc.qt.io/qt-" << (qtVersion >> 16) << "/qtlinguist-index.html";
     QDesktopServices::openUrl(QUrl(url));
 }
 

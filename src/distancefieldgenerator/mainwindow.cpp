@@ -52,7 +52,10 @@ QT_BEGIN_NAMESPACE
 
 static void openHelp()
 {
-    QDesktopServices::openUrl(QUrl(QLatin1String("http://doc.qt.io/qt-5/qtdistancefieldgenerator-index.html")));
+    const int qtVersion = QT_VERSION;
+    QString url;
+    QTextStream(&url) << "https://doc.qt.io/qt-" << (qtVersion >> 16) << "/qtdistancefieldgenerator-index.html";
+    QDesktopServices::openUrl(QUrl(url));
 }
 
 MainWindow::MainWindow(QWidget *parent)
