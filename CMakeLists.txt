@@ -20,13 +20,11 @@ set(QT_NO_INTERNAL_COMPATIBILITY_FUNCTIONS TRUE)
 set(optional_components "")
 if(WIN32)
     list(APPEND optional_components AxContainer)
- else()
-    list(APPEND optional_components DBus)
 endif()
 
 find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core Network)
 find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
-             Xml Widgets Quick QuickWidgets QmlDevTools
+             DBus Xml Widgets Quick QuickWidgets QmlDevTools
              Sql PrintSupport OpenGL OpenGLWidgets ${optional_components})
 # special case end
 
