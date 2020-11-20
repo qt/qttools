@@ -287,7 +287,7 @@ public:
                 continue;
             }
             for (long deviceIndex = 0; deviceIndex < deviceCount; ++deviceIndex) {
-                QScopedPointer<CoreConDevice> device(new CoreConDevice(version));
+                std::unique_ptr<CoreConDevice> device(new CoreConDevice(version));
 
                 ComPtr<ObjectType> deviceObject;
                 hr = deviceCollection->get_Item(deviceIndex, &deviceObject);
@@ -296,7 +296,7 @@ public:
                     continue;
                 }
 
-                hr = deviceObject.As(&deviceHandle<DeviceType>(device.data())->handle);
+                hr = deviceObject.As(&deviceHandle<DeviceType>(device.get())->handle);
                 if (FAILED(hr)) {
                     qCDebug(lcCoreCon, "Failed to confirm a device from the object at index: %d", deviceIndex);
                     continue;
@@ -308,14 +308,14 @@ public:
                     qCDebug(lcCoreCon, "Failed to obtain device id at index: %d", deviceIndex);
                     continue;
                 }
-                deviceHandle<DeviceType>(device.data())->id = QString::fromWCharArray(deviceId);
+                deviceHandle<DeviceType>(device.get())->id = QString::fromWCharArray(deviceId);
                 _bstr_t deviceName;
                 hr = deviceObject->get_Name(deviceName.GetAddress());
                 if (FAILED(hr)) {
                     qCDebug(lcCoreCon, "Failed to obtain device name at index: %d", deviceIndex);
                     continue;
                 }
-                deviceHandle<DeviceType>(device.data())->name = QString::fromWCharArray(deviceName);
+                deviceHandle<DeviceType>(device.get())->name = QString::fromWCharArray(deviceName);
 
                 ComPtr<PropertyContainerType> propertyContainer;
                 hr = deviceObject->get_PropertyContainer(&propertyContainer);
@@ -381,12 +381,12 @@ public:
                             qCDebug(lcCoreCon, "Failed to cast the property value at index: %d", propertyIndex);
                             continue;
                         }
-                        deviceHandle<DeviceType>(device.data())->isEmulator = value == _bstr_t(L"true");
+                        deviceHandle<DeviceType>(device.get())->isEmulator = value == _bstr_t(L"true");
                     }
                 }
 
                 if (!isPseudoDevice)
-                    devices.append(device.take());
+                    devices.append(device.release());
             }
         }
         return true;
