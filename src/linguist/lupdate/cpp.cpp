@@ -198,6 +198,7 @@ private:
     int yyCh;
     bool yyAtNewline;
     QString yyWord;
+    qsizetype yyWordInitialCapacity = 0;
     QStack<IfdefState> yyIfdefStack;
     int yyBracketDepth;
     int yyBraceDepth;
@@ -387,7 +388,7 @@ CppParser::TokenType CppParser::getToken()
 {
   restart:
     // Failing this assertion would mean losing the preallocated buffer.
-    Q_ASSERT(yyWord.isDetached());
+    Q_ASSERT(yyWord.capacity() == yyWordInitialCapacity);
 
     while (yyCh != EOF) {
         yyLineNo = yyCurLineNo;
@@ -1680,6 +1681,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
     pendingContext.clear();
 
     yyWord.reserve(yyInStr.size()); // Rather insane. That's because we do no length checking.
+    yyWordInitialCapacity = yyWord.capacity();
     yyInPtr = (const ushort *)yyInStr.unicode();
     yyCh = getChar();
     yyTok = getToken();
