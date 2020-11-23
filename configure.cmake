@@ -27,6 +27,10 @@ endif()
 
 #### Features
 
+qt_feature("assistant" PRIVATE
+    LABEL "Qt Assistant"
+    PURPOSE "Qt Assistant is a tool for viewing on-line documentation in Qt help file format."
+)
 qt_feature("clang" PRIVATE
     LABEL "QDoc"
     CONDITION TEST_libclang
@@ -42,10 +46,6 @@ qt_feature("designer" PRIVATE
 qt_feature("distancefieldgenerator" PRIVATE
     LABEL "Qt Distance Field Generator"
     PURPOSE "The Qt Distance Field Generator tool can be used to pregenerate the font cache in order to optimize startup performance."
-)
-qt_feature("help" PRIVATE
-    LABEL "Qt Help"
-    PURPOSE "Qt Help is a library for accessing help contents to be able to integrate online help into Qt applications."
 )
 qt_feature("kmap2qmap" PRIVATE
     LABEL "kmap2qmap"
@@ -94,11 +94,11 @@ qt_feature("windeployqt" PRIVATE
     CONDITION WIN32
 )
 qt_configure_add_summary_section(NAME "Qt Tools")
+qt_configure_add_summary_entry(ARGS "assistant")
 qt_configure_add_summary_entry(ARGS "clang")
 qt_configure_add_summary_entry(ARGS "clangcpp")
 qt_configure_add_summary_entry(ARGS "designer")
 qt_configure_add_summary_entry(ARGS "distancefieldgenerator")
-qt_configure_add_summary_entry(ARGS "help")
 qt_configure_add_summary_entry(ARGS "kmap2qmap")
 qt_configure_add_summary_entry(ARGS "linguist")
 qt_configure_add_summary_entry(ARGS "macdeployqt")

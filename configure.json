@@ -14,6 +14,11 @@
         }
     },
     "features": {
+        "assistant": {
+            "label": "Qt Assistant",
+            "purpose": "Qt Assistant is a tool for viewing on-line documentation in Qt help file format.",
+            "output": [ "privateFeature" ]
+        },
         "clang": {
             "label": "QDoc",
             "condition": "tests.libclang",
@@ -45,11 +50,6 @@
         "distancefieldgenerator": {
             "label": "Qt Distance Field Generator",
             "purpose": "The Qt Distance Field Generator tool can be used to pregenerate the font cache in order to optimize startup performance.",
-            "output": [ "privateFeature" ]
-        },
-        "help": {
-            "label": "Qt Help",
-            "purpose": "Qt Help is a library for accessing help contents to be able to integrate online help into Qt applications.",
             "output": [ "privateFeature" ]
         },
         "kmap2qmap": {
@@ -129,11 +129,11 @@ On macOS, you can use Homebrew's llvm package."
         {
             "section": "Qt Tools",
             "entries": [
+                "assistant",
                 "clang",
                 "clangcpp",
                 "designer",
                 "distancefieldgenerator",
-                "help",
                 "kmap2qmap",
                 "linguist",
                 "macdeployqt",
