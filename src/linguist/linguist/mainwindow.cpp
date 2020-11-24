@@ -54,7 +54,6 @@
 #include <QBitmap>
 #include <QCloseEvent>
 #include <QDebug>
-#include <QDesktopServices>
 #include <QDockWidget>
 #include <QFile>
 #include <QFileDialog>
@@ -71,6 +70,7 @@
 #include <QMimeData>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QProcess>
 #include <QRegularExpression>
 #include <QScreen>
 #include <QSettings>
@@ -272,6 +272,7 @@ bool FocusWatcher::eventFilter(QObject *, QEvent *event)
 
 MainWindow::MainWindow()
     : QMainWindow(0, Qt::Window),
+      m_assistantProcess(0),
       m_printer(0),
       m_findMatchCase(Qt::CaseInsensitive),
       m_findIgnoreAccelerators(true),
@@ -511,6 +512,10 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     writeConfig();
+    if (m_assistantProcess && m_assistantProcess->state() == QProcess::Running) {
+        m_assistantProcess->terminate();
+        m_assistantProcess->waitForFinished(3000);
+    }
     qDeleteAll(m_phraseBooks);
     delete m_dataModel;
     delete m_statistics;
@@ -1327,10 +1332,30 @@ void MainWindow::resetSorting()
 
 void MainWindow::manual()
 {
-    const int qtVersion = QT_VERSION;
-    QString url;
-    QTextStream(&url) << "https://doc.qt.io/qt-" << (qtVersion >> 16) << "/qtlinguist-index.html";
-    QDesktopServices::openUrl(QUrl(url));
+    if (!m_assistantProcess)
+        m_assistantProcess = new QProcess();
+
+    if (m_assistantProcess->state() != QProcess::Running) {
+        QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator();
+#if !defined(Q_OS_MAC)
+        app += QLatin1String("assistant");
+#else
+        app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");
+#endif
+
+        m_assistantProcess->start(app, QStringList() << QLatin1String("-enableRemoteControl"));
+        if (!m_assistantProcess->waitForStarted()) {
+            QMessageBox::critical(this, tr("Qt Linguist"),
+                tr("Unable to launch Qt Assistant (%1)").arg(app));
+            return;
+        }
+    }
+    QTextStream str(m_assistantProcess);
+    str << QLatin1String("SetSource qthelp://org.qt-project.linguist.")
+        << (QT_VERSION >> 16) << ((QT_VERSION >> 8) & 0xFF)
+        << (QT_VERSION & 0xFF)
+        << QLatin1String("/qtlinguist/qtlinguist-index.html")
+        << QLatin1Char('\n') << Qt::endl;
 }
 
 void MainWindow::about()
