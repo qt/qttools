@@ -9,6 +9,7 @@ qt_internal_add_app(designer
         ../../../shared/fontpanel/fontpanel.cpp ../../../shared/fontpanel/fontpanel.h
         ../../../shared/qttoolbardialog/qttoolbardialog.cpp ../../../shared/qttoolbardialog/qttoolbardialog.h ../../../shared/qttoolbardialog/qttoolbardialog.ui
         appfontdialog.cpp appfontdialog.h
+        assistantclient.cpp assistantclient.h
         designer_enums.h
         main.cpp
         mainwindow.cpp mainwindow.h

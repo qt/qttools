@@ -70,12 +70,9 @@
 
 #include <QtGui/qaction.h>
 #include <QtGui/qactiongroup.h>
-#include <QtGui/qcursor.h>
-#include <QtGui/qdesktopservices.h>
 #include <QtGui/qevent.h>
 #include <QtGui/qicon.h>
 #include <QtGui/qimage.h>
-#include <QtGui/qpainter.h>
 #include <QtGui/qpixmap.h>
 #include <QtGui/qscreen.h>
 #if defined(QT_PRINTSUPPORT_LIB) // Some platforms may not build QtPrintSupport
@@ -86,7 +83,9 @@
 #    define HAS_PRINTER
 #  endif
 #endif
+#include <QtGui/qpainter.h>
 #include <QtGui/qtransform.h>
+#include <QtGui/qcursor.h>
 
 #include <QtCore/qsize.h>
 #include <QtCore/qlibraryinfo.h>
@@ -988,32 +987,23 @@ QAction *QDesignerActions::minimizeAction() const
 
 void QDesignerActions::showDesignerHelp()
 {
-    showHelp("qtdesigner-manual.html");
+    QString url = AssistantClient::designerManualUrl();
+    url += QStringLiteral("qtdesigner-manual.html");
+    showHelp(url);
 }
 
 void QDesignerActions::helpRequested(const QString &manual, const QString &document)
 {
-    Q_UNUSED(manual);
-    showHelp(document);
+    QString url = AssistantClient::documentUrl(manual);
+    url += document;
+    showHelp(url);
 }
 
-bool QDesignerActions::showHelp(const QString &htmlFile)
+void QDesignerActions::showHelp(const QString &url)
 {
-    const int qtVersion = QT_VERSION;
-    QString url;
-    QTextStream(&url) << "https://doc.qt.io/qt-" << (qtVersion >> 16)
-// TODO: uncomment the line below just before Qt 6.0 release
-// we should have then https://doc.qt.io/qt-6.0/ link valid (like in case of 5.x series).
-// Currently it redirects to Qt 6 snapshot.
-//                      << "." << ((qtVersion >> 8) & 0xFF)
-                      << '/' << htmlFile;
-
-    return QDesktopServices::openUrl(QUrl(url));
-}
-
-bool QDesignerActions::showIdentifier(const QString &identifier)
-{
-    return showHelp(identifier.toLower() + ".html");
+    QString errorMessage;
+    if (!m_assistantClient.showPage(url, &errorMessage))
+        QMessageBox::warning(core()->topLevel(), tr("Assistant"), errorMessage);
 }
 
 void QDesignerActions::aboutDesigner()
@@ -1042,7 +1032,10 @@ void QDesignerActions::showWidgetSpecificHelp()
         return;
     }
 
-    showIdentifier(helpId);
+    QString errorMessage;
+    const bool rc = m_assistantClient.activateIdentifier(helpId, &errorMessage);
+    if (!rc)
+        QMessageBox::warning(core()->topLevel(), tr("Assistant"), errorMessage);
 }
 
 void QDesignerActions::updateCloseAction()
