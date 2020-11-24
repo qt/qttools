@@ -33,6 +33,7 @@ HEADERS += \
     designer_enums.h \
     appfontdialog.h \
     preferencesdialog.h \
+    assistantclient.h \
     mainwindow.h
 
 SOURCES += main.cpp \
@@ -49,6 +50,7 @@ SOURCES += main.cpp \
     versiondialog.cpp \
     appfontdialog.cpp \
     preferencesdialog.cpp \
+    assistantclient.cpp \
     mainwindow.cpp
 
 PRECOMPILED_HEADER=qdesigner_pch.h
