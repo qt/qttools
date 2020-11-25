@@ -1790,11 +1790,11 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
             const CollectionNode *cn =
                     m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
             if (cn && !cn->qtCMakeComponent().isEmpty()) {
-                auto qtMajorVersion = QString::number(QT_VERSION_MAJOR);
-                const QString findpackageText = "find_package(Qt" + qtMajorVersion + " COMPONENT "
-                        + cn->qtCMakeComponent() + ")";
-                const QString targetLinkLibrariesText =
-                        "target_link_libraries(mytarget PUBLIC Qt::" + cn->qtCMakeComponent() + ")";
+                const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
+                const QString findpackageText = "find_package(" + qtComponent + " COMPONENTS "
+                        + cn->qtCMakeComponent() + " REQUIRED)";
+                const QString targetLinkLibrariesText = "target_link_libraries(mytarget PUBLIC "
+                        + qtComponent + "::" + cn->qtCMakeComponent() + ")";
                 const QStringList cmakeInfo { findpackageText, targetLinkLibrariesText };
                 generateCMakeRequisite(cmakeInfo);
             }
@@ -2841,11 +2841,11 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                 const CollectionNode *cn =
                         m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
                 if (cn && !cn->qtCMakeComponent().isEmpty()) {
-                    const auto qtMajorVersion = QString::number(QT_VERSION_MAJOR);
-                    const QString findpackageText = "find_package(Qt" + qtMajorVersion
-                            + " COMPONENT " + cn->qtCMakeComponent() + ")";
+                    const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
+                    const QString findpackageText = "find_package(" + qtComponent
+                            + " COMPONENTS " + cn->qtCMakeComponent() + " REQUIRED)";
                     const QString targetLinkLibrariesText =
-                            "target_link_libraries(mytarget PUBLIC Qt::" + cn->qtCMakeComponent()
+                            "target_link_libraries(mytarget PUBLIC " + qtComponent + "::" + cn->qtCMakeComponent()
                             + ")";
                     generateSynopsisInfo("cmake-find-package", findpackageText);
                     generateSynopsisInfo("cmake-target-link-libraries", targetLinkLibrariesText);
