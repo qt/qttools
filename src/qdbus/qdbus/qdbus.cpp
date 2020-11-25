@@ -77,24 +77,24 @@ static void printArg(const QVariant &v)
         return;
     }
 
-    if (v.userType() == QVariant::StringList) {
+    if (v.metaType() == QMetaType::fromType<QStringList>()) {
         const QStringList sl = v.toStringList();
         for (const QString &s : sl)
             printf("%s\n", qPrintable(s));
-    } else if (v.userType() == QVariant::List) {
+    } else if (v.metaType() == QMetaType::fromType<QVariantList>()) {
         const QVariantList vl = v.toList();
         for (const QVariant &var : vl)
             printArg(var);
-    } else if (v.userType() == QVariant::Map) {
+    } else if (v.metaType() == QMetaType::fromType<QVariantMap>()) {
         const QVariantMap map = v.toMap();
         QVariantMap::ConstIterator it = map.constBegin();
         for ( ; it != map.constEnd(); ++it) {
             printf("%s: ", qPrintable(it.key()));
             printArg(it.value());
         }
-    } else if (v.userType() == qMetaTypeId<QDBusVariant>()) {
+    } else if (v.metaType() == QMetaType::fromType<QDBusVariant>()) {
         printArg(qvariant_cast<QDBusVariant>(v).variant());
-    } else if (v.userType() == qMetaTypeId<QDBusArgument>()) {
+    } else if (v.metaType() == QMetaType::fromType<QDBusArgument>()) {
         QDBusArgument arg = qvariant_cast<QDBusArgument>(v);
         if (arg.currentSignature() == QLatin1String("av"))
             printArg(qdbus_cast<QVariantList>(arg));
@@ -103,7 +103,7 @@ static void printArg(const QVariant &v)
         else
             printf("qdbus: I don't know how to display an argument of type '%s', run with --literal.\n",
                    qPrintable(arg.currentSignature()));
-    } else if (v.userType() != QVariant::Invalid) {
+    } else if (v.metaType().isValid()) {
         printf("%s\n", qPrintable(v.toString()));
     }
 }
