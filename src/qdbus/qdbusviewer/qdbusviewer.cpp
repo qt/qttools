@@ -347,7 +347,7 @@ void QDBusViewer::callMethod(const BusSignature &sig)
     for (int i = 0; i < args.count(); ++i) {
         QVariant a = args.at(i);
         int desttype = types.at(i);
-        if (desttype < int(QMetaType::User) && desttype != int(QVariant::Map)) {
+        if (desttype < int(QMetaType::User) && desttype != qMetaTypeId<QVariantMap>()) {
             const QMetaType metaType(desttype);
             if (a.canConvert(metaType))
                 args[i].convert(metaType);
