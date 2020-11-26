@@ -51,7 +51,7 @@ endif()
 if(TARGET Qt::DBus)
     add_subdirectory(qdbus)
 endif()
-if(WIN32)
+if(QT_FEATURE_windeployqt) # special case
     add_subdirectory(windeployqt)
 endif()
 if(QT_FEATURE_commandlineparser AND TARGET Qt::Gui AND NOT ANDROID AND NOT QNX AND NOT UIKIT AND NOT WASM)
