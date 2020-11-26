@@ -77,7 +77,7 @@ static QChar yyCh;
 static QString yyIdent;
 static QString yyComment;
 static QString yyString;
-
+static bool yyEOF = false;
 
 static qlonglong yyInteger;
 static int yyParenDepth;
@@ -101,8 +101,10 @@ std::ostream &yyMsg(int line = 0)
 
 static QChar getChar()
 {
-    if (yyInPos >= yyInStr.size())
-      return QChar(EOF);
+    if (yyInPos >= yyInStr.size()) {
+        yyEOF = true;
+        return QChar();
+    }
     QChar c = yyInStr[yyInPos++];
     if (c == QLatin1Char('\n'))
         ++yyCurLineNo;
@@ -118,7 +120,7 @@ static int getToken()
     yyComment.clear();
     yyString.clear();
 
-    while (yyCh != QChar(EOF)) {
+    while (!yyEOF) {
         yyLineNo = yyCurLineNo;
 
         if ( yyCh.isLetter() || yyCh.toLatin1() == '_' ) {
@@ -163,7 +165,7 @@ static int getToken()
                 if ( yyCh == QLatin1Char('/') ) {
                     do {
                         yyCh = getChar();
-                        if (yyCh == QChar(EOF))
+                        if (yyEOF)
                             break;
                         yyComment.append(yyCh);
                     } while (yyCh != QLatin1Char('\n'));
@@ -175,7 +177,7 @@ static int getToken()
 
                     while ( !metAsterSlash ) {
                         yyCh = getChar();
-                        if (yyCh == QChar(EOF)) {
+                        if (yyEOF) {
                             yyMsg() << qPrintable(LU::tr("Unterminated Java comment.\n"));
                             return Tok_Comment;
                         }
@@ -198,7 +200,8 @@ static int getToken()
             case '"':
                 yyCh = getChar();
 
-                while (yyCh != QChar(EOF) && yyCh != QLatin1Char('\n') && yyCh != QLatin1Char('"')) {
+                while (!yyEOF && yyCh != QLatin1Char('\n') && yyCh != QLatin1Char('"')) {
+
                     if ( yyCh == QLatin1Char('\\') ) {
                         yyCh = getChar();
                         if ( yyCh == QLatin1Char('u') ) {
@@ -251,7 +254,7 @@ static int getToken()
                     yyCh = getChar();
                 do {
                     yyCh = getChar();
-                } while (yyCh != QChar(EOF) && yyCh != QLatin1Char('\''));
+                } while (!yyEOF && yyCh != QLatin1Char('\''));
                 yyCh = getChar();
                 break;
             case '{':
@@ -447,6 +450,7 @@ static void parse(Translator *tor, ConversionData &cd)
     QString com;
     QString extracomment;
 
+    yyEOF = false;
     yyCh = getChar();
 
     yyTok = getToken();
