@@ -140,7 +140,7 @@ public:
     {
         Projects result;
         result.reserve(rawProjects.size());
-        for (const QJsonValue &rawProject : rawProjects) {
+        for (const QJsonValue rawProject : rawProjects) {
             Project project = convertProject(rawProject);
             if (!m_errorString.isEmpty())
                 break;
@@ -228,7 +228,7 @@ private:
         QStringList result;
         const QJsonArray a = v.toArray();
         result.reserve(a.count());
-        for (const QJsonValue &v : a) {
+        for (const QJsonValue v : a) {
             if (!v.isString()) {
                 m_errorString = FMT::tr("Unexpected type %1 in string array in key %2.")
                         .arg(jsonTypeName(v.type()), key);
