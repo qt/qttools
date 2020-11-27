@@ -23,7 +23,7 @@ mac {
 }
 
 win32 {
-    RC_FILE = qdbusviewer.rc
+    RC_ICONS = images/qdbusviewer.ico
 }
 
 load(qt_app)

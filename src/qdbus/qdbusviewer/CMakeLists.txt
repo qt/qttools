@@ -58,6 +58,6 @@ endif()
 
 if(WIN32)
     set_target_properties(qdbusviewer PROPERTIES
-        QT_TARGET_WINDOWS_RC_FILE "${CMAKE_CURRENT_SOURCE_DIR}/qdbusviewer.rc"
+        QT_TARGET_RC_ICONS "${CMAKE_CURRENT_SOURCE_DIR}/images/qdbusviewer.ico"
     )
 endif()
