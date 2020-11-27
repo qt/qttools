@@ -19,7 +19,7 @@
 <db:term>CMake</db:term>
 <db:listitem>
 <db:para>find_package(Qt6 COMPONENTS QDocTest REQUIRED)</db:para>
-<db:para>target_link_libraries(mytarget PUBLIC Qt6::QDocTest)</db:para>
+<db:para>target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
