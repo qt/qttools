@@ -1969,7 +1969,7 @@ void HtmlGenerator::addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, 
             const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
             const QString findPackageText = "find_package(" + qtComponent + " COMPONENTS "
                     + cn->qtCMakeComponent() + " REQUIRED)";
-            const QString targetLinkLibrariesText = "target_link_libraries(mytarget PUBLIC "
+            const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
                     + qtComponent + "::" + cn->qtCMakeComponent() + ")";
             const Atom lineBreak = Atom(Atom::RawString, " <br/>\n");
             *text << findPackageText << lineBreak << targetLinkLibrariesText;
