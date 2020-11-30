@@ -129,10 +129,14 @@ set_target_properties(linguist PROPERTIES
     QT_TARGET_DESCRIPTION "Qt Linguist"
 )
 
-# special case begin
-file(GLOB phrasebooks_files "${CMAKE_CURRENT_SOURCE_DIR}/../phrasebooks/*")
-qt_install(FILES ${phrasebooks_files} DESTINATION "${INSTALL_DATADIR}/phrasebooks")
-# special case end
+#### Keys ignored in scope 1:.:.:linguist.pro:<TRUE>:
+# INSTALLS = "phrasebooks"
+# PROJECTNAME = "Qt" "Linguist"
+# phrasebooks.files = "$$PWD/../phrasebooks/*"
+# phrasebooks.path = "$$[QT_INSTALL_DATA]/phrasebooks"
+
+## Scopes:
+#####################################################################
 
 qt_internal_extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
     DEFINES
