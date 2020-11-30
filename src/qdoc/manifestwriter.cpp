@@ -41,17 +41,21 @@ QT_BEGIN_NAMESPACE
 /*!
     \internal
 
-    For each attribute in a list of attributes, checks if the attribute is
-    found in \a usedAttributes. If it is not found, issues a warning that
-    the example with \a name is missing that attribute.
+    For each attribute in a map of attributes, checks if the attribute is
+    found in \a usedAttributes. If it is not found, issues a warning specific
+    to the attribute.
  */
-void warnAboutUnusedAttributes(const QStringList &usedAttributes, const QString &name)
+void warnAboutUnusedAttributes(const QStringList &usedAttributes, const ExampleNode *example)
 {
-    const QStringList attributesToWarnFor = { "imageUrl", "projectPath" };
+    QMap<QString, QString> attributesToWarnFor;
+    attributesToWarnFor.insert(QStringLiteral("imageUrl"),
+            QStringLiteral("Example documentation should have at least one '\\image'"));
+    attributesToWarnFor.insert(QStringLiteral("projectPath"),
+            QStringLiteral("Example has no project file"));
 
-    for (const auto &attribute : attributesToWarnFor) {
-        if (!usedAttributes.contains(attribute))
-            Location().warning(name + ": missing attribute " + attribute);
+    for (auto it = attributesToWarnFor.cbegin(); it != attributesToWarnFor.cend(); ++it) {
+        if (!usedAttributes.contains(it.key()))
+            example->doc().location().warning(example->name() + ": " + it.value());
     }
 }
 
@@ -260,7 +264,7 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
         for (auto it = usedAttributes.cbegin(); it != usedAttributes.cend(); ++it)
             writer.writeAttribute(it.key(), it.value());
 
-        warnAboutUnusedAttributes(usedAttributes.keys(), example->name());
+        warnAboutUnusedAttributes(usedAttributes.keys(), example);
         writeDescription(&writer, example);
         addWordsFromModuleNamesAsTags();
         addTitleWordsToTags(example);
