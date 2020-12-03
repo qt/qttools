@@ -130,7 +130,8 @@ bool qmake(const QString &source, const QString &destination, QString *errorMess
 bool make(const QString &destination, QString *errorMessage)
 {
     QStringList args;
-    return runProcess(g_makeBinary, args, errorMessage, destination);
+    return runProcess(g_makeBinary, args, errorMessage, destination,
+                      {}, 60000);
 }
 
 void build(const QString &name)
