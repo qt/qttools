@@ -955,6 +955,11 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
     const QString objectNameProperty = QStringLiteral("objectName");
     for (DomProperty *p : properties) {
         QString propertyName = p->attributeName();
+        if (p->kind() == DomProperty::Set && propertyName == u"features"
+            && o->inherits("QDockWidget")
+            && p->elementSet() == u"QDockWidget::AllDockWidgetFeatures") {
+            continue; // ### fixme Qt 7 remove this: Exclude deprecated value of Qt 5.
+        }
         if (propertyName == QLatin1String("numDigits") && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
             propertyName = QLatin1String("digitCount");
         const int index = sheet->indexOf(propertyName);
