@@ -320,8 +320,8 @@ void ManifestWriter::cleanUpTags()
 
         if (tag.length() < 2 || tag.at(0).isDigit() || tag.at(0) == '-'
             || tag == QLatin1String("qt") || tag == QLatin1String("the")
-            || tag == QLatin1String("and") || tag.startsWith(QLatin1String("example"))
-            || tag.startsWith(QLatin1String("chapter")))
+            || tag == QLatin1String("and") || tag == QLatin1String("doc")
+            || tag.startsWith(QLatin1String("example")) || tag.startsWith(QLatin1String("chapter")))
             continue;
         cleanedTags << tag;
     }
