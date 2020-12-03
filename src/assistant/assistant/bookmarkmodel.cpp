@@ -128,7 +128,7 @@ BookmarkModel::setItemsEditable(bool editable)
 void
 BookmarkModel::expandFoldersIfNeeeded(QTreeView *treeView)
 {
-    for (const QModelIndex &index : qAsConst(cache))
+    for (QModelIndex index : qAsConst(cache))
         treeView->setExpanded(index, index.data(UserRoleExpanded).toBool());
 }
 
