@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     QCoreApplication::setApplicationVersion(QStringLiteral(QT_VERSION_STR));
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(QStringLiteral("Qt5 plugin meta-data dumper"));
+    parser.setApplicationDescription(QStringLiteral("Qt plugin meta-data dumper"));
     QCommandLineOption jsonFormatOption(QStringList() << "f" << "json-format",
                                         QStringLiteral("Print JSON data as: indented, compact"), QStringLiteral("format"));
     QCommandLineOption fullJsonOption("full-json",
