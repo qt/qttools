@@ -115,7 +115,7 @@ static bool generateCompilationDatabase(const QString &outputFilePath, const QSt
 {
     QJsonArray commandObjects;
     const QString buildDir = QDir::currentPath();
-    for (const auto source : sources) {
+    for (const auto &source : sources) {
         QFileInfo fi(source);
         QJsonObject obj;
         obj[QLatin1String("file")] = fi.fileName();
