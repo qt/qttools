@@ -1,4 +1,6 @@
 # Generated from generatedoutput.pro.
+# special case skip regeneration
+# It's mostly manually written.
 
 #####################################################################
 ## tst_generatedOutput Test:
