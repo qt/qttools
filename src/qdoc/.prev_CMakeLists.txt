@@ -83,22 +83,9 @@ qt_internal_add_tool(${target_name}
 )
 
 #### Keys ignored in scope 1:.:.:qdoc.pro:<TRUE>:
-# CMAKE_BIN_DIR = "$$cmakeRelativePath($$[QT_HOST_BINS], $$[QT_INSTALL_PREFIX])"
-# CMAKE_INSTALL_LIBS_DIR = "$$cmakeTargetPath($$[QT_INSTALL_LIBS])"
-# CMAKE_LIB_DIR = "$$cmakeRelativePath($$[QT_INSTALL_LIBS], $$[QT_INSTALL_PREFIX])"
-# CMAKE_PACKAGE_VERSION = "$$MODULE_VERSION"
-# INSTALLS = "cmake_qdoc_tools_files"
-# QMAKE_SUBSTITUTES = "cmake_qdoc_config_file" "cmake_qdoc_config_version_file"
 # QMAKE_TARGET_DESCRIPTION = "Qt Documentation Compiler"
 # TR_EXCLUDE = "$$PWD/*"
 # _OPTION = "host_build"
-# cmake_qdoc_config_file.input = "$$PWD/Qt5DocToolsConfig.cmake.in"
-# cmake_qdoc_config_file.output = "$$MODULE_BASE_OUTDIR/lib/cmake/Qt5DocTools/Qt5DocToolsConfig.cmake"
-# cmake_qdoc_config_version_file.input = "$$[QT_HOST_DATA/src]/mkspecs/features/data/cmake/Qt5ConfigVersion.cmake.in"
-# cmake_qdoc_config_version_file.output = "$$MODULE_BASE_OUTDIR/lib/cmake/Qt5DocTools/Qt5DocToolsConfigVersion.cmake"
-# cmake_qdoc_tools_files.CONFIG = "no_check_exist"
-# cmake_qdoc_tools_files.files = "$$cmake_qdoc_config_file.output" "$$cmake_qdoc_config_version_file.output"
-# cmake_qdoc_tools_files.path = "$$[QT_INSTALL_LIBS]/cmake/Qt5DocTools"
 
 ## Scopes:
 #####################################################################
@@ -123,23 +110,6 @@ qt_internal_extend_target(${target_name} CONDITION win32-icc_x_ OR win32-msvc_x_
     LINK_OPTIONS
         "/STACK:4194304"
 )
-
-#### Keys ignored in scope 8:.:.:qdoc.pro:CMAKE_INSTALL_LIBS_DIR___contains___^(/usr?/lib(64)?._x_):
-# CMAKE_USR_MOVE_WORKAROUND = "$$CMAKE_INSTALL_LIBS_DIR"
-
-#### Keys ignored in scope 9:.:.:qdoc.pro:NOT CMAKE_LIB_DIR___contains___^\\.\\./._x_:
-# CMAKE_RELATIVE_INSTALL_DIR = "$${CMAKE_RELATIVE_INSTALL_LIBS_DIR}../../"
-# CMAKE_RELATIVE_INSTALL_LIBS_DIR = "$$cmakeRelativePath($$[QT_INSTALL_PREFIX], $$[QT_INSTALL_LIBS])"
-
-#### Keys ignored in scope 10:.:.:qdoc.pro:else:
-# CMAKE_LIB_DIR_IS_ABSOLUTE = "True"
-
-#### Keys ignored in scope 11:.:.:qdoc.pro:CMAKE_BIN_DIR___contains___^\\.\\./._x_:
-# CMAKE_BIN_DIR = "$$[QT_HOST_BINS]/"
-# CMAKE_BIN_DIR_IS_ABSOLUTE = "True"
-
-#### Keys ignored in scope 12:.:.:qdoc.pro:QMAKE_HOST.os___equals___Windows:
-# CMAKE_BIN_SUFFIX = ".exe"
 qt_internal_add_docs(${target_name}
     doc/config/qdoc.qdocconf
 )
