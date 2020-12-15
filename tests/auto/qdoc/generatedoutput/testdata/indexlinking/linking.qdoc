@@ -37,3 +37,13 @@
             QDoc.Test::Parent::group.c.
     \endlist
 */
+
+/*!
+    \qmlmodule LinkModule 1.0
+*/
+
+/*!
+    \qmltype GrandChild
+    \inqmlmodule LinkModule
+    \inherits AnotherChild
+*/

@@ -27,8 +27,8 @@
 ****************************************************************************/
 
 #include "qmltypenode.h"
-
 #include "collectionnode.h"
+#include "qdocdatabase.h"
 
 #include <QtCore/qdebug.h>
 
@@ -142,6 +142,42 @@ bool QmlTypeNode::inherits(Aggregate *type)
         qtn = qtn->qmlBaseNode();
     }
     return false;
+}
+
+/*!
+  Recursively resolves the base node for this QML type when only the name of
+  the base type is known.
+
+  \a previousSearches is used for speeding up the process.
+*/
+void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
+{
+    if (m_qmlBaseNode || m_qmlBaseName.isEmpty())
+        return;
+
+    auto *base = static_cast<QmlTypeNode *>(previousSearches.value(m_qmlBaseName));
+    if (!previousSearches.contains(m_qmlBaseName)) {
+        for (const auto &import : qAsConst(m_importList)) {
+            base = QDocDatabase::qdocDB()->findQmlType(import, m_qmlBaseName);
+            if (base)
+                break;
+        }
+        if (!base) {
+            if (m_qmlBaseName.contains(':'))
+                base = QDocDatabase::qdocDB()->findQmlType(m_qmlBaseName);
+            else
+                base = QDocDatabase::qdocDB()->findQmlType(QString(), m_qmlBaseName);
+        }
+        previousSearches.insert(m_qmlBaseName, base);
+    }
+
+    if (base && base != this) {
+        m_qmlBaseNode = base;
+        QmlTypeNode::addInheritedBy(base, this);
+        // Base types read from the index need resolving as they only have the name set
+        if (base->isIndexNode())
+            base->resolveInheritance(previousSearches);
+    }
 }
 
 /*!

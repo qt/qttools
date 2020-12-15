@@ -403,7 +403,8 @@ void tst_generatedOutput::indexLinking()
     copyIndexFiles();
     QString indexDir = QLatin1String("-indexdir ") +  m_outputDir->path();
     testAndCompare("testdata/indexlinking/indexlinking.qdocconf",
-                   "index-linking.html",
+                   "index-linking.html "
+                   "qml-linkmodule-grandchild-members.html",
                    indexDir.toLatin1().data());
 }
 

@@ -907,49 +907,16 @@ void Aggregate::findAllSince()
 }
 
 /*!
-  For each QML Type node in this aggregate's children, if the
-  QML type has a QML base type name but its QML base type node
-  pointer is nullptr, use the QML base type name to look up the
-  base type node. If the node is found, set the node's QML base
-  type node pointer to that node.
- */
+  Resolves the inheritance information for all QML type children
+  of this aggregate.
+*/
 void Aggregate::resolveQmlInheritance()
 {
     NodeMap previousSearches;
-    // Do we need recursion?
     for (auto *child : qAsConst(m_children)) {
         if (!child->isQmlType() && !child->isJsType())
             continue;
-        QmlTypeNode *type = static_cast<QmlTypeNode *>(child);
-        if (type->qmlBaseNode() != nullptr)
-            continue;
-        if (type->qmlBaseName().isEmpty())
-            continue;
-        QmlTypeNode *base = static_cast<QmlTypeNode *>(previousSearches.value(type->qmlBaseName()));
-        if (base && (base != type)) {
-            type->setQmlBaseNode(base);
-            QmlTypeNode::addInheritedBy(base, type);
-        } else {
-            if (!type->importList().isEmpty()) {
-                const ImportList &imports = type->importList();
-                for (int i = 0; i < imports.size(); ++i) {
-                    base = QDocDatabase::qdocDB()->findQmlType(imports[i], type->qmlBaseName());
-                    if (base && (base != type)) {
-                        if (base->logicalModuleVersion()[0] != imports[i].m_majorMinorVersion[0])
-                            base = nullptr; // Safeguard for QTBUG-53529
-                        break;
-                    }
-                }
-            }
-            if (base == nullptr) {
-                base = QDocDatabase::qdocDB()->findQmlType(QString(), type->qmlBaseName());
-            }
-            if (base && (base != type)) {
-                type->setQmlBaseNode(base);
-                QmlTypeNode::addInheritedBy(base, type);
-                previousSearches.insert(type->qmlBaseName(), base);
-            }
-        }
+        static_cast<QmlTypeNode *>(child)->resolveInheritance(previousSearches);
     }
 }
 
