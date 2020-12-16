@@ -105,7 +105,7 @@ qt_internal_extend_target(designer CONDITION TARGET Qt::PrintSupport
         Qt::PrintSupport
 )
 
-qt_internal_extend_target(designer CONDITION QT_CONFIG___contains___static
+qt_internal_extend_target(designer CONDITION NOT QT_BUILD_SHARED_LIBS
     DEFINES
         QT_DESIGNER_STATIC
 )
