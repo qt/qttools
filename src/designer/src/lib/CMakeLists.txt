@@ -453,12 +453,9 @@ qt_internal_extend_target(Designer CONDITION TARGET Qt::OpenGLWidgets
         Qt::OpenGLWidgets
 )
 
-qt_internal_extend_target(Designer CONDITION static
+qt_internal_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
     DEFINES
         QT_DESIGNER_STATIC
-)
-
-qt_internal_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.cpp ../../../shared/qtpropertybrowser/qtbuttonpropertybrowser.h
         ../../../shared/qtpropertybrowser/qteditorfactory.cpp ../../../shared/qtpropertybrowser/qteditorfactory.h

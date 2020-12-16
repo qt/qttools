@@ -878,12 +878,9 @@ qt_internal_add_resource(DesignerComponents "widgetbox"
 ## Scopes:
 #####################################################################
 
-qt_internal_extend_target(DesignerComponents CONDITION static
+qt_internal_extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
     DEFINES
         QT_DESIGNER_STATIC
-)
-
-qt_internal_extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
     INCLUDE_DIRECTORIES
         ../../../../shared/findwidget
         ../../../../shared/qtgradienteditor
