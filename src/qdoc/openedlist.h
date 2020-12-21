@@ -70,7 +70,7 @@ private:
     QString pref;
     QString suff;
 };
-Q_DECLARE_TYPEINFO(OpenedList, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(OpenedList, Q_RELOCATABLE_TYPE);
 
 QT_END_NAMESPACE
 

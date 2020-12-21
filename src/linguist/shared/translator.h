@@ -105,7 +105,7 @@ public:
         { return context == o.context && source == o.source && comment == o.comment; }
     QString context, source, comment;
 };
-Q_DECLARE_TYPEINFO(TMMKey, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(TMMKey, Q_RELOCATABLE_TYPE);
 inline size_t qHash(const TMMKey &key)
 {
     return qHash(key.context) ^ qHash(key.source) ^ qHash(key.comment);

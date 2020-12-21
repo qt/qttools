@@ -135,7 +135,7 @@ public:
     QStringList accum;
     QStringList next;
 };
-Q_DECLARE_TYPEINFO(MetaStackEntry, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(MetaStackEntry, Q_RELOCATABLE_TYPE);
 
 /*!
   Start accumulating values in a list by appending an empty

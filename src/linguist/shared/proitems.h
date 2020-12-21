@@ -175,7 +175,7 @@ private:
     friend QString operator+(const ProString &one, const ProString &two);
     friend class ProKey;
 };
-Q_DECLARE_TYPEINFO(ProString, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(ProString, Q_RELOCATABLE_TYPE);
 
 class ProKey : public ProString {
 public:
@@ -202,7 +202,7 @@ public:
 private:
     ProKey(const ProString &other);
 };
-Q_DECLARE_TYPEINFO(ProKey, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(ProKey, Q_RELOCATABLE_TYPE);
 
 size_t qHash(const ProString &str);
 QString operator+(const ProString &one, const ProString &two);
@@ -309,7 +309,7 @@ public:
         { return contains(ProString(str), cs); }
     bool contains(const char *str, Qt::CaseSensitivity cs = Qt::CaseSensitive) const;
 };
-Q_DECLARE_TYPEINFO(ProStringList, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(ProStringList, Q_RELOCATABLE_TYPE);
 
 inline ProStringList operator+(const ProStringList &one, const ProStringList &two)
     { ProStringList ret = one; ret += two; return ret; }
@@ -462,7 +462,7 @@ private:
     int m_offset;
 };
 
-Q_DECLARE_TYPEINFO(ProFunctionDef, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(ProFunctionDef, Q_RELOCATABLE_TYPE);
 
 struct ProFunctionDefs {
     QHash<ProKey, ProFunctionDef> testFunctions;

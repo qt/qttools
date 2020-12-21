@@ -117,7 +117,7 @@ private:
     DocPrivate *priv { nullptr };
     static DocUtilities &m_utilities;
 };
-Q_DECLARE_TYPEINFO(Doc, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Doc, Q_RELOCATABLE_TYPE);
 typedef QList<Doc> DocList;
 
 QT_END_NAMESPACE

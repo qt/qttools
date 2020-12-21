@@ -118,7 +118,7 @@ private:
     QStringList m_translations;
 };
 
-Q_DECLARE_TYPEINFO(ByteTranslatorMessage, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(ByteTranslatorMessage, Q_RELOCATABLE_TYPE);
 
 bool ByteTranslatorMessage::operator<(const ByteTranslatorMessage& m) const
 {

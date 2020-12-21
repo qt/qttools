@@ -150,7 +150,7 @@ private:
     bool m_plural;
 };
 
-Q_DECLARE_TYPEINFO(TranslatorMessage, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(TranslatorMessage, Q_RELOCATABLE_TYPE);
 
 QT_END_NAMESPACE
 

@@ -114,7 +114,7 @@ private:
     static QString project;
     static QRegularExpression *spuriousRegExp;
 };
-Q_DECLARE_TYPEINFO(Location::StackEntry, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(Location::StackEntry, Q_RELOCATABLE_TYPE);
 Q_DECLARE_TYPEINFO(Location, Q_COMPLEX_TYPE); // stkTop = &stkBottom
 
 QT_END_NAMESPACE
