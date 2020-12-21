@@ -505,7 +505,8 @@
         \a area; otherwise returns \c false.
     \endquotation
 
-    \note Running in debug mode (\c {-debug} command line option)
+    \note Running in debug mode (pass the \c {-debug} command line option
+    or set the \c QDOC_DEBUG environment variable before invoking QDoc)
     can help troubleshoot \\fn commands that QDoc fails to parse. In
     debug mode, additional diagnostic information is available.
 

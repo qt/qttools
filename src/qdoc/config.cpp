@@ -410,9 +410,9 @@ void Config::processCommandLineOptions(const QStringList &args)
     const auto outputFormats = m_parser.values(m_parser.outputFormatOption);
     for (const auto &format : outputFormats)
         overrideOutputFormats.insert(format);
-
-    m_debug = m_parser.isSet(m_parser.debugOption);
-    m_showInternal = m_parser.isSet(m_parser.showInternalOption);
+    m_debug = m_parser.isSet(m_parser.debugOption) || qEnvironmentVariableIsSet("QDOC_DEBUG");
+    m_showInternal = m_parser.isSet(m_parser.showInternalOption)
+            || qEnvironmentVariableIsSet("QDOC_SHOW_INTERNAL");
 
     if (m_parser.isSet(m_parser.prepareOption))
         m_qdocPass = Prepare;

@@ -352,7 +352,9 @@
     }
     \endcode
 
-    This function will not be included in the documentation.
+    This function will not be included in the documentation, unless QDoc
+    is called with the \c{-showinternal} command line option or the
+    \c{QDOC_SHOW_INTERNAL} environment variable is set.
 
     \target preliminary-command
     \section1 \\preliminary
