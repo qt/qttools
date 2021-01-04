@@ -338,7 +338,7 @@ void  ActionEditor::slotSelectionChanged(const QItemSelection& selected, const Q
 void ActionEditor::slotCurrentItemChanged(QAction *action)
 {
     QDesignerFormWindowInterface *fw = formWindow();
-    if (!fw)
+    if (m_withinSelectAction || fw == nullptr)
         return;
 
     const bool hasCurrentAction = action != nullptr;
@@ -750,6 +750,24 @@ void ActionEditor::mainContainerChanged()
     // Invalidate references to objects kept in model
     if (sender() == formWindow())
         setFormWindow(nullptr);
+}
+
+void ActionEditor::clearSelection()
+{
+    // For use by the menu editor; block the syncing of the object inspector
+    // in slotCurrentItemChanged() since the  menu editor updates it itself.
+    m_withinSelectAction = true;
+    m_actionView->clearSelection();
+    m_withinSelectAction = false;
+}
+
+void ActionEditor::selectAction(QAction *a)
+{
+    // For use by the menu editor; block the syncing of the object inspector
+    // in slotCurrentItemChanged() since the  menu editor updates it itself.
+    m_withinSelectAction = true;
+    m_actionView->selectAction(a);
+    m_withinSelectAction = false;
 }
 
 void ActionEditor::slotViewMode(QAction *a)

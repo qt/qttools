@@ -277,6 +277,16 @@ QAction *ActionModel::actionAt(const  QModelIndex &index) const
     return actionOfItem(i);
 }
 
+QModelIndex ActionModel::indexOf(QAction *a) const
+{
+    for (int r = rowCount() - 1; r >= 0; --r) {
+        QStandardItem *stdItem = item(r, 0);
+        if (actionOfItem(stdItem) == a)
+            return indexFromItem(stdItem);
+    }
+    return {};
+}
+
 // helpers
 
 static bool handleImageDragEnterMoveEvent(QDropEvent *event)
@@ -562,6 +572,13 @@ void ActionView::selectAll()
 void ActionView::clearSelection()
 {
     m_actionTreeView->selectionModel()->clearSelection();
+}
+
+void ActionView::selectAction(QAction *a)
+{
+    const QModelIndex index = m_model->indexOf(a);
+    if (index.isValid())
+        setCurrentIndex(index);
 }
 
 void ActionView::setCurrentIndex(const QModelIndex &index)

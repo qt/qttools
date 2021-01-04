@@ -958,17 +958,26 @@ void QDesignerMenu::selectCurrentAction()
         return;
 
     QDesignerObjectInspector *oi = nullptr;
-    if (QDesignerFormWindowInterface *fw = formWindow())
-        oi = qobject_cast<QDesignerObjectInspector *>(fw->core()->objectInspector());
+    ActionEditor *ae = nullptr;
+    if (QDesignerFormWindowInterface *fw = formWindow()) {
+        auto core = fw->core();
+        oi = qobject_cast<QDesignerObjectInspector *>(core->objectInspector());
+        ae = qobject_cast<ActionEditor *>(core->actionEditor());
+    }
 
     if (!oi)
         return;
 
     oi->clearSelection();
-    if (QMenu *menu = action->menu())
+    if (QMenu *menu = action->menu()) {
         oi->selectObject(menu);
-    else
+        if (ae)
+            ae->clearSelection();
+    } else {
         oi->selectObject(action);
+        if (ae)
+            ae->selectAction(action);
+    }
 }
 
 void QDesignerMenu::createRealMenuAction(QAction *action)

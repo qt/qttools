@@ -96,6 +96,8 @@ public:
 public slots:
     void setFilter(const QString &filter);
     void mainContainerChanged();
+    void clearSelection();
+    void selectAction(QAction *a); // For use by the menu editor
 
 private slots:
     void slotCurrentItemChanged(QAction *item);
@@ -158,6 +160,7 @@ private:
 
     QString m_filter;
     QWidget *m_filterWidget;
+    bool m_withinSelectAction = false;
 };
 
 } // namespace qdesigner_internal
