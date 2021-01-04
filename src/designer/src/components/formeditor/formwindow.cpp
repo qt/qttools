@@ -1232,8 +1232,19 @@ void FormWindow::insertWidget(QWidget *w, const QRect &rect, QWidget *container,
 
     m_undoStack.push(geom_cmd);
 
-    InsertWidgetCommand *cmd = new InsertWidgetCommand(this);
-    cmd->init(w, already_in_form);
+    QUndoCommand *cmd = nullptr;
+    if (auto dockWidget = qobject_cast<QDockWidget *>(w)) {
+        if (auto mainWindow = qobject_cast<QMainWindow *>(container)) {
+            auto addDockCmd = new AddDockWidgetCommand(this);
+            addDockCmd->init(mainWindow, dockWidget);
+            cmd = addDockCmd;
+        }
+    }
+    if (cmd == nullptr) {
+        auto insertCmd = new InsertWidgetCommand(this);
+        insertCmd->init(w, already_in_form);
+        cmd = insertCmd;
+    }
     m_undoStack.push(cmd);
 
     endCommand();

@@ -754,7 +754,7 @@ protected:
     QPointer<QDockWidget> m_dockWidget;
 };
 
-class AddDockWidgetCommand: public QDesignerFormWindowCommand
+class QDESIGNER_SHARED_EXPORT AddDockWidgetCommand: public QDesignerFormWindowCommand
 {
 
 public:
