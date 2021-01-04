@@ -940,6 +940,29 @@ static bool readDomEnumerationValue(const DomProperty *p,
     return false;
 }
 
+// ### fixme Qt 7 remove this: Exclude deprecated properties of Qt 5.
+static bool isDeprecatedQt5Property(const QObject *o, const DomProperty *p)
+{
+    const QString &propertyName = p->attributeName();
+    switch (p->kind()) {
+    case DomProperty::Set:
+        if (propertyName == u"features" && o->inherits("QDockWidget")
+            && p->elementSet() == u"QDockWidget::AllDockWidgetFeatures") {
+            return true;
+        }
+        break;
+    case DomProperty::Enum:
+        if (propertyName == u"sizeAdjustPolicy" && o->inherits("QComboBox")
+            && p->elementEnum() == u"QComboBox::AdjustToMinimumContentsLength") {
+            return true;
+        }
+        break;
+    default:
+        break;
+    }
+    return false;
+}
+
 void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &properties)
 {
     if (properties.isEmpty())
@@ -954,12 +977,9 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
 
     const QString objectNameProperty = QStringLiteral("objectName");
     for (DomProperty *p : properties) {
-        QString propertyName = p->attributeName();
-        if (p->kind() == DomProperty::Set && propertyName == u"features"
-            && o->inherits("QDockWidget")
-            && p->elementSet() == u"QDockWidget::AllDockWidgetFeatures") {
+        if (isDeprecatedQt5Property(o, p)) // ### fixme Qt 7 remove this
             continue; // ### fixme Qt 7 remove this: Exclude deprecated value of Qt 5.
-        }
+        QString propertyName = p->attributeName();
         if (propertyName == QLatin1String("numDigits") && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
             propertyName = QLatin1String("digitCount");
         const int index = sheet->indexOf(propertyName);
