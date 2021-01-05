@@ -1603,8 +1603,8 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
                           << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight)
                           << Atom(itemLeft) << Atom(Atom::String, title) << Atom(itemRight);
     } else {
-        if (node->isAggregate()) {
-            QStringList groups = static_cast<const Aggregate *>(node)->groupNames();
+        if (node->isPageNode()) {
+            QStringList groups = static_cast<const PageNode *>(node)->groupNames();
             if (groups.length() == 1) {
                 const Node *groupNode =
                         m_qdb->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
