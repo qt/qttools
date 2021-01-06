@@ -129,19 +129,20 @@ void TicTacToePlugin::initialize(QDesignerFormEditorInterface *formEditor)
 
 QString TicTacToePlugin::domXml() const
 {
-    return QLatin1String("\
-<ui language=\"c++\">\
-    <widget class=\"TicTacToe\" name=\"ticTacToe\"/>\
-    <customwidgets>\
-        <customwidget>\
-            <class>TicTacToe</class>\
-            <propertyspecifications>\
-            <tooltip name=\"state\">Tic Tac Toe state</tooltip>\
-            <stringpropertyspecification name=\"state\" notr=\"true\" type=\"singleline\"/>\
-            </propertyspecifications>\
-        </customwidget>\
-    </customwidgets>\
-</ui>");
+    return QLatin1String(R"(
+<ui language="c++">
+    <widget class="TicTacToe" name="ticTacToe"/>
+    <customwidgets>
+        <customwidget>
+            <class>TicTacToe</class>
+            <propertyspecifications>
+            <tooltip name="state">Tic Tac Toe state</tooltip>
+            <stringpropertyspecification name="state" notr="true" type="singleline"/>
+            </propertyspecifications>
+        </customwidget>
+    </customwidgets>
+</ui>
+)");
 }
 
 //! [3]

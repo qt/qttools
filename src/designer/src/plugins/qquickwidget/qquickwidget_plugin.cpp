@@ -100,22 +100,23 @@ void QQuickWidgetPlugin::initialize(QDesignerFormEditorInterface * /*core*/)
 
 QString QQuickWidgetPlugin::domXml() const
 {
-    return QStringLiteral("\
-    <ui language=\"c++\">\
-        <widget class=\"QQuickWidget\" name=\"quickWidget\">\
-            <property name=\"resizeMode\">\
-                <enum>QQuickWidget::SizeRootObjectToView</enum>\
-            </property>\
-            <property name=\"geometry\">\
-                <rect>\
-                    <x>0</x>\
-                    <y>0</y>\
-                    <width>300</width>\
-                    <height>200</height>\
-                </rect>\
-            </property>\
-        </widget>\
-    </ui>");
+    return QStringLiteral(R"(
+<ui language="c++">
+    <widget class="QQuickWidget" name="quickWidget">
+        <property name="resizeMode">
+            <enum>QQuickWidget::SizeRootObjectToView</enum>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>300</width>
+                <height>200</height>
+            </rect>
+        </property>
+    </widget>
+</ui>
+)");
 }
 
 void QQuickWidgetPlugin::sceneGraphError(QQuickWindow::SceneGraphError, const QString &message)

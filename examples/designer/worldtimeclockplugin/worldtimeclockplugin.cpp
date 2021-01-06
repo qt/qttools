@@ -108,18 +108,20 @@ bool WorldTimeClockPlugin::isContainer() const
 
 QString WorldTimeClockPlugin::domXml() const
 {
-    return "<ui language=\"c++\">\n"
-           " <widget class=\"WorldTimeClock\" name=\"worldTimeClock\">\n"
-           "  <property name=\"geometry\">\n"
-           "   <rect>\n"
-           "    <x>0</x>\n"
-           "    <y>0</y>\n"
-           "    <width>100</width>\n"
-           "    <height>100</height>\n"
-           "   </rect>\n"
-           "  </property>\n"
-           " </widget>\n"
-           "</ui>";
+    return QLatin1String(R"(
+<ui language="c++">
+  <widget class="WorldTimeClock" name="worldTimeClock">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>100</width>
+        <height>100</height>
+      </rect>
+    </property>
+  </widget>
+</ui>
+)");
 }
 
 QString WorldTimeClockPlugin::includeFile() const

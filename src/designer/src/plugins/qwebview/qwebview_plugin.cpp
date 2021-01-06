@@ -96,24 +96,25 @@ void QWebViewPlugin::initialize(QDesignerFormEditorInterface * /*core*/)
 
 QString QWebViewPlugin::domXml() const
 {
-    return QStringLiteral("\
-    <ui language=\"c++\">\
-        <widget class=\"QWebView\" name=\"webView\">\
-            <property name=\"url\">\
-                <url>\
-                    <string>about:blank</string>\
-                </url>\
-            </property>\
-            <property name=\"geometry\">\
-                <rect>\
-                    <x>0</x>\
-                    <y>0</y>\
-                    <width>300</width>\
-                    <height>200</height>\
-                </rect>\
-            </property>\
-        </widget>\
-    </ui>");
+    return QStringLiteral(R"(
+<ui language="c++">
+    <widget class="QWebView" name="webView">
+        <property name="url">
+            <url>
+                <string>about:blank</string>
+            </url>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>300</width>
+                <height>200</height>
+            </rect>
+        </property>
+    </widget>
+</ui>
+)");
 }
 
 QT_END_NAMESPACE

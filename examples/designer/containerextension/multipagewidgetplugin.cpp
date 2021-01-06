@@ -144,19 +144,19 @@ void MultiPageWidgetPlugin::initialize(QDesignerFormEditorInterface *formEditor)
 //! [7]
 QString MultiPageWidgetPlugin::domXml() const
 {
-    return QLatin1String("\
-<ui language=\"c++\">\
-    <widget class=\"MultiPageWidget\" name=\"multipagewidget\">\
-        <widget class=\"QWidget\" name=\"page\" />\
-    </widget>\
-    <customwidgets>\
-        <customwidget>\
-            <class>MultiPageWidget</class>\
-            <extends>QWidget</extends>\
-            <addpagemethod>addPage</addpagemethod>\
-        </customwidget>\
-    </customwidgets>\
-</ui>");
+    return QLatin1String(R"(
+<ui language="c++">
+    <widget class="MultiPageWidget" name="multipagewidget">
+        <widget class="QWidget" name="page" />
+    </widget>
+    <customwidgets>
+        <customwidget>
+            <class>MultiPageWidget</class>
+            <extends>QWidget</extends>
+            <addpagemethod>addPage</addpagemethod>
+        </customwidget>
+    </customwidgets>
+</ui>)");
 }
 //! [7]
 

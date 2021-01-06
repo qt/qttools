@@ -129,26 +129,32 @@ bool AnalogClockPlugin::isContainer() const
 //! [10]
 QString AnalogClockPlugin::domXml() const
 {
-    return "<ui language=\"c++\">\n"
-           " <widget class=\"AnalogClock\" name=\"analogClock\">\n"
+    return QLatin1String(R"(
+<ui language="c++">
+  <widget class="AnalogClock" name="analogClock">
+)"
 //! [11]
-           "  <property name=\"geometry\">\n"
-           "   <rect>\n"
-           "    <x>0</x>\n"
-           "    <y>0</y>\n"
-           "    <width>100</width>\n"
-           "    <height>100</height>\n"
-           "   </rect>\n"
-           "  </property>\n"
+R"(
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>100</width>
+        <height>100</height>
+      </rect>
+    </property>
+")
 //! [11]
-           "  <property name=\"toolTip\" >\n"
-           "   <string>The current time</string>\n"
-           "  </property>\n"
-           "  <property name=\"whatsThis\" >\n"
-           "   <string>The analog clock widget displays the current time.</string>\n"
-           "  </property>\n"
-           " </widget>\n"
-           "</ui>\n";
+R"(
+    <property name="toolTip">
+      <string>The current time</string>
+    </property>
+    <property name="whatsThis">
+      <string>The analog clock widget displays the current time.</string>
+    </property>
+  </widget>
+</ui>
+)");
 }
 //! [10]
 
