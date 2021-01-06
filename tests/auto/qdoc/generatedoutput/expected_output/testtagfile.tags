@@ -231,6 +231,13 @@
             <anchor>virtualFun</anchor>
             <arglist>() override</arglist>
         </member>
+        <member kind="function" protection="public" virtualness="non" static="yes">
+            <type>void</type>
+            <name>staticObsoleteMember</name>
+            <anchorfile>testqdoc-testderived-obsolete.html</anchorfile>
+            <anchor>staticObsoleteMember</anchor>
+            <arglist>()</arglist>
+        </member>
     </compound>
     <compound kind="class">
         <name>QDoc.Test.Type</name>
