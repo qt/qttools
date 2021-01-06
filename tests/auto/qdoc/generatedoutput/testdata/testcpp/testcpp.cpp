@@ -233,6 +233,16 @@ void TestDerived::virtualFun()
 */
 
 /*!
+    \obsolete
+
+    Static obsolete method.
+*/
+void TestDerived::staticObsoleteMember()
+{
+    return;
+}
+
+/*!
 \if defined(test_properties)
     \fn void TestDerived::emitSomething()
     Emitted when things happen.

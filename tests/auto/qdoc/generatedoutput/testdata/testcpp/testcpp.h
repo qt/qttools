@@ -97,6 +97,7 @@ public:
     using DerivedType = Test::SomeType;
     using NotTypedef = int;
     void virtualFun() override;
+    static void staticObsoleteMember();
 #ifdef test_properties
     QBindable<QString> bindableProp();
     QBindable<QString> someBindableProp();
