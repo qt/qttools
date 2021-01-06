@@ -56,14 +56,16 @@ public:
 
 private slots:
     void updateCustomWidgetPlugins();
+    void treeWidgetContextMenu(const QPoint &pos);
 
 private:
     void populateTreeWidget();
     QTreeWidgetItem* setTopLevelItem(const QString &itemName);
     QTreeWidgetItem* setPluginItem(QTreeWidgetItem *topLevelItem,
                                    const QString &itemName, const QFont &font);
-    void setItem(QTreeWidgetItem *pluginItem, const QString &name,
-                 const QString &toolTip, const QString &whatsThis, const QIcon &icon);
+    QTreeWidgetItem *setItem(QTreeWidgetItem *pluginItem, const QString &name,
+                             const QString &toolTip, const QString &whatsThis,
+                             const QIcon &icon);
 
     QDesignerFormEditorInterface *m_core;
     Ui::PluginDialog ui;
