@@ -479,9 +479,11 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     options->systemD3dCompiler = !parser->isSet(noSystemD3DCompilerOption);
     options->quickImports = !parser->isSet(noQuickImportOption);
 
-    if (parser->isSet(compilerRunTimeOption))
+    // default to deployment of compiler runtime for windows desktop configurations
+    if (options->platform == WindowsDesktopMinGW || options->platform == WindowsDesktopMsvc
+            || parser->isSet(compilerRunTimeOption))
         options->compilerRunTime = true;
-    else if (parser->isSet(noCompilerRunTimeOption))
+    if (parser->isSet(noCompilerRunTimeOption))
         options->compilerRunTime = false;
 
     if (options->compilerRunTime && options->platform != WindowsDesktopMinGW && options->platform != WindowsDesktopMsvc) {
