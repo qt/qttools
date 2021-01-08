@@ -743,7 +743,7 @@ void SignalSlotEditorWindow::setActiveFormWindow(QDesignerFormWindowInterface *f
         }
     }
 
-    m_editor = form->findChild<SignalSlotEditor*>();
+    m_editor = form ? form->findChild<SignalSlotEditor*>() : nullptr;
     m_model->setEditor(m_editor);
     if (!m_editor.isNull()) {
         ConnectionDelegate *delegate

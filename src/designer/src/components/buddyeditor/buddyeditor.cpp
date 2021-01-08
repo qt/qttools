@@ -218,6 +218,8 @@ void BuddyEditor::setBackground(QWidget *background)
         const QString buddy_name = buddy(label, m_formWindow->core());
         if (buddy_name.isEmpty())
             continue;
+        if (background == nullptr)
+            continue;
         QWidget *target = background->findChild<QWidget*>(buddy_name);
         if (target == nullptr)
             continue;
