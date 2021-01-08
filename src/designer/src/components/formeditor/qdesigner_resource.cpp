@@ -1287,7 +1287,7 @@ DomTabStops *QDesignerResource::saveTabStops()
 
 void QDesignerResource::applyTabStops(QWidget *widget, DomTabStops *tabStops)
 {
-    if (!tabStops)
+    if (tabStops == nullptr || widget == nullptr)
         return;
 
     QWidgetList tabOrder;
