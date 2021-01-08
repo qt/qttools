@@ -212,13 +212,13 @@ void BuddyEditor::setBackground(QWidget *background)
 {
     clear();
     ConnectionEdit::setBackground(background);
+    if (background == nullptr)
+        return;
 
     const auto label_list = background->findChildren<QLabel*>();
     for (QLabel *label : label_list) {
         const QString buddy_name = buddy(label, m_formWindow->core());
         if (buddy_name.isEmpty())
-            continue;
-        if (background == nullptr)
             continue;
         QWidget *target = background->findChild<QWidget*>(buddy_name);
         if (target == nullptr)
