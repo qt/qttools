@@ -3985,7 +3985,7 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
         // Include tags added via \meta {tag} {tag1[,tag2,...]}
         // within \example topic
         for (const auto &tag : en->doc().metaTagMap().values("tag")) {
-            const auto &tagList = tag.toLower().split(QLatin1Char(','));
+            const auto &tagList = tag.toLower().split(QLatin1Char(','), Qt::SkipEmptyParts);
             tags += QSet<QString>(tagList.cbegin(), tagList.cend());
         }
 
