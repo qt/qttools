@@ -373,7 +373,7 @@ void ManifestWriter::includeTagsAddedWithMetaCommand(const ExampleNode *example)
     const QStringMultiMap *metaTagMap = example->doc().metaTagMap();
     if (metaTagMap) {
         for (const auto &tag : metaTagMap->values("tag")) {
-            const auto &tagList = tag.toLower().split(QLatin1Char(','));
+            const auto &tagList = tag.toLower().split(QLatin1Char(','), Qt::SkipEmptyParts);
             m_tags += QSet<QString>(tagList.constBegin(), tagList.constEnd());
         }
     }
