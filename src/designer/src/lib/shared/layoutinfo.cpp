@@ -213,6 +213,9 @@ QLayout *LayoutInfo::managedLayout(const QDesignerFormEditorInterface *core, con
 
 QLayout *LayoutInfo::managedLayout(const QDesignerFormEditorInterface *core, QLayout *layout)
 {
+    if (!layout)
+        return nullptr;
+
     QDesignerMetaDataBaseInterface *metaDataBase = core->metaDataBase();
 
     if (!metaDataBase)
