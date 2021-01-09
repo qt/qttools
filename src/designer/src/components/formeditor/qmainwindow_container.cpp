@@ -106,6 +106,10 @@ Qt::DockWidgetArea dockWidgetArea(QDockWidget *me)
 }
 }
 
+// In QMainWindowContainer::remove(), remember the dock area in a dynamic
+// property so that it can used in addWidget() if that is called by undo().
+static const char dockAreaPropertyName[] = "_q_dockArea";
+
 void QMainWindowContainer::addWidget(QWidget *widget)
 {
     // remove all the occurrences of widget
@@ -138,7 +142,17 @@ void QMainWindowContainer::addWidget(QWidget *widget)
 
     else if (QDockWidget *dockWidget = qobject_cast<QDockWidget*>(widget)) {
         m_widgets.append(widget);
-        m_mainWindow->addDockWidget(dockWidgetArea(dockWidget), dockWidget);
+
+        Qt::DockWidgetArea area = Qt::LeftDockWidgetArea;
+        const auto areaProperty = widget->property(dockAreaPropertyName);
+        if (areaProperty.canConvert<Qt::DockWidgetArea>()) {
+            area = areaProperty.value<Qt::DockWidgetArea>();
+            widget->setProperty(dockAreaPropertyName, {});
+        } else {
+            area = dockWidgetArea(dockWidget);
+        }
+
+        m_mainWindow->addDockWidget(area, dockWidget);
         dockWidget->show();
 
         if (FormWindow *fw = FormWindow::findFormWindow(m_mainWindow)) {
@@ -181,6 +195,8 @@ void QMainWindowContainer::remove(int index)
         statusBar->setParent(nullptr);
         m_mainWindow->setStatusBar(nullptr);
     } else if (QDockWidget *dockWidget = qobject_cast<QDockWidget*>(widget)) {
+        const auto area = m_mainWindow->dockWidgetArea(dockWidget);
+        dockWidget->setProperty(dockAreaPropertyName, QVariant::fromValue(area));
         m_mainWindow->removeDockWidget(dockWidget);
     }
     m_widgets.removeAt(index);
