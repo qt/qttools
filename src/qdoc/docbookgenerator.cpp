@@ -3435,8 +3435,9 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
     case QmlSignalHandler:
     {
         QString handler(node->name());
-        handler[0] = handler[0].toTitleCase();
-        handler.prepend(QLatin1String("on"));
+        int prefixLocation = handler.lastIndexOf('.', -2) + 1;
+        handler[prefixLocation] = handler[prefixLocation].toTitleCase();
+        handler.insert(prefixLocation, QLatin1String("on"));
         writer->writeStartElement(dbNamespace, "para");
         writer->writeCharacters("The corresponding handler is ");
         writer->writeTextElement(dbNamespace, "code", handler);

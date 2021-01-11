@@ -140,6 +140,13 @@
 <db:para>The corresponding handler is <db:code>onCompleted</db:code>.</db:para>
 </db:note>
 </db:section>
+<db:section xml:id="group.created-signal">
+<db:title>group.created()</db:title>
+<db:para>This signal is prefixed with <db:emphasis>group</db:emphasis>.</db:para>
+<db:note>
+<db:para>The corresponding handler is <db:code>group.onCreated</db:code>.</db:para>
+</db:note>
+</db:section>
 </db:section>
 <db:section xml:id="attached-signal-documentation">
 <db:title>Attached Signal Documentation</db:title>

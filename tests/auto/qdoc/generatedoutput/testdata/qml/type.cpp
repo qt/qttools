@@ -80,6 +80,12 @@
 */
 
 /*!
+    \qmlsignal Type::group.created
+
+    This signal is prefixed with \e group.
+*/
+
+/*!
     \qmlproperty int Type::fourth
     \qmlproperty int Type::fifth
 
