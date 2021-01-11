@@ -1387,8 +1387,9 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
     case QmlSignalHandler:
     {
         QString handler(node->name());
-        handler[0] = handler[0].toTitleCase();
-        handler.prepend(QLatin1String("on"));
+        int prefixLocation = handler.lastIndexOf('.', -2) + 1;
+        handler[prefixLocation] = handler[prefixLocation].toTitleCase();
+        handler.insert(prefixLocation, QLatin1String("on"));
         text << "The corresponding handler is "
              << Atom(Atom::FormattingLeft, ATOM_FORMATTING_TELETYPE) << handler
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_TELETYPE) << ".";
