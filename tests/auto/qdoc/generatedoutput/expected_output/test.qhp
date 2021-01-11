@@ -105,6 +105,7 @@
             <keyword name="foo" id="DocTest::foo" ref="qml-qdoc-test-doctest.html#foo-signal"/>
             <keyword name="fourth" id="Type::fourth" ref="qml-qdoc-test-type.html#fourth-prop"/>
             <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
+            <keyword name="group.created" id="Type::group.created" ref="qml-qdoc-test-type.html#group.created-signal"/>
             <keyword name="group.first" id="Type::group.first" ref="qml-qdoc-test-type.html#group.first-prop"/>
             <keyword name="group.second" id="Type::group.second" ref="qml-qdoc-test-type.html#group.second-prop"/>
             <keyword name="group.third" id="Type::group.third" ref="qml-qdoc-test-type.html#group.third-prop"/>

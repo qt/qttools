@@ -243,6 +243,13 @@
         <name>QDoc.Test.Type</name>
         <filename>qml-qdoc-test-type.html</filename>
         <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>group.created</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>group.created-signal</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
             <type>Type</type>
             <name>copy</name>
             <anchorfile>qml-qdoc-test-type.html</anchorfile>
