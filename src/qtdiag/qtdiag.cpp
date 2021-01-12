@@ -149,6 +149,19 @@ QTextStream &operator<<(QTextStream &str, QPlatformScreen::SubpixelAntialiasingT
     return str;
 }
 
+QTextStream &operator<<(QTextStream &str, const QRhiDriverInfo &info)
+{
+    static const char *enumValues[] = {
+        "Unknown", "Integrated", "Discrete", "External", "Virtual", "Cpu"
+    };
+    str << "Device: " << info.deviceName
+        << " Device ID: 0x" << Qt::hex << info.deviceId
+        << " Vendor ID: 0x" << info.vendorId
+        << " Device type: " << (size_t(info.deviceType) < sizeof(enumValues) / sizeof(enumValues[0])
+                                ? enumValues[info.deviceType] : "<Unknown>");
+    return str;
+}
+
 #ifndef QT_NO_OPENGL
 
 QTextStream &operator<<(QTextStream &str, const QSurfaceFormat &format)
@@ -357,6 +370,7 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
     QScopedPointer<QRhi> rhi(QRhi::create(impl, initParams, QRhi::Flags(), nullptr));
     if (rhi) {
         str << name << ":\n";
+        str << "  Driver Info: " << rhi->driverInfo() << "\n";
         str << "  Min Texture Size: " << rhi->resourceLimit(QRhi::TextureSizeMin) << "\n";
         str << "  Max Texture Size: " << rhi->resourceLimit(QRhi::TextureSizeMax) << "\n";
         str << "  Max Color Attachments: " << rhi->resourceLimit(QRhi::MaxColorAttachments) << "\n";
