@@ -271,8 +271,6 @@ void Aggregate::markUndocumentedChildrenInternal()
 
 /*!
   This is where we set the overload numbers for function nodes.
-  \note Overload numbers for related non-members are handled
-  separately.
  */
 void Aggregate::normalizeOverloads()
 {
@@ -288,12 +286,10 @@ void Aggregate::normalizeOverloads()
                 primary->setNextOverload(fn);
                 it.value() = primary;
                 fn = primary;
-            } else {
-                fn->clearOverloadFlag();
             }
         }
         int count = 0;
-        fn->setOverloadNumber(0);
+        fn->setOverloadNumber(0); // also clears the overload flag
         FunctionNode *internalFn = nullptr;
         while (fn != nullptr) {
             FunctionNode *next = fn->nextOverload();
@@ -317,11 +313,8 @@ void Aggregate::normalizeOverloads()
             internalFn->setOverloadNumber(++count);
             internalFn = internalFn->nextOverload();
         }
-        // process next function in function map.
     }
-    /*
-      Recursive part.
-     */
+
     for (auto *node : qAsConst(m_children)) {
         if (node->isAggregate())
             static_cast<Aggregate *>(node)->normalizeOverloads();
@@ -462,25 +455,26 @@ void Aggregate::addFunction(FunctionNode *fn)
         m_functionMap.insert(fn->name(), fn);
     else
         it.value()->appendOverload(fn);
-    m_functionCount++;
 }
 
 /*!
-  When an Aggregate adopts a function that is a child of
+  When an Aggregate adopts a function \a fn that is a child of
   another Aggregate, the function is inserted into this
-  Aggregate's function map, if the function's name is not
-  already in the function map. If the function's name is
-  already in the function map, do nothing. The overload
-  link is already set correctly.
+  Aggregate's function map.
+
+  The function is also removed from the overload list
+  that's relative to the the original parent \a firstParent,
+  unless it's a primary function.
 
   \note This is a private function.
  */
-void Aggregate::adoptFunction(FunctionNode *fn)
+void Aggregate::adoptFunction(FunctionNode *fn, Aggregate *firstParent)
 {
-    auto it = m_functionMap.find(fn->name());
-    if (it == m_functionMap.end())
-        m_functionMap.insert(fn->name(), fn);
-    ++m_functionCount;
+    auto *primary = firstParent->m_functionMap.value(fn->name());
+    if (primary && primary != fn)
+        primary->removeOverload(fn);
+    fn->setNextOverload(nullptr);
+    addFunction(fn);
 }
 
 /*!
@@ -536,17 +530,15 @@ void Aggregate::addChild(Node *child)
   list and in its searchable data structures. But the child is
   also added to the child list and searchable data structures
   of this Aggregate.
-
-  The one caveat is that if the child being adopted is a function
-  node, it's next overload pointer is not altered.
  */
 void Aggregate::adoptChild(Node *child)
 {
     if (child->parent() != this) {
         m_children.append(child);
+        auto firstParent = child->parent();
         child->setParent(this);
         if (child->isFunction()) {
-            adoptFunction(static_cast<FunctionNode *>(child));
+            adoptFunction(static_cast<FunctionNode *>(child), firstParent);
         } else if (!child->name().isEmpty()) {
             m_nonfunctionMap.insert(child->name(), child);
             if (child->isEnumType())

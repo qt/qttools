@@ -6,6 +6,9 @@
         <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
             <parameter type="int &amp;" name="x" default=""/>
         </function>
+        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="" module="TestCPP">
+            <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
+        </page>
         <page name="https://wiki.qt.io/QProperty" href="https://wiki.qt.io/QProperty" status="active" location="properties.qdoc" documented="true" subtype="externalpage" title="QProperty" fulltitle="QProperty" subtitle=""/>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>

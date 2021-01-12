@@ -21,6 +21,7 @@
         </toc>
         <keywords>
             <keyword name="Classes" id="Classes" ref="classes.html"/>
+            <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
             <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
             <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
@@ -47,6 +48,7 @@
         </keywords>
         <files>
             <file>classes.html</file>
+            <file>obsolete-classes.html</file>
             <file>seenclass.html</file>
             <file>testcpp-module.html</file>
             <file>testqdoc-test-members.html</file>

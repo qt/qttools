@@ -177,6 +177,7 @@ public:
     void setOverloadFlag() { m_overloadFlag = true; }
     void setOverloadNumber(signed short number);
     void appendOverload(FunctionNode *functionNode);
+    void removeOverload(FunctionNode *functionNode);
     signed short overloadNumber() const { return m_overloadNumber; }
     FunctionNode *nextOverload() { return m_nextOverload; }
     void setNextOverload(FunctionNode *functionNode) { m_nextOverload = functionNode; }

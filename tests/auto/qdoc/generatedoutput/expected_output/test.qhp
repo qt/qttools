@@ -12,6 +12,7 @@
                     <section ref="test-demos-demo-example.html" title="Demo"/>
                     <section ref="test-demos-hidden-example.html" title="Hidden Demo"/>
                     <section ref="test-empty-qmlmodule.html" title="No QML Types Here"/>
+                    <section ref="obsolete-classes.html" title="Obsolete Classes"/>
                     <section ref="testcpp-module.html" title="QDoc Test C++ Classes"/>
                     <section ref="test-componentset-example.html" title="QML Documentation Example"/>
                     <section ref="qmlmodules.html" title="QML Modules"/>
@@ -65,6 +66,7 @@
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="No QML Types Here" id="No QML Types Here" ref="test-empty-qmlmodule.html"/>
+            <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
             <keyword name="ProgressBar" id="QML.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="ProgressBar" id="QML.UIComponents1.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
@@ -135,6 +137,7 @@
         </keywords>
         <files>
             <file>images/leonardo-da-vinci.png</file>
+            <file>obsolete-classes.html</file>
             <file>qdoc-test-qmlmodule.html</file>
             <file>qml-int.html</file>
             <file>qml-qdoc-test-abstractparent-members.html</file>

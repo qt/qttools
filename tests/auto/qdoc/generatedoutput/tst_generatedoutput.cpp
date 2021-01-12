@@ -238,6 +238,7 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc-testderived.html "
                    "testqdoc-testderived-members.html "
                    "testqdoc-testderived-obsolete.html "
+                   "obsolete-classes.html "
                    "testqdoc.html");
 }
 

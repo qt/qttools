@@ -91,22 +91,19 @@ public:
 
 protected:
     Aggregate(NodeType type, Aggregate *parent, const QString &name)
-        : PageNode(type, parent, name), m_functionCount(0)
-    {
-    }
+        : PageNode(type, parent, name) {}
     ~Aggregate() override;
     void removeFunctionNode(FunctionNode *fn);
 
 private:
     friend class Node;
     void addFunction(FunctionNode *fn);
-    void adoptFunction(FunctionNode *fn);
+    void adoptFunction(FunctionNode *fn, Aggregate *firstParent);
     static bool isSameSignature(const FunctionNode *f1, const FunctionNode *f2);
 
 protected:
     NodeList m_children {};
     NodeList m_relatedByProxy {};
-    int m_functionCount {};
     FunctionMap m_functionMap {};
 
 private:
