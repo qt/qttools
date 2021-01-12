@@ -322,7 +322,7 @@ bool FunctionNode::changeMetaness(Metaness from, Metaness to)
     return false;
 }
 
-/*! \fn void FunctionNode::setOverloadNumber(unsigned char number)
+/*!
   Sets the function node's overload number to \a number. If \a number
   is 0, the function node's overload flag is set to false. If
   \a number is greater than 0, the overload flag is set to true.
@@ -334,47 +334,60 @@ void FunctionNode::setOverloadNumber(signed short number)
 }
 
 /*!
-  If this function's next overload pointer is null, set it to
-  \a functionNode. Otherwise continue down the overload list by calling
-  this function recursively for the next overload.
+  Appends \a functionNode to the linked list of overloads for this function.
 
-  Although this function appends an overload function to the list of
+  \note Although this function appends an overload function to the list of
   overloads for this function's name, it does not set the function's
   overload number or it's overload flag. If the function has the
-  \c{\\overload} in its qdoc comment, that will set the overload
+  \c{\\overload} in its QDoc comment, that will set the overload
   flag. But qdoc treats the \c{\\overload} command as a hint that the
   function should be documented as an overload. The hint is almost
-  always correct, but qdoc reserves the right to decide which function
+  always correct, but QDoc reserves the right to decide which function
   should be the primary function and which functions are the overloads.
   These decisions are made in Aggregate::normalizeOverloads().
  */
 void FunctionNode::appendOverload(FunctionNode *functionNode)
 {
-    if (m_nextOverload == nullptr)
-        m_nextOverload = functionNode;
-    else
-        m_nextOverload->appendOverload(functionNode);
+    auto current = this;
+    while (current->m_nextOverload)
+        current = current->m_nextOverload;
+    current->m_nextOverload = functionNode;
+    functionNode->m_nextOverload = nullptr;
 }
 
 /*!
-  This function assumes that this FunctionNode is marked as an
-  overload function. It asks if the next overload is marked as
-  an overload. If not, then remove that FunctionNode from the
-  overload list and return it. Otherwise call this function
-  recursively for the next overload.
+  Removes \a functionNode from the linked list of function overloads.
+*/
+void FunctionNode::removeOverload(FunctionNode *functionNode)
+{
+    auto head = this;
+    auto **indirect = &head;
+    while ((*indirect) != functionNode) {
+        if (!(*indirect)->m_nextOverload)
+            return;
+        indirect = &(*indirect)->m_nextOverload;
+    }
+    *indirect = functionNode->m_nextOverload;
+}
+
+/*!
+  Returns the primary function - the first function
+  from the linked list of overloads that is \e not
+  marked as an overload. If found, the primary function
+  is removed from the list and returned. Otherwise
+  returns \c nullptr.
  */
 FunctionNode *FunctionNode::findPrimaryFunction()
 {
-    if (m_nextOverload != nullptr) {
-        if (!m_nextOverload->isOverload()) {
-            FunctionNode *t = m_nextOverload;
-            m_nextOverload = t->nextOverload();
-            t->setNextOverload(nullptr);
-            return t;
-        }
-        return m_nextOverload->findPrimaryFunction();
-    }
-    return nullptr;
+    auto current = this;
+    while (current->m_nextOverload && current->m_nextOverload->isOverload())
+        current = current->m_nextOverload;
+
+    auto primary = current->m_nextOverload;
+    if (primary)
+        current->m_nextOverload = primary->m_nextOverload;
+
+    return primary;
 }
 
 /*!

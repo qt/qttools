@@ -3,7 +3,8 @@ project = TestCPP
 includepaths += -I../testcpp
 
 headers = ../testcpp/testcpp.h
-sources = ../testcpp/testcpp.cpp
+sources = ../testcpp/testcpp.cpp \
+          ../testcpp/classlists.qdoc
 exampledirs = ../testcpp/snippets
 
 macro.CMDFN = \\\\fn
