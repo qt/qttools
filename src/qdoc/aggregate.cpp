@@ -722,7 +722,7 @@ void Aggregate::findAllFunctions(NodeMapMap &functionIndex)
         }
     }
     for (Node *node : qAsConst(m_children)) {
-        if (node->isAggregate() && !node->isPrivate())
+        if (node->isAggregate() && !node->isPrivate() && !node->isDontDocument())
             static_cast<Aggregate *>(node)->findAllFunctions(functionIndex);
     }
 }
