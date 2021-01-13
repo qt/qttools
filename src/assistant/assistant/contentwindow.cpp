@@ -77,6 +77,7 @@ bool ContentWindow::syncToContent(const QUrl& url)
     if (!idx.isValid())
         return false;
     m_contentWidget->setCurrentIndex(idx);
+    m_contentWidget->scrollTo(idx);
     return true;
 }
 
