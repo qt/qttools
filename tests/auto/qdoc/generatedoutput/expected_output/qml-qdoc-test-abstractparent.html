@@ -30,10 +30,13 @@
 <h2 id="properties">Properties</h2>
 <ul>
 <li class="fn"><b><b><a href="qml-qdoc-test-abstractparent.html#children-prop">children</a></b></b> : list&lt;Child&gt;</li>
+<li class="fn"><b><b><a href="qml-qdoc-test-abstractparent.html#name-prop">name</a></b></b> : string</li>
 </ul>
 <a name="methods"></a>
 <h2 id="methods">Methods</h2>
 <ul>
+<li class="fn">void <b><b><a href="qml-qdoc-test-abstractparent.html#name-method-1">name</a></b></b>()</li>
+<li class="fn">void <b><b><a href="qml-qdoc-test-abstractparent.html#name-method">name</a></b></b>(Child <i>child</i>, <i>name</i>)</li>
 <li class="fn">void <b><b><a href="qml-qdoc-test-abstractparent.html#rear-method">rear</a></b></b>(Child <i>child</i>, var <i>method</i>)</li>
 </ul>
 <!-- $$$AbstractParent-description -->
@@ -51,7 +54,37 @@
 <div class="qmldoc"><p>Children of the type.</p>
 </div></div><!-- @@@children -->
 <br/>
+<!-- $$$name -->
+<div class="qmlitem"><div class="qmlproto">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="name-prop">
+<td class="tblQmlPropNode"><p>
+<a name="name-prop"></a><span class="name">name</span> : <span class="type">string</span></p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>Name of this parent.</p>
+</div></div><!-- @@@name -->
+<br/>
 <h2>Method Documentation</h2>
+<!-- $$$name$$$name -->
+<div class="qmlitem"><div class="qmlproto">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="name-method-1">
+<td class="tblQmlFuncNode"><p>
+<a name="name-method-1"></a><span class="type">void</span> <span class="name">name</span>()</p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>Name all children with random names.</p>
+</div></div><!-- @@@name -->
+<br/>
+<!-- $$$name[overload1]$$$nameChild -->
+<div class="qmlitem"><div class="qmlproto">
+<div class="table"><table class="qmlname">
+<tr valign="top" class="odd" id="name-method">
+<td class="tblQmlFuncNode"><p>
+<a name="name-method"></a><span class="type">void</span> <span class="name">name</span>(<span class="type"><a href="qml-qdoc-test-child.html">Child</a></span> <i>child</i>, <i>name</i>)</p></td></tr>
+</table></div></div>
+<div class="qmldoc"><p>Name a <i>child</i> using <i>name</i>.</p>
+</div></div><!-- @@@name -->
+<br/>
 <!-- $$$rear[overload1]$$$rearChildvar -->
 <div class="qmlitem"><div class="qmlproto">
 <div class="table"><table class="qmlname">

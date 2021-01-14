@@ -116,6 +116,10 @@
             <keyword name="int" id="QML.int" ref="qml-int.html"/>
             <keyword name="maximum" id="ProgressBar::maximum" ref="qml-uicomponents-progressbar.html#maximum-prop"/>
             <keyword name="minimum" id="ProgressBar::minimum" ref="qml-uicomponents-progressbar.html#minimum-prop"/>
+            <keyword name="name" id="AbstractParent::name" ref="qml-qdoc-test-abstractparent.html#name-method"/>
+            <keyword name="name" id="AbstractParent::name" ref="qml-qdoc-test-abstractparent.html#name-prop"/>
+            <keyword name="name" id="Child::name" ref="qml-qdoc-test-child.html#name-method"/>
+            <keyword name="name" id="Child::name" ref="qml-qdoc-test-child.html#name-prop"/>
             <keyword name="name" id="DocTest::name" ref="qml-qdoc-test-doctest.html#name-prop"/>
             <keyword name="name" id="Type::name" ref="qml-qdoc-test-type.html#name-prop"/>
             <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>

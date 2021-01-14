@@ -170,7 +170,7 @@ public:
     bool hasTag(const QString &tag) const override { return (m_tag == tag); }
     void setTag(const QString &tag) { m_tag = tag; }
     const QString &tag() const { return m_tag; }
-    bool compare(const FunctionNode *functionNode) const;
+    bool compare(const Node *node, bool sameParent = true) const;
     bool isIgnored() const;
     bool hasOverloads() const;
     void clearOverloadFlag() { m_overloadFlag = false; }

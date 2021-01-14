@@ -1014,6 +1014,21 @@ void Sections::buildStdQmlTypeRefPageSections()
             if (n->isInternal())
                 continue;
 
+            // Skip overridden property/function documentation from abstract base type
+            if (qtn != aggregate_ && qtn->isAbstract()) {
+                NodeList candidates;
+                aggregate_->findChildren(n->name(), candidates);
+                if (std::any_of(candidates.cbegin(), candidates.cend(), [&n](const Node *c) {
+                    if (c->nodeType() == n->nodeType()) {
+                        if (!n->isFunction() || static_cast<const FunctionNode*>(n)->compare(c, false))
+                            return true;
+                    }
+                    return false;
+                })) {
+                    continue;
+                }
+            }
+
             if (!n->isSharedCommentNode() || n->isPropertyGroup())
                 allMembers.add(classMap, n);
 

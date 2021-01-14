@@ -45,10 +45,38 @@
 */
 
 /*!
+    \qmlproperty string AbstractParent::name
+    \brief Name of this parent.
+*/
+
+/*!
+    \qmlmethod void AbstractParent::name(Child child, name)
+    \brief Name a \a child using \a name.
+
+*/
+
+/*!
+    \qmlmethod void AbstractParent::name()
+    \brief Name all children with random names.
+*/
+
+/*!
     \qmltype Child
     \inqmlmodule QDoc.Test
     \inherits AbstractParent
     \brief A Child inheriting its parent.
+*/
+
+/*!
+    //! override from abstract base
+    \qmlproperty string Child::name
+    \brief Name of this child.
+*/
+
+/*!
+    //! override from abstract base
+    \qmlmethod void Child::name(Child child, name)
+    \brief Name a \a child of this child using \a name.
 */
 
 /*!

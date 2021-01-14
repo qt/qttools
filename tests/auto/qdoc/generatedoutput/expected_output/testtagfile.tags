@@ -10,10 +10,31 @@
             <anchor>rear-method</anchor>
             <arglist>(Child child, var method)</arglist>
         </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>(Child child,  name)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>()</arglist>
+        </member>
     </compound>
     <compound kind="class">
         <name>QDoc.Test.Child</name>
         <filename>qml-qdoc-test-child.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>name</name>
+            <anchorfile>qml-qdoc-test-child.html</anchorfile>
+            <anchor>name-method</anchor>
+            <arglist>(Child child,  name)</arglist>
+        </member>
     </compound>
     <compound kind="class">
         <name>QDoc.Test.DocTest</name>

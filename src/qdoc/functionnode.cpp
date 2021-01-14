@@ -546,16 +546,19 @@ void FunctionNode::debug() const
 }
 
 /*!
-  Compares this FunctionNode to the FunctionNode pointed to
-  by \a functionNode. Returns true if they describe the same function.
+  Compares this FunctionNode to \a node. If \a sameParent is \c true, compares
+  also the parent of the two nodes. Returns \c true if they describe
+  the same function.
  */
-bool FunctionNode::compare(const FunctionNode *functionNode) const
+bool FunctionNode::compare(const Node *node, bool sameParent) const
 {
-    if (functionNode == nullptr)
+    if (!node || !node->isFunction())
         return false;
+
+    const auto *functionNode = static_cast<const FunctionNode *>(node);
     if (metaness() != functionNode->metaness())
         return false;
-    if (parent() != functionNode->parent())
+    if (sameParent && parent() != functionNode->parent())
         return false;
     if (m_returnType != functionNode->returnType())
         return false;

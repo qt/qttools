@@ -102,20 +102,17 @@ Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findF
         if (node)
             return node;
     } else {
-        NodeList nodes = m_nonfunctionMap.values(name);
-        if (!nodes.isEmpty()) {
-            for (int i = 0; i < nodes.size(); ++i) {
-                Node *node = nodes.at(i);
-                if (genus == node->genus()) {
-                    if (findFlags & TypesOnly) {
-                        if (!node->isTypedef() && !node->isClassNode() && !node->isQmlType()
-                            && !node->isQmlBasicType() && !node->isJsType()
-                            && !node->isJsBasicType() && !node->isEnumType())
-                            continue;
-                    } else if (findFlags & IgnoreModules && node->isModule())
+        const NodeList &nodes = m_nonfunctionMap.values(name);
+        for (auto *node : nodes) {
+            if (genus == node->genus()) {
+                if (findFlags & TypesOnly) {
+                    if (!node->isTypedef() && !node->isClassNode() && !node->isQmlType()
+                        && !node->isQmlBasicType() && !node->isJsType()
+                        && !node->isJsBasicType() && !node->isEnumType())
                         continue;
-                    return node;
-                }
+                } else if (findFlags & IgnoreModules && node->isModule())
+                    continue;
+                return node;
             }
         }
     }
@@ -166,9 +163,8 @@ void Aggregate::findChildren(const QString &name, NodeVector &nodes) const
  */
 Node *Aggregate::findNonfunctionChild(const QString &name, bool (Node::*isMatch)() const)
 {
-    NodeList nodes = m_nonfunctionMap.values(name);
-    for (int i = 0; i < nodes.size(); ++i) {
-        Node *node = nodes.at(i);
+    const NodeList &nodes = m_nonfunctionMap.values(name);
+    for (auto *node : nodes) {
         if ((node->*(isMatch))())
             return node;
     }
