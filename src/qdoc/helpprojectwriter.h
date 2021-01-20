@@ -66,8 +66,8 @@ struct Keyword {
     Keyword(QString name, QStringList ids, QString ref) : name(name), ids(ids), ref(ref) {}
     bool operator<(const Keyword &o) const
     {
-        // Order by name; use id as a secondary sort key
-        return (name == o.name) ? ids.last() < o.ids.last() : name < o.name;
+        // Order by name; use ref as a secondary sort key
+        return (name == o.name) ? ref < o.ref : name < o.name;
     }
 };
 
