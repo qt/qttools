@@ -68,6 +68,7 @@
         \li \l{C++ Documentation Style}
         \li \l{QML Documentation Style}
         \endlist
+    \li \l{How to Resolve QDoc Warnings}
     \endlist
 
 */
@@ -429,6 +430,7 @@
     \page qdoc-categories.html
     \title Categories of Documentation
     \previouspage Writing Documentation
+    \nextpage How to Resolve QDoc Warnings
     \brief Describes the different types such as How-To's, Tutorials, Overviews,
     Examples, and Class Documentation.
 

@@ -68,6 +68,7 @@
           \li \l {qtgui.qdocconf}
           \li \l {minimum.qdocconf}
         \endlist
+      \li \l {How to Resolve QDoc Warnings}
     \endlist
 */
 
