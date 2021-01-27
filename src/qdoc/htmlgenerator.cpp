@@ -2217,8 +2217,8 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
             }
         }
     } else if (sections
-               && (node->isClassNode() || node->isNamespace() || node->isQmlType()
-                   || node->isJsType())) {
+               && (node->isClassNode() || node->isNamespace() || node->isQmlType() ||
+                   node->isJsType() || node->isQmlBasicType() || node->isJsBasicType())) {
         for (const auto &section : qAsConst(*sections)) {
             if (!section.members().isEmpty()) {
                 out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
