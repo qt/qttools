@@ -74,7 +74,7 @@ QString TicTacToePlugin::group() const
 
 QString TicTacToePlugin::toolTip() const
 {
-    return QString();
+    return QStringLiteral("Tic Tac Toe Example, demonstrating class QDesignerTaskMenuExtension (C++)");
 }
 
 QString TicTacToePlugin::whatsThis() const

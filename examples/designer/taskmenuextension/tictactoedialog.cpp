@@ -74,11 +74,10 @@ TicTacToeDialog::TicTacToeDialog(TicTacToe *tic, QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &TicTacToeDialog::saveState);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(editor);
     mainLayout->addWidget(buttonBox);
 
-    setLayout(mainLayout);
     setWindowTitle(tr("Edit State"));
 }
 //! [0]
