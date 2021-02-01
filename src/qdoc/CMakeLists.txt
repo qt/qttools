@@ -122,7 +122,7 @@ qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPri
 #### Keys ignored in scope 6:.:.:qdoc.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:
 # QMAKE_RPATHDIR = "$$CLANG_LIBDIR"
 
-qt_internal_extend_target(${target_name} CONDITION win32-icc_x_ OR win32-msvc_x_
+qt_internal_extend_target(${target_name} CONDITION (WIN32 AND ICC) OR MSVC
     LINK_OPTIONS
         "/STACK:4194304"
 )
