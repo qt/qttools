@@ -325,7 +325,8 @@ void Location::initialize()
     tabSize = config.getInt(CONFIG_TABSIZE);
     programName = config.programName();
     project = config.getString(CONFIG_PROJECT);
-    warningCount = 0;
+    if (!config.singleExec())
+        warningCount = 0;
     if (qEnvironmentVariableIsSet("QDOC_ENABLE_WARNINGLIMIT")
         || config.getBool(CONFIG_WARNINGLIMIT + Config::dot + "enabled"))
         warningLimit = config.getInt(CONFIG_WARNINGLIMIT);
