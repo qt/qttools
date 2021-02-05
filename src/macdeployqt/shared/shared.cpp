@@ -1246,7 +1246,7 @@ static bool importLessThan(const QVariant &v1, const QVariant &v2)
     return path1 < path2;
 }
 
-// Scan qml files in qmldirs for import statements, deploy used imports from Qml2ImportsPath to Contents/Resources/qml.
+// Scan qml files in qmldirs for import statements, deploy used imports from QmlImportsPath to Contents/Resources/qml.
 bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInfo, QStringList &qmlDirs, QStringList &qmlImportPaths)
 {
     LogNormal() << "";
@@ -1277,7 +1277,7 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
     }
     for (const QString &importPath : qmlImportPaths)
         argumentList << "-importPath" << importPath;
-    QString qmlImportsPath = QLibraryInfo::path(QLibraryInfo::Qml2ImportsPath);
+    QString qmlImportsPath = QLibraryInfo::path(QLibraryInfo::QmlImportsPath);
     argumentList.append( "-importPath");
     argumentList.append(qmlImportsPath);
 
