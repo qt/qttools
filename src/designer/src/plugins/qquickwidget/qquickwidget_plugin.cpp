@@ -35,6 +35,9 @@
 #include <QtCore/qdebug.h>
 #include <QtQuickWidgets/qquickwidget.h>
 
+#include <QtQuick/QQuickWindow>
+
+
 QT_BEGIN_NAMESPACE
 
 QQuickWidgetPlugin::QQuickWidgetPlugin(QObject *parent)
@@ -100,6 +103,12 @@ void QQuickWidgetPlugin::initialize(QDesignerFormEditorInterface * /*core*/)
 
 QString QQuickWidgetPlugin::domXml() const
 {
+    const auto graphicsApi = QQuickWindow::graphicsApi();
+    if (graphicsApi != QSGRendererInterface::OpenGLRhi) {
+        qWarning("Qt Designer: The QQuickWidget custom widget plugin is disabled because it requires OpenGL RHI (current: %d).",
+                 int(graphicsApi));
+        return {};
+    }
     return QStringLiteral(R"(
 <ui language="c++">
     <widget class="QQuickWidget" name="quickWidget">
