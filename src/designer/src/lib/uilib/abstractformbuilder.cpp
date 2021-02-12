@@ -1103,6 +1103,8 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
 {
     DomWidget *ui_widget = new DomWidget();
     ui_widget->setAttributeClass(QLatin1String(widget->metaObject()->className()));
+    ui_widget->setAttributeName(widget->objectName());
+
     ui_widget->setElementProperty(computeProperties(widget));
 
     if (recursive) {
