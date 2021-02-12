@@ -1169,12 +1169,9 @@ DomWidget *QDesignerResource::createDom(QWidget *widget, DomWidget *ui_parentWid
     if (m_internal_to_qt.contains(className))
         w->setAttributeClass(m_internal_to_qt.value(className));
 
-    w->setAttributeName(widget->objectName());
-
     if (isPromoted( core(), widget)) { // is promoted?
         Q_ASSERT(widgetInfo != nullptr);
 
-        w->setAttributeName(widget->objectName());
         w->setAttributeClass(widgetInfo->name());
 
         const auto &prop_list = w->elementProperty();
