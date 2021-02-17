@@ -2596,8 +2596,8 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
 
     // Nothing to export in some cases. Note that isSharedCommentNode() returns
     // true also for QML property groups.
-    if (node->isGroup() || node->isGroup() || node->isSharedCommentNode() || node->isModule()
-        || node->isJsModule() || node->isQmlModule() || node->isPageNode())
+    if (node->isGroup() || node->isSharedCommentNode() || node->isModule() || node->isJsModule()
+        || node->isQmlModule() || node->isPageNode())
         return;
 
     // Cast the node to several subtypes (null pointer if the node is not of the required type).
