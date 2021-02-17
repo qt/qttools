@@ -1217,28 +1217,12 @@ QString Node::qualifyWithParentName()
 }
 
 /*!
-  Returns the QML node's qualified name by stripping off the
-  "QML:" if present and prepending the logical module name.
+  Returns the QML node's qualified name by prepending the logical
+  module name.
  */
 QString Node::qualifyQmlName()
 {
-    QString qualifiedName = m_name;
-    if (m_name.startsWith(QLatin1String("QML:")))
-        qualifiedName = m_name.mid(4);
-    qualifiedName = logicalModuleName() + "::" + m_name;
-    return qualifiedName;
-}
-
-/*!
-  Returns the QML node's name after stripping off the
-  "QML:" if present.
- */
-QString Node::unqualifyQmlName()
-{
-    QString qmlTypeName = m_name.toLower();
-    if (qmlTypeName.startsWith(QLatin1String("qml:")))
-        qmlTypeName = qmlTypeName.mid(4);
-    return qmlTypeName;
+    return logicalModuleName() + "::" + m_name;
 }
 
 /*!

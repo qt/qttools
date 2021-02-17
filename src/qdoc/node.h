@@ -348,7 +348,6 @@ public:
     QString fullDocumentName() const;
     QString qualifyCppName();
     QString qualifyQmlName();
-    QString unqualifyQmlName();
     QString qualifyWithParentName();
 
     static FlagValue toFlagValue(bool b);

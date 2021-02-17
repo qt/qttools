@@ -803,7 +803,7 @@ void Aggregate::findAllClasses()
                 QDocDatabase::cppClasses().insert(node->qualifyCppName().toLower(), node);
             } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
                        || node->isJsBasicType()) {
-                QString name = node->unqualifyQmlName();
+                QString name = node->name().toLower();
                 QDocDatabase::qmlTypes().insert(name, node);
                 // also add to the QML basic type map
                 if (node->isQmlBasicType() || node->isJsBasicType())

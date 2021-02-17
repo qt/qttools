@@ -361,16 +361,6 @@ QString CodeMarker::taggedNode(const Node *node)
         tag = QLatin1String("@property");
         break;
     case Node::QmlType:
-        /*
-          Remove the "QML:" prefix, if present.
-          There shouldn't be any of these "QML:"
-          prefixes in the documentation sources
-          after the switch to using QML module
-          qualifiers, but this code is kept to
-          be backward compatible.
-        */
-        if (node->name().startsWith(QLatin1String("QML:")))
-            name = name.mid(4);
         tag = QLatin1String("@property");
         break;
     case Node::Page:

@@ -46,12 +46,7 @@ QMultiMap<const Node *, Node *> QmlTypeNode::inheritedBy;
 QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
     : Aggregate(type, parent, name)
 {
-    int i = 0;
-    if (name.startsWith("QML:")) {
-        qDebug() << "BOGUS QML qualifier:" << name;
-        i = 4;
-    }
-    setTitle(name.mid(i));
+    setTitle(name);
 }
 
 /*!
