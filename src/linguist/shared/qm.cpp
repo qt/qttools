@@ -552,7 +552,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 goto end;
             case Tag_Translation: {
                 int len = read32(m);
-                if (len % 1) {
+                if (len & 1) {
                     cd.appendError(QLatin1String("QM-Format error"));
                     return false;
                 }
