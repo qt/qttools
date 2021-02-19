@@ -1,0 +1,6 @@
+include(config.qdocconf)
+project = TestGlobals
+includepaths += -I../globalfunc
+
+headers = ../globalfunc/global.h
+sources = ../globalfunc/global.qdoc
