@@ -78,6 +78,7 @@ private slots:
     void usingDirective();
     void properties();
     void testTagFile();
+    void testGlobalFunctions();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -510,6 +511,11 @@ void tst_generatedOutput::properties()
 void tst_generatedOutput::testTagFile()
 {
     testAndCompare("testdata/configs/tagfiles.qdocconf", "testtagfile.tags");
+}
+
+void tst_generatedOutput::testGlobalFunctions()
+{
+    testAndCompare("testdata/configs/testglobals.qdocconf", "globals.html");
 }
 
 int main(int argc, char *argv[])
