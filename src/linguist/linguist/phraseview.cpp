@@ -37,6 +37,7 @@
 #include <QHeaderView>
 #include <QKeyEvent>
 #include <QSettings>
+#include <QShortcut>
 #include <QTreeView>
 #include <QWidget>
 #include <QDebug>
@@ -67,8 +68,12 @@ PhraseView::PhraseView(MultiDataModel *model, QList<QHash<QString, QList<Phrase 
     setRootIsDecorated(false);
     setItemsExpandable(false);
 
-    for (int i = 0; i < 10; i++)
-        (void) new GuessShortcut(i, this, &PhraseView::guessShortcut);
+    for (int i = 0; i < 9; ++i) {
+        const auto key = static_cast<Qt::Key>(int(Qt::Key_1) + i);
+        auto shortCut = new QShortcut(Qt::CTRL | key, this);
+        connect(shortCut, &QShortcut::activated, this,
+                [i, this]() { this->guessShortcut(i); });
+    }
 
     header()->setSectionResizeMode(QHeaderView::Interactive);
     header()->setSectionsClickable(true);

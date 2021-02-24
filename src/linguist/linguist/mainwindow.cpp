@@ -73,6 +73,7 @@
 #include <QProcess>
 #include <QRegularExpression>
 #include <QScreen>
+#include <QShortcut>
 #include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QStackedWidget>
