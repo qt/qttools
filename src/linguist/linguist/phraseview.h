@@ -30,7 +30,6 @@
 #define PHRASEVIEW_H
 
 #include <QList>
-#include <QShortcut>
 #include <QTreeView>
 #include "phrase.h"
 
@@ -40,32 +39,6 @@ static const int DefaultMaxCandidates = 5;
 
 class MultiDataModel;
 class PhraseModel;
-
-class GuessShortcut : public QShortcut
-{
-    Q_OBJECT
-public:
-    template<class Obj, typename Func>
-    GuessShortcut(int nkey, Obj *parent, Func member)
-        : QShortcut(parent), nrkey(nkey)
-    {
-        const auto key = static_cast<Qt::Key>(int(Qt::Key_1) + nrkey);
-        setKey(Qt::CTRL | key);
-        connect(this, &GuessShortcut::activated,
-                this, &GuessShortcut::keyActivated);
-        connect(this, &GuessShortcut::activated,
-                parent, member);
-    }
-
-private slots:
-    void keyActivated() { emit activated(nrkey); }
-
-signals:
-    void activated(int nkey);
-
-private:
-    int nrkey;
-};
 
 class PhraseView : public QTreeView
 {
