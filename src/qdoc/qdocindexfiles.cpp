@@ -1483,8 +1483,9 @@ void QDocIndexFiles::generateFunctionSections(QXmlStreamWriter &writer, Aggregat
     if (!functionMap.isEmpty()) {
         for (auto it = functionMap.begin(); it != functionMap.end(); ++it) {
             FunctionNode *fn = it.value();
-            while (fn != nullptr) {
-                generateFunctionSection(writer, fn);
+            while (fn) {
+                if (!fn->isInternal() || Config::instance().showInternal())
+                    generateFunctionSection(writer, fn);
                 fn = fn->nextOverload();
             }
         }
@@ -1504,6 +1505,9 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
      */
     if (node->isCollectionNode() || node->isGroup() || node->isModule() || node->isQmlModule()
         || node->isJsModule())
+        return;
+
+    if (node->isInternal() && !Config::instance().showInternal())
         return;
 
     if (generateIndexSection(writer, node, post)) {
