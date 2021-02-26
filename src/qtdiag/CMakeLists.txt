@@ -5,6 +5,7 @@
 #####################################################################
 
 qt_internal_add_app(qtdiag
+    INSTALL_VERSIONED_LINK
     SOURCES
         main.cpp
         qtdiag.cpp qtdiag.h
