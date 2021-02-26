@@ -45,10 +45,9 @@ class FMT {
     Q_DECLARE_TR_FUNCTIONS(Linguist)
 };
 
-static QString qtToolFilePath(const QString &toolName)
+static QString qtToolFilePath(const QString &toolName, QLibraryInfo::LibraryPath location)
 {
-    QString filePath = QCoreApplication::instance()->applicationDirPath()
-            + QLatin1Char('/') + toolName;
+    QString filePath = QLibraryInfo::path(location) + QLatin1Char('/') + toolName;
 #ifdef Q_OS_WIN
     filePath.append(QLatin1String(".exe"));
 #endif
@@ -89,10 +88,11 @@ static QString commandLineForSystem(const QString &program,
             + shellQuoted(arguments).join(QLatin1Char(' '));
 }
 
-void runQtTool(const QString &toolName, const QStringList &arguments)
+void runQtTool(const QString &toolName, const QStringList &arguments,
+               QLibraryInfo::LibraryPath location)
 {
     int exitCode = 0;
-    const QString commandLine = commandLineForSystem(qtToolFilePath(toolName), arguments);
+    const QString commandLine = commandLineForSystem(qtToolFilePath(toolName, location), arguments);
 #if defined(Q_OS_WIN)
     exitCode = _wsystem(reinterpret_cast<const wchar_t *>(commandLine.utf16()));
 #elif defined(Q_OS_UNIX)
@@ -105,6 +105,11 @@ void runQtTool(const QString &toolName, const QStringList &arguments)
         exit(exitCode);
 }
 
+void runInternalQtTool(const QString &toolName, const QStringList &arguments)
+{
+    runQtTool(toolName, arguments, QLibraryInfo::LibraryExecutablesPath);
+}
+
 std::unique_ptr<QTemporaryFile> createProjectDescription(QStringList args)
 {
     std::unique_ptr<QTemporaryFile> file(new QTemporaryFile(QStringLiteral("XXXXXX.json")));
@@ -114,6 +119,6 @@ std::unique_ptr<QTemporaryFile> createProjectDescription(QStringList args)
     }
     file->close();
     args << QStringLiteral("-out") << file->fileName();
-    runQtTool(QStringLiteral("lprodump"), args);
+    runInternalQtTool(QStringLiteral("lprodump"), args);
     return file;
 }

@@ -8,6 +8,7 @@ qt_get_tool_target_name(target_name lprodump)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Linguist QMake Project Dump Tool"
     TOOLS_TARGET Linguist # special case
+    INSTALL_DIR "${INSTALL_LIBEXECDIR}"
     SOURCES
         ../shared/ioutils.cpp ../shared/ioutils.h
         ../shared/profileevaluator.cpp ../shared/profileevaluator.h

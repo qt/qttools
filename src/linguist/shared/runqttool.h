@@ -29,13 +29,16 @@
 #ifndef RUNQTTOOL_H
 #define RUNQTTOOL_H
 
+#include <QtCore/qlibraryinfo.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
 #include <QtCore/qtemporaryfile.h>
 
 #include <memory>
 
-void runQtTool(const QString &toolName, const QStringList &arguments);
+void runQtTool(const QString &toolName, const QStringList &arguments,
+               QLibraryInfo::LibraryPath location = QLibraryInfo::BinariesPath);
+void runInternalQtTool(const QString &toolName, const QStringList &arguments);
 std::unique_ptr<QTemporaryFile> createProjectDescription(QStringList args);
 
 #endif // RUNQTTOOL_H

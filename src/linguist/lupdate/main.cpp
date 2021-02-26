@@ -1004,7 +1004,7 @@ int main(int argc, char **argv)
 
     QString errorString;
     if (!proFiles.isEmpty()) {
-        runQtTool(QStringLiteral("lupdate-pro"), app.arguments().mid(1));
+        runInternalQtTool(QStringLiteral("lupdate-pro"), app.arguments().mid(1));
         return 0;
     }
 
