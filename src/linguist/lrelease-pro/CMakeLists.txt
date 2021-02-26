@@ -8,6 +8,7 @@ qt_get_tool_target_name(target_name lrelease-pro)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Translation File Compiler for QMake Projects"
     TOOLS_TARGET Linguist # special case
+    INSTALL_DIR "${INSTALL_LIBEXECDIR}"
     SOURCES
         ../shared/runqttool.cpp ../shared/runqttool.h
         main.cpp

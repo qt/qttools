@@ -288,7 +288,7 @@ int main(int argc, char **argv)
 
     QString errorString;
     if (!extractProFiles(&inputFiles).isEmpty()) {
-        runQtTool(QStringLiteral("lrelease-pro"), app.arguments().mid(1));
+        runInternalQtTool(QStringLiteral("lrelease-pro"), app.arguments().mid(1));
         return 0;
     }
 
