@@ -142,11 +142,18 @@ static bool generateCompilationDatabase(const QString &outputFilePath, const QSt
     return true;
 }
 
-
 // Sort messages in such a way that they appear in the same order like in the given file list.
 static void sortMessagesByFileOrder(ClangCppParser::TranslatorMessageVector &messages,
                                     const QStringList &files)
 {
+    // first sort messages by line number
+    std::stable_sort(messages.begin(), messages.end(),
+              [&](const TranslatorMessage &lhs, const TranslatorMessage &rhs) {
+                  auto i = lhs.lineNumber();
+                  auto k = rhs.lineNumber();
+                  return i < k;
+              });
+
     QHash<QString, QStringList::size_type> indexByPath;
     for (const TranslatorMessage &m : messages)
         indexByPath[m.fileName()] = std::numeric_limits<QStringList::size_type>::max();
