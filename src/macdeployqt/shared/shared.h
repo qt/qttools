@@ -62,7 +62,7 @@ public:
 
     bool isDebugLibrary() const
     {
-        return binaryName.contains(QLatin1String("_debug"));
+        return binaryName.endsWith(QStringLiteral("_debug"));
     }
 };
 
