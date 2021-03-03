@@ -165,7 +165,7 @@ static void sortMessagesByFileOrder(ClangCppParser::TranslatorMessageVector &mes
               [&](const TranslatorMessage &lhs, const TranslatorMessage &rhs) {
                   auto i = indexByPath.value(lhs.fileName());
                   auto k = indexByPath.value(rhs.fileName());
-                  return i <= k;
+                  return i < k;
               });
 }
 
