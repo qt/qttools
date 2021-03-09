@@ -74,10 +74,6 @@ qt_feature("qtdiag" PRIVATE
     LABEL "qtdiag"
     PURPOSE "qtdiag outputs information about the Qt installation it was built with."
 )
-qt_feature("qtpaths" PRIVATE
-    LABEL "qtpaths"
-    PURPOSE "qtpaths is a command line client to QStandardPaths."
-)
 qt_feature("qtplugininfo" PRIVATE
     LABEL "qtplugininfo"
     PURPOSE "qtplugininfo dumps metadata about Qt plugins in JSON format."
@@ -101,7 +97,6 @@ qt_configure_add_summary_entry(ARGS "qdbus")
 qt_configure_add_summary_entry(ARGS "qev")
 qt_configure_add_summary_entry(ARGS "qtattributionsscanner")
 qt_configure_add_summary_entry(ARGS "qtdiag")
-qt_configure_add_summary_entry(ARGS "qtpaths")
 qt_configure_add_summary_entry(ARGS "qtplugininfo")
 qt_configure_add_summary_entry(ARGS "windeployqt")
 qt_configure_end_summary_section() # end of "Qt Tools" section

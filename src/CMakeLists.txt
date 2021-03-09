@@ -4,7 +4,7 @@
 # Need to stop building these apps by default because they would fail
 # in device_and_simulator builds.
 if(IOS)
-   set(_qt_additional_tools_to_exclude qtplugininfo qtpaths)
+   set(_qt_additional_tools_to_exclude qtplugininfo)
 endif()
 # special case end
 
@@ -41,9 +41,6 @@ if(QT_FEATURE_commandlineparser AND QT_FEATURE_library AND (android_app OR NOT A
 endif()
 if(QT_FEATURE_clang AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread)
     add_subdirectory(qdoc)
-endif()
-if(android_app OR (QT_FEATURE_commandlineparser AND NOT ANDROID))
-    add_subdirectory(qtpaths)
 endif()
 if(MACOS)
     add_subdirectory(macdeployqt)

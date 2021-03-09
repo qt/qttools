@@ -93,11 +93,6 @@
             "purpose": "qtdiag outputs information about the Qt installation it was built with.",
             "output": [ "privateFeature" ]
         },
-        "qtpaths": {
-            "label": "qtpaths",
-            "purpose": "qtpaths is a command line client to QStandardPaths.",
-            "output": [ "privateFeature" ]
-        },
         "qtplugininfo": {
             "label": "qtplugininfo",
             "purpose": "qtplugininfo dumps metadata about Qt plugins in JSON format.",
@@ -142,7 +137,6 @@ On macOS, you can use Homebrew's llvm package."
                 "qev",
                 "qtattributionsscanner",
                 "qtdiag",
-                "qtpaths",
                 "qtplugininfo",
                 "windeployqt"
             ]
