@@ -38,6 +38,7 @@
 #include <QtCore/QDirIterator>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QLibraryInfo>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -442,8 +443,10 @@ int main(int argc, char **argv)
     bool fail = false;
     ProFileGlobals option;
     option.qmake_abslocation = QString::fromLocal8Bit(qgetenv("QMAKE"));
-    if (option.qmake_abslocation.isEmpty())
-        option.qmake_abslocation = app.applicationDirPath() + QLatin1String("/qmake");
+    if (option.qmake_abslocation.isEmpty()) {
+        option.qmake_abslocation = QLibraryInfo::path(QLibraryInfo::BinariesPath)
+            + QLatin1String("/qmake");
+    }
     option.debugLevel = proDebug;
     option.initProperties();
     option.setCommandLineArguments(QDir::currentPath(),
