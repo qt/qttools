@@ -405,11 +405,12 @@ QString XmlGenerator::getLink(const Atom *atom, const Node *relative, const Node
   to the node holding the qdoc comment where the link command
   was found.
  */
-QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const Node **node)
+QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const Node **node,
+                                  Node::Genus genus)
 {
     QString ref;
 
-    *node = m_qdb->findNodeForAtom(atom, relative, ref);
+    *node = m_qdb->findNodeForAtom(atom, relative, ref, genus);
     if (!(*node))
         return QString();
 

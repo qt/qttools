@@ -299,6 +299,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
 {
     int idx, skipAhead = 0;
     static bool in_para = false;
+    Node::Genus genus = Node::DontCare;
 
     switch (atom->type()) {
     case Atom::AutoLink: {
@@ -307,12 +308,14 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             out() << protectEnc(atom->string());
             break;
         }
+        // Allow auto-linking to nodes in API reference
+        genus = Node::API;
     }
         Q_FALLTHROUGH();
     case Atom::NavAutoLink:
         if (!m_inLink && !m_inContents && !m_inSectionHeading) {
             const Node *node = nullptr;
-            QString link = getAutoLink(atom, relative, &node);
+            QString link = getAutoLink(atom, relative, &node, genus);
             if (link.isEmpty()) {
                 if (autolinkErrors())
                     relative->doc().location().warning(

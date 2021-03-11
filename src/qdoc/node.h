@@ -107,7 +107,14 @@ public:
         LastType
     };
 
-    enum Genus : unsigned char { DontCare, CPP, JS, QML, DOC };
+    enum Genus : unsigned char {
+        DontCare = 0x0,
+        CPP = 0x1,
+        JS = 0x2,
+        QML = 0x4,
+        DOC = 0x8,
+        API = CPP | JS | QML
+        };
 
     enum Status : unsigned char {
         Obsolete,

@@ -59,7 +59,8 @@ protected:
     QString refForNode(const Node *node);
     QString linkForNode(const Node *node, const Node *relative);
     QString getLink(const Atom *atom, const Node *relative, const Node **node);
-    QString getAutoLink(const Atom *atom, const Node *relative, const Node **node);
+    QString getAutoLink(const Atom *atom, const Node *relative, const Node **node,
+                        Node::Genus = Node::DontCare);
 
     QPair<QString, QString> anchorForNode(const Node *node);
 

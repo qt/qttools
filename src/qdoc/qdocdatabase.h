@@ -308,9 +308,10 @@ public:
     /*******************************************************************/
 
     /*****************************************************************************
-      This function can handle parameters enclosed in '[' ']' (domanin and genus).
+      This function can handle parameters enclosed in '[' ']' (domain and genus).
     ******************************************************************************/
-    const Node *findNodeForAtom(const Atom *atom, const Node *relative, QString &ref);
+    const Node *findNodeForAtom(const Atom *atom, const Node *relative, QString &ref,
+                                Node::Genus genus = Node::DontCare);
     /*******************************************************************/
 
     /*******************************************************************

@@ -104,7 +104,7 @@ Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findF
     } else {
         const NodeList &nodes = m_nonfunctionMap.values(name);
         for (auto *node : nodes) {
-            if (genus == node->genus()) {
+            if (genus & node->genus()) {
                 if (findFlags & TypesOnly) {
                     if (!node->isTypedef() && !node->isClassNode() && !node->isQmlType()
                         && !node->isQmlBasicType() && !node->isJsType()
@@ -116,7 +116,7 @@ Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findF
             }
         }
     }
-    if (genus != Node::DontCare && this->genus() != genus)
+    if (genus != Node::DontCare && !(genus & this->genus()))
         return nullptr;
     return m_functionMap.value(name);
 }

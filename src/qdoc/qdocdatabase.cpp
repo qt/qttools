@@ -1508,15 +1508,16 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
 }
 
 /*!
-  Searches for the node that matches the path in \a atom. The
-  \a relative node is used if the first leg of the path is
-  empty, i.e. if the path begins with a hashtag. The function
-  also sets \a ref if there remains an unused leg in the path
-  after the node is found. The node is returned as well as the
-  \a ref. If the returned node pointer is null, \a ref is not
-  valid.
+  Searches for the node that matches the path in \a atom and the
+  specified \a genus. The \a relative node is used if the first
+  leg of the path is empty, i.e. if the path begins with '#'.
+  The function also sets \a ref if there remains an unused leg
+  in the path after the node is found. The node is returned as
+  well as the \a ref. If the returned node pointer is null,
+  \a ref is also not valid.
  */
-const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, QString &ref)
+const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, QString &ref,
+                                          Node::Genus genus)
 {
     const Node *node = nullptr;
 
@@ -1525,7 +1526,6 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
     QString first = targetPath.first().trimmed();
 
     Tree *domain = nullptr;
-    Node::Genus genus = Node::DontCare;
 
     if (atom->isLinkAtom()) {
         domain = atom->domain();
