@@ -595,7 +595,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
         NodeVector nodes;
         static_cast<const Aggregate *>(node)->findChildren(name, nodes);
         for (const auto *node : qAsConst(nodes)) {
-            if (genus != Node::DontCare && node->genus() != genus)
+            if (genus != Node::DontCare && !(genus & node->genus()))
                 continue;
             const Node *t = matchPathAndTarget(path, idx + 1, target, node, flags, genus, ref);
             if (t && !t->isPrivate())
@@ -830,7 +830,7 @@ const Node *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus
         if (it.key() != key)
             break;
         TargetRec *candidate = it.value();
-        if ((genus == Node::DontCare) || (genus == candidate->genus())) {
+        if ((genus == Node::DontCare) || (genus & candidate->genus())) {
             if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
                 bestTarget = candidate;
                 bestTargetList.clear();
@@ -854,7 +854,7 @@ const Node *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus
         if (it.key() != key)
             break;
         TargetRec *candidate = it.value();
-        if ((genus == Node::DontCare) || (genus == candidate->genus())) {
+        if ((genus == Node::DontCare) || (genus & candidate->genus())) {
             if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
                 bestTarget = candidate;
                 bestTargetList.clear();
@@ -1216,7 +1216,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path, const Parame
     if (relative == nullptr)
         relative = root();
     else if (genus != Node::DontCare) {
-        if (genus != relative->genus())
+        if (!(genus & relative->genus()))
             relative = root();
     }
 

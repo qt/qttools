@@ -8,6 +8,7 @@
             <section ref="uicomponents-qmlmodule.html" title="UI Components">
                 <section ref="uicomponents-qmlmodule.html" title="Test">
                     <section ref="qdoc-test-qmlmodule.html" title=""/>
+                    <section ref="autolinking.html" title="Autolinking"/>
                     <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
                     <section ref="test-demos-demo-example.html" title="Demo"/>
                     <section ref="test-demos-hidden-example.html" title="Hidden Demo"/>
@@ -61,6 +62,7 @@
         <keywords>
             <keyword name="AbstractParent" id="QML.AbstractParent" ref="qml-qdoc-test-abstractparent.html"/>
             <keyword name="AbstractParent" id="QML.QDoc.Test1.AbstractParent" ref="qml-qdoc-test-abstractparent.html"/>
+            <keyword name="Autolinking" id="Autolinking" ref="autolinking.html"/>
             <keyword name="Child" id="QML.Child" ref="qml-qdoc-test-child.html"/>
             <keyword name="Child" id="QML.QDoc.Test1.Child" ref="qml-qdoc-test-child.html"/>
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
@@ -140,6 +142,7 @@
             <keyword name="virtualFun" id="TestDerived::virtualFun" ref="testqdoc-testderived.html#virtualFun"/>
         </keywords>
         <files>
+            <file>autolinking.html</file>
             <file>images/leonardo-da-vinci.png</file>
             <file>obsolete-classes.html</file>
             <file>qdoc-test-qmlmodule.html</file>

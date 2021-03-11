@@ -442,6 +442,10 @@ void LinkAtom::resolveSquareBracketParams()
             genus_ = Node::DOC;
             continue;
         }
+        if (param == "api") {
+            genus_ = Node::API;
+            continue;
+        }
         error_ = squareBracketParams_;
         break;
     }

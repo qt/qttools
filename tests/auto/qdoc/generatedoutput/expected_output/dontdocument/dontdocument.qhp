@@ -20,6 +20,7 @@
             </section>
         </toc>
         <keywords>
+            <keyword name="Autolinking" id="Autolinking" ref="autolinking.html"/>
             <keyword name="Classes" id="Classes" ref="classes.html"/>
             <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
@@ -47,6 +48,7 @@
             <keyword name="virtualFun" id="TestDerived::virtualFun" ref="testqdoc-testderived.html#virtualFun"/>
         </keywords>
         <files>
+            <file>autolinking.html</file>
             <file>classes.html</file>
             <file>obsolete-classes.html</file>
             <file>seenclass.html</file>

@@ -32,4 +32,30 @@
 
     \section1 Classes with obsolete members
     \generatelist obsoletecppmembers
+
+    \section2 TestQDoc
+*/
+
+/*!
+    \page autolinking.html
+    \title Autolinking
+
+    //! a section title that qualifies for autolinking
+    \section1 TestQDoc
+
+    The string TestQDoc links to the C++ namespace unless linking explicitly,
+    \l {#TestQDoc}{like this}, or \l {TestQDoc}{this}. Also,
+
+    Autolinks:
+
+    \list
+        \li TestQDoc::TestDerived
+    \endlist
+
+    Explicit links:
+
+    \list
+        \li \l [CPP] {TestQDoc::TestDerived}
+        \li \l {Obsolete Classes#TestQDoc}
+    \endlist
 */

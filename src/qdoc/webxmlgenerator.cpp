@@ -301,7 +301,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
     case Atom::AutoLink:
         if (!m_inLink && !m_inSectionHeading) {
             const Node *node = nullptr;
-            QString link = getLink(atom, relative, &node);
+            QString link = getAutoLink(atom, relative, &node, Node::API);
             if (node) {
                 startLink(writer, atom, node, link);
                 if (m_inLink) {

@@ -227,13 +227,17 @@ int DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeM
     int idx = 0;
     int skipAhead = 0;
     static bool inPara = false;
+    Node::Genus genus = Node::DontCare;
 
     switch (atom->type()) {
     case Atom::AutoLink:
+        // Allow auto-linking to nodes in API reference
+        genus = Node::API;
+        Q_FALLTHROUGH();
     case Atom::NavAutoLink:
         if (!inLink && !m_inContents && !m_inSectionHeading) {
             const Node *node = nullptr;
-            QString link = getAutoLink(atom, relative, &node);
+            QString link = getAutoLink(atom, relative, &node, genus);
             if (!link.isEmpty() && node && node->status() == Node::Obsolete
                 && relative->parent() != node && !relative->isObsolete()) {
                 link.clear();
