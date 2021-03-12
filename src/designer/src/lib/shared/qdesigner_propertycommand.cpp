@@ -62,11 +62,13 @@ QT_BEGIN_NAMESPACE
 namespace  {
 enum { debugPropertyCommands = 0 };
 
+const unsigned QFontFamiliesResolved = (QFont::FamilyResolved | QFont::FamiliesResolved);
+
 // Debug resolve mask of font
 QString fontMask(unsigned m)
 {
     QString rc;
-    if (m & QFont::FamilyResolved)
+    if (m & QFontFamiliesResolved)
         rc += QStringLiteral("Family");
     if (m & QFont::SizeResolved)
         rc += QStringLiteral("Size ");
@@ -261,7 +263,7 @@ void compareFontSubProperty(const QFont & f1,
 unsigned compareSubProperties(const QFont & f1, const QFont & f2)
 {
     unsigned rc = 0;
-    compareFontSubProperty(f1, f2, &QFont::family,        QFont::FamilyResolved, rc);
+    compareFontSubProperty(f1, f2, &QFont::family,        QFontFamiliesResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::pointSize,     QFont::SizeResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::bold,          QFont::WeightResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::italic,        QFont::StyleResolved, rc);
@@ -468,7 +470,7 @@ inline void setFontSubProperty(unsigned mask,
 QFont applyFontSubProperty(const QFont &oldValue, const QFont &newValue, unsigned mask)
 {
     QFont  rc = oldValue;
-    setFontSubProperty(mask, newValue, QFont::FamilyResolved,        &QFont::family,        &QFont::setFamily, rc);
+    setFontSubProperty(mask, newValue, QFontFamiliesResolved,        &QFont::family,        &QFont::setFamily, rc);
     setFontSubProperty(mask, newValue, QFont::SizeResolved,          &QFont::pointSize,     &QFont::setPointSize, rc);
     setFontSubProperty(mask, newValue, QFont::WeightResolved,        &QFont::bold,          &QFont::setBold, rc);
     setFontSubProperty(mask, newValue, QFont::StyleResolved,         &QFont::italic,        &QFont::setItalic, rc);
