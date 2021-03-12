@@ -44,7 +44,6 @@ QT_BEGIN_NAMESPACE
 
 QList<CodeParser *> CodeParser::parsers;
 bool CodeParser::showInternal_ = false;
-bool CodeParser::singleExec_ = false;
 
 /*!
   The constructor adds this code parser to the static
@@ -71,7 +70,6 @@ CodeParser::~CodeParser()
 void CodeParser::initializeParser()
 {
     showInternal_ = Config::instance().showInternal();
-    singleExec_ = Config::instance().getBool(CONFIG_SINGLEEXEC);
 }
 
 /*!
@@ -218,30 +216,6 @@ void CodeParser::setLink(Node *node, Node::LinkType linkType, const QString &arg
 bool CodeParser::isWorthWarningAbout(const Doc &doc)
 {
     return (showInternal_ || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
-}
-
-/*!
-  Returns \c true if the file being parsed is a .h file.
- */
-bool CodeParser::isParsingH() const
-{
-    return currentFile_.endsWith(".h");
-}
-
-/*!
-  Returns \c true if the file being parsed is a .cpp file.
- */
-bool CodeParser::isParsingCpp() const
-{
-    return currentFile_.endsWith(".cpp");
-}
-
-/*!
-  Returns \c true if the file being parsed is a .qdoc file.
- */
-bool CodeParser::isParsingQdoc() const
-{
-    return currentFile_.endsWith(".qdoc");
 }
 
 /*!

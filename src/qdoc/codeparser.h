@@ -55,9 +55,6 @@ public:
     virtual void precompileHeaders() {}
     virtual Node *parseFnArg(const Location &, const QString &) { return nullptr; }
 
-    bool isParsingH() const;
-    bool isParsingCpp() const;
-    bool isParsingQdoc() const;
     const QString &currentFile() const { return currentFile_; }
     const QString &moduleHeader() const { return moduleHeader_; }
     void setModuleHeader(const QString &t) { moduleHeader_ = t; }
@@ -82,7 +79,6 @@ protected:
 private:
     static QList<CodeParser *> parsers;
     static bool showInternal_;
-    static bool singleExec_;
 };
 
 #define COMMAND_ABSTRACT Doc::alias(QLatin1String("abstract"))
