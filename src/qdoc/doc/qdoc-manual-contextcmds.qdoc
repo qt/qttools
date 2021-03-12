@@ -207,10 +207,10 @@
     generated. It the abstract QML type is not marked internal, it
     will have a reference page in the documentation.
 
-    \target default-command
-    \section1 \\default
+    \target qmldefault-command
+    \section1 \\qmldefault
 
-    The \\default command is for marking a QML property as the
+    The \\qmldefault command is for marking a QML property as the
     \l {default-properties}
     {default property}. The word \c default is displayed in
     the documentation of the property.
@@ -219,7 +219,7 @@
     / *!
         \qmlproperty list<Change> State::changes
         This property holds the changes to apply for this state.
-        \default
+        \qmldefault
 
         By default, these changes are applied against the default state. If the state
         extends another state, then the changes are applied against the state being

@@ -83,6 +83,7 @@ private:
 
 #define COMMAND_ABSTRACT Doc::alias(QLatin1String("abstract"))
 #define COMMAND_CLASS Doc::alias(QLatin1String("class"))
+#define COMMAND_DEFAULT Doc::alias(QLatin1String("default"))
 #define COMMAND_DEPRECATED Doc::alias(QLatin1String("deprecated")) // ### don't document
 #define COMMAND_DONTDOCUMENT Doc::alias(QLatin1String("dontdocument"))
 #define COMMAND_ENUM Doc::alias(QLatin1String("enum"))
@@ -126,7 +127,7 @@ private:
 #define COMMAND_QMLATTACHEDSIGNAL Doc::alias(QLatin1String("qmlattachedsignal"))
 #define COMMAND_QMLBASICTYPE Doc::alias(QLatin1String("qmlbasictype"))
 #define COMMAND_QMLCLASS Doc::alias(QLatin1String("qmlclass"))
-#define COMMAND_QMLDEFAULT Doc::alias(QLatin1String("default"))
+#define COMMAND_QMLDEFAULT Doc::alias(QLatin1String("qmldefault"))
 #define COMMAND_QMLINHERITS Doc::alias(QLatin1String("inherits"))
 #define COMMAND_QMLINSTANTIATES Doc::alias(QLatin1String("instantiates"))
 #define COMMAND_QMLMETHOD Doc::alias(QLatin1String("qmlmethod"))

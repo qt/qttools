@@ -35,7 +35,7 @@
 
 /*!
     \qmlproperty list<Child> AbstractParent::children
-    \default
+    \qmldefault
     \brief Children of the type.
 */
 

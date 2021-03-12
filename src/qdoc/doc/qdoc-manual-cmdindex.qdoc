@@ -48,7 +48,6 @@
     \li \l {class-command} {\\class}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
-    \li \l {default-command} {\\default}
     \li \l {div-command} {\\div}
     \li \l {dots-command} {\\dots}
     \li \l {e-command} {\\e}
@@ -90,7 +89,6 @@
     \li \l {nonreentrant-command} {\\nonreentrant}
     \li \l {note-command} {\\note}
     \li \l {li-command} {\\o} (deprecated, use \\li)
-
     \li \l {obsolete-command} {\\obsolete}
     \li \l {oldcode-command} {\\oldcode}
     \li \l {omit-command} {\\omit}
@@ -109,6 +107,7 @@
     \li \l {qmlattachedsignal-command} {\\qmlattachedsignal}
     \li \l {qmlbasictype-command} {\\qmlbasictype}
     \li \l {qmlclass-command} {\\qmlclass} (deprecated, use \\qmltype)
+    \li \l {qmldefault-command} {\\qmldefault}
     \li \l {qmltype-command} {\\qmltype}
     \li \l {qmlmethod-command} {\\qmlmethod}
     \li \l {qmlproperty-command} {\\qmlproperty}
