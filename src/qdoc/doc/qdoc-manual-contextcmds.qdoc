@@ -221,14 +221,14 @@
         This property holds the changes to apply for this state.
         \default
 
-        By default these changes are applied against the default state. If the state
+        By default, these changes are applied against the default state. If the state
         extends another state, then the changes are applied against the state being
         extended.
     * /
     \endcode
 
     See how QDoc renders this property on the reference page for the
-    \l {State::changes}{State} type.
+    \l {QtQuick::State::changes}{State} type.
 
     \target dontdocument-command
     \section1 \\dontdocument
