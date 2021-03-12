@@ -828,11 +828,14 @@ void LupdateVisitor::generateOuput()
 {
     qCDebug(lcClang) << "=================m_trCallserateOuput============================";
     m_noopTranslationMacroAll.erase(std::remove_if(m_noopTranslationMacroAll.begin(),
-          m_noopTranslationMacroAll.end(), [](const TranslationRelatedStore &store) {
+          m_noopTranslationMacroAll.end(), [this](const TranslationRelatedStore &store) {
               // only fill if a context has been retrieved in the file we're currently visiting
               // emit warning if both context are empty
-              if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()
-                      && !store.funcName.contains(QLatin1String("QT_TRID"))) {
+              // do not emit warning if the Macro is from a different input file, it's normal the context was not found.
+             if ( m_inputFile != qPrintable(store.lupdateLocationFile))
+                 return true;
+             if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()
+                     && !store.funcName.contains(QLatin1String("QT_TRID"))) {
                   std::cerr << qPrintable(store.lupdateLocationFile) << ":";
                   std::cerr << store.lupdateLocationLine << ":";
                   std::cerr << store.locationCol << ": ";
