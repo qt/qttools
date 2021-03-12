@@ -831,14 +831,16 @@ void LupdateVisitor::generateOuput()
           m_noopTranslationMacroAll.end(), [](const TranslationRelatedStore &store) {
               // only fill if a context has been retrieved in the file we're currently visiting
               // emit warning if both context are empty
-              if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()) {
+              if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()
+                      && !store.funcName.contains(QLatin1String("QT_TRID"))) {
                   std::cerr << qPrintable(store.lupdateLocationFile) << ":";
                   std::cerr << store.lupdateLocationLine << ":";
                   std::cerr << store.locationCol << ": ";
                   std::cerr << " \'" << qPrintable(store.funcName) << "\' cannot be called without context.";
                   std::cerr << " The call is ignored (missing Q_OBJECT maybe?)\n";
               }
-              return store.contextRetrieved.isEmpty() && store.contextArg.isEmpty();
+              return store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()
+                      && !store.funcName.contains(QLatin1String("QT_TRID"));
       }), m_noopTranslationMacroAll.end());
 
     m_stores->QNoopTranlsationWithContext.emplace_bulk(std::move(m_noopTranslationMacroAll));
