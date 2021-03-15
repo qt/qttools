@@ -445,6 +445,16 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                     QmlTypeNode *qmlType = static_cast<QmlTypeNode *>(node);
                     qmlType->setQmlBaseName(args[0].first);
                 }
+            } else if (command == COMMAND_DEFAULT) {
+                if (!node->isQmlProperty()) {
+                    doc.location().warning(QStringLiteral("Ignored '\\%1', applies only to '\\%2'")
+                            .arg(command, COMMAND_QMLPROPERTY));
+                } else if (args.isEmpty() || args[0].first.isEmpty()) {
+                    doc.location().warning(QStringLiteral("Expected an argument for '\\%1' (maybe you meant '\\%2'?)")
+                            .arg(command, COMMAND_QMLDEFAULT));
+                } else {
+                    static_cast<QmlPropertyNode *>(node)->setDefaultValue(args[0].first);
+                }
             } else if (command == COMMAND_QMLDEFAULT) {
                 node->markDefault();
             } else if (command == COMMAND_QMLREADONLY) {

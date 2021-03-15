@@ -47,6 +47,7 @@
 
     \list
       \li \l {abstract-command} {\\abstract}
+      \li \l {default-command} {\\default}
       \li \l {ingroup-command}{\\ingroup},
       \li \l {inheaderfile-command}{\\inheaderfile},
       \li \l {inherits-command}{\\inherits},
@@ -59,6 +60,7 @@
       \li \l {preliminary-command}{\\preliminary},
       \li \l {previouspage-command}{\\previouspage},
       \li \l {qmlabstract-command} {\\qmlabstract}
+      \li \l {qmldefault-command} {\\qmldefault}
       \li \l {qtcmakepackage-command} {\\qtcmakepackage}
       \li \l {readonly-command} {\\readonly}
       \li \l {reentrant-command}{\\reentrant},
@@ -206,6 +208,29 @@
     also marked with \e{\\internal} so that its reference page is not
     generated. It the abstract QML type is not marked internal, it
     will have a reference page in the documentation.
+
+    \target default-command
+    \section1 \\default
+
+    The \\default command is used for documenting a default value for
+    a QML property. The command takes a single argument, which is
+    displayed in the documentation as the default value.
+
+    \badcode *
+    /\1!
+        \qmlproperty real Item::x
+        \default 0.0
+    \1/
+    \endcode
+
+    If the default value is a non-empty string, use quotes:
+
+    \badcode *
+    /\1!
+        \qmlproperty string Item::state
+        \default "invalid"
+    \1/
+    \endcode
 
     \target qmldefault-command
     \section1 \\qmldefault

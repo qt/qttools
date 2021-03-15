@@ -3531,6 +3531,9 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
             extra << "read-only";
         else if (n->isRequired())
             extra << "required";
+        else if (!n->defaultValue().isEmpty()) {
+            extra << "default: " + n->defaultValue();
+        }
 
         if (!n->since().isEmpty()) {
             if (!extra.isEmpty())

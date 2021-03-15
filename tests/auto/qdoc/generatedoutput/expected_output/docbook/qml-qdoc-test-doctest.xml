@@ -33,7 +33,7 @@
 <db:section xml:id="property-documentation">
 <db:title>Property Documentation</db:title>
 <db:section xml:id="active-prop">
-<db:title>active : bool</db:title>
+<db:title>[default: true] active : bool</db:title>
 <db:fieldsynopsis>
 <db:type>bool</db:type>
 <db:varname>active</db:varname>

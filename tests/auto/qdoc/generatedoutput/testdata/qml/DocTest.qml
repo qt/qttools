@@ -68,6 +68,7 @@ Item {
 
     /*!
         Whether the test is active.
+        \default true
 
         \sa name
     */

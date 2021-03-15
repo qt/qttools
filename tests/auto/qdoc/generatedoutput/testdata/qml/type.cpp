@@ -64,6 +64,7 @@
 
 /*!
     \qmlattachedproperty enumeration Type::type
+    \default Type.NoType
 
     \value Type.NoType
            Nothing

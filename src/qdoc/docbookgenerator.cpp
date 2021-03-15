@@ -3880,6 +3880,8 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
             extra << "read-only";
         else if (n->isRequired())
             extra << "required";
+        else if (!n->defaultValue().isEmpty())
+            extra << "default: " + n->defaultValue();
 
         if (!n->since().isEmpty()) {
             if (!extra.isEmpty())

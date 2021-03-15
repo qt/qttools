@@ -602,6 +602,16 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                         QStringLiteral("C++ class %1 not found: \\instantiates %1").arg(arg));
         } else
             doc.location().warning(QStringLiteral("\\instantiates is only allowed in \\qmltype"));
+    } else if (command == COMMAND_DEFAULT) {
+        if (!node->isQmlProperty()) {
+            doc.location().warning(QStringLiteral("Ignored '\\%1', applies only to '\\%2'")
+                    .arg(command, COMMAND_QMLPROPERTY));
+        } else if (arg.isEmpty()) {
+            doc.location().warning(QStringLiteral("Expected an argument for '\\%1' (maybe you meant '\\%2'?)")
+                    .arg(command, COMMAND_QMLDEFAULT));
+        } else {
+            static_cast<QmlPropertyNode *>(node)->setDefaultValue(arg);
+        }
     } else if (command == COMMAND_QMLDEFAULT) {
         node->markDefault();
     } else if (command == COMMAND_QMLREADONLY) {

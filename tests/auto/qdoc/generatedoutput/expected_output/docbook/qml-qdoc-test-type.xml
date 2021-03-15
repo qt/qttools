@@ -94,7 +94,7 @@
 <db:section xml:id="attached-property-documentation">
 <db:title>Attached Property Documentation</db:title>
 <db:section xml:id="type-attached-prop">
-<db:title>Type.type : enumeration</db:title>
+<db:title>[default: Type.NoType] Type.type : enumeration</db:title>
 <db:fieldsynopsis>
 <db:type>enumeration</db:type>
 <db:varname>Type.type</db:varname>
