@@ -172,10 +172,11 @@ static void sortMessagesByFileOrder(ClangCppParser::TranslatorMessageVector &mes
 void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd,
                             bool *fail)
 {
+
     // pre-process the files by a simple text search if there is any occurrence
     // of things we are interested in
     qCDebug(lcClang) << "Load CPP \n";
-    std::vector<std::string> sources, sourcesAst, sourcesPP;
+    std::vector<std::string> sourcesAst, sourcesPP;
     for (const QString &filename : files) {
         QFile file(filename);
         qCDebug(lcClang) << "File: " << filename << " \n";
@@ -187,16 +188,15 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
                     sourcesAst.emplace_back(sourcesPP.back());
                 }
             } else {
-                // mmap did not succeed, remember it anyway
-                sources.push_back(filename.toStdString());
+                QByteArray mem = file.readAll();
+                const auto ba = llvm::StringRef((const char*) (mem), file.size());
+                if (containsTranslationInformation(ba)) {
+                    sourcesPP.emplace_back(filename.toStdString());
+                    sourcesAst.emplace_back(sourcesPP.back());
+                }
             }
-        } else {
-            // we could not open the file, remember it anyway
-            sources.push_back(filename.toStdString());
         }
     }
-    sourcesPP.insert(sourcesPP.cend(), sources.cbegin(), sources.cend());
-    sourcesAst.insert(sourcesAst.cend(), sources.cbegin(), sources.cend());
 
     std::string errorMessage;
     std::unique_ptr<CompilationDatabase> db;
