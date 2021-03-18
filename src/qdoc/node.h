@@ -170,7 +170,7 @@ public:
     bool isExternalPage() const { return m_nodeType == ExternalPage; }
     bool isFunction(Genus g = DontCare) const
     {
-        return (m_nodeType != Function ? false : (genus() == g ? true : g == DontCare));
+        return m_nodeType == Function && (genus() == g || g == DontCare);
     }
     bool isGroup() const { return m_nodeType == Group; }
     bool isHeader() const { return m_nodeType == HeaderFile; }
