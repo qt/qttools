@@ -54,6 +54,7 @@
 #endif
 
 #include <vector>
+#include <iostream>
 
 QT_BEGIN_NAMESPACE
 
@@ -96,18 +97,36 @@ struct TranslationRelatedStore
     QString lupdatePlural;
     clang::SourceLocation sourceLocation;
 
-    bool isValid() const
+    bool isValid(bool printwarning = false) const
     {
         switch (trFunctionAliasManager.trFunctionByName(funcName)) {
         // only one argument: the source
         case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
-            if (contextArg.isEmpty())
+            if (contextArg.isEmpty()) {
+                if (printwarning) {
+                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                        << lupdateLocationLine << ":"
+                        << locationCol << ": "
+                        << " \'" << qPrintable(funcName)
+                        << "\' cannot be called without context."
+                        << " The call is ignored." <<std::endl;
+                }
                 return false;
+            }
             break;
         case TrFunctionAliasManager::Function_tr:
         case TrFunctionAliasManager::Function_trUtf8:
-            if (lupdateSource.isEmpty())
+            if (lupdateSource.isEmpty()) {
+                if (printwarning) {
+                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                        << lupdateLocationLine << ":"
+                        << locationCol << ": "
+                        << " \'" << qPrintable(funcName)
+                        << "\' cannot be called without source."
+                        << " The call is ignored." << std::endl;
+                }
                 return false;
+            }
             break;
         // two arguments: the context and the source
         case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
@@ -117,20 +136,47 @@ struct TranslationRelatedStore
         case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
         case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
         case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
-            if (contextArg.isEmpty() || lupdateSource.isEmpty())
+            if (contextArg.isEmpty() || lupdateSource.isEmpty()) {
+                if (printwarning) {
+                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                        << lupdateLocationLine << ":"
+                        << locationCol << ": "
+                        << " \'" << qPrintable(funcName)
+                        << "\' cannot be called without context or source."
+                        << " The call is ignored." << std::endl;
+                }
                 return false;
+            }
             // not sure if the third argument is compulsory
             break;
         // only one argument (?) the message Id
         case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
         case TrFunctionAliasManager::Function_qtTrId:
         case TrFunctionAliasManager::Function_QT_TRID_NOOP:
-            if (lupdateId.isEmpty())
+            if (lupdateId.isEmpty()) {
+                if (printwarning) {
+                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                        << lupdateLocationLine << ":"
+                        << locationCol << ": "
+                        << " \'" << qPrintable(funcName)
+                        << "\' cannot be called without Id."
+                        << " The call is ignored." << std::endl;
+                }
                 return false;
+            }
             break;
         default:
-            if (funcName == QStringLiteral("TRANSLATOR") && lupdateComment.isEmpty())
+            if (funcName == QStringLiteral("TRANSLATOR") && lupdateComment.isEmpty()) {
+                if (printwarning) {
+                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                        << lupdateLocationLine << ":"
+                        << locationCol << ": "
+                        << " \'" << qPrintable(funcName)
+                        << "\' cannot be called without comment."
+                        << " The call is ignored." << std::endl;
+                }
                 return false;
+            }
         }
         return !lupdateLocationFile.isEmpty() && (lupdateLocationLine > -1) && (locationCol > -1);
     }

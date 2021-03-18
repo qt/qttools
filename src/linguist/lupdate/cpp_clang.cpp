@@ -293,8 +293,9 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
 void ClangCppParser::collectMessages(TranslatorMessageVector &result,
                                      const TranslationRelatedStore &store)
 {
-    if (!store.isValid())
+    if (!store.isValid(true))
         return;
+
     qCDebug(lcClang) << "---------------------------------------------------------------Filling translator for " << store.funcName;
     qCDebug(lcClang) << " contextRetrieved " << store.contextRetrieved;
     qCDebug(lcClang) << " source   " << store.lupdateSource;
