@@ -161,7 +161,6 @@ public:
     static PageType getPageType(NodeType t);
 
     bool isActive() const { return m_status == Active; }
-    bool isAnyType() const { return true; }
     bool isClass() const { return m_nodeType == Class; }
     bool isCppNode() const { return genus() == CPP; }
     bool isDeprecated() const { return (m_status == Deprecated); }
@@ -259,7 +258,6 @@ public:
     virtual void setRelatedNonmember(bool b) { m_relatedNonmember = b; }
     virtual void setOutputFileName(const QString &) {}
     virtual void addMember(Node *) {}
-    virtual bool hasMembers() const { return false; }
     virtual bool hasNamespaces() const { return false; }
     virtual bool hasClasses() const { return false; }
     virtual void setAbstract(bool) {}
@@ -306,7 +304,6 @@ public:
     void setLink(LinkType linkType, const QString &link, const QString &desc);
 
     Access access() const { return m_access; }
-    QString accessString() const;
     const Location &declLocation() const { return m_declLocation; }
     const Location &defLocation() const { return m_defLocation; }
     const Location &location() const

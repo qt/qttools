@@ -349,10 +349,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
   Returns true if this node's status is \c Active.
  */
 
-/*! \fn bool Node::isAnyType() const
-  Always returns true. I'm not sure why this is here.
- */
-
 /*! \fn bool Node::isClass() const
   Returns true if the node type is \c Class.
  */
@@ -1032,23 +1028,6 @@ void Node::setSince(const QString &since)
 }
 
 /*!
-  Returns a string representing the access specifier.
- */
-QString Node::accessString() const
-{
-    switch (m_access) {
-    case Access::Protected:
-        return QLatin1String("protected");
-    case Access::Private:
-        return QLatin1String("private");
-    case Access::Public:
-    default:
-        break;
-    }
-    return QLatin1String("public");
-}
-
-/*!
   Extract a class name from the type \a string and return it.
  */
 QString Node::extractClassName(const QString &string) const
@@ -1452,11 +1431,6 @@ QString Node::physicalModuleName() const
 /*! \fn void Node::addMember(Node *node)
   In a CollectionNode, this function adds \a node to the collection
   node's members list. It does nothing if this node is not a CollectionNode.
- */
-
-/*! \fn bool Node::hasMembers() const
-  Returns \c true if this is a CollectionNode and its members list
-  is not empty. Otherwise it returns \c false.
  */
 
 /*! \fn bool Node::hasNamespaces() const

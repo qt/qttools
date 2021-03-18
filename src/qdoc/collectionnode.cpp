@@ -39,15 +39,6 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
-  Returns \c true if the collection node's member list is
-  not empty.
- */
-bool CollectionNode::hasMembers() const
-{
-    return !m_members.isEmpty();
-}
-
-/*!
   Appends \a node to the collection node's member list, if
   and only if it isn't already in the member list.
  */

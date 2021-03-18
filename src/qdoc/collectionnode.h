@@ -50,7 +50,6 @@ public:
     QString qtCMakeComponent() const override { return m_qtCMakeComponent; }
     void setQtCMakeComponent(const QString &target) override { m_qtCMakeComponent = target; }
     void addMember(Node *node) override;
-    bool hasMembers() const override;
     bool hasNamespaces() const override;
     bool hasClasses() const override;
     void getMemberNamespaces(NodeMap &out) override;
