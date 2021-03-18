@@ -55,6 +55,7 @@
                 <function name="boolPropChanged" fullname="TestQDoc::TestDerived::boolPropChanged" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="signal" virtual="non" const="false" static="false" final="false" override="false" associated-property="boolProp" type="void" signature="void boolPropChanged()"/>
                 <function name="emitSomething" fullname="TestQDoc::TestDerived::emitSomething" href="testqdoc-testderived.html#emitSomething" status="active" access="public" location="testcpp.h" documented="true" meta="signal" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void emitSomething()"/>
                 <function name="getInt" fullname="TestQDoc::TestDerived::getInt" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" associated-property="intProp" type="int *" signature="int * getInt()"/>
+                <function name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" meta="plain" virtual="non" const="true" static="false" final="false" override="false" associated-property="name" type="const QString *" signature="const QString * name() const"/>
                 <function name="resetBoolProp" fullname="TestQDoc::TestDerived::resetBoolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="slot" virtual="non" const="false" static="false" final="false" override="false" associated-property="boolProp" type="void" signature="void resetBoolProp()"/>
                 <function name="setBindableProp" fullname="TestQDoc::TestDerived::setBindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="slot" virtual="non" const="false" static="false" final="false" override="false" associated-property="bindableProp" type="void" signature="void setBindableProp(const QString &amp;s)">
                     <parameter type="const QString &amp;" name="s" default=""/>
@@ -80,6 +81,9 @@
                 </property>
                 <property name="intProp" fullname="TestQDoc::TestDerived::intProp" href="testqdoc-testderived.html#intProp-prop" status="active" access="public" location="testcpp.h" documented="true">
                     <getter name="getInt"/>
+                </property>
+                <property name="name" fullname="TestQDoc::TestDerived::name" href="testqdoc-testderived.html#name-prop" status="active" access="public" location="testcpp.h" documented="true" brief="This property holds a name">
+                    <getter name="name"/>
                 </property>
                 <property name="someProp" fullname="TestQDoc::TestDerived::someProp" href="testqdoc-testderived.html#someProp-prop" status="active" access="public" location="testcpp.h" documented="true" bindable="true">
                     <getter name="someProp"/>

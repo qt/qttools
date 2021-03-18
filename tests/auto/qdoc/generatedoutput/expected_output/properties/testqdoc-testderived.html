@@ -41,18 +41,24 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr><tr><td class="me
 </table></div>
 <a name="properties"></a>
 <h2 id="properties">Properties</h2>
-<ul>
+<div class="table"><table class="propsummary">
+<tr><td class="topAlign"><ul>
 <li class="fn"><b><a href="testqdoc-testderived.html#bindableProp-prop">bindableProp</a></b> : QString</li>
 <li class="fn"><b><a href="testqdoc-testderived.html#boolProp-prop">boolProp</a></b> : bool</li>
 <li class="fn"><b><a href="testqdoc-testderived.html#intProp-prop">intProp</a></b> : int* const</li>
+</ul></td><td class="topAlign"><ul>
+<li class="fn"><b><a href="testqdoc-testderived.html#name-prop">name</a></b> : const QString*</li>
 <li class="fn"><b><a href="testqdoc-testderived.html#someProp-prop">someProp</a></b> : QString</li>
 </ul>
+</td></tr>
+</table></div>
 <a name="public-functions"></a>
 <h2 id="public-functions">Public Functions</h2>
 <div class="table"><table class="alignedsummary">
 <tr><td class="memItemLeft rightAlign topAlign"> QBindable&lt;QString&gt; </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#bindableProp-prop">bindableProp</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#boolProp-prop">boolProp</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> int *</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#intProp-prop">getInt</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> const QString *</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#name-prop">name</a></b>() const</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> const QString &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#someProp-prop">someProp</a></b>()</td></tr>
 </table></div>
 <a name="reimplemented-public-functions"></a>
@@ -120,6 +126,14 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr><tr><td class="me
 <tr><td class="memItemLeft topAlign rightAlign"> int *</td><td class="memItemRight bottomAlign"><span class="name"><b>getInt</b></span>()</td></tr>
 </table></div>
 <!-- @@@intProp -->
+<!-- $$$name-prop$$$name -->
+<h3 class="fn" id="name-prop"><a name="name-prop"></a><code>[read-only] </code><span class="name">name</span> : const <span class="type">QString</span>*</h3>
+<p>This property holds a name.</p>
+<p><b>Access functions:</b></p>
+<div class="table"><table class="alignedsummary">
+<tr><td class="memItemLeft topAlign rightAlign"> const QString *</td><td class="memItemRight bottomAlign"><span class="name"><b>name</b></span>() const</td></tr>
+</table></div>
+<!-- @@@name -->
 <!-- $$$someProp-prop$$$someProp -->
 <h3 class="fn" id="someProp-prop"><a name="someProp-prop"></a><code>[bindable read-only] </code><span class="name">someProp</span> : <span class="type">QString</span></h3>
 <p><b>Note: </b>This property supports <a href="https://wiki.qt.io/QProperty">QProperty</a> bindings.</p>

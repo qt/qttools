@@ -37,6 +37,11 @@
 */
 
 /*!
+    \property TestQDoc::TestDerived::name
+    \brief a name.
+*/
+
+/*!
     \property TestQDoc::TestDerived::intProp
     An integer property.
 */

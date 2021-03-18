@@ -145,6 +145,29 @@
 </db:listitem>
 </db:itemizedlist>
 </db:section>
+<db:section xml:id="name-prop">
+<db:title>[read-only] name : const QString*</db:title>
+<db:fieldsynopsis>
+<db:modifier>(Qt property)</db:modifier>
+<db:type>const QString*</db:type>
+<db:varname>name</db:varname>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+<db:synopsisinfo db:role="getter">name</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>This property holds a name.</db:para>
+<db:para>
+<db:emphasis role="bold">Access functions:
+</db:emphasis>
+</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para>const <db:type>QString</db:type> *<db:emphasis role="bold"><db:link xlink:href="">name</db:link></db:emphasis>() const</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
 <db:section xml:id="someProp-prop">
 <db:title>[bindable read-only] someProp : QString</db:title>
 <db:fieldsynopsis>
