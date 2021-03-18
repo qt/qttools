@@ -338,7 +338,10 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         auto presumedLoc = sm.getPresumedLoc(fileLoc);
         if (presumedLoc.isInvalid())
             return true;
-        info = { presumedLoc.getLine(), presumedLoc.getFilename() };
+        info.Line = presumedLoc.getLine();
+        info.Filename = m_context->getSourceManager().getFileEntryForID(presumedLoc.getFileID())->tryGetRealPathName();
+        if (info.Filename.empty())
+            info.Filename = presumedLoc.getFilename();
     }   break;
     default:
         return true;
@@ -456,7 +459,12 @@ void LupdateVisitor::processIsolatedComments()
     // They are not associated to any tr calls
     // Each one needs its own entry in the m_stores->AST translation store
     for (const auto &rawComment : rawComments) {
-        if (sourceMgr.getFilename(rawComment->getBeginLoc()).str() != m_inputFile)
+        auto fileId = sourceMgr.getPresumedLoc(rawComment->getBeginLoc()).getFileID();
+        auto fName = sourceMgr.getFileEntryForID(fileId)->tryGetRealPathName().str();
+        if (fName.empty())
+            fName = sourceMgr.getPresumedLoc(rawComment->getBeginLoc()).getFilename();
+
+        if (fName != m_inputFile)
             continue;
         // Comments not separated by an empty line will be part of the same Raw comments
         // Each one needs to be saved with its line number.
@@ -750,7 +758,11 @@ bool LupdateVisitor::VisitNamedDecl(clang::NamedDecl *namedDeclaration)
     if (!fullLocation.isValid() || !fullLocation.getFileEntry())
         return true;
 
-    if (fullLocation.getFileEntry()->getName() != m_inputFile)
+    auto fName = fullLocation.getFileEntry()->tryGetRealPathName();
+    if (fName.empty())
+        fName = fullLocation.getFileEntry()->getName();
+
+    if (fName != m_inputFile)
         return true;
 
     qCDebug(lcClang) << "NamedDecl Name:   " << namedDeclaration->getQualifiedNameAsString();
@@ -856,6 +868,7 @@ void LupdateVisitor::generateOuput()
     m_stores->QDeclareTrWithContext.emplace_bulk(std::move(m_qDeclareTrMacroAll));
 
     processIsolatedComments();
+
     m_stores->AST.emplace_bulk(std::move(m_trCalls));
 }
 

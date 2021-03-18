@@ -40,7 +40,14 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
     Q_UNUSED(macroDefinition);
 
     const auto &sm = m_preprocessor.getSourceManager();
-    llvm::StringRef fileName = sm.getFilename(sourceRange.getBegin());
+    if (sm.getFilename(sourceRange.getBegin()).empty())
+        return;
+
+    llvm::StringRef fileName = sm.getFileEntryForID(sm.getFileID(sourceRange.getBegin()))->tryGetRealPathName();
+    if (fileName.empty()) {
+        fileName = sm.getFilename(sourceRange.getBegin());
+    }
+
     if (fileName != m_inputFile)
         return;
 
@@ -155,7 +162,12 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
     Q_UNUSED(endifLoc);
 
     const auto &sm = m_preprocessor.getSourceManager();
-    llvm::StringRef fileName = sm.getFilename(sourceRange.getBegin());
+    if (sm.getFilename(sourceRange.getBegin()).empty())
+        return;
+    llvm::StringRef fileName = sm.getFileEntryForID(sm.getFileID(sourceRange.getBegin()))->tryGetRealPathName();
+    if (fileName.empty()) {
+        fileName = sm.getFilename(sourceRange.getBegin());
+    }
     if (fileName != m_inputFile)
         return;
     const char *begin = sm.getCharacterData(sourceRange.getBegin());
