@@ -974,14 +974,22 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
     QString signature = spelling.mid(lpIdx + 1, rpIdx - lpIdx - 1);
     signature = signature.simplified();
 
-    QStringList part;
-    part = signature.split(QChar(' '));
-    if (part.first() == QLatin1String("enum"))
-        part.takeFirst(); // QTBUG-80027
-    if (part.size() < 2)
+    QString type;
+    QString name;
+    QStringList parts = signature.split(QChar(' '), Qt::SkipEmptyParts);
+    if (parts.size() < 2)
         return false;
-    QString type = part.at(0);
-    QString name = part.at(1);
+    if (parts.first() == QLatin1String("enum"))
+        parts.removeFirst(); // QTBUG-80027
+
+    type = parts.takeFirst();
+    if (type == QLatin1String("const") && parts.size() > 0)
+        type += " " + parts.takeFirst();
+
+    if (parts.size() > 0)
+        name = parts.takeFirst();
+    else
+        return false;
 
     if (name.front() == QChar('*')) {
         type.append(QChar('*'));
@@ -992,9 +1000,9 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
     property->setLocation(loc);
     property->setDataType(type);
 
-    int i = 2;
-    while (i < part.size()) {
-        QString key = part.at(i++);
+    int i = 0;
+    while (i < parts.size()) {
+        const QString &key = parts.at(i++);
         // Keywords with no associated values
         if (key == "CONSTANT") {
             property->setConstant();
@@ -1003,8 +1011,8 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
         } else if (key == "REQUIRED") {
             property->setRequired();
         }
-        if (i < part.size()) {
-            QString value = part.at(i++);
+        if (i < parts.size()) {
+            QString value = parts.at(i++);
             if (key == "READ") {
                 qdb_->addPropertyFunction(property, value, PropertyNode::Getter);
             } else if (key == "WRITE") {

@@ -83,7 +83,7 @@ void PropertyNode::setOverriddenFrom(const PropertyNode *baseProperty)
  */
 QString PropertyNode::qualifiedDataType() const
 {
-    if (m_propertyType != Standard)
+    if (m_propertyType != Standard || m_type.startsWith(QLatin1String("const ")))
         return m_type;
 
     if (setters().isEmpty() && resetters().isEmpty()) {

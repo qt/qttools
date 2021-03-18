@@ -90,6 +90,7 @@ class TestDerived : public Test {
     Q_PROPERTY(QString bindableProp READ bindableProp WRITE setBindableProp NOTIFY bindablePropChanged BINDABLE bindableProp)
     Q_PROPERTY(QString someProp READ someProp BINDABLE somBindableProp)
     Q_PROPERTY(int *intProp READ getInt STORED false CONSTANT FINAL)
+    Q_PROPERTY(const QString *name READ name)
     QDOC_PROPERTY(bool boolProp READ boolProp WRITE setBoolProp NOTIFY boolPropChanged RESET resetBoolProp REVISION 1)
 #endif
 
@@ -104,6 +105,7 @@ public:
     const QString &someProp();
     int *getInt();
     bool boolProp();
+    const QString *name() const;
 
 Q_SIGNALS:
     void emitSomething(QPrivateSignal);
