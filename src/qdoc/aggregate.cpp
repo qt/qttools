@@ -691,14 +691,13 @@ void Aggregate::findAllNamespaces(NodeMultiMap &namespaces)
  */
 bool Aggregate::hasObsoleteMembers() const
 {
-    for (const auto *node : m_children) {
+    for (const auto *node : m_children)
         if (!node->isPrivate() && node->isDeprecated()) {
             if (node->isFunction() || node->isProperty() || node->isEnumType() || node->isTypedef()
                 || node->isTypeAlias() || node->isVariable() || node->isQmlProperty()
                 || node->isJsProperty())
                 return true;
         }
-    }
     return false;
 }
 

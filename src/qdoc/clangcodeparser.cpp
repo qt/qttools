@@ -727,9 +727,9 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             if (comment.startsWith("//!")) {
                 qsizetype tag = comment.indexOf(QChar('['));
                 if (tag > 0) {
-                    qsizetype end = comment.indexOf(QChar(']'), tag);
+                    qsizetype end = comment.indexOf(QChar(']'), ++tag);
                     if (end > 0)
-                        fn->setTag(comment.mid(tag, 1 + end - tag));
+                        fn->setTag(comment.mid(tag, end - tag));
                 }
             }
         }
@@ -1570,10 +1570,10 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
 /*!
   Use clang to parse the function signature from a function
-  command. \a location is used for reporting errors. \a fnArg
+  command. \a location is used for reporting errors. \a fnSignature
   is the string to parse. It is always a function decl.
  */
-Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg)
+Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag)
 {
     Node *fnNode = nullptr;
     /*
@@ -1582,42 +1582,36 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
       for the correct function node. It is an error if it can
       not be found. Return 0 in that case.
     */
-    if (fnArg.startsWith('[')) {
-        int tagEnd = fnArg.indexOf(QChar(']', 0));
-        if (tagEnd > 1) {
-            QString tag = fnArg.left(++tagEnd);
-            fnNode = qdb_->findFunctionNodeForTag(tag);
-            if (!fnNode) {
-                location.error(
-                        QStringLiteral("tag \\fn %1 not used in any include file in current module")
-                                .arg(tag));
-            } else {
-                /*
-                  The function node was found. Use the formal
-                  parameter names from the \fn command, because
-                  they will be the names used in the documentation.
-                 */
-                QString fnSignature = fnArg.mid(tagEnd);
-                auto *fn = static_cast<FunctionNode *>(fnNode);
-                QStringList leftParenSplit = fnSignature.mid(fnSignature.indexOf(fn->name())).split('(');
-                if (leftParenSplit.size() > 1) {
-                    QStringList rightParenSplit = leftParenSplit[1].split(')');
-                    if (!rightParenSplit.empty()) {
-                        QString params = rightParenSplit[0];
-                        if (!params.isEmpty()) {
-                            QStringList commaSplit = params.split(',');
-                            Parameters &parameters = fn->parameters();
-                            if (parameters.count() == commaSplit.size()) {
-                                for (int i = 0; i < parameters.count(); ++i) {
-                                    QStringList blankSplit = commaSplit[i].split(' ', Qt::SkipEmptyParts);
-                                    if (blankSplit.size() > 1) {
-                                        QString pName = blankSplit.last();
-                                        // Remove any non-letters from the start of parameter name
-                                        auto it = std::find_if(std::begin(pName), std::end(pName),
-                                                [](const QChar &c) { return c.isLetter(); });
-                                        parameters[i].setName(
-                                                pName.remove(0, std::distance(std::begin(pName), it)));
-                                    }
+    if (!idTag.isEmpty()) {
+        fnNode = qdb_->findFunctionNodeForTag(idTag);
+        if (!fnNode) {
+            location.error(
+                    QStringLiteral("tag \\fn [%1] not used in any include file in current module").arg(idTag));
+        } else {
+            /*
+              The function node was found. Use the formal
+              parameter names from the \fn command, because
+              they will be the names used in the documentation.
+             */
+            auto *fn = static_cast<FunctionNode *>(fnNode);
+            QStringList leftParenSplit = fnSignature.mid(fnSignature.indexOf(fn->name())).split('(');
+            if (leftParenSplit.size() > 1) {
+                QStringList rightParenSplit = leftParenSplit[1].split(')');
+                if (!rightParenSplit.empty()) {
+                    QString params = rightParenSplit[0];
+                    if (!params.isEmpty()) {
+                        QStringList commaSplit = params.split(',');
+                        Parameters &parameters = fn->parameters();
+                        if (parameters.count() == commaSplit.size()) {
+                            for (int i = 0; i < parameters.count(); ++i) {
+                                QStringList blankSplit = commaSplit[i].split(' ', Qt::SkipEmptyParts);
+                                if (blankSplit.size() > 1) {
+                                    QString pName = blankSplit.last();
+                                    // Remove any non-letters from the start of parameter name
+                                    auto it = std::find_if(std::begin(pName), std::end(pName),
+                                            [](const QChar &c) { return c.isLetter(); });
+                                    parameters[i].setName(
+                                            pName.remove(0, std::distance(std::begin(pName), it)));
                                 }
                             }
                         }
@@ -1646,7 +1640,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
     s_fn.clear();
     for (const auto &ns : qAsConst(m_namespaceScope))
         s_fn.prepend("namespace " + ns.toUtf8() + " {");
-    s_fn += fnArg.toUtf8();
+    s_fn += fnSignature.toUtf8();
     if (!s_fn.endsWith(";"))
         s_fn += "{ }";
     s_fn.append(m_namespaceScope.size(), '}');
@@ -1660,7 +1654,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                     << ") returns" << err;
     printDiagnostics(tu);
     if (err || !tu) {
-        location.error(QStringLiteral("clang could not parse \\fn %1").arg(fnArg));
+        location.error(QStringLiteral("clang could not parse \\fn %1").arg(fnSignature));
         clang_disposeTranslationUnit(tu);
         clang_disposeIndex(index);
         return fnNode;
@@ -1685,7 +1679,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
             const auto &config = Config::instance();
             if (diagnosticCount > 0 && (!config.preparing() || config.singleExec())) {
                 bool report = true;
-                QStringList signature = fnArg.split(QChar('('));
+                QStringList signature = fnSignature.split(QChar('('));
                 if (signature.size() > 1) {
                     QStringList qualifiedName = signature.at(0).split(QChar(' '));
                     qualifiedName = qualifiedName.last().split(QLatin1String("::"));
@@ -1703,7 +1697,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
                 }
                 if (report) {
                     location.warning(
-                            QStringLiteral("clang couldn't find function when parsing \\fn %1").arg(fnArg));
+                            QStringLiteral("clang couldn't find function when parsing \\fn %1").arg(fnSignature));
                 }
             }
         }

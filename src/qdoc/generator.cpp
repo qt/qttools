@@ -1250,11 +1250,14 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         text << Atom::ParaLeft;
         if (node->isAggregate())
             text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD);
-        text << "This " << typeString(node) << " is deprecated.";
+        text << "This " << typeString(node) << " is deprecated";
+        if (const QString &version = node->deprecatedSince(); !version.isEmpty())
+            text << " since " << version;
+        text << ". We strongly advise against using it in new code.";
+        text << Atom::ParaRight;
         if (node->isAggregate())
             text << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
-        text << "We strongly advise against using it in new code."
-             << Atom::ParaRight;
+        text << Atom::ParaRight;
         break;
     case Node::Internal:
     default:

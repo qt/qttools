@@ -1045,7 +1045,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     QString obsoleteLink = generateObsoleteMembersFile(sections, marker);
     if (!obsoleteLink.isEmpty()) {
         out() << "<li><a href=\"" << obsoleteLink << "\">"
-              << "Obsolete members</a></li>\n";
+              << "Deprecated members</a></li>\n";
     }
 
     out() << "</ul>\n";
@@ -1289,7 +1289,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
         }
         if (!obsoleteLink.isEmpty()) {
             out() << "<li><a href=\"" << obsoleteLink << "\">"
-                  << "Obsolete members</a></li>\n";
+                  << "Deprecated members</a></li>\n";
         }
         out() << "</ul>\n";
     }
@@ -2359,7 +2359,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
     out() << "<p><b>The following members of class "
           << "<a href=\"" << linkForNode(aggregate, nullptr) << "\">"
           << protectEnc(aggregate->name()) << "</a>"
-          << " are obsolete.</b> "
+          << " are deprecated.</b> "
           << "They are provided to keep old source code working. "
           << "We strongly advise against using them in new code.</p>\n";
 
@@ -2384,7 +2384,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
 }
 
 /*!
-  Generates a separate file where obsolete members of the QML
+  Generates a separate file where deprecated members of the QML
   type \a qcn are listed. The \a marker is used to generate
   the section lists, which are then traversed and output here.
 
@@ -2415,7 +2415,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
     out() << "<p><b>The following members of QML type "
           << "<a href=\"" << linkForNode(aggregate, nullptr) << "\">"
           << protectEnc(aggregate->name()) << "</a>"
-          << " are obsolete.</b> "
+          << " are deprecated.</b> "
           << "They are provided to keep old source code working. "
           << "We strongly advise against using them in new code.</p>\n";
 

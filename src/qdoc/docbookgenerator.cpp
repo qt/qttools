@@ -965,7 +965,7 @@ void DocBookGenerator::beginLink(const QString &link, const Node *node, const No
     writer->writeAttribute(xlinkNamespace, "href", link);
     if (node && !(relative && node->status() == relative->status())
         && node->isDeprecated())
-        writer->writeAttribute("role", "obsolete");
+        writer->writeAttribute("role", "deprecated");
     inLink = true;
 }
 
@@ -1630,13 +1630,16 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
     writer->writeEndElement(); // para
     newLine();
 
-    for (auto i : details_spv) {
-        QString ref = registerRef(i->title().toLower());
-        startSection(ref, i->title());
+    for (const auto *section : details_spv) {
+        const QString &title = section->title();
+        QString ref = registerRef(title.toLower());
+        startSection(ref, title);
 
-        NodeVector::ConstIterator m = i->members().constBegin();
-        while (m != i->members().constEnd()) {
-            generateDetailedQmlMember(*m, aggregate);
+        const NodeVector &members = section->obsoleteMembers();
+        NodeVector::ConstIterator m = members.constBegin();
+        while (m != members.constEnd()) {
+            if ((*m)->access() != Access::Private)
+                generateDetailedQmlMember(*m, aggregate);
             ++m;
         }
 
@@ -1944,10 +1947,12 @@ bool DocBookGenerator::generateStatus(const Node *node)
             writer->writeStartElement(dbNamespace, "emphasis");
             writer->writeAttribute("role", "bold");
         }
-        writer->writeCharacters("This " + typeString(node) + " is deprecated.");
+        writer->writeCharacters("This " + typeString(node) + " is deprecated");
+        if (const QString &version = node->deprecatedSince(); !version.isEmpty())
+            writer->writeCharacters(" since " + version);
+        writer->writeCharacters(". We strongly advise against using it in new code.");
         if (node->isAggregate())
             writer->writeEndElement(); // emphasis
-        writer->writeCharacters(" We strongly advise against using it in new code.");
         writer->writeEndElement(); // para
         newLine();
         return true;

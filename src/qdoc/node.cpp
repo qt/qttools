@@ -1294,6 +1294,15 @@ QString Node::physicalModuleName() const
     else
         return QString();
 }
+void Node::setDeprecatedSince(const QString &sinceVersion)
+{
+    if (!m_deprecatedSince.isEmpty())
+        qCWarning(lcQdoc) << QStringLiteral(
+                                     "Setting deprecated since version for %1 to %2 even though it "
+                                     "was already set to %3. This is very unexpected.")
+                                     .arg(this->m_name, sinceVersion, this->m_deprecatedSince);
+    m_deprecatedSince = sinceVersion;
+}
 
 /*! \fn Node *Node::clone(Aggregate *parent)
 

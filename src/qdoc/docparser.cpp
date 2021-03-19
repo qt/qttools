@@ -1091,14 +1091,20 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case NOT_A_CMD:
                     if (metaCommandSet.contains(cmdStr)) {
+                        QString arg;
                         m_private->metacommandsUsed.insert(cmdStr);
+                        if (isLeftBracketAhead()) {
+                            m_private->constructExtra();
+                            m_private->extra->bracketedArgs_[cmdStr] = getBracketedArgument();
+                        }
                         // Force a linebreak after \obsolete or \deprecated
                         // to treat potential arguments as a new text paragraph.
                         if (m_position < m_inputLength
                             && (cmdStr == QLatin1String("obsolete")
                                 || cmdStr == QLatin1String("deprecated")))
                             m_input[m_position] = '\n';
-                        QString arg = getMetaCommandArgument(cmdStr);
+                        else
+                            arg = getMetaCommandArgument(cmdStr);
                         m_private->metaCommandMap[cmdStr].append(ArgLocPair(arg, location()));
                         if (possibleTopics.contains(cmdStr)) {
                             if (!cmdStr.endsWith(QLatin1String("propertygroup")))

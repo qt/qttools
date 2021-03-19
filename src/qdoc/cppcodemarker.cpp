@@ -295,10 +295,12 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
     if (summary) {
         if (node->isPreliminary())
             extra += " (preliminary)";
-        else if (node->isDeprecated())
-            extra += " (deprecated)";
-        else if (node->isDeprecated())
-            extra += " (obsolete)";
+        else if (node->isDeprecated()) {
+            if (const QString &version = node->deprecatedSince(); !version.isEmpty())
+                extra += " (deprecated since " + version + ")";
+            else
+                extra += " (deprecated)";
+        }
     }
 
     if (!extra.isEmpty()) {

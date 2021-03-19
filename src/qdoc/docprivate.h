@@ -44,10 +44,12 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qhash.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qtextstream.h>
 
 #include <cctype>
 #include <climits>
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 
@@ -61,14 +63,15 @@ struct DocPrivateExtra
     QList<Atom *> keywords_;
     QList<Atom *> targets_;
     QStringMultiMap metaMap_;
+    QMap<QString, QString> bracketedArgs_ {};
 };
 
 class DocPrivate
 {
 public:
     explicit DocPrivate(const Location &start = Location(), const Location &end = Location(),
-                        const QString &source = QString())
-        : start_loc(start), end_loc(end), src(source), hasLegalese(false) {};
+                        QString source = QString())
+        : start_loc(start), end_loc(end), src(std::move(source)), hasLegalese(false) {};
     ~DocPrivate();
 
     void addAlso(const Text &also);

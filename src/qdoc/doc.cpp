@@ -499,4 +499,15 @@ void Doc::detach()
     priv = newPriv;
 }
 
+/*!
+    Returns the argument passed in square brackets to the command \a command,
+    if it exists.
+ */
+QString Doc::bracketedArgs(const QString &command) const
+{
+    if (priv && priv->extra && !priv->extra->bracketedArgs_.isEmpty())
+        return priv->extra->bracketedArgs_[command];
+    return QString();
+}
+
 QT_END_NAMESPACE

@@ -258,6 +258,7 @@ void tst_generatedOutput::htmlFromQml()
                    "qml-qdoc-test-yetanotherchild.html "
                    "qml-qdoc-test-doctest.html "
                    "qml-qdoc-test-type-members.html "
+                   "qml-qdoc-test-type-obsolete.html "
                    "qml-qdoc-test-type.html "
                    "qml-test-nover-typenoversion.html "
                    "qml-test-nover-typenoversion-members.html "

@@ -53,7 +53,10 @@ public:
     virtual void parseHeaderFile(const Location &location, const QString &filePath);
     virtual void parseSourceFile(const Location &location, const QString &filePath) = 0;
     virtual void precompileHeaders() {}
-    virtual Node *parseFnArg(const Location &, const QString &) { return nullptr; }
+    virtual Node *parseFnArg(const Location &, const QString &, const QString & = QString())
+    {
+        return nullptr;
+    }
 
     const QString &currentFile() const { return currentFile_; }
     const QString &moduleHeader() const { return moduleHeader_; }

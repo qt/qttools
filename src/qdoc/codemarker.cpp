@@ -208,8 +208,11 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
     } else if (style == Section::Summary) {
         if (node->isPreliminary())
             extra << "preliminary";
-        else if (node->isDeprecated())
-            extra <<  "deprecated";
+        else if (node->isDeprecated()) {
+            extra << "deprecated";
+            if (const QString &since = node->deprecatedSince(); !since.isEmpty())
+                extra << QStringLiteral("(%1)").arg(since);
+        }
     }
 
     if (style == Section::Details && !node->since().isEmpty()) {

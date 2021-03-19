@@ -99,6 +99,7 @@ public:
     const QList<Atom *> &keywords() const;
     const QList<Atom *> &targets() const;
     QStringMultiMap *metaTagMap() const;
+    [[nodiscard]] QString bracketedArgs(const QString &command) const;
 
     static void initialize();
     static void terminate();

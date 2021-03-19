@@ -298,26 +298,40 @@
     See also \l {class-command}{\\class} and
              \l {headerfile-command}{\\headerfile}.
 
+
+    \target obsolete-command
+    \section1 \\obsolete
+    The \obsolete command is superceded by the \\deprecated command.
+
+    This command is kept for backwards compatibility reasons only.
+    It may be removed in a future version of QDoc. Use the \\deprecated
+    command instead.
+
+    \sa \l{deprecated-command}{\\deprecated}
+
     \target deprecated-command
     \section1 \\deprecated
 
     The \\deprecated command is for indicating that a function is being
-    deprecated, and it should no longer be used in new code. There is
-    no guarantee for how long it will remain in the library.
+    deprecated, and that it should no longer be used in new code. There
+    is no guarantee for how long it will remain in the library.
 
-    The \\deprecated command takes no arguments.
+    The \\deprecated command takes two optional arguments:
+    \list
+        \li A version in square brackets (e.g. [6.2]).
+        \li A string with more information, for example a suggested
+            replacement.
+    \endlist
 
     When generating the reference documentation for a class, QDoc will
     create and link to a separate page documenting its deprecated
-    functions. Usually an equivalent function is provided as an
-    alternative.
+    functions. It is good practice to suggest an equivalent function
+    as an alternative.
 
     \code
     / *!
-        \fn MyClass::MyObsoleteFunction
-        \deprecated
-
-        Use MyNewFunction() instead.
+        \fn MyClass::MyDeprecatedFunction
+        \deprecated [6.2] Use MyNewFunction() instead.
     * /
     \endcode
 
@@ -325,7 +339,7 @@
 
     \quotation
         \raw HTML
-        <h1>Obsolete Members for MyClass</h1>
+        <h1>Deprecated Members for MyClass</h1>
         \endraw
 
         \b {The following class members are deprecated.}  We strongly
@@ -334,15 +348,17 @@
         ...
 
         \list
-            \li void MyObsoleteFunction() \c (deprecated)
+            \li void MyDeprecatedFunction() \c (deprecated)
             \li ...
         \endlist
 
         \raw HTML
         <hr />
         <h2>Member Function Documentation</h2>
-        <h3>void MyObsoleteFunction ()</h3>
-        <p>Use MyNewFunction() instead.</p>
+        <h3>void MyDeprecatedFunction ()</h3>
+        <p>This function is deprecated since 6.2. It is provided to
+        keep old source code working. We strongly advise against using
+        it in new code. Use MyNewFunction() instead.</p>
         \endraw
         ...
     \endquotation

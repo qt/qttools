@@ -305,6 +305,13 @@
             <anchor>configured-signal</anchor>
             <arglist>()</arglist>
         </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>deprecatedMethod</name>
+            <anchorfile>qml-qdoc-test-type-obsolete.html</anchorfile>
+            <anchor>deprecatedMethod-method</anchor>
+            <arglist>()</arglist>
+        </member>
     </compound>
     <compound kind="class">
         <name>Test.NoVer.TypeNoVersion</name>

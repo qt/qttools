@@ -61,7 +61,7 @@ public:
     void parseHeaderFile(const Location &location, const QString &filePath) override;
     void parseSourceFile(const Location &location, const QString &filePath) override;
     void precompileHeaders() override;
-    Node *parseFnArg(const Location &location, const QString &fnArg) override;
+    Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag) override;
     static const QByteArray &fn() { return s_fn; }
 
 private:

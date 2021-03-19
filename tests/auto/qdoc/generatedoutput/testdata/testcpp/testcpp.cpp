@@ -109,9 +109,7 @@ namespace TestQDoc {
 */
 
 /*!
-    \deprecated
-
-    Use someFunction() instead.
+    \deprecated [6.0] Use someFunction() instead.
 */
 void Test::deprecatedMember()
 {
