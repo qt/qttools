@@ -307,6 +307,9 @@ public:
     virtual QString qtCMakeComponent() const { return QString(); }
     virtual bool hasTag(const QString &) const { return false; }
 
+    void setDeprecatedSince(const QString &sinceVersion) { m_deprecatedSince = sinceVersion; }
+    [[nodiscard]] const QString &deprecatedSince() const { return m_deprecatedSince; }
+
     const QMap<LinkType, QPair<QString, QString>> &links() const { return m_linkMap; }
     void setLink(LinkType linkType, const QString &link, const QString &desc);
 
@@ -391,6 +394,7 @@ private:
     QString m_outSubDir {};
     static QStringMap operators;
     static QMap<QString, Node::NodeType> goals;
+    QString m_deprecatedSince {};
 };
 
 QT_END_NAMESPACE

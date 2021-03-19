@@ -21,7 +21,7 @@
                     <para>Use <link raw="obsoleteMember()" href="testqdoc-test.html#obsoleteMember" type="function">obsoleteMember()</link> instead.</para>
                 </description>
             </function>
-            <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void deprecatedMember()">
+            <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test.html#deprecatedMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void deprecatedMember()">
                 <description>
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                 </description>

@@ -100,7 +100,8 @@
             <keyword name="configured" id="Type::configured" ref="qml-qdoc-test-type.html#configured-signal"/>
             <keyword name="copy" id="Type::copy" ref="qml-qdoc-test-type.html#copy-method"/>
             <keyword name="current" id="TabWidget::current" ref="qml-uicomponents-tabwidget.html#current-prop"/>
-            <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test-obsolete.html#deprecatedMember"/>
+            <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test.html#deprecatedMember"/>
+            <keyword name="deprecatedMethod" id="Type::deprecatedMethod" ref="qml-qdoc-test-type.html#deprecatedMethod-method"/>
             <keyword name="disable" id="Type::disable" ref="qml-qdoc-test-type.html#disable-method"/>
             <keyword name="enable" id="Type::enable" ref="qml-qdoc-test-type.html#enable-method"/>
             <keyword name="fail" id="DocTest::fail" ref="qml-qdoc-test-doctest.html#fail-method"/>

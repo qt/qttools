@@ -161,7 +161,7 @@
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>
             <name>deprecatedMember</name>
-            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchorfile>testqdoc-test.html</anchorfile>
             <anchor>deprecatedMember</anchor>
             <arglist>()</arglist>
         </member>
@@ -303,6 +303,13 @@
             <name>configured</name>
             <anchorfile>qml-qdoc-test-type.html</anchorfile>
             <anchor>configured-signal</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>deprecatedMethod</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>deprecatedMethod-method</anchor>
             <arglist>()</arglist>
         </member>
     </compound>

@@ -522,7 +522,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             if (node->isFunction()) {
                 auto *fn = static_cast<FunctionNode *>(node);
                 // The clang visitor class will have set the
-                // qualified name of the ovverridden function.
+                // qualified name of the overridden function.
                 // If the name of the overridden function isn't
                 // set, issue a warning.
                 if (fn->overridesThis().isEmpty() && isWorthWarningAbout(doc)) {
@@ -625,7 +625,13 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (node->isQmlType() || node->isJsType())
             node->setAbstract(true);
     } else if (command == COMMAND_DEPRECATED) {
-        node->setStatus(Node::Obsolete);
+        node->setStatus(Node::Deprecated);
+    } else if (command == COMMAND_DEPRECATED_SINCE) {
+        if (!arg.isEmpty())
+            node->setDeprecatedSince(arg);
+        else
+            doc.location().warning(
+                    QStringLiteral("Missing since version for \\%1").arg(COMMAND_DEPRECATED_SINCE));
     } else if (command == COMMAND_INGROUP || command == COMMAND_INPUBLICGROUP) {
         // Note: \ingroup and \inpublicgroup are the same (and now recognized as such).
         qdb_->addToGroup(arg, node);

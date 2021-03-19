@@ -117,3 +117,13 @@
 
     This attached signal is emitted when the type was configured.
 */
+
+/*!
+    \qmlmethod Type::deprecatedMethod()
+
+    \deprecated
+    \deprecatedsince 6.2
+
+    This is a method that should include information about being deprecated
+    and that it has been so since 6.2 in its docs.
+*/

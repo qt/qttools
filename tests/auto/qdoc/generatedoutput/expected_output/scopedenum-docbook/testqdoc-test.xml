@@ -190,6 +190,22 @@
 </db:methodsynopsis>
 <db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
+<db:section xml:id="deprecatedMember">
+<db:title>Test::void deprecatedMember()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>deprecatedMember</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void deprecatedMember()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is deprecated since 6.0.</db:para>
+<db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
+</db:section>
 <db:section xml:id="funcPtr">
 <db:title>Test::void (*)(bool) funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
 <db:methodsynopsis>
@@ -356,22 +372,6 @@
 </db:methodsynopsis>
 <db:para>This function is obsolete. It is provided to keep old source code working. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
-</db:section>
-<db:section xml:id="deprecatedMember">
-<db:title>Test::void deprecatedMember()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>deprecatedMember</db:methodname>
-<db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void deprecatedMember()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">obsolete</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
-</db:methodsynopsis>
-<db:para>This function is obsolete. It is provided to keep old source code working. We strongly advise against using it in new code.</db:para>
-<db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="obsoleteMember">
 <db:title>Test::void obsoleteMember()</db:title>

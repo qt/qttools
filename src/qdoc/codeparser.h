@@ -85,6 +85,7 @@ private:
 #define COMMAND_CLASS Doc::alias(QLatin1String("class"))
 #define COMMAND_DEFAULT Doc::alias(QLatin1String("default"))
 #define COMMAND_DEPRECATED Doc::alias(QLatin1String("deprecated")) // ### don't document
+#define COMMAND_DEPRECATED_SINCE Doc::alias(QLatin1String("deprecatedsince"))
 #define COMMAND_DONTDOCUMENT Doc::alias(QLatin1String("dontdocument"))
 #define COMMAND_ENUM Doc::alias(QLatin1String("enum"))
 #define COMMAND_EXAMPLE Doc::alias(QLatin1String("example"))

@@ -348,6 +348,39 @@
         ...
     \endquotation
 
+    \target deprecatedsince-command
+    \section1 \\deprecatedsince
+
+    The \\deprecatedsince command is for indicating the version when a function
+    was deprecated.
+
+    The command takes the version as a string as argument. This provides the
+    author with more flexibility, as both \c{\\deprecatedsince version 2} and
+    \c{\\deprecatedsince 2.0} are considered valid versions.
+
+    \code
+    / *!
+        \fn MyClass::MyDeprecatedFunction
+        \deprecatedsince 6.2
+
+        Use MyNewFunction() instead.
+    * /
+    \endcode
+
+    QDoc renders the documentation for this as:
+
+    \quotation
+        \raw HTML
+        <hr />
+        <h2>Member Function Documentation</h2>
+        <h3>void MyDeprecatedFunction ()</h3>
+        <p>This function is deprecated since 6.2.</p>
+        <p>Use MyNewFunction() instead.</p>
+        \endraw
+        ...
+     \endquotation
+
+
     \target internal-command
     \section1 \\internal
 
