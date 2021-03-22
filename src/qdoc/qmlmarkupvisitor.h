@@ -37,18 +37,8 @@
 #ifndef QT_NO_DECLARATIVE
 #    include <private/qqmljsastvisitor_p.h>
 #    include <private/qqmljsengine_p.h>
-#endif
 
 QT_BEGIN_NAMESPACE
-
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmlapiversion_p.h>
-#    if Q_QML_PRIVATE_API_VERSION < 8
-namespace QQmlJS {
-    using SourceLocation = AST::SourceLocation;
-}
-#    endif
-
 
 class QmlMarkupVisitor : public QQmlJS::AST::Visitor
 {
@@ -169,8 +159,9 @@ private:
     bool hasRecursionDepthError = false;
 };
 Q_DECLARE_TYPEINFO(QmlMarkupVisitor::ExtraType, Q_PRIMITIVE_TYPE);
-#endif
 
 QT_END_NAMESPACE
+
+#endif
 
 #endif

@@ -39,7 +39,6 @@
 #include <private/qqmljslexer_p.h>
 #include <private/qqmljsastvisitor_p.h>
 #include <private/qqmljsast_p.h>
-#include <private/qqmlapiversion_p.h>
 
 #include <QCoreApplication>
 #include <QFile>
@@ -52,12 +51,6 @@
 #include <cctype>
 
 QT_BEGIN_NAMESPACE
-
-#if Q_QML_PRIVATE_API_VERSION < 8
-namespace QQmlJS {
-    using SourceLocation = AST::SourceLocation;
-}
-#endif
 
 using namespace QQmlJS;
 
@@ -282,13 +275,8 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
         if (m.isWarning())
             continue;
 
-#if Q_QML_PRIVATE_API_VERSION >= 8
         const int line = m.loc.startLine;
         const int column = m.loc.startColumn;
-#else
-        const int line = m.line;
-        const int column = m.column;
-#endif
         QString error = filename + QLatin1Char(':')
                         + QString::number(line) + QLatin1Char(':') + QString::number(column)
                         + QLatin1String(": error: ") + m.message + QLatin1Char('\n');

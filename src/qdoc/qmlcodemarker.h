@@ -41,15 +41,6 @@
 
 QT_BEGIN_NAMESPACE
 
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmlapiversion_p.h>
-#    if Q_QML_PRIVATE_API_VERSION < 8
-namespace QQmlJS {
-    using SourceLocation = AST::SourceLocation;
-}
-#    endif
-#endif
-
 class QmlCodeMarker : public CppCodeMarker
 {
 public:

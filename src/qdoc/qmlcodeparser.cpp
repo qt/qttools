@@ -141,12 +141,8 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
     const auto &messages = parser->diagnosticMessages();
     for (const auto &msg : messages) {
         qDebug().nospace() << qPrintable(filePath) << ':'
-#    if Q_QML_PRIVATE_API_VERSION >= 8
                            << msg.loc.startLine << ": QML syntax error at col "
                            << msg.loc.startColumn
-#    else
-                           << msg.line << ": QML syntax error at col " << msg.column
-#    endif
                            << ": " << qPrintable(msg.message);
     }
     currentFile_.clear();
