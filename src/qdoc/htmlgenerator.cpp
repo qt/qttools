@@ -220,17 +220,6 @@ QString HtmlGenerator::format()
 }
 
 /*!
-  Generate targets for any \keyword commands that were seen
-  in the qdoc comment for the \a node.
- */
-void HtmlGenerator::generateKeywordAnchors(const Node *node)
-{
-    Q_UNUSED(node);
-    // Disabled: keywords always link to the top of the QDoc
-    // comment they appear in, and do not use a dedicated anchor.
-}
-
-/*!
   If qdoc is in the \c {-prepare} phase, traverse the primary
   tree to generate the index file for the current module.
 
@@ -1026,7 +1015,6 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
     generateHeader(title, aggregate, marker);
     generateTableOfContents(aggregate, marker, summarySections);
-    generateKeywordAnchors(aggregate);
     generateTitle(title, subtitleText, SmallSubTitle, aggregate, marker);
     if (ns && !ns->hasDoc() && ns->docNode()) {
         NamespaceNode *NS = ns->docNode();
@@ -1302,7 +1290,6 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     Sections sections(qcn);
     generateTableOfContents(qcn, marker, &sections.stdQmlTypeSummarySections());
     marker = CodeMarker::markerForLanguage(QLatin1String("QML"));
-    generateKeywordAnchors(qcn);
     generateTitle(htmlTitle, Text() << qcn->subtitle(), subTitleSize, qcn, marker);
     generateBrief(qcn, marker);
     generateQmlRequisites(qcn, marker);
@@ -1378,7 +1365,6 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker 
     generateHeader(htmlTitle, qbtn, marker);
     Sections sections(qbtn);
     generateTableOfContents(qbtn, marker, &sections.stdQmlTypeSummarySections());
-    generateKeywordAnchors(qbtn);
     generateTitle(htmlTitle, Text() << qbtn->subtitle(), subTitleSize, qbtn, marker);
 
     const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
@@ -1431,7 +1417,6 @@ void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     if ((pn->name() != QLatin1String("index.html")))
         generateTableOfContents(pn, marker, nullptr);
 
-    generateKeywordAnchors(pn);
     generateTitle(fullTitle, Text() << pn->subtitle(), subTitleSize, pn, marker);
     if (pn->isExample()) {
         generateBrief(pn, marker, nullptr, false);
@@ -1460,7 +1445,6 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
 
     generateHeader(fullTitle, cn, marker);
     generateTableOfContents(cn, marker, nullptr);
-    generateKeywordAnchors(cn);
     generateTitle(fullTitle, Text() << cn->subtitle(), subTitleSize, cn, marker);
 
     // Generate brief for C++ modules, status for all modules.
@@ -1530,7 +1514,6 @@ void HtmlGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker
     QString ref;
 
     generateHeader(fullTitle, cn, marker);
-    generateKeywordAnchors(cn);
     generateTitle(fullTitle, Text() << cn->subtitle(), subTitleSize, cn, marker);
 
     Text brief;
@@ -3348,7 +3331,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
 {
     const EnumNode *etn;
     generateExtractionMark(node, MemberMark);
-    generateKeywordAnchors(node);
     QString nodeRef = nullptr;
     if (node->isSharedCommentNode()) {
         const auto *scn = reinterpret_cast<const SharedCommentNode *>(node);
@@ -3508,7 +3490,6 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
                                               CodeMarker *marker)
 {
     generateExtractionMark(node, MemberMark);
-    generateKeywordAnchors(node);
 
     QString qmlItemHeader("<div class=\"qmlproto\">\n"
                           "<div class=\"table\"><table class=\"qmlname\">\n");

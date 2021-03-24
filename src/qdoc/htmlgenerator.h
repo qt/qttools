@@ -69,7 +69,6 @@ protected:
     void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
     void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
     QString fileExtension() const override;
-    void generateKeywordAnchors(const Node *node);
 
 private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };
