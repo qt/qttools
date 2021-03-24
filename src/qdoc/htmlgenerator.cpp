@@ -549,8 +549,8 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         int index = 0;
         for (const auto &section : sinceSections) {
             if (!section.members().isEmpty()) {
-                out() << "<a name=\"" << Doc::canonicalTitle(section.title()) << "\"></a>\n";
-                out() << "<h3>" << protectEnc(section.title()) << "</h3>\n";
+                out() << "<h3 id=\"" << Doc::canonicalTitle(section.title()) << "\">"
+                      << protectEnc(section.title()) << "</h3>\n";
                 if (index == Sections::SinceClasses)
                     generateCompactList(Generic, relative, ncmap, false, QStringLiteral("Q"));
                 else if (index == Sections::SinceQmlTypes)
@@ -821,9 +821,6 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         out() << atom->string();
         break;
     case Atom::SectionLeft:
-        out() << "<a name=\"" << Doc::canonicalTitle(Text::sectionHeading(atom).toString())
-              << "\"></a>" << '\n';
-        break;
     case Atom::SectionRight:
         break;
     case Atom::SectionHeadingLeft: {
@@ -932,7 +929,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
     case Atom::Keyword:
         break;
     case Atom::Target:
-        out() << "<a name=\"" << Doc::canonicalTitle(atom->string()) << "\"></a>";
+        out() << "<span id=\"" << Doc::canonicalTitle(atom->string()) << "\"></span>";
         break;
     case Atom::UnhandledFormat:
         out() << "<b class=\"redFont\">&lt;Missing HTML&gt;</b>";
@@ -1064,14 +1061,12 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         } else {
             if (!section.members().isEmpty()) {
                 QString ref = registerRef(section.title().toLower());
-                out() << "<a name=\"" << ref << "\"></a>" << "\n";
                 out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
                 generateSection(section.members(), aggregate, marker);
             }
             if (!section.reimplementedMembers().isEmpty()) {
                 QString name = QString("Reimplemented ") + section.title();
                 QString ref = registerRef(name.toLower());
-                out() << "<a name=\"" << ref << "\"></a>" << "\n";
                 out() << "<h2 id=\"" << ref << "\">" << protectEnc(name) << "</h2>\n";
                 generateSection(section.reimplementedMembers(), aggregate, marker);
             }
@@ -1095,9 +1090,6 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         out() << "</ul>\n";
     }
 
-    QString detailsRef = registerRef("details");
-    out() << "<a name=\"" << detailsRef << "\"></a>" << '\n';
-
     if (aggregate->doc().isEmpty()) {
         QString command = "documentation";
         if (aggregate->isClassNode())
@@ -1111,7 +1103,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     } else {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
         out() << "<div class=\"descr\">\n" // QTBUG-9504
-              << "<h2 id=\"" << detailsRef << "\">"
+              << "<h2 id=\"" << registerRef("details") << "\">"
               << "Detailed Description"
               << "</h2>\n";
         generateBody(aggregate, marker);
@@ -1203,19 +1195,15 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
     for (auto it = summarySections->constBegin(); it != summarySections->constEnd(); ++it) {
         if (!it->members().isEmpty()) {
             QString ref = registerRef(it->title().toLower());
-            out() << "<a name=\"" << ref << "\"></a>" << "\n";
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(it->title()) << "</h2>\n";
             generateSection(it->members(), aggregate, marker);
         }
     }
 
-    QString detailsRef = registerRef("details");
-    out() << "<a name=\"" << detailsRef << "\"></a>" << '\n';
-
     if (!aggregate->doc().isEmpty()) {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
         out() << "<div class=\"descr\">\n" // QTBUG-9504
-              << "<h2 id=\"" << detailsRef << "\">"
+              << "<h2 id=\"" << registerRef("details") << "\">"
               << "Detailed Description"
               << "</h2>\n";
         generateBody(aggregate, marker);
@@ -1313,16 +1301,13 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     for (const auto &section : stdQmlTypeSummarySections) {
         if (!section.isEmpty()) {
             QString ref = registerRef(section.title().toLower());
-            out() << "<a name=\"" << ref << "\"></a>" << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
             generateQmlSummary(section.members(), qcn, marker);
         }
     }
 
     generateExtractionMark(qcn, DetailedDescriptionMark);
-    QString detailsRef = registerRef("details");
-    out() << "<a name=\"" << detailsRef << "\"></a>" << '\n';
-    out() << "<h2 id=\"" << detailsRef << "\">"
+    out() << "<h2 id=\"" << registerRef("details") << "\">"
           << "Detailed Description"
           << "</h2>\n";
     generateBody(qcn, marker);
@@ -1370,16 +1355,15 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker 
     const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
     for (const auto &section : stdQmlTypeSummarySections) {
         if (!section.isEmpty()) {
-            QString ref = registerRef(section.title().toLower());
-            out() << "<a name=\"" << ref << "\"></a>" << '\n';
+            const QString &ref = registerRef(section.title().toLower());
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
             generateQmlSummary(section.members(), qbtn, marker);
         }
     }
 
     generateExtractionMark(qbtn, DetailedDescriptionMark);
-    out() << R"(<div class="descr"> <a name=")" << registerRef("details")
-          << "\"></a>\n"; // QTBUG-9504
+    out() << R"(<div class="descr" id=")" << registerRef("details")
+          << "\">\n"; // QTBUG-9504
 
     generateBody(qbtn, marker);
     out() << "</div>\n"; // QTBUG-9504
@@ -1423,8 +1407,8 @@ void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
     }
 
     generateExtractionMark(pn, DetailedDescriptionMark);
-    out() << R"(<div class="descr"> <a name=")" << registerRef("details")
-          << "\"></a>\n"; // QTBUG-9504
+    out() << R"(<div class="descr" id=")" << registerRef("details")
+          << "\">\n"; // QTBUG-9504
 
     generateBody(pn, marker);
     out() << "</div>\n"; // QTBUG-9504
@@ -1461,7 +1445,6 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
             cn->getMemberNamespaces(nmm);
             if (!nmm.isEmpty()) {
                 ref = registerRef("namespaces");
-                out() << "<a name=\"" << ref << "\"></a>" << '\n';
                 out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
                 generateAnnotatedList(cn, marker, nmm.values());
             }
@@ -1469,7 +1452,6 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
             cn->getMemberClasses(nmm);
             if (!nmm.isEmpty()) {
                 ref = registerRef("classes");
-                out() << "<a name=\"" << ref << "\"></a>" << '\n';
                 out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";
                 generateAnnotatedList(cn, marker, nmm.values());
             }
@@ -1479,15 +1461,14 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     if (cn->isModule() && !cn->doc().briefText().isEmpty()) {
         generateExtractionMark(cn, DetailedDescriptionMark);
         ref = registerRef("details");
-        out() << "<a name=\"" << ref << "\"></a>" << '\n';
         out() << "<div class=\"descr\">\n"; // QTBUG-9504
         out() << "<h2 id=\"" << ref << "\">"
               << "Detailed Description"
               << "</h2>\n";
     } else {
         generateExtractionMark(cn, DetailedDescriptionMark);
-        out() << R"(<div class="descr"> <a name=")" << registerRef("details")
-              << "\"></a>\n"; // QTBUG-9504
+        out() << R"(<div class="descr" id=")" << registerRef("details")
+              << "\">\n"; // QTBUG-9504
     }
 
     generateBody(cn, marker);
@@ -2178,7 +2159,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
 
     out() << "<div class=\"sidebar\">\n";
     out() << "<div class=\"toc\">\n";
-    out() << "<h3><a name=\"toc\">Contents</a></h3>\n";
+    out() << "<h3 id=\"toc\">Contents</h3>\n";
     out() << "<ul>\n";
 
     if (node->isModule()) {
@@ -2442,7 +2423,6 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
 
     for (const auto &section : summary_spv) {
         QString ref = registerRef(section->title().toLower());
-        out() << "<a name=\"" << ref << "\"></a>" << '\n';
         out() << "<h2 id=\"" << ref << "\">" << protectEnc(section->title()) << "</h2>\n";
         generateQmlSummary(section->obsoleteMembers(), aggregate, marker);
     }
@@ -2681,13 +2661,10 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
                 out() << "<dl class=\"flowList odd\">";
             else
                 out() << "<dl class=\"flowList even\">";
-            out() << "<dt class=\"alphaChar\">";
-            if (includeAlphabet) {
-                QChar c = paragraphName[curParNr][0].toLower();
-                out() << QString("<a name=\"%1\"></a>").arg(c);
-            }
-            out() << "<b>" << paragraphName[curParNr] << "</b>";
-            out() << "</dt>\n";
+            out() << "<dt class=\"alphaChar\"";
+            if (includeAlphabet)
+                out() << QString(" id=\"%1\"").arg(paragraphName[curParNr][0].toLower());
+            out() << "><b>" << paragraphName[curParNr] << "</b></dt>\n";
         }
 
         /*
@@ -2770,7 +2747,7 @@ void HtmlGenerator::generateFunctionIndex(const Node *relative)
 
         currentLetter = fnMap.key()[0].unicode();
         while (islower(currentLetter) && currentLetter >= nextLetter) {
-            out() << QString("<a name=\"%1\"></a>").arg(nextLetter);
+            out() << QString("<a id=\"%1\"></a>").arg(nextLetter); // TODO: This is not covered by our tests
             nextLetter++;
         }
 
@@ -3339,7 +3316,6 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
         for (const auto *sharedNode : collective) {
             nodeRef = refForNode(sharedNode);
             out() << R"(<h3 class="fn fngroupitem" id=")" << nodeRef << "\">";
-            out() << "<a name=\"" + nodeRef + "\"></a>";
             generateSynopsis(sharedNode, relative, marker, Section::Details);
             out() << "</h3>";
         }
@@ -3350,14 +3326,12 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
         nodeRef = refForNode(node);
         if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
             out() << R"(<h3 class="flags" id=")" << nodeRef << "\">";
-            out() << "<a name=\"" + nodeRef + "\"></a>";
             generateSynopsis(etn, relative, marker, Section::Details);
             out() << "<br/>";
             generateSynopsis(etn->flagsType(), relative, marker, Section::Details);
             out() << "</h3>\n";
         } else {
             out() << R"(<h3 class="fn" id=")" << nodeRef << "\">";
-            out() << "<a name=\"" + nodeRef + "\"></a>";
             generateSynopsis(node, relative, marker, Section::Details);
             out() << "</h3>" << '\n';
         }
@@ -3494,7 +3468,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
                           "<div class=\"table\"><table class=\"qmlname\">\n");
 
     QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
-                         "<td class=\"%2\"><p>\n<a name=\"%1\"></a>");
+                         "<td class=\"%2\"><p id=\"%1\">\n");
     QString qmlItemEnd("</p></td></tr>\n");
 
     QString qmlItemFooter("</table></div></div>\n");
@@ -3544,7 +3518,6 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
             const QString nodeRef = refForNode(scn);
             out() << R"(<tr valign="top" class="even" id=")" << nodeRef << "\">";
             out() << "<th class=\"centerAlign\"><p>";
-            out() << "<a name=\"" + nodeRef + "\"></a>";
             out() << "<b>" << scn->name() << " group</b>";
             out() << "</p></th></tr>\n";
         }

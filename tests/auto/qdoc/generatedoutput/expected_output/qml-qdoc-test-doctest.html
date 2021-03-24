@@ -8,7 +8,7 @@
 <body>
 <div class="sidebar">
 <div class="toc">
-<h3><a name="toc">Contents</a></h3>
+<h3 id="toc">Contents</h3>
 <ul>
 <li class="level1"><a href="#properties">Properties</a></li>
 <li class="level1"><a href="#signals">Signals</a></li>
@@ -27,28 +27,23 @@
 <tr><td class="memItemLeft rightAlign topAlign"> Import Statement:</td><td class="memItemRight bottomAlign"> import QDoc.Test 1.1</td></tr><tr><td class="memItemLeft rightAlign topAlign"> Since:</td><td class="memItemRight bottomAlign"> QDoc.Test 0.9</td></tr></table></div><ul>
 <li><a href="qml-qdoc-test-doctest-members.html">List of all members, including inherited members</a></li>
 </ul>
-<a name="properties"></a>
 <h2 id="properties">Properties</h2>
 <ul>
 <li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#active-prop">active</a></b></b> : bool</li>
 <li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#name-prop">name</a></b></b> : string</li>
 </ul>
-<a name="signals"></a>
 <h2 id="signals">Signals</h2>
 <ul>
 <li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#completed-signal">completed</a></b></b>()</li>
 <li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#foo-signal">foo</a></b></b>(var <i>bar</i>)</li>
 </ul>
-<a name="methods"></a>
 <h2 id="methods">Methods</h2>
 <ul>
 <li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#fail-method">fail</a></b></b>(<i>message</i>)</li>
 <li class="fn"><b><b><a href="qml-qdoc-test-doctest.html#fail_hard-method">fail_hard</a></b></b>(<i>msg</i>, <i>option</i>)</li>
 </ul>
 <!-- $$$DocTest-description -->
-<a name="details"></a>
 <h2 id="details">Detailed Description</h2>
-<a name="introduction"></a>
 <h2 id="introduction">Introduction</h2>
 <p>A documentation test case, itself documented inline in DocTest.qml.</p>
 <!-- @@@DocTest -->
@@ -57,8 +52,8 @@
 <div class="qmlitem"><div class="qmlproto">
 <div class="table"><table class="qmlname">
 <tr valign="top" class="odd" id="active-prop">
-<td class="tblQmlPropNode"><p>
-<a name="active-prop"></a><span class="qmlextra">[default: true] </span><span class="name">active</span> : <span class="type">bool</span></p></td></tr>
+<td class="tblQmlPropNode"><p id="active-prop">
+<span class="qmlextra">[default: true] </span><span class="name">active</span> : <span class="type">bool</span></p></td></tr>
 </table></div></div>
 <div class="qmldoc"><p>Whether the test is active.</p>
 <p><b>See also </b><a href="qml-qdoc-test-doctest.html#name-prop">name</a>.</p>
@@ -68,8 +63,8 @@
 <div class="qmlitem"><div class="qmlproto">
 <div class="table"><table class="qmlname">
 <tr valign="top" class="odd" id="name-prop">
-<td class="tblQmlPropNode"><p>
-<a name="name-prop"></a><span class="qmlextra">[required] </span><span class="name">name</span> : <span class="type">string</span></p></td></tr>
+<td class="tblQmlPropNode"><p id="name-prop">
+<span class="qmlextra">[required] </span><span class="name">name</span> : <span class="type">string</span></p></td></tr>
 </table></div></div>
 <div class="qmldoc"><p>Name of the test.</p>
 <pre class="qml"><span class="type"><a href="qml-qdoc-test-doctest.html">DocTest</a></span> {
@@ -83,8 +78,8 @@
 <div class="qmlitem"><div class="qmlproto">
 <div class="table"><table class="qmlname">
 <tr valign="top" class="odd" id="completed-signal">
-<td class="tblQmlFuncNode"><p>
-<a name="completed-signal"></a><span class="name">completed</span>()</p></td></tr>
+<td class="tblQmlFuncNode"><p id="completed-signal">
+<span class="name">completed</span>()</p></td></tr>
 </table></div></div>
 <div class="qmldoc"><p><b>Note: </b>The corresponding handler is <code>onCompleted</code>.</p>
 </div></div><!-- @@@completed -->
@@ -93,8 +88,8 @@
 <div class="qmlitem"><div class="qmlproto">
 <div class="table"><table class="qmlname">
 <tr valign="top" class="odd" id="foo-signal">
-<td class="tblQmlFuncNode"><p>
-<a name="foo-signal"></a><span class="name">foo</span>(<span class="type">var</span> <i>bar</i>)</p></td></tr>
+<td class="tblQmlFuncNode"><p id="foo-signal">
+<span class="name">foo</span>(<span class="type">var</span> <i>bar</i>)</p></td></tr>
 </table></div></div>
 <div class="qmldoc"><p>Signal with parameter <i>bar</i>.</p>
 <p><b>Note: </b>The corresponding handler is <code>onFoo</code>.</p>
@@ -105,8 +100,8 @@
 <div class="qmlitem"><div class="qmlproto">
 <div class="table"><table class="qmlname">
 <tr valign="top" class="odd" id="fail-method">
-<td class="tblQmlFuncNode"><p>
-<a name="fail-method"></a><code>[since QDoc.Test 1.0] </code><span class="name">fail</span>(<i>message</i> = &quot;oops&quot;)</p></td></tr>
+<td class="tblQmlFuncNode"><p id="fail-method">
+<code>[since QDoc.Test 1.0] </code><span class="name">fail</span>(<i>message</i> = &quot;oops&quot;)</p></td></tr>
 </table></div></div>
 <div class="qmldoc"><p>Fails the current test case, with the optional <i>message</i>.</p>
 <p>This method was introduced in QDoc.Test 1.0.</p>
@@ -116,8 +111,8 @@
 <div class="qmlitem"><div class="qmlproto">
 <div class="table"><table class="qmlname">
 <tr valign="top" class="odd" id="fail_hard-method">
-<td class="tblQmlFuncNode"><p>
-<a name="fail_hard-method"></a><span class="name">fail_hard</span>(<i>msg</i> = &quot;facepalm&quot;, <i>option</i> = 123)</p></td></tr>
+<td class="tblQmlFuncNode"><p id="fail_hard-method">
+<span class="name">fail_hard</span>(<i>msg</i> = &quot;facepalm&quot;, <i>option</i> = 123)</p></td></tr>
 </table></div></div>
 <div class="qmldoc"><p>Fails the current test case, hard.</p>
 <ul>

@@ -13,7 +13,7 @@
 </p><p/>
 <div class="sidebar">
 <div class="toc">
-<h3><a name="toc">Contents</a></h3>
+<h3 id="toc">Contents</h3>
 <ul>
 <li class="level1"><a href="#supported-file-types">Supported file types</a></li>
 <li class="level1"><a href="#further-information">Further information</a></li>
@@ -24,12 +24,10 @@
 <h1 class="title">Testing QDoc output from .qdoc files</h1>
 <span class="subtitle"></span>
 <!-- $$$qdoctests-qdocfileoutput.html-description -->
-<div class="descr"> <a name="details"></a>
+<div class="descr" id="details">
 <p>QDoc generates documentation for software projects. It does this by extracting <i>QDoc comments</i> from project source files. QDoc comments are signified by a C-style-like comment tag followed by an exclamation point, like this: <code>/*!</code> <code>This text is contained within QDoc comment tags.</code> <code>*/</code>.</p>
-<a name="supported-file-types"></a>
 <h2 id="supported-file-types">Supported file types</h2>
 <p>QDoc parses <code>.cpp</code> and <code>.qdoc</code> files. It does extract comments from header (<code>.h</code>) files.</p>
-<a name="further-information"></a>
 <h2 id="further-information">Further information</h2>
 <p>This test document is written with the purpose of testing the output QDoc generates when parsing <code>.qdoc</code> files. It is fairly simple and makes use of a limited subset of QDoc's command. Those commands are:</p>
 <ul>
@@ -43,7 +41,6 @@
 <li><code>\li</code></li>
 <li><code>\endlist</code></li>
 </ul>
-<a name="linking"></a>
 <h2 id="linking">Linking</h2>
 <p>There are multiple ways to create hyperlinks to other topics:</p>
 <ul>
