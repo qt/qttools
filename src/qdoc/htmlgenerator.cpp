@@ -60,8 +60,6 @@ QT_BEGIN_NAMESPACE
 
 int HtmlGenerator::id = 0;
 
-QString HtmlGenerator::divNavTop;
-
 static bool showBrokenLinks = false;
 
 static void addLink(const QString &linkTarget, QStringView nestedStuff, QString *res)
@@ -835,7 +833,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
         break;
     case Atom::SectionLeft:
         out() << "<a name=\"" << Doc::canonicalTitle(Text::sectionHeading(atom).toString())
-              << "\"></a>" << divNavTop << '\n';
+              << "\"></a>" << '\n';
         break;
     case Atom::SectionRight:
         break;
@@ -1078,14 +1076,14 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         } else {
             if (!section.members().isEmpty()) {
                 QString ref = registerRef(section.title().toLower());
-                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << "\n";
+                out() << "<a name=\"" << ref << "\"></a>" << "\n";
                 out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
                 generateSection(section.members(), aggregate, marker);
             }
             if (!section.reimplementedMembers().isEmpty()) {
                 QString name = QString("Reimplemented ") + section.title();
                 QString ref = registerRef(name.toLower());
-                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << "\n";
+                out() << "<a name=\"" << ref << "\"></a>" << "\n";
                 out() << "<h2 id=\"" << ref << "\">" << protectEnc(name) << "</h2>\n";
                 generateSection(section.reimplementedMembers(), aggregate, marker);
             }
@@ -1110,7 +1108,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
 
     QString detailsRef = registerRef("details");
-    out() << "<a name=\"" << detailsRef << "\"></a>" << divNavTop << '\n';
+    out() << "<a name=\"" << detailsRef << "\"></a>" << '\n';
 
     if (aggregate->doc().isEmpty()) {
         QString command = "documentation";
@@ -1217,14 +1215,14 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
     for (auto it = summarySections->constBegin(); it != summarySections->constEnd(); ++it) {
         if (!it->members().isEmpty()) {
             QString ref = registerRef(it->title().toLower());
-            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << "\n";
+            out() << "<a name=\"" << ref << "\"></a>" << "\n";
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(it->title()) << "</h2>\n";
             generateSection(it->members(), aggregate, marker);
         }
     }
 
     QString detailsRef = registerRef("details");
-    out() << "<a name=\"" << detailsRef << "\"></a>" << divNavTop << '\n';
+    out() << "<a name=\"" << detailsRef << "\"></a>" << '\n';
 
     if (!aggregate->doc().isEmpty()) {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
@@ -1328,7 +1326,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     for (const auto &section : stdQmlTypeSummarySections) {
         if (!section.isEmpty()) {
             QString ref = registerRef(section.title().toLower());
-            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+            out() << "<a name=\"" << ref << "\"></a>" << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
             generateQmlSummary(section.members(), qcn, marker);
         }
@@ -1336,7 +1334,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 
     generateExtractionMark(qcn, DetailedDescriptionMark);
     QString detailsRef = registerRef("details");
-    out() << "<a name=\"" << detailsRef << "\"></a>" << divNavTop << '\n';
+    out() << "<a name=\"" << detailsRef << "\"></a>" << '\n';
     out() << "<h2 id=\"" << detailsRef << "\">"
           << "Detailed Description"
           << "</h2>\n";
@@ -1387,7 +1385,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker 
     for (const auto &section : stdQmlTypeSummarySections) {
         if (!section.isEmpty()) {
             QString ref = registerRef(section.title().toLower());
-            out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+            out() << "<a name=\"" << ref << "\"></a>" << '\n';
             out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
             generateQmlSummary(section.members(), qbtn, marker);
         }
@@ -1479,7 +1477,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
             cn->getMemberNamespaces(nmm);
             if (!nmm.isEmpty()) {
                 ref = registerRef("namespaces");
-                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+                out() << "<a name=\"" << ref << "\"></a>" << '\n';
                 out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
                 generateAnnotatedList(cn, marker, nmm.values());
             }
@@ -1487,7 +1485,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
             cn->getMemberClasses(nmm);
             if (!nmm.isEmpty()) {
                 ref = registerRef("classes");
-                out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+                out() << "<a name=\"" << ref << "\"></a>" << '\n';
                 out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";
                 generateAnnotatedList(cn, marker, nmm.values());
             }
@@ -1497,7 +1495,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     if (cn->isModule() && !cn->doc().briefText().isEmpty()) {
         generateExtractionMark(cn, DetailedDescriptionMark);
         ref = registerRef("details");
-        out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+        out() << "<a name=\"" << ref << "\"></a>" << '\n';
         out() << "<div class=\"descr\">\n"; // QTBUG-9504
         out() << "<h2 id=\"" << ref << "\">"
               << "Detailed Description"
@@ -2461,7 +2459,7 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
 
     for (const auto &section : summary_spv) {
         QString ref = registerRef(section->title().toLower());
-        out() << "<a name=\"" << ref << "\"></a>" << divNavTop << '\n';
+        out() << "<a name=\"" << ref << "\"></a>" << '\n';
         out() << "<h2 id=\"" << ref << "\">" << protectEnc(section->title()) << "</h2>\n";
         generateQmlSummary(section->obsoleteMembers(), aggregate, marker);
     }
@@ -3366,7 +3364,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
         }
         if (collective.size() > 1)
             out() << "</div>";
-        out() << divNavTop << '\n';
+        out() << '\n';
     } else {
         nodeRef = refForNode(node);
         if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
@@ -3380,7 +3378,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
             out() << R"(<h3 class="fn" id=")" << nodeRef << "\">";
             out() << "<a name=\"" + nodeRef + "\"></a>";
             generateSynopsis(node, relative, marker, Section::Details);
-            out() << "</h3>" << divNavTop << '\n';
+            out() << "</h3>" << '\n';
         }
     }
 

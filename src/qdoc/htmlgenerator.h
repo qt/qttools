@@ -184,8 +184,6 @@ private:
 
     Config *config { nullptr };
 
-public:
-    static QString divNavTop;
 };
 
 #define HTMLGENERATOR_ADDRESS "address"
