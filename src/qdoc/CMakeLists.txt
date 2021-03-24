@@ -20,6 +20,7 @@ qt_get_tool_target_name(target_name qdoc)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Documentation Compiler"
     TOOLS_TARGET Tools # special case
+    USER_FACING
     SOURCES
         access.h
         aggregate.cpp aggregate.h
