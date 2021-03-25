@@ -55,6 +55,7 @@
 
 #include <vector>
 #include <iostream>
+#include <sstream>
 
 QT_BEGIN_NAMESPACE
 
@@ -95,6 +96,7 @@ struct TranslationRelatedStore
     QString lupdateComment;
     QString lupdateExtraComment;
     QString lupdatePlural;
+    QString lupdateWarning;
     clang::SourceLocation sourceLocation;
 
     bool isValid(bool printwarning = false) const
@@ -305,7 +307,7 @@ namespace ClangCppParser
                  bool *fail);
 
     using TranslatorMessageVector = std::vector<TranslatorMessage>;
-    void collectMessages(TranslatorMessageVector &result, const TranslationRelatedStore &store);
+    void collectMessages(TranslatorMessageVector &result, TranslationRelatedStore &store);
     TranslatorMessage translatorMessage(const TranslationRelatedStore &store,
         const QString &id, bool plural, bool isID);
 

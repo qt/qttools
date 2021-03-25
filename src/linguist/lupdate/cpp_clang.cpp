@@ -281,17 +281,21 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     ClangCppParser::finalize(rsvQNoop, wsv);
 
     TranslatorMessageVector messages;
-    for (const auto &store : finalStores)
+    for (auto &store : finalStores)
         ClangCppParser::collectMessages(messages, store);
 
     sortMessagesByFileOrder(messages, files);
 
-    for (TranslatorMessage &msg : messages)
+    for (TranslatorMessage &msg : messages) {
+        if (!msg.warning().isEmpty()) {
+            std::cerr << qPrintable(msg.warning());
+        }
         translator.extend(std::move(msg), cd);
+    }
 }
 
 void ClangCppParser::collectMessages(TranslatorMessageVector &result,
-                                     const TranslationRelatedStore &store)
+                                     TranslationRelatedStore &store)
 {
     if (!store.isValid(true))
         return;
@@ -310,8 +314,15 @@ void ClangCppParser::collectMessages(TranslatorMessageVector &result,
     case TrFunctionAliasManager::Function_trUtf8:
     case TrFunctionAliasManager::Function_QT_TR_NOOP:
     case TrFunctionAliasManager::Function_QT_TR_NOOP_UTF8:
-        if (!store.lupdateSourceWhenId.isEmpty())
+        if (!store.lupdateSourceWhenId.isEmpty()) {
+            std::stringstream warning;
+            warning << qPrintable(store.lupdateLocationFile) << ":"
+                << store.lupdateLocationLine << ":"
+                << store.locationCol << ": "
+                << "//% cannot be used with tr() / QT_TR_NOOP(). Ignoring\n";
+            store.lupdateWarning.append(QString::fromStdString(warning.str()));
             qCDebug(lcClang) << "//% is ignored when using tr function\n";
+        }
         if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty())
             qCDebug(lcClang) << "tr() cannot be called without context \n";
         else
@@ -329,8 +340,15 @@ void ClangCppParser::collectMessages(TranslatorMessageVector &result,
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
     case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
-        if (!store.lupdateSourceWhenId.isEmpty())
+        if (!store.lupdateSourceWhenId.isEmpty()) {
+            std::stringstream warning;
+            warning << qPrintable(store.lupdateLocationFile) << ":"
+                << store.lupdateLocationLine << ":"
+                << store.locationCol << ": "
+                << "//% cannot be used with translate() / QT_TRANSLATE_NOOP(). Ignoring\n";
+            store.lupdateWarning.append(QString::fromStdString(warning.str()));
             qCDebug(lcClang) << "//% is ignored when using translate function\n";
+        }
         result.push_back(translatorMessage(store, store.lupdateIdMetaData, plural, false));
         break;
 
@@ -340,8 +358,15 @@ void ClangCppParser::collectMessages(TranslatorMessageVector &result,
         Q_FALLTHROUGH();
     case TrFunctionAliasManager::Function_qtTrId:
     case TrFunctionAliasManager::Function_QT_TRID_NOOP:
-        if (!store.lupdateIdMetaData.isEmpty())
+        if (!store.lupdateIdMetaData.isEmpty()) {
+            std::stringstream warning;
+            warning << qPrintable(store.lupdateLocationFile) << ":"
+                << store.lupdateLocationLine << ":"
+                << store.locationCol << ": "
+                << "//= cannot be used with qtTrId() / QT_TRID_NOOP(). Ignoring\n";
+            store.lupdateWarning.append(QString::fromStdString(warning.str()));
             qCDebug(lcClang) << "//= is ignored when using qtTrId function \n";
+        }
         result.push_back(translatorMessage(store, store.lupdateId, plural, true));
         break;
     default:
@@ -382,6 +407,8 @@ TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStor
         msg.setExtras(store.lupdateAllMagicMetaData);
     msg.setExtraComment(ParserTool::transcode(store.lupdateExtraComment));
     msg.setId(ParserTool::transcode(id));
+    if (!store.lupdateWarning.isEmpty())
+        msg.setWarning(store.lupdateWarning);
     return msg;
 }
 

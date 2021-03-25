@@ -111,6 +111,9 @@ public:
     void setExtraComment(const QString &extraComment) { m_extraComment = extraComment; }
     QString translatorComment() const { return m_translatorComment; }
     void setTranslatorComment(const QString &translatorComment) { m_translatorComment = translatorComment; }
+    QString warning() const {return m_warning;}
+    void setWarning(const QString &warning) {m_warning = warning;}
+
 
     bool isNull() const { return m_sourcetext.isNull() && m_lineNumber == -1 && m_translations.isEmpty(); }
 
@@ -141,6 +144,7 @@ private:
     ExtraData   m_extra; // PO flags, PO plurals
     QString     m_extraComment;
     QString     m_translatorComment;
+    QString     m_warning;
     QStringList m_translations;
     QString     m_fileName;
     int         m_lineNumber;
