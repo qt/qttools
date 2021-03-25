@@ -66,7 +66,7 @@ MainWindow::MainWindow()
     assistant = new Assistant;
 // ![0]
     textViewer = new TextEdit;
-    textViewer->setContents(QLibraryInfo::location(QLibraryInfo::ExamplesPath)
+    textViewer->setContents(QLibraryInfo::path(QLibraryInfo::ExamplesPath)
             + QLatin1String("/assistant/simpletextviewer/documentation/intro.html"));
     setCentralWidget(textViewer);
 

@@ -89,7 +89,7 @@ QString documentationDirectory()
 #ifdef SRCDIR
     paths.append(QLatin1String(SRCDIR));
 #endif
-    paths.append(QLibraryInfo::location(QLibraryInfo::ExamplesPath));
+    paths.append(QLibraryInfo::path(QLibraryInfo::ExamplesPath));
     paths.append(QCoreApplication::applicationDirPath());
     paths.append(QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
     for (const auto &dir : qAsConst(paths)) {
@@ -112,7 +112,7 @@ bool Assistant::startAssistant()
     }
 
     if (m_process->state() != QProcess::Running) {
-        QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
+        QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator();
 #ifndef Q_OS_DARWIN
         app += QLatin1String("assistant");
 #else

@@ -58,7 +58,7 @@
 HelpBrowser::HelpBrowser(QWidget *parent)
     : QTextBrowser(parent)
 {
-    QString collectionFile = QLibraryInfo::location(QLibraryInfo::ExamplesPath)
+    QString collectionFile = QLibraryInfo::path(QLibraryInfo::ExamplesPath)
         + QLatin1String("/help/contextsensitivehelp/docs/wateringmachine.qhc");
 
     m_helpEngine = new QHelpEngineCore(collectionFile, this);

@@ -146,7 +146,7 @@ void tst_windeployqt::deploy()
              qPrintable(errorMessage));
 
     // Create environment with Qt and all "lib" paths removed.
-    const QString qtBinDir = QDir::toNativeSeparators(QLibraryInfo::location(QLibraryInfo::BinariesPath));
+    const QString qtBinDir = QDir::toNativeSeparators(QLibraryInfo::path(QLibraryInfo::BinariesPath));
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     const QString pathKey = QLatin1String("PATH");
     const QChar pathSeparator(QLatin1Char(';')); // ### fixme: Qt 5.6: QDir::listSeparator()

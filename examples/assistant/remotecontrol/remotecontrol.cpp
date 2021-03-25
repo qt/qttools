@@ -98,7 +98,7 @@ void RemoteControl::on_launchButton_clicked()
     if (process->state() == QProcess::Running)
         return;
 
-    QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
+    QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator();
 #if !defined(Q_OS_MAC)
     app += QLatin1String("assistant");
 #else
