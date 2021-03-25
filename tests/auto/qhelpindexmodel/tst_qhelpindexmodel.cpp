@@ -40,7 +40,7 @@ class SignalWaiter : public QThread
 
 public:
     SignalWaiter();
-    void run();
+    void run() override;
 
 public slots:
     void stopWaiting();
