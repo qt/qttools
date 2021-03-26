@@ -110,30 +110,27 @@ bool ClangCppParser::containsTranslationInformation(llvm::StringRef ba)
      return false;
 }
 
-static bool generateCompilationDatabase(const QString &outputFilePath, const QStringList &sources,
-                                        const ConversionData &cd)
+static bool generateCompilationDatabase(const QString &outputFilePath, const ConversionData &cd)
 {
     QJsonArray commandObjects;
     const QString buildDir = QDir::currentPath();
-    for (const auto &source : sources) {
-        QFileInfo fi(source);
-        QJsonObject obj;
-        obj[QLatin1String("file")] = fi.fileName();
-        obj[QLatin1String("directory")] = buildDir;
-        QJsonArray args = {
-            QLatin1String("clang++"), QLatin1String("-o"),
-            QString(fi.completeBaseName() + QLatin1String(".o")),
-            fi.fileName(),
-            QLatin1String("-fPIC"),
-            QLatin1String("-std=gnu++17")
-        };
-        for (const QString &path : cd.m_includePath) {
+    const QString fakefileName = QLatin1String("dummmy.cpp");
+    QJsonObject obj;
+    obj[QLatin1String("file")] = fakefileName;
+    obj[QLatin1String("directory")] = buildDir;
+    QJsonArray args = {
+        QLatin1String("clang++"),
+        QLatin1String("-fPIC"),
+        QLatin1String("-std=gnu++17")
+    };
+
+    for (const QString &path : cd.m_includePath) {
             QString arg = QLatin1String("-I") + path;
             args.push_back(std::move(arg));
-        }
-        obj[QLatin1String("arguments")] = args;
-        commandObjects.append(std::move(obj));
     }
+    obj[QLatin1String("arguments")] = args;
+    commandObjects.append(std::move(obj));
+
     QJsonDocument doc(commandObjects);
     QFile file(outputFilePath);
     if (!file.open(QIODevice::WriteOnly))
@@ -214,7 +211,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     if (!db) {
         const QString dbFilePath = QStringLiteral("compile_commands.json");
         qCDebug(lcClang) << "Generating compilation database" << dbFilePath;
-        if (!generateCompilationDatabase(dbFilePath, files, cd)) {
+        if (!generateCompilationDatabase(dbFilePath, cd)) {
             *fail = true;
             cd.appendError(LU::tr("Cannot generate compilation database."));
             return;
