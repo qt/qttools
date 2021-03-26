@@ -62,10 +62,7 @@ public:
         , m_stores(stores)
     {
         const auto &sm = m_preprocessor.getSourceManager();
-        m_inputFile = sm.getFileEntryForID(sm.getMainFileID())->tryGetRealPathName();
-        if (m_inputFile.empty()) {
-            m_inputFile = sm.getFileEntryForID(sm.getMainFileID())->getName();
-        }
+        m_inputFile = sm.getFileEntryForID(sm.getMainFileID())->getName();
     }
 
     ~LupdatePPCallbacks() override

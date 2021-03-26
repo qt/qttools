@@ -62,11 +62,7 @@ public:
         , m_stores(stores)
     {
         m_inputFile = m_context->getSourceManager().getFileEntryForID(
-            m_context->getSourceManager().getMainFileID())->tryGetRealPathName();
-        if (m_inputFile.empty()) {
-            m_inputFile = m_context->getSourceManager().getFileEntryForID(
-                m_context->getSourceManager().getMainFileID())->getName();
-        }
+            m_context->getSourceManager().getMainFileID())->getName();
     }
 
     bool VisitCallExpr(clang::CallExpr *callExpression);
