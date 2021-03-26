@@ -1102,12 +1102,12 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         }
     } else {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
-        out() << "<div class=\"descr\">\n" // QTBUG-9504
+        out() << "<div class=\"descr\">\n"
               << "<h2 id=\"" << registerRef("details") << "\">"
               << "Detailed Description"
               << "</h2>\n";
         generateBody(aggregate, marker);
-        out() << "</div>\n"; // QTBUG-9504
+        out() << "</div>\n";
         generateAlsoList(aggregate, marker);
         generateMaintainerList(aggregate, marker);
         generateExtractionMark(aggregate, EndMark);
@@ -1124,7 +1124,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
                 continue;
             if (!headerGenerated) {
                 if (!section.divClass().isEmpty())
-                    out() << "<div class=\"" << section.divClass() << "\">\n"; // QTBUG-9504
+                    out() << "<div class=\"" << section.divClass() << "\">\n";
                 out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
                 headerGenerated = true;
             }
@@ -1167,7 +1167,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
             }
         }
         if (headerGenerated && !section.divClass().isEmpty())
-            out() << "</div>\n"; // QTBUG-9504
+            out() << "</div>\n";
     }
     generateFooter(aggregate);
 }
@@ -1202,12 +1202,12 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
 
     if (!aggregate->doc().isEmpty()) {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
-        out() << "<div class=\"descr\">\n" // QTBUG-9504
+        out() << "<div class=\"descr\">\n"
               << "<h2 id=\"" << registerRef("details") << "\">"
               << "Detailed Description"
               << "</h2>\n";
         generateBody(aggregate, marker);
-        out() << "</div>\n"; // QTBUG-9504
+        out() << "</div>\n";
         generateAlsoList(aggregate, marker);
         generateMaintainerList(aggregate, marker);
         generateExtractionMark(aggregate, EndMark);
@@ -1218,7 +1218,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
             continue;
 
         if (!section.divClass().isEmpty())
-            out() << "<div class=\"" << section.divClass() << "\">\n"; // QTBUG-9504
+            out() << "<div class=\"" << section.divClass() << "\">\n";
         out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
 
         const QList<Node *> &members = section.members();
@@ -1255,7 +1255,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
             }
         }
         if (!section.divClass().isEmpty())
-            out() << "</div>\n"; // QTBUG-9504
+            out() << "</div>\n";
     }
     generateFooter(aggregate);
 }
@@ -1363,10 +1363,10 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker 
 
     generateExtractionMark(qbtn, DetailedDescriptionMark);
     out() << R"(<div class="descr" id=")" << registerRef("details")
-          << "\">\n"; // QTBUG-9504
+          << "\">\n";
 
     generateBody(qbtn, marker);
-    out() << "</div>\n"; // QTBUG-9504
+    out() << "</div>\n";
     generateAlsoList(qbtn, marker);
     generateExtractionMark(qbtn, EndMark);
 
@@ -1408,10 +1408,10 @@ void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 
     generateExtractionMark(pn, DetailedDescriptionMark);
     out() << R"(<div class="descr" id=")" << registerRef("details")
-          << "\">\n"; // QTBUG-9504
+          << "\">\n";
 
     generateBody(pn, marker);
-    out() << "</div>\n"; // QTBUG-9504
+    out() << "</div>\n";
     generateAlsoList(pn, marker);
     generateExtractionMark(pn, EndMark);
 
@@ -1461,18 +1461,18 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     if (cn->isModule() && !cn->doc().briefText().isEmpty()) {
         generateExtractionMark(cn, DetailedDescriptionMark);
         ref = registerRef("details");
-        out() << "<div class=\"descr\">\n"; // QTBUG-9504
+        out() << "<div class=\"descr\">\n";
         out() << "<h2 id=\"" << ref << "\">"
               << "Detailed Description"
               << "</h2>\n";
     } else {
         generateExtractionMark(cn, DetailedDescriptionMark);
         out() << R"(<div class="descr" id=")" << registerRef("details")
-              << "\">\n"; // QTBUG-9504
+              << "\">\n";
     }
 
     generateBody(cn, marker);
-    out() << "</div>\n"; // QTBUG-9504
+    out() << "</div>\n";
     generateAlsoList(cn, marker);
     generateExtractionMark(cn, EndMark);
 
