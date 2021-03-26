@@ -99,6 +99,8 @@ qt_internal_add_tool(${target_name}
         ${QT_SOURCE_TREE}/src/tools/qdoc/qmlparser
 )
 
+qt_internal_force_macos_intel_arch(${target_name})
+
 #### Keys ignored in scope 1:.:.:qdoc.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Documentation Compiler"
 # TR_EXCLUDE = "$$PWD/*"

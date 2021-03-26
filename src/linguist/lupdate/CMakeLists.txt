@@ -49,6 +49,8 @@ qt_internal_add_tool(${target_name}
         Qt::ToolsPrivate
 )
 
+qt_internal_force_macos_intel_arch(${target_name})
+
 #### Keys ignored in scope 1:.:.:lupdate.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Translation File Update Tool"
 # QT_TOOL_ENV = "qmake"
