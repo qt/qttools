@@ -2737,27 +2737,35 @@ void HtmlGenerator::generateFunctionIndex(const Node *relative)
     out() << "</b></p>\n";
 
     char nextLetter = 'a';
-    char currentLetter;
 
     out() << "<ul>\n";
     NodeMapMap &funcIndex = m_qdb->getFunctionIndex();
     for (auto fnMap = funcIndex.constBegin(); fnMap != funcIndex.constEnd(); ++fnMap) {
-        out() << "<li>";
-        out() << protectEnc(fnMap.key()) << ':';
+        const QString &key = fnMap.key();
+        const QChar firstLetter = key.isEmpty() ? QChar('A') : key.front();
+        Q_ASSERT_X(firstLetter.unicode() < 256, "generateFunctionIndex",
+                   "Only valid C++ identifiers were expected");
+        const char currentLetter = firstLetter.isLower() ? firstLetter.unicode() : nextLetter - 1;
 
-        currentLetter = fnMap.key()[0].unicode();
-        while (islower(currentLetter) && currentLetter >= nextLetter) {
-            out() << QString("<a id=\"%1\"></a>").arg(nextLetter); // TODO: This is not covered by our tests
-            nextLetter++;
+        if (currentLetter < nextLetter) {
+            out() << "<li>";
+        } else {
+            // TODO: This is not covered by our tests
+            while (nextLetter < currentLetter)
+                out() << QStringLiteral("<li id=\"%1\"></li>").arg(nextLetter++);
+            Q_ASSERT(nextLetter == currentLetter);
+            out() << QStringLiteral("<li id=\"%1\">").arg(nextLetter++);
         }
+        out() << protectEnc(key) << ':';
 
         for (auto it = (*fnMap).constBegin(); it != (*fnMap).constEnd(); ++it) {
             out() << ' ';
             generateFullName((*it)->parent(), relative, *it);
         }
-        out() << "</li>";
-        out() << '\n';
+        out() << "</li>\n";
     }
+    while (nextLetter <= 'z')
+        out() << QStringLiteral("<li id=\"%1\"></li>").arg(nextLetter++);
     out() << "</ul>\n";
 }
 
