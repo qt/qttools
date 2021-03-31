@@ -27,6 +27,7 @@
 ****************************************************************************/
 #include <QCoreApplication>
 #include <QDir>
+#include <QLibraryInfo>
 
 #include "../shared/shared.h"
 
@@ -237,11 +238,29 @@ int main(int argc, char **argv)
                           deploymentInfo.deployedFrameworks.end()).values();
     }
 
-    if (plugins && !deploymentInfo.qtPath.isEmpty()) {
-        deploymentInfo.pluginPath = deploymentInfo.qtPath + "/plugins";
-        LogNormal();
-        deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
-        createQtConf(appBundlePath);
+    // Handle plugins
+    if (plugins) {
+        // Set the plugins search directory
+        deploymentInfo.pluginPath = QLibraryInfo::path(QLibraryInfo::PluginsPath);
+
+        // Sanity checks
+        if (deploymentInfo.pluginPath.isEmpty()) {
+            LogError() << "Missing Qt plugins path\n";
+            return 1;
+        }
+
+        if (!QDir(deploymentInfo.pluginPath).exists()) {
+            LogError() << "Plugins path does not exist" << deploymentInfo.pluginPath << "\n";
+            return 1;
+        }
+
+        // Deploy plugins
+        Q_ASSERT(!deploymentInfo.pluginPath.isEmpty());
+        if (!deploymentInfo.pluginPath.isEmpty()) {
+            LogNormal();
+            deployPlugins(appBundlePath, deploymentInfo, useDebugLibs);
+            createQtConf(appBundlePath);
+        }
     }
 
     if (runStripEnabled)
@@ -257,4 +276,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
