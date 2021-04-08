@@ -129,7 +129,7 @@ static bool generateCompilationDatabase(const QString &outputFilePath, const Con
             args.push_back(std::move(arg));
     }
     obj[QLatin1String("arguments")] = args;
-    commandObjects.append(std::move(obj));
+    commandObjects.append(obj);
 
     QJsonDocument doc(commandObjects);
     QFile file(outputFilePath);
