@@ -81,17 +81,10 @@ QVariant AboutLabel::loadResource(int type, const QUrl &name)
     return QVariant();
 }
 
-
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-void AboutLabel::setSource(const QUrl &url)
-#else
 void AboutLabel::doSetSource(const QUrl &url, QTextDocument::ResourceType type)
-#endif
 {
     TRACE_OBJ
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     Q_UNUSED(type);
-#endif
     if (url.isValid() && (!HelpViewer::isLocalUrl(url)
     || !HelpViewer::canOpenPage(url.path()))) {
         if (!QDesktopServices::openUrl(url)) {

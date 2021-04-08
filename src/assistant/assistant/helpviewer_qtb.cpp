@@ -144,16 +144,10 @@ QUrl HelpViewer::source() const
     return QTextBrowser::source();
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-void HelpViewer::setSource(const QUrl &url)
-#else
 void HelpViewer::doSetSource(const QUrl &url, QTextDocument::ResourceType type)
-#endif
 {
     TRACE_OBJ
-#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     Q_UNUSED(type);
-#endif
     if (launchWithExternalApp(url))
         return;
 

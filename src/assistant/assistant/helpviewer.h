@@ -82,11 +82,7 @@ public:
     void setTitle(const QString &title);
 
     QUrl source() const;
-#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
-    void setSource(const QUrl &url) TEXTBROWSER_OVERRIDE;
-#else
     void doSetSource(const QUrl &url, QTextDocument::ResourceType type) TEXTBROWSER_OVERRIDE;
-#endif
 
     QString selectedText() const;
     bool isForwardAvailable() const;

@@ -237,16 +237,6 @@ protected:
 
     static const DomResourcePixmap *domPixmap(const DomProperty* p);
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    IconPaths iconPaths(const QIcon &) const;
-    IconPaths pixmapPaths(const QPixmap &) const;
-    DomProperty* iconToDomProperty(const QIcon &) const;
-    QIcon domPropertyToIcon(const DomResourcePixmap *);
-    QIcon domPropertyToIcon(const DomProperty* p);
-    QPixmap domPropertyToPixmap(const DomResourcePixmap* p);
-    QPixmap domPropertyToPixmap(const DomProperty* p);
-#endif
-
 private:
 //
 //  utils

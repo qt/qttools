@@ -2518,34 +2518,6 @@ QMetaEnum QAbstractFormBuilder::toolBarAreaMetaEnum()
     return metaEnum<QAbstractFormBuilderGadget>("toolBarArea");
 }
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-
-/*!
-    \internal
-    Return paths of an icon.
-*/
-
-QAbstractFormBuilder::IconPaths QAbstractFormBuilder::iconPaths(const QIcon &icon) const
-{
-    Q_UNUSED(icon);
-    qWarning() << "QAbstractFormBuilder::iconPaths() is obsoleted";
-    return IconPaths();
-}
-
-/*!
-    \internal
-    Return paths of a pixmap.
-*/
-
-QAbstractFormBuilder::IconPaths QAbstractFormBuilder::pixmapPaths(const QPixmap &pixmap) const
-{
-    Q_UNUSED(pixmap);
-    qWarning() << "QAbstractFormBuilder::pixmapPaths() is obsoleted";
-    return IconPaths();
-}
-
-#endif // < Qt 6
-
 /*!
     \internal
     Set up a DOM property with icon.
@@ -2574,22 +2546,6 @@ void QAbstractFormBuilder::setPixmapProperty(DomProperty &p, const IconPaths &ip
 {
     QFormBuilderExtra::setPixmapProperty(&p, ip);
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-
-/*!
-    \internal
-    Convenience. Return DOM property for icon; 0 if icon.isNull().
-*/
-
-DomProperty* QAbstractFormBuilder::iconToDomProperty(const QIcon &icon) const
-{
-    Q_UNUSED(icon);
-    qWarning() << "QAbstractFormBuilder::iconToDomProperty() is obsoleted";
-    return nullptr;
-}
-
-#endif // < Qt 6
 
 /*!
     \internal
@@ -2641,64 +2597,6 @@ const DomResourcePixmap *QAbstractFormBuilder::domPixmap(const DomProperty* p) {
     }
     return nullptr;
 }
-
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-
-/*!
-    \internal
-    Create icon from DOM.
-    From 4.4 - unused
-*/
-
-QIcon QAbstractFormBuilder::domPropertyToIcon(const DomResourcePixmap *icon)
-{
-    Q_UNUSED(icon);
-    qWarning() << "QAbstractFormBuilder::domPropertyToIcon() is obsoleted";
-    return QIcon();
-}
-
-/*!
-    \internal
-    Create icon from DOM. Assert if !domPixmap
-    From 4.4 - unused
-*/
-
-QIcon QAbstractFormBuilder::domPropertyToIcon(const DomProperty* p)
-{
-    Q_UNUSED(p);
-    qWarning() << "QAbstractFormBuilder::domPropertyToIcon() is obsoleted";
-    return QIcon();
-}
-
-
-/*!
-    \internal
-    Create pixmap from DOM.
-    From 4.4 - unused
-*/
-
-QPixmap QAbstractFormBuilder::domPropertyToPixmap(const DomResourcePixmap* pixmap)
-{
-    Q_UNUSED(pixmap);
-    qWarning() << "QAbstractFormBuilder::domPropertyToPixmap() is obsoleted";
-    return QPixmap();
-}
-
-
-/*!
-    \internal
-    Create pixmap from DOM. Assert if !domPixmap
-    From 4.4 - unused
-*/
-
-QPixmap QAbstractFormBuilder::domPropertyToPixmap(const DomProperty* p)
-{
-    Q_UNUSED(p);
-    qWarning() << "QAbstractFormBuilder::domPropertyToPixmap() is obsoleted";
-    return QPixmap();
-}
-
-#endif // < Qt 6
 
 /*!
     \fn void QAbstractFormBuilder::createConnections ( DomConnections *, QWidget * )
