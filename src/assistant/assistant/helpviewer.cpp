@@ -37,12 +37,22 @@
 #include <QtCore/QTemporaryFile>
 
 #include <QtGui/QDesktopServices>
+#if QT_CONFIG(clipboard)
+#include <QtGui/QClipboard>
+#endif
+#include <QtGui/QGuiApplication>
+#include <QtGui/QWheelEvent>
 
+#include <QtWidgets/QScrollBar>
 #include <QtWidgets/QVBoxLayout>
 
 #include <QtHelp/QHelpEngineCore>
 
+#include <qlitehtmlwidget.h>
+
 QT_BEGIN_NAMESPACE
+
+const int kMaxHistoryItems = 20;
 
 struct ExtensionMap {
     const char *extension;
@@ -81,34 +91,114 @@ struct ExtensionMap {
     { nullptr, nullptr }
 };
 
+static QByteArray getData(const QUrl &url)
+{
+    // TODO: this is just a hack for Qt documentation
+    // which decides to use a simpler CSS if the viewer does not have JavaScript
+    // which was a hack to decide if we are viewing in QTextBrowser or QtWebEngine et al
+    QUrl actualUrl = url;
+    QString path = url.path(QUrl::FullyEncoded);
+    static const char simpleCss[] = "/offline-simple.css";
+    if (path.endsWith(simpleCss)) {
+        path.replace(simpleCss, "/offline.css");
+        actualUrl.setPath(path);
+    }
+
+    bool helpOrAbout = (actualUrl.toString() == QLatin1String("help"));
+    const QUrl resolvedUrl = (helpOrAbout ? HelpViewerImpl::LocalHelpFile
+                                          : HelpEngineWrapper::instance().findFile(actualUrl));
+    if (resolvedUrl.isValid())
+        return HelpEngineWrapper::instance().fileData(resolvedUrl);
+
+    helpOrAbout = (actualUrl.toString() == QLatin1String("about:blank"));
+    return helpOrAbout ? HelpViewerImpl::AboutBlank.toUtf8()
+                       : HelpViewerImpl::PageNotFoundMessage.arg(url.toString()).toUtf8();
+}
+
 class HelpViewerPrivate
 {
 public:
-    HelpViewerImpl *m_viewer;
+    struct HistoryItem
+    {
+        QUrl url;
+        QString title;
+        int vscroll;
+    };
+    HistoryItem currentHistoryItem() const;
+    void setSourceInternal(const QUrl &url, int *vscroll = nullptr);
+    void incrementZoom(int steps);
+    void applyZoom(int percentage);
+
+    HelpViewer *q = nullptr;
+    QLiteHtmlWidget *m_viewer = nullptr;
+    std::vector<HistoryItem> m_backItems;
+    std::vector<HistoryItem> m_forwardItems;
+    int m_fontZoom = 100; // zoom percentage
 };
+
+HelpViewerPrivate::HistoryItem HelpViewerPrivate::currentHistoryItem() const
+{
+    return { m_viewer->url(), m_viewer->title(), m_viewer->verticalScrollBar()->value() };
+}
+
+void HelpViewerPrivate::setSourceInternal(const QUrl &url, int *vscroll)
+{
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    QUrl currentUrlWithoutFragment = m_viewer->url();
+    currentUrlWithoutFragment.setFragment({});
+    QUrl newUrlWithoutFragment = url;
+    newUrlWithoutFragment.setFragment({});
+    m_viewer->setUrl(url);
+    if (currentUrlWithoutFragment != newUrlWithoutFragment)
+        m_viewer->setHtml(QString::fromUtf8(getData(url)));
+    if (vscroll)
+        m_viewer->verticalScrollBar()->setValue(*vscroll);
+    else
+        m_viewer->scrollToAnchor(url.fragment(QUrl::FullyEncoded));
+
+    QGuiApplication::restoreOverrideCursor();
+
+    emit q->sourceChanged(q->source());
+    emit q->loadFinished();
+    emit q->titleChanged();
+}
+
+void HelpViewerPrivate::incrementZoom(int steps)
+{
+    const int incrementPercentage = 10 * steps; // 10 percent increase by single step
+    const int previousZoom = m_fontZoom;
+    applyZoom(previousZoom + incrementPercentage);
+}
+
+void HelpViewerPrivate::applyZoom(int percentage)
+{
+    const int newZoom = qBound(10, percentage, 300);
+    if (newZoom == m_fontZoom)
+        return;
+    m_fontZoom = newZoom;
+    m_viewer->setZoomFactor(newZoom / 100.0);
+}
 
 HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     : QWidget(parent)
     , d(new HelpViewerPrivate)
 {
     auto layout = new QVBoxLayout;
-    d->m_viewer = new HelpViewerImpl(zoom, this);
+    d->q = this;
+    d->m_viewer = new QLiteHtmlWidget(this);
+    d->m_viewer->setResourceHandler([](const QUrl &url) { return getData(url); });
+    d->m_viewer->viewport()->installEventFilter(this);
+    const int zoomPercentage = zoom == 0 ? 100 : zoom * 100;
+    d->applyZoom(zoomPercentage);
+    connect(d->m_viewer, &QLiteHtmlWidget::linkClicked, this, &HelpViewer::setSource);
+    connect(d->m_viewer, &QLiteHtmlWidget::linkHighlighted, this, &HelpViewer::highlighted);
+#if QT_CONFIG(clipboard)
+    connect(d->m_viewer, &QLiteHtmlWidget::copyAvailable, this, &HelpViewer::copyAvailable);
+#endif
     setLayout(layout);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(d->m_viewer, 10);
-
-    connect(d->m_viewer, &HelpViewerImpl::titleChanged,      this, &HelpViewer::titleChanged);
-#if QT_CONFIG(clipboard)
-    connect(d->m_viewer, &HelpViewerImpl::copyAvailable,     this, &HelpViewer::copyAvailable);
-#endif
-    connect(d->m_viewer, &HelpViewerImpl::sourceChanged,     this, &HelpViewer::sourceChanged);
-    connect(d->m_viewer, &HelpViewerImpl::forwardAvailable,  this, &HelpViewer::forwardAvailable);
-    connect(d->m_viewer, &HelpViewerImpl::backwardAvailable, this, &HelpViewer::backwardAvailable);
-    connect(d->m_viewer, &HelpViewerImpl::highlighted,       this, &HelpViewer::highlighted);
-#if defined(BROWSER_QTWEBKIT)
-    connect(d->m_viewer, &HelpViewerImpl::printRequested,    this, &HelpViewer::printRequested);
-#endif
-    connect(d->m_viewer, &HelpViewerImpl::loadFinished,      this, &HelpViewer::loadFinished);
 }
 
 HelpViewer::~HelpViewer()
@@ -118,32 +208,32 @@ HelpViewer::~HelpViewer()
 
 QFont HelpViewer::viewerFont() const
 {
-    return d->m_viewer->viewerFont();
+    return d->m_viewer->defaultFont();
 }
 
 void HelpViewer::setViewerFont(const QFont &font)
 {
-    d->m_viewer->setViewerFont(font);
+    d->m_viewer->setDefaultFont(font);
 }
 
 void HelpViewer::scaleUp()
 {
-    d->m_viewer->scaleUp();
+    d->incrementZoom(1);
 }
 
 void HelpViewer::scaleDown()
 {
-    d->m_viewer->scaleDown();
+    d->incrementZoom(-1);
 }
 
 void HelpViewer::resetScale()
 {
-    d->m_viewer->resetScale();
+    d->applyZoom(100);
 }
 
 qreal HelpViewer::scale() const
 {
-    return d->m_viewer->scale();
+    return d->m_viewer->zoomFactor();
 }
 
 QString HelpViewer::title() const
@@ -153,22 +243,35 @@ QString HelpViewer::title() const
 
 QUrl HelpViewer::source() const
 {
-    return d->m_viewer->source();
+    return d->m_viewer->url();
 }
 
 void HelpViewer::reload()
 {
-    d->m_viewer->reload();
+    setSource(source());
 }
 
 void HelpViewer::setSource(const QUrl &url)
 {
-    d->m_viewer->setSource(url);
+    if (launchWithExternalApp(url))
+        return;
+
+    d->m_forwardItems.clear();
+    emit forwardAvailable(false);
+    if (d->m_viewer->url().isValid()) {
+        d->m_backItems.push_back(d->currentHistoryItem());
+        while (d->m_backItems.size() > kMaxHistoryItems) // this should trigger only once anyhow
+            d->m_backItems.erase(d->m_backItems.begin());
+        emit backwardAvailable(true);
+    }
+
+    d->setSourceInternal(url);
 }
 
 void HelpViewer::print(QPagedPaintDevice *printer)
 {
-    d->m_viewer->print(printer);
+    Q_UNUSED(printer);
+    // TODO: implement me
 }
 
 QString HelpViewer::selectedText() const
@@ -178,39 +281,83 @@ QString HelpViewer::selectedText() const
 
 bool HelpViewer::isForwardAvailable() const
 {
-    return d->m_viewer->isForwardAvailable();
+    return !d->m_forwardItems.empty();
 }
 
 bool HelpViewer::isBackwardAvailable() const
 {
-    return d->m_viewer->isBackwardAvailable();
+    return !d->m_backItems.empty();
+}
+
+static QTextDocument::FindFlags textDocumentFlagsForFindFlags(HelpViewer::FindFlags flags)
+{
+    QTextDocument::FindFlags textDocFlags;
+    if (flags & HelpViewer::FindBackward)
+        textDocFlags |= QTextDocument::FindBackward;
+    if (flags & HelpViewer::FindCaseSensitively)
+        textDocFlags |= QTextDocument::FindCaseSensitively;
+    return textDocFlags;
 }
 
 bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental, bool fromSearch)
 {
-    return d->m_viewer->findText(text, flags, incremental, fromSearch);
+    Q_UNUSED(fromSearch);
+    return d->m_viewer->findText(text, textDocumentFlagsForFindFlags(flags), incremental);
 }
 
 #if QT_CONFIG(clipboard)
 void HelpViewer::copy()
 {
-    d->m_viewer->copy();
+    QGuiApplication::clipboard()->setText(selectedText());
 }
 #endif
 
 void HelpViewer::home()
 {
-    d->m_viewer->home();
+    setSource(HelpEngineWrapper::instance().homePage());
 }
 
 void HelpViewer::forward()
 {
-    d->m_viewer->forward();
+    HelpViewerPrivate::HistoryItem nextItem = d->currentHistoryItem();
+    if (d->m_forwardItems.empty())
+        return;
+    d->m_backItems.push_back(nextItem);
+    nextItem = d->m_forwardItems.front();
+    d->m_forwardItems.erase(d->m_forwardItems.begin());
+
+    emit backwardAvailable(isBackwardAvailable());
+    emit forwardAvailable(isForwardAvailable());
+    d->setSourceInternal(nextItem.url, &nextItem.vscroll);
 }
 
 void HelpViewer::backward()
 {
-    d->m_viewer->backward();
+    HelpViewerPrivate::HistoryItem previousItem = d->currentHistoryItem();
+    if (d->m_backItems.empty())
+        return;
+    d->m_forwardItems.insert(d->m_forwardItems.begin(), previousItem);
+    previousItem = d->m_backItems.back();
+    d->m_backItems.pop_back();
+
+    emit backwardAvailable(isBackwardAvailable());
+    emit forwardAvailable(isForwardAvailable());
+    d->setSourceInternal(previousItem.url, &previousItem.vscroll);
+}
+
+bool HelpViewer::eventFilter(QObject *src, QEvent *event)
+{
+    if (event->type() == QEvent::Wheel) {
+        auto we = static_cast<QWheelEvent *>(event);
+        if (we->modifiers() == Qt::ControlModifier) {
+            we->accept();
+            const int deltaY = we->angleDelta().y();
+            if (deltaY != 0)
+                d->incrementZoom(deltaY / 120);
+            return true;
+        }
+    }
+    return QWidget::eventFilter(src, event);
 }
 
 bool HelpViewer::isLocalUrl(const QUrl &url)

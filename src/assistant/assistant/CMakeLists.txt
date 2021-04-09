@@ -49,6 +49,7 @@ qt_internal_add_app(assistant
         Qt::Sql
         Qt::Widgets
         Qt::PrintSupport # special case
+        qlitehtml
     ENABLE_AUTOGEN_TOOLS
         uic
 )

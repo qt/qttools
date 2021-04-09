@@ -83,6 +83,9 @@ public:
     static QString mimeFromUrl(const QUrl &url);
     static bool launchWithExternalApp(const QUrl &url);
 
+    // implementation detail, not a part of the interface
+    bool eventFilter(QObject *src, QEvent *event) override;
+
 public slots:
 #if QT_CONFIG(clipboard)
     void copy();
@@ -99,7 +102,7 @@ signals:
     void backwardAvailable(bool enabled);
     void highlighted(const QUrl &link);
     void printRequested();
-    void loadFinished(bool finished);
+    void loadFinished();
 private:
     HelpViewerPrivate *d;
 };
