@@ -25,7 +25,7 @@ qt_internal_add_app(assistant
         helpdocsettings.cpp helpdocsettings.h
         helpdocsettingswidget.cpp helpdocsettingswidget.h helpdocsettingswidget.ui
         helpenginewrapper.cpp helpenginewrapper.h
-        helpviewer.cpp helpviewer.h helpviewer_p.h
+        helpviewer.cpp helpviewer.h helpviewerimpl.cpp helpviewerimpl.h helpviewerimpl_p.h
         indexwindow.cpp indexwindow.h
         main.cpp
         mainwindow.cpp mainwindow.h
@@ -129,7 +129,7 @@ qt_internal_extend_target(assistant CONDITION TARGET Qt::PrintSupport
 
 qt_internal_extend_target(assistant CONDITION BROWSER___equals___qtwebkit
     SOURCES
-        helpviewer_qwv.cpp
+        helpviewerimpl_qwv.cpp
     DEFINES
         BROWSER_QTWEBKIT
     PUBLIC_LIBRARIES
@@ -138,7 +138,7 @@ qt_internal_extend_target(assistant CONDITION BROWSER___equals___qtwebkit
 
 qt_internal_extend_target(assistant CONDITION NOT BROWSER___equals___qtwebkit
     SOURCES
-        helpviewer_qtb.cpp
+        helpviewerimpl_qtb.cpp
     DEFINES
         BROWSER_QTEXTBROWSER
 )

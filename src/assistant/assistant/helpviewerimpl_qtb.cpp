@@ -26,11 +26,11 @@
 **
 ****************************************************************************/
 
-#include "helpviewer.h"
+#include "helpviewerimpl.h"
+#include "helpviewerimpl_p.h"
 
 #include "globalactions.h"
 #include "helpenginewrapper.h"
-#include "helpviewer_p.h"
 #include "openpagesmanager.h"
 #include "tracer.h"
 
@@ -46,9 +46,9 @@
 
 QT_BEGIN_NAMESPACE
 
-HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
+HelpViewerImpl::HelpViewerImpl(qreal zoom, QWidget *parent)
     : QTextBrowser(parent)
-    , d(new HelpViewerPrivate(zoom))
+    , d(new HelpViewerImplPrivate(zoom))
 {
     TRACE_OBJ
     QPalette p = palette();
@@ -65,11 +65,11 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     font.setPointSize(int(font.pointSize() + zoom));
     setViewerFont(font);
 
-    connect(this, &QTextBrowser::sourceChanged, this, &HelpViewer::titleChanged);
-    connect(this, &HelpViewer::loadFinished, this, &HelpViewer::setLoadFinished);
+    connect(this, &QTextBrowser::sourceChanged, this, &HelpViewerImpl::titleChanged);
+    connect(this, &HelpViewerImpl::loadFinished, this, &HelpViewerImpl::setLoadFinished);
 }
 
-QFont HelpViewer::viewerFont() const
+QFont HelpViewerImpl::viewerFont() const
 {
     TRACE_OBJ
     if (HelpEngineWrapper::instance().usesBrowserFont())
@@ -77,7 +77,7 @@ QFont HelpViewer::viewerFont() const
     return qApp->font();
 }
 
-void HelpViewer::setViewerFont(const QFont &newFont)
+void HelpViewerImpl::setViewerFont(const QFont &newFont)
 {
     TRACE_OBJ
     if (font() != newFont) {
@@ -87,7 +87,7 @@ void HelpViewer::setViewerFont(const QFont &newFont)
     }
 }
 
-void HelpViewer::scaleUp()
+void HelpViewerImpl::scaleUp()
 {
     TRACE_OBJ
     if (d->zoomCount < 10) {
@@ -98,7 +98,7 @@ void HelpViewer::scaleUp()
     }
 }
 
-void HelpViewer::scaleDown()
+void HelpViewerImpl::scaleDown()
 {
     TRACE_OBJ
     if (d->zoomCount > -5) {
@@ -109,7 +109,7 @@ void HelpViewer::scaleDown()
     }
 }
 
-void HelpViewer::resetScale()
+void HelpViewerImpl::resetScale()
 {
     TRACE_OBJ
     if (d->zoomCount != 0) {
@@ -120,38 +120,31 @@ void HelpViewer::resetScale()
     d->zoomCount = 0;
 }
 
-qreal HelpViewer::scale() const
+qreal HelpViewerImpl::scale() const
 {
     TRACE_OBJ
     return d->zoomCount;
 }
 
-QString HelpViewer::title() const
+QString HelpViewerImpl::title() const
 {
     TRACE_OBJ
     return documentTitle();
 }
 
-void HelpViewer::setTitle(const QString &title)
-{
-    TRACE_OBJ
-    setDocumentTitle(title);
-}
-
-QUrl HelpViewer::source() const
+QUrl HelpViewerImpl::source() const
 {
     TRACE_OBJ
     return QTextBrowser::source();
 }
 
-void HelpViewer::doSetSource(const QUrl &url, QTextDocument::ResourceType type)
+void HelpViewerImpl::doSetSource(const QUrl &url, QTextDocument::ResourceType type)
 {
     TRACE_OBJ
     Q_UNUSED(type);
-    if (launchWithExternalApp(url))
+    if (HelpViewer::launchWithExternalApp(url))
         return;
 
-    emit loadStarted();
     bool helpOrAbout = (url.toString() == QLatin1String("help"));
     const QUrl resolvedUrl = (helpOrAbout ? LocalHelpFile : HelpEngineWrapper::instance().findFile(url));
 
@@ -164,25 +157,25 @@ void HelpViewer::doSetSource(const QUrl &url, QTextDocument::ResourceType type)
     emit loadFinished(true);
 }
 
-QString HelpViewer::selectedText() const
+QString HelpViewerImpl::selectedText() const
 {
     TRACE_OBJ
     return textCursor().selectedText();
 }
 
-bool HelpViewer::isForwardAvailable() const
+bool HelpViewerImpl::isForwardAvailable() const
 {
     TRACE_OBJ
     return QTextBrowser::isForwardAvailable();
 }
 
-bool HelpViewer::isBackwardAvailable() const
+bool HelpViewerImpl::isBackwardAvailable() const
 {
     TRACE_OBJ
     return QTextBrowser::isBackwardAvailable();
 }
 
-bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental,
+bool HelpViewerImpl::findText(const QString &text, HelpViewer::FindFlags flags, bool incremental,
     bool fromSearch)
 {
     TRACE_OBJ
@@ -240,20 +233,20 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 // -- public slots
 
 #if QT_CONFIG(clipboard)
-void HelpViewer::copy()
+void HelpViewerImpl::copy()
 {
     TRACE_OBJ
     QTextBrowser::copy();
 }
 #endif
 
-void HelpViewer::forward()
+void HelpViewerImpl::forward()
 {
     TRACE_OBJ
     QTextBrowser::forward();
 }
 
-void HelpViewer::backward()
+void HelpViewerImpl::backward()
 {
     TRACE_OBJ
     QTextBrowser::backward();
@@ -261,7 +254,7 @@ void HelpViewer::backward()
 
 // -- protected
 
-void HelpViewer::keyPressEvent(QKeyEvent *e)
+void HelpViewerImpl::keyPressEvent(QKeyEvent *e)
 {
     TRACE_OBJ
     if ((e->key() == Qt::Key_Home && e->modifiers() != Qt::NoModifier)
@@ -273,8 +266,7 @@ void HelpViewer::keyPressEvent(QKeyEvent *e)
     QTextBrowser::keyPressEvent(e);
 }
 
-
-void HelpViewer::wheelEvent(QWheelEvent *e)
+void HelpViewerImpl::wheelEvent(QWheelEvent *e)
 {
     TRACE_OBJ
     if (e->modifiers() == Qt::ControlModifier) {
@@ -285,7 +277,7 @@ void HelpViewer::wheelEvent(QWheelEvent *e)
     }
 }
 
-void HelpViewer::mousePressEvent(QMouseEvent *e)
+void HelpViewerImpl::mousePressEvent(QMouseEvent *e)
 {
     TRACE_OBJ
 #ifdef Q_OS_LINUX
@@ -296,7 +288,7 @@ void HelpViewer::mousePressEvent(QMouseEvent *e)
     QTextBrowser::mousePressEvent(e);
 }
 
-void HelpViewer::mouseReleaseEvent(QMouseEvent *e)
+void HelpViewerImpl::mouseReleaseEvent(QMouseEvent *e)
 {
     TRACE_OBJ
 #ifndef Q_OS_LINUX
@@ -315,7 +307,7 @@ void HelpViewer::mouseReleaseEvent(QMouseEvent *e)
 }
 
 
-void HelpViewer::resizeEvent(QResizeEvent *e)
+void HelpViewerImpl::resizeEvent(QResizeEvent *e)
 {
     const int topTextPosition = cursorForPosition({width() / 2, 0}).position();
     QTextBrowser::resizeEvent(e);
@@ -324,7 +316,7 @@ void HelpViewer::resizeEvent(QResizeEvent *e)
 
 // -- private slots
 
-void HelpViewer::actionChanged()
+void HelpViewerImpl::actionChanged()
 {
     // stub
     TRACE_OBJ
@@ -332,7 +324,7 @@ void HelpViewer::actionChanged()
 
 // -- private
 
-bool HelpViewer::eventFilter(QObject *obj, QEvent *event)
+bool HelpViewerImpl::eventFilter(QObject *obj, QEvent *event)
 {
     TRACE_OBJ
     if (event->type() == QEvent::FontChange && !d->forceFont)
@@ -340,7 +332,7 @@ bool HelpViewer::eventFilter(QObject *obj, QEvent *event)
     return QTextBrowser::eventFilter(obj, event);
 }
 
-void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
+void HelpViewerImpl::contextMenuEvent(QContextMenuEvent *event)
 {
     TRACE_OBJ
 
@@ -353,8 +345,8 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
         link = anchorAt(event->pos());
         if (link.isRelative())
             link = source().resolved(link);
-        menu.addAction(tr("Open Link"), d, &HelpViewerPrivate::openLink);
-        menu.addAction(tr("Open Link in New Tab\tCtrl+LMB"), d, &HelpViewerPrivate::openLinkInNewPage);
+        menu.addAction(tr("Open Link"), d, &HelpViewerImplPrivate::openLink);
+        menu.addAction(tr("Open Link in New Tab\tCtrl+LMB"), d, &HelpViewerImplPrivate::openLinkInNewPage);
 
 #if QT_CONFIG(clipboard)
         if (!link.isEmpty() && link.isValid())
@@ -362,10 +354,10 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
 #endif
     } else if (!selectedText().isEmpty()) {
 #if QT_CONFIG(clipboard)
-        menu.addAction(tr("Copy"), this, &HelpViewer::copy);
+        menu.addAction(tr("Copy"), this, &HelpViewerImpl::copy);
 #endif
     } else {
-        menu.addAction(tr("Reload"), this, &HelpViewer::reload);
+        menu.addAction(tr("Reload"), this, &HelpViewerImpl::reload);
     }
 
 #if QT_CONFIG(clipboard)
@@ -374,7 +366,7 @@ void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
 #endif
 }
 
-QVariant HelpViewer::loadResource(int type, const QUrl &name)
+QVariant HelpViewerImpl::loadResource(int type, const QUrl &name)
 {
     TRACE_OBJ
     QByteArray ba;
@@ -392,7 +384,7 @@ QVariant HelpViewer::loadResource(int type, const QUrl &name)
 }
 
 
-void HelpViewer::scrollToTextPosition(int position)
+void HelpViewerImpl::scrollToTextPosition(int position)
 {
     QTextCursor tc(document());
     tc.setPosition(position);

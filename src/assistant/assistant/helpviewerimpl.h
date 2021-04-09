@@ -26,33 +26,39 @@
 **
 ****************************************************************************/
 
-#ifndef HELPVIEWER_H
-#define HELPVIEWER_H
+#ifndef HELPVIEWERIMPL_H
+#define HELPVIEWERIMPL_H
 
 #include <QtCore/qglobal.h>
 #include <QtCore/QUrl>
+#include <QtCore/QVariant>
 
 #include <QtGui/QFont>
-#include <QtGui/QTextDocument>
 
-#include <QtWidgets/QWidget>
+#if defined(BROWSER_QTWEBKIT)
+#  include <QWebView>
+#elif defined(BROWSER_QTEXTBROWSER)
+#  include <QtWidgets/QTextBrowser>
+#endif
+
+#include "helpviewer.h"
 
 QT_BEGIN_NAMESPACE
 
-class HelpViewerPrivate;
-
-class HelpViewer : public QWidget
+#if defined(BROWSER_QTWEBKIT)
+#define TEXTBROWSER_OVERRIDE
+class HelpViewerImpl : public QWebView
+#elif defined(BROWSER_QTEXTBROWSER)
+#define TEXTBROWSER_OVERRIDE override
+class HelpViewerImpl : public QTextBrowser
+#endif
 {
     Q_OBJECT
-public:
-    enum FindFlag {
-        FindBackward = 0x01,
-        FindCaseSensitively = 0x02
-    };
-    Q_DECLARE_FLAGS(FindFlags, FindFlag)
+    class HelpViewerImplPrivate;
 
-    HelpViewer(qreal zoom, QWidget *parent = nullptr);
-    ~HelpViewer() override;
+public:
+    HelpViewerImpl(qreal zoom, QWidget *parent = nullptr);
+    ~HelpViewerImpl() override;
 
     QFont viewerFont() const;
     void setViewerFont(const QFont &font);
@@ -66,44 +72,65 @@ public:
     QString title() const;
 
     QUrl source() const;
-    void reload();
-    void setSource(const QUrl &url);
-
-    void print(QPagedPaintDevice *printer);
+    void doSetSource(const QUrl &url, QTextDocument::ResourceType type) TEXTBROWSER_OVERRIDE;
 
     QString selectedText() const;
     bool isForwardAvailable() const;
     bool isBackwardAvailable() const;
 
-    bool findText(const QString &text, FindFlags flags, bool incremental,
+    bool findText(const QString &text, HelpViewer::FindFlags flags, bool incremental,
         bool fromSearch);
 
-    static bool isLocalUrl(const QUrl &url);
-    static bool canOpenPage(const QString &url);
-    static QString mimeFromUrl(const QUrl &url);
-    static bool launchWithExternalApp(const QUrl &url);
+    static const QString AboutBlank;
+    static const QString LocalHelpFile;
+    static const QString PageNotFoundMessage;
 
 public slots:
 #if QT_CONFIG(clipboard)
     void copy();
 #endif
-    void home();
-    void forward();
-    void backward();
+    void home() TEXTBROWSER_OVERRIDE;
+
+    void forward() TEXTBROWSER_OVERRIDE;
+    void backward() TEXTBROWSER_OVERRIDE;
 
 signals:
     void titleChanged();
+#if !defined(BROWSER_QTEXTBROWSER)
+    // Provide signals present in QTextBrowser, QTextEdit for browsers that do not inherit QTextBrowser
     void copyAvailable(bool yes);
     void sourceChanged(const QUrl &url);
     void forwardAvailable(bool enabled);
     void backwardAvailable(bool enabled);
     void highlighted(const QUrl &link);
     void printRequested();
+#elif !defined(BROWSER_QTWEBKIT)
+    // Provide signals present in QWebView for browsers that do not inherit QWebView
     void loadFinished(bool finished);
+#endif
+
+protected:
+    void keyPressEvent(QKeyEvent *e) override;
+    void wheelEvent(QWheelEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void resizeEvent(QResizeEvent *e) override;
+
+private slots:
+    void actionChanged();
+    void setLoadFinished();
+
 private:
-    HelpViewerPrivate *d;
+    bool eventFilter(QObject *obj, QEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
+    QVariant loadResource(int type, const QUrl &name) TEXTBROWSER_OVERRIDE;
+    bool handleForwardBackwardMouseButtons(QMouseEvent *e);
+    void scrollToTextPosition(int position);
+
+private:
+    HelpViewerImplPrivate *d;
 };
 
 QT_END_NAMESPACE
 
-#endif  // HELPVIEWER_H
+#endif  // HELPVIEWERIMPL_H

@@ -27,34 +27,22 @@
 ****************************************************************************/
 
 #include "helpviewer.h"
-#include "helpviewer_p.h"
+#include "helpviewerimpl.h"
 
 #include "helpenginewrapper.h"
 #include "tracer.h"
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QStringBuilder>
 #include <QtCore/QTemporaryFile>
-#include <QtCore/QUrl>
 
 #include <QtGui/QDesktopServices>
-#include <QtGui/QMouseEvent>
+
+#include <QtWidgets/QVBoxLayout>
 
 #include <QtHelp/QHelpEngineCore>
 
 QT_BEGIN_NAMESPACE
-
-const QString HelpViewer::AboutBlank =
-    QCoreApplication::translate("HelpViewer", "<title>about:blank</title>");
-
-const QString HelpViewer::LocalHelpFile = QLatin1String("qthelp://"
-    "org.qt-project.assistantinternal-1.0.0/assistant/assistant-quick-guide.html");
-
-const QString HelpViewer::PageNotFoundMessage =
-    QCoreApplication::translate("HelpViewer", "<title>Error 404...</title><div "
-    "align=\"center\"><br><br><h1>The page could not be found.</h1><br><h3>'%1'"
-    "</h3></div>");
 
 struct ExtensionMap {
     const char *extension;
@@ -93,10 +81,136 @@ struct ExtensionMap {
     { nullptr, nullptr }
 };
 
+class HelpViewerPrivate
+{
+public:
+    HelpViewerImpl *m_viewer;
+};
+
+HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
+    : QWidget(parent)
+    , d(new HelpViewerPrivate)
+{
+    auto layout = new QVBoxLayout;
+    d->m_viewer = new HelpViewerImpl(zoom, this);
+    setLayout(layout);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(d->m_viewer, 10);
+
+    connect(d->m_viewer, &HelpViewerImpl::titleChanged,      this, &HelpViewer::titleChanged);
+#if QT_CONFIG(clipboard)
+    connect(d->m_viewer, &HelpViewerImpl::copyAvailable,     this, &HelpViewer::copyAvailable);
+#endif
+    connect(d->m_viewer, &HelpViewerImpl::sourceChanged,     this, &HelpViewer::sourceChanged);
+    connect(d->m_viewer, &HelpViewerImpl::forwardAvailable,  this, &HelpViewer::forwardAvailable);
+    connect(d->m_viewer, &HelpViewerImpl::backwardAvailable, this, &HelpViewer::backwardAvailable);
+    connect(d->m_viewer, &HelpViewerImpl::highlighted,       this, &HelpViewer::highlighted);
+#if defined(BROWSER_QTWEBKIT)
+    connect(d->m_viewer, &HelpViewerImpl::printRequested,    this, &HelpViewer::printRequested);
+#endif
+    connect(d->m_viewer, &HelpViewerImpl::loadFinished,      this, &HelpViewer::loadFinished);
+}
+
 HelpViewer::~HelpViewer()
 {
-    TRACE_OBJ
     delete d;
+}
+
+QFont HelpViewer::viewerFont() const
+{
+    return d->m_viewer->viewerFont();
+}
+
+void HelpViewer::setViewerFont(const QFont &font)
+{
+    d->m_viewer->setViewerFont(font);
+}
+
+void HelpViewer::scaleUp()
+{
+    d->m_viewer->scaleUp();
+}
+
+void HelpViewer::scaleDown()
+{
+    d->m_viewer->scaleDown();
+}
+
+void HelpViewer::resetScale()
+{
+    d->m_viewer->resetScale();
+}
+
+qreal HelpViewer::scale() const
+{
+    return d->m_viewer->scale();
+}
+
+QString HelpViewer::title() const
+{
+    return d->m_viewer->title();
+}
+
+QUrl HelpViewer::source() const
+{
+    return d->m_viewer->source();
+}
+
+void HelpViewer::reload()
+{
+    d->m_viewer->reload();
+}
+
+void HelpViewer::setSource(const QUrl &url)
+{
+    d->m_viewer->setSource(url);
+}
+
+void HelpViewer::print(QPagedPaintDevice *printer)
+{
+    d->m_viewer->print(printer);
+}
+
+QString HelpViewer::selectedText() const
+{
+    return d->m_viewer->selectedText();
+}
+
+bool HelpViewer::isForwardAvailable() const
+{
+    return d->m_viewer->isForwardAvailable();
+}
+
+bool HelpViewer::isBackwardAvailable() const
+{
+    return d->m_viewer->isBackwardAvailable();
+}
+
+bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental, bool fromSearch)
+{
+    return d->m_viewer->findText(text, flags, incremental, fromSearch);
+}
+
+#if QT_CONFIG(clipboard)
+void HelpViewer::copy()
+{
+    d->m_viewer->copy();
+}
+#endif
+
+void HelpViewer::home()
+{
+    d->m_viewer->home();
+}
+
+void HelpViewer::forward()
+{
+    d->m_viewer->forward();
+}
+
+void HelpViewer::backward()
+{
+    d->m_viewer->backward();
 }
 
 bool HelpViewer::isLocalUrl(const QUrl &url)
@@ -161,45 +275,6 @@ bool HelpViewer::launchWithExternalApp(const QUrl &url)
         return false;
     }
     return QDesktopServices::openUrl(url);
-}
-
-// -- public slots
-
-void HelpViewer::home()
-{
-    TRACE_OBJ
-    setSource(HelpEngineWrapper::instance().homePage());
-}
-
-// -- private slots
-
-void HelpViewer::setLoadStarted()
-{
-    d->m_loadFinished = false;
-}
-
-void HelpViewer::setLoadFinished(bool ok)
-{
-    d->m_loadFinished = ok;
-    emit sourceChanged(source());
-}
-
-// -- private
-
-bool HelpViewer::handleForwardBackwardMouseButtons(QMouseEvent *event)
-{
-    TRACE_OBJ
-    if (event->button() == Qt::XButton1) {
-        backward();
-        return true;
-    }
-
-    if (event->button() == Qt::XButton2) {
-        forward();
-        return true;
-    }
-
-    return false;
 }
 
 QT_END_NAMESPACE

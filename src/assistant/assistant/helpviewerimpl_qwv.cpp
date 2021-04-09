@@ -26,8 +26,8 @@
 **
 ****************************************************************************/
 
-#include "helpviewer.h"
-#include "helpviewer_p.h"
+#include "helpviewerimpl.h"
+#include "helpviewerimpl_p.h"
 
 #include "centralwidget.h"
 #include "helpenginewrapper.h"
@@ -64,7 +64,7 @@ protected:
 private:
     bool closeNewTabIfNeeded;
 
-    friend class HelpViewer;
+    friend class HelpViewerImpl;
     QUrl m_loadingUrl;
     Qt::MouseButtons m_pressedButtons;
     Qt::KeyboardModifiers m_keyboardModifiers;
@@ -140,11 +140,11 @@ bool HelpPage::acceptNavigationRequest(QWebFrame *,
     return true;
 }
 
-// -- HelpViewer
+// -- HelpViewerImpl
 
-HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
+HelpViewerImpl::HelpViewerImpl(qreal zoom, QWidget *parent)
     : QWebView(parent)
-    , d(new HelpViewerPrivate)
+    , d(new HelpViewerImplPrivate)
 {
     TRACE_OBJ
     setAcceptDrops(false);
@@ -181,7 +181,7 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     setZoomFactor(d->webDpiRatio * (zoom == 0.0 ? 1.0 : zoom));
 }
 
-QFont HelpViewer::viewerFont() const
+QFont HelpViewerImpl::viewerFont() const
 {
     TRACE_OBJ
     if (HelpEngineWrapper::instance().usesBrowserFont())
@@ -192,7 +192,7 @@ QFont HelpViewer::viewerFont() const
         webSettings->fontSize(QWebSettings::DefaultFontSize));
 }
 
-void HelpViewer::setViewerFont(const QFont &font)
+void HelpViewerImpl::setViewerFont(const QFont &font)
 {
     TRACE_OBJ
     QWebSettings *webSettings = settings();
@@ -200,43 +200,43 @@ void HelpViewer::setViewerFont(const QFont &font)
     webSettings->setFontSize(QWebSettings::DefaultFontSize, font.pointSize());
 }
 
-void HelpViewer::scaleUp()
+void HelpViewerImpl::scaleUp()
 {
     TRACE_OBJ
     setZoomFactor(zoomFactor() + 0.1);
 }
 
-void HelpViewer::scaleDown()
+void HelpViewerImpl::scaleDown()
 {
     TRACE_OBJ
     setZoomFactor(qMax(0.0, zoomFactor() - 0.1));
 }
 
-void HelpViewer::resetScale()
+void HelpViewerImpl::resetScale()
 {
     TRACE_OBJ
     setZoomFactor(d->webDpiRatio);
 }
 
-qreal HelpViewer::scale() const
+qreal HelpViewerImpl::scale() const
 {
     TRACE_OBJ
     return zoomFactor() / d->webDpiRatio;
 }
 
-QString HelpViewer::title() const
+QString HelpViewerImpl::title() const
 {
     TRACE_OBJ
     return QWebView::title();
 }
 
-void HelpViewer::setTitle(const QString &title)
+void HelpViewerImpl::setTitle(const QString &title)
 {
     TRACE_OBJ
     Q_UNUSED(title);
 }
 
-QUrl HelpViewer::source() const
+QUrl HelpViewerImpl::source() const
 {
     TRACE_OBJ
     HelpPage *currentPage = static_cast<HelpPage*> (page());
@@ -247,39 +247,39 @@ QUrl HelpViewer::source() const
     return url();
 }
 
-void HelpViewer::setSource(const QUrl &url)
+void HelpViewerImpl::setSource(const QUrl &url)
 {
     TRACE_OBJ
     load(url.toString() == QLatin1String("help") ? LocalHelpFile : url);
 }
 
-QString HelpViewer::selectedText() const
+QString HelpViewerImpl::selectedText() const
 {
     TRACE_OBJ
     return QWebView::selectedText();
 }
 
-bool HelpViewer::isForwardAvailable() const
+bool HelpViewerImpl::isForwardAvailable() const
 {
     TRACE_OBJ
     return pageAction(QWebPage::Forward)->isEnabled();
 }
 
-bool HelpViewer::isBackwardAvailable() const
+bool HelpViewerImpl::isBackwardAvailable() const
 {
     TRACE_OBJ
     return pageAction(QWebPage::Back)->isEnabled();
 }
 
-bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental,
+bool HelpViewerImpl::findText(const QString &text, HelpViewer::FindFlags flags, bool incremental,
     bool fromSearch)
 {
     TRACE_OBJ
     Q_UNUSED(incremental); Q_UNUSED(fromSearch);
     QWebPage::FindFlags options = QWebPage::FindWrapsAroundDocument;
-    if (flags & FindBackward)
+    if (flags & HelpViewer::FindBackward)
         options |= QWebPage::FindBackward;
-    if (flags & FindCaseSensitively)
+    if (flags & HelpViewer::FindCaseSensitively)
         options |= QWebPage::FindCaseSensitively;
 
     bool found = QWebView::findText(text, options);
@@ -292,20 +292,20 @@ bool HelpViewer::findText(const QString &text, FindFlags flags, bool incremental
 // -- public slots
 
 #if QT_CONFIG(clipboard)
-void HelpViewer::copy()
+void HelpViewerImpl::copy()
 {
     TRACE_OBJ
     triggerPageAction(QWebPage::Copy);
 }
 #endif
 
-void HelpViewer::forward()
+void HelpViewerImpl::forward()
 {
     TRACE_OBJ
     QWebView::forward();
 }
 
-void HelpViewer::backward()
+void HelpViewerImpl::backward()
 {
     TRACE_OBJ
     back();
@@ -313,7 +313,7 @@ void HelpViewer::backward()
 
 // -- protected
 
-void HelpViewer::keyPressEvent(QKeyEvent *e)
+void HelpViewerImpl::keyPressEvent(QKeyEvent *e)
 {
     TRACE_OBJ
     // TODO: remove this once we support multiple keysequences per command
@@ -326,7 +326,7 @@ void HelpViewer::keyPressEvent(QKeyEvent *e)
     QWebView::keyPressEvent(e);
 }
 
-void HelpViewer::wheelEvent(QWheelEvent *event)
+void HelpViewerImpl::wheelEvent(QWheelEvent *event)
 {
     TRACE_OBJ
     if (event->modifiers()& Qt::ControlModifier) {
@@ -337,7 +337,7 @@ void HelpViewer::wheelEvent(QWheelEvent *event)
     }
 }
 
-void HelpViewer::mousePressEvent(QMouseEvent *event)
+void HelpViewerImpl::mousePressEvent(QMouseEvent *event)
 {
     TRACE_OBJ
 #ifdef Q_OS_LINUX
@@ -353,7 +353,7 @@ void HelpViewer::mousePressEvent(QMouseEvent *event)
     QWebView::mousePressEvent(event);
 }
 
-void HelpViewer::mouseReleaseEvent(QMouseEvent *event)
+void HelpViewerImpl::mouseReleaseEvent(QMouseEvent *event)
 {
     TRACE_OBJ
 #ifndef Q_OS_LINUX
@@ -366,7 +366,7 @@ void HelpViewer::mouseReleaseEvent(QMouseEvent *event)
 
 // -- private slots
 
-void HelpViewer::actionChanged()
+void HelpViewerImpl::actionChanged()
 {
     TRACE_OBJ
     QAction *a = qobject_cast<QAction *>(sender());
@@ -380,13 +380,13 @@ void HelpViewer::actionChanged()
 
 // -- private
 
-bool HelpViewer::eventFilter(QObject *obj, QEvent *event)
+bool HelpViewerImpl::eventFilter(QObject *obj, QEvent *event)
 {
     TRACE_OBJ
     return QWebView::eventFilter(obj, event);
 }
 
-void HelpViewer::contextMenuEvent(QContextMenuEvent *event)
+void HelpViewerImpl::contextMenuEvent(QContextMenuEvent *event)
 {
     TRACE_OBJ
     QWebView::contextMenuEvent(event);

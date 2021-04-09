@@ -26,8 +26,8 @@
 **
 ****************************************************************************/
 
-#ifndef HELPVIEWERPRIVATE_H
-#define HELPVIEWERPRIVATE_H
+#ifndef HELPVIEWERIMPLPRIVATE_H
+#define HELPVIEWERIMPLPRIVATE_H
 
 #include "centralwidget.h"
 #include "helpviewer.h"
@@ -43,18 +43,17 @@
 
 QT_BEGIN_NAMESPACE
 
-class HelpViewer::HelpViewerPrivate : public QObject
+class HelpViewerImpl::HelpViewerImplPrivate : public QObject
 {
     Q_OBJECT
 
 public:
 #if defined(BROWSER_QTEXTBROWSER)
-    HelpViewerPrivate(int zoom)
+    HelpViewerImplPrivate(int zoom)
         : zoomCount(zoom)
     { }
 #elif defined(BROWSER_QTWEBKIT)
-    HelpViewerPrivate()
-        : m_loadFinished(false)
+    HelpViewerImplPrivate()
     {
         // The web uses 96dpi by default on the web to preserve the font size across platforms, but
         // since we control the content for the documentation, we want the system DPI to be used.
@@ -115,12 +114,8 @@ private:
 #elif defined(BROWSER_QTWEBKIT)
     qreal webDpiRatio;
 #endif // BROWSER_QTWEBKIT
-
-public:
-    bool m_loadFinished = false;
-
 };
 
 QT_END_NAMESPACE
 
-#endif  // HELPVIEWERPRIVATE_H
+#endif  // HELPVIEWERIMPLPRIVATE_H
