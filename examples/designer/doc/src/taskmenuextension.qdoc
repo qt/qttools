@@ -171,7 +171,7 @@
     using multiple inheritance, to ensure that all the interfaces
     (i.e. the classes that doesn't inherit Q_OBJECT) are made known to
     the meta object system using the Q_INTERFACES() macro. This
-    enables \QD to use \l {qobject_cast(QObject * object)} to query for supported
+    enables \QD to use qobject_cast() to query for supported
     interfaces using nothing but a QObject pointer.
 
     \section1 TicTacToePlugin Class Implementation
