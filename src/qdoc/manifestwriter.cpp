@@ -351,7 +351,8 @@ void ManifestWriter::addTitleWordsToTags(const ExampleNode *example)
  */
 void ManifestWriter::addWordsFromModuleNamesAsTags()
 {
-    QRegularExpression re("([A-Z]+[a-z0-9]*(3D|GL)?)");
+    // '?<=': positive lookbehind
+    QRegularExpression re("([A-Z]+[a-z0-9]*((?<=3)D|GL)?)");
     int pos = 0;
     QRegularExpressionMatch match;
     while ((match = re.match(m_project, pos)).hasMatch()) {
