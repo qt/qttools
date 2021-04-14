@@ -107,6 +107,8 @@ public:
     bool boolProp();
     const QString *name() const;
 
+    Q_INVOKABLE void invokeMe() const {}
+
 Q_SIGNALS:
     void emitSomething(QPrivateSignal);
     void bindablePropChanged();

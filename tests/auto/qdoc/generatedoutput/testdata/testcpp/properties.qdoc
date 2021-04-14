@@ -52,6 +52,11 @@
 */
 
 /*!
+    \fn TestQDoc::TestDerived::invokeMe() const
+    \brief Something invokable.
+*/
+
+/*!
     //! avoid link warnings for auto-generated links to QProperty
     \externalpage https://wiki.qt.io/QProperty
     \title QProperty

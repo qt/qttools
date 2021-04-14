@@ -58,6 +58,7 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr><tr><td class="me
 <tr><td class="memItemLeft rightAlign topAlign"> QBindable&lt;QString&gt; </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#bindableProp-prop">bindableProp</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> bool </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#boolProp-prop">boolProp</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> int *</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#intProp-prop">getInt</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#invokeMe">invokeMe</a></b>() const</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> const QString *</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#name-prop">name</a></b>() const</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> const QString &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-testderived.html#someProp-prop">someProp</a></b>()</td></tr>
 </table></div>
@@ -147,6 +148,11 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr><tr><td class="me
 <p>Emitted when things happen.</p>
 <p><b>Note: </b>This is a private signal. It can be used in signal connections but cannot be emitted by the user.</p>
 <!-- @@@emitSomething -->
+<!-- $$$invokeMe[overload1]$$$invokeMe -->
+<h3 class="fn" id="invokeMe"><a name="invokeMe"></a><code>[invokable] </code><span class="type">void</span> TestDerived::<span class="name">invokeMe</span>() const</h3>
+<p>Something invokable.</p>
+<p><b>Note: </b>This function can be invoked via the meta-object system and from QML. See Q_INVOKABLE</a>.</p>
+<!-- @@@invokeMe -->
 <!-- $$$virtualFun[overload1]$$$virtualFun -->
 <h3 class="fn" id="virtualFun"><a name="virtualFun"></a><code>[override virtual] </code><span class="type">void</span> TestDerived::<span class="name">virtualFun</span>()</h3>
 <p>Reimplements: <a href="testqdoc-test.html#virtualFun">Test::virtualFun</a>().</p>
