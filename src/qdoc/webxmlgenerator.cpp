@@ -257,7 +257,7 @@ void WebXMLGenerator::generateDocumentation(Node *node)
     if (!node->url().isNull() || node->isExternalPage() || node->isIndexNode())
         return;
 
-    if (node->isInternal() && !Config::instance().showInternal())
+    if (node->isInternal() && !m_showInternal)
         return;
 
     if (node->parent()) {
@@ -875,6 +875,11 @@ void WebXMLGenerator::generateAnnotatedList(QXmlStreamWriter &writer, const Node
         writer.writeEndElement(); // row
     }
     writer.writeEndElement(); // table
+}
+
+QString WebXMLGenerator::fileBase(const Node *node) const
+{
+    return Generator::fileBase(node);
 }
 
 QT_END_NAMESPACE

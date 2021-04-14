@@ -72,6 +72,7 @@ private:
     void startLink(QXmlStreamWriter &writer, const Atom *atom, const Node *node,
                    const QString &link);
     void endLink(QXmlStreamWriter &writer);
+    QString fileBase(const Node *node) const override;
 
     bool m_inLink { false };
     bool m_inSectionHeading { false };
