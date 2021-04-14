@@ -203,6 +203,25 @@
 <db:note>
 <db:para>This is a private signal. It can be used in signal connections but cannot be emitted by the user.</db:para></db:note>
 </db:section>
+<db:section xml:id="invokeMe">
+<db:title>[invokable] TestDerived::void invokeMe() const</db:title>
+<db:methodsynopsis>
+<db:modifier>const</db:modifier>
+<db:void/>
+<db:methodname>invokeMe</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void invokeMe() const</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Something invokable.</db:para>
+<db:note>
+<db:para>This function can be invoked via the meta-object system and from QML. See <db:link xlink:href="">Q_INVOKABLE</db:link>.</db:para>
+</db:note>
+</db:section>
 <db:section xml:id="virtualFun">
 <db:title>[override virtual] TestDerived::void virtualFun()</db:title>
 <db:methodsynopsis>
