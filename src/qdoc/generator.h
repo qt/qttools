@@ -97,7 +97,7 @@ public:
     static QmlTypeNode *qmlTypeContext() { return qmlTypeContext_; }
     static QString cleanRef(const QString &ref);
     static QString plainCode(const QString &markedCode);
-    static QString fileBase(const Node *node);
+    virtual QString fileBase(const Node *node) const;
 
 protected:
     static QFile *openSubPageFile(const Node *node, const QString &fileName);
