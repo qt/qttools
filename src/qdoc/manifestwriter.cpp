@@ -239,7 +239,7 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
 
         // attributes that are always written for the element
         usedAttributes.insert("name", example->title());
-        usedAttributes.insert("docUrl", m_manifestDir + Generator::fileBase(example) + ".html");
+        usedAttributes.insert("docUrl", m_manifestDir + Generator::currentGenerator()->fileBase(example) + ".html");
 
         if (!example->projectFile().isEmpty())
             usedAttributes.insert("projectPath", installPath + example->projectFile());

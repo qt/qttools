@@ -123,7 +123,7 @@ private:
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
     void generateLink(const Atom *atom, CodeMarker *marker);
 
-    QString appendObsoleteToFileBase(const Node *node) const;
+    QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
 
     void beginLink(const QString &link);
