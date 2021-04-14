@@ -8,3 +8,6 @@ outputformats                       = HTML DocBook
 {HTML.nosubdirs,DocBook.nosubdirs}  = true
 HTML.outputsubdir                   = properties
 DocBook.outputsubdir                = properties-docbook
+
+# Allow link warning to Q_INVOKABLE
+warninglimit += 1

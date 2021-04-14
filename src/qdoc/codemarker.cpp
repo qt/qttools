@@ -187,6 +187,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "slot";
             else if (func->isDefault())
                 extra << "default";
+            else if (func->isInvokable())
+                extra << "invokable";
         }
         break;
         case Node::TypeAlias:
