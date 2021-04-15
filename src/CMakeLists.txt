@@ -14,6 +14,15 @@ qt_exclude_tool_directories_from_default_target(
     ${_qt_additional_tools_to_exclude} # special case
 )
 
+# Check whether the sqlite plugin is available.
+set(sqlite_plugin_available FALSE)
+if(TARGET ${QT_CMAKE_EXPORT_NAMESPACE}::Sql)
+    get_target_property(sql_plugins ${QT_CMAKE_EXPORT_NAMESPACE}::Sql QT_PLUGINS)
+    if(QSQLiteDriverPlugin IN_LIST sql_plugins)
+        set(sqlite_plugin_available TRUE)
+    endif()
+endif()
+
 # special case begin
 # Evaluate features to decide what to build.
 # The config files will be written in the src/global module.
@@ -27,7 +36,8 @@ if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET
     add_subdirectory(designer)
     add_subdirectory(pixeltool)
 endif()
-if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets AND (FEATURE_sql_sqlite OR QT_BUILD_SHARED_LIBS)) # special case
+if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets
+        AND (sqlite_plugin_available OR QT_BUILD_SHARED_LIBS))
     add_subdirectory(assistant)
 endif()
 if(QT_FEATURE_png AND QT_FEATURE_thread AND QT_FEATURE_toolbutton AND TARGET Qt::Quick AND TARGET Qt::Widgets)
