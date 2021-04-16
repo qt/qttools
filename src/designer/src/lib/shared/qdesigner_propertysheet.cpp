@@ -51,6 +51,7 @@
 #include <QtWidgets/qtoolbar.h>
 #include <QtWidgets/qmainwindow.h>
 #include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qheaderview.h>
 
 #include <QtGui/qaction.h>
 
@@ -562,6 +563,7 @@ QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromNam
         propertyTypeHash.insert(QStringLiteral("checkable"),               PropertyCheckable);
         propertyTypeHash.insert(QStringLiteral("accessibleName"),          PropertyAccessibility);
         propertyTypeHash.insert(QStringLiteral("accessibleDescription"),   PropertyAccessibility);
+        propertyTypeHash.insert(QStringLiteral("visible"),                 PropertyVisible);
         propertyTypeHash.insert(QStringLiteral("windowTitle"),             PropertyWindowTitle);
         propertyTypeHash.insert(QStringLiteral("windowIcon"),              PropertyWindowIcon);
         propertyTypeHash.insert(QStringLiteral("windowFilePath"),          PropertyWindowFilePath);
@@ -1085,7 +1087,22 @@ QVariant QDesignerPropertySheet::property(int index) const
         return QVariant::fromValue(value);
     }
 
-    return metaProperty(index);
+    QVariant result =  metaProperty(index);
+    // QTBUG-49591: "visible" is only exposed for QHeaderView as a fake
+    // property ("headerVisible") for the item view. If the item view is not
+    // visible (on a page based container), check the WA_WState_Hidden instead,
+    // since otherwise false is returned when saving.
+    if (result.typeId() == QMetaType::Bool && !result.toBool()
+        && d->m_object->isWidgetType()
+        && propertyType(index) == PropertyVisible) {
+        if (auto *hv = qobject_cast<QHeaderView *>(d->m_object)) {
+            if (auto *parent = hv->parentWidget())  {
+                if (!parent->isVisible())
+                    result = QVariant(!hv->testAttribute(Qt::WA_WState_Hidden));
+            }
+        }
+    }
+    return result;
 }
 
 QVariant QDesignerPropertySheet::metaProperty(int index) const
