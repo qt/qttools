@@ -218,7 +218,7 @@ void BookmarkManagerWidget::exportBookmarks()
         writer.writeToFile(&file);
     } else {
         QMessageBox::information(this, tr("Qt Assistant"),
-            tr("Unable to save bookmarks."), tr("OK"));
+            tr("Unable to save bookmarks."), QMessageBox::Ok);
     }
 }
 

@@ -627,9 +627,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
                     tr("The file '%1' does not seem to be related to the currently open file(s) '%2'.\n\n"
                        "Close the open file(s) first?")
                        .arg(DataModel::prettifyPlainFileName(name), m_dataModel->condensedSrcFileNames(true)),
-                    QMessageBox::Yes | QMessageBox::Default,
-                    QMessageBox::No,
-                    QMessageBox::Cancel | QMessageBox::Escape))
+                    QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::Yes))
                 {
                     case QMessageBox::Cancel:
                         delete dm;
@@ -637,7 +635,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
                     case QMessageBox::Yes:
                         closeOld = true;
                         break;
-                    case QMessageBox::No:
+                    default:
                         break;
                 }
             }
@@ -650,9 +648,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
                        " which is being loaded as well.\n\n"
                        "Skip loading the first named file?")
                        .arg(DataModel::prettifyPlainFileName(name), opened.first().dataModel->srcFileName(true)),
-                    QMessageBox::Yes | QMessageBox::Default,
-                    QMessageBox::No,
-                    QMessageBox::Cancel | QMessageBox::Escape))
+                    QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::Yes))
                 {
                     case QMessageBox::Cancel:
                         delete dm;
@@ -662,7 +658,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
                     case QMessageBox::Yes:
                         delete dm;
                         continue;
-                    case QMessageBox::No:
+                    default:
                         break;
                 }
             }
@@ -1407,16 +1403,14 @@ bool MainWindow::maybeSaveAll()
 
     switch (QMessageBox::information(this, tr("Qt Linguist"),
         tr("Do you want to save the modified files?"),
-        QMessageBox::Yes | QMessageBox::Default,
-        QMessageBox::No,
-        QMessageBox::Cancel | QMessageBox::Escape))
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::Yes))
     {
         case QMessageBox::Cancel:
             return false;
         case QMessageBox::Yes:
             saveAll();
             return !m_dataModel->isModified();
-        case QMessageBox::No:
+        default:
             break;
     }
     return true;
@@ -1429,16 +1423,14 @@ bool MainWindow::maybeSave(int model)
 
     switch (QMessageBox::information(this, tr("Qt Linguist"),
         tr("Do you want to save '%1'?").arg(m_dataModel->srcFileName(model, true)),
-        QMessageBox::Yes | QMessageBox::Default,
-        QMessageBox::No,
-        QMessageBox::Cancel | QMessageBox::Escape))
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::Yes))
     {
         case QMessageBox::Cancel:
             return false;
         case QMessageBox::Yes:
             saveInternal(model);
             return !m_dataModel->isModified(model);
-        case QMessageBox::No:
+        default:
             break;
     }
     return true;
@@ -2363,9 +2355,7 @@ bool MainWindow::maybeSavePhraseBook(PhraseBook *pb)
     if (pb->isModified())
         switch (QMessageBox::information(this, tr("Qt Linguist"),
             tr("Do you want to save phrase book '%1'?").arg(pb->friendlyPhraseBookName()),
-            QMessageBox::Yes | QMessageBox::Default,
-            QMessageBox::No,
-            QMessageBox::Cancel | QMessageBox::Escape))
+            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, QMessageBox::Yes))
         {
             case QMessageBox::Cancel:
                 return false;
@@ -2373,7 +2363,7 @@ bool MainWindow::maybeSavePhraseBook(PhraseBook *pb)
                 if (!pb->save(pb->fileName()))
                     return false;
                 break;
-            case QMessageBox::No:
+            default:
                 break;
         }
     return true;
