@@ -43,10 +43,10 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
+#include <QtCore/QLocale>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QTextStream>
 
-#include <private/qlocale_p.h>
 #include <private/qtranslator_p.h>
 
 QT_BEGIN_NAMESPACE
@@ -351,23 +351,32 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
 
 QString Translator::makeLanguageCode(QLocale::Language language, QLocale::Country country)
 {
-    QString result = QLocalePrivate::languageToCode(language);
+    QString result = QLocale::languageToCode(language);
     if (language != QLocale::C && country != QLocale::AnyCountry) {
         result.append(QLatin1Char('_'));
-        result.append(QLocalePrivate::countryToCode(country));
+        result.append(QLocale::countryToCode(country));
     }
     return result;
 }
 
-void Translator::languageAndCountry(const QString &languageCode, QLocale::Language *lang,
-                                    QLocale::Country *country)
+void Translator::languageAndCountry(QStringView languageCode, QLocale::Language *langPtr,
+                                    QLocale::Country *countryPtr)
 {
-    // ### Uses private API.
-    QLocaleId lid = QLocaleId::fromName(languageCode);
-    if (lang)
-        *lang = QLocale::Language(lid.language_id);
-    if (country)
-        *country = QLocale::Country(lid.country_id);
+    QLocale::Language language = QLocale::AnyLanguage;
+    QLocale::Country country = QLocale::AnyCountry;
+    const auto underScore = languageCode.indexOf(u'_'); // "de_DE"
+    if (underScore != -1) {
+        language = QLocale::codeToLanguage(languageCode.left(underScore));
+        country = QLocale::codeToCountry(languageCode.mid(underScore + 1));
+    } else {
+        language = QLocale::codeToLanguage(languageCode);
+        country = QLocale(language).country();
+    }
+
+    if (langPtr)
+        *langPtr = language;
+    if (countryPtr)
+        *countryPtr = country;
 }
 
 int Translator::find(const TranslatorMessage &msg) const

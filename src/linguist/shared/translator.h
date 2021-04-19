@@ -153,8 +153,8 @@ public:
     LocationsType locationsType() const { return m_locationsType; }
 
     static QString makeLanguageCode(QLocale::Language language, QLocale::Country country);
-    static void languageAndCountry(const QString &languageCode,
-        QLocale::Language *lang, QLocale::Country *country);
+    static void languageAndCountry(QStringView languageCode,
+        QLocale::Language *langPtr, QLocale::Country *countryPtr);
     void setLanguageCode(const QString &languageCode) { m_language = languageCode; }
     void setSourceLanguageCode(const QString &languageCode) { m_sourceLanguage = languageCode; }
     static QString guessLanguageCodeFromFileName(const QString &fileName);
