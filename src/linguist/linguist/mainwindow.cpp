@@ -1264,7 +1264,7 @@ void MainWindow::addToPhraseBook()
         if (pb->language() != QLocale::C && m_dataModel->language(m_currentIndex.model()) != QLocale::C) {
             if (pb->language() != m_dataModel->language(m_currentIndex.model()))
                 continue;
-            if (pb->country() == m_dataModel->model(m_currentIndex.model())->country())
+            if (pb->territory() == m_dataModel->model(m_currentIndex.model())->territory())
                 phraseBookList.prepend(pb->friendlyPhraseBookName());
             else
                 phraseBookList.append(pb->friendlyPhraseBookName());
@@ -2400,7 +2400,7 @@ void MainWindow::updatePhraseDictInternal(int model)
         if (pb->language() != QLocale::C && m_dataModel->language(model) != QLocale::C) {
             if (pb->language() != m_dataModel->language(model))
                 continue;
-            before = (pb->country() == m_dataModel->model(model)->country());
+            before = (pb->territory() == m_dataModel->model(model)->territory());
         } else {
             before = false;
         }

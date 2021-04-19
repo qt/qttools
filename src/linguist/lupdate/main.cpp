@@ -387,7 +387,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
             if (tor.translationsExist()) {
                 QLocale::Language l;
                 QLocale::Territory c;
-                tor.languageAndCountry(tor.languageCode(), &l, &c);
+                tor.languageAndTerritory(tor.languageCode(), &l, &c);
                 QStringList forms;
                 if (!getNumerusInfo(l, c, 0, &forms, 0)) {
                     printErr(QStringLiteral("File %1 won't be updated: it contains translation but the"

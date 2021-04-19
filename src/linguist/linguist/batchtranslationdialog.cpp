@@ -58,8 +58,8 @@ void BatchTranslationDialog::setPhraseBooks(const QList<PhraseBook *> &phraseboo
             if (phrasebooks[i]->language() != m_dataModel->language(m_modelIndex))
                 sortOrder = 3;
             else
-                sortOrder = (phrasebooks[i]->country()
-                             == m_dataModel->model(m_modelIndex)->country()) ? 0 : 1;
+                sortOrder = (phrasebooks[i]->territory()
+                             == m_dataModel->model(m_modelIndex)->territory()) ? 0 : 1;
         } else {
             sortOrder = 2;
         }

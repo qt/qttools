@@ -324,34 +324,34 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
     return false;
 }
 
-QString Translator::makeLanguageCode(QLocale::Language language, QLocale::Territory country)
+QString Translator::makeLanguageCode(QLocale::Language language, QLocale::Territory territory)
 {
     QString result = QLocale::languageToCode(language);
-    if (language != QLocale::C && country != QLocale::AnyTerritory) {
+    if (language != QLocale::C && territory != QLocale::AnyTerritory) {
         result.append(QLatin1Char('_'));
-        result.append(QLocale::territoryToCode(country));
+        result.append(QLocale::territoryToCode(territory));
     }
     return result;
 }
 
-void Translator::languageAndCountry(QStringView languageCode, QLocale::Language *langPtr,
-                                    QLocale::Territory *countryPtr)
+void Translator::languageAndTerritory(QStringView languageCode, QLocale::Language *langPtr,
+                                    QLocale::Territory *territoryPtr)
 {
     QLocale::Language language = QLocale::AnyLanguage;
-    QLocale::Territory country = QLocale::AnyTerritory;
+    QLocale::Territory territory = QLocale::AnyTerritory;
     const auto underScore = languageCode.indexOf(u'_'); // "de_DE"
     if (underScore != -1) {
         language = QLocale::codeToLanguage(languageCode.left(underScore));
-        country = QLocale::codeToTerritory(languageCode.mid(underScore + 1));
+        territory = QLocale::codeToTerritory(languageCode.mid(underScore + 1));
     } else {
         language = QLocale::codeToLanguage(languageCode);
-        country = QLocale(language).territory();
+        territory = QLocale(language).territory();
     }
 
     if (langPtr)
         *langPtr = language;
-    if (countryPtr)
-        *countryPtr = country;
+    if (territoryPtr)
+        *territoryPtr = territory;
 }
 
 int Translator::find(const TranslatorMessage &msg) const
@@ -672,7 +672,7 @@ void Translator::normalizeTranslations(ConversionData &cd)
     bool truncated = false;
     QLocale::Language l;
     QLocale::Territory c;
-    languageAndCountry(languageCode(), &l, &c);
+    languageAndTerritory(languageCode(), &l, &c);
     int numPlurals = 1;
     if (l != QLocale::C) {
         QStringList forms;

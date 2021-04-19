@@ -730,7 +730,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
     if (!translator.languageCode().isEmpty()) {
         QLocale::Language l;
         QLocale::Territory c;
-        Translator::languageAndCountry(translator.languageCode(), &l, &c);
+        Translator::languageAndTerritory(translator.languageCode(), &l, &c);
         const char *gettextRules;
         if (getNumerusInfo(l, c, 0, 0, &gettextRules))
             addPoHeader(headers, hdrOrder, "Plural-Forms", QLatin1String(gettextRules));

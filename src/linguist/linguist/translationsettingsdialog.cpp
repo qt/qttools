@@ -51,7 +51,7 @@ void TranslationSettingsDialog::setPhraseBook(PhraseBook *phraseBook)
     setWindowTitle(tr("Settings for '%1' - Qt Linguist").arg(fn));
 }
 
-static void fillCountryCombo(const QVariant &lng, QComboBox *combo)
+static void fillTerritoryCombo(const QVariant &lng, QComboBox *combo)
 {
     combo->clear();
     QLocale::Language lang = QLocale::Language(lng.toInt());
@@ -69,19 +69,19 @@ static void fillCountryCombo(const QVariant &lng, QComboBox *combo)
         }
         combo->model()->sort(0, Qt::AscendingOrder);
     }
-    combo->insertItem(0, TranslationSettingsDialog::tr("Any Country"),
+    combo->insertItem(0, TranslationSettingsDialog::tr("Any Territory"),
                       QVariant(QLocale::AnyTerritory));
     combo->setCurrentIndex(0);
 }
 
 void TranslationSettingsDialog::on_srcCbLanguageList_currentIndexChanged(int idx)
 {
-    fillCountryCombo(m_ui.srcCbLanguageList->itemData(idx), m_ui.srcCbCountryList);
+    fillTerritoryCombo(m_ui.srcCbLanguageList->itemData(idx), m_ui.srcCbCountryList);
 }
 
 void TranslationSettingsDialog::on_tgtCbLanguageList_currentIndexChanged(int idx)
 {
-    fillCountryCombo(m_ui.tgtCbLanguageList->itemData(idx), m_ui.tgtCbCountryList);
+    fillTerritoryCombo(m_ui.tgtCbLanguageList->itemData(idx), m_ui.tgtCbCountryList);
 }
 
 void TranslationSettingsDialog::on_buttonBox_accepted()
@@ -92,7 +92,7 @@ void TranslationSettingsDialog::on_buttonBox_accepted()
 
     itemindex = m_ui.tgtCbCountryList->currentIndex();
     var = m_ui.tgtCbCountryList->itemData(itemindex);
-    QLocale::Territory country = QLocale::Territory(var.toInt());
+    QLocale::Territory territory = QLocale::Territory(var.toInt());
 
     itemindex = m_ui.srcCbLanguageList->currentIndex();
     var = m_ui.srcCbLanguageList->itemData(itemindex);
@@ -100,14 +100,14 @@ void TranslationSettingsDialog::on_buttonBox_accepted()
 
     itemindex = m_ui.srcCbCountryList->currentIndex();
     var = m_ui.srcCbCountryList->itemData(itemindex);
-    QLocale::Territory country2 = QLocale::Territory(var.toInt());
+    QLocale::Territory territory2 = QLocale::Territory(var.toInt());
 
     if (m_phraseBook) {
-        m_phraseBook->setLanguageAndCountry(lang, country);
-        m_phraseBook->setSourceLanguageAndCountry(lang2, country2);
+        m_phraseBook->setLanguageAndTerritory(lang, territory);
+        m_phraseBook->setSourceLanguageAndTerritory(lang2, territory2);
     } else {
-        m_dataModel->setLanguageAndCountry(lang, country);
-        m_dataModel->setSourceLanguageAndCountry(lang2, country2);
+        m_dataModel->setLanguageAndTerritory(lang, territory);
+        m_dataModel->setSourceLanguageAndTerritory(lang2, territory2);
     }
 
     accept();
@@ -116,30 +116,30 @@ void TranslationSettingsDialog::on_buttonBox_accepted()
 void TranslationSettingsDialog::showEvent(QShowEvent *)
 {
     QLocale::Language lang, lang2;
-    QLocale::Territory country, country2;
+    QLocale::Territory territory, territory2;
 
     if (m_phraseBook) {
         lang = m_phraseBook->language();
-        country = m_phraseBook->country();
+        territory = m_phraseBook->territory();
         lang2 = m_phraseBook->sourceLanguage();
-        country2 = m_phraseBook->sourceCountry();
+        territory2 = m_phraseBook->sourceTerritory();
     } else {
         lang = m_dataModel->language();
-        country = m_dataModel->country();
+        territory = m_dataModel->territory();
         lang2 = m_dataModel->sourceLanguage();
-        country2 = m_dataModel->sourceCountry();
+        territory2 = m_dataModel->sourceTerritory();
     }
 
     int itemindex = m_ui.tgtCbLanguageList->findData(QVariant(int(lang)));
     m_ui.tgtCbLanguageList->setCurrentIndex(itemindex == -1 ? 0 : itemindex);
 
-    itemindex = m_ui.tgtCbCountryList->findData(QVariant(int(country)));
+    itemindex = m_ui.tgtCbCountryList->findData(QVariant(int(territory)));
     m_ui.tgtCbCountryList->setCurrentIndex(itemindex == -1 ? 0 : itemindex);
 
     itemindex = m_ui.srcCbLanguageList->findData(QVariant(int(lang2)));
     m_ui.srcCbLanguageList->setCurrentIndex(itemindex == -1 ? 0 : itemindex);
 
-    itemindex = m_ui.srcCbCountryList->findData(QVariant(int(country2)));
+    itemindex = m_ui.srcCbCountryList->findData(QVariant(int(territory2)));
     m_ui.srcCbCountryList->setCurrentIndex(itemindex == -1 ? 0 : itemindex);
 }
 

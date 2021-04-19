@@ -174,12 +174,12 @@ public:
     static QString prettifyPlainFileName(const QString &fn);
     static QString prettifyFileName(const QString &fn);
 
-    bool setLanguageAndCountry(QLocale::Language lang, QLocale::Country country);
+    bool setLanguageAndTerritory(QLocale::Language lang, QLocale::Territory territory);
     QLocale::Language language() const { return m_language; }
-    QLocale::Country country() const { return m_country; }
-    void setSourceLanguageAndCountry(QLocale::Language lang, QLocale::Country country);
+    QLocale::Territory territory() const { return m_territory; }
+    void setSourceLanguageAndTerritory(QLocale::Language lang, QLocale::Territory territory);
     QLocale::Language sourceLanguage() const { return m_sourceLanguage; }
-    QLocale::Country sourceCountry() const { return m_sourceCountry; }
+    QLocale::Territory sourceTerritory() const { return m_sourceTerritory; }
 
     const QString &localizedLanguage() const { return m_localizedLanguage; }
     const QStringList &numerusForms() const { return m_numerusForms; }
@@ -219,8 +219,8 @@ private:
     QString m_srcFileName;
     QLocale::Language m_language;
     QLocale::Language m_sourceLanguage;
-    QLocale::Country m_country;
-    QLocale::Country m_sourceCountry;
+    QLocale::Territory m_territory;
+    QLocale::Territory m_sourceTerritory;
     bool m_relativeLocations;
     Translator::ExtraData m_extra;
 
