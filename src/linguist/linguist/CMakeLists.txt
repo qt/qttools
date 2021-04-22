@@ -170,6 +170,8 @@ if(APPLE)
     target_sources(linguist PRIVATE
         linguist.icns
     )
+else()
+    set_property(SOURCE main.cpp PROPERTY SKIP_AUTOMOC ON)
 endif()
 qt_internal_add_docs(linguist
     doc/qtlinguist.qdocconf
