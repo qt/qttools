@@ -48,6 +48,8 @@ using Specialized = Struct<int, T>;
 #endif
 
 #ifdef test_scopedenum
+    enum ClassicEnum { Yee, Haw, Howdy, Partner };
+
     enum class ScopedEnum : unsigned char {
         This = 0x01,
         That = 0x02,

@@ -143,6 +143,7 @@ private: // The rest of the class is private.
 
     Node *findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch)() const) const;
     Aggregate *findRelatesNode(const QStringList &path);
+    const Node *findEnumNode(const Node *node, const Node *aggregate, const QStringList &path, int offset) const;
     QString getRef(const QString &target, const Node *node) const;
     void insertTarget(const QString &name, const QString &title, TargetRec::TargetType type,
                       Node *node, int priority);
