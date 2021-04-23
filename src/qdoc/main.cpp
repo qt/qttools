@@ -510,7 +510,6 @@ static void processQdocconfFile(const QString &fileName)
         generator->initializeFormat();
         generator->generateDocs();
     }
-    qdb->clearLinkCounts();
 
     qCDebug(lcQdoc, "Terminating qdoc classes");
     if (Utilities::debugging())

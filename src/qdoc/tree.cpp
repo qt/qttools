@@ -71,7 +71,6 @@ QT_BEGIN_NAMESPACE
 Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
     : treeHasBeenAnalyzed_(false),
       docsHaveBeenGenerated_(false),
-      linkCount_(0),
       camelCaseModuleName_(camelCaseModuleName),
       physicalModuleName_(camelCaseModuleName.toLower()),
       qdb_(qdb),

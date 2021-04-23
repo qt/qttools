@@ -182,13 +182,6 @@ private:
         return nullptr;
     }
     void clearSearchOrder() { searchOrder_.clear(); }
-    void clearLinkCounts()
-    {
-        for (auto *tree : searchOrder())
-            tree->clearLinkCount();
-    }
-    void printLinkCounts(const QString &project);
-    QString getLinkCounts(QStringList &strings, QList<int> &counts);
     void newPrimaryTree(const QString &module);
     void setPrimaryTree(const QString &t);
     NamespaceNode *newIndexTree(const QString &module);
@@ -389,13 +382,6 @@ public:
     void mergeCollections(Node::NodeType type, CNMap &cnm, const Node *relative);
     void mergeCollections(CollectionNode *c);
     void clearSearchOrder() { forest_.clearSearchOrder(); }
-    void incrementLinkCount(const Node *t) { t->tree()->incrementLinkCount(); }
-    void clearLinkCounts() { forest_.clearLinkCounts(); }
-    void printLinkCounts(const QString &t) { forest_.printLinkCounts(t); }
-    QString getLinkCounts(QStringList &strings, QList<int> &counts)
-    {
-        return forest_.getLinkCounts(strings, counts);
-    }
     QStringList keys() { return forest_.keys(); }
     void resolveNamespaces();
     void resolveProxies();

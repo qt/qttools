@@ -331,57 +331,6 @@ const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *r
 }
 
 /*!
-  Print the list of module names ordered according
-  to how many successful searches each tree had.
- */
-void QDocForest::printLinkCounts(const QString &project)
-{
-    Location().report(QString("%1: Link Counts").arg(project));
-    QMultiMap<int, QString> m;
-    for (const auto *tree : searchOrder()) {
-        if (tree->linkCount() < 0)
-            m.insert(tree->linkCount(), tree->physicalModuleName());
-    }
-    QString depends = "depends                 +=";
-    QString module = project.toLower();
-    for (auto it = m.begin(); it != m.end(); ++it) {
-        QString line = "  " + it.value();
-        if (it.value() != module)
-            depends += QLatin1Char(' ') + it.value();
-        int pad = 30 - line.length();
-        for (int k = 0; k < pad; ++k)
-            line += QLatin1Char(' ');
-        line += "%1";
-        Location().report(line.arg(-(it.key())));
-    }
-    Location().report("Optimal depends variable:");
-    Location().report(depends);
-}
-
-/*!
-  Print the list of module names ordered according
-  to how many successful searches each tree had.
- */
-QString QDocForest::getLinkCounts(QStringList &strings, QList<int> &counts)
-{
-    QMultiMap<int, QString> m;
-    for (const auto *tree : searchOrder()) {
-        if (tree->linkCount() < 0)
-            m.insert(tree->linkCount(), tree->physicalModuleName());
-    }
-    QString depends = "depends                 +=";
-    QString module = Generator::defaultModuleName().toLower();
-    for (auto it = m.begin(); it != m.end(); ++it) {
-        if (it.value() != module) {
-            counts.append(-(it.key()));
-            strings.append(it.value());
-            depends += QLatin1Char(' ') + it.value();
-        }
-    }
-    return depends;
-}
-
-/*!
   Finds the FunctionNode for the qualified function name
   in \a path, that also has the specified \a parameters.
   Returns a pointer to the first matching function.

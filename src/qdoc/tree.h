@@ -111,9 +111,6 @@ public: // Of necessity, a few public functions remain.
     const QString &camelCaseModuleName() const { return camelCaseModuleName_; }
     const QString &physicalModuleName() const { return physicalModuleName_; }
     const QString &indexFileName() const { return indexFileName_; }
-    long incrementLinkCount() { return --linkCount_; }
-    void clearLinkCount() { linkCount_ = 0; }
-    long linkCount() const { return linkCount_; }
     const QString &indexTitle() const { return indexTitle_; }
     void setIndexTitle(const QString &t) { indexTitle_ = t; }
     NodeList &proxies() { return proxies_; }
@@ -216,7 +213,6 @@ private: // The rest of the class is private.
 private:
     bool treeHasBeenAnalyzed_;
     bool docsHaveBeenGenerated_;
-    long linkCount_;
     QString camelCaseModuleName_;
     QString physicalModuleName_;
     QString indexFileName_;
