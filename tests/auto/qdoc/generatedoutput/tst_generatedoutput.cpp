@@ -379,6 +379,8 @@ void tst_generatedOutput::scopedEnum()
 {
     testAndCompare("testdata/configs/scopedenum.qdocconf",
                    "scopedenum/testqdoc-test.html "
+                   "scopedenum/scoped-enum-linking.html "
+                   "scopedenum-docbook/scoped-enum-linking.xml "
                    "scopedenum-docbook/testqdoc-test.xml");
 }
 

@@ -9,5 +9,3 @@ outputformats = HTML DocBook
 {HTML.nosubdirs,DocBook.nosubdirs}  = true
 HTML.outputsubdir                   = scopedenum
 DocBook.outputsubdir                = scopedenum-docbook
-
-warninglimit += 2

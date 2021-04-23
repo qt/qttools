@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Enum Linking</db:title>
+<db:productname>TestCPP</db:productname>
+<db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>TestCPP Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:para>Linking to <db:link xlink:href="testqdoc-test.xml#ScopedEnum-enum">All</db:link>.</db:para>
+<db:para>TestQDoc::Test::ClassicEnum::Howdy does not link, but <db:link xlink:href="testqdoc-test.xml#ClassicEnum-enum">TestQDoc::Test::Howdy</db:link> might.</db:para>
+</db:article>

@@ -41,6 +41,52 @@
 </db:section>
 <db:section xml:id="member-type-documentation">
 <db:title>Member Type Documentation</db:title>
+<db:section xml:id="ClassicEnum-enum">
+<db:title>Test::enum ClassicEnum</db:title>
+<db:enumsynopsis>
+<db:enumname>ClassicEnum</db:enumname>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+<db:enumitem db:enumidentifier="Yee" db:enumvalue="0"/>
+<db:enumitem db:enumidentifier="Haw" db:enumvalue="1"/>
+<db:enumitem db:enumidentifier="Howdy" db:enumvalue="2"/>
+<db:enumitem db:enumidentifier="Partner" db:enumvalue="3"/>
+</db:enumsynopsis>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+<db:th>Description</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::Yee</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::Haw</db:code></db:para>
+</db:td>
+<db:td><db:code>1</db:code></db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::Howdy</db:code></db:para>
+</db:td>
+<db:td><db:code>2</db:code></db:td>
+</db:tr>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::Partner</db:code></db:para>
+</db:td>
+<db:td><db:code>3</db:code></db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
 <db:section xml:id="ScopedEnum-enum">
 <db:title>Test::enum ScopedEnum</db:title>
 <db:enumsynopsis>

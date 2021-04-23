@@ -26,10 +26,29 @@
 ****************************************************************************/
 
 /*!
+    \enum TestQDoc::Test::ClassicEnum
+
+    \value Yee
+    \value Haw
+    \value Howdy
+    \value Partner
+*/
+
+/*!
     \enum TestQDoc::Test::ScopedEnum
 
     \value This Something
     \value That Something else
     \value All  Everything
     \omitvalue OmittedValue
+*/
+
+/*!
+    \page scoped-enum-linking.html
+    \title Enum Linking
+
+    Linking to \l {TestQDoc::Test::ScopedEnum::}{All}.
+
+    TestQDoc::Test::ClassicEnum::Howdy does not link,
+    but TestQDoc::Test::Howdy might.
 */

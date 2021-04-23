@@ -594,21 +594,20 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
     if (node->isAggregate()) {
         NodeVector nodes;
         static_cast<const Aggregate *>(node)->findChildren(name, nodes);
-        for (const auto *node : qAsConst(nodes)) {
-            if (genus != Node::DontCare && !(genus & node->genus()))
+        for (const auto *child : qAsConst(nodes)) {
+            if (genus != Node::DontCare && !(genus & child->genus()))
                 continue;
-            const Node *t = matchPathAndTarget(path, idx + 1, target, node, flags, genus, ref);
+            const Node *t = matchPathAndTarget(path, idx + 1, target, child, flags, genus, ref);
             if (t && !t->isPrivate())
                 return t;
         }
     }
-    if (target.isEmpty()) {
-        if ((idx) == (path.size() - 1) && node->isAggregate() && (flags & SearchEnumValues)) {
-            const Node *t =
-                    static_cast<const Aggregate *>(node)->findEnumNodeForValue(path.at(idx));
-            if (t)
-                return t;
-        }
+    if (target.isEmpty() && (flags & SearchEnumValues)) {
+        const auto *enumNode = node->isAggregate() ?
+                findEnumNode(nullptr, node, path, idx) :
+                findEnumNode(node, nullptr, path, idx);
+        if (enumNode)
+            return enumNode;
     }
     if (((genus == Node::CPP) || (genus == Node::DontCare)) && node->isClassNode()
         && (flags & SearchBaseClasses)) {
@@ -617,12 +616,9 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
             const Node *t = matchPathAndTarget(path, idx, target, base, flags, genus, ref);
             if (t && !t->isPrivate())
                 return t;
-            if (target.isEmpty()) {
-                if ((idx) == (path.size() - 1) && (flags & SearchEnumValues)) {
-                    t = base->findEnumNodeForValue(path.at(idx));
-                    if (t)
-                        return t;
-                }
+            if (target.isEmpty() && (flags & SearchEnumValues)) {
+                if ((t = findEnumNode(base->findChildNode(path.at(idx), genus, flags), base, path, idx)))
+                    return t;
             }
         }
     }
@@ -677,17 +673,22 @@ const Node *Tree::findNode(const QStringList &path, const Node *start, int flags
 
             const Node *next = static_cast<const Aggregate *>(node)->findChildNode(path.at(i),
                                                                                    genus, tmpFlags);
-            if ((next == nullptr) && (flags & SearchEnumValues) && i == path.size() - 1) {
-                next = static_cast<const Aggregate *>(node)->findEnumNodeForValue(path.at(i));
-            }
-            if ((next == nullptr) && ((genus == Node::CPP) || (genus == Node::DontCare))
+            const Node *enumNode = (flags & SearchEnumValues) ?
+                    findEnumNode(next, node, path, i) : nullptr;
+
+            if (enumNode)
+                return enumNode;
+
+
+            if (!next && ((genus == Node::CPP) || (genus == Node::DontCare))
                 && node->isClassNode() && (flags & SearchBaseClasses)) {
                 const ClassList bases = allBaseClasses(static_cast<const ClassNode *>(node));
                 for (const auto *base : bases) {
                     next = base->findChildNode(path.at(i), genus, tmpFlags);
-                    if ((next == nullptr) && (flags & SearchEnumValues) && i == path.size() - 1)
-                        next = base->findEnumNodeForValue(path.at(i));
-                    if (next != nullptr)
+                    if (flags & SearchEnumValues)
+                        if ((enumNode = findEnumNode(next, base, path, i)))
+                            return enumNode;
+                    if (next)
                         break;
                 }
             }
@@ -699,6 +700,30 @@ const Node *Tree::findNode(const QStringList &path, const Node *start, int flags
     } while (current != nullptr);
 
     return nullptr;
+}
+
+
+/*!
+    \internal
+
+    Helper function to return an enum that matches the \a path at a specified \a offset.
+    If \a node is a valid enum node, the enum name is assumed to be included in the path
+    (i.e, a scoped enum). Otherwise, query the \a aggregate (typically, the class node)
+    for enum node that includes the value at the last position in \a path.
+ */
+const Node *Tree::findEnumNode(const Node *node, const Node *aggregate, const QStringList &path, int offset) const
+{
+    // Scoped enum (path ends in enum_name :: enum_value)
+    if (node && node->isEnumType() && offset == path.size() - 1) {
+        const auto *en = static_cast<const EnumNode*>(node);
+        if (en->isScoped() && en->hasItem(path.last()))
+            return en;
+    }
+
+    // Standard enum (path ends in class_name :: enum_value)
+    return (!node && aggregate && offset == path.size() - 1) ?
+            static_cast<const Aggregate *>(aggregate)->findEnumNodeForValue(path.last()) :
+            nullptr;
 }
 
 /*!
