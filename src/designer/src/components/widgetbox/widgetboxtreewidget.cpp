@@ -46,6 +46,7 @@
 #include <QtWidgets/qapplication.h>
 #include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qmenu.h>
+#include <QtWidgets/qscrollbar.h>
 #include <QtWidgets/qtreewidget.h>
 
 #include <QtGui/qaction.h>
@@ -304,7 +305,15 @@ bool WidgetBoxTreeWidget::load(QDesignerWidgetBox::LoadMode loadMode)
         return false;
 
     const QString contents = QString::fromUtf8(f.readAll());
-    return loadContents(contents);
+    if (!loadContents(contents))
+        return false;
+    if (topLevelItemCount() > 0) {
+        // QTBUG-93099: Set the single step to the item height to have some
+        // size-related value.
+        const auto itemHeight = visualItemRect(topLevelItem(0)).height();
+        verticalScrollBar()->setSingleStep(itemHeight);
+    }
+    return true;
 }
 
 bool WidgetBoxTreeWidget::loadContents(const QString &contents)
