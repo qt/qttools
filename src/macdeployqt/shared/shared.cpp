@@ -195,13 +195,19 @@ OtoolInfo findDependencyInfo(const QString &binaryPath)
     if (binaryPath.contains(".framework/") || binaryPath.endsWith(".dylib")) {
         const auto match = regexp.match(outputLines.first());
         if (match.hasMatch()) {
-            info.installName = match.captured(1);
-            info.compatibilityVersion = QVersionNumber::fromString(match.captured(2));
-            info.currentVersion = QVersionNumber::fromString(match.captured(3));
+            QString installname = match.captured(1);
+            if (QFileInfo(binaryPath).fileName() == QFileInfo(installname).fileName()) {
+                info.installName = installname;
+                info.compatibilityVersion = QVersionNumber::fromString(match.captured(2));
+                info.currentVersion = QVersionNumber::fromString(match.captured(3));
+                outputLines.removeFirst();
+            } else {
+                info.installName = binaryPath;
+            }
         } else {
             LogError() << "Could not parse otool output line:" << outputLines.first();
+            outputLines.removeFirst();
         }
-        outputLines.removeFirst();
     }
 
     for (const QString &outputLine : outputLines) {
