@@ -48,29 +48,29 @@
     \list
       \li \l {abstract-command} {\\abstract}
       \li \l {default-command} {\\default}
-      \li \l {ingroup-command}{\\ingroup},
-      \li \l {inheaderfile-command}{\\inheaderfile},
-      \li \l {inherits-command}{\\inherits},
-      \li \l {inmodule-command}{\\inmodule},
-      \li \l {internal-command}{\\internal},
-      \li \l {nextpage-command}{\\nextpage},
-      \li \l {nonreentrant-command}{\\nonreentrant},
-      \li \l {obsolete-command}{\\obsolete},
-      \li \l {overload-command}{\\overload},
-      \li \l {preliminary-command}{\\preliminary},
-      \li \l {previouspage-command}{\\previouspage},
+      \li \l {ingroup-command}{\\ingroup}
+      \li \l {inheaderfile-command}{\\inheaderfile}
+      \li \l {inherits-command}{\\inherits}
+      \li \l {inmodule-command}{\\inmodule}
+      \li \l {internal-command}{\\internal}
+      \li \l {nextpage-command}{\\nextpage}
+      \li \l {nonreentrant-command}{\\nonreentrant}
+      \li \l {obsolete-command}{\\obsolete}
+      \li \l {overload-command}{\\overload}
+      \li \l {preliminary-command}{\\preliminary}
+      \li \l {previouspage-command}{\\previouspage}
       \li \l {qmlabstract-command} {\\qmlabstract}
       \li \l {qmldefault-command} {\\qmldefault}
       \li \l {qtcmakepackage-command} {\\qtcmakepackage}
       \li \l {readonly-command} {\\readonly}
-      \li \l {reentrant-command}{\\reentrant},
-      \li \l {reimp-command}{\\reimp},
-      \li \l {relates-command}{\\relates},
+      \li \l {reentrant-command}{\\reentrant}
+      \li \l {reimp-command}{\\reimp}
+      \li \l {relates-command}{\\relates}
       \li \l {required-command} {\\required}
-      \li \l {since-command}{\\since},
-      \li \l {startpage-command}{\\startpage},
+      \li \l {since-command}{\\since}
+      \li \l {startpage-command}{\\startpage}
       \li \l {subtitle-command}{\\subtitle}
-      \li \l {threadsafe-command}{\\threadsafe},
+      \li \l {threadsafe-command}{\\threadsafe}
       \li \l {title-command}{\\title}
     \endlist
 
