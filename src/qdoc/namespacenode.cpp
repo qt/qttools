@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -59,9 +59,9 @@ QT_BEGIN_NAMESPACE
  */
 NamespaceNode::~NamespaceNode()
 {
-    for (int i = 0; i < m_children.size(); ++i) {
-        if (m_children[i]->parent() != this)
-            m_children[i] = nullptr;
+    for (auto &child : m_children) {
+        if (child->parent() != this)
+            child = nullptr;
     }
 }
 
@@ -84,11 +84,8 @@ bool NamespaceNode::isDocumentedHere() const
  */
 bool NamespaceNode::hasDocumentedChildren() const
 {
-    for (const auto *node : qAsConst(m_children)) {
-        if (node->isInAPI())
-            return true;
-    }
-    return false;
+    return std::any_of(m_children.cbegin(), m_children.cend(),
+                       [](Node *child) { return child->isInAPI(); });
 }
 
 /*!
@@ -110,8 +107,7 @@ void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
                     QStringLiteral(
                             "Add /*! '\\%1 %2' ... */ or remove the qdoc comment marker (!) at "
                             "that line number.")
-                            .arg(COMMAND_NAMESPACE)
-                            .arg(name());
+                            .arg(COMMAND_NAMESPACE, name());
 
             node->doc().location().warning(msg1, msg2);
         }

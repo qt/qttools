@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -70,7 +70,6 @@ public:
     void setLogicalModuleInfo(const QStringList &info) override;
 
     const NodeList &members() const { return m_members; }
-    void printMembers(const QString &title);
 
     void markSeen() { m_seen = true; }
     void markNotSeen() { m_seen = false; }

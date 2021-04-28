@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -72,7 +72,7 @@ QString WebXMLGenerator::fileExtension() const
     Some pages produce supplementary output while being generated, and that's
     handled here.
 */
-int WebXMLGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
+qsizetype WebXMLGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
 {
     if (m_supplement && currentWriter)
         addAtomElements(*currentWriter.data(), atom, relative, marker);

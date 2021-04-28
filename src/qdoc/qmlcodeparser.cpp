@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  qmlcodeparser.cpp
-*/
-
 #include "qmlcodeparser.h"
 
 #include "node.h"
@@ -37,7 +33,6 @@
 
 #ifndef QT_NO_DECLARATIVE
 #    include <private/qqmljsast_p.h>
-#    include <private/qqmljsastvisitor_p.h>
 #endif
 #include <qdebug.h>
 
@@ -52,11 +47,6 @@ QmlCodeParser::QmlCodeParser()
 #endif
 {
 }
-
-/*!
-  Destroys the QML code parser.
- */
-QmlCodeParser::~QmlCodeParser() {}
 
 /*!
   Initializes the code parser base class.
@@ -194,7 +184,6 @@ static void replaceWithSpace(QString &str, int idx, int n)
 void QmlCodeParser::extractPragmas(QString &script)
 {
     const QString pragma(QLatin1String("pragma"));
-    const QString library(QLatin1String("library"));
 
     QQmlJS::Lexer l(nullptr);
     l.setCode(script, 0);
@@ -231,7 +220,6 @@ void QmlCodeParser::extractPragmas(QString &script)
         else
             return;
     }
-    return;
 }
 #endif
 

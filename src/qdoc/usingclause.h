@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -32,6 +32,8 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 class Node;
@@ -39,7 +41,7 @@ class Node;
 struct UsingClause
 {
     UsingClause() = default;
-    explicit UsingClause(const QString &signature) : m_signature(signature) {}
+    explicit UsingClause(QString signature) : m_signature(std::move(signature)) { }
     const QString &signature() const { return m_signature; }
     const Node *node() const { return m_node; }
     void setNode(const Node *n) { m_node = n; }

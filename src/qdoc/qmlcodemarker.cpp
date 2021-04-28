@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  qmlcodemarker.cpp
-*/
-
 #include "qmlcodemarker.h"
 
 #include <QtCore/qregularexpression.h>
@@ -48,10 +44,6 @@
 #endif
 
 QT_BEGIN_NAMESPACE
-
-QmlCodeMarker::QmlCodeMarker() {}
-
-QmlCodeMarker::~QmlCodeMarker() {}
 
 /*!
   Returns \c true if the \a code is recognized by the parser.
@@ -117,23 +109,6 @@ QString QmlCodeMarker::markedUpName(const Node *node)
     if (node->isFunction())
         name += "()";
     return name;
-}
-
-QString QmlCodeMarker::markedUpFullName(const Node *node, const Node *relative)
-{
-    if (node->name().isEmpty()) {
-        return "global";
-    } else {
-        QString fullName;
-        for (;;) {
-            fullName.prepend(markedUpName(node));
-            if (node->parent() == relative || node->parent()->name().isEmpty())
-                break;
-            fullName.prepend("<@op>::</@op>");
-            node = node->parent();
-        }
-        return fullName;
-    }
 }
 
 QString QmlCodeMarker::markedUpIncludes(const QStringList &includes)
@@ -222,8 +197,6 @@ static void replaceWithSpace(QString &str, int idx, int n)
 */
 QList<QQmlJS::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
 {
-    const QString pragma(QLatin1String("pragma"));
-    const QString library(QLatin1String("library"));
     QList<QQmlJS::SourceLocation> removed;
 
     QQmlJS::Lexer l(nullptr);
@@ -233,7 +206,7 @@ QList<QQmlJS::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
 
     while (true) {
         if (token != QQmlJSGrammar::T_DOT)
-            return removed;
+            break;
 
         int startOffset = l.tokenOffset();
         int startLine = l.tokenStartLine();
@@ -242,7 +215,7 @@ QList<QQmlJS::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
         token = l.lex();
 
         if (token != QQmlJSGrammar::T_PRAGMA && token != QQmlJSGrammar::T_IMPORT)
-            return removed;
+            break;
         int endOffset = 0;
         while (startLine == l.tokenStartLine()) {
             endOffset = l.tokenLength() + l.tokenOffset();

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,10 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-/*
-  config.h
-*/
 
 #ifndef CONFIG_H
 #define CONFIG_H
@@ -147,7 +143,6 @@ public:
     QRegularExpression getRegExp(const QString &var) const;
     QList<QRegularExpression> getRegExpList(const QString &var) const;
     QSet<QString> subVars(const QString &var) const;
-    void subVarsAndValues(const QString &var, ConfigVarMap &map) const;
     QStringList getAllFiles(const QString &filesVar, const QString &dirsVar,
                             const QSet<QString> &excludedDirs = QSet<QString>(),
                             const QSet<QString> &excludedFiles = QSet<QString>());
@@ -196,7 +191,6 @@ public:
     QString previousCurrentDir() const { return m_previousCurrentDir; }
     void setPreviousCurrentDir(const QString &path) { m_previousCurrentDir = path; }
 
-    QDocPass qdocPass() const { return m_qdocPass; }
     void setQDocPass(const QDocPass &pass) { m_qdocPass = pass; };
     bool preparing() const { return (m_qdocPass == Prepare); }
     bool generating() const { return (m_qdocPass == Generate); }
@@ -231,7 +225,6 @@ private:
     Location m_lastLocation {};
     ConfigVarMap m_configVars {};
 
-    static QMap<QString, QString> m_uncompressedFiles;
     static QMap<QString, QString> m_extractedDirs;
     static QStack<QString> m_workingDirs;
     static QMap<QString, QStringList> m_includeFilesMap;
@@ -316,7 +309,6 @@ struct ConfigStrings
     static QString VERSIONSYM;
     static QString FILEEXTENSIONS;
     static QString IMAGEEXTENSIONS;
-    static QString QMLONLY;
     static QString QMLTYPESPAGE;
     static QString QMLTYPESTITLE;
     static QString WARNINGLIMIT;
@@ -396,7 +388,6 @@ struct ConfigStrings
 #define CONFIG_VERSIONSYM ConfigStrings::VERSIONSYM
 #define CONFIG_FILEEXTENSIONS ConfigStrings::FILEEXTENSIONS
 #define CONFIG_IMAGEEXTENSIONS ConfigStrings::IMAGEEXTENSIONS
-#define CONFIG_QMLONLY ConfigStrings::QMLONLY
 #define CONFIG_QMLTYPESPAGE ConfigStrings::QMLTYPESPAGE
 #define CONFIG_QMLTYPESTITLE ConfigStrings::QMLTYPESTITLE
 #define CONFIG_WARNINGLIMIT ConfigStrings::WARNINGLIMIT

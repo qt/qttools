@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -58,9 +58,8 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
     QFile in(filePath);
     currentFile_ = filePath;
     if (!in.open(QIODevice::ReadOnly)) {
-        location.error(QStringLiteral("Can't open source file '%1' (%2)")
-                               .arg(filePath)
-                               .arg(strerror(errno)));
+        location.error(
+                QStringLiteral("Can't open source file '%1' (%2)").arg(filePath, strerror(errno)));
         currentFile_.clear();
         return;
     }
@@ -105,8 +104,7 @@ bool PureDocParser::processQdocComments()
             if (topics.isEmpty()) {
                 doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "
                                                       "(e.g., '\\%1', '\\%2').")
-                                               .arg(COMMAND_MODULE)
-                                               .arg(COMMAND_PAGE));
+                                               .arg(COMMAND_MODULE, COMMAND_PAGE));
                 continue;
             }
             if (hasTooManyTopics(doc))

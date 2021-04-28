@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  jscodemarker.h
-*/
-
 #ifndef JSCODEMARKER_H
 #define JSCODEMARKER_H
 
@@ -40,16 +36,16 @@ QT_BEGIN_NAMESPACE
 class JsCodeMarker : public QmlCodeMarker
 {
 public:
-    JsCodeMarker();
-    ~JsCodeMarker() override;
+    JsCodeMarker() = default;
+    ~JsCodeMarker() override = default;
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;
     bool recognizeLanguage(const QString &language) override;
     Atom::AtomType atomType() const override;
 
-    virtual QString markedUpCode(const QString &code, const Node *relative,
-                                 const Location &location) override;
+    QString markedUpCode(const QString &code, const Node *relative,
+                         const Location &location) override;
 
 private:
     QString addMarkUp(const QString &code, const Node *relative, const Location &location);

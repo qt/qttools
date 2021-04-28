@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -60,7 +60,7 @@ void SharedCommentNode::setOverloadFlags()
  */
 Node *SharedCommentNode::clone(Aggregate *parent)
 {
-    SharedCommentNode *scn = new SharedCommentNode(*this); // shallow copy
+    auto *scn = new SharedCommentNode(*this); // shallow copy
     scn->setParent(nullptr);
     parent->addChild(scn);
 

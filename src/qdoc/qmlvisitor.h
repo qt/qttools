@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -65,7 +65,7 @@ class QmlDocVisitor : public QQmlJS::AST::Visitor
 public:
     QmlDocVisitor(const QString &filePath, const QString &code, QQmlJS::Engine *engine,
                   const QSet<QString> &commands, const QSet<QString> &topics);
-    ~QmlDocVisitor() override;
+    ~QmlDocVisitor() override = default;
 
     bool visit(QQmlJS::AST::UiImport *import) override;
     void endVisit(QQmlJS::AST::UiImport *definition) override;

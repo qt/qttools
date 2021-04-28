@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -55,7 +55,7 @@ public:
         return !name().isEmpty() && !m_collective.isEmpty()
                 && (m_collective.at(0)->isQmlProperty() || m_collective.at(0)->isJsProperty());
     }
-    int count() const { return m_collective.size(); }
+    qsizetype count() const { return m_collective.size(); }
     void append(Node *node)
     {
         m_collective.append(node);

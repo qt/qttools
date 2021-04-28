@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2019 Thibaut Cuvelier
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -192,8 +193,7 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
             if (atom->type() == Atom::FormatEndif) {
                 if (generate && numAtoms0 == numAtoms) {
                     relative->location().warning(QStringLiteral("Output format %1 not handled %2")
-                                                         .arg(format())
-                                                         .arg(outFileName()));
+                                                         .arg(format(), outFileName()));
                     Atom unhandledFormatAtom(Atom::UnhandledFormat, format());
                     generateAtomList(&unhandledFormatAtom, relative, generate, numAtoms);
                 }
@@ -219,7 +219,7 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
 /*!
   Generate DocBook from an instance of Atom.
  */
-int DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
+qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
 {
     Q_ASSERT(writer);
     Q_UNUSED(marker);
@@ -913,7 +913,7 @@ void DocBookGenerator::generateClassHierarchy(const Node *relative, NodeMultiMap
             writer->writeEndElement(); // itemizedlist
             newLine();
         } else {
-            ClassNode *child = static_cast<ClassNode *>(*stack.top().begin());
+            auto *child = static_cast<ClassNode *>(*stack.top().begin());
             writer->writeStartElement(dbNamespace, "listitem");
             newLine();
             writer->writeStartElement(dbNamespace, "para");
@@ -944,7 +944,7 @@ void DocBookGenerator::generateLink(const Atom *atom)
     auto match = funcLeftParen.match(atom->string());
     if (match.hasMatch()) {
         // hack for C++: move () outside of link
-        int k = match.capturedStart(1);
+        qsizetype k = match.capturedStart(1);
         writer->writeCharacters(atom->string().left(k));
         writer->writeEndElement(); // link
         inLink = false;
@@ -1097,7 +1097,7 @@ void DocBookGenerator::generateCompactList(ListType listType, const Node *relati
         return;
 
     const int NumParagraphs = 37; // '0' to '9', 'A' to 'Z', '_'
-    int commonPrefixLen = commonPrefix.length();
+    qsizetype commonPrefixLen = commonPrefix.length();
 
     /*
       Divide the data into 37 paragraphs: 0, ..., 9, A, ..., Z,
@@ -1575,12 +1575,12 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
     writer->writeEndElement(); // para
     newLine();
 
-    for (int i = 0; i < details_spv.size(); ++i) {
-        QString title = details_spv.at(i)->title();
+    for (const Section *section : details_spv) {
+        const QString &title = section->title();
         QString ref = registerRef(title.toLower());
         startSection(ref, title);
 
-        const NodeVector &members = details_spv.at(i)->obsoleteMembers();
+        const NodeVector &members = section->obsoleteMembers();
         NodeVector::ConstIterator m = members.constBegin();
         while (m != members.constEnd()) {
             if ((*m)->access() != Access::Private)
@@ -1611,7 +1611,6 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
         return;
 
     Aggregate *aggregate = sections.aggregate();
-    QString title = "Obsolete Members for " + aggregate->name();
     QString fn = fileName(aggregate, fileExtension());
     QString link;
     if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
@@ -1911,9 +1910,7 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     // Instantiates.
     ClassNode *cn = (const_cast<QmlTypeNode *>(qcn))->classNode();
     if (cn && (cn->status() != Node::Internal)) {
-        const Node *otherNode = nullptr;
         Atom a = Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
-        QString link = getAutoLink(&a, cn, &otherNode);
 
         generateStartRequisite("Instantiates:");
         generateSimpleLink(fullDocumentLocation(cn), cn->name());
@@ -2395,7 +2392,7 @@ void DocBookGenerator::generateMaintainerList(const Aggregate *node, CodeMarker 
 {
     Q_UNUSED(marker);
     // From Generator::generateMaintainerList.
-    QStringList sl = getMetadataElements(node, "maintainer");
+    const QStringList sl = getMetadataElements(node, "maintainer");
 
     if (!sl.isEmpty()) {
         writer->writeStartElement(dbNamespace, "para");
@@ -2407,9 +2404,9 @@ void DocBookGenerator::generateMaintainerList(const Aggregate *node, CodeMarker 
         writer->writeStartElement(dbNamespace, "simplelist");
         writer->writeAttribute("type", "vert");
         writer->writeAttribute("role", "maintainer");
-        for (int i = 0; i < sl.size(); ++i) {
+        for (const QString &maintainer : sl) {
             writer->writeStartElement(dbNamespace, "member");
-            writer->writeCharacters(sl.at(i));
+            writer->writeCharacters(maintainer);
             writer->writeEndElement(); // member
             newLine();
         }
@@ -3454,7 +3451,7 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
     {
         if (!node->isFunction())
             return;
-        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        const auto *fn = static_cast<const FunctionNode *>(node);
         NodeList nodes = fn->associatedProperties();
         if (nodes.isEmpty())
             return;
@@ -3967,7 +3964,6 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
                 writer->writeAttribute("renderas", "sect2");
 
             // Write the title.
-            QString title;
             if (node->isFunction(Node::QML) || node->isFunction(Node::JS))
                 generateQmlMethodTitle(node);
             else if (node->isQmlProperty() || node->isJsProperty())

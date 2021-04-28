@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  editdistance.cpp
-*/
-
 #include "editdistance.h"
 
 QT_BEGIN_NAMESPACE
@@ -39,8 +35,8 @@ int editDistance(const QString &s, const QString &t)
 #define D(i, j) d[(i)*n + (j)]
     int i;
     int j;
-    int m = s.length() + 1;
-    int n = t.length() + 1;
+    qsizetype m = s.length() + 1;
+    qsizetype n = t.length() + 1;
     int *d = new int[m * n];
     int result;
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -28,7 +28,6 @@
 
 #include "collectionnode.h"
 
-#include <QtCore/qdebug.h>
 #include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
@@ -101,19 +100,6 @@ void CollectionNode::getMemberClasses(NodeMap &out) const
     for (const auto &i : qAsConst(m_members)) {
         if (i->isClassNode())
             out.insert(i->name(), i);
-    }
-}
-
-/*!
-  Prints the collection node's list of members.
-  For debugging only.
- */
-void CollectionNode::printMembers(const QString &title)
-{
-    qDebug() << title << name() << m_members.size();
-    if (m_members.empty()) {
-        for (const auto &member : qAsConst(m_members))
-            qDebug() << "  MEMBER:" << member->name() << member->nodeTypeString();
     }
 }
 

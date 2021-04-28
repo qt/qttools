@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -32,27 +32,24 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 struct ImportRec
 {
     QString m_moduleName;
     QString m_majorMinorVersion;
-    QString m_importAsName;
     QString m_importUri; // subdirectory of module directory
 
-    ImportRec(const QString &name, const QString &version, const QString &importId,
-              const QString &importUri)
-        : m_moduleName(name),
-          m_majorMinorVersion(version),
-          m_importAsName(importId),
-          m_importUri(importUri)
+    ImportRec(QString name, QString version, QString importUri)
+        : m_moduleName(std::move(name)),
+          m_majorMinorVersion(std::move(version)),
+          m_importUri(std::move(importUri))
     {
     }
     QString &name() { return m_moduleName; }
     QString &version() { return m_majorMinorVersion; }
-    QString &importId() { return m_importAsName; }
-    QString &importUri() { return m_importUri; }
     bool isEmpty() const { return m_moduleName.isEmpty(); }
 };
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -294,7 +294,6 @@ void Doc::initialize()
     Config &config = Config::instance();
     DocParser::initialize(config);
 
-    QmlTypeNode::qmlOnly = config.getBool(CONFIG_QMLONLY);
     QStringMap reverseAliasMap;
 
     for (const auto &a : config.subVars(CONFIG_ALIAS)) {
@@ -302,9 +301,7 @@ void Doc::initialize()
         if (reverseAliasMap.contains(alias)) {
             config.lastLocation().warning(QStringLiteral("Command name '\\%1' cannot stand"
                                                          " for both '\\%2' and '\\%3'")
-                                                  .arg(alias)
-                                                  .arg(reverseAliasMap[alias])
-                                                  .arg(a));
+                                                  .arg(alias, reverseAliasMap[alias], a));
         } else {
             reverseAliasMap.insert(alias, a);
         }
@@ -334,15 +331,11 @@ void Doc::initialize()
                         QString other = QStringLiteral("default");
                         if (macro.defaultDef.isEmpty())
                             other = macro.otherDefs.constBegin().key();
-                        config.lastLocation().warning(QStringLiteral("Macro '\\%1' takes"
-                                                                     " inconsistent number"
-                                                                     " of arguments (%2"
-                                                                     " %3, %4 %5)")
-                                                              .arg(macroName)
-                                                              .arg(f)
-                                                              .arg(m)
-                                                              .arg(other)
-                                                              .arg(macro.numParams));
+                        config.lastLocation().warning(
+                                QStringLiteral("Macro '\\%1' takes inconsistent number of "
+                                               "arguments (%2 %3, %4 %5)")
+                                        .arg(macroName, f, QString::number(m), other,
+                                             QString::number(macro.numParams)));
                         silent = true;
                     }
                     if (macro.numParams < m)
@@ -445,7 +438,6 @@ CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, const Q
         }
     }
 
-    QString dirPath = QFileInfo(filePath).path();
     CodeMarker *marker = CodeMarker::markerForFileName(fileName);
     quoter.quoteFromFile(userFriendlyFilePath, code, marker->markedUpCode(code, nullptr, location));
     return marker;
@@ -467,7 +459,7 @@ QString Doc::canonicalTitle(const QString &title)
 
     bool dashAppended = false;
     bool begun = false;
-    int lastAlnum = 0;
+    qsizetype lastAlnum = 0;
     for (int i = 0; i != title.size(); ++i) {
         uint c = title.at(i).unicode();
         if (c >= 'A' && c <= 'Z')
@@ -499,7 +491,7 @@ void Doc::detach()
 
     --priv->count;
 
-    DocPrivate *newPriv = new DocPrivate(*priv);
+    auto *newPriv = new DocPrivate(*priv);
     newPriv->count = 1;
     if (priv->extra)
         newPriv->extra = new DocPrivateExtra(*priv->extra);

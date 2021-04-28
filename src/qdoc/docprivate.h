@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -73,11 +73,7 @@ class DocPrivate
 public:
     explicit DocPrivate(const Location &start = Location(), const Location &end = Location(),
                         const QString &source = QString())
-        : start_loc(start),
-          end_loc(end),
-          src(source),
-          hasLegalese(false),
-          hasSectioningUnits(false) {};
+        : start_loc(start), end_loc(end), src(source), hasLegalese(false) {};
     ~DocPrivate();
 
     void addAlso(const Text &also);
@@ -101,7 +97,6 @@ public:
     TopicList topics_;
 
     bool hasLegalese : 1;
-    bool hasSectioningUnits : 1;
 };
 
 QT_END_NAMESPACE

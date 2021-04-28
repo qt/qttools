@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,10 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-/*
-  location.h
-*/
 
 #ifndef LOCATION_H
 #define LOCATION_H
@@ -82,7 +78,6 @@ public:
     static void terminate();
     static void information(const QString &message);
     static void internalError(const QString &hint);
-    static QString canonicalRelativePath(const QString &path);
     static int exitCode();
 
 private:

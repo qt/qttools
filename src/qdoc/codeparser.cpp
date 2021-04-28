@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,16 +26,11 @@
 **
 ****************************************************************************/
 
-/*
-  codeparser.cpp
-*/
-
 #include "codeparser.h"
 
 #include "config.h"
 #include "generator.h"
 #include "node.h"
-#include "proxynode.h"
 #include "qdocdatabase.h"
 
 #include <QtCore/qregularexpression.h>
@@ -173,7 +168,8 @@ const QSet<QString> &CodeParser::commonMetaCommands()
  */
 void CodeParser::extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc)
 {
-    QRegularExpression bracedRegExp(QRegularExpression::anchoredPattern(QLatin1String("\\{([^{}]*)\\}(?:\\{([^{}]*)\\})?")));
+    QRegularExpression bracedRegExp(
+            QRegularExpression::anchoredPattern(QLatin1String(R"(\{([^{}]*)\}(?:\{([^{}]*)\})?)")));
     auto match = bracedRegExp.match(arg);
     if (match.hasMatch()) {
         *link = match.captured(1);
@@ -181,7 +177,7 @@ void CodeParser::extractPageLinkAndDesc(QStringView arg, QString *link, QString 
         if (desc->isEmpty())
             *desc = *link;
     } else {
-        int spaceAt = arg.indexOf(QLatin1Char(' '));
+        qsizetype spaceAt = arg.indexOf(QLatin1Char(' '));
         if (arg.contains(QLatin1String(".html")) && spaceAt != -1) {
             *link = arg.left(spaceAt).trimmed().toString();
             *desc = arg.mid(spaceAt).trimmed().toString();
@@ -265,11 +261,10 @@ void CodeParser::checkModuleInclusion(Node *n)
             }
 
             qdb_->addToModule(Generator::defaultModuleName(), n);
-            n->doc().location().warning(QStringLiteral("%1 %2 has no \\inmodule command; "
-                                                       "using project name by default: %3")
-                                                .arg(word)
-                                                .arg(n->name())
-                                                .arg(Generator::defaultModuleName()));
+            n->doc().location().warning(
+                    QStringLiteral("%1 %2 has no \\inmodule command; "
+                                   "using project name by default: %3")
+                            .arg(word, n->name(), Generator::defaultModuleName()));
         }
     }
 }

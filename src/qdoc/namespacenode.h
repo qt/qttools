@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -49,11 +49,9 @@ public:
     bool isRelatableType() const override { return true; }
     bool wasSeen() const override { return m_seen; }
     void markSeen() { m_seen = true; }
-    void markNotSeen() { m_seen = false; }
     void setTree(Tree *t) { m_tree = t; }
     const NodeList &includedChildren() const;
     void includeChild(Node *child);
-    QString whereDocumented() const { return m_whereDocumented; }
     void setWhereDocumented(const QString &t) { m_whereDocumented = t; }
     bool isDocumentedHere() const;
     bool hasDocumentedChildren() const;

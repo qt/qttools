@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -44,7 +44,6 @@
 #include "sharedcommentnode.h"
 
 #include <QtCore/qdebug.h>
-#include <QtCore/qfile.h>
 
 #include <algorithm>
 
@@ -204,7 +203,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         Node::NodeType type = m_nodeTypeMap[command];
         QStringList words = arg.first.split(QLatin1Char(' '));
         QStringList path;
-        int idx = 0;
+        qsizetype idx = 0;
         Node *node = nullptr;
 
         if (type == Node::Variable && words.size() > 1)
@@ -231,8 +230,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             if (isWorthWarningAbout(doc)) {
                 doc.location().warning(
                         QStringLiteral("Cannot find '%1' specified with '\\%2' in any header file")
-                                .arg(arg.first)
-                                .arg(command));
+                                .arg(arg.first, command));
             }
         } else if (node->isAggregate()) {
             if (type == Node::Namespace) {
@@ -416,7 +414,7 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     bool jsProps = isJSPropertyTopic(topic.topic);
     arg = topic.args;
     if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
-        int i = property.indexOf('.');
+        qsizetype i = property.indexOf('.');
         if (i != -1)
             group = property.left(i);
     }
@@ -528,17 +526,15 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                 if (fn->overridesThis().isEmpty() && isWorthWarningAbout(doc)) {
                     doc.location().warning(
                             QStringLiteral("Cannot find base function for '\\%1' in %2()")
-                                    .arg(COMMAND_REIMP)
-                                    .arg(node->name()),
+                                    .arg(COMMAND_REIMP, node->name()),
                             QStringLiteral("The function either doesn't exist in any "
                                            "base class with the same signature or it "
                                            "exists but isn't virtual."));
                 }
                 fn->setReimpFlag();
             } else {
-                doc.location().warning(QStringLiteral("Ignored '\\%1' in %2")
-                                               .arg(COMMAND_REIMP)
-                                               .arg(node->name()));
+                doc.location().warning(
+                        QStringLiteral("Ignored '\\%1' in %2").arg(COMMAND_REIMP, node->name()));
             }
         }
     } else if (command == COMMAND_RELATES) {
@@ -705,12 +701,12 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     QString funcName;
     QString returnType;
 
-    int leftParen = funcArg.indexOf(QChar('('));
+    qsizetype leftParen = funcArg.indexOf(QChar('('));
     if (leftParen > 0)
         funcName = funcArg.left(leftParen);
     else
         funcName = funcArg;
-    int firstBlank = funcName.indexOf(QChar(' '));
+    qsizetype firstBlank = funcName.indexOf(QChar(' '));
     if (firstBlank > 0) {
         returnType = funcName.left(firstBlank);
         funcName = funcName.right(funcName.length() - firstBlank - 1);
@@ -782,7 +778,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     QString params;
     if (leftParenSplit.size() > 1) {
         const QString &afterParen = leftParenSplit.at(1);
-        int rightParen = afterParen.indexOf(')');
+        qsizetype rightParen = afterParen.indexOf(')');
         if (rightParen >= 0)
             params = afterParen.left(rightParen);
     }
@@ -856,7 +852,7 @@ void CppCodeParser::setExampleFileLists(ExampleNode *en)
                 QLatin1String("*.qrc *.pro *.qmlproject *.pyproject CMakeLists.txt qmldir"));
     }
 
-    const int pathLen = exampleDir.path().size() - en->name().size();
+    const qsizetype pathLen = exampleDir.path().size() - en->name().size();
     for (auto &file : exampleFiles)
         file = file.mid(pathLen);
     for (auto &file : imageFiles)
@@ -1006,7 +1002,7 @@ bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
         for (const auto &t : topicCommandsUsed)
             topicList += QLatin1String(" \\") + t + QLatin1Char(',');
         topicList[topicList.lastIndexOf(',')] = '.';
-        int i = topicList.lastIndexOf(',');
+        qsizetype i = topicList.lastIndexOf(',');
         Q_ASSERT(i >= 0); // we had at least two commas
         topicList[i] = ' ';
         topicList.insert(i + 1, "and");

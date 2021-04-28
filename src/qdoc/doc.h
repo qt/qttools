@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -61,7 +61,6 @@ public:
     enum Sections {
         NoSection = -2,
         Part = -1,
-        Chapter = 1,
         Section1 = 1,
         Section2 = 2,
         Section3 = 3,

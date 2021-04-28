@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -30,6 +30,8 @@
 
 #include "classnode.h"
 #include "propertynode.h"
+
+#include <utility>
 #include "qdocdatabase.h"
 
 QT_BEGIN_NAMESPACE
@@ -37,10 +39,10 @@ QT_BEGIN_NAMESPACE
 /*!
   Constructor for the QML property node.
  */
-QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, const QString &type,
+QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString type,
                                  bool attached)
     : Node(parent->isJsType() ? JsProperty : QmlProperty, parent, name),
-      m_type(type),
+      m_type(std::move(type)),
       m_attached(attached)
 {
     if (m_type == "alias")
@@ -79,16 +81,12 @@ bool QmlPropertyNode::isWritable()
                                     "No Q_PROPERTY for QML property %1::%2::%3 "
                                     "in C++ class documented as QML type: "
                                     "(property not found in the C++ class or its base classes)")
-                                    .arg(logicalModuleName())
-                                    .arg(qmlTypeName())
-                                    .arg(name()));
+                                    .arg(logicalModuleName(), qmlTypeName(), name()));
             } else
                 defLocation().warning(QStringLiteral("No Q_PROPERTY for QML property %1::%2::%3 "
                                                      "in C++ class documented as QML type: "
                                                      "(C++ class not specified or not found).")
-                                              .arg(logicalModuleName())
-                                              .arg(qmlTypeName())
-                                              .arg(name()));
+                                              .arg(logicalModuleName(), qmlTypeName(), name()));
         }
     }
     return true;
@@ -104,7 +102,7 @@ bool QmlPropertyNode::isRequired()
         return fromFlagValue(m_required, false);
 
     PropertyNode *pn = findCorrespondingCppProperty();
-    return pn ? pn->isRequired() : false;
+    return pn != nullptr && pn->isRequired();
 }
 
 /*!
@@ -118,7 +116,7 @@ PropertyNode *QmlPropertyNode::findCorrespondingCppProperty()
     while (n && !(n->isQmlType() || n->isJsType()))
         n = n->parent();
     if (n) {
-        QmlTypeNode *qcn = static_cast<QmlTypeNode *>(n);
+        auto *qcn = static_cast<QmlTypeNode *>(n);
         ClassNode *cn = qcn->classNode();
         if (cn) {
             /*
@@ -138,7 +136,7 @@ PropertyNode *QmlPropertyNode::findCorrespondingCppProperty()
                     QStringList path(extractClassName(pn->qualifiedDataType()));
                     Node *nn = QDocDatabase::qdocDB()->findClassNode(path);
                     if (nn) {
-                        ClassNode *cn = static_cast<ClassNode *>(nn);
+                        auto *cn = static_cast<ClassNode *>(nn);
                         PropertyNode *pn2 = cn->findPropertyNode(dotSplit[1]);
                         /*
                           If found, return the C++ property

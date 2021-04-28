@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -81,7 +81,7 @@ class Parameters
 {
 public:
     Parameters();
-    Parameters(const QString &signature);
+    Parameters(const QString &signature); // TODO: Making this explicit breaks QDoc
 
     void clear()
     {
@@ -118,7 +118,7 @@ private:
     QString previousLexeme();
     bool match(int target);
     void matchTemplateAngles(CodeChunk &type);
-    bool matchTypeAndName(CodeChunk &type, QString &name, bool qProp = false);
+    bool matchTypeAndName(CodeChunk &type, QString &name);
     bool matchParameter();
     bool parse(const QString &signature);
 

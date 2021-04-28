@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,10 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-/*
-  config.cpp
-*/
 
 #include "config.h"
 #include "utilities.h"
@@ -117,7 +113,6 @@ QString ConfigStrings::VERSION = QStringLiteral("version");
 QString ConfigStrings::VERSIONSYM = QStringLiteral("versionsym");
 QString ConfigStrings::FILEEXTENSIONS = QStringLiteral("fileextensions");
 QString ConfigStrings::IMAGEEXTENSIONS = QStringLiteral("imageextensions");
-QString ConfigStrings::QMLONLY = QStringLiteral("qmlonly");
 QString ConfigStrings::QMLTYPESPAGE = QStringLiteral("qmltypespage");
 QString ConfigStrings::QMLTYPESTITLE = QStringLiteral("qmltypestitle");
 QString ConfigStrings::WARNINGLIMIT = QStringLiteral("warninglimit");
@@ -208,11 +203,8 @@ void MetaStack::process(QChar ch, const Location &location)
         top().close();
         top().open();
     } else {
-        /*
-          This is where all the processing is done.
-         */
-        for (auto it = top().next.begin(); it != top().next.end(); ++it)
-            *it += ch;
+        for (QString &topNext : top().next)
+            topNext += ch;
     }
 }
 
@@ -355,11 +347,11 @@ void Config::expandVariables()
                         QStringLiteral("Environment or configuration variable '%1' undefined")
                                 .arg(it->m_var));
             } else if (!refVar.m_expandVars.empty()) {
-                configVar.m_location.fatal(QStringLiteral("Nested variable expansion not allowed"),
-                                           QStringLiteral("When expanding '%1' at %2:%3")
-                                                   .arg(refVar.m_name)
-                                                   .arg(refVar.m_location.filePath())
-                                                   .arg(refVar.m_location.lineNo()));
+                configVar.m_location.fatal(
+                        QStringLiteral("Nested variable expansion not allowed"),
+                        QStringLiteral("When expanding '%1' at %2:%3")
+                                .arg(refVar.m_name, refVar.m_location.filePath(),
+                                     QString::number(refVar.m_location.lineNo())));
             }
             QString expanded;
             if (it->m_delim.isNull())
@@ -585,8 +577,6 @@ QStringList Config::getStringList(const QString &var) const
    are canonicalized. If \a validate is true, outputs a warning for invalid
    paths. If \a var is defined, updates the internal location to the
    location of \a var for the purposes of error reporting.
-
-   \sa Location::canonicalRelativePath()
  */
 QStringList Config::getCanonicalPathList(const QString &var, bool validate) const
 {
@@ -673,25 +663,6 @@ QSet<QString> Config::subVars(const QString &var) const
         }
     }
     return result;
-}
-
-/*!
-  Same as subVars(), but returns a ConfigVarMap \a map with the
-  matching keys (stripped of the prefix \a var and mapped to
-  their values.
- */
-void Config::subVarsAndValues(const QString &var, ConfigVarMap &map) const
-{
-    QString varDot = var + QLatin1Char('.');
-    for (auto it = m_configVars.constBegin(); it != m_configVars.constEnd(); ++it) {
-        if (it.key().startsWith(varDot)) {
-            QString subVar = it.key().mid(varDot.length());
-            int dot = subVar.indexOf(QLatin1Char('.'));
-            if (dot != -1)
-                subVar.truncate(dot);
-            map.insert(subVar, it.value());
-        }
-    }
 }
 
 /*!
@@ -893,13 +864,12 @@ QString Config::copyFile(const Location &location, const QString &sourceFilePath
     QFile inFile(sourceFilePath);
     if (!inFile.open(QFile::ReadOnly)) {
         location.warning(QStringLiteral("Cannot open input file for copy: '%1': %2")
-                                 .arg(sourceFilePath)
-                                 .arg(inFile.errorString()));
+                                 .arg(sourceFilePath, inFile.errorString()));
         return QString();
     }
 
     QString outFileName = userFriendlySourceFilePath;
-    int slash = outFileName.lastIndexOf(QLatin1Char('/'));
+    qsizetype slash = outFileName.lastIndexOf(QLatin1Char('/'));
     if (slash != -1)
         outFileName = outFileName.mid(slash);
     if ((outFileName.size()) > 0 && (outFileName[0] != '/'))
@@ -909,13 +879,12 @@ QString Config::copyFile(const Location &location, const QString &sourceFilePath
     QFile outFile(outFileName);
     if (!outFile.open(QFile::WriteOnly)) {
         location.warning(QStringLiteral("Cannot open output file for copy: '%1': %2")
-                                 .arg(outFileName)
-                                 .arg(outFile.errorString()));
+                                 .arg(outFileName, outFile.errorString()));
         return QString();
     }
 
     char buffer[1024];
-    int len;
+    qsizetype len;
     while ((len = inFile.read(buffer, sizeof(buffer))) > 0)
         outFile.write(buffer, len);
     return outFileName;
@@ -956,14 +925,13 @@ QStringList Config::loadMaster(const QString &fileName)
     QFile fin(fileName);
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {
-            int prefix = location.filePath().length() - location.fileName().length();
+            qsizetype prefix = location.filePath().length() - location.fileName().length();
             fin.setFileName(Config::installDir + QLatin1Char('/')
                             + fileName.right(fileName.length() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
             location.fatal(QStringLiteral("Cannot open master qdocconf file '%1': %2")
-                                   .arg(fileName)
-                                   .arg(fin.errorString()));
+                                   .arg(fileName, fin.errorString()));
     }
     QTextStream stream(&fin);
     QStringList qdocFiles;
@@ -1013,14 +981,13 @@ void Config::load(Location location, const QString &fileName)
     QFile fin(fileInfo.fileName());
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {
-            int prefix = location.filePath().length() - location.fileName().length();
+            qsizetype prefix = location.filePath().length() - location.fileName().length();
             fin.setFileName(Config::installDir + QLatin1Char('/')
                             + fileName.right(fileName.length() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
-            location.fatal(QStringLiteral("Cannot open file '%1': %2")
-                                   .arg(fileName)
-                                   .arg(fin.errorString()));
+            location.fatal(
+                    QStringLiteral("Cannot open file '%1': %2").arg(fileName, fin.errorString()));
     }
 
     QTextStream stream(&fin);
@@ -1121,7 +1088,7 @@ void Config::load(Location location, const QString &fileName)
 
                 for (;;) {
                     if (cc == '\\') {
-                        int metaCharPos;
+                        qsizetype metaCharPos;
 
                         SKIP_CHAR();
                         if (cc == '\n') {

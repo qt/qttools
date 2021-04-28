@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  qmlcodemarker.h
-*/
-
 #ifndef QMLCODEMARKER_H
 #define QMLCODEMARKER_H
 
@@ -44,18 +40,17 @@ QT_BEGIN_NAMESPACE
 class QmlCodeMarker : public CppCodeMarker
 {
 public:
-    QmlCodeMarker();
-    ~QmlCodeMarker() override;
+    QmlCodeMarker() = default;
+    ~QmlCodeMarker() override = default;
 
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;
     bool recognizeLanguage(const QString &language) override;
     Atom::AtomType atomType() const override;
-    virtual QString markedUpCode(const QString &code, const Node *relative,
-                                 const Location &location) override;
+    QString markedUpCode(const QString &code, const Node *relative,
+                         const Location &location) override;
 
     QString markedUpName(const Node *node) override;
-    QString markedUpFullName(const Node *node, const Node *relative) override;
     QString markedUpIncludes(const QStringList &includes) override;
     QString functionBeginRegExp(const QString &funcName) override;
     QString functionEndRegExp(const QString &funcName) override;

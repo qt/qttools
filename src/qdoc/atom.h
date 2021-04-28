@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -172,16 +172,14 @@ public:
     QString typeString() const;
     const QString &string() const { return strs[0]; }
     const QString &string(int i) const { return strs[i]; }
-    int count() const { return strs.size(); }
+    qsizetype count() const { return strs.size(); }
     void dump() const;
     QString linkText() const;
     const QStringList &strings() const { return strs; }
 
     virtual bool isLinkAtom() const { return false; }
     virtual Node::Genus genus() { return Node::DontCare; }
-    virtual bool specifiesDomain() { return false; }
     virtual Tree *domain() { return nullptr; }
-    virtual Node::NodeType goal() { return Node::NoType; }
     virtual const QString &error() { return noError_; }
     virtual void resolveSquareBracketParams() {}
 
@@ -206,20 +204,10 @@ public:
         resolveSquareBracketParams();
         return genus_;
     }
-    bool specifiesDomain() override
-    {
-        resolveSquareBracketParams();
-        return (domain_ != nullptr);
-    }
     Tree *domain() override
     {
         resolveSquareBracketParams();
         return domain_;
-    }
-    Node::NodeType goal() override
-    {
-        resolveSquareBracketParams();
-        return goal_;
     }
     const QString &error() override { return error_; }
     void resolveSquareBracketParams() override;

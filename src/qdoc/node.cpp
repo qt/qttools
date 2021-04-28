@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -44,6 +44,8 @@
 
 #include <QtCore/quuid.h>
 #include <QtCore/qversionnumber.h>
+
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 
@@ -661,11 +663,8 @@ QString Node::fullName(const Node *relative) const
  */
 bool Node::match(const QList<int> &types) const
 {
-    for (int i = 0; i < types.size(); ++i) {
-        if (nodeType() == types.at(i))
-            return true;
-    }
-    return false;
+    return std::any_of(types.cbegin(), types.cend(),
+                       [this](const int type) { return nodeType() == type; });
 }
 
 /*!
@@ -690,13 +689,13 @@ void Node::setDoc(const Doc &doc, bool replace)
   given \a parent and \a name. The new node is added to the
   parent's child list.
  */
-Node::Node(NodeType type, Aggregate *parent, const QString &name)
+Node::Node(NodeType type, Aggregate *parent, QString name)
     : m_nodeType(type),
       m_indexNodeFlag(false),
       m_relatedNonmember(false),
       m_hadDoc(false),
       m_parent(parent),
-      m_name(name)
+      m_name(std::move(name))
 {
     if (m_parent)
         m_parent->addChild(this);
@@ -974,11 +973,6 @@ Node::FlagValue Node::toFlagValue(bool b)
   If \a fv is neither the true enum value nor the
   false enum value, the boolean value returned is
   \a defaultValue.
-
-  Note that runtimeDesignabilityFunction() should be called
-  first. If that function returns the name of a function, it
-  means the function must be called at runtime to determine
-  whether the property is Designable.
  */
 bool Node::fromFlagValue(FlagValue fv, bool defaultValue)
 {
@@ -1211,7 +1205,7 @@ QString Node::qualifyQmlName()
  */
 bool Node::isWrapper() const
 {
-    return (m_parent ? m_parent->isWrapper() : false);
+    return m_parent != nullptr && m_parent->isWrapper();
 }
 
 /*!
@@ -1269,13 +1263,13 @@ QString Node::physicalModuleName() const
 
     QString path = location().filePath();
     QString pattern = QString("src") + QDir::separator();
-    int start = path.lastIndexOf(pattern);
+    qsizetype start = path.lastIndexOf(pattern);
 
     if (start == -1)
         return QString();
 
     QString moduleDir = path.mid(start + pattern.size());
-    int finish = moduleDir.indexOf(QDir::separator());
+    qsizetype finish = moduleDir.indexOf(QDir::separator());
 
     if (finish == -1)
         return QString();

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,7 +33,6 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qregularexpression.h>
-#include <QtCore/QTime>
 
 #include <climits>
 #include <cstdio>
@@ -218,21 +217,6 @@ QString Location::fileSuffix() const
     return (fp.isEmpty() ? fp : fp.mid(fp.lastIndexOf('.') + 1));
 }
 
-/*!
-  \brief  Returns \a path which is canonicalized and relative to the config file.
-
-  QDir::relativeFilePath does not canonicalize the paths, so
-  if the config file is located at qtbase\src\widgets\doc\qtwidgets.qdocconf
-  and it has a reference to any ancestor folder (e.g. ".." or even "../doc")
- */
-QString Location::canonicalRelativePath(const QString &path)
-{
-    QDir configFileDir(QDir::current());
-    QDir dir(path);
-    const QString canon = dir.canonicalPath();
-    return configFileDir.relativeFilePath(canon);
-}
-
 /*! \fn int Location::lineNo() const
   Returns the current line number.
   Must not be called on an empty Location object.
@@ -367,8 +351,7 @@ void Location::internalError(const QString &hint)
     Location().fatal(QStringLiteral("Internal error (%1)").arg(hint),
                      QStringLiteral("There is a bug in %1. Seek advice from your local"
                                     " %2 guru.")
-                             .arg(programName)
-                             .arg(programName));
+                             .arg(programName, programName));
 }
 
 /*!

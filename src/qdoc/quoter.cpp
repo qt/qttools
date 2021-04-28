@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -38,7 +38,7 @@ QHash<QString, QString> Quoter::commentHash;
 
 static void replaceMultipleNewlines(QString &s)
 {
-    const int n = s.size();
+    const qsizetype n = s.size();
     bool slurping = false;
     int j = -1;
     const QChar newLine = QLatin1Char('\n');
@@ -58,9 +58,9 @@ static void replaceMultipleNewlines(QString &s)
 QStringList Quoter::splitLines(const QString &line)
 {
     QStringList result;
-    int i = line.size();
+    qsizetype i = line.size();
     while (true) {
-        int j = i - 1;
+        qsizetype j = i - 1;
         while (j >= 0 && line.at(j) == QLatin1Char('\n'))
             --j;
         while (j >= 0 && line.at(j) != QLatin1Char('\n'))
@@ -80,7 +80,7 @@ QStringList Quoter::splitLines(const QString &line)
 static void trimWhiteSpace(QString &str)
 {
     enum { Normal, MetAlnum, MetSpace } state = Normal;
-    const int n = str.length();
+    const qsizetype n = str.length();
 
     int j = -1;
     QChar *d = str.data();
@@ -116,7 +116,7 @@ Quoter::Quoter() : silent(false)
         * .html, .qrc, .ui, .xq, .xml files:
           <!-- [<id>] -->
     */
-    if (!commentHash.size()) {
+    if (commentHash.empty()) {
         commentHash["pro"] = "#!";
         commentHash["py"] = "#!";
         commentHash["cmake"] = "#!";
@@ -224,7 +224,7 @@ QString Quoter::quoteSnippet(const Location &docLocation, const QString &identif
         QString line = plainLines.first();
         if (match(docLocation, delimiter, line)) {
             QString lastLine = getLine(indent);
-            int dIndex = lastLine.indexOf(delimiter);
+            qsizetype dIndex = lastLine.indexOf(delimiter);
             if (dIndex > 0) {
                 // The delimiter might be preceded on the line by other
                 // delimeters, so look for the first comment on the line.
@@ -323,8 +323,7 @@ void Quoter::failedAtEnd(const Location &docLocation, const QString &command)
             docLocation.warning(QStringLiteral("Unexpected '\\%1'").arg(command));
         } else {
             docLocation.warning(QStringLiteral("Command '\\%1' failed at end of file '%2'")
-                                        .arg(command)
-                                        .arg(codeLocation.filePath()));
+                                        .arg(command, codeLocation.filePath()));
         }
         silent = true;
     }

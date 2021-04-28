@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -53,7 +53,7 @@ public:
 
 public:
     Section() : style_(Details), status_(Active), aggregate_(nullptr) {}
-    Section(Style style, Status status);
+    Section(Style style, Status status) : style_(style), status_(status), aggregate_(nullptr) {};
     ~Section();
 
     void init(const QString &title) { title_ = title; }
@@ -85,7 +85,6 @@ public:
     ClassMap *newClassMap(const Aggregate *aggregate);
     void add(ClassMap *classMap, Node *n);
     void appendMember(Node *node) { members_.append(node); }
-    void appendReimplementedMember(Node *node) { reimplementedMembers_.append(node); }
 
     void clear();
     void reduce();
@@ -145,7 +144,6 @@ class Sections
 {
 public:
     enum VectorIndex {
-        AllMembers = 0,
         PublicTypes = 0,
         DetailsMemberTypes = 0,
         SinceNamespaces = 0,
@@ -202,8 +200,8 @@ public:
         Macros = 17
     };
 
-    Sections(Aggregate *aggregate);
-    Sections(const NodeMultiMap &nsmap);
+    explicit Sections(Aggregate *aggregate);
+    explicit Sections(const NodeMultiMap &nsmap);
     ~Sections();
 
     void initSections();

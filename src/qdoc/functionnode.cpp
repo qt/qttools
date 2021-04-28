@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -132,7 +132,7 @@ FunctionNode::FunctionNode(Metaness kind, Aggregate *parent, const QString &name
  */
 Node *FunctionNode::clone(Aggregate *parent)
 {
-    FunctionNode *fn = new FunctionNode(*this); // shallow copy
+    auto *fn = new FunctionNode(*this); // shallow copy
     fn->setParent(nullptr);
     fn->setNextOverload(nullptr);
     parent->addChild(fn);
@@ -272,17 +272,6 @@ FunctionNode::Metaness FunctionNode::getMetanessFromTopic(const QString &topic)
 }
 
 /*!
-  Sets the function node's Metaness value based on the value
-  of string \a metaness, which is the value of the function's "meta"
-  attribute in an index file. Returns the Metaness value
- */
-FunctionNode::Metaness FunctionNode::setMetaness(const QString &metaness)
-{
-    m_metaness = getMetaness(metaness);
-    return m_metaness;
-}
-
-/*!
   If this function node's metaness is \a from, change the
   metaness to \a to and return \c true. Otherwise return
   false. This function is used to change Qml function node
@@ -330,7 +319,7 @@ bool FunctionNode::changeMetaness(Metaness from, Metaness to)
 void FunctionNode::setOverloadNumber(signed short number)
 {
     m_overloadNumber = number;
-    m_overloadFlag = (number > 0) ? true : false;
+    m_overloadFlag = (number > 0);
 }
 
 /*!

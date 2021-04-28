@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -27,8 +27,6 @@
 ****************************************************************************/
 #include "docprivate.h"
 
-#include "atom.h"
-#include "openedlist.h"
 #include "text.h"
 
 #include <QtCore/qhash.h>

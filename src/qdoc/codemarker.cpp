@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -113,7 +113,7 @@ CodeMarker *CodeMarker::markerForCode(const QString &code)
 CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
 {
     CodeMarker *defaultMarker = markerForLanguage(defaultLang);
-    int dot = -1;
+    qsizetype dot = -1;
     while ((dot = fileName.lastIndexOf(QLatin1Char('.'), dot)) != -1) {
         QString ext = fileName.mid(dot + 1);
         if (defaultMarker != nullptr && defaultMarker->recognizeExtension(ext))
@@ -237,7 +237,7 @@ static const QString squot = QLatin1String("&quot;");
 
 QString CodeMarker::protect(const QString &str)
 {
-    int n = str.length();
+    qsizetype n = str.length();
     QString marked;
     marked.reserve(n * 2 + 30);
     const QChar *data = str.constData();
@@ -264,7 +264,7 @@ QString CodeMarker::protect(const QString &str)
 
 void CodeMarker::appendProtectedString(QString *output, QStringView str)
 {
-    int n = str.length();
+    qsizetype n = str.length();
     output->reserve(output->size() + n * 2 + 30);
     const QChar *data = str.constData();
     for (int i = 0; i != n; ++i) {
@@ -339,7 +339,7 @@ QString CodeMarker::typified(const QString &string, bool trailingSpace)
 QString CodeMarker::taggedNode(const Node *node)
 {
     QString tag;
-    QString name = node->name();
+    const QString &name = node->name();
 
     switch (node->nodeType()) {
     case Node::Namespace:
@@ -380,7 +380,7 @@ QString CodeMarker::taggedQmlNode(const Node *node)
 {
     QString tag;
     if (node->isFunction()) {
-        const FunctionNode *fn = static_cast<const FunctionNode *>(node);
+        const auto *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
         case FunctionNode::JsSignal:
         case FunctionNode::QmlSignal:

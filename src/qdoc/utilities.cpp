@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -71,7 +71,7 @@ bool debugging()
 
     \sa comma()
  */
-QString separator(int wordPosition, int numberOfWords)
+QString separator(qsizetype wordPosition, qsizetype numberOfWords)
 {
     static QString terminator = QStringLiteral(".");
     if (wordPosition == numberOfWords - 1)
@@ -91,7 +91,7 @@ QString separator(int wordPosition, int numberOfWords)
 
     \sa comma()
  */
-QString comma(int wordPosition, int numberOfWords)
+QString comma(qsizetype wordPosition, qsizetype numberOfWords)
 {
     if (wordPosition == numberOfWords - 1)
         return QString();

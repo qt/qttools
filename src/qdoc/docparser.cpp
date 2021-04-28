@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -269,7 +269,7 @@ bool DocParser::quoting = false;
 
 static QString cleanLink(const QString &link)
 {
-    int colonPos = link.indexOf(':');
+    qsizetype colonPos = link.indexOf(':');
     if ((colonPos == -1) || (!link.startsWith("file:") && !link.startsWith("mailto:")))
         return link;
     return link.mid(colonPos + 1).simplified();
@@ -487,7 +487,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 }
                 case CMD_ELSE:
-                    if (preprocessorSkipping.size() > 0) {
+                    if (!preprocessorSkipping.empty()) {
                         if (preprocessorSkipping.top()) {
                             --numPreprocessorSkipping;
                         } else {
@@ -624,12 +624,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     } else {
                         if (m_openedCommands.contains(CMD_TABLE))
                             location().warning(QStringLiteral("Cannot use '\\%1' within '\\%2'")
-                                                       .arg(cmdName(CMD_HEADER))
-                                                       .arg(cmdName(m_openedCommands.top())));
+                                                       .arg(cmdName(CMD_HEADER),
+                                                            cmdName(m_openedCommands.top())));
                         else
-                            location().warning(QStringLiteral("Cannot use '\\%1' outside of '\\%2'")
-                                                       .arg(cmdName(CMD_HEADER))
-                                                       .arg(cmdName(CMD_TABLE)));
+                            location().warning(
+                                    QStringLiteral("Cannot use '\\%1' outside of '\\%2'")
+                                            .arg(cmdName(CMD_HEADER), cmdName(CMD_TABLE)));
                     }
                     break;
                 case CMD_I:
@@ -784,9 +784,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         if (!m_inTableHeader && !m_inTableRow) {
                             location().warning(
                                     QStringLiteral("Missing '\\%1' or '\\%2' before '\\%3'")
-                                            .arg(cmdName(CMD_HEADER))
-                                            .arg(cmdName(CMD_ROW))
-                                            .arg(cmdName(CMD_LI)));
+                                            .arg(cmdName(CMD_HEADER), cmdName(CMD_ROW),
+                                                 cmdName(CMD_LI)));
                             append(Atom::TableRowLeft);
                             m_inTableRow = true;
                         } else if (m_inTableItem) {
@@ -799,9 +798,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     } else
                         location().warning(
                                 QStringLiteral("Command '\\%1' outside of '\\%2' and '\\%3'")
-                                        .arg(cmdName(cmd))
-                                        .arg(cmdName(CMD_LIST))
-                                        .arg(cmdName(CMD_TABLE)));
+                                        .arg(cmdName(cmd), cmdName(CMD_LIST), cmdName(CMD_TABLE)));
                     break;
                 case CMD_OLDCODE:
                     leavePara();
@@ -915,12 +912,11 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     } else {
                         if (m_openedCommands.contains(CMD_TABLE))
                             location().warning(QStringLiteral("Cannot use '\\%1' within '\\%2'")
-                                                       .arg(cmdName(CMD_ROW))
-                                                       .arg(cmdName(m_openedCommands.top())));
+                                                       .arg(cmdName(CMD_ROW),
+                                                            cmdName(m_openedCommands.top())));
                         else
                             location().warning(QStringLiteral("Cannot use '\\%1' outside of '\\%2'")
-                                                       .arg(cmdName(CMD_ROW))
-                                                       .arg(cmdName(CMD_TABLE)));
+                                                       .arg(cmdName(CMD_ROW), cmdName(CMD_TABLE)));
                     }
                     break;
                 case CMD_SA:
@@ -1248,7 +1244,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
             }
 
             if (newWord) {
-                int startPos = m_position;
+                qsizetype startPos = m_position;
                 bool autolink = isAutoLinkString(m_input, m_position);
                 if (m_position == startPos) {
                     if (!ch.isSpace()) {
@@ -1321,8 +1317,7 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet, co
     if (m_utilities.aliasMap.contains(str))
         return QStringLiteral("The command '\\%1' was renamed '\\%2' by the configuration"
                               " file. Use the new name.")
-                .arg(str)
-                .arg(m_utilities.aliasMap[str]);
+                .arg(str, m_utilities.aliasMap[str]);
 
     QString best = nearestName(str, commandSet);
     if (best.isEmpty())
@@ -1384,9 +1379,8 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                     ++i;
                 }
                 if (startLine < 0) {
-                    location().warning(QStringLiteral("Cannot find '%1' in '%2'")
-                                               .arg(identifier)
-                                               .arg(filePath));
+                    location().warning(
+                            QStringLiteral("Cannot find '%1' in '%2'").arg(identifier, filePath));
                     return;
                 }
                 QString result;
@@ -1404,8 +1398,7 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                 } while (i < lineBuffer.size());
                 if (result.isEmpty()) {
                     location().warning(QStringLiteral("Empty qdoc snippet '%1' in '%2'")
-                                               .arg(identifier)
-                                               .arg(filePath));
+                                               .arg(identifier, filePath));
                 } else {
                     m_input.insert(m_position, result);
                     m_inputLength = m_input.length();
@@ -1467,7 +1460,7 @@ bool DocParser::openCommand(int cmd)
         m_openedCommands.push(cmd);
     } else {
         location().warning(
-                QStringLiteral("Can't use '\\%1' in '\\%2'").arg(cmdName(cmd)).arg(cmdName(outer)));
+                QStringLiteral("Can't use '\\%1' in '\\%2'").arg(cmdName(cmd), cmdName(outer)));
     }
     return ok;
 }
@@ -1477,14 +1470,14 @@ bool DocParser::openCommand(int cmd)
 */
 inline bool DocParser::isAutoLinkString(const QString &word)
 {
-    int start = 0;
+    qsizetype start = 0;
     return isAutoLinkString(word, start);
 }
 
-bool DocParser::isAutoLinkString(const QString &word, int &curPos)
+bool DocParser::isAutoLinkString(const QString &word, qsizetype &curPos)
 {
-    int len = word.size();
-    int startPos = curPos;
+    qsizetype len = word.size();
+    qsizetype startPos = curPos;
     int numUppercase = 0;
     int numLowercase = 0;
     int numStrangeSymbols = 0;
@@ -1547,9 +1540,9 @@ bool DocParser::closeCommand(int endCmd)
 
         if (contains) {
             while (endCmdFor(m_openedCommands.top()) != endCmd && m_openedCommands.size() > 1) {
-                location().warning(QStringLiteral("Missing '\\%1' before '\\%2'")
-                                           .arg(endCmdName(m_openedCommands.top()))
-                                           .arg(cmdName(endCmd)));
+                location().warning(
+                        QStringLiteral("Missing '\\%1' before '\\%2'")
+                                .arg(endCmdName(m_openedCommands.top()), cmdName(endCmd)));
                 m_openedCommands.pop();
             }
         } else {
@@ -1819,7 +1812,7 @@ bool DocParser::expandMacro()
     Q_ASSERT(m_input[m_position].unicode() == '\\');
 
     QString cmdStr;
-    int backslashPos = m_position++;
+    qsizetype backslashPos = m_position++;
     while (m_position < m_input.length() && m_input[m_position].isLetterOrNumber())
         cmdStr += m_input[m_position++];
 
@@ -1933,7 +1926,7 @@ QString DocParser::expandMacroToString(const QString &name, const QString &def, 
     QString result;
     QRegularExpression re(matchExpr);
     int capStart = (re.captureCount() > 0) ? 1 : 0;
-    int i = 0;
+    qsizetype i = 0;
     QRegularExpressionMatch match;
     while ((match = re.match(rawString, i)).hasMatch()) {
         for (int c = capStart; c <= re.captureCount(); ++c)
@@ -2029,7 +2022,7 @@ QString DocParser::getArgument(bool verbatim)
     skipSpacesOrOneEndl();
 
     int delimDepth = 0;
-    int startPos = m_position;
+    qsizetype startPos = m_position;
     QString arg = getBracedArgument(verbatim);
     if (arg.isEmpty()) {
         while ((m_position < m_input.length())
@@ -2135,7 +2128,7 @@ QString DocParser::getRestOfLine()
     bool trailingSlash = false;
 
     do {
-        int begin = m_position;
+        qsizetype begin = m_position;
 
         while (m_position < m_input.size() && m_input[m_position] != '\n') {
             if (m_input[m_position] == '\\' && !trailingSlash) {
@@ -2174,7 +2167,7 @@ QString DocParser::getMetaCommandArgument(const QString &cmdStr)
 {
     skipSpacesOnLine();
 
-    int begin = m_position;
+    qsizetype begin = m_position;
     int parenDepth = 0;
 
     while (m_position < m_input.size() && (m_input[m_position] != '\n' || parenDepth > 0)) {
@@ -2207,7 +2200,7 @@ QString DocParser::getUntilEnd(int cmd)
         location().warning(QStringLiteral("Missing '\\%1'").arg(cmdName(endCmd)));
         m_position = m_input.length();
     } else {
-        int end = match.capturedStart();
+        qsizetype end = match.capturedStart();
         t = m_input.mid(m_position, end - m_position);
         m_position = match.capturedEnd();
     }
@@ -2220,7 +2213,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 
     if (!argStr.isEmpty()) {
         QStringList args = argStr.split(" ", Qt::SkipEmptyParts);
-        int paramNo, j = 0;
+        qsizetype paramNo, j = 0;
         while (j < code.size()) {
             if (code[j] == '\\' && j < code.size() - 1 && (paramNo = code[j + 1].digitValue()) >= 1
                 && paramNo <= args.size()) {
@@ -2242,7 +2235,7 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 
 bool DocParser::isBlankLine()
 {
-    int i = m_position;
+    qsizetype i = m_position;
 
     while (i < m_inputLength && m_input[i].isSpace()) {
         if (m_input[i] == '\n')
@@ -2255,7 +2248,7 @@ bool DocParser::isBlankLine()
 bool DocParser::isLeftBraceAhead()
 {
     int numEndl = 0;
-    int i = m_position;
+    qsizetype i = m_position;
 
     while (i < m_inputLength && m_input[i].isSpace() && numEndl < 2) {
         // ### bug with '\\'
@@ -2269,7 +2262,7 @@ bool DocParser::isLeftBraceAhead()
 bool DocParser::isLeftBracketAhead()
 {
     int numEndl = 0;
-    int i = m_position;
+    qsizetype i = m_position;
 
     while (i < m_inputLength && m_input[i].isSpace() && numEndl < 2) {
         // ### bug with '\\'
@@ -2295,7 +2288,7 @@ void DocParser::skipSpacesOnLine()
  */
 void DocParser::skipSpacesOrOneEndl()
 {
-    int firstEndl = -1;
+    qsizetype firstEndl = -1;
     while (m_position < m_input.length() && m_input[m_position].isSpace()) {
         QChar ch = m_input[m_position];
         if (ch == '\n') {

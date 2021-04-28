@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -40,7 +40,7 @@ QT_BEGIN_NAMESPACE
 class QmlPropertyNode : public Node
 {
 public:
-    QmlPropertyNode(Aggregate *parent, const QString &name, const QString &type, bool attached);
+    QmlPropertyNode(Aggregate *parent, const QString &name, QString type, bool attached);
 
     void setDataType(const QString &dataType) override { m_type = dataType; }
     void setStored(bool stored) { m_stored = toFlagValue(stored); }
@@ -50,10 +50,8 @@ public:
 
     const QString &dataType() const { return m_type; }
     const QString &defaultValue() const { return m_defaultValue; }
-    QString qualifiedDataType() const { return m_type; }
     bool isReadOnlySet() const { return (readOnly_ != FlagValueDefault); }
     bool isStored() const { return fromFlagValue(m_stored, true); }
-    bool isDesignable() const { return fromFlagValue(m_designable, false); }
     bool isWritable();
     bool isRequired();
     bool isDefault() const override { return m_isDefault; }

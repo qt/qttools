@@ -1,6 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2019 Thibaut Cuvelier
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -89,7 +90,8 @@ protected:
                       CodeMarker *marker = nullptr) override;
     const Atom *generateAtomList(const Atom *atom, const Node *relative, bool generate,
                                  int &numAtoms);
-    int generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker = nullptr) override;
+    qsizetype generateAtom(const Atom *atom, const Node *relative,
+                           CodeMarker *marker = nullptr) override;
 
 private:
     QXmlStreamWriter *startDocument(const Node *node);

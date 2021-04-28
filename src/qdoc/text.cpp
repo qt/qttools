@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,10 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-/*
-  text.cpp
-*/
 
 #include "text.h"
 
@@ -229,7 +225,7 @@ void Text::dump() const
         str.replace("\\", "\\\\");
         str.replace("\"", "\\\"");
         str.replace("\n", "\\n");
-        str.replace(QRegularExpression("[^\x20-\x7e]"), "?");
+        str.replace(QRegularExpression(R"([^ -~])"), "?");
         if (!str.isEmpty())
             str = " \"" + str + QLatin1Char('"');
         fprintf(stderr, "    %-15s%s\n", atom->typeString().toLatin1().data(),

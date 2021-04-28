@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -59,8 +59,7 @@ public:
 
     void addResolvedBaseClass(Access access, ClassNode *node);
     void addDerivedClass(Access access, ClassNode *node);
-    void addUnresolvedBaseClass(Access access, const QStringList &path, const QString &signature);
-    void addUnresolvedUsingClause(const QString &signature);
+    void addUnresolvedBaseClass(Access access, const QStringList &path);
     void removePrivateAndInternalBases();
     void resolvePropertyOverriddenFromPtrs(PropertyNode *pn);
 
@@ -70,9 +69,6 @@ public:
     QList<UsingClause> &usingClauses() { return m_usingClauses; }
 
     const QList<RelatedClass> &baseClasses() const { return m_bases; }
-    const QList<RelatedClass> &derivedClasses() const { return m_derived; }
-    const QList<RelatedClass> &ignoredBaseClasses() const { return m_ignoredBases; }
-    const QList<UsingClause> &usingClauses() const { return m_usingClauses; }
 
     QmlTypeNode *qmlElement() { return m_qmlElement; }
     void setQmlElement(QmlTypeNode *qcn) { m_qmlElement = qcn; }

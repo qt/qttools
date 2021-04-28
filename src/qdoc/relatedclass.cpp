@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -69,19 +69,3 @@ bool RelatedClass::isPrivate() const
     return (m_access == Access::Private);
 }
 
-/*!
-  Returns a string representing the access specifier.
- */
-QString RelatedClass::accessString() const
-{
-    switch (m_access) {
-    case Access::Protected:
-        return QLatin1String("protected");
-    case Access::Private:
-        return QLatin1String("private");
-    case Access::Public:
-    default:
-        break;
-    }
-    return QLatin1String("public");
-}

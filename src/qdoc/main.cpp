@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -332,7 +332,6 @@ static void processQdocconfFile(const QString &fileName)
       and the location in the configuration file where the
       source language was set.
      */
-    QString lang = config.getString(CONFIG_LANGUAGE);
     Location langLocation = config.lastLocation();
 
     /*
@@ -346,8 +345,6 @@ static void processQdocconfFile(const QString &fileName)
      */
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     qdb->setVersion(config.getString(CONFIG_VERSION));
-    qdb->setShowInternal(config.showInternal());
-    qdb->setSingleExec(config.getBool(CONFIG_SINGLEEXEC));
     /*
       By default, the only output format is HTML.
      */

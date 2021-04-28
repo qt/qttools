@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -108,7 +108,7 @@ protected:
     virtual QString fileExtension() const = 0;
     virtual void generateExampleFilePage(const Node *, const QString &, CodeMarker *) {}
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
-    virtual int generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
+    virtual qsizetype generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
     virtual void generateBody(const Node *node, CodeMarker *marker);
     virtual void generateCppReferencePage(Aggregate *, CodeMarker *) {}
     virtual void generateProxyPage(Aggregate *, CodeMarker *) {}
@@ -117,11 +117,8 @@ protected:
     virtual void generatePageNode(PageNode *, CodeMarker *) {}
     virtual void generateCollectionNode(CollectionNode *, CodeMarker *) {}
     virtual void generateGenericCollectionPage(CollectionNode *, CodeMarker *) {}
-    virtual void generateInherits(const ClassNode *classe, CodeMarker *marker);
     virtual void generateDocumentation(Node *node);
     virtual void generateMaintainerList(const Aggregate *node, CodeMarker *marker);
-    virtual void generateQmlInheritedBy(const QmlTypeNode *qcn, CodeMarker *marker);
-    virtual void generateQmlInherits(QmlTypeNode *, CodeMarker *) {}
     virtual bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
                                  const QString &qmlName);
     virtual bool generateText(const Text &text, const Node *relative, CodeMarker *marker);
@@ -131,7 +128,6 @@ protected:
     static bool matchAhead(const Atom *atom, Atom::AtomType expectedAtomType);
     static QString outputPrefix(const Node *node);
     static QString outputSuffix(const Node *node);
-    static void singularPlural(Text &text, const NodeList &nodes);
     static void supplementAlsoList(const Node *node, QList<Text> &alsoList);
     static QString trimmedTrailing(const QString &string, const QString &prefix,
                                    const QString &suffix);
@@ -174,14 +170,12 @@ protected:
                         const Node *actualNode = nullptr);
     void appendFullName(Text &text, const Node *apparentNode, const QString &fullName,
                         const Node *actualNode);
-    void appendFullNames(Text &text, const NodeList &nodes, const Node *relative);
     int appendSortedNames(Text &text, const ClassNode *classe,
                           const QList<RelatedClass> &classes);
     void appendSignature(Text &text, const Node *node);
     void signatureList(const NodeList &nodes, const Node *relative, CodeMarker *marker);
 
     void addImageToCopy(const ExampleNode *en, const QString &file);
-    static bool compareNodes(const Node *a, const Node *b) { return (a->name() < b->name()); }
     static bool comparePaths(const QString &a, const QString &b) { return (a < b); }
 
 private:

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -55,7 +55,6 @@ QT_BEGIN_NAMESPACE
 
 enum QDocAttr {
     QDocAttrNone,
-    QDocAttrAttribution,
     QDocAttrExample,
     QDocAttrFile,
     QDocAttrImage,
@@ -473,7 +472,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(parent->name().toLower() + ".html");
     } else if (elementName == QLatin1String("property")) {
-        PropertyNode *propNode = new PropertyNode(parent, name);
+        auto *propNode = new PropertyNode(parent, name);
         node = propNode;
         if (attributes.value(QLatin1String("bindable")) == QLatin1String("true"))
             propNode->setPropertyType(PropertyNode::Bindable);
@@ -499,7 +498,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             fn->setStatic(attributes.value(QLatin1String("static")) == QLatin1String("true"));
             fn->setFinal(attributes.value(QLatin1String("final")) == QLatin1String("true"));
             fn->setOverride(attributes.value(QLatin1String("override")) == QLatin1String("true"));
-            int refness = attributes.value(QLatin1String("refness")).toUInt();
+            qsizetype refness = attributes.value(QLatin1String("refness")).toUInt();
             if (refness == 1)
                 fn->setRef(true);
             else if (refness == 2)
@@ -632,8 +631,8 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         QString groupsAttr = attributes.value(QLatin1String("groups")).toString();
         if (!groupsAttr.isEmpty()) {
             const QStringList groupNames = groupsAttr.split(QLatin1Char(','));
-            for (const auto &name : groupNames) {
-                qdb_->addToGroup(name, node);
+            for (const auto &group : groupNames) {
+                qdb_->addToGroup(group, node);
             }
         }
 
@@ -712,7 +711,6 @@ void QDocIndexFiles::insertTarget(TargetRec::TargetType type,
  */
 void QDocIndexFiles::resolveIndex()
 {
-    QPair<ClassNode *, QString> pair;
     for (const auto &pair : qAsConst(basesList_)) {
         const QStringList bases = pair.second.split(QLatin1Char(','));
         for (const auto &base : bases) {
@@ -721,14 +719,14 @@ void QDocIndexFiles::resolveIndex()
             if (n)
                 pair.first->addResolvedBaseClass(Access::Public, static_cast<ClassNode *>(n));
             else
-                pair.first->addUnresolvedBaseClass(Access::Public, basePath, QString());
+                pair.first->addUnresolvedBaseClass(Access::Public, basePath);
         }
     }
     // No longer needed.
     basesList_.clear();
 }
 
-static const QString getAccessString(Access t)
+static QString getAccessString(Access t)
 {
 
     switch (t) {
@@ -744,7 +742,7 @@ static const QString getAccessString(Access t)
     return QLatin1String("public");
 }
 
-static const QString getStatusString(Node::Status t)
+static QString getStatusString(Node::Status t)
 {
     switch (t) {
     case Node::Obsolete:
@@ -764,7 +762,7 @@ static const QString getStatusString(Node::Status t)
     return QLatin1String("active");
 }
 
-static const QString getThreadSafenessString(Node::ThreadSafeness t)
+static QString getThreadSafenessString(Node::ThreadSafeness t)
 {
     switch (t) {
     case Node::NonReentrant:
@@ -785,7 +783,7 @@ static const QString getThreadSafenessString(Node::ThreadSafeness t)
 */
 int QDocIndexFiles::indexForNode(Node *node)
 {
-    int i = relatedNodes_.indexOf(node);
+    qsizetype i = relatedNodes_.indexOf(node);
     if (i == -1) {
         i = relatedNodes_.size();
         relatedNodes_ << node;

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -112,7 +112,7 @@ private:
     QString getCode(int cmd, CodeMarker *marker, const QString &argStr = QString());
 
     inline bool isAutoLinkString(const QString &word);
-    bool isAutoLinkString(const QString &word, int &curPos);
+    bool isAutoLinkString(const QString &word, qsizetype &curPos);
     bool isBlankLine();
     bool isLeftBraceAhead();
     bool isLeftBracketAhead();
@@ -123,15 +123,15 @@ private:
     static bool isCode(const Atom *atom);
     static bool isQuote(const Atom *atom);
 
-    QStack<int> m_openedInputs;
+    QStack<qsizetype> m_openedInputs;
 
     QString m_input;
-    int m_position {};
-    int m_backslashPosition {};
-    int m_endPosition {};
-    int m_inputLength {};
+    qsizetype m_position {};
+    qsizetype m_backslashPosition {};
+    qsizetype m_endPosition {};
+    qsizetype m_inputLength {};
     Location m_cachedLocation;
-    int m_cachedPosition {};
+    qsizetype m_cachedPosition {};
 
     DocPrivate *m_private { nullptr };
     enum ParagraphState { OutsideParagraph, InSingleLineParagraph, InMultiLineParagraph };

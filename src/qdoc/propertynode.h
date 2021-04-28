@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -55,15 +55,10 @@ public:
     void setDesignable(bool designable) { m_designable = toFlagValue(designable); }
     void setScriptable(bool scriptable) { m_scriptable = toFlagValue(scriptable); }
     void setWritable(bool writable) { m_writable = toFlagValue(writable); }
-    void setUser(bool user) { m_user = toFlagValue(user); }
     void setOverriddenFrom(const PropertyNode *baseProperty);
-    void setRuntimeDesFunc(const QString &rdf) { m_runtimeDesFunc = rdf; }
-    void setRuntimeScrFunc(const QString &scrf) { m_runtimeScrFunc = scrf; }
     void setConstant() { m_const = true; }
-    void setFinal() { m_final = true; }
     void setRequired() { m_required = true; }
     void setPropertyType(PropertyType type) { m_propertyType = type; }
-    void setRevision(int revision) { m_revision = revision; }
 
     const QString &dataType() const { return m_type; }
     QString qualifiedDataType() const;
@@ -76,29 +71,19 @@ public:
     bool hasAccessFunction(const QString &name) const;
     FunctionRole role(const FunctionNode *functionNode) const;
     bool isStored() const { return fromFlagValue(m_stored, storedDefault()); }
-    bool isDesignable() const { return fromFlagValue(m_designable, designableDefault()); }
-    bool isScriptable() const { return fromFlagValue(m_scriptable, scriptableDefault()); }
-    const QString &runtimeDesignabilityFunction() const { return m_runtimeDesFunc; }
-    const QString &runtimeScriptabilityFunction() const { return m_runtimeScrFunc; }
     bool isWritable() const { return fromFlagValue(m_writable, writableDefault()); }
-    bool isUser() const { return fromFlagValue(m_user, userDefault()); }
     bool isConstant() const { return m_const; }
-    bool isFinal() const { return m_final; }
     bool isRequired() const { return m_required; }
     PropertyType propertyType() const { return m_propertyType; }
     const PropertyNode *overriddenFrom() const { return m_overrides; }
 
     bool storedDefault() const { return true; }
-    bool userDefault() const { return false; }
     bool designableDefault() const { return !setters().isEmpty(); }
-    bool scriptableDefault() const { return true; }
     bool writableDefault() const { return !setters().isEmpty(); }
 
 private:
     QString m_type {};
     PropertyType m_propertyType { Standard };
-    QString m_runtimeDesFunc {};
-    QString m_runtimeScrFunc {};
     NodeList m_functions[NumFunctionRoles] {};
     FlagValue m_stored { FlagValueDefault };
     FlagValue m_designable { FlagValueDefault };
@@ -106,9 +91,7 @@ private:
     FlagValue m_writable { FlagValueDefault };
     FlagValue m_user { FlagValueDefault };
     bool m_const { false };
-    bool m_final { false };
     bool m_required { false };
-    int m_revision { -1 };
     const PropertyNode *m_overrides { nullptr };
 };
 

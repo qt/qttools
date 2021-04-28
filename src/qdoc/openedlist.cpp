@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,10 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-/*
-  openedlist.cpp
-*/
 
 #include "openedlist.h"
 
@@ -115,25 +111,13 @@ QString OpenedList::numberString() const
     }*/
 }
 
-QString OpenedList::toAlpha(int n)
-{
-    QString str;
-
-    while (n > 0) {
-        n--;
-        str.prepend(QChar((n % 26) + 'a'));
-        n /= 26;
-    }
-    return str;
-}
-
 int OpenedList::fromAlpha(const QString &str)
 {
     int n = 0;
     int u;
 
-    for (int i = 0; i < str.length(); i++) {
-        u = str[i].toLower().unicode();
+    for (const QChar &character : str) {
+        u = character.toLower().unicode();
         if (u >= 'a' && u <= 'z') {
             n *= 26;
             n += u - 'a' + 1;
@@ -188,10 +172,10 @@ int OpenedList::fromRoman(const QString &str)
     int u;
     int v = 0;
 
-    for (int i = str.length() - 1; i >= 0; i--) {
+    for (const QChar &character : str) {
         j = 0;
         u = 1000;
-        while (roman[j] != 'i' && roman[j] != str[i].toLower()) {
+        while (roman[j] != 'i' && roman[j] != character.toLower()) {
             j += 2;
             u /= roman[j - 1];
         }

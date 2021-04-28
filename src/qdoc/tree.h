@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  tree.h
-*/
-
 #ifndef TREE_H
 #define TREE_H
 
@@ -42,6 +38,8 @@
 
 #include <QtCore/qstack.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 class CollectionNode;
@@ -53,9 +51,8 @@ struct TargetRec
 public:
     enum TargetType { Unknown, Target, Keyword, Contents, Class, Function, Page, Subtitle };
 
-    TargetRec(const QString &name, const QString &title, TargetRec::TargetType type, Node *node,
-              int priority)
-        : node_(node), ref_(name), title_(title), priority_(priority), type_(type)
+    TargetRec(QString name, TargetRec::TargetType type, Node *node, int priority)
+        : node_(node), ref_(std::move(name)), priority_(priority)
     {
         // Discard the dedicated ref for keywords - they always
         // link to the top of the QDoc comment they appear in
@@ -64,28 +61,17 @@ public:
     }
 
     bool isEmpty() const { return ref_.isEmpty(); }
-    Node::Genus genus() { return (node_ ? node_->genus() : Node::DontCare); }
+    Node::Genus genus() const { return (node_ ? node_->genus() : Node::DontCare); }
 
     Node *node_;
     QString ref_;
-    QString title_;
     int priority_;
-    TargetType type_;
 };
 
 struct TargetLoc
 {
 public:
-    TargetLoc(const Node *loc, const QString &t, const QString &fileName, const QString &text,
-              bool broken)
-        : loc_(loc), target_(t), fileName_(fileName), text_(text), broken_(broken)
-    {
-    }
-    const Node *loc_;
-    QString target_;
-    QString fileName_;
-    QString text_;
-    bool broken_;
+    TargetLoc() = default;
 };
 
 typedef QMultiMap<QString, TargetRec *> TargetMap;
@@ -93,7 +79,6 @@ typedef QMultiMap<QString, PageNode *> PageNodeMultiMap;
 typedef QMap<QString, QmlTypeNode *> QmlTypeMap;
 typedef QMultiMap<QString, const ExampleNode *> ExampleNodeMap;
 typedef QList<TargetLoc *> TargetList;
-typedef QMap<QString, TargetList *> TargetListMap;
 
 class Tree
 {
@@ -136,8 +121,6 @@ private: // The rest of the class is private.
     const Node *findNode(const QStringList &path, const Node *relative, int flags,
                          Node::Genus genus) const;
 
-    QmlTypeNode *findQmlTypeNode(const QStringList &path);
-
     Node *findNodeByNameAndType(const QStringList &path, bool (Node::*isMatch)() const) const;
     Aggregate *findRelatesNode(const QStringList &path);
     const Node *findEnumNode(const Node *node, const Node *aggregate, const QStringList &path, int offset) const;
@@ -151,7 +134,6 @@ private: // The rest of the class is private.
     void addPropertyFunction(PropertyNode *property, const QString &funcName,
                              PropertyNode::FunctionRole funcRole);
     void resolveBaseClasses(Aggregate *n);
-    void resolveBaseClassesHelper(int pass, ClassNode *cn);
     void resolvePropertyOverriddenFromPtrs(Aggregate *n);
     void resolveProperties();
     void resolveCppToQmlLinks();
@@ -201,18 +183,12 @@ private: // The rest of the class is private.
     void setIndexFileName(const QString &t) { indexFileName_ = t; }
 
     bool treeHasBeenAnalyzed() const { return treeHasBeenAnalyzed_; }
-    bool docsHaveBeenGenerated() const { return docsHaveBeenGenerated_; }
     void setTreeHasBeenAnalyzed() { treeHasBeenAnalyzed_ = true; }
-    void setdocsHaveBeenGenerated() { docsHaveBeenGenerated_ = true; }
-    QString getNewLinkTarget(const Node *locNode, const Node *t, const QString &fileName,
-                             QString &text, bool broken);
-    TargetList *getTargetList(const QString &module);
     FunctionNode *findFunctionNodeForTag(const QString &tag, Aggregate *parent = nullptr);
     FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = nullptr);
 
 private:
     bool treeHasBeenAnalyzed_;
-    bool docsHaveBeenGenerated_;
     QString camelCaseModuleName_;
     QString physicalModuleName_;
     QString indexFileName_;

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -282,9 +282,9 @@ void HtmlGenerator::generateExampleFilePage(const Node *en, const QString &file,
 /*!
   Generate html from an instance of Atom.
  */
-int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
+qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
 {
-    int idx, skipAhead = 0;
+    qsizetype idx, skipAhead = 0;
     static bool in_para = false;
     Node::Genus genus = Node::DontCare;
 
@@ -728,8 +728,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
 
             if (atom->next() != nullptr && atom->next()->string().toInt() > 1) {
                 out() << QString(R"(<ol class="%1" type="%1" start="%2">)")
-                                 .arg(olType)
-                                 .arg(atom->next()->string());
+                                 .arg(olType, atom->next()->string());
             } else
                 out() << QString(R"(<ol class="%1" type="%1">)").arg(olType);
         }
@@ -1096,9 +1095,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
             command = R"('\class' comment)";
         if (!ns || ns->isDocumentedHere()) {
             aggregate->location().warning(
-                    QStringLiteral("No %1 for '%2'")
-                        .arg(command)
-                        .arg(aggregate->plainSignature()));
+                    QStringLiteral("No %1 for '%2'").arg(command, aggregate->plainSignature()));
         }
     } else {
         generateExtractionMark(aggregate, DetailedDescriptionMark);
@@ -1492,7 +1489,6 @@ void HtmlGenerator::generateGenericCollectionPage(CollectionNode *cn, CodeMarker
 {
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = cn->name();
-    QString ref;
 
     generateHeader(fullTitle, cn, marker);
     generateTitle(fullTitle, Text() << cn->subtitle(), subTitleSize, cn, marker);
@@ -2575,7 +2571,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
         return;
 
     const int NumParagraphs = 37; // '0' to '9', 'A' to 'Z', '_'
-    int commonPrefixLen = commonPrefix.length();
+    qsizetype commonPrefixLen = commonPrefix.length();
 
     /*
       Divide the data into 37 paragraphs: 0, ..., 9, A, ..., Z,
@@ -2616,7 +2612,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
       We now want to compute the paragraph offset. Paragraphs 0 to 6
       start at offsets 0, 3, 4, 8, 9, 14, 23.
     */
-    int paragraphOffset[NumParagraphs + 1]; // 37 + 1
+    qsizetype paragraphOffset[NumParagraphs + 1]; // 37 + 1
     paragraphOffset[0] = 0;
     for (int i = 0; i < NumParagraphs; i++) // i = 0..36
         paragraphOffset[i + 1] = paragraphOffset[i] + paragraph[i].count();
@@ -3220,7 +3216,7 @@ void HtmlGenerator::generateLink(const Atom *atom, CodeMarker *marker)
     auto match = m_funcLeftParen.match(atom->string());
     if (match.hasMatch() && marker->recognizeLanguage("Cpp")) {
         // hack for C++: move () outside of link
-        int k = match.capturedStart(1);
+        qsizetype k = match.capturedStart(1);
         out() << protectEnc(atom->string().left(k));
         if (m_link.isEmpty()) {
             if (showBrokenLinks)
@@ -3250,7 +3246,7 @@ QString HtmlGenerator::protect(const QString &string)
     html += (x);
 
     QString html;
-    int n = string.length();
+    qsizetype n = string.length();
 
     for (int i = 0; i < n; ++i) {
         QChar ch = string.at(i);
@@ -3568,30 +3564,6 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
     generateAlsoList(node, marker);
     out() << "</div></div>";
     generateExtractionMark(node, EndMark);
-}
-
-/*!
-  Output the "Inherits" line for the QML element,
-  if there should be one.
- */
-void HtmlGenerator::generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker)
-{
-    if (!qcn)
-        return;
-    QmlTypeNode *base = qcn->qmlBaseNode();
-    while (base && base->isInternal()) {
-        base = base->qmlBaseNode();
-    }
-    if (base) {
-        Text text;
-        text << Atom::ParaLeft << "Inherits ";
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(base));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        text << Atom(Atom::String, base->name());
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        text << Atom::ParaRight;
-        generateText(text, qcn, marker);
-    }
 }
 
 void HtmlGenerator::generateExtractionMark(const Node *node, ExtractionMarkType markType)

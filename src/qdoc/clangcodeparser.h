@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -51,7 +51,7 @@ QT_BEGIN_NAMESPACE
 class ClangCodeParser : public CppCodeParser
 {
 public:
-    ~ClangCodeParser() override;
+    ~ClangCodeParser() override = default;
 
     void initializeParser() override;
     void terminateParser() override;

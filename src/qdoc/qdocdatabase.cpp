@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -88,24 +88,13 @@ bool QDocDatabase::debug = false;
  */
 QDocForest::~QDocForest()
 {
-    for (int i = 0; i < searchOrder_.size(); ++i)
-        delete searchOrder_.at(i);
+    for (auto *entry : searchOrder_)
+        delete entry;
     forest_.clear();
     searchOrder_.clear();
     indexSearchOrder_.clear();
     moduleNames_.clear();
     primaryTree_ = nullptr;
-}
-
-/*!
-  Initializes the forest prior to a traversal and
-  returns a pointer to the root node of the primary
-  tree. If the forest is empty, it return 0
- */
-NamespaceNode *QDocForest::firstRoot()
-{
-    currentIndex_ = 0;
-    return (!searchOrder().isEmpty() ? searchOrder()[0]->root() : nullptr);
 }
 
 /*!
@@ -389,19 +378,9 @@ NodeMultiMapMap QDocDatabase::newSinceMaps_;
   modules sequentially in a loop. Each source file for each module
   is read exactly once.
  */
-QDocDatabase::QDocDatabase() : showInternal_(false), singleExec_(false), forest_(this)
+QDocDatabase::QDocDatabase() : forest_(this)
 {
     // nothing
-}
-
-/*!
-  Destroys the qdoc database object. This requires destroying
-  the forest object, which contains an array of tree pointers.
-  Each tree is deleted.
- */
-QDocDatabase::~QDocDatabase()
-{
-    // nothing.
 }
 
 /*!
@@ -778,8 +757,8 @@ QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &import, const QString &n
             qmName = import.m_moduleName;
         else
             qmName = import.m_importUri;
-        for (int i = 0; i < dotSplit.size(); ++i) {
-            QString qualifiedName = qmName + "::" + dotSplit[i];
+        for (const auto &namePart : dotSplit) {
+            QString qualifiedName = qmName + "::" + namePart;
             QmlTypeNode *qcn = forest_.lookupQmlType(qualifiedName);
             if (qcn)
                 return qcn;
@@ -1125,7 +1104,7 @@ void QDocDatabase::resolveNamespaces()
         NamespaceNode *ns = nullptr;
         NamespaceNode *somewhere = nullptr;
         const NodeList namespaces = namespaceMultimap.values(key);
-        int count = namespaceMultimap.remove(key);
+        qsizetype count = namespaceMultimap.remove(key);
         if (count > 0) {
             for (auto *node : namespaces) {
                 ns = static_cast<NamespaceNode *>(node);
@@ -1205,7 +1184,7 @@ void QDocDatabase::resolveProxies()
         const NodeList &proxies = t->proxies();
         if (!proxies.isEmpty()) {
             for (auto *node : proxies) {
-                ProxyNode *pn = static_cast<ProxyNode *>(node);
+                const auto *pn = static_cast<ProxyNode *>(node);
                 if (pn->count() > 0) {
                     Aggregate *aggregate = primaryTree()->findAggregate(pn->name());
                     if (aggregate != nullptr)
@@ -1235,11 +1214,11 @@ const FunctionNode *QDocDatabase::findFunctionNode(const QString &target, const 
 {
     QString signature;
     QString function = target;
-    int length = target.length();
+    qsizetype length = target.length();
     if (function.endsWith("()"))
         function.chop(2);
     if (function.endsWith(QChar(')'))) {
-        int position = function.lastIndexOf(QChar('('));
+        qsizetype position = function.lastIndexOf(QChar('('));
         signature = function.mid(position + 1, length - position - 2);
         function = function.left(position);
     }
@@ -1489,11 +1468,11 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
         else if (first.endsWith(QChar(')'))) {
             QString signature;
             QString function = first;
-            int length = first.length();
+            qsizetype length = first.length();
             if (function.endsWith("()"))
                 function.chop(2);
             if (function.endsWith(QChar(')'))) {
-                int position = function.lastIndexOf(QChar('('));
+                qsizetype position = function.lastIndexOf(QChar('('));
                 signature = function.mid(position + 1, length - position - 2);
                 function = function.left(position);
             }

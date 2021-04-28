@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -70,21 +70,9 @@ void ClassNode::addDerivedClass(Access access, ClassNode *node)
   before the generate phase of qdoc. In an unresolved base
   class, the pointer to the base class node is 0.
  */
-void ClassNode::addUnresolvedBaseClass(Access access, const QStringList &path,
-                                       const QString &signature)
+void ClassNode::addUnresolvedBaseClass(Access access, const QStringList &path)
 {
-    m_bases.append(RelatedClass(access, path, signature));
-}
-
-/*!
-  Add an unresolved \c using clause to this class node's list
-  of \c using clauses. The unresolved \c using clause will be
-  resolved before the generate phase of qdoc. In an unresolved
-  \c using clause, the pointer to the function node is 0.
- */
-void ClassNode::addUnresolvedUsingClause(const QString &signature)
-{
-    m_usingClauses.append(UsingClause(signature));
+    m_bases.append(RelatedClass(access, path));
 }
 
 /*!
@@ -102,8 +90,8 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
 
     const QList<RelatedClass> &bases = baseClasses();
     if (!bases.isEmpty()) {
-        for (int i = 0; i < bases.size(); ++i) {
-            ClassNode *cn = bases[i].m_node;
+        for (const RelatedClass &base : bases) {
+            ClassNode *cn = base.m_node;
             if (cn) {
                 pn = cn->findPropertyNode(name);
                 if (pn)
@@ -113,8 +101,8 @@ PropertyNode *ClassNode::findPropertyNode(const QString &name)
     }
     const QList<RelatedClass> &ignoredBases = ignoredBaseClasses();
     if (!ignoredBases.isEmpty()) {
-        for (int i = 0; i < ignoredBases.size(); ++i) {
-            ClassNode *cn = ignoredBases[i].m_node;
+        for (const RelatedClass &base : ignoredBases) {
+            ClassNode *cn = base.m_node;
             if (cn) {
                 pn = cn->findPropertyNode(name);
                 if (pn)
@@ -138,14 +126,14 @@ QmlTypeNode *ClassNode::findQmlBaseNode()
     const QList<RelatedClass> &bases = baseClasses();
 
     if (!bases.isEmpty()) {
-        for (int i = 0; i < bases.size(); ++i) {
-            ClassNode *cn = bases[i].m_node;
+        for (const RelatedClass &base : bases) {
+            ClassNode *cn = base.m_node;
             if (cn && cn->qmlElement()) {
                 return cn->qmlElement();
             }
         }
-        for (int i = 0; i < bases.size(); ++i) {
-            ClassNode *cn = bases[i].m_node;
+        for (const RelatedClass &base : bases) {
+            ClassNode *cn = base.m_node;
             if (cn) {
                 result = cn->findQmlBaseNode();
                 if (result != nullptr) {
@@ -250,7 +238,7 @@ bool ClassNode::docMustBeGenerated() const
 void ClassNode::promotePublicBases(const QList<RelatedClass> &bases)
 {
     if (!bases.isEmpty()) {
-        for (int i = bases.size() - 1; i >= 0; --i) {
+        for (qsizetype i = bases.size() - 1; i >= 0; --i) {
             ClassNode *bc = bases.at(i).m_node;
             if (bc == nullptr)
                 bc = QDocDatabase::qdocDB()->findClassNode(bases.at(i).m_path);
@@ -299,7 +287,7 @@ void ClassNode::removePrivateAndInternalBases()
         if (dc != nullptr && (dc->isPrivate() || dc->isInternal() || dc->isDontDocument())) {
             m_derived.removeAt(i);
             const QList<RelatedClass> &dd = dc->derivedClasses();
-            for (int j = dd.size() - 1; j >= 0; --j)
+            for (qsizetype j = dd.size() - 1; j >= 0; --j)
                 m_derived.insert(i, dd.at(j));
         } else {
             ++i;

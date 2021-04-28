@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,10 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-/*
-  cppcodemarker.cpp
-*/
 
 #include "cppcodemarker.h"
 
@@ -213,7 +209,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
         break;
     case Node::TypeAlias:
         if (style == Section::Details) {
-            QString templateDecl = node->templateDecl();
+            const QString &templateDecl = node->templateDecl();
             if (!templateDecl.isEmpty())
                 synopsis += templateDecl + QLatin1Char(' ');
         }
@@ -257,17 +253,17 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
     if (summary) {
         name = linkTag(node, name);
     } else if (node->isQmlProperty() || node->isJsProperty()) {
-        const QmlPropertyNode *pn = static_cast<const QmlPropertyNode *>(node);
+        const auto *pn = static_cast<const QmlPropertyNode *>(node);
         if (pn->isAttached())
             name.prepend(pn->element() + QLatin1Char('.'));
     }
     name = "<@name>" + name + "</@name>";
     QString synopsis;
     if (node->isQmlProperty() || node->isJsProperty()) {
-        const QmlPropertyNode *pn = static_cast<const QmlPropertyNode *>(node);
+        const auto *pn = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(pn->dataType());
     } else if (node->isFunction(Node::QML) || node->isFunction(Node::JS)) {
-        const FunctionNode *func = static_cast<const FunctionNode *>(node);
+        const auto *func = static_cast<const FunctionNode *>(node);
         if (!func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true) + name;
         else
@@ -318,22 +314,6 @@ QString CppCodeMarker::markedUpName(const Node *node)
     if (node->isFunction() && !node->isMacro())
         name += "()";
     return name;
-}
-
-QString CppCodeMarker::markedUpFullName(const Node *node, const Node *relative)
-{
-    if (node->name().isEmpty())
-        return "global";
-
-    QString fullName;
-    for (;;) {
-        fullName.prepend(markedUpName(node));
-        if (node->parent() == relative || node->parent()->name().isEmpty())
-            break;
-        fullName.prepend("<@op>::</@op>");
-        node = node->parent();
-    }
-    return fullName;
 }
 
 QString CppCodeMarker::markedUpEnumValue(const QString &enumValue, const Node *relative)

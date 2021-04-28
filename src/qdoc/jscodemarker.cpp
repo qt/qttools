@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -26,10 +26,6 @@
 **
 ****************************************************************************/
 
-/*
-  jscodemarker.cpp
-*/
-
 #include "jscodemarker.h"
 
 #include "atom.h"
@@ -46,10 +42,6 @@
 
 QT_BEGIN_NAMESPACE
 
-JsCodeMarker::JsCodeMarker() {}
-
-JsCodeMarker::~JsCodeMarker() {}
-
 /*!
   Returns \c true if the \a code is recognized by the parser.
  */
@@ -60,8 +52,7 @@ bool JsCodeMarker::recognizeCode(const QString &code)
     QQmlJS::Lexer lexer(&engine);
     QQmlJS::Parser parser(&engine);
 
-    QString newCode = code;
-    QList<QQmlJS::SourceLocation> pragmas = extractPragmas(newCode);
+    const QString &newCode = code;
     lexer.setCode(newCode, 1);
 
     return parser.parseProgram();

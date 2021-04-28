@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -25,10 +25,6 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
-/*
-  openedlist.h
-*/
 
 #ifndef OPENEDLIST_H
 #define OPENEDLIST_H
@@ -59,7 +55,6 @@ public:
     QString suffix() const { return suff; }
 
 private:
-    static QString toAlpha(int n);
     static int fromAlpha(const QString &str);
     static QString toRoman(int n);
     static int fromRoman(const QString &str);

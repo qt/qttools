@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -29,7 +29,6 @@
 #include "atom.h"
 
 #include "location.h"
-#include "proxynode.h"
 #include "qdocdatabase.h"
 
 #include <QtCore/qregularexpression.h>
@@ -362,7 +361,7 @@ void Atom::dump() const
     str.replace(QLatin1String("\\"), QLatin1String("\\\\"));
     str.replace(QLatin1String("\""), QLatin1String("\\\""));
     str.replace(QLatin1String("\n"), QLatin1String("\\n"));
-    str.replace(QRegularExpression(QLatin1String("[^\x20-\x7e]")), QLatin1String("?"));
+    str.replace(QRegularExpression(QLatin1String(R"([^ -~])")), QLatin1String("?"));
     if (!str.isEmpty())
         str = QLatin1String(" \"") + str + QLatin1Char('"');
     fprintf(stderr, "    %-15s%s\n", typeString().toLatin1().data(), str.toLatin1().data());

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -68,13 +68,10 @@ public:
     }
 
     const QString &aliasedType() const { return m_aliasedType; }
-    const Node *aliasedNode() const { return m_aliasedNode; }
-    void setAliasedNode(const Node *node) { m_aliasedNode = node; }
     Node *clone(Aggregate *parent) override;
 
 private:
     QString m_aliasedType {};
-    const Node *m_aliasedNode { nullptr };
 };
 
 QT_END_NAMESPACE

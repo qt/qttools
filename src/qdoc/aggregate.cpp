@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -77,10 +77,9 @@ Aggregate::~Aggregate()
     m_enumChildren.clear();
     m_nonfunctionMap.clear();
     m_functionMap.clear();
-    for (int i = 0; i < m_children.size(); ++i) {
-        if ((m_children[i] != nullptr) && (m_children[i]->parent() == this))
-            delete m_children[i];
-        m_children[i] = nullptr;
+    for (const Node *child : m_children) {
+        if ((child != nullptr) && (child->parent() == this))
+            delete child;
     }
     m_children.clear();
 }
@@ -231,14 +230,6 @@ FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
 }
 
 /*!
-  Returns the list of keys from the primary function map.
- */
-QStringList Aggregate::primaryKeys()
-{
-    return m_functionMap.keys();
-}
-
-/*!
   Mark all child nodes that have no documentation as having
   private access and internal status. qdoc will then ignore
   them for documentation purposes.
@@ -345,7 +336,7 @@ const NodeList &Aggregate::nonfunctionList()
 const EnumNode *Aggregate::findEnumNodeForValue(const QString &enumValue) const
 {
     for (const auto *node : m_enumChildren) {
-        const EnumNode *en = static_cast<const EnumNode *>(node);
+        const auto *en = static_cast<const EnumNode *>(node);
         if (en->hasItem(enumValue))
             return en;
     }
@@ -551,7 +542,7 @@ void Aggregate::adoptChild(Node *child)
                 m_enumChildren.append(child);
         }
         if (child->isSharedCommentNode()) {
-            SharedCommentNode *scn = static_cast<SharedCommentNode *>(child);
+            auto *scn = static_cast<SharedCommentNode *>(child);
             for (Node *n : scn->collective())
                 adoptChild(n);
         }
@@ -624,63 +615,7 @@ QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, bool attached) cons
 bool Aggregate::hasOverloads(const FunctionNode *fn) const
 {
     auto it = m_functionMap.find(fn->name());
-    return (it == m_functionMap.end() ? false : (it.value()->nextOverload() != nullptr));
-}
-
-/*!
-  Prints the inner node's list of children.
-  For debugging only.
- */
-void Aggregate::printChildren(const QString &title)
-{
-    qDebug() << title << name() << m_children.size();
-    if (m_children.size() > 0) {
-        for (int i = 0; i < m_children.size(); ++i) {
-            Node *n = m_children.at(i);
-            qDebug() << "  CHILD:" << n->name() << n->nodeTypeString();
-        }
-    }
-}
-
-/*!
-  Removes \a fn from this aggregate's function map. That's
-  all it does. If \a fn is in the function map index and it
-  has an overload, the value pointer in the function map
-  index is set to the the overload pointer. If the function
-  has no overload pointer, the function map entry is erased.
-
-  \note When removing a function node from the function map,
-  it is important to set the removed function node's next
-  overload pointer to null because the function node might
-  be added as a child to some other aggregate.
-
-  \note This is a protected function.
- */
-void Aggregate::removeFunctionNode(FunctionNode *fn)
-{
-    auto it = m_functionMap.find(fn->name());
-    if (it != m_functionMap.end()) {
-        if (it.value() == fn) {
-            if (fn->nextOverload() != nullptr) {
-                it.value() = fn->nextOverload();
-                fn->setNextOverload(nullptr);
-                fn->setOverloadNumber(0);
-            } else {
-                m_functionMap.erase(it);
-            }
-        } else {
-            FunctionNode *current = it.value();
-            while (current != nullptr) {
-                if (current->nextOverload() == fn) {
-                    current->setNextOverload(fn->nextOverload());
-                    fn->setNextOverload(nullptr);
-                    fn->setOverloadNumber(0);
-                    break;
-                }
-                current = current->nextOverload();
-            }
-        }
-    }
+    return !(it == m_functionMap.end()) && (it.value()->nextOverload() != nullptr);
 }
 
 /*
@@ -784,11 +719,11 @@ void Aggregate::findAllObsoleteThings()
                 else if (node->isQmlType() || node->isJsType())
                     QDocDatabase::obsoleteQmlTypes().insert(node->qualifyQmlName(), node);
             } else if (node->isClassNode()) {
-                Aggregate *a = static_cast<Aggregate *>(node);
+                auto *a = static_cast<Aggregate *>(node);
                 if (a->hasObsoleteMembers())
                     QDocDatabase::classesWithObsoleteMembers().insert(node->qualifyCppName(), node);
             } else if (node->isQmlType() || node->isJsType()) {
-                Aggregate *a = static_cast<Aggregate *>(node);
+                auto *a = static_cast<Aggregate *>(node);
                 if (a->hasObsoleteMembers())
                     QDocDatabase::qmlTypesWithObsoleteMembers().insert(node->qualifyQmlName(),
                                                                        node);
@@ -876,7 +811,7 @@ void Aggregate::findAllSince()
 
             if (node->isFunction()) {
                 // Insert functions into the general since map.
-                FunctionNode *fn = static_cast<FunctionNode *>(node);
+                auto *fn = static_cast<FunctionNode *>(node);
                 if (!fn->isObsolete() && !fn->isSomeCtor() && !fn->isDtor())
                     nsmap.value().insert(fn->name(), fn);
             } else if (node->isClassNode()) {

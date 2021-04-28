@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -162,7 +162,7 @@ void ManifestWriter::processManifestMetaContent(const QString &fullName, F match
         const auto &names = index.names;
         for (const QString &name : names) {
             bool match;
-            int wildcard = name.indexOf(QChar('*'));
+            qsizetype wildcard = name.indexOf(QChar('*'));
             switch (wildcard) {
             case -1: // no wildcard used, exact match required
                 match = (fullName == name);
@@ -353,7 +353,7 @@ void ManifestWriter::addWordsFromModuleNamesAsTags()
 {
     // '?<=': positive lookbehind
     QRegularExpression re("([A-Z]+[a-z0-9]*((?<=3)D|GL)?)");
-    int pos = 0;
+    qsizetype pos = 0;
     QRegularExpressionMatch match;
     while ((match = re.match(m_project, pos)).hasMatch()) {
         m_tags << match.captured(1).toLower();

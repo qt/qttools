@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -34,6 +34,8 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 class ClassNode;
@@ -44,17 +46,12 @@ struct RelatedClass
     // constructor for resolved base class
     RelatedClass(Access access, ClassNode *node) : m_access(access), m_node(node) {}
     // constructor for unresolved base class
-    RelatedClass(Access access, const QStringList &path, const QString &signature)
-        : m_access(access), m_path(path), m_signature(signature)
-    {
-    }
-    QString accessString() const;
+    RelatedClass(Access access, QStringList path) : m_access(access), m_path(std::move(path)) { }
     bool isPrivate() const;
 
     Access m_access {};
     ClassNode *m_node { nullptr };
     QStringList m_path {};
-    QString m_signature {};
 };
 
 QT_END_NAMESPACE

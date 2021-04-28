@@ -26,13 +26,7 @@
 **
 ****************************************************************************/
 
-/*
-  codechunk.cpp
-*/
-
 #include "codechunk.h"
-
-#include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
 

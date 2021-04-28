@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -44,7 +44,6 @@
 #include <QtCore/qcryptographichash.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qhash.h>
-#include <QtCore/qmap.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -185,14 +184,8 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
 
 void HelpProjectWriter::addExtraFile(const QString &file)
 {
-    for (int i = 0; i < projects.size(); ++i)
-        projects[i].extraFiles.insert(file);
-}
-
-void HelpProjectWriter::addExtraFiles(const QSet<QString> &files)
-{
-    for (int i = 0; i < projects.size(); ++i)
-        projects[i].extraFiles.unite(files);
+    for (HelpProject &project : projects)
+        project.extraFiles.insert(file);
 }
 
 Keyword HelpProjectWriter::keywordDetails(const Node *node) const
@@ -208,7 +201,7 @@ Keyword HelpProjectWriter::keywordDetails(const Node *node) const
                 : node->name();
         return Keyword(name, id, ref);
     } else if (node->isQmlType() || node->isQmlBasicType()) {
-        QString name = node->name();
+        const QString &name = node->name();
         QString moduleName = node->logicalModuleName();
         QStringList ids("QML." + name);
         if (!moduleName.isEmpty()) {
@@ -257,7 +250,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
             // Add all group members for '[group|module|qmlmodule]:name' selector
             if (node->isCollectionNode()) {
                 if (project.subprojects[i].groups.contains(node->name().toLower())) {
-                    const CollectionNode *cn = static_cast<const CollectionNode *>(node);
+                    const auto *cn = static_cast<const CollectionNode *>(node);
                     const auto members = cn->members();
                     for (const Node *m : members) {
                         if (!m->isInAPI())
@@ -313,11 +306,9 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     case Node::Enum:
         project.keywords.append(keywordDetails(node));
         {
-            const EnumNode *enumNode = static_cast<const EnumNode *>(node);
+            const auto *enumNode = static_cast<const EnumNode *>(node);
             const auto items = enumNode->items();
             for (const auto &item : items) {
-                QStringList details;
-
                 if (enumNode->itemAccess(item.name()) == Access::Private)
                     continue;
 
@@ -364,7 +355,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         break;
 
     case Node::Function: {
-        const FunctionNode *funcNode = static_cast<const FunctionNode *>(node);
+        const auto *funcNode = static_cast<const FunctionNode *>(node);
 
         /*
           QML and JS methods, signals, and signal handlers used to be node types,
@@ -394,7 +385,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     } break;
     case Node::TypeAlias:
     case Node::Typedef: {
-        const TypedefNode *typedefNode = static_cast<const TypedefNode *>(node);
+        const auto *typedefNode = static_cast<const TypedefNode *>(node);
         Keyword typedefDetails = keywordDetails(node);
         const EnumNode *enumNode = typedefNode->associatedEnum();
         // Use the location of any associated enum node in preference
@@ -461,7 +452,7 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
         return;
 
     if (node->isAggregate()) {
-        const Aggregate *aggregate = static_cast<const Aggregate *>(node);
+        const auto *aggregate = static_cast<const Aggregate *>(node);
 
         // Ensure that we don't visit nodes more than once.
         QSet<const Node *> childSet;
@@ -489,8 +480,8 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
 
 void HelpProjectWriter::generate()
 {
-    for (int i = 0; i < projects.size(); ++i)
-        generateProject(projects[i]);
+    for (HelpProject &project : projects)
+        generateProject(project);
 }
 
 void HelpProjectWriter::writeHashFile(QFile &file)
@@ -568,12 +559,9 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
         if (node->parent() && !node->parent()->name().isEmpty())
             writer.writeAttribute("title",
                                   QStringLiteral("%1::%2 %3 Reference")
-                                          .arg(node->parent()->name())
-                                          .arg(objName)
-                                          .arg(typeStr));
+                                          .arg(node->parent()->name(), objName, typeStr));
         else
-            writer.writeAttribute("title",
-                                  QStringLiteral("%1 %2 Reference").arg(objName).arg(typeStr));
+            writer.writeAttribute("title", QStringLiteral("%1 %2 Reference").arg(objName, typeStr));
 
         addMembers(project, writer, node);
         writer.writeEndElement(); // section

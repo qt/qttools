@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -59,10 +59,9 @@ class QDocForest
 {
 private:
     friend class QDocDatabase;
-    QDocForest(QDocDatabase *qdb) : qdb_(qdb), primaryTree_(nullptr), currentIndex_(0) {}
+    explicit QDocForest(QDocDatabase *qdb) : qdb_(qdb), primaryTree_(nullptr), currentIndex_(0) { }
     ~QDocForest();
 
-    NamespaceNode *firstRoot();
     NamespaceNode *nextRoot();
     Tree *firstTree();
     Tree *nextTree();
@@ -201,7 +200,7 @@ class QDocDatabase
 public:
     static QDocDatabase *qdocDB();
     static void destroyQdocDB();
-    ~QDocDatabase();
+    ~QDocDatabase() = default;
 
     Tree *findTree(const QString &t) { return forest_.findTree(t); }
 
@@ -328,7 +327,7 @@ public:
     {
         return forest_.getCollectionNode(name, type);
     }
-    FunctionNode *findFunctionNodeForTag(QString tag)
+    FunctionNode *findFunctionNodeForTag(const QString &tag)
     {
         return primaryTree()->findFunctionNodeForTag(tag);
     }
@@ -365,8 +364,6 @@ public:
 
     void clearOpenNamespaces() { openNamespaces_.clear(); }
     void insertOpenNamespace(const QString &path) { openNamespaces_.insert(path); }
-    void setShowInternal(bool value) { showInternal_ = value; }
-    void setSingleExec(bool value) { singleExec_ = value; }
     void processForest();
 
     // Try to make this function private.
@@ -402,7 +399,7 @@ private:
 
 private:
     QDocDatabase();
-    QDocDatabase(QDocDatabase const &) : showInternal_(false), forest_(this) {}
+    QDocDatabase(QDocDatabase const &) : forest_(this) { }
     QDocDatabase &operator=(QDocDatabase const &);
 
 public:
@@ -424,8 +421,6 @@ private:
     static NodeMultiMapMap newQmlTypeMaps_;
     static NodeMultiMapMap newSinceMaps_;
 
-    bool showInternal_;
-    bool singleExec_;
     QString version_;
     QDocForest forest_;
 

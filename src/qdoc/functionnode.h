@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -72,7 +72,6 @@ public:
     QString metanessString() const;
     bool changeMetaness(Metaness from, Metaness to);
     void setMetaness(Metaness metaness) { m_metaness = metaness; }
-    Metaness setMetaness(const QString &metaness);
     QString kindString() const;
     static Metaness getMetaness(const QString &value);
     static Metaness getMetanessFromTopic(const QString &topic);
@@ -137,7 +136,6 @@ public:
 
     const QString &overridesThis() const { return m_overridesThis; }
     const NodeList &associatedProperties() const { return m_associatedProperties; }
-    const QStringList &parentPath() const { return m_parentPath; }
     bool hasAssociatedProperties() const { return !m_associatedProperties.isEmpty(); }
     bool hasOneAssociatedProperty() const { return (m_associatedProperties.size() == 1); }
     Node *firstAssociatedProperty() const { return m_associatedProperties[0]; }
@@ -173,7 +171,6 @@ public:
     bool compare(const Node *node, bool sameParent = true) const;
     bool isIgnored() const;
     bool hasOverloads() const;
-    void clearOverloadFlag() { m_overloadFlag = false; }
     void setOverloadFlag() { m_overloadFlag = true; }
     void setOverloadNumber(signed short number);
     void appendOverload(FunctionNode *functionNode);

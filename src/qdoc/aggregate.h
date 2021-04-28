@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -55,7 +55,7 @@ public:
     bool isAggregate() const override { return true; }
     const EnumNode *findEnumNodeForValue(const QString &enumValue) const;
 
-    int count() const { return m_children.size(); }
+    qsizetype count() const { return m_children.size(); }
     const NodeList &childNodes() const { return m_children; }
     const NodeList &nonfunctionList();
     NodeList::ConstIterator constBegin() const { return m_children.constBegin(); }
@@ -65,12 +65,10 @@ public:
     void setIncludeFiles(const QStringList &includeFiles);
     const QStringList &includeFiles() const { return m_includeFiles; }
 
-    QStringList primaryKeys();
     QmlPropertyNode *hasQmlProperty(const QString &) const;
     QmlPropertyNode *hasQmlProperty(const QString &, bool attached) const;
     virtual QmlTypeNode *qmlBaseNode() const { return nullptr; }
     void addChildByTitle(Node *child, const QString &title);
-    void printChildren(const QString &title);
     void addChild(Node *child);
     void adoptChild(Node *child);
     void setOutputSubdirectory(const QString &t) override;
@@ -93,7 +91,6 @@ protected:
     Aggregate(NodeType type, Aggregate *parent, const QString &name)
         : PageNode(type, parent, name) {}
     ~Aggregate() override;
-    void removeFunctionNode(FunctionNode *fn);
 
 private:
     friend class Node;

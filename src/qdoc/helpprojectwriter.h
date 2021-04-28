@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -100,7 +100,6 @@ public:
     HelpProjectWriter(const QString &defaultFileName, Generator *g);
     void reset(const QString &defaultFileName, Generator *g);
     void addExtraFile(const QString &file);
-    void addExtraFiles(const QSet<QString> &files);
     void generate();
 
 private:
@@ -114,8 +113,8 @@ private:
     void addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     void writeSection(QXmlStreamWriter &writer, const QString &path, const QString &value);
 
-    QDocDatabase *qdb_;
-    Generator *gen_;
+    QDocDatabase *qdb_ {};
+    Generator *gen_ {};
 
     QString outputDir;
     QList<HelpProject> projects;

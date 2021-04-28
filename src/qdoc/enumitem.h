@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -32,13 +32,15 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 class EnumItem
 {
 public:
     EnumItem() = default;
-    EnumItem(const QString &name, const QString &value) : m_name(name), m_value(value) {}
+    EnumItem(QString name, QString value) : m_name(std::move(name)), m_value(std::move(value)) { }
 
     const QString &name() const { return m_name; }
     const QString &value() const { return m_value; }

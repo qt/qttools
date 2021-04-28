@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -39,6 +39,7 @@
 
 #include <cctype>
 #include <cstring>
+#include <utility>
 
 QT_BEGIN_NAMESPACE
 
@@ -148,7 +149,7 @@ Tokenizer::Tokenizer(const Location &loc, QFile &in)
     start(loc);
 }
 
-Tokenizer::Tokenizer(const Location &loc, const QByteArray &in) : yyIn(in)
+Tokenizer::Tokenizer(const Location &loc, QByteArray in) : yyIn(std::move(in))
 {
     init();
     yyPos = 0;

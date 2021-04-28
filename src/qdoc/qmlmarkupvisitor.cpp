@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -33,7 +33,6 @@
 
 #ifndef QT_NO_DECLARATIVE
 #    include <private/qqmljsast_p.h>
-#    include <private/qqmljsastfwd_p.h>
 #    include <private/qqmljsengine_p.h>
 #endif
 
@@ -79,8 +78,6 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
     }
 }
 
-QmlMarkupVisitor::~QmlMarkupVisitor() {}
-
 // The protect() function is a copy of the one from CppCodeMarker.
 
 static const QString samp = QLatin1String("&amp;");
@@ -90,7 +87,7 @@ static const QString squot = QLatin1String("&quot;");
 
 QString QmlMarkupVisitor::protect(const QString &str)
 {
-    int n = str.length();
+    qsizetype n = str.length();
     QString marked;
     marked.reserve(n * 2 + 30);
     const QChar *data = str.constData();
@@ -200,7 +197,7 @@ void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::SourceLocation &location,
 
     output += QString(QLatin1String("<@%1")).arg(tagName);
     for (const auto &key : attributes)
-        output += QString(QLatin1String(" %1=\"%2\"")).arg(key).arg(attributes[key]);
+        output += QString(QLatin1String(" %1=\"%2\"")).arg(key, attributes[key]);
     output += QString(QLatin1String(">%2</@%3>")).arg(protect(sourceText(location)), tagName);
     cursor += location.length;
 }
@@ -812,7 +809,6 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::DebuggerStatement *statement)
 
 bool QmlMarkupVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
 {
-    QHash<QString, QString> attributes;
     addMarkedUpToken(definition->qualifiedTypeNameId->identifierToken, QLatin1String("type"));
     QQmlJS::AST::Node::accept(definition->initializer, this);
     return false;

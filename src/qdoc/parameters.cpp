@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -34,7 +34,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QRegularExpression Parameters::varComment_("^/\\*\\s*([a-zA-Z_0-9]+)\\s*\\*/$");
+QRegularExpression Parameters::varComment_(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
 
 /*!
   \class Parameter
@@ -173,7 +173,7 @@ void Parameters::matchTemplateAngles(CodeChunk &type)
   Uses the current tokenizer to parse the \a name and \a type
   of the parameter.
  */
-bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
+bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
 {
     /*
       This code is really hard to follow... sorry. The loop is there to match
@@ -331,9 +331,6 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name, bool qProp)
                 name.append("]");
                 readToken();
             }
-        } else if (qProp && (match(Tok_default) || match(Tok_final) || match(Tok_override))) {
-            // Hack to make 'default', 'final' and 'override'  work again in Q_PROPERTY
-            name = previousLexeme();
         }
 
         if (tok_ == Tok_LeftBracket) {
@@ -427,7 +424,7 @@ void Parameters::append(const QString &type, const QString &name, const QString 
 QString Parameters::signature(bool includeValues) const
 {
     QString result;
-    if (parameters_.size() > 0) {
+    if (!parameters_.empty()) {
         for (int i = 0; i < parameters_.size(); i++) {
             if (i > 0)
                 result += ", ";
@@ -476,7 +473,7 @@ void Parameters::set(const QString &signature)
         for (const auto &item : qAsConst(commaSplit)) {
             QStringList blankSplit = item.split(' ', Qt::SkipEmptyParts);
             QString pDefault;
-            int defaultIdx = blankSplit.indexOf(QStringLiteral("="));
+            qsizetype defaultIdx = blankSplit.indexOf(QStringLiteral("="));
             if (defaultIdx != -1) {
                 if (++defaultIdx < blankSplit.size())
                     pDefault = blankSplit.mid(defaultIdx).join(' ');

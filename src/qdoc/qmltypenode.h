@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2020 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -68,14 +68,11 @@ public:
     CollectionNode *logicalModule() const override { return m_logicalModule; }
     void setQmlModule(CollectionNode *t) override { m_logicalModule = t; }
 
-    const ImportList &importList() const { return m_importList; }
     void setImportList(const ImportList &il) { m_importList = il; }
     const QString &qmlBaseName() const { return m_qmlBaseName; }
     void setQmlBaseName(const QString &name) { m_qmlBaseName = name; }
     QmlTypeNode *qmlBaseNode() const override { return m_qmlBaseNode; }
-    void setQmlBaseNode(QmlTypeNode *b) { m_qmlBaseNode = b; }
     void resolveInheritance(NodeMap &previousSearches);
-    void requireCppClass() { m_classNodeRequired = true; }
     bool cppClassRequired() const { return m_classNodeRequired; }
     static void addInheritedBy(const Node *base, Node *sub);
     static void subclasses(const Node *base, NodeList &subs);
@@ -83,7 +80,6 @@ public:
     bool inherits(Aggregate *type);
 
 public:
-    static bool qmlOnly;
     static QMultiMap<const Node *, Node *> inheritedBy;
 
 private:

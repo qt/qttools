@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -58,10 +58,6 @@ public:
     }
     virtual QString markedUpQmlItem(const Node *, bool) { return QString(); }
     virtual QString markedUpName(const Node * /*node*/) { return QString(); }
-    virtual QString markedUpFullName(const Node * /*node*/, const Node * /*relative*/)
-    {
-        return QString();
-    }
     virtual QString markedUpEnumValue(const QString & /*enumValue*/, const Node * /*relative*/)
     {
         return QString();
