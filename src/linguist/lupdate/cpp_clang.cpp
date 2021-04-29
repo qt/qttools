@@ -32,23 +32,129 @@
 #include "synchronized.h"
 #include "translator.h"
 
+#include <QLibraryInfo>
 #include <QtCore/qdir.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qjsonarray.h>
 #include <QtCore/qjsondocument.h>
 #include <QtCore/qjsonobject.h>
+#include <QtCore/QProcess>
+#include <QStandardPaths>
+#include <QtTools/private/qttools-config_p.h>
 
 #include <clang/Tooling/CompilationDatabase.h>
 
 #include <algorithm>
 #include <limits>
 #include <thread>
+#include <iostream>
+#include <cstdlib>
+
+#include <cstdio>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <array>
 
 using clang::tooling::CompilationDatabase;
 
 QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(lcClang, "qt.lupdate.clang");
+
+bool getSysCompiler(QString &sysCompiler, QStringList &compilerFlag)
+{
+    QStringList searchCompiler;
+    if (const char* local_compiler = std::getenv("CXX")) {
+        searchCompiler.push_back(QLatin1String(local_compiler));
+    } else {
+        // we could choose to always look for those after CXX...
+        searchCompiler.push_back(QLatin1String("clang++"));
+        searchCompiler.push_back(QLatin1String("gcc"));
+    }
+
+    for (QString comp : searchCompiler) {
+        sysCompiler = QStandardPaths::findExecutable(comp);
+        if (!sysCompiler.isEmpty())
+            break;
+    }
+
+    if (sysCompiler.isEmpty())
+        return false;
+
+    if (sysCompiler.endsWith(QLatin1String("clang++"))
+            || sysCompiler.endsWith(QLatin1String("gcc"))) {
+        // COMPILER -E -x c++ - -v < /dev/null
+        compilerFlag.push_back(QLatin1String("-E"));
+        compilerFlag.push_back(QLatin1String("-x"));
+        compilerFlag.push_back(QLatin1String("c++"));
+        compilerFlag.push_back(QLatin1String("-"));
+        compilerFlag.push_back(QLatin1String("-v"));
+        return true;
+
+    }
+    return false;
+}
+
+#ifdef Q_OS_WIN
+QByteArrayList getIncludePathsFromCompiler()
+{
+    QList<QByteArray> pathList;
+    if (const char* includeEnv = std::getenv("INCLUDE")) {
+        QByteArray includeList = QByteArray::fromRawData(includeEnv, strlen(includeEnv));
+        pathList = includeList.split(';');
+    }
+    for (auto it = pathList.begin(); it != pathList.end(); ++it) {
+        it->prepend("-isystem");
+    }
+    return pathList;
+}
+#else
+
+static QByteArray frameworkSuffix()
+{
+    return QByteArrayLiteral(" (framework directory)");
+}
+
+QByteArrayList getIncludePathsFromCompiler()
+{
+    QList<QByteArray> pathList;
+    QString compiler;
+    QStringList compilerFlag;
+    if (!getSysCompiler(compiler, compilerFlag))
+        return pathList;
+
+    QProcess proc;
+    proc.setStandardInputFile(proc.nullDevice());
+    proc.start(compiler, compilerFlag);
+    proc.waitForFinished(30000);
+    QByteArray buffer = proc.readAllStandardError();
+    proc.kill();
+
+    // ### TODO: Merge this with qdoc's getInternalIncludePaths()
+    const QByteArrayList stdErrLines = buffer.split('\n');
+    bool isIncludeDir = false;
+    for (const QByteArray &line : stdErrLines) {
+        if (isIncludeDir) {
+            if (line.startsWith(QByteArrayLiteral("End of search list"))) {
+                isIncludeDir = false;
+            } else {
+                QByteArray prefix("-isystem");
+                QByteArray headerPath{line.trimmed()};
+                if (headerPath.endsWith(frameworkSuffix())) {
+                    headerPath.truncate(headerPath.size() - frameworkSuffix().size());
+                    prefix = QByteArrayLiteral("-F");
+                }
+                pathList.append(prefix + headerPath);
+            }
+        } else if (line.startsWith(QByteArrayLiteral("#include <...> search starts here"))) {
+            isIncludeDir = true;
+        }
+    }
+
+    return pathList;
+}
+#endif
 
 // Makes sure all the comments will be parsed and part of the AST
 // Clang will run with the flag -fparse-all-comments
@@ -63,9 +169,29 @@ clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
                 adjustedArgs.push_back(args[i]);
         }
         adjustedArgs.push_back("-fparse-all-comments");
-        adjustedArgs.push_back("-I");
-        adjustedArgs.push_back(CLANG_RESOURCE_DIR);
+        adjustedArgs.push_back("-nostdinc");
+
+        // Turn off SSE support to avoid usage of gcc builtins.
+        // TODO: Look into what Qt Creator does.
+        // Pointers: HeaderPathFilter::removeGccInternalIncludePaths()
+        //           and gccInstallDir() in gcctoolchain.cpp
+        // Also needed for Mac, No need for CLANG_RESOURCE_DIR when this is part of the argument.
+        adjustedArgs.push_back("-mno-sse");
+
         adjustedArgs.push_back("-fsyntax-only");
+#ifdef Q_OS_WIN
+        adjustedArgs.push_back("-fms-compatibility-version=19");
+        adjustedArgs.push_back("-DQ_COMPILER_UNIFORM_INIT");    // qtbase + clang-cl hack
+#endif
+        adjustedArgs.push_back("-Wno-everything");
+
+        for (QByteArray line : getIncludePathsFromCompiler()) {
+            line = line.trimmed();
+            if (line.isEmpty())
+                continue;
+            adjustedArgs.push_back(line.data());
+        }
+
         return adjustedArgs;
     };
 }
@@ -119,15 +245,24 @@ static bool generateCompilationDatabase(const QString &outputFilePath, const Con
     obj[QLatin1String("file")] = fakefileName;
     obj[QLatin1String("directory")] = buildDir;
     QJsonArray args = {
-        QLatin1String("clang++"),
-        QLatin1String("-fPIC"),
-        QLatin1String("-std=gnu++17")
-    };
+            QLatin1String("clang++"),
+    #ifndef Q_OS_WIN
+            QLatin1String("-fPIC"),
+    #endif
+            QLatin1String("-std=gnu++17"),
+        };
+
+#if defined(Q_OS_MACOS) && QT_CONFIG(framework)
+        const QString installPath = QLibraryInfo::path(QLibraryInfo::LibrariesPath);
+        QString arg =  QLatin1String("-F") + installPath;
+        args.push_back(arg);
+#endif
 
     for (const QString &path : cd.m_includePath) {
             QString arg = QLatin1String("-I") + path;
             args.push_back(std::move(arg));
     }
+
     obj[QLatin1String("arguments")] = args;
     commandObjects.append(obj);
 
