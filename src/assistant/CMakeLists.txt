@@ -28,6 +28,7 @@ set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(qlitehtml/src EXCLUDE_FROM_ALL)
 if(TARGET qlitehtml)
     qt_autogen_tools_initial_setup(qlitehtml)
+    qt_internal_set_exceptions_flags(litehtml OFF)
     set_target_properties(qlitehtml PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_BINDIR}"
         LIBRARY_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_LIBDIR}"
