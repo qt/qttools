@@ -61,11 +61,8 @@ bool HeaderNode::docMustBeGenerated() const
  */
 bool HeaderNode::hasDocumentedChildren() const
 {
-    for (const auto *node : qAsConst(m_children)) {
-        if (node->isInAPI())
-            return true;
-    }
-    return false;
+    return std::any_of(m_children.cbegin(), m_children.cend(),
+                       [](Node *child) { return child->isInAPI(); });
 }
 
 QT_END_NAMESPACE
