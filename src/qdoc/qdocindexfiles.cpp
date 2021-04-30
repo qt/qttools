@@ -1175,7 +1175,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const auto *propertyNode = static_cast<const PropertyNode *>(node);
 
         if (propertyNode->propertyType() == PropertyNode::Bindable)
-        writer.writeAttribute("bindable", "true");
+            writer.writeAttribute("bindable", "true");
 
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
