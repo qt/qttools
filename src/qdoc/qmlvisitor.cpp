@@ -435,8 +435,6 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                 }
             } else if (command == COMMAND_DEPRECATED) {
                 node->setStatus(Node::Obsolete);
-                if (const QString &version = args[0].first; !version.isEmpty())
-                    node->setDeprecatedSince(version);
             } else if ((command == COMMAND_INQMLMODULE) || (command == COMMAND_INJSMODULE)) {
                 qdb->addToQmlModule(args[0].first, node);
             } else if (command == COMMAND_QMLINHERITS) {

@@ -1947,10 +1947,7 @@ bool DocBookGenerator::generateStatus(const Node *node)
             writer->writeStartElement(dbNamespace, "emphasis");
             writer->writeAttribute("role", "bold");
         }
-        writer->writeCharacters("This " + typeString(node) + " is deprecated");
-        if (const QString &version = node->deprecatedSince(); !version.isEmpty())
-            writer->writeCharacters(" since " + version);
-        writer->writeCharacters(".");
+        writer->writeCharacters("This " + typeString(node) + " is deprecated.");
         if (node->isAggregate())
             writer->writeEndElement(); // emphasis
         writer->writeEndElement(); // para

@@ -110,7 +110,6 @@ namespace TestQDoc {
 
 /*!
     \deprecated
-    \deprecatedsince 6.0
 
     Use someFunction() instead.
 */

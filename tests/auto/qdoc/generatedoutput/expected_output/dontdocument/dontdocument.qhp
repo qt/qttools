@@ -34,7 +34,7 @@
             <keyword name="TestDerived::NotTypedef" id="TestDerived::NotTypedef" ref="testqdoc-testderived.html#NotTypedef-typedef"/>
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
             <keyword name="anotherObsoleteMember" id="Test::anotherObsoleteMember" ref="testqdoc-test-obsolete.html#anotherObsoleteMember"/>
-            <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test.html#deprecatedMember"/>
+            <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test-obsolete.html#deprecatedMember"/>
             <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
             <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
             <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
