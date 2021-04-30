@@ -39,8 +39,9 @@
 
     \value This Something
     \value That Something else
-    \value All  Everything
     \omitvalue OmittedValue
+               This decription is omitted
+    \value All  Everything
 */
 
 /*!

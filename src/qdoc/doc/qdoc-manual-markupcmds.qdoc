@@ -2637,9 +2637,11 @@
     The \\omitvalue command excludes a C++ enum item from the
     documentation.
 
-    The command's only argument is the name of the enum item that will
-    be omitted. See the \l {enum-command} {\\enum} documentation for
-    an example.
+    The command's only mandatory argument is the name of the enum item
+    that will be omitted. If the enum item is followed by a single-line
+    description, that is also omitted.
+
+    See the \l {enum-command} {\\enum} documentation for an example.
 
     See also \l {enum-command} {\\enum} and \l {value-command}
     {\\value} \l {since-command}{\\since}
