@@ -817,6 +817,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         m_private->enumItemList.append(p1);
                     if (!m_private->omitEnumItemList.contains(p1))
                         m_private->omitEnumItemList.append(p1);
+                    skipSpacesOrOneEndl();
+                    getRestOfLine();
                     break;
                 case CMD_PRINTLINE: {
                     leavePara();
@@ -2289,7 +2291,7 @@ void DocParser::skipSpacesOnLine()
 }
 
 /*!
-  Skips spaces and on EOL.
+  Skips spaces and one EOL.
  */
 void DocParser::skipSpacesOrOneEndl()
 {

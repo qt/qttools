@@ -306,6 +306,7 @@
         \omitvalue TopRight
         \omitvalue BottomLeft
         \omitvalue BottomRight
+                   Bottom-right (omitted; not documented).
     * /
     \endcode
 
