@@ -307,6 +307,10 @@
         </member>
     </compound>
     <compound kind="class">
+        <name>Test.NoVer.TypeNoVersion</name>
+        <filename>qml-test-nover-typenoversion.html</filename>
+    </compound>
+    <compound kind="class">
         <name>QDoc.Test.YetAnotherChild</name>
         <filename>qml-qdoc-test-yetanotherchild.html</filename>
     </compound>

@@ -1330,14 +1330,15 @@
     \target qmlmodule-command
     \section1 \\qmlmodule
 
-    Insert the \c{\\qmlmodule} command to create a \c QML module page. A QML
-    module is a collection of QML types or any related material. This
-    command is similar to the \l{group-command}.
+    Use the \c{\\qmlmodule} command to create a \c QML module page. A QML
+    module page is a collection of QML types or any related material. The
+    command takes an optional \c <VERSION> number argument, and is similar
+    to the \l{group-command}.
 
-    A QML class may belong to a module by inserting the
-    \l{inqmlmodule-command}{\\inqmlmodule} command as a topic command.
-    Every member of a group must be linked to using the module name and two
-    colons (\c{::}).
+    A QML class can be associated with a module by adding the
+    \l{inqmlmodule-command}{\\inqmlmodule} command to the comment-block that
+    documents the class. You can link to any member of a QML module using the
+    module name and two colons (\c{::}) prefix.
 
     \code
     \beginqdoc
@@ -1345,8 +1346,8 @@
     \endqdoc
     \endcode
 
-    QDoc will generate a page for the module with a listing of the members
-    of the module.
+    QDoc generates a page for the module that lists all the members of the
+    module.
 
     \code
         \qmlmodule ClickableComponents

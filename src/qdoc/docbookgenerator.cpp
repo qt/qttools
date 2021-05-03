@@ -1874,9 +1874,11 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
         logicalModuleVersion =
                 collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
 
-        generateRequisite("Import Statement",
-                          "import " + qcn->logicalModuleName() + QLatin1Char(' ')
-                                  + logicalModuleVersion);
+        QStringList importText;
+        importText << "import " + qcn->logicalModuleName();
+        if (!logicalModuleVersion.isEmpty())
+            importText << logicalModuleVersion;
+        generateRequisite("Import Statement", importText.join(' '));
     }
 
     // Since and project.
@@ -2920,9 +2922,11 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         else
             logicalModuleVersion = qcn->logicalModuleVersion();
 
-        generateSynopsisInfo("import",
-                             "import " + qcn->logicalModuleName() + QLatin1Char(' ')
-                                     + logicalModuleVersion);
+        QStringList importText;
+        importText << "import " + qcn->logicalModuleName();
+        if (!logicalModuleVersion.isEmpty())
+            importText << logicalModuleVersion;
+        generateSynopsisInfo("import", importText.join(' '));
 
         // Since and project.
         if (!qcn->since().isEmpty())

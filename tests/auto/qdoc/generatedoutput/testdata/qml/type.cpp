@@ -30,6 +30,7 @@
 
 /*!
     \qmlmodule QDoc.Test \QDocTestVer
+    \title QDoc.Test QML Module
     \brief QML Types for the Test module.
     \since 1.1
     \preliminary
@@ -44,10 +45,24 @@
 */
 
 /*!
+    \qmlmodule Test.NoVer
+    \title Versionless QML Module
+    \brief QML Types for the Test module without version.
+    \since 1.1
+*/
+
+/*!
     \qmltype Type
     \instantiates TestQDoc::Test
     \inqmlmodule QDoc.Test
     \brief A QML type documented in a .cpp file.
+*/
+
+/*!
+    \qmltype TypeNoVersion
+    \instantiates TestQDoc::TestDerived
+    \inqmlmodule Test.NoVer
+    \brief Another QML type documented in a .cpp file.
 */
 
 /*!

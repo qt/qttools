@@ -104,6 +104,17 @@ void CollectionNode::getMemberClasses(NodeMap &out) const
 }
 
 /*!
+  Returns the logical module version.
+*/
+QString CollectionNode::logicalModuleVersion() const
+{
+    QStringList version;
+    version << m_logicalModuleVersionMajor << m_logicalModuleVersionMinor;
+    version.removeAll(QString());
+    return version.join(".");
+}
+
+/*!
   This function splits \a arg on the blank character to get a
   logical module name and version number. If the version number
   is present, it splits the version number on the '.' character

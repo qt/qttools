@@ -2020,7 +2020,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
         logicalModuleVersion =
                 collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
 
-        if (logicalModuleVersion.isEmpty() || qcn->logicalModuleName().isEmpty())
+        if (qcn->logicalModuleName().isEmpty())
             qcn->doc().location().warning(QStringLiteral("Could not resolve QML import "
                                                          "statement for type '%1'")
                                                   .arg(qcn->name()),
@@ -2029,7 +2029,9 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
                                                   .arg(COMMAND_INQMLMODULE));
 
         text.clear();
-        text << "import " + qcn->logicalModuleName() + QLatin1Char(' ') + logicalModuleVersion;
+        text << "import " + qcn->logicalModuleName();
+        if (!logicalModuleVersion.isEmpty())
+            text << QLatin1Char(' ') + logicalModuleVersion;
         requisites.insert(importText, text);
     }
 

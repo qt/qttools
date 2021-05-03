@@ -58,10 +58,7 @@ public:
 
     QString fullTitle() const override { return title(); }
     QString logicalModuleName() const override { return m_logicalModuleName; }
-    QString logicalModuleVersion() const override
-    {
-        return m_logicalModuleVersionMajor + QLatin1Char('.') + m_logicalModuleVersionMinor;
-    }
+    QString logicalModuleVersion() const override;
     QString logicalModuleIdentifier() const override
     {
         return m_logicalModuleName + m_logicalModuleVersionMajor;

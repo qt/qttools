@@ -7,7 +7,6 @@
         <toc>
             <section ref="uicomponents-qmlmodule.html" title="UI Components">
                 <section ref="uicomponents-qmlmodule.html" title="Test">
-                    <section ref="qdoc-test-qmlmodule.html" title=""/>
                     <section ref="autolinking.html" title="Autolinking"/>
                     <section ref="test-cmaketest-example.html" title="CMake Example Project"/>
                     <section ref="test-demos-demo-example.html" title="Demo"/>
@@ -15,9 +14,11 @@
                     <section ref="test-empty-qmlmodule.html" title="No QML Types Here"/>
                     <section ref="obsolete-classes.html" title="Obsolete Classes"/>
                     <section ref="testcpp-module.html" title="QDoc Test C++ Classes"/>
+                    <section ref="qdoc-test-qmlmodule.html" title="QDoc.Test QML Module"/>
                     <section ref="test-componentset-example.html" title="QML Documentation Example"/>
                     <section ref="qmlmodules.html" title="QML Modules"/>
                     <section ref="uicomponents-qmlmodule.html" title="UI Components"/>
+                    <section ref="test-nover-qmlmodule.html" title="Versionless QML Module"/>
                 </section>
                 <section ref="testcpp-module.html" title="Classes">
                     <section ref="testqdoc.html" title="TestQDoc"/>
@@ -74,6 +75,7 @@
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
             <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
             <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
+            <keyword name="QDoc.Test QML Module" id="QDoc.Test QML Module" ref="qdoc-test-qmlmodule.html"/>
             <keyword name="QML Modules" id="QML Modules" ref="qmlmodules.html"/>
             <keyword name="Switch" id="QML.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="Switch" id="QML.UIComponents1.Switch" ref="qml-uicomponents-switch.html"/>
@@ -87,7 +89,10 @@
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
             <keyword name="Type" id="QML.Type" ref="qml-qdoc-test-type.html"/>
             <keyword name="Type" id="QML.QDoc.Test1.Type" ref="qml-qdoc-test-type.html"/>
+            <keyword name="TypeNoVersion" id="QML.TypeNoVersion" ref="qml-test-nover-typenoversion.html"/>
+            <keyword name="TypeNoVersion" id="QML.Test.NoVer.TypeNoVersion" ref="qml-test-nover-typenoversion.html"/>
             <keyword name="UI Components" id="UI Components" ref="uicomponents-qmlmodule.html"/>
+            <keyword name="Versionless QML Module" id="Versionless QML Module" ref="test-nover-qmlmodule.html"/>
             <keyword name="YetAnotherChild" id="QML.YetAnotherChild" ref="qml-qdoc-test-yetanotherchild.html"/>
             <keyword name="YetAnotherChild" id="QML.QDoc.Test1.YetAnotherChild" ref="qml-qdoc-test-yetanotherchild.html"/>
             <keyword name="abs" id="int::abs" ref="qml-int.html#abs-method"/>
@@ -157,6 +162,8 @@
             <file>qml-qdoc-test-type.html</file>
             <file>qml-qdoc-test-yetanotherchild-members.html</file>
             <file>qml-qdoc-test-yetanotherchild.html</file>
+            <file>qml-test-nover-typenoversion-members.html</file>
+            <file>qml-test-nover-typenoversion.html</file>
             <file>qml-uicomponents-progressbar-members.html</file>
             <file>qml-uicomponents-progressbar.html</file>
             <file>qml-uicomponents-switch-members.html</file>
@@ -176,6 +183,7 @@
             <file>test-demos-demo-example.html</file>
             <file>test-demos-hidden-example.html</file>
             <file>test-empty-qmlmodule.html</file>
+            <file>test-nover-qmlmodule.html</file>
             <file>testcpp-module.html</file>
             <file>testqdoc-test-members.html</file>
             <file>testqdoc-test-obsolete.html</file>
