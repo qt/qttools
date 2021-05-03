@@ -32,5 +32,5 @@ if(TARGET qlitehtml)
         LIBRARY_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_LIBDIR}"
         ARCHIVE_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_LIBDIR}")
 else()
-    message(SEND_ERROR "qlitehtml not found. Did you run git submodule update --init --recursive?")
+    message(FATAL_ERROR "qlitehtml not found. Did you run git submodule update --init --recursive?")
 endif()
