@@ -29,6 +29,8 @@
 #include "clangtoolastreader.h"
 #include "translator.h"
 
+#include <QLibraryInfo>
+
 QT_BEGIN_NAMESPACE
 
 namespace LupdatePrivate
@@ -86,14 +88,23 @@ namespace LupdatePrivate
                     exploreChildrenForFirstStringLiteral(method->getBody(), context);
                 }
             } else if (accessSpec) {
-                QString location = accessSpec->getBeginLoc().isValid() ?
-                            QString::fromStdString(accessSpec->getBeginLoc().printToString(sm)) : QString();
-                const QString accessForQDeclareTrFunctions = QStringLiteral("src/corelib/kernel/qcoreapplication.h");
-                const QString accessForQObject = QStringLiteral("src/corelib/kernel/qtmetamacros.h");
-                if (location.contains(accessForQDeclareTrFunctions))
-                    access_for_qdeclaretrfunction = true;
-                if (location.contains(accessForQObject))
-                    access_for_qobject = true;
+                if (!accessSpec->getBeginLoc().isValid())
+                        continue;
+                QString location = QString::fromStdString(
+                            sm.getSpellingLoc(accessSpec->getBeginLoc()).printToString(sm));
+                qsizetype indexLast = location.lastIndexOf(QLatin1String(":"));
+                qsizetype indexBeforeLast = location.lastIndexOf(QLatin1String(":"), indexLast-1);
+                location.truncate(indexBeforeLast);
+                const QString qtInstallDirPath = QLibraryInfo::path(QLibraryInfo::PrefixPath);
+                const QString accessForQDeclareTrFunctions = QStringLiteral("qcoreapplication.h");
+                const QString accessForQObject = QStringLiteral("qtmetamacros.h");
+                // Qt::CaseInsensitive because of potential discrepancy in Windows with D:/ and d:/
+                if (location.startsWith(qtInstallDirPath, Qt::CaseInsensitive)) {
+                    if (location.endsWith(accessForQDeclareTrFunctions))
+                        access_for_qdeclaretrfunction = true;
+                    if (location.endsWith(accessForQObject))
+                        access_for_qobject = true;
+                }
             }
         }
 
