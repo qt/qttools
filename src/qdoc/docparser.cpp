@@ -81,7 +81,6 @@ enum {
     CMD_ENDTABLE,
     CMD_FOOTNOTE,
     CMD_GENERATELIST,
-    CMD_GRANULARITY,
     CMD_HEADER,
     CMD_HR,
     CMD_I,
@@ -190,7 +189,6 @@ static struct
              { "endtable", CMD_ENDTABLE, nullptr },
              { "footnote", CMD_FOOTNOTE, nullptr },
              { "generatelist", CMD_GENERATELIST, nullptr },
-             { "granularity", CMD_GRANULARITY, nullptr }, // ### don't document for now
              { "header", CMD_HEADER, nullptr },
              { "hr", CMD_HR, nullptr },
              { "i", CMD_I, nullptr },
@@ -612,10 +610,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         arg1 += " " + arg2;
                     append(Atom::GeneratedList, arg1);
                 } break;
-                case CMD_GRANULARITY:
-                    m_private->constructExtra();
-                    m_private->extra->granularity_ = getSectioningUnit();
-                    break;
                 case CMD_HEADER:
                     if (m_openedCommands.top() == CMD_TABLE) {
                         leaveTableRow();
@@ -1286,8 +1280,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
         m_currentSection = Doc::NoSection;
     }
 
-    if (m_private->extra && m_private->extra->granularity_ < m_private->extra->section_)
-        m_private->extra->granularity_ = m_private->extra->section_;
     m_private->text.stripFirstAtom();
 }
 
@@ -1559,7 +1551,6 @@ void DocParser::startSection(Doc::Sections unit, int cmd)
     if (m_currentSection == Doc::NoSection) {
         m_currentSection = (Doc::Sections)(unit);
         m_private->constructExtra();
-        m_private->extra->section_ = m_currentSection;
     } else
         endSection(unit, cmd);
 

@@ -54,18 +54,13 @@ QT_BEGIN_NAMESPACE
 typedef QPair<QString, Location> ArgLocPair;
 typedef QMap<QString, ArgList> CommandMap;
 
-class DocPrivateExtra
+struct DocPrivateExtra
 {
-public:
-    Doc::Sections granularity_;
-    Doc::Sections section_;
     QList<Atom *> tableOfContents_;
     QList<int> tableOfContentsLevels_;
     QList<Atom *> keywords_;
     QList<Atom *> targets_;
     QStringMultiMap metaMap_;
-
-    DocPrivateExtra() : granularity_(Doc::Part), section_(Doc::NoSection) {}
 };
 
 class DocPrivate

@@ -162,8 +162,6 @@
     \row \li Another item in a different row
     \endtable
 
-    \granularity
-
     \important This is really important.
 
     \oldcode

@@ -59,8 +59,7 @@ class Doc
 public:
     // the order is important
     enum Sections {
-        NoSection = -2,
-        Part = -1,
+        NoSection = -1,
         Section1 = 1,
         Section2 = 2,
         Section3 = 3,
