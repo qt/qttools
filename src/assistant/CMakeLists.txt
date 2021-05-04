@@ -23,6 +23,7 @@ add_subdirectory(qhelpgenerator)
 
 set(QLITEHTML_BIN_PATH ${INSTALL_BINDIR})
 set(QLITEHTML_LIBRARY_PATH ${INSTALL_LIBDIR})
+set(QLITEHTML_LIBRARY_TYPE STATIC)
 set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(qlitehtml/src EXCLUDE_FROM_ALL)
 if(TARGET qlitehtml)
