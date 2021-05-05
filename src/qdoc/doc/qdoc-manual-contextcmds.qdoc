@@ -48,6 +48,7 @@
     \list
       \li \l {abstract-command} {\\abstract}
       \li \l {default-command} {\\default}
+      \li \l {deprecated-command}{\\deprecated}
       \li \l {ingroup-command}{\\ingroup}
       \li \l {inheaderfile-command}{\\inheaderfile}
       \li \l {inherits-command}{\\inherits}
@@ -55,7 +56,6 @@
       \li \l {internal-command}{\\internal}
       \li \l {nextpage-command}{\\nextpage}
       \li \l {nonreentrant-command}{\\nonreentrant}
-      \li \l {obsolete-command}{\\obsolete}
       \li \l {overload-command}{\\overload}
       \li \l {preliminary-command}{\\preliminary}
       \li \l {previouspage-command}{\\previouspage}
@@ -183,12 +183,12 @@
     \title Status
 
     These commands are for indicating that a documented element has
-    some special status. The element could be marked as about to be
-    made obsolete, or that it is simply not to be included in the public
-    interface. The \l {since-command}{\\since} command is for
-    specifying the version number in which a function or class first
-    appeared. The \l {qmlabstract-command} {\\qmlabstract} command is
-    for marking a QML type as an abstract base class.
+    some special status. The element could be marked \e deprecated,
+    that is, it's about to be made obsolete and no longer included
+    in the public interface. The \l {since-command}{\\since} command
+    is for specifying the version number in which a function or class
+    first appeared. The \l {qmlabstract-command} {\\qmlabstract} command
+    is for marking a QML type as an abstract base class.
 
     \target abstract-command
     \target qmlabstract-command
@@ -298,24 +298,24 @@
     See also \l {class-command}{\\class} and
              \l {headerfile-command}{\\headerfile}.
 
-    \target obsolete-command
-    \section1 \\obsolete
+    \target deprecated-command
+    \section1 \\deprecated
 
-    The \\obsolete command is for indicating that a function is being
+    The \\deprecated command is for indicating that a function is being
     deprecated, and it should no longer be used in new code. There is
     no guarantee for how long it will remain in the library.
 
-    The \\obsolete command takes no arguments.
+    The \\deprecated command takes no arguments.
 
     When generating the reference documentation for a class, QDoc will
-    create and link to a separate page documenting its obsolete
+    create and link to a separate page documenting its deprecated
     functions. Usually an equivalent function is provided as an
     alternative.
 
     \code
     / *!
         \fn MyClass::MyObsoleteFunction
-        \obsolete
+        \deprecated
 
         Use MyNewFunction() instead.
     * /
@@ -328,14 +328,13 @@
         <h1>Obsolete Members for MyClass</h1>
         \endraw
 
-        \b {The following class members are obsolete.} They are
-        provided to keep old source code working. We strongly advise
-        against using them in new code.
+        \b {The following class members are deprecated.}  We strongly
+        advise against using them in new code.
 
         ...
 
         \list
-            \li void MyObsoleteFunction() \c (obsolete)
+            \li void MyObsoleteFunction() \c (deprecated)
             \li ...
         \endlist
 

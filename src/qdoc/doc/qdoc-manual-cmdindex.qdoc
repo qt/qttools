@@ -48,6 +48,7 @@
     \li \l {class-command} {\\class}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
+    \li \l {deprecated-command} {\\deprecated}
     \li \l {default-command} {\\default}
     \li \l {div-command} {\\div}
     \li \l {dots-command} {\\dots}
@@ -90,7 +91,6 @@
     \li \l {nonreentrant-command} {\\nonreentrant}
     \li \l {note-command} {\\note}
     \li \l {li-command} {\\o} (deprecated, use \\li)
-    \li \l {obsolete-command} {\\obsolete}
     \li \l {oldcode-command} {\\oldcode}
     \li \l {omit-command} {\\omit}
     \li \l {omitvalue-command} {\\omitvalue}

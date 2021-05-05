@@ -475,17 +475,17 @@ void FunctionNode::addAssociatedProperty(PropertyNode *p)
     \reimp
 
     Returns \c true if this is an access function for an obsolete property,
-    otherwise calls the base implementation of isObsolete().
+    otherwise calls the base implementation of isDeprecated().
 */
-bool FunctionNode::isObsolete() const
+bool FunctionNode::isDeprecated() const
 {
     auto it = std::find_if_not(m_associatedProperties.begin(), m_associatedProperties.end(),
-                               [](const Node *p) -> bool { return p->isObsolete(); });
+                               [](const Node *p) -> bool { return p->isDeprecated(); });
 
     if (!m_associatedProperties.isEmpty() && it == m_associatedProperties.end())
         return true;
 
-    return Node::isObsolete();
+    return Node::isDeprecated();
 }
 
 /*! \fn unsigned char FunctionNode::overloadNumber() const

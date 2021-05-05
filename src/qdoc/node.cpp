@@ -279,8 +279,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
   An unsigned char that specifies the status of the documentation element in
   the documentation set.
 
-  \value Obsolete The element is obsolete and no longer exists in the software.
-  \value Deprecated The element has been deprecated but still exists in the software.
+  \value Deprecated The element has been deprecated.
   \value Preliminary The element is new; the documentation is preliminary.
   \value Active The element is current.
   \value Internal The element is for internal use only, not to be published.
@@ -421,10 +420,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 
 /*! \fn bool Node::isNamespace() const
   Returns true if the node type is \c Namespace.
- */
-
-/*! \fn bool Node::isObsolete() const
-  Returns true if this node's status is \c Obsolete.
  */
 
 /*! \fn bool Node::isPage() const
@@ -1372,9 +1367,7 @@ QString Node::physicalModuleName() const
 */
 
 /*! \fn void Node::setStatus(Status t)
-  Sets the node's status to \a t, except that once
-  the node's status has been set to \c Obsolete, it
-  can't be reset to \c Deprecated.
+  Sets the node's status to \a t.
 
   \sa Status
 */

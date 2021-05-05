@@ -597,8 +597,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             node->setThreadSafeness(Node::UnspecifiedSafeness);
 
         QString status = attributes.value(QLatin1String("status")).toString();
+        // TODO: "obsolete" is kept for backward compatibility, remove in the near future
         if (status == QLatin1String("obsolete") || status == QLatin1String("deprecated"))
-            node->setStatus(Node::Obsolete);
+            node->setStatus(Node::Deprecated);
         else if (status == QLatin1String("preliminary"))
             node->setStatus(Node::Preliminary);
         else if (status == QLatin1String("internal"))
@@ -745,9 +746,8 @@ static QString getAccessString(Access t)
 static QString getStatusString(Node::Status t)
 {
     switch (t) {
-    case Node::Obsolete:
     case Node::Deprecated:
-        return QLatin1String("obsolete");
+        return QLatin1String("deprecated");
     case Node::Preliminary:
         return QLatin1String("preliminary");
     case Node::Active:

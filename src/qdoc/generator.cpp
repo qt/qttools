@@ -656,7 +656,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     }
 
     if (!node->isClassNode() && !node->isNamespace()) {
-        if (node->isObsolete())
+        if (node->isDeprecated())
             parentName.replace(QLatin1Char('.') + currentGenerator()->fileExtension(),
                                "-obsolete." + currentGenerator()->fileExtension());
     }
@@ -879,7 +879,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
               for all functions with a return type.
               mws 13/12/2018
             */
-            if (!fn->isObsolete() && fn->returnsBool() && !fn->isMarkedReimp()
+            if (!fn->isDeprecated() && fn->returnsBool() && !fn->isMarkedReimp()
                 && !fn->isOverload()) {
                 if (!fn->doc().body().contains("return"))
                     node->doc().location().warning(
@@ -1253,18 +1253,8 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         text << "This " << typeString(node) << " is deprecated.";
         if (node->isAggregate())
             text << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
-        text << Atom::ParaRight;
-        break;
-    case Node::Obsolete:
-        text << Atom::ParaLeft;
-        if (node->isAggregate())
-            text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD);
-        text << "This " << typeString(node) << " is obsolete.";
-        if (node->isAggregate())
-            text << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
-        text << " It is provided to keep old source code working. "
-             << "We strongly advise against "
-             << "using it in new code." << Atom::ParaRight;
+        text << "We strongly advise against using it in new code."
+             << Atom::ParaRight;
         break;
     case Node::Internal:
     default:
@@ -1395,7 +1385,7 @@ bool Generator::hasExceptions(const Node *node, NodeList &reentrant, NodeList &t
     Node::ThreadSafeness ts = node->threadSafeness();
     const NodeList &children = static_cast<const Aggregate *>(node)->childNodes();
     for (auto child : children) {
-        if (!child->isObsolete()) {
+        if (!child->isDeprecated()) {
             switch (child->threadSafeness()) {
             case Node::Reentrant:
                 reentrant.append(child);

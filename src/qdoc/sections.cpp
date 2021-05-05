@@ -200,7 +200,7 @@ void Section::insert(Node *node)
 
     if (!irrelevant) {
         QString key = sortName(node);
-        if (node->isObsolete()) {
+        if (node->isDeprecated()) {
             obsoleteMemberMap_.insert(key, node);
         } else {
             if (!inherited)

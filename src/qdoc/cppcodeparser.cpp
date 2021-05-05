@@ -621,7 +621,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (node->isQmlType() || node->isJsType())
             node->setAbstract(true);
     } else if (command == COMMAND_DEPRECATED) {
-        node->setStatus(Node::Obsolete);
+        node->setStatus(Node::Deprecated);
     } else if (command == COMMAND_INGROUP || command == COMMAND_INPUBLICGROUP) {
         // Note: \ingroup and \inpublicgroup are the same (and now recognized as such).
         qdb_->addToGroup(arg, node);
@@ -632,7 +632,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
     } else if (command == COMMAND_INJSMODULE) {
         qdb_->addToJsModule(arg, node);
     } else if (command == COMMAND_OBSOLETE) {
-        node->setStatus(Node::Obsolete);
+        node->setStatus(Node::Deprecated);
     } else if (command == COMMAND_NONREENTRANT) {
         node->setThreadSafeness(Node::NonReentrant);
     } else if (command == COMMAND_PRELIMINARY) {

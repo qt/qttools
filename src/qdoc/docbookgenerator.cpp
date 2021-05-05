@@ -238,8 +238,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         if (!inLink && !m_inContents && !m_inSectionHeading) {
             const Node *node = nullptr;
             QString link = getAutoLink(atom, relative, &node, genus);
-            if (!link.isEmpty() && node && node->status() == Node::Obsolete
-                && relative->parent() != node && !relative->isObsolete()) {
+            if (!link.isEmpty() && node && node->isDeprecated()
+                && relative->parent() != node && !relative->isDeprecated()) {
                 link.clear();
             }
             if (link.isEmpty()) {
@@ -964,7 +964,7 @@ void DocBookGenerator::beginLink(const QString &link, const Node *node, const No
     writer->writeStartElement(dbNamespace, "link");
     writer->writeAttribute(xlinkNamespace, "href", link);
     if (node && !(relative && node->status() == relative->status())
-        && node->status() == Node::Obsolete)
+        && node->isDeprecated())
         writer->writeAttribute("role", "obsolete");
     inLink = true;
 }
@@ -1024,7 +1024,7 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
 
     // Do nothing if all items are internal or obsolete
     if (std::all_of(nodeList.cbegin(), nodeList.cend(), [](const Node *n) {
-        return n->isInternal() || n->isObsolete(); })) {
+        return n->isInternal() || n->isDeprecated(); })) {
         return;
     }
 
@@ -1034,7 +1034,7 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
     newLine();
 
     for (const auto node : nodeList) {
-        if (node->isInternal() || node->isObsolete())
+        if (node->isInternal() || node->isDeprecated())
             continue;
         writer->writeStartElement(dbNamespace, "varlistentry");
         newLine();
@@ -1568,10 +1568,9 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
     writer->writeAttribute("role", "bold");
     writer->writeCharacters("The following members of class ");
     generateSimpleLink(linkForNode(aggregate, nullptr), aggregate->name());
-    writer->writeCharacters(" are obsolete.");
+    writer->writeCharacters(" are deprecated.");
     writer->writeEndElement(); // emphasis bold
-    writer->writeCharacters(" They are provided to keep old source code working. "
-                            "We strongly advise against using them in new code.");
+    writer->writeCharacters(" We strongly advise against using them in new code.");
     writer->writeEndElement(); // para
     newLine();
 
@@ -1600,7 +1599,7 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
   the section lists, which are then traversed and output here.
 
   Note that this function currently only handles correctly the
-  case where \a status is \c {Section::Obsolete}.
+  case where \a status is \c {Section::Deprecated}.
  */
 void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
 {
@@ -1625,10 +1624,9 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
     writer->writeAttribute("role", "bold");
     writer->writeCharacters("The following members of QML type ");
     generateSimpleLink(linkForNode(aggregate, nullptr), aggregate->name());
-    writer->writeCharacters(" are obsolete.");
+    writer->writeCharacters(" are deprecated.");
     writer->writeEndElement(); // emphasis bold
-    writer->writeCharacters("They are provided to keep old source code working. "
-                            "We strongly advise against using them in new code.");
+    writer->writeCharacters(" We strongly advise against using them in new code.");
     writer->writeEndElement(); // para
     newLine();
 
@@ -1949,20 +1947,7 @@ bool DocBookGenerator::generateStatus(const Node *node)
         writer->writeCharacters("This " + typeString(node) + " is deprecated.");
         if (node->isAggregate())
             writer->writeEndElement(); // emphasis
-        writer->writeEndElement(); // para
-        newLine();
-        return true;
-    case Node::Obsolete:
-        writer->writeStartElement(dbNamespace, "para");
-        if (node->isAggregate()) {
-            writer->writeStartElement(dbNamespace, "emphasis");
-            writer->writeAttribute("role", "bold");
-        }
-        writer->writeCharacters("This " + typeString(node) + " is obsolete.");
-        if (node->isAggregate())
-            writer->writeEndElement(); // emphasis
-        writer->writeCharacters(" It is provided to keep old source code working. "
-                                "We strongly advise against using it in new code.");
+        writer->writeCharacters(" We strongly advise against using it in new code.");
         writer->writeEndElement(); // para
         newLine();
         return true;
@@ -2814,9 +2799,6 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         break;
     case Node::Deprecated:
         generateSynopsisInfo("status", "deprecated");
-        break;
-    case Node::Obsolete:
-        generateSynopsisInfo("status", "obsolete");
         break;
     case Node::Internal:
         generateSynopsisInfo("status", "internal");

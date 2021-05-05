@@ -423,7 +423,7 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                     node->setAbstract(true);
                 }
             } else if (command == COMMAND_DEPRECATED) {
-                node->setStatus(Node::Obsolete);
+                node->setStatus(Node::Deprecated);
             } else if ((command == COMMAND_INQMLMODULE) || (command == COMMAND_INJSMODULE)) {
                 qdb->addToQmlModule(args[0].first, node);
             } else if (command == COMMAND_QMLINHERITS) {
@@ -457,7 +457,7 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
             } else if (command == COMMAND_INTERNAL) {
                 node->setStatus(Node::Internal);
             } else if (command == COMMAND_OBSOLETE) {
-                node->setStatus(Node::Obsolete);
+                node->setStatus(Node::Deprecated);
             } else if (command == COMMAND_PRELIMINARY) {
                 node->setStatus(Node::Preliminary);
             } else if (command == COMMAND_SINCE) {

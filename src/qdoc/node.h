@@ -117,7 +117,6 @@ public:
         };
 
     enum Status : unsigned char {
-        Obsolete,
         Deprecated,
         Preliminary,
         Active,
@@ -170,7 +169,6 @@ public:
     bool isActive() const { return m_status == Active; }
     bool isClass() const { return m_nodeType == Class; }
     bool isCppNode() const { return genus() == CPP; }
-    bool isDeprecated() const { return (m_status == Deprecated); }
     bool isDontDocument() const { return (m_status == DontDocument); }
     bool isEnumType() const { return m_nodeType == Enum; }
     bool isExample() const { return m_nodeType == Example; }
@@ -210,7 +208,7 @@ public:
     bool isVariable() const { return m_nodeType == Variable; }
     bool isGenericCollection() const { return (m_nodeType == Node::Collection); }
 
-    virtual bool isObsolete() const { return (m_status == Obsolete); }
+    virtual bool isDeprecated() const { return (m_status == Deprecated); }
     virtual bool isAbstract() const { return false; }
     virtual bool isAggregate() const { return false; } // means "can have children"
     virtual bool isFirstClassAggregate() const
@@ -247,12 +245,7 @@ public:
     void setAccess(Access t) { m_access = t; }
     void setLocation(const Location &t);
     void setDoc(const Doc &doc, bool replace = false);
-    void setStatus(Status t)
-    {
-        if (m_status == Obsolete && t == Deprecated)
-            return;
-        m_status = t;
-    }
+    void setStatus(Status t) { m_status = t; }
     void setThreadSafeness(ThreadSafeness t) { m_safeness = t; }
     void setSince(const QString &since);
     void setPhysicalModuleName(const QString &name) { m_physicalModuleName = name; }

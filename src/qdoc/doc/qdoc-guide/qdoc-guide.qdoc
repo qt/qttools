@@ -350,8 +350,8 @@
     \section2 Topic Contexts
 
     Context commands give QDoc a hint about the \e context of the topic. For
-    example, if a C++ function is obsolete, then it should be marked obsolete
-    with the \l{obsolete-command}{\\obsolete} command. Likewise,
+    example, if a C++ function is deprecated, then it should be marked as such
+    with the \l{deprecated-command}{\\deprecated} command. Likewise,
     \l{nextpage-command}{page navigation} and \l{title-command}{page title}
     give extra page information to QDoc.
 
@@ -388,8 +388,8 @@
         \l{Topic Commands}{topic commands}.
 
         \li Give the topic a context - QDoc can associate certain topics to other
-        pages such as associating obsolete functions when the documentation is
-        marked with \l{obsolete-command}{\\obsolete}.
+        pages such as associating deprecated functions when the documentation is
+        marked with \l{deprecated-command}{\\deprecated}.
 
         \li Mark sections of the document with
         \l{Markup Commands}{markup commands} - QDoc can create layouts and

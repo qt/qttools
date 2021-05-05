@@ -307,8 +307,8 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 if (autolinkErrors())
                     relative->doc().location().warning(
                             QStringLiteral("Can't autolink to '%1'").arg(atom->string()));
-            } else if (node && node->isObsolete()) {
-                if ((relative->parent() != node) && !relative->isObsolete())
+            } else if (node && node->isDeprecated()) {
+                if ((relative->parent() != node) && !relative->isDeprecated())
                     link.clear();
             }
             if (link.isEmpty()) {
@@ -2493,7 +2493,7 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *mark
     NodeMultiMap nmm;
     bool allInternal = true;
     for (auto *node : unsortedNodes) {
-        if (!node->isInternal() && !node->isObsolete()) {
+        if (!node->isInternal() && !node->isDeprecated()) {
             allInternal = false;
             nmm.insert(node->fullName(relative), node);
         }
@@ -3283,7 +3283,7 @@ QString HtmlGenerator::protect(const QString &string)
 QString HtmlGenerator::fileBase(const Node *node) const
 {
     QString result = Generator::fileBase(node);
-    if (!node->isAggregate() && node->isObsolete())
+    if (!node->isAggregate() && node->isDeprecated())
         result += QLatin1String("-obsolete");
     return result;
 }
@@ -3301,7 +3301,7 @@ void HtmlGenerator::generateFullName(const Node *apparentNode, const Node *relat
     if (actualNode == nullptr)
         actualNode = apparentNode;
     out() << "<a href=\"" << linkForNode(actualNode, relative);
-    if (actualNode->isObsolete())
+    if (actualNode->isDeprecated())
         out() << "\" class=\"obsolete";
     out() << "\">";
     out() << protectEnc(apparentNode->fullName(relative));
@@ -3409,7 +3409,7 @@ void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node 
             out() << "<i>";
     } else if (node == nullptr || (relative != nullptr && node->status() == relative->status()))
         out() << "<a href=\"" << m_link << "\">";
-    else if (node->isObsolete())
+    else if (node->isDeprecated())
         out() << "<a href=\"" << m_link << "\" class=\"obsolete\">";
     else
         out() << "<a href=\"" << m_link << "\">";

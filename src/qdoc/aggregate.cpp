@@ -628,7 +628,7 @@ bool Aggregate::hasOverloads(const FunctionNode *fn) const
  */
 static bool keep(FunctionNode *fn)
 {
-    if (fn->isPrivate() || fn->isObsolete() || fn->isInternal() || fn->isSomeCtor() || fn->isDtor())
+    if (fn->isPrivate() || fn->isDeprecated() || fn->isInternal() || fn->isSomeCtor() || fn->isDtor())
         return false;
     return true;
 }
@@ -692,7 +692,7 @@ void Aggregate::findAllNamespaces(NodeMultiMap &namespaces)
 bool Aggregate::hasObsoleteMembers() const
 {
     for (const auto *node : m_children) {
-        if (!node->isPrivate() && node->isObsolete()) {
+        if (!node->isPrivate() && node->isDeprecated()) {
             if (node->isFunction() || node->isProperty() || node->isEnumType() || node->isTypedef()
                 || node->isTypeAlias() || node->isVariable() || node->isQmlProperty()
                 || node->isJsProperty())
@@ -713,7 +713,7 @@ void Aggregate::findAllObsoleteThings()
     for (auto *node : qAsConst(m_children)) {
         if (!node->isPrivate()) {
             QString name = node->name();
-            if (node->isObsolete()) {
+            if (node->isDeprecated()) {
                 if (node->isClassNode())
                     QDocDatabase::obsoleteClasses().insert(node->qualifyCppName(), node);
                 else if (node->isQmlType() || node->isJsType())
@@ -812,7 +812,7 @@ void Aggregate::findAllSince()
             if (node->isFunction()) {
                 // Insert functions into the general since map.
                 auto *fn = static_cast<FunctionNode *>(node);
-                if (!fn->isObsolete() && !fn->isSomeCtor() && !fn->isDtor())
+                if (!fn->isDeprecated() && !fn->isSomeCtor() && !fn->isDtor())
                     nsmap.value().insert(fn->name(), fn);
             } else if (node->isClassNode()) {
                 // Insert classes into the since and class maps.

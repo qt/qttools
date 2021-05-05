@@ -99,7 +99,7 @@ public:
     bool isMacroWithParams() const { return (m_metaness == MacroWithParams); }
     bool isMacroWithoutParams() const { return (m_metaness == MacroWithoutParams); }
     bool isMacro() const override { return (isMacroWithParams() || isMacroWithoutParams()); }
-    bool isObsolete() const override;
+    bool isDeprecated() const override;
 
     bool isCppFunction() const { return m_metaness == Plain; } // Is this correct?
     bool isSignal() const { return (m_metaness == Signal); }

@@ -297,7 +297,7 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
             extra += " (preliminary)";
         else if (node->isDeprecated())
             extra += " (deprecated)";
-        else if (node->isObsolete())
+        else if (node->isDeprecated())
             extra += " (obsolete)";
     }
 

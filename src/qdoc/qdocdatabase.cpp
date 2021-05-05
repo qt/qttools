@@ -962,7 +962,7 @@ void QDocDatabase::findAllLegaleseTexts(Aggregate *node)
 /*!
   \fn void QDocDatabase::findAllObsoleteThings(Aggregate *node)
 
-  Finds all nodes with status = Obsolete and sorts them into
+  Finds all nodes with status = Deprecated and sorts them into
   maps. They can be C++ classes, QML types, or they can be
   functions, enum types, typedefs, methods, etc.
  */

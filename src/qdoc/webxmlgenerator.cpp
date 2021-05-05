@@ -302,8 +302,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         if (!m_inLink && !m_inSectionHeading) {
             const Node *node = nullptr;
             QString link = getAutoLink(atom, relative, &node, Node::API);
-            if (!link.isEmpty() && node && node->status() == Node::Obsolete
-                && relative->parent() != node && !relative->isObsolete()) {
+            if (!link.isEmpty() && node && node->isDeprecated()
+                && relative->parent() != node && !relative->isDeprecated()) {
                 link.clear();
             }
             if (node) {
