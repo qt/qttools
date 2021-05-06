@@ -1188,6 +1188,9 @@ void PropertyEditor::slotResetProperty(QtProperty *property)
     if (m_propertyManager->resetIconSubProperty(property))
         return;
 
+    if (m_propertyManager->resetTextAlignmentProperty(property))
+        return;
+
     if (!m_propertyToGroup.contains(property))
         return;
 
