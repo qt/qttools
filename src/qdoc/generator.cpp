@@ -1877,7 +1877,7 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
         ++i;
 
     qsizetype i = *pos;
-    qsizetype j = i;
+    qsizetype j {};
 
     // assume "<@" has been parsed outside
     // SKIP_CHAR('<');

@@ -304,11 +304,11 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             const Node *node = nullptr;
             QString link = getAutoLink(atom, relative, &node, genus);
             if (link.isEmpty()) {
-                if (autolinkErrors())
+                if (autolinkErrors() && relative)
                     relative->doc().location().warning(
                             QStringLiteral("Can't autolink to '%1'").arg(atom->string()));
             } else if (node && node->isDeprecated()) {
-                if ((relative->parent() != node) && !relative->isDeprecated())
+                if (relative && (relative->parent() != node) && !relative->isDeprecated())
                     link.clear();
             }
             if (link.isEmpty()) {
