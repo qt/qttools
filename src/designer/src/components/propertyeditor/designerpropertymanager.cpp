@@ -1151,6 +1151,7 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
         m_fontManager.slotPropertyDestroyed(property);
         m_brushManager.slotPropertyDestroyed(property);
     }
+    m_alignDefault.remove(property);
 }
 
 QStringList DesignerPropertyManager::attributes(int propertyType) const
@@ -1253,6 +1254,12 @@ QVariant DesignerPropertyManager::attributeValue(const QtProperty *property, con
         QMap<QtProperty *, QIcon>::const_iterator itIcon = m_defaultIcons.constFind(prop);
         if (itIcon != m_defaultIcons.constEnd())
             return itIcon.value();
+    }
+
+    if (attribute == alignDefaultAttribute()) {
+        Qt::Alignment v = m_alignDefault.value(property,
+                                               Qt::Alignment(Qt::AlignLeading | Qt::AlignHCenter));
+        return QVariant(uint(v));
     }
 
     return QtVariantPropertyManager::attributeValue(property, attribute);
@@ -1430,6 +1437,8 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
         emit attributeChanged(property, attribute, v);
 
         emit propertyChanged(property);
+    } else if (attribute == alignDefaultAttribute()) {
+        m_alignDefault[property] = Qt::Alignment(value.toUInt());
     }
     QtVariantPropertyManager::setAttribute(property, attribute, value);
 }
@@ -1475,6 +1484,16 @@ int DesignerPropertyManager::designerStringListTypeId()
 int DesignerPropertyManager::designerKeySequenceTypeId()
 {
     return qMetaTypeId<PropertySheetKeySequenceValue>();
+}
+
+QString DesignerPropertyManager::alignDefaultAttribute()
+{
+    return QStringLiteral("alignDefault");
+}
+
+uint DesignerPropertyManager::alignDefault(const QtVariantProperty *prop)
+{
+    return prop->attributeValue(DesignerPropertyManager::alignDefaultAttribute()).toUInt();
 }
 
 bool DesignerPropertyManager::isPropertyTypeSupported(int propertyType) const
@@ -2184,6 +2203,16 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     QtVariantPropertyManager::uninitializeProperty(property);
 }
 
+bool DesignerPropertyManager::resetTextAlignmentProperty(QtProperty *property)
+{
+    const auto it = m_alignDefault.constFind(property);
+    if (it == m_alignDefault.cend())
+        return false;
+    QtVariantProperty *alignProperty = variantProperty(property);
+    alignProperty->setValue(DesignerPropertyManager::alignDefault(alignProperty));
+    alignProperty->setModified(false);
+    return true;
+}
 
 bool DesignerPropertyManager::resetFontSubProperty(QtProperty *property)
 {
