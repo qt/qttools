@@ -54,7 +54,9 @@ using Specialized = Struct<int, T>;
         This = 0x01,
         That = 0x02,
         All = This | That,
-        OmittedValue = 99
+        OmittedValue = 99,
+        UselessValue,
+        VeryLastValue
     };
 #endif
     typedef struct {

@@ -99,6 +99,8 @@
 <db:enumitem db:enumidentifier="That" db:enumvalue="0x02"/>
 <db:enumitem db:enumidentifier="All" db:enumvalue="This | That"/>
 <db:enumitem db:enumidentifier="OmittedValue" db:enumvalue="99"/>
+<db:enumitem db:enumidentifier="UselessValue" db:enumvalue="100"/>
+<db:enumitem db:enumidentifier="VeryLastValue" db:enumvalue="101"/>
 </db:enumsynopsis>
 <db:informaltable>
 <db:thead>
@@ -136,6 +138,7 @@
 </db:td>
 </db:tr>
 </db:informaltable>
+<db:para>A scoped enum.</db:para>
 </db:section>
 <db:section xml:id="SomeType-typedef">
 <db:title>Test::SomeType</db:title>

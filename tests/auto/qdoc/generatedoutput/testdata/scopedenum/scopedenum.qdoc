@@ -39,9 +39,14 @@
 
     \value This Something
     \value That Something else
-    \omitvalue OmittedValue
-               This decription is omitted
+    \omitvalue OmittedValue \omit Unused -
+               This decription is omitted \endomit
     \value All  Everything
+    \omitvalue VeryLastValue
+               Nothing here
+    \omitvalue UselessValue
+
+    A scoped enum.
 */
 
 /*!

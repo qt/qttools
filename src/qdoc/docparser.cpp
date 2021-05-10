@@ -802,15 +802,29 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_OMIT:
                     getUntilEnd(cmd);
                     break;
-                case CMD_OMITVALUE:
+                case CMD_OMITVALUE: {
                     p1 = getArgument();
                     if (!m_private->enumItemList.contains(p1))
                         m_private->enumItemList.append(p1);
                     if (!m_private->omitEnumItemList.contains(p1))
                         m_private->omitEnumItemList.append(p1);
                     skipSpacesOrOneEndl();
-                    getRestOfLine();
+                    // Skip potential description paragraph
+                    while (m_position < m_inputLength && !isBlankLine()) {
+                        skipAllSpaces();
+                        if (qsizetype pos = m_position; pos < m_input.size()
+                                && m_input.at(pos++).unicode() == '\\') {
+                            QString nextCmdStr;
+                            while (pos < m_input.size() && m_input[pos].isLetterOrNumber())
+                                nextCmdStr += m_input[pos++];
+                            int nextCmd = m_utilities.cmdHash.value(cmdStr, NOT_A_CMD);
+                            if (nextCmd == cmd || nextCmd == CMD_VALUE)
+                                break;
+                        }
+                        getRestOfLine();
+                    }
                     break;
+                }
                 case CMD_PRINTLINE: {
                     leavePara();
                     QString rest = getRestOfLine();
