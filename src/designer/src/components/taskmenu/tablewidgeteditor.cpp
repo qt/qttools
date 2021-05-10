@@ -51,6 +51,7 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
 {
     m_columnEditor = new ItemListEditor(form, this);
     m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
+    m_columnEditor->setAlignDefault(Qt::AlignCenter);
     m_columnEditor->setNewItemText(tr("New Column"));
     m_rowEditor = new ItemListEditor(form, this);
     m_rowEditor->setObjectName(QStringLiteral("rowEditor"));
