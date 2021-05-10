@@ -121,6 +121,9 @@ public:
     QString newItemText() const { return m_newItemText; }
     void setCurrentIndex(int idx);
 
+    uint alignDefault() const;
+    void setAlignDefault(uint newAlignDefault);
+
 signals:
     void indexChanged(int idx);
     void itemChanged(int idx, int role, const QVariant &v);
@@ -148,6 +151,7 @@ private:
     void setPropertyBrowserVisible(bool v);
     void updateEditor();
     Ui::ItemListEditor ui;
+    uint m_alignDefault = 0;
     bool m_updating;
     QString m_newItemText;
 };

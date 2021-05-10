@@ -334,6 +334,8 @@ void ItemListEditor::on_newListItemButton_clicked()
 
     QListWidgetItem *item = new QListWidgetItem(m_newItemText);
     item->setData(Qt::DisplayPropertyRole, QVariant::fromValue(PropertySheetStringValue(m_newItemText)));
+    if (m_alignDefault != 0)
+        item->setTextAlignment(Qt::Alignment(m_alignDefault));
     item->setFlags(item->flags() | Qt::ItemIsEditable);
     if (row < ui.listWidget->count())
         ui.listWidget->insertItem(row, item);
@@ -480,6 +482,16 @@ void ItemListEditor::updateEditor()
         updateBrowser();
     else
         m_propertyBrowser->clear();
+}
+
+uint ItemListEditor::alignDefault() const
+{
+    return m_alignDefault;
+}
+
+void ItemListEditor::setAlignDefault(uint newAlignDefault)
+{
+    m_alignDefault = newAlignDefault;
 }
 } // namespace qdesigner_internal
 
