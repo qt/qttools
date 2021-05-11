@@ -3236,16 +3236,16 @@
 
     Ideally, the license text is located with the licensed code.
 
-   Elsewhere, the documentation identified as \e{\\legalese} command
-   can be accumulated using \l {generatelist-command} {\\generatelist}
-   with \c {legalese} as the argument. This is useful for generating
-   an overview of the license agreements associated with the source
-   code.
+    Elsewhere, the documentation identified as \e{\\legalese} command
+    can be accumulated using \l {generatelist-command} {\\generatelist}
+    with \c {legalese} as the argument. This is useful for generating
+    an overview of the license agreements associated with the source
+    code.
 
-   \note The output of the \c {\generatelist legalese} command includes
-   the \\legalese texts in the current documentation project only. If
-   the current documentation project depends on other modules, their
-   license texts will not be listed.
+    \note The output of the \c {\generatelist legalese} command includes
+    the \\legalese texts in the current documentation project only. If
+    the current documentation project depends on other modules, their
+    license texts will not be listed.
 
     \target warning-command
     \section1 \\warning
