@@ -134,60 +134,60 @@ public:
 
     friend class LinkAtom;
 
-    explicit Atom(AtomType type, const QString &string = "") : type_(type), strs(string) {}
+    explicit Atom(AtomType type, const QString &string = "") : m_type(type), m_strs(string) { }
 
-    Atom(AtomType type, const QString &p1, const QString &p2) : type_(type), strs(p1)
+    Atom(AtomType type, const QString &p1, const QString &p2) : m_type(type), m_strs(p1)
     {
         if (!p2.isEmpty())
-            strs << p2;
+            m_strs << p2;
     }
 
     Atom(Atom *previous, AtomType type, const QString &string)
-        : next_(previous->next_), type_(type), strs(string)
+        : m_next(previous->m_next), m_type(type), m_strs(string)
     {
-        previous->next_ = this;
+        previous->m_next = this;
     }
 
     Atom(Atom *previous, AtomType type, const QString &p1, const QString &p2)
-        : next_(previous->next_), type_(type), strs(p1)
+        : m_next(previous->m_next), m_type(type), m_strs(p1)
     {
         if (!p2.isEmpty())
-            strs << p2;
-        previous->next_ = this;
+            m_strs << p2;
+        previous->m_next = this;
     }
 
     virtual ~Atom() = default;
 
-    void appendChar(QChar ch) { strs[0] += ch; }
-    void appendString(const QString &string) { strs[0] += string; }
-    void chopString() { strs[0].chop(1); }
-    void setString(const QString &string) { strs[0] = string; }
-    Atom *next() { return next_; }
-    void setNext(Atom *newNext) { next_ = newNext; }
+    void appendChar(QChar ch) { m_strs[0] += ch; }
+    void appendString(const QString &string) { m_strs[0] += string; }
+    void chopString() { m_strs[0].chop(1); }
+    void setString(const QString &string) { m_strs[0] = string; }
+    Atom *next() { return m_next; }
+    void setNext(Atom *newNext) { m_next = newNext; }
 
-    const Atom *next() const { return next_; }
-    const Atom *next(AtomType t) const;
-    const Atom *next(AtomType t, const QString &s) const;
-    AtomType type() const { return type_; }
-    QString typeString() const;
-    const QString &string() const { return strs[0]; }
-    const QString &string(int i) const { return strs[i]; }
-    qsizetype count() const { return strs.size(); }
+    [[nodiscard]] const Atom *next() const { return m_next; }
+    [[nodiscard]] const Atom *next(AtomType t) const;
+    [[nodiscard]] const Atom *next(AtomType t, const QString &s) const;
+    [[nodiscard]] AtomType type() const { return m_type; }
+    [[nodiscard]] QString typeString() const;
+    [[nodiscard]] const QString &string() const { return m_strs[0]; }
+    [[nodiscard]] const QString &string(int i) const { return m_strs[i]; }
+    [[nodiscard]] qsizetype count() const { return m_strs.size(); }
     void dump() const;
-    QString linkText() const;
-    const QStringList &strings() const { return strs; }
+    [[nodiscard]] QString linkText() const;
+    [[nodiscard]] const QStringList &strings() const { return m_strs; }
 
-    virtual bool isLinkAtom() const { return false; }
+    [[nodiscard]] virtual bool isLinkAtom() const { return false; }
     virtual Node::Genus genus() { return Node::DontCare; }
     virtual Tree *domain() { return nullptr; }
-    virtual const QString &error() { return noError_; }
+    virtual const QString &error() { return s_noError; }
     virtual void resolveSquareBracketParams() {}
 
 protected:
-    static QString noError_;
-    Atom *next_ = nullptr;
-    AtomType type_;
-    QStringList strs;
+    static QString s_noError;
+    Atom *m_next = nullptr;
+    AtomType m_type {};
+    QStringList m_strs {};
 };
 
 class LinkAtom : public Atom
@@ -198,27 +198,27 @@ public:
     LinkAtom(Atom *previous, const LinkAtom &t);
     ~LinkAtom() override = default;
 
-    bool isLinkAtom() const override { return true; }
+    [[nodiscard]] bool isLinkAtom() const override { return true; }
     Node::Genus genus() override
     {
         resolveSquareBracketParams();
-        return genus_;
+        return m_genus;
     }
     Tree *domain() override
     {
         resolveSquareBracketParams();
-        return domain_;
+        return m_domain;
     }
-    const QString &error() override { return error_; }
+    const QString &error() override { return m_error; }
     void resolveSquareBracketParams() override;
 
 protected:
-    bool resolved_;
-    Node::Genus genus_;
-    Node::NodeType goal_;
-    Tree *domain_;
-    QString error_;
-    QString squareBracketParams_;
+    bool m_resolved {};
+    Node::Genus m_genus {};
+    Node::NodeType m_goal {};
+    Tree *m_domain {};
+    QString m_error {};
+    QString m_squareBracketParams {};
 };
 
 #define ATOM_FORMATTING_BOLD "bold"

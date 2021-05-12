@@ -47,40 +47,40 @@ class QmlTypeNode : public Aggregate
 {
 public:
     QmlTypeNode(Aggregate *parent, const QString &name, NodeType type = QmlType);
-    bool isFirstClassAggregate() const override { return true; }
-    bool isQtQuickNode() const override
+    [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
+    [[nodiscard]] bool isQtQuickNode() const override
     {
         return (logicalModuleName() == QLatin1String("QtQuick"));
     }
     ClassNode *classNode() override { return m_classNode; }
     void setClassNode(ClassNode *cn) override { m_classNode = cn; }
-    bool isAbstract() const override { return m_abstract; }
-    bool isWrapper() const override { return m_wrapper; }
+    [[nodiscard]] bool isAbstract() const override { return m_abstract; }
+    [[nodiscard]] bool isWrapper() const override { return m_wrapper; }
     void setAbstract(bool b) override { m_abstract = b; }
     void setWrapper() override { m_wrapper = true; }
-    bool isInternal() const override { return (status() == Internal); }
-    QString qmlFullBaseName() const override;
-    QString obsoleteLink() const override { return m_obsoleteLink; }
+    [[nodiscard]] bool isInternal() const override { return (status() == Internal); }
+    [[nodiscard]] QString qmlFullBaseName() const override;
+    [[nodiscard]] QString obsoleteLink() const override { return m_obsoleteLink; }
     void setObsoleteLink(const QString &t) override { m_obsoleteLink = t; }
-    QString logicalModuleName() const override;
-    QString logicalModuleVersion() const override;
-    QString logicalModuleIdentifier() const override;
-    CollectionNode *logicalModule() const override { return m_logicalModule; }
+    [[nodiscard]] QString logicalModuleName() const override;
+    [[nodiscard]] QString logicalModuleVersion() const override;
+    [[nodiscard]] QString logicalModuleIdentifier() const override;
+    [[nodiscard]] CollectionNode *logicalModule() const override { return m_logicalModule; }
     void setQmlModule(CollectionNode *t) override { m_logicalModule = t; }
 
     void setImportList(const ImportList &il) { m_importList = il; }
-    const QString &qmlBaseName() const { return m_qmlBaseName; }
+    [[nodiscard]] const QString &qmlBaseName() const { return m_qmlBaseName; }
     void setQmlBaseName(const QString &name) { m_qmlBaseName = name; }
-    QmlTypeNode *qmlBaseNode() const override { return m_qmlBaseNode; }
+    [[nodiscard]] QmlTypeNode *qmlBaseNode() const override { return m_qmlBaseNode; }
     void resolveInheritance(NodeMap &previousSearches);
-    bool cppClassRequired() const { return m_classNodeRequired; }
+    [[nodiscard]] bool cppClassRequired() const { return m_classNodeRequired; }
     static void addInheritedBy(const Node *base, Node *sub);
     static void subclasses(const Node *base, NodeList &subs);
     static void terminate();
     bool inherits(Aggregate *type);
 
 public:
-    static QMultiMap<const Node *, Node *> inheritedBy;
+    static QMultiMap<const Node *, Node *> s_inheritedBy;
 
 private:
     bool m_abstract { false };
@@ -98,7 +98,7 @@ class QmlBasicTypeNode : public Aggregate
 {
 public:
     QmlBasicTypeNode(Aggregate *parent, const QString &name, NodeType type = QmlBasicType);
-    bool isFirstClassAggregate() const override { return true; }
+    [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
 };
 
 QT_END_NAMESPACE

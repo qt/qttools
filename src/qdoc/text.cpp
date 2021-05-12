@@ -34,14 +34,14 @@
 
 QT_BEGIN_NAMESPACE
 
-Text::Text() : first(nullptr), last(nullptr) {}
+Text::Text() : m_first(nullptr), m_last(nullptr) { }
 
-Text::Text(const QString &str) : first(nullptr), last(nullptr)
+Text::Text(const QString &str) : m_first(nullptr), m_last(nullptr)
 {
     operator<<(str);
 }
 
-Text::Text(const Text &text) : first(nullptr), last(nullptr)
+Text::Text(const Text &text) : m_first(nullptr), m_last(nullptr)
 {
     operator=(text);
 }
@@ -73,17 +73,17 @@ Text &Text::operator<<(const QString &string)
 Text &Text::operator<<(const Atom &atom)
 {
     if (atom.count() < 2) {
-        if (first == nullptr) {
-            first = new Atom(atom.type(), atom.string());
-            last = first;
+        if (m_first == nullptr) {
+            m_first = new Atom(atom.type(), atom.string());
+            m_last = m_first;
         } else
-            last = new Atom(last, atom.type(), atom.string());
+            m_last = new Atom(m_last, atom.type(), atom.string());
     } else {
-        if (first == nullptr) {
-            first = new Atom(atom.type(), atom.string(), atom.string(1));
-            last = first;
+        if (m_first == nullptr) {
+            m_first = new Atom(atom.type(), atom.string(), atom.string(1));
+            m_last = m_first;
         } else
-            last = new Atom(last, atom.type(), atom.string(), atom.string(1));
+            m_last = new Atom(m_last, atom.type(), atom.string(), atom.string(1));
     }
     return *this;
 }
@@ -95,11 +95,11 @@ Text &Text::operator<<(const Atom &atom)
  */
 Text &Text::operator<<(const LinkAtom &atom)
 {
-    if (first == nullptr) {
-        first = new LinkAtom(atom);
-        last = first;
+    if (m_first == nullptr) {
+        m_first = new LinkAtom(atom);
+        m_last = m_first;
     } else
-        last = new LinkAtom(last, atom);
+        m_last = new LinkAtom(m_last, atom);
     return *this;
 }
 
@@ -115,27 +115,27 @@ Text &Text::operator<<(const Text &text)
 
 void Text::stripFirstAtom()
 {
-    if (first != nullptr) {
-        if (first == last)
-            last = nullptr;
-        Atom *oldFirst = first;
-        first = first->next();
+    if (m_first != nullptr) {
+        if (m_first == m_last)
+            m_last = nullptr;
+        Atom *oldFirst = m_first;
+        m_first = m_first->next();
         delete oldFirst;
     }
 }
 
 void Text::stripLastAtom()
 {
-    if (last != nullptr) {
-        Atom *oldLast = last;
-        if (first == last) {
-            first = nullptr;
-            last = nullptr;
+    if (m_last != nullptr) {
+        Atom *oldLast = m_last;
+        if (m_first == m_last) {
+            m_first = nullptr;
+            m_last = nullptr;
         } else {
-            last = first;
-            while (last->next() != oldLast)
-                last = last->next();
-            last->setNext(nullptr);
+            m_last = m_first;
+            while (m_last->next() != oldLast)
+                m_last = m_last->next();
+            m_last->setNext(nullptr);
         }
         delete oldLast;
     }
@@ -248,13 +248,13 @@ Text Text::subText(const Atom *begin, const Atom *end)
 
 void Text::clear()
 {
-    while (first != nullptr) {
-        Atom *atom = first;
-        first = first->next();
+    while (m_first != nullptr) {
+        Atom *atom = m_first;
+        m_first = m_first->next();
         delete atom;
     }
-    first = nullptr;
-    last = nullptr;
+    m_first = nullptr;
+    m_last = nullptr;
 }
 
 int Text::compare(const Text &text1, const Text &text2)

@@ -113,17 +113,17 @@ static int category(QChar ch)
  */
 void CodeChunk::append(const QString &lexeme)
 {
-    if (!s.isEmpty() && !lexeme.isEmpty()) {
+    if (!m_str.isEmpty() && !lexeme.isEmpty()) {
         /*
           Should there be a space or not between the code chunk so far and the
           new lexeme?
         */
-        int cat1 = category(s.at(s.size() - 1));
+        int cat1 = category(m_str.at(m_str.size() - 1));
         int cat2 = category(lexeme[0]);
         if (needSpace[cat1][cat2])
-            s += QLatin1Char(' ');
+            m_str += QLatin1Char(' ');
     }
-    s += lexeme;
+    m_str += lexeme;
 }
 
 QT_END_NAMESPACE

@@ -69,14 +69,14 @@ QT_BEGIN_NAMESPACE
   as it appears in the qdocconf file.
  */
 Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
-    : treeHasBeenAnalyzed_(false),
-      camelCaseModuleName_(camelCaseModuleName),
-      physicalModuleName_(camelCaseModuleName.toLower()),
-      qdb_(qdb),
-      root_(nullptr, QString())
+    : m_treeHasBeenAnalyzed(false),
+      m_camelCaseModuleName(camelCaseModuleName),
+      m_physicalModuleName(camelCaseModuleName.toLower()),
+      m_qdb(qdb),
+      m_root(nullptr, QString())
 {
-    root_.setPhysicalModuleName(physicalModuleName_);
-    root_.setTree(this);
+    m_root.setPhysicalModuleName(m_physicalModuleName);
+    m_root.setTree(this);
 }
 
 /*!
@@ -95,11 +95,11 @@ Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
  */
 Tree::~Tree()
 {
-    for (auto i = nodesByTargetRef_.begin(); i != nodesByTargetRef_.end(); ++i) {
+    for (auto i = m_nodesByTargetRef.begin(); i != m_nodesByTargetRef.end(); ++i) {
         delete i.value();
     }
-    nodesByTargetRef_.clear();
-    nodesByTargetTitle_.clear();
+    m_nodesByTargetRef.clear();
+    m_nodesByTargetTitle.clear();
 }
 
 /* API members */
@@ -182,7 +182,7 @@ Aggregate *Tree::findRelatesNode(const QStringList &path)
 void Tree::addPropertyFunction(PropertyNode *property, const QString &funcName,
                                PropertyNode::FunctionRole funcRole)
 {
-    unresolvedPropertyMap[property].insert(funcRole, funcName);
+    m_unresolvedPropertyMap[property].insert(funcRole, funcName);
 }
 
 /*!
@@ -201,7 +201,7 @@ void Tree::resolveBaseClasses(Aggregate *n)
             QList<RelatedClass> &bases = cn->baseClasses();
             for (auto &base : bases) {
                 if (base.m_node == nullptr) {
-                    Node *n = qdb_->findClassNode(base.m_path);
+                    Node *n = m_qdb->findClassNode(base.m_path);
                     /*
                       If the node for the base class was not found,
                       the reason might be that the subclass is in a
@@ -255,8 +255,8 @@ void Tree::resolvePropertyOverriddenFromPtrs(Aggregate *n)
  */
 void Tree::resolveProperties()
 {
-    for (auto propEntry = unresolvedPropertyMap.constBegin();
-         propEntry != unresolvedPropertyMap.constEnd(); ++propEntry) {
+    for (auto propEntry = m_unresolvedPropertyMap.constBegin();
+         propEntry != m_unresolvedPropertyMap.constEnd(); ++propEntry) {
         PropertyNode *property = propEntry.key();
         Aggregate *parent = property->parent();
         QString getterName = (*propEntry)[PropertyNode::Getter];
@@ -283,15 +283,15 @@ void Tree::resolveProperties()
         }
     }
 
-    for (auto propEntry = unresolvedPropertyMap.constBegin();
-         propEntry != unresolvedPropertyMap.constEnd(); ++propEntry) {
+    for (auto propEntry = m_unresolvedPropertyMap.constBegin();
+         propEntry != m_unresolvedPropertyMap.constEnd(); ++propEntry) {
         PropertyNode *property = propEntry.key();
         // redo it to set the property functions
         if (property->overriddenFrom())
             property->setOverriddenFrom(property->overriddenFrom());
     }
 
-    unresolvedPropertyMap.clear();
+    m_unresolvedPropertyMap.clear();
 }
 
 /*!
@@ -302,7 +302,7 @@ void Tree::resolveProperties()
 void Tree::resolveCppToQmlLinks()
 {
 
-    const NodeList &children = root_.childNodes();
+    const NodeList &children = m_root.childNodes();
     for (auto *child : children) {
         if (child->isQmlType() || child->isJsType()) {
             auto *qcn = static_cast<QmlTypeNode *>(child);
@@ -322,14 +322,14 @@ void Tree::resolveCppToQmlLinks()
 void Tree::resolveUsingClauses(Aggregate *parent)
 {
     if (!parent)
-        parent = &root_;
+        parent = &m_root;
     for (auto *child : parent->childNodes()) {
         if (child->isClassNode()) {
             auto *cn = static_cast<ClassNode *>(child);
             QList<UsingClause> &usingClauses = cn->usingClauses();
             for (auto &usingClause : usingClauses) {
                 if (usingClause.node() == nullptr) {
-                    const Node *n = qdb_->findFunctionNode(usingClause.signature(), cn, Node::CPP);
+                    const Node *n = m_qdb->findFunctionNode(usingClause.signature(), cn, Node::CPP);
                     if (n != nullptr)
                         usingClause.setNode(n);
                 }
@@ -704,22 +704,22 @@ const Node *Tree::findEnumNode(const Node *node, const Node *aggregate, const QS
  */
 QString Tree::getRef(const QString &target, const Node *node) const
 {
-    auto it = nodesByTargetTitle_.constFind(target);
-    if (it != nodesByTargetTitle_.constEnd()) {
+    auto it = m_nodesByTargetTitle.constFind(target);
+    if (it != m_nodesByTargetTitle.constEnd()) {
         do {
-            if (it.value()->node_ == node)
-                return it.value()->ref_;
+            if (it.value()->m_node == node)
+                return it.value()->m_ref;
             ++it;
-        } while (it != nodesByTargetTitle_.constEnd() && it.key() == target);
+        } while (it != m_nodesByTargetTitle.constEnd() && it.key() == target);
     }
     QString key = Doc::canonicalTitle(target);
-    it = nodesByTargetRef_.constFind(key);
-    if (it != nodesByTargetRef_.constEnd()) {
+    it = m_nodesByTargetRef.constFind(key);
+    if (it != m_nodesByTargetRef.constEnd()) {
         do {
-            if (it.value()->node_ == node)
-                return it.value()->ref_;
+            if (it.value()->m_node == node)
+                return it.value()->m_ref;
             ++it;
-        } while (it != nodesByTargetRef_.constEnd() && it.key() == key);
+        } while (it != m_nodesByTargetRef.constEnd() && it.key() == key);
     }
     return QString();
 }
@@ -734,8 +734,8 @@ void Tree::insertTarget(const QString &name, const QString &title, TargetRec::Ta
                         Node *node, int priority)
 {
     auto *target = new TargetRec(name, type, node, priority);
-    nodesByTargetRef_.insert(name, target);
-    nodesByTargetTitle_.insert(title, target);
+    m_nodesByTargetRef.insert(name, target);
+    m_nodesByTargetTitle.insert(title, target);
 }
 
 /*!
@@ -749,7 +749,7 @@ void Tree::resolveTargets(Aggregate *root)
             if (!key.isEmpty()) {
                 if (key.contains(QChar(' ')))
                     key = Doc::canonicalTitle(key);
-                QList<PageNode *> nodes = pageNodesByTitle_.values(key);
+                QList<PageNode *> nodes = m_pageNodesByTitle.values(key);
                 bool alreadyThere = false;
                 if (!nodes.empty()) {
                     for (const auto &node_ : nodes) {
@@ -762,7 +762,7 @@ void Tree::resolveTargets(Aggregate *root)
                     }
                 }
                 if (!alreadyThere)
-                    pageNodesByTitle_.insert(key, node);
+                    m_pageNodesByTitle.insert(key, node);
             }
         }
 
@@ -774,8 +774,8 @@ void Tree::resolveTargets(Aggregate *root)
                 if (!ref.isEmpty() && !title.isEmpty()) {
                     QString key = Doc::canonicalTitle(title);
                     auto *target = new TargetRec(ref, TargetRec::Contents, child, 3);
-                    nodesByTargetRef_.insert(key, target);
-                    nodesByTargetTitle_.insert(title, target);
+                    m_nodesByTargetRef.insert(key, target);
+                    m_nodesByTargetTitle.insert(title, target);
                 }
             }
         }
@@ -786,8 +786,8 @@ void Tree::resolveTargets(Aggregate *root)
                 QString title = i->string();
                 if (!ref.isEmpty() && !title.isEmpty()) {
                     auto *target = new TargetRec(ref, TargetRec::Keyword, child, 1);
-                    nodesByTargetRef_.insert(Doc::canonicalTitle(title), target);
-                    nodesByTargetTitle_.insert(title, target);
+                    m_nodesByTargetRef.insert(Doc::canonicalTitle(title), target);
+                    m_nodesByTargetTitle.insert(title, target);
                 }
             }
         }
@@ -799,8 +799,8 @@ void Tree::resolveTargets(Aggregate *root)
                 if (!ref.isEmpty() && !title.isEmpty()) {
                     QString key = Doc::canonicalTitle(title);
                     auto *target = new TargetRec(ref, TargetRec::Target, child, 2);
-                    nodesByTargetRef_.insert(key, target);
-                    nodesByTargetTitle_.insert(title, target);
+                    m_nodesByTargetRef.insert(key, target);
+                    m_nodesByTargetTitle.insert(title, target);
                 }
             }
         }
@@ -821,49 +821,49 @@ const Node *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus
     QList<TargetRec *> bestTargetList;
 
     QString key = target;
-    for (auto it = nodesByTargetTitle_.find(key); it != nodesByTargetTitle_.constEnd(); ++it) {
+    for (auto it = m_nodesByTargetTitle.find(key); it != m_nodesByTargetTitle.constEnd(); ++it) {
         if (it.key() != key)
             break;
         TargetRec *candidate = it.value();
         if ((genus == Node::DontCare) || (genus & candidate->genus())) {
-            if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
+            if (!bestTarget || (candidate->m_priority < bestTarget->m_priority)) {
                 bestTarget = candidate;
                 bestTargetList.clear();
                 bestTargetList.append(candidate);
                 numBestTargets = 1;
-            } else if (candidate->priority_ == bestTarget->priority_) {
+            } else if (candidate->m_priority == bestTarget->m_priority) {
                 bestTargetList.append(candidate);
                 ++numBestTargets;
             }
         }
     }
     if (bestTarget) {
-        ref = bestTarget->ref_;
-        return bestTarget->node_;
+        ref = bestTarget->m_ref;
+        return bestTarget->m_node;
     }
 
     numBestTargets = 0;
     bestTarget = nullptr;
     key = Doc::canonicalTitle(target);
-    for (auto it = nodesByTargetRef_.find(key); it != nodesByTargetRef_.constEnd(); ++it) {
+    for (auto it = m_nodesByTargetRef.find(key); it != m_nodesByTargetRef.constEnd(); ++it) {
         if (it.key() != key)
             break;
         TargetRec *candidate = it.value();
         if ((genus == Node::DontCare) || (genus & candidate->genus())) {
-            if (!bestTarget || (candidate->priority_ < bestTarget->priority_)) {
+            if (!bestTarget || (candidate->m_priority < bestTarget->m_priority)) {
                 bestTarget = candidate;
                 bestTargetList.clear();
                 bestTargetList.append(candidate);
                 numBestTargets = 1;
-            } else if (candidate->priority_ == bestTarget->priority_) {
+            } else if (candidate->m_priority == bestTarget->m_priority) {
                 bestTargetList.append(candidate);
                 ++numBestTargets;
             }
         }
     }
     if (bestTarget) {
-        ref = bestTarget->ref_;
-        return bestTarget->node_;
+        ref = bestTarget->m_ref;
+        return bestTarget->m_node;
     }
 
     ref.clear();
@@ -877,10 +877,10 @@ const PageNode *Tree::findPageNodeByTitle(const QString &title) const
 {
     PageNodeMultiMap::const_iterator it;
     if (title.contains(QChar(' ')))
-        it = pageNodesByTitle_.constFind(Doc::canonicalTitle(title));
+        it = m_pageNodesByTitle.constFind(Doc::canonicalTitle(title));
     else
-        it = pageNodesByTitle_.constFind(title);
-    if (it != pageNodesByTitle_.constEnd()) {
+        it = m_pageNodesByTitle.constFind(title);
+    if (it != m_pageNodesByTitle.constEnd()) {
         /*
           Reporting all these duplicate section titles is probably
           overkill. We should report the duplicate file and let
@@ -888,14 +888,14 @@ const PageNode *Tree::findPageNodeByTitle(const QString &title) const
         */
         PageNodeMultiMap::const_iterator j = it;
         ++j;
-        if (j != pageNodesByTitle_.constEnd() && j.key() == it.key()) {
-            while (j != pageNodesByTitle_.constEnd()) {
+        if (j != m_pageNodesByTitle.constEnd() && j.key() == it.key()) {
+            while (j != m_pageNodesByTitle.constEnd()) {
                 if (j.key() == it.key() && j.value()->url().isEmpty()) {
                     break; // Just report one duplicate for now.
                 }
                 ++j;
             }
-            if (j != pageNodesByTitle_.cend()) {
+            if (j != m_pageNodesByTitle.cend()) {
                 it.value()->location().warning("This page title exists in more than one file: "
                                                + title);
                 j.value()->location().warning("[It also exists here]");
@@ -947,13 +947,13 @@ CNMap *Tree::getCollectionMap(Node::NodeType type)
 {
     switch (type) {
     case Node::Group:
-        return &groups_;
+        return &m_groups;
     case Node::Module:
-        return &modules_;
+        return &m_modules;
     case Node::QmlModule:
-        return &qmlModules_;
+        return &m_qmlModules;
     case Node::JsModule:
-        return &jsModules_;
+        return &m_jsModules;
     default:
         break;
     }
@@ -1176,8 +1176,8 @@ CollectionNode *Tree::addToJsModule(const QString &name, Node *node)
  */
 void Tree::insertQmlType(const QString &key, QmlTypeNode *n)
 {
-    if (!qmlTypeMap_.contains(key))
-        qmlTypeMap_.insert(key, n);
+    if (!m_qmlTypeMap.contains(key))
+        m_qmlTypeMap.insert(key, n);
 }
 
 /*!
@@ -1258,7 +1258,7 @@ const FunctionNode *Tree::findFunctionNode(const QStringList &path, const Parame
             const FunctionNode *FN = fn;
             while (FN->isPrivate() && !FN->overridesThis().isEmpty()) {
                 QStringList path = FN->overridesThis().split("::");
-                FN = qdb_->findFunctionNode(path, parameters, relative, genus);
+                FN = m_qdb->findFunctionNode(path, parameters, relative, genus);
                 if (FN == nullptr)
                     break;
                 if (!FN->isPrivate())
@@ -1331,8 +1331,8 @@ void Tree::addToDontDocumentMap(QString &arg)
     if (sl.isEmpty())
         return;
     for (const QString &s : sl) {
-        if (!dontDocumentMap_.contains(s))
-            dontDocumentMap_.insert(s, nullptr);
+        if (!m_dontDocumentMap.contains(s))
+            m_dontDocumentMap.insert(s, nullptr);
     }
 }
 
@@ -1351,7 +1351,7 @@ void Tree::addToDontDocumentMap(QString &arg)
  */
 void Tree::markDontDocumentNodes()
 {
-    for (auto it = dontDocumentMap_.begin(); it != dontDocumentMap_.end(); ++it) {
+    for (auto it = m_dontDocumentMap.begin(); it != m_dontDocumentMap.end(); ++it) {
         Aggregate *node = findAggregate(it.key());
         if (node != nullptr)
             node->setStatus(Node::DontDocument);

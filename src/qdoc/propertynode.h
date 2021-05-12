@@ -60,26 +60,29 @@ public:
     void setRequired() { m_required = true; }
     void setPropertyType(PropertyType type) { m_propertyType = type; }
 
-    const QString &dataType() const { return m_type; }
-    QString qualifiedDataType() const;
-    NodeList functions() const;
-    const NodeList &functions(FunctionRole role) const { return m_functions[(int)role]; }
-    const NodeList &getters() const { return functions(Getter); }
-    const NodeList &setters() const { return functions(Setter); }
-    const NodeList &resetters() const { return functions(Resetter); }
-    const NodeList &notifiers() const { return functions(Notifier); }
-    bool hasAccessFunction(const QString &name) const;
+    [[nodiscard]] const QString &dataType() const { return m_type; }
+    [[nodiscard]] QString qualifiedDataType() const;
+    [[nodiscard]] NodeList functions() const;
+    [[nodiscard]] const NodeList &functions(FunctionRole role) const
+    {
+        return m_functions[(int)role];
+    }
+    [[nodiscard]] const NodeList &getters() const { return functions(Getter); }
+    [[nodiscard]] const NodeList &setters() const { return functions(Setter); }
+    [[nodiscard]] const NodeList &resetters() const { return functions(Resetter); }
+    [[nodiscard]] const NodeList &notifiers() const { return functions(Notifier); }
+    [[nodiscard]] bool hasAccessFunction(const QString &name) const;
     FunctionRole role(const FunctionNode *functionNode) const;
-    bool isStored() const { return fromFlagValue(m_stored, storedDefault()); }
-    bool isWritable() const { return fromFlagValue(m_writable, writableDefault()); }
-    bool isConstant() const { return m_const; }
-    bool isRequired() const { return m_required; }
-    PropertyType propertyType() const { return m_propertyType; }
-    const PropertyNode *overriddenFrom() const { return m_overrides; }
+    [[nodiscard]] bool isStored() const { return fromFlagValue(m_stored, storedDefault()); }
+    [[nodiscard]] bool isWritable() const { return fromFlagValue(m_writable, writableDefault()); }
+    [[nodiscard]] bool isConstant() const { return m_const; }
+    [[nodiscard]] bool isRequired() const { return m_required; }
+    [[nodiscard]] PropertyType propertyType() const { return m_propertyType; }
+    [[nodiscard]] const PropertyNode *overriddenFrom() const { return m_overrides; }
 
-    bool storedDefault() const { return true; }
-    bool designableDefault() const { return !setters().isEmpty(); }
-    bool writableDefault() const { return !setters().isEmpty(); }
+    [[nodiscard]] bool storedDefault() const { return true; }
+    [[nodiscard]] bool designableDefault() const { return !setters().isEmpty(); }
+    [[nodiscard]] bool writableDefault() const { return !setters().isEmpty(); }
 
 private:
     QString m_type {};

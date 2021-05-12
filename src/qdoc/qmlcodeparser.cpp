@@ -43,7 +43,7 @@ QT_BEGIN_NAMESPACE
  */
 QmlCodeParser::QmlCodeParser()
 #ifndef QT_NO_DECLARATIVE
-    : lexer(nullptr), parser(nullptr)
+    : m_lexer(nullptr), m_parser(nullptr)
 #endif
 {
 }
@@ -57,8 +57,8 @@ void QmlCodeParser::initializeParser()
     CodeParser::initializeParser();
 
 #ifndef QT_NO_DECLARATIVE
-    lexer = new QQmlJS::Lexer(&engine);
-    parser = new QQmlJS::Parser(&engine);
+    m_lexer = new QQmlJS::Lexer(&m_engine);
+    m_parser = new QQmlJS::Parser(&m_engine);
 #endif
 }
 
@@ -69,8 +69,8 @@ void QmlCodeParser::initializeParser()
 void QmlCodeParser::terminateParser()
 {
 #ifndef QT_NO_DECLARATIVE
-    delete lexer;
-    delete parser;
+    delete m_lexer;
+    delete m_parser;
 #endif
 }
 
@@ -101,10 +101,10 @@ QStringList QmlCodeParser::sourceFileNameFilter()
 void QmlCodeParser::parseSourceFile(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
-    currentFile_ = filePath;
+    m_currentFile = filePath;
     if (!in.open(QIODevice::ReadOnly)) {
         location.error(QStringLiteral("Cannot open QML file '%1'").arg(filePath));
-        currentFile_.clear();
+        m_currentFile.clear();
         return;
     }
 
@@ -116,11 +116,11 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
 
     QString newCode = document;
     extractPragmas(newCode);
-    lexer->setCode(newCode, 1);
+    m_lexer->setCode(newCode, 1);
 
-    if (parser->parse()) {
-        QQmlJS::AST::UiProgram *ast = parser->ast();
-        QmlDocVisitor visitor(filePath, newCode, &engine, topicCommands() + commonMetaCommands(),
+    if (m_parser->parse()) {
+        QQmlJS::AST::UiProgram *ast = m_parser->ast();
+        QmlDocVisitor visitor(filePath, newCode, &m_engine, topicCommands() + commonMetaCommands(),
                               topicCommands());
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError()) {
@@ -128,14 +128,14 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
                                << "The output is incomplete.";
         }
     }
-    const auto &messages = parser->diagnosticMessages();
+    const auto &messages = m_parser->diagnosticMessages();
     for (const auto &msg : messages) {
         qDebug().nospace() << qPrintable(filePath) << ':'
                            << msg.loc.startLine << ": QML syntax error at col "
                            << msg.loc.startColumn
                            << ": " << qPrintable(msg.message);
     }
-    currentFile_.clear();
+    m_currentFile.clear();
 #else
     location.warning("QtDeclarative not installed; cannot parse QML or JS.");
 #endif

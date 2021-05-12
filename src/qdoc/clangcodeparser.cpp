@@ -1394,7 +1394,7 @@ void ClangCodeParser::buildPCH()
                     // Visit the header now, as token from pre-compiled header won't be visited
                     // later
                     CXCursor cur = clang_getTranslationUnitCursor(tu);
-                    ClangVisitor visitor(qdb_, m_allHeaders);
+                    ClangVisitor visitor(m_qdb, m_allHeaders);
                     visitor.visitChildren(cur);
                     qCDebug(lcQdoc) << "PCH built and visited for" << moduleHeader();
                 }
@@ -1448,8 +1448,8 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
       The set of open namespaces is cleared before parsing
       each source file. The word "source" here means cpp file.
      */
-    qdb_->clearOpenNamespaces();
-    currentFile_ = filePath;
+    m_qdb->clearOpenNamespaces();
+    m_currentFile = filePath;
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);
@@ -1481,7 +1481,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     }
 
     CXCursor tuCur = clang_getTranslationUnitCursor(tu);
-    ClangVisitor visitor(qdb_, m_allHeaders);
+    ClangVisitor visitor(m_qdb, m_allHeaders);
     visitor.visitChildren(tuCur);
 
     CXToken *tokens;
@@ -1511,7 +1511,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
         NodeList nodes;
         const TopicList &topics = doc.topicsUsed();
         if (!topics.isEmpty())
-            topic = topics[0].topic;
+            topic = topics[0].m_topic;
 
         if (topic.isEmpty()) {
             Node *n = nullptr;
@@ -1583,7 +1583,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
       not be found. Return 0 in that case.
     */
     if (!idTag.isEmpty()) {
-        fnNode = qdb_->findFunctionNodeForTag(idTag);
+        fnNode = m_qdb->findFunctionNodeForTag(idTag);
         if (!fnNode) {
             location.error(
                     QStringLiteral("tag \\fn [%1] not used in any include file in current module").arg(idTag));
@@ -1666,7 +1666,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
           the diagnostics if they stop us finding the node.
          */
         CXCursor cur = clang_getTranslationUnitCursor(tu);
-        ClangVisitor visitor(qdb_, m_allHeaders);
+        ClangVisitor visitor(m_qdb, m_allHeaders);
         bool ignoreSignature = false;
         visitor.visitFnArg(cur, &fnNode, ignoreSignature);
         /*
@@ -1690,7 +1690,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
                             qualifier[i++] = QChar(' ');
                         if (i > 0)
                             qualifier = qualifier.simplified();
-                        ClassNode *cn = qdb_->findClassNode(QStringList(qualifier));
+                        ClassNode *cn = m_qdb->findClassNode(QStringList(qualifier));
                         if (cn && cn->isInternal())
                             report = false;
                     }

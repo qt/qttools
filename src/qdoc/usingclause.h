@@ -42,12 +42,12 @@ struct UsingClause
 {
     UsingClause() = default;
     explicit UsingClause(QString signature) : m_signature(std::move(signature)) { }
-    const QString &signature() const { return m_signature; }
-    const Node *node() const { return m_node; }
+    [[nodiscard]] const QString &signature() const { return m_signature; }
+    [[nodiscard]] const Node *node() const { return m_node; }
     void setNode(const Node *n) { m_node = n; }
 
     const Node *m_node { nullptr };
-    QString m_signature;
+    QString m_signature {};
 };
 
 QT_END_NAMESPACE

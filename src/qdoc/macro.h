@@ -41,9 +41,9 @@ QT_BEGIN_NAMESPACE
 struct Macro
 {
 public:
-    QString defaultDef;
-    Location defaultDefLocation;
-    QMap<QString, QString> otherDefs;
+    QString m_defaultDef {};
+    Location m_defaultDefLocation {};
+    QMap<QString, QString> m_otherDefs {};
     int numParams {};
 };
 

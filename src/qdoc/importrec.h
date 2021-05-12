@@ -38,9 +38,9 @@ QT_BEGIN_NAMESPACE
 
 struct ImportRec
 {
-    QString m_moduleName;
-    QString m_majorMinorVersion;
-    QString m_importUri; // subdirectory of module directory
+    QString m_moduleName {};
+    QString m_majorMinorVersion {};
+    QString m_importUri {}; // subdirectory of module directory
 
     ImportRec(QString name, QString version, QString importUri)
         : m_moduleName(std::move(name)),
@@ -50,7 +50,7 @@ struct ImportRec
     }
     QString &name() { return m_moduleName; }
     QString &version() { return m_majorMinorVersion; }
-    bool isEmpty() const { return m_moduleName.isEmpty(); }
+    [[nodiscard]] bool isEmpty() const { return m_moduleName.isEmpty(); }
 };
 
 QT_END_NAMESPACE

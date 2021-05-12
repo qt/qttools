@@ -49,11 +49,11 @@ public:
     ClassNode(NodeType type, Aggregate *parent, const QString &name) : Aggregate(type, parent, name)
     {
     }
-    bool isFirstClassAggregate() const override { return true; }
-    bool isClassNode() const override { return true; }
-    bool isRelatableType() const override { return true; }
-    bool isWrapper() const override { return m_wrapper; }
-    QString obsoleteLink() const override { return m_obsoleteLink; }
+    [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
+    [[nodiscard]] bool isClassNode() const override { return true; }
+    [[nodiscard]] bool isRelatableType() const override { return true; }
+    [[nodiscard]] bool isWrapper() const override { return m_wrapper; }
+    [[nodiscard]] QString obsoleteLink() const override { return m_obsoleteLink; }
     void setObsoleteLink(const QString &t) override { m_obsoleteLink = t; }
     void setWrapper() override { m_wrapper = true; }
 
@@ -68,17 +68,17 @@ public:
     QList<RelatedClass> &ignoredBaseClasses() { return m_ignoredBases; }
     QList<UsingClause> &usingClauses() { return m_usingClauses; }
 
-    const QList<RelatedClass> &baseClasses() const { return m_bases; }
+    [[nodiscard]] const QList<RelatedClass> &baseClasses() const { return m_bases; }
 
     QmlTypeNode *qmlElement() { return m_qmlElement; }
     void setQmlElement(QmlTypeNode *qcn) { m_qmlElement = qcn; }
-    bool isAbstract() const override { return m_abstract; }
+    [[nodiscard]] bool isAbstract() const override { return m_abstract; }
     void setAbstract(bool b) override { m_abstract = b; }
     PropertyNode *findPropertyNode(const QString &name);
     QmlTypeNode *findQmlBaseNode();
     FunctionNode *findOverriddenFunction(const FunctionNode *fn);
     PropertyNode *findOverriddenProperty(const FunctionNode *fn);
-    bool docMustBeGenerated() const override;
+    [[nodiscard]] bool docMustBeGenerated() const override;
 
 private:
     void promotePublicBases(const QList<RelatedClass> &bases);

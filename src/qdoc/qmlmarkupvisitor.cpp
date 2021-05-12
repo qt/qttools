@@ -43,11 +43,11 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
                                    const QList<QQmlJS::SourceLocation> &pragmas,
                                    QQmlJS::Engine *engine)
 {
-    this->source = source;
-    this->engine = engine;
+    this->m_source = source;
+    this->m_engine = engine;
 
-    cursor = 0;
-    extraIndex = 0;
+    m_cursor = 0;
+    m_extraIndex = 0;
 
     // Merge the lists of locations of pragmas and comments in the source code.
     int i = 0;
@@ -55,25 +55,25 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
     const QList<QQmlJS::SourceLocation> comments = engine->comments();
     while (i < comments.size() && j < pragmas.length()) {
         if (comments[i].offset < pragmas[j].offset) {
-            extraTypes.append(Comment);
-            extraLocations.append(comments[i]);
+            m_extraTypes.append(Comment);
+            m_extraLocations.append(comments[i]);
             ++i;
         } else {
-            extraTypes.append(Pragma);
-            extraLocations.append(comments[j]);
+            m_extraTypes.append(Pragma);
+            m_extraLocations.append(comments[j]);
             ++j;
         }
     }
 
     while (i < comments.size()) {
-        extraTypes.append(Comment);
-        extraLocations.append(comments[i]);
+        m_extraTypes.append(Comment);
+        m_extraLocations.append(comments[i]);
         ++i;
     }
 
     while (j < pragmas.length()) {
-        extraTypes.append(Pragma);
-        extraLocations.append(pragmas[j]);
+        m_extraTypes.append(Pragma);
+        m_extraLocations.append(pragmas[j]);
         ++j;
     }
 }
@@ -114,73 +114,73 @@ QString QmlMarkupVisitor::protect(const QString &str)
 
 QString QmlMarkupVisitor::markedUpCode()
 {
-    if (int(cursor) < source.length())
-        addExtra(cursor, source.length());
+    if (int(m_cursor) < m_source.length())
+        addExtra(m_cursor, m_source.length());
 
-    return output;
+    return m_output;
 }
 
 bool QmlMarkupVisitor::hasError() const
 {
-    return hasRecursionDepthError;
+    return m_hasRecursionDepthError;
 }
 
 void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
 {
-    if (extraIndex >= extraLocations.length()) {
-        QString extra = source.mid(start, finish - start);
+    if (m_extraIndex >= m_extraLocations.length()) {
+        QString extra = m_source.mid(start, finish - start);
         if (extra.trimmed().isEmpty())
-            output += extra;
+            m_output += extra;
         else
-            output += protect(extra); // text that should probably have been caught by the parser
+            m_output += protect(extra); // text that should probably have been caught by the parser
 
-        cursor = finish;
+        m_cursor = finish;
         return;
     }
 
-    while (extraIndex < extraLocations.length()) {
-        if (extraTypes[extraIndex] == Comment) {
-            if (extraLocations[extraIndex].offset - 2 >= start)
+    while (m_extraIndex < m_extraLocations.length()) {
+        if (m_extraTypes[m_extraIndex] == Comment) {
+            if (m_extraLocations[m_extraIndex].offset - 2 >= start)
                 break;
         } else {
-            if (extraLocations[extraIndex].offset >= start)
+            if (m_extraLocations[m_extraIndex].offset >= start)
                 break;
         }
-        extraIndex++;
+        m_extraIndex++;
     }
 
     quint32 i = start;
-    while (i < finish && extraIndex < extraLocations.length()) {
-        quint32 j = extraLocations[extraIndex].offset - 2;
+    while (i < finish && m_extraIndex < m_extraLocations.length()) {
+        quint32 j = m_extraLocations[m_extraIndex].offset - 2;
         if (i <= j && j < finish) {
             if (i < j)
-                output += protect(source.mid(i, j - i));
+                m_output += protect(m_source.mid(i, j - i));
 
-            quint32 l = extraLocations[extraIndex].length;
-            if (extraTypes[extraIndex] == Comment) {
-                if (source.mid(j, 2) == QLatin1String("/*"))
+            quint32 l = m_extraLocations[m_extraIndex].length;
+            if (m_extraTypes[m_extraIndex] == Comment) {
+                if (m_source.mid(j, 2) == QLatin1String("/*"))
                     l += 4;
                 else
                     l += 2;
-                output += QLatin1String("<@comment>");
-                output += protect(source.mid(j, l));
-                output += QLatin1String("</@comment>");
+                m_output += QLatin1String("<@comment>");
+                m_output += protect(m_source.mid(j, l));
+                m_output += QLatin1String("</@comment>");
             } else
-                output += protect(source.mid(j, l));
+                m_output += protect(m_source.mid(j, l));
 
-            extraIndex++;
+            m_extraIndex++;
             i = j + l;
         } else
             break;
     }
 
-    QString extra = source.mid(i, finish - i);
+    QString extra = m_source.mid(i, finish - i);
     if (extra.trimmed().isEmpty())
-        output += extra;
+        m_output += extra;
     else
-        output += protect(extra); // text that should probably have been caught by the parser
+        m_output += protect(extra); // text that should probably have been caught by the parser
 
-    cursor = finish;
+    m_cursor = finish;
 }
 
 void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::SourceLocation &location,
@@ -190,21 +190,21 @@ void QmlMarkupVisitor::addMarkedUpToken(QQmlJS::SourceLocation &location,
     if (!location.isValid())
         return;
 
-    if (cursor < location.offset)
-        addExtra(cursor, location.offset);
-    else if (cursor > location.offset)
+    if (m_cursor < location.offset)
+        addExtra(m_cursor, location.offset);
+    else if (m_cursor > location.offset)
         return;
 
-    output += QString(QLatin1String("<@%1")).arg(tagName);
+    m_output += QString(QLatin1String("<@%1")).arg(tagName);
     for (const auto &key : attributes)
-        output += QString(QLatin1String(" %1=\"%2\"")).arg(key, attributes[key]);
-    output += QString(QLatin1String(">%2</@%3>")).arg(protect(sourceText(location)), tagName);
-    cursor += location.length;
+        m_output += QString(QLatin1String(" %1=\"%2\"")).arg(key, attributes[key]);
+    m_output += QString(QLatin1String(">%2</@%3>")).arg(protect(sourceText(location)), tagName);
+    m_cursor += location.length;
 }
 
 QString QmlMarkupVisitor::sourceText(QQmlJS::SourceLocation &location)
 {
-    return source.mid(location.offset, location.length);
+    return m_source.mid(location.offset, location.length);
 }
 
 void QmlMarkupVisitor::addVerbatim(QQmlJS::SourceLocation first,
@@ -220,14 +220,14 @@ void QmlMarkupVisitor::addVerbatim(QQmlJS::SourceLocation first,
     else
         finish = first.end();
 
-    if (cursor < start)
-        addExtra(cursor, start);
-    else if (cursor > start)
+    if (m_cursor < start)
+        addExtra(m_cursor, start);
+    else if (m_cursor > start)
         return;
 
-    QString text = source.mid(start, finish - start);
-    output += protect(text);
-    cursor = finish;
+    QString text = m_source.mid(start, finish - start);
+    m_output += protect(text);
+    m_cursor = finish;
 }
 
 bool QmlMarkupVisitor::visit(QQmlJS::AST::UiImport *uiimport)
@@ -816,7 +816,7 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
 
 void QmlMarkupVisitor::throwRecursionDepthError()
 {
-    hasRecursionDepthError = true;
+    m_hasRecursionDepthError = true;
 }
 
 #endif

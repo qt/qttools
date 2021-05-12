@@ -43,7 +43,7 @@ DocPrivate::~DocPrivate()
 
 void DocPrivate::addAlso(const Text &also)
 {
-    alsoList.append(also);
+    m_alsoList.append(also);
 }
 
 void DocPrivate::constructExtra()

@@ -41,9 +41,9 @@ class ManifestWriter
 {
     struct ManifestMetaFilter
     {
-        QSet<QString> names;
-        QSet<QString> attributes;
-        QSet<QString> tags;
+        QSet<QString> m_names {};
+        QSet<QString> m_attributes {};
+        QSet<QString> m_tags {};
     };
 
 public:

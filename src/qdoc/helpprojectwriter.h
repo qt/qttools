@@ -34,23 +34,24 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qxmlstream.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 class QDocDatabase;
 class Generator;
-typedef QPair<QString, const Node *> QStringNodePair;
 
 using NodeTypeSet = QSet<unsigned char>;
 
 struct SubProject
 {
-    QString title;
-    QString indexTitle;
-    NodeTypeSet selectors;
-    bool sortPages;
-    QString type;
-    QHash<QString, const Node *> nodes;
-    QStringList groups;
+    QString m_title {};
+    QString m_indexTitle {};
+    NodeTypeSet m_selectors {};
+    bool m_sortPages {};
+    QString m_type {};
+    QHash<QString, const Node *> m_nodes {};
+    QStringList m_groups {};
 };
 
 /*
@@ -59,15 +60,21 @@ struct SubProject
  * Ref is the location of the documentation for the keyword.
  */
 struct Keyword {
-    QString name;
-    QStringList ids;
-    QString ref;
-    Keyword(QString name, QString id, QString ref) : name(name), ids(QStringList(id)), ref(ref) {}
-    Keyword(QString name, QStringList ids, QString ref) : name(name), ids(ids), ref(ref) {}
+    QString m_name {};
+    QStringList m_ids {};
+    QString m_ref {};
+    Keyword(QString name, const QString &id, QString ref)
+        : m_name(std::move(name)), m_ids(QStringList(id)), m_ref(std::move(ref))
+    {
+    }
+    Keyword(QString name, QStringList ids, QString ref)
+        : m_name(std::move(name)), m_ids(std::move(ids)), m_ref(std::move(ref))
+    {
+    }
     bool operator<(const Keyword &o) const
     {
         // Order by name; use ref as a secondary sort key
-        return (name == o.name) ? ref < o.ref : name < o.name;
+        return (m_name == o.m_name) ? m_ref < o.m_ref : m_name < o.m_name;
     }
 };
 
@@ -75,22 +82,22 @@ struct HelpProject
 {
     using NodeStatusSet = QSet<unsigned char>;
 
-    QString name;
-    QString helpNamespace;
-    QString virtualFolder;
-    QString version;
-    QString fileName;
-    QString indexRoot;
-    QString indexTitle;
-    QList<Keyword> keywords;
-    QSet<QString> files;
-    QSet<QString> extraFiles;
-    QSet<QString> filterAttributes;
-    QHash<QString, QSet<QString>> customFilters;
-    QSet<QString> excluded;
-    QList<SubProject> subprojects;
-    QHash<const Node *, NodeStatusSet> memberStatus;
-    bool includeIndexNodes;
+    QString m_name {};
+    QString m_helpNamespace {};
+    QString m_virtualFolder {};
+    QString m_version {};
+    QString m_fileName {};
+    QString m_indexRoot {};
+    QString m_indexTitle {};
+    QList<Keyword> m_keywords {};
+    QSet<QString> m_files {};
+    QSet<QString> m_extraFiles {};
+    QSet<QString> m_filterAttributes {};
+    QHash<QString, QSet<QString>> m_customFilters {};
+    QSet<QString> m_excluded {};
+    QList<SubProject> m_subprojects {};
+    QHash<const Node *, NodeStatusSet> m_memberStatus {};
+    bool m_includeIndexNodes {};
 };
 
 
@@ -113,11 +120,11 @@ private:
     void addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     void writeSection(QXmlStreamWriter &writer, const QString &path, const QString &value);
 
-    QDocDatabase *qdb_ {};
-    Generator *gen_ {};
+    QDocDatabase *m_qdb {};
+    Generator *m_gen {};
 
-    QString outputDir;
-    QList<HelpProject> projects;
+    QString m_outputDir {};
+    QList<HelpProject> m_projects {};
 };
 
 QT_END_NAMESPACE

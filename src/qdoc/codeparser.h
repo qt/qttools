@@ -58,9 +58,9 @@ public:
         return nullptr;
     }
 
-    const QString &currentFile() const { return currentFile_; }
-    const QString &moduleHeader() const { return moduleHeader_; }
-    void setModuleHeader(const QString &t) { moduleHeader_ = t; }
+    [[nodiscard]] const QString &currentFile() const { return m_currentFile; }
+    [[nodiscard]] const QString &moduleHeader() const { return m_moduleHeader; }
+    void setModuleHeader(const QString &t) { m_moduleHeader = t; }
     void checkModuleInclusion(Node *n);
 
     static void initialize();
@@ -74,14 +74,14 @@ public:
 protected:
     const QSet<QString> &commonMetaCommands();
     static void extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc);
-    static bool showInternal() { return showInternal_; }
-    QString moduleHeader_;
-    QString currentFile_;
-    QDocDatabase *qdb_;
+    static bool showInternal() { return s_showInternal; }
+    QString m_moduleHeader {};
+    QString m_currentFile {};
+    QDocDatabase *m_qdb {};
 
 private:
-    static QList<CodeParser *> parsers;
-    static bool showInternal_;
+    static QList<CodeParser *> s_parsers;
+    static bool s_showInternal;
 };
 
 #define COMMAND_ABSTRACT Doc::alias(QLatin1String("abstract"))

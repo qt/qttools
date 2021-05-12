@@ -49,30 +49,33 @@ public:
         setPageType(ptype);
     }
 
-    bool isPageNode() const override { return true; }
-    bool isTextPageNode() const override { return !isAggregate(); } // PageNode but not Aggregate
+    [[nodiscard]] bool isPageNode() const override { return true; }
+    [[nodiscard]] bool isTextPageNode() const override
+    {
+        return !isAggregate();
+    } // PageNode but not Aggregate
 
-    QString title() const override { return m_title; }
-    QString subtitle() const override { return m_subtitle; }
-    QString fullTitle() const override;
+    [[nodiscard]] QString title() const override { return m_title; }
+    [[nodiscard]] QString subtitle() const override { return m_subtitle; }
+    [[nodiscard]] QString fullTitle() const override;
     bool setTitle(const QString &title) override;
     bool setSubtitle(const QString &subtitle) override
     {
         m_subtitle = subtitle;
         return true;
     }
-    QString nameForLists() const override { return title(); }
+    [[nodiscard]] QString nameForLists() const override { return title(); }
 
-    virtual QString imageFileName() const { return QString(); }
+    [[nodiscard]] virtual QString imageFileName() const { return QString(); }
     virtual void setImageFileName(const QString &) {}
 
-    bool noAutoList() const { return m_noAutoList; }
+    [[nodiscard]] bool noAutoList() const { return m_noAutoList; }
     void setNoAutoList(bool b) override { m_noAutoList = b; }
-    const QStringList &groupNames() const { return m_groupNames; }
+    [[nodiscard]] const QStringList &groupNames() const { return m_groupNames; }
     void appendGroupName(const QString &t) override { m_groupNames.append(t); }
 
     void setOutputFileName(const QString &f) override { m_outputFileName = f; }
-    QString outputFileName() const override { return m_outputFileName; }
+    [[nodiscard]] QString outputFileName() const override { return m_outputFileName; }
 
 protected:
     friend class Node;

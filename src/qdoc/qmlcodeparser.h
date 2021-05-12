@@ -66,9 +66,9 @@ protected:
 
 private:
 #ifndef QT_NO_DECLARATIVE
-    QQmlJS::Engine engine;
-    QQmlJS::Lexer *lexer;
-    QQmlJS::Parser *parser;
+    QQmlJS::Engine m_engine {};
+    QQmlJS::Lexer *m_lexer { nullptr };
+    QQmlJS::Parser *m_parser { nullptr };
 #endif
 };
 

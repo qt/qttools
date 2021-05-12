@@ -34,7 +34,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QRegularExpression Parameters::varComment_(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
+QRegularExpression Parameters::s_varComment(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
 
 /*!
   \class Parameter
@@ -60,16 +60,14 @@ QRegularExpression Parameters::varComment_(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
  */
 QString Parameter::signature(bool includeValue) const
 {
-    QString p = type_;
-    if (!p.endsWith(QChar('*')) &&
-        !p.endsWith(QChar('&')) &&
-        !p.endsWith(QChar(' ')) &&
-        !name_.isEmpty()) {
+    QString p = m_type;
+    if (!p.endsWith(QChar('*')) && !p.endsWith(QChar('&')) && !p.endsWith(QChar(' '))
+        && !m_name.isEmpty()) {
         p += QLatin1Char(' ');
     }
-    p += name_;
-    if (includeValue && !defaultValue_.isEmpty())
-        p += " = " + defaultValue_;
+    p += m_name;
+    if (includeValue && !m_defaultValue.isEmpty())
+        p += " = " + m_defaultValue;
     return p;
 }
 
@@ -87,18 +85,18 @@ QString Parameter::signature(bool includeValue) const
   of its parameters.
  */
 
-Parameters::Parameters() : valid_(true), privateSignal_(false), tok_(0), tokenizer_(nullptr)
+Parameters::Parameters() : m_valid(true), m_privateSignal(false), m_tok(0), m_tokenizer(nullptr)
 {
     // nothing.
 }
 
 Parameters::Parameters(const QString &signature)
-    : valid_(true), privateSignal_(false), tok_(0), tokenizer_(nullptr)
+    : m_valid(true), m_privateSignal(false), m_tok(0), m_tokenizer(nullptr)
 {
     if (!signature.isEmpty()) {
         if (!parse(signature)) {
-            parameters_.clear();
-            valid_ = false;
+            m_parameters.clear();
+            m_valid = false;
         }
     }
 }
@@ -109,7 +107,7 @@ Parameters::Parameters(const QString &signature)
  */
 void Parameters::readToken()
 {
-    tok_ = tokenizer_->getToken();
+    m_tok = m_tokenizer->getToken();
 }
 
 /*!
@@ -117,7 +115,7 @@ void Parameters::readToken()
  */
 QString Parameters::lexeme()
 {
-    return tokenizer_->lexeme();
+    return m_tokenizer->lexeme();
 }
 
 /*!
@@ -125,7 +123,7 @@ QString Parameters::lexeme()
  */
 QString Parameters::previousLexeme()
 {
-    return tokenizer_->previousLexeme();
+    return m_tokenizer->previousLexeme();
 }
 
 /*!
@@ -135,7 +133,7 @@ QString Parameters::previousLexeme()
  */
 bool Parameters::match(int target)
 {
-    if (tok_ == target) {
+    if (m_tok == target) {
         readToken();
         return true;
     }
@@ -149,23 +147,23 @@ bool Parameters::match(int target)
  */
 void Parameters::matchTemplateAngles(CodeChunk &type)
 {
-    if (tok_ == Tok_LeftAngle) {
+    if (m_tok == Tok_LeftAngle) {
         int leftAngleDepth = 0;
         int parenAndBraceDepth = 0;
         do {
-            if (tok_ == Tok_LeftAngle) {
+            if (m_tok == Tok_LeftAngle) {
                 leftAngleDepth++;
-            } else if (tok_ == Tok_RightAngle) {
+            } else if (m_tok == Tok_RightAngle) {
                 leftAngleDepth--;
-            } else if (tok_ == Tok_LeftParen || tok_ == Tok_LeftBrace) {
+            } else if (m_tok == Tok_LeftParen || m_tok == Tok_LeftBrace) {
                 ++parenAndBraceDepth;
-            } else if (tok_ == Tok_RightParen || tok_ == Tok_RightBrace) {
+            } else if (m_tok == Tok_RightParen || m_tok == Tok_RightBrace) {
                 if (--parenAndBraceDepth < 0)
                     return;
             }
             type.append(lexeme());
             readToken();
-        } while (leftAngleDepth > 0 && tok_ != Tok_Eoi);
+        } while (leftAngleDepth > 0 && m_tok != Tok_Eoi);
     }
 }
 
@@ -182,13 +180,13 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
     for (;;) {
         bool virgin = true;
 
-        if (tok_ != Tok_Ident) {
+        if (m_tok != Tok_Ident) {
             /*
               There is special processing for 'Foo::operator int()'
               and such elsewhere. This is the only case where we
               return something with a trailing gulbrandsen ('Foo::').
             */
-            if (tok_ == Tok_operator)
+            if (m_tok == Tok_operator)
                 return true;
 
             /*
@@ -198,12 +196,12 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
             while (match(Tok_const) || match(Tok_volatile))
                 type.append(previousLexeme());
             QString pending;
-            while (tok_ == Tok_signed || tok_ == Tok_int || tok_ == Tok_unsigned
-                   || tok_ == Tok_short || tok_ == Tok_long || tok_ == Tok_int64) {
-                if (tok_ == Tok_signed)
+            while (m_tok == Tok_signed || m_tok == Tok_int || m_tok == Tok_unsigned
+                   || m_tok == Tok_short || m_tok == Tok_long || m_tok == Tok_int64) {
+                if (m_tok == Tok_signed)
                     pending = lexeme();
                 else {
-                    if (tok_ == Tok_unsigned && !pending.isEmpty())
+                    if (m_tok == Tok_unsigned && !pending.isEmpty())
                         type.append(pending);
                     pending.clear();
                     type.append(lexeme());
@@ -283,7 +281,7 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
         type.append(previousLexeme());
 
         /* parse the parameters. Ignore the parameter name from the type */
-        while (tok_ != Tok_RightParen && tok_ != Tok_Eoi) {
+        while (m_tok != Tok_RightParen && m_tok != Tok_Eoi) {
             QString dummy;
             if (!matchTypeAndName(type, dummy))
                 return false;
@@ -311,12 +309,12 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
               inside a C++-style comment, because the explanation
               does not fit on one line.
             */
-            auto match = varComment_.match(previousLexeme());
+            auto match = s_varComment.match(previousLexeme());
             if (match.hasMatch())
                 name = match.captured(1);
         } else if (match(Tok_LeftParen)) {
             name = "(";
-            while (tok_ != Tok_RightParen && tok_ != Tok_Eoi) {
+            while (m_tok != Tok_RightParen && m_tok != Tok_Eoi) {
                 name.append(lexeme());
                 readToken();
             }
@@ -324,7 +322,7 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
             readToken();
             if (match(Tok_LeftBracket)) {
                 name.append("[");
-                while (tok_ != Tok_RightBracket && tok_ != Tok_Eoi) {
+                while (m_tok != Tok_RightBracket && m_tok != Tok_Eoi) {
                     name.append(lexeme());
                     readToken();
                 }
@@ -333,10 +331,10 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
             }
         }
 
-        if (tok_ == Tok_LeftBracket) {
-            int bracketDepth0 = tokenizer_->bracketDepth();
-            while ((tokenizer_->bracketDepth() >= bracketDepth0 && tok_ != Tok_Eoi)
-                   || tok_ == Tok_RightBracket) {
+        if (m_tok == Tok_LeftBracket) {
+            int bracketDepth0 = m_tokenizer->bracketDepth();
+            while ((m_tokenizer->bracketDepth() >= bracketDepth0 && m_tok != Tok_Eoi)
+                   || m_tok == Tok_RightBracket) {
                 type.append(lexeme());
                 readToken();
             }
@@ -353,7 +351,7 @@ bool Parameters::matchTypeAndName(CodeChunk &type, QString &name)
 bool Parameters::matchParameter()
 {
     if (match(Tok_QPrivateSignal)) {
-        privateSignal_ = true;
+        m_privateSignal = true;
         return true;
     }
 
@@ -366,9 +364,10 @@ bool Parameters::matchParameter()
     match(Tok_Comment);
     if (match(Tok_Equal)) {
         chunk.clear();
-        int pdepth = tokenizer_->parenDepth();
-        while (tokenizer_->parenDepth() >= pdepth
-               && (tok_ != Tok_Comma || (tokenizer_->parenDepth() > pdepth)) && tok_ != Tok_Eoi) {
+        int pdepth = m_tokenizer->parenDepth();
+        while (m_tokenizer->parenDepth() >= pdepth
+               && (m_tok != Tok_Comma || (m_tokenizer->parenDepth() > pdepth))
+               && m_tok != Tok_Eoi) {
             chunk.append(lexeme());
             readToken();
         }
@@ -386,26 +385,26 @@ bool Parameters::matchParameter()
  */
 bool Parameters::parse(const QString &signature)
 {
-    Tokenizer *outerTokenizer = tokenizer_;
-    int outerTok = tok_;
+    Tokenizer *outerTokenizer = m_tokenizer;
+    int outerTok = m_tok;
 
     QByteArray latin1 = signature.toLatin1();
     Tokenizer stringTokenizer(Location(), latin1);
     stringTokenizer.setParsingFnOrMacro(true);
-    tokenizer_ = &stringTokenizer;
+    m_tokenizer = &stringTokenizer;
 
     readToken();
     do {
         if (!matchParameter()) {
-            parameters_.clear();
-            valid_ = false;
+            m_parameters.clear();
+            m_valid = false;
             break;
         }
     } while (match(Tok_Comma));
 
-    tokenizer_ = outerTokenizer;
-    tok_ = outerTok;
-    return valid_;
+    m_tokenizer = outerTokenizer;
+    m_tok = outerTok;
+    return m_valid;
 }
 
 /*!
@@ -414,7 +413,7 @@ bool Parameters::parse(const QString &signature)
  */
 void Parameters::append(const QString &type, const QString &name, const QString &value)
 {
-    parameters_.append(Parameter(type, name, value));
+    m_parameters.append(Parameter(type, name, value));
 }
 
 /*!
@@ -424,11 +423,11 @@ void Parameters::append(const QString &type, const QString &name, const QString 
 QString Parameters::signature(bool includeValues) const
 {
     QString result;
-    if (!parameters_.empty()) {
-        for (int i = 0; i < parameters_.size(); i++) {
+    if (!m_parameters.empty()) {
+        for (int i = 0; i < m_parameters.size(); i++) {
             if (i > 0)
                 result += ", ";
-            result += parameters_.at(i).signature(includeValues);
+            result += m_parameters.at(i).signature(includeValues);
         }
     }
     return result;
@@ -445,7 +444,7 @@ QString Parameters::signature(bool includeValues) const
 QString Parameters::rawSignature(bool names, bool values) const
 {
     QString raw;
-    const auto params = parameters_;
+    const auto params = m_parameters;
     for (const auto &parameter : params) {
         raw += parameter.type();
         if (names)
@@ -468,7 +467,7 @@ void Parameters::set(const QString &signature)
     clear();
     if (!signature.isEmpty()) {
         QStringList commaSplit = signature.split(',');
-        parameters_.resize(commaSplit.size());
+        m_parameters.resize(commaSplit.size());
         int i = 0;
         for (const auto &item : qAsConst(commaSplit)) {
             QStringList blankSplit = item.split(' ', Qt::SkipEmptyParts);
@@ -492,7 +491,7 @@ void Parameters::set(const QString &signature)
                     pName = pName.mid(j);
                 }
             }
-            parameters_[i++].set(pType, pName, pDefault);
+            m_parameters[i++].set(pType, pName, pDefault);
         }
     }
 }
@@ -503,7 +502,7 @@ void Parameters::set(const QString &signature)
 QSet<QString> Parameters::getNames() const
 {
     QSet<QString> names;
-    const auto params = parameters_;
+    const auto params = m_parameters;
     for (const auto &parameter : params) {
         if (!parameter.name().isEmpty())
             names.insert(parameter.name());
@@ -521,7 +520,7 @@ QString Parameters::generateTypeList() const
         for (int i = 0; i < count(); ++i) {
             if (i > 0)
                 out += ", ";
-            out += parameters_.at(i).type();
+            out += m_parameters.at(i).type();
         }
     }
     return out;
@@ -538,7 +537,7 @@ QString Parameters::generateTypeAndNameList() const
         for (int i = 0; i < count(); ++i) {
             if (i != 0)
                 out += ", ";
-            const Parameter &p = parameters_.at(i);
+            const Parameter &p = m_parameters.at(i);
             out += p.type();
             if (out[out.size() - 1].isLetterOrNumber())
                 out += QLatin1Char(' ');
@@ -559,7 +558,7 @@ bool Parameters::match(const Parameters &parameters) const
     if (count() == 0)
         return true;
     for (int i = 0; i < count(); i++) {
-        if (parameters.at(i).type() != parameters_.at(i).type())
+        if (parameters.at(i).type() != m_parameters.at(i).type())
             return false;
     }
     return true;

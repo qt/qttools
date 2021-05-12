@@ -56,11 +56,11 @@ QStringList PureDocParser::sourceFileNameFilter()
 void PureDocParser::parseSourceFile(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
-    currentFile_ = filePath;
+    m_currentFile = filePath;
     if (!in.open(QIODevice::ReadOnly)) {
         location.error(
                 QStringLiteral("Can't open source file '%1' (%2)").arg(filePath, strerror(errno)));
-        currentFile_.clear();
+        m_currentFile.clear();
         return;
     }
 
@@ -73,11 +73,11 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
       The set of open namespaces is cleared before parsing
       each source file. The word "source" here means cpp file.
      */
-    qdb_->clearOpenNamespaces();
+    m_qdb->clearOpenNamespaces();
 
     processQdocComments();
     in.close();
-    currentFile_.clear();
+    m_currentFile.clear();
 }
 
 /*!
@@ -112,7 +112,7 @@ bool PureDocParser::processQdocComments()
 
             DocList docs;
             NodeList nodes;
-            QString topic = topics[0].topic;
+            QString topic = topics[0].m_topic;
 
             processTopicArgs(doc, topic, nodes, docs);
             processMetaCommands(nodes, docs);

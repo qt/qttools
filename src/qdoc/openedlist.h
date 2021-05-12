@@ -41,18 +41,18 @@ public:
     enum ListStyle { Bullet, Tag, Value, Numeric, UpperAlpha, LowerAlpha, UpperRoman, LowerRoman };
 
     OpenedList() : sty(Bullet), ini(1), nex(0) {}
-    OpenedList(ListStyle style);
+    explicit OpenedList(ListStyle style);
     OpenedList(const Location &location, const QString &hint);
 
     void next() { nex++; }
 
-    bool isStarted() const { return nex >= ini; }
-    ListStyle style() const { return sty; }
-    QString styleString() const;
-    int number() const { return nex; }
-    QString numberString() const;
-    QString prefix() const { return pref; }
-    QString suffix() const { return suff; }
+    [[nodiscard]] bool isStarted() const { return nex >= ini; }
+    [[nodiscard]] ListStyle style() const { return sty; }
+    [[nodiscard]] QString styleString() const;
+    [[nodiscard]] int number() const { return nex; }
+    [[nodiscard]] QString numberString() const;
+    [[nodiscard]] QString prefix() const { return pref; }
+    [[nodiscard]] QString suffix() const { return suff; }
 
 private:
     static int fromAlpha(const QString &str);

@@ -47,7 +47,7 @@ class QXmlStreamAttributes;
 class IndexSectionWriter
 {
 public:
-    virtual ~IndexSectionWriter() {}
+    virtual ~IndexSectionWriter() = default;
     virtual void append(QXmlStreamWriter &writer, Node *node) = 0;
 };
 
@@ -82,13 +82,13 @@ private:
                                IndexSectionWriter *post = nullptr);
 
 private:
-    static QDocIndexFiles *qdocIndexFiles_;
-    QDocDatabase *qdb_;
-    Generator *gen_;
-    QString project_;
-    QList<QPair<ClassNode *, QString>> basesList_;
-    NodeList relatedNodes_;
-    bool storeLocationInfo_;
+    static QDocIndexFiles *s_qdocIndexFiles;
+    QDocDatabase *m_qdb {};
+    Generator *m_gen {};
+    QString m_project;
+    QList<QPair<ClassNode *, QString>> m_basesList;
+    NodeList m_relatedNodes;
+    bool m_storeLocationInfo;
 };
 
 QT_END_NAMESPACE

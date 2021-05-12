@@ -50,7 +50,7 @@ public:
     ~QmlMarkupVisitor() override = default;
 
     QString markedUpCode();
-    bool hasError() const;
+    [[nodiscard]] bool hasError() const;
 
     bool visit(QQmlJS::AST::UiImport *) override;
     void endVisit(QQmlJS::AST::UiImport *) override;
@@ -149,14 +149,14 @@ private:
     QString sourceText(QQmlJS::SourceLocation &location);
     void throwRecursionDepthError() final;
 
-    QQmlJS::Engine *engine;
-    QList<ExtraType> extraTypes;
-    QList<QQmlJS::SourceLocation> extraLocations;
-    QString source;
-    QString output;
-    quint32 cursor;
-    int extraIndex;
-    bool hasRecursionDepthError = false;
+    QQmlJS::Engine *m_engine { nullptr };
+    QList<ExtraType> m_extraTypes {};
+    QList<QQmlJS::SourceLocation> m_extraLocations {};
+    QString m_source {};
+    QString m_output {};
+    quint32 m_cursor {};
+    int m_extraIndex {};
+    bool m_hasRecursionDepthError { false };
 };
 Q_DECLARE_TYPEINFO(QmlMarkupVisitor::ExtraType, Q_PRIMITIVE_TYPE);
 

@@ -38,24 +38,30 @@ QT_BEGIN_NAMESPACE
 class CodeChunk
 {
 public:
-    CodeChunk() : hotspot(-1) {}
+    CodeChunk() : m_hotspot(-1) { }
 
     void append(const QString &lexeme);
     void appendHotspot()
     {
-        if (hotspot == -1)
-            hotspot = s.length();
+        if (m_hotspot == -1)
+            m_hotspot = m_str.length();
     }
 
-    bool isEmpty() const { return s.isEmpty(); }
-    void clear() { s.clear(); }
-    QString toString() const { return s; }
-    QString left() const { return s.left(hotspot == -1 ? s.length() : hotspot); }
-    QString right() const { return s.mid(hotspot == -1 ? s.length() : hotspot); }
+    [[nodiscard]] bool isEmpty() const { return m_str.isEmpty(); }
+    void clear() { m_str.clear(); }
+    [[nodiscard]] QString toString() const { return m_str; }
+    [[nodiscard]] QString left() const
+    {
+        return m_str.left(m_hotspot == -1 ? m_str.length() : m_hotspot);
+    }
+    [[nodiscard]] QString right() const
+    {
+        return m_str.mid(m_hotspot == -1 ? m_str.length() : m_hotspot);
+    }
 
 private:
-    QString s;
-    int hotspot;
+    QString m_str {};
+    qsizetype m_hotspot {};
 };
 
 inline bool operator==(const CodeChunk &c, const CodeChunk &d)

@@ -53,29 +53,29 @@ DocUtilities &Doc::m_utilities = DocUtilities::instance();
 Doc::Doc(const Location &start_loc, const Location &end_loc, const QString &source,
          const QSet<QString> &metaCommandSet, const QSet<QString> &topics)
 {
-    priv = new DocPrivate(start_loc, end_loc, source);
+    m_priv = new DocPrivate(start_loc, end_loc, source);
     DocParser parser;
-    parser.parse(source, priv, metaCommandSet, topics);
+    parser.parse(source, m_priv, metaCommandSet, topics);
 }
 
-Doc::Doc(const Doc &doc) : priv(nullptr)
+Doc::Doc(const Doc &doc) : m_priv(nullptr)
 {
     operator=(doc);
 }
 
 Doc::~Doc()
 {
-    if (priv && priv->deref())
-        delete priv;
+    if (m_priv && m_priv->deref())
+        delete m_priv;
 }
 
 Doc &Doc::operator=(const Doc &doc)
 {
-    if (doc.priv)
-        doc.priv->ref();
-    if (priv && priv->deref())
-        delete priv;
-    priv = doc.priv;
+    if (doc.m_priv)
+        doc.m_priv->ref();
+    if (m_priv && m_priv->deref())
+        delete m_priv;
+    m_priv = doc.m_priv;
     return *this;
 }
 
@@ -85,7 +85,7 @@ Doc &Doc::operator=(const Doc &doc)
 const Location &Doc::location() const
 {
     static const Location dummy;
-    return priv == nullptr ? dummy : priv->start_loc;
+    return m_priv == nullptr ? dummy : m_priv->m_start_loc;
 }
 
 /*!
@@ -99,18 +99,18 @@ const Location &Doc::startLocation() const
 const QString &Doc::source() const
 {
     static QString null;
-    return priv == nullptr ? null : priv->src;
+    return m_priv == nullptr ? null : m_priv->m_src;
 }
 
 bool Doc::isEmpty() const
 {
-    return priv == nullptr || priv->src.isEmpty();
+    return m_priv == nullptr || m_priv->m_src.isEmpty();
 }
 
 const Text &Doc::body() const
 {
     static const Text dummy;
-    return priv == nullptr ? dummy : priv->text;
+    return m_priv == nullptr ? dummy : m_priv->m_text;
 }
 
 Text Doc::briefText(bool inclusive) const
@@ -181,7 +181,7 @@ Text Doc::trimmedBriefText(const QString &className) const
 
 Text Doc::legaleseText() const
 {
-    if (priv == nullptr || !priv->hasLegalese)
+    if (m_priv == nullptr || !m_priv->m_hasLegalese)
         return Text();
     else
         return body().subText(Atom::LegaleseLeft, Atom::LegaleseRight);
@@ -189,22 +189,22 @@ Text Doc::legaleseText() const
 
 QSet<QString> Doc::parameterNames() const
 {
-    return priv == nullptr ? QSet<QString>() : priv->params;
+    return m_priv == nullptr ? QSet<QString>() : m_priv->m_params;
 }
 
 QStringList Doc::enumItemNames() const
 {
-    return priv == nullptr ? QStringList() : priv->enumItemList;
+    return m_priv == nullptr ? QStringList() : m_priv->m_enumItemList;
 }
 
 QStringList Doc::omitEnumItemNames() const
 {
-    return priv == nullptr ? QStringList() : priv->omitEnumItemList;
+    return m_priv == nullptr ? QStringList() : m_priv->m_omitEnumItemList;
 }
 
 QSet<QString> Doc::metaCommandsUsed() const
 {
-    return priv == nullptr ? QSet<QString>() : priv->metacommandsUsed;
+    return m_priv == nullptr ? QSet<QString>() : m_priv->m_metacommandsUsed;
 }
 
 /*!
@@ -232,61 +232,61 @@ bool Doc::isMarkedReimp() const
  */
 TopicList Doc::topicsUsed() const
 {
-    return priv == nullptr ? TopicList() : priv->topics_;
+    return m_priv == nullptr ? TopicList() : m_priv->m_topics;
 }
 
 ArgList Doc::metaCommandArgs(const QString &metacommand) const
 {
-    return priv == nullptr ? ArgList() : priv->metaCommandMap.value(metacommand);
+    return m_priv == nullptr ? ArgList() : m_priv->m_metaCommandMap.value(metacommand);
 }
 
 QList<Text> Doc::alsoList() const
 {
-    return priv == nullptr ? QList<Text>() : priv->alsoList;
+    return m_priv == nullptr ? QList<Text>() : m_priv->m_alsoList;
 }
 
 bool Doc::hasTableOfContents() const
 {
-    return priv && priv->extra && !priv->extra->tableOfContents_.isEmpty();
+    return m_priv && m_priv->extra && !m_priv->extra->m_tableOfContents.isEmpty();
 }
 
 bool Doc::hasKeywords() const
 {
-    return priv && priv->extra && !priv->extra->keywords_.isEmpty();
+    return m_priv && m_priv->extra && !m_priv->extra->m_keywords.isEmpty();
 }
 
 bool Doc::hasTargets() const
 {
-    return priv && priv->extra && !priv->extra->targets_.isEmpty();
+    return m_priv && m_priv->extra && !m_priv->extra->m_targets.isEmpty();
 }
 
 const QList<Atom *> &Doc::tableOfContents() const
 {
-    priv->constructExtra();
-    return priv->extra->tableOfContents_;
+    m_priv->constructExtra();
+    return m_priv->extra->m_tableOfContents;
 }
 
 const QList<int> &Doc::tableOfContentsLevels() const
 {
-    priv->constructExtra();
-    return priv->extra->tableOfContentsLevels_;
+    m_priv->constructExtra();
+    return m_priv->extra->m_tableOfContentsLevels;
 }
 
 const QList<Atom *> &Doc::keywords() const
 {
-    priv->constructExtra();
-    return priv->extra->keywords_;
+    m_priv->constructExtra();
+    return m_priv->extra->m_keywords;
 }
 
 const QList<Atom *> &Doc::targets() const
 {
-    priv->constructExtra();
-    return priv->extra->targets_;
+    m_priv->constructExtra();
+    return m_priv->extra->m_targets;
 }
 
 QStringMultiMap *Doc::metaTagMap() const
 {
-    return priv && priv->extra ? &priv->extra->metaMap_ : nullptr;
+    return m_priv && m_priv->extra ? &m_priv->extra->m_metaMap : nullptr;
 }
 
 void Doc::initialize()
@@ -312,25 +312,25 @@ void Doc::initialize()
         QString macroDotName = CONFIG_MACRO + Config::dot + macroName;
         Macro macro;
         macro.numParams = -1;
-        macro.defaultDef = config.getString(macroDotName);
-        if (!macro.defaultDef.isEmpty()) {
-            macro.defaultDefLocation = config.lastLocation();
-            macro.numParams = Config::numParams(macro.defaultDef);
+        macro.m_defaultDef = config.getString(macroDotName);
+        if (!macro.m_defaultDef.isEmpty()) {
+            macro.m_defaultDefLocation = config.lastLocation();
+            macro.numParams = Config::numParams(macro.m_defaultDef);
         }
         bool silent = false;
 
         for (const auto &f : config.subVars(macroDotName)) {
             QString def = config.getString(macroDotName + Config::dot + f);
             if (!def.isEmpty()) {
-                macro.otherDefs.insert(f, def);
+                macro.m_otherDefs.insert(f, def);
                 int m = Config::numParams(def);
                 if (macro.numParams == -1)
                     macro.numParams = m;
                 else if (macro.numParams != m) {
                     if (!silent) {
                         QString other = QStringLiteral("default");
-                        if (macro.defaultDef.isEmpty())
-                            other = macro.otherDefs.constBegin().key();
+                        if (macro.m_defaultDef.isEmpty())
+                            other = macro.m_otherDefs.constBegin().key();
                         config.lastLocation().warning(
                                 QStringLiteral("Macro '\\%1' takes inconsistent number of "
                                                "arguments (%2 %3, %4 %5)")
@@ -403,8 +403,9 @@ void Doc::trimCStyleComment(Location &location, QString &str)
 QString Doc::resolveFile(const Location &location, const QString &fileName,
                          QString *userFriendlyFilePath)
 {
-    const QString result = Config::findFile(location, DocParser::exampleFiles,
-                                            DocParser::exampleDirs, fileName, userFriendlyFilePath);
+    const QString result =
+            Config::findFile(location, DocParser::s_exampleFiles, DocParser::s_exampleDirs,
+                             fileName, userFriendlyFilePath);
     qCDebug(lcQdoc).noquote().nospace()
             << __FUNCTION__ << "(location=" << location.fileName() << ':' << location.lineNo()
             << ", fileName=\"" << fileName << "\"), resolved to \"" << result;
@@ -421,10 +422,10 @@ CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, const Q
     const QString filePath = resolveFile(location, fileName, &userFriendlyFilePath);
     if (filePath.isEmpty()) {
         QString details = QLatin1String("Example directories: ")
-                + DocParser::exampleDirs.join(QLatin1Char(' '));
-        if (!DocParser::exampleFiles.isEmpty())
+                + DocParser::s_exampleDirs.join(QLatin1Char(' '));
+        if (!DocParser::s_exampleFiles.isEmpty())
             details += QLatin1String(", example files: ")
-                    + DocParser::exampleFiles.join(QLatin1Char(' '));
+                    + DocParser::s_exampleFiles.join(QLatin1Char(' '));
         location.warning(QStringLiteral("Cannot find file to quote from: '%1'").arg(fileName),
                          details);
     } else {
@@ -482,21 +483,21 @@ QString Doc::canonicalTitle(const QString &title)
 
 void Doc::detach()
 {
-    if (priv == nullptr) {
-        priv = new DocPrivate;
+    if (m_priv == nullptr) {
+        m_priv = new DocPrivate;
         return;
     }
-    if (priv->count == 1)
+    if (m_priv->count == 1)
         return;
 
-    --priv->count;
+    --m_priv->count;
 
-    auto *newPriv = new DocPrivate(*priv);
+    auto *newPriv = new DocPrivate(*m_priv);
     newPriv->count = 1;
-    if (priv->extra)
-        newPriv->extra = new DocPrivateExtra(*priv->extra);
+    if (m_priv->extra)
+        newPriv->extra = new DocPrivateExtra(*m_priv->extra);
 
-    priv = newPriv;
+    m_priv = newPriv;
 }
 
 /*!
@@ -505,8 +506,8 @@ void Doc::detach()
  */
 QString Doc::bracketedArgs(const QString &command) const
 {
-    if (priv && priv->extra && !priv->extra->bracketedArgs_.isEmpty())
-        return priv->extra->bracketedArgs_[command];
+    if (m_priv && m_priv->extra && !m_priv->extra->m_bracketedArgs.isEmpty())
+        return m_priv->extra->m_bracketedArgs[command];
     return QString();
 }
 

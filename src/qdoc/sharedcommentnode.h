@@ -50,12 +50,12 @@ public:
     SharedCommentNode(QmlTypeNode *parent, int count, QString &group);
     ~SharedCommentNode() override { m_collective.clear(); }
 
-    bool isPropertyGroup() const override
+    [[nodiscard]] bool isPropertyGroup() const override
     {
         return !name().isEmpty() && !m_collective.isEmpty()
                 && (m_collective.at(0)->isQmlProperty() || m_collective.at(0)->isJsProperty());
     }
-    qsizetype count() const { return m_collective.size(); }
+    [[nodiscard]] qsizetype count() const { return m_collective.size(); }
     void append(Node *node)
     {
         m_collective.append(node);
@@ -63,7 +63,7 @@ public:
         setGenus(node->genus());
     }
     void sort() { std::sort(m_collective.begin(), m_collective.end(), Node::nodeNameLessThan); }
-    const QList<Node *> &collective() const { return m_collective; }
+    [[nodiscard]] const QList<Node *> &collective() const { return m_collective; }
     void setOverloadFlags();
     void setRelatedNonmember(bool value) override;
     Node *clone(Aggregate *parent) override;

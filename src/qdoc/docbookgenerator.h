@@ -52,7 +52,7 @@ public:
     QString format() override;
 
 protected:
-    QString fileExtension() const override;
+    [[nodiscard]] QString fileExtension() const override;
     void generateDocumentation(Node *node) override;
     using Generator::generateCppReferencePage;
     void generateCppReferencePage(Node *node);
@@ -159,19 +159,18 @@ private:
     void generateSynopsisInfo(const QString &key, const QString &value);
     void generateModifier(const QString &value);
 
-    bool inListItemLineOpen {};
-    bool inLink {};
+    bool m_inListItemLineOpen {};
     int currentSectionLevel {};
     QStack<int> sectionLevels {};
-    QString qflagsHref_;
+    QString m_qflagsHref {};
 
-    QString project;
-    QString projectDescription;
-    QString naturalLanguage;
-    QString buildversion;
-    QXmlStreamWriter *writer = nullptr;
+    QString m_project {};
+    QString m_projectDescription {};
+    QString m_naturalLanguage {};
+    QString m_buildVersion {};
+    QXmlStreamWriter *m_writer { nullptr };
 
-    Config *config = nullptr;
+    Config *m_config { nullptr };
 };
 
 QT_END_NAMESPACE

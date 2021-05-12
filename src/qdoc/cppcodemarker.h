@@ -42,7 +42,7 @@ public:
     bool recognizeCode(const QString &code) override;
     bool recognizeExtension(const QString &ext) override;
     bool recognizeLanguage(const QString &lang) override;
-    Atom::AtomType atomType() const override;
+    [[nodiscard]] Atom::AtomType atomType() const override;
     QString markedUpCode(const QString &code, const Node *relative,
                          const Location &location) override;
     QString markedUpSynopsis(const Node *node, const Node *relative, Section::Style style) override;

@@ -34,7 +34,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QMultiMap<const Node *, Node *> QmlTypeNode::inheritedBy;
+QMultiMap<const Node *, Node *> QmlTypeNode::s_inheritedBy;
 
 /*!
   Constructs a Qml type node or a Js type node depending on
@@ -54,7 +54,7 @@ QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
  */
 void QmlTypeNode::terminate()
 {
-    inheritedBy.clear();
+    s_inheritedBy.clear();
 }
 
 /*!
@@ -65,8 +65,8 @@ void QmlTypeNode::addInheritedBy(const Node *base, Node *sub)
 {
     if (sub->isInternal())
         return;
-    if (!inheritedBy.contains(base, sub))
-        inheritedBy.insert(base, sub);
+    if (!s_inheritedBy.contains(base, sub))
+        s_inheritedBy.insert(base, sub);
 }
 
 /*!
@@ -75,8 +75,8 @@ void QmlTypeNode::addInheritedBy(const Node *base, Node *sub)
 void QmlTypeNode::subclasses(const Node *base, NodeList &subs)
 {
     subs.clear();
-    if (inheritedBy.count(base) > 0) {
-        subs = inheritedBy.values(base);
+    if (s_inheritedBy.count(base) > 0) {
+        subs = s_inheritedBy.values(base);
     }
 }
 

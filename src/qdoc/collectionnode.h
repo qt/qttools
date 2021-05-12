@@ -44,29 +44,29 @@ public:
     {
     }
 
-    bool isCollectionNode() const override { return true; }
-    QString qtVariable() const override { return m_qtVariable; }
+    [[nodiscard]] bool isCollectionNode() const override { return true; }
+    [[nodiscard]] QString qtVariable() const override { return m_qtVariable; }
     void setQtVariable(const QString &v) override { m_qtVariable = v; }
-    QString qtCMakeComponent() const override { return m_qtCMakeComponent; }
+    [[nodiscard]] QString qtCMakeComponent() const override { return m_qtCMakeComponent; }
     void setQtCMakeComponent(const QString &target) override { m_qtCMakeComponent = target; }
     void addMember(Node *node) override;
-    bool hasNamespaces() const override;
-    bool hasClasses() const override;
+    [[nodiscard]] bool hasNamespaces() const override;
+    [[nodiscard]] bool hasClasses() const override;
     void getMemberNamespaces(NodeMap &out) override;
     void getMemberClasses(NodeMap &out) const override;
-    bool wasSeen() const override { return m_seen; }
+    [[nodiscard]] bool wasSeen() const override { return m_seen; }
 
-    QString fullTitle() const override { return title(); }
-    QString logicalModuleName() const override { return m_logicalModuleName; }
-    QString logicalModuleVersion() const override;
-    QString logicalModuleIdentifier() const override
+    [[nodiscard]] QString fullTitle() const override { return title(); }
+    [[nodiscard]] QString logicalModuleName() const override { return m_logicalModuleName; }
+    [[nodiscard]] QString logicalModuleVersion() const override;
+    [[nodiscard]] QString logicalModuleIdentifier() const override
     {
         return m_logicalModuleName + m_logicalModuleVersionMajor;
     }
     void setLogicalModuleInfo(const QString &arg) override;
     void setLogicalModuleInfo(const QStringList &info) override;
 
-    const NodeList &members() const { return m_members; }
+    [[nodiscard]] const NodeList &members() const { return m_members; }
 
     void markSeen() { m_seen = true; }
     void markNotSeen() { m_seen = false; }

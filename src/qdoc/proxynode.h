@@ -39,8 +39,8 @@ class ProxyNode : public Aggregate
 {
 public:
     ProxyNode(Aggregate *parent, const QString &name);
-    bool docMustBeGenerated() const override { return true; }
-    bool isRelatableType() const override { return true; }
+    [[nodiscard]] bool docMustBeGenerated() const override { return true; }
+    [[nodiscard]] bool isRelatableType() const override { return true; }
 };
 
 QT_END_NAMESPACE

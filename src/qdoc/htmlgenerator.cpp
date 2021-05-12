@@ -58,8 +58,6 @@
 
 QT_BEGIN_NAMESPACE
 
-int HtmlGenerator::id = 0;
-
 static bool showBrokenLinks = false;
 
 static void addLink(const QString &linkTarget, QStringView nestedStuff, QString *res)

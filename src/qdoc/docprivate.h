@@ -58,12 +58,12 @@ typedef QMap<QString, ArgList> CommandMap;
 
 struct DocPrivateExtra
 {
-    QList<Atom *> tableOfContents_;
-    QList<int> tableOfContentsLevels_;
-    QList<Atom *> keywords_;
-    QList<Atom *> targets_;
-    QStringMultiMap metaMap_;
-    QMap<QString, QString> bracketedArgs_ {};
+    QList<Atom *> m_tableOfContents {};
+    QList<int> m_tableOfContentsLevels {};
+    QList<Atom *> m_keywords {};
+    QList<Atom *> m_targets {};
+    QStringMultiMap m_metaMap {};
+    QMap<QString, QString> m_bracketedArgs {};
 };
 
 class DocPrivate
@@ -71,7 +71,7 @@ class DocPrivate
 public:
     explicit DocPrivate(const Location &start = Location(), const Location &end = Location(),
                         QString source = QString())
-        : start_loc(start), end_loc(end), src(std::move(source)), hasLegalese(false) {};
+        : m_start_loc(start), m_end_loc(end), m_src(std::move(source)), m_hasLegalese(false) {};
     ~DocPrivate();
 
     void addAlso(const Text &also);
@@ -81,20 +81,20 @@ public:
 
     int count { 1 };
     // ### move some of this in DocPrivateExtra
-    Location start_loc;
-    Location end_loc;
-    QString src;
-    Text text;
-    QSet<QString> params;
-    QList<Text> alsoList;
-    QStringList enumItemList;
-    QStringList omitEnumItemList;
-    QSet<QString> metacommandsUsed;
-    CommandMap metaCommandMap;
+    Location m_start_loc {};
+    Location m_end_loc {};
+    QString m_src {};
+    Text m_text {};
+    QSet<QString> m_params {};
+    QList<Text> m_alsoList {};
+    QStringList m_enumItemList {};
+    QStringList m_omitEnumItemList {};
+    QSet<QString> m_metacommandsUsed {};
+    CommandMap m_metaCommandMap {};
     DocPrivateExtra *extra { nullptr };
-    TopicList topics_;
+    TopicList m_topics {};
 
-    bool hasLegalese : 1;
+    bool m_hasLegalese : 1;
 };
 
 QT_END_NAMESPACE

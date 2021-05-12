@@ -41,11 +41,11 @@ class ExampleNode : public PageNode
 {
 public:
     ExampleNode(Aggregate *parent, const QString &name) : PageNode(Node::Example, parent, name) {}
-    QString imageFileName() const override { return m_imageFileName; }
+    [[nodiscard]] QString imageFileName() const override { return m_imageFileName; }
     void setImageFileName(const QString &ifn) override { m_imageFileName = ifn; }
-    const QStringList &files() const { return m_files; }
-    const QStringList &images() const { return m_images; }
-    const QString &projectFile() const { return m_projectFile; }
+    [[nodiscard]] const QStringList &files() const { return m_files; }
+    [[nodiscard]] const QStringList &images() const { return m_images; }
+    [[nodiscard]] const QString &projectFile() const { return m_projectFile; }
     void setFiles(const QStringList &files, const QString &projectFile)
     {
         m_files = files;

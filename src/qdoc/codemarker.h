@@ -45,7 +45,7 @@ public:
     virtual bool recognizeCode(const QString & /*code*/) { return true; }
     virtual bool recognizeExtension(const QString & /*extension*/) { return true; }
     virtual bool recognizeLanguage(const QString & /*language*/) { return false; }
-    virtual Atom::AtomType atomType() const { return Atom::Code; }
+    [[nodiscard]] virtual Atom::AtomType atomType() const { return Atom::Code; }
     virtual QString markedUpCode(const QString &code, const Node * /*relative*/,
                                  const Location & /*location*/)
     {
@@ -85,8 +85,8 @@ protected:
     QString linkTag(const Node *node, const QString &body);
 
 private:
-    static QString defaultLang;
-    static QList<CodeMarker *> markers;
+    static QString s_defaultLang;
+    static QList<CodeMarker *> s_markers;
 };
 
 QT_END_NAMESPACE

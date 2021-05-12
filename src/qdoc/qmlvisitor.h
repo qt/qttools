@@ -45,17 +45,17 @@ class Aggregate;
 
 struct QmlPropArgs
 {
-    QString type_;
-    QString module_;
-    QString component_;
-    QString name_;
+    QString m_type {};
+    QString m_module {};
+    QString m_component {};
+    QString m_name;
 
     void clear()
     {
-        type_.clear();
-        module_.clear();
-        component_.clear();
-        name_.clear();
+        m_type.clear();
+        m_module.clear();
+        m_component.clear();
+        m_name.clear();
     }
 };
 
@@ -93,27 +93,27 @@ public:
     void endVisit(QQmlJS::AST::UiQualifiedId *) override;
 
     void throwRecursionDepthError() final;
-    bool hasError() const;
+    [[nodiscard]] bool hasError() const;
 
 private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);
-    QQmlJS::SourceLocation precedingComment(quint32 offset) const;
+    [[nodiscard]] QQmlJS::SourceLocation precedingComment(quint32 offset) const;
     bool applyDocumentation(QQmlJS::SourceLocation location, Node *node);
     void applyMetacommands(QQmlJS::SourceLocation location, Node *node, Doc &doc);
     bool splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlPropArgs &qpa);
 
-    QQmlJS::Engine *engine;
-    quint32 lastEndOffset;
-    quint32 nestingLevel;
-    QString filePath_;
-    QString name;
-    QString document;
-    ImportList importList;
-    QSet<QString> commands_;
-    QSet<QString> topics_;
-    QSet<quint32> usedComments;
-    Aggregate *current;
-    bool hasRecursionDepthError = false;
+    QQmlJS::Engine *m_engine { nullptr };
+    quint32 m_lastEndOffset {};
+    quint32 m_nestingLevel {};
+    QString m_filePath {};
+    QString m_name {};
+    QString m_document {};
+    ImportList m_importList {};
+    QSet<QString> m_commands {};
+    QSet<QString> m_topics {};
+    QSet<quint32> m_usedComments {};
+    Aggregate *m_current { nullptr };
+    bool hasRecursionDepthError { false };
 };
 #endif
 

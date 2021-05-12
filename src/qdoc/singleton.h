@@ -44,8 +44,8 @@ public:
     Singleton &operator=(const Singleton &) = delete;
     static T &instance()
     {
-        static T instance;
-        return instance;
+        static T s_instance {};
+        return s_instance;
     }
 
 protected:

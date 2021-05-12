@@ -110,14 +110,14 @@ public:
     ~Tokenizer();
 
     int getToken();
-    void setParsingFnOrMacro(bool macro) { parsingMacro = macro; }
+    void setParsingFnOrMacro(bool macro) { m_parsingMacro = macro; }
 
-    const Location &location() const { return yyTokLoc; }
-    QString previousLexeme() const;
-    QString lexeme() const;
-    QString version() const { return yyVersion; }
-    int parenDepth() const { return yyParenDepth; }
-    int bracketDepth() const { return yyBracketDepth; }
+    [[nodiscard]] const Location &location() const { return m_tokLoc; }
+    [[nodiscard]] QString previousLexeme() const;
+    [[nodiscard]] QString lexeme() const;
+    [[nodiscard]] QString version() const { return m_version; }
+    [[nodiscard]] int parenDepth() const { return m_parenDepth; }
+    [[nodiscard]] int bracketDepth() const { return m_bracketDepth; }
 
     static void initialize();
     static void terminate();
@@ -133,17 +133,17 @@ private:
     */
     enum { yyLexBufSize = 524288 };
 
-    int getch() { return yyPos == yyIn.size() ? EOF : yyIn[yyPos++]; }
+    int getch() { return m_pos == m_in.size() ? EOF : m_in[m_pos++]; }
 
     inline int getChar()
     {
-        if (yyCh == EOF)
+        if (m_ch == EOF)
             return EOF;
-        if (yyLexLen < yyLexBufSize - 1) {
-            yyLex[yyLexLen++] = (char)yyCh;
-            yyLex[yyLexLen] = '\0';
+        if (m_lexLen < yyLexBufSize - 1) {
+            m_lex[m_lexLen++] = (char)m_ch;
+            m_lex[m_lexLen] = '\0';
         }
-        yyCurLoc.advance(QChar(yyCh));
+        m_curLoc.advance(QChar(m_ch));
         int ch = getch();
         if (ch == EOF)
             return EOF;
@@ -157,26 +157,26 @@ private:
     void pushSkipping(bool skip);
     bool popSkipping();
 
-    Location yyTokLoc;
-    Location yyCurLoc;
-    char *yyLexBuf1 {};
-    char *yyLexBuf2 {};
-    char *yyPrevLex {};
-    char *yyLex {};
-    size_t yyLexLen {};
-    QStack<bool> yyPreprocessorSkipping;
-    int yyNumPreprocessorSkipping {};
-    int yyBraceDepth {};
-    int yyParenDepth {};
-    int yyBracketDepth {};
-    int yyCh {};
+    Location m_tokLoc;
+    Location m_curLoc;
+    char *m_lexBuf1 { nullptr };
+    char *m_lexBuf2 { nullptr };
+    char *m_prevLex { nullptr };
+    char *m_lex { nullptr };
+    size_t m_lexLen {};
+    QStack<bool> m_preprocessorSkipping;
+    int m_numPreprocessorSkipping {};
+    int m_braceDepth {};
+    int m_parenDepth {};
+    int m_bracketDepth {};
+    int m_ch {};
 
-    QString yyVersion;
-    bool parsingMacro {};
+    QString m_version {};
+    bool m_parsingMacro {};
 
 protected:
-    QByteArray yyIn;
-    int yyPos;
+    QByteArray m_in {};
+    int m_pos {};
 };
 
 QT_END_NAMESPACE

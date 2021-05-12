@@ -40,12 +40,12 @@ class HeaderNode : public Aggregate
 {
 public:
     HeaderNode(Aggregate *parent, const QString &name);
-    bool docMustBeGenerated() const override;
-    bool isFirstClassAggregate() const override { return true; }
-    bool isRelatableType() const override { return true; }
-    QString title() const override { return (m_title.isEmpty() ? name() : m_title); }
-    QString subtitle() const override { return m_subtitle; }
-    QString fullTitle() const override
+    [[nodiscard]] bool docMustBeGenerated() const override;
+    [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
+    [[nodiscard]] bool isRelatableType() const override { return true; }
+    [[nodiscard]] QString title() const override { return (m_title.isEmpty() ? name() : m_title); }
+    [[nodiscard]] QString subtitle() const override { return m_subtitle; }
+    [[nodiscard]] QString fullTitle() const override
     {
         return (m_title.isEmpty() ? name() : name() + " - " + m_title);
     }
@@ -59,12 +59,12 @@ public:
         m_subtitle = subtitle;
         return true;
     }
-    QString nameForLists() const override { return title(); }
-    bool hasDocumentedChildren() const;
+    [[nodiscard]] QString nameForLists() const override { return title(); }
+    [[nodiscard]] bool hasDocumentedChildren() const;
 
 private:
-    QString m_title;
-    QString m_subtitle;
+    QString m_title {};
+    QString m_subtitle {};
 };
 
 QT_END_NAMESPACE

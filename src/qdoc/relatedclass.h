@@ -47,7 +47,7 @@ struct RelatedClass
     RelatedClass(Access access, ClassNode *node) : m_access(access), m_node(node) {}
     // constructor for unresolved base class
     RelatedClass(Access access, QStringList path) : m_access(access), m_path(std::move(path)) { }
-    bool isPrivate() const;
+    [[nodiscard]] bool isPrivate() const;
 
     Access m_access {};
     ClassNode *m_node { nullptr };

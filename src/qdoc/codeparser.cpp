@@ -37,8 +37,8 @@
 
 QT_BEGIN_NAMESPACE
 
-QList<CodeParser *> CodeParser::parsers;
-bool CodeParser::showInternal_ = false;
+QList<CodeParser *> CodeParser::s_parsers;
+bool CodeParser::s_showInternal = false;
 
 /*!
   The constructor adds this code parser to the static
@@ -46,8 +46,8 @@ bool CodeParser::showInternal_ = false;
  */
 CodeParser::CodeParser()
 {
-    qdb_ = QDocDatabase::qdocDB();
-    parsers.prepend(this);
+    m_qdb = QDocDatabase::qdocDB();
+    s_parsers.prepend(this);
 }
 
 /*!
@@ -56,7 +56,7 @@ CodeParser::CodeParser()
  */
 CodeParser::~CodeParser()
 {
-    parsers.removeAll(this);
+    s_parsers.removeAll(this);
 }
 
 /*!
@@ -64,7 +64,7 @@ CodeParser::~CodeParser()
  */
 void CodeParser::initializeParser()
 {
-    showInternal_ = Config::instance().showInternal();
+    s_showInternal = Config::instance().showInternal();
 }
 
 /*!
@@ -91,7 +91,7 @@ void CodeParser::parseHeaderFile(const Location &location, const QString &filePa
  */
 void CodeParser::initialize()
 {
-    for (const auto &parser : qAsConst(parsers))
+    for (const auto &parser : qAsConst(s_parsers))
         parser->initializeParser();
 }
 
@@ -100,13 +100,13 @@ void CodeParser::initialize()
  */
 void CodeParser::terminate()
 {
-    for (const auto parser : parsers)
+    for (const auto parser : s_parsers)
         parser->terminateParser();
 }
 
 CodeParser *CodeParser::parserForLanguage(const QString &language)
 {
-    for (const auto parser : qAsConst(parsers)) {
+    for (const auto parser : qAsConst(s_parsers)) {
         if (parser->language() == language)
             return parser;
     }
@@ -117,7 +117,7 @@ CodeParser *CodeParser::parserForHeaderFile(const QString &filePath)
 {
     QString fileName = QFileInfo(filePath).fileName();
 
-    for (const auto &parser : qAsConst(parsers)) {
+    for (const auto &parser : qAsConst(s_parsers)) {
         const QStringList headerPatterns = parser->headerFileNameFilter();
         for (const auto &pattern : headerPatterns) {
             auto re = QRegularExpression::fromWildcard(pattern, Qt::CaseInsensitive);
@@ -132,7 +132,7 @@ CodeParser *CodeParser::parserForSourceFile(const QString &filePath)
 {
     QString fileName = QFileInfo(filePath).fileName();
 
-    for (const auto &parser : parsers) {
+    for (const auto &parser : s_parsers) {
         const QStringList sourcePatterns = parser->sourceFileNameFilter();
         for (const QString &pattern : sourcePatterns) {
             auto re = QRegularExpression::fromWildcard(pattern, Qt::CaseInsensitive);
@@ -211,7 +211,7 @@ void CodeParser::setLink(Node *node, Node::LinkType linkType, const QString &arg
  */
 bool CodeParser::isWorthWarningAbout(const Doc &doc)
 {
-    return (showInternal_ || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
+    return (s_showInternal || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
 }
 
 /*!
@@ -260,7 +260,7 @@ void CodeParser::checkModuleInclusion(Node *n)
                 return;
             }
 
-            qdb_->addToModule(Generator::defaultModuleName(), n);
+            m_qdb->addToModule(Generator::defaultModuleName(), n);
             n->doc().location().warning(
                     QStringLiteral("%1 %2 has no \\inmodule command; "
                                    "using project name by default: %3")

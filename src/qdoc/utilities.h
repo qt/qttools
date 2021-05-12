@@ -44,7 +44,7 @@ bool debugging();
 
 QString separator(qsizetype wordPosition, qsizetype numberOfWords);
 QString comma(qsizetype wordPosition, qsizetype numberOfWords);
-};
+}
 
 QT_END_NAMESPACE
 

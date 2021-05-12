@@ -34,18 +34,18 @@ struct Topic
 {
 public:
     Topic() = default;
-    Topic(QString &t, QString a) : topic(t), args(std::move(a)) {}
+    Topic(QString &t, QString a) : m_topic(t), m_args(std::move(a)) { }
     ~Topic() = default;
 
-    bool isEmpty() const { return topic.isEmpty(); }
+    [[nodiscard]] bool isEmpty() const { return m_topic.isEmpty(); }
     void clear()
     {
-        topic.clear();
-        args.clear();
+        m_topic.clear();
+        m_args.clear();
     }
 
-    QString topic;
-    QString args;
+    QString m_topic {};
+    QString m_args {};
 };
 typedef QList<Topic> TopicList;
 

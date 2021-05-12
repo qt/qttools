@@ -42,8 +42,8 @@ public:
     EnumItem() = default;
     EnumItem(QString name, QString value) : m_name(std::move(name)), m_value(std::move(value)) { }
 
-    const QString &name() const { return m_name; }
-    const QString &value() const { return m_value; }
+    [[nodiscard]] const QString &name() const { return m_name; }
+    [[nodiscard]] const QString &value() const { return m_value; }
 
 private:
     QString m_name {};

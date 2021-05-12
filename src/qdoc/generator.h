@@ -80,21 +80,21 @@ public:
     QString linkForExampleFile(const QString &path, const Node *parent,
                                const QString &fileExt = QString());
     static QString exampleFileTitle(const ExampleNode *relative, const QString &fileName);
-    static Generator *currentGenerator() { return currentGenerator_; }
+    static Generator *currentGenerator() { return s_currentGenerator; }
     static Generator *generatorForFormat(const QString &format);
     static void initialize();
-    static const QString &outputDir() { return outDir_; }
-    static const QString &outputSubdir() { return outSubdir_; }
+    static const QString &outputDir() { return s_outDir; }
+    static const QString &outputSubdir() { return s_outSubdir; }
     static void terminate();
-    static const QStringList &outputFileNames() { return outFileNames_; }
+    static const QStringList &outputFileNames() { return s_outFileNames; }
     static void augmentImageDirs(QSet<QString> &moreImageDirs);
-    static bool noLinkErrors() { return noLinkErrors_; }
-    static bool autolinkErrors() { return autolinkErrors_; }
-    static QString defaultModuleName() { return project_; }
-    static void resetUseOutputSubdirs() { useOutputSubdirs_ = false; }
-    static bool useOutputSubdirs() { return useOutputSubdirs_; }
-    static void setQmlTypeContext(QmlTypeNode *t) { qmlTypeContext_ = t; }
-    static QmlTypeNode *qmlTypeContext() { return qmlTypeContext_; }
+    static bool noLinkErrors() { return s_noLinkErrors; }
+    static bool autolinkErrors() { return s_autolinkErrors; }
+    static QString defaultModuleName() { return s_project; }
+    static void resetUseOutputSubdirs() { s_useOutputSubdirs = false; }
+    static bool useOutputSubdirs() { return s_useOutputSubdirs; }
+    static void setQmlTypeContext(QmlTypeNode *t) { s_qmlTypeContext = t; }
+    static QmlTypeNode *qmlTypeContext() { return s_qmlTypeContext; }
     static QString cleanRef(const QString &ref);
     static QString plainCode(const QString &markedCode);
     virtual QString fileBase(const Node *node) const;
@@ -105,7 +105,7 @@ protected:
     void endFilePage() { endSubPage(); } // for symmetry
     void beginSubPage(const Node *node, const QString &fileName);
     void endSubPage();
-    virtual QString fileExtension() const = 0;
+    [[nodiscard]] virtual QString fileExtension() const = 0;
     virtual void generateExampleFilePage(const Node *, const QString &, CodeMarker *) {}
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual qsizetype generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
@@ -145,7 +145,11 @@ protected:
     void generateSince(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     virtual void generateAddendum(const Node *node, Addendum type, CodeMarker *marker,
-                                  bool generateNote = true);
+                                  bool generateNote);
+    virtual void generateAddendum(const Node *node, Addendum type, CodeMarker *marker)
+    {
+        generateAddendum(node, type, marker, true);
+    };
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
     QStringList getMetadataElements(const Aggregate *inner, const QString &t);
     void generateOverloadedSignal(const Node *node, CodeMarker *marker);
@@ -179,27 +183,27 @@ protected:
     static bool comparePaths(const QString &a, const QString &b) { return (a < b); }
 
 private:
-    static Generator *currentGenerator_;
-    static QStringList exampleDirs;
-    static QStringList exampleImgExts;
-    static QMap<QString, QMap<QString, QString>> fmtLeftMaps;
-    static QMap<QString, QMap<QString, QString>> fmtRightMaps;
-    static QList<Generator *> generators;
-    static QStringList imageDirs;
-    static QStringList imageFiles;
-    static QMap<QString, QStringList> imgFileExts;
-    static QString project_;
-    static QString outDir_;
-    static QString outSubdir_;
-    static QStringList outFileNames_;
-    static QSet<QString> outputFormats;
-    static QHash<QString, QString> outputPrefixes;
-    static QHash<QString, QString> outputSuffixes;
-    static bool noLinkErrors_;
-    static bool autolinkErrors_;
-    static bool redirectDocumentationToDevNull_;
-    static bool useOutputSubdirs_;
-    static QmlTypeNode *qmlTypeContext_;
+    static Generator *s_currentGenerator;
+    static QStringList s_exampleDirs;
+    static QStringList s_exampleImgExts;
+    static QMap<QString, QMap<QString, QString>> s_fmtLeftMaps;
+    static QMap<QString, QMap<QString, QString>> s_fmtRightMaps;
+    static QList<Generator *> s_generators;
+    static QStringList s_imageDirs;
+    static QStringList s_imageFiles;
+    static QMap<QString, QStringList> s_imgFileExts;
+    static QString s_project;
+    static QString s_outDir;
+    static QString s_outSubdir;
+    static QStringList s_outFileNames;
+    static QSet<QString> s_outputFormats;
+    static QHash<QString, QString> s_outputPrefixes;
+    static QHash<QString, QString> s_outputSuffixes;
+    static bool s_noLinkErrors;
+    static bool s_autolinkErrors;
+    static bool s_redirectDocumentationToDevNull;
+    static bool s_useOutputSubdirs;
+    static QmlTypeNode *s_qmlTypeContext;
 
     void generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker);
     static void copyTemplateFiles(const QString &configVar, const QString &subDir);

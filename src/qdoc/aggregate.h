@@ -43,7 +43,8 @@ class QmlPropertyNode;
 class Aggregate : public PageNode
 {
 public:
-    Node *findChildNode(const QString &name, Node::Genus genus, int findFlags = 0) const;
+    [[nodiscard]] Node *findChildNode(const QString &name, Node::Genus genus,
+                                      int findFlags = 0) const;
     Node *findNonfunctionChild(const QString &name, bool (Node::*)() const);
     void findChildren(const QString &name, NodeVector &nodes) const;
     FunctionNode *findFunctionChild(const QString &name, const Parameters &parameters);
@@ -52,21 +53,21 @@ public:
     void normalizeOverloads();
     void markUndocumentedChildrenInternal();
 
-    bool isAggregate() const override { return true; }
-    const EnumNode *findEnumNodeForValue(const QString &enumValue) const;
+    [[nodiscard]] bool isAggregate() const override { return true; }
+    [[nodiscard]] const EnumNode *findEnumNodeForValue(const QString &enumValue) const;
 
-    qsizetype count() const { return m_children.size(); }
-    const NodeList &childNodes() const { return m_children; }
+    [[nodiscard]] qsizetype count() const { return m_children.size(); }
+    [[nodiscard]] const NodeList &childNodes() const { return m_children; }
     const NodeList &nonfunctionList();
-    NodeList::ConstIterator constBegin() const { return m_children.constBegin(); }
-    NodeList::ConstIterator constEnd() const { return m_children.constEnd(); }
+    [[nodiscard]] NodeList::ConstIterator constBegin() const { return m_children.constBegin(); }
+    [[nodiscard]] NodeList::ConstIterator constEnd() const { return m_children.constEnd(); }
 
     void addIncludeFile(const QString &includeFile);
     void setIncludeFiles(const QStringList &includeFiles);
-    const QStringList &includeFiles() const { return m_includeFiles; }
+    [[nodiscard]] const QStringList &includeFiles() const { return m_includeFiles; }
 
-    QmlPropertyNode *hasQmlProperty(const QString &) const;
-    QmlPropertyNode *hasQmlProperty(const QString &, bool attached) const;
+    [[nodiscard]] QmlPropertyNode *hasQmlProperty(const QString &) const;
+    [[nodiscard]] QmlPropertyNode *hasQmlProperty(const QString &, bool attached) const;
     virtual QmlTypeNode *qmlBaseNode() const { return nullptr; }
     void addChildByTitle(Node *child, const QString &title);
     void addChild(Node *child);
@@ -77,7 +78,7 @@ public:
     void findAllFunctions(NodeMapMap &functionIndex);
     void findAllNamespaces(NodeMultiMap &namespaces);
     void findAllAttributions(NodeMultiMap &attributions);
-    bool hasObsoleteMembers() const;
+    [[nodiscard]] bool hasObsoleteMembers() const;
     void findAllObsoleteThings();
     void findAllClasses();
     void findAllSince();
@@ -85,7 +86,7 @@ public:
     bool hasOverloads(const FunctionNode *fn) const;
     void appendToRelatedByProxy(const NodeList &t) { m_relatedByProxy.append(t); }
     NodeList &relatedByProxy() { return m_relatedByProxy; }
-    QString typeWord(bool cap) const;
+    [[nodiscard]] QString typeWord(bool cap) const;
 
 protected:
     Aggregate(NodeType type, Aggregate *parent, const QString &name)

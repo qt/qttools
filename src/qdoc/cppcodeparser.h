@@ -78,7 +78,7 @@ protected:
     void processMetaCommands(const Doc &doc, Node *node);
     void processMetaCommands(NodeList &nodes, DocList &docs);
     void processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs);
-    bool hasTooManyTopics(const Doc &doc) const;
+    [[nodiscard]] bool hasTooManyTopics(const Doc &doc) const;
 
 private:
     void setExampleFileLists(ExampleNode *en);

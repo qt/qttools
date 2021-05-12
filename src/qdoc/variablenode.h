@@ -46,10 +46,10 @@ public:
     void setRightType(const QString &rightType) { m_rightType = rightType; }
     void setStatic(bool b) { m_static = b; }
 
-    const QString &leftType() const { return m_leftType; }
-    const QString &rightType() const { return m_rightType; }
-    QString dataType() const { return m_leftType + m_rightType; }
-    bool isStatic() const override { return m_static; }
+    [[nodiscard]] const QString &leftType() const { return m_leftType; }
+    [[nodiscard]] const QString &rightType() const { return m_rightType; }
+    [[nodiscard]] QString dataType() const { return m_leftType + m_rightType; }
+    [[nodiscard]] bool isStatic() const override { return m_static; }
     Node *clone(Aggregate *parent) override;
 
 private:

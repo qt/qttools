@@ -68,7 +68,7 @@ protected:
     void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
     void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;
-    QString fileExtension() const override;
+    [[nodiscard]] QString fileExtension() const override;
 
 private:
     enum SubTitleSize { SmallSubTitle, LargeSubTitle };
@@ -167,7 +167,6 @@ private:
     QString m_projectUrl {};
     QString m_navigationLinks {};
     QString m_navigationSeparator {};
-    static int id;
     QString m_homepage {};
     QString m_hometitle {};
     QString m_landingpage {};

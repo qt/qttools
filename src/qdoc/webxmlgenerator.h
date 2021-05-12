@@ -57,7 +57,7 @@ protected:
     void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateDocumentation(Node *node) override;
     void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
-    QString fileExtension() const override;
+    [[nodiscard]] QString fileExtension() const override;
 
     virtual const Atom *addAtomElements(QXmlStreamWriter &writer, const Atom *atom,
                                         const Node *relative, CodeMarker *marker);

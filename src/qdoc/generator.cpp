@@ -60,27 +60,27 @@
 
 QT_BEGIN_NAMESPACE
 
-Generator *Generator::currentGenerator_;
-QStringList Generator::exampleDirs;
-QStringList Generator::exampleImgExts;
-QMap<QString, QMap<QString, QString>> Generator::fmtLeftMaps;
-QMap<QString, QMap<QString, QString>> Generator::fmtRightMaps;
-QList<Generator *> Generator::generators;
-QStringList Generator::imageDirs;
-QStringList Generator::imageFiles;
-QMap<QString, QStringList> Generator::imgFileExts;
-QString Generator::outDir_;
-QString Generator::outSubdir_;
-QStringList Generator::outFileNames_;
-QSet<QString> Generator::outputFormats;
-QHash<QString, QString> Generator::outputPrefixes;
-QHash<QString, QString> Generator::outputSuffixes;
-QString Generator::project_;
-bool Generator::noLinkErrors_ = false;
-bool Generator::autolinkErrors_ = false;
-bool Generator::redirectDocumentationToDevNull_ = false;
-bool Generator::useOutputSubdirs_ = true;
-QmlTypeNode *Generator::qmlTypeContext_ = nullptr;
+Generator *Generator::s_currentGenerator;
+QStringList Generator::s_exampleDirs;
+QStringList Generator::s_exampleImgExts;
+QMap<QString, QMap<QString, QString>> Generator::s_fmtLeftMaps;
+QMap<QString, QMap<QString, QString>> Generator::s_fmtRightMaps;
+QList<Generator *> Generator::s_generators;
+QStringList Generator::s_imageDirs;
+QStringList Generator::s_imageFiles;
+QMap<QString, QStringList> Generator::s_imgFileExts;
+QString Generator::s_outDir;
+QString Generator::s_outSubdir;
+QStringList Generator::s_outFileNames;
+QSet<QString> Generator::s_outputFormats;
+QHash<QString, QString> Generator::s_outputPrefixes;
+QHash<QString, QString> Generator::s_outputSuffixes;
+QString Generator::s_project;
+bool Generator::s_noLinkErrors = false;
+bool Generator::s_autolinkErrors = false;
+bool Generator::s_redirectDocumentationToDevNull = false;
+bool Generator::s_useOutputSubdirs = true;
+QmlTypeNode *Generator::s_qmlTypeContext = nullptr;
 
 static QRegularExpression tag("</?@[^>]*>");
 static QLatin1String amp("&amp;");
@@ -97,7 +97,7 @@ static QLatin1String quot("&quot;");
 Generator::Generator()
 {
     m_qdb = QDocDatabase::qdocDB();
-    generators.prepend(this);
+    s_generators.prepend(this);
 }
 
 /*!
@@ -106,7 +106,7 @@ Generator::Generator()
  */
 Generator::~Generator()
 {
-    generators.removeAll(this);
+    s_generators.removeAll(this);
 }
 
 void Generator::appendFullName(Text &text, const Node *apparentNode, const Node *relative,
@@ -223,10 +223,10 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
     }
     path += fileName;
 
-    auto outPath = redirectDocumentationToDevNull_ ? QStringLiteral("/dev/null") : path;
+    auto outPath = s_redirectDocumentationToDevNull ? QStringLiteral("/dev/null") : path;
     auto outFile = new QFile(outPath);
 
-    if (!redirectDocumentationToDevNull_ && outFile->exists())
+    if (!s_redirectDocumentationToDevNull && outFile->exists())
         qCDebug(lcQdoc) << "Output file already exists; overwriting" << qPrintable(outFile->fileName());
 
     if (!outFile->open(QFile::WriteOnly)) {
@@ -235,7 +235,7 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
     }
 
     qCDebug(lcQdoc, "Writing: %s", qPrintable(path));
-    outFileNames_ << fileName;
+    s_outFileNames << fileName;
     return outFile;
 }
 
@@ -343,7 +343,7 @@ QString Generator::fileBase(const Node *node) const
         if (node->isExample()) {
             QString modPrefix(node->physicalModuleName());
             if (modPrefix.isEmpty()) {
-                modPrefix = project_;
+                modPrefix = s_project;
             }
             base.prepend(modPrefix.toLower() + QLatin1Char('-'));
         }
@@ -405,7 +405,7 @@ QString Generator::linkForExampleFile(const QString &path, const Node *parent,
     QString link = path;
     QString modPrefix(parent->physicalModuleName());
     if (modPrefix.isEmpty())
-        modPrefix = project_;
+        modPrefix = s_project;
     link.prepend(modPrefix.toLower() + QLatin1Char('-'));
 
     QString res;
@@ -500,12 +500,12 @@ QString Generator::cleanRef(const QString &ref)
 
 QMap<QString, QString> &Generator::formattingLeftMap()
 {
-    return fmtLeftMaps[format()];
+    return s_fmtLeftMaps[format()];
 }
 
 QMap<QString, QString> &Generator::formattingRightMap()
 {
-    return fmtRightMaps[format()];
+    return s_fmtRightMaps[format()];
 }
 
 /*!
@@ -966,11 +966,11 @@ void Generator::addImageToCopy(const ExampleNode *en, const QString &file)
     QDir dirInfo;
     QString userFriendlyFilePath;
     const QString prefix("/images/used-in-examples/");
-    QString srcPath = Config::findFile(en->location(), QStringList(), exampleDirs, file,
-                                       exampleImgExts, &userFriendlyFilePath);
-    outFileNames_ << prefix.mid(1) + userFriendlyFilePath;
+    QString srcPath = Config::findFile(en->location(), QStringList(), s_exampleDirs, file,
+                                       s_exampleImgExts, &userFriendlyFilePath);
+    s_outFileNames << prefix.mid(1) + userFriendlyFilePath;
     userFriendlyFilePath.truncate(userFriendlyFilePath.lastIndexOf('/'));
-    QString imgOutDir = outDir_ + prefix + userFriendlyFilePath;
+    QString imgOutDir = s_outDir + prefix + userFriendlyFilePath;
     if (!dirInfo.mkpath(imgOutDir))
         en->location().fatal(QStringLiteral("Cannot create output directory '%1'").arg(imgOutDir));
     Config::copyFile(en->location(), srcPath, file, imgOutDir);
@@ -1568,13 +1568,13 @@ void Generator::generateOverloadedSignal(const Node *node, CodeMarker *marker)
  */
 void Generator::generateDocs()
 {
-    currentGenerator_ = this;
+    s_currentGenerator = this;
     generateDocumentation(m_qdb->primaryTreeRoot());
 }
 
 Generator *Generator::generatorForFormat(const QString &format)
 {
-    for (const auto &generator : qAsConst(generators)) {
+    for (const auto &generator : qAsConst(s_generators)) {
         if (generator->format() == format)
             return generator;
     }
@@ -1607,8 +1607,8 @@ QStringList Generator::getMetadataElements(const Aggregate *inner, const QString
 QString Generator::imageFileName(const Node *relative, const QString &fileBase)
 {
     QString userFriendlyFilePath;
-    QString filePath = Config::findFile(relative->doc().location(), imageFiles, imageDirs, fileBase,
-                                        imgFileExts[format()], &userFriendlyFilePath);
+    QString filePath = Config::findFile(relative->doc().location(), s_imageFiles, s_imageDirs,
+                                        fileBase, s_imgFileExts[format()], &userFriendlyFilePath);
 
     if (filePath.isEmpty())
         return QString();
@@ -1649,21 +1649,21 @@ QString Generator::indent(int level, const QString &markedCode)
 void Generator::initialize()
 {
     Config &config = Config::instance();
-    outputFormats = config.getOutputFormats();
-    redirectDocumentationToDevNull_ = config.getBool(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL);
+    s_outputFormats = config.getOutputFormats();
+    s_redirectDocumentationToDevNull = config.getBool(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL);
 
-    imageFiles = config.getCanonicalPathList(CONFIG_IMAGES);
-    imageDirs = config.getCanonicalPathList(CONFIG_IMAGEDIRS);
-    exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
-    exampleImgExts = config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_IMAGEEXTENSIONS);
+    s_imageFiles = config.getCanonicalPathList(CONFIG_IMAGES);
+    s_imageDirs = config.getCanonicalPathList(CONFIG_IMAGEDIRS);
+    s_exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
+    s_exampleImgExts = config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_IMAGEEXTENSIONS);
 
     QString imagesDotFileExtensions = CONFIG_IMAGES + Config::dot + CONFIG_FILEEXTENSIONS;
     for (const auto &ext : config.subVars(imagesDotFileExtensions))
-        imgFileExts[ext] = config.getStringList(imagesDotFileExtensions + Config::dot + ext);
+        s_imgFileExts[ext] = config.getStringList(imagesDotFileExtensions + Config::dot + ext);
 
-    for (auto &g : generators) {
-        if (outputFormats.contains(g->format())) {
-            currentGenerator_ = g;
+    for (auto &g : s_generators) {
+        if (s_outputFormats.contains(g->format())) {
+            s_currentGenerator = g;
             g->initializeGenerator();
         }
     }
@@ -1690,33 +1690,34 @@ void Generator::initialize()
                                                         .arg(numOccs));
                 } else {
                     int paramPos = def.indexOf("\1");
-                    fmtLeftMaps[f].insert(n, def.left(paramPos));
-                    fmtRightMaps[f].insert(n, def.mid(paramPos + 1));
+                    s_fmtLeftMaps[f].insert(n, def.left(paramPos));
+                    s_fmtRightMaps[f].insert(n, def.mid(paramPos + 1));
                 }
             }
         }
     }
 
-    project_ = config.getString(CONFIG_PROJECT);
-    outDir_ = config.getOutputDir();
-    outSubdir_ = outDir_.mid(outDir_.lastIndexOf('/') + 1);
+    s_project = config.getString(CONFIG_PROJECT);
+    s_outDir = config.getOutputDir();
+    s_outSubdir = s_outDir.mid(s_outDir.lastIndexOf('/') + 1);
 
-    outputPrefixes.clear();
+    s_outputPrefixes.clear();
     QStringList items = config.getStringList(CONFIG_OUTPUTPREFIXES);
     if (!items.isEmpty()) {
         for (const auto &prefix : items)
-            outputPrefixes[prefix] = config.getString(CONFIG_OUTPUTPREFIXES + Config::dot + prefix);
+            s_outputPrefixes[prefix] =
+                    config.getString(CONFIG_OUTPUTPREFIXES + Config::dot + prefix);
     } else {
-        outputPrefixes[QLatin1String("QML")] = QLatin1String("qml-");
-        outputPrefixes[QLatin1String("JS")] = QLatin1String("js-");
+        s_outputPrefixes[QLatin1String("QML")] = QLatin1String("qml-");
+        s_outputPrefixes[QLatin1String("JS")] = QLatin1String("js-");
     }
 
-    outputSuffixes.clear();
+    s_outputSuffixes.clear();
     for (const auto &suffix : config.getStringList(CONFIG_OUTPUTSUFFIXES))
-        outputSuffixes[suffix] = config.getString(CONFIG_OUTPUTSUFFIXES + Config::dot + suffix);
+        s_outputSuffixes[suffix] = config.getString(CONFIG_OUTPUTSUFFIXES + Config::dot + suffix);
 
-    noLinkErrors_ = config.getBool(CONFIG_NOLINKERRORS);
-    autolinkErrors_ = config.getBool(CONFIG_AUTOLINKERRORS);
+    s_noLinkErrors = config.getBool(CONFIG_NOLINKERRORS);
+    s_autolinkErrors = config.getBool(CONFIG_AUTOLINKERRORS);
 }
 
 /*!
@@ -1729,7 +1730,7 @@ void Generator::copyTemplateFiles(const QString &configVar, const QString &subDi
     QStringList files = config.getCanonicalPathList(configVar, true);
     if (!files.isEmpty()) {
         QDir dirInfo;
-        QString templateDir = outDir_ + QLatin1Char('/') + subDir;
+        QString templateDir = s_outDir + QLatin1Char('/') + subDir;
         if (!dirInfo.exists(templateDir) && !dirInfo.mkdir(templateDir)) {
             config.lastLocation().fatal(
                     QStringLiteral("Cannot create %1 directory '%2'").arg(subDir, templateDir));
@@ -1750,32 +1751,33 @@ void Generator::copyTemplateFiles(const QString &configVar, const QString &subDi
 void Generator::initializeFormat()
 {
     Config &config = Config::instance();
-    outFileNames_.clear();
-    useOutputSubdirs_ = true;
+    s_outFileNames.clear();
+    s_useOutputSubdirs = true;
     if (config.getBool(format() + Config::dot + "nosubdirs"))
         resetUseOutputSubdirs();
 
-    if (outputFormats.isEmpty())
+    if (s_outputFormats.isEmpty())
         return;
 
-    outDir_ = config.getOutputDir(format());
-    if (outDir_.isEmpty()) {
+    s_outDir = config.getOutputDir(format());
+    if (s_outDir.isEmpty()) {
         config.lastLocation().fatal(QStringLiteral("No output directory specified in "
                                                    "configuration file or on the command line"));
     } else {
-        outSubdir_ = outDir_.mid(outDir_.lastIndexOf('/') + 1);
+        s_outSubdir = s_outDir.mid(s_outDir.lastIndexOf('/') + 1);
     }
 
-    QDir outputDir(outDir_);
+    QDir outputDir(s_outDir);
     if (outputDir.exists()) {
         if (!config.generating() && Generator::useOutputSubdirs()) {
             if (!outputDir.isEmpty())
                 config.lastLocation().error(
-                        QStringLiteral("Output directory '%1' exists but is not empty").arg(outDir_));
+                        QStringLiteral("Output directory '%1' exists but is not empty")
+                                .arg(s_outDir));
         }
     } else if (!outputDir.mkpath(QStringLiteral("."))) {
         config.lastLocation().fatal(
-                QStringLiteral("Cannot create output directory '%1'").arg(outDir_));
+                QStringLiteral("Cannot create output directory '%1'").arg(s_outDir));
     }
 
     // Output directory exists, which is enough for prepare phase.
@@ -1807,7 +1809,7 @@ void Generator::augmentImageDirs(QSet<QString> &moreImageDirs)
     if (moreImageDirs.isEmpty())
         return;
     for (const auto &it : moreImageDirs)
-        imageDirs.append(it);
+        s_imageDirs.append(it);
 }
 
 /*!
@@ -1842,9 +1844,9 @@ QString Generator::outputPrefix(const Node *node)
 {
     // Prefix is applied to QML and JS types
     if (node->isQmlType() || node->isQmlBasicType())
-        return outputPrefixes[QLatin1String("QML")];
+        return s_outputPrefixes[QLatin1String("QML")];
     if (node->isJsType() || node->isJsBasicType())
-        return outputPrefixes[QLatin1String("JS")];
+        return s_outputPrefixes[QLatin1String("JS")];
     return QString();
 }
 
@@ -1853,9 +1855,9 @@ QString Generator::outputSuffix(const Node *node)
     // Suffix is applied to QML and JS types, as
     // well as module pages.
     if (node->isQmlModule() || node->isQmlType() || node->isQmlBasicType())
-        return outputSuffixes[QLatin1String("QML")];
+        return s_outputSuffixes[QLatin1String("QML")];
     if (node->isJsModule() || node->isJsType() || node->isJsBasicType())
-        return outputSuffixes[QLatin1String("JS")];
+        return s_outputSuffixes[QLatin1String("JS")];
     return QString();
 }
 
@@ -1962,7 +1964,7 @@ QString Generator::plainCode(const QString &markedCode)
 
 void Generator::setImageFileExtensions(const QStringList &extensions)
 {
-    imgFileExts[format()] = extensions;
+    s_imgFileExts[format()] = extensions;
 }
 
 int Generator::skipAtoms(const Atom *atom, Atom::AtomType type) const
@@ -2042,17 +2044,17 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 
 void Generator::terminate()
 {
-    for (const auto &generator : qAsConst(generators)) {
-        if (outputFormats.contains(generator->format()))
+    for (const auto &generator : qAsConst(s_generators)) {
+        if (s_outputFormats.contains(generator->format()))
             generator->terminateGenerator();
     }
 
-    fmtLeftMaps.clear();
-    fmtRightMaps.clear();
-    imgFileExts.clear();
-    imageFiles.clear();
-    imageDirs.clear();
-    outDir_.clear();
+    s_fmtLeftMaps.clear();
+    s_fmtRightMaps.clear();
+    s_imgFileExts.clear();
+    s_imageFiles.clear();
+    s_imageDirs.clear();
+    s_outDir.clear();
 }
 
 void Generator::terminateGenerator() {}
