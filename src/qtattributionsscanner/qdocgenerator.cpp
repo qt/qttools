@@ -140,8 +140,9 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
                         tr("Path %1 : cannot open copyright file %2.\n")
                                 .arg(QDir::toNativeSeparators(package.path))
                                 .arg(QDir::toNativeSeparators(package.copyrightFile)));
-                copyright = QString::fromUtf8(file.readAll());
             }
+        } else {
+            copyright = QString::fromUtf8(file.readAll());
         }
     }
 
