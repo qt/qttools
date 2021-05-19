@@ -81,17 +81,15 @@ protected:
     bool generateStatus(const Node *node);
     bool generateThreadSafeness(const Node *node);
     bool generateSince(const Node *node);
-    void generateAddendum(const Node *node, Generator::Addendum type, CodeMarker *marker = nullptr,
-                          bool generateNote = true) override;
+    void generateAddendum(const Node *node, Generator::Addendum type, CodeMarker *marker,
+                          bool generateNote) override;
     using Generator::generateBody;
     void generateBody(const Node *node);
 
-    bool generateText(const Text &text, const Node *relative,
-                      CodeMarker *marker = nullptr) override;
+    bool generateText(const Text &text, const Node *relative) override;
     const Atom *generateAtomList(const Atom *atom, const Node *relative, bool generate,
                                  int &numAtoms);
-    qsizetype generateAtom(const Atom *atom, const Node *relative,
-                           CodeMarker *marker = nullptr) override;
+    qsizetype generateAtom(const Atom *atom, const Node *relative) override;
 
 private:
     QXmlStreamWriter *startDocument(const Node *node);
@@ -124,18 +122,16 @@ private:
     void generateFullName(const Node *apparentNode, const QString &fullName,
                           const Node *actualNode);
     void generateBrief(const Node *node);
-    void generateAlsoList(const Node *node, CodeMarker *marker = nullptr) override;
+    void generateAlsoList(const Node *node) override;
     void generateSignatureList(const NodeList &nodes);
-    void generateMaintainerList(const Aggregate *node, CodeMarker *marker = nullptr) override;
+    void generateMaintainerList(const Aggregate *node) override;
     void generateReimplementsClause(const FunctionNode *fn);
     void generateClassHierarchy(const Node *relative, NodeMultiMap &classMap);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative);
-    void generateExampleFilePage(const Node *en, const QString &file,
-                                 CodeMarker *marker = nullptr) override;
+    void generateExampleFilePage(const Node *en, const QString &file) override;
     void generateOverloadedSignal(const Node *node);
-    bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker = nullptr,
-                         const QString &qmlName = QString()) override;
+    bool generateQmlText(const Text &text, const Node *relative) override;
     void generateRequiredLinks(const Node *node);
     void generateLinkToExample(const ExampleNode *en, const QString &baseUrl);
 

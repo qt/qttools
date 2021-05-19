@@ -107,8 +107,17 @@ protected:
     void endSubPage();
     [[nodiscard]] virtual QString fileExtension() const = 0;
     virtual void generateExampleFilePage(const Node *, const QString &, CodeMarker *) {}
+    virtual void generateExampleFilePage(const Node *node, const QString &str)
+    {
+        generateExampleFilePage(node, str, nullptr);
+    }
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
+    virtual void generateAlsoList(const Node *node) { generateAlsoList(node, nullptr); }
     virtual qsizetype generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
+    virtual qsizetype generateAtom(const Atom *atom, const Node *node)
+    {
+        return generateAtom(atom, node, nullptr);
+    }
     virtual void generateBody(const Node *node, CodeMarker *marker);
     virtual void generateCppReferencePage(Aggregate *, CodeMarker *) {}
     virtual void generateProxyPage(Aggregate *, CodeMarker *) {}
@@ -119,9 +128,21 @@ protected:
     virtual void generateGenericCollectionPage(CollectionNode *, CodeMarker *) {}
     virtual void generateDocumentation(Node *node);
     virtual void generateMaintainerList(const Aggregate *node, CodeMarker *marker);
+    virtual void generateMaintainerList(const Aggregate *node)
+    {
+        generateMaintainerList(node, nullptr);
+    };
     virtual bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
                                  const QString &qmlName);
+    virtual bool generateQmlText(const Text &text, const Node *relative)
+    {
+        return generateQmlText(text, relative, nullptr, QString());
+    }
     virtual bool generateText(const Text &text, const Node *relative, CodeMarker *marker);
+    virtual bool generateText(const Text &text, const Node *relative)
+    {
+        return generateText(text, relative, nullptr);
+    };
     virtual QString imageFileName(const Node *relative, const QString &fileBase);
     virtual int skipAtoms(const Atom *atom, Atom::AtomType type) const;
 

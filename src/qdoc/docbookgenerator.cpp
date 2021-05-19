@@ -149,9 +149,8 @@ QString DocBookGenerator::fileExtension() const
   is the node that represents the entity where a qdoc comment
   was found, and \a text represents the qdoc comment.
  */
-bool DocBookGenerator::generateText(const Text &text, const Node *relative, CodeMarker *marker)
+bool DocBookGenerator::generateText(const Text &text, const Node *relative)
 {
-    Q_UNUSED(marker);
     // From Generator::generateText.
     if (!text.firstAtom())
         return false;
@@ -219,10 +218,9 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
 /*!
   Generate DocBook from an instance of Atom.
  */
-qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker *marker)
+qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
 {
     Q_ASSERT(m_writer);
-    Q_UNUSED(marker);
     // From HtmlGenerator::generateAtom, without warning generation.
     int idx = 0;
     int skipAhead = 0;
@@ -2151,13 +2149,13 @@ void DocBookGenerator::generateBody(const Node *node)
 
         if (fn) {
             if (fn->isQmlSignal())
-                generateAddendum(node, QmlSignalHandler);
+                generateAddendum(node, QmlSignalHandler, nullptr, true);
             if (fn->isPrivateSignal())
-                generateAddendum(node, PrivateSignal);
+                generateAddendum(node, PrivateSignal, nullptr, true);
             if (fn->isInvokable())
-                generateAddendum(node, Invokable);
+                generateAddendum(node, Invokable, nullptr, true);
             if (fn->hasAssociatedProperties())
-                generateAddendum(node, AssociatedProperties);
+                generateAddendum(node, AssociatedProperties, nullptr, true);
         }
 
         // Warning generation skipped with respect to Generator::generateBody.
@@ -2287,10 +2285,8 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 /*!
   Generate a file with the contents of a C++ or QML source file.
  */
-void DocBookGenerator::generateExampleFilePage(const Node *node, const QString &file,
-                                               CodeMarker *marker)
+void DocBookGenerator::generateExampleFilePage(const Node *node, const QString &file)
 {
-    Q_UNUSED(marker);
     // From HtmlGenerator::generateExampleFilePage.
     if (!node->isExample())
         return;
@@ -2347,9 +2343,8 @@ void DocBookGenerator::generateReimplementsClause(const FunctionNode *fn)
     }
 }
 
-void DocBookGenerator::generateAlsoList(const Node *node, CodeMarker *marker)
+void DocBookGenerator::generateAlsoList(const Node *node)
 {
-    Q_UNUSED(marker);
     // From Generator::generateAlsoList.
     QList<Text> alsoList = node->doc().alsoList();
     supplementAlsoList(node, alsoList);
@@ -2380,9 +2375,8 @@ void DocBookGenerator::generateAlsoList(const Node *node, CodeMarker *marker)
 /*!
   Generate a list of maintainers in the output
  */
-void DocBookGenerator::generateMaintainerList(const Aggregate *node, CodeMarker *marker)
+void DocBookGenerator::generateMaintainerList(const Aggregate *node)
 {
-    Q_UNUSED(marker);
     // From Generator::generateMaintainerList.
     const QStringList sl = getMetadataElements(node, "maintainer");
 
@@ -3671,9 +3665,9 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
         newLine();
 
         if (hasPrivateSignals)
-            generateAddendum(relative, Generator::PrivateSignal);
+            generateAddendum(relative, Generator::PrivateSignal, nullptr, true);
         if (isInvokable)
-            generateAddendum(relative, Generator::Invokable);
+            generateAddendum(relative, Generator::Invokable, nullptr, true);
     }
 
     if (status != Section::Obsolete && section.style() == Section::Summary
@@ -3728,11 +3722,8 @@ void DocBookGenerator::generatePageNode(PageNode *pn)
 /*!
   Extract sections of markup text and output them.
  */
-bool DocBookGenerator::generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
-                                       const QString &qmlName)
+bool DocBookGenerator::generateQmlText(const Text &text, const Node *relative)
 {
-    Q_UNUSED(marker);
-    Q_UNUSED(qmlName);
     // From Generator::generateQmlText.
     const Atom *atom = text.firstAtom();
     bool result = false;
