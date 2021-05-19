@@ -67,7 +67,7 @@ Text &Text::operator<<(Atom::AtomType atomType)
 
 Text &Text::operator<<(const QString &string)
 {
-    return operator<<(Atom(Atom::String, string));
+    return string.isEmpty() ? *this : operator<<(Atom(Atom::String, string));
 }
 
 Text &Text::operator<<(const Atom &atom)
