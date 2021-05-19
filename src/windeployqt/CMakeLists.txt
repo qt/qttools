@@ -7,7 +7,7 @@
 qt_get_tool_target_name(target_name windeployqt)
 qt_internal_add_tool(${target_name}
     # BOOTSTRAP # special case remove
-    TOOLS_TARGET "Tools" # special case
+    TOOLS_TARGET Tools # special case
     TARGET_DESCRIPTION "Qt Windows Deployment Tool"
     SOURCES
         ../shared/winutils/elfreader.cpp ../shared/winutils/elfreader.h

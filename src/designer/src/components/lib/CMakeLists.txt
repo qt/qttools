@@ -1,10 +1,10 @@
 # Generated from lib.pro.
 
 #####################################################################
-## DesignerComponents Module:
+## DesignerComponentsPrivate Module:
 #####################################################################
 
-qt_internal_add_module(DesignerComponents
+qt_internal_add_module(DesignerComponentsPrivate
     INTERNAL_MODULE
     SOURCES
         ../buddyeditor/buddyeditor.cpp ../buddyeditor/buddyeditor.h
@@ -130,7 +130,7 @@ set(propertyeditor_resource_files
     "../propertyeditor/fontmapping.xml"
 )
 
-qt_internal_add_resource(DesignerComponents "propertyeditor"
+qt_internal_add_resource(DesignerComponentsPrivate "propertyeditor"
     PREFIX
         "/qt-project.org/propertyeditor"
     BASE
@@ -313,7 +313,7 @@ set(formeditor_resource_files
     "../formeditor/images/win/widgettool.png"
 )
 
-qt_internal_add_resource(DesignerComponents "formeditor"
+qt_internal_add_resource(DesignerComponentsPrivate "formeditor"
     PREFIX
         "/qt-project.org/formeditor"
     BASE
@@ -325,7 +325,7 @@ set(formeditor1_resource_files
     "../formeditor/defaultbrushes.xml"
 )
 
-qt_internal_add_resource(DesignerComponents "formeditor1"
+qt_internal_add_resource(DesignerComponentsPrivate "formeditor1"
     PREFIX
         "/qt-project.org/brushes"
     BASE
@@ -337,7 +337,7 @@ set(widgetbox_resource_files
     "../widgetbox/widgetbox.xml"
 )
 
-qt_internal_add_resource(DesignerComponents "widgetbox"
+qt_internal_add_resource(DesignerComponentsPrivate "widgetbox"
     PREFIX
         "/qt-project.org/widgetbox"
     BASE
@@ -348,12 +348,12 @@ qt_internal_add_resource(DesignerComponents "widgetbox"
 
 
 #### Keys ignored in scope 1:.:.:lib.pro:<TRUE>:
-# MODULE = "designercomponents"
+# MODULE = "DesignerComponentsPrivate"
 
 ## Scopes:
 #####################################################################
 
-qt_internal_extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
+qt_internal_extend_target(DesignerComponentsPrivate CONDITION NOT QT_BUILD_SHARED_LIBS
     DEFINES
         QT_DESIGNER_STATIC
     INCLUDE_DIRECTORIES
@@ -362,7 +362,7 @@ qt_internal_extend_target(DesignerComponents CONDITION NOT QT_BUILD_SHARED_LIBS
         ../../../../shared/qtpropertybrowser
 )
 
-qt_internal_extend_target(DesignerComponents CONDITION QT_BUILD_SHARED_LIBS
+qt_internal_extend_target(DesignerComponentsPrivate CONDITION QT_BUILD_SHARED_LIBS
     SOURCES
         ../../../../shared/findwidget/abstractfindwidget.cpp ../../../../shared/findwidget/abstractfindwidget.h
         ../../../../shared/findwidget/itemviewfindwidget.cpp ../../../../shared/findwidget/itemviewfindwidget.h
@@ -396,7 +396,7 @@ if(QT_BUILD_SHARED_LIBS)
         "../../../../shared/findwidget/images/wrap.png"
     )
 
-    qt_internal_add_resource(DesignerComponents "findwidget"
+    qt_internal_add_resource(DesignerComponentsPrivate "findwidget"
         PREFIX
             "/qt-project.org/shared"
         BASE
@@ -425,7 +425,7 @@ if(QT_BUILD_SHARED_LIBS)
         "../../../../shared/qtpropertybrowser/images/cursor-whatsthis.png"
     )
 
-    qt_internal_add_resource(DesignerComponents "qtpropertybrowser"
+    qt_internal_add_resource(DesignerComponentsPrivate "qtpropertybrowser"
         PREFIX
             "/qt-project.org/qtpropertybrowser"
         BASE

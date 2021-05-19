@@ -47,7 +47,7 @@ qt_internal_add_tool(${target_name}
         ../shared
     PUBLIC_LIBRARIES
         Qt::CorePrivate
-        Qt::ToolsPrivate
+        Qt::Tools
 )
 
 #### Keys ignored in scope 1:.:.:lupdate.pro:<TRUE>:
