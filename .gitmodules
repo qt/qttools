@@ -1,3 +1,4 @@
 [submodule "src/assistant/qlitehtml"]
 	path = src/assistant/qlitehtml
 	url = https://code.qt.io/playground/qlitehtml.git
+	fetchRecurseSubmodules = true
