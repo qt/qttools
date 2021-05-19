@@ -181,11 +181,8 @@ qt_internal_add_module(Designer
 )
 
 # Resources:
-set_source_files_properties("../../../shared/deviceskin/skins/ClamshellPhone.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "ClamshellPhone.skin"
-)
 set(ClamshellPhone_resource_files
-    "ClamshellPhone.skin"
+    "../../../shared/deviceskin/skins/ClamshellPhone.skin"
 )
 
 qt_internal_add_resource(Designer "ClamshellPhone"
@@ -196,11 +193,8 @@ qt_internal_add_resource(Designer "ClamshellPhone"
     FILES
         ${ClamshellPhone_resource_files}
 )
-set_source_files_properties("../../../shared/deviceskin/skins/SmartPhone2.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "SmartPhone2.skin"
-)
 set(SmartPhone2_resource_files
-    "SmartPhone2.skin"
+    "../../../shared/deviceskin/skins/SmartPhone2.skin"
 )
 
 qt_internal_add_resource(Designer "SmartPhone2"
@@ -211,11 +205,8 @@ qt_internal_add_resource(Designer "SmartPhone2"
     FILES
         ${SmartPhone2_resource_files}
 )
-set_source_files_properties("../../../shared/deviceskin/skins/SmartPhone.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "SmartPhone.skin"
-)
 set(SmartPhone_resource_files
-    "SmartPhone.skin"
+    "../../../shared/deviceskin/skins/SmartPhone.skin"
 )
 
 qt_internal_add_resource(Designer "SmartPhone"
@@ -226,11 +217,8 @@ qt_internal_add_resource(Designer "SmartPhone"
     FILES
         ${SmartPhone_resource_files}
 )
-set_source_files_properties("../../../shared/deviceskin/skins/SmartPhoneWithButtons.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "SmartPhoneWithButtons.skin"
-)
 set(SmartPhoneWithButtons_resource_files
-    "SmartPhoneWithButtons.skin"
+    "../../../shared/deviceskin/skins/SmartPhoneWithButtons.skin"
 )
 
 qt_internal_add_resource(Designer "SmartPhoneWithButtons"
@@ -241,11 +229,8 @@ qt_internal_add_resource(Designer "SmartPhoneWithButtons"
     FILES
         ${SmartPhoneWithButtons_resource_files}
 )
-set_source_files_properties("../../../shared/deviceskin/skins/TouchscreenPhone.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "TouchscreenPhone.skin"
-)
 set(TouchscreenPhone_resource_files
-    "TouchscreenPhone.skin"
+    "../../../shared/deviceskin/skins/TouchscreenPhone.skin"
 )
 
 qt_internal_add_resource(Designer "TouchscreenPhone"
@@ -256,11 +241,8 @@ qt_internal_add_resource(Designer "TouchscreenPhone"
     FILES
         ${TouchscreenPhone_resource_files}
 )
-set_source_files_properties("../../../shared/deviceskin/skins/PortableMedia.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "PortableMedia.skin"
-)
 set(PortableMedia_resource_files
-    "PortableMedia.skin"
+    "../../../shared/deviceskin/skins/PortableMedia.skin"
 )
 
 qt_internal_add_resource(Designer "PortableMedia"
@@ -271,11 +253,8 @@ qt_internal_add_resource(Designer "PortableMedia"
     FILES
         ${PortableMedia_resource_files}
 )
-set_source_files_properties("../../../shared/deviceskin/skins/S60-QVGA-Candybar.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "S60-QVGA-Candybar.skin"
-)
 set(S60-QVGA-Candybar_resource_files
-    "S60-QVGA-Candybar.skin"
+    "../../../shared/deviceskin/skins/S60-QVGA-Candybar.skin"
 )
 
 qt_internal_add_resource(Designer "S60-QVGA-Candybar"
@@ -286,11 +265,8 @@ qt_internal_add_resource(Designer "S60-QVGA-Candybar"
     FILES
         ${S60-QVGA-Candybar_resource_files}
 )
-set_source_files_properties("../../../shared/deviceskin/skins/S60-nHD-Touchscreen.skin"
-    PROPERTIES QT_RESOURCE_ALIAS "S60-nHD-Touchscreen.skin"
-)
 set(S60-nHD-Touchscreen_resource_files
-    "S60-nHD-Touchscreen.skin"
+    "../../../shared/deviceskin/skins/S60-nHD-Touchscreen.skin"
 )
 
 qt_internal_add_resource(Designer "S60-nHD-Touchscreen"
@@ -301,43 +277,16 @@ qt_internal_add_resource(Designer "S60-nHD-Touchscreen"
     FILES
         ${S60-nHD-Touchscreen_resource_files}
 )
-set_source_files_properties("../../../shared/findwidget/images/mac/closetab.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/closetab.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/mac/next.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/next.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/mac/previous.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/previous.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/mac/searchfind.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/mac/searchfind.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/win/closetab.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/closetab.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/win/next.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/next.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/win/previous.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/previous.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/win/searchfind.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/win/searchfind.png"
-)
-set_source_files_properties("../../../shared/findwidget/images/wrap.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/wrap.png"
-)
 set(findwidget_resource_files
-    "images/mac/closetab.png"
-    "images/mac/next.png"
-    "images/mac/previous.png"
-    "images/mac/searchfind.png"
-    "images/win/closetab.png"
-    "images/win/next.png"
-    "images/win/previous.png"
-    "images/win/searchfind.png"
-    "images/wrap.png"
+    "../../../shared/findwidget/images/mac/closetab.png"
+    "../../../shared/findwidget/images/mac/next.png"
+    "../../../shared/findwidget/images/mac/previous.png"
+    "../../../shared/findwidget/images/mac/searchfind.png"
+    "../../../shared/findwidget/images/win/closetab.png"
+    "../../../shared/findwidget/images/win/next.png"
+    "../../../shared/findwidget/images/win/previous.png"
+    "../../../shared/findwidget/images/win/searchfind.png"
+    "../../../shared/findwidget/images/wrap.png"
 )
 
 qt_internal_add_resource(Designer "findwidget"
@@ -348,63 +297,21 @@ qt_internal_add_resource(Designer "findwidget"
     FILES
         ${findwidget_resource_files}
 )
-set_source_files_properties("../../../shared/qtgradienteditor/images/down.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/down.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/edit.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/edit.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/editdelete.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/editdelete.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/minus.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/minus.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/plus.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/plus.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/spreadpad.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/spreadpad.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/spreadreflect.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/spreadreflect.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/spreadrepeat.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/spreadrepeat.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/typeconical.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/typeconical.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/typelinear.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/typelinear.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/typeradial.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/typeradial.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/up.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/up.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/zoomin.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/zoomin.png"
-)
-set_source_files_properties("../../../shared/qtgradienteditor/images/zoomout.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/zoomout.png"
-)
 set(qtgradienteditor_resource_files
-    "images/down.png"
-    "images/edit.png"
-    "images/editdelete.png"
-    "images/minus.png"
-    "images/plus.png"
-    "images/spreadpad.png"
-    "images/spreadreflect.png"
-    "images/spreadrepeat.png"
-    "images/typeconical.png"
-    "images/typelinear.png"
-    "images/typeradial.png"
-    "images/up.png"
-    "images/zoomin.png"
-    "images/zoomout.png"
+    "../../../shared/qtgradienteditor/images/down.png"
+    "../../../shared/qtgradienteditor/images/edit.png"
+    "../../../shared/qtgradienteditor/images/editdelete.png"
+    "../../../shared/qtgradienteditor/images/minus.png"
+    "../../../shared/qtgradienteditor/images/plus.png"
+    "../../../shared/qtgradienteditor/images/spreadpad.png"
+    "../../../shared/qtgradienteditor/images/spreadreflect.png"
+    "../../../shared/qtgradienteditor/images/spreadrepeat.png"
+    "../../../shared/qtgradienteditor/images/typeconical.png"
+    "../../../shared/qtgradienteditor/images/typelinear.png"
+    "../../../shared/qtgradienteditor/images/typeradial.png"
+    "../../../shared/qtgradienteditor/images/up.png"
+    "../../../shared/qtgradienteditor/images/zoomin.png"
+    "../../../shared/qtgradienteditor/images/zoomout.png"
 )
 
 qt_internal_add_resource(Designer "qtgradienteditor"
@@ -416,20 +323,20 @@ qt_internal_add_resource(Designer "qtgradienteditor"
         ${qtgradienteditor_resource_files}
 )
 set(shared_resource_files
-    "defaultgradients.xml"
-    "templates/forms/240x320/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/240x320/Dialog_with_Buttons_Right.ui"
-    "templates/forms/320x240/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/320x240/Dialog_with_Buttons_Right.ui"
-    "templates/forms/480x640/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/480x640/Dialog_with_Buttons_Right.ui"
-    "templates/forms/640x480/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/640x480/Dialog_with_Buttons_Right.ui"
-    "templates/forms/Dialog_with_Buttons_Bottom.ui"
-    "templates/forms/Dialog_with_Buttons_Right.ui"
-    "templates/forms/Dialog_without_Buttons.ui"
-    "templates/forms/Main_Window.ui"
-    "templates/forms/Widget.ui"
+    "shared/defaultgradients.xml"
+    "shared/templates/forms/240x320/Dialog_with_Buttons_Bottom.ui"
+    "shared/templates/forms/240x320/Dialog_with_Buttons_Right.ui"
+    "shared/templates/forms/320x240/Dialog_with_Buttons_Bottom.ui"
+    "shared/templates/forms/320x240/Dialog_with_Buttons_Right.ui"
+    "shared/templates/forms/480x640/Dialog_with_Buttons_Bottom.ui"
+    "shared/templates/forms/480x640/Dialog_with_Buttons_Right.ui"
+    "shared/templates/forms/640x480/Dialog_with_Buttons_Bottom.ui"
+    "shared/templates/forms/640x480/Dialog_with_Buttons_Right.ui"
+    "shared/templates/forms/Dialog_with_Buttons_Bottom.ui"
+    "shared/templates/forms/Dialog_with_Buttons_Right.ui"
+    "shared/templates/forms/Dialog_without_Buttons.ui"
+    "shared/templates/forms/Main_Window.ui"
+    "shared/templates/forms/Widget.ui"
 )
 
 qt_internal_add_resource(Designer "shared"
@@ -471,79 +378,25 @@ qt_internal_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
 
 if(NOT QT_BUILD_SHARED_LIBS)
     # Resources:
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-arrow.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-arrow.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-busy.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-busy.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-closedhand.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-closedhand.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-cross.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-cross.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-forbidden.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-forbidden.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-hand.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-hand.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-hsplit.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-hsplit.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-ibeam.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-ibeam.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-openhand.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-openhand.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-sizeall.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeall.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-sizeb.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeb.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-sizef.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizef.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-sizeh.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizeh.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-sizev.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-sizev.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-uparrow.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-uparrow.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-vsplit.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-vsplit.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-wait.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-wait.png"
-    )
-    set_source_files_properties("../../../shared/qtpropertybrowser/images/cursor-whatsthis.png"
-        PROPERTIES QT_RESOURCE_ALIAS "images/cursor-whatsthis.png"
-    )
     set(qtpropertybrowser_resource_files
-        "images/cursor-arrow.png"
-        "images/cursor-busy.png"
-        "images/cursor-closedhand.png"
-        "images/cursor-cross.png"
-        "images/cursor-forbidden.png"
-        "images/cursor-hand.png"
-        "images/cursor-hsplit.png"
-        "images/cursor-ibeam.png"
-        "images/cursor-openhand.png"
-        "images/cursor-sizeall.png"
-        "images/cursor-sizeb.png"
-        "images/cursor-sizef.png"
-        "images/cursor-sizeh.png"
-        "images/cursor-sizev.png"
-        "images/cursor-uparrow.png"
-        "images/cursor-vsplit.png"
-        "images/cursor-wait.png"
-        "images/cursor-whatsthis.png"
+        "../../../shared/qtpropertybrowser/images/cursor-arrow.png"
+        "../../../shared/qtpropertybrowser/images/cursor-busy.png"
+        "../../../shared/qtpropertybrowser/images/cursor-closedhand.png"
+        "../../../shared/qtpropertybrowser/images/cursor-cross.png"
+        "../../../shared/qtpropertybrowser/images/cursor-forbidden.png"
+        "../../../shared/qtpropertybrowser/images/cursor-hand.png"
+        "../../../shared/qtpropertybrowser/images/cursor-hsplit.png"
+        "../../../shared/qtpropertybrowser/images/cursor-ibeam.png"
+        "../../../shared/qtpropertybrowser/images/cursor-openhand.png"
+        "../../../shared/qtpropertybrowser/images/cursor-sizeall.png"
+        "../../../shared/qtpropertybrowser/images/cursor-sizeb.png"
+        "../../../shared/qtpropertybrowser/images/cursor-sizef.png"
+        "../../../shared/qtpropertybrowser/images/cursor-sizeh.png"
+        "../../../shared/qtpropertybrowser/images/cursor-sizev.png"
+        "../../../shared/qtpropertybrowser/images/cursor-uparrow.png"
+        "../../../shared/qtpropertybrowser/images/cursor-vsplit.png"
+        "../../../shared/qtpropertybrowser/images/cursor-wait.png"
+        "../../../shared/qtpropertybrowser/images/cursor-whatsthis.png"
     )
 
     qt_internal_add_resource(Designer "qtpropertybrowser"

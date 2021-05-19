@@ -57,31 +57,13 @@ qt_internal_add_resource(designer "designer"
     FILES
         ${designer_resource_files}
 )
-set_source_files_properties("../../../shared/qttoolbardialog/images/back.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/back.png"
-)
-set_source_files_properties("../../../shared/qttoolbardialog/images/down.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/down.png"
-)
-set_source_files_properties("../../../shared/qttoolbardialog/images/forward.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/forward.png"
-)
-set_source_files_properties("../../../shared/qttoolbardialog/images/minus.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/minus.png"
-)
-set_source_files_properties("../../../shared/qttoolbardialog/images/plus.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/plus.png"
-)
-set_source_files_properties("../../../shared/qttoolbardialog/images/up.png"
-    PROPERTIES QT_RESOURCE_ALIAS "images/up.png"
-)
 set(qttoolbardialog_resource_files
-    "images/back.png"
-    "images/down.png"
-    "images/forward.png"
-    "images/minus.png"
-    "images/plus.png"
-    "images/up.png"
+    "../../../shared/qttoolbardialog/images/back.png"
+    "../../../shared/qttoolbardialog/images/down.png"
+    "../../../shared/qttoolbardialog/images/forward.png"
+    "../../../shared/qttoolbardialog/images/minus.png"
+    "../../../shared/qttoolbardialog/images/plus.png"
+    "../../../shared/qttoolbardialog/images/up.png"
 )
 
 qt_internal_add_resource(designer "qttoolbardialog"
@@ -163,4 +145,3 @@ qt_internal_extend_target(designer CONDITION UNIX AND NOT HAIKU AND NOT MACOS
 qt_internal_add_docs(designer
     doc/qtdesigner.qdocconf
 )
-

@@ -34,11 +34,8 @@ qt_internal_add_tool(${target_name}
 )
 
 # Resources:
-set_source_files_properties("../shared/exclusive_builds.prf"
-    PROPERTIES QT_RESOURCE_ALIAS "exclusive_builds.prf"
-)
 set(proparser_resource_files
-    "exclusive_builds.prf"
+    "../shared/exclusive_builds.prf"
 )
 
 qt_internal_add_resource(${target_name} "proparser"
