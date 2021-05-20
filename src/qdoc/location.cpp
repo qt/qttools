@@ -172,6 +172,8 @@ void Location::pop()
     if (--m_stkDepth == 0) {
         m_stkBottom = StackEntry();
     } else {
+        if (!m_stk)
+            return;
         m_stk->pop();
         if (m_stk->isEmpty()) {
             delete m_stk;
