@@ -1285,8 +1285,8 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
     switch (type) {
     case Invokable:
         text << "This function can be invoked via the meta-object system and from QML. See "
-             << Atom(Atom::Link, "Q_INVOKABLE")
-             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK) << "Q_INVOKABLE"
+             << Atom(Atom::AutoLink, "Q_INVOKABLE")
+             << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
              << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << ".";
         break;
     case PrivateSignal:

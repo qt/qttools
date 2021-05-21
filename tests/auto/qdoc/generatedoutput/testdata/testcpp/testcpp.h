@@ -47,6 +47,10 @@ template<typename T>
 using Specialized = Struct<int, T>;
 #endif
 
+#ifdef test_template
+#    define Q_INVOKABLE void foo() {};
+#endif
+
 #ifdef test_scopedenum
     enum ClassicEnum { Yee, Haw, Howdy, Partner };
 

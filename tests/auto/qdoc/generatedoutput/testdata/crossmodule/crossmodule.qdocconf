@@ -9,3 +9,5 @@ sources = testtype.cpp
 
 HTML.nosubdirs    = true
 HTML.outputsubdir = crossmodule
+
+defines += test_crossmodule

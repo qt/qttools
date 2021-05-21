@@ -146,6 +146,10 @@ private:
     void generateTheTable(const QStringList &requisiteOrder, const QMap<QString, Text> &requisites,
                           const QString &headerText, const Aggregate *aggregate,
                           CodeMarker *marker);
+    inline void openUnorderedList();
+    inline void closeUnorderedList();
+
+    static bool s_inUnorderedList;
 
     int m_codeIndent { 0 };
     QString m_codePrefix {};

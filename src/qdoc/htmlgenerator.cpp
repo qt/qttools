@@ -59,6 +59,7 @@
 QT_BEGIN_NAMESPACE
 
 static bool showBrokenLinks = false;
+bool HtmlGenerator::s_inUnorderedList { false };
 
 static void addLink(const QString &linkTarget, QStringView nestedStuff, QString *res)
 {
@@ -70,6 +71,30 @@ static void addLink(const QString &linkTarget, QStringView nestedStuff, QString 
         *res += QLatin1String("</a>");
     } else {
         *res += nestedStuff;
+    }
+}
+
+/*!
+    \internal
+    Convenience method that starts an unordered list if not in one.
+ */
+inline void HtmlGenerator::openUnorderedList()
+{
+    if (!s_inUnorderedList) {
+        out() << "<ul>\n";
+        s_inUnorderedList = true;
+    }
+}
+
+/*!
+    \internal
+    Convenience method that closes an unordered list if in one.
+ */
+inline void HtmlGenerator::closeUnorderedList()
+{
+    if (s_inUnorderedList) {
+        out() << "</ul>\n";
+        s_inUnorderedList = false;
     }
 }
 
@@ -1033,20 +1058,19 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     if (parentIsClass)
         generateSince(aggregate, marker);
 
-    out() << "<ul>\n";
-
     QString membersLink = generateAllMembersFile(Sections::allMembersSection(), marker);
-    if (!membersLink.isEmpty())
+    if (!membersLink.isEmpty()) {
+        openUnorderedList();
         out() << "<li><a href=\"" << membersLink << "\">"
               << "List of all members, including inherited members</a></li>\n";
-
+    }
     QString obsoleteLink = generateObsoleteMembersFile(sections, marker);
     if (!obsoleteLink.isEmpty()) {
+        openUnorderedList();
         out() << "<li><a href=\"" << obsoleteLink << "\">"
               << "Deprecated members</a></li>\n";
     }
-
-    out() << "</ul>\n";
+    closeUnorderedList();
     generateThreadSafeness(aggregate, marker);
 
     bool needOtherSection = false;
@@ -1744,7 +1768,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
     }
 
     if (node && !node->links().empty())
-        out() << "<p class=\"naviNextPrevious headerNavi\">\n" << m_navigationLinks << "</p><p/>\n";
+        out() << "<p class=\"naviNextPrevious headerNavi\">\n" << m_navigationLinks << "</p>\n";
 }
 
 void HtmlGenerator::generateTitle(const QString &title, const Text &subtitle,
@@ -1846,7 +1870,7 @@ void HtmlGenerator::generateTheTable(const QStringList &requisiteOrder,
             out() << "</td></tr>";
         }
     }
-    out() << "</table></div>";
+    out() << "</table></div>\n";
 }
 
 /*!
@@ -2044,8 +2068,6 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     ClassNode *cn = qcn->classNode();
     if (cn && !cn->isInternal()) {
         text.clear();
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(qcn));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
         text << Atom(Atom::LinkNode, CodeMarker::stringForNode(cn));
         text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
         text << Atom(Atom::String, cn->name());
@@ -2156,9 +2178,9 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
     out() << "<div class=\"sidebar\">\n";
     out() << "<div class=\"toc\">\n";
     out() << "<h3 id=\"toc\">Contents</h3>\n";
-    out() << "<ul>\n";
 
     if (node->isModule()) {
+        openUnorderedList();
         if (!static_cast<const CollectionNode *>(node)->noAutoList()) {
             if (node->hasNamespaces()) {
                 out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
@@ -2182,10 +2204,12 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
                    node->isJsType() || node->isQmlBasicType() || node->isJsBasicType())) {
         for (const auto &section : qAsConst(*sections)) {
             if (!section.members().isEmpty()) {
+                openUnorderedList();
                 out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
                       << registerRef(section.plural()) << "\">" << section.title() << "</a></li>\n";
             }
             if (!section.reimplementedMembers().isEmpty()) {
+                openUnorderedList();
                 QString ref = QString("Reimplemented ") + section.plural();
                 out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
                       << registerRef(ref.toLower()) << "\">"
@@ -2193,6 +2217,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
             }
         }
         if (!node->isNamespace() || node->hasDoc()) {
+            openUnorderedList();
             out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
                   << registerRef("details") << "\">Detailed Description</a></li>\n";
         }
@@ -2209,6 +2234,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
         // restrict the ToC depth to the one set by the HTML.tocdepth variable or
         // print all levels if tocDepth is not set.
         if (sectionNumber <= tocDepth || tocDepth < 0) {
+            openUnorderedList();
             int numAtoms;
             Text headingText = Text::sectionHeading(atom);
             QString s = headingText.toString();
@@ -2218,7 +2244,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
             out() << "</a></li>\n";
         }
     }
-    out() << "</ul>\n";
+    closeUnorderedList();
     out() << "</div>\n";
     out() << R"(<div class="sidebar-content" id="sidebar-content"></div>)";
     out() << "</div>\n";
@@ -2297,7 +2323,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
                 generateFullName(qcn, nullptr);
                 out() << ".</p>\n";
             }
-            out() << "<ul>\n";
+            openUnorderedList();
             for (int j = 0; j < keys.size(); j++) {
                 Node *node = nodes[j];
                 if (node->access() == Access::Private || node->isInternal())
@@ -2324,7 +2350,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
                 };
                 generate(node);
             }
-            out() << "</ul>\n";
+            closeUnorderedList();
         }
     }
 
@@ -2796,15 +2822,15 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
     // Look for the _ character in the member name followed by a number (or n):
     // this is intended to be rendered as a subscript.
     marked.replace(QRegularExpression("<@param>([a-z]+)_([0-9]+|n)</@param>"), "<i>\\1<sub>\\2</sub></i>");
-
     // Replace some markup by HTML tags. Do both the opening and the closing tag
     // in one go (instead of <@param> and </@param> separately, for instance).
     marked.replace("@param>", "i>");
-    if (summary)
-        marked.replace("@name>", "b>");
+
     marked.replace("@extra>", "code>");
 
     if (summary) {
+        marked.remove("<@name>");
+        marked.remove("</@name>");
         marked.remove("<@type>");
         marked.remove("</@type>");
     }
@@ -3298,12 +3324,16 @@ void HtmlGenerator::generateFullName(const Node *apparentNode, const Node *relat
 {
     if (actualNode == nullptr)
         actualNode = apparentNode;
-    out() << "<a href=\"" << linkForNode(actualNode, relative);
-    if (actualNode->isDeprecated())
-        out() << "\" class=\"obsolete";
-    out() << "\">";
+    bool link = !linkForNode(actualNode, relative).isEmpty();
+    if (link) {
+        out() << "<a href=\"" << linkForNode(actualNode, relative);
+        if (actualNode->isDeprecated())
+            out() << "\" class=\"obsolete";
+        out() << "\">";
+    }
     out() << protectEnc(apparentNode->fullName(relative));
-    out() << "</a>";
+    if (link)
+        out() << "</a>";
 }
 
 void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *relative,
@@ -3472,7 +3502,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
                           "<div class=\"table\"><table class=\"qmlname\">\n");
 
     QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
-                         "<td class=\"%2\"><p id=\"%1\">\n");
+                         "<td class=\"%2\"><p>\n");
     QString qmlItemEnd("</p></td></tr>\n");
 
     QString qmlItemFooter("</table></div></div>\n");
