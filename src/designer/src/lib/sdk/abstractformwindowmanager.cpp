@@ -143,7 +143,7 @@ QDesignerFormWindowManagerInterface::~QDesignerFormWindowManagerInterface() = de
     returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -159,7 +159,7 @@ QAction *QDesignerFormWindowManagerInterface::actionCut() const
     function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -175,7 +175,7 @@ QAction *QDesignerFormWindowManagerInterface::actionCopy() const
     function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -191,7 +191,7 @@ QAction *QDesignerFormWindowManagerInterface::actionPaste() const
     returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -205,7 +205,7 @@ QAction *QDesignerFormWindowManagerInterface::actionDelete() const
     function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -220,7 +220,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSelectAll() const
     action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -236,7 +236,7 @@ QAction *QDesignerFormWindowManagerInterface::actionLower() const
     action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -251,7 +251,7 @@ QAction *QDesignerFormWindowManagerInterface::actionRaise() const
     the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -266,7 +266,7 @@ QAction *QDesignerFormWindowManagerInterface::actionHorizontalLayout() const
     original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -280,7 +280,7 @@ QAction *QDesignerFormWindowManagerInterface::actionVerticalLayout() const
     action. The function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -294,7 +294,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSplitHorizontal() const
     action. The function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -309,7 +309,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSplitVertical() const
     original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -324,7 +324,7 @@ QAction *QDesignerFormWindowManagerInterface::actionGridLayout() const
 
     \sa QAction
     \since 4.4
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -339,7 +339,7 @@ QAction *QDesignerFormWindowManagerInterface::actionFormLayout() const
     function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -353,7 +353,7 @@ QAction *QDesignerFormWindowManagerInterface::actionBreakLayout() const
     function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -368,7 +368,7 @@ QAction *QDesignerFormWindowManagerInterface::actionAdjustSize() const
 
     \sa QAction
     \since 4.4
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -448,7 +448,7 @@ QAction *QDesignerFormWindowManagerInterface::actionSimplifyLayout() const
     function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */
@@ -462,7 +462,7 @@ QAction *QDesignerFormWindowManagerInterface::actionUndo() const
     function returns the original action.
 
     \sa QAction
-    \obsolete
+    \deprecated
 
     Use action() instead.
 */

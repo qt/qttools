@@ -273,7 +273,7 @@ private:
 
 /*!
     \class QHelpSearchQuery
-    \obsolete
+    \deprecated
     \since 4.4
     \inmodule QtHelp
     \brief The QHelpSearchQuery class contains the field name and the associated
@@ -306,14 +306,14 @@ private:
 
     \value DEFAULT  the default field provided by the search widget, several terms should be
                     split and stored in the word list except search terms enclosed in quotes.
-    \value FUZZY    \obsolete Terms should be split in separate
+    \value FUZZY    \deprecated Terms should be split in separate
                     words and passed to the search engine.
-    \value WITHOUT  \obsolete  Terms should be split in separate
+    \value WITHOUT  \deprecated  Terms should be split in separate
                     words and passed to the search engine.
-    \value PHRASE   \obsolete  Terms should not be split in separate words.
-    \value ALL      \obsolete  Terms should be split in separate
+    \value PHRASE   \deprecated  Terms should not be split in separate words.
+    \value ALL      \deprecated  Terms should be split in separate
                     words and passed to the search engine
-    \value ATLEAST  \obsolete  Terms should be split in separate
+    \value ATLEAST  \deprecated  Terms should be split in separate
                     words and passed to the search engine
 */
 
@@ -434,7 +434,7 @@ QHelpSearchResultWidget* QHelpSearchEngine::resultWidget()
 }
 
 /*!
-    \obsolete
+    \deprecated
     Use searchResultCount() instead.
 */
 int QHelpSearchEngine::hitsCount() const
@@ -444,7 +444,7 @@ int QHelpSearchEngine::hitsCount() const
 
 /*!
     \since 4.6
-    \obsolete
+    \deprecated
     Use searchResultCount() instead.
 */
 int QHelpSearchEngine::hitCount() const
@@ -463,7 +463,7 @@ int QHelpSearchEngine::searchResultCount() const
 
 /*!
     \typedef QHelpSearchEngine::SearchHit
-    \obsolete
+    \deprecated
 
     Use QHelpSearchResult instead.
 
@@ -474,7 +474,7 @@ int QHelpSearchEngine::searchResultCount() const
 */
 
 /*!
-    \obsolete
+    \deprecated
     Use searchResults() instead.
 */
 QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) const
@@ -505,7 +505,7 @@ QString QHelpSearchEngine::searchInput() const
 }
 
 /*!
-    \obsolete
+    \deprecated
     \since 4.5
     Use searchInput() instead.
 */
@@ -562,7 +562,7 @@ void QHelpSearchEngine::search(const QString &searchInput)
 }
 
 /*!
-    \obsolete
+    \deprecated
     Use search(const QString &searchInput) instead.
 */
 void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)

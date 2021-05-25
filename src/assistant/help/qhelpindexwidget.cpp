@@ -310,7 +310,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
     \fn void QHelpIndexWidget::linkActivated(const QUrl &link,
         const QString &keyword)
 
-    \obsolete
+    \deprecated
 
     Use documentActivated() instead.
 

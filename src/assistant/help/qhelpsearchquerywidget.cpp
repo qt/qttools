@@ -295,7 +295,7 @@ void QHelpSearchQueryWidget::collapseExtendedSearch()
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     Use searchInput() instead.
 */
@@ -306,7 +306,7 @@ QList<QHelpSearchQuery> QHelpSearchQueryWidget::query() const
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     Use setSearchInput() instead.
 */

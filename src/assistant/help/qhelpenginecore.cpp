@@ -160,12 +160,12 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
 
 /*!
     \fn void QHelpEngineCore::readersAboutToBeInvalidated()
-    \obsolete
+    \deprecated
 */
 
 /*!
     \fn void QHelpEngineCore::currentFilterChanged(const QString &newFilter)
-    \obsolete
+    \deprecated
 
     QHelpFilterEngine::filterActivated() should be used instead.
 
@@ -401,7 +401,7 @@ QStringList QHelpEngineCore::registeredDocumentations() const
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     QHelpFilterEngine::filters() should be used instead.
 
@@ -417,7 +417,7 @@ QStringList QHelpEngineCore::customFilters() const
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     QHelpFilterEngine::setFilterData() should be used instead.
 
@@ -437,7 +437,7 @@ bool QHelpEngineCore::addCustomFilter(const QString &filterName,
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     QHelpFilterEngine::removeFilter() should be used instead.
 
@@ -454,7 +454,7 @@ bool QHelpEngineCore::removeCustomFilter(const QString &filterName)
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     QHelpFilterEngine::availableComponents() should be used instead.
 
@@ -468,7 +468,7 @@ QStringList QHelpEngineCore::filterAttributes() const
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     QHelpFilterEngine::filterData() should be used instead.
 
@@ -483,7 +483,7 @@ QStringList QHelpEngineCore::filterAttributes(const QString &filterName) const
 }
 
 /*!
-    \obsolete
+    \deprecated
     \property QHelpEngineCore::currentFilter
     \brief the name of the custom filter currently applied.
     \since 4.5
@@ -525,7 +525,7 @@ void QHelpEngineCore::setCurrentFilter(const QString &filterName)
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     QHelpFilterEngine::filterData() should be used instead.
 
@@ -542,7 +542,7 @@ QList<QStringList> QHelpEngineCore::filterAttributeSets(const QString &namespace
 }
 
 /*!
-    \obsolete
+    \deprecated
 
     files() should be used instead.
 
