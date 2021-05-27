@@ -31,6 +31,8 @@ qt_internal_add_tool(${target_name}
     # special case begin
     EXTRA_CMAKE_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/../${QT_CMAKE_EXPORT_NAMESPACE}LinguistToolsMacros.cmake"
+    EXTRA_CMAKE_INCLUDES
+        "${QT_CMAKE_EXPORT_NAMESPACE}LinguistToolsMacros.cmake"
     # special case end
 )
 
