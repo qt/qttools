@@ -144,6 +144,157 @@ function(qt6_add_translation _qm_files)
     set(${_qm_files} ${${_qm_files}} PARENT_SCOPE)
 endfunction()
 
+# Makes the paths in the unparsed arguments absolute and stores them in out_var.
+function(qt_internal_make_paths_absolute out_var)
+    set(result "")
+    foreach(path IN LISTS ARGN)
+        get_filename_component(abs_path "${path}" ABSOLUTE)
+        list(APPEND result "${abs_path}")
+    endforeach()
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
+# Needed to locate Qt6LupdateProject.json.in file inside functions
+set(_Qt6_LINGUIST_TOOLS_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE INTERNAL "")
+
+function(qt6_add_lupdate target)
+    set(options
+        NO_GLOBAL_TARGET)
+    set(oneValueArgs)
+    set(multiValueArgs
+        TS_FILES
+        SOURCES
+        INCLUDE_DIRECTORIES
+        OPTIONS)
+    cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    if(NOT arg_INCLUDE_DIRECTORIES)
+        set(includePaths "$<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>")
+    endif()
+    if(NOT arg_SOURCES)
+        set(sources "$<TARGET_PROPERTY:${target},SOURCES>")
+    endif()
+
+    qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
+
+    set(lupdate_project_base "${CMAKE_CURRENT_BINARY_DIR}/.lupdate/${target}_project")
+    set(lupdate_project_cmake "${lupdate_project_base}")
+    get_property(multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+    if(multi_config)
+        string(APPEND lupdate_project_cmake ".$<CONFIG>")
+    endif()
+    string(APPEND lupdate_project_cmake ".cmake")
+    set(lupdate_project_json "${lupdate_project_base}.json")
+    file(GENERATE OUTPUT "${lupdate_project_cmake}"
+        CONTENT "set(lupdate_project_file \"${CMAKE_CURRENT_LIST_FILE}\")
+set(lupdate_include_paths \"${includePaths}\")
+set(lupdate_sources \"${sources}\")
+set(lupdate_translations \"${ts_files}\")
+")
+
+    add_custom_target(${target}_lupdate
+        COMMAND "${CMAKE_COMMAND}" "-DIN_FILE=${lupdate_project_cmake}"
+                "-DOUT_FILE=${lupdate_project_json}"
+                -P "${_Qt6_LINGUIST_TOOLS_DIR}/GenerateLUpdateProject.cmake"
+        COMMAND ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate -project "${lupdate_project_json}"
+                ${arg_OPTIONS}
+        DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate
+        VERBATIM)
+
+    if(NOT DEFINED QT_GLOBAL_LUPDATE_TARGET)
+        set(QT_GLOBAL_LUPDATE_TARGET update_translations)
+    endif()
+
+    if(NOT arg_NO_GLOBAL_TARGET)
+        if(NOT TARGET ${QT_GLOBAL_LUPDATE_TARGET})
+            add_custom_target(${QT_GLOBAL_LUPDATE_TARGET})
+        endif()
+        add_dependencies(${QT_GLOBAL_LUPDATE_TARGET} ${target}_lupdate)
+    endif()
+endfunction()
+
+function(qt6_add_lrelease target)
+    set(options
+        MANUAL
+        NO_GLOBAL_TARGET)
+    set(oneValueArgs)
+    set(multiValueArgs
+        TS_FILES
+        OPTIONS)
+    cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
+
+    set(qm_files "")
+    foreach(ts_file ${ts_files})
+        if(NOT EXISTS "${ts_file}")
+            # Write an empty .ts file that can be read by lrelease and updated by lupdate.
+            message(WARNING "Translation file '${ts_file}' does not exist. "
+                "Consider building the target '${target}_lupdate' to create an initial "
+                "version of that file.")
+            file(WRITE "${ts_file}"
+                [[<?xml version="1.0" encoding="utf-8"?>
+                <!DOCTYPE TS>
+                <TS version="2.1">
+                </TS>
+                ]])
+        endif()
+        get_filename_component(qm ${ts_file} NAME_WLE)
+        string(APPEND qm ".qm")
+        get_source_file_property(output_location ${ts_file} OUTPUT_LOCATION)
+        if(output_location)
+            if(NOT IS_ABSOLUTE "${output_location}")
+                get_filename_component(output_location "${output_location}" ABSOLUTE
+                    BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+            endif()
+            file(MAKE_DIRECTORY "${output_location}")
+            string(PREPEND qm "${output_location}/")
+        else()
+            string(PREPEND qm "${CMAKE_CURRENT_BINARY_DIR}/")
+        endif()
+        add_custom_command(OUTPUT ${qm}
+            COMMAND ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease
+            ${arg_OPTIONS} ${ts_file} -qm ${qm}
+            DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease ${ts_file}
+            VERBATIM)
+        list(APPEND qm_files "${qm}")
+    endforeach()
+
+    add_custom_target(${target}_lrelease DEPENDS ${qm_files})
+    if(NOT arg_MANUAL)
+        add_dependencies(${target} ${target}_lrelease)
+    endif()
+
+    if(NOT DEFINED QT_GLOBAL_LRELEASE_TARGET)
+        set(QT_GLOBAL_LRELEASE_TARGET release_translations)
+    endif()
+
+    if(NOT arg_NO_GLOBAL_TARGET)
+        if(NOT TARGET ${QT_GLOBAL_LRELEASE_TARGET})
+            add_custom_target(${QT_GLOBAL_LRELEASE_TARGET})
+        endif()
+        add_dependencies(${QT_GLOBAL_LRELEASE_TARGET} ${target}_lrelease)
+    endif()
+endfunction()
+
+function(qt6_add_translations target)
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs
+        TS_FILES
+        SOURCES
+        INCLUDE_DIRECTORIES
+        LUPDATE_OPTIONS
+        LRELEASE_OPTIONS)
+    cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    qt6_add_lupdate(${target}
+        TS_FILES "${arg_TS_FILES}"
+        SOURCES "${arg_SOURCES}"
+        INCLUDE_DIRECTORIES "${arg_INCLUDE_DIRECTORIES}"
+        OPTIONS "${arg_LUPDATE_OPTIONS}")
+    qt6_add_lrelease(${target}
+        TS_FILES "${arg_TS_FILES}"
+        OPTIONS "${arg_LRELEASE_OPTIONS}")
+endfunction()
+
 if(NOT QT_NO_CREATE_VERSIONLESS_FUNCTIONS)
     function(qt_add_translation _qm_files)
         if(QT_DEFAULT_MAJOR_VERSION EQUAL 5)
@@ -152,5 +303,26 @@ if(NOT QT_NO_CREATE_VERSIONLESS_FUNCTIONS)
             qt6_add_translation("${_qm_files}" ${ARGN})
         endif()
         set("${_qm_files}" "${${_qm_files}}" PARENT_SCOPE)
+    endfunction()
+    function(qt_add_lupdate)
+        if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+            qt6_add_lupdate(${ARGN})
+        else()
+            message(FATAL_ERROR "qt_add_lupdate() is only available in Qt 6.")
+        endif()
+    endfunction()
+    function(qt_add_lrelease)
+        if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+            qt6_add_lrelease(${ARGN})
+        else()
+            message(FATAL_ERROR "qt_add_lrelease() is only available in Qt 6.")
+        endif()
+    endfunction()
+    function(qt_add_translations)
+        if(QT_DEFAULT_MAJOR_VERSION EQUAL 6)
+            qt6_add_translations(${ARGN})
+        else()
+            message(FATAL_ERROR "qt_add_translations() is only available in Qt 6.")
+        endif()
     endfunction()
 endif()

@@ -19,6 +19,7 @@ qt_get_tool_target_name(target_name lupdate)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Translation File Update Tool"
     TOOLS_TARGET Linguist # special case
+    EXTRA_CMAKE_FILES "${CMAKE_CURRENT_LIST_DIR}/../GenerateLUpdateProject.cmake"
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp

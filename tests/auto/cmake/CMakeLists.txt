@@ -28,7 +28,7 @@ project(qttools_cmake_tests)
 enable_testing()
 
 set(required_packages Core)
-set(optional_packages Widgets)
+set(optional_packages Widgets LinguistTools)
 
 # Setup the test when called as a completely standalone project.
 if(TARGET Qt6::Core)
@@ -60,4 +60,8 @@ include("${_Qt6CTestMacros}")
 if (TARGET Qt6::Widgets)
     _qt_internal_test_expect_pass(test_uiplugin_module)
     _qt_internal_test_expect_pass(test_uiplugin_via_designer)
+endif()
+
+if(TARGET Qt6::lupdate)
+    _qt_internal_test_expect_pass(test_translation_api)
 endif()
