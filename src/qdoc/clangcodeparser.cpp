@@ -1681,8 +1681,8 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnArg
     const char *dummyFileName = fnDummyFileName;
     CXUnsavedFile unsavedFile { dummyFileName, s_fn.constData(),
                                 static_cast<unsigned long>(s_fn.size()) };
-    CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, args.data(), args.size(),
-                                                  &unsavedFile, 1, flags, &tu);
+    CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, args.data(),
+                                                  int(args.size()), &unsavedFile, 1, flags, &tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << args
                     << ") returns" << err;
     printDiagnostics(tu);
