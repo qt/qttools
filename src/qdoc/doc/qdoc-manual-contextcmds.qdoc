@@ -307,7 +307,7 @@
     It may be removed in a future version of QDoc. Use the \\deprecated
     command instead.
 
-    \sa \l{deprecated-command}{\\deprecated}
+    \sa {deprecated-command}{\\deprecated}
 
     \target deprecated-command
     \section1 \\deprecated
