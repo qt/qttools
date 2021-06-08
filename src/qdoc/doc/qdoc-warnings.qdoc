@@ -54,7 +54,7 @@
     \li The name (or, for functions, where specified, signature) used
         where it is documented not matching the name used in its
         declaration.
-    \li The link target being marked as \l {inmodule-internal}{\\internal} when the linking
+    \li The link target being marked as \l {internal-command}{\\internal} when the linking
         text was not.
     \endlist
 
@@ -338,7 +338,7 @@
 
     \section1 Missing format name after \\raw
 
-    The \l {raw-command}{\\raw} command and the corresponding \l {endraw-command}{\\endraw}
+    The \l {raw-command}{\\raw} command and the corresponding \l {raw-command}{\\endraw}
     command delimit a block of raw mark-up language code. The \\raw
     command must be followed by the format name. For now, this can
     only be HTML.
@@ -442,7 +442,7 @@
 
     \section1 Unexpected <end_command>
 
-    This warning is issued if, for example, you have an \l {endlist-command}{\\endlist} without
+    This warning is issued if, for example, you have an \l {list-command}{\\endlist} without
     a preceding \l {list-command}{\\list}. It applies to all commands that come in pairs (e.g.
     startFoo/endFoo).
 
@@ -770,3 +770,4 @@
     \endcode
 
     QDoc will issue this warning if a certain title is used in more than one page.
+*/
