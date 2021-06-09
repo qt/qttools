@@ -239,6 +239,17 @@ struct Stores
 
 namespace LupdatePrivate
 {
+    inline QString fixedLineEndings(const QString &s)
+    {
+#ifdef Q_OS_WIN
+        QString result = s;
+        result.replace(QLatin1String("\r\n"), QLatin1String("\n"));
+        return result;
+#else
+        return s;
+#endif
+    }
+
     enum QuoteCompulsary
     {
         None = 0x01,
@@ -262,7 +273,7 @@ namespace LupdatePrivate
             return {};
         if (!s.consume_back("\"") && ((quote & Right) != 0))
             return {};
-        return toQt(s);
+        return fixedLineEndings(toQt(s));
     }
 
     /*
@@ -275,7 +286,7 @@ namespace LupdatePrivate
         if (token.empty())
             return {};
 
-        const QString string = QString::fromStdString(token).trimmed();
+        const QString string = fixedLineEndings(QString::fromStdString(token).trimmed());
         const int index = string.indexOf(QLatin1Char('"'));
         if (index <= 0)
             return LupdatePrivate::cleanQuote(token, QuoteCompulsary::LeftAndRight);
