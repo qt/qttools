@@ -507,12 +507,12 @@ void ClangCppParser::collectMessages(TranslatorMessageVector &result,
     }
 }
 
-static QString ensureAbsolutePath(const QString &filePath)
+static QString ensureCanonicalPath(const QString &filePath)
 {
     QFileInfo fi(filePath);
     if (fi.isRelative())
-        return QDir::current().absoluteFilePath(filePath);
-    return filePath;
+        fi.setFile(QDir::current().absoluteFilePath(filePath));
+    return fi.canonicalFilePath();
 }
 
 TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStore &store,
@@ -529,7 +529,7 @@ TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStor
             : store.lupdateSource),
         ParserTool::transcode(store.lupdateComment),
         QString(),
-        ensureAbsolutePath(store.lupdateLocationFile),
+        ensureCanonicalPath(store.lupdateLocationFile),
         store.lupdateLocationLine,
         QStringList(),
         TranslatorMessage::Type::Unfinished,
