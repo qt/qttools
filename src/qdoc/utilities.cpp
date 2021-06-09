@@ -26,6 +26,7 @@
 **
 ****************************************************************************/
 
+#include <QtCore/qprocess.h>
 #include "utilities.h"
 
 QT_BEGIN_NAMESPACE
@@ -100,6 +101,104 @@ QString comma(qsizetype wordPosition, qsizetype numberOfWords)
     if (wordPosition == 0 || wordPosition < numberOfWords - 2)
         return QStringLiteral(", ");
     return QStringLiteral(", and ");
+}
+
+/*!
+    \internal
+*/
+static bool runProcess(const QString &program, const QStringList &arguments,
+                       QByteArray *stdOutIn, QByteArray *stdErrIn)
+{
+    QProcess process;
+    process.start(program, arguments, QProcess::ReadWrite);
+    if (!process.waitForStarted()) {
+        qCDebug(lcQdoc).nospace() << "Unable to start " << process.program()
+                                  << ": " << process.errorString();
+        return false;
+    }
+    process.closeWriteChannel();
+    const bool finished = process.waitForFinished();
+    const QByteArray stdErr = process.readAllStandardError();
+    if (stdErrIn)
+        *stdErrIn = stdErr;
+    if (stdOutIn)
+        *stdOutIn = process.readAllStandardOutput();
+
+    if (!finished) {
+        qCDebug(lcQdoc).nospace() << process.program() << " timed out: " << stdErr;
+        process.kill();
+        return false;
+    }
+
+    if (process.exitStatus() != QProcess::NormalExit) {
+        qCDebug(lcQdoc).nospace() << process.program() << " crashed: " << stdErr;
+        return false;
+    }
+
+    if (process.exitCode() != 0) {
+        qCDebug(lcQdoc).nospace() <<  process.program() << " exited with "
+            << process.exitCode() << ": " << stdErr;
+        return false;
+    }
+
+    return true;
+}
+
+/*!
+    \internal
+*/
+static QByteArray frameworkSuffix() {
+    return QByteArrayLiteral(" (framework directory)");
+}
+
+/*!
+    \internal
+    Determine the compiler's internal include paths from the output of
+
+    \badcode
+    [clang++|g++] -E -x c++ - -v </dev/null
+    \endcode
+
+    Output looks like:
+
+    \badcode
+    #include <...> search starts here:
+    /usr/local/include
+    /System/Library/Frameworks (framework directory)
+    End of search list.
+    \endcode
+*/
+QStringList getInternalIncludePaths(const QString &compiler)
+{
+    QStringList result;
+    QStringList arguments;
+    arguments << QStringLiteral("-E") << QStringLiteral("-x") << QStringLiteral("c++")
+              << QStringLiteral("-") << QStringLiteral("-v");
+    QByteArray stdOut;
+    QByteArray stdErr;
+    if (!runProcess(compiler, arguments, &stdOut, &stdErr))
+        return result;
+    const QByteArrayList stdErrLines = stdErr.split('\n');
+    bool isIncludeDir = false;
+    for (const QByteArray &line : stdErrLines) {
+        if (isIncludeDir) {
+            if (line.startsWith(QByteArrayLiteral("End of search list"))) {
+                isIncludeDir = false;
+            } else {
+                QByteArray prefix("-I");
+                QByteArray headerPath{line.trimmed()};
+                if (headerPath.endsWith(frameworkSuffix())) {
+                    headerPath.truncate(headerPath.size() - frameworkSuffix().size());
+                    prefix = QByteArrayLiteral("-F");
+                }
+                result.append(QString::fromLocal8Bit(prefix + headerPath));
+            }
+        } else if (line.startsWith(QByteArrayLiteral("#include <...> search starts here"))) {
+            isIncludeDir = true;
+        }
+    }
+
+    return result;
 }
 
 } // namespace Utilities

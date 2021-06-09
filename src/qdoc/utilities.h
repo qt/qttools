@@ -44,6 +44,7 @@ bool debugging();
 
 QString separator(qsizetype wordPosition, qsizetype numberOfWords);
 QString comma(qsizetype wordPosition, qsizetype numberOfWords);
+QStringList getInternalIncludePaths(const QString &compiler);
 }
 
 QT_END_NAMESPACE
