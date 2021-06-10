@@ -55,6 +55,13 @@
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
+            <name>itsHappening</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>itsHappening-signal</anchor>
+            <arglist>(bool really)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
             <name>fail</name>
             <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
             <anchor>fail-method</anchor>

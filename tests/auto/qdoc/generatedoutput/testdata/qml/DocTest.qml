@@ -54,6 +54,11 @@ Item {
     signal foo(var bar)
 
     /*!
+    Signals that something is \a really happening.
+    */
+    signal itsHappening(bool really)
+
+    /*!
         \qmlproperty string DocTest::name
 
         Name of the test.
