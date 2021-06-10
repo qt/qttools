@@ -629,7 +629,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                 for (QQmlJS::AST::UiParameterList *it = member->parameters; it; it = it->next) {
                     const QString type = qualifiedIdToString(it->type);
                     if (!type.isEmpty() && !it->name.isEmpty())
-                        parameters.append(type, QString(), it->name.toString());
+                        parameters.append(type, it->name.toString());
                 }
                 applyDocumentation(member->firstSourceLocation(), newSignal);
             }

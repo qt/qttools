@@ -81,6 +81,13 @@
 <db:para>The corresponding handler is <db:code>onFoo</db:code>.</db:para>
 </db:note>
 </db:section>
+<db:section xml:id="itsHappening-signal">
+<db:title>itsHappening(bool <db:emphasis>really</db:emphasis>)</db:title>
+<db:para>Signals that something is <db:code role="parameter">really</db:code> happening.</db:para>
+<db:note>
+<db:para>The corresponding handler is <db:code>onItsHappening</db:code>.</db:para>
+</db:note>
+</db:section>
 </db:section>
 <db:section xml:id="method-documentation">
 <db:title>Method Documentation</db:title>

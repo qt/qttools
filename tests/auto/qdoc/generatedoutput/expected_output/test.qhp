@@ -123,6 +123,7 @@
             <keyword name="id" id="Type::id" ref="qml-qdoc-test-type.html#id-prop"/>
             <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
             <keyword name="int" id="QML.int" ref="qml-int.html"/>
+            <keyword name="itsHappening" id="DocTest::itsHappening" ref="qml-qdoc-test-doctest.html#itsHappening-signal"/>
             <keyword name="maximum" id="ProgressBar::maximum" ref="qml-uicomponents-progressbar.html#maximum-prop"/>
             <keyword name="minimum" id="ProgressBar::minimum" ref="qml-uicomponents-progressbar.html#minimum-prop"/>
             <keyword name="name" id="AbstractParent::name" ref="qml-qdoc-test-abstractparent.html#name-method"/>
