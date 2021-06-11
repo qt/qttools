@@ -26,6 +26,29 @@ function(not_expect_target target)
     endif()
 endfunction()
 
+function(expect_files_in_list list_var)
+    set(file_names "")
+    foreach(path IN LISTS "${list_var}")
+        get_filename_component(file_name "${path}" NAME)
+        list(APPEND file_names "${file_name}")
+    endforeach()
+    set(found_file_names "")
+    foreach(expected_file_name IN LISTS ARGN)
+        list(FIND file_names "${expected_file_name}" idx)
+        if(idx EQUAL -1)
+            message(FATAL_ERROR "Expected file name '${expected_file_name}' is not in "
+                "'${list_var}'. Its value is '${${list_var}}'.")
+        endif()
+        list(APPEND found_file_names "${expected_file_name}")
+    endforeach()
+    list(REMOVE_ITEM file_names ${found_file_names})
+    list(LENGTH file_names n)
+    if(NOT n EQUAL 0)
+        message(FATAL_ERROR "Unexpected file names in '${list_var}': ${file_names}\n"
+            "Value of '${list_var}' is '${${list_var}}'.")
+    endif()
+endfunction()
+
 # Test NO_GLOBAL_TARGET for lupdate.
 create_app(app1)
 qt6_add_lupdate(app1
@@ -40,11 +63,13 @@ not_expect_target(release_translations)
 create_app(app2)
 qt6_add_lrelease(app2
     NO_GLOBAL_TARGET
-    TS_FILES myobject_de.ts myobject_en.ts)
+    TS_FILES myobject_de.ts myobject_en.ts
+    QM_FILES_OUTPUT_VARIABLE qm_files)
 not_expect_target(app2_lupdate)
 expect_target(app2_lrelease)
 not_expect_target(update_translations)
 not_expect_target(release_translations)
+expect_files_in_list(qm_files myobject_de.qm myobject_en.qm)
 
 # Typical usage of qt_add_lupdate/qt_add_lrelease. Pass some options for good measure.
 create_app(app3)
@@ -53,20 +78,24 @@ qt6_add_lupdate(app3
     OPTIONS -source-language en_US)
 qt6_add_lrelease(app3
     TS_FILES myobject_no.ts myobject_fi.ts
-    OPTIONS -compress)
+    OPTIONS -compress
+    QM_FILES_OUTPUT_VARIABLE qm_files)
 expect_target(app3_lupdate)
 expect_target(app3_lrelease)
 expect_target(release_translations)
+expect_files_in_list(qm_files myobject_no.qm myobject_fi.qm)
 
 # Now do the same with qt6_add_translations.
 create_app(app4)
 qt6_add_translations(app4
     TS_FILES myobject_no.ts myobject_fi.ts
+    QM_FILES_OUTPUT_VARIABLE qm_files
     LUPDATE_OPTIONS -source-language en_US
     LRELEASE_OPTIONS -compress)
 expect_target(app4_lupdate)
 expect_target(app4_lrelease)
 expect_target(release_translations)
+expect_files_in_list(qm_files myobject_no.qm myobject_fi.qm)
 
 # Build the update_translations target
 add_custom_target(my_all_target
