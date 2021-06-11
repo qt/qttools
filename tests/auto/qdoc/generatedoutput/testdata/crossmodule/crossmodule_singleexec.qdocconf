@@ -1,4 +1,6 @@
 include(crossmodule.qdocconf)
 
+sources += namespaces.qdoc
+
 HTML.nosubdirs          = true
 HTML.outputsubdir       = crossmodule

@@ -30,6 +30,14 @@
 /*!
     \module CrossModule
 */
+
+/*!
+    Function under a namespace that's documented elsewhere.
+*/
+void CrossModuleRef::documentMeToo()
+{
+}
+
 /*!
     \class TestType
     \inmodule CrossModule

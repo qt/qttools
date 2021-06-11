@@ -855,11 +855,6 @@ NodeMultiMap &QDocDatabase::getQmlTypesWithObsoleteMembers()
     return s_qmlTypesWithObsoleteMembers;
 }
 
-/*! \fn NodeMultiMap &QDocDatabase::getNamespaces()
-  Returns a reference to the map of all namespace nodes.
-  This function must not be called in the -prepare phase.
- */
-
 /*!
   Construct the data structures for QML basic types, if they
   have not already been constructed. Returns a reference to
@@ -1074,6 +1069,8 @@ void QDocDatabase::resolveBaseClasses()
 /*!
   Returns a reference to the namespace map. Constructs the
   namespace map if it hasn't been constructed yet.
+
+  \note This function must not be called in the prepare phase.
  */
 NodeMultiMap &QDocDatabase::getNamespaces()
 {
@@ -1102,7 +1099,7 @@ void QDocDatabase::resolveNamespaces()
     const QList<QString> keys = namespaceMultimap.uniqueKeys();
     for (const QString &key : keys) {
         NamespaceNode *ns = nullptr;
-        NamespaceNode *somewhere = nullptr;
+        NamespaceNode *indexNamespace = nullptr;
         const NodeList namespaces = namespaceMultimap.values(key);
         qsizetype count = namespaceMultimap.remove(key);
         if (count > 0) {
@@ -1111,7 +1108,7 @@ void QDocDatabase::resolveNamespaces()
                 if (ns->isDocumentedHere())
                     break;
                 else if (ns->hadDoc())
-                    somewhere = ns;
+                    indexNamespace = ns; // namespace was documented but in another tree
                 ns = nullptr;
             }
             if (ns) {
@@ -1124,7 +1121,8 @@ void QDocDatabase::resolveNamespaces()
                         nsNode->doc().location().warning(QStringLiteral("...also seen here"));
                     }
                 }
-            } else if (somewhere == nullptr) {
+            } else if (!indexNamespace) {
+                // warn about documented children in undocumented namespaces
                 for (auto *node : namespaces) {
                     if (!node->isIndexNode())
                         static_cast<NamespaceNode *>(node)->reportDocumentedChildrenInUndocumentedNamespace();
@@ -1132,18 +1130,16 @@ void QDocDatabase::resolveNamespaces()
             } else {
                 for (auto *node : namespaces) {
                     auto *nsNode = static_cast<NamespaceNode *>(node);
-                    if (nsNode != somewhere)
-                        nsNode->setDocNode(somewhere);
+                    if (nsNode != indexNamespace)
+                        nsNode->setDocNode(indexNamespace);
                 }
             }
         }
         /*
           If there are multiple namespace nodes with the same
-          name and one of them will be the reference page for
-          the namespace, include all the nodes in the public
-          API of the namespace in the single namespace node
-          that will generate the namespace reference page for
-          the namespace.
+          name where one of them will be the main reference page
+          for the namespace, include all nodes in the public
+          API of the namespace.
          */
         if (ns && count > 1) {
             for (auto *node : namespaces) {
@@ -1158,8 +1154,12 @@ void QDocDatabase::resolveNamespaces()
                 }
             }
         }
-        if (ns == nullptr)
-            ns = static_cast<NamespaceNode *>(namespaces.at(0));
+        /*
+           Add the main namespace reference node to index, or the last seen
+           namespace if the main one was not found.
+        */
+        if (!ns)
+            ns = indexNamespace ? indexNamespace : static_cast<NamespaceNode *>(namespaces.last());
         m_namespaceIndex.insert(ns->name(), ns);
     }
 }

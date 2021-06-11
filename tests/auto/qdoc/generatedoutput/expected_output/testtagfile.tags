@@ -36,6 +36,17 @@
             <arglist>(Child child,  name)</arglist>
         </member>
     </compound>
+    <compound kind="namespace">
+        <name>CrossModuleRef</name>
+        <filename>crossmoduleref.html</filename>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>documentMe</name>
+            <anchorfile>crossmoduleref.html</anchorfile>
+            <anchor>documentMe</anchor>
+            <arglist>()</arglist>
+        </member>
+    </compound>
     <compound kind="class">
         <name>QDoc.Test.DocTest</name>
         <filename>qml-qdoc-test-doctest.html</filename>

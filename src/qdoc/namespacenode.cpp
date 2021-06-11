@@ -141,7 +141,7 @@ const NodeList &NamespaceNode::includedChildren() const
 }
 
 /*!
-  This function is only called from QDocDatabase::resolveNamesapces().
+  This function is only called from QDocDatabase::resolveNamespaces().
 
   \sa includedChildren(), QDocDatabase::resolveNamespaces()
  */
@@ -213,7 +213,7 @@ void NamespaceNode::includeChild(Node *child)
   Otherwise returns \c false.
  */
 
-/*! \fn void NamespaceNode::setDocNode(NamespaceNode *ns) { m_docNode = ns; }
+/*! \fn void NamespaceNode::setDocNode(NamespaceNode *ns)
   Called in QDocDatabase::resolveNamespaces() to set the pointer to the
   NamespaceNode in which this namespace is documented.
 

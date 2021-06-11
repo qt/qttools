@@ -431,7 +431,8 @@ void tst_generatedOutput::crossModuleLinking()
     QString indexDir = QLatin1String("-indexdir ") +  m_outputDir->path();
     testAndCompare("testdata/crossmodule/crossmodule.qdocconf",
                    "crossmodule/testtype.html "
-                   "crossmodule/testtype-members.html",
+                   "crossmodule/testtype-members.html "
+                   "crossmodule/crossmoduleref-sub-crossmodule.html",
                    indexDir.toLatin1().data());
 }
 
@@ -451,6 +452,8 @@ void tst_generatedOutput::singleExec()
                    "testqdoc-test.html "
                    "testqdoc-test-members.html "
                    "testqdoc.html "
+                   "crossmoduleref.html "
+                   "crossmodule/all-namespaces.html "
                    "crossmodule/testtype.html "
                    "crossmodule/testtype-members.html",
                    "-single-exec");

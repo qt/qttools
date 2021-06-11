@@ -137,3 +137,7 @@ using Vec = BaseVec<T>;
 #endif
 
 } // namespace TestQDoc
+
+namespace CrossModuleRef {
+    void documentMe();
+}

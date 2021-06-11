@@ -21,6 +21,7 @@
                     <section ref="test-nover-qmlmodule.html" title="Versionless QML Module"/>
                 </section>
                 <section ref="testcpp-module.html" title="Classes">
+                    <section ref="crossmoduleref.html" title="CrossModuleRef"/>
                     <section ref="testqdoc.html" title="TestQDoc"/>
                     <section ref="testqdoc-test.html" title="TestQDoc::Test Class Reference">
                         <section ref="testqdoc-test-members.html" title="List of all members"/>
@@ -67,6 +68,7 @@
             <keyword name="Autolinking" id="Autolinking" ref="autolinking.html"/>
             <keyword name="Child" id="QML.Child" ref="qml-qdoc-test-child.html"/>
             <keyword name="Child" id="QML.QDoc.Test1.Child" ref="qml-qdoc-test-child.html"/>
+            <keyword name="CrossModuleRef" id="CrossModuleRef" ref="crossmoduleref.html"/>
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="No QML Types Here" id="No QML Types Here" ref="test-empty-qmlmodule.html"/>
@@ -109,6 +111,7 @@
             <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test-obsolete.html#deprecatedMember"/>
             <keyword name="deprecatedMethod" id="Type::deprecatedMethod" ref="qml-qdoc-test-type-obsolete.html#deprecatedMethod-method"/>
             <keyword name="disable" id="Type::disable" ref="qml-qdoc-test-type.html#disable-method"/>
+            <keyword name="documentMe" id="CrossModuleRef::documentMe" ref="crossmoduleref.html#documentMe"/>
             <keyword name="enable" id="Type::enable" ref="qml-qdoc-test-type.html#enable-method"/>
             <keyword name="fail" id="DocTest::fail" ref="qml-qdoc-test-doctest.html#fail-method"/>
             <keyword name="fail_hard" id="DocTest::fail_hard" ref="qml-qdoc-test-doctest.html#fail_hard-method"/>
@@ -151,6 +154,7 @@
         </keywords>
         <files>
             <file>autolinking.html</file>
+            <file>crossmoduleref.html</file>
             <file>images/leonardo-da-vinci.png</file>
             <file>obsolete-classes.html</file>
             <file>qdoc-test-qmlmodule.html</file>
