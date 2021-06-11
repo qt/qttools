@@ -299,3 +299,20 @@ void TestDerived::staticObsoleteMember()
 */
 
 } // namespace TestQDoc
+
+
+/*!
+    \namespace CrossModuleRef
+    \inmodule TestCPP
+    \brief Namespace that has documented functions in multiple modules.
+*/
+namespace CrossModuleRef {
+
+/*!
+    Document me!
+*/
+void documentMe()
+{
+}
+
+} // namespace CrossModuleRef

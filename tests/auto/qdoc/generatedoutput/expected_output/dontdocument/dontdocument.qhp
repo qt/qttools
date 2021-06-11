@@ -22,6 +22,7 @@
         <keywords>
             <keyword name="Autolinking" id="Autolinking" ref="autolinking.html"/>
             <keyword name="Classes" id="Classes" ref="classes.html"/>
+            <keyword name="CrossModuleRef" id="CrossModuleRef" ref="crossmoduleref.html"/>
             <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
             <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
@@ -35,6 +36,7 @@
             <keyword name="TestQDoc" id="TestQDoc" ref="testqdoc.html"/>
             <keyword name="anotherObsoleteMember" id="Test::anotherObsoleteMember" ref="testqdoc-test-obsolete.html#anotherObsoleteMember"/>
             <keyword name="deprecatedMember" id="Test::deprecatedMember" ref="testqdoc-test-obsolete.html#deprecatedMember"/>
+            <keyword name="documentMe" id="CrossModuleRef::documentMe" ref="crossmoduleref.html#documentMe"/>
             <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
             <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
             <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
@@ -50,6 +52,7 @@
         <files>
             <file>autolinking.html</file>
             <file>classes.html</file>
+            <file>crossmoduleref.html</file>
             <file>obsolete-classes.html</file>
             <file>seenclass.html</file>
             <file>testcpp-module.html</file>
