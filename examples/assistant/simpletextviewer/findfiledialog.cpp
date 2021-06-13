@@ -113,9 +113,9 @@ void FindFileDialog::openFile()
         return;
 
     QString fileName = item->text(0);
-    QString path = directoryComboBox->currentText() + QDir::separator();
+    QString path = QDir(directoryComboBox->currentText()).filePath(fileName);
 
-    currentEditor->setContents(path + fileName);
+    currentEditor->setContents(path);
     close();
 }
 
