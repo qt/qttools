@@ -1069,25 +1069,18 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
           have not (yet) been promoted to be node types is
           determined by the PageType enum.
         */
-        bool writeModuleName = false;
-        if (node->isExample()) {
+        if (node->isExample())
             writer.writeAttribute("subtype", "example");
-            writeModuleName = true;
-        } else if (node->isExternalPage()) {
+        else if (node->isExternalPage())
             writer.writeAttribute("subtype", "externalpage");
-        } else {
-            if (node->pageType() == Node::AttributionPage)
-                writer.writeAttribute("subtype", "attribution");
-            else
-                writer.writeAttribute("subtype", "page");
-            writeModuleName = true;
-        }
+        else
+            writer.writeAttribute("subtype",
+                    (node->pageType() == Node::AttributionPage) ? "attribution" : "page");
+
         const auto *pageNode = static_cast<const PageNode *>(node);
         writer.writeAttribute("title", pageNode->title());
         writer.writeAttribute("fulltitle", pageNode->fullTitle());
         writer.writeAttribute("subtitle", pageNode->subtitle());
-        if (!node->physicalModuleName().isEmpty() && writeModuleName)
-            writer.writeAttribute("module", node->physicalModuleName());
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;

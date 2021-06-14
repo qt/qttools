@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="componentset" href="test-componentset-example.html" status="active" location="examples.qdoc" documented="true" subtype="example" title="QML Documentation Example" fulltitle="QML Documentation Example" subtitle="" module="Test" brief="Example for documenting QML types">
+        <page name="componentset" href="test-componentset-example.html" status="active" location="examples.qdoc" documented="true" subtype="example" title="QML Documentation Example" fulltitle="QML Documentation Example" subtitle="" brief="Example for documenting QML types">
             <contents name="qml-class" title="QML Class" level="1"/>
             <contents name="properties-signals-handlers-and-methods" title="Properties, Signals, Handlers, and Methods" level="1"/>
             <contents name="internal-documentation" title="Internal Documentation" level="2"/>

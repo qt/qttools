@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="qdoctests-qdocfileoutput-exhaustive.html" href="qdoctests-qdocfileoutput-exhaustive.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Exhaustive testing of QDoc commands" fulltitle="Exhaustive testing of QDoc commands" subtitle="" module="OutputFromQDocFiles" brief="This page is a dumping ground for QDoc commands under test">
+        <page name="qdoctests-qdocfileoutput-exhaustive.html" href="qdoctests-qdocfileoutput-exhaustive.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Exhaustive testing of QDoc commands" fulltitle="Exhaustive testing of QDoc commands" subtitle="" brief="This page is a dumping ground for QDoc commands under test">
             <contents name="this-is-a-section1" title="This is a section1" level="1"/>
             <contents name="this-is-a-section2" title="This is a section2" level="2"/>
             <contents name="this-is-a-section3" title="This is a section3" level="3"/>
