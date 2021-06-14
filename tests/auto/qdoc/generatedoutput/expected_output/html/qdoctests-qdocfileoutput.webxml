@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <page name="qdoctests-qdocfileoutput.html" href="qdoctests-qdocfileoutput.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Testing QDoc output from .qdoc files" fulltitle="Testing QDoc output from .qdoc files" subtitle="" module="OutputFromQDocFiles" brief="This is a simple page for testing purposes only">
+        <page name="qdoctests-qdocfileoutput.html" href="qdoctests-qdocfileoutput.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Testing QDoc output from .qdoc files" fulltitle="Testing QDoc output from .qdoc files" subtitle="" brief="This is a simple page for testing purposes only">
             <contents name="supported-file-types" title="Supported file types" level="1"/>
             <contents name="further-information" title="Further information" level="1"/>
             <contents name="linking" title="Linking" level="1"/>
