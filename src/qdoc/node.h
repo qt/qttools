@@ -250,7 +250,7 @@ public:
     void setAccess(Access t) { m_access = t; }
     void setLocation(const Location &t);
     void setDoc(const Doc &doc, bool replace = false);
-    void setStatus(Status t) { m_status = t; }
+    void setStatus(Status t);
     void setThreadSafeness(ThreadSafeness t) { m_safeness = t; }
     void setSince(const QString &since);
     void setPhysicalModuleName(const QString &name) { m_physicalModuleName = name; }
@@ -319,7 +319,10 @@ public:
         return (m_defLocation.isEmpty() ? m_declLocation : m_defLocation);
     }
     [[nodiscard]] const Doc &doc() const { return m_doc; }
-    [[nodiscard]] bool isInAPI() const { return !isPrivate() && !isInternal() && hasDoc(); }
+    [[nodiscard]] bool isInAPI() const
+    {
+        return !isPrivate() && !isInternal() && !isDontDocument() && hasDoc();
+    }
     [[nodiscard]] bool hasDoc() const { return (m_hadDoc || !m_doc.isEmpty()); }
     [[nodiscard]] bool hadDoc() const { return m_hadDoc; }
     [[nodiscard]] Status status() const { return m_status; }

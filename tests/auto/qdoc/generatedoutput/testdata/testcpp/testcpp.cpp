@@ -316,3 +316,13 @@ void documentMe()
 }
 
 } // namespace CrossModuleRef
+
+/*!
+    \class DontLinkToMe
+    \inmodule TestCPP
+    \brief Class that does not generate documentation.
+*/
+
+/*!
+    \dontdocument (DontLinkToMe)
+*/

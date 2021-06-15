@@ -61,8 +61,8 @@ QRegularExpression Parameters::s_varComment(R"(^/\*\s*([a-zA-Z_0-9]+)\s*\*/$)");
 QString Parameter::signature(bool includeValue) const
 {
     QString p = m_type;
-    if (!p.endsWith(QChar('*')) && !p.endsWith(QChar('&')) && !p.endsWith(QChar(' '))
-        && !m_name.isEmpty()) {
+    if (!p.isEmpty() && !p.endsWith(QChar('*')) && !p.endsWith(QChar('&')) &&
+        !p.endsWith(QChar(' ')) && !m_name.isEmpty()) {
         p += QLatin1Char(' ');
     }
     p += m_name;
