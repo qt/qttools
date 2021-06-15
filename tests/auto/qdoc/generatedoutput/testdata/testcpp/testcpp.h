@@ -141,3 +141,5 @@ using Vec = BaseVec<T>;
 namespace CrossModuleRef {
     void documentMe();
 }
+
+class DontLinkToMe {};

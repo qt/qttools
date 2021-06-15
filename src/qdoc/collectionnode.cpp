@@ -53,13 +53,9 @@ void CollectionNode::addMember(Node *node)
  */
 bool CollectionNode::hasNamespaces() const
 {
-    if (!m_members.isEmpty()) {
-        for (const auto &member : qAsConst(m_members)) {
-            if (member->isNamespace())
-                return true;
-        }
-    }
-    return false;
+    return std::any_of(m_members.cbegin(), m_members.cend(), [](const Node *member) {
+        return member->isClassNode() && member->isInAPI();
+    });
 }
 
 /*!
@@ -68,13 +64,9 @@ bool CollectionNode::hasNamespaces() const
  */
 bool CollectionNode::hasClasses() const
 {
-    if (!m_members.isEmpty()) {
-        for (const auto &member : qAsConst(m_members)) {
-            if (member->isClassNode())
-                return true;
-        }
-    }
-    return false;
+    return std::any_of(m_members.cbegin(), m_members.cend(), [](const Node *member) {
+        return member->isClassNode() && member->isInAPI();
+    });
 }
 
 /*!
@@ -85,7 +77,7 @@ void CollectionNode::getMemberNamespaces(NodeMap &out)
 {
     out.clear();
     for (const auto &member : qAsConst(m_members)) {
-        if (member->isNamespace())
+        if (member->isNamespace() && member->isInAPI())
             out.insert(member->name(), member);
     }
 }
@@ -97,9 +89,9 @@ void CollectionNode::getMemberNamespaces(NodeMap &out)
 void CollectionNode::getMemberClasses(NodeMap &out) const
 {
     out.clear();
-    for (const auto &i : qAsConst(m_members)) {
-        if (i->isClassNode())
-            out.insert(i->name(), i);
+    for (const auto &member : qAsConst(m_members)) {
+        if (member->isClassNode() && member->isInAPI())
+            out.insert(member->name(), member);
     }
 }
 

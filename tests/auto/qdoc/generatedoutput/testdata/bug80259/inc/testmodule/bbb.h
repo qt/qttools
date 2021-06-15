@@ -1,5 +1,5 @@
 #pragma once
-class First
+struct First
 {
     class Nested {};
 };

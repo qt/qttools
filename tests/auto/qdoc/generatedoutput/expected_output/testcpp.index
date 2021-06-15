@@ -12,6 +12,7 @@
         <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
             <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void documentMe()"/>
         </namespace>
+        <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
         <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
             <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
             <contents name="testqdoc" title="TestQDoc" level="2"/>
@@ -62,6 +63,6 @@
             </class>
         </namespace>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title="" members="Test,QDOCTEST_MACRO2,someFunctionDefaultArg"/>
-        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" module="TestCPP" members="TestQDoc,Test,TestDerived,CrossModuleRef" brief="A test module page"/>
+        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" module="TestCPP" members="TestQDoc,Test,TestDerived,CrossModuleRef,DontLinkToMe" brief="A test module page"/>
     </namespace>
 </INDEX>

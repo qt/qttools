@@ -680,6 +680,30 @@ void Node::setDoc(const Doc &doc, bool replace)
 }
 
 /*!
+  Sets the node's status to \a t.
+
+  \sa Status
+*/
+void Node::setStatus(Status t)
+{
+    m_status = t;
+
+    // Set non-null, empty URL to nodes that are ignored as
+    // link targets
+    switch (t) {
+    case Internal:
+        if (Config::instance().showInternal())
+            break;
+        Q_FALLTHROUGH();
+    case DontDocument:
+        m_url = QStringLiteral("");
+        break;
+    default:
+        break;
+    }
+}
+
+/*!
   Construct a node with the given \a type and having the
   given \a parent and \a name. The new node is added to the
   parent's child list.
@@ -1373,12 +1397,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   Sets the node's access type to \a t.
 
   \sa Access
-*/
-
-/*! \fn void Node::setStatus(Status t)
-  Sets the node's status to \a t.
-
-  \sa Status
 */
 
 /*! \fn void Node::setThreadSafeness(ThreadSafeness t)
