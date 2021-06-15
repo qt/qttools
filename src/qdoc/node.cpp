@@ -690,6 +690,35 @@ void Node::setDoc(const Doc &doc, bool replace)
 }
 
 /*!
+  Sets the node's status to \a t, except that once
+  the node's status has been set to \c Obsolete or
+  \c Deprecated, it can't be reset.
+
+  \sa Status
+*/
+void Node::setStatus(Status t)
+{
+    if (m_status == Obsolete && t == Deprecated)
+        return;
+
+    m_status = t;
+
+    // Set non-null, empty URL to nodes that are ignored as
+    // link targets
+    switch (t) {
+    case Internal:
+        if (Config::instance().showInternal())
+            break;
+        Q_FALLTHROUGH();
+    case DontDocument:
+        m_url = QStringLiteral("");
+        break;
+    default:
+        break;
+    }
+}
+
+/*!
   Construct a node with the given \a type and having the
   given \a parent and \a name. The new node is added to the
   parent's child list.
@@ -1412,14 +1441,6 @@ QString Node::physicalModuleName() const
   Sets the node's access type to \a t.
 
   \sa Access
-*/
-
-/*! \fn void Node::setStatus(Status t)
-  Sets the node's status to \a t, except that once
-  the node's status has been set to \c Obsolete, it
-  can't be reset to \c Deprecated.
-
-  \sa Status
 */
 
 /*! \fn void Node::setThreadSafeness(ThreadSafeness t)

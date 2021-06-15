@@ -313,7 +313,7 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
 {
     if (node == nullptr)
         return QString();
-    if (!node->url().isEmpty())
+    if (!node->url().isNull())
         return node->url();
     if (fileBase(node).isEmpty())
         return QString();
@@ -396,8 +396,7 @@ QString XmlGenerator::getLink(const Atom *atom, const Node *relative, const Node
 /*!
   This function is called for autolinks, i.e. for words that
   are not marked with the qdoc link command that qdoc has
-  reason to believe should be links. For links marked with
-  the qdoc link command, the getLink() function is called.
+  reason to believe should be links.
 
   It returns the string for a link found by using the data
   in the \a atom to search the database. It also sets \a node
@@ -415,8 +414,11 @@ QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const 
         return QString();
 
     QString link = (*node)->url();
-    if (link.isEmpty())
+    if (link.isNull()) {
         link = linkForNode(*node, relative);
+    } else if (link.isEmpty()) {
+        return link; // Explicit empty url (node is ignored as a link target)
+    }
     if (!ref.isEmpty()) {
         int hashtag = link.lastIndexOf(QChar('#'));
         if (hashtag != -1)

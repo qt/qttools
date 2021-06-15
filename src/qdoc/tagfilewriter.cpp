@@ -63,7 +63,7 @@ void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Agg
 {
     const auto &nonFunctionList = const_cast<Aggregate *>(parent)->nonfunctionList();
     for (const auto *node : nonFunctionList) {
-        if (!node->url().isEmpty() || node->isPrivate())
+        if (!node->url().isNull() || node->isPrivate())
             continue;
 
         QString kind;
@@ -138,7 +138,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
 {
     const auto &childNodes = parent->childNodes();
     for (const auto *node : childNodes) {
-        if (!node->url().isEmpty())
+        if (!node->url().isNull())
             continue;
 
         QString nodeName;

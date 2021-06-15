@@ -571,6 +571,13 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
     }
 
     {
+        if (!href.isEmpty()) {
+            node->setUrl(href);
+            // Include the index URL if it exists
+            if (!node->isExternalPage() && !indexUrl.isEmpty())
+                node->setUrl(indexUrl + QLatin1Char('/') + href);
+        }
+
         const QString access = attributes.value(QLatin1String("access")).toString();
         if (access == "protected")
             node->setAccess(Access::Protected);
@@ -612,12 +619,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         QString physicalModuleName = attributes.value(QLatin1String("module")).toString();
         if (!physicalModuleName.isEmpty())
             qdb_->addToModule(physicalModuleName, node);
-        if (!href.isEmpty()) {
-            node->setUrl(href);
-            // Include the index URL if it exists
-            if (!node->isExternalPage() && !indexUrl.isEmpty())
-                node->setUrl(indexUrl + QLatin1Char('/') + href);
-        }
 
         QString since = attributes.value(QLatin1String("since")).toString();
         if (!since.isEmpty()) {

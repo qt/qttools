@@ -15,7 +15,7 @@
             <name>name</name>
             <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
             <anchor>name-method</anchor>
-            <arglist>(Child child,  name)</arglist>
+            <arglist>(Child child, name)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>
@@ -33,7 +33,7 @@
             <name>name</name>
             <anchorfile>qml-qdoc-test-child.html</anchorfile>
             <anchor>name-method</anchor>
-            <arglist>(Child child,  name)</arglist>
+            <arglist>(Child child, name)</arglist>
         </member>
     </compound>
     <compound kind="class">
@@ -58,21 +58,14 @@
             <name>fail</name>
             <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
             <anchor>fail-method</anchor>
-            <arglist>( message)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>doctest_fail</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>doctest_fail-method</anchor>
-            <arglist>( msg)</arglist>
+            <arglist>(message)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
             <name>fail_hard</name>
             <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
             <anchor>fail_hard-method</anchor>
-            <arglist>( msg,  option)</arglist>
+            <arglist>(msg, option)</arglist>
         </member>
     </compound>
     <compound kind="class">
@@ -89,24 +82,10 @@
             <anchor>toggle-method</anchor>
             <arglist>()</arglist>
         </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>releaseSwitch</name>
-            <anchorfile>qml-uicomponents-switch.html</anchorfile>
-            <anchor>releaseSwitch-method</anchor>
-            <arglist>()</arglist>
-        </member>
     </compound>
     <compound kind="class">
         <name>UIComponents.TabWidget</name>
         <filename>qml-uicomponents-tabwidget.html</filename>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>setOpacities</name>
-            <anchorfile>qml-uicomponents-tabwidget.html</anchorfile>
-            <anchor>setOpacities-method</anchor>
-            <arglist>()</arglist>
-        </member>
     </compound>
     <compound kind="namespace">
         <name>TestQDoc</name>
@@ -275,7 +254,7 @@
             <name>copy</name>
             <anchorfile>qml-qdoc-test-type.html</anchorfile>
             <anchor>copy-method</anchor>
-            <arglist>( a)</arglist>
+            <arglist>(a)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>

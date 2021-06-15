@@ -288,3 +288,13 @@ void TestDerived::staticObsoleteMember()
 \endif
 */
 } // namespace TestQDoc
+
+/*!
+    \class DontLinkToMe
+    \inmodule TestCPP
+    \brief Class that does not generate documentation.
+*/
+
+/*!
+    \dontdocument (DontLinkToMe)
+*/

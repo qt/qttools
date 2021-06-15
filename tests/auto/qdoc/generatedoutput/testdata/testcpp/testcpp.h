@@ -131,3 +131,5 @@ using Vec = BaseVec<T>;
 #endif
 
 } // namespace TestQDoc
+
+class DontLinkToMe {};

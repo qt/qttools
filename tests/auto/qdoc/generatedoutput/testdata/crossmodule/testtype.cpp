@@ -43,6 +43,7 @@
       \li \l {TestQDoc::TestDerived}
       \li \l {TestQDoc::}{Test} class \l Usage.
       \li QDOCTEST_MACRO
+      \li DontLinkToMe
     \endlist
 
     \section1 Generated Lists
