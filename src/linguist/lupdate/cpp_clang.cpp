@@ -62,42 +62,31 @@ QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(lcClang, "qt.lupdate.clang");
 
-bool getSysCompiler(QString &sysCompiler, QStringList &compilerFlag)
+static QString getSysCompiler()
 {
-    QStringList searchCompiler;
+    QStringList candidates;
     if (const char* local_compiler = std::getenv("CXX")) {
-        searchCompiler.push_back(QLatin1String(local_compiler));
+        candidates.push_back(QLatin1String(local_compiler));
     } else {
-        // we could choose to always look for those after CXX...
-        searchCompiler.push_back(QLatin1String("clang++"));
-        searchCompiler.push_back(QLatin1String("gcc"));
+        candidates = {
+#ifdef Q_OS_WIN
+            QStringLiteral("cl"),
+#endif
+            QStringLiteral("clang++"),
+            QStringLiteral("gcc")
+        };
     }
+    QString sysCompiler;
+    for (const QString &comp : candidates) {
 
-    for (QString comp : searchCompiler) {
         sysCompiler = QStandardPaths::findExecutable(comp);
         if (!sysCompiler.isEmpty())
             break;
     }
-
-    if (sysCompiler.isEmpty())
-        return false;
-
-    if (sysCompiler.endsWith(QLatin1String("clang++"))
-            || sysCompiler.endsWith(QLatin1String("gcc"))) {
-        // COMPILER -E -x c++ - -v < /dev/null
-        compilerFlag.push_back(QLatin1String("-E"));
-        compilerFlag.push_back(QLatin1String("-x"));
-        compilerFlag.push_back(QLatin1String("c++"));
-        compilerFlag.push_back(QLatin1String("-"));
-        compilerFlag.push_back(QLatin1String("-v"));
-        return true;
-
-    }
-    return false;
+    return sysCompiler;
 }
 
-#ifdef Q_OS_WIN
-QByteArrayList getIncludePathsFromCompiler()
+static QByteArrayList getMSVCIncludePathsFromEnvironment()
 {
     QList<QByteArray> pathList;
     if (const char* includeEnv = std::getenv("INCLUDE")) {
@@ -109,7 +98,7 @@ QByteArrayList getIncludePathsFromCompiler()
     }
     return pathList;
 }
-#else
+
 
 static QByteArray frameworkSuffix()
 {
@@ -118,15 +107,39 @@ static QByteArray frameworkSuffix()
 
 QByteArrayList getIncludePathsFromCompiler()
 {
+
     QList<QByteArray> pathList;
-    QString compiler;
-    QStringList compilerFlag;
-    if (!getSysCompiler(compiler, compilerFlag))
+    QString compiler = getSysCompiler();
+    if (compiler.isEmpty()) {
+        qWarning("lupdate: Could not determine system compiler.");
         return pathList;
+    }
+
+    const QFileInfo fiCompiler(compiler);
+    const QString compilerName
+
+#ifdef Q_OS_WIN
+        = fiCompiler.completeBaseName();
+#else
+        = fiCompiler.fileName();
+#endif
+
+    if (compilerName == QLatin1String("cl"))
+        return getMSVCIncludePathsFromEnvironment();
+
+    if (compilerName != QLatin1String("gcc") && compilerName != QLatin1String("clang++")) {
+        qWarning("lupdate: Unknown compiler %s", qPrintable(compiler));
+        return pathList;
+    }
+
+    const QStringList compilerFlags = {
+        QStringLiteral("-E"), QStringLiteral("-x"), QStringLiteral("c++"),
+        QStringLiteral("-"), QStringLiteral("-v")
+    };
 
     QProcess proc;
     proc.setStandardInputFile(proc.nullDevice());
-    proc.start(compiler, compilerFlag);
+    proc.start(compiler, compilerFlags);
     proc.waitForFinished(30000);
     QByteArray buffer = proc.readAllStandardError();
     proc.kill();
@@ -154,7 +167,6 @@ QByteArrayList getIncludePathsFromCompiler()
 
     return pathList;
 }
-#endif
 
 // Makes sure all the comments will be parsed and part of the AST
 // Clang will run with the flag -fparse-all-comments
