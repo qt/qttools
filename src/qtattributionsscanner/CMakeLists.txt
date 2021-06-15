@@ -8,7 +8,6 @@ qt_get_tool_target_name(target_name qtattributionsscanner)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Source Code Attribution Scanner"
     TOOLS_TARGET Tools # special case
-    INSTALL_DIR "${INSTALL_LIBEXECDIR}"
     SOURCES
         jsongenerator.cpp jsongenerator.h
         logging.h
