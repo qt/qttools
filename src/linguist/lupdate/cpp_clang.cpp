@@ -433,6 +433,8 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     for (TranslatorMessage &msg : messages) {
         if (!msg.warning().isEmpty()) {
             std::cerr << qPrintable(msg.warning());
+            if (msg.warningOnly() == true)
+                continue;
         }
         translator.extend(std::move(msg), cd);
     }
@@ -467,9 +469,20 @@ void ClangCppParser::collectMessages(TranslatorMessageVector &result,
             store.lupdateWarning.append(QString::fromStdString(warning.str()));
             qCDebug(lcClang) << "//% is ignored when using tr function\n";
         }
-        if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty())
+        if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()) {
+            std::stringstream warning;
+            warning << qPrintable(store.lupdateLocationFile) << ":"
+                << store.lupdateLocationLine << ":"
+                << store.locationCol << ": "
+                << qPrintable(store.funcName) << " cannot be called without context."
+                << " The call is ignored (missing Q_OBJECT maybe?)\n";
+            store.lupdateWarning.append(QString::fromStdString(warning.str()));
             qCDebug(lcClang) << "tr() cannot be called without context \n";
-        else
+            // The message need to be added to the results so that the warning can be ordered
+            // and printed in a consistent way.
+            // the message won't appear in the .ts file
+            result.push_back(translatorMessage(store, store.lupdateIdMetaData, plural, false, true));
+        } else
             result.push_back(translatorMessage(store, store.lupdateIdMetaData, plural, false));
         break;
 
@@ -528,8 +541,18 @@ static QString ensureCanonicalPath(const QString &filePath)
 }
 
 TranslatorMessage ClangCppParser::translatorMessage(const TranslationRelatedStore &store,
-    const QString &id, bool plural, bool isId)
+    const QString &id, bool plural, bool isId, bool isWarningOnly)
 {
+    if (isWarningOnly) {
+        TranslatorMessage msg;
+        // msg filled with file name and line number should be enough for the message ordering
+        msg.setFileName(ensureCanonicalPath(store.lupdateLocationFile));
+        msg.setLineNumber(store.lupdateLocationLine);
+        msg.setWarning(store.lupdateWarning);
+        msg.setWarningOnly(isWarningOnly);
+        return msg;
+    }
+
     QString context;
     if (!isId) {
         context = ParserTool::transcode(store.contextArg.isEmpty() ? store.contextRetrieved

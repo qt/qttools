@@ -234,7 +234,8 @@ struct Stores
     TranslationStores Preprocessor;
     WriteSynchronizedRef<TranslationRelatedStore> AST;
     WriteSynchronizedRef<TranslationRelatedStore> QDeclareTrWithContext;
-    WriteSynchronizedRef<TranslationRelatedStore> QNoopTranlsationWithContext;
+    WriteSynchronizedRef<TranslationRelatedStore> QNoopTranlsationWithContext; // or with warnings that need to be
+                                                                               //displayed in the same order, always
 };
 
 namespace LupdatePrivate
@@ -320,7 +321,7 @@ namespace ClangCppParser
     using TranslatorMessageVector = std::vector<TranslatorMessage>;
     void collectMessages(TranslatorMessageVector &result, TranslationRelatedStore &store);
     TranslatorMessage translatorMessage(const TranslationRelatedStore &store,
-        const QString &id, bool plural, bool isID);
+        const QString &id, bool plural, bool isID, bool isWarningOnly = false);
 
     void correctAstTranslationContext(ReadSynchronizedRef<TranslationRelatedStore> &ast,
         WriteSynchronizedRef<TranslationRelatedStore> &newAst, const TranslationStores &qDecl);

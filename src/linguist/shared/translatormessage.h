@@ -131,6 +131,9 @@ public:
     void setExtras(const ExtraData &extras) { m_extra = extras; }
     void unsetExtra(const QString &key);
 
+    bool warningOnly() const { return m_warningOnly; }
+    void setWarningOnly(bool isWarningOnly) { m_warningOnly = isWarningOnly; }
+
     void dump() const;
 
 private:
@@ -149,6 +152,7 @@ private:
     QString     m_fileName;
     int         m_lineNumber;
     References  m_extraRefs;
+    bool        m_warningOnly = false;
 
     Type m_type;
     bool m_plural;

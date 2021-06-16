@@ -840,22 +840,14 @@ void LupdateVisitor::generateOuput()
 {
     qCDebug(lcClang) << "=================m_trCallserateOuput============================";
     m_noopTranslationMacroAll.erase(std::remove_if(m_noopTranslationMacroAll.begin(),
-          m_noopTranslationMacroAll.end(), [this](const TranslationRelatedStore &store) {
-              // only fill if a context has been retrieved in the file we're currently visiting
-              // emit warning if both context are empty
-              // do not emit warning if the Macro is from a different input file, it's normal the context was not found.
-             if ( m_inputFile != qPrintable(store.lupdateLocationFile))
-                 return true;
-             if (store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()
-                     && !store.funcName.contains(QLatin1String("QT_TRID"))) {
-                  std::cerr << qPrintable(store.lupdateLocationFile) << ":";
-                  std::cerr << store.lupdateLocationLine << ":";
-                  std::cerr << store.locationCol << ": ";
-                  std::cerr << " \'" << qPrintable(store.funcName) << "\' cannot be called without context.";
-                  std::cerr << " The call is ignored (missing Q_OBJECT maybe?)\n";
-              }
-              return store.contextRetrieved.isEmpty() && store.contextArg.isEmpty()
-                      && !store.funcName.contains(QLatin1String("QT_TRID"));
+        m_noopTranslationMacroAll.end(), [this](const TranslationRelatedStore &store) {
+        // Macros not located in the currently visited file are missing context (and it's normal),
+        // so an output is only generated for macros present in the currently visited file.
+        // If context could not be found, it is warned against in ClangCppParser::collectMessages
+        // (where it is possible to order the warnings and print them consistantly)
+        if ( m_inputFile != qPrintable(store.lupdateLocationFile))
+            return true;
+        return false;
       }), m_noopTranslationMacroAll.end());
 
     m_stores->QNoopTranlsationWithContext.emplace_bulk(std::move(m_noopTranslationMacroAll));
