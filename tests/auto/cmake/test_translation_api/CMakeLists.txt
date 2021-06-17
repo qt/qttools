@@ -79,11 +79,11 @@ qt6_add_lupdate(app3
 qt6_add_lrelease(app3
     TS_FILES myobject_no.ts myobject_fi.ts
     OPTIONS -compress
-    QM_FILES_OUTPUT_VARIABLE qm_files)
+    QM_FILES_OUTPUT_VARIABLE qm_files2)
 expect_target(app3_lupdate)
 expect_target(app3_lrelease)
 expect_target(release_translations)
-expect_files_in_list(qm_files myobject_no.qm myobject_fi.qm)
+expect_files_in_list(qm_files2 myobject_no.qm myobject_fi.qm)
 
 # Now do the same with qt6_add_translations.
 create_app(app4)
