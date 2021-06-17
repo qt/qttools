@@ -298,7 +298,7 @@ function(qt6_add_translations target)
         OPTIONS "${arg_LUPDATE_OPTIONS}")
     qt6_add_lrelease(${target}
         TS_FILES "${arg_TS_FILES}"
-        QM_FILES_OUTPUT_VARIABLE "${arg_QM_FILES_OUTPUT_VARIABLE}"
+        QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
     if(NOT "${arg_QM_FILES_OUTPUT_VARIABLE}" STREQUAL "")
         set("${arg_QM_FILES_OUTPUT_VARIABLE}" "${qm_files}" PARENT_SCOPE)
