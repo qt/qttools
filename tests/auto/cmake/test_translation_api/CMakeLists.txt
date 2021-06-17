@@ -97,6 +97,12 @@ expect_target(app4_lrelease)
 expect_target(release_translations)
 expect_files_in_list(qm_files myobject_no.qm myobject_fi.qm)
 
+# Typical usage of qt_add_translations with a generated resource.
+create_app(app5)
+qt6_add_translations(app5
+    TS_FILES myobject_ru.ts
+    RESOURCE_PREFIX "/tränslehschns")
+
 # Build the update_translations target
 add_custom_target(my_all_target
     ALL
