@@ -32,6 +32,9 @@ add_subdirectory(qlitehtml/src EXCLUDE_FROM_ALL)
 if(TARGET qlitehtml)
     qt_autogen_tools_initial_setup(qlitehtml)
     qt_internal_set_exceptions_flags(litehtml OFF)
+    qt_disable_warnings(litehtml)
+    qt_disable_warnings(qlitehtml)
+    qt_disable_warnings(gumbo)
     set_target_properties(qlitehtml PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_BINDIR}"
         LIBRARY_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_LIBDIR}"
