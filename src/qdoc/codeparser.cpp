@@ -215,56 +215,30 @@ bool CodeParser::isWorthWarningAbout(const Doc &doc)
 }
 
 /*!
-  For each node that will produce a documentation page, this function
-  ensures that the node belongs to a module. Normally, the qdoc comment
-  for an entity that will produce a documentation page will contain an
-  \inmodule command to tell qdoc which module the entity belongs to.
-
-  But now we normally run qdoc on each module in two passes. The first
-  produces an index file; the second pass generates the docs after
-  reading all the index files it needs.
-
-  This means that all the pages generated during each pass 2 run of
-  qdoc almost certainly belong to a single module, and the name of
-  that module is, as a rule, used as the project name in the qdocconf
-  file used when running qdoc on the module.
-
-  So this function first asks if the node \a n has a non-empty module
-  name. If it it does not have a non-empty module name, it sets the
-  module name to be the project name.
-
-  In some cases it prints a qdoc warning that it has done this. Namely,
-  for C++ classes and namespaces.
+  For each node that is part of C++ API and produces a documentation
+  page, this function ensures that the node belongs to a module.
  */
 void CodeParser::checkModuleInclusion(Node *n)
 {
     if (n->physicalModuleName().isEmpty()) {
-        n->setPhysicalModuleName(Generator::defaultModuleName());
-
         if (n->isInAPI() && !n->name().isEmpty()) {
-            QString word;
             switch (n->nodeType()) {
             case Node::Class:
-                word = QLatin1String("Class");
-                break;
             case Node::Struct:
-                word = QLatin1String("Struct");
-                break;
             case Node::Union:
-                word = QLatin1String("Union");
-                break;
             case Node::Namespace:
-                word = QLatin1String("Namespace");
+            case Node::HeaderFile:
                 break;
             default:
                 return;
             }
-
+            n->setPhysicalModuleName(Generator::defaultModuleName());
             m_qdb->addToModule(Generator::defaultModuleName(), n);
             n->doc().location().warning(
-                    QStringLiteral("%1 %2 has no \\inmodule command; "
+                    QStringLiteral("Documentation for %1 '%2' has no \\inmodule command; "
                                    "using project name by default: %3")
-                            .arg(word, n->name(), Generator::defaultModuleName()));
+                            .arg(Node::nodeTypeString(n->nodeType()), n->name(),
+                                    n->physicalModuleName()));
         }
     }
 }

@@ -38,7 +38,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Children of the type.</db:para>
 </db:section>
@@ -51,7 +50,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Name of this child.</db:para>
 </db:section>

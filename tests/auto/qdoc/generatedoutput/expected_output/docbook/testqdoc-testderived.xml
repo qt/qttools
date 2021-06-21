@@ -47,7 +47,6 @@
 <db:type>DerivedType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>An aliased typedef.</db:para>
 </db:section>
@@ -57,7 +56,6 @@
 <db:type>NotTypedef</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
@@ -77,7 +75,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" type="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
@@ -98,7 +95,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Static obsolete method.</db:para>

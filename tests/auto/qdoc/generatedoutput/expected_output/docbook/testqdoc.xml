@@ -58,7 +58,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 </db:section>
 </db:section>

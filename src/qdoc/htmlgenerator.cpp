@@ -286,7 +286,7 @@ void HtmlGenerator::generateExampleFilePage(const Node *en, const QString &file,
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = en->fullTitle();
 
-    beginFilePage(en, linkForExampleFile(file, en));
+    beginFilePage(en, linkForExampleFile(file));
     generateHeader(fullTitle, en, marker);
     generateTitle(fullTitle, Text() << en->subtitle(), subTitleSize, en, marker);
 
@@ -685,7 +685,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         skipAhead = 1;
     } break;
     case Atom::ExampleFileLink: {
-        QString link = linkForExampleFile(atom->string(), relative);
+        QString link = linkForExampleFile(atom->string());
         if (link.isEmpty() && !noLinkErrors())
             relative->doc().location().warning(
                     QStringLiteral("Can't link to '%1'").arg(atom->string()));

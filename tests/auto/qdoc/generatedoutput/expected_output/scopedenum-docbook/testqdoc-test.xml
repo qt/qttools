@@ -48,7 +48,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 <db:enumitem db:enumidentifier="Yee" db:enumvalue="0"/>
 <db:enumitem db:enumidentifier="Haw" db:enumvalue="1"/>
 <db:enumitem db:enumidentifier="Howdy" db:enumvalue="2"/>
@@ -94,7 +93,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 <db:enumitem db:enumidentifier="This" db:enumvalue="0x01"/>
 <db:enumitem db:enumidentifier="That" db:enumvalue="0x02"/>
 <db:enumitem db:enumidentifier="All" db:enumvalue="This | That"/>
@@ -146,7 +144,6 @@
 <db:type>SomeType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>A typedef.</db:para>
 </db:section>
@@ -170,7 +167,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:constructorsynopsis>
 <db:para>Default constructor.</db:para>
 </db:section>
@@ -189,7 +185,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
@@ -211,7 +206,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
 </db:section>
@@ -226,7 +220,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>An inline function, documented using the \fn QDoc command.</db:para>
 </db:section>
@@ -249,7 +242,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
 </db:section>
@@ -272,7 +264,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
@@ -288,7 +279,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
@@ -313,7 +303,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Returns true if <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code> are equal.</db:para>
 </db:section>
@@ -333,7 +322,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>A macro with argument <db:code role="parameter">x</db:code>.</db:para>
 <db:para>This function was introduced in Test 1.1.</db:para>
@@ -355,7 +343,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
@@ -371,7 +358,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated since 6.0. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
@@ -387,7 +373,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>

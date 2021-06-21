@@ -1085,50 +1085,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
-    case Node::Group: {
-        const auto *collectionNode = static_cast<const CollectionNode *>(node);
-        writer.writeAttribute("seen", collectionNode->wasSeen() ? "true" : "false");
-        writer.writeAttribute("title", collectionNode->title());
-        if (!collectionNode->subtitle().isEmpty())
-            writer.writeAttribute("subtitle", collectionNode->subtitle());
-        if (!collectionNode->physicalModuleName().isEmpty())
-            writer.writeAttribute("module", collectionNode->physicalModuleName());
-        /*
-          This is not read back in, so it probably
-          shouldn't be written out in the first place.
-        */
-        if (!collectionNode->members().isEmpty()) {
-            QStringList names;
-            const auto &members = collectionNode->members();
-            for (const Node *member : members)
-                names.append(member->name());
-            writer.writeAttribute("members", names.join(QLatin1Char(',')));
-        }
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
-    } break;
-    case Node::Module: {
-        const auto *collectionNode = static_cast<const CollectionNode *>(node);
-        writer.writeAttribute("seen", collectionNode->wasSeen() ? "true" : "false");
-        writer.writeAttribute("title", collectionNode->title());
-        if (!collectionNode->subtitle().isEmpty())
-            writer.writeAttribute("subtitle", collectionNode->subtitle());
-        if (!collectionNode->physicalModuleName().isEmpty())
-            writer.writeAttribute("module", collectionNode->physicalModuleName());
-        /*
-          This is not read back in, so it probably
-          shouldn't be written out in the first place.
-        */
-        if (!collectionNode->members().isEmpty()) {
-            QStringList names;
-            const auto &members = collectionNode->members();
-            for (const Node *member : members)
-                names.append(member->name());
-            writer.writeAttribute("members", names.join(QLatin1Char(',')));
-        }
-        if (!brief.isEmpty())
-            writer.writeAttribute("brief", brief);
-    } break;
+    case Node::Group:
+    case Node::Module:
     case Node::JsModule:
     case Node::QmlModule: {
         const auto *collectionNode = static_cast<const CollectionNode *>(node);
@@ -1138,17 +1096,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("subtitle", collectionNode->subtitle());
         if (!collectionNode->physicalModuleName().isEmpty())
             writer.writeAttribute("module", collectionNode->physicalModuleName());
-        /*
-          This is not read back in, so it probably
-          shouldn't be written out in the first place.
-        */
-        if (!collectionNode->members().isEmpty()) {
-            QStringList names;
-            const auto &members = collectionNode->members();
-            for (const Node *member : members)
-                names.append(member->name());
-            writer.writeAttribute("members", names.join(QLatin1Char(',')));
-        }
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
@@ -1314,7 +1261,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         for (const QString &file : files) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            QString href = m_gen->linkForExampleFile(file, exampleNode);
+            QString href = m_gen->linkForExampleFile(file);
             writer.writeAttribute("href", href);
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "file");
@@ -1327,7 +1274,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         for (const QString &file : images) {
             writer.writeStartElement("page");
             writer.writeAttribute("name", file);
-            QString href = m_gen->linkForExampleFile(file, exampleNode);
+            QString href = m_gen->linkForExampleFile(file);
             writer.writeAttribute("href", href);
             writer.writeAttribute("status", "active");
             writer.writeAttribute("subtype", "image");

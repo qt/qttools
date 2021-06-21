@@ -125,13 +125,13 @@ void WebXMLGenerator::generateExampleFilePage(const Node *en, const QString &fil
     QByteArray data;
     QXmlStreamWriter writer(&data);
     writer.setAutoFormatting(true);
-    beginFilePage(en, linkForExampleFile(file, en, "webxml"));
+    beginFilePage(en, linkForExampleFile(file, "webxml"));
     writer.writeStartDocument();
     writer.writeStartElement("WebXML");
     writer.writeStartElement("document");
     writer.writeStartElement("page");
     writer.writeAttribute("name", file);
-    writer.writeAttribute("href", linkForExampleFile(file, en));
+    writer.writeAttribute("href", linkForExampleFile(file));
     QString title = exampleFileTitle(static_cast<const ExampleNode *>(en), file);
     writer.writeAttribute("title", title);
     writer.writeAttribute("fulltitle", title);
@@ -432,7 +432,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
 
     case Atom::ExampleFileLink: {
         if (!m_inLink) {
-            QString link = linkForExampleFile(atom->string(), relative);
+            QString link = linkForExampleFile(atom->string());
             if (!link.isEmpty())
                 startLink(writer, atom, relative, link);
         }
