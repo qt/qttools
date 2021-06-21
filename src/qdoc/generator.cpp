@@ -341,13 +341,7 @@ QString Generator::fileBase(const Node *node) const
             base.truncate(base.length() - 5);
 
         if (node->isExample()) {
-            QString modPrefix(node->physicalModuleName());
-            if (modPrefix.isEmpty()) {
-                modPrefix = s_project;
-            }
-            base.prepend(modPrefix.toLower() + QLatin1Char('-'));
-        }
-        if (node->isExample()) {
+            base.prepend(s_project.toLower() + QLatin1Char('-'));
             base.append(QLatin1String("-example"));
         }
     } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
@@ -395,25 +389,19 @@ QString Generator::fileBase(const Node *node) const
 
 /*!
   Constructs an href link from an example file name, which
-  is a path to the example file. If \a fileExtension is
-  empty (default value), retrieve the file extension from
+  is a \a path to the example file. If \a fileExt is empty
+  (default value), retrieve the file extension from
   the generator.
  */
-QString Generator::linkForExampleFile(const QString &path, const Node *parent,
-                                      const QString &fileExt)
+QString Generator::linkForExampleFile(const QString &path, const QString &fileExt)
 {
     QString link = path;
-    QString modPrefix(parent->physicalModuleName());
-    if (modPrefix.isEmpty())
-        modPrefix = s_project;
-    link.prepend(modPrefix.toLower() + QLatin1Char('-'));
+    link.prepend(s_project.toLower() + QLatin1Char('-'));
 
     QString res;
     transmogrify(link, res);
     res.append(QLatin1Char('.'));
-    res.append(fileExt);
-    if (fileExt.isEmpty())
-        res.append(fileExtension());
+    res.append(fileExt.isEmpty() ? fileExtension() : fileExt);
     return res;
 }
 

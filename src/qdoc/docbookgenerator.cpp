@@ -2437,7 +2437,7 @@ QXmlStreamWriter *DocBookGenerator::startDocument(const Node *node)
 
 QXmlStreamWriter *DocBookGenerator::startDocument(const ExampleNode *en, const QString &file)
 {
-    QString fileName = linkForExampleFile(file, en);
+    QString fileName = linkForExampleFile(file);
     return startGenericDocument(en, fileName);
 }
 

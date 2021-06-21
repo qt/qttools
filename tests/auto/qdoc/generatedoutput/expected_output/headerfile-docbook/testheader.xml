@@ -28,7 +28,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">HeaderFile</db:synopsisinfo>
 <db:enumitem db:enumidentifier="Glo" db:enumvalue="0"/>
 <db:enumitem db:enumidentifier="Bal" db:enumvalue="1"/>
 </db:enumsynopsis>
@@ -64,7 +63,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">HeaderFile</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Global variable.</db:para>
 </db:section>
@@ -82,7 +80,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">HeaderFile</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Global function.</db:para>
 </db:section>

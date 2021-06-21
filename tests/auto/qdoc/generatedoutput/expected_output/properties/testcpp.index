@@ -99,7 +99,7 @@
                 </property>
             </class>
         </namespace>
-        <group name="testgroup" href="testgroup.html" status="internal" seen="false" title="" members="Test,QDOCTEST_MACRO2,someFunctionDefaultArg"/>
-        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" module="TestCPP" members="TestQDoc,Test,TestDerived,CrossModuleRef,DontLinkToMe" brief="A test module page"/>
+        <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
+        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page"/>
     </namespace>
 </INDEX>

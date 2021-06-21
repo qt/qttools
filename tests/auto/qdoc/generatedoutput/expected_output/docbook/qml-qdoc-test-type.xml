@@ -38,7 +38,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:bridgehead renderas="sect2" xml:id="group.second-prop">group.second : int</db:bridgehead>
 <db:fieldsynopsis>
@@ -48,7 +47,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:bridgehead renderas="sect2" xml:id="group.third-prop">group.third : int</db:bridgehead>
 <db:fieldsynopsis>
@@ -58,7 +56,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>A property group.</db:para>
 </db:section>
@@ -72,7 +69,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>A read-only property.</db:para>
 </db:section>
@@ -86,7 +82,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Name of the Test.</db:para>
 </db:section>
@@ -103,7 +98,6 @@
 <db:synopsisinfo db:role="access">public</db:synopsisinfo>
 <db:synopsisinfo db:role="status">active</db:synopsisinfo>
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="module">Test</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:informaltable>
 <db:thead>

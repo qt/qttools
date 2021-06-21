@@ -77,8 +77,7 @@ public:
     virtual QString typeString(const Node *node);
 
     QString fullDocumentLocation(const Node *node, bool useSubdir = false);
-    QString linkForExampleFile(const QString &path, const Node *parent,
-                               const QString &fileExt = QString());
+    QString linkForExampleFile(const QString &path, const QString &fileExt = QString());
     static QString exampleFileTitle(const ExampleNode *relative, const QString &fileName);
     static Generator *currentGenerator() { return s_currentGenerator; }
     static Generator *generatorForFormat(const QString &format);
