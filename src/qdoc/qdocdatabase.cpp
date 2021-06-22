@@ -1325,7 +1325,7 @@ void QDocDatabase::generateIndex(const QString &fileName, const QString &url, co
   open namespaces (might not be any open ones). If the node
   is found in an open namespace, prefix \a path with the name
   of the open namespace and "::" and return a pointer to the
-  node. Othewrwise return 0.
+  node. Otherwise return \c nullptr.
 
   This function only searches in the current primary tree.
  */
