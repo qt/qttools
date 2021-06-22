@@ -88,7 +88,7 @@ Aggregate::~Aggregate()
   If \a genus is \c{Node::DontCare}, find the first node in
   this node's child list that has the given \a name. If this
   node is a QML type, be sure to also look in the children
-  of its property group nodes. Return the matching node or 0.
+  of its property group nodes. Return the matching node or \c nullptr.
 
   If \a genus is either \c{Node::CPP} or \c {Node::QML}, then
   find all this node's children that have the given \a name,
