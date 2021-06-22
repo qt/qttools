@@ -15,7 +15,7 @@ qt_internal_add_test(tst_lupdate
     SOURCES
         tst_lupdate.cpp
     LIBRARIES
-        Qt::ToolsPrivate
+        Qt::Tools
         Qt::CorePrivate
 )
 
