@@ -301,13 +301,13 @@
 
     \target obsolete-command
     \section1 \\obsolete
-    The \obsolete command is superceded by the \\deprecated command.
+    The \\obsolete command is superceded by the \\deprecated command.
 
     This command is kept for backwards compatibility reasons only.
     It may be removed in a future version of QDoc. Use the \\deprecated
     command instead.
 
-    \sa {deprecated-command}{\\deprecated}
+    See also \l {deprecated-command}{\\deprecated}.
 
     \target deprecated-command
     \section1 \\deprecated
