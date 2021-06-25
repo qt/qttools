@@ -11,8 +11,7 @@ sourcedirs = ..
 exampledirs = .. \
               ../examples
 
-imagedirs = ../images \
-            ../../../../../qtbase/src/widgets/doc/images
+imagedirs = ../images
 
 tagfile = ../html/qdoc.tags
 

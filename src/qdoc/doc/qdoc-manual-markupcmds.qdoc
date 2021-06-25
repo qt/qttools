@@ -2281,9 +2281,9 @@
     / *!
       \table 100%
         \row
-          \li \image windowsvista-pushbutton.png
+          \li \image windows-pushbutton.png
              \caption The QPushButton widget provides a command button.
-          \li \image windowsvista-toolbutton.png
+          \li \image windows-toolbutton.png
              \caption The QToolButton class provides a quick-access button to commands
              or options, usually used inside a QToolBar.
        \endtable
@@ -2294,9 +2294,9 @@
 
     \table 100%
       \row
-        \li \image windowsvista-pushbutton.png
+        \li \image windows-pushbutton.png
            \caption The QPushButton widget provides a command button.
-        \li \image windowsvista-toolbutton.png
+        \li \image windows-toolbutton.png
            \caption The QToolButton class provides a quick-access button to commands
            or options, usually used inside a QToolBar.
     \endtable
