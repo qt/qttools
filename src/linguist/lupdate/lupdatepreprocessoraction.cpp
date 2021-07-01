@@ -165,8 +165,8 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
         qCDebug(lcClang) << "SourceRangeSkipped: skipped text:" << skippedText.str();
         unsigned int beginLine = sm.getExpansionLineNumber(sourceRange.getBegin());
         unsigned int endLine = sm.getExpansionLineNumber(sourceRange.getEnd());
-        qWarning("Code with translation information has been skipped "
-                 "in file %s between lines %d and %d",
+        qWarning("%s Code with translation information has been skipped "
+                 "between lines %d and %d",
                  m_inputFile.c_str(), beginLine, endLine);
     }
 
