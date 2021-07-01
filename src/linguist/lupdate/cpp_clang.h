@@ -99,19 +99,21 @@ struct TranslationRelatedStore
     QString lupdateWarning;
     clang::SourceLocation sourceLocation;
 
-    bool isValid(bool printwarning = false) const
+    bool isValid(bool printwarning = false)
     {
         switch (trFunctionAliasManager.trFunctionByName(funcName)) {
         // only one argument: the source
         case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
             if (contextArg.isEmpty()) {
                 if (printwarning) {
-                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                    std::stringstream warning;
+                    warning << qPrintable(lupdateLocationFile) << ":"
                         << lupdateLocationLine << ":"
                         << locationCol << ": "
                         << " \'" << qPrintable(funcName)
                         << "\' cannot be called without context."
                         << " The call is ignored." <<std::endl;
+                    lupdateWarning.append(QString::fromStdString(warning.str()));
                 }
                 return false;
             }
@@ -120,12 +122,14 @@ struct TranslationRelatedStore
         case TrFunctionAliasManager::Function_trUtf8:
             if (lupdateSource.isEmpty()) {
                 if (printwarning) {
-                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                    std::stringstream warning;
+                    warning << qPrintable(lupdateLocationFile) << ":"
                         << lupdateLocationLine << ":"
                         << locationCol << ": "
                         << " \'" << qPrintable(funcName)
                         << "\' cannot be called without source."
                         << " The call is ignored." << std::endl;
+                    lupdateWarning.append(QString::fromStdString(warning.str()));
                 }
                 return false;
             }
@@ -140,12 +144,14 @@ struct TranslationRelatedStore
         case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
             if (contextArg.isEmpty() || lupdateSource.isEmpty()) {
                 if (printwarning) {
-                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                    std::stringstream warning;
+                    warning << qPrintable(lupdateLocationFile) << ":"
                         << lupdateLocationLine << ":"
                         << locationCol << ": "
                         << " \'" << qPrintable(funcName)
                         << "\' cannot be called without context or source."
                         << " The call is ignored." << std::endl;
+                    lupdateWarning.append(QString::fromStdString(warning.str()));
                 }
                 return false;
             }
@@ -157,12 +163,14 @@ struct TranslationRelatedStore
         case TrFunctionAliasManager::Function_QT_TRID_NOOP:
             if (lupdateId.isEmpty()) {
                 if (printwarning) {
-                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                    std::stringstream warning;
+                    warning << qPrintable(lupdateLocationFile) << ":"
                         << lupdateLocationLine << ":"
                         << locationCol << ": "
                         << " \'" << qPrintable(funcName)
                         << "\' cannot be called without Id."
                         << " The call is ignored." << std::endl;
+                    lupdateWarning.append(QString::fromStdString(warning.str()));
                 }
                 return false;
             }
@@ -170,12 +178,14 @@ struct TranslationRelatedStore
         default:
             if (funcName == QStringLiteral("TRANSLATOR") && lupdateComment.isEmpty()) {
                 if (printwarning) {
-                    std::cerr << qPrintable(lupdateLocationFile) << ":"
+                    std::stringstream warning;
+                    warning << qPrintable(lupdateLocationFile) << ":"
                         << lupdateLocationLine << ":"
                         << locationCol << ": "
-                        << " \'" << qPrintable(funcName)
-                        << "\' cannot be called without comment."
+                        << qPrintable(funcName)
+                        << " cannot be called without comment."
                         << " The call is ignored." << std::endl;
+                    lupdateWarning.append(QString::fromStdString(warning.str()));
                 }
                 return false;
             }
