@@ -2,6 +2,50 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>CommentOnSameLineExtraComment</name>
+    <message>
+        <location filename="test_sameLineComments.cpp" line="46"/>
+        <source>extra comment before translation. , and = in between</source>
+        <extracomment>other extra comment</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_sameLineComments.cpp" line="47"/>
+        <source>extra comment before translation. = in between</source>
+        <extracomment>extra2</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_sameLineComments.cpp" line="50"/>
+        <source>extra comment before translation</source>
+        <extracomment>extra3</extracomment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_sameLineComments.cpp" line="53"/>
+        <source>extra comment before translation. ; in between</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CommentOnSameLineMetaDataComment</name>
+    <message id="other metaData">
+        <location filename="test_sameLineComments.cpp" line="35"/>
+        <source>meta data comment before translation. , and = in between</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="metaData2">
+        <location filename="test_sameLineComments.cpp" line="36"/>
+        <source>meta data comment before translation. = in between</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="metaData3">
+        <location filename="test_sameLineComments.cpp" line="39"/>
+        <source>meta data comment before translation</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Foo</name>
     <message>
         <location filename="test_QT_TR_NOOP_context.cpp" line="37"/>
