@@ -443,8 +443,15 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
 void ClangCppParser::collectMessages(TranslatorMessageVector &result,
                                      TranslationRelatedStore &store)
 {
-    if (!store.isValid(true))
+    if (!store.isValid(true)) {
+        if (store.lupdateWarning.isEmpty())
+            return;
+        // The message needs to be added to the results so that the warning can be ordered
+        // and printed in a consistent way.
+        // the message won't appear in the .ts file
+        result.push_back(translatorMessage(store, store.lupdateIdMetaData, false, false, true));
         return;
+    }
 
     qCDebug(lcClang) << "---------------------------------------------------------------Filling translator for " << store.funcName;
     qCDebug(lcClang) << " contextRetrieved " << store.contextRetrieved;
