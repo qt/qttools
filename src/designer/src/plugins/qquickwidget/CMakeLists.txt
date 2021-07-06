@@ -9,7 +9,7 @@ qt_internal_add_plugin(QQuickWidgetPlugin
     TYPE designer
     SOURCES
         qquickwidget_plugin.cpp qquickwidget_plugin.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Designer
         Qt::Gui
@@ -28,4 +28,3 @@ qt_internal_add_resource(QQuickWidgetPlugin "qquickwidget_plugin"
     FILES
         ${qquickwidget_plugin_resource_files}
 )
-
