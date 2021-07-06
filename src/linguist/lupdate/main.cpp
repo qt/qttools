@@ -519,6 +519,8 @@ static void processSources(Translator &fetchedTor,
                  || sourceFile.endsWith(QLatin1String(".qs"), Qt::CaseInsensitive))
             requireQmlSupport = true;
 #endif // QT_NO_QML
+        else if (sourceFile.endsWith(u".py", Qt::CaseInsensitive))
+            loadPython(fetchedTor, sourceFile, cd);
         else if (!processTs(fetchedTor, sourceFile, cd))
             sourceFilesCpp << sourceFile;
     }

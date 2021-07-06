@@ -69,6 +69,7 @@ Translator merge(
 
 void loadCPP(Translator &translator, const QStringList &filenames, ConversionData &cd);
 bool loadJava(Translator &translator, const QString &filename, ConversionData &cd);
+bool loadPython(Translator &translator, const QString &fileName, ConversionData &cd);
 bool loadUI(Translator &translator, const QString &filename, ConversionData &cd);
 
 #ifndef QT_NO_QML
