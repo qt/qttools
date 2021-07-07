@@ -110,12 +110,12 @@ qt_internal_add_tool(${target_name}
 #### Keys ignored in scope 2:.:.:qdoc.pro:NOT force_bootstrap:
 # _REQUIREMENTS = "qtConfig(xmlstreamwriter)"
 
-qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
-    PUBLIC_LIBRARIES
-        Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlPrivate
+    LIBRARIES
+        Qt::QmlPrivate
 )
 
-qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlPrivate
     DEFINES
         QT_NO_DECLARATIVE
 )
@@ -130,4 +130,3 @@ qt_internal_extend_target(${target_name} CONDITION (WIN32 AND ICC) OR MSVC
 qt_internal_add_docs(${target_name}
     doc/config/qdoc.qdocconf
 )
-

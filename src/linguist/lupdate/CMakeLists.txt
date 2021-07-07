@@ -61,14 +61,14 @@ qt_internal_add_tool(${target_name}
 ## Scopes:
 #####################################################################
 
-qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlPrivate
     SOURCES
         qdeclarative.cpp
-    PUBLIC_LIBRARIES
-        Qt::QmlDevToolsPrivate
+    LIBRARIES
+        Qt::QmlPrivate
 )
 
-qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlDevToolsPrivate
+qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlPrivate
     DEFINES
         QT_NO_QML
 )

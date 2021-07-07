@@ -21,7 +21,7 @@ endif()
 
 find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core Network)
 find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
-             DBus Xml Widgets Quick QuickWidgets QmlDevToolsPrivate
+             DBus Xml Widgets Quick QuickWidgets Qml
              Sql PrintSupport OpenGL OpenGLWidgets ${optional_components})
 # special case end
 
