@@ -14,14 +14,6 @@ qt_exclude_tool_directories_from_default_target(
     ${_qt_additional_tools_to_exclude} # special case
 )
 
-# Check whether the sqlite plugin is available.
-set(sqlite_plugin_available FALSE)
-if(TARGET ${QT_CMAKE_EXPORT_NAMESPACE}::Sql)
-    get_target_property(sql_plugins ${QT_CMAKE_EXPORT_NAMESPACE}::Sql QT_PLUGINS)
-    if(QSQLiteDriverPlugin IN_LIST sql_plugins)
-        set(sqlite_plugin_available TRUE)
-    endif()
-endif()
 
 # special case begin
 # Evaluate features to decide what to build.
@@ -30,37 +22,40 @@ qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/../configure.cmake")
 # special case end
 
 add_subdirectory(global) # special case add as first directory
-add_subdirectory(linguist)
+if(QT_FEATURE_linguist)
+    add_subdirectory(linguist)
+endif()
 # add_subdirectory(global) # special case remove
-if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets)
+if(QT_FEATURE_designer)
     add_subdirectory(designer)
+endif()
+if(QT_FEATURE_pixeltool)
     add_subdirectory(pixeltool)
 endif()
-if(QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TARGET Qt::Widgets
-        AND (sqlite_plugin_available OR QT_BUILD_SHARED_LIBS))
+if(QT_FEATURE_assistant)
     add_subdirectory(assistant)
 endif()
-if(QT_FEATURE_png AND QT_FEATURE_thread AND QT_FEATURE_toolbutton AND TARGET Qt::Quick AND TARGET Qt::Widgets)
+if(QT_FEATURE_distancefieldgenerator)
     add_subdirectory(distancefieldgenerator)
 endif()
-if(QT_FEATURE_commandlineparser)
+if(QT_FEATURE_qtattributionsscanner)
     add_subdirectory(qtattributionsscanner)
 endif()
-if(QT_FEATURE_commandlineparser AND QT_FEATURE_library AND (android_app OR NOT ANDROID))
+if(QT_FEATURE_qtplugininfo)
     add_subdirectory(qtplugininfo)
 endif()
 if(QT_FEATURE_clang AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread)
     add_subdirectory(qdoc)
 endif()
-if(MACOS)
+if(QT_FEATURE_macdeployqt)
     add_subdirectory(macdeployqt)
 endif()
-if(TARGET Qt::DBus)
+if(QT_FEATURE_qdbus)
     add_subdirectory(qdbus)
 endif()
 if(QT_FEATURE_windeployqt) # special case
     add_subdirectory(windeployqt)
 endif()
-if(QT_FEATURE_commandlineparser AND TARGET Qt::Gui AND NOT ANDROID AND NOT QNX AND NOT UIKIT AND NOT WASM)
+if(QT_FEATURE_qtdiag)
     add_subdirectory(qtdiag)
 endif()

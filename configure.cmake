@@ -27,9 +27,21 @@ endif()
 
 #### Features
 
+# Check whether the sqlite plugin is available.
+set(sqlite_plugin_available FALSE)
+if(NOT QT_CONFIGURE_RUNNING)
+    if(TARGET ${QT_CMAKE_EXPORT_NAMESPACE}::Sql)
+        get_target_property(sql_plugins ${QT_CMAKE_EXPORT_NAMESPACE}::Sql QT_PLUGINS)
+        if(QSQLiteDriverPlugin IN_LIST sql_plugins)
+            set(sqlite_plugin_available TRUE)
+        endif()
+    endif()
+endif()
+
 qt_feature("assistant" PRIVATE
     LABEL "Qt Assistant"
     PURPOSE "Qt Assistant is a tool for viewing on-line documentation in Qt help file format."
+    CONDITION TARGET Qt::Widgets AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND (sqlite_plugin_available OR QT_BUILD_SHARED_LIBS)
 )
 qt_feature("clang" PRIVATE
     LABEL "QDoc"
@@ -42,10 +54,12 @@ qt_feature("clangcpp" PRIVATE
 qt_feature("designer" PRIVATE
     LABEL "Qt Designer"
     PURPOSE "Qt Designer is the Qt tool for designing and building graphical user interfaces (GUIs) with Qt Widgets. You can compose and customize your windows or dialogs in a what-you-see-is-what-you-get (WYSIWYG) manner, and test them using different styles and resolutions."
+    CONDITION TARGET Qt::Widgets AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
 )
 qt_feature("distancefieldgenerator" PRIVATE
     LABEL "Qt Distance Field Generator"
     PURPOSE "The Qt Distance Field Generator tool can be used to pregenerate the font cache in order to optimize startup performance."
+    CONDITION TARGET Qt::Widgets AND QT_FEATURE_png AND QT_FEATURE_thread AND QT_FEATURE_toolbutton AND TARGET Qt::Quick
 )
 qt_feature("kmap2qmap" PRIVATE
     LABEL "kmap2qmap"
@@ -58,15 +72,17 @@ qt_feature("linguist" PRIVATE
 qt_feature("macdeployqt" PRIVATE
     LABEL "Mac Deployment Tool"
     PURPOSE "The Mac deployment tool automates the process of creating a deployable application bundle that contains the Qt libraries as private frameworks."
-    CONDITION APPLE
+    CONDITION MACOS
 )
 qt_feature("pixeltool" PRIVATE
     LABEL "pixeltool"
     PURPOSE "The Qt Pixel Zooming Tool is a graphical application that magnifies the screen around the mouse pointer so you can look more closely at individual pixels."
+    CONDITION TARGET Qt::Widgets AND QT_FEATURE_png AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton
 )
 qt_feature("qdbus" PRIVATE
     LABEL "qdbus"
     PURPOSE "qdbus is a communication interface for Qt-based applications."
+    CONDITION TARGET Qt::DBus
 )
 qt_feature("qev" PRIVATE
     LABEL "qev"
@@ -75,14 +91,17 @@ qt_feature("qev" PRIVATE
 qt_feature("qtattributionsscanner" PRIVATE
     LABEL "Qt Attributions Scanner"
     PURPOSE "Qt Attributions Scanner generates attribution documents for third-party code in Qt."
+    CONDITION QT_FEATURE_commandlineparser
 )
 qt_feature("qtdiag" PRIVATE
     LABEL "qtdiag"
     PURPOSE "qtdiag outputs information about the Qt installation it was built with."
+    CONDITION QT_FEATURE_commandlineparser AND TARGET Qt::Gui AND NOT ANDROID AND NOT QNX AND NOT UIKIT AND NOT WASM
 )
 qt_feature("qtplugininfo" PRIVATE
     LABEL "qtplugininfo"
     PURPOSE "qtplugininfo dumps metadata about Qt plugins in JSON format."
+    CONDITION QT_FEATURE_commandlineparser AND QT_FEATURE_library AND (android_app OR NOT ANDROID)
 )
 qt_feature("windeployqt" PRIVATE
     LABEL "Windows deployment tool"
@@ -95,12 +114,12 @@ qt_configure_add_summary_entry(ARGS "clang")
 qt_configure_add_summary_entry(ARGS "clangcpp")
 qt_configure_add_summary_entry(ARGS "designer")
 qt_configure_add_summary_entry(ARGS "distancefieldgenerator")
-qt_configure_add_summary_entry(ARGS "kmap2qmap")
+#qt_configure_add_summary_entry(ARGS "kmap2qmap")
 qt_configure_add_summary_entry(ARGS "linguist")
 qt_configure_add_summary_entry(ARGS "macdeployqt")
 qt_configure_add_summary_entry(ARGS "pixeltool")
 qt_configure_add_summary_entry(ARGS "qdbus")
-qt_configure_add_summary_entry(ARGS "qev")
+#qt_configure_add_summary_entry(ARGS "qev")
 qt_configure_add_summary_entry(ARGS "qtattributionsscanner")
 qt_configure_add_summary_entry(ARGS "qtdiag")
 qt_configure_add_summary_entry(ARGS "qtplugininfo")
