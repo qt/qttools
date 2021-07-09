@@ -137,6 +137,19 @@ QStringList TrFunctionAliasManager::availableFunctionsWithAliases() const
     return result;
 }
 
+QStringList TrFunctionAliasManager::listAliases() const
+{
+    QStringList result;
+    result.reserve(NumTrFunctions);
+    for (int i = 0; i < NumTrFunctions; ++i) {
+        for (int ii = 1; ii < m_trFunctionAliases[i].size() ; ii++) {
+            // ii = 0 is the default name. Not listed here
+            result.push_back(m_trFunctionAliases[i][ii]);
+        }
+    }
+    return result;
+}
+
 TrFunctionAliasManager trFunctionAliasManager;
 
 QString ParserTool::transcode(const QString &str)

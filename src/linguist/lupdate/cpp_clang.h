@@ -339,6 +339,9 @@ namespace ClangCppParser
         WriteSynchronizedRef<TranslationRelatedStore> &newAst);
 
     bool containsTranslationInformation(llvm::StringRef ba);
+    bool hasAliases();
+    std::vector<std::string> getAliasFunctionDefinition();
+
 }
 
 QT_END_NAMESPACE

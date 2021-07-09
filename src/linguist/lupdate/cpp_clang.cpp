@@ -168,6 +168,83 @@ QByteArrayList getIncludePathsFromCompiler()
     return pathList;
 }
 
+std::vector<std::string> ClangCppParser::getAliasFunctionDefinition()
+{
+    QStringList aliases = trFunctionAliasManager.listAliases();
+    std::vector<std::string> results;
+    for (QString alias : aliases) {
+        std::string definition = "-D" + alias.toStdString();
+        switch (trFunctionAliasManager.trFunctionByName(alias)) {
+        case TrFunctionAliasManager::Function_QT_TR_N_NOOP:
+            definition += "(x)=QT_TR_N_NOOP(x)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_trUtf8:
+        case TrFunctionAliasManager::Function_tr:
+            definition += "=tr";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TR_NOOP:
+            definition += "(x)=QT_TR_NOOP(x)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TR_NOOP_UTF8:
+            definition += "(x)=QT_TR_NOOP_UTF8(x)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP:
+            definition += "(scope,x)=QT_TRANSLATE_N_NOOP(scope,x)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_N_NOOP3:
+            definition += "(scope, x, comment)=QT_TRANSLATE_N_NOOP3(scope, x, comment)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_translate:
+            definition += "=QCoreApplication::translate";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_findMessage:
+            definition += "=findMessage";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
+            definition += "(scope,x)=QT_TRANSLATE_NOOP(scope,x)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP_UTF8:
+            definition += "(scope,x)=QT_TRANSLATE_NOOP_UTF8(scope,x)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3:
+            definition += "(scope, x, comment)=QT_TRANSLATE_NOOP3(scope, x, comment)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP3_UTF8:
+            definition += "(scope, x, comment)=QT_TRANSLATE_NOOP3_UTF8(scope, x, comment)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_qtTrId:
+            definition += "=qtTrId";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_QT_TRID_N_NOOP:
+        case TrFunctionAliasManager::Function_QT_TRID_NOOP:
+            definition += "(id)=QT_TRID_NOOP(id)";
+            results.push_back(definition);
+            break;
+        case TrFunctionAliasManager::Function_Q_DECLARE_TR_FUNCTIONS:
+            definition += "(context)=Q_DECLARE_TR_FUNCTIONS(context)";
+            results.push_back(definition);
+            break;
+        default:
+            break;
+        }
+    }
+    return results;
+}
+
+static std::vector<std::string> aliasDefinition;
 // Makes sure all the comments will be parsed and part of the AST
 // Clang will run with the flag -fparse-all-comments
 clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
@@ -205,6 +282,9 @@ clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
             adjustedArgs.push_back(line.data());
         }
 
+        for (auto alias : aliasDefinition) {
+            adjustedArgs.push_back(alias);
+        }
         return adjustedArgs;
     };
 }
@@ -245,6 +325,12 @@ bool ClangCppParser::containsTranslationInformation(llvm::StringRef ba)
      if (ba.contains(qDeclareTrFunction) || ba.contains(translatorComment) || ba.contains(qtTrId) || ba.contains(tr)
          || ba.contains(trUtf8) || ba.contains(translate))
         return true;
+
+     for (QString alias : trFunctionAliasManager.listAliases()) {
+         if (ba.contains(qPrintable(alias)))
+             return true;
+     }
+
 
      return false;
 }
@@ -313,9 +399,19 @@ static void sortMessagesByFileOrder(ClangCppParser::TranslatorMessageVector &mes
               });
 }
 
+bool ClangCppParser::hasAliases()
+{
+    QStringList listAlias = trFunctionAliasManager.listAliases();
+    if (listAlias.size() > 0)
+        return true;
+    return false;
+}
+
 void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd,
                             bool *fail)
 {
+    if (hasAliases())
+        aliasDefinition = getAliasFunctionDefinition();
 
     // pre-process the files by a simple text search if there is any occurrence
     // of things we are interested in
