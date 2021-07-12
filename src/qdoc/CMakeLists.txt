@@ -94,9 +94,6 @@ qt_internal_add_tool(${target_name}
         #(CLANG_RESOURCE_DIR=\"/clang//include\") # special case remove
         CLANG_RESOURCE_DIR=${QT_LIBCLANG_RESOURCE_DIR} # special case
         QDOC2_COMPAT
-    INCLUDE_DIRECTORIES
-        ${QT_SOURCE_TREE}/src/tools/qdoc
-        ${QT_SOURCE_TREE}/src/tools/qdoc/qmlparser
 )
 
 #### Keys ignored in scope 1:.:.:qdoc.pro:<TRUE>:
