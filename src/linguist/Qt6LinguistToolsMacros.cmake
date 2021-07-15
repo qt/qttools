@@ -214,7 +214,7 @@ endfunction()
 
 function(qt6_add_lrelease target)
     set(options
-        MANUAL
+        NO_TARGET_DEPENDENCY
         NO_GLOBAL_TARGET)
     set(oneValueArgs
         QM_FILES_OUTPUT_VARIABLE)
@@ -260,7 +260,7 @@ function(qt6_add_lrelease target)
     endforeach()
 
     add_custom_target(${target}_lrelease DEPENDS ${qm_files})
-    if(NOT arg_MANUAL)
+    if(NOT arg_NO_TARGET_DEPENDENCY)
         add_dependencies(${target} ${target}_lrelease)
     endif()
 
