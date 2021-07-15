@@ -280,6 +280,8 @@ function(qt6_add_lrelease target)
     endif()
 endfunction()
 
+# This function is currently in Technical Preview.
+# It's signature and behavior might change.
 function(qt6_add_translations target)
     set(options)
     set(oneValueArgs
