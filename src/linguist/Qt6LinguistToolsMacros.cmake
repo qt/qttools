@@ -286,7 +286,8 @@ function(qt6_add_translations target)
     set(options)
     set(oneValueArgs
         QM_FILES_OUTPUT_VARIABLE
-        RESOURCE_PREFIX)
+        RESOURCE_PREFIX
+        OUTPUT_TARGETS)
     set(multiValueArgs
         TS_FILES
         SOURCES
@@ -298,6 +299,10 @@ function(qt6_add_translations target)
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
             "together with RESOURCE_PREFIX.")
+    endif()
+    if(DEFINED arg_QM_FILES_OUTPUT_VARIABLE AND DEFINED arg_OUTPUT_TARGETS)
+        message(FATAL_ERROR "OUTPUT_TARGETS cannot be specified "
+            "together with QM_FILES_OUTPUT_VARIABLE.")
     endif()
     if(NOT DEFINED arg_RESOURCE_PREFIX AND NOT DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         set(arg_RESOURCE_PREFIX "/i18n")
@@ -316,7 +321,11 @@ function(qt6_add_translations target)
         qt6_add_resources(${target} "translations"
             PREFIX "${arg_RESOURCE_PREFIX}"
             BASE "${CMAKE_CURRENT_BINARY_DIR}"
+            OUTPUT_TARGETS out_targets
             FILES ${qm_files})
+        if(DEFINED arg_OUTPUT_TARGETS)
+            set("${arg_OUTPUT_TARGETS}" "${out_targets}" PARENT_SCOPE)
+        endif()
     endif()
     if(NOT "${arg_QM_FILES_OUTPUT_VARIABLE}" STREQUAL "")
         set("${arg_QM_FILES_OUTPUT_VARIABLE}" "${qm_files}" PARENT_SCOPE)
