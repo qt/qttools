@@ -294,6 +294,15 @@ function(qt6_add_translations target)
         LUPDATE_OPTIONS
         LRELEASE_OPTIONS)
     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
+        message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
+            "together with RESOURCE_PREFIX.")
+    endif()
+    if(NOT DEFINED arg_RESOURCE_PREFIX AND NOT DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
+        set(arg_RESOURCE_PREFIX "/i18n")
+    endif()
+
     qt6_add_lupdate(${target}
         TS_FILES "${arg_TS_FILES}"
         SOURCES "${arg_SOURCES}"
