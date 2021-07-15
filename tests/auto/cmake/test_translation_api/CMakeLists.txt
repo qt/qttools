@@ -103,6 +103,21 @@ qt6_add_translations(app5
     TS_FILES myobject_ru.ts
     RESOURCE_PREFIX "/tränslehschns")
 
+# qt_add_translations on a static lib with a generated resource and the default resource prefix.
+# Extract the created resource targets.
+add_library(staticlib1 STATIC
+    myi18nobject.cpp)
+target_include_directories(staticlib1
+    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/some_dir)
+target_link_libraries(staticlib1 PRIVATE Qt6::Core)
+set(staticlib1_resource_targets "")
+qt6_add_translations(staticlib1
+    TS_FILES myobject_da.ts
+    OUTPUT_TARGETS staticlib1_resource_targets)
+if("${staticlib1_resource_targets}" STREQUAL "")
+    message(FATAL_ERROR "staticlib1_resource_targets is empty.")
+endif()
+
 # Build the update_translations target
 add_custom_target(my_all_target
     ALL
