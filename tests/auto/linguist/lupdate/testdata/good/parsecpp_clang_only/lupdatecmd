@@ -1,0 +1,1 @@
+lupdate project.pro -tr-function-alias QT_TRANSLATE_NOOP+=ma_fonction_a_moi

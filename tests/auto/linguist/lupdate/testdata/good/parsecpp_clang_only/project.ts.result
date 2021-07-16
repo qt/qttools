@@ -269,4 +269,12 @@
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>zscope</name>
+    <message>
+        <location filename="test_contain_only_alias.cpp" line="33"/>
+        <source>string_a_moi</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>
