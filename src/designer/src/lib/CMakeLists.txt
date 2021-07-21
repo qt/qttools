@@ -13,15 +13,15 @@ qt_internal_add_module(Designer
         ../../../shared/findwidget/texteditfindwidget.cpp ../../../shared/findwidget/texteditfindwidget.h
         ../../../shared/qtgradienteditor/qtcolorbutton.cpp ../../../shared/qtgradienteditor/qtcolorbutton.h
         ../../../shared/qtgradienteditor/qtcolorline.cpp ../../../shared/qtgradienteditor/qtcolorline.h
-        ../../../shared/qtgradienteditor/qtgradientdialog.cpp ../../../shared/qtgradienteditor/qtgradientdialog.h ../../../shared/qtgradienteditor/qtgradientdialog.ui
-        ../../../shared/qtgradienteditor/qtgradienteditor.cpp ../../../shared/qtgradienteditor/qtgradienteditor.h ../../../shared/qtgradienteditor/qtgradienteditor.ui
+        ../../../shared/qtgradienteditor/qtgradientdialog.cpp ../../../shared/qtgradienteditor/qtgradientdialog.h
+        ../../../shared/qtgradienteditor/qtgradienteditor.cpp ../../../shared/qtgradienteditor/qtgradienteditor.h
         ../../../shared/qtgradienteditor/qtgradientmanager.cpp ../../../shared/qtgradienteditor/qtgradientmanager.h
         ../../../shared/qtgradienteditor/qtgradientstopscontroller.cpp ../../../shared/qtgradienteditor/qtgradientstopscontroller.h
         ../../../shared/qtgradienteditor/qtgradientstopsmodel.cpp ../../../shared/qtgradienteditor/qtgradientstopsmodel.h
         ../../../shared/qtgradienteditor/qtgradientstopswidget.cpp ../../../shared/qtgradienteditor/qtgradientstopswidget.h
         ../../../shared/qtgradienteditor/qtgradientutils.cpp ../../../shared/qtgradienteditor/qtgradientutils.h
-        ../../../shared/qtgradienteditor/qtgradientview.cpp ../../../shared/qtgradienteditor/qtgradientview.h ../../../shared/qtgradienteditor/qtgradientview.ui
-        ../../../shared/qtgradienteditor/qtgradientviewdialog.cpp ../../../shared/qtgradienteditor/qtgradientviewdialog.h ../../../shared/qtgradienteditor/qtgradientviewdialog.ui
+        ../../../shared/qtgradienteditor/qtgradientview.cpp ../../../shared/qtgradienteditor/qtgradientview.h
+        ../../../shared/qtgradienteditor/qtgradientviewdialog.cpp ../../../shared/qtgradienteditor/qtgradientviewdialog.h
         ../../../shared/qtgradienteditor/qtgradientwidget.cpp ../../../shared/qtgradienteditor/qtgradientwidget.h
         extension/default_extensionfactory.cpp extension/default_extensionfactory.h
         extension/extension.cpp extension/extension.h
@@ -59,7 +59,6 @@ qt_internal_add_module(Designer
         shared/actioneditor.cpp shared/actioneditor_p.h
         shared/actionprovider_p.h
         shared/actionrepository.cpp shared/actionrepository_p.h
-        shared/addlinkdialog.ui
         shared/codedialog.cpp shared/codedialog_p.h
         shared/connectionedit.cpp shared/connectionedit_p.h
         shared/csshighlighter.cpp shared/csshighlighter_p.h
@@ -67,10 +66,9 @@ qt_internal_add_module(Designer
         shared/dialoggui.cpp shared/dialoggui_p.h
         shared/extensionfactory_p.h
         shared/formlayoutmenu.cpp shared/formlayoutmenu_p.h
-        shared/formlayoutrowdialog.ui
         shared/formwindowbase.cpp shared/formwindowbase_p.h
         shared/grid.cpp shared/grid_p.h
-        shared/gridpanel.cpp shared/gridpanel.ui shared/gridpanel_p.h
+        shared/gridpanel.cpp shared/gridpanel_p.h
         shared/htmlhighlighter.cpp shared/htmlhighlighter_p.h
         shared/iconloader.cpp shared/iconloader_p.h
         shared/iconselector.cpp shared/iconselector_p.h
@@ -79,13 +77,13 @@ qt_internal_add_module(Designer
         shared/layoutinfo.cpp shared/layoutinfo_p.h
         shared/metadatabase.cpp shared/metadatabase_p.h
         shared/morphmenu.cpp shared/morphmenu_p.h
-        shared/newactiondialog.cpp shared/newactiondialog.ui shared/newactiondialog_p.h
-        shared/newformwidget.cpp shared/newformwidget.ui shared/newformwidget_p.h
-        shared/orderdialog.cpp shared/orderdialog.ui shared/orderdialog_p.h
+        shared/newactiondialog.cpp shared/newactiondialog_p.h
+        shared/newformwidget.cpp shared/newformwidget_p.h
+        shared/orderdialog.cpp shared/orderdialog_p.h
         shared/plaintexteditor.cpp shared/plaintexteditor_p.h
-        shared/plugindialog.cpp shared/plugindialog.ui shared/plugindialog_p.h
+        shared/plugindialog.cpp shared/plugindialog_p.h
         shared/pluginmanager.cpp shared/pluginmanager_p.h
-        shared/previewconfigurationwidget.cpp shared/previewconfigurationwidget.ui shared/previewconfigurationwidget_p.h
+        shared/previewconfigurationwidget.cpp shared/previewconfigurationwidget_p.h
         shared/previewmanager.cpp shared/previewmanager_p.h
         shared/promotionmodel.cpp shared/promotionmodel_p.h
         shared/promotiontaskmenu.cpp shared/promotiontaskmenu_p.h
@@ -120,17 +118,17 @@ qt_internal_add_module(Designer
         shared/qdesigner_widgetitem.cpp shared/qdesigner_widgetitem_p.h
         shared/qlayout_widget.cpp shared/qlayout_widget_p.h
         shared/qsimpleresource.cpp shared/qsimpleresource_p.h
-        shared/qtresourceeditordialog.cpp shared/qtresourceeditordialog.ui shared/qtresourceeditordialog_p.h
+        shared/qtresourceeditordialog.cpp shared/qtresourceeditordialog_p.h
         shared/qtresourcemodel.cpp shared/qtresourcemodel_p.h
         shared/qtresourceview.cpp shared/qtresourceview_p.h
         shared/rcc.cpp shared/rcc_p.h
         shared/richtexteditor.cpp shared/richtexteditor_p.h
-        shared/selectsignaldialog.cpp shared/selectsignaldialog.ui shared/selectsignaldialog_p.h
+        shared/selectsignaldialog.cpp shared/selectsignaldialog_p.h
         shared/shared_enums_p.h
         shared/shared_global_p.h
         shared/shared_settings.cpp shared/shared_settings_p.h
         shared/sheet_delegate.cpp shared/sheet_delegate_p.h
-        shared/signalslotdialog.cpp shared/signalslotdialog.ui shared/signalslotdialog_p.h
+        shared/signalslotdialog.cpp shared/signalslotdialog_p.h
         shared/spacer_widget.cpp shared/spacer_widget_p.h
         shared/stylesheeteditor.cpp shared/stylesheeteditor_p.h
         shared/textpropertyeditor.cpp shared/textpropertyeditor_p.h
@@ -179,6 +177,32 @@ qt_internal_add_module(Designer
     PRECOMPILED_HEADER
         "lib_pch.h"
 )
+
+set(ui_sources
+    ../../../shared/qtgradienteditor/qtgradientdialog.ui
+    ../../../shared/qtgradienteditor/qtgradienteditor.ui
+    ../../../shared/qtgradienteditor/qtgradientview.ui
+    ../../../shared/qtgradienteditor/qtgradientviewdialog.ui
+    shared/addlinkdialog.ui
+    shared/formlayoutrowdialog.ui
+    shared/gridpanel.ui
+    shared/previewconfigurationwidget.ui
+    shared/newactiondialog.ui
+    shared/newformwidget.ui
+    shared/orderdialog.ui
+    shared/plugindialog.ui
+    shared/qtresourceeditordialog.ui
+    shared/selectsignaldialog.ui
+    shared/signalslotdialog.ui
+)
+
+# Work around QTBUG-95305
+if(CMAKE_GENERATOR STREQUAL "Ninja Multi-Config" AND CMAKE_CROSS_CONFIGS)
+    qt6_wrap_ui(ui_sources_processed ${ui_sources})
+else()
+    set(ui_sources_processed ${ui_sources})
+endif()
+target_sources(Designer PRIVATE ${ui_sources_processed})
 
 # Resources:
 set(ClamshellPhone_resource_files
