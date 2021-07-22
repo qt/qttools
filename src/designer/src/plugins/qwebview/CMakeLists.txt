@@ -9,7 +9,7 @@ qt_internal_add_plugin(QWebViewPlugin
     TYPE designer
     SOURCES
         qwebview_plugin.cpp qwebview_plugin.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Designer
         Qt::Gui

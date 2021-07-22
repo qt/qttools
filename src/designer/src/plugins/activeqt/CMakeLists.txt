@@ -13,7 +13,7 @@ qt_internal_add_plugin(QAxWidgetPlugin
         qaxwidgetpropertysheet.cpp qaxwidgetpropertysheet.h
         qaxwidgettaskmenu.cpp qaxwidgettaskmenu.h
         qdesigneraxwidget.cpp qdesigneraxwidget.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::AxContainer
         Qt::Core
         Qt::Designer
