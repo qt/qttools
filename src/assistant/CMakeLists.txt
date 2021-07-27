@@ -35,6 +35,7 @@ if(TARGET qlitehtml)
     qt_disable_warnings(litehtml)
     qt_disable_warnings(qlitehtml)
     qt_disable_warnings(gumbo)
+    qt_handle_multi_config_output_dirs(qlitehtml)
     set_target_properties(qlitehtml PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_BINDIR}"
         LIBRARY_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_LIBDIR}"
