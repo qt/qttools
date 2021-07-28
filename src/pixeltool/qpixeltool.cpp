@@ -108,9 +108,11 @@ void QPixelTool::timerEvent(QTimerEvent *event)
         grabScreen();
     } else if (event->timerId() == m_displayZoomId) {
         killTimer(m_displayZoomId);
+        m_displayZoomId = 0;
         setZoomVisible(false);
     } else if (event->timerId() == m_displayGridSizeId) {
         killTimer(m_displayGridSizeId);
+        m_displayGridSizeId = 0;
         m_displayGridSize = false;
     }
 }
@@ -562,9 +564,8 @@ void QPixelTool::grabScreen()
 
 void QPixelTool::startZoomVisibleTimer()
 {
-    if (m_displayZoomId > 0) {
+    if (m_displayZoomId > 0)
         killTimer(m_displayZoomId);
-    }
     m_displayZoomId = startTimer(5000);
     setZoomVisible(true);
 }
