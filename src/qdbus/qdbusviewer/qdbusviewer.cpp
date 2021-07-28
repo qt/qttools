@@ -427,10 +427,13 @@ void QDBusViewer::showContextMenu(const QPoint &point)
 
 void QDBusViewer::connectionRequested(const BusSignature &sig)
 {
-    if (!c.connect(sig.mService, QString(), sig.mInterface, sig.mName, this,
+    if (c.connect(sig.mService, QString(), sig.mInterface, sig.mName, this,
               SLOT(dumpMessage(QDBusMessage)))) {
+        logMessage(tr("Connected to service %1, path %2, interface %3, signal %4").arg(
+                    sig.mService, sig.mPath, sig.mInterface, sig.mName));
+    } else {
         logError(tr("Unable to connect to service %1, path %2, interface %3, signal %4").arg(
-                    sig.mService).arg(sig.mPath).arg(sig.mInterface).arg(sig.mName));
+                    sig.mService, sig.mPath, sig.mInterface, sig.mName));
     }
 }
 
