@@ -72,6 +72,7 @@ private slots:
     void getProperty(const BusSignature &sig);
     void setProperty(const BusSignature &sig);
     void dumpMessage(const QDBusMessage &msg);
+    void dumpError(const QDBusError &error);
     void refreshChildren();
 
     void serviceRegistered(const QString &service);

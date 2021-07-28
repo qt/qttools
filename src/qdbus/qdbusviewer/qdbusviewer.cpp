@@ -257,7 +257,7 @@ void QDBusViewer::getProperty(const BusSignature &sig)
     QList<QVariant> arguments;
     arguments << sig.mInterface << sig.mName;
     message.setArguments(arguments);
-    c.callWithCallback(message, this, SLOT(dumpMessage(QDBusMessage)));
+    c.callWithCallback(message, this, SLOT(dumpMessage(QDBusMessage)), SLOT(dumpError(QDBusError)));
 }
 
 void QDBusViewer::setProperty(const BusSignature &sig)
@@ -284,8 +284,7 @@ void QDBusViewer::setProperty(const BusSignature &sig)
     QList<QVariant> arguments;
     arguments << sig.mInterface << sig.mName << QVariant::fromValue(QDBusVariant(value));
     message.setArguments(arguments);
-    c.callWithCallback(message, this, SLOT(dumpMessage(QDBusMessage)));
-
+    c.callWithCallback(message, this, SLOT(dumpMessage(QDBusMessage)), SLOT(dumpError(QDBusError)));
 }
 
 static QString getDbusSignature(const QMetaMethod& method)
@@ -361,7 +360,7 @@ void QDBusViewer::callMethod(const BusSignature &sig)
     QDBusMessage message = QDBusMessage::createMethodCall(sig.mService, sig.mPath, sig.mInterface,
             sig.mName);
     message.setArguments(args);
-    c.callWithCallback(message, this, SLOT(dumpMessage(QDBusMessage)));
+    c.callWithCallback(message, this, SLOT(dumpMessage(QDBusMessage)), SLOT(dumpError(QDBusError)));
 }
 
 void QDBusViewer::showContextMenu(const QPoint &point)
@@ -483,6 +482,11 @@ void QDBusViewer::dumpMessage(const QDBusMessage &message)
     }
 
     log->append(out);
+}
+
+void QDBusViewer::dumpError(const QDBusError &error)
+{
+    logError(error.message());
 }
 
 void QDBusViewer::serviceChanged(const QModelIndex &index)
