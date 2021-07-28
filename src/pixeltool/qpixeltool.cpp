@@ -229,8 +229,7 @@ void QPixelTool::paintEvent(QPaintEvent *)
         }
     }
 
-    QFont f(QLatin1String("courier"));
-    f.setBold(true);
+    QFont f(QStringList{u"courier"_qs}, -1, QFont::Bold);
     p.setFont(f);
 
     if (m_displayZoom) {
