@@ -92,7 +92,7 @@ private:
     int m_lcdMode;
 
     int m_updateId;
-    int m_displayZoomId;
+    int m_displayZoomId = 0;
     int m_displayGridSizeId = 0;
 
     QRgb m_currentColor = 0;
