@@ -37,7 +37,7 @@ PrintOut::PrintOut(QPrinter *printer)
     : pr(printer), nextRule(NoRule), page(0)
 {
     p.begin(pr);
-    QFont f(QLatin1String("Arial"));
+    QFont f(QStringList{u"Arial"_qs});
     f8 = f;
     f8.setPointSize(8);
     f10 = f;
