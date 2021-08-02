@@ -302,6 +302,8 @@ void BookmarkManager::buildBookmarksMenu(const QModelIndex &index, QMenu* menu)
     } else {
         QAction *action = menu->addAction(icon, text);
         action->setData(index.data(UserRoleUrl).toString());
+        connect(action, &QAction::triggered,
+                this, &BookmarkManager::setSourceFromAction);
     }
 }
 
@@ -396,9 +398,6 @@ void BookmarkManager::refreshBookmarkMenu()
     root = bookmarkModel->index(1, 0, QModelIndex());
     for (int i = 0; i < bookmarkModel->rowCount(root); ++i)
         buildBookmarksMenu(bookmarkModel->index(i, 0, root), bookmarkMenu);
-
-    connect(bookmarkMenu, &QMenu::triggered,
-            this, &BookmarkManager::setSourceFromAction);
 }
 
 void BookmarkManager::refreshBookmarkToolBar()
@@ -420,8 +419,6 @@ void BookmarkManager::refreshBookmarkToolBar()
             QMenu *menu = new QMenu(button);
             for (int j = 0; j < bookmarkModel->rowCount(index); ++j)
                 buildBookmarksMenu(bookmarkModel->index(j, 0, index), menu);
-            connect(menu, &QMenu::triggered,
-                    this, &BookmarkManager::setSourceFromAction);
             button->setMenu(menu);
             button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
             button->setIcon(qvariant_cast<QIcon>(index.data(Qt::DecorationRole)));
