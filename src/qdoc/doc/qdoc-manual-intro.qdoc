@@ -205,7 +205,7 @@
     module's, that module is said to depend on those other Qt modules.
     Hence when QDoc runs the \e {generate phase} for that module, it
     must also load the index files for those modules so it can create
-    those thinks.
+    those links.
 
     Hence, when the Qt build system generates the Qt documentation, it
     first runs QDoc once for each module to perform the \e {prepare
