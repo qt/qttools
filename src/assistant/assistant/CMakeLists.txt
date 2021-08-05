@@ -55,16 +55,6 @@ qt_internal_add_app(assistant
 )
 
 # Resources:
-set(assistant_resource_files
-    "assistant.qch"
-)
-
-qt_internal_add_resource(assistant "assistant"
-    PREFIX
-        "/qt-project.org/assistant"
-    FILES
-        ${assistant_resource_files}
-)
 set(assistant_images_resource_files
     "images/assistant-128.png"
     "images/assistant.png"
