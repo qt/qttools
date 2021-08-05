@@ -318,45 +318,9 @@ bool MainWindow::initHelpDB(bool registerInternalDoc)
     if (!helpEngineWrapper.setupData())
         return false;
 
-    if (!registerInternalDoc) {
-        if (helpEngineWrapper.defaultHomePage() == QLatin1String("help"))
-            helpEngineWrapper.setDefaultHomePage(QLatin1String("about:blank"));
-        return true;
-    }
-    bool assistantInternalDocRegistered = false;
-    QString intern(QLatin1String("org.qt-project.assistantinternal-"));
-    for (const QString &ns : helpEngineWrapper.registeredDocumentations()) {
-        if (ns.startsWith(intern)) {
-            intern = ns;
-            assistantInternalDocRegistered = true;
-            break;
-        }
-    }
+    if (!registerInternalDoc && helpEngineWrapper.defaultHomePage() == QLatin1String("help"))
+        helpEngineWrapper.setDefaultHomePage(QLatin1String("about:blank"));
 
-    const QString &collectionFile = helpEngineWrapper.collectionFile();
-    QFileInfo fi(collectionFile);
-    QString helpFile;
-    QTextStream(&helpFile) << fi.absolutePath() << QDir::separator()
-        << QLatin1String("assistant.qch.") << (QT_VERSION >> 16)
-        << QLatin1Char('.') << ((QT_VERSION >> 8) & 0xFF);
-
-    bool needsSetup = false;
-    if (!assistantInternalDocRegistered || !QFile::exists(helpFile)) {
-        QFile file(helpFile);
-        if (file.open(QIODevice::WriteOnly)) {
-            QResource res(QLatin1String(":/qt-project.org/assistant/assistant.qch"));
-            if (file.write((const char*)res.data(), res.size()) != res.size())
-                qDebug() << QLatin1String("could not write assistant.qch...");
-
-            file.close();
-        }
-        helpEngineWrapper.unregisterDocumentation(intern);
-        helpEngineWrapper.registerDocumentation(helpFile);
-        needsSetup = true;
-    }
-
-    if (needsSetup)
-        helpEngineWrapper.setupData();
     return true;
 }
 
