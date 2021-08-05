@@ -6,7 +6,7 @@
 
 qt_internal_add_plugin(QView3DPlugin
     OUTPUT_NAME view3d
-    TYPE designer
+    PLUGIN_TYPE designer
     SOURCES
         view3d.cpp view3d.h
         view3d_global.h

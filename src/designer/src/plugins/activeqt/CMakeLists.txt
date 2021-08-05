@@ -6,7 +6,7 @@
 
 qt_internal_add_plugin(QAxWidgetPlugin
     OUTPUT_NAME qaxwidget
-    TYPE designer
+    PLUGIN_TYPE designer
     SOURCES
         qaxwidgetextrainfo.cpp qaxwidgetextrainfo.h
         qaxwidgetplugin.cpp qaxwidgetplugin.h
