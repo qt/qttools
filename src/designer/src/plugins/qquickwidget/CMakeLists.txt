@@ -6,7 +6,7 @@
 
 qt_internal_add_plugin(QQuickWidgetPlugin
     OUTPUT_NAME qquickwidget
-    TYPE designer
+    PLUGIN_TYPE designer
     SOURCES
         qquickwidget_plugin.cpp qquickwidget_plugin.h
     LIBRARIES

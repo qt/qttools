@@ -6,7 +6,7 @@
 
 qt_internal_add_plugin(QWebViewPlugin
     OUTPUT_NAME qwebview
-    TYPE designer
+    PLUGIN_TYPE designer
     SOURCES
         qwebview_plugin.cpp qwebview_plugin.h
     LIBRARIES
