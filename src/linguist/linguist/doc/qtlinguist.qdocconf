@@ -34,8 +34,11 @@ exampledirs             = ../../../../examples/linguist \
 
 imagedirs               = images
 
-depends                 += qtdoc qtqml qtquick qtcore qtgui qmake
+depends                 += qtdoc qtqml qtquick qtcore qtgui qmake qtcmake
 
 navigation.landingpage = "Qt Linguist Manual"
 
 warninglimit = 0
+
+# QTBUG-95796: Remove, once this macro is defined in qtbase.
+macro.versionlessNote = "If \\l{Versionless commands}{versionless commands} are disabled, use \\c{\1} instead. It supports the same set of arguments as this command."
