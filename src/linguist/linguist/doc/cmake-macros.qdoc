@@ -148,7 +148,7 @@ qt_add_lupdate(target TS_FILES file1.ts [file2.ts ...]
                [OPTIONS ...])
 \endcode
 
-\versionlessNote qt6_add_lupdate()
+\versionlessCMakeCommandsNote qt6_add_lupdate()
 
 \section1 Description
 
@@ -220,7 +220,7 @@ qt_add_lrelease(target TS_FILES file1.ts [file2.ts ...]
                 [OPTIONS ...])
 \endcode
 
-\versionlessNote qt6_add_lrelease()
+\versionlessCMakeCommandsNote qt6_add_lrelease()
 
 \section1 Description
 
@@ -306,7 +306,7 @@ qt_add_translations(target TS_FILES file1.ts [file2.ts ...]
                     [LRELEASE_OPTIONS])
 \endcode
 
-\versionlessNote qt6_add_translations()
+\versionlessCMakeCommandsNote qt6_add_translations()
 
 \preliminarycmakecommand
 
