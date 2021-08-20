@@ -1101,16 +1101,15 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         append(Atom::ParaRight);
                         p1 = getMetaCommandArgument(cmdStr);
                     }
-                    m_private->m_metaCommandMap[cmdStr].append(ArgLocPair(p1, location()));
+                    m_private->m_metaCommandMap[cmdStr].append(ArgPair(p1, QString()));
                     break;
                 case NOT_A_CMD:
                     if (metaCommandSet.contains(cmdStr)) {
                         QString arg;
+                        QString bracketedArg;
                         m_private->m_metacommandsUsed.insert(cmdStr);
-                        if (isLeftBracketAhead()) {
-                            m_private->constructExtra();
-                            m_private->extra->m_bracketedArgs[cmdStr] = getBracketedArgument();
-                        }
+                        if (isLeftBracketAhead())
+                            bracketedArg = getBracketedArgument();
                         // Force a linebreak after \obsolete or \deprecated
                         // to treat potential arguments as a new text paragraph.
                         if (m_position < m_inputLength
@@ -1119,7 +1118,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                             m_input[m_position] = '\n';
                         else
                             arg = getMetaCommandArgument(cmdStr);
-                        m_private->m_metaCommandMap[cmdStr].append(ArgLocPair(arg, location()));
+                        m_private->m_metaCommandMap[cmdStr].append(ArgPair(arg, bracketedArg));
                         if (possibleTopics.contains(cmdStr)) {
                             if (!cmdStr.endsWith(QLatin1String("propertygroup")))
                                 m_private->m_topics.append(Topic(cmdStr, arg));

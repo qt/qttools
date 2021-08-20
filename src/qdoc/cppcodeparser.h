@@ -69,11 +69,11 @@ protected:
     static const QSet<QString> &topicCommands();
     static const QSet<QString> &metaCommands();
     virtual Node *processTopicCommand(const Doc &doc, const QString &command,
-                                      const ArgLocPair &arg);
+                                      const ArgPair &arg);
     void processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs);
     bool splitQmlPropertyArg(const QString &arg, QString &type, QString &module, QString &element,
                              QString &name, const Location &location);
-    void processMetaCommand(const Doc &doc, const QString &command, const ArgLocPair &argLocPair,
+    void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
                             Node *node);
     void processMetaCommands(const Doc &doc, Node *node);
     void processMetaCommands(NodeList &nodes, DocList &docs);

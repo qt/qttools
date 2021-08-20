@@ -76,6 +76,12 @@ using Specialized = Struct<int, T>;
     void (*funcPtr(bool b, const char *s))(bool) {
         return func;
     }
+    //! [op-inc]
+    Test &operator++() { return *this; }
+    //! [op-dec]
+    Test &operator--() { return *this; }
+
+    void anotherFunc() {};
     inline void inlineFunction() {};
     virtual void virtualFun();
 

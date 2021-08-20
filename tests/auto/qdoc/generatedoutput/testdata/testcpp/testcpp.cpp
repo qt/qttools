@@ -157,6 +157,12 @@ void Test::someFunctionDefaultArg(int i, bool b = false)
     Returns a pointer to a function that takes a boolean. Uses \a b and \a s.
 */
 
+/*!
+    \fn [op-inc] Test::operator++()
+    \fn [op-dec] Test::operator--()
+    \deprecated
+*/
+
 // Documented below with an \fn command. Unnecessary but we support it, and it's used.
 int Test::someFunction(int, int v)
 {

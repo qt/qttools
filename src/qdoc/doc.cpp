@@ -43,6 +43,20 @@ QT_BEGIN_NAMESPACE
 DocUtilities &Doc::m_utilities = DocUtilities::instance();
 
 /*!
+    \typedef ArgList
+    \relates Doc
+
+    A list of metacommand arguments that appear in a Doc. Each entry
+    in the list is a <QString, QString> pair (ArgPair):
+
+    \list
+        \li \c {ArgPair.first} - arguments passed to the command.
+        \li \c {ArgPair.second} - optional argument string passed
+            within brackets immediately following the command.
+    \endlist
+*/
+
+/*!
   Parse the qdoc comment \a source. Build up a list of all the topic
   commands found including their arguments.  This constructor is used
   when there can be more than one topic command in theqdoc comment.
@@ -498,17 +512,6 @@ void Doc::detach()
         newPriv->extra = new DocPrivateExtra(*m_priv->extra);
 
     m_priv = newPriv;
-}
-
-/*!
-    Returns the argument passed in square brackets to the command \a command,
-    if it exists.
- */
-QString Doc::bracketedArgs(const QString &command) const
-{
-    if (m_priv && m_priv->extra && !m_priv->extra->m_bracketedArgs.isEmpty())
-        return m_priv->extra->m_bracketedArgs[command];
-    return QString();
 }
 
 QT_END_NAMESPACE

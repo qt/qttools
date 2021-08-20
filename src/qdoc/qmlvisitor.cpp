@@ -424,8 +424,8 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
                 }
             } else if (command == COMMAND_DEPRECATED) {
                 node->setStatus(Node::Deprecated);
-                if (const QString version = doc.bracketedArgs(command); !version.isEmpty())
-                    node->setDeprecatedSince(version);
+                if (!args[0].second.isEmpty())
+                    node->setDeprecatedSince(args[0].second);
             } else if ((command == COMMAND_INQMLMODULE) || (command == COMMAND_INJSMODULE)) {
                 qdb->addToQmlModule(args[0].first, node);
             } else if (command == COMMAND_QMLINHERITS) {
