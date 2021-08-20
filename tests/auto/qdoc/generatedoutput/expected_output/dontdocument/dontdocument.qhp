@@ -40,6 +40,8 @@
             <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
             <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
             <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
+            <keyword name="operator++" id="Test::operator++" ref="testqdoc-test-obsolete.html#operator-2b-2b"/>
+            <keyword name="operator--" id="Test::operator--" ref="testqdoc-test-obsolete.html#operator--"/>
             <keyword name="operator=" id="Test::operator=" ref="testqdoc-test.html#operator-eq"/>
             <keyword name="operator==" id="operator==" ref="testqdoc-test.html#operator-eq-eq"/>
             <keyword name="overload" id="Test::overload" ref="testqdoc-test.html#overload"/>

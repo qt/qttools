@@ -170,6 +170,20 @@
             <arglist>(*)(bool) funcPtr(bool b, const char *s)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::Test &amp;</type>
+            <name>operator++</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>operator-2b-2b</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::Test &amp;</type>
+            <name>operator--</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>operator--</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>
             <name>inlineFunction</name>
             <anchorfile>testqdoc-test.html</anchorfile>

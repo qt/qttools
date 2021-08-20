@@ -46,8 +46,8 @@ class DocPrivate;
 class Quoter;
 class Text;
 
-typedef QPair<QString, Location> ArgLocPair;
-typedef QList<ArgLocPair> ArgList;
+typedef QPair<QString, QString> ArgPair;
+typedef QList<ArgPair> ArgList;
 typedef QMultiMap<QString, QString> QStringMultiMap;
 
 class Doc
@@ -95,7 +95,6 @@ public:
     [[nodiscard]] const QList<Atom *> &keywords() const;
     [[nodiscard]] const QList<Atom *> &targets() const;
     [[nodiscard]] QStringMultiMap *metaTagMap() const;
-    [[nodiscard]] QString bracketedArgs(const QString &command) const;
 
     static void initialize();
     static void terminate();

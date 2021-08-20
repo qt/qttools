@@ -53,7 +53,6 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QPair<QString, Location> ArgLocPair;
 typedef QMap<QString, ArgList> CommandMap;
 
 struct DocPrivateExtra
@@ -63,7 +62,6 @@ struct DocPrivateExtra
     QList<Atom *> m_keywords {};
     QList<Atom *> m_targets {};
     QStringMultiMap m_metaMap {};
-    QMap<QString, QString> m_bracketedArgs {};
 };
 
 class DocPrivate

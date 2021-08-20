@@ -236,6 +236,7 @@ void tst_generatedOutput::htmlFromCpp()
                    "testcpp-module.html "
                    "testqdoc-test.html "
                    "testqdoc-test-members.html "
+                   "testqdoc-test-obsolete.html "
                    "testqdoc-testderived.html "
                    "testqdoc-testderived-members.html "
                    "testqdoc-testderived-obsolete.html "

@@ -188,7 +188,7 @@ const QSet<QString> &CppCodeParser::topicCommands()
   Process the topic \a command found in the \a doc with argument \a arg.
  */
 Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
-                                         const ArgLocPair &arg)
+                                         const ArgPair &arg)
 {
     ExtraFuncData extra;
     if (command == COMMAND_FN) {
@@ -496,9 +496,9 @@ const QSet<QString> &CppCodeParser::metaCommands()
   \a node is guaranteed to be non-null.
  */
 void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
-                                       const ArgLocPair &argLocPair, Node *node)
+                                       const ArgPair &argPair, Node *node)
 {
-    QString arg = argLocPair.first;
+    QString arg = argPair.first;
     if (command == COMMAND_INHEADERFILE) {
         if (node->isAggregate())
             static_cast<Aggregate *>(node)->addIncludeFile(arg);
@@ -624,8 +624,8 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             node->setAbstract(true);
     } else if (command == COMMAND_DEPRECATED) {
         node->setStatus(Node::Deprecated);
-        if (const QString version = doc.bracketedArgs(command); !version.isEmpty())
-            node->setDeprecatedSince(version);
+        if (!argPair.second.isEmpty())
+            node->setDeprecatedSince(argPair.second);
     } else if (command == COMMAND_INGROUP || command == COMMAND_INPUBLICGROUP) {
         // Note: \ingroup and \inpublicgroup are the same (and now recognized as such).
         m_qdb->addToGroup(arg, node);
@@ -915,7 +915,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
                 if (showInternal() || !doc.isInternal())
-                    node = parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first, doc.bracketedArgs(topic));
+                    node = parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first, args[0].second);
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
             } else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic)) {
@@ -935,7 +935,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                 node = nullptr;
                 if (topic == COMMAND_FN) {
                     if (showInternal() || !doc.isInternal())
-                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg.first); // TODO: Ensure \fn commands sharing a comment can have individual bracketed args
+                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg.first, arg.second);
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);
                 } else if (isQMLMethodTopic(topic) || isJSMethodTopic(topic)) {
@@ -958,6 +958,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                         nodes.append(scn);
                         docs.append(doc);
                     }
+                    processMetaCommands(doc, node);
                 }
             }
             for (auto *scn : sharedCommentNodes)
