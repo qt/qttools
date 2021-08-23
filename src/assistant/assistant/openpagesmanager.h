@@ -30,6 +30,7 @@
 #define OPENPAGESMANAGER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 
 QT_BEGIN_NAMESPACE
 
@@ -58,6 +59,8 @@ public:
 
     int pageCount() const;
     void setCurrentPage(int index);
+
+    void resetHelpPage();
 
 public slots:
     HelpViewer *createPage(const QUrl &url, bool fromSearch = false);
@@ -100,6 +103,8 @@ private:
     OpenPagesModel *m_model;
     OpenPagesWidget *m_openPagesWidget = nullptr;
     OpenPagesSwitcher *m_openPagesSwitcher = nullptr;
+
+    QPointer<HelpViewer> m_helpPageViewer;
 
     static OpenPagesManager *m_instance;
 };

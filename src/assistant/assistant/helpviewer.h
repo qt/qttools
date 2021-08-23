@@ -104,6 +104,8 @@ signals:
     void printRequested();
     void loadFinished();
 private:
+    void doSetSource(const QUrl &url, bool reload);
+
     HelpViewerPrivate *d;
 };
 

@@ -120,7 +120,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
         const int pageCount = lastShownPageList.count();
         if (pageCount == 0) {
             if (defaultCollection)
-                m_model->addPage(QUrl(QLatin1String("help")));
+                m_helpPageViewer = m_model->addPage(QUrl(QLatin1String("help")));
             else
                 m_model->addPage(QUrl(QLatin1String("about:blank")));
         } else {
@@ -266,6 +266,12 @@ void OpenPagesManager::setCurrentPage(int index)
 {
     TRACE_OBJ
     setCurrentPage(m_model->pageAt(index));
+}
+
+void OpenPagesManager::resetHelpPage()
+{
+    if (m_helpPageViewer)
+        m_helpPageViewer->reload();
 }
 
 void OpenPagesManager::setCurrentPage(HelpViewer *page)
