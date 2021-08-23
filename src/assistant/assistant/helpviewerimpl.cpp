@@ -42,7 +42,10 @@ const QString HelpViewerImpl::AboutBlank =
     QCoreApplication::translate("HelpViewer", "<title>about:blank</title>");
 
 const QString HelpViewerImpl::LocalHelpFile = QLatin1String("qthelp://"
-    "org.qt-project.assistantinternal-1.0.0/assistant/assistant-quick-guide.html");
+    "org.qt-project.qtassistant.%1%2%3/qtassistant/assistant-quick-guide.html")
+        .arg(QString::number(QT_VERSION_MAJOR),
+             QString::number(QT_VERSION_MINOR),
+             QString::number(QT_VERSION_PATCH));
 
 const QString HelpViewerImpl::PageNotFoundMessage =
     QCoreApplication::translate("HelpViewer", "<title>Error 404...</title><div "

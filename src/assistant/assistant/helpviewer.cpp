@@ -104,15 +104,12 @@ static QByteArray getData(const QUrl &url)
         actualUrl.setPath(path);
     }
 
-    bool helpOrAbout = (actualUrl.toString() == QLatin1String("help"));
-    const QUrl resolvedUrl = (helpOrAbout ? HelpViewerImpl::LocalHelpFile
-                                          : HelpEngineWrapper::instance().findFile(actualUrl));
-    if (resolvedUrl.isValid())
-        return HelpEngineWrapper::instance().fileData(resolvedUrl);
+    if (actualUrl.isValid())
+        return HelpEngineWrapper::instance().fileData(actualUrl);
 
-    helpOrAbout = (actualUrl.toString() == QLatin1String("about:blank"));
-    return helpOrAbout ? HelpViewerImpl::AboutBlank.toUtf8()
-                       : HelpViewerImpl::PageNotFoundMessage.arg(url.toString()).toUtf8();
+    const bool isAbout = (actualUrl.toString() == QLatin1String("about:blank"));
+    return isAbout ? HelpViewerImpl::AboutBlank.toUtf8()
+                   : HelpViewerImpl::PageNotFoundMessage.arg(url.toString()).toUtf8();
 }
 
 class HelpViewerPrivate
@@ -125,7 +122,7 @@ public:
         int vscroll;
     };
     HistoryItem currentHistoryItem() const;
-    void setSourceInternal(const QUrl &url, int *vscroll = nullptr);
+    void setSourceInternal(const QUrl &url, int *vscroll = nullptr, bool reload = false);
     void incrementZoom(int steps);
     void applyZoom(int percentage);
 
@@ -141,21 +138,26 @@ HelpViewerPrivate::HistoryItem HelpViewerPrivate::currentHistoryItem() const
     return { m_viewer->url(), m_viewer->title(), m_viewer->verticalScrollBar()->value() };
 }
 
-void HelpViewerPrivate::setSourceInternal(const QUrl &url, int *vscroll)
+void HelpViewerPrivate::setSourceInternal(const QUrl &url, int *vscroll, bool reload)
 {
     QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
+    const bool isHelp = (url.toString() == QLatin1String("help"));
+    const QUrl resolvedUrl = (isHelp ? HelpViewerImpl::LocalHelpFile
+                                     : HelpEngineWrapper::instance().findFile(url));
+
     QUrl currentUrlWithoutFragment = m_viewer->url();
     currentUrlWithoutFragment.setFragment({});
-    QUrl newUrlWithoutFragment = url;
+    QUrl newUrlWithoutFragment = resolvedUrl;
     newUrlWithoutFragment.setFragment({});
-    m_viewer->setUrl(url);
-    if (currentUrlWithoutFragment != newUrlWithoutFragment)
-        m_viewer->setHtml(QString::fromUtf8(getData(url)));
+
+    m_viewer->setUrl(resolvedUrl);
+    if (currentUrlWithoutFragment != newUrlWithoutFragment || reload)
+        m_viewer->setHtml(QString::fromUtf8(getData(resolvedUrl)));
     if (vscroll)
         m_viewer->verticalScrollBar()->setValue(*vscroll);
     else
-        m_viewer->scrollToAnchor(url.fragment(QUrl::FullyEncoded));
+        m_viewer->scrollToAnchor(resolvedUrl.fragment(QUrl::FullyEncoded));
 
     QGuiApplication::restoreOverrideCursor();
 
@@ -248,10 +250,15 @@ QUrl HelpViewer::source() const
 
 void HelpViewer::reload()
 {
-    setSource(source());
+    doSetSource(source(), true);
 }
 
 void HelpViewer::setSource(const QUrl &url)
+{
+    doSetSource(url, false);
+}
+
+void HelpViewer::doSetSource(const QUrl &url, bool reload)
 {
     if (launchWithExternalApp(url))
         return;
@@ -265,7 +272,7 @@ void HelpViewer::setSource(const QUrl &url)
         emit backwardAvailable(true);
     }
 
-    d->setSourceInternal(url);
+    d->setSourceInternal(url, nullptr, reload);
 }
 
 void HelpViewer::print(QPagedPaintDevice *printer)

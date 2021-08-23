@@ -431,6 +431,7 @@ void MainWindow::lookForNewQtDocumentation()
 void MainWindow::qtDocumentationInstalled()
 {
     TRACE_OBJ
+    OpenPagesManager::instance()->resetHelpPage();
     statusBar()->clearMessage();
     checkInitState();
 }

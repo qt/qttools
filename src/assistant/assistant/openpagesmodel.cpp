@@ -64,7 +64,7 @@ QVariant OpenPagesModel::data(const QModelIndex &index, int role) const
     return title.isEmpty() ? QLatin1String("(Untitled)") : title;
 }
 
-void OpenPagesModel::addPage(const QUrl &url, qreal zoom)
+HelpViewer *OpenPagesModel::addPage(const QUrl &url, qreal zoom)
 {
     TRACE_OBJ
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
@@ -74,6 +74,7 @@ void OpenPagesModel::addPage(const QUrl &url, qreal zoom)
     m_pages << page;
     endInsertRows();
     page->setSource(url);
+    return page;
 }
 
 void OpenPagesModel::removePage(int index)
