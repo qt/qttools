@@ -73,7 +73,7 @@ private:
     void printDiagnostics(const CXTranslationUnit &translationUnit) const;
 
     QString m_version {};
-    QHash<QString, QString> m_allHeaders {}; // file name->path
+    QMultiHash<QString, QString> m_allHeaders {}; // file name->path
     QList<QByteArray> m_includePaths {};
     QScopedPointer<QTemporaryDir> m_pchFileDir {};
     QByteArray m_pchName {};

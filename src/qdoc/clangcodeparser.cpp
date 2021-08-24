@@ -399,7 +399,7 @@ static void setOverridesForFunction(FunctionNode *fn, CXCursor cursor)
 class ClangVisitor
 {
 public:
-    ClangVisitor(QDocDatabase *qdb, const QHash<QString, QString> &allHeaders)
+    ClangVisitor(QDocDatabase *qdb, const QMultiHash<QString, QString> &allHeaders)
         : qdb_(qdb), parent_(qdb->primaryTreeRoot()), allHeaders_(allHeaders)
     {
     }
@@ -473,7 +473,7 @@ private:
     QDocDatabase *qdb_;
     Aggregate *parent_;
     bool m_friendDecl { false };             // true if currently visiting a friend declaration
-    const QHash<QString, QString> allHeaders_;
+    const QMultiHash<QString, QString> allHeaders_;
     QHash<CXFile, bool> isInterestingCache_; // doing a canonicalFilePath is slow, so keep a cache.
 
     /*!
@@ -1208,7 +1208,13 @@ QStringList ClangCodeParser::sourceFileNameFilter()
 void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QString &filePath)
 {
     QFileInfo fi(filePath);
-    m_allHeaders.insert(fi.fileName(), fi.canonicalPath());
+    const QString &fileName = fi.fileName();
+    const QString &canonicalPath = fi.canonicalPath();
+
+    if (m_allHeaders.contains(fileName, canonicalPath))
+        return;
+
+    m_allHeaders.insert(fileName, canonicalPath);
 }
 
 static const char *defaultArgs_[] = {
@@ -1246,7 +1252,7 @@ void ClangCodeParser::getDefaultArgs()
         m_args.push_back(p.constData());
 }
 
-static QList<QByteArray> includePathsFromHeaders(const QHash<QString, QString> &allHeaders)
+static QList<QByteArray> includePathsFromHeaders(const QMultiHash<QString, QString> &allHeaders)
 {
     QList<QByteArray> result;
     for (auto it = allHeaders.cbegin(); it != allHeaders.cend(); ++it) {
