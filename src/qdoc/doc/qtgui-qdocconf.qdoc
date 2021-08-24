@@ -56,10 +56,6 @@ every statement in the qdocconf file.
    qhp.QtGui.indexTitle          = Qt GUI
    qhp.QtGui.indexRoot           =
 
-   qhp.QtGui.filterAttributes    = qtgui $QT_VERSION qtrefdoc
-   qhp.QtGui.customFilters.Qt.name = Qtgui $QT_VERSION
-   qhp.QtGui.customFilters.Qt.filterAttributes = qtgui $QT_VERSION
-
    qhp.QtGui.subprojects         = classes
    qhp.QtGui.subprojects.classes.title = C++ Classes
    qhp.QtGui.subprojects.classes.indexTitle = Qt GUI C++ Classes
@@ -197,20 +193,6 @@ This is the title of the page that has the contents.
 
 Specifies the title of the root (namespace) page to generate the documentation for.
 Typically defined as an empty string.
-
-\badcode
-   qhp.QtGui.filterAttributes    = qtgui $QT_VERSION qtrefdoc
-   qhp.QtGui.customFilters.Qt.name = QtGui $QT_VERSION
-   qhp.QtGui.customFilters.Qt.filterAttributes = qtgui $QT_VERSION
-\endcode
-
-The documentation set (one per QDoc project) can have any number of filter
-attributes assigned to it. A filter attribute is an ordinary string which
-can be freely chosen. Additionally, custom filters that reference above
-attributes can be defined. Qt Assistant will display the name of the custom
-filter in its \gui{Filtered by} drop-down list. Only the documentation sets
-that have their filter attributes match the attributes of the selected
-custom filter will be shown.
 
 \badcode
    qhp.QtGui.subprojects         = classes
