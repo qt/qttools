@@ -13,9 +13,6 @@ qhp.QtLinguist.namespace           = org.qt-project.qtlinguist.$QT_VERSION_TAG
 qhp.QtLinguist.virtualFolder       = qtlinguist
 qhp.QtLinguist.indexTitle          = Qt Linguist Manual
 
-qhp.QtLinguist.filterAttributes    = qt $QT_VERSION tools qtlinguist
-qhp.QtLinguist.customFilters.QtLinguist.name = Qt Linguist Manual
-qhp.QtLinguist.customFilters.QtLinguist.filterAttributes = qt tools qtlinguist
 qhp.QtLinguist.subprojects         = manual examples
 qhp.QtLinguist.subprojects.manual.title = Manual
 qhp.QtLinguist.subprojects.manual.indexTitle = Qt Linguist Manual

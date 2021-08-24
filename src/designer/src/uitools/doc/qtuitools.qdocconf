@@ -15,9 +15,6 @@ qhp.QtUiTools.virtualFolder       = qtuitools
 qhp.QtUiTools.indexTitle          = Qt UI Tools
 qhp.QtHelp.indexRoot           =
 
-qhp.QtUiTools.filterAttributes    = qtuitools $QT_VERSION tools designer qtrefdoc
-qhp.QtUiTools.customFilters.QtUiTools.name = QtUiTools $QT_VERSION
-qhp.QtUiTools.customFilters.QtUiTools.filterAttributes = qtuitools $QT_VERSION
 qhp.QtUiTools.subprojects         = classes
 qhp.QtUiTools.subprojects.classes.title = C++ Classes
 qhp.QtUiTools.subprojects.classes.indexTitle = Qt UI Tools C++ Classes

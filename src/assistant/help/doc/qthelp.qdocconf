@@ -15,9 +15,6 @@ qhp.QtHelp.virtualFolder       = qthelp
 qhp.QtHelp.indexTitle          = Qt Help
 qhp.QtHelp.indexRoot           =
 
-qhp.QtHelp.filterAttributes    = qthelp $QT_VERSION tools assistant qtrefdoc
-qhp.QtHelp.customFilters.QtHelp.name = QtHelp $QT_VERSION
-qhp.QtHelp.customFilters.QtHelp.filterAttributes = qthelp $QT_VERSION
 qhp.QtHelp.subprojects         = classes
 qhp.QtHelp.subprojects.classes.title = C++ Classes
 qhp.QtHelp.subprojects.classes.indexTitle = Qt Help C++ Classes

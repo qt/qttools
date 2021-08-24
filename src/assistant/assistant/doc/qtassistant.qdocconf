@@ -13,9 +13,6 @@ qhp.QtAssistant.namespace           = org.qt-project.qtassistant.$QT_VERSION_TAG
 qhp.QtAssistant.virtualFolder       = qtassistant
 qhp.QtAssistant.indexTitle          = Qt Assistant Manual
 
-qhp.QtAssistant.filterAttributes    = qt $QT_VERSION tools assistant
-qhp.QtAssistant.customFilters.QtAssistant.name = Qt Assistant Manual
-qhp.QtAssistant.customFilters.QtAssistant.filterAttributes = qt tools assistant
 qhp.QtAssistant.subprojects         = manual examples
 qhp.QtAssistant.subprojects.manual.title = Manual
 qhp.QtAssistant.subprojects.manual.indexTitle = Qt Assistant Manual

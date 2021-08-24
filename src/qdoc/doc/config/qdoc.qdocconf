@@ -25,10 +25,6 @@ qhp.QDoc.virtualFolder       = qdoc
 qhp.QDoc.indexTitle          = QDoc Manual
 qhp.QDoc.indexRoot           =
 
-qhp.QDoc.filterAttributes    = qdoc $QT_VERSION qtrefdoc
-qhp.QDoc.customFilters.QDoc.name = QDoc $QT_VERSION
-qhp.QDoc.customFilters.QDoc.filterAttributes = qdoc $QT_VERSION
-
 qhp.QDoc.subprojects         = overviews
 qhp.QDoc.subprojects.overviews.title = Overviews
 qhp.QDoc.subprojects.overviews.indexTitle = QDoc Manual
