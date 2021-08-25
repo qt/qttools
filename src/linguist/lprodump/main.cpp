@@ -80,34 +80,30 @@ void setValue(QJsonObject &obj, const char *key, T value)
     obj[QLatin1String(key)] = toJsonValue(value);
 }
 
-class LD {
-    Q_DECLARE_TR_FUNCTIONS(LProDump)
-};
-
 static void printUsage()
 {
-    printOut(LD::tr(
-        "Usage:\n"
-        "    lprodump [options] project-file...\n"
-        "lprodump is part of Qt's Linguist tool chain. It extracts information\n"
-        "from qmake projects to a .json file. This file can be passed to\n"
-        "lupdate/lrelease using the -project option.\n\n"
-        "Options:\n"
-        "    -help  Display this information and exit.\n"
-        "    -silent\n"
-        "           Do not explain what is being done.\n"
-        "    -pro <filename>\n"
-        "           Name of a .pro file. Useful for files with .pro file syntax but\n"
-        "           different file suffix. Projects are recursed into and merged.\n"
-        "    -pro-out <directory>\n"
-        "           Virtual output directory for processing subsequent .pro files.\n"
-        "    -pro-debug\n"
-        "           Trace processing .pro files. Specify twice for more verbosity.\n"
-        "    -out <filename>\n"
-        "           Name of the output file.\n"
-        "    -version\n"
-        "           Display the version of lprodump and exit.\n"
-    ));
+    printOut(uR"(Usage:
+    lprodump [options] project-file...
+lprodump is part of Qt's Linguist tool chain. It extracts information
+from qmake projects to a .json file. This file can be passed to
+lupdate/lrelease using the -project option.
+
+Options:
+    -help  Display this information and exit.
+    -silent
+           Do not explain what is being done.
+    -pro <filename>
+           Name of a .pro file. Useful for files with .pro file syntax but
+           different file suffix. Projects are recursed into and merged.
+    -pro-out <directory>
+           Virtual output directory for processing subsequent .pro files.
+    -pro-debug
+           Trace processing .pro files. Specify twice for more verbosity.
+    -out <filename>
+           Name of the output file.
+    -version
+           Display the version of lprodump and exit.
+)"_qs);
 }
 
 static void print(const QString &fileName, int lineNo, const QString &msg)
@@ -160,12 +156,12 @@ static QStringList getResources(const QString &resourceFile, QMakeVfs *vfs)
     QString errStr;
     if (vfs->readFile(vfs->idForFileName(resourceFile, QMakeVfs::VfsCumulative),
                       &content, &errStr) != QMakeVfs::ReadOk) {
-        printErr(LD::tr("lprodump error: Cannot read %1: %2\n").arg(resourceFile, errStr));
+        printErr(QStringLiteral("lprodump error: Cannot read %1: %2\n").arg(resourceFile, errStr));
         return QStringList();
     }
     const ReadQrcResult rqr = readQrcFile(resourceFile, content);
     if (rqr.hasError()) {
-        printErr(LD::tr("lprodump error: %1:%2: %3\n")
+        printErr(QStringLiteral("lprodump error: %1:%2: %3\n")
                  .arg(resourceFile, QString::number(rqr.line), rqr.errorString));
     }
     return rqr.files;
@@ -388,7 +384,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-out")) {
             ++i;
             if (i == argc) {
-                printErr(LD::tr("The option -out requires a parameter.\n"));
+                printErr(u"The option -out requires a parameter.\n"_qs);
                 return 1;
             }
             outputFilePath = args[i];
@@ -397,12 +393,12 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro-debug")) {
             proDebug++;
         } else if (arg == QLatin1String("-version")) {
-            printOut(LD::tr("lprodump version %1\n").arg(QLatin1String(QT_VERSION_STR)));
+            printOut(QStringLiteral("lprodump version %1\n").arg(QLatin1String(QT_VERSION_STR)));
             return 0;
         } else if (arg == QLatin1String("-pro")) {
             ++i;
             if (i == argc) {
-                printErr(LD::tr("The -pro option should be followed by a filename of .pro file.\n"));
+                printErr(QStringLiteral("The -pro option should be followed by a filename of .pro file.\n"));
                 return 1;
             }
             QString file = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
@@ -411,21 +407,21 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro-out")) {
             ++i;
             if (i == argc) {
-                printErr(LD::tr("The -pro-out option should be followed by a directory name.\n"));
+                printErr(QStringLiteral("The -pro-out option should be followed by a directory name.\n"));
                 return 1;
             }
             outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
         } else if (arg.startsWith(QLatin1String("-")) && arg != QLatin1String("-")) {
-            printErr(LD::tr("Unrecognized option '%1'.\n").arg(arg));
+            printErr(QStringLiteral("Unrecognized option '%1'.\n").arg(arg));
             return 1;
         } else {
             QFileInfo fi(arg);
             if (!fi.exists()) {
-                printErr(LD::tr("lprodump error: File '%1' does not exist.\n").arg(arg));
+                printErr(QStringLiteral("lprodump error: File '%1' does not exist.\n").arg(arg));
                 return 1;
             }
             if (!isProOrPriFile(arg)) {
-                printErr(LD::tr("lprodump error: '%1' is neither a .pro nor a .pri file.\n")
+                printErr(QStringLiteral("lprodump error: '%1' is neither a .pro nor a .pri file.\n")
                          .arg(arg));
                 return 1;
             }
@@ -465,7 +461,7 @@ int main(int argc, char **argv)
     } else {
         QFile f(outputFilePath);
         if (!f.open(QIODevice::WriteOnly)) {
-            printErr(LD::tr("lprodump error: Cannot open %1 for writing.\n").arg(outputFilePath));
+            printErr(QStringLiteral("lprodump error: Cannot open %1 for writing.\n").arg(outputFilePath));
             return 1;
         }
         f.write(output);

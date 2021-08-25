@@ -456,7 +456,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
         qCDebug(lcClang) << "Generating compilation database" << dbFilePath;
         if (!generateCompilationDatabase(dbFilePath, cd)) {
             *fail = true;
-            cd.appendError(LU::tr("Cannot generate compilation database."));
+            cd.appendError(u"Cannot generate compilation database."_qs);
             return;
         }
         errorMessage.clear();

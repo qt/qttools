@@ -52,33 +52,30 @@ static void printErr(const QString & out)
     std::cerr << qPrintable(out);
 }
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
-
 static void printUsage()
 {
-    printOut(LU::tr(
-        "Usage:\n"
-        "    lupdate-pro [options] [project-file]... [-ts ts-files...]\n"
-        "lupdate-pro is part of Qt's Linguist tool chain. It extracts project\n"
-        "information from qmake projects and passes it to lupdate.\n"
-        "All command line options that are not consumed by lupdate-pro are\n"
-        "passed to lupdate.\n\n"
-        "Options:\n"
-        "    -help  Display this information and exit.\n"
-        "    -silent\n"
-        "           Do not explain what is being done.\n"
-        "    -pro <filename>\n"
-        "           Name of a .pro file. Useful for files with .pro file syntax but\n"
-        "           different file suffix. Projects are recursed into and merged.\n"
-        "    -pro-out <directory>\n"
-        "           Virtual output directory for processing subsequent .pro files.\n"
-        "    -pro-debug\n"
-        "           Trace processing .pro files. Specify twice for more verbosity.\n"
-        "    -version\n"
-        "           Display the version of lupdate-pro and exit.\n"
-    ));
+    printOut(
+        uR"(Usage:
+lupdate-pro [options] [project-file]... [-ts ts-files...]
+lupdate-pro is part of Qt's Linguist tool chain. It extracts project
+information from qmake projects and passes it to lupdate.
+All command line options that are not consumed by lupdate-pro are
+passed to lupdate.
+
+Options:
+    -help  Display this information and exit.
+    -silent
+           Do not explain what is being done.
+    -pro <filename>
+           Name of a .pro file. Useful for files with .pro file syntax but
+           different file suffix. Projects are recursed into and merged.
+    -pro-out <directory>
+           Virtual output directory for processing subsequent .pro files.
+    -pro-debug
+           Trace processing .pro files. Specify twice for more verbosity.
+    -version
+           Display the version of lupdate-pro and exit.
+)"_qs);
 }
 
 int main(int argc, char **argv)
@@ -119,12 +116,12 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro-debug")) {
             lprodumpOptions << arg;
         } else if (arg == QLatin1String("-version")) {
-            printOut(LU::tr("lupdate-pro version %1\n").arg(QLatin1String(QT_VERSION_STR)));
+            printOut(QStringLiteral("lupdate-pro version %1\n").arg(QLatin1String(QT_VERSION_STR)));
             return 0;
         } else if (arg == QLatin1String("-pro")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The -pro option should be followed by a filename of .pro file.\n"));
+                printErr(u"The -pro option should be followed by a filename of .pro file.\n"_qs);
                 return 1;
             }
             lprodumpOptions << arg << args[i];
@@ -132,7 +129,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro-out")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The -pro-out option should be followed by a directory name.\n"));
+                printErr(u"The -pro-out option should be followed by a directory name.\n"_qs);
                 return 1;
             }
             lprodumpOptions << arg << args[i];
@@ -145,7 +142,7 @@ int main(int argc, char **argv)
     } // for args
 
     if (!hasProFiles) {
-        printErr(LU::tr("lupdate-pro: No .pro/.pri files given.\n"));
+        printErr(u"lupdate-pro: No .pro/.pri files given.\n"_qs);
         return 1;
     }
 

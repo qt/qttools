@@ -525,25 +525,26 @@ Translator merge(
 
     if (options & Verbose) {
         int totalFound = neww + known;
-        err += LU::tr("    Found %n source text(s) (%1 new and %2 already existing)\n", 0, totalFound).arg(neww).arg(known);
+        err += QStringLiteral("    Found %1 source text(s) (%2 new and %3 already existing)\n")
+            .arg(totalFound).arg(neww).arg(known);
 
         if (obsoleted) {
             if (options & NoObsolete) {
-                err += LU::tr("    Removed %n obsolete entries\n", 0, obsoleted);
+                err += QStringLiteral("    Removed %1 obsolete entries\n").arg(obsoleted);
             } else {
-                err += LU::tr("    Kept %n obsolete entries\n", 0, obsoleted);
+                err += QStringLiteral("    Kept %1 obsolete entries\n").arg(obsoleted);
             }
         }
 
         if (sameNumberHeuristicCount)
-            err += LU::tr("    Number heuristic provided %n translation(s)\n",
-                      0, sameNumberHeuristicCount);
+            err += QStringLiteral("    Number heuristic provided %1 translation(s)\n")
+                .arg(sameNumberHeuristicCount);
         if (sameTextHeuristicCount)
-            err += LU::tr("    Same-text heuristic provided %n translation(s)\n",
-                      0, sameTextHeuristicCount);
+            err += QStringLiteral("    Same-text heuristic provided %1 translation(s)\n")
+                .arg(sameTextHeuristicCount);
         if (similarTextHeuristicCount)
-            err += LU::tr("    Similar-text heuristic provided %n translation(s)\n",
-                      0, similarTextHeuristicCount);
+            err += QStringLiteral("    Similar-text heuristic provided %1 translation(s)\n")
+                .arg(similarTextHeuristicCount);
     }
     return outTor;
 }

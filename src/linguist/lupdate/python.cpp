@@ -734,7 +734,7 @@ bool loadPython(Translator &translator, const QString &fileName, ConversionData 
     const bool ok = yyInFile != nullptr;
 #endif
     if (!ok) {
-        cd.appendError(LU::tr("Cannot open %1").arg(fileName));
+        cd.appendError(QStringLiteral("Cannot open %1").arg(fileName));
         return false;
     }
 

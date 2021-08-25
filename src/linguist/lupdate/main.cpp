@@ -228,7 +228,7 @@ static void recursiveFileInfoList(const QDir &dir,
 
 static void printUsage()
 {
-    printOut(LU::tr(
+    printOut(QStringLiteral(
         "Usage:\n"
         "    lupdate [options] [project-file]...\n"
         "    lupdate [options] [source-file|path|@lst-file]... -ts ts-files|@lst-file\n\n"
@@ -316,7 +316,7 @@ static bool handleTrFunctionAliases(const QString &arg)
     for (const QString &pair : arg.split(QLatin1Char(','), Qt::SkipEmptyParts)) {
         const int equalSign = pair.indexOf(QLatin1Char('='));
         if (equalSign < 0) {
-            printErr(LU::tr("tr-function mapping '%1' in -tr-function-alias is missing the '='.\n").arg(pair));
+            printErr(QStringLiteral("tr-function mapping '%1' in -tr-function-alias is missing the '='.\n").arg(pair));
             return false;
         }
         const bool plusEqual = equalSign > 0 && pair[equalSign-1] == QLatin1Char('+');
@@ -325,13 +325,13 @@ static bool handleTrFunctionAliases(const QString &arg)
         const QString alias = pair.mid(equalSign+1).trimmed();
         const int trFunction = trFunctionByDefaultName(trFunctionName);
         if (trFunction < 0) {
-            printErr(LU::tr("Unknown tr-function '%1' in -tr-function-alias option.\n"
+            printErr(QStringLiteral("Unknown tr-function '%1' in -tr-function-alias option.\n"
                             "Available tr-functions are: %2")
                      .arg(trFunctionName, availableFunctions().join(QLatin1Char(','))));
             return false;
         }
         if (alias.isEmpty()) {
-            printErr(LU::tr("Empty alias for tr-function '%1' in -tr-function-alias option.\n")
+            printErr(QStringLiteral("Empty alias for tr-function '%1' in -tr-function-alias option.\n")
                      .arg(trFunctionName));
             return false;
         }
@@ -349,7 +349,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
     for (int i = 0; i < fetchedTor.messageCount(); i++) {
         const TranslatorMessage &msg = fetchedTor.constMessage(i);
         if (!msg.id().isEmpty() && msg.sourceText().isEmpty())
-            printErr(LU::tr("lupdate warning: Message with id '%1' has no source.\n")
+            printErr(QStringLiteral("lupdate warning: Message with id '%1' has no source.\n")
                      .arg(msg.id()));
     }
 
@@ -382,11 +382,11 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
             tor.resolveDuplicates();
             cd.clearErrors();
             if (!targetLanguage.isEmpty() && targetLanguage != tor.languageCode())
-                printErr(LU::tr("lupdate warning: Specified target language '%1' disagrees with"
+                printErr(QStringLiteral("lupdate warning: Specified target language '%1' disagrees with"
                                 " existing file's language '%2'. Ignoring.\n")
                          .arg(targetLanguage, tor.languageCode()));
             if (!sourceLanguage.isEmpty() && sourceLanguage != tor.sourceLanguageCode())
-                printErr(LU::tr("lupdate warning: Specified source language '%1' disagrees with"
+                printErr(QStringLiteral("lupdate warning: Specified source language '%1' disagrees with"
                                 " existing file's language '%2'. Ignoring.\n")
                          .arg(sourceLanguage, tor.sourceLanguageCode()));
             // If there is translation in the file, the language should be recognized
@@ -397,7 +397,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
                 tor.languageAndCountry(tor.languageCode(), &l, &c);
                 QStringList forms;
                 if (!getNumerusInfo(l, c, 0, &forms, 0)) {
-                    printErr(LU::tr("File %1 won't be updated: it contains translation but the"
+                    printErr(QStringLiteral("File %1 won't be updated: it contains translation but the"
                     " target language is not recognized\n").arg(fileName));
                     continue;
                 }
@@ -418,7 +418,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
         else if (options & AbsoluteLocations)
             tor.setLocationsType(Translator::AbsoluteLocations);
         if (options & Verbose)
-            printOut(LU::tr("Updating '%1'...\n").arg(fn));
+            printOut(QStringLiteral("Updating '%1'...\n").arg(fn));
 
         UpdateOptions theseOptions = options;
         if (tor.locationsType() == Translator::NoLocations) // Could be set from file
@@ -431,7 +431,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
         }
         if (options & PluralOnly) {
             if (options & Verbose)
-                printOut(LU::tr("Stripping non plural forms in '%1'...\n").arg(fn));
+                printOut(QStringLiteral("Stripping non plural forms in '%1'...\n").arg(fn));
             out.stripNonPluralForms();
         }
         if (options & NoObsolete)
@@ -477,12 +477,12 @@ static QStringList getResources(const QString &resourceFile)
     QString content;
     QString errStr;
     if (!readFileContent(resourceFile, &content, &errStr)) {
-        printErr(LU::tr("lupdate error: Can not read %1: %2\n").arg(resourceFile, errStr));
+        printErr(QStringLiteral("lupdate error: Can not read %1: %2\n").arg(resourceFile, errStr));
         return QStringList();
     }
     ReadQrcResult rqr = readQrcFile(resourceFile, content);
     if (rqr.hasError()) {
-        printErr(LU::tr("lupdate error: %1:%2: %3\n")
+        printErr(QStringLiteral("lupdate error: %1:%2: %3\n")
                  .arg(resourceFile, QString::number(rqr.line), rqr.errorString));
     }
     return rqr.files;
@@ -540,7 +540,7 @@ static void processSources(Translator &fetchedTor,
 
 #ifdef QT_NO_QML
     if (requireQmlSupport)
-        printErr(LU::tr("lupdate warning: Some files have been ignored due to missing qml/javascript support\n"));
+        printErr(QStringLiteral("lupdate warning: Some files have been ignored due to missing qml/javascript support\n"));
 #endif
 
     if (useClangToParseCpp) {
@@ -548,7 +548,7 @@ static void processSources(Translator &fetchedTor,
         ClangCppParser::loadCPP(fetchedTor, sourceFilesCpp, cd, fail);
 #else
         *fail = true;
-        printErr(LU::tr("lupdate error: lupdate was built without clang support."));
+        printErr(QStringLiteral("lupdate error: lupdate was built without clang support."));
 #endif
     }
     else
@@ -605,7 +605,7 @@ private:
                        || codecForSource == QLatin1String("utf8")) {
                 options &= ~SourceIsUtf16;
             } else {
-                printErr(LU::tr("lupdate warning: Codec for source '%1' is invalid."
+                printErr(QStringLiteral("lupdate warning: Codec for source '%1' is invalid."
                                 " Falling back to UTF-8.\n").arg(codecForSource));
                 options &= ~SourceIsUtf16;
             }
@@ -629,11 +629,11 @@ private:
             tsFiles = *prj.translations;
             if (parentTor) {
                 if (topLevel) {
-                    printErr(LU::tr("lupdate warning: TS files from command line "
+                    printErr(QStringLiteral("lupdate warning: TS files from command line "
                                     "will override TRANSLATIONS in %1.\n").arg(projectFile));
                     goto noTrans;
                 } else if (nestComplain) {
-                    printErr(LU::tr("lupdate warning: TS files from command line "
+                    printErr(QStringLiteral("lupdate warning: TS files from command line "
                                     "prevent recursing into %1.\n").arg(projectFile));
                     return;
                 }
@@ -655,7 +655,7 @@ private:
       noTrans:
         if (!parentTor) {
             if (topLevel) {
-                printErr(LU::tr("lupdate warning: no TS files specified. Only diagnostics "
+                printErr(QStringLiteral("lupdate warning: no TS files specified. Only diagnostics "
                                 "will be produced for '%1'.\n").arg(projectFile));
             }
             Translator tor;
@@ -742,11 +742,11 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-project")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The option -project requires a parameter.\n"));
+                printErr(u"The option -project requires a parameter.\n"_qs);
                 return 1;
             }
             if (!projectDescriptionFile.isEmpty()) {
-                printErr(LU::tr("The option -project must appear only once.\n"));
+                printErr(u"The option -project must appear only once.\n"_qs);
                 return 1;
             }
             projectDescriptionFile = args[i];
@@ -755,7 +755,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-target-language")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The option -target-language requires a parameter.\n"));
+                printErr(u"The option -target-language requires a parameter.\n"_qs);
                 return 1;
             }
             targetLanguage = args[i];
@@ -763,7 +763,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-source-language")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The option -source-language requires a parameter.\n"));
+                printErr(u"The option -source-language requires a parameter.\n"_qs);
                 return 1;
             }
             sourceLanguage = args[i];
@@ -771,7 +771,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-disable-heuristic")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The option -disable-heuristic requires a parameter.\n"));
+                printErr(u"The option -disable-heuristic requires a parameter.\n"_qs);
                 return 1;
             }
             arg = args[i];
@@ -782,14 +782,14 @@ int main(int argc, char **argv)
             } else if (arg == QLatin1String("number")) {
                 options &= ~HeuristicNumber;
             } else {
-                printErr(LU::tr("Invalid heuristic name passed to -disable-heuristic.\n"));
+                printErr(u"Invalid heuristic name passed to -disable-heuristic.\n"_qs);
                 return 1;
             }
             continue;
         } else if (arg == QLatin1String("-locations")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The option -locations requires a parameter.\n"));
+                printErr(u"The option -locations requires a parameter.\n"_qs);
                 return 1;
             }
             if (args[i] == QLatin1String("none")) {
@@ -799,7 +799,7 @@ int main(int argc, char **argv)
             } else if (args[i] == QLatin1String("absolute")) {
                 options |= AbsoluteLocations;
             } else {
-                printErr(LU::tr("Invalid parameter passed to -locations.\n"));
+                printErr(u"Invalid parameter passed to -locations.\n"_qs);
                 return 1;
             }
             continue;
@@ -820,7 +820,7 @@ int main(int argc, char **argv)
             options |= NoSort;
             continue;
         } else if (arg == QLatin1String("-version")) {
-            printOut(LU::tr("lupdate version %1\n").arg(QLatin1String(QT_VERSION_STR)));
+            printOut(QStringLiteral("lupdate version %1\n").arg(QLatin1String(QT_VERSION_STR)));
             return 0;
         } else if (arg == QLatin1String("-ts")) {
             metTsFlag = true;
@@ -833,7 +833,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-extensions")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The -extensions option should be followed by an extension list.\n"));
+                printErr(u"The -extensions option should be followed by an extension list.\n"_qs);
                 return 1;
             }
             extensions = args[i];
@@ -841,7 +841,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-tr-function-alias")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The -tr-function-alias option should be followed by a list of function=alias mappings.\n"));
+                printErr(u"The -tr-function-alias option should be followed by a list of function=alias mappings.\n"_qs);
                 return 1;
             }
             if (!handleTrFunctionAliases(args[i]))
@@ -850,7 +850,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The -pro option should be followed by a filename of .pro file.\n"));
+                printErr(u"The -pro option should be followed by a filename of .pro file.\n"_qs);
                 return 1;
             }
             QString file = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
@@ -860,7 +860,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro-out")) {
             ++i;
             if (i == argc) {
-                printErr(LU::tr("The -pro-out option should be followed by a directory name.\n"));
+                printErr(u"The -pro-out option should be followed by a directory name.\n"_qs);
                 return 1;
             }
             outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
@@ -869,7 +869,7 @@ int main(int argc, char **argv)
             if (arg.length() == 2) {
                 ++i;
                 if (i == argc) {
-                    printErr(LU::tr("The -I option should be followed by a path.\n"));
+                    printErr(u"The -I option should be followed by a path.\n"_qs);
                     return 1;
                 }
                 includePath += args[i];
@@ -890,7 +890,7 @@ int main(int argc, char **argv)
         }
 #endif
         else if (arg.startsWith(QLatin1String("-")) && arg != QLatin1String("-")) {
-            printErr(LU::tr("Unrecognized option '%1'.\n").arg(arg));
+            printErr(QStringLiteral("Unrecognized option '%1'.\n").arg(arg));
             return 1;
         }
 
@@ -898,7 +898,7 @@ int main(int argc, char **argv)
         if (arg.startsWith(QLatin1String("@"))) {
             QFile lstFile(arg.mid(1));
             if (!lstFile.open(QIODevice::ReadOnly)) {
-                printErr(LU::tr("lupdate error: List file '%1' is not readable.\n")
+                printErr(QStringLiteral("lupdate error: List file '%1' is not readable.\n")
                          .arg(lstFile.fileName()));
                 return 1;
             }
@@ -907,7 +907,7 @@ int main(int argc, char **argv)
 
                 if (lineContent.startsWith(QLatin1String("-I"))) {
                     if (lineContent.length() == 2) {
-                        printErr(LU::tr("The -I option should be followed by a path.\n"));
+                        printErr(u"The -I option should be followed by a path.\n"_qs);
                         return 1;
                     }
                     includePath += lineContent.mid(2);
@@ -927,7 +927,7 @@ int main(int argc, char **argv)
                         if (!fi.exists() || fi.isWritable()) {
                             tsFileNames.append(QFileInfo(file).absoluteFilePath());
                         } else {
-                            printErr(LU::tr("lupdate warning: For some reason, '%1' is not writable.\n")
+                            printErr(QStringLiteral("lupdate warning: For some reason, '%1' is not writable.\n")
                                      .arg(file));
                         }
                         found = true;
@@ -935,7 +935,7 @@ int main(int argc, char **argv)
                     }
                 }
                 if (!found) {
-                    printErr(LU::tr("lupdate error: File '%1' has no recognized extension.\n")
+                    printErr(QStringLiteral("lupdate error: File '%1' has no recognized extension.\n")
                              .arg(file));
                     return 1;
                 }
@@ -947,7 +947,7 @@ int main(int argc, char **argv)
             for (const QString &file : qAsConst(files)) {
                 QFileInfo fi(file);
                 if (!fi.exists()) {
-                    printErr(LU::tr("lupdate error: File '%1' does not exist.\n").arg(file));
+                    printErr(QStringLiteral("lupdate error: File '%1' does not exist.\n").arg(file));
                     return 1;
                 }
                 if (isProOrPriFile(file)) {
@@ -955,7 +955,7 @@ int main(int argc, char **argv)
                     proFiles << cleanFile;
                 } else if (fi.isDir()) {
                     if (options & Verbose)
-                        printOut(LU::tr("Scanning directory '%1'...\n").arg(file));
+                        printOut(QStringLiteral("Scanning directory '%1'...\n").arg(file));
                     QDir dir = QDir(fi.filePath());
                     projectRoots.insert(dir.absolutePath() + QLatin1Char('/'));
                     if (extensionsNameFilters.isEmpty()) {
@@ -1014,12 +1014,12 @@ int main(int argc, char **argv)
     }
 
     if (!targetLanguage.isEmpty() && tsFileNames.count() != 1)
-        printErr(LU::tr("lupdate warning: -target-language usually only"
-                        " makes sense with exactly one TS file.\n"));
+        printErr(u"lupdate warning: -target-language usually only"
+                  " makes sense with exactly one TS file.\n"_qs);
 
     QString errorString;
     if (!proFiles.isEmpty()) {
-        runInternalQtTool(QStringLiteral("lupdate-pro"), app.arguments().mid(1));
+        runInternalQtTool(u"lupdate-pro"_qs, app.arguments().mid(1));
         return 0;
     }
 
@@ -1027,11 +1027,11 @@ int main(int argc, char **argv)
     if (!projectDescriptionFile.isEmpty()) {
         projectDescription = readProjectDescription(projectDescriptionFile, &errorString);
         if (!errorString.isEmpty()) {
-            printErr(LU::tr("lupdate error: %1\n").arg(errorString));
+            printErr(QStringLiteral("lupdate error: %1\n").arg(errorString));
             return 1;
         }
         if (projectDescription.empty()) {
-            printErr(LU::tr("lupdate error:"
+            printErr(QStringLiteral("lupdate error:"
                             " Could not find project descriptions in %1.\n")
                      .arg(projectDescriptionFile));
             return 1;
@@ -1041,8 +1041,8 @@ int main(int argc, char **argv)
     bool fail = false;
     if (projectDescription.empty()) {
         if (tsFileNames.isEmpty())
-            printErr(LU::tr("lupdate warning:"
-                            " no TS files specified. Only diagnostics will be produced.\n"));
+            printErr(u"lupdate warning:"
+                      " no TS files specified. Only diagnostics will be produced.\n"_qs);
 
         Translator fetchedTor;
         ConversionData cd;
@@ -1059,7 +1059,7 @@ int main(int argc, char **argv)
                       sourceLanguage, targetLanguage, options, &fail);
     } else {
         if (!sourceFiles.isEmpty() || !resourceFiles.isEmpty() || !includePath.isEmpty()) {
-            printErr(LU::tr("lupdate error:"
+            printErr(QStringLiteral("lupdate error:"
                             " Both project and source files / include paths specified.\n"));
             return 1;
         }

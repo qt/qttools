@@ -178,7 +178,7 @@ static int getToken()
                     while ( !metAsterSlash ) {
                         yyCh = getChar();
                         if (yyEOF) {
-                            yyMsg() << qPrintable(LU::tr("Unterminated Java comment.\n"));
+                            yyMsg() << "Unterminated Java comment.\n";
                             return Tok_Comment;
                         }
 
@@ -215,7 +215,7 @@ static int getToken()
                                 else {
                                     int sub(yyCh.toLower().toLatin1() - 87);
                                     if( sub > 15 || sub < 10) {
-                                        yyMsg() << qPrintable(LU::tr("Invalid Unicode value.\n"));
+                                        yyMsg() << "Invalid Unicode value.\n";
                                         break;
                                     }
                                     unicode += sub;
@@ -238,7 +238,7 @@ static int getToken()
                 }
 
                 if ( yyCh != QLatin1Char('"') )
-                    yyMsg() << qPrintable(LU::tr("Unterminated string.\n"));
+                    yyMsg() << "Unterminated string.\n";
 
                 yyCh = getChar();
 
@@ -351,9 +351,9 @@ static bool matchString( QString &s )
         if (yyTok == Tok_String)
             s += yyString;
         else {
-            yyMsg() << qPrintable(LU::tr(
+            yyMsg() <<
                 "String used in translation can contain only literals"
-                " concatenated with other literals, not expressions or numbers.\n"));
+                " concatenated with other literals, not expressions or numbers.\n";
             return false;
         }
         yyTok = getToken();
@@ -462,7 +462,7 @@ static void parse(Translator *tor, ConversionData &cd)
                 yyScope.push(new Scope(yyIdent, Scope::Clazz, yyLineNo));
             }
             else {
-                yyMsg() << qPrintable(LU::tr("'class' must be followed by a class name.\n"));
+                yyMsg() << "'class' must be followed by a class name.\n";
                 break;
             }
             while (!match(Tok_LeftBrace)) {
@@ -534,7 +534,7 @@ static void parse(Translator *tor, ConversionData &cd)
 
         case Tok_RightBrace:
             if ( yyScope.isEmpty() ) {
-                yyMsg() << qPrintable(LU::tr("Excess closing brace.\n"));
+                yyMsg() << "Excess closing brace.\n";
             }
             else
                 delete (yyScope.pop());
@@ -563,7 +563,7 @@ static void parse(Translator *tor, ConversionData &cd)
                         yyPackage.append(QLatin1String("."));
                         break;
                     default:
-                         yyMsg() << qPrintable(LU::tr("'package' must be followed by package name.\n"));
+                         yyMsg() << "'package' must be followed by package name.\n";
                          break;
                 }
                 yyTok = getToken();
@@ -576,9 +576,9 @@ static void parse(Translator *tor, ConversionData &cd)
     }
 
     if ( !yyScope.isEmpty() )
-        yyMsg(yyScope.top()->line) << qPrintable(LU::tr("Unbalanced opening brace.\n"));
+        yyMsg(yyScope.top()->line) << "Unbalanced opening brace.\n";
     else if ( yyParenDepth != 0 )
-        yyMsg(yyParenLineNo) << qPrintable(LU::tr("Unbalanced opening parenthesis.\n"));
+        yyMsg(yyParenLineNo) << "Unbalanced opening parenthesis.\n";
 }
 
 
@@ -586,7 +586,7 @@ bool loadJava(Translator &translator, const QString &filename, ConversionData &c
 {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        cd.appendError(LU::tr("Cannot open %1: %2").arg(filename, file.errorString()));
+        cd.appendError(QStringLiteral("Cannot open %1: %2").arg(filename, file.errorString()));
         return false;
     }
 

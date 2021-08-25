@@ -135,7 +135,7 @@ bool UiReader::characters(QStringView ch)
 
 bool UiReader::fatalError(qint64 line, qint64 column, const QString &message)
 {
-    QString msg = LU::tr("XML error: Parse error at line %1, column %2 (%3).")
+    QString msg = QStringLiteral("XML error: Parse error at line %1, column %2 (%3).")
                           .arg(line)
                           .arg(column)
                           .arg(message);
@@ -182,7 +182,7 @@ bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
     cd.m_sourceFileName = filename;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        cd.appendError(LU::tr("Cannot open %1: %2").arg(filename, file.errorString()));
+        cd.appendError(QStringLiteral("Cannot open %1: %2").arg(filename, file.errorString()));
         return false;
     }
 
@@ -192,7 +192,7 @@ bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
     UiReader uiReader(translator, cd, reader);
     bool result = uiReader.parse();
     if (!result)
-        cd.appendError(LU::tr("Parse error in UI file"));
+        cd.appendError(u"Parse error in UI file"_qs);
     return result;
 }
 
