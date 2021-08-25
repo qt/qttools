@@ -1055,7 +1055,8 @@ QString getLibInfix(const QStringList &deployedFrameworks)
 {
     QString libInfix;
     foreach (const QString &framework, deployedFrameworks) {
-        if (framework.startsWith(QStringLiteral("QtCore")) && framework.endsWith(QStringLiteral(".framework"))) {
+        if (framework.startsWith(QStringLiteral("QtCore")) && framework.endsWith(QStringLiteral(".framework")) &&
+            !framework.contains(QStringLiteral("5Compat"))) {
             Q_ASSERT(framework.length() >= 16);
             // 16 == "QtCore" + ".framework"
             const int lengthOfLibInfix = framework.length() - 16;
