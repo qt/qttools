@@ -237,6 +237,8 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void basicapp();
+    void plugins_data();
+    void plugins();
 };
 
 void tst_macdeployqt::initTestCase()
@@ -283,6 +285,30 @@ void tst_macdeployqt::basicapp()
     QVERIFY2(deploy(name, QStringList(), &errorMessage), qPrintable(errorMessage));
 
     // Verify deployment
+    runVerifyDeployment(name);
+}
+
+void tst_macdeployqt::plugins_data()
+{
+     QTest::addColumn<QString>("name");
+     QTest::newRow("sqlite") << "plugin_sqlite";
+     QTest::newRow("tls") << "plugin_tls";
+}
+
+void tst_macdeployqt::plugins()
+{
+    QFETCH(QString, name);
+
+    build(name);
+
+    // Verify that the test app runs before deployment.
+    QString errorMessage;
+    if (!run(name, &errorMessage)) {
+        qDebug() << qPrintable(errorMessage);
+        QSKIP("Could not run test application before deployment");
+    }
+
+    QVERIFY2(deploy(name, QStringList(), &errorMessage), qPrintable(errorMessage));
     runVerifyDeployment(name);
 }
 
