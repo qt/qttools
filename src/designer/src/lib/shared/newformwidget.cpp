@@ -129,6 +129,11 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     m_currentItem(nullptr),
     m_acceptedItem(nullptr)
 {
+     // ### FIXME Qt 8: Remove (QTBUG-96005)
+#if QT_VERSION >= QT_VERSION_CHECK(7, 0, 0)
+    QDesignerSharedSettings::migrateTemplates();
+#endif
+
     m_ui->setupUi(this);
     m_ui->treeWidget->setItemDelegate(new qdesigner_internal::SheetDelegate(m_ui->treeWidget, this));
     m_ui->treeWidget->header()->hide();

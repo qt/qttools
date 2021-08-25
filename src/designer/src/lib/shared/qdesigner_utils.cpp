@@ -44,6 +44,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qqueue.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qstandardpaths.h>
 
 #include <QtWidgets/qapplication.h>
 #include <QtGui/qicon.h>
@@ -57,13 +58,19 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal
 {
+    // ### FIXME Qt 8: Remove (QTBUG-96005)
+    QString legacyDataDirectory()
+    {
+        return QDir::homePath() + u"/.designer"_qs;
+    }
+
     QString dataDirectory()
     {
 #if QT_VERSION >= QT_VERSION_CHECK(7, 0, 0)
         return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
                + u'/' + QCoreApplication::organizationName() + u"/Designer"_qs;
 #else
-        return QDir::homePath() + u"/.designer"_qs;
+        return legacyDataDirectory();
 #endif
     }
 

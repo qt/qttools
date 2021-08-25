@@ -360,9 +360,19 @@ void QDesignerIntegrationPrivate::initialize()
     m_gradientManager = new QtGradientManager(q);
     core->setGradientManager(m_gradientManager);
 
-    m_gradientsPath = dataDirectory() + u"/gradients.xml"_qs;
+    const QString gradientsFile = u"/gradients.xml"_qs;
+    m_gradientsPath = dataDirectory() + gradientsFile;
 
-    QFile f(m_gradientsPath);
+    // Migrate from legacy to standard data directory in Qt 7
+    // ### FIXME Qt 8: Remove (QTBUG-96005)
+#if QT_VERSION >= QT_VERSION_CHECK(7, 0, 0)
+    const QString source = QFileInfo::exists(m_gradientsPath)
+        ? m_gradientsPath : legacyDataDirectory() + gradientsFile;
+#else
+    const QString source = m_gradientsPath;
+#endif
+
+    QFile f(source);
     if (f.open(QIODevice::ReadOnly)) {
         QtGradientUtils::restoreState(m_gradientManager, QString::fromLatin1(f.readAll()));
         f.close();

@@ -117,6 +117,7 @@ public:
     void setDeviceProfiles(const DeviceProfileList &dp);
 
     static const QStringList &defaultFormTemplatePaths();
+    static void migrateTemplates();
 
 protected:
     QDesignerSettingsInterface *settings() const { return m_settings; }
