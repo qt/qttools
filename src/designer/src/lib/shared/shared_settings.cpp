@@ -44,7 +44,6 @@
 
 QT_BEGIN_NAMESPACE
 
-static const char *designerPath = "/.designer";
 static const char *defaultGridKey = "defaultGrid";
 static const char *previewKey = "Preview";
 static const char *enabledKey = "Enabled";
@@ -107,9 +106,7 @@ const QStringList &QDesignerSharedSettings::defaultFormTemplatePaths()
         // Ensure default form template paths
         const QString templatePath = QStringLiteral("/templates");
         // home
-        QString path = QDir::homePath();
-        path += QLatin1String(designerPath);
-        path += templatePath;
+        QString path = dataDirectory() + templatePath;
         if (checkTemplatePath(path, true))
             rc += path;
 

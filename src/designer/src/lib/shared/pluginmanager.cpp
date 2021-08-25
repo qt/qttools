@@ -98,21 +98,10 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
 
     const QStringList path_list = QCoreApplication::libraryPaths();
 
-    const QString designer = QStringLiteral("designer");
-    for (const QString &path : path_list) {
-        QString libPath = path;
-        libPath += QDir::separator();
-        libPath += designer;
-        result.append(libPath);
-    }
+    for (const QString &path : path_list)
+        result.append(path + u"/designer"_qs);
 
-    QString homeLibPath = QDir::homePath();
-    homeLibPath += QDir::separator();
-    homeLibPath += QStringLiteral(".designer");
-    homeLibPath += QDir::separator();
-    homeLibPath += QStringLiteral("plugins");
-
-    result.append(homeLibPath);
+    result.append(qdesigner_internal::dataDirectory() + u"/plugins"_qs);
     return result;
 }
 

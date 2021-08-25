@@ -57,6 +57,17 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal
 {
+    QString dataDirectory()
+    {
+#if QT_VERSION >= QT_VERSION_CHECK(7, 0, 0)
+        return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
+               + u'/' + QCoreApplication::organizationName() + u"/Designer"_qs;
+#else
+        return QDir::homePath() + u"/.designer"_qs;
+#endif
+    }
+
+
     QDESIGNER_SHARED_EXPORT void designerWarning(const QString &message)
     {
         qWarning("Designer: %s", qPrintable(message));

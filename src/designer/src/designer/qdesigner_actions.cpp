@@ -28,6 +28,7 @@
 
 #include "qdesigner_actions.h"
 #include "designer_enums.h"
+#include <qdesigner_utils_p.h>
 #include "qdesigner.h"
 #include "qdesigner_workbench.h"
 #include "qdesigner_formwindow.h"
@@ -1186,17 +1187,8 @@ bool QDesignerActions::ensureBackupDirectories() {
 
     if (m_backupPath.isEmpty()) {
         // create names
-        m_backupPath = QDir::homePath();
-        m_backupPath += QDir::separator();
-        m_backupPath += QStringLiteral(".designer");
-        m_backupPath += QDir::separator();
-        m_backupPath += QStringLiteral("backup");
-        m_backupPath = QDir::toNativeSeparators(m_backupPath);
-
-        m_backupTmpPath = m_backupPath;
-        m_backupTmpPath += QDir::separator();
-        m_backupTmpPath += QStringLiteral("tmp");
-        m_backupTmpPath = QDir::toNativeSeparators(m_backupTmpPath);
+        m_backupPath = dataDirectory() + u"/backup"_qs;
+        m_backupTmpPath = m_backupPath + u"/tmp"_qs;
     }
 
     // ensure directories
@@ -1205,13 +1197,15 @@ bool QDesignerActions::ensureBackupDirectories() {
 
     if (!backupDir.exists()) {
         if (!backupDir.mkpath(m_backupPath)) {
-            qdesigner_internal::designerWarning(tr("The backup directory %1 could not be created.").arg(m_backupPath));
+            qdesigner_internal::designerWarning(tr("The backup directory %1 could not be created.")
+                                                .arg(QDir::toNativeSeparators(m_backupPath)));
             return false;
         }
     }
     if (!backupTmpDir.exists()) {
         if (!backupTmpDir.mkpath(m_backupTmpPath)) {
-            qdesigner_internal::designerWarning(tr("The temporary backup directory %1 could not be created.").arg(m_backupTmpPath));
+            qdesigner_internal::designerWarning(tr("The temporary backup directory %1 could not be created.")
+                                                .arg(QDir::toNativeSeparators(m_backupTmpPath)));
             return false;
         }
     }

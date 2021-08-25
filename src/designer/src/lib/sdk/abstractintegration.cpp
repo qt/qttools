@@ -43,6 +43,7 @@
 #include <qdesigner_propertycommand_p.h>
 #include <qdesigner_propertyeditor_p.h>
 #include <qdesigner_objectinspector_p.h>
+#include <qdesigner_utils_p.h>
 #include <widgetdatabase_p.h>
 #include <pluginmanager_p.h>
 #include <widgetfactory_p.h>
@@ -359,12 +360,7 @@ void QDesignerIntegrationPrivate::initialize()
     m_gradientManager = new QtGradientManager(q);
     core->setGradientManager(m_gradientManager);
 
-    QString designerFolder = QDir::homePath();
-    designerFolder += QDir::separator();
-    designerFolder += QStringLiteral(".designer");
-    m_gradientsPath = designerFolder;
-    m_gradientsPath += QDir::separator();
-    m_gradientsPath += QStringLiteral("gradients.xml");
+    m_gradientsPath = dataDirectory() + u"/gradients.xml"_qs;
 
     QFile f(m_gradientsPath);
     if (f.open(QIODevice::ReadOnly)) {

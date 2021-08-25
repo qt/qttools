@@ -29,6 +29,7 @@
 #include "qsimpleresource_p.h"
 #include "widgetfactory_p.h"
 #include "widgetdatabase_p.h"
+#include <qdesigner_utils_p.h>
 
 #include <QtDesigner/private/properties_p.h>
 #include <QtDesigner/private/ui4_p.h>
@@ -58,10 +59,7 @@ QSimpleResource::QSimpleResource(QDesignerFormEditorInterface *core) :
     QAbstractFormBuilder(),
     m_core(core)
 {
-    QString workingDirectory = QDir::homePath();
-    workingDirectory +=  QDir::separator();
-    workingDirectory +=  QStringLiteral(".designer");
-    setWorkingDirectory(QDir(workingDirectory));
+    setWorkingDirectory(QDir(dataDirectory()));
 }
 
 QSimpleResource::~QSimpleResource() = default;
