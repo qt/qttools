@@ -140,10 +140,6 @@ private:
     mutable QHash<QString,TrFunction> m_nameToTrFunctionMap;
 };
 
-class LU {
-    Q_DECLARE_TR_FUNCTIONS(LUpdate)
-};
-
 QT_END_NAMESPACE
 
 extern QT_PREPEND_NAMESPACE(TrFunctionAliasManager) trFunctionAliasManager;

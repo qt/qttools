@@ -47,19 +47,6 @@
 
 QT_USE_NAMESPACE
 
-#ifdef QT_BOOTSTRAPPED
-struct LR {
-    static inline QString tr(const char *sourceText, const char *comment = 0)
-    {
-        return QCoreApplication::translate("LRelease", sourceText, comment);
-    }
-};
-#else
-class LR {
-    Q_DECLARE_TR_FUNCTIONS(LRelease)
-};
-#endif
-
 static void printOut(const QString & out)
 {
     QTextStream stream(stdout);
@@ -74,38 +61,40 @@ static void printErr(const QString & out)
 
 static void printUsage()
 {
-    printOut(LR::tr(
-        "Usage:\n"
-        "    lrelease [options] -project project-file\n"
-        "    lrelease [options] ts-files [-qm qm-file]\n\n"
-        "lrelease is part of Qt's Linguist tool chain. It can be used as a\n"
-        "stand-alone tool to convert XML-based translations files in the TS\n"
-        "format into the 'compiled' QM format used by QTranslator objects.\n\n"
-        "Passing .pro files to lrelease is deprecated.\n"
-        "Please use the lrelease-pro tool instead, or use qmake's lrelease.prf\n"
-        "feature.\n\n"
-        "Options:\n"
-        "    -help  Display this information and exit\n"
-        "    -idbased\n"
-        "           Use IDs instead of source strings for message keying\n"
-        "    -compress\n"
-        "           Compress the QM files\n"
-        "    -nounfinished\n"
-        "           Do not include unfinished translations\n"
-        "    -removeidentical\n"
-        "           If the translated text is the same as\n"
-        "           the source text, do not include the message\n"
-        "    -markuntranslated <prefix>\n"
-        "           If a message has no real translation, use the source text\n"
-        "           prefixed with the given string instead\n"
-        "    -project <filename>\n"
-        "           Name of a file containing the project's description in JSON format.\n"
-        "           Such a file may be generated from a .pro file using the lprodump tool.\n"
-        "    -silent\n"
-        "           Do not explain what is being done\n"
-        "    -version\n"
-        "           Display the version of lrelease and exit\n"
-    ));
+    printOut(uR"(Usage:
+    lrelease [options] -project project-file
+    lrelease [options] ts-files [-qm qm-file]
+
+lrelease is part of Qt's Linguist tool chain. It can be used as a
+stand-alone tool to convert XML-based translations files in the TS
+format into the 'compiled' QM format used by QTranslator objects.
+
+Passing .pro files to lrelease is deprecated.
+Please use the lrelease-pro tool instead, or use qmake's lrelease.prf
+feature.
+
+Options:
+    -help  Display this information and exit
+    -idbased
+           Use IDs instead of source strings for message keying
+    -compress
+           Compress the QM files
+    -nounfinished
+           Do not include unfinished translations
+    -removeidentical
+           If the translated text is the same as
+           the source text, do not include the message
+    -markuntranslated <prefix>
+           If a message has no real translation, use the source text
+           prefixed with the given string instead
+    -project <filename>
+           Name of a file containing the project's description in JSON format.
+           Such a file may be generated from a .pro file using the lprodump tool.
+    -silent
+           Do not explain what is being done
+    -version
+           Display the version of lrelease and exit
+)"_qs);
 }
 
 static bool loadTsFile(Translator &tor, const QString &tsFileName, bool /* verbose */)
@@ -113,7 +102,7 @@ static bool loadTsFile(Translator &tor, const QString &tsFileName, bool /* verbo
     ConversionData cd;
     bool ok = tor.load(tsFileName, cd, QLatin1String("auto"));
     if (!ok) {
-        printErr(LR::tr("lrelease error: %1").arg(cd.error()));
+        printErr(QLatin1String("lrelease error: %1").arg(cd.error()));
     } else {
         if (!cd.errors().isEmpty())
             printOut(cd.error());
@@ -128,17 +117,18 @@ static bool releaseTranslator(Translator &tor, const QString &qmFileName,
     tor.reportDuplicates(tor.resolveDuplicates(), qmFileName, cd.isVerbose());
 
     if (cd.isVerbose())
-        printOut(LR::tr("Updating '%1'...\n").arg(qmFileName));
+        printOut(QLatin1String("Updating '%1'...\n").arg(qmFileName));
     if (removeIdentical) {
         if (cd.isVerbose())
-            printOut(LR::tr("Removing translations equal to source text in '%1'...\n").arg(qmFileName));
+            printOut(QLatin1String("Removing translations equal to source text in '%1'...\n")
+                             .arg(qmFileName));
         tor.stripIdenticalSourceTranslations();
     }
 
     QFile file(qmFileName);
     if (!file.open(QIODevice::WriteOnly)) {
-        printErr(LR::tr("lrelease error: cannot create '%1': %2\n")
-                                .arg(qmFileName, file.errorString()));
+        printErr(QLatin1String("lrelease error: cannot create '%1': %2\n")
+                         .arg(qmFileName, file.errorString()));
         return false;
     }
 
@@ -147,8 +137,7 @@ static bool releaseTranslator(Translator &tor, const QString &qmFileName,
     file.close();
 
     if (!ok) {
-        printErr(LR::tr("lrelease error: cannot save '%1': %2")
-                                .arg(qmFileName, cd.error()));
+        printErr(QLatin1String("lrelease error: cannot save '%1': %2").arg(qmFileName, cd.error()));
     } else if (!cd.errors().isEmpty()) {
         printOut(cd.error());
     }
@@ -184,8 +173,9 @@ static QStringList translationsFromProject(const Project &project, bool topLevel
         result = *project.translations;
     result << translationsFromProjects(project.subProjects, false);
     if (topLevel && result.isEmpty()) {
-        printErr(LR::tr("lrelease warning: Met no 'TRANSLATIONS' entry in project file '%1'\n")
-                 .arg(project.filePath));
+        printErr(
+            QLatin1String("lrelease warning: Met no 'TRANSLATIONS' entry in project file '%1'\n")
+            .arg(project.filePath));
     }
     return result;
 }
@@ -201,19 +191,6 @@ static QStringList translationsFromProjects(const Projects &projects, bool topLe
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
-#ifndef QT_BOOTSTRAPPED
-#ifndef Q_OS_WIN32
-    QTranslator translator;
-    QTranslator qtTranslator;
-    QString sysLocale = QLocale::system().name();
-    QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
-    if (translator.load(QLatin1String("linguist_") + sysLocale, resourceDir)
-        && qtTranslator.load(QLatin1String("qt_") + sysLocale, resourceDir)) {
-        app.installTranslator(&translator);
-        app.installTranslator(&qtTranslator);
-    }
-#endif // Q_OS_WIN32
-#endif // QT_BOOTSTRAPPED
 
     ConversionData cd;
     cd.m_verbose = true; // the default is true starting with Qt 4.2
@@ -247,11 +224,11 @@ int main(int argc, char **argv)
             cd.m_unTrPrefix = QString::fromLocal8Bit(argv[++i]);
         } else if (!strcmp(argv[i], "-project")) {
             if (i == argc - 1) {
-                printErr(LR::tr("The option -project requires a parameter.\n"));
+                printErr(QLatin1String("The option -project requires a parameter.\n"));
                 return 1;
             }
             if (!projectDescriptionFile.isEmpty()) {
-                printErr(LR::tr("The option -project must appear only once.\n"));
+                printErr(QLatin1String("The option -project must appear only once.\n"));
                 return 1;
             }
             projectDescriptionFile = QString::fromLocal8Bit(argv[++i]);
@@ -262,7 +239,7 @@ int main(int argc, char **argv)
             cd.m_verbose = true;
             continue;
         } else if (!strcmp(argv[i], "-version")) {
-            printOut(LR::tr("lrelease version %1\n").arg(QLatin1String(QT_VERSION_STR)));
+            printOut(QLatin1String("lrelease version %1\n").arg(QLatin1String(QT_VERSION_STR)));
             return 0;
         } else if (!strcmp(argv[i], "-qm")) {
             if (i == argc - 1) {
@@ -288,18 +265,19 @@ int main(int argc, char **argv)
 
     QString errorString;
     if (!extractProFiles(&inputFiles).isEmpty()) {
-        runInternalQtTool(QStringLiteral("lrelease-pro"), app.arguments().mid(1));
+        runInternalQtTool(QLatin1String("lrelease-pro"), app.arguments().mid(1));
         return 0;
     }
 
     if (!projectDescriptionFile.isEmpty()) {
         if (!inputFiles.isEmpty()) {
-            printErr(LR::tr("lrelease error: Do not specify TS files if -project is given.\n"));
+            printErr(QLatin1String(
+                    "lrelease error: Do not specify TS files if -project is given.\n"));
             return 1;
         }
         Projects projectDescription = readProjectDescription(projectDescriptionFile, &errorString);
         if (!errorString.isEmpty()) {
-            printErr(LR::tr("lrelease error: %1\n").arg(errorString));
+            printErr(QLatin1String("lrelease error: %1\n").arg(errorString));
             return 1;
         }
         inputFiles = translationsFromProjects(projectDescription);
