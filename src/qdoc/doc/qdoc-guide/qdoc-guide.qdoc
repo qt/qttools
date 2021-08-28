@@ -209,7 +209,7 @@
     \section2 QDoc Index Files
 
     Documentation projects can link to targets in other projects by specifying
-    a set of dependencies, or a set of direct paths to to index file(s) this
+    a set of dependencies, or a set of direct paths to index file(s) this
     project depends on. When QDoc generates documentation for a project,
     it will also generate an \c .index file containing URLs to each linkable
     entity in the project. Other projects can then define a dependency to the

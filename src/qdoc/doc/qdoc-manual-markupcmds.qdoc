@@ -2035,11 +2035,11 @@
     * /
     \endcode
 
-    The target name \e{capturing parentheses} can be linked from
-    within the same document containing the target in the following way:
+    The target name \e{capturing parentheses} can be linked to
+    in the following way:
 
     \list
-      \li \c {\l {capturing parentheses}} (from within the same QDoc comment)
+      \li \c {\l {capturing parentheses}}
     \endlist
 
     \note The brackets in the link example are required because the
