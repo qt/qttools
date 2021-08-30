@@ -56,12 +56,12 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QString locale = QLocale::system().name();
+    auto locale = QLocale::system();
 
 //! [0]
     QTranslator translator;
-    translator.load(QString("trollprint_") + locale);
-    app.installTranslator(&translator);
+    if (translator.load(locale, u"trollprint"_qs, u"_"_qs))
+        app.installTranslator(&translator);
 //! [0]
 
     MainWindow mainWindow;

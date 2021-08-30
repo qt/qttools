@@ -58,13 +58,13 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QString locale = QLocale::system().name();
+    auto locale = QLocale::system();
 
 //! [2]
     QTranslator translator;
 //! [2] //! [3]
-    translator.load(QString("arrowpad_") + locale);
-    app.installTranslator(&translator);
+    if (translator.load(locale, u"arrowpad"_qs, u"_"_qs))
+        app.installTranslator(&translator);
 //! [1] //! [3]
 
     MainWindow mainWindow;
