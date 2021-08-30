@@ -70,6 +70,9 @@ static int yyParenDepth;
 static int yyLineNo;
 static int yyCurLineNo;
 
+static QByteArray extraComment;
+static QByteArray id;
+
 // the file to read from (if reading from a file)
 static FILE *yyInFile;
 
@@ -267,6 +270,18 @@ static Token parseString()
     return Tok_String;
 }
 
+static QByteArray readLine()
+{
+    QByteArray result;
+    while (true) {
+        yyCh = getChar();
+        if (yyCh == EOF || yyCh == '\n')
+            break;
+        result.append(char(yyCh));
+    }
+    return result;
+}
+
 static Token getToken()
 {
     yyIdentLen = 0;
@@ -337,10 +352,22 @@ static Token getToken()
         }
         switch (yyCh) {
         case '#':
-            yyCh = getChar();
-            do {
-                yyCh = getChar();
-            } while (yyCh != EOF && yyCh != '\n');
+            switch (getChar()) {
+            case ':':
+                extraComment = readLine().trimmed();
+                break;
+            case '=':
+                id = readLine().trimmed();
+                break;
+            case EOF:
+            case '\n':
+                break;
+            default:
+                do {
+                    yyCh = getChar();
+                } while (yyCh != EOF && yyCh != '\n');
+                break;
+            }
             break;
         case '"':
         case '\'':
@@ -564,6 +591,18 @@ static bool parseTranslate(QByteArray *text, QByteArray *context, QByteArray *co
     return true;
 }
 
+static inline void setMessageParameters(TranslatorMessage *message)
+{
+    if (!extraComment.isEmpty()) {
+        message->setExtraComment(QString::fromUtf8(extraComment));
+        extraComment.clear();
+    }
+    if (!id.isEmpty()) {
+        message->setId(QString::fromUtf8(id));
+        id.clear();
+    }
+}
+
 static void parse(Translator &tor, ConversionData &cd,
                   const QByteArray &initialContext = {},
                   const QByteArray &defaultContext = {})
@@ -627,6 +666,7 @@ static void parse(Translator &tor, ConversionData &cd,
                                                   QString::fromUtf8(comment),
                                                   {}, yyFileName, yyLineNo,
                                                   {}, TranslatorMessage::Unfinished, plural);
+                        setMessageParameters(&message);
                         tor.extend(message, cd);
                     }
                 }
@@ -640,6 +680,7 @@ static void parse(Translator &tor, ConversionData &cd,
                                                   QString::fromUtf8(comment),
                                                   {}, yyFileName, yyLineNo,
                                                   {}, TranslatorMessage::Unfinished, plural);
+                        setMessageParameters(&message);
                         tor.extend(message, cd);
                     }
                 }
