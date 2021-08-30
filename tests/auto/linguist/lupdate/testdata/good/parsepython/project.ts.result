@@ -4,32 +4,33 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="main.py" line="16"/>
+        <location filename="main.py" line="17"/>
         <source>&amp;File</source>
+        <extracomment>File menu</extracomment>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="main.py" line="17"/>
+    <message id="quit_id">
+        <location filename="main.py" line="19"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="18"/>
+        <location filename="main.py" line="20"/>
         <source>CTRL+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="20"/>
+        <location filename="main.py" line="22"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main.py" line="21"/>
+        <location filename="main.py" line="23"/>
         <source>About Qt</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="main.py" line="35"/>
+        <location filename="main.py" line="37"/>
         <source>%n language(s) selected</source>
         <translation type="unfinished">
             <numerusform></numerusform>

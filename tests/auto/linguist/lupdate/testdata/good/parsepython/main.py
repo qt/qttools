@@ -13,7 +13,9 @@ import linguist_rc
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
+        #: File menu
         file_menu = self.menuBar().addMenu(self.tr("&File"))
+        #= quit_id
         quit_action = file_menu.addAction(self.tr("Quit"))
         quit_action.setShortcut(self.tr("CTRL+Q"))
         quit_action.triggered.connect(self.close)
