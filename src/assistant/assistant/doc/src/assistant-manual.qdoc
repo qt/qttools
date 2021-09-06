@@ -55,6 +55,7 @@
         \li \l{Qt Assistant Quick Guide}
         \li \l{Using Qt Assistant}
         \li \l{Customizing Qt Assistant}
+        \li \l{Licenses and Attributions}
     \endlist
 */
 
@@ -63,6 +64,7 @@
     \title Customizing Qt Assistant
 
     \previouspage Using Qt Assistant
+    \nextpage Licenses and Attributions
 
     Using \QA as custom help viewer requires more than just being able to
     display custom documentation. It is equally important that the
@@ -423,3 +425,18 @@
             \li Doesn't show any error, warning or success messages.
     \endtable
     */
+
+/*!
+    \page assistant-licenses.html
+    \title Licenses and Attributions
+
+    \previouspage Customizing Qt Assistant
+
+    \QA is available under commercial licenses from \l{The Qt Company}. In
+    addition, it is available under the \l{GNU General Public License, version 3}.
+
+    Furthermore, \QA \QtVersion may contain third party modules
+    under following permissive licenses:
+
+    \generatelist{groupsbymodule attributions-qtassistant-tools}
+*/
