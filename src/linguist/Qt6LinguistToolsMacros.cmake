@@ -215,16 +215,15 @@ function(qt6_add_lrelease target)
     set(qm_files "")
     foreach(ts_file ${ts_files})
         if(NOT EXISTS "${ts_file}")
-            # Write an empty .ts file that can be read by lrelease and updated by lupdate.
             message(WARNING "Translation file '${ts_file}' does not exist. "
                 "Consider building the target '${target}_lupdate' to create an initial "
                 "version of that file.")
-            file(WRITE "${ts_file}"
-                [[<?xml version="1.0" encoding="utf-8"?>
-                <!DOCTYPE TS>
-                <TS version="2.1">
-                </TS>
-                ]])
+
+            # Provide a command that creates an initial .ts file with the right language set.
+            # The language is guessed by lupdate from the file name.
+            add_custom_command(OUTPUT ${ts_file}
+                COMMAND ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate -ts ${ts_file}
+                VERBATIM)
         endif()
         get_filename_component(qm ${ts_file} NAME_WLE)
         string(APPEND qm ".qm")
