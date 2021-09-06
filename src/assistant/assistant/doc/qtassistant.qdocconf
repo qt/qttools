@@ -24,7 +24,7 @@ qhp.QtAssistant.subprojects.examples.sortPages = true
 
 language                = Cpp
 
-sourcedirs              = ..
+sourcedirs              += ..
 
 exampledirs             = ../../../../examples/assistant \
                           snippets

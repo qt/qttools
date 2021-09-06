@@ -70,8 +70,10 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
                      LogLevel logLevel)
 {
     out << "/*!\n\n";
-    for (const QString &part: package.qtParts)
+    for (const QString &part : package.qtParts) {
+        out << "\\ingroup attributions-" << package.qdocModule << "-" << part << "\n";
         out << "\\ingroup attributions-" << part << "\n";
+    }
 
     if (package.qtParts.contains(QLatin1String("libs"))) {
         // show up in xxx-index.html page of module
