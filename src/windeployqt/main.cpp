@@ -827,6 +827,8 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"audio", QtMultimediaModule},
     {"mediaservice", QtMultimediaModule},
     {"playlistformats", QtMultimediaModule},
+    {"networkaccess", QtNetworkModule},
+    {"networkinformation", QtNetworkModule},
     {"tls", QtNetworkModule},
     {"position", QtPositioningModule},
     {"printsupport", QtPrintSupportModule},
