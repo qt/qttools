@@ -412,6 +412,9 @@ bool TSReader::read(Translator &translator)
                 } else {
                     handleError();
                 }
+                // if the file is empty adopt AbsoluteLocation (default location type for Translator)
+                if (translator.messageCount() == 0)
+                    maybeAbsolute = true;
                 translator.setLocationsType(maybeRelative ? Translator::RelativeLocations :
                                             maybeAbsolute ? Translator::AbsoluteLocations :
                                                             Translator::NoLocations);
