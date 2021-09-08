@@ -198,8 +198,8 @@ void tst_generatedOutput::testAndCompare(const char *input, const char *outNames
             QFileInfo fileInfo(m_expectedDir.filePath(file));
             fileInfo.dir().remove(fileInfo.fileName()); // Allowed to fail
             QVERIFY(m_expectedDir.mkpath(fileInfo.dir().path()));
-            QVERIFY(QFile::copy(m_outputDir->filePath(file),
-                                fileInfo.filePath()));
+            QVERIFY2(QFile::copy(m_outputDir->filePath(file), fileInfo.filePath()),
+                     qPrintable(QStringLiteral("Failed to copy '%1'").arg(file)));
         }
         QSKIP("Regenerated expected output only.");
     }
