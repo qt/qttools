@@ -93,6 +93,17 @@
     maintain. In this example, we just maintain one set of translations,
     namely Latin.
 
+    It is also possible to produce translations using the
+    \l{cmake-macros-qtlinguisttools}{Qt6::LinguistTools CMake commands}.
+    One needs to add the following to the \c CMakeLists.txt:
+    \snippet hellotr/CMakeLists.txt 0
+    \codeline
+    \snippet hellotr/CMakeLists.txt 1
+
+    After configuring and building, the translations are produced by running:
+
+    \snippet doc/snippets/doc_src_examples_hellotr.qdoc 5
+
     Note that the file extension is \c .ts, not \c .qm. The \c .ts
     translation source format is designed for use during the
     application's development. Programmers or release managers run

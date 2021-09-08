@@ -79,3 +79,7 @@ linguist hellotr_la.ts
 //! [4]
 <translation>Orbis, te saluto!</translation>
 //! [4]
+
+//! [5]
+make update_translations
+//! [5]

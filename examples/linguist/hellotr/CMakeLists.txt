@@ -18,10 +18,19 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/linguist/hellotr")
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Widgets)
+#! [0]
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
+#! [0]
 
 qt_add_executable(hellotr
     main.cpp
 )
+#! [1]
+qt6_add_translations(hellotr
+    TS_FILES hellotr_la.ts
+    QM_FILES_OUTPUT_VARIABLE qm_files)
+install(FILES ${qm_files} DESTINATION ${INSTALL_EXAMPLEDIR})
+#! [1]
 set_target_properties(hellotr PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
