@@ -203,9 +203,24 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         parent = static_cast<Aggregate *>(current);
 
     if (attributes.hasAttribute(QLatin1String("related"))) {
-        if (adoptRelatedNode(parent, attributes.value(QLatin1String("related")).toInt())) {
-            reader.skipCurrentElement();
-            return;
+        bool isIntTypeRelatedValue = false;
+        int relatedIndex = attributes.value(QLatin1String("related")).toInt(&isIntTypeRelatedValue);
+        if (isIntTypeRelatedValue) {
+            if (adoptRelatedNode(parent, relatedIndex)) {
+                reader.skipCurrentElement();
+                return;
+            }
+        } else {
+            QList<Node *>::iterator nodeIterator =
+                    std::find_if(m_relatedNodes.begin(), m_relatedNodes.end(), [&](const Node *relatedNode) {
+                        return (name == relatedNode->name() &&  href == relatedNode->url().section(QLatin1Char('/'), -1));
+                    });
+
+            if (nodeIterator != m_relatedNodes.end()) {
+                parent->adoptChild(*nodeIterator);
+                reader.skipCurrentElement();
+                return;
+            }
         }
     }
 
