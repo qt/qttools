@@ -14,6 +14,7 @@
                     </section>
                     <section ref="testqdoc-testderived.html" title="TestQDoc::TestDerived Class Reference">
                         <section ref="testqdoc-testderived-members.html" title="List of all members"/>
+                        <section ref="testqdoc-testderived-obsolete.html" title="Obsolete members"/>
                     </section>
                 </section>
             </section>
@@ -37,6 +38,7 @@
             <keyword name="overload" id="Test::overload" ref="testqdoc-test.html#overload"/>
             <keyword name="someFunction" id="Test::someFunction" ref="testqdoc-test.html#someFunction"/>
             <keyword name="someFunctionDefaultArg" id="Test::someFunctionDefaultArg" ref="testqdoc-test.html#someFunctionDefaultArg"/>
+            <keyword name="staticObsoleteMember" id="TestDerived::staticObsoleteMember" ref="testqdoc-testderived-obsolete.html#staticObsoleteMember"/>
             <keyword name="virtualFun" id="Test::virtualFun" ref="testqdoc-test.html#virtualFun"/>
             <keyword name="virtualFun" id="TestDerived::virtualFun" ref="testqdoc-testderived.html#virtualFun"/>
         </keywords>
@@ -48,6 +50,7 @@
             <file>testqdoc-test-obsolete.html</file>
             <file>testqdoc-test.html</file>
             <file>testqdoc-testderived-members.html</file>
+            <file>testqdoc-testderived-obsolete.html</file>
             <file>testqdoc-testderived.html</file>
             <file>testqdoc.html</file>
         </files>
