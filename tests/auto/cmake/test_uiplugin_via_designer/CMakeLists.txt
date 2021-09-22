@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 project(test_uiplugin_via_designer)
 
 find_package(Qt6 COMPONENTS Widgets Xml Designer REQUIRED)
