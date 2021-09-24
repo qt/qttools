@@ -3782,7 +3782,7 @@
     and module name. These tags are displayed in Qt Creator's Welcome mode,
     helping users navigate the list of examples.
 
-    Additional tags can be created with \c {\\meta {tag} {tag1,[tag2,...]}}.
+    Additional tags can be created with \c {\meta {tag} {tag1,[tag2,...]}}.
     For example:
     \badcode
     / *!
