@@ -32,6 +32,7 @@ qt_internal_add_tool(${target_name}
     INCLUDE_DIRECTORIES
         ../shared
 )
+qt_internal_return_unless_building_tools()
 
 # Resources:
 set(proparser_resource_files

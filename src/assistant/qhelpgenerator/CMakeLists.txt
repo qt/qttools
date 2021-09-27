@@ -20,6 +20,7 @@ qt_internal_add_tool(${target_name}
         Qt::HelpPrivate
         Qt::Network
 )
+qt_internal_return_unless_building_tools()
 
 #### Keys ignored in scope 1:.:.:qhelpgenerator.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Compressed Help File Generator"

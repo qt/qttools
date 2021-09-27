@@ -95,6 +95,7 @@ qt_internal_add_tool(${target_name}
         CLANG_RESOURCE_DIR=${QT_LIBCLANG_RESOURCE_DIR} # special case
         QDOC2_COMPAT
 )
+qt_internal_return_unless_building_tools()
 
 #### Keys ignored in scope 1:.:.:qdoc.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Documentation Compiler"

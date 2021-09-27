@@ -35,6 +35,7 @@ qt_internal_add_tool(${target_name}
         "${QT_CMAKE_EXPORT_NAMESPACE}LinguistToolsMacros.cmake"
     # special case end
 )
+qt_internal_return_unless_building_tools()
 
 #### Keys ignored in scope 1:.:.:lrelease.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Translation File Compiler"

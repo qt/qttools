@@ -21,6 +21,7 @@ qt_internal_add_tool(${target_name}
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
 )
+qt_internal_return_unless_building_tools()
 
 #### Keys ignored in scope 1:.:.:qtattributionsscanner.pro:<TRUE>:
 # QMAKE_TARGET_DESCRIPTION = "Qt Source Code Attribution Scanner"
