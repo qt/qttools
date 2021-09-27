@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2019 The Qt Company Ltd.
+** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -106,7 +106,7 @@ void tst_generatedOutput::initTestCase()
     m_extraParams = QFileInfo(QTest::currentAppName()).dir().filePath("qdocincludepaths.inc");
     if (!QFileInfo::exists(m_extraParams)) {
         const QString warningMessage = "Cannot locate " + m_extraParams;
-        QWARN(qPrintable(warningMessage));
+        qWarning(qPrintable(warningMessage));
         m_extraParams.clear();
     } else {
         m_extraParams.insert(0, '@');
