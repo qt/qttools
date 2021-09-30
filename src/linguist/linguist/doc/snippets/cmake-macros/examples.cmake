@@ -18,39 +18,39 @@ set_source_files_properties(app_en.ts app_de.ts
 #! [set_output_location_on_ts_file]
 
 #! [qt_add_lupdate]
-qt6_add_lupdate(myapp TS_FILES myapp_de.ts)
+qt_add_lupdate(myapp TS_FILES myapp_de.ts)
 #! [qt_add_lupdate]
 
 #! [qt_add_lrelease_install]
-qt6_add_lrelease(myapp
+qt_add_lrelease(myapp
     TS_FILES myapp_de.ts
     QM_FILES_OUTPUT_VARIABLE qm_files)
 install(FILES ${qm_files} DESTINATION "translations")
 #! [qt_add_lrelease_install]
 
 #! [qt_add_translations_default]
-qt6_add_translations(super_calc TS_FILES super_calc_de.ts)
+qt_add_translations(super_calc TS_FILES super_calc_de.ts)
 #! [qt_add_translations_default]
 
 #! [qt_lupdate_lrelease]
-qt6_add_lupdate(super_calc TS_FILES super_calc_de.ts)
-qt6_add_lrelease(super_calc
+qt_add_lupdate(super_calc TS_FILES super_calc_de.ts)
+qt_add_lrelease(super_calc
     TS_FILES super_calc_de.ts
     QM_FILES_OUTPUT_VARIABLE qm_files)
-qt6_add_resource(super_calc "translations"
+qt_add_resources(super_calc "translations"
     PREFIX "/i18n"
     BASE "${CMAKE_CURRENT_BINARY_DIR}"
     FILES "${qm_files}")
 #! [qt_lupdate_lrelease]
 
 #! [qt_add_translations_resource_prefix]
-qt6_add_translations(frogger_game
+qt_add_translations(frogger_game
     TS_FILES frogger_game_no.ts
     RESOURCE_PREFIX "/translations")
 #! [qt_add_translations_resource_prefix]
 
 #! [qt_add_translations_install]
-qt6_add_translations(business_logic
+qt_add_translations(business_logic
     TS_FILES myapp_fi.ts
     QM_FILES_OUTPUT_VARIABLE qm_files)
 install(FILES ${qm_files} DESTINATION "translations")
