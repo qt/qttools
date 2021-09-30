@@ -164,6 +164,8 @@ Tokenizer::~Tokenizer()
 
 int Tokenizer::getToken()
 {
+    token_too_long_warning_was_issued = false;
+
     char *t = m_prevLex;
     m_prevLex = m_lex;
     m_lex = t;
