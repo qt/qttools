@@ -770,4 +770,32 @@
     \endcode
 
     QDoc will issue this warning if a certain title is used in more than one page.
+
+
+    \section1 The content is too long
+
+    QDoc uses a fixed-size buffer when tokenizing source files. If any single
+    token in the file has more characters than the maximum limit, QDoc will
+    issue this warning.
+
+    While QDoc will continue parsing the file, only the part of the token that
+    fits into the buffer is considered, meaning that the output might be
+    mangled.
+
+    To resolve this warning, the relevant content must be reduced in size,
+    either by splitting it, if possible, or by removing some of its parts.
+
+    The maximum amount of characters for a single token is shown alongside
+    the warning, for example:
+
+    \badcode
+        file.qdoc:71154: (qdoc) warning: The content is too long.
+
+        [The maximum amount of characters for this content is 524288.
+        Consider splitting it or reducing its size.]
+    \endcode
+
+    \note Since content that is too long will not be parsed in full, QDoc may
+    issue warnings that are false positives. Resolve all warnings of this type
+    before fixing other warnings.
 */

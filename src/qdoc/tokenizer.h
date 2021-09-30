@@ -127,9 +127,11 @@ private:
     void init();
     void start(const Location &loc);
     /*
-      This limit on the length of a lexeme seems fairly high, but a
-      doc comment can be arbitrarily long. The previous 65,536 limit
-      was reached by Mark Summerfield.
+     Represents the maximum amount of characters that can appear in a
+     block-comment.
+
+     When a block-comment with more characters than the maximum amount is
+     encountered, a warning is issued.
     */
     enum { yyLexBufSize = 524288 };
 
@@ -142,6 +144,14 @@ private:
         if (m_lexLen < yyLexBufSize - 1) {
             m_lex[m_lexLen++] = (char)m_ch;
             m_lex[m_lexLen] = '\0';
+        } else if (!token_too_long_warning_was_issued) {
+            location().warning(
+                u"The content is too long.\n"_qs,
+                u"The maximum amount of characters for this content is %1.\n"_qs.arg(yyLexBufSize) +
+                "Consider splitting it or reducing its size."
+            );
+
+            token_too_long_warning_was_issued = true;
         }
         m_curLoc.advance(QChar(m_ch));
         int ch = getch();
@@ -173,6 +183,13 @@ private:
 
     QString m_version {};
     bool m_parsingMacro {};
+
+    // Used to ensure that the warning that is issued when a token is
+    // too long to fit into our fixed sized buffer is not repeated for each
+    // character of that token after the last saved one.
+    // The flag is reset whenever a new token is requested, so as to allow
+    // reporting all such tokens that are too long during a single execution.
+    bool token_too_long_warning_was_issued{false};
 
 protected:
     QByteArray m_in {};
