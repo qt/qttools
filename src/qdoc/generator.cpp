@@ -1715,7 +1715,7 @@ void Generator::initialize()
 void Generator::copyTemplateFiles(const QString &configVar, const QString &subDir)
 {
     Config &config = Config::instance();
-    QStringList files = config.getCanonicalPathList(configVar, true);
+    QStringList files = config.getCanonicalPathList(configVar, Config::Validate);
     if (!files.isEmpty()) {
         QDir dirInfo;
         QString templateDir = s_outDir + QLatin1Char('/') + subDir;

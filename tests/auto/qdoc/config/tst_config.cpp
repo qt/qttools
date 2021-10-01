@@ -43,6 +43,7 @@ private slots:
     void includePathsFromCommandLine();
     void variables();
     void paths();
+    void includepaths();
     void getExampleProjectFile();
     void expandVars();
 
@@ -140,6 +141,28 @@ void tst_Config::paths()
     QCOMPARE(paths[0], rootDir.absoluteFilePath("paths/includes"));
     QCOMPARE(paths[1], rootDir.absoluteFilePath("configs"));
     QCOMPARE(paths[2], rootDir.absoluteFilePath("configs/includes"));
+}
+
+// Tests whether includepaths are resolved correctly
+void tst_Config::includepaths()
+{
+    auto &config = initConfig();
+    const auto docConfig = QFINDTESTDATA("/testdata/configs/includepaths.qdocconf");
+    if (!docConfig.isEmpty())
+        config.load(docConfig);
+
+    auto rootDir = QFileInfo(docConfig).dir();
+    QVERIFY(rootDir.cdUp());
+
+    const auto paths = config.getCanonicalPathList("includepaths",
+                                                   Config::IncludePaths);
+    QVERIFY(paths.size() == 5);
+
+    QCOMPARE(paths[0], "-I" + rootDir.absoluteFilePath("includepaths/include"));
+    QCOMPARE(paths[0], paths[1]);
+    QCOMPARE(paths[2], "-I" + rootDir.absoluteFilePath("includepaths/include/more"));
+    QCOMPARE(paths[3], "-F" + rootDir.absoluteFilePath("includepaths/include/framework"));
+    QCOMPARE(paths[4], "-isystem" + rootDir.absoluteFilePath("includepaths/include/system"));
 }
 
 void::tst_Config::getExampleProjectFile()

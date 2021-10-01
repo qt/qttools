@@ -235,8 +235,27 @@ QMap<QString, QStringList> Config::m_includeFilesMap;
   \brief The Config class contains the configuration variables
   for controlling how qdoc produces documentation.
 
-  Its load() function, reads, parses, and processes a qdocconf file.
+  Its load() function reads, parses, and processes a qdocconf file.
  */
+
+/*!
+  \enum Config::PathFlags
+
+  Flags used for retrieving canonicalized paths from Config.
+
+  \value Validate
+         Issue a warning for paths that do not exist and
+         remove them from the returned list.
+
+  \value IncludePaths
+         Assume the variable contains include paths with
+         prefixes such as \c{-I} that are to be removed
+         before canonicalizing and then re-inserted.
+
+  \omitvalue None
+
+  \sa getCanonicalPathList()
+*/
 
 /*!
   Initializes the Config with \a programName and sets all
@@ -573,12 +592,16 @@ QStringList Config::getStringList(const QString &var) const
 }
 
 /*!
-   Returns the a path list where all paths from the config variable \a var
-   are canonicalized. If \a validate is true, outputs a warning for invalid
-   paths. If \a var is defined, updates the internal location to the
-   location of \a var for the purposes of error reporting.
+   Returns a path list where all paths from the config variable \a var
+   are canonicalized. If \a flags contains \c Validate, outputs a warning
+   for invalid paths. The \c IncludePaths flag is used as a hint to strip
+   away potential prefixes found in include paths before attempting to
+   canonicalize.
+
+   \note The internal location is updated to the location of \a var for
+         the purposes of error reporting.
  */
-QStringList Config::getCanonicalPathList(const QString &var, bool validate) const
+QStringList Config::getCanonicalPathList(const QString &var, PathFlags flags) const
 {
     QStringList result;
     const auto &configVar = m_configVars.value(var);
@@ -586,19 +609,47 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
 
     for (const auto &value : configVar.m_values) {
         const QString &currentPath = value.m_path;
-        QDir dir(value.m_value.simplified());
+        QString rawValue = value.m_value.simplified();
+        QString prefix;
+
+        if (flags & IncludePaths) {
+            const QStringList prefixes = QStringList()
+                    << QLatin1String("-I")
+                    << QLatin1String("-F")
+                    << QLatin1String("-isystem");
+            const auto end = std::end(prefixes);
+            const auto it =
+                std::find_if(std::begin(prefixes), end,
+                     [&rawValue](const QString &p) {
+                        return rawValue.startsWith(p);
+                });
+            if (it != end) {
+                prefix = *it;
+                rawValue.remove(0, it->size());
+                if (rawValue.isEmpty())
+                    continue;
+            } else {
+                prefix = prefixes[0]; // -I as default
+            }
+        }
+
+        QDir dir(rawValue.trimmed());
         const QString path = dir.path();
 
         if (dir.isRelative())
             dir.setPath(currentPath + QLatin1Char('/') + path);
-        if (validate && !QFileInfo::exists(dir.path()))
+        if ((flags & Validate) && !QFileInfo::exists(dir.path()))
             m_lastLocation.warning(QStringLiteral("Cannot find file or directory: %1").arg(path));
         else {
             const QString canonicalPath = dir.canonicalPath();
             if (!canonicalPath.isEmpty())
-                result.append(canonicalPath);
+                result.append(prefix + canonicalPath);
             else if (path.contains(QLatin1Char('*')) || path.contains(QLatin1Char('?')))
                 result.append(path);
+            else
+                qCDebug(lcQdoc) <<
+                        qUtf8Printable(QStringLiteral("%1: Ignored nonexistent path \'%2\'")
+                                .arg(m_lastLocation.toString()).arg(rawValue));
         }
     }
     return result;
@@ -607,8 +658,8 @@ QStringList Config::getCanonicalPathList(const QString &var, bool validate) cons
 /*!
   Calls getRegExpList() with the control variable \a var and
   iterates through the resulting list of regular expressions,
-  concatening them with some extras characters to form a single
-  QRegularExpression, which is returned/
+  concatenating them with extra characters to form a single
+  QRegularExpression, which is then returned.
 
   \sa getRegExpList()
  */
@@ -712,8 +763,8 @@ QStringList Config::getAllFiles(const QString &filesVar, const QString &dirsVar,
                                 const QSet<QString> &excludedDirs,
                                 const QSet<QString> &excludedFiles)
 {
-    QStringList result = getCanonicalPathList(filesVar, true);
-    const QStringList dirs = getCanonicalPathList(dirsVar, true);
+    QStringList result = getCanonicalPathList(filesVar, Validate);
+    const QStringList dirs = getCanonicalPathList(dirsVar, Validate);
 
     const QString nameFilter = getString(filesVar + dot + CONFIG_FILEEXTENSIONS);
 
