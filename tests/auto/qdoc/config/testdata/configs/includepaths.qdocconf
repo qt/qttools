@@ -1,0 +1,2 @@
+project = IncludePaths
+include(../includepaths/includepaths.qdocconf)

@@ -68,6 +68,7 @@ public:
     [[nodiscard]] int lineNo() const { return m_stkTop->m_lineNo; }
     [[nodiscard]] int columnNo() const { return m_stkTop->m_columnNo; }
     [[nodiscard]] bool etc() const { return m_etc; }
+    [[nodiscard]] QString toString() const;
     void warning(const QString &message, const QString &details = QString()) const;
     void error(const QString &message, const QString &details = QString()) const;
     void fatal(const QString &message, const QString &details = QString()) const;
@@ -92,7 +93,6 @@ private:
     friend class QTypeInfo<StackEntry>;
 
     void emitMessage(MessageType type, const QString &message, const QString &details) const;
-    [[nodiscard]] QString toString() const;
     [[nodiscard]] QString top() const;
 
 private:

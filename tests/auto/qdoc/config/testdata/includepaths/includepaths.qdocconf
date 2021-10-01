@@ -1,0 +1,16 @@
+includepaths = -I./include
+
+# without prefix but same path, should be identical
+# (Config should not remove duplicates)
+includepaths += include
+
+# space between prefix and path - incorrect but we allow it
+includepaths += -I include/more
+
+# system paths and framework paths
+includepaths += \
+    -F./include/framework \
+    -isysteminclude/system
+
+# nonexistent paths are to be ignored
+includepaths += invalid

@@ -1096,38 +1096,18 @@ void ClangCodeParser::initializeParser()
 {
     Config &config = Config::instance();
     m_version = config.getString(CONFIG_VERSION);
-    auto args = config.getStringList(CONFIG_INCLUDEPATHS);
-    QSet<QString> seen;
-    m_includePaths.clear();
-
+    auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
+                                            Config::IncludePaths);
 #ifdef Q_OS_MACOS
     args.append(Utilities::getInternalIncludePaths(QStringLiteral("clang++")));
 #endif
-
-    // Remove empty paths and duplicates and add -I and canonicalize if necessary
-    for (const auto &p : args) {
-        QByteArray option;
-        QString rawpath;
-        if (p.startsWith(QLatin1String("-I")) || p.startsWith(QLatin1String("-F"))) {
-            rawpath = p.mid(2).trimmed();
-            option = p.left(2).toUtf8();
-        } else if (p.startsWith(QLatin1String("-isystem"))) {
-            rawpath = p.mid(8).trimmed();
-            option = "-isystem";
-        } else {
-            rawpath = p;
-            option = "-I";
-        }
-        if (rawpath.isEmpty() || seen.contains(rawpath))
-            continue;
-        seen.insert(rawpath);
-        QByteArray path(rawpath.toUtf8());
-        QFileInfo fi(QDir::current(), rawpath);
-        if (fi.exists())
-            path = fi.canonicalFilePath().toUtf8();
-        path.prepend(option);
-        m_includePaths.append(path);
+    m_includePaths.clear();
+    for (const auto &path : qAsConst(args)) {
+        if (!path.isEmpty())
+            m_includePaths.append(path.toUtf8());
     }
+    m_includePaths.erase(std::unique(m_includePaths.begin(), m_includePaths.end()),
+                         m_includePaths.end());
     CppCodeParser::initializeParser();
     m_pchFileDir.reset(nullptr);
     m_allHeaders.clear();

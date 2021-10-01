@@ -118,6 +118,12 @@ public:
 
     enum QDocPass { Neither, Prepare, Generate };
 
+    enum PathFlags : unsigned char {
+        None = 0x0,
+        Validate = 0x1,
+        IncludePaths = 0x2
+    };
+
     void init(const QString &programName, const QStringList &args);
     [[nodiscard]] bool getDebug() const { return m_debug; }
     [[nodiscard]] bool showInternal() const { return m_showInternal; }
@@ -142,7 +148,8 @@ public:
                                     const QString &defaultString = QString()) const;
     [[nodiscard]] QSet<QString> getStringSet(const QString &var) const;
     [[nodiscard]] QStringList getStringList(const QString &var) const;
-    [[nodiscard]] QStringList getCanonicalPathList(const QString &var, bool validate = false) const;
+    [[nodiscard]] QStringList getCanonicalPathList(const QString &var,
+                                                   PathFlags flags = None) const;
     [[nodiscard]] QRegularExpression getRegExp(const QString &var) const;
     [[nodiscard]] QList<QRegularExpression> getRegExpList(const QString &var) const;
     [[nodiscard]] QSet<QString> subVars(const QString &var) const;
