@@ -115,7 +115,7 @@
 
     When Clang parses a function statement after \l {fn-command}{\\fn}, it checks
     this against the declaration in the header file.  If Clang
-    discovers discrepancies, it will issue this warning message.
+    discovers discrepancies, it issues this warning message.
 
     \section1 C++ class <ClassName> not found: \\instantiates <ClassName>
 
@@ -132,7 +132,7 @@
     \section1 This qdoc comment contains no topic command (e.g., \\module, \\page)
 
     If a QDoc comment doesn't contain a \l {Topic Commands}{topic command}, QDoc does
-    not know what the comment documents, and will issue this warning.
+    not know what the comment documents, and issues this warning.
     Very similar to \l {Cannot tie this documentation to anything}, but
     specific to comments that are not in C++ or QML files.
 
@@ -154,16 +154,16 @@
 
     \section1 Clang couldn't find function when parsing \\fn <signature>
 
-    When parsing a \l {fn-command}{\\fn} statement, Clang will compare this with the
+    When parsing a \l {fn-command}{\\fn} statement, Clang compares this with the
     function declaration in the header file. If the signature differs
-    Clang will issue this warning.
+    Clang issues this warning.
 
     \note
     \list
         \li A member of a class or namespace needs to include the class or namespace
             prefix on the member name.
-        \li A \\fn with no return type will match, regardless of the actual return
-            type, but if it specifies an incorrect return type, it won't match.
+        \li A \\fn with no return type matches, regardless of the actual return
+            type, but if it specifies an incorrect return type, it doesn't.
         \li Differences in \\fn's parameter names don't preclude matching, although
             the \l {a-command}{\\a} commands in the comment must use the names in the declaration.
 
@@ -171,7 +171,7 @@
 
     \section1 Has no \\inmodule command
 
-    QDoc will issue this warning if the QDoc comments do not relate
+    QDoc issues this warning if the QDoc comments do not relate
     a class, namespace, or headerfile to a module with the
     \l{inmodule-command}{\\inmodule} command.
 
@@ -261,7 +261,7 @@
     allows multiple (qml|js)property or (qml|js)attachedproperty topic commands
     in a single documentation comment to document a property group
     where the last element in the path is <group>.<property>. Any other topic
-    commands will trigger this warning.
+    commands triggers this warning.
 
     \section1 Cannot find base function for <method> in <class>
 
@@ -348,7 +348,7 @@
     A \l {macro-variable}{\\macro} that specifies an output format cannot also
     have a generic definition.
 
-    An example of a configuration that will trigger this warning:
+    An example of a configuration that triggers this warning:
 
     \badcode
     macro.gui = \b
@@ -376,7 +376,7 @@
 
     This means that there are two \l {target-command}{\\target} commands
     with the same parameter. They should be unique.
-    This warning will be followed by the warning "The previous
+    This warning is followed by the warning "The previous
     occurrence is here".
 
     \section1 Cannot find qdoc include file <filename>
@@ -427,7 +427,7 @@
         \endlist
     \endcode
 
-    Will result in the QDoc warning "Can't use '\\table' in '\\list'".
+    Results in the QDoc warning "Can't use '\\table' in '\\list'".
 
     \section1 Missing <outer> before <inner>
 
@@ -552,14 +552,14 @@
     \li \\generatelist related
     \endlist
 
-    QDoc will issue this warning if you specify \c{\generatelist <group>}
+    QDoc issues this warning if you specify \c{\generatelist <group>}
     and the group does not contain any items, or if you specify
     \c{\generatelist <group> <pattern>} and no item in the group
     matches the pattern.
 
     \section1 \\generatelist <group> no such group
 
-    This warning will be issued if the argument to \l {generatelist-command}{\\generatelist}
+    This warning issues if the argument to \l {generatelist-command}{\\generatelist}
     is a non-existing group.
 
     Example:
@@ -573,7 +573,7 @@
     draganddrop group by the \c{\l {ingroup-command}{\ingroup} draganddrop} command in their
     \l {class-command}{\\class} or \l {qmltype-command}{\\qmltype} comment.
 
-    QDoc will issue this warning message if no entity has
+    QDoc issues this warning message if no entity has
     this \c{\ingroup draganddrop} statement.
 
     \section1 Missing image: <imagefile>
@@ -664,7 +664,7 @@
       \endcode
 
 
-    The \l {printuntil-command}{\\printuntil} command will print until it
+    The \l {printuntil-command}{\\printuntil} command prints until it
     meets a line consisting of only a right curly brace followed by a
     right parenthesis. In this case, the curly brace and the parenthesis
     need to be escaped because they have special meanings in regular
@@ -710,7 +710,7 @@
     \\list can take an optional argument: a single number or character
     that modifies the list style. Refer to the {list-command}{\\list}
     documentation for more details. If you use an argument that is
-    not recognized, QDoc will issue this warning.
+    not recognized, QDoc issues this warning.
 
     \section1 Unable to parse QML snippet: <code> at line <y>, column <x>
 
@@ -719,13 +719,13 @@
 
     Example:
 
-    If there is a syntax error in the QML code, QDoc will issue the warning
+    If there is a syntax error in the QML code, QDoc issues the warning
     \badcode
     Unable to parse QML snippet: Syntax error at line 97, column 42
     \endcode
 
     Snippets can also contain QML and also there the code is checked. If there is
-    for example a missing curly brace in the code, QDoc will issue the warning
+    for example a missing curly brace in the code, QDoc issues the warning
     \badcode
     Unable to parse QML snippet: Expected token '{' at line 63, column 52
     \endcode
@@ -753,7 +753,7 @@
     \endcode
 
     The \l {skipto-command}{\\skipto} + <pattern> moves the cursor to the next line containing
-    that pattern. If \\skipto doesn't find it, QDoc will issue this warning.
+    that pattern. If \\skipto doesn't find it, QDoc issues this warning.
 
     \section1 Failed to open <file> for writing
 
@@ -769,16 +769,16 @@
         \title Building ActiveX servers in Qt
     \endcode
 
-    QDoc will issue this warning if a certain title is used in more than one page.
+    QDoc issues this warning if a certain title is used in more than one page.
 
 
     \section1 The content is too long
 
     QDoc uses a fixed-size buffer when tokenizing source files. If any single
-    token in the file has more characters than the maximum limit, QDoc will
-    issue this warning.
+    token in the file has more characters than the maximum limit, QDoc issues
+    this warning.
 
-    While QDoc will continue parsing the file, only the part of the token that
+    While QDoc continues parsing the file, only the part of the token that
     fits into the buffer is considered, meaning that the output might be
     mangled.
 
@@ -795,7 +795,7 @@
         Consider splitting it or reducing its size.]
     \endcode
 
-    \note Since content that is too long will not be parsed in full, QDoc may
+    \note Since content that is too long is not parsed in full, QDoc may
     issue warnings that are false positives. Resolve all warnings of this type
     before fixing other warnings.
 */
