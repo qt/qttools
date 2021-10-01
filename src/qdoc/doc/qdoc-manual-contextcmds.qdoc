@@ -854,7 +854,7 @@
 
     The \\relates command is for including the documentation of a
     global element to some class or header file. The argument is a
-    class name or header file.
+    class name or header file. For template types, use the type name only.
 
     \code
     / *!
