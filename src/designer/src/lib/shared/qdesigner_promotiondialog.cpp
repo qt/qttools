@@ -99,8 +99,19 @@ namespace qdesigner_internal {
         formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow); // Mac
         formLayout->addRow(tr("Base class name:"),     m_baseClassCombo);
         formLayout->addRow(tr("Promoted class name:"), m_classNameEdit);
-        formLayout->addRow(tr("Header file:"),         m_includeFileEdit);
-        formLayout->addRow(tr("Global include"),       m_globalIncludeCheckBox);
+
+        QString toolTip = tr("Header file for C++ classes or module name for Qt for Python.");
+        auto *label = new QLabel(tr("Header file:"));
+        label->setToolTip(toolTip);
+        formLayout->addRow(label, m_includeFileEdit);
+        m_includeFileEdit->setToolTip(toolTip);
+
+        toolTip = tr("Indicates that header file is a global header file. Does not have any effect on Qt for Python.");
+        label = new QLabel(tr("Global include"));
+        label->setToolTip(toolTip);
+        formLayout->addRow(label, m_globalIncludeCheckBox);
+        m_globalIncludeCheckBox->setToolTip(toolTip);
+
         hboxLayout->addLayout(formLayout);
         hboxLayout->addItem(new QSpacerItem(15, 0, QSizePolicy::Fixed, QSizePolicy::Ignored));
         // Button box
