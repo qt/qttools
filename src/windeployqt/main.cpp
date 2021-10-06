@@ -108,7 +108,8 @@ enum QtModule
     QtGamePadModule           = 0x0001000000000000,
     Qt3DAnimationModule       = 0x0002000000000000,
     QtWebViewModule           = 0x0004000000000000,
-    Qt3DExtrasModule          = 0x0008000000000000
+    Qt3DExtrasModule          = 0x0008000000000000,
+    QtShaderToolsModule       = 0x0010000000000000
 };
 
 struct QtModuleEntry {
@@ -168,7 +169,8 @@ static QtModuleEntry qtModuleEntries[] = {
     { QtWebChannelModule, "webchannel", "Qt6WebChannel", nullptr },
     { QtTextToSpeechModule, "texttospeech", "Qt6TextToSpeech", nullptr },
     { QtSerialBusModule, "serialbus", "Qt6SerialBus", nullptr },
-    { QtWebViewModule, "webview", "Qt6WebView", nullptr }
+    { QtWebViewModule, "webview", "Qt6WebView", nullptr },
+    { QtShaderToolsModule, "shadertools", "Qt6ShaderTools", nullptr }
 };
 
 enum QtPlugin {
@@ -844,7 +846,7 @@ static const PluginModuleMapping pluginModuleMappings[] =
     {"qtwebengine", QtWebEngineModule | QtWebEngineCoreModule | QtWebEngineWidgetsModule},
     {"styles", QtWidgetsModule},
     {"sceneparsers", Qt3DRendererModule},
-    {"renderers", Qt3DRendererModule},
+    {"renderers", Qt3DRendererModule | QtShaderToolsModule},
     {"renderplugins", Qt3DRendererModule},
     {"geometryloaders", Qt3DRendererModule},
     {"webview", QtWebViewModule}
