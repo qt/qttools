@@ -56,12 +56,12 @@ Calls \c{lrelease} on each \c{.ts} file passed as an argument, generating
 You can set additional \c{OPTIONS} that should be passed when \c{lrelease} is
 invoked. You can find possible options in the \l{lrelease}{lrelease documentation}.
 
-By default, the \c{qm} files will be placed in the root level of the build
-directory. To change this, you can set \c{OUTPUT_LOCATION} as a property
-of the source \c{.ts} file.
+By default, the \c{qm} files will be placed in the current build directory
+(\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
+as a property of the source \c{.ts} file.
 
 For example, with the following code, the \c{.qm} files are generated
-in a \c{translations} directory below the build directory.
+in a \c{translations} directory below the current build directory.
 
 \snippet cmake-macros/examples.cmake set_output_location_on_ts_file
 
@@ -243,12 +243,12 @@ You can set additional \c{OPTIONS} that should be passed when \c{lrelease} is
 invoked. You can find possible options in the \l{lrelease}{lrelease
 documentation}.
 
-By default, the \c{.qm} files will be placed in the root level of the build
-directory. To change this, you can set \c{OUTPUT_LOCATION} as a property
-of the source \c{.ts} file.
+By default, the \c{.qm} files will be placed in the current build directory
+(\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
+as a property of the source \c{.ts} file.
 
 For example, with the following code, the \c{.qm} files are generated
-in a \c{translations} directory below the build directory.
+in a \c{translations} directory below the current build directory.
 
 \snippet cmake-macros/examples.cmake set_output_location_on_ts_file
 
@@ -335,12 +335,12 @@ You can set additional options for \l{lupdate} and \l{lrelease} with
 \c{LUPDATE_OPTIONS} and \c{LRELEASE_OPTIONS}. You can find possible options in
 the \l{translations}{translations documentation}.
 
-By default, the \c{.qm} files will be placed in the root level of the build
-directory. To change this, you can set \c{OUTPUT_LOCATION} as a property
-of the source \c{.ts} file.
+By default, the \c{.qm} files will be placed in the current build directory
+(\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
+as a property of the source \c{.ts} file.
 
 For example, with the following code, the \c{.qm} files are generated
-in a \c{translations} directory below the build directory.
+in a \c{translations} directory below the current build directory.
 
 \snippet cmake-macros/examples.cmake set_output_location_on_ts_file
 
