@@ -216,7 +216,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
                         return (name == relatedNode->name() &&  href == relatedNode->url().section(QLatin1Char('/'), -1));
                     });
 
-            if (nodeIterator != m_relatedNodes.end()) {
+            if (nodeIterator != m_relatedNodes.end() && parent) {
                 parent->adoptChild(*nodeIterator);
                 reader.skipCurrentElement();
                 return;
