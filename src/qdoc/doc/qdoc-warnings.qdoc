@@ -152,6 +152,18 @@
     containing \l {namespace-command}{\\namespace} commands with the same
     argument, <name>.
 
+    \section1 <name> is documented, but namespace <namespace> is not documented in any module
+
+    The documentation for \e {<name>} was found, but \e{<name>} is declared
+    under a namespace that is either undocumented or QDoc was unable to
+    locate the documentation for it.
+
+    This can be resolved by either documenting \e{<namespace>}, or if it is
+    already documented in another module, ensure that this module has
+    a dependency to it.
+
+    See also \l {depends-variable}{depends} and {indexes-variable}{indexes}.
+
     \section1 Clang couldn't find function when parsing \\fn <signature>
 
     When parsing a \l {fn-command}{\\fn} statement, Clang compares this with the
