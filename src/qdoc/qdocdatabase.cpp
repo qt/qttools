@@ -1090,6 +1090,8 @@ void QDocDatabase::resolveNamespaces()
 {
     if (!m_namespaceIndex.isEmpty())
         return;
+
+    bool linkErrors = !Config::instance().getBool(CONFIG_NOLINKERRORS);
     NodeMultiMap namespaceMultimap;
     Tree *t = m_forest.firstTree();
     while (t) {
@@ -1122,10 +1124,14 @@ void QDocDatabase::resolveNamespaces()
                     }
                 }
             } else if (!indexNamespace) {
-                // warn about documented children in undocumented namespaces
-                for (auto *node : namespaces) {
-                    if (!node->isIndexNode())
-                        static_cast<NamespaceNode *>(node)->reportDocumentedChildrenInUndocumentedNamespace();
+                // Warn about documented children in undocumented namespaces.
+                // As the namespace can be documented outside this project,
+                // skip the warning if -no-link-errors is set
+                if (linkErrors) {
+                    for (auto *node : namespaces) {
+                        if (!node->isIndexNode())
+                            static_cast<NamespaceNode *>(node)->reportDocumentedChildrenInUndocumentedNamespace();
+                    }
                 }
             } else {
                 for (auto *node : namespaces) {

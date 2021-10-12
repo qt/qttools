@@ -344,7 +344,7 @@
     of dependencies for a single module consists of actual build
     dependencies. In addition, if there is a documentation project
     (module) that acts as a top-level entry point for the entire
-    documentation set and provides \l {navigation-variable}[navigation}
+    documentation set and provides \l {navigation-variable}{navigation}
     links, each module documentation should include it as a dependency.
 
     When QDoc generates documentation for a project, it will also generate
@@ -1902,8 +1902,7 @@
     \target indexes-variable
     \section1 indexes
 
-    The \l {indexes-variable}[indexes} variable defines a set of paths
-    to index files to load.
+    The \c indexes variable defines a set of paths to index files to load.
 
     \badcode
     indexes = \
