@@ -128,6 +128,8 @@ public:
         TableOfContents,
         Target,
         UnhandledFormat,
+        WarningLeft,
+        WarningRight,
         UnknownCommand,
         Last = UnknownCommand
     };

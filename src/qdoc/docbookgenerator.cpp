@@ -494,14 +494,18 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::ImageText:
         break;
     case Atom::ImportantLeft:
-    case Atom::NoteLeft: {
-        QString tag = atom->type() == Atom::ImportantLeft ? "important" : "note";
-        m_writer->writeStartElement(dbNamespace, tag);
+    case Atom::NoteLeft:
+    case Atom::WarningLeft: {
+        QString admonType = atom->typeString().toLower();
+        // Remove 'Left' to get the admonition type
+        admonType.chop(4);
+        m_writer->writeStartElement(dbNamespace, admonType);
         newLine();
         m_writer->writeStartElement(dbNamespace, "para");
     } break;
     case Atom::ImportantRight:
     case Atom::NoteRight:
+    case Atom::WarningRight:
         m_writer->writeEndElement(); // para
         newLine();
         m_writer->writeEndElement(); // note/important
