@@ -118,6 +118,18 @@ if("${staticlib1_resource_targets}" STREQUAL "")
     message(FATAL_ERROR "staticlib1_resource_targets is empty.")
 endif()
 
+# Explicitly specify SOURCES.
+create_app(app6)
+qt6_add_translations(app6
+    TS_FILES myobject_cs.ts
+    SOURCES myi18nobject.cpp)
+
+# Explicitly specify INCLUDE_DIRECTORIES.
+create_app(app7)
+qt6_add_translations(app7
+    TS_FILES myobject_nl.ts
+    INCLUDE_DIRECTORIES some_dir)
+
 # Build the update_translations target
 add_custom_target(my_all_target
     ALL
