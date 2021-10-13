@@ -105,8 +105,8 @@ void tst_generatedOutput::initTestCase()
     // Resolve the path to the file containing extra parameters
     m_extraParams = QFileInfo(QTest::currentAppName()).dir().filePath("qdocincludepaths.inc");
     if (!QFileInfo::exists(m_extraParams)) {
-        const QString warningMessage = "Cannot locate " + m_extraParams;
-        qWarning(qPrintable(warningMessage));
+        qWarning().nospace() << QStringLiteral("Cannot locate")
+                             << qUtf8Printable(m_extraParams);
         m_extraParams.clear();
     } else {
         m_extraParams.insert(0, '@');
