@@ -478,14 +478,18 @@ int DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeM
     case Atom::ImageText:
         break;
     case Atom::ImportantLeft:
-    case Atom::NoteLeft: {
-        QString tag = atom->type() == Atom::ImportantLeft ? "important" : "note";
-        writer->writeStartElement(dbNamespace, tag);
+    case Atom::NoteLeft:
+    case Atom::WarningLeft: {
+        QString admonType = atom->typeString().toLower();
+        // Remove 'Left' to get the admonition type
+        admonType.chop(4);
+        writer->writeStartElement(dbNamespace, admonType);
         newLine();
         writer->writeStartElement(dbNamespace, "para");
     } break;
     case Atom::ImportantRight:
     case Atom::NoteRight:
+    case Atom::WarningRight:
         writer->writeEndElement(); // para
         newLine();
         writer->writeEndElement(); // note/important

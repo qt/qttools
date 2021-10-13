@@ -523,10 +523,6 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         writer.writeCharacters(" ");
         break;
 
-    case Atom::ImportantRight:
-        writer.writeEndElement(); // para
-        break;
-
     case Atom::LegaleseLeft:
         writer.writeStartElement("legalese");
         break;
@@ -603,7 +599,10 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         writer.writeCharacters(" ");
         break;
 
+    // End admonition elements
+    case Atom::ImportantRight:
     case Atom::NoteRight:
+    case Atom::WarningRight:
         writer.writeEndElement(); // para
         break;
 
@@ -726,6 +725,12 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         writer.writeStartElement("target");
         writer.writeAttribute("name", Doc::canonicalTitle(atom->string()));
         writer.writeEndElement();
+        break;
+
+    case Atom::WarningLeft:
+        writer.writeStartElement("para");
+        writer.writeTextElement("bold", "Warning:");
+        writer.writeCharacters(" ");
         break;
 
     case Atom::UnhandledFormat:
