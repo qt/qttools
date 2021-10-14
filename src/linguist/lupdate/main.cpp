@@ -108,12 +108,18 @@ void TrFunctionAliasManager::ensureTrFunctionHashUpdated() const
     if (!m_nameToTrFunctionMap.empty())
         return;
 
-    QHash<QString, TrFunction> nameToTrFunctionMap;
+    NameToTrFunctionMap nameToTrFunctionMap;
     for (int i = 0; i < NumTrFunctions; ++i)
         for (const QString &alias : m_trFunctionAliases[i])
             nameToTrFunctionMap[alias] = TrFunction(i);
     // commit:
     m_nameToTrFunctionMap.swap(nameToTrFunctionMap);
+}
+
+const TrFunctionAliasManager::NameToTrFunctionMap &TrFunctionAliasManager::nameToTrFunctionMap() const
+{
+    ensureTrFunctionHashUpdated();
+    return m_nameToTrFunctionMap;
 }
 
 static QStringList availableFunctions()

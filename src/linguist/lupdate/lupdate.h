@@ -121,6 +121,8 @@ public:
         NumTrFunctions
     };
 
+    using NameToTrFunctionMap = QHash<QString, TrFunction>;
+
     enum Operation { AddAlias, SetAlias };
 
     int trFunctionByName(const QString &trFunctionName) const;
@@ -132,12 +134,14 @@ public:
 
     QStringList availableFunctionsWithAliases() const;
 
+    const NameToTrFunctionMap &nameToTrFunctionMap() const;
+
 private:
     void ensureTrFunctionHashUpdated() const;
 
 private:
     QStringList m_trFunctionAliases[NumTrFunctions];
-    mutable QHash<QString,TrFunction> m_nameToTrFunctionMap;
+    mutable NameToTrFunctionMap m_nameToTrFunctionMap;
 };
 
 QT_END_NAMESPACE

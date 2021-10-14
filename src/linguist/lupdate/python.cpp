@@ -30,6 +30,7 @@
 #include <translator.h>
 #include "lupdate.h"
 
+#include <QtCore/qhash.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qstack.h>
@@ -60,8 +61,7 @@ enum Token { Tok_Eof, Tok_class, Tok_return, Tok_tr,
 */
 static QString yyFileName;
 static int yyCh;
-static char yyIdent[128];
-static size_t yyIdentLen;
+static QByteArray yyIdent;
 static char yyComment[65536];
 static size_t yyCommentLen;
 static char yyString[65536];
@@ -73,6 +73,14 @@ static int yyCurLineNo;
 static QByteArray extraComment;
 static QByteArray id;
 
+QHash<QByteArray, Token> tokens = {
+    {"None", Tok_None},
+    {"class", Tok_class},
+    {"return", Tok_return},
+    {"__tr", Tok_tr}, // Legacy?
+    {"__trUtf8", Tok_trUtf8}
+};
+
 // the file to read from (if reading from a file)
 static FILE *yyInFile;
 
@@ -82,8 +90,6 @@ static int buf;
 
 static int (*getChar)();
 static int (*peekChar)();
-
-static bool yyParsingUtf8;
 
 static int yyIndentationSize;
 static int yyContinuousSpaceCount;
@@ -150,7 +156,6 @@ static void startTokenizer(const QString &fileName, int (*getCharFunc)(),
     yyParenDepth = 0;
     yyCurLineNo = 1;
 
-    yyParsingUtf8 = false;
     yyIndentationSize = 1;
     yyContinuousSpaceCount = 0;
     yyCountingIndentation = false;
@@ -284,7 +289,7 @@ static QByteArray readLine()
 
 static Token getToken()
 {
-    yyIdentLen = 0;
+    yyIdent.clear();
     yyCommentLen = 0;
     yyStringLen = 0;
     while (yyCh != EOF) {
@@ -292,63 +297,11 @@ static Token getToken()
 
         if (std::isalpha(yyCh) || yyCh == '_') {
             do {
-                if (yyIdentLen < sizeof(yyIdent) - 1)
-                    yyIdent[yyIdentLen++] = char(yyCh);
+                yyIdent.append(char(yyCh));
                 yyCh = getChar();
             } while (std::isalnum(yyCh) || yyCh == '_');
-            yyIdent[yyIdentLen] = '\0';
 
-            switch (yyIdent[0]) {
-            case 'N':
-                if (std::strcmp(yyIdent + 1, "one") == 0)
-                    return Tok_None;
-                break;
-            case 'Q':
-                if (std::strcmp(yyIdent + 1, "T_TR_NOOP") == 0) {
-                    yyParsingUtf8 = false;
-                    return Tok_tr;
-                } else if (std::strcmp(yyIdent + 1, "T_TRANSLATE_NOOP") == 0) {
-                    yyParsingUtf8 = false;
-                    return Tok_translate;
-                }
-                break;
-            case 'c':
-                if (std::strcmp(yyIdent + 1, "lass") == 0)
-                    return Tok_class;
-                break;
-            case 'f':
-                // QTranslator::findMessage() has the same parameters as
-                // QApplication::translate().
-                if (std::strcmp(yyIdent + 1, "indMessage") == 0)
-                    return Tok_translate;
-                break;
-            case 'r':
-                if (std::strcmp(yyIdent + 1, "eturn") == 0)
-                    return Tok_return;
-                break;
-            case 't':
-                if (std::strcmp(yyIdent + 1, "r") == 0) {
-                    yyParsingUtf8 = false;
-                    return Tok_tr;
-                } else if (qstrcmp(yyIdent + 1, "rUtf8") == 0) {
-                    yyParsingUtf8 = true;
-                    return Tok_trUtf8;
-                } else if (qstrcmp(yyIdent + 1, "ranslate") == 0) {
-                    yyParsingUtf8 = false;
-                    return Tok_translate;
-                }
-                break;
-            case '_':
-                if (std::strcmp(yyIdent + 1, "_tr") == 0) {
-                    yyParsingUtf8 = false;
-                    return Tok_tr;
-                } else if (std::strcmp(yyIdent + 1, "_trUtf8") == 0) {
-                    yyParsingUtf8 = true;
-                    return Tok_trUtf8;
-                }
-                break;
-            }
-            return Tok_Ident;
+            return tokens.value(yyIdent, Tok_Ident);
         }
         switch (yyCh) {
         case '#':
@@ -725,6 +678,32 @@ static void parse(Translator &tor, ConversionData &cd,
 
 bool loadPython(Translator &translator, const QString &fileName, ConversionData &cd)
 {
+    // Match the function aliases to our tokens
+    static bool firstTime = true;
+    if (firstTime) {
+        firstTime = false;
+        const auto &nameMap  = trFunctionAliasManager.nameToTrFunctionMap();
+        for (auto it = nameMap.cbegin(), end = nameMap.cend(); it != end; ++it) {
+            switch (it.value()) {
+            case TrFunctionAliasManager::Function_tr:
+            case TrFunctionAliasManager::Function_QT_TR_NOOP:
+                tokens.insert(it.key().toUtf8(), Tok_tr);
+                break;
+            case TrFunctionAliasManager::Function_trUtf8:
+                tokens.insert(it.key().toUtf8(), Tok_trUtf8);
+                break;
+            case TrFunctionAliasManager::Function_translate:
+            case TrFunctionAliasManager::Function_QT_TRANSLATE_NOOP:
+            // QTranslator::findMessage() has the same parameters as QApplication::translate().
+            case TrFunctionAliasManager::Function_findMessage:
+                tokens.insert(it.key().toUtf8(), Tok_translate);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
 #ifdef Q_CC_MSVC
     const auto *fileNameC = reinterpret_cast<const wchar_t *>(fileName.utf16());
     const bool ok = _wfopen_s(&yyInFile, fileNameC, L"r") == 0;
