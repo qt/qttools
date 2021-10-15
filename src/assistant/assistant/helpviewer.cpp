@@ -201,6 +201,16 @@ HelpViewer::HelpViewer(qreal zoom, QWidget *parent)
     setLayout(layout);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(d->m_viewer, 10);
+
+    // Make docs' contents visible in dark theme
+    QPalette p = palette();
+    p.setColor(QPalette::Inactive, QPalette::Highlight,
+        p.color(QPalette::Active, QPalette::Highlight));
+    p.setColor(QPalette::Inactive, QPalette::HighlightedText,
+        p.color(QPalette::Active, QPalette::HighlightedText));
+    p.setColor(QPalette::Base, Qt::white);
+    p.setColor(QPalette::Text, Qt::black);
+    setPalette(p);
 }
 
 HelpViewer::~HelpViewer()
