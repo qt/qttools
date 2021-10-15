@@ -11,3 +11,6 @@ macro.endqdoc = "\\c */"
 macro.PROD = QDoc
 
 defines = test_navigation
+
+# allow (qdoc) warning: Can't link to ''
+warninglimit += 1

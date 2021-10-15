@@ -208,3 +208,10 @@
     unicode
 
 */
+
+// Empty link target that was known to assert
+/*!
+    \page crash.html
+
+    \l {}
+*/
