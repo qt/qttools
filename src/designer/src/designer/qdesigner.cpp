@@ -200,6 +200,10 @@ static inline QDesigner::ParseArgumentsResult
 
     if (parser.isSet(helpOption))
         return QDesigner::ParseArgumentsHelpRequested;
+    // There is no way to retrieve the complete help text from QCommandLineParser,
+    // so, call process() to display it.
+    if (parser.isSet(u"help-all"_qs))
+        parser.process(QCoreApplication::arguments()); // exits
     options->server = parser.isSet(serverOption);
     if (parser.isSet(clientOption)) {
         bool ok;
