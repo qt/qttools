@@ -7,6 +7,6 @@ sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"
 
-# zero warning tolerance
-warninglimit = 0
+# allow (qdoc) warning: Can't link to ''
+warninglimit = 1
 warninglimit.enabled = true

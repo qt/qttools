@@ -81,3 +81,10 @@
     titles, targets defined with \\target or \\keyword commands, and API
     reference keywords (types, methods, namespaces, and so on).
 */
+
+// Empty link target that was known to assert
+/*!
+    \page crash.html
+
+    \l {}
+*/
