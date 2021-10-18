@@ -64,7 +64,7 @@ HelpBrowser::HelpBrowser(QWidget *parent)
     m_helpEngine = new QHelpEngineCore(collectionFile, this);
     if (!m_helpEngine->setupData()) {
         delete m_helpEngine;
-        m_helpEngine = 0;
+        m_helpEngine = nullptr;
     }
 }
 

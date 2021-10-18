@@ -684,7 +684,7 @@ void QtFullToolBarManager::setToolBar(QToolBar *toolBar, const QList<QAction *> 
 
     QList<QAction *> newActionsWithSeparators;
     for (QAction *action : qAsConst(newActions)) {
-        QAction *newAction = 0;
+        QAction *newAction = nullptr;
         if (!action)
             newAction = toolBar->insertSeparator(0);
         if (d_ptr->allActions.contains(action)) {
@@ -1076,8 +1076,8 @@ void QtToolBarDialogPrivate::clearOld()
     qDeleteAll(allToolBarItems);
     allToolBarItems.clear();
 
-    currentToolBar = 0;
-    currentAction = 0;
+    currentToolBar = nullptr;
+    currentAction = nullptr;
 }
 
 void QtToolBarDialogPrivate::fillNew()
@@ -1413,7 +1413,7 @@ void QtToolBarDialogPrivate::rightClicked()
     QListWidgetItem *currentToolBarAction = ui.currentToolBarList->currentItem();
 
     QAction *action = itemToAction.value(currentAction);
-    QListWidgetItem *item = 0;
+    QListWidgetItem *item = nullptr;
     if (action) {
         if (currentState[currentToolBar].contains(action)) {
             item = actionToCurrentItem.value(action);
@@ -1499,7 +1499,7 @@ void QtToolBarDialogPrivate::currentToolBarChanged(QListWidgetItem *current)
         return;
     }
     const auto actions = currentState.value(currentToolBar);
-    QListWidgetItem *first = 0;
+    QListWidgetItem *first = nullptr;
     for (QAction *action : actions) {
         QString actionName = separatorText;
         if (action)

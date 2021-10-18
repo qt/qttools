@@ -386,7 +386,7 @@ void MessageEditor::resetSelection()
             disconnect(fte, &FormatTextEdit::editorDestroyed,
                        this, &MessageEditor::editorDestroyed);
         }
-        m_selectionHolder = 0;
+        m_selectionHolder = nullptr;
 #ifndef QT_NO_CLIPBOARD
         updateCanCutCopy();
 #endif

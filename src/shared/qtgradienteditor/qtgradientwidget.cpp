@@ -496,7 +496,7 @@ void QtGradientWidget::paintEvent(QPaintEvent *e)
         p.setBrushOrigin(0, 0);
     }
 
-    QGradient *gradient = 0;
+    QGradient *gradient = nullptr;
     switch (d_ptr->m_gradientType) {
         case QGradient::LinearGradient:
             gradient = new QLinearGradient(d_ptr->m_startLinear, d_ptr->m_endLinear);

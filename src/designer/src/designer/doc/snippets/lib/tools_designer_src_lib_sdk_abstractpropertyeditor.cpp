@@ -49,7 +49,7 @@
 ****************************************************************************/
 
 //! [0]
-        QDesignerPropertyEditorInterface *propertyEditor = 0;
+        QDesignerPropertyEditorInterface *propertyEditor = nullptr;
         propertyEditor = formEditor->propertyEditor();
 
         connect(propertyEditor, SIGNAL(propertyChanged(QString,QVariant)),
@@ -59,7 +59,7 @@
 
 //! [1]
         void checkProperty(QString property, QVariant value) {
-            QDesignerPropertyEditorInterface *propertyEditor = 0;
+            QDesignerPropertyEditorInterface *propertyEditor = nullptr;
             propertyEditor = formEditor->propertyEditor();
 
             QObject *object = propertyeditor->object();

@@ -176,7 +176,7 @@ void QtGradientView::slotGradientActivated(QListWidgetItem *item)
 QtGradientView::QtGradientView(QWidget *parent)
     : QWidget(parent)
 {
-    m_manager = 0;
+    m_manager = nullptr;
 
     m_ui.setupUi(this);
 

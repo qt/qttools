@@ -49,7 +49,7 @@
 ****************************************************************************/
 
 //! [0]
-    QDesignerFormWindowInterface *formWindow = 0;
+    QDesignerFormWindowInterface *formWindow = nullptr;
     formWindow = QDesignerFormWindowInterface::findFormWindow(myWidget);
 
     formWindow->cursor()->setProperty(myWidget, myProperty, newValue);

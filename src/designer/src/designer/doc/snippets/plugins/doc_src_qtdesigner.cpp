@@ -54,7 +54,7 @@
 
 
 //! [2]
-QDesignerMemberSheetExtension *memberSheet  = 0;
+QDesignerMemberSheetExtension *memberSheet = nullptr;
 QExtensionManager manager = formEditor->extensionManager();
 
 memberSheet = qt_extension<QDesignerMemberSheetExtension*>(manager, widget);
@@ -276,7 +276,7 @@ Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QDesignerCustomWidgetInterface")
 
 
 //! [15]
-QDesignerPropertySheetExtension *propertySheet  = 0;
+QDesignerPropertySheetExtension *propertySheet = nullptr;
 QExtensionManager manager = formEditor->extensionManager();
 
 propertySheet = qt_extension<QDesignerPropertySheetExtension*>(manager, widget);

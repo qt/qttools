@@ -469,8 +469,8 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     enum { Contexts = 0x2f, Hashes = 0x42, Messages = 0x69, NumerusRules = 0x88, Dependencies = 0x96, Language = 0xa7 };
 
     // for squeezed but non-file data, this is what needs to be deleted
-    const uchar *messageArray = 0;
-    const uchar *offsetArray = 0;
+    const uchar *messageArray = nullptr;
+    const uchar *offsetArray = nullptr;
     uint offsetLength = 0;
 
     bool ok = true;

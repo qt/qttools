@@ -1501,7 +1501,7 @@ void MainWindow::selectedMessageChanged(const QModelIndex &sortedIndex, const QM
     }
 
     int model = -1;
-    MessageItem *m = 0;
+    MessageItem *m = nullptr;
     QModelIndex index = m_sortedMessagesModel->mapToSource(sortedIndex);
     if (index.isValid()) {
         model = (index.column() && (index.column() - 1 < m_dataModel->modelCount())) ?
@@ -2029,7 +2029,7 @@ void MainWindow::doUpdateLatestModel(int model)
     m_currentIndex = MultiDataIndex(model, m_currentIndex.context(), m_currentIndex.message());
     bool enable = false;
     bool enableRw = false;
-    MessageItem *item = 0;
+    MessageItem *item = nullptr;
     if (model >= 0) {
         enable = true;
         if (m_dataModel->isModelWritable(model))

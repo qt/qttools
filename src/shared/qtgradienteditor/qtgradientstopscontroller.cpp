@@ -663,7 +663,7 @@ QtGradientStopsController::~QtGradientStopsController()
 void QtGradientStopsController::setGradientStops(const QGradientStops &stops)
 {
     d_ptr->m_model->clear();
-    QtGradientStop *first = 0;
+    QtGradientStop *first = nullptr;
     for (const QPair<qreal, QColor> &pair : stops) {
         QtGradientStop *stop = d_ptr->m_model->addStop(pair.first, pair.second);
         if (!first)

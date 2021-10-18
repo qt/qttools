@@ -107,7 +107,7 @@ void QDBusModel::addMethods(QDBusItem *parent, const QDomElement &iface)
 
     QDomElement child = iface.firstChildElement();
     while (!child.isNull()) {
-        QDBusItem *item = 0;
+        QDBusItem *item = nullptr;
         if (child.tagName() == QLatin1String("method")) {
             item = new QDBusItem(QDBusModel::MethodItem,
                     child.attribute(QLatin1String("name")), parent);

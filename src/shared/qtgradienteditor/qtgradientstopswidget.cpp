@@ -710,7 +710,7 @@ void QtGradientStopsWidget::keyPressEvent(QKeyEvent *e)
         PositionStopMap stops = d_ptr->m_model->stops();
         if (stops.isEmpty())
             return;
-        QtGradientStop *newCurrent = 0;
+        QtGradientStop *newCurrent = nullptr;
         QtGradientStop *current = d_ptr->m_model->currentStop();
         if (!current || e->key() == Qt::Key_Home || e->key() == Qt::Key_End) {
             if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Home)

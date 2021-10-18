@@ -49,8 +49,8 @@
 ****************************************************************************/
 
 //! [0]
-        QDesignerFormWindowManagerInterface *manager = 0;
-        QDesignerFormWindowInterface *formWindow = 0;
+        QDesignerFormWindowManagerInterface *manager = nullptr;
+        QDesignerFormWindowInterface *formWindow = nullptr;
 
         manager = formEditor->formWindowManager();
         formWindow = manager->formWindow(0);

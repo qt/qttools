@@ -431,7 +431,7 @@ void QtVariantPropertyManagerPrivate::slotPropertyInserted(QtProperty *property,
     if (!varParent)
         return;
 
-    QtVariantProperty *varAfter = 0;
+    QtVariantProperty *varAfter = nullptr;
     if (after) {
         varAfter = m_internalToProperty.value(after, 0);
         if (!varAfter)
@@ -1777,7 +1777,7 @@ void QtVariantPropertyManager::initializeProperty(QtProperty *property)
     QMap<int, QtAbstractPropertyManager *>::ConstIterator it =
             d_ptr->m_typeToPropertyManager.find(d_ptr->m_propertyType);
     if (it != d_ptr->m_typeToPropertyManager.constEnd()) {
-        QtProperty *internProp = 0;
+        QtProperty *internProp = nullptr;
         if (!d_ptr->m_creatingSubProperties) {
             QtAbstractPropertyManager *manager = it.value();
             internProp = manager->addProperty();
@@ -1786,7 +1786,7 @@ void QtVariantPropertyManager::initializeProperty(QtProperty *property)
         propertyToWrappedProperty()->insert(varProp, internProp);
         if (internProp) {
             const auto children = internProp->subProperties();
-            QtVariantProperty *lastProperty = 0;
+            QtVariantProperty *lastProperty = nullptr;
             for (QtProperty *child : children) {
                 QtVariantProperty *prop = d_ptr->createSubProperty(varProp, lastProperty, child);
                 lastProperty = prop ? prop : lastProperty;
