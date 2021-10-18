@@ -183,13 +183,13 @@
     entire text in curly brackets.
 
     \code
-      \c {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) :QWidget(parent)}
+      \c {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) : QWidget(parent)}
     \endcode
 
     QDoc renders this as:
 
     \quotation
-      \c {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) :QWidget(parent)}
+      \c {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) : QWidget(parent)}
     \endquotation
 
     The \\c command accepts the special character \c \ within its
