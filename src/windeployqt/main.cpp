@@ -1085,16 +1085,13 @@ static QString vcRedistDir()
     const QFileInfoList subDirs =
             QDir(vcRedistDirName)
                     .entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
-    const bool isWindows10 = QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10;
     for (const QFileInfo &f : subDirs) {
         QString path = f.absoluteFilePath();
         if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
             return path;
-        if (isWindows10) {
-            path += QStringLiteral("/onecore");
-            if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
-                return path;
-        }
+        path += QStringLiteral("/onecore");
+        if (QFileInfo(path + slash + vcDebugRedistDir()).isDir())
+            return path;
     }
     std::wcerr << "Warning: Cannot find Visual Studio redist directory under "
                << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
