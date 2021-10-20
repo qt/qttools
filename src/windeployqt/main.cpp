@@ -309,8 +309,7 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     parser->setApplicationDescription(QStringLiteral("Qt Deploy Tool ") + QLatin1String(QT_VERSION_STR)
         + QLatin1String("\n\nThe simplest way to use windeployqt is to add the bin directory of your Qt\n"
-        "installation (e.g. <QT_DIR\\bin>) to the PATH variable and then run:\n  windeployqt <path-to-app-binary>\n"
-        "If ICU, etc. are not in the bin directory, they need to be in the PATH\nvariable. "
+        "installation (e.g. <QT_DIR\\bin>) to the PATH variable and then run:\n  windeployqt <path-to-app-binary>\n\n"
         "If your application uses Qt Quick, run:\n  windeployqt --qmldir <path-to-app-qml-files> <path-to-app-binary>"));
     const QCommandLineOption helpOption = parser->addHelpOption();
     parser->addVersionOption();
