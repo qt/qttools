@@ -1075,18 +1075,16 @@ static QString vcRedistDir()
     }
     if (!vcRedistDirName.endsWith(slash))
         vcRedistDirName.append(slash);
-    vcRedistDirName.append(QStringLiteral("redist"));
+    vcRedistDirName.append(QStringLiteral("redist/MSVC"));
     if (!QFileInfo(vcRedistDirName).isDir()) {
         std::wcerr << "Warning: Cannot find Visual Studio redist directory, "
             << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
         return QString();
     }
-    const QString vc2017RedistDirName = vcRedistDirName + QStringLiteral("/MSVC");
-    if (!QFileInfo(vc2017RedistDirName).isDir())
-        return vcRedistDirName; // pre 2017
     // Look in reverse order for folder containing the debug redist folder
     const QFileInfoList subDirs =
-        QDir(vc2017RedistDirName).entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
+            QDir(vcRedistDirName)
+                    .entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
     const bool isWindows10 = QOperatingSystemVersion::current() >= QOperatingSystemVersion::Windows10;
     for (const QFileInfo &f : subDirs) {
         QString path = f.absoluteFilePath();
@@ -1099,7 +1097,7 @@ static QString vcRedistDir()
         }
     }
     std::wcerr << "Warning: Cannot find Visual Studio redist directory under "
-        << QDir::toNativeSeparators(vc2017RedistDirName).toStdWString() << ".\n";
+               << QDir::toNativeSeparators(vcRedistDirName).toStdWString() << ".\n";
     return QString();
 }
 
