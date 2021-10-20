@@ -506,24 +506,6 @@ QMap<QString, QString> queryQMakeAll(const QString &qmakeBinary, QString *errorM
     return result;
 }
 
-QString queryQMake(const QString &variable, QString *errorMessage)
-{
-    QByteArray stdOut;
-    QByteArray stdErr;
-    unsigned long exitCode;
-    const QString binary = QStringLiteral("qmake");
-    QStringList args;
-    args << QStringLiteral("-query ") << variable;
-    if (!runProcess(binary, args, QString(), &exitCode, &stdOut, &stdErr, errorMessage))
-        return QString();
-    if (exitCode) {
-        *errorMessage = binary + QStringLiteral(" returns ") + QString::number(exitCode)
-            + QStringLiteral(": ") + QString::fromLocal8Bit(stdErr);
-        return QString();
-    }
-    return QString::fromLocal8Bit(stdOut).trimmed();
-}
-
 // Update a file or directory.
 bool updateFile(const QString &sourceFileName, const QStringList &nameFilters,
                 const QString &targetDirectory, unsigned flags, JsonOutput *json, QString *errorMessage)
