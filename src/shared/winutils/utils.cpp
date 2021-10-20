@@ -455,9 +455,9 @@ QString findInPath(const QString &file)
 
 const char *qmakeInfixKey = "QT_INFIX";
 
-QMap<QString, QString> queryQMakeAll(const QString &qmakeBinary, QString *errorMessage)
+QMap<QString, QString> queryQtPaths(const QString &qtpathsBinary, QString *errorMessage)
 {
-    const QString binary = !qmakeBinary.isEmpty() ? qmakeBinary : QStringLiteral("qmake");
+    const QString binary = !qtpathsBinary.isEmpty() ? qtpathsBinary : QStringLiteral("qtpaths");
     QByteArray stdOut;
     QByteArray stdErr;
     unsigned long exitCode = 0;

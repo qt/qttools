@@ -258,7 +258,7 @@ struct Options {
     QStringList qmlDirectories; // Project's QML files.
     QStringList qmlImportPaths; // Custom QML module locations.
     QString directory;
-    QString qmakePath;
+    QString qtpathsBinary;
     QString translationsDirectory; // Translations target directory
     QStringList languages;
     QString libraryDirectory;
@@ -320,9 +320,16 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     parser->addOption(dirOption);
 
     QCommandLineOption qmakeOption(QStringLiteral("qmake"),
-                                 QStringLiteral("Use specified qmake instead of qmake from PATH."),
-                                 QStringLiteral("path"));
+                                   QStringLiteral("Use specified qmake instead of qmake from PATH. "
+                                                  "Deprecated, use qtpaths instead."),
+                                   QStringLiteral("path"));
     parser->addOption(qmakeOption);
+
+    QCommandLineOption qtpathsOption(
+            QStringLiteral("qtpaths"),
+            QStringLiteral("Use specified qtpaths.exe instead of qtpaths.exe from PATH."),
+            QStringLiteral("path"));
+    parser->addOption(qtpathsOption);
 
     QCommandLineOption libDirOption(QStringLiteral("libdir"),
                                     QStringLiteral("Copy libraries to path."),
@@ -582,20 +589,31 @@ static inline int parseArguments(const QStringList &arguments, QCommandLineParse
     if (parser->isSet(dirOption))
         options->directory = parser->value(dirOption);
 
-    if (parser->isSet(qmakeOption)) {
-        const QString qmakePath = QDir::cleanPath(parser->value(qmakeOption));
-        const QFileInfo fi(qmakePath);
+    if (parser->isSet(qmakeOption) && parser->isSet(qtpathsOption)) {
+        *errorMessage = QStringLiteral("-qmake and -qtpaths are mutually exclusive.");
+        return CommandLineParseError;
+    }
+
+    if (parser->isSet(qmakeOption) && optVerboseLevel >= 1)
+        std::wcerr << "Warning: -qmake option is deprecated. Use -qpaths instead.\n";
+
+    if (parser->isSet(qtpathsOption) || parser->isSet(qmakeOption)) {
+        const QString qtpathsArg = parser->isSet(qtpathsOption) ? parser->value(qtpathsOption)
+                                                                : parser->value(qmakeOption);
+
+        const QString qtpathsBinary = QDir::cleanPath(qtpathsArg);
+        const QFileInfo fi(qtpathsBinary);
         if (!fi.exists()) {
-            *errorMessage = msgFileDoesNotExist(qmakePath);
+            *errorMessage = msgFileDoesNotExist(qtpathsBinary);
             return CommandLineParseError;
         }
 
         if (!fi.isExecutable()) {
-            *errorMessage = QLatin1Char('"') + QDir::toNativeSeparators(qmakePath)
+            *errorMessage = QLatin1Char('"') + QDir::toNativeSeparators(qtpathsBinary)
                     + QStringLiteral("\" is not an executable.");
             return CommandLineParseError;
         }
-        options->qmakePath = qmakePath;
+        options->qtpathsBinary = qtpathsBinary;
     }
 
     if (parser->isSet(qmlDirOption))
@@ -1166,9 +1184,9 @@ static QStringList compilerRunTimeLibs(Platform platform, bool isDebug, unsigned
     return result;
 }
 
-static inline int qtVersion(const QMap<QString, QString> &qmakeVariables)
+static inline int qtVersion(const QMap<QString, QString> &qtpathsVariables)
 {
-    const QString versionString = qmakeVariables.value(QStringLiteral("QT_VERSION"));
+    const QString versionString = qtpathsVariables.value(QStringLiteral("QT_VERSION"));
     const QChar dot = QLatin1Char('.');
     const int majorVersion = versionString.section(dot, 0, 0).toInt();
     const int minorVersion = versionString.section(dot, 1, 1).toInt();
@@ -1217,18 +1235,19 @@ static QString getIcuVersion(const QString &libName)
     return version;
 }
 
-static DeployResult deploy(const Options &options,
-                           const QMap<QString, QString> &qmakeVariables,
+static DeployResult deploy(const Options &options, const QMap<QString, QString> &qtpathsVariables,
                            QString *errorMessage)
 {
     DeployResult result;
 
     const QChar slash = QLatin1Char('/');
 
-    const QString qtBinDir = qmakeVariables.value(QStringLiteral("QT_INSTALL_BINS"));
-    const QString libraryLocation = options.platform == Unix ? qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBS")) : qtBinDir;
-    const QString infix = qmakeVariables.value(QLatin1String(qmakeInfixKey));
-    const int version = qtVersion(qmakeVariables);
+    const QString qtBinDir = qtpathsVariables.value(QStringLiteral("QT_INSTALL_BINS"));
+    const QString libraryLocation = options.platform == Unix
+            ? qtpathsVariables.value(QStringLiteral("QT_INSTALL_LIBS"))
+            : qtBinDir;
+    const QString infix = qtpathsVariables.value(QLatin1String(qmakeInfixKey));
+    const int version = qtVersion(qtpathsVariables);
     Q_UNUSED(version);
 
     if (optVerboseLevel > 1)
@@ -1345,7 +1364,7 @@ static DeployResult deploy(const Options &options,
         // Custom list of import paths provided by user
         QStringList qmlImportPaths = options.qmlImportPaths;
         // Qt's own QML modules
-        qmlImportPaths << qmakeVariables.value(QStringLiteral("QT_INSTALL_QML"));
+        qmlImportPaths << qtpathsVariables.value(QStringLiteral("QT_INSTALL_QML"));
         QStringList qmlDirectories = options.qmlDirectories;
         if (qmlDirectories.isEmpty()) {
             const QString qmlDirectory = findQmlDirectory(options.platform, options.directory);
@@ -1394,13 +1413,13 @@ static DeployResult deploy(const Options &options,
     }
     result.deployedQtLibraries = (result.usedQtLibraries | options.additionalLibraries) & ~options.disabledLibraries;
 
-    const QStringList plugins =
-        findQtPlugins(&result.deployedQtLibraries,
-                      // For non-QML applications, disable QML to prevent it from being pulled in by the qtaccessiblequick plugin.
-                      options.disabledLibraries | (usesQml2 ? 0 : (QtQmlModule | QtQuickModule)),
-                      options.disabledPlugins,
-                      qmakeVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")), libraryLocation, infix,
-                      debugMatchMode, options.platform, &platformPlugin);
+    const QStringList plugins = findQtPlugins(
+            &result.deployedQtLibraries,
+            // For non-QML applications, disable QML to prevent it from being pulled in by the
+            // qtaccessiblequick plugin.
+            options.disabledLibraries | (usesQml2 ? 0 : (QtQmlModule | QtQuickModule)),
+            options.disabledPlugins, qtpathsVariables.value(QStringLiteral("QT_INSTALL_PLUGINS")),
+            libraryLocation, infix, debugMatchMode, options.platform, &platformPlugin);
 
     // Apply options flags and re-add library names.
     QString qtGuiLibrary;
@@ -1520,7 +1539,8 @@ static DeployResult deploy(const Options &options,
             }
         } // Quick 2
         if (usesQuick1) {
-            const QString quick1ImportPath = qmakeVariables.value(QStringLiteral("QT_INSTALL_IMPORTS"));
+            const QString quick1ImportPath =
+                    qtpathsVariables.value(QStringLiteral("QT_INSTALL_IMPORTS"));
             const QmlDirectoryFileEntryFunction qmlFileEntryFunction(options.platform, debugMatchMode, options.deployPdb ? QmlDirectoryFileEntryFunction::DeployPdb : 0);
             QStringList quick1Imports(QStringLiteral("Qt"));
             for (const QString &quick1Import : qAsConst(quick1Imports)) {
@@ -1534,9 +1554,9 @@ static DeployResult deploy(const Options &options,
     if (options.translations) {
         if (!options.dryRun && !createDirectory(options.translationsDirectory, errorMessage))
             return result;
-        if (!deployTranslations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
-                                result.deployedQtLibraries, options.translationsDirectory,
-                                options, errorMessage)) {
+        if (!deployTranslations(qtpathsVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS")),
+                                result.deployedQtLibraries, options.translationsDirectory, options,
+                                errorMessage)) {
             return result;
         }
     }
@@ -1545,24 +1565,23 @@ static DeployResult deploy(const Options &options,
     return result;
 }
 
-static bool deployWebProcess(const QMap<QString, QString> &qmakeVariables,
-                             const char *binaryName,
+static bool deployWebProcess(const QMap<QString, QString> &qtpathsVariables, const char *binaryName,
                              const Options &sourceOptions, QString *errorMessage)
 {
     // Copy the web process and its dependencies
     const QString webProcess = webProcessBinary(binaryName, sourceOptions.platform);
-    const QString webProcessSource = qmakeVariables.value(QStringLiteral("QT_INSTALL_LIBEXECS")) +
-                                     QLatin1Char('/') + webProcess;
+    const QString webProcessSource = qtpathsVariables.value(QStringLiteral("QT_INSTALL_LIBEXECS"))
+            + QLatin1Char('/') + webProcess;
     if (!updateFile(webProcessSource, sourceOptions.directory, sourceOptions.updateFileFlags, sourceOptions.json, errorMessage))
         return false;
     Options options(sourceOptions);
     options.binaries.append(options.directory + QLatin1Char('/') + webProcess);
     options.quickImports = false;
     options.translations = false;
-    return deploy(options, qmakeVariables, errorMessage);
+    return deploy(options, qtpathsVariables, errorMessage);
 }
 
-static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
+static bool deployWebEngineCore(const QMap<QString, QString> &qtpathsVariables,
                                 const Options &options, bool isDebug, QString *errorMessage)
 {
     static const char *installDataFiles[] = {"icudtl.dat",
@@ -1575,12 +1594,11 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
         webEngineProcessName.append('d');
     if (optVerboseLevel)
         std::wcout << "Deploying: " << webEngineProcessName.constData() << "...\n";
-    if (!deployWebProcess(qmakeVariables, webEngineProcessName, options, errorMessage))
+    if (!deployWebProcess(qtpathsVariables, webEngineProcessName, options, errorMessage))
         return false;
     const QString resourcesSubDir = QStringLiteral("/resources");
-    const QString resourcesSourceDir
-        = qmakeVariables.value(QStringLiteral("QT_INSTALL_DATA")) + resourcesSubDir
-            + QLatin1Char('/');
+    const QString resourcesSourceDir = qtpathsVariables.value(QStringLiteral("QT_INSTALL_DATA"))
+            + resourcesSubDir + QLatin1Char('/');
     const QString resourcesTargetDir(options.directory + resourcesSubDir);
     if (!createDirectory(resourcesTargetDir, errorMessage))
         return false;
@@ -1590,7 +1608,7 @@ static bool deployWebEngineCore(const QMap<QString, QString> &qmakeVariables,
             return false;
         }
     }
-    const QFileInfo translations(qmakeVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS"))
+    const QFileInfo translations(qtpathsVariables.value(QStringLiteral("QT_INSTALL_TRANSLATIONS"))
                                  + QStringLiteral("/qtwebengine_locales"));
     if (!translations.isDir()) {
         std::wcerr << "Warning: Cannot find the translation files of the QtWebEngine module at "
@@ -1652,12 +1670,14 @@ int main(int argc, char **argv)
             return 0;
     }
 
-    const QMap<QString, QString> qmakeVariables = queryQMakeAll(options.qmakePath, &errorMessage);
-    const QString xSpec = qmakeVariables.value(QStringLiteral("QMAKE_XSPEC"));
+    const QMap<QString, QString> qtpathsVariables =
+            queryQtPaths(options.qtpathsBinary, &errorMessage);
+    const QString xSpec = qtpathsVariables.value(QStringLiteral("QMAKE_XSPEC"));
     options.platform = platformFromMkSpec(xSpec);
 
-    if (qmakeVariables.isEmpty() || xSpec.isEmpty() || !qmakeVariables.contains(QStringLiteral("QT_INSTALL_BINS"))) {
-        std::wcerr << "Unable to query qmake: " << errorMessage << '\n';
+    if (qtpathsVariables.isEmpty() || xSpec.isEmpty()
+        || !qtpathsVariables.contains(QStringLiteral("QT_INSTALL_BINS"))) {
+        std::wcerr << "Unable to query qtpaths: " << errorMessage << '\n';
         return 1;
     }
 
@@ -1677,14 +1697,14 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    const DeployResult result = deploy(options, qmakeVariables, &errorMessage);
+    const DeployResult result = deploy(options, qtpathsVariables, &errorMessage);
     if (!result) {
         std::wcerr << errorMessage << '\n';
         return 1;
     }
 
     if (result.deployedQtLibraries & QtWebEngineCoreModule) {
-        if (!deployWebEngineCore(qmakeVariables, options, result.isDebug, &errorMessage)) {
+        if (!deployWebEngineCore(qtpathsVariables, options, result.isDebug, &errorMessage)) {
             std::wcerr << errorMessage << '\n';
             return 1;
         }

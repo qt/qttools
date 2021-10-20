@@ -173,7 +173,7 @@ QString findInPath(const QString &file);
 
 extern const char *qmakeInfixKey; // Fake key containing the libinfix
 
-QMap<QString, QString> queryQMakeAll(const QString &qmakeBinary, QString *errorMessage);
+QMap<QString, QString> queryQtPaths(const QString &qmakeBinary, QString *errorMessage);
 
 enum DebugMatchMode {
     MatchDebug,
