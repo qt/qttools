@@ -49,6 +49,7 @@ QDocCommandLineParser::QDocCommandLineParser()
       noLinkErrorsOption(QStringList() << QStringLiteral("no-link-errors")),
       autoLinkErrorsOption(QStringList() << QStringLiteral("autolink-errors")),
       debugOption(QStringList() << QStringLiteral("debug")),
+      atomsDumpOption("atoms-dump"),
       prepareOption(QStringList() << QStringLiteral("prepare")),
       generateOption(QStringList() << QStringLiteral("generate")),
       logProgressOption(QStringList() << QStringLiteral("log-progress")),
@@ -127,6 +128,11 @@ QDocCommandLineParser::QDocCommandLineParser()
 
     debugOption.setDescription(QCoreApplication::translate("qdoc", "Enable debug output"));
     addOption(debugOption);
+
+    atomsDumpOption.setDescription(QCoreApplication::translate(
+            "qdoc",
+            "Shows a human-readable form of the intermediate result of parsing a block-comment."));
+    addOption(atomsDumpOption);
 
     prepareOption.setDescription(QCoreApplication::translate(
             "qdoc", "Run qdoc only to generate an index file, not the docs"));

@@ -355,21 +355,6 @@ QString Atom::typeString() const
 */
 
 /*!
-  Dumps this Atom to stderr in printer friendly form.
- */
-void Atom::dump() const
-{
-    QString str = string();
-    str.replace(QLatin1String("\\"), QLatin1String("\\\\"));
-    str.replace(QLatin1String("\""), QLatin1String("\\\""));
-    str.replace(QLatin1String("\n"), QLatin1String("\\n"));
-    str.replace(QRegularExpression(QLatin1String(R"([^ -~])")), QLatin1String("?"));
-    if (!str.isEmpty())
-        str = QLatin1String(" \"") + str + QLatin1Char('"');
-    fprintf(stderr, "    %-15s%s\n", typeString().toLatin1().data(), str.toLatin1().data());
-}
-
-/*!
     For a link atom, returns the string representing the link text
     if one exist in the list of atoms.
 */

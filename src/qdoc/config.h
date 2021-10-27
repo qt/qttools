@@ -126,6 +126,7 @@ public:
 
     void init(const QString &programName, const QStringList &args);
     [[nodiscard]] bool getDebug() const { return m_debug; }
+    [[nodiscard]] bool getAtomsDump() const { return m_atomsDump; }
     [[nodiscard]] bool showInternal() const { return m_showInternal; }
 
     void clear();
@@ -227,6 +228,13 @@ private:
 
     bool m_showInternal { false };
     static bool m_debug;
+
+    // An option that can be set trough a similarly named command-line option.
+    // When this is set, every time QDoc parses a block-comment, a
+    // human-readable presentation of the `Atom`s structure for that
+    // block will shown to the user.
+    static bool m_atomsDump;
+
     static bool isMetaKeyChar(QChar ch);
     void load(Location location, const QString &fileName);
 

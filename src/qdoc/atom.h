@@ -175,7 +175,6 @@ public:
     [[nodiscard]] const QString &string() const { return m_strs[0]; }
     [[nodiscard]] const QString &string(int i) const { return m_strs[i]; }
     [[nodiscard]] qsizetype count() const { return m_strs.size(); }
-    void dump() const;
     [[nodiscard]] QString linkText() const;
     [[nodiscard]] const QStringList &strings() const { return m_strs; }
 

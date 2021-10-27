@@ -42,7 +42,7 @@ struct QDocCommandLineParser : public QCommandLineParser
     QCommandLineOption showInternalOption, redirectDocumentationToDevNullOption;
     QCommandLineOption noExamplesOption, indexDirOption, installDirOption;
     QCommandLineOption outputDirOption, outputFormatOption;
-    QCommandLineOption noLinkErrorsOption, autoLinkErrorsOption, debugOption;
+    QCommandLineOption noLinkErrorsOption, autoLinkErrorsOption, debugOption, atomsDumpOption;
     QCommandLineOption prepareOption, generateOption, logProgressOption, singleExecOption;
     QCommandLineOption includePathOption, includePathSystemOption, frameworkOption;
     QCommandLineOption timestampsOption, useDocBookExtensions;

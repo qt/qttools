@@ -217,8 +217,42 @@ Text Text::sectionHeading(const Atom *sectionLeft)
     return Text();
 }
 
+/*!
+   Prints a human-readable version of the contained atoms to stderr.
+
+   The output is formatted as a linear list of atoms, with each atom
+   being on its own line.
+
+   Each atom is represented by its type and its stringified-contents,
+   if any, with a space between the two.
+
+   Indentation is used to emphasize the possible block-level
+   relationship between consecutive atoms, increasing after a
+   "Left" atom and decreasing just before a "Right" atom.
+
+   For example, if this `Text` represented the block-comment
+   containing the text:
+
+      \c {\l {somelink} {This is a link}}
+
+   Then the human-readable output would look like the following:
+
+   \badcode
+    ParaLeft
+        Link "somelink"
+        FormattingLeft "link"
+            String "This is a link"
+        FormattingRight "link"
+        String
+    ParaRight
+   \endcode
+ */
 void Text::dump() const
 {
+    constexpr int minimum_indentation_level { 1 };
+    int indentation_level { minimum_indentation_level };
+    int indentation_width { 4 };
+
     const Atom *atom = firstAtom();
     while (atom != nullptr) {
         QString str = atom->string();
@@ -228,8 +262,18 @@ void Text::dump() const
         str.replace(QRegularExpression(R"([^ -~])"), "?");
         if (!str.isEmpty())
             str = " \"" + str + QLatin1Char('"');
-        fprintf(stderr, "    %-15s%s\n", atom->typeString().toLatin1().data(),
-                str.toLatin1().data());
+
+        QString atom_type = atom->typeString();
+        if (atom_type.contains("Right"))
+            indentation_level = std::max(minimum_indentation_level, indentation_level - 1);
+
+        fprintf(stderr, "%s%s%s\n",
+                QString(indentation_level * indentation_width, ' ').toLatin1().data(),
+                atom_type.toLatin1().data(), str.toLatin1().data());
+
+        if (atom_type.contains("Left"))
+            indentation_level += 1;
+
         atom = atom->next();
     }
 }

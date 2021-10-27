@@ -70,6 +70,15 @@ Doc::Doc(const Location &start_loc, const Location &end_loc, const QString &sour
     m_priv = new DocPrivate(start_loc, end_loc, source);
     DocParser parser;
     parser.parse(source, m_priv, metaCommandSet, topics);
+
+    if (Config::instance().getAtomsDump()) {
+        start_loc.information(u"==== Atoms Structure for block comment starting at %1 ===="_qs.arg(
+                start_loc.toString()));
+        body().dump();
+        end_loc.information(
+                u"==== Ending atoms Structure for block comment ending at %1 ===="_qs.arg(
+                        end_loc.toString()));
+    }
 }
 
 Doc::Doc(const Doc &doc) : m_priv(nullptr)
