@@ -98,7 +98,7 @@ inline QDebug operator<<(QDebug debug, const ApplicationBundleInfo &info)
 
 bool copyFilePrintStatus(const QString &from, const QString &to)
 {
-    if (QFile(to).exists()) {
+    if (QFile::exists(to)) {
         if (alwaysOwerwriteEnabled) {
             QFile(to).remove();
         } else {
@@ -135,7 +135,7 @@ bool copyFilePrintStatus(const QString &from, const QString &to)
 
 bool linkFilePrintStatus(const QString &file, const QString &link)
 {
-    if (QFile(link).exists()) {
+    if (QFile::exists(link)) {
         if (QFile(link).symLinkTarget().isEmpty())
             LogError() << link << "exists but it's a file.";
         else
@@ -747,7 +747,7 @@ QString copyDylib(const FrameworkInfo &framework, const QString path)
     }
 
     // Return if the dylib has already been deployed
-    if (QFileInfo(dylibDestinationBinaryPath).exists() && !alwaysOwerwriteEnabled)
+    if (QFileInfo::exists(dylibDestinationBinaryPath) && !alwaysOwerwriteEnabled)
         return dylibDestinationBinaryPath;
 
     // Copy dylib binary
@@ -814,7 +814,7 @@ QString copyFramework(const FrameworkInfo &framework, const QString path)
     // Contents/Info.plist should be Versions/5/Resources/Info.plist
     const QString legacyInfoPlistPath = framework.frameworkPath + "/Contents/Info.plist";
     const QString correctInfoPlistPath = frameworkDestinationDirectory + "/Resources/Info.plist";
-    if (QFile(legacyInfoPlistPath).exists()) {
+    if (QFile::exists(legacyInfoPlistPath)) {
         copyFilePrintStatus(legacyInfoPlistPath, correctInfoPlistPath);
         patch_debugInInfoPlist(correctInfoPlistPath);
     }
@@ -1275,11 +1275,11 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
                 + "/qmlimportscanner");
 
     // Fallback: Look relative to the macdeployqt binary
-    if (!QFile(qmlImportScannerPath).exists())
+    if (!QFile::exists(qmlImportScannerPath))
         qmlImportScannerPath = QCoreApplication::applicationDirPath() + "/qmlimportscanner";
 
     // Verify that we found a qmlimportscanner binary
-    if (!QFile(qmlImportScannerPath).exists()) {
+    if (!QFile::exists(qmlImportScannerPath)) {
         LogError() << "qmlimportscanner not found at" << qmlImportScannerPath;
         LogError() << "Rebuild qtdeclarative/tools/qmlimportscanner";
         return false;
