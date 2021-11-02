@@ -65,6 +65,9 @@
             </class>
         </namespace>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
-        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page"/>
+        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page">
+            <contents name="linking-to-function-like-things" title="Linking to function-like things" level="1"/>
+            <contents name="section" title="section()" level="2"/>
+        </module>
     </namespace>
 </INDEX>

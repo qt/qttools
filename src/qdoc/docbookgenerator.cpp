@@ -941,19 +941,21 @@ void DocBookGenerator::generateClassHierarchy(const Node *relative, NodeMultiMap
 
 void DocBookGenerator::generateLink(const Atom *atom)
 {
+    Q_ASSERT(m_inLink);
+
     // From HtmlGenerator::generateLink.
-    QRegularExpression funcLeftParen("\\S(\\()");
-    auto match = funcLeftParen.match(atom->string());
-    if (match.hasMatch()) {
-        // hack for C++: move () outside of link
-        qsizetype k = match.capturedStart(1);
-        m_writer->writeCharacters(atom->string().left(k));
-        m_writer->writeEndElement(); // link
-        m_inLink = false;
-        m_writer->writeCharacters(atom->string().mid(k));
-    } else {
-        m_writer->writeCharacters(atom->string());
+    if (m_linkNode && m_linkNode->isFunction()) {
+        auto match = XmlGenerator::m_funcLeftParen.match(atom->string());
+        if (match.hasMatch()) {
+            // C++: move () outside of link
+            qsizetype leftParenLoc = match.capturedStart(1);
+            m_writer->writeCharacters(atom->string().left(leftParenLoc));
+            endLink();
+            m_writer->writeCharacters(atom->string().mid(leftParenLoc));
+            return;
+        }
     }
+    m_writer->writeCharacters(atom->string());
 }
 
 /*!
@@ -969,6 +971,7 @@ void DocBookGenerator::beginLink(const QString &link, const Node *node, const No
         && node->isDeprecated())
         m_writer->writeAttribute("role", "deprecated");
     m_inLink = true;
+    m_linkNode = node;
 }
 
 void DocBookGenerator::endLink()
@@ -977,6 +980,7 @@ void DocBookGenerator::endLink()
     if (m_inLink)
         m_writer->writeEndElement(); // link
     m_inLink = false;
+    m_linkNode = nullptr;
 }
 
 void DocBookGenerator::generateList(const Node *relative, const QString &selector)

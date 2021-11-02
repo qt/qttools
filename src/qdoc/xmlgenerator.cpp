@@ -37,6 +37,8 @@
 
 QT_BEGIN_NAMESPACE
 
+const QRegularExpression XmlGenerator::m_funcLeftParen(QStringLiteral("^\\S+(\\(.*\\))$"));
+
 /*!
   Do not display \brief for QML/JS types, document and collection nodes
  */

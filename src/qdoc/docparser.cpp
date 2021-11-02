@@ -1255,7 +1255,10 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
 
             if (newWord) {
                 qsizetype startPos = m_position;
-                bool autolink = isAutoLinkString(m_input, m_position);
+                // No auto-linking inside links
+                bool autolink = (!m_pendingFormats.isEmpty() &&
+                        m_pendingFormats.last() == ATOM_FORMATTING_LINK) ?
+                            false : isAutoLinkString(m_input, m_position);
                 if (m_position == startPos) {
                     if (!ch.isSpace()) {
                         appendChar(ch);

@@ -119,7 +119,7 @@ private:
     void generateFullName(const Node *apparentNode, const Node *relative,
                           const Node *actualNode = nullptr);
     void generateDetailedMember(const Node *node, const PageNode *relative, CodeMarker *marker);
-    void generateLink(const Atom *atom, CodeMarker *marker);
+    void generateLink(const Atom *atom);
 
     QString fileBase(const Node *node) const override;
     QString fileName(const Node *node);
@@ -156,7 +156,6 @@ private:
     QString m_codeSuffix {};
     HelpProjectWriter *m_helpProjectWriter { nullptr };
     ManifestWriter *m_manifestWriter { nullptr };
-    QRegularExpression m_funcLeftParen { "\\S(\\()" };
     QString m_headerScripts {};
     QString m_headerStyles {};
     QString m_endHeader {};
