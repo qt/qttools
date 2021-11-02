@@ -74,8 +74,6 @@ private:
     void endLink(QXmlStreamWriter &writer);
     QString fileBase(const Node *node) const override;
 
-    bool m_inLink { false };
-    bool m_inSectionHeading { false };
     bool m_hasQuotingInformation { false };
     QString quoteCommand {};
     QScopedPointer<QXmlStreamWriter> currentWriter {};

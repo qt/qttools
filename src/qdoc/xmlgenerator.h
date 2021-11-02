@@ -66,6 +66,10 @@ protected:
     QPair<QString, QString> anchorForNode(const Node *node);
 
     static QString targetType(const Node *node);
+
+protected:
+    static const QRegularExpression m_funcLeftParen;
+    const Node *m_linkNode { nullptr };
 };
 
 QT_END_NAMESPACE

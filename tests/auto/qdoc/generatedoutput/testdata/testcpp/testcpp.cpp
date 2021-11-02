@@ -49,6 +49,22 @@ namespace TestQDoc {
 \if defined(test_nestedmacro)
     \versionnote {module} {\ver}
 \endif
+
+    \section1 Linking to function-like things
+
+    \list
+        \li \l {TestQDoc::Test::someFunctionDefaultArg}
+               {someFunctionDefaultArg()}
+        \li QDOCTEST_MACRO2()
+        \li \l {TestQDoc::Test::}{QDOCTEST_MACRO2(int &x)}
+        \li \l {section()}
+        \li \l {section()} {section() is a section title}
+        \li \l {TestQDoc::Test::Test()} {open( parenthesis}
+        \li \l {https://en.cppreference.com/w/cpp/utility/move}
+               {C++11 added std::move(T&& t)}
+    \endlist
+
+    \section2 section()
 */
 
 /*!

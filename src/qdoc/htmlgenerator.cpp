@@ -58,7 +58,6 @@
 
 QT_BEGIN_NAMESPACE
 
-static bool showBrokenLinks = false;
 bool HtmlGenerator::s_inUnorderedList { false };
 
 static void addLink(const QString &linkTarget, QStringView nestedStuff, QString *res)
@@ -338,7 +337,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 out() << protectEnc(atom->string());
             } else {
                 beginLink(link, node, relative);
-                generateLink(atom, marker);
+                generateLink(atom);
                 endLink();
             }
         } else {
@@ -679,10 +678,9 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         if (link.isEmpty() && (node != relative) && !noLinkErrors()) {
             relative->doc().location().warning(
                     QStringLiteral("Can't link to '%1'").arg(atom->string()));
-        } else {
-            node = nullptr;
         }
-        beginLink(link, node, relative);
+        beginLink(link, nullptr, relative);
+        m_linkNode = node;
         skipAhead = 1;
     } break;
     case Atom::ExampleFileLink: {
@@ -863,7 +861,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         break;
     case Atom::String:
         if (m_inLink && !m_inContents && !m_inSectionHeading) {
-            generateLink(atom, marker);
+            generateLink(atom);
         } else {
             out() << protectEnc(atom->string());
         }
@@ -3238,24 +3236,22 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
     return html;
 }
 
-void HtmlGenerator::generateLink(const Atom *atom, CodeMarker *marker)
+void HtmlGenerator::generateLink(const Atom *atom)
 {
-    auto match = m_funcLeftParen.match(atom->string());
-    if (match.hasMatch() && marker->recognizeLanguage("Cpp")) {
-        // hack for C++: move () outside of link
-        qsizetype k = match.capturedStart(1);
-        out() << protectEnc(atom->string().left(k));
-        if (m_link.isEmpty()) {
-            if (showBrokenLinks)
-                out() << "</i>";
-        } else {
-            out() << "</a>";
+    Q_ASSERT(m_inLink);
+
+    if (m_linkNode && m_linkNode->isFunction()) {
+        auto match = XmlGenerator::m_funcLeftParen.match(atom->string());
+        if (match.hasMatch()) {
+            // C++: move () outside of link
+            qsizetype leftParenLoc = match.capturedStart(1);
+            out() << protectEnc(atom->string().left(leftParenLoc));
+            endLink();
+            out() << protectEnc(atom->string().mid(leftParenLoc));
+            return;
         }
-        m_inLink = false;
-        out() << protectEnc(atom->string().mid(k));
-    } else {
-        out() << protectEnc(atom->string());
     }
+    out() << protectEnc(atom->string());
 }
 
 QString HtmlGenerator::protectEnc(const QString &string)
@@ -3422,39 +3418,39 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
 void HtmlGenerator::beginLink(const QString &link)
 {
     m_link = link;
-    if (m_link.isEmpty()) {
-        if (showBrokenLinks)
-            out() << "<i>";
-    }
-    out() << "<a href=\"" << m_link << "\">";
     m_inLink = true;
+    m_linkNode = nullptr;
+
+    if (!m_link.isEmpty())
+        out() << "<a href=\"" << m_link << "\">";
 }
 
 void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node *relative)
 {
     m_link = link;
-    if (m_link.isEmpty()) {
-        if (showBrokenLinks)
-            out() << "<i>";
-    } else if (node == nullptr || (relative != nullptr && node->status() == relative->status()))
+    m_inLink = true;
+    m_linkNode = node;
+    if (m_link.isEmpty())
+        return;
+
+    if (node == nullptr || (relative != nullptr && node->status() == relative->status()))
         out() << "<a href=\"" << m_link << "\">";
     else if (node->isDeprecated())
         out() << "<a href=\"" << m_link << "\" class=\"obsolete\">";
     else
         out() << "<a href=\"" << m_link << "\">";
-    m_inLink = true;
 }
 
 void HtmlGenerator::endLink()
 {
-    if (m_inLink) {
-        if (m_link.isEmpty() && showBrokenLinks) {
-            out() << "</i>";
-        } else {
-            out() << "</a>";
-        }
-    }
+    if (!m_inLink)
+        return;
+
     m_inLink = false;
+    m_linkNode = nullptr;
+
+    if (!m_link.isEmpty())
+        out() << "</a>";
 }
 
 /*!
