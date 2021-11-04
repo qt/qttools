@@ -47,8 +47,9 @@
 
 QT_BEGIN_NAMESPACE
 
-class QtColorButtonPrivate
+class QtColorButtonPrivate : public QObject
 {
+    Q_OBJECT
     QtColorButton *q_ptr;
     Q_DECLARE_PUBLIC(QtColorButton)
 public:
@@ -124,7 +125,7 @@ QtColorButton::QtColorButton(QWidget *parent)
 
     setAcceptDrops(true);
 
-    connect(this, SIGNAL(clicked()), this, SLOT(slotEditColor()));
+    connect(this, &QToolButton::clicked, d_ptr.data(), &QtColorButtonPrivate::slotEditColor);
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
 }
 
@@ -268,4 +269,4 @@ void QtColorButton::dropEvent(QDropEvent *event)
 
 QT_END_NAMESPACE
 
-#include "moc_qtcolorbutton.cpp"
+#include "qtcolorbutton.moc"

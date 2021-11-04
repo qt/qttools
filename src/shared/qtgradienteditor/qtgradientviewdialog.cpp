@@ -48,10 +48,10 @@ QtGradientViewDialog::QtGradientViewDialog(QWidget *parent)
 {
     m_ui.setupUi(this);
     m_ui.buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-    connect(m_ui.gradientView, SIGNAL(currentGradientChanged(QString)),
-            this, SLOT(slotGradientSelected(QString)));
-    connect(m_ui.gradientView, SIGNAL(gradientActivated(QString)),
-            this, SLOT(slotGradientActivated(QString)));
+    connect(m_ui.gradientView, &QtGradientView::currentGradientChanged,
+            this, &QtGradientViewDialog::slotGradientSelected);
+    connect(m_ui.gradientView, &QtGradientView::gradientActivated,
+            this, &QtGradientViewDialog::slotGradientActivated);
 }
 
 void QtGradientViewDialog::setGradientManager(QtGradientManager *manager)

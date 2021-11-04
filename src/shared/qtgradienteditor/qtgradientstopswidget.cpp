@@ -51,13 +51,16 @@
 
 QT_BEGIN_NAMESPACE
 
-class QtGradientStopsWidgetPrivate
+class QtGradientStopsWidgetPrivate : public QObject
 {
+    Q_OBJECT
     QtGradientStopsWidget *q_ptr;
     Q_DECLARE_PUBLIC(QtGradientStopsWidget)
 public:
     typedef QMap<qreal, QColor> PositionColorMap;
     typedef QMap<QtGradientStop *, qreal> StopPositionMap;
+
+    void setGradientStopsModel(QtGradientStopsModel *model);
 
     void slotStopAdded(QtGradientStop *stop);
     void slotStopRemoved(QtGradientStop *stop);
@@ -113,6 +116,60 @@ public:
 
     PositionColorMap m_moveOriginal;
 };
+
+void QtGradientStopsWidgetPrivate::setGradientStopsModel(QtGradientStopsModel *model)
+{
+    if (m_model == model)
+        return;
+
+    if (m_model) {
+        disconnect(m_model, &QtGradientStopsModel::stopAdded,
+                    this, &QtGradientStopsWidgetPrivate::slotStopAdded);
+        disconnect(m_model, &QtGradientStopsModel::stopRemoved,
+                    this, &QtGradientStopsWidgetPrivate::slotStopRemoved);
+        disconnect(m_model, &QtGradientStopsModel::stopMoved,
+                    this, &QtGradientStopsWidgetPrivate::slotStopMoved);
+        disconnect(m_model, &QtGradientStopsModel::stopsSwapped,
+                    this, &QtGradientStopsWidgetPrivate::slotStopsSwapped);
+        disconnect(m_model, &QtGradientStopsModel::stopChanged,
+                    this, &QtGradientStopsWidgetPrivate::slotStopChanged);
+        disconnect(m_model, &QtGradientStopsModel::stopSelected,
+                    this, &QtGradientStopsWidgetPrivate::slotStopSelected);
+        disconnect(m_model, &QtGradientStopsModel::currentStopChanged,
+                    this, &QtGradientStopsWidgetPrivate::slotCurrentStopChanged);
+
+        m_stops.clear();
+    }
+
+    m_model = model;
+
+    if (m_model) {
+        connect(m_model, &QtGradientStopsModel::stopAdded,
+                    this, &QtGradientStopsWidgetPrivate::slotStopAdded);
+        connect(m_model, &QtGradientStopsModel::stopRemoved,
+                    this, &QtGradientStopsWidgetPrivate::slotStopRemoved);
+        connect(m_model, &QtGradientStopsModel::stopMoved,
+                    this, &QtGradientStopsWidgetPrivate::slotStopMoved);
+        connect(m_model, &QtGradientStopsModel::stopsSwapped,
+                    this, &QtGradientStopsWidgetPrivate::slotStopsSwapped);
+        connect(m_model, &QtGradientStopsModel::stopChanged,
+                    this, &QtGradientStopsWidgetPrivate::slotStopChanged);
+        connect(m_model, &QtGradientStopsModel::stopSelected,
+                    this, &QtGradientStopsWidgetPrivate::slotStopSelected);
+        connect(m_model, &QtGradientStopsModel::currentStopChanged,
+                    this, &QtGradientStopsWidgetPrivate::slotCurrentStopChanged);
+
+        const QtGradientStopsModel::PositionStopMap stopsMap = m_model->stops();
+        for (auto it = stopsMap.cbegin(), end = stopsMap.cend(); it != end; ++it)
+            slotStopAdded(it.value());
+
+        const auto selected = m_model->selectedStops();
+        for (QtGradientStop *stop : selected)
+            slotStopSelected(stop, true);
+
+        slotCurrentStopChanged(m_model->currentStop());
+    }
+}
 
 double QtGradientStopsWidgetPrivate::fromViewport(int x) const
 {
@@ -406,56 +463,7 @@ bool QtGradientStopsWidget::isBackgroundCheckered() const
 
 void QtGradientStopsWidget::setGradientStopsModel(QtGradientStopsModel *model)
 {
-    if (d_ptr->m_model == model)
-        return;
-
-    if (d_ptr->m_model) {
-        disconnect(d_ptr->m_model, SIGNAL(stopAdded(QtGradientStop*)),
-                    this, SLOT(slotStopAdded(QtGradientStop*)));
-        disconnect(d_ptr->m_model, SIGNAL(stopRemoved(QtGradientStop*)),
-                    this, SLOT(slotStopRemoved(QtGradientStop*)));
-        disconnect(d_ptr->m_model, SIGNAL(stopMoved(QtGradientStop*,qreal)),
-                    this, SLOT(slotStopMoved(QtGradientStop*,qreal)));
-        disconnect(d_ptr->m_model, SIGNAL(stopsSwapped(QtGradientStop*,QtGradientStop*)),
-                    this, SLOT(slotStopsSwapped(QtGradientStop*,QtGradientStop*)));
-        disconnect(d_ptr->m_model, SIGNAL(stopChanged(QtGradientStop*,QColor)),
-                    this, SLOT(slotStopChanged(QtGradientStop*,QColor)));
-        disconnect(d_ptr->m_model, SIGNAL(stopSelected(QtGradientStop*,bool)),
-                    this, SLOT(slotStopSelected(QtGradientStop*,bool)));
-        disconnect(d_ptr->m_model, SIGNAL(currentStopChanged(QtGradientStop*)),
-                    this, SLOT(slotCurrentStopChanged(QtGradientStop*)));
-
-        d_ptr->m_stops.clear();
-    }
-
-    d_ptr->m_model = model;
-
-    if (d_ptr->m_model) {
-        connect(d_ptr->m_model, SIGNAL(stopAdded(QtGradientStop*)),
-                    this, SLOT(slotStopAdded(QtGradientStop*)));
-        connect(d_ptr->m_model, SIGNAL(stopRemoved(QtGradientStop*)),
-                    this, SLOT(slotStopRemoved(QtGradientStop*)));
-        connect(d_ptr->m_model, SIGNAL(stopMoved(QtGradientStop*,qreal)),
-                    this, SLOT(slotStopMoved(QtGradientStop*,qreal)));
-        connect(d_ptr->m_model, SIGNAL(stopsSwapped(QtGradientStop*,QtGradientStop*)),
-                    this, SLOT(slotStopsSwapped(QtGradientStop*,QtGradientStop*)));
-        connect(d_ptr->m_model, SIGNAL(stopChanged(QtGradientStop*,QColor)),
-                    this, SLOT(slotStopChanged(QtGradientStop*,QColor)));
-        connect(d_ptr->m_model, SIGNAL(stopSelected(QtGradientStop*,bool)),
-                    this, SLOT(slotStopSelected(QtGradientStop*,bool)));
-        connect(d_ptr->m_model, SIGNAL(currentStopChanged(QtGradientStop*)),
-                    this, SLOT(slotCurrentStopChanged(QtGradientStop*)));
-
-        const QtGradientStopsModel::PositionStopMap stopsMap = d_ptr->m_model->stops();
-        for (auto it = stopsMap.cbegin(), end = stopsMap.cend(); it != end; ++it)
-            d_ptr->slotStopAdded(it.value());
-
-        const auto selected = d_ptr->m_model->selectedStops();
-        for (QtGradientStop *stop : selected)
-            d_ptr->slotStopSelected(stop, true);
-
-        d_ptr->slotCurrentStopChanged(d_ptr->m_model->currentStop());
-    }
+    d_ptr->setGradientStopsModel(model);
 }
 
 void QtGradientStopsWidget::mousePressEvent(QMouseEvent *e)
@@ -940,13 +948,13 @@ void QtGradientStopsWidget::contextMenuEvent(QContextMenuEvent *e)
     } else if (zoom() >= 100) {
         zoomInAction->setEnabled(false);
     }
-    connect(newStopAction, SIGNAL(triggered()), this, SLOT(slotNewStop()));
-    connect(deleteAction, SIGNAL(triggered()), this, SLOT(slotDelete()));
-    connect(flipAllAction, SIGNAL(triggered()), this, SLOT(slotFlipAll()));
-    connect(selectAllAction, SIGNAL(triggered()), this, SLOT(slotSelectAll()));
-    connect(zoomInAction, SIGNAL(triggered()), this, SLOT(slotZoomIn()));
-    connect(zoomOutAction, SIGNAL(triggered()), this, SLOT(slotZoomOut()));
-    connect(zoomAllAction, SIGNAL(triggered()), this, SLOT(slotResetZoom()));
+    connect(newStopAction, &QAction::triggered, d_ptr.data(), &QtGradientStopsWidgetPrivate::slotNewStop);
+    connect(deleteAction, &QAction::triggered, d_ptr.data(), &QtGradientStopsWidgetPrivate::slotDelete);
+    connect(flipAllAction, &QAction::triggered, d_ptr.data(), &QtGradientStopsWidgetPrivate::slotFlipAll);
+    connect(selectAllAction, &QAction::triggered, d_ptr.data(), &QtGradientStopsWidgetPrivate::slotSelectAll);
+    connect(zoomInAction, &QAction::triggered, d_ptr.data(), &QtGradientStopsWidgetPrivate::slotZoomIn);
+    connect(zoomOutAction, &QAction::triggered, d_ptr.data(), &QtGradientStopsWidgetPrivate::slotZoomOut);
+    connect(zoomAllAction, &QAction::triggered, d_ptr.data(), &QtGradientStopsWidgetPrivate::slotResetZoom);
     menu.addAction(newStopAction);
     menu.addAction(deleteAction);
     menu.addAction(flipAllAction);
@@ -1132,4 +1140,4 @@ double QtGradientStopsWidget::zoom() const
 
 QT_END_NAMESPACE
 
-#include "moc_qtgradientstopswidget.cpp"
+#include "qtgradientstopswidget.moc"

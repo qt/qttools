@@ -56,7 +56,6 @@ public:
     static void restoreState(QtGradientManager *manager, const QString &state);
 
     static QPixmap gradientPixmap(const QGradient &gradient, const QSize &size = QSize(64, 64), bool checkeredBackground = false);
-
 };
 
 QT_END_NAMESPACE

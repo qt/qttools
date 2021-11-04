@@ -43,12 +43,12 @@
 
 QT_BEGIN_NAMESPACE
 
-class QtGradientDialogPrivate
+class QtGradientDialogPrivate : public QObject
 {
+    Q_OBJECT
     QtGradientDialog *q_ptr;
     Q_DECLARE_PUBLIC(QtGradientDialog)
 public:
-
     void slotAboutToShowDetails(bool details, int extensionWidthHint);
 
     Ui::QtGradientDialog m_ui;
@@ -205,8 +205,8 @@ QtGradientDialog::QtGradientDialog(QWidget *parent)
     button = d_ptr->m_ui.buttonBox->button(QDialogButtonBox::Cancel);
     if (button)
         button->setAutoDefault(false);
-    connect(d_ptr->m_ui.gradientEditor, SIGNAL(aboutToShowDetails(bool,int)),
-                this, SLOT(slotAboutToShowDetails(bool,int)));
+    connect(d_ptr->m_ui.gradientEditor, &QtGradientEditor::aboutToShowDetails,
+            d_ptr.data(), &QtGradientDialogPrivate::slotAboutToShowDetails);
 }
 
 /*!
@@ -348,4 +348,4 @@ QGradient QtGradientDialog::getGradient(bool *ok, QWidget *parent, const QString
 
 QT_END_NAMESPACE
 
-#include "moc_qtgradientdialog.cpp"
+#include "qtgradientdialog.moc"

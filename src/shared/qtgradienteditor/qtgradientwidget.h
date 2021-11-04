@@ -90,6 +90,7 @@ public:
 
 public slots:
     void setGradientStops(const QGradientStops &stops);
+
 signals:
 
     void startLinearChanged(const QPointF &point);
