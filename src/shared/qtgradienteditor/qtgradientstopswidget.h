@@ -67,7 +67,6 @@ public:
     double zoom() const;
 
 signals:
-
     void zoomChanged(double zoom);
 
 protected:
@@ -92,20 +91,6 @@ private:
     QScopedPointer<QtGradientStopsWidgetPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtGradientStopsWidget)
     Q_DISABLE_COPY_MOVE(QtGradientStopsWidget)
-    Q_PRIVATE_SLOT(d_func(), void slotStopAdded(QtGradientStop *stop))
-    Q_PRIVATE_SLOT(d_func(), void slotStopRemoved(QtGradientStop *stop))
-    Q_PRIVATE_SLOT(d_func(), void slotStopMoved(QtGradientStop *stop, qreal newPos))
-    Q_PRIVATE_SLOT(d_func(), void slotStopsSwapped(QtGradientStop *stop1, QtGradientStop *stop2))
-    Q_PRIVATE_SLOT(d_func(), void slotStopChanged(QtGradientStop *stop, const QColor &newColor))
-    Q_PRIVATE_SLOT(d_func(), void slotStopSelected(QtGradientStop *stop, bool selected))
-    Q_PRIVATE_SLOT(d_func(), void slotCurrentStopChanged(QtGradientStop *stop))
-    Q_PRIVATE_SLOT(d_func(), void slotNewStop())
-    Q_PRIVATE_SLOT(d_func(), void slotDelete())
-    Q_PRIVATE_SLOT(d_func(), void slotFlipAll())
-    Q_PRIVATE_SLOT(d_func(), void slotSelectAll())
-    Q_PRIVATE_SLOT(d_func(), void slotZoomIn())
-    Q_PRIVATE_SLOT(d_func(), void slotZoomOut())
-    Q_PRIVATE_SLOT(d_func(), void slotResetZoom())
 };
 
 QT_END_NAMESPACE

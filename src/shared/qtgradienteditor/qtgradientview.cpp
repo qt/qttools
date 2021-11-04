@@ -149,7 +149,7 @@ void QtGradientView::slotRenameGradient()
     m_ui.listWidget->editItem(item);
 }
 
-void QtGradientView::slotRenameGradient(QListWidgetItem *item)
+void QtGradientView::slotRenameGradientItem(QListWidgetItem *item)
 {
     if (!item)
         return;
@@ -202,19 +202,19 @@ QtGradientView::QtGradientView(QWidget *parent)
     pal.setBrush(QPalette::Base, QBrush(pm));
     m_ui.listWidget->viewport()->setPalette(pal);
 
-    connect(m_ui.listWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(slotGradientActivated(QListWidgetItem*)));
-    connect(m_ui.listWidget, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(slotRenameGradient(QListWidgetItem*)));
-    connect(m_ui.listWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), this, SLOT(slotCurrentItemChanged(QListWidgetItem*)));
+    connect(m_ui.listWidget, &QListWidget::itemDoubleClicked, this, &QtGradientView::slotGradientActivated);
+    connect(m_ui.listWidget, &QListWidget::itemChanged, this, &QtGradientView::slotRenameGradientItem);
+    connect(m_ui.listWidget, &QListWidget::currentItemChanged, this, &QtGradientView::slotCurrentItemChanged);
 
     m_newAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/plus.png")), tr("New..."), this);
     m_editAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/edit.png")), tr("Edit..."), this);
     m_renameAction = new QAction(tr("Rename"), this);
     m_removeAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/minus.png")), tr("Remove"), this);
 
-    connect(m_newAction, SIGNAL(triggered()), this, SLOT(slotNewGradient()));
-    connect(m_editAction, SIGNAL(triggered()), this, SLOT(slotEditGradient()));
-    connect(m_removeAction, SIGNAL(triggered()), this, SLOT(slotRemoveGradient()));
-    connect(m_renameAction, SIGNAL(triggered()), this, SLOT(slotRenameGradient()));
+    connect(m_newAction, &QAction::triggered, this, &QtGradientView::slotNewGradient);
+    connect(m_editAction, &QAction::triggered, this, &QtGradientView::slotEditGradient);
+    connect(m_removeAction, &QAction::triggered, this, &QtGradientView::slotRemoveGradient);
+    connect(m_renameAction, &QAction::triggered, this, &QtGradientView::slotRenameGradient);
 
     m_ui.listWidget->addAction(m_newAction);
     m_ui.listWidget->addAction(m_editAction);
@@ -235,14 +235,14 @@ void QtGradientView::setGradientManager(QtGradientManager *manager)
         return;
 
     if (m_manager) {
-        disconnect(m_manager, SIGNAL(gradientAdded(QString,QGradient)),
-                    this, SLOT(slotGradientAdded(QString,QGradient)));
-        disconnect(m_manager, SIGNAL(gradientRenamed(QString,QString)),
-                    this, SLOT(slotGradientRenamed(QString,QString)));
-        disconnect(m_manager, SIGNAL(gradientChanged(QString,QGradient)),
-                    this, SLOT(slotGradientChanged(QString,QGradient)));
-        disconnect(m_manager, SIGNAL(gradientRemoved(QString)),
-                    this, SLOT(slotGradientRemoved(QString)));
+        disconnect(m_manager, &QtGradientManager::gradientAdded,
+                    this, &QtGradientView::slotGradientAdded);
+        disconnect(m_manager, &QtGradientManager::gradientRenamed,
+                    this, &QtGradientView::slotGradientRenamed);
+        disconnect(m_manager, &QtGradientManager::gradientChanged,
+                    this, &QtGradientView::slotGradientChanged);
+        disconnect(m_manager, &QtGradientManager::gradientRemoved,
+                    this, &QtGradientView::slotGradientRemoved);
 
         m_ui.listWidget->clear();
         m_idToItem.clear();
@@ -258,14 +258,14 @@ void QtGradientView::setGradientManager(QtGradientManager *manager)
     for (auto itGrad = gradients.cbegin(), end = gradients.cend(); itGrad != end; ++itGrad)
         slotGradientAdded(itGrad.key(), itGrad.value());
 
-    connect(m_manager, SIGNAL(gradientAdded(QString,QGradient)),
-            this, SLOT(slotGradientAdded(QString,QGradient)));
-    connect(m_manager, SIGNAL(gradientRenamed(QString,QString)),
-            this, SLOT(slotGradientRenamed(QString,QString)));
-    connect(m_manager, SIGNAL(gradientChanged(QString,QGradient)),
-            this, SLOT(slotGradientChanged(QString,QGradient)));
-    connect(m_manager, SIGNAL(gradientRemoved(QString)),
-            this, SLOT(slotGradientRemoved(QString)));
+    connect(m_manager, &QtGradientManager::gradientAdded,
+            this, &QtGradientView::slotGradientAdded);
+    connect(m_manager, &QtGradientManager::gradientRenamed,
+            this, &QtGradientView::slotGradientRenamed);
+    connect(m_manager, &QtGradientManager::gradientChanged,
+            this, &QtGradientView::slotGradientChanged);
+    connect(m_manager, &QtGradientManager::gradientRemoved,
+            this, &QtGradientView::slotGradientRemoved);
 }
 
 QtGradientManager *QtGradientView::gradientManager() const

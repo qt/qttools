@@ -75,7 +75,7 @@ private slots:
     void slotEditGradient();
     void slotRemoveGradient();
     void slotRenameGradient();
-    void slotRenameGradient(QListWidgetItem *item);
+    void slotRenameGradientItem(QListWidgetItem *item);
     void slotCurrentItemChanged(QListWidgetItem *item);
     void slotGradientActivated(QListWidgetItem *item);
 

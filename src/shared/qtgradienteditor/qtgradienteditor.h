@@ -71,7 +71,6 @@ public:
     void setSpec(QColor::Spec spec);
 
 signals:
-
     void gradientChanged(const QGradient &gradient);
     void aboutToShowDetails(bool details, int extenstionWidthHint);
 
@@ -79,29 +78,6 @@ private:
     QScopedPointer<class QtGradientEditorPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtGradientEditor)
     Q_DISABLE_COPY_MOVE(QtGradientEditor)
-    Q_PRIVATE_SLOT(d_func(), void slotGradientStopsChanged(const QGradientStops &stops))
-    Q_PRIVATE_SLOT(d_func(), void slotTypeChanged(int type))
-    Q_PRIVATE_SLOT(d_func(), void slotSpreadChanged(int type))
-    Q_PRIVATE_SLOT(d_func(), void slotStartLinearXChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotStartLinearYChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotEndLinearXChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotEndLinearYChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotCentralRadialXChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotCentralRadialYChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotFocalRadialXChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotFocalRadialYChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotRadiusRadialChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotCentralConicalXChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotCentralConicalYChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotAngleConicalChanged(double value))
-    Q_PRIVATE_SLOT(d_func(), void slotDetailsChanged(bool details))
-    Q_PRIVATE_SLOT(d_func(), void startLinearChanged(const QPointF &))
-    Q_PRIVATE_SLOT(d_func(), void endLinearChanged(const QPointF &))
-    Q_PRIVATE_SLOT(d_func(), void centralRadialChanged(const QPointF &))
-    Q_PRIVATE_SLOT(d_func(), void focalRadialChanged(const QPointF &))
-    Q_PRIVATE_SLOT(d_func(), void radiusRadialChanged(qreal))
-    Q_PRIVATE_SLOT(d_func(), void centralConicalChanged(const QPointF &))
-    Q_PRIVATE_SLOT(d_func(), void angleConicalChanged(qreal))
 };
 
 QT_END_NAMESPACE

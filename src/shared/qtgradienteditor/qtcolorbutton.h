@@ -58,11 +58,11 @@ public:
     QColor color() const;
 
 public slots:
-
     void setColor(const QColor &color);
 
 signals:
     void colorChanged(const QColor &color);
+
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -72,11 +72,11 @@ protected:
     void dragLeaveEvent(QDragLeaveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 #endif
+
 private:
     QScopedPointer<class QtColorButtonPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtColorButton)
     Q_DISABLE_COPY_MOVE(QtColorButton)
-    Q_PRIVATE_SLOT(d_func(), void slotEditColor())
 };
 
 QT_END_NAMESPACE

@@ -94,15 +94,12 @@ public:
     ColorComponent colorComponent() const;
 
 public slots:
-
     void setColor(const QColor &color);
 
 signals:
-
     void colorChanged(const QColor &color);
 
 protected:
-
     void resizeEvent(QResizeEvent *event) override;
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -111,7 +108,6 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private:
-
     QScopedPointer<class QtColorLinePrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtColorLine)
     Q_DISABLE_COPY_MOVE(QtColorLine)
