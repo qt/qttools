@@ -42,7 +42,7 @@ class NamespaceNode : public Aggregate
 {
 public:
     NamespaceNode(Aggregate *parent, const QString &name) : Aggregate(Namespace, parent, name) {}
-    ~NamespaceNode() override;
+    ~NamespaceNode() override = default;
     [[nodiscard]] Tree *tree() const override { return (parent() ? parent()->tree() : m_tree); }
 
     [[nodiscard]] bool isFirstClassAggregate() const override { return true; }

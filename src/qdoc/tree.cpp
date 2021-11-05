@@ -80,24 +80,19 @@ Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
 }
 
 /*!
-  Destroys the Tree. The root node is a data member
-  of this object, so its destructor is called. The
-  destructor of each child node is called, and these
-  destructors are recursive. Thus the entire tree is
-  destroyed.
+  Destroys the Tree.
 
   There are two maps of targets, keywords, and contents.
-  One map is indexed by ref, the other by title. The ref
-  is just the canonical form of the title. Both maps
+  One map is indexed by ref, the other by title. Both maps
   use the same set of TargetRec objects as the values,
-  so the destructor only deletes the values from one of
-  the maps. Then it clears both maps.
+  so we only need to delete the values from one of them.
+
+  The Node instances themselves are destroyed by the root
+  node's (\c m_root) destructor.
  */
 Tree::~Tree()
 {
-    for (auto i = m_nodesByTargetRef.begin(); i != m_nodesByTargetRef.end(); ++i) {
-        delete i.value();
-    }
+    qDeleteAll(m_nodesByTargetRef);
     m_nodesByTargetRef.clear();
     m_nodesByTargetTitle.clear();
 }

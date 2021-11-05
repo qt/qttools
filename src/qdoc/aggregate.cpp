@@ -50,37 +50,36 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
-  The destructor calls delete for each child of this Aggregate
-  that has this Aggregate as its parent. A child node that has
-  some other Aggregate as its parent is deleted by that
-  Aggregate's destructor. This is a fail-safe test.
+  Recursively set all non-related members in the list of children to
+  \nullptr, after which each aggregate can safely delete all children
+  in their list. Aggregate's destructor calls this only on the root
+  namespace node.
+ */
+void Aggregate::dropNonRelatedMembers()
+{
+    for (auto &child : m_children) {
+        if (!child)
+            continue;
+        if (child->parent() != this)
+            child = nullptr;
+        else if (child->isAggregate())
+            static_cast<Aggregate*>(child)->dropNonRelatedMembers();
+    }
+}
 
-  The destructor no longer deletes the collection of children
-  by calling qDeleteAll() because the child list can contain
-  pointers to children that have some other Aggregate as their
-  parent. This is because of how the \e{\\relates} command is
-  processed. An Aggregate can have a pointer to, for example,
-  a FunctionNode in its child list, but that FunctionNode has
-  a differen Aggregate as its parent because a \e{\\relates}
-  command was used to relate it to that parent. In that case,
-  the other Aggregate's destructor must delete that node.
-
-  \note This function is the \b only place where delete is
-  called to delete any subclass of Node.
-
-  \note This strategy depends on the node tree being destroyed
-  by calling delete on the root node of the tree. This happens
-  in the destructor of class Tree.
+/*!
+  Destroys this Aggregate; deletes each child.
  */
 Aggregate::~Aggregate()
 {
+    // If this is the root, clear non-related children first
+    if (isNamespace() && name().isEmpty())
+        dropNonRelatedMembers();
+
     m_enumChildren.clear();
     m_nonfunctionMap.clear();
     m_functionMap.clear();
-    for (const Node *child : m_children) {
-        if ((child != nullptr) && (child->parent() == this))
-            delete child;
-    }
+    qDeleteAll(m_children.begin(), m_children.end());
     m_children.clear();
 }
 

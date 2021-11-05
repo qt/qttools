@@ -48,24 +48,6 @@ QT_BEGIN_NAMESPACE
  */
 
 /*!
-  The destructor removes all children from the child list that
-  have a parent() that is not this NamespaceNode. This situation
-  can arise because of elements that are related to this namespace
-  using the \c {\\relates} command.
-
-  \note The child nodes remaining in the child list after the ones
-  with a different parent() have been removed are deleted in the
-  destructor of the Aggregate base class.
- */
-NamespaceNode::~NamespaceNode()
-{
-    for (auto &child : m_children) {
-        if (child->parent() != this)
-            child = nullptr;
-    }
-}
-
-/*!
   Returns true if this namespace is to be documented in the
   current module. There can be elements declared in this
   namespace spread over multiple modules. Those elements are

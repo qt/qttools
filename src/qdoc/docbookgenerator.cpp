@@ -2454,6 +2454,7 @@ void DocBookGenerator::endDocument()
     m_writer->writeEndElement(); // article
     m_writer->writeEndDocument();
     m_writer->device()->close();
+    delete m_writer->device();
     delete m_writer;
     m_writer = nullptr;
 }
