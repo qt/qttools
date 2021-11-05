@@ -87,29 +87,19 @@ Section::~Section()
  */
 void Section::clear()
 {
+    qDeleteAll(m_classMapList);
+    qDeleteAll(m_classKeysNodesList);
     m_memberMap.clear();
     m_obsoleteMemberMap.clear();
     m_reimplementedMemberMap.clear();
-    if (!m_classMapList.isEmpty()) {
-        for (ClassMap *classMap : m_classMapList) {
-            classMap = nullptr;
-            delete classMap;
-        }
-        m_classMapList.clear();
-    }
+    m_classMapList.clear();
     m_keys.clear();
     m_obsoleteKeys.clear();
     m_members.clear();
     m_obsoleteMembers.clear();
     m_reimplementedMembers.clear();
     m_inheritedMembers.clear();
-    if (!m_classKeysNodesList.isEmpty()) {
-        for (ClassKeysNodes *classKeysNode : m_classKeysNodesList) {
-            classKeysNode = nullptr;
-            delete classKeysNode;
-        }
-        m_classKeysNodesList.clear();
-    }
+    m_classKeysNodesList.clear();
     m_aggregate = nullptr;
 }
 
