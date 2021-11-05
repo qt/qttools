@@ -1386,11 +1386,11 @@ void ClangCodeParser::buildPCH()
                     visitor.visitChildren(cur);
                     qCDebug(lcQdoc) << "PCH built and visited for" << moduleHeader();
                 }
-                clang_disposeTranslationUnit(tu);
             } else {
                 m_pchFileDir->remove();
                 qCCritical(lcQdoc) << "Could not create PCH file for " << moduleHeader();
             }
+            clang_disposeTranslationUnit(tu);
             m_args.pop_back(); // remove the "-xc++";
         }
     }
@@ -1464,6 +1464,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
+        clang_disposeTranslationUnit(tu);
         clang_disposeIndex(index_);
         return;
     }
@@ -1709,6 +1710,7 @@ void ClangCodeParser::printDiagnostics(const CXTranslationUnit &translationUnit)
         auto formattedDiagnostic = clang_formatDiagnostic(diagnostic, displayOptions);
         qCDebug(lcQdocClang) << clang_getCString(formattedDiagnostic);
         clang_disposeString(formattedDiagnostic);
+        clang_disposeDiagnostic(diagnostic);
     }
 }
 
