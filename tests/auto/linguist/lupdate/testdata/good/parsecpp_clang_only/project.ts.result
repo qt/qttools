@@ -201,6 +201,19 @@
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="test_line_directive.cpp" line="3"/>
+        <source>blabla 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test_line_directive.cpp" line="7"/>
+        <source>blabla 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>WithQDeclareTr::Nested</name>
     <message>
         <location filename="test_QT_TR_NOOP_context.cpp" line="74"/>

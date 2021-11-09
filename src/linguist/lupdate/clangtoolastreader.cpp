@@ -347,7 +347,8 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
         const auto fileLoc = sm.getFileLoc(callExpression->getBeginLoc());
         if (fileLoc.isInvalid() || !fileLoc.isFileID())
             return true;
-        auto presumedLoc = sm.getPresumedLoc(fileLoc);
+        // not using line directive (# line)
+        auto presumedLoc = sm.getPresumedLoc(fileLoc, false);
         if (presumedLoc.isInvalid())
             return true;
         info = { presumedLoc.getLine(), presumedLoc.getFilename() };
@@ -474,7 +475,7 @@ void LupdateVisitor::processIsolatedComments()
         // Each one needs to be saved with its line number.
         // The store is used here only to pass this information.
         TranslationRelatedStore store;
-        store.lupdateLocationLine = sourceMgr.getPresumedLoc(rawComment->getBeginLoc()).getLine();
+        store.lupdateLocationLine = sourceMgr.getPresumedLoc(rawComment->getBeginLoc(), false).getLine();
         QString comment = toQt(rawComment->getRawText(sourceMgr));
         qCDebug(lcClang) << " raw Comment : \n" << comment;
         setInfoFromRawComment(comment, &store);
