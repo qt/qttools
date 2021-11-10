@@ -36,6 +36,7 @@
 #include "tree.h"
 
 #include <QtCore/qregularexpression.h>
+#include <stack>
 
 QT_BEGIN_NAMESPACE
 
@@ -1519,9 +1520,13 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
 }
 
 /*!
-    Updates navigation (previous/next page links) for pages listed
-    in the TOC, specified by the \c navigation.toctitles configuration
-    variable.
+    Updates navigation (previous/next page links and the navigation parent)
+    for pages listed in the TOC, specified by the \c navigation.toctitles
+    configuration variable.
+
+    if \c navigation.toctitles.inclusive is \c true, include also the TOC
+    page(s) themselves as a 'root' item in the navigation bar (breadcrumbs)
+    that are generated for HTML output.
 */
 void QDocDatabase::updateNavigation()
 {
@@ -1529,23 +1534,33 @@ void QDocDatabase::updateNavigation()
     QList<Tree *> searchOrder = this->searchOrder();
     setLocalSearch();
 
-    const auto tocTitles =
-            Config::instance().getStringList(CONFIG_NAVIGATION +
-                                             Config::dot +
-                                             CONFIG_TOCTITLES);
+    const QString configVar = CONFIG_NAVIGATION +
+                              Config::dot +
+                              CONFIG_TOCTITLES;
+    bool inclusive =
+            Config::instance().getBool(configVar +
+                                       Config::dot +
+                                       CONFIG_INCLUSIVE);
+
+    const auto tocTitles = Config::instance().getStringList(configVar);
 
     for (const auto &tocTitle : tocTitles) {
         if (const auto tocPage = findNodeForTarget(tocTitle, nullptr)) {
             Text body = tocPage->doc().body();
             auto *atom = body.firstAtom();
             std::pair<Node *, Atom *> prev { nullptr, nullptr };
+            std::stack<const Node *> tocStack;
+            tocStack.push(inclusive ? tocPage : nullptr);
             bool inItem = false;
             while (atom) {
                 switch (atom->type()) {
                 case Atom::ListItemLeft:
+                    // Not known if we're going to have a link, push a temporary
+                    tocStack.push(nullptr);
                     inItem = true;
                     break;
                 case Atom::ListItemRight:
+                    tocStack.pop();
                     inItem = false;
                     break;
                 case Atom::Link: {
@@ -1553,6 +1568,9 @@ void QDocDatabase::updateNavigation()
                         break;
                     QString ref;
                     auto page = const_cast<Node *>(findNodeForAtom(atom, nullptr, ref));
+                    // ignore self-references
+                    if (page && page == prev.first)
+                        break;
                     if (page && page->isPageNode()) {
                         if (prev.first) {
                             prev.first->setLink(Node::NextLink,
@@ -1562,6 +1580,19 @@ void QDocDatabase::updateNavigation()
                                           prev.first->title(),
                                           prev.second->linkText());
                         }
+                        if (page == tocPage)
+                            break;
+                        // Find the navigation parent from the stack; we may have null pointers
+                        // for non-link list items, so skip those.
+                        qsizetype popped = 0;
+                        while (tocStack.size() > 1 && !tocStack.top()) {
+                            tocStack.pop();
+                            ++popped;
+                        }
+                        page->setNavigationParent(tocStack.empty() ? nullptr : tocStack.top());
+                        while (--popped > 0)
+                            tocStack.push(nullptr);
+                        tocStack.push(page);
                         prev = { page, atom };
                     }
                 }

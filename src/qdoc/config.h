@@ -288,6 +288,7 @@ struct ConfigStrings
     static QString IMAGEDIRS;
     static QString IMAGES;
     static QString INCLUDEPATHS;
+    static QString INCLUSIVE;
     static QString INDEXES;
     static QString LANDINGPAGE;
     static QString LANDINGTITLE;
@@ -367,6 +368,7 @@ struct ConfigStrings
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
 #define CONFIG_IMAGES ConfigStrings::IMAGES
 #define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
+#define CONFIG_INCLUSIVE ConfigStrings::INCLUSIVE
 #define CONFIG_INDEXES ConfigStrings::INDEXES
 #define CONFIG_LANDINGPAGE ConfigStrings::LANDINGPAGE
 #define CONFIG_LANDINGTITLE ConfigStrings::LANDINGTITLE

@@ -55,6 +55,7 @@
 #include <QtCore/qregularexpression.h>
 
 #include <cctype>
+#include <deque>
 
 QT_BEGIN_NAMESPACE
 
@@ -1586,17 +1587,35 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
                           << Atom(itemLeft) << Atom(Atom::String, title) << Atom(itemRight);
     } else {
         if (node->isPageNode()) {
-            QStringList groups = static_cast<const PageNode *>(node)->groupNames();
-            if (groups.length() == 1) {
-                const Node *groupNode =
-                        m_qdb->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
-                if (groupNode && !groupNode->title().isEmpty()) {
-                    navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, groupNode->name())
+            auto currentNode = node;
+            std::deque<const Node *> navNodes;
+            // Cutoff at 16 items in case there's a circular dependency
+            qsizetype navItems = 0;
+            while (currentNode->navigationParent() && ++navItems < 16) {
+                if (std::find(navNodes.cbegin(), navNodes.cend(),
+                              currentNode->navigationParent()) == navNodes.cend())
+                    navNodes.push_front(currentNode->navigationParent());
+                currentNode = currentNode->navigationParent();
+            }
+            // If no nav. parent was found but the page is in a single group, use that
+            if (navNodes.empty()) {
+                QStringList groups = static_cast<const PageNode *>(node)->groupNames();
+                if (groups.length() == 1) {
+                    const Node *groupNode =
+                            m_qdb->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
+                    if (groupNode && !groupNode->title().isEmpty())
+                        navNodes.push_front(groupNode);
+                }
+            }
+            while (!navNodes.empty()) {
+                if (navNodes.front()->isPageNode()) {
+                    navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, navNodes.front()->name())
                                   << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                                  << Atom(Atom::String, groupNode->title())
+                                  << Atom(Atom::String, navNodes.front()->title())
                                   << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
                                   << Atom(itemRight);
                 }
+                navNodes.pop_front();
             }
         }
         if (!navigationbar.isEmpty()) {

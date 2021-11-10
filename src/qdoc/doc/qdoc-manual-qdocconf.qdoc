@@ -1116,7 +1116,11 @@
                acts as a table of contents (TOC). QDoc generates navigation links
                for pages listed in the TOC, without the need for
                \l {nextpage-command}{\\nextpage} and \l {previouspage-command}
-               {\\previouspage} commands.
+               {\\previouspage} commands, as well as a navigation hierarchy that's
+               visible in the navigation bar (breadcrumbs) for HTML output.
+      \row \li \c navigation.toctitles.inclusive (Since QDoc 6.3)
+           \li If set to \c true, page(s) listed in \c navigation.toctitles
+               will also appear in the navigation bar as a root item.
     \endtable
 
     For example:

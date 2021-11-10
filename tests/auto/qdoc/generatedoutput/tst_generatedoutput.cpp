@@ -60,6 +60,7 @@ private slots:
 
     // Output format independent tests
     void autoNavigation();
+    void tocBreadcrumbs();
     void examplesManifestXmlAndQhp();
     void ignoresinceVariable();
     void templateParameters();
@@ -356,6 +357,16 @@ void tst_generatedOutput::autoNavigation()
                    "qdoctests-qdocfileoutput-exhaustive.html "
                    "toc.html");
 }
+
+void tst_generatedOutput::tocBreadcrumbs()
+{
+    testAndCompare("testdata/configs/tocbreadcrumbs.qdocconf",
+                   "tocbreadcrumbs/qdoctests-qdocfileoutput.html "
+                   "tocbreadcrumbs/qdoctests-qdocfileoutput-linking.html "
+                   "tocbreadcrumbs/qdoctests-qdocfileoutput-exhaustive.html "
+                   "tocbreadcrumbs/toc-test.html");
+}
+
 
 void tst_generatedOutput::examplesManifestXmlAndQhp()
 {

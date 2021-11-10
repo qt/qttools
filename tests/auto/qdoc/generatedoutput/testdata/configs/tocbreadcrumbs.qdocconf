@@ -1,0 +1,9 @@
+include(tocnavigation.qdocconf)
+
+sources += ../toc/toc.qdoc
+
+navigation.toctitles    = TOC
+navigation.toctitles.inclusive = true
+
+HTML.nosubdirs          = true
+HTML.outputsubdir       = tocbreadcrumbs

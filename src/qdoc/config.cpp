@@ -73,6 +73,7 @@ QString ConfigStrings::IGNOREWORDS = QStringLiteral("ignorewords");
 QString ConfigStrings::IMAGEDIRS = QStringLiteral("imagedirs");
 QString ConfigStrings::IMAGES = QStringLiteral("images");
 QString ConfigStrings::INCLUDEPATHS = QStringLiteral("includepaths");
+QString ConfigStrings::INCLUSIVE = QStringLiteral("inclusive");
 QString ConfigStrings::INDEXES = QStringLiteral("indexes");
 QString ConfigStrings::LANDINGPAGE = QStringLiteral("landingpage");
 QString ConfigStrings::LANDINGTITLE = QStringLiteral("landingtitle");
