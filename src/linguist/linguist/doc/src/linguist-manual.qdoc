@@ -1088,7 +1088,8 @@
 
         \li The functions and macros for the text-ID-based translation system are
         different to the plain-text system. You use the \c qsTrId() function instead
-        of qsTr(), and the \c QT_TRID_NOOP() macro instead of QT_TR_NOOP().
+        of qsTr(), the \c QT_TRID_NOOP() macro instead of QT_TR_NOOP(),
+        and \c QT_TRID_N_NOOP() macro instead of QT_TR_N_NOOP()).
 
         \li Use text IDs as user interface strings rather than plain text
         strings. For example, \c {qsTrId("id-back-not-front")}
