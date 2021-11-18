@@ -1,5 +1,3 @@
-
-
 #### Inputs
 
 
@@ -69,11 +67,6 @@ qt_feature("linguist" PRIVATE
     LABEL "Qt Linguist"
     PURPOSE "Qt Linguist can be used by translator to translate text in Qt applications."
 )
-qt_feature("macdeployqt" PRIVATE
-    LABEL "Mac Deployment Tool"
-    PURPOSE "The Mac deployment tool automates the process of creating a deployable application bundle that contains the Qt libraries as private frameworks."
-    CONDITION MACOS
-)
 qt_feature("pixeltool" PRIVATE
     LABEL "pixeltool"
     PURPOSE "The Qt Pixel Zooming Tool is a graphical application that magnifies the screen around the mouse pointer so you can look more closely at individual pixels."
@@ -103,11 +96,6 @@ qt_feature("qtplugininfo" PRIVATE
     PURPOSE "qtplugininfo dumps metadata about Qt plugins in JSON format."
     CONDITION QT_FEATURE_commandlineparser AND QT_FEATURE_library AND (android_app OR NOT ANDROID)
 )
-qt_feature("windeployqt" PRIVATE
-    LABEL "Windows deployment tool"
-    PURPOSE "The Windows deployment tool is designed to automate the process of creating a deployable folder containing the Qt-related dependencies (libraries, QML imports, plugins, and translations) required to run the application from that folder. It creates a sandbox for Universal Windows Platform (UWP) or an installation tree for Windows desktop applications, which can be easily bundled into an installation package."
-    CONDITION WIN32
-)
 qt_configure_add_summary_section(NAME "Qt Tools")
 qt_configure_add_summary_entry(ARGS "assistant")
 qt_configure_add_summary_entry(ARGS "clang")
@@ -116,14 +104,12 @@ qt_configure_add_summary_entry(ARGS "designer")
 qt_configure_add_summary_entry(ARGS "distancefieldgenerator")
 #qt_configure_add_summary_entry(ARGS "kmap2qmap")
 qt_configure_add_summary_entry(ARGS "linguist")
-qt_configure_add_summary_entry(ARGS "macdeployqt")
 qt_configure_add_summary_entry(ARGS "pixeltool")
 qt_configure_add_summary_entry(ARGS "qdbus")
 #qt_configure_add_summary_entry(ARGS "qev")
 qt_configure_add_summary_entry(ARGS "qtattributionsscanner")
 qt_configure_add_summary_entry(ARGS "qtdiag")
 qt_configure_add_summary_entry(ARGS "qtplugininfo")
-qt_configure_add_summary_entry(ARGS "windeployqt")
 qt_configure_end_summary_section() # end of "Qt Tools" section
 qt_configure_add_report_entry(
     TYPE WARNING
