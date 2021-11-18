@@ -251,9 +251,9 @@ void QmlMarkupVisitor::endVisit(QQmlJS::AST::UiImport *uiimport)
 bool QmlMarkupVisitor::visit(QQmlJS::AST::UiPublicMember *member)
 {
     if (member->type == QQmlJS::AST::UiPublicMember::Property) {
-        addVerbatim(member->defaultToken);
-        addVerbatim(member->readonlyToken);
-        addVerbatim(member->propertyToken);
+        addVerbatim(member->defaultToken());
+        addVerbatim(member->readonlyToken());
+        addVerbatim(member->propertyToken());
         addVerbatim(member->typeModifierToken);
         addMarkedUpToken(member->typeToken, QLatin1String("type"));
         addMarkedUpToken(member->identifierToken, QLatin1String("name"));
@@ -263,10 +263,10 @@ bool QmlMarkupVisitor::visit(QQmlJS::AST::UiPublicMember *member)
         else if (member->statement)
             QQmlJS::AST::Node::accept(member->statement, this);
     } else {
-        addVerbatim(member->propertyToken);
+        addVerbatim(member->propertyToken());
         addVerbatim(member->typeModifierToken);
         addMarkedUpToken(member->typeToken, QLatin1String("type"));
-        // addVerbatim(member->identifierToken);
+        // addVerbatim(member->identifierToken());
         QQmlJS::AST::Node::accept(member->parameters, this);
     }
     addVerbatim(member->semicolonToken);

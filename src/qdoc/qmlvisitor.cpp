@@ -645,10 +645,10 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                 QmlPropertyNode *qmlPropNode = qmlType->hasQmlProperty(name);
                 if (qmlPropNode == nullptr)
                     qmlPropNode = new QmlPropertyNode(qmlType, name, type, false);
-                qmlPropNode->markReadOnly(member->isReadonlyMember);
-                if (member->isDefaultMember)
+                qmlPropNode->markReadOnly(member->isReadonly());
+                if (member->isDefaultMember())
                     qmlPropNode->markDefault();
-                if (member->requiredToken.isValid())
+                if (member->requiredToken().isValid())
                     qmlPropNode->setRequired();
                 applyDocumentation(member->firstSourceLocation(), qmlPropNode);
             }
