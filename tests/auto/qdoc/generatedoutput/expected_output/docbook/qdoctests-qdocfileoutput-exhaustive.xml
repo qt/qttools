@@ -48,12 +48,6 @@
 <db:important>
 <db:para>This is really important.</db:para>
 </db:important>
-<db:para>For example, if you have code like</db:para>
-<db:programlisting language="cpp" role="bad">This is old code&lt;@op&gt;.&lt;/@op&gt;
-</db:programlisting>
-<db:para>you can rewrite it as</db:para>
-<db:programlisting language="cpp" role="new">This is &lt;@keyword&gt;new&lt;/@keyword&gt; and shiny&lt;@op&gt;!&lt;/@op&gt;
-</db:programlisting>
 <db:note>
 <db:para>The code above doesn't compile</db:para>
 </db:note>

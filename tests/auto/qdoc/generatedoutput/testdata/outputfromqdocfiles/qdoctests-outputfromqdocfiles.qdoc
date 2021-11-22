@@ -164,12 +164,6 @@
 
     \important This is really important.
 
-    \oldcode
-        This is old code.
-    \newcode
-        This is new and shiny!
-    \endcode
-
     \note The code above doesn't compile
 
     \hr

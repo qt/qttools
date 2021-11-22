@@ -795,6 +795,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                                         .arg(cmdName(cmd), cmdName(CMD_LIST), cmdName(CMD_TABLE)));
                     break;
                 case CMD_OLDCODE:
+                    location().warning(QStringLiteral("'\\oldcode' and '\\newcode' are deprecated. "
+                                                      "They will be removed in Qt 6.4."));
+
                     leavePara();
                     append(Atom::CodeOld, getCode(CMD_OLDCODE, marker));
                     append(Atom::CodeNew, getCode(CMD_NEWCODE, marker));

@@ -51,10 +51,6 @@
     </table>
     <para>
         <bold>Important:</bold> This is really important.</para>
-    <para>For example, if you have code like</para>
-    <oldcode>This is old code.</oldcode>
-    <para>you can rewrite it as</para>
-    <newcode>This is new and shiny!</newcode>
     <para>
         <bold>Note:</bold> The code above doesn't compile</para>
     <para>

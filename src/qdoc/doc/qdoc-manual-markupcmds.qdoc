@@ -67,10 +67,10 @@
     \li \l {list-command} {\\list}
     \li \l {meta-command} {\\meta}
     \li \l {noautolist-command} {\\noautolist}
-    \li \l {newcode-command} {\\newcode}
+    \li \l {newcode-command} {\\newcode, deprecated}
     \li \l {li-command} {\\o} (deprecated, use \\li)
     \li \l {note-command} {\\note}
-    \li \l {oldcode-command} {\\oldcode}
+    \li \l {oldcode-command} {\\oldcode, deprecated}
     \li \l {omit-command} {\\omit}
     \li \l {printline-command} {\\printline}
     \li \l {printto-command} {\\printto}
@@ -888,11 +888,9 @@
     content that is not in a Qt language recognized by QDoc, use
     \l {badcode-command}{\\badcode} instead.
 
-    When processing any of the \\code, \l {newcode-command} {\\newcode} or \l
-    {oldcode-command} {\\oldcode} commands, QDoc removes all
-    indentation that is common for the verbatim code blocks within a
-    \c{/}\c{*!} ... \c{*}\c{/} comment before it adds the standard
-    indentation.
+    When processing the \\code command, QDoc removes all indentation
+    that is common for the verbatim code blocks within a \c{/}\c{*!}
+    ... \c{*}\c{/} comment before it adds the standard indentation.
 
     \note This doesn't apply to externally quoted code using the \l
     {quotefromfile-command} {\\quotefromfile} or \l
@@ -959,10 +957,9 @@
     \l{07-0-qdoc-commands-includingexternalcode.html#codeline-command}
     {\\codeline} commands.
 
-    See also \l {c-command} {\\c}, \l {badcode-command} {\\badcode}, \l
-    {07-0-qdoc-commands-includingexternalcode.html#quotefromfile-command}
-    {\\quotefromfile}, \l{newcode-command} {\\newcode}, and \l {oldcode-command}
-    {\\oldcode}.
+    See also \l {c-command} {\\c}, \l {badcode-command} {\\badcode}, and
+    \l {07-0-qdoc-commands-includingexternalcode.html#quotefromfile-command}
+    {\\quotefromfile}.
 
     \target badcode-command
     \section1 \\badcode
@@ -981,57 +978,14 @@
     \target newcode-command
     \section1 \\newcode
 
-    The \\newcode, \\oldcode, and \\endcode commands enable you to
-    show how to port a snippet of code to a new version of an API.
-
-    The \\newcode command and its companion the \\oldcode command are
-    a convenience combination of the \l {code-command} {\\code} commands:
-    this combination provides a text relating the two code snippets to each
-    other.
-
-    The \\newcode command requires a preceding \\oldcode statement.
-
-    Like the \l{code-command}{\\code} command, the \\newcode command renders its
-    code on a new line in the documentation using a monospace font and the
-    standard indentation.
-
-           \code
-           / *!
-               \oldcode
-                   if (printer->setup(parent))
-                       ...
-               \newcode
-                   QPrintDialog dialog(printer, parent);
-                       if (dialog.exec())
-                           ...
-               \ endcode
-           * /
-           \endcode
-
-    QDoc renders this as:
-
-           \quotation
-               \oldcode
-                   if (printer->setup(parent))
-                       ...
-               \newcode
-                   QPrintDialog dialog(printer, parent);
-                       if (dialog.exec())
-                           ...
-               \endcode
-           \endquotation
-
-    Other QDoc commands are disabled within \\oldcode ... \\endcode,
-    and the '\\' character doesn't need to be escaped.
+    The \\newcode command is deprecated and marked for
+    removal in Qt 6.4.
 
     \target oldcode-command
     \section1 \\oldcode
 
-    The \\oldcode command requires a corresponding
-    \\newcode statement; otherwise QDoc fails to parse the command
-    and emits a warning.
-
-    See also \l {newcode-command} {\\newcode}.
+    The \\oldcode command is deprecated and marked for
+    removal in Qt 6.4.
 
     \target qml-command
     \section1 \\qml
