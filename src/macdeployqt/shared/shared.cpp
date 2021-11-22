@@ -1204,7 +1204,6 @@ void createQtConf(const QString &appBundlePath)
     // Set Plugins and imports paths. These are relative to App.app/Contents.
     QByteArray contents = "[Paths]\n"
                           "Plugins = PlugIns\n"
-                          "Imports = Resources/qml\n"
                           "Qml2Imports = Resources/qml\n";
 
     QString filePath = appBundlePath + "/Contents/Resources/";
