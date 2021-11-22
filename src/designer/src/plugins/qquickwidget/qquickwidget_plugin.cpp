@@ -82,6 +82,13 @@ bool QQuickWidgetPlugin::isContainer() const
 
 QWidget *QQuickWidgetPlugin::createWidget(QWidget *parent)
 {
+    const auto graphicsApi = QQuickWindow::graphicsApi();
+    if (graphicsApi != QSGRendererInterface::OpenGL) {
+        qWarning("Qt Designer: The QQuickWidget custom widget plugin is disabled because it requires OpenGL RHI (current: %d).",
+             int(graphicsApi));
+        return {};
+    }
+
     QQuickWidget *result = new QQuickWidget(parent);
     connect(result, &QQuickWidget::sceneGraphError,
             this, &QQuickWidgetPlugin::sceneGraphError);
@@ -103,12 +110,9 @@ void QQuickWidgetPlugin::initialize(QDesignerFormEditorInterface * /*core*/)
 
 QString QQuickWidgetPlugin::domXml() const
 {
-    const auto graphicsApi = QQuickWindow::graphicsApi();
-    if (graphicsApi != QSGRendererInterface::OpenGLRhi) {
-        qWarning("Qt Designer: The QQuickWidget custom widget plugin is disabled because it requires OpenGL RHI (current: %d).",
-                 int(graphicsApi));
+    if (QQuickWindow::graphicsApi() != QSGRendererInterface::OpenGL)
         return {};
-    }
+
     return QStringLiteral(R"(
 <ui language="c++">
     <widget class="QQuickWidget" name="quickWidget">
