@@ -33,6 +33,10 @@ namespace TestQDoc {
 //! [random tag]
 \note This is just a test.
 //! [random tag]
+
+//! [args]
+\1\2 \3 \2\1
+//! [args]
 */
 
 /*!
@@ -45,6 +49,7 @@ namespace TestQDoc {
     \testnoautolist
 
     \include testcpp.cpp random tag
+    \include testcpp.cpp {args} {/} {*} {Look, Ma! {I'm made of arguments!}}
 
 \if defined(test_nestedmacro)
     \versionnote {module} {\ver}

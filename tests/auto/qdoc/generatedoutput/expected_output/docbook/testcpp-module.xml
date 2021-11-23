@@ -46,7 +46,7 @@
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 <db:note>
-<db:para>This is just a test.</db:para>
+<db:para>This is just a test. /* Look, Ma! {I'm made of arguments!} */</db:para>
 </db:note>
 <db:section xml:id="linking-to-function-like-things">
 <db:title>Linking to function-like things</db:title>
