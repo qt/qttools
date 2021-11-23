@@ -75,7 +75,7 @@ private:
     Location &location();
     QString detailsUnknownCommand(const QSet<QString> &metaCommandSet, const QString &str);
     void insertTarget(const QString &target, bool keyword);
-    void include(const QString &fileName, const QString &identifier);
+    void include(const QString &fileName, const QString &identifier, const QStringList &parameters);
     void startFormat(const QString &format, int cmd);
     bool openCommand(int cmd);
     bool closeCommand(int endCmd);
@@ -122,6 +122,7 @@ private:
     void skipToNextPreprocessorCommand();
     static bool isCode(const Atom *atom);
     static bool isQuote(const Atom *atom);
+    static void expandArgumentsInString(QString &str, const QStringList &args);
 
     QStack<qsizetype> m_openedInputs {};
 

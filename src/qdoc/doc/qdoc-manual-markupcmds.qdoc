@@ -3636,25 +3636,25 @@
     \l{sources.fileextensions-variable}{sources.fileextensions};
     for example, \c .qdocinc.
 
-    The command can have either one or two arguments. The first
+    The command can have one or more arguments. The first
     argument is always a file name. The contents of the file must be
     QDoc input, in other words, a sequence of QDoc commands and text, but
     without the enclosing QDoc comment \c{/}\c{*!} ... \c{*}\c{/} delimiters.
-    If you want to include the entire named file, don't use the second
-    argument. If you want to include only part of the file, see the
+    If you want to include the entire named file, leave the second argument
+    empty. If you want to include only part of the file, see the
     \l{2-argument-form}{two argument form} below. Here is an example
     of the one argument form:
 
-            \code
-            / *!
-                \page corefeatures.html
-                \title Core Features
+    \code *
+    /\1!
+        \page corefeatures.html
+        \title Core Features
 
-                \include examples/signalandslots.qdocinc
-                \include examples/objectmodel.qdocinc
-                \include examples/layoutmanagement.qdocinc
-            * /
-            \endcode
+        \include examples/signalandslots.qdocinc
+        \include examples/objectmodel.qdocinc
+        \include examples/layoutmanagement.qdocinc
+    \1/
+    \endcode
 
     QDoc renders this page \l{corefeatures.html} {as shown here}.
 
@@ -3664,19 +3664,19 @@
     It is a waste of time to make a separate \c .qdocinc file for every
     QDoc include snippet you want to use in multiple places in the
     documentation, especially given that you probably have to put the
-    copyright/license notice in every one of these files. So if you
-    have a large number of snippets to be included, you can put them all in a
-    single file if you want, and surround each one with:
+    copyright/license notice in every one of these files. If you
+    have multiple snippets to be included, you can put them all in a
+    single file and surround each one with:
     \code
-        //! [snippet-id1]
+    //! [snippet-id1]
 
-           QDoc commands and text...
+    QDoc commands and text...
 
     //! [snippet-id1]
 
-        //! [snippet-id2]
+    //! [snippet-id2]
 
-           More QDoc commands and text...
+    More QDoc commands and text...
 
     //! [snippet-id2]
     \endcode
@@ -3684,18 +3684,50 @@
     Then you can use the two-argument form of the command:
 
     \code
-        \input examples/signalandslots.qdocinc snippet-id2
-        \input examples/objectmodel.qdocinc another-snippet-id
+        \include examples/signalandslots.qdocinc snippet-id2
+        \include examples/objectmodel.qdocinc another-snippet-id
     \endcode
 
-    It works as expected. The sequence of QDoc commands and text found
-    between the two tags with the same name as the second argument is
-    sent to the QDoc input stream. You can even have nested snippets.
+    The sequence of QDoc commands and text found between the two tags
+    with the same name as the second argument is sent to the QDoc input
+    stream. You can even have nested snippets.
 
     \note Snippet identifiers work also within documentation comment
     (\beginqdoc .. \endqdoc) blocks, so it's not necessary to use a
     separate \c .qdocinc file. When processing a comment block, QDoc
     removes any \c {//!} comment lines from the generated output.
+
+    \section2 Extra arguments
+
+    Since QDoc 6.3, any further arguments passed to the \\include command
+    are used for injecting strings into the included content. To inject a
+    string to a specific location in the content, add a backslash followed
+    by a digit (1..9). The digits correspond with the order of the argument
+    list.
+
+    For example, given the following snippet in a file \c includes.qdocinc:
+
+    \badcode
+    //! [usage]
+    To enable \e{\1}, select \uicontrol {\2} > \uicontrol Enable.
+    //! [usage]
+    \endcode
+
+    Then, the following \\include line:
+
+    \badcode
+    \include includes.qdocinc {usage} {detailed output} {Verbose}
+    \endcode
+
+    Renders
+    \quotation
+    To enable \e {detailed output}, select \uicontrol {Verbose} >
+    \uicontrol Enable.
+    \endquotation
+
+    \important Each additional argument (including the snippet ID) must be
+               enclosed in braces. If you want to include the entire file,
+               use an empty snippet ID: \c {{}}.
 
     \target meta-command
     \section1 \\meta

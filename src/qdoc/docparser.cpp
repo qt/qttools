@@ -656,8 +656,16 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_INCLUDE:
                 case CMD_INPUT: {
                     QString fileName = getArgument();
-                    QString identifier = getRestOfLine();
-                    include(fileName, identifier);
+                    QStringList parameters;
+                    QString identifier;
+                    if (isLeftBraceAhead()) {
+                        identifier = getArgument();
+                        while (isLeftBraceAhead() && parameters.size() < 9)
+                            parameters << getArgument();
+                    } else {
+                        identifier = getRestOfLine();
+                    }
+                    include(fileName, identifier, parameters);
                     break;
                 }
                 case CMD_INLINEIMAGE:
@@ -1357,7 +1365,7 @@ void DocParser::insertTarget(const QString &target, bool keyword)
     }
 }
 
-void DocParser::include(const QString &fileName, const QString &identifier)
+void DocParser::include(const QString &fileName, const QString &identifier, const QStringList &parameters)
 {
     if (location().depth() > 16)
         location().fatal(QStringLiteral("Too many nested '\\%1's").arg(cmdName(CMD_INCLUDE)));
@@ -1372,15 +1380,16 @@ void DocParser::include(const QString &fileName, const QString &identifier)
         } else {
             location().push(fileName);
             QTextStream inStream(&inFile);
-            QString includedStuff = inStream.readAll();
+            QString includedContent = inStream.readAll();
             inFile.close();
 
             if (identifier.isEmpty()) {
-                m_input.insert(m_position, includedStuff);
+                expandArgumentsInString(includedContent, parameters);
+                m_input.insert(m_position, includedContent);
                 m_inputLength = m_input.length();
-                m_openedInputs.push(m_position + includedStuff.length());
+                m_openedInputs.push(m_position + includedContent.length());
             } else {
-                QStringList lineBuffer = includedStuff.split(QLatin1Char('\n'));
+                QStringList lineBuffer = includedContent.split(QLatin1Char('\n'));
                 int i = 0;
                 int startLine = -1;
                 while (i < lineBuffer.size()) {
@@ -1410,6 +1419,8 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                         result += lineBuffer[i] + QLatin1Char('\n');
                     ++i;
                 } while (i < lineBuffer.size());
+
+                expandArgumentsInString(result, parameters);
                 if (result.isEmpty()) {
                     location().warning(QStringLiteral("Empty qdoc snippet '%1' in '%2'")
                                                .arg(identifier, filePath));
@@ -2220,24 +2231,29 @@ QString DocParser::getUntilEnd(int cmd)
     return t;
 }
 
+void DocParser::expandArgumentsInString(QString &str, const QStringList &args)
+{
+    if (args.isEmpty())
+        return;
+
+    qsizetype paramNo;
+    qsizetype j = 0;
+    while (j < str.size()) {
+        if (str[j] == '\\' && j < str.size() - 1 && (paramNo = str[j + 1].digitValue()) >= 1
+            && paramNo <= args.size()) {
+            const QString &r = args[paramNo - 1];
+            str.replace(j, 2, r);
+            j += qMin(1, r.size());
+        } else {
+            ++j;
+        }
+    }
+}
+
 QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 {
     QString code = untabifyEtc(getUntilEnd(cmd));
-
-    if (!argStr.isEmpty()) {
-        QStringList args = argStr.split(" ", Qt::SkipEmptyParts);
-        qsizetype paramNo, j = 0;
-        while (j < code.size()) {
-            if (code[j] == '\\' && j < code.size() - 1 && (paramNo = code[j + 1].digitValue()) >= 1
-                && paramNo <= args.size()) {
-                QString p = args[paramNo - 1];
-                code.replace(j, 2, p);
-                j += qMin(1, p.size());
-            } else {
-                ++j;
-            }
-        }
-    }
+    expandArgumentsInString(code, argStr.split(" ", Qt::SkipEmptyParts));
 
     int indent = indentLevel(code);
     code = dedent(indent, code);
