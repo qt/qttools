@@ -98,6 +98,9 @@ qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
         WrapLibClang::WrapLibClang # special case
 )
 
+qt_internal_extend_target(${target_name} CONDITION MSVC
+    DEFINES _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)
+
 # special case begin
 if(QT_FEATURE_clangcpp)
     set_property(SOURCE clangtoolastreader.cpp PROPERTY SKIP_AUTOMOC ON)
