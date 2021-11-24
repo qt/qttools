@@ -271,6 +271,8 @@ clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
 #ifdef Q_OS_WIN
         adjustedArgs.push_back("-fms-compatibility-version=19");
         adjustedArgs.push_back("-DQ_COMPILER_UNIFORM_INIT");    // qtbase + clang-cl hack
+        // avoid constexpr error connected with offsetof (QTBUG-97380)
+        adjustedArgs.push_back("-D_CRT_USE_BUILTIN_OFFSETOF");
 #endif
         adjustedArgs.push_back("-Wno-everything");
         adjustedArgs.push_back("-std=gnu++17");
