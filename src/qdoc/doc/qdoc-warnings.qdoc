@@ -123,6 +123,14 @@
     Refer to the \l{instantiates-command}{\\instantiates} command in the
     \l {QDoc manual}.
 
+    QDoc issues this warning if it failed to locate the documentation for the
+     C++ class <ClassName>. Either the class is undocumented, it is marked
+    \l {internal-command}{\\internal}, or it originates from another
+    documentation module and QDoc did not locate an index file for the
+    corresponding dependency.
+
+    See also \l {depends-variable}{depends}.
+
     \section1 Cannot tie this documentation to anything
 
     QDoc found a \\beginqdoc ... \\endqdoc comment, with no \l{Topic Commands}{topic command}, that was

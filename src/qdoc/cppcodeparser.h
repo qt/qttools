@@ -93,6 +93,7 @@ private:
     static QSet<QString> m_excludeFiles;
     QString m_exampleNameFilter;
     QString m_exampleImageFilter;
+    bool m_showLinkErrors { false };
 };
 
 QT_END_NAMESPACE

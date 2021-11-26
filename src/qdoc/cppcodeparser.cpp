@@ -144,6 +144,8 @@ void CppCodeParser::initializeParser()
         m_exampleImageFilter = exampleImagePatterns.join(' ');
     else
         m_exampleImageFilter = "*.png";
+
+    m_showLinkErrors = !config.getBool(CONFIG_NOLINKERRORS);
 }
 
 /*!
@@ -595,11 +597,16 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             ClassNode *classNode = m_qdb->findClassNode(arg.split("::"));
             if (classNode)
                 node->setClassNode(classNode);
-            else
+            else if (m_showLinkErrors) {
                 doc.location().warning(
-                        QStringLiteral("C++ class %1 not found: \\instantiates %1").arg(arg));
-        } else
-            doc.location().warning(QStringLiteral("\\instantiates is only allowed in \\qmltype"));
+                        QStringLiteral("C++ class %2 not found: \\%1 %2")
+                                .arg(command, arg));
+            }
+        } else {
+            doc.location().warning(
+                    QStringLiteral("\\%1 is only allowed in \\%2")
+                            .arg(command, COMMAND_QMLTYPE));
+        }
     } else if (command == COMMAND_DEFAULT) {
         if (!node->isQmlProperty()) {
             doc.location().warning(QStringLiteral("Ignored '\\%1', applies only to '\\%2'")
