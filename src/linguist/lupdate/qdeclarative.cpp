@@ -82,7 +82,7 @@ protected:
     using AST::Visitor::endVisit;
 
     void accept(AST::Node *node)
-    { AST::Node::acceptChild(node, this); }
+    { AST::Node::accept(node, this); }
 
     void endVisit(AST::CallExpression *node) override
     {
