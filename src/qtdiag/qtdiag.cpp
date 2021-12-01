@@ -156,7 +156,7 @@ QTextStream &operator<<(QTextStream &str, const QRhiDriverInfo &info)
     };
     str << "Device: " << info.deviceName
         << " Device ID: 0x" << Qt::hex << info.deviceId
-        << " Vendor ID: 0x" << info.vendorId
+        << " Vendor ID: 0x" << info.vendorId << Qt::dec
         << " Device type: " << (size_t(info.deviceType) < sizeof(enumValues) / sizeof(enumValues[0])
                                 ? enumValues[info.deviceType] : "<Unknown>");
     return str;
