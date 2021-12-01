@@ -320,6 +320,12 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         { "IntAttributes", QRhi::IntAttributes },
         { "ScreenSpaceDerivatives", QRhi::ScreenSpaceDerivatives },
         { "ReadBackAnyTextureFormat", QRhi::ReadBackAnyTextureFormat },
+        { "PipelineCacheDataLoadSave", QRhi::PipelineCacheDataLoadSave },
+        { "ImageDataStride", QRhi::ImageDataStride },
+        { "RenderBufferImport", QRhi::RenderBufferImport },
+        { "ThreeDimensionalTextures", QRhi::ThreeDimensionalTextures },
+        { "RenderTo3DTextureSlice", QRhi::RenderTo3DTextureSlice },
+        { "TextureArrays", QRhi::TextureArrays },
 
         { nullptr, QRhi::Feature(0) }
     };
@@ -381,6 +387,8 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         str << "  MaxThreadGroupX: " << rhi->resourceLimit(QRhi::MaxThreadGroupX) << "\n";
         str << "  MaxThreadGroupY: " << rhi->resourceLimit(QRhi::MaxThreadGroupY) << "\n";
         str << "  MaxThreadGroupZ: " << rhi->resourceLimit(QRhi::MaxThreadGroupZ) << "\n";
+        str << "  TextureArraySizeMax: " << rhi->resourceLimit(QRhi::TextureArraySizeMax) << "\n";
+        str << "  MaxUniformBufferRange: " << rhi->resourceLimit(QRhi::MaxUniformBufferRange) << "\n";
         str << "  Uniform Buffer Alignment: " << rhi->ubufAlignment() << "\n";
         QByteArrayList supportedSampleCounts;
         for (int s : rhi->supportedSampleCounts())
