@@ -448,7 +448,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         const uint mask = font.resolveMask();
         if (mask & QFont::WeightResolved)
             fnt->setElementBold(font.bold());
-        if (mask & QFont::FamilyResolved)
+        if ((mask & (QFont::FamilyResolved | QFont::FamiliesResolved)) != 0)
             fnt->setElementFamily(font.family());
         if (mask & QFont::StyleResolved)
             fnt->setElementItalic(font.italic());
