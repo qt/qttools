@@ -166,6 +166,14 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>Hogus</name>
+    <message>
+        <location filename="main.cpp" line="700"/>
+        <source>this should be in Hogus</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Internal::Message</name>
     <message>
         <location filename="main.cpp" line="283"/>

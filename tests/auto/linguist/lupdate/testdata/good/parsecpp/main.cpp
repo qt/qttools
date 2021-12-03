@@ -688,3 +688,13 @@ void testing::test() {    static const char * const test_string_n3[] = {
         QT_TR_N_NOOP("%n test")
     };
 }
+
+
+
+// QTBUG-91521: context in static initializers with parentheses
+class Hogus : QObject {
+    Q_OBJECT
+    static const QString myString;
+};
+
+const QString Hogus::myString(QT_TR_NOOP("this should be in Hogus"));
