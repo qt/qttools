@@ -210,7 +210,7 @@ namespace qdesigner_internal {
     unsigned FontPropertyManager::fontFlag(int idx)
     {
         switch (idx) {
-        case 0: return QFont::FamilyResolved;
+        case 0: return QFont::FamilyResolved | QFont::FamiliesResolved;
         case 1: return QFont::SizeResolved;
         case 2: return QFont::WeightResolved;
         case 3: return QFont::StyleResolved;
