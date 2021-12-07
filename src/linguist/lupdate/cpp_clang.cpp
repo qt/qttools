@@ -275,7 +275,6 @@ clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
         adjustedArgs.push_back("-D_CRT_USE_BUILTIN_OFFSETOF");
 #endif
         adjustedArgs.push_back("-Wno-everything");
-        adjustedArgs.push_back("-std=gnu++17");
 
         for (QByteArray line : getIncludePathsFromCompiler()) {
             line = line.trimmed();
@@ -347,6 +346,7 @@ static bool generateCompilationDatabase(const QString &outputFilePath, const Con
     obj[QLatin1String("directory")] = buildDir;
     QJsonArray args = {
             QLatin1String("clang++"),
+            QLatin1String("-std=gnu++17"),
     #ifndef Q_OS_WIN
             QLatin1String("-fPIC"),
     #endif
