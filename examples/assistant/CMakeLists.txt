@@ -1,4 +1,4 @@
 # Generated from assistant.pro.
 
-add_subdirectory(simpletextviewer)
-add_subdirectory(remotecontrol)
+qt_internal_add_example(simpletextviewer)
+qt_internal_add_example(remotecontrol)
