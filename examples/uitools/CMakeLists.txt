@@ -1,4 +1,4 @@
 # Generated from uitools.pro.
 
-add_subdirectory(multipleinheritance)
-add_subdirectory(textfinder)
+qt_internal_add_example(multipleinheritance)
+qt_internal_add_example(textfinder)

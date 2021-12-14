@@ -1,5 +1,5 @@
 # Generated from linguist.pro.
 
-add_subdirectory(arrowpad)
-add_subdirectory(hellotr)
-add_subdirectory(trollprint)
+qt_internal_add_example(arrowpad)
+qt_internal_add_example(hellotr)
+qt_internal_add_example(trollprint)
