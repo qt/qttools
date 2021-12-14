@@ -1,3 +1,3 @@
 # Generated from help.pro.
 
-add_subdirectory(contextsensitivehelp)
+qt_internal_add_example(contextsensitivehelp)
