@@ -107,6 +107,12 @@ MessageEditor::MessageEditor(MultiDataModel *dataModel, QMainWindow *parent)
     showNothing();
 }
 
+MessageEditor::~MessageEditor()
+{
+    if (FormatTextEdit *fte = qobject_cast<FormatTextEdit *>(m_selectionHolder))
+        disconnect(fte, &FormatTextEdit::editorDestroyed, this, &MessageEditor::editorDestroyed);
+}
+
 void MessageEditor::setupEditorPage()
 {
     QFrame *editorPage = new QFrame;
