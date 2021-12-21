@@ -106,7 +106,7 @@ namespace qdesigner_internal {
         formLayout->addRow(label, m_includeFileEdit);
         m_includeFileEdit->setToolTip(toolTip);
 
-        toolTip = tr("Indicates that header file is a global header file. Does not have any effect on Qt for Python.");
+        toolTip = tr("Indicates that the header file is a global header file. Does not have any effect on Qt for Python.");
         label = new QLabel(tr("Global include"));
         label->setToolTip(toolTip);
         formLayout->addRow(label, m_globalIncludeCheckBox);
