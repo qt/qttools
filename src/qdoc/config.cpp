@@ -992,7 +992,8 @@ QStringList Config::loadMaster(const QString &fileName)
     QDir configDir(QFileInfo(fileName).canonicalPath());
     QString line = stream.readLine();
     while (!line.isNull()) {
-        qdocFiles.append(QFileInfo(configDir, line).filePath());
+        if (!line.isEmpty())
+            qdocFiles.append(QFileInfo(configDir, line).filePath());
         line = stream.readLine();
     }
     fin.close();
