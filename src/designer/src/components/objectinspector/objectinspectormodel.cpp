@@ -63,11 +63,6 @@ static inline QObject *objectOfItem(const QStandardItem *item) {
     return qvariant_cast<QObject *>(item->data(DataRole));
 }
 
-static bool sortEntry(const QObject *a, const QObject *b)
-{
-    return a->objectName() < b->objectName();
-}
-
 static bool sameIcon(const QIcon &i1, const QIcon &i2)
 {
     if (i1.isNull() &&  i2.isNull())
@@ -289,9 +284,7 @@ namespace qdesigner_internal {
 
         if (!object->children().isEmpty()) {
             ButtonGroupList buttonGroups;
-            QObjectList children = object->children();
-            std::sort(children.begin(), children.end(), sortEntry);
-            for (QObject *childObject : qAsConst(children)) {
+            for (QObject *childObject : object->children()) {
                 // Managed child widgets unless we had a container extension
                 if (childObject->isWidgetType()) {
                     if (!containerExtension) {
