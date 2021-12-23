@@ -255,6 +255,8 @@ ObjectInspector::ObjectInspectorPrivate::ObjectInspectorPrivate(QDesignerFormEdi
     m_filterModel->setSourceModel(m_model);
     m_filterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_treeView->setModel(m_filterModel);
+    m_treeView->setSortingEnabled(true);
+    m_treeView->sortByColumn(0, Qt::AscendingOrder);
     m_treeView->setItemDelegate(new ObjectInspectorDelegate);
     m_treeView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     m_treeView->header()->setSectionResizeMode(1, QHeaderView::Stretch);
