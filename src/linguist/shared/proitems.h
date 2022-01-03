@@ -168,7 +168,7 @@ private:
     QString m_string;
     int m_offset, m_length;
     int m_file;
-    mutable uint m_hash;
+    mutable size_t m_hash;
     QChar *prepareExtend(int extraLen, int thisTarget, int extraTarget);
     size_t updatedHash() const;
     friend size_t qHash(const ProString &str);
