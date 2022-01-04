@@ -418,17 +418,12 @@ void QtGradientStopsModel::clearSelection()
         selectStop(stop, false);
 }
 
-namespace {
-    template <typename BidirectionalIterator>
-    std::reverse_iterator<BidirectionalIterator> rev(BidirectionalIterator it)
-    { return std::reverse_iterator<BidirectionalIterator>(it); }
-}
-
 void QtGradientStopsModel::flipAll()
 {
     QMap<qreal, QtGradientStop *> stopsMap = stops();
     QMap<QtGradientStop *, bool> swappedList;
-    for (auto itStop = rev(stopsMap.keyValueEnd()), end = rev(stopsMap.keyValueBegin()); itStop != end; ++itStop) {
+    for (auto itStop = stopsMap.keyValueEnd(), begin = stopsMap.keyValueBegin(); itStop != begin;) {
+        --itStop;
         QtGradientStop *stop = (*itStop).second;
         if (swappedList.contains(stop))
             continue;
