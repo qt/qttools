@@ -10,9 +10,6 @@ project(QtTools # special case
     LANGUAGES CXX C
 )
 
-# special case begin
-set(QT_REPO_NOT_WARNINGS_CLEAN TRUE)
-
 # add platform specific compontents
 set(optional_components "")
 if(WIN32)
@@ -23,7 +20,6 @@ find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Co
 find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
              DBus Xml Widgets Quick QuickWidgets Qml
              Sql PrintSupport OpenGL OpenGLWidgets ${optional_components})
-# special case end
 
 qt_build_repo()
 
