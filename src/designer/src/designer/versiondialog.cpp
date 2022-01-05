@@ -160,7 +160,7 @@ VersionDialog::VersionDialog(QWidget *parent)
 
     lbl->setText(tr("%1"
                     "<br/>Copyright (C) %2 The Qt Company Ltd."
-                    ).arg(version, QStringLiteral("2021")));
+                    ).arg(version, QStringLiteral("2022")));
 
     lbl->setWordWrap(true);
     lbl->setOpenExternalLinks(true);
