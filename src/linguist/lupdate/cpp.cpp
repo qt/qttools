@@ -886,7 +886,7 @@ CppParser::TokenType CppParser::getToken()
                 return Tok_QuestionMark;
             case '0':
                 yyCh = getChar();
-                if (yyCh == 'x') {
+                if (yyCh == 'x' || yyCh == 'X') {
                     do {
                         yyCh = getChar();
                     } while ((yyCh >= '0' && yyCh <= '9') || yyCh == '\''
