@@ -145,4 +145,5 @@ This is a test string
 struct IntLiteralsWithSeparators {
     long d = 10'000'000'0'00;
     int x = 0x1'AF'FE;
+    int X = 0X2'E5E7;
 };
