@@ -139,3 +139,10 @@ const QString nodelimiter(QObject::tr(R"(
 const Qstring withdelimiter = QObject::tr(R"delim(
 This is a test string
 )delim");
+
+
+// New in C++14: integer literals may contain single quotes as separator.
+struct IntLiteralsWithSeparators {
+    long d = 10'000'000'0'00;
+    int x = 0x1'AF'FE;
+};

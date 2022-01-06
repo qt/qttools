@@ -887,7 +887,7 @@ CppParser::TokenType CppParser::getToken()
                 if (yyCh == 'x') {
                     do {
                         yyCh = getChar();
-                    } while ((yyCh >= '0' && yyCh <= '9')
+                    } while ((yyCh >= '0' && yyCh <= '9') || yyCh == '\''
                              || (yyCh >= 'a' && yyCh <= 'f') || (yyCh >= 'A' && yyCh <= 'F'));
                     return Tok_Integer;
                 }
@@ -905,7 +905,7 @@ CppParser::TokenType CppParser::getToken()
             case '9':
                 do {
                     yyCh = getChar();
-                } while (yyCh >= '0' && yyCh <= '9');
+                } while ((yyCh >= '0' && yyCh <= '9') || yyCh == '\'');
                 return Tok_Integer;
             default:
                 yyCh = getChar();
