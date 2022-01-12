@@ -110,7 +110,8 @@ void Node::initialize()
     goals.insert("qmlsignal", Node::Function);
     goals.insert("qmlsignalhandler", Node::Function);
     goals.insert("qmlmethod", Node::Function);
-    goals.insert("qmlbasictype", Node::QmlBasicType);
+    goals.insert("qmlvaluetype", Node::QmlValueType);
+    goals.insert("qmlbasictype", Node::QmlValueType); // deprecated!
     goals.insert("sharedcomment", Node::SharedComment);
     goals.insert("collection", Node::Collection);
 }
@@ -138,7 +139,7 @@ bool Node::changeType(NodeType from, NodeType to)
         case QmlType:
         case QmlModule:
         case QmlProperty:
-        case QmlBasicType:
+        case QmlValueType:
             setGenus(Node::QML);
             break;
         case JsType:
@@ -786,7 +787,7 @@ Node::PageType Node::getPageType(Node::NodeType t)
     case Node::Variable:
     case Node::QmlType:
     case Node::QmlProperty:
-    case Node::QmlBasicType:
+    case Node::QmlValueType:
     case Node::JsType:
     case Node::JsProperty:
     case Node::JsBasicType:
@@ -836,7 +837,7 @@ Node::Genus Node::getGenus(Node::NodeType t)
     case Node::QmlType:
     case Node::QmlModule:
     case Node::QmlProperty:
-    case Node::QmlBasicType:
+    case Node::QmlValueType:
         return Node::QML;
     case Node::JsType:
     case Node::JsModule:
@@ -931,7 +932,7 @@ QString Node::nodeTypeString(NodeType t)
 
     case QmlType:
         return QLatin1String("QML type");
-    case QmlBasicType:
+    case QmlValueType:
         return QLatin1String("QML basic type");
     case QmlModule:
         return QLatin1String("QML module");

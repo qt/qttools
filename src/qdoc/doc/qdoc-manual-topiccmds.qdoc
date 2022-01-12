@@ -1207,24 +1207,24 @@
     QDoc includes this documentation on the QML reference page for the
     \l GridView element.
 
-    \target qmlbasictype-command
-    \section1 \\qmlbasictype
+    \target qmlvaluetype-command
+    \section1 \\qmlvaluetype
 
-    The \\qmlbasictype command is for documenting a basic type for QML.
+    The \\qmlvaluetype command is for documenting a value type for QML.
     The argument is the type name. The type must be included in the
-    QML basic types group using the \l{ingroup-command}{\\ingroup}
+    QML value types group using the \l{ingroup-command}{\\ingroup}
     command as shown below. This will cause QDoc to include the
     documentation for the type on the
-    \l{http://doc.qt.io/qt-5/qtqml-typesystem-basictypes.html}
-    {QML Basic Types} page. The \l{brief-command} {\\brief} command
+    \l{http://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
+    {QML Value Types} page. The \l{brief-command} {\\brief} command
     is also required, because it appears on the
-    \l{http://doc.qt.io/qt-5/qtqml-typesystem-basictypes.html}
-    {QML Basic Types} page as well.
+    \l{http://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
+    {QML Value Types} page as well.
 
     \code
     / *!
-        \qmlbasictype int
-        \ingroup qmlbasictypes
+        \qmlvaluetype int
+        \ingroup qmlvaluetypes
 
         \brief An integer is a whole number, for example 0, 10, or -20.
 
@@ -1238,7 +1238,7 @@
         Item { width: 100; height: 200 }
         \endqml
 
-        \sa {QML Basic Types}
+        \sa {QML Value Types}
     * /
     \endcode
 

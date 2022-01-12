@@ -180,7 +180,7 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
   must be either Node::QmlBasicType or Node::JsBasicType.
   The new node has the given \a parent and \a name.
  */
-QmlBasicTypeNode::QmlBasicTypeNode(Aggregate *parent, const QString &name, Node::NodeType type)
+QmlValueTypeNode::QmlValueTypeNode(Aggregate *parent, const QString &name, Node::NodeType type)
     : Aggregate(type, parent, name)
 {
     setTitle(name);

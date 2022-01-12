@@ -315,7 +315,7 @@ Sections::Sections(Aggregate *aggregate) : m_aggregate(aggregate)
     case Node::JsType:
     case Node::JsBasicType:
     case Node::QmlType:
-    case Node::QmlBasicType:
+    case Node::QmlValueType:
         initAggregate(s_stdQmlTypeSummarySections, m_aggregate);
         initAggregate(s_stdQmlTypeDetailsSections, m_aggregate);
         buildStdQmlTypeRefPageSections();
@@ -438,7 +438,7 @@ Sections::~Sections()
         case Node::JsType:
         case Node::JsBasicType:
         case Node::QmlType:
-        case Node::QmlBasicType:
+        case Node::QmlValueType:
             clear(stdQmlTypeSummarySections());
             clear(stdQmlTypeDetailsSections());
             allMembersSection().clear();

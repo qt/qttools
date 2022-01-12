@@ -59,7 +59,7 @@
 */
 
 /*!
-    \qmlbasictype int
+    \qmlvaluetype int
     \inqmlmodule QDoc.Test
     \ingroup qmltypes
     \brief An integer basic type.

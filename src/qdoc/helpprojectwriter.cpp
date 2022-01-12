@@ -155,7 +155,8 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     typeHash["jsproperty"] = Node::QmlProperty;
     typeHash["qmlclass"] = Node::QmlType; // Legacy alias for 'qmltype'
     typeHash["qmltype"] = Node::QmlType;
-    typeHash["qmlbasictype"] = Node::QmlBasicType;
+    typeHash["qmlbasictype"] = Node::QmlValueType; // Legacy alias for 'qmlvaluetype'
+    typeHash["qmlvaluetype"] = Node::QmlValueType;
 
     for (const QString &selector : selectors) {
         QStringList pieces = selector.split(QLatin1Char(':'));
@@ -279,7 +280,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         project.m_keywords.append(keywordDetails(node));
         break;
     case Node::QmlType:
-    case Node::QmlBasicType:
+    case Node::QmlValueType:
     case Node::JsType:
     case Node::JsBasicType:
         if (node->doc().hasKeywords()) {
@@ -548,7 +549,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::Union:
     case Node::QmlType:
     case Node::JsType:
-    case Node::QmlBasicType:
+    case Node::QmlValueType:
     case Node::JsBasicType: {
         QString typeStr = m_gen->typeString(node);
         if (!typeStr.isEmpty())

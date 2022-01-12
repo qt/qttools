@@ -39,7 +39,7 @@ documented with the QML \l{topic-commands}{topic commands}:
 \list
 \li \l{qmlattachedproperty-command}{\\qmlattachedproperty}
 \li \l{qmlattachedsignal-command}{\\qmlattachedsignal}
-\li \l{qmlbasictype-command}{\\qmlbasictype}
+\li \l{qmlvaluetype-command}{\\qmlvaluetype}
 \li \l{qmltype-command}{\\qmltype}
 \li \l{qmlmethod-command}{\\qmlmethod}
 \li \l{qmlproperty-command}{\\qmlproperty}

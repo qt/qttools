@@ -479,8 +479,9 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         } else if (atom->string().contains("classes ")) {
             QString rootName = atom->string().mid(atom->string().indexOf("classes") + 7).trimmed();
             generateCompactList(Generic, relative, m_qdb->getCppClasses(), true, rootName);
-        } else if (atom->string() == QLatin1String("qmlbasictypes")) {
-            generateCompactList(Generic, relative, m_qdb->getQmlBasicTypes(), true,
+        } else if (atom->string() == QLatin1String("qmlvaluetypes")
+                   || atom->string() == QLatin1String("qmlbasictypes")) {
+            generateCompactList(Generic, relative, m_qdb->getQmlValueTypes(), true,
                                 QStringLiteral(""));
         } else if (atom->string() == QLatin1String("qmltypes")) {
             generateCompactList(Generic, relative, m_qdb->getQmlTypes(), true, QStringLiteral(""));
@@ -1355,7 +1356,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
   Generate the HTML page for the QML basic type represented
   by the QML basic type node \a qbtn.
  */
-void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker *marker)
+void HtmlGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
     QString htmlTitle = qbtn->fullTitle();

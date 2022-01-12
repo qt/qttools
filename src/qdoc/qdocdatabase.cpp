@@ -861,7 +861,7 @@ NodeMultiMap &QDocDatabase::getQmlTypesWithObsoleteMembers()
   have not already been constructed. Returns a reference to
   the map of QML basic types.
  */
-NodeMultiMap &QDocDatabase::getQmlBasicTypes()
+NodeMultiMap &QDocDatabase::getQmlValueTypes()
 {
     if (s_cppClasses.isEmpty() && s_qmlBasicTypes.isEmpty())
         processForest(&QDocDatabase::findAllClasses);

@@ -96,7 +96,7 @@ public:
         QmlType,
         QmlModule,
         QmlProperty,
-        QmlBasicType,
+        QmlValueType,
         JsType,
         JsModule,
         JsProperty,
@@ -192,7 +192,7 @@ public:
     [[nodiscard]] bool isProxyNode() const { return m_nodeType == Proxy; }
     [[nodiscard]] bool isPublic() const { return m_access == Access::Public; }
     [[nodiscard]] bool isProtected() const { return m_access == Access::Protected; }
-    [[nodiscard]] bool isQmlBasicType() const { return m_nodeType == QmlBasicType; }
+    [[nodiscard]] bool isQmlBasicType() const { return m_nodeType == QmlValueType; }
     [[nodiscard]] bool isQmlModule() const { return m_nodeType == QmlModule; }
     [[nodiscard]] bool isQmlNode() const { return genus() == QML; }
     [[nodiscard]] bool isQmlProperty() const { return m_nodeType == QmlProperty; }

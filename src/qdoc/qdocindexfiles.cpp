@@ -314,8 +314,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(name);
         node = qmlTypeNode;
-    } else if (elementName == QLatin1String("qmlbasictype")) {
-        auto *qbtn = new QmlBasicTypeNode(parent, name);
+    } else if (elementName == QLatin1String("qmlvaluetype")
+               || elementName == QLatin1String("qmlbasictype")) {
+        auto *qbtn = new QmlValueTypeNode(parent, name);
         qbtn->setTitle(attributes.value(QLatin1String("title")).toString());
         if (attributes.hasAttribute(QLatin1String("location")))
             name = attributes.value("location").toString();
@@ -325,7 +326,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(name);
         node = qbtn;
     } else if (elementName == QLatin1String("jsbasictype")) {
-        auto *qbtn = new QmlBasicTypeNode(parent, name);
+        auto *qbtn = new QmlValueTypeNode(parent, name);
         qbtn->setGenus(Node::JS);
         qbtn->setTitle(attributes.value(QLatin1String("title")).toString());
         if (attributes.hasAttribute(QLatin1String("location")))
@@ -887,8 +888,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             logicalModuleName = node->logicalModule()->logicalModuleName();
         qmlFullBaseName = node->qmlFullBaseName();
         break;
-    case Node::QmlBasicType:
-        nodeName = "qmlbasictype";
+    case Node::QmlValueType:
+        nodeName = "qmlvaluetype";
         break;
     case Node::JsBasicType:
         nodeName = "jsbasictype";

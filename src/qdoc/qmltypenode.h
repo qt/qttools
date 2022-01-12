@@ -94,10 +94,10 @@ private:
     ImportList m_importList {};
 };
 
-class QmlBasicTypeNode : public Aggregate
+class QmlValueTypeNode : public Aggregate
 {
 public:
-    QmlBasicTypeNode(Aggregate *parent, const QString &name, NodeType type = QmlBasicType);
+    QmlValueTypeNode(Aggregate *parent, const QString &name, NodeType type = QmlValueType);
     [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
 };
 

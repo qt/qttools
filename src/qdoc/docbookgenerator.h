@@ -61,7 +61,7 @@ protected:
     using Generator::generateQmlTypePage;
     void generateQmlTypePage(QmlTypeNode *qcn);
     using Generator::generateQmlBasicTypePage;
-    void generateQmlBasicTypePage(QmlBasicTypeNode *qbtn);
+    void generateQmlBasicTypePage(QmlValueTypeNode *qbtn);
     using Generator::generateCollectionNode;
     void generateCollectionNode(CollectionNode *cn);
     using Generator::generateGenericCollectionPage;

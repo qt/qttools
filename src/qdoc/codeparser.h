@@ -128,7 +128,7 @@ private:
 #define COMMAND_QMLATTACHEDMETHOD Doc::alias(QLatin1String("qmlattachedmethod"))
 #define COMMAND_QMLATTACHEDPROPERTY Doc::alias(QLatin1String("qmlattachedproperty"))
 #define COMMAND_QMLATTACHEDSIGNAL Doc::alias(QLatin1String("qmlattachedsignal"))
-#define COMMAND_QMLBASICTYPE Doc::alias(QLatin1String("qmlbasictype"))
+#define COMMAND_QMLVALUETYPE Doc::alias(QLatin1String("qmlvaluetype"))
 #define COMMAND_QMLCLASS Doc::alias(QLatin1String("qmlclass"))
 #define COMMAND_QMLDEFAULT Doc::alias(QLatin1String("qmldefault"))
 #define COMMAND_QMLINHERITS Doc::alias(QLatin1String("inherits"))
@@ -158,6 +158,9 @@ private:
 #define COMMAND_VERSION Doc::alias(QLatin1String("version"))
 #define COMMAND_UNION Doc::alias(QLatin1String("union"))
 #define COMMAND_WRAPPER Doc::alias(QLatin1String("wrapper"))
+
+// deprecated alias of qmlvaluetype
+#define COMMAND_QMLBASICTYPE Doc::alias(QLatin1String("qmlbasictype"))
 
 QT_END_NAMESPACE
 

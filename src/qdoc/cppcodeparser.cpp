@@ -74,7 +74,8 @@ CppCodeParser::CppCodeParser()
                        << COMMAND_QMLPROPERTYGROUP // mws 13/03/2019
                        << COMMAND_QMLATTACHEDPROPERTY << COMMAND_QMLSIGNAL
                        << COMMAND_QMLATTACHEDSIGNAL << COMMAND_QMLMETHOD
-                       << COMMAND_QMLATTACHEDMETHOD << COMMAND_QMLBASICTYPE << COMMAND_QMLMODULE
+                       << COMMAND_QMLATTACHEDMETHOD << COMMAND_QMLVALUETYPE << COMMAND_QMLBASICTYPE
+                       << COMMAND_QMLMODULE
                        << COMMAND_JSTYPE << COMMAND_JSPROPERTY
                        << COMMAND_JSPROPERTYGROUP // mws 13/03/2019
                        << COMMAND_JSATTACHEDPROPERTY << COMMAND_JSSIGNAL << COMMAND_JSATTACHEDSIGNAL
@@ -335,12 +336,12 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             qcn = new QmlTypeNode(m_qdb->primaryTreeRoot(), arg.first, Node::JsType);
         qcn->setLocation(doc.startLocation());
         return qcn;
-    } else if (command == COMMAND_QMLBASICTYPE) {
-        auto *node = new QmlBasicTypeNode(m_qdb->primaryTreeRoot(), arg.first);
+    } else if (command == COMMAND_QMLVALUETYPE || command == COMMAND_QMLBASICTYPE) {
+        auto *node = new QmlValueTypeNode(m_qdb->primaryTreeRoot(), arg.first);
         node->setLocation(doc.startLocation());
         return node;
     } else if (command == COMMAND_JSBASICTYPE) {
-        auto *node = new QmlBasicTypeNode(m_qdb->primaryTreeRoot(), arg.first, Node::JsBasicType);
+        auto *node = new QmlValueTypeNode(m_qdb->primaryTreeRoot(), arg.first, Node::JsBasicType);
         node->setLocation(doc.startLocation());
         return node;
     } else if ((command == COMMAND_QMLSIGNAL) || (command == COMMAND_QMLMETHOD)

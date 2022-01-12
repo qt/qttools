@@ -394,12 +394,15 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                     : m_qdb->getExamples();
             generateAnnotatedLists(relative, things, atom->string());
         } else if (atom->string() == QLatin1String("classes")
-                   || atom->string() == QLatin1String("qmlbasictypes")
+                   || atom->string() == QLatin1String("qmlbasictypes") // deprecated!
+                   || atom->string() == QLatin1String("qmlvaluetypes")
                    || atom->string() == QLatin1String("qmltypes")) {
             const NodeMultiMap things = atom->string() == QLatin1String("classes")
                     ? m_qdb->getCppClasses()
-                    : atom->string() == QLatin1String("qmlbasictypes") ? m_qdb->getQmlBasicTypes()
-                                                                       : m_qdb->getQmlTypes();
+                    : (atom->string() == QLatin1String("qmlvaluetypes")
+                       || atom->string() == QLatin1String("qmlbasictypes"))
+                      ? m_qdb->getQmlValueTypes()
+                      : m_qdb->getQmlTypes();
             generateCompactList(Generic, relative, things, QString(), atom->string());
         } else if (atom->string().contains("classes ")) {
             QString rootName = atom->string().mid(atom->string().indexOf("classes") + 7).trimmed();
@@ -3810,7 +3813,7 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
   Generate the DocBook page for the QML basic type represented
   by the QML basic type node \a qbtn.
  */
-void DocBookGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn)
+void DocBookGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn)
 {
     // From HtmlGenerator::generateQmlBasicTypePage.
     // Start producing the DocBook file.
@@ -4046,7 +4049,7 @@ void DocBookGenerator::generateDocumentation(Node *node)
             } else if (node->isQmlType() || node->isJsType()) {
                 generateQmlTypePage(static_cast<QmlTypeNode *>(node));
             } else if (node->isQmlBasicType() || node->isJsBasicType()) {
-                generateQmlBasicTypePage(static_cast<QmlBasicTypeNode *>(node));
+                generateQmlBasicTypePage(static_cast<QmlValueTypeNode *>(node));
             } else if (node->isProxyNode()) {
                 generateProxyPage(static_cast<Aggregate *>(node));
             }

@@ -1092,7 +1092,7 @@ void Generator::generateDocumentation(Node *node)
                 endSubPage();
             } else if (node->isQmlBasicType() || node->isJsBasicType()) {
                 beginSubPage(node, fileName(node));
-                auto *qbtn = static_cast<QmlBasicTypeNode *>(node);
+                auto *qbtn = static_cast<QmlValueTypeNode *>(node);
                 generateQmlBasicTypePage(qbtn, marker);
                 endSubPage();
             } else if (node->isProxyNode()) {
@@ -2075,7 +2075,7 @@ QString Generator::typeString(const Node *node)
     case Node::Union:
         return "union";
     case Node::QmlType:
-    case Node::QmlBasicType:
+    case Node::QmlValueType:
     case Node::JsBasicType:
         return "type";
     case Node::Page:

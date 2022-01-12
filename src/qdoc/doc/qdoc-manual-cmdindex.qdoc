@@ -106,7 +106,7 @@
     \li \l {qmlabstract-command} {\\qmlabstract}
     \li \l {qmlattachedproperty-command} {\\qmlattachedproperty}
     \li \l {qmlattachedsignal-command} {\\qmlattachedsignal}
-    \li \l {qmlbasictype-command} {\\qmlbasictype}
+    \li \l {qmlvaluetype-command} {\\qmlvaluetype}
     \li \l {qmlclass-command} {\\qmlclass} (deprecated, use \\qmltype)
     \li \l {qmldefault-command} {\\qmldefault}
     \li \l {qmltype-command} {\\qmltype}

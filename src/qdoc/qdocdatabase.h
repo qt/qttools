@@ -271,7 +271,7 @@ public:
     NodeMultiMap &getObsoleteQmlTypes();
     NodeMultiMap &getQmlTypesWithObsoleteMembers();
     NodeMultiMap &getNamespaces();
-    NodeMultiMap &getQmlBasicTypes();
+    NodeMultiMap &getQmlValueTypes();
     NodeMultiMap &getQmlTypes();
     NodeMultiMap &getExamples();
     NodeMultiMap &getAttributions();
