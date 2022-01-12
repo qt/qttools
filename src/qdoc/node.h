@@ -293,7 +293,7 @@ public:
     [[nodiscard]] bool match(const QList<int> &types) const;
     [[nodiscard]] Aggregate *parent() const { return m_parent; }
     [[nodiscard]] const QString &name() const { return m_name; }
-    [[nodiscard]] QString physicalModuleName() const;
+    [[nodiscard]] QString physicalModuleName() const { return m_physicalModuleName; }
     [[nodiscard]] QString url() const { return m_url; }
     [[nodiscard]] virtual QString nameForLists() const { return m_name; }
     [[nodiscard]] virtual QString outputFileName() const { return QString(); }
