@@ -1265,59 +1265,6 @@ QString Node::fullDocumentName() const
     return pieces.join(concatenator);
 }
 
-/*!
-  Find the module (Qt Core, Qt GUI, etc.) to which the class belongs.
-  We do this by obtaining the full path to the header file's location
-  and examine everything between "src/" and the filename. This is
-  semi-dirty because we are assuming a particular directory structure.
-
-  This function is only really useful if the class's module has not
-  been defined in the header file with a QT_MODULE macro or with an
-  \inmodule command in the documentation.
- */
-QString Node::physicalModuleName() const
-{
-    if (!m_physicalModuleName.isEmpty())
-        return m_physicalModuleName;
-
-    QString path = location().filePath();
-    QString pattern = QString("src") + QDir::separator();
-    qsizetype start = path.lastIndexOf(pattern);
-
-    if (start == -1)
-        return QString();
-
-    QString moduleDir = path.mid(start + pattern.size());
-    qsizetype finish = moduleDir.indexOf(QDir::separator());
-
-    if (finish == -1)
-        return QString();
-
-    QString physicalModuleName = moduleDir.left(finish);
-
-    if (physicalModuleName == QLatin1String("corelib"))
-        return QLatin1String("QtCore");
-    else if (physicalModuleName == QLatin1String("uitools"))
-        return QLatin1String("QtUiTools");
-    else if (physicalModuleName == QLatin1String("gui"))
-        return QLatin1String("QtGui");
-    else if (physicalModuleName == QLatin1String("network"))
-        return QLatin1String("QtNetwork");
-    else if (physicalModuleName == QLatin1String("opengl"))
-        return QLatin1String("QtOpenGL");
-    else if (physicalModuleName == QLatin1String("svg"))
-        return QLatin1String("QtSvg");
-    else if (physicalModuleName == QLatin1String("sql"))
-        return QLatin1String("QtSql");
-    else if (physicalModuleName == QLatin1String("qtestlib"))
-        return QLatin1String("QtTest");
-    else if (moduleDir.contains("webkit"))
-        return QLatin1String("QtWebKit");
-    else if (physicalModuleName == QLatin1String("xml"))
-        return QLatin1String("QtXml");
-    else
-        return QString();
-}
 void Node::setDeprecatedSince(const QString &sinceVersion)
 {
     if (!m_deprecatedSince.isEmpty())
