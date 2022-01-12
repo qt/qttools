@@ -700,11 +700,11 @@ QString QPixelTool::aboutText() const
 
     QString result;
     QTextStream str(&result);
-    str << "<html></head><body><h2>Qt Pixeltool</h2><p>Qt " << QT_VERSION_STR
+    str << "<html><head></head><body><h2>Qt Pixeltool</h2><p>Qt " << QT_VERSION_STR
         << "</p><p>Copyright (C) 2017 The Qt Company Ltd.</p><h3>Screens</h3><ul>";
     for (const QScreen *screen : screens)
         str << "<li>" << (screen == windowScreen ? "* " : "  ") << screen << "</li>";
-    str << "<ul></body></html>";
+    str << "</ul></body></html>";
     return result;
 }
 
