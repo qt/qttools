@@ -374,61 +374,45 @@ QString CppCodeMarker::functionEndRegExp(const QString & /* funcName */)
 QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
                                  const Location & /* location */)
 {
-    static QSet<QString> types;
-    static QSet<QString> keywords;
+    static QSet<QString> types{
+        QLatin1String("bool"),       QLatin1String("char"),    QLatin1String("double"),
+        QLatin1String("float"),      QLatin1String("int"),     QLatin1String("long"),
+        QLatin1String("short"),      QLatin1String("signed"),  QLatin1String("unsigned"),
+        QLatin1String("uint"),       QLatin1String("ulong"),   QLatin1String("ushort"),
+        QLatin1String("uchar"),      QLatin1String("void"),    QLatin1String("qlonglong"),
+        QLatin1String("qulonglong"), QLatin1String("qint"),    QLatin1String("qint8"),
+        QLatin1String("qint16"),     QLatin1String("qint32"),  QLatin1String("qint64"),
+        QLatin1String("quint"),      QLatin1String("quint8"),  QLatin1String("quint16"),
+        QLatin1String("quint32"),    QLatin1String("quint64"), QLatin1String("qreal"),
+        QLatin1String("cond")
+    };
 
-    if (types.isEmpty()) {
-        // initialize statics
-        Q_ASSERT(keywords.isEmpty());
-        static const QString typeTable[] = {
-            QLatin1String("bool"),       QLatin1String("char"),    QLatin1String("double"),
-            QLatin1String("float"),      QLatin1String("int"),     QLatin1String("long"),
-            QLatin1String("short"),      QLatin1String("signed"),  QLatin1String("unsigned"),
-            QLatin1String("uint"),       QLatin1String("ulong"),   QLatin1String("ushort"),
-            QLatin1String("uchar"),      QLatin1String("void"),    QLatin1String("qlonglong"),
-            QLatin1String("qulonglong"), QLatin1String("qint"),    QLatin1String("qint8"),
-            QLatin1String("qint16"),     QLatin1String("qint32"),  QLatin1String("qint64"),
-            QLatin1String("quint"),      QLatin1String("quint8"),  QLatin1String("quint16"),
-            QLatin1String("quint32"),    QLatin1String("quint64"), QLatin1String("qreal"),
-            QLatin1String("cond")
-        };
-
-        static const QString keywordTable[] = {
-            QLatin1String("and"), QLatin1String("and_eq"), QLatin1String("asm"),
-            QLatin1String("auto"), QLatin1String("bitand"), QLatin1String("bitor"),
-            QLatin1String("break"), QLatin1String("case"), QLatin1String("catch"),
-            QLatin1String("class"), QLatin1String("compl"), QLatin1String("const"),
-            QLatin1String("const_cast"), QLatin1String("continue"), QLatin1String("default"),
-            QLatin1String("delete"), QLatin1String("do"), QLatin1String("dynamic_cast"),
-            QLatin1String("else"), QLatin1String("enum"), QLatin1String("explicit"),
-            QLatin1String("export"), QLatin1String("extern"), QLatin1String("false"),
-            QLatin1String("for"), QLatin1String("friend"), QLatin1String("goto"),
-            QLatin1String("if"), QLatin1String("include"), QLatin1String("inline"),
-            QLatin1String("monitor"), QLatin1String("mutable"), QLatin1String("namespace"),
-            QLatin1String("new"), QLatin1String("not"), QLatin1String("not_eq"),
-            QLatin1String("operator"), QLatin1String("or"), QLatin1String("or_eq"),
-            QLatin1String("private"), QLatin1String("protected"), QLatin1String("public"),
-            QLatin1String("register"), QLatin1String("reinterpret_cast"), QLatin1String("return"),
-            QLatin1String("sizeof"), QLatin1String("static"), QLatin1String("static_cast"),
-            QLatin1String("struct"), QLatin1String("switch"), QLatin1String("template"),
-            QLatin1String("this"), QLatin1String("throw"), QLatin1String("true"),
-            QLatin1String("try"), QLatin1String("typedef"), QLatin1String("typeid"),
-            QLatin1String("typename"), QLatin1String("union"), QLatin1String("using"),
-            QLatin1String("virtual"), QLatin1String("volatile"), QLatin1String("wchar_t"),
-            QLatin1String("while"), QLatin1String("xor"), QLatin1String("xor_eq"),
-            QLatin1String("synchronized"),
-            // Qt specific
-            QLatin1String("signals"), QLatin1String("slots"), QLatin1String("emit")
-        };
-
-        types.reserve(sizeof(typeTable) / sizeof(QString));
-        for (int j = sizeof(typeTable) / sizeof(QString) - 1; j; --j)
-            types.insert(typeTable[j]);
-
-        keywords.reserve(sizeof(keywordTable) / sizeof(QString));
-        for (int j = sizeof(keywordTable) / sizeof(QString) - 1; j; --j)
-            keywords.insert(keywordTable[j]);
-    }
+    static QSet<QString> keywords{
+        QLatin1String("and"), QLatin1String("and_eq"), QLatin1String("asm"), QLatin1String("auto"),
+        QLatin1String("bitand"), QLatin1String("bitor"), QLatin1String("break"),
+        QLatin1String("case"), QLatin1String("catch"), QLatin1String("class"),
+        QLatin1String("compl"), QLatin1String("const"), QLatin1String("const_cast"),
+        QLatin1String("continue"), QLatin1String("default"), QLatin1String("delete"),
+        QLatin1String("do"), QLatin1String("dynamic_cast"), QLatin1String("else"),
+        QLatin1String("enum"), QLatin1String("explicit"), QLatin1String("export"),
+        QLatin1String("extern"), QLatin1String("false"), QLatin1String("for"),
+        QLatin1String("friend"), QLatin1String("goto"), QLatin1String("if"),
+        QLatin1String("include"), QLatin1String("inline"), QLatin1String("monitor"),
+        QLatin1String("mutable"), QLatin1String("namespace"), QLatin1String("new"),
+        QLatin1String("not"), QLatin1String("not_eq"), QLatin1String("operator"),
+        QLatin1String("or"), QLatin1String("or_eq"), QLatin1String("private"),
+        QLatin1String("protected"), QLatin1String("public"), QLatin1String("register"),
+        QLatin1String("reinterpret_cast"), QLatin1String("return"), QLatin1String("sizeof"),
+        QLatin1String("static"), QLatin1String("static_cast"), QLatin1String("struct"),
+        QLatin1String("switch"), QLatin1String("template"), QLatin1String("this"),
+        QLatin1String("throw"), QLatin1String("true"), QLatin1String("try"),
+        QLatin1String("typedef"), QLatin1String("typeid"), QLatin1String("typename"),
+        QLatin1String("union"), QLatin1String("using"), QLatin1String("virtual"),
+        QLatin1String("volatile"), QLatin1String("wchar_t"), QLatin1String("while"),
+        QLatin1String("xor"), QLatin1String("xor_eq"), QLatin1String("synchronized"),
+        // Qt specific
+        QLatin1String("signals"), QLatin1String("slots"), QLatin1String("emit")
+    };
 
     QString code = in;
     QString out;
