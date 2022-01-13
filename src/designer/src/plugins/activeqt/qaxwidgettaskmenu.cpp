@@ -59,8 +59,8 @@ class SetControlCommand : public QUndoCommand
 public:
     SetControlCommand(QDesignerAxWidget *ax, QDesignerFormWindowInterface *core, const QString &newClsid = QString());
 
-    virtual void redo() {  apply(m_newClsid); }
-    virtual void undo() {  apply(m_oldClsid);  }
+    virtual void redo() override {  apply(m_newClsid); }
+    virtual void undo() override {  apply(m_oldClsid);  }
 
 private:
     bool apply(const QString &clsid);
