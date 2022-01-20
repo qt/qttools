@@ -46,7 +46,7 @@ signals:
     void receivedCommand(const QString &cmd);
 
 private:
-    void run();
+    void run() override;
     bool ok;
 };
 
