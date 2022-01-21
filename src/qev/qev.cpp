@@ -29,6 +29,7 @@
 #include <QWidget>
 #include <QApplication>
 #include <QDebug>
+#include <QFile>
 #include <qevent.h>
 
 QT_USE_NAMESPACE
@@ -39,8 +40,9 @@ class Widget : public QWidget
 {
 public:
     Widget(){ setAttribute(Qt::WA_InputMethodEnabled); }
-    QSize sizeHint() const { return QSize(20, 20); }
-    bool event(QEvent *e) {
+    QSize sizeHint() const override { return QSize(20, 20); }
+    bool event(QEvent *e) override
+    {
         if (e->type() == QEvent::ContextMenu)
             return false;
         QDebug(qout) << e << Qt::endl;
