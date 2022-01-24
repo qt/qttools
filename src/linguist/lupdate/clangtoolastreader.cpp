@@ -27,6 +27,7 @@
 ****************************************************************************/
 
 #include "clangtoolastreader.h"
+#include "filesignificancecheck.h"
 #include "translator.h"
 
 #include <QLibraryInfo>
@@ -358,7 +359,7 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     }
 
     // Checking that the CallExpression is from the input file we're interested in
-    if (info.Filename != m_inputFile)
+    if (!LupdatePrivate::isFileSignificant(info.Filename))
         return true;
 
     qCDebug(lcClang) << "************************** VisitCallExpr ****************";
@@ -437,16 +438,21 @@ bool LupdateVisitor::VisitCallExpr(clang::CallExpr *callExpression)
     return true;
 }
 
+void LupdateVisitor::processIsolatedComments()
+{
+    auto &sourceMgr = m_context->getSourceManager();
+    processIsolatedComments(sourceMgr.getMainFileID()) ;
+}
+
 /*
     Retrieve the comments not associated with tr calls.
 */
-void LupdateVisitor::processIsolatedComments()
+void LupdateVisitor::processIsolatedComments(const clang::FileID file)
 {
     qCDebug(lcClang) << "==== processIsolatedComments ====";
     auto &sourceMgr = m_context->getSourceManager();
 
 #if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(10,0,0))
-    const clang::FileID file = sourceMgr.getMainFileID();
     const auto commentsInThisFile = m_context->Comments.getCommentsInFile(file);
     if (!commentsInThisFile)
         return;
@@ -469,13 +475,15 @@ void LupdateVisitor::processIsolatedComments()
     // They are not associated to any tr calls
     // Each one needs its own entry in the m_stores->AST translation store
     for (const auto &rawComment : rawComments) {
-        if (sourceMgr.getFilename(rawComment->getBeginLoc()).str() != m_inputFile)
+        if (!LupdatePrivate::isFileSignificant(sourceMgr.getFilename(rawComment->getBeginLoc()).str()))
             continue;
         // Comments not separated by an empty line will be part of the same Raw comments
         // Each one needs to be saved with its line number.
         // The store is used here only to pass this information.
         TranslationRelatedStore store;
         store.lupdateLocationLine = sourceMgr.getPresumedLoc(rawComment->getBeginLoc(), false).getLine();
+        store.lupdateLocationFile = QString::fromStdString(
+                    sourceMgr.getPresumedLoc(rawComment->getBeginLoc(), false).getFilename());
         QString comment = toQt(rawComment->getRawText(sourceMgr));
         qCDebug(lcClang) << " raw Comment : \n" << comment;
         setInfoFromRawComment(comment, &store);
@@ -719,7 +727,7 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
                 newStore.contextArg = comment.left(index).trimmed();
                 newStore.lupdateComment = comment.mid(index).trimmed();
             }
-            newStore.lupdateLocationFile = QString::fromStdString(m_inputFile);
+            newStore.lupdateLocationFile = store->lupdateLocationFile;
             newStore.lupdateLocationLine = storeLine;
             newStore.locationCol = 0;
             newStore.printStore();
@@ -734,9 +742,14 @@ void LupdateVisitor::setInfoFromRawComment(const QString &commentString,
 
 void LupdateVisitor::processPreprocessorCalls()
 {
-    m_macro = (m_stores->Preprocessor.size() > 0);
-    for (const auto &store : m_stores->Preprocessor)
-        processPreprocessorCall(store);
+    QString inputFile = toQt(m_inputFile);
+    for (const auto &store : m_stores->Preprocessor) {
+        if (store.lupdateInputFile == inputFile)
+            processPreprocessorCall(store);
+    }
+
+    if (m_qDeclareTrMacroAll.size() > 0 || m_noopTranslationMacroAll.size() > 0)
+        m_macro = true;
 }
 
 void LupdateVisitor::processPreprocessorCall(TranslationRelatedStore store)
@@ -763,7 +776,7 @@ bool LupdateVisitor::VisitNamedDecl(clang::NamedDecl *namedDeclaration)
     if (!fullLocation.isValid() || !fullLocation.getFileEntry())
         return true;
 
-    if (fullLocation.getFileEntry()->getName() != m_inputFile)
+    if (!LupdatePrivate::isFileSignificant(fullLocation.getFileEntry()->getName().str()))
         return true;
 
     qCDebug(lcClang) << "NamedDecl Name:   " << namedDeclaration->getQualifiedNameAsString();
@@ -841,12 +854,12 @@ void LupdateVisitor::generateOutput()
 {
     qCDebug(lcClang) << "=================generateOutput============================";
     m_noopTranslationMacroAll.erase(std::remove_if(m_noopTranslationMacroAll.begin(),
-        m_noopTranslationMacroAll.end(), [this](const TranslationRelatedStore &store) {
+        m_noopTranslationMacroAll.end(), [](const TranslationRelatedStore &store) {
         // Macros not located in the currently visited file are missing context (and it's normal),
         // so an output is only generated for macros present in the currently visited file.
         // If context could not be found, it is warned against in ClangCppParser::collectMessages
         // (where it is possible to order the warnings and print them consistantly)
-        if ( m_inputFile != qPrintable(store.lupdateLocationFile))
+        if (!LupdatePrivate::isFileSignificant(store.lupdateLocationFile.toStdString()))
             return true;
         return false;
       }), m_noopTranslationMacroAll.end());

@@ -4,5 +4,6 @@ SOURCES += test_isolatedComments.cpp
 SOURCES += test_sameLineComments.cpp
 SOURCES += test_contain_only_alias.cpp
 SOURCES += test_line_directive.cpp
+SOURCES += test_header_only.cpp
 
 TRANSLATIONS = project.ts

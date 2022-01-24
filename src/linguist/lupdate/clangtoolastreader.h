@@ -79,6 +79,7 @@ private:
 
     void processPreprocessorCall(TranslationRelatedStore store);
     void processIsolatedComments();
+    void processIsolatedComments(const clang::FileID file);
 
     clang::ASTContext *m_context = nullptr;
     std::string m_inputFile;

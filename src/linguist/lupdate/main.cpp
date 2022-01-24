@@ -52,6 +52,7 @@
 bool useClangToParseCpp = false;
 QString commandLineCompilationDatabaseDir; // for the path to the json file passed as a command line argument.
                                     // Has priority over what is in the .pro file and passed to the project.
+QStringList rootDirs;
 
 // Can't have an array of QStaticStringData<N> for different N, so
 // use QString, which requires constructor calls. Doesn't matter
@@ -309,6 +310,10 @@ static void printUsage()
         "           A directory specified on the command line takes precedence.\n"
         "           If no path is given, the compilation database will be searched\n"
         "           in all parent paths of the first input file.\n"
+        "    -project-roots <directory>...\n"
+        "           Specify one or more project root directories.\n"
+        "           Only files below a project root are considered for translation when using\n"
+        "           the -clang-parser option.\n"
         "    @lst-file\n"
         "           Read additional file names (one per line) or includepaths (one per\n"
         "           line, and prefixed with -I) from lst-file.\n"
@@ -622,6 +627,10 @@ private:
         ConversionData cd;
         cd.m_noUiLines = options & NoUiLines;
         cd.m_projectRoots = projectRoots(projectFile, sources);
+        QStringList projectRootDirs;
+        for (auto dir : cd.m_projectRoots)
+            projectRootDirs.append(dir);
+        cd.m_rootDirs = projectRootDirs;
         cd.m_includePath = prj.includePaths;
         cd.m_excludes = prj.excluded;
         cd.m_sourceIsUtf16 = options & SourceIsUtf16;
@@ -894,6 +903,14 @@ int main(int argc, char **argv)
              }
             continue;
         }
+        else if (arg == QLatin1String("-project-roots")) {
+            while ((i + 1) != argc && !args[i + 1].startsWith(QLatin1String("-"))) {
+                 i++;
+                 rootDirs << args[i];
+             }
+            rootDirs.removeDuplicates();
+            continue;
+        }
 #endif
         else if (arg.startsWith(QLatin1String("-")) && arg != QLatin1String("-")) {
             printErr(QStringLiteral("Unrecognized option '%1'.\n").arg(arg));
@@ -1058,6 +1075,7 @@ int main(int argc, char **argv)
         cd.m_includePath = includePath;
         cd.m_allCSources = allCSources;
         cd.m_compilationDatabaseDir = commandLineCompilationDatabaseDir;
+        cd.m_rootDirs = rootDirs;
         for (const QString &resource : qAsConst(resourceFiles))
             sourceFiles << getResources(resource);
         processSources(fetchedTor, sourceFiles, cd, &fail);

@@ -28,6 +28,7 @@
 
 #include "cpp_clang.h"
 #include "clangtoolastreader.h"
+#include "filesignificancecheck.h"
 #include "lupdatepreprocessoraction.h"
 #include "synchronized.h"
 #include "translator.h"
@@ -38,6 +39,7 @@
 #include <QtCore/qjsonarray.h>
 #include <QtCore/qjsondocument.h>
 #include <QtCore/qjsonobject.h>
+#include <QtCore/qscopeguard.h>
 #include <QtCore/QProcess>
 #include <QStandardPaths>
 #include <QtTools/private/qttools-config_p.h>
@@ -97,6 +99,21 @@ static QByteArrayList getMSVCIncludePathsFromEnvironment()
         it->prepend("-isystem");
     }
     return pathList;
+}
+
+static QStringList getProjectDirsFromEnvironment()
+{
+    QList<QByteArray> dirList;
+    QStringList rootdirs;
+    if (const char* includeEnv = std::getenv("LUPDATE_ROOT_DIRS")) {
+        QByteArray includeList = QByteArray::fromRawData(includeEnv, strlen(includeEnv));
+        dirList = includeList.split(';');
+
+        for (auto dir : dirList) {
+            rootdirs.append(QString::fromStdString(dir.toStdString()));
+        }
+    }
+    return rootdirs;
 }
 
 
@@ -333,26 +350,6 @@ bool ClangCppParser::stringContainsTranslationInformation(llvm::StringRef ba)
      return false;
 }
 
-bool ClangCppParser::fileContainsTranslationInformation(const QString &filePath)
-{
-    QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly))
-        return false;
-
-    if (const uchar *memory = file.map(0, file.size())) {
-        const auto ba = llvm::StringRef(reinterpret_cast<const char*>(memory), file.size());
-        if (stringContainsTranslationInformation(ba))
-            return true;
-    } else {
-        const QByteArray mem = file.readAll();
-        const auto ba = llvm::StringRef(mem.constData(), file.size());
-        if (stringContainsTranslationInformation(ba))
-            return true;
-    }
-
-    return false;
-}
-
 static bool generateCompilationDatabase(const QString &outputFilePath, const ConversionData &cd)
 {
     QJsonArray commandObjects;
@@ -429,6 +426,14 @@ bool ClangCppParser::hasAliases()
 void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, ConversionData &cd,
                             bool *fail)
 {
+    FileSignificanceCheck::create();
+    auto cleanup = qScopeGuard(FileSignificanceCheck::destroy);
+    FileSignificanceCheck::the()->setExclusionPatterns(cd.m_excludes);
+    if (cd.m_rootDirs.size() > 0)
+        FileSignificanceCheck::the()->setRootDirectories(cd.m_rootDirs);
+    else
+        FileSignificanceCheck::the()->setRootDirectories(getProjectDirsFromEnvironment());
+
     if (hasAliases())
         aliasDefinition = getAliasFunctionDefinition();
 
@@ -438,8 +443,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     std::vector<std::string> sources;
     for (const QString &filename : files) {
         qCDebug(lcClang) << "File: " << filename << " \n";
-        if (fileContainsTranslationInformation(filename))
-            sources.emplace_back(filename.toStdString());
+        sources.emplace_back(filename.toStdString());
     }
 
     std::string errorMessage;

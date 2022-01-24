@@ -406,6 +406,11 @@ backslashed \ stuff.</source>
         <source>message after local include without space</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="included.cpp" line="30"/>
+        <source>message from #included .cpp file</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QTranslator</name>

@@ -78,6 +78,7 @@ qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
     SOURCES
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h
+        filesignificancecheck.cpp filesignificancecheck.h
         lupdatepreprocessoraction.cpp lupdatepreprocessoraction.h
         synchronized.h
     DEFINES

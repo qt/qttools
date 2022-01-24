@@ -87,6 +87,7 @@ struct TranslationRelatedStore
     QString contextRetrieved;
     QString lupdateSource;
     QString lupdateLocationFile;
+    QString lupdateInputFile; // file associated to the running of the tool
     qint64 lupdateLocationLine = -1;
     QString lupdateId;
     QString lupdateSourceWhenId;
@@ -339,7 +340,6 @@ namespace ClangCppParser
         WriteSynchronizedRef<TranslationRelatedStore> &newAst);
 
     bool stringContainsTranslationInformation(llvm::StringRef ba);
-    bool fileContainsTranslationInformation(const QString &filePath);
     bool hasAliases();
     std::vector<std::string> getAliasFunctionDefinition();
 

@@ -27,6 +27,7 @@
 ****************************************************************************/
 
 #include "lupdatepreprocessoraction.h"
+#include "filesignificancecheck.h"
 
 #include <clang/Lex/MacroArgs.h>
 #include <clang/Basic/TokenKinds.h>
@@ -41,7 +42,7 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
 
     const auto &sm = m_preprocessor.getSourceManager();
     llvm::StringRef fileName = sm.getFilename(sourceRange.getBegin());
-    if (fileName != m_inputFile)
+    if (!LupdatePrivate::isFileSignificant(fileName.str()))
         return;
 
     const QString funcName = QString::fromStdString(m_preprocessor.getSpelling(token));
@@ -67,6 +68,7 @@ void LupdatePPCallbacks::MacroExpands(const clang::Token &token,
     store.callType = QStringLiteral("MacroExpands");
     store.funcName = funcName;
     store.lupdateLocationFile = toQt(fileName);
+    store.lupdateInputFile = toQt(m_inputFile);
     store.lupdateLocationLine = sm.getExpansionLineNumber(sourceRange.getBegin());
     store.locationCol = sm.getExpansionColumnNumber(sourceRange.getBegin());
 
@@ -159,8 +161,10 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
 
     const auto &sm = m_preprocessor.getSourceManager();
     llvm::StringRef fileName = sm.getFilename(sourceRange.getBegin());
-    if (fileName != m_inputFile)
+
+    if (!LupdatePrivate::isFileSignificant(fileName.str()))
         return;
+
     const char *begin = sm.getCharacterData(sourceRange.getBegin());
     const char *end = sm.getCharacterData(sourceRange.getEnd());
     llvm::StringRef skippedText = llvm::StringRef(begin, end - begin);
@@ -170,7 +174,7 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
         unsigned int endLine = sm.getExpansionLineNumber(sourceRange.getEnd());
         qWarning("%s Code with translation information has been skipped "
                  "between lines %d and %d",
-                 m_inputFile.c_str(), beginLine, endLine);
+                 fileName.str().c_str(), beginLine, endLine);
     }
 
 }
