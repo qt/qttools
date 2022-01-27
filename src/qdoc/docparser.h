@@ -61,7 +61,6 @@ public:
     static QString untabifyEtc(const QString &str);
     static int indentLevel(const QString &str);
     static QString dedent(int level, const QString &str);
-    static QString slashed(const QString &str);
 
     static int s_tabSize;
     static QStringList s_exampleFiles;

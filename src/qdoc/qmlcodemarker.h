@@ -52,8 +52,6 @@ public:
 
     QString markedUpName(const Node *node) override;
     QString markedUpIncludes(const QStringList &includes) override;
-    QString functionBeginRegExp(const QString &funcName) override;
-    QString functionEndRegExp(const QString &funcName) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
 #ifndef QT_NO_DECLARATIVE

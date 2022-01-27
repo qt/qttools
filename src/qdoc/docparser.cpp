@@ -111,7 +111,6 @@ enum {
     CMD_QUOTATION,
     CMD_QUOTEFILE,
     CMD_QUOTEFROMFILE,
-    CMD_QUOTEFUNCTION,
     CMD_RAW,
     CMD_ROW,
     CMD_SA,
@@ -219,7 +218,6 @@ static struct
              { "quotation", CMD_QUOTATION, nullptr },
              { "quotefile", CMD_QUOTEFILE, nullptr },
              { "quotefromfile", CMD_QUOTEFROMFILE, nullptr },
-             { "quotefunction", CMD_QUOTEFUNCTION, nullptr },
              { "raw", CMD_RAW, nullptr },
              { "row", CMD_ROW, nullptr },
              { "sa", CMD_SA, nullptr },
@@ -892,21 +890,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         append(Atom::CodeQuoteArgument, arg);
                     }
                     Doc::quoteFromFile(location(), m_quoter, arg);
-                    break;
-                }
-                case CMD_QUOTEFUNCTION: {
-                    leavePara();
-                    marker = quoteFromFile();
-                    p1 = getRestOfLine();
-                    if (s_quoting) {
-                        append(Atom::CodeQuoteCommand, cmdStr);
-                        append(Atom::CodeQuoteArgument, slashed(marker->functionEndRegExp(p1)));
-                    }
-                    m_quoter.quoteTo(location(), cmdStr, slashed(marker->functionBeginRegExp(p1)));
-                    append(Atom::Code,
-                           m_quoter.quoteUntil(location(), cmdStr,
-                                               slashed(marker->functionEndRegExp(p1))));
-                    m_quoter.reset();
                     break;
                 }
                 case CMD_RAW:
@@ -2479,13 +2462,6 @@ QString DocParser::dedent(int level, const QString &str)
         }
     }
     return result;
-}
-
-QString DocParser::slashed(const QString &str)
-{
-    QString result = str;
-    result.replace(QLatin1Char('/'), "\\/");
-    return QLatin1Char('/') + result + QLatin1Char('/');
 }
 
 /*!

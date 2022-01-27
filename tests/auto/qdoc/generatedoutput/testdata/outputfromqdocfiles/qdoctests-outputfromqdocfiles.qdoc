@@ -183,7 +183,6 @@
     printuntil  // what’s the difference between printto and printuntil???
     quotefile
     quotefromfile
-    quotefunction
     skipline
     skipto
     skipuntil

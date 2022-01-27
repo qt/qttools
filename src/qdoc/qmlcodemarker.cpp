@@ -122,16 +122,6 @@ QString QmlCodeMarker::markedUpIncludes(const QStringList &includes)
     return addMarkUp(code, nullptr, location);
 }
 
-QString QmlCodeMarker::functionBeginRegExp(const QString &funcName)
-{
-    return QLatin1Char('^') + QRegularExpression::escape("function " + funcName) + QLatin1Char('$');
-}
-
-QString QmlCodeMarker::functionEndRegExp(const QString & /* funcName */)
-{
-    return "^\\}$";
-}
-
 QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative */,
                                  const Location &location)
 {

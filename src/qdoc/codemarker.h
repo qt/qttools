@@ -63,8 +63,6 @@ public:
         return QString();
     }
     virtual QString markedUpIncludes(const QStringList & /*includes*/) { return QString(); }
-    virtual QString functionBeginRegExp(const QString & /*funcName*/) { return QString(); }
-    virtual QString functionEndRegExp(const QString & /*funcName*/) { return QString(); }
 
     static void initialize();
     static void terminate();

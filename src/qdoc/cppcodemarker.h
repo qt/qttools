@@ -50,8 +50,6 @@ public:
     QString markedUpName(const Node *node) override;
     QString markedUpEnumValue(const QString &enumValue, const Node *relative) override;
     QString markedUpIncludes(const QStringList &includes) override;
-    QString functionBeginRegExp(const QString &funcName) override;
-    QString functionEndRegExp(const QString &funcName) override;
 
 private:
     QString addMarkUp(const QString &protectedCode, const Node *relative, const Location &location);

@@ -348,16 +348,6 @@ QString CppCodeMarker::markedUpIncludes(const QStringList &includes)
     return code;
 }
 
-QString CppCodeMarker::functionBeginRegExp(const QString &funcName)
-{
-    return QLatin1Char('^') + QRegularExpression::escape(funcName) + QLatin1Char('$');
-}
-
-QString CppCodeMarker::functionEndRegExp(const QString & /* funcName */)
-{
-    return "^\\}$";
-}
-
 /*
     @char
     @class
