@@ -130,6 +130,14 @@ namespace TestQDoc {
 */
 
 /*!
+\if defined(test_properties)
+    \property Test::id
+\else
+    \nothing
+\endif
+*/
+
+/*!
     \deprecated [6.0] Use someFunction() instead.
 */
 void Test::deprecatedMember()
@@ -275,6 +283,18 @@ void TestDerived::staticObsoleteMember()
     \nothing
 \endif
 */
+
+/*!
+\if defined(test_properties)
+    \reimp
+\else
+    \nothing
+\endif
+*/
+int TestDerived::id()
+{
+    return 1;
+}
 
 /*!
 \if defined(test_template)

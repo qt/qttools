@@ -195,6 +195,21 @@
 <db:note>
 <db:para>This is a private signal. It can be used in signal connections but cannot be emitted by the user.</db:para></db:note>
 </db:section>
+<db:section xml:id="id">
+<db:title>[override virtual] TestDerived::int id()</db:title>
+<db:methodsynopsis>
+<db:modifier>virtual</db:modifier>
+<db:type>int</db:type>
+<db:methodname>id</db:methodname>
+<db:modifier>override</db:modifier>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">int id() override</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Reimplements an access function for property: <db:link xlink:href="testqdoc-test.xml#id-prop" type="property">Test::id</db:link>.</db:para>
 <db:section xml:id="invokeMe">
 <db:title>[invokable] TestDerived::void invokeMe() const</db:title>
 <db:methodsynopsis>
@@ -252,4 +267,4 @@
 </db:section>
 </db:section>
 </db:section>
-</db:section></db:article>
+</db:section></db:section></db:article>
