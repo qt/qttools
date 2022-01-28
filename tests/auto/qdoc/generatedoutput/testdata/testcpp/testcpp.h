@@ -39,6 +39,10 @@
 namespace TestQDoc {
 
 class Test {
+#ifdef test_properties
+    Q_OBJECT
+    Q_PROPERTY(int id READ id)
+#endif
 public:
 
 #ifdef test_template
@@ -95,6 +99,9 @@ protected:
         a = b;
     }
 #endif
+#ifdef test_properties
+    virtual int id() { return 0; }
+#endif
 };
 
 class TestDerived : public Test {
@@ -122,6 +129,7 @@ public:
     const QString *name() const;
 
     Q_INVOKABLE void invokeMe() const {}
+    int id() override;
 
 Q_SIGNALS:
     void emitSomething(QPrivateSignal);
