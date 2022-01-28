@@ -2346,7 +2346,7 @@ void DocBookGenerator::generateReimplementsClause(const FunctionNode *fn)
                 m_writer->writeStartElement(dbNamespace, "para");
                 m_writer->writeCharacters("Reimplements an access function for property: ");
                 QString fullName = sameName->parent()->name() + "::" + sameName->name();
-                generateFullName(sameName->parent(), fullName, overrides);
+                generateFullName(sameName->parent(), fullName, sameName);
                 m_writer->writeCharacters(".");
                 return;
             }
@@ -4249,8 +4249,6 @@ void DocBookGenerator::generateFullName(const Node *apparentNode, const QString 
     Q_ASSERT(actualNode);
 
     // From Generator::appendFullName.
-    if (actualNode == nullptr)
-        actualNode = apparentNode;
     m_writer->writeStartElement(dbNamespace, "link");
     m_writer->writeAttribute(xlinkNamespace, "href", fullDocumentLocation(actualNode));
     m_writer->writeAttribute("type", targetType(actualNode));
