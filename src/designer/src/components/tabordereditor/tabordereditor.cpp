@@ -294,14 +294,16 @@ void TabOrderEditor::mousePressEvent(QMouseEvent *e)
             if (core->widgetFactory()->isPassiveInteractor(child)) {
 
                 QMouseEvent event(QEvent::MouseButtonPress,
-                                    child->mapFromGlobal(e->globalPosition().toPoint()),
-                                    e->button(), e->buttons(), e->modifiers());
+                                  child->mapFromGlobal(e->globalPosition().toPoint()),
+                                  e->globalPosition().toPoint(), e->button(), e->buttons(),
+                                  e->modifiers());
 
                 qApp->sendEvent(child, &event);
 
                 QMouseEvent event2(QEvent::MouseButtonRelease,
-                                    child->mapFromGlobal(e->globalPosition().toPoint()),
-                                    e->button(), e->buttons(), e->modifiers());
+                                   child->mapFromGlobal(e->globalPosition().toPoint()),
+                                   e->globalPosition().toPoint(), e->button(), e->buttons(),
+                                   e->modifiers());
 
                 qApp->sendEvent(child, &event2);
 
