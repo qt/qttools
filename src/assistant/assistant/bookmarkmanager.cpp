@@ -385,8 +385,8 @@ void BookmarkManager::refreshBookmarkMenu()
     bookmarkMenu->addAction(tr("Manage Bookmarks..."), this,
                             &BookmarkManager::manageBookmarks);
     bookmarkMenu->addAction(QIcon::fromTheme("bookmark-new"), tr("Add Bookmark..."),
-                            this, &BookmarkManager::addBookmarkActivated,
-                            QKeySequence(tr("Ctrl+D")));
+                            QKeySequence(tr("Ctrl+D")),
+                            this, &BookmarkManager::addBookmarkActivated);
 
     bookmarkMenu->addSeparator();
 

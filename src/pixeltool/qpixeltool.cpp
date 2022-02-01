@@ -412,10 +412,10 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     menu.addSeparator();
 
     // Grid size options
-    menu.addAction(QLatin1String("Increase grid size"),
-                   this, &QPixelTool::increaseGridSize, Qt::Key_PageUp);
-    menu.addAction(QLatin1String("Decrease grid size"),
-                   this, &QPixelTool::decreaseGridSize, Qt::Key_PageDown);
+    menu.addAction(QLatin1String("Increase grid size"), Qt::Key_PageUp,
+                   this, &QPixelTool::increaseGridSize);
+    menu.addAction(QLatin1String("Decrease grid size"), Qt::Key_PageDown,
+                   this, &QPixelTool::decreaseGridSize);
     menu.addSeparator();
 
     QActionGroup *lcdGroup = new QActionGroup(&menu);
@@ -432,10 +432,10 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     menu.addSeparator();
 
     // Zoom options
-    menu.addAction(QLatin1String("Zoom in"),
-                   this, &QPixelTool::increaseZoom, Qt::Key_Plus);
-    menu.addAction(QLatin1String("Zoom out"),
-                   this, &QPixelTool::decreaseZoom, Qt::Key_Minus);
+    menu.addAction(QLatin1String("Zoom in"), Qt::Key_Plus,
+                   this, &QPixelTool::increaseZoom);
+    menu.addAction(QLatin1String("Zoom out"), Qt::Key_Minus,
+                   this, &QPixelTool::decreaseZoom);
     menu.addSeparator();
 
     // Freeze / Autoupdate
@@ -446,13 +446,13 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     menu.addSeparator();
 
     // Copy to clipboard / save
-    menu.addAction(QLatin1String("Save as image..."),
-                   this, &QPixelTool::saveToFile, QKeySequence::SaveAs);
+    menu.addAction(QLatin1String("Save as image..."), QKeySequence::SaveAs,
+                   this, &QPixelTool::saveToFile);
 #if QT_CONFIG(clipboard)
-    menu.addAction(QLatin1String("Copy to clipboard"),
-                   this, &QPixelTool::copyToClipboard, QKeySequence::Copy);
-    menu.addAction(QLatin1String("Copy color value to clipboard"),
-                   this, &QPixelTool::copyColorToClipboard, Qt::Key_C);
+    menu.addAction(QLatin1String("Copy to clipboard"), QKeySequence::Copy,
+                   this, &QPixelTool::copyToClipboard);
+    menu.addAction(QLatin1String("Copy color value to clipboard"), Qt::Key_C,
+                   this, &QPixelTool::copyColorToClipboard);
 #endif // QT_CONFIG(clipboard)
 
     menu.addSeparator();

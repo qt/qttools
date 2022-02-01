@@ -551,16 +551,16 @@ void MainWindow::setupActions()
 
     m_viewMenu->addSeparator();
 
-    m_viewMenu->addAction(tr("Contents"),
-            this, &MainWindow::showContents, QKeySequence(tr("ALT+C")));
-    m_viewMenu->addAction(tr("Index"),
-            this, &MainWindow::showIndex, QKeySequence(tr("ALT+I")));
-    m_viewMenu->addAction(tr("Bookmarks"),
-            this, &MainWindow::showBookmarksDockWidget, QKeySequence(tr("ALT+O")));
-    m_viewMenu->addAction(tr("Search"),
-            this, &MainWindow::showSearch, QKeySequence(tr("ALT+S")));
-    m_viewMenu->addAction(tr("Open Pages"),
-            this, &MainWindow::showOpenPages, QKeySequence(tr("ALT+P")));
+    m_viewMenu->addAction(tr("Contents"), QKeySequence(tr("ALT+C")),
+                          this, &MainWindow::showContents);
+    m_viewMenu->addAction(tr("Index"), QKeySequence(tr("ALT+I")),
+                          this, &MainWindow::showIndex);
+    m_viewMenu->addAction(tr("Bookmarks"), QKeySequence(tr("ALT+O")),
+                          this, &MainWindow::showBookmarksDockWidget);
+    m_viewMenu->addAction(tr("Search"), QKeySequence(tr("ALT+S")),
+                          this, &MainWindow::showSearch);
+    m_viewMenu->addAction(tr("Open Pages"), QKeySequence(tr("ALT+P")),
+                          this, &MainWindow::showOpenPages);
 
     menu = menuBar()->addMenu(tr("&Go"));
     menu->addAction(globalActions->homeAction());
