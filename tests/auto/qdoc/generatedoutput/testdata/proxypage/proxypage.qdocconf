@@ -1,0 +1,13 @@
+include(../configs/config.qdocconf)
+
+project = ProxyPage
+includepaths += .
+moduleheader = proxy.h
+
+{sourcedirs,headerdirs} = .
+
+outputformats                       = HTML DocBook
+{HTML.nosubdirs,DocBook.nosubdirs}  = true
+HTML.outputsubdir                   = proxypage
+DocBook.outputsubdir                = proxypage-docbook
+

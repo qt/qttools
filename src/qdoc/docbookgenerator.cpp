@@ -1483,10 +1483,9 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
         bool generatedSomething = false;
 
         Text brief;
-        const NamespaceNode *ns = node->isAggregate()
-                ? static_cast<const NamespaceNode *>(static_cast<const Aggregate *>(node))
-                : nullptr;
-        if (node->isAggregate() && ns && !ns->hasDoc() && ns->docNode()) {
+        const NamespaceNode *ns =
+                node->isNamespace() ? static_cast<const NamespaceNode *>(node) : nullptr;
+        if (ns && !ns->hasDoc() && ns->docNode()) {
             NamespaceNode *NS = ns->docNode();
             brief << "The " << ns->name()
                   << " namespace includes the following elements from module "

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>StdPair</db:title>
+<db:productname>ProxyPage</db:productname>
+<db:titleabbrev>ProxyPage Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>ProxyPage Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:section xml:id="type documentation">
+<db:title>Type Documentation</db:title>
+<db:section xml:id="StdPair-typedef">
+<db:title>[alias] template &lt;class T1, class T2&gt; StdPair</db:title>
+<db:typedefsynopsis>
+<db:type>StdPair</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">active</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+</db:typedefsynopsis>
+</db:section>
+</db:section>
+</db:article>
