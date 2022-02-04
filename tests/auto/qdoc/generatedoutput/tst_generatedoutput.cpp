@@ -80,6 +80,7 @@ private slots:
     void properties();
     void testTagFile();
     void testGlobalFunctions();
+    void proxyPage();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -541,6 +542,13 @@ void tst_generatedOutput::testTagFile()
 void tst_generatedOutput::testGlobalFunctions()
 {
     testAndCompare("testdata/configs/testglobals.qdocconf", "globals.html");
+}
+
+void tst_generatedOutput::proxyPage()
+{
+    testAndCompare("testdata/proxypage/proxypage.qdocconf",
+                   "proxypage/stdpair-proxy.html "
+                   "proxypage-docbook/stdpair-proxy.xml");
 }
 
 int main(int argc, char *argv[])
