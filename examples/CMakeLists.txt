@@ -1,6 +1,6 @@
 # Generated from examples.pro.
 
-qt_examples_build_begin()
+qt_examples_build_begin(EXTERNAL_BUILD)
 
 
 qt_exclude_tool_directories_from_default_target(
