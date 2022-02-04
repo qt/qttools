@@ -471,7 +471,7 @@ static void dumpStandardLocation(QTextStream &str, QStandardPaths::StandardLocat
 
 #define DUMP_CPU_FEATURE(feature, name)                 \
     if (qCpuHasFeature(feature))                        \
-        str << " " name;
+        str << " " name
 
 #define DUMP_STANDARDPATH(str, location) \
     str << "  " << #location << ": "; \
@@ -589,6 +589,7 @@ QString qtDiag(unsigned flags)
 
     str << "\nArchitecture: " << QSysInfo::currentCpuArchitecture() << "; features:";
 #if defined(Q_PROCESSOR_X86)
+    DUMP_CPU_FEATURE(HYBRID, "hybrid");
     DUMP_CPU_FEATURE(SSE2, "SSE2");
     DUMP_CPU_FEATURE(SSE3, "SSE3");
     DUMP_CPU_FEATURE(SSSE3, "SSSE3");
@@ -596,6 +597,15 @@ QString qtDiag(unsigned flags)
     DUMP_CPU_FEATURE(SSE4_2, "SSE4.2");
     DUMP_CPU_FEATURE(AVX, "AVX");
     DUMP_CPU_FEATURE(AVX2, "AVX2");
+    DUMP_CPU_FEATURE(AVX512F, "AVX512F");
+    DUMP_CPU_FEATURE(AVX512IFMA, "AVX512IFMA");
+    DUMP_CPU_FEATURE(AVX512VBMI2, "AVX512VBMI2");
+    DUMP_CPU_FEATURE(AVX512FP16, "AVX512FP16");
+    DUMP_CPU_FEATURE(RDRND, "RDRAND");
+    DUMP_CPU_FEATURE(RDSEED, "RDSEED");
+    DUMP_CPU_FEATURE(AES, "AES");
+    DUMP_CPU_FEATURE(VAES, "VAES");
+    DUMP_CPU_FEATURE(SHA, "SHA");
 #elif defined(Q_PROCESSOR_ARM)
     DUMP_CPU_FEATURE(ARM_NEON, "Neon");
 #elif defined(Q_PROCESSOR_MIPS)
