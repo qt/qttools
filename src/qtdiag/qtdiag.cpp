@@ -596,8 +596,6 @@ QString qtDiag(unsigned flags)
     DUMP_CPU_FEATURE(SSE4_2, "SSE4.2");
     DUMP_CPU_FEATURE(AVX, "AVX");
     DUMP_CPU_FEATURE(AVX2, "AVX2");
-    DUMP_CPU_FEATURE(RTM, "RTM");
-    DUMP_CPU_FEATURE(HLE, "HLE");
 #elif defined(Q_PROCESSOR_ARM)
     DUMP_CPU_FEATURE(ARM_NEON, "Neon");
 #elif defined(Q_PROCESSOR_MIPS)
