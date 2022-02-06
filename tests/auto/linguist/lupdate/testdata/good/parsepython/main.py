@@ -37,6 +37,36 @@ class Window(QMainWindow):
         message = self.tr("%n language(s) selected", "", count)
         self.statusBar().showMessage(message)
 
+    def test_translate_trailing_comma_behavior(self):
+        self.translate("CONTEXT",
+                       "SOME TEXT, NO COMMENT, TRAILING COMMA",                  
+                      )
+        self.translate("CONTEXT",
+                       "SOME TEXT",
+                       "A COMMENT, NO TRAILING COMMA"
+                      )
+        self.translate("CONTEXT",
+                       "SOME MORE TEXT",
+                       "A COMMENT WITH A TRAILING COMMA",
+                      )
+        self.translate("CONTEXT",
+                       "EVEN MORE TEXT",
+                       "A COMMENT WITH PLURALIZATION",
+                       42
+                      )
+        self.translate("CONTEXT",
+                       "YET MORE TEXT",
+                       "A COMMENT WITH PLURALIZATION AND A TRAILING COMMA",
+                       42,
+                      )
+        self.translate("CONTEXT",
+                       "SOME TEXT, SHOULD NOT BE EXTRACTED",
+                       "A COMMENT WITH PLURALIZATION AND A TRAILING COMMA AND GARBAGE",
+                       42,
+                       "THIS SHOULD NOT WORK"
+                      )
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

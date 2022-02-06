@@ -2,6 +2,42 @@
 <!DOCTYPE TS>
 <TS version="2.1">
 <context>
+    <name>CONTEXT</name>
+    <message>
+        <location filename="main.py" line="44"/>
+        <source>SOME TEXT, NO COMMENT, TRAILING COMMA</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="48"/>
+        <source>SOME TEXT</source>
+        <comment>A COMMENT, NO TRAILING COMMA</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="52"/>
+        <source>SOME MORE TEXT</source>
+        <comment>A COMMENT WITH A TRAILING COMMA</comment>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.py" line="57"/>
+        <source>EVEN MORE TEXT</source>
+        <comment>A COMMENT WITH PLURALIZATION</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="main.py" line="62"/>
+        <source>YET MORE TEXT</source>
+        <comment>A COMMENT WITH PLURALIZATION AND A TRAILING COMMA</comment>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+</context>
+<context>
     <name>Window</name>
     <message>
         <location filename="main.py" line="17"/>

@@ -515,33 +515,57 @@ static bool parseTranslate(QByteArray *text, QByteArray *context, QByteArray *co
     if (match(Tok_RightParen))
         return true;
 
-    // look for comment
-    if (!match(Tok_Comma) || !matchStringOrNone(comment))
+    // not a comma or a right paren, illegal syntax
+    if (!match(Tok_Comma))
         return false;
+
+    // python accepts trailing commas within parenthesis, so allow a comma with nothing after
+    if (match(Tok_RightParen))
+        return true;
+
+    // check for comment
+    if (!matchStringOrNone(comment))
+        return false; // not a comment, or a trailing comma... something is wrong
 
     if (match(Tok_RightParen))
         return true;
 
-    // look for encoding
+    // not a comma or a right paren, illegal syntax
     if (!match(Tok_Comma))
         return false;
 
-    if (matchEncoding(utf8)) {
-        if (!match(Tok_RightParen)) {
-            // look for the plural quantifier,
-            // this can be a number, an identifier or a function call,
-            // so for simplicity we mark it as plural if we know we have a comma instead of an
-            // right parentheses.
-            *plural = match(Tok_Comma);
-        }
+    // python accepts trailing commas within parenthesis, so allow a comma with nothing after
+    if (match(Tok_RightParen))
         return true;
+
+    // look for optional encoding information
+    if (matchEncoding(utf8)) {
+        if (match(Tok_RightParen))
+            return true;
+
+        // not a comma or a right paren, illegal syntax
+        if (!match(Tok_Comma))
+            return false;
+
+        // python accepts trailing commas within parenthesis, so allow a comma with nothing after
+        if (match(Tok_RightParen))
+            return true;
     }
 
-    // This can be a QTranslator::translate("context", "source", "comment", n) plural translation
-    if (!matchExpression() || !match(Tok_RightParen))
+    // Must be a plural expression
+    if (!matchExpression())
         return false;
+
     *plural = true;
-    return true;
+
+    // Ignore any trailing comma here
+    match(Tok_Comma);
+
+    // This must be the end, or there are too many parameters
+    if (match(Tok_RightParen))
+        return true;
+
+    return false;
 }
 
 static inline void setMessageParameters(TranslatorMessage *message)
