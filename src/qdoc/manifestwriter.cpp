@@ -312,12 +312,13 @@ void ManifestWriter::cleanUpTags()
     QSet<QString> cleanedTags;
 
     for (auto tag : m_tags) {
-        if (tag.at(0) == '(')
-            tag.remove(0, 1).chop(1);
-        if (tag.endsWith(QLatin1Char(':')))
+        // strip punctuation characters from start and end
+        while (!tag.isEmpty() && tag.at(0).isPunct())
+            tag.remove(0, 1);
+        while (!tag.isEmpty() && tag.back().isPunct())
             tag.chop(1);
 
-        if (tag.length() < 2 || tag.at(0).isDigit() || tag.at(0) == '-'
+        if (tag.length() < 2 || tag.at(0).isDigit()
             || tag == QLatin1String("qt") || tag == QLatin1String("the")
             || tag == QLatin1String("and") || tag == QLatin1String("doc")
             || tag.startsWith(QLatin1String("example")) || tag.startsWith(QLatin1String("chapter")))
