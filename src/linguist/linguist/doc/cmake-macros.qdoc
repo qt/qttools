@@ -139,6 +139,8 @@ files in the build directory:
 
 \brief Add targets to generate or update Qt Linguist .ts files.
 
+\cmakecommandsince 6.2
+
 \section1 Synopsis
 
 \badcode
@@ -210,6 +212,8 @@ Add the targets \c{myapp_lupdate} and \c{update_translations} for updating the
 \target qt6_add_lrelease
 
 \brief Add targets to transform Qt Linguist .ts files into .qm files.
+
+\cmakecommandsince 6.2
 
 \section1 Synopsis
 
@@ -294,6 +298,8 @@ files.
 \target qt6_add_translations
 
 \brief Add targets to update and transform Qt Linguist .ts files into .qm files.
+
+\cmakecommandsince 6.2
 
 \section1 Synopsis
 
