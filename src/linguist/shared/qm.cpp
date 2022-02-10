@@ -38,6 +38,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QMap>
 #include <QtCore/QString>
+#include <QtCore/QStringDecoder>
 
 QT_BEGIN_NAMESPACE
 
