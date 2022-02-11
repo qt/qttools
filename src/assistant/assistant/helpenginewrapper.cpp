@@ -29,7 +29,6 @@
 
 #include "helpenginewrapper.h"
 #include "../shared/collectionconfiguration.h"
-#include "../help/qhelpengine_p.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
