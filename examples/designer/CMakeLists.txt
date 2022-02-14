@@ -1,6 +1,3 @@
-# Generated from designer.pro.
-
-
 qt_exclude_tool_directories_from_default_target(
     containerextension
     taskmenuextension

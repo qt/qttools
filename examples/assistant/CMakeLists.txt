@@ -1,4 +1,2 @@
-# Generated from assistant.pro.
-
 qt_internal_add_example(simpletextviewer)
 qt_internal_add_example(remotecontrol)
