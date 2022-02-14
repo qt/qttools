@@ -1,23 +1,15 @@
-# Generated from simpletextviewer.pro.
-
 cmake_minimum_required(VERSION 3.16)
 project(simpletextviewer LANGUAGES CXX)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/assistant/simpletextviewer")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 qt_add_executable(simpletextviewer
     assistant.cpp assistant.h
@@ -26,12 +18,14 @@ qt_add_executable(simpletextviewer
     mainwindow.cpp mainwindow.h
     textedit.cpp textedit.h
 )
+
 set_target_properties(simpletextviewer PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
 )
+
 target_compile_definitions(simpletextviewer PUBLIC
-    SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/" # special case
+    SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
 )
 
 target_link_libraries(simpletextviewer PUBLIC
