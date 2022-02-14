@@ -2045,7 +2045,7 @@
     \code
     / *!
         When a string is surrounded by slashes, it is
-        interpreted as a \l {QRegularExpression}{regular expression}.
+        interpreted as a \l {regular expression}.
     * /
     \endcode
 
