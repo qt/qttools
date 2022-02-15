@@ -21,6 +21,11 @@ qt_exclude_tool_directories_from_default_target(
 qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/../configure.cmake")
 # special case end
 
+if(TARGET Qt::Widgets)
+    add_subdirectory(uiplugin)
+    add_subdirectory(uitools)
+endif()
+
 add_subdirectory(global) # special case add as first directory
 if(QT_FEATURE_linguist)
     add_subdirectory(linguist)

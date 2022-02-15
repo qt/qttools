@@ -6,13 +6,13 @@
 
 qt_internal_add_module(UiTools
     SOURCES
-        ../lib/uilib/abstractformbuilder.cpp ../lib/uilib/abstractformbuilder.h
-        ../lib/uilib/formbuilder.cpp ../lib/uilib/formbuilder.h
-        ../lib/uilib/formbuilderextra.cpp ../lib/uilib/formbuilderextra_p.h
-        ../lib/uilib/properties.cpp ../lib/uilib/properties_p.h
-        ../lib/uilib/resourcebuilder.cpp ../lib/uilib/resourcebuilder_p.h
-        ../lib/uilib/textbuilder.cpp ../lib/uilib/textbuilder_p.h
-        ../lib/uilib/ui4.cpp ../lib/uilib/ui4_p.h
+        ../designer/src/lib/uilib/abstractformbuilder.cpp ../designer/src/lib/uilib/abstractformbuilder.h
+        ../designer/src/lib/uilib/formbuilder.cpp ../designer/src/lib/uilib/formbuilder.h
+        ../designer/src/lib/uilib/formbuilderextra.cpp ../designer/src/lib/uilib/formbuilderextra_p.h
+        ../designer/src/lib/uilib/properties.cpp ../designer/src/lib/uilib/properties_p.h
+        ../designer/src/lib/uilib/resourcebuilder.cpp ../designer/src/lib/uilib/resourcebuilder_p.h
+        ../designer/src/lib/uilib/textbuilder.cpp ../designer/src/lib/uilib/textbuilder_p.h
+        ../designer/src/lib/uilib/ui4.cpp ../designer/src/lib/uilib/ui4_p.h
         quiloader.cpp quiloader.h
     DEFINES
         QFORMINTERNAL_NAMESPACE
@@ -20,7 +20,7 @@ qt_internal_add_module(UiTools
         QT_DESIGNER_STATIC
         QT_USE_QSTRINGBUILDER
     INCLUDE_DIRECTORIES
-        ../lib/uilib
+        ../designer/src/lib/uilib
     LIBRARIES
         Qt::UiPlugin
     PUBLIC_LIBRARIES
@@ -37,7 +37,7 @@ qt_internal_extend_target(UiTools CONDITION TARGET Qt::OpenGLWidgets
         Qt::OpenGLWidgets
 )
 
-qt_internal_extend_target(UiTools CONDITION QT_FEATURE_opengl
+qt_internal_extend_target(UiTools CONDITION TARGET Qt::OpenGL
     LIBRARIES
         Qt::OpenGL
 )

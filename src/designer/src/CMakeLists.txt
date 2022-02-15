@@ -8,8 +8,6 @@ qt_exclude_tool_directories_from_default_target(
     plugins
 )
 
-add_subdirectory(uiplugin)
-add_subdirectory(uitools)
 if(QT_FEATURE_process)
     add_subdirectory(lib)
     add_subdirectory(components)

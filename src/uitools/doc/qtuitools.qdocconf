@@ -27,7 +27,7 @@ headerdirs            += ..
 
 sourcedirs              = ..
 
-exampledirs             = ../../../../../examples/uitools \
+exampledirs             = ../../../examples/uitools \
                           snippets
 
 imagedirs               = images

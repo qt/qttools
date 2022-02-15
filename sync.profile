@@ -1,8 +1,8 @@
 %modules = ( # path to module name map
     "QtTools" => "$basedir/src/global",
     "QtHelp" => "$basedir/src/assistant/help",
-    "QtUiTools" => "$basedir/src/designer/src/uitools",
-    "QtUiPlugin" => "$basedir/src/designer/src/uiplugin",
+    "QtUiTools" => "$basedir/src/uitools",
+    "QtUiPlugin" => "$basedir/src/uiplugin",
     "QtDesigner" => "$basedir/src/designer/src/lib",
     "QtDesignerComponents" => "$basedir/src/designer/src/components/lib",
 );
