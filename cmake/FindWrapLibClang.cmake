@@ -61,7 +61,7 @@ if(TARGET libclang AND ((TARGET clang-cpp AND TARGET LLVM) OR TARGET clangHandle
         set(__qt_clang_genex "$<IF:${__qt_clang_genex_condition},clang-cpp;LLVM,clangHandleCXX>")
         target_link_libraries(WrapLibClang::WrapLibClang
             INTERFACE libclang
-            ${__qt_clang_genex}
+            "${__qt_clang_genex}"
             Threads::Threads
             )
 
