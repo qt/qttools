@@ -245,11 +245,12 @@ std::vector<std::string> ClangCppParser::getAliasFunctionDefinition()
 }
 
 static std::vector<std::string> aliasDefinition;
-// Makes sure all the comments will be parsed and part of the AST
-// Clang will run with the flag -fparse-all-comments
-clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
+
+static clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
 {
-    return [](const clang::tooling::CommandLineArguments &args, llvm::StringRef /*unused*/) {
+    const QByteArrayList compilerIncludeFlags = getIncludePathsFromCompiler();
+    return [=](const clang::tooling::CommandLineArguments &args,
+               llvm::StringRef /*unused*/) {
         clang::tooling::CommandLineArguments adjustedArgs;
         for (size_t i = 0, e = args.size(); i < e; ++i) {
             llvm::StringRef arg = args[i];
@@ -276,12 +277,8 @@ clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
 #endif
         adjustedArgs.push_back("-Wno-everything");
 
-        for (QByteArray line : getIncludePathsFromCompiler()) {
-            line = line.trimmed();
-            if (line.isEmpty())
-                continue;
-            adjustedArgs.push_back(line.data());
-        }
+        for (const QByteArray &flag : compilerIncludeFlags)
+            adjustedArgs.push_back(flag.data());
 
         for (auto alias : aliasDefinition) {
             adjustedArgs.push_back(alias);
@@ -478,13 +475,14 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     ReadSynchronizedRef<std::string> ppSources(sourcesPP);
     WriteSynchronizedRef<TranslationRelatedStore> ppStore(stores.Preprocessor);
     size_t idealProducerCount = std::min(ppSources.size(), size_t(std::thread::hardware_concurrency()));
+    clang::tooling::ArgumentsAdjuster argumentsAdjuster = getClangArgumentAdjuster();
 
     for (size_t i = 0; i < idealProducerCount; ++i) {
-        std::thread producer([&ppSources, &db, &ppStore]() {
+        std::thread producer([&ppSources, &db, &ppStore, &argumentsAdjuster]() {
             std::string file;
             while (ppSources.next(&file)) {
                 clang::tooling::ClangTool tool(*db, file);
-                tool.appendArgumentsAdjuster(getClangArgumentAdjuster());
+                tool.appendArgumentsAdjuster(argumentsAdjuster);
                 tool.run(new LupdatePreprocessorActionFactory(&ppStore));
             }
         });
@@ -497,11 +495,11 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     ReadSynchronizedRef<std::string> astSources(sourcesAst);
     idealProducerCount = std::min(astSources.size(), size_t(std::thread::hardware_concurrency()));
     for (size_t i = 0; i < idealProducerCount; ++i) {
-        std::thread producer([&astSources, &db, &stores]() {
+        std::thread producer([&astSources, &db, &stores, &argumentsAdjuster]() {
             std::string file;
             while (astSources.next(&file)) {
                 clang::tooling::ClangTool tool(*db, file);
-                tool.appendArgumentsAdjuster(getClangArgumentAdjuster());
+                tool.appendArgumentsAdjuster(argumentsAdjuster);
                 tool.run(new LupdateToolActionFactory(&stores));
             }
         });
