@@ -69,9 +69,25 @@ namespace qdesigner_internal {
 StyleSheetEditor::StyleSheetEditor(QWidget *parent)
     : QTextEdit(parent)
 {
+    enum : int { DarkThreshold = 200 }; // Observed 239 on KDE/Dark
+
     setTabStopDistance(fontMetrics().horizontalAdvance(QLatin1Char(' ')) * 4);
     setAcceptRichText(false);
-    new CssHighlighter(document());
+
+    const QColor textColor = palette().color(QPalette::WindowText);
+    const bool darkMode = textColor.red() > DarkThreshold
+        && textColor.green() > DarkThreshold
+        && textColor.blue() > DarkThreshold;
+
+    CssHighlightColors colors;
+    colors.selector = darkMode ? QColor(Qt::red).lighter() : QColor(Qt::darkRed);
+    const QColor blue(Qt::blue);
+    colors.property = darkMode ? blue.lighter() : blue;
+    colors.pseudo1 = colors.pseudo2 = colors.value = textColor;
+    colors.quote = darkMode ? Qt::magenta : Qt::darkMagenta;
+    colors.comment = darkMode ? Qt::green : Qt::darkGreen;
+
+    new CssHighlighter(colors, document());
 }
 
 // --- StyleSheetEditorDialog
