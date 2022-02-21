@@ -130,22 +130,23 @@ void tst_generatedOutput::runQDocProcess(const QStringList &arguments)
     QProcess qdocProcess;
     qdocProcess.setProgram(m_qdoc);
     qdocProcess.setArguments(arguments);
+
+    auto failQDoc = [&](QProcess::ProcessError) {
+        QFAIL(qPrintable(QStringLiteral("Running qdoc failed with exit code %1: %2")
+                .arg(qdocProcess.exitCode()).arg(qdocProcess.errorString())));
+    };
+    QObject::connect(&qdocProcess, &QProcess::errorOccurred, failQDoc);
+
     qdocProcess.start();
     qdocProcess.waitForFinished();
-
     if (qdocProcess.exitCode() == 0)
         return;
 
-    QString output = qdocProcess.readAllStandardOutput();
     QString errors = qdocProcess.readAllStandardError();
-
-    qInfo() << "QDoc exited with exit code" << qdocProcess.exitCode();
-    if (output.size() > 0)
-        qInfo().nospace() << "Received output:\n" << qUtf8Printable(output);
-    if (errors.size() > 0)
+    if (!errors.isEmpty())
         qInfo().nospace() << "Received errors:\n" << qUtf8Printable(errors);
-
-    QFAIL("Running QDoc failed. See output above.");
+    if (!QTest::currentTestFailed())
+        failQDoc(QProcess::UnknownError);
 }
 
 void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
