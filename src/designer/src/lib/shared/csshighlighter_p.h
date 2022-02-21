@@ -41,17 +41,30 @@
 #define CSSHIGHLIGHTER_H
 
 #include <QtGui/qsyntaxhighlighter.h>
+#include <QtGui/qcolor.h>
 #include "shared_global_p.h"
 
 QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
+struct CssHighlightColors
+{
+    QColor selector;
+    QColor property;
+    QColor value;
+    QColor pseudo1;
+    QColor pseudo2;
+    QColor quote;
+    QColor comment;
+};
+
 class QDESIGNER_SHARED_EXPORT CssHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    explicit CssHighlighter(QTextDocument *document);
+    explicit CssHighlighter(const CssHighlightColors &colors,
+                            QTextDocument *document);
 
 protected:
     void highlightBlock(const QString&) override;
@@ -60,6 +73,8 @@ protected:
 private:
     enum State { Selector, Property, Value, Pseudo, Pseudo1, Pseudo2, Quote,
                  MaybeComment, Comment, MaybeCommentEnd };
+
+    const CssHighlightColors m_colors;
 };
 
 } // namespace qdesigner_internal

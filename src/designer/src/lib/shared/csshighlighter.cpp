@@ -32,8 +32,9 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
-CssHighlighter::CssHighlighter(QTextDocument *document)
-: QSyntaxHighlighter(document)
+CssHighlighter::CssHighlighter(const CssHighlightColors &colors,
+                               QTextDocument *document)
+    : QSyntaxHighlighter(document), m_colors(colors)
 {
 }
 
@@ -143,26 +144,26 @@ void CssHighlighter::highlight(const QString &text, int start, int length, int s
 
     switch (state) {
     case Selector:
-        setFormat(start, length, Qt::darkRed);
+        setFormat(start, length, m_colors.selector);
         break;
     case Property:
-        setFormat(start, length, Qt::blue);
+        setFormat(start, length, m_colors.property);
         break;
     case Value:
-        setFormat(start, length, Qt::black);
+        setFormat(start, length, m_colors.value);
         break;
     case Pseudo1:
-        setFormat(start, length, Qt::darkRed);
+        setFormat(start, length, m_colors.pseudo1);
         break;
     case Pseudo2:
-        setFormat(start, length, Qt::darkRed);
+        setFormat(start, length, m_colors.pseudo2);
         break;
     case Quote:
-        setFormat(start, length, Qt::darkMagenta);
+        setFormat(start, length, m_colors.quote);
         break;
     case Comment:
     case MaybeCommentEnd:
-        format.setForeground(Qt::darkGreen);
+        format.setForeground(m_colors.comment);
         setFormat(start, length, format);
         break;
     default:
