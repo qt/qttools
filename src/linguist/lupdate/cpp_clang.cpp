@@ -415,24 +415,20 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     // pre-process the files by a simple text search if there is any occurrence
     // of things we are interested in
     qCDebug(lcClang) << "Load CPP \n";
-    std::vector<std::string> sourcesAst, sourcesPP;
+    std::vector<std::string> sources;
     for (const QString &filename : files) {
         QFile file(filename);
         qCDebug(lcClang) << "File: " << filename << " \n";
         if (file.open(QIODevice::ReadOnly)) {
             if (const uchar *memory = file.map(0, file.size())) {
                 const auto ba = llvm::StringRef((const char*) (memory), file.size());
-                if (containsTranslationInformation(ba)) {
-                    sourcesPP.emplace_back(filename.toStdString());
-                    sourcesAst.emplace_back(sourcesPP.back());
-                }
+                if (containsTranslationInformation(ba))
+                    sources.emplace_back(filename.toStdString());
             } else {
                 QByteArray mem = file.readAll();
                 const auto ba = llvm::StringRef((const char*) (mem), file.size());
-                if (containsTranslationInformation(ba)) {
-                    sourcesPP.emplace_back(filename.toStdString());
-                    sourcesAst.emplace_back(sourcesPP.back());
-                }
+                if (containsTranslationInformation(ba))
+                    sources.emplace_back(filename.toStdString());
             }
         }
     }
@@ -472,7 +468,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     Stores stores(ast, qdecl, qnoop);
 
     std::vector<std::thread> producers;
-    ReadSynchronizedRef<std::string> ppSources(sourcesPP);
+    ReadSynchronizedRef<std::string> ppSources(sources);
     WriteSynchronizedRef<TranslationRelatedStore> ppStore(stores.Preprocessor);
     size_t idealProducerCount = std::min(ppSources.size(), size_t(std::thread::hardware_concurrency()));
     clang::tooling::ArgumentsAdjuster argumentsAdjuster = getClangArgumentAdjuster();
@@ -492,7 +488,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
         producer.join();
     producers.clear();
 
-    ReadSynchronizedRef<std::string> astSources(sourcesAst);
+    ReadSynchronizedRef<std::string> astSources(sources);
     idealProducerCount = std::min(astSources.size(), size_t(std::thread::hardware_concurrency()));
     for (size_t i = 0; i < idealProducerCount; ++i) {
         std::thread producer([&astSources, &db, &stores, &argumentsAdjuster]() {
