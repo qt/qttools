@@ -476,7 +476,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                                     .arg(QString::fromLatin1(hdrValue)));
                                 error = true;
                                 // This will avoid a flood of conversion errors.
-                                toUnicode = QStringConverter::Latin1;
+                                toUnicode = QStringDecoder(QStringConverter::Latin1);
                             } else {
                                 QByteArray cod = hdrValue.mid(20);
                                 auto enc = QStringConverter::encodingForName(cod);
@@ -485,9 +485,9 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                                             .arg(QString::fromLatin1(cod)));
                                     error = true;
                                     // This will avoid a flood of conversion errors.
-                                    toUnicode = QStringConverter::Latin1;
+                                    toUnicode = QStringDecoder(QStringConverter::Latin1);
                                 } else {
-                                    toUnicode = *enc;
+                                    toUnicode = QStringDecoder(*enc);
                                 }
                             }
                     } else if (hdrName == "Content-Transfer-Encoding") {
