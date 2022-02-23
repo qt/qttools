@@ -25,13 +25,14 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-
 #include <QtCore/QtCore>
+#include "test_isolatedComments.h"
+#include "test_QT_TR_NOOP_context_with_comments.h"
+
 /*  TRANSLATOR MULTIPLELINE
  first line
  second line
  */
-
 /*  TRANSLATOR
     MultipleLineSecondTry
     first line

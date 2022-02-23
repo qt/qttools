@@ -176,7 +176,34 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
                  "between lines %d and %d",
                  fileName.str().c_str(), beginLine, endLine);
     }
+}
 
+// To list the included files
+void LupdatePPCallbacks::InclusionDirective(clang::SourceLocation /*hashLoc*/,
+    const clang::Token & /*includeTok*/, clang::StringRef /*fileName*/, bool /*isAngled*/,
+    clang::CharSourceRange /*filenameRange*/, const clang::FileEntry *file,
+    clang::StringRef /*searchPath*/, clang::StringRef /*relativePath*/,
+    const clang::Module */*imported*/, clang::SrcMgr::CharacteristicKind /*fileType*/)
+{
+    if (!file)
+        return;
+
+    clang::StringRef fileNameRealPath = file->tryGetRealPathName();
+    if (!LupdatePrivate::isFileSignificant(fileNameRealPath.str()))
+        return;
+
+    TranslationRelatedStore store;
+    store.callType = QStringLiteral("InclusionDirective");
+    store.lupdateLocationFile = toQt(fileNameRealPath);
+    store.lupdateLocationLine = 1;
+    store.locationCol = 1;
+    store.lupdateInputFile = toQt(m_inputFile);
+    // do not fill the store.funcName. There is no function at this point
+    // the information is retrieved here to look for TRANSLATOR comments in header files
+    // when traversing the AST
+
+    if (store.isValid())
+        m_ppStores.emplace_back(std::move(store));
 }
 
 QT_END_NAMESPACE

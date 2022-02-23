@@ -754,10 +754,20 @@ void LupdateVisitor::processPreprocessorCalls()
 
 void LupdateVisitor::processPreprocessorCall(TranslationRelatedStore store)
 {
+    // To get the comments around the macros
     const std::vector<QString> rawComments = rawCommentsFromSourceLocation(store
         .callLocation(m_context->getSourceManager()));
+    // to pick up the raw comments in the files collected from the preprocessing.
     for (const auto &rawComment : rawComments)
         setInfoFromRawComment(rawComment, &store);
+
+    // Processing the isolated comments (TRANSLATOR) in the files included in the main input file.
+    if (store.callType.contains(QStringLiteral("InclusionDirective"))) {
+        auto &sourceMgr = m_context->getSourceManager();
+        const clang::FileID file = sourceMgr.getDecomposedLoc(store.callLocation(sourceMgr)).first;
+        processIsolatedComments(file);
+        return;
+    }
 
     if (store.isValid()) {
         if (store.funcName.contains(QStringLiteral("Q_DECLARE_TR_FUNCTIONS")))

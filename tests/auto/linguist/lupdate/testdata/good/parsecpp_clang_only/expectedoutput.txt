@@ -2,4 +2,4 @@
 .*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp_clang_only[/\\]test_QT_TR_NOOP_context.cpp:91:26: QT_TR_NOOP cannot be called without context\. The call is ignored \(missing Q_OBJECT maybe\?\)
 .*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp_clang_only[/\\]test_QT_TR_NOOP_context_bis.cpp:51:26: QT_TR_NOOP cannot be called without context\. The call is ignored \(missing Q_OBJECT maybe\?\)
 .*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp_clang_only[/\\]test_QT_TR_NOOP_context_bis.cpp:91:26: QT_TR_NOOP cannot be called without context\. The call is ignored \(missing Q_OBJECT maybe\?\)
-.*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp_clang_only[/\\]test_isolatedComments.cpp:83:0: TRANSLATOR cannot be called without comment. The call is ignored.
+.*[/\\]lupdate[/\\]testdata[/\\]good[/\\]parsecpp_clang_only[/\\]test_isolatedComments.cpp:84:0: TRANSLATOR cannot be called without comment. The call is ignored.
