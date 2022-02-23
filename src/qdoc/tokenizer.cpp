@@ -508,15 +508,16 @@ void Tokenizer::initialize()
 {
     Config &config = Config::instance();
     QString versionSym = config.getString(CONFIG_VERSIONSYM);
+    const QLatin1String defaultEncoding("UTF-8");
 
-    QString sourceEncoding = config.getString(CONFIG_SOURCEENCODING);
-    if (sourceEncoding.isEmpty())
-        sourceEncoding = QLatin1String("UTF-8");
-    sourceDecoder = QStringDecoder(sourceEncoding.toUtf8());
-    if (!sourceDecoder.isValid()) {
-        qWarning() << "Source encoding" << sourceEncoding << "is not supported. Using UTF-8.";
-        sourceDecoder = QStringDecoder::Utf8;
+    QString sourceEncoding = config.getString(CONFIG_SOURCEENCODING, defaultEncoding);
+    if (!QStringConverter::encodingForName(sourceEncoding.toUtf8().constData())) {
+        Location().warning(QStringLiteral("Source encoding '%1' not supported, using '%2' as default.")
+                .arg(sourceEncoding, defaultEncoding));
+        sourceEncoding = defaultEncoding;
     }
+    sourceDecoder = QStringDecoder(sourceEncoding.toUtf8().constData());
+    Q_ASSERT(sourceDecoder.isValid());
 
     comment = new QRegularExpression("/(?:\\*.*\\*/|/.*\n|/[^\n]*$)", QRegularExpression::InvertedGreedinessOption);
     versionX = new QRegularExpression("$cannot possibly match^");
