@@ -338,7 +338,8 @@ namespace ClangCppParser
     void finalize(ReadSynchronizedRef<TranslationRelatedStore> &ast,
         WriteSynchronizedRef<TranslationRelatedStore> &newAst);
 
-    bool containsTranslationInformation(llvm::StringRef ba);
+    bool stringContainsTranslationInformation(llvm::StringRef ba);
+    bool fileContainsTranslationInformation(const QString &filePath);
     bool hasAliases();
     std::vector<std::string> getAliasFunctionDefinition();
 

@@ -164,7 +164,7 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
     const char *begin = sm.getCharacterData(sourceRange.getBegin());
     const char *end = sm.getCharacterData(sourceRange.getEnd());
     llvm::StringRef skippedText = llvm::StringRef(begin, end - begin);
-    if (ClangCppParser::containsTranslationInformation(skippedText)) {
+    if (ClangCppParser::stringContainsTranslationInformation(skippedText)) {
         qCDebug(lcClang) << "SourceRangeSkipped: skipped text:" << skippedText.str();
         unsigned int beginLine = sm.getExpansionLineNumber(sourceRange.getBegin());
         unsigned int endLine = sm.getExpansionLineNumber(sourceRange.getEnd());

@@ -287,7 +287,7 @@ static clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
     };
 }
 
-bool ClangCppParser::containsTranslationInformation(llvm::StringRef ba)
+bool ClangCppParser::stringContainsTranslationInformation(llvm::StringRef ba)
 {
     // pre-process the files by a simple text search if there is any occurrence
     // of things we are interested in
@@ -331,6 +331,26 @@ bool ClangCppParser::containsTranslationInformation(llvm::StringRef ba)
 
 
      return false;
+}
+
+bool ClangCppParser::fileContainsTranslationInformation(const QString &filePath)
+{
+    QFile file(filePath);
+    if (!file.open(QIODevice::ReadOnly))
+        return false;
+
+    if (const uchar *memory = file.map(0, file.size())) {
+        const auto ba = llvm::StringRef(reinterpret_cast<const char*>(memory), file.size());
+        if (stringContainsTranslationInformation(ba))
+            return true;
+    } else {
+        const QByteArray mem = file.readAll();
+        const auto ba = llvm::StringRef(mem.constData(), file.size());
+        if (stringContainsTranslationInformation(ba))
+            return true;
+    }
+
+    return false;
 }
 
 static bool generateCompilationDatabase(const QString &outputFilePath, const ConversionData &cd)
@@ -417,20 +437,9 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     qCDebug(lcClang) << "Load CPP \n";
     std::vector<std::string> sources;
     for (const QString &filename : files) {
-        QFile file(filename);
         qCDebug(lcClang) << "File: " << filename << " \n";
-        if (file.open(QIODevice::ReadOnly)) {
-            if (const uchar *memory = file.map(0, file.size())) {
-                const auto ba = llvm::StringRef((const char*) (memory), file.size());
-                if (containsTranslationInformation(ba))
-                    sources.emplace_back(filename.toStdString());
-            } else {
-                QByteArray mem = file.readAll();
-                const auto ba = llvm::StringRef((const char*) (mem), file.size());
-                if (containsTranslationInformation(ba))
-                    sources.emplace_back(filename.toStdString());
-            }
-        }
+        if (fileContainsTranslationInformation(filename))
+            sources.emplace_back(filename.toStdString());
     }
 
     std::string errorMessage;
