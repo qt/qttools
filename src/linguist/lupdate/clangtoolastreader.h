@@ -69,7 +69,7 @@ public:
     void processPreprocessorCalls();
     bool VisitNamedDecl(clang::NamedDecl *namedDeclaration);
     void findContextForTranslationStoresFromPP(clang::NamedDecl *namedDeclaration);
-    void generateOuput();
+    void generateOutput();
 
 private:
     std::vector<QString> rawCommentsForCallExpr(const clang::CallExpr *callExpr) const;
@@ -105,7 +105,7 @@ public:
         m_visitor.processPreprocessorCalls();
         bool traverse = m_visitor.TraverseAST(context);
         qCDebug(lcClang) << "TraverseAST: " << traverse;
-        m_visitor.generateOuput();
+        m_visitor.generateOutput();
     }
 
 private:

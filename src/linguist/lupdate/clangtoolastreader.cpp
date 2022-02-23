@@ -837,9 +837,9 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
     }
 }
 
-void LupdateVisitor::generateOuput()
+void LupdateVisitor::generateOutput()
 {
-    qCDebug(lcClang) << "=================m_trCallserateOuput============================";
+    qCDebug(lcClang) << "=================generateOutput============================";
     m_noopTranslationMacroAll.erase(std::remove_if(m_noopTranslationMacroAll.begin(),
         m_noopTranslationMacroAll.end(), [this](const TranslationRelatedStore &store) {
         // Macros not located in the currently visited file are missing context (and it's normal),
