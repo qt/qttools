@@ -155,7 +155,8 @@ private slots:
     void prevUnfinished();
     void nextUnfinished();
     void findNext(const QString &text, DataModel::FindLocation where,
-                  bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool regularExp);
+                  bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool regularExp,
+                  int statusFilter);
     void revalidate();
     void toggleStatistics();
     void toggleVisualizeWhitespace();
@@ -231,6 +232,7 @@ private:
     bool m_findIgnoreAccelerators;
     bool m_findSkipObsolete;
     bool m_findUseRegExp;
+    int m_statusFilter = -1;
     DataModel::FindLocation m_findWhere;
 
     TranslateDialog *m_translateDialog;

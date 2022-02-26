@@ -41,6 +41,10 @@ FindDialog::FindDialog(QWidget *parent)
 {
     setupUi(this);
 
+    statusFilter->addItem(tr("All"), -1);
+    statusFilter->addItem(tr("Finished"), TranslatorMessage::Finished);
+    statusFilter->addItem(tr("Unfinished"), TranslatorMessage::Unfinished);
+
     findNxt->setEnabled(false);
 
     connect(findNxt, &QAbstractButton::clicked,
@@ -49,6 +53,8 @@ FindDialog::FindDialog(QWidget *parent)
             this, &FindDialog::verify);
     connect(led, &QLineEdit::textChanged,
             this, &FindDialog::verify);
+    connect(statusFilter, &QComboBox::currentIndexChanged,
+            this, &FindDialog::statusFilterChanged);
 
     led->setFocus();
 }
@@ -68,6 +74,21 @@ void FindDialog::verify()
     findNxt->setEnabled(!led->text().isEmpty() && validRegExp);
 }
 
+void FindDialog::statusFilterChanged()
+{
+    int newStateFilter = statusFilter->currentData().toInt();
+    if (newStateFilter != -1) {
+        if (m_lastStateFilter == -1)
+            m_storedSkipObsolete = skipObsolete->isChecked();
+        skipObsolete->setEnabled(false);
+        skipObsolete->setChecked(true);
+    } else {
+        skipObsolete->setEnabled(true);
+        skipObsolete->setChecked(m_storedSkipObsolete);
+    }
+    m_lastStateFilter = newStateFilter;
+}
+
 void FindDialog::emitFindNext()
 {
     DataModel::FindLocation where;
@@ -80,7 +101,8 @@ void FindDialog::emitFindNext()
     else
         where = DataModel::Translations;
     emit findNext(led->text(), where, matchCase->isChecked(), ignoreAccelerators->isChecked(),
-                  skipObsolete->isChecked(), useRegExp->isChecked());
+                  skipObsolete->isChecked(), useRegExp->isChecked(),
+                  statusFilter->currentData().toInt());
     led->selectAll();
 }
 

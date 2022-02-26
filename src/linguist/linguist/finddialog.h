@@ -46,7 +46,8 @@ public:
 
 signals:
     void findNext(const QString& text, DataModel::FindLocation where,
-                  bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp);
+                  bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp,
+                  int statusFilter);
 
 public slots:
     void find();
@@ -54,10 +55,13 @@ public slots:
 private slots:
     void emitFindNext();
     void verify();
+    void statusFilterChanged();
 
 private:
     QRegularExpression m_regExp;
     bool m_redText = false;
+    int m_lastStateFilter = -1;
+    bool m_storedSkipObsolete = false;
 };
 
 QT_END_NAMESPACE

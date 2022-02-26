@@ -33,8 +33,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>414</width>
-    <height>175</height>
+    <width>454</width>
+    <height>263</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -101,13 +101,13 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="matchCase">
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="skipObsolete">
           <property name="whatsThis">
-           <string>Texts such as 'TeX' and 'tex' are considered as different when checked.</string>
+           <string>Obsoleted messages are skipped when checked.</string>
           </property>
           <property name="text">
-           <string>&amp;Match case</string>
+           <string>Skip &amp;obsolete</string>
           </property>
          </widget>
         </item>
@@ -124,13 +124,13 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="skipObsolete">
-          <property name="whatsThis">
-           <string>Obsoleted messages are skipped when checked.</string>
-          </property>
+        <item row="5" column="0">
+         <widget class="QLabel" name="labelState">
           <property name="text">
-           <string>Skip &amp;obsolete</string>
+           <string>T&amp;ranslation status:</string>
+          </property>
+          <property name="buddy">
+           <cstring>statusFilter</cstring>
           </property>
          </widget>
         </item>
@@ -144,6 +144,23 @@
           </property>
           <property name="checked">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="matchCase">
+          <property name="whatsThis">
+           <string>Texts such as 'TeX' and 'tex' are considered as different when checked.</string>
+          </property>
+          <property name="text">
+           <string>&amp;Match case</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QComboBox" name="statusFilter">
+          <property name="toolTip">
+           <string>Lets you filter the search target by translation status</string>
           </property>
          </widget>
         </item>
@@ -169,6 +186,19 @@
            <bool>true</bool>
           </property>
          </widget>
+        </item>
+        <item row="7" column="0">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>

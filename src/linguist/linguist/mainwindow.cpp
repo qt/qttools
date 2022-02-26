@@ -1003,8 +1003,12 @@ void MainWindow::findAgain()
         bool hadMessage = false;
         for (int i = 0; i < m_dataModel->modelCount(); ++i) {
             if (MessageItem *m = m_dataModel->messageItem(dataIndex, i)) {
+                if (m_statusFilter != -1 && m_statusFilter != m->type())
+                    continue;
+
                 if (m_findSkipObsolete && m->isObsolete())
                     continue;
+
                 bool found = true;
                 do {
                     if (!hadMessage) {
@@ -1776,7 +1780,8 @@ bool MainWindow::doNext(bool checkUnfinished)
 }
 
 void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
-                          bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp)
+                          bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp,
+                          int statusFilter)
 {
     if (text.isEmpty())
         return;
@@ -1786,6 +1791,7 @@ void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
     m_findIgnoreAccelerators = ignoreAccelerators;
     m_findSkipObsolete = skipObsolete;
     m_findUseRegExp = useRegExp;
+    m_statusFilter = statusFilter;
     if (m_findUseRegExp) {
         m_findDialog->getRegExp().setPatternOptions(matchCase
                                                     ? QRegularExpression::NoPatternOption
