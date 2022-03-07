@@ -10,29 +10,4 @@ instructions:
 
   Test:
     - !include "{{qt/qtbase}}/coin_module_test_template_v3.yaml"
-    - type: Group
-      instructions:
-        - !include "{{qt/qtbase}}/prepare_building_env.yaml"
-        - type: EnvironmentVariable
-          variableName: QDOC_NOLINKERRORS
-          variableValue: 1
-        - type: EnvironmentVariable
-          variableName: QDOC_ENABLE_WARNINGLIMIT
-          variableValue: 1
-        - type: SetBuildDirectory
-          directory: "{{.SourceDir}}"
-        - type: ChangeDirectory
-          directory: "{{.BuildDir}}"
-        - type: EnvironmentVariable
-          variableName: COIN_CMAKE_ARGS
-          variableValue: "-DBUILD_TESTING=OFF {{.SourceDir}}"
-        - !include "{{qt/qtbase}}/call_cmake.yaml"
-        - type: ExecuteCommand
-          command: "cmake --build . --target generate_docs"
-          maxTimeInSeconds: 1800
-          maxTimeBetweenOutput: 900
-          userMessageOnFailure: "Documentation check failed, see the log for details."
-      enable_if:
-        condition: property
-        property: features
-        contains_value: "TestDocs"
+    - !include "{{qt/qtbase}}/coin_module_test_docs.yaml"
