@@ -44,6 +44,7 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qlibraryinfo.h>
 #include <QtCore/qlocale.h>
+#include <QtCore/qtextstream.h>
 #include <QtCore/qtimer.h>
 #include <QtCore/qtranslator.h>
 #include <QtCore/qfileinfo.h>

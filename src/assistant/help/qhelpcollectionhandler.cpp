@@ -48,6 +48,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QList>
+#include <QtCore/QMultiMap>
 #include <QtCore/QTimer>
 #include <QtCore/QVersionNumber>
 

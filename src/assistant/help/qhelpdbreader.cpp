@@ -42,6 +42,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QList>
+#include <QtCore/QMultiMap>
 #include <QtCore/QVariant>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>

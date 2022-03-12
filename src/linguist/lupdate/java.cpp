@@ -36,6 +36,8 @@
 #include <QtCore/QStack>
 #include <QtCore/QString>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QStringConverter>
+#include <QtCore/QTextStream>
 
 #include <iostream>
 

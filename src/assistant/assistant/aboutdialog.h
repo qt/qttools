@@ -33,6 +33,8 @@
 #include <QtWidgets/QDialog>
 #include <QtCore/QMap>
 
+#include <QtCore/QMap>
+
 QT_BEGIN_NAMESPACE
 
 class QLabel;

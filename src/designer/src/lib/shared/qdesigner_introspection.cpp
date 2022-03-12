@@ -28,6 +28,7 @@
 
 #include "qdesigner_introspection_p.h"
 
+#include <QtCore/qobject.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qstringlist.h>

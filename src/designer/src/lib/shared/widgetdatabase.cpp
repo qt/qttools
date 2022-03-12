@@ -46,6 +46,8 @@
 #include <QtCore/qscopedpointer.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qmetaobject.h>
+#include <QtCore/qset.h>
+#include <QtCore/qstring.h>
 #include <QtCore/qtextstream.h>
 #include <QtCore/qcoreapplication.h>
 

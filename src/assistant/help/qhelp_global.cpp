@@ -38,6 +38,7 @@
 ****************************************************************************/
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QHash>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QMutexLocker>
 #include <QtGui/QTextDocument>

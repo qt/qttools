@@ -42,6 +42,7 @@
 #include <qhelp_global.h>
 
 #include <QtCore/QtMath>
+#include <QtCore/QMap>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>

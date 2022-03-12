@@ -57,6 +57,8 @@
 #include <QtCore/qfile.h>
 #include <QtCore/qscopedvaluerollback.h>
 #include <QtCore/qtemporarydir.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qvarlengtharray.h>
 
 #include <clang-c/Index.h>
 

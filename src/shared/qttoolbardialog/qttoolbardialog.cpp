@@ -49,6 +49,7 @@
 #include <QtGui/QtEvents>
 
 #include <QtCore/QSet>
+#include <QtCore/QMap>
 
 #include <algorithm>
 

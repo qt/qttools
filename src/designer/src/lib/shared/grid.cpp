@@ -30,6 +30,8 @@
 
 #include <QtCore/qlist.h>
 #include <QtCore/qstring.h>
+#include <QtCore/qvariant.h>
+#include <QtCore/qmap.h>
 
 #include <QtGui/qevent.h>
 #include <QtGui/qpainter.h>

@@ -33,6 +33,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include <private/qqmljsengine_p.h>
 #include <private/qqmljsparser_p.h>

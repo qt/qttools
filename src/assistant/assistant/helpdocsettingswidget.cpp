@@ -45,6 +45,8 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QPushButton>
 
+#include <QtCore/QMap>
+
 QT_BEGIN_NAMESPACE
 
 class HelpDocSettingsWidgetPrivate

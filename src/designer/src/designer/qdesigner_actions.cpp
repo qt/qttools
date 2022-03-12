@@ -94,6 +94,7 @@
 #include <QtCore/qpluginloader.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qtimer.h>
+#include <QtCore/qtextstream.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qsavefile.h>
