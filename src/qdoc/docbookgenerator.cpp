@@ -1800,8 +1800,8 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
                     m_qdb->getCollectionNode(aggregate->physicalModuleName(), Node::Module);
             if (cn && !cn->qtCMakeComponent().isEmpty()) {
                 const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
-                const QString findpackageText = "find_package(" + qtComponent + " COMPONENTS "
-                        + cn->qtCMakeComponent() + " REQUIRED)";
+                const QString findpackageText = "find_package(" + qtComponent
+                        + " REQUIRED COMPONENTS " + cn->qtCMakeComponent() + ")";
                 const QString targetLinkLibrariesText = "target_link_libraries(mytarget PRIVATE "
                         + qtComponent + "::" + cn->qtCMakeComponent() + ")";
                 const QStringList cmakeInfo { findpackageText, targetLinkLibrariesText };
@@ -2835,7 +2835,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                 if (cn && !cn->qtCMakeComponent().isEmpty()) {
                     const QString qtComponent = "Qt" + QString::number(QT_VERSION_MAJOR);
                     const QString findpackageText = "find_package(" + qtComponent
-                            + " COMPONENTS " + cn->qtCMakeComponent() + " REQUIRED)";
+                            + " REQUIRED COMPONENTS " + cn->qtCMakeComponent() + ")";
                     const QString targetLinkLibrariesText =
                             "target_link_libraries(mytarget PRIVATE " + qtComponent + "::" + cn->qtCMakeComponent()
                             + ")";

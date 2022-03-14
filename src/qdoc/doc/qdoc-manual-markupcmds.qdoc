@@ -3294,7 +3294,7 @@
         <p>A namespace. <a href="#details">More...</a></p>
         <div class="table"><table class="alignedsummary">
         <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span>
-        </td></tr><tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 COMPONENTS Baz REQUIRED)</td></tr>
+        </td></tr><tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)</td></tr>
     \endraw
 
 
