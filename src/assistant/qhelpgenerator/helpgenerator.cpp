@@ -817,6 +817,7 @@ bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
         QRegularExpressionMatch match;
         int pos = 0;
         while ((match = linkPattern.match(content, pos)).hasMatch()) {
+            pos = match.capturedEnd();
             const QString &linkedFileName = match.captured(1);
             if (linkedFileName.contains(QLatin1String("://")))
                 continue;
@@ -830,7 +831,6 @@ bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
                 allLinksOk = false;
                 invalidLinks.append(canonicalLinkedFileName);
             }
-            pos = match.capturedEnd();
         }
     }
 
