@@ -195,7 +195,7 @@ void ToolBarEventFilter::slotRemoveSelectedAction()
     const ActionList actions = m_toolBar->actions();
     const int pos = actions.indexOf(a);
     QAction *action_before = nullptr;
-    if (pos != -1 && actions.count() > pos + 1)
+    if (pos != -1 && actions.size() > pos + 1)
         action_before = actions.at(pos + 1);
 
     RemoveActionFromCommand *cmd = new RemoveActionFromCommand(fw);

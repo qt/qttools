@@ -163,7 +163,7 @@ void FormWindowBase::addReloadableProperty(QDesignerPropertySheet *sheet, int in
 void FormWindowBase::removeReloadableProperty(QDesignerPropertySheet *sheet, int index)
 {
     m_d->m_reloadableResources[sheet].remove(index);
-    if (!m_d->m_reloadableResources[sheet].count()) {
+    if (m_d->m_reloadableResources[sheet].isEmpty()) {
         m_d->m_reloadableResources.remove(sheet);
         disconnectSheet(sheet);
     }

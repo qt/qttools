@@ -49,7 +49,7 @@ QMdiAreaContainer::QMdiAreaContainer(QMdiArea *widget, QObject *parent)
 
 int QMdiAreaContainer::count() const
 {
-    return m_mdiArea->subWindowList(QMdiArea::CreationOrder).count();
+    return m_mdiArea->subWindowList(QMdiArea::CreationOrder).size();
 }
 
 QWidget *QMdiAreaContainer::widget(int index) const

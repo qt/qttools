@@ -153,7 +153,7 @@ void Layout::setup()
     QWidgetList lastList;
     const QWidgetList &parents = lists.keys();
     for (QWidget *p : parents) {
-        if (lists.count(p) > lastList.count())
+        if (lists.count(p) > lastList.size())
             lastList = lists.values(p);
     }
 
@@ -162,7 +162,7 @@ void Layout::setup()
     // best list has only one entry and we do not layout a container,
     // we leave here.
     QDesignerWidgetDataBaseInterface *widgetDataBase = m_formWindow->core()->widgetDataBase();
-    if (lastList.count() < 2 &&
+    if (lastList.size() < 2 &&
                         (!m_layoutBase ||
                           (!widgetDataBase->isContainer(m_layoutBase, false) &&
                             m_layoutBase != m_formWindow->mainContainer()))
@@ -319,7 +319,7 @@ void Layout::finishLayout(bool needMove, QLayout *layout)
 
 void Layout::undoLayout()
 {
-    if (!m_widgets.count())
+    if (m_widgets.isEmpty())
         return;
 
     m_formWindow->selectWidget(m_layoutBase, false);

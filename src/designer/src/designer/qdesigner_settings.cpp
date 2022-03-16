@@ -186,8 +186,8 @@ QMap<QString, QString> QDesignerSettings::backup() const
     const QStringList bak = settings()->value(QLatin1String(backupBakListKey), QStringList()).toStringList();
 
     QMap<QString, QString> map;
-    const int orgCount = org.count();
-    for (int i = 0; i < orgCount; ++i)
+    const qsizetype orgCount = org.size();
+    for (qsizetype i = 0; i < orgCount; ++i)
         map.insert(org.at(i), bak.at(i));
 
     return map;

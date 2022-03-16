@@ -135,7 +135,7 @@ void Grid::paint(QPainter &p, const QWidget *widget, QPaintEvent *e) const
             points.reserve((yend - ystart) / m_deltaY + 1);
             for (int y = ystart; y <= yend; y += m_deltaY)
                 points.push_back(QPointF(x, y));
-            p.drawPoints( &(*points.begin()), points.count());
+            p.drawPoints( &(*points.begin()), points.size());
             points.clear();
         }
     }

@@ -67,15 +67,14 @@ template <class Widget>
     int actionIndexAt(const Widget *w, const QPoint &pos, Qt::Orientation orientation)
 {
     const auto actions = w->actions();
-    const int actionCount = actions.count();
-    if (actionCount == 0)
+    if (actions.isEmpty())
         return -1;
     // actionGeometry() can be wrong sometimes; it returns a geometry that
     // stretches to the end of the toolbar/menu bar. So, check from the beginning
     // in the case of a horizontal right-to-left orientation.
     const bool checkTopRight = orientation == Qt::Horizontal && w->layoutDirection() == Qt::RightToLeft;
     const QPoint topRight = QPoint(w->rect().width(), 0);
-    for (int index = 0; index < actionCount; ++index) {
+    for (qsizetype index = 0, actionCount = actions.size(); index < actionCount; ++index) {
         QRect g = w->actionGeometry(actions.at(index));
         if (checkTopRight)
             g.setTopRight(topRight);
@@ -83,7 +82,7 @@ template <class Widget>
             g.setTopLeft(QPoint(0, 0));
 
         if (g.contains(pos))
-            return index;
+            return int(index);
     }
     return -1;
 }

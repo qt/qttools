@@ -148,7 +148,7 @@ public:
     void raiseSelection(QWidget *w);
 
     inline const QWidgetList& widgets() const { return m_widgets; }
-    inline int widgetCount() const { return m_widgets.count(); }
+    inline int widgetCount() const { return m_widgets.size(); }
     inline QWidget *widgetAt(int index) const { return m_widgets.at(index); }
 
     QWidgetList widgets(QWidget *widget) const;

@@ -122,7 +122,7 @@ bool FormWindowCursor::hasSelection() const
 
 int FormWindowCursor::selectedWidgetCount() const
 {
-    int N = m_formWindow->selectedWidgets().count();
+    int N = m_formWindow->selectedWidgets().size();
     return N ? N : 1;
 }
 

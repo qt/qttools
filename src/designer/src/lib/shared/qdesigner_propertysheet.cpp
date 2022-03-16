@@ -183,7 +183,7 @@ public:
     explicit QDesignerPropertySheetPrivate(QDesignerPropertySheet *sheetPublic, QObject *object, QObject *sheetParent);
 
     bool invalidIndex(const char *functionName, int index) const;
-    inline int count() const { return m_meta->propertyCount() + m_addProperties.count(); }
+    inline int count() const { return m_meta->propertyCount() + m_addProperties.size(); }
 
     PropertyType propertyType(int index) const;
     QString transformLayoutPropertyName(int index) const;

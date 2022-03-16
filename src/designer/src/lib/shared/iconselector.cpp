@@ -333,8 +333,8 @@ static QString imageFilter()
     QString filter = QApplication::translate("IconSelector", "All Pixmaps (");
     const auto supportedImageFormats = QImageReader::supportedImageFormats();
     const QString jpeg = QStringLiteral("JPEG");
-    const int count = supportedImageFormats.count();
-    for (int i = 0; i< count; ++i) {
+    const qsizetype count = supportedImageFormats.size();
+    for (qsizetype i = 0; i < count; ++i) {
         if (i)
             filter += QLatin1Char(' ');
         filter += QStringLiteral("*.");

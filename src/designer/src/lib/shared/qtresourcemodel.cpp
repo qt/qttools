@@ -378,7 +378,7 @@ void QtResourceModelPrivate::removeOldPaths(QtResourceSet *resourceSet, const QS
                     const int idx = itRemove.value().indexOf(resourceSet);
                     if (idx >= 0)
                         itRemove.value().removeAt(idx);
-                    if (itRemove.value().count() == 0) {
+                    if (itRemove.value().isEmpty()) {
                         PathDataMap::iterator it = m_pathToData.find(oldPath);
                         if (it != m_pathToData.end())
                             deleteResource(it.value());

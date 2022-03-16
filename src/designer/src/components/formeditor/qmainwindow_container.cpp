@@ -50,7 +50,7 @@ QMainWindowContainer::QMainWindowContainer(QMainWindow *widget, QObject *parent)
 
 int QMainWindowContainer::count() const
 {
-    return m_widgets.count();
+    return m_widgets.size();
 }
 
 QWidget *QMainWindowContainer::widget(int index) const

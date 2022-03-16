@@ -2076,10 +2076,10 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
     const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     const QMetaEnum itemFlags_enum = metaEnum<QAbstractFormBuilderGadget>("itemFlags");
     const auto &columns = ui_widget->elementColumn();
-    if (columns.count() > 0)
-        treeWidget->setColumnCount(columns.count());
+    if (!columns.isEmpty())
+        treeWidget->setColumnCount(columns.size());
 
-    for (int i = 0; i<columns.count(); ++i) {
+    for (qsizetype i = 0, size = columns.size(); i < size; ++i) {
         const DomColumn *c = columns.at(i);
         const DomPropertyHash properties = propertyMap(c->elementProperty());
 
@@ -2179,9 +2179,9 @@ void QAbstractFormBuilder::loadTableWidgetExtraInfo(DomWidget *ui_widget, QTable
     Q_UNUSED(parentWidget);
 
     const auto &columns = ui_widget->elementColumn();
-    if (columns.count() > 0)
-        tableWidget->setColumnCount(columns.count());
-    for (int i = 0; i< columns.count(); i++) {
+    if (!columns.isEmpty())
+        tableWidget->setColumnCount(columns.size());
+    for (qsizetype i = 0, size = columns.size(); i < size; ++i) {
         DomColumn *c = columns.at(i);
         const DomPropertyHash properties = propertyMap(c->elementProperty());
 
@@ -2193,9 +2193,9 @@ void QAbstractFormBuilder::loadTableWidgetExtraInfo(DomWidget *ui_widget, QTable
     }
 
     const auto &rows = ui_widget->elementRow();
-    if (rows.count() > 0)
-        tableWidget->setRowCount(rows.count());
-    for (int i = 0; i< rows.count(); i++) {
+    if (!rows.isEmpty())
+        tableWidget->setRowCount(rows.size());
+    for (qsizetype i = 0, size = rows.size(); i < size; ++i) {
         const DomRow *r = rows.at(i);
         const DomPropertyHash properties = propertyMap(r->elementProperty());
 
@@ -2460,7 +2460,7 @@ DomAction *QAbstractFormBuilder::createDom(QAction *action)
 
 DomButtonGroup *QAbstractFormBuilder::createDom(QButtonGroup *buttonGroup)
 {
-    if (buttonGroup->buttons().count() == 0) // Empty group left over on form?
+    if (buttonGroup->buttons().isEmpty()) // Empty group left over on form?
         return nullptr;
     DomButtonGroup *domButtonGroup = new DomButtonGroup;
     domButtonGroup->setAttributeName(buttonGroup->objectName());

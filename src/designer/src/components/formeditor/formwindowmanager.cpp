@@ -811,7 +811,7 @@ void FormWindowManager::slotUpdateActions()
     bool canMorphIntoHBoxLayout = false;
     bool canMorphIntoGridLayout = false;
     bool canMorphIntoFormLayout = false;
-    int selectedWidgetCount = 0;
+    bool hasSelectedWidgets = false;
     int laidoutWidgetCount = 0;
     int unlaidoutWidgetCount = 0;
 #if QT_CONFIG(clipboard)
@@ -831,7 +831,7 @@ void FormWindowManager::slotUpdateActions()
 
         QWidgetList simplifiedSelection = m_activeFormWindow->selectedWidgets();
 
-        selectedWidgetCount = simplifiedSelection.count();
+        hasSelectedWidgets = !simplifiedSelection.isEmpty();
 #if QT_CONFIG(clipboard)
         pasteAvailable = qApp->clipboard()->mimeData() && qApp->clipboard()->mimeData()->hasText();
 #endif
@@ -854,7 +854,7 @@ void FormWindowManager::slotUpdateActions()
         }
 
         // Figure out layouts: Looking at a group of dangling widgets
-        if (simplifiedSelection.count() != 1) {
+        if (simplifiedSelection.size() != 1) {
             layoutAvailable = unlaidoutWidgetCount > 1;
             //breakAvailable = false;
             break;
@@ -903,13 +903,13 @@ void FormWindowManager::slotUpdateActions()
     } while(false);
 
 #if QT_CONFIG(clipboard)
-    m_actionCut->setEnabled(selectedWidgetCount > 0);
-    m_actionCopy->setEnabled(selectedWidgetCount > 0);
+    m_actionCut->setEnabled(hasSelectedWidgets);
+    m_actionCopy->setEnabled(hasSelectedWidgets);
     m_actionPaste->setEnabled(pasteAvailable);
 #endif
-    m_actionDelete->setEnabled(selectedWidgetCount > 0);
-    m_actionLower->setEnabled(canChangeZOrder && selectedWidgetCount > 0);
-    m_actionRaise->setEnabled(canChangeZOrder && selectedWidgetCount > 0);
+    m_actionDelete->setEnabled(hasSelectedWidgets);
+    m_actionLower->setEnabled(canChangeZOrder && hasSelectedWidgets);
+    m_actionRaise->setEnabled(canChangeZOrder && hasSelectedWidgets);
 
 
     m_actionSelectAll->setEnabled(m_activeFormWindow != nullptr);
