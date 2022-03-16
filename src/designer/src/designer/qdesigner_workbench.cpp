@@ -537,7 +537,7 @@ QDesignerFormEditorInterface *QDesignerWorkbench::core() const
 
 int QDesignerWorkbench::toolWindowCount() const
 {
-    return m_toolWindows.count();
+    return m_toolWindows.size();
 }
 
 QDesignerToolWindow *QDesignerWorkbench::toolWindow(int index) const
@@ -547,7 +547,7 @@ QDesignerToolWindow *QDesignerWorkbench::toolWindow(int index) const
 
 int QDesignerWorkbench::formWindowCount() const
 {
-    return m_formWindows.count();
+    return m_formWindows.size();
 }
 
 QDesignerFormWindow *QDesignerWorkbench::formWindow(int index) const

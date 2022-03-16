@@ -2711,7 +2711,7 @@ bool FormWindow::blockSelectionChanged(bool b)
 void FormWindow::editContents()
 {
     const QWidgetList sel = selectedWidgets();
-    if (sel.count() == 1) {
+    if (sel.size() == 1) {
         QWidget *widget = sel.first();
 
         if (QAction *a = preferredEditAction(core(), widget))

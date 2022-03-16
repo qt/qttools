@@ -65,7 +65,7 @@ QDesignerWidgetDataBaseInterface::~QDesignerWidgetDataBaseInterface()
 */
 int QDesignerWidgetDataBaseInterface::count() const
 {
-    return m_items.count();
+    return m_items.size();
 }
 
 /*!

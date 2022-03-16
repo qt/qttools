@@ -1273,7 +1273,7 @@ DomTabStops *QDesignerResource::saveTabStops()
             tabStops.append(widget->objectName());
     }
 
-    if (tabStops.count()) {
+    if (!tabStops.isEmpty()) {
         DomTabStops *dom = new DomTabStops;
         dom->setElementTabStop(tabStops);
         return dom;
@@ -1940,7 +1940,7 @@ QList<DomProperty*> QDesignerResource::computeProperties(QObject *object)
             }
         }
         if (compressSpacings) {
-            if (spacingProperties.count() == 2) {
+            if (spacingProperties.size() == 2) {
                 DomProperty *spacingProperty = spacingProperties.at(0);
                 spacingProperty->setAttributeName(QStringLiteral("spacing"));
                 properties.append(spacingProperty);

@@ -79,9 +79,9 @@ void OrderDialog::setPageList(const QWidgetList &pages)
     // The old index is set as user data on the item instead of the QWidget*
     // because DnD is enabled which requires the user data to serializable
     m_orderMap.clear();
-    const int count = pages.count();
-    for (int i=0; i < count; ++i)
-        m_orderMap.insert(i, pages.at(i));
+    const qsizetype count = pages.size();
+    for (qsizetype i = 0; i < count; ++i)
+        m_orderMap.insert(int(i), pages.at(i));
     buildList();
 }
 

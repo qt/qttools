@@ -214,20 +214,12 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     m_buttonAction(new QAction(tr("Drop Down Button View"), this)),
     m_classLabel(new ElidingLabel)
 {
-    QList<QColor> colors;
-    colors.reserve(6);
-    colors.push_back(QColor(255, 230, 191));
-    colors.push_back(QColor(255, 255, 191));
-    colors.push_back(QColor(191, 255, 191));
-    colors.push_back(QColor(199, 255, 255));
-    colors.push_back(QColor(234, 191, 255));
-    colors.push_back(QColor(255, 191, 239));
-    m_colors.reserve(colors.count());
+    const QColor colors[] = {{255, 230, 191}, {255, 255, 191}, {191, 255, 191},
+                             {199, 255, 255}, {234, 191, 255}, {255, 191, 239}};
     const int darknessFactor = 250;
-    for (int i = 0; i < colors.count(); i++) {
-        const QColor &c = colors.at(i);
+    m_colors.reserve(std::size(colors));
+    for (const QColor &c : colors)
         m_colors.push_back(qMakePair(c, c.darker(darknessFactor)));
-    }
     QColor dynamicColor(191, 207, 255);
     QColor layoutColor(255, 191, 191);
     m_dynamicColor = qMakePair(dynamicColor, dynamicColor.darker(darknessFactor));

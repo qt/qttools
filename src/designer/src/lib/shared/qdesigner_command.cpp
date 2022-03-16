@@ -266,8 +266,8 @@ void ChangeZOrderCommand::init(QWidget *widget)
     setText(QApplication::translate("Command", "Change Z-order of '%1'").arg(widget->objectName()));
 
     m_oldParentZOrder = qvariant_cast<QWidgetList>(widget->parentWidget()->property("_q_zOrder"));
-    const int index = m_oldParentZOrder.indexOf(m_widget);
-    if (index != -1 && index + 1 < m_oldParentZOrder.count())
+    const qsizetype index = m_oldParentZOrder.indexOf(m_widget);
+    if (index != -1 && index + 1 < m_oldParentZOrder.size())
         m_oldPreceding = m_oldParentZOrder.at(index + 1);
 }
 
@@ -2528,7 +2528,7 @@ void TreeWidgetContents::applyToTreeWidget(QTreeWidget *treeWidget, DesignerIcon
 {
     treeWidget->clear();
 
-    treeWidget->setColumnCount(m_headerItem.m_items.count());
+    treeWidget->setColumnCount(m_headerItem.m_items.size());
     treeWidget->setHeaderItem(m_headerItem.createTreeItem(iconCache));
     for (const ItemContents &ic : m_rootItems)
         treeWidget->addTopLevelItem(ic.createTreeItem(iconCache, editor));

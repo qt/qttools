@@ -1543,7 +1543,7 @@ void QtResourceEditorDialogPrivate::slotAddFiles()
     QtResourceFile *nextResourceFile = m_qrcManager->nextResourceFile(currentResourceFile);
     if (!currentResourceFile) {
         const auto resourceFiles = currentResourcePrefix->resourceFiles();
-        if (resourceFiles.count() > 0)
+        if (!resourceFiles.isEmpty())
             nextResourceFile = resourceFiles.first();
     }
 
@@ -2072,9 +2072,9 @@ QString QtResourceEditorDialog::selectedResource() const
         if (resourceEnding.startsWith(slash))
             resourceEnding = resourceEnding.mid(1);
         else if (resourceEnding.startsWith(dotSlash))
-            resourceEnding = resourceEnding.mid(dotSlash.count());
+            resourceEnding = resourceEnding.mid(dotSlash.size());
         else if (resourceEnding.startsWith(dotDotSlash))
-            resourceEnding = resourceEnding.mid(dotDotSlash.count());
+            resourceEnding = resourceEnding.mid(dotDotSlash.size());
         else
             break;
     }

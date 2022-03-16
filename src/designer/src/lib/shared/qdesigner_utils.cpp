@@ -772,14 +772,14 @@ namespace qdesigner_internal
         Q_ASSERT(qname.isEmpty() == false);
 
 
-        if (qname.count() > 1 && qname.at(1).isUpper()) {
+        if (qname.size() > 1 && qname.at(1).isUpper()) {
             const QChar first = qname.at(0);
             if (first == QLatin1Char('Q') || first == QLatin1Char('K'))
                 qname.remove(0, 1);
         }
 
-        const int len = qname.count();
-        for (int i = 0; i < len && qname.at(i).isUpper(); i++)
+        const qsizetype len = qname.size();
+        for (qsizetype i = 0; i < len && qname.at(i).isUpper(); ++i)
             qname[i] = qname.at(i).toLower();
 
         return qname;

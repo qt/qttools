@@ -68,7 +68,7 @@ FormWindowWidgetStack::~FormWindowWidgetStack() = default;
 
 int FormWindowWidgetStack::count() const
 {
-    return m_tools.count();
+    return m_tools.size();
 }
 
 QDesignerFormWindowToolInterface *FormWindowWidgetStack::currentTool() const
