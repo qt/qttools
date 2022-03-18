@@ -1153,6 +1153,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                             }
                         }
                     } else if (isAutoLinkString(cmdStr)) {
+                        // [possibly-incorrect-parsing][auto-linking]
+                        // See [function-dependent-on-context][auto-linking]
                         appendWord(cmdStr);
                     } else {
                         if (!cmdStr.endsWith("propertygroup")) {
@@ -1473,8 +1475,126 @@ bool DocParser::openCommand(int cmd)
     return ok;
 }
 
+// TODO: Consider modifying this to avoid the possibility of
+// misunderstanding the output of the first overload.
+// There are different possibilities but some of the obvious one may
+// result in a pessimization of `isAutoLinking`, whose impact must be
+// considered.
+
+// REMARK: [function-dependent-on-context][auto-linking]
+// The following overload is insidious as it is not in reality
+// total on its domain.
+// Supposedly, with a good degree of certainty, this overload was
+// intended to support the ability to auto-link for those sequences of
+// characters that are already parsed.
+// Considering how the parser for auto-linking is implemented, this is
+// inerehently unsafe unless certain conditions are met.
+// At the current time of writing, this is safe as its only use is on
+// certain strings that respect the command grammr, which is a safe
+// subset for which the function is total.
+// See [possibly-incorrect-parsing][auto-linking] for such cases.
+//
+// Nonetheless, it must be noted that any additional call to this
+// overload must always be audited for this issue and any existing
+// call must be reaudited every time the format of its input
+// parameters changes to assume a new grammar.
+
 /*!
     Returns \c true if \a word qualifies for auto-linking.
+
+    A word qualifies for auto-linking if either:
+
+    \list
+        \li It is composed of only upper and lowercase characters
+        \li AND It contains at least one uppercase character that is not
+        the first character of word
+        \li AND it contains at least two lowercase characters
+    \endlist
+
+    Or
+
+    \list
+        \li It is composed only of uppercase characters, lowercase
+        characters, characters in [_@] and the \c {"::"} sequence.
+        \li It contains at least one uppercase character that is not
+        the first character of word or it contains at least one
+        lowercase character
+        \li AND it contains at least one character in [_@] or it
+        contains at least one \c {"::"} sequence.
+    \endlist
+
+    Inserting or suffixing, but not prefixing, any sequence in [0-9]+
+    in a word that qualifies for auto-linking by the above rules
+    preserves the auto-linkability of the word.
+
+    Suffixing the sequence \c {"()"} to a word that qualifies for
+    auto-linking by the above rules preserves the auto-linkability of
+    a word.
+
+    FInally, a word qualifies for auto-linking if:
+
+    \list
+        \li It is composed of only uppercase characters, lowercase
+        characters and the sequence \c {"()"}
+        \li AND it contains one lowercase character and a sequence of zero, one
+        or two upper or lowercase characters
+        \li AND it contains exactly one sequence \c {"()"}
+        \li AND it contains one sequence \c {"()"} as the last two
+        characters of word
+    \endlist
+
+    For example, \c {"fOo"}, \c {"FooBar"} and \c {"foobaR"} qualify
+    for auto-linking by the first rule.
+
+    \c {"QT_DEBUG"}, \c {"::Qt"} and \c {"std::move"} qualifies for
+    auto-linking by the second rule.
+
+    \c {"SIMDVector256"} qualifies by suffixing \c {"SIMDVector"},
+    which qualifies by the first rule, with the sequence \c {"256"}
+
+    \c {"FooBar::Bar()"} qualifies by suffixing \c {"FooBar::Bar"},
+    which qualifies by the first and second rule, with the sequence \c
+    {"()"}.
+
+    \c {"Foo()"} and \c {"a()"} qualifies by the last rule.
+
+    Instead, \c {"Q"}, \c {"flower"}, \c {"_"} and \c {"()"} do not
+    qualify for auto-linking.
+
+    The rules are intended as a heuristic to catch common cases in the
+    Qt documentation where a word might represent an important
+    documented element such as a class or a method that could be
+    linked to while at the same time avoiding catching common words
+    such as \c {"A"} or \c {"Nonetheless"}.
+
+    The heuristic assumes that Qt's codebase respects a style where
+    camelCasing is the standard for most of the elements, a function
+    call is identified by the use of parenthesis and certain elements,
+    such as macros, might be fully uppercase.
+
+    Furthemore, it assumes that the Qt codebase is written in a
+    language that has an identifier grammar similar to the one for
+    C++.
+
+    This overload is intended to be used only on words that are
+    guaranteed to either entirely qualify for autolinking, such that
+    they can be produced from the above rules, or to no contain any
+    prefix that qualifies for auto-linking. For example, words whose
+    grammar is [a-z][A-Z][a-z]+.
+
+    That is, consider a word W that qualifies for auto-linking and any
+    word Z.
+
+    The concatenation of W followed by Z will be considred as
+    qualifying for auto-linking independently of the structure of Z.
+
+    For example, \c {"foo()?ajEjd!!!!&a"} would qualify the whole word
+    for auto-linking albeit only the prefix \c {"foo()"} actually
+    respects the auto-linking rules.
+
+    Any call of this overload with a word that does not respect this
+    constraint will not be considered to guarantee that \a word
+    qualifies for auto-linking.
 */
 inline bool DocParser::isAutoLinkString(const QString &word)
 {
@@ -1482,6 +1602,22 @@ inline bool DocParser::isAutoLinkString(const QString &word)
     return isAutoLinkString(word, start);
 }
 
+/*!
+    Returns \c true if a prefix of \a word qualifies for auto-linking.
+
+    Respects the same parsing rules as the unary overload.
+
+    \a curPos defines the offset, from the first character of \ word,
+    at which parsing is initiated.
+
+    When the call completes, \a curPos represents the offset, from the
+    first character of word, that is the successor of the amount of
+    characters of word that were parsed.
+
+    If the return value of the call is \c true, it is guaranteed that
+    the prefix of \word that contains the characters up to and not
+    including \a curPos qualifies for auto-linking.
+*/
 bool DocParser::isAutoLinkString(const QString &word, qsizetype &curPos)
 {
     qsizetype len = word.size();
@@ -1512,22 +1648,18 @@ bool DocParser::isAutoLinkString(const QString &word, qsizetype &curPos)
             ++numStrangeSymbols;
             curPos += 2;
         } else if (latin1Ch == '(') {
-            if (curPos > startPos) {
-                if ((curPos < len - 1) && (word.at(curPos + 1) == QLatin1Char(')'))) {
-                    ++numStrangeSymbols;
-                    m_position += 2;
-                    break;
-                } else {
-                    break;
-                }
-            } else {
-                break;
+            if ((curPos < len - 1) && (word.at(curPos + 1) == QLatin1Char(')'))) {
+                ++numStrangeSymbols;
+                m_position += 2;
             }
-        } else {
+
+            break;
+       } else {
             break;
         }
     }
-    return ((numUppercase >= 1 && numLowercase >= 2) || numStrangeSymbols > 0);
+
+    return ((numUppercase >= 1 && numLowercase >= 2) || (numStrangeSymbols > 0 && (numUppercase + numLowercase >= 1)));
 }
 
 bool DocParser::closeCommand(int endCmd)
