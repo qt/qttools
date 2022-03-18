@@ -48,6 +48,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QRegularExpression>
 #include <QtCore/QSet>
+#include <QtCore/QMap>
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>
 #include <QtCore/QStringConverter>

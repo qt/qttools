@@ -29,6 +29,7 @@
 #define BOOKMARKMODEL_H
 
 #include <QtCore/QAbstractItemModel>
+#include <QtCore/QMap>
 
 #include <QtGui/QIcon>
 
