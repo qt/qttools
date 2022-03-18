@@ -5,7 +5,9 @@ qt_exclude_tool_directories_from_default_target(
 )
 
 if(TARGET Qt::Widgets)
-    add_subdirectory(help)
+    if(TARGET Qt::Help)
+        add_subdirectory(help)
+    endif()
     add_subdirectory(linguist)
     add_subdirectory(uitools)
 endif()
