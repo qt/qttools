@@ -632,8 +632,8 @@ void MainWindow::setupActions()
     menuBar()->insertMenu(menu->menuAction(), windowMenu);
     windowMenu->addAction(tr("Zoom"),
             this, &QWidget::showMaximized);
-    windowMenu->addAction(tr("Minimize"),
-            this, &QWidget::showMinimized, QKeySequence(tr("Ctrl+M")));
+    windowMenu->addAction(tr("Minimize"), QKeySequence(tr("Ctrl+M")),
+            this, &QWidget::showMinimized);
 #endif
 
     // content viewer connections
