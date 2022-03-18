@@ -30,6 +30,7 @@
 #include "logging.h"
 
 #include <QtCore/qdir.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qjsonarray.h>
 #include <QtCore/qjsondocument.h>
 #include <QtCore/qjsonobject.h>

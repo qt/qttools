@@ -31,6 +31,7 @@
 
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QDialog>
+#include <QtCore/QMap>
 
 QT_BEGIN_NAMESPACE
 

@@ -35,6 +35,7 @@
 #include "messagemodel.h"
 
 #include <QtCore/QHash>
+#include <QtCore/QMap>
 #include <QtCore/QLocale>
 
 #include <QtWidgets/QMainWindow>

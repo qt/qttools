@@ -41,6 +41,7 @@
 #include "helpdocsettingswidget.h"
 #include "ui_helpdocsettingswidget.h"
 
+#include <QtCore/QMap>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QPushButton>
 

@@ -30,6 +30,7 @@
 #include "phrase.h"
 #include "messagemodel.h"
 
+#include <QtCore/QMap>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
