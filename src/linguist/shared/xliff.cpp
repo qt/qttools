@@ -65,7 +65,7 @@ static QString dataType(const TranslatorMessage &m)
 {
     QByteArray fileName = m.fileName().toLatin1();
     unsigned int extHash = 0;
-    int pos = fileName.count() - 1;
+    int pos = fileName.size() - 1;
     for (int pass = 0; pass < 4 && pos >=0; ++pass, --pos) {
         if (fileName.at(pos) == '.')
             break;

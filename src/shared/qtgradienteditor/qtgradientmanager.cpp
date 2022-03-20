@@ -59,8 +59,8 @@ QString QtGradientManager::uniqueId(const QString &id) const
         return id;
 
     QString base = id;
-    while (base.count() > 0 && base.at(base.count() - 1).isDigit())
-        base = base.left(base.count() - 1);
+    while (base.size() > 0 && base.at(base.size() - 1).isDigit())
+        base = base.left(base.size() - 1);
     QString newId = base;
     int counter = 0;
     while (m_idToGradient.contains(newId)) {

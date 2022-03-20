@@ -146,7 +146,7 @@ QString QHelpDBReader::qtVersionHeuristic() const
     // We drop any non digit characters.
     const QChar dot(QLatin1Char('.'));
     QString tail;
-    for (int i = nameSpace.count(); i > 0; --i) {
+    for (int i = nameSpace.size(); i > 0; --i) {
         const QChar c = nameSpace.at(i - 1);
         if (c.isDigit() || c == dot)
             tail.prepend(c);
@@ -172,16 +172,16 @@ QString QHelpDBReader::qtVersionHeuristic() const
         tail.chop(1);
 
     if (tail.count(dot) == 0) {
-        if (tail.count() > 5)
+        if (tail.size() > 5)
             return tail;
 
         // When we have 3 digits, we split it like: ABC -> A.B.C
         // When we have 4 digits, we split it like: ABCD -> A.BC.D
         // When we have 5 digits, we split it like: ABCDE -> A.BC.DE
         const int major = tail.left(1).toInt();
-        const int minor = tail.count() == 3
+        const int minor = tail.size() == 3
                 ? tail.mid(1, 1).toInt() : tail.mid(1, 2).toInt();
-        const int patch = tail.count() == 5
+        const int patch = tail.size() == 5
                 ? tail.right(2).toInt() : tail.right(1).toInt();
 
         return QString::fromUtf8("%1.%2.%3").arg(major).arg(minor).arg(patch);
