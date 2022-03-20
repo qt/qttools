@@ -488,10 +488,10 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         const QLocale locale = qvariant_cast<QLocale>(v);
 
         const QMetaEnum language_enum = metaEnum<QAbstractFormBuilderGadget>("language");
-        const QMetaEnum country_enum = metaEnum<QAbstractFormBuilderGadget>("country");
+        const QMetaEnum territory_enum = metaEnum<QAbstractFormBuilderGadget>("country");
 
         dom->setAttributeLanguage(QLatin1String(language_enum.valueToKey(locale.language())));
-        dom->setAttributeCountry(QLatin1String(country_enum.valueToKey(locale.country())));
+        dom->setAttributeCountry(QLatin1String(territory_enum.valueToKey(locale.territory())));
 
         dom_prop->setElementLocale(dom);
         }
