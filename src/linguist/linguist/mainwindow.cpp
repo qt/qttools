@@ -1982,8 +1982,8 @@ void MainWindow::setupMenuBar()
     // Window menu
     QMenu *windowMenu = new QMenu(tr("&Window"), this);
     menuBar()->insertMenu(m_ui.menuHelp->menuAction(), windowMenu);
-    windowMenu->addAction(tr("Minimize"), this,
-        &QWidget::showMinimized, QKeySequence(tr("Ctrl+M")));
+    windowMenu->addAction(tr("Minimize"), QKeySequence(tr("Ctrl+M")),
+        this, &QWidget::showMinimized);
 #endif
 
     // Help
