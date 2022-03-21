@@ -1153,8 +1153,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                             }
                         }
                     } else if (isAutoLinkString(cmdStr)) {
-                        // [possibly-incorrect-parsing][auto-linking]
-                        // See [function-dependent-on-context][auto-linking]
                         appendWord(cmdStr);
                     } else {
                         if (!cmdStr.endsWith("propertygroup")) {
@@ -1475,30 +1473,6 @@ bool DocParser::openCommand(int cmd)
     return ok;
 }
 
-// TODO: Consider modifying this to avoid the possibility of
-// misunderstanding the output of the first overload.
-// There are different possibilities but some of the obvious one may
-// result in a pessimization of `isAutoLinking`, whose impact must be
-// considered.
-
-// REMARK: [function-dependent-on-context][auto-linking]
-// The following overload is insidious as it is not in reality
-// total on its domain.
-// Supposedly, with a good degree of certainty, this overload was
-// intended to support the ability to auto-link for those sequences of
-// characters that are already parsed.
-// Considering how the parser for auto-linking is implemented, this is
-// inerehently unsafe unless certain conditions are met.
-// At the current time of writing, this is safe as its only use is on
-// certain strings that respect the command grammr, which is a safe
-// subset for which the function is total.
-// See [possibly-incorrect-parsing][auto-linking] for such cases.
-//
-// Nonetheless, it must be noted that any additional call to this
-// overload must always be audited for this issue and any existing
-// call must be reaudited every time the format of its input
-// parameters changes to assume a new grammar.
-
 /*!
     Returns \c true if \a word qualifies for auto-linking.
 
@@ -1575,48 +1549,33 @@ bool DocParser::openCommand(int cmd)
     Furthemore, it assumes that the Qt codebase is written in a
     language that has an identifier grammar similar to the one for
     C++.
-
-    This overload is intended to be used only on words that are
-    guaranteed to either entirely qualify for autolinking, such that
-    they can be produced from the above rules, or to no contain any
-    prefix that qualifies for auto-linking. For example, words whose
-    grammar is [a-z][A-Z][a-z]+.
-
-    That is, consider a word W that qualifies for auto-linking and any
-    word Z.
-
-    The concatenation of W followed by Z will be considred as
-    qualifying for auto-linking independently of the structure of Z.
-
-    For example, \c {"foo()?ajEjd!!!!&a"} would qualify the whole word
-    for auto-linking albeit only the prefix \c {"foo()"} actually
-    respects the auto-linking rules.
-
-    Any call of this overload with a word that does not respect this
-    constraint will not be considered to guarantee that \a word
-    qualifies for auto-linking.
 */
 inline bool DocParser::isAutoLinkString(const QString &word)
 {
     qsizetype start = 0;
-    return isAutoLinkString(word, start);
+    return isAutoLinkString(word, start) && (start == word.length());
 }
 
 /*!
-    Returns \c true if a prefix of \a word qualifies for auto-linking.
+    Returns \c true if a prefix of a substring of \a word qualifies
+    for auto-linking.
 
     Respects the same parsing rules as the unary overload.
 
     \a curPos defines the offset, from the first character of \ word,
-    at which parsing is initiated.
+    at which the parsed substring starts.
 
     When the call completes, \a curPos represents the offset, from the
-    first character of word, that is the successor of the amount of
-    characters of word that were parsed.
+    first character of word, that is the successor of the offset of
+    the last parsed character.
 
     If the return value of the call is \c true, it is guaranteed that
-    the prefix of \word that contains the characters up to and not
-    including \a curPos qualifies for auto-linking.
+    the prefix of the substring of \word that contains the characters
+    from the initial value of \a curPos and up to but not including \a
+    curPos qualifies for auto-linking.
+
+    If \a curPos is initially zero, the considered substring is the
+    entirety of \a word.
 */
 bool DocParser::isAutoLinkString(const QString &word, qsizetype &curPos)
 {
