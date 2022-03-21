@@ -322,7 +322,7 @@ function(qt6_add_translations target)
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
     if(NOT "${arg_RESOURCE_PREFIX}" STREQUAL "")
-        qt6_add_resources(${target} "translations"
+        qt6_add_resources(${target} "${target}_translations"
             PREFIX "${arg_RESOURCE_PREFIX}"
             BASE "${CMAKE_CURRENT_BINARY_DIR}"
             OUTPUT_TARGETS out_targets
