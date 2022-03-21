@@ -33,11 +33,13 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 PrintOut::PrintOut(QPrinter *printer)
     : pr(printer), nextRule(NoRule), page(0)
 {
     p.begin(pr);
-    QFont f(QStringList{u"Arial"_qs});
+    QFont f(QStringList{u"Arial"_s});
     f8 = f;
     f8.setPointSize(8);
     f10 = f;

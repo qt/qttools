@@ -44,6 +44,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *defaultGridKey = "defaultGrid";
 static const char *previewKey = "Preview";
 static const char *enabledKey = "Enabled";
@@ -123,7 +125,7 @@ const QStringList &QDesignerSharedSettings::defaultFormTemplatePaths()
 // ### FIXME Qt 8: Remove (QTBUG-96005)
 void QDesignerSharedSettings::migrateTemplates()
 {
-    const QString templatePath = u"/templates"_qs;
+    const QString templatePath = u"/templates"_s;
     QString path = dataDirectory() + templatePath;
     if (QFileInfo::exists(path))
         return;

@@ -50,6 +50,8 @@
 
 #include <QtCore/qxmlstream.h>
 
+using namespace Qt::StringLiterals;
+
 static const char *uiElementC = "ui";
 static const char *languageAttributeC = "language";
 static const char *widgetElementC = "widget";
@@ -99,9 +101,9 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
     const QStringList path_list = QCoreApplication::libraryPaths();
 
     for (const QString &path : path_list)
-        result.append(path + u"/designer"_qs);
+        result.append(path + u"/designer"_s);
 
-    result.append(qdesigner_internal::dataDirectory() + u"/plugins"_qs);
+    result.append(qdesigner_internal::dataDirectory() + u"/plugins"_s);
     return result;
 }
 

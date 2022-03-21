@@ -52,6 +52,8 @@
 
 #include "mainwindow.h"
 
+using namespace Qt::StringLiterals;
+
 //! [0]
 int main(int argc, char *argv[])
 //! [0] //! [1]
@@ -63,7 +65,7 @@ int main(int argc, char *argv[])
 //! [2]
     QTranslator translator;
 //! [2] //! [3]
-    if (translator.load(locale, u"arrowpad"_qs, u"_"_qs))
+    if (translator.load(locale, u"arrowpad"_s, u"_"_s))
         app.installTranslator(&translator);
 //! [1] //! [3]
 

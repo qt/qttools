@@ -56,19 +56,21 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal
 {
     // ### FIXME Qt 8: Remove (QTBUG-96005)
     QString legacyDataDirectory()
     {
-        return QDir::homePath() + u"/.designer"_qs;
+        return QDir::homePath() + u"/.designer"_s;
     }
 
     QString dataDirectory()
     {
 #if QT_VERSION >= QT_VERSION_CHECK(7, 0, 0)
         return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)
-               + u'/' + QCoreApplication::organizationName() + u"/Designer"_qs;
+               + u'/' + QCoreApplication::organizationName() + u"/Designer"_s;
 #else
         return legacyDataDirectory();
 #endif

@@ -49,6 +49,8 @@
 
 #include <iostream>
 
+using namespace Qt::StringLiterals;
+
 static void printOut(const QString &out)
 {
     std::cout << qPrintable(out);
@@ -105,7 +107,7 @@ Options:
            Comma-separated list of QMake variables containing .ts files.
     -version
            Display the version of lprodump and exit.
-)"_qs);
+)"_s);
 }
 
 static void print(const QString &fileName, int lineNo, const QString &msg)
@@ -378,7 +380,7 @@ int main(int argc, char **argv)
     QCoreApplication app(argc, argv);
     QStringList args = app.arguments();
     QStringList proFiles;
-    QStringList translationsVariables = { u"TRANSLATIONS"_qs };
+    QStringList translationsVariables = { u"TRANSLATIONS"_s };
     QString outDir = QDir::currentPath();
     QHash<QString, QString> outDirMap;
     QString outputFilePath;
@@ -394,7 +396,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-out")) {
             ++i;
             if (i == argc) {
-                printErr(u"The option -out requires a parameter.\n"_qs);
+                printErr(u"The option -out requires a parameter.\n"_s);
                 return 1;
             }
             outputFilePath = args[i];
@@ -421,11 +423,11 @@ int main(int argc, char **argv)
                 return 1;
             }
             outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
-        } else if (arg == u"-translations-variables"_qs) {
+        } else if (arg == u"-translations-variables"_s) {
             ++i;
             if (i == argc) {
-                printErr(u"The -translations-variables option must be followed by a "_qs
-                         u"comma-separated list of variable names.\n"_qs);
+                printErr(u"The -translations-variables option must be followed by a "_s
+                         u"comma-separated list of variable names.\n"_s);
                 return 1;
             }
             translationsVariables = args.at(i).split(QLatin1Char(','));

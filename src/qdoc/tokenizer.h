@@ -140,6 +140,8 @@ private:
 
     inline int getChar()
     {
+        using namespace Qt::StringLiterals;
+
         if (m_ch == EOF)
             return EOF;
         if (m_lexLen < yyLexBufSize - 1) {
@@ -147,8 +149,8 @@ private:
             m_lex[m_lexLen] = '\0';
         } else if (!token_too_long_warning_was_issued) {
             location().warning(
-                u"The content is too long.\n"_qs,
-                u"The maximum amount of characters for this content is %1.\n"_qs.arg(yyLexBufSize) +
+                u"The content is too long.\n"_s,
+                u"The maximum amount of characters for this content is %1.\n"_s.arg(yyLexBufSize) +
                 "Consider splitting it or reducing its size."
             );
 

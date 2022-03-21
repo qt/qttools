@@ -60,6 +60,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 /*!
     \class QDesignerIntegrationInterface
 
@@ -360,7 +362,7 @@ void QDesignerIntegrationPrivate::initialize()
     m_gradientManager = new QtGradientManager(q);
     core->setGradientManager(m_gradientManager);
 
-    const QString gradientsFile = u"/gradients.xml"_qs;
+    const QString gradientsFile = u"/gradients.xml"_s;
     m_gradientsPath = dataDirectory() + gradientsFile;
 
     // Migrate from legacy to standard data directory in Qt 7

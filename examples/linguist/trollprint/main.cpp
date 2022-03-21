@@ -52,6 +52,8 @@
 
 #include "mainwindow.h"
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -60,7 +62,7 @@ int main(int argc, char *argv[])
 
 //! [0]
     QTranslator translator;
-    if (translator.load(locale, u"trollprint"_qs, u"_"_qs))
+    if (translator.load(locale, u"trollprint"_s, u"_"_s))
         app.installTranslator(&translator);
 //! [0]
 

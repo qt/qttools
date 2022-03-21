@@ -40,6 +40,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 DocUtilities &Doc::m_utilities = DocUtilities::instance();
 
 /*!
@@ -72,11 +74,11 @@ Doc::Doc(const Location &start_loc, const Location &end_loc, const QString &sour
     parser.parse(source, m_priv, metaCommandSet, topics);
 
     if (Config::instance().getAtomsDump()) {
-        start_loc.information(u"==== Atoms Structure for block comment starting at %1 ===="_qs.arg(
+        start_loc.information(u"==== Atoms Structure for block comment starting at %1 ===="_s.arg(
                 start_loc.toString()));
         body().dump();
         end_loc.information(
-                u"==== Ending atoms Structure for block comment ending at %1 ===="_qs.arg(
+                u"==== Ending atoms Structure for block comment ending at %1 ===="_s.arg(
                         end_loc.toString()));
     }
 }

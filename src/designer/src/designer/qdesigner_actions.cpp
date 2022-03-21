@@ -104,6 +104,7 @@
 QT_BEGIN_NAMESPACE
 
 using namespace qdesigner_internal;
+using namespace Qt::StringLiterals;
 
 const char *QDesignerActions::defaultToolbarPropertyName = "__qt_defaultToolBarAction";
 
@@ -1188,8 +1189,8 @@ bool QDesignerActions::ensureBackupDirectories() {
 
     if (m_backupPath.isEmpty()) {
         // create names
-        m_backupPath = dataDirectory() + u"/backup"_qs;
-        m_backupTmpPath = m_backupPath + u"/tmp"_qs;
+        m_backupPath = dataDirectory() + u"/backup"_s;
+        m_backupTmpPath = m_backupPath + u"/tmp"_s;
     }
 
     // ensure directories

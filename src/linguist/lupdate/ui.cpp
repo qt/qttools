@@ -39,6 +39,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class UiReader : public XmlParser
 {
 public:
@@ -192,7 +194,7 @@ bool loadUI(Translator &translator, const QString &filename, ConversionData &cd)
     UiReader uiReader(translator, cd, reader);
     bool result = uiReader.parse();
     if (!result)
-        cd.appendError(u"Parse error in UI file"_qs);
+        cd.appendError(u"Parse error in UI file"_s);
     return result;
 }
 

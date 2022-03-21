@@ -42,6 +42,8 @@
 
 #include <iostream>
 
+using namespace Qt::StringLiterals;
+
 static void printOut(const QString & out)
 {
     std::cout << qPrintable(out);
@@ -75,7 +77,7 @@ Options:
            Trace processing .pro files. Specify twice for more verbosity.
     -version
            Display the version of lupdate-pro and exit.
-)"_qs);
+)"_s);
 }
 
 int main(int argc, char **argv)
@@ -121,7 +123,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro")) {
             ++i;
             if (i == argc) {
-                printErr(u"The -pro option should be followed by a filename of .pro file.\n"_qs);
+                printErr(u"The -pro option should be followed by a filename of .pro file.\n"_s);
                 return 1;
             }
             lprodumpOptions << arg << args[i];
@@ -129,7 +131,7 @@ int main(int argc, char **argv)
         } else if (arg == QLatin1String("-pro-out")) {
             ++i;
             if (i == argc) {
-                printErr(u"The -pro-out option should be followed by a directory name.\n"_qs);
+                printErr(u"The -pro-out option should be followed by a directory name.\n"_s);
                 return 1;
             }
             lprodumpOptions << arg << args[i];
@@ -142,7 +144,7 @@ int main(int argc, char **argv)
     } // for args
 
     if (!hasProFiles) {
-        printErr(u"lupdate-pro: No .pro/.pri files given.\n"_qs);
+        printErr(u"lupdate-pro: No .pro/.pri files given.\n"_s);
         return 1;
     }
 

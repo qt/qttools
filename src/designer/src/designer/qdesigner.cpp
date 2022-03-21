@@ -56,6 +56,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *designerApplicationName = "Designer";
 static const char designerDisplayName[] = "Qt Designer";
 static const char *designerWarningPrefix = "Designer: ";
@@ -203,7 +205,7 @@ static inline QDesigner::ParseArgumentsResult
         return QDesigner::ParseArgumentsHelpRequested;
     // There is no way to retrieve the complete help text from QCommandLineParser,
     // so, call process() to display it.
-    if (parser.isSet(u"help-all"_qs))
+    if (parser.isSet(u"help-all"_s))
         parser.process(QCoreApplication::arguments()); // exits
     options->server = parser.isSet(serverOption);
     if (parser.isSet(clientOption)) {

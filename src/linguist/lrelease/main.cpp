@@ -47,6 +47,8 @@
 
 QT_USE_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static void printOut(const QString & out)
 {
     QTextStream stream(stdout);
@@ -94,7 +96,7 @@ Options:
            Do not explain what is being done
     -version
            Display the version of lrelease and exit
-)"_qs);
+)"_s);
 }
 
 static bool loadTsFile(Translator &tor, const QString &tsFileName, bool /* verbose */)

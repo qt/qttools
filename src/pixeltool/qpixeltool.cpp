@@ -53,6 +53,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static QPoint initialPos(const QSettings &settings, const QSize &initialSize)
 {
     const QPoint defaultPos = QGuiApplication::primaryScreen()->availableGeometry().topLeft();
@@ -231,7 +233,7 @@ void QPixelTool::paintEvent(QPaintEvent *)
         }
     }
 
-    QFont f(QStringList{u"courier"_qs}, -1, QFont::Bold);
+    QFont f(QStringList{u"courier"_s}, -1, QFont::Bold);
     p.setFont(f);
 
     if (m_displayZoom) {

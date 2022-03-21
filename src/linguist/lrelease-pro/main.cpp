@@ -38,6 +38,8 @@
 
 QT_USE_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static void printOut(const QString &out)
 {
     std::cout << qPrintable(out);
@@ -65,7 +67,7 @@ Options:
            Do not explain what is being done
     -version
            Display the version of lrelease-pro and exit
-)"_qs);
+)"_s);
 }
 
 int main(int argc, char **argv)
@@ -121,7 +123,7 @@ int main(int argc, char **argv)
 
     const QStringList proFiles = extractProFiles(&inputFiles);
     if (proFiles.isEmpty()) {
-        printErr(u"lrelease-pro: No .pro/.pri files given.\n"_qs);
+        printErr(u"lrelease-pro: No .pro/.pri files given.\n"_s);
         return 1;
     }
     if (!inputFiles.isEmpty()) {

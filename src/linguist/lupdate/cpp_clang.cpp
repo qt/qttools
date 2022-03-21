@@ -62,6 +62,8 @@ using clang::tooling::CompilationDatabase;
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 Q_LOGGING_CATEGORY(lcClang, "qt.lupdate.clang");
 
 static QString getSysCompiler()
@@ -464,7 +466,7 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
         qCDebug(lcClang) << "Generating compilation database" << dbFilePath;
         if (!generateCompilationDatabase(dbFilePath, cd)) {
             *fail = true;
-            cd.appendError(u"Cannot generate compilation database."_qs);
+            cd.appendError(u"Cannot generate compilation database."_s);
             return;
         }
         errorMessage.clear();
