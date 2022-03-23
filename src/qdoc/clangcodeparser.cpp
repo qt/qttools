@@ -337,6 +337,11 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                 continue;
             if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
+            if (fn->isRef() != (clang_Type_getCXXRefQualifier(funcType) == CXRefQualifier_LValue))
+                continue;
+            if (fn->isRefRef() != (clang_Type_getCXXRefQualifier(funcType) == CXRefQualifier_RValue))
+                continue;
+
             bool different = false;
             for (int i = 0; i < numArg; ++i) {
                 CXType argType = clang_getArgType(funcType, i);
