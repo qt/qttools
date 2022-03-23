@@ -104,6 +104,8 @@ static void printUsage()
         "           Trace processing .pro files. Specify twice for more verbosity.\n"
         "    -out <filename>\n"
         "           Name of the output file.\n"
+        "    -translations-variables <variable_1>[,<variable_2>,...]\n"
+        "           Comma-separated list of QMake variables containing .ts files.\n"
         "    -version\n"
         "           Display the version of lprodump and exit.\n"
     ));
@@ -272,11 +274,13 @@ static void excludeProjects(const ProFileEvaluator &visitor, QStringList *subPro
 }
 
 static QJsonArray processProjects(bool topLevel, const QStringList &proFiles,
+        const QStringList &translationsVariables,
         const QHash<QString, QString> &outDirMap,
         ProFileGlobals *option, QMakeVfs *vfs, QMakeParser *parser,
         bool *fail);
 
-static QJsonObject processProject(const QString &proFile, ProFileGlobals *option, QMakeVfs *vfs,
+static QJsonObject processProject(const QString &proFile, const QStringList &translationsVariables,
+                                  ProFileGlobals *option, QMakeVfs *vfs,
                                   QMakeParser *parser, ProFileEvaluator &visitor)
 {
     QJsonObject result;
@@ -304,7 +308,7 @@ static QJsonObject processProject(const QString &proFile, ProFileGlobals *option
                 subProFiles << subPro;
             }
         }
-        QJsonArray subResults = processProjects(false, subProFiles,
+        QJsonArray subResults = processProjects(false, subProFiles, translationsVariables,
                                                 QHash<QString, QString>(), option, vfs, parser,
                                                 nullptr);
         if (!subResults.isEmpty())
@@ -321,6 +325,7 @@ static QJsonObject processProject(const QString &proFile, ProFileGlobals *option
 }
 
 static QJsonArray processProjects(bool topLevel, const QStringList &proFiles,
+        const QStringList &translationsVariables,
         const QHash<QString, QString> &outDirMap,
         ProFileGlobals *option, QMakeVfs *vfs, QMakeParser *parser, bool *fail)
 {
@@ -346,16 +351,20 @@ static QJsonArray processProjects(bool topLevel, const QStringList &proFiles,
             continue;
         }
 
-        QJsonObject prj = processProject(proFile, option, vfs, parser, visitor);
+        QJsonObject prj = processProject(proFile, translationsVariables, option, vfs, parser,
+                                         visitor);
         setValue(prj, "projectFile", proFile);
-        if (visitor.contains(QLatin1String("TRANSLATIONS"))) {
-            QStringList tsFiles;
+        QStringList tsFiles;
+        for (const QString &varName : translationsVariables) {
+            if (!visitor.contains(varName))
+                continue;
             QDir proDir(QFileInfo(proFile).path());
-            const QStringList translations = visitor.values(QLatin1String("TRANSLATIONS"));
+            const QStringList translations = visitor.values(varName);
             for (const QString &tsFile : translations)
                 tsFiles << proDir.filePath(tsFile);
-            setValue(prj, "translations", tsFiles);
         }
+        if (!tsFiles.isEmpty())
+            setValue(prj, "translations", tsFiles);
         result.append(prj);
         pro->deref();
     }
@@ -367,6 +376,7 @@ int main(int argc, char **argv)
     QCoreApplication app(argc, argv);
     QStringList args = app.arguments();
     QStringList proFiles;
+    QStringList translationsVariables = { QStringLiteral("TRANSLATIONS") };
     QString outDir = QDir::currentPath();
     QHash<QString, QString> outDirMap;
     QString outputFilePath;
@@ -409,6 +419,14 @@ int main(int argc, char **argv)
                 return 1;
             }
             outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
+        } else if (arg == QLatin1String("-translations-variables")) {
+            ++i;
+            if (i == argc) {
+                printErr(LD::tr("The -translations-variables option must be followed by a "
+                                "comma-separated list of variable names.\n"));
+                return 1;
+            }
+            translationsVariables = args.at(i).split(QLatin1Char(','));
         } else if (arg.startsWith(QLatin1String("-")) && arg != QLatin1String("-")) {
             printErr(LD::tr("Unrecognized option '%1'.\n").arg(arg));
             return 1;
@@ -446,8 +464,8 @@ int main(int argc, char **argv)
     QMakeVfs vfs;
     QMakeParser parser(0, &vfs, &evalHandler);
 
-    QJsonArray results = processProjects(true, proFiles, outDirMap, &option, &vfs,
-                                         &parser, &fail);
+    QJsonArray results = processProjects(true, proFiles, translationsVariables, outDirMap, &option,
+                                         &vfs, &parser, &fail);
     if (fail)
         return 1;
 
