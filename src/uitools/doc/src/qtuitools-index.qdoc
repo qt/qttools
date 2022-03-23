@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2018 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -31,17 +31,9 @@
 
     \brief Provides classes to handle forms created with Qt Designer.
 
-    \section1 Getting Started
-
-    Qt Designer forms are processed at run-time to produce dynamically-generated
+    Qt Designer forms are processed at run-time to produce dynamically generated
     user interfaces. In order to generate a form at run-time, a resource
-    file containing a UI file is needed. Applications that use the
-    form handling classes need to be configured to be built against the
-    Qt UI Tools module. This is done by including the following declaration
-    in a \c qmake project file to ensure that the application is compiled
-    and linked appropriately.
-
-    \snippet quiloader/doc_src_qtuiloader.pro 0
+    file containing a UI file is needed.
 
     A form loader object, provided by the QUiLoader class, is used to construct
     the user interface. This user interface can be retrieved from any QIODevice.
@@ -49,12 +41,33 @@
     project's resources. The QUiLoader::load() function takes the user interface
     description contained in the file and constructs the form widget.
 
-    To include the definitions of the module's classes, use the following
-    directive:
+    \section1 Using the Module
 
-    \snippet quiloader/doc_src_qtuiloader.cpp 1
+    \include {module-use.qdocinc} {using the c++ api}
+
+    \section2 Building with CMake
+
+    \include {module-use.qdocinc} {building with cmake} {UiTools}
+
+    \section2 Building with qmake
+
+    \include {module-use.qdocinc} {building_with_qmake} {uitools}
 
     \section1 Licenses and Attributions
+
+    \section1 Examples
+
+    \list
+        \li \l {Qt UI Tools Examples}
+    \endlist
+
+    \section1 Reference
+
+    \list
+        \li \l {Qt UI Tools C++ Classes} {C++ Classes}
+    \endlist
+
+    \section1 Licenses
 
     Qt UI Tools is available under commercial licenses from \l{The Qt Company}.
     In addition, it is available under free software licenses. Since Qt 6.0,
@@ -62,15 +75,4 @@
     \l{GNU Lesser General Public License, version 3}, or
     the \l{GNU General Public License, version 2}.
     See \l{Qt Licensing} for further details.
-
-    \section1 API Reference
-    These are links to the API reference materials.
-    \list
-        \li \l{Qt UI Tools C++ Classes}{C++ Classes}
-    \endlist
-
-    \section1 Examples
-     \list
-      \li \l{Qt UI Tools Examples}
-     \endlist
 */

@@ -25,7 +25,7 @@ language                = Cpp
 
 headerdirs            += ..
 
-sourcedirs              = ..
+sourcedirs              += ..
 
 exampledirs             = ../../../examples/uitools \
                           snippets
