@@ -22,72 +22,66 @@ qt_internal_add_tool(${target_name}
     TOOLS_TARGET Tools # special case
     USER_FACING
     SOURCES
-        access.h
-        aggregate.cpp aggregate.h
-        atom.cpp atom.h
-        clangcodeparser.cpp clangcodeparser.h
-        classnode.cpp classnode.h
-        codechunk.cpp codechunk.h
-        codemarker.cpp codemarker.h
-        codeparser.cpp codeparser.h
-        collectionnode.cpp collectionnode.h
-        config.cpp config.h
-        cppcodemarker.cpp cppcodemarker.h
-        cppcodeparser.cpp cppcodeparser.h
-        doc.cpp doc.h
-        docbookgenerator.cpp docbookgenerator.h
-        docparser.cpp docparser.h
-        docprivate.cpp docprivate.h
-        docutilities.h
-        editdistance.cpp editdistance.h
-        enumitem.h
-        enumnode.cpp enumnode.h
-        examplenode.h
-        externalpagenode.cpp externalpagenode.h
-        functionnode.cpp functionnode.h
-        generator.cpp generator.h
-        headernode.cpp headernode.h
-        helpprojectwriter.cpp helpprojectwriter.h
-        htmlgenerator.cpp htmlgenerator.h
-        importrec.h
-        jscodemarker.cpp jscodemarker.h
-        location.cpp location.h
-        macro.h
+        aggregate.cpp
+        atom.cpp
+        clangcodeparser.cpp
+        classnode.cpp
+        codechunk.cpp
+        codemarker.cpp
+        codeparser.cpp
+        collectionnode.cpp
+        config.cpp
+        cppcodemarker.cpp
+        cppcodeparser.cpp
+        doc.cpp
+        docbookgenerator.cpp
+        docparser.cpp
+        docprivate.cpp
+        editdistance.cpp
+        enumnode.cpp
+        externalpagenode.cpp
+        functionnode.cpp
+        generator.cpp
+        headernode.cpp
+        helpprojectwriter.cpp
+        htmlgenerator.cpp
+        jscodemarker.cpp
+        location.cpp
         main.cpp
-        manifestwriter.cpp manifestwriter.h
-        namespacenode.cpp namespacenode.h
-        node.cpp node.h
-        openedlist.cpp openedlist.h
-        pagenode.cpp pagenode.h
-        parameters.cpp parameters.h
-        propertynode.cpp propertynode.h
-        proxynode.cpp proxynode.h
-        puredocparser.cpp puredocparser.h
-        qdoccommandlineparser.cpp qdoccommandlineparser.h
-        qdocdatabase.cpp qdocdatabase.h
-        qdocindexfiles.cpp qdocindexfiles.h
-        qmlcodemarker.cpp qmlcodemarker.h
-        qmlcodeparser.cpp qmlcodeparser.h
-        qmlmarkupvisitor.cpp qmlmarkupvisitor.h
-        qmlpropertynode.cpp qmlpropertynode.h
-        qmltypenode.cpp qmltypenode.h
-        qmlvisitor.cpp qmlvisitor.h
-        quoter.cpp quoter.h
-        relatedclass.cpp relatedclass.h
-        sections.cpp sections.h
-        sharedcommentnode.cpp sharedcommentnode.h
-        singleton.h
-        tagfilewriter.cpp tagfilewriter.h
-        text.cpp text.h
-        tokenizer.cpp tokenizer.h
-        topic.h
-        tree.cpp tree.h
-        typedefnode.cpp typedefnode.h
-        usingclause.cpp usingclause.h
-        utilities.cpp utilities.h
-        variablenode.cpp variablenode.h
-        webxmlgenerator.cpp webxmlgenerator.h
-        xmlgenerator.cpp xmlgenerator.h
+        manifestwriter.cpp
+        namespacenode.cpp
+        node.cpp
+        openedlist.cpp
+        pagenode.cpp
+        parameters.cpp
+        propertynode.cpp
+        proxynode.cpp
+        puredocparser.cpp
+        qdoccommandlineparser.cpp
+        qdocdatabase.cpp
+        qdocindexfiles.cpp
+        qmlcodemarker.cpp
+        qmlcodeparser.cpp
+        qmlmarkupvisitor.cpp
+        qmlpropertynode.cpp
+        qmltypenode.cpp
+        qmlvisitor.cpp
+        quoter.cpp
+        relatedclass.cpp
+        sections.cpp
+        sharedcommentnode.cpp
+        tagfilewriter.cpp
+        text.cpp
+        tokenizer.cpp
+        tree.cpp
+        typedefnode.cpp
+        usingclause.cpp
+        utilities.cpp
+        variablenode.cpp
+        webxmlgenerator.cpp
+        xmlgenerator.cpp
+    INCLUDE_DIRECTORIES
+        ${CMAKE_CURRENT_LIST_DIR}
     LIBRARIES # special case
         WrapLibClang::WrapLibClang # special case
     DEFINES
