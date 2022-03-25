@@ -47,6 +47,7 @@
 
 #include <QtCore/qxmlstream.h>
 
+#include <QtCore/qcoreapplication.h>
 #include <QtCore/qscopedpointer.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qmetaobject.h>
@@ -289,6 +290,24 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
 #undef DECLARE_LAYOUT
 #undef DECLARE_WIDGET
 #undef DECLARE_WIDGET_1
+
+    const QString msgAbstractClass =
+        QCoreApplication::translate("WidgetDataBase",
+                                    "Abstract base class that cannot be instantiated. For promotion/custom widget usage only.");
+
+#if QT_CONFIG(abstractbutton)
+    auto *abItem = new WidgetDataBaseItem(u"QAbstractButton"_qs);
+    abItem->setToolTip(msgAbstractClass);
+    abItem->setBaseClassName(u"QWidget"_qs);
+    append(abItem);
+#endif // QT_CONFIG(abstractbutton)
+
+#if QT_CONFIG(itemviews)
+    auto *aivItem = new WidgetDataBaseItem(u"QAbstractItemView"_qs);
+    aivItem->setBaseClassName(u"QAbstractScrollArea"_qs);
+    aivItem->setToolTip(msgAbstractClass);
+    append(aivItem);
+#endif // QT_CONFIG(itemviews)
 
     append(new WidgetDataBaseItem(QString::fromUtf8("Line")));
     append(new WidgetDataBaseItem(QString::fromUtf8("Spacer")));

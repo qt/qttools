@@ -71,6 +71,14 @@
 #include <QtCore/qmetaobject.h>
 #include <QtCore/qpointer.h>
 
+#if QT_CONFIG(abstractbutton)
+#  include <QtWidgets/qabstractbutton.h>
+#endif
+
+#if QT_CONFIG(itemviews)
+#  include <QtWidgets/qabstractitemview.h>
+#endif
+
 #ifdef QT_OPENGLWIDGETS_LIB
 #  include <QtOpenGLWidgets/qopenglwidget.h>
 #endif
@@ -93,6 +101,59 @@ static inline bool isAxWidget(const QObject *o)
 static const char *formEditorDynamicProperty = "_q_formEditorObject";
 
 namespace qdesigner_internal {
+
+#if QT_CONFIG(abstractbutton)
+
+class QDesignerAbstractButton : public QAbstractButton
+{
+public:
+    using QAbstractButton::QAbstractButton;
+
+protected:
+    void paintEvent(QPaintEvent *) override {}
+};
+
+#endif
+
+#if QT_CONFIG(itemviews)
+
+class QDesignerAbstractItemView : public QAbstractItemView
+{
+public:
+    using QAbstractItemView::QAbstractItemView;
+
+    QRect visualRect(const QModelIndex &) const override
+    {
+        return QRect(QPoint(), QSize(10, 10));
+    }
+
+    void scrollTo(const QModelIndex &, ScrollHint = EnsureVisible) override {}
+
+    QModelIndex indexAt(const QPoint &) const override
+    {
+        return {};
+    }
+
+protected:
+    QModelIndex moveCursor(CursorAction, Qt::KeyboardModifiers) override
+    {
+        return {};
+    }
+
+    int horizontalOffset() const override { return 0; }
+    int verticalOffset() const override { return 0; }
+
+    bool isIndexHidden(const QModelIndex &) const override { return false; }
+
+    void setSelection(const QRect &, QItemSelectionModel::SelectionFlags) override {}
+
+    QRegion visualRegionForSelection(const QItemSelection &) const override
+    {
+        return QRegion(QRect(QPoint(), QSize(10, 10)));
+    }
+};
+
+#endif // QT_CONFIG(itemviews)
 
 // A friendly SpinBox that grants access to its QLineEdit
 class FriendlySpinBox : public QAbstractSpinBox {
@@ -334,6 +395,14 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         // 2) Special widgets
         if (widgetName == m_strings.m_line) {
             w = new Line(parentWidget);
+#if QT_CONFIG(abstractbutton)
+        } else if (widgetName == u"QAbstractButton") {
+            w = new QDesignerAbstractButton(parentWidget);
+#endif
+#if QT_CONFIG(itemviews)
+        } else if (widgetName == u"QAbstractItemView") {
+            w = new QDesignerAbstractItemView(parentWidget);
+#endif
         } else if (widgetName == m_strings.m_qDockWidget) {
             w = new QDesignerDockWidget(parentWidget);
         } else if (widgetName == m_strings.m_qMenuBar) {

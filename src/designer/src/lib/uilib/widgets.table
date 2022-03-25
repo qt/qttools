@@ -27,7 +27,11 @@ DECLARE_WIDGET(QFrame, "")
 DECLARE_WIDGET(QGroupBox, "")
 #endif
 #if QT_CONFIG(scrollarea)
+DECLARE_WIDGET(QAbstractScrollArea, "")
 DECLARE_WIDGET(QScrollArea, "")
+#endif
+#if QT_CONFIG(abstractslider)
+DECLARE_WIDGET(QAbstractSlider, "")
 #endif
 #if QT_CONFIG(lcdnumber)
 DECLARE_WIDGET(QLCDNumber, "")
@@ -73,6 +77,7 @@ DECLARE_WIDGET(QScrollBar, "")
 DECLARE_WIDGET(QSlider, "")
 #endif
 #if QT_CONFIG(spinbox)
+DECLARE_WIDGET(QAbstractSpinBox, "")
 DECLARE_WIDGET(QSpinBox, "")
 DECLARE_WIDGET(QDoubleSpinBox, "")
 #endif
