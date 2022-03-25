@@ -86,7 +86,8 @@ QString QDesignerWidgetBoxInterface::Widget::name() const
 
 void QDesignerWidgetBoxInterface::Widget::setName(const QString &aname)
 {
-    m_data->m_name = aname;
+    if (m_data->m_name != aname)
+        m_data->m_name = aname;
 }
 
 QString QDesignerWidgetBoxInterface::Widget::domXml() const
@@ -96,7 +97,8 @@ QString QDesignerWidgetBoxInterface::Widget::domXml() const
 
 void QDesignerWidgetBoxInterface::Widget::setDomXml(const QString &xml)
 {
-    m_data->m_xml = xml;
+    if (m_data->m_xml != xml)
+        m_data->m_xml = xml;
 }
 
 QString QDesignerWidgetBoxInterface::Widget::iconName() const
@@ -106,7 +108,8 @@ QString QDesignerWidgetBoxInterface::Widget::iconName() const
 
 void QDesignerWidgetBoxInterface::Widget::setIconName(const QString &icon_name)
 {
-    m_data->m_icon_name = icon_name;
+    if (m_data->m_icon_name != icon_name)
+        m_data->m_icon_name = icon_name;
 }
 
 QDesignerWidgetBoxInterface::Widget::Type QDesignerWidgetBoxInterface::Widget::type() const
@@ -116,7 +119,8 @@ QDesignerWidgetBoxInterface::Widget::Type QDesignerWidgetBoxInterface::Widget::t
 
 void QDesignerWidgetBoxInterface::Widget::setType(Type atype)
 {
-    m_data->m_type = atype;
+    if (m_data->m_type != atype)
+        m_data->m_type = atype;
 }
 
 bool QDesignerWidgetBoxInterface::Widget::isNull() const
