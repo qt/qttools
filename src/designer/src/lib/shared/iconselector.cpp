@@ -58,6 +58,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qlist.h>
+#include <QtCore/qstringlistmodel.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -510,35 +511,34 @@ void IconSelector::setPixmapCache(DesignerPixmapCache *pixmapCache)
 
 // --- IconThemeEditor
 
-// Validator for theme line edit, accepts empty or non-blank strings.
-class BlankSuppressingValidator : public QValidator {
-public:
-    explicit BlankSuppressingValidator(QObject * parent = nullptr) : QValidator(parent) {}
-
-    State validate(QString &input, int &pos) const override
-    {
-        const int blankPos = input.indexOf(QLatin1Char(' '));
-        if (blankPos != -1) {
-            pos = blankPos;
-            return Invalid;
-        }
-        return Acceptable;
-    }
-};
-
 struct IconThemeEditorPrivate {
     IconThemeEditorPrivate();
 
     const QPixmap m_emptyPixmap;
-    QLineEdit *m_themeLineEdit;
+    QComboBox *m_themeComboBox;
     QLabel *m_themeLabel;
+    QStringListModel *m_themeModel;
 };
 
 IconThemeEditorPrivate::IconThemeEditorPrivate() :
     m_emptyPixmap(emptyPixmap()),
-    m_themeLineEdit(new QLineEdit),
-    m_themeLabel(new QLabel)
+    m_themeComboBox(new QComboBox),
+    m_themeLabel(new QLabel),
+    m_themeModel(new QStringListModel)
 {
+    QStringList iconNames;
+    QFile file(QStringLiteral(":/qt-project.org/designer/icon-naming-spec.txt"));
+    if (file.open(QIODevice::ReadOnly)) {
+        while (!file.atEnd()) {
+            const auto line = file.readLine().trimmed();
+            if (line.isEmpty() || line.startsWith('#'))
+                continue;
+            iconNames.append(QString::fromUtf8(line));
+        }
+        file.close();
+    }
+    std::sort(iconNames.begin(), iconNames.end());
+    m_themeModel->setStringList(iconNames);
 }
 
 IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
@@ -558,11 +558,11 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
     themeLabelVLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding));
     mainHLayout->addLayout(themeLabelVLayout);
 
-    d->m_themeLineEdit = new QLineEdit;
-    d->m_themeLineEdit->setValidator(new BlankSuppressingValidator(d->m_themeLineEdit));
-    connect(d->m_themeLineEdit, &QLineEdit::textChanged, this, &IconThemeEditor::slotChanged);
-    connect(d->m_themeLineEdit, &QLineEdit::textEdited, this, &IconThemeEditor::edited);
-    mainHLayout->addWidget(d->m_themeLineEdit);
+    d->m_themeComboBox->setModel(d->m_themeModel);
+    d->m_themeComboBox->setCurrentIndex(-1);
+    connect(d->m_themeComboBox, &QComboBox::currentTextChanged, this, &IconThemeEditor::slotChanged);
+    connect(d->m_themeComboBox, &QComboBox::currentTextChanged, this, &IconThemeEditor::edited);
+    mainHLayout->addWidget(d->m_themeComboBox);
 
     if (wantResetButton) {
         QToolButton *themeResetButton = new QToolButton;
@@ -572,14 +572,14 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
     }
 
     setLayout(mainHLayout);
-    setFocusProxy(d->m_themeLineEdit);
+    setFocusProxy(d->m_themeComboBox);
 }
 
 IconThemeEditor::~IconThemeEditor() = default;
 
 void IconThemeEditor::reset()
 {
-    d->m_themeLineEdit->clear();
+    d->m_themeComboBox->setCurrentIndex(-1);
     emit edited(QString());
 }
 
@@ -602,12 +602,12 @@ void IconThemeEditor::updatePreview(const QString &t)
 
 QString IconThemeEditor::theme() const
 {
-    return d->m_themeLineEdit->text();
+    return d->m_themeComboBox->currentText();
 }
 
 void IconThemeEditor::setTheme(const QString &t)
 {
-    d->m_themeLineEdit->setText(t);
+    d->m_themeComboBox->setCurrentText(t);
 }
 
 } // qdesigner_internal

@@ -348,6 +348,7 @@ qt_internal_add_resource(Designer "qtgradienteditor"
 )
 set(shared_resource_files
     "shared/defaultgradients.xml"
+    "shared/icon-naming-spec.txt"
     "shared/templates/forms/240x320/Dialog_with_Buttons_Bottom.ui"
     "shared/templates/forms/240x320/Dialog_with_Buttons_Right.ui"
     "shared/templates/forms/320x240/Dialog_with_Buttons_Bottom.ui"
