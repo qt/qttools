@@ -647,8 +647,7 @@
 
     In the specified directories, QDoc will only read the files with
     the \c fileextensions specified in the \l {headers.fileextensions}
-    {\c headers.fileextensions} variable. The default extensions are
-    *.ch, *.h, *.h++, *.hh, *.hpp, and *.hxx". The files specified by
+    {\c headers.fileextensions} variable. The files specified by
     \l {headers} {\c headers} will be read without taking into account
     their fileextensions.
 
@@ -1292,8 +1291,7 @@
 
     In the specified directories, QDoc will only read the files with
     the \c fileextensions specified in the \l {sources.fileextensions}
-    {\c sources.fileextensions} variable. The default extensions are
-    *.c++, *.cc, *.cpp and *.cxx. The files specified by \l {sources}
+    {\c sources.fileextensions} variable. The files specified by \l {sources}
     {\c sources} will be read independent of their fileextensions.
 
     See also \l {sources-variable} {sources} and
@@ -1354,7 +1352,8 @@
     variable. In this way QDoc avoid spending time reading irrelevant
     files.
 
-    The default extensions are *.c++, *.cc, *.cpp and *.cxx.
+    The default extensions are *.c++, *.cc, *.cpp, *.cxx, *.mm, *.qml
+    and *.qdoc.
 
     The extensions are given as standard wildcard expressions. You
     can add a file extension to the filter using '+='. For example:

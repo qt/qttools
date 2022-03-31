@@ -296,7 +296,8 @@ void Config::reset()
     // Default values
     setStringList(CONFIG_CODEINDENT, QStringList("0"));
     setStringList(CONFIG_FALSEHOODS, QStringList("0"));
-    setStringList(CONFIG_FILEEXTENSIONS, QStringList("*.cpp *.h *.qdoc *.qml"));
+    setStringList(CONFIG_HEADERS + dot + CONFIG_FILEEXTENSIONS, QStringList("*.ch *.h *.h++ *.hh *.hpp *.hxx"));
+    setStringList(CONFIG_SOURCES + dot + CONFIG_FILEEXTENSIONS, QStringList("*.c++ *.cc *.cpp *.cxx *.mm *.qml *.qdoc"));
     setStringList(CONFIG_LANGUAGE, QStringList("Cpp")); // i.e. C++
     setStringList(CONFIG_OUTPUTFORMATS, QStringList("HTML"));
     setStringList(CONFIG_TABSIZE, QStringList("8"));
