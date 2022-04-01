@@ -192,6 +192,7 @@
     <addaction name="actionSelectAll"/>
     <addaction name="separator"/>
     <addaction name="actionFind"/>
+    <addaction name="actionFindPrev"/>
     <addaction name="actionFindNext"/>
     <addaction name="actionSearchAndTranslate"/>
     <addaction name="actionBatchTranslation"/>
@@ -976,6 +977,17 @@
    </property>
    <property name="menuRole">
     <enum>QAction::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionFindPrev">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Find P&amp;revious</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F3</string>
    </property>
   </action>
  </widget>

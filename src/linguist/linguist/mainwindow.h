@@ -72,6 +72,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 public:
     enum {PhraseCloseMenu, PhraseEditMenu, PhrasePrintMenu};
+    enum FindDirection {FindNext, FindPrev};
 
     MainWindow();
     ~MainWindow();
@@ -107,7 +108,6 @@ private slots:
     void print();
     void closeFile();
     bool closeAll();
-    void findAgain();
     void showTranslateDialog();
     void showBatchTranslateDialog();
     void showTranslationSettings();
@@ -170,6 +170,7 @@ private:
     QModelIndex prevMessage(const QModelIndex &currentIndex, bool checkUnfinished = false) const;
     bool doNext(bool checkUnfinished);
     bool doPrev(bool checkUnfinished);
+    void findAgain(FindDirection direction = FindNext);
 
     void updateStatistics();
     void initViewHeaders();

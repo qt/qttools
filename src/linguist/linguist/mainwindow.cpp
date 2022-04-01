@@ -569,6 +569,7 @@ void MainWindow::modelCountChanged()
 
     m_ui.actionFind->setEnabled(m_dataModel->contextCount() > 0);
     m_ui.actionFindNext->setEnabled(false);
+    m_ui.actionFindPrev->setEnabled(false);
 
     m_formPreviewView->setSourceContext(-1, 0);
 }
@@ -986,13 +987,15 @@ bool MainWindow::searchItem(DataModel::FindLocation where, const QString &search
                             ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0;
 }
 
-void MainWindow::findAgain()
+void MainWindow::findAgain(FindDirection direction)
 {
     if (m_dataModel->contextCount() == 0)
         return;
 
     const QModelIndex &startIndex = m_messageView->currentIndex();
-    QModelIndex index = nextMessage(startIndex);
+    QModelIndex index = (direction == FindNext
+            ? nextMessage(startIndex)
+            : prevMessage(startIndex));
 
     while (index.isValid()) {
         QModelIndex realIndex = m_sortedMessagesModel->mapToSource(index);
@@ -1052,7 +1055,9 @@ void MainWindow::findAgain()
         if (index == startIndex)
             break;
 
-        index = nextMessage(index);
+        index = (direction == FindNext
+                    ? nextMessage(index)
+                    : prevMessage(index));
     }
 
     qApp->beep();
@@ -1792,6 +1797,7 @@ void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
                                                     : QRegularExpression::CaseInsensitiveOption);
     }
     m_ui.actionFindNext->setEnabled(true);
+    m_ui.actionFindPrev->setEnabled(true);
     findAgain();
 }
 
@@ -1905,7 +1911,9 @@ void MainWindow::setupMenuBar()
     connect(m_ui.actionFind, &QAction::triggered,
             m_findDialog, &FindDialog::find);
     connect(m_ui.actionFindNext, &QAction::triggered,
-            this, &MainWindow::findAgain);
+            this, [this] {findAgain(FindNext);});
+    connect(m_ui.actionFindPrev, &QAction::triggered,
+            this, [this] {findAgain(FindPrev);});
     connect(m_ui.actionSearchAndTranslate, &QAction::triggered,
             this, &MainWindow::showTranslateDialog);
     connect(m_ui.actionBatchTranslation, &QAction::triggered,
