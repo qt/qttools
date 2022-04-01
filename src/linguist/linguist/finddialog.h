@@ -41,13 +41,19 @@ class FindDialog : public QDialog, public Ui::FindDialog
 {
     Q_OBJECT
 public:
+    enum FindOption {
+        MatchCase = 0x1,
+        IgnoreAccelerators = 0x2,
+        SkipObsolete = 0x4,
+        UseRegExp = 0x8
+    };
+    Q_DECLARE_FLAGS(FindOptions, FindOption)
     FindDialog(QWidget *parent = 0);
     QRegularExpression &getRegExp() { return m_regExp; }
 
 signals:
     void findNext(const QString& text, DataModel::FindLocation where,
-                  bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp,
-                  int statusFilter);
+                  FindDialog::FindOptions options, int statusFilter);
 
 public slots:
     void find();

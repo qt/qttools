@@ -33,6 +33,7 @@
 #include "ui_mainwindow.h"
 #include "recentfiles.h"
 #include "messagemodel.h"
+#include "finddialog.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QMap>
@@ -57,7 +58,6 @@ class QTreeView;
 
 class BatchTranslationDialog;
 class ErrorsView;
-class FindDialog;
 class FocusWatcher;
 class FormPreviewView;
 class MessageEditor;
@@ -155,8 +155,7 @@ private slots:
     void prevUnfinished();
     void nextUnfinished();
     void findNext(const QString &text, DataModel::FindLocation where,
-                  bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool regularExp,
-                  int statusFilter);
+                  FindDialog::FindOptions options, int statusFilter);
     void revalidate();
     void toggleStatistics();
     void toggleVisualizeWhitespace();
@@ -228,11 +227,8 @@ private:
 
     FindDialog *m_findDialog;
     QString m_findText;
-    Qt::CaseSensitivity m_findMatchCase;
-    bool m_findIgnoreAccelerators;
-    bool m_findSkipObsolete;
-    bool m_findUseRegExp;
-    int m_statusFilter = -1;
+    FindDialog::FindOptions m_findOptions;
+    int m_findStatusFilter = -1;
     DataModel::FindLocation m_findWhere;
 
     TranslateDialog *m_translateDialog;

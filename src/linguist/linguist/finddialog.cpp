@@ -100,9 +100,12 @@ void FindDialog::emitFindNext()
                 (comments->isChecked() ? DataModel::Comments : 0));
     else
         where = DataModel::Translations;
-    emit findNext(led->text(), where, matchCase->isChecked(), ignoreAccelerators->isChecked(),
-                  skipObsolete->isChecked(), useRegExp->isChecked(),
-                  statusFilter->currentData().toInt());
+
+    FindOptions options((matchCase->isChecked() ? FindOption::MatchCase : 0) |
+                        (ignoreAccelerators->isChecked() ? FindDialog::IgnoreAccelerators : 0) |
+                        (skipObsolete->isChecked() ? FindDialog::SkipObsolete : 0) |
+                        (useRegExp->isChecked() ? FindDialog::UseRegExp : 0));
+    emit findNext(led->text(), where, options, statusFilter->currentData().toInt());
     led->selectAll();
 }
 

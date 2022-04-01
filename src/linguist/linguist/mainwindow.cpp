@@ -275,10 +275,6 @@ MainWindow::MainWindow()
     : QMainWindow(0, Qt::Window),
       m_assistantProcess(0),
       m_printer(0),
-      m_findMatchCase(Qt::CaseInsensitive),
-      m_findIgnoreAccelerators(true),
-      m_findSkipObsolete(false),
-      m_findUseRegExp(false),
       m_findWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
@@ -979,14 +975,15 @@ bool MainWindow::searchItem(DataModel::FindLocation where, const QString &search
 
     QString text = searchWhat;
 
-    if (m_findIgnoreAccelerators)
+    if (m_findOptions.testFlag(FindDialog::IgnoreAccelerators))
         // FIXME: This removes too much. The proper solution might be too slow, though.
         text.remove(QLatin1Char('&'));
 
-    if (m_findUseRegExp)
+    if (m_findOptions.testFlag(FindDialog::UseRegExp))
         return m_findDialog->getRegExp().match(text).hasMatch();
     else
-        return text.indexOf(m_findText, 0, m_findMatchCase) >= 0;
+        return text.indexOf(m_findText, 0, m_findOptions.testFlag(FindDialog::MatchCase)
+                            ? Qt::CaseSensitive : Qt::CaseInsensitive) >= 0;
 }
 
 void MainWindow::findAgain()
@@ -1003,10 +1000,11 @@ void MainWindow::findAgain()
         bool hadMessage = false;
         for (int i = 0; i < m_dataModel->modelCount(); ++i) {
             if (MessageItem *m = m_dataModel->messageItem(dataIndex, i)) {
-                if (m_statusFilter != -1 && m_statusFilter != m->type())
+                if (m_findStatusFilter != -1 && m_findStatusFilter != m->type())
                     continue;
 
-                if (m_findSkipObsolete && m->isObsolete())
+                if (m_findOptions.testFlag(FindDialog::SkipObsolete)
+                        && m->isObsolete())
                     continue;
 
                 bool found = true;
@@ -1780,20 +1778,16 @@ bool MainWindow::doNext(bool checkUnfinished)
 }
 
 void MainWindow::findNext(const QString &text, DataModel::FindLocation where,
-                          bool matchCase, bool ignoreAccelerators, bool skipObsolete, bool useRegExp,
-                          int statusFilter)
+                          FindDialog::FindOptions options, int statusFilter)
 {
     if (text.isEmpty())
         return;
     m_findText = text;
     m_findWhere = where;
-    m_findMatchCase = matchCase ? Qt::CaseSensitive : Qt::CaseInsensitive;
-    m_findIgnoreAccelerators = ignoreAccelerators;
-    m_findSkipObsolete = skipObsolete;
-    m_findUseRegExp = useRegExp;
-    m_statusFilter = statusFilter;
-    if (m_findUseRegExp) {
-        m_findDialog->getRegExp().setPatternOptions(matchCase
+    m_findOptions = options;
+    m_findStatusFilter = statusFilter;
+    if (options.testFlag(FindDialog::UseRegExp)) {
+        m_findDialog->getRegExp().setPatternOptions(options.testFlag(FindDialog::MatchCase)
                                                     ? QRegularExpression::NoPatternOption
                                                     : QRegularExpression::CaseInsensitiveOption);
     }
