@@ -3,12 +3,12 @@
     <examples>
         <example docUrl="qthelp://org.qt-project.test.001/test/test-cmaketest-example.html" imageUrl="qthelp://org.qt-project.test.001/test/images/leonardo-da-vinci.png" isTest="true" name="CMake Example Project" projectPath="test/cmaketest/CMakeLists.txt">
             <description><![CDATA[No description available]]></description>
-            <tags>cmake,project,test</tags>
+            <tags>test</tags>
             <fileToOpen mainFile="true">test/cmaketest/main.cpp</fileToOpen>
         </example>
         <example docUrl="qthelp://org.qt-project.test.001/test/test-componentset-example.html" isTest="true" name="QML Documentation Example" projectPath="tutorials/componentset/componentset.pro">
             <description><![CDATA[Example for documenting QML types.]]></description>
-            <tags>documentation,qml,sample,test</tags>
+            <tags>sample,test</tags>
             <fileToOpen mainFile="true">tutorials/componentset/componentset.qml</fileToOpen>
         </example>
     </examples>

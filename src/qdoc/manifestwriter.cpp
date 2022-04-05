@@ -266,8 +266,6 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
         warnAboutUnusedAttributes(usedAttributes.keys(), example);
         writeDescription(&writer, example);
         addWordsFromModuleNamesAsTags();
-        addTitleWordsToTags(example);
-        cleanUpTags();
         writeTagsElement(&writer);
 
         const QString exampleName = example->name().mid(example->name().lastIndexOf('/') + 1);
@@ -300,45 +298,6 @@ void ManifestWriter::writeTagsElement(QXmlStreamWriter *writer)
     sortedTags.sort();
     writer->writeCharacters(sortedTags.join(","));
     writer->writeEndElement(); // tags
-}
-
-/*!
-    \internal
-
-    Clean up tags, exclude invalid and common words.
- */
-void ManifestWriter::cleanUpTags()
-{
-    QSet<QString> cleanedTags;
-
-    for (auto tag : m_tags) {
-        // strip punctuation characters from start and end
-        while (!tag.isEmpty() && tag.at(0).isPunct())
-            tag.remove(0, 1);
-        while (!tag.isEmpty() && tag.back().isPunct())
-            tag.chop(1);
-
-        if (tag.length() < 2 || tag.at(0).isDigit()
-            || tag == QLatin1String("qt") || tag == QLatin1String("the")
-            || tag == QLatin1String("and") || tag == QLatin1String("doc")
-            || tag.startsWith(QLatin1String("example")) || tag.startsWith(QLatin1String("chapter")))
-            continue;
-        cleanedTags << tag;
-    }
-    m_tags = cleanedTags;
-}
-
-/*!
-    \internal
-
-    Add the example's title as tags.
- */
-void ManifestWriter::addTitleWordsToTags(const ExampleNode *example)
-{
-    Q_ASSERT(example);
-
-    const auto &titleWords = example->title().toLower().split(QLatin1Char(' '));
-    m_tags += QSet<QString>(titleWords.cbegin(), titleWords.cend());
 }
 
 /*!
