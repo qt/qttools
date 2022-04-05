@@ -24,6 +24,7 @@ qt_internal_add_tool(${target_name}
     SOURCES
         aggregate.cpp
         atom.cpp
+        boundaries/filesystem/directorypath.cpp
         clangcodeparser.cpp
         classnode.cpp
         codechunk.cpp
