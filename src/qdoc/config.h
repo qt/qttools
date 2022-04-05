@@ -120,6 +120,17 @@ public:
 
     enum PathFlags : unsigned char {
         None = 0x0,
+        // TODO: [unenforced-unclear-validation]
+        // The Validate flag is used, for example, during the retrival
+        // of paths in getCanonicalPathList.
+        // It is unclear what kind of validation it performs, if any,
+        // and when this validation is required.
+        // Instead, remove this kind of flag and ensure that any
+        // amount of required validation is performed during the
+        // parsing step, if possilbe, and only once.
+        // Furthemore, ensure any such validation removes some
+        // uncertainty on dependent subsystems, moving constraints to
+        // preconditions and expressing them at the API boundaries.
         Validate = 0x1,
         IncludePaths = 0x2
     };
@@ -172,10 +183,6 @@ public:
                                     const QSet<QString> &excludedFiles = QSet<QString>());
     static QString findFile(const Location &location, const QStringList &files,
                             const QStringList &dirs, const QString &fileName,
-                            QString *userFriendlyFilePath = nullptr);
-    static QString findFile(const Location &location, const QStringList &files,
-                            const QStringList &dirs, const QString &fileBase,
-                            const QStringList &fileExtensions,
                             QString *userFriendlyFilePath = nullptr);
     static QString copyFile(const Location &location, const QString &sourceFilePath,
                             const QString &userFriendlySourceFilePath,

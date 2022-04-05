@@ -61,6 +61,8 @@ QT_BEGIN_NAMESPACE
 
 bool HtmlGenerator::s_inUnorderedList { false };
 
+HtmlGenerator::HtmlGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
+
 static void addLink(const QString &linkTarget, QStringView nestedStuff, QString *res)
 {
     if (!linkTarget.isEmpty()) {
@@ -140,10 +142,6 @@ void HtmlGenerator::initializeGenerator()
 
     Generator::initializeGenerator();
     config = &Config::instance();
-    setImageFileExtensions(QStringList() << "png"
-                                         << "jpg"
-                                         << "jpeg"
-                                         << "gif");
 
     /*
       The formatting maps are owned by Generator. They are cleared in
@@ -281,20 +279,20 @@ void HtmlGenerator::generateDocs()
 /*!
   Generate an html file with the contents of a C++ or QML source file.
  */
-void HtmlGenerator::generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker)
+void HtmlGenerator::generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = en->fullTitle();
 
-    beginFilePage(en, linkForExampleFile(file));
+    beginFilePage(en, linkForExampleFile(resolved_file.get_query()));
     generateHeader(fullTitle, en, marker);
     generateTitle(fullTitle, Text() << en->subtitle(), subTitleSize, en, marker);
 
     Text text;
     Quoter quoter;
-    Doc::quoteFromFile(en->doc().location(), quoter, file);
+    Doc::quoteFromFile(en->doc().location(), quoter, resolved_file);
     QString code = quoter.quoteTo(en->location(), QString(), QString());
-    CodeMarker *codeMarker = CodeMarker::markerForFileName(file);
+    CodeMarker *codeMarker = CodeMarker::markerForFileName(resolved_file.get_path());
     text << Atom(codeMarker->atomType(), code);
     Atom a(codeMarker->atomType(), code);
 
@@ -618,28 +616,62 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         break;
     case Atom::Image:
     case Atom::InlineImage: {
-        QString fileName = imageFileName(relative, atom->string());
         QString text;
         if (atom->next() != nullptr)
             text = atom->next()->string();
         if (atom->type() == Atom::Image)
             out() << "<p class=\"centerAlign\">";
-        if (fileName.isEmpty()) {
+
+        auto maybe_resolved_file{file_resolver.resolve(atom->string())};
+        if (!maybe_resolved_file) {
+            // TODO: [uncentralized-admonition]
             relative->location().warning(
                     QStringLiteral("Missing image: %1").arg(protectEnc(atom->string())));
             out() << "<font color=\"red\">[Missing image " << protectEnc(atom->string())
                   << "]</font>";
         } else {
-            QString prefix;
-            out() << "<img src=\"" << protectEnc(prefix + fileName) << '"';
+            ResolvedFile file{*maybe_resolved_file};
+            QString file_name{QFileInfo{file.get_path()}.fileName()};
+
+            // TODO: [operation-can-fail-making-the-output-incorrect]
+            // The operation of copying the file can fail, making the
+            // output refer to an image that does not exist.
+            // This should be fine as HTML will take care of managing
+            // the rendering of a missing image, but what html will
+            // render is in stark contrast with what we do when the
+            // image does not exist at all.
+            // It may be more correct to unify the behavior between
+            // the two either by considering images that cannot be
+            // copied as missing or letting the HTML renderer
+            // always taking care of the two cases.
+            // Do notice that effectively doing this might be
+            // unnecessary as extracting the output directory logic
+            // should ensure that a safe assumption for copy should be
+            // made at the API boundary.
+
+            // TODO: [uncentralized-output-directory-structure]
+            Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
+
+            // TODO: [uncentralized-output-directory-structure]
+            out() << "<img src=\"" << "images/" + protectEnc(file_name) << '"';
+
+            // TODO: [same-result-branching]
+            // If text is empty protectEnc should return the empty
+            // string itself, such that the two branches would still
+            // result in the same output.
+            // Ensure that this is the case and then flatten the branch if so.
             if (!text.isEmpty())
                 out() << " alt=\"" << protectEnc(text) << '"';
             else
                 out() << " alt=\"\"";
+
             out() << " />";
-            m_helpProjectWriter->addExtraFile(fileName);
-            setImageFileName(relative, fileName);
+
+            // TODO: [uncentralized-output-directory-structure]
+            m_helpProjectWriter->addExtraFile("images/" + file_name);
+            setImageFileName(relative, "images/" + file_name);
         }
+
         if (atom->type() == Atom::Image)
             out() << "</p>";
     } break;

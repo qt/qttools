@@ -46,6 +46,9 @@
 #include "tree.h"
 #include "webxmlgenerator.h"
 
+#include "filesystem/fileresolver.hpp"
+#include "boundaries/filesystem/directorypath.hpp"
+
 #include <QtCore/qdatetime.h>
 #include <QtCore/qdebug.h>
 #include <QtCore/qglobal.h>
@@ -282,6 +285,112 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc).noquote() << "Arguments:" << QCoreApplication::arguments();
     }
 
+    // <<TODO: [cleanup-temporary-kludges]
+    // The underlying validation should be performed at the
+    // configuration level during parsing.
+    // This cannot be done straightforwardly with how the Config class
+    // is implemented.
+    // When the Config class will be deprived of logic and
+    // restructured, the compiler will notify us of this kludge, but
+    // remember to reevaluate the code itself considering the new
+    // data-flow and the possibility for optimizations as this is not
+    // done for temporary code. Indeed some of the code is visibly wasteful.
+    // Similarly, ensure that the loose definition that we use here is
+    // not preserved.
+
+    QStringList search_directories{config.getCanonicalPathList(CONFIG_EXAMPLEDIRS)};
+    QStringList image_search_directories{config.getCanonicalPathList(CONFIG_IMAGEDIRS)};
+
+    const auto &excludedDirList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
+    QSet<QString> excludedDirs = QSet<QString>(excludedDirList.cbegin(), excludedDirList.cend());
+    const auto &excludedFilesList = config.getCanonicalPathList(CONFIG_EXCLUDEFILES);
+    QSet<QString> excludedFiles =
+            QSet<QString>(excludedFilesList.cbegin(), excludedFilesList.cend());
+
+    qCDebug(lcQdoc, "Adding doc/image dirs found in exampledirs to imagedirs");
+    QSet<QString> exampleImageDirs;
+    QStringList exampleImageList = config.getExampleImageFiles(excludedDirs, excludedFiles);
+    for (const auto &image : exampleImageList) {
+        if (image.contains("doc/images")) {
+            QString t = image.left(image.lastIndexOf("doc/images") + 10);
+            if (!exampleImageDirs.contains(t))
+                exampleImageDirs.insert(t);
+        }
+    }
+
+    // REMARK: The previous system discerned between search directories based on the kind of file that was searched for.
+    // For example, an image search was bounded to some directories
+    // that may or may not be the same as the ones where examples are
+    // searched for.
+    // The current Qt documentation does not use this feature. That
+    // is, the output of QDoc when a unified search list is used is
+    // the same as the output for that of separated lists.
+    // For this reason, we currently simplify the process, albeit this
+    // may at some point change, by joining the various lists into a
+    // single search list and a unified interface.
+    // Do note that the configuration still allows for those
+    // parameters to be user defined in a split-way as this will not
+    // be able to be changed until Config itself is looked upon.
+    // Hence, we join the various directory sources into one list for the time being.
+    // Do note that this means that the amount of searched directories for a file is now increased.
+    // This shouldn't matter as the amount of directories is expected
+    // to be generally small and the search routine complexity is
+    // linear in the amount of directories.
+    // There are some complications that may arise in very specific
+    // cases by this choice (some of which where there before under
+    // possibly different circumstances), making some files
+    // unreachable.
+    // See the remarks in FileResolver for more infomration.
+    std::copy(image_search_directories.begin(), image_search_directories.end(), std::back_inserter(search_directories));
+    std::copy(exampleImageDirs.begin(), exampleImageDirs.end(), std::back_inserter(search_directories));
+
+    std::vector<DirectoryPath> validated_search_directories{};
+    for (const QString& path : search_directories) {
+        auto maybe_validated_path{DirectoryPath::refine(path)};
+        if (!maybe_validated_path)
+            // TODO: [uncentralized-admonition]
+            qCDebug(lcQdoc).noquote() << u"%1 is not a valid path, it will be ignored when resolving a file"_qs.arg(path);
+        else validated_search_directories.push_back(*maybe_validated_path);
+    }
+
+    // TODO>>
+
+    FileResolver file_resolver{std::move(validated_search_directories)};
+
+    // REMARK: The constructor for generators doesn't actually perform
+    // initialization of their content.
+    // Indeed, Generators use the general antipattern of the static
+    // initialize-terminate non-scoped mutable state that we see in
+    // many parts of QDoc.
+    // In their constructor, Generators mainly register themselves into a static list.
+    // Previously, this was done at the start of main.
+    // To be able to pass a correct FileResolver or other systems, we
+    // need to construct them after the configuration has been read
+    // and has been destructured.
+    // For this reason, their construction was moved here.
+    // This function may be called more than once for some of QDoc's
+    // call, albeit this should not actually happen in Qt's
+    // documentation.
+    // Then, constructing the generators here might provide for some
+    // unexpected behavior as new generators are appended to the list
+    // and never used, considering that the list is searched in a
+    // linearly fashion and each generator of some type T, in the
+    // current codebase, will always be found if another instance of
+    // that same type would have been found.
+    // Furthermore, those instances would be destroyed by then, such
+    // that accessing them would be erroneous.
+    // To avoid this, the static list was made to be cleared in
+    // Generator::terminate, which, in theory, will be called before
+    // the generators will be constructed again.
+    // We could have used the initialize method for this, but this
+    // would force us into a limited and more complex semantic, see an
+    // example of this in DocParser, and would restrain us further to
+    // the initialize-terminate idiom which is expect to be purged in
+    // the future.
+    HtmlGenerator htmlGenerator{file_resolver};
+    WebXMLGenerator webXMLGenerator{file_resolver};
+    DocBookGenerator docBookGenerator{file_resolver};
+
     /*
       Initialize all the classes and data structures with the
       qdoc configuration. This is safe to do for each qdocconf
@@ -294,7 +403,7 @@ static void processQdocconfFile(const QString &fileName)
     CodeMarker::initialize();
     CodeParser::initialize();
     Generator::initialize();
-    Doc::initialize();
+    Doc::initialize(file_resolver);
 
 #ifndef QT_NO_TRANSLATION
     /*
@@ -384,24 +493,6 @@ static void processQdocconfFile(const QString &fileName)
         root->tree()->setIndexTitle(
                 config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE, title));
     }
-
-    const auto &excludedDirList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
-    QSet<QString> excludedDirs = QSet<QString>(excludedDirList.cbegin(), excludedDirList.cend());
-    const auto &excludedFilesList = config.getCanonicalPathList(CONFIG_EXCLUDEFILES);
-    QSet<QString> excludedFiles =
-            QSet<QString>(excludedFilesList.cbegin(), excludedFilesList.cend());
-
-    qCDebug(lcQdoc, "Adding doc/image dirs found in exampledirs to imagedirs");
-    QSet<QString> exampleImageDirs;
-    QStringList exampleImageList = config.getExampleImageFiles(excludedDirs, excludedFiles);
-    for (const auto &image : exampleImageList) {
-        if (image.contains("doc/images")) {
-            QString t = image.left(image.lastIndexOf("doc/images") + 10);
-            if (!exampleImageDirs.contains(t))
-                exampleImageDirs.insert(t);
-        }
-    }
-    Generator::augmentImageDirs(exampleImageDirs);
 
     if (config.dualExec() || config.preparing()) {
         QStringList headerList;
@@ -562,10 +653,6 @@ int main(int argc, char **argv)
     CppCodeMarker cppMarker;
     JsCodeMarker jsMarker;
     QmlCodeMarker qmlMarker;
-
-    HtmlGenerator htmlGenerator;
-    WebXMLGenerator webXMLGenerator;
-    DocBookGenerator docBookGenerator;
 
     Config::instance().init(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());
     Config &config = Config::instance();

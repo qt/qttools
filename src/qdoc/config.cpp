@@ -595,6 +595,20 @@ QStringList Config::getStringList(const QString &var) const
     return result;
 }
 
+// TODO: [late-canonicalization][pod-configuration]
+// The canonicalization for paths is done at the time where they are
+// required, and done each time they are requested.
+// Instead, config should be parsed to an intermediate format that is
+// a POD type that already contains canonicalized representations for
+// each element.
+// Those representations should provide specific guarantees about
+// their format and be representable at the API boundaries.
+//
+// This would ensure that the correct canonicalization is always
+// applied, is applied only once and that dependent sub-logics can be
+// written in a way that doesn't require branching or futher
+// canonicalization.
+
 /*!
    Returns a path list where all paths from the config variable \a var
    are canonicalized. If \a flags contains \c Validate, outputs a warning
@@ -801,6 +815,13 @@ QStringList Config::getExampleImageFiles(const QSet<QString> &excludedDirs,
     return result;
 }
 
+// TODO: [misplaced-logic][examples][pod-configuration]
+// The definition of how an example is structured and how to find its
+// components should not be part of Config or, for that matter,
+// CppCodeParser, which is the actual caller of this method.
+// Move this method to a more appropriate place as soon as a suitable
+// place is available for it.
+
 /*!
     Returns the path to the project file for \a examplePath, or an empty string
     if no project file was found.
@@ -826,6 +847,24 @@ QString Config::getExampleProjectFile(const QString &examplePath)
 
     return projectFile;
 }
+
+// TODO: [pod-configuration]
+// Remove findFile completely from the configuration.
+// External usages of findFile were already removed but a last caller
+// of this method exists internally to Config in
+// `getExampleProjectFile`.
+// That method has to be removed at some point and this method should
+// go with it.
+// Do notice that FileResolver is the replacement for findFile but it
+// is designed, for now, with a scope that does only care about the
+// usages of findFile that are outside the Config class.
+// More specifically, it was designed to replace only the uses of
+// findFile that deal with user provided queries or queries related to
+// that.
+// The logic that is used internally in Config is the same, but has a
+// different conceptual meaning.
+// When findFile is permanently removed, it must be considered whether
+// FileResolver itself should be used for the same logic or not.
 
 /*!
   \a fileName is the path of the file to find.
@@ -872,6 +911,13 @@ QString Config::findFile(const Location &location, const QStringList &files,
     if (!fileInfo.exists())
         return QString();
 
+    // <<REMARK: This is actually dead code. It is unclear what it tries
+    // to do and why but its usage is unnecessary in the current
+    // codebase.
+    // Indeed, the whole concept of the "userFriendlyFilePath" is
+    // removed for file searching.
+    // It will be removed directly with the whole of findFile, but it
+    // should not be considered anymore until then.
     if (userFriendlyFilePath) {
         for (auto c = components.constBegin();;) {
             bool isArchive = (c != components.constEnd() - 1);
@@ -879,6 +925,7 @@ QString Config::findFile(const Location &location, const QStringList &files,
 
             if (isArchive) {
                 QString extracted = m_extractedDirs[fileInfo.filePath()];
+
                 ++c;
                 fileInfo.setFile(QDir(extracted), *c);
             } else {
@@ -888,23 +935,22 @@ QString Config::findFile(const Location &location, const QStringList &files,
             userFriendlyFilePath->append(QLatin1Char('?'));
         }
     }
+    // REMARK>>
+
     return fileInfo.filePath();
 }
 
-/*!
- */
-QString Config::findFile(const Location &location, const QStringList &files,
-                         const QStringList &dirs, const QString &fileBase,
-                         const QStringList &fileExtensions, QString *userFriendlyFilePath)
-{
-    for (const auto &extension : fileExtensions) {
-        QString filePath = findFile(location, files, dirs, fileBase + QLatin1Char('.') + extension,
-                                    userFriendlyFilePath);
-        if (!filePath.isEmpty())
-            return filePath;
-    }
-    return findFile(location, files, dirs, fileBase, userFriendlyFilePath);
-}
+// TODO: [pod-configuration]
+// An intermediate representation for the configuration should only
+// contain data that will later be destructured into subsystem that
+// care about specific subsets of the configuration and can carry that
+// information with them, uniquely.
+// Remove copyFile, moving it into whatever will have the unique
+// resposability of knowing how to build an output directory for a
+// QDoc execution.
+// Should copy file being used for not only copying file to the build
+// output directory, split its responsabilities into smaller elements
+// instead of forcing the logic together.
 
 /*!
   Copies the \a sourceFilePath to the file name constructed by
@@ -916,6 +962,15 @@ QString Config::findFile(const Location &location, const QStringList &files,
 QString Config::copyFile(const Location &location, const QString &sourceFilePath,
                          const QString &userFriendlySourceFilePath, const QString &targetDirPath)
 {
+    // TODO: A copying operation should only be performed on files
+    // that we assume to be available. Ensure that this is true at the
+    // API boundary and bubble up the error checking and reporting to
+    // call-site users. Possibly this will be as simple as
+    // ResolvedFile, but could not be done at the time of the introduction of
+    // that type as we first need to encapsulate the logic for
+    // copying files into an appropriate subsystem and have a better
+    // understanding of call-site usages.
+
     QFile inFile(sourceFilePath);
     if (!inFile.open(QFile::ReadOnly)) {
         location.warning(QStringLiteral("Cannot open input file for copy: '%1': %2")
@@ -923,20 +978,60 @@ QString Config::copyFile(const Location &location, const QString &sourceFilePath
         return QString();
     }
 
-    QString outFileName = userFriendlySourceFilePath;
-    qsizetype slash = outFileName.lastIndexOf(QLatin1Char('/'));
-    if (slash != -1)
-        outFileName = outFileName.mid(slash);
-    if ((outFileName.size()) > 0 && (outFileName[0] != '/'))
-        outFileName = targetDirPath + QLatin1Char('/') + outFileName;
-    else
-        outFileName = targetDirPath + outFileName;
+    // TODO: [non-canonical-representation]
+    // Similar to other part of QDoc, we do a series of non-intuitive
+    // checks to canonicalize some multi-format parameter into
+    // something we can use.
+    // Understand which of those formats are actually in use and
+    // provide a canonicalized version that can be requested at the
+    // API boundary to ensure that correct formatting is used.
+    // If possible, gradually bubble up the canonicalization until a
+    // single entry-point in the program exists where the
+    // canonicalization can be processed to avoid complicating
+    // intermediate steps.
+    // ADDENDUM 1: At least one usage of this seems to depend on the
+    // processing done for files coming from
+    // Generator::copyTemplateFile, which are expressed as absolute
+    // paths. This seems to be the only usage that is currently
+    // needed, hence a temporary new implementation is provided that
+    // only takes this case into account.
+    // Do notice that we assume that in this case we always want a
+    // flat structure, that is, we are copying the file as a direct
+    // child of the target directory.
+    // Nonetheless, it is possible that this case will not be needed,
+    // such that it can be removed later on, or that it will be nedeed
+    // in multiple places such that an higher level interface for it
+    // should be provided.
+    // Furthermoe, it might be possible that there is an edge case
+    // that is now not considered, as it is unknown, that was
+    // considered before.
+    // As it is now unclear what kind of paths are used here, what
+    // format they have, why they are used and why they have some
+    // specific format, further processing is avoided but a more
+    // torough overview of what should is needed must be done when
+    // more information are gathered and this function is extracted
+    // away from config.
+
+    QString outFileName{userFriendlySourceFilePath};
+    QFileInfo outFileNameInfo{userFriendlySourceFilePath};
+    if (outFileNameInfo.isAbsolute())
+        outFileName = outFileNameInfo.fileName();
+
+    outFileName = targetDirPath + "/" + outFileName;
+
     QFile outFile(outFileName);
     if (!outFile.open(QFile::WriteOnly)) {
+        // TODO: [uncrentralized-warning]
         location.warning(QStringLiteral("Cannot open output file for copy: '%1': %2")
                                  .arg(outFileName, outFile.errorString()));
         return QString();
     }
+
+    // TODO: There shouldn't be any particular advantage to copying
+    // the file by readying its content and writing it compared to
+    // asking the underlying system to do the copy for us.
+    // Consider simplifying this part by avoiding doing the manual
+    // work ourselves.
 
     char buffer[1024];
     qsizetype len;
@@ -1265,6 +1360,8 @@ QStringList Config::getFilesHere(const QString &uncleanDir, const QString &nameF
                                  const Location &location, const QSet<QString> &excludedDirs,
                                  const QSet<QString> &excludedFiles)
 {
+    // TODO: Understand why location is used to branch the
+    // canonicalization and why the two different methods are used.
     QString dir =
             location.isEmpty() ? QDir::cleanPath(uncleanDir) : QDir(uncleanDir).canonicalPath();
     QStringList result;
@@ -1278,6 +1375,8 @@ QStringList Config::getFilesHere(const QString &uncleanDir, const QString &nameF
     dirInfo.setFilter(QDir::Files);
     QStringList fileNames = dirInfo.entryList();
     for (const auto &file : qAsConst(fileNames)) {
+        // TODO: Understand if this is needed and, should it be, if it
+        // is indeed the only case that should be considered.
         if (!file.startsWith(QLatin1Char('~'))) {
             QString s = dirInfo.filePath(file);
             QString c = QDir::cleanPath(s);

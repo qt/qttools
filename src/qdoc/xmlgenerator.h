@@ -32,6 +32,7 @@
 
 #include "node.h"
 #include "generator.h"
+#include "filesystem/fileresolver.hpp"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qstring.h>
@@ -41,7 +42,7 @@ QT_BEGIN_NAMESPACE
 class XmlGenerator : public Generator
 {
 public:
-    explicit XmlGenerator() = default;
+    explicit XmlGenerator(FileResolver& file_resolver);
 
 protected:
     QHash<QString, QString> refMap;

@@ -33,6 +33,7 @@
 #include "codemarker.h"
 #include "config.h"
 #include "xmlgenerator.h"
+#include "filesystem/fileresolver.hpp"
 
 #include <QtCore/qhash.h>
 #include <QtCore/qxmlstream.h>
@@ -46,7 +47,7 @@ class FunctionNode;
 class DocBookGenerator : public XmlGenerator
 {
 public:
-    explicit DocBookGenerator() = default;
+    explicit DocBookGenerator(FileResolver& file_resolver);
 
     void initializeGenerator() override;
     QString format() override;
@@ -129,7 +130,7 @@ private:
     void generateClassHierarchy(const Node *relative, NodeMultiMap &classMap);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative);
-    void generateExampleFilePage(const Node *en, const QString &file) override;
+    void generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker* = nullptr) override;
     void generateOverloadedSignal(const Node *node);
     bool generateQmlText(const Text &text, const Node *relative) override;
     void generateRequiredLinks(const Node *node);

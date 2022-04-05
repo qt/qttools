@@ -43,7 +43,7 @@ class Aggregate;
 class WebXMLGenerator : public HtmlGenerator, public IndexSectionWriter
 {
 public:
-    WebXMLGenerator() = default;
+    WebXMLGenerator(FileResolver& file_resolver);
 
     void initializeGenerator() override;
     void terminateGenerator() override;
@@ -56,7 +56,7 @@ protected:
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateDocumentation(Node *node) override;
-    void generateExampleFilePage(const Node *en, const QString &file, CodeMarker *marker) override;
+    void generateExampleFilePage(const Node *en, ResolvedFile file, CodeMarker *marker = nullptr) override;
     [[nodiscard]] QString fileExtension() const override;
 
     virtual const Atom *addAtomElements(QXmlStreamWriter &writer, const Atom *atom,

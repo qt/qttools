@@ -35,6 +35,8 @@
 #include "openedlist.h"
 #include "quoter.h"
 
+#include "filesystem/fileresolver.hpp"
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/qglobalstatic.h>
 #include <QtCore/qhash.h>
@@ -53,7 +55,7 @@ public:
     void parse(const QString &source, DocPrivate *docPrivate, const QSet<QString> &metaCommandSet,
                const QSet<QString> &possibleTopics);
 
-    static void initialize(const Config &config);
+    static void initialize(const Config &config, FileResolver& file_resolver);
     static void terminate();
     static int endCmdFor(int cmd);
     static QString cmdName(int cmd);
@@ -63,10 +65,6 @@ public:
     static QString dedent(int level, const QString &str);
 
     static int s_tabSize;
-    static QStringList s_exampleFiles;
-    static QStringList s_exampleDirs;
-    static QStringList s_sourceFiles;
-    static QStringList s_sourceDirs;
     static QStringList s_ignoreWords;
     static bool s_quoting;
 
@@ -95,7 +93,7 @@ private:
     void leaveValue();
     void leaveValueList();
     void leaveTableRow();
-    CodeMarker *quoteFromFile();
+    void quoteFromFile(const QString& filename);
     bool expandMacro();
     void expandMacro(const QString &name, const QString &def, int numParams);
     QString expandMacroToString(const QString &name, const QString &def, int numParams,
@@ -154,6 +152,42 @@ private:
     Atom *m_lastAtom { nullptr };
 
     static DocUtilities &s_utilities;
+
+    // KLUDGE: When parsing documentation, there is a need to find
+    // files to resolve quoting commands. Ideally, the system that
+    // takes care of this would be a non-static member that is a
+    // reference that is passed at
+    // construction time.
+    // Nonetheless, with how the current codebase is constructed, this
+    // has proven to be extremely difficult until more changes are
+    // done. In particular, the construction of a DocParser happens in
+    // multiple places at multiple depths and, in particular, happens
+    // in one of Doc's constructor.
+    // Doc itself is built, again, in multiple places at multiple
+    // depths, making it clumsy and sometimes infeasible to pass the
+    // dependency around so that it is available at the required
+    // places. In particular, this stems from the fact that Doc is
+    // holding many responsabilities and is spread troughtout much of
+    // the codebase in different ways. DocParser mostly depends on Doc
+    // and Doc currently depends on DocParser, making the two
+    // difficult to separate.
+    //
+    // In the future, we expect Doc to mostly be removed, such as to
+    // remove this dependencies and the parsing of documentation to
+    // happen near main and atomically from other endevours, producing
+    // an intermediate representation that is consumed by later
+    // phases.
+    // At that point, it should be possible to not have this kind of
+    // indirection while, for now, the only accessible way to pass
+    // this dependency is trough the initialize method which passes
+    // for Doc::initialize.
+    //
+    // Furthemore, as we cannot late-bind a reference, and having a
+    // desire to avoid an unnecessary copy, we are thus forced to use
+    // a different storage method, in this case a pointer.
+    // This too should be removed later on, using reference or move
+    // semantic depending on the required data-flow.
+    static FileResolver* file_resolver;
 };
 QT_END_NAMESPACE
 

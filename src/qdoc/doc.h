@@ -30,9 +30,11 @@
 #define DOC_H
 
 #include "location.h"
-
 #include "docutilities.h"
 #include "topic.h"
+
+#include "filesystem/fileresolver.hpp"
+#include "boundaries/filesystem/resolvedfile.hpp"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qset.h>
@@ -96,14 +98,11 @@ public:
     [[nodiscard]] const QList<Atom *> &targets() const;
     [[nodiscard]] QStringMultiMap *metaTagMap() const;
 
-    static void initialize();
+    static void initialize(FileResolver& file_resolver);
     static void terminate();
     static QString alias(const QString &english);
     static void trimCStyleComment(Location &location, QString &str);
-    static QString resolveFile(const Location &location, const QString &fileName,
-                               QString *userFriendlyFilePath = nullptr);
-    static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter,
-                                     const QString &fileName);
+    static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter, ResolvedFile resolved_file);
     static QString canonicalTitle(const QString &title);
 
 private:

@@ -62,6 +62,8 @@ QT_BEGIN_NAMESPACE
 static const char dbNamespace[] = "http://docbook.org/ns/docbook";
 static const char xlinkNamespace[] = "http://www.w3.org/1999/xlink";
 
+DocBookGenerator::DocBookGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
+
 inline void DocBookGenerator::newLine()
 {
     m_writer->writeCharacters("\n");
@@ -460,12 +462,32 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         break;
     case Atom::Image: // mediaobject
     case Atom::InlineImage: { // inlinemediaobject
+        // TODO: [generator-insufficient-structural-abstraction]
+        // The structure of the computations for this part of the
+        // docbook generation and the same parts in other format
+        // generators is the same.
+        //
+        // The difference, instead, lies in what the generated output
+        // is like. A correct abstraction for a generator would take
+        // this structural equivalence into account and encapsulate it
+        // into a driver for the format generators.
+        //
+        // This would avoid the replication of content, and the
+        // subsequent friction for changes and desyncronization
+        // between generators.
+        //
+        // Review all the generators routines and find the actual
+        // skeleton that is shared between them, then consider it when
+        // extracting the logic for the generation phase.
         QString tag = atom->type() == Atom::Image ? "mediaobject" : "inlinemediaobject";
         m_writer->writeStartElement(dbNamespace, tag);
         newLine();
 
-        QString fileName = imageFileName(relative, atom->string());
-        if (fileName.isEmpty()) {
+        auto maybe_resolved_file{file_resolver.resolve(atom->string())};
+        if (!maybe_resolved_file) {
+            // TODO: [uncetnralized-admonition][failed-resolve-file]
+            relative->location().warning(QStringLiteral("Missing image: %1").arg(atom->string()));
+
             m_writer->writeStartElement(dbNamespace, "textobject");
             newLine();
             m_writer->writeStartElement(dbNamespace, "para");
@@ -476,18 +498,26 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeEndElement(); // textobject
             newLine();
         } else {
+            ResolvedFile file{*maybe_resolved_file};
+            QString file_name{QFileInfo{file.get_path()}.fileName()};
+
+            // TODO: [uncentralized-output-directory-structure]
+            QString output_file_name = Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
+
             if (atom->next() && !atom->next()->string().isEmpty())
                 m_writer->writeTextElement(dbNamespace, "alt", atom->next()->string());
 
             m_writer->writeStartElement(dbNamespace, "imageobject");
             newLine();
             m_writer->writeEmptyElement(dbNamespace, "imagedata");
-            m_writer->writeAttribute("fileref", fileName);
+            // TODO: [uncentralized-output-directory-structure]
+            m_writer->writeAttribute("fileref", "images/" + file_name);
             newLine();
             m_writer->writeEndElement(); // imageobject
             newLine();
 
-            setImageFileName(relative, fileName);
+            // TODO: [uncentralized-output-directory-structure]
+            setImageFileName(relative, "images/" + file_name);
         }
 
         m_writer->writeEndElement(); // [inline]mediaobject
@@ -2240,6 +2270,8 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
     newLine();
 }
 
+// TODO: [multi-purpose-function-with-flag][generate-file-list]
+
 /*!
   This function is called when the documentation for an example is
   being formatted. It outputs a list of files for the example, which
@@ -2249,6 +2281,16 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
 */
 void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 {
+
+    // TODO: [possibly-stale-duplicate-code][generator-insufficient-structural-abstraction]
+    // Review and compare this code with
+    // Generator::generateFileList.
+    // Some subtle changes that might be semantically equivalent are
+    // present between the two.
+    // Supposedly, this version is to be considered stale compared to
+    // Generator's one and it might be possible to remove it in favor
+    // of that as long as the difference in output are taken into consideration.
+
     // From Generator::generateFileList
     QString tag;
     QStringList paths;
@@ -2271,18 +2313,31 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 
     m_writer->writeStartElement(dbNamespace, "itemizedlist");
 
-    for (const auto &file : qAsConst(paths)) {
-        if (images) {
-            if (!file.isEmpty())
-                addImageToCopy(en, file);
-        } else {
-            generateExampleFilePage(en, file);
+    for (const auto &path : qAsConst(paths)) {
+        auto maybe_resolved_file{file_resolver.resolve(path)};
+        if (!maybe_resolved_file) {
+            // TODO: [uncentralized-admonition][failed-resolve-file]
+            QString details = std::transform_reduce(
+                file_resolver.get_search_directories().cbegin(),
+                file_resolver.get_search_directories().cend(),
+                u"Searched directories:"_qs,
+                std::plus(),
+                [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
+            );
+
+            en->location().warning(u"Cannot find file to quote from: %1"_qs.arg(path), details);
+
+            continue;
         }
+
+        auto file{*maybe_resolved_file};
+        if (images) addImageToCopy(en, file);
+        else        generateExampleFilePage(en, file);
 
         m_writer->writeStartElement(dbNamespace, "listitem");
         newLine();
         m_writer->writeStartElement(dbNamespace, "para");
-        generateSimpleLink(file, file);
+        generateSimpleLink(file.get_query(), file.get_query());
         m_writer->writeEndElement(); // para
         m_writer->writeEndElement(); // listitem
         newLine();
@@ -2295,24 +2350,27 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 /*!
   Generate a file with the contents of a C++ or QML source file.
  */
-void DocBookGenerator::generateExampleFilePage(const Node *node, const QString &file)
+void DocBookGenerator::generateExampleFilePage(const Node *node, ResolvedFile resolved_file, CodeMarker*)
 {
+    // TODO: [generator-insufficient-structural-abstraction]
+
     // From HtmlGenerator::generateExampleFilePage.
     if (!node->isExample())
         return;
 
+    // TODO: Understand if this is safe.
     const auto en = static_cast<const ExampleNode *>(node);
 
     // Store current (active) writer
     QXmlStreamWriter *currentWriter = m_writer;
-    m_writer = startDocument(en, file);
+    m_writer = startDocument(en, resolved_file.get_path());
     generateHeader(en->fullTitle(), en->subtitle(), en);
 
     Text text;
     Quoter quoter;
-    Doc::quoteFromFile(en->doc().location(), quoter, file);
+    Doc::quoteFromFile(en->doc().location(), quoter, resolved_file);
     QString code = quoter.quoteTo(en->location(), QString(), QString());
-    CodeMarker *codeMarker = CodeMarker::markerForFileName(file);
+    CodeMarker *codeMarker = CodeMarker::markerForFileName(resolved_file.get_path());
     text << Atom(codeMarker->atomType(), code);
     Atom a(codeMarker->atomType(), code);
     generateText(text, en);

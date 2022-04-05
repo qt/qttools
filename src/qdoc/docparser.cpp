@@ -41,6 +41,7 @@
 
 #include <cctype>
 #include <climits>
+#include <functional>
 
 QT_BEGIN_NAMESPACE
 
@@ -256,12 +257,10 @@ static struct
              { nullptr, 0, nullptr } };
 
 int DocParser::s_tabSize;
-QStringList DocParser::s_exampleFiles;
-QStringList DocParser::s_exampleDirs;
-QStringList DocParser::s_sourceFiles;
-QStringList DocParser::s_sourceDirs;
 QStringList DocParser::s_ignoreWords;
 bool DocParser::s_quoting = false;
+FileResolver* DocParser::file_resolver{nullptr};
+
 
 static QString cleanLink(const QString &link)
 {
@@ -271,13 +270,9 @@ static QString cleanLink(const QString &link)
     return link.mid(colonPos + 1).simplified();
 }
 
-void DocParser::initialize(const Config &config)
+void DocParser::initialize(const Config &config, FileResolver& file_resolver)
 {
     s_tabSize = config.getInt(CONFIG_TABSIZE);
-    s_exampleFiles = config.getCanonicalPathList(CONFIG_EXAMPLES);
-    s_exampleDirs = config.getCanonicalPathList(CONFIG_EXAMPLEDIRS);
-    s_sourceFiles = config.getCanonicalPathList(CONFIG_SOURCES);
-    s_sourceDirs = config.getCanonicalPathList(CONFIG_SOURCEDIRS);
     s_ignoreWords = config.getStringList(CONFIG_IGNOREWORDS);
 
     int i = 0;
@@ -295,15 +290,14 @@ void DocParser::initialize(const Config &config)
     for (const auto &format : config.getOutputFormats())
         DocParser::s_quoting = DocParser::s_quoting
                 || config.getBool(format + Config::dot + CONFIG_QUOTINGINFORMATION);
+
+    // KLUDGE: file_resolver is temporarily a pointer. See the
+    // comment for file_resolver in the header file for more context.
+    DocParser::file_resolver = &file_resolver;
 }
 
 void DocParser::terminate()
 {
-    s_exampleFiles.clear();
-    s_exampleDirs.clear();
-    s_sourceFiles.clear();
-    s_sourceDirs.clear();
-
     int i = 0;
     while (cmds[i].english) {
         delete cmds[i].alias;
@@ -872,8 +866,9 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_QUOTEFILE: {
                     leavePara();
+
                     QString fileName = getArgument();
-                    Doc::quoteFromFile(location(), m_quoter, fileName);
+                    quoteFromFile(fileName);
                     if (s_quoting) {
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, fileName);
@@ -889,7 +884,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         append(Atom::CodeQuoteCommand, cmdStr);
                         append(Atom::CodeQuoteArgument, arg);
                     }
-                    Doc::quoteFromFile(location(), m_quoter, arg);
+                    quoteFromFile(arg);
                     break;
                 }
                 case CMD_RAW:
@@ -985,7 +980,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         append(Atom::SnippetLocation, snippet);
                         append(Atom::SnippetIdentifier, identifier);
                     }
-                    marker = Doc::quoteFromFile(location(), m_quoter, snippet);
+                    marker = CodeMarker::markerForFileName(snippet);
+                    quoteFromFile(snippet);
                     appendToCode(m_quoter.quoteSnippet(location(), identifier), marker->atomType());
                     break;
                 }
@@ -1888,9 +1884,56 @@ void DocParser::leaveTableRow()
     }
 }
 
-CodeMarker *DocParser::quoteFromFile()
+void DocParser::quoteFromFile(const QString& filename)
 {
-    return Doc::quoteFromFile(location(), m_quoter, getArgument());
+    // KLUDGE: We dereference file_resolver as it is temporarily a pointer.
+    // See the comment for file_resolver in the header files for more context.
+    //
+    // We spefically dereference it, instead of using the arrow
+    // operator, to better represent that we do not consider this as
+    // an actual pointer, as it should not be.
+    //
+    // Do note that we are considering it informally safe to
+    // dereference the pointer, as we expect it to always hold a value
+    // at this point, but actual enforcement of this appears nowhere
+    // in the codebase.
+    auto maybe_resolved_file{(*file_resolver).resolve(filename)};
+    if (!maybe_resolved_file) {
+        // TODO: [uncentralized-admonition][failed-resolve-file]
+        // This warning is required in multiple places.
+        // To ensure the consistency of the warning and avoid
+        // duplicating code everywhere, provide a centralized effort
+        // where the warning message can be generated (but not
+        // issued).
+        // The current format is based on what was used before, review
+        // it when it is moved out.
+        QString details = std::transform_reduce(
+            (*file_resolver).get_search_directories().cbegin(),
+            (*file_resolver).get_search_directories().cend(),
+            u"Searched directories:"_qs,
+            std::plus(),
+            [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
+        );
+
+        location().warning(u"Cannot find file to quote from: %1"_qs.arg(filename), details);
+
+        // REMARK: The following is duplicated from
+        // Doc::quoteFromFile. If, for some reason (such as a file
+        // that is inaccessible), the quoting fails but, previously,
+        // the logic duplicated here was still run.
+        // This is not true anymore as quoteFromFile does require a
+        // resolved file to be run now.
+        // It is not entirely clear if this is required for the
+        // semantics of DocParser to be preserved, but for the sake of
+        // avoiding premature breakages this was retained.
+        // Do note that this should be considered temporary as the
+        // quoter state, if any will be preserved, should not be
+        // managed in such a spread and unlocal way.
+        m_quoter.reset();
+
+        CodeMarker *marker = CodeMarker::markerForFileName(QString{});
+        m_quoter.quoteFromFile(filename, QString{}, marker->markedUpCode(QString{}, nullptr, location()));
+    } else Doc::quoteFromFile(location(), m_quoter, *maybe_resolved_file);
 }
 
 /*!

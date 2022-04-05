@@ -43,6 +43,8 @@ QT_BEGIN_NAMESPACE
 
 static CodeMarker *marker_ = nullptr;
 
+WebXMLGenerator::WebXMLGenerator(FileResolver& file_resolver) : HtmlGenerator(file_resolver) {}
+
 void WebXMLGenerator::initializeGenerator()
 {
     HtmlGenerator::initializeGenerator();
@@ -119,35 +121,34 @@ void WebXMLGenerator::generatePageNode(PageNode *pn, CodeMarker * /* marker */)
     endSubPage();
 }
 
-void WebXMLGenerator::generateExampleFilePage(const Node *en, const QString &file,
-                                              CodeMarker * /* marker */)
+void WebXMLGenerator::generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker* /* marker */)
 {
+    // TODO: [generator-insufficient-structural-abstraction]
+
     QByteArray data;
     QXmlStreamWriter writer(&data);
     writer.setAutoFormatting(true);
-    beginFilePage(en, linkForExampleFile(file, "webxml"));
+    beginFilePage(en, linkForExampleFile(resolved_file.get_query(), "webxml"));
     writer.writeStartDocument();
     writer.writeStartElement("WebXML");
     writer.writeStartElement("document");
     writer.writeStartElement("page");
-    writer.writeAttribute("name", file);
-    writer.writeAttribute("href", linkForExampleFile(file));
-    QString title = exampleFileTitle(static_cast<const ExampleNode *>(en), file);
+    writer.writeAttribute("name", resolved_file.get_path());
+    writer.writeAttribute("href", linkForExampleFile(resolved_file.get_path()));
+    QString title = exampleFileTitle(static_cast<const ExampleNode *>(en), resolved_file.get_path());
     writer.writeAttribute("title", title);
     writer.writeAttribute("fulltitle", title);
-    writer.writeAttribute("subtitle", file);
+    writer.writeAttribute("subtitle", resolved_file.get_path());
     writer.writeStartElement("description");
 
     if (Config::instance().getBool(CONFIG_LOCATIONINFO)) {
-        QString userFriendlyFilePath; // unused
-        writer.writeAttribute("path",
-                              Doc::resolveFile(en->doc().location(), file, &userFriendlyFilePath));
+        writer.writeAttribute("path", resolved_file.get_path());
         writer.writeAttribute("line", "0");
         writer.writeAttribute("column", "0");
     }
 
     Quoter quoter;
-    Doc::quoteFromFile(en->doc().location(), quoter, file);
+    Doc::quoteFromFile(en->doc().location(), quoter, resolved_file);
     QString code = quoter.quoteTo(en->location(), QString(), QString());
     writer.writeTextElement("code", trimmedTrailing(code, QString(), QString()));
 
@@ -509,20 +510,56 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         writer.writeAttribute("contents", atom->string());
         writer.writeEndElement();
         break;
-    case Atom::Image:
-        writer.writeStartElement("image");
-        writer.writeAttribute("href", imageFileName(relative, atom->string()));
-        writer.writeEndElement();
-        setImageFileName(relative, atom->string());
-        break;
 
-    case Atom::InlineImage:
-        writer.writeStartElement("inlineimage");
-        writer.writeAttribute("href", imageFileName(relative, atom->string()));
-        writer.writeEndElement();
-        setImageFileName(relative, atom->string());
-        break;
+    // TODO: The other generators treat inlineimage and image
+    // simultaneously as the diffirences aren't big. It should be
+    // possible to do the same for webxmlgenerator instead of
+    // repeating the code.
 
+    // TODO: [generator-insufficient-structural-abstraction]
+    case Atom::Image: {
+        auto maybe_resolved_file{file_resolver.resolve(atom->string())};
+        if (!maybe_resolved_file) {
+            // TODO: [uncentralized-admonition][failed-resolve-file]
+            relative->location().warning(QStringLiteral("Missing image: %1").arg(atom->string()));
+        } else {
+            ResolvedFile file{*maybe_resolved_file};
+            QString file_name{QFileInfo{file.get_path()}.fileName()};
+
+            // TODO: [uncentralized-output-directory-structure]
+            Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
+
+            writer.writeStartElement("image");
+            // TODO: [uncentralized-output-directory-structure]
+            writer.writeAttribute("href", "images/" + file_name);
+            writer.writeEndElement();
+            // TODO: [uncentralized-output-directory-structure]
+            setImageFileName(relative, "images/" + file_name);
+        }
+        break;
+    }
+    // TODO: [generator-insufficient-structural-abstraction]
+    case Atom::InlineImage: {
+        auto maybe_resolved_file{file_resolver.resolve(atom->string())};
+        if (!maybe_resolved_file) {
+            // TODO: [uncentralized-admonition][failed-resolve-file]
+            relative->location().warning(QStringLiteral("Missing image: %1").arg(atom->string()));
+        } else {
+            ResolvedFile file{*maybe_resolved_file};
+            QString file_name{QFileInfo{file.get_path()}.fileName()};
+
+            // TODO: [uncentralized-output-directory-structure]
+            Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
+
+            writer.writeStartElement("inlineimage");
+            // TODO: [uncentralized-output-directory-structure]
+            writer.writeAttribute("href", "images/" + file_name);
+            writer.writeEndElement();
+            // TODO: [uncentralized-output-directory-structure]
+            setImageFileName(relative, "images/" + file_name);
+        }
+        break;
+    }
     case Atom::ImageText:
         break;
 
@@ -681,9 +718,22 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         if (m_quoting) {
             const QString &location = atom->string();
             writer.writeAttribute("location", location);
-            const QString resolved = Doc::resolveFile(Location(), location);
-            if (!resolved.isEmpty())
-                writer.writeAttribute("path", resolved);
+            auto maybe_resolved_file{file_resolver.resolve(location)};
+            // const QString resolved = Doc::resolveFile(Location(), location);
+            if (maybe_resolved_file)
+                writer.writeAttribute("path", (*maybe_resolved_file).get_path());
+            else {
+                // TODO: [uncetnralized-admonition][failed-resolve-file]
+                QString details = std::transform_reduce(
+                    file_resolver.get_search_directories().cbegin(),
+                    file_resolver.get_search_directories().cend(),
+                    u"Searched directories:"_qs,
+                    std::plus(),
+                    [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
+                );
+
+                relative->location().warning(u"Cannot find file to quote from: %1"_qs.arg(location), details);
+            }
         }
         break;
 
