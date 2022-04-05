@@ -26,6 +26,7 @@ qt_internal_add_tool(${target_name}
         atom.cpp
         boundaries/filesystem/directorypath.cpp
         boundaries/filesystem/filepath.cpp
+        boundaries/filesystem/resolvedfile.cpp
         clangcodeparser.cpp
         classnode.cpp
         codechunk.cpp
@@ -42,6 +43,7 @@ qt_internal_add_tool(${target_name}
         editdistance.cpp
         enumnode.cpp
         externalpagenode.cpp
+        filesystem/fileresolver.cpp
         functionnode.cpp
         generator.cpp
         headernode.cpp
