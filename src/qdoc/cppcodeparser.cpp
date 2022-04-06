@@ -449,7 +449,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
                     if (!doc.body().isEmpty()) {
                         doc.startLocation().warning(
                                 QStringLiteral("QML property documented multiple times: '%1'")
-                                        .arg(arg));
+                                        .arg(arg), QStringLiteral("also seen here: %1")
+                                                .arg(existingProperty->location().toString()));
                     }
                     continue;
                 }
@@ -810,8 +811,9 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     macro->setReturnType(returnType);
     macro->setParameters(params);
     if (macro->compare(oldMacroNode)) {
-        location.warning(QStringLiteral("\\macro %1 documented more than once").arg(macroArg));
-        oldMacroNode->doc().location().warning(QStringLiteral("(The previous doc is here)"));
+        location.warning(QStringLiteral("\\macro %1 documented more than once")
+                .arg(macroArg), QStringLiteral("also seen here: %1")
+                        .arg(oldMacroNode->doc().location().toString()));
     }
     return macro;
 }

@@ -1120,8 +1120,8 @@ void QDocDatabase::resolveNamespaces()
                     if (nsNode->hadDoc() && nsNode != ns) {
                         ns->doc().location().warning(
                                 QStringLiteral("Namespace %1 documented more than once")
-                                        .arg(nsNode->name()));
-                        nsNode->doc().location().warning(QStringLiteral("...also seen here"));
+                                        .arg(nsNode->name()), QStringLiteral("also seen here: %1")
+                                                .arg(nsNode->doc().location().toString()));
                     }
                 }
             } else if (!indexNamespace) {

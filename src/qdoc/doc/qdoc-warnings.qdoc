@@ -144,11 +144,11 @@
     Very similar to \l {Cannot tie this documentation to anything}, but
     specific to comments that are not in C++ or QML files.
 
-    \section1 <name> documented more than once (The previous doc is here)
+    \section1 <name> documented more than once
 
     QDoc issues this warning when it finds two comments that
-    document the same item. The warning comes in two parts,
-    one giving the later occurrence, the other the first.
+    document the same item. The location of the previously seen
+    comment is provided in warning details.
 
     For example, you see this warning when a function has a documentation
     comment preceding its definition, and a separate \\fn comment
@@ -718,12 +718,11 @@
     Without them, QDoc cannot locate the index files of any dependencies
     defined with the 'depends' configuration variable.
 
-    \section1 Overrides a previous doc (The previous doc is here)
+    \section1 Overrides a previous doc
 
-    When QDoc finds two comments that appear to describe the same
-    entity, it issues this warning and tells you where to find the
-    other comment. The warning comes in two parts, one giving the
-    later occurrence, the other the first.
+    QDoc issues this warning when it finds two comments that appear to
+    describe the same entity. The location of the previously seen
+    comment is provided in warning details.
 
     \section1 Unrecognized list style <name>
 

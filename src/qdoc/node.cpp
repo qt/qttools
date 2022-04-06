@@ -674,8 +674,8 @@ bool Node::match(const QList<int> &types) const
 void Node::setDoc(const Doc &doc, bool replace)
 {
     if (!m_doc.isEmpty() && !replace && !doc.isMarkedReimp()) {
-        doc.location().warning(QStringLiteral("Overrides a previous doc"));
-        m_doc.location().warning(QStringLiteral("(The previous doc is here)"));
+        doc.location().warning(QStringLiteral("Overrides a previous doc"),
+                QStringLiteral("from here: %1").arg(m_doc.location().toString()));
     }
     m_doc = doc;
 }
