@@ -62,7 +62,7 @@ private:
     QDocDatabase *m_qdb { nullptr };
     QList<ManifestMetaFilter> m_manifestMetaContent {};
 
-    void addWordsFromModuleNamesAsTags();
+    void addModuleNameAsTag();
     void includeTagsAddedWithMetaCommand(const ExampleNode *example);
     void writeTagsElement(QXmlStreamWriter *writer);
     template <typename F>

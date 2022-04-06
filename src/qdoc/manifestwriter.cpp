@@ -265,7 +265,7 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
 
         warnAboutUnusedAttributes(usedAttributes.keys(), example);
         writeDescription(&writer, example);
-        addWordsFromModuleNamesAsTags();
+        addModuleNameAsTag();
         writeTagsElement(&writer);
 
         const QString exampleName = example->name().mid(example->name().lastIndexOf('/') + 1);
@@ -304,20 +304,16 @@ void ManifestWriter::writeTagsElement(QXmlStreamWriter *writer)
     \internal
 
     Add words from module name as tags
-    QtQuickControls -> qt,quick,controls
-    QtOpenGL -> qt,opengl
-    QtQuick3D -> qt,quick3d
+    QtQuickControls -> quickcontrols
+    QtOpenGL -> opengl
+    QtQuick3D -> quick3d
  */
-void ManifestWriter::addWordsFromModuleNamesAsTags()
+void ManifestWriter::addModuleNameAsTag()
 {
-    // '?<=': positive lookbehind
-    QRegularExpression re("([A-Z]+[a-z0-9]*((?<=3)D|GL)?)");
-    qsizetype pos = 0;
-    QRegularExpressionMatch match;
-    while ((match = re.match(m_project, pos)).hasMatch()) {
-        m_tags << match.captured(1).toLower();
-        pos = match.capturedEnd();
-    }
+    QString moduleName = m_project;
+    if (moduleName.startsWith("Qt"))
+        moduleName = moduleName.mid(2);
+    m_tags << moduleName.toLower();
 }
 
 /*!
