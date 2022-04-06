@@ -3973,15 +3973,11 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             writer.writeCDATA(QString("No description available"));
         writer.writeEndElement(); // description
 
-        // Add words from module name as tags
-        // QtQuickControls -> qt,quick,controls
-        // QtOpenGL -> qt,opengl
-        QRegExp re("([A-Z]+[a-z0-9]*(3D|GL)?)");
-        int pos = 0;
-        while ((pos = re.indexIn(project, pos)) != -1) {
-            tags << re.cap(1).toLower();
-            pos += re.matchedLength();
-        }
+        // Add module name as tag
+        QString moduleName = project;
+        if (moduleName.startsWith("Qt"))
+            moduleName = moduleName.mid(2);
+        tags << moduleName.toLower();
 
         // Include tags added via \meta {tag} {tag1[,tag2,...]}
         // within \example topic
