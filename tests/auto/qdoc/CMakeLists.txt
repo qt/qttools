@@ -7,6 +7,7 @@ if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND QT_FEATURE_debug_and_release)
 endif()
 # special case end
 
+add_subdirectory(catch_generators)
 add_subdirectory(config)
 # special case begin
 # CMake builds currently don't build qdoc, presumably because the llvm
