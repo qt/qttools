@@ -40,6 +40,10 @@
 #include <QtDesigner/abstractformeditor.h>
 
 #include <QtUiPlugin/customwidget.h>
+#include <QtWidgets/QtWidgets>
+#ifdef QT_OPENGLWIDGETS_LIB
+#include <QtOpenGLWidgets/qopenglwidget.h>
+#endif
 
 #include <QtCore/qxmlstream.h>
 
@@ -249,6 +253,27 @@ WidgetDataBaseItem *WidgetDataBaseItem::clone(const QDesignerWidgetDataBaseItemI
     return rc;
 }
 
+QString WidgetDataBaseItem::baseClassName() const
+{
+    return m_extends.isEmpty() ? m_baseClassName : m_extends;
+}
+
+void WidgetDataBaseItem::setBaseClassName(const QString &b)
+{
+    m_baseClassName = b;
+}
+
+static void addWidgetItem(WidgetDataBase *wdb, const char *name, const QMetaObject &mo,
+                          const char *comment)
+{
+    auto *item = new WidgetDataBaseItem(QString::fromUtf8(name));
+    if (auto *base = mo.superClass())
+        item->setBaseClassName(QString::fromUtf8(base->className()));
+    if (comment[0])
+        item->setToolTip(QString::fromUtf8(comment));
+    wdb->append(item);
+}
+
 // ----------------------------------------------------------
 WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *parent)
     : QDesignerWidgetDataBaseInterface(parent),
@@ -256,7 +281,7 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
 {
 #define DECLARE_LAYOUT(L, C)
 #define DECLARE_COMPAT_WIDGET(W, C) DECLARE_WIDGET(W, C)
-#define DECLARE_WIDGET(W, C) append(new WidgetDataBaseItem(QString::fromUtf8(#W)));
+#define DECLARE_WIDGET(W, C) addWidgetItem(this, #W, W::staticMetaObject, C);
 
 #include <widgets.table>
 

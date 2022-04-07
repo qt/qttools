@@ -106,6 +106,9 @@ public:
 
     static WidgetDataBaseItem *clone(const QDesignerWidgetDataBaseItemInterface *item);
 
+    QString baseClassName() const; // FIXME Qt 7: Move to QDesignerWidgetDataBaseItemInterface
+    void setBaseClassName(const QString &b);
+
     QStringList fakeSlots() const;
     void setFakeSlots(const QStringList &);
 
@@ -117,6 +120,7 @@ public:
 
 private:
     QString m_name;
+    QString m_baseClassName;
     QString m_group;
     QString m_toolTip;
     QString m_whatsThis;
