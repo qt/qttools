@@ -1305,9 +1305,9 @@ void MainWindow::addToPhraseBook()
             return;
     } else {
         bool okPressed = false;
-        QString selectedPhraseBook = QInputDialog::getItem(this, tr("Add to phrase book"),
-                                tr("Select phrase book to add to"),
-                                phraseBookList, 0, false, &okPressed);
+        selectedPhraseBook = QInputDialog::getItem(this, tr("Add to phrase book"),
+                                                   tr("Select phrase book to add to"),
+                                                   phraseBookList, 0, false, &okPressed);
         if (!okPressed)
             return;
     }

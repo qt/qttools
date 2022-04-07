@@ -748,7 +748,7 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom, cons
         fullName = node->fullName();
     if (!fullName.isEmpty() && !link.isEmpty()) {
         writer.writeStartElement("link");
-        if (!atom->string().isEmpty())
+        if (atom && !atom->string().isEmpty())
             writer.writeAttribute("raw", atom->string());
         else
             writer.writeAttribute("raw", fullName);

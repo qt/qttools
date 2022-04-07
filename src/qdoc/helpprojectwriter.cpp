@@ -657,7 +657,9 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeStartElement("toc");
     writer.writeStartElement("section");
     const Node *node = qdb_->findPageNodeByTitle(project.indexTitle);
-    if (node == nullptr)
+    if (!node)
+        node = qdb_->findNodeByNameAndType(QStringList(project.indexTitle), &Node::isPageNode);
+    if (!node)
         node = qdb_->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
     QString indexPath;
     if (node)
