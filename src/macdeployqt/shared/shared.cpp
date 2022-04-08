@@ -852,9 +852,11 @@ void changeInstallName(const QString &bundlePath, const FrameworkInfo &framework
         changeInstallName(framework.installName, deployedInstallName, binary);
         // Workaround for the case when the library ID name is a symlink, while the dependencies
         // specified using the canonical path to the library (QTBUG-56814)
-        QString canonicalInstallName = QFileInfo(framework.installName).canonicalFilePath();
+        QFileInfo fileInfo= QFileInfo(framework.installName);
+        QString canonicalInstallName = fileInfo.canonicalFilePath();
         if (!canonicalInstallName.isEmpty() && canonicalInstallName != framework.installName) {
             changeInstallName(canonicalInstallName, deployedInstallName, binary);
+            changeInstallName(fileInfo.canonicalPath() + "/" + fileInfo.fileName(), deployedInstallName, binary);
         }
     }
 }
