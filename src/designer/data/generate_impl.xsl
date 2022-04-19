@@ -161,29 +161,12 @@
 
     </xsl:template>
 
-    <!-- Format a string constant for comparison as QLatin1String("foo") - they're all ascii-only -->
-    <xsl:template name="string-constant-for-comparison">
-        <xsl:param name="literal"/>
-        <xsl:text>QLatin1String("</xsl:text>
-        <xsl:value-of select="$literal"/>
-        <xsl:text>")</xsl:text>
-    </xsl:template>
-
-    <!-- Format a string constant for storage as QString(QLatin1Char('X')) or QLatin1String("foo"), respectively -->
-    <xsl:template name="string-constant-for-storage">
+    <!-- Format a string constant -->
+    <xsl:template name="string-constant">
     <xsl:param name="literal"/>
-        <xsl:choose>
-            <xsl:when test="string-length($literal) &lt; 2">
-                  <xsl:text>QString(QLatin1Char('</xsl:text>
-                <xsl:value-of select="$literal"/>
-                <xsl:text>'))</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:text>QStringLiteral("</xsl:text>
-                    <xsl:value-of select="$literal"/>
-                <xsl:text>")</xsl:text>
-           </xsl:otherwise>
-       </xsl:choose>
+        <xsl:text>u"</xsl:text>
+            <xsl:value-of select="$literal"/>
+        <xsl:text>"_s</xsl:text>
     </xsl:template>
 
 <!-- Implementation: read(QXmlStreamReader) -->
@@ -217,7 +200,7 @@
                 </xsl:variable>
 
                 <xsl:text>        if (name == </xsl:text>
-                <xsl:call-template name="string-constant-for-comparison">
+                <xsl:call-template name="string-constant">
                     <xsl:with-param name="literal" select="@name"/>
                 </xsl:call-template>
                 <xsl:text>) {&endl;</xsl:text>
@@ -230,7 +213,7 @@
                 <xsl:text>        }&endl;</xsl:text>
             </xsl:for-each>
 
-            <xsl:text>        reader.raiseError(QLatin1String("Unexpected attribute ") + name);&endl;</xsl:text>
+            <xsl:text>        reader.raiseError("Unexpected attribute "_L1 + name);&endl;</xsl:text>
             <xsl:text>    }&endl;</xsl:text>
             <xsl:text>&endl;</xsl:text>
         </xsl:if>
@@ -264,7 +247,7 @@
             <xsl:variable name="array" select="@maxOccurs = 'unbounded'"/>
 
             <xsl:text>            if (!tag.compare(</xsl:text>
-            <xsl:call-template name="string-constant-for-comparison">
+            <xsl:call-template name="string-constant">
                 <xsl:with-param name="literal" select="$lower-name"/>
             </xsl:call-template>
             <xsl:text>, Qt::CaseInsensitive)) {&endl;</xsl:text>
@@ -355,7 +338,7 @@
             </xsl:call-template>
         </xsl:for-each>
 
-        <xsl:text>            reader.raiseError(QLatin1String("Unexpected element ") + tag);&endl;</xsl:text>
+        <xsl:text>            reader.raiseError("Unexpected element "_L1 + tag);&endl;</xsl:text>
         <xsl:text>        }&endl;</xsl:text>
         <xsl:text>            break;&endl;</xsl:text>
         <xsl:text>        case QXmlStreamReader::EndElement :&endl;</xsl:text>
@@ -402,7 +385,7 @@
             <xsl:value-of select="$cap-name"/>
             <xsl:text>())&endl;</xsl:text>
             <xsl:text>        writer.writeAttribute(</xsl:text>
-            <xsl:call-template name="string-constant-for-storage">
+            <xsl:call-template name="string-constant">
                 <xsl:with-param name="literal" select="$lower-name"/>
             </xsl:call-template>
 
@@ -458,7 +441,7 @@
                         </xsl:variable>
 
                         <xsl:text>        writer.writeTextElement(</xsl:text>
-                        <xsl:call-template name="string-constant-for-storage">
+                        <xsl:call-template name="string-constant">
                             <xsl:with-param name="literal" select="$camel-case-name"/>
                         </xsl:call-template>
                         <xsl:text>, </xsl:text>
@@ -478,7 +461,7 @@
                         <xsl:text>            m_</xsl:text>
                         <xsl:value-of select="$camel-case-name"/>
                         <xsl:text>->write(writer, </xsl:text>
-                        <xsl:call-template name="string-constant-for-storage">
+                        <xsl:call-template name="string-constant">
                             <xsl:with-param name="literal" select="$lower-name"/>
                         </xsl:call-template>
                         <xsl:text>);&endl;</xsl:text>
@@ -533,7 +516,7 @@
                     <xsl:choose>
                         <xsl:when test="$xs-type-cat = 'pointer'">
                             <xsl:text>        v->write(writer, </xsl:text>
-                            <xsl:call-template name="string-constant-for-storage">
+                            <xsl:call-template name="string-constant">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>);&endl;</xsl:text>
@@ -547,7 +530,7 @@
                             </xsl:variable>
 
                             <xsl:text>        writer.writeTextElement(</xsl:text>
-                            <xsl:call-template name="string-constant-for-storage">
+                            <xsl:call-template name="string-constant">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>, </xsl:text>
@@ -566,7 +549,7 @@
                             <xsl:text>        m_</xsl:text>
                             <xsl:value-of select="$camel-case-name"/>
                             <xsl:text>->write(writer, </xsl:text>
-                            <xsl:call-template name="string-constant-for-storage">
+                            <xsl:call-template name="string-constant">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>);&endl;</xsl:text>
@@ -579,7 +562,7 @@
                                 </xsl:call-template>
                             </xsl:variable>
                             <xsl:text>        writer.writeTextElement(</xsl:text>
-                            <xsl:call-template name="string-constant-for-storage">
+                            <xsl:call-template name="string-constant">
                                 <xsl:with-param name="literal" select="$lower-name"/>
                             </xsl:call-template>
                             <xsl:text>, </xsl:text>
@@ -838,6 +821,7 @@
         <xsl:text>&endl;</xsl:text>
         <xsl:text>&endl;</xsl:text>
         <xsl:text>QT_BEGIN_NAMESPACE&endl;</xsl:text>
+        <xsl:text>&endl;using namespace Qt::StringLiterals;&endl;&endl;</xsl:text>
 
         <xsl:text>#ifdef QFORMINTERNAL_NAMESPACE&endl;</xsl:text>
         <xsl:text>using namespace QFormInternal;&endl;</xsl:text>
