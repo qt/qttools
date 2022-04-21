@@ -19,4 +19,6 @@ examples.fileextensions = "*.qml *.cpp"
 macro.begincomment      = "\\c{/*}"
 macro.QDocTestVer       = "1.1"
 
+navigation.qmltypespage     = "QDoc.Test QML Module"
+navigation.qmltypestitle    = "Types"
 warninglimit += 1
