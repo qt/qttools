@@ -1540,7 +1540,26 @@ QString HtmlGenerator::fileExtension() const
 }
 
 /*!
-  Output navigation list in the html file.
+  Output a navigation bar (breadcrumbs) for the html file.
+  For API reference pages, items for the navigation bar are (in order):
+  \table
+    \header \li Item     \li Related configuration variable  \li Notes
+    \row    \li home     \li navigation.homepage             \li e.g. 'Qt 6.2'
+    \row    \li landing  \li navigation.landingpage          \li Module landing page
+    \row    \li types    \li navigation.cppclassespage (C++)\br
+                             navigation.qmltypespage (QML)   \li Types only
+    \row    \li module   \li n/a (automatic)                 \li Module page if different
+                                                                 from previous item
+    \row    \li page     \li n/a                             \li Current page title
+  \endtable
+
+ For other page types (page nodes) the navigation bar is constructed from home
+ page, landing page, and the chain of Node::navigationParent() items (if one exists).
+ This chain is constructed from the \\list structure on a page or pages defined in
+ \c navigation.toctitles configuration variable.
+
+ Finally, if no other navigation data exists for a page but it is a member of a
+ single group (using \\ingroup), add that group page to the navigation bar.
  */
 void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node,
                                           CodeMarker *marker, const QString &buildversion,
@@ -1552,39 +1571,41 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
     Text navigationbar;
 
     // Set list item types based on the navigation bar type
+    // TODO: Do we still need table items?
     Atom::AtomType itemLeft = tableItems ? Atom::TableItemLeft : Atom::ListItemLeft;
     Atom::AtomType itemRight = tableItems ? Atom::TableItemRight : Atom::ListItemRight;
+
+    auto addNavItem = [&](const QString &link, const QString &title) {
+        navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, link)
+                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                      << Atom(Atom::String, title)
+                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
+    };
 
     if (m_hometitle == title)
         return;
     if (!m_homepage.isEmpty())
-        navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, m_homepage)
-                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                      << Atom(Atom::String, m_hometitle)
-                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
+        addNavItem(m_homepage, m_hometitle);
     if (!m_landingpage.isEmpty() && m_landingtitle != title)
-        navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, m_landingpage)
-                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                      << Atom(Atom::String, m_landingtitle)
-                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
+        addNavItem(m_landingpage, m_landingtitle);
 
     if (node->isClassNode()) {
         if (!m_cppclassespage.isEmpty() && !m_cppclassestitle.isEmpty())
-            navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, m_cppclassespage)
-                          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                          << Atom(Atom::String, m_cppclassestitle)
-                          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
-
-        if (!node->name().isEmpty())
-            navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
+            addNavItem(m_cppclassespage, m_cppclassestitle);
+        if (!node->physicalModuleName().isEmpty()) {
+            // TODO: Abusing addModule() which is just a wrapper for private method findModule()
+            auto moduleNode = m_qdb->addModule(node->physicalModuleName());
+            if (moduleNode && moduleNode->title() != m_cppclassespage)
+                addNavItem(moduleNode->name(), moduleNode->name());
+        }
+        navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
                || node->isJsBasicType()) {
         if (!m_qmltypespage.isEmpty() && !m_qmltypestitle.isEmpty())
-            navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, m_qmltypespage)
-                          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                          << Atom(Atom::String, m_qmltypestitle)
-                          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight)
-                          << Atom(itemLeft) << Atom(Atom::String, title) << Atom(itemRight);
+            addNavItem(m_qmltypespage, m_qmltypestitle);
+        if (node->logicalModule() && node->logicalModule()->title() != m_qmltypespage)
+            addNavItem(node->logicalModule()->name(), node->logicalModule()->name());
+        navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else {
         if (node->isPageNode()) {
             auto currentNode = node;
@@ -1608,13 +1629,8 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
                 }
             }
             while (!navNodes.empty()) {
-                if (navNodes.front()->isPageNode()) {
-                    navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, navNodes.front()->name())
-                                  << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-                                  << Atom(Atom::String, navNodes.front()->title())
-                                  << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK)
-                                  << Atom(itemRight);
-                }
+                if (navNodes.front()->isPageNode())
+                    addNavItem(navNodes.front()->name(), navNodes.front()->title());
                 navNodes.pop_front();
             }
         }
