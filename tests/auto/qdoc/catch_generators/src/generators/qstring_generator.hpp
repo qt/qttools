@@ -52,6 +52,27 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
                 assert(maximum_length >= 0);
                 assert(minimum_length <= maximum_length);
 
+                // TODO: While the following is generally a good
+                // strategy for simple generator it may become less
+                // maintable on complex generators or the complexity
+                // may go out of hand for some of them.
+                // Should that be the case, explore the task of
+                // providing a small abstraction over accessing owned
+                // generators that can be used for those cases.
+                // In general, we want to be able to discern between
+                // getting a value by checking that the generator has
+                // one available and getting a value without checking
+                // that the generator has one available.
+                // For collection based generators, we usually need to
+                // report if not enough elements are available to
+                // genrate the first value. This usually requires a
+                // dividing the access to the generator in a base
+                // case, that is unchecked, and a series of checked
+                // accesses.
+                // It should be possible to normalize the
+                // implementation if a good abstraction for those
+                // idioms is found.
+
                 // REMARK: [catch-generators-semantic-first-value]
                 // It is important to remember that in catch, for an
                 // instance of a generator that was just constructed ,

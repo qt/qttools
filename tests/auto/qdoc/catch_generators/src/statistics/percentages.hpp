@@ -58,4 +58,17 @@ namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE {
         return (100.0 / static_cast<double>(cardinality));
     }
 
+    /*!
+     * Returns a percentage probability that is equal to \a
+     * probability.
+     *
+     * \a probabbility must be in the reange [0.0, 1.0]
+     */
+    inline double probability_to_percentage(double probability) {
+        assert(probability >= 0.0);
+        assert(probability <= 1.0);
+
+        return probability * 100.0;
+    }
+
 } // end QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE
