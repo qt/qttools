@@ -495,7 +495,7 @@ SCENARIO("The format of a path", "[Path][Contents]") {
 }
 
 // REMARK: [mayfail][distribution]
-SCENARIO("Observing the distribution of paths based on their configuration", "[Path][Statitics][!mayfail]") {
+SCENARIO("Observing the distribution of paths based on their configuration", "[Path][Statistics][!mayfail]") {
     GIVEN("A series of components generators") {
         QString device_component_value{"device"};
         QString root_component_value{"root"};

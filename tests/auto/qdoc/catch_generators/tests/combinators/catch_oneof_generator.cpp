@@ -116,7 +116,7 @@ SCENARIO("Choosing between one of many generators", "[OneOf][Combinators]") {
 // As long as this test doesn't fail consistently, with values that
 // shows an unsustainable deviation, it should be considered to be
 // working.
-SCENARIO("Observing the distribution of generators that are chosen from", "[OneOf][Combinators][Statitics][!mayfail]") {
+SCENARIO("Observing the distribution of generators that are chosen from", "[OneOf][Combinators][Statistics][!mayfail]") {
     GIVEN("Some generators producing values of the same type") {
         std::size_t generators_amount = GENERATE(take(10, random(1, 10)));
 
