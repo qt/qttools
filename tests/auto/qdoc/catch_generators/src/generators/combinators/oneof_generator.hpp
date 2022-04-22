@@ -29,7 +29,7 @@
 #pragma once
 
 #include "../../namespaces.hpp"
-#include "../../statistics/percentages.hpp"
+#include "../../utilities/statistics/percentages.hpp"
 
 #include <catch.hpp>
 

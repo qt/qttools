@@ -31,8 +31,9 @@
 #include "generators/qstring_generator.hpp"
 #include "generators/path_generator.hpp"
 #include "generators/combinators/cycle_generator.hpp"
-#include "statistics/percentages.hpp"
-#include "statistics/distribution.hpp"
+#include "utilities/statistics/percentages.hpp"
+#include "utilities/statistics/distribution.hpp"
+#include "utilities/semantics/copy_value.hpp"
 
 #include <qt_catch_conversions.hpp>
 
@@ -44,9 +45,6 @@
 
 using namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE;
 using namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE;
-
-template<typename T>
-std::remove_reference_t<T> copy_value(T value) { return value; }
 
 TEST_CASE("A path generated with a multi_device_path_probability of 1.0 always contains a device component.", "[Path][Content][SpecialCase]") {
     QString device_component_value{"C:"};

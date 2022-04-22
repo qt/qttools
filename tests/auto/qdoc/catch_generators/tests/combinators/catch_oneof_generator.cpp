@@ -31,8 +31,9 @@
 #include "namespaces.hpp"
 #include "generators/k_partition_of_r_generator.hpp"
 #include "generators/combinators/oneof_generator.hpp"
-#include "statistics/percentages.hpp"
-#include "statistics/distribution.hpp"
+#include "utilities/statistics/percentages.hpp"
+#include "utilities/statistics/distribution.hpp"
+#include "utilities/semantics/copy_value.hpp"
 
 #include <catch.hpp>
 
@@ -44,9 +45,6 @@
 
 using namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE;
 using namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE;
-
-template<typename T>
-std::remove_reference_t<T> copy_value(T value) { return value; }
 
 SCENARIO("Choosing between one of many generators", "[OneOf][Combinators]") {
     GIVEN("Some generators producing values of the same type") {

@@ -37,8 +37,6 @@
 #include <QChar>
 #include <QString>
 
-#include <qsystemdetection.h>
-
 namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
 
 
