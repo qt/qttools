@@ -64,6 +64,8 @@ namespace {
 
 namespace qdesigner_internal {
 
+using namespace Qt::StringLiterals;
+
 // ----------------------------------------------------------
 WidgetDataBaseItem::WidgetDataBaseItem(const QString &name, const QString &group)
     : m_name(name),
@@ -296,15 +298,15 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
                                     "Abstract base class that cannot be instantiated. For promotion/custom widget usage only.");
 
 #if QT_CONFIG(abstractbutton)
-    auto *abItem = new WidgetDataBaseItem(u"QAbstractButton"_qs);
+    auto *abItem = new WidgetDataBaseItem(u"QAbstractButton"_s);
     abItem->setToolTip(msgAbstractClass);
-    abItem->setBaseClassName(u"QWidget"_qs);
+    abItem->setBaseClassName(u"QWidget"_s);
     append(abItem);
 #endif // QT_CONFIG(abstractbutton)
 
 #if QT_CONFIG(itemviews)
-    auto *aivItem = new WidgetDataBaseItem(u"QAbstractItemView"_qs);
-    aivItem->setBaseClassName(u"QAbstractScrollArea"_qs);
+    auto *aivItem = new WidgetDataBaseItem(u"QAbstractItemView"_s);
+    aivItem->setBaseClassName(u"QAbstractScrollArea"_s);
     aivItem->setToolTip(msgAbstractClass);
     append(aivItem);
 #endif // QT_CONFIG(itemviews)
