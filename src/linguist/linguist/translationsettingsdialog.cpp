@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2016 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Linguist of the Qt Toolkit.
@@ -41,14 +41,16 @@ TranslationSettingsDialog::TranslationSettingsDialog(QWidget *parent)
     m_ui.setupUi(this);
 
     for (int i = QLocale::C + 1; i < QLocale::LastLanguage; ++i) {
-        QString lang = QLocale::languageToString(QLocale::Language(i));
-        auto loc = QLocale(QLocale::Language(i));
-        if (loc.language() != QLocale::English) {
-            QString nln = loc.nativeLanguageName();
-            if (!nln.isEmpty()) {
-                //: <english> (<endonym>)  (language and country names)
-                lang = tr("%1 (%2)").arg(lang, nln);
-            }
+        const auto language = QLocale::Language(i);
+        QString lang = QLocale::languageToString(language);
+        const auto loc = QLocale(language);
+        // Languages for which we have no data get mapped to the default locale;
+        // its endonym is unrelated to the language requested. For English, the
+        // endonym is the name we already have; don't repeat it.
+        if (loc.language() == language && language != QLocale::English) {
+            const QString native = loc.nativeLanguageName();
+            if (!native.isEmpty()) //: <english> (<endonym>)  (language names)
+                lang = tr("%1 (%2)").arg(lang, native);
         }
         m_ui.srcCbLanguageList->addItem(lang, QVariant(i));
     }
