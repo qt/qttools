@@ -26,9 +26,14 @@
 **
 ****************************************************************************/
 
+// TODO: Change the include paths to implicitly consider
+// `catch_generators` a root directory and change the CMakeLists.txt
+// file to make this possible.
+
 #include "../namespaces.hpp"
 #include "qchar_generator.hpp"
 #include "qstring_generator.hpp"
+#include "../utilities/semantics/move_into_vector.hpp"
 
 #include <catch.hpp>
 
@@ -36,6 +41,14 @@
 
 #include <QChar>
 #include <QString>
+#include <QStringList>
+#include <QRegularExpression>
+
+#if defined(Q_OS_WINDOWS)
+
+    #include <QStorageInfo>
+
+#endif
 
 namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
 
@@ -508,15 +521,361 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
         Catch::Generators::GeneratorWrapper<QString>&& device_generator,
         Catch::Generators::GeneratorWrapper<QString>&& root_component_generator,
         Catch::Generators::GeneratorWrapper<QString>&& directory_generator,
-        Catch::Generators::GeneratorWrapper<QString>&& separator_generator,
         Catch::Generators::GeneratorWrapper<QString>&& filename_generator,
+        Catch::Generators::GeneratorWrapper<QString>&& separator_generator,
         PathGeneratorConfiguration configuration = PathGeneratorConfiguration{}
     ) {
         return Catch::Generators::GeneratorWrapper<QString>(
             std::unique_ptr<Catch::Generators::IGenerator<QString>>(
-                new QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::PathGenerator(std::move(device_generator), std::move(root_component_generator), std::move(directory_generator), std::move(separator_generator), std::move(filename_generator), configuration)
+                new QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::PathGenerator(std::move(device_generator), std::move(root_component_generator), std::move(directory_generator), std::move(filename_generator), std::move(separator_generator), configuration)
             )
         );
+    }
+
+    namespace QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE {
+
+        // REMARK: We need a bounded length for the generation of path
+        // components as strings.
+        // We trivially do not want components to be the empty string,
+        // such that we have a minimum length of 1, but the maximum
+        // length is more malleable.
+        // We don't want components that are too long to avoid
+        // incurring in a big performance overhead, as we may generate
+        // many of them.
+        // At the same time, we want some freedom in having diffent
+        // length components.
+        // The value that was chosen is based on the general value for
+        // POSIX's NAME_MAX, which seems to tend to be 14 on many systems.
+        // We see this value as a small enough but not too much value
+        // that further brings with itself a relation to paths,
+        // increasing our portability even if it is out of scope, as
+        // almost no modern respects NAME_MAX.
+        // We don't use POSIX's NAME_MAX directly as it may not be available
+        // on all systems.
+        inline static constexpr std::size_t minimum_component_length{1};
+        inline static constexpr std::size_t maximum_component_length{14};
+
+        /*!
+         * Returns a generator that generates strings that are
+         * suitable to be used as a root component in POSIX paths.
+         *
+         * As per
+         * \l {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_02},
+         * this is any sequence of slash characters that is not of
+         * length 2.
+         */
+        inline Catch::Generators::GeneratorWrapper<QString> posix_root() {
+            return uniformly_valued_oneof(
+                QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::move_into_vector(
+                    string(character('/', '/'), 1, 1),
+                    string(character('/', '/'), 3, maximum_component_length)
+                ),
+                std::vector{1, maximum_component_length - 3}
+            );
+        }
+
+        /*!
+         * Returns a generator that generates strings that are
+         * suitable to be used as directory components in POSIX paths
+         * and that use an alphabet that should generally be supported
+         * by other systems.
+         *
+         * Components of this kind use the \l
+         * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_282}{Portable
+         * Filename Character Set}.
+         */
+        inline Catch::Generators::GeneratorWrapper<QString> portable_posix_directory_name() {
+            return string(
+                QDOC_CATCH_GENERATORS_QCHAR_ALPHABETS_NAMESPACE::portable_posix_filename(),
+                minimum_component_length, maximum_component_length
+            );
+        }
+
+        /*!
+         * Returns a generator that generates strings that are
+         * suitable to be used as filenames in POSIX paths and that
+         * use an alphabet that should generally be supported by
+         * other systems.
+         *
+         * Filenames of this kind use the \l
+         * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_282}{Portable
+         * Filename Character Set}.
+         */
+        inline Catch::Generators::GeneratorWrapper<QString> portable_posix_filename() {
+            // REMARK: "." and ".." always represent directories so we
+            // avoid generating them. Other than this, there is no
+            // difference between a file name and a directory name.
+            return filter([](auto& filename) { return filename != "." && filename != ".."; },  portable_posix_directory_name());
+        }
+
+        /*!
+         * Returns a generator that generates strings that can be used
+         * as POSIX compliant separators.
+         *
+         * As per \l
+         * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_271},
+         * a separator is a sequence of one or more slashes.
+         */
+        inline Catch::Generators::GeneratorWrapper<QString> posix_separator() {
+            return string(character('/', '/'), minimum_component_length, maximum_component_length);
+        }
+
+        /*!
+         * Returns a generator that generates strings that can be
+         * suitably used as logical drive names in Windows' paths.
+         *
+         * As per \l
+         * {https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#traditional-dos-paths}
+         * and \l
+         * {https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrives},
+         * they are composed of a single letter.
+         * Each generated string always follows the lettet with a
+         * colon, as it is specifically intended for path usages,
+         * where this is required.
+         *
+         * We use only uppercase letters for the drives names albeit,
+         * depending on case sensitivity, lowercase letter could be
+         * used.
+         */
+        inline Catch::Generators::GeneratorWrapper<QString> windows_logical_drives() {
+            return Catch::Generators::map(
+                [](QString letter){ return letter + ':';},
+                string(QDOC_CATCH_GENERATORS_QCHAR_ALPHABETS_NAMESPACE::ascii_uppercase(), 1, 1)
+            );
+        }
+
+        /*!
+         * Returns a generator that generate strings that can be used
+         * as separators in Windows based paths.
+         *
+         * As per \l
+         * {https://docs.microsoft.com/en-us/dotnet/api/system.io.path.directoryseparatorchar?view=net-6.0}
+         * and \l
+         * {https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#canonicalize-separators},
+         * this is a sequence of one or more backward or forward slashes.
+         */
+        inline Catch::Generators::GeneratorWrapper<QString> windows_separator() {
+            return uniform_oneof(
+                QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::move_into_vector(
+                    string(character('\\', '\\'), minimum_component_length, maximum_component_length),
+                    string(character('/', '/'), minimum_component_length, maximum_component_length)
+                )
+            );
+        }
+
+    } // end QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE
+
+    /*!
+     * Returns a generator that generates strings representing
+     * POSIX compatible paths.
+     *
+     * The generated paths follows the format specified in \l
+     * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_271}.
+     *
+     * The optional length-requirements, such as PATH_MAX and
+     * NAME_MAX, are relaxed away as they are generally not
+     * respected by modern systems.
+     *
+     * It is possible to set the probability of obtaining a
+     * relative or absolute path through \a
+     * absolute_path_probability and the one of obtaining a path
+     * potentially pointing ot a directory or on a file through \a
+     * directory_path_probability.
+     */
+    inline Catch::Generators::GeneratorWrapper<QString> relaxed_portable_posix_path(double absolute_path_probability = 0.5, double directory_path_probability = 0.5) {
+        return path(
+            // POSIX path are never multi-device, so that we have
+            // provide an empty device component generator and set
+            // the probability for Multi-Device paths to zero.
+            string(character(), 0, 0),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::posix_root(),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::portable_posix_directory_name(),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::portable_posix_filename(),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::posix_separator(),
+            PathGeneratorConfiguration{}
+                .set_multi_device_path_probability(0.0)
+                .set_absolute_path_probability(absolute_path_probability)
+                .set_directory_path_probability(directory_path_probability)
+        );
+    }
+
+    /*!
+     * Returns a generator that produces strings that represents
+     * traditional DOS paths as defined in \l
+     * {https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#traditional-dos-paths}.
+     *
+     * The directory and filename components of a path generated
+     * in this way are, currently, restricted to use a portable
+     * character set as defined by POSIX.
+     *
+     * Do note that most paths themselves, will not be portable, on
+     * the whole, albeit they may be valid paths on other systems, as
+     * Windows uses a path system that is generally incompatible with
+     * other systems.
+     *
+     * Some possibly valid special path, such as a "C:" or "\"
+     * will never be generated.
+     */
+    inline Catch::Generators::GeneratorWrapper<QString> traditional_dos_path(double absolute_path_probability = 0.5, double directory_path_probability = 0.5) {
+        return path(
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::windows_logical_drives(),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::windows_separator(),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::portable_posix_directory_name(),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::portable_posix_filename(),
+            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::windows_separator(),
+            PathGeneratorConfiguration{}
+                .set_absolute_path_probability(absolute_path_probability)
+                .set_directory_path_probability(directory_path_probability)
+        );
+    }
+
+    // TODO: Find a good way to test the following functions.
+    // native_path can probably be tied to the tests for the
+    // OS-specific functions, with TEMPLATE_TEST_CASE.
+    // The other ones may follow a similar pattern but require a bit
+    // more work so that they tie to a specific case instead of the
+    // general one.
+    // Nonetheless, this approach is both error prone and difficult to
+    // parse, because of the required if preprocessor directives,
+    // and should be avoided if possible.
+
+    /*!
+     * Returns a generator that generates QStrings that represents
+     * paths native to the underlying OS.
+     *
+     * On Windows, paths that refer to a drive always refer to the
+     * root drive.
+     *
+     * native* functions should always be chosen when using paths for
+     * testing interfacing with the filesystem itself.
+     *
+     * System outside Linux, macOS or Windows are not supported.
+     */
+    inline Catch::Generators::GeneratorWrapper<QString> native_path(double absolute_path_probability = 0.5, double directory_path_probability = 0.5) {
+#if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
+
+        return relaxed_portable_posix_path(absolute_path_probability, directory_path_probability);
+
+#elif defined(Q_OS_WINDOWS)
+
+        // REMARK: If a Windows path is generated on Windows
+        // itself, we expect that it may be used to interact with
+        // the filesystem, similar to how we expect a POSIX path
+        // to be used on Linux.
+        // For this reason, we only generate a specific drive, the
+        // root one, so that we know it is an actually available
+        // drive and to contain the possible modifications to the
+        // filesystem to an easily foundable place.
+
+        // TODO: This probably will not always work, as, while not
+        // common, it might be possible, for example, that the
+        // drive where the system is installed is used
+        // specifically for the system and the user does not have
+        // read or write access to it. If any problem comes out,
+        // this should be rechecked and a more stable solution
+        // should be found.
+
+        static auto root_device{QStorageInfo::root().rootPath()};
+
+        return Catch::Generators::filter(
+            [](auto& path){ return !path.startsWith(root_device + ":"); },
+            traditional_dos_path(directory_path_probability, directory_path_probability)
+        );
+
+#endif
+    }
+
+    /*!
+     * Returns a generator that generates QStrings that represents
+     * paths native to the underlying OS and that are always \e
+     * {Relative}.
+     *
+     * Avoids generating paths that refer to a directory that is not
+     * included in the path itself.
+     *
+     * System outside Linux, macOS or Windows are not supported.
+     */
+    inline Catch::Generators::GeneratorWrapper<QString> native_relative_path(double directory_path_probability = 0.5) {
+        // REMARK: When testing, we generally use some specific
+        // directory as a root for relative paths.
+        // We want the generated path to be relative to that
+        // directory because we need a clean state for the test to
+        // be reliable.
+        // When generating paths, it is possible, correctly, to
+        // have a path that refers to that directory or some
+        // parent of it, removing us from the clean state that we
+        // need.
+        // To avoid that, we filter out paths that end up referring to a directory that is not under our "root" directory.
+        //
+        // We can think of each generated component moving us
+        // further down or up, in case of "..", a directory
+        // hierarchy, or keeping us at the same place in case of
+        // ".".
+        // Any path that ends up under our original "root"
+        // directory will safely keep our clean state for testing.
+        //
+        // Each "." keeps us at the same level in the hierarchy.
+        // Each ".." moves us up one level in the hierarchy.
+        // Each component that is not "." or ".." moves us down
+        // one level into the hierarchy.
+        //
+        // Then, to avoid referring to the "root" directory or one
+        // of its parents, we need to balance out each "." and
+        // ".." with the components that precedes or follow their
+        // appearance.
+        //
+        // Since "." keeps us at the same level, it can appear how
+        // many times it wants as long as the path referes to the
+        // "root" directory or a directory or file under it and at
+        // least one other component referes to a directory or
+        // file that is under the "root" directory.
+        //
+        // Since ".." moves us one level up in the hierarchy, a
+        // sequence of n ".." components is safe when at least n +
+        // 1 non "." or ".." components appear before it.
+        //
+        // To avoid the above problem, we filter away paths that
+        // do not respect those rules.
+        return Catch::Generators::filter(
+            [](auto& path){
+                QStringList components{path.split(QRegularExpression{R"((\\|\/)+)"}, Qt::SkipEmptyParts)};
+                int depth{0};
+
+                for (auto& component : components) {
+                    if (component == "..")
+                        --depth;
+                    else if (component != ".")
+                        ++depth;
+
+                    if (depth < 0) return false;
+                }
+
+                return (depth > 0);
+            },
+            native_path(0.0, directory_path_probability)
+        );
+    }
+
+    /*!
+     * Returns a generator that generates QStrings that represents
+     * paths native to the underlying OS and that are always \e
+     * {Relative} and \e {To a File}.
+     *
+     * System outside Linux, macOS or Windows are not supported.
+     */
+    inline Catch::Generators::GeneratorWrapper<QString> native_relative_file_path() {
+        return native_relative_path(0.0);
+    }
+
+    /*!
+     * Returns a generator that generates QStrings that represents
+     * paths native to the underlying OS and that are always \e
+     * {Relative} and \e {To a Directory}.
+     *
+     * System outside Linux, macOS or Windows are not supported.
+     */
+    inline Catch::Generators::GeneratorWrapper<QString> native_relative_directory_path() {
+        return native_relative_path(1.0);
     }
 
 } // end QDOC_CATCH_GENERATORS_ROOT_NAMESPACE

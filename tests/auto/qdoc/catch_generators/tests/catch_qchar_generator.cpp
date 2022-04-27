@@ -36,6 +36,7 @@
 #include <QChar>
 
 using namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE;
+using namespace QDOC_CATCH_GENERATORS_QCHAR_ALPHABETS_NAMESPACE;
 
 SCENARIO("Binding a generated QChar to a range", "[QChar][Bounds]") {
     GIVEN("A lower bound") {
@@ -70,4 +71,57 @@ TEST_CASE(
     auto generated_character = GENERATE_COPY(take(100, character(bound, bound)));
 
     REQUIRE(generated_character.unicode() == bound);
+}
+
+TEST_CASE("When generating digits, each generated character is in the class [0-9]", "[QChar][SpecialCase]") {
+    auto generated_character = GENERATE(take(100, digit()));
+
+    REQUIRE(generated_character >= '0');
+    REQUIRE(generated_character <= '9');
+}
+
+TEST_CASE("When generating lowercase ascii characters, each generated character is in the class [a-z]", "[QChar][SpecialCase]") {
+    auto generated_character = GENERATE(take(100, ascii_lowercase()));
+
+    REQUIRE(generated_character >= 'a');
+    REQUIRE(generated_character <= 'z');
+}
+
+TEST_CASE("When generating uppercase ascii characters, each generated character is in the class [A-Z]", "[QChar][SpecialCase]") {
+    auto generated_character = GENERATE(take(100, ascii_uppercase()));
+
+    REQUIRE(generated_character >= 'A');
+    REQUIRE(generated_character <= 'Z');
+}
+
+TEST_CASE("When generating ascii alphabetic characters, each generated character is in the class [a-zA-Z]", "[QChar][SpecialCase]") {
+    auto generated_character = GENERATE(take(100, ascii_alpha()));
+
+    REQUIRE((
+             (generated_character >= 'a' && generated_character <= 'z') ||
+             (generated_character >= 'A' && generated_character <= 'Z')
+            ));
+}
+
+TEST_CASE("When generating ascii alphabetic characters, each generated character is in the class [a-zA-Z0-9]", "[QChar][SpecialCase]") {
+    auto generated_character = GENERATE(take(100, ascii_alpha()));
+
+    REQUIRE((
+             (generated_character >= 'a' && generated_character <= 'z') ||
+             (generated_character >= 'A' && generated_character <= 'Z') ||
+             (generated_character >= '0' && generated_character <= '9')
+            ));
+}
+
+TEST_CASE("When generating portable posix filename, each generated character is in the class [-_.a-zA-Z0-9]", "[QChar][SpecialCase]") {
+    auto generated_character = GENERATE(take(100, ascii_alpha()));
+
+    REQUIRE((
+             (generated_character == '-') ||
+             (generated_character == '_') ||
+             (generated_character == '.') ||
+             (generated_character >= 'a' && generated_character <= 'z') ||
+             (generated_character >= 'A' && generated_character <= 'Z') ||
+             (generated_character >= '0' && generated_character <= '9')
+            ));
 }

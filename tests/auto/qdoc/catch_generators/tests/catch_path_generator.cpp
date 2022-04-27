@@ -636,3 +636,44 @@ SCENARIO("Observing the distribution of paths based on their configuration", "[P
         }
     }
 }
+
+
+SCENARIO("Generating paths that are suitable to be used on POSIX systems", "[Path][POSIX][Content]") {
+    GIVEN("A generator that generates Strings representing paths on a POSIX system that are portable") {
+        auto path_generator = relaxed_portable_posix_path();
+
+        WHEN("A path is generated from it") {
+            auto generated_path = GENERATE_REF(take(100, std::move(path_generator)));
+
+            THEN("The path is composed only by one or more characters in the class [-_./a-zA-Z0-9]") {
+                REQUIRE(QRegularExpression{R"(\A[-_.\/a-zA-Z0-9]+\z)"}.match(generated_path).hasMatch());
+            }
+        }
+    }
+}
+
+SCENARIO("Generating paths that are suitable to be used on Windows", "[Path][Windows][Content]") {
+    GIVEN("A generator that generates Strings representing paths on a Windows system") {
+        auto path_generator = traditional_dos_path();
+
+        WHEN("A path is generated from it") {
+            auto generated_path = GENERATE_REF(take(100, std::move(path_generator)));
+
+            CAPTURE(generated_path);
+
+            THEN("The path starts with an uppercase letter followed by a colon, a backward or forward slash or a character in the class [-_.a-zA-Z0-9]") {
+                QRegularExpression beginning_re{"([A-Z]:|\\|\\/|[-_.a-zA-Z0-9])"};
+
+                auto beginning_match{beginning_re.match(generated_path)};
+
+                REQUIRE(beginning_match.hasMatch());
+
+                generated_path.remove(0, beginning_match.capturedEnd());
+
+                AND_THEN("The rest of the path is composed by zero or more characters in the class [-_./\\a-zA-Z0-9]") {
+                    REQUIRE(QRegularExpression{R"(\A[-_.\/\\a-zA-Z0-9]*\z)"}.match(generated_path).hasMatch());
+                }
+            }
+        }
+    }
+}
