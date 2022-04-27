@@ -347,6 +347,26 @@ SCENARIO("The format of a path", "[Path][Contents]") {
                         successive_directories_match = successive_directories_re.match(generated_path, successive_directories_match.capturedEnd(1));
                     }
                 }
+
+
+                THEN("There is a separator component between each successive directory and filename components") {
+                    REQUIRE_FALSE(generated_path.contains(directory_component_value + filename_component_value));
+
+                    auto successive_directory_filename_re{
+                    QRegularExpression(u"%1(%2)%3"_qs.arg(directory_component_value)
+                                                     .arg(QStringList{device_component_value, root_component_value, filename_component_value, separator_component_value}.join("|"))
+                                                     .arg(filename_component_value)
+                    )};
+
+                    auto successive_directory_filename_match(successive_directory_filename_re.match(generated_path));
+                    while (successive_directory_filename_match.hasMatch()) {
+                        auto in_between_component{successive_directory_filename_match.captured(1)};
+
+                        REQUIRE(in_between_component == separator_component_value);
+
+                        successive_directory_filename_match = successive_directory_filename_re.match(generated_path, successive_directory_filename_match.capturedEnd(1));
+                    }
+                }
             }
         }
 
