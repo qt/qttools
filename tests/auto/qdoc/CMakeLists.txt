@@ -8,6 +8,7 @@ endif()
 # special case end
 
 add_subdirectory(catch_generators)
+add_subdirectory(qdoc)
 add_subdirectory(config)
 # special case begin
 # CMake builds currently don't build qdoc, presumably because the llvm

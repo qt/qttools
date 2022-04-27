@@ -35,6 +35,12 @@
 #include "qstring_generator.hpp"
 #include "../utilities/semantics/move_into_vector.hpp"
 
+#if defined(Q_OS_WINDOWS)
+
+    #include "combinators/cycle_generator.hpp"
+
+#endif
+
 #include <catch.hpp>
 
 #include <random>
@@ -638,10 +644,30 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
          * used.
          */
         inline Catch::Generators::GeneratorWrapper<QString> windows_logical_drives() {
+            // REMARK: If a Windows path is generated on Windows
+            // itself, we expect that it may be used to interact with
+            // the filesystem, similar to how we expect a POSIX path
+            // to be used on Linux.
+            // For this reason, we only generate a specific drive, the one
+            // that contains the current working directory, so that we
+            // know it is an actually available drive and to contain the
+            // possible modifications to the filesystem to an easily
+            // foundable place.
+
+#if defined(Q_OS_WINDOWS)
+
+            auto root_device{QStorageInfo{QDir()}.rootPath().first(1) + ":"};
+
+            return cycle(Catch::Generators::value(std::move(root_device)));
+
+#else
+
             return Catch::Generators::map(
                 [](QString letter){ return letter + ':';},
                 string(QDOC_CATCH_GENERATORS_QCHAR_ALPHABETS_NAMESPACE::ascii_uppercase(), 1, 1)
             );
+
+#endif
         }
 
         /*!
@@ -716,14 +742,32 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      * Some possibly valid special path, such as a "C:" or "\"
      * will never be generated.
      */
-    inline Catch::Generators::GeneratorWrapper<QString> traditional_dos_path(double absolute_path_probability = 0.5, double directory_path_probability = 0.5) {
+    inline Catch::Generators::GeneratorWrapper<QString> traditional_dos_path(
+        double absolute_path_probability = 0.5,
+        double directory_path_probability = 0.5,
+        double multi_device_path_probability = 0.5
+    ) {
         return path(
             QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::windows_logical_drives(),
             QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::windows_separator(),
-            QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::portable_posix_directory_name(),
+            // REMAKR: Windows treats trailing dots as if they were a
+            // component of their own, that is, as the special
+            // relative paths.
+            // This seems to not be correctly handled by Qt's
+            // filesystem methods, resulting in inconsistencies when
+            // one such path is encountered.
+            // To avoid the issue, considering that an equivalent path
+            // can be formed by actually having the dots on their own
+            // as a component, we filter out all those paths that have
+            // trailing dots but are not only composed of dots.
+            Catch::Generators::filter(
+                [](auto& path){ return !(path.endsWith(".") && path.contains(QRegularExpression("[^.]"))) ; },
+                QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::portable_posix_directory_name()
+            ),
             QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::portable_posix_filename(),
             QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE::windows_separator(),
             PathGeneratorConfiguration{}
+                .set_multi_device_path_probability(multi_device_path_probability)
                 .set_absolute_path_probability(absolute_path_probability)
                 .set_directory_path_probability(directory_path_probability)
         );
@@ -758,29 +802,16 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
 
 #elif defined(Q_OS_WINDOWS)
 
-        // REMARK: If a Windows path is generated on Windows
-        // itself, we expect that it may be used to interact with
-        // the filesystem, similar to how we expect a POSIX path
-        // to be used on Linux.
-        // For this reason, we only generate a specific drive, the
-        // root one, so that we know it is an actually available
-        // drive and to contain the possible modifications to the
-        // filesystem to an easily foundable place.
-
-        // TODO: This probably will not always work, as, while not
-        // common, it might be possible, for example, that the
-        // drive where the system is installed is used
-        // specifically for the system and the user does not have
-        // read or write access to it. If any problem comes out,
-        // this should be rechecked and a more stable solution
-        // should be found.
-
-        static auto root_device{QStorageInfo::root().rootPath()};
-
-        return Catch::Generators::filter(
-            [](auto& path){ return !path.startsWith(root_device + ":"); },
-            traditional_dos_path(directory_path_probability, directory_path_probability)
-        );
+        // REMARK: When generating native paths for testing we
+        // generally want to avoid relative paths that are
+        // drive-specific, as we want them to be tied to a specific
+        // working directory that may not be the current directory on
+        // the drive.
+        // Hence, we avoid generating paths that may have a drive component.
+        // For tests where those kind of paths are interesting, a
+        // specific Windows-only test should be made, using
+        // traditional_dos_path to generate drive-relative paths only.
+        return traditional_dos_path(absolute_path_probability, directory_path_probability, 0.0);
 
 #endif
     }
