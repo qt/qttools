@@ -13,5 +13,5 @@
 QDOC_REFINED_TYPEDEF(QString, DirectoryPath) {
     QFileInfo info{value};
 
-    return (info.isDir() && info.isReadable()) ? std::optional(DirectoryPath{info.canonicalFilePath()}) : std::nullopt;
+    return (info.isDir() && info.isReadable() && info.isExecutable()) ? std::optional(DirectoryPath{info.canonicalFilePath()}) : std::nullopt;
 }

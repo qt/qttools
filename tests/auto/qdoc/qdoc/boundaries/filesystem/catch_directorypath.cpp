@@ -102,27 +102,50 @@ SCENARIO("Obtaining a DirectoryPath", "[DirectoryPath][Boundaries][Validation][C
                     auto maybe_directory_path{DirectoryPath::refine(path_to_directory)};
 
                     THEN("A DirectoryPath instance is not obtained") {
-                        REQUIRE(!maybe_directory_path);
+                        // REMARK: [temporary_directory_cleanup]
+                        CHECK(!maybe_directory_path);
+                        REQUIRE(QFile::setPermissions(path_to_directory, QFileDevice::WriteUser | QFileDevice::ReadUser | QFileDevice::ExeUser));
                     }
                 }
             }
 
-            AND_GIVEN("That the directory represented by the path is readable") {
-                // TODO: We currently need the execution permission to
-                // handle the special case of a path ending in ".".
-                // This may later change to be handled in DirectoryPath.
-                // If such is the case, change this test to a simpler version.
-                REQUIRE(QFile::setPermissions(path_to_directory, QFileDevice::ReadOwner | QFileDevice::ReadGroup | QFileDevice::ReadOther | QFileDevice::ExeUser));
+            AND_GIVEN("That the directory represented by the path is not executable") {
+                REQUIRE(QFile::setPermissions(path_to_directory, QFileDevice::WriteOwner  |
+                                                                  QFileDevice::ReadOwner  |
+                                                                  QFileDevice::WriteGroup |
+                                                                  QFileDevice::ReadGroup  |
+                                                                  QFileDevice::WriteOther |
+                                                                  QFileDevice::ReadOther));
+
+                WHEN("A DirectoryPath instance is requested from that string") {
+                    auto maybe_directory_path{DirectoryPath::refine(path_to_directory)};
+
+                    THEN("A DirectoryPath instance is not obtained") {
+                        // REMARK: [temporary_directory_cleanup]
+                        CHECK(!maybe_directory_path);
+                        REQUIRE(QFile::setPermissions(path_to_directory, QFileDevice::WriteUser | QFileDevice::ReadUser | QFileDevice::ExeUser));
+                    }
+                }
+            }
+
+            AND_GIVEN("That the directory represented by the path is readable and executable") {
+                REQUIRE(QFile::setPermissions(path_to_directory, QFileDevice::ReadOwner  |
+                                                                  QFileDevice::ExeOwner  |
+                                                                  QFileDevice::ReadGroup |
+                                                                  QFileDevice::ExeGroup  |
+                                                                  QFileDevice::ReadOther |
+                                                                  QFileDevice::ExeOther));
 
                 WHEN("A DirectoryPath instance is requested from that string") {
                     auto maybe_directory_path{DirectoryPath::refine(path_to_directory)};
 
                     THEN("A DirectoryPath instance is obtained") {
-                        // REMARK: We restore write permission to
+                        // REMARK: [temporary_directory_cleanup]
+                        // We restore all permission to
                         // ensure that the temporary directory can be
                         // automatically cleaned up.
                         CHECK(maybe_directory_path);
-                        REQUIRE(QFile::setPermissions(path_to_directory, QFileDevice::WriteUser));
+                        REQUIRE(QFile::setPermissions(path_to_directory, QFileDevice::WriteUser | QFileDevice::ReadUser | QFileDevice::ExeUser));
                     }
                 }
             }

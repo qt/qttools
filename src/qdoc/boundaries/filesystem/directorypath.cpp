@@ -11,7 +11,7 @@
  *
  * An instance of this type guarantees that, at the time of creation
  * of the instance, the contained path represented an existing,
- * readable directory.
+ * readable, executable directory.
  *
  * The type is intended to be used whenever a user-provided path to a
  * directory is encountered the first time, validating that it can be

@@ -100,7 +100,9 @@ SCENARIO("Obtaining a FilePath", "[FilePath][Boundaries][Validation][Canonicaliz
                     auto maybe_filepath{FilePath::refine(path_to_file)};
 
                     THEN("A FilePath instance is not obtained") {
-                        REQUIRE(!maybe_filepath);
+                        // REMARK: [temporary_directory_cleanup]
+                        CHECK(!maybe_filepath);
+                        REQUIRE(QFile::setPermissions(path_to_file, QFileDevice::WriteUser | QFileDevice::ReadUser | QFileDevice::ExeUser));
                     }
                 }
             }
@@ -112,11 +114,9 @@ SCENARIO("Obtaining a FilePath", "[FilePath][Boundaries][Validation][Canonicaliz
                     auto maybe_filepath{FilePath::refine(path_to_file)};
 
                     THEN("A FilePath instance is obtained") {
-                        // REMARK: We restore write permission to
-                        // ensure that the temporary directory can be
-                        // automatically cleaned up.
+                        // REMARK: [temporary_directory_cleanup]
                         CHECK(maybe_filepath);
-                        REQUIRE(QFile::setPermissions(path_to_file, QFileDevice::WriteUser));
+                        REQUIRE(QFile::setPermissions(path_to_file, QFileDevice::WriteUser | QFileDevice::ReadUser | QFileDevice::ExeUser));
                     }
                 }
             }
