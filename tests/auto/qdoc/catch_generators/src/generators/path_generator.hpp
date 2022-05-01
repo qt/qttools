@@ -34,6 +34,7 @@
 #include "qchar_generator.hpp"
 #include "qstring_generator.hpp"
 #include "../utilities/semantics/move_into_vector.hpp"
+#include "../utilities/semantics/generator_handler.hpp"
 
 #if defined(Q_OS_WINDOWS)
 
@@ -186,11 +187,11 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
                 Catch::Generators::GeneratorWrapper<QString>&& filename_component_generator,
                 Catch::Generators::GeneratorWrapper<QString>&& separator_component_generator,
                 PathGeneratorConfiguration configuration = PathGeneratorConfiguration{}
-            ) : device_component_generator{std::move(device_component_generator)},
-                root_component_generator{std::move(root_component_generator)},
-                directory_component_generator{std::move(directory_component_generator)},
-                filename_component_generator{std::move(filename_component_generator)},
-                separator_component_generator{std::move(separator_component_generator)},
+            ) : device_component_generator{QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::handler(std::move(device_component_generator))},
+                root_component_generator{QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::handler(std::move(root_component_generator))},
+                directory_component_generator{QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::handler(std::move(directory_component_generator))},
+                filename_component_generator{QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::handler(std::move(filename_component_generator))},
+                separator_component_generator{QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::handler(std::move(separator_component_generator))},
                 random_engine{std::random_device{}()},
                 components_amount_distribution{configuration.minimum_components_amount, configuration.maximum_components_amount},
                 is_multi_device_distribution{configuration.multi_device_path_probability},
@@ -202,125 +203,8 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
                 assert(configuration.minimum_components_amount > 0);
                 assert(configuration.minimum_components_amount <= configuration.maximum_components_amount);
 
-                // REMARK: [catch-generators-semantic-first-value]
-                {
-                    std::size_t components_amount{components_amount_distribution(random_engine)};
-
-                    // REMARK: As per our specification of a path, we
-                    // do not count device components, and separators,
-                    // when considering the amount of components in a
-                    // path.
-                    // This is a tradeoff that is not necessarily
-                    // precise.
-                    // Counting those kinds of components, on one
-                    // hand, would allow a device component to stands
-                    // on its own as a path, for example "C:", which
-                    // might actually be correct in some path format.
-                    // On the other hand, counting those kinds of
-                    // components makes the construction of paths for
-                    // our model much more complex with regards, for
-                    // example, to the amount of component.
-                    //
-                    // Counting device components, since they can
-                    // appear both in relative and absolute paths,
-                    // makes the minimum amount of components
-                    // different for different kinds of paths.
-                    //
-                    // Since absolute paths always require a root
-                    // component, the minimum amount of components for
-                    // a multi-device absolute path is 2.
-                    //
-                    // But an absolute path that is not multi-device
-                    // would only require one minimum component.
-                    //
-                    // Similarly, problems arise with the existence of
-                    // Windows' relative multi-device path, which
-                    // require a leading separator component after a
-                    // device component.
-                    //
-                    // This problem mostly comes from our model
-                    // simplifying the definition of paths quite a bit
-                    // into binary-forms.
-                    // This simplifies the code and its structure,
-                    // sacrificing some precision.
-                    // The lost precision is almost none for POSIX
-                    // based paths, but is graver for DOS paths, since
-                    // they have a more complex specification.
-                    //
-                    // Currently, we expect that the paths that QDoc
-                    // will encounter will mostly be in POSIX-like
-                    // forms, even on Windows, and aim to support
-                    // that, such that the simplification of code is
-                    // considered a better tradeoff compared to the
-                    // loss of precision.
-                    //
-                    // If this changes, the model should be changed to
-                    // pursue a Windows-first modeling, moving the
-                    // categorization of paths from the current binary
-                    // model to the absolute, drive-relative and
-                    // relative triptych that Windows uses.
-                    // This more complex model should be able to
-                    // completely describe posix paths too, making it
-                    // a superior choice as long as the complexity is
-                    // warranted.
-                    //
-                    // Do note that the model similarly can become
-                    // inconsistent when used to generate format of
-                    // paths such as the one used in some resource
-                    // systems.
-                    // Those are considered out-of-scope for our needs
-                    // and were not taken into account when developing
-                    // this generator.
-                    if (is_multi_device_distribution(random_engine)) current_path += this->device_component_generator.get();
-
-                    // REMARK: Similarly to not counting other form of
-                    // components, we do not count root components
-                    // towards the amounts of components that the path
-                    // has to simplify the code.
-                    // To support the "special" root path on, for
-                    // example, posix systems, we require a more
-                    // complex branching logic that changes based on
-                    // the path being absolute or not.
-                    //
-                    // We don't expect root to be a particularly
-                    // useful path for QDoc purposes and expect to not
-                    // have to consider it for our tests.
-                    // If consideration for it become required, it is
-                    // possible to test it directly in the affected
-                    // systemss as a special case.
-                    //
-                    // If most systems are affected by the handling of
-                    // a root path, then the model should be slightly
-                    // changed to accommodate its generation.
-                    if (is_absolute_path_distribution(random_engine)) current_path += this->root_component_generator.get();
-
-                    std::size_t prefix_components_amount{std::max(std::size_t{1}, components_amount) - 1};
-
-                    if (prefix_components_amount > 0) {
-                        current_path += this->directory_component_generator.get() + this->separator_component_generator.get();
-                        --prefix_components_amount;
-                    }
-
-
-                    while (prefix_components_amount > 0) {
-                        if (!this->directory_component_generator.next() || !this->separator_component_generator.next())
-                            Catch::throw_exception("Not enough values to initialize the first string");
-
-                        current_path += this->directory_component_generator.get() + this->separator_component_generator.get();
-                        --prefix_components_amount;
-                    }
-
-
-                    if (is_directory_path_distribution(random_engine)) {
-                        current_path += this->directory_component_generator.get();
-
-                        if (has_trailing_separator(random_engine)) {
-                            current_path += this->separator_component_generator.get();
-                        }
-                    } else {
-                        current_path += this->filename_component_generator.get();
-                    }
-                }
+                if (!next())
+                    Catch::throw_exception("Not enough values to initialize the first string");
             }
 
             QString const& get() const override { return current_path; }
@@ -330,11 +214,95 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
 
                 current_path = "";
 
+                // REMARK: As per our specification of a path, we
+                // do not count device components, and separators,
+                // when considering the amount of components in a
+                // path.
+                // This is a tradeoff that is not necessarily
+                // precise.
+                // Counting those kinds of components, on one
+                // hand, would allow a device component to stands
+                // on its own as a path, for example "C:", which
+                // might actually be correct in some path format.
+                // On the other hand, counting those kinds of
+                // components makes the construction of paths for
+                // our model much more complex with regards, for
+                // example, to the amount of component.
+                //
+                // Counting device components, since they can
+                // appear both in relative and absolute paths,
+                // makes the minimum amount of components
+                // different for different kinds of paths.
+                //
+                // Since absolute paths always require a root
+                // component, the minimum amount of components for
+                // a multi-device absolute path is 2.
+                //
+                // But an absolute path that is not multi-device
+                // would only require one minimum component.
+                //
+                // Similarly, problems arise with the existence of
+                // Windows' relative multi-device path, which
+                // require a leading separator component after a
+                // device component.
+                //
+                // This problem mostly comes from our model
+                // simplifying the definition of paths quite a bit
+                // into binary-forms.
+                // This simplifies the code and its structure,
+                // sacrificing some precision.
+                // The lost precision is almost none for POSIX
+                // based paths, but is graver for DOS paths, since
+                // they have a more complex specification.
+                //
+                // Currently, we expect that the paths that QDoc
+                // will encounter will mostly be in POSIX-like
+                // forms, even on Windows, and aim to support
+                // that, such that the simplification of code is
+                // considered a better tradeoff compared to the
+                // loss of precision.
+                //
+                // If this changes, the model should be changed to
+                // pursue a Windows-first modeling, moving the
+                // categorization of paths from the current binary
+                // model to the absolute, drive-relative and
+                // relative triptych that Windows uses.
+                // This more complex model should be able to
+                // completely describe posix paths too, making it
+                // a superior choice as long as the complexity is
+                // warranted.
+                //
+                // Do note that the model similarly can become
+                // inconsistent when used to generate format of
+                // paths such as the one used in some resource
+                // systems.
+                // Those are considered out-of-scope for our needs
+                // and were not taken into account when developing
+                // this generator.
                 if (is_multi_device_distribution(random_engine)) {
                     if (!device_component_generator.next()) return false;
                     current_path += device_component_generator.get();
                 }
 
+                // REMARK: Similarly to not counting other form of
+                // components, we do not count root components
+                // towards the amounts of components that the path
+                // has to simplify the code.
+                // To support the "special" root path on, for
+                // example, posix systems, we require a more
+                // complex branching logic that changes based on
+                // the path being absolute or not.
+                //
+                // We don't expect root to be a particularly
+                // useful path for QDoc purposes and expect to not
+                // have to consider it for our tests.
+                // If consideration for it become required, it is
+                // possible to test it directly in the affected
+                // systemss as a special case.
+                //
+                // If most systems are affected by the handling of
+                // a root path, then the model should be slightly
+                // changed to accommodate its generation.
                 if (is_absolute_path_distribution(random_engine)) {
                     if (!root_component_generator.next()) return false;
 

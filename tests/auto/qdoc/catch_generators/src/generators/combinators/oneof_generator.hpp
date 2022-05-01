@@ -30,6 +30,7 @@
 
 #include "../../namespaces.hpp"
 #include "../../utilities/statistics/percentages.hpp"
+#include "../../utilities/semantics/generator_handler.hpp"
 
 #include <catch.hpp>
 
@@ -63,9 +64,12 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
                 assert(weights.size() == this->generators.size());
                 assert(std::reduce(weights.cbegin(), weights.cend()) == Approx(100.0));
 
-                // REMARK: [catch-generators-semantic-first-value]
-                std::size_t generator_index{this->choice_distribution(random_engine)};
-                this->current_value = this->generators[generator_index].get();
+                std::transform(
+                    this->generators.begin(), this->generators.end(), this->generators.begin(),
+                    [](auto& generator){ return QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::handler(std::move(generator)); }
+                );
+
+                static_cast<void>(next());
             }
 
             T const& get() const override { return current_value; }

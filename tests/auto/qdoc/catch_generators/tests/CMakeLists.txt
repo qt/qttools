@@ -8,6 +8,8 @@ qt_internal_add_test(tst_QDoc_Catch_Generators
 
     combinators/catch_oneof_generator.cpp
     combinators/catch_cycle_generator.cpp
+
+    utilities/catch_generator_handler.cpp
   INCLUDE_DIRECTORIES
     ../src
     ../../catch

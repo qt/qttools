@@ -637,6 +637,105 @@ SCENARIO("Observing the distribution of paths based on their configuration", "[P
     }
 }
 
+TEST_CASE("The first component of the passed in device components generator is not lost", "[Path][GeneratorFirstElement][SpecialCase]") {
+    QString device_component_generator_first_value{"device"};
+
+    auto generated_path = GENERATE_COPY(take(1,
+        path(
+            values({device_component_generator_first_value, QString{""}}),
+            empty_string(),
+            empty_string(),
+            empty_string(),
+            empty_string(),
+            PathGeneratorConfiguration{}
+                .set_multi_device_path_probability(1.0)
+                .set_minimum_components_amount(1)
+                .set_maximum_components_amount(1)
+        )
+    ));
+
+    REQUIRE(generated_path.contains(device_component_generator_first_value));
+}
+
+TEST_CASE("The first component of the passed in root components generator is not lost", "[Path][GeneratorFirstElement][SpecialCase]") {
+    QString root_component_generator_first_value{"root"};
+
+    auto generated_path = GENERATE_COPY(take(1,
+        path(
+            empty_string(),
+            values({root_component_generator_first_value, QString{""}}),
+            empty_string(),
+            empty_string(),
+            empty_string(),
+            PathGeneratorConfiguration{}
+                .set_absolute_path_probability(1.0)
+                .set_minimum_components_amount(1)
+                .set_maximum_components_amount(1)
+        )
+    ));
+
+    REQUIRE(generated_path.contains(root_component_generator_first_value));
+}
+
+TEST_CASE("The first component of the passed in directory components generator is not lost", "[Path][GeneratorFirstElement][SpecialCase]") {
+    QString directory_component_generator_first_value{"dir"};
+
+    auto generated_path = GENERATE_COPY(take(1,
+        path(
+            empty_string(),
+            empty_string(),
+            values({directory_component_generator_first_value, QString{""}}),
+            empty_string(),
+            empty_string(),
+            PathGeneratorConfiguration{}
+                .set_directory_path_probability(1.0)
+                .set_minimum_components_amount(1)
+                .set_maximum_components_amount(1)
+        )
+    ));
+
+    REQUIRE(generated_path.contains(directory_component_generator_first_value));
+}
+
+TEST_CASE("The first component of the passed in filename components generator is not lost", "[Path][GeneratorFirstElement][SpecialCase]") {
+    QString filename_component_generator_first_value{"dir"};
+
+    auto generated_path = GENERATE_COPY(take(1,
+        path(
+            empty_string(),
+            empty_string(),
+            empty_string(),
+            values({filename_component_generator_first_value, QString{""}}),
+            empty_string(),
+            PathGeneratorConfiguration{}
+                .set_directory_path_probability(0.0)
+                .set_minimum_components_amount(1)
+                .set_maximum_components_amount(1)
+        )
+    ));
+
+    REQUIRE(generated_path.contains(filename_component_generator_first_value));
+}
+
+TEST_CASE("The first component of the passed in separator components generator is not lost", "[Path][GeneratorFirstElement][SpecialCase]") {
+    QString separator_component_generator_first_value{"sep"};
+
+    auto generated_path = GENERATE_COPY(take(1,
+        path(
+            empty_string(),
+            empty_string(),
+            empty_string(),
+            empty_string(),
+            values({separator_component_generator_first_value, QString{""}}),
+            PathGeneratorConfiguration{}
+                .set_directory_path_probability(0.0)
+                .set_minimum_components_amount(2)
+                .set_maximum_components_amount(2)
+        )
+    ));
+
+    REQUIRE(generated_path.contains(separator_component_generator_first_value));
+}
 
 SCENARIO("Generating paths that are suitable to be used on POSIX systems", "[Path][POSIX][Content]") {
     GIVEN("A generator that generates Strings representing paths on a POSIX system that are portable") {

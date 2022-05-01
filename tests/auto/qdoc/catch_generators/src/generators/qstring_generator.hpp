@@ -30,6 +30,7 @@
 
 #include "../namespaces.hpp"
 #include "qchar_generator.hpp"
+#include "../utilities/semantics/generator_handler.hpp"
 
 #include <catch.hpp>
 
@@ -43,7 +44,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
         class QStringGenerator : public Catch::Generators::IGenerator<QString> {
         public:
             QStringGenerator(Catch::Generators::GeneratorWrapper<QChar>&& character_generator, qsizetype minimum_length, qsizetype maximum_length)
-                : character_generator{std::move(character_generator)},
+                : character_generator{QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE::handler(std::move(character_generator))},
                 random_engine{std::random_device{}()},
                 length_distribution{minimum_length, maximum_length},
                 current_string{}
@@ -52,62 +53,8 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
                 assert(maximum_length >= 0);
                 assert(minimum_length <= maximum_length);
 
-                // TODO: While the following is generally a good
-                // strategy for simple generator it may become less
-                // maintable on complex generators or the complexity
-                // may go out of hand for some of them.
-                // Should that be the case, explore the task of
-                // providing a small abstraction over accessing owned
-                // generators that can be used for those cases.
-                // In general, we want to be able to discern between
-                // getting a value by checking that the generator has
-                // one available and getting a value without checking
-                // that the generator has one available.
-                // For collection based generators, we usually need to
-                // report if not enough elements are available to
-                // genrate the first value. This usually requires a
-                // dividing the access to the generator in a base
-                // case, that is unchecked, and a series of checked
-                // accesses.
-                // It should be possible to normalize the
-                // implementation if a good abstraction for those
-                // idioms is found.
-
-                // REMARK: [catch-generators-semantic-first-value]
-                // It is important to remember that in catch, for an
-                // instance of a generator that was just constructed ,
-                // it should be valid to call get.
-                // This means that when we depend on an externally
-                // passed generator, to avoid skipping the first
-                // value, we want to call get once before calling
-                // next.
-                // If done otherwise, we may incur into errors for
-                // those cases where, for example, the generator
-                // contains a single value.
-                // Or, similarly, if the values of the generator are
-                // finite, we will not exhaust the entire set,
-                // producing possibly difficult to spot bugs or
-                // improper testing.
-                //
-                // This means that in the constructor of a generator
-                // that depends on another generator, we must perform
-                // a similar operation to next, with the difference in
-                // the order of the calls to get and next.
-                //
-                // While it is possible to abstract this away to avoid
-                // the code duplication that we have here, those
-                // operation have such a small scope and small reading
-                // overhead that the duplication was purposefully
-                // chosen to avoid complicating the code needlessly.
-
-                qsizetype length{length_distribution(random_engine)};
-
-                if (length > 0) this->current_string += this->character_generator.get();
-
-                for (qsizetype length_index{1}; length_index < length; ++length_index) {
-                    if (!this->character_generator.next()) Catch::throw_exception("Not enough values to initialize the first string");
-                    this->current_string += this->character_generator.get();
-                }
+                if (!next())
+                    Catch::throw_exception("Not enough values to initialize the first string");
             }
 
             QString const& get() const override { return current_string; }

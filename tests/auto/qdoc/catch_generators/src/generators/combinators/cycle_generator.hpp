@@ -29,6 +29,7 @@
 #pragma once
 
 #include "../../namespaces.hpp"
+#include "../../utilities/semantics/generator_handler.hpp"
 
 #include <catch.hpp>
 
@@ -45,7 +46,13 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
                   cache{},
                   cache_index{0}
             {
-                // REMARK: [catch-generators-semantic-first-value]
+                // REMARK: We generally handle extracting the first
+                // value by using an handler, to avoid code
+                // duplication and the possibility of an error.
+                // In this specific case, we turn to a more "manual"
+                // approach as it better models the cache-based
+                // implementation, removing the need to not increment
+                // cache_index the first time that next is called.
                 cache.emplace_back(this->generator.get());
             }
 
