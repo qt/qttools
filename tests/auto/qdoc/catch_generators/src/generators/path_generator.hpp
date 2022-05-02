@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -106,7 +106,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      */
 
     /*!
-     * \variable PathGeneratiorConfiguration::multi_device_path_probability
+     * \variable PathGeneratorConfiguration::multi_device_path_probability
      *
      * Every path produced by a PathGenerator configured with a
      * mutli_device_path_probability of n has a probability of n to be
@@ -118,7 +118,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      */
 
     /*!
-     * \variable PathGeneratiorConfiguration::absolute_path_probability
+     * \variable PathGeneratorConfiguration::absolute_path_probability
      *
      * Every path produced by a PathGenerator configured with an
      * absolute_path_probability of n has a probability of n to be \e
@@ -129,7 +129,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      */
 
     /*!
-     * \variable PathGeneratiorConfiguration::directory_path_probability
+     * \variable PathGeneratorConfiguration::directory_path_probability
      *
      * Every path produced by a PathGenerator configured with a
      * directory_path_probability of n has a probability of n to be \e
@@ -141,7 +141,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      */
 
     /*!
-     * \variable PathGeneratiorConfiguration::has_trailing_separator_probability
+     * \variable PathGeneratorConfiguration::has_trailing_separator_probability
      *
      * Every path produced by a PathGenerator configured with an
      * has_trailing_separator_probability of n has a probability of n
@@ -153,7 +153,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      */
 
     /*!
-     * \variable PathGeneratiorConfiguration::minimum_components_amount
+     * \variable PathGeneratorConfiguration::minimum_components_amount
      *
      * Every path produced by a PathGenerator configured with a
      * minimum_components_amount of n will be the concatenation of at
@@ -165,7 +165,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      */
 
     /*!
-     * \variable PathGeneratiorConfiguration::maximum_components_amount
+     * \variable PathGeneratorConfiguration::maximum_components_amount
      *
      * Every path produced by a PathGenerator configured with a
      * maximum_components_amount of n will be the concatenation of at
@@ -428,18 +428,18 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
     * {root} or \e {separator} component is present.
     * \endlist
     *
-    * For example, if "C:" is a \e {device} component, "\" is a
-    * \e {root} component, \" is a \e {separator} component,
+    * For example, if "C:" is a \e {device} component, "\\" is a
+    * \e {root} component, "\\" is a \e {separator} component,
     * "directory" is a \e {directory} component and "filename" is
     * a \e {filename} component, the following are all paths:
     *
-    * C:\directory", "C:\directory\directory", "C:filename",
-    * "directory\directory\", "\directory\filename", "filename".
+    * "C:\\directory", "C:\\directory\\directory", "C:filename",
+    * "directory\\directory\\", "\\directory\\filename", "filename".
     *
     * While the following aren't:
     *
-    * "C:", "C:\", "directory\C:", "foo", "C:filename\",
-    * "filename\directory\filename", "filename\filename",
+    * "C:", "C:\\", "directory\\C:", "foo", "C:filename\\",
+    * "filename\\directory\\filename", "filename\\filename",
     * "directorydirectory"."
     *
     * The format of different components type can be the same.
@@ -555,8 +555,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
          * by other systems.
          *
          * Components of this kind use the \l
-         * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_282}{Portable
-         * Filename Character Set}.
+         * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_282}{Portable Filename Character Set}.
          */
         inline Catch::Generators::GeneratorWrapper<QString> portable_posix_directory_name() {
             return string(
@@ -572,8 +571,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
          * other systems.
          *
          * Filenames of this kind use the \l
-         * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_282}{Portable
-         * Filename Character Set}.
+         * {https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_282}{Portable Filename Character Set}.
          */
         inline Catch::Generators::GeneratorWrapper<QString> portable_posix_filename() {
             // REMARK: "." and ".." always represent directories so we

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -48,7 +48,7 @@ namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE {
             auto key{std::invoke(std::forward<GroupBy>(group_by), *begin)};
 
             histogram.try_emplace(key, 0);
-            histogram[key]+= 1;
+            histogram[key] += 1;
             ++begin;
         }
 

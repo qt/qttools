@@ -55,7 +55,7 @@ namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE {
      *
      * This function is intended to allow the construction of an
      * std::vector<T>, where T is a move only type, as an expression,
-     * to lighen the idiom.
+     * to lighten the idiom.
      *
      * For example, Catch's GeneratorWrapper<T> adapts a
      * std::unique_ptr, which is move only, making it impossible to

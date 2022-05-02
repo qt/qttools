@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -91,7 +91,7 @@ namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
      * If the owning generator needs to produce more values that the
      * owned generator can support, it might fail at some point.
      * By cycling over the owned generator, we can extend the sequence
-     * of produced value so that enough are generated, in a controlled
+     * of produced values so that enough are generated, in a controlled
      * way.
      *
      * The type T should generally be copyable for this generator to

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -35,9 +35,9 @@
 namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE {
 
     /*!
-     * Returnes the percentage of \amount over \a total.
+     * Returns the percentage of \amount over \a total.
      *
-     * \a amount is needs to be greater or equal to zero and \a total
+     * \a amount needs to be greater or equal to zero and \a total
      * needs to be greater than zero.
      */
     inline double percent_of(double amount, double total) {
@@ -62,7 +62,7 @@ namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE {
      * Returns a percentage probability that is equal to \a
      * probability.
      *
-     * \a probabbility must be in the reange [0.0, 1.0]
+     * \a probability must be in the range [0.0, 1.0]
      */
     inline double probability_to_percentage(double probability) {
         assert(probability >= 0.0);

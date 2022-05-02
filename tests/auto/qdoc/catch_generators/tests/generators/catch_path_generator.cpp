@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -542,7 +542,7 @@ SCENARIO("Observing the distribution of paths based on their configuration", "[P
             WHEN("A certain amount of paths are generated from that generator") {
                 auto paths = GENERATE_REF(take(1, chunk(10000, std::move(path_generator))));
 
-                THEN("The amount of paths that are Multi-Device approximately respect the given probability and the amount of paths that are not approximately respects a probability of 1 - n") {
+                THEN("The amount of paths that are Multi-Device approximately respects the given probability and the amount of paths that are not approximately respects a probability of 1 - n") {
                     auto maybe_distribution_error{respects_distribution(
                         std::move(paths),
                         [&device_component_value](const QString& path){ return (path.startsWith(device_component_value)) ? "Multi-Device" : "Non Multi-Device"; },
@@ -569,7 +569,7 @@ SCENARIO("Observing the distribution of paths based on their configuration", "[P
             WHEN("A certain amount of paths are generated from that generator") {
                 auto paths = GENERATE_REF(take(1, chunk(10000, std::move(path_generator))));
 
-                THEN("The amount of paths that are Absolute approximately respect the given probability and the amount of paths that are Relative approximately respects a probability of 1 - n") {
+                THEN("The amount of paths that are Absolute approximately respects the given probability and the amount of paths that are Relative approximately respects a probability of 1 - n") {
                     auto maybe_distribution_error{respects_distribution(
                         std::move(paths),
                         [&root_component_value](const QString& path){ return (path.contains(root_component_value)) ? "Absolute" : "Relative"; },
@@ -596,7 +596,7 @@ SCENARIO("Observing the distribution of paths based on their configuration", "[P
             WHEN("A certain amount of paths are generated from that generator") {
                 auto paths = GENERATE_REF(take(1, chunk(10000, std::move(path_generator))));
 
-                THEN("The amount of paths that are To a Directory approximately respect the given probability and the amount of paths that are To a File approximately respects a probability of 1 - n") {
+                THEN("The amount of paths that are To a Directory approximately respects the given probability and the amount of paths that are To a File approximately respects a probability of 1 - n") {
                     auto maybe_distribution_error{respects_distribution(
                         std::move(paths),
                         [&filename_component_value](const QString& path){ return (path.contains(filename_component_value)) ? "To a File" : "To a Directory"; },
@@ -623,7 +623,7 @@ SCENARIO("Observing the distribution of paths based on their configuration", "[P
             WHEN("A certain amount of paths are generated from that generator") {
                 auto paths = GENERATE_REF(take(1, chunk(10000, std::move(path_generator))));
 
-                THEN("The amount of paths that are Have a Trailing Separator approximately respect the given probability and the amount of paths that do not Have a Trailing Separator approximately respects a probability of 1 - n") {
+                THEN("The amount of paths that are Have a Trailing Separator approximately respects the given probability and the amount of paths that do not Have a Trailing Separator approximately respects a probability of 1 - n") {
                     auto maybe_distribution_error{respects_distribution(
                         std::move(paths),
                         [&separator_component_value](const QString& path){ return (path.endsWith(separator_component_value)) ? "Have a Trailing Separator" : "Doesn't Have a Trailing Separator"; },

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -111,7 +111,7 @@ SCENARIO("Choosing between one of many generators", "[OneOf][Combinators]") {
 // test-run itself fail.
 // We generally expect this test to not fail, but it may fail randomly
 // every now and then simply because of how a correctly randomized
-// distrubution may behave.
+// distribution may behave.
 // As long as this test doesn't fail consistently, with values that
 // shows an unsustainable deviation, it should be considered to be
 // working.
@@ -189,7 +189,7 @@ SCENARIO("Observing the distribution of generators that are chosen from", "[OneO
             generators.push_back(Catch::Generators::random(generators_bounds[index - 1] + lower_bound_offset, generators_bounds[index]));
         }
 
-        AND_GIVEN("A probability of being chosen, in percentage, for each of the generators, such that the sum of the percentages is an hundred") {
+        AND_GIVEN("A probability of being chosen, in percentage, for each of the generators, such that the sum of the percentages is one hundred") {
             std::vector<double> probabilities = GENERATE_COPY(take(10, k_partition_of_r(100.0, generators_amount)));
 
             AND_GIVEN("A choosing generator for those generators based on the given probabilities") {
@@ -198,7 +198,7 @@ SCENARIO("Observing the distribution of generators that are chosen from", "[OneO
                 WHEN("A certain amount of values are generated from the choosing generator") {
                     auto values = GENERATE_REF(take(1, chunk(10000, std::move(choosing_generator))));
 
-                    THEN("The distribution of elements for each generator approximately respect the weight that was given to it") {
+                    THEN("The distribution of elements for each generator approximately respects the weight that was given to it") {
                         auto maybe_distribution_error{respects_distribution(
                             std::move(values),
                             find_index_of_producing_generator,
@@ -217,7 +217,7 @@ SCENARIO("Observing the distribution of generators that are chosen from", "[OneO
             WHEN("A certain amount of values are generated from the choosing generator") {
                 auto values = GENERATE_REF(take(1, chunk(10000, std::move(choosing_generator))));
 
-                THEN("The distribution of elements approximately tends to being uniform over the generators") {
+                THEN("The distribution of elements approximates uniformity over the generators") {
                     double probability{uniform_probability(generators_amount)};
 
                     auto maybe_distribution_error{respects_distribution(
@@ -275,7 +275,7 @@ SCENARIO("Observing the distribution of generators that are chosen from", "[OneO
             WHEN("A certain amount of values are generated from the choosing generator") {
                 auto values = GENERATE_REF(take(1, chunk(10000, std::move(choosing_generator))));
 
-                THEN("The distribution of elements approximately tends to being uniform for each value") {
+                THEN("The distribution of elements approximates uniformity for each value") {
                     double probability{uniform_probability(output_cardinality)};
 
                     auto maybe_distribution_error{respects_distribution(

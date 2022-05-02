@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2022 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the tools applications of the Qt Toolkit.
@@ -41,15 +41,6 @@
 
 namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE {
     namespace QDOC_CATCH_GENERATORS_PRIVATE_NAMESPACE {
-
-        // TODO: The interface for OneOf is the main reason why we
-        // need and use move_into_vector.
-        // While this is mostly unavaidoable as long as we want to be
-        // able to supper dynamically generated generators, we could
-        // avoid the duplication by having one* functions use a
-        // simplified interface (template packs instead of vector)
-        // that is calls move_into_vector itself.
-        // Consider if it makes sense to do this.
 
         template<typename T>
         class OneOfGenerator : public Catch::Generators::IGenerator<T> {
