@@ -91,7 +91,6 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
 {
     const int MaxEnumValues = 6;
     const FunctionNode *func;
-    const PropertyNode *property;
     const VariableNode *variable;
     const EnumNode *enume;
     QString synopsis;
@@ -220,10 +219,16 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
             synopsis = "flags ";
         synopsis += name;
         break;
-    case Node::Property:
-        property = static_cast<const PropertyNode *>(node);
+    case Node::Property: {
+        auto property = static_cast<const PropertyNode *>(node);
         synopsis = name + " : " + typified(property->qualifiedDataType());
         break;
+    }
+    case Node::QmlProperty: {
+        auto property = static_cast<const QmlPropertyNode *>(node);
+        synopsis = name + " : " + typified(property->dataType());
+        break;
+    }
     case Node::Variable:
         variable = static_cast<const VariableNode *>(node);
         if (style == Section::AllMembers) {

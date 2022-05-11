@@ -578,7 +578,9 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                     generateCompactList(Generic, relative, ncmap, false, QStringLiteral("Q"));
                 else if (index == Sections::SinceQmlTypes)
                     generateCompactList(Generic, relative, nqcmap, false, QStringLiteral(""));
-                else if (index == Sections::SinceMemberFunctions) {
+                else if (index == Sections::SinceMemberFunctions
+                         || index == Sections::SinceQmlMethods
+                         || index == Sections::SinceQmlProperties) {
                     ParentMaps parentmaps;
                     ParentMaps::iterator pmap;
                     const QList<Node *> &members = section.members();
@@ -591,7 +593,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                     }
                     for (auto map = parentmaps.begin(); map != parentmaps.end(); ++map) {
                         NodeVector nv = map->values().toVector();
-                        out() << "<p>Class ";
+                        out() << ((index == Sections::SinceMemberFunctions) ? "<p>Class " : "<p>QML Type ");
 
                         out() << "<a href=\"" << linkForNode(map.key(), relative) << "\">";
                         QStringList pieces = map.key()->fullName().split("::");
