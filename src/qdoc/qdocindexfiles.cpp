@@ -506,8 +506,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         if (attributes.value(QLatin1String("attached")) == QLatin1String("true"))
             attached = true;
         auto *fn = new FunctionNode(metaness, parent, name, attached);
+
+        fn->setReturnType(attributes.value(QLatin1String("type")).toString());
+
         if (fn->isCppNode()) {
-            fn->setReturnType(attributes.value(QLatin1String("type")).toString());
             fn->setVirtualness(attributes.value(QLatin1String("virtual")).toString());
             fn->setConst(attributes.value(QLatin1String("const")) == QLatin1String("true"));
             fn->setStatic(attributes.value(QLatin1String("static")) == QLatin1String("true"));
@@ -528,28 +530,29 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
                 fn->setOverloadNumber(attributes.value(QLatin1String("overload-number")).toUInt());
             else
                 fn->setOverloadNumber(0);
-            /*
-              Note: The "signature" attribute was written to the
-              index file, but it is not read back in. That is ok
-              because we reconstruct the parameter list and the
-              return type, from which the signature was built in
-              the first place and from which it can be rebuilt.
-            */
-            while (reader.readNextStartElement()) {
-                QXmlStreamAttributes childAttributes = reader.attributes();
-                if (reader.name() == QLatin1String("parameter")) {
-                    // Do not use the default value for the parameter; it is not
-                    // required, and has been known to cause problems.
-                    QString type = childAttributes.value(QLatin1String("type")).toString();
-                    QString name = childAttributes.value(QLatin1String("name")).toString();
-                    fn->parameters().append(type, name);
-                } else if (reader.name() == QLatin1String("keyword")) {
-                    insertTarget(TargetRec::Keyword, childAttributes, fn);
-                } else if (reader.name() == QLatin1String("target")) {
-                    insertTarget(TargetRec::Target, childAttributes, fn);
-                }
-                reader.skipCurrentElement();
+        }
+
+        /*
+            Note: The "signature" attribute was written to the
+            index file, but it is not read back in. That is ok
+            because we reconstruct the parameter list and the
+            return type, from which the signature was built in
+            the first place and from which it can be rebuilt.
+        */
+        while (reader.readNextStartElement()) {
+            QXmlStreamAttributes childAttributes = reader.attributes();
+            if (reader.name() == QLatin1String("parameter")) {
+                // Do not use the default value for the parameter; it is not
+                // required, and has been known to cause problems.
+                QString type = childAttributes.value(QLatin1String("type")).toString();
+                QString name = childAttributes.value(QLatin1String("name")).toString();
+                fn->parameters().append(type, name);
+            } else if (reader.name() == QLatin1String("keyword")) {
+                insertTarget(TargetRec::Keyword, childAttributes, fn);
+            } else if (reader.name() == QLatin1String("target")) {
+                insertTarget(TargetRec::Target, childAttributes, fn);
             }
+            reader.skipCurrentElement();
         }
 
         node = fn;
@@ -1374,13 +1377,18 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
             writer.writeAttribute("associated-property",
                                   associatedProperties.join(QLatin1Char(',')));
         }
-        writer.writeAttribute("type", fn->returnType());
+    }
+
+    writer.writeAttribute("type", fn->returnType());
+
+    if (fn->isCppNode()) {
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
+
         /*
-          Note: The "signature" attribute is written to the
-          index file, but it is not read back in by qdoc. However,
-          we need it for the webxml generator.
+        Note: The "signature" attribute is written to the
+        index file, but it is not read back in by qdoc. However,
+        we need it for the webxml generator.
         */
         QString signature = fn->signature(false, false);
         // 'const' is already part of FunctionNode::signature()
@@ -1395,15 +1403,15 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         QStringList groups = m_qdb->groupNamesForNode(fn);
         if (!groups.isEmpty())
             writer.writeAttribute("groups", groups.join(QLatin1Char(',')));
+    }
 
-        for (int i = 0; i < fn->parameters().count(); ++i) {
-            const Parameter &parameter = fn->parameters().at(i);
-            writer.writeStartElement("parameter");
-            writer.writeAttribute("type", parameter.type());
-            writer.writeAttribute("name", parameter.name());
-            writer.writeAttribute("default", parameter.defaultValue());
-            writer.writeEndElement(); // parameter
-        }
+    for (int i = 0; i < fn->parameters().count(); ++i) {
+        const Parameter &parameter = fn->parameters().at(i);
+        writer.writeStartElement("parameter");
+        writer.writeAttribute("type", parameter.type());
+        writer.writeAttribute("name", parameter.name());
+        writer.writeAttribute("default", parameter.defaultValue());
+        writer.writeEndElement(); // parameter
     }
 
     // Append to the section if the callback object was set
