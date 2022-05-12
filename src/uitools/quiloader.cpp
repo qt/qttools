@@ -450,7 +450,8 @@ void FormBuilderPrivate::applyProperties(QObject *o, const QList<DomProperty*> &
             o->setProperty(dynname, QVariant::fromValue(strVal));
             anyTrs = trEnabled;
         }
-        o->setProperty(name, text);
+        if (p->elementString()->text() != text)
+            o->setProperty(name, text);
     }
     if (anyTrs)
         o->installEventFilter(m_trwatch);
