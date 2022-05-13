@@ -267,6 +267,19 @@ function(qt6_add_lrelease target)
             DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease "${ts_file}"
             VERBATIM)
         list(APPEND qm_files "${qm}")
+
+        # QTBUG-103470: Save the target responsible for driving the build of the custom command
+        # into an internal source file property. It will be added as a dependency for targets
+        # created by _qt_internal_process_resource, to avoid the Xcode issue of not allowing
+        # multiple targets depending on the output, without having a common target ancestor.
+        set(scope_args)
+        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+            set(scope_args TARGET_DIRECTORY ${target})
+        endif()
+        set_source_files_properties("${qm}" ${scope_args} PROPERTIES
+            _qt_resource_target_dependency "${target}_lrelease"
+            QT_RESOURCE_TARGET_DEPENDENCY "${target}_lrelease" # TODO: remove once qtbase is updated
+        )
     endforeach()
 
     add_custom_target(${target}_lrelease DEPENDS ${qm_files})
