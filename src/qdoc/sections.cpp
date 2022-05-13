@@ -194,12 +194,9 @@ void Section::insert(Node *node)
         if (node->isDeprecated()) {
             m_obsoleteMemberMap.insert(key, node);
         } else {
-            if (!inherited)
+            if (!inherited || m_style == AllMembers)
                 m_memberMap.insert(key, node);
-            else if (m_style == AllMembers) {
-                if (!m_memberMap.contains(key))
-                    m_memberMap.insert(key, node);
-            }
+
             if (inherited && (node->parent()->isClassNode() || node->parent()->isNamespace())) {
                 if (m_inheritedMembers.isEmpty()
                     || m_inheritedMembers.last().first != node->parent()) {
