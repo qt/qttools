@@ -567,11 +567,13 @@ static void processQdocconfFile(const QString &fileName)
     qCDebug(lcQdoc, "Generating docs");
     for (const auto &format : outputFormats) {
         auto *generator = Generator::generatorForFormat(format);
-        if (generator == nullptr)
+        if (generator) {
+            generator->initializeFormat();
+            generator->generateDocs();
+        } else {
             outputFormatsLocation.fatal(
                     QCoreApplication::translate("QDoc", "Unknown output format '%1'").arg(format));
-        generator->initializeFormat();
-        generator->generateDocs();
+        }
     }
 
     qCDebug(lcQdoc, "Terminating qdoc classes");
