@@ -36,7 +36,7 @@
 #include <QtCore/qfileinfo.h>
 
 QDOC_REFINED_TYPEDEF(QString, DirectoryPath) {
-    QFileInfo info{std::move(value)};
+    QFileInfo info{value};
 
     return (info.isDir() && info.isReadable()) ? std::optional(DirectoryPath{info.canonicalFilePath()}) : std::nullopt;
 }
