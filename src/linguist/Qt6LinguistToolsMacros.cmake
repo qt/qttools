@@ -278,7 +278,6 @@ function(qt6_add_lrelease target)
         endif()
         set_source_files_properties("${qm}" ${scope_args} PROPERTIES
             _qt_resource_target_dependency "${target}_lrelease"
-            QT_RESOURCE_TARGET_DEPENDENCY "${target}_lrelease" # TODO: remove once qtbase is updated
         )
     endforeach()
 
