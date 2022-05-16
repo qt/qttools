@@ -493,22 +493,33 @@
         <h3>QIcon QStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption *option, const QWidget *widget) const</h3>
         \endraw
 
-        This function was introduced in Qt version 4.1
+        This function was introduced in Qt version 4.1.
 
         Returns an icon for \a standardIcon.
 
         ...
 
-        See also \l {QStyle::standardPixmap()} {standardPixmap()}.
+        \b {See also} \l {QStyle::standardPixmap()} {standardPixmap()}.
     \endquotation
 
-    QDoc generates the "Qt" reference from the \l
-    {25-qdoc-configuration-derivedprojects.html#project} {\c project}
-    configuration variable. For that reason this reference will change
-    according to the current documentation project.
+    If the argument passed to \\since contains no spaces, it is assumed to be
+    a version number string for the Qt project, and QDoc will prefix it with
+    'Qt' in the generated output. The argument can also contain the project
+    name explicitly:
 
-    See also \l {project}
-    {\c project}.
+    \badcode
+    \since MyFramework 2.0
+    \endcode
+
+    In this case, the arguments (project and version) are used as is.
+
+    \section2 Since Clause
+
+    The \\value command allows an optional \e {since} clause, enclosed in square
+    brackets, to immediately follow the command string. This is used for
+    marking specific C++ enum values with since information.
+
+    See also \l {value-command}{\\value} and \l {ignoresince}.
 */
 
 
