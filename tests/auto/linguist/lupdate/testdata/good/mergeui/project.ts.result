@@ -8,17 +8,17 @@
         <translation type="vanished">Qt Assistant - Finn tekst</translation>
     </message>
     <message>
-        <location filename="project.ui" line="44"/>
+        <location filename="project.ui" line="19"/>
         <source>Qt Assistant - Find Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="project.ui" line="47"/>
+        <location filename="project.ui" line="22"/>
         <source>300px</source>
         <translation>300px</translation>
     </message>
     <message>
-        <location filename="project.ui" line="50"/>
+        <location filename="project.ui" line="25"/>
         <source>401 pixels</source>
         <translation type="unfinished"></translation>
     </message>

@@ -4,12 +4,12 @@
 <context>
     <name>FindDialog</name>
     <message>
-        <location filename="project.ui" line="44"/>
+        <location filename="project.ui" line="19"/>
         <source>Qt Assistant - Finn text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="project.ui" line="47"/>
+        <location filename="project.ui" line="22"/>
         <source>Finn tekst</source>
         <translation type="unfinished"></translation>
     </message>
