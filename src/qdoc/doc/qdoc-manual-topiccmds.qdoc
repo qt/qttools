@@ -522,6 +522,25 @@
     and destructor, copy constructor and move-copy constructor,
     assignment operator, and move-assignment operator.
 
+    When documenting an hidden friend, it is required to prepend the
+    enclosing class name to the function name.
+    For example, for:
+
+    \code
+    class Foo {
+       ...
+       friend bool operator==(const Foo&, const Foo&) { ... }
+       ...
+    }
+    \endcode
+
+    The command should be written as \c{"\fn Foo::operator==(const
+    Foo&, const Foo&)"} and not as the free function \c{"\fn
+    operator==(const Foo&, const Foo&)"}.
+
+    Failure to do so will have QDoc complaining about being unable to
+    resolve the function.
+
     \note The \\fn command is QDoc's default command: when no
     topic command can be found in a QDoc comment, QDoc tries to tie
     the documentation to the following code as if it is the
