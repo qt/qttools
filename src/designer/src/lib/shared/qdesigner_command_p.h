@@ -865,7 +865,9 @@ struct QDESIGNER_SHARED_EXPORT ListContents {
     QTreeWidgetItem *createTreeItem(DesignerIconCache *iconCache) const;
 
     void createFromListWidget(const QListWidget *listWidget, bool editor);
-    void applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache, bool editor) const;
+    void applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache,
+                           bool editor,
+                           Qt::Alignment alignmentDefault = Qt::AlignLeading | Qt::AlignVCenter) const;
     void createFromComboBox(const QComboBox *listWidget);
     void applyToComboBox(QComboBox *listWidget, DesignerIconCache *iconCache) const;
 

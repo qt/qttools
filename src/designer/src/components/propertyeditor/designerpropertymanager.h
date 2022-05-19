@@ -135,6 +135,7 @@ public:
     QString valueText(const QtProperty *property) const override;
     QIcon valueIcon(const QtProperty *property) const override;
 
+    bool resetTextAlignmentProperty(QtProperty *property);
     bool resetFontSubProperty(QtProperty *property);
     bool resetIconSubProperty(QtProperty *subProperty);
 
@@ -155,6 +156,10 @@ public:
         { m_IdBasedTranslations = v; }
     static bool useIdBasedTranslations()
         { return m_IdBasedTranslations; }
+
+    static QString alignDefaultAttribute();
+
+    static uint alignDefault(const QtVariantProperty *prop);
 
 public Q_SLOTS:
     void setAttribute(QtProperty *property, const QString &attribute, const QVariant &value) override;
@@ -200,6 +205,7 @@ private:
     PropertyToPropertyMap m_propertyToAlignV;
     PropertyToPropertyMap m_alignHToProperty;
     PropertyToPropertyMap m_alignVToProperty;
+    QHash<const QtProperty *, Qt::Alignment> m_alignDefault;
 
     QMap<QtProperty *, QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> > m_propertyToIconSubProperties;
     QMap<QtProperty *, QPair<QIcon::Mode, QIcon::State> > m_iconSubPropertyToState;

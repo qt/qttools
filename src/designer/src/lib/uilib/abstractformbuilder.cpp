@@ -1634,24 +1634,28 @@ static void storeItemFlags(const T *item, QList<DomProperty*> *properties)
 
 template<class T>
 static void storeItemProps(QAbstractFormBuilder *abstractFormBuilder, const T *item,
-        QList<DomProperty*> *properties)
+        QList<DomProperty*> *properties,
+        Qt::Alignment defaultAlign = Qt::AlignLeading | Qt::AlignVCenter)
 {
     static const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     FriendlyFB * const formBuilder = static_cast<FriendlyFB *>(abstractFormBuilder);
 
     DomProperty *p;
-    QVariant v;
 
     for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles)
         if ((p = formBuilder->saveText(it.second, item->data(it.first.second))))
             properties->append(p);
 
-    for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles)
-        if ((v = item->data(it.first)).isValid() &&
-            (p = variantToDomProperty(abstractFormBuilder,
-                static_cast<const QMetaObject *>(&QAbstractFormBuilderGadget::staticMetaObject),
-                it.second, v)))
+    auto *mo = static_cast<const QMetaObject *>(&QAbstractFormBuilderGadget::staticMetaObject);
+    for (const QFormBuilderStrings::RoleNName &it : strings.itemRoles) {
+        const QVariant v = item->data(it.first);
+        const bool isModified = v.isValid()
+            && (it.first != Qt::TextAlignmentRole || v.toUInt() != uint(defaultAlign));
+        if (isModified &&
+            (p = variantToDomProperty(abstractFormBuilder, mo, it.second, v))) {
             properties->append(p);
+        }
+    }
 
     if ((p = formBuilder->saveResource(item->data(Qt::DecorationPropertyRole))))
         properties->append(p);
@@ -1809,11 +1813,12 @@ void QAbstractFormBuilder::saveTableWidgetExtraInfo(QTableWidget *tableWidget, D
 
     // save the horizontal header
     QVector<DomColumn *> columns;
+    auto *header = tableWidget->horizontalHeader();
     for (int c = 0; c < tableWidget->columnCount(); c++) {
         QList<DomProperty*> properties;
         QTableWidgetItem *item = tableWidget->horizontalHeaderItem(c);
         if (item)
-            storeItemProps(this, item, &properties);
+            storeItemProps(this, item, &properties, header->defaultAlignment());
 
         DomColumn *column = new DomColumn;
         column->setElementProperty(properties);
@@ -1823,11 +1828,12 @@ void QAbstractFormBuilder::saveTableWidgetExtraInfo(QTableWidget *tableWidget, D
 
     // save the vertical header
     QVector<DomRow *> rows;
+    header = tableWidget->verticalHeader();
     for (int r = 0; r < tableWidget->rowCount(); r++) {
         QList<DomProperty*> properties;
         QTableWidgetItem *item = tableWidget->verticalHeaderItem(r);
         if (item)
-            storeItemProps(this, item, &properties);
+            storeItemProps(this, item, &properties, header->defaultAlignment());
 
         DomRow *row = new DomRow;
         row->setElementProperty(properties);

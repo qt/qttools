@@ -282,6 +282,7 @@ void tst_lconvert::roundtrips_data()
     QStringList tsPoTs; tsPoTs << "ts" << "po" << "ts";
     QStringList tsXlfTs; tsXlfTs << "ts" << "xlf" << "ts";
     QStringList tsQmTs; tsQmTs << "ts" << "qm" << "ts";
+    QStringList qmTsQm; qmTsQm << "qm" << "ts" << "qm";
 
     QList<QStringList> noArgs;
     QList<QStringList> filterPoArgs; filterPoArgs << QStringList() << (QStringList() << "-drop-tag" << "po:*");
@@ -318,6 +319,7 @@ void tst_lconvert::roundtrips_data()
 
     QTest::newRow("ts-po-ts (endless loop)") << "endless-po-loop.ts" << tsPoTs << noArgs;
     QTest::newRow("ts-qm-ts (whitespace)") << "whitespace.ts" << tsQmTs << noArgs;
+    QTest::newRow("qm-ts-qm (untranslated)") << "untranslated.qm" << qmTsQm << noArgs;
 }
 
 void tst_lconvert::roundtrips()

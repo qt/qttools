@@ -2269,16 +2269,19 @@ void ListContents::createFromListWidget(const QListWidget *listWidget, bool edit
         m_items.append(ItemData(listWidget->item(i), editor));
 }
 
-void ListContents::applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache, bool editor) const
+void ListContents::applyToListWidget(QListWidget *listWidget, DesignerIconCache *iconCache,
+                                     bool editor, Qt::Alignment alignmentDefault) const
 {
     listWidget->clear();
 
     int i = 0;
     for (const ItemData &entry : m_items) {
-        if (!entry.isValid())
-            new QListWidgetItem(TableWidgetContents::defaultHeaderText(i), listWidget);
-        else
-            listWidget->addItem(entry.createListItem(iconCache, editor));
+        auto *item = entry.isValid()
+            ? entry.createListItem(iconCache, editor)
+            : new QListWidgetItem(TableWidgetContents::defaultHeaderText(i));
+        if (item->textAlignment() == 0)
+            item->setTextAlignment(alignmentDefault);
+        listWidget->addItem(item);
         i++;
     }
 }

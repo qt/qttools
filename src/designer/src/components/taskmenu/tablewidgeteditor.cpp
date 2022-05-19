@@ -51,6 +51,7 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
 {
     m_columnEditor = new ItemListEditor(form, this);
     m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
+    m_columnEditor->setAlignDefault(Qt::AlignCenter);
     m_columnEditor->setNewItemText(tr("New Column"));
     m_rowEditor = new ItemListEditor(form, this);
     m_rowEditor->setObjectName(QStringLiteral("rowEditor"));
@@ -136,11 +137,19 @@ TableWidgetContents TableWidgetEditor::fillContentsFromTableWidget(QTableWidget 
     tblCont.fromTableWidget(tableWidget, false);
     tblCont.applyToTableWidget(ui.tableWidget, iconCache(), true);
 
-    tblCont.m_verticalHeader.applyToListWidget(m_rowEditor->listWidget(), iconCache(), true);
-    m_rowEditor->setupEditor(tableWidget, tableHeaderPropList);
+    auto *header = tableWidget->verticalHeader();
+    auto headerAlignment = header != nullptr
+            ? header->defaultAlignment() : Qt::Alignment(Qt::AlignLeading | Qt::AlignVCenter);
+    tblCont.m_verticalHeader.applyToListWidget(m_rowEditor->listWidget(), iconCache(),
+                                               true, headerAlignment);
+    m_rowEditor->setupEditor(tableWidget, tableHeaderPropList, headerAlignment);
 
-    tblCont.m_horizontalHeader.applyToListWidget(m_columnEditor->listWidget(), iconCache(), true);
-    m_columnEditor->setupEditor(tableWidget, tableHeaderPropList);
+    header = tableWidget->horizontalHeader();
+    headerAlignment = header != nullptr
+        ? header->defaultAlignment() : Qt::Alignment(Qt::AlignCenter);
+    tblCont.m_horizontalHeader.applyToListWidget(m_columnEditor->listWidget(), iconCache(),
+                                                 true, headerAlignment);
+    m_columnEditor->setupEditor(tableWidget, tableHeaderPropList, headerAlignment);
 
     setupEditor(tableWidget, tableItemPropList);
     if (ui.tableWidget->columnCount() > 0 && ui.tableWidget->rowCount() > 0)

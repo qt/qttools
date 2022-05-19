@@ -50,6 +50,7 @@
 #include <QtWidgets/qaction.h>
 #include <QtWidgets/qactiongroup.h>
 #include <QtWidgets/qmenu.h>
+#include <QtWidgets/qscrollbar.h>
 
 #include <QtCore/qfile.h>
 #include <QtCore/qtimer.h>
@@ -303,7 +304,15 @@ bool WidgetBoxTreeWidget::load(QDesignerWidgetBox::LoadMode loadMode)
         return false;
 
     const QString contents = QString::fromUtf8(f.readAll());
-    return loadContents(contents);
+    if (!loadContents(contents))
+        return false;
+    if (topLevelItemCount() > 0) {
+        // QTBUG-93099: Set the single step to the item height to have some
+        // size-related value.
+        const auto itemHeight = visualItemRect(topLevelItem(0)).height();
+        verticalScrollBar()->setSingleStep(itemHeight);
+    }
+    return true;
 }
 
 bool WidgetBoxTreeWidget::loadContents(const QString &contents)

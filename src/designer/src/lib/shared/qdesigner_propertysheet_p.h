@@ -157,6 +157,7 @@ public:
                         PropertyGeometry,
                         PropertyChecked,
                         PropertyCheckable,
+                        PropertyVisible,
                         PropertyWindowTitle,
                         PropertyWindowIcon,
                         PropertyWindowFilePath,

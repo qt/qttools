@@ -86,9 +86,11 @@ private slots:
 
 protected:
     virtual int defaultItemFlags() const = 0;
-    void setupProperties(PropertyDefinition *propDefs);
+    void setupProperties(const PropertyDefinition *propList,
+                         Qt::Alignment alignDefault = Qt::AlignLeading | Qt::AlignVCenter);
     void setupObject(QWidget *object);
-    void setupEditor(QWidget *object, PropertyDefinition *propDefs);
+    void setupEditor(QWidget *object, const PropertyDefinition *propDefs,
+                     Qt::Alignment alignDefault = Qt::AlignLeading | Qt::AlignVCenter);
     void injectPropertyBrowser(QWidget *parent, QWidget *widget);
     void updateBrowser();
     virtual void setItemData(int role, const QVariant &v) = 0;
@@ -112,11 +114,15 @@ class ItemListEditor: public AbstractItemEditor
 public:
     explicit ItemListEditor(QDesignerFormWindowInterface *form, QWidget *parent);
 
-    void setupEditor(QWidget *object, PropertyDefinition *propDefs);
+    void setupEditor(QWidget *object, const PropertyDefinition *propDefs,
+                     Qt::Alignment alignDefault = Qt::AlignLeading | Qt::AlignVCenter);
     QListWidget *listWidget() const { return ui.listWidget; }
     void setNewItemText(const QString &tpl) { m_newItemText = tpl; }
     QString newItemText() const { return m_newItemText; }
     void setCurrentIndex(int idx);
+
+    uint alignDefault() const;
+    void setAlignDefault(uint newAlignDefault);
 
 signals:
     void indexChanged(int idx);
@@ -145,6 +151,7 @@ private:
     void setPropertyBrowserVisible(bool v);
     void updateEditor();
     Ui::ItemListEditor ui;
+    uint m_alignDefault = 0;
     bool m_updating;
     QString m_newItemText;
 };
