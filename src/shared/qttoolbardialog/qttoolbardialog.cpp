@@ -1065,7 +1065,7 @@ void QtToolBarDialogPrivate::fillNew()
             item = new QTreeWidgetItem(categoryItem);
             item->setText(0, action->text());
             item->setIcon(0, action->icon());
-            item->setTextAlignment(0, Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic);
+            item->setTextAlignment(0, Qt::Alignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic));
             actionToItem.insert(action, item);
             itemToAction.insert(item, action);
             if (toolBarManager->isWidgetAction(action)) {
@@ -1391,7 +1391,7 @@ void QtToolBarDialogPrivate::rightClicked()
         } else {
             item = new QListWidgetItem(action->text());
             item->setIcon(action->icon());
-            item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic);
+            item->setTextAlignment(Qt::Alignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic));
             currentItemToAction.insert(item, action);
             actionToCurrentItem.insert(action, item);
             if (widgetActionToToolBar.contains(action)) {
@@ -1472,7 +1472,7 @@ void QtToolBarDialogPrivate::currentToolBarChanged(QListWidgetItem *current)
         QListWidgetItem *item = new QListWidgetItem(actionName, ui.currentToolBarList);
         if (action) {
             item->setIcon(action->icon());
-            item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic);
+            item->setTextAlignment(Qt::Alignment(Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic));
             actionToCurrentItem.insert(action, item);
             if (widgetActionToToolBar.contains(action))
                 item->setData(Qt::ForegroundRole, QColor(Qt::blue));
