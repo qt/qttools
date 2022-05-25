@@ -203,6 +203,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     int skipAhead = 0;
     static bool inPara = false;
     Node::Genus genus = Node::DontCare;
+    bool closeFigureWrapper = false;
 
     switch (atom->type()) {
     case Atom::AutoLink:
@@ -436,6 +437,29 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         // Not supported in DocBook.
         break;
     case Atom::Image: // mediaobject
+        // An Image atom is always followed by an ImageText atom, containing the alternative text.
+        // If no caption is present we just output a <db:mediaobject>,
+        // avoiding the wrapper as it is not required.
+        if (atom->next() && matchAhead(atom->next(), Atom::CaptionLeft)) {
+            // If there is a caption, there must be a <db:figure>
+            // wrapper starting with the caption.
+            skipAhead += 4;
+            Q_ASSERT(atom->next());
+            Q_ASSERT(atom->next()->next());
+            Q_ASSERT(atom->next()->next()->next());
+            Q_ASSERT(atom->next()->next()->next()->next());
+
+            m_writer->writeStartElement(dbNamespace, "figure");
+            newLine();
+
+            generateAtom(atom->next()->next(), relative); // Atom::CaptionLeft
+            generateAtom(atom->next()->next()->next(), relative); // The actual caption.
+            generateAtom(atom->next()->next()->next()->next(), relative); // Atom::CaptionRight
+
+            closeFigureWrapper = true;
+        }
+
+        Q_FALLTHROUGH();
     case Atom::InlineImage: { // inlinemediaobject
         // TODO: [generator-insufficient-structural-abstraction]
         // The structure of the computations for this part of the
@@ -498,6 +522,12 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeEndElement(); // [inline]mediaobject
         if (atom->type() == Atom::Image)
             newLine();
+
+        if (closeFigureWrapper) {
+            m_writer->writeEndElement(); // figure
+            newLine();
+            closeFigureWrapper = false;
+        }
     } break;
     case Atom::ImageText:
         break;
