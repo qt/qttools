@@ -2244,6 +2244,14 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
             << Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
     path.removeAll(QString());
 
+    // Write the link to the example. Typically, this link comes after sections, hence
+    // wrap it in a section too.
+    m_writer->writeStartElement(dbNamespace, "section");
+    newLine();
+    m_writer->writeStartElement(dbNamespace, "title");
+    m_writer->writeCharacters("Example project");
+    m_writer->writeEndElement(); // title
+    newLine();
     m_writer->writeStartElement(dbNamespace, "para");
     m_writer->writeStartElement(dbNamespace, "link");
     m_writer->writeAttribute(xlinkNamespace, "href",
@@ -2251,6 +2259,8 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
     m_writer->writeCharacters(link);
     m_writer->writeEndElement(); // link
     m_writer->writeEndElement(); // para
+    newLine();
+    m_writer->writeEndElement(); // section
     newLine();
 }
 
