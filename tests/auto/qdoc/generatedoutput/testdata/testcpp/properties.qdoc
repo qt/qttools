@@ -57,6 +57,17 @@
 */
 
 /*!
+    \qmltype TheType
+    \instantiates TestQDoc::TestDerived
+    \inqmlmodule TheModule
+*/
+
+/*!
+    \qmlproperty string TheType::name
+    \brief Read-only status of this property is resolved from Q_PROPERTY.
+*/
+
+/*!
     //! avoid link warnings for auto-generated links to QProperty
     \externalpage https://wiki.qt.io/QProperty
     \title QProperty

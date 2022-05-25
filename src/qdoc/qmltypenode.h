@@ -73,7 +73,6 @@ public:
     void setQmlBaseName(const QString &name) { m_qmlBaseName = name; }
     [[nodiscard]] QmlTypeNode *qmlBaseNode() const override { return m_qmlBaseNode; }
     void resolveInheritance(NodeMap &previousSearches);
-    [[nodiscard]] bool cppClassRequired() const { return m_classNodeRequired; }
     static void addInheritedBy(const Node *base, Node *sub);
     static void subclasses(const Node *base, NodeList &subs);
     static void terminate();
@@ -84,7 +83,6 @@ public:
 
 private:
     bool m_abstract { false };
-    bool m_classNodeRequired { false };
     bool m_wrapper { false };
     ClassNode *m_classNode { nullptr };
     QString m_qmlBaseName {};

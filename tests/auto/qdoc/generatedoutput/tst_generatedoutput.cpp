@@ -529,6 +529,7 @@ void tst_generatedOutput::properties()
     testAndCompare("testdata/configs/properties.qdocconf",
                    "properties/testqdoc-testderived.html "
                    "properties/testqdoc-testderived-members.html "
+                   "properties/qml-thetype.html "
                    "properties/testcpp.index "
                    "properties-docbook/testqdoc-testderived.xml",
                    m_extraParams.toLatin1().data());
