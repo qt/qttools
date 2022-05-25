@@ -1677,7 +1677,7 @@ static QString nodeToSynopsisTag(const Node *node)
     if (node->isClass() || node->isQmlType() || node->isQmlBasicType())
         return QStringLiteral("classsynopsis");
     if (node->isNamespace())
-        return QStringLiteral("namespacesynopsis");
+        return QStringLiteral("packagesynopsis");
     if (node->isPageNode()) {
         node->doc().location().warning("Unexpected document node in nodeToSynopsisTag");
         return QString();
