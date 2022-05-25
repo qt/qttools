@@ -44,9 +44,11 @@
 </db:fieldsynopsis>
 <db:para>Whether the test is active.</db:para>
 <db:para><db:emphasis>See also </db:emphasis>
-<db:simplelist type="vert" role="see-also"><db:member><db:link xlink:href="qml-qdoc-test-doctest.xml#name-prop">name</db:link></db:member>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qml-qdoc-test-doctest.xml#name-prop">name</db:link></db:member>
 </db:simplelist>
-</db:para></db:section>
+</db:para>
+</db:section>
 <db:section xml:id="name-prop">
 <db:title>[required] name : string</db:title>
 <db:fieldsynopsis>

@@ -36,9 +36,11 @@
 </db:fieldsynopsis>
 <db:para>The color of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link>'s gradient. Must bind to a color type.</db:para>
 <db:para><db:emphasis>See also </db:emphasis>
-<db:simplelist type="vert" role="see-also"><db:member><db:link xlink:href="qml-uicomponents-progressbar.xml#secondColor-prop">secondColor</db:link></db:member>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qml-uicomponents-progressbar.xml#secondColor-prop">secondColor</db:link></db:member>
 </db:simplelist>
-</db:para></db:section>
+</db:para>
+</db:section>
 <db:section xml:id="maximum-prop">
 <db:title>maximum : int</db:title>
 <db:fieldsynopsis>
@@ -75,9 +77,11 @@
 </db:fieldsynopsis>
 <db:para>The second color of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link>'s gradient. Must bind to a color type.</db:para>
 <db:para><db:emphasis>See also </db:emphasis>
-<db:simplelist type="vert" role="see-also"><db:member><db:link xlink:href="qml-uicomponents-progressbar.xml#color-prop">color</db:link></db:member>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qml-uicomponents-progressbar.xml#color-prop">color</db:link></db:member>
 </db:simplelist>
-</db:para></db:section>
+</db:para>
+</db:section>
 <db:section xml:id="value-prop">
 <db:title>value : int</db:title>
 <db:fieldsynopsis>

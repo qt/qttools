@@ -1441,6 +1441,7 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
             else
                 m_writer->writeAttribute(xlinkNamespace, "title", linkPair.second);
             m_writer->writeEndElement(); // extendedlink
+            newLine();
         }
         if (node->links().contains(Node::NextLink)) {
             linkPair = node->links()[Node::NextLink];
@@ -1461,6 +1462,7 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
             else
                 m_writer->writeAttribute(xlinkNamespace, "title", linkPair.second);
             m_writer->writeEndElement(); // extendedlink
+            newLine();
         }
         if (node->links().contains(Node::StartLink)) {
             linkPair = node->links()[Node::StartLink];
@@ -1481,6 +1483,7 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
             else
                 m_writer->writeAttribute(xlinkNamespace, "title", linkPair.second);
             m_writer->writeEndElement(); // extendedlink
+            newLine();
         }
     }
 
@@ -2408,16 +2411,20 @@ void DocBookGenerator::generateAlsoList(const Node *node)
         m_writer->writeStartElement(dbNamespace, "simplelist");
         m_writer->writeAttribute("type", "vert");
         m_writer->writeAttribute("role", "see-also");
+        newLine();
+
         for (const Text &text : alsoList) {
             m_writer->writeStartElement(dbNamespace, "member");
             generateText(text, node);
             m_writer->writeEndElement(); // member
             newLine();
         }
+
         m_writer->writeEndElement(); // simplelist
         newLine();
 
         m_writer->writeEndElement(); // para
+        newLine();
     }
 }
 

@@ -5,7 +5,8 @@
 <db:productname>OutputFromQDocFiles</db:productname>
 <db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
-<db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput-linking.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="QDoc Linking Test"/></db:extendedlink><db:abstract>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput-linking.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="QDoc Linking Test"/></db:extendedlink>
+<db:abstract>
 <db:para>This is a simple page for testing purposes only.</db:para>
 </db:abstract>
 </db:info>
