@@ -201,8 +201,8 @@
 <db:modifier>virtual</db:modifier>
 <db:type>int</db:type>
 <db:methodname>id</db:methodname>
-<db:modifier>override</db:modifier>
 <db:void/>
+<db:modifier>override</db:modifier>
 <db:synopsisinfo role="meta">plain</db:synopsisinfo>
 <db:synopsisinfo role="signature">int id() override</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
@@ -234,8 +234,8 @@
 <db:modifier>virtual</db:modifier>
 <db:void/>
 <db:methodname>virtualFun</db:methodname>
-<db:modifier>override</db:modifier>
 <db:void/>
+<db:modifier>override</db:modifier>
 <db:synopsisinfo role="meta">plain</db:synopsisinfo>
 <db:synopsisinfo role="signature">void virtualFun() override</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>

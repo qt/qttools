@@ -158,10 +158,9 @@
 <db:section xml:id="Test">
 <db:title>[default] Test::Test()</db:title>
 <db:constructorsynopsis>
-<db:type></db:type>
 <db:methodname>Test</db:methodname>
-<db:modifier>default</db:modifier>
 <db:void/>
+<db:modifier>default</db:modifier>
 <db:synopsisinfo role="meta">constructor</db:synopsisinfo>
 <db:synopsisinfo role="signature">Test() = default</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
@@ -175,11 +174,11 @@
 <db:methodsynopsis>
 <db:type>TestQDoc::Test &amp;</db:type>
 <db:methodname>operator=</db:methodname>
-<db:modifier>default</db:modifier>
 <db:methodparam>
 <db:type>TestQDoc::Test &amp;&amp;</db:type>
 <db:parameter>other</db:parameter>
 </db:methodparam>
+<db:modifier>default</db:modifier>
 <db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
 <db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>

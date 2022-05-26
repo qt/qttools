@@ -2838,7 +2838,9 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         if (functionNode->isStatic())
             generateModifier("static");
 
-        if (!functionNode->isMacro()) {
+        if (!functionNode->isMacro() && !functionNode->isCtor() &&
+                !functionNode->isCCtor() && !functionNode->isMCtor()
+                && !functionNode->isDtor()) {
             if (functionNode->returnType() == "void")
                 m_writer->writeEmptyElement(dbNamespace, "void");
             else
@@ -2849,15 +2851,6 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         // of the method without parentheses.
         m_writer->writeTextElement(dbNamespace, "methodname", node->plainName().chopped(2));
         newLine();
-
-        if (functionNode->isOverload())
-            generateModifier("overload");
-        if (functionNode->isDefault())
-            generateModifier("default");
-        if (functionNode->isFinal())
-            generateModifier("final");
-        if (functionNode->isOverride())
-            generateModifier("override");
 
         if (!functionNode->isMacro() && functionNode->parameters().isEmpty()) {
             m_writer->writeEmptyElement(dbNamespace, "void");
@@ -2880,6 +2873,15 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             m_writer->writeEndElement(); // methodparam
             newLine();
         }
+
+        if (functionNode->isOverload())
+            generateModifier("overload");
+        if (functionNode->isDefault())
+            generateModifier("default");
+        if (functionNode->isFinal())
+            generateModifier("final");
+        if (functionNode->isOverride())
+            generateModifier("override");
 
         generateSynopsisInfo("meta", functionNode->metanessString());
 
