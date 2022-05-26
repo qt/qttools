@@ -993,6 +993,9 @@ QString Config::copyFile(const Location &location, const QString &sourceFilePath
         outFileName = outFileNameInfo.fileName();
 
     outFileName = targetDirPath + "/" + outFileName;
+    QDir targetDir(targetDirPath);
+    if (!targetDir.exists())
+        targetDir.mkpath(".");
 
     QFile outFile(outFileName);
     if (!outFile.open(QFile::WriteOnly)) {
