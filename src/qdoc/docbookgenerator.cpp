@@ -3618,9 +3618,12 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
             default:
                 continue;
             }
+            m_writer->writeStartElement(dbNamespace, "para");
             m_writer->writeCharacters(msg + " for property ");
             generateSimpleLink(linkForNode(pn, nullptr), pn->name());
             m_writer->writeCharacters(". ");
+            m_writer->writeEndElement(); // para
+            newLine();
         }
         break;
     }
