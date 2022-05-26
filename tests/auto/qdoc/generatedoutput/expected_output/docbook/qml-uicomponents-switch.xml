@@ -30,9 +30,9 @@
 <db:type>bool</db:type>
 <db:varname>on</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Indicates the state of the switch. If <db:code>false</db:code>, then the switch is in the <db:code>off</db:code> state.</db:para>
 </db:section>

@@ -30,9 +30,9 @@
 <db:type>color</db:type>
 <db:varname>color</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>The color of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link>'s gradient. Must bind to a color type.</db:para>
 <db:section>
@@ -50,9 +50,9 @@
 <db:type>int</db:type>
 <db:varname>maximum</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>The maximum value of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link> range. The <db:link xlink:href="qml-uicomponents-progressbar.xml#value-prop">value</db:link> must not be more than this value.</db:para>
 </db:section>
@@ -62,9 +62,9 @@
 <db:type>int</db:type>
 <db:varname>minimum</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>The minimum value of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link> range. The <db:link xlink:href="qml-uicomponents-progressbar.xml#value-prop">value</db:link> must not be less than this value.</db:para>
 </db:section>
@@ -74,9 +74,9 @@
 <db:type>color</db:type>
 <db:varname>secondColor</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>The second color of the <db:link xlink:href="qml-uicomponents-progressbar.xml">ProgressBar</db:link>'s gradient. Must bind to a color type.</db:para>
 <db:section>
@@ -94,9 +94,9 @@
 <db:type>int</db:type>
 <db:varname>value</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>The value of the progress.</db:para>
 </db:section>

@@ -35,27 +35,27 @@
 <db:type>int</db:type>
 <db:varname>group.first</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:bridgehead renderas="sect2" xml:id="group.second-prop">group.second : int</db:bridgehead>
 <db:fieldsynopsis>
 <db:type>int</db:type>
 <db:varname>group.second</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:bridgehead renderas="sect2" xml:id="group.third-prop">group.third : int</db:bridgehead>
 <db:fieldsynopsis>
 <db:type>int</db:type>
 <db:varname>group.third</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>A property group.</db:para>
 </db:section>
@@ -66,9 +66,9 @@
 <db:varname>id</db:varname>
 <db:modifier>[read-only]</db:modifier>
 
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>A read-only property.</db:para>
 </db:section>
@@ -79,9 +79,9 @@
 <db:varname>name</db:varname>
 <db:modifier>writable</db:modifier>
 <db:modifier>required</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Name of the Test.</db:para>
 </db:section>
@@ -95,9 +95,9 @@
 <db:varname>Type.type</db:varname>
 <db:modifier>attached</db:modifier>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:informaltable>
 <db:thead>

@@ -35,9 +35,9 @@
 <db:modifier>writable</db:modifier>
 <db:modifier>[default]</db:modifier>
 
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Children of the type.</db:para>
 </db:section>
@@ -47,9 +47,9 @@
 <db:type>string</db:type>
 <db:varname>name</db:varname>
 <db:modifier>writable</db:modifier>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Name of this child.</db:para>
 </db:section>

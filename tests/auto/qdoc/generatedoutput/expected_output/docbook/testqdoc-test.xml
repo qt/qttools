@@ -44,9 +44,9 @@
 <db:section xml:id="SomeType-typedef">
 <db:title>Test::SomeType</db:title>
 <db:typedefsynopsis>
-<db:type>SomeType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:type>SomeType</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>A typedef.</db:para>
 </db:section>
@@ -65,11 +65,11 @@
 <db:methodname>Test</db:methodname>
 <db:modifier>default</db:modifier>
 <db:void/>
-<db:synopsisinfo db:role="meta">constructor</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">Test() = default</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">Test() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:constructorsynopsis>
 <db:para>Default constructor.</db:para>
 </db:section>
@@ -83,11 +83,11 @@
 <db:type>TestQDoc::Test &amp;&amp;</db:type>
 <db:parameter>other</db:parameter>
 </db:methodparam>
-<db:synopsisinfo db:role="meta">move-assign</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
@@ -104,11 +104,11 @@
 <db:type>const char *</db:type>
 <db:parameter>s</db:parameter>
 </db:methodparam>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void (*)(bool) funcPtr(bool b, const char *s)</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void (*)(bool) funcPtr(bool b, const char *s)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
 </db:section>
@@ -118,11 +118,11 @@
 <db:void/>
 <db:methodname>inlineFunction</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void inlineFunction()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void inlineFunction()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>An inline function, documented using the \fn QDoc command.</db:para>
 </db:section>
@@ -140,11 +140,11 @@
 <db:parameter>v</db:parameter>
 <db:initializer>0</db:initializer>
 </db:methodparam>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">int someFunction(int, int v)</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">int someFunction(int, int v)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
 </db:section>
@@ -162,11 +162,11 @@
 <db:parameter>b</db:parameter>
 <db:initializer>false</db:initializer>
 </db:methodparam>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void someFunctionDefaultArg(int i, bool b)</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void someFunctionDefaultArg(int i, bool b)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
@@ -177,11 +177,11 @@
 <db:void/>
 <db:methodname>virtualFun</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void virtualFun()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void virtualFun()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
@@ -201,11 +201,11 @@
 <db:type>const TestQDoc::Test &amp;</db:type>
 <db:parameter>rhs</db:parameter>
 </db:methodparam>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Returns true if <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code> are equal.</db:para>
 </db:section>
@@ -220,11 +220,11 @@
 <db:type>int &amp;</db:type>
 <db:parameter>x</db:parameter>
 </db:methodparam>
-<db:synopsisinfo db:role="meta">macrowithparams</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">QDOCTEST_MACRO2(int &amp;x)</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">macrowithparams</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDOCTEST_MACRO2(int &amp;x)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>A macro with argument <db:code role="parameter">x</db:code>.</db:para>
 <db:para>This function was introduced in Test 1.1.</db:para>
@@ -246,11 +246,11 @@
 <db:void/>
 <db:methodname>anotherObsoleteMember</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void anotherObsoleteMember()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void anotherObsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
@@ -261,11 +261,11 @@
 <db:void/>
 <db:methodname>deprecatedMember</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void deprecatedMember()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void deprecatedMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated since 6.0. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
@@ -276,11 +276,11 @@
 <db:void/>
 <db:methodname>obsoleteMember</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void obsoleteMember()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void obsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>

@@ -44,18 +44,18 @@
 <db:section xml:id="DerivedType-typedef">
 <db:title>[alias] TestDerived::DerivedType</db:title>
 <db:typedefsynopsis>
-<db:type>DerivedType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:type>DerivedType</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>An aliased typedef.</db:para>
 </db:section>
 <db:section xml:id="NotTypedef-typedef">
 <db:title>[alias] TestDerived::NotTypedef</db:title>
 <db:typedefsynopsis>
-<db:type>NotTypedef</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:type>NotTypedef</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
@@ -70,11 +70,11 @@
 <db:methodname>virtualFun</db:methodname>
 <db:modifier>override</db:modifier>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void virtualFun() override</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void virtualFun() override</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" type="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
@@ -90,11 +90,11 @@
 <db:void/>
 <db:methodname>staticObsoleteMember</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void staticObsoleteMember()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void staticObsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Static obsolete method.</db:para>

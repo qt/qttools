@@ -44,18 +44,18 @@
 <db:section xml:id="DerivedType-typedef">
 <db:title>[alias] TestDerived::DerivedType</db:title>
 <db:typedefsynopsis>
-<db:type>DerivedType</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:type>DerivedType</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>An aliased typedef.</db:para>
 </db:section>
 <db:section xml:id="NotTypedef-typedef">
 <db:title>[alias] TestDerived::NotTypedef</db:title>
 <db:typedefsynopsis>
-<db:type>NotTypedef</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:type>NotTypedef</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
@@ -68,12 +68,12 @@
 <db:modifier>(Qt property)</db:modifier>
 <db:type>QString</db:type>
 <db:varname>bindableProp</db:varname>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="getter">bindableProp</db:synopsisinfo>
-<db:synopsisinfo db:role="setter">setBindableProp</db:synopsisinfo>
-<db:synopsisinfo db:role="notifier">bindablePropChanged</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">bindableProp</db:synopsisinfo>
+<db:synopsisinfo role="setter">setBindableProp</db:synopsisinfo>
+<db:synopsisinfo role="notifier">bindablePropChanged</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>This property supports <db:link xlink:href="https://wiki.qt.io/QProperty">QProperty</db:link> bindings.</db:para>
 <db:para>Some property.</db:para>
@@ -84,13 +84,13 @@
 <db:modifier>(Qt property)</db:modifier>
 <db:type>bool</db:type>
 <db:varname>boolProp</db:varname>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="getter">boolProp</db:synopsisinfo>
-<db:synopsisinfo db:role="setter">setBoolProp</db:synopsisinfo>
-<db:synopsisinfo db:role="resetter">resetBoolProp</db:synopsisinfo>
-<db:synopsisinfo db:role="notifier">boolPropChanged</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">boolProp</db:synopsisinfo>
+<db:synopsisinfo role="setter">setBoolProp</db:synopsisinfo>
+<db:synopsisinfo role="resetter">resetBoolProp</db:synopsisinfo>
+<db:synopsisinfo role="notifier">boolPropChanged</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>A boolean property.</db:para>
 <db:para>
@@ -124,10 +124,10 @@
 <db:modifier>(Qt property)</db:modifier>
 <db:type>int*</db:type>
 <db:varname>intProp</db:varname>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="getter">getInt</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">getInt</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>An integer property.</db:para>
 <db:para>
@@ -146,10 +146,10 @@
 <db:modifier>(Qt property)</db:modifier>
 <db:type>const QString*</db:type>
 <db:varname>name</db:varname>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="getter">name</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">name</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>This property holds a name.</db:para>
 <db:para>
@@ -168,10 +168,10 @@
 <db:modifier>(Qt property)</db:modifier>
 <db:type>QString</db:type>
 <db:varname>someProp</db:varname>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
-<db:synopsisinfo db:role="getter">someProp</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="getter">someProp</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>This property supports <db:link xlink:href="https://wiki.qt.io/QProperty">QProperty</db:link> bindings.</db:para>
 <db:para>Another property.</db:para>
@@ -185,11 +185,11 @@
 <db:void/>
 <db:methodname>emitSomething</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">signal</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void emitSomething()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">signal</db:synopsisinfo>
+<db:synopsisinfo role="signature">void emitSomething()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Emitted when things happen.</db:para>
 <db:note>
@@ -203,11 +203,11 @@
 <db:methodname>id</db:methodname>
 <db:modifier>override</db:modifier>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">int id() override</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">int id() override</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Reimplements an access function for property: <db:link xlink:href="testqdoc-test.xml#id-prop" type="property">Test::id</db:link>.</db:para>
 <db:section xml:id="invokeMe">
@@ -217,11 +217,11 @@
 <db:void/>
 <db:methodname>invokeMe</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void invokeMe() const</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void invokeMe() const</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Something invokable.</db:para>
 <db:note>
@@ -236,11 +236,11 @@
 <db:methodname>virtualFun</db:methodname>
 <db:modifier>override</db:modifier>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void virtualFun() override</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void virtualFun() override</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" type="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
@@ -256,11 +256,11 @@
 <db:void/>
 <db:methodname>staticObsoleteMember</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void staticObsoleteMember()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void staticObsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Static obsolete method.</db:para>

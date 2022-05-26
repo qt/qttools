@@ -25,9 +25,9 @@
 <db:title>enum Globals</db:title>
 <db:enumsynopsis>
 <db:enumname>Globals</db:enumname>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 <db:enumitem db:enumidentifier="Glo" db:enumvalue="0"/>
 <db:enumitem db:enumidentifier="Bal" db:enumvalue="1"/>
 </db:enumsynopsis>
@@ -60,9 +60,9 @@
 <db:fieldsynopsis>
 <db:type>const int</db:type>
 <db:varname>globalVar</db:varname>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Global variable.</db:para>
 </db:section>
@@ -75,11 +75,11 @@
 <db:void/>
 <db:methodname>globalFunc</db:methodname>
 <db:void/>
-<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo db:role="signature">void globalFunc()</db:synopsisinfo>
-<db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void globalFunc()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Global function.</db:para>
 </db:section>

@@ -2709,7 +2709,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
 void DocBookGenerator::generateSynopsisInfo(const QString &key, const QString &value)
 {
     m_writer->writeStartElement(dbNamespace, "synopsisinfo");
-    m_writer->writeAttribute(dbNamespace, "role", key);
+    m_writer->writeAttribute("role", key);
     m_writer->writeCharacters(value);
     m_writer->writeEndElement(); // synopsisinfo
     newLine();

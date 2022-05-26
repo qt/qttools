@@ -12,9 +12,9 @@
 <db:section xml:id="StdPair-typedef">
 <db:title>[alias] template &lt;class T1, class T2&gt; StdPair</db:title>
 <db:typedefsynopsis>
-<db:type>StdPair</db:type><db:synopsisinfo db:role="access">public</db:synopsisinfo>
-<db:synopsisinfo db:role="status">active</db:synopsisinfo>
-<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:type>StdPair</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
 </db:section>
 </db:section>
