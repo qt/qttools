@@ -843,6 +843,11 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         newLine();
         break;
     case Atom::TableHeaderLeft:
+        if (matchAhead(atom, Atom::TableHeaderRight)) {
+            skipAhead += 1;
+            break;
+        }
+
         m_writer->writeStartElement(dbNamespace, "thead");
         newLine();
         m_writer->writeStartElement(dbNamespace, "tr");
