@@ -845,6 +845,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         }
         break;
     case Atom::TableRowLeft:
+        if (matchAhead(atom, Atom::TableRowRight))
+            break;
+
         m_writer->writeStartElement(dbNamespace, "tr");
         if (atom->string().isEmpty()) {
             m_writer->writeAttribute("valign", "top");
