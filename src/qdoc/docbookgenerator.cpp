@@ -2192,6 +2192,7 @@ bool DocBookGenerator::generateThreadSafeness(const Node *node)
             newLine();
         }
         m_writer->writeEndElement(); // note
+        newLine();
 
         return true;
     }
