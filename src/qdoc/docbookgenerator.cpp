@@ -227,6 +227,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     static bool inPara = false;
     Node::Genus genus = Node::DontCare;
     bool closeFigureWrapper = false;
+    bool closeTableRow = false;
 
     switch (atom->type()) {
     case Atom::AutoLink:
@@ -885,8 +886,21 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 m_writer->writeAttribute(args.at(i).chopped(1), args.at(i + 1));
         }
         newLine();
+
+        if (!matchAhead(atom, Atom::TableItemLeft)) {
+            closeTableRow = true;
+            m_writer->writeEndElement(); // td
+            newLine();
+        }
+
         break;
     case Atom::TableRowRight:
+        if (closeTableRow) {
+            closeTableRow = false;
+            m_writer->writeEndElement(); // td
+            newLine();
+        }
+
         m_writer->writeEndElement(); // tr
         newLine();
         break;
