@@ -192,6 +192,13 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
     return nullptr;
 }
 
+QString removeCodeMarkers(const QString& code) {
+    QString rewritten = code;
+    QRegularExpression re("(<@[^>&]*>)|(<\\/@[^&>]*>)");
+    rewritten.replace(re, "");
+    return rewritten;
+}
+
 /*!
   Generate DocBook from an instance of Atom.
  */
@@ -262,14 +269,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::Qml:
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "qml");
-        m_writer->writeCharacters(atom->string());
+        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
     case Atom::JavaScript:
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "js");
-        m_writer->writeCharacters(atom->string());
+        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
@@ -279,14 +286,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "cpp");
         m_writer->writeAttribute("role", "new");
-        m_writer->writeCharacters(atom->string());
+        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
     case Atom::Code:
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "cpp");
-        m_writer->writeCharacters(atom->string());
+        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
@@ -298,7 +305,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "cpp");
         m_writer->writeAttribute("role", "bad");
-        m_writer->writeCharacters(atom->string());
+        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;

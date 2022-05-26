@@ -29,13 +29,13 @@
 
     Rectangle {
         id: tab1
-        color: &lt;@string&gt;&amp;quot;red&amp;quot;&lt;/@string&gt;
-        &lt;@comment&gt;//... omitted&lt;/@comment&gt;
+        color: &amp;quot;red&amp;quot;
+        //... omitted
     }
     Rectangle {
         id: tab2
-        color: &lt;@string&gt;&amp;quot;blue&amp;quot;&lt;/@string&gt;
-        &lt;@comment&gt;//... omitted&lt;/@comment&gt;
+        color: &amp;quot;blue&amp;quot;
+        //... omitted
     }
 
 }
@@ -69,7 +69,7 @@
 </db:fieldsynopsis>
 <db:para>A sample <db:code>read-only</db:code> property. A contrived property to demonstrate QDoc's ability to detect read-only properties.</db:para>
 <db:para>The signature is:</db:para>
-<db:programlisting language="cpp">readonly property &lt;@type&gt;int&lt;/@type&gt; sampleReadOnlyProperty: &lt;@number&gt;0&lt;/@number&gt;
+<db:programlisting language="cpp">readonly property int sampleReadOnlyProperty: 0
 </db:programlisting>
 <db:para>Note that the property must be initialized to a value.</db:para>
 </db:section>

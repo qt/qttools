@@ -64,9 +64,9 @@
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
 </db:fieldsynopsis>
 <db:para>Name of the test.</db:para>
-<db:programlisting language="qml">&lt;@type&gt;DocTest&lt;/@type&gt; {
-    &lt;@name&gt;name&lt;/@name&gt;: &lt;@string&gt;&amp;quot;test&amp;quot;&lt;/@string&gt;
-    &lt;@comment&gt;// ...&lt;/@comment&gt;
+<db:programlisting language="qml">DocTest {
+    name: &amp;quot;test&amp;quot;
+    // ...
 }
 </db:programlisting>
 </db:section>

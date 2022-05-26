@@ -21,8 +21,8 @@
 <db:title>Properties, Signals, Handlers, and Methods</db:title>
 <db:para>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</db:para>
 <db:para>To document the type of a <db:emphasis>property alias</db:emphasis>, you must use the \qmlproperty command to specify the data type.</db:para>
-<db:programlisting language="cpp">\qmlproperty &lt;@type&gt;int&lt;/@type&gt; anAliasedProperty
-An aliased property of type &lt;@type&gt;int&lt;/@type&gt;&lt;@op&gt;.&lt;/@op&gt;
+<db:programlisting language="cpp">\qmlproperty int anAliasedProperty
+An aliased property of type int.
 </db:programlisting>
 <db:section xml:id="internal-documentation">
 <db:title>Internal Documentation</db:title>
