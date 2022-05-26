@@ -37,6 +37,18 @@ QT_BEGIN_NAMESPACE
 static const char dbNamespace[] = "http://docbook.org/ns/docbook";
 static const char xlinkNamespace[] = "http://www.w3.org/1999/xlink";
 
+QString validXmlId(const QString& xmlid) {
+    if (xmlid.isEmpty()) {
+        return xmlid;
+    }
+
+    if (xmlid[0].isDigit()) {
+        return "_" + xmlid;
+    } else {
+        return xmlid;
+    }
+}
+
 DocBookGenerator::DocBookGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
 
 inline void DocBookGenerator::newLine()
@@ -54,7 +66,9 @@ void DocBookGenerator::startSectionBegin()
 void DocBookGenerator::startSectionBegin(const QString &id)
 {
     m_writer->writeStartElement(dbNamespace, "section");
-    m_writer->writeAttribute("xml:id", id);
+    if (!id.isEmpty()) {
+        m_writer->writeAttribute("xml:id", validXmlId(id));
+    }
     newLine();
     m_writer->writeStartElement(dbNamespace, "title");
 }
@@ -81,7 +95,9 @@ void DocBookGenerator::endSection()
 void DocBookGenerator::writeAnchor(const QString &id)
 {
     m_writer->writeEmptyElement(dbNamespace, "anchor");
-    m_writer->writeAttribute("xml:id", id);
+    if (!id.isEmpty()) {
+        m_writer->writeAttribute("xml:id", validXmlId(id));
+    }
     newLine();
 }
 
@@ -764,8 +780,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             sectionLevels.push(currentSectionLevel);
 
             m_writer->writeStartElement(dbNamespace, "section");
-            m_writer->writeAttribute("xml:id",
-                                     Doc::canonicalTitle(Text::sectionHeading(atom).toString()));
+            if (QString id = Doc::canonicalTitle(Text::sectionHeading(atom).toString()); !id.isEmpty()) {
+                m_writer->writeAttribute("xml:id", validXmlId(id));
+            }
             newLine();
             // Unlike startSectionBegin, don't start a title here.
         }
@@ -3622,7 +3639,9 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 QString nodeRef = refForNode(n);
 
                 if (firstFunction) {
-                    m_writer->writeAttribute("xml:id", refForNode(collective.at(0)));
+                    if (QString id = refForNode(collective.at(0)); !id.isEmpty()) {
+                        m_writer->writeAttribute("xml:id", validXmlId(id));
+                    }
                     newLine();
                     m_writer->writeStartElement(dbNamespace, "title");
                     generateSynopsis(n, relative, Section::Details);
@@ -3633,7 +3652,9 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 } else {
                     m_writer->writeStartElement(dbNamespace, "bridgehead");
                     m_writer->writeAttribute("renderas", "sect2");
-                    m_writer->writeAttribute("xml:id", nodeRef);
+                    if (!nodeRef.isEmpty()) {
+                        m_writer->writeAttribute("xml:id", validXmlId(nodeRef));
+                    }
                     generateSynopsis(n, relative, Section::Details);
                     m_writer->writeEndElement(); // bridgehead
                     newLine();
@@ -3641,11 +3662,14 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             }
         }
     } else {
-        const EnumNode *etn;
         QString nodeRef = refForNode(node);
+        if (!nodeRef.isEmpty()) {
+            m_writer->writeAttribute("xml:id", validXmlId(nodeRef));
+        }
+        newLine();
+
+        const EnumNode *etn;
         if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
-            m_writer->writeAttribute("xml:id", nodeRef);
-            newLine();
             m_writer->writeStartElement(dbNamespace, "title");
             generateSynopsis(etn, relative, Section::Details);
             m_writer->writeEndElement(); // title
@@ -3655,8 +3679,6 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             m_writer->writeEndElement(); // bridgehead
             newLine();
         } else {
-            m_writer->writeAttribute("xml:id", nodeRef);
-            newLine();
             m_writer->writeStartElement(dbNamespace, "title");
             generateSynopsis(node, relative, Section::Details);
             m_writer->writeEndElement(); // title
@@ -4026,7 +4048,9 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
 
                 m_writer->writeStartElement(dbNamespace, "bridgehead");
                 m_writer->writeAttribute("renderas", "sect2");
-                m_writer->writeAttribute("xml:id", refForNode(qpn));
+                if (QString id = refForNode(qpn); !id.isEmpty()) {
+                    m_writer->writeAttribute("xml:id", validXmlId(id));
+                }
                 m_writer->writeCharacters(getQmlPropertyTitle(qpn));
                 m_writer->writeEndElement(); // bridgehead
                 newLine();
@@ -4055,7 +4079,9 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
             // Complete the section tag.
             if (i == 0) {
                 m_writer->writeStartElement(dbNamespace, "section");
-                m_writer->writeAttribute("xml:id", refForNode(m));
+                if (QString id = refForNode(m); !id.isEmpty()) {
+                    m_writer->writeAttribute("xml:id", validXmlId(id));
+                }
                 newLine();
             }
 
