@@ -872,22 +872,8 @@
     {quotefromfile-command} {\\quotefromfile} or \l
     {quotefile-command} {\\quotefile} command.
 
-           \code
-           / *!
-               \code
-                   #include <QApplication>
-                   #include <QPushButton>
-
-                   int main(int argc, char *argv[])
-                   {
-                       ...
-                   }
-               \ endcode
-           * /
-           \endcode
-
-           QDoc renders this as:
-
+       \code \\endcode *
+       /*!
            \code
                #include <QApplication>
                #include <QPushButton>
@@ -896,12 +882,40 @@
                {
                    ...
                }
-           \endcode
+           \1
+       \2/
+       \endcode
+
+       QDoc renders this as:
+
+       \code
+           #include <QApplication>
+           #include <QPushButton>
+
+           int main(int argc, char *argv[])
+           {
+               ...
+           }
+       \endcode
 
     Other QDoc commands are disabled within \\code... \\endcode, and
     the special character '\\' is accepted and rendered like the rest
     of the code, unless it is followed by a digit and parameters were
     passed to \\code.
+
+    \section2 Highlighting and autolinking
+
+    The \\code commands attempts to parse its contents as code of a
+    specific language, as defined in the the \l {language-variable}{language}
+    configuration variable. This provides highlighting and automatic
+    linking to types detected in the code.
+
+    As an exception since QDoc version 6.4, when the \\code command
+    is used within a QML-specific \l {Topic Commands}{topic}, QDoc
+    first attempts to recognize the code as QML; for other topics,
+    the language configuration variable takes precedence. To
+    explicitly mark the code snippet as QML, use the \l {qml-command}
+    {\\qml} command instead.
 
     \section2 Code snippet parameters
 
@@ -928,14 +942,12 @@
     \section2 Including code from external files
 
     To include code snippets from an external file, use the
-    \l{07-0-qdoc-commands-includingexternalcode.html#snippet-command}
-    {\\snippet} and
-    \l{07-0-qdoc-commands-includingexternalcode.html#codeline-command}
+    \l{snippet-command}{\\snippet} and \l{codeline-command}
     {\\codeline} commands.
 
-    See also \l {c-command} {\\c}, \l {badcode-command} {\\badcode}, and
-    \l {07-0-qdoc-commands-includingexternalcode.html#quotefromfile-command}
-    {\\quotefromfile}.
+    See also \l {c-command}{\\c}, \l {qml-command}{\\qml},
+    \l {badcode-command}{\\badcode}, \l {quotefromfile-command}
+    {\\quotefromfile}, and \l {language-variable}{language}.
 
     \target badcode-command
     \section1 \\badcode

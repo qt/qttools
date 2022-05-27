@@ -2342,6 +2342,13 @@ void DocParser::expandArgumentsInString(QString &str, const QStringList &args)
     }
 }
 
+/*!
+    Returns the marked-up code following the code-quoting command \a cmd, expanding
+    any arguments passed in \a argStr.
+
+    Uses the \a marker to mark up the code. If it's \c nullptr, resolve the marker
+    based on the topic and the quoted code itself.
+*/
 QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 {
     QString code = untabifyEtc(getUntilEnd(cmd));
@@ -2349,6 +2356,13 @@ QString DocParser::getCode(int cmd, CodeMarker *marker, const QString &argStr)
 
     int indent = indentLevel(code);
     code = dedent(indent, code);
+
+    // If we're in a QML topic, check if the QML marker recognizes the code
+    if (!marker && !m_private->m_topics.isEmpty()
+            && m_private->m_topics[0].m_topic.startsWith("qml")) {
+        auto qmlMarker = CodeMarker::markerForLanguage("QML");
+        marker = (qmlMarker && qmlMarker->recognizeCode(code)) ? qmlMarker : nullptr;
+    }
     if (marker == nullptr)
         marker = CodeMarker::markerForCode(code);
     return marker->markedUpCode(code, nullptr, location());

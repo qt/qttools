@@ -875,18 +875,23 @@
     \section1 language
 
     The \c language variable specifies the language of the source code
-    that is used in the documentation.
-
-    Currently, C++ is the only language that QDoc understands. It is
-    also the default language, and doesn't really need to be
-    specified. However, a possible example of a language variable
-    statement:
+    that is used in the documentation. Specifically, it defines the
+    default language for parsing source code within \\code .. \\endcode
+    blocks.
 
     \badcode
-        language = Cpp
+    language = Cpp
     \endcode
 
-    This identifies C++ as the language of the Qt source code.
+    The default language is C++ (Cpp), and doesn't need to be explicitly
+    specified. If the code snippets in the documentation consist mainly
+    of QML code, set QML as the default:
+
+    \badcode
+    language = QML
+    \endcode
+
+    See also \l {code-command}[\\code}.
 
     \target locationinfo-variable
     \section1 locationinfo

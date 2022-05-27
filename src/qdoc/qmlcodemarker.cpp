@@ -26,6 +26,11 @@ QT_BEGIN_NAMESPACE
 bool QmlCodeMarker::recognizeCode(const QString &code)
 {
 #ifndef QT_NO_DECLARATIVE
+    // Naive pre-check; starts with an import statement or 'CamelCase {'
+    QRegularExpression regExp(QStringLiteral("^\\s*(import |([A-Z][a-z0-9]*)+\\s?{)"));
+    if (!regExp.match(code).hasMatch())
+        return false;
+
     QQmlJS::Engine engine;
     QQmlJS::Lexer lexer(&engine);
     QQmlJS::Parser parser(&engine);
