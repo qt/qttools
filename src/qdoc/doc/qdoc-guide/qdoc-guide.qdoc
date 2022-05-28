@@ -5,7 +5,7 @@
     \title Getting Started with QDoc
     \nextpage Installing Clang for QDoc
 
-    Qt uses QDoc to generate its documentation set into HTML and DITA XML
+    Qt uses QDoc to generate its documentation set into HTML and DocBook XML
     formats. QDoc uses a set of configuration files to generate documentation
     from QDoc comments. The comments have types called
     \l{writing-topic-commands}{topics} that determine whether a comment is a
@@ -65,11 +65,11 @@
     can also be in other qdocconf files. The \c {include(<filepath>)} command
     allows configuration files to include other configuration files.
 
-    QDoc has two outputs, HTML documentation and documentation in DITA XML
+    QDoc has two outputs, HTML documentation and documentation in DocBook XML
     format. The main distinction between the two outputs is that HTML
     documentation needs to have its HTML styling information in the
-    configuration files. DITA XML documentation does not, and a separate process
-    can style the documentation in DITA at a later time. DITA XML is therefore
+    configuration files. DocBook documentation does not, and a separate process
+    can style the documentation in DocBook at a later time. DocBook therefore
     more flexible in allowing different styles to apply to the same information.
 
     To run QDoc, the project configuration file is supplied as an argument.

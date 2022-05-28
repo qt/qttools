@@ -11,7 +11,7 @@
     QDoc is a tool used by Qt Developers to generate documentation for
     software projects. It works by extracting \e {QDoc comments} from
     project source files and then formatting these comments as HTML
-    pages or DITA XML documents. QDoc finds QDoc comments in \c
+    pages or DocBook XML documents. QDoc finds QDoc comments in \c
     {.cpp} files and in \c {.qdoc} files. QDoc does not look for QDoc
     comments in \c {.h} files. A QDoc comment always begins with an
     exclamation mark (\b{!})). For example:
@@ -75,7 +75,7 @@
     Configuration File} {QDoc configuration file}. The configuration
     file is where you tell QDoc where to find the project source
     files, header files, and \c {.qdoc} files. It is also where you
-    tell QDoc what kind of output to generate (HTML, DITA XML,...),
+    tell QDoc what kind of output to generate (HTML, DocBook XML...),
     and where to put the generated documentation. The configuration
     file also contains other information for QDoc.
 
@@ -235,7 +235,7 @@
     it will run. The default value is \e {HTML}, so if you don't set
     \c {outputformats} in your configuration file, QDoc will generate
     HTML output. That's usually what you will want anyway, but you can
-    also specify \e {DITAXML} to get DITA XML output instead.
+    also specify \e {DocBook} to get DocBook output instead.
 
     Next, QDoc uses the values of the
     \l {headerdirs-variable}
