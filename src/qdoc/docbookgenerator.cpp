@@ -496,7 +496,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         // into a driver for the format generators.
         //
         // This would avoid the replication of content, and the
-        // subsequent friction for changes and desyncronization
+        // subsequent friction for changes and desynchronization
         // between generators.
         //
         // Review all the generators routines and find the actual
