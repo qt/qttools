@@ -116,6 +116,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
 
     QWidget *servicesWidget = new QWidget;
     QVBoxLayout *servicesLayout = new QVBoxLayout(servicesWidget);
+    servicesLayout->setContentsMargins(QMargins());
     servicesLayout->addWidget(serviceFilterLine);
     servicesLayout->addWidget(servicesView);
     splitter->addWidget(servicesWidget);
