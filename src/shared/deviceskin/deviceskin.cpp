@@ -175,7 +175,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
             QString line = ts.readLine();
             if ( line.isNull() )
                 break;
-            if ( line[0] != QLatin1Char('#') && !line.isEmpty() ) {
+            if (!line.isEmpty() && line.at(0) != u'#') {
                 int eq = line.indexOf(QLatin1Char('='));
                 if ( eq >= 0 ) {
                     const QString key = line.left(eq);
