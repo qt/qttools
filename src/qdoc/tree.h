@@ -27,7 +27,7 @@ public:
     enum TargetType { Unknown, Target, Keyword, Contents, Class, Function, Page, Subtitle };
 
     TargetRec(QString name, TargetRec::TargetType type, Node *node, int priority)
-        : m_node(node), m_ref(std::move(name)), m_priority(priority)
+        : m_node(node), m_ref(std::move(name)), m_type(type), m_priority(priority)
     {
         // Discard the dedicated ref for keywords - they always
         // link to the top of the QDoc comment they appear in
@@ -40,20 +40,14 @@ public:
 
     Node *m_node { nullptr };
     QString m_ref {};
+    TargetType m_type {};
     int m_priority {};
-};
-
-struct TargetLoc
-{
-public:
-    TargetLoc() = default;
 };
 
 typedef QMultiMap<QString, TargetRec *> TargetMap;
 typedef QMultiMap<QString, PageNode *> PageNodeMultiMap;
 typedef QMap<QString, QmlTypeNode *> QmlTypeMap;
 typedef QMultiMap<QString, const ExampleNode *> ExampleNodeMap;
-typedef QList<TargetLoc *> TargetList;
 
 class Tree
 {
@@ -88,7 +82,8 @@ private: // The rest of the class is private.
     Node *findNodeRecursive(const QStringList &path, int pathIndex, const Node *start,
                             bool (Node::*)() const) const;
     const Node *findNodeForTarget(const QStringList &path, const QString &target, const Node *node,
-                                  int flags, Node::Genus genus, QString &ref) const;
+                                  int flags, Node::Genus genus, QString &ref,
+                                  TargetRec::TargetType *targetType = nullptr) const;
     const Node *matchPathAndTarget(const QStringList &path, int idx, const QString &target,
                                    const Node *node, int flags, Node::Genus genus,
                                    QString &ref) const;
@@ -104,7 +99,7 @@ private: // The rest of the class is private.
     void insertTarget(const QString &name, const QString &title, TargetRec::TargetType type,
                       Node *node, int priority);
     void resolveTargets(Aggregate *root);
-    const Node *findUnambiguousTarget(const QString &target, Node::Genus genus, QString &ref) const;
+    const TargetRec *findUnambiguousTarget(const QString &target, Node::Genus genus) const;
     [[nodiscard]] const PageNode *findPageNodeByTitle(const QString &title) const;
 
     void addPropertyFunction(PropertyNode *property, const QString &funcName,

@@ -273,6 +273,10 @@ void QDocForest::newPrimaryTree(const QString &module)
   other trees, which are all index trees. With relative set
   to 0, the starting point for each index tree is the root
   of the index tree.
+
+  If \a targetPath is resolved successfully but it refers to
+  a \\section title, continue the search, keeping the section
+  title as a fallback if no higher-priority targets are found.
  */
 const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *relative,
                                           Node::Genus genus, QString &ref)
@@ -286,13 +290,20 @@ const Node *QDocForest::findNodeForTarget(QStringList &targetPath, const Node *r
     if (!targetPath.isEmpty())
         target = targetPath.takeFirst();
 
+    TargetRec::TargetType type = TargetRec::Unknown;
+    const Node *tocNode = nullptr;
     for (const auto *tree : searchOrder()) {
-        const Node *n = tree->findNodeForTarget(entityPath, target, relative, flags, genus, ref);
-        if (n)
-            return n;
+        const Node *n = tree->findNodeForTarget(entityPath, target, relative, flags, genus, ref, &type);
+        if (n) {
+            // Targets referring to non-section titles are returned immediately
+            if (type != TargetRec::Contents)
+                return n;
+            if (!tocNode)
+                tocNode = n;
+        }
         relative = nullptr;
     }
-    return nullptr;
+    return tocNode;
 }
 
 /*!

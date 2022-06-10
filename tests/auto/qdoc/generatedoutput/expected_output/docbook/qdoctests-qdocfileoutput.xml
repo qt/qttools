@@ -66,4 +66,8 @@
 </db:listitem>
 </db:itemizedlist>
 </db:section>
+<db:section xml:id="qdoc-linking-test">
+<db:title>QDoc Linking Test</db:title>
+<db:para>This section title is overridden by another target which takes precedence.</db:para>
+</db:section>
 </db:article>
