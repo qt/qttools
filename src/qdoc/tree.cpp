@@ -419,7 +419,7 @@ Node *Tree::findNodeRecursive(const QStringList &path, int pathIndex, const Node
  */
 const Node *Tree::findNodeForTarget(const QStringList &path, const QString &target,
                                     const Node *start, int flags, Node::Genus genus,
-                                    QString &ref) const
+                                    QString &ref, TargetRec::TargetType *targetType) const
 {
     const Node *node = nullptr;
     if ((genus == Node::DontCare) || (genus == Node::DOC)) {
@@ -435,15 +435,21 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
         }
     }
 
-    node = findUnambiguousTarget(path.join(QLatin1String("::")), genus, ref);
-    if (node) {
+
+    const TargetRec *result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
+    if (result) {
+        node = result->m_node;
+        ref = result->m_ref;
         if (!target.isEmpty()) {
             ref = getRef(target, node);
             if (ref.isEmpty())
                 node = nullptr;
         }
-        if (node)
+        if (node) {
+            if (targetType)
+                *targetType = result->m_type;
             return node;
+        }
     }
 
     const Node *current = start;
@@ -780,64 +786,30 @@ void Tree::resolveTargets(Aggregate *root)
 }
 
 /*!
-  This function searches for a \a target anchor node. If it
-  finds one, it sets \a ref and returns the found node.
+  Searches for a \a target anchor, matching the given \a genus, and returns
+  the associated TargetRec instance.
  */
-const Node *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus,
-                                        QString &ref) const
+const TargetRec *Tree::findUnambiguousTarget(const QString &target, Node::Genus genus) const
 {
-    int numBestTargets = 0;
-    TargetRec *bestTarget = nullptr;
-    QList<TargetRec *> bestTargetList;
-
-    QString key = target;
-    for (auto it = m_nodesByTargetTitle.find(key); it != m_nodesByTargetTitle.constEnd(); ++it) {
-        if (it.key() != key)
-            break;
-        TargetRec *candidate = it.value();
-        if ((genus == Node::DontCare) || (genus & candidate->genus())) {
-            if (!bestTarget || (candidate->m_priority < bestTarget->m_priority)) {
-                bestTarget = candidate;
-                bestTargetList.clear();
-                bestTargetList.append(candidate);
-                numBestTargets = 1;
-            } else if (candidate->m_priority == bestTarget->m_priority) {
-                bestTargetList.append(candidate);
-                ++numBestTargets;
+    auto findBestCandidate = [&](const TargetMap &tgtMap, const QString &key) {
+        TargetRec *best = nullptr;
+        auto [it, end] = tgtMap.equal_range(key);
+        while (it != end) {
+            TargetRec *candidate = it.value();
+            if ((genus == Node::DontCare) || (genus & candidate->genus())) {
+                if (!best || (candidate->m_priority < best->m_priority))
+                    best = candidate;
             }
+            ++it;
         }
-    }
-    if (bestTarget) {
-        ref = bestTarget->m_ref;
-        return bestTarget->m_node;
-    }
+        return best;
+    };
 
-    numBestTargets = 0;
-    bestTarget = nullptr;
-    key = Doc::canonicalTitle(target);
-    for (auto it = m_nodesByTargetRef.find(key); it != m_nodesByTargetRef.constEnd(); ++it) {
-        if (it.key() != key)
-            break;
-        TargetRec *candidate = it.value();
-        if ((genus == Node::DontCare) || (genus & candidate->genus())) {
-            if (!bestTarget || (candidate->m_priority < bestTarget->m_priority)) {
-                bestTarget = candidate;
-                bestTargetList.clear();
-                bestTargetList.append(candidate);
-                numBestTargets = 1;
-            } else if (candidate->m_priority == bestTarget->m_priority) {
-                bestTargetList.append(candidate);
-                ++numBestTargets;
-            }
-        }
-    }
-    if (bestTarget) {
-        ref = bestTarget->m_ref;
-        return bestTarget->m_node;
-    }
+    TargetRec *bestTarget = findBestCandidate(m_nodesByTargetTitle, target);
+    if (!bestTarget)
+        bestTarget = findBestCandidate(m_nodesByTargetRef, Doc::canonicalTitle(target));
 
-    ref.clear();
-    return nullptr;
+    return bestTarget;
 }
 
 /*!

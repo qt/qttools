@@ -46,6 +46,11 @@
     \li \l {link-test-target}{Linking using a \\target string}
     \li \l {QDoc Linking Test}{Linking using a \\keyword string}
     \endlist
+
+    \section1 QDoc Linking Test
+
+    This section title is overridden by another target which takes
+    precedence.
 */
 
 /*!

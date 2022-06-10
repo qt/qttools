@@ -5,6 +5,7 @@
             <contents name="supported-file-types" title="Supported file types" level="1"/>
             <contents name="further-information" title="Further information" level="1"/>
             <contents name="linking" title="Linking" level="1"/>
+            <contents name="qdoc-linking-test" title="QDoc Linking Test" level="1"/>
             <description>
                 <relation href="qdoctests-qdocfileoutput-linking.html" type="page" meta="next" description="Testing QDoc's link command"/>
                 <brief>This is a simple page for testing purposes only.</brief>
@@ -76,6 +77,10 @@
                                 <link raw="QDoc Linking Test" href="qdoctests-qdocfileoutput-linking.html" type="page" page="Testing QDoc's link command">Linking using a \keyword string</link></para>
                         </item>
                     </list>
+                </section>
+                <section id="qdoc-linking-test">
+                    <heading level="1">QDoc Linking Test</heading>
+                    <para>This section title is overridden by another target which takes precedence.</para>
                 </section>
             </description>
         </page>
