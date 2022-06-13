@@ -33,6 +33,7 @@
 
 #include <metadatabase_p.h>
 #include <qdesigner_formwindowcommand_p.h>
+#include <signalslotdialog_p.h>
 
 #include <QtDesigner/private/ui4_p.h>
 #include <QtDesigner/abstractformwindow.h>
@@ -373,6 +374,21 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
     if (connections == nullptr)
         return;
 
+    // For old forms, that were saved before Qt 4 times, there was no <slots>
+    // section inside ui file. Currently, when we specify custom signals or slots
+    // for the form, we add them into the <slots> section. For all signals / slots
+    // inside <slots> section uic creates string-based connections.
+    // In order to fix old forms, we detect if a signal or slot used inside connection
+    // is a custom (fake) one, like it's being done inside SignalSlotDialog.
+    // In case of a fake signal / slot we register it inside meta data base, so that
+    // the next save will add a missing <slots> section.
+    QStringList existingSlots, existingSignals;
+    SignalSlotDialog::existingMethodsFromMemberSheet(m_form_window->core(), parent,
+                                                     existingSlots, existingSignals);
+    QStringList fakeSlots, fakeSignals;
+    SignalSlotDialog::fakeMethodsFromMetaDataBase(m_form_window->core(), parent,
+                                                  fakeSlots, fakeSignals);
+
     setBackground(parent);
     clear();
     const auto &list = connections->elementConnection();
@@ -404,14 +420,29 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
             }
         }
 
+        const QString sourceSignal = dom_con->elementSignal();
+        if (source == parent && !existingSignals.contains(sourceSignal)
+                && !fakeSignals.contains(sourceSignal)) {
+            fakeSignals.append(sourceSignal);
+        }
+
+        const QString destSlot = dom_con->elementSlot();
+        if (destination == parent && !existingSlots.contains(destSlot)
+                && !fakeSlots.contains(destSlot)) {
+            fakeSlots.append(destSlot);
+        }
+
+
         SignalSlotConnection *con = new SignalSlotConnection(this);
 
         con->setEndPoint(EndPoint::Source, source, sp);
         con->setEndPoint(EndPoint::Target, destination, tp);
-        con->setSignal(dom_con->elementSignal());
-        con->setSlot(dom_con->elementSlot());
+        con->setSignal(sourceSignal);
+        con->setSlot(destSlot);
         addConnection(con);
     }
+    SignalSlotDialog::fakeMethodsToMetaDataBase(m_form_window->core(), parent,
+                                                fakeSlots, fakeSignals);
 }
 
 static bool skipWidget(const QWidget *w)

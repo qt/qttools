@@ -140,6 +140,14 @@ public:
     // Edit fake methods of a promoted class stored in WidgetDataBase on a base class instance.
     static bool editPromotedClass(QDesignerFormEditorInterface *core, QObject *baseObject, QWidget *parent = nullptr, FocusMode m = FocusSlots);
 
+    static void fakeMethodsFromMetaDataBase(QDesignerFormEditorInterface *core, QObject *o,
+                                            QStringList &slotList, QStringList &signalList);
+    static void fakeMethodsToMetaDataBase(QDesignerFormEditorInterface *core, QObject *o,
+                                          const QStringList &slotList, const QStringList &signalList);
+    static void existingMethodsFromMemberSheet(QDesignerFormEditorInterface *core, QObject *o,
+                                               QStringList &slotList, QStringList &signalList);
+
+
 private slots:
     void slotCheckSignature(const QString &signature, bool *ok);
 
