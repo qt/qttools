@@ -17,7 +17,6 @@
 QT_BEGIN_NAMESPACE
 
 typedef QMultiMap<QString, Node *> NodeMultiMap;
-typedef QMap<Node *, NodeMultiMap> ParentMaps;
 
 class Aggregate;
 class CodeMarker;

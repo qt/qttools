@@ -555,22 +555,27 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 else if (index == Sections::SinceMemberFunctions
                          || index == Sections::SinceQmlMethods
                          || index == Sections::SinceQmlProperties) {
-                    ParentMaps parentmaps;
-                    ParentMaps::iterator pmap;
+
+                    QMap<QString, NodeMultiMap> parentmaps;
+
                     const QList<Node *> &members = section.members();
                     for (const auto &member : members) {
-                        Node *parent = (*member).parent();
-                        pmap = parentmaps.find(parent);
-                        if (pmap == parentmaps.end())
-                            pmap = parentmaps.insert(parent, NodeMultiMap());
-                        pmap->insert(member->name(), member);
+                        QString parent_full_name = (*member).parent()->fullName();
+
+                        auto parent_entry = parentmaps.find(parent_full_name);
+                        if (parent_entry == parentmaps.end())
+                            parent_entry = parentmaps.insert(parent_full_name, NodeMultiMap());
+                        parent_entry->insert(member->name(), member);
                     }
+
                     for (auto map = parentmaps.begin(); map != parentmaps.end(); ++map) {
                         NodeVector nv = map->values().toVector();
+                        auto parent = nv.front()->parent();
+
                         out() << ((index == Sections::SinceMemberFunctions) ? "<p>Class " : "<p>QML Type ");
 
-                        out() << "<a href=\"" << linkForNode(map.key(), relative) << "\">";
-                        QStringList pieces = map.key()->fullName().split("::");
+                        out() << "<a href=\"" << linkForNode(parent, relative) << "\">";
+                        QStringList pieces = parent->fullName().split("::");
                         out() << protectEnc(pieces.last());
                         out() << "</a>"
                               << ":</p>\n";
