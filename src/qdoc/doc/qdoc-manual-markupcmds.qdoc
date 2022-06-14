@@ -3264,25 +3264,28 @@
     and namespaces. This information will then appear in a table at the top of
     the class or namespace documentation page. For example:
 
-        \code
-        / *!
-            \namespace Foo
-            \inheaderfile Bar
-            \qtcmakepackage Baz
-            \brief A namespace.
+    \badcode *
+    /*!
+        \namespace Foo
+        \inheaderfile Bar
+        \qtcmakepackage Baz
+        \brief A namespace.
 
-            [...]
-        * /
-        \endcode
+        ...
+    \1/
+    \endcode
 
     QDoc will output this as
 
     \raw HTML
+        <blockquote>
         <h1 class="title">Foo Namespace</h1>
-        <p>A namespace. <a href="#details">More...</a></p>
+        <p>A namespace. <a>More...</a></p>
         <div class="table"><table class="alignedsummary">
-        <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span>
-        </td></tr><tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)</td></tr>
+        <tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;Bar&gt;</span></td></tr>
+        <tr><td class="memItemLeft rightAlign topAlign"> CMake:</td><td class="memItemRight bottomAlign"> find_package(Qt6 REQUIRED COMPONENTS Baz)</td></tr>
+        </table></div>
+        </blockquote>
     \endraw
 
 
