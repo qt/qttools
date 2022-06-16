@@ -374,6 +374,9 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
 
 PropertyEditor::~PropertyEditor()
 {
+    // Prevent emission of QtTreePropertyBrowser::itemChanged() when deleting
+    // the current item, causing asserts.
+    m_treeBrowser->setCurrentItem(nullptr);
     storeExpansionState();
     saveSettings();
 }
