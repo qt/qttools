@@ -704,10 +704,13 @@ QString qtDiag(unsigned flags)
         << "  showIsMaximized: " << styleHints->showIsMaximized() << '\n'
         << "  passwordMaskDelay: " << styleHints->passwordMaskDelay() << '\n'
         << "  passwordMaskCharacter: ";
-    if (passwordMaskCharacter.unicode() >= 32 && passwordMaskCharacter.unicode() < 128)
+    const int passwordMaskCharacterUc = passwordMaskCharacter.unicode();
+    if (passwordMaskCharacterUc >= 32 && passwordMaskCharacterUc < 128) {
         str << '\'' << passwordMaskCharacter << '\'';
-    else
-        str << "U+" << qSetFieldWidth(4) << qSetPadChar('0') << Qt::uppercasedigits << Qt::hex << passwordMaskCharacter.unicode() << Qt::dec << qSetFieldWidth(0);
+    } else {
+        str << "U+" << qSetFieldWidth(4) << qSetPadChar('0') << Qt::uppercasedigits << Qt::hex
+            << passwordMaskCharacterUc << Qt::dec << qSetFieldWidth(0);
+    }
     str << '\n'
         << "  fontSmoothingGamma: " << styleHints->fontSmoothingGamma() << '\n'
         << "  useRtlExtensions: " << styleHints->useRtlExtensions() << '\n'
