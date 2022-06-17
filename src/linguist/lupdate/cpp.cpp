@@ -59,16 +59,10 @@ private:
     QBitArray m_ba;
 };
 
-struct NamespaceStackItem
-{
-    qsizetype depth = 0; // the depth of CppParser::namespaces
-    int token = 0;       // the token that opened the namespace or class
-};
-
 struct CppParserState
 {
     NamespaceList namespaces;
-    QStack<NamespaceStackItem> namespaceDepths;
+    QStack<qsizetype> namespaceDepths;
     NamespaceList functionContext;
     QString functionContextUnresolved;
     QString pendingContext;
@@ -174,7 +168,6 @@ private:
     void enterNamespace(NamespaceList *namespaces, const HashString &name);
     void truncateNamespaces(NamespaceList *namespaces, int lenght);
     Namespace *modifyNamespace(NamespaceList *namespaces, bool haveLast = true);
-    bool isInClassDeclaration() const;
 
     // Tokenizer state
     QString yyFileName;
@@ -1134,14 +1127,6 @@ void CppParser::truncateNamespaces(NamespaceList *namespaces, int length)
         namespaces->erase(namespaces->begin() + length, namespaces->end());
 }
 
-bool CppParser::isInClassDeclaration() const
-{
-    for (const NamespaceStackItem &item : namespaceDepths)
-        if (item.token == Tok_class)
-            return true;
-    return false;
-}
-
 
 /*
   Functions for processing include files.
@@ -1773,10 +1758,10 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         yyMsg() << "Ignoring definition of undeclared qualified class\n";
                         break;
                     }
-                    namespaceDepths.push({ namespaces.count(), Tok_class });
+                    namespaceDepths.push(namespaces.count());
                     namespaces = nsl;
                 } else {
-                    namespaceDepths.push({ namespaces.count(), Tok_class });
+                    namespaceDepths.push(namespaces.count());
                 }
                 enterNamespace(&namespaces, fct);
 
@@ -1809,7 +1794,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     ns = HashString(text);
                 }
                 if (yyTok == Tok_LeftBrace) {
-                    namespaceDepths.push({ namespaces.count(), Tok_namespace });
+                    namespaceDepths.push(namespaces.count());
                     for (const auto &nns : nestedNamespaces)
                         enterNamespace(&namespaces, nns);
                     enterNamespace(&namespaces, ns);
@@ -1842,7 +1827,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 }
             } else if (yyTok == Tok_LeftBrace) {
                 // Anonymous namespace
-                namespaceDepths.push({ namespaces.count(), Tok_namespace });
+                namespaceDepths.push(namespaces.count());
                 metaExpected = true;
                 yyTok = getToken();
             }
@@ -1949,15 +1934,8 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             } else {
               notrfunc:
                 prefix.clear();
-                if (yyBraceDepth == namespaceDepths.count() && pendingContext.isEmpty() && !isInClassDeclaration()) {
-                    if (!prospectiveContext.isEmpty()) {
-                        pendingContext = prospectiveContext;
-                        prospectiveContext.clear();
-                    }
-                } else {
-                    if (yyTok == Tok_Ident && !yyParenDepth)
-                        prospectiveContext.clear();
-                }
+                if (yyTok == Tok_Ident && !yyParenDepth)
+                    prospectiveContext.clear();
             }
             metaExpected = false;
             break;
@@ -1993,7 +1971,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             if (!yyTokColonSeen) {
                 if (yyBraceDepth + 1 == namespaceDepths.count()) {
                     // class or namespace
-                    truncateNamespaces(&namespaces, namespaceDepths.pop().depth);
+                    truncateNamespaces(&namespaces, namespaceDepths.pop());
                 }
                 if (yyBraceDepth == namespaceDepths.count()) {
                     // function, class or namespace
@@ -2055,20 +2033,37 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     yyTokColonSeen = false;
                 }
             }
-            Q_FALLTHROUGH();
-        case Tok_LeftParen:
             yyTokIdentSeen = false;
-            Q_FALLTHROUGH();
+            metaExpected = true;
+            yyTok = getToken();
+            break;
+        case Tok_LeftParen:
+            if (!yyTokColonSeen && yyBraceDepth == namespaceDepths.count() && yyParenDepth == 1
+                && !prospectiveContext.isEmpty()) {
+                pendingContext = prospectiveContext;
+                prospectiveContext.clear();
+            }
+            yyTokIdentSeen = false;
+            metaExpected = true;
+            yyTok = getToken();
+            break;
         case Tok_Comma:
         case Tok_QuestionMark:
             metaExpected = true;
             yyTok = getToken();
             break;
         case Tok_RightParen:
-            if (yyParenDepth == 0)
+            if (yyParenDepth == 0) {
+                if (!yyTokColonSeen && !pendingContext.isEmpty()
+                    && yyBraceDepth == namespaceDepths.count()) {
+                    // Demote the pendingContext to prospectiveContext.
+                    prospectiveContext = pendingContext;
+                    pendingContext.clear();
+                }
                 metaExpected = true;
-            else
+            } else {
                 metaExpected = false;
+            }
             yyTok = getToken();
             break;
         default:
