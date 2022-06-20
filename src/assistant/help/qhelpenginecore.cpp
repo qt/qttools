@@ -77,7 +77,7 @@ void QHelpEngineCorePrivate::errorReceived(const QString &msg)
     The core help engine can be used to perform different tasks.
     By calling documentsForIdentifier() the engine returns
     URLs specifying the file locations inside the help system. The
-    actual file data can then be retrived by calling fileData().
+    actual file data can then be retrieved by calling fileData().
 
     The help engine can contain any number of custom filters.
     The management of the filters, including adding new filters,
