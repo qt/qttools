@@ -1970,8 +1970,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             } else {
               notrfunc:
                 prefix.clear();
-                if (yyTok == Tok_Ident && !yyParenDepth)
-                    prospectiveContext.clear();
             }
             metaExpected = false;
             break;
