@@ -422,12 +422,12 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
                                     QString &ref, TargetRec::TargetType *targetType) const
 {
     const Node *node = nullptr;
+
     if ((genus == Node::DontCare) || (genus == Node::DOC)) {
         node = findPageNodeByTitle(path.at(0));
         if (node) {
             if (!target.isEmpty()) {
-                ref = getRef(target, node);
-                if (ref.isEmpty())
+                if (ref = getRef(target, node); ref.isEmpty())
                     node = nullptr;
             }
             if (node)
@@ -435,34 +435,32 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
         }
     }
 
-
     const TargetRec *result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
     if (result) {
         node = result->m_node;
         ref = result->m_ref;
         if (!target.isEmpty()) {
-            ref = getRef(target, node);
-            if (ref.isEmpty())
+            if (ref = getRef(target, node); ref.isEmpty())
                 node = nullptr;
         }
         if (node) {
             if (targetType)
                 *targetType = result->m_type;
-            return node;
+            // Delay returning references to section titles as we
+            // may find a better match below
+            if (!targetType || *targetType != TargetRec::Contents)
+                return node;
+            else
+                ref.clear();
         }
     }
 
-    const Node *current = start;
-    if (current == nullptr)
-        current = root();
-
+    const Node *current = start ? start : root();
     /*
       If the path contains one or two double colons ("::"),
-      check first to see if the first two path strings refer
-      to a QML element. If they do, path[0] will be the QML
-      module identifier, and path[1] will be the QML type.
-      If the answer is yes, the reference identifies a QML
-      type node.
+      check if the first two path elements refer to a QML type.
+      If so, path[0] is QML module identifier, and path[1] is
+      the type.
     */
     int path_idx = 0;
     if (((genus == Node::QML) || (genus == Node::DontCare)) && (path.size() >= 2)
@@ -473,27 +471,28 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
             if (path.size() == 2) {
                 if (!target.isEmpty()) {
                     ref = getRef(target, current);
-                    if (!ref.isEmpty())
-                        return current;
-                    return nullptr;
-                } else
-                    return current;
+                    return (!ref.isEmpty()) ? current : nullptr;
+                }
+                return current;
             }
             path_idx = 2;
         }
     }
 
-    while (current != nullptr) {
-        if (current->isAggregate()) { // Should this be isPageNode() ???
-            const Node *node =
-                    matchPathAndTarget(path, path_idx, target, current, flags, genus, ref);
-            if (node)
-                return node;
+    while (current) {
+        if (current->isAggregate()) {
+            if (const Node *match = matchPathAndTarget(
+                    path, path_idx, target, current, flags, genus, ref);
+                    match != nullptr)
+                return match;
         }
         current = current->parent();
         path_idx = 0;
     }
-    return nullptr;
+
+    if (node && result)
+        ref = result->m_ref; // Restore section title's ref
+    return node;
 }
 
 /*!
