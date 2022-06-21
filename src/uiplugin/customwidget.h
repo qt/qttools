@@ -16,7 +16,7 @@ class QDesignerFormEditorInterface;
 class QDesignerCustomWidgetInterface
 {
 public:
-    virtual ~QDesignerCustomWidgetInterface() {}
+    virtual ~QDesignerCustomWidgetInterface() = default; // ### FIXME: weak vtable
 
     virtual QString name() const = 0;
     virtual QString group() const = 0;
@@ -48,7 +48,7 @@ Q_DECLARE_INTERFACE(QDesignerCustomWidgetInterface, QDesignerCustomWidgetInterfa
 class QDesignerCustomWidgetCollectionInterface
 {
 public:
-    virtual ~QDesignerCustomWidgetCollectionInterface() {}
+    virtual ~QDesignerCustomWidgetCollectionInterface() = default; // ### FIXME: weak vtable
 
     virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const = 0;
 };

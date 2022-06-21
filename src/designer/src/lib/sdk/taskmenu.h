@@ -4,29 +4,26 @@
 #ifndef TASKMENU_H
 #define TASKMENU_H
 
+#include <QtDesigner/sdk_global.h>
 #include <QtDesigner/extension.h>
 
 QT_BEGIN_NAMESPACE
 
 class QAction;
 
-class QDesignerTaskMenuExtension
+class QDESIGNER_SDK_EXPORT QDesignerTaskMenuExtension
 {
 public:
     Q_DISABLE_COPY_MOVE(QDesignerTaskMenuExtension)
 
     QDesignerTaskMenuExtension() = default;
-    virtual ~QDesignerTaskMenuExtension() = default;
+    virtual ~QDesignerTaskMenuExtension();
 
     virtual QAction *preferredEditAction() const;
 
     virtual QList<QAction*> taskActions() const = 0;
 };
 Q_DECLARE_EXTENSION_INTERFACE(QDesignerTaskMenuExtension, "org.qt-project.Qt.Designer.TaskMenu")
-
-
-inline QAction *QDesignerTaskMenuExtension::preferredEditAction() const
-{ return nullptr; }
 
 QT_END_NAMESPACE
 

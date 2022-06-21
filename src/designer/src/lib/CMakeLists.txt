@@ -55,7 +55,7 @@ qt_internal_add_module(Designer
         sdk/layoutdecoration.h
         sdk/membersheet.h
         sdk/propertysheet.h
-        sdk/taskmenu.h
+        sdk/taskmenu.cpp sdk/taskmenu.h
         shared/actioneditor.cpp shared/actioneditor_p.h
         shared/actionprovider_p.h
         shared/actionrepository.cpp shared/actionrepository_p.h
