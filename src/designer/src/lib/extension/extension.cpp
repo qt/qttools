@@ -34,10 +34,10 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \fn QAbstractExtensionFactory::~QAbstractExtensionFactory()
-
     Destroys the extension factory.
 */
+QAbstractExtensionFactory::~QAbstractExtensionFactory()
+    = default;
 
 /*!
     \fn QObject *QAbstractExtensionFactory::extension(QObject *object, const QString &iid) const
@@ -74,10 +74,10 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \fn QAbstractExtensionManager::~QAbstractExtensionManager()
-
     Destroys the extension manager.
 */
+QAbstractExtensionManager::~QAbstractExtensionManager()
+    = default;
 
 /*!
     \fn void QAbstractExtensionManager::registerExtensions(QAbstractExtensionFactory *factory, const QString &iid)

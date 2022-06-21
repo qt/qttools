@@ -4,6 +4,8 @@
 #ifndef EXTENSION_H
 #define EXTENSION_H
 
+#include <QtDesigner/extension_global.h>
+
 #include <QtCore/qstring.h>
 #include <QtCore/qobject.h>
 
@@ -11,19 +13,19 @@ QT_BEGIN_NAMESPACE
 
 #define Q_TYPEID(IFace) QLatin1String(IFace##_iid)
 
-class QAbstractExtensionFactory
+class QDESIGNER_EXTENSION_EXPORT QAbstractExtensionFactory
 {
 public:
-    virtual ~QAbstractExtensionFactory() {}
+    virtual ~QAbstractExtensionFactory();
 
     virtual QObject *extension(QObject *object, const QString &iid) const = 0;
 };
 Q_DECLARE_INTERFACE(QAbstractExtensionFactory, "org.qt-project.Qt.QAbstractExtensionFactory")
 
-class QAbstractExtensionManager
+class QDESIGNER_EXTENSION_EXPORT QAbstractExtensionManager
 {
 public:
-    virtual ~QAbstractExtensionManager() {}
+    virtual ~QAbstractExtensionManager();
 
     virtual void registerExtensions(QAbstractExtensionFactory *factory, const QString &iid) = 0;
     virtual void unregisterExtensions(QAbstractExtensionFactory *factory, const QString &iid) = 0;
