@@ -125,6 +125,8 @@ private:
     inline void openUnorderedList();
     inline void closeUnorderedList();
 
+    QString groupReferenceText(PageNode* node);
+
     static bool s_inUnorderedList;
 
     int m_codeIndent { 0 };

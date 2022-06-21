@@ -1416,16 +1416,121 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
     if (c == nullptr)
         return;
 
+    // REMARK: This form of merging is usually called during the
+    // generation phase om-the-fly when a source-of-truth collection
+    // is required.
+    // In practice, this means a collection could be merged many, many
+    // times during the lifetime of a generation.
+    // To avoid repeating the merging process each time, which could
+    // be time consuming, we use a small flag that is set directly on
+    // the collection to bail-out early.
+    //
+    // The merging process is only meaningful for collections when the
+    // collection references are spread troughout multiple projects.
+    // The part of information that exists in other project is read
+    // before the generation phase, such that when the generation
+    // phase comes, we already have all the information we need for
+    // merging such that we can consider all version of a certain
+    // collection node immutable, making the caching inherently
+    // correct at any point of the generation.
+    //
+    // This implies that this operation is unsafe if it is performed
+    // before all the index files are loaded.
+    // Indeed, this is a prerequisite, with the current structure, to
+    // perform this optmization.
+    //
+    // At the current time, this is true and is expected not to
+    // change.
+    //
+    // Do note that this is not applied to the other overload of
+    // mergeCollections as we cannot as safely ensure its consistency
+    // and, as the result of the merging depends on multiple
+    // parameters, it would require an actual memoization of the call.
+    //
+    // Note that this is a defensive optimization and we are assuming
+    // that it is effective based on heuristical data. As this is
+    // expected to disappear, at least in its current form, in the
+    // future, a more thorough analysis was not performed.
+    if (c->isMerged()) {
+        return;
+    }
+
     for (auto *tree : searchOrder()) {
         CollectionNode *cn = tree->getCollection(c->name(), c->nodeType());
         if (cn && cn != c) {
             if ((cn->isQmlModule() || cn->isJsModule())
                 && cn->logicalModuleIdentifier() != c->logicalModuleIdentifier())
                 continue;
+
             for (auto *node : cn->members())
                 c->addMember(node);
+
+            // REMARK: The merging process is performed to ensure that
+            // references to the collection in external projects are
+            // taken into account before consuming the collection.
+            //
+            // This works by having QDoc construct empty collections
+            // as soon as a reference to a collection is encountered
+            // and filling details later on when its definition is
+            // found.
+            //
+            // This initially-empty collection is always saved to the
+            // primaryTree and it is the collection that is directly
+            // accessible to consumers during the generation process.
+            //
+            // Nonetheless, when the definition for the collection is
+            // not in the same project as the one that is being
+            // compiled, its details will never be filled in.
+            //
+            // Indeed, the details will live in the index file for the
+            // project where the collection is defined, if any, and
+            // the node for it, which has complete information, will
+            // live in some non-primaryTree.
+            //
+            // The merging process itself is used by consumers during
+            // the generation process because they access the
+            // primaryTree version of the collection expecting a
+            // source-of-truth.
+            // To ensure that this is the case for usages that
+            // requires linking, we need to merge not only the members
+            // of the collection that reside in external versions of
+            // the collection; but some of the data that reside in the
+            // definition of the collection intself, namely the title
+            // and the url.
+            //
+            // A collection that contains the data of a definition is
+            // always marked as seen, hence we use that to discern
+            // whether we are working with a placeholder node or not,
+            // and fill in the data if we encounter a node that
+            // represents a definition.
+            //
+            // The way in which QDoc works implies that collection are
+            // globally scoped between projects.
+            // The repetition of the definition for the same
+            // collection is warned for as a duplicate documentation,
+            // such that we can expect a single valid source of truth
+            // for a given collection in each project.
+            // It is currently unknown if this warning is applicable
+            // when the repeated collection is defined in two
+            // different projects.
+            //
+            // As QDoc implicitly would not correctly support this
+            // case, we assume that only one declaration exists for
+            // each collection, such that the first encoutered one
+            // must be the source of truth and that there is no need
+            // to copy any data after the first copy is performed.
+            // KLUDGE: Note that this process is done as a hackish
+            // solution to QTBUG-104237 and should not be considered
+            // final or dependable.
+            if (!c->wasSeen() && cn->wasSeen()) {
+                c->markSeen();
+                c->setTitle(cn->title());
+                c->setUrl(cn->url());
+            }
         }
     }
+
+    c->markMerged();
 }
 
 /*!

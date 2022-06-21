@@ -22,6 +22,7 @@
 #include "tagfilewriter.h"
 #include "tree.h"
 #include "quoter.h"
+#include "utilities.h"
 
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
@@ -992,6 +993,58 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
 }
 
 /*!
+ * Return a string representing a text that exposes information about
+ * the groups that the \a node is part of.
+ *
+ * The returned string is composed of comma separated links to the
+ * groups, with their title as the user-facing text, surrounded by
+ * some introductory text.
+ *
+ * For example, if a node named N is part of the groups with title A
+ * and B, the line rendered form of the line will be "N is part of the
+ * A, B groups", where A and B are clickable links that target the
+ * respective page of each group.
+ *
+ * If a node has a single group, the comma is removed for readability
+ * pusposes and "groups" is expressed as a singular noun.
+ * For example, "N is part of the A group".
+ *
+ * The returned string is empty when the node is not linked to any
+ * group.
+ *
+ * This string is used in the summary of c++ classes or qml types to
+ * link them to some of the overview documentation that is generated
+ * through the "\group" command.
+ *
+ * Note that this is currently, incorrectly, a member of
+ * HthmlGenerator as it requires access to some protected/private
+ * members for escaping and linking.
+ */
+QString HtmlGenerator::groupReferenceText(PageNode* node) {
+    auto link_for_group = [this](QString group_name) -> QString {
+        CollectionNode* group{m_qdb->groups()[group_name]};
+        m_qdb->mergeCollections(group);
+
+        QString target{linkForNode(group, nullptr)};
+
+        return (target.isEmpty()) ? protectEnc(group->name()) : "<a href=\"" + target + "\">" + protectEnc(group->fullTitle()) + "</a>";
+    };
+
+    QString text{};
+
+    QStringList groups_names{node->groupNames()};
+    if (!groups_names.empty()) {
+        text += node->name() + " is part of ";
+
+        for (qsizetype index{0}; index < groups_names.size(); ++index) {
+            text += link_for_group(groups_names[index]) + Utilities::separator(index, groups_names.size());
+        }
+    }
+
+    return text;
+}
+
+/*!
   Generate a reference page for the C++ class, namespace, or
   header file documented in \a node using the code \a marker
   provided.
@@ -1085,6 +1138,13 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         out() << "<li><a href=\"" << obsoleteLink << "\">"
               << "Deprecated members</a></li>\n";
     }
+
+    if (QString groups_text{groupReferenceText(aggregate)}; !groups_text.isEmpty()) {
+        openUnorderedList();
+
+        out() << "<li>" << groups_text << "</li>\n";
+    }
+
     closeUnorderedList();
     generateThreadSafeness(aggregate, marker);
 
@@ -1319,7 +1379,8 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     QString allQmlMembersLink = generateAllQmlMembersFile(sections, marker);
     QString obsoleteLink = generateObsoleteQmlMembersFile(sections, marker);
     if (!allQmlMembersLink.isEmpty() || !obsoleteLink.isEmpty()) {
-        out() << "<ul>\n";
+        openUnorderedList();
+
         if (!allQmlMembersLink.isEmpty()) {
             out() << "<li><a href=\"" << allQmlMembersLink << "\">"
                   << "List of all members, including inherited members</a></li>\n";
@@ -1328,8 +1389,15 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
             out() << "<li><a href=\"" << obsoleteLink << "\">"
                   << "Deprecated members</a></li>\n";
         }
-        out() << "</ul>\n";
     }
+
+    if (QString groups_text{groupReferenceText(qcn)}; !groups_text.isEmpty()) {
+        openUnorderedList();
+
+        out() << "<li>" << groups_text << "</li>\n";
+    }
+
+    closeUnorderedList();
 
     const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
     for (const auto &section : stdQmlTypeSummarySections) {
@@ -1415,6 +1483,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn, CodeMarker 
             }
         }
     }
+
     generateFooter(qbtn);
 }
 
