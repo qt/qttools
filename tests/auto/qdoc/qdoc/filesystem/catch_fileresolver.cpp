@@ -151,6 +151,7 @@ SCENARIO("Finding a file based on some root search directories", "[ResolvingFile
 
             AND_GIVEN("A relative path that does not represent an element on the filesystem that is reachable from that directory") {
                 QString relative_path = GENERATE(filter([](auto& path){ return path != "." && path != ".."; }, take(100, qdoc::catch_generators::native_relative_path())));
+                CAPTURE(relative_path);
 
                 REQUIRE(!QFileInfo{working_directory.path() + '/' + relative_path}.exists());
 
@@ -177,6 +178,7 @@ SCENARIO("Finding a file based on some root search directories", "[ResolvingFile
             AND_GIVEN("A relative path that represents an existing directory on the filesystem that is reachable from that directory") {
                 QString relative_path = GENERATE(take(100, qdoc::catch_generators::native_relative_directory_path()));
                 CAPTURE(relative_path);
+
                 REQUIRE(QDir{working_directory.path()}.mkpath(relative_path));
 
                 WHEN("The relative path is used as a query to resolve a file") {
@@ -202,7 +204,6 @@ SCENARIO("Finding a file based on some root search directories", "[ResolvingFile
 
             AND_GIVEN("A relative path that represents an existing file on the filesystem that is reachable from that directory") {
                 QString relative_path = GENERATE(take(100, qdoc::catch_generators::native_relative_file_path()));
-
                 CAPTURE(relative_path);
 
                 REQUIRE(QDir{working_directory.path()}.mkpath(QFileInfo{relative_path}.path()));
@@ -236,10 +237,11 @@ SCENARIO("Finding a file based on some root search directories", "[ResolvingFile
 
         AND_GIVEN("A relative path that represents an existing file on the filesystem that is reachable from exactly one of those directories") {
             QString relative_path = GENERATE(take(10, qdoc::catch_generators::native_relative_file_path()));
+            CAPTURE(relative_path);
 
             std::size_t containing_directory_index = GENERATE_COPY(take(1, random(std::size_t{0}, directories_amount - 1)));
-
-            CAPTURE(relative_path);
+            CAPTURE(containing_directory_index);
+            CAPTURE(working_directories[containing_directory_index].path());
 
             REQUIRE(QDir{working_directories[containing_directory_index].path()}.mkpath(QFileInfo{relative_path}.path()));
             REQUIRE(QFile{working_directories[containing_directory_index].path() + "/" + relative_path}.open(QIODeviceBase::ReadWrite | QIODeviceBase::NewOnly));
@@ -270,7 +272,6 @@ SCENARIO("Inspecting the content of a file that was resolved", "[ResolvingFiles]
 
         AND_GIVEN("A relative path that represents an existing file on the filesystem that is reachable from that directory") {
             QString relative_path = GENERATE(take(100, qdoc::catch_generators::native_relative_file_path()));
-
             CAPTURE(relative_path);
 
             REQUIRE(QDir{working_directory.path()}.mkpath(QFileInfo{relative_path}.path()));
@@ -296,14 +297,15 @@ TEST_CASE(
     "[ResolvingFiles][File][Path][Validation][SpecialCase]"
 ) {
     std::size_t directories_amount = GENERATE(take(10, random(2, 10)));
+
     QString relative_path = GENERATE(take(10, qdoc::catch_generators::native_relative_file_path()));
+    CAPTURE(relative_path);
 
     std::vector<QTemporaryDir> working_directories(directories_amount);
     REQUIRE(std::all_of(working_directories.cbegin(), working_directories.cend(), [](auto& dir){ return dir.isValid(); }));
 
     for (const auto& directory : working_directories) {
         CAPTURE(directory.path());
-        CAPTURE(relative_path);
         REQUIRE(QDir{directory.path()}.mkpath(QFileInfo{relative_path}.path()));
         REQUIRE(QFile{directory.path() + "/" + relative_path}.open(QIODeviceBase::ReadWrite | QIODeviceBase::NewOnly));
     }

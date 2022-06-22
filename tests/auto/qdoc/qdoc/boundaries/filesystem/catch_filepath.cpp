@@ -43,6 +43,7 @@ SCENARIO("Obtaining a FilePath", "[FilePath][Boundaries][Validation][Canonicaliz
 
     GIVEN("Any string representing a path that does not represent an existing element on the filesystem") {
         QString path = GENERATE(take(100, filter([](auto path){ return !QFileInfo{path}.exists(); }, qdoc::catch_generators::native_path())));
+        CAPTURE(path);
 
         WHEN("A FilePath instance is requested from that string") {
             auto maybe_filepath{FilePath::refine(path)};
@@ -55,6 +56,7 @@ SCENARIO("Obtaining a FilePath", "[FilePath][Boundaries][Validation][Canonicaliz
 
     GIVEN("Any string representing a path to a directory") {
         QString relative_path = GENERATE(take(100, qdoc::catch_generators::native_relative_directory_path()));
+        CAPTURE(relative_path);
 
         QTemporaryDir working_directory{};
         REQUIRE(working_directory.isValid());
@@ -78,6 +80,7 @@ SCENARIO("Obtaining a FilePath", "[FilePath][Boundaries][Validation][Canonicaliz
 
     GIVEN("Any string representing a path to a file") {
         QString relative_path = GENERATE(take(100, qdoc::catch_generators::native_relative_file_path()));
+        CAPTURE(relative_path);
 
         QTemporaryDir working_directory{};
         REQUIRE(working_directory.isValid());
@@ -130,6 +133,7 @@ SCENARIO("Obtaining a FilePath", "[FilePath][Boundaries][Validation][Canonicaliz
 SCENARIO("Inspecting the contents of a FilePath", "[FilePath][Boundaries][Canonicalization][Path][Contents]") {
     GIVEN("Any string representing a path from which a FilePath instance can be obtained") {
         QString relative_path = GENERATE(take(100, qdoc::catch_generators::native_relative_file_path()));
+        CAPTURE(relative_path);
 
         QTemporaryDir working_directory{};
         REQUIRE(working_directory.isValid());
