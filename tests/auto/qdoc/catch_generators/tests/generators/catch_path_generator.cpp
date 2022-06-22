@@ -26,16 +26,16 @@
 **
 ****************************************************************************/
 
-#include "namespaces.hpp"
-#include "generators/qchar_generator.hpp"
-#include "generators/qstring_generator.hpp"
-#include "generators/path_generator.hpp"
-#include "generators/combinators/cycle_generator.hpp"
-#include "utilities/statistics/percentages.hpp"
-#include "utilities/statistics/distribution.hpp"
-#include "utilities/semantics/copy_value.hpp"
+#include "namespaces.h"
+#include "generators/qchar_generator.h"
+#include "generators/qstring_generator.h"
+#include "generators/path_generator.h"
+#include "generators/combinators/cycle_generator.h"
+#include "utilities/statistics/percentages.h"
+#include "utilities/statistics/distribution.h"
+#include "utilities/semantics/copy_value.h"
 
-#include <qt_catch_conversions.hpp>
+#include <qt_catch_conversions.h>
 
 #include <catch.hpp>
 

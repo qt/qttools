@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "../../namespaces.hpp"
-#include "../../utilities/statistics/percentages.hpp"
-#include "../../utilities/semantics/generator_handler.hpp"
+#include "../../namespaces.h"
+#include "../../utilities/statistics/percentages.h"
+#include "../../utilities/semantics/generator_handler.h"
 
 #include <catch.hpp>
 

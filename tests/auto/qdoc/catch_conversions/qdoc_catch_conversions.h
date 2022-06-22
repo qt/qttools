@@ -3,11 +3,11 @@
 
 #pragma once
 
-#include "qt_catch_conversions.hpp"
+#include "qt_catch_conversions.h"
 
-#include <boundaries/filesystem/directorypath.hpp>
-#include <boundaries/filesystem/filepath.hpp>
-#include <boundaries/filesystem/resolvedfile.hpp>
+#include <boundaries/filesystem/directorypath.h>
+#include <boundaries/filesystem/filepath.h>
+#include <boundaries/filesystem/resolvedfile.h>
 
 #include <ostream>
 

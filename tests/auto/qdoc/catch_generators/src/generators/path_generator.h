@@ -30,15 +30,15 @@
 // `catch_generators` a root directory and change the CMakeLists.txt
 // file to make this possible.
 
-#include "../namespaces.hpp"
-#include "qchar_generator.hpp"
-#include "qstring_generator.hpp"
-#include "../utilities/semantics/move_into_vector.hpp"
-#include "../utilities/semantics/generator_handler.hpp"
+#include "../namespaces.h"
+#include "qchar_generator.h"
+#include "qstring_generator.h"
+#include "../utilities/semantics/move_into_vector.h"
+#include "../utilities/semantics/generator_handler.h"
 
 #if defined(Q_OS_WINDOWS)
 
-    #include "combinators/cycle_generator.hpp"
+    #include "combinators/cycle_generator.h"
 
 #endif
 

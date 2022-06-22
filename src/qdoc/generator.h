@@ -6,7 +6,7 @@
 
 #include "text.h"
 #include "utilities.h"
-#include "filesystem/fileresolver.hpp"
+#include "filesystem/fileresolver.h"
 
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>

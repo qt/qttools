@@ -26,8 +26,8 @@
 **
 ****************************************************************************/
 
-#include "namespaces.hpp"
-#include "generators/k_partition_of_r_generator.hpp"
+#include "namespaces.h"
+#include "generators/k_partition_of_r_generator.h"
 
 #include <catch.hpp>
 

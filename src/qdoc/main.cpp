@@ -21,8 +21,8 @@
 #include "tree.h"
 #include "webxmlgenerator.h"
 
-#include "filesystem/fileresolver.hpp"
-#include "boundaries/filesystem/directorypath.hpp"
+#include "filesystem/fileresolver.h"
+#include "boundaries/filesystem/directorypath.h"
 
 #include <QtCore/qdatetime.h>
 #include <QtCore/qdebug.h>

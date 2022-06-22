@@ -8,8 +8,8 @@
 #include "docutilities.h"
 #include "topic.h"
 
-#include "filesystem/fileresolver.hpp"
-#include "boundaries/filesystem/resolvedfile.hpp"
+#include "filesystem/fileresolver.h"
+#include "boundaries/filesystem/resolvedfile.h"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qset.h>

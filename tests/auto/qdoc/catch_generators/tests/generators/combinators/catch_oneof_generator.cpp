@@ -26,15 +26,15 @@
 **
 ****************************************************************************/
 
-#include <std_catch_conversions.hpp>
+#include <std_catch_conversions.h>
 
-#include "namespaces.hpp"
-#include "generators/k_partition_of_r_generator.hpp"
-#include "generators/combinators/oneof_generator.hpp"
-#include "generators/combinators/cycle_generator.hpp"
-#include "utilities/statistics/percentages.hpp"
-#include "utilities/statistics/distribution.hpp"
-#include "utilities/semantics/copy_value.hpp"
+#include "namespaces.h"
+#include "generators/k_partition_of_r_generator.h"
+#include "generators/combinators/oneof_generator.h"
+#include "generators/combinators/cycle_generator.h"
+#include "utilities/statistics/percentages.h"
+#include "utilities/statistics/distribution.h"
+#include "utilities/semantics/copy_value.h"
 
 #include <catch.hpp>
 

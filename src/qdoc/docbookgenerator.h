@@ -8,7 +8,7 @@
 #include "codemarker.h"
 #include "config.h"
 #include "xmlgenerator.h"
-#include "filesystem/fileresolver.hpp"
+#include "filesystem/fileresolver.h"
 
 #include <QtCore/qhash.h>
 #include <QtCore/qxmlstream.h>

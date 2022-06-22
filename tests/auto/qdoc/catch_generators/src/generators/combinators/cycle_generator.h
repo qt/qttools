@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "../../namespaces.hpp"
-#include "../../utilities/semantics/generator_handler.hpp"
+#include "../../namespaces.h"
+#include "../../utilities/semantics/generator_handler.h"
 
 #include <catch.hpp>
 

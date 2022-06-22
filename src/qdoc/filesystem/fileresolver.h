@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "boundaries/filesystem/directorypath.hpp"
-#include "boundaries/filesystem/resolvedfile.hpp"
+#include "boundaries/filesystem/directorypath.h"
+#include "boundaries/filesystem/resolvedfile.h"
 
 #include <optional>
 #include <vector>

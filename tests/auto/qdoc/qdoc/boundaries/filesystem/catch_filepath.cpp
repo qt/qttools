@@ -26,13 +26,13 @@
 **
 ****************************************************************************/
 
-#include <qdoc_catch_conversions.hpp>
+#include <qdoc_catch_conversions.h>
 
 #include <catch.hpp>
 
-#include <boundaries/filesystem/filepath.hpp>
+#include <boundaries/filesystem/filepath.h>
 
-#include <qdoc_catch_generators.hpp>
+#include <qdoc_catch_generators.h>
 
 #include <QFileInfo>
 #include <QTemporaryDir>

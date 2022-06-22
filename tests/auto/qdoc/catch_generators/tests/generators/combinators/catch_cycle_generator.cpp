@@ -26,8 +26,8 @@
 **
 ****************************************************************************/
 
-#include "namespaces.hpp"
-#include "generators/combinators/cycle_generator.hpp"
+#include "namespaces.h"
+#include "generators/combinators/cycle_generator.h"
 
 #include <catch.hpp>
 

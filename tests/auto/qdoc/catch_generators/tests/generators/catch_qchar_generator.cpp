@@ -26,10 +26,10 @@
 **
 ****************************************************************************/
 
-#include "namespaces.hpp"
-#include "generators/qchar_generator.hpp"
+#include "namespaces.h"
+#include "generators/qchar_generator.h"
 
-#include <qt_catch_conversions.hpp>
+#include <qt_catch_conversions.h>
 
 #include <catch.hpp>
 

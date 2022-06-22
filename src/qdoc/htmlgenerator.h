@@ -6,7 +6,7 @@
 
 #include "codemarker.h"
 #include "xmlgenerator.h"
-#include "filesystem/fileresolver.hpp"
+#include "filesystem/fileresolver.h"
 
 #include <QtCore/qhash.h>
 #include <QtCore/qregularexpression.h>

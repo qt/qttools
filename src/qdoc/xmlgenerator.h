@@ -7,7 +7,7 @@
 
 #include "node.h"
 #include "generator.h"
-#include "filesystem/fileresolver.hpp"
+#include "filesystem/fileresolver.h"
 
 #include <QtCore/qmap.h>
 #include <QtCore/qstring.h>

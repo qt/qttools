@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "std_catch_conversions.hpp"
+#include "std_catch_conversions.h"
 
 #include <ostream>
 

@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "../namespaces.hpp"
-#include "../utilities/semantics/move_into_vector.hpp"
-#include "combinators/oneof_generator.hpp"
+#include "../namespaces.h"
+#include "../utilities/semantics/move_into_vector.h"
+#include "combinators/oneof_generator.h"
 
 #include <catch.hpp>
 

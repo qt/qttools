@@ -26,13 +26,13 @@
 **
 ****************************************************************************/
 
-#include <qdoc_catch_conversions.hpp>
+#include <qdoc_catch_conversions.h>
 
 #include <catch.hpp>
 
-#include <filesystem/fileresolver.hpp>
+#include <filesystem/fileresolver.h>
 
-#include <qdoc_catch_generators.hpp>
+#include <qdoc_catch_generators.h>
 
 #include <vector>
 #include <algorithm>

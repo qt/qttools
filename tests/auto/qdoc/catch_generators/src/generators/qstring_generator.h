@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "../namespaces.hpp"
-#include "qchar_generator.hpp"
-#include "../utilities/semantics/generator_handler.hpp"
+#include "../namespaces.h"
+#include "qchar_generator.h"
+#include "../utilities/semantics/generator_handler.h"
 
 #include <catch.hpp>
 

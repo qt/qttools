@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../../namespaces.hpp"
+#include "../../namespaces.h"
 
 #include <functional>
 #include <optional>

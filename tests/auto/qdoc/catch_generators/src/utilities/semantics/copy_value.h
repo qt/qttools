@@ -28,47 +28,24 @@
 
 #pragma once
 
-#include "../../namespaces.hpp"
+#include "../../namespaces.h"
 
-#include <cassert>
+#include <type_traits>
 
 namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE {
 
     /*!
-     * Returns the percentage of \amount over \a total.
+     * Forces \value to be copied in an expression context.
      *
-     * \a amount needs to be greater or equal to zero and \a total
-     * needs to be greater than zero.
-     */
-    inline double percent_of(double amount, double total) {
-        assert(amount >= 0.0);
-        assert(total > 0.0);
-
-        return (amount / total) * 100.0;
-    }
-
-    /*!
-     * Given the cardinality of a set, returns the percentage
-     * probability that applied to every element of the set generates
-     * a uniform distribution.
-     */
-    inline double uniform_probability(std::size_t cardinality) {
-        assert(cardinality > 0);
-
-        return (100.0 / static_cast<double>(cardinality));
-    }
-
-    /*!
-     * Returns a percentage probability that is equal to \a
-     * probability.
+     * This is used in contexts where inferences of a type that
+     * requires generality might identify a reference when ownership
+     * is required.
      *
-     * \a probability must be in the range [0.0, 1.0]
+     * Note that the compiler might optmize the copy away. This is a
+     * non-issue as we are only interested in breaking lifetime
+     * dependencies.
      */
-    inline double probability_to_percentage(double probability) {
-        assert(probability >= 0.0);
-        assert(probability <= 1.0);
-
-        return probability * 100.0;
-    }
+    template<typename T>
+    std::remove_reference_t<T> copy_value(T value) { return value; }
 
 } // end QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE

@@ -10,7 +10,7 @@
 #include "openedlist.h"
 #include "quoter.h"
 
-#include "filesystem/fileresolver.hpp"
+#include "filesystem/fileresolver.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/qglobalstatic.h>

@@ -3,15 +3,15 @@
 
 #pragma once
 
-#include "boundaries/refined_typedef.hpp"
+#include "../refined_typedef.h"
 
 #include <optional>
 
 #include <QtCore/qstring.h>
 #include <QtCore/qfileinfo.h>
 
-QDOC_REFINED_TYPEDEF(QString, FilePath) {
+QDOC_REFINED_TYPEDEF(QString, DirectoryPath) {
     QFileInfo info{value};
 
-    return (info.isFile() && info.isReadable()) ? std::optional(FilePath{info.canonicalFilePath()}) : std::nullopt;
+    return (info.isDir() && info.isReadable() && info.isExecutable()) ? std::optional(DirectoryPath{info.canonicalFilePath()}) : std::nullopt;
 }
