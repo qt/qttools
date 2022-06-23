@@ -38,6 +38,7 @@
 #include <QTemporaryDir>
 #include <QDir>
 #include <QIODeviceBase>
+#include <QRegularExpression>
 
 SCENARIO("Obtaining a DirectoryPath", "[DirectoryPath][Boundaries][Validation][Canonicalization][Path]") {
 
@@ -78,7 +79,38 @@ SCENARIO("Obtaining a DirectoryPath", "[DirectoryPath][Boundaries][Validation][C
 #if defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
 
     GIVEN("Any string representing a path to a directory") {
-        QString relative_path = GENERATE(take(100, qdoc::catch_generators::native_relative_directory_path()));
+        // REMARK: [relative-component-permissions]
+        // For tests where we change the permissions of the path, we
+        // want to avoid relative components in a final position.
+        // Relative components are actual objects on the filesystem in
+        // *nix systems.
+        // What this means is that to perform some operations on them,
+        // such as changing permissions, we need the correct
+        // permission in their containing or parent directory.
+        // When we change permissions for those files, the permissions
+        // for their containing or parent directory is actually
+        // changed.
+        // Depending on the way in which the permissions where
+        // changed, it may then be impossible to change them back, as
+        // the containing or parent directory might not provide the
+        // necessary permission to read or change the nodes that it
+        // contains.
+        // For tests in particular, this means that we are not able to
+        // ensure that the correct permissions will be available for
+        // the cleanup of the temporary directories that we need for
+        // testing.
+        // To avoid this situation, we filter out those paths that end
+        // in a relative component.
+        QString relative_path = GENERATE(take(100,
+            filter(
+                [](QString path){
+                    QString last_component = path.split(QRegularExpression{R"(\/+)"}, Qt::SkipEmptyParts).last();
+                    return (last_component != ".") && (last_component != "..");
+                },
+                qdoc::catch_generators::native_relative_file_path()
+            )
+        ));
+        CAPTURE(relative_path);
 
         QTemporaryDir working_directory{};
         REQUIRE(working_directory.isValid());
