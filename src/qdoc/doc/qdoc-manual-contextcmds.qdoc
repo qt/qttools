@@ -907,7 +907,7 @@
 
     The \\ingroup command indicates that the given
     overview or documented class belongs to a certain group of
-    related docmentation.
+    related documentation.
 
     A class or overview may belong to many groups.
 
