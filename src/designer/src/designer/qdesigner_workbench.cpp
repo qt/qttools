@@ -373,6 +373,9 @@ void QDesignerWorkbench::switchToNeutralMode()
         tw->setParent(nullptr);
     }
 
+    if (m_dockedMainWindow != nullptr) // Prevent assert
+        m_dockedMainWindow->mdiArea()->setActiveSubWindow(nullptr);
+
     for (QDesignerFormWindow *fw : qAsConst(m_formWindows)) {
         fw->setParent(nullptr);
         fw->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
