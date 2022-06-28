@@ -61,6 +61,7 @@
 #include <QtGui/qactiongroup.h>
 #include <QtGui/qevent.h>
 #include <QtGui/qscreen.h>
+#include <QtGui/qwindow.h>
 
 #include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
@@ -371,6 +372,9 @@ void QDesignerWorkbench::switchToNeutralMode()
     for (QDesignerToolWindow *tw : qAsConst(m_toolWindows)) {
         tw->setCloseEventPolicy(MainWindowBase::AcceptCloseEvents);
         tw->setParent(nullptr);
+        // Prevent unneeded native children when switching to docked
+        if (auto *handle = tw->windowHandle())
+            handle->destroy();
     }
 
     if (m_dockedMainWindow != nullptr) // Prevent assert
@@ -379,6 +383,9 @@ void QDesignerWorkbench::switchToNeutralMode()
     for (QDesignerFormWindow *fw : qAsConst(m_formWindows)) {
         fw->setParent(nullptr);
         fw->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+        // Prevent unneeded native children when switching to docked
+        if (auto *handle = fw->windowHandle())
+            handle->destroy();
     }
 
 #ifndef Q_OS_MACOS
