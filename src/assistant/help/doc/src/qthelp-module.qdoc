@@ -15,11 +15,6 @@
     online help and documentation in their applications are described in
     more detail in \l{The Qt Help Framework} overview document.
 
-    To include the definitions of the module's classes, use the
-    following directive:
-
-    \snippet doc_src_qthelp.cpp 0
-
     To link against the module, add this line to your \l qmake \c
     .pro file:
 

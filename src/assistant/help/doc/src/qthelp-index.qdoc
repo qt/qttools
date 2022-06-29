@@ -10,10 +10,6 @@
 
     \section1 Getting Started
 
-    To use Qt Help classes, add this directive into the C++ files:
-
-    \snippet doc_src_qthelp.cpp 0
-
     To link against the Qt Help module, add this line to the project file:
 
     \snippet doc_src_qthelp.qdoc 1
