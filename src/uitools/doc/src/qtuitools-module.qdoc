@@ -29,10 +29,4 @@
     used to obtain a form stored in a project's resources. The
     QUiLoader::load() function takes the user interface description
     contained in the file and constructs the form widget.
-
-    To include the definitions of the module's classes, use the following
-    directive:
-
-    \snippet quiloader/doc_src_qtuiloader.cpp 1
-
 */

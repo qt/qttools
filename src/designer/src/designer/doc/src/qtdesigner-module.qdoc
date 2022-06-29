@@ -14,11 +14,6 @@
     In addition, the QFormBuilder class provides the possibility of
     constructing user interfaces from UI files at run-time.
 
-    To include the definitions of the module classes, use the following
-    directive:
-
-    \snippet plugins/doc_src_qtdesigner.cpp 0
-
     To link against the module, add this line to your \c qmake .pro file:
 
     \snippet plugins/doc_src_qtdesigner.pro 1

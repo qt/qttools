@@ -19,10 +19,6 @@
 
     \section1 Getting Started
 
-    To use Qt Designer classes, add this directive into the C++ files:
-
-    \snippet plugins/doc_src_qtdesigner.cpp 0
-
     To link against the Qt Designer module, add this line to the project file:
 
     \snippet plugins/doc_src_qtdesigner.pro 1
