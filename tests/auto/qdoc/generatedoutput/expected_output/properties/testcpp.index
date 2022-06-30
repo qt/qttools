@@ -9,19 +9,19 @@
         <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
             <contents name="testqdoc" title="TestQDoc" level="1"/>
         </page>
-        <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
+        <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
             <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void documentMe()"/>
         </namespace>
-        <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
+        <class name="DontLinkToMe" href="dontlinktome.html" status="ignored" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Class that does not generate documentation"/>
         <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
             <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
             <contents name="testqdoc" title="TestQDoc" level="2"/>
         </page>
         <page name="https://wiki.qt.io/QProperty" href="https://wiki.qt.io/QProperty" status="active" location="properties.qdoc" documented="true" subtype="externalpage" title="QProperty" fulltitle="QProperty" subtitle=""/>
-        <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" documented="true" module="TestCPP" brief="A namespace">
+        <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
             <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
-            <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" documented="true" groups="testgroup" module="TestCPP" brief="A class in a namespace">
+            <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="testgroup" module="TestCPP" brief="A class in a namespace">
                 <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
@@ -59,7 +59,7 @@
                 <typedef name="SomeType" fullname="TestQDoc::Test::SomeType" href="testqdoc-test.html#SomeType-typedef" status="active" access="public" location="testcpp.h" documented="true"/>
                 <property name="id" fullname="TestQDoc::Test::id" href="testqdoc-test.html#id-prop" status="active" access="public" location="testcpp.h" documented="true"/>
             </class>
-            <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A derived class in a namespace">
+            <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A derived class in a namespace">
                 <function name="bindableProp" fullname="TestQDoc::TestDerived::bindableProp" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" associated-property="bindableProp" type="QBindable&lt;QString&gt;" signature="QBindable&lt;QString&gt; bindableProp()"/>
                 <function name="bindablePropChanged" fullname="TestQDoc::TestDerived::bindablePropChanged" href="testqdoc-testderived.html#bindableProp-prop" status="active" access="public" location="testcpp.h" meta="signal" virtual="non" const="false" static="false" final="false" override="false" associated-property="bindableProp" type="void" signature="void bindablePropChanged()"/>
                 <function name="boolProp" fullname="TestQDoc::TestDerived::boolProp" href="testqdoc-testderived.html#boolProp-prop" status="active" access="public" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" associated-property="boolProp" type="bool" signature="bool boolProp()"/>
@@ -107,7 +107,7 @@
             <qmlproperty name="name" fullname="TheType::name" href="qml-thetype.html#name-prop" status="active" access="public" location="properties.qdoc" documented="true" type="string" attached="false" writable="false" brief="Read-only status of this property is resolved from Q_PROPERTY"/>
         </qmlclass>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
-        <module name="TestCPP" href="testcpp-module.html" status="active" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page">
+        <module name="TestCPP" href="testcpp-module.html" status="active" since="2.0" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page">
             <contents name="linking-to-function-like-things" title="Linking to function-like things" level="1"/>
             <contents name="section" title="section()" level="2"/>
         </module>

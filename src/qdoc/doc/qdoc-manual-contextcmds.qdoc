@@ -489,6 +489,12 @@
 
     In this case, the arguments (project and version) are used as is.
 
+    \section2 Inheritance of Since Information
+
+    Since QDoc version 6.5, C++ classes and QML types inherit the \\since statement
+    from their respective \l {module-command}{module} or \l {qmlmodule-command}
+    {QML module}, unless \\since is explicitly used in the type documentation.
+
     \section2 Since Clause
 
     The \\value command allows an optional \e {since} clause, enclosed in square

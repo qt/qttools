@@ -6,6 +6,7 @@
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>Base QML type.</db:para>
+<db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
 <db:variablelist>
@@ -13,6 +14,12 @@
 <db:term>Import Statement</db:term>
 <db:listitem>
 <db:para>import QDoc.Test 1.1</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since:</db:term>
+<db:listitem>
+<db:para>Qt 1.1</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>

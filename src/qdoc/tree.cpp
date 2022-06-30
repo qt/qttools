@@ -284,16 +284,53 @@ void Tree::resolveCppToQmlLinks()
 }
 
 /*!
+    For each \a aggregate, recursively set the \\since version based on
+    \\since information from the associated physical or logical module.
+    That is, C++ and QML types inherit the \\since of their module,
+    unless that command is explicitly used in the type documentation.
+*/
+void Tree::resolveSince(Aggregate &aggregate)
+{
+    for (auto *child : aggregate.childNodes()) {
+        if (!child->since().isEmpty())
+            continue;
+
+        Node::NodeType moduleType;
+        QString moduleName;
+        switch (child->nodeType())
+        {
+        case Node::Namespace:
+        case Node::Class:
+        case Node::Struct:
+        case Node::Union:
+        case Node::HeaderFile:
+            moduleType = Node::Module;
+            moduleName = child->physicalModuleName();
+            break;
+        case Node::QmlType:
+            moduleType = Node::QmlModule;
+            moduleName = child->logicalModuleName();
+            break;
+        default:
+            continue;
+        };
+        if (moduleName.isEmpty())
+            continue;
+        if (const auto collectionNode = m_qdb->getCollectionNode(moduleName, moduleType))
+            child->setSince(collectionNode->since());
+
+        Q_ASSERT(child->isAggregate());
+        resolveSince(static_cast<Aggregate&>(*child));
+    }
+}
+
+/*!
   For each C++ class node, resolve any \c using clauses
   that appeared in the class declaration.
-
-  For type aliases, resolve the aliased node.
  */
-void Tree::resolveUsingClauses(Aggregate *parent)
+void Tree::resolveUsingClauses(Aggregate &aggregate)
 {
-    if (!parent)
-        parent = &m_root;
-    for (auto *child : parent->childNodes()) {
+    for (auto *child : aggregate.childNodes()) {
         if (child->isClassNode()) {
             auto *cn = static_cast<ClassNode *>(child);
             QList<UsingClause> &usingClauses = cn->usingClauses();
@@ -306,7 +343,7 @@ void Tree::resolveUsingClauses(Aggregate *parent)
             }
         }
     if (child->genus() == Node::CPP && child->isAggregate())
-        resolveUsingClauses(static_cast<Aggregate *>(child));
+        resolveUsingClauses(static_cast<Aggregate&>(*child));
     }
 }
 

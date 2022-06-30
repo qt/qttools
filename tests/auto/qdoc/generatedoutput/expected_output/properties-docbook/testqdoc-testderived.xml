@@ -7,6 +7,7 @@
 <db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>A derived class in a namespace.</db:para>
+<db:para>This class was introduced in Qt 2.0.</db:para>
 </db:abstract>
 </db:info>
 <db:variablelist>
@@ -14,6 +15,12 @@
 <db:term>Header</db:term>
 <db:listitem>
 <db:para>TestDerived</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since</db:term>
+<db:listitem>
+<db:para>Qt 2.0</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>

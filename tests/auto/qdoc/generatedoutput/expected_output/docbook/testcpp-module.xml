@@ -6,9 +6,11 @@
 <db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
 <db:abstract>
 <db:para>A test module page.</db:para>
+<db:para>This module was introduced in Qt 2.0.</db:para>
 </db:abstract>
 </db:info>
 <db:para>A test module page.</db:para>
+<db:para>This module was introduced in Qt 2.0.</db:para>
 <db:section xml:id="namespaces">
 <db:title>Namespaces</db:title>
 <db:variablelist role="namespaces">

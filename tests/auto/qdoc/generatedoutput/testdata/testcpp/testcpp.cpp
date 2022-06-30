@@ -20,6 +20,7 @@ namespace TestQDoc {
     \qtcmakepackage QDocTest
     \title QDoc Test C++ Classes
     \brief A test module page.
+    \since 2.0
 
     \testnoautolist
 
@@ -327,6 +328,7 @@ int TestDerived::id()
     \namespace CrossModuleRef
     \inmodule TestCPP
     \brief Namespace that has documented functions in multiple modules.
+    \since 3.0
 */
 namespace CrossModuleRef {
 

@@ -1025,14 +1025,16 @@ void QDocDatabase::resolveStuff()
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveTargets(primaryTreeRoot());
         primaryTree()->resolveCppToQmlLinks();
-        primaryTree()->resolveUsingClauses();
+        primaryTree()->resolveUsingClauses(*primaryTreeRoot());
+        primaryTree()->resolveSince(*primaryTreeRoot());
     }
     if (config.singleExec() && config.generating()) {
         primaryTree()->resolveBaseClasses(primaryTreeRoot());
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveCppToQmlLinks();
-        primaryTree()->resolveUsingClauses();
+        primaryTree()->resolveUsingClauses(*primaryTreeRoot());
+        primaryTree()->resolveSince(*primaryTreeRoot());
     }
     if (!config.preparing()) {
         resolveNamespaces();

@@ -6,9 +6,11 @@
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>A test module page.</db:para>
+<db:para>This module was introduced in Qt 2.0.</db:para>
 </db:abstract>
 </db:info>
 <db:para>A test module page.</db:para>
+<db:para>This module was introduced in Qt 2.0.</db:para>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 <db:note>
