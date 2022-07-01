@@ -37,6 +37,7 @@ QT_WARNING_DISABLE_MSVC(4100)
 QT_WARNING_DISABLE_MSVC(4146)
 QT_WARNING_DISABLE_MSVC(4267)
 QT_WARNING_DISABLE_MSVC(4624)
+QT_WARNING_DISABLE_GCC("-Wnonnull")
 
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/FrontendActions.h>
