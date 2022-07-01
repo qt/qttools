@@ -593,8 +593,8 @@
 
     The \\group command is typically followed by a \l {title-command}
     {\\title} command and a short introduction to the group. The
-    HTML page for the group is written to a \c {.html} file put in
-    <lower-case>\e{group}.html.
+    HTML page for the group is written to an \c {.html} file named
+    <lower-case-group-name>.html.
 
     Each class name is listed as a link to the class reference page
     followed by the text from the class's \l {brief-command} {\\brief}
