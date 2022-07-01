@@ -11,9 +11,15 @@
     In addition, the QFormBuilder class provides the possibility of
     constructing user interfaces from UI files at run-time.
 
+    \note This documentation covers the tool \e {Qt Designer} and classes
+    related to building graphical user interfaces for Qt Widgets.
+    \l {Qt Design Studio Manual}{Qt Design Studio} is a UI composition tool
+    that covers all steps of UI design and implementation for Qt Quick user
+    interfaces.
+
     \section1 Getting Started
 
-    To use Qt Designer classes,add this directive into the C++ files:
+    To use Qt Designer classes, add this directive into the C++ files:
 
     \snippet plugins/doc_src_qtdesigner.cpp 0
 
