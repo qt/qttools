@@ -72,6 +72,14 @@ void DocBookGenerator::startSectionBegin(const QString &id)
     m_writer->writeStartElement(dbNamespace, "title");
 }
 
+void DocBookGenerator::startSectionBegin(const Node *node)
+{
+    m_writer->writeStartElement(dbNamespace, "section");
+    writeXmlId(node);
+    newLine();
+    m_writer->writeStartElement(dbNamespace, "title");
+}
+
 void DocBookGenerator::startSectionEnd()
 {
     m_writer->writeEndElement(); // title
@@ -83,6 +91,19 @@ void DocBookGenerator::startSection(const QString &id, const QString &title)
     startSectionBegin(id);
     m_writer->writeCharacters(title);
     startSectionEnd();
+}
+
+void DocBookGenerator::startSection(const Node *node, const QString &title)
+{
+    startSectionBegin(node);
+    m_writer->writeCharacters(title);
+    startSectionEnd();
+}
+
+void DocBookGenerator::startSection(const QString &title)
+{
+    // No xml:id given: down the calls, "" is interpreted as "no ID".
+    startSection("", title);
 }
 
 void DocBookGenerator::endSection()
@@ -2334,18 +2355,14 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
 
     // Write the link to the example. Typically, this link comes after sections, hence
     // wrap it in a section too.
-    m_writer->writeStartElement(dbNamespace, "section");
-    newLine();
-    m_writer->writeStartElement(dbNamespace, "title");
-    m_writer->writeCharacters("Example project");
-    m_writer->writeEndElement(); // title
-    newLine();
+    startSection("Example project");
+
     m_writer->writeStartElement(dbNamespace, "para");
     generateSimpleLink(exampleUrl.replace(placeholder, path.join(separator)), link);
     m_writer->writeEndElement(); // para
     newLine();
-    m_writer->writeEndElement(); // section
-    newLine();
+
+    endSection();
 }
 
 // TODO: [multi-purpose-function-with-flag][generate-file-list]
@@ -2359,7 +2376,6 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
 */
 void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 {
-
     // TODO: [possibly-stale-duplicate-code][generator-insufficient-structural-abstraction]
     // Review and compare this code with
     // Generator::generateFileList.
@@ -2388,6 +2404,8 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
     m_writer->writeCharacters(tag);
     m_writer->writeEndElement(); // para
     newLine();
+
+    startSection("List of Files");
 
     m_writer->writeStartElement(dbNamespace, "itemizedlist");
 
@@ -2423,6 +2441,8 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 
     m_writer->writeEndElement(); // itemizedlist
     newLine();
+
+    endSection();
 }
 
 /*!
@@ -2496,13 +2516,7 @@ void DocBookGenerator::generateAlsoList(const Node *node)
     supplementAlsoList(node, alsoList);
 
     if (!alsoList.isEmpty()) {
-        m_writer->writeStartElement(dbNamespace, "section");
-        newLine();
-
-        m_writer->writeStartElement(dbNamespace, "title");
-        m_writer->writeCharacters("See Also");
-        m_writer->writeEndElement(); // title
-        newLine();
+        startSection("See Also");
 
         m_writer->writeStartElement(dbNamespace, "para");
         m_writer->writeStartElement(dbNamespace, "emphasis");
@@ -2528,8 +2542,7 @@ void DocBookGenerator::generateAlsoList(const Node *node)
         m_writer->writeEndElement(); // para
         newLine();
 
-        m_writer->writeEndElement(); // section
-        newLine();
+        endSection();
     }
 }
 
@@ -3659,7 +3672,6 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
 void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *relative)
 {
     // From HtmlGenerator::generateDetailedMember.
-    m_writer->writeStartElement(dbNamespace, "section");
     if (node->isSharedCommentNode()) {
         const auto scn = reinterpret_cast<const SharedCommentNode *>(node);
         const QList<Node *> &collective = scn->collective();
@@ -3668,12 +3680,9 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
         for (const Node *n : collective) {
             if (n->isFunction()) {
                 if (firstFunction) {
-                    writeXmlId(collective.at(0));
-                    newLine();
-                    m_writer->writeStartElement(dbNamespace, "title");
+                    startSectionBegin(collective.at(0));
                     generateSynopsis(n, relative, Section::Details);
-                    m_writer->writeEndElement(); // title
-                    newLine();
+                    startSectionEnd();
 
                     firstFunction = false;
                 } else {
@@ -3687,24 +3696,20 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             }
         }
     } else {
-        writeXmlId(node);
-        newLine();
-
         const EnumNode *etn;
         if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
-            m_writer->writeStartElement(dbNamespace, "title");
+            startSectionBegin(node);
             generateSynopsis(etn, relative, Section::Details);
-            m_writer->writeEndElement(); // title
-            newLine();
+            startSectionEnd();
+
             m_writer->writeStartElement(dbNamespace, "bridgehead");
             generateSynopsis(etn->flagsType(), relative, Section::Details);
             m_writer->writeEndElement(); // bridgehead
             newLine();
         } else {
-            m_writer->writeStartElement(dbNamespace, "title");
+            startSectionBegin(node);
             generateSynopsis(node, relative, Section::Details);
-            m_writer->writeEndElement(); // title
-            newLine();
+            startSectionEnd();
         }
     }
 
@@ -4059,7 +4064,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
             heading = scn->name() + " group";
         else
             heading = node->name();
-        startSection(refForNode(scn), heading);
+        startSection(scn, heading);
         // This last call creates a title for this section. In other words,
         // titles are forbidden for the rest of the section.
 
@@ -4080,7 +4085,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         }
     } else if (node->isQmlProperty() || node->isJsProperty()) {
         auto qpn = static_cast<QmlPropertyNode *>(node);
-        startSection(refForNode(qpn), getQmlPropertyTitle(qpn));
+        startSection(qpn, getQmlPropertyTitle(qpn));
         generateDocBookSynopsis(qpn);
     } else if (node->isSharedCommentNode()) {
         const auto scn = reinterpret_cast<const SharedCommentNode *>(node);
@@ -4096,17 +4101,13 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
                 continue;
             }
 
-            // Complete the section tag.
-            if (i == 0) {
-                m_writer->writeStartElement(dbNamespace, "section");
-                writeXmlId(m);
-                newLine();
-            }
-
             // Write the tag containing the title.
-            m_writer->writeStartElement(dbNamespace, (i == 0) ? "title" : "bridgehead");
-            if (i > 0)
+            if (i == 0) {
+                startSectionBegin(m);
+            } else {
+                m_writer->writeStartElement(dbNamespace, "bridgehead");
                 m_writer->writeAttribute("renderas", "sect2");
+            }
 
             // Write the title.
             if (node->isFunction(Node::QML) || node->isFunction(Node::JS))
@@ -4116,6 +4117,8 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
                         getQmlPropertyTitle(static_cast<QmlPropertyNode *>(node)));
 
             // Complete the title and the synopsis.
+            if (i == 0)
+                startSectionEnd();
             generateDocBookSynopsis(m);
             ++i;
         }
@@ -4123,7 +4126,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         if (i == 0)
             generateEndSection = false;
     } else { // assume the node is a method/signal handler
-        startSectionBegin(refForNode(node));
+        startSectionBegin(node);
         generateQmlMethodTitle(node);
         startSectionEnd();
     }

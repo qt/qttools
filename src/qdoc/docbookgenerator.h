@@ -120,8 +120,11 @@ private:
     void writeXmlId(const Node *node);
     inline void newLine();
     void startSectionBegin(const QString &id = "");
+    void startSectionBegin(const Node *node);
     void startSectionEnd();
     void startSection(const QString &id, const QString &title);
+    void startSection(const Node *node, const QString &title);
+    void startSection(const QString &title);
     void endSection();
     void writeAnchor(const QString &id);
     void generateSimpleLink(const QString &href, const QString &text);
