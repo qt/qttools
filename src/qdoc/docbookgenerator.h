@@ -55,6 +55,7 @@ protected:
     void generateSortedNames(const ClassNode *cn, const QList<RelatedClass> &rc);
     void generateSortedQmlNames(const Node *base, const NodeList &subs);
     bool generateStatus(const Node *node);
+    void generateGroupReferenceText(const Node *node);
     bool generateThreadSafeness(const Node *node);
     bool generateSince(const Node *node);
     void generateAddendum(const Node *node, Generator::Addendum type, CodeMarker *marker,

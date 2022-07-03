@@ -2175,6 +2175,13 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
         }
     }
 
+    // Group.
+    if (!aggregate->groupNames().empty()) {
+        generateStartRequisite("Group");
+        generateGroupReferenceText(aggregate);
+        generateEndRequisite();
+    }
+
     // Write the elements as a list if not empty.
     delete m_writer;
     m_writer = oldWriter;
@@ -2275,6 +2282,13 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
         generateEndRequisite();
     }
 
+    // Group.
+    if (!qcn->groupNames().empty()) {
+        generateStartRequisite("Group");
+        generateGroupReferenceText(qcn);
+        generateEndRequisite();
+    }
+
     m_writer->writeEndElement(); // variablelist
     newLine();
 }
@@ -2359,6 +2373,42 @@ void DocBookGenerator::generateSignatureList(const NodeList &nodes)
 
     m_writer->writeEndElement(); // itemizedlist
     newLine();
+}
+
+/*!
+ * Return a string representing a text that exposes information about
+ * the groups that the \a node is part of.
+ */
+void DocBookGenerator::generateGroupReferenceText(const Node* node)
+{
+    // From HtmlGenerator::groupReferenceText
+
+    if (!node->isAggregate())
+        return;
+    const auto aggregate = static_cast<const Aggregate *>(node);
+
+    const QStringList &groups_names{aggregate->groupNames()};
+    if (!groups_names.empty()) {
+        m_writer->writeStartElement(dbNamespace, "para");
+        m_writer->writeCharacters(aggregate->name() + " is part of ");
+        m_writer->writeStartElement(dbNamespace, "simplelist");
+
+        for (qsizetype index{0}; index < groups_names.size(); ++index) {
+            CollectionNode* group{m_qdb->groups()[groups_names[index]]};
+            m_qdb->mergeCollections(group);
+
+            m_writer->writeStartElement(dbNamespace, "member");
+            if (QString target{linkForNode(group, nullptr)}; !target.isEmpty())
+                generateSimpleLink(target, group->fullTitle());
+            else
+                m_writer->writeCharacters(group->name());
+            m_writer->writeEndElement(); // member
+        }
+
+        m_writer->writeEndElement(); // simplelist
+        m_writer->writeEndElement(); // para
+        newLine();
+    }
 }
 
 /*!
