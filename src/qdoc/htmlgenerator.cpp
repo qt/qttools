@@ -1021,7 +1021,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
  * members for escaping and linking.
  */
 QString HtmlGenerator::groupReferenceText(PageNode* node) {
-    auto link_for_group = [this](QString group_name) -> QString {
+    auto link_for_group = [this](const QString &group_name) -> QString {
         CollectionNode* group{m_qdb->groups()[group_name]};
         m_qdb->mergeCollections(group);
 
