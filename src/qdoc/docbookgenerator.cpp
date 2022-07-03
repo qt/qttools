@@ -2344,11 +2344,7 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
     m_writer->writeEndElement(); // title
     newLine();
     m_writer->writeStartElement(dbNamespace, "para");
-    m_writer->writeStartElement(dbNamespace, "link");
-    m_writer->writeAttribute(xlinkNamespace, "href",
-                             exampleUrl.replace(placeholder, path.join(separator)));
-    m_writer->writeCharacters(link);
-    m_writer->writeEndElement(); // link
+    generateSimpleLink(exampleUrl.replace(placeholder, path.join(separator)), link);
     m_writer->writeEndElement(); // para
     newLine();
     m_writer->writeEndElement(); // section
