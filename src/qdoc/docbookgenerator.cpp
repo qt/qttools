@@ -1256,56 +1256,52 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
                                             return node->doc().briefText().toString().isEmpty();
                                         });
 
-    // From WebXMLGenerator::generateAnnotatedList.
-    if (!nodeList.isEmpty()) {
-        // Wrap the list in a section if needed.
-        if (withSectionIfNeeded && m_hasSection)
-            startSection("", "Contents");
+    // Wrap the list in a section if needed.
+    if (withSectionIfNeeded && m_hasSection)
+        startSection("", "Contents");
 
-        m_writer->writeStartElement(dbNamespace, noItemsHaveTitle ? "itemizedlist" : "variablelist");
-        m_writer->writeAttribute("role", selector);
-        newLine();
+    m_writer->writeStartElement(dbNamespace, noItemsHaveTitle ? "itemizedlist" : "variablelist");
+    m_writer->writeAttribute("role", selector);
+    newLine();
 
-        for (const auto &node : nodeList) {
-            if (node->isInternal() || node->isDeprecated())
-                continue;
+    for (const auto &node : nodeList) {
+        if (node->isInternal() || node->isDeprecated())
+            continue;
 
-            if (noItemsHaveTitle) {
-                m_writer->writeStartElement(dbNamespace, "listitem");
-                newLine();
-                m_writer->writeStartElement(dbNamespace, "para");
-            } else {
-                m_writer->writeStartElement(dbNamespace, "varlistentry");
-                newLine();
-                m_writer->writeStartElement(dbNamespace, "term");
-            }
-            generateFullName(node, relative);
-            if (noItemsHaveTitle) {
-                m_writer->writeEndElement(); // para
-                newLine();
-                m_writer->writeEndElement(); // listitem
-            } else {
-                m_writer->writeEndElement(); // term
-                newLine();
-                m_writer->writeStartElement(dbNamespace, "listitem");
-                newLine();
-                m_writer->writeStartElement(dbNamespace, "para");
-                m_writer->writeCharacters(node->doc().briefText().toString());
-                m_writer->writeEndElement(); // para
-                newLine();
-                m_writer->writeEndElement(); // listitem
-                newLine();
-                m_writer->writeEndElement(); // varlistentry
-            }
+        if (noItemsHaveTitle) {
+            m_writer->writeStartElement(dbNamespace, "listitem");
             newLine();
+            m_writer->writeStartElement(dbNamespace, "para");
+        } else {
+            m_writer->writeStartElement(dbNamespace, "varlistentry");
+            newLine();
+            m_writer->writeStartElement(dbNamespace, "term");
         }
-
-        m_writer->writeEndElement(); // itemizedlist or variablelist
+        generateFullName(node, relative);
+        if (noItemsHaveTitle) {
+            m_writer->writeEndElement(); // para
+            newLine();
+            m_writer->writeEndElement(); // listitem
+        } else {
+            m_writer->writeEndElement(); // term
+            newLine();
+            m_writer->writeStartElement(dbNamespace, "listitem");
+            newLine();
+            m_writer->writeStartElement(dbNamespace, "para");
+            m_writer->writeCharacters(node->doc().briefText().toString());
+            m_writer->writeEndElement(); // para
+            newLine();
+            m_writer->writeEndElement(); // listitem
+            newLine();
+            m_writer->writeEndElement(); // varlistentry
+        }
         newLine();
-
-        if (withSectionIfNeeded && m_hasSection)
-            endSection();
     }
+    m_writer->writeEndElement(); // itemizedlist or variablelist
+    newLine();
+
+    if (withSectionIfNeeded && m_hasSection)
+        endSection();
 }
 
 /*!
