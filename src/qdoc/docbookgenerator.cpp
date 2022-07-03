@@ -442,15 +442,15 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             generateAnnotatedLists(relative, things, atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string() == QLatin1String("classes")
-                || atom->string() == QLatin1String("qmlbasictypes") // deprecated!
-                || atom->string() == QLatin1String("qmlvaluetypes")
-                || atom->string() == QLatin1String("qmltypes")) {
+                   || atom->string() == QLatin1String("qmlbasictypes") // deprecated!
+                   || atom->string() == QLatin1String("qmlvaluetypes")
+                   || atom->string() == QLatin1String("qmltypes")) {
             const NodeMultiMap things = atom->string() == QLatin1String("classes")
                     ? m_qdb->getCppClasses()
                     : (atom->string() == QLatin1String("qmlvaluetypes")
                        || atom->string() == QLatin1String("qmlbasictypes"))
-                      ? m_qdb->getQmlValueTypes()
-                      : m_qdb->getQmlTypes();
+                    ? m_qdb->getQmlValueTypes()
+                    : m_qdb->getQmlTypes();
             generateCompactList(relative, things, QString(), atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string().contains("classes ")) {
@@ -476,7 +476,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 }
             }
         } else if (atom->string().startsWith("examplefiles")
-                || atom->string().startsWith("exampleimages")) {
+                   || atom->string().startsWith("exampleimages")) {
             if (relative->isExample())
                 qDebug() << "GENERATE FILE LIST CALLED" << relative->name() << atom->string();
         } else if (atom->string() == QLatin1String("classhierarchy")) {
@@ -485,12 +485,12 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         } else if (atom->string().startsWith("obsolete")) {
             QString prefix = atom->string().contains("cpp") ? QStringLiteral("Q") : QString();
             const NodeMultiMap &things = atom->string() == QLatin1String("obsoleteclasses")
-                     ? m_qdb->getObsoleteClasses()
-                     : atom->string() == QLatin1String("obsoleteqmltypes")
-                             ? m_qdb->getObsoleteQmlTypes()
-                             : atom->string() == QLatin1String("obsoletecppmembers")
-                                     ? m_qdb->getClassesWithObsoleteMembers()
-                                     : m_qdb->getQmlTypesWithObsoleteMembers();
+                    ? m_qdb->getObsoleteClasses()
+                    : atom->string() == QLatin1String("obsoleteqmltypes")
+                    ? m_qdb->getObsoleteQmlTypes()
+                    : atom->string() == QLatin1String("obsoletecppmembers")
+                    ? m_qdb->getClassesWithObsoleteMembers()
+                    : m_qdb->getQmlTypesWithObsoleteMembers();
             generateCompactList(relative, things, prefix, atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string() == QLatin1String("functionindex")) {
@@ -500,9 +500,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             generateLegaleseList(relative);
             hasGeneratedSomething = !m_qdb->getLegaleseTexts().isEmpty();
         } else if (atom->string() == QLatin1String("overviews")
-            || atom->string() == QLatin1String("cpp-modules")
-            || atom->string() == QLatin1String("qml-modules")
-            || atom->string() == QLatin1String("related")) {
+                   || atom->string() == QLatin1String("cpp-modules")
+                   || atom->string() == QLatin1String("qml-modules")
+                   || atom->string() == QLatin1String("related")) {
             generateList(relative, atom->string());
             hasGeneratedSomething = true; // Approximation, because there is
             // some nontrivial logic in generateList.
@@ -1522,45 +1522,49 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
     if (withSectionIfNeeded && m_hasSection)
         startSection("", "Contents");
 
-    m_writer->writeStartElement(dbNamespace, noItemsHaveTitle ? "itemizedlist" : "variablelist");
-    m_writer->writeAttribute("role", selector);
-    newLine();
+    // From WebXMLGenerator::generateAnnotatedList.
+    if (!nodeList.isEmpty()) {
+        m_writer->writeStartElement(dbNamespace, "variablelist");
+        m_writer->writeAttribute("role", selector);
+        newLine();
 
-    for (const auto &node : nodeList) {
-        if (node->isInternal() || node->isDeprecated())
-            continue;
+        for (const auto &node : nodeList) {
+            if (node->isInternal() || node->isDeprecated())
+                continue;
 
-        if (noItemsHaveTitle) {
-            m_writer->writeStartElement(dbNamespace, "listitem");
+            if (noItemsHaveTitle) {
+                m_writer->writeStartElement(dbNamespace, "listitem");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "para");
+            } else {
+                m_writer->writeStartElement(dbNamespace, "varlistentry");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "term");
+            }
+            generateFullName(node, relative);
+            if (noItemsHaveTitle) {
+                m_writer->writeEndElement(); // para
+                newLine();
+                m_writer->writeEndElement(); // listitem
+            } else {
+                m_writer->writeEndElement(); // term
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "listitem");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "para");
+                m_writer->writeCharacters(node->doc().briefText().toString());
+                m_writer->writeEndElement(); // para
+                newLine();
+                m_writer->writeEndElement(); // listitem
+                newLine();
+                m_writer->writeEndElement(); // varlistentry
+            }
             newLine();
-            m_writer->writeStartElement(dbNamespace, "para");
-        } else {
-            m_writer->writeStartElement(dbNamespace, "varlistentry");
-            newLine();
-            m_writer->writeStartElement(dbNamespace, "term");
         }
-        generateFullName(node, relative);
-        if (noItemsHaveTitle) {
-            m_writer->writeEndElement(); // para
-            newLine();
-            m_writer->writeEndElement(); // listitem
-        } else {
-            m_writer->writeEndElement(); // term
-            newLine();
-            m_writer->writeStartElement(dbNamespace, "listitem");
-            newLine();
-            m_writer->writeStartElement(dbNamespace, "para");
-            m_writer->writeCharacters(node->doc().briefText().toString());
-            m_writer->writeEndElement(); // para
-            newLine();
-            m_writer->writeEndElement(); // listitem
-            newLine();
-            m_writer->writeEndElement(); // varlistentry
-        }
+
+        m_writer->writeEndElement(); // itemizedlist or variablelist
         newLine();
     }
-    m_writer->writeEndElement(); // itemizedlist or variablelist
-    newLine();
 
     if (withSectionIfNeeded && m_hasSection)
         endSection();
