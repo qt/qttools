@@ -60,6 +60,7 @@
 <db:title>QDOCTEST_MACRO</db:title>
 <db:methodsynopsis>
 <db:methodname>QDOCTEST_MAC</db:methodname>
+<db:void/>
 <db:synopsisinfo role="meta">macrowithoutparams</db:synopsisinfo>
 <db:synopsisinfo role="signature">QDOCTEST_MACRO</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>

@@ -52,13 +52,25 @@
 <db:title>Test::enum ClassicEnum</db:title>
 <db:enumsynopsis>
 <db:enumname>ClassicEnum</db:enumname>
+<db:enumitem>
+<db:enumidentifier>Yee</db:enumidentifier>
+<db:enumvalue>0</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Haw</db:enumidentifier>
+<db:enumvalue>1</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Howdy</db:enumidentifier>
+<db:enumvalue>2</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>Partner</db:enumidentifier>
+<db:enumvalue>3</db:enumvalue>
+</db:enumitem>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-<db:enumitem db:enumidentifier="Yee" db:enumvalue="0"/>
-<db:enumitem db:enumidentifier="Haw" db:enumvalue="1"/>
-<db:enumitem db:enumidentifier="Howdy" db:enumvalue="2"/>
-<db:enumitem db:enumidentifier="Partner" db:enumvalue="3"/>
 </db:enumsynopsis>
 <db:informaltable>
 <db:thead>
@@ -97,15 +109,33 @@
 <db:title>Test::enum ScopedEnum</db:title>
 <db:enumsynopsis>
 <db:enumname>ScopedEnum</db:enumname>
+<db:enumitem>
+<db:enumidentifier>This</db:enumidentifier>
+<db:enumvalue>0x01</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>That</db:enumidentifier>
+<db:enumvalue>0x02</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>All</db:enumidentifier>
+<db:enumvalue>This | That</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>OmittedValue</db:enumidentifier>
+<db:enumvalue>99</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>UselessValue</db:enumidentifier>
+<db:enumvalue>100</db:enumvalue>
+</db:enumitem>
+<db:enumitem>
+<db:enumidentifier>VeryLastValue</db:enumidentifier>
+<db:enumvalue>101</db:enumvalue>
+</db:enumitem>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-<db:enumitem db:enumidentifier="This" db:enumvalue="0x01"/>
-<db:enumitem db:enumidentifier="That" db:enumvalue="0x02"/>
-<db:enumitem db:enumidentifier="All" db:enumvalue="This | That"/>
-<db:enumitem db:enumidentifier="OmittedValue" db:enumvalue="99"/>
-<db:enumitem db:enumidentifier="UselessValue" db:enumvalue="100"/>
-<db:enumitem db:enumidentifier="VeryLastValue" db:enumvalue="101"/>
 </db:enumsynopsis>
 <db:informaltable>
 <db:thead>
@@ -148,7 +178,8 @@
 <db:section xml:id="SomeType-typedef">
 <db:title>Test::SomeType</db:title>
 <db:typedefsynopsis>
-<db:type>SomeType</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:typedefname>SomeType</db:typedefname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>

@@ -51,7 +51,8 @@
 <db:section xml:id="SomeType-typedef">
 <db:title>Test::SomeType</db:title>
 <db:typedefsynopsis>
-<db:type>SomeType</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:typedefname>SomeType</db:typedefname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>

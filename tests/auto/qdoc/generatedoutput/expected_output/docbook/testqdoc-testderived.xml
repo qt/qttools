@@ -51,7 +51,8 @@
 <db:section xml:id="DerivedType-typedef">
 <db:title>[alias] TestDerived::DerivedType</db:title>
 <db:typedefsynopsis>
-<db:type>DerivedType</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:typedefname>DerivedType</db:typedefname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
@@ -60,7 +61,8 @@
 <db:section xml:id="NotTypedef-typedef">
 <db:title>[alias] TestDerived::NotTypedef</db:title>
 <db:typedefsynopsis>
-<db:type>NotTypedef</db:type><db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:typedefname>NotTypedef</db:typedefname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:typedefsynopsis>
@@ -83,7 +85,7 @@
 <db:synopsisinfo role="status">active</db:synopsisinfo>
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
-<db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" type="function">Test::virtualFun()</db:link>.</db:para>
+<db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" role="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
 <db:section xml:id="obsolete">
 <db:title>Obsolete Members for TestDerived</db:title>

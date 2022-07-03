@@ -970,13 +970,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::UnhandledFormat:
         m_writer->writeStartElement(dbNamespace, "emphasis");
         m_writer->writeAttribute("role", "bold");
-        m_writer->writeCharacters("&lt;Missing DocBook&gt;");
+        m_writer->writeCharacters("<Missing DocBook>");
         m_writer->writeEndElement(); // emphasis
         break;
     case Atom::UnknownCommand:
         m_writer->writeStartElement(dbNamespace, "emphasis");
         m_writer->writeAttribute("role", "bold");
-        m_writer->writeCharacters("&lt;Unknown command&gt;");
+        m_writer->writeCharacters("<Unknown command>");
         m_writer->writeStartElement(dbNamespace, "code");
         m_writer->writeCharacters(atom->string());
         m_writer->writeEndElement(); // code
@@ -2882,7 +2882,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         m_writer->writeTextElement(dbNamespace, "methodname", node->plainName().chopped(2));
         newLine();
 
-        if (!functionNode->isMacro() && functionNode->parameters().isEmpty()) {
+        if (functionNode->parameters().isEmpty()) {
             m_writer->writeEmptyElement(dbNamespace, "void");
             newLine();
         }
@@ -2912,7 +2912,36 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             generateModifier("final");
         if (functionNode->isOverride())
             generateModifier("override");
+    } else if (node->isTypedef()) {
+        m_writer->writeTextElement(dbNamespace, "typedefname", node->plainName());
+        newLine();
+    } else {
+        node->doc().location().warning(
+            QStringLiteral("Unexpected node type in generateDocBookSynopsis: %1")
+                .arg(node->nodeTypeString()));
+        newLine();
+    }
 
+    // Enums and typedefs.
+    if (enumNode) {
+        for (const EnumItem &item : enumNode->items()) {
+            m_writer->writeStartElement(dbNamespace, "enumitem");
+            newLine();
+            m_writer->writeTextElement(dbNamespace, "enumidentifier", item.name());
+            newLine();
+            m_writer->writeTextElement(dbNamespace, "enumvalue", item.value());
+            newLine();
+            m_writer->writeEndElement(); // enumitem
+            newLine();
+        }
+    }
+
+    // Below: only synopsisinfo within synopsisTag. These elements must be at
+    // the end of the tag, as per DocBook grammar.
+
+    // Information for functions that could not be output previously
+    // (synopsisinfo).
+    if (node->isFunction()) {
         generateSynopsisInfo("meta", functionNode->metanessString());
 
         if (functionNode->isOverload())
@@ -2947,13 +2976,6 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         else if (functionNode->isDefault())
             signature += " = default";
         generateSynopsisInfo("signature", signature);
-    } else if (node->isTypedef()) {
-        m_writer->writeTextElement(dbNamespace, "type", node->plainName());
-    } else {
-        node->doc().location().warning(
-                QStringLiteral("Unexpected node type in generateDocBookSynopsis: %1")
-                        .arg(node->nodeTypeString()));
-        newLine();
     }
 
     // Accessibility status.
@@ -3032,7 +3054,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                 QString link = getAutoLink(&a, aggregate, &otherNode);
 
                 m_writer->writeStartElement(dbNamespace, "synopsisinfo");
-                m_writer->writeAttribute(dbNamespace, "role", "instantiatedBy");
+                m_writer->writeAttribute("role", "instantiatedBy");
                 generateSimpleLink(link, classe->qmlElement()->name());
                 m_writer->writeEndElement(); // synopsisinfo
                 newLine();
@@ -3042,7 +3064,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             QList<RelatedClass>::ConstIterator r;
             if (!classe->baseClasses().isEmpty()) {
                 m_writer->writeStartElement(dbNamespace, "synopsisinfo");
-                m_writer->writeAttribute(dbNamespace, "role", "inherits");
+                m_writer->writeAttribute("role", "inherits");
 
                 r = classe->baseClasses().constBegin();
                 int index = 0;
@@ -3068,7 +3090,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             // Inherited by.
             if (!classe->derivedClasses().isEmpty()) {
                 m_writer->writeStartElement(dbNamespace, "synopsisinfo");
-                m_writer->writeAttribute(dbNamespace, "role", "inheritedBy");
+                m_writer->writeAttribute("role", "inheritedBy");
                 generateSortedNames(classe, classe->derivedClasses());
                 m_writer->writeEndElement(); // synopsisinfo
                 newLine();
@@ -3102,7 +3124,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         QmlTypeNode::subclasses(qcn, subs);
         if (!subs.isEmpty()) {
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");
-            m_writer->writeAttribute(dbNamespace, "role", "inheritedBy");
+            m_writer->writeAttribute("role", "inheritedBy");
             generateSortedQmlNames(qcn, subs);
             m_writer->writeEndElement(); // synopsisinfo
             newLine();
@@ -3118,7 +3140,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             QString link = getAutoLink(&a, base, &otherNode);
 
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");
-            m_writer->writeAttribute(dbNamespace, "role", "inherits");
+            m_writer->writeAttribute("role", "inherits");
             generateSimpleLink(link, base->name());
             m_writer->writeEndElement(); // synopsisinfo
             newLine();
@@ -3132,7 +3154,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             QString link = getAutoLink(&a, cn, &otherNode);
 
             m_writer->writeTextElement(dbNamespace, "synopsisinfo");
-            m_writer->writeAttribute(dbNamespace, "role", "instantiates");
+            m_writer->writeAttribute("role", "instantiates");
             generateSimpleLink(link, cn->name());
             m_writer->writeEndElement(); // synopsisinfo
             newLine();
@@ -3197,27 +3219,18 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
         }
     }
 
-    // Enums and typedefs.
-    if (enumNode) {
-        for (const EnumItem &item : enumNode->items()) {
-            m_writer->writeStartElement(dbNamespace, "enumitem");
-            m_writer->writeAttribute(dbNamespace, "enumidentifier", item.name());
-            m_writer->writeAttribute(dbNamespace, "enumvalue", item.value());
-            m_writer->writeEndElement(); // enumitem
-            newLine();
-        }
-    }
-
     m_writer->writeEndElement(); // nodeToSynopsisTag (like classsynopsis)
     newLine();
 
-    // The typedef associated to this enum.
+    // The typedef associated to this enum. It is output *after* the main tag,
+    // i.e. it must be after the synopsisinfo.
     if (enumNode && enumNode->flagsType()) {
         m_writer->writeStartElement(dbNamespace, "typedefsynopsis");
         newLine();
 
         m_writer->writeTextElement(dbNamespace, "typedefname",
                                    enumNode->flagsType()->fullDocumentName());
+        newLine();
 
         m_writer->writeEndElement(); // typedefsynopsis
         newLine();
@@ -3410,6 +3423,7 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
             }
             m_writer->writeCharacters(QStringLiteral(")"));
         }
+
         if (func->isConst())
             m_writer->writeCharacters(QStringLiteral(" const"));
 
@@ -3780,10 +3794,20 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
 
         if (en->flagsType()) {
             m_writer->writeStartElement(dbNamespace, "para");
-            m_writer->writeCharacters("The " + en->flagsType()->name() + " type is a typedef for ");
+            m_writer->writeCharacters("The ");
+            m_writer->writeStartElement(dbNamespace, "code");
+            m_writer->writeCharacters(en->flagsType()->name());
+            m_writer->writeEndElement(); // code
+            m_writer->writeCharacters(" type is a typedef for ");
+            m_writer->writeStartElement(dbNamespace, "code");
             generateSimpleLink(m_qflagsHref, "QFlags");
-            m_writer->writeCharacters("&lt;" + en->name() + "&gt;. ");
-            m_writer->writeCharacters("It stores an OR combination of " + en->name() + "values.");
+            m_writer->writeCharacters("<" + en->name() + ">. ");
+            m_writer->writeEndElement(); // code
+            m_writer->writeCharacters("It stores an OR combination of ");
+            m_writer->writeStartElement(dbNamespace, "code");
+            m_writer->writeCharacters(en->name());
+            m_writer->writeEndElement(); // code
+            m_writer->writeCharacters(" values.");
             m_writer->writeEndElement(); // para
             newLine();
         }
@@ -4421,7 +4445,7 @@ void DocBookGenerator::generateFullName(const Node *apparentNode, const QString 
     // From Generator::appendFullName.
     m_writer->writeStartElement(dbNamespace, "link");
     m_writer->writeAttribute(xlinkNamespace, "href", fullDocumentLocation(actualNode));
-    m_writer->writeAttribute("type", targetType(actualNode));
+    m_writer->writeAttribute("role", targetType(actualNode));
     m_writer->writeCharacters(fullName);
     m_writer->writeEndElement(); // link
 }
