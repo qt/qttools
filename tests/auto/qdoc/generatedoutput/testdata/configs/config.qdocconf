@@ -12,3 +12,8 @@ warninglimit.enabled = true
 
 # don't write host system-specific paths to index files
 locationinfo = false
+
+# Macro from qtbase/doc/global/macros.qdocconf
+# The file cannot be included directly, because it requires many
+# variables to be set, like QT_VER
+macro.borderedimage       = "\\div {class=\"border\"} \\image \1\n\\enddiv"

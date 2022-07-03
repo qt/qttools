@@ -149,6 +149,42 @@
 
     \hr
 
+    \section1 Images
+
+    An image without any text:
+
+    \image leonardo-da-vinci.png
+
+    An image with just an alternative text:
+
+    \image leonardo-da-vinci.png Image alt
+
+    An image with alternative text and 1-atom caption:
+
+    \image leonardo-da-vinci.png Image alt
+    \caption Image caption
+
+    An image with alternative text and 2-atom caption:
+
+    \image leonardo-da-vinci.png Image alt
+    \caption Image caption without bold text
+
+    A bordered image:
+
+    \borderedimage leonardo-da-vinci.png
+
+    //! A bordered image with alternative text:
+    //!
+    //! \borderedimage leonardo-da-vinci.png Screenshot of the Drill Down Example
+    //! It looks like this macro is not written to handle alternative text (no \2)
+
+    A bordered image with a caption:
+
+    \borderedimage leonardo-da-vinci.png
+    \caption Screenshot of the System Tray Icon
+
+    \section1 Commands not yet tested
+
     \warning The following commands have yet to be tested:
     footnote
     link
@@ -157,7 +193,6 @@
     header
     index
     topicref // or just don’t care, remove it
-    image
     inlineimage
     printline
     printto

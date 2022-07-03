@@ -49,11 +49,65 @@
 <db:note>
 <db:para>The code above doesn't compile</db:para>
 </db:note>
+</db:section>
+</db:section>
+</db:section>
+</db:section>
+<db:section xml:id="images">
+<db:title>Images</db:title>
+<db:para>An image without any text:</db:para>
+<db:mediaobject>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+<db:para>An image with just an alternative text:</db:para>
+<db:mediaobject>
+<db:alt>Image alt</db:alt>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+<db:para>An image with alternative text and 1-atom caption:</db:para>
+<db:figure>
+<db:title>Image caption</db:title>
+<db:mediaobject>
+<db:alt>Image alt</db:alt>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+</db:figure>
+<db:para>An image with alternative text and 2-atom caption:</db:para>
+<db:figure>
+<db:title>Image caption without bold text</db:title>
+<db:mediaobject>
+<db:alt>Image alt</db:alt>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+</db:figure>
+<db:para>A bordered image:</db:para>
+<db:mediaobject>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+<db:para>A bordered image with a caption:</db:para>
+<db:figure>
+<db:title>Screenshot of the System Tray Icon<db:mediaobject>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+</db:title>
+</db:figure>
+</db:section>
+<db:section xml:id="commands-not-yet-tested">
+<db:title>Commands not yet tested</db:title>
 <db:warning>
-<db:para>The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it image inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</db:para>
+<db:para>The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</db:para>
 </db:warning>
-</db:section>
-</db:section>
-</db:section>
 </db:section>
 </db:article>

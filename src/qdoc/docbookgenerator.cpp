@@ -251,7 +251,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     int skipAhead = 0;
     static bool inPara = false;
     Node::Genus genus = Node::DontCare;
-    bool closeFigureWrapper = false;
     bool closeTableRow = false;
 
     switch (atom->type()) {
@@ -515,10 +514,16 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         // Not supported in DocBook.
         break;
     case Atom::Image: // mediaobject
-        // An Image atom is always followed by an ImageText atom, containing the alternative text.
-        // If no caption is present we just output a <db:mediaobject>,
+        // An Image atom is always followed by an ImageText atom,
+        // containing the alternative text.
+        // If no caption is present, we just output a <db:mediaobject>,
         // avoiding the wrapper as it is not required.
-        if (atom->next() && matchAhead(atom->next(), Atom::CaptionLeft)) {
+        // For bordered images, there is another atom before the
+        // caption, DivRight (the corresponding DivLeft being just
+        // before the image).
+
+        if (atom->next() && matchAhead(atom->next(), Atom::DivRight) && atom->next()->next()
+            && matchAhead(atom->next()->next(), Atom::CaptionLeft)) {
             // If there is a caption, there must be a <db:figure>
             // wrapper starting with the caption.
             skipAhead += 4;
@@ -526,6 +531,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             Q_ASSERT(atom->next()->next());
             Q_ASSERT(atom->next()->next()->next());
             Q_ASSERT(atom->next()->next()->next()->next());
+            Q_ASSERT(atom->next()->next()->next()->next()->next());
 
             m_writer->writeStartElement(dbNamespace, "figure");
             newLine();
@@ -534,7 +540,40 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             generateAtom(atom->next()->next()->next(), relative); // The actual caption.
             generateAtom(atom->next()->next()->next()->next(), relative); // Atom::CaptionRight
 
-            closeFigureWrapper = true;
+            m_closeFigureWrapper = true;
+        }
+
+        if (atom->next() && matchAhead(atom->next(), Atom::CaptionLeft)) {
+            // If there is a caption, there must be a <db:figure>
+            // wrapper starting with the caption.
+            Q_ASSERT(atom->next());
+            Q_ASSERT(atom->next()->next());
+            Q_ASSERT(atom->next()->next()->next());
+            Q_ASSERT(atom->next()->next()->next()->next());
+
+            m_writer->writeStartElement(dbNamespace, "figure");
+            newLine();
+
+            const Atom *current = atom->next()->next();
+            ++skipAhead;
+
+            Q_ASSERT(current->type() == Atom::CaptionLeft);
+            generateAtom(current, relative);
+            current = current->next();
+            ++skipAhead;
+
+            while (current->type() != Atom::CaptionRight) { // The actual caption.
+                generateAtom(current, relative);
+                current = current->next();
+                ++skipAhead;
+            }
+
+            Q_ASSERT(current->type() == Atom::CaptionRight);
+            generateAtom(current, relative);
+            current = current->next();
+            ++skipAhead;
+
+            m_closeFigureWrapper = true;
         }
 
         Q_FALLTHROUGH();
@@ -581,8 +620,10 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             // TODO: [uncentralized-output-directory-structure]
             Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
 
-            if (atom->next() && !atom->next()->string().isEmpty())
+            if (atom->next() && !atom->next()->string().isEmpty()) {
                 m_writer->writeTextElement(dbNamespace, "alt", atom->next()->string());
+                newLine();
+            }
 
             m_writer->writeStartElement(dbNamespace, "imageobject");
             newLine();
@@ -601,10 +642,10 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         if (atom->type() == Atom::Image)
             newLine();
 
-        if (closeFigureWrapper) {
+        if (m_closeFigureWrapper) {
             m_writer->writeEndElement(); // figure
             newLine();
-            closeFigureWrapper = false;
+            m_closeFigureWrapper = false;
         }
     } break;
     case Atom::ImageText:
