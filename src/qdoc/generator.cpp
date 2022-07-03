@@ -388,8 +388,21 @@ QString Generator::fileName(const Node *node, const QString &extension) const
     return extension.isNull() ? name + fileExtension() : name + extension;
 }
 
-QString Generator::cleanRef(const QString &ref)
+/*!
+  Clean the given \a ref to be used as an HTML anchor or an \c xml:id.
+  If \a xmlCompliant is set to \c true, a stricter process is used, as XML
+  is more rigorous in what it accepts. Otherwise, if \a xmlCompliant is set to
+  \c false, the basic HTML transformations are applied.
+
+  More specifically, only XML NCNames are allowed
+  (https://www.w3.org/TR/REC-xml-names/#NT-NCName).
+ */
+QString Generator::cleanRef(const QString &ref, bool xmlCompliant)
 {
+    // XML-compliance is ensured in two ways:
+    // - no digit (0-9) at the beginning of an ID (many IDs do not respect this property)
+    // - no colon (:) anywhere in the ID (occurs very rarely)
+
     QString clean;
 
     if (ref.isEmpty())
@@ -399,8 +412,10 @@ QString Generator::cleanRef(const QString &ref)
     const QChar c = ref[0];
     const uint u = c.unicode();
 
-    if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9')) {
+    if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (!xmlCompliant && u >= '0' && u <= '9')) {
         clean += c;
+    } else if (xmlCompliant && u >= '0' && u <= '9') {
+        clean += QLatin1Char('A') + c;
     } else if (u == '~') {
         clean += "dtor.";
     } else if (u == '_') {
@@ -413,7 +428,7 @@ QString Generator::cleanRef(const QString &ref)
         const QChar c = ref[i];
         const uint u = c.unicode();
         if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9') || u == '-'
-            || u == '_' || u == ':' || u == '.') {
+            || u == '_' || (xmlCompliant && u == ':') || u == '.') {
             clean += c;
         } else if (c.isSpace()) {
             clean += QLatin1Char('-');

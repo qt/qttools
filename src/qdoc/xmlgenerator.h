@@ -32,7 +32,7 @@ protected:
     static std::pair<QString, int> getAtomListValue(const Atom *atom);
     static std::pair<QString, QString> getTableWidthAttr(const Atom *atom);
 
-    QString registerRef(const QString &ref);
+    QString registerRef(const QString &ref, bool xmlCompliant = false);
     QString refForNode(const Node *node);
     QString linkForNode(const Node *node, const Node *relative);
     QString getLink(const Atom *atom, const Node *relative, const Node **node);

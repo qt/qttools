@@ -207,9 +207,9 @@ std::pair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
   To ensure unicity throughout the document, this method
   uses the \a refMap cache.
  */
-QString XmlGenerator::registerRef(const QString &ref)
+QString XmlGenerator::registerRef(const QString &ref, bool xmlCompliant)
 {
-    QString cleanRef = Generator::cleanRef(ref);
+    QString cleanRef = Generator::cleanRef(ref, xmlCompliant);
 
     for (;;) {
         QString &prevRef = refMap[cleanRef.toLower()];

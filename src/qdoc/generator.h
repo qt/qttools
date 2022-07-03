@@ -68,7 +68,7 @@ public:
     static bool useOutputSubdirs() { return s_useOutputSubdirs; }
     static void setQmlTypeContext(QmlTypeNode *t) { s_qmlTypeContext = t; }
     static QmlTypeNode *qmlTypeContext() { return s_qmlTypeContext; }
-    static QString cleanRef(const QString &ref);
+    static QString cleanRef(const QString &ref, bool xmlCompliant = false);
     static QString plainCode(const QString &markedCode);
     virtual QString fileBase(const Node *node) const;
 
