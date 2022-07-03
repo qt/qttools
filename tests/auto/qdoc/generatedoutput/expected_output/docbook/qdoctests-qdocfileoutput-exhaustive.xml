@@ -96,12 +96,12 @@
 </db:mediaobject>
 <db:para>A bordered image with a caption:</db:para>
 <db:figure>
-<db:title>Screenshot of the System Tray Icon<db:mediaobject>
+<db:title>Screenshot of the System Tray Icon</db:title>
+<db:mediaobject>
 <db:imageobject>
 <db:imagedata fileref="images/leonardo-da-vinci.png"/>
 </db:imageobject>
 </db:mediaobject>
-</db:title>
 </db:figure>
 </db:section>
 <db:section xml:id="commands-not-yet-tested">

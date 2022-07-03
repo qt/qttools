@@ -526,7 +526,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             && matchAhead(atom->next()->next(), Atom::CaptionLeft)) {
             // If there is a caption, there must be a <db:figure>
             // wrapper starting with the caption.
-            skipAhead += 4;
             Q_ASSERT(atom->next());
             Q_ASSERT(atom->next()->next());
             Q_ASSERT(atom->next()->next()->next());
@@ -536,9 +535,24 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeStartElement(dbNamespace, "figure");
             newLine();
 
-            generateAtom(atom->next()->next(), relative); // Atom::CaptionLeft
-            generateAtom(atom->next()->next()->next(), relative); // The actual caption.
-            generateAtom(atom->next()->next()->next()->next(), relative); // Atom::CaptionRight
+            const Atom *current = atom->next()->next()->next();
+            skipAhead += 2;
+
+            Q_ASSERT(current->type() == Atom::CaptionLeft);
+            generateAtom(current, relative);
+            current = current->next();
+            ++skipAhead;
+
+            while (current->type() != Atom::CaptionRight) { // The actual caption.
+                generateAtom(current, relative);
+                current = current->next();
+                ++skipAhead;
+            }
+
+            Q_ASSERT(current->type() == Atom::CaptionRight);
+            generateAtom(current, relative);
+            current = current->next();
+            ++skipAhead;
 
             m_closeFigureWrapper = true;
         }
