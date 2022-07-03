@@ -649,7 +649,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             newLine();
             m_writer->writeStartElement(dbNamespace, "item");
         } else { // (atom->string() == ATOM_LIST_VALUE)
-            QPair<QString, int> pair = getAtomListValue(atom);
+            std::pair<QString, int> pair = getAtomListValue(atom);
             skipAhead = pair.second;
 
             m_writer->writeStartElement(dbNamespace, "tr");
@@ -816,7 +816,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeCharacters(atom->string());
         break;
     case Atom::TableLeft: {
-        QPair<QString, QString> pair = getTableWidthAttr(atom);
+        std::pair<QString, QString> pair = getTableWidthAttr(atom);
         QString attr = pair.second;
         QString width = pair.first;
 
@@ -1500,8 +1500,8 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
     // or useSeparator field, as this content is only output in the info tag, not in the main
     // content).
     if (node && !node->links().empty()) {
-        QPair<QString, QString> linkPair;
-        QPair<QString, QString> anchorPair;
+        std::pair<QString, QString> linkPair;
+        std::pair<QString, QString> anchorPair;
         const Node *linkNode;
 
         if (node->links().contains(Node::PreviousLink)) {
@@ -3862,7 +3862,7 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
 void DocBookGenerator::generateSectionInheritedList(const Section &section, const Node *relative)
 {
     // From HtmlGenerator::generateSectionInheritedList.
-    QList<QPair<Aggregate *, int>>::ConstIterator p = section.inheritedMembers().constBegin();
+    QList<std::pair<Aggregate *, int>>::ConstIterator p = section.inheritedMembers().constBegin();
     while (p != section.inheritedMembers().constEnd()) {
         m_writer->writeStartElement(dbNamespace, "listitem");
         m_writer->writeCharacters(QString::number((*p).second) + u' ');
