@@ -831,7 +831,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         if (!width.isEmpty())
             m_writer->writeAttribute("width", width);
         newLine();
-        m_numTableRows = 0;
     } break;
     case Atom::TableRight:
         m_writer->writeEndElement(); // table
@@ -1243,8 +1242,6 @@ void DocBookGenerator::generateCompactList(ListType listType, const Node *relati
     // No table of contents in DocBook.
 
     // Actual output.
-    m_numTableRows = 0;
-
     int curParNr = 0;
     int curParOffset = 0;
     QString previousName;
