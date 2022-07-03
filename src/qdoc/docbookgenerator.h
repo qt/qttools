@@ -117,6 +117,7 @@ private:
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     void writeXmlId(const QString &id);
+    void writeXmlId(const Node *node);
     inline void newLine();
     void startSectionBegin(const QString &id = "");
     void startSectionEnd();

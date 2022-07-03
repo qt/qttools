@@ -7,7 +7,7 @@
 <db:abstract>
 <db:para>ProxyPage Reference Documentation.</db:para></db:abstract>
 </db:info>
-<db:section xml:id="type documentation">
+<db:section xml:id="type-documentation">
 <db:title>Type Documentation</db:title>
 <db:section xml:id="StdPair-typedef">
 <db:title>[alias] template &lt;class T1, class T2&gt; StdPair</db:title>

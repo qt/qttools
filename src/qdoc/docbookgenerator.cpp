@@ -37,18 +37,6 @@ QT_BEGIN_NAMESPACE
 static const char dbNamespace[] = "http://docbook.org/ns/docbook";
 static const char xlinkNamespace[] = "http://www.w3.org/1999/xlink";
 
-QString validXmlId(const QString& xmlid) {
-    if (xmlid.isEmpty()) {
-        return xmlid;
-    }
-
-    if (xmlid[0].isDigit()) {
-        return "_" + xmlid;
-    } else {
-        return xmlid;
-    }
-}
-
 DocBookGenerator::DocBookGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
 
 inline void DocBookGenerator::newLine()
@@ -61,7 +49,19 @@ void DocBookGenerator::writeXmlId(const QString &id)
     if (id.isEmpty())
         return;
 
-    m_writer->writeAttribute("xml:id", id);
+    m_writer->writeAttribute("xml:id", registerRef(id, true));
+}
+
+void DocBookGenerator::writeXmlId(const Node *node)
+{
+    if (!node)
+        return;
+
+    // Specifically for nodes, do not use the same code path, as refForNode
+    // calls registerRef in all cases. Calling registerRef a second time adds
+    // a character to "disambiguate" the two IDs (the one returned by
+    // refForNode, then the one that is written as xml:id).
+    m_writer->writeAttribute("xml:id", Generator::cleanRef(refForNode(node), true));
 }
 
 void DocBookGenerator::startSectionBegin(const QString &id)
@@ -1236,7 +1236,7 @@ void DocBookGenerator::generateAnnotatedLists(const Node *relative, const NodeMu
     // From HtmlGenerator::generateAnnotatedLists.
     for (const QString &name : nmm.uniqueKeys()) {
         if (!name.isEmpty())
-            startSection(registerRef(name.toLower()), name);
+            startSection(name.toLower(), name);
         generateAnnotatedList(relative, nmm.values(name), selector);
         if (!name.isEmpty())
             endSection();
@@ -1536,7 +1536,6 @@ bool DocBookGenerator::generateSince(const Node *node)
 void DocBookGenerator::generateHeader(const QString &title, const QString &subTitle,
                                       const Node *node)
 {
-    // From HtmlGenerator::generateHeader.
     refMap.clear();
 
     // Output the DocBook header.
@@ -1750,8 +1749,7 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
 
     for (const Section *section : details_spv) {
         const QString &title = section->title();
-        QString ref = registerRef(title.toLower());
-        startSection(ref, title);
+        startSection(title.toLower(), title);
 
         const NodeVector &members = section->obsoleteMembers();
         NodeVector::ConstIterator m = members.constBegin();
@@ -1806,8 +1804,7 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
 
     for (const auto *section : details_spv) {
         const QString &title = section->title();
-        QString ref = registerRef(title.toLower());
-        startSection(ref, title);
+        startSection(title.toLower(), title);
 
         const NodeVector &members = section->obsoleteMembers();
         NodeVector::ConstIterator m = members.constBegin();
@@ -2657,6 +2654,8 @@ QXmlStreamWriter *DocBookGenerator::startGenericDocument(const Node *node, const
 
 QXmlStreamWriter *DocBookGenerator::startDocument(const Node *node)
 {
+    refMap.clear();
+
     QString fileName = Generator::fileName(node, fileExtension());
     return startGenericDocument(node, fileName);
 }
@@ -2723,7 +2722,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
 
     // Actual content.
     if (!aggregate->doc().isEmpty()) {
-        startSection(registerRef("details"), "Detailed Description");
+        startSection("details", "Detailed Description");
 
         generateBody(aggregate);
         generateAlsoList(aggregate);
@@ -2749,7 +2748,7 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
 
             if (!headerGenerated) {
                 // Equivalent to h2
-                startSection(registerRef(section->title().toLower()), section->title());
+                startSection(section->title().toLower(), section->title());
                 headerGenerated = true;
             }
 
@@ -3733,12 +3732,8 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
         bool firstFunction = true;
         for (const Node *n : collective) {
             if (n->isFunction()) {
-                QString nodeRef = refForNode(n);
-
                 if (firstFunction) {
-                    if (QString id = refForNode(collective.at(0)); !id.isEmpty()) {
-                        m_writer->writeAttribute("xml:id", validXmlId(id));
-                    }
+                    writeXmlId(collective.at(0));
                     newLine();
                     m_writer->writeStartElement(dbNamespace, "title");
                     generateSynopsis(n, relative, Section::Details);
@@ -3749,7 +3744,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 } else {
                     m_writer->writeStartElement(dbNamespace, "bridgehead");
                     m_writer->writeAttribute("renderas", "sect2");
-                    writeXmlId(nodeRef),
+                    writeXmlId(n);
                     generateSynopsis(n, relative, Section::Details);
                     m_writer->writeEndElement(); // bridgehead
                     newLine();
@@ -3757,10 +3752,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             }
         }
     } else {
-        QString nodeRef = refForNode(node);
-        if (!nodeRef.isEmpty()) {
-            m_writer->writeAttribute("xml:id", validXmlId(nodeRef));
-        }
+        writeXmlId(node);
         newLine();
 
         const EnumNode *etn;
@@ -4002,7 +3994,7 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     generateHeader(title, qcn->subtitle(), qcn);
     generateQmlRequisites(qcn);
 
-    startSection(registerRef("details"), "Detailed Description");
+    startSection("details", "Detailed Description");
     generateBody(qcn);
 
     ClassNode *cn = qcn->classNode();
@@ -4015,7 +4007,7 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     Sections sections(qcn);
     for (const auto &section : sections.stdQmlTypeDetailsSections()) {
         if (!section.isEmpty()) {
-            startSection(registerRef(section.title().toLower()), section.title());
+            startSection(section.title().toLower(), section.title());
 
             for (const auto &member : section.members())
                 generateDetailedQmlMember(member, qcn);
@@ -4052,7 +4044,7 @@ void DocBookGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn)
     Sections sections(qbtn);
     generateHeader(htmlTitle, qbtn->subtitle(), qbtn);
 
-    startSection(registerRef("details"), "Detailed Description");
+    startSection("details", "Detailed Description");
 
     generateBody(qbtn);
     generateAlsoList(qbtn);
@@ -4062,7 +4054,7 @@ void DocBookGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn)
     SectionVector::ConstIterator s = sections.stdQmlTypeDetailsSections().constBegin();
     while (s != sections.stdQmlTypeDetailsSections().constEnd()) {
         if (!s->isEmpty()) {
-            startSection(registerRef(s->title().toLower()), s->title());
+            startSection(s->title().toLower(), s->title());
 
             NodeVector::ConstIterator m = s->members().constBegin();
             while (m != s->members().constEnd()) {
@@ -4143,7 +4135,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
 
                 m_writer->writeStartElement(dbNamespace, "bridgehead");
                 m_writer->writeAttribute("renderas", "sect2");
-                writeXmlId(refForNode(qpn));
+                writeXmlId(qpn);
                 m_writer->writeCharacters(getQmlPropertyTitle(qpn));
                 m_writer->writeEndElement(); // bridgehead
                 newLine();
@@ -4172,9 +4164,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
             // Complete the section tag.
             if (i == 0) {
                 m_writer->writeStartElement(dbNamespace, "section");
-                if (QString id = refForNode(m); !id.isEmpty()) {
-                    m_writer->writeAttribute("xml:id", validXmlId(id));
-                }
+                writeXmlId(m);
                 newLine();
             }
 
@@ -4306,7 +4296,7 @@ void DocBookGenerator::generateProxyPage(Aggregate *aggregate)
 
     // Actual content.
     if (!aggregate->doc().isEmpty()) {
-        startSection(registerRef("details"), "Detailed Description");
+        startSection("details", "Detailed Description");
 
         generateBody(aggregate);
         generateAlsoList(aggregate);
@@ -4377,14 +4367,14 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
             NodeMap nmm;
             cn->getMemberNamespaces(nmm);
             if (!nmm.isEmpty()) {
-                startSection(registerRef("namespaces"), "Namespaces");
+                startSection("namespaces", "Namespaces");
                 generateAnnotatedList(cn, nmm.values(), "namespaces");
                 endSection();
             }
             nmm.clear();
             cn->getMemberClasses(nmm);
             if (!nmm.isEmpty()) {
-                startSection(registerRef("classes"), "Classes");
+                startSection("classes", "Classes");
                 generateAnnotatedList(cn, nmm.values(), "classes");
                 endSection();
             }
@@ -4393,10 +4383,19 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
 
     bool generatedTitle = false;
     if (cn->isModule() && !cn->doc().briefText().isEmpty()) {
-        startSection(registerRef("details"), "Detailed Description");
+        startSection("details", "Detailed Description");
         generatedTitle = true;
-    } else {
-        writeAnchor(registerRef("details"));
+    }
+    // The anchor is only needed if the node has a body.
+    else if (
+            // generateBody generates something.
+            (cn->isFunction() && ((!cn->hasDoc() && !cn->hasSharedDoc()) || !cn->isSharingComment())) ||
+            cn->isExample() ||
+            // generateAlsoList generates something.
+            !cn->doc().alsoList().empty() ||
+            // generateAnnotatedList generates something.
+            (!cn->noAutoList() && (cn->isGroup() || cn->isQmlModule() || cn->isJsModule()))) {
+        writeAnchor("details");
     }
 
     generateBody(cn);
