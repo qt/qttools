@@ -74,7 +74,7 @@ private:
     void endDocument();
 
     void generateAnnotatedList(const Node *relative, const NodeList &nodeList,
-                               const QString &selector);
+                               const QString &selector, bool withSectionIfNeeded = false);
     void generateAnnotatedLists(const Node *relative, const NodeMultiMap &nmm,
                                 const QString &selector);
     void generateCompactList(ListType listType, const Node *relative, const NodeMultiMap &nmm,
@@ -140,6 +140,7 @@ private:
     QStack<int> sectionLevels {};
     QString m_qflagsHref {};
     bool m_inTeletype { false };
+    bool m_hasSection { false };
 
     QString m_project {};
     QString m_projectDescription {};
