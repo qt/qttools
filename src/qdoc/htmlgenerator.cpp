@@ -1017,7 +1017,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
  * through the "\group" command.
  *
  * Note that this is currently, incorrectly, a member of
- * HthmlGenerator as it requires access to some protected/private
+ * HtmlGenerator as it requires access to some protected/private
  * members for escaping and linking.
  */
 QString HtmlGenerator::groupReferenceText(PageNode* node) {

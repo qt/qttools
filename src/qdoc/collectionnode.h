@@ -44,7 +44,7 @@ public:
     void setLogicalModuleInfo(const QStringList &info) override;
     void setState(const QString &state) { m_state = state; }
 
-    // REMAKR: Those methods are used by QDocDatabase as a performance
+    // REMARK: Those methods are used by QDocDatabase as a performance
     // detail to avoid merging a collection node multiple times. They
     // should not be addressed in any other part of the code nor
     // should their usage appear more than once in QDocDatabase,
