@@ -171,7 +171,7 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
             break;
         case Node::Property: {
             auto propertyNode = static_cast<const PropertyNode *>(node);
-            if (propertyNode->propertyType() == PropertyNode::Bindable)
+            if (propertyNode->propertyType() == PropertyNode::PropertyType::BindableProperty)
                 extra << "bindable";
             if (!propertyNode->isWritable())
                 extra << "read-only";

@@ -2280,7 +2280,7 @@ void DocBookGenerator::generateBody(const Node *node)
         if (fn && !fn->overridesThis().isEmpty())
             generateReimplementsClause(fn);
         else if (node->isProperty()) {
-            if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::Standard)
+            if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::PropertyType::StandardProperty)
                 generateAddendum(node, BindableProperty, nullptr, false);
         }
         if (!generateText(node->doc().body(), node)) {
@@ -2955,7 +2955,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
 
         if (functionNode->hasAssociatedProperties()) {
             QStringList associatedProperties;
-            const NodeList &nodes = functionNode->associatedProperties();
+            const auto &nodes = functionNode->associatedProperties();
             for (const Node *n : nodes) {
                 const auto pn = static_cast<const PropertyNode *>(n);
                 associatedProperties << pn->name();
@@ -3636,7 +3636,7 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         if (!node->isFunction())
             return;
         const auto *fn = static_cast<const FunctionNode *>(node);
-        NodeList nodes = fn->associatedProperties();
+        auto nodes = fn->associatedProperties();
         if (nodes.isEmpty())
             return;
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
@@ -3644,16 +3644,16 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
             QString msg;
             const auto pn = static_cast<const PropertyNode *>(node);
             switch (pn->role(fn)) {
-            case PropertyNode::Getter:
+            case PropertyNode::FunctionRole::Getter:
                 msg = QStringLiteral("Getter function");
                 break;
-            case PropertyNode::Setter:
+            case PropertyNode::FunctionRole::Setter:
                 msg = QStringLiteral("Setter function");
                 break;
-            case PropertyNode::Resetter:
+            case PropertyNode::FunctionRole::Resetter:
                 msg = QStringLiteral("Resetter function");
                 break;
-            case PropertyNode::Notifier:
+            case PropertyNode::FunctionRole::Notifier:
                 msg = QStringLiteral("Notifier signal");
                 break;
             default:
@@ -3745,7 +3745,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
 
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
-        if (property->propertyType() == PropertyNode::Standard) {
+        if (property->propertyType() == PropertyNode::PropertyType::StandardProperty) {
             Section section(Section::Accessors, Section::Active);
 
             section.appendMembers(property->getters().toVector());

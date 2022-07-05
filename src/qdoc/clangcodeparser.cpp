@@ -979,9 +979,9 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
         if (i < parts.size()) {
             QString value = parts.at(i++);
             if (key == "READ") {
-                qdb_->addPropertyFunction(property, value, PropertyNode::Getter);
+                qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Getter);
             } else if (key == "WRITE") {
-                qdb_->addPropertyFunction(property, value, PropertyNode::Setter);
+                qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Setter);
                 property->setWritable(true);
             } else if (key == "STORED") {
                 property->setStored(value.toLower() == "true");
@@ -995,11 +995,12 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
                     property->setDesignable(false);
                 }
             } else if (key == "BINDABLE") {
-                property->setPropertyType(PropertyNode::Bindable);
+                property->setPropertyType(PropertyNode::PropertyType::BindableProperty);
+                qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Bindable);
             } else if (key == "RESET") {
-                qdb_->addPropertyFunction(property, value, PropertyNode::Resetter);
+                qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Resetter);
             } else if (key == "NOTIFY") {
-                qdb_->addPropertyFunction(property, value, PropertyNode::Notifier);
+                qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Notifier);
             } else if (key == "SCRIPTABLE") {
                 QString v = value.toLower();
                 if (v == "true")

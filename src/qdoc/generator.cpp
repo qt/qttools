@@ -549,7 +549,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
             if (fn->isDtor())
                 anchorRef = "#dtor." + fn->name().mid(1);
             else if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty())
-                return fullDocumentLocation(fn->firstAssociatedProperty());
+                return fullDocumentLocation(fn->associatedProperties()[0]);
             else if (fn->overloadNumber() > 0)
                 anchorRef = QLatin1Char('#') + cleanRef(fn->name()) + QLatin1Char('-')
                         + QString::number(fn->overloadNumber());
@@ -749,7 +749,7 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
         if (fn && !fn->overridesThis().isEmpty())
             generateReimplementsClause(fn, marker);
         else if (node->isProperty()) {
-            if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::Standard)
+            if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::PropertyType::StandardProperty)
                 generateAddendum(node, BindableProperty, marker);
         }
 
@@ -1299,7 +1299,7 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         if (!node->isFunction())
             return;
         const auto *fn = static_cast<const FunctionNode *>(node);
-        NodeList nodes = fn->associatedProperties();
+        auto nodes = fn->associatedProperties();
         if (nodes.isEmpty())
             return;
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
@@ -1307,16 +1307,16 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
             QString msg;
             const auto *pn = static_cast<const PropertyNode *>(n);
             switch (pn->role(fn)) {
-            case PropertyNode::Getter:
+            case PropertyNode::FunctionRole::Getter:
                 msg = QStringLiteral("Getter function");
                 break;
-            case PropertyNode::Setter:
+            case PropertyNode::FunctionRole::Setter:
                 msg = QStringLiteral("Setter function");
                 break;
-            case PropertyNode::Resetter:
+            case PropertyNode::FunctionRole::Resetter:
                 msg = QStringLiteral("Resetter function");
                 break;
-            case PropertyNode::Notifier:
+            case PropertyNode::FunctionRole::Notifier:
                 msg = QStringLiteral("Notifier signal");
                 break;
             default:

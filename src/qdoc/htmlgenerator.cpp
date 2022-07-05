@@ -3502,7 +3502,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
 
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
-        if (property->propertyType() == PropertyNode::Standard) {
+        if (property->propertyType() == PropertyNode::PropertyType::StandardProperty) {
             Section section(Section::Accessors, Section::Active);
 
             section.appendMembers(property->getters().toVector());

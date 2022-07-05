@@ -466,7 +466,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         auto *propNode = new PropertyNode(parent, name);
         node = propNode;
         if (attributes.value(QLatin1String("bindable")) == QLatin1String("true"))
-            propNode->setPropertyType(PropertyNode::Bindable);
+            propNode->setPropertyType(PropertyNode::PropertyType::BindableProperty);
 
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + parent->name().toLower() + ".html");
@@ -1107,45 +1107,18 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case Node::Property: {
         const auto *propertyNode = static_cast<const PropertyNode *>(node);
 
-        if (propertyNode->propertyType() == PropertyNode::Bindable)
+        if (propertyNode->propertyType() == PropertyNode::PropertyType::BindableProperty)
             writer.writeAttribute("bindable", "true");
 
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
-        const auto &getters = propertyNode->getters();
-        for (const auto *fnNode : getters) {
-            if (fnNode) {
-                const auto *functionNode = static_cast<const FunctionNode *>(fnNode);
-                writer.writeStartElement("getter");
-                writer.writeAttribute("name", functionNode->name());
-                writer.writeEndElement(); // getter
-            }
-        }
-        const auto &setters = propertyNode->setters();
-        for (const auto *fnNode : setters) {
-            if (fnNode) {
-                const auto *functionNode = static_cast<const FunctionNode *>(fnNode);
-                writer.writeStartElement("setter");
-                writer.writeAttribute("name", functionNode->name());
-                writer.writeEndElement(); // setter
-            }
-        }
-        const auto &resetters = propertyNode->resetters();
-        for (const auto *fnNode : resetters) {
-            if (fnNode) {
-                const auto *functionNode = static_cast<const FunctionNode *>(fnNode);
-                writer.writeStartElement("resetter");
-                writer.writeAttribute("name", functionNode->name());
-                writer.writeEndElement(); // resetter
-            }
-        }
-        const auto &notifiers = propertyNode->notifiers();
-        for (const auto *fnNode : notifiers) {
-            if (fnNode) {
-                const auto *functionNode = static_cast<const FunctionNode *>(fnNode);
-                writer.writeStartElement("notifier");
-                writer.writeAttribute("name", functionNode->name());
-                writer.writeEndElement(); // notifier
+        // Property access function names
+        for (qsizetype i{0}; i < (qsizetype)PropertyNode::FunctionRole::NumFunctionRoles; ++i) {
+            auto role{(PropertyNode::FunctionRole)i};
+            for (const auto *fnNode : propertyNode->functions(role)) {
+                writer.writeStartElement(PropertyNode::roleName(role));
+                writer.writeAttribute("name", fnNode->name());
+                writer.writeEndElement();
             }
         }
     } break;

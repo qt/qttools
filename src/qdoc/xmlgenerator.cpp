@@ -265,7 +265,7 @@ QString XmlGenerator::refForNode(const Node *node)
             break;
         default:
             if (fn->hasOneAssociatedProperty() && fn->doc().isEmpty()) {
-                return refForNode(fn->firstAssociatedProperty());
+                return refForNode(fn->associatedProperties()[0]);
             } else {
                 ref = fn->name();
                 if (fn->overloadNumber() != 0)

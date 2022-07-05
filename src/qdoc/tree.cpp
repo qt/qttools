@@ -222,6 +222,10 @@ void Tree::resolvePropertyOverriddenFromPtrs(Aggregate *n)
 }
 
 /*!
+    Resolves access functions associated with each PropertyNode stored
+    in \c m_unresolvedPropertyMap, and adds them into the property node.
+    This allows the property node to list the access functions when
+    generating their documentation.
  */
 void Tree::resolveProperties()
 {
@@ -229,10 +233,11 @@ void Tree::resolveProperties()
          propEntry != m_unresolvedPropertyMap.constEnd(); ++propEntry) {
         PropertyNode *property = propEntry.key();
         Aggregate *parent = property->parent();
-        QString getterName = (*propEntry)[PropertyNode::Getter];
-        QString setterName = (*propEntry)[PropertyNode::Setter];
-        QString resetterName = (*propEntry)[PropertyNode::Resetter];
-        QString notifierName = (*propEntry)[PropertyNode::Notifier];
+        QString getterName = (*propEntry)[PropertyNode::FunctionRole::Getter];
+        QString setterName = (*propEntry)[PropertyNode::FunctionRole::Setter];
+        QString resetterName = (*propEntry)[PropertyNode::FunctionRole::Resetter];
+        QString notifierName = (*propEntry)[PropertyNode::FunctionRole::Notifier];
+        QString bindableName = (*propEntry)[PropertyNode::FunctionRole::Bindable];
 
         for (auto it = parent->constBegin(); it != parent->constEnd(); ++it) {
             if ((*it)->isFunction()) {
@@ -240,13 +245,15 @@ void Tree::resolveProperties()
                 if (function->access() == property->access()
                     && (function->status() == property->status() || function->doc().isEmpty())) {
                     if (function->name() == getterName) {
-                        property->addFunction(function, PropertyNode::Getter);
+                        property->addFunction(function, PropertyNode::FunctionRole::Getter);
                     } else if (function->name() == setterName) {
-                        property->addFunction(function, PropertyNode::Setter);
+                        property->addFunction(function, PropertyNode::FunctionRole::Setter);
                     } else if (function->name() == resetterName) {
-                        property->addFunction(function, PropertyNode::Resetter);
+                        property->addFunction(function, PropertyNode::FunctionRole::Resetter);
                     } else if (function->name() == notifierName) {
-                        property->addSignal(function, PropertyNode::Notifier);
+                        property->addSignal(function, PropertyNode::FunctionRole::Notifier);
+                    } else if (function->name() == bindableName) {
+                        property->addFunction(function, PropertyNode::FunctionRole::Bindable);
                     }
                 }
             }

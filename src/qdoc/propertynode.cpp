@@ -22,6 +22,29 @@ PropertyNode::PropertyNode(Aggregate *parent, const QString &name) : Node(Proper
     // nothing
 }
 
+
+/*!
+    Returns a string representing an access function \a role.
+*/
+QString PropertyNode::roleName(FunctionRole role)
+{
+    switch (role) {
+    case FunctionRole::Getter:
+        return "getter";
+    case FunctionRole::Setter:
+        return "setter";
+    case FunctionRole::Resetter:
+        return "resetter";
+    case FunctionRole::Notifier:
+        return "notifier";
+    case FunctionRole::Bindable:
+        return "bindable";
+    default:
+        break;
+    }
+    return QString();
+}
+
 /*!
   Sets this property's \e {overridden from} property to
   \a baseProperty, which indicates that this property
@@ -34,7 +57,7 @@ PropertyNode::PropertyNode(Aggregate *parent, const QString &name) : Node(Proper
  */
 void PropertyNode::setOverriddenFrom(const PropertyNode *baseProperty)
 {
-    for (int i = 0; i < NumFunctionRoles; ++i) {
+    for (qsizetype i{0}; i < (qsizetype)FunctionRole::NumFunctionRoles; ++i) {
         if (m_functions[i].isEmpty())
             m_functions[i] = baseProperty->m_functions[i];
     }
@@ -58,7 +81,7 @@ void PropertyNode::setOverriddenFrom(const PropertyNode *baseProperty)
  */
 QString PropertyNode::qualifiedDataType() const
 {
-    if (m_propertyType != Standard || m_type.startsWith(QLatin1String("const ")))
+    if (m_propertyType != PropertyType::StandardProperty || m_type.startsWith(QLatin1String("const ")))
         return m_type;
 
     if (setters().isEmpty() && resetters().isEmpty()) {
@@ -102,16 +125,15 @@ bool PropertyNode::hasAccessFunction(const QString &name) const
 }
 
 /*!
-  Returns true if function \a functionNode has role \a r for this
-  property.
+  Returns the role of \a functionNode for this property.
  */
 PropertyNode::FunctionRole PropertyNode::role(const FunctionNode *functionNode) const
 {
-    for (int i = 0; i < 4; i++) {
+    for (qsizetype i{0}; i < (qsizetype)FunctionRole::NumFunctionRoles; i++) {
         if (m_functions[i].contains(const_cast<FunctionNode *>(functionNode)))
             return (FunctionRole)i;
     }
-    return Notifier;
+    return FunctionRole::Notifier; // TODO: Figure out a better way to handle 'not found'.
 }
 
 QT_END_NAMESPACE
