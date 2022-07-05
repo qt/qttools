@@ -516,18 +516,27 @@ void Translator::dropUiLines()
     }
 }
 
-struct TranslatorMessageIdPtr {
-    explicit TranslatorMessageIdPtr(const TranslatorMessage &tm)
+class TranslatorMessagePtrBase
+{
+public:
+    explicit TranslatorMessagePtrBase(const Translator *tor, int messageIndex)
+        : tor(tor), messageIndex(messageIndex)
     {
-        ptr = &tm;
     }
 
     inline const TranslatorMessage *operator->() const
     {
-        return ptr;
+        return &tor->message(messageIndex);
     }
 
-    const TranslatorMessage *ptr;
+    const Translator *tor;
+    const int messageIndex;
+};
+
+class TranslatorMessageIdPtr : public TranslatorMessagePtrBase
+{
+public:
+    using TranslatorMessagePtrBase::TranslatorMessagePtrBase;
 };
 
 Q_DECLARE_TYPEINFO(TranslatorMessageIdPtr, Q_RELOCATABLE_TYPE);
@@ -542,18 +551,10 @@ inline bool operator==(TranslatorMessageIdPtr tmp1, TranslatorMessageIdPtr tmp2)
     return tmp1->id() == tmp2->id();
 }
 
-struct TranslatorMessageContentPtr {
-    explicit TranslatorMessageContentPtr(const TranslatorMessage &tm)
-    {
-        ptr = &tm;
-    }
-
-    inline const TranslatorMessage *operator->() const
-    {
-        return ptr;
-    }
-
-    const TranslatorMessage *ptr;
+class TranslatorMessageContentPtr : public TranslatorMessagePtrBase
+{
+public:
+    using TranslatorMessagePtrBase::TranslatorMessagePtrBase;
 };
 
 Q_DECLARE_TYPEINFO(TranslatorMessageContentPtr, Q_RELOCATABLE_TYPE);
@@ -579,33 +580,32 @@ inline bool operator==(TranslatorMessageContentPtr tmp1, TranslatorMessageConten
 
 Translator::Duplicates Translator::resolveDuplicates()
 {
-    QList<int> duplicateIndices;
     Duplicates dups;
-    QHash<TranslatorMessageIdPtr, int> idRefs;
-    QHash<TranslatorMessageContentPtr, int> contentRefs;
-    for (int i = 0; i < m_messages.count(); ++i) {
+    QSet<TranslatorMessageIdPtr> idRefs;
+    QSet<TranslatorMessageContentPtr> contentRefs;
+    for (int i = 0; i < m_messages.count();) {
         const TranslatorMessage &msg = m_messages.at(i);
         TranslatorMessage *omsg;
         int oi;
         QSet<int> *pDup;
         if (!msg.id().isEmpty()) {
-            const auto it = idRefs.constFind(TranslatorMessageIdPtr(msg));
+            const auto it = idRefs.constFind(TranslatorMessageIdPtr(this, i));
             if (it != idRefs.constEnd()) {
-                oi = *it;
+                oi = it->messageIndex;
                 omsg = &m_messages[oi];
                 pDup = &dups.byId;
                 goto gotDupe;
             }
         }
         {
-            const auto it = contentRefs.constFind(TranslatorMessageContentPtr(msg));
+            const auto it = contentRefs.constFind(TranslatorMessageContentPtr(this, i));
             if (it != contentRefs.constEnd()) {
-                oi = *it;
+                oi = it->messageIndex;
                 omsg = &m_messages[oi];
                 if (msg.id().isEmpty() || omsg->id().isEmpty()) {
                     if (!msg.id().isEmpty() && omsg->id().isEmpty()) {
                         omsg->setId(msg.id());
-                        idRefs[TranslatorMessageIdPtr(*omsg)] = oi;
+                        idRefs.insert(TranslatorMessageIdPtr(this, oi));
                     }
                     pDup = &dups.byContents;
                     goto gotDupe;
@@ -614,21 +614,17 @@ Translator::Duplicates Translator::resolveDuplicates()
             }
         }
         if (!msg.id().isEmpty())
-            idRefs[TranslatorMessageIdPtr(msg)] = i;
-        contentRefs[TranslatorMessageContentPtr(msg)] = i;
+            idRefs.insert(TranslatorMessageIdPtr(this, i));
+        contentRefs.insert(TranslatorMessageContentPtr(this, i));
+        ++i;
         continue;
       gotDupe:
         pDup->insert(oi);
         if (!omsg->isTranslated() && msg.isTranslated())
             omsg->setTranslations(msg.translations());
         m_indexOk = false;
-        // don't remove the duplicate entries yet to not mess up the pointers that
-        // are in the hashes
-        duplicateIndices.append(i);
+        m_messages.removeAt(i);
     }
-    // now remove the duplicates from the messages
-    for (int i = duplicateIndices.size() - 1; i >= 0; --i)
-        m_messages.removeAt(duplicateIndices.at(i));
     return dups;
 }
 
