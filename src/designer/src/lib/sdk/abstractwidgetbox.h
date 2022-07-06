@@ -59,7 +59,7 @@ public:
 
         QString name() const { return m_name; }
         void setName(const QString &aname) { m_name = aname; }
-        int widgetCount() const { return m_widget_list.size(); }
+        int widgetCount() const { return int(m_widget_list.size()); }
         Widget widget(int idx) const { return m_widget_list.at(idx); }
         void removeWidget(int idx) { m_widget_list.removeAt(idx); }
         void addWidget(const Widget &awidget) { m_widget_list.append(awidget); }
