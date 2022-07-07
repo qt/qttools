@@ -318,22 +318,6 @@ const EnumNode *Aggregate::findEnumNodeForValue(const QString &enumValue) const
 }
 
 /*!
-  Appends \a includeFile file to the list of include files.
- */
-void Aggregate::addIncludeFile(const QString &includeFile)
-{
-    m_includeFiles.append(includeFile);
-}
-
-/*!
-  Sets the list of include files to \a includeFiles.
- */
-void Aggregate::setIncludeFiles(const QStringList &includeFiles)
-{
-    m_includeFiles = includeFiles;
-}
-
-/*!
   Compare \a f1 to \a f2 and return \c true if they have the same
   signature. Otherwise return \c false. They must have the same
   number of parameters, and all the parameter types must be the
@@ -873,11 +857,6 @@ QString Aggregate::typeWord(bool cap) const
 
 /*! \fn NodeList::ConstIterator Aggregate::constEnd() const
   Returns a const iterator pointing at the end of the child list.
- */
-
-/*! \fn const QStringList &Aggregate::includeFiles() const
-  This function returns a const reference to a list of strings, but
-  I no longer know what they are.
  */
 
 /*! \fn QmlTypeNode *Aggregate::qmlBaseNode() const

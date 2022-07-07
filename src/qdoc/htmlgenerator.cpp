@@ -1940,7 +1940,7 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText, sinceText,
                                        instantiatedByText, inheritsText, inheritedBytext };
 
-    addIncludeFilesToMap(aggregate, marker, requisites, &text, headerText);
+    addIncludeFileToMap(aggregate, marker, requisites, text, headerText);
     addSinceToMap(aggregate, requisites, &text, sinceText);
 
     if (aggregate->isClassNode() || aggregate->isNamespace()) {
@@ -1985,7 +1985,7 @@ void HtmlGenerator::generateTheTable(const QStringList &requisiteOrder,
                 out() << requisites.value(*it).toString();
             else
                 generateText(requisites.value(*it), aggregate, marker);
-            out() << "</td></tr>";
+            out() << "</td></tr>\n";
         }
     }
     out() << "</table></div>\n";
@@ -2117,20 +2117,18 @@ void HtmlGenerator::addSinceToMap(const Aggregate *aggregate, QMap<QString, Text
  * \internal
  * Adds the includes (from the \\includefile command) to the map.
  */
-void HtmlGenerator::addIncludeFilesToMap(const Aggregate *aggregate, CodeMarker *marker,
-                                         QMap<QString, Text> &requisites, Text *text,
+void HtmlGenerator::addIncludeFileToMap(const Aggregate *aggregate, CodeMarker *marker,
+                                         QMap<QString, Text> &requisites, Text& text,
                                          const QString &headerText)
 {
-    QStringList includeFiles = aggregate->includeFiles();
-    includeFiles.erase(std::remove_if(includeFiles.begin(), includeFiles.end(),
-        [](auto includeFile) { return includeFile.isEmpty(); }), includeFiles.end());
+    if (aggregate->includeFile()) {
+        text.clear();
+        text << highlightedCode(
+            indent(m_codeIndent, marker->markedUpInclude(*aggregate->includeFile())),
+            aggregate
+        );
 
-    if (!includeFiles.isEmpty() && text != nullptr) {
-        text->clear();
-        *text << highlightedCode(
-                indent(m_codeIndent, marker->markedUpIncludes(includeFiles)),
-                aggregate);
-        requisites.insert(headerText, *text);
+        requisites.insert(headerText, text);
     }
 }
 

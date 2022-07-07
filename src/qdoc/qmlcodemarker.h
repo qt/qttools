@@ -26,7 +26,7 @@ public:
                          const Location &location) override;
 
     QString markedUpName(const Node *node) override;
-    QString markedUpIncludes(const QStringList &includes) override;
+    QString markedUpInclude(const QString &include) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
 #ifndef QT_NO_DECLARATIVE

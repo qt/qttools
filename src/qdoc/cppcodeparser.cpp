@@ -479,8 +479,21 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
 {
     QString arg = argPair.first;
     if (command == COMMAND_INHEADERFILE) {
-        if (node->isAggregate())
-            static_cast<Aggregate *>(node)->addIncludeFile(arg);
+        // TODO: [incorrect-constructs][header-arg]
+        // The emptiness check for arg is required as,
+        // currently, DocParser fancies passing (without any warning)
+        // incorrect constructs doen the chain, such as an
+        // "\inheaderfile" command with no argument.
+        //
+        // As it is the case here, we require further sanity checks to
+        // preserve some of the semantic for the later phases.
+        // This generally has a ripple effect on the whole codebase,
+        // making it more complex and increasesing the surface of bugs.
+        //
+        // The following emptiness check should be removed as soon as
+        // DocParser is enhanced with correct semantics.
+        if (node->isAggregate() && !arg.isEmpty())
+            static_cast<Aggregate *>(node)->setIncludeFile(arg);
         else
             doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_INHEADERFILE));
     } else if (command == COMMAND_OVERLOAD) {
@@ -962,14 +975,28 @@ void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
             checkModuleInclusion(node);
             if (node->isAggregate()) {
                 auto *aggregate = static_cast<Aggregate *>(node);
-                if (aggregate->includeFiles().isEmpty()) {
+
+                if (!aggregate->includeFile()) {
                     Aggregate *parent = aggregate;
                     while (parent->physicalModuleName().isEmpty() && (parent->parent() != nullptr))
                         parent = parent->parent();
+
                     if (parent == aggregate)
-                        aggregate->addIncludeFile(aggregate->name());
-                    else
-                        aggregate->setIncludeFiles(parent->includeFiles());
+                        // TODO: Understand if the name can be empty.
+                        // In theory it should not be possible as
+                        // there would be no aggregate to refer to
+                        // such that this code is never reached.
+                        //
+                        // If the name can be empty, this would
+                        // endanger users of the include file down the
+                        // line, forcing them to ensure that, further
+                        // to there being an actual include file, that
+                        // include file is not an empty string, such
+                        // that we would require a different way to
+                        // generate the include file here.
+                        aggregate->setIncludeFile(aggregate->name());
+                    else if (aggregate->includeFile())
+                        aggregate->setIncludeFile(*parent->includeFile());
                 }
             }
         }

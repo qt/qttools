@@ -104,8 +104,8 @@ private:
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     void generateExtractionMark(const Node *node, ExtractionMarkType markType);
-    void addIncludeFilesToMap(const Aggregate *aggregate, CodeMarker *marker,
-                              QMap<QString, Text> &requisites, Text *text,
+    void addIncludeFileToMap(const Aggregate *aggregate, CodeMarker *marker,
+                              QMap<QString, Text> &requisites, Text& text,
                               const QString &headerText);
     void addSinceToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,
                        const QString &sinceText) const;

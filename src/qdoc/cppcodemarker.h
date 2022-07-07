@@ -24,7 +24,7 @@ public:
     QString markedUpQmlItem(const Node *node, bool summary) override;
     QString markedUpName(const Node *node) override;
     QString markedUpEnumValue(const QString &enumValue, const Node *relative) override;
-    QString markedUpIncludes(const QStringList &includes) override;
+    QString markedUpInclude(const QString &include) override;
 
 private:
     QString addMarkUp(const QString &protectedCode, const Node *relative, const Location &location);

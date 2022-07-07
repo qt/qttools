@@ -1877,10 +1877,7 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
     newLine();
 
     // Includes.
-    if (!aggregate->includeFiles().isEmpty()) {
-        for (const QString &include : aggregate->includeFiles())
-            generateRequisite("Header", include);
-    }
+    if (aggregate->includeFile()) generateRequisite("Header", *aggregate->includeFile());
 
     // Since and project.
     if (!aggregate->since().isEmpty())
@@ -2967,10 +2964,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     // C++ classes and name spaces.
     if (aggregate) {
         // Includes.
-        if (!aggregate->includeFiles().isEmpty()) {
-            for (const QString &include : aggregate->includeFiles())
-                generateSynopsisInfo("headers", include);
-        }
+        if (aggregate->includeFile()) generateSynopsisInfo("headers", *aggregate->includeFile());
 
         // Since and project.
         if (!aggregate->since().isEmpty())

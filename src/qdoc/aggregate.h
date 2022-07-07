@@ -6,6 +6,8 @@
 
 #include "pagenode.h"
 
+#include <optional>
+
 #include <QtCore/qglobal.h>
 #include <QtCore/qstringlist.h>
 
@@ -37,9 +39,11 @@ public:
     [[nodiscard]] NodeList::ConstIterator constBegin() const { return m_children.constBegin(); }
     [[nodiscard]] NodeList::ConstIterator constEnd() const { return m_children.constEnd(); }
 
-    void addIncludeFile(const QString &includeFile);
-    void setIncludeFiles(const QStringList &includeFiles);
-    [[nodiscard]] const QStringList &includeFiles() const { return m_includeFiles; }
+    inline void setIncludeFile(const QString& include) { m_includeFile.emplace(include); }
+    // REMARK: Albeit not enforced at the API boundaries,
+    // downstream-user can assume that if there is a QString that was
+    // set, then that string is not empty.
+    [[nodiscard]] inline const std::optional<QString>& includeFile() const { return m_includeFile; }
 
     [[nodiscard]] QmlPropertyNode *hasQmlProperty(const QString &) const;
     [[nodiscard]] QmlPropertyNode *hasQmlProperty(const QString &, bool attached) const;
@@ -81,7 +85,29 @@ protected:
     FunctionMap m_functionMap {};
 
 private:
-    QStringList m_includeFiles {};
+    // REMARK: The member indicates the name of a file where the
+    // aggregate can be found from, for example, an header file that
+    // declares a class.
+    // For aggregates such as classes we expect this to always be set
+    // to a non-empty string after the code-parsing phase.
+    // Indeed, currently, by default, QDoc always generates such a
+    // string using the name of the aggregate if no include file can
+    // be propagated from some of the parents.
+    //
+    // Nonetheless, we are still forced to make this an optional, as
+    // this will not be true for all Aggregates.
+    //
+    // For example, for namespaces, we don't seem to set an include
+    // file and indeed doing so wouldn't be particularly meaningful.
+    //
+    // It is possible to assume in later code, especially the
+    // generation phase, that at least some classes of aggregates
+    // always have a value set here but we should, for the moment,
+    // still check for the possibility of something not to be there,
+    // or warn if we decide to ignore that, to be compliant with the
+    // current interface, whose change would require deep changes to
+    // QDoc internal structures.
+    std::optional<QString> m_includeFile{};
     NodeList m_enumChildren {};
     NodeMultiMap m_nonfunctionMap {};
     NodeList m_nonfunctionList {};

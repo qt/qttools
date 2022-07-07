@@ -37,7 +37,7 @@ public:
     {
         return QString();
     }
-    virtual QString markedUpIncludes(const QStringList & /*includes*/) { return QString(); }
+    virtual QString markedUpInclude(const QString & /*include*/) { return QString(); }
 
     static void initialize();
     static void terminate();
