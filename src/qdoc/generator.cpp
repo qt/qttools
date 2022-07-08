@@ -1147,36 +1147,35 @@ bool Generator::generateQmlText(const Text &text, const Node *relative, CodeMark
 
 void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker)
 {
-    if (!fn->overridesThis().isEmpty()) {
-        if (fn->parent()->isClassNode()) {
-            auto *cn = static_cast<ClassNode *>(fn->parent());
-            const FunctionNode *overrides = cn->findOverriddenFunction(fn);
-            if (overrides && !overrides->isPrivate() && !overrides->parent()->isPrivate()) {
-                if (overrides->hasDoc()) {
-                    Text text;
-                    text << Atom::ParaLeft << "Reimplements: ";
-                    QString fullName =
-                            overrides->parent()->name() + "::" + overrides->signature(false, true);
-                    appendFullName(text, overrides->parent(), fullName, overrides);
-                    text << "." << Atom::ParaRight;
-                    generateText(text, fn, marker);
-                } else {
-                    fn->doc().location().warning(
-                            QStringLiteral("Illegal \\reimp; no documented virtual function for %1")
-                                    .arg(overrides->plainSignature()));
-                }
-                return;
-            }
-            const PropertyNode *sameName = cn->findOverriddenProperty(fn);
-            if (sameName && sameName->hasDoc()) {
-                Text text;
-                text << Atom::ParaLeft << "Reimplements an access function for property: ";
-                QString fullName = sameName->parent()->name() + "::" + sameName->name();
-                appendFullName(text, sameName->parent(), fullName, sameName);
-                text << "." << Atom::ParaRight;
-                generateText(text, fn, marker);
-            }
+    if (fn->overridesThis().isEmpty() || !fn->parent()->isClassNode())
+        return;
+
+    auto *cn = static_cast<ClassNode *>(fn->parent());
+    const FunctionNode *overrides = cn->findOverriddenFunction(fn);
+    if (overrides && !overrides->isPrivate() && !overrides->parent()->isPrivate()) {
+        if (overrides->hasDoc()) {
+            Text text;
+            text << Atom::ParaLeft << "Reimplements: ";
+            QString fullName =
+                    overrides->parent()->name() + "::" + overrides->signature(false, true);
+            appendFullName(text, overrides->parent(), fullName, overrides);
+            text << "." << Atom::ParaRight;
+            generateText(text, fn, marker);
+        } else {
+            fn->doc().location().warning(
+                    QStringLiteral("Illegal \\reimp; no documented virtual function for %1")
+                            .arg(overrides->plainSignature()));
         }
+        return;
+    }
+    const PropertyNode *sameName = cn->findOverriddenProperty(fn);
+    if (sameName && sameName->hasDoc()) {
+        Text text;
+        text << Atom::ParaLeft << "Reimplements an access function for property: ";
+        QString fullName = sameName->parent()->name() + "::" + sameName->name();
+        appendFullName(text, sameName->parent(), fullName, sameName);
+        text << "." << Atom::ParaRight;
+        generateText(text, fn, marker);
     }
 }
 

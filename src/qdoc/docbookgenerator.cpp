@@ -2427,11 +2427,14 @@ void DocBookGenerator::generateBody(const Node *node)
             if (static_cast<const PropertyNode *>(node)->propertyType() != PropertyNode::PropertyType::StandardProperty)
                 generateAddendum(node, BindableProperty, nullptr, false);
         }
+
+        // Generate the body.
         if (!generateText(node->doc().body(), node)) {
             if (node->isMarkedReimp())
                 return;
         }
 
+        // Output what is after the main body.
         if (fn) {
             if (fn->isQmlSignal())
                 generateAddendum(node, QmlSignalHandler, nullptr, true);
@@ -2628,39 +2631,42 @@ void DocBookGenerator::generateExampleFilePage(const Node *node, ResolvedFile re
     Atom a(codeMarker->atomType(), code);
     generateText(text, en);
 
-    endDocument(); // Deletes m_writer.
-    // Restore writer.
-    m_writer = currentWriter;
+    endDocument(); // Delete m_writer.
+    m_writer = currentWriter; // Restore writer.
 }
 
 void DocBookGenerator::generateReimplementsClause(const FunctionNode *fn)
 {
     // From Generator::generateReimplementsClause, without warning generation.
-    if (!fn->overridesThis().isEmpty()) {
-        if (fn->parent()->isClassNode()) {
-            auto cn = static_cast<ClassNode *>(fn->parent());
-            const FunctionNode *overrides = cn->findOverriddenFunction(fn);
-            if (overrides && !overrides->isPrivate() && !overrides->parent()->isPrivate()) {
-                if (overrides->hasDoc()) {
-                    m_writer->writeStartElement(dbNamespace, "para");
-                    m_writer->writeCharacters("Reimplements: ");
-                    QString fullName =
-                            overrides->parent()->name() + "::" + overrides->signature(false, true);
-                    generateFullName(overrides->parent(), fullName, overrides);
-                    m_writer->writeCharacters(".");
-                    return;
-                }
-            }
-            const PropertyNode *sameName = cn->findOverriddenProperty(fn);
-            if (sameName && sameName->hasDoc()) {
-                m_writer->writeStartElement(dbNamespace, "para");
-                m_writer->writeCharacters("Reimplements an access function for property: ");
-                QString fullName = sameName->parent()->name() + "::" + sameName->name();
-                generateFullName(sameName->parent(), fullName, sameName);
-                m_writer->writeCharacters(".");
-                return;
-            }
+    if (fn->overridesThis().isEmpty() || !fn->parent()->isClassNode())
+        return;
+
+    auto cn = static_cast<ClassNode *>(fn->parent());
+
+    if (const FunctionNode *overrides = cn->findOverriddenFunction(fn);
+        overrides && !overrides->isPrivate() && !overrides->parent()->isPrivate()) {
+        if (overrides->hasDoc()) {
+            m_writer->writeStartElement(dbNamespace, "para");
+            m_writer->writeCharacters("Reimplements: ");
+            QString fullName =
+                    overrides->parent()->name() + "::" + overrides->signature(false, true);
+            generateFullName(overrides->parent(), fullName, overrides);
+            m_writer->writeCharacters(".");
+            m_writer->writeEndElement(); // para
+            newLine();
+            return;
         }
+    }
+
+    if (const PropertyNode *sameName = cn->findOverriddenProperty(fn); sameName && sameName->hasDoc()) {
+        m_writer->writeStartElement(dbNamespace, "para");
+        m_writer->writeCharacters("Reimplements an access function for property: ");
+        QString fullName = sameName->parent()->name() + "::" + sameName->name();
+        generateFullName(sameName->parent(), fullName, sameName);
+        m_writer->writeCharacters(".");
+        m_writer->writeEndElement(); // para
+        newLine();
+        return;
     }
 }
 

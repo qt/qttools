@@ -87,6 +87,7 @@
 </db:methodsynopsis>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" role="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
+</db:section>
 <db:section xml:id="obsolete">
 <db:title>Obsolete Members for TestDerived</db:title>
 <db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
@@ -110,4 +111,4 @@
 </db:section>
 </db:section>
 </db:section>
-</db:section></db:article>
+</db:article>

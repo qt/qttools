@@ -231,6 +231,7 @@
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Reimplements an access function for property: <db:link xlink:href="testqdoc-test.xml#id-prop" role="property">Test::id</db:link>.</db:para>
+</db:section>
 <db:section xml:id="invokeMe">
 <db:title>[invokable] TestDerived::void invokeMe() const</db:title>
 <db:methodsynopsis>
@@ -265,6 +266,7 @@
 </db:methodsynopsis>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" role="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
+</db:section>
 <db:section xml:id="obsolete">
 <db:title>Obsolete Members for TestDerived</db:title>
 <db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
@@ -288,4 +290,4 @@
 </db:section>
 </db:section>
 </db:section>
-</db:section></db:section></db:article>
+</db:article>
