@@ -3033,8 +3033,11 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             newLine();
         }
         // Remove two characters from the plain name to only get the name
-        // of the method without parentheses.
-        m_writer->writeTextElement(dbNamespace, "methodname", node->plainName().chopped(2));
+        // of the method without parentheses (only for functions, not macros).
+        QString name = node->plainName();
+        if (name.endsWith("()"))
+            name.chop(2);
+        m_writer->writeTextElement(dbNamespace, "methodname", name);
         newLine();
 
         if (functionNode->parameters().isEmpty()) {

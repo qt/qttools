@@ -276,7 +276,7 @@
 <db:section xml:id="QDOCTEST_MACRO2">
 <db:title>[since Test 1.1] QDOCTEST_MACRO2(int &amp;<db:emphasis>x</db:emphasis>)</db:title>
 <db:methodsynopsis>
-<db:methodname>QDOCTEST_MACR</db:methodname>
+<db:methodname>QDOCTEST_MACRO2</db:methodname>
 <db:methodparam>
 <db:type>int &amp;</db:type>
 <db:parameter>x</db:parameter>
