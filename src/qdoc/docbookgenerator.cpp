@@ -1006,6 +1006,21 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 writeRawHtml(str);
                 hasRewrittenString = true;
             }
+        } else if (// Formatting of images.
+                str.startsWith(R"(<div class="table"><table style="background:transparent; border:0px">)") ||
+                str.startsWith(R"(</td><td style="border:0px">)") ||
+                str.simplified().startsWith("</td></tr> </table></div>") ||
+                str.startsWith(R"(<br style="clear: both" />)") ||
+                str.startsWith(R"(<div style="float: left; margin-right: 2em">)") ||
+                str.startsWith(R"(<div style="float: right; margin-left: 2em">)") ||
+                str.startsWith("</div>") ||
+                str.startsWith("<span></span>") ||
+                str.simplified().startsWith("</td></tr> </table></div>") ||
+                str.startsWith(R"(<br style="clear: both" />)") ||
+                // Other formatting, only for QMake.
+                str == "<br />") {
+            // Ignore this part, as it's only for formatting of images.
+            hasRewrittenString = true;
         }
         // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are several images
         // at once with the same encoding.
