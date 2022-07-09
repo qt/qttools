@@ -153,6 +153,7 @@ private:
     bool m_inPara { false }; // Ignores nesting of paragraphs (like list items).
     bool m_inBlockquote { false };
     unsigned m_inList { 0 }; // Depth in number of nested lists.
+    bool m_rewritingCustomQmlModuleSummary { false };
 
     QString m_project {};
     QString m_projectDescription {};

@@ -1075,9 +1075,203 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 m_writer->writeCharacters("&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;");
             m_writer->writeEndElement(); // phrase
         }
-        // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are several images
-        // at once with the same encoding.
-        else if (str.startsWith(R"(<div align="center"><figure><svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg")")) {
+        // The following two cases handle some specificities of the documentation of Qt Quick
+        // Controls 2. A small subset of pages is involved, as of Qt 6.4.0:
+        // qtquickcontrols2-imagine, qtquickcontrols2-macos, qtquickcontrols2-material,
+        // qtquickcontrols2-universal, qtquickcontrols2-windows. The string to rewrite looks like
+        // the following, with XML comments to indicate the start of atoms:
+        //      <!--RawString--><table class="alignedsummary"><tbody><tr><td class="memItemLeft
+        //      rightAlign topAlign"> Import Statement:</td><td class="memItemRight bottomAlign">
+        //      import
+        //      <!--String-->QtQuick.Controls.Imagine 2.12
+        //      <!--RawString--></td></tr><tr><td class="memItemLeft rightAlign topAlign">
+        //      Since:</td> <td class="memItemRight bottomAlign">
+        //      <!--String-->Qt 5.10
+        //      <!--RawString--></td></tr></tbody></table>
+        // The structure being fixed, a rigid but simple solution is implemented: don't parse the
+        // table, simply output the expected set of tags. An alternative would be to parse the HTML
+        // table and to replicate the tags. The output is identical to
+        // DocBookGenerator::generateQmlRequisites.
+        else if (
+                str.startsWith(
+                        R"(<table class="alignedsummary"><tbody><tr><td class="memItemLeft rightAlign topAlign"> Import Statement:)")
+                && matchAhead(atom, Atom::String) && matchAhead(atom->next(), Atom::RawString)
+                && matchAhead(atom->next()->next(), Atom::String)
+                && matchAhead(atom->next()->next()->next(), Atom::RawString)) {
+            m_rewritingCustomQmlModuleSummary = true;
+            hasRewrittenString = true;
+
+            m_writer->writeStartElement(dbNamespace, "variablelist");
+            newLine();
+
+            generateStartRequisite("Import Statement");
+            m_writer->writeCharacters("import ");
+        } else if (m_rewritingCustomQmlModuleSummary) {
+            if (str.startsWith(
+                        R"(</td></tr><tr><td class="memItemLeft rightAlign topAlign"> Since:)")) {
+                generateEndRequisite();
+                generateStartRequisite("Since");
+
+                hasRewrittenString = true;
+            } else if (str.startsWith(R"(</td></tr></tbody></table>)")) {
+                m_rewritingCustomQmlModuleSummary = false;
+                hasRewrittenString = true;
+
+                generateEndRequisite();
+                m_writer->writeEndElement(); // variablelist
+                newLine();
+            }
+        }
+        // Another idiosyncrasy for this module:
+        //      <!--RawString--><div class="qmlproto"><table class="qmlname"><tbody><tr valign="top"
+        //      class="odd" id="
+        //      <!--String-->universal-accent-attached-prop
+        //      <!--RawString-->"><td class="tblQmlPropNode"><p><span class="name">
+        //      <!--String-->Universal.accent
+        //      <!--RawString--></span> : <span class="type">
+        //      <!--String-->color
+        //      <!--RawString--></span></p></td></tr></tbody></table></div>
+        // Several variants of this template exist, with more than three String between the
+        // RawString. They are defined in
+        // qtdeclarative\src\quickcontrols2\doc\qtquickcontrols.qdocconf.
+        else if (
+                str.startsWith(
+                        R"(<div class="qmlproto"><table class="qmlname"><tbody><tr valign="top" class="odd" id=")")
+                && matchAhead(atom, Atom::String) && matchAhead(atom->next(), Atom::RawString)
+                && matchAhead(atom->next()->next(), Atom::String)
+                && matchAhead(atom->next()->next()->next(), Atom::RawString)) {
+            hasRewrittenString = true;
+            m_hasSection = true;
+
+            // Determine which case occurs (property or method).
+            const bool isStyleProperty = atom->next()->next()->string().startsWith(
+                    R"("><td class="tblQmlPropNode"><p><span class="name">)");
+            const bool isStyleMethod =
+                    !isStyleProperty; // atom->next()->next()->string().startsWith(R"("><td
+                                      // class="tblQmlFuncNode"><p><span class="type">)")
+
+            // Parse the sequence of atoms.
+            const Atom *nextStringAtom =
+                    atom->next(); // Invariant: ->type() == Atom::String (except after parsing).
+            const QString id = nextStringAtom->string();
+            skipAhead += 2;
+            QString name;
+            QString type;
+            QString arg1;
+            QString type1;
+            QString arg2;
+            QString type2;
+
+            if (isStyleProperty) {
+                nextStringAtom = nextStringAtom->next()->next();
+                name = nextStringAtom->string();
+                skipAhead += 2;
+
+                nextStringAtom = nextStringAtom->next()->next();
+                type = nextStringAtom->string();
+                skipAhead += 2;
+            } else if (isStyleMethod) {
+                nextStringAtom = nextStringAtom->next()->next();
+                type = nextStringAtom->string();
+                skipAhead += 2;
+
+                nextStringAtom = nextStringAtom->next()->next();
+                type = nextStringAtom->string();
+                skipAhead += 2;
+
+                nextStringAtom = nextStringAtom->next()->next();
+                arg1 = nextStringAtom->string();
+                skipAhead += 2;
+
+                nextStringAtom = nextStringAtom->next()->next();
+                type1 = nextStringAtom->string();
+                skipAhead += 2;
+
+                if (matchAhead(nextStringAtom, Atom::RawString)
+                    && matchAhead(nextStringAtom->next(), Atom::String)
+                    && matchAhead(nextStringAtom->next()->next(), Atom::RawString)
+                    && matchAhead(nextStringAtom->next()->next()->next(), Atom::String)
+                    && matchAhead(nextStringAtom->next()->next()->next()->next(),
+                                  Atom::RawString)) {
+                    nextStringAtom = nextStringAtom->next()->next();
+                    arg2 = nextStringAtom->string();
+                    skipAhead += 2;
+
+                    nextStringAtom = nextStringAtom->next()->next();
+                    type2 = nextStringAtom->string();
+                    skipAhead += 2;
+                }
+
+                // For now (Qt 6.4.0), the macro is only defined up to two arguments: \stylemethod
+                // and \stylemethod2.
+            }
+
+            // Write the corresponding DocBook.
+            // This should be wrapped in a section, but there is no mechanism to check for
+            // \endstyleproperty or \endstylemethod within qdoc (it must be done at the macro
+            // level), hence the bridgehead.
+            QString title;
+            if (isStyleProperty) {
+                title = name + " : " + type;
+            } else if (isStyleMethod) {
+                title = type + " " + name;
+            }
+
+            m_writer->writeStartElement(dbNamespace, "bridgehead");
+            m_writer->writeAttribute("renderas", "sect2");
+            writeXmlId(id);
+            m_writer->writeCharacters(title);
+            m_writer->writeEndElement(); // bridgehead
+            newLine();
+
+            if (m_config->getBool(CONFIG_DOCBOOKEXTENSIONS)) {
+                if (isStyleProperty) {
+                    m_writer->writeStartElement(dbNamespace, "fieldsynopsis");
+
+                    m_writer->writeTextElement(dbNamespace, "type", type);
+                    newLine();
+                    m_writer->writeTextElement(dbNamespace, "varname", name);
+                    newLine();
+
+                    m_writer->writeEndElement(); // fieldsynopsis
+                } else if (isStyleMethod) {
+                    m_writer->writeStartElement(dbNamespace, "methodsynopsis");
+
+                    m_writer->writeTextElement(dbNamespace, "type", type);
+                    newLine();
+                    m_writer->writeTextElement(dbNamespace, "methodname", name);
+                    newLine();
+
+                    if (!arg1.isEmpty() && !type1.isEmpty()) {
+                        m_writer->writeStartElement(dbNamespace, "methodparam");
+                        newLine();
+                        m_writer->writeTextElement(dbNamespace, "type", type1);
+                        newLine();
+                        m_writer->writeTextElement(dbNamespace, "parameter", arg1);
+                        newLine();
+                        m_writer->writeEndElement(); // methodparam
+                        newLine();
+                    }
+                    if (!arg2.isEmpty() && !type2.isEmpty()) {
+                        m_writer->writeStartElement(dbNamespace, "methodparam");
+                        newLine();
+                        m_writer->writeTextElement(dbNamespace, "type", type2);
+                        newLine();
+                        m_writer->writeTextElement(dbNamespace, "parameter", arg2);
+                        newLine();
+                        m_writer->writeEndElement(); // methodparam
+                        newLine();
+                    }
+
+                    m_writer->writeEndElement(); // methodsynopsis
+                }
+            }
+        }
+        // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are
+        // several images at once with the same encoding.
+        else if (
+                str.startsWith(
+                        R"(<div align="center"><figure><svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg")")) {
             const QStringList images = str.split("</div>", Qt::SkipEmptyParts, Qt::CaseInsensitive);
 
             for (const QString& image : images) {
@@ -1112,9 +1306,11 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
 
             hasRewrittenString = true;
         }
-        // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are several images
-        // at once with the same encoding.
-        else if (str.startsWith(R"(<div align="center"><figure><svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg")")) {
+        // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are
+        // several images at once with the same encoding.
+        else if (
+                str.startsWith(
+                        R"(<div align="center"><figure><svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg")")) {
             const QStringList images = str.split("</div>", Qt::SkipEmptyParts, Qt::CaseInsensitive);
 
             for (const QString &image : images) {
@@ -4769,7 +4965,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
     };
 
     if (node->isPropertyGroup()) {
-        const auto scn = static_cast<const SharedCommentNode *>(node);
+        const auto *scn = static_cast<const SharedCommentNode *>(node);
 
         QString heading;
         if (!scn->name().isEmpty())
