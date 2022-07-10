@@ -441,14 +441,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                        || atom->string() == QLatin1String("qmlbasictypes"))
                       ? m_qdb->getQmlValueTypes()
                       : m_qdb->getQmlTypes();
-            generateCompactList(Generic, relative, things, QString(), atom->string());
+            generateCompactList(relative, things, QString(), atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string().contains("classes ")) {
             QString rootName = atom->string().mid(atom->string().indexOf("classes") + 7).trimmed();
             NodeMultiMap things = m_qdb->getCppClasses();
 
             hasGeneratedSomething = !things.isEmpty();
-            generateCompactList(Generic, relative, things, rootName, atom->string());
+            generateCompactList(relative, things, rootName, atom->string());
         } else if ((idx = atom->string().indexOf(QStringLiteral("bymodule"))) != -1) {
             QString moduleName = atom->string().mid(idx + 8).trimmed();
             Node::NodeType type = typeFromString(atom);
@@ -473,7 +473,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             generateClassHierarchy(relative, m_qdb->getCppClasses());
             hasGeneratedSomething = !m_qdb->getCppClasses().isEmpty();
         } else if (atom->string().startsWith("obsolete")) {
-            ListType type = atom->string().endsWith("members") ? Obsolete : Generic;
             QString prefix = atom->string().contains("cpp") ? QStringLiteral("Q") : QString();
             const NodeMultiMap &things = atom->string() == QLatin1String("obsoleteclasses")
                      ? m_qdb->getObsoleteClasses()
@@ -482,7 +481,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                              : atom->string() == QLatin1String("obsoletecppmembers")
                                      ? m_qdb->getClassesWithObsoleteMembers()
                                      : m_qdb->getQmlTypesWithObsoleteMembers();
-            generateCompactList(type, relative, things, prefix, atom->string());
+            generateCompactList(relative, things, prefix, atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string() == QLatin1String("functionindex")) {
             generateFunctionIndex(relative);
@@ -1315,14 +1314,14 @@ void DocBookGenerator::generateAnnotatedLists(const Node *relative, const NodeMu
   the name of the first and last classes in the class map
   \a nmm.
  */
-void DocBookGenerator::generateCompactList(ListType listType, const Node *relative,
-                                           const NodeMultiMap &nmm, const QString &commonPrefix,
-                                           const QString &selector)
+void DocBookGenerator::generateCompactList(const Node *relative, const NodeMultiMap &nmm,
+                                           const QString &commonPrefix, const QString &selector)
 {
     // From HtmlGenerator::generateCompactList. No more "includeAlphabet", this should be handled by
     // the DocBook toolchain afterwards.
     // TODO: In DocBook, probably no need for this method: this is purely presentational, i.e. to be
     // fully handled by the DocBook toolchain.
+
     if (nmm.isEmpty())
         return;
 
@@ -1425,22 +1424,10 @@ void DocBookGenerator::generateCompactList(ListType listType, const Node *relati
             for (int j = 0; j < curParOffset; j++)
                 ++it;
 
-            if (listType == Generic) {
-                generateFullName(it.value(), relative);
-                m_writer->writeStartElement(dbNamespace, "link");
-                m_writer->writeAttribute(xlinkNamespace, "href", fullDocumentLocation(*it));
-                m_writer->writeAttribute("type", targetType(it.value()));
-            } else if (listType == Obsolete) {
-                QString fn = fileName(it.value(), fileExtension());
-                QString link;
-                if (useOutputSubdirs())
-                    link = QString("../" + it.value()->outputSubdirectory() + QLatin1Char('/'));
-                link += fn;
-
-                m_writer->writeStartElement(dbNamespace, "link");
-                m_writer->writeAttribute(xlinkNamespace, "href", link);
-                m_writer->writeAttribute("type", targetType(it.value()));
-            }
+            // Write the link to the element, which is identical if the element is obsolete or not.
+            m_writer->writeStartElement(dbNamespace, "link");
+            m_writer->writeAttribute(xlinkNamespace, "href", linkForNode(*it, relative));
+            m_writer->writeAttribute("type", targetType(it.value()));
 
             QStringList pieces;
             if (it.value()->isQmlType()) {
@@ -1796,12 +1783,6 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
         return;
 
     Aggregate *aggregate = sections.aggregate();
-    QString link;
-    if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
-        link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
-    link += fileName(aggregate, fileExtension());
-    aggregate->setObsoleteLink(link);
-
     startSection("obsolete", "Obsolete Members for " + aggregate->name());
 
     m_writer->writeStartElement(dbNamespace, "para");
@@ -1834,7 +1815,7 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
 }
 
 /*!
-  Generates a separate file where obsolete members of the QML
+  Generates a separate section where obsolete members of the QML
   type \a qcn are listed. The \a marker is used to generate
   the section lists, which are then traversed and output here.
 
@@ -1850,13 +1831,6 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
         return;
 
     Aggregate *aggregate = sections.aggregate();
-    QString fn = fileName(aggregate, fileExtension());
-    QString link;
-    if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
-        link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
-    link += fn;
-    aggregate->setObsoleteLink(link);
-
     startSection("obsolete", "Obsolete Members for " + aggregate->name());
 
     m_writer->writeStartElement(dbNamespace, "para");
