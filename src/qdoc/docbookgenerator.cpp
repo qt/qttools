@@ -3767,13 +3767,13 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         if (!node->isFunction())
             return;
         const auto *fn = static_cast<const FunctionNode *>(node);
-        auto nodes = fn->associatedProperties();
-        if (nodes.isEmpty())
+        auto propertyNodes = fn->associatedProperties();
+        if (propertyNodes.isEmpty())
             return;
-        std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
-        for (const auto node : std::as_const(nodes)) {
+        std::sort(propertyNodes.begin(), propertyNodes.end(), Node::nodeNameLessThan);
+        for (const auto propertyNode : std::as_const(propertyNodes)) {
             QString msg;
-            const auto pn = static_cast<const PropertyNode *>(node);
+            const auto pn = static_cast<const PropertyNode *>(propertyNode);
             switch (pn->role(fn)) {
             case PropertyNode::FunctionRole::Getter:
                 msg = QStringLiteral("Getter function");
@@ -4228,9 +4228,9 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         // titles are forbidden for the rest of the section.
 
         const QList<Node *> sharedNodes = scn->collective();
-        for (const auto &node : sharedNodes) {
-            if (node->isQmlProperty()) {
-                auto *qpn = static_cast<QmlPropertyNode *>(node);
+        for (const auto &sharedNode : sharedNodes) {
+            if (sharedNode->isQmlProperty()) {
+                auto *qpn = static_cast<QmlPropertyNode *>(sharedNode);
 
                 m_writer->writeStartElement(dbNamespace, "bridgehead");
                 m_writer->writeAttribute("renderas", "sect2");
