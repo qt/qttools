@@ -148,6 +148,7 @@ private:
     bool m_closeTableRow { false };
     bool m_closeTableCell { false };
     std::pair<QString, QString> m_tableWidthAttr {};
+    bool m_inPara { false }; // Ignores nesting of paragraphs (like list items).
 
     QString m_project {};
     QString m_projectDescription {};

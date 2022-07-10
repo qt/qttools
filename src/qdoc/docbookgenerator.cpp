@@ -249,7 +249,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     // From HtmlGenerator::generateAtom, without warning generation.
     int idx = 0;
     int skipAhead = 0;
-    static bool inPara = false;
     Node::Genus genus = Node::DontCare;
 
     switch (atom->type()) {
@@ -284,11 +283,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             break;
         }
         m_writer->writeStartElement(dbNamespace, "para");
+        m_inPara = true;
         rewritePropertyBrief(atom, relative);
         break;
     case Atom::BriefRight:
         if (hasBrief(relative)) {
             m_writer->writeEndElement(); // para
+            m_inPara = false;
             newLine();
         }
         break;
@@ -338,9 +339,11 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeStartElement(dbNamespace, "footnote");
         newLine();
         m_writer->writeStartElement(dbNamespace, "para");
+        m_inPara = true;
         break;
     case Atom::FootnoteRight:
         m_writer->writeEndElement(); // para
+        m_inPara = false;
         newLine();
         m_writer->writeEndElement(); // footnote
         break;
@@ -497,8 +500,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         }
 
         // There must still be some content generated for the DocBook document
-        // to be valid.
-        if (!hasGeneratedSomething) {
+        // to be valid (except if already in a paragraph).
+        if (!hasGeneratedSomething && !m_inPara) {
             m_writer->writeEmptyElement(dbNamespace, "para");
             newLine();
         }
@@ -672,11 +675,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeStartElement(dbNamespace, admonType);
         newLine();
         m_writer->writeStartElement(dbNamespace, "para");
+        m_inPara = true;
     } break;
     case Atom::ImportantRight:
     case Atom::NoteRight:
     case Atom::WarningRight:
         m_writer->writeEndElement(); // para
+        m_inPara = false;
         newLine();
         m_writer->writeEndElement(); // note/important
         newLine();
@@ -697,11 +702,17 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         skipAhead = 1;
     } break;
     case Atom::ListLeft:
-        if (inPara) {
+        if (m_inPara) {
+            // The variable m_inPara is not set in a very smart way, because
+            // it ignores nesting. This might in theory create false positives
+            // here. A better solution would be to track the depth of
+            // paragraphs the generator is in, but determining the right check
+            // for this condition is far from trivial (think of nested lists).
             m_writer->writeEndElement(); // para
             newLine();
-            inPara = false;
+            m_inPara = false;
         }
+
         if (atom->string() == ATOM_LIST_BULLET) {
             m_writer->writeStartElement(dbNamespace, "itemizedlist");
             newLine();
@@ -803,6 +814,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeStartElement(dbNamespace, "listitem");
             newLine();
             m_writer->writeStartElement(dbNamespace, "para");
+            m_inPara = true;
         } else if (atom->string() == ATOM_LIST_VALUE) {
             if (m_threeColumnEnumValueTable) {
                 if (matchAhead(atom, Atom::ListItemRight)) {
@@ -824,6 +836,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::ListItemRight:
         if (atom->string() == ATOM_LIST_TAG) {
             m_writer->writeEndElement(); // para
+            m_inPara = false;
             newLine();
             m_writer->writeEndElement(); // listitem
             newLine();
@@ -855,19 +868,19 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         break;
     case Atom::ParaLeft:
         m_writer->writeStartElement(dbNamespace, "para");
-        inPara = true;
+        m_inPara = true;
         break;
     case Atom::ParaRight:
         endLink();
-        if (inPara) {
+        if (m_inPara) {
             m_writer->writeEndElement(); // para
             newLine();
-            inPara = false;
+            m_inPara = false;
         }
         break;
     case Atom::QuotationLeft:
         m_writer->writeStartElement(dbNamespace, "blockquote");
-        inPara = true;
+        m_inPara = true;
         break;
     case Atom::QuotationRight:
         m_writer->writeEndElement(); // blockquote
@@ -952,10 +965,10 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         QString attr = pair.second;
         QString width = pair.first;
 
-        if (inPara) {
+        if (m_inPara) {
             m_writer->writeEndElement(); // para or blockquote
             newLine();
-            inPara = false;
+            m_inPara = false;
         }
 
         m_tableHeaderAlreadyOutput = false;
@@ -2015,11 +2028,13 @@ void DocBookGenerator::generateStartRequisite(const QString &description)
     m_writer->writeStartElement(dbNamespace, "listitem");
     newLine();
     m_writer->writeStartElement(dbNamespace, "para");
+    m_inPara = true;
 }
 
 void DocBookGenerator::generateEndRequisite()
 {
     m_writer->writeEndElement(); // para
+    m_inPara = false;
     newLine();
     m_writer->writeEndElement(); // listitem
     newLine();
@@ -2045,6 +2060,7 @@ void DocBookGenerator::generateCMakeRequisite(const QStringList &values)
     m_writer->writeCharacters(values.first());
     m_writer->writeEndElement(); // para
     newLine();
+
     m_writer->writeStartElement(dbNamespace, "para");
     m_writer->writeCharacters(values.last());
     generateEndRequisite();
