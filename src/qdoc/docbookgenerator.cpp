@@ -116,6 +116,9 @@ void DocBookGenerator::endSection()
 
 void DocBookGenerator::writeAnchor(const QString &id)
 {
+    if (id.isEmpty())
+        return;
+
     m_writer->writeEmptyElement(dbNamespace, "anchor");
     writeXmlId(id);
     newLine();
@@ -859,17 +862,27 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeEndElement(); // table
         newLine();
         break;
-    case Atom::TableHeaderLeft:
+    case Atom::TableHeaderLeft: {
         if (matchAhead(atom, Atom::TableHeaderRight)) {
-            skipAhead += 1;
+            ++skipAhead;
             break;
+        }
+
+        const Atom *next = atom->next();
+        QString id{""};
+        if (matchAhead(atom, Atom::Target)) {
+            id = Doc::canonicalTitle(next->string());
+            next = next->next();
+            ++skipAhead;
         }
 
         m_writer->writeStartElement(dbNamespace, "thead");
         newLine();
         m_writer->writeStartElement(dbNamespace, "tr");
+        writeXmlId(id);
         newLine();
         m_inTableHeader = true;
+    }
         break;
     case Atom::TableHeaderRight:
         m_writer->writeEndElement(); // tr
@@ -884,11 +897,21 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_inTableHeader = false;
         }
         break;
-    case Atom::TableRowLeft:
+    case Atom::TableRowLeft: {
         if (matchAhead(atom, Atom::TableRowRight))
             break;
 
+        QString id{""};
+        bool hasTarget {false};
+        if (matchAhead(atom, Atom::Target)) {
+            id = Doc::canonicalTitle(atom->next()->string());
+            ++skipAhead;
+            hasTarget = true;
+        }
+
         m_writer->writeStartElement(dbNamespace, "tr");
+        writeXmlId(id);
+
         if (atom->string().isEmpty()) {
             m_writer->writeAttribute("valign", "top");
         } else {
@@ -920,12 +943,24 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         }
         newLine();
 
-        if (!matchAhead(atom, Atom::TableItemLeft)) {
+        // If there is nothing in this row, close it right now. There might be
+        // keywords before the row contents.
+        bool isRowEmpty = hasTarget
+            ? !matchAhead(atom->next(), Atom::TableItemLeft)
+            : !matchAhead(atom, Atom::TableItemLeft);
+        if (isRowEmpty && matchAhead(atom, Atom::Keyword)) {
+            const Atom* next = atom->next();
+            while (matchAhead(next, Atom::Keyword))
+                next = next->next();
+            isRowEmpty = !matchAhead(next, Atom::TableItemLeft);
+        }
+
+        if (isRowEmpty) {
             closeTableRow = true;
             m_writer->writeEndElement(); // td
             newLine();
         }
-
+    }
         break;
     case Atom::TableRowRight:
         if (closeTableRow) {
@@ -967,6 +1002,15 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::Keyword:
         break;
     case Atom::Target:
+        // Sometimes, there is a \target just before a section title with
+        // the same ID. Only output one xml:id.
+        if (matchAhead(atom, Atom::SectionRight) && matchAhead(atom->next(), Atom::SectionLeft)) {
+            QString nextId = Doc::canonicalTitle(Text::sectionHeading(atom->next()->next()).toString());
+            QString ownId = Doc::canonicalTitle(atom->string());
+            if (nextId == ownId)
+                break;
+        }
+
         writeAnchor(Doc::canonicalTitle(atom->string()));
         break;
     case Atom::UnhandledFormat:
