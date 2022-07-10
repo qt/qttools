@@ -1035,6 +1035,27 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 str == "<br />") {
             // Ignore this part, as it's only for formatting of images.
             hasRewrittenString = true;
+        } else if (str.startsWith(R"(<div style="padding:10px;color:#fff;background)") &&
+                matchAhead(atom, Atom::String) && matchAhead(atom->next(), Atom::RawString) &&
+                matchAhead(atom->next()->next(), Atom::String) &&
+                matchAhead(atom->next()->next()->next(), Atom::RawString) &&
+                matchAhead(atom->next()->next()->next()->next(), Atom::String) &&
+                matchAhead(atom->next()->next()->next()->next()->next(), Atom::RawString)) {
+            hasRewrittenString = true;
+            skipAhead += 6;
+
+            const QString color = atom->next()->string(); // == atom->next()->next()->next()->string()
+            const QString text = atom->next()->next()->next()->next()->next()->string();
+
+            m_writer->writeStartElement(dbNamespace, "phrase");
+            m_writer->writeAttribute("role", "color:" + color);
+            m_writer->writeCharacters(color);
+            m_writer->writeCharacters(" ");
+            if (text.isEmpty())
+                m_writer->writeCharacters(text);
+            else
+                m_writer->writeCharacters("&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;");
+            m_writer->writeEndElement(); // phrase
         }
         // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are several images
         // at once with the same encoding.
