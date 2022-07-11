@@ -280,6 +280,7 @@ bool TSReader::read(Translator &translator)
                             msg.setContext(context);
                             msg.setType(TranslatorMessage::Finished);
                             msg.setPlural(attributes().value(strnumerus) == stryes);
+                            msg.setTsLineNumber(lineNumber());
                             while (!atEnd()) {
                                 readNext();
                                 if (isEndElement()) {

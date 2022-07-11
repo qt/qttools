@@ -73,6 +73,8 @@ public:
     void setFileName(const QString &fileName) { m_fileName = fileName; }
     int lineNumber() const { return m_lineNumber; }
     void setLineNumber(int lineNumber) { m_lineNumber = lineNumber; }
+    int tsLineNumber() const { return m_tsLineNumber; }
+    void setTsLineNumber(int lineNumber) { m_tsLineNumber = lineNumber; }
     void clearReferences();
     void setReferences(const References &refs);
     void addReference(const QString &fileName, int lineNumber);
@@ -126,6 +128,7 @@ private:
     QStringList m_translations;
     QString     m_fileName;
     int         m_lineNumber;
+    int         m_tsLineNumber = -1;
     References  m_extraRefs;
     bool        m_warningOnly = false;
 

@@ -620,6 +620,9 @@ void Translator::reportDuplicates(const Duplicates &dupes,
                           << "\n* Source: " << qPrintable(msg.sourceText()) << std::endl;
                 if (!msg.comment().isEmpty())
                     std::cerr << "* Comment: " << qPrintable(msg.comment()) << std::endl;
+                const int tsLine = msg.tsLineNumber();
+                if (tsLine >= 0)
+                    std::cerr << "* Line in .ts File: " << msg.tsLineNumber() << std::endl;
             }
             std::cerr << std::endl;
         }
