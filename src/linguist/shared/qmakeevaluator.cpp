@@ -32,7 +32,7 @@
 #    include <sys/sysctl.h>
 #  endif
 #else
-#include <windows.h>
+#include <qt_windows.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -257,10 +257,10 @@ ProStringList QMakeEvaluator::split_value_list(QStringView vals, int source)
 
     const QChar *vals_data = vals.data();
     const int vals_len = vals.length();
-    ushort quote = 0;
+    char16_t quote = 0;
     bool hadWord = false;
     for (int x = 0; x < vals_len; x++) {
-        ushort unicode = vals_data[x].unicode();
+        char16_t unicode = vals_data[x].unicode();
         if (unicode == quote) {
             quote = 0;
             hadWord = true;
@@ -288,7 +288,7 @@ ProStringList QMakeEvaluator::split_value_list(QStringView vals, int source)
             break;
         case '\\':
             if (x + 1 != vals_len) {
-                ushort next = vals_data[++x].unicode();
+                char16_t next = vals_data[++x].unicode();
                 if (next == '\'' || next == '"' || next == '\\') {
                     build += QChar(unicode);
                     unicode = next;
@@ -875,9 +875,8 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::visitProVariable(
         if (quote)
             pattern = QRegularExpression::escape(pattern);
 
-        QRegularExpression regexp(pattern, case_sense ?
-                                      QRegularExpression::NoPatternOption :
-                                      QRegularExpression::CaseInsensitiveOption);
+        QRegularExpression regexp(pattern, case_sense ? QRegularExpression::NoPatternOption :
+                                                        QRegularExpression::CaseInsensitiveOption);
 
         // We could make a union of modified and unmodified values,
         // but this will break just as much as it fixes, so leave it as is.
@@ -1547,8 +1546,8 @@ void QMakeEvaluator::updateFeaturePaths()
     }
 
     for (int i = 0; i < feature_roots.count(); ++i)
-        if (!feature_roots.at(i).endsWith((ushort)'/'))
-            feature_roots[i].append((ushort)'/');
+        if (!feature_roots.at(i).endsWith(QLatin1Char('/')))
+            feature_roots[i].append(QLatin1Char('/'));
 
     feature_roots.removeDuplicates();
 
@@ -1612,7 +1611,7 @@ bool QMakeEvaluator::isActiveConfig(QStringView config, bool regex)
         return m_hostBuild;
 
     if (regex && (config.contains(QLatin1Char('*')) || config.contains(QLatin1Char('?')))) {
-        QRegularExpression re(QRegularExpression::wildcardToRegularExpression(config.toString()));
+        auto re = QRegularExpression::fromWildcard(config.toString());
 
         // mkspecs
         if (re.match(m_qmakespecName).hasMatch())
@@ -1688,7 +1687,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateFunction(
 
     if (m_valuemapStack.size() >= 100) {
         evalError(fL1S("Ran into infinite recursion (depth > 100)."));
-        vr = ReturnFalse;
+        vr = ReturnError;
     } else {
         m_valuemapStack.push(ProValueMap());
         m_locationStack.push(m_current);

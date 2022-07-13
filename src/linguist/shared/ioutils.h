@@ -24,12 +24,13 @@ public:
         FileIsDir = 2
     };
 
+    static QString binaryAbsLocation(const QString &argv0);
     static FileType fileType(const QString &fileName);
     static bool exists(const QString &fileName) { return fileType(fileName) != FileNotFound; }
     static bool isRelativePath(const QString &fileName);
     static bool isAbsolutePath(const QString &fileName) { return !isRelativePath(fileName); }
-    static QStringView pathName(QStringView fileName); // Requires normalized path
-    static QStringView fileName(QStringView fileName); // Requires normalized path
+    static QStringView pathName(const QString &fileName); // Requires normalized path
+    static QStringView fileName(const QString &fileName); // Requires normalized path
     static QString resolvePath(const QString &baseDir, const QString &fileName);
     static QString shellQuoteUnix(const QString &arg);
     static QString shellQuoteWin(const QString &arg);

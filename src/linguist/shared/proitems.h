@@ -6,6 +6,7 @@
 
 #include "qmake_global.h"
 
+#include <qdebug.h>
 #include <qhash.h>
 #include <qlist.h>
 #include <qmap.h>
@@ -44,9 +45,16 @@ public:
     ProString();
     ProString(const ProString &other);
     ProString &operator=(const ProString &) = default;
-    PROITEM_EXPLICIT ProString(const QString &str);
+    template<typename A, typename B>
+    ProString &operator=(const QStringBuilder<A, B> &str)
+    { return *this = QString(str); }
+    ProString(const QString &str);
     PROITEM_EXPLICIT ProString(QStringView str);
     PROITEM_EXPLICIT ProString(const char *str);
+    template<typename A, typename B>
+    ProString(const QStringBuilder<A, B> &str)
+        : ProString(QString(str))
+    {}
     ProString(const QString &str, int offset, int length);
     void setValue(const QString &str);
     void clear() { m_string.clear(); m_length = 0; }
@@ -57,12 +65,16 @@ public:
     ProString &prepend(const ProString &other);
     ProString &append(const ProString &other, bool *pending = nullptr);
     ProString &append(const QString &other) { return append(ProString(other)); }
+    template<typename A, typename B>
+    ProString &append(const QStringBuilder<A, B> &other) { return append(QString(other)); }
     ProString &append(const QLatin1String other);
     ProString &append(const char *other) { return append(QLatin1String(other)); }
     ProString &append(QChar other);
     ProString &append(const ProStringList &other, bool *pending = nullptr, bool skipEmpty1st = false);
     ProString &operator+=(const ProString &other) { return append(other); }
     ProString &operator+=(const QString &other) { return append(other); }
+    template<typename A, typename B>
+    ProString &operator+=(const QStringBuilder<A, B> &other) { return append(QString(other)); }
     ProString &operator+=(const QLatin1String other) { return append(other); }
     ProString &operator+=(const char *other) { return append(other); }
     ProString &operator+=(QChar other) { return append(other); }
@@ -97,9 +109,13 @@ public:
     bool startsWith(const QString &sub, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().startsWith(sub, cs); }
     bool startsWith(const char *sub, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().startsWith(QLatin1String(sub), cs); }
     bool startsWith(QChar c, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().startsWith(c, cs); }
+    template<typename A, typename B>
+    bool startsWith(const QStringBuilder<A, B> &str) { return startsWith(QString(str)); }
     bool endsWith(const ProString &sub, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().endsWith(sub.toQStringView(), cs); }
     bool endsWith(const QString &sub, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().endsWith(sub, cs); }
     bool endsWith(const char *sub, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().endsWith(QLatin1String(sub), cs); }
+    template<typename A, typename B>
+    bool endsWith(const QStringBuilder<A, B> &str) { return endsWith(QString(str)); }
     bool endsWith(QChar c, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().endsWith(c, cs); }
     int indexOf(const QString &s, int from = 0, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().indexOf(s, from, cs); }
     int indexOf(const char *s, int from = 0, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return toQStringView().indexOf(QLatin1String(s), from, cs); }
@@ -110,7 +126,7 @@ public:
     bool contains(const QString &s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return indexOf(s, 0, cs) >= 0; }
     bool contains(const char *s, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return indexOf(QLatin1String(s), 0, cs) >= 0; }
     bool contains(QChar c, Qt::CaseSensitivity cs = Qt::CaseSensitive) const { return indexOf(c, 0, cs) >= 0; }
-    int toLongLong(bool *ok = nullptr, int base = 10) const { return toQStringView().toLongLong(ok, base); }
+    qlonglong toLongLong(bool *ok = nullptr, int base = 10) const { return toQStringView().toLongLong(ok, base); }
     int toInt(bool *ok = nullptr, int base = 10) const { return toQStringView().toInt(ok, base); }
     short toShort(bool *ok = nullptr, int base = 10) const { return toQStringView().toShort(ok, base); }
 
@@ -144,7 +160,6 @@ private:
     int m_offset, m_length;
     int m_file;
     mutable size_t m_hash;
-    QChar *prepareExtend(int extraLen, int thisTarget, int extraTarget);
     size_t updatedHash() const;
     friend size_t qHash(const ProString &str);
     friend QString operator+(const ProString &one, const ProString &two);
@@ -152,10 +167,15 @@ private:
 };
 Q_DECLARE_TYPEINFO(ProString, Q_RELOCATABLE_TYPE);
 
+
 class ProKey : public ProString {
 public:
     ALWAYS_INLINE ProKey() : ProString() {}
     explicit ProKey(const QString &str);
+    template<typename A, typename B>
+    ProKey(const QStringBuilder<A, B> &str)
+        : ProString(str)
+    {}
     PROITEM_EXPLICIT ProKey(const char *str);
     ProKey(const QString &str, int off, int len);
     ProKey(const QString &str, int off, int len, uint hash);
@@ -179,31 +199,47 @@ private:
 };
 Q_DECLARE_TYPEINFO(ProKey, Q_RELOCATABLE_TYPE);
 
-size_t qHash(const ProString &str);
-QString operator+(const ProString &one, const ProString &two);
-inline QString operator+(const ProString &one, const QString &two)
-    { return one.toQStringView() + two; }
-inline QString operator+(const QString &one, const ProString &two)
-    { return one + two.toQStringView(); }
+template <> struct QConcatenable<ProString> : private QAbstractConcatenable
+{
+    typedef ProString type;
+    typedef QString ConvertTo;
+    enum { ExactSize = true };
+    static int size(const ProString &a) { return a.length(); }
+    static inline void appendTo(const ProString &a, QChar *&out)
+    {
+        const auto n = a.size();
+        if (!n)
+            return;
+        memcpy(out, a.toQStringView().data(), sizeof(QChar) * n);
+        out += n;
+    }
+};
 
-inline QString operator+(const ProString &one, const char *two)
-    { return one.toQStringView() + QLatin1String(two); }
-inline QString operator+(const char *one, const ProString &two)
-    { return QLatin1String(one) + two.toQStringView(); }
-inline QString operator+(const ProString &one, QChar two)
-    { return one.toQStringView() + two; }
-inline QString operator+(QChar one, const ProString &two)
-    { return one + two.toQStringView(); }
+template <> struct QConcatenable<ProKey> : private QAbstractConcatenable
+{
+    typedef ProKey type;
+    typedef QString ConvertTo;
+    enum { ExactSize = true };
+    static int size(const ProKey &a) { return a.length(); }
+    static inline void appendTo(const ProKey &a, QChar *&out)
+    {
+        const auto n = a.size();
+        if (!n)
+            return;
+        memcpy(out, a.toQStringView().data(), sizeof(QChar) * n);
+        out += n;
+    }
+};
+
+
+size_t qHash(const ProString &str);
 
 inline QString &operator+=(QString &that, const ProString &other)
     { return that += other.toQStringView(); }
 
-inline bool operator==(const QString &that, const ProString &other)
-    { return other == that; }
-inline bool operator!=(const QString &that, const ProString &other)
-    { return !(other == that); }
-
 QTextStream &operator<<(QTextStream &t, const ProString &str);
+template<typename A, typename B>
+QTextStream &operator<<(QTextStream &t, const QStringBuilder<A, B> &str) { return t << QString(str); }
 
 // This class manages read-only access to a ProString via a raw data QString
 // temporary, ensuring that the latter is accessed exclusively.
@@ -221,7 +257,7 @@ public:
     }
     // No destructor, as a RAII pattern cannot be used: references to the
     // temporary string can legitimately outlive instances of this class
-    // (if they are held by Qt, e.g. in QRegularExpression).
+    // (if they are held by Qt, e.g. in QRegExp).
     QString &set(const ProString &ps) { return ps.toQString(*m_rs); }
     QString &str() { return *m_rs; }
 
@@ -268,6 +304,8 @@ public:
     QString join(const ProString &sep) const;
     QString join(const QString &sep) const;
     QString join(QChar sep) const;
+    template<typename A, typename B>
+    QString join(const QStringBuilder<A, B> &str) { return join(QString(str)); }
 
     void insertUnique(const ProStringList &value);
 
@@ -404,7 +442,7 @@ class ProFunctionDef {
 public:
     ProFunctionDef(ProFile *pro, int offset) : m_pro(pro), m_offset(offset) { m_pro->ref(); }
     ProFunctionDef(const ProFunctionDef &o) : m_pro(o.m_pro), m_offset(o.m_offset) { m_pro->ref(); }
-    ProFunctionDef(ProFunctionDef &&other) Q_DECL_NOTHROW
+    ProFunctionDef(ProFunctionDef &&other) noexcept
         : m_pro(other.m_pro), m_offset(other.m_offset) { other.m_pro = nullptr; }
     ~ProFunctionDef() { if (m_pro) m_pro->deref(); }
     ProFunctionDef &operator=(const ProFunctionDef &o)
@@ -418,13 +456,13 @@ public:
         }
         return *this;
     }
-    ProFunctionDef &operator=(ProFunctionDef &&other) Q_DECL_NOTHROW
+    ProFunctionDef &operator=(ProFunctionDef &&other) noexcept
     {
         ProFunctionDef moved(std::move(other));
         swap(moved);
         return *this;
     }
-    void swap(ProFunctionDef &other) Q_DECL_NOTHROW
+    void swap(ProFunctionDef &other) noexcept
     {
         qSwap(m_pro, other.m_pro);
         qSwap(m_offset, other.m_offset);
@@ -443,6 +481,8 @@ struct ProFunctionDefs {
     QHash<ProKey, ProFunctionDef> testFunctions;
     QHash<ProKey, ProFunctionDef> replaceFunctions;
 };
+
+QDebug operator<<(QDebug debug, const ProString &str);
 
 QT_END_NAMESPACE
 

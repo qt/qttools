@@ -26,7 +26,7 @@
 #include <unistd.h>
 #include <sys/utsname.h>
 #else
-#include <windows.h>
+#include <qt_windows.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -78,6 +78,13 @@ QString QMakeGlobals::cleanSpec(QMakeCmdLineParserState &state, const QString &s
     return ret;
 }
 
+/*
+ * Return value meanings:
+ * ArgumentUnknown    The argument at *pos was not handled by this function.
+ *                    Leave it to the caller to handle this argument.
+ * ArgumentMalformed  There was an error detected.
+ * ArgumentsOk        All arguments were known. There are no arguments left to handle.
+ */
 QMakeGlobals::ArgumentReturn QMakeGlobals::addCommandLineArguments(
         QMakeCmdLineParserState &state, QStringList &args, int *pos)
 {

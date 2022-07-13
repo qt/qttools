@@ -347,9 +347,9 @@ void QMakeParser::read(ProFile *pro, QStringView in, int line, SubGrammar gramma
     int wordCount = 0; // Number of words in currently accumulated expression
     int lastIndent = 0; // Previous line's indentation, to detect accidental continuation abuse
     bool lineMarked = true; // For in-expression markers
-    ushort needSep = TokNewStr; // Met unquoted whitespace
-    ushort quote = 0;
-    ushort term = 0;
+    char16_t needSep = TokNewStr; // Met unquoted whitespace
+    char16_t quote = 0;
+    char16_t term = 0;
 
     Context context;
     ushort *ptr;
@@ -425,7 +425,7 @@ void QMakeParser::read(ProFile *pro, QStringView in, int line, SubGrammar gramma
     }
 
     forever {
-        ushort c;
+        char16_t c;
 
         // First, skip leading whitespace
         for (indent = 0; ; ++cur, ++indent) {
@@ -596,7 +596,7 @@ void QMakeParser::read(ProFile *pro, QStringView in, int line, SubGrammar gramma
                             if (c != term) {
                                 parseError(fL1S("Missing %1 terminator [found %2]")
                                     .arg(QChar(term))
-                                    .arg(c ? QString(c) : QString::fromLatin1("end-of-line")));
+                                    .arg(c ? QString(QChar(c)) : QString::fromLatin1("end-of-line")));
                                 m_inError = true;
                                 // Just parse on, as if there was a terminator ...
                             } else {
@@ -611,7 +611,7 @@ void QMakeParser::read(ProFile *pro, QStringView in, int line, SubGrammar gramma
                     }
                 } else if (c == '\\') {
                     static const char symbols[] = "[]{}()$\\'\"";
-                    ushort c2;
+                    char16_t c2;
                     if (cur != end && !((c2 = *cur) & 0xff00) && strchr(symbols, c2)) {
                         c = c2;
                         cur++;
@@ -1524,7 +1524,8 @@ static bool getBlock(const ushort *tokens, int limit, int &offset, QString *outS
                 ok = getSubBlock(tokens, limit, offset, outStr, indent, "block");
                 break;
             default:
-                Q_ASSERT(!"unhandled token");
+                // unhandled token
+                Q_UNREACHABLE();
             }
         }
         if (!ok)

@@ -34,6 +34,8 @@ qt_internal_add_tool(${target_name}
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
+    LIBRARIES
+        Qt::CorePrivate
 )
 qt_internal_return_unless_building_tools()
 
@@ -51,10 +53,10 @@ qt_internal_add_resource(${target_name} "proparser"
         ${proparser_resource_files}
 )
 
-
-#### Keys ignored in scope 1:.:.:lprodump.pro:<TRUE>:
-# QMAKE_TARGET_DESCRIPTION = "Qt Linguist QMake Project Dump Tool"
-# QT_TOOL_ENV = "qmake"
-# _OPTION = "host_build"
-# qmake.name = "QMAKE"
-# qmake.value = "$$shell_path($$QMAKE_QMAKE)"
+qt_internal_extend_target(${target_name} CONDITION WIN32
+    SOURCES
+        ../shared/registry.cpp
+        ../shared/registry_p.h
+    DEFINES
+        _SCL_SECURE_NO_WARNINGS
+)

@@ -1,4 +1,4 @@
-// Copyright (C) 2016 The Qt Company Ltd.
+// Copyright (C) 2021 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "qmakeevaluator.h"
@@ -13,20 +13,22 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <qjsonarray.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
 #include <qlist.h>
 #include <qregularexpression.h>
 #include <qset.h>
 #include <qstringlist.h>
 #include <qtextstream.h>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-# include <qjsondocument.h>
-# include <qjsonobject.h>
-# include <qjsonarray.h>
-#endif
+
 #ifdef PROEVALUATOR_THREAD_SAFE
 # include <qthreadpool.h>
 #endif
 #include <qversionnumber.h>
+#ifdef Q_OS_WIN
+# include <registry_p.h>
+#endif
 
 #include <algorithm>
 
@@ -39,7 +41,7 @@
 #include <sys/stat.h>
 #include <sys/utsname.h>
 #else
-#include <windows.h>
+#include <qt_windows.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,7 +70,7 @@ enum ExpandFunc {
     E_UPPER, E_LOWER, E_TITLE, E_FILES, E_PROMPT, E_RE_ESCAPE, E_VAL_ESCAPE,
     E_REPLACE, E_SORT_DEPENDS, E_RESOLVE_DEPENDS, E_ENUMERATE_VARS,
     E_SHADOWED, E_ABSOLUTE_PATH, E_RELATIVE_PATH, E_CLEAN_PATH,
-    E_SYSTEM_PATH, E_SHELL_PATH, E_SYSTEM_QUOTE, E_SHELL_QUOTE, E_GETENV
+    E_SYSTEM_PATH, E_SHELL_PATH, E_SYSTEM_QUOTE, E_SHELL_QUOTE, E_GETENV, E_READ_REGISTRY
 };
 
 enum TestFunc {
@@ -165,6 +167,7 @@ void QMakeEvaluator::initFunctionStatics()
         { "system_quote", E_SYSTEM_QUOTE, -1, 1, "arg" },
         { "shell_quote", E_SHELL_QUOTE, -1, 1, "arg" },
         { "getenv", E_GETENV, 1, 1, "arg" },
+        { "read_registry", E_READ_REGISTRY, 2, 3, "tree, key, [wow64]" },
     };
     statics.expands.reserve((int)(sizeof(expandInits)/sizeof(expandInits[0])));
     for (unsigned i = 0; i < sizeof(expandInits)/sizeof(expandInits[0]); ++i)
@@ -193,9 +196,7 @@ void QMakeEvaluator::initFunctionStatics()
         { "infile", T_INFILE, 2, 3, "file, var, [values]" },
         { "count", T_COUNT, 2, 3, "var, count, [op=operator]" },
         { "isEmpty", T_ISEMPTY, 1, 1, "var" },
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
         { "parseJson", T_PARSE_JSON, 2, 2, "var, into" },
-#endif
         { "load", T_LOAD, 1, 2, "feature, [ignore_errors=false]" },
         { "include", T_INCLUDE, 1, 3, "file, [into, [silent]]" },
         { "debug", T_DEBUG, 2, 2, "level, message" },
@@ -333,7 +334,6 @@ QMakeEvaluator::quoteValue(const ProString &val)
     return ret;
 }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 static void addJsonValue(const QJsonValue &value, const QString &keyPrefix, ProValueMap *map);
 
 static void insertJsonKeyValue(const QString &key, const QStringList &values, ProValueMap *map)
@@ -445,7 +445,6 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::parseJsonInto(const QByteArray &json
 
     return QMakeEvaluator::ReturnTrue;
 }
-#endif
 
 QMakeEvaluator::VisitReturn
 QMakeEvaluator::writeFile(const QString &ctx, const QString &fn, QIODevice::OpenMode mode,
@@ -857,7 +856,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinExpand(
         ret += values(map(args.at(0)));
         break;
     case E_LIST: {
-        QString tmp = QString::asprintf(".QMAKE_INTERNAL_TMP_variableName_%d", m_listCount++);
+        QString tmp(QString::asprintf(".QMAKE_INTERNAL_TMP_variableName_%d", m_listCount++));
         ret = ProStringList(ProString(tmp));
         ProStringList lst;
         for (const ProString &arg : args)
@@ -1026,7 +1025,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinExpand(
         for (int d = 0; d < dirs.count(); d++) {
             QString dir = dirs[d];
             QDir qdir(pfx + dir);
-            for (int i = 0; i < (int)qdir.count(); ++i) {
+            for (int i = 0, count = int(qdir.count()); i < count; ++i) {
                 if (qdir[i] == statics.strDot || qdir[i] == statics.strDotDot)
                     continue;
                 QString fname = dir + qdir[i];
@@ -1204,6 +1203,40 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinExpand(
         ret << ProString(m_option->getEnv(u1.str()));
         break;
     }
+#ifdef Q_OS_WIN
+    case E_READ_REGISTRY: {
+        HKEY tree;
+        const auto par = args.at(0);
+        if (!par.compare(QLatin1String("HKCU"), Qt::CaseInsensitive)
+                || !par.compare(QLatin1String("HKEY_CURRENT_USER"), Qt::CaseInsensitive)) {
+            tree = HKEY_CURRENT_USER;
+        } else if (!par.compare(QLatin1String("HKLM"), Qt::CaseInsensitive)
+                || !par.compare(QLatin1String("HKEY_LOCAL_MACHINE"), Qt::CaseInsensitive)) {
+            tree = HKEY_LOCAL_MACHINE;
+        } else {
+            evalError(fL1S("read_registry(): invalid or unsupported registry tree %1.")
+                      .arg(par.toQStringView()));
+            goto allfail;
+        }
+        int flags = 0;
+        if (args.count() > 2) {
+            const auto opt = args.at(2);
+            if (opt == "32"
+                    || !opt.compare(QLatin1String("wow64_32key"), Qt::CaseInsensitive)) {
+                flags = KEY_WOW64_32KEY;
+            } else if (opt == "64"
+                    || !opt.compare(QLatin1String("wow64_64key"), Qt::CaseInsensitive)) {
+                flags = KEY_WOW64_64KEY;
+            } else {
+                evalError(fL1S("read_registry(): invalid option %1.")
+                          .arg(opt.toQStringView()));
+                goto allfail;
+            }
+        }
+        ret << ProString(qt_readRegistryKey(tree, args.at(1).toQString(m_tmp1), flags));
+        break;
+    }
+#endif
     default:
         evalError(fL1S("Function '%1' is not implemented.").arg(func.toQStringView()));
         break;
@@ -1445,7 +1478,7 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
                 auto isFrom = [pro](const ProString &s) {
                     return s.sourceFile() == pro;
                 };
-                vit->erase(std::remove_if(vit->begin(), vit->end(), isFrom), vit->end());
+                vit->removeIf(isFrom);
                 if (vit->isEmpty()) {
                     // When an initially non-empty variable becomes entirely empty,
                     // undefine it altogether.
@@ -1531,8 +1564,8 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
     case T_CONFIG: {
         if (args.count() == 1)
             return returnBool(isActiveConfig(args.at(0).toQStringView()));
-        const auto &mutuals = args.at(1).toQStringView().split(QLatin1Char('|'),
-                                                              Qt::SkipEmptyParts);
+        const auto mutuals = args.at(1).toQStringView().split(QLatin1Char('|'),
+                                                             Qt::SkipEmptyParts);
         const ProStringList &configs = values(statics.strCONFIG);
 
         for (int i = configs.size() - 1; i >= 0; i--) {
@@ -1666,14 +1699,12 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
             m_valuemapStack.top()[var] = statics.fakeValue;
         return ReturnTrue;
     }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     case T_PARSE_JSON: {
         QByteArray json = values(args.at(0).toKey()).join(QLatin1Char(' ')).toUtf8();
         ProStringRoUser u1(args.at(1), m_tmp2);
         QString parseInto = u1.str();
         return parseJsonInto(json, parseInto, &m_valuemapStack.top());
     }
-#endif
     case T_INCLUDE: {
         QString parseInto;
         LoadFlags flags;
@@ -1849,10 +1880,6 @@ QMakeEvaluator::VisitReturn QMakeEvaluator::evaluateBuiltinConditional(
         return ReturnTrue;
     }
     case T_CACHE:
-        if (args.count() > 3) {
-            evalError(fL1S("cache(var, [set|add|sub] [transient] [super|stash], [srcvar]) requires one to three arguments."));
-            return ReturnFalse;
-        }
         return testFunc_cache(args);
     case T_RELOAD_PROPERTIES:
 #ifdef QT_BUILD_QMAKE
