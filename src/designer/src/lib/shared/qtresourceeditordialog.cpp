@@ -1802,16 +1802,15 @@ bool QtResourceEditorDialogPrivate::loadQrcFile(const QString &path, QtQrcFileDa
     file.close();
 
     QDomDocument doc;
-    int errLine, errCol;
-    if (!doc.setContent(dataArray, errorMessage, &errLine, &errCol))  {
+    if (QDomDocument::ParseResult result = doc.setContent(dataArray)) {
+        return loadQrcFileData(doc, path, qrcFileData, errorMessage);
+    } else {
         *errorMessage =
             QCoreApplication::translate("QtResourceEditorDialog",
                                         "A parse error occurred at line %1, column %2 of %3:\n%4")
-                                       .arg(errLine).arg(errCol).arg(path, *errorMessage);
+                .arg(result.errorLine).arg(result.errorColumn).arg(path, result.errorMessage);
         return false;
     }
-
-    return loadQrcFileData(doc, path, qrcFileData, errorMessage);
 }
 
 bool QtResourceEditorDialogPrivate::saveQrcFile(const QtQrcFileData &qrcFileData)
