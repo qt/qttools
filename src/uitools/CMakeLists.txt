@@ -13,7 +13,8 @@ qt_internal_add_module(UiTools
         ../designer/src/lib/uilib/resourcebuilder.cpp ../designer/src/lib/uilib/resourcebuilder_p.h
         ../designer/src/lib/uilib/textbuilder.cpp ../designer/src/lib/uilib/textbuilder_p.h
         ../designer/src/lib/uilib/ui4.cpp ../designer/src/lib/uilib/ui4_p.h
-        quiloader.cpp quiloader.h
+        quiloader.cpp quiloader.h quiloader_p.h
+        qtuitoolsglobal.h
     DEFINES
         QFORMINTERNAL_NAMESPACE
         QT_DESIGNER

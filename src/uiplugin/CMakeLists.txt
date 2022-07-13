@@ -8,6 +8,9 @@ qt_internal_add_module(UiPlugin
     NO_PRIVATE_MODULE
     HEADER_MODULE
     QMAKE_MODULE_CONFIG designer_defines
+    SOURCES
+        customwidget.h
+        qdesignerexportwidget.h
     PUBLIC_LIBRARIES
         Qt::Core
         Qt::Gui
