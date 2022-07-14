@@ -19,7 +19,7 @@ every statement in the qdocconf file.
 
    project                 = QtGui
    description             = Qt GUI Reference Documentation
-   url                     = http://doc.qt.io/qt-5
+   url                     = http://doc.qt.io/qt
    version                 = $QT_VERSION
 
    examplesinstallpath     = gui
@@ -35,10 +35,10 @@ every statement in the qdocconf file.
    qhp.QtGui.subprojects         = classes
    qhp.QtGui.subprojects.classes.title = C++ Classes
    qhp.QtGui.subprojects.classes.indexTitle = Qt GUI C++ Classes
-   qhp.QtGui.subprojects.classes.selectors = class fake:headerfile
+   qhp.QtGui.subprojects.classes.selectors = class headerfile
    qhp.QtGui.subprojects.classes.sortPages = true
 
-   tagfile                 = ../../../doc/qtgui/qtgui.tags
+   tagfile                 = qtgui.tags
 
    depends += \
        qtcore \
@@ -62,7 +62,7 @@ every statement in the qdocconf file.
 
    imagedirs   += images \
                   ../../../examples/gui/doc/images \
-                  ../../../doc/src/images \
+                  ../../../doc/src/images
 \endcode
 
 \title Qtgui.qdocconf with notes
@@ -109,24 +109,23 @@ to content listed in the index.
 \note QDoc omits this value when the -installdir argument
 is specified when running QDoc.
 
-\target examplesinstallpath
-
 \badcode
    examplesinstallpath     = gui
 \endcode
 
-This \c examplesinstallpath variable indicates that the examples will be
+The \c examplesinstallpath variable indicates that the examples will be
 installed in the \e gui directory under the parent examples directory
 (for Qt, this is $QT_INSTALL_EXAMPLES).
 
 \note The examplepath variable has to match the example directory specified in
       \c exampledirs.
 
-\note It is possible to override the \c exampleinstallpath for a specific
+\note It is possible to override \c examplesinstallpath for a specific
       \l {example-command}{\\example} using the \l {meta-command}{\\meta}
       command.
 
-\b {See also}: \l {exampledirs} and \l {meta-command}{\\meta}.
+\b {See also}: \l {examplesinstallpath}, \l {exampledirs}, and
+\l {meta-command}{\\meta}.
 
 \badcode
    qhp.projects    = QtGui

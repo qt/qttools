@@ -147,6 +147,7 @@
     \li \l {depends-variable} {depends}
     \li \l {exampledirs-variable} {exampledirs}
     \li \l {examples-variable} {examples}
+    \li \l {examplesinstallpath-variable} {examplesinstallpath}
     \li \l {examples.fileextensions-variable} {examples.fileextensions}
     \li \l {excludedirs-variable} {excludedirs}
     \li \l {excludefiles-variable} {excludefiles}
@@ -441,6 +442,58 @@
     \endcode
 
     See also \l {exampledirs-variable} {exampledirs}.
+
+    \target examplesinstallpath-variable
+    \section1 examplesinstallpath
+
+    The \c examplesinstallpath variable sets the root path for this
+    project's examples under the \e installed example directory.
+
+    Assuming a root install path of \c QT_INSTALL_EXAMPLES for all
+    examples, then the path
+
+    \badcode
+    <QT_INSTALL_EXAMPLES>/<examplesinstallpath>/<example_path>
+    \endcode
+
+    will be used to refer to a path of a single example within this
+    documentation project. These paths are recorded in the
+    \l {Example Manifest Files} {example manifest file}, read by Qt
+    Creator.
+
+    To ensure correct paths, \c examplesinstallpath must match with
+    one of the directories listed in \l {exampledirs-variable}
+    {exampledirs}. The path passed as an argument for each
+    \l {example-command} {\\example} command is relative to
+    the path in \e exampledirs.
+
+    For example:
+
+    \badcode
+    exampledirs = ./snippets \
+                  ../../../examples/mymodule
+
+    examplesinstallpath = mymodule
+    \endcode
+
+    And given a following \\example command:
+
+    \badcode *
+    /*!
+        \example basic/hello
+        ...
+    \1/
+    \endcode
+
+    Then, the path \c {mymodule/basic/hello} is recorded in the manifest file
+    for this example.
+
+    \note It is possible to override \c examplesinstallpath for an individual
+          \l {example-command}{\\example} using the \l {meta-command}{\\meta}
+          command.
+
+    \b {See also}: \l {exampledirs}, \l {example-command} {\\example}, and
+    \l {meta-command}{\\meta}.
 
     \target examples.fileextensions-variable
     \section1 examples.fileextensions
