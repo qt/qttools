@@ -89,6 +89,7 @@ private:
 #define COMMAND_JSTYPE Doc::alias(QLatin1String("jstype"))
 #define COMMAND_MACRO Doc::alias(QLatin1String("macro"))
 #define COMMAND_MODULE Doc::alias(QLatin1String("module"))
+#define COMMAND_MODULESTATE Doc::alias(QLatin1String("modulestate"))
 #define COMMAND_NAMESPACE Doc::alias(QLatin1String("namespace"))
 #define COMMAND_NEXTPAGE Doc::alias(QLatin1String("nextpage"))
 #define COMMAND_NOAUTOLIST Doc::alias(QLatin1String("noautolist"))

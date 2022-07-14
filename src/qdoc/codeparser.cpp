@@ -127,13 +127,13 @@ const QSet<QString> &CodeParser::commonMetaCommands()
     if (commonMetaCommands_.isEmpty()) {
         commonMetaCommands_ << COMMAND_ABSTRACT << COMMAND_DEFAULT << COMMAND_DEPRECATED << COMMAND_INGROUP
                             << COMMAND_INJSMODULE << COMMAND_INMODULE << COMMAND_INPUBLICGROUP
-                            << COMMAND_INQMLMODULE << COMMAND_INTERNAL << COMMAND_NOAUTOLIST
-                            << COMMAND_NONREENTRANT << COMMAND_OBSOLETE << COMMAND_PRELIMINARY
-                            << COMMAND_QMLABSTRACT << COMMAND_QMLDEFAULT << COMMAND_QMLINHERITS
-                            << COMMAND_QMLREADONLY << COMMAND_QMLREQUIRED << COMMAND_QTCMAKEPACKAGE
-                            << COMMAND_QTVARIABLE << COMMAND_REENTRANT << COMMAND_SINCE
-                            << COMMAND_STARTPAGE  << COMMAND_SUBTITLE << COMMAND_THREADSAFE
-                            << COMMAND_TITLE << COMMAND_WRAPPER;
+                            << COMMAND_INQMLMODULE << COMMAND_INTERNAL << COMMAND_MODULESTATE
+                            << COMMAND_NOAUTOLIST << COMMAND_NONREENTRANT << COMMAND_OBSOLETE
+                            << COMMAND_PRELIMINARY << COMMAND_QMLABSTRACT << COMMAND_QMLDEFAULT
+                            << COMMAND_QMLINHERITS << COMMAND_QMLREADONLY << COMMAND_QMLREQUIRED
+                            << COMMAND_QTCMAKEPACKAGE << COMMAND_QTVARIABLE << COMMAND_REENTRANT
+                            << COMMAND_SINCE << COMMAND_STARTPAGE  << COMMAND_SUBTITLE
+                            << COMMAND_THREADSAFE << COMMAND_TITLE << COMMAND_WRAPPER;
     }
     return commonMetaCommands_;
 }

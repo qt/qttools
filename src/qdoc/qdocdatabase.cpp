@@ -1348,6 +1348,38 @@ Node *QDocDatabase::findNodeInOpenNamespace(QStringList &path, bool (Node::*isMa
 }
 
 /*!
+    Returns the collection node representing the module that \a relative
+    node belongs to, or \c nullptr if there is no such module in the
+    primary tree.
+*/
+const CollectionNode *QDocDatabase::getModuleNode(const Node *relative)
+{
+    Node::NodeType moduleType{Node::Module};
+    QString moduleName;
+    switch (relative->genus())
+    {
+    case Node::CPP:
+        moduleType = Node::Module;
+        moduleName = relative->physicalModuleName();
+        break;
+    case Node::QML:
+        moduleType = Node::QmlModule;
+        moduleName = relative->logicalModuleName();
+        break;
+    case Node::JS:
+        moduleType = Node::JsModule;
+        moduleName = relative->logicalModuleName();
+        break;
+    default:
+        return nullptr;
+    }
+    if (moduleName.isEmpty())
+        return nullptr;
+
+    return primaryTree()->getCollection(moduleName, moduleType);
+}
+
+/*!
   Finds all the collection nodes of the specified \a type
   and merges them into the collection node map \a cnm. Nodes
   that match the \a relative node are not included.

@@ -292,34 +292,14 @@ void Tree::resolveCppToQmlLinks()
 void Tree::resolveSince(Aggregate &aggregate)
 {
     for (auto *child : aggregate.childNodes()) {
+        if (!child->isAggregate())
+            continue;
         if (!child->since().isEmpty())
             continue;
 
-        Node::NodeType moduleType;
-        QString moduleName;
-        switch (child->nodeType())
-        {
-        case Node::Namespace:
-        case Node::Class:
-        case Node::Struct:
-        case Node::Union:
-        case Node::HeaderFile:
-            moduleType = Node::Module;
-            moduleName = child->physicalModuleName();
-            break;
-        case Node::QmlType:
-            moduleType = Node::QmlModule;
-            moduleName = child->logicalModuleName();
-            break;
-        default:
-            continue;
-        };
-        if (moduleName.isEmpty())
-            continue;
-        if (const auto collectionNode = m_qdb->getCollectionNode(moduleName, moduleType))
+        if (const auto collectionNode = m_qdb->getModuleNode(child))
             child->setSince(collectionNode->since());
 
-        Q_ASSERT(child->isAggregate());
         resolveSince(static_cast<Aggregate&>(*child));
     }
 }

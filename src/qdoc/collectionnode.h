@@ -38,8 +38,11 @@ public:
     {
         return m_logicalModuleName + m_logicalModuleVersionMajor;
     }
+    [[nodiscard]] QString state() const { return m_state; }
+
     void setLogicalModuleInfo(const QString &arg) override;
     void setLogicalModuleInfo(const QStringList &info) override;
+    void setState(const QString &state) { m_state = state; }
 
     // REMAKR: Those methods are used by QDocDatabase as a performance
     // detail to avoid merging a collection node multiple times. They
@@ -97,6 +100,7 @@ private:
     QString m_logicalModuleVersionMinor {};
     QString m_qtVariable {};
     QString m_qtCMakeComponent {};
+    QString m_state {};
 };
 
 QT_END_NAMESPACE

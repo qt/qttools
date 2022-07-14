@@ -24,6 +24,7 @@
     \title Versionless QML Module
     \brief QML Types for the Test module without version.
     \since 1.1
+    \modulestate Tech Preview
 */
 
 /*!

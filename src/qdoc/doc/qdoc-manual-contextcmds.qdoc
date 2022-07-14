@@ -30,6 +30,7 @@
       \li \l {inherits-command}{\\inherits}
       \li \l {inmodule-command}{\\inmodule}
       \li \l {internal-command}{\\internal}
+      \li \l {modulestate-command} {\\modulestate} (Since QDoc 6.5)
       \li \l {nextpage-command}{\\nextpage}
       \li \l {nonreentrant-command}{\\nonreentrant}
       \li \l {overload-command}{\\overload}
@@ -371,6 +372,32 @@
     This function will not be included in the documentation, unless QDoc
     is called with the \c{-showinternal} command line option or the
     \c{QDOC_SHOW_INTERNAL} environment variable is set.
+
+    \target modulestate-command
+    \section1 \\modulestate
+
+    The \\modulestate command can be used within a \\module or \\qmlmodule
+    topic to provide a module state description other than \e preliminary or
+    \e deprecated.
+
+    Rest of the line is taken as an argument that describes the module's
+    state. For example:
+
+    \badcode *
+    /*!
+        \module QtFoo
+        \modulestate Technical Preview
+    \1/
+    \endcode
+
+    QDoc will then add this information on the module page:
+
+    \quotation
+    This module is in \e {Technical Preview} state.
+    \endquotation
+
+    In HTML output, this state information appears also in the navigation
+    bar (breadcrumbs) of reference pages for the module's members.
 
     \target preliminary-command
     \section1 \\preliminary

@@ -125,4 +125,14 @@ void CollectionNode::setLogicalModuleInfo(const QStringList &info)
     }
 }
 
+/*!
+    \fn void CollectionNode::setState(const QString &state)
+    \fn QString CollectionNode::state()
+
+    Sets or gets a description of this module's state. For example,
+    \e {"Technical Preview"}. This string is used when generating the
+    module's documentation page and reference pages of the module's
+    members.
+*/
+
 QT_END_NAMESPACE

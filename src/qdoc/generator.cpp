@@ -1226,7 +1226,16 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
 
     switch (node->status()) {
     case Node::Active:
-        // Do nothing.
+        // Output the module 'state' description if set.
+        if (node->isModule() || node->isQmlModule()) {
+            const QString &state = static_cast<const CollectionNode*>(node)->state();
+            if (!state.isEmpty()) {
+                text << Atom::ParaLeft << "This " << typeString(node) << " is in "
+                     << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC) << state
+                     << Atom(Atom::FormattingRight, ATOM_FORMATTING_ITALIC) << " state."
+                     << Atom::ParaRight;
+            }
+        }
         break;
     case Node::Preliminary:
         text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << "This "

@@ -1666,6 +1666,12 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
                       << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
     };
 
+    // Resolve the associated module (collection) node and its 'state' description
+    const auto *moduleNode = m_qdb->getModuleNode(node);
+    QString moduleState;
+    if (moduleNode && !moduleNode->state().isEmpty())
+        moduleState = QStringLiteral(" (%1)").arg(moduleNode->state());
+
     if (m_hometitle == title)
         return;
     if (!m_homepage.isEmpty())
@@ -1677,18 +1683,17 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
         if (!m_cppclassespage.isEmpty() && !m_cppclassestitle.isEmpty())
             addNavItem(m_cppclassespage, m_cppclassestitle);
         if (!node->physicalModuleName().isEmpty()) {
-            // TODO: Abusing addModule() which is just a wrapper for private method findModule()
-            auto moduleNode = m_qdb->addModule(node->physicalModuleName());
-            if (moduleNode && moduleNode->title() != m_cppclassespage)
-                addNavItem(moduleNode->name(), moduleNode->name());
+            if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_cppclassespage))
+                addNavItem(moduleNode->name(), moduleNode->name() + moduleState);
         }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
                || node->isJsBasicType()) {
         if (!m_qmltypespage.isEmpty() && !m_qmltypestitle.isEmpty())
             addNavItem(m_qmltypespage, m_qmltypestitle);
-        if (node->logicalModule() && node->logicalModule()->title() != m_qmltypespage)
-            addNavItem(node->logicalModule()->name(), node->logicalModule()->name());
+        if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_qmltypespage)) {
+            addNavItem(moduleNode->name(), moduleNode->name() + moduleState);
+        }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else {
         if (node->isPageNode()) {

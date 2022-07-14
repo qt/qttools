@@ -320,6 +320,7 @@ public:
     [[nodiscard]] virtual QString logicalModuleName() const { return QString(); }
     [[nodiscard]] virtual QString logicalModuleVersion() const { return QString(); }
     [[nodiscard]] virtual QString logicalModuleIdentifier() const { return QString(); }
+
     virtual void setLogicalModuleInfo(const QString &) {}
     virtual void setLogicalModuleInfo(const QStringList &) {}
     [[nodiscard]] virtual CollectionNode *logicalModule() const { return nullptr; }

@@ -672,6 +672,15 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             doc.location().warning(
                     QStringLiteral("Command '\\%1' is only meaningful in '\\module'.")
                             .arg(COMMAND_QTCMAKEPACKAGE));
+    } else if (command == COMMAND_MODULESTATE ) {
+        if (!node->isModule() && !node->isQmlModule()) {
+            doc.location().warning(
+                    QStringLiteral(
+                            "Command '\\%1' is only meaningful in '\\module' and '\\qmlmodule'.")
+                            .arg(COMMAND_MODULESTATE));
+        } else {
+            static_cast<CollectionNode*>(node)->setState(arg);
+        }
     } else if (command == COMMAND_NOAUTOLIST) {
         node->setNoAutoList(true);
     }

@@ -2024,7 +2024,21 @@ bool DocBookGenerator::generateStatus(const Node *node)
     // From Generator::generateStatus.
     switch (node->status()) {
     case Node::Active:
-        // Do nothing.
+        // Output the module 'state' description if set.
+        if (node->isModule() || node->isQmlModule()) {
+            const QString &state = static_cast<const CollectionNode*>(node)->state();
+            if (!state.isEmpty()) {
+                m_writer->writeStartElement(dbNamespace, "para");
+                m_writer->writeCharacters("This " + typeString(node) + " is in ");
+                m_writer->writeStartElement(dbNamespace, "emphasis");
+                m_writer->writeCharacters(state);
+                m_writer->writeEndElement(); // emphasis
+                m_writer->writeCharacters(" state.");
+                m_writer->writeEndElement(); // para
+                newLine();
+                return true;
+            }
+        }
         return false;
     case Node::Preliminary:
         m_writer->writeStartElement(dbNamespace, "para");

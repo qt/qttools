@@ -304,6 +304,8 @@ public:
     {
         return m_forest.getCollectionNode(name, type);
     }
+    const CollectionNode *getModuleNode(const Node *relative);
+
     FunctionNode *findFunctionNodeForTag(const QString &tag)
     {
         return primaryTree()->findFunctionNodeForTag(tag);
