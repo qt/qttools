@@ -136,7 +136,8 @@ void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Agg
  */
 void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggregate *parent)
 {
-    const auto &childNodes = parent->childNodes();
+    auto childNodes = parent->childNodes();
+    std::sort(childNodes.begin(), childNodes.end(), Node::nodeNameLessThan);
     for (const auto *node : childNodes) {
         if (!node->url().isNull())
             continue;
