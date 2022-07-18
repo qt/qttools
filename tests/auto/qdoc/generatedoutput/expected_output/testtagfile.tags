@@ -5,10 +5,10 @@
         <filename>qml-qdoc-test-abstractparent.html</filename>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>
-            <name>rear</name>
+            <name>name</name>
             <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
-            <anchor>rear-method</anchor>
-            <arglist>(Child child, var method)</arglist>
+            <anchor>name-method</anchor>
+            <arglist>()</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>
@@ -19,10 +19,10 @@
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>
-            <name>name</name>
+            <name>rear</name>
             <anchorfile>qml-qdoc-test-abstractparent.html</anchorfile>
-            <anchor>name-method</anchor>
-            <arglist>()</arglist>
+            <anchor>rear-method</anchor>
+            <arglist>(Child child, var method)</arglist>
         </member>
     </compound>
     <compound kind="class">
@@ -59,20 +59,6 @@
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
-            <name>foo</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>foo-signal</anchor>
-            <arglist>(var bar)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>itsHappening</name>
-            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
-            <anchor>itsHappening-signal</anchor>
-            <arglist>(bool really)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
             <name>fail</name>
             <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
             <anchor>fail-method</anchor>
@@ -84,6 +70,20 @@
             <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
             <anchor>fail_hard-method</anchor>
             <arglist>(msg, option)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>foo</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>foo-signal</anchor>
+            <arglist>(var bar)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>itsHappening</name>
+            <anchorfile>qml-qdoc-test-doctest.html</anchorfile>
+            <anchor>itsHappening-signal</anchor>
+            <arglist>(bool really)</arglist>
         </member>
     </compound>
     <compound kind="class">
@@ -121,53 +121,19 @@
     <compound kind="class">
         <name>TestQDoc::Test</name>
         <filename>testqdoc-test.html</filename>
-        <member kind="typedef" type="">
-            <name>SomeType</name>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>QDOCTEST_MACRO2</name>
             <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>SomeType-typedef</anchor>
-            <arglist></arglist>
+            <anchor>QDOCTEST_MACRO2</anchor>
+            <arglist>(int &amp;x)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
-            <type>int</type>
-            <name>someFunction</name>
+            <type></type>
+            <name>Test</name>
             <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>someFunction</anchor>
-            <arglist>(int, int v)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>someFunctionDefaultArg</name>
-            <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>someFunctionDefaultArg</anchor>
-            <arglist>(int i, bool b)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>obsoleteMember</name>
-            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
-            <anchor>obsoleteMember</anchor>
+            <anchor>Test</anchor>
             <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>anotherObsoleteMember</name>
-            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
-            <anchor>anotherObsoleteMember</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>deprecatedMember</name>
-            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
-            <anchor>deprecatedMember</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void (*)(bool)</type>
-            <name>funcPtr</name>
-            <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>funcPtr</anchor>
-            <arglist>(*)(bool) funcPtr(bool b, const char *s)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>TestQDoc::Test &amp;</type>
@@ -184,18 +150,11 @@
             <arglist>()</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>inlineFunction</name>
+            <type>TestQDoc::Test &amp;</type>
+            <name>operator=</name>
             <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>inlineFunction</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="virtual" static="no">
-            <type>virtual void</type>
-            <name>virtualFun</name>
-            <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>virtualFun</anchor>
-            <arglist>()</arglist>
+            <anchor>operator-eq</anchor>
+            <arglist>(TestQDoc::Test &amp;&amp;other)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>bool</type>
@@ -203,6 +162,48 @@
             <anchorfile>testqdoc-test.html</anchorfile>
             <anchor>operator-eq-eq</anchor>
             <arglist>(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>int</type>
+            <name>someFunction</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>someFunction</anchor>
+            <arglist>(int, int v)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void (*)(bool)</type>
+            <name>funcPtr</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>funcPtr</anchor>
+            <arglist>(*)(bool) funcPtr(bool b, const char *s)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>anotherObsoleteMember</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>anotherObsoleteMember</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>deprecatedMember</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>deprecatedMember</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>inlineFunction</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>inlineFunction</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>obsoleteMember</name>
+            <anchorfile>testqdoc-test-obsolete.html</anchorfile>
+            <anchor>obsoleteMember</anchor>
+            <arglist>()</arglist>
         </member>
         <member kind="function" protection="protected" virtualness="non" static="no">
             <type>void</type>
@@ -219,31 +220,44 @@
             <arglist>(bool b)</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>Test</name>
+            <type>void</type>
+            <name>someFunctionDefaultArg</name>
             <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>Test</anchor>
+            <anchor>someFunctionDefaultArg</anchor>
+            <arglist>(int i, bool b)</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="virtual" static="no">
+            <type>virtual void</type>
+            <name>virtualFun</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>virtualFun</anchor>
             <arglist>()</arglist>
         </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>TestQDoc::Test &amp;</type>
-            <name>operator=</name>
+        <member kind="typedef" type="">
+            <name>SomeType</name>
             <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>operator-eq</anchor>
-            <arglist>(TestQDoc::Test &amp;&amp;other)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>QDOCTEST_MACRO2</name>
-            <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>QDOCTEST_MACRO2</anchor>
-            <arglist>(int &amp;x)</arglist>
+            <anchor>SomeType-typedef</anchor>
+            <arglist></arglist>
         </member>
     </compound>
     <compound kind="class">
         <name>TestQDoc::TestDerived</name>
         <filename>testqdoc-testderived.html</filename>
         <base>Test</base>
+        <member kind="function" protection="public" virtualness="non" static="yes">
+            <type>void</type>
+            <name>staticObsoleteMember</name>
+            <anchorfile>testqdoc-testderived-obsolete.html</anchorfile>
+            <anchor>staticObsoleteMember</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="virtual" static="no">
+            <type>virtual void</type>
+            <name>virtualFun</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>virtualFun</anchor>
+            <arglist>() override</arglist>
+        </member>
         <member kind="typedef" type="">
             <name>DerivedType</name>
             <anchorfile>testqdoc-testderived.html</anchorfile>
@@ -256,51 +270,16 @@
             <anchor>NotTypedef-typedef</anchor>
             <arglist></arglist>
         </member>
-        <member kind="function" protection="public" virtualness="virtual" static="no">
-            <type>virtual void</type>
-            <name>virtualFun</name>
-            <anchorfile>testqdoc-testderived.html</anchorfile>
-            <anchor>virtualFun</anchor>
-            <arglist>() override</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="yes">
-            <type>void</type>
-            <name>staticObsoleteMember</name>
-            <anchorfile>testqdoc-testderived-obsolete.html</anchorfile>
-            <anchor>staticObsoleteMember</anchor>
-            <arglist>()</arglist>
-        </member>
     </compound>
     <compound kind="class">
         <name>QDoc.Test.Type</name>
         <filename>qml-qdoc-test-type.html</filename>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>group.created</name>
-            <anchorfile>qml-qdoc-test-type.html</anchorfile>
-            <anchor>group.created-signal</anchor>
-            <arglist>()</arglist>
-        </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>Type</type>
             <name>copy</name>
             <anchorfile>qml-qdoc-test-type.html</anchorfile>
             <anchor>copy-method</anchor>
             <arglist>(a)</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>enable</name>
-            <anchorfile>qml-qdoc-test-type.html</anchorfile>
-            <anchor>enable-method</anchor>
-            <arglist>()</arglist>
-        </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type></type>
-            <name>disable</name>
-            <anchorfile>qml-qdoc-test-type.html</anchorfile>
-            <anchor>disable-method</anchor>
-            <arglist>()</arglist>
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type></type>
@@ -321,6 +300,27 @@
             <name>deprecatedMethod</name>
             <anchorfile>qml-qdoc-test-type-obsolete.html</anchorfile>
             <anchor>deprecatedMethod-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>disable</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>disable-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>enable</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>enable-method</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type></type>
+            <name>group.created</name>
+            <anchorfile>qml-qdoc-test-type.html</anchorfile>
+            <anchor>group.created-signal</anchor>
             <arglist>()</arglist>
         </member>
     </compound>
