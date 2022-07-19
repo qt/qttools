@@ -755,7 +755,7 @@ void QDesignerWorkbench::updateWindowMenu(QDesignerFormWindowInterface *fwi)
 
 void QDesignerWorkbench::formWindowActionTriggered(QAction *a)
 {
-    QDesignerFormWindow *fw = qobject_cast<QDesignerFormWindow *>(a->parentWidget());
+    QDesignerFormWindow *fw = qobject_cast<QDesignerFormWindow *>(a->parent());
     Q_ASSERT(fw);
 
     if (isFormWindowMinimized(fw))
