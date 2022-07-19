@@ -805,10 +805,10 @@ QString Config::getExampleProjectFile(const QString &examplePath)
 {
     QFileInfo fileInfo(examplePath);
     QStringList validNames;
-    validNames << fileInfo.fileName() + QLatin1String(".pro")
+    validNames << QLatin1String("CMakeLists.txt")
+               << fileInfo.fileName() + QLatin1String(".pro")
                << fileInfo.fileName() + QLatin1String(".qmlproject")
                << fileInfo.fileName() + QLatin1String(".pyproject")
-               << QLatin1String("CMakeLists.txt")
                << QLatin1String("qbuild.pro"); // legacy
 
     QString projectFile;
