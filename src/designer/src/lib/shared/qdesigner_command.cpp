@@ -2653,19 +2653,20 @@ static RemoveActionCommand::ActionData findActionIn(QAction *action)
 {
     RemoveActionCommand::ActionData result;
     // We only want menus and toolbars, no toolbuttons.
-    const QWidgetList &associatedWidgets = action->associatedWidgets();
-    for (QWidget *widget : associatedWidgets) {
-        if (qobject_cast<const QMenu *>(widget) || qobject_cast<const QToolBar *>(widget)) {
-            const auto actionList = widget->actions();
-            const int size = actionList.size();
-            for (int i = 0; i < size; ++i) {
-                if (actionList.at(i) == action) {
-                    QAction *before = nullptr;
-                    if (i + 1 < size)
-                        before = actionList.at(i + 1);
-                    result.append(RemoveActionCommand::ActionDataItem(before, widget));
-                    break;
-                }
+    const QObjectList associatedObjects = action->associatedObjects();
+    for (QObject *obj : associatedObjects) {
+        if (!qobject_cast<const QMenu *>(obj) && !qobject_cast<const QToolBar *>(obj))
+            continue;
+        QWidget *widget = static_cast<QWidget *>(obj);
+        const auto actionList = widget->actions();
+        const int size = actionList.size();
+        for (int i = 0; i < size; ++i) {
+            if (actionList.at(i) == action) {
+                QAction *before = nullptr;
+                if (i + 1 < size)
+                    before = actionList.at(i + 1);
+                result.append(RemoveActionCommand::ActionDataItem(before, widget));
+                break;
             }
         }
     }

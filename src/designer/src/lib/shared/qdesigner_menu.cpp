@@ -1035,16 +1035,15 @@ QDesignerMenu *QDesignerMenu::findOrCreateSubMenu(QAction *action)
 
 bool QDesignerMenu::canCreateSubMenu(QAction *action) const // ### improve it's a bit too slow
 {
-    const QWidgetList &associatedWidgets = action->associatedWidgets();
-    for (const QWidget *aw : associatedWidgets) {
-        if (aw != this) {
-            if (const QMenu *m = qobject_cast<const QMenu *>(aw)) {
+    const QObjectList associatedObjects = action->associatedObjects();
+    for (const QObject *ao : associatedObjects) {
+        if (ao != this) {
+            if (const QMenu *m = qobject_cast<const QMenu *>(ao)) {
                 if (m->actions().contains(action))
                     return false; // sorry
-            } else {
-                if (const QToolBar *tb = qobject_cast<const QToolBar *>(aw))
-                    if (tb->actions().contains(action))
-                        return false; // sorry
+            } else if (const QToolBar *tb = qobject_cast<const QToolBar *>(ao)) {
+                if (tb->actions().contains(action))
+                    return false; // sorry
             }
         }
     }

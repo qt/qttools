@@ -351,7 +351,13 @@ void ActionEditor::slotCurrentItemChanged(QAction *action)
 
     QDesignerObjectInspector *oi = qobject_cast<QDesignerObjectInspector *>(core()->objectInspector());
 
-    if (action->associatedWidgets().isEmpty()) {
+    // Check if we have at least one associated QWidget:
+    const auto associatedObjects = action->associatedObjects();
+    auto it = std::find_if(associatedObjects.cbegin(), associatedObjects.cend(),
+                           [](QObject *obj) {
+                               return qobject_cast<QWidget *>(obj) != nullptr;
+                           });
+    if (it == associatedObjects.cend()) {
         // Special case: action not in object tree. Deselect all and set in property editor
         fw->clearSelection(false);
         if (oi)
