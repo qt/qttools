@@ -651,8 +651,14 @@ PropertyHelper::PropertyHelper(QObject* object,
         m_parentWidget = (qobject_cast<QWidget*>(object))->parentWidget();
         m_objectType = OT_Widget;
     } else {
-        if (const QAction *action = qobject_cast<const QAction *>(m_object))
-            m_objectType = action->associatedWidgets().isEmpty() ? OT_FreeAction : OT_AssociatedAction;
+        if (const QAction *action = qobject_cast<const QAction *>(m_object)) {
+            const QObjectList associatedObjects = action->associatedObjects();
+            auto it = std::find_if(associatedObjects.cbegin(), associatedObjects.cend(),
+                                   [](QObject *obj) {
+                                       return qobject_cast<QWidget *>(obj) != nullptr;
+                                   });
+            m_objectType = (it == associatedObjects.cend()) ? OT_FreeAction : OT_AssociatedAction;
+        }
     }
 
     if(debugPropertyCommands)

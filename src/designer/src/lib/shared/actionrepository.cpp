@@ -139,14 +139,16 @@ QModelIndex ActionModel::addAction(QAction *action)
 // Find the associated menus and toolbars, ignore toolbuttons
 QWidgetList ActionModel::associatedWidgets(const QAction *action)
 {
-    QWidgetList rc = action->associatedWidgets();
-    for (QWidgetList::iterator it = rc.begin(); it != rc.end(); )
-        if (qobject_cast<const QMenu *>(*it) || qobject_cast<const QToolBar *>(*it)) {
-            ++it;
-        } else {
-            it = rc.erase(it);
+    const QObjectList rc = action->associatedObjects();
+    QWidgetList result;
+    result.reserve(rc.size());
+    for (QObject *obj : rc) {
+        if (QWidget *w = qobject_cast<QWidget *>(obj)) {
+            if (qobject_cast<const QMenu *>(w) || qobject_cast<const QToolBar *>(w))
+                result.push_back(w);
         }
-    return rc;
+    }
+    return result;
 }
 
 // shortcut is a fake property, need to retrieve it via property sheet.
@@ -643,9 +645,9 @@ QPixmap  ActionRepositoryMimeData::actionDragPixmap(const QAction *action)
     if (!icon.isNull())
         return icon.pixmap(QSize(22, 22));
 
-    const QWidgetList &associatedWidgets = action->associatedWidgets();
-    for (QWidget *w : associatedWidgets) {
-        if (QToolButton *tb = qobject_cast<QToolButton *>(w))
+    const QObjectList associatedObjects = action->associatedObjects();
+    for (QObject *o : associatedObjects) {
+        if (QToolButton *tb = qobject_cast<QToolButton *>(o))
             return tb->grab(QRect(0, 0, -1, -1));
     }
 
