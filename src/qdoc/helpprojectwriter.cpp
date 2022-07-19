@@ -455,7 +455,8 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
 
         // Ensure that we don't visit nodes more than once.
         QSet<const Node *> childSet;
-        const NodeList &children = aggregate->childNodes();
+        NodeList children = aggregate->childNodes();
+        std::sort(children.begin(), children.end(), Node::nodeNameLessThan);
         for (const auto *child : children) {
             // Skip related non-members adopted by some other aggregate
             if (child->parent() != aggregate)
