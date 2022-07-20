@@ -13,7 +13,7 @@ qt_internal_add_app(qdbusviewer
         qdbusmodel.cpp qdbusmodel.h
         qdbusviewer.cpp qdbusviewer.h
         servicesproxymodel.cpp servicesproxymodel.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::DBusPrivate
         Qt::Gui
         Qt::Widgets

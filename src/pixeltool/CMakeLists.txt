@@ -8,7 +8,7 @@ qt_internal_add_app(pixeltool
     SOURCES
         main.cpp
         qpixeltool.cpp qpixeltool.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::CorePrivate
         Qt::Gui
         Qt::GuiPrivate

@@ -26,7 +26,7 @@ qt_internal_add_tool(${target_name}
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::CorePrivate
     # special case begin
     EXTRA_CMAKE_FILES

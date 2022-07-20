@@ -9,7 +9,7 @@ qt_internal_add_app(qtdiag
     SOURCES
         main.cpp
         qtdiag.cpp qtdiag.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::CorePrivate
         # Qt::Gui # special case QTBUG-83498
         # Qt::GuiPrivate # special case QTBUG-83498

@@ -16,7 +16,7 @@ qt_internal_add_tool(${target_name}
         main.cpp
         qhelpdatainterface.cpp qhelpdatainterface_p.h
         qhelpprojectdata.cpp qhelpprojectdata_p.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::HelpPrivate
         Qt::Network

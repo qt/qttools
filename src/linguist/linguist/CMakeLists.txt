@@ -46,7 +46,7 @@ qt_internal_add_app(linguist
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::CorePrivate
         Qt::Gui
         Qt::GuiPrivate

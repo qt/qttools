@@ -24,7 +24,7 @@ qt_internal_add_tool(${target_name}
         QT_NO_CAST_TO_ASCII
     INCLUDE_DIRECTORIES
         ../shared
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::CorePrivate
 )
 qt_internal_return_unless_building_tools()

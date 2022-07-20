@@ -42,7 +42,7 @@ qt_internal_add_app(assistant
         xbelsupport.cpp xbelsupport.h
     INCLUDE_DIRECTORIES
         ../../shared/fontpanel
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::Help
         Qt::Network

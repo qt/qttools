@@ -7,7 +7,7 @@
 qt_internal_add_app(qdbus
     SOURCES
         qdbus.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::DBusPrivate
         Qt::Xml
 )

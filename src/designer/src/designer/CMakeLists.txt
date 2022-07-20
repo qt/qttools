@@ -32,7 +32,7 @@ qt_internal_add_app(designer
         ../lib/sdk
         ../lib/shared
         extra
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::CorePrivate
         Qt::DesignerComponentsPrivate
         Qt::DesignerPrivate
