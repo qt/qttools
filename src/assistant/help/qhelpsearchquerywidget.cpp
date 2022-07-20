@@ -258,6 +258,7 @@ void QHelpSearchQueryWidget::collapseExtendedSearch()
     // TODO: no extended search anymore, deprecate it?
 }
 
+#if QT_DEPRECATED_SINCE(5, 9)
 /*!
     \deprecated
 
@@ -281,6 +282,7 @@ void QHelpSearchQueryWidget::setQuery(const QList<QHelpSearchQuery> &queryList)
 
     setSearchInput(queryList.first().wordList.join(QChar::Space));
 }
+#endif // QT_DEPRECATED_SINCE(5, 9)
 
 /*!
     \since 5.9
