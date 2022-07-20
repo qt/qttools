@@ -365,6 +365,7 @@ void QHelpIndexWidget::showLink(const QModelIndex &index)
     const QList<QHelpLink> &docs = indexModel->helpEngine()->documentsForKeyword(name);
     if (docs.count() > 1) {
         emit documentsActivated(docs, name);
+#if QT_DEPRECATED_SINCE(5, 15)
         QT_WARNING_PUSH
         QT_WARNING_DISABLE_DEPRECATED
         QMultiMap<QString, QUrl> links;
@@ -372,12 +373,15 @@ void QHelpIndexWidget::showLink(const QModelIndex &index)
             links.insert(doc.title, doc.url);
         emit linksActivated(links, name);
         QT_WARNING_POP
+#endif
     } else if (!docs.isEmpty()) {
         emit documentActivated(docs.first(), name);
+#if QT_DEPRECATED_SINCE(5, 15)
         QT_WARNING_PUSH
         QT_WARNING_DISABLE_DEPRECATED
         emit linkActivated(docs.first().url, name);
         QT_WARNING_POP
+#endif
     }
 }
 
