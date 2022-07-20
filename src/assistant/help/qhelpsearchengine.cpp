@@ -397,6 +397,7 @@ QHelpSearchResultWidget* QHelpSearchEngine::resultWidget()
     return d->resultWidget;
 }
 
+#if QT_DEPRECATED_SINCE(5, 9)
 /*!
     \deprecated
     Use searchResultCount() instead.
@@ -415,6 +416,7 @@ int QHelpSearchEngine::hitCount() const
 {
     return d->searchResultCount();
 }
+#endif // QT_DEPRECATED_SINCE(5, 9)
 
 /*!
     \since 5.9
@@ -425,6 +427,7 @@ int QHelpSearchEngine::searchResultCount() const
     return d->searchResultCount();
 }
 
+#if QT_DEPRECATED_SINCE(5, 9)
 /*!
     \typedef QHelpSearchEngine::SearchHit
     \deprecated
@@ -448,6 +451,7 @@ QList<QHelpSearchEngine::SearchHit> QHelpSearchEngine::hits(int start, int end) 
         hits.append(qMakePair(result.url().toString(), result.title()));
     return hits;
 }
+#endif // QT_DEPRECATED_SINCE(5, 9)
 
 /*!
     \since 5.9
@@ -468,6 +472,7 @@ QString QHelpSearchEngine::searchInput() const
     return d->m_searchInput;
 }
 
+#if QT_DEPRECATED_SINCE(5, 9)
 /*!
     \deprecated
     \since 4.5
@@ -478,6 +483,7 @@ QList<QHelpSearchQuery> QHelpSearchEngine::query() const
     return QList<QHelpSearchQuery>() << QHelpSearchQuery(QHelpSearchQuery::DEFAULT,
            d->m_searchInput.split(QChar::Space));
 }
+#endif // QT_DEPRECATED_SINCE(5, 9)
 
 /*!
     Forces the search engine to reindex all documentation files.
@@ -525,6 +531,7 @@ void QHelpSearchEngine::search(const QString &searchInput)
     d->search(searchInput);
 }
 
+#if QT_DEPRECATED_SINCE(5, 9)
 /*!
     \deprecated
     Use search(const QString &searchInput) instead.
@@ -536,6 +543,7 @@ void QHelpSearchEngine::search(const QList<QHelpSearchQuery> &queryList)
 
     d->search(queryList.first().wordList.join(QChar::Space));
 }
+#endif // QT_DEPRECATED_SINCE(5, 9)
 
 /*!
     \internal
