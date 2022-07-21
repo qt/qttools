@@ -49,9 +49,6 @@ public:
     [[nodiscard]] const QStringList &groupNames() const { return m_groupNames; }
     void appendGroupName(const QString &t) override { m_groupNames.append(t); }
 
-    void setOutputFileName(const QString &f) override { m_outputFileName = f; }
-    [[nodiscard]] QString outputFileName() const override { return m_outputFileName; }
-
 protected:
     friend class Node;
 
@@ -59,7 +56,6 @@ protected:
     bool m_noAutoList { false };
     QString m_title {};
     QString m_subtitle {};
-    QString m_outputFileName {};
     QStringList m_groupNames {};
 };
 

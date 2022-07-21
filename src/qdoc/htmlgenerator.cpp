@@ -260,7 +260,7 @@ void HtmlGenerator::generateExampleFilePage(const Node *en, ResolvedFile resolve
     SubTitleSize subTitleSize = LargeSubTitle;
     QString fullTitle = en->fullTitle();
 
-    beginFilePage(en, linkForExampleFile(resolved_file.get_query()));
+    beginSubPage(en, linkForExampleFile(resolved_file.get_query()));
     generateHeader(fullTitle, en, marker);
     generateTitle(fullTitle, Text() << en->subtitle(), subTitleSize, en, marker);
 
@@ -273,7 +273,7 @@ void HtmlGenerator::generateExampleFilePage(const Node *en, ResolvedFile resolve
     Atom a(codeMarker->atomType(), code);
 
     generateText(text, en, codeMarker);
-    endFilePage();
+    endSubPage();
 }
 
 /*!

@@ -74,8 +74,6 @@ public:
 
 protected:
     static QFile *openSubPageFile(const Node *node, const QString &fileName);
-    void beginFilePage(const Node *node, const QString &fileName);
-    void endFilePage() { endSubPage(); } // for symmetry
     void beginSubPage(const Node *node, const QString &fileName);
     void endSubPage();
     [[nodiscard]] virtual QString fileExtension() const = 0;

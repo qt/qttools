@@ -103,7 +103,7 @@ void WebXMLGenerator::generateExampleFilePage(const Node *en, ResolvedFile resol
     QByteArray data;
     QXmlStreamWriter writer(&data);
     writer.setAutoFormatting(true);
-    beginFilePage(en, linkForExampleFile(resolved_file.get_query(), "webxml"));
+    beginSubPage(en, linkForExampleFile(resolved_file.get_query(), "webxml"));
     writer.writeStartDocument();
     writer.writeStartElement("WebXML");
     writer.writeStartElement("document");
@@ -134,7 +134,7 @@ void WebXMLGenerator::generateExampleFilePage(const Node *en, ResolvedFile resol
     writer.writeEndDocument();
 
     out() << data;
-    endFilePage();
+    endSubPage();
 }
 
 void WebXMLGenerator::generateIndexSections(QXmlStreamWriter &writer, Node *node)

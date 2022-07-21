@@ -183,7 +183,7 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
   this method deals with errors when opening the file:
   the returned QFile is always valid and can be written to.
 
-  \sa beginFilePage()
+  \sa beginSubPage()
  */
 QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 {
@@ -213,33 +213,13 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 /*!
   Creates the file named \a fileName in the output directory.
   Attaches a QTextStream to the created file, which is written
-  to all over the place using out(). This function does not
-  store the \a fileName in the \a node as the output file name.
-
-  \sa beginSubPage()
+  to all over the place using out().
  */
-void Generator::beginFilePage(const Node *node, const QString &fileName)
+void Generator::beginSubPage(const Node *node, const QString &fileName)
 {
     QFile *outFile = openSubPageFile(node, fileName);
     auto *out = new QTextStream(outFile);
     outStreamStack.push(out);
-}
-
-/*!
- Creates the file named \a fileName in the output directory.
- Attaches a QTextStream to the created file, which is written
- to all over the place using out(). This function calls another
- function, \c beginFilePage(), which is really just most of what
- this function used to contain. We needed a different version
- that doesn't store the \a fileName in the \a node as the output
- file name.
-
- \sa beginFilePage()
-*/
-void Generator::beginSubPage(const Node *node, const QString &fileName)
-{
-    beginFilePage(node, fileName);
-    const_cast<Node *>(node)->setOutputFileName(fileName);
 }
 
 /*!

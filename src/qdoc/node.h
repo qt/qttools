@@ -236,7 +236,6 @@ public:
     void setIndexNodeFlag(bool isIndexNode = true) { m_indexNodeFlag = isIndexNode; }
     void setHadDoc() { m_hadDoc = true; }
     virtual void setRelatedNonmember(bool b) { m_relatedNonmember = b; }
-    virtual void setOutputFileName(const QString &) {}
     virtual void addMember(Node *) {}
     [[nodiscard]] virtual bool hasNamespaces() const { return false; }
     [[nodiscard]] virtual bool hasClasses() const { return false; }
@@ -271,7 +270,6 @@ public:
     [[nodiscard]] QString physicalModuleName() const { return m_physicalModuleName; }
     [[nodiscard]] QString url() const { return m_url; }
     [[nodiscard]] virtual QString nameForLists() const { return m_name; }
-    [[nodiscard]] virtual QString outputFileName() const { return QString(); }
     [[nodiscard]] virtual QString obsoleteLink() const { return QString(); }
     virtual void setObsoleteLink(const QString &) {}
     virtual void setQtVariable(const QString &) {}

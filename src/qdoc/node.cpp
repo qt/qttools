@@ -1360,11 +1360,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   of something. This function is called when the \c relates command is seen.
  */
 
-/*! \fn void Node::setOutputFileName(const QString &f)
-  In a PageNode, this function sets the node's output file name to \a f.
-  In a non-PageNode, this function does nothing.
- */
-
 /*! \fn void Node::addMember(Node *node)
   In a CollectionNode, this function adds \a node to the collection
   node's members list. It does nothing if this node is not a CollectionNode.
@@ -1503,11 +1498,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
 /*! \fn QString Node::nameForLists() const
   If this node is a PageNode or a HeaderNode, title() is returned.
   Otherwise name() is returned.
- */
-
-/*! \fn QString Node::outputFileName() const
-  If this node is a PageNode, the name of the output file that will be
-  generated for the node is returned. Otherwise an empty string is returned.
  */
 
 /*! \fn QString Node::obsoleteLink() const

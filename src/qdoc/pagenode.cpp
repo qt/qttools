@@ -128,12 +128,4 @@ bool PageNode::setTitle(const QString &title)
   Appends \a t to the list of group names.
  */
 
-/*! \fn void PageNode::setOutputFileName(const QString &f)
-  Sets this PageNode's output file name to \a f.
- */
-
-/*! \fn QString PageNode::outputFileName() const
-  Returns this PageNode's output file name.
- */
-
 QT_END_NAMESPACE
