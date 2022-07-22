@@ -39,6 +39,27 @@ bool XmlGenerator::isThreeColumnEnumValueTable(const Atom *atom)
 }
 
 /*!
+  Determines whether the list atom should be shown with just one column (value).
+ */
+bool XmlGenerator::isOneColumnValueTable(const Atom *atom)
+{
+    if (atom->type() != Atom::ListLeft || atom->string() != ATOM_LIST_VALUE)
+        return false;
+
+    while (atom && atom->type() != Atom::ListTagRight)
+        atom = atom->next();
+
+    if (atom) {
+        if (!matchAhead(atom, Atom::ListItemLeft))
+            return false;
+        if (!atom->next())
+            return false;
+        return matchAhead(atom->next(), Atom::ListItemRight);
+    }
+    return false;
+}
+
+/*!
   Header offset depending on the type of the node
  */
 int XmlGenerator::hOffset(const Node *node)

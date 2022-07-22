@@ -666,19 +666,21 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
 
             m_threeColumnEnumValueTable = isThreeColumnEnumValueTable(atom);
             if (m_threeColumnEnumValueTable && relative->nodeType() == Node::Enum) {
-                // If not in \enum topic, skip the value column
+                // With three columns, if not in \enum topic, skip the value column
                 m_writer->writeTextElement(dbNamespace, "th", "Value");
                 newLine();
             }
 
-            m_writer->writeTextElement(dbNamespace, "th", "Description");
-            newLine();
+            if (!isOneColumnValueTable(atom)) {
+                m_writer->writeTextElement(dbNamespace, "th", "Description");
+                newLine();
+            }
 
             m_writer->writeEndElement(); // tr
             newLine();
             m_writer->writeEndElement(); // thead
             newLine();
-        } else {
+        } else { // No recognized list type.
             m_writer->writeStartElement(dbNamespace, "orderedlist");
 
             if (atom->next() != nullptr && atom->next()->string().toInt() > 1)

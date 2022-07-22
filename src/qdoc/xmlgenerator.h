@@ -24,6 +24,7 @@ protected:
 
     static bool hasBrief(const Node *node);
     static bool isThreeColumnEnumValueTable(const Atom *atom);
+    static bool isOneColumnValueTable(const Atom *atom);
     static int hOffset(const Node *node);
 
     static void rewritePropertyBrief(const Atom *atom, const Node *relative);
