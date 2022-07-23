@@ -1036,9 +1036,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 QStringList spans = p.split(QLatin1Char(','));
                 if (spans.size() == 2) {
                     if (spans.at(0) != "1")
-                        m_writer->writeAttribute("colspan", spans.at(0));
+                        m_writer->writeAttribute("colspan", spans.at(0).trimmed());
                     if (spans.at(1) != "1")
-                        m_writer->writeAttribute("rowspan", spans.at(1));
+                        m_writer->writeAttribute("rowspan", spans.at(1).trimmed());
                 }
             }
         }
