@@ -183,7 +183,21 @@ std::pair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
         else if (p1.contains(QLatin1Char('%')))
             width = p1;
     }
-    return std::pair<QString, QString>(width, attr);
+
+    // Many times, in the documentation, there is a space before the % sign:
+    // this breaks the parsing logic above.
+    if (width == QLatin1String("%")) {
+        // The percentage is typically stored in p0, parse it as an int.
+        bool ok = false;
+        int widthPercentage = p0.toInt(&ok);
+        if (ok) {
+            width = QString::number(widthPercentage) + "%";
+        } else {
+            width = {};
+        }
+    }
+
+    return {width, attr};
 }
 
 /*!
