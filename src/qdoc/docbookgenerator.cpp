@@ -3029,8 +3029,6 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             newLine();
         }
 
-        if (functionNode->isOverload())
-            generateModifier("overload");
         if (functionNode->isDefault())
             generateModifier("default");
         if (functionNode->isFinal())
@@ -3080,9 +3078,11 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     if (node->isFunction()) {
         generateSynopsisInfo("meta", functionNode->metanessString());
 
-        if (functionNode->isOverload())
+        if (functionNode->isOverload()) {
+            generateSynopsisInfo("overload", "overload");
             generateSynopsisInfo("overload-number",
                                  QString::number(functionNode->overloadNumber()));
+        }
 
         if (functionNode->isRef())
             generateSynopsisInfo("refness", QString::number(1));
