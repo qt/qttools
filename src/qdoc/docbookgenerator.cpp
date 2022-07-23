@@ -916,6 +916,24 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         bool hasRewrittenString = false;
         const QString &str = atom->string().trimmed();
 
+        static QHash<QString, QString> entitiesMapping;
+        if (entitiesMapping.isEmpty()) {
+            // These mappings come from qtbase\doc\global\macros.qdocconf.
+            entitiesMapping["&aacute;"] = "&#225;";
+            entitiesMapping["&Aring;"] = "&#197;";
+            entitiesMapping["&aring;"] = "&#229;";
+            entitiesMapping["&Auml;"] = "&#196;";
+            entitiesMapping["&copyright;"] = "&#169;";
+            entitiesMapping["&eacute;"] = "&#233;";
+            entitiesMapping["&iacute;"] = "&#237;";
+            entitiesMapping["&oslash;"] = "&#248;";
+            entitiesMapping["&ouml;"] = "&#246;";
+            entitiesMapping["&rarrow;"] = "&#8594;";
+            entitiesMapping["&uuml;"] = "&#252;";
+            entitiesMapping["&mdash;"] = "&#8212;";
+            entitiesMapping["&Pi;"] = "&#928;";
+        }
+
         if (str.startsWith(R"(<link rel="stylesheet" type="text/css")")) {
             hasRewrittenString = true;
             m_writer->writeComment(str);
@@ -1145,6 +1163,22 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         if (!hasRewrittenString && m_inBlockquote) {
             writeRawHtml(atom->string());
             hasRewrittenString = true;
+        } else {
+            // Deal with some HTML entities to convert into XML.
+            // This implementation complements the entities in qtbase\doc\global\macros.qdocconf,
+            // because this code focuses on the RawString atom, while the configuration only works
+            // for macros that generate HTML/XML entities.
+            auto end = entitiesMapping.keyEnd();
+            for (auto it = entitiesMapping.keyBegin(); it != end; ++it) {
+                if (const QString &entity = *it; str.startsWith(entity)) {
+                    QString rewrittenString = str;
+                    rewrittenString.replace(entity, entitiesMapping.value(entity));
+
+                    m_writer->device()->write(rewrittenString.toUtf8());
+
+                    hasRewrittenString = true;
+                }
+            }
         }
 
         // The RawString may be a macro specialized for DocBook, in which case no escaping is expected.
