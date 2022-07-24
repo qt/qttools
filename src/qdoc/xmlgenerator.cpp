@@ -195,19 +195,21 @@ std::pair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
  */
 QString XmlGenerator::registerRef(const QString &ref)
 {
-    QString clean = Generator::cleanRef(ref);
+    QString cleanRef = Generator::cleanRef(ref);
 
     for (;;) {
-        QString &prevRef = refMap[clean.toLower()];
+        QString &prevRef = refMap[cleanRef.toLower()];
         if (prevRef.isEmpty()) {
+            // This reference has never been met before for this document: register it.
             prevRef = ref;
             break;
         } else if (prevRef == ref) {
+            // This exact same reference was already found. This case typically occurs within refForNode.
             break;
         }
-        clean += QLatin1Char('x');
+        cleanRef += QLatin1Char('x');
     }
-    return clean;
+    return cleanRef;
 }
 
 /*!
