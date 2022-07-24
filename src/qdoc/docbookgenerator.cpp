@@ -3865,26 +3865,27 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
     bool closeSupplementarySection = false;
 
     if (node->isSharedCommentNode()) {
-        const auto scn = reinterpret_cast<const SharedCommentNode *>(node);
+        const auto *scn = reinterpret_cast<const SharedCommentNode *>(node);
         const QList<Node *> &collective = scn->collective();
 
         bool firstFunction = true;
-        for (const Node *n : collective) {
-            if (n->isFunction()) {
-                if (firstFunction) {
-                    startSectionBegin(collective.at(0));
-                    generateSynopsis(n, relative, Section::Details);
-                    startSectionEnd();
+        for (const auto *sharedNode : collective) {
+            if (firstFunction) {
+                startSectionBegin(sharedNode);
+            } else {
+                m_writer->writeStartElement(dbNamespace, "bridgehead");
+                m_writer->writeAttribute("renderas", "sect2");
+                writeXmlId(sharedNode);
+            }
 
-                    firstFunction = false;
-                } else {
-                    m_writer->writeStartElement(dbNamespace, "bridgehead");
-                    m_writer->writeAttribute("renderas", "sect2");
-                    writeXmlId(n);
-                    generateSynopsis(n, relative, Section::Details);
-                    m_writer->writeEndElement(); // bridgehead
-                    newLine();
-                }
+            generateSynopsis(sharedNode, relative, Section::Details);
+
+            if (firstFunction) {
+                startSectionEnd();
+                firstFunction = false;
+            } else {
+                m_writer->writeEndElement(); // bridgehead
+                newLine();
             }
         }
     } else {
@@ -3895,6 +3896,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             startSectionEnd();
 
             m_writer->writeStartElement(dbNamespace, "bridgehead");
+            m_writer->writeAttribute("renderas", "sect2");
             generateSynopsis(etn->flagsType(), relative, Section::Details);
             m_writer->writeEndElement(); // bridgehead
             newLine();
@@ -4469,6 +4471,7 @@ void DocBookGenerator::generateProxyPage(Aggregate *aggregate)
                     startSectionBegin();
                     generateFullName(member, aggregate);
                     startSectionEnd();
+
                     generateBrief(member);
                     endSection();
                 }
