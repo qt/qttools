@@ -2847,44 +2847,36 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
     }
 
     Sections sections(const_cast<Aggregate *>(aggregate));
-    auto *sectionVector =
+    SectionVector sectionVector =
             (aggregate->isNamespace() || aggregate->isHeader()) ?
-                    &sections.stdDetailsSections() :
-                    &sections.stdCppClassDetailsSections();
-    SectionVector::ConstIterator section = sectionVector->constBegin();
-    while (section != sectionVector->constEnd()) {
-        bool headerGenerated = false;
-        NodeVector::ConstIterator member = section->members().constBegin();
-        while (member != section->members().constEnd()) {
-            if ((*member)->access() == Access::Private) { // ### check necessary?
-                ++member;
+                    sections.stdDetailsSections() :
+                    sections.stdCppClassDetailsSections();
+    for (const Section &section : sectionVector) {
+        if (section.members().isEmpty())
+            continue;
+
+        startSection(section.title().toLower(), section.title());
+
+        for (const Node *member : section.members()) {
+            if (member->access() == Access::Private) // ### check necessary?
                 continue;
-            }
 
-            if (!headerGenerated) {
-                // Equivalent to h2
-                startSection(section->title().toLower(), section->title());
-                headerGenerated = true;
-            }
-
-            if ((*member)->nodeType() != Node::Class) {
+            if (member->nodeType() != Node::Class) {
                 // This function starts its own section.
-                generateDetailedMember(*member, aggregate);
+                generateDetailedMember(member, aggregate);
             } else {
                 startSectionBegin();
                 m_writer->writeCharacters("class ");
-                generateFullName(*member, aggregate);
+                generateFullName(member, aggregate);
                 startSectionEnd();
-                generateBrief(*member);
+
+                generateBrief(member);
+
                 endSection();
             }
-
-            ++member;
         }
 
-        if (headerGenerated)
-            endSection();
-        ++section;
+        endSection();
     }
 
     generateObsoleteMembers(sections);
