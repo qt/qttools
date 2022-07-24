@@ -62,8 +62,8 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="overload">
-<db:title>[protected] Test::void overload()</db:title>
-<db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] Test::void overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
+<db:title>[protected] void Test::overload()</db:title>
+<db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] void Test::overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
 <db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="Test">
@@ -81,7 +81,7 @@
 <db:para>Default constructor.</db:para>
 </db:section>
 <db:section xml:id="funcPtr">
-<db:title>Test::void (*)(bool) funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
+<db:title>void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>void (*)(bool)</db:type>
 <db:methodname>funcPtr</db:methodname>
@@ -102,7 +102,7 @@
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
 </db:section>
 <db:section xml:id="inlineFunction">
-<db:title>Test::void inlineFunction()</db:title>
+<db:title>void Test::inlineFunction()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>inlineFunction</db:methodname>
@@ -116,7 +116,7 @@
 <db:para>An inline function, documented using the \fn QDoc command.</db:para>
 </db:section>
 <db:section xml:id="methodWithEmDashInItsDocs">
-<db:title>Test::void methodWithEmDashInItsDocs()</db:title>
+<db:title>void Test::methodWithEmDashInItsDocs()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>methodWithEmDashInItsDocs</db:methodname>
@@ -141,7 +141,7 @@
 </db:section>
 </db:section>
 <db:section xml:id="methodWithEnDashInItsDocs">
-<db:title>Test::void methodWithEnDashInItsDocs()</db:title>
+<db:title>void Test::methodWithEnDashInItsDocs()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>methodWithEnDashInItsDocs</db:methodname>
@@ -170,7 +170,7 @@
 </db:section>
 </db:section>
 <db:section xml:id="someFunction">
-<db:title>Test::int someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
+<db:title>int Test::someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
 <db:methodsynopsis>
 <db:type>int</db:type>
 <db:methodname>someFunction</db:methodname>
@@ -192,7 +192,7 @@
 <db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
 </db:section>
 <db:section xml:id="someFunctionDefaultArg">
-<db:title>Test::void someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
+<db:title>void Test::someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>someFunctionDefaultArg</db:methodname>
@@ -214,7 +214,7 @@
 <db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="virtualFun">
-<db:title>[virtual] Test::void virtualFun()</db:title>
+<db:title>[virtual] void Test::virtualFun()</db:title>
 <db:methodsynopsis>
 <db:modifier>virtual</db:modifier>
 <db:void/>
@@ -229,7 +229,7 @@
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
-<db:title>[default] Test::TestQDoc::Test &amp;operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>TestQDoc::Test &amp;</db:type>
 <db:methodname>operator=</db:methodname>
@@ -297,12 +297,12 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="operator-2b-2b">
-<db:title>Test::TestQDoc::Test &amp;operator++()</db:title>
-<db:bridgehead renderas="sect2" xml:id="operator--">Test::TestQDoc::Test &amp;operator--()</db:bridgehead>
+<db:title>TestQDoc::Test &amp;Test::operator++()</db:title>
+<db:bridgehead renderas="sect2" xml:id="operator--">TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 </db:section>
 <db:section xml:id="anotherObsoleteMember">
-<db:title>Test::void anotherObsoleteMember()</db:title>
+<db:title>void Test::anotherObsoleteMember()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>anotherObsoleteMember</db:methodname>
@@ -317,7 +317,7 @@
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="deprecatedMember">
-<db:title>Test::void deprecatedMember()</db:title>
+<db:title>void Test::deprecatedMember()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>deprecatedMember</db:methodname>
@@ -332,7 +332,7 @@
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="obsoleteMember">
-<db:title>Test::void obsoleteMember()</db:title>
+<db:title>void Test::obsoleteMember()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>obsoleteMember</db:methodname>

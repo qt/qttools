@@ -72,7 +72,7 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="virtualFun">
-<db:title>[override virtual] TestDerived::void virtualFun()</db:title>
+<db:title>[override virtual] void TestDerived::virtualFun()</db:title>
 <db:methodsynopsis>
 <db:modifier>virtual</db:modifier>
 <db:void/>
@@ -94,7 +94,7 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="staticObsoleteMember">
-<db:title>[static] TestDerived::void staticObsoleteMember()</db:title>
+<db:title>[static] void TestDerived::staticObsoleteMember()</db:title>
 <db:methodsynopsis>
 <db:modifier>static</db:modifier>
 <db:void/>

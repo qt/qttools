@@ -3548,20 +3548,23 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
         m_writer->writeCharacters(CodeMarker::extraSynopsis(node, style));
 
     // Then generate the synopsis.
+    QString namePrefix {};
     if (style == Section::Details) {
         if (!node->isRelatedNonmember() && !node->isProxyNode() && !node->parent()->name().isEmpty()
             && !node->parent()->isHeader() && !node->isProperty() && !node->isQmlNode()) {
-            m_writer->writeCharacters(taggedNode(node->parent()) + "::");
+            namePrefix = taggedNode(node->parent()) + "::";
         }
     }
 
     switch (node->nodeType()) {
     case Node::Namespace:
         m_writer->writeCharacters("namespace ");
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
         break;
     case Node::Class:
         m_writer->writeCharacters("class ");
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
         break;
     case Node::Function: {
@@ -3576,6 +3579,7 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
         // Name and parameters.
         if (style != Section::AllMembers && !func->returnType().isEmpty())
             typified(func->returnType(), relative, true, generateType);
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
 
         if (!func->isMacroWithoutParams()) {
@@ -3625,6 +3629,7 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     case Node::Enum: {
         const auto enume = static_cast<const EnumNode *>(node);
         m_writer->writeCharacters(QStringLiteral("enum "));
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
 
         QString synopsis;
@@ -3662,15 +3667,18 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
             if (!templateDecl.isEmpty())
                 m_writer->writeCharacters(templateDecl + QLatin1Char(' '));
         }
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
     } break;
     case Node::Typedef: {
         if (static_cast<const TypedefNode *>(node)->associatedEnum())
             m_writer->writeCharacters("flags ");
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
     } break;
     case Node::Property: {
         const auto property = static_cast<const PropertyNode *>(node);
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
         m_writer->writeCharacters(" : ");
         typified(property->qualifiedDataType(), relative, false, generateType);
@@ -3684,11 +3692,13 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
         } else {
             typified(variable->leftType(), relative, false, generateType);
             m_writer->writeCharacters(" ");
+            m_writer->writeCharacters(namePrefix);
             generateSynopsisName(node, relative, generateNameLink);
             m_writer->writeCharacters(variable->rightType());
         }
     } break;
     default:
+        m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);
     }
 }

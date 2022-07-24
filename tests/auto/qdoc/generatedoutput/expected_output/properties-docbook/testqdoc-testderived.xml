@@ -201,7 +201,7 @@
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="emitSomething">
-<db:title>[private signal] TestDerived::void emitSomething()</db:title>
+<db:title>[private signal] void TestDerived::emitSomething()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>emitSomething</db:methodname>
@@ -217,7 +217,7 @@
 <db:para>This is a private signal. It can be used in signal connections but cannot be emitted by the user.</db:para></db:note>
 </db:section>
 <db:section xml:id="id">
-<db:title>[override virtual] TestDerived::int id()</db:title>
+<db:title>[override virtual] int TestDerived::id()</db:title>
 <db:methodsynopsis>
 <db:modifier>virtual</db:modifier>
 <db:type>int</db:type>
@@ -233,7 +233,7 @@
 <db:para>Reimplements an access function for property: <db:link xlink:href="testqdoc-test.xml#id-prop" role="property">Test::id</db:link>.</db:para>
 </db:section>
 <db:section xml:id="invokeMe">
-<db:title>[invokable] TestDerived::void invokeMe() const</db:title>
+<db:title>[invokable] void TestDerived::invokeMe() const</db:title>
 <db:methodsynopsis>
 <db:modifier>const</db:modifier>
 <db:void/>
@@ -251,7 +251,7 @@
 </db:note>
 </db:section>
 <db:section xml:id="virtualFun">
-<db:title>[override virtual] TestDerived::void virtualFun()</db:title>
+<db:title>[override virtual] void TestDerived::virtualFun()</db:title>
 <db:methodsynopsis>
 <db:modifier>virtual</db:modifier>
 <db:void/>
@@ -273,7 +273,7 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="staticObsoleteMember">
-<db:title>[static] TestDerived::void staticObsoleteMember()</db:title>
+<db:title>[static] void TestDerived::staticObsoleteMember()</db:title>
 <db:methodsynopsis>
 <db:modifier>static</db:modifier>
 <db:void/>
