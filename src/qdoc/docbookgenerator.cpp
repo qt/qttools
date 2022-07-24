@@ -2304,8 +2304,7 @@ bool DocBookGenerator::generateThreadSafeness(const Node *node)
         m_writer->writeEndElement(); // warning
 
         return true;
-    }
-    if (ts == Node::Reentrant || ts == Node::ThreadSafe) {
+    } else if (ts == Node::Reentrant || ts == Node::ThreadSafe) {
         m_writer->writeStartElement(dbNamespace, "note");
         newLine();
         m_writer->writeStartElement(dbNamespace, "para");
