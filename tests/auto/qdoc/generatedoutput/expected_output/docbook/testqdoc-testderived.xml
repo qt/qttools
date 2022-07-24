@@ -90,8 +90,8 @@
 <db:section xml:id="obsolete">
 <db:title>Obsolete Members for TestDerived</db:title>
 <db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
-<db:section xml:id="member-function-documentation">
-<db:title>Member Function Documentation</db:title>
+<db:section xml:id="obsolete-member-function-documentation">
+<db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="staticObsoleteMember">
 <db:title>[static] TestDerived::void staticObsoleteMember()</db:title>
 <db:methodsynopsis>

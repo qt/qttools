@@ -170,8 +170,8 @@
 <db:section xml:id="obsolete">
 <db:title>Obsolete Members for Type</db:title>
 <db:para><db:emphasis role="bold">The following members of QML type <db:link xlink:href="qml-qdoc-test-type.xml">Type</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
-<db:section xml:id="method-documentation">
-<db:title>Method Documentation</db:title>
+<db:section xml:id="obsolete-method-documentation">
+<db:title>Obsolete Method Documentation</db:title>
 <db:section xml:id="deprecatedMethod-method">
 <db:title>deprecatedMethod()</db:title>
 <db:para>This method is deprecated since 6.2. We strongly advise against using it in new code.</db:para>

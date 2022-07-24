@@ -421,8 +421,8 @@
 <db:section xml:id="obsolete">
 <db:title>Obsolete Members for Test</db:title>
 <db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-test.xml">Test</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
-<db:section xml:id="member-function-documentation">
-<db:title>Member Function Documentation</db:title>
+<db:section xml:id="obsolete-member-function-documentation">
+<db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="operator-2b-2b">
 <db:title>Test::TestQDoc::Test &amp;operator++()</db:title>
 <db:bridgehead renderas="sect2" xml:id="operator--">Test::TestQDoc::Test &amp;operator--()</db:bridgehead>

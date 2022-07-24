@@ -1797,7 +1797,7 @@ void DocBookGenerator::generateObsoleteMembers(const Sections &sections)
     newLine();
 
     for (const Section *section : details_spv) {
-        const QString &title = section->title();
+        const QString &title = "Obsolete " + section->title();
         startSection(title.toLower(), title);
 
         const NodeVector &members = section->obsoleteMembers();
@@ -1845,7 +1845,7 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
     newLine();
 
     for (const auto *section : details_spv) {
-        const QString &title = section->title();
+        const QString &title = "Obsolete " + section->title();
         startSection(title.toLower(), title);
 
         const NodeVector &members = section->obsoleteMembers();
