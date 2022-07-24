@@ -1230,7 +1230,6 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         if (const QString &version = node->deprecatedSince(); !version.isEmpty())
             text << " since " << version;
         text << ". We strongly advise against using it in new code.";
-        text << Atom::ParaRight;
         if (node->isAggregate())
             text << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
         text << Atom::ParaRight;
