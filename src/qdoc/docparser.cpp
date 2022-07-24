@@ -1017,6 +1017,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     enterPara(Atom::WarningLeft, Atom::WarningRight);
                     break;
                 case CMD_OVERLOAD:
+                    leavePara();
                     m_private->m_metacommandsUsed.insert(cmdStr);
                     p1.clear();
                     if (!isBlankLine())
