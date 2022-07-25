@@ -1149,6 +1149,11 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             skipAhead += 4;
             sectionLevels.pop();
         }
+
+        if (!matchAhead(atom, Atom::SectionHeadingLeft)) {
+            // No section title afterwards, make one up. This likely indicates a problem in the original documentation.
+            m_writer->writeTextElement(dbNamespace, "title", "");
+        }
         break;
     case Atom::SectionRight:
         // All the logic about closing sections is done in the SectionLeft case
