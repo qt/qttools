@@ -78,7 +78,7 @@ private:
                                const QString &selector, bool withSectionIfNeeded = false);
     void generateAnnotatedLists(const Node *relative, const NodeMultiMap &nmm,
                                 const QString &selector);
-    void generateCompactList(const Node *relative, const NodeMultiMap &nmm,
+    void generateCompactList(const Node *relative, const NodeMultiMap &nmm, bool includeAlphabet,
                              const QString &commonPrefix, const QString &selector);
     using Generator::generateFileList;
     void generateFileList(const ExampleNode *en, bool images);

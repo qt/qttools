@@ -451,14 +451,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                        || atom->string() == QLatin1String("qmlbasictypes"))
                     ? m_qdb->getQmlValueTypes()
                     : m_qdb->getQmlTypes();
-            generateCompactList(relative, things, QString(), atom->string());
+            generateCompactList(relative, things, true, QString(), atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string().contains("classes ")) {
             QString rootName = atom->string().mid(atom->string().indexOf("classes") + 7).trimmed();
             NodeMultiMap things = m_qdb->getCppClasses();
 
             hasGeneratedSomething = !things.isEmpty();
-            generateCompactList(relative, things, rootName, atom->string());
+            generateCompactList(relative, things, true, rootName, atom->string());
         } else if ((idx = atom->string().indexOf(QStringLiteral("bymodule"))) != -1) {
             QString moduleName = atom->string().mid(idx + 8).trimmed();
             Node::NodeType type = typeFromString(atom);
@@ -491,7 +491,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                     : atom->string() == QLatin1String("obsoletecppmembers")
                     ? m_qdb->getClassesWithObsoleteMembers()
                     : m_qdb->getQmlTypesWithObsoleteMembers();
-            generateCompactList(relative, things, prefix, atom->string());
+            generateCompactList(relative, things, false, prefix, atom->string());
             hasGeneratedSomething = !things.isEmpty();
         } else if (atom->string() == QLatin1String("functionindex")) {
             generateFunctionIndex(relative);
@@ -1735,7 +1735,8 @@ void DocBookGenerator::generateAnnotatedLists(const Node *relative, const NodeMu
   \a nmm.
  */
 void DocBookGenerator::generateCompactList(const Node *relative, const NodeMultiMap &nmm,
-                                           const QString &commonPrefix, const QString &selector)
+                                           bool includeAlphabet, const QString &commonPrefix,
+                                           const QString &selector)
 {
     // From HtmlGenerator::generateCompactList. No more "includeAlphabet", this should be handled by
     // the DocBook toolchain afterwards.
@@ -1758,26 +1759,25 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
     QString paragraphName[NumParagraphs + 1];
     QSet<char> usedParagraphNames;
 
-    NodeMultiMap::ConstIterator c = nmm.constBegin();
-    while (c != nmm.constEnd()) {
+    for (auto c = nmm.constBegin(); c != nmm.constEnd(); ++c) {
         QStringList pieces = c.key().split("::");
-        QString key;
         int idx = commonPrefixLen;
         if (idx > 0 && !pieces.last().startsWith(commonPrefix, Qt::CaseInsensitive))
             idx = 0;
-        key = pieces.last().mid(idx).toLower();
+        QString last = pieces.last().toLower();
+        QString key = last.mid(idx);
 
         int paragraphNr = NumParagraphs - 1;
 
-        if (key[0].digitValue() != -1)
+        if (key[0].digitValue() != -1) {
             paragraphNr = key[0].digitValue();
-        else if (key[0] >= QLatin1Char('a') && key[0] <= QLatin1Char('z'))
+        } else if (key[0] >= QLatin1Char('a') && key[0] <= QLatin1Char('z')) {
             paragraphNr = 10 + key[0].unicode() - 'a';
+        }
 
         paragraphName[paragraphNr] = key[0].toUpper();
         usedParagraphNames.insert(key[0].toLower().cell());
-        paragraph[paragraphNr].insert(c.key(), c.value());
-        ++c;
+        paragraph[paragraphNr].insert(last, c.value());
     }
 
     /*
@@ -1793,7 +1793,24 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
     for (int i = 0; i < NumParagraphs; i++) // i = 0..36
         paragraphOffset[i + 1] = paragraphOffset[i] + paragraph[i].size();
 
-    // No table of contents in DocBook.
+    // Output the alphabet as a row of links.
+    if (includeAlphabet && !usedParagraphNames.isEmpty()) {
+        m_writer->writeStartElement(dbNamespace, "simplelist");
+        newLine();
+
+        for (int i = 0; i < 26; i++) {
+            QChar ch('a' + i);
+            if (usedParagraphNames.contains(char('a' + i))) {
+                m_writer->writeStartElement(dbNamespace, "member");
+                generateSimpleLink(ch, ch.toUpper());
+                m_writer->writeEndElement(); // member
+                newLine();
+            }
+        }
+
+        m_writer->writeEndElement(); // simplelist
+        newLine();
+    }
 
     // Actual output.
     int curParNr = 0;
@@ -1801,25 +1818,31 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
     QString previousName;
     bool multipleOccurrences = false;
 
+    m_writer->writeStartElement(dbNamespace, "variablelist");
+    m_writer->writeAttribute("role", selector);
+    newLine();
+
     for (int i = 0; i < nmm.size(); i++) {
         while ((curParNr < NumParagraphs) && (curParOffset == paragraph[curParNr].size())) {
+
             ++curParNr;
             curParOffset = 0;
         }
 
-        /*
-          Starting a new paragraph means starting a new variablelist.
-        */
+        // Starting a new paragraph means starting a new varlistentry.
         if (curParOffset == 0) {
             if (i > 0) {
-                m_writer->writeEndElement(); // variablelist
+                m_writer->writeEndElement(); // itemizedlist
+                newLine();
+                m_writer->writeEndElement(); // listitem
+                newLine();
+                m_writer->writeEndElement(); // varlistentry
                 newLine();
             }
 
-            m_writer->writeStartElement(dbNamespace, "variablelist");
-            m_writer->writeAttribute("role", selector);
-            newLine();
             m_writer->writeStartElement(dbNamespace, "varlistentry");
+            if (includeAlphabet)
+                writeXmlId(paragraphName[curParNr][0].toLower());
             newLine();
 
             m_writer->writeStartElement(dbNamespace, "term");
@@ -1829,14 +1852,18 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
             m_writer->writeEndElement(); // emphasis
             m_writer->writeEndElement(); // term
             newLine();
+
+            m_writer->writeStartElement(dbNamespace, "listitem");
+            newLine();
+            m_writer->writeStartElement(dbNamespace, "itemizedlist");
+            newLine();
         }
 
-        /*
-          Output a listitem for the current offset in the current paragraph.
-         */
+        // Output a listitem for the current offset in the current paragraph.
         m_writer->writeStartElement(dbNamespace, "listitem");
         newLine();
         m_writer->writeStartElement(dbNamespace, "para");
+
         if ((curParNr < NumParagraphs) && !paragraphName[curParNr].isEmpty()) {
             NodeMultiMap::Iterator it;
             NodeMultiMap::Iterator next;
@@ -1844,11 +1871,8 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
             for (int j = 0; j < curParOffset; j++)
                 ++it;
 
-            // Write the link to the element, which is identical if the element is obsolete or not.
-            m_writer->writeStartElement(dbNamespace, "link");
-            m_writer->writeAttribute(xlinkNamespace, "href", linkForNode(*it, relative));
-            m_writer->writeAttribute("type", targetType(it.value()));
-
+            // Cut the name into pieces to determine whether it is simple (one piece) or complex
+            // (more than one piece).
             QStringList pieces;
             if (it.value()->isQmlType()) {
                 QString name = it.value()->name();
@@ -1866,26 +1890,38 @@ void DocBookGenerator::generateCompactList(const Node *relative, const NodeMulti
             } else
                 pieces = it.value()->fullName(relative).split("::");
 
+            // Write the link to the element, which is identical if the element is obsolete or not.
+            m_writer->writeStartElement(dbNamespace, "link");
+            m_writer->writeAttribute(xlinkNamespace, "href", linkForNode(*it, relative));
+            if (const QString type = targetType(it.value()); !type.isEmpty())
+                m_writer->writeAttribute("role", type);
             m_writer->writeCharacters(pieces.last());
             m_writer->writeEndElement(); // link
 
+            // Outside the link, give the full name of the node if it is complex.
             if (pieces.size() > 1) {
                 m_writer->writeCharacters(" (");
                 generateFullName(it.value()->parent(), relative);
                 m_writer->writeCharacters(")");
             }
         }
+
         m_writer->writeEndElement(); // para
         newLine();
         m_writer->writeEndElement(); // listitem
         newLine();
-        m_writer->writeEndElement(); // varlistentry
-        newLine();
+
         curParOffset++;
     }
-    if (nmm.size() > 0) {
-        m_writer->writeEndElement(); // variablelist
-    }
+    m_writer->writeEndElement(); // itemizedlist
+    newLine();
+    m_writer->writeEndElement(); // listitem
+    newLine();
+    m_writer->writeEndElement(); // varlistentry
+    newLine();
+
+    m_writer->writeEndElement(); // variablelist
+    newLine();
 }
 
 void DocBookGenerator::generateFunctionIndex(const Node *relative)
