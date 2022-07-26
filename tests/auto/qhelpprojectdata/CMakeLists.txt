@@ -12,7 +12,7 @@ qt_internal_add_test(tst_qhelpprojectdata
     DEFINES
         QT_USE_USING_NAMESPACE
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}\\\"
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::HelpPrivate
 )

@@ -10,7 +10,7 @@ qt_internal_add_test(tst_qhelpindexmodel
     DEFINES
         QT_USE_USING_NAMESPACE
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}\\\"
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::Help
         Qt::Sql
