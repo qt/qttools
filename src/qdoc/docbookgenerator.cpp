@@ -773,6 +773,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
 
             newLine();
         }
+        m_inList++;
         break;
     case Atom::ListItemNumber:
         break;
@@ -809,59 +810,70 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 newLine();
             }
         }
+        m_inList++;
         break;
     case Atom::SinceTagRight:
-    case Atom::ListTagRight:
         if (atom->string() == ATOM_LIST_TAG) {
             m_writer->writeEndElement(); // item
             newLine();
         }
         break;
-    case Atom::ListItemLeft:
-        m_inListItemLineOpen = false;
-        if (atom->string() == ATOM_LIST_TAG) {
-            m_writer->writeStartElement(dbNamespace, "listitem");
+    case Atom::ListTagRight:
+        if (m_inList > 0 && atom->string() == ATOM_LIST_TAG) {
+            m_writer->writeEndElement(); // item
             newLine();
-            m_writer->writeStartElement(dbNamespace, "para");
-            m_inPara = true;
-        } else if (atom->string() == ATOM_LIST_VALUE) {
-            if (m_threeColumnEnumValueTable) {
-                if (matchAhead(atom, Atom::ListItemRight)) {
-                    m_writer->writeEmptyElement(dbNamespace, "td");
-                    newLine();
-                    m_inListItemLineOpen = false;
-                } else {
-                    m_writer->writeStartElement(dbNamespace, "td");
-                    newLine();
-                    m_inListItemLineOpen = true;
-                }
-            }
-        } else {
-            m_writer->writeStartElement(dbNamespace, "listitem");
-            newLine();
+            m_inList = false;
         }
-        // Don't skip a paragraph, DocBook requires them within list items.
+        break;
+    case Atom::ListItemLeft:
+        if (m_inList > 0) {
+            m_inListItemLineOpen = false;
+            if (atom->string() == ATOM_LIST_TAG) {
+                m_writer->writeStartElement(dbNamespace, "listitem");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "para");
+                m_inPara = true;
+            } else if (atom->string() == ATOM_LIST_VALUE) {
+                if (m_threeColumnEnumValueTable) {
+                    if (matchAhead(atom, Atom::ListItemRight)) {
+                        m_writer->writeEmptyElement(dbNamespace, "td");
+                        newLine();
+                        m_inListItemLineOpen = false;
+                    } else {
+                        m_writer->writeStartElement(dbNamespace, "td");
+                        newLine();
+                        m_inListItemLineOpen = true;
+                    }
+                }
+            } else {
+                m_writer->writeStartElement(dbNamespace, "listitem");
+                newLine();
+            }
+            // Don't skip a paragraph, DocBook requires them within list items.
+        }
         break;
     case Atom::ListItemRight:
-        if (atom->string() == ATOM_LIST_TAG) {
-            m_writer->writeEndElement(); // para
-            m_inPara = false;
-            newLine();
-            m_writer->writeEndElement(); // listitem
-            newLine();
-            m_writer->writeEndElement(); // varlistentry
-            newLine();
-        } else if (atom->string() == ATOM_LIST_VALUE) {
-            if (m_inListItemLineOpen) {
-                m_writer->writeEndElement(); // td
+        if (m_inList > 0) {
+            if (atom->string() == ATOM_LIST_TAG) {
+                m_writer->writeEndElement(); // para
+                m_inPara = false;
                 newLine();
-                m_inListItemLineOpen = false;
+                m_writer->writeEndElement(); // listitem
+                newLine();
+                m_writer->writeEndElement(); // varlistentry
+                newLine();
+            } else if (atom->string() == ATOM_LIST_VALUE) {
+                if (m_inListItemLineOpen) {
+                    m_writer->writeEndElement(); // td
+                    newLine();
+                    m_inListItemLineOpen = false;
+                }
+                m_writer->writeEndElement(); // tr
+                newLine();
+            } else {
+                m_writer->writeEndElement(); // listitem
+                newLine();
             }
-            m_writer->writeEndElement(); // tr
-            newLine();
-        } else {
-            m_writer->writeEndElement(); // listitem
-            newLine();
         }
         break;
     case Atom::ListRight:
@@ -872,6 +884,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         // - ATOM_LIST_NUMERIC: orderedlist
         m_writer->writeEndElement();
         newLine();
+        m_inList--;
         break;
     case Atom::Nop:
         break;
@@ -3141,8 +3154,10 @@ QXmlStreamWriter *DocBookGenerator::startGenericDocument(const Node *node, const
         m_writer->writeAttribute("xml:lang", m_naturalLanguage);
     newLine();
 
-    // Empty the section stack for the new document.
+    // Reset the state for the new document.
     sectionLevels.resize(0);
+    m_inPara = false;
+    m_inList = 0;
 
     return m_writer;
 }
