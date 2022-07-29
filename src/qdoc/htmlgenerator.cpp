@@ -3691,6 +3691,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
             out() << "<div class=\"fngroup\">\n";
         out() << qmlItemHeader;
         for (const auto &sharedNode : sharedNodes) {
+            // Generate the node only if it is relevant for Qt Quick.
             if (sharedNode->isFunction(Node::QML) || sharedNode->isFunction(Node::JS))
                 generateQmlMethod(sharedNode);
             else if (sharedNode->isQmlProperty() || sharedNode->isJsProperty())
