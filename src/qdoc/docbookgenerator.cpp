@@ -4698,8 +4698,6 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         generateSynopsis(node, relative, Section::Details);
     };
 
-    bool generateEndSection = true;
-
     if (node->isPropertyGroup()) {
         const auto scn = static_cast<const SharedCommentNode *>(node);
 
@@ -4710,7 +4708,8 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
             heading = node->name();
         startSection(scn, heading);
         // This last call creates a title for this section. In other words,
-        // titles are forbidden for the rest of the section.
+        // titles are forbidden for the rest of the section, hence the use of
+        // bridgehead.
 
         const QList<Node *> sharedNodes = scn->collective();
         for (const auto &sharedNode : sharedNodes) {
@@ -4738,36 +4737,48 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         // In the section, generate a title for the first node, then bridgeheads for
         // the next ones.
         int i = 0;
-        for (const auto m : sharedNodes) {
+        for (const auto &sharedNode : sharedNodes) {
             // Ignore this element if there is nothing to generate.
-            if (!node->isFunction(Node::QML) && !node->isQmlProperty()) {
+            if (!sharedNode->isFunction(Node::QML) && !sharedNode->isQmlProperty()) {
                 continue;
             }
 
             // Write the tag containing the title.
             if (i == 0) {
-                startSectionBegin(m);
+                startSectionBegin(sharedNode);
             } else {
                 m_writer->writeStartElement(dbNamespace, "bridgehead");
                 m_writer->writeAttribute("renderas", "sect2");
             }
 
             // Write the title.
-            if (node->isFunction(Node::QML))
-                generateQmlMethodTitle(node);
-            else if (node->isQmlProperty())
+            if (sharedNode->isFunction(Node::QML))
+                generateQmlMethodTitle(sharedNode);
+            else if (sharedNode->isQmlProperty())
                 m_writer->writeCharacters(
-                        getQmlPropertyTitle(static_cast<QmlPropertyNode *>(node)));
+                        getQmlPropertyTitle(static_cast<QmlPropertyNode *>(sharedNode)));
 
             // Complete the title and the synopsis.
             if (i == 0)
                 startSectionEnd();
-            generateDocBookSynopsis(m);
+            else
+                m_writer->writeEndElement(); // bridgehead
+            generateDocBookSynopsis(sharedNode);
             ++i;
         }
 
-        if (i == 0)
-            generateEndSection = false;
+        // If the list is empty, still generate a section.
+        if (i == 0) {
+            startSectionBegin(refForNode(node));
+
+            if (node->isFunction(Node::QML))
+                generateQmlMethodTitle(node);
+            else if (node->isQmlProperty())
+                m_writer->writeCharacters(
+                    getQmlPropertyTitle(static_cast<QmlPropertyNode *>(node)));
+
+            startSectionEnd();
+        }
     } else { // assume the node is a method/signal handler
         startSectionBegin(node);
         generateQmlMethodTitle(node);
@@ -4780,8 +4791,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
     generateSince(node);
     generateAlsoList(node);
 
-    if (generateEndSection)
-        endSection();
+    endSection();
 }
 
 /*!
