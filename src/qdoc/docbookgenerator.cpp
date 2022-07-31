@@ -1110,6 +1110,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
 
             hasRewrittenString = true;
         }
+        // For ActiveQt, there is some raw HTML that has no meaningful
+        // translation into DocBook.
+        else if (str.trimmed().toLower().startsWith(R"(<script language="javascript">)")
+                 || str.trimmed().toLower().startsWith(R"(<script language="vbscript">)")
+                 || str.trimmed().toLower().startsWith("<object id=")) {
+            writeRawHtml(str);
+            hasRewrittenString = true;
+        }
 
         // No rewriting worked: for blockquotes, this is likely a qdoc example.
         // Use some programlisting to encode this raw HTML.
