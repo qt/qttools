@@ -1353,6 +1353,96 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             writeRawHtml(str);
             hasRewrittenString = true;
         }
+        // Raw HTML encoding of some tables. Perform some basic soundness
+        // checks to ensure the conversion has some chance of success.
+        else if (str.startsWith("<table ") &&
+                str.count("<tr") == str.count("</tr") &&
+                str.count("<td") == str.count("</td") &&
+                str.count("<tr") > 0 && str.count("</td") > 0) {
+            QStringList tables = str.split("</table>", Qt::SkipEmptyParts);
+            for (QString table : tables) {
+                // Several changes:
+                // - name spaces for each element
+                // - use of informaltable (no caption) instead of table
+                // - DocBook-compliant encoding of the background cell color.
+                //   In case the background color is given by value instead of
+                //   name (like "#d0d0d0" instead of "gray"), remove the sharp
+                //   so that the output class is still allowed by CSS.
+                // - use of emphasis instead of HTML b or i, DocBook link
+                //   instead of HTML a, DocBook para instead of HTML p
+                // - removal of the "nowrap" and "align" attributes (no DocBook
+                //   encoding), correction of rowspan and colspan attributes
+                // - adding a </tbody> in case it is opened and never closed
+                // - encoding of images and titles (as bridgeheads)
+                // - remove line feeds
+                table = table.replace("</", "</db:");
+                table = table.replace("<", "<db:");
+                table = table.replace("<db:/db:", "</db:");
+
+                table = table.replace("<db:table", "<db:informaltable");
+
+                table = table.replace("<db:b>", R"(<db:emphasis role="bold">)");
+                table = table.replace("</db:b>", "</db:emphasis>");
+                table = table.replace("<db:i>", "<db:emphasis>");
+                table = table.replace("</db:i>", "</db:emphasis>");
+
+                table = table.replace("<db:a href=", "<db:link xlink:href=");
+                table = table.replace("</db:a>", "</db:link>");
+
+                table = table.replace("<db:p>", "<db:para>");
+                table = table.replace("</db:p>", "</db:para>");
+
+                table = table.replace("<db:br />", QString());
+                table = table.replace("<db:br/>", QString());
+
+                table = table.replace(
+                    QRegularExpression(R"regex(<db:h(\d).*)>(.*)</db:h(\d)>)regex"),
+                    R"xml(<db:bridgehead renderas="sect\1">\2</bridgehead>)xml");
+                // Expecting \1 == \3.
+
+                table = table.replace(R"( nowrap="nowrap")", QString());
+                table = table.replace(R"( align="center")", QString());
+                table = table.replace(
+                    QRegularExpression(R"regex((row|col)span="\s+(.*)")regex"),
+                    R"(\1span="\2")");
+
+                table = table.replace(
+                    QRegularExpression(R"regex(<db:td (.*)bgcolor="#(.*)"(.*)>(.*)</db:td>)regex"),
+                    R"xml(<db:td \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>\4</db:td>)xml");
+                table = table.replace(
+                    QRegularExpression(R"regex(<db:td (.*)bgcolor="(.*)"(.*)>(.*)</db:td>)regex"),
+                    R"xml(<db:td \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>\4</db:td>)xml");
+                table = table.replace(
+                    QRegularExpression(R"regex(<db:tr (.*)bgcolor="#(.*)"(.*)>)regex"),
+                    R"xml(<db:tr \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>)xml");
+                table = table.replace(
+                    QRegularExpression(R"regex(<db:tr (.*)bgcolor="(.*)"(.*)>³)regex"),
+                    R"xml(<db:tr \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>)xml");
+
+                table = table.replace(
+                    QRegularExpression(R"regex(<db:img src="(.*)" alt="(.*)"\s*/>)regex"),
+                    R"xml(<db:figure>
+<db:title>\2</db:title>
+<db:mediaobject>
+<db:imageobject>
+<db:imagedata fileref="\1"/>
+</db:imageobject>
+</db:mediaobject>
+</db:figure>)xml");
+
+                m_writer->device()->write(table.toUtf8());
+
+                // Finalize the table by writing the end tags.
+                // m_writer->writeEndElement cannot be used, as the opening
+                // tags are output directly through m_writer->device().
+                if (table.contains("<db:tbody") && !table.contains("</db:tbody")) {
+                    m_writer->device()->write("</db:tbody>\n");
+                }
+                m_writer->device()->write("</db:informaltable>\n");
+            }
+
+            hasRewrittenString = true;
+        }
 
         // No rewriting worked: for blockquotes, this is likely a qdoc example.
         // Use some programlisting to encode this raw HTML.
