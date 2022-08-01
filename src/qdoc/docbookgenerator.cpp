@@ -889,11 +889,12 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         break;
     case Atom::QuotationLeft:
         m_writer->writeStartElement(dbNamespace, "blockquote");
-        m_inPara = true;
+        m_inBlockquote = true;
         break;
     case Atom::QuotationRight:
         m_writer->writeEndElement(); // blockquote
         newLine();
+        m_inBlockquote = false;
         break;
     case Atom::RawString: {
         // Many of these transformations are only useful when dealing with
@@ -1094,6 +1095,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 newLine();
             }
 
+            hasRewrittenString = true;
+        }
+
+        // No rewriting worked: for blockquotes, this is likely a qdoc example.
+        // Use some programlisting to encode this raw HTML.
+        if (!hasRewrittenString && m_inBlockquote) {
+            writeRawHtml(atom->string());
             hasRewrittenString = true;
         }
 
