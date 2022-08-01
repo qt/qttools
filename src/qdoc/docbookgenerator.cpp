@@ -1005,48 +1005,56 @@ void DocBookGenerator::generateClassHierarchy(const Node *relative, NodeMultiMap
     if (classMap.isEmpty())
         return;
 
-    NodeMap topLevel;
-    for (Node *c : classMap) {
-        auto *classNode = static_cast<ClassNode *>(c);
-        if (classNode->baseClasses().isEmpty())
-            topLevel.insert(classNode->name(), classNode);
-    }
+    std::function<void(ClassNode *)> generateClassAndChildren
+        = [this, &relative, &generateClassAndChildren](ClassNode * classe) {
+            m_writer->writeStartElement(dbNamespace, "listitem");
+            newLine();
 
-    QStack<NodeMap> stack;
-    stack.push(topLevel);
+            // This class.
+            m_writer->writeStartElement(dbNamespace, "para");
+            generateFullName(classe, relative);
+            m_writer->writeEndElement(); // para
+            newLine();
+
+            // Children, if any.
+            bool hasChild = false;
+            for (const RelatedClass &relatedClass : classe->derivedClasses()) {
+                if (relatedClass.m_node && relatedClass.m_node->isInAPI()) {
+                    hasChild = true;
+                    break;
+                }
+            }
+
+            if (hasChild) {
+                m_writer->writeStartElement(dbNamespace, "itemizedlist");
+                newLine();
+
+                for (const RelatedClass &relatedClass: classe->derivedClasses()) {
+                    if (relatedClass.m_node && relatedClass.m_node->isInAPI()) {
+                        generateClassAndChildren(relatedClass.m_node);
+                    }
+                }
+
+                m_writer->writeEndElement(); // itemizedlist
+                newLine();
+            }
+
+            // End this class.
+            m_writer->writeEndElement(); // listitem
+            newLine();
+        };
 
     m_writer->writeStartElement(dbNamespace, "itemizedlist");
     newLine();
-    while (!stack.isEmpty()) {
-        if (stack.top().isEmpty()) {
-            stack.pop();
-            m_writer->writeEndElement(); // listitem
-            newLine();
-            m_writer->writeEndElement(); // itemizedlist
-            newLine();
-        } else {
-            auto *child = static_cast<ClassNode *>(*stack.top().begin());
-            m_writer->writeStartElement(dbNamespace, "listitem");
-            newLine();
-            m_writer->writeStartElement(dbNamespace, "para");
-            generateFullName(child, relative);
-            m_writer->writeEndElement(); // para
-            newLine();
-            // Don't close the listitem now, as DocBook requires sublists to reside in items.
-            stack.top().erase(stack.top().begin());
 
-            NodeMap newTop;
-            for (const RelatedClass &d : child->derivedClasses()) {
-                if (d.m_node && !d.isPrivate() && !d.m_node->isInternal() && d.m_node->hasDoc())
-                    newTop.insert(d.m_node->name(), d.m_node);
-            }
-            if (!newTop.isEmpty()) {
-                stack.push(newTop);
-                m_writer->writeStartElement(dbNamespace, "itemizedlist");
-                newLine();
-            }
-        }
+    for (const auto &it : classMap) {
+        auto *classe = static_cast<ClassNode *>(it);
+        if (classe->baseClasses().isEmpty())
+            generateClassAndChildren(classe);
     }
+
+    m_writer->writeEndElement(); // itemizedlist
+    newLine();
 }
 
 void DocBookGenerator::generateLink(const Atom *atom)
