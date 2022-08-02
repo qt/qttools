@@ -274,28 +274,30 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
         if (cn)
             generateAnnotatedList(writer, relative, cn->members());
     } break;
-    case Atom::AutoLink:
+    case Atom::AutoLink: {
+        const Node *node{nullptr};
+        QString link{};
+
         if (!m_inLink && !m_inSectionHeading) {
-            const Node *node = nullptr;
-            QString link = getAutoLink(atom, relative, &node, Node::API);
+            link = getAutoLink(atom, relative, &node, Node::API);
+
             if (!link.isEmpty() && node && node->isDeprecated()
                 && relative->parent() != node && !relative->isDeprecated()) {
                 link.clear();
             }
-            if (node) {
-                startLink(writer, atom, node, link);
-                if (m_inLink) {
-                    writer.writeCharacters(atom->string());
-                    writer.writeEndElement(); // link
-                    m_inLink = false;
-                }
-            } else {
-                writer.writeCharacters(atom->string());
-            }
-        } else {
-            writer.writeCharacters(atom->string());
         }
+
+        startLink(writer, atom, node, link);
+
+        writer.writeCharacters(atom->string());
+
+        if (m_inLink) {
+            writer.writeEndElement(); // link
+            m_inLink = false;
+        }
+
         break;
+    }
     case Atom::BaseName:
         break;
     case Atom::BriefLeft:
