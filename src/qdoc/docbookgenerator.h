@@ -117,8 +117,7 @@ private:
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
     inline void newLine();
-    void startSectionBegin();
-    void startSectionBegin(const QString &id);
+    void startSectionBegin(const QString &id = "");
     void startSectionEnd();
     void startSection(const QString &id, const QString &title);
     void endSection();

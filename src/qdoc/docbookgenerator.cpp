@@ -56,13 +56,6 @@ inline void DocBookGenerator::newLine()
     m_writer->writeCharacters("\n");
 }
 
-void DocBookGenerator::startSectionBegin()
-{
-    m_writer->writeStartElement(dbNamespace, "section");
-    newLine();
-    m_writer->writeStartElement(dbNamespace, "title");
-}
-
 void DocBookGenerator::startSectionBegin(const QString &id)
 {
     m_writer->writeStartElement(dbNamespace, "section");
