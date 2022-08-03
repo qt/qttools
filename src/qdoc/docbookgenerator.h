@@ -116,6 +116,7 @@ private:
     void generateLink(const Atom *atom);
     void beginLink(const QString &link, const Node *node, const Node *relative);
     void endLink();
+    void writeXmlId(const QString &id);
     inline void newLine();
     void startSectionBegin(const QString &id = "");
     void startSectionEnd();
