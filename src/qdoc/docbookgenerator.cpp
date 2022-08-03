@@ -56,12 +56,18 @@ inline void DocBookGenerator::newLine()
     m_writer->writeCharacters("\n");
 }
 
+void DocBookGenerator::writeXmlId(const QString &id)
+{
+    if (id.isEmpty())
+        return;
+
+    m_writer->writeAttribute("xml:id", id);
+}
+
 void DocBookGenerator::startSectionBegin(const QString &id)
 {
     m_writer->writeStartElement(dbNamespace, "section");
-    if (!id.isEmpty()) {
-        m_writer->writeAttribute("xml:id", validXmlId(id));
-    }
+    writeXmlId(id);
     newLine();
     m_writer->writeStartElement(dbNamespace, "title");
 }
@@ -88,9 +94,7 @@ void DocBookGenerator::endSection()
 void DocBookGenerator::writeAnchor(const QString &id)
 {
     m_writer->writeEmptyElement(dbNamespace, "anchor");
-    if (!id.isEmpty()) {
-        m_writer->writeAttribute("xml:id", validXmlId(id));
-    }
+    writeXmlId(id);
     newLine();
 }
 
@@ -774,9 +778,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             sectionLevels.push(currentSectionLevel);
 
             m_writer->writeStartElement(dbNamespace, "section");
-            if (QString id = Doc::canonicalTitle(Text::sectionHeading(atom).toString()); !id.isEmpty()) {
-                m_writer->writeAttribute("xml:id", validXmlId(id));
-            }
+            writeXmlId(Doc::canonicalTitle(Text::sectionHeading(atom).toString()));
             newLine();
             // Unlike startSectionBegin, don't start a title here.
         }
@@ -874,14 +876,25 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             QStringList args = atom->string().split("\"", Qt::SkipEmptyParts);
             //      arg1=, val1, arg2=, val2,
             //      \-- 1st --/  \-- 2nd --/  \-- remainder
-            if (args.size() % 2) {
+            const int nArgs = args.size();
+
+            if (nArgs % 2) {
                 // Problem...
                 relative->doc().location().warning(
                         QStringLiteral("Error when parsing attributes for the table: got \"%1\"")
                                 .arg(atom->string()));
             }
-            for (int i = 0; i + 1 < args.size(); i += 2)
-                m_writer->writeAttribute(args.at(i).chopped(1), args.at(i + 1));
+            for (int i = 0; i + 1 < nArgs; i += 2) {
+                // args.at(i): name of the attribute being set.
+                // args.at(i + 1): value of the said attribute.
+                const QString &attr = args.at(i).chopped(1);
+                if (attr == "id") { // Too bad if there is an anchor later on
+                    // (currently never happens).
+                    writeXmlId(args.at(i + 1));
+                } else {
+                    m_writer->writeAttribute(attr, args.at(i + 1));
+                }
+            }
         }
         newLine();
 
@@ -3670,9 +3683,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 } else {
                     m_writer->writeStartElement(dbNamespace, "bridgehead");
                     m_writer->writeAttribute("renderas", "sect2");
-                    if (!nodeRef.isEmpty()) {
-                        m_writer->writeAttribute("xml:id", validXmlId(nodeRef));
-                    }
+                    writeXmlId(nodeRef),
                     generateSynopsis(n, relative, Section::Details);
                     m_writer->writeEndElement(); // bridgehead
                     newLine();
@@ -4066,9 +4077,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
 
                 m_writer->writeStartElement(dbNamespace, "bridgehead");
                 m_writer->writeAttribute("renderas", "sect2");
-                if (QString id = refForNode(qpn); !id.isEmpty()) {
-                    m_writer->writeAttribute("xml:id", validXmlId(id));
-                }
+                writeXmlId(refForNode(qpn));
                 m_writer->writeCharacters(getQmlPropertyTitle(qpn));
                 m_writer->writeEndElement(); // bridgehead
                 newLine();
