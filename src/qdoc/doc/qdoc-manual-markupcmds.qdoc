@@ -2467,16 +2467,16 @@
                 border="0">
 
                <tr valign="top" bgcolor="#a2c511">
-                   <th colspan="3" rowspan=" 1">
+                   <th colspan="3" rowspan="1">
                    This header cell spans three columns, but only one row.
                    </th>
                </tr>
 
                <tr valign="top" bgcolor="#d0d0d0">
-                   <td colspan="2" rowspan=" 1">
+                   <td colspan="2" rowspan="1">
                    This table cell spans two columns, but only one row.
                    </td>
-                   <td rowspan=" 2">
+                   <td rowspan="2">
                    This table cell spans only one column, but two rows.
                    </td>
                </tr>
@@ -2842,16 +2842,16 @@
                 border="0">
 
                <tr valign="top" bgcolor="#a2c511">
-                   <th colspan="3" rowspan=" 1">
+                   <th colspan="3" rowspan="1">
                    This header cell spans three columns, but only one row.
                    </th>
                </tr>
 
                <tr valign="top" bgcolor="#d0d0d0">
-                   <td colspan="2" rowspan=" 1">
+                   <td colspan="2" rowspan="1">
                    This table item spans two columns, but only one row.
                    </td>
-                   <td rowspan=" 2">
+                   <td rowspan="2">
                    This table item spans only one column, but two rows.
                    </td>
                </tr>
