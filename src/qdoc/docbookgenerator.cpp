@@ -46,6 +46,15 @@ inline void DocBookGenerator::newLine()
     m_writer->writeCharacters("\n");
 }
 
+inline void DocBookGenerator::writeRawHtml(const QString &rawCode)
+{
+    m_writer->writeStartElement(dbNamespace, "programlisting");
+    m_writer->writeAttribute("role", "raw-html");
+    m_writer->writeCDATA(rawCode);
+    m_writer->writeEndElement(); // programlisting
+    newLine();
+}
+
 void DocBookGenerator::writeXmlId(const QString &id)
 {
     if (id.isEmpty())
