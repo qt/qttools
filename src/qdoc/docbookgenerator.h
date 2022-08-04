@@ -135,6 +135,7 @@ private:
     int currentSectionLevel {};
     QStack<int> sectionLevels {};
     QString m_qflagsHref {};
+    bool m_inTeletype { false };
 
     QString m_project {};
     QString m_projectDescription {};
