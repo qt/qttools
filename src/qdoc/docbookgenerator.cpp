@@ -273,7 +273,10 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         // This may at one time have been used to mark up C++ code but it is
         // now widely used to write teletype text. As a result, text marked
         // with the \c command is not passed to a code marker.
-        m_writer->writeTextElement(dbNamespace, "code", plainCode(atom->string()));
+        if (m_inTeletype)
+            m_writer->writeCharacters(plainCode(atom->string()));
+        else
+            m_writer->writeTextElement(dbNamespace, "code", plainCode(atom->string()));
         break;
     case Atom::CaptionLeft:
         m_writer->writeStartElement(dbNamespace, "title");
@@ -395,6 +398,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             || atom->string() == ATOM_FORMATTING_UICONTROL) {
             m_writer->writeEndElement();
         } else if (atom->string() == ATOM_FORMATTING_LINK) {
+            if (atom->string() == ATOM_FORMATTING_TELETYPE)
+                m_inTeletype = false;
             endLink();
         } else {
             relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
