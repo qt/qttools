@@ -376,15 +376,36 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeStartElement(dbNamespace, "emphasis");
             m_writer->writeAttribute("role", "underline");
         } else if (atom->string() == ATOM_FORMATTING_SUBSCRIPT) {
-            m_writer->writeStartElement(dbNamespace, "sub");
+            m_writer->writeStartElement(dbNamespace, "subscript");
         } else if (atom->string() == ATOM_FORMATTING_SUPERSCRIPT) {
-            m_writer->writeStartElement(dbNamespace, "sup");
+            m_writer->writeStartElement(dbNamespace, "superscript");
         } else if (atom->string() == ATOM_FORMATTING_TELETYPE
                    || atom->string() == ATOM_FORMATTING_PARAMETER) {
             m_writer->writeStartElement(dbNamespace, "code");
 
             if (atom->string() == ATOM_FORMATTING_PARAMETER)
                 m_writer->writeAttribute("role", "parameter");
+            else // atom->string() == ATOM_FORMATTING_TELETYPE
+                m_inTeletype = true;
+
+            // For parameters, understand subscripts.
+            if (atom->string() == ATOM_FORMATTING_PARAMETER) {
+                if (atom->next() != nullptr && atom->next()->type() == Atom::String) {
+                    QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
+                    auto match = subscriptRegExp.match(atom->next()->string());
+                    if (match.hasMatch()) {
+                        m_writer->writeCharacters(match.captured(1));
+                        m_writer->writeStartElement(dbNamespace, "subscript");
+                        m_writer->writeCharacters(match.captured(2));
+                        m_writer->writeEndElement(); // subscript
+                        skipAhead = 1;
+                    }
+                }
+            }
+        } else if (atom->string() == ATOM_FORMATTING_UICONTROL) {
+            m_writer->writeStartElement(dbNamespace, "guilabel");
+        } else {
+            relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
         }
         break;
     case Atom::FormattingRight:
@@ -393,11 +414,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             || atom->string() == ATOM_FORMATTING_SUBSCRIPT
             || atom->string() == ATOM_FORMATTING_SUPERSCRIPT
             || atom->string() == ATOM_FORMATTING_TELETYPE
-            || atom->string() == ATOM_FORMATTING_PARAMETER) {
+            || atom->string() == ATOM_FORMATTING_PARAMETER
+            || atom->string() == ATOM_FORMATTING_UICONTROL) {
             m_writer->writeEndElement();
-        }
-        if (atom->string() == ATOM_FORMATTING_LINK)
+        } else if (atom->string() == ATOM_FORMATTING_LINK) {
             endLink();
+        } else {
+            relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
+        }
         break;
     case Atom::AnnotatedList:
         if (const CollectionNode *cn = m_qdb->getCollectionNode(atom->string(), Node::Group))
@@ -3397,9 +3421,9 @@ void DocBookGenerator::generateParameter(const Parameter &parameter, const Node 
         auto match = sub.match(paramName);
         if (match.hasMatch()) {
             m_writer->writeCharacters(match.captured(0));
-            m_writer->writeStartElement(dbNamespace, "sub");
+            m_writer->writeStartElement(dbNamespace, "subscript");
             m_writer->writeCharacters(match.captured(1));
-            m_writer->writeEndElement(); // sub
+            m_writer->writeEndElement(); // subscript
         } else {
             m_writer->writeCharacters(paramName);
         }
