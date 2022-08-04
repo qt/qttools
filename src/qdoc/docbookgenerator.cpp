@@ -1259,11 +1259,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         }
         newLine();
 
-        // If there is nothing in this row, close it right now. There might be
-        // keywords before the row contents.
-        bool isRowEmpty = hasTarget
-            ? !matchAhead(atom->next(), Atom::TableItemLeft)
-            : !matchAhead(atom, Atom::TableItemLeft);
+        // If there is nothing in this row, close it right now. There might be keywords before the row contents.
+        bool isRowEmpty = hasTarget ? !matchAhead(atom->next(), Atom::TableItemLeft) : !matchAhead(atom, Atom::TableItemLeft);
         if (isRowEmpty && matchAhead(atom, Atom::Keyword)) {
             const Atom* next = atom->next();
             while (matchAhead(next, Atom::Keyword))
@@ -1318,8 +1315,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::Keyword:
         break;
     case Atom::Target:
-        // Sometimes, there is a \target just before a section title with
-        // the same ID. Only output one xml:id.
+        // Sometimes, there is a \target just before a section title with the same ID. Only outut one xml:id.
         if (matchAhead(atom, Atom::SectionRight) && matchAhead(atom->next(), Atom::SectionLeft)) {
             QString nextId = Doc::canonicalTitle(Text::sectionHeading(atom->next()->next()).toString());
             QString ownId = Doc::canonicalTitle(atom->string());
