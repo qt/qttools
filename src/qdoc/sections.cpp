@@ -81,7 +81,7 @@ void Section::clear()
 /*!
   Construct a name for the \a node that can be used for sorting
   a set of nodes into equivalence classes. If \a name is provided,
-  start with that name. Itherwise start with the name in \a node.
+  start with that name. Otherwise start with the name in \a node.
  */
 QString Section::sortName(const Node *node, const QString *name)
 {
@@ -244,8 +244,7 @@ void Section::reduce()
         m_keys = m_memberMap.keys();
         m_members = m_memberMap.values().toVector();
         m_reimplementedMembers = m_reimplementedMemberMap.values().toVector();
-        for (int i = 0; i < m_classMapList.size(); i++) {
-            ClassMap *cm = m_classMapList[i];
+        for (const auto &cm : m_classMapList) {
             auto *ckn = new ClassKeysNodes;
             ckn->first = cm->first;
             ckn->second.second = cm->second.values().toVector();
