@@ -1395,7 +1395,7 @@
     \target qmlmodule-command
     \section1 \\qmlmodule
 
-    Use the \c{\\qmlmodule} command to create a \c QML module page. A QML
+    Use the \c{\qmlmodule} command to create a \c QML module page. A QML
     module page is a collection of QML types or any related material. The
     command takes an optional \c <VERSION> number argument, and is similar
     to the \l{group-command}.
