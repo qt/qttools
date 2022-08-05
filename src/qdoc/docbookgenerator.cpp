@@ -886,8 +886,29 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeEndElement(); // blockquote
         newLine();
         break;
-    case Atom::RawString:
-        m_writer->writeCharacters(atom->string());
+    case Atom::RawString: {
+        // Many of these transformations are only useful when dealing with
+        // older versions of Qt, with their idiosyncrasies. However, they
+        // also make qdoc hardened against new problematic raw strings.
+        bool hasRewrittenString = false;
+        const QString &str = atom->string().trimmed();
+
+        if (str.startsWith(R"(<link rel="stylesheet" type="text/css")")) {
+            hasRewrittenString = true;
+            m_writer->writeComment(str);
+        } else if (str == "\\sup{*}") {
+            hasRewrittenString = true;
+            m_writer->writeTextElement(dbNamespace, "superscript", "*");
+        } else if (str.startsWith("<sup>") && str.endsWith("</sup>")) {
+            hasRewrittenString = true;
+            m_writer->writeTextElement(dbNamespace, "superscript", str.mid(5, str.size() - 5 - 6));
+        }
+
+        // The RawString may be a macro specialized for DocBook, in which case no escaping is expected.
+        // QXmlStreamWriter always write UTF-8 contents.
+        if (!hasRewrittenString)
+            m_writer->device()->write(atom->string().toUtf8()); // str has been trimmed.
+    }
         break;
     case Atom::SectionLeft:
         m_hasSection = true;

@@ -9,35 +9,35 @@
 <db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
 </db:info>
 <db:para>The navigation commands...</db:para>
-<db:blockquote>        &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;5&quot; width=&quot;100%&quot;&gt;
+<db:blockquote        <table border="0" cellpadding="0" cellspacing="5" width="100%">
 
-        &lt;tr&gt;
-        &lt;p&gt;
-        [Previous: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
-        Basic Qt&lt;/a&gt;]
-        [&lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;Contents&lt;/a&gt;]
-        [Next: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
-        Creating Dialogs&lt;/a&gt;]
-        &lt;/p&gt;
+        <tr>
+        <p>
+        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Basic Qt</a>]
+        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
+        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Creating Dialogs</a>]
+        </p>
 
-        &lt;h1 align=&quot;center&quot;&gt;Getting Started&lt;br /&gt;&lt;/h1&gt;
+        <h1 align="center">Getting Started<br /></h1>
 
-        &lt;p&gt;
+        <p>
         This chapter shows how to combine basic C++ with the
         functionality provided by Qt to create a few small graphical
         interface (GUI) applications.
-        &lt;/p&gt;
+        </p>
 
-        &lt;p&gt;
-        [Previous: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
-        Basic Qt&lt;/a&gt;]
-        [&lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;Contents&lt;/a&gt;]
-        [Next: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
-        Creating Dialogs&lt;/a&gt;]
-        &lt;/p&gt;
+        <p>
+        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Basic Qt</a>]
+        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
+        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Creating Dialogs</a>]
+        </p>
 
-        &lt;/table&gt;
-    </db:blockquote>
+        </table>
+    />
 <db:programlisting language="cpp">&amp;lt;head&amp;gt;
     ...
     &amp;lt;link rel=&amp;quot;start&amp;quot; href=&amp;quot;basicqt.html&amp;quot; /&amp;gt;

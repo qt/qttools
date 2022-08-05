@@ -28,7 +28,7 @@
 <db:para>Lorem legal ipsum</db:para>
 <db:blockquote><db:para>This is a quotation.</db:para>
 </db:blockquote>
-        &lt;html&gt;&lt;body&gt;This is &lt;b&gt;raw&lt;/b&gt;. Like the &lt;h1&gt;Eddie Murphy&lt;/h1&gt; movie. Just not as funny.&lt;/body&gt;&lt;/html&gt;
+        <html><body>This is <b>raw</b>. Like the <h1>Eddie Murphy</h1> movie. Just not as funny.</body></html>
     <db:sidebar><db:para>Look, ma! I made a sidebar!</db:para>
 </db:sidebar>
 <db:informaltable style="generic">
