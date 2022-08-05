@@ -72,7 +72,7 @@ QDomDocument QDBusModel::introspect(const QString &path)
         return doc;
     }
 
-    doc.setContent(xml);
+    doc.setContent(xml.value());
     return doc;
 }
 

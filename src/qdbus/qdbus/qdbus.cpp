@@ -109,7 +109,7 @@ static void listObjects(const QString &service, const QString &path)
     }
 
     QDomDocument doc;
-    doc.setContent(xml);
+    doc.setContent(xml.value());
     QDomElement node = doc.documentElement();
     QDomElement child = node.firstChildElement();
     while (!child.isNull()) {
@@ -194,7 +194,7 @@ static void listAllInterfaces(const QString &service, const QString &path)
     }
 
     QDomDocument doc;
-    doc.setContent(xml);
+    doc.setContent(xml.value());
     QDomElement node = doc.documentElement();
     QDomElement child = node.firstChildElement();
     while (!child.isNull()) {
