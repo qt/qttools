@@ -902,6 +902,53 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         } else if (str.startsWith("<sup>") && str.endsWith("</sup>")) {
             hasRewrittenString = true;
             m_writer->writeTextElement(dbNamespace, "superscript", str.mid(5, str.size() - 5 - 6));
+        } else if (str.startsWith("<div class=\"video")) {
+            hasRewrittenString = true;
+
+            // Sequence of atoms:
+            // - RawString (this one): <div class="video">\n<a href="https://www.youtube.com/watch/?v=
+            // - String: video ID
+            // - RawString: ">\n<img src="images/
+            // - String: video ID, again (but with an associated image)
+            // - RawString: .jpg" title="Click to play in a browser" /></a>\n</div>\n
+            // TODO: No call to file resolver, like the other generators. Would it be required?
+            //      auto maybe_resolved_file{file_resolver.resolve(atom->string())};
+            Q_ASSERT(atom->next());
+            Q_ASSERT(atom->next()->next());
+            Q_ASSERT(atom->next()->next()->next());
+            Q_ASSERT(atom->next()->next()->next()->next());
+            Q_ASSERT(atom->next()->type() == Atom::String);
+            Q_ASSERT(atom->next()->next()->next()->type() == Atom::String);
+            skipAhead += 4;
+
+            const QString &videoID = atom->next()->string();
+            const QString &imageID = atom->next()->next()->next()->string();
+
+            m_writer->writeStartElement(dbNamespace, "mediaobject");
+            newLine();
+
+            m_writer->writeStartElement(dbNamespace, "videoobject");
+            newLine();
+            m_writer->writeStartElement(dbNamespace, "videodata");
+            m_writer->writeAttribute("fileref", videoID);
+            newLine();
+            m_writer->writeEndElement(); // videodata
+            newLine();
+            m_writer->writeEndElement(); // videoobject
+            newLine();
+
+            m_writer->writeStartElement(dbNamespace, "imageobject");
+            newLine();
+            m_writer->writeStartElement(dbNamespace, "imagedata");
+            m_writer->writeAttribute("fileref", "images/" + imageID + ".jpg");
+            newLine();
+            m_writer->writeEndElement(); // imagedata
+            newLine();
+            m_writer->writeEndElement(); // imageobject
+            newLine();
+
+            m_writer->writeEndElement(); // mediaobject
+            newLine();
         }
 
         // The RawString may be a macro specialized for DocBook, in which case no escaping is expected.
