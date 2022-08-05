@@ -958,6 +958,91 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
 
             m_writer->writeEndElement(); // mediaobject
             newLine();
+        } else if (str.startsWith("<h") && str.size() >= 9) { // <hX></hX>: 9 characters.
+            // If qdoc has just closed a section, suppose that the person
+            // writing this RawString knows what they are doing generate a
+            // section. Otherwise, create a bridgehead.
+            bool hasJustClosedASection = !m_writer->device()->isSequential() &&
+                m_writer->device()->readAll().trimmed().endsWith("</db:section>");
+
+            // Parse the raw string. If nothing matches, no title is found,
+            // and no rewriting is performed.
+            QChar level = str[2];
+            QString title {""};
+            QString id {""};
+
+            if (str.startsWith("<h" + level + ">") && str.endsWith("</h" + level + ">")) {
+                title = str.mid(4, str.size() - 9);
+            } else if (str.startsWith("<h" + level + " id=") && str.endsWith("</h" + level + ">")) {
+                // <hX id=: 7 characters.
+                QString idToEndTag = str.mid(8, str.size() - 7 - 5);
+                id = idToEndTag.split("\"")[0];
+                title = idToEndTag.remove(0, id.size() + 2).chopped(1);
+            }
+
+            // Output the DocBook equivalent.
+            if (!title.isEmpty()) {
+                hasRewrittenString = true;
+
+                if (hasJustClosedASection) {
+                    startSection(id, title);
+                    m_closeSectionAfterRawTitle = true;
+                } else {
+                    m_writer->writeStartElement(dbNamespace, "bridgehead");
+                    m_writer->writeAttribute("renderas", "sect" + level);
+                    writeXmlId(id);
+                    m_writer->writeCharacters(title);
+                    m_writer->writeEndElement(); // bridgehead
+                }
+
+                // If there is an anchor just after with the same ID, skip it.
+                if (matchAhead(atom, Atom::Target) && Doc::canonicalTitle(atom->next()->string()) == id) {
+                    ++skipAhead;
+                }
+            } else {
+                // The formatting is not recognized: it starts with a tittle,
+                // then some unknown stuff. It's highly likely some qdoc
+                // example: output that as raw HTML in DocBook too.
+                writeRawHtml(str);
+                hasRewrittenString = true;
+            }
+        }
+        // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are several images
+        // at once with the same encoding.
+        else if (str.startsWith(R"(<div align="center"><figure><svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg")")) {
+            const QStringList images = str.split("</div>", Qt::SkipEmptyParts, Qt::CaseInsensitive);
+
+            for (const QString& image : images) {
+                // Find the caption.
+                const QStringList parts = image.split("</svg>");
+                const QString svgImage = "<svg" + parts[0].split("<svg")[1] + "</svg>";
+                const QString caption = parts[1].split("<figcaption>")[1].split("</figcaption>")[0];
+
+                // Output the DocBook equivalent.
+                m_writer->writeStartElement(dbNamespace, "figure");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "title");
+                m_writer->writeCharacters(caption);
+                m_writer->writeEndElement(); // title
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "mediaobject");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "imageobject");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "imagedata");
+                newLine();
+                m_writer->device()->write(svgImage.toUtf8()); // SVG image as raw XML.
+                m_writer->writeEndElement(); // imagedata
+                newLine();
+                m_writer->writeEndElement(); // imageobject
+                newLine();
+                m_writer->writeEndElement(); // mediaobject
+                newLine();
+                m_writer->writeEndElement(); // figure
+                newLine();
+            }
+
+            hasRewrittenString = true;
         }
 
         // The RawString may be a macro specialized for DocBook, in which case no escaping is expected.
@@ -1962,6 +2047,10 @@ void DocBookGenerator::generateFooter()
 {
     if (m_closeSectionAfterGeneratedList) {
         m_closeSectionAfterGeneratedList = false;
+        endSection();
+    }
+    if (m_closeSectionAfterRawTitle) {
+        m_closeSectionAfterRawTitle = false;
         endSection();
     }
 

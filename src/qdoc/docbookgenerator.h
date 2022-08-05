@@ -144,6 +144,7 @@ private:
     bool m_inTeletype { false };
     bool m_hasSection { false };
     bool m_closeSectionAfterGeneratedList { false };
+    bool m_closeSectionAfterRawTitle { false };
     bool m_closeFigureWrapper { false };
     bool m_tableHeaderAlreadyOutput { false };
     bool m_closeTableRow { false };

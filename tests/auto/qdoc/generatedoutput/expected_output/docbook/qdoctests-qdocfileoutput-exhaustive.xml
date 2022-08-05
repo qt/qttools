@@ -28,8 +28,8 @@
 <db:para>Lorem legal ipsum</db:para>
 <db:blockquote><db:para>This is a quotation.</db:para>
 </db:blockquote>
-        <html><body>This is <b>raw</b>. Like the <h1>Eddie Murphy</h1> movie. Just not as funny.</body></html>
-    <db:sidebar><db:para>Look, ma! I made a sidebar!</db:para>
+<db:programlisting role="raw-html"><![CDATA[<html><body>This is <b>raw</b>. Like the <h1>Eddie Murphy</h1> movie. Just not as funny.</body></html>]]></db:programlisting>
+<db:sidebar><db:para>Look, ma! I made a sidebar!</db:para>
 </db:sidebar>
 <db:informaltable style="generic">
 <db:tr valign="top">
