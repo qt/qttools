@@ -369,7 +369,6 @@ private:
     QString m_templateDecl {};
     QString m_reconstitutedBrief {};
     QString m_outSubDir {};
-    static QStringMap operators;
     static QMap<QString, Node::NodeType> goals;
     QString m_deprecatedSince {};
     const Node *m_navParent { nullptr };

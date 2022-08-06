@@ -24,7 +24,6 @@
 
 QT_BEGIN_NAMESPACE
 
-QStringMap Node::operators;
 QMap<QString, Node::NodeType> Node::goals;
 
 /*!
@@ -694,51 +693,9 @@ Node::Node(NodeType type, Aggregate *parent, QString name)
 {
     if (m_parent)
         m_parent->addChild(this);
+
     m_outSubDir = Generator::outputSubdir();
-    if (operators.isEmpty()) {
-        operators.insert("++", "inc");
-        operators.insert("--", "dec");
-        operators.insert("==", "eq");
-        operators.insert("!=", "ne");
-        operators.insert("<<", "lt-lt");
-        operators.insert(">>", "gt-gt");
-        operators.insert("+=", "plus-assign");
-        operators.insert("-=", "minus-assign");
-        operators.insert("*=", "mult-assign");
-        operators.insert("/=", "div-assign");
-        operators.insert("%=", "mod-assign");
-        operators.insert("&=", "bitwise-and-assign");
-        operators.insert("|=", "bitwise-or-assign");
-        operators.insert("^=", "bitwise-xor-assign");
-        operators.insert("<<=", "bitwise-left-shift-assign");
-        operators.insert(">>=", "bitwise-right-shift-assign");
-        operators.insert("||", "logical-or");
-        operators.insert("&&", "logical-and");
-        operators.insert("()", "call");
-        operators.insert("[]", "subscript");
-        operators.insert("->", "pointer");
-        operators.insert("->*", "pointer-star");
-        operators.insert("+", "plus");
-        operators.insert("-", "minus");
-        operators.insert("*", "mult");
-        operators.insert("/", "div");
-        operators.insert("%", "mod");
-        operators.insert("|", "bitwise-or");
-        operators.insert("&", "bitwise-and");
-        operators.insert("^", "bitwise-xor");
-        operators.insert("!", "not");
-        operators.insert("~", "bitwise-not");
-        operators.insert("<=", "lt-eq");
-        operators.insert(">=", "gt-eq");
-        operators.insert("<", "lt");
-        operators.insert(">", "gt");
-        operators.insert("=", "assign");
-        operators.insert(",", "comma");
-        operators.insert("delete[]", "delete-array");
-        operators.insert("delete", "delete");
-        operators.insert("new[]", "new-array");
-        operators.insert("new", "new");
-    }
+
     setPageType(getPageType(type));
     setGenus(getGenus(type));
 }
