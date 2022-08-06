@@ -282,8 +282,6 @@ public:
 
     [[nodiscard]] const QMap<LinkType, std::pair<QString, QString>> &links() const { return m_linkMap; }
     void setLink(LinkType linkType, const QString &link, const QString &desc);
-    [[nodiscard]] const Node *navigationParent() const { return m_navParent; }
-    void setNavigationParent(const Node *parent) { m_navParent = parent; }
 
     [[nodiscard]] Access access() const { return m_access; }
     [[nodiscard]] const Location &declLocation() const { return m_declLocation; }
@@ -370,7 +368,6 @@ private:
     QString m_outSubDir {};
     static QMap<QString, Node::NodeType> goals;
     QString m_deprecatedSince {};
-    const Node *m_navParent { nullptr };
 };
 
 QT_END_NAMESPACE

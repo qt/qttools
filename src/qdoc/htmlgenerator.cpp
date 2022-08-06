@@ -1638,7 +1638,7 @@ QString HtmlGenerator::fileExtension() const
   \endtable
 
  For other page types (page nodes) the navigation bar is constructed from home
- page, landing page, and the chain of Node::navigationParent() items (if one exists).
+ page, landing page, and the chain of PageNode::navigationParent() items (if one exists).
  This chain is constructed from the \\list structure on a page or pages defined in
  \c navigation.toctitles configuration variable.
 
@@ -1697,7 +1697,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else {
         if (node->isPageNode()) {
-            auto currentNode = node;
+            auto currentNode{static_cast<const PageNode*>(node)};
             std::deque<const Node *> navNodes;
             // Cutoff at 16 items in case there's a circular dependency
             qsizetype navItems = 0;

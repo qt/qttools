@@ -1662,51 +1662,152 @@ void QDocDatabase::updateNavigation()
     const QString configVar = CONFIG_NAVIGATION +
                               Config::dot +
                               CONFIG_TOCTITLES;
+
+    // TODO: [direct-configuration-access]
+    // The configuration is currently a singleton with some generally
+    // global mutable state.
+    //
+    // Accessing the data in this form complicates testing and
+    // requires tests that inhibit any test parallelization, as the
+    // tests are not self contained.
+    //
+    // This should be generally avoived. Possibly, we should strive
+    // for Config to be a POD type that generally is scoped to
+    // main and whose data is destructured into dependencies when
+    // the dependencies are constructed.
     bool inclusive =
             Config::instance().getBool(configVar +
                                        Config::dot +
                                        CONFIG_INCLUSIVE);
 
+    // TODO: [direct-configuration-access]
     const auto tocTitles = Config::instance().getStringList(configVar);
 
     for (const auto &tocTitle : tocTitles) {
-        if (const auto tocPage = findNodeForTarget(tocTitle, nullptr)) {
+        if (const auto candidateTarget = findNodeForTarget(tocTitle, nullptr); candidateTarget && candidateTarget->isPageNode()) {
+            auto tocPage{static_cast<const PageNode*>(candidateTarget)};
+
             Text body = tocPage->doc().body();
+
             auto *atom = body.firstAtom();
-            std::pair<Node *, Atom *> prev { nullptr, nullptr };
-            std::stack<const Node *> tocStack;
+
+            std::pair<PageNode *, Atom *> prev { nullptr, nullptr };
+
+            std::stack<const PageNode *> tocStack;
             tocStack.push(inclusive ? tocPage : nullptr);
+
             bool inItem = false;
+
+            // TODO: Understand how much we use this form of looping over atoms.
+            // If it is used a few times we might consider providing
+            // an iterator for Text to make use of a simpler
+            // range-for loop.
             while (atom) {
                 switch (atom->type()) {
-                case Atom::ListItemLeft:
-                    // Not known if we're going to have a link, push a temporary
-                    tocStack.push(nullptr);
-                    inItem = true;
-                    break;
-                case Atom::ListItemRight:
-                    tocStack.pop();
-                    inItem = false;
-                    break;
-                case Atom::Link: {
-                    if (!inItem)
+                    case Atom::ListItemLeft:
+                        // Not known if we're going to have a link, push a temporary
+                        tocStack.push(nullptr);
+                        inItem = true;
                         break;
-                    QString ref;
-                    auto page = const_cast<Node *>(findNodeForAtom(atom, nullptr, ref));
-                    // ignore self-references
-                    if (page && page == prev.first)
+                    case Atom::ListItemRight:
+                        tocStack.pop();
+                        inItem = false;
                         break;
-                    if (page && page->isPageNode()) {
+                    case Atom::Link: {
+                        if (!inItem)
+                            break;
+
+                        // TODO: [unnecessary-output-parameter]
+                        // We currently need an lvalue string to
+                        // pass to findNodeForAtom, as the
+                        // outparameter ref.
+                        //
+                        // Apart from the general problems with output
+                        // parameters, we shouldn't be forced to
+                        // instanciate an unnecessary object at call
+                        // site.
+                        //
+                        // Understand what the correct way to avoid this is.
+                        // This requires changes to findNodeForAtom
+                        // and should be addressed in the context of
+                        // revising that method.
+                        QString unused{};
+                        // TODO: Having to const cast is really a code
+                        // smell and could result in undefined
+                        // behavior in some specific cases (e.g point
+                        // to something that is actually const).
+                        //
+                        // We should understand how to sequence the
+                        // code so that we have access to mutable data
+                        // when we need it and "freeze" the data
+                        // afterwards.
+                        //
+                        // If it we expect this form of mutability at
+                        // this point we should expose a non-const API
+                        // for the database, possibly limited to a
+                        // very specific scope of execution.
+                        //
+                        // Understand what the correct sequencing for
+                        // this processing is and revise this part.
+                        auto candidatePage = const_cast<Node *>(findNodeForAtom(atom, nullptr, unused));
+                        if (!candidatePage || !candidatePage->isPageNode()) break;
+
+                        auto page{static_cast<PageNode*>(candidatePage)};
+
+                        // ignore self-references
+                        if (page == prev.first) break;
+
                         if (prev.first) {
-                            prev.first->setLink(Node::NextLink,
-                                                page->title(),
-                                                atom->linkText());
-                            page->setLink(Node::PreviousLink,
-                                          prev.first->title(),
-                                          prev.second->linkText());
+                            prev.first->setLink(
+                                Node::NextLink,
+                                page->title(),
+                                // TODO: [possible-assertion-failure][imprecise-types][atoms-link]
+                                // As with other structures in QDoc we
+                                // are able to call methods that are
+                                // valid only on very specific states.
+                                //
+                                // For some of those calls we have
+                                // some defensive programming measures
+                                // that allow us to at least identify
+                                // the error during debugging, while
+                                // for others this may currently hide
+                                // some logic error.
+                                //
+                                // To avoid those cases, we should
+                                // strive to move those cases to a
+                                // compilation error, requiring a
+                                // statically analyzable state that
+                                // represents the current model.
+                                //
+                                // This would ensure that those
+                                // lingering class of bugs are
+                                // eliminated completely, forces a
+                                // more explicit codebase where the
+                                // current capabilities do not depend
+                                // on runtime values might not be
+                                // generally visible, and does not
+                                // require us to incur into the
+                                // required state, which may be rare,
+                                // simplifying our abilities to
+                                // evaluate all possible states.
+                                //
+                                // For linking atoms, LinkAtom is
+                                // available and might be a good
+                                // enough solution to move linkText
+                                // to.
+                                atom->linkText()
+                            );
+                            page->setLink(
+                                Node::PreviousLink,
+                                prev.first->title(),
+                                // TODO: [possible-assertion-failure][imprecise-types][atoms-link]
+                                prev.second->linkText()
+                            );
                         }
+
                         if (page == tocPage)
                             break;
+
                         // Find the navigation parent from the stack; we may have null pointers
                         // for non-link list items, so skip those.
                         qsizetype popped = 0;
@@ -1714,20 +1815,20 @@ void QDocDatabase::updateNavigation()
                             tocStack.pop();
                             ++popped;
                         }
+
                         page->setNavigationParent(tocStack.empty() ? nullptr : tocStack.top());
+
                         while (--popped > 0)
                             tocStack.push(nullptr);
+
                         tocStack.push(page);
                         prev = { page, atom };
                     }
-                }
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
                 }
 
-                if (atom == body.lastAtom())
-                    break;
                 atom = atom->next();
             }
         } else {

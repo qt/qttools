@@ -49,6 +49,9 @@ public:
     [[nodiscard]] const QStringList &groupNames() const { return m_groupNames; }
     void appendGroupName(const QString &t) override { m_groupNames.append(t); }
 
+    [[nodiscard]] const PageNode *navigationParent() const { return m_navParent; }
+    void setNavigationParent(const PageNode *parent) { m_navParent = parent; }
+
 protected:
     friend class Node;
 
@@ -57,6 +60,9 @@ protected:
     QString m_title {};
     QString m_subtitle {};
     QStringList m_groupNames {};
+
+private:
+    const PageNode *m_navParent { nullptr };
 };
 
 QT_END_NAMESPACE
