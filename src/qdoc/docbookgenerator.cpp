@@ -989,9 +989,21 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         writeXmlId(id);
         newLine();
         m_inTableHeader = true;
+
+        if (!matchAhead(atom, Atom::TableItemLeft)) {
+            m_closeTableCell = true;
+            m_writer->writeStartElement(dbNamespace, "td");
+            newLine();
+        }
     }
         break;
     case Atom::TableHeaderRight:
+        if (m_closeTableCell) {
+            m_closeTableCell = false;
+            m_writer->writeEndElement(); // td
+            newLine();
+        }
+
         m_writer->writeEndElement(); // tr
         newLine();
         if (matchAhead(atom, Atom::TableHeaderLeft)) {
