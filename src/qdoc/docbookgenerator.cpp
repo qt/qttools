@@ -1059,6 +1059,43 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
 
             hasRewrittenString = true;
         }
+        // This time, a specificity of Qt Virtual Keyboard to embed SVG images. Typically, there are several images
+        // at once with the same encoding.
+        else if (str.startsWith(R"(<div align="center"><figure><svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg")")) {
+            const QStringList images = str.split("</div>", Qt::SkipEmptyParts, Qt::CaseInsensitive);
+
+            for (const QString &image : images) {
+                // Find the caption.
+                const QStringList parts = image.split("</svg>");
+                const QString svgImage = "<svg" + parts[0].split("<svg")[1] + "</svg>";
+                const QString caption = parts[1].split("<figcaption>")[1].split("</figcaption>")[0];
+
+                // Output the DocBook equivalent.
+                m_writer->writeStartElement(dbNamespace, "figure");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "title");
+                m_writer->writeCharacters(caption);
+                m_writer->writeEndElement(); // title
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "mediaobject");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "imageobject");
+                newLine();
+                m_writer->writeStartElement(dbNamespace, "imagedata");
+                newLine();
+                m_writer->device()->write(svgImage.toUtf8()); // SVG image as raw XML.
+                m_writer->writeEndElement(); // imagedata
+                newLine();
+                m_writer->writeEndElement(); // imageobject
+                newLine();
+                m_writer->writeEndElement(); // mediaobject
+                newLine();
+                m_writer->writeEndElement(); // figure
+                newLine();
+            }
+
+            hasRewrittenString = true;
+        }
 
         // The RawString may be a macro specialized for DocBook, in which case no escaping is expected.
         // QXmlStreamWriter always write UTF-8 contents.
