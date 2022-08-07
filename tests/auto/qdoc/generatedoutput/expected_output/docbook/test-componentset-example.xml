@@ -34,10 +34,13 @@ An aliased property of type int.
 <db:title>QML Types with C++ Implementation</db:title>
 <db:para>This example only demonstrates the documentation for types in QML files, but the regular QML commands may be placed inside C++ classes to define the public API of the QML type.</db:para>
 </db:section>
+<db:section>
+<db:title>List of Files</db:title>
 <db:para>Files:</db:para>
 <db:section>
 <db:title>List of Files</db:title>
-<db:itemizedlist><db:listitem>
+<db:itemizedlist>
+<db:listitem>
 <db:para><db:link xlink:href="componentset/ProgressBar.qml">componentset/ProgressBar.qml</db:link></db:para></db:listitem>
 <db:listitem>
 <db:para><db:link xlink:href="componentset/Switch.qml">componentset/Switch.qml</db:link></db:para></db:listitem>
@@ -49,4 +52,4 @@ An aliased property of type int.
 <db:para><db:link xlink:href="componentset/componentset.qml">componentset/componentset.qml</db:link></db:para></db:listitem>
 </db:itemizedlist>
 </db:section>
-</db:article>
+</db:section></db:article>

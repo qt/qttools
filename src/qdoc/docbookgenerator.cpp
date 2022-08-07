@@ -841,7 +841,24 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             newLine();
             // Unlike startSectionBegin, don't start a title here.
         }
-        break;
+
+        if (matchAhead(atom, Atom::SectionHeadingLeft) &&
+                matchAhead(atom->next(), Atom::String) &&
+                matchAhead(atom->next()->next(), Atom::SectionHeadingRight) &&
+                matchAhead(atom->next()->next()->next(), Atom::SectionRight) &&
+                !atom->next()->next()->next()->next()->next()) {
+            // A lonely section at the end of the document indicates that a
+            // generated list of some sort should be within this section.
+            // Close this section later on, in generateFooter().
+            generateAtom(atom->next(), relative);
+            generateAtom(atom->next()->next(), relative);
+            generateAtom(atom->next()->next()->next(), relative);
+
+            m_closeSectionAfterGeneratedList = true;
+            skipAhead += 4;
+            sectionLevels.pop();
+        }
+                break;
     case Atom::SectionRight:
         // All the logic about closing sections is done in the SectionLeft case
         // and generateFooter() for the end of the page.
@@ -1766,6 +1783,11 @@ void DocBookGenerator::closeTextSections()
 
 void DocBookGenerator::generateFooter()
 {
+    if (m_closeSectionAfterGeneratedList) {
+        m_closeSectionAfterGeneratedList = false;
+        endSection();
+    }
+
     closeTextSections();
     m_writer->writeEndElement(); // article
 }
@@ -2530,6 +2552,8 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
     if (paths.isEmpty())
         return;
 
+    startSection("", "List of Files");
+
     m_writer->writeStartElement(dbNamespace, "para");
     m_writer->writeCharacters(tag);
     m_writer->writeEndElement(); // para
@@ -2538,6 +2562,7 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
     startSection("List of Files");
 
     m_writer->writeStartElement(dbNamespace, "itemizedlist");
+    newLine();
 
     for (const auto &path : std::as_const(paths)) {
         auto maybe_resolved_file{file_resolver.resolve(path)};
@@ -3829,6 +3854,8 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
 void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *relative)
 {
     // From HtmlGenerator::generateDetailedMember.
+    bool closeSupplementarySection = false;
+
     if (node->isSharedCommentNode()) {
         const auto scn = reinterpret_cast<const SharedCommentNode *>(node);
         const QList<Node *> &collective = scn->collective();
@@ -3875,6 +3902,13 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
 
     generateStatus(node);
     generateBody(node);
+
+    // If the body ends with a section, the rest of the description must be wrapped in a section too.
+    if (node->hasDoc() && node->doc().body().firstAtom() && node->doc().body().lastAtom()->type() == Atom::SectionRight) {
+        closeSupplementarySection = true;
+        startSection("", "Notes");
+    }
+
     generateOverloadedSignal(node);
     generateThreadSafeness(node);
     generateSince(node);
@@ -3948,7 +3982,14 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             newLine();
         }
     }
+
+    if (closeSupplementarySection)
+        endSection();
+
+    // The list of linked pages is always in its own section.
     generateAlsoList(node);
+
+    // Close the section for this member.
     endSection(); // section
 }
 

@@ -141,6 +141,7 @@ private:
     QString m_qflagsHref {};
     bool m_inTeletype { false };
     bool m_hasSection { false };
+    bool m_closeSectionAfterGeneratedList { false };
 
     QString m_project {};
     QString m_projectDescription {};
