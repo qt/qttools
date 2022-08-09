@@ -175,7 +175,7 @@ void Section::insert(Node *node)
             if (inherited && (node->parent()->isClassNode() || node->parent()->isNamespace())) {
                 if (m_inheritedMembers.isEmpty()
                     || m_inheritedMembers.last().first != node->parent()) {
-                    QPair<Aggregate *, int> p(node->parent(), 0);
+                    std::pair<Aggregate *, int> p(node->parent(), 0);
                     m_inheritedMembers.append(p);
                 }
                 m_inheritedMembers.last().second++;

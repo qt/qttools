@@ -128,16 +128,16 @@ void XmlGenerator::setImageFileName(const Node *relative, const QString &fileNam
   returns the content of the list entry \a atom (first member of the pair).
   It also returns the number of items to skip ahead (second member of the pair).
  */
-QPair<QString, int> XmlGenerator::getAtomListValue(const Atom *atom)
+std::pair<QString, int> XmlGenerator::getAtomListValue(const Atom *atom)
 {
     const Atom *lookAhead = atom->next();
     if (!lookAhead)
-        return QPair<QString, int>(QString(), 1);
+        return std::pair<QString, int>(QString(), 1);
 
     QString t = lookAhead->string();
     lookAhead = lookAhead->next();
     if (!lookAhead || lookAhead->type() != Atom::ListTagRight)
-        return QPair<QString, int>(QString(), 1);
+        return std::pair<QString, int>(QString(), 1);
 
     lookAhead = lookAhead->next();
     int skipAhead;
@@ -152,7 +152,7 @@ QPair<QString, int> XmlGenerator::getAtomListValue(const Atom *atom)
     } else {
         skipAhead = 1;
     }
-    return QPair<QString, int>(t, skipAhead);
+    return std::pair<QString, int>(t, skipAhead);
 }
 
 /*!
@@ -161,7 +161,7 @@ QPair<QString, int> XmlGenerator::getAtomListValue(const Atom *atom)
   the attribute for this table (either "generic" or
   "borderless").
  */
-QPair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
+std::pair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
 {
     QString p0, p1;
     QString attr = "generic";
@@ -183,7 +183,7 @@ QPair<QString, QString> XmlGenerator::getTableWidthAttr(const Atom *atom)
         else if (p1.contains(QLatin1Char('%')))
             width = p1;
     }
-    return QPair<QString, QString>(width, attr);
+    return std::pair<QString, QString>(width, attr);
 }
 
 /*!
@@ -412,9 +412,9 @@ QString XmlGenerator::getAutoLink(const Atom *atom, const Node *relative, const 
     return link;
 }
 
-QPair<QString, QString> XmlGenerator::anchorForNode(const Node *node)
+std::pair<QString, QString> XmlGenerator::anchorForNode(const Node *node)
 {
-    QPair<QString, QString> anchorPair;
+    std::pair<QString, QString> anchorPair;
 
     anchorPair.first = Generator::fileName(node);
     if (node->isTextPageNode())

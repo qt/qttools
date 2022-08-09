@@ -945,7 +945,7 @@ bool Node::fromFlagValue(FlagValue fv, bool defaultValue)
  */
 void Node::setLink(LinkType linkType, const QString &link, const QString &desc)
 {
-    QPair<QString, QString> linkPair;
+    std::pair<QString, QString> linkPair;
     linkPair.first = link;
     linkPair.second = desc;
     m_linkMap[linkType] = linkPair;
@@ -1485,7 +1485,7 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   \c false. I don't know what the tag is used for.
  */
 
-/*! \fn const QMap<LinkType, QPair<QString, QString> > &Node::links() const
+/*! \fn const QMap<LinkType, std::pair<QString, QString> > &Node::links() const
   Returns a reference to this node's link map. The link map should
   probably be moved to the PageNode, because it contains links to the
   start page, next page, previous page, and contents page, and these

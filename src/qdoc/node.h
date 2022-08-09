@@ -15,7 +15,6 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
-#include <QtCore/qpair.h>
 #include <QtCore/qstringlist.h>
 
 QT_BEGIN_NAMESPACE
@@ -281,7 +280,7 @@ public:
     void setDeprecatedSince(const QString &sinceVersion);
     [[nodiscard]] const QString &deprecatedSince() const { return m_deprecatedSince; }
 
-    [[nodiscard]] const QMap<LinkType, QPair<QString, QString>> &links() const { return m_linkMap; }
+    [[nodiscard]] const QMap<LinkType, std::pair<QString, QString>> &links() const { return m_linkMap; }
     void setLink(LinkType linkType, const QString &link, const QString &desc);
     [[nodiscard]] const Node *navigationParent() const { return m_navParent; }
     void setNavigationParent(const Node *parent) { m_navParent = parent; }
@@ -361,7 +360,7 @@ private:
     Location m_declLocation {};
     Location m_defLocation {};
     Doc m_doc {};
-    QMap<LinkType, QPair<QString, QString>> m_linkMap {};
+    QMap<LinkType, std::pair<QString, QString>> m_linkMap {};
     QString m_fileNameBase {};
     QString m_physicalModuleName {};
     QString m_url {};

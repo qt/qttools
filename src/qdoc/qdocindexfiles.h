@@ -61,7 +61,7 @@ private:
     QDocDatabase *m_qdb {};
     Generator *m_gen {};
     QString m_project;
-    QList<QPair<ClassNode *, QString>> m_basesList;
+    QList<std::pair<ClassNode *, QString>> m_basesList;
     NodeList m_relatedNodes;
     bool m_storeLocationInfo;
 };

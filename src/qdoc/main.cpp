@@ -44,7 +44,7 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 }
 
 #ifndef QT_NO_TRANSLATION
-typedef QPair<QString, QTranslator *> Translator;
+typedef std::pair<QString, QTranslator *> Translator;
 static QList<Translator> translators;
 #endif
 

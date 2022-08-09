@@ -778,7 +778,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         if (atom->string() == ATOM_LIST_TAG) {
             out() << "<dt>";
         } else { // (atom->string() == ATOM_LIST_VALUE)
-            QPair<QString, int> pair = getAtomListValue(atom);
+            std::pair<QString, int> pair = getAtomListValue(atom);
             skipAhead = pair.second;
             QString t = protectEnc(plainCode(marker->markedUpEnumValue(pair.first, relative)));
             out() << "<tr><td class=\"topAlign\"><code>" << t << "</code>";
@@ -884,7 +884,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         }
         break;
     case Atom::TableLeft: {
-        QPair<QString, QString> pair = getTableWidthAttr(atom);
+        std::pair<QString, QString> pair = getTableWidthAttr(atom);
         QString attr = pair.second;
         QString width = pair.first;
 
@@ -1827,8 +1827,8 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
     refMap.clear();
 
     if (node && !node->links().empty()) {
-        QPair<QString, QString> linkPair;
-        QPair<QString, QString> anchorPair;
+        std::pair<QString, QString> linkPair;
+        std::pair<QString, QString> anchorPair;
         const Node *linkNode;
         bool useSeparator = false;
 
@@ -3157,7 +3157,7 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
 
 void HtmlGenerator::generateSectionInheritedList(const Section &section, const Node *relative)
 {
-    const QList<QPair<Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
+    const QList<std::pair<Aggregate *, int>> &inheritedMembers = section.inheritedMembers();
     for (const auto &member : inheritedMembers) {
         out() << "<li class=\"fn\">";
         out() << member.second << ' ';

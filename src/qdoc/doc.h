@@ -23,7 +23,7 @@ class DocPrivate;
 class Quoter;
 class Text;
 
-typedef QPair<QString, QString> ArgPair;
+typedef std::pair<QString, QString> ArgPair;
 typedef QList<ArgPair> ArgList;
 typedef QMultiMap<QString, QString> QStringMultiMap;
 

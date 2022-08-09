@@ -9,7 +9,6 @@
 #include "singleton.h"
 
 #include <QtCore/qmap.h>
-#include <QtCore/qpair.h>
 #include <QtCore/qset.h>
 #include <QtCore/qstack.h>
 #include <QtCore/qstringlist.h>
