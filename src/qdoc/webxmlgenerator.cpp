@@ -834,7 +834,7 @@ void WebXMLGenerator::endLink(QXmlStreamWriter &writer)
 void WebXMLGenerator::generateRelations(QXmlStreamWriter &writer, const Node *node)
 {
     if (node && !node->links().empty()) {
-        QPair<QString, QString> anchorPair;
+        std::pair<QString, QString> anchorPair;
         const Node *linkNode;
 
         for (auto it = node->links().cbegin(); it != node->links().cend(); ++it) {

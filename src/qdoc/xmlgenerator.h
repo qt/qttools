@@ -29,8 +29,8 @@ protected:
     static void rewritePropertyBrief(const Atom *atom, const Node *relative);
     static Node::NodeType typeFromString(const Atom *atom);
     static void setImageFileName(const Node *relative, const QString &fileName);
-    static QPair<QString, int> getAtomListValue(const Atom *atom);
-    static QPair<QString, QString> getTableWidthAttr(const Atom *atom);
+    static std::pair<QString, int> getAtomListValue(const Atom *atom);
+    static std::pair<QString, QString> getTableWidthAttr(const Atom *atom);
 
     QString registerRef(const QString &ref);
     QString refForNode(const Node *node);
@@ -39,7 +39,7 @@ protected:
     QString getAutoLink(const Atom *atom, const Node *relative, const Node **node,
                         Node::Genus = Node::DontCare);
 
-    QPair<QString, QString> anchorForNode(const Node *node);
+    std::pair<QString, QString> anchorForNode(const Node *node);
 
     static QString targetType(const Node *node);
 

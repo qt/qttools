@@ -226,7 +226,7 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             QString bases = attributes.value(QLatin1String("bases")).toString();
             if (!bases.isEmpty())
                 m_basesList.append(
-                        QPair<ClassNode *, QString>(static_cast<ClassNode *>(node), bases));
+                        std::pair<ClassNode *, QString>(static_cast<ClassNode *>(node), bases));
         }
         if (!indexUrl.isEmpty())
             location = Location(indexUrl + QLatin1Char('/') + name.toLower() + ".html");
