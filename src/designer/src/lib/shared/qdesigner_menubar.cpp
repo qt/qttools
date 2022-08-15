@@ -478,7 +478,7 @@ void QDesignerMenuBar::showLineEdit()
     m_editor->selectAll();
     m_editor->setGeometry(actionGeometry(action));
     m_editor->show();
-    qApp->setActiveWindow(m_editor);
+    m_editor->activateWindow();
     m_editor->setFocus();
     m_editor->grabKeyboard();
 }
