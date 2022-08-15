@@ -938,7 +938,7 @@ void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &i
 
     if (added) {
         save();
-        QApplication::setActiveWindow(this);
+        activateWindow();
         // Is the new item visible in filtered mode?
         const WidgetBoxCategoryListView::AccessMode am = WidgetBoxCategoryListView::FilteredAccess;
         if (const int count = categoryView->count(am))
