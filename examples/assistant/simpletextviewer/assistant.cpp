@@ -115,11 +115,11 @@ bool Assistant::startAssistant()
     }
 
     if (m_process->state() != QProcess::Running) {
-        QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
+        QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath);
 #ifndef Q_OS_DARWIN
-        app += QLatin1String("assistant");
+        app += QLatin1String("/assistant");
 #else
-        app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");
+        app += QLatin1String("/Assistant.app/Contents/MacOS/Assistant");
 #endif
 
         const QString collectionDirectory = documentationDirectory();
@@ -135,7 +135,8 @@ bool Assistant::startAssistant()
         m_process->start(app, args);
 
         if (!m_process->waitForStarted()) {
-            showError(tr("Unable to launch Qt Assistant (%1): %2").arg(app, m_process->errorString()));
+            showError(tr("Unable to launch Qt Assistant (%1): %2")
+                              .arg(QDir::toNativeSeparators(app), m_process->errorString()));
             return false;
         }
     }

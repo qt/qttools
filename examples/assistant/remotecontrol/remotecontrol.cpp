@@ -98,11 +98,11 @@ void RemoteControl::on_launchButton_clicked()
     if (process->state() == QProcess::Running)
         return;
 
-    QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath) + QDir::separator();
+    QString app = QLibraryInfo::location(QLibraryInfo::BinariesPath);
 #if !defined(Q_OS_MAC)
-    app += QLatin1String("assistant");
+    app += QLatin1String("/assistant");
 #else
-    app += QLatin1String("Assistant.app/Contents/MacOS/Assistant");
+    app += QLatin1String("/Assistant.app/Contents/MacOS/Assistant");
 #endif
 
     ui.contentsCheckBox->setChecked(true);
@@ -113,8 +113,9 @@ void RemoteControl::on_launchButton_clicked()
     args << QLatin1String("-enableRemoteControl");
     process->start(app, args);
     if (!process->waitForStarted()) {
-        QMessageBox::critical(this, tr("Remote Control"),
-            tr("Could not start Qt Assistant from %1.").arg(app));
+        QMessageBox::critical(
+                this, tr("Remote Control"),
+                tr("Could not start Qt Assistant from %1.").arg(QDir::toNativeSeparators(app)));
         return;
     }
 

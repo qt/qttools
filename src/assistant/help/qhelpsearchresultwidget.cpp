@@ -60,6 +60,7 @@ QT_BEGIN_NAMESPACE
 class QResultWidget : public QTextBrowser
 {
     Q_OBJECT
+    Q_PROPERTY(QColor linkColor READ linkColor WRITE setLinkColor)
 
 public:
     QResultWidget(QWidget *parent = nullptr)
@@ -68,6 +69,15 @@ public:
         connect(this, &QTextBrowser::anchorClicked,
                 this, &QResultWidget::requestShowLink);
         setContextMenuPolicy(Qt::NoContextMenu);
+        setLinkColor(palette().color(QPalette::Link));
+    }
+
+    QColor linkColor() const { return m_linkColor; }
+    void setLinkColor(const QColor &color)
+    {
+        m_linkColor = color;
+        const QString sheet = QString::fromLatin1("a { text-decoration: underline; color: %1 }").arg(m_linkColor.name());
+        document()->setDefaultStyleSheet(sheet);
     }
 
     void showResultPage(const QVector<QHelpSearchResult> results, bool isIndexing)
@@ -88,10 +98,10 @@ public:
             }
 
             for (const QHelpSearchResult &result : results) {
-                str << "<div style=\"text-align:left; font-weight:bold\"><a href=\""
-                    << result.url().toString() << "\">" << result.title() << "</a>"
-                    "<div style=\"color:green; font-weight:normal;"
-                    " margin:5px\">" << result.snippet() << "</div></div><p></p>";
+                str << "<div style=\"text-align:left\"><a href=\""
+                    << result.url().toString() << "\">"
+                    << result.title() << "</a></div>"
+                    "<div style =\"margin:5px\">" << result.snippet() << "</div>";
             }
         } else {
             str << "<div align=\"center\"><br><br><h2>"
@@ -114,6 +124,9 @@ signals:
 
 private slots:
     void setSource(const QUrl & /* name */) override {}
+
+private:
+    QColor m_linkColor;
 };
 
 

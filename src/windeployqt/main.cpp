@@ -1334,7 +1334,18 @@ static DeployResult deploy(const Options &options,
                     const QString icuVersion = icuLibs.front().mid(index, numberExpression.matchedLength());
                     if (optVerboseLevel > 1)
                         std::wcout << "Adding ICU version " << icuVersion << '\n';
-                    icuLibs.push_back(QStringLiteral("icudt") + icuVersion + QLatin1String(windowsSharedLibrarySuffix));
+                    QString icuLib = QStringLiteral("icudt") + icuVersion
+                            + QLatin1String(windowsSharedLibrarySuffix);;
+                    // Some packages contain debug dlls of ICU libraries even though it's a C
+                    // library and the official packages do not differentiate (QTBUG-87677)
+                    if (result.isDebug) {
+                        const QString icuLibCandidate = QStringLiteral("icudtd") + icuVersion
+                                + QLatin1String(windowsSharedLibrarySuffix);
+                        if (!findInPath(icuLibCandidate).isEmpty()) {
+                            icuLib = icuLibCandidate;
+                        }
+                    }
+                    icuLibs.push_back(icuLib);
                 }
                 for (const QString &icuLib : qAsConst(icuLibs)) {
                     const QString icuPath = findInPath(icuLib);

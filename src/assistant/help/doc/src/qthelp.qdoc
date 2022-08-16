@@ -128,7 +128,7 @@
             \li .qhc
             \li The help collection file that QHelpEngine operates on. It can
                 contain references to any number of compressed help files as
-                well as additional information, such as custom filters.
+                well as additional information.
     \endtable
 
     \section1 Generating Qt Help
@@ -275,48 +275,14 @@
     The virtual folder tag is mandatory and the folder name must not
     contain any slashes (/).
 
-    \target Custom Filters
-    \section2 Custom Filters
-
-    The Qt help project file contains optional definitions of
-    custom filters. A custom filter contains a list of filter
-    attributes which will be used later to display only the documentation
-    set that has all those attributes assigned. So, when setting the
-    current filter in the QHelpEngine to \e {My Application 1.0} only
-    the documentation which has \e myapp and \e {1.0} set as filter
-    attributes will be shown.
-
-    \snippet doc_src_qthelp.qdoc 9
-
-    You can define any number of custom filters in a help project file.
-    It is important to know that you do not have to specify the filter
-    attributes in the same project file. These attributes can be defined
-    in any help file, in a filter section.
-
     \target Filter Section
     \section2 Filter Section
 
-    A filter section contains the actual documentation. One Qt help project
-    file may contain more than one filter sections. Every filter section
-    consists of four parts, the filter attributes section, the table of
-    contents, the keywords and the files list. In theory all parts are
-    optional but not specifying anything there will result in an empty
-    documentation set.
-
-    \section3 Filter Attributes
-
-    Every filter section should have filter attributes assigned to it, to
-    enable documentation filtering. If no filter attribute is defined, the
-    documentation will only be shown if no filtering occurs, meaning the
-    current custom filter in the QHelpEngine does not contain any filter
-    attributes.
-
-    \snippet doc_src_qthelp.qdoc 10
-
-    In this case, the filter attributes \e myapp and \e {1.0} are assigned to
-    the filter section. This means that all contents specified in this section
-    will only be shown if the current custom filter has \e myapp or \e {1.0},
-    or both, as filter attributes.
+    A filter section contains the actual documentation. A Qt help project
+    file may contain more than one filter section. Every filter section
+    consists of the table of contents, the keywords, and the files list.
+    In theory all parts are optional but not specifying anything there will
+    result in an empty documentation set.
 
     \section3 Table of Contents
 
