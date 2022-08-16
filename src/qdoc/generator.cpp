@@ -2098,6 +2098,9 @@ QString Generator::typeString(const Node *node)
         case FunctionNode::JsMethod:
         case FunctionNode::QmlMethod:
             return "method";
+        case FunctionNode::MacroWithParams:
+        case FunctionNode::MacroWithoutParams:
+            return "macro";
         default:
             break;
         }
