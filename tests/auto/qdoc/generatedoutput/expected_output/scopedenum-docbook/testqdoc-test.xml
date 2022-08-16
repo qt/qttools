@@ -324,7 +324,7 @@
 <db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>A macro with argument <db:code role="parameter">x</db:code>.</db:para>
-<db:para>This function was introduced in Test 1.1.</db:para>
+<db:para>This macro was introduced in Test 1.1.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="obsolete">
