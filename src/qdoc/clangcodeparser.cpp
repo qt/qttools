@@ -1178,7 +1178,7 @@ static const char *defaultArgs_[] = {
 #endif
     "-DQ_QDOC",
     "-DQ_CLANG_QDOC",
-    "-DQT_DISABLE_DEPRECATED_BEFORE=0",
+    "-DQT_DISABLE_DEPRECATED_UP_TO=0",
     "-DQT_ANNOTATE_CLASS(type,...)=static_assert(sizeof(#__VA_ARGS__),#type);",
     "-DQT_ANNOTATE_CLASS2(type,a1,a2)=static_assert(sizeof(#a1,#a2),#type);",
     "-DQT_ANNOTATE_FUNCTION(a)=__attribute__((annotate(#a)))",
