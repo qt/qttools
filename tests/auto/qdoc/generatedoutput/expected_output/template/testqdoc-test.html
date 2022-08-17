@@ -52,6 +52,8 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> TestQDoc::Test &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#operator-eq">operator=</a></b>(TestQDoc::Test &amp;&amp;<i>other</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void (*)(bool) </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#funcPtr">funcPtr</a></b>(bool <i>b</i>, const char *<i>s</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#inlineFunction">inlineFunction</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#methodWithEmDashInItsDocs">methodWithEmDashInItsDocs</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#methodWithEnDashInItsDocs">methodWithEnDashInItsDocs</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int, int <i>v</i> = 0)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunctionDefaultArg">someFunctionDefaultArg</a></b>(int <i>i</i>, bool <i>b</i> = false)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#virtualFun">virtualFun</a></b>()</td></tr>
@@ -113,6 +115,26 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <h3 class="fn" id="inlineFunction"><span class="type">void</span> Test::<span class="name">inlineFunction</span>()</h3>
 <p>An inline function, documented using the \fn QDoc command.</p>
 <!-- @@@inlineFunction -->
+<!-- $$$methodWithEmDashInItsDocs[overload1]$$$methodWithEmDashInItsDocs -->
+<h3 class="fn" id="methodWithEmDashInItsDocs"><span class="type">void</span> Test::<span class="name">methodWithEmDashInItsDocs</span>()</h3>
+<p>This method has em dashes in its documentation&mdash;as you'll find represented by <code>---</code> in the sources&mdash;here and there. The important bit to note is that when passed e.g&#x2e; to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</p>
+<p>-----------------------------------------------------------------------</p>
+<p>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</p>
+<p>&mdash;You can also start a new paragraph with an em dash, if you want to.</p>
+<p><b>See also </b><a href="testqdoc-test.html#methodWithEnDashInItsDocs">methodWithEnDashInItsDocs</a>.</p>
+<!-- @@@methodWithEmDashInItsDocs -->
+<!-- $$$methodWithEnDashInItsDocs[overload1]$$$methodWithEnDashInItsDocs -->
+<h3 class="fn" id="methodWithEnDashInItsDocs"><span class="type">void</span> Test::<span class="name">methodWithEnDashInItsDocs</span>()</h3>
+<p>This method has en dashes in its documentation &ndash; as you'll find represented by <code>--</code> in the sources &ndash; here and there. The important bit to note is that when passed e.g&#x2e; to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</p>
+<pre class="cpp"><span class="keyword">for</span> (<span class="type">int</span> i <span class="operator">=</span> <span class="number">42</span>; i <span class="operator">&gt;</span> <span class="number">0</span>; <span class="operator">-</span><span class="operator">-</span>i)
+    <span class="comment">// Do something cool during countdown.</span></pre>
+<p>...as it would be silly if this would output &ndash;i instead of <code>--i</code>.</p>
+<p>-----------------------------------------------------------------------</p>
+<p>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the \hr command instead, like this:</p>
+<hr />
+<p>&ndash; You can also start a new paragraph with an en dash, if you want to.</p>
+<p><b>See also </b>methodWithEnDashInItsDocs.</p>
+<!-- @@@methodWithEnDashInItsDocs -->
 <!-- $$$someFunction[overload1]$$$someFunctionintint -->
 <h3 class="fn" id="someFunction"><span class="type">int</span> Test::<span class="name">someFunction</span>(<span class="type">int</span>, <span class="type">int</span> <i>v</i> = 0)</h3>
 <p>Function that takes a parameter <i>v</i>. Also returns the value of <i>v</i>.</p>

@@ -1138,6 +1138,34 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
             } // case '\\' (qdoc markup command)
             break;
         }
+        case '-': { // Catch en-dash (--) and em-dash (---) markup here.
+            enterPara();
+            qsizetype dashCount = 1;
+            ++m_position;
+
+            // Figure out how many hyphens in a row.
+            while ((m_position < m_inputLength) && (m_input.at(m_position) == '-')) {
+                ++dashCount;
+                ++m_position;
+            }
+
+            if (dashCount == 3) {
+                // 3 hyphens, append an em-dash character.
+                const QChar emDash(8212);
+                appendChar(emDash);
+            } else if (dashCount == 2) {
+                // 2 hyphens; append an en-dash character.
+                const QChar enDash(8211);
+                appendChar(enDash);
+            } else {
+                // dashCount is either one or more than three. Append a hyphen
+                // the appropriate number of times. This ensures '----' doesn't
+                // end up as an em-dash followed by a hyphen in the output.
+                for (qsizetype i = 0; i < dashCount; ++i)
+                    appendChar('-');
+            }
+            break;
+        }
         case '{':
             enterPara();
             appendChar('{');

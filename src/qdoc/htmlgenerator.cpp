@@ -3402,6 +3402,10 @@ QString HtmlGenerator::protect(const QString &string)
             APPEND("&lt;");
         } else if (ch == QLatin1Char('>')) {
             APPEND("&gt;");
+        } else if (ch == QChar(8211)) {
+            APPEND("&ndash;");
+        } else if (ch == QChar(8212)) {
+            APPEND("&mdash;");
         } else if (ch == QLatin1Char('"')) {
             APPEND("&quot;");
         } else if ((ch == QLatin1Char('*') && i + 1 < n && string.at(i) == QLatin1Char('/'))

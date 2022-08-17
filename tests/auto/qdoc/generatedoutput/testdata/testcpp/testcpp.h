@@ -50,6 +50,8 @@ using Specialized = Struct<int, T>;
     void obsoleteMember();
     void anotherObsoleteMember();
     void deprecatedMember();
+    void methodWithEnDashInItsDocs();
+    void methodWithEmDashInItsDocs();
     void func(bool) {};
     //! [funcPtr]
     void (*funcPtr(bool b, const char *s))(bool) {

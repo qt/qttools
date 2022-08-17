@@ -38,6 +38,29 @@
                     <brief>An inline function, documented using the \fn QDoc command.</brief>
                 </description>
             </function>
+            <function name="methodWithEmDashInItsDocs" fullname="TestQDoc::Test::methodWithEmDashInItsDocs" href="testqdoc-test.html#methodWithEmDashInItsDocs" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void methodWithEmDashInItsDocs()">
+                <description>
+                    <para>This method has em dashes in its documentation—as you'll find represented by <teletype type="highlighted">---</teletype> in the sources—here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</para>
+                    <para>-----------------------------------------------------------------------</para>
+                    <para>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</para>
+                    <para>—You can also start a new paragraph with an em dash, if you want to.</para>
+                    <see-also>
+                        <link raw="methodWithEnDashInItsDocs" href="testqdoc-test.html#methodWithEnDashInItsDocs" type="function">methodWithEnDashInItsDocs</link>
+                    </see-also>
+                </description>
+            </function>
+            <function name="methodWithEnDashInItsDocs" fullname="TestQDoc::Test::methodWithEnDashInItsDocs" href="testqdoc-test.html#methodWithEnDashInItsDocs" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void methodWithEnDashInItsDocs()">
+                <description>
+                    <para>This method has en dashes in its documentation – as you'll find represented by <teletype type="highlighted">--</teletype> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</para>
+                    <code>for (int i = 42; i &gt; 0; --i)
+    // Do something cool during countdown.</code>
+                    <para>...as it would be silly if this would output –i instead of <teletype type="highlighted">--i</teletype>.</para>
+                    <para>-----------------------------------------------------------------------</para>
+                    <para>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the \hr command instead, like this:</para>
+                    <para>– You can also start a new paragraph with an en dash, if you want to.</para>
+                    <see-also>methodWithEnDashInItsDocs</see-also>
+                </description>
+            </function>
             <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void obsoleteMember()">
                 <description>
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>

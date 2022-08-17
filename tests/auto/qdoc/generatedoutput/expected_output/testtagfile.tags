@@ -200,6 +200,20 @@
         </member>
         <member kind="function" protection="public" virtualness="non" static="no">
             <type>void</type>
+            <name>methodWithEmDashInItsDocs</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>methodWithEmDashInItsDocs</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>methodWithEnDashInItsDocs</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>methodWithEnDashInItsDocs</anchor>
+            <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
             <name>obsoleteMember</name>
             <anchorfile>testqdoc-test-obsolete.html</anchorfile>
             <anchor>obsoleteMember</anchor>

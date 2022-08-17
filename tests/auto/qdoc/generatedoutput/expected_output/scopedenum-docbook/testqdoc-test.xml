@@ -229,6 +229,60 @@
 </db:methodsynopsis>
 <db:para>An inline function, documented using the \fn QDoc command.</db:para>
 </db:section>
+<db:section xml:id="methodWithEmDashInItsDocs">
+<db:title>Test::void methodWithEmDashInItsDocs()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>methodWithEmDashInItsDocs</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void methodWithEmDashInItsDocs()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This method has em dashes in its documentation—as you'll find represented by <db:code>---</db:code> in the sources—here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</db:para>
+<db:para>-----------------------------------------------------------------------</db:para>
+<db:para>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</db:para>
+<db:para>—You can also start a new paragraph with an em dash, if you want to.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="testqdoc-test.xml#methodWithEnDashInItsDocs">methodWithEnDashInItsDocs</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="methodWithEnDashInItsDocs">
+<db:title>Test::void methodWithEnDashInItsDocs()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>methodWithEnDashInItsDocs</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void methodWithEnDashInItsDocs()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This method has en dashes in its documentation – as you'll find represented by <db:code>--</db:code> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</db:para>
+<db:programlisting language="cpp">for (int i = 42; i &amp;gt; 0; --i)
+    // Do something cool during countdown.
+</db:programlisting>
+<db:para>...as it would be silly if this would output –i instead of <db:code>--i</db:code>.</db:para>
+<db:para>-----------------------------------------------------------------------</db:para>
+<db:para>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the \hr command instead, like this:</db:para>
+<db:para>– You can also start a new paragraph with an en dash, if you want to.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="">methodWithEnDashInItsDocs</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
 <db:section xml:id="someFunction">
 <db:title>Test::int someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
 <db:methodsynopsis>

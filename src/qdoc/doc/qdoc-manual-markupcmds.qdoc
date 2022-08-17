@@ -78,6 +78,8 @@
     \li \l {raw-command} {\\unicode}
     \li \l {warning-command} {\\warning}
     \li \l {backslash-sequence} {\\\\}
+    \li \l {endash-sequence} {\--}
+    \li \l {emdash-sequence} {-\--}
     \endlist
 */
 
@@ -627,6 +629,101 @@
         like this: \c {C:\windows\home\}.
     \endquotation
 
+    \target endash-sequence
+    \section1 \-- (en dash)
+    QDoc renders double hyphens as an en dash. QDoc markup commands
+    designed to make their input appear verbatim---such as the \\c
+    command---won't replace the double hyphens with an en dash character.
+    For example:
+
+        \code
+        / *!
+            The \\c command -- useful if you want text in a monospace font --
+            is well documented.
+        * /
+        \endcode
+
+        QDoc renders this as:
+
+        \quotation
+            The \\c command -- useful if you want text in a monospace font --
+            is well documented.
+        \endquotation
+
+    However, other commands may require that the hyphens are escaped to ensure
+    QDoc renders the output as expected. For example;
+
+            \code
+            / *!
+                This \l {endash-sequence}{link to the -- (endash) sequence}
+                isn't escaped and QDoc therefore renders an endash in the link
+                text. However, the escaped
+                \l {endash-sequence}{link to the \-- (endash) sequence}
+                renders both hyphens as intended.
+            * /
+            \endcode
+
+            QDoc renders this as:
+
+            \quotation
+                This \l {endash-sequence}{link to the -- (endash) sequence}
+                isn't escaped and QDoc therefore renders an endash in the link
+                text. However, the escaped
+                \l {endash-sequence}{link to the \-- (endash) sequence}
+                renders both hyphens as intended.
+            \endquotation
+
+    See also \l {emdash-sequence}{\-\-- (em dash)}.
+
+    \target emdash-sequence
+    \section1 -\-- (em dash)
+
+        QDoc renders triple hyphens as an en dash. QDoc markup commands
+        designed to make their input appear verbatim---such as the \\c
+        command---won't replace the triple hyphens with an en dash character.
+        For example:
+
+            \code
+            / *!
+                The \\c command---useful when you want text to be rendered
+                verbatim---is well documented.
+            * /
+            \endcode
+
+            QDoc renders this as:
+
+            \quotation
+                The \\c command---useful when you want text to be rendered
+                verbatim---is well documented.
+            \endquotation
+
+        However, other commands may require that the hyphens are escaped to ensure
+        QDoc renders the output as expected. For example;
+
+                \code
+                / *!
+                    This \l {emdash-sequence}{link to the --- (emdash) sequence}
+                    isn't escaped and QDoc therefore renders an emdash in the link
+                    text. However, the escaped
+                    \l {emdash-sequence}{link to the -\-- (emdash) sequence}
+                    renders both hyphens as intended.
+                * /
+                \endcode
+
+                QDoc renders this as:
+
+                \quotation
+                    This \l {emdash-sequence}{link to the --- (emdash) sequence}
+                    isn't escaped and QDoc therefore renders an emdash in the link
+                    text. However, the escaped
+                    \l {emdash-sequence}{link to the -\-- (emdash) sequence}
+                    renders both hyphens as intended.
+                \endquotation
+
+        \note The escaped control sequence in this example is for the en dash.
+              This avoids a hyphen followed by an en dash in the output.
+
+    See also \l {endash-sequence}{\-- (en dash)}.
 */
 
 

@@ -39,6 +39,8 @@
             <keyword name="documentMe" id="CrossModuleRef::documentMe" ref="crossmoduleref.html#documentMe"/>
             <keyword name="funcPtr" id="Test::funcPtr" ref="testqdoc-test.html#funcPtr"/>
             <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
+            <keyword name="methodWithEmDashInItsDocs" id="Test::methodWithEmDashInItsDocs" ref="testqdoc-test.html#methodWithEmDashInItsDocs"/>
+            <keyword name="methodWithEnDashInItsDocs" id="Test::methodWithEnDashInItsDocs" ref="testqdoc-test.html#methodWithEnDashInItsDocs"/>
             <keyword name="obsoleteMember" id="Test::obsoleteMember" ref="testqdoc-test-obsolete.html#obsoleteMember"/>
             <keyword name="operator++" id="Test::operator++" ref="testqdoc-test-obsolete.html#operator-2b-2b"/>
             <keyword name="operator--" id="Test::operator--" ref="testqdoc-test-obsolete.html#operator--"/>
