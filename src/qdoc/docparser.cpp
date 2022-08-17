@@ -234,8 +234,7 @@ static struct
 int DocParser::s_tabSize;
 QStringList DocParser::s_ignoreWords;
 bool DocParser::s_quoting = false;
-FileResolver* DocParser::file_resolver{nullptr};
-
+FileResolver *DocParser::file_resolver{ nullptr };
 
 static QString cleanLink(const QString &link)
 {
@@ -245,7 +244,7 @@ static QString cleanLink(const QString &link)
     return link.mid(colonPos + 1).simplified();
 }
 
-void DocParser::initialize(const Config &config, FileResolver& file_resolver)
+void DocParser::initialize(const Config &config, FileResolver &file_resolver)
 {
     s_tabSize = config.getInt(CONFIG_TABSIZE);
     s_ignoreWords = config.getStringList(CONFIG_IGNOREWORDS);
@@ -1859,7 +1858,7 @@ void DocParser::leaveTableRow()
     }
 }
 
-void DocParser::quoteFromFile(const QString& filename)
+void DocParser::quoteFromFile(const QString &filename)
 {
     // KLUDGE: We dereference file_resolver as it is temporarily a pointer.
     // See the comment for file_resolver in the header files for more context.
@@ -1887,7 +1886,7 @@ void DocParser::quoteFromFile(const QString& filename)
             (*file_resolver).get_search_directories().cend(),
             u"Searched directories:"_qs,
             std::plus(),
-            [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
+            [](const DirectoryPath &directory_path){ return " " + directory_path.value(); }
         );
 
         location().warning(u"Cannot find file to quote from: %1"_qs.arg(filename), details);
