@@ -77,7 +77,7 @@
     \li \l {underline-command} {\\underline}
     \li \l {raw-command} {\\unicode}
     \li \l {warning-command} {\\warning}
-    \li \l {backslash-command} {\\\\}
+    \li \l {backslash-sequence} {\\\\}
     \endlist
 */
 
@@ -553,7 +553,7 @@
     The \\uicontrol command is used to mark content as being used for UI
     control elements. When using HTML, the output is rendered in bold.
 
-    \sa \\b
+    See also \l {b-command}{\\b}.
 
     \target underline-command
     \section1 \\underline
@@ -579,14 +579,14 @@
     If the argument contains spaces or other punctuation, enclose the
     argument in curly brackets.
 
-    \target backslash-command
+    \target backslash-sequence
     \section1 \\\\ (double backslash)
 
-    The \\\\ command expands to a double backslash.
+    The sequence \\\\ expands to a single backslash.
 
     QDoc commands always start with a single backslash. To display a
-    single backslash in the text you need to type two backslashes. If
-    you want to display two backslashes, you need to type four.
+    single backslash in the text, you must type two backslashes. If
+    you want to display two backslashes, you must type four.
 
     \code
     / *!
