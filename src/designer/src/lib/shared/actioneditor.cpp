@@ -53,6 +53,7 @@ static const char *actionEditorViewModeKey = "ActionEditorViewMode";
 
 static const char *iconPropertyC = "icon";
 static const char *shortcutPropertyC = "shortcut";
+static const char *menuRolePropertyC = "menuRole";
 static const char *toolTipPropertyC = "toolTip";
 static const char *checkablePropertyC = "checkable";
 static const char *objectNamePropertyC = "objectName";
@@ -447,6 +448,8 @@ void ActionEditor::slotNewAction()
 
         sheet->setProperty(sheet->indexOf(QLatin1String(iconPropertyC)), QVariant::fromValue(actionData.icon));
 
+        setInitialProperty(sheet, QLatin1String(menuRolePropertyC), QVariant::fromValue(actionData.menuRole));
+
         AddActionCommand *cmd = new AddActionCommand(formWindow());
         cmd->init(action);
         formWindow()->commandHistory()->push(cmd);
@@ -527,6 +530,7 @@ void ActionEditor::editAction(QAction *action, int column)
     oldActionData.icon = qvariant_cast<PropertySheetIconValue>(sheet->property(sheet->indexOf(QLatin1String(iconPropertyC))));
     oldActionData.keysequence = ActionModel::actionShortCut(sheet);
     oldActionData.checkable =  action->isCheckable();
+    oldActionData.menuRole.value = action->menuRole();
     dlg.setActionData(oldActionData);
 
     switch (column) {
@@ -545,6 +549,9 @@ void ActionEditor::editAction(QAction *action, int column)
     case qdesigner_internal::ActionModel::ToolTipColumn:
         dlg.focusTooltip();
         break;
+    case qdesigner_internal::ActionModel::MenuRoleColumn:
+        dlg.focusMenuRole();
+        break;
     }
 
     if (!dlg.exec())
@@ -558,7 +565,8 @@ void ActionEditor::editAction(QAction *action, int column)
 
     const bool severalChanges = (changeMask != ActionData::TextChanged)      && (changeMask != ActionData::NameChanged)
                              && (changeMask != ActionData::ToolTipChanged)   && (changeMask != ActionData::IconChanged)
-                             && (changeMask != ActionData::CheckableChanged) && (changeMask != ActionData::KeysequenceChanged);
+                             && (changeMask != ActionData::CheckableChanged) && (changeMask != ActionData::KeysequenceChanged)
+                             && (changeMask != ActionData::MenuRoleChanged);
 
     QDesignerFormWindowInterface *fw = formWindow();
     QUndoStack *undoStack = fw->commandHistory();
@@ -582,6 +590,9 @@ void ActionEditor::editAction(QAction *action, int column)
 
     if (changeMask & ActionData::KeysequenceChanged)
         undoStack->push(setKeySequencePropertyCommand(newActionData.keysequence, action, fw));
+
+    if (changeMask & ActionData::MenuRoleChanged)
+        undoStack->push(setPropertyCommand(QLatin1String(menuRolePropertyC), static_cast<QAction::MenuRole>(newActionData.menuRole.value), QAction::NoRole, action, fw));
 
     if (severalChanges)
         fw->endCommand();

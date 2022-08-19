@@ -34,7 +34,8 @@ struct ActionData {
 
     enum ChangeMask {
         TextChanged = 0x1, NameChanged = 0x2, ToolTipChanged = 0x4,
-        IconChanged = 0x8, CheckableChanged = 0x10, KeysequenceChanged = 0x20
+        IconChanged = 0x8, CheckableChanged = 0x10, KeysequenceChanged = 0x20,
+        MenuRoleChanged = 0x40
     };
 
     // Returns a combination of ChangeMask flags
@@ -46,6 +47,7 @@ struct ActionData {
     PropertySheetIconValue icon;
     bool checkable{false};
     PropertySheetKeySequenceValue keysequence;
+    PropertySheetFlagValue menuRole;
 };
 
 inline bool operator==(const ActionData &a1, const ActionData &a2) {  return a1.compare(a2) == 0u; }
@@ -70,6 +72,7 @@ public slots:
     void focusTooltip();
     void focusShortcut();
     void focusCheckable();
+    void focusMenuRole();
 
 private slots:
     void on_editActionText_textEdited(const QString &text);

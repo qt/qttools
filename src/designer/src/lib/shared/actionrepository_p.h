@@ -39,7 +39,7 @@ class QDESIGNER_SHARED_EXPORT ActionModel: public QStandardItemModel
 {
     Q_OBJECT
 public:
-    enum Columns { NameColumn, UsedColumn, TextColumn, ShortCutColumn, CheckedColumn, ToolTipColumn, NumColumns };
+    enum Columns { NameColumn, UsedColumn, TextColumn, ShortCutColumn, CheckedColumn, ToolTipColumn, MenuRoleColumn, NumColumns };
     enum   { ActionRole = Qt::UserRole + 1000 };
 
     explicit ActionModel(QWidget *parent = nullptr);

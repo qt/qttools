@@ -12,6 +12,7 @@
 #include <QtDesigner/abstractformwindow.h>
 #include <QtDesigner/abstractformeditor.h>
 
+#include <QtCore/QMetaEnum>
 #include <QtWidgets/qpushbutton.h>
 
 QT_BEGIN_NAMESPACE
@@ -33,6 +34,8 @@ unsigned ActionData::compare(const ActionData &rhs) const
         rc |= CheckableChanged;
     if (keysequence != rhs.keysequence)
         rc |= KeysequenceChanged ;
+    if (menuRole.value != rhs.menuRole.value)
+        rc |= MenuRoleChanged ;
     return rc;
 }
 
@@ -51,6 +54,13 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     m_ui->keysequenceResetToolButton->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
     connect(m_ui->keysequenceResetToolButton, &QAbstractButton::clicked,
             this, &NewActionDialog::slotResetKeySequence);
+
+    const auto menuRoles = QMetaEnum::fromType<QAction::MenuRole>();
+    for (int i = 0; i < menuRoles.keyCount(); i++) {
+        const auto key = menuRoles.key(i);
+        const auto value = menuRoles.value(i);
+        m_ui->menuRole->addItem(QLatin1StringView(key), value);
+    }
 
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     focusText();
@@ -96,6 +106,11 @@ void NewActionDialog::focusCheckable()
     m_ui->checkableCheckBox->setFocus();
 }
 
+void NewActionDialog::focusMenuRole()
+{
+    m_ui->menuRole->setFocus();
+}
+
 QString NewActionDialog::actionText() const
 {
     return m_ui->editActionText->text();
@@ -116,6 +131,7 @@ ActionData NewActionDialog::actionData() const
     rc.icon.setTheme(m_ui->iconThemeEditor->theme());
     rc.checkable = m_ui->checkableCheckBox->checkState() == Qt::Checked;
     rc.keysequence = PropertySheetKeySequenceValue(m_ui->keySequenceEdit->keySequence());
+    rc.menuRole.value = m_ui->menuRole->currentData().toInt();
     return rc;
 }
 
@@ -128,6 +144,7 @@ void NewActionDialog::setActionData(const ActionData &d)
     m_ui->tooltipEditor->setText(d.toolTip);
     m_ui->keySequenceEdit->setKeySequence(d.keysequence.value());
     m_ui->checkableCheckBox->setCheckState(d.checkable ? Qt::Checked : Qt::Unchecked);
+    m_ui->menuRole->setCurrentIndex(m_ui->menuRole->findData(d.menuRole.value));
 
     // Suppress updating of the object name from the text for existing actions.
     m_autoUpdateObjectName = d.name.isEmpty();

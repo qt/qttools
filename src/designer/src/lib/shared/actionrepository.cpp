@@ -23,6 +23,7 @@
 
 #include <QtCore/qset.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qmetaobject.h>
 
 Q_DECLARE_METATYPE(QAction*)
 
@@ -54,6 +55,7 @@ ActionModel::ActionModel(QWidget *parent ) :
     headers += tr("Shortcut");
     headers += tr("Checkable");
     headers += tr("ToolTip");
+    headers += tr("MenuRole");
     Q_ASSERT(NumColumns == headers.size());
     setHorizontalHeaderLabels(headers);
 }
@@ -200,6 +202,10 @@ void  ActionModel::setItems(QDesignerFormEditorInterface *core, QAction *action,
     item = sl[ToolTipColumn];
     item->setToolTip(toolTip);
     item->setText(toolTip.replace(QLatin1Char('\n'), QLatin1Char(' ')));
+    // menuRole
+    const auto menuRole = action->menuRole();
+    item = sl[MenuRoleColumn];
+    item->setText(QLatin1StringView(QMetaEnum::fromType<QAction::MenuRole>().valueToKey(menuRole)));
 }
 
 QMimeData *ActionModel::mimeData(const QModelIndexList &indexes ) const
