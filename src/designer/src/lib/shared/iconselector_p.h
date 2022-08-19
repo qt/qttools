@@ -117,12 +117,7 @@ signals:
 public slots:
     void reset();
 
-private slots:
-    void slotChanged(const QString &);
-
 private:
-    void updatePreview(const QString &);
-
     QScopedPointer<IconThemeEditorPrivate> d;
 };
 

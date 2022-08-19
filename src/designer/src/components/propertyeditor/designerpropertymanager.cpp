@@ -476,7 +476,7 @@ IconThemeDialog::IconThemeDialog(QWidget *parent)
     setWindowTitle(tr("Set Icon From Theme"));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
-    QLabel *label = new QLabel(tr("Input icon name from the current theme:"), this);
+    QLabel *label = new QLabel(tr("Select icon name from theme:"), this);
     m_editor = new IconThemeEditor(this);
     QDialogButtonBox *buttons = new QDialogButtonBox(this);
     buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);

@@ -33,7 +33,6 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qlist.h>
-#include <QtCore/qstringlistmodel.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -144,13 +143,6 @@ LanguageResourceDialog* LanguageResourceDialog::create(QDesignerFormEditorInterf
 }
 
 // ------------ IconSelectorPrivate
-
-static inline QPixmap emptyPixmap()
-{
-    QImage img(16, 16, QImage::Format_ARGB32_Premultiplied);
-    img.fill(0);
-    return QPixmap::fromImage(img);
-}
 
 class IconSelectorPrivate
 {
@@ -486,34 +478,34 @@ void IconSelector::setPixmapCache(DesignerPixmapCache *pixmapCache)
 
 // --- IconThemeEditor
 
+static const QMap<QString, QIcon> &themeIcons()
+{
+   static QMap<QString, QIcon> result;
+   if (result.isEmpty()) {
+       QFile file(QStringLiteral(":/qt-project.org/designer/icon-naming-spec.txt"));
+       if (file.open(QIODevice::ReadOnly)) {
+           while (!file.atEnd()) {
+               const auto line = file.readLine().trimmed();
+               if (line.isEmpty() || line.startsWith('#'))
+                   continue;
+               const auto iconName = QString::fromUtf8(line);
+               result.insert(iconName, QIcon::fromTheme(iconName));
+           }
+           file.close();
+       }
+   }
+   return result;
+}
+
 struct IconThemeEditorPrivate {
     IconThemeEditorPrivate();
 
-    const QPixmap m_emptyPixmap;
     QComboBox *m_themeComboBox;
-    QLabel *m_themeLabel;
-    QStringListModel *m_themeModel;
 };
 
 IconThemeEditorPrivate::IconThemeEditorPrivate() :
-    m_emptyPixmap(emptyPixmap()),
-    m_themeComboBox(new QComboBox),
-    m_themeLabel(new QLabel),
-    m_themeModel(new QStringListModel)
+    m_themeComboBox(new QComboBox)
 {
-    QStringList iconNames;
-    QFile file(QStringLiteral(":/qt-project.org/designer/icon-naming-spec.txt"));
-    if (file.open(QIODevice::ReadOnly)) {
-        while (!file.atEnd()) {
-            const auto line = file.readLine().trimmed();
-            if (line.isEmpty() || line.startsWith('#'))
-                continue;
-            iconNames.append(QString::fromUtf8(line));
-        }
-        file.close();
-    }
-    std::sort(iconNames.begin(), iconNames.end());
-    m_themeModel->setStringList(iconNames);
 }
 
 IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
@@ -522,20 +514,10 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
     QHBoxLayout *mainHLayout = new QHBoxLayout;
     mainHLayout->setContentsMargins(QMargins());
 
-    // Vertically center theme preview label
-    d->m_themeLabel->setPixmap(d->m_emptyPixmap);
-
-    QVBoxLayout *themeLabelVLayout = new QVBoxLayout;
-    d->m_themeLabel->setMargin(1);
-    themeLabelVLayout->setContentsMargins(QMargins());
-    themeLabelVLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding));
-    themeLabelVLayout->addWidget(d->m_themeLabel);
-    themeLabelVLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding));
-    mainHLayout->addLayout(themeLabelVLayout);
-
-    d->m_themeComboBox->setModel(d->m_themeModel);
+    const auto icons = themeIcons();
+    for (auto i = icons.constBegin(); i != icons.constEnd(); ++i)
+        d->m_themeComboBox->addItem(i.value(), i.key());
     d->m_themeComboBox->setCurrentIndex(-1);
-    connect(d->m_themeComboBox, &QComboBox::currentTextChanged, this, &IconThemeEditor::slotChanged);
     connect(d->m_themeComboBox, &QComboBox::currentTextChanged, this, &IconThemeEditor::edited);
     mainHLayout->addWidget(d->m_themeComboBox);
 
@@ -556,23 +538,6 @@ void IconThemeEditor::reset()
 {
     d->m_themeComboBox->setCurrentIndex(-1);
     emit edited(QString());
-}
-
-void IconThemeEditor::slotChanged(const QString &theme)
-{
-    updatePreview(theme);
-}
-
-void IconThemeEditor::updatePreview(const QString &t)
-{
-    // Update preview label with icon.
-    if (t.isEmpty() || !QIcon::hasThemeIcon(t)) { // Empty
-        if (d->m_themeLabel->pixmap(Qt::ReturnByValue).cacheKey() != d->m_emptyPixmap.cacheKey())
-            d->m_themeLabel->setPixmap(d->m_emptyPixmap);
-    } else {
-        const QIcon icon = QIcon::fromTheme(t);
-        d->m_themeLabel->setPixmap(icon.pixmap(d->m_emptyPixmap.size()));
-    }
 }
 
 QString IconThemeEditor::theme() const
