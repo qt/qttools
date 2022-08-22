@@ -141,8 +141,6 @@
 
     \list
     \li \l {alias-variable} {alias}
-    \li \l {Cpp.ignoredirectives-variable} {Cpp.ignoredirectives}
-    \li \l {Cpp.ignoretokens-variable} {Cpp.ignoretokens}
     \li \l {defines-variable} {defines}
     \li \l {depends-variable} {depends}
     \li \l {exampledirs-variable} {exampledirs}
@@ -193,7 +191,6 @@
 
     \list
     \li \l {Generic Configuration Variables}
-    \li \l {C++ Specific Configuration Variables}
     \li \l {Format-specific Configuration Variables}
     \endlist
 
@@ -1524,7 +1521,7 @@
 /*!
     \page 22-creating-help-project-files.html
     \previouspage Generic Configuration Variables
-    \nextpage C++ Specific Configuration Variables
+    \nextpage Format-specific Configuration Variables
 
     \title Creating Help Project Files
 
@@ -1651,118 +1648,8 @@
 */
 
 /*!
-    \page 23-qdoc-configuration-cppvariables.html
-    \previouspage Creating Help Project Files
-    \nextpage Format-specific Configuration Variables
-
-    \title C++ Specific Configuration Variables
-
-    The C++ specific configuration variables are provided to avoid
-    erroneous documentation due to non-standard C++ constructs.
-
-    \target Cpp.ignoredirectives-variable
-    \section1 Cpp.ignoredirectives
-    The \c Cpp.ignoredirectives variable makes QDoc ignore the
-    specified non-standard constructs, within C++ source code.
-
-    If not specified by the \tt {\l Cpp.ignoretokens} or \tt {\l
-    Cpp.ignoredirectives} variables, non-standard constructs
-    (typically macros) can result in erroneous documentation.
-
-    \badcode
-    Cpp.ignoredirectives = Q_DECLARE_INTERFACE \
-                           Q_DECLARE_OPERATORS_FOR_FLAGS \
-                           Q_DECLARE_PRIVATE \
-                           Q_DECLARE_PUBLIC \
-                           Q_DISABLE_COPY \
-                           Q_DUMMY_COMPARISON_OPERATOR \
-                           Q_ENUMS \
-                           Q_FLAGS \
-                           Q_INTERFACES \
-                           __attribute__
-    \endcode
-
-    makes sure that when processing the code below, for example, QDoc
-    will simply ignore the 'Q_ENUMS' and 'Q_FLAGS' expressions:
-
-    \code
-        class Q_CORE_EXPORT Qt {
-            Q_OBJECT
-            Q_ENUMS(Orientation TextFormat BackgroundMode
-                    DateFormat ScrollBarPolicy FocusPolicy
-                    ContextMenuPolicy CaseSensitivity
-                    LayoutDirection ArrowType)
-            Q_ENUMS(ToolButtonStyle)
-            Q_FLAGS(Alignment)
-            Q_FLAGS(Orientations)
-            Q_FLAGS(DockWidgetAreas)
-
-          public:
-            ...
-        };
-    \endcode
-
-    The Q_OBJECT macro, however, is an exception: QDoc recognizes this
-    particular non-standard construct, so there is no need specifying
-    it using the \tt {\l Cpp.ignoredirectives} variable.
-
-    Regarding the Q_CORE_EXPORT macro; see the documentation of the
-    \tt {\l Cpp.ignoretokens} variable.
-
-    See also \l Cpp.ignoretokens.
-
-    \target Cpp.ignoretokens-variable
-    \section1 Cpp.ignoretokens
-
-    The \c Cpp.ignoretokens variable makes QDoc ignore the specified
-    non-standard constructs, within C++ source code.
-
-    If not specified by the \tt {\l Cpp.ignoretokens} or \tt {\l
-    Cpp.ignoredirectives} variables, non-standard constructs
-    (typically macros) can result in erroneous documentation.
-
-    In \l qtgui.qdocconf:
-
-    \badcode
-    Cpp.ignoretokens = QAXFACTORY_EXPORT \
-                       QM_EXPORT_CANVAS \
-                       ...
-                       Q_COMPAT_EXPORT \
-                       Q_CORE_EXPORT \
-                       Q_EXPLICIT \
-                       Q_EXPORT \
-                       ...
-                       Q_XML_EXPORT
-    \endcode
-
-    makes sure that when processing the code below, for example, QDoc
-    will simply ignore the 'Q_CORE_EXPORT' expression:
-
-    \code
-        class Q_CORE_EXPORT Qt {
-            Q_OBJECT
-            Q_ENUMS(Orientation TextFormat BackgroundMode
-                    DateFormat ScrollBarPolicy FocusPolicy
-                    ContextMenuPolicy CaseSensitivity
-                    LayoutDirection ArrowType)
-            Q_ENUMS(ToolButtonStyle)
-            Q_FLAGS(Alignment)
-            Q_FLAGS(Orientations)
-            Q_FLAGS(DockWidgetAreas)
-          public:
-            ...
-        };
-    \endcode
-
-    Regarding the Q_OBJECT, Q_ENUMS and Q_FLAGS macros; see the
-    documentation of the \tt {\l Cpp.ignoredirectives} variable.
-
-    See also \l Cpp.ignoredirectives.
-*/
-
-/*!
     \page 24-qdoc-configuration-htmlvariables.html
-    \previouspage C++ Specific Configuration Variables
+    \previouspage Creating Help Project Files
     \nextpage Supporting Derived Projects
 
     \keyword HTML Specific Configuration Variables
