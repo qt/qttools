@@ -41,6 +41,15 @@ static QString languageJoin(const QStringList &list)
     return result;
 }
 
+// Embed source code between \badcode ... \endbadcode
+// Also, avoid '*/' breaking qdoc by passing the star as argument
+static void sourceCode(QTextStream &out, const QString &src)
+{
+    out << "\\badcode *\n";
+    out << QString(src).replace(QStringLiteral("*/"), QStringLiteral("\\1/"));
+    out << "\n\\endcode\n\n";
+}
+
 static void generate(QTextStream &out, const Package &package, const QDir &baseDir,
                      LogLevel logLevel)
 {
@@ -123,8 +132,10 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         }
     }
 
-    if (!copyright.isEmpty())
-        out << "\n\\badcode\n" << copyright << "\n\\endcode\n\n";
+    if (!copyright.isEmpty()) {
+        out << "\n";
+        sourceCode(out, copyright);
+    }
 
     if (isSpdxLicenseId(package.licenseId) && package.licenseId != QLatin1String("NONE")) {
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"
@@ -147,9 +158,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
             }
             return;
         }
-        out << "\\badcode\n";
-        out << QString::fromUtf8(file.readAll()).trimmed();
-        out << "\n\\endcode\n\n";
+        sourceCode(out, QString::fromUtf8(file.readAll()).trimmed());
     }
     out << "*/\n";
 }
