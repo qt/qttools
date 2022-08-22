@@ -37,7 +37,6 @@
         \list
           \li \l {Generic Configuration Variables}
           \li \l {Creating Help Project Files}
-          \li \l {C++ Specific Configuration Variables}
           \li \l {Format-specific Configuration Variables}
           \li \l {Supporting Derived Projects}
           \li \l {Example Manifest Files}
