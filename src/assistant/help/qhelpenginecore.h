@@ -50,7 +50,7 @@ public:
     QStringList registeredDocumentations() const;
     QByteArray fileData(const QUrl &url) const;
 
-#if QT_DEPRECATED_SINCE(5,13)
+// #if QT_DEPRECATED_SINCE(5,13)
     QStringList customFilters() const;
     bool removeCustomFilter(const QString &filterName);
     bool addCustomFilter(const QString &filterName,
@@ -66,7 +66,7 @@ public:
     QList<QUrl> files(const QString namespaceName,
         const QStringList &filterAttributes,
         const QString &extensionFilter = QString());
-#endif
+// #endif
 
     QList<QUrl> files(const QString namespaceName,
                       const QString &filterName,
@@ -99,10 +99,10 @@ Q_SIGNALS:
     void setupFinished();
     void warning(const QString &msg);
 
-#if QT_DEPRECATED_SINCE(5,13)
+// #if QT_DEPRECATED_SINCE(5,13)
     void currentFilterChanged(const QString &newFilter);
     void readersAboutToBeInvalidated();
-#endif
+// #endif
 
 protected:
     QHelpEngineCore(QHelpEngineCorePrivate *helpEngineCorePrivate,
