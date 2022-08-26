@@ -125,7 +125,7 @@
 
     \section1 Cannot tie this documentation to anything
 
-    QDoc found a \\beginqdoc ... \\endqdoc comment, with no \l{Topic Commands}{topic command}, that was
+    QDoc found a \beginqdoc ... \endqdoc comment, with no \l{Topic Commands}{topic command}, that was
     not immediately followed by a class, function or property definition.
     It thus does not know what the comment documents.
 
