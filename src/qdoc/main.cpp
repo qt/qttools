@@ -601,7 +601,8 @@ int main(int argc, char **argv)
 
     // Initialize Qt:
 #ifndef QT_BOOTSTRAPPED
-    qSetGlobalQHashSeed(0); // set the hash seed to 0 if it wasn't set yet
+    // use deterministic hash seed
+    QHashSeed::setDeterministicGlobalSeed();
 #endif
     QCoreApplication app(argc, argv);
     app.setApplicationVersion(QLatin1String(QT_VERSION_STR));
