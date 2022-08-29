@@ -324,28 +324,28 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
     return false;
 }
 
-QString Translator::makeLanguageCode(QLocale::Language language, QLocale::Country country)
+QString Translator::makeLanguageCode(QLocale::Language language, QLocale::Territory country)
 {
     QString result = QLocale::languageToCode(language);
-    if (language != QLocale::C && country != QLocale::AnyCountry) {
+    if (language != QLocale::C && country != QLocale::AnyTerritory) {
         result.append(QLatin1Char('_'));
-        result.append(QLocale::countryToCode(country));
+        result.append(QLocale::territoryToCode(country));
     }
     return result;
 }
 
 void Translator::languageAndCountry(QStringView languageCode, QLocale::Language *langPtr,
-                                    QLocale::Country *countryPtr)
+                                    QLocale::Territory *countryPtr)
 {
     QLocale::Language language = QLocale::AnyLanguage;
-    QLocale::Country country = QLocale::AnyCountry;
+    QLocale::Territory country = QLocale::AnyTerritory;
     const auto underScore = languageCode.indexOf(u'_'); // "de_DE"
     if (underScore != -1) {
         language = QLocale::codeToLanguage(languageCode.left(underScore));
-        country = QLocale::codeToCountry(languageCode.mid(underScore + 1));
+        country = QLocale::codeToTerritory(languageCode.mid(underScore + 1));
     } else {
         language = QLocale::codeToLanguage(languageCode);
-        country = QLocale(language).country();
+        country = QLocale(language).territory();
     }
 
     if (langPtr)
@@ -671,7 +671,7 @@ void Translator::normalizeTranslations(ConversionData &cd)
 {
     bool truncated = false;
     QLocale::Language l;
-    QLocale::Country c;
+    QLocale::Territory c;
     languageAndCountry(languageCode(), &l, &c);
     int numPlurals = 1;
     if (l != QLocale::C) {

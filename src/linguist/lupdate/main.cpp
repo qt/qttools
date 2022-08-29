@@ -381,7 +381,7 @@ static void updateTsFiles(const Translator &fetchedTor, const QStringList &tsFil
             // (when the language is not recognized, plural translations are lost)
             if (tor.translationsExist()) {
                 QLocale::Language l;
-                QLocale::Country c;
+                QLocale::Territory c;
                 tor.languageAndCountry(tor.languageCode(), &l, &c);
                 QStringList forms;
                 if (!getNumerusInfo(l, c, 0, &forms, 0)) {

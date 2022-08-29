@@ -164,8 +164,8 @@ PhraseBook::PhraseBook() :
     m_changed(false),
     m_language(QLocale::C),
     m_sourceLanguage(QLocale::C),
-    m_country(QLocale::AnyCountry),
-    m_sourceCountry(QLocale::AnyCountry)
+    m_country(QLocale::AnyTerritory),
+    m_sourceCountry(QLocale::AnyTerritory)
 {
 }
 
@@ -174,7 +174,7 @@ PhraseBook::~PhraseBook()
     qDeleteAll(m_phrases);
 }
 
-void PhraseBook::setLanguageAndCountry(QLocale::Language lang, QLocale::Country country)
+void PhraseBook::setLanguageAndCountry(QLocale::Language lang, QLocale::Territory country)
 {
     if (m_language == lang && m_country == country)
         return;
@@ -183,7 +183,7 @@ void PhraseBook::setLanguageAndCountry(QLocale::Language lang, QLocale::Country 
     setModified(true);
 }
 
-void PhraseBook::setSourceLanguageAndCountry(QLocale::Language lang, QLocale::Country country)
+void PhraseBook::setSourceLanguageAndCountry(QLocale::Language lang, QLocale::Territory country)
 {
     if (m_sourceLanguage == lang && m_sourceCountry == country)
         return;
@@ -210,14 +210,14 @@ bool PhraseBook::load(const QString &fileName, bool *langGuessed)
     if (m_language == QLocale::C) {
         QLocale sys;
         m_language = sys.language();
-        m_country = sys.country();
+        m_country = sys.territory();
         *langGuessed = true;
     }
 
     QString lang = hand->sourceLanguage();
     if (lang.isEmpty()) {
         m_sourceLanguage = QLocale::C;
-        m_sourceCountry = QLocale::AnyCountry;
+        m_sourceCountry = QLocale::AnyTerritory;
     } else {
         Translator::languageAndCountry(lang, &m_sourceLanguage, &m_sourceCountry);
     }

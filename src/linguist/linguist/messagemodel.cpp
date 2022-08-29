@@ -95,8 +95,8 @@ DataModel::DataModel(QObject *parent)
     m_srcCharsSpc(0),
     m_language(QLocale::Language(-1)),
     m_sourceLanguage(QLocale::Language(-1)),
-    m_country(QLocale::Country(-1)),
-    m_sourceCountry(QLocale::Country(-1))
+    m_country(QLocale::Territory(-1)),
+    m_sourceCountry(QLocale::Territory(-1))
 {}
 
 QStringList DataModel::normalizedTranslations(const MessageItem &m) const
@@ -258,12 +258,12 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
         *langGuessed = true;
     }
     QLocale::Language l;
-    QLocale::Country c;
+    QLocale::Territory c;
     Translator::languageAndCountry(lang, &l, &c);
     if (l == QLocale::C) {
         QLocale sys;
         l = sys.language();
-        c = sys.country();
+        c = sys.territory();
         *langGuessed = true;
     }
     if (!setLanguageAndCountry(l, c))
@@ -278,7 +278,7 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
     lang = tor.sourceLanguageCode();
     if (lang.isEmpty()) {
         l = QLocale::C;
-        c = QLocale::AnyCountry;
+        c = QLocale::AnyTerritory;
     } else {
         Translator::languageAndCountry(lang, &l, &c);
     }
@@ -360,7 +360,7 @@ void DataModel::doCharCounting(const QString &text, int &trW, int &trC, int &trC
     }
 }
 
-bool DataModel::setLanguageAndCountry(QLocale::Language lang, QLocale::Country country)
+bool DataModel::setLanguageAndCountry(QLocale::Language lang, QLocale::Territory country)
 {
     if (m_language == lang && m_country == country)
         return true;
@@ -372,9 +372,18 @@ bool DataModel::setLanguageAndCountry(QLocale::Language lang, QLocale::Country c
     QByteArray rules;
     bool ok = getNumerusInfo(lang, country, &rules, &m_numerusForms, 0);
     QLocale loc(lang, country);
-    m_localizedLanguage = QLocale::countriesForLanguage(lang).size() > 1
+    // Add territory name if we couldn't match the (lang, country) combination,
+    // or if the language is used in more than one country.
+    const bool mentionTerritory = (loc.territory() != country) || [lang, country]() {
+        const auto locales = QLocale::matchingLocales(lang, QLocale::AnyScript,
+                                                      QLocale::AnyTerritory);
+        return std::any_of(locales.cbegin(), locales.cend(), [country](const QLocale &locale) {
+            return locale.territory() != country;
+        });
+    }();
+    m_localizedLanguage = mentionTerritory
             //: <language> (<country>)
-            ? tr("%1 (%2)").arg(loc.nativeLanguageName(), loc.nativeCountryName())
+            ? tr("%1 (%2)").arg(loc.nativeLanguageName(), loc.nativeTerritoryName())
             : loc.nativeLanguageName();
     m_countRefNeeds.clear();
     for (int i = 0; i < rules.size(); ++i) {
@@ -391,7 +400,7 @@ bool DataModel::setLanguageAndCountry(QLocale::Language lang, QLocale::Country c
     return ok;
 }
 
-void DataModel::setSourceLanguageAndCountry(QLocale::Language lang, QLocale::Country country)
+void DataModel::setSourceLanguageAndCountry(QLocale::Language lang, QLocale::Territory country)
 {
     if (m_sourceLanguage == lang && m_sourceCountry == country)
         return;

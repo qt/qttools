@@ -56,19 +56,21 @@ static void fillCountryCombo(const QVariant &lng, QComboBox *combo)
     combo->clear();
     QLocale::Language lang = QLocale::Language(lng.toInt());
     if (lang != QLocale::C) {
-        for (QLocale::Country cntr : QLocale::countriesForLanguage(lang)) {
-            QString country = QLocale::countryToString(cntr);
-            auto loc = QLocale(lang, cntr);
+        const auto matches = QLocale::matchingLocales(lang, QLocale::AnyScript,
+                                                      QLocale::AnyTerritory);
+        for (const auto &loc : matches) {
+            QString name = QLocale::territoryToString(loc.territory());
             if (loc.language() != QLocale::English) {
-                QString ncn = loc.nativeCountryName();
-                if (!ncn.isEmpty())
-                    country = TranslationSettingsDialog::tr("%1 (%2)").arg(country, ncn);
+                QString endonym = loc.nativeTerritoryName();
+                if (!endonym.isEmpty())
+                    name = TranslationSettingsDialog::tr("%1 (%2)").arg(name, endonym);
             }
-            combo->addItem(country, QVariant(cntr));
+            combo->addItem(name, QVariant(loc.territory()));
         }
         combo->model()->sort(0, Qt::AscendingOrder);
     }
-    combo->insertItem(0, TranslationSettingsDialog::tr("Any Country"), QVariant(QLocale::AnyCountry));
+    combo->insertItem(0, TranslationSettingsDialog::tr("Any Country"),
+                      QVariant(QLocale::AnyTerritory));
     combo->setCurrentIndex(0);
 }
 
@@ -90,7 +92,7 @@ void TranslationSettingsDialog::on_buttonBox_accepted()
 
     itemindex = m_ui.tgtCbCountryList->currentIndex();
     var = m_ui.tgtCbCountryList->itemData(itemindex);
-    QLocale::Country country = QLocale::Country(var.toInt());
+    QLocale::Territory country = QLocale::Territory(var.toInt());
 
     itemindex = m_ui.srcCbLanguageList->currentIndex();
     var = m_ui.srcCbLanguageList->itemData(itemindex);
@@ -98,7 +100,7 @@ void TranslationSettingsDialog::on_buttonBox_accepted()
 
     itemindex = m_ui.srcCbCountryList->currentIndex();
     var = m_ui.srcCbCountryList->itemData(itemindex);
-    QLocale::Country country2 = QLocale::Country(var.toInt());
+    QLocale::Territory country2 = QLocale::Territory(var.toInt());
 
     if (m_phraseBook) {
         m_phraseBook->setLanguageAndCountry(lang, country);
@@ -114,7 +116,7 @@ void TranslationSettingsDialog::on_buttonBox_accepted()
 void TranslationSettingsDialog::showEvent(QShowEvent *)
 {
     QLocale::Language lang, lang2;
-    QLocale::Country country, country2;
+    QLocale::Territory country, country2;
 
     if (m_phraseBook) {
         lang = m_phraseBook->language();

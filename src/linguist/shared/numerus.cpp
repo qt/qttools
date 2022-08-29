@@ -265,22 +265,22 @@ static const QLocale::Language welshLanguage[] = { QLocale::Welsh, EOL };
 static const QLocale::Language arabicLanguage[] = { QLocale::Arabic, EOL };
 static const QLocale::Language tagalogLanguage[] = { QLocale::Filipino, EOL };
 
-static const QLocale::Country frenchStyleCountries[] = {
+static const QLocale::Territory frenchStyleCountries[] = {
     // keep synchronized with frenchStyleLanguages
-    QLocale::AnyCountry,
-    QLocale::AnyCountry,
-    QLocale::AnyCountry,
+    QLocale::AnyTerritory,
+    QLocale::AnyTerritory,
+    QLocale::AnyTerritory,
     QLocale::Brazil,
-    QLocale::AnyCountry,
-    QLocale::AnyCountry,
-    QLocale::AnyCountry
+    QLocale::AnyTerritory,
+    QLocale::AnyTerritory,
+    QLocale::AnyTerritory
 };
 struct NumerusTableEntry {
     const uchar *rules;
     int rulesSize;
     const char * const *forms;
     const QLocale::Language *languages;
-    const QLocale::Country *countries;
+    const QLocale::Territory *countries;
     const char * const gettextRules;
 };
 
@@ -324,7 +324,7 @@ static const NumerusTableEntry numerusTable[] = {
 
 static const int NumerusTableSize = sizeof(numerusTable) / sizeof(numerusTable[0]);
 
-bool getNumerusInfo(QLocale::Language language, QLocale::Country country,
+bool getNumerusInfo(QLocale::Language language, QLocale::Territory country,
                     QByteArray *rules, QStringList *forms, const char **gettextRules)
 {
     while (true) {
@@ -332,7 +332,7 @@ bool getNumerusInfo(QLocale::Language language, QLocale::Country country,
             const NumerusTableEntry &entry = numerusTable[i];
             for (int j = 0; entry.languages[j] != EOL; ++j) {
                 if (entry.languages[j] == language
-                        && ((!entry.countries && country == QLocale::AnyCountry)
+                        && ((!entry.countries && country == QLocale::AnyTerritory)
                             || (entry.countries && entry.countries[j] == country))) {
                     if (rules) {
                         *rules = QByteArray::fromRawData(reinterpret_cast<const char *>(entry.rules),
@@ -350,9 +350,9 @@ bool getNumerusInfo(QLocale::Language language, QLocale::Country country,
             }
         }
 
-        if (country == QLocale::AnyCountry)
+        if (country == QLocale::AnyTerritory)
             break;
-        country = QLocale::AnyCountry;
+        country = QLocale::AnyTerritory;
     }
     return false;
 }
@@ -364,14 +364,15 @@ QString getNumerusInfoString()
     for (int i = 0; i < NumerusTableSize; ++i) {
         const NumerusTableEntry &entry = numerusTable[i];
         for (int j = 0; entry.languages[j] != EOL; ++j) {
-            QLocale loc(entry.languages[j], entry.countries ? entry.countries[j] : QLocale::AnyCountry);
+            QLocale loc(entry.languages[j], entry.countries ? entry.countries[j]
+                                                            : QLocale::AnyTerritory);
             QString lang = QLocale::languageToString(entry.languages[j]);
             if (loc.language() == QLocale::C)
                 lang += QLatin1String(" (!!!)");
-            else if (entry.countries && entry.countries[j] != QLocale::AnyCountry)
-                lang += QLatin1String(" (") + QLocale::countryToString(loc.country()) + QLatin1Char(')');
+            else if (entry.countries && entry.countries[j] != QLocale::AnyTerritory)
+                lang += QLatin1String(" (%1)").arg(QLocale::territoryToString(loc.territory()));
             else
-                lang += QLatin1String(" [") + QLocale::countryToString(loc.country()) + QLatin1Char(']');
+                lang += QLatin1String(" [%1]").arg(QLocale::territoryToString(loc.territory()));
             langs << QString::fromLatin1("%1 %2 %3\n").arg(lang, -40).arg(loc.name(), -8)
                                 .arg(QString::fromLatin1(entry.gettextRules));
         }

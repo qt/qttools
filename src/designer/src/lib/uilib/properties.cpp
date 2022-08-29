@@ -246,8 +246,8 @@ QVariant domPropertyToVariant(const DomProperty *p)
         const DomLocale *locale = p->elementLocale();
         return QVariant::fromValue(QLocale(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QLocale::Language>("language",
                                                                                                                  locale->attributeLanguage().toLatin1().constData()),
-                    enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QLocale::Country>("country",
-                                                                                         locale->attributeCountry().toLatin1().constData())));
+                    enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QLocale::Territory>("country",
+                                                                                           locale->attributeCountry().toLatin1().constData())));
     }
     case DomProperty::SizePolicy: {
         const DomSizePolicy *sizep = p->elementSizePolicy();
