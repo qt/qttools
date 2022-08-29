@@ -16,6 +16,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static CodeMarker *marker_ = nullptr;
 
 WebXMLGenerator::WebXMLGenerator(FileResolver& file_resolver) : HtmlGenerator(file_resolver) {}
@@ -704,12 +706,12 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
                 QString details = std::transform_reduce(
                     file_resolver.get_search_directories().cbegin(),
                     file_resolver.get_search_directories().cend(),
-                    u"Searched directories:"_qs,
+                    u"Searched directories:"_s,
                     std::plus(),
                     [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
                 );
 
-                relative->location().warning(u"Cannot find file to quote from: %1"_qs.arg(location), details);
+                relative->location().warning(u"Cannot find file to quote from: %1"_s.arg(location), details);
             }
         }
         break;

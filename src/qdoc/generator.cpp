@@ -35,6 +35,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 Generator *Generator::s_currentGenerator;
 QMap<QString, QMap<QString, QString>> Generator::s_fmtLeftMaps;
 QMap<QString, QMap<QString, QString>> Generator::s_fmtRightMaps;
@@ -982,12 +984,12 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
             QString details = std::transform_reduce(
                 file_resolver.get_search_directories().cbegin(),
                 file_resolver.get_search_directories().cend(),
-                u"Searched directories:"_qs,
+                u"Searched directories:"_s,
                 std::plus(),
                 [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
             );
 
-            en->location().warning(u"(Generator)Cannot find file to quote from: %1"_qs.arg(path), details);
+            en->location().warning(u"(Generator)Cannot find file to quote from: %1"_s.arg(path), details);
 
             continue;
         }

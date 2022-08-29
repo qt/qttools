@@ -38,6 +38,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 {
     return fi1.lastModified() < fi2.lastModified();
@@ -324,7 +326,7 @@ static void processQdocconfFile(const QString &fileName)
         auto maybe_validated_path{DirectoryPath::refine(path)};
         if (!maybe_validated_path)
             // TODO: [uncentralized-admonition]
-            qCDebug(lcQdoc).noquote() << u"%1 is not a valid path, it will be ignored when resolving a file"_qs.arg(path);
+            qCDebug(lcQdoc).noquote() << u"%1 is not a valid path, it will be ignored when resolving a file"_s.arg(path);
         else validated_search_directories.push_back(*maybe_validated_path);
     }
 

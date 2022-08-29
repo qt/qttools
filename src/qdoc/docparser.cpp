@@ -20,6 +20,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 DocUtilities &DocParser::s_utilities = DocUtilities::instance();
 
 enum {
@@ -1912,12 +1914,12 @@ void DocParser::quoteFromFile(const QString &filename)
         QString details = std::transform_reduce(
             (*file_resolver).get_search_directories().cbegin(),
             (*file_resolver).get_search_directories().cend(),
-            u"Searched directories:"_qs,
+            u"Searched directories:"_s,
             std::plus(),
             [](const DirectoryPath &directory_path){ return " " + directory_path.value(); }
         );
 
-        location().warning(u"Cannot find file to quote from: %1"_qs.arg(filename), details);
+        location().warning(u"Cannot find file to quote from: %1"_s.arg(filename), details);
 
         // REMARK: The following is duplicated from
         // Doc::quoteFromFile. If, for some reason (such as a file

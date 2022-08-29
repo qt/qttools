@@ -34,6 +34,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char dbNamespace[] = "http://docbook.org/ns/docbook";
 static const char xlinkNamespace[] = "http://www.w3.org/1999/xlink";
 
@@ -2424,12 +2426,12 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
             QString details = std::transform_reduce(
                 file_resolver.get_search_directories().cbegin(),
                 file_resolver.get_search_directories().cend(),
-                u"Searched directories:"_qs,
+                u"Searched directories:"_s,
                 std::plus(),
                 [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
             );
 
-            en->location().warning(u"Cannot find file to quote from: %1"_qs.arg(path), details);
+            en->location().warning(u"Cannot find file to quote from: %1"_s.arg(path), details);
 
             continue;
         }

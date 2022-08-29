@@ -46,6 +46,8 @@
 using namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE;
 using namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE;
 
+using namespace Qt::StringLiterals;
+
 TEST_CASE("A path generated with a multi_device_path_probability of 1.0 always contains a device component.", "[Path][Content][SpecialCase]") {
     QString device_component_value{"C:"};
     auto path_generator = path(
@@ -321,7 +323,7 @@ SCENARIO("The format of a path", "[Path][Contents]") {
                     REQUIRE_FALSE(generated_path.contains(directory_component_value + directory_component_value));
 
                     auto successive_directories_re{
-                    QRegularExpression(u"%1(%2)%3"_qs.arg(directory_component_value)
+                    QRegularExpression(u"%1(%2)%3"_s.arg(directory_component_value)
                                                      .arg(QStringList{device_component_value, root_component_value, filename_component_value, separator_component_value}.join("|"))
                                                      .arg(directory_component_value)
                     )};
@@ -351,7 +353,7 @@ SCENARIO("The format of a path", "[Path][Contents]") {
                     REQUIRE_FALSE(generated_path.contains(directory_component_value + filename_component_value));
 
                     auto successive_directory_filename_re{
-                    QRegularExpression(u"%1(%2)%3"_qs.arg(directory_component_value)
+                    QRegularExpression(u"%1(%2)%3"_s.arg(directory_component_value)
                                                      .arg(QStringList{device_component_value, root_component_value, filename_component_value, separator_component_value}.join("|"))
                                                      .arg(filename_component_value)
                     )};
