@@ -144,7 +144,7 @@ const QSet<QString> &CodeParser::commonMetaCommands()
  */
 void CodeParser::extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc)
 {
-    QRegularExpression bracedRegExp(
+    static const QRegularExpression bracedRegExp(
             QRegularExpression::anchoredPattern(QLatin1String(R"(\{([^{}]*)\}(?:\{([^{}]*)\})?)")));
     auto match = bracedRegExp.matchView(arg);
     if (match.hasMatch()) {
