@@ -985,15 +985,6 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
                 property->setWritable(true);
             } else if (key == "STORED") {
                 property->setStored(value.toLower() == "true");
-            } else if (key == "DESIGNABLE") {
-                QString v = value.toLower();
-                if (v == "true")
-                    property->setDesignable(true);
-                else if (v == "false")
-                    property->setDesignable(false);
-                else {
-                    property->setDesignable(false);
-                }
             } else if (key == "BINDABLE") {
                 property->setPropertyType(PropertyNode::PropertyType::BindableProperty);
                 qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Bindable);
@@ -1001,15 +992,6 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
                 qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Resetter);
             } else if (key == "NOTIFY") {
                 qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Notifier);
-            } else if (key == "SCRIPTABLE") {
-                QString v = value.toLower();
-                if (v == "true")
-                    property->setScriptable(true);
-                else if (v == "false")
-                    property->setScriptable(false);
-                else {
-                    property->setScriptable(false);
-                }
             }
         }
     }

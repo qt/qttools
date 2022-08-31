@@ -27,8 +27,6 @@ public:
     void addFunction(FunctionNode *function, FunctionRole role);
     void addSignal(FunctionNode *function, FunctionRole role);
     void setStored(bool stored) { m_stored = toFlagValue(stored); }
-    void setDesignable(bool designable) { m_designable = toFlagValue(designable); }
-    void setScriptable(bool scriptable) { m_scriptable = toFlagValue(scriptable); }
     void setWritable(bool writable) { m_writable = toFlagValue(writable); }
     void setOverriddenFrom(const PropertyNode *baseProperty);
     void setConstant() { m_const = true; }
@@ -56,7 +54,6 @@ public:
     [[nodiscard]] const PropertyNode *overriddenFrom() const { return m_overrides; }
 
     [[nodiscard]] bool storedDefault() const { return true; }
-    [[nodiscard]] bool designableDefault() const { return !setters().isEmpty(); }
     [[nodiscard]] bool writableDefault() const { return !setters().isEmpty(); }
 
 private:
@@ -64,8 +61,6 @@ private:
     PropertyType m_propertyType { PropertyType::StandardProperty };
     NodeList m_functions[(qsizetype)FunctionRole::NumFunctionRoles] {};
     FlagValue m_stored { FlagValueDefault };
-    FlagValue m_designable { FlagValueDefault };
-    FlagValue m_scriptable { FlagValueDefault };
     FlagValue m_writable { FlagValueDefault };
     FlagValue m_user { FlagValueDefault };
     bool m_const { false };

@@ -20,7 +20,6 @@ public:
     void setDataType(const QString &dataType) override { m_type = dataType; }
     void setStored(bool stored) { m_stored = toFlagValue(stored); }
     void setDefaultValue(const QString &value) { m_defaultValue = value; }
-    void setDesignable(bool designable) { m_designable = toFlagValue(designable); }
     void setRequired() { m_required = toFlagValue(true); }
 
     [[nodiscard]] const QString &dataType() const { return m_type; }
@@ -59,7 +58,6 @@ private:
     QString m_type {};
     QString m_defaultValue {};
     FlagValue m_stored { FlagValueDefault };
-    FlagValue m_designable { FlagValueDefault };
     bool m_isAlias { false };
     bool m_isDefault { false };
     bool m_attached {};

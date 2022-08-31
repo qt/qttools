@@ -63,10 +63,6 @@ void PropertyNode::setOverriddenFrom(const PropertyNode *baseProperty)
     }
     if (m_stored == FlagValueDefault)
         m_stored = baseProperty->m_stored;
-    if (m_designable == FlagValueDefault)
-        m_designable = baseProperty->m_designable;
-    if (m_scriptable == FlagValueDefault)
-        m_scriptable = baseProperty->m_scriptable;
     if (m_writable == FlagValueDefault)
         m_writable = baseProperty->m_writable;
     if (m_user == FlagValueDefault)
