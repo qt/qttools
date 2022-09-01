@@ -263,7 +263,6 @@ public:
     virtual void markDefault() {}
     virtual void markReadOnly(bool) {}
 
-    [[nodiscard]] bool match(const QList<int> &types) const;
     [[nodiscard]] Aggregate *parent() const { return m_parent; }
     [[nodiscard]] const QString &name() const { return m_name; }
     [[nodiscard]] QString physicalModuleName() const { return m_physicalModuleName; }

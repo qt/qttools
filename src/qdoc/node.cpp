@@ -627,17 +627,6 @@ QString Node::fullName(const Node *relative) const
 }
 
 /*!
-  Try to match this node's type with one of the \a types.
-  If a match is found, return true. If no match is found,
-  return false.
- */
-bool Node::match(const QList<int> &types) const
-{
-    return std::any_of(types.cbegin(), types.cend(),
-                       [this](const int type) { return nodeType() == type; });
-}
-
-/*!
   Sets this Node's Doc to \a doc. If \a replace is false and
   this Node already has a Doc, and if this doc is not marked
   with the \\reimp command, a warning is reported that the
