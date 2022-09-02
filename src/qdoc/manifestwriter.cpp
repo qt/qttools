@@ -288,6 +288,9 @@ void ManifestWriter::addModuleNameAsTag()
     QString moduleName = m_project;
     if (moduleName.startsWith("Qt"))
         moduleName = moduleName.mid(2);
+    // Some examples are in QtDoc module, but 'doc' as tag makes little sense
+    if (moduleName == "Doc")
+        return;
     m_tags << moduleName.toLower();
 }
 
