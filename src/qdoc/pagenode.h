@@ -45,7 +45,7 @@ public:
     virtual void setImageFileName(const QString &) {}
 
     [[nodiscard]] bool noAutoList() const { return m_noAutoList; }
-    void setNoAutoList(bool b) override { m_noAutoList = b; }
+    void setNoAutoList(bool b) { m_noAutoList = b; }
     [[nodiscard]] const QStringList &groupNames() const { return m_groupNames; }
     void appendGroupName(const QString &t) override { m_groupNames.append(t); }
 

@@ -1367,11 +1367,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   string.
  */
 
-/*! \fn void Node::setNoAutoList(bool b)
-  If this node is a PageNode, the node's \c {no autolist} flag is set to \a b.
-  Otherwise the function does nothing.
- */
-
 /*! \fn bool Node::docMustBeGenerated() const
   This function is called to perform a test to decide if the node must have
   documentation generated. In the Node base class, it always returns \c false.

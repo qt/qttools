@@ -682,7 +682,14 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             static_cast<CollectionNode*>(node)->setState(arg);
         }
     } else if (command == COMMAND_NOAUTOLIST) {
-        node->setNoAutoList(true);
+        if (!node->isCollectionNode() && !node->isExample()) {
+            doc.location().warning(
+                    QStringLiteral(
+                            "Command '\\%1' is only meaningful in '\\module', '\\qmlmodule', `\\group` and `\\example`.")
+                            .arg(COMMAND_NOAUTOLIST));
+        } else {
+            static_cast<PageNode*>(node)->setNoAutoList(true);
+        }
     }
 }
 

@@ -246,7 +246,6 @@ public:
     [[nodiscard]] virtual bool wasSeen() const { return false; }
     virtual void appendGroupName(const QString &) {}
     [[nodiscard]] virtual QString element() const { return QString(); }
-    virtual void setNoAutoList(bool) {}
     [[nodiscard]] virtual bool docMustBeGenerated() const { return false; }
 
     [[nodiscard]] virtual QString title() const { return name(); }
