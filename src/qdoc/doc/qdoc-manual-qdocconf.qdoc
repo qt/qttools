@@ -344,7 +344,7 @@
     \endcode
 
     With above, QDoc will search for a file
-    \c {$T_INSTALL_DOCS/qtdoc/qtdoc.index} for a dependency to \c qtdoc.
+    \c {$QT_INSTALL_DOCS/qtdoc/qtdoc.index} for a dependency to \c qtdoc.
     If an index file for a dependency is not found, QDoc will output a
     warning.
 
