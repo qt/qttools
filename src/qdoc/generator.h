@@ -167,8 +167,8 @@ protected:
 
     void addImageToCopy(const ExampleNode *en, const ResolvedFile& resolved_file);
     // TODO: This seems to be used as the predicate in std::sort calls.
-    // Remove it as it is unneded.
-    // Indeed, it could be replaced by std::less and, furthemore,
+    // Remove it as it is unneeded.
+    // Indeed, it could be replaced by std::less and, furthermore,
     // std::sort already defaults to operator< when no predicate is
     // provided.
     static bool comparePaths(const QString &a, const QString &b) { return (a < b); }
