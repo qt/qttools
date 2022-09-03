@@ -4173,6 +4173,9 @@ void DocBookGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn)
 
     endSection();
 
+    // Compared to HTML, skip sections.stdQmlTypeSummarySections(): it only
+    // generates a part of the table of contents.
+
     SectionVector::ConstIterator s = sections.stdQmlTypeDetailsSections().constBegin();
     while (s != sections.stdQmlTypeDetailsSections().constEnd()) {
         if (!s->isEmpty()) {
