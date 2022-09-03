@@ -4161,10 +4161,10 @@ void DocBookGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn)
     Q_ASSERT(m_writer == nullptr);
     m_writer = startDocument(qbtn);
 
-    const QString htmlTitle = qbtn->fullTitle() + " QML Basic Type";
+    const QString title = qbtn->fullTitle() + " QML Basic Type";
 
     Sections sections(qbtn);
-    generateHeader(htmlTitle, qbtn->subtitle(), qbtn);
+    generateHeader(title, qbtn->subtitle(), qbtn);
 
     startSection("details", "Detailed Description");
 
