@@ -1588,6 +1588,10 @@ bool DocBookGenerator::generateSince(const Node *node)
     return false;
 }
 
+/*!
+    Generate the DocBook header for the file, including the abstract.
+    Equivalent to calling generateTitle and generateBrief in HTML.
+*/
 void DocBookGenerator::generateHeader(const QString &title, const QString &subTitle,
                                       const Node *node)
 {
