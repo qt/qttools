@@ -251,7 +251,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     int skipAhead = 0;
     static bool inPara = false;
     Node::Genus genus = Node::DontCare;
-    bool closeTableRow = false;
 
     switch (atom->type()) {
     case Atom::AutoLink:
@@ -959,6 +958,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             inPara = false;
         }
 
+        m_tableHeaderAlreadyOutput = false;
+
         m_writer->writeStartElement(dbNamespace, "informaltable");
         m_writer->writeAttribute("style", attr);
         if (!width.isEmpty())
@@ -966,6 +967,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         newLine();
     } break;
     case Atom::TableRight:
+        m_tableWidthAttr = {"", ""};
         m_writer->writeEndElement(); // table
         newLine();
         break;
@@ -973,6 +975,24 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         if (matchAhead(atom, Atom::TableHeaderRight)) {
             ++skipAhead;
             break;
+        }
+
+        if (m_tableHeaderAlreadyOutput) {
+            // Headers are only allowed at the beginning of the table: close
+            // the table and reopen one.
+            m_writer->writeEndElement(); // table
+            newLine();
+
+            const QString &attr = m_tableWidthAttr.second;
+            const QString &width = m_tableWidthAttr.first;
+
+            m_writer->writeStartElement(dbNamespace, "informaltable");
+            m_writer->writeAttribute("style", attr);
+            if (!width.isEmpty())
+                m_writer->writeAttribute("width", width);
+            newLine();
+        } else {
+            m_tableHeaderAlreadyOutput = true;
         }
 
         const Atom *next = atom->next();
@@ -1077,15 +1097,15 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         }
 
         if (isRowEmpty) {
-            closeTableRow = true;
+            m_closeTableRow = true;
             m_writer->writeEndElement(); // td
             newLine();
         }
     }
         break;
     case Atom::TableRowRight:
-        if (closeTableRow) {
-            closeTableRow = false;
+        if (m_closeTableRow) {
+            m_closeTableRow = false;
             m_writer->writeEndElement(); // td
             newLine();
         }

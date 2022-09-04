@@ -143,6 +143,8 @@ private:
     bool m_hasSection { false };
     bool m_closeSectionAfterGeneratedList { false };
     bool m_closeFigureWrapper { false };
+    bool m_tableHeaderAlreadyOutput { false };
+    bool m_closeTableRow { false };
     bool m_closeTableCell { false };
     std::pair<QString, QString> m_tableWidthAttr {};
 
