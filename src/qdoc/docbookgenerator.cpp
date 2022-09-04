@@ -948,8 +948,10 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         }
         break;
     case Atom::TableRowLeft: {
-        if (matchAhead(atom, Atom::TableRowRight))
+        if (matchAhead(atom, Atom::TableRowRight)) {
+            skipAhead = 1;
             break;
+        }
 
         QString id{""};
         bool hasTarget {false};
