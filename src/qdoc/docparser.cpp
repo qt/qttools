@@ -1128,8 +1128,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         appendWord(cmdStr);
                     } else {
                         if (!cmdStr.endsWith("propertygroup")) {
-                            // The QML and JS property group commands are no longer required
-                            // for grouping QML and JS properties. They are allowed but ignored.
+                            // The QML property group commands are no longer required
+                            // for grouping QML properties. They are allowed but ignored.
                             location().warning(QStringLiteral("Unknown command '\\%1'").arg(cmdStr),
                                                detailsUnknownCommand(metaCommandSet, cmdStr));
                         }

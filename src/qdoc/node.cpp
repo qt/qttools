@@ -91,47 +91,6 @@ void Node::initialize()
 }
 
 /*!
-  If this Node's type is \a from, change the type to \a to
-  and return \c true. Otherwise return false. This function
-  is used to change Qml node types to Javascript node types,
-  because these nodes are created as Qml nodes before it is
-  discovered that the entity represented by the node is not
-  Qml but javascript.
-
-  Note that if the function returns true, which means the node
-  type was indeed changed, then the node's Genus is also changed
-  from QML to JS.
-
-  The function also works in the other direction, but there is
-  no use case for that.
- */
-bool Node::changeType(NodeType from, NodeType to)
-{
-    if (m_nodeType == from) {
-        m_nodeType = to;
-        switch (to) {
-        case QmlType:
-        case QmlModule:
-        case QmlProperty:
-        case QmlValueType:
-            setGenus(Node::QML);
-            break;
-        case JsType:
-        case JsModule:
-        case JsProperty:
-        case JsBasicType:
-            setGenus(Node::JS);
-            break;
-        default:
-            setGenus(Node::CPP);
-            break;
-        }
-        return true;
-    }
-    return false;
-}
-
-/*!
   Returns \c true if the node \a n1 is less than node \a n2. The
   comparison is performed by comparing properties of the nodes
   in order of increasing complexity.
@@ -187,7 +146,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
   \value ExternalPage The Node subclass is ExternalPageNode, which is for
          linking to an external page.
   \value Function The Node subclass is FunctionNode, which can represent C++,
-         QML, and Javascript functions.
+         and QML functions.
   \value Typedef The Node subclass is TypedefNode, which represents a C++
          typedef.
   \value Property The Node subclass is PropertyNode, which represents a use of
@@ -205,14 +164,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
          property in a QML type.
   \value QmlBasicType The Node subclass is QmlBasicTypeNode, which represents a
          basic type like int, etc.
-  \value JsType The Node subclass is QmlTypeNode, which represents a javascript
-         type.
-  \value JsModule The Node subclass is CollectionNode, which represents a
-         javascript module.
-  \value JsProperty The Node subclass is QmlPropertyNode, which represents a
-         javascript property.
-  \value JsBasicType The Node subclass is QmlBasicTypeNode, which represents a
-         basic type like int, etc.
   \value SharedComment The Node subclass is SharedCommentNode, which represents
          a collection of nodes that share the same documentation comment.
   \omitvalue Collection
@@ -226,14 +177,13 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
   \enum Node::Genus
 
   An unsigned char value that specifies whether the Node represents a
-  C++ element, a QML element, a javascript element, or a text document.
+  C++ element, a QML element, or a text document.
   The Genus values are also passed to search functions to specify the
   Genus of Tree Node that can satisfy the search.
 
   \value DontCare The Genus is not specified. Used when calling Tree search functions to indicate
                   the search can accept any Genus of Node.
   \value CPP The Node represents a C++ element.
-  \value JS The Node represents a javascript element.
   \value QML The Node represents a QML element.
   \value DOC The Node represents a text document.
 */
@@ -367,26 +317,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 
 /*! \fn bool Node::isIndexNode() const
   Returns true if this node was created from something in an index file.
- */
-
-/*! \fn bool Node::isJsBasicType() const
-  Returns true if the node type is \c JsBasicType.
- */
-
-/*! \fn bool Node::isJsModule() const
-  Returns true if the node type is \c JsModule.
- */
-
-/*! \fn bool Node::isJsNode() const
-  Returns true if this node's Genus value is \c JS.
- */
-
-/*! \fn bool Node::isJsProperty() const
-  Returns true if the node type is \c JsProperty.
- */
-
-/*! \fn bool Node::isJsType() const
-  Returns true if the node type is \c JsType.
  */
 
 /*! \fn bool Node::isModule() const
@@ -709,9 +639,6 @@ Node::PageType Node::getPageType(Node::NodeType t)
     case Node::QmlType:
     case Node::QmlProperty:
     case Node::QmlValueType:
-    case Node::JsType:
-    case Node::JsProperty:
-    case Node::JsBasicType:
     case Node::SharedComment:
         return Node::ApiPage;
     case Node::Example:
@@ -722,7 +649,6 @@ Node::PageType Node::getPageType(Node::NodeType t)
     case Node::Group:
     case Node::Module:
     case Node::QmlModule:
-    case Node::JsModule:
     case Node::Collection:
         return Node::OverviewPage;
     case Node::Proxy:
@@ -760,11 +686,6 @@ Node::Genus Node::getGenus(Node::NodeType t)
     case Node::QmlProperty:
     case Node::QmlValueType:
         return Node::QML;
-    case Node::JsType:
-    case Node::JsModule:
-    case Node::JsProperty:
-    case Node::JsBasicType:
-        return Node::JS;
     case Node::Page:
     case Node::Group:
     case Node::Example:
@@ -859,15 +780,6 @@ QString Node::nodeTypeString(NodeType t)
         return QLatin1String("QML module");
     case QmlProperty:
         return QLatin1String("QML property");
-
-    case JsType:
-        return QLatin1String("JS type");
-    case JsBasicType:
-        return QLatin1String("JS basic type");
-    case JsModule:
-        return QLatin1String("JS module");
-    case JsProperty:
-        return QLatin1String("JS property");
 
     case SharedComment:
         return QLatin1String("shared comment");
@@ -1013,18 +925,18 @@ Node::ThreadSafeness Node::inheritedThreadSafeness() const
 }
 
 /*!
-  If this node is a QML or JS type node, return a pointer to
-  it. If it is a child of a QML or JS type node, return the
-  pointer to its parent QMLor JS type node. Otherwise return
+  If this node is a QML type node, return a pointer to
+  it. If it is a child of a QML type node, return the
+  pointer to its parent QML type node. Otherwise return
   0;
  */
 QmlTypeNode *Node::qmlTypeNode()
 {
-    if (isQmlNode() || isJsNode()) {
+    if (isQmlNode()) {
         Node *n = this;
-        while (n && !(n->isQmlType() || n->isJsType()))
+        while (n && !(n->isQmlType()))
             n = n->parent();
-        if (n && (n->isQmlType() || n->isJsType()))
+        if (n && (n->isQmlType()))
             return static_cast<QmlTypeNode *>(n);
     }
     return nullptr;
@@ -1161,7 +1073,7 @@ QString Node::fullDocumentName() const
         if (!n->name().isEmpty())
             pieces.insert(0, n->name());
 
-        if ((n->isQmlType() || n->isJsType()) && !n->logicalModuleName().isEmpty()) {
+        if (n->isQmlType() && !n->logicalModuleName().isEmpty()) {
             pieces.insert(0, n->logicalModuleName());
             break;
         }
@@ -1178,7 +1090,7 @@ QString Node::fullDocumentName() const
 
     // Create a name based on the type of the ancestor node.
     QString concatenator = "::";
-    if (n->isQmlType() || n->isJsType())
+    if (n->isQmlType())
         concatenator = QLatin1Char('.');
 
     if (n->isTextPageNode())
@@ -1542,7 +1454,7 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
 
 /*! \fn QString Node::qmlTypeName() const
   If this is a QmlPropertyNode or a FunctionNode representing a QML
-  or javascript methos, this function returns the qmlTypeName() of
+  method, this function returns the qmlTypeName() of
   the parent() node. Otherwise it returns the name data member.
  */
 
@@ -1576,7 +1488,7 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   version number is not absolutely necessary.
 
   The strings are stored in the appropriate data members for use
-  when the QML or javascript module page is generated.
+  when the QML module page is generated.
  */
 
 /*! \fn void Node::setLogicalModuleInfo(const QStringList &info)
@@ -1588,7 +1500,7 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   the minor version number is not strictly necessary.
 
   The strings are stored in the appropriate data members for use
-  when the QML or javascript module page is generated. This overload
+  when the QML module page is generated. This overload
   of the function is called when qdoc is reading an index file.
  */
 

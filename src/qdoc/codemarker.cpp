@@ -358,15 +358,12 @@ QString CodeMarker::taggedQmlNode(const Node *node)
     if (node->isFunction()) {
         const auto *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::JsSignal:
         case FunctionNode::QmlSignal:
             tag = QLatin1String("@signal");
             break;
-        case FunctionNode::JsSignalHandler:
         case FunctionNode::QmlSignalHandler:
             tag = QLatin1String("@signalhandler");
             break;
-        case FunctionNode::JsMethod:
         case FunctionNode::QmlMethod:
             tag = QLatin1String("@method");
             break;
@@ -374,7 +371,7 @@ QString CodeMarker::taggedQmlNode(const Node *node)
             tag = QLatin1String("@unknown");
             break;
         }
-    } else if (node->isQmlProperty() || node->isJsProperty()) {
+    } else if (node->isQmlProperty()) {
         tag = QLatin1String("@property");
     } else {
         tag = QLatin1String("@unknown");

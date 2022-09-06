@@ -1362,11 +1362,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 {
     Generator::setQmlTypeContext(qcn);
     SubTitleSize subTitleSize = LargeSubTitle;
-    QString htmlTitle = qcn->fullTitle();
-    if (qcn->isJsType())
-        htmlTitle += " JavaScript Type";
-    else
-        htmlTitle += " QML Type";
+    QString htmlTitle = qcn->fullTitle() + " QML Type";
 
     generateHeader(htmlTitle, qcn, marker);
     Sections sections(qcn);
@@ -1441,11 +1437,7 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 void HtmlGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn, CodeMarker *marker)
 {
     SubTitleSize subTitleSize = LargeSubTitle;
-    QString htmlTitle = qbtn->fullTitle();
-    if (qbtn->isJsType())
-        htmlTitle += " JavaScript Basic Type";
-    else
-        htmlTitle += " QML Basic Type";
+    QString htmlTitle = qbtn->fullTitle() + " QML Basic Type";
 
     marker = CodeMarker::markerForLanguage(QLatin1String("QML"));
 
@@ -1490,7 +1482,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn, CodeMarker 
 
 /*!
   Generate the HTML page for an entity that doesn't map
-  to any underlying parsable C++, QML, or Javascript element.
+  to any underlying parsable C++ or QML element.
  */
 void HtmlGenerator::generatePageNode(PageNode *pn, CodeMarker *marker)
 {
@@ -1581,7 +1573,7 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
     generateExtractionMark(cn, EndMark);
 
     if (!cn->noAutoList()) {
-        if (cn->isGroup() || cn->isQmlModule() || cn->isJsModule())
+        if (cn->isGroup() || cn->isQmlModule())
             generateAnnotatedList(cn, marker, cn->members());
     }
     generateFooter(cn);
@@ -1688,8 +1680,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
                 addNavItem(moduleNode->name(), moduleNode->name() + moduleState);
         }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
-    } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
-               || node->isJsBasicType()) {
+    } else if (node->isQmlType() || node->isQmlBasicType()) {
         if (!m_qmltypespage.isEmpty() && !m_qmltypestitle.isEmpty())
             addNavItem(m_qmltypespage, m_qmltypestitle);
         if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_qmltypespage)) {
@@ -2321,9 +2312,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
                 break;
             }
         }
-    } else if (sections
-               && (node->isClassNode() || node->isNamespace() || node->isQmlType() ||
-                   node->isJsType() || node->isQmlBasicType() || node->isJsBasicType())) {
+    } else if (sections && (node->isClassNode() || node->isNamespace() || node->isQmlType() || node->isQmlBasicType())) {
         for (const auto &section : qAsConst(*sections)) {
             if (!section.members().isEmpty()) {
                 openUnorderedList();
@@ -2839,7 +2828,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
             }
 
             QStringList pieces;
-            if (it.value()->isQmlType() || it.value()->isJsType()) {
+            if (it.value()->isQmlType()) {
                 QString name = it.value()->name();
                 next = it;
                 ++next;
@@ -2991,8 +2980,6 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
         type = Node::Module;
     else if (selector == QLatin1String("qml-modules"))
         type = Node::QmlModule;
-    else if (selector == QLatin1String("js-modules"))
-        type = Node::JsModule;
     if (type != Node::NoType) {
         NodeList nodeList;
         m_qdb->mergeCollections(type, cnm, relative);
@@ -3004,13 +2991,13 @@ void HtmlGenerator::generateList(const Node *relative, CodeMarker *marker, const
     } else {
         /*
           \generatelist {selector} is only allowed in a
-          comment where the topic is \group, \module,
-          \qmlmodule, or \jsmodule
+          comment where the topic is \group, \module, or
+          \qmlmodule.
         */
         if (relative && !relative->isCollectionNode()) {
             relative->doc().location().warning(
                     QStringLiteral("\\generatelist {%1} is only allowed in \\group, "
-                                   "\\module, \\qmlmodule, and \\jsmodule comments.")
+                                   "\\module and \\qmlmodule comments.")
                             .arg(selector));
             return;
         }
@@ -3255,7 +3242,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                 par1 = QStringView();
                 const Node *n = m_qdb->findTypeNode(arg.toString(), relative, genus);
                 html += QLatin1String("<span class=\"type\">");
-                if (n && (n->isQmlBasicType() || n->isJsBasicType())) {
+                if (n && (n->isQmlBasicType())) {
                     if (relative && (relative->genus() == n->genus() || genus == n->genus()))
                         addLink(linkForNode(n, relative), arg, &html);
                     else
@@ -3598,7 +3585,7 @@ void HtmlGenerator::generateQmlSummary(const NodeVector &members, const Node *re
                     out() << "<ul>\n";
                     const QList<Node *> &sharedNodes = scn->collective();
                     for (const auto &node : sharedNodes) {
-                        if (node->isQmlProperty() || node->isJsProperty()) {
+                        if (node->isQmlProperty()) {
                             out() << "<li class=\"fn\">";
                             generateQmlItem(node, relative, marker, true);
                             out() << "</li>\n";
@@ -3681,11 +3668,11 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         }
         const QList<Node *> sharedNodes = scn->collective();
         for (const auto &sharedNode : sharedNodes) {
-            if (sharedNode->isQmlProperty() || sharedNode->isJsProperty())
+            if (sharedNode->isQmlProperty())
                 generateQmlProperty(static_cast<QmlPropertyNode *>(sharedNode));
         }
         out() << qmlItemFooter;
-    } else if (node->isQmlProperty() || node->isJsProperty()) {
+    } else if (node->isQmlProperty()) {
         out() << qmlItemHeader;
         generateQmlProperty(static_cast<QmlPropertyNode *>(node));
         out() << qmlItemFooter;
@@ -3697,9 +3684,9 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         out() << qmlItemHeader;
         for (const auto &sharedNode : sharedNodes) {
             // Generate the node only if it is relevant for Qt Quick.
-            if (sharedNode->isFunction(Node::QML) || sharedNode->isFunction(Node::JS))
+            if (sharedNode->isFunction(Node::QML))
                 generateQmlMethod(sharedNode);
-            else if (sharedNode->isQmlProperty() || sharedNode->isJsProperty())
+            else if (sharedNode->isQmlProperty())
                 generateQmlProperty(static_cast<QmlPropertyNode *>(sharedNode));
         }
         out() << qmlItemFooter;

@@ -283,8 +283,6 @@ QString Generator::fileBase(const Node *node) const
 
         if (node->isQmlModule())
             base.append("-qmlmodule");
-        else if (node->isJsModule())
-            base.append("-jsmodule");
         else if (node->isModule())
             base.append("-module");
         // Why not add "-group" for group pages?
@@ -297,8 +295,7 @@ QString Generator::fileBase(const Node *node) const
             base.prepend(s_project.toLower() + QLatin1Char('-'));
             base.append(QLatin1String("-example"));
         }
-    } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
-               || node->isJsBasicType()) {
+    } else if (node->isQmlType() || node->isQmlBasicType()) {
         base = node->name();
         /*
           To avoid file name conflicts in the html directory,
@@ -497,8 +494,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
             parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
         else
             return QString();
-    } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
-               || node->isJsBasicType()) {
+    } else if (node->isQmlType() || node->isQmlBasicType()) {
         QString fb = fileBase(node);
         if (fb.startsWith(outputPrefix(node)))
             return fb + QLatin1Char('.') + currentGenerator()->fileExtension();
@@ -535,15 +531,12 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::Function: {
         const auto *fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::JsSignal:
         case FunctionNode::QmlSignal:
             anchorRef = QLatin1Char('#') + node->name() + "-signal";
             break;
-        case FunctionNode::JsSignalHandler:
         case FunctionNode::QmlSignalHandler:
             anchorRef = QLatin1Char('#') + node->name() + "-signal-handler";
             break;
-        case FunctionNode::JsMethod:
         case FunctionNode::QmlMethod:
             anchorRef = QLatin1Char('#') + node->name() + "-method";
             break;
@@ -584,7 +577,6 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
         if (!node->isPropertyGroup())
             break;
     } Q_FALLTHROUGH();
-    case Node::JsProperty:
     case Node::QmlProperty:
         if (node->isAttached())
             anchorRef = QLatin1Char('#') + node->name() + "-attached-prop";
@@ -594,13 +586,11 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
     case Node::Variable:
         anchorRef = QLatin1Char('#') + node->name() + "-var";
         break;
-    case Node::JsType:
     case Node::QmlType:
     case Node::Page:
     case Node::Group:
     case Node::HeaderFile:
     case Node::Module:
-    case Node::JsModule:
     case Node::QmlModule: {
         parentName = fileBase(node);
         parentName.replace(QLatin1Char('/'), QLatin1Char('-'))
@@ -1032,26 +1022,23 @@ void Generator::generateDocumentation(Node *node)
     if (node->parent() != nullptr) {
         if (node->isCollectionNode()) {
             /*
-              A collection node collects: groups, C++ modules,
-              QML modules or JavaScript modules. Testing for a
-              CollectionNode must be done before testing for a
-              TextPageNode because a CollectionNode is a PageNode
-              at this point.
+              A collection node collects: groups, C++ modules, or QML
+              modules. Testing for a CollectionNode must be done
+              before testing for a TextPageNode because a
+              CollectionNode is a PageNode at this point.
 
-              Don't output an HTML page for the collection
-              node unless the \group, \module, \qmlmodule or
-              \jsmodule command was actually seen by qdoc in
-              the qdoc comment for the node.
+              Don't output an HTML page for the collection node unless
+              the \group, \module, or \qmlmodule command was actually
+              seen by qdoc in the qdoc comment for the node.
 
               A key prerequisite in this case is the call to
-              mergeCollections(cn). We must determine whether
-              this group, module, QML module, or JavaScript
-              module has members in other modules. We know at
-              this point that cn's members list contains only
-              members in the current module. Therefore, before
-              outputting the page for cn, we must search for
-              members of cn in the other modules and add them
-              to the members list.
+              mergeCollections(cn). We must determine whether this
+              group, module or QML module has members in other
+              modules. We know at this point that cn's members list
+              contains only members in the current module. Therefore,
+              before outputting the page for cn, we must search for
+              members of cn in the other modules and add them to the
+              members list.
             */
             auto *cn = static_cast<CollectionNode *>(node);
             if (cn->wasSeen()) {
@@ -1081,12 +1068,12 @@ void Generator::generateDocumentation(Node *node)
                 beginSubPage(node, fileName(node));
                 generateCppReferencePage(static_cast<Aggregate *>(node), marker);
                 endSubPage();
-            } else if (node->isQmlType() || node->isJsType()) {
+            } else if (node->isQmlType()) {
                 beginSubPage(node, fileName(node));
                 auto *qcn = static_cast<QmlTypeNode *>(node);
                 generateQmlTypePage(qcn, marker);
                 endSubPage();
-            } else if (node->isQmlBasicType() || node->isJsBasicType()) {
+            } else if (node->isQmlBasicType()) {
                 beginSubPage(node, fileName(node));
                 auto *qbtn = static_cast<QmlValueTypeNode *>(node);
                 generateQmlBasicTypePage(qbtn, marker);
@@ -1671,7 +1658,6 @@ void Generator::initialize()
                     config.getString(CONFIG_OUTPUTPREFIXES + Config::dot + prefix);
     } else {
         s_outputPrefixes[QLatin1String("QML")] = QLatin1String("qml-");
-        s_outputPrefixes[QLatin1String("JS")] = QLatin1String("js-");
     }
 
     s_outputSuffixes.clear();
@@ -1819,22 +1805,20 @@ QString Generator::outFileName()
 
 QString Generator::outputPrefix(const Node *node)
 {
-    // Prefix is applied to QML and JS types
+    // Prefix is applied to QML types
     if (node->isQmlType() || node->isQmlBasicType())
         return s_outputPrefixes[QLatin1String("QML")];
-    if (node->isJsType() || node->isJsBasicType())
-        return s_outputPrefixes[QLatin1String("JS")];
+
     return QString();
 }
 
 QString Generator::outputSuffix(const Node *node)
 {
-    // Suffix is applied to QML and JS types, as
+    // Suffix is applied to QML types, as
     // well as module pages.
     if (node->isQmlModule() || node->isQmlType() || node->isQmlBasicType())
         return s_outputSuffixes[QLatin1String("QML")];
-    if (node->isJsModule() || node->isJsType() || node->isJsBasicType())
-        return s_outputSuffixes[QLatin1String("JS")];
+
     return QString();
 }
 
@@ -2082,7 +2066,6 @@ QString Generator::typeString(const Node *node)
         return "union";
     case Node::QmlType:
     case Node::QmlValueType:
-    case Node::JsBasicType:
         return "type";
     case Node::Page:
         return "documentation";
@@ -2094,13 +2077,10 @@ QString Generator::typeString(const Node *node)
     case Node::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::JsSignal:
         case FunctionNode::QmlSignal:
             return "signal";
-        case FunctionNode::JsSignalHandler:
         case FunctionNode::QmlSignalHandler:
             return "signal handler";
-        case FunctionNode::JsMethod:
         case FunctionNode::QmlMethod:
             return "method";
         case FunctionNode::MacroWithParams:
@@ -2115,7 +2095,6 @@ QString Generator::typeString(const Node *node)
     case Node::QmlProperty:
         return "property";
     case Node::Module:
-    case Node::JsModule:
     case Node::QmlModule:
         return "module";
     case Node::SharedComment: {

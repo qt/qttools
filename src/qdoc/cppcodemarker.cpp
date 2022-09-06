@@ -78,8 +78,7 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
 
     if (style == Section::Details) {
         if (!node->isRelatedNonmember() && !node->isProxyNode() && !node->parent()->name().isEmpty()
-            && !node->parent()->isHeader() && !node->isProperty() && !node->isQmlNode()
-            && !node->isJsNode()) {
+            && !node->parent()->isHeader() && !node->isProperty() && !node->isQmlNode()) {
             name.prepend(taggedNode(node->parent()) + "::");
         }
     }
@@ -232,17 +231,17 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
     QString name = taggedQmlNode(node);
     if (summary) {
         name = linkTag(node, name);
-    } else if (node->isQmlProperty() || node->isJsProperty()) {
+    } else if (node->isQmlProperty()) {
         const auto *pn = static_cast<const QmlPropertyNode *>(node);
         if (pn->isAttached())
             name.prepend(pn->element() + QLatin1Char('.'));
     }
     name = "<@name>" + name + "</@name>";
     QString synopsis;
-    if (node->isQmlProperty() || node->isJsProperty()) {
+    if (node->isQmlProperty()) {
         const auto *pn = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(pn->dataType());
-    } else if (node->isFunction(Node::QML) || node->isFunction(Node::JS)) {
+    } else if (node->isFunction(Node::QML)) {
         const auto *func = static_cast<const FunctionNode *>(node);
         if (!func->returnType().isEmpty())
             synopsis = typified(func->returnType(), true) + name;

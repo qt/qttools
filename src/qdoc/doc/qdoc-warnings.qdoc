@@ -235,7 +235,7 @@
     the same QML property, either by appearing just before its definition,
     or using the \l {qmlproperty-command}{\\qmlproperty} command.
 
-    \section1 Command <command> not allowed with QML/JS property commands
+    \section1 Command <command> not allowed with QML property commands
 
     Example:
 
@@ -250,11 +250,11 @@
     Error message:
 
     \badcode
-    Command '\\qmlsignal' not allowed with QML/JS property commands
+    Command '\\qmlsignal' not allowed with QML property commands
     \endcode
 
     This warning is specific to property group documentation.  QDoc
-    allows multiple (qml|js)property or (qml|js)attachedproperty topic commands
+    allows multiple qmlproperty or qmlattachedproperty topic commands
     in a single documentation comment to document a property group
     where the last element in the path is <group>.<property>. Any other topic
     commands triggers this warning.
@@ -538,7 +538,6 @@
     \li \\generatelist classes <prefix>
     \li \\generatelist classesbymodule <module name>
     \li \\generatelist qmltypesbymodule <module name>
-    \li \\generatelist jstypesbymodule <module_name>
     \li \\generatelist examplesfiles <regular expression>
     \li \\generatelist exampleimages <regular expression>
     \li \\generatelist functionindex
@@ -624,10 +623,10 @@
     the topic documented, so should end in a full stop. It should
     also be brief.
 
-    \section1 QtDeclarative not installed; cannot parse QML or JS
+    \section1 QtDeclarative not installed; cannot parse QML
 
     QDoc issues this warning if it has been compiled without support
-    for QML/JS parsing. This should not happen unless you have a
+    for QML parsing. This should not happen unless you have a
     custom build of QDoc.
 
     \section1 Invalid regular expression <regex>

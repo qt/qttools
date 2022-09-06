@@ -35,9 +35,7 @@ public:
     FunctionNode *parseMacroArg(const Location &location, const QString &macroArg);
     FunctionNode *parseOtherFuncArg(const QString &topic, const Location &location,
                                     const QString &funcArg);
-    static bool isJSMethodTopic(const QString &t);
     static bool isQMLMethodTopic(const QString &t);
-    static bool isJSPropertyTopic(const QString &t);
     static bool isQMLPropertyTopic(const QString &t);
 
 protected:

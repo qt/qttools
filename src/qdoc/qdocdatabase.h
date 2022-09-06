@@ -184,12 +184,10 @@ public:
     const CNMap &groups() { return primaryTree()->groups(); }
     const CNMap &modules() { return primaryTree()->modules(); }
     const CNMap &qmlModules() { return primaryTree()->qmlModules(); }
-    const CNMap &jsModules() { return primaryTree()->jsModules(); }
 
     CollectionNode *addGroup(const QString &name) { return primaryTree()->addGroup(name); }
     CollectionNode *addModule(const QString &name) { return primaryTree()->addModule(name); }
     CollectionNode *addQmlModule(const QString &name) { return primaryTree()->addQmlModule(name); }
-    CollectionNode *addJsModule(const QString &name) { return primaryTree()->addJsModule(name); }
 
     CollectionNode *addToGroup(const QString &name, Node *node)
     {
@@ -202,10 +200,6 @@ public:
     CollectionNode *addToQmlModule(const QString &name, Node *node)
     {
         return primaryTree()->addToQmlModule(name, node);
-    }
-    CollectionNode *addToJsModule(const QString &name, Node *node)
-    {
-        return primaryTree()->addToJsModule(name, node);
     }
 
     void addExampleNode(ExampleNode *n) { primaryTree()->addExampleNode(n); }

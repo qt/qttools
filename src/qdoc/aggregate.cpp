@@ -80,8 +80,7 @@ Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findF
             if (genus & node->genus()) {
                 if (findFlags & TypesOnly) {
                     if (!node->isTypedef() && !node->isClassNode() && !node->isQmlType()
-                        && !node->isQmlBasicType() && !node->isJsType()
-                        && !node->isJsBasicType() && !node->isEnumType())
+                        && !node->isQmlBasicType() && !node->isEnumType())
                         continue;
                 } else if (findFlags & IgnoreModules && node->isModule())
                     continue;
@@ -518,14 +517,12 @@ void Aggregate::setOutputSubdirectory(const QString &t)
 }
 
 /*!
-  If this node has a child that is a QML property or JS property
-  named \a n, return a pointer to that child. Otherwise, return \nullptr.
+  If this node has a child that is a QML property named \a n, return a
+  pointer to that child. Otherwise, return \nullptr.
  */
 QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n) const
 {
     NodeType goal = Node::QmlProperty;
-    if (isJsNode())
-        goal = Node::JsProperty;
     for (auto *child : qAsConst(m_children)) {
         if (child->nodeType() == goal) {
             if (child->name() == n)
@@ -536,15 +533,12 @@ QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n) const
 }
 
 /*!
-  If this node has a child that is a QML property or JS property
-  named \a n and that also matches \a attached, return a pointer
-  to that child.
+  If this node has a child that is a QML property named \a n and that
+  also matches \a attached, return a pointer to that child.
  */
 QmlPropertyNode *Aggregate::hasQmlProperty(const QString &n, bool attached) const
 {
     NodeType goal = Node::QmlProperty;
-    if (isJsNode())
-        goal = Node::JsProperty;
     for (auto *child : qAsConst(m_children)) {
         if (child->nodeType() == goal) {
             if (child->name() == n && child->isAttached() == attached)
@@ -652,8 +646,7 @@ bool Aggregate::hasObsoleteMembers() const
     for (const auto *node : m_children)
         if (!node->isPrivate() && node->isDeprecated()) {
             if (node->isFunction() || node->isProperty() || node->isEnumType() || node->isTypedef()
-                || node->isTypeAlias() || node->isVariable() || node->isQmlProperty()
-                || node->isJsProperty())
+                || node->isTypeAlias() || node->isVariable() || node->isQmlProperty())
                 return true;
         }
     return false;
@@ -673,13 +666,13 @@ void Aggregate::findAllObsoleteThings()
             if (node->isDeprecated()) {
                 if (node->isClassNode())
                     QDocDatabase::obsoleteClasses().insert(node->qualifyCppName(), node);
-                else if (node->isQmlType() || node->isJsType())
+                else if (node->isQmlType())
                     QDocDatabase::obsoleteQmlTypes().insert(node->qualifyQmlName(), node);
             } else if (node->isClassNode()) {
                 auto *a = static_cast<Aggregate *>(node);
                 if (a->hasObsoleteMembers())
                     QDocDatabase::classesWithObsoleteMembers().insert(node->qualifyCppName(), node);
-            } else if (node->isQmlType() || node->isJsType()) {
+            } else if (node->isQmlType()) {
                 auto *a = static_cast<Aggregate *>(node);
                 if (a->hasObsoleteMembers())
                     QDocDatabase::qmlTypesWithObsoleteMembers().insert(node->qualifyQmlName(),
@@ -692,9 +685,9 @@ void Aggregate::findAllObsoleteThings()
 }
 
 /*!
-  Finds all the C++ classes, QML types, JS types, QML and JS
-  basic types, and examples in this aggregate and inserts them
-  into appropriate maps for later use in generating documentation.
+  Finds all the C++ classes, QML types, QML basic types, and examples
+  in this aggregate and inserts them into appropriate maps for later
+  use in generating documentation.
  */
 void Aggregate::findAllClasses()
 {
@@ -703,12 +696,11 @@ void Aggregate::findAllClasses()
             && node->tree()->camelCaseModuleName() != QString("QDoc")) {
             if (node->isClassNode()) {
                 QDocDatabase::cppClasses().insert(node->qualifyCppName().toLower(), node);
-            } else if (node->isQmlType() || node->isQmlBasicType() || node->isJsType()
-                       || node->isJsBasicType()) {
+            } else if (node->isQmlType() || node->isQmlBasicType()) {
                 QString name = node->name().toLower();
                 QDocDatabase::qmlTypes().insert(name, node);
                 // also add to the QML basic type map
-                if (node->isQmlBasicType() || node->isJsBasicType())
+                if (node->isQmlBasicType())
                     QDocDatabase::qmlBasicTypes().insert(name, node);
             } else if (node->isExample()) {
                 // use the module index title as key for the example map
@@ -776,12 +768,12 @@ void Aggregate::findAllSince()
                 QString name = node->qualifyWithParentName();
                 nsmap.value().insert(name, node);
                 ncmap.value().insert(name, node);
-            } else if (node->isQmlType() || node->isJsType()) {
+            } else if (node->isQmlType()) {
                 // Insert QML elements into the since and element maps.
                 QString name = node->qualifyWithParentName();
                 nsmap.value().insert(name, node);
                 nqcmap.value().insert(name, node);
-            } else if (node->isQmlProperty() || node->isJsProperty()) {
+            } else if (node->isQmlProperty()) {
                 // Insert QML properties into the since map.
                 nsmap.value().insert(node->name(), node);
             } else {
@@ -804,7 +796,7 @@ void Aggregate::resolveQmlInheritance()
 {
     NodeMap previousSearches;
     for (auto *child : qAsConst(m_children)) {
-        if (!child->isQmlType() && !child->isJsType())
+        if (!child->isQmlType())
             continue;
         static_cast<QmlTypeNode *>(child)->resolveInheritance(previousSearches);
     }

@@ -464,8 +464,6 @@ void QDocDatabase::initializeDB()
     s_typeNodeMap.insert("initialized", nullptr);
     s_typeNodeMap.insert("isLoaded", nullptr);
     s_typeNodeMap.insert("item", nullptr);
-    s_typeNodeMap.insert("jsdict", nullptr);
-    s_typeNodeMap.insert("jsobject", nullptr);
     s_typeNodeMap.insert("key", nullptr);
     s_typeNodeMap.insert("keysequence", nullptr);
     s_typeNodeMap.insert("listViewClicked", nullptr);
@@ -570,12 +568,6 @@ void QDocDatabase::initializeDB()
   QML module nodes in the primary tree.
 */
 
-/*!
-  \fn const CNMap &QDocDatabase::jsModules()
-  Returns a const reference to the collection of all
-  JovaScript module nodes in the primary tree.
-*/
-
 /*! \fn CollectionNode *QDocDatabase::findGroup(const QString &name)
   Find the group node named \a name and return a pointer
   to it. If a matching node is not found, add a new group
@@ -592,18 +584,6 @@ void QDocDatabase::initializeDB()
 
   If a new module node is added, its parent is the tree root,
   and the new module node is marked \e{not seen}.
- */
-
-/*! \fn CollectionNode *QDocDatabase::findQmlModule(const QString &name, bool javaScript)
-  Find the QML module node named \a name and return a pointer
-  to it. If a matching node is not found, add a new QML module
-  node named \a name and return a pointer to that one.
-
-  If \a javaScript is set, the return collection must be a
-  JavaScript module.
-
-  If a new QML or JavaScript module node is added, its parent
-  is the tree root, and the new node is marked \e{not seen}.
  */
 
 /*! \fn CollectionNode *QDocDatabase::addGroup(const QString &name)
@@ -630,14 +610,6 @@ void QDocDatabase::initializeDB()
   node is returned.
  */
 
-/*! \fn CollectionNode *QDocDatabase::addJsModule(const QString &name)
-  Looks up the JavaScript module named \a name in the primary
-  tree. If a match is found, a pointer to the node is returned.
-  Otherwise, a new JavaScript module node named \a name is
-  created and inserted into the collection, and the pointer to
-  that node is returned.
- */
-
 /*! \fn CollectionNode *QDocDatabase::addToGroup(const QString &name, Node *node)
   Looks up the group node named \a name in the collection
   of all group nodes. If a match is not found, a new group
@@ -659,12 +631,6 @@ void QDocDatabase::initializeDB()
 /*! \fn Collection *QDocDatabase::addToQmlModule(const QString &name, Node *node)
   Looks up the QML module named \a name. If it isn't there,
   create it. Then append \a node to the QML module's member
-  list. The parent of \a node is not changed by this function.
- */
-
-/*! \fn Collection *QDocDatabase::addToJsModule(const QString &name, Node *node)
-  Looks up the JavaScript module named \a name. If it isn't there,
-  create it. Then append \a node to the JavaScript module's member
   list. The parent of \a node is not changed by this function.
  */
 
@@ -699,7 +665,7 @@ QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name)
 
     QStringList path(name);
     Node *n = m_forest.findNodeByNameAndType(path, &Node::isQmlType);
-    if (n && (n->isQmlType() || n->isJsType()))
+    if (n && n->isQmlType())
         return static_cast<QmlTypeNode *>(n);
     return nullptr;
 }
@@ -1366,10 +1332,6 @@ const CollectionNode *QDocDatabase::getModuleNode(const Node *relative)
         moduleType = Node::QmlModule;
         moduleName = relative->logicalModuleName();
         break;
-    case Node::JS:
-        moduleType = Node::JsModule;
-        moduleName = relative->logicalModuleName();
-        break;
     default:
         return nullptr;
     }
@@ -1414,8 +1376,8 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
             if (values.size() > 1) {
                 for (CollectionNode *value : values) {
                     if (value != n) {
-                        // Allow multiple (major) versions of QML/JS modules
-                        if ((n->isQmlModule() || n->isJsModule())
+                        // Allow multiple (major) versions of QML modules
+                        if ((n->isQmlModule())
                             && n->logicalModuleIdentifier() != value->logicalModuleIdentifier()) {
                             if (value->wasSeen() && value != relative
                                 && !value->members().isEmpty())
@@ -1441,7 +1403,7 @@ void QDocDatabase::mergeCollections(Node::NodeType type, CNMap &cnm, const Node 
   and type as \a c and merges their members into the
   members list of \a c.
 
-  For QML and JS modules, only nodes with matching
+  For QML modules, only nodes with matching
   module identifiers are merged to avoid merging
   modules with different (major) versions.
  */
@@ -1492,7 +1454,7 @@ void QDocDatabase::mergeCollections(CollectionNode *c)
     for (auto *tree : searchOrder()) {
         CollectionNode *cn = tree->getCollection(c->name(), c->nodeType());
         if (cn && cn != c) {
-            if ((cn->isQmlModule() || cn->isJsModule())
+            if ((cn->isQmlModule())
                 && cn->logicalModuleIdentifier() != c->logicalModuleIdentifier())
                 continue;
 

@@ -27,8 +27,7 @@ public:
 
     [[nodiscard]] bool isPropertyGroup() const override
     {
-        return !name().isEmpty() && !m_collective.isEmpty()
-                && (m_collective.at(0)->isQmlProperty() || m_collective.at(0)->isJsProperty());
+        return !name().isEmpty() && !m_collective.isEmpty() && (m_collective.at(0)->isQmlProperty());
     }
     [[nodiscard]] qsizetype count() const { return m_collective.size(); }
     void append(Node *node)

@@ -267,42 +267,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(name);
         node = qmlTypeNode;
-    } else if (elementName == QLatin1String("jstype")) {
-        auto *qmlTypeNode = new QmlTypeNode(parent, name);
-        qmlTypeNode->setGenus(Node::JS);
-        qmlTypeNode->setTitle(attributes.value(QLatin1String("title")).toString());
-        QString logicalModuleName = attributes.value(QLatin1String("js-module-name")).toString();
-        if (!logicalModuleName.isEmpty())
-            m_qdb->addToQmlModule(logicalModuleName, qmlTypeNode);
-        bool abstract = false;
-        if (attributes.value(QLatin1String("abstract")) == QLatin1String("true"))
-            abstract = true;
-        qmlTypeNode->setAbstract(abstract);
-        QString qmlFullBaseName = attributes.value(QLatin1String("js-base-type")).toString();
-        if (!qmlFullBaseName.isEmpty()) {
-            qmlTypeNode->setQmlBaseName(qmlFullBaseName);
-        }
-        if (attributes.hasAttribute(QLatin1String("location")))
-            name = attributes.value("location").toString();
-        if (!indexUrl.isEmpty())
-            location = Location(indexUrl + QLatin1Char('/') + name);
-        else if (!indexUrl.isNull())
-            location = Location(name);
-        node = qmlTypeNode;
     } else if (elementName == QLatin1String("qmlvaluetype")
                || elementName == QLatin1String("qmlbasictype")) {
         auto *qbtn = new QmlValueTypeNode(parent, name);
-        qbtn->setTitle(attributes.value(QLatin1String("title")).toString());
-        if (attributes.hasAttribute(QLatin1String("location")))
-            name = attributes.value("location").toString();
-        if (!indexUrl.isEmpty())
-            location = Location(indexUrl + QLatin1Char('/') + name);
-        else if (!indexUrl.isNull())
-            location = Location(name);
-        node = qbtn;
-    } else if (elementName == QLatin1String("jsbasictype")) {
-        auto *qbtn = new QmlValueTypeNode(parent, name);
-        qbtn->setGenus(Node::JS);
         qbtn->setTitle(attributes.value(QLatin1String("title")).toString());
         if (attributes.hasAttribute(QLatin1String("location")))
             name = attributes.value("location").toString();
@@ -324,18 +291,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         if (attributes.value(QLatin1String("required")) == QLatin1String("true"))
             qmlPropertyNode->setRequired();
         node = qmlPropertyNode;
-    } else if (elementName == QLatin1String("jsproperty")) {
-        QString type = attributes.value(QLatin1String("type")).toString();
-        bool attached = false;
-        if (attributes.value(QLatin1String("attached")) == QLatin1String("true"))
-            attached = true;
-        bool readonly = false;
-        if (attributes.value(QLatin1String("writable")) == QLatin1String("false"))
-            readonly = true;
-        auto *qmlPropertyNode = new QmlPropertyNode(parent, name, type, attached);
-        qmlPropertyNode->setGenus(Node::JS);
-        qmlPropertyNode->markReadOnly(readonly);
-        node = qmlPropertyNode;
     } else if (elementName == QLatin1String("group")) {
         auto *collectionNode = m_qdb->addGroup(name);
         collectionNode->setTitle(attributes.value(QLatin1String("title")).toString());
@@ -355,17 +310,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         auto *collectionNode = m_qdb->addQmlModule(t);
         QStringList info;
         info << t << attributes.value(QLatin1String("qml-module-version")).toString();
-        collectionNode->setLogicalModuleInfo(info);
-        collectionNode->setTitle(attributes.value(QLatin1String("title")).toString());
-        collectionNode->setSubtitle(attributes.value(QLatin1String("subtitle")).toString());
-        if (attributes.value(QLatin1String("seen")) == QLatin1String("true"))
-            collectionNode->markSeen();
-        node = collectionNode;
-    } else if (elementName == QLatin1String("jsmodule")) {
-        QString t = attributes.value(QLatin1String("js-module-name")).toString();
-        auto *collectionNode = m_qdb->addJsModule(t);
-        QStringList info;
-        info << t << attributes.value(QLatin1String("js-module-version")).toString();
         collectionNode->setLogicalModuleInfo(info);
         collectionNode->setTitle(attributes.value(QLatin1String("title")).toString());
         collectionNode->setSubtitle(attributes.value(QLatin1String("subtitle")).toString());
@@ -857,20 +801,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         moduleVerAttr = "qml-module-version";
         qmlFullBaseName = node->qmlFullBaseName();
         break;
-    case Node::JsType:
-        nodeName = "jstype";
-        baseNameAttr = "js-base-type";
-        moduleNameAttr = "js-module-name";
-        moduleVerAttr = "js-module-version";
-        if (node->logicalModule() != nullptr)
-            logicalModuleName = node->logicalModule()->logicalModuleName();
-        qmlFullBaseName = node->qmlFullBaseName();
-        break;
     case Node::QmlValueType:
         nodeName = "qmlvaluetype";
-        break;
-    case Node::JsBasicType:
-        nodeName = "jsbasictype";
         break;
     case Node::Page:
     case Node::Example:
@@ -887,13 +819,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         nodeName = "qmlmodule";
         moduleNameAttr = "qml-module-name";
         moduleVerAttr = "qml-module-version";
-        logicalModuleName = node->logicalModuleName();
-        logicalModuleVersion = node->logicalModuleVersion();
-        break;
-    case Node::JsModule:
-        nodeName = "jsmodule";
-        moduleNameAttr = "js-module-name";
-        moduleVerAttr = "js-module-version";
         logicalModuleName = node->logicalModuleName();
         logicalModuleVersion = node->logicalModuleVersion();
         break;
@@ -914,13 +839,10 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (!node->isPropertyGroup())
             return false;
         // Add an entry for property groups so that they can be linked to
-        nodeName = node->genus() == Node::QML ? "qmlproperty" : "jsproperty";
+        nodeName = "qmlproperty";
         break;
     case Node::QmlProperty:
         nodeName = "qmlproperty";
-        break;
-    case Node::JsProperty:
-        nodeName = "jsproperty";
         break;
     case Node::Proxy:
         nodeName = "proxy";
@@ -944,7 +866,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
 
     writer.writeAttribute("name", objName);
 
-    // Write module and base type info for QML/JS types
+    // Write module and base type info for QML types
     if (!moduleNameAttr.isEmpty()) {
         if (!logicalModuleName.isEmpty())
             writer.writeAttribute(moduleNameAttr, logicalModuleName);
@@ -964,9 +886,9 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         href = m_gen->fullDocumentLocation(node);
     } else
         href = node->name();
-    if (node->isQmlNode() || node->isJsNode()) {
+    if (node->isQmlNode()) {
         Aggregate *p = node->parent();
-        if (p && (p->isQmlType() || p->isJsType()) && p->isAbstract())
+        if (p && p->isQmlType() && p->isAbstract())
             href.clear();
     }
     if (!href.isEmpty())
@@ -1042,7 +964,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
-    case Node::JsType:
     case Node::QmlType: {
         const auto *qmlTypeNode = static_cast<const QmlTypeNode *>(node);
         writer.writeAttribute("title", qmlTypeNode->title());
@@ -1081,7 +1002,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     } break;
     case Node::Group:
     case Node::Module:
-    case Node::JsModule:
     case Node::QmlModule: {
         const auto *collectionNode = static_cast<const CollectionNode *>(node);
         writer.writeAttribute("seen", collectionNode->wasSeen() ? "true" : "false");
@@ -1093,7 +1013,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
-    case Node::JsProperty:
     case Node::QmlProperty: {
         auto *qmlPropertyNode = static_cast<QmlPropertyNode *>(node);
         writer.writeAttribute("type", qmlPropertyNode->dataType());
@@ -1414,8 +1333,7 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
       Note that groups, modules, and QML modules are written
       after all the other nodes.
      */
-    if (node->isCollectionNode() || node->isGroup() || node->isModule() || node->isQmlModule()
-        || node->isJsModule())
+    if (node->isCollectionNode() || node->isGroup() || node->isModule() || node->isQmlModule())
         return;
 
     if (node->isInternal() && !Config::instance().showInternal())
@@ -1459,14 +1377,6 @@ void QDocIndexFiles::generateIndexSections(QXmlStreamWriter &writer, Node *node,
             const CNMap &qmlModules = m_qdb->qmlModules();
             if (!qmlModules.isEmpty()) {
                 for (auto it = qmlModules.constBegin(); it != qmlModules.constEnd(); ++it) {
-                    if (generateIndexSection(writer, it.value(), post))
-                        writer.writeEndElement();
-                }
-            }
-
-            const CNMap &jsModules = m_qdb->jsModules();
-            if (!jsModules.isEmpty()) {
-                for (auto it = jsModules.constBegin(); it != jsModules.constEnd(); ++it) {
                     if (generateIndexSection(writer, it.value(), post))
                         writer.writeEndElement();
                 }

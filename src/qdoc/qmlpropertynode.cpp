@@ -17,7 +17,7 @@ QT_BEGIN_NAMESPACE
  */
 QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString type,
                                  bool attached)
-    : Node(parent->isJsType() ? JsProperty : QmlProperty, parent, name),
+    : Node(QmlProperty, parent, name),
       m_type(std::move(type)),
       m_attached(attached)
 {
@@ -80,7 +80,7 @@ PropertyNode *QmlPropertyNode::findCorrespondingCppProperty()
 {
     PropertyNode *pn;
     Node *n = parent();
-    while (n && !(n->isQmlType() || n->isJsType()))
+    while (n && !(n->isQmlType()))
         n = n->parent();
     if (n) {
         auto *qcn = static_cast<QmlTypeNode *>(n);
