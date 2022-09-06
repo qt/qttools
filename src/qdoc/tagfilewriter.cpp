@@ -50,7 +50,6 @@ void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Agg
         case Node::Struct:
         case Node::Union:
         case Node::QmlType:
-        case Node::JsType:
             kind = "class";
             break;
         default:

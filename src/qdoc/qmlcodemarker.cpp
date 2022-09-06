@@ -75,7 +75,7 @@ QString QmlCodeMarker::markedUpCode(const QString &code, const Node *relative,
 
 /*!
   Constructs and returns the marked up name for the \a node.
-  If the node is any kind of QML or JS function (a method,
+  If the node is any kind of QML function (a method,
   signal, or handler), "()" is appended to the marked up name.
  */
 QString QmlCodeMarker::markedUpName(const Node *node)

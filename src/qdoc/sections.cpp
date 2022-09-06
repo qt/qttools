@@ -120,9 +120,6 @@ QString Section::sortName(const Node *node, const QString *name)
         }
         if (fn->isQmlMethod() || fn->isQmlSignal() || fn->isQmlSignalHandler())
             return QLatin1Char('E') + nodeName;
-
-        if (fn->isJsMethod() || fn->isJsSignal() || fn->isJsSignalHandler())
-            return QLatin1Char('E') + nodeName;
     }
     if (node->isClassNode())
         return QLatin1Char('A') + nodeName;
@@ -144,7 +141,7 @@ void Section::insert(Node *node)
     if (!node->isRelatedNonmember()) {
         Aggregate *p = node->parent();
         if (!p->isNamespace() && p != m_aggregate) {
-            if ((!p->isQmlType() && !p->isJsType()) || !p->isAbstract())
+            if (!p->isQmlType() || !p->isAbstract())
                 inherited = true;
         }
     }
@@ -284,8 +281,6 @@ Sections::Sections(Aggregate *aggregate) : m_aggregate(aggregate)
         initAggregate(s_stdCppClassDetailsSections, m_aggregate);
         buildStdCppClassRefPageSections();
         break;
-    case Node::JsType:
-    case Node::JsBasicType:
     case Node::QmlType:
     case Node::QmlValueType:
         initAggregate(s_stdQmlTypeSummarySections, m_aggregate);
@@ -316,7 +311,6 @@ Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
     for (auto it = nsmap.constBegin(); it != nsmap.constEnd(); ++it) {
         Node *node = it.value();
         switch (node->nodeType()) {
-        case Node::JsType:
         case Node::QmlType:
             sections[SinceQmlTypes].appendMember(node);
             break;
@@ -340,15 +334,12 @@ Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
         case Node::Function: {
             const auto *fn = static_cast<const FunctionNode *>(node);
             switch (fn->metaness()) {
-            case FunctionNode::JsSignal:
             case FunctionNode::QmlSignal:
                 sections[SinceQmlSignals].appendMember(node);
                 break;
-            case FunctionNode::JsSignalHandler:
             case FunctionNode::QmlSignalHandler:
                 sections[SinceQmlSignalHandlers].appendMember(node);
                 break;
-            case FunctionNode::JsMethod:
             case FunctionNode::QmlMethod:
                 sections[SinceQmlMethods].appendMember(node);
                 break;
@@ -380,7 +371,6 @@ Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
         case Node::Variable:
             sections[SinceVariables].appendMember(node);
             break;
-        case Node::JsProperty:
         case Node::QmlProperty:
             sections[SinceQmlProperties].appendMember(node);
             break;
@@ -407,8 +397,6 @@ Sections::~Sections()
             clear(stdCppClassDetailsSections());
             allMembersSection().clear();
             break;
-        case Node::JsType:
-        case Node::JsBasicType:
         case Node::QmlType:
         case Node::QmlValueType:
             clear(stdQmlTypeSummarySections());
@@ -829,7 +817,7 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
             t = scn->collective().first(); // TODO: warn about mixed node types in collective?
     }
 
-    if (t->isQmlProperty() || t->isJsProperty()) {
+    if (t->isQmlProperty()) {
         auto *pn = static_cast<QmlPropertyNode *>(t);
         if (pn->isAttached())
             dv[QmlAttachedProperties].insert(n);
@@ -837,14 +825,14 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
             dv[QmlProperties].insert(n);
     } else if (t->isFunction()) {
         auto *fn = static_cast<FunctionNode *>(t);
-        if (fn->isQmlSignal() || fn->isJsSignal()) {
+        if (fn->isQmlSignal()) {
             if (fn->isAttached())
                 dv[QmlAttachedSignals].insert(n);
             else
                 dv[QmlSignals].insert(n);
-        } else if (fn->isQmlSignalHandler() || fn->isJsSignalHandler()) {
+        } else if (fn->isQmlSignalHandler()) {
             dv[QmlSignalHandlers].insert(n);
-        } else if (fn->isQmlMethod() || fn->isJsMethod()) {
+        } else if (fn->isQmlMethod()) {
             if (fn->isAttached())
                 dv[QmlAttachedMethods].insert(n);
             else
@@ -862,7 +850,7 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
 {
     if (n->isSharingComment() && !sharing)
         return;
-    if (n->isQmlProperty() || n->isJsProperty()) {
+    if (n->isQmlProperty()) {
         auto *pn = static_cast<QmlPropertyNode *>(n);
         if (pn->isAttached())
             sv[QmlAttachedProperties].insert(pn);
@@ -870,14 +858,14 @@ void Sections::distributeQmlNodeInSummaryVector(SectionVector &sv, Node *n, bool
             sv[QmlProperties].insert(pn);
     } else if (n->isFunction()) {
         auto *fn = static_cast<FunctionNode *>(n);
-        if (fn->isQmlSignal() || fn->isJsSignal()) {
+        if (fn->isQmlSignal()) {
             if (fn->isAttached())
                 sv[QmlAttachedSignals].insert(fn);
             else
                 sv[QmlSignals].insert(fn);
-        } else if (fn->isQmlSignalHandler() || fn->isJsSignalHandler()) {
+        } else if (fn->isQmlSignalHandler()) {
             sv[QmlSignalHandlers].insert(fn);
-        } else if (fn->isQmlMethod() || fn->isJsMethod()) {
+        } else if (fn->isQmlMethod()) {
             if (fn->isAttached())
                 sv[QmlAttachedMethods].insert(fn);
             else

@@ -11,15 +11,15 @@ QT_BEGIN_NAMESPACE
   \class FunctionNode
 
   This node is used to represent any kind of function being
-  documented. It can represent a C++ class member function,
-  a C++ global function, a QML method, a javascript method,
-  or a macro, with or without parameters.
+  documented. It can represent a C++ class member function, a C++
+  global function, a QML method, or a macro, with or without
+  parameters.
 
   A C++ function can be a signal a slot, a constructor of any
   kind, a destructor, a copy or move assignment operator, or
   just a plain old member function or global function.
 
-  A QML or javascript method can be a plain old method, or a
+  A QML method can be a plain old method, or a
   signal or signal handler.
 
   If the function is not an overload, its overload flag is
@@ -171,9 +171,6 @@ static void buildMetanessMap()
     metanessMap_["qmlsignal"] = FunctionNode::QmlSignal;
     metanessMap_["qmlsignalhandler"] = FunctionNode::QmlSignalHandler;
     metanessMap_["qmlmethod"] = FunctionNode::QmlMethod;
-    metanessMap_["jssignal"] = FunctionNode::JsSignal;
-    metanessMap_["jssignalhandler"] = FunctionNode::JsSignalHandler;
-    metanessMap_["jsmethos"] = FunctionNode::JsMethod;
 }
 
 static QMap<QString, FunctionNode::Metaness> topicMetanessMap_;
@@ -184,10 +181,6 @@ static void buildTopicMetanessMap()
     topicMetanessMap_["qmlattachedsignal"] = FunctionNode::QmlSignal;
     topicMetanessMap_["qmlmethod"] = FunctionNode::QmlMethod;
     topicMetanessMap_["qmlattachedmethod"] = FunctionNode::QmlMethod;
-    topicMetanessMap_["jssignal"] = FunctionNode::JsSignal;
-    topicMetanessMap_["jsattachedsignal"] = FunctionNode::JsSignal;
-    topicMetanessMap_["jsmethod"] = FunctionNode::JsMethod;
-    topicMetanessMap_["jsattachedmethod"] = FunctionNode::JsMethod;
 }
 
 /*!
@@ -216,11 +209,8 @@ Node::Genus FunctionNode::getGenus(FunctionNode::Metaness metaness)
     case FunctionNode::QmlSignalHandler:
     case FunctionNode::QmlMethod:
         return Node::QML;
-    case FunctionNode::JsSignal:
-    case FunctionNode::JsSignalHandler:
-    case FunctionNode::JsMethod:
-        return Node::JS;
     }
+
     return Node::DontCare;
 }
 
@@ -244,46 +234,6 @@ FunctionNode::Metaness FunctionNode::getMetanessFromTopic(const QString &topic)
     if (topicMetanessMap_.isEmpty())
         buildTopicMetanessMap();
     return topicMetanessMap_[topic];
-}
-
-/*!
-  If this function node's metaness is \a from, change the
-  metaness to \a to and return \c true. Otherwise return
-  false. This function is used to change Qml function node
-  metaness values to Javascript function node metaness,
-  values because these nodes are created as Qml function
-  nodes before it is discovered that what the function node
-  represents is not a Qml function but a javascript function.
-
-  Note that if the function returns true, which means the node
-  type was indeed changed, then the node's Genus is also changed
-  from QML to JS.
-
-  The function also works in the other direction, but there is
-  no use case for that.
- */
-bool FunctionNode::changeMetaness(Metaness from, Metaness to)
-{
-    if (m_metaness == from) {
-        m_metaness = to;
-        switch (to) {
-        case QmlSignal:
-        case QmlSignalHandler:
-        case QmlMethod:
-            setGenus(Node::QML);
-            break;
-        case JsSignal:
-        case JsSignalHandler:
-        case JsMethod:
-            setGenus(Node::JS);
-            break;
-        default:
-            setGenus(Node::CPP);
-            break;
-        }
-        return true;
-    }
-    return false;
 }
 
 /*!
@@ -377,12 +327,6 @@ QString FunctionNode::kindString() const
         return "QML signal handler";
     case FunctionNode::QmlMethod:
         return "QML method";
-    case FunctionNode::JsSignal:
-        return "JS signal";
-    case FunctionNode::JsSignalHandler:
-        return "JS signal handler";
-    case FunctionNode::JsMethod:
-        return "JS method";
     default:
         return "function";
     }
@@ -425,12 +369,6 @@ QString FunctionNode::metanessString() const
         return "qmlsignalhandler";
     case FunctionNode::QmlMethod:
         return "qmlmethod";
-    case FunctionNode::JsSignal:
-        return "jssignal";
-    case FunctionNode::JsSignalHandler:
-        return "jssignalhandler";
-    case FunctionNode::JsMethod:
-        return "jsmethod";
     default:
         return "plain";
     }

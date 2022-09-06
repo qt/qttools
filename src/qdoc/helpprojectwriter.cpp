@@ -124,10 +124,8 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
     typeHash["variable"] = Node::Variable;
     typeHash["group"] = Node::Group;
     typeHash["module"] = Node::Module;
-    typeHash["jsmodule"] = Node::JsModule;
     typeHash["qmlmodule"] = Node::QmlModule;
-    typeHash["qmlproperty"] = Node::JsProperty;
-    typeHash["jsproperty"] = Node::QmlProperty;
+    typeHash["qmlproperty"] = Node::QmlProperty;
     typeHash["qmlclass"] = Node::QmlType; // Legacy alias for 'qmltype'
     typeHash["qmltype"] = Node::QmlType;
     typeHash["qmlbasictype"] = Node::QmlValueType; // Legacy alias for 'qmlvaluetype'
@@ -149,8 +147,7 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
             for (const auto &piece : std::as_const(pieces)) {
                 if (typeHash[typeName] == Node::Group
                     || typeHash[typeName] == Node::Module
-                    || typeHash[typeName] == Node::QmlModule
-                    || typeHash[typeName] == Node::JsModule) {
+                    || typeHash[typeName] == Node::QmlModule) {
                     subproject.m_groups << piece.toLower();
                 }
             }
@@ -187,8 +184,6 @@ Keyword HelpProjectWriter::keywordDetails(const Node *node) const
             ids << "QML." + moduleName + majorVersion + "." + name;
         }
         return Keyword(name, ids, ref);
-    } else if (node->isJsType() || node->isJsBasicType()) {
-        return Keyword(node->name(), "JS." + node->name(), ref);
     } else if (node->isTextPageNode()) {
         const auto *pageNode = static_cast<const PageNode *>(node);
         return Keyword(pageNode->fullTitle(), pageNode->fullTitle(), ref);
@@ -256,8 +251,6 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         break;
     case Node::QmlType:
     case Node::QmlValueType:
-    case Node::JsType:
-    case Node::JsBasicType:
         if (node->doc().hasKeywords()) {
             const auto keywords = node->doc().keywords();
             for (const Atom *keyword : keywords) {
@@ -302,8 +295,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
 
     case Node::Group:
     case Node::Module:
-    case Node::QmlModule:
-    case Node::JsModule: {
+    case Node::QmlModule: {
         const auto *cn = static_cast<const CollectionNode *>(node);
         if (!cn->fullTitle().isEmpty()) {
             if (cn->doc().hasKeywords()) {
@@ -325,7 +317,6 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
 
     case Node::Property:
     case Node::QmlProperty:
-    case Node::JsProperty:
         project.m_keywords.append(keywordDetails(node));
         break;
 
@@ -333,13 +324,11 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         const auto *funcNode = static_cast<const FunctionNode *>(node);
 
         /*
-          QML and JS methods, signals, and signal handlers used to be node types,
+          QML methods, signals, and signal handlers used to be node types,
           but now they are Function nodes with a Metaness value that specifies
-          what kind of function they are, QmlSignal, JsSignal, QmlMethod, etc. It
-          suffices at this point to test whether the node is of the QML or JS Genus,
-          because we already know it is NodeType::Function.
-         */
-        if (funcNode->isQmlNode() || funcNode->isJsNode()) {
+          what kind of function they are, QmlSignal, QmlMethod, etc.
+        */
+        if (funcNode->isQmlNode()) {
             project.m_keywords.append(keywordDetails(node));
             break;
         }
@@ -489,7 +478,7 @@ void HelpProjectWriter::writeSection(QXmlStreamWriter &writer, const QString &pa
  */
 void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node)
 {
-    if (node->isQmlBasicType() || node->isJsBasicType())
+    if (node->isQmlBasicType())
         return;
 
     QString href = m_gen->fullDocumentLocation(node, false);
@@ -504,8 +493,7 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
     // Do not generate a 'List of all members' for namespaces or header files,
     // but always generate it for derived classes and QML classes
     if (!node->isNamespace() && !node->isHeader()
-        && (derivedClass || node->isQmlType() || node->isJsType()
-            || !project.m_memberStatus[node].isEmpty())) {
+        && (derivedClass || node->isQmlType() || !project.m_memberStatus[node].isEmpty())) {
         QString membersPath = href + QStringLiteral("-members.html");
         writeSection(writer, membersPath, QStringLiteral("List of all members"));
     }
@@ -526,9 +514,7 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::Struct:
     case Node::Union:
     case Node::QmlType:
-    case Node::JsType:
-    case Node::QmlValueType:
-    case Node::JsBasicType: {
+    case Node::QmlValueType: {
         QString typeStr = m_gen->typeString(node);
         if (!typeStr.isEmpty())
             typeStr[0] = typeStr[0].toTitleCase();
@@ -554,7 +540,6 @@ void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer
     case Node::Page:
     case Node::Group:
     case Node::Module:
-    case Node::JsModule:
     case Node::QmlModule: {
         writer.writeStartElement("section");
         writer.writeAttribute("ref", href);

@@ -238,7 +238,7 @@
 
     Documentation is contained within QDoc \e comments, delimited by
     \beginqdoc and \endqdoc comments. Note that these are valid comments
-    in C++, QML, and JavaScript.
+    in C++ and QML.
 
     Within a QDoc comment, \c {//!} is used as a single-line documentation
     comment; the comment itself and anything after it, until a newline,

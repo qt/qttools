@@ -738,7 +738,7 @@
     that QDoc will ignore when resolving hyperlink targets.
 
     QDoc has an auto-linking feature, where linking is attempted for words
-    that resemble C++, QML, or JavaScript entities. Specifically, a string
+    that resemble C++ or QML entities. Specifically, a string
     qualifies for auto-linking if it is at least three characters in
     length, has no whitespace, and it
 
@@ -1229,18 +1229,16 @@
     documentation.
 
     \badcode
-        outputprefixes     = QML JS
+        outputprefixes     = QML
         outputprefixes.QML = uicomponents-
-        outputprefixes.JS  = uicomponents-
     \endcode
 
     By default, files containing the API documentation for QML types
-    are prefixed with "qml-", and javaScript types with "js-". In the
-    above example, the prefix \c "uicomponents" is used instead for
-    both.
+    are prefixed with "qml-". In the above example, the prefix \c
+    "uicomponents" is used instead.
 
     The output prefix is applied to file names for documentation on
-    QML and JS types.
+    QML.
 
     \target outputsuffixes-variable
     \section1 outputsuffixes
@@ -1258,9 +1256,9 @@
     the generated HTML page for a QML type \e FooWidget would be
     \c qml-foobar-tp-foowidget.html.
 
-    By default, no suffix is used. The output suffix, if defined, is applied
-    to file names for documentation on QML and JS types, and their respective
-    module pages.
+    By default, no suffix is used. The output suffix, if defined, is
+    applied to file names for documentation on QML and its module
+    page.
 
     The \c outputsuffixes variable was introduced in QDoc 5.6.
 

@@ -93,11 +93,11 @@ These are the possible documentation styles for signals:
 \li "Emitted when..."
 \endlist
 
-\section1 Methods and JavaScript Functions
+\section1 Methods and QML Functions
 
 Typically, function documentation immediately precedes the implementation of the
 function in the \c .cpp file. The \l{topic-commands}{topic command} for
-functions is \l{fn-command}{\\fn}. For functions in QML or JavaScript, the
+functions is \l{fn-command}{\\fn}. For functions in QML, the
 documentation must reside immediately above the function declaration.
 
 The function documentation starts with a verb, indicating the operation the

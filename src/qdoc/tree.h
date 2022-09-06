@@ -120,7 +120,6 @@ private: // The rest of the class is private.
     [[nodiscard]] const CNMap &groups() const { return m_groups; }
     [[nodiscard]] const CNMap &modules() const { return m_modules; }
     [[nodiscard]] const CNMap &qmlModules() const { return m_qmlModules; }
-    [[nodiscard]] const CNMap &jsModules() const { return m_jsModules; }
 
     CollectionNode *getCollection(const QString &name, Node::NodeType type);
     CollectionNode *findCollection(const QString &name, Node::NodeType type);
@@ -131,20 +130,14 @@ private: // The rest of the class is private.
     {
         return findCollection(name, Node::QmlModule);
     }
-    CollectionNode *findJsModule(const QString &name)
-    {
-        return findCollection(name, Node::JsModule);
-    }
 
     CollectionNode *addGroup(const QString &name) { return findGroup(name); }
     CollectionNode *addModule(const QString &name) { return findModule(name); }
     CollectionNode *addQmlModule(const QString &name) { return findQmlModule(name); }
-    CollectionNode *addJsModule(const QString &name) { return findJsModule(name); }
 
     CollectionNode *addToGroup(const QString &name, Node *node);
     CollectionNode *addToModule(const QString &name, Node *node);
     CollectionNode *addToQmlModule(const QString &name, Node *node);
-    CollectionNode *addToJsModule(const QString &name, Node *node);
 
     [[nodiscard]] QmlTypeNode *lookupQmlType(const QString &name) const
     {
@@ -179,7 +172,6 @@ private:
     CNMap m_groups {};
     CNMap m_modules {};
     CNMap m_qmlModules {};
-    CNMap m_jsModules {};
     QmlTypeMap m_qmlTypeMap {};
     ExampleNodeMap m_exampleNodeMap {};
     NodeList m_proxies {};

@@ -126,7 +126,7 @@ const QSet<QString> &CodeParser::commonMetaCommands()
 {
     if (commonMetaCommands_.isEmpty()) {
         commonMetaCommands_ << COMMAND_ABSTRACT << COMMAND_DEFAULT << COMMAND_DEPRECATED << COMMAND_INGROUP
-                            << COMMAND_INJSMODULE << COMMAND_INMODULE << COMMAND_INPUBLICGROUP
+                            << COMMAND_INMODULE << COMMAND_INPUBLICGROUP
                             << COMMAND_INQMLMODULE << COMMAND_INTERNAL << COMMAND_NOAUTOLIST
                             << COMMAND_NONREENTRANT << COMMAND_OBSOLETE << COMMAND_PRELIMINARY
                             << COMMAND_QMLABSTRACT << COMMAND_QMLDEFAULT << COMMAND_QMLINHERITS

@@ -34,9 +34,6 @@ public:
         QmlSignal,
         QmlSignalHandler,
         QmlMethod,
-        JsSignal,
-        JsSignalHandler,
-        JsMethod
     };
 
     FunctionNode(Aggregate *parent, const QString &name); // C++ function (Plain)
@@ -45,7 +42,6 @@ public:
     Node *clone(Aggregate *parent) override;
     [[nodiscard]] Metaness metaness() const { return m_metaness; }
     [[nodiscard]] QString metanessString() const;
-    bool changeMetaness(Metaness from, Metaness to);
     void setMetaness(Metaness metaness) { m_metaness = metaness; }
     [[nodiscard]] QString kindString() const;
     static Metaness getMetaness(const QString &value);
@@ -88,10 +84,6 @@ public:
     [[nodiscard]] bool isMCtor() const { return (m_metaness == MCtor); }
     [[nodiscard]] bool isCAssign() const { return (m_metaness == CAssign); }
     [[nodiscard]] bool isMAssign() const { return (m_metaness == MAssign); }
-
-    [[nodiscard]] bool isJsMethod() const { return (m_metaness == JsMethod); }
-    [[nodiscard]] bool isJsSignal() const { return (m_metaness == JsSignal); }
-    [[nodiscard]] bool isJsSignalHandler() const { return (m_metaness == JsSignalHandler); }
 
     [[nodiscard]] bool isQmlMethod() const { return (m_metaness == QmlMethod); }
     [[nodiscard]] bool isQmlSignal() const { return (m_metaness == QmlSignal); }

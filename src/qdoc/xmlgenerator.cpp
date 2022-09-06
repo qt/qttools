@@ -17,12 +17,11 @@ const QRegularExpression XmlGenerator::m_funcLeftParen(QStringLiteral("^\\S+(\\(
 XmlGenerator::XmlGenerator(FileResolver& file_resolver) : Generator(file_resolver) {}
 
 /*!
-  Do not display \brief for QML/JS types, document and collection nodes
+  Do not display \brief for QML types, document and collection nodes
  */
 bool XmlGenerator::hasBrief(const Node *node)
 {
-    return !(node->isQmlType() || node->isPageNode() || node->isCollectionNode()
-             || node->isJsType());
+    return !(node->isQmlType() || node->isPageNode() || node->isCollectionNode());
 }
 
 /*!
@@ -100,8 +99,6 @@ Node::NodeType XmlGenerator::typeFromString(const Atom *atom)
     const auto &name = atom->string();
     if (name.startsWith(QLatin1String("qml")))
         return Node::QmlModule;
-    else if (name.startsWith(QLatin1String("js")))
-        return Node::JsModule;
     else if (name.startsWith(QLatin1String("groups")))
         return Node::Group;
     else
@@ -247,15 +244,12 @@ QString XmlGenerator::refForNode(const Node *node)
     case Node::Function: {
         const auto fn = static_cast<const FunctionNode *>(node);
         switch (fn->metaness()) {
-        case FunctionNode::JsSignal:
         case FunctionNode::QmlSignal:
             ref = fn->name() + "-signal";
             break;
-        case FunctionNode::JsSignalHandler:
         case FunctionNode::QmlSignalHandler:
             ref = fn->name() + "-signal-handler";
             break;
-        case FunctionNode::JsMethod:
         case FunctionNode::QmlMethod:
             ref = fn->name() + "-method";
             if (fn->overloadNumber() != 0)
@@ -276,7 +270,6 @@ QString XmlGenerator::refForNode(const Node *node)
         if (!node->isPropertyGroup())
             break;
     } Q_FALLTHROUGH();
-    case Node::JsProperty:
     case Node::QmlProperty:
         if (node->isAttached())
             ref = node->name() + "-attached-prop";
@@ -315,8 +308,7 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
         return QString();
 
     QString fn = fileName(node);
-    if (node->parent() && (node->parent()->isQmlType() || node->parent()->isJsType())
-        && node->parent()->isAbstract()) {
+    if (node->parent() && node->parent()->isQmlType() && node->parent()->isAbstract()) {
         if (Generator::qmlTypeContext()) {
             if (Generator::qmlTypeContext()->inherits(node->parent())) {
                 fn = fileName(Generator::qmlTypeContext());

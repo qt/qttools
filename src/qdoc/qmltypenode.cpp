@@ -12,13 +12,12 @@ QT_BEGIN_NAMESPACE
 QMultiMap<const Node *, Node *> QmlTypeNode::s_inheritedBy;
 
 /*!
-  Constructs a Qml type node or a Js type node depending on
-  the value of \a type, which is Node::QmlType by default,
-  but which can also be Node::JsType. The new node has the
-  given \a parent and \a name.
+  Constructs a Qml type.
+
+  The new node has the given \a parent and \a name.
  */
-QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, NodeType type)
-    : Aggregate(type, parent, name)
+QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name)
+    : Aggregate(QmlType, parent, name)
 {
     setTitle(name);
 }
@@ -150,13 +149,12 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
 }
 
 /*!
-  Constructs either a Qml basic type node or a Javascript
-  basic type node, depending on the value pf \a type, which
-  must be either Node::QmlBasicType or Node::JsBasicType.
+  Constructs a Qml basic type node.
+
   The new node has the given \a parent and \a name.
  */
-QmlValueTypeNode::QmlValueTypeNode(Aggregate *parent, const QString &name, Node::NodeType type)
-    : Aggregate(type, parent, name)
+QmlValueTypeNode::QmlValueTypeNode(Aggregate *parent, const QString &name)
+    : Aggregate(QmlValueType, parent, name)
 {
     setTitle(name);
 }
