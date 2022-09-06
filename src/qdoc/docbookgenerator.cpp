@@ -316,13 +316,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
-    case Atom::JavaScript:
-        m_writer->writeStartElement(dbNamespace, "programlisting");
-        m_writer->writeAttribute("language", "js");
-        m_writer->writeCharacters(removeCodeMarkers(atom->string()));
-        m_writer->writeEndElement(); // programlisting
-        newLine();
-        break;
     case Atom::CodeNew:
         m_writer->writeTextElement(dbNamespace, "para", "you can rewrite it as");
         newLine();

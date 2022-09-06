@@ -9,7 +9,6 @@
 #include "doc.h"
 #include "docbookgenerator.h"
 #include "htmlgenerator.h"
-#include "jscodemarker.h"
 #include "location.h"
 #include "puredocparser.h"
 #include "qdocdatabase.h"
@@ -621,7 +620,7 @@ int main(int argc, char **argv)
 
     /*
       Create code markers for plain text, C++,
-      javascript, and QML.
+      and QML.
 
       The plain CodeMarker must be instantiated first because it is used as
       fallback when the other markers cannot be used.
@@ -631,7 +630,6 @@ int main(int argc, char **argv)
      */
     CodeMarker fallbackMarker;
     CppCodeMarker cppMarker;
-    JsCodeMarker jsMarker;
     QmlCodeMarker qmlMarker;
 
     Config::instance().init(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());

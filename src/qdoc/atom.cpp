@@ -69,8 +69,6 @@ QT_BEGIN_NAMESPACE
   \value ImageText
   \value ImportantNote
   \value InlineImage
-  \value JavaScript
-  \value EndJavaScript
   \value Keyword
   \value LineBreak
   \value Link
@@ -157,8 +155,6 @@ static const struct
              { "ImportantLeft", Atom::ImportantLeft },
              { "ImportantRight", Atom::ImportantRight },
              { "InlineImage", Atom::InlineImage },
-             { "JavaScript", Atom::JavaScript },
-             { "EndJavaScript", Atom::EndJavaScript },
              { "Keyword", Atom::Keyword },
              { "LegaleseLeft", Atom::LegaleseLeft },
              { "LegaleseRight", Atom::LegaleseRight },

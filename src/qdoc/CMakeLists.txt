@@ -52,7 +52,6 @@ qt_internal_add_tool(${target_name}
         headernode.cpp
         helpprojectwriter.cpp
         htmlgenerator.cpp
-        jscodemarker.cpp
         location.cpp
         main.cpp
         manifestwriter.cpp

@@ -52,8 +52,6 @@ public:
         ImportantLeft,
         ImportantRight,
         InlineImage,
-        JavaScript,
-        EndJavaScript,
         Keyword,
         LegaleseLeft,
         LegaleseRight,

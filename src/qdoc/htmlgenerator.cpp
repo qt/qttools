@@ -359,13 +359,6 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                                  m_codePrefix, m_codeSuffix)
               << "</pre>\n";
         break;
-    case Atom::JavaScript:
-        out() << "<pre class=\"js\">"
-              << trimmedTrailing(highlightedCode(indent(m_codeIndent, atom->string()), relative,
-                                                 false, Node::JS),
-                                 m_codePrefix, m_codeSuffix)
-              << "</pre>\n";
-        break;
     case Atom::CodeNew:
         out() << "<p>you can rewrite it as</p>\n";
         Q_FALLTHROUGH();

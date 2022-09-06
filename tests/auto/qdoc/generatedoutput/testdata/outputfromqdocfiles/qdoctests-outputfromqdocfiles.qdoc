@@ -112,10 +112,6 @@
 
     \dots
 
-    \js
-        // If I knew JavaScript, this is where I would write it.
-    \endjs
-
     \qmltext
         And if I knew qmltext, I guess this is where that would go.
     \endqmltext

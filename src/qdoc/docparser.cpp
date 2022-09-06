@@ -122,8 +122,6 @@ enum {
     CMD_ENDQMLTEXT,
     CMD_CPPTEXT,
     CMD_ENDCPPTEXT,
-    CMD_JS,
-    CMD_ENDJS,
     NOT_A_CMD
 };
 
@@ -229,8 +227,6 @@ static struct
              { "endqmltext", CMD_ENDQMLTEXT, nullptr },
              { "cpptext", CMD_CPPTEXT, nullptr },
              { "endcpptext", CMD_ENDCPPTEXT, nullptr },
-             { "js", CMD_JS, nullptr },
-             { "endjs", CMD_ENDJS, nullptr },
              { nullptr, 0, nullptr } };
 
 int DocParser::s_tabSize;
@@ -408,13 +404,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_QMLTEXT:
                     append(Atom::QmlText);
                     break;
-                case CMD_JS:
-                    leavePara();
-                    append(Atom::JavaScript,
-                           getCode(CMD_JS,
-                                   CodeMarker::markerForLanguage(QLatin1String("JavaScript")),
-                                   getMetaCommandArgument(cmdStr)));
-                    break;
                 case CMD_DIV:
                     leavePara();
                     p1 = getArgument(true);
@@ -476,9 +465,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_ENDQMLTEXT:
                     append(Atom::EndQmlText);
-                    break;
-                case CMD_ENDJS:
-                    closeCommand(cmd);
                     break;
                 case CMD_ENDFOOTNOTE:
                     if (closeCommand(cmd)) {
@@ -2498,8 +2484,6 @@ int DocParser::endCmdFor(int cmd)
         return CMD_ENDQML;
     case CMD_QMLTEXT:
         return CMD_ENDQMLTEXT;
-    case CMD_JS:
-        return CMD_ENDJS;
     case CMD_FOOTNOTE:
         return CMD_ENDFOOTNOTE;
     case CMD_LEGALESE:
@@ -2622,7 +2606,7 @@ QString DocParser::dedent(int level, const QString &str)
 bool DocParser::isCode(const Atom *atom)
 {
     Atom::AtomType type = atom->type();
-    return (type == Atom::Code || type == Atom::Qml || type == Atom::JavaScript);
+    return (type == Atom::Code || type == Atom::Qml);
 }
 
 /*!

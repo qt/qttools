@@ -23,8 +23,6 @@
 <db:para><db:emphasis role="bold">All your text belong to bold</db:emphasis> ...And this is an examble of only <db:emphasis role="bold">bold</db:emphasis> being, well, bold.</db:para>
 <db:programlisting language="cpp">    ...
 </db:programlisting>
-<db:programlisting language="js">// If I knew JavaScript, this is where I would write it.
-</db:programlisting>
 <db:para>And if I knew qmltext, I guess this is where that would go. </db:para>
 <db:title>This a caption</db:title>
 <db:para>Lorem legal ipsum</db:para>
