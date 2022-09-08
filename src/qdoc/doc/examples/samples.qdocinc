@@ -50,7 +50,7 @@
 
 //! [sample-faq]
 /*!
-    \page altruism-faq.html faq
+    \page altruism-faq.html
     \title Altruism Frequently Asked Questions
 
     \brief All the questions about altruism, answered.
@@ -75,7 +75,7 @@
 
 //! [sample-overview]
 /*!
-    \page overview-qt-technology.html overview
+    \page overview-qt-technology.html
     \title Overview of a Qt Technology
 
     \brief provides a technology never seen before.
