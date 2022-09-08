@@ -369,9 +369,13 @@ void QDBusViewer::showContextMenu(const QPoint &point)
         menu.addAction(action);
         break; }
     case QDBusModel::PropertyItem: {
+        QDBusInterface iface(sig.mService, sig.mPath, sig.mInterface, c);
+        QMetaProperty prop = iface.metaObject()->property(iface.metaObject()->indexOfProperty(sig.mName.toLatin1()));
         QAction *actionSet = new QAction(tr("&Set value"), &menu);
         actionSet->setData(3);
+        actionSet->setEnabled(prop.isWritable());
         QAction *actionGet = new QAction(tr("&Get value"), &menu);
+        actionGet->setEnabled(prop.isReadable());
         actionGet->setData(4);
         menu.addAction(actionSet);
         menu.addAction(actionGet);
