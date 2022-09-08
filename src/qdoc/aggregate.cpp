@@ -722,7 +722,7 @@ void Aggregate::findAllAttributions(NodeMultiMap &attributions)
 {
     for (auto *node : qAsConst(m_children)) {
         if (!node->isPrivate()) {
-            if (node->pageType() == Node::AttributionPage)
+            if (node->isPageNode() && static_cast<PageNode*>(node)->isAttribution())
                 attributions.insert(node->tree()->indexTitle(), node);
             else if (node->isAggregate())
                 static_cast<Aggregate *>(node)->findAllAttributions(attributions);

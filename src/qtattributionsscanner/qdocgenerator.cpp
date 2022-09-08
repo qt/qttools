@@ -64,7 +64,8 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         out << "\\ingroup attributions-" << package.qdocModule << "\n";
         // include in '\generatelist annotatedattributions'
         out << "\\page " << package.qdocModule << "-attribution-" << package.id
-            << ".html attribution\n";
+            << ".html\n";
+        out << "\\attribution\n";
     } else {
         out << "\\page " << package.qdocModule << "-attribution-" << package.id
             << ".html \n";

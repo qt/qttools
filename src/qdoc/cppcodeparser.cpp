@@ -260,26 +260,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         cn->markSeen();
         return cn;
     } else if (command == COMMAND_PAGE) {
-        Node::PageType ptype = Node::ArticlePage;
-        QStringList args = arg.first.split(QLatin1Char(' '));
-        if (args.size() > 1) {
-            QString t = args[1].toLower();
-            if (t == "howto")
-                ptype = Node::HowToPage;
-            else if (t == "api")
-                ptype = Node::ApiPage;
-            else if (t == "example")
-                ptype = Node::ExamplePage;
-            else if (t == "overview")
-                ptype = Node::OverviewPage;
-            else if (t == "tutorial")
-                ptype = Node::TutorialPage;
-            else if (t == "faq")
-                ptype = Node::FAQPage;
-            else if (t == "attribution")
-                ptype = Node::AttributionPage;
-        }
-        auto *pn = new PageNode(m_qdb->primaryTreeRoot(), args[0], ptype);
+        auto *pn = new PageNode(m_qdb->primaryTreeRoot(), arg.first.split(' ').front());
         pn->setLocation(doc.startLocation());
         return pn;
     } else if (command == COMMAND_QMLTYPE) {
@@ -660,6 +641,27 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         } else {
             static_cast<PageNode*>(node)->setNoAutoList(true);
         }
+    } else if (command == COMMAND_ATTRIBUTION) {
+        // TODO: This condition is not currently exact enough, as it
+        // will allow any non-aggregate `PageNode` to use the command,
+        // For example, an `ExampleNode`.
+        //
+        // The command is intended only for internal usage by
+        // "qattributionscanner" and should only work on `PageNode`s
+        // that are generated from a "\page" command.
+        //
+        // It is already possible to provide a more restricted check,
+        // albeit in a somewhat dirty way. It is not expected that
+        // this warning will have any particular use.
+        // If it so happens that a case where the too-broad scope of
+        // the warning is a problem or hides a bug, modify the
+        // condition to be restrictive enough.
+        // Otherwise, wait until a more torough look at QDoc's
+        // internal representations an way to enable "Attribution
+        // Pages" is performed before looking at the issue again.
+        if (!node->isTextPageNode()) {
+            doc.location().warning(u"Command '\\%1' is only meaningful in '\\%2'"_qs.arg(COMMAND_ATTRIBUTION, COMMAND_PAGE));
+        } else { static_cast<PageNode*>(node)->markAttribution(); }
     }
 }
 

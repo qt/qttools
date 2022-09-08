@@ -34,7 +34,8 @@ enum QDocAttr {
     QDocAttrFile,
     QDocAttrImage,
     QDocAttrDocument,
-    QDocAttrExternalPage
+    QDocAttrExternalPage,
+    QDocAttrAttribution
 };
 
 static Node *root_ = nullptr;
@@ -318,26 +319,19 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         node = collectionNode;
     } else if (elementName == QLatin1String("page")) {
         QDocAttr subtype = QDocAttrNone;
-        Node::PageType ptype = Node::NoPageType;
         QString attr = attributes.value(QLatin1String("subtype")).toString();
         if (attr == QLatin1String("attribution")) {
-            subtype = QDocAttrDocument;
-            ptype = Node::AttributionPage;
+            subtype = QDocAttrAttribution;
         } else if (attr == QLatin1String("example")) {
             subtype = QDocAttrExample;
-            ptype = Node::ExamplePage;
         } else if (attr == QLatin1String("file")) {
             subtype = QDocAttrFile;
-            ptype = Node::NoPageType;
         } else if (attr == QLatin1String("image")) {
             subtype = QDocAttrImage;
-            ptype = Node::NoPageType;
         } else if (attr == QLatin1String("page")) {
             subtype = QDocAttrDocument;
-            ptype = Node::ArticlePage;
         } else if (attr == QLatin1String("externalpage")) {
             subtype = QDocAttrExternalPage;
-            ptype = Node::ArticlePage;
         } else
             goto done;
 
@@ -356,8 +350,11 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             pageNode = new ExampleNode(parent, name);
         else if (subtype == QDocAttrExternalPage)
             pageNode = new ExternalPageNode(parent, name);
-        else
-            pageNode = new PageNode(parent, name, ptype);
+        else {
+            pageNode = new PageNode(parent, name);
+            if (subtype == QDocAttrAttribution) pageNode->markAttribution();
+        }
+
         pageNode->setTitle(attributes.value(QLatin1String("title")).toString());
 
         if (attributes.hasAttribute(QLatin1String("location")))
@@ -975,23 +972,12 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case Node::Page:
     case Node::Example:
     case Node::ExternalPage: {
-        /*
-          Page nodes (anything that generates a doc page)
-          no longer have a subtype. Some of the subtypes
-          (Example, External, and Header) have been promoted
-          to be node types. They have become subclasses of
-          PageNode or, in the case of Header, a subclass of
-          Aggregate. The processing for other subtypes that
-          have not (yet) been promoted to be node types is
-          determined by the PageType enum.
-        */
         if (node->isExample())
             writer.writeAttribute("subtype", "example");
         else if (node->isExternalPage())
             writer.writeAttribute("subtype", "externalpage");
         else
-            writer.writeAttribute("subtype",
-                    (node->pageType() == Node::AttributionPage) ? "attribution" : "page");
+            writer.writeAttribute("subtype", (static_cast<PageNode*>(node)->isAttribution() ? "attribution" : "page"));
 
         const auto *pageNode = static_cast<const PageNode *>(node);
         writer.writeAttribute("title", pageNode->title());

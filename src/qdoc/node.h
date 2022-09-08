@@ -102,18 +102,6 @@ public:
 
     enum LinkType : unsigned char { StartLink, NextLink, PreviousLink, ContentsLink };
 
-    enum PageType : unsigned char {
-        NoPageType,
-        AttributionPage,
-        ApiPage,
-        ArticlePage,
-        ExamplePage,
-        HowToPage,
-        OverviewPage,
-        TutorialPage,
-        FAQPage
-    };
-
     enum FlagValue { FlagValueDefault = -1, FlagValueFalse = 0, FlagValueTrue = 1 };
 
     virtual ~Node() = default;
@@ -127,11 +115,6 @@ public:
     [[nodiscard]] Genus genus() const { return m_genus; }
     void setGenus(Genus t) { m_genus = t; }
     static Genus getGenus(NodeType t);
-
-    [[nodiscard]] PageType pageType() const { return m_pageType; }
-    void setPageType(PageType t) { m_pageType = t; }
-    void setPageType(const QString &t);
-    static PageType getPageType(NodeType t);
 
     [[nodiscard]] bool isActive() const { return m_status == Active; }
     [[nodiscard]] bool isClass() const { return m_nodeType == Class; }
@@ -334,7 +317,6 @@ private:
     Genus m_genus {};
     Access m_access { Access::Public };
     ThreadSafeness m_safeness { UnspecifiedSafeness };
-    PageType m_pageType { NoPageType };
     Status m_status { Active };
     bool m_indexNodeFlag : 1;
     bool m_relatedNonmember : 1;

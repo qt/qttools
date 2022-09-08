@@ -123,6 +123,7 @@ private:
 #define COMMAND_VERSION Doc::alias(QLatin1String("version"))
 #define COMMAND_UNION Doc::alias(QLatin1String("union"))
 #define COMMAND_WRAPPER Doc::alias(QLatin1String("wrapper"))
+#define COMMAND_ATTRIBUTION Doc::alias(QLatin1String("attribution"))
 
 // deprecated alias of qmlvaluetype
 #define COMMAND_QMLBASICTYPE Doc::alias(QLatin1String("qmlbasictype"))

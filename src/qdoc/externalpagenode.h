@@ -16,7 +16,6 @@ public:
     ExternalPageNode(Aggregate *parent, const QString &url)
         : PageNode(Node::ExternalPage, parent, url)
     {
-        setPageType(Node::ArticlePage);
         setUrl(url);
     }
 };

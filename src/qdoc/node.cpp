@@ -234,24 +234,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
  */
 
 /*!
-  \enum Node::PageType
-
-  An unsigned char value that indicates what kind of documentation page
-  the Node represents. I think it is not very useful anymore.
-
-  \value NoPageType
-  \value AttributionPage
-  \value ApiPage
-  \value ArticlePage
-  \value ExamplePage
-  \value HowToPage
-  \value OverviewPage
-  \value TutorialPage
-  \value FAQPage
-  \omitvalue OnBeyondZebra
-*/
-
-/*!
   \enum Node::FlagValue
 
   A value used in PropertyNode and QmlPropertyNode that can be -1, 0, or +1.
@@ -615,46 +597,7 @@ Node::Node(NodeType type, Aggregate *parent, QString name)
 
     m_outSubDir = Generator::outputSubdir();
 
-    setPageType(getPageType(type));
     setGenus(getGenus(type));
-}
-
-/*!
-  Determines the appropriate PageType value for the NodeType
-  value \a t and returns that PageType value.
- */
-Node::PageType Node::getPageType(Node::NodeType t)
-{
-    switch (t) {
-    case Node::Namespace:
-    case Node::Class:
-    case Node::Struct:
-    case Node::Union:
-    case Node::HeaderFile:
-    case Node::Enum:
-    case Node::Function:
-    case Node::Typedef:
-    case Node::Property:
-    case Node::Variable:
-    case Node::QmlType:
-    case Node::QmlProperty:
-    case Node::QmlValueType:
-    case Node::SharedComment:
-        return Node::ApiPage;
-    case Node::Example:
-        return Node::ExamplePage;
-    case Node::Page:
-    case Node::ExternalPage:
-        return Node::NoPageType;
-    case Node::Group:
-    case Node::Module:
-    case Node::QmlModule:
-    case Node::Collection:
-        return Node::OverviewPage;
-    case Node::Proxy:
-    default:
-        return Node::NoPageType;
-    }
 }
 
 /*!
@@ -789,27 +732,6 @@ QString Node::nodeTypeString(NodeType t)
         break;
     }
     return QString();
-}
-
-/*!
-  Set the page type according to the string \a t.
- */
-void Node::setPageType(const QString &t)
-{
-    if ((t == "API") || (t == "api"))
-        m_pageType = ApiPage;
-    else if (t == "howto")
-        m_pageType = HowToPage;
-    else if (t == "overview")
-        m_pageType = OverviewPage;
-    else if (t == "tutorial")
-        m_pageType = TutorialPage;
-    else if (t == "faq")
-        m_pageType = FAQPage;
-    else if (t == "article")
-        m_pageType = ArticlePage;
-    else if (t == "example")
-        m_pageType = ExamplePage;
 }
 
 /*! Converts the boolean value \a b to an enum representation
@@ -1133,18 +1055,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
 
 /*! void Node::setGenus(Genus t)
   Sets this node's Genus to \a t.
-*/
-
-/*! \fn PageType Node::pageType() const
-  Returns this node's page type.
-
-  \sa PageType
-*/
-
-/*! \fn void Node::setPageType(PageType t)
-  Sets this node's page type to \a t.
-
-  \sa PageType
 */
 
 /*! \fn  QString Node::signature(bool values, bool noReturnType, bool templateParams) const

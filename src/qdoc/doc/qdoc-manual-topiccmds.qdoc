@@ -1000,33 +1000,10 @@
     \section1 \\page
 
     The \\page command is for creating a stand-alone documentation
-    page. The argument can consist of two parts separated by a
-    space. The first part is the name of the file where QDoc should
-    store the page. The second part, if present, is a word that
-    specifies the page type. Currently, the second part can be one of
-    the following list of words:
+    page.
 
-    \list
-
-    \li api - This is the type of page used for C++ class references and
-    QML type references. You should never use this one for the pages
-    you write, because this one is reserved for QDoc.
-
-    \li attribution - A page describing (code) attributions.
-
-    \li example - A page that describes a working example.
-
-    \li faq - A frequently asked question.
-
-    \li howto - A user guide on how to use some components of the
-    software.
-
-    \li overview - For text pages that provide an overview of some
-    important subject.
-
-    \li tutorial - For text pages that are part of a tutorial.
-
-    \endlist
+    The \\page command expects a single argument that represents the
+    name of the file where QDoc should store the page.
 
     The page title is set using the \l {title-command} {\\title}
     command.
