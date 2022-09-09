@@ -376,18 +376,6 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
                                 trimmedTrailing(plainCode(atom->string()), QString(), QString()));
         break;
 
-    case Atom::CodeNew:
-        writer.writeTextElement("para", "you can rewrite it as");
-        writer.writeTextElement("newcode",
-                                trimmedTrailing(plainCode(atom->string()), QString(), QString()));
-        break;
-
-    case Atom::CodeOld:
-        writer.writeTextElement("para", "For example, if you have code like");
-        writer.writeTextElement("oldcode",
-                                trimmedTrailing(plainCode(atom->string()), QString(), QString()));
-        break;
-
     case Atom::CodeQuoteArgument:
         if (m_quoting) {
             if (quoteCommand == "dots") {

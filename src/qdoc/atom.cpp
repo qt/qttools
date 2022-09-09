@@ -48,8 +48,6 @@ QT_BEGIN_NAMESPACE
   \value CaptionRight
   \value Code
   \value CodeBad
-  \value CodeNew
-  \value CodeOld
   \value CodeQuoteArgument
   \value CodeQuoteCommand
   \value DivLeft
@@ -134,8 +132,6 @@ static const struct
              { "CaptionRight", Atom::CaptionRight },
              { "Code", Atom::Code },
              { "CodeBad", Atom::CodeBad },
-             { "CodeNew", Atom::CodeNew },
-             { "CodeOld", Atom::CodeOld },
              { "CodeQuoteArgument", Atom::CodeQuoteArgument },
              { "CodeQuoteCommand", Atom::CodeQuoteCommand },
              { "DivLeft", Atom::DivLeft },

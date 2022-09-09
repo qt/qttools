@@ -43,10 +43,8 @@
     \li \l {list-command} {\\list}
     \li \l {meta-command} {\\meta}
     \li \l {noautolist-command} {\\noautolist}
-    \li \l {newcode-command} {\\newcode, deprecated}
     \li \l {li-command} {\\o} (deprecated, use \\li)
     \li \l {note-command} {\\note}
-    \li \l {oldcode-command} {\\oldcode, deprecated}
     \li \l {omit-command} {\\omit}
     \li \l {printline-command} {\\printline}
     \li \l {printto-command} {\\printto}
@@ -950,18 +948,6 @@
     language, but should still be styled similarly to a \\code paragraph.
 
     Like \\code, \\badcode accepts also optional parameters.
-
-    \target newcode-command
-    \section1 \\newcode
-
-    The \\newcode command is deprecated and marked for
-    removal in Qt 6.4.
-
-    \target oldcode-command
-    \section1 \\oldcode
-
-    The \\oldcode command is deprecated and marked for
-    removal in Qt 6.4.
 
     \target qml-command
     \section1 \\qml

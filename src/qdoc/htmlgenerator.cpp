@@ -365,18 +365,12 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                                  m_codePrefix, m_codeSuffix)
               << "</pre>\n";
         break;
-    case Atom::CodeNew:
-        out() << "<p>you can rewrite it as</p>\n";
-        Q_FALLTHROUGH();
     case Atom::Code:
         out() << "<pre class=\"cpp\">"
               << trimmedTrailing(highlightedCode(indent(m_codeIndent, atom->string()), relative),
                                  m_codePrefix, m_codeSuffix)
               << "</pre>\n";
         break;
-    case Atom::CodeOld:
-        out() << "<p>For example, if you have code like</p>\n";
-        Q_FALLTHROUGH();
     case Atom::CodeBad:
         out() << "<pre class=\"cpp plain\">"
               << trimmedTrailing(protectEnc(plainCode(indent(m_codeIndent, atom->string()))),

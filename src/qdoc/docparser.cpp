@@ -74,10 +74,8 @@ enum {
     CMD_LINK,
     CMD_LIST,
     CMD_META,
-    CMD_NEWCODE,
     CMD_NOTE,
     CMD_O,
-    CMD_OLDCODE,
     CMD_OMIT,
     CMD_OMITVALUE,
     CMD_OVERLOAD,
@@ -181,10 +179,8 @@ static struct
              { "link", CMD_LINK, nullptr },
              { "list", CMD_LIST, nullptr },
              { "meta", CMD_META, nullptr },
-             { "newcode", CMD_NEWCODE, nullptr },
              { "note", CMD_NOTE, nullptr },
              { "o", CMD_O, nullptr },
-             { "oldcode", CMD_OLDCODE, nullptr },
              { "omit", CMD_OMIT, nullptr },
              { "omitvalue", CMD_OMITVALUE, nullptr },
              { "overload", CMD_OVERLOAD, nullptr },
@@ -719,10 +715,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     p1 = getArgument();
                     m_private->extra->m_metaMap.insert(p1, getArgument());
                     break;
-                case CMD_NEWCODE:
-                    location().warning(
-                            QStringLiteral("Unexpected '\\%1'").arg(cmdName(CMD_NEWCODE)));
-                    break;
                 case CMD_NOTE:
                     leavePara();
                     enterPara(Atom::NoteLeft, Atom::NoteRight);
@@ -768,14 +760,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         location().warning(
                                 QStringLiteral("Command '\\%1' outside of '\\%2' and '\\%3'")
                                         .arg(cmdName(cmd), cmdName(CMD_LIST), cmdName(CMD_TABLE)));
-                    break;
-                case CMD_OLDCODE:
-                    location().warning(QStringLiteral("'\\oldcode' and '\\newcode' are deprecated. "
-                                                      "They will be removed in Qt 6.4."));
-
-                    leavePara();
-                    append(Atom::CodeOld, getCode(CMD_OLDCODE, marker));
-                    append(Atom::CodeNew, getCode(CMD_NEWCODE, marker));
                     break;
                 case CMD_OMIT:
                     getUntilEnd(cmd);
@@ -2465,10 +2449,6 @@ int DocParser::endCmdFor(int cmd)
         return CMD_ENDLINK;
     case CMD_LIST:
         return CMD_ENDLIST;
-    case CMD_NEWCODE:
-        return CMD_ENDCODE;
-    case CMD_OLDCODE:
-        return CMD_NEWCODE;
     case CMD_OMIT:
         return CMD_ENDOMIT;
     case CMD_QUOTATION:

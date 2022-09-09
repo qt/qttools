@@ -29,8 +29,6 @@ public:
         CaptionRight,
         Code,
         CodeBad,
-        CodeNew,
-        CodeOld,
         CodeQuoteArgument,
         CodeQuoteCommand,
         DivLeft,
