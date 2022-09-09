@@ -304,7 +304,6 @@ public:
     static FlagValue toFlagValue(bool b);
     static bool fromFlagValue(FlagValue fv, bool defaultValue);
     static QString nodeTypeString(NodeType t);
-    static NodeType goal(const QString &t) { return goals.value(t); }
     static bool nodeNameLessThan(const Node *first, const Node *second);
 
 protected:
@@ -334,7 +333,6 @@ private:
     QString m_templateDecl {};
     QString m_reconstitutedBrief {};
     QString m_outSubDir {};
-    static QMap<QString, Node::NodeType> goals;
     QString m_deprecatedSince {};
 };
 

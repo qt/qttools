@@ -24,37 +24,6 @@
 
 QT_BEGIN_NAMESPACE
 
-QMap<QString, Node::NodeType> Node::goals {
-    {"namespace", Node::Namespace},
-    {"class", Node::Class},
-    {"struct", Node::Struct},
-    {"union", Node::Union},
-    {"header", Node::HeaderFile},
-    {"headerfile", Node::HeaderFile},
-    {"page", Node::Page},
-    {"enum", Node::Enum},
-    {"example", Node::Example},
-    {"externalpage", Node::ExternalPage},
-    {"typedef", Node::Typedef},
-    {"typealias", Node::TypeAlias},
-    {"function", Node::Function},
-    {"proxy", Node::Proxy},
-    {"property", Node::Property},
-    {"variable", Node::Variable},
-    {"group", Node::Group},
-    {"module", Node::Module},
-    {"qmltype", Node::QmlType},
-    {"qmlmodule", Node::QmlModule},
-    {"qmlproperty", Node::QmlProperty},
-    {"qmlsignal", Node::Function},
-    {"qmlsignalhandler", Node::Function},
-    {"qmlmethod", Node::Function},
-    {"qmlvaluetype", Node::QmlValueType},
-    {"qmlbasictype", Node::QmlValueType}, // deprecated!
-    {"sharedcomment", Node::SharedComment},
-    {"collection", Node::Collection},
-};
-
 /*!
   \class Node
   \brief The Node class is the base class for all the nodes in QDoc's parse tree.

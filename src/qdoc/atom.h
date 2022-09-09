@@ -189,7 +189,6 @@ public:
 protected:
     bool m_resolved {};
     Node::Genus m_genus {};
-    Node::NodeType m_goal {};
     Tree *m_domain {};
     QString m_error {};
     QString m_squareBracketParams {};
