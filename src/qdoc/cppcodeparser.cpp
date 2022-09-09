@@ -24,6 +24,8 @@
 
 #include <algorithm>
 
+using namespace Qt::Literals::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 /* qmake ignore Q_OBJECT */
@@ -660,7 +662,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         // internal representations an way to enable "Attribution
         // Pages" is performed before looking at the issue again.
         if (!node->isTextPageNode()) {
-            doc.location().warning(u"Command '\\%1' is only meaningful in '\\%2'"_qs.arg(COMMAND_ATTRIBUTION, COMMAND_PAGE));
+            doc.location().warning(u"Command '\\%1' is only meaningful in '\\%2'"_s.arg(COMMAND_ATTRIBUTION, COMMAND_PAGE));
         } else { static_cast<PageNode*>(node)->markAttribution(); }
     }
 }
