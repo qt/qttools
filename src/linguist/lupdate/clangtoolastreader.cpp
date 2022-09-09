@@ -437,7 +437,7 @@ void LupdateVisitor::processIsolatedComments(const clang::FileID file)
         tmp.emplace_back(commentInFile.second);
     clang::ArrayRef<clang::RawComment *> rawComments = tmp;
 #else
-    Q_UNSED(file)
+    Q_UNUSED(file);
     clang::ArrayRef<clang::RawComment *> rawComments = m_context->getRawCommentList().getComments();
 #endif
 
