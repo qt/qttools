@@ -24,7 +24,36 @@
 
 QT_BEGIN_NAMESPACE
 
-QMap<QString, Node::NodeType> Node::goals;
+QMap<QString, Node::NodeType> Node::goals {
+    {"namespace", Node::Namespace},
+    {"class", Node::Class},
+    {"struct", Node::Struct},
+    {"union", Node::Union},
+    {"header", Node::HeaderFile},
+    {"headerfile", Node::HeaderFile},
+    {"page", Node::Page},
+    {"enum", Node::Enum},
+    {"example", Node::Example},
+    {"externalpage", Node::ExternalPage},
+    {"typedef", Node::Typedef},
+    {"typealias", Node::TypeAlias},
+    {"function", Node::Function},
+    {"proxy", Node::Proxy},
+    {"property", Node::Property},
+    {"variable", Node::Variable},
+    {"group", Node::Group},
+    {"module", Node::Module},
+    {"qmltype", Node::QmlType},
+    {"qmlmodule", Node::QmlModule},
+    {"qmlproperty", Node::QmlProperty},
+    {"qmlsignal", Node::Function},
+    {"qmlsignalhandler", Node::Function},
+    {"qmlmethod", Node::Function},
+    {"qmlvaluetype", Node::QmlValueType},
+    {"qmlbasictype", Node::QmlValueType}, // deprecated!
+    {"sharedcomment", Node::SharedComment},
+    {"collection", Node::Collection},
+};
 
 /*!
   \class Node
@@ -48,47 +77,6 @@ QMap<QString, Node::NodeType> Node::goals;
 
   \sa Aggregate, ClassNode, PropertyNode
  */
-
-/*!
-  Initialize the map of search goals. This is called once
-  by QDocDatabase::initializeDB(). The map key is a string
-  representing a value in the enum Node::NodeType. The map value
-  is the enum value.
-
-  There should be an entry in the map for each value in the
-  NodeType enum.
- */
-void Node::initialize()
-{
-    goals.insert("namespace", Node::Namespace);
-    goals.insert("class", Node::Class);
-    goals.insert("struct", Node::Struct);
-    goals.insert("union", Node::Union);
-    goals.insert("header", Node::HeaderFile);
-    goals.insert("headerfile", Node::HeaderFile);
-    goals.insert("page", Node::Page);
-    goals.insert("enum", Node::Enum);
-    goals.insert("example", Node::Example);
-    goals.insert("externalpage", Node::ExternalPage);
-    goals.insert("typedef", Node::Typedef);
-    goals.insert("typealias", Node::TypeAlias);
-    goals.insert("function", Node::Function);
-    goals.insert("proxy", Node::Proxy);
-    goals.insert("property", Node::Property);
-    goals.insert("variable", Node::Variable);
-    goals.insert("group", Node::Group);
-    goals.insert("module", Node::Module);
-    goals.insert("qmltype", Node::QmlType);
-    goals.insert("qmlmodule", Node::QmlModule);
-    goals.insert("qmlproperty", Node::QmlProperty);
-    goals.insert("qmlsignal", Node::Function);
-    goals.insert("qmlsignalhandler", Node::Function);
-    goals.insert("qmlmethod", Node::Function);
-    goals.insert("qmlvaluetype", Node::QmlValueType);
-    goals.insert("qmlbasictype", Node::QmlValueType); // deprecated!
-    goals.insert("sharedcomment", Node::SharedComment);
-    goals.insert("collection", Node::Collection);
-}
 
 /*!
   Returns \c true if the node \a n1 is less than node \a n2. The

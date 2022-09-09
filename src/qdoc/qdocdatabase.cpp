@@ -407,12 +407,9 @@ void QDocDatabase::destroyQdocDB()
 
   \note Do not add QML basic types into this list as it will
         break linking to those types.
-
-  Also calls Node::initialize() to initialize the search goal map.
  */
 void QDocDatabase::initializeDB()
 {
-    Node::initialize();
     s_typeNodeMap.insert("accepted", nullptr);
     s_typeNodeMap.insert("actionPerformed", nullptr);
     s_typeNodeMap.insert("activated", nullptr);
