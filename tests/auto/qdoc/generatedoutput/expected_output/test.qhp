@@ -22,6 +22,7 @@
                     </section>
                     <section ref="testqdoc-testderived.html" title="TestQDoc::TestDerived Class Reference">
                         <section ref="testqdoc-testderived-members.html" title="List of all members"/>
+                        <section ref="testqdoc-testderived-obsolete.html" title="Obsolete members"/>
                     </section>
                 </section>
                 <section ref="uicomponents-qmlmodule.html" title="QML Types">
@@ -104,6 +105,7 @@
             <keyword name="secondColor" id="ProgressBar::secondColor" ref="qml-uicomponents-progressbar.html#secondColor-prop"/>
             <keyword name="someFunction" id="Test::someFunction" ref="testqdoc-test.html#someFunction"/>
             <keyword name="someFunctionDefaultArg" id="Test::someFunctionDefaultArg" ref="testqdoc-test.html#someFunctionDefaultArg"/>
+            <keyword name="staticObsoleteMember" id="TestDerived::staticObsoleteMember" ref="testqdoc-testderived-obsolete.html#staticObsoleteMember"/>
             <keyword name="toggle" id="Switch::toggle" ref="qml-uicomponents-switch.html#toggle-method"/>
             <keyword name="type" id="Type::type" ref="qml-qdoc-test-type.html#type-attached-prop"/>
             <keyword name="value" id="ProgressBar::value" ref="qml-uicomponents-progressbar.html#value-prop"/>
@@ -141,6 +143,7 @@
             <file>testqdoc-test-obsolete.html</file>
             <file>testqdoc-test.html</file>
             <file>testqdoc-testderived-members.html</file>
+            <file>testqdoc-testderived-obsolete.html</file>
             <file>testqdoc-testderived.html</file>
             <file>testqdoc.html</file>
             <file>uicomponents-qmlmodule.html</file>

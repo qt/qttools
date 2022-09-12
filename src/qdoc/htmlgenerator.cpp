@@ -661,7 +661,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             if (relative->isExample()) {
                 qDebug() << "GENERATE FILE LIST CALLED" << relative->name() << atom->string();
             } else
-                relative->location().warning(QString("'\\generatelist \1' can only be used with "
+                relative->location().warning(QString("'\\generatelist %1' can only be used with "
                                                      "'\\example' topic command")
                                                      .arg(atom->string()));
         } else if (atom->string() == QLatin1String("classhierarchy")) {
@@ -699,10 +699,10 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
             if (cn) {
                 if (!generateGroupList(const_cast<CollectionNode *>(cn)))
                     relative->location().warning(
-                            QString("'\\generatelist \1' group is empty").arg(atom->string()));
+                            QString("'\\generatelist %1' group is empty").arg(atom->string()));
             } else {
                 relative->location().warning(
-                        QString("'\\generatelist \1' no such group").arg(atom->string()));
+                        QString("'\\generatelist %1' no such group").arg(atom->string()));
             }
         }
         break;

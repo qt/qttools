@@ -5,6 +5,11 @@
             <description>
                 <brief>A derived class in a namespace.</brief>
             </description>
+            <function name="staticObsoleteMember" fullname="TestQDoc::TestDerived::staticObsoleteMember" href="testqdoc-testderived-obsolete.html#staticObsoleteMember" status="obsolete" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="true" final="false" override="false" type="void" signature="void staticObsoleteMember()">
+                <description>
+                    <para>Static obsolete method.</para>
+                </description>
+            </function>
             <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" const="false" static="false" final="false" override="true" type="void" signature="void virtualFun() override">
                 <description/>
             </function>

@@ -220,6 +220,7 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc-test-members.html "
                    "testqdoc-testderived.html "
                    "testqdoc-testderived-members.html "
+                   "testqdoc-testderived-obsolete.html "
                    "testqdoc.html");
 }
 

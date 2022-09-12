@@ -283,9 +283,7 @@ void Section::reduce()
 {
     if (!isEmpty()) {
         keys_ = memberMap_.keys();
-        obsoleteKeys_ = obsoleteMemberMap_.keys();
         members_ = memberMap_.values().toVector();
-        obsoleteMembers_ = obsoleteMemberMap_.values().toVector();
         reimplementedMembers_ = reimplementedMemberMap_.values().toVector();
         for (int i = 0; i < classMapList_.size(); i++) {
             ClassMap *cm = classMapList_[i];
@@ -295,6 +293,10 @@ void Section::reduce()
             ckn->second.first = cm->second.keys();
             classKeysNodesList_.append(ckn);
         }
+    }
+    if (!obsoleteMemberMap_.isEmpty()) {
+        obsoleteKeys_ = obsoleteMemberMap_.keys();
+        obsoleteMembers_ = obsoleteMemberMap_.values().toVector();
     }
 }
 

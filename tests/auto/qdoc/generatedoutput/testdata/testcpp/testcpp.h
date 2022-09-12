@@ -74,6 +74,7 @@ public:
     using DerivedType = Test::SomeType;
     using NotTypedef = int;
     void virtualFun() override;
+    static void staticObsoleteMember();
 };
 
 } // namespace TestQDoc

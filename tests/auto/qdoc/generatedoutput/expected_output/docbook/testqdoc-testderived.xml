@@ -76,4 +76,28 @@
 </db:methodsynopsis>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" type="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
+<db:section xml:id="obsolete">
+<db:title>Obsolete Members for TestDerived</db:title>
+<db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link> are obsolete.</db:emphasis> They are provided to keep old source code working. We strongly advise against using them in new code.</db:para>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="staticObsoleteMember">
+<db:title>[static] TestDerived::void staticObsoleteMember()</db:title>
+<db:methodsynopsis>
+<db:modifier>static</db:modifier>
+<db:void/>
+<db:methodname>staticObsoleteMember</db:methodname>
+<db:void/>
+<db:synopsisinfo db:role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo db:role="signature">void staticObsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo db:role="access">public</db:synopsisinfo>
+<db:synopsisinfo db:role="status">obsolete</db:synopsisinfo>
+<db:synopsisinfo db:role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo db:role="module">TestCPP</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is obsolete. It is provided to keep old source code working. We strongly advise against using it in new code.</db:para>
+<db:para>Static obsolete method.</db:para>
+</db:section>
+</db:section>
+</db:section>
 </db:section></db:article>
