@@ -27,8 +27,8 @@ public:
     void addMember(Node *node) override;
     [[nodiscard]] bool hasNamespaces() const override;
     [[nodiscard]] bool hasClasses() const override;
-    void getMemberNamespaces(NodeMap &out) override;
-    void getMemberClasses(NodeMap &out) const override;
+    void getMemberNamespaces(NodeMap &out);
+    void getMemberClasses(NodeMap &out) const;
     [[nodiscard]] bool wasSeen() const override { return m_seen; }
 
     [[nodiscard]] QString fullTitle() const override { return title(); }

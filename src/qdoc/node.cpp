@@ -1110,16 +1110,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   data member is set to \c true.
  */
 
-/*! \fn void Node::getMemberNamespaces(NodeMap& out)
-  If this is a CollectionNode, \a out is loaded with all the collection
-  members that are namespaces.
- */
-
-/*! \fn void getMemberClasses(NodeMap& out) const { }
-  If this is a CollectionNode, \a out is loaded with all the collection
-  members that are classes.
- */
-
 /*! \fn void Node::setDataType(const QString &dataType)
   If this node is a PropertyNode or a QmlPropertyNode, its
   data type data member is set to \a dataType. Otherwise,

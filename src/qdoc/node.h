@@ -212,8 +212,6 @@ public:
     [[nodiscard]] virtual bool hasClasses() const { return false; }
     virtual void setAbstract(bool) {}
     virtual void setWrapper() {}
-    virtual void getMemberNamespaces(NodeMap &) {}
-    virtual void getMemberClasses(NodeMap &) const {}
     virtual void setDataType(const QString &) {}
     [[nodiscard]] virtual bool wasSeen() const { return false; }
     virtual void appendGroupName(const QString &) {}
