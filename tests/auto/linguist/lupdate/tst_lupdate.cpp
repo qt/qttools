@@ -17,6 +17,8 @@
 
 #include <iostream>
 
+using namespace Qt::Literals::StringLiterals;
+
 class tst_lupdate : public QObject
 {
     Q_OBJECT
@@ -226,6 +228,7 @@ void tst_lupdate::good_data()
         "parsecontexts",
         "parsecpp",
         "parsecpp2",
+        "parseqrc_json",
         "prefix",
         "preprocess",
         "proparsing2", // llvm8 cannot handle file name without extension
@@ -290,8 +293,15 @@ void tst_lupdate::good()
     QVERIFY(file.open(QIODevice::WriteOnly));
     file.close();
 
-    if (lupdateArguments.isEmpty())
-        lupdateArguments.append(QLatin1String("project.pro"));
+    if (lupdateArguments.isEmpty()) {
+        // Automatically pass "project.pro" or "-project project.json".
+        if (QFile::exists(dir + u"/project.json"_s)) {
+            lupdateArguments << u"-project"_s << u"project.json"_s;
+        } else {
+            lupdateArguments.append(QLatin1String("project.pro"));
+        }
+    }
+
     lupdateArguments.prepend("-silent");
     if (useClangCpp)
         lupdateArguments.append("-clang-parser");

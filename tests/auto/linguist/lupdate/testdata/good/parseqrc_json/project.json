@@ -1,0 +1,16 @@
+[
+  {
+    "excluded": [],
+    "includePaths": [
+    ],
+    "projectFile": "project.pro",
+    "sources": [
+      "main.cpp",
+      "main.qml",
+      "project.qrc"
+    ],
+    "translations": [
+      "project.ts"
+    ]
+  }
+]
