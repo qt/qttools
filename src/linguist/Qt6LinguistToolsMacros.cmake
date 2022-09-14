@@ -196,8 +196,11 @@ set(lupdate_sources \"${sources}\")
 set(lupdate_translations \"${ts_files}\")
 ")
 
-    _qt_internal_wrap_tool_command(lupdate_command SET
-        $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
+    _qt_internal_get_tool_wrapper_script_path(tool_wrapper)
+    set(lupdate_command
+        COMMAND
+            "${tool_wrapper}"
+            $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
     add_custom_target(${target}_lupdate
         COMMAND "${CMAKE_COMMAND}" "-DIN_FILE=${lupdate_project_cmake}"
                 "-DOUT_FILE=${lupdate_project_json}"
@@ -230,10 +233,15 @@ function(qt6_add_lrelease target)
     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
 
-    _qt_internal_wrap_tool_command(lupdate_command SET
-        $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
-    _qt_internal_wrap_tool_command(lrelease_command SET
-        $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lrelease>)
+    _qt_internal_get_tool_wrapper_script_path(tool_wrapper)
+    set(lupdate_command
+        COMMAND
+            "${tool_wrapper}"
+            $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
+    set(lrelease_command
+        COMMAND
+            "${tool_wrapper}"
+            $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lrelease>)
 
     set(qm_files "")
     foreach(ts_file ${ts_files})
