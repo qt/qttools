@@ -325,8 +325,6 @@ Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
             sections[SinceEnumTypes].appendMember(node);
             break;
         case Node::Typedef:
-            sections[SinceTypedefs].appendMember(node);
-            break;
         case Node::TypeAlias:
             sections[SinceTypeAliases].appendMember(node);
             break;
@@ -502,7 +500,6 @@ void Sections::initSections()
         v[SinceGlobalFunctions].init("    New Global Functions");
         v[SinceMacros].init("    New Macros");
         v[SinceEnumTypes].init("    New Enum Types");
-        v[SinceTypedefs].init("    New Typedefs");
         v[SinceTypeAliases].init("    New Type Aliases");
         v[SinceProperties].init("    New Properties");
         v[SinceVariables].init("    New Variables");
