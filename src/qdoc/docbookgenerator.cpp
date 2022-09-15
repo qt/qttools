@@ -3795,7 +3795,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
         if (property->propertyType() == PropertyNode::PropertyType::StandardProperty) {
-            Section section(Section::Accessors, Section::Active);
+            Section section("", "", "", "", Section::Accessors, Section::Active);
 
             section.appendMembers(property->getters().toVector());
             section.appendMembers(property->setters().toVector());
@@ -3815,7 +3815,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 generateSectionList(section, node);
             }
 
-            Section notifiers(Section::Accessors, Section::Active);
+            Section notifiers("", "", "", "", Section::Accessors, Section::Active);
             notifiers.appendMembers(property->notifiers().toVector());
 
             if (!notifiers.members().isEmpty()) {

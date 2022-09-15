@@ -25,31 +25,14 @@ public:
     enum Status { Obsolete, Active };
 
 public:
-    Section() : m_style(Details), m_status(Active), m_aggregate(nullptr) { }
-    Section(Style style, Status status) : m_style(style), m_status(status), m_aggregate(nullptr) {};
-    ~Section();
+    Section(
+        QString title, QString singular, QString plural,
+        QString divclass, Style style, Status status
+    ) : m_title{title}, m_singular{singular}, m_plural{plural},
+        m_divClass{divclass}, m_style{style}, m_status{status}
+    {}
 
-    void init(const QString &title) { m_title = title; }
-    void init(const QString &singular, const QString &plural)
-    {
-        m_singular = singular;
-        m_plural = plural;
-    }
-    void init(const QString &title, const QString &singular, const QString &plural)
-    {
-        m_title = title;
-        m_divClass.clear();
-        m_singular = singular;
-        m_plural = plural;
-    }
-    void init(const QString &title, const QString &divClass, const QString &singular,
-              const QString &plural)
-    {
-        m_title = title;
-        m_divClass = divClass;
-        m_singular = singular;
-        m_plural = plural;
-    }
+    ~Section();
 
     void insert(Node *node);
     void insert(const QString &key, Node *node) { m_memberMap.insert(key, node); }
@@ -94,12 +77,12 @@ private:
     QString sortName(const Node *node, const QString *name = nullptr);
 
 private:
-    Style m_style {};
-    Status m_status {};
     QString m_title {};
-    QString m_divClass {};
     QString m_singular {};
     QString m_plural {};
+    QString m_divClass {};
+    Style m_style {};
+    Status m_status {};
 
     Aggregate *m_aggregate { nullptr };
     QStringList m_keys {};
@@ -182,7 +165,6 @@ public:
     explicit Sections(const NodeMultiMap &nsmap);
     ~Sections();
 
-    void initSections();
     void clear(SectionVector &v);
     void reduce(SectionVector &v);
     void buildStdRefPageSections();

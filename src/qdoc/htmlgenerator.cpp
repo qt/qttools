@@ -3478,7 +3478,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
         if (property->propertyType() == PropertyNode::PropertyType::StandardProperty) {
-            Section section(Section::Accessors, Section::Active);
+            Section section("", "", "", "", Section::Accessors, Section::Active);
 
             section.appendMembers(property->getters().toVector());
             section.appendMembers(property->setters().toVector());
@@ -3489,7 +3489,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
                 generateSectionList(section, node, marker);
             }
 
-            Section notifiers(Section::Accessors, Section::Active);
+            Section notifiers("", "", "", "", Section::Accessors, Section::Active);
             notifiers.appendMembers(property->notifiers().toVector());
 
             if (!notifiers.members().isEmpty()) {

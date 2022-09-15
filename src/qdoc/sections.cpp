@@ -21,17 +21,95 @@
 
 QT_BEGIN_NAMESPACE
 
-static bool sectionsInitialized = false;
-QList<Section> Sections::s_stdSummarySections(7, Section(Section::Summary, Section::Active));
-QList<Section> Sections::s_stdDetailsSections(7, Section(Section::Details, Section::Active));
-QList<Section> Sections::s_stdCppClassSummarySections(18,
-                                                      Section(Section::Summary, Section::Active));
-QList<Section> Sections::s_stdCppClassDetailsSections(6,
-                                                      Section(Section::Details, Section::Active));
-QList<Section> Sections::s_sinceSections(15, Section(Section::Details, Section::Active));
-QList<Section> Sections::s_allMembers(1, Section(Section::AllMembers, Section::Active));
-QList<Section> Sections::s_stdQmlTypeSummarySections(7, Section(Section::Summary, Section::Active));
-QList<Section> Sections::s_stdQmlTypeDetailsSections(7, Section(Section::Details, Section::Active));
+QList<Section> Sections::s_stdSummarySections {
+    { "Namespaces",       "namespace",       "namespaces",       "", Section::Summary, Section::Active },
+    { "Classes",          "class",           "classes",          "", Section::Summary, Section::Active },
+    { "Types",            "type",            "types",            "", Section::Summary, Section::Active },
+    { "Variables",        "variable",        "variables",        "", Section::Summary, Section::Active },
+    { "Static Variables", "static variable", "static variables", "", Section::Summary, Section::Active },
+    { "Functions",        "function",        "functions",        "", Section::Summary, Section::Active },
+    { "Macros",           "macro",           "macros",           "", Section::Summary, Section::Active },
+};
+
+QList<Section> Sections::s_stdDetailsSections {
+    { "Namespaces",             "namespace",       "namespaces",       "nmspace", Section::Details, Section::Active },
+    { "Classes",                "class",           "classes",          "classes", Section::Details, Section::Active },
+    { "Type Documentation",     "type",            "types",            "types",   Section::Details, Section::Active },
+    { "Variable Documentation", "variable",        "variables",        "vars",    Section::Details, Section::Active },
+    { "Static Variables",       "static variable", "static variables", QString(), Section::Details, Section::Active },
+    { "Function Documentation", "function",        "functions",        "func",    Section::Details, Section::Active },
+    { "Macro Documentation",    "macro",           "macros",           "macros",  Section::Details, Section::Active },
+};
+
+QList<Section> Sections::s_stdCppClassSummarySections {
+    { "Public Types",             "public type",             "public types",             "", Section::Summary, Section::Active },
+    { "Properties",               "property",                "properties",               "", Section::Summary, Section::Active },
+    { "Public Functions",         "public function",         "public functions",         "", Section::Summary, Section::Active },
+    { "Public Slots",             "public slot",             "public slots",             "", Section::Summary, Section::Active },
+    { "Signals",                  "signal",                  "signals",                  "", Section::Summary, Section::Active },
+    { "Public Variables",         "public variable",         "public variables",         "", Section::Summary, Section::Active },
+    { "Static Public Members",    "static public member",    "static public members",    "", Section::Summary, Section::Active },
+    { "Protected Types",          "protected type",          "protected types",          "", Section::Summary, Section::Active },
+    { "Protected Functions",      "protected function",      "protected functions",      "", Section::Summary, Section::Active },
+    { "Protected Slots",          "protected slot",          "protected slots",          "", Section::Summary, Section::Active },
+    { "Protected Variables",      "protected type",          "protected variables",      "", Section::Summary, Section::Active },
+    { "Static Protected Members", "static protected member", "static protected members", "", Section::Summary, Section::Active },
+    { "Private Types",            "private type",            "private types",            "", Section::Summary, Section::Active },
+    { "Private Functions",        "private function",        "private functions",        "", Section::Summary, Section::Active },
+    { "Private Slots",            "private slot",            "private slots",            "", Section::Summary, Section::Active },
+    { "Static Private Members",   "static private member",   "static private members",   "", Section::Summary, Section::Active },
+    { "Related Non-Members",      "related non-member",      "related non-members",      "", Section::Summary, Section::Active },
+    { "Macros",                   "macro",                   "macros",                   "", Section::Summary, Section::Active },
+};
+
+QList<Section> Sections::s_stdCppClassDetailsSections {
+    { "Member Type Documentation",     "member", "members", "types",     Section::Details, Section::Active },
+    { "Property Documentation",        "member", "members", "prop",      Section::Details, Section::Active },
+    { "Member Function Documentation", "member", "members", "func",      Section::Details, Section::Active },
+    { "Member Variable Documentation", "member", "members", "vars",      Section::Details, Section::Active },
+    { "Related Non-Members",           "member", "members", "relnonmem", Section::Details, Section::Active },
+    { "Macro Documentation",           "member", "members", "macros",    Section::Details, Section::Active },
+};
+
+QList<Section> Sections::s_stdQmlTypeSummarySections {
+    { "Properties",          "property",          "properties",          "", Section::Summary, Section::Active },
+    { "Attached Properties", "attached property", "attached properties", "", Section::Summary, Section::Active },
+    { "Signals",             "signal",            "signals",             "", Section::Summary, Section::Active },
+    { "Signal Handlers",     "signal handler",    "signal handlers",     "", Section::Summary, Section::Active },
+    { "Attached Signals",    "attached signal",   "attached signals",    "", Section::Summary, Section::Active },
+    { "Methods",             "method",            "methods",             "", Section::Summary, Section::Active },
+    { "Attached Methods",    "attached method",   "attached methods",    "", Section::Summary, Section::Active },
+};
+
+QList<Section> Sections::s_stdQmlTypeDetailsSections {
+    { "Property Documentation",          "member",         "members",         "qmlprop",    Section::Details, Section::Active },
+    { "Attached Property Documentation", "member",         "members",         "qmlattprop", Section::Details, Section::Active },
+    { "Signal Documentation",            "signal",         "signals",         "qmlsig",     Section::Details, Section::Active },
+    { "Signal Handler Documentation",    "signal handler", "signal handlers", "qmlsighan",  Section::Details, Section::Active },
+    { "Attached Signal Documentation",   "signal",         "signals",         "qmlattsig",  Section::Details, Section::Active },
+    { "Method Documentation",            "member",         "members",         "qmlmeth",    Section::Details, Section::Active },
+    { "Attached Method Documentation",   "member",         "members",         "qmlattmeth", Section::Details, Section::Active },
+};
+
+QList<Section> Sections::s_sinceSections {
+    { "    New Namespaces",              "", "", "", Section::Details, Section::Active },
+    { "    New Classes",                 "", "", "", Section::Details, Section::Active },
+    { "    New Member Functions",        "", "", "", Section::Details, Section::Active },
+    { "    New Functions in Namespaces", "", "", "", Section::Details, Section::Active },
+    { "    New Global Functions",        "", "", "", Section::Details, Section::Active },
+    { "    New Macros",                  "", "", "", Section::Details, Section::Active },
+    { "    New Enum Types",              "", "", "", Section::Details, Section::Active },
+    { "    New Type Aliases",            "", "", "", Section::Details, Section::Active },
+    { "    New Properties",              "", "", "", Section::Details, Section::Active },
+    { "    New Variables",               "", "", "", Section::Details, Section::Active },
+    { "    New QML Types",               "", "", "", Section::Details, Section::Active },
+    { "    New QML Properties",          "", "", "", Section::Details, Section::Active },
+    { "    New QML Signals",             "", "", "", Section::Details, Section::Active },
+    { "    New QML Signal Handlers",     "", "", "", Section::Details, Section::Active },
+    { "    New QML Methods",             "", "", "", Section::Details, Section::Active },
+};
+
+QList<Section> Sections::s_allMembers{ { "", "member", "members", "", Section::AllMembers, Section::Active } };
 
 /*!
   \class Section
@@ -270,7 +348,6 @@ void Section::reduce()
  */
 Sections::Sections(Aggregate *aggregate) : m_aggregate(aggregate)
 {
-    initSections();
     initAggregate(s_allMembers, m_aggregate);
     switch (m_aggregate->nodeType()) {
     case Node::Class:
@@ -303,7 +380,6 @@ Sections::Sections(Aggregate *aggregate) : m_aggregate(aggregate)
  */
 Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
 {
-    initSections();
     if (nsmap.isEmpty())
         return;
     SectionVector &sections = sinceSections();
@@ -419,118 +495,6 @@ void Sections::initAggregate(SectionVector &v, Aggregate *aggregate)
 {
     for (Section &section : v)
         section.setAggregate(aggregate);
-}
-
-/*!
-  This function is called once to initialize all the instances
-  of QList<Section>. The lists have already been constructed
-  with the correct number of Section entries in each. Each Section
-  entry has already been constructed with the correct values of
-  Style and Status for the list it is in. This function adds the
-  correct text strings to each section in each vector.
- */
-void Sections::initSections()
-{
-    if (sectionsInitialized)
-        return;
-    sectionsInitialized = true;
-
-    s_allMembers[0].init("member", "members");
-    {
-        QList<Section> &v = s_stdCppClassSummarySections;
-        v[0].init("Public Types", "public type", "public types");
-        v[1].init("Properties", "property", "properties");
-        v[2].init("Public Functions", "public function", "public functions");
-        v[3].init("Public Slots", "public slot", "public slots");
-        v[4].init("Signals", "signal", "signals");
-        v[5].init("Public Variables", "public variable", "public variables");
-        v[6].init("Static Public Members", "static public member", "static public members");
-        v[7].init("Protected Types", "protected type", "protected types");
-        v[8].init("Protected Functions", "protected function", "protected functions");
-        v[9].init("Protected Slots", "protected slot", "protected slots");
-        v[10].init("Protected Variables", "protected type", "protected variables");
-        v[11].init("Static Protected Members", "static protected member",
-                   "static protected members");
-        v[12].init("Private Types", "private type", "private types");
-        v[13].init("Private Functions", "private function", "private functions");
-        v[14].init("Private Slots", "private slot", "private slots");
-        v[15].init("Static Private Members", "static private member", "static private members");
-        v[16].init("Related Non-Members", "related non-member", "related non-members");
-        v[17].init("Macros", "macro", "macros");
-    }
-
-    {
-        QList<Section> &v = s_stdCppClassDetailsSections;
-        v[0].init("Member Type Documentation", "types", "member", "members");
-        v[1].init("Property Documentation", "prop", "member", "members");
-        v[2].init("Member Function Documentation", "func", "member", "members");
-        v[3].init("Member Variable Documentation", "vars", "member", "members");
-        v[4].init("Related Non-Members", "relnonmem", "member", "members");
-        v[5].init("Macro Documentation", "macros", "member", "members");
-    }
-
-    {
-        QList<Section> &v = s_stdSummarySections;
-        v[0].init("Namespaces", "namespace", "namespaces");
-        v[1].init("Classes", "class", "classes");
-        v[2].init("Types", "type", "types");
-        v[3].init("Variables", "variable", "variables");
-        v[4].init("Static Variables", "static variable", "static variables");
-        v[5].init("Functions", "function", "functions");
-        v[6].init("Macros", "macro", "macros");
-    }
-
-    {
-        QList<Section> &v = s_stdDetailsSections;
-        v[0].init("Namespaces", "nmspace", "namespace", "namespaces");
-        v[1].init("Classes", "classes", "class", "classes");
-        v[2].init("Type Documentation", "types", "type", "types");
-        v[3].init("Variable Documentation", "vars", "variable", "variables");
-        v[4].init("Static Variables", QString(), "static variable", "static variables");
-        v[5].init("Function Documentation", "func", "function", "functions");
-        v[6].init("Macro Documentation", "macros", "macro", "macros");
-    }
-
-    {
-        QList<Section> &v = s_sinceSections;
-        v[SinceNamespaces].init("    New Namespaces");
-        v[SinceClasses].init("    New Classes");
-        v[SinceMemberFunctions].init("    New Member Functions");
-        v[SinceNamespaceFunctions].init("    New Functions in Namespaces");
-        v[SinceGlobalFunctions].init("    New Global Functions");
-        v[SinceMacros].init("    New Macros");
-        v[SinceEnumTypes].init("    New Enum Types");
-        v[SinceTypeAliases].init("    New Type Aliases");
-        v[SinceProperties].init("    New Properties");
-        v[SinceVariables].init("    New Variables");
-        v[SinceQmlTypes].init("    New QML Types");
-        v[SinceQmlProperties].init("    New QML Properties");
-        v[SinceQmlSignals].init("    New QML Signals");
-        v[SinceQmlSignalHandlers].init("    New QML Signal Handlers");
-        v[SinceQmlMethods].init("    New QML Methods");
-    }
-
-    {
-        QList<Section> &v = s_stdQmlTypeSummarySections;
-        v[0].init("Properties", "property", "properties");
-        v[1].init("Attached Properties", "attached property", "attached properties");
-        v[2].init("Signals", "signal", "signals");
-        v[3].init("Signal Handlers", "signal handler", "signal handlers");
-        v[4].init("Attached Signals", "attached signal", "attached signals");
-        v[5].init("Methods", "method", "methods");
-        v[6].init("Attached Methods", "attached method", "attached methods");
-    }
-
-    {
-        QList<Section> &v = s_stdQmlTypeDetailsSections;
-        v[0].init("Property Documentation", "qmlprop", "member", "members");
-        v[1].init("Attached Property Documentation", "qmlattprop", "member", "members");
-        v[2].init("Signal Documentation", "qmlsig", "signal", "signals");
-        v[3].init("Signal Handler Documentation", "qmlsighan", "signal handler", "signal handlers");
-        v[4].init("Attached Signal Documentation", "qmlattsig", "signal", "signals");
-        v[5].init("Method Documentation", "qmlmeth", "member", "members");
-        v[6].init("Attached Method Documentation", "qmlattmeth", "member", "members");
-    }
 }
 
 /*!
