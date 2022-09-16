@@ -1639,8 +1639,17 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
     Atom::AtomType itemLeft = tableItems ? Atom::TableItemLeft : Atom::ListItemLeft;
     Atom::AtomType itemRight = tableItems ? Atom::TableItemRight : Atom::ListItemRight;
 
+    // Helper to add an item to navigation bar based on a string link target
     auto addNavItem = [&](const QString &link, const QString &title) {
         navigationbar << Atom(itemLeft) << Atom(Atom::NavLink, link)
+                      << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
+                      << Atom(Atom::String, title)
+                      << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
+    };
+
+    // Helper to add an item to navigation bar based on a target node
+    auto addNavItemNode = [&](const Node *node, const QString &title) {
+        navigationbar << Atom(itemLeft) << Atom(Atom::LinkNode, CodeMarker::stringForNode(node))
                       << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
                       << Atom(Atom::String, title)
                       << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK) << Atom(itemRight);
@@ -1663,15 +1672,21 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
         if (!m_cppclassespage.isEmpty() && !m_cppclassestitle.isEmpty())
             addNavItem(m_cppclassespage, m_cppclassestitle);
         if (!node->physicalModuleName().isEmpty()) {
+            // Add explicit link to the \module page if:
+            //   - It's not the C++ classes page that's already added, OR
+            //   - It has a \modulestate associated with it
             if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_cppclassespage))
-                addNavItem(moduleNode->name(), moduleNode->name() + moduleState);
+                addNavItemNode(moduleNode, moduleNode->name() + moduleState);
         }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else if (node->isQmlType() || node->isQmlBasicType()) {
         if (!m_qmltypespage.isEmpty() && !m_qmltypestitle.isEmpty())
             addNavItem(m_qmltypespage, m_qmltypestitle);
+        // Add explicit link to the \qmlmodule page if:
+        //   - It's not the QML types page that's already added, OR
+        //   - It has a \modulestate associated with it
         if (moduleNode && (!moduleState.isEmpty() || moduleNode->title() != m_qmltypespage)) {
-            addNavItem(moduleNode->name(), moduleNode->name() + moduleState);
+            addNavItemNode(moduleNode, moduleNode->name() + moduleState);
         }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
     } else {
@@ -1698,7 +1713,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
             }
             while (!navNodes.empty()) {
                 if (navNodes.front()->isPageNode())
-                    addNavItem(navNodes.front()->name(), navNodes.front()->title());
+                    addNavItemNode(navNodes.front(), navNodes.front()->title());
                 navNodes.pop_front();
             }
         }
