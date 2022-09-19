@@ -31,12 +31,6 @@ QT_WARNING_POP
 
 QT_BEGIN_NAMESPACE
 
-inline QDebug operator<<(QDebug out, const std::string& str)
-{
-    out << QString::fromStdString(str);
-    return out;
-}
-
 Q_DECLARE_LOGGING_CATEGORY(lcClang)
 
 inline QString toQt(llvm::StringRef str)

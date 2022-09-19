@@ -144,7 +144,7 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
     const char *end = sm.getCharacterData(sourceRange.getEnd());
     llvm::StringRef skippedText = llvm::StringRef(begin, end - begin);
     if (ClangCppParser::stringContainsTranslationInformation(skippedText)) {
-        qCDebug(lcClang) << "SourceRangeSkipped: skipped text:" << skippedText.str();
+        qCDebug(lcClang) << "SourceRangeSkipped: skipped text:" << QString::fromStdString(skippedText.str());
         unsigned int beginLine = sm.getExpansionLineNumber(sourceRange.getBegin());
         unsigned int endLine = sm.getExpansionLineNumber(sourceRange.getEnd());
         qWarning("%s Code with translation information has been skipped "

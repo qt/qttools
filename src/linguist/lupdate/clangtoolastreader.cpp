@@ -765,9 +765,9 @@ bool LupdateVisitor::VisitNamedDecl(clang::NamedDecl *namedDeclaration)
     if (!LupdatePrivate::isFileSignificant(fullLocation.getFileEntry()->getName().str()))
         return true;
 
-    qCDebug(lcClang) << "NamedDecl Name:   " << namedDeclaration->getQualifiedNameAsString();
-    qCDebug(lcClang) << "NamedDecl source: " << namedDeclaration->getSourceRange().printToString(
-        m_context->getSourceManager());
+    qCDebug(lcClang) << "NamedDecl Name:   " << QString::fromStdString(namedDeclaration->getQualifiedNameAsString());
+    qCDebug(lcClang) << "NamedDecl source: " << QString::fromStdString(namedDeclaration->getSourceRange().printToString(
+        m_context->getSourceManager()));
     // Checks if there is a macro located within the range of this NamedDeclaration
     // in order to find a context for the macro
     findContextForTranslationStoresFromPP(namedDeclaration);
@@ -795,15 +795,15 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
 
             store.contextRetrieved = LupdatePrivate::contextForNoopMacro(namedDeclaration, sm);
             qCDebug(lcClang) << "------------------------------------------NOOP Macro in range ---";
-            qCDebug(lcClang) << "Range " << namedDeclaration->getSourceRange().printToString(sm);
-            qCDebug(lcClang) << "Point " << sourceLoc.printToString(sm);
+            qCDebug(lcClang) << "Range " << QString::fromStdString(namedDeclaration->getSourceRange().printToString(sm));
+            qCDebug(lcClang) << "Point " << QString::fromStdString(sourceLoc.printToString(sm));
             qCDebug(lcClang) << "=========== Visit Named Declaration =============================";
             qCDebug(lcClang) << " Declaration Location    " <<
-                namedDeclaration->getSourceRange().printToString(sm);
+                QString::fromStdString(namedDeclaration->getSourceRange().printToString(sm));
             qCDebug(lcClang) << " Macro       Location                                 "
-                << sourceLoc.printToString(sm);
+                << QString::fromStdString(sourceLoc.printToString(sm));
             qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
-                << namedDeclaration->getQualifiedNameAsString();
+                << QString::fromStdString(namedDeclaration->getQualifiedNameAsString());
             qCDebug(lcClang) << " Context LupdatePrivate::contextForNoopMacro          "
                 << store.contextRetrieved;
             qCDebug(lcClang) << " Context Retrieved       " << store.contextRetrieved;
@@ -820,13 +820,13 @@ void LupdateVisitor::findContextForTranslationStoresFromPP(clang::NamedDecl *nam
             store.contextRetrieved = QString::fromStdString(
                 namedDeclaration->getQualifiedNameAsString());
             qCDebug(lcClang) << "------------------------------------------DECL Macro in range ---";
-            qCDebug(lcClang) << "Range " << namedDeclaration->getSourceRange().printToString(sm);
-            qCDebug(lcClang) << "Point " << sourceLoc.printToString(sm);
+            qCDebug(lcClang) << "Range " << QString::fromStdString(namedDeclaration->getSourceRange().printToString(sm));
+            qCDebug(lcClang) << "Point " << QString::fromStdString(sourceLoc.printToString(sm));
             qCDebug(lcClang) << "=========== Visit Named Declaration =============================";
             qCDebug(lcClang) << " Declaration Location    " <<
-                namedDeclaration->getSourceRange().printToString(sm);
+                QString::fromStdString(namedDeclaration->getSourceRange().printToString(sm));
             qCDebug(lcClang) << " Macro       Location                                 "
-                << sourceLoc.printToString(sm);
+                << QString::fromStdString(sourceLoc.printToString(sm));
             qCDebug(lcClang) << " Context namedDeclaration->getQualifiedNameAsString() "
                 << store.contextRetrieved;
             qCDebug(lcClang) << " Context Retrieved       " << store.contextRetrieved;
