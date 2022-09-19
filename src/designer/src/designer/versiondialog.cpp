@@ -42,7 +42,9 @@ private:
 VersionLabel::VersionLabel(QWidget *parent)
         : QLabel(parent)
 {
-    setPixmap(QPixmap(QStringLiteral(":/qt-project.org/designer/images/designer.png")));
+    QPixmap pixmap(QStringLiteral(":/qt-project.org/designer/images/designer.png"));
+    pixmap.setDevicePixelRatio(devicePixelRatioF());
+    setPixmap(pixmap);
     hitPoints.append(QPoint(56, 25));
     hitPoints.append(QPoint(29, 55));
     hitPoints.append(QPoint(56, 87));
@@ -130,8 +132,8 @@ VersionDialog::VersionDialog(QWidget *parent)
 {
     setWindowFlags((windowFlags() & ~Qt::WindowContextHelpButtonHint) | Qt::MSWindowsFixedSizeDialogHint);
     QGridLayout *layout = new QGridLayout(this);
-    VersionLabel *label = new VersionLabel;
-    QLabel *lbl = new QLabel;
+    VersionLabel *label = new VersionLabel(this);
+    QLabel *lbl = new QLabel(this);
     QString version = tr("<h3>%1</h3><br/><br/>Version %2");
     version = version.arg(tr("Qt Designer")).arg(QLatin1String(QT_VERSION_STR));
     version.append(tr("<br/>Qt Designer is a graphical user interface designer for Qt applications.<br/>"));
@@ -143,7 +145,7 @@ VersionDialog::VersionDialog(QWidget *parent)
     lbl->setWordWrap(true);
     lbl->setOpenExternalLinks(true);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
     connect(buttonBox , &QDialogButtonBox::rejected, this, &QDialog::reject);
     connect(label, &VersionLabel::triggered, this, &QDialog::accept);
     layout->addWidget(label, 0, 0, 1, 1);
