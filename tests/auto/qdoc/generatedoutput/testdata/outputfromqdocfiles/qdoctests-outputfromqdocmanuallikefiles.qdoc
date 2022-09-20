@@ -1,0 +1,59 @@
+// Copyright (C) 2022 Thibaut Cuvelier
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+// Excerpts from src/qdoc/doc/qdoc-guide.qdoc
+
+/*!
+    \page qdoctests-qdocmanuallikefileoutput.html
+
+    \title Document Navigation
+
+    The navigation commands...
+
+    \quotation
+    \raw HTML
+        <table border="0" cellpadding="0" cellspacing="5" width="100%">
+
+        <tr>
+        <p>
+        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Basic Qt</a>]
+        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
+        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Creating Dialogs</a>]
+        </p>
+
+        <h1 align="center">Getting Started<br /></h1>
+
+        <p>
+        This chapter shows how to combine basic C++ with the
+        functionality provided by Qt to create a few small graphical
+        interface (GUI) applications.
+        </p>
+
+        <p>
+        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Basic Qt</a>]
+        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
+        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
+        Creating Dialogs</a>]
+        </p>
+
+        </table>
+    \endraw
+    \endquotation
+
+    \code
+    <head>
+        ...
+        <link rel="start" href="basicqt.html" />
+        ...
+    </head>
+    \endcode
+
+    \section1 Commands
+
+    \target previouspage-command
+    \section2 \\previouspage
+
+    The \\previouspage command...
+*/

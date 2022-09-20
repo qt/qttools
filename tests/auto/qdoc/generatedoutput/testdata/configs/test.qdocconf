@@ -4,7 +4,8 @@ description = "A test project for QDoc build artifacts"
 buildversion = "$project - $description"
 moduleheader =
 
-sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc
+sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc \
+          ../outputfromqdocfiles/qdoctests-outputfromqdocmanuallikefiles.qdoc
 
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"

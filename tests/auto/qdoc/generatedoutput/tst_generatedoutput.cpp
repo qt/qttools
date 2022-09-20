@@ -204,6 +204,7 @@ void tst_generatedOutput::htmlFromQDocFile()
     testAndCompare("testdata/configs/test.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html "
+                   "qdoctests-qdocmanuallikefileoutput.html "
                    "qdoctests-qdocfileoutput-exhaustive.html "
                    "toc.html");
 }
