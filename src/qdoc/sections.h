@@ -74,9 +74,6 @@ public:
     void setAggregate(Aggregate *t) { m_aggregate = t; }
 
 private:
-    QString sortName(const Node *node);
-
-private:
     QString m_title {};
     QString m_singular {};
     QString m_plural {};

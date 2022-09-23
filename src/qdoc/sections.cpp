@@ -160,7 +160,7 @@ void Section::clear()
   Construct a name for the \a node that can be used for sorting
   a set of nodes into equivalence classes.
  */
-QString Section::sortName(const Node *node)
+QString sortName(const Node *node)
 {
     QString nodeName{node->name()};
 
