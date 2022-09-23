@@ -3097,13 +3097,7 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
                 out() << "<li class=\"fn\">";
             }
 
-            QString prefix;
-            const QStringList &keys = section.keys(status);
-            if (!keys.isEmpty()) {
-                prefix = keys.at(i).mid(1);
-                prefix = prefix.left(keys.at(i).indexOf("::") + 1);
-            }
-            generateSynopsis(member, relative, marker, section.style(), alignNames, &prefix);
+            generateSynopsis(member, relative, marker, section.style(), alignNames);
             if (member->isFunction()) {
                 const auto *fn = static_cast<const FunctionNode *>(member);
                 if (fn->isPrivateSignal()) {
@@ -3163,12 +3157,10 @@ void HtmlGenerator::generateSectionInheritedList(const Section &section, const N
 }
 
 void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, CodeMarker *marker,
-                                     Section::Style style, bool alignNames, const QString *prefix)
+                                     Section::Style style, bool alignNames)
 {
     QString marked = marker->markedUpSynopsis(node, relative, style);
 
-    if (prefix)
-        marked.prepend(*prefix);
     QRegularExpression templateTag("(<[^@>]*>)");
     auto match = templateTag.match(marked);
     if (match.hasMatch()) {

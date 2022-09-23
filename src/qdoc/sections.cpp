@@ -146,8 +146,6 @@ void Section::clear()
     m_obsoleteMemberMap.clear();
     m_reimplementedMemberMap.clear();
     m_classMapList.clear();
-    m_keys.clear();
-    m_obsoleteKeys.clear();
     m_members.clear();
     m_obsoleteMembers.clear();
     m_reimplementedMembers.clear();
@@ -311,7 +309,6 @@ void Section::add(ClassMap *classMap, Node *n)
 void Section::reduce()
 {
     if (!isEmpty()) {
-        m_keys = m_memberMap.keys();
         m_members = m_memberMap.values().toVector();
         m_reimplementedMembers = m_reimplementedMemberMap.values().toVector();
         for (const auto &cm : m_classMapList) {
@@ -323,7 +320,6 @@ void Section::reduce()
         }
     }
     if (!m_obsoleteMemberMap.isEmpty()) {
-        m_obsoleteKeys = m_obsoleteMemberMap.keys();
         m_obsoleteMembers = m_obsoleteMemberMap.values().toVector();
     }
 }

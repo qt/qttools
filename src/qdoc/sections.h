@@ -56,11 +56,6 @@ public:
     [[nodiscard]] const QString &divClass() const { return m_divClass; }
     [[nodiscard]] const QString &singular() const { return m_singular; }
     [[nodiscard]] const QString &plural() const { return m_plural; }
-    [[nodiscard]] const QStringList &keys() const { return m_keys; }
-    [[nodiscard]] const QStringList &keys(Status t) const
-    {
-        return (t == Obsolete ? m_obsoleteKeys : m_keys);
-    }
     [[nodiscard]] const NodeVector &members() const { return m_members; }
     [[nodiscard]] const NodeVector &reimplementedMembers() const { return m_reimplementedMembers; }
     [[nodiscard]] const QList<std::pair<Aggregate *, int>> &inheritedMembers() const
@@ -82,8 +77,6 @@ private:
     Status m_status {};
 
     Aggregate *m_aggregate { nullptr };
-    QStringList m_keys {};
-    QStringList m_obsoleteKeys {};
     NodeVector m_members {};
     NodeVector m_obsoleteMembers {};
     NodeVector m_reimplementedMembers {};

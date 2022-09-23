@@ -86,8 +86,7 @@ private:
 
     void generateSection(const NodeVector &nv, const Node *relative, CodeMarker *marker);
     void generateSynopsis(const Node *node, const Node *relative, CodeMarker *marker,
-                          Section::Style style, bool alignNames = false,
-                          const QString *prefix = nullptr);
+                          Section::Style style, bool alignNames = false);
     void generateSectionInheritedList(const Section &section, const Node *relative);
     QString highlightedCode(const QString &markedCode, const Node *relative,
                             bool alignNames = false, Node::Genus genus = Node::DontCare);
