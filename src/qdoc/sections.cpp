@@ -158,16 +158,12 @@ void Section::clear()
 
 /*!
   Construct a name for the \a node that can be used for sorting
-  a set of nodes into equivalence classes. If \a name is provided,
-  start with that name. Otherwise start with the name in \a node.
+  a set of nodes into equivalence classes.
  */
-QString Section::sortName(const Node *node, const QString *name)
+QString Section::sortName(const Node *node)
 {
-    QString nodeName;
-    if (name != nullptr)
-        nodeName = *name;
-    else
-        nodeName = node->name();
+    QString nodeName{node->name()};
+
     int numDigits = 0;
     for (qsizetype i = nodeName.size() - 1; i > 0; --i) {
         if (nodeName.at(i).digitValue() == -1)
@@ -303,8 +299,7 @@ ClassMap *Section::newClassMap(const Aggregate *aggregate)
  */
 void Section::add(ClassMap *classMap, Node *n)
 {
-    QString key = n->name();
-    key = sortName(n, &key);
+    const QString key = sortName(n);
     m_memberMap.insert(key, n);
     classMap->second.insert(key, n);
 }
