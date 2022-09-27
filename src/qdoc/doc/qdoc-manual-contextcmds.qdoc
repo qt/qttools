@@ -48,6 +48,7 @@
       \li \l {subtitle-command}{\\subtitle}
       \li \l {threadsafe-command}{\\threadsafe}
       \li \l {title-command}{\\title}
+      \li \l {wrapper-command}{\\wrapper}
     \endlist
 
 */
@@ -496,6 +497,14 @@
     marking specific C++ enum values with since information.
 
     See also \l {value-command}{\\value} and \l {ignoresince}.
+
+    \target wrapper-command
+    \section1 \\wrapper
+
+    The \\wrapper command, when used in a C++ class documentation, marks the
+    class as a \e wrapper that provides access to a non-Qt API. This command
+    is used for suppressing warnings that might otherwise be generated for
+    members of such a class.
 */
 
 

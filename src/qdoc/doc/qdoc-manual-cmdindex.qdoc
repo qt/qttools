@@ -127,5 +127,6 @@
     \li \l {variable-command} {\\variable}
     \li \l {value-command} {\\value}
     \li \l {warning-command} {\\warning}
+    \li \l {wrapper-command} {\\wrapper}
     \endlist
 */
