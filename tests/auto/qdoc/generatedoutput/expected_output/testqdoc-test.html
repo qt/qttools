@@ -47,7 +47,6 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <h2 id="public-functions">Public Functions</h2>
 <div class="table"><table class="alignedsummary">
 <tr><td class="memItemLeft rightAlign topAlign"> </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#Test">Test</a></b>()</td></tr>
-<tr><td class="memItemLeft rightAlign topAlign"> TestQDoc::Test &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#operator-eq">operator=</a></b>(TestQDoc::Test &amp;&amp;<i>other</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void (*)(bool) </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#funcPtr">funcPtr</a></b>(bool <i>b</i>, const char *<i>s</i>)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#inlineFunction">inlineFunction</a></b>()</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#methodWithEmDashInItsDocs">methodWithEmDashInItsDocs</a></b>()</td></tr>
@@ -55,6 +54,7 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> int </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunction">someFunction</a></b>(int, int <i>v</i> = 0)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#someFunctionDefaultArg">someFunctionDefaultArg</a></b>(int <i>i</i>, bool <i>b</i> = false)</td></tr>
 <tr><td class="memItemLeft rightAlign topAlign"> virtual void </td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#virtualFun">virtualFun</a></b>()</td></tr>
+<tr><td class="memItemLeft rightAlign topAlign"> TestQDoc::Test &amp;</td><td class="memItemRight bottomAlign"><b><a href="testqdoc-test.html#operator-eq">operator=</a></b>(TestQDoc::Test &amp;&amp;<i>other</i>)</td></tr>
 </table></div>
 <h2 id="protected-functions">Protected Functions</h2>
 <div class="table"><table class="alignedsummary">
@@ -92,10 +92,6 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <h3 class="fn" id="Test"><code>[default] </code>Test::<span class="name">Test</span>()</h3>
 <p>Default constructor.</p>
 <!-- @@@Test -->
-<!-- $$$operator=[overload1]$$$operator=TestQDoc::Test&& -->
-<h3 class="fn" id="operator-eq"><code>[default] </code><span class="type"><a href="testqdoc-test.html">TestQDoc::Test</a></span> &amp;Test::<span class="name">operator=</span>(<span class="type"><a href="testqdoc-test.html">TestQDoc::Test</a></span> &amp;&amp;<i>other</i>)</h3>
-<p>Move-assigns <i>other</i>.</p>
-<!-- @@@operator= -->
 <!-- $$$funcPtr[overload1]$$$funcPtrboolconstchar* -->
 <h3 class="fn" id="funcPtr"><span class="type">void</span> (*)(<span class="type">bool</span>) Test::<span class="name">funcPtr</span>(<span class="type">bool</span> <i>b</i>, const <span class="type">char</span> *<i>s</i>)</h3>
 <p>Returns a pointer to a function that takes a boolean. Uses <i>b</i> and <i>s</i>.</p>
@@ -136,6 +132,10 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <h3 class="fn" id="virtualFun"><code>[virtual] </code><span class="type">void</span> Test::<span class="name">virtualFun</span>()</h3>
 <p>Function that must be reimplemented.</p>
 <!-- @@@virtualFun -->
+<!-- $$$operator=[overload1]$$$operator=TestQDoc::Test&& -->
+<h3 class="fn" id="operator-eq"><code>[default] </code><span class="type"><a href="testqdoc-test.html">TestQDoc::Test</a></span> &amp;Test::<span class="name">operator=</span>(<span class="type"><a href="testqdoc-test.html">TestQDoc::Test</a></span> &amp;&amp;<i>other</i>)</h3>
+<p>Move-assigns <i>other</i>.</p>
+<!-- @@@operator= -->
 </div>
 <div class="relnonmem">
 <h2>Related Non-Members</h2>

@@ -80,24 +80,6 @@
 </db:constructorsynopsis>
 <db:para>Default constructor.</db:para>
 </db:section>
-<db:section xml:id="operator-eq">
-<db:title>[default] Test::TestQDoc::Test &amp;operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
-<db:methodsynopsis>
-<db:type>TestQDoc::Test &amp;</db:type>
-<db:methodname>operator=</db:methodname>
-<db:methodparam>
-<db:type>TestQDoc::Test &amp;&amp;</db:type>
-<db:parameter>other</db:parameter>
-</db:methodparam>
-<db:modifier>default</db:modifier>
-<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
-<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
-<db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
-</db:section>
 <db:section xml:id="funcPtr">
 <db:title>Test::void (*)(bool) funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
 <db:methodsynopsis>
@@ -245,6 +227,24 @@
 <db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that must be reimplemented.</db:para>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[default] Test::TestQDoc::Test &amp;operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>TestQDoc::Test &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>TestQDoc::Test &amp;&amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="related-non-members">

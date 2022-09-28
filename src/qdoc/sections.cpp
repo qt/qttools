@@ -175,24 +175,26 @@ QString sortName(const Node *node)
             nodeName.insert(nodeName.size() - numDigits - 1, QLatin1Char('0'));
     }
 
-    if (node->isFunction()) {
+    if (node->isFunction(Node::CPP)) {
         const auto *fn = static_cast<const FunctionNode *>(node);
-        if (fn->isCppFunction()) {
-            QString sortNo;
-            if (fn->isSomeCtor())
-                sortNo = QLatin1String("C");
-            else if (fn->isDtor())
-                sortNo = QLatin1String("D");
-            else if (nodeName.startsWith(QLatin1String("operator")) && nodeName.length() > 8
-                     && !nodeName[8].isLetterOrNumber())
-                sortNo = QLatin1String("F");
-            else
-                sortNo = QLatin1String("E");
-            return sortNo + nodeName + QLatin1Char(' ') + QString::number(fn->overloadNumber(), 36);
-        }
-        if (fn->isQmlMethod() || fn->isQmlSignal() || fn->isQmlSignalHandler())
-            return QLatin1Char('E') + nodeName;
+
+        QString sortNo;
+        if (fn->isSomeCtor())
+            sortNo = QLatin1String("C");
+        else if (fn->isDtor())
+            sortNo = QLatin1String("D");
+        else if (nodeName.startsWith(QLatin1String("operator")) && nodeName.length() > 8
+                    && !nodeName[8].isLetterOrNumber())
+            sortNo = QLatin1String("F");
+        else
+            sortNo = QLatin1String("E");
+
+        return sortNo + nodeName + QLatin1Char(' ') + QString::number(fn->overloadNumber(), 36);
     }
+
+    if (node->isFunction(Node::QML))
+        return QLatin1Char('E') + nodeName;
+
     if (node->isClassNode())
         return QLatin1Char('A') + nodeName;
 
