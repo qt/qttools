@@ -689,7 +689,7 @@ QString qtDiag(unsigned flags)
         << "  startDragTime: " << styleHints->startDragTime() << '\n'
         << "  startDragVelocity: " << styleHints->startDragVelocity() << '\n'
         << "  keyboardInputInterval: " << styleHints->keyboardInputInterval() << '\n'
-        << "  keyboardAutoRepeatRate: " << styleHints->keyboardAutoRepeatRate() << '\n'
+        << "  keyboardAutoRepeatRateF: " << styleHints->keyboardAutoRepeatRateF() << '\n'
         << "  cursorFlashTime: " << styleHints->cursorFlashTime() << '\n'
         << "  showIsFullScreen: " << styleHints->showIsFullScreen() << '\n'
         << "  showIsMaximized: " << styleHints->showIsMaximized() << '\n'
