@@ -156,14 +156,23 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
 // To list the included files
 void LupdatePPCallbacks::InclusionDirective(clang::SourceLocation /*hashLoc*/,
     const clang::Token & /*includeTok*/, clang::StringRef /*fileName*/, bool /*isAngled*/,
-    clang::CharSourceRange /*filenameRange*/, const clang::FileEntry *file,
+    clang::CharSourceRange /*filenameRange*/,
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(15,0,0))
+    const clang::Optional<clang::FileEntryRef> file,
+#else
+    const clang::FileEntry *file,
+#endif
     clang::StringRef /*searchPath*/, clang::StringRef /*relativePath*/,
     const clang::Module */*imported*/, clang::SrcMgr::CharacteristicKind /*fileType*/)
 {
     if (!file)
         return;
 
-    clang::StringRef fileNameRealPath = file->tryGetRealPathName();
+    clang::StringRef fileNameRealPath = file->
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(15,0,0))
+        getFileEntry().
+#endif
+        tryGetRealPathName();
     if (!LupdatePrivate::isFileSignificant(fileNameRealPath.str()))
         return;
 
