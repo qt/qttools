@@ -4,6 +4,10 @@
 #ifndef ABSTRACTFORMBUILDER_H
 #define ABSTRACTFORMBUILDER_H
 
+#if 0
+#  pragma qt_sync_skip_header_check
+#endif
+
 #include "uilib_global.h"
 
 #include <QtCore/qlist.h>

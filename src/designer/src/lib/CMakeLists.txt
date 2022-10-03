@@ -140,6 +140,7 @@ qt_internal_add_module(Designer
         shared/widgetdatabase.cpp shared/widgetdatabase_p.h
         shared/widgetfactory.cpp shared/widgetfactory_p.h
         shared/zoomwidget.cpp shared/zoomwidget_p.h
+        uilib/uilib_global.h
         uilib/abstractformbuilder.cpp uilib/abstractformbuilder.h
         uilib/formbuilder.cpp uilib/formbuilder.h
         uilib/formbuilderextra.cpp uilib/formbuilderextra_p.h

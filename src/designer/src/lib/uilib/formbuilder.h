@@ -4,15 +4,15 @@
 #ifndef FORMBUILDER_H
 #define FORMBUILDER_H
 
+#if 0
+#  pragma qt_class(QFormBuilder)
+#  pragma qt_sync_skip_header_check
+#endif
+
 #include "uilib_global.h"
 #include "abstractformbuilder.h"
 
 QT_BEGIN_NAMESPACE
-#if 0
-// pragma for syncqt, don't remove.
-
-#pragma qt_class(QFormBuilder)
-#endif
 
 class QDesignerCustomWidgetInterface;
 
