@@ -273,7 +273,7 @@ bool FormMultiWidget::eventFilter(QObject *watched, QEvent *event)
 {
     int i = 0;
     while (m_editors.at(i) != watched)
-        if (++i >= m_editors.count()) // Happens when deleting an editor
+        if (++i >= m_editors.size()) // Happens when deleting an editor
             return false;
     if (event->type() == QEvent::FocusOut) {
         m_minusButtons.at(i)->setToolTip(QString());
@@ -315,7 +315,7 @@ void FormMultiWidget::updateLayout()
     if (variants) {
         QVBoxLayout *layoutForPlusButtons = new QVBoxLayout;
         layoutForPlusButtons->setContentsMargins(QMargins());
-        for (int i = 0; i < m_plusButtons.count(); ++i)
+        for (int i = 0; i < m_plusButtons.size(); ++i)
             layoutForPlusButtons->addWidget(m_plusButtons.at(i), Qt::AlignTop);
         layout->addLayout(layoutForPlusButtons, 1, 0, Qt::AlignTop);
 
@@ -323,20 +323,20 @@ void FormMultiWidget::updateLayout()
         QGridLayout *layoutForLabels = new QGridLayout;
         layoutForLabels->setContentsMargins(QMargins());
         layoutForLabels->setRowMinimumHeight(0, minimumRowHeight);
-        for (int j = 0; j < m_editors.count(); ++j) {
+        for (int j = 0; j < m_editors.size(); ++j) {
             layoutForLabels->addWidget(m_editors.at(j), 1 + j, 0, Qt::AlignVCenter);
             layoutForLabels->addWidget(m_minusButtons.at(j), 1 + j, 1, Qt::AlignVCenter);
         }
-        layoutForLabels->setRowMinimumHeight(m_editors.count() + 1, minimumRowHeight);
+        layoutForLabels->setRowMinimumHeight(m_editors.size() + 1, minimumRowHeight);
         layout->addLayout(layoutForLabels, 1, 1, Qt::AlignTop);
     } else {
-        for (int k = 0; k < m_editors.count(); ++k)
+        for (int k = 0; k < m_editors.size(); ++k)
             layout->addWidget(m_editors.at(k), 1 + k, 0, Qt::AlignVCenter);
     }
 
-    for (int i = 0; i < m_plusButtons.count(); ++i)
+    for (int i = 0; i < m_plusButtons.size(); ++i)
         m_plusButtons.at(i)->setVisible(variants);
-    for (int j = 0; j < m_minusButtons.count(); ++j)
+    for (int j = 0; j < m_minusButtons.size(); ++j)
         m_minusButtons.at(j)->setVisible(variants);
 
     updateGeometry();
@@ -356,16 +356,16 @@ void FormMultiWidget::setTranslation(const QString &text, bool userAction)
 {
     QStringList texts = text.split(QChar(Translator::BinaryVariantSeparator), Qt::KeepEmptyParts);
 
-    while (m_editors.count() > texts.count()) {
+    while (m_editors.size() > texts.size()) {
         delete m_minusButtons.takeLast();
         delete m_plusButtons.takeLast();
         delete m_editors.takeLast();
     }
-    while (m_editors.count() < texts.count())
-        addEditor(m_editors.count());
+    while (m_editors.size() < texts.size())
+        addEditor(m_editors.size());
     updateLayout();
 
-    for (int i = 0; i < texts.count(); ++i)
+    for (int i = 0; i < texts.size(); ++i)
         // XXX this will emit n textChanged signals
         m_editors.at(i)->setPlainText(texts.at(i), userAction);
 
@@ -397,7 +397,7 @@ QString toPlainText(const QString &text)
 QString FormMultiWidget::getTranslation() const
 {
     QString ret;
-    for (int i = 0; i < m_editors.count(); ++i) {
+    for (int i = 0; i < m_editors.size(); ++i) {
         if (i)
             ret += QChar(Translator::BinaryVariantSeparator);
         ret += toPlainText(m_editors.at(i)->document()->toRawText());
@@ -408,7 +408,7 @@ QString FormMultiWidget::getTranslation() const
 void FormMultiWidget::setEditingEnabled(bool enable)
 {
     // Use read-only state so that the text can still be copied
-    for (int i = 0; i < m_editors.count(); ++i)
+    for (int i = 0; i < m_editors.size(); ++i)
         m_editors.at(i)->setReadOnly(!enable);
     m_label->setEnabled(enable);
     if (m_multiEnabled)
@@ -441,7 +441,7 @@ void FormMultiWidget::plusButtonClicked()
 
 void FormMultiWidget::deleteEditor(int idx)
 {
-    if (m_editors.count() == 1) {
+    if (m_editors.size() == 1) {
         // Don't just clear(), so the undo history is not lost
         QTextCursor c = m_editors.first()->textCursor();
         c.select(QTextCursor::Document);
@@ -458,7 +458,7 @@ void FormMultiWidget::deleteEditor(int idx)
         delete m_minusButtons.takeAt(idx);
         delete m_plusButtons.takeAt(idx + 1);
         updateLayout();
-        emit textChanged(m_editors.at((m_editors.count() == idx) ? idx - 1 : idx));
+        emit textChanged(m_editors.at((m_editors.size() == idx) ? idx - 1 : idx));
     }
 }
 

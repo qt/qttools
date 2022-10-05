@@ -31,13 +31,13 @@ ReadQrcResult readQrcFile(const QString &resourceFile, const QString &content)
         QXmlStreamReader::TokenType t = reader.readNext();
         switch (t) {
         case QXmlStreamReader::StartElement:
-            if (curDepth >= tagStack.count() || reader.name() != tagStack.at(curDepth)) {
+            if (curDepth >= tagStack.size() || reader.name() != tagStack.at(curDepth)) {
                 result.errorString = FMT::tr("unexpected <%1> tag\n")
                     .arg(reader.name().toString());
                 result.line = reader.lineNumber();
                 return result;
             }
-            if (++curDepth == tagStack.count())
+            if (++curDepth == tagStack.size())
                 isFileTag = true;
             break;
 

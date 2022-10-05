@@ -1704,7 +1704,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
             // If no nav. parent was found but the page is in a single group, use that
             if (navNodes.empty()) {
                 QStringList groups = static_cast<const PageNode *>(node)->groupNames();
-                if (groups.length() == 1) {
+                if (groups.size() == 1) {
                     const Node *groupNode =
                             m_qdb->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
                     if (groupNode && !groupNode->title().isEmpty())
@@ -2027,7 +2027,7 @@ void HtmlGenerator::addInheritsToMap(QMap<QString, Text> &requisites, Text *text
                 } else if (cls.m_access == Access::Private) {
                     *text << " (private)";
                 }
-                *text << Utilities::comma(index++, classe->baseClasses().count());
+                *text << Utilities::comma(index++, classe->baseClasses().size());
             }
         }
         *text << Atom::ParaRight;
@@ -2710,7 +2710,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
         return;
 
     const int NumParagraphs = 37; // '0' to '9', 'A' to 'Z', '_'
-    qsizetype commonPrefixLen = commonPrefix.length();
+    qsizetype commonPrefixLen = commonPrefix.size();
 
     /*
       Divide the data into 37 paragraphs: 0, ..., 9, A, ..., Z,
@@ -3299,7 +3299,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                 bool handled = false;
                 for (int k = 0; k != nTags; ++k) {
                     const QLatin1String &tag = spanTags[2 * k];
-                    if (i + tag.size() <= src.length() && tag == QStringView(src).mid(i, tag.size())) {
+                    if (i + tag.size() <= src.size() && tag == QStringView(src).mid(i, tag.size())) {
                         html += spanTags[2 * k + 1];
                         i += tag.size();
                         handled = true;
@@ -3318,7 +3318,7 @@ QString HtmlGenerator::highlightedCode(const QString &markedCode, const Node *re
                 bool handled = false;
                 for (int k = 0; k != nTags; ++k) {
                     const QLatin1String &tag = spanTags[2 * k];
-                    if (i + tag.size() <= src.length() && tag == QStringView(src).mid(i, tag.size())) {
+                    if (i + tag.size() <= src.size() && tag == QStringView(src).mid(i, tag.size())) {
                         html += QLatin1String("</span>");
                         i += tag.size();
                         handled = true;
@@ -3373,7 +3373,7 @@ QString HtmlGenerator::protect(const QString &string)
     html += (x);
 
     QString html;
-    qsizetype n = string.length();
+    qsizetype n = string.size();
 
     for (int i = 0; i < n; ++i) {
         QChar ch = string.at(i);

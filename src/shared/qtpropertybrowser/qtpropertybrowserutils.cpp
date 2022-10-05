@@ -67,7 +67,7 @@ void QtCursorDatabase::appendCursor(Qt::CursorShape shape, const QString &name, 
 {
     if (m_cursorShapeToValue.contains(shape))
         return;
-    const int value = m_cursorNames.count();
+    const int value = m_cursorNames.size();
     m_cursorNames.append(name);
     m_cursorIcons.insert(value, icon);
     m_valueToCursorShape.insert(value, shape);

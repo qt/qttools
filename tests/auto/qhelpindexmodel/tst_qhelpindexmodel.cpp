@@ -84,7 +84,7 @@ void tst_QHelpIndexModel::setupIndex()
         QTest::qWait(500);
 
     QCOMPARE(h.currentFilter(), QString("unfiltered"));
-    QCOMPARE(m->stringList().count(), 19);
+    QCOMPARE(m->stringList().size(), 19);
 
     w.start();
     h.setCurrentFilter("Custom Filter 1");
@@ -95,7 +95,7 @@ void tst_QHelpIndexModel::setupIndex()
     QStringList lst;
     lst << "foo" << "bar" << "bla" << "einstein" << "newton";
     const auto stringList = m->stringList();
-    QCOMPARE(stringList.count(), 5);
+    QCOMPARE(stringList.size(), 5);
     for (const QString &s : stringList)
         lst.removeAll(s);
     QCOMPARE(lst.isEmpty(), true);
@@ -116,16 +116,16 @@ void tst_QHelpIndexModel::filter()
         QTest::qWait(500);
 
     QCOMPARE(h.currentFilter(), QString("unfiltered"));
-    QCOMPARE(m->stringList().count(), 19);
+    QCOMPARE(m->stringList().size(), 19);
 
     m->filter("foo");
-    QCOMPARE(m->stringList().count(), 2);
+    QCOMPARE(m->stringList().size(), 2);
 
     m->filter("fo");
-    QCOMPARE(m->stringList().count(), 3);
+    QCOMPARE(m->stringList().size(), 3);
 
     m->filter("qmake");
-    QCOMPARE(m->stringList().count(), 11);
+    QCOMPARE(m->stringList().size(), 11);
 }
 
 QTEST_MAIN(tst_QHelpIndexModel)

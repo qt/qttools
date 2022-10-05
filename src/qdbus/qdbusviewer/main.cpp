@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 #endif
 
     QStringList args = app.arguments();
-    while (args.count()) {
+    while (args.size()) {
         QString arg = args.takeFirst();
         if (arg == QLatin1String("--bus"))
             mw.addCustomBusTab(args.takeFirst());

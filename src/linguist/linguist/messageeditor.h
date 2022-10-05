@@ -46,7 +46,7 @@ public:
     void setNumerusForms(int model, const QStringList &numerusForms);
     bool eventFilter(QObject *, QEvent *) override;
     void setNumerusTranslation(int model, const QString &translation, int numerus);
-    int activeModel() const { return (m_editors.count() != 1) ? m_currentModel : 0; }
+    int activeModel() const { return (m_editors.size() != 1) ? m_currentModel : 0; }
     void setEditorFocusForModel(int model);
     void setUnfinishedEditorFocus();
     bool focusNextUnfinished();

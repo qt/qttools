@@ -1514,11 +1514,11 @@ bool QtCharEdit::eventFilter(QObject *o, QEvent *e)
             QString actionString = action->text();
             const int pos = actionString.lastIndexOf(QLatin1Char('\t'));
             if (pos > 0)
-                actionString = actionString.remove(pos, actionString.length() - pos);
+                actionString = actionString.remove(pos, actionString.size() - pos);
             action->setText(actionString);
         }
         QAction *actionBefore = nullptr;
-        if (actions.count() > 0)
+        if (actions.size() > 0)
             actionBefore = actions[0];
         QAction *clearAction = new QAction(tr("Clear Char"), menu);
         menu->insertAction(actionBefore, clearAction);
@@ -1784,7 +1784,7 @@ void QtEnumEditorFactoryPrivate::slotEnumNamesChanged(QtProperty *property,
         editor->blockSignals(true);
         editor->clear();
         editor->addItems(enumNames);
-        const int nameCount = enumNames.count();
+        const int nameCount = enumNames.size();
         for (int i = 0; i < nameCount; i++)
             editor->setItemIcon(i, enumIcons.value(i));
         editor->setCurrentIndex(manager->value(property));
@@ -1806,7 +1806,7 @@ void QtEnumEditorFactoryPrivate::slotEnumIconsChanged(QtProperty *property,
     const QStringList enumNames = manager->enumNames(property);
     for (QComboBox *editor : it.value()) {
         editor->blockSignals(true);
-        const int nameCount = enumNames.count();
+        const int nameCount = enumNames.size();
         for (int i = 0; i < nameCount; i++)
             editor->setItemIcon(i, enumIcons.value(i));
         editor->setCurrentIndex(manager->value(property));
@@ -1886,7 +1886,7 @@ QWidget *QtEnumEditorFactory::createEditor(QtEnumPropertyManager *manager, QtPro
     QStringList enumNames = manager->enumNames(property);
     editor->addItems(enumNames);
     QMap<int, QIcon> enumIcons = manager->enumIcons(property);
-    const int enumNamesCount = enumNames.count();
+    const int enumNamesCount = enumNames.size();
     for (int i = 0; i < enumNamesCount; i++)
         editor->setItemIcon(i, enumIcons.value(i));
     editor->setCurrentIndex(manager->value(property));

@@ -90,7 +90,7 @@ void tst_QHelpEngineCore::setCollectionFile()
     QCOMPARE(help.collectionFile(), QFileInfo(col1File).absoluteFilePath());
 
     QStringList docs = help.registeredDocumentations();
-    QCOMPARE(docs.count(), 1);
+    QCOMPARE(docs.size(), 1);
     QCOMPARE(docs.first(), QLatin1String("trolltech.com.1.0.0.test"));
 }
 
@@ -164,7 +164,7 @@ void tst_QHelpEngineCore::registeredDocumentations()
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
     const QStringList docs = help.registeredDocumentations();
-    QCOMPARE(docs.count(), 3);
+    QCOMPARE(docs.size(), 3);
     QStringList lst;
     lst << "trolltech.com.3-3-8.qmake" << "trolltech.com.4-3-0.qmake"
         << "trolltech.com.1.0.0.test";
@@ -182,11 +182,11 @@ void tst_QHelpEngineCore::registerDocumentation()
         c.setReadOnly(false);
         QCOMPARE(c.setupData(), true);
         c.registerDocumentation(m_path + "/data/qmake-3.3.8.qch");
-        QCOMPARE(c.registeredDocumentations().count(), 1);
+        QCOMPARE(c.registeredDocumentations().size(), 1);
         c.registerDocumentation(m_path + "/data/qmake-3.3.8.qch");
-        QCOMPARE(c.registeredDocumentations().count(), 1);
+        QCOMPARE(c.registeredDocumentations().size(), 1);
         c.registerDocumentation(m_path + "/data/linguist-3.3.8.qch");
-        QCOMPARE(c.registeredDocumentations().count(), 2);
+        QCOMPARE(c.registeredDocumentations().size(), 2);
     }
 
     {
@@ -213,9 +213,9 @@ void tst_QHelpEngineCore::unregisterDocumentation()
     QHelpEngineCore c(m_colFile);
     c.setReadOnly(false);
     QCOMPARE(c.setupData(), true);
-    QCOMPARE(c.registeredDocumentations().count(), 3);
+    QCOMPARE(c.registeredDocumentations().size(), 3);
     c.unregisterDocumentation("trolltech.com.3-3-8.qmake");
-    QCOMPARE(c.registeredDocumentations().count(), 2);
+    QCOMPARE(c.registeredDocumentations().size(), 2);
     QCOMPARE(c.unregisterDocumentation("noexisting"), false);
 }
 
@@ -236,13 +236,13 @@ void tst_QHelpEngineCore::customFilters()
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
     const QStringList custom = help.customFilters();
-    QCOMPARE(custom.count(), 4);
+    QCOMPARE(custom.size(), 4);
     QStringList lst;
     lst << "qmake Manual" << "Custom Filter 1"
         << "Custom Filter 2" << "unfiltered";
     for (const QString &s : custom)
         lst.removeAll(s);
-    QCOMPARE(lst.count(), 0);
+    QCOMPARE(lst.size(), 0);
 }
 
 void tst_QHelpEngineCore::removeCustomFilter()
@@ -251,7 +251,7 @@ void tst_QHelpEngineCore::removeCustomFilter()
     QCOMPARE(help.setupData(), true);
     help.removeCustomFilter("Custom Filter 1");
     QStringList custom = help.customFilters();
-    QCOMPARE(custom.count(), 3);
+    QCOMPARE(custom.size(), 3);
     QCOMPARE((bool)custom.contains("Custom Filter 1"), false);
 }
 
@@ -261,7 +261,7 @@ void tst_QHelpEngineCore::addCustomFilter()
     QCOMPARE(help.setupData(), true);
     help.addCustomFilter("Qt Tools", QStringList() << "tools" << "qt");
     QStringList custom = help.customFilters();
-    QCOMPARE(custom.count(), 5);
+    QCOMPARE(custom.size(), 5);
     QCOMPARE((bool)custom.contains("Qt Tools"), true);
 }
 
@@ -270,12 +270,12 @@ void tst_QHelpEngineCore::filterAttributes()
     QHelpEngineCore help(m_colFile, 0);
     QCOMPARE(help.setupData(), true);
     const QStringList atts = help.filterAttributes("qmake Manual");
-    QCOMPARE(atts.count(), 3);
+    QCOMPARE(atts.size(), 3);
     QStringList lst;
     lst << "qmake" << "tools" << "qt";
     for (const QString &s : atts)
         lst.removeAll(s);
-    QCOMPARE(lst.count(), 0);
+    QCOMPARE(lst.size(), 0);
 }
 
 void tst_QHelpEngineCore::currentFilter()
@@ -302,8 +302,8 @@ void tst_QHelpEngineCore::filterAttributeSets()
     help.setReadOnly(false);
     QCOMPARE(help.setupData(), true);
     QList<QStringList> lst = help.filterAttributeSets("trolltech.com.1.0.0.test");
-    QCOMPARE(lst.count(), 2);
-    QCOMPARE(lst.first().count(), 2);
+    QCOMPARE(lst.size(), 2);
+    QCOMPARE(lst.first().size(), 2);
     QCOMPARE((bool)lst.first().contains("filter1"), true);
     QCOMPARE((bool)lst.last().contains("filter2"), true);
 }
@@ -315,26 +315,26 @@ void tst_QHelpEngineCore::files()
     QCOMPARE(help.setupData(), true);
     QList<QUrl> lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList());
-    QCOMPARE(lst.count(), 16);
+    QCOMPARE(lst.size(), 16);
     lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList(), "png");
-    QCOMPARE(lst.count(), 2);
+    QCOMPARE(lst.size(), 2);
     lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList() << "qt", "html");
-    QCOMPARE(lst.count(), 13);
+    QCOMPARE(lst.size(), 13);
     lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList() << "qt" << "qmake", "html");
-    QCOMPARE(lst.count(), 13);
+    QCOMPARE(lst.size(), 13);
     lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList() << "qt" << "qmake" << "bla", "html");
-    QCOMPARE(lst.count(), 0);
+    QCOMPARE(lst.size(), 0);
     lst = help.files("trolltech.com.4-3-0.qmake",
         QStringList() << "qt" << "qmake", "foo");
 
     // print 'lst' if test fails:
     auto printRemainder = qScopeGuard([&]{ for (const QUrl &url : lst) qDebug() << url; });
 
-    QCOMPARE(lst.count(), 0);
+    QCOMPARE(lst.size(), 0);
 
     printRemainder.dismiss();
 }

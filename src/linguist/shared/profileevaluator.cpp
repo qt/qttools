@@ -127,7 +127,7 @@ QStringList ProFileEvaluator::absoluteFileValues(
             // because no sane project would add generated files by wildcard.
             if (IoUtils::fileType(absDir) == IoUtils::FileIsDir) {
                 QString wildcard = d->m_tmp2.setRawData(absEl.constData() + nameOff + 1,
-                                                        absEl.length() - nameOff - 1);
+                                                        absEl.size() - nameOff - 1);
                 if (wildcard.contains(QLatin1Char('*')) || wildcard.contains(QLatin1Char('?'))) {
                     QDir theDir(absDir);
                     for (const QString &fn : theDir.entryList(QStringList(wildcard)))
@@ -144,7 +144,7 @@ QStringList ProFileEvaluator::absoluteFileValues(
 ProFileEvaluator::TemplateType ProFileEvaluator::templateType() const
 {
     const ProStringList &templ = d->values(ProKey("TEMPLATE"));
-    if (templ.count() >= 1) {
+    if (templ.size() >= 1) {
         const QString &t = templ.at(0).toQString();
         if (!t.compare(QLatin1String("app"), Qt::CaseInsensitive))
             return TT_Application;

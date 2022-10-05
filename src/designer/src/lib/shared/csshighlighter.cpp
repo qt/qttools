@@ -54,7 +54,7 @@ void CssHighlighter::highlightBlock(const QString& text)
         state = save_state;
     }
 
-    for (int i = 0; i < text.length(); i++) {
+    for (int i = 0; i < text.size(); i++) {
         int token = ALNUM;
         const QChar c = text.at(i);
         const char a = c.toLatin1();
@@ -106,13 +106,13 @@ void CssHighlighter::highlightBlock(const QString& text)
         }
     }
 
-    highlight(text, lastIndex, text.length() - lastIndex, state);
+    highlight(text, lastIndex, text.size() - lastIndex, state);
     setCurrentBlockState(state + (save_state<<16));
 }
 
 void CssHighlighter::highlight(const QString &text, int start, int length, int state)
 {
-    if (start >= text.length() || length <= 0)
+    if (start >= text.size() || length <= 0)
         return;
 
     QTextCharFormat format;

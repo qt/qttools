@@ -19,7 +19,7 @@ public:
     void appendHotspot()
     {
         if (m_hotspot == -1)
-            m_hotspot = m_str.length();
+            m_hotspot = m_str.size();
     }
 
     [[nodiscard]] bool isEmpty() const { return m_str.isEmpty(); }
@@ -27,11 +27,11 @@ public:
     [[nodiscard]] QString toString() const { return m_str; }
     [[nodiscard]] QString left() const
     {
-        return m_str.left(m_hotspot == -1 ? m_str.length() : m_hotspot);
+        return m_str.left(m_hotspot == -1 ? m_str.size() : m_hotspot);
     }
     [[nodiscard]] QString right() const
     {
-        return m_str.mid(m_hotspot == -1 ? m_str.length() : m_hotspot);
+        return m_str.mid(m_hotspot == -1 ? m_str.size() : m_hotspot);
     }
 
 private:

@@ -133,7 +133,7 @@ void tst_QHelpGenerator::checkFiles()
         "AND b.FileId=a.FileID AND c.Name=\'filter1\'");
     while (m_query->next())
         lst.removeAll(m_query->value(0).toString());
-    QCOMPARE(lst.count(), 0);
+    QCOMPARE(lst.size(), 0);
 
     QMap<int, QStringList> fileAtts;
     m_query->exec("SELECT a.Id, b.Name FROM FileAttributeSetTable a, "
@@ -144,7 +144,7 @@ void tst_QHelpGenerator::checkFiles()
             fileAtts.insert(id, QStringList());
         fileAtts[id].append(m_query->value(1).toString());
     }
-    QCOMPARE(fileAtts.count(), 2);
+    QCOMPARE(fileAtts.size(), 2);
     QVERIFY(fileAtts.value(1).contains("test"));
     QVERIFY(fileAtts.value(1).contains("filter1"));
     QVERIFY(!fileAtts.value(1).contains("filter2"));

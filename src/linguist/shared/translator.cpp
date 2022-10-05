@@ -99,7 +99,7 @@ void Translator::replaceSorted(const TranslatorMessage &msg)
 
 static QString elidedId(const QString &id, int len)
 {
-    return id.length() <= len ? id : id.left(len - 5) + QLatin1String("[...]");
+    return id.size() <= len ? id : id.left(len - 5) + QLatin1String("[...]");
 }
 
 static QString makeMsgId(const TranslatorMessage &msg)
@@ -454,7 +454,7 @@ void Translator::stripIdenticalSourceTranslations()
 {
     for (auto it = m_messages.begin(); it != m_messages.end(); ) {
         // we need to have just one translation, and it be equal to the source
-        if (it->translations().count() == 1 && it->translation() == it->sourceText())
+        if (it->translations().size() == 1 && it->translation() == it->sourceText())
             it = m_messages.erase(it);
         else
             ++it;
@@ -657,11 +657,11 @@ QStringList Translator::normalizedTranslations(const TranslatorMessage &msg, int
 
     // make sure that the stringlist always have the size of the
     // language's current numerus, or 1 if its not plural
-    if (translations.count() > numTranslations) {
-        for (int i = translations.count(); i > numTranslations; --i)
+    if (translations.size() > numTranslations) {
+        for (int i = translations.size(); i > numTranslations; --i)
             translations.removeLast();
-    } else if (translations.count() < numTranslations) {
-        for (int i = translations.count(); i < numTranslations; ++i)
+    } else if (translations.size() < numTranslations) {
+        for (int i = translations.size(); i < numTranslations; ++i)
             translations.append(QString());
     }
     return translations;
@@ -677,16 +677,16 @@ void Translator::normalizeTranslations(ConversionData &cd)
     if (l != QLocale::C) {
         QStringList forms;
         if (getNumerusInfo(l, c, 0, &forms, 0))
-            numPlurals = forms.count(); // includes singular
+            numPlurals = forms.size(); // includes singular
     }
     for (int i = 0; i < m_messages.count(); ++i) {
         const TranslatorMessage &msg = m_messages.at(i);
         QStringList tlns = msg.translations();
         int ccnt = msg.isPlural() ? numPlurals : 1;
-        if (tlns.count() != ccnt) {
-            while (tlns.count() < ccnt)
+        if (tlns.size() != ccnt) {
+            while (tlns.size() < ccnt)
                 tlns.append(QString());
-            while (tlns.count() > ccnt) {
+            while (tlns.size() > ccnt) {
                 tlns.removeLast();
                 truncated = true;
             }

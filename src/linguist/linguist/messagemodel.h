@@ -84,7 +84,7 @@ public:
     bool isFinished() const { return unfinishedCount() == 0; }
 
     MessageItem *messageItem(int i) const;
-    int messageCount() const { return msgItemList.count(); }
+    int messageCount() const { return msgItemList.size(); }
 
     MessageItem *findMessage(const QString &sourcetext, const QString &comment) const;
 
@@ -147,7 +147,7 @@ public:
     enum FindLocation { NoLocation = 0, SourceText = 0x1, Translations = 0x2, Comments = 0x4 };
 
     // Specializations
-    int contextCount() const { return m_contextList.count(); }
+    int contextCount() const { return m_contextList.size(); }
     ContextItem *findContext(const QString &context) const;
     MessageItem *findMessage(const QString &context, const QString &sourcetext,
         const QString &comment) const;
@@ -284,7 +284,7 @@ public:
 
     QString context() const { return m_context; }
     QString comment() const { return m_comment; }
-    int messageCount() const { return m_messageLists.isEmpty() ? 0 : m_messageLists[0].count(); }
+    int messageCount() const { return m_messageLists.isEmpty() ? 0 : m_messageLists[0].size(); }
     // For item count in context list
     int getNumFinished() const { return m_finishedCount; }
     int getNumEditable() const { return m_editableCount; }
@@ -377,8 +377,8 @@ public:
     void moveModel(int oldPos, int newPos); // newPos is *before* removing at oldPos; note that this does not emit update signals
 
     // Entire multi-model
-    int modelCount() const { return m_dataModels.count(); }
-    int contextCount() const { return m_multiContextList.count(); }
+    int modelCount() const { return m_dataModels.size(); }
+    int contextCount() const { return m_multiContextList.size(); }
     int messageCount() const { return m_numMessages; }
     // Next two needed for progress indicator in main window
     int getNumFinished() const { return m_numFinished; }

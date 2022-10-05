@@ -144,11 +144,11 @@ QString ParserTool::transcode(const QString &str)
     const QByteArray in = str.toUtf8();
     QByteArray out;
 
-    out.reserve(in.length());
-    for (int i = 0; i < in.length();) {
+    out.reserve(in.size());
+    for (int i = 0; i < in.size();) {
         uchar c = in[i++];
         if (c == '\\') {
-            if (i >= in.length())
+            if (i >= in.size())
                 break;
             c = in[i++];
 
@@ -158,7 +158,7 @@ QString ParserTool::transcode(const QString &str)
             if (c == 'x' || c == 'u' || c == 'U') {
                 const bool unicode = (c != 'x');
                 QByteArray hex;
-                while (i < in.length() && isxdigit((c = in[i]))) {
+                while (i < in.size() && isxdigit((c = in[i]))) {
                     hex += c;
                     i++;
                 }
@@ -170,7 +170,7 @@ QString ParserTool::transcode(const QString &str)
                 QByteArray oct;
                 int n = 0;
                 oct += c;
-                while (n < 2 && i < in.length() && (c = in[i]) >= '0' && c < '8') {
+                while (n < 2 && i < in.size() && (c = in[i]) >= '0' && c < '8') {
                     i++;
                     n++;
                     oct += c;
@@ -184,7 +184,7 @@ QString ParserTool::transcode(const QString &str)
             out += c;
         }
     }
-    return QString::fromUtf8(out.constData(), out.length());
+    return QString::fromUtf8(out.constData(), out.size());
 }
 
 static QString m_defaultExtensions;
@@ -580,7 +580,7 @@ static QSet<QString> projectRoots(const QString &projectFile, const QStringList 
         sourceDirs.insert(sf.left(sf.lastIndexOf(QLatin1Char('/')) + 1));
     QStringList rootList = sourceDirs.values();
     rootList.sort();
-    for (int prev = 0, curr = 1; curr < rootList.length(); )
+    for (int prev = 0, curr = 1; curr < rootList.size(); )
         if (rootList.at(curr).startsWith(rootList.at(prev)))
             rootList.removeAt(curr);
         else
@@ -883,7 +883,7 @@ int main(int argc, char **argv)
             outDir = QDir::cleanPath(QFileInfo(args[i]).absoluteFilePath());
             continue;
         } else if (arg.startsWith(QLatin1String("-I"))) {
-            if (arg.length() == 2) {
+            if (arg.size() == 2) {
                 ++i;
                 if (i == argc) {
                     printErr(u"The -I option should be followed by a path.\n"_s);
@@ -931,7 +931,7 @@ int main(int argc, char **argv)
                 QString lineContent = QString::fromLocal8Bit(lstFile.readLine().trimmed());
 
                 if (lineContent.startsWith(QLatin1String("-I"))) {
-                    if (lineContent.length() == 2) {
+                    if (lineContent.size() == 2) {
                         printErr(u"The -I option should be followed by a path.\n"_s);
                         return 1;
                     }
@@ -996,7 +996,7 @@ int main(int argc, char **argv)
                         filters |= QDir::AllDirs | QDir::NoDotAndDotDot;
                     QFileInfoList fileinfolist;
                     recursiveFileInfoList(dir, extensionsNameFilters, filters, &fileinfolist);
-                    int scanRootLen = dir.absolutePath().length();
+                    int scanRootLen = dir.absolutePath().size();
                     for (const QFileInfo &fi : qAsConst(fileinfolist)) {
                         QString fn = QDir::cleanPath(fi.absoluteFilePath());
                         if (fn.endsWith(QLatin1String(".qrc"), Qt::CaseInsensitive)) {
@@ -1038,7 +1038,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    if (!targetLanguage.isEmpty() && tsFileNames.count() != 1)
+    if (!targetLanguage.isEmpty() && tsFileNames.size() != 1)
         printErr(u"lupdate warning: -target-language usually only"
                   " makes sense with exactly one TS file.\n"_s);
 

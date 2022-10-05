@@ -49,8 +49,8 @@ SCENARIO("Binding a QString to a length range", "[QString][Bounds]") {
                 QString generated_string = GENERATE_COPY(take(1, string(character(), minimum_length, maximum_length)));
 
                 THEN("The generated string's length is in the range [minimum_length, maximum_length]") {
-                    REQUIRE(generated_string.length() >= minimum_length);
-                    REQUIRE(generated_string.length() <= maximum_length);
+                    REQUIRE(generated_string.size() >= minimum_length);
+                    REQUIRE(generated_string.size() <= maximum_length);
                 }
             }
         }
@@ -67,7 +67,7 @@ TEST_CASE("When the maximum length and the minimum length are equal, all generat
     auto length = GENERATE(take(100, random(0, 100)));
     auto generated_string = GENERATE_COPY(take(100, string(character(), length, length)));
 
-    REQUIRE(generated_string.length() == length);
+    REQUIRE(generated_string.size() == length);
 }
 
 SCENARIO("Limiting the characters that can compose a QString", "[QString][Contents]") {

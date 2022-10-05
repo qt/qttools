@@ -47,7 +47,7 @@ void BatchTranslationDialog::setPhraseBooks(const QList<PhraseBook *> &phraseboo
     m_model.insertColumn(0);
     m_phrasebooks = phrasebooks;
     m_modelIndex = modelIndex;
-    int count = phrasebooks.count();
+    int count = phrasebooks.size();
     m_model.insertRows(0, count);
     for (int i = 0; i < count; ++i) {
         QModelIndex idx(m_model.index(i, 0));

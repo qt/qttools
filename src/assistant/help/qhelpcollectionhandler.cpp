@@ -168,7 +168,7 @@ bool QHelpCollectionHandler::openCollectionFile()
 
     m_query->exec(queryString);
     m_query->next();
-    if (m_query->value(0).toInt() != newTables.count()) {
+    if (m_query->value(0).toInt() != newTables.size()) {
         if (!recreateIndexAndNamespaceFilterTables(m_query)) {
             emit error(tr("Cannot create index tables in file %1.").arg(collectionFile()));
             return false;
@@ -958,7 +958,7 @@ static QHelpCollectionHandler::FileInfo extractFileInfo(const QUrl &url)
     if (fileInfo.fileName.startsWith(QLatin1Char('/')))
         fileInfo.fileName = fileInfo.fileName.mid(1);
     fileInfo.folderName = fileInfo.fileName.mid(0, fileInfo.fileName.indexOf(QLatin1Char('/'), 1));
-    fileInfo.fileName.remove(0, fileInfo.folderName.length() + 1);
+    fileInfo.fileName.remove(0, fileInfo.folderName.size() + 1);
 
     return fileInfo;
 }
@@ -1101,8 +1101,8 @@ static QString prepareFilterQuery(int attributesCount,
 void bindFilterQuery(QSqlQuery *query, int startingBindPos, const QStringList &filterAttributes)
 {
     for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < filterAttributes.count(); j++) {
-            query->bindValue(i * filterAttributes.count() + j + startingBindPos,
+        for (int j = 0; j < filterAttributes.size(); j++) {
+            query->bindValue(i * filterAttributes.size() + j + startingBindPos,
                              filterAttributes.at(j));
         }
     }
@@ -1131,7 +1131,7 @@ QString QHelpCollectionHandler::namespaceForFile(const QUrl &url,
                 "AND FolderTable.NamespaceId = NamespaceTable.Id");
 
     const QString filterQuery = filterlessQuery
-            + prepareFilterQuery(filterAttributes.count(),
+            + prepareFilterQuery(filterAttributes.size(),
                                  QLatin1String("FileNameTable"),
                                  QLatin1String("FileId"),
                                  QLatin1String("FileFilterTable"),
@@ -1244,7 +1244,7 @@ QStringList QHelpCollectionHandler::files(const QString &namespaceName,
                 "AND NamespaceTable.Name = ?") + extensionQuery;
 
     const QString filterQuery = filterlessQuery
-            + prepareFilterQuery(filterAttributes.count(),
+            + prepareFilterQuery(filterAttributes.size(),
                                  QLatin1String("FileNameTable"),
                                  QLatin1String("FileId"),
                                  QLatin1String("FileFilterTable"),
@@ -1389,7 +1389,7 @@ QStringList QHelpCollectionHandler::indicesForFilter(const QStringList &filterAt
                 "AND IndexTable.NamespaceId = NamespaceTable.Id");
 
     const QString filterQuery = filterlessQuery
-            + prepareFilterQuery(filterAttributes.count(),
+            + prepareFilterQuery(filterAttributes.size(),
                                  QLatin1String("IndexTable"),
                                  QLatin1String("Id"),
                                  QLatin1String("IndexFilterTable"),
@@ -1483,7 +1483,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
                 "AND VersionTable.NamespaceId = NamespaceTable.Id");
 
     const QString filterQuery = filterlessQuery
-            + prepareFilterQuery(filterAttributes.count(),
+            + prepareFilterQuery(filterAttributes.size(),
                                  QLatin1String("ContentsTable"),
                                  QLatin1String("Id"),
                                  QLatin1String("ContentsFilterTable"),
@@ -2010,7 +2010,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         const int attributeId = m_query->value(0).toInt();
 
         QVariantList attributeIds;
-        for (int i = 0; i < it.value().count(); i++)
+        for (int i = 0; i < it.value().size(); i++)
             attributeIds.append(attributeId);
 
         m_query->prepare(QLatin1String("INSERT INTO FileFilterTable VALUES(?, ?)"));
@@ -2072,7 +2072,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         const int attributeId = m_query->value(0).toInt();
 
         QVariantList attributeIds;
-        for (int i = 0; i < it.value().count(); i++)
+        for (int i = 0; i < it.value().size(); i++)
             attributeIds.append(attributeId);
 
         m_query->prepare(QLatin1String("INSERT INTO IndexFilterTable VALUES(?, ?)"));
@@ -2124,7 +2124,7 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         const int attributeId = m_query->value(0).toInt();
 
         QVariantList attributeIds;
-        for (int i = 0; i < it.value().count(); i++)
+        for (int i = 0; i < it.value().size(); i++)
             attributeIds.append(attributeId);
 
         m_query->prepare(QLatin1String("INSERT INTO ContentsFilterTable VALUES(?, ?)"));
@@ -2343,7 +2343,7 @@ QList<QHelpLink> QHelpCollectionHandler::documentsForField(
                 "AND IndexTable.%1 = ?").arg(fieldName);
 
     const QString filterQuery = filterlessQuery
-            + prepareFilterQuery(filterAttributes.count(),
+            + prepareFilterQuery(filterAttributes.size(),
                                  QLatin1String("IndexTable"),
                                  QLatin1String("Id"),
                                  QLatin1String("IndexFilterTable"),

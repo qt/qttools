@@ -28,7 +28,7 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
     int i = 0;
     int j = 0;
     const QList<QQmlJS::SourceLocation> comments = engine->comments();
-    while (i < comments.size() && j < pragmas.length()) {
+    while (i < comments.size() && j < pragmas.size()) {
         if (comments[i].offset < pragmas[j].offset) {
             m_extraTypes.append(Comment);
             m_extraLocations.append(comments[i]);
@@ -46,7 +46,7 @@ QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
         ++i;
     }
 
-    while (j < pragmas.length()) {
+    while (j < pragmas.size()) {
         m_extraTypes.append(Pragma);
         m_extraLocations.append(pragmas[j]);
         ++j;
@@ -62,7 +62,7 @@ static const QString squot = QLatin1String("&quot;");
 
 QString QmlMarkupVisitor::protect(const QString &str)
 {
-    qsizetype n = str.length();
+    qsizetype n = str.size();
     QString marked;
     marked.reserve(n * 2 + 30);
     const QChar *data = str.constData();
@@ -89,8 +89,8 @@ QString QmlMarkupVisitor::protect(const QString &str)
 
 QString QmlMarkupVisitor::markedUpCode()
 {
-    if (int(m_cursor) < m_source.length())
-        addExtra(m_cursor, m_source.length());
+    if (int(m_cursor) < m_source.size())
+        addExtra(m_cursor, m_source.size());
 
     return m_output;
 }
@@ -102,7 +102,7 @@ bool QmlMarkupVisitor::hasError() const
 
 void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
 {
-    if (m_extraIndex >= m_extraLocations.length()) {
+    if (m_extraIndex >= m_extraLocations.size()) {
         QString extra = m_source.mid(start, finish - start);
         if (extra.trimmed().isEmpty())
             m_output += extra;
@@ -113,7 +113,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
         return;
     }
 
-    while (m_extraIndex < m_extraLocations.length()) {
+    while (m_extraIndex < m_extraLocations.size()) {
         if (m_extraTypes[m_extraIndex] == Comment) {
             if (m_extraLocations[m_extraIndex].offset - 2 >= start)
                 break;
@@ -125,7 +125,7 @@ void QmlMarkupVisitor::addExtra(quint32 start, quint32 finish)
     }
 
     quint32 i = start;
-    while (i < finish && m_extraIndex < m_extraLocations.length()) {
+    while (i < finish && m_extraIndex < m_extraLocations.size()) {
         quint32 j = m_extraLocations[m_extraIndex].offset - 2;
         if (i <= j && j < finish) {
             if (i < j)

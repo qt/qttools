@@ -77,7 +77,7 @@ BookmarkModel::setBookmarks(const QByteArray &bookmarks)
     QString name, url;
     while (!stream.atEnd()) {
         stream >> depth >> name >> url >> expanded;
-        while ((parents.count() - 1) != depth)
+        while ((parents.size() - 1) != depth)
             parents.pop();
 
         BookmarkItem *item = new BookmarkItem(DataVector() << name << url << expanded);

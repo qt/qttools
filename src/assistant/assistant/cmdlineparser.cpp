@@ -56,7 +56,7 @@ CmdLineParser::CmdLineParser(const QStringList &arguments)
     m_quiet(false)
 {
     TRACE_OBJ
-    for (int i = 1; i < arguments.count(); ++i) {
+    for (int i = 1; i < arguments.size(); ++i) {
         const QString &arg = arguments.at(i);
         if (arg.toLower() == "-quiet")
             m_quiet = true;
@@ -113,7 +113,7 @@ CmdLineParser::Result CmdLineParser::parse()
 bool CmdLineParser::hasMoreArgs() const
 {
     TRACE_OBJ
-    return m_pos < m_arguments.count();
+    return m_pos < m_arguments.size();
 }
 
 const QString &CmdLineParser::nextArg()

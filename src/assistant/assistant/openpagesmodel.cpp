@@ -19,7 +19,7 @@ OpenPagesModel::OpenPagesModel(QObject *parent) : QAbstractTableModel(parent)
 int OpenPagesModel::rowCount(const QModelIndex &parent) const
 {
     TRACE_OBJ
-    return  parent.isValid() ? 0 : m_pages.count();
+    return  parent.isValid() ? 0 : m_pages.size();
 }
 
 int OpenPagesModel::columnCount(const QModelIndex &/*parent*/) const

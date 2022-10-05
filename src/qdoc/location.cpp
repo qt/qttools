@@ -342,7 +342,7 @@ void Location::emitMessage(MessageType type, const QString &message, const QStri
     if (type == Warning && s_spuriousRegExp != nullptr) {
         auto match = s_spuriousRegExp->match(message, 0, QRegularExpression::NormalMatch,
                                              QRegularExpression::AnchorAtOffsetMatchOption);
-        if (match.hasMatch() && match.capturedLength() == message.length())
+        if (match.hasMatch() && match.capturedLength() == message.size())
             return;
     }
 

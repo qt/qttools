@@ -71,7 +71,7 @@ void RecentFiles::addFiles(const QStringList &names)
             m_strLists.removeAt(index);
             m_clone1st = true;
         } else {
-            if (m_strLists.count() >= m_maxEntries)
+            if (m_strLists.size() >= m_maxEntries)
                 m_strLists.removeLast();
             m_clone1st = false;
         }

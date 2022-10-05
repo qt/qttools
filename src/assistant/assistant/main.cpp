@@ -43,10 +43,10 @@ updateLastPagesOnUnregister(QHelpEngineCore& helpEngine, const QString& nsName)
     QStringList currentPages = CollectionConfiguration::lastShownPages(helpEngine);
     if (!currentPages.isEmpty()) {
         QStringList zoomList = CollectionConfiguration::lastZoomFactors(helpEngine);
-        while (zoomList.count() < currentPages.count())
+        while (zoomList.size() < currentPages.size())
             zoomList.append(CollectionConfiguration::DefaultZoomFactor);
 
-        for (int i = currentPages.count(); --i >= 0;) {
+        for (int i = currentPages.size(); --i >= 0;) {
             if (QUrl(currentPages.at(i)).host() == nsName) {
                 zoomList.removeAt(i);
                 currentPages.removeAt(i);

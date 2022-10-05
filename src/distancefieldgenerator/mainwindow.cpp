@@ -332,11 +332,11 @@ void MainWindow::save()
 
             TableRecord qtdfRecord;
             qtdfRecord.offset = qToBigEndian(currentOffset);
-            qtdfRecord.length = qToBigEndian(qtdf.length());
+            qtdfRecord.length = qToBigEndian(qtdf.size());
             qtdfRecord.tag = qToBigEndian(MAKE_TAG('q', 't', 'd', 'f'));
             quint32 checkSum = 0;
             const quint32 *start = reinterpret_cast<const quint32 *>(qtdf.constData());
-            const quint32 *end = reinterpret_cast<const quint32 *>(qtdf.constData() + qtdf.length());
+            const quint32 *end = reinterpret_cast<const quint32 *>(qtdf.constData() + qtdf.size());
             while (start < end)
                 checkSum += *(start++);
             qtdfRecord.checkSum = qToBigEndian(checkSum);
@@ -362,7 +362,7 @@ void MainWindow::save()
 
     quint32 checkSum = 0;
     const quint32 *start = reinterpret_cast<const quint32 *>(output.constData());
-    const quint32 *end = reinterpret_cast<const quint32 *>(output.constData() + output.length());
+    const quint32 *end = reinterpret_cast<const quint32 *>(output.constData() + output.size());
     while (start < end)
         checkSum += *(start++);
 

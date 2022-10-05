@@ -459,7 +459,7 @@ void Parameters::set(const QString &signature)
                 qSwap(pType, pName);
             else {
                 int j = 0;
-                while (j < pName.length() && !pName.at(j).isLetter())
+                while (j < pName.size() && !pName.at(j).isLetter())
                     j++;
                 if (j > 0) {
                     pType += QChar(' ') + pName.left(j);

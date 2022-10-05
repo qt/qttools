@@ -1158,7 +1158,7 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     // split 'name_number'
     qlonglong num = 0;
     qlonglong factor = 1;
-    int idx = s.length()-1;
+    int idx = s.size()-1;
     const ushort zeroUnicode = QLatin1Char('0').unicode();
     for ( ; idx > 0 && s.at(idx).isDigit(); --idx) {
         num += (s.at(idx).unicode() - zeroUnicode) * factor;
@@ -1171,7 +1171,7 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     }  else {
         num = 1;
         s += underscore;
-        idx = s.length();
+        idx = s.size();
     }
     // try 'name_n', 'name_n+1'
     for (num++ ; ;num++) {

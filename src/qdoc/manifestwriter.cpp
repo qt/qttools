@@ -225,7 +225,7 @@ void ManifestWriter::generateManifestFile(const QString &manifest, const QString
             for (const auto &attribute : attributes) {
                 const QLatin1Char div(':');
                 QStringList attrList = attribute.split(div);
-                if (attrList.count() == 1)
+                if (attrList.size() == 1)
                     attrList.append(QStringLiteral("true"));
                 QString attrName = attrList.takeFirst();
                 if (!usedAttributes.contains(attrName))

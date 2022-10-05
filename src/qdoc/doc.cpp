@@ -168,7 +168,7 @@ Text Doc::trimmedBriefText(const QString &className) const
         whats = w.join(' ');
 
         if (whats.endsWith(QLatin1Char('.')))
-            whats.truncate(whats.length() - 1);
+            whats.truncate(whats.size() - 1);
 
         if (!whats.isEmpty())
             whats[0] = whats[0].toUpper();
@@ -376,7 +376,7 @@ void Doc::trimCStyleComment(Location &location, QString &str)
     int asterColumn = location.columnNo() + 1;
     int i;
 
-    for (i = 0; i < str.length(); ++i) {
+    for (i = 0; i < str.size(); ++i) {
         if (m.columnNo() == asterColumn) {
             if (str[i] != '*')
                 break;
@@ -392,12 +392,12 @@ void Doc::trimCStyleComment(Location &location, QString &str)
         }
         m.advance(str[i]);
     }
-    if (cleaned.length() == str.length())
+    if (cleaned.size() == str.size())
         str = cleaned;
 
     for (int i = 0; i < 3; ++i)
         location.advance(str[i]);
-    str = str.mid(3, str.length() - 5);
+    str = str.mid(3, str.size() - 5);
 }
 
 CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, ResolvedFile resolved_file)

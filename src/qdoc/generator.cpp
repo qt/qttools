@@ -152,7 +152,7 @@ int Generator::appendSortedNames(Text &text, const ClassNode *cn, const QList<Re
     const QStringList classNames = classMap.keys();
     for (const auto &className : classNames) {
         text << classMap[className];
-        text << Utilities::comma(index++, classNames.count());
+        text << Utilities::comma(index++, classNames.size());
     }
     return index;
 }
@@ -174,7 +174,7 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
     const QStringList names = classMap.keys();
     for (const auto &name : names) {
         text << classMap[name];
-        text << Utilities::comma(index++, names.count());
+        text << Utilities::comma(index++, names.size());
     }
     return index;
 }
@@ -279,7 +279,7 @@ QString Generator::fileBase(const Node *node) const
     if (node->isCollectionNode()) {
         base = node->name() + outputSuffix(node);
         if (base.endsWith(".html"))
-            base.truncate(base.length() - 5);
+            base.truncate(base.size() - 5);
 
         if (node->isQmlModule())
             base.append("-qmlmodule");
@@ -289,7 +289,7 @@ QString Generator::fileBase(const Node *node) const
     } else if (node->isTextPageNode()) {
         base = node->name();
         if (base.endsWith(".html"))
-            base.truncate(base.length() - 5);
+            base.truncate(base.size() - 5);
 
         if (node->isExample()) {
             base.prepend(s_project.toLower() + QLatin1Char('-'));
@@ -423,7 +423,7 @@ QString Generator::cleanRef(const QString &ref, bool xmlCompliant)
         clean += QLatin1Char('A');
     }
 
-    for (int i = 1; i < ref.length(); i++) {
+    for (int i = 1; i < ref.size(); i++) {
         const QChar c = ref[i];
         const uint u = c.unicode();
         if ((u >= 'a' && u <= 'z') || (u >= 'A' && u <= 'Z') || (u >= '0' && u <= '9') || u == '-'
@@ -773,8 +773,8 @@ void Generator::generateBody(const Node *node, CodeMarker *marker)
             const auto &documentedItemList = enume->doc().enumItemNames();
             QSet<QString> documentedItems(documentedItemList.cbegin(), documentedItemList.cend());
             const QSet<QString> allItems = definedItems + documentedItems;
-            if (allItems.count() > definedItems.count()
-                || allItems.count() > documentedItems.count()) {
+            if (allItems.size() > definedItems.size()
+                || allItems.size() > documentedItems.size()) {
                 for (const auto &it : allItems) {
                     if (!definedItems.contains(it)) {
                         QString details;
@@ -1185,7 +1185,7 @@ QString Generator::formatSince(const Node *node)
     QStringList since = node->since().split(QLatin1Char(' '));
 
     // If there is only one argument, assume it is the Qt version number.
-    if (since.count() == 1)
+    if (since.size() == 1)
         return "Qt " + since[0];
 
     // Otherwise, use the original <project> <version> string.
@@ -1589,7 +1589,7 @@ QString Generator::indent(int level, const QString &markedCode)
     int column = 0;
 
     int i = 0;
-    while (i < markedCode.length()) {
+    while (i < markedCode.size()) {
         if (markedCode.at(i) == QLatin1Char('\n')) {
             column = 0;
         } else {
@@ -1846,7 +1846,7 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
     // SKIP_CHAR('<');
     // SKIP_CHAR('@');
 
-    if (tag != QStringView(src).mid(i, tag.length())) {
+    if (tag != QStringView(src).mid(i, tag.size())) {
         return false;
     }
 
@@ -1854,7 +1854,7 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
         qDebug() << "haystack:" << src << "needle:" << tag << "i:" << i;
 
     // skip tag
-    i += tag.length();
+    i += tag.size();
 
     // parse stuff like:  linkTag("(<@link node=\"([^\"]+)\">).*(</@link>)");
     if (par1) {
@@ -1886,7 +1886,7 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
     // find contents up to closing "</@tag>
     j = i;
     for (; true; ++i) {
-        if (i + 4 + tag.length() > n)
+        if (i + 4 + tag.size() > n)
             return false;
         if (src[i] != '<')
             continue;
@@ -1894,16 +1894,16 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
             continue;
         if (src[i + 2] != '@')
             continue;
-        if (tag != QStringView(src).mid(i + 3, tag.length()))
+        if (tag != QStringView(src).mid(i + 3, tag.size()))
             continue;
-        if (src[i + 3 + tag.length()] != '>')
+        if (src[i + 3 + tag.size()] != '>')
             continue;
         break;
     }
 
     *contents = QStringView(src).mid(j, i - j);
 
-    i += tag.length() + 4;
+    i += tag.size() + 4;
 
     *pos = i;
     if (debug)
@@ -2045,8 +2045,8 @@ QString Generator::trimmedTrailing(const QString &string, const QString &prefix,
                                    const QString &suffix)
 {
     QString trimmed = string;
-    while (trimmed.length() > 0 && trimmed[trimmed.length() - 1].isSpace())
-        trimmed.truncate(trimmed.length() - 1);
+    while (trimmed.size() > 0 && trimmed[trimmed.size() - 1].isSpace())
+        trimmed.truncate(trimmed.size() - 1);
 
     trimmed.append(suffix);
     trimmed.prepend(prefix);

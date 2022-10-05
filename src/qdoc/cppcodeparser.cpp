@@ -700,7 +700,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     qsizetype firstBlank = funcName.indexOf(QChar(' '));
     if (firstBlank > 0) {
         returnType = funcName.left(firstBlank);
-        funcName = funcName.right(funcName.length() - firstBlank - 1);
+        funcName = funcName.right(funcName.size() - firstBlank - 1);
     }
 
     QStringList colonSplit(funcName.split("::"));
@@ -774,7 +774,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
             params = afterParen.left(rightParen);
     }
     int i = 0;
-    while (i < macroName.length() && !macroName.at(i).isLetter())
+    while (i < macroName.size() && !macroName.at(i).isLetter())
         i++;
     if (i > 0) {
         returnType += QChar(' ') + macroName.left(i);
@@ -978,7 +978,7 @@ void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
 bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
 {
     const QSet<QString> topicCommandsUsed = topicCommands() & doc.metaCommandsUsed();
-    if (topicCommandsUsed.count() > 1) {
+    if (topicCommandsUsed.size() > 1) {
         bool ok = true;
         for (const auto &t : topicCommandsUsed) {
             if (!t.startsWith(QLatin1String("qml")))

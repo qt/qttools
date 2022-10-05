@@ -398,7 +398,7 @@ void MainWindow::lookForNewQtDocumentation()
             this, &MainWindow::resetQtDocInfo);
     connect(m_qtDocInstaller, &QtDocInstaller::registerDocumentation,
             this, &MainWindow::registerDocumentation);
-    if (helpEngine.qtDocInfo(QLatin1String("qt")).count() != 2)
+    if (helpEngine.qtDocInfo(QLatin1String("qt")).size() != 2)
         statusBar()->showMessage(tr("Looking for Qt Documentation..."));
     m_qtDocInstaller->installDocs();
 }

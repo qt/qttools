@@ -76,10 +76,10 @@ int main(int argc, char **argv)
     QString resourceDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
     QStringList args = app.arguments();
 
-    for (int i = 1; i < args.count(); ++i) {
+    for (int i = 1; i < args.size(); ++i) {
         QString argument = args.at(i);
         if (argument == QLatin1String("-resourcedir")) {
-            if (i + 1 < args.count()) {
+            if (i + 1 < args.size()) {
                 resourceDir = QFile::decodeName(args.at(++i).toLocal8Bit());
             } else {
                 // issue a warning

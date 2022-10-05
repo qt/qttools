@@ -157,7 +157,7 @@ bool HelpGeneratorPrivate::generate(QHelpProjectData *helpData,
     int i = 1;
     for (const QHelpDataFilterSection &fs : helpData->filterSections()) {
         emit statusChanged(tr("Insert help data for filter section (%1 of %2)...")
-            .arg(i++).arg(helpData->filterSections().count()));
+            .arg(i++).arg(helpData->filterSections().size()));
         insertFilterAttributes(fs.filterAttributes());
         QByteArray ba;
         QDataStream s(&ba, QIODevice::WriteOnly);
@@ -185,15 +185,15 @@ void HelpGeneratorPrivate::setupProgress(QHelpProjectData *helpData)
     int numberOfFiles = 0;
     int numberOfIndices = 0;
     for (const QHelpDataFilterSection &fs : helpData->filterSections()) {
-        numberOfFiles += fs.files().count();
-        numberOfIndices += fs.indices().count();
+        numberOfFiles += fs.files().size();
+        numberOfIndices += fs.indices().size();
     }
     // init      2%
     // filters   1%
     // contents 10%
     // files    60%
     // indices  27%
-    m_contentStep = 10.0 / qMax(helpData->customFilters().count(), 1);
+    m_contentStep = 10.0 / qMax(helpData->customFilters().size(), 1);
     m_fileStep = 60.0 / qMax(numberOfFiles, 1);
     m_indexStep = 27.0 / qMax(numberOfIndices, 1);
 }
@@ -668,7 +668,7 @@ bool HelpGeneratorPrivate::insertKeywords(const QList<QHelpDataIndexItem> &keywo
     m_query->exec(QLatin1String("COMMIT"));
 
     m_query->exec(QLatin1String("SELECT COUNT(Id) FROM IndexTable"));
-    if (m_query->next() && m_query->value(0).toInt() >= indices.count())
+    if (m_query->next() && m_query->value(0).toInt() >= indices.size())
         return true;
     return false;
 }

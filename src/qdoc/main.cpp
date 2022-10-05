@@ -135,7 +135,7 @@ static void loadIndexFiles(const QSet<QString> &formats)
                 config.dependModules().removeAll(config.getString(CONFIG_PROJECT).toLower());
                 config.dependModules().removeDuplicates();
                 qCCritical(lcQdoc) << "qdocconf file has depends = *; loading all "
-                               << config.dependModules().count()
+                               << config.dependModules().size()
                                << " index files found";
             }
             for (const auto &module : config.dependModules()) {

@@ -77,7 +77,7 @@ void TSReader::handleError()
     case Characters:
         {
             QString tok = text().toString();
-            if (tok.length() > 30)
+            if (tok.size() > 30)
                 tok = tok.left(30) + QLatin1String("[...]");
             raiseError(QString::fromLatin1("Unexpected characters '%1' %2").arg(tok, loc));
         }
@@ -415,7 +415,7 @@ static QString numericEntity(int ch)
 static QString protect(const QString &str)
 {
     QString result;
-    result.reserve(str.length() * 12 / 10);
+    result.reserve(str.size() * 12 / 10);
     for (int i = 0; i != str.size(); ++i) {
         const QChar ch = str[i];
         uint c = ch.unicode();
@@ -471,12 +471,12 @@ static void writeVariants(QTextStream &t, const char *indent, const QString &inp
             t << "\n    " << indent << "<lengthvariant>"
               << protect(input.mid(start, offset - start))
               << "</lengthvariant>";
-            if (offset == input.length())
+            if (offset == input.size())
                 break;
             start = offset + 1;
             offset = input.indexOf(QChar(Translator::BinaryVariantSeparator), start);
             if (offset < 0)
-                offset = input.length();
+                offset = input.size();
         }
         t << "\n" << indent;
     } else {
@@ -619,7 +619,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
                 if (msg.isPlural()) {
                     t << ">";
                     const QStringList &translns = msg.translations();
-                    for (int j = 0; j < translns.count(); ++j) {
+                    for (int j = 0; j < translns.size(); ++j) {
                         t << "\n            <numerusform";
                         writeVariants(t, "            ", translns[j]);
                         t << "</numerusform>";

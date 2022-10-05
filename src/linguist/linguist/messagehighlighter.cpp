@@ -60,7 +60,7 @@ void MessageHighlighter::highlightBlock(const QString &text)
     static const QLatin1String endElement = QLatin1String("/>");
 
     int state = previousBlockState();
-    int len = text.length();
+    int len = text.size();
     int start = 0;
     int pos = 0;
 

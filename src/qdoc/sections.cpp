@@ -183,7 +183,7 @@ QString sortName(const Node *node)
             sortNo = QLatin1String("C");
         else if (fn->isDtor())
             sortNo = QLatin1String("D");
-        else if (nodeName.startsWith(QLatin1String("operator")) && nodeName.length() > 8
+        else if (nodeName.startsWith(QLatin1String("operator")) && nodeName.size() > 8
                     && !nodeName[8].isLetterOrNumber())
             sortNo = QLatin1String("F");
         else
@@ -552,7 +552,7 @@ void Sections::stdRefPageSwitch(SectionVector &v, Node *n, Node *t)
         return;
     case Node::SharedComment: {
         auto *scn = static_cast<SharedCommentNode *>(t);
-        if (!scn->doc().isEmpty() && scn->collective().count())
+        if (!scn->doc().isEmpty() && scn->collective().size())
             stdRefPageSwitch(
                     v, scn,
                     scn->collective().first()); // TODO: warn about mixed node types in collective?
@@ -717,7 +717,7 @@ void Sections::distributeNodeInDetailsVector(SectionVector &dv, Node *n)
 
     if (n->isSharedCommentNode() && n->hasDoc()) {
         auto *scn = static_cast<SharedCommentNode *>(n);
-        if (scn->collective().count())
+        if (scn->collective().size())
             t = scn->collective().first(); // TODO: warn about mixed node types in collective?
     }
 
@@ -766,7 +766,7 @@ void Sections::distributeQmlNodeInDetailsVector(SectionVector &dv, Node *n)
             return;
         }
         auto *scn = static_cast<SharedCommentNode *>(n);
-        if (scn->collective().count())
+        if (scn->collective().size())
             t = scn->collective().first(); // TODO: warn about mixed node types in collective?
     }
 

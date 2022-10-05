@@ -207,7 +207,7 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
             ? QLatin1String("ContextName")
             : QLatin1String("Identifier");
 
-    const int usedAttributeCount = usedAttributeIds.count();
+    const int usedAttributeCount = usedAttributeIds.size();
 
     QMap<int, IndexItem> idToIndexItem;
 
@@ -273,13 +273,13 @@ QHelpDBReader::IndexTable QHelpDBReader::indexTable() const
 
         const bool mayOptimizeIndexTable
                 = filterDataCount(m_query, QLatin1String("IndexFilterTable"))
-                == idToIndexItem.count() * usedAttributeCount;
+                == idToIndexItem.size() * usedAttributeCount;
         const bool mayOptimizeFileTable
                 = filterDataCount(m_query, QLatin1String("FileFilterTable"))
-                == idToFileItem.count() * usedAttributeCount;
+                == idToFileItem.size() * usedAttributeCount;
         const bool mayOptimizeContentsTable
                 = filterDataCount(m_query, QLatin1String("ContentsFilterTable"))
-                == idToContentsItem.count() * usedAttributeCount;
+                == idToContentsItem.size() * usedAttributeCount;
         optimized = mayOptimizeIndexTable && mayOptimizeFileTable && mayOptimizeContentsTable;
 
         if (!optimized) {
@@ -471,7 +471,7 @@ QMultiMap<QString, QByteArray> QHelpDBReader::filesData(const QStringList &filte
                                       "AND FileNameTable.FolderId = FolderTable.Id %1"))
             .arg(extension);
     } else {
-        for (int i = 0; i < filterAttributes.count(); ++i) {
+        for (int i = 0; i < filterAttributes.size(); ++i) {
             if (i > 0)
                 query.append(QLatin1String(" INTERSECT "));
             query.append(QString(QLatin1String(

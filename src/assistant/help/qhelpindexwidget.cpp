@@ -226,12 +226,12 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
                     if (goodMatch == -1)
-                        goodMatch = lst.count() - 1;
-                    if (filter.length() == index.length()){
-                        perfectMatch = lst.count() - 1;
+                        goodMatch = lst.size() - 1;
+                    if (filter.size() == index.size()){
+                        perfectMatch = lst.size() - 1;
                     }
                 } else if (perfectMatch > -1 && index == filter) {
-                    perfectMatch = lst.count() - 1;
+                    perfectMatch = lst.size() - 1;
                 }
             }
         }
@@ -241,12 +241,12 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
                     if (goodMatch == -1)
-                        goodMatch = lst.count() - 1;
-                    if (filter.length() == index.length()){
-                        perfectMatch = lst.count() - 1;
+                        goodMatch = lst.size() - 1;
+                    if (filter.size() == index.size()){
+                        perfectMatch = lst.size() - 1;
                     }
                 } else if (perfectMatch > -1 && index == filter) {
-                    perfectMatch = lst.count() - 1;
+                    perfectMatch = lst.size() - 1;
                 }
             }
         }
@@ -327,7 +327,7 @@ void QHelpIndexWidget::showLink(const QModelIndex &index)
     const QString name = v.isValid() ? v.toString() : QString();
 
     const QList<QHelpLink> &docs = indexModel->helpEngine()->documentsForKeyword(name);
-    if (docs.count() > 1) {
+    if (docs.size() > 1) {
         emit documentsActivated(docs, name);
 #if QT_DEPRECATED_SINCE(5, 15)
         QT_WARNING_PUSH

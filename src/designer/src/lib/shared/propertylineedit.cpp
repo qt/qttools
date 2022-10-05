@@ -37,7 +37,7 @@ namespace qdesigner_internal {
         // position cursor after new text and grab focus
         const int oldCursorPosition = cursorPosition ();
         insert(text);
-        setCursorPosition (oldCursorPosition + text.length());
+        setCursorPosition (oldCursorPosition + text.size());
         setFocus(Qt::OtherFocusReason);
     }
 

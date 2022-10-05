@@ -717,7 +717,7 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
 #endif
     case CXCursor_EnumDecl: {
         auto *en = static_cast<EnumNode *>(findNodeForCursor(qdb_, cursor));
-        if (en && en->items().count())
+        if (en && en->items().size())
             return CXChildVisit_Continue; // Was already parsed, probably in another TU
         QString enumTypeName = fromCXString(clang_getCursorSpelling(cursor));
         if (enumTypeName.isEmpty()) {

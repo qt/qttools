@@ -103,7 +103,7 @@ static QString translationAttempt(const QString &oldTranslation,
       number is met, it is replaced with its newNumber equivalent. In
       our example, the "3.0" of "XeT 3.0" becomes "3.1".
     */
-    for (i = 0; i < oldTranslation.length(); i++) {
+    for (i = 0; i < oldTranslation.size(); i++) {
         attempt += oldTranslation[i];
         for (k = 0; k < p; k++) {
             if (oldTranslation[i] == oldNumbers[k][matchedYet[k]])
@@ -123,7 +123,7 @@ static QString translationAttempt(const QString &oldTranslation,
             best = p; // an impossible value
             for (k = 0; k < p; k++) {
                 if ((!met[k] || pass > 0) &&
-                     matchedYet[k] == oldNumbers[k].length() &&
+                     matchedYet[k] == oldNumbers[k].size() &&
                      numberLength(oldTranslation, i + 1 - matchedYet[k]) == matchedYet[k]) {
                     // the longer the better
                     if (best == p || matchedYet[k] > matchedYet[best])
@@ -131,7 +131,7 @@ static QString translationAttempt(const QString &oldTranslation,
                 }
             }
             if (best != p) {
-                attempt.truncate(attempt.length() - matchedYet[best]);
+                attempt.truncate(attempt.size() - matchedYet[best]);
                 attempt += newNumbers[best];
                 met[best] = true;
                 for (k = 0; k < p; k++)
@@ -193,7 +193,7 @@ int applyNumberHeuristic(Translator &tor)
         if (msg.type() == TranslatorMessage::Unfinished) {
             if (!hasTranslation)
                 untranslated[i] = true;
-        } else if (hasTranslation && msg.translations().count() == 1) {
+        } else if (hasTranslation && msg.translations().size() == 1) {
             const QString &key = zeroKey(msg.sourceText());
             if (!key.isEmpty())
                 translated.insert(key, qMakePair(msg.sourceText(), msg.translation()));

@@ -263,7 +263,7 @@ QString createErrorString(const QString &filename, const QString &code, Parser &
 
         const QString textLine = lines.at(line > 0 ? line - 1 : 0);
         error += textLine + QLatin1Char('\n');
-        for (int i = 0, end = qMin(column > 0 ? column - 1 : 0, textLine.length()); i < end; ++i) {
+        for (int i = 0, end = qMin(column > 0 ? column - 1 : 0, textLine.size()); i < end; ++i) {
             const QChar ch = textLine.at(i);
             if (ch.isSpace())
                 error += ch;
@@ -315,7 +315,7 @@ void FindTrCalls::processComment(const SourceLocation &loc)
 
     const QStringView commentStr = engine->midRef(loc.begin(), loc.length);
     const QChar *chars = commentStr.constData();
-    const int length = commentStr.length();
+    const int length = commentStr.size();
 
     // Try to match the logic of the C++ parser.
     if (*chars == QLatin1Char(':') && chars[1].isSpace()) {
@@ -330,8 +330,8 @@ void FindTrCalls::processComment(const SourceLocation &loc)
         if (k > -1)
             extra.insert(text.left(k), text.mid(k + 1).trimmed());
     } else if (*chars == QLatin1Char('%') && chars[1].isSpace()) {
-        sourcetext.reserve(sourcetext.length() + length-2);
-        ushort *ptr = (ushort *)sourcetext.data() + sourcetext.length();
+        sourcetext.reserve(sourcetext.size() + length-2);
+        ushort *ptr = (ushort *)sourcetext.data() + sourcetext.size();
         int p = 2, c;
         forever {
             if (p >= length)
@@ -369,8 +369,8 @@ void FindTrCalls::processComment(const SourceLocation &loc)
         ushort c;
         while ((c = chars[idx].unicode()) == ' ' || c == '\t' || c == '\r' || c == '\n')
             ++idx;
-        if (!memcmp(chars + idx, MagicComment.unicode(), MagicComment.length() * 2)) {
-            idx += MagicComment.length();
+        if (!memcmp(chars + idx, MagicComment.unicode(), MagicComment.size() * 2)) {
+            idx += MagicComment.size();
             QString comment = QString(chars + idx, length - idx).simplified();
             int k = comment.indexOf(QLatin1Char(' '));
             if (k == -1) {

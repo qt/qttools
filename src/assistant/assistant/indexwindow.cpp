@@ -178,7 +178,7 @@ void IndexWindow::open(QHelpIndexWidget* indexWidget, const QModelIndex &index)
         const QList<QHelpLink> docs = model->helpEngine()->documentsForKeyword(keyword);
 
         QUrl url;
-        if (docs.count() > 1) {
+        if (docs.size() > 1) {
             TopicChooser tc(this, keyword, docs);
             if (tc.exec() == QDialog::Accepted)
                 url = tc.link();

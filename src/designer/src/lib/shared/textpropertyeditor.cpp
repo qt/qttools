@@ -370,7 +370,7 @@ namespace qdesigner_internal {
         for (int pos = 0; (pos = rc.indexOf(QLatin1Char('\\'),pos)) >= 0 ; ) {
             // found an escaped character. If not a newline or at end of string, leave as is, else insert '\n'
             const int nextpos = pos + 1;
-            if (nextpos  >= rc.length())  // trailing '\\'
+            if (nextpos  >= rc.size())  // trailing '\\'
                  break;
             // Escaped NewLine
             if (rc.at(nextpos) ==  QChar(QLatin1Char('n')))
