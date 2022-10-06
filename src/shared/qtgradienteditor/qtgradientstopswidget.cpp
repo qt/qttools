@@ -630,7 +630,7 @@ void QtGradientStopsWidget::mouseMoveEvent(QMouseEvent *e)
         double x1 = d_ptr->fromViewport(xv1);
         double x2 = d_ptr->fromViewport(xv2);
 
-        for (QtGradientStop *stop : qAsConst(d_ptr->m_stops)) {
+        for (QtGradientStop *stop : std::as_const(d_ptr->m_stops)) {
             if ((stop->position() >= x1 && stop->position() <= x2) ||
                         beginList.contains(stop) || endList.contains(stop))
                 d_ptr->m_model->selectStop(stop, true);

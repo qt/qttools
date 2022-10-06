@@ -616,7 +616,7 @@ bool KeymapParser::parseKmap(QFile *f)
                     searchpath << d;
                 searchpath << QDir::current();
 
-                for (const QDir &path : qAsConst(searchpath)) {
+                for (const QDir &path : std::as_const(searchpath)) {
                     QFile f2(path.filePath(incname));
                     //qWarning("  -- trying to include %s", qPrintable(f2.fileName()));
                     if (f2.open(QIODevice::ReadOnly)) {

@@ -87,7 +87,7 @@ void FormWindowWidgetStack::setSenderAsCurrentTool()
         return;
     }
 
-    for (QDesignerFormWindowToolInterface *t : qAsConst(m_tools)) {
+    for (QDesignerFormWindowToolInterface *t : std::as_const(m_tools)) {
         if (action == t->action()) {
             tool = t;
             break;

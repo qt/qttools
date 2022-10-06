@@ -444,7 +444,7 @@ void Parameters::set(const QString &signature)
         QStringList commaSplit = signature.split(',');
         m_parameters.resize(commaSplit.size());
         int i = 0;
-        for (const auto &item : qAsConst(commaSplit)) {
+        for (const auto &item : std::as_const(commaSplit)) {
             QStringList blankSplit = item.split(' ', Qt::SkipEmptyParts);
             QString pDefault;
             qsizetype defaultIdx = blankSplit.indexOf(QStringLiteral("="));

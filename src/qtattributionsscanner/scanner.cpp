@@ -48,7 +48,7 @@ static void validatePackage(Package &p, const QString &filePath, LogLevel logLev
                       << std::endl;
         }
 
-        for (const QString &part : qAsConst(p.qtParts)) {
+        for (const QString &part : std::as_const(p.qtParts)) {
             if (part != QLatin1String("examples")
                     && part != QLatin1String("tests")
                     && part != QLatin1String("tools")

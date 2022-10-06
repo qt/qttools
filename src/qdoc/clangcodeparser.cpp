@@ -290,7 +290,7 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         auto numArg = clang_getNumArgTypes(funcType);
         bool isVariadic = clang_isFunctionTypeVariadic(funcType);
         QVarLengthArray<QString, 20> args;
-        for (Node *candidate : qAsConst(candidates)) {
+        for (Node *candidate : std::as_const(candidates)) {
             if (!candidate->isFunction(Node::CPP))
                 continue;
             auto fn = static_cast<FunctionNode *>(candidate);
@@ -1056,7 +1056,7 @@ void ClangCodeParser::initializeParser()
     args.append(Utilities::getInternalIncludePaths(QStringLiteral("clang++")));
 #endif
     m_includePaths.clear();
-    for (const auto &path : qAsConst(args)) {
+    for (const auto &path : std::as_const(args)) {
         if (!path.isEmpty())
             m_includePaths.append(path.toUtf8());
     }
@@ -1182,7 +1182,7 @@ void ClangCodeParser::getDefaultArgs()
     m_args.clear();
     m_args.insert(m_args.begin(), std::begin(defaultArgs_), std::end(defaultArgs_));
     // Add the defines from the qdocconf file.
-    for (const auto &p : qAsConst(m_defines))
+    for (const auto &p : std::as_const(m_defines))
         m_args.push_back(p.constData());
 }
 
@@ -1363,7 +1363,7 @@ void ClangCodeParser::precompileHeaders()
 {
     getDefaultArgs();
     getMoreArgs();
-    for (const auto &p : qAsConst(m_moreArgs))
+    for (const auto &p : std::as_const(m_moreArgs))
         m_args.push_back(p.constData());
 
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
@@ -1411,7 +1411,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
         m_args.push_back(m_pchName.constData());
     }
     getMoreArgs();
-    for (const auto &p : qAsConst(m_moreArgs))
+    for (const auto &p : std::as_const(m_moreArgs))
         m_args.push_back(p.constData());
 
     CXTranslationUnit tu;
@@ -1578,7 +1578,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
 
     std::vector<const char *> args(std::begin(defaultArgs_), std::end(defaultArgs_));
     // Add the defines from the qdocconf file.
-    for (const auto &p : qAsConst(m_defines))
+    for (const auto &p : std::as_const(m_defines))
         args.push_back(p.constData());
     if (!m_pchName.isEmpty()) {
         args.push_back("-w");
@@ -1587,7 +1587,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
     }
     CXTranslationUnit tu;
     s_fn.clear();
-    for (const auto &ns : qAsConst(m_namespaceScope))
+    for (const auto &ns : std::as_const(m_namespaceScope))
         s_fn.prepend("namespace " + ns.toUtf8() + " {");
     s_fn += fnSignature.toUtf8();
     if (!s_fn.endsWith(";"))

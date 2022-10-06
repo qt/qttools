@@ -413,7 +413,7 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
     ++filterSetId;
     QList<int> attValues = filterAtts.values();
     std::sort(attValues.begin(), attValues.end());
-    for (int attId : qAsConst(attValues)) {
+    for (int attId : std::as_const(attValues)) {
         m_query->prepare(QLatin1String("INSERT INTO FileAttributeSetTable "
             "VALUES(?, ?)"));
         m_query->bindValue(0, filterSetId);
@@ -480,7 +480,7 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
             fileId = it.value();
             QSet<int> &fileFilterSet = m_fileFilterMap[fileId];
             QSet<int> &tmpFileFilterSet = tmpFileFilterMap[fileId];
-            for (int filter : qAsConst(filterAtts)) {
+            for (int filter : std::as_const(filterAtts)) {
                 if (!fileFilterSet.contains(filter)
                     && !tmpFileFilterSet.contains(filter)) {
                     fileFilterSet.insert(filter);
@@ -495,7 +495,7 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
         for (auto it = tmpFileFilterMap.cbegin(), end = tmpFileFilterMap.cend(); it != end; ++it) {
             QList<int> filterValues = it.value().values();
             std::sort(filterValues.begin(), filterValues.end());
-            for (int fv : qAsConst(filterValues)) {
+            for (int fv : std::as_const(filterValues)) {
                 m_query->prepare(QLatin1String("INSERT INTO FileFilterTable "
                     "VALUES(?, ?)"));
                 m_query->bindValue(0, fv);
@@ -504,7 +504,7 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
             }
         }
 
-        for (const QByteArray &fileData : qAsConst(fileDataList)) {
+        for (const QByteArray &fileData : std::as_const(fileDataList)) {
             m_query->prepare(QLatin1String("INSERT INTO FileDataTable VALUES "
                 "(Null, ?)"));
             m_query->bindValue(0, fileData);
@@ -513,7 +513,7 @@ bool HelpGeneratorPrivate::insertFiles(const QStringList &files, const QString &
                 addProgress(m_fileStep * 20.0);
         }
 
-        for (const FileNameTableData &fnd : qAsConst(fileNameDataList)) {
+        for (const FileNameTableData &fnd : std::as_const(fileNameDataList)) {
             m_query->prepare(QLatin1String("INSERT INTO FileNameTable "
                 "(FolderId, Name, FileId, Title) VALUES (?, ?, ?, ?)"));
             m_query->bindValue(0, 1);
@@ -549,7 +549,7 @@ bool HelpGeneratorPrivate::registerCustomFilter(const QString &filterName,
         idsToInsert.removeAll(m_query->value(1).toString());
     }
 
-    for (const QString &id : qAsConst(idsToInsert)) {
+    for (const QString &id : std::as_const(idsToInsert)) {
         m_query->prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
         m_query->bindValue(0, id);
         m_query->exec();
@@ -656,8 +656,8 @@ bool HelpGeneratorPrivate::insertKeywords(const QList<QHelpDataIndexItem> &keywo
     m_query->exec(QLatin1String("COMMIT"));
 
     m_query->exec(QLatin1String("BEGIN"));
-    for (int idx : qAsConst(indexFilterTable)) {
-        for (int a : qAsConst(filterAtts)) {
+    for (int idx : std::as_const(indexFilterTable)) {
+        for (int a : std::as_const(filterAtts)) {
             m_query->prepare(QLatin1String("INSERT INTO IndexFilterTable (FilterAttributeId, IndexId) "
                 "VALUES(?, ?)"));
             m_query->bindValue(0, a);
@@ -766,7 +766,7 @@ bool HelpGeneratorPrivate::checkLinks(const QHelpProjectData &helpData)
      *         commented out can cause false warning.
      */
     bool allLinksOk = true;
-    for (const QString &fileName : qAsConst(files)) {
+    for (const QString &fileName : std::as_const(files)) {
         if (!fileName.endsWith(QLatin1String("html"))
             && !fileName.endsWith(QLatin1String("htm")))
             continue;

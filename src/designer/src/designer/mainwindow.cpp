@@ -196,7 +196,7 @@ ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
 
     m_manager->setMainWindow(configureableMainWindow);
 
-    for (QToolBar *tb : qAsConst(m_toolbars)) {
+    for (QToolBar *tb : std::as_const(m_toolbars)) {
         const QString title = tb->windowTitle();
         m_manager->addToolBar(tb, title);
         addActionsToToolBarManager(tb->actions(), title, m_manager);
@@ -240,7 +240,7 @@ void ToolBarManager::updateToolBarMenu()
     std::stable_sort(m_toolbars.begin(), m_toolbars.end(), toolBarTitleLessThan);
     // add to menu
     m_toolBarMenu->clear();
-    for (QToolBar *tb : qAsConst(m_toolbars))
+    for (QToolBar *tb : std::as_const(m_toolbars))
         m_toolBarMenu->addAction(tb->toggleViewAction());
     m_toolBarMenu->addAction(m_configureAction);
 }

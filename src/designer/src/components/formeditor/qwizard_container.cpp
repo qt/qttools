@@ -114,7 +114,7 @@ void QWizardContainer::insertWidget(int index, QWidget *widget)
             m_wizard->removePage(idList.at(i));
         }
         int newId = idBefore + delta;
-        for (QWizardPage *page : qAsConst(pageList)) {
+        for (QWizardPage *page : std::as_const(pageList)) {
             m_wizard->setPage(newId, page);
             newId += delta;
         }

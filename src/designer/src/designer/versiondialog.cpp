@@ -80,14 +80,14 @@ void VersionLabel::mouseReleaseEvent(QMouseEvent *me)
         if (!secondStage) {
             m_path.lineTo(me->pos());
             bool gotIt = true;
-            for (const QPoint &pt : qAsConst(hitPoints)) {
+            for (const QPoint &pt : std::as_const(hitPoints)) {
                 if (!m_path.contains(pt)) {
                     gotIt = false;
                     break;
                 }
             }
             if (gotIt) {
-                for (const QPoint &pt : qAsConst(missPoints)) {
+                for (const QPoint &pt : std::as_const(missPoints)) {
                     if (m_path.contains(pt)) {
                         gotIt = false;
                         break;

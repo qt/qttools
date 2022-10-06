@@ -172,7 +172,7 @@ void tst_generatedOutput::testAndCompare(const char *input, const char *outNames
 
     if (m_regen) {
         QVERIFY(m_expectedDir.mkpath(m_expectedDir.path()));
-        for (const auto &file : qAsConst(expectedOuts)) {
+        for (const auto &file : std::as_const(expectedOuts)) {
             QFileInfo fileInfo(m_expectedDir.filePath(file));
             fileInfo.dir().remove(fileInfo.fileName()); // Allowed to fail
             QVERIFY(m_expectedDir.mkpath(fileInfo.dir().path()));

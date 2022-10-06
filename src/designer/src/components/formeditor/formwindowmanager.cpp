@@ -614,7 +614,7 @@ void FormWindowManager::slotActionAdjustSizeActivated()
     }
 
     // Always count the main container as unlaid-out
-    for (QWidget *widget : qAsConst(selectedWidgets)) {
+    for (QWidget *widget : std::as_const(selectedWidgets)) {
         bool unlaidout = LayoutInfo::layoutType(core(), widget->parentWidget()) == LayoutInfo::NoLayout;
         bool isMainContainer = m_activeFormWindow->isMainContainer(widget);
 
@@ -726,7 +726,7 @@ QSet<QWidget *> FormWindowManager::getUnsortedLayoutsToBeBroken(bool firstOnly) 
     if (selection.isEmpty() && m_activeFormWindow->mainContainer())
         selection.append(m_activeFormWindow->mainContainer());
 
-    for (QWidget *selectedWidget : qAsConst(selection)) {
+    for (QWidget *selectedWidget : std::as_const(selection)) {
         // find all layouts
         const QWidgetList &list = layoutsToBeBroken(selectedWidget);
         if (!list.isEmpty()) {

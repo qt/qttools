@@ -432,7 +432,7 @@ void QFormBuilder::updateCustomWidgets()
     d->m_customWidgets.clear();
 
 #if QT_CONFIG(library)
-    for (const QString &path : qAsConst(d->m_pluginPaths)) {
+    for (const QString &path : std::as_const(d->m_pluginPaths)) {
         const QDir dir(path);
         const QStringList candidates = dir.entryList(QDir::Files);
 

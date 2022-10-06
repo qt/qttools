@@ -198,7 +198,7 @@ Qt::DropAction QDesignerMimeData::execDrag(const QDesignerDnDItems &items, QWidg
     const Qt::DropAction executedAction = drag->exec(Qt::CopyAction|Qt::MoveAction, mimeData->proposedDropAction());
 
     if (executedAction == Qt::IgnoreAction) {
-        for (QWidget *w : qAsConst(reshowWidgets))
+        for (QWidget *w : std::as_const(reshowWidgets))
             w->show();
     }
 

@@ -1137,7 +1137,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
     bool needOtherSection = false;
 
-    for (const auto &section : qAsConst(*summarySections)) {
+    for (const auto &section : std::as_const(*summarySections)) {
         if (section.members().isEmpty() && section.reimplementedMembers().isEmpty()) {
             if (!section.inheritedMembers().isEmpty())
                 needOtherSection = true;
@@ -1166,7 +1166,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         out() << "<h3>Additional Inherited Members</h3>\n"
                  "<ul>\n";
 
-        for (const auto &section : qAsConst(*summarySections)) {
+        for (const auto &section : std::as_const(*summarySections)) {
             if (section.members().isEmpty() && !section.inheritedMembers().isEmpty())
                 generateSectionInheritedList(section, aggregate);
         }
@@ -1194,7 +1194,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         generateExtractionMark(aggregate, EndMark);
     }
 
-    for (const auto &section : qAsConst(*detailsSections)) {
+    for (const auto &section : std::as_const(*detailsSections)) {
         bool headerGenerated = false;
         if (section.isEmpty())
             continue;
@@ -1294,7 +1294,7 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
         generateExtractionMark(aggregate, EndMark);
     }
 
-    for (const auto &section : qAsConst(*detailsSections)) {
+    for (const auto &section : std::as_const(*detailsSections)) {
         if (section.isEmpty())
             continue;
 
@@ -2308,14 +2308,14 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
         }
         out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#" << registerRef("details")
               << "\">Detailed Description</a></li>\n";
-        for (const auto &entry : qAsConst(toc)) {
+        for (const auto &entry : std::as_const(toc)) {
             if (entry->string().toInt() == 1) {
                 detailsBase = 1;
                 break;
             }
         }
     } else if (sections && (node->isClassNode() || node->isNamespace() || node->isQmlType() || node->isQmlBasicType())) {
-        for (const auto &section : qAsConst(*sections)) {
+        for (const auto &section : std::as_const(*sections)) {
             if (!section.members().isEmpty()) {
                 openUnorderedList();
                 out() << "<li class=\"level" << sectionNumber << "\"><a href=\"#"
@@ -2642,7 +2642,7 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *mark
     NodeList nodes = nmm.values();
     std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
 
-    for (const auto *node : qAsConst(nodes)) {
+    for (const auto *node : std::as_const(nodes)) {
         if (++row % 2 == 1)
             out() << "<tr class=\"odd topAlign\">";
         else

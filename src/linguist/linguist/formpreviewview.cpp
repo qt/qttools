@@ -182,7 +182,7 @@ static void buildTargets(QObject *o, TargetsHash *targets)
 
 static void destroyTargets(TargetsHash *targets)
 {
-    for (const auto &targetList : qAsConst(*targets))
+    for (const auto &targetList : std::as_const(*targets))
         for (const TranslatableEntry &target : targetList)
             if (target.type == TranslatableProperty)
                 delete target.prop.name;

@@ -52,7 +52,7 @@ bool NamespaceNode::hasDocumentedChildren() const
  */
 void NamespaceNode::reportDocumentedChildrenInUndocumentedNamespace() const
 {
-    for (const auto *node : qAsConst(m_children)) {
+    for (const auto *node : std::as_const(m_children)) {
         if (node->isInAPI()) {
             QString msg1 = node->name();
             if (node->isFunction())

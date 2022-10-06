@@ -119,7 +119,7 @@ PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::PreviewConfigurat
     Skins skins = defaultSkins();
     skins.push_front(SkinNamePath(PreviewConfigurationWidget::tr("None"), QString()));
 
-    for (const auto &skin : qAsConst(skins))
+    for (const auto &skin : std::as_const(skins))
         m_ui.m_skinCombo->addItem(skin.first, QVariant(skin.second));
     m_browseSkinIndex = m_firstUserSkinIndex = skins.size();
     m_ui.m_skinCombo->addItem(PreviewConfigurationWidget::tr("Browse..."), QString());

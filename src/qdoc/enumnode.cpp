@@ -38,7 +38,7 @@ Access EnumNode::itemAccess(const QString &name) const
  */
 QString EnumNode::itemValue(const QString &name) const
 {
-    for (const auto &item : qAsConst(m_items)) {
+    for (const auto &item : std::as_const(m_items)) {
         if (item.name() == name)
             return item.value();
     }

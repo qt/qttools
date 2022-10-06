@@ -1709,7 +1709,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     // actions
     if (!selection.m_actions.isEmpty()) {
         QList<DomAction *> domActions;
-        for (QAction* action : qAsConst(selection.m_actions)) {
+        for (QAction* action : std::as_const(selection.m_actions)) {
             if (DomAction *domAction = createDom(action))
                 domActions += domAction;
         }

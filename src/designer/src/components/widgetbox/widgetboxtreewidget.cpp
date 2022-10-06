@@ -300,7 +300,7 @@ bool WidgetBoxTreeWidget::loadContents(const QString &contents)
         return false;
     }
 
-    for (const Category &cat : qAsConst(cat_list))
+    for (const Category &cat : std::as_const(cat_list))
         addCategory(cat);
 
     addCustomCategories(false);

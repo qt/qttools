@@ -768,7 +768,7 @@ bool QHelpCollectionHandler::addCustomFilter(const QString &filterName,
             idsToInsert.removeAll(attributeName);
     }
 
-    for (const QString &id : qAsConst(idsToInsert)) {
+    for (const QString &id : std::as_const(idsToInsert)) {
         m_query->prepare(QLatin1String("INSERT INTO FilterAttributeTable VALUES(NULL, ?)"));
         m_query->bindValue(0, id);
         m_query->exec();
@@ -1511,7 +1511,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
     }
 
     QList<QHelpCollectionHandler::ContentsData> result;
-    for (const auto &versionContents : qAsConst(contentsMap)) {
+    for (const auto &versionContents : std::as_const(contentsMap)) {
         // insert items in the reverse order of version number
         const auto itBegin = versionContents.constBegin();
         auto it = versionContents.constEnd();
@@ -1570,7 +1570,7 @@ QList<QHelpCollectionHandler::ContentsData> QHelpCollectionHandler::contentsForF
     }
 
     QList<QHelpCollectionHandler::ContentsData> result;
-    for (const auto &versionContents : qAsConst(contentsMap)) {
+    for (const auto &versionContents : std::as_const(contentsMap)) {
         // insert items in the reverse order of version number
         const auto itBegin = versionContents.constBegin();
         auto it = versionContents.constEnd();

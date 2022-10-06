@@ -667,7 +667,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
 
     QSet<QWidget*> widget_set;
 
-    for (QWidget *child : qAsConst(sel)) { // Move parent layout or container?
+    for (QWidget *child : std::as_const(sel)) { // Move parent layout or container?
         QWidget *current = child;
 
         bool done = false;
@@ -704,7 +704,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
     const QPoint globalPos = mapToGlobal(m_startPos);
     const QDesignerDnDItemInterface::DropType dropType = (mouseFlags(e->modifiers()) & CopyDragModifier) ?
                             QDesignerDnDItemInterface::CopyDrop : QDesignerDnDItemInterface::MoveDrop;
-    for (QWidget *widget : qAsConst(sel)) {
+    for (QWidget *widget : std::as_const(sel)) {
         item_list.append(new FormWindowDnDItem(dropType,  this, widget, globalPos));
         if (dropType == QDesignerDnDItemInterface::MoveDrop) {
             m_selection->hide(widget);
@@ -721,7 +721,7 @@ bool FormWindow::handleMouseMoveEvent(QWidget *, QWidget *, QMouseEvent *e)
 
     if (!sel.isEmpty()) // reshow selection?
         if (QDesignerMimeData::execDrag(item_list, core()->topLevel()) == Qt::IgnoreAction && dropType == QDesignerDnDItemInterface::MoveDrop)
-            for (QWidget *widget : qAsConst(sel))
+            for (QWidget *widget : std::as_const(sel))
                 m_selection->show(widget);
 
     m_startPos = QPoint();
@@ -1285,7 +1285,7 @@ QWidget *FormWindow::containerAt(const QPoint &pos, QWidget *notParentOf)
         depth = widgetDepth(container);
     }
 
-    for (QWidget *wit : qAsConst(m_widgets)) {
+    for (QWidget *wit : std::as_const(m_widgets)) {
         if (qobject_cast<QLayoutWidget*>(wit) || qobject_cast<QSplitter*>(wit))
             continue;
         if (!wit->isVisibleTo(this))
@@ -1502,7 +1502,7 @@ ArrowKeyPropertyCommand::ArrowKeyPropertyCommand(QDesignerFormWindowInterface *f
 void ArrowKeyPropertyCommand::init(QWidgetList &l, const ArrowKeyOperation &op)
 {
     QObjectList ol;
-    for (QWidget *w : qAsConst(l))
+    for (QWidget *w : std::as_const(l))
         ol.push_back(w);
     SetPropertyCommand::init(ol, QStringLiteral("geometry"), QVariant::fromValue(op));
 
@@ -1577,7 +1577,7 @@ bool FormWindow::handleKeyReleaseEvent(QWidget *, QWidget *, QKeyEvent *e)
 void FormWindow::selectAll()
 {
     bool selectionChanged = false;
-    for (QWidget *widget : qAsConst(m_widgets)) {
+    for (QWidget *widget : std::as_const(m_widgets)) {
         if (widget->isVisibleTo(this) && trySelectWidget(widget, true))
             selectionChanged = true;
     }
@@ -2017,7 +2017,7 @@ void FormWindow::raiseWidgets()
         return;
 
     beginCommand(tr("Raise widgets"));
-    for (QWidget *widget : qAsConst(widgets)) {
+    for (QWidget *widget : std::as_const(widgets)) {
         RaiseWidgetCommand *cmd = new RaiseWidgetCommand(this);
         cmd->init(widget);
         m_undoStack.push(cmd);
@@ -2034,7 +2034,7 @@ void FormWindow::lowerWidgets()
         return;
 
     beginCommand(tr("Lower widgets"));
-    for (QWidget *widget : qAsConst(widgets)) {
+    for (QWidget *widget : std::as_const(widgets)) {
         LowerWidgetCommand *cmd = new LowerWidgetCommand(this);
         cmd->init(widget);
         m_undoStack.push(cmd);
@@ -2850,7 +2850,7 @@ bool FormWindow::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list,
     QPoint offset;
     QDesignerDnDItemInterface *current = nullptr;
     QDesignerFormWindowCursorInterface *c = cursor();
-    for (QDesignerDnDItemInterface *item : qAsConst(item_list)) {
+    for (QDesignerDnDItemInterface *item : std::as_const(item_list)) {
         QWidget *w = item->widget();
         if (!current)
             current = item;
@@ -2865,7 +2865,7 @@ bool FormWindow::dropWidgets(const QList<QDesignerDnDItemInterface*> &item_list,
         offset = designerGrid().snapPoint(topLeft) - topLeft;
     }
 
-    for (QDesignerDnDItemInterface *item : qAsConst(item_list)) {
+    for (QDesignerDnDItemInterface *item : std::as_const(item_list)) {
         DomUI *dom_ui = item->domUi();
         QRect geometry = item->decoration()->geometry();
         Q_ASSERT(dom_ui != nullptr);

@@ -187,7 +187,7 @@ void Translator::appendSorted(const TranslatorMessage &msg)
     // Working vars
     int prevLine = 0;
     int curIdx = 0;
-    for (const TranslatorMessage &mit : qAsConst(m_messages)) {
+    for (const TranslatorMessage &mit : std::as_const(m_messages)) {
         bool sameFile = mit.fileName() == msg.fileName() && mit.context() == msg.context();
         int curLine;
         if (sameFile && (curLine = mit.lineNumber()) >= prevLine) {
@@ -232,7 +232,7 @@ static QString guessFormat(const QString &filename, const QString &format)
     if (format != QLatin1String("auto"))
         return format;
 
-    for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
+    for (const Translator::FileFormat &fmt : std::as_const(Translator::registeredFileFormats())) {
         if (filename.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive))
             return fmt.extension;
     }
@@ -269,7 +269,7 @@ bool Translator::load(const QString &filename, ConversionData &cd, const QString
 
     QString fmt = guessFormat(filename, format);
 
-    for (const FileFormat &format : qAsConst(registeredFileFormats())) {
+    for (const FileFormat &format : std::as_const(registeredFileFormats())) {
         if (fmt == format.extension) {
             if (format.loader)
                 return (*format.loader)(*this, file, cd);
@@ -310,7 +310,7 @@ bool Translator::save(const QString &filename, ConversionData &cd, const QString
     QString fmt = guessFormat(filename, format);
     cd.m_targetDir = QFileInfo(filename).absoluteDir();
 
-    for (const FileFormat &format : qAsConst(registeredFileFormats())) {
+    for (const FileFormat &format : std::as_const(registeredFileFormats())) {
         if (fmt == format.extension) {
             if (format.saver)
                 return (*format.saver)(*this, file, cd);
@@ -703,7 +703,7 @@ void Translator::normalizeTranslations(ConversionData &cd)
 QString Translator::guessLanguageCodeFromFileName(const QString &filename)
 {
     QString str = filename;
-    for (const FileFormat &format : qAsConst(registeredFileFormats())) {
+    for (const FileFormat &format : std::as_const(registeredFileFormats())) {
         if (str.endsWith(format.extension)) {
             str = str.left(str.size() - format.extension.size() - 1);
             break;

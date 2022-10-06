@@ -503,7 +503,7 @@ static void expandQrcFiles(Project &project)
 
 static bool processTs(Translator &fetchedTor, const QString &file, ConversionData &cd)
 {
-    for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
+    for (const Translator::FileFormat &fmt : std::as_const(Translator::registeredFileFormats())) {
         if (file.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive)) {
             Translator tor;
             if (tor.load(file, cd, fmt.extension)) {
@@ -944,9 +944,9 @@ int main(int argc, char **argv)
             files << arg;
         }
         if (metTsFlag) {
-            for (const QString &file : qAsConst(files)) {
+            for (const QString &file : std::as_const(files)) {
                 bool found = false;
-                for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
+                for (const Translator::FileFormat &fmt : std::as_const(Translator::registeredFileFormats())) {
                     if (file.endsWith(QLatin1Char('.') + fmt.extension, Qt::CaseInsensitive)) {
                         QFileInfo fi(file);
                         if (!fi.exists() || fi.isWritable()) {
@@ -969,7 +969,7 @@ int main(int argc, char **argv)
         } else if (metXTsFlag) {
             alienFiles += files;
         } else {
-            for (const QString &file : qAsConst(files)) {
+            for (const QString &file : std::as_const(files)) {
                 QFileInfo fi(file);
                 if (!fi.exists()) {
                     printErr(QStringLiteral("lupdate error: File '%1' does not exist.\n").arg(file));
@@ -997,7 +997,7 @@ int main(int argc, char **argv)
                     QFileInfoList fileinfolist;
                     recursiveFileInfoList(dir, extensionsNameFilters, filters, &fileinfolist);
                     int scanRootLen = dir.absolutePath().size();
-                    for (const QFileInfo &fi : qAsConst(fileinfolist)) {
+                    for (const QFileInfo &fi : std::as_const(fileinfolist)) {
                         QString fn = QDir::cleanPath(fi.absoluteFilePath());
                         if (fn.endsWith(QLatin1String(".qrc"), Qt::CaseInsensitive)) {
                             resourceFiles << fn;
@@ -1080,7 +1080,7 @@ int main(int argc, char **argv)
         cd.m_allCSources = allCSources;
         cd.m_compilationDatabaseDir = commandLineCompilationDatabaseDir;
         cd.m_rootDirs = rootDirs;
-        for (const QString &resource : qAsConst(resourceFiles))
+        for (const QString &resource : std::as_const(resourceFiles))
             sourceFiles << getResources(resource);
         processSources(fetchedTor, sourceFiles, cd, &fail);
         updateTsFiles(fetchedTor, tsFileNames, alienFiles,

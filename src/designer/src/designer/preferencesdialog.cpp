@@ -24,7 +24,7 @@ PreferencesDialog::PreferencesDialog(QDesignerFormEditorInterface *core, QWidget
     m_optionsPages = core->optionsPages();
 
     m_ui->m_optionTabWidget->clear();
-    for (QDesignerOptionsPageInterface *optionsPage : qAsConst(m_optionsPages)) {
+    for (QDesignerOptionsPageInterface *optionsPage : std::as_const(m_optionsPages)) {
         QWidget *page = optionsPage->createPage(this);
         m_ui->m_optionTabWidget->addTab(page, optionsPage->name());
         if (QDesignerAppearanceOptionsWidget *appearanceWidget = qobject_cast<QDesignerAppearanceOptionsWidget *>(page))
@@ -49,7 +49,7 @@ QPushButton *PreferencesDialog::applyButton() const
 
 void PreferencesDialog::slotApply()
 {
-    for (QDesignerOptionsPageInterface *optionsPage : qAsConst(m_optionsPages))
+    for (QDesignerOptionsPageInterface *optionsPage : std::as_const(m_optionsPages))
         optionsPage->apply();
 }
 
@@ -74,7 +74,7 @@ void PreferencesDialog::slotUiModeChanged(bool modified)
 
 void PreferencesDialog::closeOptionPages()
 {
-    for (QDesignerOptionsPageInterface *optionsPage : qAsConst(m_optionsPages))
+    for (QDesignerOptionsPageInterface *optionsPage : std::as_const(m_optionsPages))
         optionsPage->finish();
 }
 

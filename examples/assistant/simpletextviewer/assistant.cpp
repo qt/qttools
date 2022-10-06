@@ -45,7 +45,7 @@ QString documentationDirectory()
     paths.append(QLibraryInfo::path(QLibraryInfo::ExamplesPath));
     paths.append(QCoreApplication::applicationDirPath());
     paths.append(QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
-    for (const auto &dir : qAsConst(paths)) {
+    for (const auto &dir : std::as_const(paths)) {
         const QString path = dir + QLatin1String("/documentation");
         if (QFileInfo::exists(path))
             return path;

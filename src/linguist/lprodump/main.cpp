@@ -179,7 +179,7 @@ static QStringList getSources(const ProFileEvaluator &visitor, const QString &pr
                          + visitor.values(QLatin1String("DEPLOYMENT"));
     installs.removeDuplicates();
     QDir baseDir(projectDir);
-    for (const QString &inst : qAsConst(installs)) {
+    for (const QString &inst : std::as_const(installs)) {
         for (const QString &file : visitor.values(inst + QLatin1String(".files"))) {
             QFileInfo info(file);
             if (!info.isAbsolute())
@@ -267,7 +267,7 @@ static QJsonObject processProject(const QString &proFile, const QStringList &tra
         excludeProjects(visitor, &subProjects);
         QStringList subProFiles;
         QDir proDir(proPath);
-        for (const QString &subdir : qAsConst(subProjects)) {
+        for (const QString &subdir : std::as_const(subProjects)) {
             QString realdir = visitor.value(subdir + QLatin1String(".subdir"));
             if (realdir.isEmpty())
                 realdir = visitor.value(subdir + QLatin1String(".file"));

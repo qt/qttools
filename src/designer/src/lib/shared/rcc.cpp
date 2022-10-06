@@ -571,7 +571,7 @@ bool RCCResourceLibrary::addFile(const QString &alias, const RCCFileInfo &file)
     RCCFileInfo *s = new RCCFileInfo(file);
     s->m_parent = parent;
     if (parent->m_children.contains(filename)) {
-        for (const QString &fileName : qAsConst(m_fileNames)) {
+        for (const QString &fileName : std::as_const(m_fileNames)) {
             qWarning("%s: Warning: potential duplicate alias detected: '%s'",
                      qPrintable(fileName), qPrintable(filename));
         }

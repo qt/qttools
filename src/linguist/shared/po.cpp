@@ -548,7 +548,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
             msg.setTranslatorComment(toUnicode(item.translatorComments));
             msg.setPlural(item.isPlural || item.msgStr.size() > 1);
             QStringList translations;
-            for (const QByteArray &bstr : qAsConst(item.msgStr)) {
+            for (const QByteArray &bstr : std::as_const(item.msgStr)) {
                 QString str = toUnicode(bstr);
                 str.replace(QChar(Translator::TextVariantSeparator),
                             QChar(Translator::BinaryVariantSeparator));
@@ -741,7 +741,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
     if (qtContexts)
         addPoHeader(headers, hdrOrder, "X-Qt-Contexts", QLatin1String("true"));
     QString hdrStr;
-    for (const QString &hdr : qAsConst(hdrOrder)) {
+    for (const QString &hdr : std::as_const(hdrOrder)) {
         hdrStr += hdr;
         hdrStr += QLatin1String(": ");
         hdrStr += headers.value(makePoHeader(hdr));

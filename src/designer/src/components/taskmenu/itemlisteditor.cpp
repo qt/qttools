@@ -225,7 +225,7 @@ void AbstractItemEditor::cacheReloaded()
 void AbstractItemEditor::updateBrowser()
 {
     BoolBlocker block(m_updatingBrowser);
-    for (QtVariantProperty *prop : qAsConst(m_properties)) {
+    for (QtVariantProperty *prop : std::as_const(m_properties)) {
         int role = m_propertyToRole.value(prop);
         QVariant val = getItemData(role);
 
@@ -244,7 +244,7 @@ void AbstractItemEditor::updateBrowser()
     }
 
     if (m_propertyBrowser->topLevelItems().isEmpty()) {
-        for (QtVariantProperty *prop : qAsConst(m_rootProperties))
+        for (QtVariantProperty *prop : std::as_const(m_rootProperties))
             m_propertyBrowser->addProperty(prop);
     }
 }

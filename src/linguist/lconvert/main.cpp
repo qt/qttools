@@ -20,7 +20,7 @@ static int usage(const QStringList &args)
 
     QString loaders;
     QString line(QLatin1String("    %1 - %2\n"));
-    for (const Translator::FileFormat &format : qAsConst(Translator::registeredFileFormats()))
+    for (const Translator::FileFormat &format : std::as_const(Translator::registeredFileFormats()))
         loaders += line.arg(format.extension, -5).arg(format.description());
 
     std::cout << qPrintable(QStringLiteral("\nUsage:\n"

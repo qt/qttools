@@ -1214,7 +1214,7 @@ void CppFiles::addIncludeCycle(const QSet<QString> &fileNames)
     }
     qDeleteAll(intersectingCycles);
 
-    for (const QString &fileName : qAsConst(cycle->fileNames))
+    for (const QString &fileName : std::as_const(cycle->fileNames))
         includeCycles().insert(fileName, cycle);
 }
 
@@ -1229,7 +1229,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
 {
     QString cleanFile = QDir::cleanPath(file);
 
-    for (const QString &ex : qAsConst(cd.m_excludes)) {
+    for (const QString &ex : std::as_const(cd.m_excludes)) {
         QRegularExpression rx(QRegularExpression::wildcardToRegularExpression(ex));
         if (rx.match(cleanFile).hasMatch())
             return;
@@ -1274,7 +1274,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
     inclusions.insert(cleanFile);
     if (isIndirect) {
         CppParser parser;
-        for (const QString &projectRoot : qAsConst(cd.m_projectRoots))
+        for (const QString &projectRoot : std::as_const(cd.m_projectRoots))
             if (cleanFile.startsWith(projectRoot)) {
                 parser.setTranslator(new Translator);
                 break;
@@ -1680,7 +1680,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     processInclude(cSource, cd, includeStack, inclusions);
                 goto incOk;
             }
-            for (const QString &incPath : qAsConst(cd.m_includePath)) {
+            for (const QString &incPath : std::as_const(cd.m_includePath)) {
                 text = QDir(incPath).absoluteFilePath(yyWord);
                 text.detach();
                 if (QFileInfo(text).isFile()) {

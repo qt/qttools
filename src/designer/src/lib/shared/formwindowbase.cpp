@@ -240,7 +240,7 @@ void FormWindowBase::reloadProperties()
             toolBox->setCurrentIndex(current);
         }
     }
-    for (QObject *object : qAsConst(m_d->m_reloadablePropertySheets)) {
+    for (QObject *object : std::as_const(m_d->m_reloadablePropertySheets)) {
         reloadIconResources(iconCache(), object);
     }
 }
@@ -426,7 +426,7 @@ void FormWindowBase::deleteWidgetList(const QWidgetList &widget_list)
         tr("Delete '%1'").arg(widget_list.constFirst()->objectName()) : tr("Delete");
 
     commandHistory()->beginMacro(description);
-    for (QWidget *w : qAsConst(widget_list)) {
+    for (QWidget *w : std::as_const(widget_list)) {
         emit widgetRemoved(w);
         DeleteWidgetCommand *cmd = new DeleteWidgetCommand(this);
         cmd->init(w);

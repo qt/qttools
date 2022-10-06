@@ -91,7 +91,7 @@ static void appendClass(const QString &className, Methods methods, QStandardItem
     std::sort(methods.begin(), methods.end(), signatureLessThan);
     QStandardItem *topLevelItem = createTopLevelItem(className);
     model->appendRow(topLevelItem);
-    for (const SelectSignalDialog::Method &m : qAsConst(methods)) {
+    for (const SelectSignalDialog::Method &m : std::as_const(methods)) {
         QStandardItem *item = new QStandardItem(m.signature);
         item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
         item->setData(QVariant::fromValue(m), MethodRole);

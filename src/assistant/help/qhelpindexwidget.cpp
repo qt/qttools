@@ -221,7 +221,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
         auto re = QRegularExpression::wildcardToRegularExpression(wildcard,
                                                                   QRegularExpression::UnanchoredWildcardConversion);
         const QRegularExpression regExp(re, QRegularExpression::CaseInsensitiveOption);
-        for (const QString &index : qAsConst(d->indices)) {
+        for (const QString &index : std::as_const(d->indices)) {
             if (index.contains(regExp)) {
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {
@@ -236,7 +236,7 @@ QModelIndex QHelpIndexModel::filter(const QString &filter, const QString &wildca
             }
         }
     } else {
-        for (const QString &index : qAsConst(d->indices)) {
+        for (const QString &index : std::as_const(d->indices)) {
             if (index.contains(filter, Qt::CaseInsensitive)) {
                 lst.append(index);
                 if (perfectMatch == -1 && index.startsWith(filter, Qt::CaseInsensitive)) {

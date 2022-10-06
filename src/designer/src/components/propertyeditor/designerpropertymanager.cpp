@@ -1267,7 +1267,7 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
             return;
 
         PropertyToPropertyListMap::iterator pfit = m_propertyToFlags.find(property);
-        for (QtProperty *prop : qAsConst(pfit.value())) {
+        for (QtProperty *prop : std::as_const(pfit.value())) {
             if (prop) {
                 delete prop;
                 m_flagToProperty.remove(prop);

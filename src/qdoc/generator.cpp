@@ -967,7 +967,7 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
     text << Atom::ParaLeft << tag << Atom::ParaRight;
     text << Atom(Atom::ListLeft, openedList.styleString());
 
-    for (const auto &path : qAsConst(paths)) {
+    for (const auto &path : std::as_const(paths)) {
         auto maybe_resolved_file{file_resolver.resolve(path)};
         if (!maybe_resolved_file) {
             // TODO: [uncentralized-admonition][failed-resolve-file]
@@ -1292,7 +1292,7 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         if (nodes.isEmpty())
             return;
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
-        for (const auto *n : qAsConst(nodes)) {
+        for (const auto *n : std::as_const(nodes)) {
             QString msg;
             const auto *pn = static_cast<const PropertyNode *>(n);
             switch (pn->role(fn)) {
@@ -1553,7 +1553,7 @@ void Generator::generateDocs()
 
 Generator *Generator::generatorForFormat(const QString &format)
 {
-    for (const auto &generator : qAsConst(s_generators)) {
+    for (const auto &generator : std::as_const(s_generators)) {
         if (generator->format() == format)
             return generator;
     }
@@ -2000,7 +2000,7 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
 
 void Generator::terminate()
 {
-    for (const auto &generator : qAsConst(s_generators)) {
+    for (const auto &generator : std::as_const(s_generators)) {
         if (s_outputFormats.contains(generator->format()))
             generator->terminateGenerator();
     }
