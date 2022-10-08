@@ -904,17 +904,17 @@ void CppParser::loadState(const CppParserState &state)
 Namespace *CppParser::modifyNamespace(NamespaceList *namespaces, bool haveLast)
 {
     Namespace *pns, *ns = &results->rootNamespace;
-    for (int i = 1; i < namespaces->count(); ++i) {
+    for (int i = 1; i < namespaces->size(); ++i) {
         pns = ns;
         if (!(ns = pns->children.value(namespaces->at(i)))) {
             do {
                 ns = new Namespace;
-                if (haveLast || i < namespaces->count() - 1)
+                if (haveLast || i < namespaces->size() - 1)
                     if (const Namespace *ons = findNamespace(*namespaces, i + 1))
                         ns->classDef = ons->classDef;
                 pns->children.insert(namespaces->at(i), ns);
                 pns = ns;
-            } while (++i < namespaces->count());
+            } while (++i < namespaces->size());
             break;
         }
     }
@@ -925,10 +925,10 @@ QString CppParser::stringifyNamespace(int start, const NamespaceList &namespaces
 {
     QString ret;
     int l = 0;
-    for (int j = start; j < namespaces.count(); ++j)
+    for (int j = start; j < namespaces.size(); ++j)
         l += namespaces.at(j).value().size();
-    ret.reserve(l + qMax(0, (namespaces.count() - start - 1)) * 2);
-    for (int i = start; i < namespaces.count(); ++i) {
+    ret.reserve(l + qMax(0, (namespaces.size() - start - 1)) * 2);
+    for (int i = start; i < namespaces.size(); ++i) {
         if (i > start)
             ret += QLatin1String("::");
         ret += namespaces.at(i).value();
@@ -1047,7 +1047,7 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
 
     if (segments.first().value().isEmpty()) {
         // fully qualified
-        if (segments.count() == 1) {
+        if (segments.size() == 1) {
             resolved->clear();
             *resolved << HashString(QString());
             return true;
@@ -1062,8 +1062,8 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces, int nsCnt,
     do {
         if (qualifyOne(namespaces, nsIdx + 1, segments[initSegIdx], resolved)) {
             int segIdx = initSegIdx;
-            while (++segIdx < segments.count()) {
-                if (!qualifyOne(*resolved, resolved->count(), segments[segIdx], resolved)) {
+            while (++segIdx < segments.size()) {
+                if (!qualifyOne(*resolved, resolved->size(), segments[segIdx], resolved)) {
                     if (unresolved)
                         *unresolved = segments.mid(segIdx);
                     return false;
@@ -1083,7 +1083,7 @@ bool CppParser::fullyQualify(const NamespaceList &namespaces,
                              const NamespaceList &segments, bool isDeclaration,
                              NamespaceList *resolved, NamespaceList *unresolved) const
 {
-    return fullyQualify(namespaces, namespaces.count(),
+    return fullyQualify(namespaces, namespaces.size(),
                         segments, isDeclaration, resolved, unresolved);
 }
 
@@ -1109,7 +1109,7 @@ const Namespace *CppParser::findNamespace(const NamespaceList &namespaces, int n
 {
     const Namespace *ns = 0;
     if (nsCount == -1)
-        nsCount = namespaces.count();
+        nsCount = namespaces.size();
     visitNamespace(namespaces, nsCount, &CppParser::findNamespaceCallback, &ns);
     return ns;
 }
@@ -1123,7 +1123,7 @@ void CppParser::enterNamespace(NamespaceList *namespaces, const HashString &name
 
 void CppParser::truncateNamespaces(NamespaceList *namespaces, int length)
 {
-    if (namespaces->count() > length)
+    if (namespaces->size() > length)
         namespaces->erase(namespaces->begin() + length, namespaces->end());
 }
 
@@ -1246,7 +1246,7 @@ void CppParser::processInclude(const QString &file, ConversionData &cd, const QS
     // it. Otherwise it is safe to process it stand-alone and re-use the parsed
     // namespace data for inclusion into other files.
     bool isIndirect = false;
-    if (namespaces.count() == 1 && functionContext.count() == 1
+    if (namespaces.size() == 1 && functionContext.size() == 1
         && functionContextUnresolved.isEmpty() && pendingContext.isEmpty()
         && !CppFiles::isBlacklisted(cleanFile)
         && isHeader(cleanFile)) {
@@ -1454,7 +1454,7 @@ void CppParser::handleTr(QString &prefix, bool plural)
         }
         if (prefix.isEmpty()) {
             if (functionContextUnresolved.isEmpty()) {
-                int idx = functionContext.length();
+                int idx = functionContext.size();
                 if (idx < 2) {
                     yyMsg() << "tr() cannot be called without context\n";
                     return;
@@ -1758,10 +1758,10 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                         yyMsg() << "Ignoring definition of undeclared qualified class\n";
                         break;
                     }
-                    namespaceDepths.push(namespaces.count());
+                    namespaceDepths.push(namespaces.size());
                     namespaces = nsl;
                 } else {
-                    namespaceDepths.push(namespaces.count());
+                    namespaceDepths.push(namespaces.size());
                 }
                 enterNamespace(&namespaces, fct);
 
@@ -1794,7 +1794,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     ns = HashString(text);
                 }
                 if (yyTok == Tok_LeftBrace) {
-                    namespaceDepths.push(namespaces.count());
+                    namespaceDepths.push(namespaces.size());
                     for (const auto &nns : nestedNamespaces)
                         enterNamespace(&namespaces, nns);
                     enterNamespace(&namespaces, ns);
@@ -1827,7 +1827,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 }
             } else if (yyTok == Tok_LeftBrace) {
                 // Anonymous namespace
-                namespaceDepths.push(namespaces.count());
+                namespaceDepths.push(namespaces.size());
                 metaExpected = true;
                 yyTok = getToken();
             }

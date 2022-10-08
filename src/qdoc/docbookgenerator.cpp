@@ -1317,7 +1317,7 @@ void DocBookGenerator::generateCompactList(ListType listType, const Node *relati
     int paragraphOffset[NumParagraphs + 1]; // 37 + 1
     paragraphOffset[0] = 0;
     for (int i = 0; i < NumParagraphs; i++) // i = 0..36
-        paragraphOffset[i + 1] = paragraphOffset[i] + paragraph[i].count();
+        paragraphOffset[i + 1] = paragraphOffset[i] + paragraph[i].size();
 
     // No table of contents in DocBook.
 
@@ -1327,8 +1327,8 @@ void DocBookGenerator::generateCompactList(ListType listType, const Node *relati
     QString previousName;
     bool multipleOccurrences = false;
 
-    for (int i = 0; i < nmm.count(); i++) {
-        while ((curParNr < NumParagraphs) && (curParOffset == paragraph[curParNr].count())) {
+    for (int i = 0; i < nmm.size(); i++) {
+        while ((curParNr < NumParagraphs) && (curParOffset == paragraph[curParNr].size())) {
             ++curParNr;
             curParOffset = 0;
         }
@@ -1421,7 +1421,7 @@ void DocBookGenerator::generateCompactList(ListType listType, const Node *relati
         newLine();
         curParOffset++;
     }
-    if (nmm.count() > 0) {
+    if (nmm.size() > 0) {
         m_writer->writeEndElement(); // variablelist
     }
 }

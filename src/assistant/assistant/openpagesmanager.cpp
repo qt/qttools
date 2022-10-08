@@ -146,7 +146,7 @@ void OpenPagesManager::closeCurrentPage()
         = m_openPagesWidget->selectionModel()->selectedRows();
     if (selectedIndexes.isEmpty())
         return;
-    Q_ASSERT(selectedIndexes.count() == 1);
+    Q_ASSERT(selectedIndexes.size() == 1);
     removePage(selectedIndexes.first().row());
 }
 

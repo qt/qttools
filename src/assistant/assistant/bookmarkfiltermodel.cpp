@@ -62,7 +62,7 @@ void BookmarkFilterModel::setSourceModel(QAbstractItemModel *_sourceModel)
 int BookmarkFilterModel::rowCount(const QModelIndex &index) const
 {
     Q_UNUSED(index);
-    return cache.count();
+    return cache.size();
 }
 
 int BookmarkFilterModel::columnCount(const QModelIndex &index) const
@@ -76,7 +76,7 @@ int BookmarkFilterModel::columnCount(const QModelIndex &index) const
 QModelIndex BookmarkFilterModel::mapToSource(const QModelIndex &proxyIndex) const
 {
     const int row = proxyIndex.row();
-    if (proxyIndex.isValid() && row >= 0 && row < cache.count())
+    if (proxyIndex.isValid() && row >= 0 && row < cache.size())
         return cache[row];
     return QModelIndex();
 }
@@ -96,7 +96,7 @@ QModelIndex BookmarkFilterModel::index(int row, int column,
     const QModelIndex &index) const
 {
     Q_UNUSED(index);
-    if (row < 0 || column < 0 || cache.count() <= row
+    if (row < 0 || column < 0 || cache.size() <= row
         || !sourceModel || sourceModel->columnCount() <= column) {
         return QModelIndex();
     }

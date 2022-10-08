@@ -163,7 +163,7 @@ void MetaStack::process(QChar ch, const Location &location)
         push(MetaStackEntry());
         top().open();
     } else if (ch == QLatin1Char('}')) {
-        if (count() == 1)
+        if (size() == 1)
             location.fatal(QStringLiteral("Unexpected '}'"));
 
         top().close();
@@ -175,7 +175,7 @@ void MetaStack::process(QChar ch, const Location &location)
             for (const auto &suffix : suffixes)
                 top().next << prefix + suffix;
         }
-    } else if (ch == QLatin1Char(',') && count() > 1) {
+    } else if (ch == QLatin1Char(',') && size() > 1) {
         top().close();
         top().open();
     } else {
@@ -189,7 +189,7 @@ void MetaStack::process(QChar ch, const Location &location)
  */
 QStringList MetaStack::getExpanded(const Location &location)
 {
-    if (count() > 1)
+    if (size() > 1)
         location.fatal(QStringLiteral("Missing '}'"));
 
     top().close();

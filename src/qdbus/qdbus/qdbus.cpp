@@ -338,7 +338,7 @@ static int placeCall(const QString &service, const QString &path, const QString 
                 }
                 params += p;
             }
-            if (params.count() == types.size() && args.isEmpty())
+            if (params.size() == types.size() && args.isEmpty())
                 matchFound = true;
             else if (knownIds.isEmpty()) {
                 fprintf(stderr, "Invalid number of parameters\n");

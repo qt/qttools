@@ -129,7 +129,7 @@ void BatchTranslationDialog::startTranslation()
 void BatchTranslationDialog::movePhraseBookUp()
 {
     QModelIndexList indexes = m_ui.phrasebookList->selectionModel()->selectedIndexes();
-    if (indexes.count() <= 0) return;
+    if (indexes.size() <= 0) return;
 
     QModelIndex sel = indexes[0];
     int row = sel.row();
@@ -145,7 +145,7 @@ void BatchTranslationDialog::movePhraseBookUp()
 void BatchTranslationDialog::movePhraseBookDown()
 {
     QModelIndexList indexes = m_ui.phrasebookList->selectionModel()->selectedIndexes();
-    if (indexes.count() <= 0) return;
+    if (indexes.size() <= 0) return;
 
     QModelIndex sel = indexes[0];
     int row = sel.row();

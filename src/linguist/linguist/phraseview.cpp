@@ -194,9 +194,9 @@ static CandidateList similarTextHeuristicCandidates(MultiDataModel *model, int m
 
         int score = stringmatcher.getSimilarityScore(s);
 
-        if (candidates.count() == maxCandidates && score > scores[maxCandidates - 1])
+        if (candidates.size() == maxCandidates && score > scores[maxCandidates - 1])
             candidates.removeLast();
-        if (candidates.count() < maxCandidates && score >= textSimilarityThreshold ) {
+        if (candidates.size() < maxCandidates && score >= textSimilarityThreshold ) {
             Candidate cand(mtm.context(), s, mtm.comment(), mtm.translation());
 
             int i;

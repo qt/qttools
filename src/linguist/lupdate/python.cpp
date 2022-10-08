@@ -97,7 +97,7 @@ static int getCharFromFile()
     } else {
         if (yyIndentationSize == 1 && yyContinuousSpaceCount > yyIndentationSize)
             yyIndentationSize = yyContinuousSpaceCount;
-        if (yyCountingIndentation && yyContextStack.count() > 1) {
+        if (yyCountingIndentation && yyContextStack.size() > 1) {
             ContextPair& top = yyContextStack.top();
             if (top.second == 0 && yyContinuousSpaceCount > 0) {
                 top.second = yyContinuousSpaceCount;

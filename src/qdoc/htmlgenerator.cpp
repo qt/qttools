@@ -2754,7 +2754,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
     qsizetype paragraphOffset[NumParagraphs + 1]; // 37 + 1
     paragraphOffset[0] = 0;
     for (int i = 0; i < NumParagraphs; i++) // i = 0..36
-        paragraphOffset[i + 1] = paragraphOffset[i] + paragraph[i].count();
+        paragraphOffset[i + 1] = paragraphOffset[i] + paragraph[i].size();
 
     /*
       Output the alphabet as a row of links.
@@ -2780,8 +2780,8 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
     QString previousName;
     bool multipleOccurrences = false;
 
-    for (int i = 0; i < nmm.count(); i++) {
-        while ((curParNr < NumParagraphs) && (curParOffset == paragraph[curParNr].count())) {
+    for (int i = 0; i < nmm.size(); i++) {
+        while ((curParNr < NumParagraphs) && (curParOffset == paragraph[curParNr].size())) {
             ++curParNr;
             curParOffset = 0;
         }
@@ -2856,7 +2856,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
         out() << "</dd>\n";
         curParOffset++;
     }
-    if (nmm.count() > 0)
+    if (nmm.size() > 0)
         out() << "</dl>\n";
 
     out() << "</div>\n";
@@ -3016,7 +3016,7 @@ void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, 
     if (!nv.isEmpty()) {
         bool twoColumn = false;
         if (nv.first()->isProperty()) {
-            twoColumn = (nv.count() >= 5);
+            twoColumn = (nv.size() >= 5);
             alignNames = false;
         }
         if (alignNames) {
@@ -3036,7 +3036,7 @@ void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, 
             if (alignNames) {
                 out() << "<tr><td class=\"memItemLeft rightAlign topAlign\"> ";
             } else {
-                if (twoColumn && i == (nv.count() + 1) / 2)
+                if (twoColumn && i == (nv.size() + 1) / 2)
                     out() << "</ul></td><td class=\"topAlign\"><ul>\n";
                 out() << "<li class=\"fn\">";
             }
@@ -3070,9 +3070,9 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
         bool twoColumn = false;
         if (section.style() == Section::AllMembers) {
             alignNames = false;
-            twoColumn = (members.count() >= 16);
+            twoColumn = (members.size() >= 16);
         } else if (members.first()->isProperty()) {
-            twoColumn = (members.count() >= 5);
+            twoColumn = (members.size() >= 5);
             alignNames = false;
         }
         if (alignNames) {
@@ -3092,7 +3092,7 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
             if (alignNames) {
                 out() << "<tr><td class=\"memItemLeft topAlign rightAlign\"> ";
             } else {
-                if (twoColumn && i == (members.count() + 1) / 2)
+                if (twoColumn && i == (members.size() + 1) / 2)
                     out() << "</ul></td><td class=\"topAlign\"><ul>\n";
                 out() << "<li class=\"fn\">";
             }

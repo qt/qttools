@@ -80,7 +80,7 @@ void Translator::ensureIndexed() const
         m_ctxCmtIdx.clear();
         m_idMsgIdx.clear();
         m_msgIdx.clear();
-        for (int i = 0; i < m_messages.count(); i++)
+        for (int i = 0; i < m_messages.size(); i++)
             addIndex(i, m_messages.at(i));
     }
 }
@@ -155,7 +155,7 @@ void Translator::extend(const TranslatorMessage &msg, ConversionData &cd)
 void Translator::insert(int idx, const TranslatorMessage &msg)
 {
     if (m_indexOk) {
-        if (idx == m_messages.count())
+        if (idx == m_messages.size())
             addIndex(idx, msg);
         else
             m_indexOk = false;
@@ -165,7 +165,7 @@ void Translator::insert(int idx, const TranslatorMessage &msg)
 
 void Translator::append(const TranslatorMessage &msg)
 {
-    insert(m_messages.count(), msg);
+    insert(m_messages.size(), msg);
 }
 
 void Translator::appendSorted(const TranslatorMessage &msg)
@@ -558,7 +558,7 @@ Translator::Duplicates Translator::resolveDuplicates()
     Duplicates dups;
     QSet<TranslatorMessageIdPtr> idRefs;
     QSet<TranslatorMessageContentPtr> contentRefs;
-    for (int i = 0; i < m_messages.count();) {
+    for (int i = 0; i < m_messages.size();) {
         const TranslatorMessage &msg = m_messages.at(i);
         TranslatorMessage *omsg;
         int oi;
@@ -679,7 +679,7 @@ void Translator::normalizeTranslations(ConversionData &cd)
         if (getNumerusInfo(l, c, 0, &forms, 0))
             numPlurals = forms.size(); // includes singular
     }
-    for (int i = 0; i < m_messages.count(); ++i) {
+    for (int i = 0; i < m_messages.size(); ++i) {
         const TranslatorMessage &msg = m_messages.at(i);
         QStringList tlns = msg.translations();
         int ccnt = msg.isPlural() ? numPlurals : 1;

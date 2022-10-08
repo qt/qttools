@@ -402,8 +402,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     // valid nodes. Note that it's important to do this *after* constructing
     // the topic nodes - which need to be written to index before the related
     // scn.
-    if (sharedNodes.count() > 1) {
-        auto *scn = new SharedCommentNode(qmlType, sharedNodes.count(), group);
+    if (sharedNodes.size() > 1) {
+        auto *scn = new SharedCommentNode(qmlType, sharedNodes.size(), group);
         scn->setLocation(doc.startLocation());
         nodes.append(scn);
         docs.append(doc);
