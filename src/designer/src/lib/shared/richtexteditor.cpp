@@ -36,6 +36,8 @@
 #include <QtCore/qpointer.h>
 #include <QtCore/qxmlstream.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 static const char RichTextDialogGroupC[] = "RichTextDialog";
@@ -83,11 +85,8 @@ static inline void filterAttributes(QStringView name,
 // Richtext simplification filter helpers: Check for blank QStringView.
 static inline bool isWhiteSpace(QStringView in)
 {
-    const int count = in.size();
-    for (int i = 0; i < count; i++)
-        if (!in.at(i).isSpace())
-            return false;
-    return true;
+    return std::all_of(in.cbegin(), in.cend(),
+                       [](QChar c) { return c.isSpace(); });
 }
 
 // Richtext simplification filter: Remove hard-coded font settings,

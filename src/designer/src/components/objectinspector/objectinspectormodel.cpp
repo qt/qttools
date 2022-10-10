@@ -407,10 +407,10 @@ namespace qdesigner_internal {
 
         QObjectSet changedObjects;
 
-        const int size = newModel.size();
+        const auto size = newModel.size();
         Q_ASSERT(oldModel.size() ==  size);
-        for (int i = 0; i < size; i++) {
-            const ObjectData &newEntry = newModel[i];
+        for (qsizetype i = 0; i < size; ++i) {
+            const ObjectData &newEntry = newModel.at(i);
             ObjectData &entry =  oldModel[i];
             // Has some data changed?
             if (const unsigned changedMask = entry.compare(newEntry)) {

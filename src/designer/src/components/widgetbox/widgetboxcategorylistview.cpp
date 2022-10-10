@@ -138,8 +138,7 @@ void WidgetBoxCategoryModel::setViewMode(QListView::ViewMode vm)
 
 int WidgetBoxCategoryModel::indexOfWidget(const QString &name)
 {
-    const int count = m_items.size();
-    for (int  i = 0; i < count; i++)
+    for (qsizetype i = 0, count = m_items.size(); i < count; ++i)
         if (m_items.at(i).widget.name() == name)
             return i;
     return -1;

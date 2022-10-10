@@ -1692,9 +1692,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     // Widgets
     if (!selection.m_widgets.isEmpty()) {
         QList<DomWidget *> ui_widget_list;
-        const int size = selection.m_widgets.size();
-        for (int i=0; i< size; ++i) {
-            QWidget *w = selection.m_widgets.at(i);
+        for (auto *w : selection.m_widgets) {
             m_selected = w;
             DomWidget *ui_child = createDom(w, ui_widget);
             m_selected = nullptr;

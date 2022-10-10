@@ -60,9 +60,9 @@ void HtmlHighlighter::highlightBlock(const QString &text)
     static const QLatin1String endElement("/>");
 
     int state = previousBlockState();
-    int len = text.size();
-    int start = 0;
-    int pos = 0;
+    qsizetype len = text.size();
+    qsizetype start = 0;
+    qsizetype pos = 0;
 
     while (pos < len) {
         switch (state) {

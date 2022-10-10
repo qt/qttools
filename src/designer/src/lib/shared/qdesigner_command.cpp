@@ -2634,8 +2634,7 @@ static RemoveActionCommand::ActionData findActionIn(QAction *action)
             continue;
         QWidget *widget = static_cast<QWidget *>(obj);
         const auto actionList = widget->actions();
-        const int size = actionList.size();
-        for (int i = 0; i < size; ++i) {
+        for (qsizetype i = 0, size = actionList.size(); i < size; ++i) {
             if (actionList.at(i) == action) {
                 QAction *before = nullptr;
                 if (i + 1 < size)

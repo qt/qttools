@@ -141,12 +141,11 @@ QString ButtonGroupCommand::nameList(const ButtonList& bl)
     QString rc;
     const QChar quote = QLatin1Char('\'');
     const QString separator =  QStringLiteral(", ");
-    const int size = bl.size();
-    for (int i = 0; i < size; i++) {
+    for (qsizetype i = 0, size = bl.size(); i < size; ++i) {
         if (i)
             rc += separator;
         rc += quote;
-        rc += bl[i]->objectName();
+        rc += bl.at(i)->objectName();
         rc += quote;
     }
     return rc;
@@ -455,7 +454,7 @@ bool ButtonTaskMenu::refreshAssignMenu(const QDesignerFormWindowInterface *fw, i
     // Assign to other
     const ButtonGroupList bl = ButtonGroupCommand::managedButtonGroups(fw);
     // Groups: Any groups to add to except the current?
-    const int groupCount = bl.size();
+    const auto groupCount = bl.size();
     const bool hasAddGroups = groupCount > 1 || (groupCount == 1 && !bl.contains(currentGroup));
     if (hasAddGroups) {
         if (!m_assignGroupSubMenu->isEmpty())

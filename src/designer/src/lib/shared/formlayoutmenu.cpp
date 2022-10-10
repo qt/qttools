@@ -265,10 +265,8 @@ static inline PrefixCharacterKind prefixCharacterKind(const QChar &c)
 static QString prefixFromLabel(const QString &prefix)
 {
     QString rc;
-    const int length = prefix.size();
     bool lastWasAcceptable = false;
-    for (int i = 0 ; i < length; i++) {
-        const QChar c = prefix.at(i);
+    for (const QChar c : prefix) {
         const PrefixCharacterKind kind = prefixCharacterKind(c);
         const bool acceptable = kind != PC_Invalid;
         if (acceptable) {

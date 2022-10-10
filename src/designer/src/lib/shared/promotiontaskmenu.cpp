@@ -144,7 +144,7 @@ void PromotionTaskMenu::addActions(QDesignerFormWindowInterface *fw, unsigned fl
                                    ActionList &actionList)
 {
     Q_ASSERT(m_widget);
-    const int previousSize = actionList.size();
+    const auto previousSize = actionList.size();
     const PromotionState promotionState = createPromotionActions(fw);
 
     // Promotion candidates/demote

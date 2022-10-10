@@ -335,10 +335,10 @@ void BuddyEditor::autoBuddy()
     // Add the list in one go.
     if (labelList.isEmpty())
         return;
-    const int count = labelList.size();
+    const auto count = labelList.size();
     Q_ASSERT(count == buddies.size());
     undoStack()->beginMacro(tr("Add %n buddies", nullptr, count));
-    for (int i = 0; i < count; i++)
+    for (qsizetype i = 0; i < count; ++i)
         undoStack()->push(createBuddyCommand(m_formWindow, labelList.at(i), buddies.at(i)));
     undoStack()->endMacro();
     // Now select all new ones

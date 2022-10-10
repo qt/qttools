@@ -194,8 +194,9 @@ static bool removeEmptyCellsOnGrid(GridLikeLayout *grid, const QRect &area)
     // remove, starting from last
     if (!indexesToBeRemoved.isEmpty()) {
         std::stable_sort(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
-        for (int i = indexesToBeRemoved.size() - 1; i >= 0; i--)
-            delete grid->takeAt(indexesToBeRemoved[i]);
+        std::reverse(indexesToBeRemoved.begin(), indexesToBeRemoved.end());
+        for (auto i : std::as_const(indexesToBeRemoved))
+            delete grid->takeAt(i);
     }
     return true;
 }
@@ -542,12 +543,11 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         if (savedState == state(boxLayout))
             return;
 
-        const int count = savedState.size();
-        Q_ASSERT(count == currentState.size());
+        Q_ASSERT(savedState.size() == currentState.size());
         // Take items and reassemble in saved order
         const LayoutItemVector items = disassembleLayout(boxLayout);
-        for (int i = 0; i < count; i++) {
-            QLayoutItem *item = findItemOfWidget(items, savedState[i]);
+        for (auto *w : savedState) {
+            QLayoutItem *item = findItemOfWidget(items, w);
             Q_ASSERT(item);
             boxLayout->addItem(item);
         }

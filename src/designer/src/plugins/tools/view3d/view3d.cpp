@@ -374,9 +374,8 @@ static void grabWidget_helper(QWidget *widget, QPixmap &res, QPixmap &buf,
         pt.drawPixmap(offset.x(), offset.y(), buf, 0, 0, r.width(), r.height());
     }
 
-    const QObjectList children = widget->children();
-    for (int i = 0; i < children.size(); ++i) {
-        QWidget *child = qobject_cast<QWidget*>(children.at(i));
+    for (auto *o : widget->children()) {
+        QWidget *child = qobject_cast<QWidget*>(o);
         if (child == 0 || child->isWindow())
             continue;
         if (child->isHidden() || !child->geometry().intersects(r))

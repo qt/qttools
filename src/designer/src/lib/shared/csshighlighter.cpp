@@ -29,7 +29,7 @@ void CssHighlighter::highlightBlock(const QString& text)
         { Comment, Comment, Comment, Comment, Comment, Comment, Comment, -1, MaybeCommentEnd } // MaybeCommentEnd
     };
 
-    int lastIndex = 0;
+    qsizetype lastIndex = 0;
     bool lastWasSlash = false;
     int state = previousBlockState(), save_state;
     if (state == -1) {
@@ -54,7 +54,7 @@ void CssHighlighter::highlightBlock(const QString& text)
         state = save_state;
     }
 
-    for (int i = 0; i < text.size(); i++) {
+    for (qsizetype i = 0; i < text.size(); ++i) {
         int token = ALNUM;
         const QChar c = text.at(i);
         const char a = c.toLatin1();

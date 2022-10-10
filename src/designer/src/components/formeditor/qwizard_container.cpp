@@ -93,7 +93,7 @@ void QWizardContainer::insertWidget(int index, QWidget *widget)
     }
 
     const auto idList = m_wizard->pageIds();
-    const int pageCount = idList.size();
+    const auto pageCount = idList.size();
     if (index >= pageCount) {
         addWidget(widget);
         return;
@@ -109,7 +109,7 @@ void QWizardContainer::insertWidget(int index, QWidget *widget)
         // Create a gap by shuffling pages
         WizardPageList pageList;
         pageList.push_back(newPage);
-        for (int i = index; i < pageCount; i++) {
+        for (qsizetype i = index; i < pageCount; ++i) {
             pageList.push_back(m_wizard->page(idList.at(i)));
             m_wizard->removePage(idList.at(i));
         }

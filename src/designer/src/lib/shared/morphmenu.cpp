@@ -316,10 +316,10 @@ bool MorphWidgetCommand::init(QWidget *widget, const QString &newClassName)
     // If the target has a container extension, we add enough new pages to take
     // up the children of the before widget
     if (QDesignerContainerExtension* c = qt_extension<QDesignerContainerExtension*>(core->extensionManager(), m_afterWidget)) {
-        if (const int pageCount = childContainers(core, m_beforeWidget).size()) {
+        if (const auto pageCount = childContainers(core, m_beforeWidget).size()) {
             const QString qWidget = QStringLiteral("QWidget");
             const QString containerName = m_afterWidget->objectName();
-            for (int i = 0; i < pageCount; i++) {
+            for (qsizetype i = 0; i < pageCount; ++i) {
                 QString name = containerName;
                 name += QStringLiteral("Page");
                 name += QString::number(i + 1);
@@ -381,8 +381,8 @@ void MorphWidgetCommand::morph(QWidget *before, QWidget *after)
     QWidgetList beforeChildContainers = childContainers(fw->core(), before);
     QWidgetList afterChildContainers = childContainers(fw->core(), after);
     Q_ASSERT(beforeChildContainers.size() == afterChildContainers.size());
-    const int childContainerCount = beforeChildContainers.size();
-    for (int i = 0; i < childContainerCount; i++) {
+    const auto childContainerCount = beforeChildContainers.size();
+    for (qsizetype i = 0; i < childContainerCount; ++i) {
         QWidget *beforeChildContainer = beforeChildContainers.at(i);
         QWidget *afterChildContainer = afterChildContainers.at(i);
         if (QLayout *childLayout = beforeChildContainer->layout()) {
@@ -482,11 +482,11 @@ bool MorphWidgetCommand::canMorph(QDesignerFormWindowInterface *fw, QWidget *w, 
         return true;
     // Check children. All child containers must be non-laid-out or have managed layouts
     const QWidgetList pages = childContainers(core, w);
-    const int pageCount = pages.size();
+    const auto pageCount = pages.size();
     if (ptrToChildContainerCount)
         *ptrToChildContainerCount = pageCount;
     if (pageCount) {
-        for (int i = 0; i < pageCount; i++)
+        for (qsizetype i = 0; i < pageCount; ++i)
             if (QLayout *cl = pages.at(i)->layout())
                 if (!core->metaDataBase()->item(cl))
                     return false;

@@ -1158,7 +1158,7 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     // split 'name_number'
     qlonglong num = 0;
     qlonglong factor = 1;
-    int idx = s.size()-1;
+    qsizetype idx = s.size() - 1;
     const ushort zeroUnicode = QLatin1Char('0').unicode();
     for ( ; idx > 0 && s.at(idx).isDigit(); --idx) {
         num += (s.at(idx).unicode() - zeroUnicode) * factor;
@@ -2253,9 +2253,7 @@ QAction *FormWindow::createSelectAncestorSubMenu(QWidget *w)
     QMenu *menu = new QMenu;
     QActionGroup *ag = new QActionGroup(menu);
     QObject::connect(ag, &QActionGroup::triggered, this, &FormWindow::slotSelectWidget);
-    const int size = parents.size();
-    for (int i = 0; i < size; i++) {
-        QWidget *w = parents.at(i);
+    for (auto *w : std::as_const(parents)) {
         QAction *a = ag->addAction(objectNameOf(w));
         a->setData(QVariant::fromValue(w));
         menu->addAction(a);
@@ -2464,8 +2462,8 @@ QWidget *FormWindow::containerAt(const QPoint &pos)
 static QWidget *childAt_SkipDropLine(QWidget *w, QPoint pos)
 {
     const QObjectList &child_list = w->children();
-    for (int i = child_list.size() - 1; i >= 0; --i) {
-        QObject *child_obj = child_list[i];
+    for (auto i = child_list.size() - 1; i >= 0; --i) {
+        QObject *child_obj = child_list.at(i);
         if (qobject_cast<WidgetHandle*>(child_obj) != nullptr)
             continue;
         QWidget *child = qobject_cast<QWidget*>(child_obj);

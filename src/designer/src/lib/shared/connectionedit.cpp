@@ -608,7 +608,7 @@ void Connection::trimLine()
 {
     if (m_source == nullptr || m_source_pos == QPoint(-1, -1) || m_target_pos == QPoint(-1, -1))
         return;
-    int cnt = m_knee_list.size();
+    auto cnt = m_knee_list.size();
     if (cnt < 2)
         return;
 
@@ -697,7 +697,7 @@ QRegion Connection::region() const
 {
     QRegion result;
 
-    for (int i = 0; i < m_knee_list.size() - 1; ++i)
+    for (qsizetype i = 0; i < m_knee_list.size() - 1; ++i)
         result = result.united(lineRect(m_knee_list.at(i), m_knee_list.at(i + 1)));
 
     if (!m_arrow_head.isEmpty()) {
@@ -730,7 +730,7 @@ void Connection::update(bool update_widgets) const
 
 void Connection::paint(QPainter *p) const
 {
-    for (int i = 0; i < m_knee_list.size() - 1; ++i)
+    for (qsizetype i = 0; i < m_knee_list.size() - 1; ++i)
         p->drawLine(m_knee_list.at(i), m_knee_list.at(i + 1));
 
     if (!m_arrow_head.isEmpty()) {
@@ -762,7 +762,7 @@ QRect Connection::endPointRect(EndPoint::Type type) const
 
 CETypes::LineDir Connection::labelDir(EndPoint::Type type) const
 {
-    const int cnt = m_knee_list.size();
+    const auto cnt = m_knee_list.size();
     if (cnt < 2)
         return RightDir;
 
@@ -782,7 +782,7 @@ CETypes::LineDir Connection::labelDir(EndPoint::Type type) const
 
 QRect Connection::labelRect(EndPoint::Type type) const
 {
-    const int cnt = m_knee_list.size();
+    const auto cnt = m_knee_list.size();
     if (cnt < 2)
         return QRect();
     const QString text = label(type);

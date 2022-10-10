@@ -550,7 +550,7 @@ int PaletteModel::groupToColumn(QPalette::ColorGroup group) const
 
 int PaletteModel::rowOf(QPalette::ColorRole role) const
 {
-    for (int row = 0, size = m_roleEntries.size(); row < size; ++row) {
+    for (qsizetype row = 0, size = m_roleEntries.size(); row < size; ++row) {
         if (m_roleEntries.at(row).role == role)
             return row;
     }

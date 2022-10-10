@@ -489,7 +489,7 @@ void PreviewConfiguration::fromSettings(const QString &prefix, const QDesignerSe
     clear();
     QString key = prefix;
     key += QLatin1Char('/');
-    const int prefixSize = key.size();
+    const auto prefixSize = key.size();
 
     PreviewConfigurationData &d = *m_d;
 

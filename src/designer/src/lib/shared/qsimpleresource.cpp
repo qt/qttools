@@ -133,9 +133,9 @@ void QSimpleResource::addCustomWidgetsToWidgetDatabase(const QDesignerFormEditor
                                                        QList<DomCustomWidget *> &custom_widget_list)
 {
     QDesignerWidgetDataBaseInterface *db = core->widgetDataBase();
-    for (int i=0; i < custom_widget_list.size(); ) {
+    for (qsizetype i = 0; i < custom_widget_list.size(); ) {
         bool classInserted = false;
-        DomCustomWidget *custom_widget = custom_widget_list[i];
+        DomCustomWidget *custom_widget = custom_widget_list.at(i);
         const QString customClassName = custom_widget->elementClass();
         const QString base_class = custom_widget->elementExtends();
         QString includeFile;

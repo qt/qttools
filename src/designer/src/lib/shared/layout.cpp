@@ -1128,14 +1128,14 @@ QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QW
     // -----------------------------------------------------------------
 
     // We need a list of both start and stop values for x- & y-axis
-    const int widgetCount = widgetList.size();
+    const auto widgetCount = widgetList.size();
     QList<int> x( widgetCount * 2 );
     QList<int> y( widgetCount * 2 );
 
     // Using push_back would look nicer, but operator[] is much faster
-    int index  = 0;
-    for (int i = 0; i < widgetCount; ++i) {
-        const QRect widgetPos = expandGeometry(widgetList.at(i)->geometry());
+    qsizetype index = 0;
+    for (const auto *w : widgetList) {
+        const QRect widgetPos = expandGeometry(w->geometry());
         x[index]   = widgetPos.left();
         x[index+1] = widgetPos.right();
         y[index]   = widgetPos.top();
@@ -1154,9 +1154,7 @@ QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QW
     // enough space
     m_grid.resize(y.size(), x.size());
 
-    const  QWidgetList::const_iterator cend = widgetList.constEnd();
-    for (QWidgetList::const_iterator it = widgetList.constBegin(); it != cend; ++it) {
-        QWidget *w = *it;
+    for (auto *w : widgetList) {
         // Mark the cells in the grid that contains a widget
         const QRect widgetPos = expandGeometry(w->geometry());
         QRect c(0, 0, 0, 0); // rect of columns/rows
@@ -1166,8 +1164,8 @@ QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QW
         Q_ASSERT(leftIdx != -1);
         c.setLeft(leftIdx);
         c.setRight(leftIdx);
-        for (int cw=leftIdx; cw<x.size(); cw++)
-            if (x[cw] <  widgetPos.right())
+        for (qsizetype cw = leftIdx; cw < x.size(); ++cw)
+            if (x.at(cw) < widgetPos.right())
                 c.setRight(cw);
             else
                 break;
@@ -1176,8 +1174,8 @@ QWidgetList GridLayout<GridLikeLayout, LayoutType, GridMode>::buildGrid(const QW
         Q_ASSERT(topIdx != -1);
         c.setTop(topIdx);
         c.setBottom(topIdx);
-        for (int ch=topIdx; ch<y.size(); ch++)
-            if (y[ch] <  widgetPos.bottom())
+        for (qsizetype ch = topIdx; ch < y.size(); ++ch)
+            if (y.at(ch) < widgetPos.bottom())
                 c.setBottom(ch);
             else
                 break;

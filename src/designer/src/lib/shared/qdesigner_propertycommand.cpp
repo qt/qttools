@@ -1167,7 +1167,7 @@ bool PropertyListCommand::canMergeLists(const PropertyHelperList& other) const
 {
     if (m_propertyHelperList.size() !=  other.size())
         return false;
-    for (int i = 0; i < m_propertyHelperList.size(); i++) {
+    for (qsizetype i = 0; i < m_propertyHelperList.size(); ++i) {
         if (!m_propertyHelperList.at(i)->canMerge(*other.at(i)))
             return false;
     }

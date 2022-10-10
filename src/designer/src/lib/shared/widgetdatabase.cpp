@@ -370,15 +370,14 @@ static WidgetDataBaseItem *createCustomWidgetItem(const QDesignerCustomWidgetInt
 
 void WidgetDataBase::loadPlugins()
 {
-    typedef QMap<QString, int> NameIndexMap;
+    typedef QMap<QString, qsizetype> NameIndexMap;
     using ItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
     using NameSet = QSet<QString>;
     // 1) create a map of existing custom classes
     NameIndexMap existingCustomClasses;
     NameSet nonCustomClasses;
-    const int count = m_items.size();
-    for (int i = 0; i < count; i++)    {
-        const QDesignerWidgetDataBaseItemInterface* item =  m_items[i];
+    for (qsizetype i = 0, count = m_items.size(); i < count; ++i)    {
+        const QDesignerWidgetDataBaseItemInterface* item =  m_items.at(i);
         if (item->isCustom() && !item->isPromoted())
             existingCustomClasses.insert(item->name(), i);
         else
@@ -410,7 +409,7 @@ void WidgetDataBase::loadPlugins()
                 }
             } else {
                 // replace existing info
-                const int existingIndex = existingIt.value();
+                const auto existingIndex = existingIt.value();
                 delete m_items[existingIndex];
                 m_items[existingIndex] = pluginItem;
                 existingCustomClasses.erase(existingIt);

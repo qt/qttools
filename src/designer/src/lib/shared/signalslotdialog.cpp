@@ -237,8 +237,8 @@ void SignaturePanel::slotRemove()
     if (const int row = selectedIndexes.constFirst().row())
         m_listView->setCurrentIndex (selectedIndexes.constFirst().sibling(row - 1, 0));
 
-    for (int  i = selectedIndexes.size() - 1; i >= 0; i--)
-        qDeleteAll(m_model->takeRow(selectedIndexes[i].row()));
+    for (auto i = selectedIndexes.size() - 1; i >= 0; --i)
+        qDeleteAll(m_model->takeRow(selectedIndexes.at(i).row()));
 }
 
 void SignaturePanel::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &)

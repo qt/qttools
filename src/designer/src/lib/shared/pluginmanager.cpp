@@ -733,8 +733,7 @@ QDesignerCustomWidgetData QDesignerPluginManager::customWidgetData(QDesignerCust
 
 QDesignerCustomWidgetData QDesignerPluginManager::customWidgetData(const QString &name) const
 {
-    const int count = m_d->m_customWidgets.size();
-    for (int i = 0; i < count; i++)
+    for (qsizetype i = 0, count = m_d->m_customWidgets.size(); i < count; ++i)
         if (m_d->m_customWidgets.at(i)->name() == name)
             return m_d->m_customWidgetData.at(i);
     return QDesignerCustomWidgetData();

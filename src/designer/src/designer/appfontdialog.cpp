@@ -142,9 +142,8 @@ int AppFontManager::add(const QString &fontFile, QString *errorMessage)
 
 bool AppFontManager::remove(int id, QString *errorMessage)
 {
-    const int count = m_fonts.size();
-    for (int i = 0; i < count; i++)
-        if (m_fonts[i].second == id)
+    for (qsizetype i = 0, count = m_fonts.size(); i < count; ++i)
+        if (m_fonts.at(i).second == id)
             return removeAt(i, errorMessage);
 
     *errorMessage = QCoreApplication::translate("AppFontManager", "'%1' is not a valid font id.").arg(id);
@@ -153,9 +152,8 @@ bool AppFontManager::remove(int id, QString *errorMessage)
 
 bool AppFontManager::remove(const QString &fontFile, QString *errorMessage)
 {
-    const int count = m_fonts.size();
-    for (int i = 0; i < count; i++)
-        if (m_fonts[i].first == fontFile)
+    for (qsizetype i = 0, count = m_fonts.size(); i < count; ++i)
+        if (m_fonts.at(i).first == fontFile)
             return removeAt(i, errorMessage);
 
     *errorMessage = QCoreApplication::translate("AppFontManager", "There is no loaded font matching the id '%1'.").arg(fontFile);
@@ -329,8 +327,8 @@ static void removeFonts(const QModelIndexList &selectedIndexes, AppFontModel *mo
     }
 
     std::stable_sort(rows.begin(), rows.end());
-    for (int i = rows.size() - 1; i >= 0; i--)
-        model->removeRow(rows[i]);
+    for (qsizetype i = rows.size() - 1; i >= 0; --i)
+        model->removeRow(rows.at(i));
 }
 
 void AppFontWidget::slotRemoveFiles()
