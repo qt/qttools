@@ -76,6 +76,8 @@
 #include <QtCore/qscopedpointer.h>
 #include <QtXml/qdom.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 using namespace qdesigner_internal;
@@ -889,32 +891,26 @@ void QDesignerActions::formWindowSettingsChanged(QDesignerFormWindowInterface *f
 void QDesignerActions::updateRecentFileActions()
 {
     QStringList files = m_settings.recentFilesList();
-    const int originalSize = files.size();
-    int numRecentFiles = qMin(files.size(), int(MaxRecentFiles));
-    const auto recentFilesActs = m_recentFilesActions->actions();
-
-    for (int i = 0; i < numRecentFiles; ++i) {
-        const QFileInfo fi(files[i]);
-        // If the file doesn't exist anymore, just remove it from the list so
-        // people don't get confused.
-        if (!fi.exists()) {
-            files.removeAt(i);
-            --i;
-            numRecentFiles = qMin(files.size(), int(MaxRecentFiles));
-            continue;
-        }
-        const QString text = fi.fileName();
-        recentFilesActs[i]->setText(text);
-        recentFilesActs[i]->setIconText(files[i]);
-        recentFilesActs[i]->setVisible(true);
+    auto existingEnd = std::remove_if(files.begin(), files.end(),
+                                      [] (const QString &f) { return !QFileInfo::exists(f); });
+    if (existingEnd != files.end()) {
+        files.erase(existingEnd, files.end());
+        m_settings.setRecentFilesList(files);
     }
 
-    for (int j = numRecentFiles; j < MaxRecentFiles; ++j)
-        recentFilesActs[j]->setVisible(false);
-
-    // If there's been a change, right it back
-    if (originalSize != files.size())
-        m_settings.setRecentFilesList(files);
+    const auto recentFilesActs = m_recentFilesActions->actions();
+    qsizetype i = 0;
+    for (QAction *action : recentFilesActs) {
+        if (i < files.size()) {
+            const QString &file = files.at(i);
+            action->setText(QFileInfo(file).fileName());
+            action->setIconText(file);
+            action->setVisible(true);
+        } else {
+            action->setVisible(false);
+        }
+        ++i;
+    }
 }
 
 void QDesignerActions::openRecentForm()
