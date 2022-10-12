@@ -6,6 +6,7 @@
             <contents name="further-information" title="Further information" level="1"/>
             <contents name="linking" title="Linking" level="1"/>
             <contents name="qdoc-linking-test" title="QDoc Linking Test" level="1"/>
+            <contents name="linking-to-something-in-a-section-title" title="Linking to something in a section title" level="1"/>
             <description>
                 <relation href="qdoctests-qdocfileoutput-linking.html" type="page" meta="next" description="Testing QDoc's link command"/>
                 <brief>This is a simple page for testing purposes only.</brief>
@@ -81,6 +82,10 @@
                 <section id="qdoc-linking-test">
                     <heading level="1">QDoc Linking Test</heading>
                     <para>This section title is overridden by another target which takes precedence.</para>
+                </section>
+                <section id="linking-to-something-in-a-section-title">
+                    <heading level="1">Linking to <link raw="Further information" href="qdoctests-qdocfileoutput.html#further-information" type="page" page="Testing QDoc output from .qdoc files">something</link> in a section title</heading>
+                    <para>This is allowed but a questionable practice.</para>
                 </section>
             </description>
         </page>

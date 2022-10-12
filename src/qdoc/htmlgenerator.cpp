@@ -676,6 +676,10 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         out() << "<br/>";
         break;
     case Atom::Link:
+        // Prevent nested links in table of contents
+        if (m_inContents)
+            break;
+        Q_FALLTHROUGH();
     case Atom::NavLink: {
         const Node *node = nullptr;
         QString link = getLink(atom, relative, &node);
@@ -2288,7 +2292,6 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
 
     // disable nested links in table of contents
     m_inContents = true;
-    m_inLink = true;
 
     out() << "<div class=\"sidebar\">\n";
     out() << "<div class=\"toc\">\n";

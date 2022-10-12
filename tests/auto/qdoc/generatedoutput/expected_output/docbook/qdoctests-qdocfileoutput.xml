@@ -70,4 +70,8 @@
 <db:title>QDoc Linking Test</db:title>
 <db:para>This section title is overridden by another target which takes precedence.</db:para>
 </db:section>
+<db:section xml:id="linking-to-something-in-a-section-title">
+<db:title>Linking to <db:link xlink:href="qdoctests-qdocfileoutput.xml#further-information">something</db:link> in a section title</db:title>
+<db:para>This is allowed but a questionable practice.</db:para>
+</db:section>
 </db:article>
