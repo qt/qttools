@@ -1062,7 +1062,10 @@
     \section1 \\qml
 
     The \\qml and \\endqml commands enclose a snippet of QML source
-    code.
+    code. Use these for proper syntax highlighting of QML code snippets.
+    The enclosed snippet must be complete as if it was a valid .qml file.
+    If the snippet is incomplete, QDoc will issue a warning and ignore the
+    snippet.
 
     \code
     / *!
