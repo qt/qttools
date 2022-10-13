@@ -193,7 +193,8 @@ QString sortName(const Node *node)
     }
 
     if (node->isFunction(Node::QML))
-        return QLatin1Char('E') + nodeName;
+        return QLatin1Char('E') + nodeName + QLatin1Char(' ') +
+            QString::number(static_cast<const FunctionNode*>(node)->overloadNumber(), 36);
 
     if (node->isClassNode())
         return QLatin1Char('A') + nodeName;
