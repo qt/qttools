@@ -10,6 +10,8 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qlist.h>
 
+#include <optional>
+
 namespace Scanner {
 
 enum class InputFormat {
@@ -19,9 +21,9 @@ enum class InputFormat {
 Q_DECLARE_FLAGS(InputFormats, InputFormat)
 Q_DECLARE_OPERATORS_FOR_FLAGS(InputFormats)
 
-QList<Package> readFile(const QString &filePath, LogLevel logLevel);
-QList<Package> scanDirectory(const QString &directory, InputFormats inputFormats, LogLevel logLevel);
-
+std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLevel);
+std::optional<QList<Package>> scanDirectory(const QString &directory, InputFormats inputFormats,
+                                            LogLevel logLevel);
 }
 
 #endif // SCANNER_H

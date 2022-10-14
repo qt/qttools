@@ -50,8 +50,7 @@ static void sourceCode(QTextStream &out, const QString &src)
     out << "\n\\endcode\n\n";
 }
 
-static void generate(QTextStream &out, const Package &package, const QDir &baseDir,
-                     LogLevel logLevel)
+static void generate(QTextStream &out, const Package &package, const QDir &baseDir)
 {
     out << "/*!\n\n";
     for (const QString &part : package.qtParts) {
@@ -116,21 +115,8 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
     QString copyright;
     if (!package.copyright.isEmpty())
         copyright = package.copyright;
-
-    if (!package.copyrightFile.isEmpty()) {
-        const QDir packageDir(package.path);
-        QFile file(QDir(package.path).absoluteFilePath(package.copyrightFile));
-        if (!file.open(QIODevice::ReadOnly)) {
-            if (logLevel != SilentLog) {
-                std::cerr << qPrintable(
-                        tr("Path %1 : cannot open copyright file %2.\n")
-                                .arg(QDir::toNativeSeparators(package.path))
-                                .arg(QDir::toNativeSeparators(package.copyrightFile)));
-            }
-        } else {
-            copyright = QString::fromUtf8(file.readAll());
-        }
-    }
+    else if (!package.copyrightFileContents.isEmpty())
+        copyright = package.copyrightFileContents;
 
     if (!copyright.isEmpty()) {
         out << "\n";
@@ -147,18 +133,9 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         out << package.license << ".\n\n";
     }
 
-    foreach (const QString &licenseFile, package.licenseFiles) {
-        QFile file(licenseFile);
-        if (!file.open(QIODevice::ReadOnly)) {
-            if (logLevel != SilentLog) {
-                std::cerr << qPrintable(tr("Path %1 : cannot open license file %2.\n")
-                                                .arg(QDir::toNativeSeparators(package.path))
-                                                .arg(QDir::toNativeSeparators(licenseFile)));
-                out << "*/\n";
-            }
-            return;
-        }
-        sourceCode(out, QString::fromUtf8(file.readAll()).trimmed());
+    foreach (const QString &license, package.licenseFilesContents) {
+        out << "*/\n";
+        sourceCode(out, license);
     }
     out << "*/\n";
 }
@@ -171,7 +148,7 @@ void generate(QTextStream &out, const QList<Package> &packages, const QString &b
 
     QDir baseDir(baseDirectory);
     for (const Package &package : packages)
-        generate(out, package, baseDir, logLevel);
+        generate(out, package, baseDir);
 }
 
 } // namespace QDocGenerator
