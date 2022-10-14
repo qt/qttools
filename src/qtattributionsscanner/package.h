@@ -26,9 +26,11 @@ struct Package {
     QString license; // The license under which the package is distributed. Mandatory.
     QString licenseId; // see https://spdx.org/licenses/. Optional.
     QStringList licenseFiles; // path to files containing the license text. Optional.
+    QStringList licenseFilesContents;
 
     QString copyright; // Text with copyright owner. Optional.
     QString copyrightFile; // Path to file containing copyright owners. Optional.
+    QString copyrightFileContents;
 
     QString packageComment; // Further comments about the package. Optional.
 };

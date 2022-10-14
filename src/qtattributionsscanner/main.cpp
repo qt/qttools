@@ -99,9 +99,16 @@ int main(int argc, char *argv[])
         if (logLevel == VerboseLog)
             std::cerr << qPrintable(tr("Recursively scanning %1 for attribution files...").arg(
                                         QDir::toNativeSeparators(path))) << std::endl;
-        packages = Scanner::scanDirectory(path, formats, logLevel);
+        std::optional<QList<Package>> p = Scanner::scanDirectory(path, formats, logLevel);
+        if (!p)
+            return 1;
+        packages = *p;
     } else if (pathInfo.isFile()) {
-        packages = Scanner::readFile(path, logLevel);
+        std::optional<QList<Package>> p = Scanner::readFile(path, logLevel);
+        if (!p)
+            return 1;
+        packages = *p;
+
     } else {
         std::cerr << qPrintable(tr("%1 is not a valid file or directory.").arg(
                                     QDir::toNativeSeparators(path))) << std::endl << std::endl;

@@ -40,26 +40,23 @@ tst_qtattributionsscanner::tst_qtattributionsscanner()
 void tst_qtattributionsscanner::test_data()
 {
     QTest::addColumn<QString>("input");
+    QTest::addColumn<bool>("success");
     QTest::addColumn<QString>("stdout_file");
     QTest::addColumn<QString>("stderr_file");
 
-    QTest::newRow("good")
-            << QStringLiteral("good")
-            << QStringLiteral("good/expected.json")
-            << QStringLiteral("good/expected.error");
-    QTest::newRow("warnings (incomplete)")
-            << QStringLiteral("warnings/incomplete")
-            << QStringLiteral("warnings/incomplete/expected.json")
-            << QStringLiteral("warnings/incomplete/expected.error");
+    QTest::newRow("good") << QStringLiteral("good") << true << QStringLiteral("good/expected.json")
+                          << QStringLiteral("good/expected.error");
+    QTest::newRow("warnings (incomplete)") << QStringLiteral("warnings/incomplete") << false
+                                           << QStringLiteral("warnings/incomplete/expected.json")
+                                           << QStringLiteral("warnings/incomplete/expected.error");
     QTest::newRow("warnings (unknown attribute)")
-            << QStringLiteral("warnings/unknown")
+            << QStringLiteral("warnings/unknown") << false
             << QStringLiteral("warnings/unknown/expected.json")
             << QStringLiteral("warnings/unknown/expected.error");
-    QTest::newRow("singlefile")
-            << QStringLiteral("good/minimal/qt_attribution_test.json")
-            << QStringLiteral("good/minimal/expected.json")
-            << QStringLiteral("good/minimal/expected.error");
-    QTest::newRow("variants") << QStringLiteral("good/variants/qt_attribution_test.json")
+    QTest::newRow("singlefile") << QStringLiteral("good/minimal/qt_attribution_test.json") << true
+                                << QStringLiteral("good/minimal/expected.json")
+                                << QStringLiteral("good/minimal/expected.error");
+    QTest::newRow("variants") << QStringLiteral("good/variants/qt_attribution_test.json") << true
                               << QStringLiteral("good/variants/expected.json")
                               << QStringLiteral("good/variants/expected.error");
 }
@@ -75,6 +72,7 @@ void tst_qtattributionsscanner::readExpectedFile(const QString &baseDir, const Q
 void tst_qtattributionsscanner::test()
 {
     QFETCH(QString, input);
+    QFETCH(bool, success);
     QFETCH(QString, stdout_file);
     QFETCH(QString, stderr_file);
 
@@ -95,9 +93,9 @@ void tst_qtattributionsscanner::test()
 
     QVERIFY2(proc.exitStatus() == QProcess::NormalExit,
              "\"qtattributionsscanner " + m_cmd.toLatin1() + "\" crashed");
-    QVERIFY2(!proc.exitCode(),
-             "\"qtattributionsscanner " + m_cmd.toLatin1() + "\" exited with code " +
-             QByteArray::number(proc.exitCode()));
+    QVERIFY2(success ? (proc.exitCode() == 0) : (proc.exitCode() != 0),
+             "\"qtattributionsscanner " + m_cmd.toLatin1() + "\" exited with code "
+                     + QByteArray::number(proc.exitCode()));
 
     { // compare error output
         QByteArray stdErr = proc.readAllStandardError();
@@ -109,7 +107,8 @@ void tst_qtattributionsscanner::test()
         QCOMPARE(stdErr, expectedErrorOutput);
     }
 
-    { // compare json output
+    if (proc.exitCode() == 0) {
+        // compare json output
         QByteArray stdOut = proc.readAllStandardOutput();
 
         QJsonParseError jsonError;
