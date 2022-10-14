@@ -264,34 +264,19 @@
     enclose documentation that only will be included if the
     preprocessor symbol is defined.
 
-    The values of the variable are regular expressions (see QRegularExpression
-    for details). By default, no symbol is defined, meaning that code
-    protected with #ifdef...#endif will be ignored.
-
     \badcode
-        defines = Q_QDOC \
-                  QT_.*_SUPPORT \
-                  QT_.*_LIB \
-                  QT_COMPAT \
-                  QT3_SUPPORT \
-                  Q_OS_.* \
-                  Q_BYTE_ORDER \
-                  __cplusplus
+        defines = QT_GUI_LIB
     \endcode
 
     This ensures that QDoc will process the code that requires these
     symbols to be defined. For example:
 
     \code
-        #ifdef Q_OS_WIN
-          HDC getDC() const;
-          void releaseDC(HDC) const;
+        #ifdef Q_GUI_LIB
+        void keyClick(QWidget *widget, Qt::Key key, Qt::KeyboardModifiers modifier = Qt::NoModifier, int delay = -1)
         #endif
     \endcode
 
-    Since the Q_OS_.* regular expression (specified using the \c
-    defines variable) matches Q_OS_WIN, QDoc will process the code
-    within #ifdef and #endif in our example.
 
     You can also define preprocessor symbols manually on the command
     line using the -D option. For example:
