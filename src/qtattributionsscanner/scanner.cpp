@@ -14,6 +14,8 @@
 
 #include <iostream>
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace Scanner {
 
 static void missingPropertyWarning(const QString &filePath, const QString &property)
@@ -87,6 +89,79 @@ static std::optional<QStringList> toStringList(const QJsonValue &value)
         result.push_back(iter.toString());
     }
     return result;
+}
+
+// Extracts SPDX license ids from a SPDX license expression.
+// For "(BSD-3-Clause AND BeerWare)" this function returns { "BSD-3-Clause", "BeerWare" }.
+static QStringList extractLicenseIdsFromSPDXExpression(QString expression)
+{
+    const QStringList spdxOperators = {
+        u"AND"_s,
+        u"OR"_s,
+        u"WITH"_s
+    };
+
+    // Replace parentheses with spaces. We're not interested in grouping.
+    const QRegularExpression parensRegex(u"[()]"_s);
+    expression.replace(parensRegex, u" "_s);
+
+    // Split the string at space boundaries to extract tokens.
+    QStringList result;
+    for (const QString &token : expression.split(QLatin1Char(' '), Qt::SkipEmptyParts)) {
+        if (spdxOperators.contains(token))
+            continue;
+
+        // Remove the unary + operator, if present.
+        if (token.endsWith(QLatin1Char('+')))
+            result.append(token.mid(0, token.length() - 1));
+        else
+            result.append(token);
+    }
+    return result;
+}
+
+// Starting at packageDir, look for a LICENSES subdirectory in the directory hierarchy upwards.
+// Return a default-constructed QString if the directory was not found.
+static QString locateLicensesDir(const QString &packageDir)
+{
+    static const QString licensesSubDir = u"LICENSES"_s;
+    QDir dir(packageDir);
+    while (true) {
+        if (dir.cd(licensesSubDir))
+            return dir.path();
+        if (dir.isRoot())
+            break;
+        dir.cdUp();
+    }
+    return {};
+}
+
+// Locates the license files that belong to the licenses mentioned in LicenseId and stores them in
+// the specified package object.
+static bool autoDetectLicenseFiles(Package &p)
+{
+    const QString licensesDirPath = locateLicensesDir(p.path);
+    const QStringList licenseIds = extractLicenseIdsFromSPDXExpression(p.licenseId);
+    if (!licenseIds.isEmpty() && licensesDirPath.isEmpty()) {
+        std::cerr << qPrintable(tr("LICENSES directory could not be located.")) << std::endl;
+        return false;
+    }
+
+    bool success = true;
+    QDir licensesDir(licensesDirPath);
+    for (const QString &id : licenseIds) {
+        QString fileName = id + u".txt";
+        if (licensesDir.exists(fileName)) {
+            p.licenseFiles.append(licensesDir.filePath(fileName));
+        } else {
+            std::cerr << qPrintable(tr("Expected license file not found: %1").arg(
+                                        QDir::toNativeSeparators(licensesDir.filePath(fileName))))
+                      << std::endl;
+            success = false;
+        }
+    }
+
+    return success;
 }
 
 // Transforms a JSON object into a Package object
@@ -199,6 +274,9 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         }
         p.licenseFilesContents << QString::fromUtf8(file.readAll()).trimmed();
     }
+
+    if (p.licenseFiles.isEmpty() && !autoDetectLicenseFiles(p))
+        return std::nullopt;
 
     if (!validatePackage(p, filePath, logLevel) || !validPackage)
         return std::nullopt;

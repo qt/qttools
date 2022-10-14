@@ -67,6 +67,9 @@ void tst_qtattributionsscanner::readExpectedFile(const QString &baseDir, const Q
     QVERIFY2(file.open(QIODevice::ReadOnly | QIODevice::Text), "Could not open " + file.fileName().toLocal8Bit());
     *content = file.readAll();
     content->replace("%{PWD}", baseDir.toUtf8());
+
+    QDir licensesDir(QStringLiteral(QTTOOLS_LICENSES_DIR));
+    content->replace("%{LICENSES_DIR}", licensesDir.canonicalPath().toUtf8());
 }
 
 void tst_qtattributionsscanner::test()

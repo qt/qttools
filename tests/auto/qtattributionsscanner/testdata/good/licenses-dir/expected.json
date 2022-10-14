@@ -1,0 +1,23 @@
+[
+    {
+        "Copyright": "Copyright",
+        "CopyrightFile": "",
+        "Description": "",
+        "DownloadLocation": "",
+        "Files": "",
+        "Homepage": "",
+        "Id": "licenses-dir",
+        "License": "BSD 3-Clause \"New\" or \"Revised\" License",
+        "LicenseFile": "%{LICENSES_DIR}/BSD-3-Clause.txt",
+        "LicenseId": "BSD-3-Clause",
+        "Name": "LicensesDir",
+        "PackageComment": "",
+        "Path": "%{PWD}",
+        "QDocModule": "qtest",
+        "QtParts": [
+            "libs"
+        ],
+        "QtUsage": "Usage",
+        "Version": ""
+    }
+]
