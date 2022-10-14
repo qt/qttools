@@ -266,7 +266,7 @@ static QString prefixFromLabel(const QString &prefix)
 {
     QString rc;
     bool lastWasAcceptable = false;
-    for (const QChar c : prefix) {
+    for (const QChar &c : prefix) {
         const PrefixCharacterKind kind = prefixCharacterKind(c);
         const bool acceptable = kind != PC_Invalid;
         if (acceptable) {
