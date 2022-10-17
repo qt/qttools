@@ -336,6 +336,9 @@ bool DataModel::release(const QString &fileName, bool verbose, bool ignoreUnfini
     cd.m_verbose = verbose;
     cd.m_ignoreUnfinished = ignoreUnfinished;
     cd.m_saveMode = mode;
+    cd.m_idBased =
+            std::all_of(tor.messages().begin(), tor.messages().end(),
+                        [](const TranslatorMessage &message) { return !message.id().isEmpty(); });
     bool ok = saveQM(tor, file, cd);
     if (!ok)
         QMessageBox::warning(parent, QObject::tr("Qt Linguist"), cd.error());
