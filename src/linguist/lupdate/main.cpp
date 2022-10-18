@@ -1042,6 +1042,14 @@ int main(int argc, char **argv)
         printErr(u"lupdate warning: -target-language usually only"
                   " makes sense with exactly one TS file.\n"_s);
 
+    if (proFiles.isEmpty() && resourceFiles.isEmpty() && sourceFiles.length() == 1
+        && QFileInfo(sourceFiles.first()).fileName() == u"CMakeLists.txt"_s) {
+        printErr(u"lupdate error: Passing a CMakeLists.txt as project file is not supported.\n"_s
+                 u"Please use the 'qt_add_lupdate' CMake command and build the "_s
+                 u"'update_translations' target.\n"_s);
+        return 1;
+    }
+
     QString errorString;
     if (!proFiles.isEmpty()) {
         runInternalQtTool(u"lupdate-pro"_s, app.arguments().mid(1));
