@@ -121,15 +121,16 @@ void QDocIndexFiles::readIndexFile(const QString &path)
 
     QXmlStreamAttributes attrs = reader.attributes();
 
-    // Generate a relative URL between the install dir and the index file
-    // when the -installdir command line option is set.
-    QString indexUrl;
-    if (Config::installDir.isEmpty()) {
-        indexUrl = attrs.value(QLatin1String("url")).toString();
-    } else {
-        // Use a fake directory, since we will copy the output to a sub directory of
-        // installDir when using "make install". This is just for a proper relative path.
-        // QDir installDir(path.section('/', 0, -3) + "/outputdir");
+    QString indexUrl {attrs.value(QLatin1String("url")).toString()};
+
+    // Decide how we link to nodes loaded from this index file:
+    // If building a set that will be installed AND the URL of
+    // the dependency is identical to ours, assume that also
+    // the dependent html files are available under the same
+    // directory tree. Otherwise, link using the full index URL.
+    if (!Config::installDir.isEmpty() && indexUrl == Config::instance().getString(CONFIG_URL)) {
+        // Generate a relative URL between the install dir and the index file
+        // when the -installdir command line option is set.
         QDir installDir(path.section('/', 0, -3) + '/' + Generator::outputSubdir());
         indexUrl = installDir.relativeFilePath(path).section('/', 0, -2);
     }

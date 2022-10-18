@@ -1,6 +1,10 @@
 # test linking to entities loaded from index
 project = IndexLinking
 
+# Use a URL different from what the dependency below uses,
+# to avoid linking with relative paths. See QTBUG-107762.
+url = indexlinking
+
 depends = \
     qmlpropertygroups
 
