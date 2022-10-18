@@ -1,6 +1,7 @@
 include(../configs/testqml.qdocconf)
 
 project = QmlPropertyGroups
+url = https://doc.qt.io/${project}
 
 sourcedirs += .
 
