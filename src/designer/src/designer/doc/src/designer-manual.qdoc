@@ -23,8 +23,8 @@
     \l {Qt Design Studio Manual}{Qt Design Studio} for user interface
     design rather than widgets. It is a much easier way to write many kinds of
     applications. It enables a completely customizable appearance,
-    touch-reactive elements, and smooth animated transitions, backed up by the
-    power of OpenGL graphics acceleration.
+    touch-reactive elements, and smooth animated transitions, taking advantage
+    of hardware acceleration.
 
     If you are new to \QD, you can take a look at the
     \l{Getting To Know Qt Designer} document. For a quick tutorial on how to
