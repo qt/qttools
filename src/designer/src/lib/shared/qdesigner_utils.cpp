@@ -13,7 +13,10 @@
 #include <QtDesigner/taskmenu.h>
 #include <QtDesigner/qextensionmanager.h>
 
+#include <QtCore/qcoreapplication.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qoperatingsystemversion.h>
 #include <QtCore/qprocess.h>
 #include <QtCore/qlibraryinfo.h>
 #include <QtCore/qdebug.h>
@@ -705,7 +708,20 @@ namespace qdesigner_internal {
     {
         QProcess uic;
         QStringList arguments;
-        QString binary = QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath) + "/uic"_L1;
+        static constexpr auto uicBinary =
+            QOperatingSystemVersion::currentType() != QOperatingSystemVersion::Windows
+            ? "/uic"_L1 : "/uic.exe"_L1;
+        QString binary = QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath) + uicBinary;
+        // In a PySide6 installation, there is no libexec directory; uic.exe is
+        // in the main wheel directory next to designer.exe.
+        if (!QFileInfo::exists(binary))
+            binary = QCoreApplication::applicationDirPath() + uicBinary;
+        if (!QFileInfo::exists(binary)) {
+            errorMessage = QApplication::translate("Designer", "%1 does not exist.").
+                           arg(QDir::toNativeSeparators(binary));
+            return false;
+        }
+
         switch (language) {
         case UicLanguage::Cpp:
             break;
