@@ -32,7 +32,7 @@
 \title qt_add_translation
 \target qt6_add_translation
 
-\brief Compiles Qt Linguist .ts files into .qm files.
+\summary {Compiles Qt Linguist .ts files into .qm files.}
 
 \warning This function is deprecated. Consider using the target-based
 functions \l{qt6_add_lrelease} or \l{qt6_add_translations} instead.
@@ -85,10 +85,10 @@ sub-directory:
 \title qt_create_translation
 \target qt6_create_translation
 
+\summary {Sets up the Qt Linguist translation toolchain.}
+
 \warning This function is deprecated. Consider using the target-based
 functions \l{qt6_add_lupdate} or \l{qt6_add_translations} instead.
-
-\brief Sets up the Qt Linguist translation toolchain.
 
 \section1 Synopsis
 
@@ -137,7 +137,7 @@ files in the build directory:
 \title qt_add_lupdate
 \target qt6_add_lupdate
 
-\brief Add targets to generate or update Qt Linguist .ts files.
+\summary {Add targets to generate or update Qt Linguist .ts files.}
 
 \cmakecommandsince 6.2
 
@@ -211,7 +211,7 @@ Add the targets \c{myapp_lupdate} and \c{update_translations} for updating the
 \title qt_add_lrelease
 \target qt6_add_lrelease
 
-\brief Add targets to transform Qt Linguist .ts files into .qm files.
+\summary {Add targets to transform Qt Linguist .ts files into .qm files.}
 
 \cmakecommandsince 6.2
 
@@ -297,7 +297,7 @@ files.
 \title qt_add_translations
 \target qt6_add_translations
 
-\brief Add targets to update and transform Qt Linguist .ts files into .qm files.
+\summary {Add targets to update and transform Qt Linguist .ts files into .qm files.}
 
 \cmakecommandsince 6.2
 
