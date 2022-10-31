@@ -29,6 +29,7 @@
             <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
             <keyword name="SeenClass" id="SeenClass" ref="seenclass.html"/>
             <keyword name="Test" id="TestQDoc::Test" ref="testqdoc-test.html"/>
+            <keyword name="Test C++ Types" id="Test C++ Types" ref="cpptypes.html"/>
             <keyword name="Test::SomeType" id="Test::SomeType" ref="testqdoc-test.html#SomeType-typedef"/>
             <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
             <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
@@ -56,6 +57,7 @@
         <files>
             <file>autolinking.html</file>
             <file>classes.html</file>
+            <file>cpptypes.html</file>
             <file>crossmoduleref.html</file>
             <file>obsolete-classes.html</file>
             <file>seenclass.html</file>

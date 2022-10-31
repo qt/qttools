@@ -985,7 +985,9 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
 
 /*!
  * Return a string representing a text that exposes information about
- * the groups that the \a node is part of.
+ * the user-visible groups that the \a node is part of. A user-visible
+ * group is a group that generates an output page, that is, a \\group
+ * topic exists for the group and can be linked to.
  *
  * The returned string is composed of comma separated links to the
  * groups, with their title as the user-facing text, surrounded by
@@ -1001,7 +1003,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
  * For example, "N is part of the A group".
  *
  * The returned string is empty when the node is not linked to any
- * group.
+ * group that has a valid link target.
  *
  * This string is used in the summary of c++ classes or qml types to
  * link them to some of the overview documentation that is generated
@@ -1012,26 +1014,33 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
  * members for escaping and linking.
  */
 QString HtmlGenerator::groupReferenceText(PageNode* node) {
-    auto link_for_group = [this](const QString &group_name) -> QString {
-        CollectionNode* group{m_qdb->groups()[group_name]};
-        m_qdb->mergeCollections(group);
-
+    auto link_for_group = [this](const CollectionNode *group) -> QString {
         QString target{linkForNode(group, nullptr)};
-
         return (target.isEmpty()) ? protectEnc(group->name()) : "<a href=\"" + target + "\">" + protectEnc(group->fullTitle()) + "</a>";
     };
 
     QString text{};
 
-    QStringList groups_names{node->groupNames()};
-    if (!groups_names.empty()) {
+    const QStringList &groups_names{node->groupNames()};
+    if (groups_names.isEmpty())
+        return text;
+
+    std::vector<CollectionNode *> groups_nodes(groups_names.size(), nullptr);
+    std::transform(groups_names.cbegin(), groups_names.cend(), groups_nodes.begin(),
+            [this](const QString &group_name) -> CollectionNode* {
+                CollectionNode *group{m_qdb->groups()[group_name]};
+                m_qdb->mergeCollections(group);
+                return (group && group->wasSeen()) ? group : nullptr;
+            });
+    groups_nodes.erase(std::remove(groups_nodes.begin(), groups_nodes.end(), nullptr), groups_nodes.end());
+
+    if (!groups_nodes.empty()) {
         text += node->name() + " is part of ";
 
-        for (qsizetype index{0}; index < groups_names.size(); ++index) {
-            text += link_for_group(groups_names[index]) + Utilities::separator(index, groups_names.size());
+        for (std::vector<CollectionNode *>::size_type index{0}; index < groups_nodes.size(); ++index) {
+            text += link_for_group(groups_nodes[index]) + Utilities::separator(index, groups_nodes.size());
         }
     }
-
     return text;
 }
 

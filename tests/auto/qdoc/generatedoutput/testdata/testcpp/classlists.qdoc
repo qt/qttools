@@ -34,3 +34,8 @@
         \li \l {Obsolete Classes#TestQDoc}
     \endlist
 */
+
+/*!
+    \group cpptypes
+    \title Test C++ Types
+*/

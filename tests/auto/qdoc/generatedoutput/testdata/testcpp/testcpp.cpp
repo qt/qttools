@@ -68,6 +68,7 @@ namespace TestQDoc {
     \since 1.1
 \endif
     \ingroup testgroup
+    \ingroup cpptypes
 */
 
 /*!

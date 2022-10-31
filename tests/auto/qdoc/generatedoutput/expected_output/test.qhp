@@ -85,6 +85,7 @@
             <keyword name="TabWidget" id="QML.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
             <keyword name="TabWidget" id="QML.UIComponents1.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
             <keyword name="Test" id="TestQDoc::Test" ref="testqdoc-test.html"/>
+            <keyword name="Test C++ Types" id="Test C++ Types" ref="cpptypes.html"/>
             <keyword name="Test::SomeType" id="Test::SomeType" ref="testqdoc-test.html#SomeType-typedef"/>
             <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
             <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
@@ -158,6 +159,7 @@
         </keywords>
         <files>
             <file>autolinking.html</file>
+            <file>cpptypes.html</file>
             <file>crossmoduleref.html</file>
             <file>images/leonardo-da-vinci.png</file>
             <file>obsolete-classes.html</file>

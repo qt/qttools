@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebXML>
     <document>
-        <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="testgroup" module="TestCPP" brief="A class in a namespace">
+        <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
             <description>
                 <brief>A class in a namespace.</brief>
             </description>
