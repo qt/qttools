@@ -44,7 +44,7 @@
     \li \l{Qt Linguist Manual: Developers}{Developers}
     \li \l{Qt Linguist Manual: TS File Format}{TS File Format}
     \li \l{Qt Linguist Manual: Text ID Based Translations}{Text ID Based Translations}
-    \li \l{cmake-macros-qtlinguisttools}{CMake Commands}
+    \li \l{CMake Commands in Qt6 LinguistTools}{CMake Commands}
     \endlist
 
 */
