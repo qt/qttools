@@ -113,7 +113,7 @@ static QStringList extractLicenseIdsFromSPDXExpression(QString expression)
 
         // Remove the unary + operator, if present.
         if (token.endsWith(QLatin1Char('+')))
-            result.append(token.mid(0, token.length() - 1));
+            result.append(token.mid(0, token.size() - 1));
         else
             result.append(token);
     }
