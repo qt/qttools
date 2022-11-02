@@ -243,40 +243,37 @@ static std::vector<std::string> aliasDefinition;
 static clang::tooling::ArgumentsAdjuster getClangArgumentAdjuster()
 {
     const QByteArrayList compilerIncludeFlags = getIncludePathsFromCompiler();
-    return [=](const clang::tooling::CommandLineArguments &args,
-               llvm::StringRef /*unused*/) {
-        clang::tooling::CommandLineArguments adjustedArgs;
-        for (size_t i = 0, e = args.size(); i < e; ++i) {
-            llvm::StringRef arg = args[i];
-            // FIXME: Remove options that generate output.
-            if (!arg.startswith("-fcolor-diagnostics") && !arg.startswith("-fdiagnostics-color"))
-                adjustedArgs.push_back(args[i]);
-        }
-        adjustedArgs.push_back("-fparse-all-comments");
-        adjustedArgs.push_back("-nostdinc");
+    return [=](const clang::tooling::CommandLineArguments &args, llvm::StringRef /*unused*/) {
+        clang::tooling::CommandLineArguments adjustedArgs(args);
+        clang::tooling::CommandLineArguments adjustedArgsTemp;
+
+        adjustedArgsTemp.push_back("-fparse-all-comments");
+        adjustedArgsTemp.push_back("-nostdinc");
 
         // Turn off SSE support to avoid usage of gcc builtins.
         // TODO: Look into what Qt Creator does.
         // Pointers: HeaderPathFilter::removeGccInternalIncludePaths()
         //           and gccInstallDir() in gcctoolchain.cpp
         // Also needed for Mac, No need for CLANG_RESOURCE_DIR when this is part of the argument.
-        adjustedArgs.push_back("-mno-sse");
+        adjustedArgsTemp.push_back("-mno-sse");
 
-        adjustedArgs.push_back("-fsyntax-only");
 #ifdef Q_OS_WIN
-        adjustedArgs.push_back("-fms-compatibility-version=19");
-        adjustedArgs.push_back("-DQ_COMPILER_UNIFORM_INIT");    // qtbase + clang-cl hack
+        adjustedArgsTemp.push_back("-fms-compatibility-version=19");
+        adjustedArgsTemp.push_back("-DQ_COMPILER_UNIFORM_INIT"); // qtbase + clang-cl hack
         // avoid constexpr error connected with offsetof (QTBUG-97380)
-        adjustedArgs.push_back("-D_CRT_USE_BUILTIN_OFFSETOF");
+        adjustedArgsTemp.push_back("-D_CRT_USE_BUILTIN_OFFSETOF");
 #endif
-        adjustedArgs.push_back("-Wno-everything");
+        adjustedArgsTemp.push_back("-Wno-everything");
 
         for (const QByteArray &flag : compilerIncludeFlags)
-            adjustedArgs.push_back(flag.data());
+            adjustedArgsTemp.push_back(flag.data());
 
         for (auto alias : aliasDefinition) {
-            adjustedArgs.push_back(alias);
+            adjustedArgsTemp.push_back(alias);
         }
+
+        clang::tooling::CommandLineArguments::iterator it = llvm::find(adjustedArgs, "--");
+        adjustedArgs.insert(it, adjustedArgsTemp.begin(), adjustedArgsTemp.end());
         return adjustedArgs;
     };
 }
@@ -461,7 +458,11 @@ void ClangCppParser::loadCPP(Translator &translator, const QStringList &files, C
     ReadSynchronizedRef<std::string> ppSources(sources);
     WriteSynchronizedRef<TranslationRelatedStore> ppStore(stores.Preprocessor);
     size_t idealProducerCount = std::min(ppSources.size(), size_t(std::thread::hardware_concurrency()));
-    clang::tooling::ArgumentsAdjuster argumentsAdjuster = getClangArgumentAdjuster();
+    clang::tooling::ArgumentsAdjuster argumentsAdjusterSyntaxOnly =
+            clang::tooling::getClangSyntaxOnlyAdjuster();
+    clang::tooling::ArgumentsAdjuster argumentsAdjusterLocal = getClangArgumentAdjuster();
+    clang::tooling::ArgumentsAdjuster argumentsAdjuster =
+            clang::tooling::combineAdjusters(argumentsAdjusterLocal, argumentsAdjusterSyntaxOnly);
 
     for (size_t i = 0; i < idealProducerCount; ++i) {
         std::thread producer([&ppSources, &db, &ppStore, &argumentsAdjuster]() {
