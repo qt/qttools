@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="qdoctests-qdocmanuallikefileoutput.html" href="qdoctests-qdocmanuallikefileoutput.html" status="active" location="qdoctests-outputfromqdocmanuallikefiles.qdoc" documented="true" subtype="page" title="Document Navigation" fulltitle="Document Navigation" subtitle="">
+            <target name="previouspage-command"/>
+            <contents name="commands" title="Commands" level="1"/>
+            <contents name="previouspage" title="\previouspage" level="2"/>
+            <description>
+                <para>The navigation commands...</para>
+                <quote>
+                    <raw format="HTML">        &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;5&quot; width=&quot;100%&quot;&gt;
+
+        &lt;tr&gt;
+        &lt;p&gt;
+        [Previous: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
+        Basic Qt&lt;/a&gt;]
+        [&lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;Contents&lt;/a&gt;]
+        [Next: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
+        Creating Dialogs&lt;/a&gt;]
+        &lt;/p&gt;
+
+        &lt;h1 align=&quot;center&quot;&gt;Getting Started&lt;br /&gt;&lt;/h1&gt;
+
+        &lt;p&gt;
+        This chapter shows how to combine basic C++ with the
+        functionality provided by Qt to create a few small graphical
+        interface (GUI) applications.
+        &lt;/p&gt;
+
+        &lt;p&gt;
+        [Previous: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
+        Basic Qt&lt;/a&gt;]
+        [&lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;Contents&lt;/a&gt;]
+        [Next: &lt;a href=&quot;15-qdoc-commands-navigation.html#deadlink&quot;&gt;
+        Creating Dialogs&lt;/a&gt;]
+        &lt;/p&gt;
+
+        &lt;/table&gt;
+    </raw>
+                </quote>
+                <code>&lt;head&gt;
+    ...
+    &lt;link rel=&quot;start&quot; href=&quot;basicqt.html&quot; /&gt;
+    ...
+&lt;/head&gt;</code>
+                <section id="commands">
+                    <heading level="1">Commands</heading>
+                    <target name="previouspage-command"/>
+                </section>
+                <section id="previouspage">
+                    <heading level="2">\previouspage</heading>
+                    <para>The \previouspage command...</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

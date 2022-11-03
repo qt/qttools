@@ -261,6 +261,7 @@ void tst_generatedOutput::webXmlFromQDocFile()
 {
     testAndCompare("testdata/configs/webxml_test.qdocconf",
                    "html/qdoctests-qdocfileoutput.webxml "
+                   "html/qdoctests-qdocmanuallikefileoutput.webxml "
                    "html/qdoctests-qdocfileoutput-linking.webxml "
                    "html/qdoctests-qdocfileoutput-exhaustive.webxml");
 }
@@ -294,6 +295,7 @@ void tst_generatedOutput::docBookFromQDocFile()
 {
     testAndCompare("testdata/configs/docbook_test.qdocconf",
                    "docbook/qdoctests-qdocfileoutput.xml "
+                   "docbook/qdoctests-qdocmanuallikefileoutput.xml "
                    "docbook/qdoctests-qdocfileoutput-linking.xml "
                    "docbook/qdoctests-qdocfileoutput-exhaustive.xml");
 }
