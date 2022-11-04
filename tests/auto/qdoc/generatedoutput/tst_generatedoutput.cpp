@@ -482,7 +482,8 @@ void tst_generatedOutput::noAutoList()
 void tst_generatedOutput::nestedMacro()
 {
     testAndCompare("testdata/configs/nestedmacro.qdocconf",
-                   "nestedmacro/testcpp-module.html");
+                   "nestedmacro/testcpp-module.html "
+                   "docbook-nestedmacro/testcpp-module.xml");
 }
 
 void tst_generatedOutput::headerFile()

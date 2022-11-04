@@ -1058,16 +1058,16 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         }
                     } else if (s_utilities.macroHash.contains(cmdStr)) {
                         const Macro &macro = s_utilities.macroHash.value(cmdStr);
+                        QStringList macroArgs;
                         int numPendingFi = 0;
                         int numFormatDefs = 0;
-                        QString matchExpr;
                         for (auto it = macro.m_otherDefs.constBegin();
                              it != macro.m_otherDefs.constEnd(); ++it) {
-                            if (it.key() == "match") {
-                                matchExpr = it.value();
-                            } else {
+                            if (it.key() != "match") {
+                                if (numFormatDefs == 0)
+                                    macroArgs = getMacroArguments(cmdStr, macro);
                                 append(Atom::FormatIf, it.key());
-                                expandMacro(cmdStr, *it, macro.numParams);
+                                expandMacro(*it, macroArgs);
                                 ++numFormatDefs;
                                 if (it == macro.m_otherDefs.constEnd()) {
                                     append(Atom::FormatEndif);
@@ -1087,8 +1087,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                                                        "format-specific and qdoc-"
                                                        "syntax definitions"));
                             } else {
-                                QString expanded = expandMacroToString(cmdStr, macro.m_defaultDef,
-                                                                       macro.numParams, matchExpr);
+                                QString expanded = expandMacroToString(cmdStr, macro);
                                 m_input.replace(m_backslashPosition,
                                                 m_endPosition - m_backslashPosition, expanded);
                                 m_inputLength = m_input.size();
@@ -1937,8 +1936,7 @@ bool DocParser::expandMacro()
         if (s_utilities.macroHash.contains(cmdStr)) {
             const Macro &macro = s_utilities.macroHash.value(cmdStr);
             if (!macro.m_defaultDef.isEmpty()) {
-                QString expanded = expandMacroToString(cmdStr, macro.m_defaultDef, macro.numParams,
-                                                       macro.m_otherDefs.value("match"));
+                QString expanded = expandMacroToString(cmdStr, macro);
                 m_input.replace(backslashPos, m_position - backslashPos, expanded);
                 m_inputLength = m_input.size();
                 m_position = backslashPos;
@@ -1961,40 +1959,22 @@ bool DocParser::expandMacro()
     return false;
 }
 
-void DocParser::expandMacro(const QString &name, const QString &def, int numParams)
+void DocParser::expandMacro(const QString &def, const QStringList &args)
 {
-    if (numParams == 0) {
+    if (args.isEmpty()) {
         append(Atom::RawString, def);
     } else {
-        QStringList args;
         QString rawString;
 
-        for (int i = 0; i < numParams; ++i) {
-            if (numParams == 1 || isLeftBraceAhead()) {
-                args << getArgument();
-            } else {
-                location().warning(QStringLiteral("Macro '\\%1' invoked with too few"
-                                                  " arguments (expected %2, got %3)")
-                                           .arg(name)
-                                           .arg(numParams)
-                                           .arg(i));
-                numParams = i;
-                break;
-            }
-        }
-
-        int j = 0;
-        while (j < def.size()) {
-            int paramNo;
-            if (((paramNo = def[j].unicode()) >= 1) && (paramNo <= numParams)) {
+        for (int j = 0; j < def.size(); ++j) {
+            if (int paramNo = def[j].unicode(); paramNo >= 1 && paramNo <= args.length()) {
                 if (!rawString.isEmpty()) {
                     append(Atom::RawString, rawString);
                     rawString.clear();
                 }
                 append(Atom::String, args[paramNo - 1]);
-                j += 1;
             } else {
-                rawString += def[j++];
+                rawString += def[j];
             }
         }
         if (!rawString.isEmpty())
@@ -2002,40 +1982,22 @@ void DocParser::expandMacro(const QString &name, const QString &def, int numPara
     }
 }
 
-QString DocParser::expandMacroToString(const QString &name, const QString &def, int numParams,
-                                       const QString &matchExpr)
+QString DocParser::expandMacroToString(const QString &name, const Macro &macro)
 {
+    const QString &def{macro.m_defaultDef};
     QString rawString;
 
-    if (numParams == 0) {
-        rawString = def;
+    if (macro.numParams == 0) {
+        rawString = macro.m_defaultDef;
     } else {
-        QStringList args;
-        for (int i = 0; i < numParams; ++i) {
-            if (numParams == 1 || isLeftBraceAhead()) {
-                args << getArgument(true);
-            } else {
-                location().warning(QStringLiteral("Macro '\\%1' invoked with too few"
-                                                  " arguments (expected %2, got %3)")
-                                           .arg(name)
-                                           .arg(numParams)
-                                           .arg(i));
-                numParams = i;
-                break;
-            }
-        }
+        QStringList args{getMacroArguments(name, macro)};
 
-        int j = 0;
-        while (j < def.size()) {
-            int paramNo;
-            if (((paramNo = def[j].unicode()) >= 1) && (paramNo <= numParams)) {
-                rawString += args[paramNo - 1];
-                j += 1;
-            } else {
-                rawString += def[j++];
-            }
+        for (int j = 0; j < def.size(); ++j) {
+            int paramNo = def[j].unicode();
+            rawString += (paramNo >= 1 && paramNo <= args.length()) ? args[paramNo - 1] : def[j];
         }
     }
+    QString matchExpr{macro.m_otherDefs.value("match")};
     if (matchExpr.isEmpty())
         return rawString;
 
@@ -2222,6 +2184,31 @@ QString DocParser::getBracketedArgument()
             location().warning(QStringLiteral("Missing ']'"));
     }
     return arg;
+}
+
+
+/*!
+    Returns the list of arguments passed to a \a macro with name \a name.
+
+    If a macro takes more than a single argument, they are expected to be
+    wrapped in braces.
+*/
+QStringList DocParser::getMacroArguments(const QString &name, const Macro &macro)
+{
+    QStringList args;
+    for (int i = 0; i < macro.numParams; ++i) {
+        if (macro.numParams == 1 || isLeftBraceAhead()) {
+            args << getArgument();
+        } else {
+            location().warning(QStringLiteral("Macro '\\%1' invoked with too few"
+                    " arguments (expected %2, got %3)")
+                            .arg(name)
+                            .arg(macro.numParams)
+                            .arg(i));
+            break;
+        }
+    }
+    return args;
 }
 
 QString DocParser::getOptionalArgument()

@@ -28,7 +28,8 @@ namespace TestQDoc {
     \include testcpp.cpp {args} {/} {*} {Look, Ma! {I'm made of arguments!}}
 
 \if defined(test_nestedmacro)
-    \versionnote {module} {\ver}
+    \versionnote {module} {\ver 5.15.0}
+    \ver 1.0.0
 \endif
 
     \section1 Linking to function-like things

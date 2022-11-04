@@ -2,9 +2,13 @@ include(config.qdocconf)
 include(testcpp.qdocconf)
 defines += test_nestedmacro
 
-macro.ver               = "5.15.0"
+macro.ver               = "\1"
 macro.ver.match         = "^(\\d+\\.\\d+)"
-macro.versionnote.HTML  = "<p><b>This \1 was introduced in version \2.</b></p>\n"
+macro.versionnote.HTML      = "<p><b>This \1 was introduced in version \2.</b></p>\n"
+macro.versionnote.DocBook   = "<db:para>This \1 was introduced in version \2.</db:para>\n"
 
-HTML.nosubdirs          = true
-HTML.outputsubdir       = nestedmacro
+outputformats = HTML DocBook
+
+{HTML.nosubdirs,DocBook.nosubdirs}  = true
+HTML.outputsubdir                   = nestedmacro
+DocBook.outputsubdir                = docbook-nestedmacro

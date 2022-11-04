@@ -23,6 +23,7 @@ QT_BEGIN_NAMESPACE
 class Doc;
 class DocPrivate;
 class CodeMarker;
+struct Macro;
 
 class DocParser
 {
@@ -70,13 +71,13 @@ private:
     void leaveTableRow();
     void quoteFromFile(const QString& filename);
     bool expandMacro();
-    void expandMacro(const QString &name, const QString &def, int numParams);
-    QString expandMacroToString(const QString &name, const QString &def, int numParams,
-                                const QString &matchExpr);
+    void expandMacro(const QString &def, const QStringList &args);
+    QString expandMacroToString(const QString &name, const Macro &macro);
     Doc::Sections getSectioningUnit();
     QString getArgument(bool verbatim = false);
     QString getBracedArgument(bool verbatim);
     QString getBracketedArgument();
+    QStringList getMacroArguments(const QString &name, const Macro &macro);
     QString getOptionalArgument();
     QString getRestOfLine();
     QString getMetaCommandArgument(const QString &cmdStr);

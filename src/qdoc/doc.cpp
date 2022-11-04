@@ -326,7 +326,8 @@ void Doc::initialize(FileResolver& file_resolver)
                 int m = Config::numParams(def);
                 if (macro.numParams == -1)
                     macro.numParams = m;
-                else if (macro.numParams != m) {
+                // .match definition is a regular expression that contains no params
+                else if (macro.numParams != m && f != QLatin1String("match")) {
                     if (!silent) {
                         QString other = QStringLiteral("default");
                         if (macro.m_defaultDef.isEmpty())
