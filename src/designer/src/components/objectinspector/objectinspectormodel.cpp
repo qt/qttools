@@ -47,8 +47,10 @@ static bool sameIcon(const QIcon &i1, const QIcon &i2)
     return i1.cacheKey() == i2.cacheKey();
 }
 
-static inline bool isNameColumnEditable(const QObject *)
+static inline bool isNameColumnEditable(const QObject *o)
 {
+    if (auto *action = qobject_cast<const QAction *>(o))
+        return !action->isSeparator();
     return true;
 }
 
