@@ -30,7 +30,9 @@
     <para>
         <bold>All your text belong to bold</bold> ...And this is an examble of only <bold>bold</bold> being, well, bold.</para>
     <dots indent="4">...</dots>
-    <para>And if I knew qmltext, I guess this is where that would go. </para>This a caption<legalese>
+    <para>And if I knew qmltext, I guess this is where that would go. </para>
+    <para>This a caption</para>
+    <legalese>
         <para>Lorem legal ipsum</para>
     </legalese>
     <quote>
@@ -62,11 +64,17 @@
         <para>An image with just an alternative text:</para>
         <image href="images/leonardo-da-vinci.png"/>
         <para>An image with alternative text and 1-atom caption:</para>
-        <image href="images/leonardo-da-vinci.png"/>Image caption<para>An image with alternative text and 2-atom caption:</para>
-        <image href="images/leonardo-da-vinci.png"/>Image caption without bold text<para>A bordered image:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>Image caption</para>
+        <para>An image with alternative text and 2-atom caption:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>Image caption with <bold>bold</bold> text</para>
+        <para>A bordered image:</para>
         <image href="images/leonardo-da-vinci.png"/>
         <para>A bordered image with a caption:</para>
-        <image href="images/leonardo-da-vinci.png"/>Screenshot of the System Tray Icon</section>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>Screenshot of the System Tray Icon</para>
+    </section>
     <section id="commands-not-yet-tested">
         <heading level="1">Commands not yet tested</heading>
         <para>

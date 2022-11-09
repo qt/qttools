@@ -167,7 +167,7 @@
     An image with alternative text and 2-atom caption:
 
     \image leonardo-da-vinci.png Image alt
-    \caption Image caption without bold text
+    \caption Image caption with \b {bold} text
 
     A bordered image:
 

@@ -80,7 +80,7 @@
 </db:figure>
 <db:para>An image with alternative text and 2-atom caption:</db:para>
 <db:figure>
-<db:title>Image caption without bold text</db:title>
+<db:title>Image caption with <db:emphasis role="bold">bold</db:emphasis> text</db:title>
 <db:mediaobject>
 <db:alt>Image alt</db:alt>
 <db:imageobject>

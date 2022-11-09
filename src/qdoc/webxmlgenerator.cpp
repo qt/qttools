@@ -622,10 +622,12 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
     case Atom::Nop:
         break;
 
+    case Atom::CaptionLeft:
     case Atom::ParaLeft:
         writer.writeStartElement("para");
         break;
 
+    case Atom::CaptionRight:
     case Atom::ParaRight:
         writer.writeEndElement(); // para
         break;
