@@ -1297,11 +1297,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_WARNING:
                     leavePara();
-                    enterPara();
-                    append(Atom::FormattingLeft, ATOM_FORMATTING_BOLD);
-                    append(Atom::String, "Warning:");
-                    append(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
-                    append(Atom::String, " ");
+                    enterPara(Atom::WarningLeft, Atom::WarningRight);
                     break;
                 case CMD_OVERLOAD:
                     priv->metacommandsUsed.insert(cmdStr);

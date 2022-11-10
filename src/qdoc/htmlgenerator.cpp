@@ -800,23 +800,24 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
     } break;
     case Atom::ImageText:
         break;
+    // Admonitions
     case Atom::ImportantLeft:
-        out() << "<p>";
-        out() << formattingLeftMap()[ATOM_FORMATTING_BOLD];
-        out() << "Important: ";
-        out() << formattingRightMap()[ATOM_FORMATTING_BOLD];
-        break;
-    case Atom::ImportantRight:
-        out() << "</p>";
-        break;
     case Atom::NoteLeft:
-        out() << "<p>";
+    case Atom::WarningLeft: {
+        QString admonType = atom->typeString();
+        // Remove 'Left' from atom type to get the admonition type
+        admonType.chop(4);
+        out() << "<div class=\"admonition " << admonType.toLower() << "\">\n"
+              << "<p>";
         out() << formattingLeftMap()[ATOM_FORMATTING_BOLD];
-        out() << "Note: ";
+        out() << admonType << ": ";
         out() << formattingRightMap()[ATOM_FORMATTING_BOLD];
-        break;
+    } break;
+    case Atom::ImportantRight:
     case Atom::NoteRight:
-        out() << "</p>\n";
+    case Atom::WarningRight:
+        out() << "</p>\n"
+              << "</div>\n";
         break;
     case Atom::LegaleseLeft:
         out() << "<div class=\"LegaleseLeft\">";

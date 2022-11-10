@@ -234,6 +234,8 @@ static const struct
              { "TableOfContents", Atom::TableOfContents },
              { "Target", Atom::Target },
              { "UnhandledFormat", Atom::UnhandledFormat },
+             { "WarningLeft", Atom::WarningLeft },
+             { "WarningRight", Atom::WarningRight },
              { "UnknownCommand", Atom::UnknownCommand },
              { nullptr, 0 } };
 

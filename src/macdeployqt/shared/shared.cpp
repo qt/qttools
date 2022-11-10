@@ -1289,7 +1289,7 @@ bool deployQmlImports(const QString &appBundlePath, DeploymentInfo deploymentInf
         LogError() << "Could not start qmlimpoortscanner. Process error is" << qmlImportScanner.errorString();
         return false;
     }
-    qmlImportScanner.waitForFinished();
+    qmlImportScanner.waitForFinished(-1);
 
     // log qmlimportscanner errors
     qmlImportScanner.setReadChannel(QProcess::StandardError);
