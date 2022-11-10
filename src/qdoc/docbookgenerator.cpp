@@ -1149,7 +1149,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             skipAhead += 4;
             sectionLevels.pop();
         }
-                break;
+        break;
     case Atom::SectionRight:
         // All the logic about closing sections is done in the SectionLeft case
         // and generateFooter() for the end of the page.
