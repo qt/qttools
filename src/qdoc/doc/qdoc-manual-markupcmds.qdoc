@@ -1792,7 +1792,7 @@
     \endlist
 
     The \e {QML} in \e {square brackets} tells QDoc to accept a
-    matching target only if the traget is on a QML page. Qdoc actually
+    matching target only if the target is on a QML page. Qdoc actually
     finds the C++ namespace target first, but since that target is on
     a C++ page, QDoc ignores it and keeps looking until it finds the
     same target on a QML page.
@@ -1844,7 +1844,7 @@
     \endlist
 
     When a module name is used as the \e {square bracket} argument,
-    QDoc will search for link the target in that module only. This
+    QDoc will search for the link target in that module only. This
     makes searching for link targets more efficient.
 
     Finally, the module name and entity type arguments can be
