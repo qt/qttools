@@ -37,7 +37,7 @@ void QHelpSearchIndexReader::search(const QString &collectionFile, const QString
 int QHelpSearchIndexReader::searchResultCount() const
 {
     QMutexLocker lock(&m_mutex);
-    return m_searchResults.count();
+    return m_searchResults.size();
 }
 
 QList<QHelpSearchResult> QHelpSearchIndexReader::searchResults(int start,

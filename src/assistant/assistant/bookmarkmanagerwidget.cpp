@@ -104,7 +104,7 @@ void BookmarkManagerWidget::selectNextIndex(bool direction) const
 {
     QModelIndex current = ui.treeView->currentIndex();
     if (current.isValid() && !cache.isEmpty()) {
-        current = cache.at(nextIndex(cache.indexOf(current), cache.count(),
+        current = cache.at(nextIndex(cache.indexOf(current), cache.size(),
             direction));
     }
     ui.treeView->setCurrentIndex(current);

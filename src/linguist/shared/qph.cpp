@@ -89,7 +89,7 @@ static bool loadQPH(Translator &translator, QIODevice &dev, ConversionData &)
 static QString protect(const QString &str)
 {
     QString result;
-    result.reserve(str.length() * 12 / 10);
+    result.reserve(str.size() * 12 / 10);
     for (int i = 0; i != str.size(); ++i) {
         uint c = str.at(i).unicode();
         switch (c) {

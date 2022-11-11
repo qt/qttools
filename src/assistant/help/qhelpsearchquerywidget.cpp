@@ -42,7 +42,7 @@ private:
 
         QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override
         {
-            if (!index.isValid() || index.row() >= termList.count()||
+            if (!index.isValid() || index.row() >= termList.size()||
                 (role != Qt::EditRole && role != Qt::DisplayRole))
                 return QVariant();
             return termList.at(index.row());
@@ -100,7 +100,7 @@ private:
         // Otherwise, the respective button would be disabled.
         Q_ASSERT(m_queries.curQuery != maxOrMinIndex);
 
-        m_queries.curQuery = qBound(0, m_queries.curQuery + addend, m_queries.queries.count() - 1);
+        m_queries.curQuery = qBound(0, m_queries.curQuery + addend, m_queries.queries.size() - 1);
         const QString &query = m_queries.queries.at(m_queries.curQuery);
         m_lineEdit->setText(query);
 

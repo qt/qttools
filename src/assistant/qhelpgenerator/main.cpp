@@ -147,7 +147,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
         CollectionConfiguration::setApplicationIcon(helpEngine, icon.readAll());
     }
 
-    if (config.aboutMenuTexts().count()) {
+    if (config.aboutMenuTexts().size()) {
         QByteArray ba;
         QDataStream s(&ba, QIODevice::WriteOnly);
         const QMap<QString, QString> &aboutMenuTexts = config.aboutMenuTexts();
@@ -165,7 +165,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
         CollectionConfiguration::setAboutIcon(helpEngine, icon.readAll());
     }
 
-    if (config.aboutTextFiles().count()) {
+    if (config.aboutTextFiles().size()) {
         QByteArray ba;
         QDataStream s(&ba, QIODevice::WriteOnly);
         QMap<QString, QByteArray> imgData;
@@ -209,7 +209,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
             }
         }
         CollectionConfiguration::setAboutTexts(helpEngine, ba);
-        if (imgData.count()) {
+        if (imgData.size()) {
             QByteArray imageData;
             QBuffer buffer(&imageData);
             buffer.open(QIODevice::WriteOnly);

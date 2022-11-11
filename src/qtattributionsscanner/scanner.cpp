@@ -298,7 +298,7 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
         QString line = in.readLine().trimmed();
         QStringList parts = line.split(QStringLiteral(":"));
 
-        if (parts.count() < 2)
+        if (parts.size() < 2)
             continue;
 
         QString key = parts.at(0);

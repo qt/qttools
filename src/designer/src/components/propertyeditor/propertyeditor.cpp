@@ -558,7 +558,7 @@ QColor PropertyEditor::propertyColor(QtProperty *property) const
         else if (isLayoutGroup(groupProperty))
             pair = m_layoutColor;
         else
-            pair = m_colors[groupIdx % m_colors.count()];
+            pair = m_colors[groupIdx % m_colors.size()];
     }
     if (!m_brightness)
         return pair.first;

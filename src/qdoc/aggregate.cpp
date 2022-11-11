@@ -358,7 +358,7 @@ bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
             QString t1 = p1.at(i).type();
             QString t2 = p2.at(i).type();
 
-            if (t1.length() < t2.length())
+            if (t1.size() < t2.size())
                 qSwap(t1, t2);
 
             /*

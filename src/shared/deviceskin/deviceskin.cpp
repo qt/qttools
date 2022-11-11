@@ -81,7 +81,7 @@ bool DeviceSkinParameters::read(const QString &skinDirectory,  ReadMode rm,  QSt
     // Figure out the name. remove ending '/' if present
     QString skinFile = skinDirectory;
     if (skinFile.endsWith(QLatin1Char('/')))
-        skinFile.truncate(skinFile.length() - 1);
+        skinFile.truncate(skinFile.size() - 1);
 
     QFileInfo fi(skinFile);
     QString fn;
@@ -144,7 +144,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
                 if ( eq >= 0 ) {
                     const QString key = line.left(eq);
                     eq++;
-                    while (eq<line.length()-1 && line[eq].isSpace())
+                    while (eq<line.size()-1 && line[eq].isSpace())
                         eq++;
                     const QString value = line.mid(eq);
                     if ( key == UpKey ) {
@@ -257,7 +257,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
         const QString line = ts.readLine();
         if ( !line.isEmpty() && line[0] != QLatin1Char('#') ) {
             const QStringList tok = line.split(splitRe);
-            if ( tok.count()<6 ) {
+            if ( tok.size()<6 ) {
                 *errorMessage =  DeviceSkin::tr("Syntax error in area definition: %1").arg(line);
                 return false;
             } else {
@@ -270,7 +270,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
                 }
 
                 int p=0;
-                for (int j=2; j < tok.count() - 1; ) {
+                for (int j=2; j < tok.size() - 1; ) {
                     const int x = tok[j++].toInt();
                     const int y = tok[j++].toInt();
                     area.area.putPoints(p++,1,x,y);
@@ -281,7 +281,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
                     area.name.truncate(area.name.size() - 1);
                     area.name.remove(0, 1);
                 }
-                if ( area.name.length() == 1 )
+                if ( area.name.size() == 1 )
                     area.text = area.name;
                 if ( area.name == Joystick)
                     joystick = i;
@@ -370,8 +370,8 @@ void DeviceSkin::calcRegions()
 {
     const int numAreas = m_parameters.buttonAreas.size();
     for (int i=0; i<numAreas; i++) {
-        QPolygon xa(m_parameters.buttonAreas[i].area.count());
-        int n = m_parameters.buttonAreas[i].area.count();
+        QPolygon xa(m_parameters.buttonAreas[i].area.size());
+        int n = m_parameters.buttonAreas[i].area.size();
         for (int p = 0; p < n; p++) {
             xa.setPoint(p,transform.map(m_parameters.buttonAreas[i].area[p]));
         }
@@ -513,7 +513,7 @@ void DeviceSkin::paintEvent( QPaintEvent *)
     for (int button : qAsConst(toDraw)) {
         const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[button];
         const QRect r = buttonRegions[button].boundingRect();
-        if ( ba.area.count() > 2 )
+        if ( ba.area.size() > 2 )
             p.setClipRegion(buttonRegions[button]);
         p.drawPixmap( r.topLeft(), skinImageDown, r);
     }

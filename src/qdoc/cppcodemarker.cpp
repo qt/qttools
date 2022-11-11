@@ -399,7 +399,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
     bool atEOF = false;
 
     auto readChar = [&]() {
-         if (i < code.length())
+         if (i < code.size())
             ch = code[i++];
          else
             atEOF = true;
@@ -589,7 +589,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
         }
     }
 
-    if (start < code.length()) {
+    if (start < code.size()) {
         appendProtectedString(&out, QStringView{code}.mid(start));
     }
 

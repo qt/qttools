@@ -10,8 +10,8 @@ int editDistance(const QString &s, const QString &t)
 #define D(i, j) d[(i)*n + (j)]
     int i;
     int j;
-    qsizetype m = s.length() + 1;
-    qsizetype n = t.length() + 1;
+    qsizetype m = s.size() + 1;
+    qsizetype n = t.size() + 1;
     int *d = new int[m * n];
     int result;
 
@@ -59,7 +59,7 @@ QString nearestName(const QString &actual, const QSet<QString> &candidates)
         }
     }
 
-    if (numBest == 1 && deltaBest <= 2 && actual.length() + best.length() >= 5)
+    if (numBest == 1 && deltaBest <= 2 && actual.size() + best.size() >= 5)
         return best;
 
     return QString();

@@ -1207,7 +1207,7 @@ const FunctionNode *QDocDatabase::findFunctionNode(const QString &target, const 
 {
     QString signature;
     QString function = target;
-    qsizetype length = target.length();
+    qsizetype length = target.size();
     if (function.endsWith("()"))
         function.chop(2);
     if (function.endsWith(QChar(')'))) {
@@ -1461,7 +1461,7 @@ const Node *QDocDatabase::findNodeForAtom(const Atom *a, const Node *relative, Q
         else if (first.endsWith(QChar(')'))) {
             QString signature;
             QString function = first;
-            qsizetype length = first.length();
+            qsizetype length = first.size();
             if (function.endsWith("()"))
                 function.chop(2);
             if (function.endsWith(QChar(')'))) {

@@ -389,7 +389,7 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
 {
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QSet<QString> metacommands = doc.metaCommandsUsed();
-    if (metacommands.count() > 0) {
+    if (metacommands.size() > 0) {
         metacommands.subtract(m_topics);
         for (const auto &command : qAsConst(metacommands)) {
             const ArgList args = doc.metaCommandArgs(command);
@@ -520,7 +520,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiImport *import)
 {
     QString name = m_document.mid(import->fileNameToken.offset, import->fileNameToken.length);
     if (name[0] == '\"')
-        name = name.mid(1, name.length() - 2);
+        name = name.mid(1, name.size() - 2);
     QString version;
     if (import->version) {
         const auto start = import->version->firstSourceLocation().begin();

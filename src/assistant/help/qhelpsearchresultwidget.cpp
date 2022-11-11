@@ -50,7 +50,7 @@ public:
         QTextStream str(&htmlFile);
         str << "<html><head><title>" << tr("Search Results") << "</title></head><body>";
 
-        const int count = results.count();
+        const int count = results.size();
         if (count != 0) {
             if (isIndexing) {
                 str << "<div style=\"text-align:left;"

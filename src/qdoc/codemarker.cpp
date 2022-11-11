@@ -213,7 +213,7 @@ static const QString squot = QLatin1String("&quot;");
 
 QString CodeMarker::protect(const QString &str)
 {
-    qsizetype n = str.length();
+    qsizetype n = str.size();
     QString marked;
     marked.reserve(n * 2 + 30);
     const QChar *data = str.constData();
@@ -240,7 +240,7 @@ QString CodeMarker::protect(const QString &str)
 
 void CodeMarker::appendProtectedString(QString *output, QStringView str)
 {
-    qsizetype n = str.length();
+    qsizetype n = str.size();
     output->reserve(output->size() + n * 2 + 30);
     const QChar *data = str.constData();
     for (int i = 0; i != n; ++i) {

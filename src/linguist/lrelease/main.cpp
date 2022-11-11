@@ -132,7 +132,7 @@ static bool releaseTsFile(const QString& tsFileName,
     QString qmFileName = tsFileName;
     for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
         if (qmFileName.endsWith(QLatin1Char('.') + fmt.extension)) {
-            qmFileName.chop(fmt.extension.length() + 1);
+            qmFileName.chop(fmt.extension.size() + 1);
             break;
         }
     }

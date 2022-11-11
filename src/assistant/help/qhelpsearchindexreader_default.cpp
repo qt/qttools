@@ -83,7 +83,7 @@ static QString namespacePlaceholders(const QStringList &namespaceList)
 {
     QString placeholders;
     bool firstNS = true;
-    for (int i = namespaceList.count(); i; --i) {
+    for (int i = namespaceList.size(); i; --i) {
         if (firstNS)
             firstNS = false;
         else
@@ -242,7 +242,7 @@ void QHelpSearchIndexReaderDefault::run()
     m_searchResults = m_reader.searchResults();
     lock.unlock();
 
-    emit searchingFinished(m_searchResults.count());
+    emit searchingFinished(m_searchResults.size());
 }
 
 }   // namespace std

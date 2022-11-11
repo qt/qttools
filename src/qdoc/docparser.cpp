@@ -291,7 +291,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
 {
     m_input = source;
     m_position = 0;
-    m_inputLength = m_input.length();
+    m_inputLength = m_input.size();
     m_cachedLocation = docPrivate->m_start_loc;
     m_cachedPosition = 0;
     m_private = docPrivate;
@@ -482,7 +482,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                     break;
                 case CMD_ENDIF:
-                    if (preprocessorSkipping.count() > 0) {
+                    if (preprocessorSkipping.size() > 0) {
                         if (preprocessorSkipping.pop())
                             --numPreprocessorSkipping;
                         (void)getRestOfLine(); // ### should ensure that it's empty
@@ -1001,7 +1001,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         p1 = getArgument();
                         if (p1.startsWith(QLatin1String("[since "))
                             && p1.endsWith(QLatin1String("]"))) {
-                            p2 = p1.mid(7, p1.length() - 8);
+                            p2 = p1.mid(7, p1.size() - 8);
                             p1 = getArgument();
                         }
                         if (!m_private->m_enumItemList.contains(p1))
@@ -1103,7 +1103,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                                                                        macro.numParams, matchExpr);
                                 m_input.replace(m_backslashPosition,
                                                 m_endPosition - m_backslashPosition, expanded);
-                                m_inputLength = m_input.length();
+                                m_inputLength = m_input.size();
                                 m_position = m_backslashPosition;
                             }
                         }
@@ -1239,7 +1239,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
     if (m_openedCommands.top() != CMD_OMIT) {
         location().warning(
                 QStringLiteral("Missing '\\%1'").arg(endCmdName(m_openedCommands.top())));
-    } else if (preprocessorSkipping.count() > 0) {
+    } else if (preprocessorSkipping.size() > 0) {
         location().warning(QStringLiteral("Missing '\\%1'").arg(cmdName(CMD_ENDIF)));
     }
 
@@ -1324,8 +1324,8 @@ void DocParser::include(const QString &fileName, const QString &identifier, cons
             if (identifier.isEmpty()) {
                 expandArgumentsInString(includedContent, parameters);
                 m_input.insert(m_position, includedContent);
-                m_inputLength = m_input.length();
-                m_openedInputs.push(m_position + includedContent.length());
+                m_inputLength = m_input.size();
+                m_openedInputs.push(m_position + includedContent.size());
             } else {
                 QStringList lineBuffer = includedContent.split(QLatin1Char('\n'));
                 int i = 0;
@@ -1364,8 +1364,8 @@ void DocParser::include(const QString &fileName, const QString &identifier, cons
                                                .arg(identifier, filePath));
                 } else {
                     m_input.insert(m_position, result);
-                    m_inputLength = m_input.length();
-                    m_openedInputs.push(m_position + result.length());
+                    m_inputLength = m_input.size();
+                    m_openedInputs.push(m_position + result.size());
                 }
             }
         }
@@ -1508,7 +1508,7 @@ bool DocParser::openCommand(int cmd)
 inline bool DocParser::isAutoLinkString(const QString &word)
 {
     qsizetype start = 0;
-    return isAutoLinkString(word, start) && (start == word.length());
+    return isAutoLinkString(word, start) && (start == word.size());
 }
 
 /*!
@@ -1913,7 +1913,7 @@ bool DocParser::expandMacro()
 
     QString cmdStr;
     qsizetype backslashPos = m_position++;
-    while (m_position < m_input.length() && m_input[m_position].isLetterOrNumber())
+    while (m_position < m_input.size() && m_input[m_position].isLetterOrNumber())
         cmdStr += m_input[m_position++];
 
     m_endPosition = m_position;
@@ -1924,7 +1924,7 @@ bool DocParser::expandMacro()
                 QString expanded = expandMacroToString(cmdStr, macro.m_defaultDef, macro.numParams,
                                                        macro.m_otherDefs.value("match"));
                 m_input.replace(backslashPos, m_position - backslashPos, expanded);
-                m_inputLength = m_input.length();
+                m_inputLength = m_input.size();
                 m_position = backslashPos;
                 return true;
             } else {
@@ -2070,9 +2070,9 @@ QString DocParser::getBracedArgument(bool verbatim)
 {
     QString arg;
     int delimDepth = 0;
-    if (m_position < m_input.length() && m_input[m_position] == '{') {
+    if (m_position < m_input.size() && m_input[m_position] == '{') {
         ++m_position;
-        while (m_position < m_input.length() && delimDepth >= 0) {
+        while (m_position < m_input.size() && delimDepth >= 0) {
             switch (m_input[m_position].unicode()) {
             case '{':
                 ++delimDepth;
@@ -2125,7 +2125,7 @@ QString DocParser::getArgument(bool verbatim)
     qsizetype startPos = m_position;
     QString arg = getBracedArgument(verbatim);
     if (arg.isEmpty()) {
-        while ((m_position < m_input.length())
+        while ((m_position < m_input.size())
                && ((delimDepth > 0) || ((delimDepth == 0) && !m_input[m_position].isSpace()))) {
             switch (m_input[m_position].unicode()) {
             case '(':
@@ -2154,13 +2154,13 @@ QString DocParser::getArgument(bool verbatim)
             }
         }
         m_endPosition = m_position;
-        if ((arg.length() > 1) && (QString(".,:;!?").indexOf(m_input[m_position - 1]) != -1)
+        if ((arg.size() > 1) && (QString(".,:;!?").indexOf(m_input[m_position - 1]) != -1)
             && !arg.endsWith("...")) {
-            arg.truncate(arg.length() - 1);
+            arg.truncate(arg.size() - 1);
             --m_position;
         }
-        if (arg.length() > 2 && m_input.mid(m_position - 2, 2) == "'s") {
-            arg.truncate(arg.length() - 2);
+        if (arg.size() > 2 && m_input.mid(m_position - 2, 2) == "'s") {
+            arg.truncate(arg.size() - 2);
             m_position -= 2;
         }
     }
@@ -2178,9 +2178,9 @@ QString DocParser::getBracketedArgument()
     QString arg;
     int delimDepth = 0;
     skipSpacesOrOneEndl();
-    if (m_position < m_input.length() && m_input[m_position] == '[') {
+    if (m_position < m_input.size() && m_input[m_position] == '[') {
         ++m_position;
-        while (m_position < m_input.length() && delimDepth >= 0) {
+        while (m_position < m_input.size() && delimDepth >= 0) {
             switch (m_input[m_position].unicode()) {
             case '[':
                 ++delimDepth;
@@ -2211,7 +2211,7 @@ QString DocParser::getBracketedArgument()
 QString DocParser::getOptionalArgument()
 {
     skipSpacesOrOneEndl();
-    if (m_position + 1 < m_input.length() && m_input[m_position] == '\\'
+    if (m_position + 1 < m_input.size() && m_input[m_position] == '\\'
         && m_input[m_position + 1].isLetterOrNumber()) {
         return QString();
     } else {
@@ -2298,7 +2298,7 @@ QString DocParser::getUntilEnd(int cmd)
 
     if (!match.hasMatch()) {
         location().warning(QStringLiteral("Missing '\\%1'").arg(cmdName(endCmd)));
-        m_position = m_input.length();
+        m_position = m_input.size();
     } else {
         qsizetype end = match.capturedStart();
         t = m_input.mid(m_position, end - m_position);
@@ -2383,7 +2383,7 @@ bool DocParser::isLeftBracketAhead()
  */
 void DocParser::skipSpacesOnLine()
 {
-    while ((m_position < m_input.length()) && m_input[m_position].isSpace()
+    while ((m_position < m_input.size()) && m_input[m_position].isSpace()
            && (m_input[m_position].unicode() != '\n'))
         ++m_position;
 }
@@ -2394,7 +2394,7 @@ void DocParser::skipSpacesOnLine()
 void DocParser::skipSpacesOrOneEndl()
 {
     qsizetype firstEndl = -1;
-    while (m_position < m_input.length() && m_input[m_position].isSpace()) {
+    while (m_position < m_input.size() && m_input[m_position].isSpace()) {
         QChar ch = m_input[m_position];
         if (ch == '\n') {
             if (firstEndl == -1) {
@@ -2421,7 +2421,7 @@ void DocParser::skipToNextPreprocessorCommand()
     auto match = rx.match(m_input, m_position + 1); // ### + 1 necessary?
 
     if (!match.hasMatch())
-        m_position = m_input.length();
+        m_position = m_input.size();
     else
         m_position = match.capturedStart();
 }
@@ -2485,7 +2485,7 @@ QString DocParser::endCmdName(int cmd)
 QString DocParser::untabifyEtc(const QString &str)
 {
     QString result;
-    result.reserve(str.length());
+    result.reserve(str.size());
     int column = 0;
 
     for (const auto &character : str) {
@@ -2508,7 +2508,7 @@ QString DocParser::untabifyEtc(const QString &str)
     }
 
     while (result.endsWith("\n\n"))
-        result.truncate(result.length() - 1);
+        result.truncate(result.size() - 1);
     while (result.startsWith(QLatin1Char('\n')))
         result = result.mid(1);
 

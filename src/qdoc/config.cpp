@@ -163,7 +163,7 @@ void MetaStack::process(QChar ch, const Location &location)
         push(MetaStackEntry());
         top().open();
     } else if (ch == QLatin1Char('}')) {
-        if (count() == 1)
+        if (size() == 1)
             location.fatal(QStringLiteral("Unexpected '}'"));
 
         top().close();
@@ -175,7 +175,7 @@ void MetaStack::process(QChar ch, const Location &location)
             for (const auto &suffix : suffixes)
                 top().next << prefix + suffix;
         }
-    } else if (ch == QLatin1Char(',') && count() > 1) {
+    } else if (ch == QLatin1Char(',') && size() > 1) {
         top().close();
         top().open();
     } else {
@@ -189,7 +189,7 @@ void MetaStack::process(QChar ch, const Location &location)
  */
 QStringList MetaStack::getExpanded(const Location &location)
 {
-    if (count() > 1)
+    if (size() > 1)
         location.fatal(QStringLiteral("Missing '}'"));
 
     top().close();
@@ -699,7 +699,7 @@ QSet<QString> Config::subVars(const QString &var) const
     QString varDot = var + QLatin1Char('.');
     for (auto it = m_configVars.constBegin(); it != m_configVars.constEnd(); ++it) {
         if (it.key().startsWith(varDot)) {
-            QString subVar = it.key().mid(varDot.length());
+            QString subVar = it.key().mid(varDot.size());
             int dot = subVar.indexOf(QLatin1Char('.'));
             if (dot != -1)
                 subVar.truncate(dot);
@@ -1025,7 +1025,7 @@ QString Config::copyFile(const Location &location, const QString &sourceFilePath
 int Config::numParams(const QString &value)
 {
     int max = 0;
-    for (int i = 0; i != value.length(); ++i) {
+    for (int i = 0; i != value.size(); ++i) {
         uint c = value[i].unicode();
         if (c > 0 && c < 8)
             max = qMax(max, static_cast<int>(c));
@@ -1053,9 +1053,9 @@ QStringList Config::loadMaster(const QString &fileName)
     QFile fin(fileName);
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {
-            qsizetype prefix = location.filePath().length() - location.fileName().length();
+            qsizetype prefix = location.filePath().size() - location.fileName().size();
             fin.setFileName(Config::installDir + QLatin1Char('/')
-                            + fileName.right(fileName.length() - prefix));
+                            + fileName.right(fileName.size() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
             location.fatal(QStringLiteral("Cannot open master qdocconf file '%1': %2")
@@ -1110,9 +1110,9 @@ void Config::load(Location location, const QString &fileName)
     QFile fin(fileInfo.fileName());
     if (!fin.open(QFile::ReadOnly | QFile::Text)) {
         if (!Config::installDir.isEmpty()) {
-            qsizetype prefix = location.filePath().length() - location.fileName().length();
+            qsizetype prefix = location.filePath().size() - location.fileName().size();
             fin.setFileName(Config::installDir + QLatin1Char('/')
-                            + fileName.right(fileName.length() - prefix));
+                            + fileName.right(fileName.size() - prefix));
         }
         if (!fin.open(QFile::ReadOnly | QFile::Text))
             location.fatal(
@@ -1131,7 +1131,7 @@ void Config::load(Location location, const QString &fileName)
     int i = 0;
     QChar c = text.at(0);
     uint cc = c.unicode();
-    while (i < text.length()) {
+    while (i < text.size()) {
         if (cc == 0) {
             ++i;
         } else if (c.isSpace()) {
@@ -1158,7 +1158,7 @@ void Config::load(Location location, const QString &fileName)
             const QStringList keys = stack.getExpanded(location);
             SKIP_SPACES();
 
-            if (keys.count() == 1 && keys.first() == QLatin1String("include")) {
+            if (keys.size() == 1 && keys.first() == QLatin1String("include")) {
                 QString includeFile;
 
                 if (cc != '(')

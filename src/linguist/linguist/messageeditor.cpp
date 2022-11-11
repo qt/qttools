@@ -236,7 +236,7 @@ void MessageEditor::addPluralForm(int model, const QString &label, bool writable
         transEditor->setVisible(false);
     transEditor->setMultiEnabled(m_lengthVariants);
     static_cast<QBoxLayout *>(m_editors[model].container->layout())->insertWidget(
-        m_editors[model].transTexts.count(), transEditor);
+        m_editors[model].transTexts.size(), transEditor);
 
     connect(transEditor, &FormMultiWidget::selectionChanged,
             this, &MessageEditor::selectionChanged);
@@ -315,7 +315,7 @@ void MessageEditor::reallyFixTabOrder()
 QStringList MessageEditor::translations(int model) const
 {
     QStringList translations;
-    for (int i = 0; i < m_editors[model].transTexts.count() &&
+    for (int i = 0; i < m_editors[model].transTexts.size() &&
                     m_editors[model].transTexts.at(i)->isVisible(); ++i)
         translations << m_editors[model].transTexts[i]->getTranslation();
     return translations;
@@ -376,8 +376,8 @@ void MessageEditor::resetSelection()
 
 void MessageEditor::activeModelAndNumerus(int *model, int *numerus) const
 {
-    for (int j = 0; j < m_editors.count(); ++j) {
-        for (int i = 0; i < m_editors[j].transTexts.count(); ++i)
+    for (int j = 0; j < m_editors.size(); ++j) {
+        for (int i = 0; i < m_editors[j].transTexts.size(); ++i)
             for (QTextEdit *te : m_editors[j].transTexts[i]->getEditors())
                 if (m_focusWidget == te) {
                     *model = j;
@@ -443,11 +443,11 @@ void MessageEditor::setTargetLanguage(int model)
 {
     const QStringList &numerusForms = m_dataModel->model(model)->numerusForms();
     const QString &langLocalized = m_dataModel->model(model)->localizedLanguage();
-    for (int i = 0; i < numerusForms.count(); ++i) {
+    for (int i = 0; i < numerusForms.size(); ++i) {
         const QString &label = tr("Translation to %1 (%2)").arg(langLocalized, numerusForms[i]);
         if (!i)
             m_editors[model].firstForm = label;
-        if (i >= m_editors[model].transTexts.count())
+        if (i >= m_editors[model].transTexts.size())
             addPluralForm(model, label, m_dataModel->isModelWritable(model));
         else
             m_editors[model].transTexts[i]->setLabel(label);
@@ -456,7 +456,7 @@ void MessageEditor::setTargetLanguage(int model)
                 tr("This is where you can enter or modify"
                    " the translation of the above source text.") );
     }
-    for (int j = m_editors[model].transTexts.count() - numerusForms.count(); j > 0; --j)
+    for (int j = m_editors[model].transTexts.size() - numerusForms.size(); j > 0; --j)
         delete m_editors[model].transTexts.takeLast();
     m_editors[model].invariantForm = tr("Translation to %1").arg(langLocalized);
     m_editors[model].transCommentText->setLabel(tr("Translator comments for %1").arg(langLocalized));
@@ -464,8 +464,8 @@ void MessageEditor::setTargetLanguage(int model)
 
 MessageEditorData *MessageEditor::modelForWidget(const QObject *o)
 {
-    for (int j = 0; j < m_editors.count(); ++j) {
-        for (int i = 0; i < m_editors[j].transTexts.count(); ++i)
+    for (int j = 0; j < m_editors.size(); ++j) {
+        for (int i = 0; i < m_editors[j].transTexts.size(); ++i)
             for (QTextEdit *te : m_editors[j].transTexts[i]->getEditors())
                 if (te == o)
                     return &m_editors[j];
@@ -547,7 +547,7 @@ void MessageEditor::showNothing()
     m_source->clearTranslation();
     m_pluralSource->clearTranslation();
     m_commentText->clearTranslation();
-    for (int j = 0; j < m_editors.count(); ++j) {
+    for (int j = 0; j < m_editors.size(); ++j) {
         setEditingEnabled(j, false);
         for (FormMultiWidget *widget : qAsConst(m_editors[j].transTexts))
             widget->clearTranslation();
@@ -608,7 +608,7 @@ void MessageEditor::showMessage(const MultiDataIndex &index)
                              && item->message().type() != TranslatorMessage::Vanished);
 
         // Translation label
-        ed.pluralEditMode = item->translations().count() > 1;
+        ed.pluralEditMode = item->translations().size() > 1;
         ed.transTexts.first()->setLabel(ed.pluralEditMode ? ed.firstForm : ed.invariantForm);
 
         // Translation forms
@@ -619,7 +619,7 @@ void MessageEditor::showMessage(const MultiDataIndex &index)
             QStringList normalizedTranslations =
                 m_dataModel->model(j)->normalizedTranslations(*item);
             for (int i = 0; i < ed.transTexts.size(); ++i) {
-                bool shouldShow = (i < normalizedTranslations.count());
+                bool shouldShow = (i < normalizedTranslations.size());
                 if (shouldShow)
                     setNumerusTranslation(j, normalizedTranslations.at(i), i);
                 else
@@ -637,7 +637,7 @@ void MessageEditor::showMessage(const MultiDataIndex &index)
 void MessageEditor::setNumerusTranslation(int model, const QString &translation, int numerus)
 {
     MessageEditorData &ed = m_editors[model];
-    if (numerus >= ed.transTexts.count())
+    if (numerus >= ed.transTexts.size())
         numerus = 0;
     FormMultiWidget *transForm = ed.transTexts[numerus];
     transForm->setTranslation(translation, false);
@@ -836,7 +836,7 @@ void MessageEditor::setEditorFocusForModel(int model)
 
 bool MessageEditor::focusNextUnfinished(int start)
 {
-    for (int j = start; j < m_editors.count(); ++j)
+    for (int j = start; j < m_editors.size(); ++j)
         if (m_dataModel->isModelWritable(j))
             if (MessageItem *item = m_dataModel->messageItem(m_currentIndex, j))
                 if (item->type() == TranslatorMessage::Unfinished) {

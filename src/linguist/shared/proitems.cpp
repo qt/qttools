@@ -39,13 +39,13 @@ ProString::ProString(const ProString &other, OmitPreHashing) :
 }
 
 ProString::ProString(const QString &str, DoPreHashing) :
-    m_string(str), m_offset(0), m_length(str.length()), m_file(0)
+    m_string(str), m_offset(0), m_length(str.size()), m_file(0)
 {
     updatedHash();
 }
 
 ProString::ProString(const QString &str) :
-    m_string(str), m_offset(0), m_length(str.length()), m_file(0), m_hash(0x80000000)
+    m_string(str), m_offset(0), m_length(str.size()), m_file(0), m_hash(0x80000000)
 {
 }
 
@@ -83,7 +83,7 @@ ProString::ProString(const QString &str, int offset, int length) :
 
 void ProString::setValue(const QString &str)
 {
-    m_string = str, m_offset = 0, m_length = str.length(), m_hash = 0x80000000;
+    m_string = str, m_offset = 0, m_length = str.size(), m_hash = 0x80000000;
 }
 
 size_t ProString::updatedHash() const
@@ -120,7 +120,7 @@ ProKey::ProKey(const QString &str, int off, int len, uint hash) :
 
 void ProKey::setValue(const QString &str)
 {
-    m_string = str, m_offset = 0, m_length = str.length();
+    m_string = str, m_offset = 0, m_length = str.size();
     updatedHash();
 }
 

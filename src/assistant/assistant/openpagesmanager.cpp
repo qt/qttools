@@ -92,7 +92,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
         break;
     case ShowLastPages: {
         const QStringList &lastShownPageList = helpEngine.lastShownPages();
-        const int pageCount = lastShownPageList.count();
+        const int pageCount = lastShownPageList.size();
         if (pageCount == 0) {
             if (defaultCollection)
                 m_helpPageViewer = m_model->addPage(QUrl(QLatin1String("help")));
@@ -100,7 +100,7 @@ void OpenPagesManager::setupInitialPages(bool defaultCollection,
                 m_model->addPage(QUrl(QLatin1String("about:blank")));
         } else {
             QStringList zoomFactors = helpEngine.lastZoomFactors();
-            while (zoomFactors.count() < pageCount)
+            while (zoomFactors.size() < pageCount)
                 zoomFactors.append(CollectionConfiguration::DefaultZoomFactor);
             initialPage = helpEngine.lastTabPage();
             if (initialPage >= pageCount) {
@@ -146,7 +146,7 @@ void OpenPagesManager::closeCurrentPage()
         = m_openPagesWidget->selectionModel()->selectedRows();
     if (selectedIndexes.isEmpty())
         return;
-    Q_ASSERT(selectedIndexes.count() == 1);
+    Q_ASSERT(selectedIndexes.size() == 1);
     removePage(selectedIndexes.first().row());
 }
 

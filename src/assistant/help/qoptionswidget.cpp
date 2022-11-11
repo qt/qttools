@@ -103,14 +103,14 @@ void QOptionsWidget::setOptions(const QStringList &validOptions,
     for (const QString &option : m_invalidOptions)
         appendItem(option, false, true);
 
-    if ((validSelectedOptions.count() + m_invalidOptions.count())
-            && validUnselectedOptions.count()) {
+    if ((validSelectedOptions.size() + m_invalidOptions.size())
+            && validUnselectedOptions.size()) {
         appendSeparator();
     }
 
     for (const QString &option : validUnselectedOptions) {
         appendItem(option, true, false);
-        if (option.isEmpty() && validUnselectedOptions.count() > 1) // special No Option item
+        if (option.isEmpty() && validUnselectedOptions.size() > 1) // special No Option item
             appendSeparator();
     }
 }

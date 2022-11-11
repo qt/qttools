@@ -61,7 +61,7 @@ void PrintOut::flushLine(bool /* mayBreak */)
     else if (!firstParagraph)
         drawRule(nextRule);
 
-    for (int i = 0; i < cp.boxes.count(); ++i) {
+    for (int i = 0; i < cp.boxes.size(); ++i) {
         Box b = cp.boxes[i];
         b.rect.translate(0, voffset);
         QRect r = b.rect;

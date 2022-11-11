@@ -196,7 +196,7 @@ Prefix Releaser::commonPrefix(const ByteTranslatorMessage &m1, const ByteTransla
 void Releaser::writeMessage(const ByteTranslatorMessage &msg, QDataStream &stream,
     TranslatorSaveMode mode, Prefix prefix) const
 {
-    for (int i = 0; i < msg.translations().count(); ++i)
+    for (int i = 0; i < msg.translations().size(); ++i)
         stream << quint8(Tag_Translation) << msg.translations().at(i);
 
     if (mode == SaveEverything)
@@ -357,7 +357,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
 
             do {
                 const char *con = entry.value().constData();
-                uint len = uint(entry.value().length());
+                uint len = uint(entry.value().size());
                 len = qMin(len, 255u);
                 t << quint8(len);
                 t.writeRawData(con, len);
@@ -503,7 +503,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     QStringList numerusForms;
     bool guessPlurals = true;
     if (getNumerusInfo(l, c, 0, &numerusForms, 0))
-        guessPlurals = (numerusForms.count() == 1);
+        guessPlurals = (numerusForms.size() == 1);
 
     QString context, sourcetext, comment;
     QStringList translations;
@@ -534,7 +534,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
                 if (len != -1)
                     str = QString((const QChar *)m, len / 2);
                 if (QSysInfo::ByteOrder == QSysInfo::LittleEndian) {
-                    for (int i = 0; i < str.length(); ++i)
+                    for (int i = 0; i < str.size(); ++i)
                         str[i] = QChar((str.at(i).unicode() >> 8) +
                             ((str.at(i).unicode() << 8) & 0xff00));
                 }
@@ -581,7 +581,7 @@ bool loadQM(Translator &translator, QIODevice &dev, ConversionData &cd)
     end:;
         TranslatorMessage msg;
         msg.setType(TranslatorMessage::Finished);
-        if (translations.count() > 1) {
+        if (translations.size() > 1) {
             // If guessPlurals is not false here, plural form discard messages
             // will be spewn out later.
             msg.setPlural(true);

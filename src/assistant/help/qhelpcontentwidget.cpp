@@ -100,7 +100,7 @@ QHelpContentItem *QHelpContentItem::child(int row) const
 */
 int QHelpContentItem::childCount() const
 {
-    return d->childItems.count();
+    return d->childItems.size();
 }
 
 /*!

@@ -55,7 +55,7 @@ QStringList Quoter::splitLines(const QString &line)
 static void trimWhiteSpace(QString &str)
 {
     enum { Normal, MetAlnum, MetSpace } state = Normal;
-    const qsizetype n = str.length();
+    const qsizetype n = str.size();
 
     int j = -1;
     QChar *d = str.data();
@@ -141,7 +141,7 @@ void Quoter::quoteFromFile(const QString &userFriendlyFilePath, const QString &p
 
     m_plainLines = splitLines(plainCode);
     m_markedLines = splitLines(markedCode);
-    if (m_markedLines.count() != m_plainLines.count()) {
+    if (m_markedLines.size() != m_plainLines.size()) {
         m_codeLocation.warning(
                 QStringLiteral("Something is wrong with qdoc's handling of marked code"));
         m_markedLines = m_plainLines;
@@ -189,7 +189,7 @@ QString Quoter::quoteSnippet(const Location &docLocation, const QString &identif
     while (!m_plainLines.isEmpty()) {
         if (match(docLocation, delimiter, m_plainLines.first())) {
             QString startLine = getLine();
-            while (indent < startLine.length() && startLine[indent] == QLatin1Char(' '))
+            while (indent < startLine.size() && startLine[indent] == QLatin1Char(' '))
                 indent++;
             break;
         }
@@ -260,7 +260,7 @@ QString Quoter::getLine(int unindent)
 
     QString t = m_markedLines.takeFirst();
     int i = 0;
-    while (i < unindent && i < t.length() && t[i] == QLatin1Char(' '))
+    while (i < unindent && i < t.size() && t[i] == QLatin1Char(' '))
         i++;
 
     t = t.mid(i);
@@ -273,12 +273,12 @@ bool Quoter::match(const Location &docLocation, const QString &pattern0, const Q
 {
     QString str = line;
     while (str.endsWith(QLatin1Char('\n')))
-        str.truncate(str.length() - 1);
+        str.truncate(str.size() - 1);
 
     QString pattern = pattern0;
     if (pattern.startsWith(QLatin1Char('/')) && pattern.endsWith(QLatin1Char('/'))
-        && pattern.length() > 2) {
-        QRegularExpression rx(pattern.mid(1, pattern.length() - 2));
+        && pattern.size() > 2) {
+        QRegularExpression rx(pattern.mid(1, pattern.size() - 2));
         if (!m_silent && !rx.isValid()) {
             docLocation.warning(
                     QStringLiteral("Invalid regular expression '%1'").arg(rx.pattern()));

@@ -27,7 +27,7 @@ static QString poEscapedString(const QString &prefix, const QString &keyword,
     QStringList lines;
     int off = 0;
     QString res;
-    while (off < ba.length()) {
+    while (off < ba.size()) {
         ushort c = ba[off++].unicode();
         switch (c) {
         case '\n':
@@ -63,7 +63,7 @@ static QString poEscapedString(const QString &prefix, const QString &keyword,
             if (c < 32) {
                 res += QLatin1String("\\x");
                 res += QString::number(c, 16);
-                if (off < ba.length() && isxdigit(ba[off].unicode()))
+                if (off < ba.size() && isxdigit(ba[off].unicode()))
                     res += QLatin1String("\"\"");
             } else {
                 res += QChar(c);
@@ -75,15 +75,15 @@ static QString poEscapedString(const QString &prefix, const QString &keyword,
         lines.append(res);
     if (!lines.isEmpty()) {
         if (!noWrap) {
-            if (lines.count() != 1 ||
-                lines.first().length() > MAX_LEN - keyword.length() - prefix.length() - 3)
+            if (lines.size() != 1 ||
+                lines.first().size() > MAX_LEN - keyword.size() - prefix.size() - 3)
             {
                 const QStringList olines = lines;
                 lines = QStringList(QString());
-                const int maxlen = MAX_LEN - prefix.length() - 2;
+                const int maxlen = MAX_LEN - prefix.size() - 2;
                 for (const QString &line : olines) {
                     int off = 0;
-                    while (off + maxlen < line.length()) {
+                    while (off + maxlen < line.size()) {
                         int idx = line.lastIndexOf(QLatin1Char(' '), off + maxlen - 1) + 1;
                         if (idx == off) {
 #ifdef HARD_WRAP_LONG_WORDS
@@ -101,7 +101,7 @@ static QString poEscapedString(const QString &prefix, const QString &keyword,
                     lines.append(line.mid(off));
                 }
             }
-        } else if (lines.count() > 1) {
+        } else if (lines.size() > 1) {
             lines.prepend(QString());
         }
     }
@@ -133,10 +133,10 @@ static QString poEscapedLines(const QString &prefix, bool addSpace, const QStrin
 
 static QString poWrappedEscapedLines(const QString &prefix, bool addSpace, const QString &line)
 {
-    const int maxlen = MAX_LEN - prefix.length() - addSpace;
+    const int maxlen = MAX_LEN - prefix.size() - addSpace;
     QStringList lines;
     int off = 0;
-    while (off + maxlen < line.length()) {
+    while (off + maxlen < line.size()) {
         int idx = line.lastIndexOf(QLatin1Char(' '), off + maxlen - 1);
         if (idx < off) {
 #if 0 //def HARD_WRAP_LONG_WORDS
@@ -202,11 +202,11 @@ static QByteArray slurpEscapedString(const QList<QByteArray> &lines, int &l,
             break;
         offset++;
         forever {
-            if (offset == line.length())
+            if (offset == line.size())
                 goto premature_eol;
             uchar c = line[offset++];
             if (c == '"') {
-                if (offset == line.length())
+                if (offset == line.size())
                     break;
                 while (isspace(line[offset]))
                     offset++;
@@ -219,7 +219,7 @@ static QByteArray slurpEscapedString(const QList<QByteArray> &lines, int &l,
                 continue;
             }
             if (c == '\\') {
-                if (offset == line.length())
+                if (offset == line.size())
                     goto premature_eol;
                 c = line[offset++];
                 switch (c) {
@@ -260,14 +260,14 @@ static QByteArray slurpEscapedString(const QList<QByteArray> &lines, int &l,
                 case '7':
                     stoff = offset - 1;
                     while ((c = line[offset]) >= '0' && c <= '7')
-                        if (++offset == line.length())
+                        if (++offset == line.size())
                             goto premature_eol;
                     msg += line.mid(stoff, offset - stoff).toUInt(0, 8);
                     break;
                 case 'x':
                     stoff = offset;
                     while (isxdigit(line[offset]))
-                        if (++offset == line.length())
+                        if (++offset == line.size())
                             goto premature_eol;
                     msg += line.mid(stoff, offset - stoff).toUInt(0, 16);
                     break;
@@ -410,7 +410,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
             bool isObsolete = line.startsWith("#~ msgstr");
             const QByteArray prefix = isObsolete ? "#~ " : "";
             while (true) {
-                int idx = line.indexOf(' ', prefix.length());
+                int idx = line.indexOf(' ', prefix.size());
                 QByteArray str = slurpEscapedString(lines, l, idx, prefix, cd);
                 item.msgStr.append(str);
                 if (l + 1 >= lines.size() || !isTranslationLine(lines.at(l + 1)))
@@ -491,7 +491,7 @@ bool loadPO(Translator &translator, QIODevice &dev, ConversionData &cd)
                     "Plural-Forms", "X-Language", "X-Source-Language", "X-Qt-Contexts"
                 };
                 uint cdh = 0;
-                for (int cho = 0; cho < hdrOrder.length(); cho++) {
+                for (int cho = 0; cho < hdrOrder.size(); cho++) {
                     for (;; cdh++) {
                         if (cdh == sizeof(dfltHdrs)/sizeof(dfltHdrs[0])) {
                             extras[QLatin1String("po-headers")] =
@@ -795,7 +795,7 @@ bool savePO(const Translator &translator, QIODevice &dev, ConversionData &)
             // This is fuzzy logic, as we don't know whether the string is
             // actually used with QString::arg().
             for (int off = 0; (off = source.indexOf(QLatin1Char('%'), off)) >= 0; ) {
-                if (++off >= source.length())
+                if (++off >= source.size())
                     break;
                 if (source.at(off) == QLatin1Char('n') || source.at(off).isDigit()) {
                     flags.append(QLatin1String("qt-format"));

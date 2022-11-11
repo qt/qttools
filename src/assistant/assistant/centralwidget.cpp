@@ -519,7 +519,7 @@ void CentralWidget::highlightSearchTerms()
     const QString searchInput = searchEngine->searchInput();
     const bool wholePhrase = searchInput.startsWith(QLatin1Char('"')) &&
                              searchInput.endsWith(QLatin1Char('"'));
-    const QStringList &words = wholePhrase ? QStringList(searchInput.mid(1, searchInput.length() - 2)) :
+    const QStringList &words = wholePhrase ? QStringList(searchInput.mid(1, searchInput.size() - 2)) :
                                 searchInput.split(QRegularExpression("\\W+"), Qt::SkipEmptyParts);
     HelpViewer *viewer = currentHelpViewer();
     for (const QString &word : words)

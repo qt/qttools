@@ -217,7 +217,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
     // Only add nodes to the set for each subproject if they match a selector.
     // Those that match will be listed in the table of contents.
 
-    for (int i = 0; i < project.m_subprojects.length(); i++) {
+    for (int i = 0; i < project.m_subprojects.size(); i++) {
         SubProject subproject = project.m_subprojects[i];
         // No selectors: accept all nodes.
         if (subproject.m_selectors.isEmpty()) {
@@ -642,7 +642,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
     generateSections(project, writer, rootNode);
 
-    for (int i = 0; i < project.m_subprojects.length(); i++) {
+    for (int i = 0; i < project.m_subprojects.size(); i++) {
         SubProject subproject = project.m_subprojects[i];
 
         if (subproject.m_type == QLatin1String("manual")) {

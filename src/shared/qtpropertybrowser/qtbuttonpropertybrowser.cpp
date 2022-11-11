@@ -324,7 +324,7 @@ void QtButtonPropertyBrowserPrivate::propertyRemoved(QtBrowserItem *index)
         removeRow(m_mainLayout, row);
         if (colSpan > 1)
             removeRow(m_mainLayout, row);
-    } else if (parentItem->children.count() != 0) {
+    } else if (parentItem->children.size() != 0) {
         removeRow(parentItem->layout, row);
         if (colSpan > 1)
             removeRow(parentItem->layout, row);

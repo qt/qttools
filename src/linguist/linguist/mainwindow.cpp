@@ -106,7 +106,7 @@ static Ending ending(QString str, QLocale::Language lang)
     if (str.isEmpty())
         return End_None;
 
-    switch (str.at(str.length() - 1).unicode()) {
+    switch (str.at(str.size() - 1).unicode()) {
     case 0x002e: // full stop
         if (str.endsWith(QLatin1String("...")))
             return End_Ellipsis;
@@ -1180,7 +1180,7 @@ void MainWindow::openPhraseBook()
         m_phraseBookDir = QFileInfo(name).absolutePath();
         if (!isPhraseBookOpen(name)) {
             if (PhraseBook *phraseBook = doOpenPhraseBook(name)) {
-                int n = phraseBook->phrases().count();
+                int n = phraseBook->phrases().size();
                 statusBar()->showMessage(tr("%n phrase(s) loaded.", 0, n), MessageMS);
             }
         }
@@ -2407,7 +2407,7 @@ void MainWindow::updatePhraseDictInternal(int model)
         const auto phrases = pb->phrases();
         for (Phrase *p : phrases) {
             QString f = friendlyString(p->source());
-            if (f.length() > 0) {
+            if (f.size() > 0) {
                 f = f.split(QLatin1Char(' ')).first();
                 if (!pd.contains(f)) {
                     pd.insert(f, QList<Phrase *>());
@@ -2488,7 +2488,7 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
             QStringList translations = m->translations();
 
             // Truncated variants are permitted to be "denormalized"
-            for (int i = 0; i < translations.count(); ++i) {
+            for (int i = 0; i < translations.size(); ++i) {
                 int sep = translations.at(i).indexOf(QChar(Translator::BinaryVariantSeparator));
                 if (sep >= 0)
                     translations[i].truncate(sep);
@@ -2497,7 +2497,7 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
             if (m_ui.actionAccelerators->isChecked()) {
                 bool sk = haveMnemonic(source);
                 bool tk = true;
-                for (int i = 0; i < translations.count() && tk; ++i) {
+                for (int i = 0; i < translations.size() && tk; ++i) {
                     tk &= haveMnemonic(translations[i]);
                 }
 
@@ -2513,7 +2513,7 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
             }
             if (m_ui.actionSurroundingWhitespace->isChecked()) {
                 bool whitespaceok = true;
-                for (int i = 0; i < translations.count() && whitespaceok; ++i) {
+                for (int i = 0; i < translations.size() && whitespaceok; ++i) {
                     whitespaceok &= (leadingWhitespace(source) == leadingWhitespace(translations[i]));
                     whitespaceok &= (trailingWhitespace(source) == trailingWhitespace(translations[i]));
                 }
@@ -2526,7 +2526,7 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
             }
             if (m_ui.actionEndingPunctuation->isChecked()) {
                 bool endingok = true;
-                for (int i = 0; i < translations.count() && endingok; ++i) {
+                for (int i = 0; i < translations.size() && endingok; ++i) {
                     endingok &= (ending(source, m_dataModel->sourceLanguage(mi)) ==
                                 ending(translations[i], m_dataModel->language(mi)));
                 }
@@ -2577,14 +2577,14 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
                 // between place markers in the source text and the translation text.
                 QHash<int, int> placeMarkerIndexes;
                 QString translation;
-                int numTranslations = translations.count();
+                int numTranslations = translations.size();
                 for (int pass = 0; pass < numTranslations + 1; ++pass) {
                     const QChar *uc_begin = source.unicode();
-                    const QChar *uc_end = uc_begin + source.length();
+                    const QChar *uc_end = uc_begin + source.size();
                     if (pass >= 1) {
                         translation = translations[pass - 1];
                         uc_begin = translation.unicode();
-                        uc_end = uc_begin + translation.length();
+                        uc_end = uc_begin + translation.size();
                     }
                     const QChar *c = uc_begin;
                     while (c < uc_end) {

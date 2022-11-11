@@ -64,7 +64,7 @@ bool QtDocInstaller::installDoc(const DocInfo &docInfo)
         dt = QDateTime::fromString(info.first(), Qt::ISODate);
 
     QString qchFile;
-    if (info.count() == 2)
+    if (info.size() == 2)
         qchFile = info.last();
 
     if (m_qchFiles.isEmpty()) {

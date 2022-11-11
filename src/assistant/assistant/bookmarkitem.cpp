@@ -41,14 +41,14 @@ BookmarkItem::addChild(BookmarkItem *child)
 BookmarkItem*
 BookmarkItem::child(int number) const
 {
-    if (number >= 0 && number < m_children.count())
+    if (number >= 0 && number < m_children.size())
         return m_children[number];
     return nullptr;
 }
 
 int BookmarkItem::childCount() const
 {
-    return m_children.count();
+    return m_children.size();
 }
 
 int BookmarkItem::childNumber() const

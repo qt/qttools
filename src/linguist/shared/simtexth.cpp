@@ -146,7 +146,7 @@ static inline CoMatrix intersection(const CoMatrix &m, const CoMatrix &n)
 StringSimilarityMatcher::StringSimilarityMatcher(const QString &stringToMatch)
     : m_cm(stringToMatch)
 {
-    m_length = stringToMatch.length();
+    m_length = stringToMatch.size();
 }
 
 int StringSimilarityMatcher::getSimilarityScore(const QString &strCandidate)

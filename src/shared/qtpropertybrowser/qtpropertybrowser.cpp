@@ -388,7 +388,7 @@ void QtProperty::setModified(bool modified)
 void QtProperty::addSubProperty(QtProperty *property)
 {
     QtProperty *after = nullptr;
-    if (d_ptr->m_subItems.count() > 0)
+    if (d_ptr->m_subItems.size() > 0)
         after = d_ptr->m_subItems.last();
     insertSubProperty(property, after);
 }
@@ -433,7 +433,7 @@ void QtProperty::insertSubProperty(QtProperty *property,
     int pos = 0;
     int newPos = 0;
     QtProperty *properAfterProperty = nullptr;
-    while (pos < pendingList.count()) {
+    while (pos < pendingList.size()) {
         QtProperty *i = pendingList.at(pos);
         if (i == property)
             return; // if item is already inserted in this item then cannot add.
@@ -465,7 +465,7 @@ void QtProperty::removeSubProperty(QtProperty *property)
 
     auto pendingList = subProperties();
     int pos = 0;
-    while (pos < pendingList.count()) {
+    while (pos < pendingList.size()) {
         if (pendingList.at(pos) == property) {
             d_ptr->m_subItems.removeAt(pos);
             property->d_ptr->m_parentItems.remove(this);
@@ -1355,7 +1355,7 @@ void QtAbstractPropertyBrowserPrivate::removeBrowserIndexes(QtProperty *property
 void QtAbstractPropertyBrowserPrivate::removeBrowserIndex(QtBrowserItem *index)
 {
     const auto children = index->children();
-    for (int i = children.count(); i > 0; i--) {
+    for (int i = children.size(); i > 0; i--) {
         removeBrowserIndex(children.at(i - 1));
     }
 
@@ -1707,7 +1707,7 @@ void QtAbstractPropertyBrowser::clear()
 QtBrowserItem *QtAbstractPropertyBrowser::addProperty(QtProperty *property)
 {
     QtProperty *afterProperty = nullptr;
-    if (d_ptr->m_subItems.count() > 0)
+    if (d_ptr->m_subItems.size() > 0)
         afterProperty = d_ptr->m_subItems.last();
     return insertProperty(property, afterProperty);
 }
@@ -1738,7 +1738,7 @@ QtBrowserItem *QtAbstractPropertyBrowser::insertProperty(QtProperty *property,
     auto pendingList = properties();
     int pos = 0;
     int newPos = 0;
-    while (pos < pendingList.count()) {
+    while (pos < pendingList.size()) {
         QtProperty *prop = pendingList.at(pos);
         if (prop == property)
             return 0;
@@ -1775,7 +1775,7 @@ void QtAbstractPropertyBrowser::removeProperty(QtProperty *property)
 
     auto pendingList = properties();
     int pos = 0;
-    while (pos < pendingList.count()) {
+    while (pos < pendingList.size()) {
         if (pendingList.at(pos) == property) {
             d_ptr->m_subItems.removeAt(pos); //perhaps this two lines
             d_ptr->removeSubTree(property, 0); //should be moved down after propertyRemoved call.

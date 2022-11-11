@@ -697,8 +697,8 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName)
 void HelpEngineWrapperPrivate::checkDocFilesWatched()
 {
     TRACE_OBJ
-    const int watchedFilesCount = m_qchWatcher->files().count();
-    const int docFilesCount = m_helpEngine->registeredDocumentations().count();
+    const int watchedFilesCount = m_qchWatcher->files().size();
+    const int docFilesCount = m_helpEngine->registeredDocumentations().size();
     if (watchedFilesCount != docFilesCount) {
         qWarning("Strange: Have %d docs, but %d are being watched",
                  watchedFilesCount, docFilesCount);

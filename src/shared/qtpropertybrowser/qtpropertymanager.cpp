@@ -405,7 +405,7 @@ void QtMetaEnumProvider::initLocale()
 
         if (!territories.isEmpty() && !m_languageToIndex.contains(language)) {
             territories = sortTerritories(territories);
-            int langIdx = m_languageEnumNames.count();
+            int langIdx = m_languageEnumNames.size();
             m_indexToLanguage[langIdx] = language;
             m_languageToIndex[language] = langIdx;
             QStringList territoryNames;
@@ -4693,7 +4693,7 @@ QString QtEnumPropertyManager::valueText(const QtProperty *property) const
     const QtEnumPropertyManagerPrivate::Data &data = it.value();
 
     const int v = data.val;
-    if (v >= 0 && v < data.enumNames.count())
+    if (v >= 0 && v < data.enumNames.size())
         return data.enumNames.at(v);
     return QString();
 }
@@ -4731,10 +4731,10 @@ void QtEnumPropertyManager::setValue(QtProperty *property, int val)
 
     QtEnumPropertyManagerPrivate::Data data = it.value();
 
-    if (val >= data.enumNames.count())
+    if (val >= data.enumNames.size())
         return;
 
-    if (val < 0 && data.enumNames.count() > 0)
+    if (val < 0 && data.enumNames.size() > 0)
         return;
 
     if (val < 0)
@@ -4776,7 +4776,7 @@ void QtEnumPropertyManager::setEnumNames(QtProperty *property, const QStringList
 
     data.val = -1;
 
-    if (enumNames.count() > 0)
+    if (enumNames.size() > 0)
         data.val = 0;
 
     it.value() = data;
@@ -5052,7 +5052,7 @@ void QtFlagPropertyManager::setValue(QtProperty *property, int val)
     if (data.val == val)
         return;
 
-    if (val > (1 << data.flagNames.count()) - 1)
+    if (val > (1 << data.flagNames.size()) - 1)
         return;
 
     if (val < 0)
