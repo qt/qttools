@@ -620,7 +620,7 @@ QWidget *ConnectionDelegate::createEditor(QWidget *parent,
                 continue;
             // Mark deprecated members by passing bool=true.
             QMap<QString, bool> markedMemberList;
-            for (const QString &member : qAsConst(classInfo.m_memberList))
+            for (const QString &member : std::as_const(classInfo.m_memberList))
                 markedMemberList.insert(member, false);
             inline_editor->addTitle(classInfo.m_className);
             inline_editor->addTextList(markedMemberList);

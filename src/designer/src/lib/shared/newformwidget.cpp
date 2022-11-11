@@ -164,7 +164,7 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     if (m_deviceProfiles.isEmpty()) {
         m_ui->profileComboBox->setEnabled(false);
     } else {
-        for (const auto &deviceProfile : qAsConst(m_deviceProfiles))
+        for (const auto &deviceProfile : std::as_const(m_deviceProfiles))
             m_ui->profileComboBox->addItem(deviceProfile.name());
         const int ci = settings.currentDeviceProfileIndex();
         if (ci >= 0)

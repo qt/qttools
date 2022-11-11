@@ -158,11 +158,11 @@ void BuddyEditor::updateBackground()
     if (!toRemove.isEmpty()) {
         DeleteConnectionsCommand command(this, toRemove);
         command.redo();
-        for (Connection *con : qAsConst(toRemove))
+        for (Connection *con : std::as_const(toRemove))
             delete takeConnection(con);
     }
 
-    for (Connection *newConn : qAsConst(newList)) {
+    for (Connection *newConn : std::as_const(newList)) {
         bool found = false;
         const int c = connectionCount();
         for (int i = 0; i < c; i++) {
@@ -253,7 +253,7 @@ void BuddyEditor::widgetRemoved(QWidget *widget)
     child_list.prepend(widget);
 
     ConnectionSet remove_set;
-    for (QWidget *w : qAsConst(child_list)) {
+    for (QWidget *w : std::as_const(child_list)) {
         const ConnectionList &cl = connectionList();
         for (Connection *con : cl) {
             if (con->widget(EndPoint::Source) == w || con->widget(EndPoint::Target) == w)
@@ -263,7 +263,7 @@ void BuddyEditor::widgetRemoved(QWidget *widget)
 
     if (!remove_set.isEmpty()) {
         undoStack()->beginMacro(tr("Remove buddies"));
-        for (Connection *con : qAsConst(remove_set)) {
+        for (Connection *con : std::as_const(remove_set)) {
             setSelected(con, false);
             con->update();
             QWidget *source = con->widget(EndPoint::Source);

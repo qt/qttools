@@ -456,7 +456,7 @@ static void writeExtras(QTextStream &t, const char *indent,
         }
     }
     outs.sort();
-    for (const QString &out : qAsConst(outs))
+    for (const QString &out : std::as_const(outs))
         t << indent << out << Qt::endl;
 }
 
@@ -532,12 +532,12 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
     QHash<QString, int> currentLine;
     QString currentFile;
-    for (const QString &context : qAsConst(contextOrder)) {
+    for (const QString &context : std::as_const(contextOrder)) {
         t << "<context>\n"
              "    <name>"
           << protect(context)
           << "</name>\n";
-        for (const TranslatorMessage &msg : qAsConst(messageOrder[context])) {
+        for (const TranslatorMessage &msg : std::as_const(messageOrder[context])) {
             //msg.dump();
 
                 t << "    <message";

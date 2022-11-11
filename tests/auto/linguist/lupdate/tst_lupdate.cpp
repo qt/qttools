@@ -278,7 +278,7 @@ void tst_lupdate::good()
         file.close();
     }
 
-    for (const QString &ts : qAsConst(generatedtsfiles)) {
+    for (const QString &ts : std::as_const(generatedtsfiles)) {
         QString genTs = workDir + QLatin1Char('/') + ts;
         QFile::remove(genTs);
         QString beforetsfile = dir + QLatin1Char('/') + ts + QLatin1String(".before");
@@ -320,7 +320,7 @@ void tst_lupdate::good()
             return;
     }
 
-    for (const QString &ts : qAsConst(generatedtsfiles)) {
+    for (const QString &ts : std::as_const(generatedtsfiles)) {
         if (dir.endsWith("preprocess_clang_parser")) {
             doCompare(workDir + QLatin1Char('/') + ts,
                       dir + QLatin1Char('/') + ts + QLatin1String(".result"), true);

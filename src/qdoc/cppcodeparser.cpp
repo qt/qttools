@@ -916,7 +916,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
             }
         } else if (args.size() > 1) {
             QList<SharedCommentNode *> sharedCommentNodes;
-            for (const auto &arg : qAsConst(args)) {
+            for (const auto &arg : std::as_const(args)) {
                 node = nullptr;
                 if (topic == COMMAND_FN) {
                     if (showInternal() || !doc.isInternal())

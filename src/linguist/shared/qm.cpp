@@ -263,7 +263,7 @@ void Releaser::squeeze(TranslatorSaveMode mode)
 {
     m_dependencyArray.clear();
     QDataStream depstream(&m_dependencyArray, QIODevice::WriteOnly);
-    for (const QString &dep : qAsConst(m_dependencies))
+    for (const QString &dep : std::as_const(m_dependencies))
         depstream << dep;
 
     if (m_messages.isEmpty() && mode == SaveEverything)

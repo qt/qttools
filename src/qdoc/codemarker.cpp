@@ -58,7 +58,7 @@ void CodeMarker::terminateMarker()
 void CodeMarker::initialize()
 {
     s_defaultLang = Config::instance().getString(CONFIG_LANGUAGE);
-    for (const auto &marker : qAsConst(s_markers))
+    for (const auto &marker : std::as_const(s_markers))
         marker->initializeMarker();
 }
 
@@ -67,7 +67,7 @@ void CodeMarker::initialize()
  */
 void CodeMarker::terminate()
 {
-    for (const auto &marker : qAsConst(s_markers))
+    for (const auto &marker : std::as_const(s_markers))
         marker->terminateMarker();
 }
 
@@ -77,7 +77,7 @@ CodeMarker *CodeMarker::markerForCode(const QString &code)
     if (defaultMarker != nullptr && defaultMarker->recognizeCode(code))
         return defaultMarker;
 
-    for (const auto &marker : qAsConst(s_markers)) {
+    for (const auto &marker : std::as_const(s_markers)) {
         if (marker->recognizeCode(code))
             return marker;
     }
@@ -93,7 +93,7 @@ CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
         QString ext = fileName.mid(dot + 1);
         if (defaultMarker != nullptr && defaultMarker->recognizeExtension(ext))
             return defaultMarker;
-        for (const auto &marker : qAsConst(s_markers)) {
+        for (const auto &marker : std::as_const(s_markers)) {
             if (marker->recognizeExtension(ext))
                 return marker;
         }
@@ -104,7 +104,7 @@ CodeMarker *CodeMarker::markerForFileName(const QString &fileName)
 
 CodeMarker *CodeMarker::markerForLanguage(const QString &lang)
 {
-    for (const auto &marker : qAsConst(s_markers)) {
+    for (const auto &marker : std::as_const(s_markers)) {
         if (marker->recognizeLanguage(lang))
             return marker;
     }

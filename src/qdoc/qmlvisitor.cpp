@@ -391,7 +391,7 @@ void QmlDocVisitor::applyMetacommands(QQmlJS::SourceLocation, Node *node, Doc &d
     QSet<QString> metacommands = doc.metaCommandsUsed();
     if (metacommands.size() > 0) {
         metacommands.subtract(m_topics);
-        for (const auto &command : qAsConst(metacommands)) {
+        for (const auto &command : std::as_const(metacommands)) {
             const ArgList args = doc.metaCommandArgs(command);
             if ((command == COMMAND_QMLABSTRACT) || (command == COMMAND_ABSTRACT)) {
                 if (node->isQmlType() || node->isJsType()) {

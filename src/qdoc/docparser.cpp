@@ -1376,7 +1376,7 @@ void DocParser::startFormat(const QString &format, int cmd)
 {
     enterPara();
 
-    for (const auto &item : qAsConst(m_pendingFormats)) {
+    for (const auto &item : std::as_const(m_pendingFormats)) {
         if (item == format) {
             location().warning(QStringLiteral("Cannot nest '\\%1' commands").arg(cmdName(cmd)));
             return;

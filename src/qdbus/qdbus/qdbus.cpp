@@ -386,7 +386,7 @@ static bool globServices(QDBusConnectionInterface *bus, const QString &glob)
 
     QStringList names = bus->registeredServiceNames();
     names.sort();
-    for (const QString &name : qAsConst(names))
+    for (const QString &name : std::as_const(names))
         if (pattern.match(name).hasMatch())
             printf("%s\n", qPrintable(name));
 

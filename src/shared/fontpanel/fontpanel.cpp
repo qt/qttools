@@ -30,7 +30,7 @@ FontPanel::FontPanel(QWidget *parentWidget) :
 
     auto writingSystems = QFontDatabase::writingSystems();
     writingSystems.push_front(QFontDatabase::Any);
-    for (QFontDatabase::WritingSystem ws : qAsConst(writingSystems))
+    for (QFontDatabase::WritingSystem ws : std::as_const(writingSystems))
         m_writingSystemComboBox->addItem(QFontDatabase::writingSystemName(ws), QVariant(ws));
     connect(m_writingSystemComboBox, &QComboBox::currentIndexChanged,
             this, &FontPanel::slotWritingSystemChanged);
@@ -241,7 +241,7 @@ void FontPanel::updatePointSizes(const QString &family, const QString &styleStri
     //  try to maintain selection or select closest.
     if (hasSizes) {
         QString n;
-        for (int pointSize : qAsConst(pointSizes))
+        for (int pointSize : std::as_const(pointSizes))
             m_pointSizeComboBox->addItem(n.setNum(pointSize), QVariant(pointSize));
         const int closestIndex = closestPointSizeIndex(oldPointSize);
         if (closestIndex != -1)

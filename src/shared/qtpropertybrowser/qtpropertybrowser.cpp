@@ -125,15 +125,15 @@ QtProperty::QtProperty(QtAbstractPropertyManager *manager)
 */
 QtProperty::~QtProperty()
 {
-    for (QtProperty *property : qAsConst(d_ptr->m_parentItems))
+    for (QtProperty *property : std::as_const(d_ptr->m_parentItems))
         property->d_ptr->m_manager->d_ptr->propertyRemoved(this, property);
 
     d_ptr->m_manager->d_ptr->propertyDestroyed(this);
 
-    for (QtProperty *property : qAsConst(d_ptr->m_subItems))
+    for (QtProperty *property : std::as_const(d_ptr->m_subItems))
         property->d_ptr->m_parentItems.remove(this);
 
-    for (QtProperty *property : qAsConst(d_ptr->m_parentItems))
+    for (QtProperty *property : std::as_const(d_ptr->m_parentItems))
         property->d_ptr->m_subItems.removeAll(this);
 }
 
@@ -1348,7 +1348,7 @@ void QtAbstractPropertyBrowserPrivate::removeBrowserIndexes(QtProperty *property
             toRemove.append(idx);
     }
 
-    for (QtBrowserItem *index : qAsConst(toRemove))
+    for (QtBrowserItem *index : std::as_const(toRemove))
         removeBrowserIndex(index);
 }
 

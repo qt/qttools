@@ -600,7 +600,7 @@ void PromoteToCustomWidgetCommand::init(const WidgetPointerList &widgets,const Q
 
 void PromoteToCustomWidgetCommand::redo()
 {
-    for (QWidget *w : qAsConst(m_widgets)) {
+    for (QWidget *w : std::as_const(m_widgets)) {
         if (w)
             promoteWidget(core(), w, m_customClassName);
     }
@@ -619,7 +619,7 @@ void PromoteToCustomWidgetCommand::updateSelection()
 
 void PromoteToCustomWidgetCommand::undo()
 {
-    for (QWidget *w : qAsConst(m_widgets)) {
+    for (QWidget *w : std::as_const(m_widgets)) {
         if (w)
             demoteWidget(core(), w);
     }
@@ -832,7 +832,7 @@ void BreakLayoutCommand::redo()
     m_layout->breakLayout();
     delete deco; // release the extension
 
-    for (QWidget *widget : qAsConst(m_widgets)) {
+    for (QWidget *widget : std::as_const(m_widgets)) {
         widget->resize(widget->size().expandedTo(QSize(16, 16)));
     }
     // Update unless we are in an intermediate state of morphing layout
@@ -2659,7 +2659,7 @@ void RemoveActionCommand::init(QAction *action)
 void RemoveActionCommand::redo()
 {
     QDesignerFormWindowInterface *fw = formWindow();
-    for (const ActionDataItem &item : qAsConst(m_actionData)) {
+    for (const ActionDataItem &item : std::as_const(m_actionData)) {
         item.widget->removeAction(m_action);
     }
     // Notify components (for example, signal slot editor)
@@ -2676,7 +2676,7 @@ void RemoveActionCommand::undo()
 {
     core()->actionEditor()->setFormWindow(formWindow());
     core()->actionEditor()->manageAction(m_action);
-    for (const ActionDataItem &item : qAsConst(m_actionData))
+    for (const ActionDataItem &item : std::as_const(m_actionData))
         item.widget->insertAction(item.before, m_action);
     if (!m_actionData.isEmpty())
         core()->objectInspector()->setFormWindow(formWindow());

@@ -204,7 +204,7 @@ void QSimpleResource::handleDomCustomWidgets(const QDesignerFormEditorInterface 
     // Oops, there are classes left whose base class could not be found.
     // Default them to QWidget with warnings.
     const QString fallBackBaseClass = QStringLiteral("QWidget");
-    for (DomCustomWidget *custom_widget : qAsConst(custom_widget_list)) {
+    for (DomCustomWidget *custom_widget : std::as_const(custom_widget_list)) {
         const QString customClassName = custom_widget->elementClass();
         const QString base_class = custom_widget->elementExtends();
         qDebug() << "** WARNING The base class " << base_class << " of the custom widget class " << customClassName

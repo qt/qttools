@@ -192,7 +192,7 @@ void MessageEditor::messageModelAppended()
 
 void MessageEditor::allModelsDeleted()
 {
-    for (const MessageEditorData &med : qAsConst(m_editors))
+    for (const MessageEditorData &med : std::as_const(m_editors))
         med.container->deleteLater();
     m_editors.clear();
     m_currentModel = -1;
@@ -293,7 +293,7 @@ void MessageEditor::fixTabOrder()
 void MessageEditor::reallyFixTabOrder()
 {
     QWidget *prev = this;
-    for (const MessageEditorData &med : qAsConst(m_editors)) {
+    for (const MessageEditorData &med : std::as_const(m_editors)) {
         for (FormMultiWidget *fmw : med.transTexts)
             for (QTextEdit *te : fmw->getEditors()) {
                 setTabOrder(prev, te);
@@ -549,7 +549,7 @@ void MessageEditor::showNothing()
     m_commentText->clearTranslation();
     for (int j = 0; j < m_editors.size(); ++j) {
         setEditingEnabled(j, false);
-        for (FormMultiWidget *widget : qAsConst(m_editors[j].transTexts))
+        for (FormMultiWidget *widget : std::as_const(m_editors[j].transTexts))
             widget->clearTranslation();
         m_editors[j].transCommentText->clearTranslation();
     }
@@ -664,7 +664,7 @@ void MessageEditor::setTranslation(int latestModel, const QString &translation)
 void MessageEditor::setEditingEnabled(int model, bool enabled)
 {
     MessageEditorData &ed = m_editors[model];
-    for (FormMultiWidget *widget : qAsConst(ed.transTexts))
+    for (FormMultiWidget *widget : std::as_const(ed.transTexts))
         widget->setEditingEnabled(enabled);
     ed.transCommentText->setEditingEnabled(enabled);
 
@@ -676,7 +676,7 @@ void MessageEditor::setEditingEnabled(int model, bool enabled)
 void MessageEditor::setLengthVariants(bool on)
 {
     m_lengthVariants = on;
-    for (const MessageEditorData &ed : qAsConst(m_editors))
+    for (const MessageEditorData &ed : std::as_const(m_editors))
         for (FormMultiWidget *widget : ed.transTexts)
             widget->setMultiEnabled(on);
 }
@@ -863,7 +863,7 @@ void MessageEditor::setVisualizeWhitespace(bool value)
     m_pluralSource->getEditor()->setVisualizeWhitespace(value);
     m_commentText->getEditor()->setVisualizeWhitespace(value);
 
-    for (const MessageEditorData &med : qAsConst(m_editors)) {
+    for (const MessageEditorData &med : std::as_const(m_editors)) {
         med.transCommentText->getEditor()->setVisualizeWhitespace(value);
         for (FormMultiWidget *widget : med.transTexts)
             for (FormatTextEdit *te : widget->getEditors())
@@ -893,7 +893,7 @@ void MessageEditor::applyFontSize()
     m_pluralSource->getEditor()->setFont(font);
     m_commentText->getEditor()->setFont(font);
 
-    for (const MessageEditorData &med : qAsConst(m_editors)) {
+    for (const MessageEditorData &med : std::as_const(m_editors)) {
         for (FormMultiWidget *fmw : med.transTexts)
             for (QTextEdit *te : fmw->getEditors())
                 te->setFont(font);

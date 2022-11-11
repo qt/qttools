@@ -628,7 +628,7 @@ void QDesignerPluginManager::updateRegisteredPlugins()
     if (debugPluginManager)
         qDebug() << Q_FUNC_INFO;
     m_d->m_registeredPlugins.clear();
-    for (const QString &path : qAsConst(m_d->m_pluginPaths))
+    for (const QString &path : std::as_const(m_d->m_pluginPaths))
         registerPath(path);
 }
 
@@ -638,7 +638,7 @@ bool QDesignerPluginManager::registerNewPlugins()
         qDebug() << Q_FUNC_INFO;
 
     const int before = m_d->m_registeredPlugins.size();
-    for (const QString &path : qAsConst(m_d->m_pluginPaths))
+    for (const QString &path : std::as_const(m_d->m_pluginPaths))
         registerPath(path);
     const bool newPluginsFound = m_d->m_registeredPlugins.size() > before;
     // We force a re-initialize as Jambi collection might return
@@ -709,7 +709,7 @@ void QDesignerPluginManager::ensureInitialized()
         for (QObject *o : staticPluginObjects)
             m_d->addCustomWidgets(o, staticPluginPath, designerLanguage);
     }
-    for (const QString &plugin : qAsConst(m_d->m_registeredPlugins)) {
+    for (const QString &plugin : std::as_const(m_d->m_registeredPlugins)) {
         if (QObject *o = instance(plugin))
             m_d->addCustomWidgets(o, plugin, designerLanguage);
     }

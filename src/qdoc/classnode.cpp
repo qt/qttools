@@ -274,7 +274,7 @@ void ClassNode::removePrivateAndInternalBases()
  */
 void ClassNode::resolvePropertyOverriddenFromPtrs(PropertyNode *pn)
 {
-    for (const auto &baseClass : qAsConst(baseClasses())) {
+    for (const auto &baseClass : std::as_const(baseClasses())) {
         ClassNode *cn = baseClass.m_node;
         if (cn) {
             Node *n = cn->findNonfunctionChild(pn->name(), &Node::isProperty);

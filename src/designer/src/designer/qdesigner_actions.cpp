@@ -1071,7 +1071,7 @@ void QDesignerActions::backupForms()
         for (const QString &backupFile : backupFiles)
             backupDir.remove(backupFile);
 
-        for (const QString &tmpName : qAsConst(tmpFiles)) {
+        for (const QString &tmpName : std::as_const(tmpFiles)) {
             QString name(tmpName);
             name.replace(m_backupTmpPath, m_backupPath);
             QFile tmpFile(tmpName);

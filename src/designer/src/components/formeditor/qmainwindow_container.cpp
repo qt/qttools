@@ -72,7 +72,7 @@ Qt::DockWidgetArea dockWidgetArea(QDockWidget *me)
             candidates.append(mw->layout());
             candidates += mw->layout()->findChildren<QLayout*>();
         }
-        for (QLayout *l : qAsConst(candidates)) {
+        for (QLayout *l : std::as_const(candidates)) {
             if (l->indexOf(me) != -1)
                 return mw->dockWidgetArea(me);
         }

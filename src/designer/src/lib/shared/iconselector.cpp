@@ -424,7 +424,7 @@ IconSelector::IconSelector(QWidget *parent) :
 
     int index = 0;
     QStringList items;
-    for (const auto &item : qAsConst(d_ptr->m_stateToName)) {
+    for (const auto &item : std::as_const(d_ptr->m_stateToName)) {
         const QPair<QIcon::Mode, QIcon::State> state = item.first;
         const QString name = item.second;
 

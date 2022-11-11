@@ -813,7 +813,7 @@ QString Config::getExampleProjectFile(const QString &examplePath)
 
     QString projectFile;
 
-    for (const auto &name : qAsConst(validNames)) {
+    for (const auto &name : std::as_const(validNames)) {
         projectFile = Config::findFile(Location(), m_exampleFiles, m_exampleDirs,
                                        examplePath + QLatin1Char('/') + name);
         if (!projectFile.isEmpty())
@@ -1352,7 +1352,7 @@ QStringList Config::getFilesHere(const QString &uncleanDir, const QString &nameF
     dirInfo.setSorting(QDir::Name);
     dirInfo.setFilter(QDir::Files);
     QStringList fileNames = dirInfo.entryList();
-    for (const auto &file : qAsConst(fileNames)) {
+    for (const auto &file : std::as_const(fileNames)) {
         // TODO: Understand if this is needed and, should it be, if it
         // is indeed the only case that should be considered.
         if (!file.startsWith(QLatin1Char('~'))) {

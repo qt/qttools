@@ -160,7 +160,7 @@ void QtFullToolBarManagerPrivate::removeWidgetActions(const QMap<QToolBar *, QLi
 
         toolBars.insert(toolBar, newActions);
         toolBarsWithSeparators.insert(toolBar, newActionsWithSeparators);
-        for (QAction *oldAction : qAsConst(removedActions)) {
+        for (QAction *oldAction : std::as_const(removedActions)) {
             widgetActions.insert(oldAction, 0);
             actionToToolBars[oldAction].removeAll(toolBar);
         }
@@ -312,7 +312,7 @@ bool QtFullToolBarManagerPrivate::restoreState(QDataStream &stream) const
             q_ptr->setToolBar(toolBar, actions);
         }
     }
-    for (QToolBar *toolBar : qAsConst(oldCustomToolBars))
+    for (QToolBar *toolBar : std::as_const(oldCustomToolBars))
         q_ptr->deleteToolBar(toolBar);
     return true;
 }
@@ -648,7 +648,7 @@ void QtFullToolBarManager::setToolBar(QToolBar *toolBar, const QList<QAction *> 
     }
 
     QList<QAction *> newActionsWithSeparators;
-    for (QAction *action : qAsConst(newActions)) {
+    for (QAction *action : std::as_const(newActions)) {
         QAction *newAction = nullptr;
         if (!action)
             newAction = toolBar->insertSeparator(0);
@@ -1184,7 +1184,7 @@ void QtToolBarDialogPrivate::removeToolBar(ToolBarItem *item)
     int row = ui.toolBarList->row(i);
     const auto itToolBar = toolBarToWidgetActions.find(item);
     if (itToolBar != toolBarToWidgetActions.end()) {
-        for (QAction *action : qAsConst(itToolBar.value()))
+        for (QAction *action : std::as_const(itToolBar.value()))
             widgetActionToToolBar.insert(action, 0);
         toolBarToWidgetActions.erase(itToolBar);
     }
@@ -1228,7 +1228,7 @@ void QtToolBarDialogPrivate::defaultClicked()
 
         const auto tbwit = toolBarToWidgetActions.find(toolBarItem);
         if (tbwit != toolBarToWidgetActions.end()) {
-            for (QAction *action : qAsConst(tbwit.value()))
+            for (QAction *action : std::as_const(tbwit.value()))
                 widgetActionToToolBar.insert(action, 0);
             toolBarToWidgetActions.erase(tbwit);
         }

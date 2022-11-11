@@ -77,7 +77,7 @@ void QtGroupBoxPropertyBrowserPrivate::slotEditorDestroyed()
 
 void QtGroupBoxPropertyBrowserPrivate::slotUpdate()
 {
-    for (WidgetItem *item : qAsConst(m_recreateQueue)) {
+    for (WidgetItem *item : std::as_const(m_recreateQueue)) {
         WidgetItem *par = item->parent;
         QWidget *w = nullptr;
         QGridLayout *l = nullptr;

@@ -503,14 +503,14 @@ void DeviceSkin::paintEvent( QPaintEvent *)
     if ( buttonPressed == true ) {
         toDraw += buttonIndex;
     }
-    for (int toggle : qAsConst(m_parameters.toggleAreaList)) {
+    for (int toggle : std::as_const(m_parameters.toggleAreaList)) {
         const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[toggle];
         if (flipped_open || ba.activeWhenClosed) {
             if (ba.toggleArea && ba.toggleActiveArea)
                 toDraw += toggle;
         }
     }
-    for (int button : qAsConst(toDraw)) {
+    for (int button : std::as_const(toDraw)) {
         const DeviceSkinButtonArea &ba = m_parameters.buttonAreas[button];
         const QRect r = buttonRegions[button].boundingRect();
         if ( ba.area.size() > 2 )

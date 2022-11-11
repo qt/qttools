@@ -51,7 +51,7 @@ bool CollectionNode::hasClasses() const
 void CollectionNode::getMemberNamespaces(NodeMap &out)
 {
     out.clear();
-    for (const auto &member : qAsConst(m_members)) {
+    for (const auto &member : std::as_const(m_members)) {
         if (member->isNamespace() && member->isInAPI())
             out.insert(member->name(), member);
     }
@@ -64,7 +64,7 @@ void CollectionNode::getMemberNamespaces(NodeMap &out)
 void CollectionNode::getMemberClasses(NodeMap &out) const
 {
     out.clear();
-    for (const auto &member : qAsConst(m_members)) {
+    for (const auto &member : std::as_const(m_members)) {
         if (member->isClassNode() && member->isInAPI())
             out.insert(member->name(), member);
     }

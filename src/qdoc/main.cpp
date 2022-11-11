@@ -167,7 +167,7 @@ static void loadIndexFiles(const QSet<QString> &formats)
                     */
                     QStringList indexPaths;
                     indexPaths.reserve(foundIndices.size());
-                    for (const auto &found : qAsConst(foundIndices))
+                    for (const auto &found : std::as_const(foundIndices))
                         indexPaths << found.absoluteFilePath();
                     if (warn) {
                         Location().warning(
@@ -643,19 +643,19 @@ int main(int argc, char **argv)
     if (config.singleExec()) {
         // single qdoc process for prepare and generate phases
         config.setQDocPass(Config::Prepare);
-        for (const auto &file : qAsConst(qdocFiles)) {
+        for (const auto &file : std::as_const(qdocFiles)) {
             config.dependModules().clear();
             processQdocconfFile(file);
         }
         config.setQDocPass(Config::Generate);
         QDocDatabase::qdocDB()->processForest();
-        for (const auto &file : qAsConst(qdocFiles)) {
+        for (const auto &file : std::as_const(qdocFiles)) {
             config.dependModules().clear();
             processQdocconfFile(file);
         }
     } else {
         // separate qdoc processes for prepare and generate phases
-        for (const auto &file : qAsConst(qdocFiles)) {
+        for (const auto &file : std::as_const(qdocFiles)) {
             config.dependModules().clear();
             processQdocconfFile(file);
         }

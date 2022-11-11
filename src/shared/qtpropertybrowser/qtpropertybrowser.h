@@ -112,7 +112,7 @@ public:
     explicit QtAbstractEditorFactory(QObject *parent) : QtAbstractEditorFactoryBase(parent) {}
     QWidget *createEditor(QtProperty *property, QWidget *parent) override
     {
-        for (PropertyManager *manager : qAsConst(m_managers)) {
+        for (PropertyManager *manager : std::as_const(m_managers)) {
             if (manager == property->propertyManager()) {
                 return createEditor(manager, property, parent);
             }
@@ -144,7 +144,7 @@ public:
     PropertyManager *propertyManager(QtProperty *property) const
     {
         QtAbstractPropertyManager *manager = property->propertyManager();
-        for (PropertyManager *m : qAsConst(m_managers)) {
+        for (PropertyManager *m : std::as_const(m_managers)) {
             if (m == manager) {
                 return m;
             }
@@ -158,7 +158,7 @@ protected:
     virtual void disconnectPropertyManager(PropertyManager *manager) = 0;
     void managerDestroyed(QObject *manager) override
     {
-        for (PropertyManager *m : qAsConst(m_managers)) {
+        for (PropertyManager *m : std::as_const(m_managers)) {
             if (m == manager) {
                 m_managers.remove(m);
                 return;
@@ -168,7 +168,7 @@ protected:
 private:
     void breakConnection(QtAbstractPropertyManager *manager) override
     {
-        for (PropertyManager *m : qAsConst(m_managers)) {
+        for (PropertyManager *m : std::as_const(m_managers)) {
             if (m == manager) {
                 removePropertyManager(m);
                 return;

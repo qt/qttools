@@ -2439,7 +2439,7 @@ void DocBookGenerator::generateFileList(const ExampleNode *en, bool images)
 
     m_writer->writeStartElement(dbNamespace, "itemizedlist");
 
-    for (const auto &path : qAsConst(paths)) {
+    for (const auto &path : std::as_const(paths)) {
         auto maybe_resolved_file{file_resolver.resolve(path)};
         if (!maybe_resolved_file) {
             // TODO: [uncentralized-admonition][failed-resolve-file]
@@ -3656,7 +3656,7 @@ void DocBookGenerator::generateAddendum(const Node *node, Addendum type, CodeMar
         if (nodes.isEmpty())
             return;
         std::sort(nodes.begin(), nodes.end(), Node::nodeNameLessThan);
-        for (const auto node : qAsConst(nodes)) {
+        for (const auto node : std::as_const(nodes)) {
             QString msg;
             const auto pn = static_cast<const PropertyNode *>(node);
             switch (pn->role(fn)) {
@@ -4294,7 +4294,7 @@ void DocBookGenerator::generateProxyPage(Aggregate *aggregate)
     Sections sections(aggregate);
     SectionVector *detailsSections = &sections.stdDetailsSections();
 
-    for (const auto &section : qAsConst(*detailsSections)) {
+    for (const auto &section : std::as_const(*detailsSections)) {
         if (section.isEmpty())
             continue;
 

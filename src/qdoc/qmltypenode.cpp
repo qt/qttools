@@ -126,7 +126,7 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
 
     auto *base = static_cast<QmlTypeNode *>(previousSearches.value(m_qmlBaseName));
     if (!previousSearches.contains(m_qmlBaseName)) {
-        for (const auto &import : qAsConst(m_importList)) {
+        for (const auto &import : std::as_const(m_importList)) {
             base = QDocDatabase::qdocDB()->findQmlType(import, m_qmlBaseName);
             if (base)
                 break;

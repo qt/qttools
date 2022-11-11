@@ -278,7 +278,7 @@ namespace qdesigner_internal {
             }
             // Add button groups
             if (!buttonGroups.isEmpty()) {
-                for (QButtonGroup *group : qAsConst(buttonGroups))
+                for (QButtonGroup *group : std::as_const(buttonGroups))
                     createModelRecursion(fwi, object, group, model, ctx);
             }
         } // has children

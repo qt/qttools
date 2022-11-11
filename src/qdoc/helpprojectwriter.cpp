@@ -146,7 +146,7 @@ void HelpProjectWriter::readSelectors(SubProject &subproject, const QStringList 
         subproject.m_selectors << typeHash.value(typeName);
         if (!pieces.isEmpty()) {
             pieces = pieces[0].split(QLatin1Char(','));
-            for (const auto &piece : qAsConst(pieces)) {
+            for (const auto &piece : std::as_const(pieces)) {
                 if (typeHash[typeName] == Node::Group
                     || typeHash[typeName] == Node::Module
                     || typeHash[typeName] == Node::QmlModule
@@ -451,7 +451,7 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
                     childSet << child;
             }
         }
-        for (const auto *child : qAsConst(childSet))
+        for (const auto *child : std::as_const(childSet))
             generateSections(project, writer, child);
     }
 }
@@ -611,7 +611,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
         writer.writeAttribute("name", it.key());
         QStringList sortedAttributes = it.value().values();
         sortedAttributes.sort();
-        for (const auto &filter : qAsConst(sortedAttributes))
+        for (const auto &filter : std::as_const(sortedAttributes))
             writer.writeTextElement("filterAttribute", filter);
         writer.writeEndElement(); // customFilter
     }
@@ -622,7 +622,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     // Write filterAttribute elements.
     QStringList sortedFilterAttributes = project.m_filterAttributes.values();
     sortedFilterAttributes.sort();
-    for (const auto &filterName : qAsConst(sortedFilterAttributes))
+    for (const auto &filterName : std::as_const(sortedFilterAttributes))
         writer.writeTextElement("filterAttribute", filterName);
 
     writer.writeStartElement("toc");
@@ -705,14 +705,14 @@ void HelpProjectWriter::generateProject(HelpProject &project)
             if (subproject.m_sortPages) {
                 QStringList titles = subproject.m_nodes.keys();
                 titles.sort();
-                for (const auto &title : qAsConst(titles)) {
+                for (const auto &title : std::as_const(titles)) {
                     writeNode(project, writer, subproject.m_nodes[title]);
                 }
             } else {
                 // Find a contents node and navigate from there, using the NextLink values.
                 QSet<QString> visited;
                 bool contentsFound = false;
-                for (const auto *node : qAsConst(subproject.m_nodes)) {
+                for (const auto *node : std::as_const(subproject.m_nodes)) {
                     QString nextTitle = node->links().value(Node::NextLink).first;
                     if (!nextTitle.isEmpty()
                         && node->links().value(Node::ContentsLink).first.isEmpty()) {
@@ -740,7 +740,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
                     std::sort(subnodes.begin(), subnodes.end(), Node::nodeNameLessThan);
 
-                    for (const auto *node : qAsConst(subnodes))
+                    for (const auto *node : std::as_const(subnodes))
                         writeNode(project, writer, node);
                 }
             }
@@ -757,8 +757,8 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
     writer.writeStartElement("keywords");
     std::sort(project.m_keywords.begin(), project.m_keywords.end());
-    for (const auto &k : qAsConst(project.m_keywords)) {
-        for (const auto &id : qAsConst(k.m_ids)) {
+    for (const auto &k : std::as_const(project.m_keywords)) {
+        for (const auto &id : std::as_const(k.m_ids)) {
             writer.writeStartElement("keyword");
             writer.writeAttribute("name", k.m_name);
             writer.writeAttribute("id", id);
@@ -778,7 +778,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     files.unite(project.m_extraFiles);
     QStringList sortedFiles = files.values();
     sortedFiles.sort();
-    for (const auto &usedFile : qAsConst(sortedFiles)) {
+    for (const auto &usedFile : std::as_const(sortedFiles)) {
         if (!usedFile.isEmpty())
             writer.writeTextElement("file", usedFile);
     }

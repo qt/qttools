@@ -145,10 +145,10 @@ void tst_lconvert::convertChain(const QString &_inFileName, const QString &_outF
         args << "-if" << stations[i] << "-i" << "-" << "-of" << stations[i + 1];
         cvts.at(i)->start(lconvert, args, QIODevice::ReadWrite | QIODevice::Text);
     }
-    for (QProcess *cvt : qAsConst(cvts))
+    for (QProcess *cvt : std::as_const(cvts))
         QVERIFY2(cvt->waitForStarted(), qPrintable(cvt->errorString()));
     int st = 0;
-    for (QProcess *cvt : qAsConst(cvts))
+    for (QProcess *cvt : std::as_const(cvts))
         doWait(cvt, ++st);
 
     if (!QTest::currentTestFailed())

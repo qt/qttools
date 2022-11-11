@@ -130,7 +130,7 @@ static bool releaseTsFile(const QString& tsFileName,
         return false;
 
     QString qmFileName = tsFileName;
-    for (const Translator::FileFormat &fmt : qAsConst(Translator::registeredFileFormats())) {
+    for (const Translator::FileFormat &fmt : std::as_const(Translator::registeredFileFormats())) {
         if (qmFileName.endsWith(QLatin1Char('.') + fmt.extension)) {
             qmFileName.chop(fmt.extension.size() + 1);
             break;
@@ -260,7 +260,7 @@ int main(int argc, char **argv)
         inputFiles = translationsFromProjects(projectDescription);
     }
 
-    for (const QString &inputFile : qAsConst(inputFiles)) {
+    for (const QString &inputFile : std::as_const(inputFiles)) {
         if (outputFile.isEmpty()) {
             if (!releaseTsFile(inputFile, cd, removeIdentical))
                 return 1;

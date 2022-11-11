@@ -539,7 +539,7 @@ const Node *Tree::matchPathAndTarget(const QStringList &path, int idx, const QSt
     if (node->isAggregate()) {
         NodeVector nodes;
         static_cast<const Aggregate *>(node)->findChildren(name, nodes);
-        for (const auto *child : qAsConst(nodes)) {
+        for (const auto *child : std::as_const(nodes)) {
             if (genus != Node::DontCare && !(genus & child->genus()))
                 continue;
             const Node *t = matchPathAndTarget(path, idx + 1, target, child, flags, genus, ref);

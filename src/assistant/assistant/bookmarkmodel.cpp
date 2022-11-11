@@ -103,7 +103,7 @@ BookmarkModel::setItemsEditable(bool editable)
 void
 BookmarkModel::expandFoldersIfNeeeded(QTreeView *treeView)
 {
-    for (QModelIndex index : qAsConst(cache))
+    for (QModelIndex index : std::as_const(cache))
         treeView->setExpanded(index, index.data(UserRoleExpanded).toBool());
 }
 
@@ -130,7 +130,7 @@ BookmarkModel::removeItem(const QModelIndex &index)
         indexes = collectItems(index);
     indexes.append(index);
 
-    for (const QModelIndex &itemToRemove : qAsConst(indexes)) {
+    for (const QModelIndex &itemToRemove : std::as_const(indexes)) {
         if (!removeRow(itemToRemove.row(), itemToRemove.parent()))
             return false;
         cache.remove(itemFromIndex(itemToRemove));

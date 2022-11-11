@@ -767,7 +767,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
         sourceLanguageCode.replace(QLatin1Char('_'), QLatin1Char('-'));
     QString languageCode = translator.languageCode();
     languageCode.replace(QLatin1Char('_'), QLatin1Char('-'));
-    for (const QString &fn : qAsConst(fileOrder)) {
+    for (const QString &fn : std::as_const(fileOrder)) {
         writeIndent(ts, indent);
         ts << "<file original=\"" << fn << "\""
             << " datatype=\"" << dataType(messageOrder[fn].cbegin()->first()) << "\""
@@ -776,7 +776,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
             << "><body>\n";
         ++indent;
 
-        for (const QString &ctx : qAsConst(contextOrder[fn])) {
+        for (const QString &ctx : std::as_const(contextOrder[fn])) {
             if (!ctx.isEmpty()) {
                 writeIndent(ts, indent);
                 ts << "<group restype=\"" << restypeContext << "\""
@@ -784,7 +784,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
                 ++indent;
             }
 
-            for (const TranslatorMessage &msg : qAsConst(messageOrder[fn][ctx]))
+            for (const TranslatorMessage &msg : std::as_const(messageOrder[fn][ctx]))
                 writeMessage(ts, msg, drops, indent);
 
             if (!ctx.isEmpty()) {

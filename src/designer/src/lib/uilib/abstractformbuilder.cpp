@@ -1121,7 +1121,7 @@ DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parent
         }
     }
 
-    for (QObject *obj : qAsConst(children)) {
+    for (QObject *obj : std::as_const(children)) {
         if (QWidget *childWidget = qobject_cast<QWidget*>(obj)) {
             if (d->m_laidout.contains(childWidget) || !recursive)
                 continue;
@@ -1311,7 +1311,7 @@ DomLayout *QAbstractFormBuilder::createDom(QLayout *layout, DomLayout *ui_layout
 
     QList<DomLayoutItem *> ui_items;
     ui_items.reserve(newList.size());
-    for (const FormBuilderSaveLayoutEntry &item : qAsConst(newList)) {
+    for (const FormBuilderSaveLayoutEntry &item : std::as_const(newList)) {
         if (DomLayoutItem *ui_item = createDom(item.item, lay, ui_parentWidget)) {
             if (item.row >= 0)
                 ui_item->setAttributeRow(item.row);
@@ -1936,7 +1936,7 @@ void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemVi
                 const QString upperPropertyName = realPropertyName.at(0).toUpper()
                                                   + realPropertyName.mid(1);
                 const QString fakePropertyName = headerPrefix + upperPropertyName;
-                for (DomProperty *property : qAsConst(headerProperties)) {
+                for (DomProperty *property : std::as_const(headerProperties)) {
                     if (property->attributeName() == realPropertyName) {
                         property->setAttributeName(fakePropertyName);
                         viewProperties << property;

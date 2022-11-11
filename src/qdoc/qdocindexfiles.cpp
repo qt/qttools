@@ -708,7 +708,7 @@ void QDocIndexFiles::insertTarget(TargetRec::TargetType type,
  */
 void QDocIndexFiles::resolveIndex()
 {
-    for (const auto &pair : qAsConst(m_basesList)) {
+    for (const auto &pair : std::as_const(m_basesList)) {
         const QStringList bases = pair.second.split(QLatin1Char(','));
         for (const auto &base : bases) {
             QStringList basePath = base.split(QString("::"));

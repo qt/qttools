@@ -397,7 +397,7 @@ void WidgetDataBase::loadPlugins()
     unsigned addedPlugins = 0;
     unsigned removedPlugins = 0;
     if (!pluginList.isEmpty()) {
-        for (QDesignerWidgetDataBaseItemInterface *pluginItem : qAsConst(pluginList)) {
+        for (QDesignerWidgetDataBaseItemInterface *pluginItem : std::as_const(pluginList)) {
             const QString pluginName = pluginItem->name();
             NameIndexMap::iterator existingIt = existingCustomClasses.find(pluginName);
             if (existingIt == existingCustomClasses.end()) {
