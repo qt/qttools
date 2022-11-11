@@ -174,12 +174,16 @@ Keyword HelpProjectWriter::keywordDetails(const Node *node) const
                 : node->name();
         return Keyword(name, id, ref);
     } else if (node->isQmlType() || node->isQmlBasicType()) {
-        QStringList parts;
-        parts.prepend(node->name());
-        if (QString moduleName{node->logicalModuleName()}; !moduleName.isEmpty())
-            parts.prepend(moduleName);
-        parts.prepend("QML");
-        return Keyword(node->name(), parts.join('.'), ref);
+        const QString &name = node->name();
+        QString moduleName = node->logicalModuleName();
+        QStringList ids("QML." + name);
+        if (!moduleName.isEmpty()) {
+            QString majorVersion = node->logicalModule()
+                    ? node->logicalModule()->logicalModuleVersion().split('.')[0]
+                    : QString();
+            ids << "QML." + moduleName + majorVersion + "." + name;
+        }
+        return Keyword(name, ids, ref);
     } else if (node->isTextPageNode()) {
         const auto *pageNode = static_cast<const PageNode *>(node);
         return Keyword(pageNode->fullTitle(), pageNode->fullTitle(), ref);
