@@ -621,7 +621,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::InlineImage: {
         QString fileName = imageFileName(relative, atom->string());
         QString text;
-        if (atom->next() != nullptr)
+        if (atom->next() && atom->next()->type() == Atom::ImageText)
             text = atom->next()->string();
         if (atom->type() == Atom::Image)
             out() << "<p class=\"centerAlign\">";

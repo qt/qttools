@@ -57,6 +57,10 @@
     <newcode>This is new and shiny!</newcode>
     <para>
         <bold>Note:</bold> The code above doesn't compile</para>
+    <para>An inline image:</para>
+    <para>The is a paragraph containing an <inlineimage href="images/01.png"/> inline image to test if qdoc handles them properly, without considering rest of the line as alt text for the image.</para>
+    <para>An inline image with alt text:</para>
+    <para>Here is another example of <inlineimage href="images/01.png"/> inline image with alternative text, which should be added as an attribute to the inline image.</para>
     <para>
-        <bold>Warning:</bold> The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it image inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile quotefunction skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</para>
+        <bold>Warning:</bold> The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it image printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile quotefunction skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</para>
 </WebXML>

@@ -473,9 +473,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeEndElement(); // textobject
             newLine();
         } else {
-            if (atom->next() && !atom->next()->string().isEmpty())
+            if (atom->next() && !atom->next()->string().isEmpty()
+                && atom->next()->type() == Atom::ImageText)
                 m_writer->writeTextElement(dbNamespace, "alt", atom->next()->string());
-
             m_writer->writeStartElement(dbNamespace, "imageobject");
             newLine();
             m_writer->writeEmptyElement(dbNamespace, "imagedata");
