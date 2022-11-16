@@ -57,8 +57,8 @@ static bool validatePackage(Package &p, const QString &filePath, LogLevel logLev
                                        "mutually exclusive.")
                                             .arg(QDir::toNativeSeparators(filePath)))
                       << std::endl;
-            validPackage = false;
         }
+        validPackage = false;
     }
 
     for (const QString &part : std::as_const(p.qtParts)) {
