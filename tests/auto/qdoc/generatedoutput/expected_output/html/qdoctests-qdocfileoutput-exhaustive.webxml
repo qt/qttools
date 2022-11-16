@@ -74,6 +74,10 @@
         <para>A bordered image with a caption:</para>
         <image href="images/leonardo-da-vinci.png"/>
         <para>Screenshot of the System Tray Icon</para>
+        <para>An inline image:</para>
+        <para>The is a paragraph containing an <inlineimage href="images/01.png"/> inline image to test if qdoc handles them properly, without considering rest of the line as alt text for the image.</para>
+        <para>An inline image with alt text:</para>
+        <para>Here is another example of <inlineimage href="images/01.png"/> inline image with alternative text, which should be added as an attribute to the inline image.</para>
     </section>
     <section id="commands-not-yet-tested">
         <heading level="1">Commands not yet tested</heading>

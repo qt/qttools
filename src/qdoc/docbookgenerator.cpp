@@ -645,7 +645,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             // TODO: [uncentralized-output-directory-structure]
             Config::copyFile(relative->doc().location(), file.get_path(), file_name, outputDir() + QLatin1String("/images"));
 
-            if (atom->next() && !atom->next()->string().isEmpty()) {
+            if (atom->next() && !atom->next()->string().isEmpty()
+                && atom->next()->type() == Atom::ImageText) {
                 m_writer->writeTextElement(dbNamespace, "alt", atom->next()->string());
                 newLine();
             }

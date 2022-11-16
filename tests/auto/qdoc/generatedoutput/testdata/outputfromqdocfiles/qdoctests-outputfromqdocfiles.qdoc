@@ -183,6 +183,18 @@
     \borderedimage leonardo-da-vinci.png
     \caption Screenshot of the System Tray Icon
 
+    An inline image:
+
+    The is a paragraph containing an \inlineimage 01.png inline image to test
+    if qdoc handles them properly, without considering rest of the line as
+    alt text for the image.
+
+    An inline image with alt text:
+
+    Here is another example of \inlineimage 01.png {No. 1} inline image with
+    alternative text, which should be added as an attribute to the inline
+    image.
+
     \section1 Commands not yet tested
 
     \warning The following commands have yet to be tested:
