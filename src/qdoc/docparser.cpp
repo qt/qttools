@@ -622,8 +622,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_INLINEIMAGE:
                     enterPara();
                     append(Atom::InlineImage, getArgument());
-                    append(Atom::ImageText, getRestOfLine());
-                    append(Atom::String, " ");
+                    //Append ImageText only if the following
+                    //argument is enclosed in braces.
+                    if (isLeftBraceAhead()) {
+                        append(Atom::ImageText, getArgument());
+                        append(Atom::String, " ");
+                    }
                     break;
                 case CMD_INDEX:
                     if (m_paragraphState == OutsideParagraph) {

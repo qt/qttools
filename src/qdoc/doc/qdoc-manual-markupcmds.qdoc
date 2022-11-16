@@ -2201,9 +2201,9 @@
 
     The command takes two arguments. The first argument is the name of
     the image file. The second argument is optional and is a simple
-    description of the image, equivalent to the HTML alt="" in an image
-    tag. The description is used for tooltips, and for when a browser
-    doesn't support images, like the Lynx text browser.
+    description of the image within braces {}, equivalent to the HTML
+    alt="" in an image tag. The description is used for tooltips, and
+    for when a browser doesn't support images, like the Lynx text browser.
 
     The most common use of the \\inlineimage command is in lists and
     tables. Here is an example of including inline images in a list:
@@ -2211,9 +2211,8 @@
     \code
     / *!
         \list 1
-          \li \inlineimage happy.gif Oh so happy!
-          \li \inlineimage happy.gif Oh so happy!
-          \li \inlineimage happy.gif Oh so happy!
+          \li \inlineimage happy.gif {Oh so happy, I am a caption!}
+          \li \inlineimage happy.gif Oh so happy, but I'm not a caption.
         \endlist
     * /
     \endcode
@@ -2221,9 +2220,8 @@
     QDoc renders this as:
 
     \list 1
-      \li \inlineimage happy.gif Oh so happy!
-      \li \inlineimage happy.gif Oh so happy!
-      \li \inlineimage happy.gif Oh so happy!
+      \li \inlineimage happy.gif {Oh so happy, I am a caption!}
+      \li \inlineimage happy.gif Oh so happy, but I'm not a caption.
     \endlist
 
     Here is an example of including inline images in a table:
@@ -2235,11 +2233,11 @@
             \li Qt
             \li Qt Creator
         \row
-            \li \inlineimage happy.gif Oh so happy!
+            \li \inlineimage happy.gif {Oh so happy!}
             \li \inlineimage happy.gif Oh so happy!
         \row
             \li \inlineimage happy.gif Oh so happy!
-            \li \inlineimage happy.gif Oh so happy!
+            \li \inlineimage happy.gif {Oh so happy!}
         \endtable
     * /
     \endcode
@@ -2256,11 +2254,11 @@
         <tr valign="top" bgcolor="#f0f0f0">
             <td><img src="images/happy.gif" alt="Oh so happy!" />
             </td>
-            <td><img src="images/happy.gif" alt="Oh so happy!" />
+            <td><img src="images/happy.gif"/> Oh so happy!
             </td>
         </tr>
         <tr valign="top" bgcolor="#f0f0f0">
-            <td><img src="images/happy.gif" alt="Oh so happy!"/>
+            <td><img src="images/happy.gif"/> Oh so happy!
             </td>
             <td><img src="images/happy.gif" alt="Oh so happy!" />
             </td>
@@ -2273,26 +2271,22 @@
 
     \code
     / *!
-        \inlineimage training.jpg Qt Training
-        The Qt Programming course is offered as a
-        five day Open Enrollment Course. The classes
-        are open to the public. Although the course is open
-        to anyone who wants to learn, attendees should
-        have significant experience in C++ development
-        to derive maximum benefit from the course.
+        \inlineimage training.jpg {Qt Training} The Qt Programming course is
+        offered as a five day Open Enrollment Course. The classes are open to
+        the public. Although the course is open to anyone who wants to learn,
+        attendees should have significant experience in C++ development to
+        derive maximum benefit from the course.
     * /
     \endcode
 
     QDoc renders this as:
 
     \quotation
-       \inlineimage training.jpg Qt Training
-        The Qt Programming course is offered as a
-        five day Open Enrollment Course. The classes
-        are open to the public. Although the course is open
-        to anyone who wants to learn, attendees should
-        have significant experience in C++ development
-        to derive maximum benefit from the course.
+        \inlineimage training.jpg {Qt Training} The Qt Programming course is
+        offered as a five day Open Enrollment Course. The classes are open to
+        the public. Although the course is open to anyone who wants to learn,
+        attendees should have significant experience in C++ development to
+        derive maximum benefit from the course.
     \endquotation
 
     See also \l {image-command} {\\image} and \l {caption-command} {\\caption}.
