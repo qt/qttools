@@ -58,8 +58,10 @@
 
     \section1 Creating a Latin Message File
 
-    The first step is to create a project file, \c hellotr.pro, that lists
-    all the source files for the project:
+    The first step is to create a project file that lists
+    all the source files for the project.
+
+    When using qmake, the relevant lines in \c hellotr.pro are:
 
     \snippet hellotr/hellotr.pro 0
     \snippet hellotr/hellotr.pro 1
@@ -68,16 +70,10 @@
     maintain. In this example, we just maintain one set of translations,
     namely Latin.
 
-    It is also possible to produce translations using the
-    \l{cmake-commands-qtlinguisttools}{Qt6::LinguistTools CMake commands}.
-    One needs to add the following to the \c CMakeLists.txt:
+    When using CMake, the relevant lines in \c CMakeLists.txt are:
     \snippet hellotr/CMakeLists.txt 0
     \codeline
     \snippet hellotr/CMakeLists.txt 1
-
-    After configuring and building, the translations are produced by running:
-
-    \snippet doc/snippets/doc_src_examples_hellotr.qdoc 5
 
     Note that the file extension is \c .ts, not \c .qm. The \c .ts
     translation source format is designed for use during the
@@ -105,15 +101,22 @@
     \c lupdate is used to create and update the message files (\c hellotr_la.ts
     in this case) to keep them in sync with the source code. It is safe to
     run \c lupdate at any time, as \c lupdate does not remove any
-    information. For example, you can put it in the makefile, so the TS
-    files are updated whenever the source changes.
+    information.
 
-    Try running \c lupdate right now, like this:
+    Try running \c lupdate right now.
+
+    When using qmake, \c lupdate must be run manually:
 
     \snippet doc/snippets/doc_src_examples_hellotr.qdoc 0
 
     (The \c -verbose option instructs \c lupdate to display messages that
-    explain what it is doing.) You should now have a file \c hellotr_la.ts in
+    explain what it is doing.)
+
+    When using CMake, build the \c update_translations target to run \c lupdate:
+
+    \snippet doc/snippets/doc_src_examples_hellotr.qdoc 5
+
+    You should now have a file \c hellotr_la.ts in
     the current directory, containing this:
 
     \snippet doc/snippets/doc_src_examples_hellotr.qdoc 1
