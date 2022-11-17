@@ -12,10 +12,6 @@ setenv LANG fr
 //! [2]
 
 
-//! [3]
-set LANG=fr
-//! [3]
-
 //! [4]
 make update_translations
 //! [4]

@@ -59,13 +59,12 @@
     \section1 Creating a Latin Message File
 
     The first step is to create a project file, \c hellotr.pro, that lists
-    all the source files for the project. The project file can be a qmake
-    project file, or even an ordinary makefile. Any file that contains
+    all the source files for the project:
 
     \snippet hellotr/hellotr.pro 0
     \snippet hellotr/hellotr.pro 1
 
-    will work. \c TRANSLATIONS specifies the message files we want to
+    \c TRANSLATIONS specifies the message files we want to
     maintain. In this example, we just maintain one set of translations,
     namely Latin.
 
