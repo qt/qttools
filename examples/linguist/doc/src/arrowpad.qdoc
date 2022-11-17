@@ -176,21 +176,20 @@
 
     \snippet doc/snippets/doc_src_examples_arrowpad.qdoc 1
 
-    This should create both \c arrowpad_fr.qm and \c arrowpad_nl.qm. Set the \c
-    LANG environment variable to \c fr. In Unix, one of the two following
-    commands should work
+    This should create both \c arrowpad_fr.qm and \c arrowpad_nl.qm.
+
+    To use \c arrowpad_fr.qm, change your system language to French.
+    In Unix, one of the two following commands should work:
 
     \snippet doc/snippets/doc_src_examples_arrowpad.qdoc 2
 
-    In Windows, either modify \c autoexec.bat or run
-
-    \snippet doc/snippets/doc_src_examples_arrowpad.qdoc 3
+    In Windows, set your display language to French.
 
     When you run the program, you should now see the French version:
 
     \image linguist-arrowpad_fr.png
 
-    Try the same with Dutch, by setting \c LANG=nl. Now the Dutch
+    Try the same with Dutch (use \c LANG=nl in Unix). Now the Dutch
     version should appear:
 
     \image linguist-arrowpad_nl.png
