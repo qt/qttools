@@ -34,5 +34,5 @@ linguist hellotr_la.ts
 //! [4]
 
 //! [5]
-make update_translations
+cmake --build . --target update_translations
 //! [5]
