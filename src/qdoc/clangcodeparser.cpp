@@ -897,15 +897,67 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     Parameters &parameters = fn->parameters();
     parameters.clear();
     parameters.reserve(numArg);
+
+    // TODO: [clang16-required][unsound-code][bug-ridden]
+    // The following code that sets the metaness of the currently
+    // processed function node incorrect in multiple ways with regards
+    // to the specification of move/copy constructors/assignment
+    // operators.
+    //
+    // For example, it doesn't correctly allow for qualifiers nor does
+    // it correctly respect the argument disposition.
+    //
+    // It was previously bugged and still present a series of bugs
+    // such as being able to misidentify constructors types.
+    //
+    // A by-specification implementation in our currently used
+    // libclang is not particularly feasible due to the required
+    // complexity and is preferred to be avoided.
+    //
+    // To solve the issue, we pushed a series of patches to upstream
+    // llvm to expose some of the C++ API methods that would
+    // trivialize the following code.
+    //
+    // Those methods will be available on LLVM 16, which is currently
+    // expected for January 2023.
+    // When LLVM 16 comes out and we upgrade to it, the following code
+    // should be fixed and the minimum required version of libclang
+    // for QDoc should be updated.
     for (int i = 0; i < numArg; ++i) {
         CXType argType = clang_getArgType(funcType, i);
         if (fn->isCtor()) {
-            if (fromCXString(clang_getTypeSpelling(clang_getPointeeType(argType))) == fn->name()) {
-                if (argType.kind == CXType_RValueReference)
-                    fn->setMetaness(FunctionNode::MCtor);
-                else if (argType.kind == CXType_LValueReference)
-                    fn->setMetaness(FunctionNode::CCtor);
+            // TODO:KLUDGE: [temporary-hack]
+            // The following is used to fix a very specific bug in the
+            // way QDoc assigns the metaness of constructors.
+            // It is nonetheless quite imperfect in its handling and
+            // is only used as a temporary fix while LLVM 16 is not
+            // available.
+            //
+            // This is expected to be removed as soon as LLVM 16 comes out.
+            static auto remove_qualifiers = [](QString type_spelling) {
+                // REMARK: While, generally, a type with
+                // both qualifiers would be written "const volatile
+                // T", clang accepts "volatile const T" too.
+                //
+                // Nonetheless, we do not handle that case as
+                // libclang, when providing the spelling, currently
+                // always writes the const-qualifier before the
+                // volatile-qualifier.
+                if (type_spelling.startsWith("const "))
+                    type_spelling.remove(0, QString("const ").size());
+
+                if (type_spelling.startsWith("volatile "))
+                    type_spelling.remove(0, QString("volatile ").size());
+
+                return type_spelling;
+            };
+
+            const QString type_spelling{remove_qualifiers(fromCXString(clang_getTypeSpelling(clang_getPointeeType(argType))))};
+            if (type_spelling == fn->name()) {
+                if (argType.kind == CXType_RValueReference) fn->setMetaness(FunctionNode::MCtor);
+                else if (argType.kind == CXType_LValueReference) fn->setMetaness(FunctionNode::CCtor);
             }
+
         } else if ((kind == CXCursor_CXXMethod) && (fn->name() == QLatin1String("operator="))) {
             if (argType.kind == CXType_RValueReference)
                 fn->setMetaness(FunctionNode::MAssign);
