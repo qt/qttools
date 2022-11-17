@@ -12,29 +12,33 @@
 
     We will use two translations, French and Dutch, although there is no
     effective limit on the number of possible translations that can be used
-    with an application. The relevant lines of \c arrowpad.pro are
+    with an application.
+
+    When using qmake, the relevant lines in \c arrowpad.pro are:
 
     \snippet arrowpad/arrowpad.pro 0
     \codeline
     \snippet arrowpad/arrowpad.pro 1
 
-    Run \c lupdate; it should produce two identical message files
-    \c arrowpad_fr.ts and \c arrowpad_nl.ts. These files will contain all the source
-    texts marked for translation with \c tr() calls and their contexts.
-
-    It is also possible to produce translations using the
-    \l{cmake-commands-qtlinguisttools}{Qt6::LinguistTools CMake commands}.
-    The relevant lines in \c CMakeLists.txt are:
+    When using CMake, the relevant lines in \c CMakeLists.txt are:
     \snippet arrowpad/CMakeLists.txt 0
     \codeline
     \snippet arrowpad/CMakeLists.txt 1
 
-    After configuring and building, the translations are produced by running:
+    Run \c lupdate. It should produce two identical message files
+    \c arrowpad_fr.ts and \c arrowpad_nl.ts. These files will contain all the source
+    texts marked for translation with \c tr() calls and their contexts.
+
+    When using qmake, \c lupdate must be run manually:
+
+    \snippet doc/snippets/doc_src_examples_arrowpad.qdoc 0
+
+    When using CMake, build the \c update_translations target to run \c lupdate:
 
     \snippet doc/snippets/doc_src_examples_arrowpad.qdoc 4
 
     See the \l{Qt Linguist Manual} for more information about
-    translating Qt application.
+    translating Qt applications.
 
     \section1 Line by Line Walkthrough
 
