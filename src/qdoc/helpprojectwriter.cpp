@@ -184,6 +184,11 @@ Keyword HelpProjectWriter::keywordDetails(const Node *node) const
             ids << "QML." + moduleName + majorVersion + "." + name;
         }
         return Keyword(name, ids, ref);
+    } else if (node->isQmlModule()) {
+        const QLatin1Char delim('.');
+        QStringList parts = node->logicalModuleName().split(delim) << "QML";
+        std::reverse(parts.begin(), parts.end());
+        return Keyword(node->logicalModuleName(), parts.join(delim), ref);
     } else if (node->isTextPageNode()) {
         const auto *pageNode = static_cast<const PageNode *>(node);
         return Keyword(pageNode->fullTitle(), pageNode->fullTitle(), ref);
