@@ -71,20 +71,21 @@
             <keyword name="CrossModuleRef" id="CrossModuleRef" ref="crossmoduleref.html"/>
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
-            <keyword name="No QML Types Here" id="No QML Types Here" ref="test-empty-qmlmodule.html"/>
             <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
             <keyword name="ProgressBar" id="QML.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="ProgressBar" id="QML.UIComponents1.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
             <keyword name="QDOCTEST_MACRO2" id="QDOCTEST_MACRO2" ref="testqdoc-test.html#QDOCTEST_MACRO2"/>
             <keyword name="QDoc Test C++ Classes" id="QDoc Test C++ Classes" ref="testcpp-module.html"/>
-            <keyword name="QDoc.Test QML Module" id="QDoc.Test QML Module" ref="qdoc-test-qmlmodule.html"/>
+            <keyword name="QDoc.Test" id="QML.Test.QDoc" ref="qdoc-test-qmlmodule.html"/>
             <keyword name="QML Modules" id="QML Modules" ref="qmlmodules.html"/>
             <keyword name="Switch" id="QML.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="Switch" id="QML.UIComponents1.Switch" ref="qml-uicomponents-switch.html"/>
             <keyword name="TabWidget" id="QML.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
             <keyword name="TabWidget" id="QML.UIComponents1.TabWidget" ref="qml-uicomponents-tabwidget.html"/>
             <keyword name="Test" id="TestQDoc::Test" ref="testqdoc-test.html"/>
+            <keyword name="Test.Empty" id="QML.Empty.Test" ref="test-empty-qmlmodule.html"/>
+            <keyword name="Test.NoVer" id="QML.NoVer.Test" ref="test-nover-qmlmodule.html"/>
             <keyword name="Test::SomeType" id="Test::SomeType" ref="testqdoc-test.html#SomeType-typedef"/>
             <keyword name="TestDerived" id="TestQDoc::TestDerived" ref="testqdoc-testderived.html"/>
             <keyword name="TestDerived::DerivedType" id="TestDerived::DerivedType" ref="testqdoc-testderived.html#DerivedType-typedef"/>
@@ -94,8 +95,7 @@
             <keyword name="Type" id="QML.QDoc.Test1.Type" ref="qml-qdoc-test-type.html"/>
             <keyword name="TypeNoVersion" id="QML.TypeNoVersion" ref="qml-test-nover-typenoversion.html"/>
             <keyword name="TypeNoVersion" id="QML.Test.NoVer.TypeNoVersion" ref="qml-test-nover-typenoversion.html"/>
-            <keyword name="UI Components" id="UI Components" ref="uicomponents-qmlmodule.html"/>
-            <keyword name="Versionless QML Module" id="Versionless QML Module" ref="test-nover-qmlmodule.html"/>
+            <keyword name="UIComponents" id="QML.UIComponents" ref="uicomponents-qmlmodule.html"/>
             <keyword name="YetAnotherChild" id="QML.YetAnotherChild" ref="qml-qdoc-test-yetanotherchild.html"/>
             <keyword name="YetAnotherChild" id="QML.QDoc.Test1.YetAnotherChild" ref="qml-qdoc-test-yetanotherchild.html"/>
             <keyword name="abs" id="int::abs" ref="qml-int.html#abs-method"/>
