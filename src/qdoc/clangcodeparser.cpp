@@ -1171,7 +1171,17 @@ void ClangCodeParser::parseHeaderFile(const Location & /*location*/, const QStri
 }
 
 static const char *defaultArgs_[] = {
+/*
+  https://bugreports.qt.io/browse/QTBUG-94365
+  An unidentified bug in Clang 15.x causes parsing failures due to errors in
+  the AST. This replicates only with C++20 support enabled - avoid the issue
+  by using C++17 with Clang 15.
+ */
+#if LIBCLANG_VERSION_MAJOR == 15
+    "-std=c++17",
+#else
     "-std=c++20",
+#endif
 #ifndef Q_OS_WIN
     "-fPIC",
 #else
