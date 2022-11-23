@@ -72,7 +72,7 @@ static void addLink(const QString &linkTarget, const QStringRef &nestedStuff, QS
     if (!linkTarget.isEmpty()) {
         *res += QLatin1String("<a href=\"");
         *res += linkTarget;
-        *res += QLatin1String("\">");
+        *res += QLatin1String("\" translate=\"no\">");
         *res += nestedStuff;
         *res += QLatin1String("</a>");
     } else {
@@ -750,7 +750,7 @@ int HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMark
                         NodeVector nv = map->values().toVector();
                         out() << "<p>Class ";
 
-                        out() << "<a href=\"" << linkForNode(map.key(), relative) << "\">";
+                        out() << "<a href=\"" << linkForNode(map.key(), relative) << "\" translate=\"no\">";
                         QStringList pieces = map.key()->fullName().split("::");
                         out() << protectEnc(pieces.last());
                         out() << "</a>"
@@ -2475,7 +2475,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
     generateTitle(title, Text(), SmallSubTitle, aggregate, marker);
 
     out() << "<p><b>The following members of class "
-          << "<a href=\"" << linkForNode(aggregate, nullptr) << "\">"
+          << "<a href=\"" << linkForNode(aggregate, nullptr) << "\" translate=\"no\">"
           << protectEnc(aggregate->name()) << "</a>"
           << " are obsolete.</b> "
           << "They are provided to keep old source code working. "
@@ -2636,7 +2636,7 @@ void HtmlGenerator::generateAnnotatedList(const Node *relative, CodeMarker *mark
             out() << "<tr class=\"odd topAlign\">";
         else
             out() << "<tr class=\"even topAlign\">";
-        out() << "<td class=\"tblName\"><p>";
+        out() << "<td class=\"tblName\" translate=\"no\"><p>";
         generateFullName(node, relative);
         out() << "</p></td>";
 
@@ -2749,7 +2749,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
       Output the alphabet as a row of links.
      */
     if (includeAlphabet) {
-        out() << "<p  class=\"centerAlign functionIndex\"><b>";
+        out() << "<p  class=\"centerAlign functionIndex\" translate=\"no\"><b>";
         for (int i = 0; i < 26; i++) {
             QChar ch('a' + i);
             if (usedParagraphNames.contains(char('a' + i)))
@@ -2761,7 +2761,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
     /*
       Output a <div> element to contain all the <dl> elements.
      */
-    out() << "<div class=\"flowListDiv\">\n";
+    out() << "<div class=\"flowListDiv\" translate=\"no\">\n";
     numTableRows_ = 0;
 
     int curParNr = 0;
@@ -2856,7 +2856,7 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
 
 void HtmlGenerator::generateFunctionIndex(const Node *relative)
 {
-    out() << "<p  class=\"centerAlign functionIndex\"><b>";
+    out() << "<p  class=\"centerAlign functionIndex\" translate=\"no\"><b>";
     for (int i = 0; i < 26; i++) {
         QChar ch('a' + i);
         out() << QString("<a href=\"#%1\">%2</a>&nbsp;").arg(ch).arg(ch.toUpper());
@@ -2866,7 +2866,7 @@ void HtmlGenerator::generateFunctionIndex(const Node *relative)
     char nextLetter = 'a';
     char currentLetter;
 
-    out() << "<ul>\n";
+    out() << "<ul translate=\"no\">\n";
     NodeMapMap &funcIndex = qdb_->getFunctionIndex();
     for (auto fnMap = funcIndex.constBegin(); fnMap != funcIndex.constEnd(); ++fnMap) {
         out() << "<li>";
@@ -3008,7 +3008,7 @@ void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, 
             out() << "<div class=\"table\"><table class=\"alignedsummary\" translate=\"no\">\n";
         } else {
             if (twoColumn)
-                out() << "<div class=\"table\"><table class=\"propsummary\">\n"
+                out() << "<div class=\"table\"><table class=\"propsummary\" translate=\"no\">\n"
                       << "<tr><td class=\"topAlign\">";
             out() << "<ul>\n";
         }
@@ -3545,7 +3545,7 @@ void HtmlGenerator::beginLink(const QString &link)
         if (showBrokenLinks)
             out() << "<i>";
     }
-    out() << "<a href=\"" << link_ << "\">";
+    out() << "<a href=\"" << link_ << "\" translate=\"no\">";
     inLink_ = true;
 }
 
@@ -3556,11 +3556,11 @@ void HtmlGenerator::beginLink(const QString &link, const Node *node, const Node 
         if (showBrokenLinks)
             out() << "<i>";
     } else if (node == nullptr || (relative != nullptr && node->status() == relative->status()))
-        out() << "<a href=\"" << link_ << "\">";
+        out() << "<a href=\"" << link_ << "\" translate=\"no\">";
     else if (node->isObsolete())
-        out() << "<a href=\"" << link_ << "\" class=\"obsolete\">";
+        out() << "<a href=\"" << link_ << "\" class=\"obsolete\" translate=\"no\">";
     else
-        out() << "<a href=\"" << link_ << "\">";
+        out() << "<a href=\"" << link_ << "\" translate=\"no\">";
     inLink_ = true;
 }
 
@@ -3627,7 +3627,7 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
     generateExtractionMark(node, MemberMark);
     generateKeywordAnchors(node);
 
-    QString qmlItemHeader("<div class=\"qmlproto\">\n"
+    QString qmlItemHeader("<div class=\"qmlproto\" translate=\"no\">\n"
                           "<div class=\"table\"><table class=\"qmlname\">\n");
 
     QString qmlItemStart("<tr valign=\"top\" class=\"odd\" id=\"%1\">\n"
