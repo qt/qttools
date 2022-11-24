@@ -858,16 +858,12 @@ void Sections::buildStdCppClassRefPageSections()
     SectionVector &summarySections = stdCppClassSummarySections();
     SectionVector &detailsSections = stdCppClassDetailsSections();
     Section &allMembers = allMembersSection();
-    bool documentAll = true;
-    if (m_aggregate->parent() && !m_aggregate->name().isEmpty() && !m_aggregate->hasDoc())
-        documentAll = false;
+
     for (auto it = m_aggregate->constBegin(); it != m_aggregate->constEnd(); ++it) {
         Node *n = *it;
         if (!n->isPrivate() && !n->isProperty() && !n->isRelatedNonmember()
             && !n->isSharedCommentNode())
             allMembers.insert(n);
-        if (!documentAll && !n->hasDoc())
-            continue;
 
         distributeNodeInSummaryVector(summarySections, n);
         distributeNodeInDetailsVector(detailsSections, n);
@@ -888,8 +884,6 @@ void Sections::buildStdCppClassRefPageSections()
             if (!n->isPrivate() && !n->isProperty() && !n->isRelatedNonmember()
                 && !n->isSharedCommentNode())
                 allMembers.insert(n);
-            if (!documentAll && !n->hasDoc())
-                continue;
         }
         pushBaseClasses(stack, cn);
     }
