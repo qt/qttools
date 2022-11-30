@@ -70,7 +70,7 @@
     namely Latin.
 
     It is also possible to produce translations using the
-    \l{cmake-macros-qtlinguisttools}{Qt6::LinguistTools CMake commands}.
+    \l{cmake-commands-qtlinguisttools}{Qt6::LinguistTools CMake commands}.
     One needs to add the following to the \c CMakeLists.txt:
     \snippet hellotr/CMakeLists.txt 0
     \codeline

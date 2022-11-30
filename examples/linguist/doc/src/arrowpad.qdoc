@@ -23,7 +23,7 @@
     texts marked for translation with \c tr() calls and their contexts.
 
     It is also possible to produce translations using the
-    \l{cmake-macros-qtlinguisttools}{Qt6::LinguistTools CMake commands}.
+    \l{cmake-commands-qtlinguisttools}{Qt6::LinguistTools CMake commands}.
     The relevant lines in \c CMakeLists.txt are:
     \snippet arrowpad/CMakeLists.txt 0
     \codeline
