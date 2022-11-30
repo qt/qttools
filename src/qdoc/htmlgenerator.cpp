@@ -2438,50 +2438,49 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
     out() << ", including inherited members.</p>\n";
 
     ClassKeysNodesList &cknl = sections.allMembersSection().classKeysNodesList();
-    if (!cknl.isEmpty()) {
-        for (int i = 0; i < cknl.size(); i++) {
-            ClassKeysNodes *ckn = cknl[i];
-            const QmlTypeNode *qcn = ckn->first;
-            KeysAndNodes &kn = ckn->second;
-            QStringList &keys = kn.first;
-            NodeVector &nodes = kn.second;
-            if (nodes.isEmpty())
-                continue;
-            if (i != 0) {
-                out() << "<p>The following members are inherited from ";
-                generateFullName(qcn, nullptr);
-                out() << ".</p>\n";
-            }
-            openUnorderedList();
-            for (int j = 0; j < keys.size(); j++) {
-                Node *node = nodes[j];
-                if (node->access() == Access::Private || node->isInternal())
-                    continue;
-                if (node->isSharingComment() && node->sharedCommentNode()->isPropertyGroup())
-                    continue;
-
-                std::function<void(Node *)> generate = [&](Node *n) {
-                    out() << "<li class=\"fn\" translate=\"no\">";
-                    generateQmlItem(n, aggregate, marker, true);
-                    if (n->isDefault())
-                        out() << " [default]";
-                    else if (n->isAttached())
-                        out() << " [attached]";
-                    // Indent property group members
-                    if (n->isPropertyGroup()) {
-                        out() << "<ul>\n";
-                        const QList<Node *> &collective =
-                                static_cast<SharedCommentNode *>(n)->collective();
-                        std::for_each(collective.begin(), collective.end(), generate);
-                        out() << "</ul>\n";
-                    }
-                    out() << "</li>\n";
-                };
-                generate(node);
-            }
-            closeUnorderedList();
+    for (int i = 0; i < cknl.size(); i++) {
+        ClassKeysNodes *ckn = cknl[i];
+        const QmlTypeNode *qcn = ckn->first;
+        KeysAndNodes &kn = ckn->second;
+        QStringList &keys = kn.first;
+        NodeVector &nodes = kn.second;
+        if (nodes.isEmpty())
+            continue;
+        if (i != 0) {
+            out() << "<p>The following members are inherited from ";
+            generateFullName(qcn, nullptr);
+            out() << ".</p>\n";
         }
+        openUnorderedList();
+        for (int j = 0; j < keys.size(); j++) {
+            Node *node = nodes[j];
+            if (node->access() == Access::Private || node->isInternal())
+                continue;
+            if (node->isSharingComment() && node->sharedCommentNode()->isPropertyGroup())
+                continue;
+
+            std::function<void(Node *)> generate = [&](Node *n) {
+                out() << "<li class=\"fn\" translate=\"no\">";
+                generateQmlItem(n, aggregate, marker, true);
+                if (n->isDefault())
+                    out() << " [default]";
+                else if (n->isAttached())
+                    out() << " [attached]";
+                // Indent property group members
+                if (n->isPropertyGroup()) {
+                    out() << "<ul>\n";
+                    const QList<Node *> &collective =
+                            static_cast<SharedCommentNode *>(n)->collective();
+                    std::for_each(collective.begin(), collective.end(), generate);
+                    out() << "</ul>\n";
+                }
+                out() << "</li>\n";
+            };
+            generate(node);
+        }
+        closeUnorderedList();
     }
+
 
     generateFooter();
     endSubPage();
