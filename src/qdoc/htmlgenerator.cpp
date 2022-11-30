@@ -2442,7 +2442,6 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
         ClassKeysNodes *ckn = cknl[i];
         const QmlTypeNode *qcn = ckn->first;
         KeysAndNodes &kn = ckn->second;
-        QStringList &keys = kn.first;
         NodeVector &nodes = kn.second;
         if (nodes.isEmpty())
             continue;
@@ -2452,7 +2451,7 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
             out() << ".</p>\n";
         }
         openUnorderedList();
-        for (int j = 0; j < keys.size(); j++) {
+        for (int j = 0; j < nodes.size(); j++) {
             Node *node = nodes[j];
             if (node->access() == Access::Private || node->isInternal())
                 continue;
