@@ -2437,12 +2437,11 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
     generateFullName(aggregate, nullptr);
     out() << ", including inherited members.</p>\n";
 
-    ClassKeysNodesList &cknl = sections.allMembersSection().classKeysNodesList();
+    ClassNodesList &cknl = sections.allMembersSection().classNodesList();
     for (int i = 0; i < cknl.size(); i++) {
-        ClassKeysNodes *ckn = cknl[i];
+        ClassNodes *ckn = cknl[i];
         const QmlTypeNode *qcn = ckn->first;
-        KeysAndNodes &kn = ckn->second;
-        NodeVector &nodes = kn.second;
+        NodeVector &nodes = ckn->second;
         if (nodes.isEmpty())
             continue;
         if (i != 0) {

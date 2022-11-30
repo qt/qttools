@@ -14,9 +14,8 @@ typedef QMultiMap<QString, Node *> MemberMap; // the string is the member signat
 typedef std::pair<const QmlTypeNode *, MemberMap> ClassMap; // the node is the QML type
 typedef QList<ClassMap *> ClassMapList;
 
-typedef std::pair<QStringList, NodeVector> KeysAndNodes;
-typedef std::pair<const QmlTypeNode *, KeysAndNodes> ClassKeysNodes;
-typedef QList<ClassKeysNodes *> ClassKeysNodesList;
+typedef std::pair<const QmlTypeNode *, NodeVector> ClassNodes;
+typedef QList<ClassNodes *> ClassNodesList;
 
 class Section
 {
@@ -62,7 +61,7 @@ public:
     {
         return m_inheritedMembers;
     }
-    ClassKeysNodesList &classKeysNodesList() { return m_classKeysNodesList; }
+    ClassNodesList &classNodesList() { return m_classNodesList; }
     [[nodiscard]] const NodeVector &obsoleteMembers() const { return m_obsoleteMembers; }
     void appendMembers(const NodeVector &nv) { m_members.append(nv); }
     [[nodiscard]] const Aggregate *aggregate() const { return m_aggregate; }
@@ -81,7 +80,7 @@ private:
     NodeVector m_obsoleteMembers {};
     NodeVector m_reimplementedMembers {};
     QList<std::pair<Aggregate *, int>> m_inheritedMembers {};
-    ClassKeysNodesList m_classKeysNodesList {};
+    ClassNodesList m_classNodesList {};
 
     QMultiMap<QString, Node *> m_memberMap {};
     QMultiMap<QString, Node *> m_obsoleteMemberMap {};

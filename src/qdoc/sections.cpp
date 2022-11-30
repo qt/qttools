@@ -141,7 +141,7 @@ Section::~Section()
 void Section::clear()
 {
     qDeleteAll(m_classMapList);
-    qDeleteAll(m_classKeysNodesList);
+    qDeleteAll(m_classNodesList);
     m_memberMap.clear();
     m_obsoleteMemberMap.clear();
     m_reimplementedMemberMap.clear();
@@ -150,7 +150,7 @@ void Section::clear()
     m_obsoleteMembers.clear();
     m_reimplementedMembers.clear();
     m_inheritedMembers.clear();
-    m_classKeysNodesList.clear();
+    m_classNodesList.clear();
     m_aggregate = nullptr;
 }
 
@@ -319,11 +319,10 @@ void Section::reduce()
         m_members = m_memberMap.values().toVector();
         m_reimplementedMembers = m_reimplementedMemberMap.values().toVector();
         for (const auto &cm : m_classMapList) {
-            auto *ckn = new ClassKeysNodes;
+            auto *ckn = new ClassNodes;
             ckn->first = cm->first;
-            ckn->second.second = cm->second.values().toVector();
-            ckn->second.first = cm->second.keys();
-            m_classKeysNodesList.append(ckn);
+            ckn->second = cm->second.values().toVector();
+            m_classNodesList.append(ckn);
         }
     }
     if (!m_obsoleteMemberMap.isEmpty()) {
