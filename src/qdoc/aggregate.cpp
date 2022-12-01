@@ -662,7 +662,6 @@ void Aggregate::findAllObsoleteThings()
 {
     for (auto *node : std::as_const(m_children)) {
         if (!node->isPrivate()) {
-            QString name = node->name();
             if (node->isDeprecated()) {
                 if (node->isClassNode())
                     QDocDatabase::obsoleteClasses().insert(node->qualifyCppName(), node);

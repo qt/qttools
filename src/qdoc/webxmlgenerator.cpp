@@ -29,7 +29,7 @@ void WebXMLGenerator::initializeGenerator()
 
 void WebXMLGenerator::terminateGenerator()
 {
-    Generator::terminateGenerator();
+    HtmlGenerator::terminateGenerator();
 }
 
 QString WebXMLGenerator::format()

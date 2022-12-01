@@ -1585,7 +1585,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
             } else if (CodeParser::isWorthWarningAbout(doc)) {
                 bool future = false;
                 if (doc.metaCommandsUsed().contains(COMMAND_SINCE)) {
-                    QString sinceVersion = doc.metaCommandArgs(COMMAND_SINCE)[0].first;
+                    QString sinceVersion = doc.metaCommandArgs(COMMAND_SINCE).at(0).first;
                     if (getUnpatchedVersion(sinceVersion) > getUnpatchedVersion(m_version))
                         future = true;
                 }

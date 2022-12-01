@@ -642,7 +642,7 @@ QStringList Config::getCanonicalPathList(const QString &var, PathFlags flags) co
             else
                 qCDebug(lcQdoc) <<
                         qUtf8Printable(QStringLiteral("%1: Ignored nonexistent path \'%2\'")
-                                .arg(m_lastLocation.toString()).arg(rawValue));
+                                .arg(m_lastLocation.toString(), rawValue));
         }
     }
     return result;

@@ -296,7 +296,8 @@ void Doc::initialize(FileResolver& file_resolver)
 
     QStringMap reverseAliasMap;
 
-    for (const auto &a : config.subVars(CONFIG_ALIAS)) {
+    const auto &configAliases = config.subVars(CONFIG_ALIAS);
+    for (const auto &a : configAliases) {
         QString alias = config.getString(CONFIG_ALIAS + Config::dot + a);
         if (reverseAliasMap.contains(alias)) {
             config.lastLocation().warning(QStringLiteral("Command name '\\%1' cannot stand"
@@ -308,7 +309,8 @@ void Doc::initialize(FileResolver& file_resolver)
         m_utilities.aliasMap.insert(a, alias);
     }
 
-    for (const auto &macroName : config.subVars(CONFIG_MACRO)) {
+    const auto &configMacros = config.subVars(CONFIG_MACRO);
+    for (const auto &macroName : configMacros) {
         QString macroDotName = CONFIG_MACRO + Config::dot + macroName;
         Macro macro;
         macro.numParams = -1;
@@ -319,7 +321,8 @@ void Doc::initialize(FileResolver& file_resolver)
         }
         bool silent = false;
 
-        for (const auto &f : config.subVars(macroDotName)) {
+        const auto &macroDotNames = config.subVars(macroDotName);
+        for (const auto &f : macroDotNames) {
             QString def = config.getString(macroDotName + Config::dot + f);
             if (!def.isEmpty()) {
                 macro.m_otherDefs.insert(f, def);
