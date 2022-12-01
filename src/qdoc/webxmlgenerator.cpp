@@ -698,7 +698,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
                     file_resolver.get_search_directories().cend(),
                     u"Searched directories:"_s,
                     std::plus(),
-                    [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
+                    [](const DirectoryPath &directory_path) -> QString { return u' ' + directory_path.value(); }
                 );
 
                 relative->location().warning(u"Cannot find file to quote from: %1"_s.arg(location), details);

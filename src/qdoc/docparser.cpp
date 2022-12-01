@@ -1886,7 +1886,7 @@ void DocParser::quoteFromFile(const QString &filename)
             (*file_resolver).get_search_directories().cend(),
             u"Searched directories:"_s,
             std::plus(),
-            [](const DirectoryPath &directory_path){ return " " + directory_path.value(); }
+            [](const DirectoryPath &directory_path) -> QString { return u' ' + directory_path.value(); }
         );
 
         location().warning(u"Cannot find file to quote from: %1"_s.arg(filename), details);
