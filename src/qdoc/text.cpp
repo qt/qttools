@@ -234,7 +234,8 @@ void Text::dump() const
         str.replace("\\", "\\\\");
         str.replace("\"", "\\\"");
         str.replace("\n", "\\n");
-        str.replace(QRegularExpression(R"([^ -~])"), "?");
+        static const QRegularExpression re(R"([^ -~])");
+        str.replace(re, "?");
         if (!str.isEmpty())
             str = " \"" + str + QLatin1Char('"');
 

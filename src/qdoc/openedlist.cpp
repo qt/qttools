@@ -15,7 +15,7 @@ OpenedList::OpenedList(ListStyle style) : sty(style), ini(1), nex(0) {}
 
 OpenedList::OpenedList(const Location &location, const QString &hint) : sty(Bullet), ini(1)
 {
-    QRegularExpression hintSyntax("^(\\W*)([0-9]+|[A-Z]+|[a-z]+)(\\W*)$");
+    static const QRegularExpression hintSyntax("^(\\W*)([0-9]+|[A-Z]+|[a-z]+)(\\W*)$");
 
     auto match = hintSyntax.match(hint);
     if (match.hasMatch()) {

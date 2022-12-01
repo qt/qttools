@@ -409,7 +409,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
             out() << formattingLeftMap()[atom->string()];
         if (atom->string() == ATOM_FORMATTING_PARAMETER) {
             if (atom->next() != nullptr && atom->next()->type() == Atom::String) {
-                QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
+                static const QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
                 auto match = subscriptRegExp.match(atom->next()->string());
                 if (match.hasMatch()) {
                     out() << match.captured(1) << "<sub>" << match.captured(2)
@@ -1721,7 +1721,7 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
     QVersionNumber projectVersion = QVersionNumber::fromString(m_qdb->version());
     if (!projectVersion.isNull()) {
         QVersionNumber titleVersion;
-        QRegularExpression re(QLatin1String(R"(\d+\.\d+)"));
+        static const QRegularExpression re(QLatin1String(R"(\d+\.\d+)"));
         const QString &versionedTitle = titleSuffix.isEmpty() ? title : titleSuffix;
         auto match = re.match(versionedTitle);
         if (match.hasMatch())
@@ -2856,7 +2856,7 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
                                     bool summary)
 {
     QString marked = marker->markedUpQmlItem(node, summary);
-    QRegularExpression templateTag("(<[^@>]*>)");
+    static const QRegularExpression templateTag("(<[^@>]*>)");
     auto match = templateTag.match(marked);
     if (match.hasMatch()) {
         QString contents = protectEnc(match.captured(1));
@@ -2865,7 +2865,8 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
 
     // Look for the _ character in the member name followed by a number (or n):
     // this is intended to be rendered as a subscript.
-    marked.replace(QRegularExpression("<@param>([a-z]+)_([0-9]+|n)</@param>"), "<i>\\1<sub>\\2</sub></i>");
+    static const QRegularExpression re("<@param>([a-z]+)_([0-9]+|n)</@param>");
+    marked.replace(re, "<i>\\1<sub>\\2</sub></i>");
     // Replace some markup by HTML tags. Do both the opening and the closing tag
     // in one go (instead of <@param> and </@param> separately, for instance).
     marked.replace("@param>", "i>");
@@ -3102,14 +3103,15 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
 
     if (prefix)
         marked.prepend(*prefix);
-    QRegularExpression templateTag("(<[^@>]*>)");
+    static const QRegularExpression templateTag("(<[^@>]*>)");
     auto match = templateTag.match(marked);
     if (match.hasMatch()) {
         QString contents = protectEnc(match.captured(1));
         marked.replace(match.capturedStart(1), match.capturedLength(1), contents);
     }
 
-    marked.replace(QRegularExpression("<@param>([a-z]+)_([1-9n])</@param>"), "<i>\\1<sub>\\2</sub></i>");
+    static const QRegularExpression re("<@param>([a-z]+)_([1-9n])</@param>");
+    marked.replace(re, "<i>\\1<sub>\\2</sub></i>");
     marked.replace("<@param>", "<i>");
     marked.replace("</@param>", "</i>");
 
@@ -3119,7 +3121,8 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
     }
 
     if (style == Section::AllMembers) {
-        QRegularExpression extraRegExp("<@extra>.*</@extra>", QRegularExpression::InvertedGreedinessOption);
+        static const  QRegularExpression extraRegExp("<@extra>.*</@extra>",
+                                                     QRegularExpression::InvertedGreedinessOption);
         marked.remove(extraRegExp);
     } else {
         marked.replace("<@extra>", "<code>");

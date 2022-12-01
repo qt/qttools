@@ -231,7 +231,7 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
 
 QString removeCodeMarkers(const QString& code) {
     QString rewritten = code;
-    QRegularExpression re("(<@[^>&]*>)|(<\\/@[^&>]*>)");
+    static const QRegularExpression re("(<@[^>&]*>)|(<\\/@[^&>]*>)");
     rewritten.replace(re, "");
     return rewritten;
 }
@@ -378,7 +378,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             // For parameters, understand subscripts.
             if (atom->string() == ATOM_FORMATTING_PARAMETER) {
                 if (atom->next() != nullptr && atom->next()->type() == Atom::String) {
-                    QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
+                    static const QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
                     auto match = subscriptRegExp.match(atom->next()->string());
                     if (match.hasMatch()) {
                         m_writer->writeCharacters(match.captured(1));
@@ -3375,7 +3375,7 @@ void DocBookGenerator::generateParameter(const Parameter &parameter, const Node 
     if (generateExtra || pname.isEmpty()) {
         // Look for the _ character in the member name followed by a number (or n):
         // this is intended to be rendered as a subscript.
-        QRegularExpression sub("([a-z]+)_([0-9]+|n)");
+        static const QRegularExpression sub("([a-z]+)_([0-9]+|n)");
 
         m_writer->writeStartElement(dbNamespace, "emphasis");
         auto match = sub.match(paramName);
