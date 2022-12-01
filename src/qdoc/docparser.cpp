@@ -258,7 +258,8 @@ void DocParser::initialize(const Config &config, FileResolver& file_resolver)
 
     // If any of the formats define quotinginformation, activate quoting
     DocParser::s_quoting = config.getBool(CONFIG_QUOTINGINFORMATION);
-    for (const auto &format : config.getOutputFormats())
+    const auto &outputFormats = config.getOutputFormats();
+    for (const auto &format : outputFormats)
         DocParser::s_quoting = DocParser::s_quoting
                 || config.getBool(format + Config::dot + CONFIG_QUOTINGINFORMATION);
 

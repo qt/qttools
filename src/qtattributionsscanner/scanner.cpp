@@ -84,7 +84,7 @@ static std::optional<QStringList> toStringList(const QJsonValue &value)
     if (!value.isArray())
         return std::nullopt;
     QStringList result;
-    for (auto iter : value.toArray()) {
+    for (const auto &iter : value.toArray()) {
         if (iter.type() != QJsonValue::String)
             return std::nullopt;
         result.push_back(iter.toString());
@@ -217,7 +217,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
                 continue;
             }
             const QDir dir(directory);
-            for (auto iter : strings.value())
+            for (const auto &iter : std::as_const(strings.value()))
                 p.licenseFiles.push_back(dir.absoluteFilePath(iter));
         } else if (key == QLatin1String("Copyright")) {
             p.copyright = value;
@@ -256,8 +256,8 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         QFile file(p.copyrightFile);
         if (!file.open(QIODevice::ReadOnly)) {
             std::cerr << qPrintable(tr("File %1: Cannot open 'CopyrightFile' %2.\n")
-                                            .arg(QDir::toNativeSeparators(filePath))
-                                            .arg(QDir::toNativeSeparators(p.copyrightFile)));
+                                            .arg(QDir::toNativeSeparators(filePath),
+                                                 QDir::toNativeSeparators(p.copyrightFile)));
             validPackage = false;
         }
         p.copyrightFileContents = QString::fromUtf8(file.readAll());
@@ -268,8 +268,8 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         if (!file.open(QIODevice::ReadOnly)) {
             if (logLevel != SilentLog) {
                 std::cerr << qPrintable(tr("File %1: Cannot open 'LicenseFile' %2.\n")
-                                                .arg(QDir::toNativeSeparators(filePath))
-                                                .arg(QDir::toNativeSeparators(licenseFile)));
+                                                .arg(QDir::toNativeSeparators(filePath),
+                                                     QDir::toNativeSeparators(licenseFile)));
             }
             validPackage = false;
         }

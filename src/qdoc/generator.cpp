@@ -938,7 +938,6 @@ void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
 void Generator::addImageToCopy(const ExampleNode *en, const ResolvedFile& resolved_file)
 {
     QDir dirInfo;
-    QString userFriendlyFilePath;
     // TODO: [uncentralized-output-directory-structure]
     const QString prefix("/images/used-in-examples");
 
@@ -1640,9 +1639,11 @@ void Generator::initialize()
         }
     }
 
-    for (const auto &n : config.subVars(CONFIG_FORMATTING)) {
+    const auto &configFormatting = config.subVars(CONFIG_FORMATTING);
+    for (const auto &n : configFormatting) {
         QString formattingDotName = CONFIG_FORMATTING + Config::dot + n;
-        for (const auto &f : config.subVars(formattingDotName)) {
+        const auto &formattingDotNames = config.subVars(formattingDotName);
+        for (const auto &f : formattingDotNames) {
             QString def = config.getString(formattingDotName + Config::dot + f);
             if (!def.isEmpty()) {
                 int numParams = Config::numParams(def);

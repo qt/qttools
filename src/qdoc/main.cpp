@@ -144,7 +144,7 @@ static void loadIndexFiles(const QSet<QString> &formats)
                 subDirs << module;
 
                 for (const auto &dir : config.indexDirs()) {
-                    for (const auto &subDir : subDirs) {
+                    for (const auto &subDir : std::as_const(subDirs)) {
                         QString fileToLookFor = dir + QLatin1Char('/') + subDir + QLatin1Char('/')
                                 + module + ".index";
                         if (QFile::exists(fileToLookFor)) {
@@ -432,7 +432,7 @@ static void processQdocconfFile(const QString &fileName)
     /*
       By default, the only output format is HTML.
      */
-    QSet<QString> outputFormats = config.getOutputFormats();
+    const QSet<QString> outputFormats = config.getOutputFormats();
     Location outputFormatsLocation = config.lastLocation();
 
     qdb->clearSearchOrder();
@@ -539,7 +539,8 @@ static void processQdocconfFile(const QString &fileName)
         */
         parsed = 0;
         qCInfo(lcQdoc) << "Parse source files for" << project;
-        for (const auto &key : sources.keys()) {
+        for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
+            const auto &key = it.key();
             auto *codeParser = CodeParser::parserForSourceFile(key);
             if (codeParser) {
                 ++parsed;
