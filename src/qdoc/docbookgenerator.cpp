@@ -244,7 +244,7 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
 
 QString removeCodeMarkers(const QString& code) {
     QString rewritten = code;
-    QRegularExpression re("(<@[^>&]*>)|(<\\/@[^&>]*>)");
+    static const QRegularExpression re("(<@[^>&]*>)|(<\\/@[^&>]*>)");
     rewritten.replace(re, "");
     return rewritten;
 }
@@ -385,7 +385,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             // For parameters, understand subscripts.
             if (atom->string() == ATOM_FORMATTING_PARAMETER) {
                 if (atom->next() != nullptr && atom->next()->type() == Atom::String) {
-                    QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
+                    static const QRegularExpression subscriptRegExp("^([a-z]+)_([0-9n])$");
                     auto match = subscriptRegExp.match(atom->next()->string());
                     if (match.hasMatch()) {
                         m_writer->writeCharacters(match.captured(1));
@@ -1395,32 +1395,32 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 table = table.replace("<db:br />", QString());
                 table = table.replace("<db:br/>", QString());
 
-                table = table.replace(
-                    QRegularExpression(R"regex(<db:h(\d).*)>(.*)</db:h(\d)>)regex"),
+                static const QRegularExpression re1(R"regex(<db:h(\d).*)>(.*)</db:h(\d)>)regex");
+                table.replace(re1,
                     R"xml(<db:bridgehead renderas="sect\1">\2</bridgehead>)xml");
                 // Expecting \1 == \3.
 
                 table = table.replace(R"( nowrap="nowrap")", QString());
                 table = table.replace(R"( align="center")", QString());
-                table = table.replace(
-                    QRegularExpression(R"regex((row|col)span="\s+(.*)")regex"),
+                static const QRegularExpression re2(R"regex((row|col)span="\s+(.*)")regex");
+                table.replace(re2,
                     R"(\1span="\2")");
 
-                table = table.replace(
-                    QRegularExpression(R"regex(<db:td (.*)bgcolor="#(.*)"(.*)>(.*)</db:td>)regex"),
+                static const QRegularExpression re3(R"regex(<db:td (.*)bgcolor="#(.*)"(.*)>(.*)</db:td>)regex");
+                table.replace(re3,
                     R"xml(<db:td \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>\4</db:td>)xml");
-                table = table.replace(
-                    QRegularExpression(R"regex(<db:td (.*)bgcolor="(.*)"(.*)>(.*)</db:td>)regex"),
+                static const QRegularExpression re4(R"regex(<db:td (.*)bgcolor="(.*)"(.*)>(.*)</db:td>)regex");
+                table.replace(re4,
                     R"xml(<db:td \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>\4</db:td>)xml");
-                table = table.replace(
-                    QRegularExpression(R"regex(<db:tr (.*)bgcolor="#(.*)"(.*)>)regex"),
+                static const QRegularExpression re5(R"regex(<db:tr (.*)bgcolor="#(.*)"(.*)>)regex");
+                table.replace(re5,
                     R"xml(<db:tr \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>)xml");
-                table = table.replace(
-                    QRegularExpression(R"regex(<db:tr (.*)bgcolor="(.*)"(.*)>³)regex"),
+                static const QRegularExpression re6(R"regex(<db:tr (.*)bgcolor="(.*)"(.*)>³)regex");
+                table.replace(re6,
                     R"xml(<db:tr \1 class="bgcolor-\2" \3><?dbhtml bgcolor="\2" ?><?dbfo bgcolor="\2" ?>)xml");
 
-                table = table.replace(
-                    QRegularExpression(R"regex(<db:img src="(.*)" alt="(.*)"\s*/>)regex"),
+                static const QRegularExpression re7(R"regex(<db:img src="(.*)" alt="(.*)"\s*/>)regex");
+                table.replace(re7,
                     R"xml(<db:figure>
 <db:title>\2</db:title>
 <db:mediaobject>
@@ -2834,10 +2834,10 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
     if (!output.isEmpty()) {
         // Namespaces are mangled in this output, because QXmlStreamWriter doesn't know about them. (Letting it know
         // would imply generating the xmlns declaration one more time.)
-        QRegularExpression xmlTag(R"(<(/?)n\d+:)"); // Only for DocBook tags.
-        QRegularExpression xmlnsDocBookDefinition(R"( xmlns:n\d+=")" + QString{dbNamespace} + "\"");
-        QRegularExpression xmlnsXLinkDefinition(R"( xmlns:n\d+=")" + QString{xlinkNamespace} + "\"");
-        QRegularExpression xmlAttr(R"( n\d+:)"); // Only for XLink attributes.
+        static const QRegularExpression xmlTag(R"(<(/?)n\d+:)"); // Only for DocBook tags.
+        static const QRegularExpression xmlnsDocBookDefinition(R"( xmlns:n\d+=")" + QString{dbNamespace} + "\"");
+        static const QRegularExpression xmlnsXLinkDefinition(R"( xmlns:n\d+=")" + QString{xlinkNamespace} + "\"");
+        static const QRegularExpression xmlAttr(R"( n\d+:)"); // Only for XLink attributes.
         // Space at the beginning!
         const QString cleanOutput = output.replace(xmlTag, R"(<\1db:)")
             .replace(xmlnsDocBookDefinition, "")
@@ -4290,7 +4290,7 @@ void DocBookGenerator::generateParameter(const Parameter &parameter, const Node 
     if (generateExtra || pname.isEmpty()) {
         // Look for the _ character in the member name followed by a number (or n):
         // this is intended to be rendered as a subscript.
-        QRegularExpression sub("([a-z]+)_([0-9]+|n)");
+        static const QRegularExpression sub("([a-z]+)_([0-9]+|n)");
 
         m_writer->writeStartElement(dbNamespace, "emphasis");
         auto match = sub.match(paramName);

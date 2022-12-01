@@ -387,9 +387,9 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
     int start = 0;
     int finish = 0;
     QChar ch;
-    QRegularExpression classRegExp(QRegularExpression::anchoredPattern("Qt?(?:[A-Z3]+[a-z][A-Za-z]*|t)"));
-    QRegularExpression functionRegExp(QRegularExpression::anchoredPattern("q([A-Z][a-z]+)+"));
-    QRegularExpression findFunctionRegExp(QStringLiteral("^\\s*\\("));
+    static const QRegularExpression classRegExp(QRegularExpression::anchoredPattern("Qt?(?:[A-Z3]+[a-z][A-Za-z]*|t)"));
+    static const QRegularExpression functionRegExp(QRegularExpression::anchoredPattern("q([A-Z][a-z]+)+"));
+    static const QRegularExpression findFunctionRegExp(QStringLiteral("^\\s*\\("));
     bool atEOF = false;
 
     auto readChar = [&]() {

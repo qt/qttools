@@ -1086,7 +1086,7 @@ void Config::load(Location location, const QString &fileName)
     QString path = fileInfo.canonicalPath();
     pushWorkingDir(path);
     QDir::setCurrent(path);
-    QRegularExpression keySyntax(QRegularExpression::anchoredPattern(QLatin1String("\\w+(?:\\.\\w+)*")));
+    static const QRegularExpression keySyntax(QRegularExpression::anchoredPattern(QLatin1String("\\w+(?:\\.\\w+)*")));
 
 #define SKIP_CHAR()                                                                                \
     do {                                                                                           \
