@@ -1004,7 +1004,7 @@ void Generator::generateFileList(const ExampleNode *en, CodeMarker *marker, bool
                 file_resolver.get_search_directories().cend(),
                 u"Searched directories:"_qs,
                 std::plus(),
-                [](const DirectoryPath& directory_path){ return " " + directory_path.value(); }
+                [](const DirectoryPath &directory_path) -> QString { return u' ' + directory_path.value(); }
             );
 
             en->location().warning(u"(Generator)Cannot find file to quote from: %1"_qs.arg(path), details);
