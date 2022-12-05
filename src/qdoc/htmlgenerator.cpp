@@ -2439,9 +2439,9 @@ QString HtmlGenerator::generateAllQmlMembersFile(const Sections &sections, CodeM
 
     ClassNodesList &cknl = sections.allMembersSection().classNodesList();
     for (int i = 0; i < cknl.size(); i++) {
-        ClassNodes *ckn = cknl[i];
-        const QmlTypeNode *qcn = ckn->first;
-        NodeVector &nodes = ckn->second;
+        ClassNodes ckn = cknl[i];
+        const QmlTypeNode *qcn = ckn.first;
+        NodeVector &nodes = ckn.second;
         if (nodes.isEmpty())
             continue;
         if (i != 0) {

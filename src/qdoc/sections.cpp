@@ -140,10 +140,7 @@ Section::~Section()
  */
 void Section::clear()
 {
-    qDeleteAll(m_classMapList);
-    qDeleteAll(m_classNodesList);
     m_reimplementedMemberMap.clear();
-    m_classMapList.clear();
     m_members.clear();
     m_obsoleteMembers.clear();
     m_reimplementedMembers.clear();
@@ -285,29 +282,6 @@ bool Section::insertReimplementedMember(Node *node)
 }
 
 /*!
-  Allocate a new ClassMap on the heap for the \a aggregate
-  node, append it to the list of class maps, and return a
-  pointer to the new class map.
- */
-ClassMap *Section::newClassMap(const Aggregate *aggregate)
-{
-    auto *classMap = new ClassMap;
-    classMap->first = static_cast<const QmlTypeNode *>(aggregate);
-    m_classMapList.append(classMap);
-    return classMap;
-}
-
-/*!
-  Add node \a n to the \a classMap and to the member map.
- */
-void Section::add(ClassMap *classMap, Node *n)
-{
-    const QString key = sortName(n);
-    m_members.push_back(n);
-    classMap->second.insert(key, n);
-}
-
-/*!
   If this section is not empty, convert its maps to sequential
   structures for better traversal during doc generation.
  */
@@ -355,11 +329,9 @@ void Section::reduce()
     std::stable_sort(m_obsoleteMembers.begin(), m_obsoleteMembers.end(), node_less_than);
 
     m_reimplementedMembers = m_reimplementedMemberMap.values().toVector();
-    for (const auto &cm : m_classMapList) {
-        auto *ckn = new ClassNodes;
-        ckn->first = cm->first;
-        ckn->second = cm->second.values().toVector();
-        m_classNodesList.append(ckn);
+
+    for (auto &cn : m_classNodesList) {
+        std::stable_sort(cn.second.begin(), cn.second.end(), node_less_than);
     }
 }
 
@@ -930,15 +902,15 @@ void Sections::buildStdCppClassRefPageSections()
  */
 void Sections::buildStdQmlTypeRefPageSections()
 {
-    ClassMap *classMap = nullptr;
+    ClassNodes *classNodes = nullptr;
     SectionVector &summarySections = stdQmlTypeSummarySections();
     SectionVector &detailsSections = stdQmlTypeDetailsSections();
     Section &allMembers = allMembersSection();
 
     const Aggregate *qtn = m_aggregate;
     while (qtn) {
-        if (!qtn->isAbstract() || !classMap)
-            classMap = allMembers.newClassMap(qtn);
+        if (!qtn->isAbstract() || !classNodes)
+            classNodes = &allMembers.classNodesList().emplace_back(static_cast<const QmlTypeNode*>(qtn), NodeVector{});
         for (const auto n : qtn->childNodes()) {
             if (n->isInternal())
                 continue;
@@ -958,8 +930,11 @@ void Sections::buildStdQmlTypeRefPageSections()
                 }
             }
 
-            if (!n->isSharedCommentNode() || n->isPropertyGroup())
-                allMembers.add(classMap, n);
+            if (!n->isSharedCommentNode() || n->isPropertyGroup()) {
+                allMembers.insert(n);
+                classNodes->second.push_back(n);
+            }
+
 
             if (qtn == m_aggregate || qtn->isAbstract()) {
                 distributeQmlNodeInSummaryVector(summarySections, n);

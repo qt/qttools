@@ -10,12 +10,8 @@ QT_BEGIN_NAMESPACE
 
 class Aggregate;
 
-typedef QMultiMap<QString, Node *> MemberMap; // the string is the member signature
-typedef std::pair<const QmlTypeNode *, MemberMap> ClassMap; // the node is the QML type
-typedef QList<ClassMap *> ClassMapList;
-
 typedef std::pair<const QmlTypeNode *, NodeVector> ClassNodes;
-typedef QList<ClassNodes *> ClassNodesList;
+typedef QList<ClassNodes> ClassNodesList;
 
 class Section
 {
@@ -36,8 +32,6 @@ public:
     void insert(Node *node);
     bool insertReimplementedMember(Node *node);
 
-    ClassMap *newClassMap(const Aggregate *aggregate);
-    void add(ClassMap *classMap, Node *n);
     void appendMember(Node *node) { m_members.append(node); }
 
     void clear();
@@ -45,7 +39,7 @@ public:
     [[nodiscard]] bool isEmpty() const
     {
         return (m_members.isEmpty() && m_inheritedMembers.isEmpty()
-                && m_reimplementedMemberMap.isEmpty() && m_classMapList.isEmpty());
+                && m_reimplementedMemberMap.isEmpty() && m_classNodesList.isEmpty());
     }
 
     [[nodiscard]] Style style() const { return m_style; }
@@ -82,7 +76,6 @@ private:
     ClassNodesList m_classNodesList {};
 
     QMultiMap<QString, Node *> m_reimplementedMemberMap {};
-    ClassMapList m_classMapList {};
 };
 
 typedef QList<Section> SectionVector;
