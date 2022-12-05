@@ -34,7 +34,6 @@ public:
     ~Section();
 
     void insert(Node *node);
-    void insert(const QString &key, Node *node) { m_memberMap.insert(key, node); }
     bool insertReimplementedMember(Node *node);
 
     ClassMap *newClassMap(const Aggregate *aggregate);
@@ -45,7 +44,7 @@ public:
     void reduce();
     [[nodiscard]] bool isEmpty() const
     {
-        return (m_memberMap.isEmpty() && m_inheritedMembers.isEmpty()
+        return (m_members.isEmpty() && m_inheritedMembers.isEmpty()
                 && m_reimplementedMemberMap.isEmpty() && m_classMapList.isEmpty());
     }
 
@@ -82,7 +81,6 @@ private:
     QList<std::pair<Aggregate *, int>> m_inheritedMembers {};
     ClassNodesList m_classNodesList {};
 
-    QMultiMap<QString, Node *> m_memberMap {};
     QMultiMap<QString, Node *> m_obsoleteMemberMap {};
     QMultiMap<QString, Node *> m_reimplementedMemberMap {};
     ClassMapList m_classMapList {};

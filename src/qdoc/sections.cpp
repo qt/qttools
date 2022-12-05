@@ -142,7 +142,6 @@ void Section::clear()
 {
     qDeleteAll(m_classMapList);
     qDeleteAll(m_classNodesList);
-    m_memberMap.clear();
     m_obsoleteMemberMap.clear();
     m_reimplementedMemberMap.clear();
     m_classMapList.clear();
@@ -246,7 +245,7 @@ void Section::insert(Node *node)
             m_obsoleteMemberMap.insert(key, node);
         } else {
             if (!inherited || m_style == AllMembers)
-                m_memberMap.insert(key, node);
+                m_members.push_back(node);
 
             if (inherited && (node->parent()->isClassNode() || node->parent()->isNamespace())) {
                 if (m_inheritedMembers.isEmpty()
@@ -305,7 +304,7 @@ ClassMap *Section::newClassMap(const Aggregate *aggregate)
 void Section::add(ClassMap *classMap, Node *n)
 {
     const QString key = sortName(n);
-    m_memberMap.insert(key, n);
+    m_members.push_back(n);
     classMap->second.insert(key, n);
 }
 
@@ -315,16 +314,54 @@ void Section::add(ClassMap *classMap, Node *n)
  */
 void Section::reduce()
 {
-    if (!isEmpty()) {
-        m_members = m_memberMap.values().toVector();
-        m_reimplementedMembers = m_reimplementedMemberMap.values().toVector();
-        for (const auto &cm : m_classMapList) {
-            auto *ckn = new ClassNodes;
-            ckn->first = cm->first;
-            ckn->second = cm->second.values().toVector();
-            m_classNodesList.append(ckn);
-        }
+    // TODO:TEMPORARY:INTERMEDITATE: Section uses a series of maps
+    // to internally manage the categorization of the various members
+    // of an aggregate. It further uses a secondary "flattened"
+    // (usually vector) version that is later used by consumers of a
+    // Section content.
+    //
+    // One of the uses of those maps is that of ordering, by using
+    // keys generated with `sortName`.
+    // Nonetheless, this is the only usage that comes from the keys,
+    // as they are neither necessary nor used outside of the internal
+    // code for Section.
+    //
+    // Hence, the codebase is moving towards removing the maps in
+    // favor of building a flattened, consumer ready, version of the
+    // categorization directly, cutting the intermediate conversion
+    // step.
+    //
+    // To do so while keeping as much of the old behavior as possible,
+    // we provide a sorting for the flattened version that is based on
+    // `sortName`, as the previous ordering was.
+    //
+    // This acts as a relatively heavy pessimization, as `sortName`,
+    // used as a comparator, can be called multiple times for each
+    // Node, while before it would have been called almost-once.
+    //
+    // Instead of fixing this issue, by for example caching the
+    // sortName of each Node instance, we temporarily keep the
+    // pessimization while the various maps are removed.
+    //
+    // When all the maps are removed, we can remove `sortName`, which
+    // produces strings to use as key requiring a few allocations and
+    // expensive operations, with an actual comparator function, which
+    // should be more lightweight and more than offset the
+    // multiple-calls.
+    static auto node_less_than = [](const Node* left, const Node* right) {
+      return sortName(left) < sortName(right);
+    };
+
+    std::stable_sort(m_members.begin(), m_members.end(), node_less_than);
+
+    m_reimplementedMembers = m_reimplementedMemberMap.values().toVector();
+    for (const auto &cm : m_classMapList) {
+        auto *ckn = new ClassNodes;
+        ckn->first = cm->first;
+        ckn->second = cm->second.values().toVector();
+        m_classNodesList.append(ckn);
     }
+
     if (!m_obsoleteMemberMap.isEmpty()) {
         m_obsoleteMembers = m_obsoleteMemberMap.values().toVector();
     }
