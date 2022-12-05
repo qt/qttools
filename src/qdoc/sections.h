@@ -81,7 +81,6 @@ private:
     QList<std::pair<Aggregate *, int>> m_inheritedMembers {};
     ClassNodesList m_classNodesList {};
 
-    QMultiMap<QString, Node *> m_obsoleteMemberMap {};
     QMultiMap<QString, Node *> m_reimplementedMemberMap {};
     ClassMapList m_classMapList {};
 };

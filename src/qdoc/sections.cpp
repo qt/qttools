@@ -142,7 +142,6 @@ void Section::clear()
 {
     qDeleteAll(m_classMapList);
     qDeleteAll(m_classNodesList);
-    m_obsoleteMemberMap.clear();
     m_reimplementedMemberMap.clear();
     m_classMapList.clear();
     m_members.clear();
@@ -242,7 +241,7 @@ void Section::insert(Node *node)
     if (!irrelevant) {
         QString key = sortName(node);
         if (node->isDeprecated()) {
-            m_obsoleteMemberMap.insert(key, node);
+            m_obsoleteMembers.push_back(node);
         } else {
             if (!inherited || m_style == AllMembers)
                 m_members.push_back(node);
@@ -353,6 +352,7 @@ void Section::reduce()
     };
 
     std::stable_sort(m_members.begin(), m_members.end(), node_less_than);
+    std::stable_sort(m_obsoleteMembers.begin(), m_obsoleteMembers.end(), node_less_than);
 
     m_reimplementedMembers = m_reimplementedMemberMap.values().toVector();
     for (const auto &cm : m_classMapList) {
@@ -360,10 +360,6 @@ void Section::reduce()
         ckn->first = cm->first;
         ckn->second = cm->second.values().toVector();
         m_classNodesList.append(ckn);
-    }
-
-    if (!m_obsoleteMemberMap.isEmpty()) {
-        m_obsoleteMembers = m_obsoleteMemberMap.values().toVector();
     }
 }
 
