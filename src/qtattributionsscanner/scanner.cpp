@@ -75,6 +75,21 @@ static bool validatePackage(Package &p, const QString &filePath, LogLevel logLev
             validPackage = false;
         }
     }
+
+    const QDir dir = p.path;
+    for (const QString &file : std::as_const(p.files)) {
+        if (!dir.exists(file)) {
+            if (logLevel != SilentLog) {
+                std::cerr << qPrintable(tr("File %1: Path '%2' does not exist in directory '%3'.")
+                                                .arg(QDir::toNativeSeparators(filePath),
+                                                     QDir::toNativeSeparators(file),
+                                                     QDir::toNativeSeparators(p.path)))
+                          << std::endl;
+            }
+            validPackage = false;
+        }
+    }
+
     return validPackage;
 }
 
