@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<instructionals module="Test">
-    <demos>
-        <demo docUrl="qthelp://org.qt-project.test.001/test/test-demos-demo-example.html" imageUrl="qthelp://org.qt-project.test.001/test/images/leonardo-da-vinci.png" isTest="true" name="Demo" projectPath="test/demos/demo/demo.pro">
-            <description><![CDATA[No description available]]></description>
-            <tags>test</tags>
-        </demo>
-    </demos>
-</instructionals>

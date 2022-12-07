@@ -1958,10 +1958,9 @@
 
     \title Example Manifest Files
 
-    QDoc generates XML files that contain information about all documented
-    examples and demos. These files, named \c {examples-manifest.xml} and
-    \c {demos-manifest.xml}, are used by Qt Creator to present a list of
-    examples in its welcome screen and to link to their documentation.
+    QDoc generates example-manifest.xml files that contain information about
+    all documented examples. These files are used by Qt Creator to present a
+    list of examples in its welcome screen and to link to their documentation.
 
     \section1 Manifest XML Structure
 
