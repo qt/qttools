@@ -29,7 +29,6 @@ public:
     QString retrieveExampleInstallationPath(const ExampleNode *example) const;
 
 private:
-    QSet<QString> m_tags {};
     QString m_manifestDir {};
     QString m_examplesPath {};
     QString m_outputDirectory {};
@@ -37,9 +36,6 @@ private:
     QDocDatabase *m_qdb { nullptr };
     QList<ManifestMetaFilter> m_manifestMetaContent {};
 
-    void addModuleNameAsTag();
-    void includeTagsAddedWithMetaCommand(const ExampleNode *example);
-    void writeTagsElement(QXmlStreamWriter *writer);
     template <typename F>
     void processManifestMetaContent(const QString &fullName, F matchFunc);
 };
