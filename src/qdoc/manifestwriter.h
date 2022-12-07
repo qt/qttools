@@ -24,7 +24,7 @@ class ManifestWriter
 public:
     ManifestWriter();
     void generateManifestFiles();
-    void generateManifestFile(const QString &manifest, const QString &element);
+    void generateExampleManifestFile();
     void readManifestMetaContent();
     QString retrieveExampleInstallationPath(const ExampleNode *example) const;
 

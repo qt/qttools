@@ -5,7 +5,7 @@
     \example demos/hidden
     \title Hidden Demo
     \meta tag broken
-    \brief Tagged 'broken', does not appear in demos-manifest.xml.
+    \brief Tagged 'broken', does not appear in examples-manifest.xml.
 
     Also missing an image, but that's OK as it's broken anyway.
 */
