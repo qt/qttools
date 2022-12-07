@@ -108,6 +108,36 @@ void writeFilesToOpen(QXmlStreamWriter &writer, const QString &installPath,
 }
 
 /*!
+    \internal
+    \brief Writes example metadata into \a writer.
+
+    For instance,
+
+
+      \ meta category {Application Example}
+
+    becomes
+
+      <meta>
+        <entry name="category">Application Example</entry>
+      <meta>
+*/
+static void writeMetaInformation(QXmlStreamWriter &writer, const QStringMultiMap &map)
+{
+    if (map.isEmpty())
+        return;
+
+    writer.writeStartElement("meta");
+    for (auto it = map.constBegin(); it != map.constEnd(); ++it) {
+        writer.writeStartElement("entry");
+        writer.writeAttribute(QStringLiteral("name"), it.key());
+        writer.writeCharacters(it.value());
+        writer.writeEndElement(); // tag
+    }
+    writer.writeEndElement(); // meta
+}
+
+/*!
     \class ManifestWriter
     \internal
     \brief The ManifestWriter is responsible for writing manifest files.
@@ -292,6 +322,16 @@ void ManifestWriter::generateExampleManifestFile()
         const auto files = example->files();
         const QMap<int, QString> filesToOpen = getFilesToOpen(files, exampleName);
         writeFilesToOpen(writer, installPath, filesToOpen);
+
+        if (const QStringMultiMap *metaTagMapP = example->doc().metaTagMap()) {
+            // Write \meta elements into the XML, except for 'tag', 'installpath',
+            // as they are handled separately
+            QStringMultiMap map = *metaTagMapP;
+            erase_if(map, [](QStringMultiMap::iterator iter) {
+                return iter.key() == "tag" || iter.key() == "installpath";
+            });
+            writeMetaInformation(writer, map);
+        }
 
         writer.writeEndElement(); // example
     }
