@@ -21,7 +21,7 @@ typedef QList<ImportRec> ImportList;
 class QmlTypeNode : public Aggregate
 {
 public:
-    QmlTypeNode(Aggregate *parent, const QString &name);
+    QmlTypeNode(Aggregate *parent, const QString &name, Node::NodeType type);
     [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
     [[nodiscard]] bool isQtQuickNode() const override
     {
@@ -65,13 +65,6 @@ private:
     CollectionNode *m_logicalModule { nullptr };
     QmlTypeNode *m_qmlBaseNode { nullptr };
     ImportList m_importList {};
-};
-
-class QmlValueTypeNode : public Aggregate
-{
-public:
-    QmlValueTypeNode(Aggregate *parent, const QString &name);
-    [[nodiscard]] bool isFirstClassAggregate() const override { return true; }
 };
 
 QT_END_NAMESPACE

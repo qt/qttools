@@ -313,15 +313,18 @@ QString Generator::fileBase(const Node *node) const
             base.prepend(s_project.toLower() + QLatin1Char('-'));
             base.append(QLatin1String("-example"));
         }
-    } else if (node->isQmlType() || node->isQmlBasicType()) {
+    } else if (node->isQmlType()) {
         base = node->name();
         /*
           To avoid file name conflicts in the html directory,
           we prepend a prefix (by default, "qml-") and an optional suffix
           to the file name. The suffix, if one exists, is appended to the
           module name.
+
+          For historical reasons, skip the module name qualifier for QML value types
+          in order to avoid excess redirects in the online docs. TODO: re-assess
         */
-        if (!node->logicalModuleName().isEmpty()
+        if (!node->logicalModuleName().isEmpty() && !node->isQmlBasicType()
             && (!node->logicalModule()->isInternal() || m_showInternal))
             base.prepend(node->logicalModuleName() + outputSuffix(node) + QLatin1Char('-'));
 
@@ -512,19 +515,8 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
             parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
         else
             return QString();
-    } else if (node->isQmlType() || node->isQmlBasicType()) {
-        QString fb = fileBase(node);
-        if (fb.startsWith(outputPrefix(node)))
-            return fb + QLatin1Char('.') + currentGenerator()->fileExtension();
-        else {
-            QString mq;
-            if (!node->logicalModuleName().isEmpty()) {
-                mq = node->logicalModuleName().replace(QChar('.'), QChar('-'));
-                mq = mq.toLower() + QLatin1Char('-');
-            }
-            return fdl + outputPrefix(node) + mq + fileBase(node) + QLatin1Char('.')
-                    + currentGenerator()->fileExtension();
-        }
+    } else if (node->isQmlType()) {
+        return fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
     } else if (node->isTextPageNode() || node->isCollectionNode()) {
         parentName = fileBase(node) + QLatin1Char('.') + currentGenerator()->fileExtension();
     } else if (fileBase(node).isEmpty())
@@ -1089,11 +1081,6 @@ void Generator::generateDocumentation(Node *node)
                 beginSubPage(node, fileName(node));
                 auto *qcn = static_cast<QmlTypeNode *>(node);
                 generateQmlTypePage(qcn, marker);
-                endSubPage();
-            } else if (node->isQmlBasicType()) {
-                beginSubPage(node, fileName(node));
-                auto *qbtn = static_cast<QmlValueTypeNode *>(node);
-                generateQmlBasicTypePage(qbtn, marker);
                 endSubPage();
             } else if (node->isProxyNode()) {
                 beginSubPage(node, fileName(node));
@@ -1817,7 +1804,7 @@ QString Generator::outFileName()
 QString Generator::outputPrefix(const Node *node)
 {
     // Prefix is applied to QML types
-    if (node->isQmlType() || node->isQmlBasicType())
+    if (node->isQmlType())
         return s_outputPrefixes[QLatin1String("QML")];
 
     return QString();
@@ -1827,7 +1814,7 @@ QString Generator::outputSuffix(const Node *node)
 {
     // Suffix is applied to QML types, as
     // well as module pages.
-    if (node->isQmlModule() || node->isQmlType() || node->isQmlBasicType())
+    if (node->isQmlModule() || node->isQmlType())
         return s_outputSuffixes[QLatin1String("QML")];
 
     return QString();

@@ -58,7 +58,7 @@
     \qmlvaluetype int
     \inqmlmodule QDoc.Test
 
-    \brief An integer basic type.
+    \brief An integer value type.
 */
 
 /*!

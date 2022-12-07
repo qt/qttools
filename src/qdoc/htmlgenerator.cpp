@@ -1296,7 +1296,12 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
 {
     Generator::setQmlTypeContext(qcn);
     SubTitleSize subTitleSize = LargeSubTitle;
-    QString htmlTitle = qcn->fullTitle() + " QML Type";
+    QString htmlTitle = qcn->fullTitle();
+    if (qcn->isQmlBasicType())
+        htmlTitle.append(" QML Value Type");
+    else
+        htmlTitle.append(" QML Type");
+
 
     generateHeader(htmlTitle, qcn, marker);
     Sections sections(qcn);
@@ -1306,7 +1311,11 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     generateBrief(qcn, marker);
     generateQmlRequisites(qcn, marker);
 
-    QString allQmlMembersLink = generateAllQmlMembersFile(sections, marker);
+    QString allQmlMembersLink;
+
+    // No 'All Members' file for QML value types
+    if (!qcn->isQmlBasicType())
+        allQmlMembersLink = generateAllQmlMembersFile(sections, marker);
     QString obsoleteLink = generateObsoleteQmlMembersFile(sections, marker);
     if (!allQmlMembersLink.isEmpty() || !obsoleteLink.isEmpty()) {
         out() << "<ul>\n";
@@ -1354,55 +1363,6 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
     }
     generateFooter(qcn);
     Generator::setQmlTypeContext(nullptr);
-}
-
-/*!
-  Generate the HTML page for the QML basic type represented
-  by the QML basic type node \a qbtn.
- */
-void HtmlGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn, CodeMarker *marker)
-{
-    SubTitleSize subTitleSize = LargeSubTitle;
-    QString htmlTitle = qbtn->fullTitle() + " QML Basic Type";
-
-    marker = CodeMarker::markerForLanguage(QLatin1String("QML"));
-
-    generateHeader(htmlTitle, qbtn, marker);
-    Sections sections(qbtn);
-    generateTableOfContents(qbtn, marker, &sections.stdQmlTypeSummarySections());
-    generateTitle(htmlTitle, Text() << qbtn->subtitle(), subTitleSize, qbtn, marker);
-    generateBrief(qbtn, marker);
-
-    const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
-    for (const auto &section : stdQmlTypeSummarySections) {
-        if (!section.isEmpty()) {
-            const QString &ref = registerRef(section.title().toLower());
-            out() << "<h2 id=\"" << ref << "\">" << protectEnc(section.title()) << "</h2>\n";
-            generateQmlSummary(section.members(), qbtn, marker);
-        }
-    }
-
-    generateExtractionMark(qbtn, DetailedDescriptionMark);
-    out() << R"(<div class="descr" id=")" << registerRef("details")
-          << "\">\n";
-
-    generateBody(qbtn, marker);
-    out() << "</div>\n";
-    generateAlsoList(qbtn, marker);
-    generateExtractionMark(qbtn, EndMark);
-
-    const QList<Section> &stdQmlTypeDetailsSections = sections.stdQmlTypeDetailsSections();
-    for (const auto &section : stdQmlTypeDetailsSections) {
-        if (!section.isEmpty()) {
-            out() << "<h2>" << protectEnc(section.title()) << "</h2>\n";
-            const QList<Node *> &members = section.members();
-            for (const auto member : members) {
-                generateDetailedQmlMember(member, qbtn, marker);
-                out() << "<br/>\n";
-            }
-        }
-    }
-    generateFooter(qbtn);
 }
 
 /*!
@@ -1601,7 +1561,7 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
                 addNavItem(moduleNode->name(), moduleNode->name());
         }
         navigationbar << Atom(itemLeft) << Atom(Atom::String, node->name()) << Atom(itemRight);
-    } else if (node->isQmlType() || node->isQmlBasicType()) {
+    } else if (node->isQmlType()) {
         if (!m_qmltypespage.isEmpty() && !m_qmltypestitle.isEmpty())
             addNavItem(m_qmltypespage, m_qmltypestitle);
         if (node->logicalModule() && node->logicalModule()->title() != m_qmltypespage)
@@ -2077,23 +2037,14 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     const CollectionNode *collection = qcn->logicalModule();
 
     // skip import statement of \internal collections
-    if (!collection || !collection->isInternal() || m_showInternal) {
-        logicalModuleVersion =
-                collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
-
-        if (qcn->logicalModuleName().isEmpty())
-            qcn->doc().location().warning(QStringLiteral("Could not resolve QML import "
-                                                         "statement for type '%1'")
-                                                  .arg(qcn->name()),
-                                          QStringLiteral("Maybe you forgot to use the "
-                                                         "'\\%1' command?")
-                                                  .arg(COMMAND_INQMLMODULE));
-
+    if (!qcn->logicalModuleName().isEmpty() && (!collection || !collection->isInternal() || m_showInternal)) {
+        QStringList parts = QStringList() << "import" << qcn->logicalModuleName() << qcn->logicalModuleVersion();
         text.clear();
-        text << "import " + qcn->logicalModuleName();
-        if (!logicalModuleVersion.isEmpty())
-            text << QLatin1Char(' ') + logicalModuleVersion;
+        text << parts.join(' ').trimmed();
         requisites.insert(importText, text);
+    } else if (!qcn->isQmlBasicType() && qcn->logicalModuleName().isEmpty()) {
+        qcn->doc().location().warning(QStringLiteral("Could not resolve QML import statement for type '%1'").arg(qcn->name()),
+                                      QStringLiteral("Maybe you forgot to use the '\\%1' command?").arg(COMMAND_INQMLMODULE));
     }
 
     // add the since and project into the map
@@ -2238,7 +2189,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
                 break;
             }
         }
-    } else if (sections && (node->isClassNode() || node->isNamespace() || node->isQmlType() || node->isQmlBasicType())) {
+    } else if (sections && (node->isClassNode() || node->isNamespace() || node->isQmlType())) {
         for (const auto &section : std::as_const(*sections)) {
             if (!section.members().isEmpty()) {
                 openUnorderedList();

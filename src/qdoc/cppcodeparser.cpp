@@ -282,19 +282,17 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
         auto *pn = new PageNode(m_qdb->primaryTreeRoot(), args[0], ptype);
         pn->setLocation(doc.startLocation());
         return pn;
-    } else if (command == COMMAND_QMLTYPE) {
+    } else if (command == COMMAND_QMLTYPE ||
+               command == COMMAND_QMLVALUETYPE ||
+               command == COMMAND_QMLBASICTYPE) {
         QmlTypeNode *qcn = nullptr;
+        auto nodeType = (command == COMMAND_QMLTYPE) ? Node::QmlType : Node::QmlValueType;
         Node *candidate = m_qdb->primaryTreeRoot()->findChildNode(arg.first, Node::QML);
-        if (candidate != nullptr && candidate->isQmlType())
-            qcn = static_cast<QmlTypeNode *>(candidate);
-        else
-            qcn = new QmlTypeNode(m_qdb->primaryTreeRoot(), arg.first);
+        qcn = (candidate && candidate->nodeType() == nodeType) ?
+                static_cast<QmlTypeNode *>(candidate) :
+                new QmlTypeNode(m_qdb->primaryTreeRoot(), arg.first, nodeType);
         qcn->setLocation(doc.startLocation());
         return qcn;
-    } else if (command == COMMAND_QMLVALUETYPE || command == COMMAND_QMLBASICTYPE) {
-        auto *node = new QmlValueTypeNode(m_qdb->primaryTreeRoot(), arg.first);
-        node->setLocation(doc.startLocation());
-        return node;
     } else if ((command == COMMAND_QMLSIGNAL) || (command == COMMAND_QMLMETHOD)
                || (command == COMMAND_QMLATTACHEDSIGNAL) || (command == COMMAND_QMLATTACHEDMETHOD)) {
         Q_UNREACHABLE();
@@ -374,8 +372,11 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
 
     NodeList sharedNodes;
     QmlTypeNode *qmlType = m_qdb->findQmlType(module, qmlTypeName);
+    // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
+    // This may lead to unexpected behavior if documenting \qmlvaluetype's properties
+    // before the type itself.
     if (qmlType == nullptr)
-        qmlType = new QmlTypeNode(m_qdb->primaryTreeRoot(), qmlTypeName);
+        qmlType = new QmlTypeNode(m_qdb->primaryTreeRoot(), qmlTypeName, Node::QmlType);
 
     for (const auto &topicCommand : topics) {
         QString cmd = topicCommand.m_topic;
@@ -687,8 +688,6 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     funcName = colonSplit.last();
 
     Aggregate *aggregate = m_qdb->findQmlType(moduleName, elementName);
-    if (aggregate == nullptr)
-        aggregate = m_qdb->findQmlBasicType(moduleName, elementName);
     if (aggregate == nullptr)
         return nullptr;
 

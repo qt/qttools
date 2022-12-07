@@ -671,30 +671,6 @@ QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name)
 }
 
 /*!
-  Looks up the QML basic type node identified by the Qml module id
-  \a qmid and QML basic type \a name and returns a pointer to the
-  QML basic type node. The key is \a qmid + "::" + \a name.
-
-  If the QML module id is empty, it looks up the QML basic type by
-  \a name only.
- */
-Aggregate *QDocDatabase::findQmlBasicType(const QString &qmid, const QString &name)
-{
-    if (!qmid.isEmpty()) {
-        QString t = qmid + "::" + name;
-        Aggregate *a = m_forest.lookupQmlBasicType(t);
-        if (a)
-            return a;
-    }
-
-    QStringList path(name);
-    Node *n = m_forest.findNodeByNameAndType(path, &Node::isQmlBasicType);
-    if (n && n->isQmlBasicType())
-        return static_cast<Aggregate *>(n);
-    return nullptr;
-}
-
-/*!
   Looks up the QML type node identified by the Qml module id
   constructed from the strings in the \a import record and the
   QML type \a name and returns a pointer to the QML type node.

@@ -1007,7 +1007,7 @@ bool Sections::hasObsoleteMembers(SectionPtrVector *summary_spv,
     const SectionVector *sections = nullptr;
     if (m_aggregate->isClassNode())
         sections = &stdCppClassSummarySections();
-    else if (m_aggregate->isQmlType() || m_aggregate->isQmlBasicType())
+    else if (m_aggregate->isQmlType())
         sections = &stdQmlTypeSummarySections();
     else
         sections = &stdSummarySections();
@@ -1017,7 +1017,7 @@ bool Sections::hasObsoleteMembers(SectionPtrVector *summary_spv,
     }
     if (m_aggregate->isClassNode())
         sections = &stdCppClassDetailsSections();
-    else if (m_aggregate->isQmlType() || m_aggregate->isQmlBasicType())
+    else if (m_aggregate->isQmlType())
         sections = &stdQmlTypeDetailsSections();
     else
         sections = &stdDetailsSections();

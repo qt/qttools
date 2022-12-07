@@ -35,7 +35,7 @@
 <db:varlistentry>
 <db:term><db:link xlink:href="qml-int.xml" xlink:role="">int</db:link></db:term>
 <db:listitem>
-<db:para>An integer basic type.</db:para>
+<db:para>An integer value type.</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
