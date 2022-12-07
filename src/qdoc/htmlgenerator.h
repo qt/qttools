@@ -40,7 +40,6 @@ protected:
     void generateCppReferencePage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateProxyPage(Aggregate *aggregate, CodeMarker *marker) override;
     void generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker) override;
-    void generateQmlBasicTypePage(QmlValueTypeNode *qbtn, CodeMarker *marker) override;
     void generatePageNode(PageNode *pn, CodeMarker *marker) override;
     void generateCollectionNode(CollectionNode *cn, CodeMarker *marker) override;
     void generateGenericCollectionPage(CollectionNode *cn, CodeMarker *marker) override;

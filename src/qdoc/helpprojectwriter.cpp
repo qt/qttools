@@ -173,7 +173,7 @@ Keyword HelpProjectWriter::keywordDetails(const Node *node) const
                 ? node->parent()->name()+"::"+node->name()
                 : node->name();
         return Keyword(name, id, ref);
-    } else if (node->isQmlType() || node->isQmlBasicType()) {
+    } else if (node->isQmlType()) {
         const QString &name = node->name();
         QString moduleName = node->logicalModuleName();
         QStringList ids("QML." + name);
@@ -483,9 +483,6 @@ void HelpProjectWriter::writeSection(QXmlStreamWriter &writer, const QString &pa
  */
 void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node)
 {
-    if (node->isQmlBasicType())
-        return;
-
     QString href = m_gen->fullDocumentLocation(node, false);
     href = href.left(href.size() - 5);
     if (href.isEmpty())
@@ -496,8 +493,8 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
         derivedClass = !(static_cast<const ClassNode *>(node)->baseClasses().isEmpty());
 
     // Do not generate a 'List of all members' for namespaces or header files,
-    // but always generate it for derived classes and QML classes
-    if (!node->isNamespace() && !node->isHeader()
+    // but always generate it for derived classes and QML types (but not QML value types)
+    if (!node->isNamespace() && !node->isHeader() && !node->isQmlBasicType()
         && (derivedClass || node->isQmlType() || !project.m_memberStatus[node].isEmpty())) {
         QString membersPath = href + QStringLiteral("-members.html");
         writeSection(writer, membersPath, QStringLiteral("List of all members"));

@@ -144,10 +144,6 @@ private: // The rest of the class is private.
     {
         return m_qmlTypeMap.value(name);
     }
-    [[nodiscard]] Aggregate *lookupQmlBasicType(const QString &name) const
-    {
-        return m_qmlTypeMap.value(name);
-    }
     void insertQmlType(const QString &key, QmlTypeNode *n);
     void addExampleNode(ExampleNode *n) { m_exampleNodeMap.insert(n->title(), n); }
     ExampleNodeMap &exampleNodeMap() { return m_exampleNodeMap; }

@@ -480,7 +480,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
         if (candidate != nullptr)
             component = static_cast<QmlTypeNode *>(candidate);
         else
-            component = new QmlTypeNode(m_current, m_name);
+            component = new QmlTypeNode(m_current, m_name, Node::QmlType);
         component->setTitle(m_name);
         component->setImportList(m_importList);
         m_importList.clear();

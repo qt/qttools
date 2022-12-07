@@ -248,8 +248,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             location = Location(indexUrl + QLatin1Char('/') + name);
         else if (!indexUrl.isNull())
             location = Location(name);
-    } else if (elementName == QLatin1String("qmlclass")) {
-        auto *qmlTypeNode = new QmlTypeNode(parent, name);
+    } else if (elementName == QLatin1String("qmlclass") || elementName == QLatin1String("qmlvaluetype")
+               || elementName == QLatin1String("qmlbasictype")) {
+        auto *qmlTypeNode = new QmlTypeNode(parent, name,
+                    elementName == QLatin1String("qmlclass") ? Node::QmlType : Node::QmlValueType);
         qmlTypeNode->setTitle(attributes.value(QLatin1String("title")).toString());
         QString logicalModuleName = attributes.value(QLatin1String("qml-module-name")).toString();
         if (!logicalModuleName.isEmpty())
@@ -269,17 +271,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         else if (!indexUrl.isNull())
             location = Location(name);
         node = qmlTypeNode;
-    } else if (elementName == QLatin1String("qmlvaluetype")
-               || elementName == QLatin1String("qmlbasictype")) {
-        auto *qbtn = new QmlValueTypeNode(parent, name);
-        qbtn->setTitle(attributes.value(QLatin1String("title")).toString());
-        if (attributes.hasAttribute(QLatin1String("location")))
-            name = attributes.value("location").toString();
-        if (!indexUrl.isEmpty())
-            location = Location(indexUrl + QLatin1Char('/') + name);
-        else if (!indexUrl.isNull())
-            location = Location(name);
-        node = qbtn;
     } else if (elementName == QLatin1String("qmlproperty")) {
         QString type = attributes.value(QLatin1String("type")).toString();
         bool attached = false;
@@ -791,16 +782,14 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         nodeName = "header";
         break;
     case Node::QmlType:
-        nodeName = "qmlclass";
+    case Node::QmlValueType:
+        nodeName = (node->nodeType() == Node::QmlType) ? "qmlclass" : "qmlvaluetype";
         if (node->logicalModule() != nullptr)
             logicalModuleName = node->logicalModule()->logicalModuleName();
         baseNameAttr = "qml-base-type";
         moduleNameAttr = "qml-module-name";
         moduleVerAttr = "qml-module-version";
         qmlFullBaseName = node->qmlFullBaseName();
-        break;
-    case Node::QmlValueType:
-        nodeName = "qmlvaluetype";
         break;
     case Node::Page:
     case Node::Example:
@@ -962,6 +951,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
     } break;
+    case Node::QmlValueType:
     case Node::QmlType: {
         const auto *qmlTypeNode = static_cast<const QmlTypeNode *>(node);
         writer.writeAttribute("title", qmlTypeNode->title());

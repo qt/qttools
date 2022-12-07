@@ -79,8 +79,8 @@ Node *Aggregate::findChildNode(const QString &name, Node::Genus genus, int findF
         for (auto *node : nodes) {
             if (genus & node->genus()) {
                 if (findFlags & TypesOnly) {
-                    if (!node->isTypedef() && !node->isClassNode() && !node->isQmlType()
-                        && !node->isQmlBasicType() && !node->isEnumType())
+                    if (!node->isTypedef() && !node->isClassNode()
+                        && !node->isQmlType() && !node->isEnumType())
                         continue;
                 } else if (findFlags & IgnoreModules && node->isModule())
                     continue;
@@ -695,7 +695,7 @@ void Aggregate::findAllClasses()
             && node->tree()->camelCaseModuleName() != QString("QDoc")) {
             if (node->isClassNode()) {
                 QDocDatabase::cppClasses().insert(node->qualifyCppName().toLower(), node);
-            } else if (node->isQmlType() || node->isQmlBasicType()) {
+            } else if (node->isQmlType()) {
                 QString name = node->name().toLower();
                 QDocDatabase::qmlTypes().insert(name, node);
                 // also add to the QML basic type map

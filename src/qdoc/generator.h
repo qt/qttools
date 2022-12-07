@@ -25,7 +25,6 @@ class FunctionNode;
 class Location;
 class Node;
 class QDocDatabase;
-class QmlValueTypeNode;
 
 class Generator
 {
@@ -89,7 +88,6 @@ protected:
     virtual void generateCppReferencePage(Aggregate *, CodeMarker *) {}
     virtual void generateProxyPage(Aggregate *, CodeMarker *) {}
     virtual void generateQmlTypePage(QmlTypeNode *, CodeMarker *) {}
-    virtual void generateQmlBasicTypePage(QmlValueTypeNode *, CodeMarker *) {}
     virtual void generatePageNode(PageNode *, CodeMarker *) {}
     virtual void generateCollectionNode(CollectionNode *, CodeMarker *) {}
     virtual void generateGenericCollectionPage(CollectionNode *, CodeMarker *) {}

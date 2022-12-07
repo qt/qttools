@@ -142,7 +142,7 @@ public:
     [[nodiscard]] bool isQmlModule() const { return m_nodeType == QmlModule; }
     [[nodiscard]] bool isQmlNode() const { return genus() == QML; }
     [[nodiscard]] bool isQmlProperty() const { return m_nodeType == QmlProperty; }
-    [[nodiscard]] bool isQmlType() const { return m_nodeType == QmlType; }
+    [[nodiscard]] bool isQmlType() const { return m_nodeType == QmlType || m_nodeType == QmlValueType; }
     [[nodiscard]] bool isRelatedNonmember() const { return m_relatedNonmember; }
     [[nodiscard]] bool isStruct() const { return m_nodeType == Struct; }
     [[nodiscard]] bool isSharedCommentNode() const { return m_nodeType == SharedComment; }

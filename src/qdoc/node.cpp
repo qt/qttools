@@ -119,8 +119,8 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
          module.
   \value QmlProperty The Node subclass is QmlPropertyNode, which represents a
          property in a QML type.
-  \value QmlBasicType The Node subclass is QmlBasicTypeNode, which represents a
-         basic type like int, etc.
+  \value QmlBasicType The Node subclass is QmlTypeNode, which represents a
+         value type like int, etc.
   \value SharedComment The Node subclass is SharedCommentNode, which represents
          a collection of nodes that share the same documentation comment.
   \omitvalue Collection
@@ -311,7 +311,7 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
  */
 
 /*! \fn bool Node::isQmlType() const
-  Returns true if the node type is \c QmlType.
+  Returns true if the node type is \c QmlType or \c QmlValueType.
  */
 
 /*! \fn bool Node::isRelatedNonmember() const
@@ -675,7 +675,7 @@ QString Node::nodeTypeString(NodeType t)
     case QmlType:
         return QLatin1String("QML type");
     case QmlValueType:
-        return QLatin1String("QML basic type");
+        return QLatin1String("QML value type");
     case QmlModule:
         return QLatin1String("QML module");
     case QmlProperty:

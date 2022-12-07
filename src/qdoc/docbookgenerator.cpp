@@ -2620,7 +2620,7 @@ void DocBookGenerator::generateObsoleteQmlMembers(const Sections &sections)
 static QString nodeToSynopsisTag(const Node *node)
 {
     // Order from Node::nodeTypeString.
-    if (node->isClass() || node->isQmlType() || node->isQmlBasicType())
+    if (node->isClass() || node->isQmlType())
         return QStringLiteral("classsynopsis");
     if (node->isNamespace())
         return QStringLiteral("packagesynopsis");
@@ -2874,8 +2874,11 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
         base = base->qmlBaseNode();
     }
 
+    // Skip import statement for \internal collections
+    const bool generate_import_statement = !qcn->logicalModuleName().isEmpty() && (!collection || !collection->isInternal() || m_showInternal);
     // Detect if anything is generated in this method. If not, exit early to avoid having an empty list.
-    const bool generates_something = !collection || !collection->isInternal() || m_showInternal || !qcn->since().isEmpty() || !subs.isEmpty() || base;
+    const bool generates_something = generate_import_statement || !qcn->since().isEmpty() || !subs.isEmpty() || base;
+
     if (!generates_something)
         return;
 
@@ -2883,16 +2886,9 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
     m_writer->writeStartElement(dbNamespace, "variablelist");
     newLine();
 
-    // skip import statement for \internal collections
-    if (!collection || !collection->isInternal() || m_showInternal) {
-        QString logicalModuleVersion =
-                collection ? collection->logicalModuleVersion() : qcn->logicalModuleVersion();
-
-        QStringList importText;
-        importText << "import " + qcn->logicalModuleName();
-        if (!logicalModuleVersion.isEmpty())
-            importText << logicalModuleVersion;
-        generateRequisite("Import Statement", importText.join(' '));
+    if (generate_import_statement) {
+        QStringList parts = QStringList() << "import" << qcn->logicalModuleName() << qcn->logicalModuleVersion();
+        generateRequisite("Import Statement", parts.join(' ').trimmed());
     }
 
     // Since and project.
@@ -4930,7 +4926,11 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     m_writer = startDocument(qcn);
 
     Generator::setQmlTypeContext(qcn);
-    const QString title = qcn->fullTitle() + " QML Type";
+    QString title = qcn->fullTitle();
+    if (qcn->isQmlBasicType())
+        title.append(" QML Value Type");
+    else
+        title.append(" QML Type");
 
     generateHeader(title, qcn->subtitle(), qcn);
     generateQmlRequisites(qcn);
@@ -4961,52 +4961,6 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
 
     generateFooter();
     Generator::setQmlTypeContext(nullptr);
-
-    endDocument();
-}
-
-/*!
-  Generate the DocBook page for the QML basic type represented
-  by the QML basic type node \a qbtn.
- */
-void DocBookGenerator::generateQmlBasicTypePage(QmlValueTypeNode *qbtn)
-{
-    // From HtmlGenerator::generateQmlBasicTypePage.
-    // Start producing the DocBook file.
-    Q_ASSERT(m_writer == nullptr);
-    m_writer = startDocument(qbtn);
-
-    const QString title = qbtn->fullTitle() + " QML Basic Type";
-
-    Sections sections(qbtn);
-    generateHeader(title, qbtn->subtitle(), qbtn);
-
-    startSection("details", "Detailed Description");
-
-    generateBody(qbtn);
-    generateAlsoList(qbtn);
-
-    endSection();
-
-    // Compared to HTML, skip sections.stdQmlTypeSummarySections(): it only
-    // generates a part of the table of contents.
-
-    SectionVector::ConstIterator s = sections.stdQmlTypeDetailsSections().constBegin();
-    while (s != sections.stdQmlTypeDetailsSections().constEnd()) {
-        if (!s->isEmpty()) {
-            startSection(s->title().toLower(), s->title());
-
-            NodeVector::ConstIterator m = s->members().constBegin();
-            while (m != s->members().constEnd()) {
-                generateDetailedQmlMember(*m, qbtn);
-                ++m;
-            }
-
-            endSection();
-        }
-        ++s;
-    }
-    generateFooter();
 
     endDocument();
 }
@@ -5205,10 +5159,8 @@ void DocBookGenerator::generateDocumentation(Node *node)
             if ((node->isClassNode() || node->isHeader() || node->isNamespace())
                 && node->docMustBeGenerated()) {
                 generateCppReferencePage(static_cast<Aggregate *>(node));
-            } else if (node->isQmlType()) {
+            } else if (node->isQmlType()) { // Includes QML value types
                 generateQmlTypePage(static_cast<QmlTypeNode *>(node));
-            } else if (node->isQmlBasicType()) {
-                generateQmlBasicTypePage(static_cast<QmlValueTypeNode *>(node));
             } else if (node->isProxyNode()) {
                 generateProxyPage(static_cast<Aggregate *>(node));
             }

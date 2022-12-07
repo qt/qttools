@@ -49,6 +49,7 @@
                     <section ref="qml-qdoc-test-yetanotherchild.html" title="YetAnotherChild Type Reference">
                         <section ref="qml-qdoc-test-yetanotherchild-members.html" title="List of all members"/>
                     </section>
+                    <section ref="qml-int.html" title="int Type Reference"/>
                     <section ref="qml-uicomponents-progressbar.html" title="ProgressBar Type Reference">
                         <section ref="qml-uicomponents-progressbar-members.html" title="List of all members"/>
                     </section>
@@ -58,7 +59,6 @@
                     <section ref="qml-uicomponents-tabwidget.html" title="TabWidget Type Reference">
                         <section ref="qml-uicomponents-tabwidget-members.html" title="List of all members"/>
                     </section>
-                    <section ref="qml-int.html" title="int Type Reference"/>
                 </section>
             </section>
         </toc>
@@ -127,6 +127,7 @@
             <keyword name="id" id="Type::id" ref="qml-qdoc-test-type.html#id-prop"/>
             <keyword name="inlineFunction" id="Test::inlineFunction" ref="testqdoc-test.html#inlineFunction"/>
             <keyword name="int" id="QML.int" ref="qml-int.html"/>
+            <keyword name="int" id="QML.QDoc.Test1.int" ref="qml-int.html"/>
             <keyword name="itsHappening" id="DocTest::itsHappening" ref="qml-qdoc-test-doctest.html#itsHappening-signal"/>
             <keyword name="maximum" id="ProgressBar::maximum" ref="qml-uicomponents-progressbar.html#maximum-prop"/>
             <keyword name="methodWithEmDashInItsDocs" id="Test::methodWithEmDashInItsDocs" ref="testqdoc-test.html#methodWithEmDashInItsDocs"/>

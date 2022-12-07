@@ -14,11 +14,13 @@ QMultiMap<const Node *, Node *> QmlTypeNode::s_inheritedBy;
 /*!
   Constructs a Qml type.
 
-  The new node has the given \a parent and \a name.
+  The new node has the given \a parent, name \a name, and a specific node
+  \a type. Valid types are Node::QmlType and Node::QmlValueType.
  */
-QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name)
-    : Aggregate(QmlType, parent, name)
+QmlTypeNode::QmlTypeNode(Aggregate *parent, const QString &name, Node::NodeType type)
+    : Aggregate(type, parent, name)
 {
+    Q_ASSERT(type == Node::QmlType || type == Node::QmlValueType);
     setTitle(name);
 }
 
@@ -146,17 +148,6 @@ void QmlTypeNode::resolveInheritance(NodeMap &previousSearches)
         if (base->isIndexNode())
             base->resolveInheritance(previousSearches);
     }
-}
-
-/*!
-  Constructs a Qml basic type node.
-
-  The new node has the given \a parent and \a name.
- */
-QmlValueTypeNode::QmlValueTypeNode(Aggregate *parent, const QString &name)
-    : Aggregate(QmlValueType, parent, name)
-{
-    setTitle(name);
 }
 
 QT_END_NAMESPACE

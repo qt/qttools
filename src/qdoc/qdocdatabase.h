@@ -148,15 +148,6 @@ private:
         return nullptr;
     }
 
-    Aggregate *lookupQmlBasicType(const QString &name)
-    {
-        for (const auto *tree : searchOrder()) {
-            Aggregate *a = tree->lookupQmlBasicType(name);
-            if (a)
-                return a;
-        }
-        return nullptr;
-    }
     void clearSearchOrder() { m_searchOrder.clear(); }
     void newPrimaryTree(const QString &module);
     void setPrimaryTree(const QString &t);
@@ -208,7 +199,6 @@ public:
     QmlTypeNode *findQmlType(const QString &name);
     QmlTypeNode *findQmlType(const QString &qmid, const QString &name);
     QmlTypeNode *findQmlType(const ImportRec &import, const QString &name);
-    Aggregate *findQmlBasicType(const QString &qmid, const QString &name);
 
     static NodeMultiMap &obsoleteClasses() { return s_obsoleteClasses; }
     static NodeMultiMap &obsoleteQmlTypes() { return s_obsoleteQmlTypes; }
