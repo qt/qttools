@@ -178,6 +178,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         const QString key = iter.key();
 
         if (!iter.value().isString() && key != QLatin1String("QtParts")
+            && key != QLatin1String("Files")
             && key != QLatin1String("LicenseFiles")) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
@@ -191,7 +192,22 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         } else if (key == QLatin1String("Path")) {
             p.path = QDir(directory).absoluteFilePath(value);
         } else if (key == QLatin1String("Files")) {
-            p.files = value.simplified().split(QLatin1Char(' '), Qt::SkipEmptyParts);
+            QJsonValueConstRef jsonValue = iter.value();
+            if (jsonValue.isArray()) {
+                auto maybeStringList = toStringList(jsonValue);
+                if (maybeStringList)
+                    p.files = maybeStringList.value();
+            } else if (jsonValue.isString()) {
+                // Legacy format: multiple values separated by space in one string.
+                p.files = value.simplified().split(QLatin1Char(' '), Qt::SkipEmptyParts);
+            } else {
+                if (logLevel != SilentLog) {
+                    std::cerr << qPrintable(tr("File %1: Expected JSON array of strings as value "
+                                               "of Files."));
+                    validPackage = false;
+                    continue;
+                }
+            }
         } else if (key == QLatin1String("Id")) {
             p.id = value;
         } else if (key == QLatin1String("Homepage")) {
