@@ -12,8 +12,11 @@
         </example>
         <example docUrl="qthelp://org.qt-project.test.001/test/test-componentset-example.html" isTest="true" name="QML Documentation Example" projectPath="tutorials/componentset/componentset.pro">
             <description><![CDATA[Example for documenting QML types.]]></description>
-            <tags>sample,test</tags>
+            <tags>application,sample,test</tags>
             <fileToOpen mainFile="true">tutorials/componentset/componentset.qml</fileToOpen>
+            <meta>
+                <entry name="category">Application Example</entry>
+            </meta>
         </example>
     </examples>
 </instructionals>

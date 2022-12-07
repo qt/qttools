@@ -9,6 +9,8 @@
     \testnoautolist
 
     \meta tag {test,sample}
+    \meta tag {application}
+    \meta category {Application Example}
     \meta installpath tutorials
 
     This example demonstrates one of the ways to document QML types. It also
