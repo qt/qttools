@@ -85,7 +85,7 @@ private:
     void generateObsoleteMembers(const Sections &sections);
     void generateObsoleteQmlMembers(const Sections &sections);
     void generateSectionList(const Section &section, const Node *relative,
-                             Section::Status status = Section::Active);
+                             bool useObsoleteMembers = false);
     void generateSectionInheritedList(const Section &section, const Node *relative);
     void generateSynopsisName(const Node *node, const Node *relative, bool generateNameLink);
     void generateParameter(const Parameter &parameter, const Node *relative, bool generateExtra,

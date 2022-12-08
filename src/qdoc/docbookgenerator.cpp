@@ -4712,7 +4712,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
         if (property->propertyType() == PropertyNode::PropertyType::StandardProperty) {
-            Section section("", "", "", "", Section::Accessors, Section::Active);
+            Section section("", "", "", "", Section::Accessors);
 
             section.appendMembers(property->getters().toVector());
             section.appendMembers(property->setters().toVector());
@@ -4732,7 +4732,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 generateSectionList(section, node);
             }
 
-            Section notifiers("", "", "", "", Section::Accessors, Section::Active);
+            Section notifiers("", "", "", "", Section::Accessors);
             notifiers.appendMembers(property->notifiers().toVector());
 
             if (!notifiers.members().isEmpty()) {
@@ -4790,11 +4790,11 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
 }
 
 void DocBookGenerator::generateSectionList(const Section &section, const Node *relative,
-                                           Section::Status status)
+                                           bool useObsoleteMembers)
 {
     // From HtmlGenerator::generateSectionList, just generating a list (not tables).
     const NodeVector &members =
-            (status == Section::Obsolete ? section.obsoleteMembers() : section.members());
+            (useObsoleteMembers ? section.obsoleteMembers() : section.members());
     if (!members.isEmpty()) {
         bool hasPrivateSignals = false;
         bool isInvokable = false;
@@ -4842,7 +4842,7 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
             generateAddendum(relative, Generator::Invokable, nullptr, true);
     }
 
-    if (status != Section::Obsolete && section.style() == Section::Summary
+    if (!useObsoleteMembers && section.style() == Section::Summary
         && !section.inheritedMembers().isEmpty()) {
         m_writer->writeStartElement(dbNamespace, "itemizedlist");
         newLine();

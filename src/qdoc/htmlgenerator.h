@@ -79,7 +79,7 @@ private:
     bool generateGroupList(CollectionNode *cn);
     void generateList(const Node *relative, CodeMarker *marker, const QString &selector);
     void generateSectionList(const Section &section, const Node *relative, CodeMarker *marker,
-                             Section::Status = Section::Active);
+                             bool useObsoloteMembers = false);
     void generateQmlSummary(const NodeVector &members, const Node *relative, CodeMarker *marker);
     void generateQmlItem(const Node *node, const Node *relative, CodeMarker *marker, bool summary);
     void generateDetailedQmlMember(Node *node, const Aggregate *relative, CodeMarker *marker);

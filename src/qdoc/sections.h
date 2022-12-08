@@ -17,14 +17,13 @@ class Section
 {
 public:
     enum Style { Summary, Details, AllMembers, Accessors };
-    enum Status { Obsolete, Active };
 
 public:
     Section(
         QString title, QString singular, QString plural,
-        QString divclass, Style style, Status status
+        QString divclass, Style style
     ) : m_title{title}, m_singular{singular}, m_plural{plural},
-        m_divClass{divclass}, m_style{style}, m_status{status}
+        m_divClass{divclass}, m_style{style}
     {}
 
     ~Section();
@@ -43,7 +42,6 @@ public:
     }
 
     [[nodiscard]] Style style() const { return m_style; }
-    [[nodiscard]] Status status() const { return m_status; }
     [[nodiscard]] const QString &title() const { return m_title; }
     [[nodiscard]] const QString &divClass() const { return m_divClass; }
     [[nodiscard]] const QString &singular() const { return m_singular; }
@@ -66,7 +64,6 @@ private:
     QString m_plural {};
     QString m_divClass {};
     Style m_style {};
-    Status m_status {};
 
     Aggregate *m_aggregate { nullptr };
     NodeVector m_members {};

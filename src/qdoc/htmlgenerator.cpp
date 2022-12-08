@@ -2515,7 +2515,7 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
 
     for (const auto &section : summary_spv) {
         out() << "<h2>" << protectEnc(section->title()) << "</h2>\n";
-        generateSectionList(*section, aggregate, marker, Section::Obsolete);
+        generateSectionList(*section, aggregate, marker, true);
     }
 
     for (const auto &section : details_spv) {
@@ -2537,9 +2537,6 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
   Generates a separate file where deprecated members of the QML
   type \a qcn are listed. The \a marker is used to generate
   the section lists, which are then traversed and output here.
-
-  Note that this function currently only handles correctly the
-  case where \a status is \c {Section::Obsolete}.
  */
 QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, CodeMarker *marker)
 {
@@ -3073,11 +3070,11 @@ void HtmlGenerator::generateSection(const NodeVector &nv, const Node *relative, 
 }
 
 void HtmlGenerator::generateSectionList(const Section &section, const Node *relative,
-                                        CodeMarker *marker, Section::Status status)
+                                        CodeMarker *marker, bool useObsoleteMembers)
 {
     bool alignNames = true;
     const NodeVector &members =
-            (status == Section::Obsolete ? section.obsoleteMembers() : section.members());
+            (useObsoleteMembers ? section.obsoleteMembers() : section.members());
     if (!members.isEmpty()) {
         bool hasPrivateSignals = false;
         bool isInvokable = false;
@@ -3145,7 +3142,7 @@ void HtmlGenerator::generateSectionList(const Section &section, const Node *rela
         }
     }
 
-    if (status != Section::Obsolete && section.style() == Section::Summary
+    if (!useObsoleteMembers && section.style() == Section::Summary
         && !section.inheritedMembers().isEmpty()) {
         out() << "<ul>\n";
         generateSectionInheritedList(section, relative);
@@ -3501,7 +3498,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);
         if (property->propertyType() == PropertyNode::PropertyType::StandardProperty) {
-            Section section("", "", "", "", Section::Accessors, Section::Active);
+            Section section("", "", "", "", Section::Accessors);
 
             section.appendMembers(property->getters().toVector());
             section.appendMembers(property->setters().toVector());
@@ -3512,7 +3509,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
                 generateSectionList(section, node, marker);
             }
 
-            Section notifiers("", "", "", "", Section::Accessors, Section::Active);
+            Section notifiers("", "", "", "", Section::Accessors);
             notifiers.appendMembers(property->notifiers().toVector());
 
             if (!notifiers.members().isEmpty()) {
