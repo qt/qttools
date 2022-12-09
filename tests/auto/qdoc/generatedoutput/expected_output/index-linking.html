@@ -11,6 +11,7 @@
 <h3 id="toc">Contents</h3>
 <ul>
 <li class="level1"><a href="#qml-properties">QML properties</a></li>
+<li class="level1"><a href="#auto-linking-to-types-in-code-snippets">Auto-linking to types in code snippets</a></li>
 </ul>
 </div>
 <div class="sidebar-content" id="sidebar-content"></div></div>
@@ -21,6 +22,15 @@
 <ol class="A" type="A"><li>Property group: <a href="https://doc.qt.io/QmlPropertyGroups/qml-qdoc-test-parent.html#group-prop">Parent::group</a>.</li>
 <li>Property in a group: <a href="https://doc.qt.io/QmlPropertyGroups/qml-qdoc-test-parent.html#group.c-prop">QDoc.Test::Parent::group.c</a>.</li>
 </ol>
+<h2 id="auto-linking-to-types-in-code-snippets">Auto-linking to types in code snippets</h2>
+<pre class="qml" translate="no">import QtQuick
+
+<span class="type"><a href="https://doc.qt.io/QmlPropertyGroups/qml-uicomponents-progressbar.html">ProgressBar</a></span> {
+    <span class="comment">// Linking to int value type</span>
+    property <span class="type"><a href="https://doc.qt.io/QmlPropertyGroups/qml-int.html">int</a></span> <span class="name">progress</span>: <span class="number">0</span>
+}</pre>
+<pre class="cpp" translate="no"><span class="comment">// 'int' should not link anywhere in C++ code</span>
+<span class="type">int</span> main() { <span class="type">int</span> x{<span class="number">0</span>}; <span class="keyword">return</span> x; }</pre>
 </div>
 <!-- @@@index-linking.html -->
 </body>
