@@ -787,7 +787,6 @@ void FormWindowManager::slotUpdateActions()
     bool canMorphIntoGridLayout = false;
     bool canMorphIntoFormLayout = false;
     bool hasSelectedWidgets = false;
-    int laidoutWidgetCount = 0;
     int unlaidoutWidgetCount = 0;
 #if QT_CONFIG(clipboard)
     bool pasteAvailable = false;
@@ -819,11 +818,9 @@ void FormWindowManager::slotUpdateActions()
         // Always count the main container as unlaid-out
         const QWidgetList::const_iterator cend = simplifiedSelection.constEnd();
         for (QWidgetList::const_iterator it = simplifiedSelection.constBegin(); it != cend; ++it) {
-            if (*it != mainContainer && LayoutInfo::isWidgetLaidout(m_core, *it)) {
-                ++laidoutWidgetCount;
-            } else {
+            if (*it == mainContainer || !LayoutInfo::isWidgetLaidout(m_core, *it))
                 ++unlaidoutWidgetCount;
-            }
+
             if (qobject_cast<const QLayoutWidget *>(*it) || qobject_cast<const Spacer *>(*it))
                 canChangeZOrder = false;
         }

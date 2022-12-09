@@ -4798,7 +4798,6 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
         m_writer->writeStartElement(dbNamespace, "itemizedlist");
         newLine();
 
-        int i = 0;
         NodeVector::ConstIterator m = members.constBegin();
         while (m != members.constEnd()) {
             if ((*m)->access() == Access::Private) {
@@ -4825,7 +4824,6 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
             m_writer->writeEndElement(); // listitem
             newLine();
 
-            i++;
             ++m;
         }
 
