@@ -299,10 +299,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             collectionNode->markSeen();
         node = collectionNode;
     } else if (elementName == QLatin1String("qmlmodule")) {
-        QString t = attributes.value(QLatin1String("qml-module-name")).toString();
-        auto *collectionNode = m_qdb->addQmlModule(t);
+        auto *collectionNode = m_qdb->addQmlModule(name);
         QStringList info;
-        info << t << attributes.value(QLatin1String("qml-module-version")).toString();
+        info << name << attributes.value(QLatin1String("qml-module-version")).toString();
         collectionNode->setLogicalModuleInfo(info);
         collectionNode->setTitle(attributes.value(QLatin1String("title")).toString());
         collectionNode->setSubtitle(attributes.value(QLatin1String("subtitle")).toString());
@@ -784,8 +783,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     case Node::QmlType:
     case Node::QmlValueType:
         nodeName = (node->nodeType() == Node::QmlType) ? "qmlclass" : "qmlvaluetype";
-        if (node->logicalModule() != nullptr)
-            logicalModuleName = node->logicalModule()->logicalModuleName();
+        logicalModuleName = node->logicalModuleName();
         baseNameAttr = "qml-base-type";
         moduleNameAttr = "qml-module-name";
         moduleVerAttr = "qml-module-version";
@@ -857,8 +855,6 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
     if (!moduleNameAttr.isEmpty()) {
         if (!logicalModuleName.isEmpty())
             writer.writeAttribute(moduleNameAttr, logicalModuleName);
-        else
-            writer.writeAttribute(moduleNameAttr, node->name());
         if (!logicalModuleVersion.isEmpty())
             writer.writeAttribute(moduleVerAttr, logicalModuleVersion);
     }

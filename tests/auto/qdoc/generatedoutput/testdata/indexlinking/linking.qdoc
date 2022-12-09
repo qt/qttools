@@ -11,6 +11,22 @@
         \li Property in a group: \l [QmlPropertyGroups]
             QDoc.Test::Parent::group.c.
     \endlist
+
+    \section1 Auto-linking to types in code snippets
+
+    \qml
+    import QtQuick
+
+    ProgressBar {
+        // Linking to int value type
+        property int progress: 0
+    }
+    \endqml
+
+    \code
+    // 'int' should not link anywhere in C++ code
+    int main() { int x{0}; return x; }
+    \endcode
 */
 
 /*!
