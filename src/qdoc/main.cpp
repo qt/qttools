@@ -522,11 +522,9 @@ static void processQdocconfFile(const QString &fileName)
         */
 
         qCDebug(lcQdoc, "Parsing header files");
-        int parsed = 0;
         for (auto it = headers.constBegin(); it != headers.constEnd(); ++it) {
             CodeParser *codeParser = CodeParser::parserForHeaderFile(it.key());
             if (codeParser) {
-                ++parsed;
                 qCDebug(lcQdoc, "Parsing %s", qPrintable(it.key()));
                 codeParser->parseHeaderFile(config.location(), it.key());
             }
@@ -538,13 +536,11 @@ static void processQdocconfFile(const QString &fileName)
           Parse each source text file in the set using the appropriate parser and
           add it to the big tree.
         */
-        parsed = 0;
         qCInfo(lcQdoc) << "Parse source files for" << project;
         for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
             const auto &key = it.key();
             auto *codeParser = CodeParser::parserForSourceFile(key);
             if (codeParser) {
-                ++parsed;
                 qCDebug(lcQdoc, "Parsing %s", qPrintable(key));
                 codeParser->parseSourceFile(config.location(), key);
             }

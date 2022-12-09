@@ -729,7 +729,6 @@ int main(int argc, char **argv)
     UpdateOptions options =
         Verbose | // verbose is on by default starting with Qt 4.2
         HeuristicSameText | HeuristicSimilarText | HeuristicNumber;
-    int proDebug = 0;
     int numFiles = 0;
     bool metTsFlag = false;
     bool metXTsFlag = false;
@@ -759,7 +758,6 @@ int main(int argc, char **argv)
             options &= ~Verbose;
             continue;
         } else if (arg == QLatin1String("-pro-debug")) {
-            proDebug++;
             continue;
         } else if (arg == QLatin1String("-project")) {
             ++i;
