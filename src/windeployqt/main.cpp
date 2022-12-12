@@ -932,6 +932,8 @@ QStringList findQtPlugins(quint64 *usedQtModules, quint64 disabledQtModules,
                 case WindowsDesktopMsvc:
                 case WindowsDesktopMinGW:
                     filter = QStringLiteral("qwindows");
+                    if (!infix.isEmpty())
+                        filter += infix;
                     break;
                 case Unix:
                     filter = QStringLiteral("libqxcb");
