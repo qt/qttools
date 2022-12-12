@@ -262,8 +262,8 @@ void Aggregate::normalizeOverloads()
                     internalFn = next;
                 } else {
                     next->setOverloadNumber(++count);
+                    fn = fn->nextOverload();
                 }
-                fn = fn->nextOverload();
             } else {
                 fn->setNextOverload(internalFn);
                 break;
