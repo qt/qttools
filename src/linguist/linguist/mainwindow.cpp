@@ -30,6 +30,7 @@
 #include <QBitmap>
 #include <QCloseEvent>
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDockWidget>
 #include <QFile>
 #include <QFileDialog>
@@ -442,7 +443,12 @@ bool FocusWatcher::eventFilter(QObject *, QEvent *event)
 
 MainWindow::MainWindow()
     : QMainWindow(0, Qt::Window),
+#if QT_CONFIG(process)
       m_assistantProcess(0),
+#endif // QT_CONFIG(process)
+#if QT_CONFIG(printsupport)
+      m_printer(0),
+#endif // QT_CONFIG(printsupport)
       m_findWhere(DataModel::NoLocation),
       m_translationSettingsDialog(0),
       m_settingCurrentMessage(false),
@@ -605,6 +611,7 @@ MainWindow::MainWindow()
     addDockWidget(Qt::TopDockWidgetArea, m_messagesDock);
     addDockWidget(Qt::BottomDockWidgetArea, m_phrasesDock);
     addDockWidget(Qt::TopDockWidgetArea, m_sourceAndFormDock);
+    m_sourceAndFormDock->hide();
     addDockWidget(Qt::BottomDockWidgetArea, m_errorsDock);
     //tabifyDockWidget(m_errorsDock, m_sourceAndFormDock);
     //tabifyDockWidget(m_sourceCodeDock, m_phrasesDock);
@@ -723,10 +730,12 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
     writeConfig();
+#if QT_CONFIG(process)
     if (m_assistantProcess && m_assistantProcess->state() == QProcess::Running) {
         m_assistantProcess->terminate();
         m_assistantProcess->waitForFinished(3000);
     }
+#endif // QT_CONFIG(process)
     qDeleteAll(m_phraseBooks);
     delete m_dataModel;
     delete m_statistics;
@@ -809,7 +818,7 @@ struct OpenedFile {
     bool langGuessed;
 };
 
-bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
+bool MainWindow::openFiles(const QStringList &names)
 {
     if (names.isEmpty())
         return false;
@@ -826,7 +835,7 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
             waitCursor = true;
         }
 
-        bool readWrite = globalReadWrite;
+        bool readWrite = m_globalReadWrite;
         if (name.startsWith(u'=')) {
             name.remove(0, 1);
             readWrite = false;
@@ -939,12 +948,14 @@ bool MainWindow::openFiles(const QStringList &names, bool globalReadWrite)
 
 void MainWindow::open()
 {
-    openFiles(pickTranslationFiles());
+    m_globalReadWrite = true;
+    pickTranslationFiles();
 }
 
 void MainWindow::openAux()
 {
-    openFiles(pickTranslationFiles(), false);
+    m_globalReadWrite = false;
+    pickTranslationFiles();
 }
 
 void MainWindow::closeFile()
@@ -996,7 +1007,7 @@ static QString fileFilters(bool allFirst)
     return filter;
 }
 
-QStringList MainWindow::pickTranslationFiles()
+void MainWindow::pickTranslationFiles()
 {
     QString dir;
     if (!m_recentFiles.isEmpty())
@@ -1012,9 +1023,24 @@ QStringList MainWindow::pickTranslationFiles()
                               .arg(mainFileBase.left(pos) + "_*."_L1 + mainFile.completeSuffix());
     }
 
-    return QFileDialog::getOpenFileNames(this, tr("Open Translation Files"), dir,
-        varFilt +
-        fileFilters(true));
+#ifndef Q_OS_WASM
+    openFiles(QFileDialog::getOpenFileNames(this, tr("Open Translation Files"), dir,
+                                            varFilt + fileFilters(true)));
+#else
+    const auto fileOpenCompleted = [this](const QString &fileName, const QByteArray &fileContent) {
+        const QString copyFileName =
+                QDir::tempPath() + QLatin1String("/") + QFileInfo(fileName).fileName();
+        QFile tsFile(copyFileName);
+        if (tsFile.open(QIODevice::WriteOnly)) {
+            tsFile.write(fileContent);
+            tsFile.close();
+            openFiles({ copyFileName });
+            m_wasmFileMap[copyFileName] = std::move(fileName);
+        }
+    };
+
+    QFileDialog::getOpenFileContent(varFilt + fileFilters(true), fileOpenCompleted);
+#endif // Q_OS_WASM
 }
 
 void MainWindow::saveInternal(int model)
@@ -1022,6 +1048,17 @@ void MainWindow::saveInternal(int model)
     QApplication::setOverrideCursor(Qt::WaitCursor);
     if (m_dataModel->save(model, this)) {
         updateCaption();
+#ifdef Q_OS_WASM
+        QString wasmFileName = m_dataModel->model(model)->srcFileName();
+        if (const auto itr = m_wasmFileMap.find(wasmFileName); itr != m_wasmFileMap.end()) {
+            QFile tsFile(wasmFileName);
+            if (tsFile.open(QIODevice::ReadOnly)) {
+
+                QByteArray content = tsFile.readAll();
+                QFileDialog::saveFileContent(content, itr.value(), this);
+            }
+        }
+#endif // Q_OS_WASM
         statusBar()->showMessage(tr("File saved."), MessageMS);
     }
     QApplication::restoreOverrideCursor();
@@ -1037,14 +1074,22 @@ void MainWindow::saveAll()
 
 void MainWindow::save()
 {
-    if (m_currentIndex.model() < 0)
+    if (m_currentIndex.model() < 0) {
+        QMessageBox::warning(this, tr("Qt Linguist"), tr("Please select a file to be saved."));
         return;
+    }
 
     saveInternal(m_currentIndex.model());
 }
 
 void MainWindow::saveAs()
 {
+#ifdef Q_OS_WASM
+    QMessageBox::warning(this, tr("Qt Linguist"),
+                         tr("This function is not available on WebAssembly"));
+    return;
+#endif // Q_OS_WASM
+
     if (m_currentIndex.model() < 0)
         return;
 
@@ -1581,6 +1626,7 @@ void MainWindow::resetSorting()
 
 void MainWindow::manual()
 {
+#if QT_CONFIG(process)
     if (!m_assistantProcess)
         m_assistantProcess = new QProcess();
 
@@ -1602,6 +1648,10 @@ void MainWindow::manual()
     QTextStream str(m_assistantProcess);
     str << "SetSource qthelp://org.qt-project.linguist."_L1 << QT_VERSION_MAJOR << QT_VERSION_MINOR
         << QT_VERSION_PATCH << "/qtlinguist/qtlinguist-index.html"_L1 << u'\n' << Qt::endl;
+#else // QT_CONFIG(process)
+    QDesktopServices::openUrl(
+            QUrl::fromUserInput(QLatin1String("https://doc.qt.io/qt-6/qtlinguist-index.html")));
+#endif // QT_CONFIG(process)
 }
 
 void MainWindow::about()
@@ -2175,9 +2225,14 @@ void MainWindow::setupMenuBar()
     connect(m_ui.menuFile, &QMenu::aboutToShow, this, &MainWindow::fileAboutToShow);
     connect(m_ui.actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(m_ui.actionOpenAux, &QAction::triggered, this, &MainWindow::openAux);
-    connect(m_ui.actionSaveAll, &QAction::triggered, this, &MainWindow::saveAll);
     connect(m_ui.actionSave, &QAction::triggered, this, &MainWindow::save);
+#ifndef Q_OS_WASM
+    connect(m_ui.actionSaveAll, &QAction::triggered, this, &MainWindow::saveAll);
     connect(m_ui.actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
+#else
+    m_ui.actionSaveAs->setVisible(false);
+    m_ui.actionSaveAll->setVisible(false);
+#endif // Q_OS_WASM
     connect(m_ui.actionReleaseAll, &QAction::triggered, this, &MainWindow::releaseAll);
     connect(m_ui.actionRelease, &QAction::triggered, this, &MainWindow::release);
     connect(m_ui.actionReleaseAs, &QAction::triggered, this, &MainWindow::releaseAs);
@@ -2407,33 +2462,48 @@ void MainWindow::fileAboutToShow()
         if (m_dataModel->modelCount() > 1) {
             if (m_currentIndex.model() >= 0) {
                 QString fn = QFileInfo(m_dataModel->srcFileName(m_currentIndex.model())).baseName();
+#ifndef Q_OS_WASM
                 m_ui.actionSave->setText(tr("&Save '%1'").arg(fn));
                 m_ui.actionSaveAs->setText(tr("Save '%1' &As...").arg(fn));
+#else
+                m_ui.actionSave->setText(tr("&Download '%1'").arg(fn));
+#endif // Q_OS_WASM
                 m_ui.actionRelease->setText(tr("Release '%1'").arg(fn));
                 m_ui.actionReleaseAs->setText(tr("Release '%1' As...").arg(fn));
                 m_ui.actionClose->setText(tr("&Close '%1'").arg(fn));
             } else {
+#ifndef Q_OS_WASM
                 m_ui.actionSave->setText(tr("&Save"));
                 m_ui.actionSaveAs->setText(tr("Save &As..."));
+#else
+                m_ui.actionSave->setText(tr("&Download"));
+#endif // Q_OS_WASM
                 m_ui.actionRelease->setText(tr("Release"));
                 m_ui.actionReleaseAs->setText(tr("Release As..."));
                 m_ui.actionClose->setText(tr("&Close"));
             }
 
+#ifndef Q_OS_WASM
             m_ui.actionSaveAll->setText(tr("Save All"));
+#endif // Q_OS_WASM
             m_ui.actionReleaseAll->setText(tr("&Release All"));
             m_ui.actionCloseAll->setText(tr("Close All"));
             en = true;
         } else {
+#ifndef Q_OS_WASM
             m_ui.actionSaveAs->setText(tr("Save &As..."));
-            m_ui.actionReleaseAs->setText(tr("Release As..."));
-
             m_ui.actionSaveAll->setText(tr("&Save"));
+#else
+            m_ui.actionSave->setText(tr("&Download"));
+#endif // Q_OS_WASM
+            m_ui.actionReleaseAs->setText(tr("Release As..."));
             m_ui.actionReleaseAll->setText(tr("&Release"));
             m_ui.actionCloseAll->setText(tr("&Close"));
             en = false;
         }
+#ifndef Q_OS_WASM
         m_ui.actionSave->setVisible(en);
+#endif // Q_OS_WASM
         m_ui.actionRelease->setVisible(en);
         m_ui.actionClose->setVisible(en);
         m_fileActiveModel = m_currentIndex.model();

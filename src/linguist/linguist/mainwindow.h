@@ -57,7 +57,7 @@ public:
     MainWindow();
     ~MainWindow();
 
-    bool openFiles(const QStringList &names, bool readWrite = true);
+    bool openFiles(const QStringList &names);
     static QString friendlyString(const QString &str);
 
 protected:
@@ -173,7 +173,7 @@ private:
     bool savePhraseBook(QString *name, PhraseBook &pb);
     bool maybeSavePhraseBook(PhraseBook *phraseBook);
     bool maybeSavePhraseBooks();
-    QStringList pickTranslationFiles();
+    void pickTranslationFiles();
     void doShowTranslationSettings(int model);
     void doUpdateLatestModel(int model);
     void updateSourceView(int model, MessageItem *item);
@@ -190,7 +190,10 @@ private:
     void updateDanger(const MultiDataIndex &index, bool verbose);
     void updateIcons();
     bool searchItem(DataModel::FindLocation where, const QString &searchWhat);
+
+#if QT_CONFIG(process)
     QProcess *m_assistantProcess;
+#endif // QT_CONFIG(process)
     QTreeView *m_contextView;
     QTreeView *m_labelView;
     QTreeView *m_messageView;
@@ -254,6 +257,10 @@ private:
     Statistics *m_statistics;
     RecentFiles m_recentFiles;
     MachineTranslationDialog *m_machineTranslationDialog = 0;
+    bool m_globalReadWrite = true;
+#ifdef Q_OS_WASM
+    QMap<QString, QString> m_wasmFileMap;
+#endif // Q_OS_WASM
 };
 
 QT_END_NAMESPACE

@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     mw.show();
     QApplication::restoreOverrideCursor();
 
-    mw.openFiles(files, true);
+    mw.openFiles(files);
 
     return app.exec();
 }

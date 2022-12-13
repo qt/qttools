@@ -5,6 +5,15 @@
 ## linguist App:
 #####################################################################
 
+if(NOT QT_BUILDING_QT)
+    # Standalone linguist build settings.
+
+    # Let qt_internal_add_app build the executable in our build directory instead of the Qt build
+    # tree.
+    set(QT_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+    find_package(Qt6UiToolsPrivate CONFIG REQUIRED)
+endif()
+
 qt_internal_add_app(linguist
     SOURCES
         ../shared/numerus.cpp
@@ -70,45 +79,47 @@ qt_internal_extend_target(linguist CONDITION QT_FEATURE_printsupport
         Qt::PrintSupport
 )
 
-set(available_plugins "")
+if(QT_BUILDING_QT)
+    set(available_plugins "")
 
-set(plugin_targets
-    Qt::qtquickcontrols2plugin
-    Qt::qtquick2plugin
-    Qt::qtquickdialogsplugin
-    Qt::qtquickcontrols2universalstyleplugin
-    Qt::qtquickcontrols2basicstyleplugin
-    Qt::qtquickcontrols2fluentwinui3styleplugin
-    Qt::qtquickcontrols2fusionstyleplugin
-    Qt::qtquickcontrols2imaginestyleplugin
-    Qt::qtquickcontrols2iosstyleplugin
-    Qt::qtquickcontrols2macosstyleplugin
-    Qt::qtquickcontrols2materialstyleplugin
-    Qt::qtquicktemplates2plugin
-    Qt::qtquickcontrols2implplugin
-    Qt::qtquickdialogs2quickimplplugin
-    Qt::qtquickcontrols2universalstyleimplplugin
-    Qt::qtquickcontrols2basicstyleimplplugin
-    Qt::qtquickcontrols2fluentwinui3styleimplplugin
-    Qt::qtquickcontrols2fusionstyleimplplugin
-    Qt::qtquickcontrols2imaginestyleimplplugin
-    Qt::qtquickcontrols2iosstyleimplplugin
-    Qt::qtquickcontrols2macosstyleimplplugin
-    Qt::qtquickcontrols2materialstyleimplplugin
-    Qt::quickwindow
-)
+    set(plugin_targets
+        Qt::qtquickcontrols2plugin
+        Qt::qtquick2plugin
+        Qt::qtquickdialogsplugin
+        Qt::qtquickcontrols2universalstyleplugin
+        Qt::qtquickcontrols2basicstyleplugin
+        Qt::qtquickcontrols2fluentwinui3styleplugin
+        Qt::qtquickcontrols2fusionstyleplugin
+        Qt::qtquickcontrols2imaginestyleplugin
+        Qt::qtquickcontrols2iosstyleplugin
+        Qt::qtquickcontrols2macosstyleplugin
+        Qt::qtquickcontrols2materialstyleplugin
+        Qt::qtquicktemplates2plugin
+        Qt::qtquickcontrols2implplugin
+        Qt::qtquickdialogs2quickimplplugin
+        Qt::qtquickcontrols2universalstyleimplplugin
+        Qt::qtquickcontrols2basicstyleimplplugin
+        Qt::qtquickcontrols2fluentwinui3styleimplplugin
+        Qt::qtquickcontrols2fusionstyleimplplugin
+        Qt::qtquickcontrols2imaginestyleimplplugin
+        Qt::qtquickcontrols2iosstyleimplplugin
+        Qt::qtquickcontrols2macosstyleimplplugin
+        Qt::qtquickcontrols2materialstyleimplplugin
+        Qt::quickwindow
+    )
 
-foreach(plugin ${plugin_targets})
-    if(TARGET ${plugin})
-        list(APPEND available_plugins ${plugin})
-    endif()
-endforeach()
+    foreach(plugin ${plugin_targets})
+        if(TARGET ${plugin})
+            list(APPEND available_plugins ${plugin})
+        endif()
+    endforeach()
 
-if (available_plugins)
-    if(BUILD_SHARED_LIBS)
-        add_dependencies(linguist ${available_plugins})
-    else()
-        qt_internal_extend_target(linguist LIBRARIES ${available_plugins})
+    if(available_plugins)
+        if(BUILD_SHARED_LIBS)
+            add_dependencies(linguist ${available_plugins})
+        else()
+            qt_internal_extend_target(linguist LIBRARIES ${available_plugins})
+        endif()
     endif()
 endif()
 
@@ -312,7 +323,9 @@ if(APPLE)
 else()
     set_property(SOURCE main.cpp PROPERTY SKIP_AUTOMOC ON)
 endif()
-qt_internal_add_docs(linguist
-    doc/qtlinguist.qdocconf
-)
 
+if(QT_BUILDING_QT)
+    qt_internal_add_docs(linguist
+        doc/qtlinguist.qdocconf
+    )
+endif()
