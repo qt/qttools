@@ -10,6 +10,7 @@
 qt_internal_add_module(DesignerComponentsPrivate
     INTERNAL_MODULE
     SOURCES
+        lib_pch.h
         ../buddyeditor/buddyeditor.cpp ../buddyeditor/buddyeditor.h
         ../buddyeditor/buddyeditor_global.h
         ../buddyeditor/buddyeditor_plugin.cpp ../buddyeditor/buddyeditor_plugin.h
