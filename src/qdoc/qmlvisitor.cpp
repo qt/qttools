@@ -546,17 +546,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiArrayBinding *)
 
 void QmlDocVisitor::endVisit(QQmlJS::AST::UiArrayBinding *) {}
 
-template<typename T>
-QString qualifiedIdToString(T node);
-
-template<>
-QString qualifiedIdToString(QStringView node)
-{
-    return node.toString();
-}
-
-template<>
-QString qualifiedIdToString(QQmlJS::AST::UiQualifiedId *node)
+static QString qualifiedIdToString(QQmlJS::AST::UiQualifiedId *node)
 {
     QString s;
 
@@ -590,7 +580,7 @@ bool QmlDocVisitor::visit(QQmlJS::AST::UiPublicMember *member)
                 auto *newSignal = new FunctionNode(metaness, m_current, name);
                 Parameters &parameters = newSignal->parameters();
                 for (QQmlJS::AST::UiParameterList *it = member->parameters; it; it = it->next) {
-                    const QString type = qualifiedIdToString(it->type);
+                    const QString type = it->type ? it->type->toString() : QString();
                     if (!type.isEmpty() && !it->name.isEmpty())
                         parameters.append(type, it->name.toString());
                 }
