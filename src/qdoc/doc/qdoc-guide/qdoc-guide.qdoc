@@ -663,6 +663,8 @@
     cannot be used, as they miss certain components required by QDoc.
 
     If you install Clang in a custom location you need to tell CMake where
-    to find it. This can be done by adding the installation path to
-    the \c CMAKE_PREFIX_PATH CMake cache variable.
+    to find it. This can be done by specifying your LLVM installation path
+    using the \c LLVM_INSTALL_DIR environment variable when configuring Qt.
+    Alternatively, you can add the installation path to the \c CMAKE_PREFIX_PATH
+    CMake cache variable.
 */

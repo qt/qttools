@@ -117,8 +117,10 @@ qt_configure_end_summary_section() # end of "Qt Tools" section
 qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "QDoc will not be compiled, probably because libclang could not be located. This means that you cannot build the Qt documentation.
-Either set CMAKE_PREFIX_PATH or LLVM_INSTALL_DIR to the location of your llvm installation.
+You may need to set CMAKE_PREFIX_PATH or LLVM_INSTALL_DIR to the location of your llvm installation.
 On Linux systems, you may be able to install libclang by installing the libclang-dev or libclang-devel package, depending on your distribution.
+You may need to install another package, such as clang itself, to provide the ClangConfig.cmake file needed to detect your libclang. Once this
+file is in place, the configure script may be able to detect your system-installed libclang without further environment variables.
 On macOS, you can use Homebrew's llvm package.
 You will also need to set the FEATURE_clang CMake variable to ON to re-evaluate this check."
     CONDITION NOT QT_FEATURE_clang
