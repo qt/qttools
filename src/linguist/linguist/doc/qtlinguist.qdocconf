@@ -15,7 +15,7 @@ qhp.QtLinguist.indexTitle          = Qt Linguist Manual
 
 qhp.QtLinguist.subprojects         = manual examples
 qhp.QtLinguist.subprojects.manual.title = Manual
-qhp.QtLinguist.subprojects.manual.indexTitle = Qt Linguist Manual
+qhp.QtLinguist.subprojects.manual.indexTitle = All topics
 qhp.QtLinguist.subprojects.manual.type = manual
 qhp.QtLinguist.subprojects.examples.title = Examples
 qhp.QtLinguist.subprojects.examples.indexTitle = Qt Linguist Examples
@@ -30,6 +30,9 @@ exampledirs             = ../../../../examples/linguist \
                           snippets
 
 imagedirs               = images
+
+# Add thumbnails for YouTube links
+{HTML.extraimages,DocBook.extraimages,qhp.QtDoc.extraFiles} += images/xNIz78IPBu0.jpg
 
 depends                 += qtdoc qtqml qtquick qtcore qtgui qmake qtcmake
 
