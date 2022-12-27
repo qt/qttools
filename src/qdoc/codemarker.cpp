@@ -149,6 +149,8 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "virtual";
             }
 
+            if (func->isExplicit()) extra << "explicit";
+
             if (func->access() == Access::Protected)
                 extra << "protected";
             else if (func->access() == Access::Private)

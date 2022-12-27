@@ -896,6 +896,32 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
     });
 }
 
+struct CXXSpecifiers {
+    bool is_explicit = false;
+};
+
+static CXXSpecifiers get_specifiers(CXCursor cursor) {
+    CXXSpecifiers specifiers{};
+
+    CXTranslationUnit tu{clang_Cursor_getTranslationUnit(cursor)};
+
+    CXToken* tokens = nullptr;
+    unsigned token_count{0};
+
+    clang_tokenize(tu, clang_getCursorExtent(cursor), &tokens, &token_count);
+
+    for (unsigned index = 0; index < token_count; ++index) {
+        if (clang_getTokenKind(tokens[index]) == CXToken_Keyword) {
+            QString token_spelling{fromCXString(clang_getTokenSpelling(tu, tokens[index]))};
+            if (token_spelling == "explicit") specifiers.is_explicit = true;
+        }
+    }
+
+    clang_disposeTokens(tu, tokens, token_count);
+
+    return specifiers;
+}
+
 void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 {
     CXCursorKind kind = clang_getCursorKind(cursor);
@@ -919,6 +945,10 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
                                : clang_CXXMethod_isPureVirtual(cursor)
                                        ? FunctionNode::PureVirtual
                                        : FunctionNode::NormalVirtual);
+
+    CXXSpecifiers specifiers{get_specifiers(cursor)};
+    if (specifiers.is_explicit) fn->markExplicit();
+
     CXRefQualifierKind refQualKind = clang_Type_getCXXRefQualifier(funcType);
     if (refQualKind == CXRefQualifier_LValue)
         fn->setRef(true);

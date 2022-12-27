@@ -423,6 +423,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             fn->setStatic(attributes.value(QLatin1String("static")) == QLatin1String("true"));
             fn->setFinal(attributes.value(QLatin1String("final")) == QLatin1String("true"));
             fn->setOverride(attributes.value(QLatin1String("override")) == QLatin1String("true"));
+
+            if (attributes.value(QLatin1String("explicit")) == QLatin1String("true"))
+                fn->markExplicit();
+
             qsizetype refness = attributes.value(QLatin1String("refness")).toUInt();
             if (refness == 1)
                 fn->setRef(true);
@@ -1195,6 +1199,9 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         writer.writeAttribute("static", fn->isStatic() ? "true" : "false");
         writer.writeAttribute("final", fn->isFinal() ? "true" : "false");
         writer.writeAttribute("override", fn->isOverride() ? "true" : "false");
+
+        if (fn->isExplicit()) writer.writeAttribute("explicit", "true");
+
         /*
           This ensures that for functions that have overloads,
           the first function written is the one that is not an

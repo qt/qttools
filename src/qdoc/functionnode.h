@@ -75,6 +75,9 @@ public:
     }
     [[nodiscard]] bool isDeprecated() const override;
 
+    void markExplicit() { m_explicit = true; }
+    bool isExplicit() const { return m_explicit; }
+
     [[nodiscard]] bool isCppFunction() const { return m_metaness == Plain; } // Is this correct?
     [[nodiscard]] bool isSignal() const { return (m_metaness == Signal); }
     [[nodiscard]] bool isSlot() const { return (m_metaness == Slot); }
@@ -178,6 +181,8 @@ private:
     bool m_isRef : 1;
     bool m_isRefRef : 1;
     bool m_isInvokable : 1;
+    bool m_explicit;
+
     Metaness m_metaness {};
     Virtualness m_virtualness {};
     signed short m_overloadNumber {};
