@@ -78,6 +78,9 @@ public:
     void markExplicit() { m_explicit = true; }
     bool isExplicit() const { return m_explicit; }
 
+    void markConstexpr() { m_constexpr = true; }
+    bool isConstexpr() const { return m_constexpr; }
+
     [[nodiscard]] bool isCppFunction() const { return m_metaness == Plain; } // Is this correct?
     [[nodiscard]] bool isSignal() const { return (m_metaness == Signal); }
     [[nodiscard]] bool isSlot() const { return (m_metaness == Slot); }
@@ -182,6 +185,7 @@ private:
     bool m_isRefRef : 1;
     bool m_isInvokable : 1;
     bool m_explicit;
+    bool m_constexpr;
 
     Metaness m_metaness {};
     Virtualness m_virtualness {};

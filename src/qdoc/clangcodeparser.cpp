@@ -898,6 +898,7 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
 
 struct CXXSpecifiers {
     bool is_explicit = false;
+    bool is_constexpr = false;
 };
 
 static CXXSpecifiers get_specifiers(CXCursor cursor) {
@@ -913,7 +914,9 @@ static CXXSpecifiers get_specifiers(CXCursor cursor) {
     for (unsigned index = 0; index < token_count; ++index) {
         if (clang_getTokenKind(tokens[index]) == CXToken_Keyword) {
             QString token_spelling{fromCXString(clang_getTokenSpelling(tu, tokens[index]))};
+
             if (token_spelling == "explicit") specifiers.is_explicit = true;
+            else if (token_spelling == "constexpr") specifiers.is_constexpr = true;
         }
     }
 
@@ -948,6 +951,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     CXXSpecifiers specifiers{get_specifiers(cursor)};
     if (specifiers.is_explicit) fn->markExplicit();
+    if (specifiers.is_constexpr) fn->markConstexpr();
 
     CXRefQualifierKind refQualKind = clang_Type_getCXXRefQualifier(funcType);
     if (refQualKind == CXRefQualifier_LValue)

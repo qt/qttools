@@ -427,6 +427,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             if (attributes.value(QLatin1String("explicit")) == QLatin1String("true"))
                 fn->markExplicit();
 
+            if (attributes.value(QLatin1String("constexpr")) == QLatin1String("true"))
+                fn->markConstexpr();
+
             qsizetype refness = attributes.value(QLatin1String("refness")).toUInt();
             if (refness == 1)
                 fn->setRef(true);
@@ -1201,6 +1204,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         writer.writeAttribute("override", fn->isOverride() ? "true" : "false");
 
         if (fn->isExplicit()) writer.writeAttribute("explicit", "true");
+        if (fn->isConstexpr()) writer.writeAttribute("constexpr", "true");
 
         /*
           This ensures that for functions that have overloads,
