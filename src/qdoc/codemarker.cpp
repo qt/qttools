@@ -150,6 +150,7 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
             }
 
             if (func->isExplicit()) extra << "explicit";
+            if (func->isConstexpr()) extra << "constexpr";
 
             if (func->access() == Access::Protected)
                 extra << "protected";
