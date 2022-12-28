@@ -123,8 +123,8 @@ public:
     void undo() override;
 
 protected:
-    using PropertyHelperPtr = QSharedPointer<PropertyHelper>;
-    using PropertyHelperList = QList<PropertyHelperPtr>;
+    using PropertyHelperPtr = std::unique_ptr<PropertyHelper>;
+    using PropertyHelperList = std::vector<PropertyHelperPtr>;
 
     // add an object
     bool add(QObject *object, const QString &propertyName);
@@ -169,8 +169,9 @@ protected:
     const PropertyDescription &propertyDescription() const { return  m_propertyDescription; }
 
 protected:
-    virtual PropertyHelper *createPropertyHelper(QObject *o, SpecialProperty sp,
-                                                 QDesignerPropertySheetExtension *sheet, int sheetIndex) const;
+    virtual std::unique_ptr<PropertyHelper>
+    createPropertyHelper(QObject *o, SpecialProperty sp,
+                         QDesignerPropertySheetExtension *sheet, int sheetIndex) const;
 
 private:
     PropertyDescription m_propertyDescription;

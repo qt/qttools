@@ -969,7 +969,7 @@ bool PropertyListCommand::add(QObject *object, const QString &propertyName)
 
     const PropertyDescription description(propertyName, sheet, index);
 
-    if (m_propertyHelperList.isEmpty()) {
+    if (m_propertyHelperList.empty()) {
         // first entry
         m_propertyDescription = description;
     } else {
@@ -979,21 +979,22 @@ bool PropertyListCommand::add(QObject *object, const QString &propertyName)
             return false;
     }
 
-    const PropertyHelperPtr ph(createPropertyHelper(object, m_propertyDescription.m_specialProperty, sheet, index));
-    m_propertyHelperList.push_back(ph);
+    auto ph = createPropertyHelper(object, m_propertyDescription.m_specialProperty, sheet, index);
+    m_propertyHelperList.push_back(std::move(ph));
     return true;
 }
 
-PropertyHelper *PropertyListCommand::createPropertyHelper(QObject *object, SpecialProperty sp,
-                                                          QDesignerPropertySheetExtension *sheet, int sheetIndex) const
+std::unique_ptr<PropertyHelper>
+PropertyListCommand::createPropertyHelper(QObject *object, SpecialProperty sp,
+                                          QDesignerPropertySheetExtension *sheet, int sheetIndex) const
 {
-    return new PropertyHelper(object, sp, sheet, sheetIndex);
+    return std::make_unique<PropertyHelper>(object, sp, sheet, sheetIndex);
 }
 
 // Init from a list and make sure referenceObject is added first to obtain the right property group
 bool PropertyListCommand::initList(const QObjectList &list, const QString &apropertyName, QObject *referenceObject)
 {
-    propertyHelperList().clear();
+    m_propertyHelperList.clear();
 
     // Ensure the referenceObject (property editor) is first, so the right property group is chosen.
     if (referenceObject) {
@@ -1005,26 +1006,26 @@ bool PropertyListCommand::initList(const QObjectList &list, const QString &aprop
             add(o, apropertyName);
     }
 
-    return !propertyHelperList().isEmpty();
+    return !m_propertyHelperList.empty();
 }
 
 
 QObject* PropertyListCommand::object(int index) const
 {
-    Q_ASSERT(index < m_propertyHelperList.size());
-    return m_propertyHelperList.at(index)->object();
+    Q_ASSERT(size_t(index) < m_propertyHelperList.size());
+    return m_propertyHelperList[index]->object();
 }
 
 QVariant PropertyListCommand::oldValue(int index) const
 {
-    Q_ASSERT(index < m_propertyHelperList.size());
-    return m_propertyHelperList.at(index)->oldValue();
+    Q_ASSERT(size_t(index) < m_propertyHelperList.size());
+    return m_propertyHelperList[index]->oldValue();
 }
 
 void PropertyListCommand::setOldValue(const QVariant &oldValue, int index)
 {
-    Q_ASSERT(index < m_propertyHelperList.size());
-    m_propertyHelperList.at(index)->setOldValue(oldValue);
+    Q_ASSERT(size_t(index) < m_propertyHelperList.size());
+    m_propertyHelperList[index]->setOldValue(oldValue);
 }
 // ----- SetValueFunction: Set a new value when applied to a PropertyHelper.
 class SetValueFunction {
@@ -1084,7 +1085,7 @@ template <class PropertyListIterator, class Function>
     bool updatedPropertyEditor = false;
 
     for (PropertyListIterator it = begin; it != end; ++it) {
-        PropertyHelper *ph = it->data();
+        PropertyHelper *ph = it->get();
         if (QObject* object = ph->object()) { // Might have been deleted in the meantime
             const PropertyHelper::Value newValue = function( *ph );
             updateMask |= ph->updateMask();
@@ -1165,10 +1166,10 @@ void PropertyListCommand::undo()
 // check if lists are aequivalent for command merging (same widgets and props)
 bool PropertyListCommand::canMergeLists(const PropertyHelperList& other) const
 {
-    if (m_propertyHelperList.size() !=  other.size())
+    if (m_propertyHelperList.size() != other.size())
         return false;
-    for (qsizetype i = 0; i < m_propertyHelperList.size(); ++i) {
-        if (!m_propertyHelperList.at(i)->canMerge(*other.at(i)))
+    for (size_t i = 0; i < m_propertyHelperList.size(); ++i) {
+        if (!m_propertyHelperList[i]->canMerge(*other[i]))
             return false;
     }
     return true;
@@ -1234,9 +1235,9 @@ void SetPropertyCommand::setDescription()
 {
     if (propertyHelperList().size() == 1) {
         setText(QApplication::translate("Command", "Changed '%1' of '%2'")
-                                        .arg(propertyName(), propertyHelperList().at(0)->object()->objectName()));
+                                        .arg(propertyName(), propertyHelperList().front()->object()->objectName()));
     } else {
-        int count = propertyHelperList().size();
+        int count = static_cast<int>(propertyHelperList().size());
         setText(QCoreApplication::translate("Command", "Changed '%1' of %n objects", "", count).arg(propertyName()));
     }
 }
@@ -1334,9 +1335,9 @@ void ResetPropertyCommand::setDescription()
 {
     if (propertyHelperList().size() == 1) {
         setText(QCoreApplication::translate("Command", "Reset '%1' of '%2'")
-                                            .arg(propertyName(), propertyHelperList().at(0)->object()->objectName()));
+                                            .arg(propertyName(), propertyHelperList().front()->object()->objectName()));
     } else {
-        int count = propertyHelperList().size();
+        int count = static_cast<int>(propertyHelperList().size());
         setText(QCoreApplication::translate("Command", "Reset '%1' of %n objects", "", count).arg(propertyName()));
     }
 }
