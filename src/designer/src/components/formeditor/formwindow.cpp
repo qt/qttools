@@ -1485,9 +1485,10 @@ public:
     void init(QWidgetList &l, const ArrowKeyOperation &op);
 
 protected:
-    PropertyHelper *createPropertyHelper(QObject *o, SpecialProperty sp,
-                                         QDesignerPropertySheetExtension *s, int i) const override
-        { return new ArrowKeyPropertyHelper(o, sp, s, i); }
+    std::unique_ptr<PropertyHelper>
+    createPropertyHelper(QObject *o, SpecialProperty sp,
+                         QDesignerPropertySheetExtension *s, int i) const override
+    { return std::make_unique<ArrowKeyPropertyHelper>(o, sp, s, i); }
     QVariant mergeValue(const QVariant &newValue) override;
 };
 
