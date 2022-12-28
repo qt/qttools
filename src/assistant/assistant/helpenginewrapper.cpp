@@ -8,8 +8,6 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileSystemWatcher>
-#include <QtCore/QPair>
-#include <QtCore/QSharedPointer>
 #include <QtCore/QTimer>
 #include <QtHelp/QHelpContentModel>
 #include <QtHelp/QHelpEngine>
@@ -17,6 +15,9 @@
 #include <QtHelp/QHelpIndexModel>
 #include <QtHelp/QHelpLink>
 #include <QtHelp/QHelpSearchEngine>
+
+#include <map>
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 
@@ -75,8 +76,11 @@ private:
 
     QHelpEngine * const m_helpEngine;
     QFileSystemWatcher * const m_qchWatcher;
-    typedef QPair<QDateTime, QSharedPointer<TimeoutForwarder> > RecentSignal;
-    QMap<QString, RecentSignal> m_recentQchUpdates;
+    struct RecentSignal {
+        QDateTime timestamp;
+        std::unique_ptr<TimeoutForwarder> forwarder;
+    };
+    std::map<QString, RecentSignal> m_recentQchUpdates;
 };
 
 HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = nullptr;
@@ -727,7 +731,7 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
      * signal more than  once.
      */
     if (ns.isEmpty()) {
-        m_recentQchUpdates.remove(fileName);
+        m_recentQchUpdates.erase(fileName);
         return;
     }
 
@@ -742,19 +746,22 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
 
      // Case 1: This is the first recent signal for the file.
     if (it == m_recentQchUpdates.end()) {
-        QSharedPointer<TimeoutForwarder> forwarder(new TimeoutForwarder(fileName));
-        m_recentQchUpdates.insert(fileName, RecentSignal(now, forwarder));
-        QTimer::singleShot(UpdateGracePeriod, forwarder.data(),
+        auto forwarder = std::make_unique<TimeoutForwarder>(fileName);
+        QTimer::singleShot(UpdateGracePeriod, forwarder.get(),
                            &TimeoutForwarder::forward);
+        m_recentQchUpdates.emplace(fileName,
+                                   RecentSignal{std::move(now), std::move(forwarder)});
         return;
     }
 
+    auto &[key, entry] = *it;
+
     // Case 2: The last signal for this file has not expired yet.
-    if (it.value().first > now.addMSecs(-UpdateGracePeriod)) {
+    if (entry.timestamp > now.addMSecs(-UpdateGracePeriod)) {
         if (!fromTimeout)
-            it.value().first = now;
+            entry.timestamp = now;
         else
-            QTimer::singleShot(UpdateGracePeriod, it.value().second.data(),
+            QTimer::singleShot(UpdateGracePeriod, entry.forwarder.get(),
                                &TimeoutForwarder::forward);
         return;
     }
