@@ -124,7 +124,6 @@ private:
     void generateBrief(const Node *node);
     void generateAlsoList(const Node *node) override;
     void generateSignatureList(const NodeList &nodes);
-    void generateMaintainerList(const Aggregate *node) override;
     void generateReimplementsClause(const FunctionNode *fn);
     void generateClassHierarchy(const Node *relative, NodeMultiMap &classMap);
     void generateFunctionIndex(const Node *relative);

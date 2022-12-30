@@ -1114,26 +1114,6 @@ void Generator::generateDocumentation(Node *node)
 }
 
 /*!
-  Generate a list of maintainers in the output
- */
-void Generator::generateMaintainerList(const Aggregate *node, CodeMarker *marker)
-{
-    QStringList sl = getMetadataElements(node, "maintainer");
-
-    if (!sl.isEmpty()) {
-        Text text;
-        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-             << "Maintained by: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
-
-        for (int i = 0; i < sl.size(); ++i)
-            text << sl.at(i) << Utilities::separator(i, sl.size());
-
-        text << Atom::ParaRight;
-        generateText(text, node, marker);
-    }
-}
-
-/*!
   Extract sections of markup text surrounded by \e qmltext
   and \e endqmltext and output them.
  */
