@@ -3715,14 +3715,11 @@
     \target meta-command
     \section1 \\meta
 
-    The \\meta command is used for adding metadata to example documentation,
-    and when generating HTML output for specifying the \e maintainer(s) of a
-    C++ class.
-
+    The \\meta command is used for adding metadata to example documentation.
     The command has two arguments: the first argument is the name of the
-    metadata attribute, and the second argument is the
-    value for the attribute. Each argument should be enclosed in curly
-    brackets, as shown in this example:
+    metadata attribute, and the second argument is the value for the attribute.
+    Each argument should be enclosed in curly brackets, as shown in this
+    example:
 
     \code
     / *!

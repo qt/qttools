@@ -1302,7 +1302,6 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         generateBody(aggregate, marker);
         out() << "</div>\n"; // QTBUG-9504
         generateAlsoList(aggregate, marker);
-        generateMaintainerList(aggregate, marker);
         generateExtractionMark(aggregate, EndMark);
     }
 
@@ -1406,7 +1405,6 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
         generateBody(aggregate, marker);
         out() << "</div>\n"; // QTBUG-9504
         generateAlsoList(aggregate, marker);
-        generateMaintainerList(aggregate, marker);
         generateExtractionMark(aggregate, EndMark);
     }
 
@@ -3708,30 +3706,6 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
     generateAlsoList(node, marker);
     out() << "</div></div>";
     generateExtractionMark(node, EndMark);
-}
-
-/*!
-  Output the "Inherits" line for the QML element,
-  if there should be one.
- */
-void HtmlGenerator::generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker)
-{
-    if (!qcn)
-        return;
-    QmlTypeNode *base = qcn->qmlBaseNode();
-    while (base && base->isInternal()) {
-        base = base->qmlBaseNode();
-    }
-    if (base) {
-        Text text;
-        text << Atom::ParaLeft << "Inherits ";
-        text << Atom(Atom::LinkNode, CodeMarker::stringForNode(base));
-        text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-        text << Atom(Atom::String, base->name());
-        text << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-        text << Atom::ParaRight;
-        generateText(text, qcn, marker);
-    }
 }
 
 /*!

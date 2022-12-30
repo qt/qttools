@@ -2349,38 +2349,6 @@ void DocBookGenerator::generateAlsoList(const Node *node, CodeMarker *marker)
 }
 
 /*!
-  Generate a list of maintainers in the output
- */
-void DocBookGenerator::generateMaintainerList(const Aggregate *node, CodeMarker *marker)
-{
-    Q_UNUSED(marker);
-    // From Generator::generateMaintainerList.
-    QStringList sl = getMetadataElements(node, "maintainer");
-
-    if (!sl.isEmpty()) {
-        writer->writeStartElement(dbNamespace, "para");
-        writer->writeStartElement(dbNamespace, "emphasis");
-        writer->writeCharacters("Maintained by: ");
-        writer->writeEndElement(); // emphasis
-        newLine();
-
-        writer->writeStartElement(dbNamespace, "simplelist");
-        writer->writeAttribute("type", "vert");
-        writer->writeAttribute("role", "maintainer");
-        for (int i = 0; i < sl.size(); ++i) {
-            writer->writeStartElement(dbNamespace, "member");
-            writer->writeCharacters(sl.at(i));
-            writer->writeEndElement(); // member
-            newLine();
-        }
-        writer->writeEndElement(); // simplelist
-        newLine();
-
-        writer->writeEndElement(); // para
-    }
-}
-
-/*!
   Open a new file to write XML contents, including the DocBook
   opening tag.
  */
@@ -2477,7 +2445,6 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
 
         generateBody(aggregate);
         generateAlsoList(aggregate);
-        generateMaintainerList(aggregate);
 
         endSection();
     }
@@ -4071,7 +4038,6 @@ void DocBookGenerator::generateProxyPage(Aggregate *aggregate)
 
         generateBody(aggregate);
         generateAlsoList(aggregate);
-        generateMaintainerList(aggregate);
 
         endSection();
     }
