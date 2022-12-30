@@ -1130,7 +1130,6 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
         generateBody(aggregate, marker);
         out() << "</div>\n";
         generateAlsoList(aggregate, marker);
-        generateMaintainerList(aggregate, marker);
         generateExtractionMark(aggregate, EndMark);
     }
 
@@ -1230,7 +1229,6 @@ void HtmlGenerator::generateProxyPage(Aggregate *aggregate, CodeMarker *marker)
         generateBody(aggregate, marker);
         out() << "</div>\n";
         generateAlsoList(aggregate, marker);
-        generateMaintainerList(aggregate, marker);
         generateExtractionMark(aggregate, EndMark);
     }
 

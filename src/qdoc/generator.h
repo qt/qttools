@@ -126,11 +126,6 @@ protected:
     virtual void generateCollectionNode(CollectionNode *, CodeMarker *) {}
     virtual void generateGenericCollectionPage(CollectionNode *, CodeMarker *) {}
     virtual void generateDocumentation(Node *node);
-    virtual void generateMaintainerList(const Aggregate *node, CodeMarker *marker);
-    virtual void generateMaintainerList(const Aggregate *node)
-    {
-        generateMaintainerList(node, nullptr);
-    };
     virtual bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
                                  const QString &qmlName);
     virtual bool generateQmlText(const Text &text, const Node *relative)
