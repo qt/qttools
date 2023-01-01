@@ -3779,7 +3779,7 @@
 
     \badcode
     //! [usage]
-    To enable \e{\1}, select \uicontrol {\2} > \uicontrol Enable.
+    To enable \e \1, select \uicontrol \2 > \uicontrol Enable.
     //! [usage]
     \endcode
 
