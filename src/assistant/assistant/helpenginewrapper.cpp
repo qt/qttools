@@ -738,7 +738,7 @@ void HelpEngineWrapperPrivate::qchFileChanged(const QString &fileName,
      */
 
     const auto &it = m_recentQchUpdates.find(fileName);
-    const QDateTime &now = QDateTime::currentDateTime();
+    const QDateTime now = QDateTime::currentDateTimeUtc();
 
      // Case 1: This is the first recent signal for the file.
     if (it == m_recentQchUpdates.end()) {
