@@ -77,16 +77,25 @@ static bool validatePackage(Package &p, const QString &filePath, LogLevel logLev
     }
 
     const QDir dir = p.path;
-    for (const QString &file : std::as_const(p.files)) {
-        if (!dir.exists(file)) {
-            if (logLevel != SilentLog) {
-                std::cerr << qPrintable(tr("File %1: Path '%2' does not exist in directory '%3'.")
-                                                .arg(QDir::toNativeSeparators(filePath),
-                                                     QDir::toNativeSeparators(file),
-                                                     QDir::toNativeSeparators(p.path)))
-                          << std::endl;
+    if (!dir.exists()) {
+        std::cerr << qPrintable(
+                tr("File %1: Directory '%2' does not exist.")
+                        .arg(QDir::toNativeSeparators(filePath), QDir::toNativeSeparators(p.path)))
+                  << std::endl;
+        validPackage = false;
+    } else {
+        for (const QString &file : std::as_const(p.files)) {
+            if (!dir.exists(file)) {
+                if (logLevel != SilentLog) {
+                    std::cerr << qPrintable(
+                            tr("File %1: Path '%2' does not exist in directory '%3'.")
+                                    .arg(QDir::toNativeSeparators(filePath),
+                                         QDir::toNativeSeparators(file),
+                                         QDir::toNativeSeparators(p.path)))
+                              << std::endl;
+                }
+                validPackage = false;
             }
-            validPackage = false;
         }
     }
 
@@ -142,11 +151,12 @@ static QString locateLicensesDir(const QString &packageDir)
     static const QString licensesSubDir = u"LICENSES"_s;
     QDir dir(packageDir);
     while (true) {
+        if (!dir.exists())
+            break;
         if (dir.cd(licensesSubDir))
             return dir.path();
-        if (dir.isRoot())
+        if (dir.isRoot() || !dir.cdUp())
             break;
-        dir.cdUp();
     }
     return {};
 }
