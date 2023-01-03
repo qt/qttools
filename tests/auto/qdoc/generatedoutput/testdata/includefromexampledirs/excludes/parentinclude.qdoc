@@ -12,11 +12,12 @@
 */
 
 /*!
-//! children-qmlproperty
+    //! --- Observe the indented snippet tag:
+    //! children-qmlproperty
     \qmlproperty list<Child> AbstractParent::children
     \qmldefault
     \brief Children of the type.
-//! children-qmlproperty
+    //! children-qmlproperty
 */
 
 /*!
