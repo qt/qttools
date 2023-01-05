@@ -1348,38 +1348,32 @@ void DocParser::include(const QString &fileName, const QString &identifier, cons
                 m_openedInputs.push(m_position + includedContent.size());
             } else {
                 QStringList lineBuffer = includedContent.split(QLatin1Char('\n'));
-                int i = 0;
-                int startLine = -1;
+                qsizetype bufLen{lineBuffer.size()};
+                qsizetype i;
                 QStringView trimmedLine;
-                while (i < lineBuffer.size()) {
+                for (i = 0; i < bufLen; ++i) {
                     trimmedLine = QStringView{lineBuffer[i]}.trimmed();
-                    if (trimmedLine.startsWith(QLatin1String("//!"))) {
-                        if (trimmedLine.contains(identifier)) {
-                            startLine = i + 1;
-                            break;
-                        }
-                    }
-                    ++i;
+                    if (trimmedLine.startsWith(QLatin1String("//!")) &&
+                        trimmedLine.contains(identifier))
+                        break;
                 }
-                if (startLine < 0) {
+                if (i < bufLen - 1) {
+                    ++i;
+                } else {
                     location().warning(
                             QStringLiteral("Cannot find '%1' in '%2'").arg(identifier, filePath));
                     return;
                 }
                 QString result;
-                i = startLine;
                 do {
                     trimmedLine = QStringView{lineBuffer[i]}.trimmed();
-                    if (trimmedLine.startsWith(QLatin1String("//!"))) {
-                        if (i < lineBuffer.size()) {
-                            if (trimmedLine.contains(identifier)) {
-                                break;
-                            }
-                        }
-                    } else
+                    if (trimmedLine.startsWith(QLatin1String("//!")) &&
+                        trimmedLine.contains(identifier))
+                        break;
+                    else
                         result += lineBuffer[i] + QLatin1Char('\n');
                     ++i;
-                } while (i < lineBuffer.size());
+                } while (i < bufLen);
 
                 expandArgumentsInString(result, parameters);
                 if (result.isEmpty()) {
