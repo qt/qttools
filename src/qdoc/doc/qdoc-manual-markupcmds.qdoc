@@ -3756,7 +3756,12 @@
     are used for injecting strings into the included content. To inject a
     string to a specific location in the content, add a backslash followed
     by a digit (1..9). The digits correspond with the order of the argument
-    list.
+    list. Enclose arguments in curly braces to ensure that QDoc renders the
+    entire argument, including possible whitespace characters, as you expect.
+
+    \important Each additional argument (including the snippet ID) must be
+               enclosed in braces. If you want to include the entire file,
+               use an empty snippet ID: \c {{}}.
 
     For example, given the following snippet in a file \c includes.qdocinc:
 
@@ -3777,10 +3782,6 @@
     To enable \e {detailed output}, select \uicontrol {Verbose} >
     \uicontrol Enable.
     \endquotation
-
-    \important Each additional argument (including the snippet ID) must be
-               enclosed in braces. If you want to include the entire file,
-               use an empty snippet ID: \c {{}}.
 
     \target meta-command
     \section1 \\meta
