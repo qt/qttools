@@ -13,8 +13,3 @@ SUBDIRS     = calculatorform
 # the sun cc compiler has a problem with the include lines for the form.prf
 solaris-cc*:SUBDIRS -= calculatorbuilder \
                        worldtimeclockbuilder
-
-qtNomakeTools( \
-    containerextension \
-    taskmenuextension \
-)
