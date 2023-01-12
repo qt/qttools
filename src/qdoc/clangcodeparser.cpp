@@ -908,7 +908,6 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
 
 struct CXXSpecifiers {
     bool is_explicit = false;
-    bool is_constexpr = false;
 };
 
 static CXXSpecifiers get_specifiers(CXCursor cursor) {
@@ -926,7 +925,6 @@ static CXXSpecifiers get_specifiers(CXCursor cursor) {
             QString token_spelling{fromCXString(clang_getTokenSpelling(tu, tokens[index]))};
 
             if (token_spelling == "explicit") specifiers.is_explicit = true;
-            else if (token_spelling == "constexpr") specifiers.is_constexpr = true;
         }
     }
 
@@ -980,20 +978,35 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     CXXSpecifiers specifiers{get_specifiers(cursor)};
     if (specifiers.is_explicit) fn->markExplicit();
-    if (specifiers.is_constexpr) fn->markConstexpr();
 
+    // REMARK: We assume that the following operations and casts are
+    // generally safe.
+    // Callers of those methods will generally check at the LibClang
+    // level the kind of cursor we are dealing with and will pass on
+    // only valid cursors that are of a function kind and that are at
+    // least a declaration.
+    //
+    // Failure to do so implies a bug in the call chain and should be
+    // dealt with as such.
     const clang::Decl* declaration = get_cursor_declaration(cursor);
+    const clang::FunctionDecl* function_declaration{nullptr};
     if (auto templated_decl = llvm::dyn_cast_or_null<const clang::FunctionTemplateDecl>(declaration))
-        declaration = templated_decl->getTemplatedDecl();
-    const clang::FunctionType* function_type = declaration->getFunctionType();
+        function_declaration = templated_decl->getTemplatedDecl();
+    else function_declaration = static_cast<const clang::FunctionDecl*>(declaration);
+
+    assert(function_declaration);
+
+    const clang::FunctionType* function_type = function_declaration->getFunctionType();
     const clang::FunctionProtoType* function_prototype = static_cast<const clang::FunctionProtoType*>(function_type);
+
+    if (function_declaration->isConstexpr()) fn->markConstexpr();
 
     if (function_prototype) {
         clang::FunctionProtoType::ExceptionSpecInfo exception_specification = function_prototype->getExceptionSpecInfo();
 
         if (exception_specification.Type != clang::ExceptionSpecificationType::EST_None) {
-            clang::SourceManager& source_manager = declaration->getASTContext().getSourceManager();
-            const clang::LangOptions& lang_options = declaration->getASTContext().getLangOpts();
+            clang::SourceManager& source_manager = function_declaration->getASTContext().getSourceManager();
+            const clang::LangOptions& lang_options = function_declaration->getASTContext().getLangOpts();
 
             fn->markNoexcept(
                 exception_specification.NoexceptExpr ?
