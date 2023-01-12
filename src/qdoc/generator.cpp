@@ -33,6 +33,10 @@
 #    include "QtCore/qurl.h"
 #endif
 
+#include <string>
+
+using namespace std::literals::string_literals;
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -1166,6 +1170,31 @@ void Generator::generateSince(const Node *node, CodeMarker *marker)
             text << "or modified ";
         text << "in " << formatSince(node) << "." << Atom::ParaRight;
         generateText(text, node, marker);
+    }
+}
+
+void Generator::generateNoexceptNote(const Node* node, CodeMarker* marker) {
+    std::vector<const Node*> nodes;
+    if (node->isSharedCommentNode()) {
+        auto shared_node = static_cast<const SharedCommentNode*>(node);
+        nodes.reserve(shared_node->collective().size());
+        nodes.insert(nodes.begin(), shared_node->collective().begin(), shared_node->collective().end());
+    } else nodes.push_back(node);
+
+    std::size_t counter{1};
+    for (const Node* node : nodes) {
+        if (node->isFunction(Node::CPP)) {
+            if (auto exception_info = static_cast<const FunctionNode*>(node)->getNoexcept(); exception_info && !(*exception_info).isEmpty()) {
+                Text text;
+                text << Atom::NoteLeft
+                        << (nodes.size() > 1 ? QString::fromStdString(" ("s + std::to_string(counter) + ")"s) : QString::fromStdString("This ") + typeString(node))
+                        << " does not throw any exception when " << "\"" << *exception_info << "\"" << " is true."
+                    << Atom::NoteRight;
+                generateText(text, node, marker);
+            }
+        }
+
+        ++counter;
     }
 }
 

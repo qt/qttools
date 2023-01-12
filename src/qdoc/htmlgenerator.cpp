@@ -32,6 +32,7 @@
 
 #include <cctype>
 #include <deque>
+#include <string>
 
 QT_BEGIN_NAMESPACE
 
@@ -3442,6 +3443,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
     generateOverloadedSignal(node, marker);
     generateThreadSafeness(node, marker);
     generateSince(node, marker);
+    generateNoexceptNote(node, marker);
 
     if (node->isProperty()) {
         const auto property = static_cast<const PropertyNode *>(node);

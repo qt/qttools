@@ -151,6 +151,9 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
 
             if (func->isExplicit()) extra << "explicit";
             if (func->isConstexpr()) extra << "constexpr";
+            if (auto noexcept_info = func->getNoexcept()) {
+                extra << (QString("noexcept") + (!(*noexcept_info).isEmpty() ? "(...)" : ""));
+            }
 
             if (func->access() == Access::Protected)
                 extra << "protected";

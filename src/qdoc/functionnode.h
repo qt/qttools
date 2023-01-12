@@ -11,6 +11,8 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qstring.h>
 
+#include <optional>
+
 QT_BEGIN_NAMESPACE
 
 class FunctionNode : public Node
@@ -80,6 +82,9 @@ public:
 
     void markConstexpr() { m_constexpr = true; }
     bool isConstexpr() const { return m_constexpr; }
+
+    void markNoexcept(QString expression = "") { m_noexcept = expression; }
+    const std::optional<QString>& getNoexcept() const { return m_noexcept; }
 
     [[nodiscard]] bool isCppFunction() const { return m_metaness == Plain; } // Is this correct?
     [[nodiscard]] bool isSignal() const { return (m_metaness == Signal); }
@@ -186,6 +191,8 @@ private:
     bool m_isInvokable : 1;
     bool m_explicit;
     bool m_constexpr;
+
+    std::optional<QString> m_noexcept;
 
     Metaness m_metaness {};
     Virtualness m_virtualness {};

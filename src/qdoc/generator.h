@@ -123,6 +123,7 @@ protected:
     virtual void generateFileList(const ExampleNode *en, CodeMarker *marker, bool images);
     static QString formatSince(const Node *node);
     void generateSince(const Node *node, CodeMarker *marker);
+    void generateNoexceptNote(const Node *node, CodeMarker *marker);
     void generateStatus(const Node *node, CodeMarker *marker);
     virtual void generateAddendum(const Node *node, Addendum type, CodeMarker *marker,
                                   bool generateNote);

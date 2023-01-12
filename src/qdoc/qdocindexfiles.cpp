@@ -430,6 +430,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
             if (attributes.value(QLatin1String("constexpr")) == QLatin1String("true"))
                 fn->markConstexpr();
 
+            if (attributes.value(QLatin1String("noexcept")) == QLatin1String("true")) {
+                fn->markNoexcept(attributes.value("noexcept_expression").toString());
+            }
+
             qsizetype refness = attributes.value(QLatin1String("refness")).toUInt();
             if (refness == 1)
                 fn->setRef(true);
@@ -1205,6 +1209,11 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
 
         if (fn->isExplicit()) writer.writeAttribute("explicit", "true");
         if (fn->isConstexpr()) writer.writeAttribute("constexpr", "true");
+
+        if (auto noexcept_info = fn->getNoexcept()) {
+            writer.writeAttribute("noexcept", "true");
+            if (!(*noexcept_info).isEmpty()) writer.writeAttribute("noexcept_expression", *noexcept_info);
+        }
 
         /*
           This ensures that for functions that have overloads,

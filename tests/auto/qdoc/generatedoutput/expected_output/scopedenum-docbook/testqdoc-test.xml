@@ -200,7 +200,7 @@
 <db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="Test">
-<db:title>[default] Test::Test()</db:title>
+<db:title>[noexcept default] Test::Test()</db:title>
 <db:constructorsynopsis>
 <db:methodname>Test</db:methodname>
 <db:void/>
@@ -362,7 +362,7 @@
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
-<db:title>[default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:title>[noexcept default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
 <db:methodsynopsis>
 <db:type>TestQDoc::Test &amp;</db:type>
 <db:methodname>operator=</db:methodname>

@@ -26,6 +26,16 @@
 
 #include <clang-c/Index.h>
 
+#include <clang/AST/Decl.h>
+#include <clang/AST/DeclTemplate.h>
+#include <clang/AST/Expr.h>
+#include <clang/AST/Type.h>
+#include <clang/AST/TypeLoc.h>
+#include <clang/Basic/SourceLocation.h>
+#include <clang/Frontend/ASTUnit.h>
+#include <clang/Lex/Lexer.h>
+#include <llvm/Support/Casting.h>
+
 #include <cstdio>
 
 QT_BEGIN_NAMESPACE
@@ -925,6 +935,25 @@ static CXXSpecifiers get_specifiers(CXCursor cursor) {
     return specifiers;
 }
 
+/*!
+ * Returns the underlying Decl that \a cursor represents.
+ *
+ * This can be used to drop back down from a LibClang's CXCursor to
+ * the underlying C++ AST that Clang provides.
+ *
+ * It should be used when LibClang does not expose certain
+ * functionalities that are available in the C++ AST.
+ *
+ * The CXCursor should represent a declaration. Usages of this
+ * function on CXCursors that do not represent a declaration may
+ * produce undefined results.
+ */
+static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
+    assert(clang_isDeclaration(clang_getCursorKind(cursor)));
+
+    return static_cast<const clang::Decl*>(cursor.data[0]);
+}
+
 void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 {
     CXCursorKind kind = clang_getCursorKind(cursor);
@@ -952,6 +981,27 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     CXXSpecifiers specifiers{get_specifiers(cursor)};
     if (specifiers.is_explicit) fn->markExplicit();
     if (specifiers.is_constexpr) fn->markConstexpr();
+
+    const clang::Decl* declaration = get_cursor_declaration(cursor);
+    if (auto templated_decl = llvm::dyn_cast_or_null<const clang::FunctionTemplateDecl>(declaration))
+        declaration = templated_decl->getTemplatedDecl();
+    const clang::FunctionType* function_type = declaration->getFunctionType();
+    const clang::FunctionProtoType* function_prototype = static_cast<const clang::FunctionProtoType*>(function_type);
+
+    if (function_prototype) {
+        clang::FunctionProtoType::ExceptionSpecInfo exception_specification = function_prototype->getExceptionSpecInfo();
+
+        if (exception_specification.Type != clang::ExceptionSpecificationType::EST_None) {
+            clang::SourceManager& source_manager = declaration->getASTContext().getSourceManager();
+            const clang::LangOptions& lang_options = declaration->getASTContext().getLangOpts();
+
+            fn->markNoexcept(
+                exception_specification.NoexceptExpr ?
+                    QString::fromStdString(clang::Lexer::getSourceText(clang::CharSourceRange::getTokenRange(exception_specification.NoexceptExpr->getSourceRange()), source_manager, lang_options).str()) :
+                    ""
+            );
+        }
+    }
 
     CXRefQualifierKind refQualKind = clang_Type_getCXXRefQualifier(funcType);
     if (refQualKind == CXRefQualifier_LValue)
