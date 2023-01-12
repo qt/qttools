@@ -37,6 +37,9 @@ qt_internal_add_tool(${target_name}
     LIBRARIES
         Qt::CorePrivate
 )
+
+set_source_files_properties(../shared/qmakeparser.cpp PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
+
 qt_internal_return_unless_building_tools()
 
 # Resources:

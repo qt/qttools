@@ -8,7 +8,7 @@
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qxmlstream.h>
 
-static bool isSupportedExtension(const QString &ext)
+bool isSupportedExtension(const QString &ext)
 {
     return ext == QLatin1String("qml")
         || ext == QLatin1String("js") || ext == QLatin1String("qs")

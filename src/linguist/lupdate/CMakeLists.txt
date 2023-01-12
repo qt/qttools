@@ -53,6 +53,9 @@ qt_internal_add_tool(${target_name}
         Qt::CorePrivate
         Qt::Tools
 )
+
+set_source_files_properties(python.cpp PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
+
 qt_internal_return_unless_building_tools()
 
 #### Keys ignored in scope 1:.:.:lupdate.pro:<TRUE>:
