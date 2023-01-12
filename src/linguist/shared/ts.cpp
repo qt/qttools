@@ -404,13 +404,13 @@ bool TSReader::read(Translator &translator)
     return true;
 }
 
-static QString numericEntity(int ch)
+static QString tsNumericEntity(int ch)
 {
     return QString(ch <= 0x20 ? QLatin1String("<byte value=\"x%1\"/>")
         : QLatin1String("&#x%1;")) .arg(ch, 0, 16);
 }
 
-static QString protect(const QString &str)
+static QString tsProtect(const QString &str)
 {
     QString result;
     result.reserve(str.size() * 12 / 10);
@@ -435,7 +435,7 @@ static QString protect(const QString &str)
             break;
         default:
             if ((c < 0x20 || (ch > QChar(0x7f) && ch.isSpace())) && c != '\n' && c != '\t')
-                result += numericEntity(c);
+                result += tsNumericEntity(c);
             else // this also covers surrogates
                 result += QChar(c);
         }
@@ -450,7 +450,7 @@ static void writeExtras(QTextStream &t, const char *indent,
     for (auto it = extras.cbegin(), end = extras.cend(); it != end; ++it) {
         if (!drops.match(it.key()).hasMatch()) {
             outs << (QStringLiteral("<extra-") + it.key() + QLatin1Char('>')
-                     + protect(it.value())
+                     + tsProtect(it.value())
                      + QStringLiteral("</extra-") + it.key() + QLatin1Char('>'));
         }
     }
@@ -467,7 +467,7 @@ static void writeVariants(QTextStream &t, const char *indent, const QString &inp
         int start = 0;
         forever {
             t << "\n    " << indent << "<lengthvariant>"
-              << protect(input.mid(start, offset - start))
+              << tsProtect(input.mid(start, offset - start))
               << "</lengthvariant>";
             if (offset == input.size())
                 break;
@@ -478,7 +478,7 @@ static void writeVariants(QTextStream &t, const char *indent, const QString &inp
         }
         t << "\n" << indent;
     } else {
-        t << ">" << protect(input);
+        t << ">" << tsProtect(input);
     }
 }
 
@@ -534,7 +534,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
     for (const QString &context : std::as_const(contextOrder)) {
         t << "<context>\n"
              "    <name>"
-          << protect(context)
+          << tsProtect(context)
           << "</name>\n";
         for (const TranslatorMessage &msg : std::as_const(messageOrder[context])) {
             //msg.dump();
@@ -584,27 +584,27 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
                 }
 
                 t << "        <source>"
-                  << protect(msg.sourceText())
+                  << tsProtect(msg.sourceText())
                   << "</source>\n";
 
                 if (!msg.oldSourceText().isEmpty())
-                    t << "        <oldsource>" << protect(msg.oldSourceText()) << "</oldsource>\n";
+                    t << "        <oldsource>" << tsProtect(msg.oldSourceText()) << "</oldsource>\n";
 
                 if (!msg.comment().isEmpty()) {
                     t << "        <comment>"
-                      << protect(msg.comment())
+                      << tsProtect(msg.comment())
                       << "</comment>\n";
                 }
 
                     if (!msg.oldComment().isEmpty())
-                        t << "        <oldcomment>" << protect(msg.oldComment()) << "</oldcomment>\n";
+                        t << "        <oldcomment>" << tsProtect(msg.oldComment()) << "</oldcomment>\n";
 
                     if (!msg.extraComment().isEmpty())
-                        t << "        <extracomment>" << protect(msg.extraComment())
+                        t << "        <extracomment>" << tsProtect(msg.extraComment())
                           << "</extracomment>\n";
 
                     if (!msg.translatorComment().isEmpty())
-                        t << "        <translatorcomment>" << protect(msg.translatorComment())
+                        t << "        <translatorcomment>" << tsProtect(msg.translatorComment())
                           << "</translatorcomment>\n";
 
                 t << "        <translation";

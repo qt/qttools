@@ -119,13 +119,6 @@ public:
 
 static EvalHandler evalHandler;
 
-static bool isSupportedExtension(const QString &ext)
-{
-    return ext == QLatin1String("qml")
-        || ext == QLatin1String("js") || ext == QLatin1String("qs")
-        || ext == QLatin1String("ui") || ext == QLatin1String("jui");
-}
-
 static QStringList getResources(const QString &resourceFile, QMakeVfs *vfs)
 {
     Q_ASSERT(vfs);

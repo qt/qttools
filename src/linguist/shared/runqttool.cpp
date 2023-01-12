@@ -26,7 +26,7 @@ static QString qtToolFilePath(const QString &toolName, QLibraryInfo::LibraryPath
     return QDir::cleanPath(filePath);
 }
 
-static void printErr(const QString &out)
+static void rtPrintErr(const QString &out)
 {
     std::cerr << qUtf8Printable(out);
 }
@@ -86,7 +86,7 @@ std::unique_ptr<QTemporaryFile> createProjectDescription(QStringList args)
 {
     std::unique_ptr<QTemporaryFile> file(new QTemporaryFile(QStringLiteral("XXXXXX.json")));
     if (!file->open()) {
-        printErr(FMT::tr("Cannot create temporary file: %1\n").arg(file->errorString()));
+        rtPrintErr(FMT::tr("Cannot create temporary file: %1\n").arg(file->errorString()));
         exit(1);
     }
     file->close();

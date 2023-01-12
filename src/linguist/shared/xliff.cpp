@@ -101,7 +101,7 @@ static char charFromEscape(char escape)
     return escape;
 }
 
-static QString numericEntity(int ch, bool makePhs)
+static QString xlNumericEntity(int ch, bool makePhs)
 {
     // ### This needs to be reviewed, to reflect the updated XLIFF-PO spec.
     if (!makePhs || ch < 7 || ch > 0x0d)
@@ -116,7 +116,7 @@ static QString numericEntity(int ch, bool makePhs)
               .arg(++id) .arg(name) .arg(escapechar);
 }
 
-static QString protect(const QString &str, bool makePhs = true)
+static QString xlProtect(const QString &str, bool makePhs = true)
 {
     QString result;
     int len = str.size();
@@ -140,7 +140,7 @@ static QString protect(const QString &str, bool makePhs = true)
             break;
         default:
             if (c < 0x20 && c != '\r' && c != '\n' && c != '\t')
-                result += numericEntity(c, makePhs);
+                result += xlNumericEntity(c, makePhs);
             else // this also covers surrogates
                 result += QChar(c);
         }
@@ -156,7 +156,7 @@ static void writeExtras(QTextStream &ts, int indent,
         if (!drops.match(it.key()).hasMatch()) {
             writeIndent(ts, indent);
             ts << "<trolltech:" << it.key() << '>'
-               << protect(it.value())
+               << xlProtect(it.value())
                << "</trolltech:" << it.key() << ">\n";
         }
     }
@@ -185,25 +185,25 @@ static void writeComment(QTextStream &ts, const TranslatorMessage &msg, const QR
     if (!msg.comment().isEmpty()) {
         writeIndent(ts, indent);
         ts << "<context-group><context context-type=\"" << contextMsgctxt << "\">"
-           << protect(msg.comment(), false)
+           << xlProtect(msg.comment(), false)
            << "</context></context-group>\n";
     }
     if (!msg.oldComment().isEmpty()) {
         writeIndent(ts, indent);
         ts << "<context-group><context context-type=\"" << contextOldMsgctxt << "\">"
-           << protect(msg.oldComment(), false)
+           << xlProtect(msg.oldComment(), false)
            << "</context></context-group>\n";
     }
     writeExtras(ts, indent, msg.extras(), drops);
     if (!msg.extraComment().isEmpty()) {
         writeIndent(ts, indent);
         ts << "<note annotates=\"source\" from=\"developer\">"
-           << protect(msg.extraComment()) << "</note>\n";
+           << xlProtect(msg.extraComment()) << "</note>\n";
     }
     if (!msg.translatorComment().isEmpty()) {
         writeIndent(ts, indent);
         ts << "<note from=\"translator\">"
-           << protect(msg.translatorComment()) << "</note>\n";
+           << xlProtect(msg.translatorComment()) << "</note>\n";
     }
 }
 
@@ -264,7 +264,7 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
             source = *srcit;
             ++srcit;
         } // else just repeat last element
-        ts << "<source xml:space=\"preserve\">" << protect(source) << "</source>\n";
+        ts << "<source xml:space=\"preserve\">" << xlProtect(source) << "</source>\n";
 
         bool puttrans = false;
         QString translation;
@@ -281,7 +281,7 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
                 ts << "<alt-trans>\n";
                 ++indent;
                 writeIndent(ts, indent);
-                ts << "<source xml:space=\"preserve\"" << pluralStr << '>' << protect(*oldsrcit) << "</source>\n";
+                ts << "<source xml:space=\"preserve\"" << pluralStr << '>' << xlProtect(*oldsrcit) << "</source>\n";
                 if (!puttrans) {
                     writeIndent(ts, indent);
                     ts << "<target restype=\"" << restypeDummy << "\"/>\n";
@@ -290,7 +290,7 @@ static void writeTransUnits(QTextStream &ts, const TranslatorMessage &msg, const
 
             if (puttrans) {
                 writeIndent(ts, indent);
-                ts << "<target xml:space=\"preserve\"" << state << ">" << protect(translation) << "</target>\n";
+                ts << "<target xml:space=\"preserve\"" << state << ">" << xlProtect(translation) << "</target>\n";
             }
 
             if (oldsrcit != oldsrcend) {
@@ -780,7 +780,7 @@ bool saveXLIFF(const Translator &translator, QIODevice &dev, ConversionData &cd)
             if (!ctx.isEmpty()) {
                 writeIndent(ts, indent);
                 ts << "<group restype=\"" << restypeContext << "\""
-                    << " resname=\"" << protect(ctx) << "\">\n";
+                    << " resname=\"" << xlProtect(ctx) << "\">\n";
                 ++indent;
             }
 
