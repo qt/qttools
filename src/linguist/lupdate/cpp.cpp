@@ -14,9 +14,9 @@ QT_BEGIN_NAMESPACE
 
 /* qmake ignore Q_OBJECT */
 
-static QString MagicComment(QLatin1String("TRANSLATOR"));
+using namespace Qt::StringLiterals;
 
-#define STRING(s) static QString str##s(QLatin1String(#s))
+static const QString MagicComment = u"TRANSLATOR"_s;
 
 //#define DIAGNOSE_RETRANSLATABILITY // FIXME: should make a runtime option of this
 
@@ -335,25 +335,25 @@ CppParser::TokenType CppParser::lookAheadToSemicolonOrLeftBrace()
     }
 }
 
-STRING(Q_OBJECT);
-STRING(class);
-STRING(final);
-STRING(friend);
-STRING(namespace);
-STRING(nullptr);
-STRING(Q_NULLPTR);
-STRING(NULL);
-STRING(operator);
-STRING(return);
-STRING(struct);
-STRING(using);
-STRING(private);
-STRING(protected);
-STRING(public);
-STRING(slots);
-STRING(signals);
-STRING(Q_SLOTS);
-STRING(Q_SIGNALS);
+static const QString strQ_OBJECT = u"Q_OBJECT"_s;
+static const QString strclass = u"class"_s;
+static const QString strfinal = u"final"_s;
+static const QString strfriend = u"friend"_s;
+static const QString strnamespace = u"namespace"_s;
+static const QString strnullptr = u"nullptr"_s;
+static const QString strQ_NULLPTR = u"Q_NULLPTR"_s;
+static const QString strNULL = u"NULL"_s;
+static const QString stroperator = u"operator"_s;
+static const QString strreturn = u"return"_s;
+static const QString strstruct = u"struct"_s;
+static const QString strusing = u"using"_s;
+static const QString strprivate = u"private"_s;
+static const QString strprotected = u"protected"_s;
+static const QString strpublic = u"public"_s;
+static const QString strslots = u"slots"_s;
+static const QString strsignals = u"signals"_s;
+static const QString strQ_SLOTS = u"Q_SLOTS"_s;
+static const QString strQ_SIGNALS = u"Q_SIGNALS"_s;
 
 CppParser::TokenType CppParser::getToken()
 {
@@ -1338,12 +1338,12 @@ bool CppParser::matchString(QString *s)
     }
 }
 
-STRING(QApplication);
-STRING(QCoreApplication);
-STRING(UnicodeUTF8);
-STRING(DefaultCodec);
-STRING(CodecForTr);
-STRING(Latin1);
+static const QString strQApplication = u"QApplication"_s;
+static const QString strQCoreApplication = u"QCoreApplication"_s;
+static const QString strUnicodeUTF8 = u"UnicodeUTF8"_s;
+static const QString strDefaultCodec = u"DefaultCodec"_s;
+static const QString strCodecForTr = u"CodecForTr"_s;
+static const QString strLatin1 = u"Latin1"_s;
 
 bool CppParser::matchEncoding()
 {
