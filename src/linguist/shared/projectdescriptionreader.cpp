@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "projectdescriptionreader.h"
+#include "fmt.h"
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qfile.h>
@@ -14,10 +15,6 @@
 #include <functional>
 
 using std::placeholders::_1;
-
-class FMT {
-    Q_DECLARE_TR_FUNCTIONS(Linguist)
-};
 
 class Validator
 {

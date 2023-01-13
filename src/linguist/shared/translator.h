@@ -5,6 +5,7 @@
 #define METATRANSLATOR_H
 
 #include "translatormessage.h"
+#include "fmt.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -16,10 +17,6 @@
 
 
 QT_BEGIN_NAMESPACE
-
-class FMT {
-    Q_DECLARE_TR_FUNCTIONS(Linguist)
-};
 
 class QIODevice;
 

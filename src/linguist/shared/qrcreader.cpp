@@ -2,14 +2,11 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "qrcreader.h"
+#include "fmt.h"
 
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qxmlstream.h>
-
-class FMT {
-    Q_DECLARE_TR_FUNCTIONS(Linguist)
-};
 
 static bool isSupportedExtension(const QString &ext)
 {
