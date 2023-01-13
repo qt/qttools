@@ -197,17 +197,6 @@ QHelpContentItem *QHelpContentProvider::takeContentItem()
     return content;
 }
 
-// TODO: this is a copy from helpcollectionhandler, make it common
-static QUrl buildQUrl(const QString &ns, const QString &folder,
-                      const QString &relFileName, const QString &anchor)
-{
-    QUrl url;
-    url.setScheme(QLatin1String("qthelp"));
-    url.setAuthority(ns);
-    url.setPath(QLatin1Char('/') + folder + QLatin1Char('/') + relFileName);
-    url.setFragment(anchor);
-    return url;
-}
 
 static QUrl constructUrl(const QString &namespaceName,
                          const QString &folderName,
@@ -216,7 +205,7 @@ static QUrl constructUrl(const QString &namespaceName,
     const int idx = relativePath.indexOf(QLatin1Char('#'));
     const QString &rp = idx < 0 ? relativePath : relativePath.left(idx);
     const QString anchor = idx < 0 ? QString() : relativePath.mid(idx + 1);
-    return buildQUrl(namespaceName, folderName, rp, anchor);
+    return QHelpCollectionHandler::buildQUrl(namespaceName, folderName, rp, anchor);
 }
 
 void QHelpContentProvider::run()

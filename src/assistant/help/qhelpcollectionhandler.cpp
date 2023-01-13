@@ -2263,8 +2263,8 @@ bool QHelpCollectionHandler::unregisterIndexTable(int nsId, int vfId)
     return true;
 }
 
-static QUrl buildQUrl(const QString &ns, const QString &folder,
-                      const QString &relFileName, const QString &anchor)
+QUrl QHelpCollectionHandler::buildQUrl(const QString &ns, const QString &folder,
+                                       const QString &relFileName, const QString &anchor)
 {
     QUrl url;
     url.setScheme(QLatin1String("qthelp"));
