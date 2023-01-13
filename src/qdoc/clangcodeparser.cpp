@@ -967,6 +967,10 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     assert(function_declaration);
 
     const clang::CXXConstructorDecl* constructor_declaration = llvm::dyn_cast<const clang::CXXConstructorDecl>(function_declaration);
+
+    if (constructor_declaration && constructor_declaration->isCopyConstructor()) fn->setMetaness(FunctionNode::CCtor);
+    else if (constructor_declaration && constructor_declaration->isMoveConstructor()) fn->setMetaness(FunctionNode::MCtor);
+
     const clang::CXXConversionDecl* conversion_declaration = llvm::dyn_cast<const clang::CXXConversionDecl>(function_declaration);
 
     if (function_declaration->isConstexpr()) fn->markConstexpr();
@@ -1035,40 +1039,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     // for QDoc should be updated.
     for (int i = 0; i < numArg; ++i) {
         CXType argType = clang_getArgType(funcType, i);
-        if (fn->isCtor()) {
-            // TODO:KLUDGE: [temporary-hack]
-            // The following is used to fix a very specific bug in the
-            // way QDoc assigns the metaness of constructors.
-            // It is nonetheless quite imperfect in its handling and
-            // is only used as a temporary fix while LLVM 16 is not
-            // available.
-            //
-            // This is expected to be removed as soon as LLVM 16 comes out.
-            static auto remove_qualifiers = [](QString type_spelling) {
-                // REMARK: While, generally, a type with
-                // both qualifiers would be written "const volatile
-                // T", clang accepts "volatile const T" too.
-                //
-                // Nonetheless, we do not handle that case as
-                // libclang, when providing the spelling, currently
-                // always writes the const-qualifier before the
-                // volatile-qualifier.
-                if (type_spelling.startsWith("const "))
-                    type_spelling.remove(0, QString("const ").size());
-
-                if (type_spelling.startsWith("volatile "))
-                    type_spelling.remove(0, QString("volatile ").size());
-
-                return type_spelling;
-            };
-
-            const QString type_spelling{remove_qualifiers(fromCXString(clang_getTypeSpelling(clang_getPointeeType(argType))))};
-            if (type_spelling == fn->name()) {
-                if (argType.kind == CXType_RValueReference) fn->setMetaness(FunctionNode::MCtor);
-                else if (argType.kind == CXType_LValueReference) fn->setMetaness(FunctionNode::CCtor);
-            }
-
-        } else if ((kind == CXCursor_CXXMethod) && (fn->name() == QLatin1String("operator="))) {
+        if ((kind == CXCursor_CXXMethod) && (fn->name() == QLatin1String("operator="))) {
             if (argType.kind == CXType_RValueReference)
                 fn->setMetaness(FunctionNode::MAssign);
             else if (argType.kind == CXType_LValueReference)
