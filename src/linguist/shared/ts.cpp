@@ -12,9 +12,7 @@
 
 #include <algorithm>
 
-#define STRINGIFY_INTERNAL(x) #x
-#define STRINGIFY(x) STRINGIFY_INTERNAL(x)
-#define STRING(s) static QString str##s(QLatin1String(STRINGIFY(s)))
+using namespace Qt::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
@@ -104,8 +102,8 @@ static QString byteValue(QString value)
 
 QString TSReader::readContents()
 {
-    STRING(byte);
-    STRING(value);
+    static const QString strbyte = u"byte"_s;
+    static const QString strvalue = u"value"_s;
 
     QString result;
     while (!atEnd()) {
@@ -133,9 +131,9 @@ QString TSReader::readContents()
 
 QString TSReader::readTransContents()
 {
-    STRING(lengthvariant);
-    STRING(variants);
-    STRING(yes);
+    static const QString strlengthvariant = u"lengthvariant"_s;
+    static const QString strvariants = u"variants"_s;
+    static const QString stryes = u"yes"_s;
 
     if (attributes().value(strvariants) == stryes) {
         QString result;
@@ -162,35 +160,35 @@ QString TSReader::readTransContents()
 
 bool TSReader::read(Translator &translator)
 {
-    STRING(catalog);
-    STRING(comment);
-    STRING(context);
-    STRING(dependencies);
-    STRING(dependency);
-    STRING(extracomment);
-    STRING(filename);
-    STRING(id);
-    STRING(language);
-    STRING(line);
-    STRING(location);
-    STRING(message);
-    STRING(name);
-    STRING(numerus);
-    STRING(numerusform);
-    STRING(obsolete);
-    STRING(oldcomment);
-    STRING(oldsource);
-    STRING(source);
-    STRING(sourcelanguage);
-    STRING(translation);
-    STRING(translatorcomment);
-    STRING(TS);
-    STRING(type);
-    STRING(unfinished);
-    STRING(userdata);
-    STRING(vanished);
-    //STRING(version);
-    STRING(yes);
+    static const QString strcatalog = u"catalog"_s;
+    static const QString strcomment = u"comment"_s;
+    static const QString strcontext = u"context"_s;
+    static const QString strdependencies = u"dependencies"_s;
+    static const QString strdependency = u"dependency"_s;
+    static const QString strextracomment = u"extracomment"_s;
+    static const QString strfilename = u"filename"_s;
+    static const QString strid = u"id"_s;
+    static const QString strlanguage = u"language"_s;
+    static const QString strline = u"line"_s;
+    static const QString strlocation = u"location"_s;
+    static const QString strmessage = u"message"_s;
+    static const QString strname = u"name"_s;
+    static const QString strnumerus = u"numerus"_s;
+    static const QString strnumerusform = u"numerusform"_s;
+    static const QString strobsolete = u"obsolete"_s;
+    static const QString stroldcomment = u"oldcomment"_s;
+    static const QString stroldsource = u"oldsource"_s;
+    static const QString strsource = u"source"_s;
+    static const QString strsourcelanguage = u"sourcelanguage"_s;
+    static const QString strtranslation = u"translation"_s;
+    static const QString strtranslatorcomment = u"translatorcomment"_s;
+    static const QString strTS = u"TS"_s;
+    static const QString strtype = u"type"_s;
+    static const QString strunfinished = u"unfinished"_s;
+    static const QString struserdata = u"userdata"_s;
+    static const QString strvanished = u"vanished"_s;
+    //static const QString strversion = u"version"_s;
+    static const QString stryes = u"yes"_s;
 
     static const QString strextrans(QLatin1String("extra-"));
 
