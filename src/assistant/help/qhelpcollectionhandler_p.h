@@ -180,6 +180,9 @@ public:
 
     void setReadOnly(bool readOnly);
 
+    static QUrl buildQUrl(const QString &ns, const QString &folder,
+                          const QString &relFileName, const QString &anchor);
+
 signals:
     void error(const QString &msg) const;
 
