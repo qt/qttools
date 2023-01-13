@@ -906,33 +906,6 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
     });
 }
 
-struct CXXSpecifiers {
-    bool is_explicit = false;
-};
-
-static CXXSpecifiers get_specifiers(CXCursor cursor) {
-    CXXSpecifiers specifiers{};
-
-    CXTranslationUnit tu{clang_Cursor_getTranslationUnit(cursor)};
-
-    CXToken* tokens = nullptr;
-    unsigned token_count{0};
-
-    clang_tokenize(tu, clang_getCursorExtent(cursor), &tokens, &token_count);
-
-    for (unsigned index = 0; index < token_count; ++index) {
-        if (clang_getTokenKind(tokens[index]) == CXToken_Keyword) {
-            QString token_spelling{fromCXString(clang_getTokenSpelling(tu, tokens[index]))};
-
-            if (token_spelling == "explicit") specifiers.is_explicit = true;
-        }
-    }
-
-    clang_disposeTokens(tu, tokens, token_count);
-
-    return specifiers;
-}
-
 /*!
  * Returns the underlying Decl that \a cursor represents.
  *
@@ -976,9 +949,6 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
                                        ? FunctionNode::PureVirtual
                                        : FunctionNode::NormalVirtual);
 
-    CXXSpecifiers specifiers{get_specifiers(cursor)};
-    if (specifiers.is_explicit) fn->markExplicit();
-
     // REMARK: We assume that the following operations and casts are
     // generally safe.
     // Callers of those methods will generally check at the LibClang
@@ -996,10 +966,17 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
 
     assert(function_declaration);
 
-    const clang::FunctionType* function_type = function_declaration->getFunctionType();
-    const clang::FunctionProtoType* function_prototype = static_cast<const clang::FunctionProtoType*>(function_type);
+    const clang::CXXConstructorDecl* constructor_declaration = llvm::dyn_cast<const clang::CXXConstructorDecl>(function_declaration);
+    const clang::CXXConversionDecl* conversion_declaration = llvm::dyn_cast<const clang::CXXConversionDecl>(function_declaration);
 
     if (function_declaration->isConstexpr()) fn->markConstexpr();
+    if (
+        (constructor_declaration && constructor_declaration->isExplicit()) ||
+        (conversion_declaration && conversion_declaration->isExplicit())
+    ) fn->markExplicit();
+
+    const clang::FunctionType* function_type = function_declaration->getFunctionType();
+    const clang::FunctionProtoType* function_prototype = static_cast<const clang::FunctionProtoType*>(function_type);
 
     if (function_prototype) {
         clang::FunctionProtoType::ExceptionSpecInfo exception_specification = function_prototype->getExceptionSpecInfo();
