@@ -979,6 +979,11 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
         (conversion_declaration && conversion_declaration->isExplicit())
     ) fn->markExplicit();
 
+    const clang::CXXMethodDecl* method_declaration = llvm::dyn_cast<const clang::CXXMethodDecl>(function_declaration);
+
+    if (method_declaration && method_declaration->isCopyAssignmentOperator()) fn->setMetaness(FunctionNode::CAssign);
+    else if (method_declaration && method_declaration->isMoveAssignmentOperator()) fn->setMetaness(FunctionNode::MAssign);
+
     const clang::FunctionType* function_type = function_declaration->getFunctionType();
     const clang::FunctionProtoType* function_prototype = static_cast<const clang::FunctionProtoType*>(function_type);
 
@@ -1012,39 +1017,8 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     parameters.clear();
     parameters.reserve(numArg);
 
-    // TODO: [clang16-required][unsound-code][bug-ridden]
-    // The following code that sets the metaness of the currently
-    // processed function node incorrect in multiple ways with regards
-    // to the specification of move/copy constructors/assignment
-    // operators.
-    //
-    // For example, it doesn't correctly allow for qualifiers nor does
-    // it correctly respect the argument disposition.
-    //
-    // It was previously bugged and still present a series of bugs
-    // such as being able to misidentify constructors types.
-    //
-    // A by-specification implementation in our currently used
-    // libclang is not particularly feasible due to the required
-    // complexity and is preferred to be avoided.
-    //
-    // To solve the issue, we pushed a series of patches to upstream
-    // llvm to expose some of the C++ API methods that would
-    // trivialize the following code.
-    //
-    // Those methods will be available on LLVM 16, which is currently
-    // expected for January 2023.
-    // When LLVM 16 comes out and we upgrade to it, the following code
-    // should be fixed and the minimum required version of libclang
-    // for QDoc should be updated.
     for (int i = 0; i < numArg; ++i) {
         CXType argType = clang_getArgType(funcType, i);
-        if ((kind == CXCursor_CXXMethod) && (fn->name() == QLatin1String("operator="))) {
-            if (argType.kind == CXType_RValueReference)
-                fn->setMetaness(FunctionNode::MAssign);
-            else if (argType.kind == CXType_LValueReference)
-                fn->setMetaness(FunctionNode::CAssign);
-        }
         parameters.append(adjustTypeName(fromCXString(clang_getTypeSpelling(argType))));
         if (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated) {
             parameters.last().setCanonicalType(fromCXString(
