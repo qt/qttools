@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "runqttool.h"
+#include "fmt.h"
 
 #include "profileutils.h"
 
@@ -15,10 +16,6 @@
 #ifdef Q_OS_UNIX
 #include <sys/wait.h>
 #endif
-
-class FMT {
-    Q_DECLARE_TR_FUNCTIONS(Linguist)
-};
 
 static QString qtToolFilePath(const QString &toolName, QLibraryInfo::LibraryPath location)
 {
