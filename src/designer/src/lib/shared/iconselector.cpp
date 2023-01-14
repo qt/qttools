@@ -38,6 +38,21 @@ QT_BEGIN_NAMESPACE
 
 namespace qdesigner_internal {
 
+// Validator for theme line edit, accepts empty or non-blank strings.
+class BlankSuppressingValidator : public QValidator {
+public:
+    explicit BlankSuppressingValidator(QObject * parent = nullptr) : QValidator(parent) {}
+    State validate(QString &input, int &pos) const override
+    {
+        const auto blankPos = input.indexOf(u' ');
+        if (blankPos != -1) {
+            pos = blankPos;
+            return Invalid;
+        }
+        return Acceptable;
+    }
+};
+
 // -------------------- LanguageResourceDialogPrivate
 class LanguageResourceDialogPrivate {
     LanguageResourceDialog *q_ptr;
@@ -518,6 +533,8 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
     for (auto i = icons.constBegin(); i != icons.constEnd(); ++i)
         d->m_themeComboBox->addItem(i.value(), i.key());
     d->m_themeComboBox->setCurrentIndex(-1);
+    d->m_themeComboBox->setEditable(true);
+    d->m_themeComboBox->lineEdit()->setValidator(new BlankSuppressingValidator(this));
     connect(d->m_themeComboBox, &QComboBox::currentTextChanged, this, &IconThemeEditor::edited);
     mainHLayout->addWidget(d->m_themeComboBox);
 
