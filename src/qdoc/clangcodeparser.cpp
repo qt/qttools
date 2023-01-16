@@ -1488,8 +1488,7 @@ void ClangCodeParser::buildPCH()
             m_args.push_back("-xc++");
             CXTranslationUnit tu;
             QString tmpHeader = m_pchFileDir->path() + "/" + module;
-            QFile tmpHeaderFile(tmpHeader);
-            if (tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
+            if (QFile tmpHeaderFile(tmpHeader); tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
                 QTextStream out(&tmpHeaderFile);
                 if (header.isEmpty()) {
                     for (auto it = m_allHeaders.constKeyValueBegin();
@@ -1509,7 +1508,6 @@ void ClangCodeParser::buildPCH()
                     }
                     out << QLatin1String("#include \"") + header + QLatin1String("\"");
                 }
-                tmpHeaderFile.close();
             }
 
             CXErrorCode err =
