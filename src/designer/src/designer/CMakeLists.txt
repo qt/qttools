@@ -48,6 +48,9 @@ qt_internal_add_app(designer
         "qdesigner_pch.h"
 )
 
+# Due to QTBUG-110369, don't add designer as dependency to External Project examples.
+qt_internal_skip_dependency_for_examples(designer)
+
 # Resources:
 set(designer_resource_files
     "images/designer.png"
