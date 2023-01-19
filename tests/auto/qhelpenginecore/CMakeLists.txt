@@ -12,7 +12,7 @@ qt_internal_add_test(tst_qhelpenginecore
         tst_qhelpenginecore.cpp
     DEFINES
         QT_USE_USING_NAMESPACE
-        SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}\\\"
+        SRCDIR="${CMAKE_CURRENT_SOURCE_DIR}"
     LIBRARIES
         Qt::Gui
         Qt::Help
