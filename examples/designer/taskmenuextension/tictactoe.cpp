@@ -6,7 +6,9 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-static inline QString defaultState() { return QStringLiteral("---------"); }
+using namespace Qt::StringLiterals;
+
+static inline QString defaultState() { return u"---------"_s; }
 
 TicTacToe::TicTacToe(QWidget *parent)
     : QWidget(parent), myState(defaultState())

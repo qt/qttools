@@ -38,7 +38,7 @@ TicTacToeDialog::TicTacToeDialog(TicTacToe *tic, QWidget *parent)
 //! [1]
 QSize TicTacToeDialog::sizeHint() const
 {
-    return QSize(250, 250);
+    return {250, 250};
 }
 //! [1]
 

@@ -6,6 +6,8 @@
 
 #include <QtPlugin>
 
+using namespace Qt::StringLiterals;
+
 //! [0]
 AnalogClockPlugin::AnalogClockPlugin(QObject *parent)
     : QObject(parent)
@@ -40,35 +42,35 @@ QWidget *AnalogClockPlugin::createWidget(QWidget *parent)
 //! [4]
 QString AnalogClockPlugin::name() const
 {
-    return QStringLiteral("AnalogClock");
+    return u"AnalogClock"_s;
 }
 //! [4]
 
 //! [5]
 QString AnalogClockPlugin::group() const
 {
-    return QStringLiteral("Display Widgets [Examples]");
+    return u"Display Widgets [Examples]"_s;
 }
 //! [5]
 
 //! [6]
 QIcon AnalogClockPlugin::icon() const
 {
-    return QIcon();
+    return {};
 }
 //! [6]
 
 //! [7]
 QString AnalogClockPlugin::toolTip() const
 {
-    return QString();
+    return {};
 }
 //! [7]
 
 //! [8]
 QString AnalogClockPlugin::whatsThis() const
 {
-    return QString();
+    return {};
 }
 //! [8]
 
@@ -82,7 +84,7 @@ bool AnalogClockPlugin::isContainer() const
 //! [10]
 QString AnalogClockPlugin::domXml() const
 {
-    return QLatin1String(R"(
+    return uR"(
 <ui language="c++">
   <widget class="AnalogClock" name="analogClock">
 )"
@@ -107,13 +109,13 @@ R"(
     </property>
   </widget>
 </ui>
-)");
+)"_s;
 }
 //! [10]
 
 //! [12]
 QString AnalogClockPlugin::includeFile() const
 {
-    return QStringLiteral("analogclock.h");
+    return u"analogclock.h"_s;
 }
 //! [12]

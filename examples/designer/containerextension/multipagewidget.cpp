@@ -12,19 +12,19 @@ MultiPageWidget::MultiPageWidget(QWidget *parent)
     , stackWidget(new QStackedWidget)
     , comboBox(new QComboBox)
 {
-    comboBox->setObjectName(QStringLiteral("__qt__passive_comboBox"));
+    comboBox->setObjectName("__qt__passive_comboBox");
 
-    connect(comboBox, QOverload<int>::of(&QComboBox::activated),
+    connect(comboBox, &QComboBox::activated,
             this, &MultiPageWidget::setCurrentIndex);
 
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto *layout = new QVBoxLayout(this);
     layout->addWidget(comboBox);
     layout->addWidget(stackWidget);
 }
 
 QSize MultiPageWidget::sizeHint() const
 {
-    return QSize(200, 150);
+    return {200, 150};
 }
 
 void MultiPageWidget::addPage(QWidget *page)
@@ -34,7 +34,7 @@ void MultiPageWidget::addPage(QWidget *page)
 
 void MultiPageWidget::removePage(int index)
 {
-    QWidget *widget = stackWidget->widget(index);
+    auto *widget = stackWidget->widget(index);
     stackWidget->removeWidget(widget);
 
     comboBox->removeItem(index);
@@ -91,10 +91,10 @@ QString MultiPageWidget::pageTitle() const
 {
     if (const QWidget *currentWidget = stackWidget->currentWidget())
         return currentWidget->windowTitle();
-    return QString();
+    return {};
 }
 
-void MultiPageWidget::setPageTitle(QString const &newTitle)
+void MultiPageWidget::setPageTitle(const QString &newTitle)
 {
     if (QWidget *currentWidget = stackWidget->currentWidget())
         currentWidget->setWindowTitle(newTitle);

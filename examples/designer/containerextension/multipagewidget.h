@@ -32,7 +32,7 @@ public slots:
     void addPage(QWidget *page);
     void insertPage(int index, QWidget *page);
     void removePage(int index);
-    void setPageTitle(QString const &newTitle);
+    void setPageTitle(const QString &newTitle);
     void setCurrentIndex(int index);
 
 private slots:
