@@ -945,6 +945,8 @@ void WidgetBoxTreeWidget::dropWidgets(const QList<QDesignerDnDItemInterface*> &i
             categoryView->setCurrentItem(am, count - 1);
         categoryView->adjustSize(); // XXX
         adjustSubListSize(scratch_item);
+        doItemsLayout();
+        scrollToItem(scratch_item, PositionAtTop);
     }
 }
 
