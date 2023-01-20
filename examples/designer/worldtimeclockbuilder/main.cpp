@@ -7,6 +7,9 @@
 #include <QApplication>
 #include <QWidget>
 #include <QFile>
+
+using namespace Qt::StringLiterals;
+
 //! [1]
 int main(int argc, char *argv[])
 {
@@ -18,7 +21,7 @@ int main(int argc, char *argv[])
 //! [1]
 
 //! [2]
-    QFile file(":/forms/form.ui");
+    QFile file(u":/forms/form.ui"_s);
     file.open(QFile::ReadOnly);
 
     QWidget *widget = loader.load(&file);

@@ -1,15 +1,18 @@
 // Copyright (C) 2016 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
+#include "calculatorform.h"
+
 //! [0]
 #include <QtUiTools>
 //! [0]
-#include <QSpinBox>
 #include <QLabel>
+#include <QSpinBox>
 #include <QVBoxLayout>
+
 #include <QFile>
 
-#include "calculatorform.h"
+using namespace Qt::StringLiterals;
 
 //! [1]
 CalculatorForm::CalculatorForm(QWidget *parent)
@@ -17,16 +20,16 @@ CalculatorForm::CalculatorForm(QWidget *parent)
 {
     QUiLoader loader;
 
-    QFile file(":/forms/calculatorform.ui");
+    QFile file(u":/forms/calculatorform.ui"_s);
     file.open(QFile::ReadOnly);
     QWidget *formWidget = loader.load(&file, this);
     file.close();
 //! [1]
 
 //! [2]
-    ui_inputSpinBox1 = findChild<QSpinBox*>("inputSpinBox1");
-    ui_inputSpinBox2 = findChild<QSpinBox*>("inputSpinBox2");
-    ui_outputWidget = findChild<QLabel*>("outputWidget");
+    ui_inputSpinBox1 = findChild<QSpinBox*>(u"inputSpinBox1"_s);
+    ui_inputSpinBox2 = findChild<QSpinBox*>(u"inputSpinBox2"_s);
+    ui_outputWidget = findChild<QLabel*>(u"outputWidget"_s);
 //! [2]
 
 //! [3]
@@ -34,9 +37,8 @@ CalculatorForm::CalculatorForm(QWidget *parent)
 //! [3]
 
 //! [4]
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto *layout = new QVBoxLayout(this);
     layout->addWidget(formWidget);
-    setLayout(layout);
 
     setWindowTitle(tr("Calculator Builder"));
 }

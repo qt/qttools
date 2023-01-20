@@ -5,13 +5,14 @@
 
 #include <QMouseEvent>
 #include <QPainter>
+
 #include <QTimer>
 
 WorldTimeClock::WorldTimeClock(QWidget *parent)
     : QWidget(parent)
 {
     QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
+    connect(timer, &QTimer::timeout, this, qOverload<>(&QWidget::update));
     timer->start(1000);
 
     setWindowTitle(tr("World Time Clock"));
@@ -20,16 +21,8 @@ WorldTimeClock::WorldTimeClock(QWidget *parent)
 
 void WorldTimeClock::paintEvent(QPaintEvent *)
 {
-    static const QPoint hourHand[3] = {
-        QPoint(7, 8),
-        QPoint(-7, 8),
-        QPoint(0, -40)
-    };
-    static const QPoint minuteHand[3] = {
-        QPoint(7, 8),
-        QPoint(-7, 8),
-        QPoint(0, -70)
-    };
+    static const QPoint hourHand[3] = {{7, 8}, {-7, 8}, {0, -40}};
+    static const QPoint minuteHand[3] = {{7, 8}, {-7, 8}, {0, -70}};
 
     QColor hourColor(127, 0, 127);
     QColor minuteColor(0, 127, 127, 191);

@@ -9,6 +9,8 @@
 #include <QtDesigner/QExtensionManager>
 #include <QtPlugin>
 
+using namespace Qt::StringLiterals;
+
 //! [0]
 TicTacToePlugin::TicTacToePlugin(QObject *parent)
     : QObject(parent)
@@ -17,32 +19,32 @@ TicTacToePlugin::TicTacToePlugin(QObject *parent)
 
 QString TicTacToePlugin::name() const
 {
-    return QStringLiteral("TicTacToe");
+    return u"TicTacToe"_s;
 }
 
 QString TicTacToePlugin::group() const
 {
-    return QStringLiteral("Display Widgets [Examples]");
+    return u"Display Widgets [Examples]"_s;
 }
 
 QString TicTacToePlugin::toolTip() const
 {
-    return QStringLiteral("Tic Tac Toe Example, demonstrating class QDesignerTaskMenuExtension (C++)");
+    return u"Tic Tac Toe Example, demonstrating class QDesignerTaskMenuExtension (C++)"_s;
 }
 
 QString TicTacToePlugin::whatsThis() const
 {
-    return QString();
+    return {};
 }
 
 QString TicTacToePlugin::includeFile() const
 {
-    return QStringLiteral("tictactoe.h");
+    return u"tictactoe.h"_s;
 }
 
 QIcon TicTacToePlugin::icon() const
 {
-    return QIcon();
+    return {};
 }
 
 bool TicTacToePlugin::isContainer() const
@@ -52,8 +54,8 @@ bool TicTacToePlugin::isContainer() const
 
 QWidget *TicTacToePlugin::createWidget(QWidget *parent)
 {
-    TicTacToe *ticTacToe = new TicTacToe(parent);
-    ticTacToe->setState(QStringLiteral("-X-XO----"));
+    auto *ticTacToe = new TicTacToe(parent);
+    ticTacToe->setState(u"-X-XO----"_s);
     return ticTacToe;
 }
 
@@ -70,7 +72,7 @@ void TicTacToePlugin::initialize(QDesignerFormEditorInterface *formEditor)
         return;
 
     QExtensionManager *manager = formEditor->extensionManager();
-    Q_ASSERT(manager != 0);
+    Q_ASSERT(manager != nullptr);
 //! [2]
 
 //! [3]
@@ -82,7 +84,7 @@ void TicTacToePlugin::initialize(QDesignerFormEditorInterface *formEditor)
 
 QString TicTacToePlugin::domXml() const
 {
-    return QLatin1String(R"(
+    return uR"(
 <ui language="c++">
     <widget class="TicTacToe" name="ticTacToe"/>
     <customwidgets>
@@ -95,7 +97,7 @@ QString TicTacToePlugin::domXml() const
         </customwidget>
     </customwidgets>
 </ui>
-)");
+)"_s;
 }
 
 //! [3]
