@@ -30,4 +30,4 @@ private:
 };
 //! [0]
 
-#endif
+#endif // CALCULATORFORM_H

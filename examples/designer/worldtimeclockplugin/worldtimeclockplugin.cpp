@@ -6,6 +6,8 @@
 
 #include <QtPlugin>
 
+using namespace Qt::StringLiterals;
+
 WorldTimeClockPlugin::WorldTimeClockPlugin(QObject *parent)
     : QObject(parent)
 {
@@ -31,27 +33,27 @@ QWidget *WorldTimeClockPlugin::createWidget(QWidget *parent)
 
 QString WorldTimeClockPlugin::name() const
 {
-    return QStringLiteral("WorldTimeClock");
+    return u"WorldTimeClock"_s;
 }
 
 QString WorldTimeClockPlugin::group() const
 {
-    return QStringLiteral("Display Widgets [Examples]");
+    return u"Display Widgets [Examples]"_s;
 }
 
 QIcon WorldTimeClockPlugin::icon() const
 {
-    return QIcon();
+    return {};
 }
 
 QString WorldTimeClockPlugin::toolTip() const
 {
-    return QString();
+    return {};
 }
 
 QString WorldTimeClockPlugin::whatsThis() const
 {
-    return QString();
+    return {};
 }
 
 bool WorldTimeClockPlugin::isContainer() const
@@ -61,7 +63,7 @@ bool WorldTimeClockPlugin::isContainer() const
 
 QString WorldTimeClockPlugin::domXml() const
 {
-    return QLatin1String(R"(
+    return uR"(
 <ui language="c++">
   <widget class="WorldTimeClock" name="worldTimeClock">
     <property name="geometry">
@@ -74,10 +76,10 @@ QString WorldTimeClockPlugin::domXml() const
     </property>
   </widget>
 </ui>
-)");
+)"_s;
 }
 
 QString WorldTimeClockPlugin::includeFile() const
 {
-    return QStringLiteral("worldtimeclock.h");
+    return u"worldtimeclock.h"_s;
 }
