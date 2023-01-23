@@ -8,19 +8,15 @@ CalculatorForm::CalculatorForm(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
+    connect(ui.inputSpinBox1, &QSpinBox::valueChanged, this, &CalculatorForm::updateResult);
+    connect(ui.inputSpinBox2, &QSpinBox::valueChanged, this, &CalculatorForm::updateResult);
 }
 //! [0]
 
 //! [1]
-void CalculatorForm::on_inputSpinBox1_valueChanged(int value)
+void CalculatorForm::updateResult()
 {
-    ui.outputWidget->setText(QString::number(value + ui.inputSpinBox2->value()));
+    const int sum = ui.inputSpinBox1->value() + ui.inputSpinBox2->value();
+    ui.outputWidget->setText(QString::number(sum));
 }
 //! [1]
-
-//! [2]
-void CalculatorForm::on_inputSpinBox2_valueChanged(int value)
-{
-    ui.outputWidget->setText(QString::number(value + ui.inputSpinBox1->value()));
-}
-//! [2]
