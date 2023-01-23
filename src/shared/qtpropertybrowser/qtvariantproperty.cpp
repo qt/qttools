@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using QtIconMap = QMap<int, QIcon>;
+
 class QtEnumPropertyType
 {
 };
