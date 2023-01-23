@@ -40,6 +40,9 @@ public:
 #ifndef QT_NO_CURSOR
     QCursor valueToCursor(int value) const;
 #endif
+
+    static QtCursorDatabase *instance();
+
 private:
     void appendCursor(Qt::CursorShape shape, const QString &name, const QIcon &icon);
     QStringList m_cursorNames;

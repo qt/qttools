@@ -6234,25 +6234,6 @@ void QtColorPropertyManager::uninitializeProperty(QtProperty *property)
 
 // QtCursorPropertyManager
 
-// Make sure icons are removed as soon as QApplication is destroyed, otherwise,
-// handles are leaked on X11.
-static void clearCursorDatabase();
-namespace {
-struct CursorDatabase : public QtCursorDatabase
-{
-    CursorDatabase()
-    {
-        qAddPostRoutine(clearCursorDatabase);
-    }
-};
-}
-Q_GLOBAL_STATIC(QtCursorDatabase, cursorDatabase)
-
-static void clearCursorDatabase()
-{
-    cursorDatabase()->clear();
-}
-
 class QtCursorPropertyManagerPrivate
 {
     QtCursorPropertyManager *q_ptr;
@@ -6330,7 +6311,7 @@ QString QtCursorPropertyManager::valueText(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
-    return cursorDatabase()->cursorToShapeName(it.value());
+    return QtCursorDatabase::instance()->cursorToShapeName(it.value());
 }
 
 /*!
@@ -6342,7 +6323,7 @@ QIcon QtCursorPropertyManager::valueIcon(const QtProperty *property) const
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
 
-    return cursorDatabase()->cursorToShapeIcon(it.value());
+    return QtCursorDatabase::instance()->cursorToShapeIcon(it.value());
 }
 
 /*!

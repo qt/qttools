@@ -13,8 +13,17 @@
 
 QT_BEGIN_NAMESPACE
 
+// Make sure icons are removed as soon as QApplication is destroyed, otherwise,
+// handles are leaked on X11.
+static void clearCursorDatabase()
+{
+    QtCursorDatabase::instance()->clear();
+}
+
 QtCursorDatabase::QtCursorDatabase()
 {
+    qAddPostRoutine(clearCursorDatabase);
+
     appendCursor(Qt::ArrowCursor, QCoreApplication::translate("QtCursorDatabase", "Arrow"),
                  QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-arrow.png")));
     appendCursor(Qt::UpArrowCursor, QCoreApplication::translate("QtCursorDatabase", "Up Arrow"),
@@ -116,6 +125,13 @@ QCursor QtCursorDatabase::valueToCursor(int value) const
     return QCursor();
 }
 #endif
+
+Q_GLOBAL_STATIC(QtCursorDatabase, cursorDatabase)
+
+QtCursorDatabase *QtCursorDatabase::instance()
+{
+    return cursorDatabase();
+}
 
 QPixmap QtPropertyBrowserUtils::brushValuePixmap(const QBrush &b)
 {
