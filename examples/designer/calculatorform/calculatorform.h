@@ -17,8 +17,7 @@ public:
     explicit CalculatorForm(QWidget *parent = nullptr);
 
 private slots:
-    void on_inputSpinBox1_valueChanged(int value);
-    void on_inputSpinBox2_valueChanged(int value);
+    void updateResult();
 
 private:
     Ui::CalculatorForm ui;
