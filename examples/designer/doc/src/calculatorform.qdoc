@@ -10,9 +10,7 @@
 
     The Calculator Form Example shows how to use a form created with
     \QD in an application by using the user interface information from
-    a QWidget subclass.  We use \l{Using a Designer UI File in Your Application}
-    {uic's auto-connection} feature to automatically connect signals
-    from widgets on the form to slots in our code.
+    a QWidget subclass.
 
     \image calculatorform-example.png Screenshot of the Calculator Form example
 
@@ -27,8 +25,14 @@
     result is a UI file describing the form, the widgets used, any signal-slot
     connections between them, and other standard user interface properties.
 
-    To ensure that the example can use this file, we need to include a \c FORMS
-    declaration in the example's project file:
+    To ensure that the example can use this file, we enable the \c CMAKE_AUTOUIC
+    feature and list the UI file in the source files:
+
+    \snippet calculatorform/CMakeLists.txt 0
+    \codeline
+    \snippet calculatorform/CMakeLists.txt 1
+
+    For \c qmake, we need to include a \c FORMS declaration in the example's project file:
 
     \snippet calculatorform/calculatorform.pro 1
 
@@ -49,16 +53,17 @@
 
     \snippet calculatorform/calculatorform.h 1
 
-    Apart from the constructor, the class contains two private slots that
-    are named according to the auto-connection naming convention required
-    by \c uic.
+    Apart from the constructor, the class contains a private slot
+    \c updateResult() that performs the calculation and updates the output
+    widget accordingly.
     The private \c ui member variable refers to the form, and is used to
     access the contents of the user interface.
 
     \section1 CalculatorForm Class Implementation
 
-    The constructor simply calls the base class's constructor and
-    sets up the form's user interface.
+    The constructor simply calls the base class's constructor,
+    sets up the form's user interface and connects
+    the signals \l{QSpinBox::valueChanged()} to the slot \c updateResult().
 
     \snippet calculatorform/calculatorform.cpp 0
 
@@ -66,26 +71,10 @@
     \c this as the argument to this function to use the \c CalculatorForm
     widget itself as the container for the user interface.
 
-    To automatically connect signals from the spin boxes defined in the
-    user interface, we use the naming convention that indicates which
-    widgets and their signals in the user interface should be connected
-    to each slot. The first slot is called whenever the spin box called
-    "inputSpinBox1" in the user interface emits the
-    \l{QSpinBox::valueChanged()}{valueChanged()} signal:
+    Slot \c updateResult() adds the values and sets the result on
+    the output widget:
 
     \snippet calculatorform/calculatorform.cpp 1
 
-    When this occurs, we use the value supplied by the signal to update the
-    output label by setting its new text directly. We access the output label
-    and the other spin box via the class's private \c ui variable.
-
-    The second slot is called whenever the second spin box, called
-    "inputSpinBox2", emits the \l{QSpinBox::valueChanged()}{valueChanged()}
-    signal:
-
-    \snippet calculatorform/calculatorform.cpp 2
-
-    In this case, the value from the first spin box is read and combined
-    with the value supplied by the signal. Again, the output label is
-    updated directly via the \c ui variable.
+    It is called whenever the value of one of the spin boxes changes.
 */
