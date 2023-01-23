@@ -27,8 +27,6 @@
 #include <QtGui/qpainter.h>
 #include <QtGui/qevent.h>
 
-Q_DECLARE_METATYPE(QAction*)
-
 QT_BEGIN_NAMESPACE
 
 using ActionList = QList<QAction *>;
