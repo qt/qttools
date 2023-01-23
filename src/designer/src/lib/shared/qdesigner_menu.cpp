@@ -31,8 +31,6 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/qdebug.h>
 
-Q_DECLARE_METATYPE(QAction*)
-
 QT_BEGIN_NAMESPACE
 
 using namespace qdesigner_internal;

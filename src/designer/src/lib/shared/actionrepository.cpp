@@ -25,8 +25,6 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qmetaobject.h>
 
-Q_DECLARE_METATYPE(QAction*)
-
 QT_BEGIN_NAMESPACE
 
 namespace {

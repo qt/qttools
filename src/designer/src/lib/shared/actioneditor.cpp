@@ -45,8 +45,6 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qbuffer.h>
 
-Q_DECLARE_METATYPE(QAction*)
-
 QT_BEGIN_NAMESPACE
 
 static const char *actionEditorViewModeKey = "ActionEditorViewMode";

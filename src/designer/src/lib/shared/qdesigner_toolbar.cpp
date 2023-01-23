@@ -27,8 +27,6 @@
 
 #include <QtCore/qdebug.h>
 
-Q_DECLARE_METATYPE(QAction*)
-
 QT_BEGIN_NAMESPACE
 
 using ActionList = QList<QAction *>;
