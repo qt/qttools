@@ -1912,8 +1912,6 @@ void QtEnumEditorFactory::disconnectPropertyManager(QtEnumPropertyManager *manag
 
 // QtCursorEditorFactory
 
-Q_GLOBAL_STATIC(QtCursorDatabase, cursorDatabase)
-
 class QtCursorEditorFactoryPrivate
 {
     QtCursorEditorFactory *q_ptr;
@@ -1949,7 +1947,8 @@ void QtCursorEditorFactoryPrivate::slotPropertyChanged(QtProperty *property, con
         return;
 
     m_updatingEnum = true;
-    m_enumPropertyManager->setValue(enumProp, cursorDatabase()->cursorToValue(cursor));
+    auto *cdb = QtCursorDatabase::instance();
+    m_enumPropertyManager->setValue(enumProp, cdb->cursorToValue(cursor));
     m_updatingEnum = false;
 }
 
@@ -1965,7 +1964,8 @@ void QtCursorEditorFactoryPrivate::slotEnumChanged(QtProperty *property, int val
     if (!cursorManager)
         return;
 #ifndef QT_NO_CURSOR
-    cursorManager->setValue(prop, QCursor(cursorDatabase()->valueToCursor(value)));
+    auto *cdb = QtCursorDatabase::instance();
+    cursorManager->setValue(prop, QCursor(cdb->valueToCursor(value)));
 #endif
 }
 
@@ -2050,10 +2050,11 @@ QWidget *QtCursorEditorFactory::createEditor(QtCursorPropertyManager *manager, Q
         enumProp = d_ptr->m_propertyToEnum[property];
     } else {
         enumProp = d_ptr->m_enumPropertyManager->addProperty(property->propertyName());
-        d_ptr->m_enumPropertyManager->setEnumNames(enumProp, cursorDatabase()->cursorShapeNames());
-        d_ptr->m_enumPropertyManager->setEnumIcons(enumProp, cursorDatabase()->cursorShapeIcons());
+        auto *cdb = QtCursorDatabase::instance();
+        d_ptr->m_enumPropertyManager->setEnumNames(enumProp, cdb->cursorShapeNames());
+        d_ptr->m_enumPropertyManager->setEnumIcons(enumProp, cdb->cursorShapeIcons());
 #ifndef QT_NO_CURSOR
-        d_ptr->m_enumPropertyManager->setValue(enumProp, cursorDatabase()->cursorToValue(manager->value(property)));
+        d_ptr->m_enumPropertyManager->setValue(enumProp, cdb->cursorToValue(manager->value(property)));
 #endif
         d_ptr->m_propertyToEnum[property] = enumProp;
         d_ptr->m_enumToProperty[enumProp] = property;
