@@ -33,11 +33,11 @@
 #include <QtCore/qdebug.h>
 
 static const char *widgetBoxRootElementC = "widgetbox";
-static const char *widgetElementC = "widget";
+static const char *wbWidgetElementC = "widget";
 static const char *uiElementC = "ui";
 static const char *categoryElementC = "category";
 static const char *categoryEntryElementC = "categoryentry";
-static const char *nameAttributeC = "name";
+static const char *wbNameAttributeC = "name";
 static const char *typeAttributeC = "type";
 static const char *iconAttributeC = "icon";
 static const char *defaultTypeValueC = "default";
@@ -359,7 +359,7 @@ bool WidgetBoxTreeWidget::readCategories(const QString &fileName, const QString 
             if (tag == QLatin1String(categoryElementC)) {
                 // <category name="Layouts">
                 const QXmlStreamAttributes attributes = reader.attributes();
-                const QString categoryName = attributes.value(QLatin1String(nameAttributeC)).toString();
+                const QString categoryName = attributes.value(QLatin1String(wbNameAttributeC)).toString();
                 if (categoryName == QLatin1String(invisibleNameC)) {
                     ignoreEntries = true;
                 } else {
@@ -374,7 +374,7 @@ bool WidgetBoxTreeWidget::readCategories(const QString &fileName, const QString 
                 //  <categoryentry name="Vertical Layout" icon="win/editvlayout.png" type="default">
                 if (!ignoreEntries) {
                     QXmlStreamAttributes attr = reader.attributes();
-                    const QString widgetName = attr.value(QLatin1String(nameAttributeC)).toString();
+                    const QString widgetName = attr.value(QLatin1String(wbNameAttributeC)).toString();
                     const QString widgetIcon = attr.value(QLatin1String(iconAttributeC)).toString();
                     const WidgetBoxTreeWidget::Widget::Type widgetType =
                         attr.value(QLatin1String(typeAttributeC)).toString()
@@ -461,7 +461,7 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
                 if (name == QLatin1String(uiElementC)) {
                     startTagPosition = currentPosition;
                 } else {
-                    if (name == QLatin1String(widgetElementC)) {
+                    if (name == QLatin1String(wbWidgetElementC)) {
                         startTagPosition = currentPosition;
                         parsedWidgetTag = true;
                     } else {
@@ -471,7 +471,7 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
                 }
             } else {
                 // We are within <ui> looking for the first <widget> tag
-                if (!parsedWidgetTag && r.name() == QLatin1String(widgetElementC)) {
+                if (!parsedWidgetTag && r.name() == QLatin1String(wbWidgetElementC)) {
                     parsedWidgetTag = true;
                 }
             }
@@ -508,7 +508,7 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
 void WidgetBoxTreeWidget::writeCategories(QXmlStreamWriter &writer, const CategoryList &cat_list) const
 {
     const QString widgetbox = QLatin1String(widgetBoxRootElementC);
-    const QString name = QLatin1String(nameAttributeC);
+    const QString name = QLatin1String(wbNameAttributeC);
     const QString type = QLatin1String(typeAttributeC);
     const QString icon = QLatin1String(iconAttributeC);
     const QString defaultType = QLatin1String(defaultTypeValueC);

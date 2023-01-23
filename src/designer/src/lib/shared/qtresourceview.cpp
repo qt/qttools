@@ -46,8 +46,8 @@ static const char *typeImage = "image";
 static const char *typeStyleSheet = "stylesheet";
 static const char *typeOther = "other";
 static const char *fileAttribute = "file";
-static const char *SplitterPosition = "SplitterPosition";
-static const char *Geometry = "Geometry";
+static const char *qrvSplitterPosition = "SplitterPosition";
+static const char *qrvGeometry = "Geometry";
 static const char *ResourceViewDialogC = "ResourceDialog";
 
 // ---------------- ResourceListWidget: A list widget that has drag enabled
@@ -171,7 +171,7 @@ void QtResourceViewPrivate::restoreSettings()
     QDesignerSettingsInterface *settings = m_core->settingsManager();
     settings->beginGroup(m_settingsKey);
 
-    m_splitter->restoreState(settings->value(QLatin1String(SplitterPosition)).toByteArray());
+    m_splitter->restoreState(settings->value(QLatin1String(qrvSplitterPosition)).toByteArray());
     settings->endGroup();
 }
 
@@ -183,7 +183,7 @@ void QtResourceViewPrivate::saveSettings()
     QDesignerSettingsInterface *settings = m_core->settingsManager();
     settings->beginGroup(m_settingsKey);
 
-    settings->setValue(QLatin1String(SplitterPosition), m_splitter->saveState());
+    settings->setValue(QLatin1String(qrvSplitterPosition), m_splitter->saveState());
     settings->endGroup();
 }
 
@@ -821,7 +821,7 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
     QDesignerSettingsInterface *settings = core->settingsManager();
     settings->beginGroup(QLatin1String(ResourceViewDialogC));
 
-    const QVariant geometry = settings->value(QLatin1String(Geometry));
+    const QVariant geometry = settings->value(QLatin1String(qrvGeometry));
     if (geometry.metaType().id() == QMetaType::QByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374.
         restoreGeometry(geometry.toByteArray());
 
@@ -833,7 +833,7 @@ QtResourceViewDialog::~QtResourceViewDialog()
     QDesignerSettingsInterface *settings = d_ptr->m_core->settingsManager();
     settings->beginGroup(QLatin1String(ResourceViewDialogC));
 
-    settings->setValue(QLatin1String(Geometry), saveGeometry());
+    settings->setValue(QLatin1String(qrvGeometry), saveGeometry());
 
     settings->endGroup();
 }
