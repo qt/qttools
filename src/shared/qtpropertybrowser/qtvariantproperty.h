@@ -12,8 +12,6 @@ QT_BEGIN_NAMESPACE
 
 class QRegularExpression;
 
-typedef QMap<int, QIcon> QtIconMap;
-
 class QtVariantPropertyManager;
 
 class QtVariantProperty : public QtProperty
@@ -136,6 +134,4 @@ private:
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QIcon)
-Q_DECLARE_METATYPE(QtIconMap)
 #endif
