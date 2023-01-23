@@ -12,27 +12,28 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/designer/calculatorbuilder")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui UiTools Widgets)
 
-qt_add_executable(calculatorbuilder
-    calculatorform.cpp calculatorform.h
-    main.cpp
-)
+qt_add_executable(calculatorbuilder main.cpp)
 
 set_target_properties(calculatorbuilder PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
 )
 
+#! [0]
 target_link_libraries(calculatorbuilder PUBLIC
     Qt::Core
     Qt::Gui
     Qt::UiTools
     Qt::Widgets
 )
+#! [0]
 
 # Resources:
+#! [1]
 set(calculatorbuilder_resource_files
     "calculatorform.ui"
 )
+#! [1]
 
 qt6_add_resources(calculatorbuilder "calculatorbuilder"
     PREFIX

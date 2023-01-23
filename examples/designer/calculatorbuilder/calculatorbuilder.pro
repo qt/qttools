@@ -1,8 +1,6 @@
 #! [0]
-HEADERS     = calculatorform.h
 RESOURCES   = calculatorbuilder.qrc
-SOURCES     = calculatorform.cpp \
-              main.cpp
+SOURCES     = main.cpp
 QT += widgets uitools
 #! [0]
 
