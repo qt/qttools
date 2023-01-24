@@ -48,7 +48,7 @@ static inline int compare(const qdesigner_internal::PreviewConfiguration &pc1, c
     return pc1.deviceSkin().compare(pc2.deviceSkin());
 }
 
-namespace {
+namespace qdesigner_internal {
     // ------ PreviewData (data associated with a preview window)
     struct PreviewData {
         PreviewData(const QPointer<QWidget> &widget, const  QDesignerFormWindowInterface *formWindow, const qdesigner_internal::PreviewConfiguration &pc);
@@ -65,9 +65,6 @@ namespace {
         m_configuration(pc)
     {
     }
-}
-
-namespace qdesigner_internal {
 
 /* In designer, we have the situation that laid-out maincontainers have
  * a geometry set (which might differ from their sizeHint()). The QGraphicsItem
