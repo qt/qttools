@@ -16,7 +16,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 static QWidget *decorationFromWidget(QWidget *w)
 {
@@ -75,5 +75,7 @@ DomUI *FormWindowDnDItem::domUi() const
     resourceModel->setCurrentResourceSet(currentResourceSet);
     return result;
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

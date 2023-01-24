@@ -5,7 +5,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 // ----------------------------------------------------------------------------
 QLongLongValidator::QLongLongValidator(QObject * parent)
@@ -102,5 +102,7 @@ void QULongLongValidator::setTop(qulonglong top)
 {
     setRange(bottom(), top);
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

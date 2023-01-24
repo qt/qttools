@@ -8,7 +8,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 PaletteEditorButton::PaletteEditorButton(QDesignerFormEditorInterface *core, const QPalette &palette, QWidget *parent)
     : QToolButton(parent),
@@ -43,5 +43,7 @@ void PaletteEditorButton::showPaletteEditor()
         emit paletteChanged(m_palette);
     }
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

@@ -8,7 +8,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 StringListEditorButton::StringListEditorButton(
     const QStringList &stringList, QWidget *parent)
@@ -37,5 +37,7 @@ void StringListEditorButton::showStringListEditor()
         emit stringListChanged(m_stringList);
     }
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

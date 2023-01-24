@@ -13,7 +13,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 SignalSlotEditorTool::SignalSlotEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent)
     : QDesignerFormWindowToolInterface(parent),
@@ -81,5 +81,7 @@ void SignalSlotEditorTool::loadFromDom(DomUI *ui, QWidget *mainContainer)
 {
     m_editor->fromUi(ui->elementConnections(), mainContainer);
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

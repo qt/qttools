@@ -15,7 +15,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 QMainWindowContainer::QMainWindowContainer(QMainWindow *widget, QObject *parent)
     : QObject(parent),
@@ -176,5 +176,7 @@ void QMainWindowContainer::remove(int index)
     }
     m_widgets.removeAt(index);
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

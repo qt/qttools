@@ -12,7 +12,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 TabOrderEditorPlugin::TabOrderEditorPlugin() = default;
 
@@ -86,6 +86,8 @@ QAction *TabOrderEditorPlugin::action() const
 {
     return m_action;
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE
 

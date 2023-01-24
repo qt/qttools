@@ -8,7 +8,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 /*!
     \class qdesigner_internal::QDesignerFormWindowManager
@@ -45,5 +45,7 @@ void QDesignerFormWindowManager::showPluginDialog()
     PluginDialog dlg(core(), core()->topLevel());
     dlg.exec();
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE
