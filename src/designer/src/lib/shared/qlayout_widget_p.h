@@ -176,6 +176,7 @@ public:
 
     // grid helpers: find item index
     static int findItemAt(QGridLayout *, int row, int column);
+    using QDesignerLayoutDecorationExtension::findItemAt;
     // grid helpers: Quick check whether simplify should be enabled for grids. May return false positives.
     static bool canSimplifyQuickCheck(const QGridLayout *);
     static bool canSimplifyQuickCheck(const QFormLayout *fl);
