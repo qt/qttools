@@ -1320,6 +1320,9 @@ void Config::load(Location location, const QString &fileName)
     popWorkingDir();
     if (!m_workingDirs.isEmpty())
         QDir::setCurrent(m_workingDirs.top());
+#undef SKIP_CHAR
+#undef SKIP_SPACES
+#undef PUT_CHAR
 }
 
 bool Config::isFileExcluded(const QString &fileName, const QSet<QString> &excludedFiles)
