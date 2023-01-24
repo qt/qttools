@@ -14,7 +14,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static QString protect(const QString & str)
+static QString xmlProtect(const QString & str)
 {
     QString p = str;
     p.replace(QLatin1Char('&'),  QLatin1String("&amp;"));
@@ -253,10 +253,10 @@ bool PhraseBook::save(const QString &fileName)
     t << ">\n";
     for (Phrase *p : std::as_const(m_phrases)) {
         t << "<phrase>\n";
-        t << "    <source>" << protect( p->source() ) << "</source>\n";
-        t << "    <target>" << protect( p->target() ) << "</target>\n";
+        t << "    <source>" << xmlProtect( p->source() ) << "</source>\n";
+        t << "    <target>" << xmlProtect( p->target() ) << "</target>\n";
         if (!p->definition().isEmpty())
-            t << "    <definition>" << protect( p->definition() )
+            t << "    <definition>" << xmlProtect( p->definition() )
               << "</definition>\n";
         t << "</phrase>\n";
     }
