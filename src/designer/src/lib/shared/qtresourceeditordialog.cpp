@@ -44,7 +44,7 @@ static QString msgTagMismatch(const QString &got, const QString &expected)
     return QCoreApplication::translate("QtResourceEditorDialog", "The file does not appear to be a resource file; element '%1' was found where '%2' was expected.").arg(got, expected);
 }
 
-namespace {
+namespace qdesigner_internal {
 
 // below 3 data classes should be derived from QSharedData and made implicit shared class
 struct QtResourceFileData {
@@ -72,7 +72,14 @@ struct QtQrcFileData {
     { return qrcPath == other.qrcPath && resourceList == other.resourceList; }
 };
 
-bool loadResourceFileData(const QDomElement &fileElem, QtResourceFileData *fileData, QString *errorMessage)
+} // namespace qdesigner_internal
+
+using QtResourcePrefixData = qdesigner_internal::QtResourcePrefixData;
+using QtResourceFileData = qdesigner_internal::QtResourceFileData;
+using QtQrcFileData = qdesigner_internal::QtQrcFileData;
+
+static bool loadResourceFileData(const QDomElement &fileElem, QtResourceFileData *fileData,
+                                 QString *errorMessage)
 {
     if (!fileData)
         return false;
@@ -142,7 +149,7 @@ static bool loadQrcFileData(const QDomDocument &doc, const QString &path, QtQrcF
     return true;
 }
 
-QDomElement saveResourceFileData(QDomDocument &doc, const QtResourceFileData &fileData)
+static QDomElement saveResourceFileData(QDomDocument &doc, const QtResourceFileData &fileData)
 {
     QDomElement fileElem = doc.createElement(QLatin1String(rccFileTag));
     if (!fileData.alias.isEmpty())
@@ -154,7 +161,7 @@ QDomElement saveResourceFileData(QDomDocument &doc, const QtResourceFileData &fi
     return fileElem;
 }
 
-QDomElement saveResourcePrefixData(QDomDocument &doc, const QtResourcePrefixData &prefixData)
+static QDomElement saveResourcePrefixData(QDomDocument &doc, const QtResourcePrefixData &prefixData)
 {
     QDomElement prefixElem = doc.createElement(QLatin1String(rccTag));
     if (!prefixData.prefix.isEmpty())
@@ -170,7 +177,7 @@ QDomElement saveResourcePrefixData(QDomDocument &doc, const QtResourcePrefixData
     return prefixElem;
 }
 
-QDomDocument saveQrcFileData(const QtQrcFileData &qrcFileData)
+static QDomDocument saveQrcFileData(const QtQrcFileData &qrcFileData)
 {
     QDomDocument doc;
     QDomElement docElem = doc.createElement(QLatin1String(rccRootTag));
@@ -183,6 +190,9 @@ QDomDocument saveQrcFileData(const QtQrcFileData &qrcFileData)
 
     return doc;
 }
+
+namespace qdesigner_internal {
+
 // --------------- QtResourceFile
 class QtResourceFile {
 public:
@@ -759,9 +769,12 @@ void QtQrcManager::removeResourceFile(QtResourceFile *resourceFile)
     delete resourceFile;
 }
 
+} // namespace qdesigner_internal
 
-
-}
+using QtResourceFile = qdesigner_internal::QtResourceFile;
+using QtResourcePrefix = qdesigner_internal::QtResourcePrefix;
+using QtQrcFile = qdesigner_internal::QtQrcFile;
+using QtQrcManager = qdesigner_internal::QtQrcManager;
 
 // ----------------- QtResourceEditorDialogPrivate
 class QtResourceEditorDialogPrivate
