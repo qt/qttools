@@ -1,6 +1,6 @@
-#! [0]
+#! [1]
 QT          += widgets uiplugin
-#! [0]
+#! [1]
 
 QTDIR_build {
 # This is only for the Qt build. Do not use externally. We mean it.
@@ -12,14 +12,15 @@ CONFIG += install_ok
 # Public example:
 
 TARGET      = $$qtLibraryTarget($$TARGET)
-#! [1]
-CONFIG     += plugin
+#! [0]
 TEMPLATE    = lib
-#! [1]
+CONFIG     += plugin
+#! [0]
 
+#! [3]
 target.path = $$[QT_INSTALL_PLUGINS]/designer
 INSTALLS += target
-
+#! [3]
 }
 
 #! [2]
