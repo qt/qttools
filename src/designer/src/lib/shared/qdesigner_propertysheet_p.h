@@ -94,6 +94,8 @@ public:
     static bool internalDynamicPropertiesEnabled();
     static void setInternalDynamicPropertiesEnabled(bool v);
 
+    static QDesignerFormEditorInterface *formEditorForObject(QObject *o);
+
 protected:
     bool isAdditionalProperty(int index) const;
     bool isFakeProperty(int index) const;
