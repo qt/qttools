@@ -85,6 +85,11 @@ private:
 
 HelpEngineWrapper *HelpEngineWrapper::helpEngineWrapper = nullptr;
 
+HelpEngineWrapper &HelpEngineWrapper::instance()
+{
+    return instance({});
+}
+
 HelpEngineWrapper &HelpEngineWrapper::instance(const QString &collectionFile)
 {
     TRACE_OBJ

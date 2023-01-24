@@ -40,7 +40,8 @@ class HelpEngineWrapper : public QObject
     Q_DISABLE_COPY(HelpEngineWrapper)
     friend class TimeoutForwarder;
 public:
-    static HelpEngineWrapper &instance(const QString &collectionFile = QString());
+    static HelpEngineWrapper &instance();
+    static HelpEngineWrapper &instance(const QString &collectionFile);
     static void removeInstance();
 
     // Forwarded help engine member functions, possibly enriched.
