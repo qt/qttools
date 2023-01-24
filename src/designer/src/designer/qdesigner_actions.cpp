@@ -80,7 +80,6 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
 using namespace Qt::StringLiterals;
 
 const char *QDesignerActions::defaultToolbarPropertyName = "__qt_defaultToolBarAction";
@@ -311,7 +310,7 @@ QDesignerActions::QDesignerActions(QDesignerWorkbench *workbench)
     m_editWidgetsAction->setProperty(QDesignerActions::defaultToolbarPropertyName, true);
     m_toolActions->addAction(m_editWidgetsAction);
 
-    connect(formWindowManager, &QDesignerFormWindowManager::activeFormWindowChanged,
+    connect(formWindowManager, &qdesigner_internal::QDesignerFormWindowManager::activeFormWindowChanged,
                 this, &QDesignerActions::activeFormWindowChanged);
 
     const QObjectList builtinPlugins = QPluginLoader::staticInstances()
@@ -1160,7 +1159,7 @@ bool QDesignerActions::ensureBackupDirectories() {
 
     if (m_backupPath.isEmpty()) {
         // create names
-        m_backupPath = dataDirectory() + u"/backup"_s;
+        m_backupPath = qdesigner_internal::dataDirectory() + u"/backup"_s;
         m_backupTmpPath = m_backupPath + u"/tmp"_s;
     }
 
@@ -1219,7 +1218,7 @@ QPixmap QDesignerActions::createPreviewPixmap(QDesignerFormWindowInterface *fw)
 qdesigner_internal::PreviewConfiguration QDesignerActions::previewConfiguration()
 {
     qdesigner_internal::PreviewConfiguration pc;
-    QDesignerSharedSettings settings(core());
+    qdesigner_internal::QDesignerSharedSettings settings(core());
     if (settings.isCustomPreviewConfigurationEnabled())
         pc = settings.customPreviewConfiguration();
     return pc;

@@ -12,7 +12,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 QLayoutWidgetPropertySheet::QLayoutWidgetPropertySheet(QLayoutWidget *object, QObject *parent)
     : QDesignerPropertySheet(object, parent)
@@ -39,5 +39,7 @@ bool QLayoutWidgetPropertySheet::dynamicPropertiesAllowed() const
 {
     return false;
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

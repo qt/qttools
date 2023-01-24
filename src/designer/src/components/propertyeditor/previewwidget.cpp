@@ -11,7 +11,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 PreviewWidget::PreviewWidget(QWidget *parent)
     : QWidget(parent)
@@ -31,5 +31,6 @@ PreviewWidget::PreviewWidget(QWidget *parent)
 
 PreviewWidget::~PreviewWidget() = default;
 
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

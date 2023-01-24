@@ -36,8 +36,6 @@ static inline QString namingModeKey() { return QStringLiteral("naming"); }
 static inline QString underScoreNamingMode() { return QStringLiteral("underscore"); }
 static inline QString camelCaseNamingMode() { return QStringLiteral("camelcase"); }
 
-using namespace qdesigner_internal;
-
 static bool checkTemplatePath(const QString &path, bool create)
 {
     QDir current(QDir::current());

@@ -14,7 +14,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 ListWidgetEditor::ListWidgetEditor(QDesignerFormWindowInterface *form,
                                    QWidget *parent)
@@ -96,5 +96,7 @@ ListContents ListWidgetEditor::contents() const
     retVal.createFromListWidget(m_itemsEditor->listWidget(), true);
     return retVal;
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

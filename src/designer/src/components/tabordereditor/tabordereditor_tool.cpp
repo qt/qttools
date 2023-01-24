@@ -12,7 +12,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 TabOrderEditorTool::TabOrderEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent)
     : QDesignerFormWindowToolInterface(parent),
@@ -69,5 +69,7 @@ QAction *TabOrderEditorTool::action() const
 {
     return m_action;
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

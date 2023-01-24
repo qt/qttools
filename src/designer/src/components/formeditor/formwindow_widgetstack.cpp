@@ -15,7 +15,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 FormWindowWidgetStack::FormWindowWidgetStack(QObject *parent) :
     QObject(parent),
@@ -176,5 +176,7 @@ QLayout *FormWindowWidgetStack::layout() const
 {
     return m_layout;
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

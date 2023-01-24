@@ -19,7 +19,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 TableWidgetTaskMenu::TableWidgetTaskMenu(QTableWidget *button, QObject *parent)
     : QDesignerTaskMenu(button, parent),
@@ -72,5 +72,7 @@ void TableWidgetTaskMenu::updateSelection()
     if (m_editor)
         m_editor->deleteLater();
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

@@ -21,7 +21,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 ComboBoxTaskMenu::ComboBoxTaskMenu(QComboBox *button, QObject *parent)
     : QDesignerTaskMenu(button, parent),
@@ -90,5 +90,7 @@ void ComboBoxTaskMenu::updateSelection()
     if (m_editor)
         m_editor->deleteLater();
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

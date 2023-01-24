@@ -23,7 +23,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 WidgetEditorTool::WidgetEditorTool(FormWindow *formWindow)
     : QDesignerFormWindowToolInterface(formWindow),
@@ -325,5 +325,7 @@ void WidgetEditorTool::deactivated()
 
     m_formWindow->clearSelection();
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

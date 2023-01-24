@@ -53,10 +53,6 @@ static const char *highlightSectionsProperty = "highlightSections";
 static const char *minimumSectionSizeProperty = "minimumSectionSize";
 static const char *showSortIndicatorProperty = "showSortIndicator";
 static const char *stretchLastSectionProperty = "stretchLastSection";
-} // namespace qdesigner_internal
-
-using namespace qdesigner_internal;
-
 
 /***************** ItemViewPropertySheetPrivate *********************/
 
@@ -228,5 +224,7 @@ bool ItemViewPropertySheet::reset(int index)
     }
     return QDesignerPropertySheet::reset(index);
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

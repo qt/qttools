@@ -13,7 +13,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 LinePropertySheet::LinePropertySheet(Line *object, QObject *parent)
     : QDesignerPropertySheet(object, parent)
@@ -41,5 +41,7 @@ QString LinePropertySheet::propertyGroup(int index) const
 {
     return QDesignerPropertySheet::propertyGroup(index);
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

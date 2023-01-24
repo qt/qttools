@@ -21,7 +21,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 TaskMenuComponent::TaskMenuComponent(QDesignerFormEditorInterface *core, QObject *parent)
     : QObject(parent),
@@ -62,5 +62,8 @@ QDesignerFormEditorInterface *TaskMenuComponent::core() const
     return m_core;
 
 }
+
+} // namespace qdesigner_internal
+
 QT_END_NAMESPACE
 

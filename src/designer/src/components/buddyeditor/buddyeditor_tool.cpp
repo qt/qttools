@@ -10,7 +10,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 BuddyEditorTool::BuddyEditorTool(QDesignerFormWindowInterface *formWindow, QObject *parent)
     : QDesignerFormWindowToolInterface(parent),
@@ -68,5 +68,7 @@ QAction *BuddyEditorTool::action() const
 {
     return m_action;
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE

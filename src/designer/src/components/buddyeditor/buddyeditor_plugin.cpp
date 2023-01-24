@@ -12,7 +12,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using namespace qdesigner_internal;
+namespace qdesigner_internal {
 
 BuddyEditorPlugin::BuddyEditorPlugin() = default;
 
@@ -86,5 +86,7 @@ void BuddyEditorPlugin::activeFormWindowChanged(QDesignerFormWindowInterface *fo
 {
     m_action->setEnabled(formWindow != nullptr);
 }
+
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE
