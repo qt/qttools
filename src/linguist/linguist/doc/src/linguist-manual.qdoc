@@ -1216,8 +1216,7 @@
         to distinguish identical source text in the same context. It also shows
         how minimize the translator's work when an application is upgraded.
 
-    \li \l{QML Examples - Internationalization}{Internationalization} is a
-        Qt Quick application that demonstrates how to internationalize Qt Quick
+    \li \l{Qt Quick I18N} demonstrates how to internationalize Qt Quick
         applications.
     \endlist
 
