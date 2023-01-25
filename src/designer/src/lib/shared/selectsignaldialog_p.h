@@ -59,7 +59,7 @@ private:
     Method methodFromIndex(const QModelIndex &) const;
     void populateModel(QDesignerFormEditorInterface *core, QObject *object);
 
-    Ui::SelectSignalDialog *m_ui;
+    QT_PREPEND_NAMESPACE(Ui)::SelectSignalDialog *m_ui;
     QPushButton *m_okButton;
     QStandardItemModel *m_model;
 };

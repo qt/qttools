@@ -131,7 +131,7 @@ private:
     static bool editPromotedClass(QDesignerFormEditorInterface *core, const QString &promotedClassName, QObject *baseObject, QWidget *parent, FocusMode m);
 
     const FocusMode m_focusMode;
-    Ui::SignalSlotDialogClass *m_ui;
+    QT_PREPEND_NAMESPACE(Ui)::SignalSlotDialogClass *m_ui;
     QDesignerDialogGuiInterface *m_dialogGui;
     SignaturePanel *m_slotPanel;
     SignaturePanel *m_signalPanel;

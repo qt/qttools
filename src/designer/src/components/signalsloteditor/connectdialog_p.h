@@ -61,7 +61,7 @@ private:
     const WidgetMode m_sourceMode;
     const WidgetMode m_destinationMode;
     QDesignerFormWindowInterface *m_formWindow;
-    Ui::ConnectDialog m_ui;
+    QT_PREPEND_NAMESPACE(Ui)::ConnectDialog m_ui;
 };
 
 }
