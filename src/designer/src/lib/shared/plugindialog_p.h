@@ -43,7 +43,7 @@ private:
                              const QIcon &icon);
 
     QDesignerFormEditorInterface *m_core;
-    Ui::PluginDialog ui;
+    QT_PREPEND_NAMESPACE(Ui)::PluginDialog ui;
     QIcon interfaceIcon;
     QIcon featureIcon;
 };

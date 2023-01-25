@@ -36,7 +36,7 @@ private:
     FormWindowData data() const;
     void setData(const FormWindowData&);
 
-    Ui::FormWindowSettings *m_ui;
+    QT_PREPEND_NAMESPACE(Ui)::FormWindowSettings *m_ui;
     FormWindowBase *m_formWindow;
     FormWindowData *m_oldData;
 };

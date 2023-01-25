@@ -93,7 +93,7 @@ private:
     // Check for buddy marker in string
     const QRegularExpression m_buddyMarkerRegexp;
 
-    Ui::FormLayoutRowDialog m_ui;
+    QT_PREPEND_NAMESPACE(Ui)::FormLayoutRowDialog m_ui;
     bool m_labelNameEdited;
     bool m_fieldNameEdited;
     bool m_buddyClicked;
