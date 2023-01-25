@@ -387,9 +387,8 @@ bool QDesignerMenuBar::handleContextMenuEvent(QWidget *, QContextMenuEvent *even
 
     QMenu menu;
     const ActionList al = contextMenuActions();
-    const ActionList::const_iterator acend = al.constEnd();
-    for (ActionList::const_iterator it =  al.constBegin(); it != acend; ++it)
-        menu.addAction(*it);
+    for (auto *a : al)
+        menu.addAction(a);
     menu.exec(event->globalPos());
     return true;
 }

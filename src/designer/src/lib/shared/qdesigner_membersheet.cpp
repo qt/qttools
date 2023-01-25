@@ -10,14 +10,11 @@
 #include <QtWidgets/qwidget.h>
 QT_BEGIN_NAMESPACE
 
-static QList<QByteArray> stringListToByteArray(const QStringList &l)
+static QByteArrayList stringListToByteArray(const QStringList &l)
 {
-    if (l.isEmpty())
-        return QList<QByteArray>();
-    QList<QByteArray> rc;
-    const QStringList::const_iterator cend = l.constEnd();
-    for (QStringList::const_iterator it = l.constBegin(); it != cend; ++it)
-        rc += it->toUtf8();
+    QByteArrayList rc;
+    for (const auto &s : l)
+        rc += s.toUtf8();
     return rc;
 }
 

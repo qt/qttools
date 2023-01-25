@@ -77,9 +77,8 @@ void AppFontManager::save(QDesignerSettingsInterface *s, const QString &prefix) 
 {
     // Store as list of file names
     QStringList fontFiles;
-    const FileNameFontIdPairs::const_iterator cend = m_fonts.constEnd();
-    for (FileNameFontIdPairs::const_iterator it = m_fonts.constBegin(); it != cend; ++it)
-        fontFiles.push_back(it->first);
+    for (const auto &fnp : m_fonts)
+        fontFiles.push_back(fnp.first);
 
     s->beginGroup(prefix);
     s->setValue(QLatin1String(fontFileKeyC),  fontFiles);
@@ -100,10 +99,10 @@ void AppFontManager::restore(const QDesignerSettingsInterface *s, const QString 
         qDebug() << "AppFontManager::restoring" << fontFiles.size() << "fonts from " << prefix;
     if (!fontFiles.isEmpty()) {
         QString errorMessage;
-        const QStringList::const_iterator cend = fontFiles.constEnd();
-        for (QStringList::const_iterator it = fontFiles.constBegin(); it != cend; ++it)
-            if (add(*it, &errorMessage) == -1)
+        for (const auto &ff : fontFiles) {
+            if (add(ff, &errorMessage) == -1)
                 qWarning("%s", qPrintable(errorMessage));
+        }
     }
 }
 
@@ -120,9 +119,8 @@ int AppFontManager::add(const QString &fontFile, QString *errorMessage)
     }
     const QString fullPath = inf.absoluteFilePath();
     // Check if already loaded
-    const FileNameFontIdPairs::const_iterator cend = m_fonts.constEnd();
-    for (FileNameFontIdPairs::const_iterator it = m_fonts.constBegin(); it != cend; ++it) {
-        if (it->first == fullPath) {
+    for (const auto &fnp : std::as_const(m_fonts)) {
+        if (fnp.first == fullPath) {
             *errorMessage = QCoreApplication::translate("AppFontManager", "The font file '%1' is already loaded.").arg(fontFile);
             return -1;
         }
@@ -205,9 +203,8 @@ void AppFontModel::init(const AppFontManager &mgr)
     using FileNameFontIdPairs = AppFontManager::FileNameFontIdPairs;
 
     const FileNameFontIdPairs &fonts = mgr.fonts();
-    const FileNameFontIdPairs::const_iterator cend = fonts.constEnd();
-    for (FileNameFontIdPairs::const_iterator it = fonts.constBegin(); it != cend; ++it)
-        add(it->first, it->second);
+    for (const auto &fnp : fonts)
+        add(fnp.first, fnp.second);
 }
 
 void AppFontModel::add(const QString &fontFile, int id)
@@ -223,11 +220,10 @@ void AppFontModel::add(const QString &fontFile, int id)
 
     appendRow(fileItem);
     const QStringList families = QFontDatabase::applicationFontFamilies(id);
-    const QStringList::const_iterator cend = families.constEnd();
-    for (QStringList::const_iterator it = families.constBegin(); it != cend; ++it) {
-        QStandardItem *familyItem = new QStandardItem(*it);
+    for (const auto &fam : families) {
+        QStandardItem *familyItem = new QStandardItem(fam);
         familyItem->setToolTip(fullPath);
-        familyItem->setFont(QFont(*it));
+        familyItem->setFont(QFont(fam));
         familyItem->setFlags(Qt::ItemIsEnabled);
         fileItem->appendRow(familyItem);
     }
@@ -291,11 +287,10 @@ void AppFontWidget::addFiles()
     QString errorMessage;
 
     AppFontManager &fmgr = AppFontManager::instance();
-    const QStringList::const_iterator cend = files.constEnd();
-    for (QStringList::const_iterator it = files.constBegin(); it != cend; ++it) {
-        const int id = fmgr.add(*it, &errorMessage);
+    for (const auto &f : files) {
+        const int id = fmgr.add(f, &errorMessage);
         if (id != -1) {
-            m_model->add(*it, id);
+            m_model->add(f, id);
         } else {
             QMessageBox::critical(this, tr("Error Adding Fonts"), errorMessage);
         }
@@ -314,12 +309,11 @@ static void removeFonts(const QModelIndexList &selectedIndexes, AppFontModel *mo
     rows.reserve(selectedIndexes.size());
 
     QString errorMessage;
-    const QModelIndexList::const_iterator cend = selectedIndexes.constEnd();
-    for (QModelIndexList::const_iterator it = selectedIndexes.constBegin(); it != cend; ++it) {
-        const int id = model->idAt(*it);
+    for (const auto &mi : selectedIndexes) {
+        const int id = model->idAt(mi);
         if (id != -1) {
             if (fmgr.remove(id, &errorMessage)) {
-                rows.push_back(it->row());
+                rows.append(mi.row());
             } else {
                 QMessageBox::critical(dialogParent, AppFontWidget::tr("Error Removing Fonts"), errorMessage);
             }

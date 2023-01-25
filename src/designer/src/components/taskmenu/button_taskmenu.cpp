@@ -86,18 +86,16 @@ void ButtonGroupCommand::addButtonsToGroup()
 {
     if (debugButtonMenu)
         qDebug() << "Adding " << m_buttonList << " to " << m_buttonGroup;
-    const ButtonList::const_iterator cend = m_buttonList.constEnd();
-    for (ButtonList::const_iterator it = m_buttonList.constBegin(); it != cend; ++it)
-        m_buttonGroup->addButton(*it);
+    for (auto *b : std::as_const(m_buttonList))
+        m_buttonGroup->addButton(b);
 }
 
 void ButtonGroupCommand::removeButtonsFromGroup()
 {
     if (debugButtonMenu)
         qDebug() << "Removing " << m_buttonList << " from " << m_buttonGroup;
-    const ButtonList::const_iterator cend = m_buttonList.constEnd();
-    for (ButtonList::const_iterator it = m_buttonList.constBegin(); it != cend; ++it)
-        m_buttonGroup->removeButton(*it);
+    for (auto *b : std::as_const(m_buttonList))
+        m_buttonGroup->removeButton(b);
 }
 
 void ButtonGroupCommand::createButtonGroup()
@@ -123,9 +121,8 @@ void ButtonGroupCommand::breakButtonGroup()
     // Button group was selected, that is, break was invoked via its context menu. Remove it from property editor, select the buttons
     if (core->propertyEditor()->object() == m_buttonGroup) {
         fw->clearSelection(false);
-        const ButtonList::const_iterator cend = m_buttonList.constEnd();
-        for (ButtonList::const_iterator it = m_buttonList.constBegin(); it != cend; ++it)
-            fw->selectWidget(*it, true);
+        for (auto *b : std::as_const(m_buttonList))
+            fw->selectWidget(b, true);
     }
     // Now remove and refresh object inspector
     removeButtonsFromGroup();
@@ -157,13 +154,13 @@ ButtonGroupList ButtonGroupCommand::managedButtonGroups(const QDesignerFormWindo
     const QDesignerMetaDataBaseInterface *mdb = formWindow->core()->metaDataBase();
     ButtonGroupList bl;
     // Check 1st order children for managed button groups
-    const QObjectList children = formWindow->mainContainer()->children();
-    const QObjectList::const_iterator cend =  children.constEnd();
-    for (QObjectList::const_iterator it =  children.constBegin(); it != cend; ++it) {
-        if (!(*it)->isWidgetType())
-            if (QButtonGroup *bg = qobject_cast<QButtonGroup *>(*it))
+    for (auto *o : formWindow->mainContainer()->children()) {
+        if (!o->isWidgetType()) {
+            if (QButtonGroup *bg = qobject_cast<QButtonGroup *>(o)) {
                 if (mdb->item(bg))
                     bl.push_back(bg);
+            }
+        }
     }
     return bl;
 }
@@ -302,10 +299,10 @@ void ButtonGroupMenu::selectGroup()
     // Select and make current button "current" again by selecting it last (if there is any)
     const ButtonList buttons = m_buttonGroup->buttons();
     m_formWindow->clearSelection(false);
-    const ButtonList::const_iterator cend = buttons.constEnd();
-    for (ButtonList::const_iterator it = buttons.constBegin(); it != cend; ++it)
-        if (*it != m_currentButton)
-            m_formWindow->selectWidget(*it, true);
+    for (auto *b : buttons) {
+        if (b != m_currentButton)
+            m_formWindow->selectWidget(b, true);
+    }
     if (m_currentButton)
         m_formWindow->selectWidget(m_currentButton, true);
 }
@@ -462,11 +459,8 @@ bool ButtonTaskMenu::refreshAssignMenu(const QDesignerFormWindowInterface *fw, i
         // Create a new action group
         m_assignActionGroup = new QActionGroup(this);
         connect(m_assignActionGroup, &QActionGroup::triggered, this, &ButtonTaskMenu::addToGroup);
-
-        const ButtonGroupList::const_iterator cend = bl.constEnd();
-        for (ButtonGroupList::const_iterator it = bl.constBegin(); it != cend; ++it) {
-            QButtonGroup *bg = *it;
-            if (*it != currentGroup) {
+        for (auto *bg : bl) {
+            if (bg != currentGroup) {
                 QAction *a = new QAction(bg->objectName(), m_assignGroupSubMenu);
                 a->setData(QVariant::fromValue(bg));
                 m_assignActionGroup->addAction(a);

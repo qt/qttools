@@ -771,15 +771,13 @@ QWidget *PreviewManager::showPreview(const QDesignerFormWindowInterface *fw,
 
 QWidget *PreviewManager::raise(const QDesignerFormWindowInterface *fw, const PreviewConfiguration &pc)
 {
-    using PreviewDataList = PreviewManagerPrivate::PreviewDataList;
     if (d->m_previews.isEmpty())
         return nullptr;
 
     // find matching window
-    const PreviewDataList::const_iterator cend =  d->m_previews.constEnd();
-    for (PreviewDataList::const_iterator it = d->m_previews.constBegin(); it !=  cend ;++it) {
-        QWidget * w = it->m_widget;
-        if (w && it->m_formWindow == fw && it->m_configuration == pc) {
+    for (const auto &pd : std::as_const(d->m_previews)) {
+        QWidget *w = pd.m_widget;
+        if (w && pd.m_formWindow == fw && pd.m_configuration == pc) {
             w->raise();
             w->activateWindow();
             return w;
@@ -793,9 +791,9 @@ void PreviewManager::closeAllPreviews()
     if (!d->m_previews.isEmpty()) {
         d->m_updateBlocked = true;
         d->m_activePreview = nullptr;
-        for (auto it = d->m_previews.constBegin(), cend = d->m_previews.constEnd(); it != cend ;++it) {
-            if (it->m_widget)
-                it->m_widget->close();
+        for (const auto &pd : std::as_const(d->m_previews)) {
+            if (pd.m_widget)
+                pd.m_widget->close();
         }
         d->m_previews.clear();
         d->m_updateBlocked = false;

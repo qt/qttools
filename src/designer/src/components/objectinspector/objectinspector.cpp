@@ -429,12 +429,12 @@ void ObjectInspector::ObjectInspectorPrivate::selectIndexRange(const QModelIndex
         selectFlags |= QItemSelectionModel::Current;
 
     QItemSelectionModel *selectionModel = m_treeView->selectionModel();
-    const QModelIndexList::const_iterator cend = indexes.constEnd();
-    for (QModelIndexList::const_iterator it = indexes.constBegin(); it != cend; ++it)
-        if (it->column() == 0) {
-            selectionModel->select(*it, selectFlags);
+    for (const auto &mi : indexes) {
+        if (mi.column() == 0) {
+            selectionModel->select(mi, selectFlags);
             selectFlags &= ~(QItemSelectionModel::Clear|QItemSelectionModel::Current);
         }
+    }
     if (flags & MakeCurrent)
         m_treeView->scrollTo(indexes.constFirst(), QAbstractItemView::EnsureVisible);
 }
@@ -571,10 +571,10 @@ QObjectList ObjectInspector::ObjectInspectorPrivate::indexesToObjects(const QMod
     if (indexes.isEmpty())
         return rc;
     rc.reserve(indexes.size());
-    const QModelIndexList::const_iterator icend = indexes.constEnd();
-    for (QModelIndexList::const_iterator it = indexes.constBegin(); it != icend; ++it)
-        if (it->column() == 0)
-            rc.append(objectAt(*it));
+    for (const auto &mi : indexes) {
+        if (mi.column() == 0)
+            rc.append(objectAt(mi));
+    }
     return rc;
 }
 
@@ -584,9 +584,8 @@ bool ObjectInspector::ObjectInspectorPrivate::checkManagedWidgetSelection(const 
 {
     bool isManagedWidgetSelection = false;
     QItemSelectionModel *selectionModel = m_treeView->selectionModel();
-    const QModelIndexList::const_iterator cscend = rowSelection.constEnd();
-    for (QModelIndexList::const_iterator it = rowSelection.constBegin(); it != cscend; ++it) {
-        QObject *object = objectAt(*it);
+    for (const auto &mi : rowSelection) {
+        QObject *object = objectAt(mi);
         if (selectionType(m_formWindow, object) == ManagedWidgetSelection) {
             isManagedWidgetSelection = true;
             break;
@@ -597,10 +596,10 @@ bool ObjectInspector::ObjectInspectorPrivate::checkManagedWidgetSelection(const 
         return false;
     // Need to unselect unmanaged ones
     const bool blocked = selectionModel->blockSignals(true);
-    for (QModelIndexList::const_iterator it = rowSelection.constBegin(); it != cscend; ++it) {
-        QObject *object = objectAt(*it);
+    for (const auto &mi : rowSelection) {
+        QObject *object = objectAt(mi);
         if (selectionType(m_formWindow, object) != ManagedWidgetSelection)
-            selectionModel->select(*it, QItemSelectionModel::Deselect|QItemSelectionModel::Rows);
+            selectionModel->select(mi, QItemSelectionModel::Deselect|QItemSelectionModel::Rows);
     }
     selectionModel->blockSignals(blocked);
     return true;

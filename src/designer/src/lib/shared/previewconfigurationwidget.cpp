@@ -46,9 +46,8 @@ static const Skins &defaultSkins() {
         const QFileInfoList list = dir.entryInfoList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::Name);
         if (list.isEmpty())
             return rc;
-        const QFileInfoList::const_iterator lcend = list.constEnd();
-        for (QFileInfoList::const_iterator it = list.constBegin(); it != lcend; ++it)
-            rc.push_back(SkinNamePath(it->baseName(), it->filePath()));
+        for (const auto &fi : list)
+            rc.append(SkinNamePath(fi.baseName(), fi.filePath()));
     }
     return rc;
 }
@@ -147,14 +146,12 @@ void PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::addUserSkins
 {
     if (files.isEmpty())
         return;
-    const QStringList ::const_iterator fcend = files.constEnd();
-    for (QStringList::const_iterator it = files.constBegin(); it != fcend; ++it) {
-        const QFileInfo fi(*it);
-        if (fi.isDir() && fi.isReadable()) {
-            m_ui.m_skinCombo->insertItem(m_browseSkinIndex++, fi.baseName(), QVariant(*it));
-        } else {
-            qWarning() << "Unable to access the skin directory '" << *it << "'.";
-        }
+    for (const auto &f : files) {
+        const QFileInfo fi(f);
+        if (fi.isDir() && fi.isReadable())
+            m_ui.m_skinCombo->insertItem(m_browseSkinIndex++, fi.baseName(), QVariant(f));
+        else
+            qWarning() << "Unable to access the skin directory '" << f << "'.";
     }
 }
 

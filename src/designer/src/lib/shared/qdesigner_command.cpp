@@ -128,10 +128,8 @@ static void recursiveUpdate(QWidget *w)
 {
     w->update();
 
-    const QObjectList &l = w->children();
-    const QObjectList::const_iterator cend = l.end();
-    for ( QObjectList::const_iterator it = l.begin(); it != cend; ++it) {
-        if (QWidget *w = qobject_cast<QWidget*>(*it))
+    for (auto *child : w->children()) {
+        if (QWidget *w = qobject_cast<QWidget*>(child))
             recursiveUpdate(w);
     }
 }
@@ -322,14 +320,11 @@ void ManageWidgetCommandHelper::init(const QDesignerFormWindowInterface *fw, QWi
     m_managedChildren.clear();
 
     const QWidgetList children = m_widget->findChildren<QWidget *>();
-    if (children.isEmpty())
-        return;
-
     m_managedChildren.reserve(children.size());
-    const QWidgetList::const_iterator lcend = children.constEnd();
-    for (QWidgetList::const_iterator it = children.constBegin(); it != lcend; ++it)
-        if (fw->isManaged(*it))
-            m_managedChildren.push_back(*it);
+    for (auto *w : children) {
+        if (fw->isManaged(w))
+            m_managedChildren.push_back(w);
+    }
 }
 
 void ManageWidgetCommandHelper::init(QWidget *widget, const QWidgetList &managedChildren)
@@ -666,11 +661,10 @@ void CursorSelectionState::restore(QDesignerFormWindowInterface *formWindow) con
     } else {
         // Select current as last
         formWindow->clearSelection(false);
-        const WidgetPointerList::const_iterator cend = m_selection.constEnd();
-        for (WidgetPointerList::const_iterator it = m_selection.constBegin(); it != cend; ++it)
-            if (QWidget *w = *it)
-                if (w != m_current)
-                    formWindow->selectWidget(*it, true);
+        for (const auto &wp : m_selection) {
+            if (!wp.isNull() && wp.data() != m_current)
+                formWindow->selectWidget(wp.data(), true);
+        }
         if (m_current)
             formWindow->selectWidget(m_current, true);
     }
@@ -2114,9 +2108,7 @@ static void copyRolesFromItem(ItemData *id, const T *item, bool editor)
 template<class T>
 static void copyRolesToItem(const ItemData *id, T *item, DesignerIconCache *iconCache, bool editor)
 {
-    QHash<int, QVariant>::const_iterator it = id->m_properties.constBegin(),
-            end = id->m_properties.constEnd();
-    for (; it != end; ++it)
+    for (auto it = id->m_properties.cbegin(), end = id->m_properties.cend(); it != end; ++it) {
         if (it.value().isValid()) {
             if (!editor && it.key() == ItemFlagsShadowRole) {
                 item->setFlags((Qt::ItemFlags)it.value().toInt());
@@ -2142,6 +2134,7 @@ static void copyRolesToItem(const ItemData *id, T *item, DesignerIconCache *icon
                 }
             }
         }
+    }
 
     if (editor)
         item->setFlags(item->flags() | Qt::ItemIsEditable);
@@ -2190,8 +2183,7 @@ ItemData::ItemData(const QTreeWidgetItem *item, int column)
 
 void ItemData::fillTreeItemColumn(QTreeWidgetItem *item, int column, DesignerIconCache *iconCache) const
 {
-    QHash<int, QVariant>::const_iterator it = m_properties.constBegin(), end = m_properties.constEnd();
-    for (; it != end; ++it)
+    for (auto it = m_properties.cbegin(), end = m_properties.cend(); it != end; ++it) {
         if (it.value().isValid()) {
             item->setData(column, it.key(), it.value());
             switch (it.key()) {
@@ -2213,6 +2205,7 @@ void ItemData::fillTreeItemColumn(QTreeWidgetItem *item, int column, DesignerIco
                 break;
             }
         }
+    }
 }
 
 ListContents::ListContents(const QTreeWidgetItem *item)

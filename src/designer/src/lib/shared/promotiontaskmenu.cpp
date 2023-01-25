@@ -121,10 +121,9 @@ PromotionTaskMenu::PromotionState  PromotionTaskMenu::createPromotionActions(QDe
 
     QMenu *candidatesMenu = new QMenu();
     // Create a sub menu
-    const WidgetDataBaseItemList::const_iterator cend = candidates.constEnd();
     // Set up actions and map class names
-    for (WidgetDataBaseItemList::const_iterator it = candidates.constBegin(); it != cend; ++it) {
-        const QString customClassName = (*it)->name();
+    for (auto *item : candidates) {
+        const QString customClassName = item->name();
         candidatesMenu->addAction(customClassName,
                                   this, [this, customClassName] { this->slotPromoteToCustomWidget(customClassName); });
     }
@@ -265,9 +264,7 @@ PromotionTaskMenu::PromotionSelectionList PromotionTaskMenu::promotionSelectionL
             designerObjectInspector->getSelection(s);
             // Find objects of similar state
             const QWidgetList &source = m_mode == ModeManagedMultiSelection ? s.managed : s.unmanaged;
-            const QWidgetList::const_iterator cend = source.constEnd();
-            for (QWidgetList::const_iterator it = source.constBegin(); it != cend; ++it) {
-                QWidget *w = *it;
+            for (auto *w : source) {
                 if (w != m_widget) {
                     // Selection state mismatch
                     if (intro->metaObject(w)->className() != className || isPromoted(core, w) !=  promoted)

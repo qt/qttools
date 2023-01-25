@@ -816,12 +816,11 @@ void FormWindowManager::slotUpdateActions()
             simplifiedSelection.append(mainContainer);
 
         // Always count the main container as unlaid-out
-        const QWidgetList::const_iterator cend = simplifiedSelection.constEnd();
-        for (QWidgetList::const_iterator it = simplifiedSelection.constBegin(); it != cend; ++it) {
-            if (*it == mainContainer || !LayoutInfo::isWidgetLaidout(m_core, *it))
+        for (auto *w : std::as_const(simplifiedSelection)) {
+            if (w == mainContainer || !LayoutInfo::isWidgetLaidout(m_core, w))
                 ++unlaidoutWidgetCount;
 
-            if (qobject_cast<const QLayoutWidget *>(*it) || qobject_cast<const Spacer *>(*it))
+            if (qobject_cast<const QLayoutWidget *>(w) || qobject_cast<const Spacer *>(w))
                 canChangeZOrder = false;
         }
 

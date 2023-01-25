@@ -49,17 +49,16 @@ PreviewActionGroup::PreviewActionGroup(QDesignerFormEditorInterface *core, QObje
 
     // Add style actions
     const QStringList styles = QStyleFactory::keys();
-    const QStringList::const_iterator cend = styles.constEnd();
     // Make sure ObjectName  is unique in case toolbar solution is used.
     objNamePrefix = QStringLiteral("__qt_designer_style_");
     // Create styles. Set style name string as action data.
-    for (QStringList::const_iterator it = styles.constBegin(); it !=  cend ;++it) {
-        QAction *a = new QAction(tr("%1 Style").arg(*it), this);
+    for (const auto &s : styles) {
+        QAction *a = new QAction(tr("%1 Style").arg(s), this);
         QString objName = objNamePrefix;
-        objName += *it;
+        objName += s;
         objName += objNamePostfix;
         a->setObjectName(objName);
-        a->setData(*it);
+        a->setData(s);
         addAction(a);
     }
 }

@@ -147,9 +147,8 @@ int WidgetBoxCategoryModel::indexOfWidget(const QString &name)
 QDesignerWidgetBoxInterface::Category WidgetBoxCategoryModel::category() const
 {
     QDesignerWidgetBoxInterface::Category rc;
-    const WidgetBoxCategoryEntrys::const_iterator cend = m_items.constEnd();
-    for (WidgetBoxCategoryEntrys::const_iterator it = m_items.constBegin(); it != cend; ++it)
-        rc.addWidget(it->widget);
+    for (const auto &c : m_items)
+        rc.addWidget(c.widget);
     return rc;
 }
 

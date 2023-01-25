@@ -573,10 +573,8 @@ bool MorphMenu::populateMenu(QWidget *w, QDesignerFormWindowInterface *fw)
     }
 
     // Add actions
-    const QStringList::const_iterator cend = c.constEnd();
-    for (QStringList::const_iterator it = c.constBegin(); it != cend; ++it) {
-        if (*it != oldClassName) {
-            const QString className = *it;
+    for (const auto &className : c) {
+        if (className != oldClassName) {
             m_menu->addAction(className,
                               this, [this, className] { this->slotMorph(className); });
         }

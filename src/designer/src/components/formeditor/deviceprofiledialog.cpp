@@ -59,9 +59,8 @@ DeviceProfileDialog::DeviceProfileDialog(QDesignerDialogGuiInterface *dlgGui, QW
     // Styles
     const QStringList styles = QStyleFactory::keys();
     m_ui->m_styleCombo->addItem(tr("Default"), QVariant(QString()));
-    const QStringList::const_iterator cend = styles.constEnd();
-    for (QStringList::const_iterator it = styles.constBegin(); it != cend; ++it)
-         m_ui->m_styleCombo->addItem(*it, *it);
+    for (const auto &s : styles)
+         m_ui->m_styleCombo->addItem(s, s);
 
     connect(m_ui->m_nameLineEdit, &QLineEdit::textChanged, this, &DeviceProfileDialog::nameChanged);
     connect(m_ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);

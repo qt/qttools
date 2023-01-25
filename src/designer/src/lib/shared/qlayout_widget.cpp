@@ -510,11 +510,10 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     QLayoutItem *BoxLayoutHelper::findItemOfWidget(const LayoutItemVector &lv, QWidget *w)
     {
-        const LayoutItemVector::const_iterator cend = lv.constEnd();
-        for (LayoutItemVector::const_iterator it = lv.constBegin(); it != cend; ++it)
-            if ( (*it)->widget() == w)
-                return *it;
-
+        for (auto *l : lv) {
+            if (l->widget() == w)
+                 return l;
+        }
         return nullptr;
     }
 
