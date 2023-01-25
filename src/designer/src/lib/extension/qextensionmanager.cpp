@@ -118,15 +118,16 @@ QObject *QExtensionManager::extension(QObject *object, const QString &iid) const
 {
     const FactoryMap::const_iterator it = m_extensions.constFind(iid);
     if (it != m_extensions.constEnd()) {
-        const FactoryList::const_iterator fcend = it.value().constEnd();
-        for (FactoryList::const_iterator fit = it.value().constBegin(); fit != fcend; ++fit)
-            if (QObject *ext = (*fit)->extension(object, iid))
+        for (const auto &f : it.value()) {
+            if (QObject *ext = f->extension(object, iid))
                 return ext;
+        }
     }
-    const FactoryList::const_iterator gfcend =  m_globalExtension.constEnd();
-    for (FactoryList::const_iterator git = m_globalExtension.constBegin(); git != gfcend; ++git)
-        if (QObject *ext = (*git)->extension(object, iid))
+
+    for (const auto &gf : m_globalExtension) {
+        if (QObject *ext = gf->extension(object, iid))
             return ext;
+    }
 
     return nullptr;
 }

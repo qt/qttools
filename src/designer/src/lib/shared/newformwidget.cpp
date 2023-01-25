@@ -131,9 +131,8 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     loadFrom(templatePath, true, uiExtension, formTemplate, selectedItem);
     // Additional template paths
     const QStringList formTemplatePaths = settings.formTemplatePaths();
-    const QStringList::const_iterator ftcend = formTemplatePaths.constEnd();
-    for (QStringList::const_iterator it = formTemplatePaths.constBegin(); it != ftcend; ++it)
-        loadFrom(*it, false, uiExtension, formTemplate, selectedItem);
+    for (const auto &ftp : formTemplatePaths)
+        loadFrom(ftp, false, uiExtension, formTemplate, selectedItem);
 
     // Widgets/custom widgets
     if (!lang) {
@@ -406,17 +405,16 @@ void NewFormWidget::loadFrom(const QString &path, bool resourceFile, const QStri
     root->setText(0, visiblePath.replace(underscore, blank));
     root->setToolTip(0, path);
 
-    const QFileInfoList::const_iterator lcend = list.constEnd();
-    for (QFileInfoList::const_iterator it = list.constBegin(); it != lcend; ++it) {
-        if (!it->isFile())
+    for (const auto &fi : list) {
+        if (!fi.isFile())
             continue;
 
         QTreeWidgetItem *item = new QTreeWidgetItem(root);
-        const QString text = it->baseName().replace(underscore, blank);
+        const QString text = fi.baseName().replace(underscore, blank);
         if (selectedItemFound == nullptr && text == selectedItem)
             selectedItemFound = item;
         item->setText(0, text);
-        item->setData(0, TemplateNameRole, it->absoluteFilePath());
+        item->setData(0, TemplateNameRole, fi.absoluteFilePath());
     }
 }
 
@@ -428,14 +426,12 @@ void NewFormWidget::loadFrom(const QString &title, const QStringList &nameList,
     QTreeWidgetItem *root = new QTreeWidgetItem(m_ui->treeWidget);
     root->setFlags(root->flags() & ~Qt::ItemIsSelectable);
     root->setText(0, title);
-    const QStringList::const_iterator cend = nameList.constEnd();
-    for (QStringList::const_iterator it = nameList.constBegin(); it != cend; ++it) {
-        const QString text = *it;
+    for (const auto &text : nameList) {
         QTreeWidgetItem *item = new QTreeWidgetItem(root);
         item->setText(0, text);
         if (selectedItemFound == nullptr && text == selectedItem)
             selectedItemFound = item;
-        item->setData(0, ClassNameRole, *it);
+        item->setData(0, ClassNameRole, text);
     }
 }
 

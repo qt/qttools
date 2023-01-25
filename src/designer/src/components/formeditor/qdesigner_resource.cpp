@@ -640,11 +640,10 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
         QVariantMap designerFormData;
         if (ui->hasElementDesignerdata()) {
             const DomPropertyList domPropertyList = ui->elementDesignerdata()->elementProperty();
-            const DomPropertyList::const_iterator cend = domPropertyList.constEnd();
-            for (DomPropertyList::const_iterator it = domPropertyList.constBegin(); it != cend; ++it) {
-                const QVariant vprop = domPropertyToVariant(this, mainWidget->metaObject(), *it);
+            for (auto *prop : domPropertyList) {
+                const QVariant vprop = domPropertyToVariant(this, mainWidget->metaObject(), prop);
                 if (vprop.metaType().id() != QMetaType::UnknownType)
-                    designerFormData.insert((*it)->attributeName(), vprop);
+                    designerFormData.insert(prop->attributeName(), vprop);
             }
         }
         m_formWindow->setFormData(designerFormData);
@@ -683,13 +682,10 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
 
         // Register all button groups the form builder adds as children of the main container for them to be found
         // in the signal slot editor
-        const QObjectList mchildren = mainWidget->children();
-        if (!mchildren.isEmpty()) {
-            QDesignerMetaDataBaseInterface *mdb = core()->metaDataBase();
-            const QObjectList::const_iterator cend = mchildren.constEnd();
-            for (QObjectList::const_iterator it = mchildren.constBegin(); it != cend; ++it)
-                if (QButtonGroup *bg = qobject_cast<QButtonGroup*>(*it))
-                    mdb->add(bg);
+        auto *mdb = core()->metaDataBase();
+        for (auto *child : mainWidget->children()) {
+            if (QButtonGroup *bg = qobject_cast<QButtonGroup*>(child))
+                mdb->add(bg);
         }
         // Load tools
         for (int index = 0; index < m_formWindow->toolCount(); ++index) {
@@ -2211,15 +2207,14 @@ void QDesignerResource::applyAttributesToPropertySheet(const DomWidget *ui_widge
     if (attributes.isEmpty())
         return;
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_formWindow->core()->extensionManager(), widget);
-    const DomPropertyList::const_iterator acend = attributes.constEnd();
-    for (DomPropertyList::const_iterator it = attributes.constBegin(); it != acend; ++it) {
-        const QString name = (*it)->attributeName();
+    for (auto *prop : attributes) {
+        const QString name = prop->attributeName();
         const int index = sheet->indexOf(name);
         if (index == -1) {
             const QString msg = QString::fromUtf8("Unable to apply attributive property '%1' to '%2'. It does not exist.").arg(name, widget->objectName());
             designerWarning(msg);
         } else {
-            sheet->setProperty(index, domPropertyToVariant(this, widget->metaObject(), *it));
+            sheet->setProperty(index, domPropertyToVariant(this, widget->metaObject(), prop));
             sheet->setChanged(index, true);
         }
     }

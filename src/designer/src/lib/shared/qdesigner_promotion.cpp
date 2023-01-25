@@ -240,11 +240,10 @@ namespace qdesigner_internal {
             if (!scratchPadClasses.isEmpty()) {
                 // Check whether these are actually promoted
                 QDesignerWidgetDataBaseInterface *widgetDataBase = m_core->widgetDataBase();
-                QStringList::const_iterator cend = scratchPadClasses.constEnd();
-                for (QStringList::const_iterator it = scratchPadClasses.constBegin(); it != cend; ++it ) {
-                    const int index = widgetDataBase->indexOfClassName(*it);
+                for (const auto &scItem : scratchPadClasses) {
+                    const int index = widgetDataBase->indexOfClassName(scItem);
                     if (index != -1 && widgetDataBase->item(index)->isPromoted())
-                        rc += *it;
+                        rc.insert(scItem);
                 }
             }
         }
@@ -276,12 +275,12 @@ namespace qdesigner_internal {
         // class B will depend on it. When removing QWebView, the base class of B will
         // be changed to that of QWebView by the below code.
         const PromotedClasses promotedList = promotedClasses();
-        for (PromotedClasses::const_iterator it = promotedList.constBegin(), end = promotedList.constEnd(); it != end; ++it) {
-            if (it->baseItem->name() == className) {
+        for (const auto &pc : promotedList) {
+            if (pc.baseItem->name() == className) {
                 const QString extends = widgetDataBase->item(index)->extends();
-                qWarning().nospace() << "Warning: Promoted class " << it->promotedItem->name()
+                qWarning().nospace() << "Warning: Promoted class " << pc.promotedItem->name()
                     << " extends " << className << ", changing its base class to " <<  extends << '.';
-                it->promotedItem->setExtends(extends);
+                pc.promotedItem->setExtends(extends);
             }
         }
         widgetDataBase->remove(index);

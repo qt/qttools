@@ -677,10 +677,10 @@ template <class Container>
     Selection s;
     designerObjectInspector->getSelection(s);
     const QWidgetList &source = fw->isManaged(current) ? s.managed : s.unmanaged;
-    const QWidgetList::const_iterator cend = source.constEnd();
-    for ( QWidgetList::const_iterator it = source.constBegin(); it != cend; ++it)
-        if (*it != current) // was first
-            c->push_back(*it);
+    for (auto *w : source) {
+        if (w != current) // was first
+            c->append(w);
+    }
 }
 
 QObjectList QDesignerTaskMenu::applicableObjects(const QDesignerFormWindowInterface *fw, PropertyMode pm) const

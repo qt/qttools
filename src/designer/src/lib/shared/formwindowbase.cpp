@@ -292,10 +292,8 @@ static void recursiveUpdate(QWidget *w)
 {
     w->update();
 
-    const QObjectList &l = w->children();
-    const QObjectList::const_iterator cend = l.constEnd();
-    for (QObjectList::const_iterator it = l.constBegin(); it != cend; ++it) {
-        if (QWidget *w = qobject_cast<QWidget*>(*it))
+    for (auto *child : w->children()) {
+        if (QWidget *w = qobject_cast<QWidget*>(child))
             recursiveUpdate(w);
     }
 }
@@ -459,9 +457,8 @@ QMenu *FormWindowBase::createExtensionTaskMenu(QDesignerFormWindowInterface *fw,
         actions.push_back(a);
     }
     QMenu *rc = new QMenu;
-    const ActionList::const_iterator cend = actions.constEnd();
-    for (ActionList::const_iterator it = actions.constBegin(); it != cend; ++it)
-        rc->addAction(*it);
+    for (auto *a : std::as_const(actions))
+        rc->addAction(a);
     return rc;
 }
 

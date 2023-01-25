@@ -148,9 +148,8 @@ bool ToolBarEventFilter::handleContextMenuEvent(QContextMenuEvent * event )
     const ActionList al = contextMenuActions(event->globalPos());
 
     QMenu menu(nullptr);
-    const ActionList::const_iterator acend = al.constEnd();
-    for (ActionList::const_iterator it = al.constBegin(); it != acend; ++it)
-        menu.addAction(*it);
+    for (auto *a : al)
+        menu.addAction(a);
     menu.exec(globalPos);
     return true;
 }

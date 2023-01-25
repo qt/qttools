@@ -198,14 +198,13 @@ namespace qdesigner_internal
 
         const QChar delimiter = QLatin1Char('|');
         QString rc;
-        const QStringList::const_iterator cend = flagIds.constEnd();
-        for (QStringList::const_iterator it = flagIds.constBegin(); it != cend; ++it) {
+        for (const auto &id : flagIds) {
             if (!rc.isEmpty())
                 rc += delimiter ;
             if (sm == FullyQualified)
-                appendQualifiedName(*it, rc);
+                appendQualifiedName(id, rc);
             else
-                rc += *it;
+                rc += id;
         }
         return rc;
     }
@@ -220,9 +219,9 @@ namespace qdesigner_internal
         }
         uint flags = 0;
         bool valueOk = true;
-        QStringList keys = s.split(QString(QLatin1Char('|')));
-        for (auto it = keys.constBegin(), cend = keys.constEnd(); it != cend; ++it) {
-            const uint flagValue = keyToValue(*it, &valueOk);
+        const QStringList keys = s.split(QString(QLatin1Char('|')));
+        for (const QString &key : keys) {
+            const uint flagValue = keyToValue(key, &valueOk);
             if (!valueOk) {
                 flags = 0;
                 break;

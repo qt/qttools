@@ -150,9 +150,8 @@ void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
 QStringList EmbeddedOptionsControlPrivate::existingProfileNames() const
 {
     QStringList rc;
-    const DeviceProfileList::const_iterator dcend = m_sortedProfiles.constEnd();
-    for (DeviceProfileList::const_iterator it = m_sortedProfiles.constBegin(); it != dcend; ++it)
-        rc.push_back(it->name());
+    for (const auto &dp : m_sortedProfiles)
+        rc.append(dp.name());
     return rc;
 }
 

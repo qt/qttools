@@ -58,9 +58,8 @@ void TemplateOptionsWidget::setTemplatePaths(const QStringList &l)
         // disable button
         templatePathSelectionChanged();
     } else {
-        const QStringList::const_iterator cend = l.constEnd();
-        for (QStringList::const_iterator it = l.constBegin(); it != cend; ++it)
-            m_ui->m_templatePathListWidget->addItem(*it);
+        for (const auto &s : l)
+            m_ui->m_templatePathListWidget->addItem(s);
         m_ui->m_templatePathListWidget->setCurrentItem(m_ui->m_templatePathListWidget->item(0));
     }
 }

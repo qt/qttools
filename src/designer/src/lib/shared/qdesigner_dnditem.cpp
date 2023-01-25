@@ -140,8 +140,8 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
         QPainter painter(&image);
         QPainter maskPainter(&mask);
         decorationTopLeft = unitedGeometry.topLeft();
-        for (it = m_items.constBegin() ; it != cend; ++it ) {
-            QWidget *w = (*it)->decoration();
+        for (auto *item : std::as_const(m_items)) {
+            QWidget *w = item->decoration();
             const QPixmap wp = w->grab(QRect(0, 0, -1, -1));
             const QPoint pos = w->pos() - decorationTopLeft;
             painter.drawPixmap(pos, wp);
@@ -169,9 +169,7 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
 
 QDesignerMimeData::~QDesignerMimeData()
 {
-    const QDesignerDnDItems::const_iterator cend = m_items.constEnd();
-    for (QDesignerDnDItems::const_iterator it = m_items.constBegin(); it != cend; ++it )
-        delete *it;
+    qDeleteAll(m_items);
 }
 
 Qt::DropAction QDesignerMimeData::proposedDropAction() const
@@ -189,11 +187,12 @@ Qt::DropAction QDesignerMimeData::execDrag(const QDesignerDnDItems &items, QWidg
 
     // Store pointers to widgets that are to be re-shown if a move operation is canceled
     QWidgetList reshowWidgets;
-    const QDesignerDnDItems::const_iterator cend = items.constEnd();
-    for (QDesignerDnDItems::const_iterator it = items.constBegin(); it != cend; ++it )
-        if (QWidget *w = (*it)->widget())
-            if ((*it)->type() ==  QDesignerDnDItemInterface::MoveDrop)
+    for (auto *item : items) {
+        if (QWidget *w = item->widget()) {
+            if (item->type() == QDesignerDnDItemInterface::MoveDrop)
                 reshowWidgets.push_back(w);
+        }
+    }
 
     const Qt::DropAction executedAction = drag->exec(Qt::CopyAction|Qt::MoveAction, mimeData->proposedDropAction());
 
@@ -209,9 +208,8 @@ Qt::DropAction QDesignerMimeData::execDrag(const QDesignerDnDItems &items, QWidg
 void QDesignerMimeData::moveDecoration(const QPoint &globalPos) const
 {
     const QPoint relativeDistance = globalPos - m_globalStartPos;
-    const QDesignerDnDItems::const_iterator cend = m_items.constEnd();
-    for (QDesignerDnDItems::const_iterator it =m_items.constBegin(); it != cend; ++it ) {
-        QWidget *w = (*it)->decoration();
+    for (auto *item : m_items) {
+        QWidget *w = item->decoration();
         w->move(w->pos() + relativeDistance);
     }
 }
@@ -221,12 +219,14 @@ void QDesignerMimeData::removeMovedWidgetsFromSourceForm(const QDesignerDnDItems
     typedef QMultiMap<FormWindowBase *, QWidget *> FormWidgetMap;
     FormWidgetMap formWidgetMap;
     // Find moved widgets per form
-    const QDesignerDnDItems::const_iterator cend = items.constEnd();
-    for (QDesignerDnDItems::const_iterator it = items.constBegin(); it != cend; ++it )
-        if ((*it)->type() ==  QDesignerDnDItemInterface::MoveDrop)
-            if (QWidget *w = (*it)->widget())
-                if (FormWindowBase *fb = qobject_cast<FormWindowBase *>((*it)->source()))
+    for (auto *item : items) {
+        if (item->type() == QDesignerDnDItemInterface::MoveDrop) {
+            if (QWidget *w = item->widget()) {
+                if (FormWindowBase *fb = qobject_cast<FormWindowBase *>(item->source()))
                     formWidgetMap.insert(fb, w);
+            }
+        }
+    }
 
     const auto &formWindows = formWidgetMap.uniqueKeys();
     for (FormWindowBase *fb : formWindows)

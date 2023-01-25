@@ -561,15 +561,14 @@ QStringList QDesignerPluginManager::findPlugins(const QString &path)
     // Load symbolic links but make sure all file names are unique as not
     // to fall for something like 'libplugin.so.1 -> libplugin.so'
     QStringList result;
-    const QFileInfoList::const_iterator icend = infoList.constEnd();
-    for (QFileInfoList::const_iterator it = infoList.constBegin(); it != icend; ++it) {
+    for (const auto &fi : infoList) {
         QString fileName;
-        if (it->isSymLink()) {
-            const QFileInfo linkTarget = QFileInfo(it->symLinkTarget());
+        if (fi.isSymLink()) {
+            const QFileInfo linkTarget = QFileInfo(fi.symLinkTarget());
             if (linkTarget.exists() && linkTarget.isFile())
                 fileName = linkTarget.absoluteFilePath();
         } else {
-            fileName = it->absoluteFilePath();
+            fileName = fi.absoluteFilePath();
         }
         if (!fileName.isEmpty() && QLibrary::isLibrary(fileName) && !result.contains(fileName))
             result += fileName;

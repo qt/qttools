@@ -112,18 +112,18 @@ namespace qdesigner_internal {
         QDesignerWidgetDataBaseItemInterface *baseClass = nullptr;
         QStandardItem *baseItem = nullptr;
 
-        const PromotedClasses::const_iterator bcend = promotedClasses.constEnd();
-        for (PromotedClasses::const_iterator it = promotedClasses.constBegin(); it !=  bcend; ++it) {
+        for (auto &pi : promotedClasses) {
             // Start a new base class?
-            if (baseClass !=  it->baseItem) {
-                baseClass =  it->baseItem;
-                const StandardItemList baseRow = baseModelRow(it->baseItem);
+            if (baseClass != pi.baseItem) {
+                baseClass = pi.baseItem;
+                const StandardItemList baseRow = baseModelRow(pi.baseItem);
                 baseItem = baseRow.constFirst();
                 appendRow(baseRow);
             }
             Q_ASSERT(baseItem);
             // Append derived
-            baseItem->appendRow(promotedModelRow(it->baseItem, it->promotedItem, usedPromotedClasses.contains(it->promotedItem->name())));
+            baseItem->appendRow(promotedModelRow(pi.baseItem, pi.promotedItem,
+                                                 usedPromotedClasses.contains(pi.promotedItem->name())));
         }
     }
 

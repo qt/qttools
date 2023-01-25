@@ -126,9 +126,8 @@ void QDesignerWorkbench::Position::applyTo(QDockWidget *dockWidget) const
 
 static inline void addActionsToMenu(QMenu *m, const ActionList &al)
 {
-    const ActionList::const_iterator cend = al.constEnd();
-    for (ActionList::const_iterator it = al.constBegin(); it != cend; ++it)
-        m->addAction(*it);
+    for (auto *a : al)
+        m->addAction(a);
 }
 
 static inline QMenu *addMenu(QMenuBar *mb, const QString &title, const ActionList &al)

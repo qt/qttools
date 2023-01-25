@@ -487,9 +487,7 @@ void BoxLayout::doLayout()
 
     QDesignerWidgetItemInstaller wii; // Make sure we use QDesignerWidgetItem.
 
-    const  QWidgetList::const_iterator cend = widgets().constEnd();
-    for (QWidgetList::const_iterator it =  widgets().constBegin(); it != cend; ++it) {
-        QWidget *w = *it;
+    for (auto *w : widgets()) {
         if (needReparent)
             reparentToLayoutBase(w);
 
@@ -539,10 +537,7 @@ void SplitterLayout::doLayout()
     QSplitter *splitter = qobject_cast<QSplitter*>(layoutBaseWidget());
     Q_ASSERT(splitter != nullptr);
 
-
-    const  QWidgetList::const_iterator cend = widgets().constEnd();
-    for (QWidgetList::const_iterator it =  widgets().constBegin(); it != cend; ++it) {
-        QWidget *w = *it;
+    for (auto *w : widgets()) {
         if (needReparent)
             reparentToLayoutBase(w);
         splitter->addWidget(w);
@@ -915,9 +910,7 @@ bool Grid::shrinkFormLayoutSpans()
             widgets.insert(w);
     // Restrict the widget span: max horizontal span at column 0: 2, anything else: 1
     const int maxRowSpan = 1;
-    const WidgetSet::const_iterator cend = widgets.constEnd();
-    for (WidgetSet::const_iterator it = widgets.constBegin(); it != cend ; ++it) {
-        QWidget *w = *it;
+    for (auto *w : std::as_const(widgets)) {
         int row, col,  rowspan, colspan;
         if (!locateWidget(w, row, col, rowspan, colspan)) {
             qDebug("ooops, widget '%s' does not fit in layout", w->objectName().toUtf8().constData());
@@ -1070,9 +1063,7 @@ void GridLayout<GridLikeLayout, LayoutType, GridMode>::doLayout()
 
     QDesignerWidgetItemInstaller wii; // Make sure we use QDesignerWidgetItem.
 
-    const  QWidgetList::const_iterator cend = widgets().constEnd();
-    for (QWidgetList::const_iterator it =  widgets().constBegin(); it != cend; ++it) {
-        QWidget *w = *it;
+    for (auto *w : widgets()) {
         int r = 0, c = 0, rs = 0, cs = 0;
 
         if (m_grid.locateWidget(w, r, c, rs, cs)) {

@@ -179,9 +179,9 @@ WidgetSelection *FormWindow::Selection::addWidget(FormWindow* fw, QWidget *w)
         return rc;
     }
     // find a free one in the pool
-    for (auto it = m_selectionPool.constBegin(), pend = m_selectionPool.constEnd(); it != pend; ++it) {
-        if (! (*it)->isUsed()) {
-            rc = *it;
+    for (auto *s : std::as_const(m_selectionPool)) {
+        if (!s->isUsed()) {
+            rc = s;
             break;
         }
     }
@@ -924,13 +924,9 @@ bool FormWindow::isMainContainer(const QWidget *w) const
 void FormWindow::updateChildSelections(QWidget *w)
 {
     const QWidgetList l = w->findChildren<QWidget*>();
-    if (!l.isEmpty()) {
-        const QWidgetList::const_iterator lcend = l.constEnd();
-        for (QWidgetList::const_iterator it = l.constBegin(); it != lcend; ++it) {
-            QWidget *w = *it;
-            if (isManaged(w))
-                updateSelection(w);
-        }
+    for (auto *w : l) {
+        if (isManaged(w))
+            updateSelection(w);
     }
 }
 
@@ -1790,9 +1786,8 @@ static void positionPastedWidgetsAtMousePosition(FormWindow *fw, const QPoint &c
         cursorPos = grid.snapPoint(QPoint(0, 0));
     // Determine area of pasted widgets
     QRect pasteArea;
-    const QWidgetList::const_iterator lcend = l.constEnd();
-    for (QWidgetList::const_iterator it = l.constBegin(); it != lcend; ++it)
-        pasteArea =pasteArea.isNull() ? (*it)->geometry() : pasteArea.united((*it)->geometry());
+    for (auto *w : l)
+        pasteArea = pasteArea.isNull() ? w->geometry() : pasteArea.united(w->geometry());
 
     // Mouse on some child? (try to position bottomRight on a free spot to
     // get the stacked-offset effect of Designer 4.3, that is, offset by grid if Ctrl-V is pressed continuously
@@ -1804,8 +1799,8 @@ static void positionPastedWidgetsAtMousePosition(FormWindow *fw, const QPoint &c
     } while (true);
     // Move.
     const QPoint offset = cursorPos - pasteArea.topLeft();
-    for (QWidgetList::const_iterator it = l.constBegin(); it != lcend; ++it)
-        (*it)->move((*it)->pos() + offset);
+    for (auto *w : l)
+        w->move(w->pos() + offset);
 }
 
 void FormWindow::paste(PasteMode pasteMode)
@@ -1983,15 +1978,14 @@ void FormWindow::breakLayout(QWidget *w)
     // Find the first-order managed child widgets
     QWidgetList widgets;
 
-    const QObjectList children = w->children();
-    const QObjectList::const_iterator cend = children.constEnd();
     const QDesignerMetaDataBaseInterface *mdb = core()->metaDataBase();
-    for (QObjectList::const_iterator it =  children.constBegin(); it != cend; ++it)
-        if ( (*it)->isWidgetType())  {
-            QWidget *w = static_cast<QWidget*>(*it);
+    for (auto *o : w->children()) {
+        if (o->isWidgetType())  {
+            auto *w = static_cast<QWidget*>(o);
             if (mdb->item(w))
                 widgets.push_back(w);
         }
+    }
 
     BreakLayoutCommand *cmd = new BreakLayoutCommand(this);
     cmd->init(widgets, w);
@@ -2175,16 +2169,15 @@ void FormWindow::layoutContainer(QWidget *w, int type)
 
     w = core()->widgetFactory()->containerOfWidget(w);
 
-    const QObjectList l = w->children();
     // find managed widget children
     QWidgetList widgets;
-    const QObjectList::const_iterator ocend = l.constEnd();
-    for (QObjectList::const_iterator it = l.constBegin(); it != ocend; ++it)
-        if ( (*it)->isWidgetType() ) {
-            QWidget *widget = static_cast<QWidget*>(*it);
+    for (auto *o : w->children()) {
+        if (o->isWidgetType() ) {
+            auto *widget = static_cast<QWidget*>(o);
             if (widget->isVisibleTo(this) && isManaged(widget))
                 widgets.append(widget);
         }
+    }
 
     if (widgets.isEmpty()) // QTBUG-50563, observed when using hand-edited forms.
         return;
@@ -2413,9 +2406,7 @@ void FormWindow::simplifySelection(QWidgetList *sel) const
     }
     QWidgetList toBeRemoved;
     toBeRemoved.reserve(sel->size());
-    const QWidgetList::const_iterator scend = sel->constEnd();
-    for (QWidgetList::const_iterator it = sel->constBegin(); it != scend; ++it) {
-        QWidget *child = *it;
+    for (auto *child : std::as_const(*sel)) {
         for (QWidget *w = child; true ; ) { // Is any of the parents also selected?
             QWidget *parent = w->parentWidget();
             if (!parent || parent == mainC)
@@ -2429,11 +2420,8 @@ void FormWindow::simplifySelection(QWidgetList *sel) const
     }
     // Now we can actually remove the widgets that were marked
     // for removal in the previous pass.
-    if (!toBeRemoved.isEmpty()) {
-        const QWidgetList::const_iterator rcend = toBeRemoved.constEnd();
-        for (QWidgetList::const_iterator it = toBeRemoved.constBegin(); it != rcend; ++it)
-            sel->removeAll(*it);
-    }
+    for (auto *r : std::as_const(toBeRemoved))
+        sel->removeAll(r);
 }
 
 FormWindow *FormWindow::findFormWindow(QWidget *w)

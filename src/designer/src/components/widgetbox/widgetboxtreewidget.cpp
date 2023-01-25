@@ -320,9 +320,8 @@ void WidgetBoxTreeWidget::addCustomCategories(bool replace)
     }
     // re-add
     const CategoryList customList = loadCustomCategoryList();
-    const CategoryList::const_iterator cend = customList.constEnd();
-    for (CategoryList::const_iterator it = customList.constBegin(); it != cend; ++it)
-        addCategory(*it);
+    for (const auto &c : customList)
+        addCategory(c);
 }
 
 static inline QString msgXmlError(const QString &fileName, const QXmlStreamReader &r)
