@@ -156,19 +156,17 @@ private:
 // Helper to correctly unmanage a widget and its children for delete operations
 class  QDESIGNER_SHARED_EXPORT ManageWidgetCommandHelper {
 public:
-    using WidgetVector = QList<QWidget *>;
-
     ManageWidgetCommandHelper();
     void init(const QDesignerFormWindowInterface *fw, QWidget *widget);
-    void init(QWidget *widget, const WidgetVector &managedChildren);
+    void init(QWidget *widget, const QWidgetList &managedChildren);
 
     void manage(QDesignerFormWindowInterface *fw);
     void unmanage(QDesignerFormWindowInterface *fw);
 
-    const WidgetVector &managedChildren() const { return m_managedChildren; }
+    const QWidgetList &managedChildren() const { return m_managedChildren; }
 private:
     QWidget *m_widget = nullptr;
-    WidgetVector m_managedChildren;
+    QWidgetList m_managedChildren;
 };
 
 class QDESIGNER_SHARED_EXPORT DeleteWidgetCommand: public QDesignerFormWindowCommand
