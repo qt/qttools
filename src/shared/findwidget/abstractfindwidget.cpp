@@ -80,13 +80,13 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     m_toolClose->setIcon(afwCreateIconSet(QLatin1String("closetab.png")));
     m_toolClose->setAutoRaise(true);
     layOut->addWidget(m_toolClose);
-    connect(m_toolClose, SIGNAL(clicked()), SLOT(deactivate()));
+    connect(m_toolClose, &QAbstractButton::clicked, this, &AbstractFindWidget::deactivate);
 
     m_editFind = new QLineEdit(this);
     layOut->addWidget(m_editFind);
-    connect(m_editFind, SIGNAL(returnPressed()), SLOT(findNext()));
-    connect(m_editFind, SIGNAL(textChanged(QString)), SLOT(findCurrentText()));
-    connect(m_editFind, SIGNAL(textChanged(QString)), SLOT(updateButtons()));
+    connect(m_editFind, &QLineEdit::returnPressed, this, &AbstractFindWidget::findNext);
+    connect(m_editFind, &QLineEdit::textChanged, this, &AbstractFindWidget::findCurrentText);
+    connect(m_editFind, &QLineEdit::textChanged, this, &AbstractFindWidget::updateButtons);
 
     m_toolPrevious = new QToolButton(this);
     m_toolPrevious->setAutoRaise(true);
@@ -94,7 +94,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     m_toolPrevious->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     m_toolPrevious->setIcon(afwCreateIconSet(QLatin1String("previous.png")));
     layOut->addWidget(m_toolPrevious);
-    connect(m_toolPrevious, SIGNAL(clicked()), SLOT(findPrevious()));
+    connect(m_toolPrevious, &QAbstractButton::clicked, this, &AbstractFindWidget::findPrevious);
 
     m_toolNext = new QToolButton(this);
     m_toolNext->setAutoRaise(true);
@@ -102,7 +102,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     m_toolNext->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     m_toolNext->setIcon(afwCreateIconSet(QLatin1String("next.png")));
     layOut->addWidget(m_toolNext);
-    connect(m_toolNext, SIGNAL(clicked()), SLOT(findNext()));
+    connect(m_toolNext, &QAbstractButton::clicked, this, &AbstractFindWidget::findNext);
 
     if (flags & NarrowLayout) {
         QSizePolicy sp(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -124,7 +124,8 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     if (!(flags & NoCaseSensitive)) {
         m_checkCase = new QCheckBox(tr("&Case sensitive"), this);
         layOut->addWidget(m_checkCase);
-        connect(m_checkCase, SIGNAL(toggled(bool)), SLOT(findCurrentText()));
+        connect(m_checkCase, &QAbstractButton::toggled,
+                this, &AbstractFindWidget::findCurrentText);
     } else {
         m_checkCase = 0;
     }
@@ -132,7 +133,8 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     if (!(flags & NoWholeWords)) {
         m_checkWholeWords = new QCheckBox(tr("Whole &words"), this);
         layOut->addWidget(m_checkWholeWords);
-        connect(m_checkWholeWords, SIGNAL(toggled(bool)), SLOT(findCurrentText()));
+        connect(m_checkWholeWords, &QAbstractButton::toggled,
+                this, &AbstractFindWidget::findCurrentText);
     } else {
         m_checkWholeWords = 0;
     }
