@@ -49,14 +49,17 @@
 ****************************************************************************/
 
 #include "textfinder.h"
-#include <QFile>
+
+#include <QUiLoader>
+
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
-#include <QTextStream>
-#include <QUiLoader>
 #include <QVBoxLayout>
+
+#include <QFile>
+#include <QTextStream>
 
 //! [4]
 static QWidget *loadUiFile(QWidget *parent)
@@ -100,9 +103,8 @@ TextFinder::TextFinder(QWidget *parent)
 //! [3a]
 
 //! [3b]
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto *layout = new QVBoxLayout(this);
     layout->addWidget(formWidget);
-    setLayout(layout);
 //! [3b]
 
 //! [3c]
