@@ -2085,6 +2085,10 @@ pixmap property in the property editor.
 
     \snippet manual/doc_src_designer-manual.cpp 2
 
+    \note When renaming widgets in the form, the slot names need to be
+    adapted accordingly, which can become a maintenance problem.
+    For this reason, we recommend against using this in new code.
+
     Using this convention, we can define and implement a slot that responds to
     mouse clicks on the \gui OK button:
 
