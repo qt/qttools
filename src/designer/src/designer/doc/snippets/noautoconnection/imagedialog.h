@@ -59,7 +59,7 @@ class ImageDialog : public QDialog, private Ui::ImageDialog
     Q_OBJECT
 
 public:
-    ImageDialog(QWidget *parent = 0);
+    explicit ImageDialog(QWidget *parent = nullptr);
 
 private slots:
     void checkValues();

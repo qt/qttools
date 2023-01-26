@@ -48,8 +48,6 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
-
 #include "imagedialog.h"
 
 ImageDialog::ImageDialog(QWidget *parent)
@@ -64,6 +62,6 @@ ImageDialog::ImageDialog(QWidget *parent)
     colorDepthCombo->addItem(tr("65536 colors (16 bits per pixel)"));
     colorDepthCombo->addItem(tr("16 million colors (24 bits per pixel)"));
 
-    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(okButton, &QAbstractButton::clicked, this, &QDialog::accept);
+    connect(cancelButton, &QAbstractButton::clicked, this, &QDialog::reject);
 }
