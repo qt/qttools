@@ -19,10 +19,10 @@
 #include <QtCore/QDebug>
 
 #ifdef TEST_SKIN
-#  include <QtGui/QMainWindow>
-#  include <QtGui/QDialog>
-#  include <QtGui/QDialogButtonBox>
-#  include <QtGui/QHBoxLayout>
+#  include <QtWidgets/QMainWindow>
+#  include <QtWidgets/QDialog>
+#  include <QtWidgets/QDialogButtonBox>
+#  include <QtWidgets/QHBoxLayout>
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -790,16 +790,16 @@ int main(int argc,char *argv[])
     QHBoxLayout *dialogLayout = new QHBoxLayout();
     dialog->setLayout(dialogLayout);
     QDialogButtonBox *dialogButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
-    QObject::connect(dialogButtonBox, SIGNAL(rejected()), dialog, SLOT(reject()));
-    QObject::connect(dialogButtonBox, SIGNAL(accepted()), dialog, SLOT(accept()));
+    QObject::connect(dialogButtonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
+    QObject::connect(dialogButtonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
     dialogLayout->addWidget(dialogButtonBox);
     dialog->setFixedSize(params.screenSize());
     dialog->setParent(&ds, Qt::SubWindow);
     dialog->setAutoFillBackground(true);
     ds.setView(dialog);
 
-    QObject::connect(&ds, SIGNAL(popupMenu()), &mw, SLOT(close()));
-    QObject::connect(&ds, SIGNAL(skinKeyPressEvent(int,QString,bool)), &mw, SLOT(close()));
+    QObject::connect(&ds, &DeviceSkin::popupMenu, &mw, &QWidget::close);
+    QObject::connect(&ds, &DeviceSkin::skinKeyPressEvent, &mw, &QWidget::close);
     mw.show();
     return app.exec();
 }

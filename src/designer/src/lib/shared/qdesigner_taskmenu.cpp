@@ -121,19 +121,21 @@ namespace qdesigner_internal {
 
 // Sub menu displaying the alignment options of a widget in a managed
 // grid/box layout cell.
-class LayoutAlignmentMenu {
+class LayoutAlignmentMenu : public QObject {
+    Q_OBJECT
 public:
     explicit LayoutAlignmentMenu(QObject *parent);
 
     QAction *subMenuAction() const { return m_subMenuAction; }
-
-    void connect(QObject *receiver, const char *aSlot);
 
     // Set up enabled state and checked actions according to widget (managed box/grid)
     bool setAlignment(const QDesignerFormEditorInterface *core, QWidget *w);
 
     // Return the currently checked alignment
     Qt::Alignment alignment() const;
+
+signals:
+    void changed();
 
 private:
     enum Actions { HorizNone, Left, HorizCenter, Right, VerticalNone, Top, VerticalCenter, Bottom };
@@ -155,13 +157,15 @@ QAction *LayoutAlignmentMenu::createAction(const QString &text, int data, QMenu 
     return a;
 }
 
-LayoutAlignmentMenu::LayoutAlignmentMenu(QObject *parent) :
+LayoutAlignmentMenu::LayoutAlignmentMenu(QObject *parent) : QObject(parent),
     m_subMenuAction(new QAction(QDesignerTaskMenu::tr("Layout Alignment"), parent)),
     m_horizGroup(new QActionGroup(parent)),
     m_verticalGroup(new QActionGroup(parent))
 {
     m_horizGroup->setExclusive(true);
     m_verticalGroup->setExclusive(true);
+    connect(m_horizGroup, &QActionGroup::triggered, this, &LayoutAlignmentMenu::changed);
+    connect(m_verticalGroup, &QActionGroup::triggered, this, &LayoutAlignmentMenu::changed);
 
     QMenu *menu = new QMenu;
     m_subMenuAction->setMenu(menu);
@@ -175,12 +179,6 @@ LayoutAlignmentMenu::LayoutAlignmentMenu(QObject *parent) :
     m_actions[Top] = createAction(QDesignerTaskMenu::tr("Top"), Qt::AlignTop, menu, m_verticalGroup);
     m_actions[VerticalCenter] = createAction(QDesignerTaskMenu::tr("Center Vertically"), Qt::AlignVCenter, menu, m_verticalGroup);
     m_actions[Bottom] = createAction(QDesignerTaskMenu::tr("Bottom"), Qt::AlignBottom, menu, m_verticalGroup);
-}
-
-void LayoutAlignmentMenu::connect(QObject *receiver, const char *aSlot)
-{
-    QObject::connect(m_horizGroup, SIGNAL(triggered(QAction*)), receiver, aSlot);
-    QObject::connect(m_verticalGroup, SIGNAL(triggered(QAction*)), receiver, aSlot);
 }
 
 bool LayoutAlignmentMenu::setAlignment(const QDesignerFormEditorInterface *core, QWidget *w)
@@ -356,7 +354,8 @@ QDesignerTaskMenu::QDesignerTaskMenu(QWidget *widget, QObject *parent) :
     connect(d->m_containerFakeMethods, &QAction::triggered, this, &QDesignerTaskMenu::containerFakeMethods);
     connect(d->m_navigateToSlot, &QAction::triggered, this, &QDesignerTaskMenu::slotNavigateToSlot);
     connect(d->m_sizeActionGroup, &QActionGroup::triggered, this, &QDesignerTaskMenu::applySize);
-    d->m_layoutAlignmentMenu.connect(this, SLOT(slotLayoutAlignment()));
+    connect(&d->m_layoutAlignmentMenu, &LayoutAlignmentMenu::changed,
+            this, &QDesignerTaskMenu::slotLayoutAlignment);
 }
 
 QDesignerTaskMenu::~QDesignerTaskMenu()
@@ -723,3 +722,5 @@ void QDesignerTaskMenu::slotLayoutAlignment()
 } // namespace qdesigner_internal
 
 QT_END_NAMESPACE
+
+#include "qdesigner_taskmenu.moc"

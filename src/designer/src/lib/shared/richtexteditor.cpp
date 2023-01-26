@@ -40,6 +40,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char RichTextDialogGroupC[] = "RichTextDialog";
 static const char GeometryKeyC[] = "Geometry";
 static const char TabKeyC[] = "Tab";
@@ -375,7 +377,6 @@ private:
 };
 
 static QAction *createCheckableAction(const QIcon &icon, const QString &text,
-                                      QObject *receiver, const char *slot,
                                       QObject *parent = nullptr)
 {
     QAction *result = new QAction(parent);
@@ -383,8 +384,6 @@ static QAction *createCheckableAction(const QIcon &icon, const QString &text,
     result->setText(text);
     result->setCheckable(true);
     result->setChecked(false);
-    if (slot)
-        QObject::connect(result, SIGNAL(triggered(bool)), receiver, slot);
     return result;
 }
 
@@ -414,20 +413,20 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     // Bold, italic and underline buttons
 
     m_bold_action = createCheckableAction(
-            createIconSet(QStringLiteral("textbold.png")),
-            tr("Bold"), editor, SLOT(setFontBold(bool)), this);
+            createIconSet(u"textbold.png"_s), tr("Bold"), this);
+    connect(m_bold_action, &QAction::triggered, editor, &RichTextEditor::setFontBold);
     m_bold_action->setShortcut(tr("CTRL+B"));
     addAction(m_bold_action);
 
     m_italic_action = createCheckableAction(
-            createIconSet(QStringLiteral("textitalic.png")),
-            tr("Italic"), editor, SLOT(setFontItalic(bool)), this);
+            createIconSet(u"textitalic.png"_s), tr("Italic"), this);
+    connect(m_italic_action, &QAction::triggered, editor, &RichTextEditor::setFontItalic);
     m_italic_action->setShortcut(tr("CTRL+I"));
     addAction(m_italic_action);
 
     m_underline_action = createCheckableAction(
-            createIconSet(QStringLiteral("textunder.png")),
-            tr("Underline"), editor, SLOT(setFontUnderline(bool)), this);
+            createIconSet(u"textunder.png"_s), tr("Underline"), this);
+    connect(m_underline_action, &QAction::triggered, editor, &RichTextEditor::setFontUnderline);
     m_underline_action->setShortcut(tr("CTRL+U"));
     addAction(m_underline_action);
 
@@ -440,28 +439,25 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
             this, &RichTextEditorToolBar::alignmentActionTriggered);
 
     m_align_left_action = createCheckableAction(
-            createIconSet(QStringLiteral("textleft.png")),
-            tr("Left Align"), editor, nullptr, alignment_group);
+            createIconSet(u"textleft.png"_s), tr("Left Align"), alignment_group);
     addAction(m_align_left_action);
 
     m_align_center_action = createCheckableAction(
-            createIconSet(QStringLiteral("textcenter.png")),
-            tr("Center"), editor, nullptr, alignment_group);
+            createIconSet(u"textcenter.png"_s), tr("Center"), alignment_group);
     addAction(m_align_center_action);
 
     m_align_right_action = createCheckableAction(
-            createIconSet(QStringLiteral("textright.png")),
-            tr("Right Align"), editor, nullptr, alignment_group);
+            createIconSet(u"textright.png"_s), tr("Right Align"), alignment_group);
     addAction(m_align_right_action);
 
     m_align_justify_action = createCheckableAction(
-            createIconSet(QStringLiteral("textjustify.png")),
-            tr("Justify"), editor, nullptr, alignment_group);
+            createIconSet(u"textjustify.png"_s), tr("Justify"), alignment_group);
     addAction(m_align_justify_action);
 
     m_layoutDirectionAction = createCheckableAction(
-            createIconSet(QStringLiteral("righttoleft.png")),
-            tr("Right to Left"), this, SLOT(layoutDirectionChanged()));
+            createIconSet(u"righttoleft.png"_s), tr("Right to Left"));
+    connect(m_layoutDirectionAction, &QAction::triggered,
+            this, &RichTextEditorToolBar::layoutDirectionChanged);
     addAction(m_layoutDirectionAction);
 
     addSeparator();
@@ -469,15 +465,15 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
     // Superscript and subscript buttons
 
     m_valign_sup_action = createCheckableAction(
-            createIconSet(QStringLiteral("textsuperscript.png")),
-            tr("Superscript"),
-            this, SLOT(setVAlignSuper(bool)), this);
+            createIconSet(u"textsuperscript.png"_s), tr("Superscript"), this);
+    connect(m_valign_sup_action, &QAction::triggered,
+            this, &RichTextEditorToolBar::setVAlignSuper);
     addAction(m_valign_sup_action);
 
     m_valign_sub_action = createCheckableAction(
-            createIconSet(QStringLiteral("textsubscript.png")),
-            tr("Subscript"),
-            this, SLOT(setVAlignSub(bool)), this);
+            createIconSet(u"textsubscript.png"_s), tr("Subscript"), this);
+    connect(m_valign_sub_action, &QAction::triggered,
+            this, &RichTextEditorToolBar::setVAlignSub);
     addAction(m_valign_sub_action);
 
     addSeparator();
@@ -505,8 +501,9 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     // Simplify rich text
     m_simplify_richtext_action
-        = createCheckableAction(createIconSet(QStringLiteral("simplifyrichtext.png")),
-                                tr("Simplify Rich Text"), m_editor, SLOT(setSimplifyRichText(bool)));
+        = createCheckableAction(createIconSet(u"simplifyrichtext.png"_s), tr("Simplify Rich Text"));
+    connect(m_simplify_richtext_action, &QAction::triggered,
+            m_editor, &RichTextEditor::setSimplifyRichText);
     m_simplify_richtext_action->setChecked(m_editor->simplifyRichText());
     connect(m_editor.data(), &RichTextEditor::simplifyRichTextChanged,
             m_simplify_richtext_action, &QAction::setChecked);
