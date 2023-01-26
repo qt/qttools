@@ -11,7 +11,7 @@ class ImageDialog : public QDialog
     Q_OBJECT
 
 public:
-    ImageDialog(QWidget *parent = 0);
+    explicit ImageDialog(QWidget *parent = nullptr);
 
 private:
     Ui::ImageDialog ui;
