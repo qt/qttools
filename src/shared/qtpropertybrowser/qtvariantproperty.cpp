@@ -4,12 +4,12 @@
 #include "qtvariantproperty.h"
 #include "qtpropertymanager.h"
 #include "qteditorfactory.h"
+
 #include <QtCore/QVariant>
-#include <QtGui/QIcon>
 #include <QtCore/QDate>
 #include <QtCore/QLocale>
-#include <QtCore/QRegularExpression>
 #include <QtCore/QMap>
+#include <QtCore/QRegularExpression>
 
 #if defined(Q_CC_MSVC)
 #    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
@@ -891,12 +891,15 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::Int][d_ptr->m_maximumAttribute] = QMetaType::Int;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::Int][d_ptr->m_singleStepAttribute] = QMetaType::Int;
     d_ptr->m_typeToValueType[QMetaType::Int] = QMetaType::Int;
-    connect(intPropertyManager, SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(intPropertyManager, SIGNAL(rangeChanged(QtProperty*,int,int)),
-                this, SLOT(slotRangeChanged(QtProperty*,int,int)));
-    connect(intPropertyManager, SIGNAL(singleStepChanged(QtProperty*,int)),
-                this, SLOT(slotSingleStepChanged(QtProperty*,int)));
+    connect(intPropertyManager, &QtIntPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(intPropertyManager, &QtIntPropertyManager::rangeChanged,
+            this, [this](QtProperty *property, int min, int max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(intPropertyManager, &QtIntPropertyManager::singleStepChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotSingleStepChanged(property, value); });
     // DoublePropertyManager
     QtDoublePropertyManager *doublePropertyManager = new QtDoublePropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::Double] = doublePropertyManager;
@@ -909,30 +912,37 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::Double][d_ptr->m_decimalsAttribute] =
             QMetaType::Int;
     d_ptr->m_typeToValueType[QMetaType::Double] = QMetaType::Double;
-    connect(doublePropertyManager, SIGNAL(valueChanged(QtProperty*,double)),
-                this, SLOT(slotValueChanged(QtProperty*,double)));
-    connect(doublePropertyManager, SIGNAL(rangeChanged(QtProperty*,double,double)),
-                this, SLOT(slotRangeChanged(QtProperty*,double,double)));
-    connect(doublePropertyManager, SIGNAL(singleStepChanged(QtProperty*,double)),
-                this, SLOT(slotSingleStepChanged(QtProperty*,double)));
-    connect(doublePropertyManager, SIGNAL(decimalsChanged(QtProperty*,int)),
-                this, SLOT(slotDecimalsChanged(QtProperty*,int)));
+    connect(doublePropertyManager, &QtDoublePropertyManager::valueChanged,
+            this, [this](QtProperty *property, double value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(doublePropertyManager, &QtDoublePropertyManager::rangeChanged,
+            this, [this](QtProperty *property, double min, double max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(doublePropertyManager, &QtDoublePropertyManager::singleStepChanged,
+            this, [this](QtProperty *property, double value)
+            { d_ptr->slotSingleStepChanged(property, value); });
+    connect(doublePropertyManager, &QtDoublePropertyManager::decimalsChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotDecimalsChanged(property, value); });
     // BoolPropertyManager
     QtBoolPropertyManager *boolPropertyManager = new QtBoolPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::Bool] = boolPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::Bool] = QMetaType::Bool;
-    connect(boolPropertyManager, SIGNAL(valueChanged(QtProperty*,bool)),
-                this, SLOT(slotValueChanged(QtProperty*,bool)));
+    connect(boolPropertyManager, &QtBoolPropertyManager::valueChanged,
+            this, [this](QtProperty *property, bool value)
+            { d_ptr->slotValueChanged(property, value); });
     // StringPropertyManager
     QtStringPropertyManager *stringPropertyManager = new QtStringPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QString] = stringPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QString] = QMetaType::QString;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QString][d_ptr->m_regExpAttribute] =
             QMetaType::QRegularExpression;
-    connect(stringPropertyManager, SIGNAL(valueChanged(QtProperty*,QString)),
-                this, SLOT(slotValueChanged(QtProperty*,QString)));
-    connect(stringPropertyManager, SIGNAL(regExpChanged(QtProperty*,QRegularExpression)),
-                this, SLOT(slotRegExpChanged(QtProperty*,QRegularExpression)));
+    connect(stringPropertyManager, &QtStringPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QString &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(stringPropertyManager, &QtStringPropertyManager::regExpChanged,
+            this, [this](QtProperty *property, const QRegularExpression &value)
+            { d_ptr->slotRegExpChanged(property, value); });
     // DatePropertyManager
     QtDatePropertyManager *datePropertyManager = new QtDatePropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QDate] = datePropertyManager;
@@ -941,74 +951,93 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
             QMetaType::QDate;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QDate][d_ptr->m_maximumAttribute] =
             QMetaType::QDate;
-    connect(datePropertyManager, SIGNAL(valueChanged(QtProperty*,QDate)),
-                this, SLOT(slotValueChanged(QtProperty*,QDate)));
-    connect(datePropertyManager, SIGNAL(rangeChanged(QtProperty*,QDate,QDate)),
-                this, SLOT(slotRangeChanged(QtProperty*,QDate,QDate)));
+    connect(datePropertyManager, &QtDatePropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QDate &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(datePropertyManager, &QtDatePropertyManager::rangeChanged,
+            this, [this](QtProperty *property, const QDate &min, const QDate &max)
+            { d_ptr->slotRangeChanged(property, min, max); });
     // TimePropertyManager
     QtTimePropertyManager *timePropertyManager = new QtTimePropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QTime] = timePropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QTime] = QMetaType::QTime;
-    connect(timePropertyManager, SIGNAL(valueChanged(QtProperty*,QTime)),
-                this, SLOT(slotValueChanged(QtProperty*,QTime)));
+    connect(timePropertyManager, &QtTimePropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QTime &value)
+            { d_ptr->slotValueChanged(property, value); });
     // DateTimePropertyManager
     QtDateTimePropertyManager *dateTimePropertyManager = new QtDateTimePropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QDateTime] = dateTimePropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QDateTime] = QMetaType::QDateTime;
-    connect(dateTimePropertyManager, SIGNAL(valueChanged(QtProperty*,QDateTime)),
-                this, SLOT(slotValueChanged(QtProperty*,QDateTime)));
+    connect(dateTimePropertyManager, &QtDateTimePropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QDateTime &value)
+            { d_ptr->slotValueChanged(property, value); });
     // KeySequencePropertyManager
     QtKeySequencePropertyManager *keySequencePropertyManager = new QtKeySequencePropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QKeySequence] = keySequencePropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QKeySequence] = QMetaType::QKeySequence;
-    connect(keySequencePropertyManager, SIGNAL(valueChanged(QtProperty*,QKeySequence)),
-                this, SLOT(slotValueChanged(QtProperty*,QKeySequence)));
+    connect(keySequencePropertyManager, &QtKeySequencePropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QKeySequence &value)
+            { d_ptr->slotValueChanged(property, value); });
     // CharPropertyManager
     QtCharPropertyManager *charPropertyManager = new QtCharPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QChar] = charPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QChar] = QMetaType::QChar;
-    connect(charPropertyManager, SIGNAL(valueChanged(QtProperty*,QChar)),
-                this, SLOT(slotValueChanged(QtProperty*,QChar)));
+    connect(charPropertyManager, &QtCharPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QChar &value)
+            { d_ptr->slotValueChanged(property, value); });
     // LocalePropertyManager
     QtLocalePropertyManager *localePropertyManager = new QtLocalePropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QLocale] = localePropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QLocale] = QMetaType::QLocale;
-    connect(localePropertyManager, SIGNAL(valueChanged(QtProperty*,QLocale)),
-                this, SLOT(slotValueChanged(QtProperty*,QLocale)));
-    connect(localePropertyManager->subEnumPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(localePropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(localePropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(localePropertyManager, &QtLocalePropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QLocale &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(localePropertyManager->subEnumPropertyManager(), &QtEnumPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(localePropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(localePropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // PointPropertyManager
     QtPointPropertyManager *pointPropertyManager = new QtPointPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QPoint] = pointPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QPoint] = QMetaType::QPoint;
-    connect(pointPropertyManager, SIGNAL(valueChanged(QtProperty*,QPoint)),
-                this, SLOT(slotValueChanged(QtProperty*,QPoint)));
-    connect(pointPropertyManager->subIntPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(pointPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(pointPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(pointPropertyManager, &QtPointPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QPoint &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(pointPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(pointPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(pointPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // PointFPropertyManager
     QtPointFPropertyManager *pointFPropertyManager = new QtPointFPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QPointF] = pointFPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QPointF] = QMetaType::QPointF;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QPointF][d_ptr->m_decimalsAttribute] =
             QMetaType::Int;
-    connect(pointFPropertyManager, SIGNAL(valueChanged(QtProperty*,QPointF)),
-                this, SLOT(slotValueChanged(QtProperty*,QPointF)));
-    connect(pointFPropertyManager, SIGNAL(decimalsChanged(QtProperty*,int)),
-                this, SLOT(slotDecimalsChanged(QtProperty*,int)));
-    connect(pointFPropertyManager->subDoublePropertyManager(), SIGNAL(valueChanged(QtProperty*,double)),
-                this, SLOT(slotValueChanged(QtProperty*,double)));
-    connect(pointFPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(pointFPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(pointFPropertyManager, &QtPointFPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QPointF &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(pointFPropertyManager, &QtPointFPropertyManager::decimalsChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotDecimalsChanged(property, value); });
+    connect(pointFPropertyManager->subDoublePropertyManager(), &QtDoublePropertyManager::valueChanged,
+            this, [this](QtProperty *property, double value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(pointFPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(pointFPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // SizePropertyManager
     QtSizePropertyManager *sizePropertyManager = new QtSizePropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QSize] = sizePropertyManager;
@@ -1017,18 +1046,24 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
             QMetaType::QSize;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QSize][d_ptr->m_maximumAttribute] =
             QMetaType::QSize;
-    connect(sizePropertyManager, SIGNAL(valueChanged(QtProperty*,QSize)),
-                this, SLOT(slotValueChanged(QtProperty*,QSize)));
-    connect(sizePropertyManager, SIGNAL(rangeChanged(QtProperty*,QSize,QSize)),
-                this, SLOT(slotRangeChanged(QtProperty*,QSize,QSize)));
-    connect(sizePropertyManager->subIntPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(sizePropertyManager->subIntPropertyManager(), SIGNAL(rangeChanged(QtProperty*,int,int)),
-                this, SLOT(slotRangeChanged(QtProperty*,int,int)));
-    connect(sizePropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(sizePropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(sizePropertyManager, &QtSizePropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QSize &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(sizePropertyManager, &QtSizePropertyManager::rangeChanged,
+            this, [this](QtProperty *property, const QSize &min, const QSize &max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(sizePropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(sizePropertyManager->subIntPropertyManager(), &QtIntPropertyManager::rangeChanged,
+            this, [this](QtProperty *property, int min, int max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(sizePropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(sizePropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // SizeFPropertyManager
     QtSizeFPropertyManager *sizeFPropertyManager = new QtSizeFPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QSizeF] = sizeFPropertyManager;
@@ -1039,38 +1074,48 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
             QMetaType::QSizeF;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QSizeF][d_ptr->m_decimalsAttribute] =
             QMetaType::Int;
-    connect(sizeFPropertyManager, SIGNAL(valueChanged(QtProperty*,QSizeF)),
-                this, SLOT(slotValueChanged(QtProperty*,QSizeF)));
-    connect(sizeFPropertyManager, SIGNAL(rangeChanged(QtProperty*,QSizeF,QSizeF)),
-                this, SLOT(slotRangeChanged(QtProperty*,QSizeF,QSizeF)));
-    connect(sizeFPropertyManager, SIGNAL(decimalsChanged(QtProperty*,int)),
-                this, SLOT(slotDecimalsChanged(QtProperty*,int)));
-    connect(sizeFPropertyManager->subDoublePropertyManager(), SIGNAL(valueChanged(QtProperty*,double)),
-                this, SLOT(slotValueChanged(QtProperty*,double)));
-    connect(sizeFPropertyManager->subDoublePropertyManager(), SIGNAL(rangeChanged(QtProperty*,double,double)),
-                this, SLOT(slotRangeChanged(QtProperty*,double,double)));
-    connect(sizeFPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(sizeFPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(sizeFPropertyManager, &QtSizeFPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QSizeF &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(sizeFPropertyManager, &QtSizeFPropertyManager::rangeChanged,
+            this, [this](QtProperty *property, const QSizeF &min, const QSizeF &max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(sizeFPropertyManager->subDoublePropertyManager(), &QtDoublePropertyManager::valueChanged,
+            this, [this](QtProperty *property, double value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(sizeFPropertyManager->subDoublePropertyManager(), &QtDoublePropertyManager::rangeChanged,
+            this, [this](QtProperty *property, double min, double max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(sizeFPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(sizeFPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // RectPropertyManager
     QtRectPropertyManager *rectPropertyManager = new QtRectPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QRect] = rectPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QRect] = QMetaType::QRect;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QRect][d_ptr->m_constraintAttribute] =
             QMetaType::QRect;
-    connect(rectPropertyManager, SIGNAL(valueChanged(QtProperty*,QRect)),
-                this, SLOT(slotValueChanged(QtProperty*,QRect)));
-    connect(rectPropertyManager, SIGNAL(constraintChanged(QtProperty*,QRect)),
-                this, SLOT(slotConstraintChanged(QtProperty*,QRect)));
-    connect(rectPropertyManager->subIntPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(rectPropertyManager->subIntPropertyManager(), SIGNAL(rangeChanged(QtProperty*,int,int)),
-                this, SLOT(slotRangeChanged(QtProperty*,int,int)));
-    connect(rectPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(rectPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(rectPropertyManager, &QtRectPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QRect &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(rectPropertyManager, &QtRectPropertyManager::constraintChanged,
+            this, [this](QtProperty *property, const QRect &value)
+            { d_ptr->slotConstraintChanged(property, value); });
+    connect(rectPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(rectPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::rangeChanged,
+            this, [this](QtProperty *property, int min, int max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(rectPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(rectPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // RectFPropertyManager
     QtRectFPropertyManager *rectFPropertyManager = new QtRectFPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QRectF] = rectFPropertyManager;
@@ -1079,32 +1124,40 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
             QMetaType::QRectF;
     d_ptr->m_typeToAttributeToAttributeType[QMetaType::QRectF][d_ptr->m_decimalsAttribute] =
             QMetaType::Int;
-    connect(rectFPropertyManager, SIGNAL(valueChanged(QtProperty*,QRectF)),
-                this, SLOT(slotValueChanged(QtProperty*,QRectF)));
-    connect(rectFPropertyManager, SIGNAL(constraintChanged(QtProperty*,QRectF)),
-                this, SLOT(slotConstraintChanged(QtProperty*,QRectF)));
-    connect(rectFPropertyManager, SIGNAL(decimalsChanged(QtProperty*,int)),
-                this, SLOT(slotDecimalsChanged(QtProperty*,int)));
-    connect(rectFPropertyManager->subDoublePropertyManager(), SIGNAL(valueChanged(QtProperty*,double)),
-                this, SLOT(slotValueChanged(QtProperty*,double)));
-    connect(rectFPropertyManager->subDoublePropertyManager(), SIGNAL(rangeChanged(QtProperty*,double,double)),
-                this, SLOT(slotRangeChanged(QtProperty*,double,double)));
-    connect(rectFPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(rectFPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(rectFPropertyManager, &QtRectFPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QRectF &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(rectFPropertyManager, &QtRectFPropertyManager::constraintChanged,
+            this, [this](QtProperty *property, const QRectF &value)
+            { d_ptr->slotConstraintChanged(property, value); });
+    connect(rectFPropertyManager->subDoublePropertyManager(), &QtDoublePropertyManager::valueChanged,
+            this, [this](QtProperty *property, double value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(rectFPropertyManager->subDoublePropertyManager(), &QtDoublePropertyManager::rangeChanged,
+            this, [this](QtProperty *property, double min, double max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(rectFPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(rectFPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // ColorPropertyManager
     QtColorPropertyManager *colorPropertyManager = new QtColorPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QColor] = colorPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QColor] = QMetaType::QColor;
-    connect(colorPropertyManager, SIGNAL(valueChanged(QtProperty*,QColor)),
-                this, SLOT(slotValueChanged(QtProperty*,QColor)));
-    connect(colorPropertyManager->subIntPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(colorPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(colorPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(colorPropertyManager, &QtColorPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QColor &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(colorPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(colorPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(colorPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // EnumPropertyManager
     int enumId = enumTypeId();
     QtEnumPropertyManager *enumPropertyManager = new QtEnumPropertyManager(this);
@@ -1114,58 +1167,75 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
             QMetaType::QStringList;
     d_ptr->m_typeToAttributeToAttributeType[enumId][d_ptr->m_enumIconsAttribute] =
             iconMapTypeId();
-    connect(enumPropertyManager, SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(enumPropertyManager, SIGNAL(enumNamesChanged(QtProperty*,QStringList)),
-                this, SLOT(slotEnumNamesChanged(QtProperty*,QStringList)));
-    connect(enumPropertyManager, SIGNAL(enumIconsChanged(QtProperty*,QMap<int,QIcon>)),
-                this, SLOT(slotEnumIconsChanged(QtProperty*,QMap<int,QIcon>)));
+    connect(enumPropertyManager, &QtEnumPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QColor &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(enumPropertyManager, &QtEnumPropertyManager::enumNamesChanged,
+            this, [this](QtProperty *property, const QStringList &value)
+            { d_ptr->slotEnumNamesChanged(property, value); });
+    connect(enumPropertyManager, &QtEnumPropertyManager::enumIconsChanged,
+            this, [this](QtProperty *property, const QMap<int,QIcon> &value)
+            { d_ptr->slotEnumIconsChanged(property, value); });
     // SizePolicyPropertyManager
     QtSizePolicyPropertyManager *sizePolicyPropertyManager = new QtSizePolicyPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QSizePolicy] = sizePolicyPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QSizePolicy] = QMetaType::QSizePolicy;
-    connect(sizePolicyPropertyManager, SIGNAL(valueChanged(QtProperty*,QSizePolicy)),
-                this, SLOT(slotValueChanged(QtProperty*,QSizePolicy)));
-    connect(sizePolicyPropertyManager->subIntPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(sizePolicyPropertyManager->subIntPropertyManager(), SIGNAL(rangeChanged(QtProperty*,int,int)),
-                this, SLOT(slotRangeChanged(QtProperty*,int,int)));
-    connect(sizePolicyPropertyManager->subEnumPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(sizePolicyPropertyManager->subEnumPropertyManager(),
-                SIGNAL(enumNamesChanged(QtProperty*,QStringList)),
-                this, SLOT(slotEnumNamesChanged(QtProperty*,QStringList)));
-    connect(sizePolicyPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(sizePolicyPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(sizePolicyPropertyManager, &QtSizePolicyPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QSizePolicy &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(sizePolicyPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(sizePolicyPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::rangeChanged,
+            this, [this](QtProperty *property, int min, int max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(sizePolicyPropertyManager->subEnumPropertyManager(), &QtEnumPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(sizePolicyPropertyManager->subEnumPropertyManager(), &QtEnumPropertyManager::enumNamesChanged,
+            this, [this](QtProperty *property, const QStringList &value)
+            { d_ptr->slotEnumNamesChanged(property, value); });
+    connect(sizePolicyPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(sizePolicyPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // FontPropertyManager
     QtFontPropertyManager *fontPropertyManager = new QtFontPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QFont] = fontPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QFont] = QMetaType::QFont;
-    connect(fontPropertyManager, SIGNAL(valueChanged(QtProperty*,QFont)),
-                this, SLOT(slotValueChanged(QtProperty*,QFont)));
-    connect(fontPropertyManager->subIntPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(fontPropertyManager->subIntPropertyManager(), SIGNAL(rangeChanged(QtProperty*,int,int)),
-                this, SLOT(slotRangeChanged(QtProperty*,int,int)));
-    connect(fontPropertyManager->subEnumPropertyManager(), SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(fontPropertyManager->subEnumPropertyManager(),
-                SIGNAL(enumNamesChanged(QtProperty*,QStringList)),
-                this, SLOT(slotEnumNamesChanged(QtProperty*,QStringList)));
-    connect(fontPropertyManager->subBoolPropertyManager(), SIGNAL(valueChanged(QtProperty*,bool)),
-                this, SLOT(slotValueChanged(QtProperty*,bool)));
-    connect(fontPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(fontPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(fontPropertyManager, &QtFontPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QFont &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(fontPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(fontPropertyManager->subIntPropertyManager(), &QtIntPropertyManager::rangeChanged,
+            this, [this](QtProperty *property, int min, int max)
+            { d_ptr->slotRangeChanged(property, min, max); });
+    connect(fontPropertyManager->subEnumPropertyManager(), &QtEnumPropertyManager::valueChanged,
+            this, [this](QtProperty *property, int value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(fontPropertyManager->subEnumPropertyManager(), &QtEnumPropertyManager::enumNamesChanged,
+            this, [this](QtProperty *property, const QStringList &value)
+            { d_ptr->slotEnumNamesChanged(property, value); });
+    connect(fontPropertyManager->subBoolPropertyManager(), &QtBoolPropertyManager::valueChanged,
+            this, [this](QtProperty *property, bool value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(fontPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(fontPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // CursorPropertyManager
     QtCursorPropertyManager *cursorPropertyManager = new QtCursorPropertyManager(this);
     d_ptr->m_typeToPropertyManager[QMetaType::QCursor] = cursorPropertyManager;
     d_ptr->m_typeToValueType[QMetaType::QCursor] = QMetaType::QCursor;
-    connect(cursorPropertyManager, SIGNAL(valueChanged(QtProperty*,QCursor)),
-                this, SLOT(slotValueChanged(QtProperty*,QCursor)));
+    connect(cursorPropertyManager, &QtCursorPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QCursor &value)
+            { d_ptr->slotValueChanged(property, value); });
     // FlagPropertyManager
     int flagId = flagTypeId();
     QtFlagPropertyManager *flagPropertyManager = new QtFlagPropertyManager(this);
@@ -1173,16 +1243,21 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToValueType[flagId] = QMetaType::Int;
     d_ptr->m_typeToAttributeToAttributeType[flagId][d_ptr->m_flagNamesAttribute] =
             QMetaType::QStringList;
-    connect(flagPropertyManager, SIGNAL(valueChanged(QtProperty*,int)),
-                this, SLOT(slotValueChanged(QtProperty*,int)));
-    connect(flagPropertyManager, SIGNAL(flagNamesChanged(QtProperty*,QStringList)),
-                this, SLOT(slotFlagNamesChanged(QtProperty*,QStringList)));
-    connect(flagPropertyManager->subBoolPropertyManager(), SIGNAL(valueChanged(QtProperty*,bool)),
-                this, SLOT(slotValueChanged(QtProperty*,bool)));
-    connect(flagPropertyManager, SIGNAL(propertyInserted(QtProperty*,QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyInserted(QtProperty*,QtProperty*,QtProperty*)));
-    connect(flagPropertyManager, SIGNAL(propertyRemoved(QtProperty*,QtProperty*)),
-                this, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
+    connect(flagPropertyManager, &QtFlagPropertyManager::valueChanged,
+            this, [this](QtProperty *property, const QColor &value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(flagPropertyManager, &QtFlagPropertyManager::flagNamesChanged,
+            this, [this](QtProperty *property, const QStringList &value)
+            { d_ptr->slotFlagNamesChanged(property, value); });
+    connect(flagPropertyManager->subBoolPropertyManager(), &QtBoolPropertyManager::valueChanged,
+            this, [this](QtProperty *property, bool value)
+            { d_ptr->slotValueChanged(property, value); });
+    connect(flagPropertyManager, &QtAbstractPropertyManager::propertyInserted,
+            this, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+            { d_ptr->slotPropertyInserted(property, parent, after); });
+    connect(flagPropertyManager, &QtAbstractPropertyManager::propertyRemoved,
+            this, [this](QtProperty *property, QtProperty *parent)
+            { d_ptr->slotPropertyRemoved(property, parent); });
     // FlagPropertyManager
     int groupId = groupTypeId();
     QtGroupPropertyManager *groupPropertyManager = new QtGroupPropertyManager(this);
