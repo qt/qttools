@@ -102,7 +102,7 @@ QtPropertyEditorView::QtPropertyEditorView(QWidget *parent) :
     QTreeWidget(parent),
     m_editorPrivate(0)
 {
-    connect(header(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(resizeColumnToContents(int)));
+    connect(header(), &QHeaderView::sectionDoubleClicked, this, &QTreeView::resizeColumnToContents);
 }
 
 void QtPropertyEditorView::drawRow(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -273,7 +273,8 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
             if (editor) {
                 editor->setAutoFillBackground(true);
                 editor->installEventFilter(const_cast<QtPropertyEditorDelegate *>(this));
-                connect(editor, SIGNAL(destroyed(QObject*)), this, SLOT(slotEditorDestroyed(QObject*)));
+                connect(editor, &QObject::destroyed,
+                        this, &QtPropertyEditorDelegate::slotEditorDestroyed);
                 m_propertyToEditor[property] = editor;
                 m_editorToProperty[editor] = property;
                 m_editedItem = item;

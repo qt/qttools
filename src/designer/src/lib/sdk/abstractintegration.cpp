@@ -281,8 +281,6 @@ public:
     void updateSelection();
     void updateCustomWidgetPlugins();
 
-    void updatePropertyPrivate(const QString &name, const QVariant &value);
-
     void initialize();
     void getSelection(qdesigner_internal::Selection &s);
     QObject *propertyEditorObject();
@@ -320,12 +318,9 @@ void QDesignerIntegrationPrivate::initialize()
         QObject::connect(designerPropertyEditor, &QDesignerPropertyEditor::resetProperty,
                          q, &QDesignerIntegration::resetProperty);
         QObject::connect(designerPropertyEditor, &QDesignerPropertyEditor::addDynamicProperty,
-                q, &QDesignerIntegration::addDynamicProperty);
+                         q, &QDesignerIntegration::addDynamicProperty);
         QObject::connect(designerPropertyEditor, &QDesignerPropertyEditor::removeDynamicProperty,
-                q, &QDesignerIntegration::removeDynamicProperty);
-    } else {
-        QObject::connect(core->propertyEditor(), SIGNAL(propertyChanged(QString,QVariant)),
-                q, SLOT(updatePropertyPrivate(QString,QVariant))); // ### fixme: VS Integration leftover?
+                         q, &QDesignerIntegration::removeDynamicProperty);
     }
 
     QObject::connect(core->formWindowManager(), &QDesignerFormWindowManagerInterface::formWindowAdded,
