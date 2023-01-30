@@ -420,8 +420,8 @@ QtResourceModel::QtResourceModel(QObject *parent) :
     d_ptr->q_ptr = this;
 
     d_ptr->m_fileWatcher = new QFileSystemWatcher(this);
-    connect(d_ptr->m_fileWatcher, SIGNAL(fileChanged(QString)),
-            this, SLOT(slotFileChanged(QString)));
+    connect(d_ptr->m_fileWatcher, &QFileSystemWatcher::fileChanged,
+            this, [this](const QString &fileName) { d_ptr->slotFileChanged(fileName); });
 }
 
 QtResourceModel::~QtResourceModel()

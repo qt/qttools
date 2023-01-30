@@ -90,10 +90,12 @@ void LanguageResourceDialogPrivate::init(LanguageResourceDialog *p)
     QLayout *layout = new QVBoxLayout(p);
     layout->addWidget(m_browser);
     layout->addWidget(m_dialogButtonBox);
-    QObject::connect(m_dialogButtonBox, SIGNAL(accepted()), p, SLOT(slotAccepted()));
+    QObject::connect(m_dialogButtonBox, &QDialogButtonBox::accepted, p, [this] { slotAccepted(); });
     QObject::connect(m_dialogButtonBox, &QDialogButtonBox::rejected, p, &QDialog::reject);
-    QObject::connect(m_browser, SIGNAL(currentPathChanged(QString)), p, SLOT(slotPathChanged(QString)));
-    QObject::connect(m_browser, SIGNAL(pathActivated(QString)), p, SLOT(slotAccepted()));
+    QObject::connect(m_browser, &QDesignerResourceBrowserInterface::currentPathChanged,
+                     p, [this](const QString &fileName) { slotPathChanged(fileName); });
+    QObject::connect(m_browser, &QDesignerResourceBrowserInterface::pathActivated,
+                     p, [this] { slotAccepted(); });
     p->setModal(true);
     p->setWindowTitle(LanguageResourceDialog::tr("Choose Resource"));
     p->setWindowFlags(p->windowFlags() & ~Qt::WindowContextHelpButtonHint);
@@ -444,13 +446,18 @@ IconSelector::IconSelector(QWidget *parent) :
 
     d_ptr->m_iconButton->setMenu(setMenu);
 
-    connect(d_ptr->m_stateComboBox, SIGNAL(activated(int)), this, SLOT(slotStateActivated()));
-    connect(d_ptr->m_iconButton, SIGNAL(clicked()), this, SLOT(slotSetActivated()));
-    connect(setResourceAction, SIGNAL(triggered()), this, SLOT(slotSetResourceActivated()));
-    connect(setFileAction, SIGNAL(triggered()), this, SLOT(slotSetFileActivated()));
-    connect(d_ptr->m_resetAction, SIGNAL(triggered()), this, SLOT(slotResetActivated()));
-    connect(d_ptr->m_resetAllAction, SIGNAL(triggered()), this, SLOT(slotResetAllActivated()));
-
+    connect(d_ptr->m_stateComboBox, &QComboBox::activated,
+            this, [this] { d_ptr->slotStateActivated(); });
+    connect(d_ptr->m_iconButton, &QAbstractButton::clicked,
+            this, [this] { d_ptr->slotSetActivated(); });
+    connect(setResourceAction, &QAction::triggered,
+            this, [this] { d_ptr->slotSetResourceActivated(); });
+    connect(setFileAction, &QAction::triggered,
+            this, [this] { d_ptr->slotSetFileActivated(); });
+    connect(d_ptr->m_resetAction, &QAction::triggered,
+            this, [this] { d_ptr->slotResetActivated(); });
+    connect(d_ptr->m_resetAllAction, &QAction::triggered,
+            this, [this] { d_ptr->slotResetAllActivated(); });
     d_ptr->slotUpdate();
 }
 
@@ -480,14 +487,14 @@ void IconSelector::setFormEditor(QDesignerFormEditorInterface *core)
 void IconSelector::setIconCache(DesignerIconCache *iconCache)
 {
     d_ptr->m_iconCache = iconCache;
-    connect(iconCache, SIGNAL(reloaded()), this, SLOT(slotUpdate()));
+    connect(iconCache, &DesignerIconCache::reloaded, this, [this] { d_ptr->slotUpdate(); });
     d_ptr->slotUpdate();
 }
 
 void IconSelector::setPixmapCache(DesignerPixmapCache *pixmapCache)
 {
     d_ptr->m_pixmapCache = pixmapCache;
-    connect(pixmapCache, SIGNAL(reloaded()), this, SLOT(slotUpdate()));
+    connect(pixmapCache, &DesignerPixmapCache::reloaded, this, [this] { d_ptr->slotUpdate(); });
     d_ptr->slotUpdate();
 }
 

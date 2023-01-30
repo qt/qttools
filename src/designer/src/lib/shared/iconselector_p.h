@@ -56,8 +56,6 @@ private:
     QScopedPointer<class LanguageResourceDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(LanguageResourceDialog)
     Q_DISABLE_COPY_MOVE(LanguageResourceDialog)
-    Q_PRIVATE_SLOT(d_func(), void slotAccepted())
-    Q_PRIVATE_SLOT(d_func(), void slotPathChanged(QString))
 
 };
 
@@ -89,14 +87,6 @@ private:
     QScopedPointer<class IconSelectorPrivate> d_ptr;
     Q_DECLARE_PRIVATE(IconSelector)
     Q_DISABLE_COPY_MOVE(IconSelector)
-
-    Q_PRIVATE_SLOT(d_func(), void slotStateActivated())
-    Q_PRIVATE_SLOT(d_func(), void slotSetActivated())
-    Q_PRIVATE_SLOT(d_func(), void slotSetResourceActivated())
-    Q_PRIVATE_SLOT(d_func(), void slotSetFileActivated())
-    Q_PRIVATE_SLOT(d_func(), void slotResetActivated())
-    Q_PRIVATE_SLOT(d_func(), void slotResetAllActivated())
-    Q_PRIVATE_SLOT(d_func(), void slotUpdate())
 };
 
 // IconThemeEditor: Let's the user input theme icon names and shows a preview label.

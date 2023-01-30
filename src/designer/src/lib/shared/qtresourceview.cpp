@@ -533,20 +533,23 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     QIcon editIcon = QIcon::fromTheme(QStringLiteral("document-properties"), qdesigner_internal::createIconSet(QStringLiteral("edit.png")));
     d_ptr->m_editResourcesAction = new QAction(editIcon, tr("Edit Resources..."), this);
     d_ptr->m_toolBar->addAction(d_ptr->m_editResourcesAction);
-    connect(d_ptr->m_editResourcesAction, SIGNAL(triggered()), this, SLOT(slotEditResources()));
+    connect(d_ptr->m_editResourcesAction, &QAction::triggered,
+            this, [this] { d_ptr->slotEditResources(); });
     d_ptr->m_editResourcesAction->setEnabled(false);
 
     QIcon refreshIcon = QIcon::fromTheme(QStringLiteral("view-refresh"), qdesigner_internal::createIconSet(QStringLiteral("reload.png")));
     d_ptr->m_reloadResourcesAction = new QAction(refreshIcon, tr("Reload"), this);
 
     d_ptr->m_toolBar->addAction(d_ptr->m_reloadResourcesAction);
-    connect(d_ptr->m_reloadResourcesAction, SIGNAL(triggered()), this, SLOT(slotReloadResources()));
+    connect(d_ptr->m_reloadResourcesAction, &QAction::triggered,
+            this, [this] { d_ptr->slotReloadResources(); });
     d_ptr->m_reloadResourcesAction->setEnabled(false);
 
 #if QT_CONFIG(clipboard)
     QIcon copyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), qdesigner_internal::createIconSet(QStringLiteral("editcopy.png")));
     d_ptr->m_copyResourcePathAction = new QAction(copyIcon, tr("Copy Path"), this);
-    connect(d_ptr->m_copyResourcePathAction, SIGNAL(triggered()), this, SLOT(slotCopyResourcePath()));
+    connect(d_ptr->m_copyResourcePathAction, &QAction::triggered,
+            this, [this] { d_ptr->slotCopyResourcePath(); });
     d_ptr->m_copyResourcePathAction->setEnabled(false);
 #endif
 
@@ -554,7 +557,8 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     QHBoxLayout *filterLayout = new QHBoxLayout(d_ptr->m_filterWidget);
     filterLayout->setContentsMargins(0, 0, 0, 0);
     QLineEdit *filterLineEdit = new QLineEdit(d_ptr->m_filterWidget);
-    connect(filterLineEdit, SIGNAL(textChanged(QString)), this, SLOT(slotFilterChanged(QString)));
+    connect(filterLineEdit, &QLineEdit::textChanged,
+            this, [this](const QString &text) { d_ptr->slotFilterChanged(text); });
     filterLineEdit->setPlaceholderText(tr("Filter"));
     filterLineEdit->setClearButtonEnabled(true);
     filterLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Ignored));
@@ -581,15 +585,15 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     d_ptr->m_listWidget->setIconSize(QSize(48, 48));
     d_ptr->m_listWidget->setGridSize(QSize(64, 64));
 
-    connect(d_ptr->m_treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-                    this, SLOT(slotCurrentPathChanged(QTreeWidgetItem*)));
-    connect(d_ptr->m_listWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                    this, SLOT(slotCurrentResourceChanged(QListWidgetItem*)));
-    connect(d_ptr->m_listWidget, SIGNAL(itemActivated(QListWidgetItem*)),
-                    this, SLOT(slotResourceActivated(QListWidgetItem*)));
+    connect(d_ptr->m_treeWidget, &QTreeWidget::currentItemChanged,
+            this, [this](QTreeWidgetItem *item) { d_ptr->slotCurrentPathChanged(item); });
+    connect(d_ptr->m_listWidget, &QListWidget::currentItemChanged,
+            this, [this](QListWidgetItem *item) { d_ptr->slotCurrentResourceChanged(item); });
+    connect(d_ptr->m_listWidget, &QListWidget::itemActivated,
+            this, [this](QListWidgetItem *item) { d_ptr->slotResourceActivated(item); });
     d_ptr->m_listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(d_ptr->m_listWidget, SIGNAL(customContextMenuRequested(QPoint)),
-                this, SLOT(slotListWidgetContextMenuRequested(QPoint)));
+    connect(d_ptr->m_listWidget, &QListWidget::customContextMenuRequested,
+            this, [this](const QPoint &point) { d_ptr->slotListWidgetContextMenuRequested(point); });
 }
 
 QtResourceView::~QtResourceView()
@@ -668,10 +672,8 @@ void QtResourceView::setSettingsKey(const QString &key)
 
 void QtResourceView::setResourceModel(QtResourceModel *model)
 {
-    if (d_ptr->m_resourceModel) {
-        disconnect(d_ptr->m_resourceModel, SIGNAL(resourceSetActivated(QtResourceSet*,bool)),
-                    this, SLOT(slotResourceSetActivated(QtResourceSet*)));
-    }
+    if (d_ptr->m_resourceModel)
+        disconnect(d_ptr->m_resourceModel, &QtResourceModel::resourceSetActivated, this, nullptr);
 
     // clear here
     d_ptr->m_treeWidget->clear();
@@ -682,8 +684,8 @@ void QtResourceView::setResourceModel(QtResourceModel *model)
     if (!d_ptr->m_resourceModel)
         return;
 
-    connect(d_ptr->m_resourceModel, SIGNAL(resourceSetActivated(QtResourceSet*,bool)),
-            this, SLOT(slotResourceSetActivated(QtResourceSet*)));
+    connect(d_ptr->m_resourceModel, &QtResourceModel::resourceSetActivated,
+            this, [this](QtResourceSet *resource) { d_ptr->slotResourceSetActivated(resource); });
 
     // fill new here
     d_ptr->slotResourceSetActivated(d_ptr->m_resourceModel->currentResourceSet());
@@ -814,7 +816,8 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
     connect(d_ptr->m_box, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(d_ptr->m_box, &QDialogButtonBox::rejected, this, &QDialog::reject);
     connect(d_ptr->m_view, &QtResourceView::resourceActivated, this, &QDialog::accept);
-    connect(d_ptr->m_view, SIGNAL(resourceSelected(QString)), this, SLOT(slotResourceSelected(QString)));
+    connect(d_ptr->m_view, &QtResourceView::resourceSelected,
+            this, [this](const QString &resource) { d_ptr->slotResourceSelected(resource); });
     d_ptr->setOkButtonEnabled(false);
     d_ptr->m_view->setResourceModel(core->resourceModel());
 
