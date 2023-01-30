@@ -2,18 +2,18 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qttreepropertybrowser.h"
-#include <QtCore/QSet>
+
 #include <QtCore/QMap>
+#include <QtGui/QFocusEvent>
 #include <QtGui/QIcon>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QItemDelegate>
+#include <QtGui/QPainter>
+#include <QtGui/QPalette>
+#include <QtWidgets/QApplication>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
-#include <QtGui/QPainter>
-#include <QtWidgets/QApplication>
-#include <QtGui/QFocusEvent>
+#include <QtWidgets/QItemDelegate>
 #include <QtWidgets/QStyle>
-#include <QtGui/QPalette>
+#include <QtWidgets/QTreeWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -282,7 +282,7 @@ QWidget *QtPropertyEditorDelegate::createEditor(QWidget *parent,
             return editor;
         }
     }
-    return 0;
+    return nullptr;
 }
 
 void QtPropertyEditorDelegate::updateEditorGeometry(QWidget *editor,
@@ -414,16 +414,20 @@ void QtTreePropertyBrowserPrivate::init(QWidget *parent)
 
     m_expandIcon = drawIndicatorIcon(q_ptr->palette(), q_ptr->style());
 
-    QObject::connect(m_treeWidget, SIGNAL(collapsed(QModelIndex)), q_ptr, SLOT(slotCollapsed(QModelIndex)));
-    QObject::connect(m_treeWidget, SIGNAL(expanded(QModelIndex)), q_ptr, SLOT(slotExpanded(QModelIndex)));
-    QObject::connect(m_treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), q_ptr, SLOT(slotCurrentTreeItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
+    QObject::connect(m_treeWidget, &QTreeView::collapsed,
+                     q_ptr, [this](const QModelIndex &index) { slotCollapsed(index); });
+    QObject::connect(m_treeWidget, &QTreeView::expanded,
+                     q_ptr, [this](const QModelIndex &index) { slotExpanded(index); });
+    QObject::connect(m_treeWidget, &QTreeWidget::currentItemChanged,
+                     q_ptr, [this](QTreeWidgetItem *current, QTreeWidgetItem *previous)
+                     { slotCurrentTreeItemChanged(current, previous); });
 }
 
 QtBrowserItem *QtTreePropertyBrowserPrivate::currentItem() const
 {
     if (QTreeWidgetItem *treeItem = m_treeWidget->currentItem())
         return m_itemToIndex.value(treeItem);
-    return 0;
+    return nullptr;
 }
 
 void QtTreePropertyBrowserPrivate::setCurrentItem(QtBrowserItem *browserItem, bool block)
@@ -443,7 +447,7 @@ QtProperty *QtTreePropertyBrowserPrivate::indexToProperty(const QModelIndex &ind
     QtBrowserItem *idx = m_itemToIndex.value(item);
     if (idx)
         return idx->property();
-    return 0;
+    return nullptr;
 }
 
 QtBrowserItem *QtTreePropertyBrowserPrivate::indexToBrowserItem(const QModelIndex &index) const
@@ -593,7 +597,7 @@ QColor QtTreePropertyBrowserPrivate::calculatedBackgroundColor(QtBrowserItem *it
             return it.value();
         i = i->parent();
     }
-    return QColor();
+    return {};
 }
 
 void QtTreePropertyBrowserPrivate::slotCollapsed(const QModelIndex &index)
@@ -694,7 +698,9 @@ QtTreePropertyBrowser::QtTreePropertyBrowser(QWidget *parent)
     d_ptr->q_ptr = this;
 
     d_ptr->init(this);
-    connect(this, SIGNAL(currentItemChanged(QtBrowserItem*)), this, SLOT(slotCurrentBrowserItemChanged(QtBrowserItem*)));
+    QObject::connect(this, &QtAbstractPropertyBrowser::currentItemChanged,
+                     this, [this](QtBrowserItem *current)
+                     { d_ptr->slotCurrentBrowserItemChanged(current); });
 }
 
 /*!

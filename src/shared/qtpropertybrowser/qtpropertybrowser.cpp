@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtpropertybrowser.h"
-#include <QtCore/QSet>
 #include <QtCore/QMap>
 #include <QtGui/QIcon>
 
@@ -693,7 +692,7 @@ bool QtAbstractPropertyManager::hasValue(const QtProperty *property) const
 QIcon QtAbstractPropertyManager::valueIcon(const QtProperty *property) const
 {
     Q_UNUSED(property);
-    return QIcon();
+    return {};
 }
 
 /*!
@@ -708,7 +707,7 @@ QIcon QtAbstractPropertyManager::valueIcon(const QtProperty *property) const
 QString QtAbstractPropertyManager::valueText(const QtProperty *property) const
 {
     Q_UNUSED(property);
-    return QString();
+    return {};
 }
 
 /*!
@@ -1228,17 +1227,16 @@ void QtAbstractPropertyBrowserPrivate::insertSubTree(QtProperty *property,
     QtAbstractPropertyManager *manager = property->propertyManager();
     if (m_managerToProperties[manager].isEmpty()) {
         // connect manager's signals
-        q_ptr->connect(manager, SIGNAL(propertyInserted(QtProperty *,
-                            QtProperty *, QtProperty *)),
-                q_ptr, SLOT(slotPropertyInserted(QtProperty *,
-                            QtProperty *, QtProperty *)));
-        q_ptr->connect(manager, SIGNAL(propertyRemoved(QtProperty *,
-                            QtProperty *)),
-                q_ptr, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
-        q_ptr->connect(manager, SIGNAL(propertyDestroyed(QtProperty*)),
-                q_ptr, SLOT(slotPropertyDestroyed(QtProperty*)));
-        q_ptr->connect(manager, SIGNAL(propertyChanged(QtProperty*)),
-                q_ptr, SLOT(slotPropertyDataChanged(QtProperty*)));
+        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyInserted,
+                       q_ptr, [this](QtProperty *property, QtProperty *parent, QtProperty *after)
+                       { slotPropertyInserted(property, parent, after); });
+        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyRemoved,
+                       q_ptr, [this](QtProperty *property, QtProperty *parent)
+                       { slotPropertyRemoved(property, parent); });
+        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyDestroyed,
+                       q_ptr, [this](QtProperty *property) { slotPropertyDestroyed(property); });
+        q_ptr->connect(manager, &QtAbstractPropertyManager::propertyChanged,
+                       q_ptr, [this](QtProperty *property) { slotPropertyDataChanged(property); });
     }
     m_managerToProperties[manager].append(property);
     m_propertyToParents[property].append(parentProperty);
@@ -1265,17 +1263,10 @@ void QtAbstractPropertyBrowserPrivate::removeSubTree(QtProperty *property,
     m_managerToProperties[manager].removeAll(property);
     if (m_managerToProperties[manager].isEmpty()) {
         // disconnect manager's signals
-        q_ptr->disconnect(manager, SIGNAL(propertyInserted(QtProperty *,
-                            QtProperty *, QtProperty *)),
-                q_ptr, SLOT(slotPropertyInserted(QtProperty *,
-                            QtProperty *, QtProperty *)));
-        q_ptr->disconnect(manager, SIGNAL(propertyRemoved(QtProperty *,
-                            QtProperty *)),
-                q_ptr, SLOT(slotPropertyRemoved(QtProperty*,QtProperty*)));
-        q_ptr->disconnect(manager, SIGNAL(propertyDestroyed(QtProperty*)),
-                q_ptr, SLOT(slotPropertyDestroyed(QtProperty*)));
-        q_ptr->disconnect(manager, SIGNAL(propertyChanged(QtProperty*)),
-                q_ptr, SLOT(slotPropertyDataChanged(QtProperty*)));
+        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyInserted, q_ptr, nullptr);
+        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyRemoved, q_ptr, nullptr);
+        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyDestroyed, q_ptr, nullptr);
+        q_ptr->disconnect(manager, &QtAbstractPropertyManager::propertyChanged, q_ptr, nullptr);
 
         m_managerToProperties.remove(manager);
     }
@@ -1732,7 +1723,7 @@ QtBrowserItem *QtAbstractPropertyBrowser::insertProperty(QtProperty *property,
             QtProperty *afterProperty)
 {
     if (!property)
-        return 0;
+        return nullptr;
 
     // if item is already inserted in this item then cannot add.
     auto pendingList = properties();
@@ -1741,7 +1732,7 @@ QtBrowserItem *QtAbstractPropertyBrowser::insertProperty(QtProperty *property,
     while (pos < pendingList.size()) {
         QtProperty *prop = pendingList.at(pos);
         if (prop == property)
-            return 0;
+            return nullptr;
         if (prop == afterProperty) {
             newPos = pos + 1;
         }
@@ -1822,7 +1813,7 @@ QWidget *QtAbstractPropertyBrowser::createEditor(QtProperty *property,
     }
 
     if (!factory)
-        return 0;
+        return nullptr;
     QWidget *w = factory->createEditor(property, parent);
     // Since some editors can be QComboBoxes, and we changed their focus policy in Qt 5
     // to make them feel more native on Mac, we need to relax the focus policy to something

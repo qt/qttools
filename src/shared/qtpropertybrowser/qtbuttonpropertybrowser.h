@@ -14,7 +14,6 @@ class QtButtonPropertyBrowser : public QtAbstractPropertyBrowser
 {
     Q_OBJECT
 public:
-
     QtButtonPropertyBrowser(QWidget *parent = 0);
     ~QtButtonPropertyBrowser();
 
@@ -22,7 +21,6 @@ public:
     bool isExpanded(QtBrowserItem *item) const;
 
 Q_SIGNALS:
-
     void collapsed(QtBrowserItem *item);
     void expanded(QtBrowserItem *item);
 
@@ -32,14 +30,9 @@ protected:
     void itemChanged(QtBrowserItem *item) override;
 
 private:
-
     QScopedPointer<QtButtonPropertyBrowserPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtButtonPropertyBrowser)
     Q_DISABLE_COPY_MOVE(QtButtonPropertyBrowser)
-    Q_PRIVATE_SLOT(d_func(), void slotUpdate())
-    Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed())
-    Q_PRIVATE_SLOT(d_func(), void slotToggled(bool))
-
 };
 
 QT_END_NAMESPACE

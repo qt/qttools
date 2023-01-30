@@ -2,12 +2,11 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtgroupboxpropertybrowser.h"
-#include <QtCore/QSet>
-#include <QtWidgets/QGridLayout>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QGroupBox>
-#include <QtCore/QTimer>
+
 #include <QtCore/QMap>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QLabel>
 
 QT_BEGIN_NAMESPACE
 
@@ -119,7 +118,7 @@ void QtGroupBoxPropertyBrowserPrivate::slotUpdate()
 
 void QtGroupBoxPropertyBrowserPrivate::updateLater()
 {
-    QTimer::singleShot(0, q_ptr, SLOT(slotUpdate()));
+    QMetaObject::invokeMethod(q_ptr, [this] { slotUpdate(); }, Qt::QueuedConnection);
 }
 
 void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, QtBrowserItem *afterIndex)
@@ -208,7 +207,8 @@ void QtGroupBoxPropertyBrowserPrivate::propertyInserted(QtBrowserItem *index, Qt
     if (!newItem->widget) {
         newItem->widgetLabel = new QLabel(parentWidget);
     } else {
-        QObject::connect(newItem->widget, SIGNAL(destroyed()), q_ptr, SLOT(slotEditorDestroyed()));
+        QObject::connect(newItem->widget, &QWidget::destroyed,
+                         q_ptr, [this] { slotEditorDestroyed(); });
         m_widgetToItem[newItem->widget] = newItem;
     }
 
@@ -332,9 +332,7 @@ void QtGroupBoxPropertyBrowserPrivate::removeRow(QGridLayout *layout, int row) c
 
 bool QtGroupBoxPropertyBrowserPrivate::hasHeader(WidgetItem *item) const
 {
-    if (item->widget)
-        return true;
-    return false;
+    return item->widget;
 }
 
 void QtGroupBoxPropertyBrowserPrivate::propertyChanged(QtBrowserItem *index)
