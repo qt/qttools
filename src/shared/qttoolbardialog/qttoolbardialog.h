@@ -77,22 +77,6 @@ private:
     QScopedPointer<QtToolBarDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtToolBarDialog)
     Q_DISABLE_COPY_MOVE(QtToolBarDialog)
-
-    Q_PRIVATE_SLOT(d_func(), void newClicked())
-    Q_PRIVATE_SLOT(d_func(), void removeClicked())
-    Q_PRIVATE_SLOT(d_func(), void defaultClicked())
-    Q_PRIVATE_SLOT(d_func(), void okClicked())
-    Q_PRIVATE_SLOT(d_func(), void applyClicked())
-    Q_PRIVATE_SLOT(d_func(), void cancelClicked())
-    Q_PRIVATE_SLOT(d_func(), void upClicked())
-    Q_PRIVATE_SLOT(d_func(), void downClicked())
-    Q_PRIVATE_SLOT(d_func(), void leftClicked())
-    Q_PRIVATE_SLOT(d_func(), void rightClicked())
-    Q_PRIVATE_SLOT(d_func(), void renameClicked())
-    Q_PRIVATE_SLOT(d_func(), void toolBarRenamed(QListWidgetItem *))
-    Q_PRIVATE_SLOT(d_func(), void currentActionChanged(QTreeWidgetItem *))
-    Q_PRIVATE_SLOT(d_func(), void currentToolBarChanged(QListWidgetItem *))
-    Q_PRIVATE_SLOT(d_func(), void currentToolBarActionChanged(QListWidgetItem *))
 };
 
 QT_END_NAMESPACE
