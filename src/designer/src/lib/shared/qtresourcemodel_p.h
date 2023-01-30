@@ -98,8 +98,6 @@ private:
     QScopedPointer<class QtResourceModelPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceModel)
     Q_DISABLE_COPY_MOVE(QtResourceModel)
-
-    Q_PRIVATE_SLOT(d_func(), void slotFileChanged(const QString &))
 };
 
 QT_END_NAMESPACE

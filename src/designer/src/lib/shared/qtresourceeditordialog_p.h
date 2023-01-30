@@ -49,41 +49,6 @@ private:
     QScopedPointer<class QtResourceEditorDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceEditorDialog)
     Q_DISABLE_COPY_MOVE(QtResourceEditorDialog)
-
-    Q_PRIVATE_SLOT(d_func(), void slotQrcFileInserted(QtQrcFile *))
-    Q_PRIVATE_SLOT(d_func(), void slotQrcFileMoved(QtQrcFile *))
-    Q_PRIVATE_SLOT(d_func(), void slotQrcFileRemoved(QtQrcFile *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourcePrefixInserted(QtResourcePrefix *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourcePrefixMoved(QtResourcePrefix *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourcePrefixChanged(QtResourcePrefix *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourceLanguageChanged(QtResourcePrefix *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourcePrefixRemoved(QtResourcePrefix *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourceFileInserted(QtResourceFile *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourceFileMoved(QtResourceFile *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourceAliasChanged(QtResourceFile *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourceFileRemoved(QtResourceFile *))
-
-    Q_PRIVATE_SLOT(d_func(), void slotCurrentQrcFileChanged(QListWidgetItem *))
-    Q_PRIVATE_SLOT(d_func(), void slotCurrentTreeViewItemChanged(const QModelIndex &))
-    Q_PRIVATE_SLOT(d_func(), void slotListWidgetContextMenuRequested(const QPoint &))
-    Q_PRIVATE_SLOT(d_func(), void slotTreeViewContextMenuRequested(const QPoint &))
-    Q_PRIVATE_SLOT(d_func(), void slotTreeViewItemChanged(QStandardItem *))
-
-    Q_PRIVATE_SLOT(d_func(), void slotNewQrcFile())
-    Q_PRIVATE_SLOT(d_func(), void slotImportQrcFile())
-    Q_PRIVATE_SLOT(d_func(), void slotRemoveQrcFile())
-    Q_PRIVATE_SLOT(d_func(), void slotMoveUpQrcFile())
-    Q_PRIVATE_SLOT(d_func(), void slotMoveDownQrcFile())
-
-    Q_PRIVATE_SLOT(d_func(), void slotNewPrefix())
-    Q_PRIVATE_SLOT(d_func(), void slotAddFiles())
-    Q_PRIVATE_SLOT(d_func(), void slotChangePrefix())
-    Q_PRIVATE_SLOT(d_func(), void slotChangeLanguage())
-    Q_PRIVATE_SLOT(d_func(), void slotChangeAlias())
-    Q_PRIVATE_SLOT(d_func(), void slotClonePrefix())
-    Q_PRIVATE_SLOT(d_func(), void slotRemove())
-    Q_PRIVATE_SLOT(d_func(), void slotMoveUp())
-    Q_PRIVATE_SLOT(d_func(), void slotMoveDown())
 };
 
 QT_END_NAMESPACE

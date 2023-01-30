@@ -63,21 +63,9 @@ protected:
     bool event(QEvent *event) override;
 
 private:
-
     QScopedPointer<class QtResourceViewPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceView)
     Q_DISABLE_COPY_MOVE(QtResourceView)
-    Q_PRIVATE_SLOT(d_func(), void slotResourceSetActivated(QtResourceSet *))
-    Q_PRIVATE_SLOT(d_func(), void slotCurrentPathChanged(QTreeWidgetItem *))
-    Q_PRIVATE_SLOT(d_func(), void slotCurrentResourceChanged(QListWidgetItem *))
-    Q_PRIVATE_SLOT(d_func(), void slotResourceActivated(QListWidgetItem *))
-    Q_PRIVATE_SLOT(d_func(), void slotEditResources())
-    Q_PRIVATE_SLOT(d_func(), void slotReloadResources())
-#if QT_CONFIG(clipboard)
-    Q_PRIVATE_SLOT(d_func(), void slotCopyResourcePath())
-#endif
-    Q_PRIVATE_SLOT(d_func(), void slotListWidgetContextMenuRequested(const QPoint &pos))
-    Q_PRIVATE_SLOT(d_func(), void slotFilterChanged(const QString &pattern))
 };
 
 class QDESIGNER_SHARED_EXPORT  QtResourceViewDialog : public QDialog
@@ -97,7 +85,6 @@ private:
     QScopedPointer<class QtResourceViewDialogPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtResourceViewDialog)
     Q_DISABLE_COPY_MOVE(QtResourceViewDialog)
-    Q_PRIVATE_SLOT(d_func(), void slotResourceSelected(const QString &))
 };
 
 QT_END_NAMESPACE
