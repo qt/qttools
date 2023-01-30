@@ -123,15 +123,15 @@ public:
             return;
         m_managers.insert(manager);
         connectPropertyManager(manager);
-        connect(manager, SIGNAL(destroyed(QObject *)),
-                    this, SLOT(managerDestroyed(QObject *)));
+        connect(manager, &QObject::destroyed,
+                this, &QtAbstractEditorFactory<PropertyManager>::managerDestroyed);
     }
     void removePropertyManager(PropertyManager *manager)
     {
         if (!m_managers.contains(manager))
             return;
-        disconnect(manager, SIGNAL(destroyed(QObject *)),
-                    this, SLOT(managerDestroyed(QObject *)));
+        disconnect(manager, &QObject::destroyed,
+                this, &QtAbstractEditorFactory<PropertyManager>::managerDestroyed);
         disconnectPropertyManager(manager);
         m_managers.remove(manager);
     }

@@ -228,7 +228,7 @@ QtBoolEdit::QtBoolEdit(QWidget *parent) :
         lt->setContentsMargins(0, 0, 4, 0);
     lt->addWidget(m_checkBox);
     setLayout(lt);
-    connect(m_checkBox, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
+    connect(m_checkBox, &QAbstractButton::toggled, this, &QtBoolEdit::toggled);
     setFocusProxy(m_checkBox);
     m_checkBox->setText(tr("True"));
 }

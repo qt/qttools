@@ -76,8 +76,7 @@ void tst_QHelpContentModel::setupContents()
     h.setReadOnly(false);
     QHelpContentModel *m = h.contentModel();
     SignalWaiter w;
-    connect(m, SIGNAL(contentsCreated()),
-        &w, SLOT(stopWaiting()));
+    connect(m, &QHelpContentModel::contentsCreated, &w, &SignalWaiter::stopWaiting);
     w.start();
     h.setupData();
     int i = 0;
@@ -102,8 +101,7 @@ void tst_QHelpContentModel::contentItemAt()
     h.setReadOnly(false);
     QHelpContentModel *m = h.contentModel();
     SignalWaiter w;
-    connect(m, SIGNAL(contentsCreated()),
-        &w, SLOT(stopWaiting()));
+    connect(m, &QHelpContentModel::contentsCreated, &w, &SignalWaiter::stopWaiting);
     w.start();
     h.setupData();
     int i = 0;

@@ -75,8 +75,7 @@ void tst_QHelpIndexModel::setupIndex()
     h.setReadOnly(false);
     QHelpIndexModel *m = h.indexModel();
     SignalWaiter w;
-    connect(m, SIGNAL(indexCreated()),
-        &w, SLOT(stopWaiting()));
+    connect(m, &QHelpIndexModel::indexCreated, &w, &SignalWaiter::stopWaiting);
     w.start();
     h.setupData();
     int i = 0;
@@ -107,8 +106,7 @@ void tst_QHelpIndexModel::filter()
     h.setReadOnly(false);
     QHelpIndexModel *m = h.indexModel();
     SignalWaiter w;
-    connect(m, SIGNAL(indexCreated()),
-        &w, SLOT(stopWaiting()));
+    connect(m, &QHelpIndexModel::indexCreated, &w, &SignalWaiter::stopWaiting);
     w.start();
     h.setupData();
     int i = 0;
