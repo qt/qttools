@@ -14,7 +14,6 @@ class QtGroupBoxPropertyBrowser : public QtAbstractPropertyBrowser
 {
     Q_OBJECT
 public:
-
     QtGroupBoxPropertyBrowser(QWidget *parent = 0);
     ~QtGroupBoxPropertyBrowser();
 
@@ -24,13 +23,9 @@ protected:
     void itemChanged(QtBrowserItem *item) override;
 
 private:
-
     QScopedPointer<QtGroupBoxPropertyBrowserPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtGroupBoxPropertyBrowser)
     Q_DISABLE_COPY_MOVE(QtGroupBoxPropertyBrowser)
-    Q_PRIVATE_SLOT(d_func(), void slotUpdate())
-    Q_PRIVATE_SLOT(d_func(), void slotEditorDestroyed())
-
 };
 
 QT_END_NAMESPACE

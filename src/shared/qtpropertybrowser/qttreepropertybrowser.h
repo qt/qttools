@@ -22,7 +22,6 @@ class QtTreePropertyBrowser : public QtAbstractPropertyBrowser
     Q_PROPERTY(int splitterPosition READ splitterPosition WRITE setSplitterPosition)
     Q_PROPERTY(bool propertiesWithoutValueMarked READ propertiesWithoutValueMarked WRITE setPropertiesWithoutValueMarked)
 public:
-
     enum ResizeMode
     {
         Interactive,
@@ -69,7 +68,6 @@ public:
     void editItem(QtBrowserItem *item);
 
 Q_SIGNALS:
-
     void collapsed(QtBrowserItem *item);
     void expanded(QtBrowserItem *item);
 
@@ -79,16 +77,9 @@ protected:
     void itemChanged(QtBrowserItem *item) override;
 
 private:
-
     QScopedPointer<QtTreePropertyBrowserPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtTreePropertyBrowser)
     Q_DISABLE_COPY_MOVE(QtTreePropertyBrowser)
-
-    Q_PRIVATE_SLOT(d_func(), void slotCollapsed(const QModelIndex &))
-    Q_PRIVATE_SLOT(d_func(), void slotExpanded(const QModelIndex &))
-    Q_PRIVATE_SLOT(d_func(), void slotCurrentBrowserItemChanged(QtBrowserItem *))
-    Q_PRIVATE_SLOT(d_func(), void slotCurrentTreeItemChanged(QTreeWidgetItem *, QTreeWidgetItem *))
-
 };
 
 QT_END_NAMESPACE

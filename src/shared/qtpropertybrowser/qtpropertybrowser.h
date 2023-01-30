@@ -69,9 +69,7 @@ public:
 
     QtProperty *addProperty(const QString &name = QString());
 Q_SIGNALS:
-
-    void propertyInserted(QtProperty *property,
-                QtProperty *parent, QtProperty *after);
+    void propertyInserted(QtProperty *property, QtProperty *parent, QtProperty *after);
     void propertyChanged(QtProperty *property);
     void propertyRemoved(QtProperty *property, QtProperty *parent);
     void propertyDestroyed(QtProperty *property);
@@ -253,13 +251,6 @@ private:
     QScopedPointer<QtAbstractPropertyBrowserPrivate> d_ptr;
     Q_DECLARE_PRIVATE(QtAbstractPropertyBrowser)
     Q_DISABLE_COPY_MOVE(QtAbstractPropertyBrowser)
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyInserted(QtProperty *,
-                            QtProperty *, QtProperty *))
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyRemoved(QtProperty *,
-                            QtProperty *))
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyDestroyed(QtProperty *))
-    Q_PRIVATE_SLOT(d_func(), void slotPropertyDataChanged(QtProperty *))
-
 };
 
 QT_END_NAMESPACE
