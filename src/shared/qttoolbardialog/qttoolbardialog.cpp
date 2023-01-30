@@ -4,16 +4,13 @@
 #include "qttoolbardialog.h"
 #include "ui_qttoolbardialog.h"
 
-#include <QtWidgets/QToolBar>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QPushButton>
-
+#include <QtCore/QMap>
+#include <QtCore/QSet>
 #include <QtGui/QAction>
 #include <QtGui/QtEvents>
-
-#include <QtCore/QSet>
-#include <QtCore/QMap>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QToolBar>
 
 #include <algorithm>
 
@@ -1696,33 +1693,36 @@ QtToolBarDialog::QtToolBarDialog(QWidget *parent, Qt::WindowFlags flags)
     d_ptr->ui.newButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/plus.png")));
     d_ptr->ui.removeButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/minus.png")));
 
-    connect(d_ptr->ui.newButton, SIGNAL(clicked()), this, SLOT(newClicked()));
-    connect(d_ptr->ui.removeButton, SIGNAL(clicked()), this, SLOT(removeClicked()));
-    connect(d_ptr->ui.renameButton, SIGNAL(clicked()), this, SLOT(renameClicked()));
-    connect(d_ptr->ui.upButton, SIGNAL(clicked()), this, SLOT(upClicked()));
-    connect(d_ptr->ui.downButton, SIGNAL(clicked()), this, SLOT(downClicked()));
-    connect(d_ptr->ui.leftButton, SIGNAL(clicked()), this, SLOT(leftClicked()));
-    connect(d_ptr->ui.rightButton, SIGNAL(clicked()), this, SLOT(rightClicked()));
+    connect(d_ptr->ui.newButton, &QAbstractButton::clicked, this, [this] { d_ptr->newClicked(); });
+    connect(d_ptr->ui.removeButton, &QAbstractButton::clicked, this, [this] { d_ptr->removeClicked(); });
+    connect(d_ptr->ui.renameButton, &QAbstractButton::clicked, this, [this] { d_ptr->renameClicked(); });
+    connect(d_ptr->ui.upButton, &QAbstractButton::clicked, this, [this] { d_ptr->upClicked(); });
+    connect(d_ptr->ui.downButton, &QAbstractButton::clicked, this, [this] { d_ptr->downClicked(); });
+    connect(d_ptr->ui.leftButton, &QAbstractButton::clicked, this, [this] { d_ptr->leftClicked(); });
+    connect(d_ptr->ui.rightButton, &QAbstractButton::clicked, this, [this] { d_ptr->rightClicked(); });
 
-    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), this, SLOT(defaultClicked()));
-    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), this, SLOT(okClicked()));
-    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), this, SLOT(applyClicked()));
-    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), this, SLOT(cancelClicked()));
+    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::RestoreDefaults),
+            &QAbstractButton::clicked, this, [this] { d_ptr->defaultClicked(); });
+    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::Ok),
+            &QAbstractButton::clicked, this, [this] { d_ptr->okClicked(); });
+    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::Apply),
+            &QAbstractButton::clicked, this, [this] { d_ptr->applyClicked(); });
+    connect(d_ptr->ui.buttonBox->button(QDialogButtonBox::Cancel),
+            &QAbstractButton::clicked, this, [this] { d_ptr->cancelClicked(); });
 
-    connect(d_ptr->ui.actionTree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-                    this, SLOT(currentActionChanged(QTreeWidgetItem*)));
-    connect(d_ptr->ui.toolBarList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                    this, SLOT(currentToolBarChanged(QListWidgetItem*)));
-    connect(d_ptr->ui.currentToolBarList,
-                    SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-                    this, SLOT(currentToolBarActionChanged(QListWidgetItem*)));
+    connect(d_ptr->ui.actionTree, &QTreeWidget::currentItemChanged,
+            this, [this](QTreeWidgetItem *current) { d_ptr->currentActionChanged(current); });
+    connect(d_ptr->ui.currentToolBarList, &QListWidget::currentItemChanged,
+            this, [this](QListWidgetItem *current) { d_ptr->currentToolBarActionChanged(current); });
+    connect(d_ptr->ui.toolBarList, &QListWidget::currentItemChanged,
+            this, [this](QListWidgetItem *current) { d_ptr->currentToolBarChanged(current); });
 
-    connect(d_ptr->ui.actionTree, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
-                    this, SLOT(rightClicked()));
-    connect(d_ptr->ui.currentToolBarList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-                    this, SLOT(leftClicked()));
-    connect(d_ptr->ui.toolBarList, SIGNAL(itemChanged(QListWidgetItem*)),
-                    this, SLOT(toolBarRenamed(QListWidgetItem*)));
+    connect(d_ptr->ui.actionTree, &QTreeWidget::itemDoubleClicked,
+            this, [this] { d_ptr->rightClicked(); });
+    connect(d_ptr->ui.currentToolBarList, &QListWidget::itemDoubleClicked,
+            this, [this] { d_ptr->leftClicked(); });
+    connect(d_ptr->ui.toolBarList, &QListWidget::itemChanged,
+            this, [this](QListWidgetItem *current) { d_ptr->toolBarRenamed(current); });
 }
 
 /*!
