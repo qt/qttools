@@ -6,12 +6,6 @@ project(customwidgetplugin LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 
-if(NOT DEFINED INSTALL_EXAMPLESDIR)
-    set(INSTALL_EXAMPLESDIR "examples")
-endif()
-
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/plugins/designer")
-
 find_package(Qt6 REQUIRED COMPONENTS Core Gui UiPlugin Widgets)
 
 qt_add_plugin(customwidgetplugin)
@@ -31,6 +25,15 @@ target_link_libraries(customwidgetplugin PUBLIC
     Qt::UiPlugin
     Qt::Widgets
 )
+
+if(QT6_INSTALL_PREFIX)
+   set(INSTALL_EXAMPLEDIR "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_PLUGINS}/designer")
+else()
+   if(NOT DEFINED INSTALL_EXAMPLESDIR)
+       set(INSTALL_EXAMPLESDIR "examples")
+   endif()
+   set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/plugins/designer")
+endif()
 
 install(TARGETS customwidgetplugin
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
