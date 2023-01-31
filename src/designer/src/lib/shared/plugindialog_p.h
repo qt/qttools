@@ -19,6 +19,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class QFileInfo;
+
 class QDesignerFormEditorInterface;
 
 namespace qdesigner_internal {
@@ -37,7 +39,7 @@ private:
     void populateTreeWidget();
     QTreeWidgetItem* setTopLevelItem(const QString &itemName);
     QTreeWidgetItem* setPluginItem(QTreeWidgetItem *topLevelItem,
-                                   const QString &itemName, const QFont &font);
+                                   const QFileInfo &file, const QFont &font);
     QTreeWidgetItem *setItem(QTreeWidgetItem *pluginItem, const QString &name,
                              const QString &toolTip, const QString &whatsThis,
                              const QIcon &icon);
