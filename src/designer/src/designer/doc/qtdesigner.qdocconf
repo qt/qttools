@@ -27,11 +27,7 @@ qhp.QtDesigner.subprojects.classes.sortPages = true
 
 language                = Cpp
 
-headerdirs             += .. \
-                          ../../../../uiplugin \
-                          ../../lib
-
-sourcedirs              = .. \
+{headerdirs,sourcedirs} += .. \
                           ../../../../uiplugin \
                           ../../lib
 
@@ -40,7 +36,7 @@ exampledirs             = ../../../../../examples/designer \
 
 imagedirs               = images
 
-depends                 += qtdoc qtgui qtwidgets qtcore qtuitools qtquick qmake
+depends                 += qtdoc qtgui qtwidgets qtcore qtuitools qtquick qtcmake qmake
 
 navigation.landingpage = "Qt Designer Manual"
 navigation.cppclassespage = "Qt Designer C++ Classes"

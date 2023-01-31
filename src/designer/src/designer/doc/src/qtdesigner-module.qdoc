@@ -13,10 +13,6 @@
 
     In addition, the QFormBuilder class provides the possibility of
     constructing user interfaces from UI files at run-time.
-
-    To link against the module, add this line to your \c qmake .pro file:
-
-    \snippet plugins/doc_src_qtdesigner.pro 1
 */
 
 /*!
