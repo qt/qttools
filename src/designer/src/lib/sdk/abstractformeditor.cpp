@@ -103,7 +103,7 @@ QDesignerFormEditorInterfacePrivate::~QDesignerFormEditorInterfacePrivate()
     these components. They are typically used to query (and
     manipulate) the respective component. For example:
 
-    \snippet lib/tools_designer_src_lib_sdk_abstractformeditor.cpp 0
+    \snippet lib/tools_designer_src_lib_sdk_abstractobjectinspector.cpp 0
 
     QDesignerFormEditorInterface is not intended to be instantiated
     directly. A pointer to \QD's current QDesignerFormEditorInterface
