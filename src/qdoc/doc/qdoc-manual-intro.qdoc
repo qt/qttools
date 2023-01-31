@@ -16,8 +16,8 @@
     comments in \c {.h} files. A QDoc comment always begins with an
     exclamation mark (\b{!})). For example:
 
-    \code
-        / *!
+    \badcode *
+        /\1!
             \class QObject
             \brief The QObject class is the base class of all Qt objects.
 
@@ -51,7 +51,7 @@
             inheritance hierarchy by using the \c inherits() function.
 
         ....
-    * /
+        \1/
     \endcode
 
     From the QDoc comment above, QDoc generates the HTML \l {QObject}
