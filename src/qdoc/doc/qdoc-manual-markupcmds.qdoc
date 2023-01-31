@@ -189,9 +189,9 @@
 
     \badcode *
     /\1!
-         \div {class="float-right"}
-           \inlineimage qml-column.png
-         \enddiv
+        \div {class="float-right"}
+            \inlineimage qml-column.png
+        \enddiv
     \1/
     \endcode
 
@@ -636,87 +636,87 @@
             The \\c command -- useful if you want text in a monospace font --
             is well documented.
         \1/
-        \endcode
+    \endcode
 
-        QDoc renders this as:
+    QDoc renders this as:
 
-        \quotation
-            The \\c command -- useful if you want text in a monospace font --
-            is well documented.
-        \endquotation
+    \quotation
+        The \\c command -- useful if you want text in a monospace font --
+        is well documented.
+    \endquotation
 
     However, other commands may require that the hyphens are escaped to ensure
     QDoc renders the output as expected. For example;
 
     \badcode *
     /\1!
-                This \l {endash-sequence}{link to the -- (endash) sequence}
-                isn't escaped and QDoc therefore renders an endash in the link
-                text. However, the escaped
-                \l {endash-sequence}{link to the \-- (endash) sequence}
-                renders both hyphens as intended.
+        This \l {endash-sequence}{link to the -- (endash) sequence}
+        isn't escaped and QDoc therefore renders an endash in the link
+        text. However, the escaped
+        \l {endash-sequence}{link to the \-- (endash) sequence}
+        renders both hyphens as intended.
     \1/
-            \endcode
+    \endcode
 
-            QDoc renders this as:
+    QDoc renders this as:
 
-            \quotation
-                This \l {endash-sequence}{link to the -- (endash) sequence}
-                isn't escaped and QDoc therefore renders an endash in the link
-                text. However, the escaped
-                \l {endash-sequence}{link to the \-- (endash) sequence}
-                renders both hyphens as intended.
-            \endquotation
+    \quotation
+        This \l {endash-sequence}{link to the -- (endash) sequence}
+        isn't escaped and QDoc therefore renders an endash in the link
+        text. However, the escaped
+        \l {endash-sequence}{link to the \-- (endash) sequence}
+        renders both hyphens as intended.
+    \endquotation
 
     See also \l {emdash-sequence}{\-\-- (em dash)}.
 
     \target emdash-sequence
     \section1 -\-- (em dash)
 
-        QDoc renders triple hyphens as an en dash. QDoc markup commands
-        designed to make their input appear verbatim---such as the \\c
-        command---won't replace the triple hyphens with an en dash character.
-        For example:
+    QDoc renders triple hyphens as an en dash. QDoc markup commands
+    designed to make their input appear verbatim---such as the \\c
+    command---won't replace the triple hyphens with an en dash character.
+    For example:
 
     \badcode *
     /\1!
-                The \\c command---useful when you want text to be rendered
-                verbatim---is well documented.
+        The \\c command---useful when you want text to be rendered
+        verbatim---is well documented.
     \1/
-            \endcode
+    \endcode
 
-            QDoc renders this as:
+    QDoc renders this as:
 
-            \quotation
-                The \\c command---useful when you want text to be rendered
-                verbatim---is well documented.
-            \endquotation
+    \quotation
+        The \\c command---useful when you want text to be rendered
+        verbatim---is well documented.
+    \endquotation
 
-        However, other commands may require that the hyphens are escaped to ensure
-        QDoc renders the output as expected. For example;
+    However, other commands may require that the hyphens are escaped to ensure
+    QDoc renders the output as expected. For example;
 
     \badcode *
     /\1!
-                    This \l {emdash-sequence}{link to the --- (emdash) sequence}
-                    isn't escaped and QDoc therefore renders an emdash in the link
-                    text. However, the escaped
-                    \l {emdash-sequence}{link to the -\-- (emdash) sequence}
-                    renders both hyphens as intended.
+        This \l {emdash-sequence}{link to the --- (emdash) sequence}
+        isn't escaped and QDoc therefore renders an emdash in the link
+        text. However, the escaped
+        \l {emdash-sequence}{link to the -\-- (emdash) sequence}
+        renders both hyphens as intended.
     \1/
-                \endcode
+    \endcode
 
-                QDoc renders this as:
+    QDoc renders this as:
 
-                \quotation
-                    This \l {emdash-sequence}{link to the --- (emdash) sequence}
-                    isn't escaped and QDoc therefore renders an emdash in the link
-                    text. However, the escaped
-                    \l {emdash-sequence}{link to the -\-- (emdash) sequence}
-                    renders both hyphens as intended.
-                \endquotation
+    \quotation
+        This \l {emdash-sequence}{link to the --- (emdash) sequence}
+        isn't escaped and QDoc therefore renders an emdash in the link
+        text. However, the escaped
+        \l {emdash-sequence}{link to the -\-- (emdash) sequence}
+        renders both hyphens as intended.
+    \endquotation
 
-        \note The escaped control sequence in this example is for the en dash.
-              This avoids a hyphen followed by an en dash in the output.
+    \note The escaped control sequence in this example is for the en dash.
+          This avoids a hyphen followed by an en dash in the output.
 
     See also \l {endash-sequence}{\-- (en dash)}.
 */
@@ -750,74 +750,74 @@
 
     There is a strict ordering of the section units:
 
-           \code
-           section1
-                  |
-                  section2
-                         |
-                         section3
-                                |
-                                section4
-           \endcode
+    \code
+    section1
+          |
+          section2
+                 |
+                 section3
+                        |
+                        section4
+    \endcode
 
     When sections are used, the first section command should be \c section1.
 
     \badcode *
     /\1!
-               \section1 Basic Qt
+        \section1 Basic Qt
 
-               This is the first section.
-
-
-                   \section2 Getting Started
-
-                   This is the first subsection.
+        This is the first section.
 
 
-                       \section3 Hello Qt
+            \section2 Getting Started
 
-                       This is the first subsubsection.
-
-
-                       \section3 Making Connections
-
-                       This is the second subsubsection.
+            This is the first subsection.
 
 
-                       \section3 Using the Reference Documentation
+                \section3 Hello Qt
 
-                       This is the third subsubsection.
-
-
-                   \section2 Creating Dialogs
-
-                   This is the second subsection.
+                This is the first subsubsection.
 
 
-                       \section3 Subclassing QDialog
+                \section3 Making Connections
 
-                       This is the first subsubsection.
-
-                       ...
+                This is the second subsubsection.
 
 
-               \section1 Intermediate Qt
+                \section3 Using the Reference Documentation
 
-               This is the second section.
-
-
-                   \section2 Layout Management
-
-                   This is the second section's first subsection.
+                This is the third subsubsection.
 
 
-                       \section3 Basic Layouts
+            \section2 Creating Dialogs
 
-                       This is the first subsubsection.
+            This is the second subsection.
 
-               ...
+
+                \section3 Subclassing QDialog
+
+                This is the first subsubsection.
+
+                ...
+
+
+        \section1 Intermediate Qt
+
+        This is the second section.
+
+
+            \section2 Layout Management
+
+            This is the second section's first subsection.
+
+
+                \section3 Basic Layouts
+
+                This is the first subsubsection.
+
+            ...
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
@@ -1021,7 +1021,7 @@
 
     \badcode 1 2 * endcode
     /\3!
-    \code * hello
+        \code * hello
         /\\1 \\2 \\1/
         \\4
     \3/
@@ -1146,25 +1146,25 @@
 
     \badcode *
     /\1!
-               This is a simple "Hello world" example:
+       This is a simple "Hello world" example:
 
-               \quotefile examples/main.cpp
+       \quotefile examples/main.cpp
 
-               It contains only the bare minimum you need
-               to get a Qt application up and running.
+       It contains only the bare minimum you need
+       to get a Qt application up and running.
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               This is a simple "Hello world" example:
+    \quotation
+       This is a simple "Hello world" example:
 
-               \quotefile examples/main.cpp
+       \quotefile examples/main.cpp
 
-               It contains only the bare minimum you need to get a Qt
-               application up and running.
-           \endquotation
+       It contains only the bare minimum you need to get a Qt
+       application up and running.
+    \endquotation
 
     See also \l {quotefromfile-command} {\\quotefromfile} and
     \l {code-command} {\\code}.
@@ -1189,49 +1189,49 @@
 
     \badcode *
     /\1!
-               The whole application is contained within
-               the \c main() function:
+       The whole application is contained within
+       the \c main() function:
 
-               \quotefromfile examples/main.cpp
+       \quotefromfile examples/main.cpp
 
-               \skipto main
-               \printuntil app(argc, argv)
+       \skipto main
+       \printuntil app(argc, argv)
 
-               First we create a QApplication object using
-               the \c argc and \c argv parameters.
+       First we create a QApplication object using
+       the \c argc and \c argv parameters.
 
-               \skipto QPushButton
-               \printuntil resize
+       \skipto QPushButton
+       \printuntil resize
 
-               Then we create a QPushButton, and give it a reasonable
-               size using the QWidget::resize() function.
+       Then we create a QPushButton, and give it a reasonable
+       size using the QWidget::resize() function.
 
-               ...
+       ...
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               The whole application is contained within
-               the \c main() function:
+    \quotation
+       The whole application is contained within
+       the \c main() function:
 
-               \quotefromfile examples/main.cpp
+       \quotefromfile examples/main.cpp
 
-               \skipto main
-               \printuntil app(argc, argv)
+       \skipto main
+       \printuntil app(argc, argv)
 
-               First we create a QApplication object using the \c argc
-               and \c argv parameters.
+       First we create a QApplication object using the \c argc
+       and \c argv parameters.
 
-               \skipto QPushButton
-               \printuntil resize
+       \skipto QPushButton
+       \printuntil resize
 
-               Then we create a QPushButton, and give it a reasonable
-               size using the QWidget::resize() function.
+       Then we create a QPushButton, and give it a reasonable
+       size using the QWidget::resize() function.
 
-               ...
-           \endquotation
+       ...
+    \endquotation
 
     QDoc remembers which file it is quoting from, and the current
     position in that file (see \l {file} {\\printline} for more
@@ -1258,56 +1258,56 @@
 
     \badcode *
     /\1!
-               There has to be exactly one QApplication object
-               in every GUI application that uses Qt.
+       There has to be exactly one QApplication object
+       in every GUI application that uses Qt.
 
-               \quotefromfile examples/main.cpp
+       \quotefromfile examples/main.cpp
 
-               \printline QApplication
+       \printline QApplication
 
-               This line includes the QApplication class
-               definition. QApplication manages various
-               application-wide resources, such as the
-               default font and cursor.
+       This line includes the QApplication class
+       definition. QApplication manages various
+       application-wide resources, such as the
+       default font and cursor.
 
-               \printline QPushButton
+       \printline QPushButton
 
-               This line includes the QPushButton class
-               definition. The QPushButton widget provides a command
-               button.
+       This line includes the QPushButton class
+       definition. The QPushButton widget provides a command
+       button.
 
-               \printline main
+       \printline main
 
-               The main function...
+       The main function...
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               There has to be exactly one QApplication object
-               in every GUI application that uses Qt.
+    \quotation
+       There has to be exactly one QApplication object
+       in every GUI application that uses Qt.
 
-               \quotefromfile examples/main.cpp
+       \quotefromfile examples/main.cpp
 
-               \skipto QApplication
-               \printline QApplication
+       \skipto QApplication
+       \printline QApplication
 
-               This line includes the QApplication class
-               definition. QApplication manages various
-               application-wide resources, such as the
-               default font and cursor.
+       This line includes the QApplication class
+       definition. QApplication manages various
+       application-wide resources, such as the
+       default font and cursor.
 
-               \printline QPushButton
+       \printline QPushButton
 
-               This line includes the QPushButton class
-               definition. The QPushButton widget provides a command
-               button.
+       This line includes the QPushButton class
+       definition. The QPushButton widget provides a command
+       button.
 
-               \printline main
+       \printline main
 
-               The main function...
-           \endquotation
+       The main function...
+    \endquotation
 
     \target file
 
@@ -1324,33 +1324,33 @@
 
     \badcode *
     /\1!
-               \quotefromfile examples/mainwindow.cpp
+       \quotefromfile examples/mainwindow.cpp
 
-               \skipto closeEvent
-               \printuntil /^\}/
+       \skipto closeEvent
+       \printuntil /^\}/
 
-               Close events are sent to widgets that the users want to
-               close, usually by clicking \c File|Exit or by clicking
-               the \c X title bar button. By reimplementing the event
-               handler, we can intercept attempts to close the
-               application.
+       Close events are sent to widgets that the users want to
+       close, usually by clicking \c File|Exit or by clicking
+       the \c X title bar button. By reimplementing the event
+       handler, we can intercept attempts to close the
+       application.
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               \quotefromfile examples/mainwindow.cpp
+    \quotation
+       \quotefromfile examples/mainwindow.cpp
 
-               \skipto closeEvent
-               \printuntil /^\}/
+       \skipto closeEvent
+       \printuntil /^\}/
 
-               Close events are sent to widgets that the users want to
-               close, usually by clicking \c File|Exit or by clicking
-               the \c X title bar button. By reimplementing the event
-               handler, we can intercept attempts to close the
-               application.
-           \endquotation
+       Close events are sent to widgets that the users want to
+       close, usually by clicking \c File|Exit or by clicking
+       the \c X title bar button. By reimplementing the event
+       handler, we can intercept attempts to close the
+       application.
+    \endquotation
 
     (\l {widgets/scribble} {The complete example file...})
 
@@ -1385,30 +1385,30 @@
 
     \badcode *
     /\1!
-               The whole application is contained within the
-               \c main() function:
+       The whole application is contained within the
+       \c main() function:
 
-               \quotefromfile examples/main.cpp
-               \printto hello
+       \quotefromfile examples/main.cpp
+       \printto hello
 
-               First we create a QApplication object using the \c argc and
-               \c argv parameters...
+       First we create a QApplication object using the \c argc and
+       \c argv parameters...
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               The whole application is contained within the
-               \c main() function:
+    \quotation
+       The whole application is contained within the
+       \c main() function:
 
-               \quotefromfile examples/main.cpp
-               \skipto main
-               \printto hello
+       \quotefromfile examples/main.cpp
+       \skipto main
+       \printto hello
 
-               First we create a QApplication object using the \c argc
-               and \c argv parameters...
-           \endquotation
+       First we create a QApplication object using the \c argc
+       and \c argv parameters...
+    \endquotation
 
     See also \l {printline-command} {\\printline} and \l
     {printuntil-command} {\\printuntil}.
@@ -1435,35 +1435,35 @@
 
     \badcode *
     /\1!
-               The whole application is contained within the
-               \c main() function:
+       The whole application is contained within the
+       \c main() function:
 
-               \quotefromfile examples/main.cpp
-               \skipto main
-               \printuntil hello
+       \quotefromfile examples/main.cpp
+       \skipto main
+       \printuntil hello
 
-               First we create a QApplication object using the
-               \c argc and \c argv parameters, then we create
-               a QPushButton.
+       First we create a QApplication object using the
+       \c argc and \c argv parameters, then we create
+       a QPushButton.
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               The whole application is contained within the
-               \c main() function:
+    \quotation
+       The whole application is contained within the
+       \c main() function:
 
-               \quotefromfile examples/main.cpp
-               \skipto main
-               \printuntil hello
+       \quotefromfile examples/main.cpp
+       \skipto main
+       \printuntil hello
 
-               First we create a \l
-               {http://doc.qt.io/qt-6/qapplication.html} {QApplication}
-               object using the \c argc and \c argv parameters, then we
-               create a \l
-               {http://doc.qt.io/qt-6/qpushbutton.html} {QPushButton}.
-           \endquotation
+       First we create a \l
+       {http://doc.qt.io/qt-6/qapplication.html} {QApplication}
+       object using the \c argc and \c argv parameters, then we
+       create a \l
+       {http://doc.qt.io/qt-6/qpushbutton.html} {QPushButton}.
+    \endquotation
 
     See also \l {printline-command} {\\printline} and \l
     {printto-command} {\\printto}.
@@ -1487,37 +1487,37 @@
 
     \badcode *
     /\1!
-               QPushButton is a GUI push button that the user
-               can press and release.
+       QPushButton is a GUI push button that the user
+       can press and release.
 
-               \quotefromfile examples/main.cpp
-               \skipline QApplication
-               \printline QPushButton
+       \quotefromfile examples/main.cpp
+       \skipline QApplication
+       \printline QPushButton
 
-               This line includes the QPushButton class
-               definition. For each class that is part of the
-               public Qt API, there exists a header file of
-               the same name that contains its definition.
+       This line includes the QPushButton class
+       definition. For each class that is part of the
+       public Qt API, there exists a header file of
+       the same name that contains its definition.
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               \l
-               QPushButton is a GUI push button that the user
-               can press and release.
+    \quotation
+       \l
+       QPushButton is a GUI push button that the user
+       can press and release.
 
-               \quotefromfile examples/main.cpp
-               \skipto QApplication
-               \skipline QApplication
-               \printline QPushButton
+       \quotefromfile examples/main.cpp
+       \skipto QApplication
+       \skipline QApplication
+       \printline QPushButton
 
-               This line includes the QPushButton class
-               definition. For each class that is part of the public
-               Qt API, there exists a header file of the same name
-               that contains its definition.
-           \endquotation
+       This line includes the QPushButton class
+       definition. For each class that is part of the public
+       Qt API, there exists a header file of the same name
+       that contains its definition.
+    \endquotation
 
     See also \l {skipto-command} {\\skipto}, \l {skipuntil-command}
     {\\skipuntil} and \l {dots} {\\dots}.
@@ -1544,36 +1544,36 @@
 
     \badcode *
     /\1!
-               The whole application is contained within
-               the \c main() function:
+       The whole application is contained within
+       the \c main() function:
 
-               \quotefromfile examples/main.cpp
-               \skipto main
-               \printuntil }
+       \quotefromfile examples/main.cpp
+       \skipto main
+       \printuntil }
 
-               First we create a QApplication object. There
-               has to be exactly one such object in
-               every GUI application that uses Qt. Then
-               we create a QPushButton, resize it to a reasonable
-               size...
+       First we create a QApplication object. There
+       has to be exactly one such object in
+       every GUI application that uses Qt. Then
+       we create a QPushButton, resize it to a reasonable
+       size ...
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               The whole application is contained within
-               the \c main() function:
+    \quotation
+       The whole application is contained within
+       the \c main() function:
 
-               \quotefromfile examples/main.cpp
-               \skipto main
-               \printuntil }
+       \quotefromfile examples/main.cpp
+       \skipto main
+       \printuntil }
 
-               First we create a QApplication object. There has to be
-               exactly one such object in every GUI application that
-               uses Qt. Then we create a QPushButton, resize it to a
-               reasonable size ...
-           \endquotation
+       First we create a QApplication object. There has to be
+       exactly one such object in every GUI application that
+       uses Qt. Then we create a QPushButton, resize it to a
+       reasonable size ...
+    \endquotation
 
     See also \l {skipline-command} {\\skipline}, \l
     {skipuntil-command} {\\skipuntil} and \l {dots} {\\dots}.
@@ -1600,35 +1600,35 @@
 
     \badcode *
     /\1!
-               The first thing we did in the \c main() function
-               was to create a QApplication object \c app.
+       The first thing we did in the \c main() function
+       was to create a QApplication object \c app.
 
-               \quotefromfile examples/main.cpp
-               \skipuntil show
-               \dots
-               \printuntil }
+       \quotefromfile examples/main.cpp
+       \skipuntil show
+       \dots
+       \printuntil }
 
-               In the end we must remember to make \c main() pass the
-               control to Qt. QCoreApplication::exec() will return when
-               the application exits...
+       In the end we must remember to make \c main() pass the
+       control to Qt. QCoreApplication::exec() will return when
+       the application exits...
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               The first thing we did in the \c main() function was to
-               create a QApplication object \c app.
+    \quotation
+       The first thing we did in the \c main() function was to
+       create a QApplication object \c app.
 
-               \quotefromfile examples/main.cpp
-               \skipuntil show
-               \dots
-               \printuntil }
+       \quotefromfile examples/main.cpp
+       \skipuntil show
+       \dots
+       \printuntil }
 
-               In the end we must remember to make \c main() pass the
-               control to Qt. QCoreApplication::exec()
-               will return when the application exits...
-           \endquotation
+       In the end we must remember to make \c main() pass the
+       control to Qt. QCoreApplication::exec()
+       will return when the application exits...
+    \endquotation
 
     See also \l {skipline-command} {\\skipline}, \l {skipto-command}
     {\\skipto} and \l {dots} {\\dots}.
@@ -1646,23 +1646,23 @@
 
     \badcode *
     /\1!
-               \quotefromfile examples/main.cpp
-               \skipto main
-               \printuntil {
-               \dots
-               \skipuntil exec
-               \printline }
+       \quotefromfile examples/main.cpp
+       \skipto main
+       \printuntil {
+       \dots
+       \skipuntil exec
+       \printline }
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotefromfile examples/main.cpp
-           \skipto main
-           \printuntil {
-           \dots
-           \skipuntil exec
-           \printline }
+    \quotefromfile examples/main.cpp
+    \skipto main
+    \printuntil {
+    \dots
+    \skipuntil exec
+    \printline }
 
     The default indentation is 4 spaces, but this can be adjusted
     using the command's optional argument.
@@ -1766,8 +1766,8 @@
 
     \badcode *
     /\1!
-          Read the \l {http://doc.qt.io/qt-6/}
-          {Qt 6 Documentation} carefully.
+      Read the \l {http://doc.qt.io/qt-6/}
+      {Qt 6 Documentation} carefully.
     \1/
     \endcode
 
@@ -1785,16 +1785,16 @@
 
     \badcode *
     /\1!
-         \target assertions
+        \target assertions
 
-         Assertions make some statement about the text at the
-         point where they occur in the regexp, but they do not
-         match any characters.
+        Assertions make some statement about the text at the
+        point where they occur in the regexp, but they do not
+        match any characters.
 
-         ...
+        ...
 
-         Regexps are built up from expressions, quantifiers, and
-         \l {assertions} {assertions}.
+        Regexps are built up from expressions, quantifiers, and
+        \l {assertions} {assertions}.
     \1/
     \endcode
 
@@ -2007,15 +2007,15 @@
 
     \badcode *
     /\1!
-         Appends the actions \a actions to this widget's
-         list of actions.
+        Appends the actions \a actions to this widget's
+        list of actions.
 
-         \sa removeAction(), QMenu, addAction()
+        \sa removeAction(), QMenu, addAction()
     \1/
-      void QWidget::addActions(QList<QAction *> actions)
-      {
-      ...
-      }
+    void QWidget::addActions(QList<QAction *> actions)
+    {
+        ...
+    }
     \endcode
 
     QDoc renders this as:
@@ -2347,13 +2347,13 @@
 
     \badcode *
     /\1!
-               \table 100 %
+       \table 100 %
 
-                  ...
+          ...
 
-               \endtable
+       \endtable
     \1/
-           \endcode
+    \endcode
 
     The code above ensures that the table will fill all available
     space. If the table's width is smaller than 100 %, the table will
@@ -2367,115 +2367,115 @@
 
     \badcode *
     /\1!
-               \table
-               \header
-                   \li Qt Core Feature
-                   \li Brief Description
-               \row
-                   \li \l {Signal and Slots}
-                   \li Signals and slots are used for communication
-                      between objects.
-               \row
-                   \li \l {Layout Management}
-                   \li The Qt layout system provides a simple
-                      and powerful way of specifying the layout
-                      of child widgets.
-               \row
-                   \li \l {Drag and Drop}
-                   \li Drag and drop provides a simple visual
-                      mechanism which users can use to transfer
-                      information between and within applications.
-               \endtable
+       \table
+       \header
+           \li Qt Core Feature
+           \li Brief Description
+       \row
+           \li \l {Signal and Slots}
+           \li Signals and slots are used for communication
+              between objects.
+       \row
+           \li \l {Layout Management}
+           \li The Qt layout system provides a simple
+              and powerful way of specifying the layout
+              of child widgets.
+       \row
+           \li \l {Drag and Drop}
+           \li Drag and drop provides a simple visual
+              mechanism which users can use to transfer
+              information between and within applications.
+       \endtable
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \raw HTML
-               <table align="center" cellpadding="2"
-                   cellspacing="1" border="0">
-               <tr valign="top" bgcolor="#a2c511">
-                   <th>Qt Core Feature</th>
-                   <th>Brief Description</th>
-               </tr>
+    \raw HTML
+       <table align="center" cellpadding="2"
+           cellspacing="1" border="0">
+       <tr valign="top" bgcolor="#a2c511">
+           <th>Qt Core Feature</th>
+           <th>Brief Description</th>
+       </tr>
 
-               <tr valign="top" bgcolor="#d0d0d0">
-                   <td>
-                   <a href="http://doc.qt.io/qt-6/signalsandslots.html">
-                       Signals and Slots</a>
-                   </td>
-                   <td>Signals and slots are used for communication
-                       between objects.</td>
-               </tr>
+       <tr valign="top" bgcolor="#d0d0d0">
+           <td>
+           <a href="http://doc.qt.io/qt-6/signalsandslots.html">
+               Signals and Slots</a>
+           </td>
+           <td>Signals and slots are used for communication
+               between objects.</td>
+       </tr>
 
-               <tr valign="top" bgcolor="#c0c0c0">
-                   <td>
-                   <a href="http://doc.qt.io/qt-6/layout.html">
-                       Layout Management</a></td>
-                   <td>The Qt layout system provides a simple
-                       and powerful way of specifying the layout
-                       of child widgets.</td>
-               </tr>
+       <tr valign="top" bgcolor="#c0c0c0">
+           <td>
+           <a href="http://doc.qt.io/qt-6/layout.html">
+               Layout Management</a></td>
+           <td>The Qt layout system provides a simple
+               and powerful way of specifying the layout
+               of child widgets.</td>
+       </tr>
 
-               <tr valign="top" bgcolor="#d0d0d0">
-                   <td>
-                   <a href="http://doc.qt.io/qt-6/dnd.html">
-                       Drag and Drop</a></td>
-                   <td>Drag and drop provides a simple visual
-                       mechanism which users can use to transfer
-                       information between and within applications.</td>
-               </tr>
-               </table>
-           \endraw
+       <tr valign="top" bgcolor="#d0d0d0">
+           <td>
+           <a href="http://doc.qt.io/qt-6/dnd.html">
+               Drag and Drop</a></td>
+           <td>Drag and drop provides a simple visual
+               mechanism which users can use to transfer
+               information between and within applications.</td>
+       </tr>
+       </table>
+    \endraw
 
     You can also make cells span several rows and columns. For
     example:
 
     \badcode *
     /\1!
-               \table
-               \header
-                   \li {3,1} This header cell spans three columns,
-                      but only one row.
-               \row
-                   \li {2, 1} This table cell spans two columns,
-                      but only one row
-                   \li {1, 2} This table cell spans only one column,
-                   but two rows.
-               \row
-                   \li A regular table cell
-                   \li A regular table cell
-               \endtable
+       \table
+       \header
+           \li {3,1} This header cell spans three columns,
+              but only one row.
+       \row
+           \li {2, 1} This table cell spans two columns,
+              but only one row
+           \li {1, 2} This table cell spans only one column,
+           but two rows.
+       \row
+           \li A regular table cell
+           \li A regular table cell
+       \endtable
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \raw HTML
-               <table align="center" cellpadding="2" cellspacing="1"
-                border="0">
+    \raw HTML
+       <table align="center" cellpadding="2" cellspacing="1"
+        border="0">
 
-               <tr valign="top" bgcolor="#a2c511">
-                   <th colspan="3" rowspan="1">
-                   This header cell spans three columns, but only one row.
-                   </th>
-               </tr>
+       <tr valign="top" bgcolor="#a2c511">
+           <th colspan="3" rowspan="1">
+           This header cell spans three columns, but only one row.
+           </th>
+       </tr>
 
-               <tr valign="top" bgcolor="#d0d0d0">
-                   <td colspan="2" rowspan="1">
-                   This table cell spans two columns, but only one row.
-                   </td>
-                   <td rowspan="2">
-                   This table cell spans only one column, but two rows.
-                   </td>
-               </tr>
+       <tr valign="top" bgcolor="#d0d0d0">
+           <td colspan="2" rowspan="1">
+           This table cell spans two columns, but only one row.
+           </td>
+           <td rowspan="2">
+           This table cell spans only one column, but two rows.
+           </td>
+       </tr>
 
-               <tr valign="top" bgcolor="#c0c0c0">
-                   <td>A regular table cell</td>
-                   <td>A regular table cell</td>
-               </tr>
-               </table>
-           \endraw
+       <tr valign="top" bgcolor="#c0c0c0">
+           <td>A regular table cell</td>
+           <td>A regular table cell</td>
+       </tr>
+       </table>
+    \endraw
 
     See also \l {header-command} {\\header}, \l {row-command} {\\row} and \l {li-command} {\\li}.
 
@@ -2494,38 +2494,38 @@
 
     \badcode *
     /\1!
-               \table
-               \header
-                   \li Qt Core Feature
-                   \li Brief Description
-               \row
-                   \li \l {Signal and Slots}
-                   \li Signals and slots are used for communication
-                      between objects.
-               \endtable
+       \table
+       \header
+           \li Qt Core Feature
+           \li Brief Description
+       \row
+           \li \l {Signal and Slots}
+           \li Signals and slots are used for communication
+              between objects.
+       \endtable
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \raw HTML
-               <table align="center" cellpadding="2"
-                   cellspacing="1" border="0">
-               <tr valign="top" bgcolor="#a2c511">
-                   <th>Qt Core Feature</th>
-                   <th>Brief Description</th>
-               </tr>
+    \raw HTML
+       <table align="center" cellpadding="2"
+           cellspacing="1" border="0">
+       <tr valign="top" bgcolor="#a2c511">
+           <th>Qt Core Feature</th>
+           <th>Brief Description</th>
+       </tr>
 
-               <tr valign="top" bgcolor="#d0d0d0">
-                   <td>
-                   <a href="http://doc.qt.io/qt-6/signalsandslots.html">
-                       Signals and Slots</a>
-                   </td>
-                   <td>Signals and slots are used for communication
-                       between objects.</td>
-               </tr>
-               </table>
-           \endraw
+       <tr valign="top" bgcolor="#d0d0d0">
+           <td>
+           <a href="http://doc.qt.io/qt-6/signalsandslots.html">
+               Signals and Slots</a>
+           </td>
+           <td>Signals and slots are used for communication
+               between objects.</td>
+       </tr>
+       </table>
+    \endraw
 
     See also \l {table-command} {\\table}, \l {row-command} {\\row} and \l {li-command} {\\li}.
 
@@ -2546,66 +2546,66 @@
 
     \badcode *
     /\1!
-               \table
-               \header
-                   \li Qt Core Feature
-                   \li Brief Description
-               \row
-                   \li \l {Signal and Slots}
-                   \li Signals and slots are used for communication
-                      between objects.
-               \row
-                   \li \l {Layout Management}
-                   \li The Qt layout system provides a simple
-                      and powerful way of specifying the layout
-                      of child widgets.
-               \row
-                   \li \l {Drag and Drop}
-                   \li Drag and drop provides a simple visual
-                      mechanism which users can use to transfer
-                      information between and within applications.
-               \endtable
+       \table
+       \header
+           \li Qt Core Feature
+           \li Brief Description
+       \row
+           \li \l {Signal and Slots}
+           \li Signals and slots are used for communication
+              between objects.
+       \row
+           \li \l {Layout Management}
+           \li The Qt layout system provides a simple
+              and powerful way of specifying the layout
+              of child widgets.
+       \row
+           \li \l {Drag and Drop}
+           \li Drag and drop provides a simple visual
+              mechanism which users can use to transfer
+              information between and within applications.
+       \endtable
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \raw HTML
-               <table align="center" cellpadding="2"
-                   cellspacing="1" border="0">
-               <tr valign="top" bgcolor="#a2c511">
-                   <th>Qt Core Feature</th>
-                   <th>Brief Description</th>
-               </tr>
+    \raw HTML
+       <table align="center" cellpadding="2"
+           cellspacing="1" border="0">
+       <tr valign="top" bgcolor="#a2c511">
+           <th>Qt Core Feature</th>
+           <th>Brief Description</th>
+       </tr>
 
-               <tr valign="top" bgcolor="#d0d0d0">
-                   <td>
-                   <a href="http://doc.qt.io/qt-6/signalsandslots.html">
-                       Signals and Slots</a>
-                   </td>
-                   <td>Signals and slots are used for communication
-                       between objects.</td>
-               </tr>
+       <tr valign="top" bgcolor="#d0d0d0">
+           <td>
+           <a href="http://doc.qt.io/qt-6/signalsandslots.html">
+               Signals and Slots</a>
+           </td>
+           <td>Signals and slots are used for communication
+               between objects.</td>
+       </tr>
 
-               <tr valign="top" bgcolor="#c0c0c0">
-                   <td>
-                   <a href="http://doc.qt.io/qt-6/layout.html">
-                       Layout Management</a></td>
-                   <td>The Qt layout system provides a simple
-                       and powerful way of specifying the layout
-                       of child widgets.</td>
-               </tr>
+       <tr valign="top" bgcolor="#c0c0c0">
+           <td>
+           <a href="http://doc.qt.io/qt-6/layout.html">
+               Layout Management</a></td>
+           <td>The Qt layout system provides a simple
+               and powerful way of specifying the layout
+               of child widgets.</td>
+       </tr>
 
-               <tr valign="top" bgcolor="#d0d0d0">
-                   <td>
-                   <a href="http://doc.qt.io/qt-6/dnd.html">
-                       Drag and Drop</a></td>
-                   <td>Drag and drop provides a simple visual
-                       mechanism which users can use to transfer
-                       information between and within applications.</td>
-               </tr>
-               </table>
-           \endraw
+       <tr valign="top" bgcolor="#d0d0d0">
+           <td>
+           <a href="http://doc.qt.io/qt-6/dnd.html">
+               Drag and Drop</a></td>
+           <td>Drag and drop provides a simple visual
+               mechanism which users can use to transfer
+               information between and within applications.</td>
+       </tr>
+       </table>
+    \endraw
 
     See also \l {table-command} {\\table}, \l {header-command}
     {\\header}, and \l {li-command} {\\li}.
@@ -2672,97 +2672,97 @@
 
     \badcode *
     /\1!
-               \list
-               \li Qt Reference Documentation: Getting Started
-                   \list
-                   \li How to Learn Qt
-                   \li Installation
-                       \list
-                       \li Qt/X11
-                       \li Qt/Windows
-                       \li Qt/Mac
-                       \li Qt/Embedded
-                       \endlist
-                   \li Tutorial and Examples
-                   \endlist
-               \endlist
+        \list
+            \li Qt Reference Documentation: Getting Started
+            \list
+                \li How to Learn Qt
+                \li Installation
+                \list
+                    \li Qt/X11
+                    \li Qt/Windows
+                    \li Qt/Mac
+                    \li Qt/Embedded
+                \endlist
+            \li Tutorial and Examples
+            \endlist
+        \endlist
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \list
-           \li Qt Reference Documentation: Getting Started
-               \list
-               \li How to Learn Qt
-               \li Installation
-                   \list
-                   \li Qt/X11
-                   \li Qt/Windows
-                   \li Qt/Mac
-                   \li Qt/Embedded
-                   \endlist
-               \li Tutorial and Examples
-               \endlist
-           \endlist
+    \list
+        \li Qt Reference Documentation: Getting Started
+        \list
+            \li How to Learn Qt
+            \li Installation
+            \list
+                \li Qt/X11
+                \li Qt/Windows
+                \li Qt/Mac
+                \li Qt/Embedded
+            \endlist
+        \li Tutorial and Examples
+        \endlist
+    \endlist
 
     The \\list command takes an optional argument providing
     alternative appearances for the list items.
 
     \badcode *
     /\1!
-               \list
-                   \li How to Learn Qt
-                   \li Installation
-                   \li Tutorial and Examples
-               \endlist
+       \list
+           \li How to Learn Qt
+           \li Installation
+           \li Tutorial and Examples
+       \endlist
     \1/
-           \endcode
+    \endcode
 
-     QDoc renders the list items with bullets (the default):
+    QDoc renders the list items with bullets (the default):
 
-           \list
-               \li How to Learn Qt
-               \li Installation
-               \li Tutorial and Examples
-           \endlist
+    \list
+       \li How to Learn Qt
+       \li Installation
+       \li Tutorial and Examples
+    \endlist
 
     If you provide 'A' as an argument to the \\list command, the
     bullets are replaced with characters in alphabetical order:
 
-           \list A
-               \li How to Learn Qt
-               \li Installation
-               \li Tutorial and Examples
-           \endlist
+    \list A
+       \li How to Learn Qt
+       \li Installation
+       \li Tutorial and Examples
+    \endlist
 
-     If you replace 'A' with '1', the list items are numbered in
-     ascending order:
+    If you replace 'A' with '1', the list items are numbered in
+    ascending order:
 
-           \list 1
-               \li How to Learn Qt
-               \li Installation
-               \li Tutorial and Examples
-           \endlist
+    \list 1
+       \li How to Learn Qt
+       \li Installation
+       \li Tutorial and Examples
+    \endlist
 
     If you provide 'i' as the argument, the bullets are replaced with
     roman numerals:
 
-           \list i
-               \li How to Learn Qt
-               \li Installation
-               \li Tutorial and Examples
-           \endlist
+    \list i
+       \li How to Learn Qt
+       \li Installation
+       \li Tutorial and Examples
+    \endlist
 
     Finally, you can make the list items appear with roman numbers
     following in ascending order if you provide 'I' as the optional
     argument:
 
-           \list I
-               \li How to Learn Qt
-               \li Installation
-               \li Tutorial and Examples
-           \endlist
+    \list I
+       \li How to Learn Qt
+       \li Installation
+       \li Tutorial and Examples
+    \endlist
 
     You can also make the listing start at any character or number by
     simply provide the number or character you want to start at. For
@@ -2770,21 +2770,21 @@
 
     \badcode *
     /\1!
-               \list G
-                   \li How to Learn Qt
-                   \li Installation
-                   \li Tutorial and Examples
-               \endlist
+       \list G
+           \li How to Learn Qt
+           \li Installation
+           \li Tutorial and Examples
+       \endlist
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \list G
-               \li How to Learn Qt
-               \li Installation
-               \li Tutorial and Examples
-           \endlist
+    \list G
+       \li How to Learn Qt
+       \li Installation
+       \li Tutorial and Examples
+    \endlist
 
     See also \l {li-command} {\\li}.
 
@@ -2805,49 +2805,49 @@
 
     \badcode *
     /\1!
-               \table
-               \header
-                   \li {3,1} This header cell spans three columns
-                      but only one row.
-               \row
-                   \li {2, 1} This table item spans two columns
-                      but only one row
-                   \li {1, 2} This table item spans only one column,
-                   but two rows.
-               \row
-                   \li A regular table item
-                   \li A regular table item
-               \endtable
+       \table
+       \header
+           \li {3,1} This header cell spans three columns
+              but only one row.
+       \row
+           \li {2, 1} This table item spans two columns
+              but only one row
+           \li {1, 2} This table item spans only one column,
+           but two rows.
+       \row
+           \li A regular table item
+           \li A regular table item
+       \endtable
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \raw HTML
-               <table align="center" cellpadding="2" cellspacing="1"
-                border="0">
+    \raw HTML
+       <table align="center" cellpadding="2" cellspacing="1"
+        border="0">
 
-               <tr valign="top" bgcolor="#a2c511">
-                   <th colspan="3" rowspan="1">
-                   This header cell spans three columns, but only one row.
-                   </th>
-               </tr>
+       <tr valign="top" bgcolor="#a2c511">
+           <th colspan="3" rowspan="1">
+           This header cell spans three columns, but only one row.
+           </th>
+       </tr>
 
-               <tr valign="top" bgcolor="#d0d0d0">
-                   <td colspan="2" rowspan="1">
-                   This table item spans two columns, but only one row.
-                   </td>
-                   <td rowspan="2">
-                   This table item spans only one column, but two rows.
-                   </td>
-               </tr>
+       <tr valign="top" bgcolor="#d0d0d0">
+           <td colspan="2" rowspan="1">
+           This table item spans two columns, but only one row.
+           </td>
+           <td rowspan="2">
+           This table item spans only one column, but two rows.
+           </td>
+       </tr>
 
-               <tr valign="top" bgcolor="#c0c0c0">
-                   <td>A regular table item</td>
-                   <td>A regular table item</td>
-               </tr>
-               </table>
-           \endraw
+       <tr valign="top" bgcolor="#c0c0c0">
+           <td>A regular table item</td>
+           <td>A regular table item</td>
+       </tr>
+       </table>
+    \endraw
 
     If not specified, the item will span one column and one row.
 
@@ -2879,19 +2879,19 @@
 
     \badcode *
     /\1!
-          Although the prospect of a significantly broader market is
-          good news for Firstlogic, the notion also posed some
-          challenges. Dave Dobson, director of technology for the La
-          Crosse, Wisconsin-based company, said:
+      Although the prospect of a significantly broader market is
+      good news for Firstlogic, the notion also posed some
+      challenges. Dave Dobson, director of technology for the La
+      Crosse, Wisconsin-based company, said:
 
-          \quotation
-             As our solutions were being adopted into new
-             environments, we saw an escalating need for easier
-             integration with a wider range of enterprise
-             applications.
-          \endquotation
+      \quotation
+         As our solutions were being adopted into new
+         environments, we saw an escalating need for easier
+         integration with a wider range of enterprise
+         applications.
+      \endquotation
     \1/
-        \endcode
+    \endcode
 
     The text in the \b{\\quotation} block will appear in the generated HTML as:
 
@@ -2900,19 +2900,19 @@
       <p>As our solutions were being adopted into new environments,
       we saw an escalating need for easier integration with a wider
       range of enterprise applications.</p>
-        </blockquote>
+    </blockquote>
     \endcode
 
     The built-in style sheet for most browsers will render the
     contents of the <blockquote> tag with left and right
     indentations. The example above would be rendered as:
 
-          \quotation
-             As our solutions were being adopted into new
-             environments, we saw an escalating need for easier
-             integration with a wider range of enterprise
-             applications.
-          \endquotation
+    \quotation
+         As our solutions were being adopted into new
+         environments, we saw an escalating need for easier
+         integration with a wider range of enterprise
+         applications.
+    \endquotation
 
     But you can redefine the \b{<blockquote>} tag in your style.css file.
 
@@ -2968,62 +2968,62 @@
 
     \badcode *
     /\1!
-               \property QWidget::isActiveWindow
-               \brief Whether this widget's window is the active window.
+       \property QWidget::isActiveWindow
+       \brief Whether this widget's window is the active window.
 
-               The active window is the window that contains the widget that
-               has keyboard focus.
+       The active window is the window that contains the widget that
+       has keyboard focus.
 
-               When popup windows are visible, this property is \c true
-               for both the active window \e and the popup.
+       When popup windows are visible, this property is \c true
+       for both the active window \e and the popup.
 
-               \sa activateWindow(), QApplication::activeWindow()
+       \sa activateWindow(), QApplication::activeWindow()
     \1/
-           \endcode
+    \endcode
 
-           and the QWidget::geometry property
+    and the QWidget::geometry property
 
     \badcode *
     /\1!
-               \property QWidget::geometry
-               \brief The geometry of the widget relative to its parent and
-               excluding the window frame.
+       \property QWidget::geometry
+       \brief The geometry of the widget relative to its parent and
+       excluding the window frame.
 
-               When changing the geometry, the widget, if visible,
-               receives a move event (moveEvent()) and/or a resize
-               event (resizeEvent()) immediately.
+       When changing the geometry, the widget, if visible,
+       receives a move event (moveEvent()) and/or a resize
+       event (resizeEvent()) immediately.
 
-               ...
+       ...
 
-              \sa frameGeometry(), rect(), ...
+      \sa frameGeometry(), rect(), ...
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               \raw HTML
-                   <h3>geometry :
-                   <a href="http://doc.qt.io/qt-6/qrect.html">QRect</a>
-                   </h3>
-               \endraw
+    \quotation
+       \raw HTML
+           <h3>geometry :
+           <a href="http://doc.qt.io/qt-6/qrect.html">QRect</a>
+           </h3>
+       \endraw
 
-               This property holds the geometry of the widget relative
-               to its parent and excluding the window frame.
+       This property holds the geometry of the widget relative
+       to its parent and excluding the window frame.
 
-               ...
+       ...
 
-               Access functions:
-               \list
-                   \li \b {const QRect & geometry () const}
-                   \li \b {void setGeometry ( int x, int y, int w, int h )}
-                   \li \b {void setGeometry ( const QRect & )}
-               \endlist
+       Access functions:
+       \list
+           \li \b {const QRect & geometry () const}
+           \li \b {void setGeometry ( int x, int y, int w, int h )}
+           \li \b {void setGeometry ( const QRect & )}
+       \endlist
 
-               See also \l
-               {QWidget::frameGeometry()} {frameGeometry()}, \l
-               {QWidget::rect()} {rect()}, ...
-           \endquotation
+       See also \l
+       {QWidget::frameGeometry()} {frameGeometry()}, \l
+       {QWidget::rect()} {rect()}, ...
+    \endquotation
 
     \target brief class
 
@@ -3031,8 +3031,8 @@
     using a complete sentence like this:
 
     \badcode
-           The <classname> class is|provides|contains|specifies...
-           \endcode
+    The <classname> class is|provides|contains|specifies...
+    \endcode
 
     \warning Do not repeat your detailed description with the same sentence as
     the brief statement will be the first paragraph of the detailed
@@ -3040,148 +3040,148 @@
 
     \badcode *
     /\1!
-               \class PreviewWindow
-               \brief The PreviewWindow class is a custom widget
-                      displaying the names of its currently set
-                      window flags in a read-only text editor.
+       \class PreviewWindow
+       \brief The PreviewWindow class is a custom widget
+              displaying the names of its currently set
+              window flags in a read-only text editor.
 
-               The PreviewWindow class inherits QWidget. The widget
-               displays the names of its window flags set with the
-               setWindowFlags() function. It is also provided with a
-               QPushButton that closes the window.
+       The PreviewWindow class inherits QWidget. The widget
+       displays the names of its window flags set with the
+       setWindowFlags() function. It is also provided with a
+       QPushButton that closes the window.
 
-               ...
+       ...
 
-               \sa QWidget
+       \sa QWidget
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               \raw HTML
-                   <h1>PreviewWindow Class Reference</h1>
-               \endraw
+    \quotation
+        \raw HTML
+            <h1>PreviewWindow Class Reference</h1>
+        \endraw
 
-               The PreviewWindow class is a custom widget displaying
-               the names of its currently set window flags in a
-               read-only text editor. \l {preview window} {More...}
+        The PreviewWindow class is a custom widget displaying
+        the names of its currently set window flags in a
+        read-only text editor. \l {preview window} {More...}
 
-               \raw HTML
-                   <h3>Properties</h3>
-               \endraw
+        \raw HTML
+            <h3>Properties</h3>
+        \endraw
 
-               \list
-                   \li 52 properties inherited from QWidget
-                   \li 1 property inherited from QObject
-               \endlist
+        \list
+            \li 52 properties inherited from QWidget
+            \li 1 property inherited from QObject
+        \endlist
 
-               \raw HTML
-                   <h3>Public Functions</h3>
-               \endraw
+        \raw HTML
+            <h3>Public Functions</h3>
+        \endraw
 
-               \list
-                   \li \l {constructor} {PreviewWindow}(QWidget *parent = 0)
-                   \li void \l {function} {setWindowFlags}(Qt::WindowFlags flags)
-               \endlist
+        \list
+            \li \l {constructor} {PreviewWindow}(QWidget *parent = 0)
+            \li void \l {function} {setWindowFlags}(Qt::WindowFlags flags)
+        \endlist
 
-               \list
-                   \li 183 public functions inherited from QWidget
-                   \li 28 public functions inherited from QObject
-               \endlist
+        \list
+            \li 183 public functions inherited from QWidget
+            \li 28 public functions inherited from QObject
+        \endlist
 
-               \raw HTML
-                   <h3>Public Slots</h3>
-               \endraw
+        \raw HTML
+            <h3>Public Slots</h3>
+        \endraw
 
-               \list
-                   \li 17 public slots inherited from QWidget
-                   \li 1 public slot inherited from QObject
-               \endlist
+        \list
+            \li 17 public slots inherited from QWidget
+            \li 1 public slot inherited from QObject
+        \endlist
 
-               \raw HTML
-                   <h3>Additional Inherited Members</h3>
-               \endraw
+        \raw HTML
+            <h3>Additional Inherited Members</h3>
+        \endraw
 
-               \list
-                   \li 1 signal inherited from QWidget
-                   \li 1 signal inherited from QObject
-                   \li 4 static public members inherited from QWidget
-                   \li 4 static public members inherited from QObject
-                   \li 39 protected functions inherited from QWidget
-                   \li 7 protected functions inherited from QObject
-               \endlist
+        \list
+            \li 1 signal inherited from QWidget
+            \li 1 signal inherited from QObject
+            \li 4 static public members inherited from QWidget
+            \li 4 static public members inherited from QObject
+            \li 39 protected functions inherited from QWidget
+            \li 7 protected functions inherited from QObject
+        \endlist
 
-               \target preview window
+        \target preview window
 
-               \raw HTML
-                   <hr />
-                   <h2>Detailed Description</h2>
-               \endraw
+        \raw HTML
+            <hr />
+            <h2>Detailed Description</h2>
+        \endraw
 
-               The PreviewWindow class is a custom widget displaying
-               the names of its currently set window flags in a
-               read-only text editor.
+        The PreviewWindow class is a custom widget displaying
+        the names of its currently set window flags in a
+        read-only text editor.
 
-               The PreviewWindow class inherits QWidget. The widget
-               displays the names of its window flags set with the \l
-               {function} {setWindowFlags()} function. It is also
-               provided with a QPushButton that closes the window.
+        The PreviewWindow class inherits QWidget. The widget
+        displays the names of its window flags set with the \l
+        {function} {setWindowFlags()} function. It is also
+        provided with a QPushButton that closes the window.
 
-               ...
+        ...
 
-               See also QWidget.
+        See also QWidget.
 
-               \raw HTML
-                   <hr />
-                   <h2>Member Function Documentation</h2>
-               \endraw
+        \raw HTML
+            <hr />
+            <h2>Member Function Documentation</h2>
+        \endraw
 
-               \target constructor
-               \raw HTML
-                   <h3>PreviewWindow(QWidget *parent = 0)</h3>
-               \endraw
+        \target constructor
+        \raw HTML
+            <h3>PreviewWindow(QWidget *parent = 0)</h3>
+        \endraw
 
-               Constructs a preview window widget with \e parent.
+        Constructs a preview window widget with \e parent.
 
-               \target function
-               \raw HTML
-                   <h3>setWindowFlags(Qt::WindowFlags flags)</h3>
-               \endraw
+        \target function
+        \raw HTML
+            <h3>setWindowFlags(Qt::WindowFlags flags)</h3>
+        \endraw
 
-               Sets the widgets flags using the
-               QWidget::setWindowFlags() function.
+        Sets the widgets flags using the
+        QWidget::setWindowFlags() function.
 
-               Then runs through the available window flags,
-               creating a text that contains the names of the flags
-               that matches the flags parameter, displaying
-               the text in the widgets text editor.
-           \endquotation
+        Then runs through the available window flags,
+        creating a text that contains the names of the flags
+        that matches the flags parameter, displaying
+        the text in the widgets text editor.
+    \endquotation
 
     Using \\brief in a \l{namespace-command}{\\namespace}:
 
     \badcode *
     /\1!
-               \namespace Qt
+       \namespace Qt
 
-               \brief The Qt namespace contains miscellaneous identifiers
-               used throughout the Qt library.
+       \brief The Qt namespace contains miscellaneous identifiers
+       used throughout the Qt library.
     \1/
-           \endcode
+    \endcode
 
     Using \\brief in a \l{headerfile-command}{\\headerfile}:
 
     \badcode *
     /\1!
-               \headerfile <QtGlobal>
-               \title Global Qt Declarations
+       \headerfile <QtGlobal>
+       \title Global Qt Declarations
 
-               \brief The <QtGlobal> header file provides basic
-               declarations and is included by all other Qt headers.
+       \brief The <QtGlobal> header file provides basic
+       declarations and is included by all other Qt headers.
 
-               \sa <QtAlgorithms>
+       \sa <QtAlgorithms>
     \1/
-           \endcode
+    \endcode
 
     See also \l{property-command} {\\property}, \l{class-command}
     {\\class}, \l{namespace-command} {\\namespace} and
@@ -3200,48 +3200,48 @@
 
     \badcode *
     /\1!
-      \legalese
-          Copyright 1996 Daniel Dardailler.
+        \legalese
+            Copyright 1996 Daniel Dardailler.
 
-          Permission to use, copy, modify, distribute, and sell this
-          software for any purpose is hereby granted without fee,
-          provided that the above copyright notice appear in all
-          copies and that both that copyright notice and this
-          permission notice appear in supporting documentation, and
-          that the name of Daniel Dardailler not be used in
-          advertising or publicity pertaining to distribution of the
-          software without specific, written prior permission. Daniel
-          Dardailler makes no representations about the suitability of
-          this software for any purpose. It is provided "as is"
-          without express or implied warranty.
+            Permission to use, copy, modify, distribute, and sell this
+            software for any purpose is hereby granted without fee,
+            provided that the above copyright notice appear in all
+            copies and that both that copyright notice and this
+            permission notice appear in supporting documentation, and
+            that the name of Daniel Dardailler not be used in
+            advertising or publicity pertaining to distribution of the
+            software without specific, written prior permission. Daniel
+            Dardailler makes no representations about the suitability of
+            this software for any purpose. It is provided "as is"
+            without express or implied warranty.
 
-      Modifications Copyright 1999 Matt Koss, under the same
-          license as above.
-          \endlegalese
+            Modifications Copyright 1999 Matt Koss, under the same
+            license as above.
+        \endlegalese
     \1/
-        \endcode
+    \endcode
 
-        It will appear in the generated HTML as:
+    It will appear in the generated HTML as:
 
     \badcode
-     <div class="LegaleseLeft">
+    <div class="LegaleseLeft">
        <p>Copyright 1996 Daniel Dardailler.</p>
-           <p>Permission to use, copy, modify, distribute, and sell
-           this software for any purpose is hereby granted without fee,
-           provided that the above copyright notice appear in all
-           copies and that both that copyright notice and this
-           permission notice appear in supporting documentation, and
-           that the name of Daniel Dardailler not be used in
-           advertising or publicity pertaining to distribution of the
-           software without specific, written prior permission. Daniel
-           Dardailler makes no representations about the suitability of
-           this software for any purpose. It is provided "as is"
-           without express or implied warranty.</p>
+       <p>Permission to use, copy, modify, distribute, and sell
+       this software for any purpose is hereby granted without fee,
+       provided that the above copyright notice appear in all
+       copies and that both that copyright notice and this
+       permission notice appear in supporting documentation, and
+       that the name of Daniel Dardailler not be used in
+       advertising or publicity pertaining to distribution of the
+       software without specific, written prior permission. Daniel
+       Dardailler makes no representations about the suitability of
+       this software for any purpose. It is provided "as is"
+       without express or implied warranty.</p>
 
        <p>Modifications Copyright 1999 Matt Koss, under the same
-           license as above.</p>
-     </div>
-       \endcode
+       license as above.</p>
+    </div>
+    \endcode
 
     If the \\endlegalese command is omitted, QDoc will process the
     \\legalese command but considers the rest of the documentation
@@ -3268,25 +3268,25 @@
 
     \badcode *
     /\1!
-               Qt::HANDLE is a platform-specific handle type
-               for system objects. This is  equivalent to
-               \c{void *} on Windows and macOS, and to
-               \c{unsigned long} on X11.
+       Qt::HANDLE is a platform-specific handle type
+       for system objects. This is  equivalent to
+       \c{void *} on Windows and macOS, and to
+       \c{unsigned long} on X11.
 
-               \warning Using this type is not portable.
+       \warning Using this type is not portable.
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               Qt::HANDLE is a platform-specific handle type
-               for system objects. This is  equivalent to
-               \c{void *} on Windows and macOS, and to
-               \c{unsigned long} on X11.
+    \quotation
+       Qt::HANDLE is a platform-specific handle type
+       for system objects. This is  equivalent to
+       \c{void *} on Windows and macOS, and to
+       \c{unsigned long} on X11.
 
-               \warning Using this type is not portable.
-           \endquotation
+       \warning Using this type is not portable.
+    \endquotation
 */
 
 
@@ -3310,15 +3310,15 @@
 
     \badcode *
     /\1!
-               ...
-               \section1 Drag and Drop Classes
+       ...
+       \section1 Drag and Drop Classes
 
-               These classes deal with drag and drop and the necessary mime type
-               encoding and decoding.
+       These classes deal with drag and drop and the necessary mime type
+       encoding and decoding.
 
-               \annotatedlist draganddrop
+       \annotatedlist draganddrop
     \1/
-           \endcode
+    \endcode
 
     This generates a list of all the C++ classes and/or QML types in
     the \e{draganddrop} group. A C++ class or QML type in the
@@ -3367,15 +3367,15 @@
 
     \badcode *
     /\1!
-               \page classes.html
-               \title All Classes
+       \page classes.html
+       \title All Classes
 
-               For a shorter list that only includes the most
-               frequently used classes, see \l{Qt's Main Classes}.
+       For a shorter list that only includes the most
+       frequently used classes, see \l{Qt's Main Classes}.
 
-               \generatelist classes Q
+       \generatelist classes Q
     \1/
-           \endcode
+    \endcode
 
     This generates the \e {All Classes} page. The command accepts the
     following arguments:
@@ -3473,16 +3473,16 @@
 
     \badcode *
     /\1!
-          \page phonon-module.html
-          \module Phonon
-          \title Phonon Module
-          \ingroup modules
+        \page phonon-module.html
+        \module Phonon
+        \title Phonon Module
+        \ingroup modules
 
-          \brief Contains namespaces and classes for multimedia functionality.
+        \brief Contains namespaces and classes for multimedia functionality.
 
-          \generatelist{classesbymodule Phonon}
+        \generatelist{classesbymodule Phonon}
 
-      ...
+        ...
     \1/
     \endcode
 
@@ -3616,15 +3616,15 @@
 
     \badcode *
     /\1!
-               \if defined(opensourceedition)
+       \if defined(opensourceedition)
 
-               \note This edition is for the development of
-               \l{Qt Open Source Edition} {Free and Open Source}
-               software only; see \l{Qt Commercial Editions}.
+       \note This edition is for the development of
+       \l{Qt Open Source Edition} {Free and Open Source}
+       software only; see \l{Qt Commercial Editions}.
 
-               \endif
+       \endif
     \1/
-           \endcode
+    \endcode
 
     This QDoc comment will only be rendered if the \c
     opensourceedition preprocessor symbol is defined, and specified in
@@ -3632,8 +3632,8 @@
     file to make QDoc process the code within #ifdef and #endif:
 
     \badcode
-               defines = opensourceedition
-           \endcode
+    defines = opensourceedition
+    \endcode
 
     You can also define the preprocessor symbol manually on the
     command line. For more information see the documentation of the \l
@@ -3838,7 +3838,7 @@
     file, effectively removing it from Qt Creator's Welcome mode.
 
     \badcode
-        \meta tag broken
+    \meta tag broken
     \endcode
 
     \b {Example Install Paths}
@@ -3889,44 +3889,44 @@
 
     \badcode *
     /\1!
-                \table
-                \row
-                    \li Basic Widgets
-                    \li Basic GUI widgets such as buttons, comboboxes
-                       and scrollbars.
+        \table
+        \row
+            \li Basic Widgets
+            \li Basic GUI widgets such as buttons, comboboxes
+               and scrollbars.
 
-                \omit
-                \row
-                    \li Component Model
-                    \li Interfaces and helper classes for the Qt
-                       Component Model.
-                \endomit
+        \omit
+        \row
+            \li Component Model
+            \li Interfaces and helper classes for the Qt
+               Component Model.
+        \endomit
 
-                \row
-                    \li Database Classes
-                    \li Database related classes, e.g. for SQL databases.
-                \endtable
+        \row
+            \li Database Classes
+            \li Database related classes, e.g. for SQL databases.
+        \endtable
     \1/
-            \endcode
+    \endcode
 
     QDoc renders this as:
 
-            \raw HTML
-                <table align="center" cellpadding="2"
-                    cellspacing="1" border="0">
+    \raw HTML
+        <table align="center" cellpadding="2"
+            cellspacing="1" border="0">
 
-                <tr valign="top" bgcolor="#d0d0d0">
-                    <td>Basic Widgets</td>
-                    <td>Basic GUI widgets such as buttons, comboboxes
-                       and scrollbars.</td>
-                </tr>
+        <tr valign="top" bgcolor="#d0d0d0">
+            <td>Basic Widgets</td>
+            <td>Basic GUI widgets such as buttons, comboboxes
+               and scrollbars.</td>
+        </tr>
 
-                <tr valign="top" bgcolor="#c0c0c0">
-                    <td>Database Classes</td>
-                    <td>Database related classes, e.g. for SQL databases.</td>
-                </tr>
-                </table>
-            \endraw
+        <tr valign="top" bgcolor="#c0c0c0">
+            <td>Database Classes</td>
+            <td>Database related classes, e.g. for SQL databases.</td>
+        </tr>
+        </table>
+    \endraw
 
     \target raw-command
     \section1 \\raw (avoid)
@@ -3948,59 +3948,59 @@
 
     \badcode *
     /\1!
-               Qt has some predefined QColor objects.
+       Qt has some predefined QColor objects.
 
-               \raw HTML
-               <style type="text/css" id="colorstyles">
-               #color-blue { background-color: #0000ff; color: #ffffff }
-               #color-darkBlue { background-color: #000080; color: #ffffff }
-               #color-cyan { background-color: #00ffff; color: #000000 }
-               </style>
+       \raw HTML
+       <style type="text/css" id="colorstyles">
+       #color-blue { background-color: #0000ff; color: #ffffff }
+       #color-darkBlue { background-color: #000080; color: #ffffff }
+       #color-cyan { background-color: #00ffff; color: #000000 }
+       </style>
 
-               <p>
-               <tt id="color-blue">Blue(#0000ff)</tt>,
-               <tt id="color-darkBlue">dark blue(#000080)</tt> and
-               <tt id="color-cyan">cyan(#00ffff)</tt>.
-           </p>
-               \endraw
+       <p>
+       <tt id="color-blue">Blue(#0000ff)</tt>,
+       <tt id="color-darkBlue">dark blue(#000080)</tt> and
+       <tt id="color-cyan">cyan(#00ffff)</tt>.
+    </p>
+       \endraw
     \1/
-           \endcode
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-               Qt has some predefined QColor objects.
+    \quotation
+        Qt has some predefined QColor objects.
 
-               \raw HTML
-               <style type="text/css" id="colorstyles">
-               #color-blue { background-color: #0000ff; color: #ffffff }
-               #color-darkBlue { background-color: #000080; color: #ffffff }
-               #color-cyan { background-color: #00ffff; color: #000000 }
-               </style>
+        \raw HTML
+        <style type="text/css" id="colorstyles">
+            #color-blue { background-color: #0000ff; color: #ffffff }
+            #color-darkBlue { background-color: #000080; color: #ffffff }
+            #color-cyan { background-color: #00ffff; color: #000000 }
+        </style>
 
-               <p>
-               <tt id="color-blue">Blue(#0000ff)</tt>,
-               <tt id="color-darkBlue">dark blue(#000080)</tt> and
-               <tt id="color-cyan">cyan(#00ffff)</tt>.
-           </p>
-               \endraw
-           \endquotation
+        <p>
+            <tt id="color-blue">Blue(#0000ff)</tt>,
+            <tt id="color-darkBlue">dark blue(#000080)</tt> and
+            <tt id="color-cyan">cyan(#00ffff)</tt>.
+        </p>
+       \endraw
+    \endquotation
 
     \note But you can achieve the exact same thing using QDoc
     commands. In this case, all you have to do is include the color
     styles in your style.css file. Then you can write:
 
     \badcode
-           \tt {\span {id="color-blue"} {Blue(#0000ff)}},
-           \tt {\span {id="color-darkBlue"} {dark blue(#000080)}} and
-           \tt {\span {id="color-cyan"} {cyan(#00ffff)}}.
-       \endcode
+       \tt {\span {id="color-blue"} {Blue(#0000ff)}},
+       \tt {\span {id="color-darkBlue"} {dark blue(#000080)}} and
+       \tt {\span {id="color-cyan"} {cyan(#00ffff)}}.
+    \endcode
 
     which QDoc renders as:
 
-           \tt {\span {id="color-blue"} {Blue(#0000ff)}},
-           \tt {\span {id="color-darkBlue"} {dark blue(#000080)}} and
-           \tt {\span {id="color-cyan"} {cyan(#00ffff)}}.
+    \tt {\span {id="color-blue"} {Blue(#0000ff)}},
+    \tt {\span {id="color-darkBlue"} {dark blue(#000080)}} and
+    \tt {\span {id="color-cyan"} {cyan(#00ffff)}}.
 
     \target unicode-command
     \section1 \\unicode
@@ -4014,21 +4014,21 @@
     example:
 
     \badcode
-                O G\unicode{0xEA}nio e as Rosas
+        O G\unicode{0xEA}nio e as Rosas
 
-                \unicode 0xC0 table en famille avec 15 \unicode 0x20AC par jour
+        \unicode 0xC0 table en famille avec 15 \unicode 0x20AC par jour
 
-                \unicode 0x3A3 \e{a}\sub{\e{i}}
-           \endcode
+        \unicode 0x3A3 \e{a}\sub{\e{i}}
+    \endcode
 
     QDoc renders this as:
 
-           \quotation
-                O G\unicode{0xEA}nio e as Rosas
+    \quotation
+        O G\unicode{0xEA}nio e as Rosas
 
-                \unicode 0xC0 table en famille avec 15 \unicode 0x20AC par jour
+        \unicode 0xC0 table en famille avec 15 \unicode 0x20AC par jour
 
-                \unicode 0x3A3 \e{a}\sub{\e{i}}
-           \endquotation
+        \unicode 0x3A3 \e{a}\sub{\e{i}}
+    \endquotation
 */
 
