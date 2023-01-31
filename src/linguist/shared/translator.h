@@ -95,6 +95,7 @@ public:
     bool m_noUiLines;
     bool m_idBased;
     TranslatorSaveMode m_saveMode;
+    QStringList m_rootDirs;
 };
 
 class TMMKey {
