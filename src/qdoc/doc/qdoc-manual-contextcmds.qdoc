@@ -218,8 +218,8 @@
     {default property}. The word \c default is displayed in
     the documentation of the property.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmlproperty list<Change> State::changes
         This property holds the changes to apply for this state.
         \qmldefault
@@ -227,7 +227,7 @@
         By default, these changes are applied against the default state. If the state
         extends another state, then the changes are applied against the state being
         extended.
-    * /
+    \1/
     \endcode
 
     See how QDoc renders this property on the reference page for the
@@ -245,10 +245,10 @@
     Below you will find the \\dontdocument command in the
     dontdocument.qdoc for widgets:
 
-    \badcode
-    / *!
+    \badcode *
+    /\1!
        \dontdocument (QTypeInfo QMetaTypeId)
-    * /
+    \1/
     \endcode
 
     \target inheaderfile-command
@@ -306,11 +306,11 @@
     functions. It is good practice to suggest an equivalent function
     as an alternative.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \fn MyClass::MyDeprecatedFunction
         \deprecated [6.2] Use MyNewFunction() instead.
-    * /
+    \1/
     \endcode
 
     QDoc renders this in \c{myclass-obsolete.html} as:
@@ -352,14 +352,14 @@
     QDoc ignores the documentation as well as the documented item,
     when generating the associated class reference documentation.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \internal
 
         Tries to find the decimal separator. If it can't find
         it and the thousand delimiter is != '.' it will try to
         find a '.';
-    * /
+    \1/
     int QDoubleSpinBoxPrivate::findDelimiter
             (const QString &str, int index) const
     {
@@ -412,15 +412,15 @@
     function documentation, and marks the function as preliminary when
     it appears in lists.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \preliminary
 
         Returns information about the joining type attributes of the
         character (needed for certain languages such as Arabic or
         Syriac).
 
-    * /
+    \1/
     QChar::JoiningType QChar::joiningType() const
     {
         return QChar::joiningType(ucs);
@@ -475,8 +475,8 @@
     The \\since command tells in which minor release
     the associated functionality was added.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \since 4.1
 
         Returns an icon for \a standardIcon.
@@ -484,7 +484,7 @@
         ...
 
         \sa standardPixmap()
-    * /
+    \1/
     QIcon QStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption *option, const QWidget *widget) const
     {
     }
@@ -572,8 +572,8 @@
     \section1 Example
 
     \target reentrant-example
-    \code
-    \beginqdoc
+    \badcode *
+    /\1!
         \class QLocale
         \brief The QLocale class converts between numbers and their
         string representations in various languages.
@@ -600,7 +600,7 @@
         threads are created.
 
         \sa system(), c()
-    \endqdoc
+    \1/
     void QLocale::setDefault(const QLocale &locale)
     {
         default_d = locale.d;
@@ -748,8 +748,8 @@
     inheriting element's \l{qmltype-command}{\\qmltype} comment.
     The argument is the name of the inherited QML type.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmltype PauseAnimation
         \instantiates QDeclarativePauseAnimation
         \ingroup qml-animation-transition
@@ -769,7 +769,7 @@
         }
 
         \sa {QML Animation and Transitions}, {declarative/animation/basics}{Animation basics example}
-    * /
+    \1/
     \endcode
 
     QDoc includes this line on the reference page for the
@@ -799,8 +799,8 @@
     \e{This function overloads...}  line of text with a link
     to the documentation for the primary version of the function.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \overload addAction()
 
         This convenience function creates a new action with an
@@ -809,7 +809,7 @@
         returns it.
 
         \sa QWidget::addAction()
-    * /
+    \1/
     QAction *QMenu::addAction(const QIcon &icon, const QString &text)
     {
         QAction *ret = new QAction(icon, text, this);
@@ -860,10 +860,10 @@
     QDoc will omit the reimplemented function from the class
     reference.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \reimp
-    * /
+    \1/
     void QToolButton::nextCheckState()
     {
         Q_D(QToolButton);
@@ -885,14 +885,14 @@
     global element to some class or header file. The argument is a
     class name or header file. For template types, use the type name only.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \relates QChar
 
         Reads a char from the stream \a in into char \a chr.
 
         \sa {Format of the QDataStream operators}
-    * /
+    \1/
     QDataStream &operator>>(QDataStream &in, QChar &chr)
     {
         quint16 u;
@@ -934,15 +934,15 @@
     its argument. Make sure that the group name is followed by
     a linebreak.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \class QDir
         \brief The QDir class provides access to directory
                structures and their contents.
 
         \ingroup io
         ...
-    * /
+    \1/
     \endcode
 
     This will include the QDir class in the \c io group, which means,
@@ -1007,8 +1007,8 @@
     The \\title command sets the title for a documentation page, or
     allows you to override it.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \page signalandslots.html
 
         \title Signals & Slots
@@ -1019,7 +1019,7 @@
         from the features provided by other frameworks.
 
         ...
-    * /
+    \1/
     \endcode
 
     QDoc renders this as:
@@ -1042,8 +1042,8 @@
 
     The \\subtitle command sets a subtitle for a documentation page.
 
-    \code
-    \beginqdoc
+    \badcode *
+    /\1!
         \page qtopiacore-overview.html
 
         \title Qtopia Core
@@ -1053,7 +1053,7 @@
         complete and self-contained C++ GUI and platform
         development tool for Linux-based embedded development.
         ...
-    \endqdoc
+    \1/
     \endcode
 
     QDoc renders this as:

@@ -51,8 +51,8 @@
     If a topic command is repeated with different arguments, the
     same documentation will appear for both the units.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \fn void PreviewWindow::setWindowFlags()
         \fn void ControllerWindow::setWindowFlags()
 
@@ -62,7 +62,7 @@
         Then runs through the available window flags, creating a text
         that contains the names of the flags that matches the flags
         parameter, displaying the text in the widgets text editor.
-    * /
+    \1/
     \endcode
 
     The \c PreviewWindow::setWindowFlags() and \c
@@ -148,8 +148,8 @@
     class is part of the public API, and lets you enter a detailed
     description.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \class QMap::iterator
 
         \brief The QMap::iterator class provides an STL-style
@@ -157,7 +157,7 @@
 
         QMap features both \l{STL-style iterators} and
         \l{Java-style iterators}. The STL-style iterators ...
-    * /
+    \1/
     \endcode
 
     The HTML documentation for the named class is written to a
@@ -178,8 +178,8 @@
     and one or more \l{Markup Commands}. See the \\class command for
     any of the Qt class for examples. Here is a very simple example:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \class PreviewWindow
         \brief The PreviewWindow class is a custom widget.
                displaying the names of its currently set
@@ -195,7 +195,7 @@
         ...
 
         \sa QWidget
-    * /
+    \1/
     \endcode
 
     The way QDoc renders this \\class will depend a lot on your \c
@@ -334,8 +334,8 @@
 
     This enum can be cocumented this way:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \enum Qt::Corner
 
         This enum type specifies a corner in a rectangle:
@@ -354,7 +354,7 @@
         \omitvalue BottomLeft
         \omitvalue BottomRight
                    Bottom-right (omitted; not documented).
-    * /
+    \1/
     \endcode
 
     Note the inclusion of the namespace qualifier. QDoc will render
@@ -420,8 +420,8 @@
     For example, if \l {exampledirs-variable} {exampledirs} contains
     \c $QTDIR/examples/widgets/imageviewer, then
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \example widgets/imageviewer
         \title ImageViewer Example
         \subtitle
@@ -430,7 +430,7 @@
         to display an image.
 
         ...
-    * /
+    \1/
     \endcode
 
     QDoc renders this example in widgets-imageviewer.html:
@@ -467,21 +467,21 @@
 
     The \\externalpage command assigns a title to an external URL.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \externalpage http://doc.qt.io/
         \title Qt Documentation Site
-    * /
+    \1/
     \endcode
 
     This allows you to include a link to the external page in your
     documentation this way:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         At the \l {Qt Documentation Site} you can find the latest
         documentation for Qt, Qt Creator, the Qt SDK and much more.
-    * /
+    \1/
     \endcode
 
     QDoc renders this as:
@@ -496,12 +496,12 @@
     command, you would have to hard-code the address into your
     documentation:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         At the \l {http://doc.qt.io/}{Qt Documentation Site}
         you can find the latest documentation for Qt, Qt Creator, the Qt SDK
         and much more.
-    * /
+    \1/
     \endcode
 
     The \\externalpage command makes it easier to maintain the
@@ -551,13 +551,13 @@
     documenting an inline function in the \c .cpp file that is
     implemented in the \c .h file.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \fn bool QToolBar::isAreaAllowed(Qt::ToolBarArea area) const
 
         Returns \c true if this toolbar is dockable in the given
         \a area; otherwise returns \c false.
-    * /
+    \1/
     \endcode
 
     QDoc renders this as:
@@ -600,8 +600,8 @@
     followed by the text from the class's \l {brief-command} {\\brief}
     texts.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \group io
 
         \title Input/Output and Networking
@@ -609,7 +609,7 @@
         These classes are used to handle input and output to
         and from external devices, processes, files etc., as
         well as manipulating files and directories.
-    * /
+    \1/
     \endcode
 
     QDoc generates a group page in \c{io.html} that will look
@@ -657,8 +657,8 @@
     explicitly using the \l {generatelist-command} {\\generatelist}
     command with the \c related argument.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \group architecture
 
         \title Architecture
@@ -668,7 +668,7 @@
         technologies.
 
         \generatelist{related}
-    * /
+    \1/
     \endcode
 
     See also \l {ingroup-command} {\\ingroup} and \l
@@ -690,8 +690,8 @@
     If the argument doesn't exist as a header file, the \\headerfile
     command creates a documentation page for the header file anyway.
 
-           \code
-           / *!
+    \badcode *
+    /\1!
                \headerfile <QtAlgorithms>
 
                \title Generic Algorithms
@@ -702,7 +702,7 @@
                Qt provides a number of global template functions in \c
                <QtAlgorithms> that work on containers and perform
                well-know algorithms.
-           * /
+    \1/
            \endcode
 
     QDoc generates a header file page \c{qtalgorithms.html} that looks
@@ -758,8 +758,8 @@
     lost. Here are three example macro comments followed by what they
     might look like in \c {qtglobal.html} or \c {qobject.html}:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \macro void Q_ASSERT(bool test)
         \relates <QtGlobal>
 
@@ -769,7 +769,7 @@
         ...
 
         \sa Q_ASSERT_X(), qFatal(), {Debugging Techniques}
-    * /
+    \1/
     \endcode
 
     \quotation
@@ -783,11 +783,10 @@
         ...
 
         See also Q_ASSERT_X(), qFatal() and \l {Debugging Techniques}.
-
    \endquotation
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \macro Q_PROPERTY(...)
         \relates QObject
 
@@ -796,7 +795,7 @@
         ...
 
         \sa {Qt's Property System}
-    * /
+    \1/
     \endcode
 
     \quotation
@@ -811,8 +810,8 @@
         See also \l {Qt's Property System}.
     \endquotation
 
-    \code
-    / *!
+    \badcode
+    /\1!
         \macro Q_OBJECT
         \relates QObject
 
@@ -825,7 +824,7 @@
 
         \sa {Meta-Object System}, {Signals and Slots}, {Qt's
         Property System}
-    * /
+    \1/
     \endcode
 
     \quotation
@@ -858,8 +857,8 @@
     text from the class's \l {brief-command} {\\brief} command. For
     example:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \module QtNetwork
 
         \title Qt Network Module
@@ -872,7 +871,7 @@
         implements application-level protocols, and
         lower-level classes such as QTcpSocket, QTcpServer, and
         QUdpSocket.
-    * /
+    \1/
     \endcode
 
     QDoc renders this in \c {qtnetwork.html} like this:
@@ -925,9 +924,7 @@
                QUdpSocket.
                </p>
                \endraw
-
                ...
-
            \endquotation
 
     The \l {noautolist-command} {\\noautolist} command can be used here
@@ -943,12 +940,12 @@
     for a namespace is similar to the reference page it generates for a
     C++ class.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \namespace Qt
 
         \brief Contains miscellaneous identifiers used throughout the Qt library.
-    * /
+    \1/
     \endcode
 
     QDoc renders this in \c{qt.html} like this:
@@ -1008,8 +1005,8 @@
     The page title is set using the \l {title-command} {\\title}
     command.
 
-           \code
-           / *!
+    \badcode *
+    /\1!
                \page aboutqt.html
 
                \title About Qt
@@ -1026,7 +1023,7 @@
                component programming.
 
                ...
-            * /
+    \1/
             \endcode
 
     QDoc renders this page in \c {aboutqt.html}.
@@ -1041,7 +1038,7 @@
     takes as arguments the property's name and its set, reset and get
     functions.
 
-    \code
+    \badcode
     Q_PROPERTY(QString state READ state WRITE setState)
     \endcode
 
@@ -1059,13 +1056,13 @@
     {brief-property} {description} as the \l {variable-command}
     {\\variable} command.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \property QPushButton::flat
         \brief Whether the border is disabled.
 
         This property's default is false.
-    * /
+    \1/
     \endcode
 
     QDoc includes this in \c {qpushbutton.html} like this:
@@ -1085,11 +1082,10 @@
         \li \b { bool isFlat () const}
         \li \b { void setFlat ( bool )}
         \endlist
-
     \endquotation
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \property QWidget::width
         \brief The width of the widget excluding any window frame.
 
@@ -1097,7 +1093,7 @@
         overview of window geometry.
 
         \sa geometry, height, size
-    * /
+    \1/
     \endcode
 
     QDoc includes this in \c {qwidget.html} like this:
@@ -1128,7 +1124,7 @@
 
     The \\qmlattachedproperty command is for documenting a QML
     property that will be attached to some QML type. See
-    \l{http://doc.qt.io/qt-5/qtqml-syntax-objectattributes.html#attached-properties-and-attached-signal-handlers}
+    \l{https://doc.qt.io/qt-5/qtqml-syntax-objectattributes.html#attached-properties-and-attached-signal-handlers}
     {Attached Properties}. The argument is the rest of the line. The
     argument text should be the property type, followed by the QML
     element name where the property is being declared, the \c{::}
@@ -1137,9 +1133,10 @@
     and the property has type \c {bool}, the \\qmlattachedproperty for
     it would look like this:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmlattachedproperty bool ListView::isCurrentItem
+
         This attached property is \c true if this delegate is the current
     item; otherwise false.
 
@@ -1149,12 +1146,11 @@
     item, for example:
 
         \snippet doc/src/snippets/declarative/listview/listview.qml isCurrentItem
-    * /
+    \1/
     \endcode
 
     QDoc includes this attached property on the QML reference page for the
-    \l{http://doc.qt.io/qt-5/qml-qtquick-listview.html#isCurrentItem-attached-prop}
-    {ListView} element.
+    \l [QML] {ListView} type.
 
     \target qmlattachedsignal-command
     \section1 \\qmlattachedsignal
@@ -1169,11 +1165,11 @@
     attached signal named \c add() in the \c GridView
     element is documented like this:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmlattachedsignal GridView::add()
         This attached signal is emitted immediately after an item is added to the view.
-    * /
+    \1/
     \endcode
 
     QDoc includes this documentation on the QML reference page for the
@@ -1187,14 +1183,14 @@
     QML value types group using the \l{ingroup-command}{\\ingroup}
     command as shown below. This will cause QDoc to include the
     documentation for the type on the
-    \l{http://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
+    \l{https://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
     {QML Value Types} page. The \l{brief-command} {\\brief} command
     is also required, because it appears on the
-    \l{http://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
+    \l{https://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
     {QML Value Types} page as well.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmlvaluetype int
         \ingroup qmlvaluetypes
 
@@ -1211,7 +1207,7 @@
         \endqml
 
         \sa {QML Value Types}
-    * /
+    \1/
     \endcode
 
     QDoc outputs this as \l{http://doc.qt.io/qt-5/qml-int.html}
@@ -1228,8 +1224,8 @@
     first argument is the name of the QML type. The second argument
     is the name of the C++ class that instantiates the QML type.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmlclass Transform QGraphicsTransform
         \ingroup qml-transform-elements
         \since 4.7
@@ -1251,8 +1247,7 @@
 
         You can assign any number of Transform elements to an \l
         Item. Each Transform is applied in order, one at a time.
-
-    * /
+    \1/
     \endcode
 
     This example generates the
@@ -1271,8 +1266,8 @@
     argument is the complete method signature, including return
     type and parameter names and types.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmlmethod void TextInput::select(int start, int end)
 
         Causes the text from \a start to \a end to be selected.
@@ -1283,7 +1278,7 @@
         selectionEnd the greater (regardless of the order passed to this method).
 
        \sa selectionStart, selectionEnd
-    * /
+    \1/
     \endcode
 
     QDoc includes this documentation on the element reference page for the
@@ -1300,8 +1295,8 @@
     specified using the \l{instantiates-command} {\\instantiates}
     context command.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmltype Transform
         \instantiates QGraphicsTransform
         \inqmlmodule QtQuick
@@ -1310,7 +1305,7 @@
 
         The Transform element is a base type which cannot be
         instantiated directly.
-    * /
+    \1/
     \endcode
 
     Here, the \e{\\qmltype} comment includes \l{instantiates-command}
@@ -1332,17 +1327,16 @@
     property named \c x in QML type \c Translate, and the property
     has type \c {real}, the \\qmlproperty for it would look like this:
 
-    \code
-        / *!
+    \badcode *
+    /\1!
             \qmlproperty real Translate::x
 
             The translation along the X axis.
-        * /
+    \1/
     \endcode
 
     QDoc includes this QML property on the QML reference page for the
-    \l {http://doc.qt.io/qt-5/qml-qtquick-translate.html} {Translate}
-    element.
+    \l [QML] {Translate} type.
 
     If the QML property is of enumeration type, or it holds a bit-wise
     combination of flags, the \l{value-command}{\\value} command can
@@ -1357,17 +1351,17 @@
     name. If we have a QML signal named \c clicked(), the documentation for it
     would look like this:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
     \qmlsignal QtQuick::MouseArea::clicked(MouseEvent mouse)
+
     This signal is emitted when there is a click. A click is defined as a
     press followed by a release, both inside the MouseArea.
-    * /
+    \1/
     \endcode
 
     QDoc includes this documentation on the QML reference page for the
-    \l{http://doc.qt.io/qt-5/qml-qtquick-mousearea.html#clicked-signal}
-    {MouseArea} element.
+    \l [QML] {MouseArea} type.
 
     \target qmlmodule-command
     \section1 \\qmlmodule
@@ -1377,25 +1371,27 @@
     command takes an optional \c <VERSION> number argument, and is similar
     to the \l{group-command}.
 
-    A QML class can be associated with a module by adding the
+    A QML type is associated with a module by adding the
     \l{inqmlmodule-command}{\\inqmlmodule} command to the comment-block that
-    documents the class. You can link to any member of a QML module using the
+    documents the type. You can link to any member of a QML module using the
     module name and two colons (\c{::}) prefix.
 
-    \code
-    \beginqdoc
+    \badcode *
+    /\1!
         A link to the TabWidget of the UI Component is \l {UIComponent::TabWidget}.
-    \endqdoc
+    \1/
     \endcode
 
     QDoc generates a page for the module that lists all the members of the
     module.
 
-    \code
+    \badcode *
+    /\1!
         \qmlmodule ClickableComponents
 
         This is a list of the Clickable Components set. A Clickable component
         responds to a \c clicked() event.
+    \1/
     \endcode
 
     \target inqmlmodule-command
@@ -1407,11 +1403,13 @@
     member of a group must be linked to using the module name and two colons
     (\c{::}).
 
-    \code
+    \badcode *
+    /\1!
         \qmltype ClickableButton
         \inqmlmodule ClickableComponents
 
         A clickable button that responds to the \c click() event.
+    \1/
     \endcode
 
     To link to the \c ClickableButton, use the
@@ -1430,8 +1428,8 @@
     If the QML type is not instantiated by a C++ class, this command
     is not used.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \qmltype Transform
         \instantiates QGraphicsTransform
         \inqmlmodule QtQuick
@@ -1440,7 +1438,7 @@
 
         The Transform element is a base type which cannot be
         instantiated directly.
-    * /
+    \1/
     \endcode
 
     Here, the \e{\\qmltype} comment includes \l{instantiates-command}
@@ -1492,13 +1490,13 @@
     header file, the \\typedef comment must contain a
      \l {relates-command} {\\relates} command.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \typedef QObjectList
         \relates QObject
 
         Synonym for QList<QObject>.
-    * /
+    \1/
     \endcode
 
     QDoc includes this in \c {qobject.html} as:
@@ -1513,8 +1511,8 @@
 
     Another, although more rare, example:
 
-    \code
-    / *!
+    \badcode * endcode
+    /\1!
         \typedef QMsgHandler
         \relates QtGlobal
 
@@ -1523,10 +1521,10 @@
 
         \code
             void myMsgHandler(QtMsgType, const char *);
-        \ endcode
+        \\2
 
         \sa QtMsgType, qInstallMessageHandler()
-    * /
+    \1/
     \endcode
 
     QDoc includes this in \c {qtglobal.html} as:
@@ -1551,12 +1549,12 @@
     Other typedefs are located on the reference page for the class
     that defines them.
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \typedef QList::Iterator
 
         Qt-style synonym for QList::iterator.
-    * /
+    \1/
     \endcode
 
     QDoc includes this one on the reference page for class QList as:
@@ -1585,12 +1583,12 @@
 
     In case of a member variable:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \variable QStyleOption::palette
         \brief The palette that should be used when painting
                the control
-    * /
+    \1/
     \endcode
 
     QDoc includes this in qstyleoption.html as:
@@ -1619,24 +1617,25 @@
 
     For these, the \\variable command can be used this way:
 
-    \code
-    / *!
+    \badcode *
+    /\1!
         \variable QTreeWidgetItem::Type
 
         The default type for tree widget items.
 
         \sa UserType, type()
-    * /
+    \1/
     \endcode
-    \code
-    / *!
+
+    \badcode *
+    /\1!
         \variable QTreeWidgetItem::UserType
 
         The minimum value for custom types. Values below
         UserType are reserved by Qt.
 
         \sa Type, type()
-    * /
+    \1/
     \endcode
 
     QDoc includes these in qtreewidget.html as:
