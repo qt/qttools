@@ -49,8 +49,7 @@
 ****************************************************************************/
 
 //! [0]
-        QDesignerWidgetBoxInterface *widgetBox = 0:
-        widgetBox = formEditor->widgetBox();
+        auto *widgetBox = formEditor->widgetBox();
 
         widgetBox->load();
 //! [0]
