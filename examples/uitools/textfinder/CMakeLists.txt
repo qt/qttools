@@ -10,7 +10,9 @@ endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/uitools/textfinder")
 
+#! [0]
 find_package(Qt6 REQUIRED COMPONENTS Core Gui UiTools Widgets)
+#! [0]
 
 qt_add_executable(textfinder
     main.cpp
@@ -22,12 +24,14 @@ set_target_properties(textfinder PROPERTIES
     MACOSX_BUNDLE TRUE
 )
 
+#! [1]
 target_link_libraries(textfinder PUBLIC
     Qt::Core
     Qt::Gui
     Qt::UiTools
     Qt::Widgets
 )
+#! [1]
 
 # Resources:
 set(textfinder_resource_files
