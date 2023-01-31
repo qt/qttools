@@ -400,8 +400,6 @@ void QtMetaEnumProvider::initLocale()
     for (QLocale::Language language : languages) {
         auto locales = QLocale::matchingLocales(language, QLocale::AnyScript,
                                                 QLocale::AnyTerritory);
-        if (locales.isEmpty() && language == system.language())
-            locales << system;
 
         if (!locales.isEmpty() && !m_languageToIndex.contains(language)) {
             const auto territories = sortedTerritories(locales);
