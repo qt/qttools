@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 //! [0]
-        QDesignerWidgetBoxInterface *widgetBox = 0:
-        widgetBox = formEditor->widgetBox();
+        auto *widgetBox = formEditor->widgetBox();
 
         widgetBox->load();
 //! [0]

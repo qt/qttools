@@ -2,21 +2,17 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 //! [0]
-    QDesignerFormWindowInterface *formWindow;
-    formWindow = QDesignerFormWindowInterface::findFormWindow(myWidget);
+    auto *formWindow = QDesignerFormWindowInterface::findFormWindow(myWidget);
 //! [0]
 
 
 //! [1]
     QList<QDesignerFormWindowInterface *> forms;
-    QDesignerFormWindowInterface *formWindow;
 
-    QDesignerFormWindowManagerInterface *manager = formEditor->formWindowManager();
+    auto *manager = formEditor->formWindowManager();
 
-    for (int i = 0; i < manager->formWindowCount(); i++) {
-        formWindow = manager->formWindow(i);
-        forms.append(formWindow);
-    }
+    for (int i = 0; i < manager->formWindowCount(); ++i)
+        forms.append(manager->formWindow(i));
 //! [1]
 
 

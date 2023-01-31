@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 //! [0]
-       QDesignerPropertySheetExtension *propertySheet;
-       QExtensionManager manager = formEditor->extensionManager();
+       auto *manager = formEditor->extensionManager();
 
-       propertySheet = qt_extension<QDesignerPropertySheetExtension*>(manager, widget);
+       auto *propertySheet = qt_extension<QDesignerPropertySheetExtension*>(manager, widget);
 
        if(propertySheet) {...}
 //! [0]
