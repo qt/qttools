@@ -2,11 +2,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 //! [0]
-        QDesignerFormWindowManagerInterface *manager = nullptr;
-        QDesignerFormWindowInterface *formWindow = nullptr;
-
-        manager = formEditor->formWindowManager();
-        formWindow = manager->formWindow(0);
+        auto *manager = formEditor->formWindowManager();
+        auto *formWindow = manager->formWindow(0);
 
         manager->setActiveFormWindow(formWindow);
 //! [0]

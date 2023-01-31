@@ -7,8 +7,8 @@
             if (initialized)
                 return;
 
-            QExtensionManager *manager = formEditor->extensionManager();
-            Q_ASSERT(manager != 0);
+            auto *manager = formEditor->extensionManager();
+            Q_ASSERT(manager != nullptr);
 
             manager->registerExtensions(new MyExtensionFactory(manager),
                                         Q_TYPEID(QDesignerTaskMenuExtension));

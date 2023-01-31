@@ -6,13 +6,12 @@
                 const QString &iid, QObject *parent) const
         {
             if (iid != Q_TYPEID(QDesignerContainerExtension))
-                return 0;
+                return nullptr;
 
-            if (MyCustomWidget *widget = qobject_cast<MyCustomWidget*>
-                   (object))
+            if (auto *widget = qobject_cast<MyCustomWidget*>(object))
                 return new MyContainerExtension(widget, parent);
 
-            return 0;
+            return nullptr;
         }
 //! [0]
 
@@ -21,17 +20,17 @@
         QObject *AGeneralExtensionFactory::createExtension(QObject *object,
                 const QString &iid, QObject *parent) const
         {
-            MyCustomWidget *widget = qobject_cast<MyCustomWidget*>(object);
+            auto *widget = qobject_cast<MyCustomWidget*>(object);
+            if (!widget)
+                return nullptr;
 
-            if (widget && (iid == Q_TYPEID(QDesignerTaskMenuExtension))) {
+            if (iid == Q_TYPEID(QDesignerTaskMenuExtension))
                 return new MyTaskMenuExtension(widget, parent);
 
-            } else if (widget && (iid == Q_TYPEID(QDesignerContainerExtension))) {
+            if (iid == Q_TYPEID(QDesignerContainerExtension))
                 return new MyContainerExtension(widget, parent);
 
-            } else {
-                return 0;
-            }
+            return nullptr;
         }
 //! [1]
 
