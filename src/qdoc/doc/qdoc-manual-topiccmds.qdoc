@@ -692,55 +692,55 @@
 
     \badcode *
     /\1!
-               \headerfile <QtAlgorithms>
+       \headerfile <QtAlgorithms>
 
-               \title Generic Algorithms
+       \title Generic Algorithms
 
-               \brief The <QtAlgorithms> header file provides
-                generic template-based algorithms.
+       \brief The <QtAlgorithms> header file provides
+        generic template-based algorithms.
 
-               Qt provides a number of global template functions in \c
-               <QtAlgorithms> that work on containers and perform
-               well-know algorithms.
+       Qt provides a number of global template functions in \c
+       <QtAlgorithms> that work on containers and perform
+       well-know algorithms.
     \1/
-           \endcode
+    \endcode
 
     QDoc generates a header file page \c{qtalgorithms.html} that looks
     like this:
 
-           \quotation
-               \raw HTML
-               <center><h1>&lt;QtAlgorithms&gt; -
-                           Generic Algorithms</h1></center>
-               <p>The <QtAlgorithms> header file provides generic
-               template-based algorithms.
-               <a href="13-qdoc-commands-topics.html#header-command">More...</a>
-               </p>
+    \quotation
+       \raw HTML
+       <center><h1>&lt;QtAlgorithms&gt; -
+                   Generic Algorithms</h1></center>
+       <p>The <QtAlgorithms> header file provides generic
+       template-based algorithms.
+       <a href="13-qdoc-commands-topics.html#header-command">More...</a>
+       </p>
 
-               <h3>Functions</h3>
-               <ul>
-               <li>RandomAccessIterator
-               <a href="http://doc.qt.io/qt-5/qtalgorithms-obsolete.html#qBinaryFind">qBinaryFind</a></b>
-               (RandomAccessIterator begin, RandomAccessIterator end,
-               const T & value)</li>
-               <li>...</li></ul>
-               <hr />
-               \endraw
+       <h3>Functions</h3>
+       <ul>
+       <li>RandomAccessIterator
+       <a href="http://doc.qt.io/qt-5/qtalgorithms-obsolete.html#qBinaryFind">qBinaryFind</a></b>
+       (RandomAccessIterator begin, RandomAccessIterator end,
+       const T & value)</li>
+       <li>...</li></ul>
+       <hr />
+       \endraw
 
-               \target header
+       \target header
 
-               \raw HTML
-               <h2>Detailed Description</h2>
-               <p>The <QtAlgorithms> header file provides generic
-               template-based algorithms. </p>
-               \endraw
+       \raw HTML
+       <h2>Detailed Description</h2>
+       <p>The <QtAlgorithms> header file provides generic
+       template-based algorithms. </p>
+       \endraw
 
-               Qt provides a number of global template functions in \c
-               <QtAlgorithms> that work on containers and perform
-               well-know algorithms.
+       Qt provides a number of global template functions in \c
+       <QtAlgorithms> that work on containers and perform
+       well-know algorithms.
 
-               ...
-           \endquotation
+       ...
+    \endquotation
 
     See also \l {inheaderfile-command}{\\inheaderfile}.
 
@@ -783,7 +783,7 @@
         ...
 
         See also Q_ASSERT_X(), qFatal() and \l {Debugging Techniques}.
-   \endquotation
+    \endquotation
 
     \badcode *
     /\1!
@@ -876,56 +876,56 @@
 
     QDoc renders this in \c {qtnetwork.html} like this:
 
-           \quotation
-               \raw HTML
-               <h1><center>Qt Network Module</center></h1>
-               \endraw
+    \quotation
+       \raw HTML
+       <h1><center>Qt Network Module</center></h1>
+       \endraw
 
-               The Qt Network module offers classes that allow you to
-               write TCP/IP clients and servers.\l {module
-               details} {More...}
+       The Qt Network module offers classes that allow you to
+       write TCP/IP clients and servers.\l {module
+       details} {More...}
 
-               \raw HTML
-               <p>
-               <table width="100%">
-                   <tr valign="top" bgcolor="#d0d0d0">
-                   <td><b>
-                   <a href="https://doc.qt.io/qt-5/qabstractsocket.html">QAbstractSocket</a>
-                   </b></td>
-                   <td>
-                   The base functionality common to all socket types
-                   </td></tr>
+       \raw HTML
+       <p>
+       <table width="100%">
+           <tr valign="top" bgcolor="#d0d0d0">
+           <td><b>
+           <a href="https://doc.qt.io/qt-5/qabstractsocket.html">QAbstractSocket</a>
+           </b></td>
+           <td>
+           The base functionality common to all socket types
+           </td></tr>
 
-                   <tr valign="top" bgcolor="#d0d0d0">
-                   <td>...</td>
-                   <td>...</td>
-                   </tr>
-               </table>
+           <tr valign="top" bgcolor="#d0d0d0">
+           <td>...</td>
+           <td>...</td>
+           </tr>
+       </table>
 
-               <p><hr /></p>
-               \endraw
+       <p><hr /></p>
+       \endraw
 
-               \target module details
+       \target module details
 
-               \raw HTML
-               <h2>Detailed Description</h2>
+       \raw HTML
+       <h2>Detailed Description</h2>
 
-               <p>
-               The Qt Network module offers classes that allow you to
-               write TCP/IP clients and servers.
-               </p>
+       <p>
+       The Qt Network module offers classes that allow you to
+       write TCP/IP clients and servers.
+       </p>
 
-               <p>
-               The network module provides classes to make network
-               programming easier and portable. It offers both
-               high-level classes such as QNetworkAccessManager that
-               implements application-level protocols, and
-               lower-level classes such as QTcpSocket, QTcpServer, and
-               QUdpSocket.
-               </p>
-               \endraw
-               ...
-           \endquotation
+       <p>
+       The network module provides classes to make network
+       programming easier and portable. It offers both
+       high-level classes such as QNetworkAccessManager that
+       implements application-level protocols, and
+       lower-level classes such as QTcpSocket, QTcpServer, and
+       QUdpSocket.
+       </p>
+       \endraw
+       ...
+    \endquotation
 
     The \l {noautolist-command} {\\noautolist} command can be used here
     to omit the automatically generated list of classes at the end.
@@ -950,40 +950,40 @@
 
     QDoc renders this in \c{qt.html} like this:
 
-           \quotation
-               \raw HTML
-               <center><h1>Qt Namespace</h1></center>
-               <p>The Qt namespace contains miscellaneous
-               identifiers used throughout the Qt library.
-               <a href="13-qdoc-commands-topics.html#name">More...</a>
-               </p>
+    \quotation
+       \raw HTML
+       <center><h1>Qt Namespace</h1></center>
+       <p>The Qt namespace contains miscellaneous
+       identifiers used throughout the Qt library.
+       <a href="13-qdoc-commands-topics.html#name">More...</a>
+       </p>
 
-               <pre>#include &lt;Qt&gt;</pre>
-               <ul>
-               <li>
-               <a href="https://doc.qt.io/qt-5/qt-obsolete.html">
-                   Obsolete members</a></li>
-               </ul>
+       <pre>#include &lt;Qt&gt;</pre>
+       <ul>
+       <li>
+       <a href="https://doc.qt.io/qt-5/qt-obsolete.html">
+           Obsolete members</a></li>
+       </ul>
 
 
-               <h3>Types</h3>
-               <ul>
-               <li>flags
-               <a href="https://doc.qt.io/qt-5/qt.html#AlignmentFlag-enum">Alignment</a></b></li>
-               <li>...</li></ul>
-               <hr />
-               \endraw
+       <h3>Types</h3>
+       <ul>
+       <li>flags
+       <a href="https://doc.qt.io/qt-5/qt.html#AlignmentFlag-enum">Alignment</a></b></li>
+       <li>...</li></ul>
+       <hr />
+       \endraw
 
-               \target name
+       \target name
 
-               \raw HTML
-               <h2>Detailed Description</h2>
-               <p>Contains miscellaneous identifiers
-               used throughout the Qt library.</p>
-               \endraw
+       \raw HTML
+       <h2>Detailed Description</h2>
+       <p>Contains miscellaneous identifiers
+       used throughout the Qt library.</p>
+       \endraw
 
-               ...
-           \endquotation
+       ...
+    \endquotation
 
     Note that in C++, a particular namespace can be used in more
     than one module, but when C++ elements from different modules
@@ -1007,24 +1007,24 @@
 
     \badcode *
     /\1!
-               \page aboutqt.html
+       \page aboutqt.html
 
-               \title About Qt
+       \title About Qt
 
-               Qt is a C++ toolkit for cross-platform GUI
-               application development. Qt provides single-source
-               portability across Microsoft Windows, macOS, Linux,
-               and all major commercial Unix variants.
+       Qt is a C++ toolkit for cross-platform GUI
+       application development. Qt provides single-source
+       portability across Microsoft Windows, macOS, Linux,
+       and all major commercial Unix variants.
 
-               Qt provides application developers with all the
-               functionality needed to build applications with
-               state-of-the-art graphical user interfaces. Qt is fully
-               object-oriented, easily extensible, and allows true
-               component programming.
+       Qt provides application developers with all the
+       functionality needed to build applications with
+       state-of-the-art graphical user interfaces. Qt is fully
+       object-oriented, easily extensible, and allows true
+       component programming.
 
-               ...
+       ...
     \1/
-            \endcode
+    \endcode
 
     QDoc renders this page in \c {aboutqt.html}.
 
@@ -1138,12 +1138,12 @@
         \qmlattachedproperty bool ListView::isCurrentItem
 
         This attached property is \c true if this delegate is the current
-    item; otherwise false.
+        item; otherwise false.
 
         It is attached to each instance of the delegate.
 
         This property may be used to adjust the appearance of the current
-    item, for example:
+        item, for example:
 
         \snippet doc/src/snippets/declarative/listview/listview.qml isCurrentItem
     \1/
@@ -1329,9 +1329,9 @@
 
     \badcode *
     /\1!
-            \qmlproperty real Translate::x
+        \qmlproperty real Translate::x
 
-            The translation along the X axis.
+        The translation along the X axis.
     \1/
     \endcode
 
@@ -1353,10 +1353,10 @@
 
     \badcode *
     /\1!
-    \qmlsignal QtQuick::MouseArea::clicked(MouseEvent mouse)
+        \qmlsignal QtQuick::MouseArea::clicked(MouseEvent mouse)
 
-    This signal is emitted when there is a click. A click is defined as a
-    press followed by a release, both inside the MouseArea.
+        This signal is emitted when there is a click. A click is defined as a
+        press followed by a release, both inside the MouseArea.
     \1/
     \endcode
 
