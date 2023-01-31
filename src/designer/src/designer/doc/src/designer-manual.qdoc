@@ -1759,10 +1759,19 @@ pixmap property in the property editor.
 
     \image directapproach-calculatorform.png
 
-    We will use \c qmake to build the executable, so we need to write a
-    \c{.pro} file:
+    When using \c CMake to build the executable, a \c{CMakeLists.txt}
+    file is required:
 
-    \snippet calculatorform/calculatorform.pro 0
+    \snippet uitools/calculatorform/CMakeLists.txt 0
+
+    The form is listed among the C++ source files in \c qt_add_executable().
+    The option \c CMAKE_AUTOUIC tells \c CMake to run the \c uic tool
+    to create a \c ui_calculatorform.h file that can be used
+    by the source files.
+
+    When using \c qmake to build the executable, a \c{.pro} file is required:
+
+    \snippet uitools/calculatorform/calculatorform.pro 0
 
     The special feature of this file is the \c FORMS declaration that tells
     \c qmake which files to process with \c uic. In this case, the
@@ -1770,8 +1779,8 @@ pixmap property in the property editor.
     that can be used by any file listed in the \c SOURCES declaration.
 
     \note You can use Qt Creator to create the Calculator Form project. It
-    automatically generates the main.cpp, UI, and .pro files, which you can
-    then modify.
+    automatically generates the main.cpp, UI, and a project file for the
+    desired build tool, which you can modify.
 
     \section2 The Direct Approach
 
@@ -1826,8 +1835,12 @@ pixmap property in the property editor.
 
     \snippet calculatorform/calculatorform.h 0
 
-    This means that the \c{.pro} file must be updated to include
-    \c{calculatorform.h}:
+    The project file must be updated to include \c{calculatorform.h}.
+    For \c CMake:
+
+    \snippet calculatorform/CMakeLists.txt 1
+
+    For \c qmake:
 
     \snippet calculatorform/calculatorform.pro 0
 
@@ -1974,9 +1987,14 @@ pixmap property in the property editor.
 
     A resource file containing a UI file is required to process forms at
     run time. Also, the application needs to be configured to use the QtUiTools
-    module. This is done by including the following declaration in a \c qmake
+    module. This is done by including the following declarations in a \c CMake
     project file, ensuring that the application is compiled and linked
     appropriately.
+
+    \snippet ../uitools/textfinder/CMakeLists.txt 0
+    \snippet ../uitools/textfinder/CMakeLists.txt 1
+
+    For \c qmake:
 
     \snippet manual/doc_src_designer-manual.pro 0
 
@@ -2416,7 +2434,7 @@ pixmap property in the property editor.
     \section1 Getting Started
 
     To integrate a custom widget with \QD, you require a suitable description
-    for the widget and an appropriate \c{.pro} file.
+    for the widget and an appropriate project file.
 
 
     \section2 Providing an Interface Description
@@ -2659,26 +2677,37 @@ pixmap property in the property editor.
 
     The \l{Custom Widget Plugin Example} demonstrates a simple \QD plugin.
 
-    The \c{.pro} file for a plugin must specify the headers and sources for
+    The project file for a plugin must specify the headers and sources for
     both the custom widget and the plugin interface. Typically, this file only
-    has to specify that the plugin's project is to be built as a library, but
-    with specific plugin support for \QD. This is done with the following
-    declarations:
+    has to specify that the plugin's project will be built as a library, but
+    with specific plugin support for \QD. For \c CMake, this is done with
+    the following declarations:
+
+    \snippet customwidgetplugin/CMakeLists.txt 0
+    \snippet customwidgetplugin/CMakeLists.txt 1
+    \snippet customwidgetplugin/CMakeLists.txt 2
+
+    The link libraries list specifies \c Qt::UiPlugin. This indicates that
+    the plugin uses the abstract interfaces QDesignerCustomWidgetInterface
+    and QDesignerCustomWidgetCollectionInterface only and has no linkage
+    to the \QD libraries. When accessing other interfaces of \QD that have
+    linkage, \c Designer should be used instead; this ensures that the plugin
+    dynamically links to the \QD libraries and has a run-time dependency on
+    them.
+
+    It is also necessary to ensure that the plugin is installed together with
+    other \QD widget plugins:
+
+    \snippet customwidgetplugin/CMakeLists.txt 3
+    \snippet customwidgetplugin/CMakeLists.txt 4
+
+    For \c qmake:
 
     \snippet customwidgetplugin/customwidgetplugin.pro 0
     \snippet customwidgetplugin/customwidgetplugin.pro 2
 
-    The \c QT variable contains the keyword \c uiplugin. It indicates that
-    the plugin uses the abstract interfaces QDesignerCustomWidgetInterface
-    and QDesignerCustomWidgetCollectionInterface only and has no linkage
-    to the \QD libraries. When accessing other interfaces of \QD that have
-    linkage, \c designer should be used instead; this ensures that the plugin
-    dynamically links to the \QD libraries and has a run-time dependency on
-    them.
-
-    If plugins are built in a mode that is incompatible with \QD, they will
-    not be loaded and installed. For more information about plugins, see the
-    \l{plugins-howto.html}{Plugins HOWTO} document.
+    The \c QT variable contains the keyword \c uiplugin, which is
+    the equivalent of the \c Qt::UiPlugin library.
 
     It is also necessary to ensure that the plugin is installed together with
     other \QD widget plugins:
@@ -2695,19 +2724,24 @@ pixmap property in the property editor.
     See QCoreApplication::libraryPaths() for more information about customizing
     paths for libraries and plugins with Qt applications.
 
+    If plugins are built in a mode that is incompatible with \QD, they will
+    not be loaded and installed. For more information about plugins, see the
+    \l{plugins-howto.html}{Plugins HOWTO} document.
+
     \section2 Splitting up the Plugin
 
-    In a real world scenario, you do not want to have dependencies of the
-    application making use of the custom widgets to the \QD headers and
-    libraries as introduced by the simple approach explained above.
+    The simple approach explained above introduces a problem particularly
+    when using the other interfaces of \QD that have linkage:
+    The application using the custom widget will then depend on
+    \QD headers and libraries. In a real world scenario, this is not desired.
 
     The following sections describe how to resolve this.
 
     \section3 Linking the Widget into the Application
 
-     The source and header file of the custom widget can be shared
-     between the application and \QD by creating a \c{.pri} file for
-     inclusion:
+     When using \c qmake, the source and header file of the custom widget
+     can be shared between the application and \QD by creating a \c{.pri}
+     file for inclusion:
 
      \code
      INCLUDEPATH += $$PWD
@@ -2721,6 +2755,9 @@ pixmap property in the property editor.
      \code
      include(customwidget.pri)
      \endcode
+
+    When using \c CMake, the source files of the widget can similarly be
+    added to the application project.
 
     \section3 Sharing the Widget Using a Library
 
