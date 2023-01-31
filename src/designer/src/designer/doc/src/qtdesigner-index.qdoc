@@ -17,11 +17,20 @@
     that covers all steps of UI design and implementation for Qt Quick user
     interfaces.
 
-    \section1 Getting Started
+    \if !defined(qtforpython)
 
-    To link against the Qt Designer module, add this line to the project file:
+    \section1 Using the Module
 
-    \snippet plugins/doc_src_qtdesigner.pro 1
+    \include {module-use.qdocinc} {using the c++ api}
+
+    \section2 Building with CMake
+
+    \include {module-use.qdocinc} {building with cmake} {Designer}
+
+    \section2 Building with qmake
+
+    \include {module-use.qdocinc} {building_with_qmake} {designer}
+    \endif
 
     \section1 Articles and Guides
 
