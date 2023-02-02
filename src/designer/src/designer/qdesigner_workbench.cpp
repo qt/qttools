@@ -232,6 +232,7 @@ QDesignerWorkbench::~QDesignerWorkbench()
         delete widgetBoxToolWindow();
         break;
     }
+    delete m_globalMenuBar;
 }
 
 void QDesignerWorkbench::saveGeometriesForModeChange()
