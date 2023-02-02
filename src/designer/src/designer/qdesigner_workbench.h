@@ -6,11 +6,12 @@
 
 #include "designer_enums.h"
 
-#include <QtCore/qobject.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
-#include <QtCore/qset.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qpointer.h>
 #include <QtCore/qrect.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -25,13 +26,9 @@ class QActionGroup;
 class QDockWidget;
 class QMenu;
 class QMenuBar;
-class QMainWindow;
 class QToolBar;
-class QMdiArea;
 class QMdiSubWindow;
 class QCloseEvent;
-class QFont;
-class QtToolBarManager;
 class ToolBarManager;
 
 class QDesignerFormEditorInterface;
@@ -129,7 +126,7 @@ private:
 
     QMenu *m_windowMenu;
 
-    QMenuBar *m_globalMenuBar;
+    QPointer<QMenuBar> m_globalMenuBar;
 
     struct TopLevelData {
         ToolBarManager *toolbarManager;
