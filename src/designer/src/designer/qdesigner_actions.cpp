@@ -7,10 +7,10 @@
 #include "qdesigner.h"
 #include "qdesigner_workbench.h"
 #include "qdesigner_formwindow.h"
+#include "mainwindow.h"
 #include "newform.h"
 #include "versiondialog.h"
 #include "saveformastemplate.h"
-#include "qdesigner_toolwindow.h"
 #include "preferencesdialog.h"
 #include "appfontdialog.h"
 
@@ -475,7 +475,7 @@ QString QDesignerActions::uiExtension() const
 
 QAction *QDesignerActions::createRecentFilesMenu()
 {
-    QMenu *menu = new QMenu;
+    m_recentMenu.reset(new QMenu);
     QAction *act;
     // Need to insert this into the QAction.
     for (int i = 0; i < MaxRecentFiles; ++i) {
@@ -483,20 +483,20 @@ QAction *QDesignerActions::createRecentFilesMenu()
         act->setVisible(false);
         connect(act, &QAction::triggered, this, &QDesignerActions::openRecentForm);
         m_recentFilesActions->addAction(act);
-        menu->addAction(act);
+        m_recentMenu->addAction(act);
     }
     updateRecentFileActions();
-    menu->addSeparator();
+    m_recentMenu->addSeparator();
     act = new QAction(QIcon::fromTheme(QStringLiteral("edit-clear")),
                       tr("Clear &Menu"), this);
     act->setObjectName(QStringLiteral("__qt_action_clear_menu_"));
     connect(act, &QAction::triggered, this, &QDesignerActions::clearRecentFiles);
     m_recentFilesActions->addAction(act);
-    menu->addAction(act);
+    m_recentMenu->addAction(act);
 
     act = new QAction(QIcon::fromTheme(QStringLiteral("document-open-recent")),
                       tr("&Recent Forms"), this);
-    act->setMenu(menu);
+    act->setMenu(m_recentMenu.get());
     return act;
 }
 

@@ -184,6 +184,8 @@ private:
     QPrinter *m_printer = nullptr;
 
     qdesigner_internal::PreviewManager *m_previewManager = nullptr;
+
+    std::unique_ptr<QMenu> m_recentMenu;
 };
 
 QT_END_NAMESPACE
