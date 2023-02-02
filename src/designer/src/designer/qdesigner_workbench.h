@@ -135,7 +135,7 @@ private:
     TopLevelData m_topLevelData;
 
     UIMode m_mode = NeutralMode;
-    DockedMainWindow *m_dockedMainWindow = nullptr;
+    QPointer<DockedMainWindow> m_dockedMainWindow;
 
     QList<QDesignerToolWindow *> m_toolWindows;
     QList<QDesignerFormWindow *> m_formWindows;
