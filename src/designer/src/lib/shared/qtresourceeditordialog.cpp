@@ -2013,6 +2013,8 @@ QtResourceEditorDialog::~QtResourceEditorDialog()
     settings->setValue(QLatin1String(SplitterPosition), d_ptr->m_ui.splitter->saveState());
     settings->setValue(QLatin1String(Geometry), saveGeometry());
     settings->endGroup();
+
+    disconnect(d_ptr->m_qrcManager, nullptr, this, nullptr);
 }
 
 QtResourceModel *QtResourceEditorDialog::model() const
