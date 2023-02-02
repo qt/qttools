@@ -233,6 +233,7 @@ QDesignerWorkbench::~QDesignerWorkbench()
         break;
     }
     delete m_globalMenuBar;
+    delete m_dockedMainWindow;
 }
 
 void QDesignerWorkbench::saveGeometriesForModeChange()
@@ -371,7 +372,6 @@ void QDesignerWorkbench::switchToNeutralMode()
     qDesigner->setMainWindow(nullptr);
 
     delete m_dockedMainWindow;
-    m_dockedMainWindow = nullptr;
 }
 
 void QDesignerWorkbench::switchToDockedMode()
