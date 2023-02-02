@@ -224,7 +224,7 @@ QToolButton *ActionEditor::createConfigureMenuButton(const QString &t, QMenu **p
     QAction *configureAction = new QAction(t, configureButton);
     QIcon configureIcon = QIcon::fromTheme(QStringLiteral("document-properties"), createIconSet(QStringLiteral("configure.png")));
     configureAction->setIcon(configureIcon);
-    QMenu *configureMenu = new QMenu;
+    QMenu *configureMenu = new QMenu(configureButton);
     configureAction->setMenu(configureMenu);
     configureButton->setDefaultAction(configureAction);
     configureButton->setPopupMode(QToolButton::InstantPopup);
