@@ -443,15 +443,6 @@ QString FunctionNode::signature(bool values, bool noReturnType, bool templatePar
 }
 
 /*!
-  Print some information used for debugging qdoc. Only used when debugging.
- */
-void FunctionNode::debug() const
-{
-    qDebug("QML METHOD %s m_returnType %s m_parentPath %s", qPrintable(name()),
-           qPrintable(m_returnType), qPrintable(m_parentPath.join(' ')));
-}
-
-/*!
   Compares this FunctionNode to \a node. If \a sameParent is \c true, compares
   also the parent of the two nodes. Returns \c true if they describe
   the same function.

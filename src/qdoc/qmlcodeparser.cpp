@@ -5,6 +5,7 @@
 
 #include "node.h"
 #include "qmlvisitor.h"
+#include "utilities.h"
 
 #ifndef QT_NO_DECLARATIVE
 #    include <private/qqmljsast_p.h>
@@ -87,8 +88,6 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
     QString document = in.readAll();
     in.close();
 
-    Location fileLocation(filePath);
-
     QString newCode = document;
     extractPragmas(newCode);
     m_lexer->setCode(newCode, 1);
@@ -98,17 +97,13 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
         QmlDocVisitor visitor(filePath, newCode, &m_engine, topicCommands() + commonMetaCommands(),
                               topicCommands());
         QQmlJS::AST::Node::accept(ast, &visitor);
-        if (visitor.hasError()) {
-            qDebug().nospace() << qPrintable(filePath) << ": Could not analyze QML file. "
-                               << "The output is incomplete.";
-        }
+        if (visitor.hasError())
+            Location(filePath).warning("Could not analyze QML file, output is incomplete.");
     }
     const auto &messages = m_parser->diagnosticMessages();
     for (const auto &msg : messages) {
-        qDebug().nospace() << qPrintable(filePath) << ':'
-                           << msg.loc.startLine << ": QML syntax error at col "
-                           << msg.loc.startColumn
-                           << ": " << qPrintable(msg.message);
+        qCDebug(lcQdoc, "%s: %d: %d: QML syntax error: %s", qUtf8Printable(filePath),
+                msg.loc.startLine, msg.loc.startColumn, qUtf8Printable(msg.message));
     }
     m_currentFile.clear();
 #else

@@ -127,7 +127,7 @@ void QDocForest::setPrimaryTree(const QString &t)
     m_primaryTree = findTree(T);
     m_forest.remove(T);
     if (m_primaryTree == nullptr)
-        qDebug() << "ERROR: Could not set primary tree to:" << t;
+        qCCritical(lcQdoc) << "Error: Could not set primary tree to" << t;
 }
 
 /*!
@@ -1234,7 +1234,7 @@ void QDocDatabase::readIndexes(const QStringList &indexFiles)
         if (!isLoaded(fn))
             filesToRead << file;
         else
-            qDebug() << "This index file is already in memory:" << file;
+            qCCritical(lcQdoc) << "Index file" << file << "is already in memory.";
     }
     QDocIndexFiles::qdocIndexFiles()->readIndexes(filesToRead);
 }

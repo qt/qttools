@@ -1819,16 +1819,11 @@ QString Generator::outputSuffix(const Node *node)
 }
 
 bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n,
-                         QStringView *contents, QStringView *par1, bool debug)
+                         QStringView *contents, QStringView *par1)
 {
 #define SKIP_CHAR(c)                                                                               \
-    if (debug)                                                                                     \
-        qDebug() << "looking for " << c << " at " << QString(src.data() + i, n - i);               \
-    if (i >= n || src[i] != c) {                                                                   \
-        if (debug)                                                                                 \
-            qDebug() << " char '" << c << "' not found";                                           \
+    if (i >= n || src[i] != c)                                                                     \
         return false;                                                                              \
-    }                                                                                              \
     ++i;
 
 #define SKIP_SPACE                                                                                 \
@@ -1846,9 +1841,6 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
         return false;
     }
 
-    if (debug)
-        qDebug() << "haystack:" << src << "needle:" << tag << "i:" << i;
-
     // skip tag
     i += tag.size();
 
@@ -1860,8 +1852,6 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
         while (i < n && src[i].isLetter())
             ++i;
         if (src[i] == '=') {
-            if (debug)
-                qDebug() << "read parameter" << QString(src.data() + j, i - j);
             SKIP_CHAR('=');
             SKIP_CHAR('"');
             // skip parameter name
@@ -1871,9 +1861,6 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
             *par1 = QStringView(src).mid(j, i - j);
             SKIP_CHAR('"');
             SKIP_SPACE;
-        } else {
-            if (debug)
-                qDebug() << "no optional parameter found";
         }
     }
     SKIP_SPACE;
@@ -1902,10 +1889,9 @@ bool Generator::parseArg(const QString &src, const QString &tag, int *pos, int n
     i += tag.size() + 4;
 
     *pos = i;
-    if (debug)
-        qDebug() << " tag " << tag << " found: pos now: " << i;
     return true;
 #undef SKIP_CHAR
+#undef SKIP_SPACE
 }
 
 QString Generator::plainCode(const QString &markedCode)

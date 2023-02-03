@@ -140,8 +140,6 @@ public:
         return parent()->logicalModuleIdentifier();
     }
 
-    void debug() const;
-
     void setFinal(bool b) { m_isFinal = b; }
     [[nodiscard]] bool isFinal() const { return m_isFinal; }
 

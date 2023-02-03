@@ -11,6 +11,7 @@
 #include "qdocdatabase.h"
 #include "qmlpropertynode.h"
 #include "tokenizer.h"
+#include "utilities.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qfileinfo.h>
@@ -148,7 +149,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *no
                             nodes.append(n);
                         }
                     } else
-                        qDebug() << "  FAILED TO PARSE QML PROPERTY:" << topic << args;
+                        qCDebug(lcQdoc) << "Failed to parse QML property:" << topic << args;
                 } else if (topic.endsWith(QLatin1String("method")) || topic == COMMAND_QMLSIGNAL) {
                     if (node->isFunction()) {
                         auto *fn = static_cast<FunctionNode *>(node);
