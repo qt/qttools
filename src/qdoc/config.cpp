@@ -408,7 +408,7 @@ void Config::processCommandLineOptions(const QStringList &args)
         m_qdocPass = Prepare;
     if (m_parser.isSet(m_parser.generateOption))
         m_qdocPass = Generate;
-    if (m_parser.isSet(m_parser.logProgressOption))
+    if (m_debug || m_parser.isSet(m_parser.logProgressOption))
         setStringList(CONFIG_LOGPROGRESS, QStringList("true"));
     if (m_parser.isSet(m_parser.timestampsOption))
         setStringList(CONFIG_TIMESTAMPS, QStringList("true"));
@@ -1392,7 +1392,6 @@ QString Config::popWorkingDir()
     if (!m_workingDirs.isEmpty())
         return m_workingDirs.pop();
 
-    qDebug() << "RETURNED EMPTY WORKING DIR";
     return QString();
 }
 

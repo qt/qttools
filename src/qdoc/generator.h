@@ -138,7 +138,7 @@ protected:
     QTextStream &out();
     QString outFileName();
     bool parseArg(const QString &src, const QString &tag, int *pos, int n, QStringView *contents,
-                  QStringView *par1 = nullptr, bool debug = false);
+                  QStringView *par1 = nullptr);
     void unknownAtom(const Atom *atom);
     int appendSortedQmlNames(Text &text, const Node *base, const NodeList &subs);
 

@@ -132,11 +132,13 @@ static void loadIndexFiles(const QSet<QString> &formats)
                     }
                 }
                 // Remove self-dependencies and possible duplicates
-                config.dependModules().removeAll(config.getString(CONFIG_PROJECT).toLower());
+                QString project{config.getString(CONFIG_PROJECT)};
+                config.dependModules().removeAll(project.toLower());
                 config.dependModules().removeDuplicates();
-                qCCritical(lcQdoc) << "qdocconf file has depends = *; loading all "
+                qCCritical(lcQdoc) << "Configuration file for"
+                               << project << "has depends = *; loading all"
                                << config.dependModules().size()
-                               << " index files found";
+                               << "index files found";
             }
             for (const auto &module : config.dependModules()) {
                 QList<QFileInfo> foundIndices;
@@ -206,10 +208,14 @@ static void loadIndexFiles(const QSet<QString> &formats)
     Prints to stderr the name of the project that QDoc is running for,
     in which mode and which phase.
 
-    If QDoc is running in debug mode, also logs the command line arguments.
+    If QDoc is not running in debug mode or --log-progress command line
+    option is not set, do nothing.
  */
 void logStartEndMessage(const QLatin1String &startStop, const Config &config)
 {
+    if (!config.getBool(CONFIG_LOGPROGRESS))
+        return;
+
     const QString runName = " qdoc for "
             + config.getString(CONFIG_PROJECT)
             + QLatin1String(" in ")
@@ -536,7 +542,8 @@ static void processQdocconfFile(const QString &fileName)
           Parse each source text file in the set using the appropriate parser and
           add it to the big tree.
         */
-        qCInfo(lcQdoc) << "Parse source files for" << project;
+        if (config.getBool(CONFIG_LOGPROGRESS))
+            qCInfo(lcQdoc) << "Parse source files for" << project;
         for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
             const auto &key = it.key();
             auto *codeParser = CodeParser::parserForSourceFile(key);
@@ -545,7 +552,8 @@ static void processQdocconfFile(const QString &fileName)
                 codeParser->parseSourceFile(config.location(), key);
             }
         }
-        qCInfo(lcQdoc) << "Source files parsed for" << project;
+        if (config.getBool(CONFIG_LOGPROGRESS))
+            qCInfo(lcQdoc) << "Source files parsed for" << project;
     }
     /*
       Now the primary tree has been built from all the header and
@@ -670,14 +678,6 @@ int main(int argc, char **argv)
     translators.clear();
 #endif
     QmlTypeNode::terminate();
-
-#ifdef DEBUG_SHUTDOWN_CRASH
-    qDebug() << "main(): Delete qdoc database";
-#endif
     QDocDatabase::destroyQdocDB();
-#ifdef DEBUG_SHUTDOWN_CRASH
-    qDebug() << "main(): qdoc database deleted";
-#endif
-
     return Location::exitCode();
 }
