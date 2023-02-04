@@ -422,6 +422,15 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>QTBUG110630</name>
+    <message>
+        <location filename="main.cpp" line="718"/>
+        <source>translation with extras-quoted field</source>
+        <translation type="unfinished"></translation>
+        <extra-quoted> string with spaces </extra-quoted>
+    </message>
+</context>
+<context>
     <name>QTBUG99415</name>
     <message>
         <location filename="main.cpp" line="707"/>

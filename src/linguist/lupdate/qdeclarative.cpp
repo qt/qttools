@@ -329,8 +329,14 @@ void FindTrCalls::processComment(const SourceLocation &loc)
     } else if (*chars == QLatin1Char('~') && chars[1].isSpace()) {
         QString text = QString(chars+2, length-2).trimmed();
         int k = text.indexOf(QLatin1Char(' '));
-        if (k > -1)
-            extra.insert(text.left(k), text.mid(k + 1).trimmed());
+        if (k > -1) {
+            QString commentvalue = text.mid(k + 1).trimmed();
+            if (commentvalue.startsWith(QLatin1Char('"')) && commentvalue.endsWith(QLatin1Char('"'))
+               && commentvalue.size() != 1) {
+               commentvalue = commentvalue.sliced(1, commentvalue.size() - 2);
+            }
+            extra.insert(text.left(k), commentvalue);
+        }
     } else if (*chars == QLatin1Char('%') && chars[1].isSpace()) {
         sourcetext.reserve(sourcetext.size() + length-2);
         ushort *ptr = (ushort *)sourcetext.data() + sourcetext.size();

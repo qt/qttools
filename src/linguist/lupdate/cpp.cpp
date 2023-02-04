@@ -2107,8 +2107,14 @@ void CppParser::processComment()
         yyWord.remove(0, 2);
         text = yyWord.trimmed();
         int k = text.indexOf(QLatin1Char(' '));
-        if (k > -1)
-            extra.insert(text.left(k), text.mid(k + 1).trimmed());
+        if (k > -1) {
+            QString commentvalue = text.mid(k + 1).trimmed();
+            if (commentvalue.startsWith(QLatin1Char('"')) && commentvalue.endsWith(QLatin1Char('"'))
+                && commentvalue.size() != 1) {
+                commentvalue = commentvalue.sliced(1, commentvalue.size() - 2);
+            }
+            extra.insert(text.left(k), commentvalue);
+        }
         text.clear();
     } else if (*ptr == QLatin1Char('%') && ptr[1].isSpace()) {
         sourcetext.reserve(sourcetext.size() + yyWord.size() - 2);

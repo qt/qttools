@@ -196,5 +196,11 @@
             <numerusform></numerusform>
         </translation>
     </message>
+    <message>
+        <location filename="main.qml" line="101"/>
+        <source>translation with extras-quoted field</source>
+        <translation type="unfinished"></translation>
+        <extra-quoted> string with spaces </extra-quoted>
+    </message>
 </context>
 </TS>

@@ -191,5 +191,11 @@
             <numerusform></numerusform>
         </translation>
     </message>
+    <message>
+        <location filename="main.js" line="94"/>
+        <source>translation with extras-quoted field</source>
+        <translation type="unfinished"></translation>
+        <extra-quoted> string with spaces </extra-quoted>
+    </message>
 </context>
 </TS>

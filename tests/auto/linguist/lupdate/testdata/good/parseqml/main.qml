@@ -96,5 +96,8 @@ QtObject {
 
         //% "Source text"
         qsTrId("qtn_baz_biz");
+
+        //~ quoted " string with spaces "
+        qsTr("translation with extras-quoted field");
     }
 }

@@ -89,3 +89,6 @@ var more_greeting_strings = [ QT_TRID_NOOP("qtn_needle"), QT_TRID_NOOP("qtn_hays
 //: qsTrId() with comment, meta-data and plurals.
 //~ well-tested True
 qsTrId("qtn_bar_baz", 10);
+
+//~ quoted " string with spaces "
+qsTr("translation with extras-quoted field");
