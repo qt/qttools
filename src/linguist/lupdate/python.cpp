@@ -17,7 +17,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static const char MagicComment[] = "TRANSLATOR ";
+static const char PythonMagicComment[] = "TRANSLATOR ";
 
 /*
   The first part of this source file is the Python tokenizer.  We skip
@@ -648,8 +648,8 @@ static void parse(Translator &tor, ConversionData &cd,
             case Tok_Comment:
                 comment = yyComment;
                 comment = comment.simplified();
-                if (comment.left(sizeof(MagicComment) - 1) == MagicComment) {
-                    comment.remove(0, sizeof(MagicComment) - 1);
+                if (comment.left(sizeof(PythonMagicComment) - 1) == PythonMagicComment) {
+                    comment.remove(0, sizeof(PythonMagicComment) - 1);
                     int k = comment.indexOf(' ');
                     if (k == -1) {
                         context = comment;

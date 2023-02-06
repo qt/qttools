@@ -30,7 +30,9 @@ QT_BEGIN_NAMESPACE
 
 using namespace QQmlJS;
 
-static QString MagicComment(QLatin1String("TRANSLATOR"));
+using namespace Qt::StringLiterals;
+
+static QString QmlMagicComment = u"TRANSLATOR"_s;
 
 class FindTrCalls: protected AST::Visitor
 {
@@ -369,8 +371,8 @@ void FindTrCalls::processComment(const SourceLocation &loc)
         ushort c;
         while ((c = chars[idx].unicode()) == ' ' || c == '\t' || c == '\r' || c == '\n')
             ++idx;
-        if (!memcmp(chars + idx, MagicComment.unicode(), MagicComment.size() * 2)) {
-            idx += MagicComment.size();
+        if (!memcmp(chars + idx, QmlMagicComment.unicode(), QmlMagicComment.size() * 2)) {
+            idx += QmlMagicComment.size();
             QString comment = QString(chars + idx, length - idx).simplified();
             int k = comment.indexOf(QLatin1Char(' '));
             if (k == -1) {
