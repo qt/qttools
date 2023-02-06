@@ -133,7 +133,7 @@ const QSet<QString> &QmlCodeParser::topicCommands()
   This function blanks out the section of the \a str beginning at \a idx
   and running for \a n characters.
 */
-static void replaceWithSpace(QString &str, int idx, int n)
+void replaceWithSpace(QString &str, int idx, int n) // Also used in qmlcodemarker.cpp.
 {
     QChar *data = str.data() + idx;
     const QChar space(QLatin1Char(' '));

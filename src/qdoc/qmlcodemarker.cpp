@@ -143,13 +143,7 @@ QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative *
   Copied and pasted from
   src/declarative/qml/qqmlscriptparser.cpp.
 */
-static void replaceWithSpace(QString &str, int idx, int n)
-{
-    QChar *data = str.data() + idx;
-    const QChar space(QLatin1Char(' '));
-    for (int ii = 0; ii < n; ++ii)
-        *data++ = space;
-}
+void replaceWithSpace(QString &str, int idx, int n); // qmlcodeparser.cpp
 
 /*
   Copied and pasted from
