@@ -16,7 +16,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const QString MagicComment = u"TRANSLATOR"_s;
+static const QString CppMagicComment = u"TRANSLATOR"_s;
 
 //#define DIAGNOSE_RETRANSLATABILITY // FIXME: should make a runtime option of this
 
@@ -2151,8 +2151,8 @@ void CppParser::processComment()
         ushort c;
         while ((c = uc[idx]) == ' ' || c == '\t' || c == '\n')
             ++idx;
-        if (!memcmp(uc + idx, MagicComment.unicode(), MagicComment.size() * 2)) {
-            idx += MagicComment.size();
+        if (!memcmp(uc + idx, CppMagicComment.unicode(), CppMagicComment.size() * 2)) {
+            idx += CppMagicComment.size();
             comment = QString::fromRawData(yyWord.unicode() + idx,
                                            yyWord.size() - idx).simplified();
             int k = comment.indexOf(QLatin1Char(' '));
