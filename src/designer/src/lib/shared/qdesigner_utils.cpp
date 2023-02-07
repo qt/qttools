@@ -23,6 +23,7 @@
 
 #include <QtWidgets/qapplication.h>
 #include <QtGui/qicon.h>
+#include <QtGui/qpalette.h>
 #include <QtGui/qpixmap.h>
 #include <QtWidgets/qlistwidget.h>
 #include <QtWidgets/qtreewidget.h>
@@ -776,6 +777,22 @@ namespace qdesigner_internal
         if (m_enabled)
             m_widget->setUpdatesEnabled(true);
     }
+
+// from qpalette.cpp
+quint64 paletteResolveMask(QPalette::ColorGroup colorGroup,
+                           QPalette::ColorRole colorRole)
+{
+    const auto offset = quint64(QPalette::NColorRoles) * quint64(colorGroup);
+    const auto bitPos = quint64(colorRole) + offset;
+    return 1ull << bitPos;
+}
+
+quint64 paletteResolveMask(QPalette::ColorRole colorRole)
+{
+    return paletteResolveMask(QPalette::Active, colorRole)
+        | paletteResolveMask(QPalette::Inactive, colorRole)
+        | paletteResolveMask(QPalette::Disabled, colorRole);
+}
 
 } // namespace qdesigner_internal
 
