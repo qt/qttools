@@ -3497,30 +3497,6 @@
 
     \note Support for this argument was introduced in QDoc 5.6.
 
-    \section2 \c {examplefiles [regular_expression]}
-
-    The \c examplefiles argument lists the files that are part of
-    an example project. The optional second argument is a regular
-    expression; if provided, only the files whose path matches with
-    the regular expression are listed.
-
-    The \c examplefiles argument can be only used within example
-    documentation (see \l {example-command}{\\example}), and is
-    typically used together with the \l {noautolist-command}{\\noautolist}
-    command.
-
-    \section2 \c {exampleimages [regular_expression]}
-
-    The \c exampleimages argument lists the images that are part of
-    an example project. The optional second argument is a regular
-    expression; if provided, only the image files whose path matches
-    with the regular expression are listed.
-
-    The \c exampleimages argument can be only used within example
-    documentation (see \l {example-command}{\\example}), and is
-    typically used together with the \l {noautolist-command}{\\noautolist}
-    command.
-
     \section2 \c functionindex
 
     The \c functionindex argument provides a complete alphabetical

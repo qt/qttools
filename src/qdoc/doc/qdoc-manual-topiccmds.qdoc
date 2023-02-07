@@ -457,8 +457,7 @@
         ...
     \endquotation
 
-    \b {See also:} \l {generatelist-command}{\\generatelist examplefiles},
-                   \l {noautolist-command}{\\noautolist},
+    \b {See also:} \l {noautolist-command}{\\noautolist},
                    \l {url.examples-variable}{url.examples},
                    \l {meta-command}{\\meta}
 

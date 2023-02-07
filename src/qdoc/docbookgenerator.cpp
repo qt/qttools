@@ -475,10 +475,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                     hasGeneratedSomething = !cn->members().isEmpty();
                 }
             }
-        } else if (atom->string().startsWith("examplefiles")
-                   || atom->string().startsWith("exampleimages")) {
-            if (relative->isExample())
-                qDebug() << "GENERATE FILE LIST CALLED" << relative->name() << atom->string();
         } else if (atom->string() == QLatin1String("classhierarchy")) {
             generateClassHierarchy(relative, m_qdb->getCppClasses());
             hasGeneratedSomething = !m_qdb->getCppClasses().isEmpty();
