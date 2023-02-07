@@ -1358,7 +1358,7 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
 
         data.superPalette = superPalette;
         // resolve here
-        const uint mask = data.val.resolveMask();
+        const auto mask = data.val.resolveMask();
         data.val = data.val.resolve(superPalette);
         data.val.setResolveMask(mask);
 
@@ -1531,7 +1531,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
     }
     if (m_paletteValues.contains(const_cast<QtProperty *>(property))) {
         const PaletteData data = m_paletteValues.value(const_cast<QtProperty *>(property));
-        const uint mask = data.val.resolveMask();
+        const auto mask = data.val.resolveMask();
         if (mask)
             return tr("Customized (%n roles)", nullptr, bitCount(mask));
         static const QString inherited = tr("Inherited");
@@ -1825,7 +1825,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
 
         PaletteData data = m_paletteValues.value(property);
 
-        const uint mask = p.resolveMask();
+        const auto mask = p.resolveMask();
         p = p.resolve(data.superPalette);
         p.setResolveMask(mask);
 

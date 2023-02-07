@@ -267,8 +267,8 @@ quint64 compareSubProperties(const QPalette & p1, const QPalette & p2)
     quint64 rc = 0;
     unsigned maskBit = 1u;
     // generate a mask for each role
-    const unsigned p1Changed = p1.resolveMask();
-    const unsigned p2Changed = p2.resolveMask();
+    const auto p1Changed = p1.resolveMask();
+    const auto p2Changed = p2.resolveMask();
     for (int role = QPalette::WindowText;  role < QPalette::NColorRoles; role++, maskBit <<= 1u) {
         const bool p1RoleChanged = p1Changed & maskBit;
         const bool p2RoleChanged = p2Changed & maskBit;
@@ -464,7 +464,7 @@ QPalette applyPaletteSubProperty(const QPalette &oldValue, const QPalette &newVa
 {
     QPalette rc = oldValue;
     // apply a mask for each role
-    unsigned maskBit = 1u;
+    quint64 maskBit = 1u;
     for (int role = QPalette::WindowText;  role < QPalette::NColorRoles; role++, maskBit <<= 1u) {
         if (mask & maskBit) {
             for (int group = QPalette::Active; group < QPalette::NColorGroups;  group++) {
@@ -473,7 +473,7 @@ QPalette applyPaletteSubProperty(const QPalette &oldValue, const QPalette &newVa
                 rc.setColor(pgroup, prole, newValue.color(pgroup, prole));
             }
             // Set the resolve bit from NewValue in return value
-            uint r = rc.resolveMask();
+            auto r = rc.resolveMask();
             const bool origFlag = newValue.resolveMask() & maskBit;
             if (origFlag)
                 r |= maskBit;
