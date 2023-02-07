@@ -464,11 +464,12 @@ bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int 
         return true;
     }
     if (index.column() == 0 && role == Qt::EditRole) {
-        uint mask = m_palette.resolveMask();
+        auto mask = m_palette.resolveMask();
         const bool isMask = qvariant_cast<bool>(value);
-        if (isMask)
-            mask |= (1 << int(colorRole));
-        else {
+        const auto bitMask = 1ull << quint64(colorRole);
+        if (isMask) {
+            mask |= bitMask;
+        } else {
             m_palette.setBrush(QPalette::Active, colorRole,
                                m_parentPalette.brush(QPalette::Active, colorRole));
             m_palette.setBrush(QPalette::Inactive, colorRole,
@@ -476,7 +477,7 @@ bool PaletteModel::setData(const QModelIndex &index, const QVariant &value, int 
             m_palette.setBrush(QPalette::Disabled, colorRole,
                                m_parentPalette.brush(QPalette::Disabled, colorRole));
 
-            mask &= ~(1 << int(colorRole));
+            mask &= ~bitMask;
         }
         m_palette.setResolveMask(mask);
         emit paletteChanged(m_palette);
