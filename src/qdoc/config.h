@@ -163,7 +163,7 @@ public:
                             const QString &targetDirPath);
     static int numParams(const QString &value);
     static void pushWorkingDir(const QString &dir);
-    static QString popWorkingDir();
+    static void popWorkingDir();
 
     static const QString dot;
 
