@@ -1083,9 +1083,7 @@ QStringList Config::loadMaster(const QString &fileName)
 void Config::load(Location location, const QString &fileName)
 {
     QFileInfo fileInfo(fileName);
-    QString path = fileInfo.canonicalPath();
-    pushWorkingDir(path);
-    QDir::setCurrent(path);
+    pushWorkingDir(fileInfo.canonicalPath());
     static const QRegularExpression keySyntax(QRegularExpression::anchoredPattern(QLatin1String("\\w+(?:\\.\\w+)*")));
 
 #define SKIP_CHAR()                                                                                \
@@ -1200,7 +1198,7 @@ void Config::load(Location location, const QString &fileName)
                 /*
                   Here is the recursive call.
                  */
-                load(location, QFileInfo(QDir(path), includeFile).filePath());
+                load(location, QFileInfo(QDir(m_workingDirs.top()), includeFile).filePath());
             } else {
                 /*
                   It wasn't an include statement, so it's something else.
@@ -1318,8 +1316,7 @@ void Config::load(Location location, const QString &fileName)
         }
     }
     popWorkingDir();
-    if (!m_workingDirs.isEmpty())
-        QDir::setCurrent(m_workingDirs.top());
+
 #undef SKIP_CHAR
 #undef SKIP_SPACES
 #undef PUT_CHAR
@@ -1376,23 +1373,26 @@ QStringList Config::getFilesHere(const QString &uncleanDir, const QString &nameF
 }
 
 /*!
-  Push \a dir onto the stack of working directories.
+  Set \a dir as the working directory and push it onto the
+  stack of working directories.
  */
 void Config::pushWorkingDir(const QString &dir)
 {
     m_workingDirs.push(dir);
+    QDir::setCurrent(dir);
 }
 
 /*!
-  If the stack of working directories is not empty, pop the
-  top entry and return it. Otherwise return an empty string.
+  Pop the top entry from the stack of working directories.
+  Set the working directory to the next one on the stack,
+  if one exists.
  */
-QString Config::popWorkingDir()
+void Config::popWorkingDir()
 {
+    Q_ASSERT(!m_workingDirs.isEmpty());
+    m_workingDirs.pop();
     if (!m_workingDirs.isEmpty())
-        return m_workingDirs.pop();
-
-    return QString();
+        QDir::setCurrent(m_workingDirs.top());
 }
 
 QT_END_NAMESPACE
