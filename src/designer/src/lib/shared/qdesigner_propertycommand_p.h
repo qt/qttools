@@ -62,7 +62,8 @@ public:
     SpecialProperty specialProperty() const { return m_specialProperty; }
     // set a new value. Can be overwritten to perform a transformation (see
     // handling of Arrow key move in FormWindow class).
-    virtual Value setValue(QDesignerFormWindowInterface *fw, const QVariant &value, bool changed, unsigned subPropertyMask);
+    virtual Value setValue(QDesignerFormWindowInterface *fw, const QVariant &value,
+                           bool changed, quint64 subPropertyMask);
 
     // restore old value
     Value restoreOldValue(QDesignerFormWindowInterface *fw);
@@ -133,7 +134,7 @@ protected:
     bool initList(const QObjectList &list, const QString &apropertyName, QObject *referenceObject = nullptr);
 
     // set a new value, return update mask
-    unsigned setValue(const QVariant &value, bool changed, unsigned subPropertyMask);
+    unsigned setValue(const QVariant &value, bool changed, quint64 subPropertyMask);
 
     // restore old value,  return update mask
     unsigned  restoreOldValue();
@@ -203,10 +204,10 @@ protected:
     virtual QVariant mergeValue(const QVariant &newValue);
 
 private:
-    unsigned subPropertyMask(const QVariant &newValue, QObject *referenceObject);
+    quint64 subPropertyMask(const QVariant &newValue, QObject *referenceObject);
     void setDescription();
     QVariant m_newValue;
-    unsigned m_subPropertyMask;
+    quint64 m_subPropertyMask;
 };
 
 class QDESIGNER_SHARED_EXPORT ResetPropertyCommand: public PropertyListCommand

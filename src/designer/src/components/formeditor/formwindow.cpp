@@ -1462,10 +1462,12 @@ public:
                        QDesignerPropertySheetExtension *s, int i) :
                        PropertyHelper(o, sp, s, i) {}
 
-    Value setValue(QDesignerFormWindowInterface *fw, const QVariant &value, bool changed, unsigned subPropertyMask) override;
+    Value setValue(QDesignerFormWindowInterface *fw, const QVariant &value, bool changed,
+                   quint64 subPropertyMask) override;
 };
 
-PropertyHelper::Value ArrowKeyPropertyHelper::setValue(QDesignerFormWindowInterface *fw, const QVariant &value, bool changed, unsigned subPropertyMask)
+PropertyHelper::Value ArrowKeyPropertyHelper::setValue(QDesignerFormWindowInterface *fw, const QVariant &value,
+                                                       bool changed, quint64 subPropertyMask)
 {
     // Apply operation to obtain the new geometry value.
     QWidget *w = qobject_cast<QWidget*>(object());
