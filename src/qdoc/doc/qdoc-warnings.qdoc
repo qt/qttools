@@ -524,11 +524,6 @@
       indexes += path/to/QtCreator/appmanplugin/manual.index
       \endcode
 
-    \section1 \\generatelist examplefiles can only be used with \\example topic command
-
-    The command "\\generatelist examplefiles" can only be used in example
-    documentation (i.e., when the topic command is \\example).
-
     \section1 \\generatelist <group> is empty
 
     Below a short overview of all possible arguments for \l {generatelist-command}{\\generatelist}:
@@ -538,8 +533,6 @@
     \li \\generatelist classes <prefix>
     \li \\generatelist classesbymodule <module name>
     \li \\generatelist qmltypesbymodule <module name>
-    \li \\generatelist examplesfiles <regular expression>
-    \li \\generatelist exampleimages <regular expression>
     \li \\generatelist functionindex
     \li \\generatelist legalese
     \li \\generatelist overviews

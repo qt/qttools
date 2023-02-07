@@ -462,14 +462,6 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                 } else
                     generateAnnotatedList(relative, marker, cn->members());
             }
-        } else if (atom->string().startsWith("examplefiles")
-                   || atom->string().startsWith("exampleimages")) {
-            if (relative->isExample()) {
-                qDebug() << "GENERATE FILE LIST CALLED" << relative->name() << atom->string();
-            } else
-                relative->location().warning(QString("'\\generatelist %1' can only be used with "
-                                                     "'\\example' topic command")
-                                                     .arg(atom->string()));
         } else if (atom->string() == QLatin1String("classhierarchy")) {
             generateClassHierarchy(relative, m_qdb->getCppClasses());
         } else if (atom->string() == QLatin1String("obsoleteclasses")) {
