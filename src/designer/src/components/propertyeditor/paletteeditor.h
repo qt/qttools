@@ -96,6 +96,9 @@ public:
 
     QPalette::ColorRole colorRole() const { return QPalette::NoRole; }
     void setCompute(bool on) { m_compute = on; }
+
+    quint64 rowMask(const QModelIndex &index) const;
+
 signals:
     void paletteChanged(const QPalette &palette);
 private:

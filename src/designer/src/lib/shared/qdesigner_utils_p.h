@@ -443,6 +443,12 @@ private:
     const bool m_enabled;
 };
 
+// QPalette helpers: Mask for a single color role/group
+QDESIGNER_SHARED_EXPORT quint64 paletteResolveMask(QPalette::ColorGroup colorGroup,
+                                                   QPalette::ColorRole colorRole);
+// Mask for the colors of a role in all groups (Active/Inactive/Disabled)
+QDESIGNER_SHARED_EXPORT quint64 paletteResolveMask(QPalette::ColorRole colorRole);
+
 namespace Utils {
 
 inline int valueOf(const QVariant &value, bool *ok = nullptr)

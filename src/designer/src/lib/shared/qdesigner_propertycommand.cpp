@@ -251,36 +251,30 @@ quint64 compareSubProperties(const QFont & f1, const QFont & f2)
     return rc;
 }
 
-// Compare colors of a role
-bool roleColorChanged(const QPalette & p1, const QPalette & p2, QPalette::ColorRole role)
-{
-    for (int group = QPalette::Active; group < QPalette::NColorGroups;  group++) {
-        const QPalette::ColorGroup pgroup = static_cast<QPalette::ColorGroup>(group);
-        if (p1.color(pgroup, role) != p2.color(pgroup, role))
-            return true;
-    }
-    return false;
-}
 // find changed subproperties of a QPalette taking the [undocumented] resolve flags into account
 quint64 compareSubProperties(const QPalette & p1, const QPalette & p2)
 {
     quint64 rc = 0;
-    unsigned maskBit = 1u;
     // generate a mask for each role
     const auto p1Changed = p1.resolveMask();
     const auto p2Changed = p2.resolveMask();
-    for (int role = QPalette::WindowText;  role < QPalette::NColorRoles; role++, maskBit <<= 1u) {
-        const bool p1RoleChanged = p1Changed & maskBit;
-        const bool p2RoleChanged = p2Changed & maskBit;
-        // Role has been set/reset in editor
-        if (p1RoleChanged != p2RoleChanged) {
-            rc |= maskBit;
-        } else {
-            // Was modified in both palettes: Compare values.
-            if (p1RoleChanged && p2RoleChanged && roleColorChanged(p1, p2, static_cast<QPalette::ColorRole>(role)))
+
+    for (int r = 0; r < static_cast<int>(QPalette::NColorRoles); ++r) {
+        for (int g = 0; g < static_cast<int>(QPalette::NColorGroups); ++g) {
+            const auto role = static_cast<QPalette::ColorRole>(r);
+            const auto group = static_cast<QPalette::ColorGroup>(g);
+            const auto maskBit = qdesigner_internal::paletteResolveMask(group, role);
+            const bool p1RoleChanged = p1Changed & maskBit;
+            const bool p2RoleChanged = p2Changed & maskBit;
+            if (p1RoleChanged != p2RoleChanged // Role has been set/reset in editor
+                // Was modified in both palettes: Compare values.
+                || (p1RoleChanged && p2RoleChanged
+                    && p1.brush(group, role).color() != p2.brush(group, role).color())) {
                 rc |= maskBit;
+            }
         }
     }
+
     return rc;
 }
 
@@ -463,23 +457,23 @@ QPalette applyPaletteSubProperty(const QPalette &oldValue, const QPalette &newVa
                                  quint64 mask)
 {
     QPalette rc = oldValue;
-    // apply a mask for each role
-    quint64 maskBit = 1u;
-    for (int role = QPalette::WindowText;  role < QPalette::NColorRoles; role++, maskBit <<= 1u) {
-        if (mask & maskBit) {
-            for (int group = QPalette::Active; group < QPalette::NColorGroups;  group++) {
-                const QPalette::ColorGroup pgroup = static_cast<QPalette::ColorGroup>(group);
-                const QPalette::ColorRole prole =  static_cast<QPalette::ColorRole>(role);
-                rc.setColor(pgroup, prole, newValue.color(pgroup, prole));
+    // apply a mask for each role/group
+    for (int r = 0; r < static_cast<int>(QPalette::NColorRoles); ++r) {
+        for (int g = 0; g < static_cast<int>(QPalette::NColorGroups); ++g) {
+            const auto role = static_cast<QPalette::ColorRole>(r);
+            const auto group = static_cast<QPalette::ColorGroup>(g);
+            const auto maskBit = qdesigner_internal::paletteResolveMask(group, role);
+            if (mask & maskBit) {
+                rc.setColor(group, role, newValue.color(group, role));
+                // Set the resolve bit from NewValue in return value
+                auto resolveMask = rc.resolveMask();
+                const bool origFlag = newValue.resolveMask() & maskBit;
+                if (origFlag)
+                    resolveMask |= maskBit;
+                else
+                    resolveMask &= ~maskBit;
+                rc.setResolveMask(resolveMask);
             }
-            // Set the resolve bit from NewValue in return value
-            auto r = rc.resolveMask();
-            const bool origFlag = newValue.resolveMask() & maskBit;
-            if (origFlag)
-                r |= maskBit;
-            else
-                r &= ~maskBit;
-            rc.setResolveMask(r);
         }
     }
     return rc;
