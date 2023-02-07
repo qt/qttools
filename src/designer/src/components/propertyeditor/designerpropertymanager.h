@@ -155,7 +155,6 @@ private:
     typedef QMap<QtProperty *, bool> PropertyBoolMap;
     PropertyBoolMap m_resetMap;
 
-    int bitCount(int mask) const;
     struct FlagData
     {
         uint val{0};
