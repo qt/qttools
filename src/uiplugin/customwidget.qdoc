@@ -205,12 +205,12 @@
     Using this macro ensures that the symbols are retained on those platforms,
     and has no side effects on other platforms.
 
-    For example, the \l{worldtimeclockplugin}{World Time Clock Plugin}
+    For example, the \l{customwidgetplugin}{Custom Widget Plugin Example}
     example exports a custom widget class with the following declaration:
 
-    \snippet worldtimeclockplugin/worldtimeclock.h 0
+    \snippet customwidgetplugin/analogclock.h 0
     \dots
-    \snippet worldtimeclockplugin/worldtimeclock.h 2
+    \snippet customwidgetplugin/analogclock.h 1
 
     \sa {Creating Custom Widgets for Qt Designer}
 */
