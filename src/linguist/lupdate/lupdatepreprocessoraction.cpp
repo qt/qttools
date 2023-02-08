@@ -157,7 +157,9 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
 void LupdatePPCallbacks::InclusionDirective(clang::SourceLocation /*hashLoc*/,
     const clang::Token & /*includeTok*/, clang::StringRef /*fileName*/, bool /*isAngled*/,
     clang::CharSourceRange /*filenameRange*/,
-#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(15,0,0))
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(16,0,0))
+    const clang::OptionalFileEntryRef file,
+#elif (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(15,0,0))
     const clang::Optional<clang::FileEntryRef> file,
 #else
     const clang::FileEntry *file,
