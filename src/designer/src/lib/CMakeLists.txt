@@ -1,7 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from lib.pro.
 
 #####################################################################
 ## Designer Module:
@@ -381,8 +380,6 @@ qt_internal_add_resource(Designer "shared"
         ${shared_resource_files}
 )
 
-
-#### Keys ignored in scope 1:.:.:lib.pro:<TRUE>:
 # MODULE = "designer"
 
 ## Scopes:

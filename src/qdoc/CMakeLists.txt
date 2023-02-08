@@ -1,9 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from qdoc.pro.
-
-# special case begin
 if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND CMAKE_GENERATOR STREQUAL "Ninja Multi-Config")
     message(WARNING "qdoc will not be built in this configuration.")
     return()
@@ -13,7 +10,6 @@ if (MINGW)
     set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY _qt_skip_separate_debug_info ON)
 endif()
 
-# special case end
 
 #####################################################################
 ## qdoc Tool:
@@ -22,7 +18,7 @@ endif()
 qt_get_tool_target_name(target_name qdoc)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Documentation Compiler"
-    TOOLS_TARGET Tools # special case
+    TOOLS_TARGET Tools
     USER_FACING
     SOURCES
         aggregate.cpp
@@ -88,28 +84,17 @@ qt_internal_add_tool(${target_name}
         xmlgenerator.cpp
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_LIST_DIR}
-    LIBRARIES # special case
-        WrapLibClang::WrapLibClang # special case
+    LIBRARIES
+        WrapLibClang::WrapLibClang
     DEFINES
         #(CLANG_RESOURCE_DIR=\"/clang//include\") # special case remove
-        CLANG_RESOURCE_DIR=${QT_LIBCLANG_RESOURCE_DIR} # special case
+        CLANG_RESOURCE_DIR=${QT_LIBCLANG_RESOURCE_DIR}
         # To provide the ability to workaround version-specific Clang issues.
         # A re-export of (LLVM|CLANG)_VERSION_MAJOR done in WrapLibClang.cmake
         LIBCLANG_VERSION_MAJOR=${QT_LIB_CLANG_VERSION_MAJOR}
         QDOC2_COMPAT
 )
 qt_internal_return_unless_building_tools()
-
-#### Keys ignored in scope 1:.:.:qdoc.pro:<TRUE>:
-# QMAKE_TARGET_DESCRIPTION = "Qt Documentation Compiler"
-# TR_EXCLUDE = "$$PWD/*"
-# _OPTION = "host_build"
-
-## Scopes:
-#####################################################################
-
-#### Keys ignored in scope 2:.:.:qdoc.pro:NOT force_bootstrap:
-# _REQUIREMENTS = "qtConfig(xmlstreamwriter)"
 
 qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlPrivate
     LIBRARIES
@@ -120,9 +105,6 @@ qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlPrivate
     DEFINES
         QT_NO_DECLARATIVE
 )
-
-#### Keys ignored in scope 6:.:.:qdoc.pro:NOT QMAKE_DEFAULT_LIBDIRS___contains____ss_CLANG_LIBDIR AND NOT disable_external_rpath:
-# QMAKE_RPATHDIR = "$$CLANG_LIBDIR"
 
 qt_internal_extend_target(${target_name} CONDITION (WIN32 AND ICC) OR MSVC
     LINK_OPTIONS

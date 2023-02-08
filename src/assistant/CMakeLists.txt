@@ -1,13 +1,9 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from assistant.pro.
-
-# special case begin
 if(NOT TARGET Qt::Sql OR NOT TARGET Qt::PrintSupport)
     return()
 endif()
-# special case end
 
 qt_exclude_tool_directories_from_default_target(
     assistant

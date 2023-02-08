@@ -1,9 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from linguist.pro.
-
-
 qt_exclude_tool_directories_from_default_target(
     linguist
 )
@@ -21,7 +18,5 @@ if(QT_FEATURE_process AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TA
     add_subdirectory(linguist)
 endif()
 
-# special case begin
 # Create a fake module that would emulate the Qt5::LinguistTools CMake Config package
 qt_internal_add_module(Linguist NO_MODULE_HEADERS HEADER_MODULE)
-# special case end

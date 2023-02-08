@@ -1,7 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from designer.pro.
 
 #####################################################################
 ## designer App:
@@ -136,7 +135,6 @@ if(APPLE)
     # special case end
 endif()
 
-#### Keys ignored in scope 6:.:.:designer.pro:APPLE:
 # FILETYPES.files = "uifile.icns"
 # FILETYPES.path = "Contents/Resources"
 # QMAKE_BUNDLE_DATA = "FILETYPES"

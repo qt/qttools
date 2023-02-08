@@ -1,8 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from distancefieldgenerator.pro.
-
 #####################################################################
 ## qdistancefieldgenerator App:
 #####################################################################
@@ -30,9 +28,6 @@ set_target_properties(qdistancefieldgenerator PROPERTIES
     QT_TARGET_DESCRIPTION "Qt Distance Field Generator"
 )
 
-#### Keys ignored in scope 1:.:.:distancefieldgenerator.pro:<TRUE>:
-# QT_FOR_CONFIG = "tools-private"
-# _REQUIREMENTS = "qtConfig(distancefieldgenerator)"
 qt_internal_add_docs(qdistancefieldgenerator
     doc/qtdistancefieldgenerator.qdocconf
 )
