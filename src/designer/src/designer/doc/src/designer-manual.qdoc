@@ -2393,8 +2393,6 @@ pixmap property in the property editor.
 
     \section2 User Defined Custom Widgets
 
-    \image worldtimeclockplugin-example.png
-
     Custom widgets can be adapted for use with \QD, giving designers the
     opportunity to configure the user interface using the actual widgets that
     will be used in an application rather than placeholder widgets. The process
@@ -2424,8 +2422,6 @@ pixmap property in the property editor.
     properties, signals, and slots. Since \QD uses real widgets during the form
     design process, custom widgets will appear the same as they do when
     previewed.
-
-    \image worldtimeclockplugin-example.png
 
     The \l QtDesigner module provides you with the ability to create custom
     widgets in \QD.
@@ -2782,7 +2778,7 @@ pixmap property in the property editor.
 
     For more information on using custom widgets in \QD, refer to the
     \l{customwidgetplugin}{Custom Widget Plugin} and
-    \l{worldtimeclockplugin}{World Time Clock Plugin} examples for more
+    \l{taskmenuextension}{Task Menu Extension Example} examples for more
     information about using custom widgets in \QD. Also, you can use the
     QDesignerCustomWidgetCollectionInterface class to combine several custom
     widgets into a single library.

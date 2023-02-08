@@ -5,9 +5,7 @@ SUBDIRS     = calculatorform
         SUBDIRS += calculatorbuilder \
                    containerextension \
                    customwidgetplugin \
-                   taskmenuextension \
-                   worldtimeclockbuilder \
-                   worldtimeclockplugin
+                   taskmenuextension
 }
 
 # the sun cc compiler has a problem with the include lines for the form.prf

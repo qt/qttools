@@ -23,8 +23,6 @@
     \li \l{customwidgetplugin}{Custom Widget Plugin}\raisedaster
     \li \l{taskmenuextension}{Task Menu Extension}\raisedaster
     \li \l{containerextension}{Container Extension}\raisedaster
-    \li \l{worldtimeclockbuilder}{World Time Clock Builder}\raisedaster
-    \li \l{worldtimeclockplugin}{World Time Clock Plugin}\raisedaster
     \endlist
 
     Examples marked with an asterisk (*) are fully documented.
