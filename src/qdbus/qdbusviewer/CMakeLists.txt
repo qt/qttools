@@ -1,8 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from qdbusviewer.pro.
-
 #####################################################################
 ## qdbusviewer App:
 #####################################################################
@@ -52,11 +50,9 @@ if(APPLE)
     target_sources(qdbusviewer PRIVATE
         images/qdbusviewer.icns
     )
-    # special case end
     # Set values to be replaced in the custom Info_mac.plist.
     set(ICON "qdbusviewer.icns")
     set(EXECUTABLE "qdbusviewer")
-    # special case end
 endif()
 
 if(WIN32)

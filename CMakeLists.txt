@@ -1,14 +1,13 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from qttools.pro.
 
 cmake_minimum_required(VERSION 3.16)
 
 include(.cmake.conf)
-project(QtTools # special case
+project(QtTools
     VERSION "${QT_REPO_MODULE_VERSION}"
-    DESCRIPTION "Qt Tools" # special case
+    DESCRIPTION "Qt Tools"
     HOMEPAGE_URL "https://qt.io/"
     LANGUAGES CXX C
 )
@@ -26,9 +25,5 @@ find_package(Qt6 ${PROJECT_VERSION} QUIET CONFIG OPTIONAL_COMPONENTS
 
 qt_build_repo()
 
-# special case begin
-
 # Add tool dependencies that were deferred by qt_internal_add_docs.
 qt_internal_add_deferred_dependencies()
-
-# special case end

@@ -1,8 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from linguist.pro.
-
 #####################################################################
 ## linguist App:
 #####################################################################
@@ -132,10 +130,8 @@ set_target_properties(linguist PROPERTIES
     QT_TARGET_DESCRIPTION "Qt Linguist"
 )
 
-# special case begin
 file(GLOB phrasebooks_files "${CMAKE_CURRENT_SOURCE_DIR}/../phrasebooks/*")
 qt_install(FILES ${phrasebooks_files} DESTINATION "${INSTALL_DATADIR}/phrasebooks")
-# special case end
 
 qt_internal_extend_target(linguist CONDITION QT_PRODUCT___contains___OpenSource._x_
     DEFINES

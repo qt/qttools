@@ -1,8 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from lconvert.pro.
-
 #####################################################################
 ## lconvert Tool:
 #####################################################################
@@ -10,7 +8,7 @@
 qt_get_tool_target_name(target_name lconvert)
 qt_internal_add_tool(${target_name}
     TARGET_DESCRIPTION "Qt Translation File Converter"
-    TOOLS_TARGET Linguist # special case
+    TOOLS_TARGET Linguist
     SOURCES
         ../shared/numerus.cpp
         ../shared/po.cpp
@@ -31,7 +29,3 @@ qt_internal_add_tool(${target_name}
         Qt::CorePrivate
 )
 qt_internal_return_unless_building_tools()
-
-#### Keys ignored in scope 1:.:.:lconvert.pro:<TRUE>:
-# QMAKE_TARGET_DESCRIPTION = "Qt Translation File Converter"
-# _OPTION = "host_build"

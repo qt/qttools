@@ -1,8 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from global.pro.
-
 #####################################################################
 ## Tools Module:
 #####################################################################
@@ -16,6 +14,3 @@ qt_internal_add_module(Tools
     MODULE_INTERFACE_NAME Tools # Specify the 'Tools' name explicitly to avoid warning
                                 # related to the expected name of internal module.
 )
-
-#### Keys ignored in scope 1:.:.:global.pro:<TRUE>:
-# MODULE = "tools"

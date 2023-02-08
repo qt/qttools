@@ -1,8 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from assistant.pro.
-
 #####################################################################
 ## assistant App:
 #####################################################################
@@ -51,7 +49,7 @@ qt_internal_add_app(assistant
         Qt::Network
         Qt::Sql
         Qt::Widgets
-        Qt::PrintSupport # special case
+        Qt::PrintSupport
         qlitehtml
     ENABLE_AUTOGEN_TOOLS
         uic
@@ -102,17 +100,8 @@ set_target_properties(assistant PROPERTIES
     QT_TARGET_DESCRIPTION "Qt Assistant"
 )
 
-#### Keys ignored in scope 1:.:.:assistant.pro:<TRUE>:
-# PROJECTNAME = "Assistant"
-
 ## Scopes:
 #####################################################################
-
-#### Keys ignored in scope 2:.:.:assistant.pro:TARGET Qt::WebKitWidgets AND NOT QT_CONFIG___contains___static:
-# BROWSER = "qtwebkit"
-
-#### Keys ignored in scope 3:.:.:assistant.pro:else:
-# BROWSER = "qtextbrowser"
 
 qt_internal_extend_target(assistant CONDITION TARGET Qt::PrintSupport
     PUBLIC_LIBRARIES
@@ -178,11 +167,9 @@ if(APPLE)
     target_sources(assistant PRIVATE
         assistant.icns
     )
-    # special case end
     # Set values to be replaced in the custom Info_mac.plist.
     set(ICON "assistant.icns")
     set(EXECUTABLE "Assistant")
-    # special case end
 endif()
 qt_internal_add_docs(assistant
     doc/qtassistant.qdocconf

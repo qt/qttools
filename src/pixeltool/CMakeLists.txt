@@ -1,8 +1,6 @@
 # Copyright (C) 2022 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
-# Generated from pixeltool.pro.
-
 #####################################################################
 ## pixeltool App:
 #####################################################################
@@ -17,10 +15,6 @@ qt_internal_add_app(pixeltool
         Qt::GuiPrivate
         Qt::Widgets
 )
-
-#### Keys ignored in scope 1:.:.:pixeltool.pro:<TRUE>:
-# QT_FOR_CONFIG = "tools-private"
-# _REQUIREMENTS = "qtConfig(pixeltool)"
 
 ## Scopes:
 #####################################################################
