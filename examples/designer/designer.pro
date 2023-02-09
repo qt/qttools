@@ -1,5 +1,6 @@
 TEMPLATE    = subdirs
-SUBDIRS     = calculatorform
+SUBDIRS     = calculatorform \
+              calculatorform_mi
 
 !contains(CONFIG, static) {
         SUBDIRS += calculatorbuilder \

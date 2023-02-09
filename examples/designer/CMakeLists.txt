@@ -7,6 +7,7 @@ qt_exclude_tool_directories_from_default_target(
 )
 
 qt_internal_add_example(calculatorform)
+qt_internal_add_example(calculatorform_mi)
 if(QT_BUILD_SHARED_LIBS AND NOT solaris-cc_x_)
     qt_internal_add_example(calculatorbuilder)
 endif()
