@@ -53,7 +53,7 @@ QT_BEGIN_NAMESPACE
     For a complete example using the QExtensionFactory class, see the
     \l {taskmenuextension}{Task Menu Extension example}. The
     example shows how to create a custom widget plugin for Qt
-    Designer, and how to to use the QDesignerTaskMenuExtension class
+    Designer, and how to use the QDesignerTaskMenuExtension class
     to add custom items to Qt Designer's task menu.
 
     \sa QExtensionManager, QAbstractExtensionFactory

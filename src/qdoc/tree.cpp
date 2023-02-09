@@ -1097,7 +1097,7 @@ void Tree::insertQmlType(const QString &key, QmlTypeNode *n)
 /*!
   Finds the function node with the specifried name \a path that
   also has the specified \a parameters and returns a pointer to
-  the the first matching function node if one is found.
+  the first matching function node if one is found.
 
   This function begins searching the tree at \a relative for
   the \l {FunctionNode} {function node} identified by \a path

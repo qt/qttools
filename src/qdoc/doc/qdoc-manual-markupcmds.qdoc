@@ -997,7 +997,7 @@
     \section2 Highlighting and autolinking
 
     The \\code commands attempts to parse its contents as code of a
-    specific language, as defined in the the \l {language-variable}{language}
+    specific language, as defined in the \l {language-variable}{language}
     configuration variable. This provides highlighting and automatic
     linking to types detected in the code.
 

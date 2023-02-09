@@ -105,7 +105,7 @@
 
     Or you can use an existing factory, expanding the
     QExtensionFactory::createExtension() function to make the factory
-    able to create a property sheet extension extension as well. For
+    able to create a property sheet extension as well. For
     example:
 
     \snippet plugins/doc_src_qtdesigner.cpp 18
@@ -113,7 +113,7 @@
     For a complete example using an extension class, see the \l
     {taskmenuextension}{Task Menu Extension example}. The
     example shows how to create a custom widget plugin for Qt
-    Designer, and how to to use the QDesignerTaskMenuExtension class
+    Designer, and how to use the QDesignerTaskMenuExtension class
     to add custom items to \QD's task menu.
 
     \sa QExtensionFactory, QExtensionManager, {Creating Custom Widget

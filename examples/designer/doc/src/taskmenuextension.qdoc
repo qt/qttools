@@ -10,7 +10,7 @@
     menu entries that are associated with the plugin.
 
     The Task Menu Extension example shows how to create a custom
-    widget plugin for \l {Qt Designer Manual}{\QD}, and how to to use
+    widget plugin for \l {Qt Designer Manual}{\QD}, and how to use
     the QDesignerTaskMenuExtension class to provide custom task menu
     entries associated with the plugin.
 

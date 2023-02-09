@@ -407,7 +407,7 @@ void Aggregate::addFunction(FunctionNode *fn)
   Aggregate's function map.
 
   The function is also removed from the overload list
-  that's relative to the the original parent \a firstParent.
+  that's relative to the original parent \a firstParent.
 
   \note This is a private function.
  */

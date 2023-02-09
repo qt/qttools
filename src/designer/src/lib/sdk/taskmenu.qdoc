@@ -81,7 +81,7 @@
     For a complete example using the QDesignerTaskMenuExtension class,
     see the \l {taskmenuextension}{Task Menu Extension
     example}. The example shows how to create a custom widget plugin
-    for \QD, and how to to use the QDesignerTaskMenuExtension
+    for \QD, and how to use the QDesignerTaskMenuExtension
     class to add custom items to \QD's task menu.
 
     \sa QExtensionFactory, QExtensionManager, {Creating Custom Widget

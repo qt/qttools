@@ -109,7 +109,7 @@ void Generator::appendFullName(Text &text, const Node *apparentNode, const QStri
 
 /*!
   Append the signature for the function named in \a node to
-  \a text, so that is is a link to the documentation for that
+  \a text, so that is a link to the documentation for that
   function.
  */
 void Generator::appendSignature(Text &text, const Node *node)
