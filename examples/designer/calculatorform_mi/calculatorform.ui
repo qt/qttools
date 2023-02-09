@@ -24,7 +24,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle" >
-   <string>Calculator Builder</string>
+   <string>Calculator Form</string>
   </property>
   <layout class="QGridLayout" >
    <property name="objectName" >

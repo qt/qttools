@@ -1,2 +1,1 @@
-qt_internal_add_example(multipleinheritance)
 qt_internal_add_example(textfinder)

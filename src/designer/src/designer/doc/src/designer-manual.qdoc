@@ -1931,14 +1931,14 @@ pixmap property in the property editor.
     We need to include the header file that \c uic generates from the
     \c calculatorform.ui file, as follows:
 
-    \snippet ../uitools/multipleinheritance/calculatorform.h 0
+    \snippet ../designer/calculatorform_mi/calculatorform.h 0
 
     The class is defined in a similar way to the one used in the
     \l{The Single Inheritance Approach}{single inheritance approach}, except that
     this time we inherit from \e{both} QWidget and \c{Ui::CalculatorForm},
     as follows:
 
-    \snippet ../uitools/multipleinheritance/calculatorform.h 1
+    \snippet ../designer/calculatorform_mi/calculatorform.h 1
 
     We inherit \c{Ui::CalculatorForm} privately to ensure that the user
     interface objects are private in our subclass. We can also inherit it with
@@ -1949,7 +1949,7 @@ pixmap property in the property editor.
     constructor used in the \l{The Single Inheritance Approach}
     {single inheritance} example:
 
-    \snippet ../uitools/multipleinheritance/calculatorform.cpp 0
+    \snippet ../designer/calculatorform_mi/calculatorform.cpp 0
 
     In this case, the widgets used in the user interface can be accessed in the
     same say as a widget created in code by hand. We no longer require the
