@@ -34,14 +34,6 @@
 <db:title>Property Documentation</db:title>
 <db:section xml:id="active-prop">
 <db:title>[default: true] active : bool</db:title>
-<db:fieldsynopsis>
-<db:type>bool</db:type>
-<db:varname>active</db:varname>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>Whether the test is active.</db:para>
 <db:section>
 <db:title>See Also</db:title>
@@ -54,15 +46,6 @@
 </db:section>
 <db:section xml:id="name-prop">
 <db:title>[required] name : string</db:title>
-<db:fieldsynopsis>
-<db:type>string</db:type>
-<db:varname>name</db:varname>
-<db:modifier>writable</db:modifier>
-<db:modifier>required</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>Name of the test.</db:para>
 <db:programlisting language="qml">DocTest {
     name: &amp;quot;test&amp;quot;

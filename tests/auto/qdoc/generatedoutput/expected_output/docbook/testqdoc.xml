@@ -58,15 +58,6 @@
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO">
 <db:title>QDOCTEST_MACRO</db:title>
-<db:methodsynopsis>
-<db:methodname>QDOCTEST_MACRO</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">macrowithoutparams</db:synopsisinfo>
-<db:synopsisinfo role="signature">QDOCTEST_MACRO</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 </db:section>
 </db:section>
 </db:article>

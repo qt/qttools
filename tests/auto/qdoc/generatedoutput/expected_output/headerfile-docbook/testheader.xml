@@ -30,20 +30,6 @@
 <db:title>Type Documentation</db:title>
 <db:section xml:id="Globals-enum">
 <db:title>enum Globals</db:title>
-<db:enumsynopsis>
-<db:enumname>Globals</db:enumname>
-<db:enumitem>
-<db:enumidentifier>Glo</db:enumidentifier>
-<db:enumvalue>0</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>Bal</db:enumidentifier>
-<db:enumvalue>1</db:enumvalue>
-</db:enumitem>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:enumsynopsis>
 <db:informaltable>
 <db:thead>
 <db:tr>
@@ -69,13 +55,6 @@
 <db:title>Variable Documentation</db:title>
 <db:section xml:id="globalVar-var">
 <db:title>const int globalVar</db:title>
-<db:fieldsynopsis>
-<db:type>const int</db:type>
-<db:varname>globalVar</db:varname>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>Global variable.</db:para>
 </db:section>
 </db:section>
@@ -83,16 +62,6 @@
 <db:title>Function Documentation</db:title>
 <db:section xml:id="globalFunc">
 <db:title>void globalFunc()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>globalFunc</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void globalFunc()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Global function.</db:para>
 </db:section>
 </db:section>

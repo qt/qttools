@@ -136,8 +136,9 @@ private:
     void generateSynopsisInfo(const QString &key, const QString &value);
     void generateModifier(const QString &value);
 
-    bool m_inListItemLineOpen {};
-    int currentSectionLevel {};
+    // Generator state when outputting the documentation.
+    bool m_inListItemLineOpen { false };
+    int currentSectionLevel { 0 };
     QStack<int> sectionLevels {};
     QString m_qflagsHref {};
     bool m_inTeletype { false };
@@ -154,11 +155,13 @@ private:
     unsigned m_inList { 0 }; // Depth in number of nested lists.
     bool m_rewritingCustomQmlModuleSummary { false };
 
+    // Generator configuration, set before starting the generation.
     QString m_project {};
     QString m_projectDescription {};
     QString m_naturalLanguage {};
     QString m_buildVersion {};
     QXmlStreamWriter *m_writer { nullptr };
+    bool m_useDocBook52 { false }; // Enable tags from DocBook 5.2. Also called "extensions".
 
     Config *m_config { nullptr };
 };

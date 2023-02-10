@@ -46,27 +46,10 @@
 <db:title>Property Documentation</db:title>
 <db:section xml:id="current-prop">
 <db:title>current : int</db:title>
-<db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>current</db:varname>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>The currently active tab in the <db:link xlink:href="qml-uicomponents-tabwidget.xml">TabWidget</db:link>.</db:para>
 </db:section>
 <db:section xml:id="sampleReadOnlyProperty-prop">
 <db:title>[read-only] sampleReadOnlyProperty : int</db:title>
-<db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>sampleReadOnlyProperty</db:varname>
-<db:modifier>[read-only]</db:modifier>
-
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>A sample <db:code>read-only</db:code> property. A contrived property to demonstrate QDoc's ability to detect read-only properties.</db:para>
 <db:para>The signature is:</db:para>
 <db:programlisting language="cpp">readonly property int sampleReadOnlyProperty: 0

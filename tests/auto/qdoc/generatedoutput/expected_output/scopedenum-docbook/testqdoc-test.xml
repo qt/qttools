@@ -57,28 +57,6 @@
 <db:title>Member Type Documentation</db:title>
 <db:section xml:id="ClassicEnum-enum">
 <db:title>enum Test::ClassicEnum</db:title>
-<db:enumsynopsis>
-<db:enumname>ClassicEnum</db:enumname>
-<db:enumitem>
-<db:enumidentifier>Yee</db:enumidentifier>
-<db:enumvalue>0</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>Haw</db:enumidentifier>
-<db:enumvalue>1</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>Howdy</db:enumidentifier>
-<db:enumvalue>2</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>Partner</db:enumidentifier>
-<db:enumvalue>3</db:enumvalue>
-</db:enumitem>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:enumsynopsis>
 <db:informaltable>
 <db:thead>
 <db:tr>
@@ -113,36 +91,6 @@
 </db:section>
 <db:section xml:id="ScopedEnum-enum">
 <db:title>enum Test::ScopedEnum</db:title>
-<db:enumsynopsis>
-<db:enumname>ScopedEnum</db:enumname>
-<db:enumitem>
-<db:enumidentifier>This</db:enumidentifier>
-<db:enumvalue>0x01</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>That</db:enumidentifier>
-<db:enumvalue>0x02</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>All</db:enumidentifier>
-<db:enumvalue>This | That</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>OmittedValue</db:enumidentifier>
-<db:enumvalue>99</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>UselessValue</db:enumidentifier>
-<db:enumvalue>100</db:enumvalue>
-</db:enumitem>
-<db:enumitem>
-<db:enumidentifier>VeryLastValue</db:enumidentifier>
-<db:enumvalue>101</db:enumvalue>
-</db:enumitem>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:enumsynopsis>
 <db:informaltable>
 <db:thead>
 <db:tr>
@@ -183,12 +131,6 @@
 </db:section>
 <db:section xml:id="SomeType-typedef">
 <db:title>Test::SomeType</db:title>
-<db:typedefsynopsis>
-<db:typedefname>SomeType</db:typedefname>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:typedefsynopsis>
 <db:para>A typedef.</db:para>
 </db:section>
 </db:section>
@@ -201,65 +143,18 @@
 </db:section>
 <db:section xml:id="Test">
 <db:title>[noexcept default] Test::Test()</db:title>
-<db:constructorsynopsis>
-<db:methodname>Test</db:methodname>
-<db:void/>
-<db:modifier>default</db:modifier>
-<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
-<db:synopsisinfo role="signature">Test() = default</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:constructorsynopsis>
 <db:para>Default constructor.</db:para>
 </db:section>
 <db:section xml:id="funcPtr">
 <db:title>void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
-<db:methodsynopsis>
-<db:type>void (*)(bool)</db:type>
-<db:methodname>funcPtr</db:methodname>
-<db:methodparam>
-<db:type>bool</db:type>
-<db:parameter>b</db:parameter>
-</db:methodparam>
-<db:methodparam>
-<db:type>const char *</db:type>
-<db:parameter>s</db:parameter>
-</db:methodparam>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void (*)(bool) funcPtr(bool b, const char *s)</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
 </db:section>
 <db:section xml:id="inlineFunction">
 <db:title>void Test::inlineFunction()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>inlineFunction</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void inlineFunction()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>An inline function, documented using the \fn QDoc command.</db:para>
 </db:section>
 <db:section xml:id="methodWithEmDashInItsDocs">
 <db:title>void Test::methodWithEmDashInItsDocs()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>methodWithEmDashInItsDocs</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void methodWithEmDashInItsDocs()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>This method has em dashes in its documentation—as you'll find represented by <db:code>---</db:code> in the sources—here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</db:para>
 <db:para>-----------------------------------------------------------------------</db:para>
 <db:para>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</db:para>
@@ -275,16 +170,6 @@
 </db:section>
 <db:section xml:id="methodWithEnDashInItsDocs">
 <db:title>void Test::methodWithEnDashInItsDocs()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>methodWithEnDashInItsDocs</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void methodWithEnDashInItsDocs()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>This method has en dashes in its documentation – as you'll find represented by <db:code>--</db:code> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</db:para>
 <db:programlisting language="cpp">for (int i = 42; i &amp;gt; 0; --i)
     // Do something cool during countdown.
@@ -304,79 +189,18 @@
 </db:section>
 <db:section xml:id="someFunction">
 <db:title>int Test::someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
-<db:methodsynopsis>
-<db:type>int</db:type>
-<db:methodname>someFunction</db:methodname>
-<db:methodparam>
-<db:type>int</db:type>
-<db:parameter></db:parameter>
-</db:methodparam>
-<db:methodparam>
-<db:type>int</db:type>
-<db:parameter>v</db:parameter>
-<db:initializer>0</db:initializer>
-</db:methodparam>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">int someFunction(int, int v)</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
 </db:section>
 <db:section xml:id="someFunctionDefaultArg">
 <db:title>void Test::someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>someFunctionDefaultArg</db:methodname>
-<db:methodparam>
-<db:type>int</db:type>
-<db:parameter>i</db:parameter>
-</db:methodparam>
-<db:methodparam>
-<db:type>bool</db:type>
-<db:parameter>b</db:parameter>
-<db:initializer>false</db:initializer>
-</db:methodparam>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void someFunctionDefaultArg(int i, bool b)</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="virtualFun">
 <db:title>[virtual] void Test::virtualFun()</db:title>
-<db:methodsynopsis>
-<db:modifier>virtual</db:modifier>
-<db:void/>
-<db:methodname>virtualFun</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void virtualFun()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
 <db:title>[noexcept default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
-<db:methodsynopsis>
-<db:type>TestQDoc::Test &amp;</db:type>
-<db:methodname>operator=</db:methodname>
-<db:methodparam>
-<db:type>TestQDoc::Test &amp;&amp;</db:type>
-<db:parameter>other</db:parameter>
-</db:methodparam>
-<db:modifier>default</db:modifier>
-<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
-<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
 </db:section>
 </db:section>
@@ -384,23 +208,6 @@
 <db:title>Related Non-Members</db:title>
 <db:section xml:id="operator-eq-eq">
 <db:title>bool operator==(const TestQDoc::Test &amp;<db:emphasis>lhs</db:emphasis>, const TestQDoc::Test &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
-<db:methodsynopsis>
-<db:type>bool</db:type>
-<db:methodname>operator==</db:methodname>
-<db:methodparam>
-<db:type>const TestQDoc::Test &amp;</db:type>
-<db:parameter>lhs</db:parameter>
-</db:methodparam>
-<db:methodparam>
-<db:type>const TestQDoc::Test &amp;</db:type>
-<db:parameter>rhs</db:parameter>
-</db:methodparam>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Returns true if <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code> are equal.</db:para>
 </db:section>
 </db:section>
@@ -408,18 +215,6 @@
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO2">
 <db:title>[since Test 1.1] QDOCTEST_MACRO2(int &amp;<db:emphasis>x</db:emphasis>)</db:title>
-<db:methodsynopsis>
-<db:methodname>QDOCTEST_MACRO2</db:methodname>
-<db:methodparam>
-<db:type>int &amp;</db:type>
-<db:parameter>x</db:parameter>
-</db:methodparam>
-<db:synopsisinfo role="meta">macrowithparams</db:synopsisinfo>
-<db:synopsisinfo role="signature">QDOCTEST_MACRO2(int &amp;x)</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>A macro with argument <db:code role="parameter">x</db:code>.</db:para>
 <db:para>This macro was introduced in Test 1.1.</db:para>
 </db:section>
@@ -436,46 +231,16 @@
 </db:section>
 <db:section xml:id="anotherObsoleteMember">
 <db:title>void Test::anotherObsoleteMember()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>anotherObsoleteMember</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void anotherObsoleteMember()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="deprecatedMember">
 <db:title>void Test::deprecatedMember()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>deprecatedMember</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void deprecatedMember()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>This function is deprecated since 6.0. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="obsoleteMember">
 <db:title>void Test::obsoleteMember()</db:title>
-<db:methodsynopsis>
-<db:void/>
-<db:methodname>obsoleteMember</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void obsoleteMember()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>

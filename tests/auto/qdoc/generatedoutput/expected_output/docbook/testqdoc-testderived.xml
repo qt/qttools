@@ -50,22 +50,10 @@
 <db:title>Member Type Documentation</db:title>
 <db:section xml:id="DerivedType-typedef">
 <db:title>[alias] TestDerived::DerivedType</db:title>
-<db:typedefsynopsis>
-<db:typedefname>DerivedType</db:typedefname>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:typedefsynopsis>
 <db:para>An aliased typedef.</db:para>
 </db:section>
 <db:section xml:id="NotTypedef-typedef">
 <db:title>[alias] TestDerived::NotTypedef</db:title>
-<db:typedefsynopsis>
-<db:typedefname>NotTypedef</db:typedefname>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:typedefsynopsis>
 <db:para>I'm an alias, not a typedef.</db:para>
 </db:section>
 </db:section>
@@ -73,18 +61,6 @@
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="virtualFun">
 <db:title>[override virtual] void TestDerived::virtualFun()</db:title>
-<db:methodsynopsis>
-<db:modifier>virtual</db:modifier>
-<db:void/>
-<db:methodname>virtualFun</db:methodname>
-<db:void/>
-<db:modifier>override</db:modifier>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void virtualFun() override</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" role="function">Test::virtualFun()</db:link>.</db:para>
 </db:section>
 </db:section>
@@ -95,17 +71,6 @@
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="staticObsoleteMember">
 <db:title>[static] void TestDerived::staticObsoleteMember()</db:title>
-<db:methodsynopsis>
-<db:modifier>static</db:modifier>
-<db:void/>
-<db:methodname>staticObsoleteMember</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">plain</db:synopsisinfo>
-<db:synopsisinfo role="signature">void staticObsoleteMember()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Static obsolete method.</db:para>
 </db:section>

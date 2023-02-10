@@ -42,79 +42,21 @@
 <db:title>Property Documentation</db:title>
 <db:section xml:id="fifth-prop">
 <db:title>fifth : int</db:title>
-<db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>fifth</db:varname>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
-<db:bridgehead renderas="sect2">fourth : int</db:bridgehead><db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>fourth</db:varname>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
-<db:para>A group of properties sharing a documentation comment.</db:para>
+<db:bridgehead renderas="sect2">fourth : int</db:bridgehead><db:para>A group of properties sharing a documentation comment.</db:para>
 </db:section>
 <db:section xml:id="group-prop">
 <db:title>group group</db:title>
 <db:bridgehead renderas="sect2" xml:id="group.first-prop">group.first : int</db:bridgehead>
-<db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>group.first</db:varname>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:bridgehead renderas="sect2" xml:id="group.second-prop">group.second : int</db:bridgehead>
-<db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>group.second</db:varname>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:bridgehead renderas="sect2" xml:id="group.third-prop">group.third : int</db:bridgehead>
-<db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>group.third</db:varname>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>A property group.</db:para>
 </db:section>
 <db:section xml:id="id-prop">
 <db:title>[read-only] id : int</db:title>
-<db:fieldsynopsis>
-<db:type>int</db:type>
-<db:varname>id</db:varname>
-<db:modifier>[read-only]</db:modifier>
-
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>A read-only property.</db:para>
 </db:section>
 <db:section xml:id="name-prop">
 <db:title>[required] name : string</db:title>
-<db:fieldsynopsis>
-<db:type>string</db:type>
-<db:varname>name</db:varname>
-<db:modifier>writable</db:modifier>
-<db:modifier>required</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:para>Name of the Test.</db:para>
 </db:section>
 </db:section>
@@ -122,15 +64,6 @@
 <db:title>Attached Property Documentation</db:title>
 <db:section xml:id="type-attached-prop">
 <db:title>[default: Type.NoType] Type.type : enumeration</db:title>
-<db:fieldsynopsis>
-<db:type>enumeration</db:type>
-<db:varname>Type.type</db:varname>
-<db:modifier>attached</db:modifier>
-<db:modifier>writable</db:modifier>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:fieldsynopsis>
 <db:informaltable>
 <db:thead>
 <db:tr>
@@ -188,27 +121,7 @@
 <db:title>Method Documentation</db:title>
 <db:section xml:id="disable-method">
 <db:title>disable()</db:title>
-<db:methodsynopsis>
-<db:type></db:type>
-<db:methodname>disable</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">qmlmethod</db:synopsisinfo>
-<db:synopsisinfo role="signature">disable()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
-<db:bridgehead renderas="sect2">enable()</db:bridgehead><db:methodsynopsis>
-<db:type></db:type>
-<db:methodname>enable</db:methodname>
-<db:void/>
-<db:synopsisinfo role="meta">qmlmethod</db:synopsisinfo>
-<db:synopsisinfo role="signature">enable()</db:synopsisinfo>
-<db:synopsisinfo role="access">public</db:synopsisinfo>
-<db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
-</db:methodsynopsis>
-<db:para>Enables or disables this type.</db:para>
+<db:bridgehead renderas="sect2">enable()</db:bridgehead><db:para>Enables or disables this type.</db:para>
 </db:section>
 <db:section xml:id="copy-method">
 <db:title>Type copy(<db:emphasis>a</db:emphasis>)</db:title>

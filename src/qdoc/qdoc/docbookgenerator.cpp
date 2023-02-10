@@ -156,6 +156,7 @@ void DocBookGenerator::initializeGenerator()
         m_naturalLanguage = QLatin1String("en");
 
     m_buildVersion = m_config->get(CONFIG_BUILDVERSION).asString();
+    m_useDocBook52 = m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool();
 }
 
 QString DocBookGenerator::format()
@@ -1227,7 +1228,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeEndElement(); // bridgehead
             newLine();
 
-            if (m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool()) {
+            if (m_useDocBook52) {
                 if (isStyleProperty) {
                     m_writer->writeStartElement(dbNamespace, "fieldsynopsis");
 
@@ -3665,7 +3666,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     // Generator::generateThreadSafeness, QDocIndexFiles::generateIndexSection.
 
     // This function is the only place where DocBook extensions are used.
-    if (m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool())
+    if (!m_useDocBook52)
         return;
 
     // Nothing to export in some cases. Note that isSharedCommentNode() returns
