@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
-<db:title>Child QML Type</db:title>
+<db:title its:translate="no">Child QML Type</db:title>
 <db:productname>Test</db:productname>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
@@ -9,7 +9,7 @@
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
-<db:variablelist>
+<db:variablelist its:translate="no">
 <db:varlistentry>
 <db:term>Import Statement</db:term>
 <db:listitem>
@@ -47,7 +47,7 @@
 <db:title>Method Documentation</db:title>
 <db:section xml:id="name-method">
 <db:title>void name(Child <db:emphasis>child</db:emphasis>, <db:emphasis>name</db:emphasis>)</db:title>
-<db:para>Name a <db:code role="parameter">child</db:code> of this child using <db:code role="parameter">name</db:code>.</db:para>
+<db:para>Name a <db:code its:translate="no" role="parameter">child</db:code> of this child using <db:code its:translate="no" role="parameter">name</db:code>.</db:para>
 </db:section>
 <db:section xml:id="name-method-1">
 <db:title>void name()</db:title>
@@ -55,7 +55,7 @@
 </db:section>
 <db:section xml:id="rear-method">
 <db:title>void rear(Child <db:emphasis>child</db:emphasis>, var <db:emphasis>method</db:emphasis> = Strict)</db:title>
-<db:para>Do some abstract parenting on <db:code role="parameter">child</db:code> using a specific <db:code role="parameter">method</db:code>.</db:para>
+<db:para>Do some abstract parenting on <db:code its:translate="no" role="parameter">child</db:code> using a specific <db:code its:translate="no" role="parameter">method</db:code>.</db:para>
 </db:section>
 </db:section>
 </db:article>

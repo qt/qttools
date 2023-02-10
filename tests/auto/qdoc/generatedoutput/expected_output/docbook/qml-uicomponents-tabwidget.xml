@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
-<db:title>TabWidget QML Type</db:title>
+<db:title its:translate="no">TabWidget QML Type</db:title>
 <db:productname>Test</db:productname>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>A widget that places its children as tabs.</db:para>
 </db:abstract>
 </db:info>
-<db:variablelist>
+<db:variablelist its:translate="no">
 <db:varlistentry>
 <db:term>Import Statement</db:term>
 <db:listitem>
@@ -24,7 +24,7 @@
 <db:section xml:id="adding-tabs">
 <db:title>Adding Tabs</db:title>
 <db:para>To add a tab, declare the tab as a child of the <db:link xlink:href="qml-uicomponents-tabwidget.xml">TabWidget</db:link>.</db:para>
-<db:programlisting language="cpp">TabWidget {
+<db:programlisting language="cpp" its:translate="no">TabWidget {
     id: tabwidget
 
     Rectangle {
@@ -52,7 +52,7 @@
 <db:title>[read-only] sampleReadOnlyProperty : int</db:title>
 <db:para>A sample <db:code>read-only</db:code> property. A contrived property to demonstrate QDoc's ability to detect read-only properties.</db:para>
 <db:para>The signature is:</db:para>
-<db:programlisting language="cpp">readonly property int sampleReadOnlyProperty: 0
+<db:programlisting language="cpp" its:translate="no">readonly property int sampleReadOnlyProperty: 0
 </db:programlisting>
 <db:para>Note that the property must be initialized to a value.</db:para>
 </db:section>

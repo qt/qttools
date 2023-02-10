@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
 <db:title>Document Navigation</db:title>
 <db:productname>OutputFromQDocFiles</db:productname>
@@ -39,7 +39,7 @@
         </table>
     ]]></db:programlisting>
 </db:blockquote>
-<db:programlisting language="cpp">&amp;lt;head&amp;gt;
+<db:programlisting language="cpp" its:translate="no">&amp;lt;head&amp;gt;
     ...
     &amp;lt;link rel=&amp;quot;start&amp;quot; href=&amp;quot;basicqt.html&amp;quot; /&amp;gt;
     ...

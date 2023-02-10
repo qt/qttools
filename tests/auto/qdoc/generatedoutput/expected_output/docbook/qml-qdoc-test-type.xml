@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
-<db:title>Type QML Type</db:title>
+<db:title its:translate="no">Type QML Type</db:title>
 <db:productname>Test</db:productname>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
@@ -9,7 +9,7 @@
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
-<db:variablelist>
+<db:variablelist its:translate="no">
 <db:varlistentry>
 <db:term>Import Statement</db:term>
 <db:listitem>
@@ -73,7 +73,7 @@
 </db:thead>
 <db:tr>
 <db:td>
-<db:para>Type.NoType</db:para>
+<db:para its:translate="no">Type.NoType</db:para>
 </db:td>
 <db:td>
 <db:para>Nothing</db:para>
@@ -81,7 +81,7 @@
 </db:tr>
 <db:tr>
 <db:td>
-<db:para>Type.SomeType</db:para>
+<db:para its:translate="no">Type.SomeType</db:para>
 </db:td>
 <db:td>
 <db:para>Something</db:para>
@@ -94,7 +94,7 @@
 <db:title>Signal Documentation</db:title>
 <db:section xml:id="completed-signal">
 <db:title>completed(int <db:emphasis>status</db:emphasis>)</db:title>
-<db:para>This signal is emitted when the operation completed with <db:code role="parameter">status</db:code>.</db:para>
+<db:para>This signal is emitted when the operation completed with <db:code its:translate="no" role="parameter">status</db:code>.</db:para>
 <db:note>
 <db:para>The corresponding handler is <db:code>onCompleted</db:code>.</db:para>
 </db:note>
@@ -125,7 +125,7 @@
 </db:section>
 <db:section xml:id="copy-method">
 <db:title>Type copy(<db:emphasis>a</db:emphasis>)</db:title>
-<db:para>Returns another Type based on <db:code role="parameter">a</db:code>.</db:para>
+<db:para>Returns another Type based on <db:code its:translate="no" role="parameter">a</db:code>.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="obsolete">

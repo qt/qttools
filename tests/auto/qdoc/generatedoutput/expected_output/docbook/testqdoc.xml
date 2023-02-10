@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
-<db:title>TestQDoc Namespace</db:title>
+<db:title its:translate="no">TestQDoc Namespace</db:title>
 <db:productname>TestCPP</db:productname>
 <db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
 <db:abstract>
@@ -9,7 +9,7 @@
 <db:para>This namespace was introduced in Qt 2.0.</db:para>
 </db:abstract>
 </db:info>
-<db:variablelist>
+<db:variablelist its:translate="no">
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
@@ -57,7 +57,7 @@
 <db:section xml:id="macro-documentation">
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO">
-<db:title>QDOCTEST_MACRO</db:title>
+<db:title its:translate="no">QDOCTEST_MACRO</db:title>
 </db:section>
 </db:section>
 </db:article>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
-<db:title>Test Class</db:title>
-<db:subtitle>TestQDoc::Test</db:subtitle>
+<db:title its:translate="no">Test Class</db:title>
+<db:subtitle its:translate="no">TestQDoc::Test</db:subtitle>
 <db:productname>TestCPP</db:productname>
 <db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
 <db:abstract>
@@ -10,7 +10,7 @@
 <db:para>This class was introduced in Qt 2.0.</db:para>
 </db:abstract>
 </db:info>
-<db:variablelist>
+<db:variablelist its:translate="no">
 <db:varlistentry>
 <db:term>Header</db:term>
 <db:listitem>
@@ -56,31 +56,31 @@
 <db:section xml:id="member-type-documentation">
 <db:title>Member Type Documentation</db:title>
 <db:section xml:id="SomeType-typedef">
-<db:title>Test::SomeType</db:title>
+<db:title its:translate="no">Test::SomeType</db:title>
 <db:para>A typedef.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
 <db:section xml:id="overload">
-<db:title>[protected] void Test::overload()</db:title>
-<db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] void Test::overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
-<db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
+<db:title its:translate="no">[protected] void Test::overload()</db:title>
+<db:bridgehead renderas="sect2" xml:id="overload-1" its:translate="no">[protected, since Test 1.2] void Test::overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
+<db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code its:translate="no" role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="Test">
-<db:title>[noexcept default] Test::Test()</db:title>
+<db:title its:translate="no">[noexcept default] Test::Test()</db:title>
 <db:para>Default constructor.</db:para>
 </db:section>
 <db:section xml:id="funcPtr">
-<db:title>void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
-<db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
+<db:title its:translate="no">void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
+<db:para>Returns a pointer to a function that takes a boolean. Uses <db:code its:translate="no" role="parameter">b</db:code> and <db:code its:translate="no" role="parameter">s</db:code>.</db:para>
 </db:section>
 <db:section xml:id="inlineFunction">
-<db:title>void Test::inlineFunction()</db:title>
+<db:title its:translate="no">void Test::inlineFunction()</db:title>
 <db:para>An inline function, documented using the \fn QDoc command.</db:para>
 </db:section>
 <db:section xml:id="methodWithEmDashInItsDocs">
-<db:title>void Test::methodWithEmDashInItsDocs()</db:title>
+<db:title its:translate="no">void Test::methodWithEmDashInItsDocs()</db:title>
 <db:para>This method has em dashes in its documentation—as you'll find represented by <db:code>---</db:code> in the sources—here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</db:para>
 <db:para>-----------------------------------------------------------------------</db:para>
 <db:para>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</db:para>
@@ -95,9 +95,9 @@
 </db:section>
 </db:section>
 <db:section xml:id="methodWithEnDashInItsDocs">
-<db:title>void Test::methodWithEnDashInItsDocs()</db:title>
+<db:title its:translate="no">void Test::methodWithEnDashInItsDocs()</db:title>
 <db:para>This method has en dashes in its documentation – as you'll find represented by <db:code>--</db:code> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</db:para>
-<db:programlisting language="cpp">for (int i = 42; i &amp;gt; 0; --i)
+<db:programlisting language="cpp" its:translate="no">for (int i = 42; i &amp;gt; 0; --i)
     // Do something cool during countdown.
 </db:programlisting>
 <db:para>...as it would be silly if this would output –i instead of <db:code>--i</db:code>.</db:para>
@@ -114,34 +114,34 @@
 </db:section>
 </db:section>
 <db:section xml:id="someFunction">
-<db:title>int Test::someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
-<db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
+<db:title its:translate="no">int Test::someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
+<db:para>Function that takes a parameter <db:code its:translate="no" role="parameter">v</db:code>. Also returns the value of <db:code its:translate="no" role="parameter">v</db:code>.</db:para>
 </db:section>
 <db:section xml:id="someFunctionDefaultArg">
-<db:title>void Test::someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
-<db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+<db:title its:translate="no">void Test::someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
+<db:para>Function that takes a parameter <db:code its:translate="no" role="parameter">i</db:code> and <db:code its:translate="no" role="parameter">b</db:code>.</db:para>
 </db:section>
 <db:section xml:id="virtualFun">
-<db:title>[virtual] void Test::virtualFun()</db:title>
+<db:title its:translate="no">[virtual] void Test::virtualFun()</db:title>
 <db:para>Function that must be reimplemented.</db:para>
 </db:section>
 <db:section xml:id="operator-eq">
-<db:title>[noexcept default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
-<db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
+<db:title its:translate="no">[noexcept default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:para>Move-assigns <db:code its:translate="no" role="parameter">other</db:code>.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="related-non-members">
 <db:title>Related Non-Members</db:title>
 <db:section xml:id="operator-eq-eq">
-<db:title>bool operator==(const TestQDoc::Test &amp;<db:emphasis>lhs</db:emphasis>, const TestQDoc::Test &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
-<db:para>Returns true if <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code> are equal.</db:para>
+<db:title its:translate="no">bool operator==(const TestQDoc::Test &amp;<db:emphasis>lhs</db:emphasis>, const TestQDoc::Test &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
+<db:para>Returns true if <db:code its:translate="no" role="parameter">lhs</db:code> and <db:code its:translate="no" role="parameter">rhs</db:code> are equal.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="macro-documentation">
 <db:title>Macro Documentation</db:title>
 <db:section xml:id="QDOCTEST_MACRO2">
-<db:title>[since Test 1.1] QDOCTEST_MACRO2(int &amp;<db:emphasis>x</db:emphasis>)</db:title>
-<db:para>A macro with argument <db:code role="parameter">x</db:code>.</db:para>
+<db:title its:translate="no">[since Test 1.1] QDOCTEST_MACRO2(int &amp;<db:emphasis>x</db:emphasis>)</db:title>
+<db:para>A macro with argument <db:code its:translate="no" role="parameter">x</db:code>.</db:para>
 <db:para>This macro was introduced in Test 1.1.</db:para>
 </db:section>
 </db:section>
@@ -151,22 +151,22 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="operator-2b-2b">
-<db:title>TestQDoc::Test &amp;Test::operator++()</db:title>
-<db:bridgehead renderas="sect2" xml:id="operator--">TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
+<db:title its:translate="no">TestQDoc::Test &amp;Test::operator++()</db:title>
+<db:bridgehead renderas="sect2" xml:id="operator--" its:translate="no">TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 </db:section>
 <db:section xml:id="anotherObsoleteMember">
-<db:title>void Test::anotherObsoleteMember()</db:title>
+<db:title its:translate="no">void Test::anotherObsoleteMember()</db:title>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="deprecatedMember">
-<db:title>void Test::deprecatedMember()</db:title>
+<db:title its:translate="no">void Test::deprecatedMember()</db:title>
 <db:para>This function is deprecated since 6.0. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="obsoleteMember">
-<db:title>void Test::obsoleteMember()</db:title>
+<db:title its:translate="no">void Test::obsoleteMember()</db:title>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>

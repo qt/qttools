@@ -38,6 +38,7 @@ using namespace Qt::StringLiterals;
 
 static const char dbNamespace[] = "http://docbook.org/ns/docbook";
 static const char xlinkNamespace[] = "http://www.w3.org/1999/xlink";
+static const char itsNamespace[] = "http://www.w3.org/2005/11/its";
 
 DocBookGenerator::DocBookGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
 
@@ -158,6 +159,7 @@ void DocBookGenerator::initializeGenerator()
     m_buildVersion = m_config->get(CONFIG_BUILDVERSION).asString();
     m_useDocBook52 = m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool() ||
             m_config->get(format() + Config::dot + "usedocbookextensions").asBool();
+    m_useITS = m_config->get(format() + Config::dot + "its").asBool();
 }
 
 QString DocBookGenerator::format()
@@ -324,6 +326,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::Qml:
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "qml");
+        if (m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
         m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
@@ -331,6 +335,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::Code:
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "cpp");
+        if (m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
         m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
@@ -339,6 +345,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeStartElement(dbNamespace, "programlisting");
         m_writer->writeAttribute("language", "cpp");
         m_writer->writeAttribute("role", "bad");
+        if (m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
         m_writer->writeCharacters(removeCodeMarkers(atom->string()));
         m_writer->writeEndElement(); // programlisting
         newLine();
@@ -381,6 +389,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         } else if (atom->string() == ATOM_FORMATTING_TELETYPE
                    || atom->string() == ATOM_FORMATTING_PARAMETER) {
             m_writer->writeStartElement(dbNamespace, "code");
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
 
             if (atom->string() == ATOM_FORMATTING_PARAMETER)
                 m_writer->writeAttribute("role", "parameter");
@@ -403,6 +413,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             }
         } else if (atom->string() == ATOM_FORMATTING_UICONTROL) {
             m_writer->writeStartElement(dbNamespace, "guilabel");
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
         } else {
             relative->location().warning(QStringLiteral("Unsupported formatting: %1").arg(atom->string()));
         }
@@ -796,6 +808,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeStartElement(dbNamespace, "td");
             newLine();
             m_writer->writeStartElement(dbNamespace, "para");
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
             generateEnumValue(pair.first, relative);
             m_writer->writeEndElement(); // para
             newLine();
@@ -809,8 +823,13 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 m_writer->writeStartElement(dbNamespace, "td");
                 if (itemValue.isEmpty())
                     m_writer->writeCharacters("?");
-                else
-                    m_writer->writeTextElement(dbNamespace, "code", itemValue);
+                else {
+                    m_writer->writeStartElement(dbNamespace, "code");
+                    if (m_useITS)
+                        m_writer->writeAttribute(itsNamespace, "translate", "no");
+                    m_writer->writeCharacters(itemValue);
+                    m_writer->writeEndElement(); // code
+                }
                 m_writer->writeEndElement(); // td
                 newLine();
             }
@@ -1766,6 +1785,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::UnknownCommand:
         m_writer->writeStartElement(dbNamespace, "emphasis");
         m_writer->writeAttribute("role", "bold");
+        if (m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
         m_writer->writeCharacters("<Unknown command>");
         m_writer->writeStartElement(dbNamespace, "code");
         m_writer->writeCharacters(atom->string());
@@ -2342,11 +2363,19 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
     // Output the DocBook header.
     m_writer->writeStartElement(dbNamespace, "info");
     newLine();
-    m_writer->writeTextElement(dbNamespace, "title", title);
+    m_writer->writeStartElement(dbNamespace, "title");
+    if (node->genus() & Node::API && m_useITS)
+        m_writer->writeAttribute(itsNamespace, "translate", "no");
+    m_writer->writeCharacters(title);
+    m_writer->writeEndElement(); // title
     newLine();
 
     if (!subTitle.isEmpty()) {
-        m_writer->writeTextElement(dbNamespace, "subtitle", subTitle);
+        m_writer->writeStartElement(dbNamespace, "subtitle");
+        if (node->genus() & Node::API && m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
+        m_writer->writeCharacters(subTitle);
+        m_writer->writeEndElement(); // subtitle
         newLine();
     }
 
@@ -2849,6 +2878,8 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
             .replace(xmlAttr, " xlink:");
 
         m_writer->writeStartElement(dbNamespace, "variablelist");
+        if (m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
         newLine();
 
         m_writer->device()->write(cleanOutput.toUtf8());
@@ -2888,6 +2919,8 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
 
     // Start writing the elements as a list.
     m_writer->writeStartElement(dbNamespace, "variablelist");
+    if (m_useITS)
+        m_writer->writeAttribute(itsNamespace, "translate", "no");
     newLine();
 
     if (generate_import_statement) {
@@ -3506,6 +3539,8 @@ QXmlStreamWriter *DocBookGenerator::startGenericDocument(const Node *node, const
     newLine();
     m_writer->writeNamespace(dbNamespace, "db");
     m_writer->writeNamespace(xlinkNamespace, "xlink");
+    if (m_useITS)
+        m_writer->writeNamespace(itsNamespace, "its");
     m_writer->writeStartElement(dbNamespace, "article");
     m_writer->writeAttribute("version", "5.2");
     if (!m_naturalLanguage.isEmpty())
@@ -3666,7 +3701,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     // From Generator::generateStatus, HtmlGenerator::generateRequisites,
     // Generator::generateThreadSafeness, QDocIndexFiles::generateIndexSection.
 
-    // This function is the only place where DocBook extensions are used.
+    // This function is the major place where DocBook extensions are used.
     if (!m_useDocBook52)
         return;
 
@@ -4635,6 +4670,8 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
                 m_writer->writeAttribute("renderas", "sect2");
                 writeXmlId(sharedNode);
             }
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
 
             generateSynopsis(sharedNode, relative, Section::Details);
 
@@ -4650,6 +4687,8 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
         const EnumNode *etn;
         if (node->isEnumType() && (etn = static_cast<const EnumNode *>(node))->flagsType()) {
             startSectionBegin(node);
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
             generateSynopsis(etn, relative, Section::Details);
             startSectionEnd();
 
@@ -4660,6 +4699,8 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
             newLine();
         } else {
             startSectionBegin(node);
+            if (m_useITS)
+                m_writer->writeAttribute(itsNamespace, "translate", "no");
             generateSynopsis(node, relative, Section::Details);
             startSectionEnd();
         }
@@ -4772,6 +4813,8 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
         bool isInvokable = false;
 
         m_writer->writeStartElement(dbNamespace, "itemizedlist");
+        if (m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
         newLine();
 
         NodeVector::ConstIterator m = members.constBegin();
@@ -4815,6 +4858,8 @@ void DocBookGenerator::generateSectionList(const Section &section, const Node *r
     if (!useObsoleteMembers && section.style() == Section::Summary
         && !section.inheritedMembers().isEmpty()) {
         m_writer->writeStartElement(dbNamespace, "itemizedlist");
+        if (m_useITS)
+            m_writer->writeAttribute(itsNamespace, "translate", "no");
         newLine();
 
         generateSectionInheritedList(section, relative);
@@ -4877,6 +4922,10 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
         title.append(" QML Value Type");
     else
         title.append(" QML Type");
+    // TODO: for ITS attribute, only apply translate="no" on qcn->fullTitle(),
+    // not its suffix (which should be translated). generateHeader doesn't
+    // allow this kind of input, the title isn't supposed to be structured.
+    // Ideally, do the same in HTML.
 
     generateHeader(title, qcn->subtitle(), qcn);
     generateQmlRequisites(qcn);

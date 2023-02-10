@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
 <db:title>QML Documentation Example</db:title>
 <db:productname>Test</db:productname>
@@ -21,7 +21,7 @@
 <db:title>Properties, Signals, Handlers, and Methods</db:title>
 <db:para>The types have their properties, signals, handlers, and methods defined in their respective QML files. QDoc associates the properties and methods to the types, therefore, you only need to place the documentation above the property, method, or signal.</db:para>
 <db:para>To document the type of a <db:emphasis>property alias</db:emphasis>, you must use the \qmlproperty command to specify the data type.</db:para>
-<db:programlisting language="cpp">\qmlproperty int anAliasedProperty
+<db:programlisting language="cpp" its:translate="no">\qmlproperty int anAliasedProperty
 An aliased property of type int.
 </db:programlisting>
 <db:section xml:id="internal-documentation">

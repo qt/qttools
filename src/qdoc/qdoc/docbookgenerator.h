@@ -162,6 +162,7 @@ private:
     QString m_buildVersion {};
     QXmlStreamWriter *m_writer { nullptr };
     bool m_useDocBook52 { false }; // Enable tags from DocBook 5.2. Also called "extensions".
+    bool m_useITS { false }; // Enable ITS attributes for parts that should not be translated.
 
     Config *m_config { nullptr };
 };

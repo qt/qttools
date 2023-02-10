@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
 <db:info>
 <db:title>Exhaustive testing of QDoc commands</db:title>
 <db:productname>OutputFromQDocFiles</db:productname>
@@ -17,11 +17,11 @@
 <db:title>This is a section3</db:title>
 <db:section xml:id="this-is-a-section4">
 <db:title>This is a section4</db:title>
-<db:programlisting language="cpp" role="bad">This is bad code
+<db:programlisting language="cpp" role="bad" its:translate="no">This is bad code
 </db:programlisting>
 <db:para>This text should have a line break riiiiight  noooow.</db:para>
 <db:para><db:emphasis role="bold">All your text belong to bold</db:emphasis> ...And this is an examble of only <db:emphasis role="bold">bold</db:emphasis> being, well, bold.</db:para>
-<db:programlisting language="cpp">    ...
+<db:programlisting language="cpp" its:translate="no">    ...
 </db:programlisting>
 <db:title>This a caption</db:title>
 <db:para>Lorem legal ipsum</db:para>
