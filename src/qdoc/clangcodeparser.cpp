@@ -1068,32 +1068,44 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
 
     QString signature = spelling.mid(lpIdx + 1, rpIdx - lpIdx - 1);
     signature = signature.simplified();
-
-    QString type;
-    QString name;
     QStringList parts = signature.split(QChar(' '), Qt::SkipEmptyParts);
-    if (parts.size() < 2)
+
+    static const QStringList attrs =
+            QStringList() << "READ"     << "MEMBER"     << "WRITE"
+                          << "NOTIFY"   << "CONSTANT"   << "FINAL"
+                          << "REQUIRED" << "BINDABLE"   << "DESIGNABLE"
+                          << "RESET"    << "REVISION"   << "SCRIPTABLE"
+                          << "STORED"   << "USER";
+
+    // Find the location of the first attribute. All preceding parts
+    // represent the property type + name.
+    auto it = std::find_if(parts.cbegin(), parts.cend(),
+                           [](const QString &attr) -> bool {
+        return attrs.contains(attr);
+    });
+
+    if (it == parts.cend() || std::distance(parts.cbegin(), it) < 2)
         return false;
-    if (parts.first() == QLatin1String("enum"))
-        parts.removeFirst(); // QTBUG-80027
 
-    type = parts.takeFirst();
-    if (type == QLatin1String("const") && !parts.empty())
-        type += " " + parts.takeFirst();
+    QStringList typeParts;
+    std::copy(parts.cbegin(), it, std::back_inserter(typeParts));
+    parts.erase(parts.cbegin(), it);
+    QString name = typeParts.takeLast();
 
-    if (!parts.empty())
-        name = parts.takeFirst();
-    else
-        return false;
-
-    if (name.front() == QChar('*')) {
-        type.append(QChar('*'));
-        name.remove(0, 1);
+    // Move the pointer operator(s) from name to type
+    while (!name.isEmpty() && name.front() == QChar('*')) {
+        typeParts.last().push_back(name.front());
+        name.removeFirst();
     }
+
+    // Need at least READ or MEMBER + getter/member name
+    if (parts.size() < 2 || name.isEmpty())
+        return false;
+
     auto *property = new PropertyNode(parent_, name);
     property->setAccess(Access::Public);
     property->setLocation(loc);
-    property->setDataType(type);
+    property->setDataType(typeParts.join(QChar(' ')));
 
     int i = 0;
     while (i < parts.size()) {
@@ -1110,6 +1122,8 @@ bool ClangVisitor::parseProperty(const QString &spelling, const Location &loc)
                 qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Getter);
             } else if (key == "WRITE") {
                 qdb_->addPropertyFunction(property, value, PropertyNode::FunctionRole::Setter);
+                property->setWritable(true);
+            } else if (key == "MEMBER") {
                 property->setWritable(true);
             } else if (key == "STORED") {
                 property->setStored(value.toLower() == "true");
