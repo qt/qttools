@@ -156,7 +156,8 @@ void DocBookGenerator::initializeGenerator()
         m_naturalLanguage = QLatin1String("en");
 
     m_buildVersion = m_config->get(CONFIG_BUILDVERSION).asString();
-    m_useDocBook52 = m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool();
+    m_useDocBook52 = m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool() ||
+            m_config->get(format() + Config::dot + "usedocbookextensions").asBool();
 }
 
 QString DocBookGenerator::format()
