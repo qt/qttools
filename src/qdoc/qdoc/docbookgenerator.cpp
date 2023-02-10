@@ -161,7 +161,7 @@ void DocBookGenerator::initializeGenerator()
 
 QString DocBookGenerator::format()
 {
-    return QStringLiteral("DocBook");
+    return "DocBook";
 }
 
 /*!
@@ -169,7 +169,7 @@ QString DocBookGenerator::format()
  */
 QString DocBookGenerator::fileExtension() const
 {
-    return QStringLiteral("xml");
+    return "xml";
 }
 
 /*!
