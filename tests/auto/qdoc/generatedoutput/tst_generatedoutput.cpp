@@ -29,10 +29,13 @@ private slots:
     void webXmlFromCppBug80259();
     void illformated_documentation();
 
-    // DocBook generator
+    // DocBook generator (wiht and without extensions)
     void docBookFromQDocFile();
     void docBookFromCpp();
     void docBookFromQml();
+    void docBookWithExtensionsFromQDocFile();
+    void docBookWithExtensionsFromCpp();
+    void docBookWithExtensionsFromQml();
 
     // Output format independent tests
     void autoNavigation();
@@ -340,6 +343,43 @@ void tst_generatedOutput::docBookFromQml()
                    "docbook/qml-uicomponents-switch.xml "
                    "docbook/qml-uicomponents-tabwidget.xml "
                    "docbook/qml-int.xml");
+}
+
+void tst_generatedOutput::docBookWithExtensionsFromQDocFile()
+{
+    testAndCompare("testdata/configs/docbookext_test.qdocconf",
+                   "docbookext/qdoctests-qdocfileoutput.xml "
+                   "docbookext/qdoctests-qdocmanuallikefileoutput.xml "
+                   "docbookext/qdoctests-qdocfileoutput-linking.xml "
+                   "docbookext/qdoctests-qdocfileoutput-exhaustive.xml");
+}
+
+void tst_generatedOutput::docBookWithExtensionsFromCpp()
+{
+    testAndCompare("testdata/configs/docbookext_testcpp.qdocconf",
+                   "docbookext/testcpp-module.xml "
+                   "docbookext/testqdoc-test.xml "
+                   "docbookext/testqdoc-testderived.xml "
+                   "docbookext/testqdoc.xml");
+}
+
+void tst_generatedOutput::docBookWithExtensionsFromQml()
+{
+    testAndCompare("testdata/configs/docbookext_testqml.qdocconf",
+                   "docbookext/test-componentset-example.xml "
+                   "docbookext/uicomponents-qmlmodule.xml "
+                   "docbookext/qdoc-test-qmlmodule.xml "
+                   "docbookext/test-nover-qmlmodule.xml "
+                   "docbookext/qml-qdoc-test-abstractparent.xml "
+                   "docbookext/qml-qdoc-test-child.xml "
+                   "docbookext/qml-qdoc-test-yetanotherchild.xml "
+                   "docbookext/qml-qdoc-test-doctest.xml "
+                   "docbookext/qml-qdoc-test-type.xml "
+                   "docbookext/qml-test-nover-typenoversion.xml "
+                   "docbookext/qml-uicomponents-progressbar.xml "
+                   "docbookext/qml-uicomponents-switch.xml "
+                   "docbookext/qml-uicomponents-tabwidget.xml "
+                   "docbookext/qml-int.xml");
 }
 
 void tst_generatedOutput::autoNavigation()

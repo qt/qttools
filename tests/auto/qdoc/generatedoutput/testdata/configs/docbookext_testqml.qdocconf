@@ -1,0 +1,3 @@
+include(config.qdocconf)
+include(testqml.qdocconf)
+include(docbookext.qdocconf)

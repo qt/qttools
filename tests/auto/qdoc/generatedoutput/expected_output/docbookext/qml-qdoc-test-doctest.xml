@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>DocTest QML Type</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Represents a doc test case.</db:para>
+<db:para>This type was introduced in QDoc.Test 0.9.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import QDoc.Test 1.1</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since:</db:term>
+<db:listitem>
+<db:para>QDoc.Test 0.9</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:section xml:id="introduction">
+<db:title>Introduction</db:title>
+<db:para>A documentation test case, itself documented inline in <db:link xlink:href="qml-qdoc-test-doctest.xml">DocTest</db:link>.qml.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="active-prop">
+<db:title>[default: true] active : bool</db:title>
+<db:fieldsynopsis>
+<db:type>bool</db:type>
+<db:varname>active</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Whether the test is active.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="qml-qdoc-test-doctest.xml#name-prop">name</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="name-prop">
+<db:title>[required] name : string</db:title>
+<db:fieldsynopsis>
+<db:type>string</db:type>
+<db:varname>name</db:varname>
+<db:modifier>writable</db:modifier>
+<db:modifier>required</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Name of the test.</db:para>
+<db:programlisting language="qml">DocTest {
+    name: &amp;quot;test&amp;quot;
+    // ...
+}
+</db:programlisting>
+</db:section>
+</db:section>
+<db:section xml:id="signal-documentation">
+<db:title>Signal Documentation</db:title>
+<db:section xml:id="completed-signal">
+<db:title>completed()</db:title>
+<db:note>
+<db:para>The corresponding handler is <db:code>onCompleted</db:code>.</db:para>
+</db:note>
+</db:section>
+<db:section xml:id="foo-signal">
+<db:title>foo(var <db:emphasis>bar</db:emphasis>)</db:title>
+<db:para>Signal with parameter <db:code role="parameter">bar</db:code>.</db:para>
+<db:note>
+<db:para>The corresponding handler is <db:code>onFoo</db:code>.</db:para>
+</db:note>
+</db:section>
+<db:section xml:id="itsHappening-signal">
+<db:title>itsHappening(bool <db:emphasis>really</db:emphasis>)</db:title>
+<db:para>Signals that something is <db:code role="parameter">really</db:code> happening.</db:para>
+<db:note>
+<db:para>The corresponding handler is <db:code>onItsHappening</db:code>.</db:para>
+</db:note>
+</db:section>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="fail-method">
+<db:title>[since QDoc.Test 1.0] fail(<db:emphasis>message</db:emphasis> = &quot;oops&quot;)</db:title>
+<db:para>Fails the current test case, with the optional <db:code role="parameter">message</db:code>.</db:para>
+<db:para>This method was introduced in QDoc.Test 1.0.</db:para>
+</db:section>
+<db:section xml:id="fail_hard-method">
+<db:title>fail_hard(<db:emphasis>msg</db:emphasis> = &quot;facepalm&quot;, <db:emphasis>option</db:emphasis> = 123)</db:title>
+<db:para>Fails the current test case, hard.</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para>Prints out <db:code role="parameter">msg</db:code>.</db:para>
+</db:listitem>
+<db:listitem>
+<db:para>Accepts a random <db:code role="parameter">option</db:code>.</db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:section>
+</db:section>
+</db:article>

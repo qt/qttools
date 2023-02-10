@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Testing QDoc's link command</db:title>
+<db:productname>OutputFromQDocFiles</db:productname>
+<db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput.xml" xlink:type="arc" xlink:arcrole="prev" xlink:title="QDoc Testing"/></db:extendedlink>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="toc.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="Table of Contents"/></db:extendedlink>
+<db:abstract>
+<db:para>This is a page for testing QDoc's link command.</db:para>
+</db:abstract>
+</db:info>
+<db:anchor xml:id="link-test-target"/>
+<db:section xml:id="link-targets">
+<db:title>Link targets</db:title>
+<db:para>Valid parameters for the link command (<db:code>\l</db:code>) are page and section titles, targets defined with \target or \keyword commands, and API reference keywords (types, methods, namespaces, and so on).</db:para>
+</db:section>
+</db:article>

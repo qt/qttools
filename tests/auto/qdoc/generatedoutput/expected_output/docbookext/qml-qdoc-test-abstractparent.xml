@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>AbstractParent QML Type</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>Abstract base QML type.</db:para>
+<db:para>This type was introduced in Qt 1.1.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Import Statement</db:term>
+<db:listitem>
+<db:para>import QDoc.Test 1.1</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since:</db:term>
+<db:listitem>
+<db:para>Qt 1.1</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherited By:</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="qml-qdoc-test-child.xml" xlink:role="">Child</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="property-documentation">
+<db:title>Property Documentation</db:title>
+<db:section xml:id="children-prop">
+<db:title>[default] children : list&lt;Child&gt;</db:title>
+<db:fieldsynopsis>
+<db:type>list&lt;Child&gt;</db:type>
+<db:varname>children</db:varname>
+<db:modifier>writable</db:modifier>
+<db:modifier>[default]</db:modifier>
+
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Children of the type.</db:para>
+</db:section>
+<db:section xml:id="name-prop">
+<db:title>name : string</db:title>
+<db:fieldsynopsis>
+<db:type>string</db:type>
+<db:varname>name</db:varname>
+<db:modifier>writable</db:modifier>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:fieldsynopsis>
+<db:para>Name of this parent.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="method-documentation">
+<db:title>Method Documentation</db:title>
+<db:section xml:id="name-method">
+<db:title>void name(Child <db:emphasis>child</db:emphasis>, <db:emphasis>name</db:emphasis>)</db:title>
+<db:para>Name a <db:code role="parameter">child</db:code> using <db:code role="parameter">name</db:code>.</db:para>
+</db:section>
+<db:section xml:id="name-method-1">
+<db:title>void name()</db:title>
+<db:para>Name all children with random names.</db:para>
+</db:section>
+<db:section xml:id="rear-method">
+<db:title>void rear(Child <db:emphasis>child</db:emphasis>, var <db:emphasis>method</db:emphasis> = Strict)</db:title>
+<db:para>Do some abstract parenting on <db:code role="parameter">child</db:code> using a specific <db:code role="parameter">method</db:code>.</db:para>
+</db:section>
+</db:section>
+</db:article>

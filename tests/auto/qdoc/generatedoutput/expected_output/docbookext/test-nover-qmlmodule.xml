@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Versionless QML Module</db:title>
+<db:productname>Test</db:productname>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>QML Types for the Test module without version.</db:para>
+<db:para>This module is in <db:emphasis>Tech Preview</db:emphasis> state.</db:para>
+<db:para>This module was introduced in Qt 1.1.</db:para>
+</db:abstract>
+</db:info>
+<db:para>This module is in <db:emphasis>Tech Preview</db:emphasis> state.</db:para>
+<db:para>This module was introduced in Qt 1.1.</db:para>
+<db:anchor xml:id="details"/>
+<db:variablelist role="members">
+<db:varlistentry>
+<db:term><db:link xlink:href="qml-test-nover-typenoversion.xml" xlink:role="">TypeNoVersion</db:link></db:term>
+<db:listitem>
+<db:para>Another QML type documented in a .cpp file.</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+</db:article>

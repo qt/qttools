@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TestDerived Class</db:title>
+<db:subtitle>TestQDoc::TestDerived</db:subtitle>
+<db:productname>TestCPP</db:productname>
+<db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A derived class in a namespace.</db:para>
+<db:para>This class was introduced in Qt 2.0.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TestDerived</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since</db:term>
+<db:listitem>
+<db:para>Qt 2.0</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>CMake</db:term>
+<db:listitem>
+<db:para>find_package(Qt6 REQUIRED COMPONENTS QDocTest)</db:para>
+<db:para>target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>qmake</db:term>
+<db:listitem>
+<db:para>QT += testcpp</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherits</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml" xlink:role="class">TestQDoc::Test</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="DerivedType-typedef">
+<db:title>[alias] TestDerived::DerivedType</db:title>
+<db:typedefsynopsis>
+<db:typedefname>DerivedType</db:typedefname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:typedefsynopsis>
+<db:para>An aliased typedef.</db:para>
+</db:section>
+<db:section xml:id="NotTypedef-typedef">
+<db:title>[alias] TestDerived::NotTypedef</db:title>
+<db:typedefsynopsis>
+<db:typedefname>NotTypedef</db:typedefname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:typedefsynopsis>
+<db:para>I'm an alias, not a typedef.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="virtualFun">
+<db:title>[override virtual] void TestDerived::virtualFun()</db:title>
+<db:methodsynopsis>
+<db:modifier>virtual</db:modifier>
+<db:void/>
+<db:methodname>virtualFun</db:methodname>
+<db:void/>
+<db:modifier>override</db:modifier>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void virtualFun() override</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" role="function">Test::virtualFun()</db:link>.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="obsolete">
+<db:title>Obsolete Members for TestDerived</db:title>
+<db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
+<db:section xml:id="obsolete-member-function-documentation">
+<db:title>Obsolete Member Function Documentation</db:title>
+<db:section xml:id="staticObsoleteMember">
+<db:title>[static] void TestDerived::staticObsoleteMember()</db:title>
+<db:methodsynopsis>
+<db:modifier>static</db:modifier>
+<db:void/>
+<db:methodname>staticObsoleteMember</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void staticObsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
+<db:para>Static obsolete method.</db:para>
+</db:section>
+</db:section>
+</db:section>
+</db:article>

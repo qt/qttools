@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Test Class</db:title>
+<db:subtitle>TestQDoc::Test</db:subtitle>
+<db:productname>TestCPP</db:productname>
+<db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A class in a namespace.</db:para>
+<db:para>This class was introduced in Qt 2.0.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Test</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Since</db:term>
+<db:listitem>
+<db:para>Qt 2.0</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>CMake</db:term>
+<db:listitem>
+<db:para>find_package(Qt6 REQUIRED COMPONENTS QDocTest)</db:para>
+<db:para>target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>qmake</db:term>
+<db:listitem>
+<db:para>QT += testcpp</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Inherited By</db:term>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestQDoc::TestDerived</db:link></db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Group</db:term>
+<db:listitem>
+<db:para><db:para>Test is part of <db:simplelist><db:member>testgroup</db:member><db:member><db:link xlink:href="cpptypes.xml">Test C++ Types</db:link></db:member></db:simplelist></db:para>
+</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="SomeType-typedef">
+<db:title>Test::SomeType</db:title>
+<db:typedefsynopsis>
+<db:typedefname>SomeType</db:typedefname>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:typedefsynopsis>
+<db:para>A typedef.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="overload">
+<db:title>[protected] void Test::overload()</db:title>
+<db:bridgehead renderas="sect2" xml:id="overload-1">[protected, since Test 1.2] void Test::overload(bool <db:emphasis>b</db:emphasis>)</db:bridgehead>
+<db:para>Overloads that share a documentation comment, optionally taking a parameter <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+<db:section xml:id="Test">
+<db:title>[noexcept default] Test::Test()</db:title>
+<db:constructorsynopsis>
+<db:methodname>Test</db:methodname>
+<db:void/>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">constructor</db:synopsisinfo>
+<db:synopsisinfo role="signature">Test() = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:constructorsynopsis>
+<db:para>Default constructor.</db:para>
+</db:section>
+<db:section xml:id="funcPtr">
+<db:title>void (*)(bool) Test::funcPtr(bool <db:emphasis>b</db:emphasis>, const char *<db:emphasis>s</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>void (*)(bool)</db:type>
+<db:methodname>funcPtr</db:methodname>
+<db:methodparam>
+<db:type>bool</db:type>
+<db:parameter>b</db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>const char *</db:type>
+<db:parameter>s</db:parameter>
+</db:methodparam>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void (*)(bool) funcPtr(bool b, const char *s)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Returns a pointer to a function that takes a boolean. Uses <db:code role="parameter">b</db:code> and <db:code role="parameter">s</db:code>.</db:para>
+</db:section>
+<db:section xml:id="inlineFunction">
+<db:title>void Test::inlineFunction()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>inlineFunction</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void inlineFunction()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>An inline function, documented using the \fn QDoc command.</db:para>
+</db:section>
+<db:section xml:id="methodWithEmDashInItsDocs">
+<db:title>void Test::methodWithEmDashInItsDocs()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>methodWithEmDashInItsDocs</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void methodWithEmDashInItsDocs()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This method has em dashes in its documentation—as you'll find represented by <db:code>---</db:code> in the sources—here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</db:para>
+<db:para>-----------------------------------------------------------------------</db:para>
+<db:para>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</db:para>
+<db:para>—You can also start a new paragraph with an em dash, if you want to.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="testqdoc-test.xml#methodWithEnDashInItsDocs">methodWithEnDashInItsDocs</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="methodWithEnDashInItsDocs">
+<db:title>void Test::methodWithEnDashInItsDocs()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>methodWithEnDashInItsDocs</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void methodWithEnDashInItsDocs()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This method has en dashes in its documentation – as you'll find represented by <db:code>--</db:code> in the sources – here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</db:para>
+<db:programlisting language="cpp">for (int i = 42; i &amp;gt; 0; --i)
+    // Do something cool during countdown.
+</db:programlisting>
+<db:para>...as it would be silly if this would output –i instead of <db:code>--i</db:code>.</db:para>
+<db:para>-----------------------------------------------------------------------</db:para>
+<db:para>It still allows people to add a bunch of dashes, though, without replacing them all with a series of en dashes. Of course, they might want to use the \hr command instead, like this:</db:para>
+<db:para>– You can also start a new paragraph with an en dash, if you want to.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="">methodWithEnDashInItsDocs</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="someFunction">
+<db:title>int Test::someFunction(<db:emphasis>int</db:emphasis>, int <db:emphasis>v</db:emphasis> = 0)</db:title>
+<db:methodsynopsis>
+<db:type>int</db:type>
+<db:methodname>someFunction</db:methodname>
+<db:methodparam>
+<db:type>int</db:type>
+<db:parameter></db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>int</db:type>
+<db:parameter>v</db:parameter>
+<db:initializer>0</db:initializer>
+</db:methodparam>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">int someFunction(int, int v)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Function that takes a parameter <db:code role="parameter">v</db:code>. Also returns the value of <db:code role="parameter">v</db:code>.</db:para>
+</db:section>
+<db:section xml:id="someFunctionDefaultArg">
+<db:title>void Test::someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>someFunctionDefaultArg</db:methodname>
+<db:methodparam>
+<db:type>int</db:type>
+<db:parameter>i</db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>bool</db:type>
+<db:parameter>b</db:parameter>
+<db:initializer>false</db:initializer>
+</db:methodparam>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void someFunctionDefaultArg(int i, bool b)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
+</db:section>
+<db:section xml:id="virtualFun">
+<db:title>[virtual] void Test::virtualFun()</db:title>
+<db:methodsynopsis>
+<db:modifier>virtual</db:modifier>
+<db:void/>
+<db:methodname>virtualFun</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void virtualFun()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Function that must be reimplemented.</db:para>
+</db:section>
+<db:section xml:id="operator-eq">
+<db:title>[noexcept default] TestQDoc::Test &amp;Test::operator=(TestQDoc::Test &amp;&amp;<db:emphasis>other</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>TestQDoc::Test &amp;</db:type>
+<db:methodname>operator=</db:methodname>
+<db:methodparam>
+<db:type>TestQDoc::Test &amp;&amp;</db:type>
+<db:parameter>other</db:parameter>
+</db:methodparam>
+<db:modifier>default</db:modifier>
+<db:synopsisinfo role="meta">move-assign</db:synopsisinfo>
+<db:synopsisinfo role="signature">TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other) = default</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Move-assigns <db:code role="parameter">other</db:code>.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="related-non-members">
+<db:title>Related Non-Members</db:title>
+<db:section xml:id="operator-eq-eq">
+<db:title>bool operator==(const TestQDoc::Test &amp;<db:emphasis>lhs</db:emphasis>, const TestQDoc::Test &amp;<db:emphasis>rhs</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:type>bool</db:type>
+<db:methodname>operator==</db:methodname>
+<db:methodparam>
+<db:type>const TestQDoc::Test &amp;</db:type>
+<db:parameter>lhs</db:parameter>
+</db:methodparam>
+<db:methodparam>
+<db:type>const TestQDoc::Test &amp;</db:type>
+<db:parameter>rhs</db:parameter>
+</db:methodparam>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">bool operator==(const TestQDoc::Test &amp;lhs, const TestQDoc::Test &amp;rhs)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Returns true if <db:code role="parameter">lhs</db:code> and <db:code role="parameter">rhs</db:code> are equal.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="macro-documentation">
+<db:title>Macro Documentation</db:title>
+<db:section xml:id="QDOCTEST_MACRO2">
+<db:title>[since Test 1.1] QDOCTEST_MACRO2(int &amp;<db:emphasis>x</db:emphasis>)</db:title>
+<db:methodsynopsis>
+<db:methodname>QDOCTEST_MACRO2</db:methodname>
+<db:methodparam>
+<db:type>int &amp;</db:type>
+<db:parameter>x</db:parameter>
+</db:methodparam>
+<db:synopsisinfo role="meta">macrowithparams</db:synopsisinfo>
+<db:synopsisinfo role="signature">QDOCTEST_MACRO2(int &amp;x)</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>A macro with argument <db:code role="parameter">x</db:code>.</db:para>
+<db:para>This macro was introduced in Test 1.1.</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="obsolete">
+<db:title>Obsolete Members for Test</db:title>
+<db:para><db:emphasis role="bold">The following members of class <db:link xlink:href="testqdoc-test.xml">Test</db:link> are deprecated.</db:emphasis> We strongly advise against using them in new code.</db:para>
+<db:section xml:id="obsolete-member-function-documentation">
+<db:title>Obsolete Member Function Documentation</db:title>
+<db:section xml:id="operator-2b-2b">
+<db:title>TestQDoc::Test &amp;Test::operator++()</db:title>
+<db:bridgehead renderas="sect2" xml:id="operator--">TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
+<db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
+</db:section>
+<db:section xml:id="anotherObsoleteMember">
+<db:title>void Test::anotherObsoleteMember()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>anotherObsoleteMember</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void anotherObsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
+<db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
+</db:section>
+<db:section xml:id="deprecatedMember">
+<db:title>void Test::deprecatedMember()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>deprecatedMember</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void deprecatedMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is deprecated since 6.0. We strongly advise against using it in new code.</db:para>
+<db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
+</db:section>
+<db:section xml:id="obsoleteMember">
+<db:title>void Test::obsoleteMember()</db:title>
+<db:methodsynopsis>
+<db:void/>
+<db:methodname>obsoleteMember</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">void obsoleteMember()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">deprecated</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
+<db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
+</db:section>
+</db:section>
+</db:section>
+</db:article>
