@@ -208,7 +208,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         const QString key = iter.key();
 
         if (!iter.value().isString() && key != "QtParts"_L1 && key != "SecurityCritical"_L1
-            && key != "Files"_L1 && key != "LicenseFiles"_L1) {
+            && key != "Files"_L1 && key != "LicenseFiles"_L1 && key != "Comment"_L1) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
                                             QDir::toNativeSeparators(filePath), key)) << std::endl;
@@ -237,6 +237,11 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
                     continue;
                 }
             }
+        } else if (key == "Comment"_L1) {
+            // Accepted purely to record details of potential interest doing
+            // updates in future. Value is an arbitrary object. Any number of
+            // Comment entries may be present: JSON doesn't require names to be
+            // unique, albeit some linters may kvetch.
         } else if (key == "Id"_L1) {
             p.id = value;
         } else if (key == "Homepage"_L1) {
