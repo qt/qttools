@@ -9,38 +9,40 @@
 
 #include <iostream>
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace JsonGenerator {
 
 static QJsonObject generate(Package package)
 {
     QJsonObject obj;
 
-    obj.insert(QStringLiteral("Id"), package.id);
-    obj.insert(QStringLiteral("Path"), package.path);
-    obj.insert(QStringLiteral("Files"), package.files.join(QLatin1Char(' ')));
-    obj.insert(QStringLiteral("QDocModule"), package.qdocModule);
-    obj.insert(QStringLiteral("Name"), package.name);
-    obj.insert(QStringLiteral("QtUsage"), package.qtUsage);
-    obj.insert(QStringLiteral("QtParts"), QJsonArray::fromStringList(package.qtParts));
+    obj.insert(u"Id"_s, package.id);
+    obj.insert(u"Path"_s, package.path);
+    obj.insert(u"Files"_s, package.files.join(QLatin1Char(' ')));
+    obj.insert(u"QDocModule"_s, package.qdocModule);
+    obj.insert(u"Name"_s, package.name);
+    obj.insert(u"QtUsage"_s, package.qtUsage);
+    obj.insert(u"QtParts"_s, QJsonArray::fromStringList(package.qtParts));
 
-    obj.insert(QStringLiteral("Description"), package.description);
-    obj.insert(QStringLiteral("Homepage"), package.homepage);
-    obj.insert(QStringLiteral("Version"), package.version);
-    obj.insert(QStringLiteral("DownloadLocation"), package.downloadLocation);
+    obj.insert(u"Description"_s, package.description);
+    obj.insert(u"Homepage"_s, package.homepage);
+    obj.insert(u"Version"_s, package.version);
+    obj.insert(u"DownloadLocation"_s, package.downloadLocation);
 
-    obj.insert(QStringLiteral("License"), package.license);
-    obj.insert(QStringLiteral("LicenseId"), package.licenseId);
+    obj.insert(u"License"_s, package.license);
+    obj.insert(u"LicenseId"_s, package.licenseId);
     if (package.licenseFiles.isEmpty())
-        obj.insert(QStringLiteral("LicenseFile"), QString());
+        obj.insert(u"LicenseFile"_s, QString());
     else if (package.licenseFiles.size() == 1)
-        obj.insert(QStringLiteral("LicenseFile"), package.licenseFiles.first());
+        obj.insert(u"LicenseFile"_s, package.licenseFiles.first());
     else
-        obj.insert(QStringLiteral("LicenseFiles"),
+        obj.insert(u"LicenseFiles"_s,
                    QJsonArray::fromStringList(package.licenseFiles));
 
-    obj.insert(QStringLiteral("Copyright"), package.copyright);
-    obj.insert(QStringLiteral("CopyrightFile"), package.copyrightFile);
-    obj.insert(QStringLiteral("PackageComment"), package.packageComment);
+    obj.insert(u"Copyright"_s, package.copyright);
+    obj.insert(u"CopyrightFile"_s, package.copyrightFile);
+    obj.insert(u"PackageComment"_s, package.packageComment);
 
     return obj;
 }
