@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+using namespace Qt::Literals::StringLiterals;
+
 namespace QDocGenerator {
 
 // See definition of idstring and licenseid in https://spdx.org/spdx-specification-21-web-version
@@ -28,13 +30,13 @@ static QString languageJoin(const QStringList &list)
 {
     QString result;
     for (int i = 0; i < list.size(); ++i) {
-        QString delimiter = QStringLiteral(", ");
+        QString delimiter = u", "_s;
         if (i == list.size() - 1) // last item
             delimiter.clear();
         else if (list.size() == 2)
-            delimiter = QStringLiteral(" and ");
+            delimiter = u" and "_s;
         else if (list.size() > 2 && i == list.size() - 2)
-            delimiter = QStringLiteral(", and "); // oxford comma
+            delimiter = u", and "_s; // oxford comma
         result += list[i] + delimiter;
     }
 
@@ -46,7 +48,7 @@ static QString languageJoin(const QStringList &list)
 static void sourceCode(QTextStream &out, const QString &src)
 {
     out << "\\badcode *\n";
-    out << QString(src).replace(QStringLiteral("*/"), QStringLiteral("\\1/"));
+    out << QString(src).replace(u"*/"_s, u"\\1/"_s);
     out << "\n\\endcode\n\n";
 }
 
@@ -58,7 +60,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         out << "\\ingroup attributions-" << part << "\n";
     }
 
-    if (package.qtParts.contains(QLatin1String("libs"))) {
+    if (package.qtParts.contains("libs"_L1)) {
         // show up in xxx-index.html page of module
         out << "\\ingroup attributions-" << package.qdocModule << "\n";
         // include in '\generatelist annotatedattributions'
@@ -124,10 +126,10 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         sourceCode(out, copyright);
     }
 
-    if (isSpdxLicenseId(package.licenseId) && package.licenseId != QLatin1String("NONE")) {
+    if (isSpdxLicenseId(package.licenseId) && package.licenseId != "NONE"_L1) {
         out << "\\l{https://spdx.org/licenses/" << package.licenseId << ".html}"
             << "{" << package.license << "}.\n\n";
-    } else if (package.licenseId.startsWith(QLatin1String("urn:dje:license:"))) {
+    } else if (package.licenseId.startsWith("urn:dje:license:"_L1)) {
         out << "\\l{https://enterprise.dejacode.com/licenses/public/" << package.licenseId.mid(16)
             << "/}{" << package.license << "}.\n\n";
     } else {

@@ -14,44 +14,44 @@
 
 #include <iostream>
 
+using namespace Qt::Literals::StringLiterals;
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    a.setApplicationName(QStringLiteral("Qt Attributions Scanner"));
-    a.setApplicationVersion(QStringLiteral("1.1"));
+    a.setApplicationName(u"Qt Attributions Scanner"_s);
+    a.setApplicationVersion(u"1.1"_s);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(tr("Processes attribution files in Qt sources."));
-    parser.addPositionalArgument(QStringLiteral("path"),
+    parser.addPositionalArgument(u"path"_s,
                                  tr("Path to a qt_attribution.json/README.chromium file, "
                                     "or a directory to be scannned recursively."));
     parser.addHelpOption();
     parser.addVersionOption();
 
-    QCommandLineOption generatorOption(QStringLiteral("output-format"),
+    QCommandLineOption generatorOption(u"output-format"_s,
                                        tr("Output format (\"qdoc\", \"json\")."),
-                                       QStringLiteral("generator"),
-                                       QStringLiteral("qdoc"));
-    QCommandLineOption inputFormatOption(QStringLiteral("input-files"),
-                                       tr("Input files (\"qt_attributions\" scans for qt_attribution.json, "
-                                          "\"chromium_attributions\" for README.Chromium, \"all\" for both)."),
-                                       QStringLiteral("input_format"),
-                                       QStringLiteral("qt_attributions"));
-    QCommandLineOption filterOption(QStringLiteral("filter"),
-                                    tr("Filter packages according to <filter> (e.g. QDocModule=qtcore)"),
-                                    QStringLiteral("expression"));
-    QCommandLineOption baseDirOption(QStringLiteral("basedir"),
+                                       u"generator"_s, u"qdoc"_s);
+    QCommandLineOption inputFormatOption(u"input-files"_s,
+                                       tr("Input files (\"qt_attributions\" scans for "
+                                          "qt_attribution.json, \"chromium_attributions\" for "
+                                          "README.Chromium, \"all\" for both)."),
+                                       u"input_format"_s,
+                                       u"qt_attributions"_s);
+    QCommandLineOption filterOption(u"filter"_s,
+                                    tr("Filter packages according to <filter> "
+                                       "(e.g. QDocModule=qtcore)"),
+                                    u"expression"_s);
+    QCommandLineOption baseDirOption(u"basedir"_s,
                                      tr("Paths in documentation are made relative to this "
                                         "directory."),
-                                     QStringLiteral("directory"));
-    QCommandLineOption outputOption({ QStringLiteral("o"), QStringLiteral("output") },
+                                     u"directory"_s);
+    QCommandLineOption outputOption({ u"o"_s, u"output"_s },
                                     tr("Write generated data to <file>."),
-                                    QStringLiteral("file"));
-    QCommandLineOption verboseOption(QStringLiteral("verbose"),
-                                     tr("Verbose output."));
-    QCommandLineOption silentOption({ QStringLiteral("s"), QStringLiteral("silent") },
-                                    tr("Minimal output."));
+                                    u"file"_s);
+    QCommandLineOption verboseOption(u"verbose"_s, tr("Verbose output."));
+    QCommandLineOption silentOption({ u"s"_s, u"silent"_s }, tr("Minimal output."));
 
     parser.addOption(generatorOption);
     parser.addOption(inputFormatOption);
@@ -81,11 +81,11 @@ int main(int argc, char *argv[])
 
     QString inputFormat = parser.value(inputFormatOption);
     Scanner::InputFormats formats;
-    if (inputFormat == QLatin1String("qt_attributions"))
+    if (inputFormat == "qt_attributions"_L1)
         formats = Scanner::InputFormat::QtAttributions;
-    else if (inputFormat == QLatin1String("chromium_attributions"))
+    else if (inputFormat == "chromium_attributions"_L1)
         formats = Scanner::InputFormat::ChromiumAttributions;
-    else if (inputFormat == QLatin1String("all"))
+    else if (inputFormat == "all"_L1)
         formats = Scanner::InputFormat::QtAttributions | Scanner::InputFormat::ChromiumAttributions;
     else {
         std::cerr << qPrintable(tr("%1 is not a valid input-files argument").arg(inputFormat)) << std::endl << std::endl;
@@ -143,19 +143,19 @@ int main(int argc, char *argv[])
 
     // Generate the output and write it
     QString generator = parser.value(generatorOption);
-    if (generator == QLatin1String("qdoc")) {
+    if (generator == "qdoc"_L1) {
         QString baseDirectory = parser.value(baseDirOption);
         if (baseDirectory.isEmpty()) {
             if (pathInfo.isDir()) {
                 // include top level module name in printed paths
-                baseDirectory = pathInfo.dir().absoluteFilePath(QStringLiteral(".."));
+                baseDirectory = pathInfo.dir().absoluteFilePath(u".."_s);
             } else {
-                baseDirectory = pathInfo.absoluteDir().absoluteFilePath(QStringLiteral(".."));
+                baseDirectory = pathInfo.absoluteDir().absoluteFilePath(u".."_s);
             }
         }
 
         QDocGenerator::generate(out, packages, baseDirectory, logLevel);
-    } else if (generator == QLatin1String("json")) {
+    } else if (generator == "json"_L1) {
         JsonGenerator::generate(out, packages, logLevel);
     } else {
         std::cerr << qPrintable(tr("Unknown output-format %1.").arg(generator)) << std::endl;
