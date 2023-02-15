@@ -7,7 +7,7 @@
     a custom multi-page container in Qt Designer's workspace.
     \inmodule QtDesigner
 
-    \image containerextension-example.png
+    \image containerextension-example.webp
 
     QDesignerContainerExtension provide an interface for creating
     custom container extensions. A container extension consists of a

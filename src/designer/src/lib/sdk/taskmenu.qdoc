@@ -15,7 +15,7 @@
     menu. Whenever a task menu is requested, \QD will query
     for the selected widget's task menu extension.
 
-    \image taskmenuextension-example-faded.png
+    \image taskmenuextension-example.webp
 
     A task menu extension is a collection of QActions. The actions
     appear as entries in the task menu when the plugin with the

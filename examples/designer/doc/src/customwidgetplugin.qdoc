@@ -8,7 +8,7 @@
 
     \brief Creating a custom widget plugin for Qt Designer.
 
-    \image customwidgetplugin-example.png
+    \image customwidgetplugin-example.webp
 
     In this example, the custom widget used is based on the
     \l{widgets/analogclock}{Analog Clock example}, and does not provide any custom
