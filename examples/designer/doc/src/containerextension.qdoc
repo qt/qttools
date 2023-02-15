@@ -12,7 +12,7 @@
     plugin for \QD using the
     QDesignerContainerExtension class.
 
-    \image containerextension-example.png
+    \image containerextension-example.webp
 
     To provide a custom widget that can be used with \QD, we need to
     supply a self-contained implementation. In this example we use a

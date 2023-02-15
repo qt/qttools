@@ -8,7 +8,7 @@
 
     \brief Creating a user interface from a \QD form at run-time.
 
-    \image calculatorbuilder-example.png
+    \image calculatorbuilder-example.webp
 
     We use the form created in the \l{calculatorform}{Calculator Form}
     example to show that the same user interface can be generated when the

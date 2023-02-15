@@ -12,7 +12,7 @@
     \l{Qt Designer} in an application by subclassing both QWidget and the user
     interface class, which is \c{Ui::CalculatorForm}.
 
-    \image calculatorform_mi.png
+    \image calculatorform-example.webp
 
     To subclass the \c calculatorform.ui file and ensure that \c qmake
     processes it with the \c uic, we have to include \c calculatorform.ui

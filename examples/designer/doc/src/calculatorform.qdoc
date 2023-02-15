@@ -12,7 +12,7 @@
     \QD in an application by using the user interface information from
     a QWidget subclass.
 
-    \image calculatorform-example.png Screenshot of the Calculator Form example
+    \image calculatorform-example.webp Screenshot of the Calculator Form example
 
     The example presents two spin boxes that are used to input integer values
     and a label that shows their sum. Whenever either of the spin boxes are
