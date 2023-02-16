@@ -4,7 +4,7 @@
 /*!
     \example textfinder
     \ingroup examples-qtuitools
-    \title Text Finder Example
+    \title Text Finder
 
     \brief Dynamically loading .ui files using QUiLoader.
 
@@ -150,5 +150,5 @@
     QUILoader is just one of them. See \l{Using a Designer UI File in Your
     Application} for more information on the other approaches available.
 
-    \sa {Calculator Builder Example}, {World Time Clock Builder Example}
+    \sa {Calculator Builder}
     */
