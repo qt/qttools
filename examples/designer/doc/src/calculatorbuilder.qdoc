@@ -4,7 +4,7 @@
 /*!
     \example calculatorbuilder
     \ingroup examples-designer
-    \title Calculator Builder Example
+    \title Calculator Builder
 
     \brief Creating a user interface from a \QD form at run-time.
 

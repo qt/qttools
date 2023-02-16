@@ -19,7 +19,7 @@
     When implementing a custom widget you must subclass
     QDesignerCustomWidgetInterface to expose your widget to \QD. For
     example, this is the declaration for the plugin used in the
-    \l{Custom Widget Plugin Example}{Custom Widget Plugin example} that
+    \l{Custom Widget Plugin} example that
     enables an analog clock custom widget to be used by \QD:
 
     \snippet customwidgetplugin/customwidgetplugin.h 0
@@ -205,7 +205,7 @@
     Using this macro ensures that the symbols are retained on those platforms,
     and has no side effects on other platforms.
 
-    For example, the \l{customwidgetplugin}{Custom Widget Plugin Example}
+    For example, the \l{customwidgetplugin}{Custom Widget Plugin}
     example exports a custom widget class with the following declaration:
 
     \snippet customwidgetplugin/analogclock.h 0

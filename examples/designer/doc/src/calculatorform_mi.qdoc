@@ -4,7 +4,7 @@
 /*!
     \example multipleinheritance
     \ingroup examples-designer
-    \title Calculator Form Example/Multiple Inheritance Example
+    \title Calculator Form/Multiple Inheritance
 
     \brief Using a form created with Qt Designer in an application.
 

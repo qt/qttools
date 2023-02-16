@@ -601,7 +601,7 @@ void QUiLoaderPrivate::setupWidgetMap() const
     a form or creating a custom widget.
 
     For a complete example using the QUiLoader class, see the
-    \l{Calculator Builder Example}.
+    \l{Calculator Builder}.
 
     \sa {Qt UI Tools}, QFormBuilder
 */

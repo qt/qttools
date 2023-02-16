@@ -1750,7 +1750,7 @@ pixmap property in the property editor.
     \endlist
 
     To demonstrate, we create a simple Calculator Form application. It is based on the
-    original \l{Calculator Form Example}{Calculator Form} example.
+    original \l{Calculator Form} example.
 
     The application consists of one source file, \c main.cpp and a UI
     file.
@@ -1827,8 +1827,7 @@ pixmap property in the property editor.
     interface and other objects in your application.
     The generated \c{Ui::CalculatorForm} structure is a member of the class.
 
-    This approach is used in the \l{Calculator Form Example}{Calculator Form}
-    example.
+    This approach is used in the \l{Calculator Form} example.
 
     To ensure that we can use the user interface, we need to include the header
     file that \c uic generates before referring to \c{Ui::CalculatorForm}:
@@ -2009,7 +2008,7 @@ pixmap property in the property editor.
     \snippet manual/doc_src_designer-manual.cpp 1
 
     The QUiLoader::load() function is invoked as shown in this code from the
-    \l{Text Finder Example}{Text Finder} example:
+    \l{Text Finder} example:
 
     \snippet ../uitools/textfinder/textfinder.cpp 4
 
@@ -2090,7 +2089,7 @@ pixmap property in the property editor.
     \snippet autoconnection/imagedialog.h 0
 
     Another example of automatic signal and slot connection would be the
-    \l{Text Finder Example}{Text Finder} with its \c{on_findButton_clicked()}
+    \l{Text Finder} with its \c{on_findButton_clicked()}
     slot.
 
     We use QMetaObject's system to enable signal and slot connections:
@@ -2671,7 +2670,7 @@ pixmap property in the property editor.
 
     \section2 A Simple Plugin
 
-    The \l{Custom Widget Plugin Example} demonstrates a simple \QD plugin.
+    The \l{Custom Widget Plugin} demonstrates a simple \QD plugin.
 
     The project file for a plugin must specify the headers and sources for
     both the custom widget and the plugin interface. Typically, this file only
@@ -2778,7 +2777,7 @@ pixmap property in the property editor.
 
     For more information on using custom widgets in \QD, refer to the
     \l{customwidgetplugin}{Custom Widget Plugin} and
-    \l{taskmenuextension}{Task Menu Extension Example} examples for more
+    \l{taskmenuextension}{Task Menu Extension} examples for more
     information about using custom widgets in \QD. Also, you can use the
     QDesignerCustomWidgetCollectionInterface class to combine several custom
     widgets into a single library.
