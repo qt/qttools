@@ -1012,19 +1012,23 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     if (!fn->isNonvirtual() && kind != CXCursor_Destructor)
         setOverridesForFunction(fn, cursor);
 
-    int numArg = clang_getNumArgTypes(funcType);
     Parameters &parameters = fn->parameters();
     parameters.clear();
-    parameters.reserve(numArg);
+    parameters.reserve(function_declaration->getNumParams());
 
-    for (int i = 0; i < numArg; ++i) {
-        CXType argType = clang_getArgType(funcType, i);
-        parameters.append(adjustTypeName(fromCXString(clang_getTypeSpelling(argType))));
-        if (argType.kind == CXType_Typedef || argType.kind == CXType_Elaborated) {
-            parameters.last().setCanonicalType(fromCXString(
-                clang_getTypeSpelling(clang_getCanonicalType(argType))));
-        }
+    const clang::LangOptions& lang_options = function_declaration->getASTContext().getLangOpts();
+    clang::PrintingPolicy p{lang_options};
+
+    for (clang::ParmVarDecl* const parameter_declaration : function_declaration->parameters()) {
+        clang::QualType parameter_type = parameter_declaration->getOriginalType();
+
+        parameters.append(adjustTypeName(QString::fromStdString(parameter_type.getAsString(p))));
+
+        if (!parameter_type.isCanonical())
+            parameters.last().setCanonicalType(QString::fromStdString(parameter_type.getCanonicalType().getAsString(p)));
     }
+
+
     if (parameters.count() > 0) {
         if (parameters.last().type().endsWith(QLatin1String("QPrivateSignal"))) {
             parameters.pop_back(); // remove the QPrivateSignal argument
