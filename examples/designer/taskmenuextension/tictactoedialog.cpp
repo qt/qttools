@@ -27,7 +27,7 @@ TicTacToeDialog::TicTacToeDialog(TicTacToe *tic, QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::accepted, this, &TicTacToeDialog::saveState);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    auto *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(editor);
     mainLayout->addWidget(buttonBox);
 
@@ -53,10 +53,8 @@ void TicTacToeDialog::resetState()
 void TicTacToeDialog::saveState()
 {
 //! [3] //! [4]
-    if (QDesignerFormWindowInterface *formWindow
-            = QDesignerFormWindowInterface::findFormWindow(ticTacToe)) {
+    if (auto *formWindow = QDesignerFormWindowInterface::findFormWindow(ticTacToe))
         formWindow->cursor()->setProperty("state", editor->state());
-    }
 //! [4] //! [5]
     accept();
 }
