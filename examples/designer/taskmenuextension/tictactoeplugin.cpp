@@ -71,7 +71,7 @@ void TicTacToePlugin::initialize(QDesignerFormEditorInterface *formEditor)
     if (initialized)
         return;
 
-    QExtensionManager *manager = formEditor->extensionManager();
+    auto *manager = formEditor->extensionManager();
     Q_ASSERT(manager != nullptr);
 //! [2]
 
