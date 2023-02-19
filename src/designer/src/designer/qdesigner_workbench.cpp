@@ -233,6 +233,7 @@ QDesignerWorkbench::~QDesignerWorkbench()
         break;
     }
     delete m_globalMenuBar;
+    m_windowMenu = nullptr;
     delete m_dockedMainWindow;
 }
 
@@ -589,7 +590,8 @@ void QDesignerWorkbench::removeFormWindow(QDesignerFormWindow *formWindow)
 
     if (QAction *action = formWindow->action()) {
         m_windowActions->removeAction(action);
-        m_windowMenu->removeAction(action);
+        if (m_windowMenu)
+            m_windowMenu->removeAction(action);
     }
 
     if (m_formWindows.isEmpty()) {
