@@ -422,6 +422,14 @@ backslashed \ stuff.</source>
     </message>
 </context>
 <context>
+    <name>QTBUG36589</name>
+    <message>
+        <location filename="main.cpp" line="719"/>
+        <source>string after an enum class</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QTBUG99415</name>
     <message>
         <location filename="main.cpp" line="707"/>
