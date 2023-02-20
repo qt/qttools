@@ -718,3 +718,13 @@ class QTBUG110630 : QObject {
         tr("translation with extras-quoted field");
     }
 };
+
+// enum class - C++11
+enum class Bar : unsigned short;
+// QTBUG-36589: Don't treat enum classes as a normal class
+class QTBUG36589 : QObject {
+    Q_OBJECT
+    const QString txt() {
+        tr("string after an enum class");
+    }
+};
