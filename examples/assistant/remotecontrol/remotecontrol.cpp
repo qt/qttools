@@ -13,12 +13,12 @@ RemoteControl::RemoteControl(QWidget *parent, Qt::WindowFlags flags)
         : QMainWindow(parent, flags)
 {
     ui.setupUi(this);
-    connect(ui.indexLineEdit, SIGNAL(returnPressed()),
-        this, SLOT(on_indexButton_clicked()));
-    connect(ui.identifierLineEdit, SIGNAL(returnPressed()),
-        this, SLOT(on_identifierButton_clicked()));
-    connect(ui.urlLineEdit, SIGNAL(returnPressed()),
-        this, SLOT(on_urlButton_clicked()));
+    connect(ui.indexLineEdit, &QLineEdit::returnPressed,
+        this, &RemoteControl::on_indexButton_clicked);
+    connect(ui.identifierLineEdit, &QLineEdit::returnPressed,
+        this, &RemoteControl::on_identifierButton_clicked);
+    connect(ui.urlLineEdit, &QLineEdit::returnPressed,
+        this, &RemoteControl::on_urlButton_clicked);
 
     QString rc;
     QTextStream(&rc) << QLatin1String("qthelp://org.qt-project.qtdoc.")
@@ -29,8 +29,8 @@ RemoteControl::RemoteControl(QWidget *parent, Qt::WindowFlags flags)
     ui.startUrlLineEdit->setText(rc);
 
     process = new QProcess(this);
-    connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
-        this, SLOT(helpViewerClosed()));
+    connect(process, &QProcess::finished,
+        this, &RemoteControl::helpViewerClosed);
 }
 
 RemoteControl::~RemoteControl()
