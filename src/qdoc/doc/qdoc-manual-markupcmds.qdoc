@@ -2945,24 +2945,16 @@
     \target brief-command
     \section1 \\brief
 
-    The \\brief command introduces a one-sentence description of a
-    class, namespace, header file, property, or variable.
+    The \\brief command introduces a one-sentence description of
+    any of the \l{Topic Commands}.
 
     The brief text is used to introduce the documentation of the
     associated object, and in lists generated using the \l
     {generatelist-command} {\\generatelist} command and the \l
     {annotatedlist-command} {\\annotatedlist} command.
 
-    The \\brief command can be used in two significant different ways:
-    \l {brief class} {One for classes, namespaces and header files},
-    and \l {brief-property} {one for properties and variables}.
-
-    \target brief-property
-
-    When the \\brief command is used to describe a property or a
-    variable, the brief text must be a sentence fragment starting with
-    "whether" (for a boolean property or variable) or starting with
-    "the" (for any other property or variable).
+    The brief text will be displayed in the documentation
+    for that particular topic.
 
     For example the boolean QWidget::isWindow property:
 
@@ -3025,7 +3017,6 @@
        {QWidget::rect()} {rect()}, ...
     \endquotation
 
-    \target brief class
 
     When the \\brief command is used to describe a class, we recommend
     using a complete sentence like this:
