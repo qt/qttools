@@ -1051,9 +1051,8 @@
     {brief-command} {\\brief} command. For properties the \l
     {brief-command} {\\brief} command's argument is a sentence
     fragment that will be included in a one line description of the
-    property. The command follows the same rules for the \l
-    {brief-property} {description} as the \l {variable-command}
-    {\\variable} command.
+    property. The command follows the same rules for the
+    description as the \l {variable-command} {\\variable} command.
 
     \badcode *
     /\1!
