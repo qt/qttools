@@ -33,14 +33,14 @@ void MainWindow::createActions()
     exitAct = new QAction(tr("E&xit"), this);
     exitAct->setShortcut(tr("Ctrl+Q", "Quit"));
 //! [2]
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+    connect(exitAct, &QAction::triggered, this, &MainWindow::close);
 
     aboutAct = new QAction(tr("&About"), this);
     aboutAct->setShortcut(Qt::Key_F1);
-    connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+    connect(aboutAct, &QAction::triggered, this, &MainWindow::about);
 
     aboutQtAct = new QAction(tr("About &Qt"), this);
-    connect(aboutQtAct, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+    connect(aboutQtAct, &QAction::triggered, qApp, &QApplication::aboutQt);
 }
 
 void MainWindow::createMenus()

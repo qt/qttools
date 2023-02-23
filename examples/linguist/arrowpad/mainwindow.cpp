@@ -16,7 +16,7 @@ MainWindow::MainWindow()
 //! [1]
     exitAct = new QAction(tr("E&xit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);
-    connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+    connect(exitAct, &QAction::triggered, this, &MainWindow::close);
 //! [1]
 
     fileMenu = menuBar()->addMenu(tr("&File"));
