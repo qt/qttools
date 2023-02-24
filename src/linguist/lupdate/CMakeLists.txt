@@ -99,6 +99,12 @@ qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
         WrapLibClang::WrapLibClang # special case
 )
 
+if(QT_FEATURE_clangcpp)
+    # If libclangTooling.a is not built with -fPIE enabled we cannot link it to lupdate.
+    # TODO: Re-enable PIE once clang is built with PIE in provisioning.
+    set_target_properties(${target_name} PROPERTIES POSITION_INDEPENDENT_CODE FALSE)
+endif()
+
 qt_internal_extend_target(${target_name} CONDITION MSVC
     DEFINES _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)
 
