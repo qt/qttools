@@ -9,9 +9,8 @@
 
 #include <QtCore/qstring.h>
 
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmljsastvisitor_p.h>
-#    include <private/qqmljsengine_p.h>
+#include <private/qqmljsastvisitor_p.h>
+#include <private/qqmljsengine_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -136,7 +135,5 @@ private:
 Q_DECLARE_TYPEINFO(QmlMarkupVisitor::ExtraType, Q_PRIMITIVE_TYPE);
 
 QT_END_NAMESPACE
-
-#endif
 
 #endif

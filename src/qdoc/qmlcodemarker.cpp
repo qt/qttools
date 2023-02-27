@@ -10,13 +10,11 @@
 #include "qmlmarkupvisitor.h"
 #include "text.h"
 
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmljsast_p.h>
-#    include <private/qqmljsastfwd_p.h>
-#    include <private/qqmljsengine_p.h>
-#    include <private/qqmljslexer_p.h>
-#    include <private/qqmljsparser_p.h>
-#endif
+#include <private/qqmljsast_p.h>
+#include <private/qqmljsastfwd_p.h>
+#include <private/qqmljsengine_p.h>
+#include <private/qqmljslexer_p.h>
+#include <private/qqmljsparser_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -25,7 +23,6 @@ QT_BEGIN_NAMESPACE
  */
 bool QmlCodeMarker::recognizeCode(const QString &code)
 {
-#ifndef QT_NO_DECLARATIVE
     // Naive pre-check; starts with an import statement or 'CamelCase {'
     static const QRegularExpression regExp(QStringLiteral("^\\s*(import |([A-Z][a-z0-9]*)+\\s?{)"));
     if (!regExp.match(code).hasMatch())
@@ -40,10 +37,6 @@ bool QmlCodeMarker::recognizeCode(const QString &code)
     lexer.setCode(newCode, 1);
 
     return parser.parse();
-#else
-    Q_UNUSED(code);
-    return false;
-#endif
 }
 
 /*!
@@ -99,7 +92,6 @@ QString QmlCodeMarker::markedUpInclude(const QString &include)
 QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative */,
                                  const Location &location)
 {
-#ifndef QT_NO_DECLARATIVE
     QQmlJS::Engine engine;
     QQmlJS::Lexer lexer(&engine);
 
@@ -131,14 +123,8 @@ QString QmlCodeMarker::addMarkUp(const QString &code, const Node * /* relative *
     }
 
     return output;
-#else
-    Q_UNUSED(code);
-    location.warning("QtDeclarative not installed; cannot parse QML or JS.");
-    return QString();
-#endif
 }
 
-#ifndef QT_NO_DECLARATIVE
 /*
   Copied and pasted from
   src/declarative/qml/qqmlscriptparser.cpp.
@@ -185,6 +171,5 @@ QList<QQmlJS::SourceLocation> QmlCodeMarker::extractPragmas(QString &script)
     }
     return removed;
 }
-#endif
 
 QT_END_NAMESPACE

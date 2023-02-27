@@ -8,11 +8,9 @@
 
 #include <QtCore/qset.h>
 
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmljsengine_p.h>
-#    include <private/qqmljslexer_p.h>
-#    include <private/qqmljsparser_p.h>
-#endif
+#include <private/qqmljsengine_p.h>
+#include <private/qqmljslexer_p.h>
+#include <private/qqmljsparser_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -31,20 +29,16 @@ public:
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location &location, const QString &filePath) override;
 
-#ifndef QT_NO_DECLARATIVE
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     void extractPragmas(QString &script);
-#endif
 
 protected:
     const QSet<QString> &topicCommands();
 
 private:
-#ifndef QT_NO_DECLARATIVE
     QQmlJS::Engine m_engine {};
     QQmlJS::Lexer *m_lexer { nullptr };
     QQmlJS::Parser *m_parser { nullptr };
-#endif
 };
 
 QT_END_NAMESPACE

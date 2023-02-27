@@ -9,10 +9,8 @@
 
 #include <QtCore/qstring.h>
 
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmljsastvisitor_p.h>
-#    include <private/qqmljsengine_p.h>
-#endif
+#include <private/qqmljsastvisitor_p.h>
+#include <private/qqmljsengine_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -34,7 +32,6 @@ struct QmlPropArgs
     }
 };
 
-#ifndef QT_NO_DECLARATIVE
 class QmlDocVisitor : public QQmlJS::AST::Visitor
 {
 public:
@@ -90,7 +87,6 @@ private:
     Aggregate *m_current { nullptr };
     bool hasRecursionDepthError { false };
 };
-#endif
 
 QT_END_NAMESPACE
 

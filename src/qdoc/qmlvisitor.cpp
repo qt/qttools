@@ -17,14 +17,11 @@
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qglobal.h>
 
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmljsast_p.h>
-#    include <private/qqmljsengine_p.h>
-#endif
+#include <private/qqmljsast_p.h>
+#include <private/qqmljsengine_p.h>
 
 QT_BEGIN_NAMESPACE
 
-#ifndef QT_NO_DECLARATIVE
 /*!
   The constructor stores all the parameters in local data members.
  */
@@ -708,7 +705,5 @@ bool QmlDocVisitor::hasError() const
 {
     return hasRecursionDepthError;
 }
-
-#endif
 
 QT_END_NAMESPACE

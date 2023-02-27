@@ -6,14 +6,11 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qstringlist.h>
 
-#ifndef QT_NO_DECLARATIVE
-#    include <private/qqmljsast_p.h>
-#    include <private/qqmljsengine_p.h>
-#endif
+#include <private/qqmljsast_p.h>
+#include <private/qqmljsengine_p.h>
 
 QT_BEGIN_NAMESPACE
 
-#ifndef QT_NO_DECLARATIVE
 QmlMarkupVisitor::QmlMarkupVisitor(const QString &source,
                                    const QList<QQmlJS::SourceLocation> &pragmas,
                                    QQmlJS::Engine *engine)
@@ -793,7 +790,5 @@ void QmlMarkupVisitor::throwRecursionDepthError()
 {
     m_hasRecursionDepthError = true;
 }
-
-#endif
 
 QT_END_NAMESPACE

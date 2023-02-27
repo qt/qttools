@@ -85,6 +85,7 @@ qt_internal_add_tool(${target_name}
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_LIST_DIR}
     LIBRARIES
+        Qt::QmlPrivate
         WrapLibClang::WrapLibClang
     DEFINES
         #(CLANG_RESOURCE_DIR=\"/clang//include\") # special case remove
@@ -99,16 +100,6 @@ qt_internal_return_unless_building_tools()
 # If libclangTooling.a is not built with -fPIE enabled we cannot link it to qdoc.
 # TODO: Re-enable PIE once clang is built with PIE in provisioning.
 set_target_properties(${target_name} PROPERTIES POSITION_INDEPENDENT_CODE FALSE)
-
-qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlPrivate
-    LIBRARIES
-        Qt::QmlPrivate
-)
-
-qt_internal_extend_target(${target_name} CONDITION NOT TARGET Qt::QmlPrivate
-    DEFINES
-        QT_NO_DECLARATIVE
-)
 
 qt_internal_extend_target(${target_name} CONDITION (WIN32 AND ICC) OR MSVC
     LINK_OPTIONS
