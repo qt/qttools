@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+class Config;
+
 /*
  Contains information about a location
  where a ConfigVar string needs to be expanded
@@ -35,25 +37,22 @@ struct ExpandVar
     }
 };
 
-/*
-  This struct contains all the information for
-  one config variable found in a qdocconf file.
- */
-struct ConfigVar
+class ConfigVar
 {
-    QString m_name {};
-
+public:
     struct ConfigValue {
         QString m_value;
         QString m_path;
     };
 
-    QList<ConfigValue> m_values {};
-    Location m_location {};
-    QList<ExpandVar> m_expandVars {};
+    [[nodiscard]] QString asString(const QString defaultString = QString()) const;
+    [[nodiscard]] QStringList asStringList() const;
+    [[nodiscard]] QSet<QString> asStringSet() const;
+    [[nodiscard]] bool asBool() const;
+    [[nodiscard]] int asInt() const;
+    [[nodiscard]] const Location &location() const { return m_location; }
 
     ConfigVar() = default;
-
     ConfigVar(QString name, const QStringList &values, const QString &dir,
               const Location &loc = Location(),
               const QList<ExpandVar> &expandVars = QList<ExpandVar>())
@@ -63,21 +62,16 @@ struct ConfigVar
             m_values << ConfigValue {v, dir};
     }
 
-    /*
-      Appends values to this ConfigVar, and adjusts the ExpandVar
-      parameters so they continue to refer to the correct values.
-    */
-    void append(const ConfigVar &other)
-    {
-        m_expandVars << other.m_expandVars;
-        QList<ExpandVar>::Iterator it = m_expandVars.end();
-        it -= other.m_expandVars.size();
-        std::for_each(it, m_expandVars.end(), [this](ExpandVar &v) {
-            v.m_valueIndex += m_values.size();
-        });
-        m_values << other.m_values;
-        m_location = other.m_location;
-    }
+private:
+    void append(const ConfigVar &other);
+
+private:
+    QString m_name {};
+    QList<ConfigValue> m_values {};
+    Location m_location {};
+    QList<ExpandVar> m_expandVars {};
+
+    friend class Config;
 };
 
 /*
@@ -124,16 +118,35 @@ public:
     [[nodiscard]] QStringList qdocFiles() const { return m_parser.positionalArguments(); }
     [[nodiscard]] const QString &programName() const { return m_prog; }
     [[nodiscard]] const Location &location() const { return m_location; }
-    [[nodiscard]] const Location &lastLocation() const { return m_lastLocation; }
-    [[nodiscard]] bool getBool(const QString &var) const;
-    [[nodiscard]] int getInt(const QString &var) const;
-
+    [[nodiscard]] ConfigVar &get(const QString &var)
+    {
+        // Avoid injecting default-constructed values to map if var doesn't exist
+        static ConfigVar empty;
+        return (m_configVars.contains(var)) ? m_configVars[var] : empty;
+    }
+    [[nodiscard]] bool getBool(const QString &var) const
+    {
+        return m_configVars.value(var).asBool();
+    }
+    [[nodiscard]] int getInt(const QString &var) const
+    {
+        return m_configVars.value(var).asInt();
+    }
     [[nodiscard]] QString getOutputDir(const QString &format = QString("HTML")) const;
     [[nodiscard]] QSet<QString> getOutputFormats() const;
     [[nodiscard]] QString getString(const QString &var,
-                                    const QString &defaultString = QString()) const;
-    [[nodiscard]] QSet<QString> getStringSet(const QString &var) const;
-    [[nodiscard]] QStringList getStringList(const QString &var) const;
+                                    const QString &defaultString = QString()) const
+    {
+        return m_configVars.value(var).asString(defaultString);
+    }
+    [[nodiscard]] QSet<QString> getStringSet(const QString &var) const
+    {
+        return m_configVars.value(var).asStringSet();
+    }
+    [[nodiscard]] QStringList getStringList(const QString &var) const
+    {
+        return m_configVars.value(var).asStringList();
+    }
     [[nodiscard]] QStringList getCanonicalPathList(const QString &var,
                                                    PathFlags flags = None) const;
     [[nodiscard]] QRegularExpression getRegExp(const QString &var) const;
@@ -192,11 +205,6 @@ private:
     void setIncludePaths();
     void setIndexDirs();
     void expandVariables();
-    inline void updateLocation(const ConfigVar &cv) const
-    {
-        if (!cv.m_location.isEmpty())
-            const_cast<Config *>(this)->m_lastLocation = cv.m_location;
-    }
 
     QStringList m_dependModules {};
     QStringList m_defines {};
@@ -221,7 +229,6 @@ private:
 
     QString m_prog {};
     Location m_location {};
-    Location m_lastLocation {};
     ConfigVarMap m_configVars {};
 
     static QMap<QString, QString> m_extractedDirs;
@@ -395,12 +402,12 @@ struct ConfigStrings
 
 inline bool Config::singleExec() const
 {
-    return getBool(CONFIG_SINGLEEXEC);
+    return m_configVars.value(CONFIG_SINGLEEXEC).asBool();
 }
 
 inline bool Config::dualExec() const
 {
-    return !getBool(CONFIG_SINGLEEXEC);
+    return !m_configVars.value(CONFIG_SINGLEEXEC).asBool();
 }
 
 QT_END_NAMESPACE

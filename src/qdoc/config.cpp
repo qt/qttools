@@ -208,6 +208,100 @@ QStack<QString> Config::m_workingDirs;
 QMap<QString, QStringList> Config::m_includeFilesMap;
 
 /*!
+  \class ConfigVar
+  \brief contains all the information for a single config variable in a
+         .qdocconf file.
+*/
+
+/*!
+  Returns this configuration variable as a string.
+
+  If the variable is not defined, returns \a defaultString.
+
+  \note By default, \a defaultString is a null string.
+  This allows determining whether a configuration variable is
+  undefined (returns a null string) or defined as empty
+  (returns a non-null, empty string).
+*/
+QString ConfigVar::asString(const QString defaultString) const
+{
+    if (m_name.isEmpty())
+        return defaultString;
+
+    QString result(""); // an empty but non-null string
+    for (const auto &value : std::as_const(m_values)) {
+        if (!result.isEmpty() && !result.endsWith(QChar('\n')))
+            result.append(QChar(' '));
+        result.append(value.m_value);
+    }
+    return result;
+}
+
+/*!
+  Returns this config variable as a string list.
+*/
+QStringList ConfigVar::asStringList() const
+{
+    QStringList result;
+    for (const auto &value : std::as_const(m_values))
+        result << value.m_value;
+    return result;
+}
+
+/*!
+  Returns this config variable as a string set.
+*/
+QSet<QString> ConfigVar::asStringSet() const
+{
+    const auto &stringList = asStringList();
+    return QSet<QString>(stringList.cbegin(), stringList.cend());
+}
+
+/*!
+  Returns this config variable as a boolean.
+*/
+bool ConfigVar::asBool() const
+{
+    return QVariant(asString()).toBool();
+}
+
+/*!
+  Returns this configuration variable as an integer; iterates
+  through the string list, interpreting each
+  string in the list as an integer and adding it to a total sum.
+
+  Returns 0 if this variable is defined as empty, and
+  -1 if it's is not defined.
+ */
+int ConfigVar::asInt() const
+{
+    const QStringList strs = asStringList();
+    if (strs.isEmpty())
+        return -1;
+
+    int sum = 0;
+    for (const auto &str : strs)
+        sum += str.toInt();
+    return sum;
+}
+
+/*!
+  Appends values to this ConfigVar, and adjusts the ExpandVar
+  parameters so that they continue to refer to the correct values.
+*/
+void ConfigVar::append(const ConfigVar &other)
+{
+    m_expandVars << other.m_expandVars;
+    QList<ExpandVar>::Iterator it = m_expandVars.end();
+    it -= other.m_expandVars.size();
+    std::for_each(it, m_expandVars.end(), [this](ExpandVar &v) {
+        v.m_valueIndex += m_values.size();
+    });
+    m_values << other.m_values;
+    m_location = other.m_location;
+}
+
+/*!
   \class Config
   \brief The Config class contains the configuration variables
   for controlling how qdoc produces documentation.
@@ -256,7 +350,7 @@ Config::~Config()
  */
 void Config::clear()
 {
-    m_location = m_lastLocation = Location();
+    m_location = Location();
     m_configVars.clear();
     m_includeFilesMap.clear();
 }
@@ -289,7 +383,7 @@ void Config::reset()
     SET(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL, redirectDocumentationToDevNullOption);
     SET(CONFIG_AUTOLINKERRORS, autoLinkErrorsOption);
 #undef SET
-    m_showInternal = getBool(CONFIG_SHOWINTERNAL);
+    m_showInternal = m_configVars.value(CONFIG_SHOWINTERNAL).asBool();
     setListFlag(CONFIG_NOLINKERRORS,
                 m_parser.isSet(m_parser.noLinkErrorsOption)
                         || qEnvironmentVariableIsSet("QDOC_NOLINKERRORS"));
@@ -314,7 +408,6 @@ void Config::load(const QString &fileName)
         m_location = Location(fileName);
     else
         m_location.setEtc(true);
-    m_lastLocation = Location();
 
     expandVariables();
 
@@ -352,9 +445,9 @@ void Config::expandVariables()
             }
             QString expanded;
             if (it->m_delim.isNull())
-                expanded = getStringList(key).join(QString());
+                expanded = m_configVars.value(key).asStringList().join(QString());
             else
-                expanded = getStringList(key).join(it->m_delim);
+                expanded = m_configVars.value(key).asStringList().join(it->m_delim);
             configVar.m_values[it->m_valueIndex].m_value.insert(it->m_index, expanded);
         }
         configVar.m_expandVars.clear();
@@ -447,33 +540,6 @@ void Config::setIndexDirs()
 }
 
 /*!
-  Looks up the configuration variable \a var in the string
-  map and returns the boolean value.
- */
-bool Config::getBool(const QString &var) const
-{
-    return QVariant(getString(var)).toBool();
-}
-
-/*!
-  Looks up the configuration variable \a var in the string list
-  map. Iterates through the string list found, interpreting each
-  string in the list as an integer and adding it to a total sum.
-  Returns the sum or \c -1 if \a var is not set.
- */
-int Config::getInt(const QString &var) const
-{
-    const QStringList strs = getStringList(var);
-    if (strs.isEmpty())
-        return -1;
-
-    int sum = 0;
-    for (const auto &str : strs)
-        sum += str.toInt();
-    return sum;
-}
-
-/*!
   Function to return the correct outputdir for the output \a format.
   If \a format is not specified, defaults to 'HTML'.
   outputdir can be set using the qdocconf or the command-line
@@ -483,16 +549,16 @@ QString Config::getOutputDir(const QString &format) const
 {
     QString t;
     if (overrideOutputDir.isNull())
-        t = getString(CONFIG_OUTPUTDIR);
+        t = m_configVars.value(CONFIG_OUTPUTDIR).asString();
     else
         t = overrideOutputDir;
-    if (getBool(CONFIG_SINGLEEXEC)) {
-        QString project = getString(CONFIG_PROJECT);
+    if (m_configVars.value(CONFIG_SINGLEEXEC).asBool()) {
+        QString project = m_configVars.value(CONFIG_PROJECT).asString();
         t += QLatin1Char('/') + project.toLower();
     }
-    if (getBool(format + Config::dot + "nosubdirs")) {
+    if (m_configVars.value(format + Config::dot + "nosubdirs").asBool()) {
         t = t.left(t.lastIndexOf('/'));
-        QString singleOutputSubdir = getString(format + Config::dot + "outputsubdir");
+        QString singleOutputSubdir = m_configVars.value(format + Config::dot + "outputsubdir").asString();
         if (singleOutputSubdir.isEmpty())
             singleOutputSubdir = "html";
         t += QLatin1Char('/') + singleOutputSubdir;
@@ -508,66 +574,9 @@ QString Config::getOutputDir(const QString &format) const
 QSet<QString> Config::getOutputFormats() const
 {
     if (overrideOutputFormats.isEmpty())
-        return getStringSet(CONFIG_OUTPUTFORMATS);
+        return m_configVars.value(CONFIG_OUTPUTFORMATS).asStringSet();
     else
         return overrideOutputFormats;
-}
-
-/*!
-  Returns the value of a configuration variable \a var
-  as a string. If \a var is defined, updates the internal
-  location to the location of \a var for the purposes of
-  error reporting.
-
-  If \a var is not defined, returns \a defaultString.
-
-  \note By default, \a defaultString is a null string. If \a var
-  is found but contains an empty string, that is returned instead.
-  This allows determining whether a configuration variable is
-  undefined (null string) or defined as empty (empty string).
- */
-QString Config::getString(const QString &var, const QString &defaultString) const
-{
-    const auto &configVar = m_configVars.value(var);
-
-    if (configVar.m_name.isEmpty())
-        return defaultString;
-    updateLocation(configVar);
-
-    QString result(""); // an empty but non-null string
-    for (const auto &value : configVar.m_values) {
-        if (!result.isEmpty() && !result.endsWith(QChar('\n')))
-            result.append(QChar(' '));
-        result.append(value.m_value);
-    }
-    return result;
-}
-
-/*!
-  Looks up the configuration variable \a var in the string
-  list map, converts the string list it maps to into a set
-  of strings, and returns the set.
- */
-QSet<QString> Config::getStringSet(const QString &var) const
-{
-    const auto &stringList = getStringList(var);
-    return QSet<QString>(stringList.cbegin(), stringList.cend());
-}
-
-/*!
-  Returns the string list contained in the configuration variable
-  \a var. If \a var is defined, updates the internal location
-  to the location of \a var for the purposes of error reporting.
- */
-QStringList Config::getStringList(const QString &var) const
-{
-    const auto &configVar = m_configVars.value(var);
-    updateLocation(configVar);
-
-    QStringList result;
-    for (const auto &value : configVar.m_values)
-        result << value.m_value;
-    return result;
 }
 
 // TODO: [late-canonicalization][pod-configuration]
@@ -590,15 +599,11 @@ QStringList Config::getStringList(const QString &var) const
    for invalid paths. The \c IncludePaths flag is used as a hint to strip
    away potential prefixes found in include paths before attempting to
    canonicalize.
-
-   \note The internal location is updated to the location of \a var for
-         the purposes of error reporting.
  */
 QStringList Config::getCanonicalPathList(const QString &var, PathFlags flags) const
 {
     QStringList result;
     const auto &configVar = m_configVars.value(var);
-    updateLocation(configVar);
 
     for (const auto &value : configVar.m_values) {
         const QString &currentPath = value.m_path;
@@ -632,7 +637,7 @@ QStringList Config::getCanonicalPathList(const QString &var, PathFlags flags) co
         if (dir.isRelative())
             dir.setPath(currentPath + QLatin1Char('/') + path);
         if ((flags & Validate) && !QFileInfo::exists(dir.path()))
-            m_lastLocation.warning(QStringLiteral("Cannot find file or directory: %1").arg(path));
+            configVar.m_location.warning(QStringLiteral("Cannot find file or directory: %1").arg(path));
         else {
             const QString canonicalPath = dir.canonicalPath();
             if (!canonicalPath.isEmpty())
@@ -642,7 +647,7 @@ QStringList Config::getCanonicalPathList(const QString &var, PathFlags flags) co
             else
                 qCDebug(lcQdoc) <<
                         qUtf8Printable(QStringLiteral("%1: Ignored nonexistent path \'%2\'")
-                                .arg(m_lastLocation.toString(), rawValue));
+                                .arg(configVar.m_location.toString(), rawValue));
         }
     }
     return result;
@@ -680,7 +685,7 @@ QRegularExpression Config::getRegExp(const QString &var) const
  */
 QList<QRegularExpression> Config::getRegExpList(const QString &var) const
 {
-    const QStringList strs = getStringList(var);
+    const QStringList strs = m_configVars.value(var).asStringList();
     QList<QRegularExpression> regExps;
     for (const auto &str : strs)
         regExps += QRegularExpression(str);
@@ -759,7 +764,7 @@ QStringList Config::getAllFiles(const QString &filesVar, const QString &dirsVar,
     QStringList result = getCanonicalPathList(filesVar, Validate);
     const QStringList dirs = getCanonicalPathList(dirsVar, Validate);
 
-    const QString nameFilter = getString(filesVar + dot + CONFIG_FILEEXTENSIONS);
+    const QString nameFilter = m_configVars.value(filesVar + dot + CONFIG_FILEEXTENSIONS).asString();
 
     for (const auto &dir : dirs)
         result += getFilesHere(dir, nameFilter, location(), excludedDirs, excludedFiles);
@@ -783,7 +788,7 @@ QStringList Config::getExampleImageFiles(const QSet<QString> &excludedDirs,
 {
     QStringList result;
     const QStringList dirs = getCanonicalPathList("exampledirs");
-    const QString nameFilter = getString(CONFIG_EXAMPLES + dot + CONFIG_IMAGEEXTENSIONS);
+    const QString nameFilter = m_configVars.value(CONFIG_EXAMPLES + dot + CONFIG_IMAGEEXTENSIONS).asString();
 
     for (const auto &dir : dirs)
         result += getFilesHere(dir, nameFilter, location(), excludedDirs, excludedFiles);

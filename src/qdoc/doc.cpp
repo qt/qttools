@@ -293,16 +293,16 @@ void Doc::initialize(FileResolver& file_resolver)
 {
     Config &config = Config::instance();
     DocParser::initialize(config, file_resolver);
-
     QStringMap reverseAliasMap;
 
     const auto &configAliases = config.subVars(CONFIG_ALIAS);
     for (const auto &a : configAliases) {
-        QString alias = config.getString(CONFIG_ALIAS + Config::dot + a);
+        const auto &aliasConfigVar = config.get(CONFIG_ALIAS + Config::dot + a);
+        QString alias{aliasConfigVar.asString()};
         if (reverseAliasMap.contains(alias)) {
-            config.lastLocation().warning(QStringLiteral("Command name '\\%1' cannot stand"
-                                                         " for both '\\%2' and '\\%3'")
-                                                  .arg(alias, reverseAliasMap[alias], a));
+            aliasConfigVar.location().warning(QStringLiteral("Command name '\\%1' cannot stand"
+                                         " for both '\\%2' and '\\%3'")
+                                         .arg(alias, reverseAliasMap[alias], a));
         } else {
             reverseAliasMap.insert(alias, a);
         }
@@ -314,16 +314,18 @@ void Doc::initialize(FileResolver& file_resolver)
         QString macroDotName = CONFIG_MACRO + Config::dot + macroName;
         Macro macro;
         macro.numParams = -1;
-        macro.m_defaultDef = config.getString(macroDotName);
+        const auto &macroConfigVar = config.get(macroDotName);
+        macro.m_defaultDef = macroConfigVar.asString();
         if (!macro.m_defaultDef.isEmpty()) {
-            macro.m_defaultDefLocation = config.lastLocation();
+            macro.m_defaultDefLocation = macroConfigVar.location();
             macro.numParams = Config::numParams(macro.m_defaultDef);
         }
         bool silent = false;
 
         const auto &macroDotNames = config.subVars(macroDotName);
         for (const auto &f : macroDotNames) {
-            QString def = config.getString(macroDotName + Config::dot + f);
+            const auto &macroSubVar = config.get(macroDotName + Config::dot + f);
+            QString def{macroSubVar.asString()};
             if (!def.isEmpty()) {
                 macro.m_otherDefs.insert(f, def);
                 int m = Config::numParams(def);
@@ -335,11 +337,11 @@ void Doc::initialize(FileResolver& file_resolver)
                         QString other = QStringLiteral("default");
                         if (macro.m_defaultDef.isEmpty())
                             other = macro.m_otherDefs.constBegin().key();
-                        config.lastLocation().warning(
+                        macroSubVar.location().warning(
                                 QStringLiteral("Macro '\\%1' takes inconsistent number of "
                                                "arguments (%2 %3, %4 %5)")
-                                        .arg(macroName, f, QString::number(m), other,
-                                             QString::number(macro.numParams)));
+                                               .arg(macroName, f, QString::number(m), other,
+                                               QString::number(macro.numParams)));
                         silent = true;
                     }
                     if (macro.numParams < m)

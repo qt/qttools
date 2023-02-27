@@ -407,8 +407,8 @@ static void processQdocconfFile(const QString &fileName)
         if (!found) {
             auto *translator = new QTranslator(nullptr);
             if (!translator->load(file)) {
-                config.lastLocation().error(
-                        QCoreApplication::translate("QDoc", "Cannot load translator '%1'")
+                config.get(CONFIG_TRANSLATORS).location()
+                        .error(QCoreApplication::translate("QDoc", "Cannot load translator '%1'")
                                 .arg(file));
             } else {
                 QCoreApplication::instance()->installTranslator(translator);
@@ -417,13 +417,6 @@ static void processQdocconfFile(const QString &fileName)
         }
     }
 #endif
-
-    /*
-      Get the source language (Cpp) from the configuration
-      and the location in the configuration file where the
-      source language was set.
-     */
-    Location langLocation = config.lastLocation();
 
     /*
       Initialize the qdoc database, where all the parsed source files
@@ -440,7 +433,6 @@ static void processQdocconfFile(const QString &fileName)
       By default, the only output format is HTML.
      */
     const QSet<QString> outputFormats = config.getOutputFormats();
-    Location outputFormatsLocation = config.lastLocation();
 
     qdb->clearSearchOrder();
     if (!config.singleExec()) {
@@ -577,8 +569,9 @@ static void processQdocconfFile(const QString &fileName)
             generator->initializeFormat();
             generator->generateDocs();
         } else {
-            outputFormatsLocation.fatal(
-                    QCoreApplication::translate("QDoc", "Unknown output format '%1'").arg(format));
+            config.get(CONFIG_OUTPUTFORMATS).location()
+                    .fatal(QCoreApplication::translate("QDoc", "Unknown output format '%1'")
+                            .arg(format));
         }
     }
 

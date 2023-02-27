@@ -296,8 +296,9 @@ void Location::initialize()
     if (regExp.isValid()) {
         s_spuriousRegExp = new QRegularExpression(regExp);
     } else {
-        config.lastLocation().warning(
-                QStringLiteral("Invalid regular expression '%1'").arg(regExp.pattern()));
+        config.get(CONFIG_SPURIOUS).location()
+                .warning(QStringLiteral("Invalid regular expression '%1'")
+                        .arg(regExp.pattern()));
     }
 }
 

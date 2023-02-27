@@ -1767,8 +1767,8 @@ void QDocDatabase::updateNavigation()
                 atom = atom->next();
             }
         } else {
-            Config::instance().lastLocation().warning(
-                    QStringLiteral("Failed to find table of contents with title '%1'")
+            Config::instance().get(configVar).location()
+                    .warning(QStringLiteral("Failed to find table of contents with title '%1'")
                             .arg(tocTitle));
         }
     }

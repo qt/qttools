@@ -1616,23 +1616,22 @@ void Generator::initialize()
         QString formattingDotName = CONFIG_FORMATTING + Config::dot + n;
         const auto &formattingDotNames = config.subVars(formattingDotName);
         for (const auto &f : formattingDotNames) {
-            QString def = config.getString(formattingDotName + Config::dot + f);
+            const auto &configVar = config.get(formattingDotName + Config::dot + f);
+            QString def{configVar.asString()};
             if (!def.isEmpty()) {
                 int numParams = Config::numParams(def);
                 int numOccs = def.count("\1");
                 if (numParams != 1) {
-                    config.lastLocation().warning(QStringLiteral("Formatting '%1' must "
-                                                                 "have exactly one "
-                                                                 "parameter (found %2)")
-                                                          .arg(n)
-                                                          .arg(numParams));
+                    configVar.location().warning(QStringLiteral("Formatting '%1' must "
+                                                                "have exactly one "
+                                                                "parameter (found %2)")
+                                                                .arg(n, numParams));
                 } else if (numOccs > 1) {
-                    config.lastLocation().fatal(QStringLiteral("Formatting '%1' must "
-                                                               "contain exactly one "
-                                                               "occurrence of '\\1' "
-                                                               "(found %2)")
-                                                        .arg(n)
-                                                        .arg(numOccs));
+                    configVar.location().fatal(QStringLiteral("Formatting '%1' must "
+                                             "contain exactly one "
+                                             "occurrence of '\\1' "
+                                             "(found %2)")
+                                            .arg(n, numOccs));
                 } else {
                     int paramPos = def.indexOf("\1");
                     s_fmtLeftMaps[f].insert(n, def.left(paramPos));
@@ -1687,6 +1686,7 @@ void Generator::copyTemplateFiles(const QString &configVar, const QString &subDi
     // resolution uses.
     Config &config = Config::instance();
     QStringList files = config.getCanonicalPathList(configVar, Config::Validate);
+    const auto &loc = config.get(configVar).location();
     if (!files.isEmpty()) {
         QDir dirInfo;
         // TODO: [uncentralized-output-directory-structure]
@@ -1703,12 +1703,11 @@ void Generator::copyTemplateFiles(const QString &configVar, const QString &subDi
         QString templateDir = s_outDir + QLatin1Char('/') + subDir;
         if (!dirInfo.exists(templateDir) && !dirInfo.mkdir(templateDir)) {
             // TODO: [uncentralized-admonition]
-            config.lastLocation().fatal(
-                    QStringLiteral("Cannot create %1 directory '%2'").arg(subDir, templateDir));
+            loc.fatal(QStringLiteral("Cannot create %1 directory '%2'").arg(subDir, templateDir));
         } else {
             for (const auto &file : files) {
                 if (!file.isEmpty())
-                    Config::copyFile(config.lastLocation(), file, file, templateDir);
+                    Config::copyFile(loc, file, file, templateDir);
             }
         }
     }
@@ -1732,8 +1731,8 @@ void Generator::initializeFormat()
 
     s_outDir = config.getOutputDir(format());
     if (s_outDir.isEmpty()) {
-        config.lastLocation().fatal(QStringLiteral("No output directory specified in "
-                                                   "configuration file or on the command line"));
+        Location().fatal(QStringLiteral("No output directory specified in "
+                                        "configuration file or on the command line"));
     } else {
         s_outSubdir = s_outDir.mid(s_outDir.lastIndexOf('/') + 1);
     }
@@ -1742,13 +1741,11 @@ void Generator::initializeFormat()
     if (outputDir.exists()) {
         if (!config.generating() && Generator::useOutputSubdirs()) {
             if (!outputDir.isEmpty())
-                config.lastLocation().error(
-                        QStringLiteral("Output directory '%1' exists but is not empty")
+                Location().error(QStringLiteral("Output directory '%1' exists but is not empty")
                                 .arg(s_outDir));
         }
     } else if (!outputDir.mkpath(QStringLiteral("."))) {
-        config.lastLocation().fatal(
-                QStringLiteral("Cannot create output directory '%1'").arg(s_outDir));
+        Location().fatal(QStringLiteral("Cannot create output directory '%1'").arg(s_outDir));
     }
 
     // Output directory exists, which is enough for prepare phase.
@@ -1757,8 +1754,7 @@ void Generator::initializeFormat()
 
     const QLatin1String imagesDir("images");
     if (!outputDir.exists(imagesDir) && !outputDir.mkdir(imagesDir))
-        config.lastLocation().fatal(
-                QStringLiteral("Cannot create images directory '%1'").arg(outputDir.filePath(imagesDir)));
+        Location().fatal(QStringLiteral("Cannot create images directory '%1'").arg(outputDir.filePath(imagesDir)));
 
     copyTemplateFiles(format() + Config::dot + CONFIG_STYLESHEETS, "style");
     copyTemplateFiles(format() + Config::dot + CONFIG_SCRIPTS, "scripts");
