@@ -869,10 +869,12 @@ void MainWindow::showAboutDialog()
     } else {
         QByteArray resources;
 #if defined(BROWSER_QTWEBKIT)
-        const QString browser = QStringLiteral("Qt WebKit");
+        QString browser = QStringLiteral("Qt WebKit");
 #else
-        const QString browser = QStringLiteral("QTextBrowser");
+        QString browser = QStringLiteral("QTextBrowser");
 #endif
+        if (m_centralWidget->currentHelpViewer())
+            browser = QStringLiteral("QLiteHtmlWidget");
         aboutDia.setText(tr("<center>"
             "<h3>%1</h3>"
             "<p>Version %2</p>"
