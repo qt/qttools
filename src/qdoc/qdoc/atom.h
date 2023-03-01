@@ -31,6 +31,8 @@ public:
         CodeBad,
         CodeQuoteArgument,
         CodeQuoteCommand,
+        DetailsLeft,
+        DetailsRight,
         DivLeft,
         DivRight,
         ExampleFileLink,

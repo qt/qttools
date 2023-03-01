@@ -86,6 +86,8 @@
                 <section id="linking-to-something-in-a-section-title">
                     <heading level="1">Linking to <link raw="Further information" href="qdoctests-qdocfileoutput.html#further-information" type="page" page="Testing QDoc output from .qdoc files">something</link> in a section title</heading>
                     <para>This is allowed but a questionable practice.</para>
+                    <para>
+                        <bold>Note:</bold> You're looking at detailed information.</para>
                 </section>
             </description>
         </page>

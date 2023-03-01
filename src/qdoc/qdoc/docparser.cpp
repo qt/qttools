@@ -36,11 +36,13 @@ enum {
     CMD_CAPTION,
     CMD_CODE,
     CMD_CODELINE,
+    CMD_DETAILS,
     CMD_DIV,
     CMD_DOTS,
     CMD_E,
     CMD_ELSE,
     CMD_ENDCODE,
+    CMD_ENDDETAILS,
     CMD_ENDDIV,
     CMD_ENDFOOTNOTE,
     CMD_ENDIF,
@@ -136,11 +138,13 @@ static struct
              { "caption", CMD_CAPTION },
              { "code", CMD_CODE },
              { "codeline", CMD_CODELINE },
+             { "details", CMD_DETAILS },
              { "div", CMD_DIV },
              { "dots", CMD_DOTS },
              { "e", CMD_E },
              { "else", CMD_ELSE },
              { "endcode", CMD_ENDCODE },
+             { "enddetails", CMD_ENDDETAILS },
              { "enddiv", CMD_ENDDIV },
              { "endfootnote", CMD_ENDFOOTNOTE },
              { "endif", CMD_ENDIF },
@@ -381,6 +385,16 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     append(Atom::Qml,
                            getCode(CMD_QML, CodeMarker::markerForLanguage(QLatin1String("QML")),
                                    getMetaCommandArgument(cmdStr)));
+                    break;
+                case CMD_DETAILS:
+                    leavePara();
+                    append(Atom::DetailsLeft, getArgument());
+                    m_openedCommands.push(cmd);
+                    break;
+                case CMD_ENDDETAILS:
+                    leavePara();
+                    append(Atom::DetailsRight);
+                    closeCommand(cmd);
                     break;
                 case CMD_DIV:
                     leavePara();
@@ -1749,7 +1763,8 @@ void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, con
     if (m_paragraphState == OutsideParagraph) {
 
         if ((m_private->m_text.lastAtom()->type() != Atom::ListItemLeft)
-            && (m_private->m_text.lastAtom()->type() != Atom::DivLeft)) {
+            && (m_private->m_text.lastAtom()->type() != Atom::DivLeft)
+            && (m_private->m_text.lastAtom()->type() != Atom::DetailsLeft)) {
             leaveValueList();
         }
 
@@ -2425,6 +2440,8 @@ int DocParser::endCmdFor(int cmd)
         return CMD_ENDCODE;
     case CMD_CODE:
         return CMD_ENDCODE;
+    case CMD_DETAILS:
+        return CMD_ENDDETAILS;
     case CMD_DIV:
         return CMD_ENDDIV;
     case CMD_QML:

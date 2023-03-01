@@ -370,6 +370,16 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                                  m_codePrefix, m_codeSuffix)
               << "</pre>\n";
         break;
+    case Atom::DetailsLeft:
+        out() << "<details>\n";
+        if (!atom->string().isEmpty())
+            out() << "<summary>" << protectEnc(atom->string()) << "</summary>\n";
+        else
+            out() << "<summary>...</summary>\n";
+        break;
+    case Atom::DetailsRight:
+        out() << "</details>\n";
+        break;
     case Atom::DivLeft:
         out() << "<div";
         if (!atom->string().isEmpty())

@@ -50,6 +50,8 @@ QT_BEGIN_NAMESPACE
   \value CodeBad
   \value CodeQuoteArgument
   \value CodeQuoteCommand
+  \value DetailsLeft
+  \value DetailsRight
   \value DivLeft
   \value DivRight
   \value ExampleFileLink
@@ -130,6 +132,8 @@ static const struct
              { "CodeBad", Atom::CodeBad },
              { "CodeQuoteArgument", Atom::CodeQuoteArgument },
              { "CodeQuoteCommand", Atom::CodeQuoteCommand },
+             { "DetailsLeft", Atom::DetailsLeft },
+             { "DetailsRight", Atom::DetailsRight },
              { "DivLeft", Atom::DivLeft },
              { "DivRight", Atom::DivRight },
              { "ExampleFileLink", Atom::ExampleFileLink },

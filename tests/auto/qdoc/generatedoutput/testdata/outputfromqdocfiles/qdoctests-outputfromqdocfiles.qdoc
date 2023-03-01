@@ -55,6 +55,10 @@
     \section1 Linking to \l {Further information}{something} in a section title
 
     This is allowed but a questionable practice.
+
+    \details {\PROD details}
+        \note You're looking at detailed information.
+    \enddetails
 */
 
 /*!

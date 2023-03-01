@@ -173,6 +173,46 @@
 
     See also \l {tt-command} {\\tt} and \l {code-command} {\\code}.
 
+    \target details-command
+    \section1 \\details
+
+    The \\details and \\enddetails commands generates a collapsible <details>
+    element with a <summary> to control the hidden/visible state.
+
+    When generating HTML output, use the \\details and \\enddetails commands to
+    generate a collapsible \c{<details>} HTML element. The command takes an
+    optional summary string enclosed in curly braces. This optional argument
+    specifies a visible heading for the details.
+
+    For example, with the following input:
+    \badcode *
+        /\1!
+            \details {QDoc details}
+              \note You're looking at detailed information.
+            \enddetails
+        \1/
+    \endcode
+
+    If QDoc is generating HTML, it will translate these commands to:
+
+    \badcode
+    <summary>QDoc details</summary><div class="admonition note"><p><b>Note: </b>You're looking at detailed information.</p></div>
+    \endcode
+
+    QDoc renders this as:
+
+    \raw HTML
+        <details>
+        <summary>QDoc details</summary>
+        <div class="admonition note">
+        <p><b>Note: </b>You're looking at detailed information.</p>
+        </div>
+        </details>
+    \endraw
+
+    For any other output format, QDoc generates the contents as a normal paragraph,
+    ignoring the summary string.
+
     \target div-command
     \section1 \\div
 

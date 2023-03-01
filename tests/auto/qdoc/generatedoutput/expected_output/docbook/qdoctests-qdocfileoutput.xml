@@ -73,5 +73,8 @@
 <db:section xml:id="linking-to-something-in-a-section-title">
 <db:title>Linking to <db:link xlink:href="qdoctests-qdocfileoutput.xml#further-information">something</db:link> in a section title</db:title>
 <db:para>This is allowed but a questionable practice.</db:para>
+<db:note>
+<db:para>You're looking at detailed information.</db:para>
+</db:note>
 </db:section>
 </db:article>

@@ -341,6 +341,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeEndElement(); // programlisting
         newLine();
         break;
+    case Atom::DetailsLeft:
+    case Atom::DetailsRight:
+        break;
     case Atom::DivLeft:
     case Atom::DivRight:
         break;
