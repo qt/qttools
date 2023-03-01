@@ -55,15 +55,14 @@ int QMainWindowContainer::count() const
 
 QWidget *QMainWindowContainer::widget(int index) const
 {
-    if (index == -1)
-        return nullptr;
-
-    return m_widgets.at(index);
+    return m_widgets.value(index, nullptr);
 }
 
 int QMainWindowContainer::currentIndex() const
 {
-    return m_mainWindow->centralWidget() ? 0 : -1;
+    // QTBUG-111603, handle plugins with unmanaged central widgets
+    auto *cw = m_mainWindow->centralWidget();
+    return cw != nullptr && m_widgets.contains(cw) ? 0 : -1;
 }
 
 void QMainWindowContainer::setCurrentIndex(int index)
