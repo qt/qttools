@@ -13,14 +13,12 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QMap<QString, QString> QStringMap;
 typedef QHash<QString, int> QHash_QString_int;
 typedef QHash<QString, Macro> QHash_QString_Macro;
 
 struct DocUtilities : public Singleton<DocUtilities>
 {
 public:
-    QStringMap aliasMap;
     QHash_QString_int cmdHash;
     QHash_QString_Macro macroHash;
 };

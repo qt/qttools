@@ -321,7 +321,6 @@ struct ConfigStrings
     static QString WARNINGLIMIT;
 };
 
-#define CONFIG_ALIAS ConfigStrings::ALIAS
 #define CONFIG_AUTOLINKERRORS ConfigStrings::AUTOLINKERRORS
 #define CONFIG_BUILDVERSION ConfigStrings::BUILDVERSION
 #define CONFIG_CLANGDEFINES ConfigStrings::CLANGDEFINES

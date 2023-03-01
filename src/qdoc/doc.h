@@ -75,7 +75,6 @@ public:
 
     static void initialize(FileResolver& file_resolver);
     static void terminate();
-    static QString alias(const QString &english);
     static void trimCStyleComment(Location &location, QString &str);
     static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter, ResolvedFile resolved_file);
     static QString canonicalTitle(const QString &title);

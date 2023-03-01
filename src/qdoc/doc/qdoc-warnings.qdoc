@@ -82,8 +82,8 @@
     \section1 Unknown macro
 
     QDoc issues this warning when it sees a backslash, \c{\}, followed
-    by a token it does not recognize as the name of a \l {macro-variable}{built-in command}
-    or a \l {alias-variable}{user-defined macro}. When quoting code
+    by a token it doesn't recognize as the name of either a built-in command
+    or a \l {macro-variable}{user-defined macro}. When quoting code
     that contains character escape sequences, you should enclose the
     code in \\c{...} to prevent this warning against the escape sequences.
 
@@ -305,11 +305,6 @@
     file named \c{CMakeLists.txt}, or a file with a \c{.pro}, \c{.qmlproject}, or
     \c{.pyproject} extension where the base name matches that of the example
     directory. For example, \c {examples/mymodule/helloworld/helloworld.pro}.
-
-    \section1 Command name <alias> cannot stand for both <first> and <later>
-
-    QDoc issues this warning when one name is \l {alias-variable}{aliased} to more
-    than one command when reading the configuration.
 
     \section1 Cannot open file to quote from: <filename>
 

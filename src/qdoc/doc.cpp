@@ -293,21 +293,6 @@ void Doc::initialize(FileResolver& file_resolver)
 {
     Config &config = Config::instance();
     DocParser::initialize(config, file_resolver);
-    QStringMap reverseAliasMap;
-
-    const auto &configAliases = config.subVars(CONFIG_ALIAS);
-    for (const auto &a : configAliases) {
-        const auto &aliasConfigVar = config.get(CONFIG_ALIAS + Config::dot + a);
-        QString alias{aliasConfigVar.asString()};
-        if (reverseAliasMap.contains(alias)) {
-            aliasConfigVar.location().warning(QStringLiteral("Command name '\\%1' cannot stand"
-                                         " for both '\\%2' and '\\%3'")
-                                         .arg(alias, reverseAliasMap[alias], a));
-        } else {
-            reverseAliasMap.insert(alias, a);
-        }
-        m_utilities.aliasMap.insert(a, alias);
-    }
 
     const auto &configMacros = config.subVars(CONFIG_MACRO);
     for (const auto &macroName : configMacros) {
@@ -359,15 +344,9 @@ void Doc::initialize(FileResolver& file_resolver)
  */
 void Doc::terminate()
 {
-    m_utilities.aliasMap.clear();
     m_utilities.cmdHash.clear();
     m_utilities.macroHash.clear();
     DocParser::terminate();
-}
-
-QString Doc::alias(const QString &english)
-{
-    return m_utilities.aliasMap.value(english, english);
 }
 
 /*!

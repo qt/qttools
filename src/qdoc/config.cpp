@@ -13,7 +13,6 @@
 
 QT_BEGIN_NAMESPACE
 
-QString ConfigStrings::ALIAS = QStringLiteral("alias");
 QString ConfigStrings::AUTOLINKERRORS = QStringLiteral("autolinkerrors");
 QString ConfigStrings::BUILDVERSION = QStringLiteral("buildversion");
 QString ConfigStrings::CLANGDEFINES = QStringLiteral("clangdefines");

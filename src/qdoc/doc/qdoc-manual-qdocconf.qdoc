@@ -140,7 +140,6 @@
     \section1 Variable List
 
     \list
-    \li \l {alias-variable} {alias}
     \li \l {defines-variable} {defines}
     \li \l {depends-variable} {depends}
     \li \l {exampledirs-variable} {exampledirs}
@@ -215,23 +214,6 @@
     the documentation, as well as the directory to put the generated
     documentation. You can also do some minor manipulation of QDoc
     itself, controlling its output and processing behavior.
-
-    \target alias-variable
-    \section1 alias
-
-    The \c alias variable renames a QDoc command.
-
-    The general syntax is \tt {alias.\e{original-command-name} = \e
-    temporary-command-name}.
-
-    \badcode
-        alias.e = i
-    \endcode
-
-    This renames the built-in command \\e (italics) to be \\i. The \c
-    alias variable is often used for compatibility reasons.
-
-    See also \l {macro-variable} {macro}.
 
     \target codeindent-variable
     \section1 codeindent
@@ -1010,8 +992,6 @@
     A macro that defines a match pattern outputs all capture groups
     (parentheses) concatenated together, or the exact matched string
     if the pattern does not contain any capture groups.
-
-    See also \l {alias-variable} {alias}.
 
     \target manifestmeta-variable
     \section1 manifestmeta

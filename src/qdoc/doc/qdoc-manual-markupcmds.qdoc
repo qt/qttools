@@ -34,7 +34,6 @@
     \li \l {if-command} {\\if}
     \li \l {image-command} {\\image}
     \li \l {include-command} {\\include}
-    \li \l {include-command} {\\input}
     \li \l {inlineimage-command} {\\inlineimage}
     \li \l {keyword-command} {\\keyword}
     \li \l {l-command} {\\l}

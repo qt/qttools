@@ -1,11 +1,11 @@
-// Copyright (C) 2016 The Qt Company Ltd.
+// Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 /*!
     \page corefeatures.html
     \title Core Features
 
-    \input examples/signalandslots.qdocinc
-    \input examples/objectmodel.qdocinc
-    \input examples/layoutmanagement.qdocinc
+    \include examples/signalandslots.qdocinc
+    \include examples/objectmodel.qdocinc
+    \include examples/layoutmanagement.qdocinc
 */

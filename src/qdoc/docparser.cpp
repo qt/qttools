@@ -125,105 +125,104 @@ enum {
 
 static struct
 {
-    const char *english;
+    const char *name;
     int no;
-    QString *alias;
-} cmds[] = { { "a", CMD_A, nullptr },
-             { "annotatedlist", CMD_ANNOTATEDLIST, nullptr },
-             { "b", CMD_B, nullptr },
-             { "badcode", CMD_BADCODE, nullptr },
-             { "bold", CMD_BOLD, nullptr },
-             { "br", CMD_BR, nullptr },
-             { "brief", CMD_BRIEF, nullptr },
-             { "c", CMD_C, nullptr },
-             { "caption", CMD_CAPTION, nullptr },
-             { "code", CMD_CODE, nullptr },
-             { "codeline", CMD_CODELINE, nullptr },
-             { "div", CMD_DIV, nullptr },
-             { "dots", CMD_DOTS, nullptr },
-             { "e", CMD_E, nullptr },
-             { "else", CMD_ELSE, nullptr },
-             { "endcode", CMD_ENDCODE, nullptr },
-             { "enddiv", CMD_ENDDIV, nullptr },
-             { "endfootnote", CMD_ENDFOOTNOTE, nullptr },
-             { "endif", CMD_ENDIF, nullptr },
-             { "endlegalese", CMD_ENDLEGALESE, nullptr },
-             { "endlink", CMD_ENDLINK, nullptr },
-             { "endlist", CMD_ENDLIST, nullptr },
-             { "endmapref", CMD_ENDMAPREF, nullptr },
-             { "endomit", CMD_ENDOMIT, nullptr },
-             { "endquotation", CMD_ENDQUOTATION, nullptr },
-             { "endraw", CMD_ENDRAW, nullptr },
-             { "endsection1", CMD_ENDSECTION1, nullptr }, // ### don't document for now
-             { "endsection2", CMD_ENDSECTION2, nullptr }, // ### don't document for now
-             { "endsection3", CMD_ENDSECTION3, nullptr }, // ### don't document for now
-             { "endsection4", CMD_ENDSECTION4, nullptr }, // ### don't document for now
-             { "endsidebar", CMD_ENDSIDEBAR, nullptr },
-             { "endtable", CMD_ENDTABLE, nullptr },
-             { "footnote", CMD_FOOTNOTE, nullptr },
-             { "generatelist", CMD_GENERATELIST, nullptr },
-             { "header", CMD_HEADER, nullptr },
-             { "hr", CMD_HR, nullptr },
-             { "i", CMD_I, nullptr },
-             { "if", CMD_IF, nullptr },
-             { "image", CMD_IMAGE, nullptr },
-             { "important", CMD_IMPORTANT, nullptr },
-             { "include", CMD_INCLUDE, nullptr },
-             { "inlineimage", CMD_INLINEIMAGE, nullptr },
-             { "index", CMD_INDEX, nullptr }, // ### don't document for now
-             { "input", CMD_INPUT, nullptr },
-             { "keyword", CMD_KEYWORD, nullptr },
-             { "l", CMD_L, nullptr },
-             { "legalese", CMD_LEGALESE, nullptr },
-             { "li", CMD_LI, nullptr },
-             { "link", CMD_LINK, nullptr },
-             { "list", CMD_LIST, nullptr },
-             { "meta", CMD_META, nullptr },
-             { "note", CMD_NOTE, nullptr },
-             { "o", CMD_O, nullptr },
-             { "omit", CMD_OMIT, nullptr },
-             { "omitvalue", CMD_OMITVALUE, nullptr },
-             { "overload", CMD_OVERLOAD, nullptr },
-             { "printline", CMD_PRINTLINE, nullptr },
-             { "printto", CMD_PRINTTO, nullptr },
-             { "printuntil", CMD_PRINTUNTIL, nullptr },
-             { "quotation", CMD_QUOTATION, nullptr },
-             { "quotefile", CMD_QUOTEFILE, nullptr },
-             { "quotefromfile", CMD_QUOTEFROMFILE, nullptr },
-             { "raw", CMD_RAW, nullptr },
-             { "row", CMD_ROW, nullptr },
-             { "sa", CMD_SA, nullptr },
-             { "section1", CMD_SECTION1, nullptr },
-             { "section2", CMD_SECTION2, nullptr },
-             { "section3", CMD_SECTION3, nullptr },
-             { "section4", CMD_SECTION4, nullptr },
-             { "sidebar", CMD_SIDEBAR, nullptr },
-             { "sincelist", CMD_SINCELIST, nullptr },
-             { "skipline", CMD_SKIPLINE, nullptr },
-             { "skipto", CMD_SKIPTO, nullptr },
-             { "skipuntil", CMD_SKIPUNTIL, nullptr },
-             { "snippet", CMD_SNIPPET, nullptr },
-             { "span", CMD_SPAN, nullptr },
-             { "sub", CMD_SUB, nullptr },
-             { "sup", CMD_SUP, nullptr },
-             { "table", CMD_TABLE, nullptr },
-             { "tableofcontents", CMD_TABLEOFCONTENTS, nullptr },
-             { "target", CMD_TARGET, nullptr },
-             { "tt", CMD_TT, nullptr },
-             { "uicontrol", CMD_UICONTROL, nullptr },
-             { "underline", CMD_UNDERLINE, nullptr },
-             { "unicode", CMD_UNICODE, nullptr },
-             { "value", CMD_VALUE, nullptr },
-             { "warning", CMD_WARNING, nullptr },
-             { "qml", CMD_QML, nullptr },
-             { "endqml", CMD_ENDQML, nullptr },
-             { "cpp", CMD_CPP, nullptr },
-             { "endcpp", CMD_ENDCPP, nullptr },
-             { "qmltext", CMD_QMLTEXT, nullptr },
-             { "endqmltext", CMD_ENDQMLTEXT, nullptr },
-             { "cpptext", CMD_CPPTEXT, nullptr },
-             { "endcpptext", CMD_ENDCPPTEXT, nullptr },
-             { nullptr, 0, nullptr } };
+} cmds[] = { { "a", CMD_A },
+             { "annotatedlist", CMD_ANNOTATEDLIST },
+             { "b", CMD_B },
+             { "badcode", CMD_BADCODE },
+             { "bold", CMD_BOLD },
+             { "br", CMD_BR },
+             { "brief", CMD_BRIEF },
+             { "c", CMD_C },
+             { "caption", CMD_CAPTION },
+             { "code", CMD_CODE },
+             { "codeline", CMD_CODELINE },
+             { "div", CMD_DIV },
+             { "dots", CMD_DOTS },
+             { "e", CMD_E },
+             { "else", CMD_ELSE },
+             { "endcode", CMD_ENDCODE },
+             { "enddiv", CMD_ENDDIV },
+             { "endfootnote", CMD_ENDFOOTNOTE },
+             { "endif", CMD_ENDIF },
+             { "endlegalese", CMD_ENDLEGALESE },
+             { "endlink", CMD_ENDLINK },
+             { "endlist", CMD_ENDLIST },
+             { "endmapref", CMD_ENDMAPREF },
+             { "endomit", CMD_ENDOMIT },
+             { "endquotation", CMD_ENDQUOTATION },
+             { "endraw", CMD_ENDRAW },
+             { "endsection1", CMD_ENDSECTION1 }, // ### don't document for now
+             { "endsection2", CMD_ENDSECTION2 }, // ### don't document for now
+             { "endsection3", CMD_ENDSECTION3 }, // ### don't document for now
+             { "endsection4", CMD_ENDSECTION4 }, // ### don't document for now
+             { "endsidebar", CMD_ENDSIDEBAR },
+             { "endtable", CMD_ENDTABLE },
+             { "footnote", CMD_FOOTNOTE },
+             { "generatelist", CMD_GENERATELIST },
+             { "header", CMD_HEADER },
+             { "hr", CMD_HR },
+             { "i", CMD_I },
+             { "if", CMD_IF },
+             { "image", CMD_IMAGE },
+             { "important", CMD_IMPORTANT },
+             { "include", CMD_INCLUDE },
+             { "inlineimage", CMD_INLINEIMAGE },
+             { "index", CMD_INDEX }, // ### don't document for now
+             { "input", CMD_INPUT },
+             { "keyword", CMD_KEYWORD },
+             { "l", CMD_L },
+             { "legalese", CMD_LEGALESE },
+             { "li", CMD_LI },
+             { "link", CMD_LINK },
+             { "list", CMD_LIST },
+             { "meta", CMD_META },
+             { "note", CMD_NOTE },
+             { "o", CMD_O },
+             { "omit", CMD_OMIT },
+             { "omitvalue", CMD_OMITVALUE },
+             { "overload", CMD_OVERLOAD },
+             { "printline", CMD_PRINTLINE },
+             { "printto", CMD_PRINTTO },
+             { "printuntil", CMD_PRINTUNTIL },
+             { "quotation", CMD_QUOTATION },
+             { "quotefile", CMD_QUOTEFILE },
+             { "quotefromfile", CMD_QUOTEFROMFILE },
+             { "raw", CMD_RAW },
+             { "row", CMD_ROW },
+             { "sa", CMD_SA },
+             { "section1", CMD_SECTION1 },
+             { "section2", CMD_SECTION2 },
+             { "section3", CMD_SECTION3 },
+             { "section4", CMD_SECTION4 },
+             { "sidebar", CMD_SIDEBAR },
+             { "sincelist", CMD_SINCELIST },
+             { "skipline", CMD_SKIPLINE },
+             { "skipto", CMD_SKIPTO },
+             { "skipuntil", CMD_SKIPUNTIL },
+             { "snippet", CMD_SNIPPET },
+             { "span", CMD_SPAN },
+             { "sub", CMD_SUB },
+             { "sup", CMD_SUP },
+             { "table", CMD_TABLE },
+             { "tableofcontents", CMD_TABLEOFCONTENTS },
+             { "target", CMD_TARGET },
+             { "tt", CMD_TT },
+             { "uicontrol", CMD_UICONTROL },
+             { "underline", CMD_UNDERLINE },
+             { "unicode", CMD_UNICODE },
+             { "value", CMD_VALUE },
+             { "warning", CMD_WARNING },
+             { "qml", CMD_QML },
+             { "endqml", CMD_ENDQML },
+             { "cpp", CMD_CPP },
+             { "endcpp", CMD_ENDCPP },
+             { "qmltext", CMD_QMLTEXT },
+             { "endqmltext", CMD_ENDQMLTEXT },
+             { "cpptext", CMD_CPPTEXT },
+             { "endcpptext", CMD_ENDCPPTEXT },
+             { nullptr, 0 } };
 
 int DocParser::s_tabSize;
 QStringList DocParser::s_ignoreWords;
@@ -244,9 +243,8 @@ void DocParser::initialize(const Config &config, FileResolver &file_resolver)
     s_ignoreWords = config.getStringList(CONFIG_IGNOREWORDS);
 
     int i = 0;
-    while (cmds[i].english) {
-        cmds[i].alias = new QString(Doc::alias(cmds[i].english));
-        s_utilities.cmdHash.insert(*cmds[i].alias, cmds[i].no);
+    while (cmds[i].name) {
+        s_utilities.cmdHash.insert(cmds[i].name, cmds[i].no);
 
         if (cmds[i].no != i)
             Location::internalError(QStringLiteral("command %1 missing").arg(i));
@@ -267,12 +265,6 @@ void DocParser::initialize(const Config &config, FileResolver &file_resolver)
 
 void DocParser::terminate()
 {
-    int i = 0;
-    while (cmds[i].english) {
-        delete cmds[i].alias;
-        cmds[i].alias = nullptr;
-        ++i;
-    }
 }
 
 /*!
@@ -1289,15 +1281,10 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet, co
 {
     QSet<QString> commandSet = metaCommandSet;
     int i = 0;
-    while (cmds[i].english != nullptr) {
-        commandSet.insert(*cmds[i].alias);
+    while (cmds[i].name != nullptr) {
+        commandSet.insert(cmds[i].name);
         ++i;
     }
-
-    if (s_utilities.aliasMap.contains(str))
-        return QStringLiteral("The command '\\%1' was renamed '\\%2' by the configuration"
-                              " file. Use the new name.")
-                .arg(str, s_utilities.aliasMap[str]);
 
     QString best = nearestName(str, commandSet);
     if (best.isEmpty())
@@ -2491,7 +2478,7 @@ int DocParser::endCmdFor(int cmd)
 
 QString DocParser::cmdName(int cmd)
 {
-    return *cmds[cmd].alias;
+    return cmds[cmd].name;
 }
 
 QString DocParser::endCmdName(int cmd)
