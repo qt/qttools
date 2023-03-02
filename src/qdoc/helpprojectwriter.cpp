@@ -454,22 +454,25 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
         const auto *aggregate = static_cast<const Aggregate *>(node);
 
         // Ensure that we don't visit nodes more than once.
-        QSet<const Node *> childSet;
-        const NodeList &children = aggregate->childNodes();
-        for (const auto *child : children) {
+        NodeList childSet;
+        NodeList children = aggregate->childNodes();
+        std::sort(children.begin(), children.end(), Node::nodeNameLessThan);
+        for (auto *child : children) {
             // Skip related non-members adopted by some other aggregate
             if (child->parent() != aggregate)
                 continue;
             if (child->isIndexNode() || child->isPrivate())
                 continue;
             if (child->isTextPageNode()) {
-                childSet << child;
+                if (!childSet.contains(child))
+                    childSet << child;
             } else {
                 // Store member status of children
                 project.m_memberStatus[node].insert(child->status());
                 if (child->isFunction() && static_cast<const FunctionNode *>(child)->isOverload())
                     continue;
-                childSet << child;
+                if (!childSet.contains(child))
+                    childSet << child;
             }
         }
         for (const auto *child : qAsConst(childSet))

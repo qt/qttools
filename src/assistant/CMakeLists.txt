@@ -31,10 +31,18 @@ endif()
 add_subdirectory(qlitehtml/src EXCLUDE_FROM_ALL)
 if(TARGET qlitehtml)
     qt_autogen_tools_initial_setup(qlitehtml)
-    qt_internal_set_exceptions_flags(litehtml OFF)
-    qt_disable_warnings(litehtml)
+    # The litehtml and gumbo targets will not be available here if they are not built by Qt
+    # but found in the system, because they are imported only to the subdirectory scope
+    # where find_package was called. But that's fine, we wouldn't be able to set compiler flags
+    # on them anyway.
+    if(TARGET litehtml)
+        qt_internal_set_exceptions_flags(litehtml OFF)
+        qt_disable_warnings(litehtml)
+    endif()
+    if(TARGET gumbo)
+        qt_disable_warnings(gumbo)
+    endif()
     qt_disable_warnings(qlitehtml)
-    qt_disable_warnings(gumbo)
     qt_handle_multi_config_output_dirs(qlitehtml)
     set_target_properties(qlitehtml PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${QT_BUILD_DIR}/${INSTALL_BINDIR}"

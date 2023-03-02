@@ -1371,6 +1371,7 @@ void HtmlGenerator::generateQmlBasicTypePage(QmlBasicTypeNode *qbtn, CodeMarker 
     Sections sections(qbtn);
     generateTableOfContents(qbtn, marker, &sections.stdQmlTypeSummarySections());
     generateTitle(htmlTitle, Text() << qbtn->subtitle(), subTitleSize, qbtn, marker);
+    generateBrief(qbtn, marker);
 
     const QList<Section> &stdQmlTypeSummarySections = sections.stdQmlTypeSummarySections();
     for (const auto &section : stdQmlTypeSummarySections) {

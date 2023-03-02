@@ -663,23 +663,28 @@
     QDoc uses Clang when parsing C++ files as well as function signatures in
     \l {fn-command} {\\fn} commands. Clang is part of
     \l {https://llvm.org/}{the LLVM Compiler Infrastructure Project}.
-    Therefore, if you are going to build QDoc from source, you need to install
-    \l{http://clang.llvm.org}{LLVM 8.0} or greater first.
+    If you're going to build QDoc from source, you must install
+    \l{http://clang.llvm.org}{Clang 8.0} or later.
 
     You can get Clang through various channels:
 
     \list
-    \li Qt provides \l{http://download.qt.io/development_releases/prebuilt/libclang/qt}
-        {prebuilt Clang packages} that are also used for the Qt binaries in the online
-        installer. They allow to link LLVM/clang libraries statically, but only support Release
-        builds on Windows.
-    \li Linux distributions often provide a package called libclang-dev or libclang-devel.
+    \li Qt provides the
+        \l{http://download.qt.io/development_releases/prebuilt/libclang/qt}
+        {prebuilt Clang packages} that are used for the Qt binaries in the
+        online installer. These let you link LLVM/Clang libraries statically,
+        but only support Release builds on Windows.
+    \li Linux distributions often provide a package called \e libclang-dev or
+        \e libclang-devel. Qt's build system instructs CMake to look for
+        \e {ClangConfig.cmake}, so make sure you install the package that
+        provides this file if you want to build QDoc. Running QDoc requires
+        only \e libclang.
     \li On macOS, you can also use Homebrew's
         \l{https://formulae.brew.sh/formula/llvm}{llvm formula}.
     \endlist
 
-    \note the prebuilt binaries from \l{http://releases.llvm.org/download.html} cannot
-    be used, as they miss certain components required by QDoc.
+    \note the prebuilt binaries from \l{http://releases.llvm.org/download.html}
+    cannot be used, as they miss certain components required by QDoc.
 
     If you install Clang in a custom location you need to tell CMake where
     to find it. This can be done by adding the installation path to

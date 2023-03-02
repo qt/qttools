@@ -30,22 +30,20 @@
 #define CLANG_TOOL_AST_READER_H
 
 #include "cpp_clang.h"
-#if defined(Q_CC_MSVC)
-# pragma warning(push)
-# pragma warning(disable: 4100)
-# pragma warning(disable: 4146)
-# pragma warning(disable: 4267)
-# pragma warning(disable: 4624)
-#endif
+
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_MSVC(4100)
+QT_WARNING_DISABLE_MSVC(4146)
+QT_WARNING_DISABLE_MSVC(4267)
+QT_WARNING_DISABLE_MSVC(4624)
+QT_WARNING_DISABLE_GCC("-Wnonnull")
 
 #include <clang/AST/RecursiveASTVisitor.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/FrontendActions.h>
 #include <clang/Tooling/Tooling.h>
 
-#if defined(Q_CC_MSVC)
-# pragma warning(pop)
-#endif
+QT_WARNING_POP
 
 #include <iostream>
 #include <memory>
