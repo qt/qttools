@@ -32,7 +32,6 @@ public:
                const QSet<QString> &possibleTopics);
 
     static void initialize(const Config &config, FileResolver& file_resolver);
-    static void terminate();
     static int endCmdFor(int cmd);
     static QString cmdName(int cmd);
     static QString endCmdName(int cmd);

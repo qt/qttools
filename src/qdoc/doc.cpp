@@ -346,7 +346,6 @@ void Doc::terminate()
 {
     m_utilities.cmdHash.clear();
     m_utilities.macroHash.clear();
-    DocParser::terminate();
 }
 
 /*!

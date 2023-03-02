@@ -263,10 +263,6 @@ void DocParser::initialize(const Config &config, FileResolver &file_resolver)
     DocParser::file_resolver = &file_resolver;
 }
 
-void DocParser::terminate()
-{
-}
-
 /*!
   Parse the \a source string to build a Text data structure
   in \a docPrivate. The Text data structure is a linked list
