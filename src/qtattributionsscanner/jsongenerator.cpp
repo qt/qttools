@@ -23,6 +23,7 @@ static QJsonObject generate(Package package)
     obj.insert(u"QDocModule"_s, package.qdocModule);
     obj.insert(u"Name"_s, package.name);
     obj.insert(u"QtUsage"_s, package.qtUsage);
+    obj.insert(u"SecurityCritical"_s, package.securityCritical);
     obj.insert(u"QtParts"_s, QJsonArray::fromStringList(package.qtParts));
 
     obj.insert(u"Description"_s, package.description);

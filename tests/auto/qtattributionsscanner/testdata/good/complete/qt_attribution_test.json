@@ -18,6 +18,7 @@ Usage",
     "Homepage": "www.qt.io",
     "Version": "1.0",
     "DownloadLocation": "www.qt.io/1.0",
+    "SecurityCritical": true,
     "LicenseId": "xxx",
     "LicenseFile": "../../../../../../LICENSES/BSD-3-Clause.txt",
     "PackageComment": "just a test package"
