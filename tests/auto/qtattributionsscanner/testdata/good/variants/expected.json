@@ -21,6 +21,7 @@
             "libs"
         ],
         "QtUsage": "Usage",
+        "SecurityCritical": false,
         "Version": ""
     }
 ]

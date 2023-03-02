@@ -61,6 +61,12 @@ static bool validatePackage(Package &p, const QString &filePath, LogLevel logLev
         validPackage = false;
     }
 
+    if (p.securityCritical && p.downloadLocation.isEmpty()) {
+        if (logLevel != SilentLog)
+            missingPropertyWarning(filePath, u"DownloadLocation"_s);
+        validPackage = false;
+    }
+
     for (const QString &part : std::as_const(p.qtParts)) {
         if (part != "examples"_L1 && part != "tests"_L1
             && part != "tools"_L1 && part != "libs"_L1) {
@@ -201,9 +207,8 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
     for (auto iter = object.constBegin(); iter != object.constEnd(); ++iter) {
         const QString key = iter.key();
 
-        if (!iter.value().isString() && key != "QtParts"_L1
-            && key != "Files"_L1
-            && key != "LicenseFiles"_L1) {
+        if (!iter.value().isString() && key != "QtParts"_L1 && key != "SecurityCritical"_L1
+            && key != "Files"_L1 && key != "LicenseFiles"_L1) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
                                             QDir::toNativeSeparators(filePath), key)) << std::endl;
@@ -271,6 +276,15 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
             p.description = value;
         } else if (key == "QtUsage"_L1) {
             p.qtUsage = value;
+        } else if (key == "SecurityCritical"_L1) {
+            if (!iter.value().isBool()) {
+                std::cerr << qPrintable(tr("File %1: Expected JSON boolean in %2.")
+                                                .arg(QDir::toNativeSeparators(filePath), key))
+                          << std::endl;
+                validPackage = false;
+                continue;
+            }
+            p.securityCritical = iter.value().toBool();
         } else if (key == "QtParts"_L1) {
             auto parts = toStringList(iter.value());
             if (!parts) {
