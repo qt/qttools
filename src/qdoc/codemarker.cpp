@@ -57,7 +57,7 @@ void CodeMarker::terminateMarker()
  */
 void CodeMarker::initialize()
 {
-    s_defaultLang = Config::instance().getString(CONFIG_LANGUAGE);
+    s_defaultLang = Config::instance().get(CONFIG_LANGUAGE).asString();
     for (const auto &marker : std::as_const(s_markers))
         marker->initializeMarker();
 }

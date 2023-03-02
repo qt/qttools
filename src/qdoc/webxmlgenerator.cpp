@@ -118,7 +118,7 @@ void WebXMLGenerator::generateExampleFilePage(const Node *en, ResolvedFile resol
     writer.writeAttribute("subtitle", resolved_file.get_path());
     writer.writeStartElement("description");
 
-    if (Config::instance().getBool(CONFIG_LOCATIONINFO)) {
+    if (Config::instance().get(CONFIG_LOCATIONINFO).asBool()) {
         writer.writeAttribute("path", resolved_file.get_path());
         writer.writeAttribute("line", "0");
         writer.writeAttribute("column", "0");
@@ -157,7 +157,7 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
     Q_ASSERT(marker_);
 
     writer.writeStartElement("description");
-    if (Config::instance().getBool(CONFIG_LOCATIONINFO)) {
+    if (Config::instance().get(CONFIG_LOCATIONINFO).asBool()) {
         writer.writeAttribute("path", node->doc().location().filePath());
         writer.writeAttribute("line", QString::number(node->doc().location().lineNo()));
         writer.writeAttribute("column", QString::number(node->doc().location().columnNo()));

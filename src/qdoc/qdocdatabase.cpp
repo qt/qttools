@@ -961,7 +961,7 @@ void QDocDatabase::resolveNamespaces()
     if (!m_namespaceIndex.isEmpty())
         return;
 
-    bool linkErrors = !Config::instance().getBool(CONFIG_NOLINKERRORS);
+    bool linkErrors = !Config::instance().get(CONFIG_NOLINKERRORS).asBool();
     NodeMultiMap namespaceMultimap;
     Tree *t = m_forest.firstTree();
     while (t) {
@@ -1552,13 +1552,11 @@ void QDocDatabase::updateNavigation()
     // for Config to be a POD type that generally is scoped to
     // main and whose data is destructured into dependencies when
     // the dependencies are constructed.
-    bool inclusive =
-            Config::instance().getBool(configVar +
-                                       Config::dot +
-                                       CONFIG_INCLUSIVE);
+    bool inclusive{Config::instance().get(
+            configVar + Config::dot + CONFIG_INCLUSIVE).asBool()};
 
     // TODO: [direct-configuration-access]
-    const auto tocTitles = Config::instance().getStringList(configVar);
+    const auto tocTitles{Config::instance().get(configVar).asStringList()};
 
     for (const auto &tocTitle : tocTitles) {
         if (const auto candidateTarget = findNodeForTarget(tocTitle, nullptr); candidateTarget && candidateTarget->isPageNode()) {

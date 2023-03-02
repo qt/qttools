@@ -118,35 +118,15 @@ public:
     [[nodiscard]] QStringList qdocFiles() const { return m_parser.positionalArguments(); }
     [[nodiscard]] const QString &programName() const { return m_prog; }
     [[nodiscard]] const Location &location() const { return m_location; }
-    [[nodiscard]] ConfigVar &get(const QString &var)
+    [[nodiscard]] const ConfigVar &get(const QString &var) const
     {
         // Avoid injecting default-constructed values to map if var doesn't exist
         static ConfigVar empty;
-        return (m_configVars.contains(var)) ? m_configVars[var] : empty;
-    }
-    [[nodiscard]] bool getBool(const QString &var) const
-    {
-        return m_configVars.value(var).asBool();
-    }
-    [[nodiscard]] int getInt(const QString &var) const
-    {
-        return m_configVars.value(var).asInt();
+        auto it = m_configVars.constFind(var);
+        return (it != m_configVars.constEnd()) ? *it : empty;
     }
     [[nodiscard]] QString getOutputDir(const QString &format = QString("HTML")) const;
     [[nodiscard]] QSet<QString> getOutputFormats() const;
-    [[nodiscard]] QString getString(const QString &var,
-                                    const QString &defaultString = QString()) const
-    {
-        return m_configVars.value(var).asString(defaultString);
-    }
-    [[nodiscard]] QSet<QString> getStringSet(const QString &var) const
-    {
-        return m_configVars.value(var).asStringSet();
-    }
-    [[nodiscard]] QStringList getStringList(const QString &var) const
-    {
-        return m_configVars.value(var).asStringList();
-    }
     [[nodiscard]] QStringList getCanonicalPathList(const QString &var,
                                                    PathFlags flags = None) const;
     [[nodiscard]] QRegularExpression getRegExp(const QString &var) const;

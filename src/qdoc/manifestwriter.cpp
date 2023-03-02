@@ -145,17 +145,18 @@ static void writeMetaInformation(QXmlStreamWriter &writer, const QStringMultiMap
 ManifestWriter::ManifestWriter()
 {
     Config &config = Config::instance();
-    m_project = config.getString(CONFIG_PROJECT);
+    m_project = config.get(CONFIG_PROJECT).asString();
     m_outputDirectory = config.getOutputDir();
     m_qdb = QDocDatabase::qdocDB();
 
     const QString prefix = CONFIG_QHP + Config::dot + m_project + Config::dot;
     m_manifestDir =
-            QLatin1String("qthelp://") + config.getString(prefix + QLatin1String("namespace"));
-    m_manifestDir += QLatin1Char('/') + config.getString(prefix + QLatin1String("virtualFolder"))
+            QLatin1String("qthelp://") + config.get(prefix + QLatin1String("namespace")).asString();
+    m_manifestDir +=
+            QLatin1Char('/') + config.get(prefix + QLatin1String("virtualFolder")).asString()
             + QLatin1Char('/');
     readManifestMetaContent();
-    m_examplesPath = config.getString(CONFIG_EXAMPLESINSTALLPATH);
+    m_examplesPath = config.get(CONFIG_EXAMPLESINSTALLPATH).asString();
     if (!m_examplesPath.isEmpty())
         m_examplesPath += QLatin1Char('/');
 }
@@ -352,15 +353,16 @@ void ManifestWriter::generateExampleManifestFile()
 void ManifestWriter::readManifestMetaContent()
 {
     Config &config = Config::instance();
-    const QStringList names =
-            config.getStringList(CONFIG_MANIFESTMETA + Config::dot + QStringLiteral("filters"));
+    const QStringList names{config.get(CONFIG_MANIFESTMETA
+                            + Config::dot
+                            + QStringLiteral("filters")).asStringList()};
 
     for (const auto &manifest : names) {
         ManifestMetaFilter filter;
         QString prefix = CONFIG_MANIFESTMETA + Config::dot + manifest + Config::dot;
-        filter.m_names = config.getStringSet(prefix + QStringLiteral("names"));
-        filter.m_attributes = config.getStringSet(prefix + QStringLiteral("attributes"));
-        filter.m_tags = config.getStringSet(prefix + QStringLiteral("tags"));
+        filter.m_names = config.get(prefix + QStringLiteral("names")).asStringSet();
+        filter.m_attributes = config.get(prefix + QStringLiteral("attributes")).asStringSet();
+        filter.m_tags = config.get(prefix + QStringLiteral("tags")).asStringSet();
         m_manifestMetaContent.append(filter);
     }
 }

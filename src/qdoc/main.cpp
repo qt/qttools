@@ -63,8 +63,8 @@ static void loadIndexFiles(const QSet<QString> &formats)
     Config &config = Config::instance();
     QDocDatabase *qdb = QDocDatabase::qdocDB();
     QStringList indexFiles;
-    const QStringList configIndexes = config.getStringList(CONFIG_INDEXES);
-    bool warn = !config.getBool(CONFIG_NOLINKERRORS);
+    const QStringList configIndexes{config.get(CONFIG_INDEXES).asStringList()};
+    bool warn = !config.get(CONFIG_NOLINKERRORS).asBool();
 
     for (const auto &index : configIndexes) {
         QFileInfo fi(index);
@@ -74,15 +74,15 @@ static void loadIndexFiles(const QSet<QString> &formats)
             Location().warning(QString("Index file not found: %1").arg(index));
     }
 
-    config.dependModules() += config.getStringList(CONFIG_DEPENDS);
+    config.dependModules() += config.get(CONFIG_DEPENDS).asStringList();
     config.dependModules().removeDuplicates();
     bool useNoSubDirs = false;
     QSet<QString> subDirs;
 
     for (const auto &format : formats) {
-        if (config.getBool(format + Config::dot + "nosubdirs")) {
+        if (config.get(format + Config::dot + "nosubdirs").asBool()) {
             useNoSubDirs = true;
-            QString singleOutputSubdir = config.getString(format + Config::dot + "outputsubdir");
+            QString singleOutputSubdir{config.get(format + Config::dot + "outputsubdir").asString()};
             if (singleOutputSubdir.isEmpty())
                 singleOutputSubdir = "html";
             subDirs << singleOutputSubdir;
@@ -130,7 +130,7 @@ static void loadIndexFiles(const QSet<QString> &formats)
                     }
                 }
                 // Remove self-dependencies and possible duplicates
-                QString project{config.getString(CONFIG_PROJECT)};
+                QString project{config.get(CONFIG_PROJECT).asString()};
                 config.dependModules().removeAll(project.toLower());
                 config.dependModules().removeDuplicates();
                 qCCritical(lcQdoc) << "Configuration file for"
@@ -189,7 +189,7 @@ static void loadIndexFiles(const QSet<QString> &formats)
                 } else if (!asteriskUsed && warn) {
                     Location().warning(
                             QString(R"("%1" Cannot locate index file for dependency "%2")")
-                                    .arg(config.getString(CONFIG_PROJECT), module));
+                                    .arg(config.get(CONFIG_PROJECT).asString(), module));
                 }
             }
         } else if (warn) {
@@ -209,13 +209,13 @@ static void loadIndexFiles(const QSet<QString> &formats)
     If QDoc is not running in debug mode or --log-progress command line
     option is not set, do nothing.
  */
-void logStartEndMessage(const QLatin1String &startStop, const Config &config)
+void logStartEndMessage(const QLatin1String &startStop, Config &config)
 {
-    if (!config.getBool(CONFIG_LOGPROGRESS))
+    if (!config.get(CONFIG_LOGPROGRESS).asBool())
         return;
 
     const QString runName = " qdoc for "
-            + config.getString(CONFIG_PROJECT)
+            + config.get(CONFIG_PROJECT).asString()
             + QLatin1String(" in ")
             + QLatin1String(config.singleExec() ? "single" : "dual")
             + QLatin1String(" process mode: ")
@@ -248,7 +248,7 @@ static void processQdocconfFile(const QString &fileName)
      */
     Location::initialize();
     config.load(fileName);
-    QString project = config.getString(CONFIG_PROJECT);
+    QString project{config.get(CONFIG_PROJECT).asString()};
     if (project.isEmpty()) {
         qCCritical(lcQdoc) << QLatin1String("qdoc can't run; no project set in qdocconf file");
         exit(1);
@@ -392,7 +392,7 @@ static void processQdocconfFile(const QString &fileName)
       but only if they haven't already been loaded. This works in both
       -prepare/-generate mode and -singleexec mode.
      */
-    const QStringList fileNames = config.getStringList(CONFIG_TRANSLATORS);
+    const QStringList fileNames{config.get(CONFIG_TRANSLATORS).asStringList()};
     for (const auto &file : fileNames) {
         bool found = false;
         if (!translators.isEmpty()) {
@@ -427,7 +427,7 @@ static void processQdocconfFile(const QString &fileName)
       So it is safe to call qdocDB() any time.
      */
     QDocDatabase *qdb = QDocDatabase::qdocDB();
-    qdb->setVersion(config.getString(CONFIG_VERSION));
+    qdb->setVersion(config.get(CONFIG_VERSION).asString());
     /*
       By default, the only output format is HTML.
      */
@@ -446,7 +446,7 @@ static void processQdocconfFile(const QString &fileName)
     else
         qdb->setPrimaryTree(project);
 
-    const QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
+    const QString moduleHeader{config.get(CONFIG_MODULEHEADER).asString()};
     if (!moduleHeader.isNull())
         clangParser.setModuleHeader(moduleHeader);
     else
@@ -454,7 +454,7 @@ static void processQdocconfFile(const QString &fileName)
 
     // Retrieve the dependencies if loadIndexFiles() was not called
     if (config.dependModules().isEmpty()) {
-        config.dependModules() = config.getStringList(CONFIG_DEPENDS);
+        config.dependModules() = config.get(CONFIG_DEPENDS).asStringList();
         config.dependModules().removeDuplicates();
     }
     qdb->setSearchOrder(config.dependModules());
@@ -462,9 +462,9 @@ static void processQdocconfFile(const QString &fileName)
     // Store the title of the index (landing) page
     NamespaceNode *root = qdb->primaryTreeRoot();
     if (root) {
-        QString title = config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGPAGE);
+        QString title{config.get(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGPAGE).asString()};
         root->tree()->setIndexTitle(
-                config.getString(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE, title));
+                config.get(CONFIG_NAVIGATION + Config::dot + CONFIG_LANDINGTITLE).asString(title));
     }
 
     if (config.dualExec() || config.preparing()) {
@@ -535,7 +535,7 @@ static void processQdocconfFile(const QString &fileName)
           Parse each source text file in the set using the appropriate parser and
           add it to the big tree.
         */
-        if (config.getBool(CONFIG_LOGPROGRESS))
+        if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Parse source files for" << project;
         for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
             const auto &key = it.key();
@@ -545,7 +545,7 @@ static void processQdocconfFile(const QString &fileName)
                 codeParser->parseSourceFile(config.location(), key);
             }
         }
-        if (config.getBool(CONFIG_LOGPROGRESS))
+        if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Source files parsed for" << project;
     }
     /*

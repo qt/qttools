@@ -1182,7 +1182,7 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
 void ClangCodeParser::initializeParser()
 {
     Config &config = Config::instance();
-    m_version = config.getString(CONFIG_VERSION);
+    m_version = config.get(CONFIG_VERSION).asString();
     auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
                                             Config::IncludePaths);
 #ifdef Q_OS_MACOS
@@ -1204,7 +1204,7 @@ void ClangCodeParser::initializeParser()
     m_defines.clear();
     QSet<QString> accepted;
     {
-        const QStringList tmpDefines = config.getStringList(CONFIG_CLANGDEFINES);
+        const QStringList tmpDefines{config.get(CONFIG_CLANGDEFINES).asStringList()};
         for (const QString &def : tmpDefines) {
             if (!accepted.contains(def)) {
                 QByteArray tmp("-D");
@@ -1215,7 +1215,7 @@ void ClangCodeParser::initializeParser()
         }
     }
     {
-        const QStringList tmpDefines = config.getStringList(CONFIG_DEFINES);
+        const QStringList tmpDefines{config.get(CONFIG_DEFINES).asStringList()};
         for (const QString &def : tmpDefines) {
             if (!accepted.contains(def) && !def.contains(QChar('*'))) {
                 QByteArray tmp("-D");

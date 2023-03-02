@@ -43,58 +43,55 @@ void HelpProjectWriter::reset(const QString &defaultFileName, Generator *g)
     Config &config = Config::instance();
     m_outputDir = config.getOutputDir();
 
-    const QStringList names = config.getStringList(CONFIG_QHP + Config::dot + "projects");
+    const QStringList names{config.get(CONFIG_QHP + Config::dot + "projects").asStringList()};
 
     for (const auto &projectName : names) {
         HelpProject project;
         project.m_name = projectName;
 
         QString prefix = CONFIG_QHP + Config::dot + projectName + Config::dot;
-        project.m_helpNamespace = config.getString(prefix + "namespace");
-        project.m_virtualFolder = config.getString(prefix + "virtualFolder");
-        project.m_version = config.getString(CONFIG_VERSION);
-        project.m_fileName = config.getString(prefix + "file");
+        project.m_helpNamespace = config.get(prefix + "namespace").asString();
+        project.m_virtualFolder = config.get(prefix + "virtualFolder").asString();
+        project.m_version = config.get(CONFIG_VERSION).asString();
+        project.m_fileName = config.get(prefix + "file").asString();
         if (project.m_fileName.isEmpty())
             project.m_fileName = defaultFileName;
-        project.m_extraFiles = config.getStringSet(prefix + "extraFiles");
-        project.m_extraFiles += config.getStringSet(CONFIG_QHP + Config::dot + "extraFiles");
-        project.m_indexTitle = config.getString(prefix + "indexTitle");
-        project.m_indexRoot = config.getString(prefix + "indexRoot");
-        const auto &filterAttributes = config.getStringList(prefix + "filterAttributes");
-        project.m_filterAttributes =
-                QSet<QString>(filterAttributes.cbegin(), filterAttributes.cend());
-        project.m_includeIndexNodes = config.getBool(prefix + "includeIndexNodes");
+        project.m_extraFiles = config.get(prefix + "extraFiles").asStringSet();
+        project.m_extraFiles += config.get(CONFIG_QHP + Config::dot + "extraFiles").asStringSet();
+        project.m_indexTitle = config.get(prefix + "indexTitle").asString();
+        project.m_indexRoot = config.get(prefix + "indexRoot").asString();
+        project.m_filterAttributes = config.get(prefix + "filterAttributes").asStringSet();
+        project.m_includeIndexNodes = config.get(prefix + "includeIndexNodes").asBool();
         const QSet<QString> customFilterNames = config.subVars(prefix + "customFilters");
         for (const auto &filterName : customFilterNames) {
-            QString name = config.getString(prefix + "customFilters" + Config::dot + filterName
-                                            + Config::dot + "name");
-            const auto &filters =
-                    config.getStringList(prefix + "customFilters" + Config::dot + filterName
-                                         + Config::dot + "filterAttributes");
-            project.m_customFilters[name] = QSet<QString>(filters.cbegin(), filters.cend());
+            QString name{config.get(prefix + "customFilters" + Config::dot + filterName
+                                    + Config::dot + "name").asString()};
+            project.m_customFilters[name] =
+                    config.get(prefix + "customFilters" + Config::dot + filterName
+                               + Config::dot + "filterAttributes").asStringSet();
         }
 
-        const auto excludedPrefixes = config.getStringSet(prefix + "excluded");
+        const auto excludedPrefixes = config.get(prefix + "excluded").asStringSet();
         for (auto name : excludedPrefixes)
             project.m_excluded.insert(name.replace(QLatin1Char('\\'), QLatin1Char('/')));
 
-        const auto subprojectPrefixes = config.getStringList(prefix + "subprojects");
+        const auto subprojectPrefixes{config.get(prefix + "subprojects").asStringList()};
         for (const auto &name : subprojectPrefixes) {
             SubProject subproject;
             QString subprefix = prefix + "subprojects" + Config::dot + name + Config::dot;
-            subproject.m_title = config.getString(subprefix + "title");
+            subproject.m_title = config.get(subprefix + "title").asString();
             if (subproject.m_title.isEmpty())
                 continue;
-            subproject.m_indexTitle = config.getString(subprefix + "indexTitle");
-            subproject.m_sortPages = config.getBool(subprefix + "sortPages");
-            subproject.m_type = config.getString(subprefix + "type");
-            readSelectors(subproject, config.getStringList(subprefix + "selectors"));
+            subproject.m_indexTitle = config.get(subprefix + "indexTitle").asString();
+            subproject.m_sortPages = config.get(subprefix + "sortPages").asBool();
+            subproject.m_type = config.get(subprefix + "type").asString();
+            readSelectors(subproject, config.get(subprefix + "selectors").asStringList());
             project.m_subprojects.append(subproject);
         }
 
         if (project.m_subprojects.isEmpty()) {
             SubProject subproject;
-            readSelectors(subproject, config.getStringList(prefix + "selectors"));
+            readSelectors(subproject, config.get(prefix + "selectors").asStringList());
             project.m_subprojects.insert(0, subproject);
         }
 

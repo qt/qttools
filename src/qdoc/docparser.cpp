@@ -239,8 +239,8 @@ static QString cleanLink(const QString &link)
 
 void DocParser::initialize(const Config &config, FileResolver &file_resolver)
 {
-    s_tabSize = config.getInt(CONFIG_TABSIZE);
-    s_ignoreWords = config.getStringList(CONFIG_IGNOREWORDS);
+    s_tabSize = config.get(CONFIG_TABSIZE).asInt();
+    s_ignoreWords = config.get(CONFIG_IGNOREWORDS).asStringList();
 
     int i = 0;
     while (cmds[i].name) {
@@ -252,11 +252,11 @@ void DocParser::initialize(const Config &config, FileResolver &file_resolver)
     }
 
     // If any of the formats define quotinginformation, activate quoting
-    DocParser::s_quoting = config.getBool(CONFIG_QUOTINGINFORMATION);
+    DocParser::s_quoting = config.get(CONFIG_QUOTINGINFORMATION).asBool();
     const auto &outputFormats = config.getOutputFormats();
     for (const auto &format : outputFormats)
         DocParser::s_quoting = DocParser::s_quoting
-                || config.getBool(format + Config::dot + CONFIG_QUOTINGINFORMATION);
+                || config.get(format + Config::dot + CONFIG_QUOTINGINFORMATION).asBool();
 
     // KLUDGE: file_resolver is temporarily a pointer. See the
     // comment for file_resolver in the header file for more context.

@@ -84,16 +84,16 @@ void tst_Config::variables()
     auto &config = initConfig("/testdata/configs/vars.qdocconf");
 
     const QStringList list = { "testing", "line", "by\n", "line" };
-    QCOMPARE(config.getStringList("list"), list);
-    QCOMPARE(config.getString("list"), "testing line by\nline");
-    QCOMPARE(config.getBool("true"), true);
-    QCOMPARE(config.getBool("untrue"), false);
-    QCOMPARE(config.getInt("int"), 2);
-    QCOMPARE(config.getString("void"), QString());
-    QVERIFY(!config.getString("void").isNull());
-    QCOMPARE(config.getString("void", "undefined"), QString());
-    QCOMPARE(config.getString("undefined", "undefined"), "undefined");
-    QVERIFY(config.getString("undefined").isNull());
+    QCOMPARE(config.get("list").asStringList(), list);
+    QCOMPARE(config.get("list").asString(), "testing line by\nline");
+    QCOMPARE(config.get("true").asBool(), true);
+    QCOMPARE(config.get("untrue").asBool(), false);
+    QCOMPARE(config.get("int").asInt(), 2);
+    QCOMPARE(config.get("void").asString(), QString());
+    QVERIFY(!config.get("void").asString().isNull());
+    QCOMPARE(config.get("void").asString("undefined"), QString());
+    QCOMPARE(config.get("undefined").asString("undefined"), "undefined");
+    QVERIFY(config.get("undefined").asString().isNull());
 
     QSet<QString> subVars = { "thing", "where", "time" };
     QCOMPARE(config.subVars("some"), subVars);
@@ -168,11 +168,11 @@ void::tst_Config::expandVars()
     qputenv("QDOC_TSTCONFIG_LIST", QByteArray("a b c"));
     auto &config = initConfig("/testdata/configs/expandvars.qdocconf");
 
-    QCOMPARE(config.getString("expanded1"), "foo");
-    QCOMPARE(config.getString("expanded2"), "foo,bar");
-    QCOMPARE(config.getString("expanded3"), "foobar foobar baz");
-    QCOMPARE(config.getString("literally"), "$data ${data}");
-    QCOMPARE(config.getString("csvlist"), "a,b,c");
+    QCOMPARE(config.get("expanded1").asString(), "foo");
+    QCOMPARE(config.get("expanded2").asString(), "foo,bar");
+    QCOMPARE(config.get("expanded3").asString(), "foobar foobar baz");
+    QCOMPARE(config.get("literally").asString(), "$data ${data}");
+    QCOMPARE(config.get("csvlist").asString(), "a,b,c");
 }
 
 QTEST_APPLESS_MAIN(tst_Config)

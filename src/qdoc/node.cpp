@@ -744,7 +744,7 @@ void Node::setSince(const QString &since)
         project = Config::dot + parts.first();
 
     QVersionNumber cutoff =
-            QVersionNumber::fromString(Config::instance().getString(CONFIG_IGNORESINCE + project))
+            QVersionNumber::fromString(Config::instance().get(CONFIG_IGNORESINCE + project).asString())
                     .normalized();
 
     if (!cutoff.isNull() && QVersionNumber::fromString(parts.last()).normalized() < cutoff)

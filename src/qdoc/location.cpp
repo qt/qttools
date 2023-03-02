@@ -283,14 +283,14 @@ void Location::report(const QString &message, const QString &details) const
 void Location::initialize()
 {
     Config &config = Config::instance();
-    s_tabSize = config.getInt(CONFIG_TABSIZE);
+    s_tabSize = config.get(CONFIG_TABSIZE).asInt();
     s_programName = config.programName();
-    s_project = config.getString(CONFIG_PROJECT);
+    s_project = config.get(CONFIG_PROJECT).asString();
     if (!config.singleExec())
         s_warningCount = 0;
     if (qEnvironmentVariableIsSet("QDOC_ENABLE_WARNINGLIMIT")
-        || config.getBool(CONFIG_WARNINGLIMIT + Config::dot + "enabled"))
-        s_warningLimit = config.getInt(CONFIG_WARNINGLIMIT);
+        || config.get(CONFIG_WARNINGLIMIT + Config::dot + "enabled").asBool())
+        s_warningLimit = config.get(CONFIG_WARNINGLIMIT).asInt();
 
     QRegularExpression regExp = config.getRegExp(CONFIG_SPURIOUS);
     if (regExp.isValid()) {

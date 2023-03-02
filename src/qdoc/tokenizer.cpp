@@ -482,10 +482,10 @@ int Tokenizer::getToken()
 void Tokenizer::initialize()
 {
     Config &config = Config::instance();
-    QString versionSym = config.getString(CONFIG_VERSIONSYM);
+    QString versionSym = config.get(CONFIG_VERSIONSYM).asString();
     const QLatin1String defaultEncoding("UTF-8");
 
-    QString sourceEncoding = config.getString(CONFIG_SOURCEENCODING, defaultEncoding);
+    QString sourceEncoding = config.get(CONFIG_SOURCEENCODING).asString(defaultEncoding);
     if (!QStringConverter::encodingForName(sourceEncoding.toUtf8().constData())) {
         Location().warning(QStringLiteral("Source encoding '%1' not supported, using '%2' as default.")
                 .arg(sourceEncoding, defaultEncoding));
@@ -501,10 +501,11 @@ void Tokenizer::initialize()
                              + ")[ \t]+\"([^\"]*)\"[ \t]*$");
     definedX = new QRegularExpression("^defined ?\\(?([A-Z_0-9a-z]+) ?\\)?$");
 
-    QStringList d = config.getStringList(CONFIG_DEFINES);
+    QStringList d{config.get(CONFIG_DEFINES).asStringList()};
     d += "qdoc";
     defines = new QRegularExpression(QRegularExpression::anchoredPattern(d.join('|')));
-    falsehoods = new QRegularExpression(QRegularExpression::anchoredPattern(config.getStringList(CONFIG_FALSEHOODS).join('|')));
+    falsehoods = new QRegularExpression(QRegularExpression::anchoredPattern(
+            config.get(CONFIG_FALSEHOODS).asStringList().join('|')));
 
     /*
       The keyword hash table is always cleared before any words are inserted.
@@ -515,16 +516,18 @@ void Tokenizer::initialize()
 
     ignoredTokensAndDirectives = new QHash<QByteArray, bool>;
 
-    const QStringList tokens =
-            config.getStringList(LANGUAGE_CPP + Config::dot + CONFIG_IGNORETOKENS);
+    const QStringList tokens{config.get(LANGUAGE_CPP
+                                        + Config::dot
+                                        + CONFIG_IGNORETOKENS).asStringList()};
     for (const auto &token : tokens) {
         const QByteArray tb = token.toLatin1();
         ignoredTokensAndDirectives->insert(tb, false);
         insertKwordIntoHash(tb.data(), -1);
     }
 
-    const QStringList directives =
-            config.getStringList(LANGUAGE_CPP + Config::dot + CONFIG_IGNOREDIRECTIVES);
+    const QStringList directives{config.get(LANGUAGE_CPP
+                                            + Config::dot
+                                            + CONFIG_IGNOREDIRECTIVES).asStringList()};
     for (const auto &directive : directives) {
         const QByteArray db = directive.toLatin1();
         ignoredTokensAndDirectives->insert(db, true);

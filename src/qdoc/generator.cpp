@@ -845,7 +845,7 @@ void Generator::generateRequiredLinks(const Node *node, CodeMarker *marker)
         return;
 
     const auto *en = static_cast<const ExampleNode *>(node);
-    QString exampleUrl = Config::instance().getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
+    QString exampleUrl{Config::instance().get(CONFIG_URL + Config::dot + CONFIG_EXAMPLES).asString()};
 
     if (exampleUrl.isEmpty()) {
         if (!en->noAutoList()) {
@@ -890,7 +890,7 @@ void Generator::generateLinkToExample(const ExampleNode *en, CodeMarker *marker,
     if (metaTagMap)
         pathRoot = metaTagMap->value(QLatin1String("installpath"));
     if (pathRoot.isEmpty())
-        pathRoot = Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH);
+        pathRoot = Config::instance().get(CONFIG_EXAMPLESINSTALLPATH).asString();
     QStringList path = QStringList() << pathRoot << en->name();
     path.removeAll(QString());
 
@@ -1602,7 +1602,7 @@ void Generator::initialize()
 {
     Config &config = Config::instance();
     s_outputFormats = config.getOutputFormats();
-    s_redirectDocumentationToDevNull = config.getBool(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL);
+    s_redirectDocumentationToDevNull = config.get(CONFIG_REDIRECTDOCUMENTATIONTODEVNULL).asBool();
 
     for (auto &g : s_generators) {
         if (s_outputFormats.contains(g->format())) {
@@ -1641,26 +1641,27 @@ void Generator::initialize()
         }
     }
 
-    s_project = config.getString(CONFIG_PROJECT);
+    s_project = config.get(CONFIG_PROJECT).asString();
     s_outDir = config.getOutputDir();
     s_outSubdir = s_outDir.mid(s_outDir.lastIndexOf('/') + 1);
 
     s_outputPrefixes.clear();
-    QStringList items = config.getStringList(CONFIG_OUTPUTPREFIXES);
+    QStringList items{config.get(CONFIG_OUTPUTPREFIXES).asStringList()};
     if (!items.isEmpty()) {
         for (const auto &prefix : items)
             s_outputPrefixes[prefix] =
-                    config.getString(CONFIG_OUTPUTPREFIXES + Config::dot + prefix);
+                    config.get(CONFIG_OUTPUTPREFIXES + Config::dot + prefix).asString();
     } else {
         s_outputPrefixes[QLatin1String("QML")] = QLatin1String("qml-");
     }
 
     s_outputSuffixes.clear();
-    for (const auto &suffix : config.getStringList(CONFIG_OUTPUTSUFFIXES))
-        s_outputSuffixes[suffix] = config.getString(CONFIG_OUTPUTSUFFIXES + Config::dot + suffix);
+    for (const auto &suffix : config.get(CONFIG_OUTPUTSUFFIXES).asStringList())
+        s_outputSuffixes[suffix] = config.get(CONFIG_OUTPUTSUFFIXES
+                                              + Config::dot + suffix).asString();
 
-    s_noLinkErrors = config.getBool(CONFIG_NOLINKERRORS);
-    s_autolinkErrors = config.getBool(CONFIG_AUTOLINKERRORS);
+    s_noLinkErrors = config.get(CONFIG_NOLINKERRORS).asBool();
+    s_autolinkErrors = config.get(CONFIG_AUTOLINKERRORS).asBool();
 }
 
 /*!
@@ -1723,7 +1724,7 @@ void Generator::initializeFormat()
     Config &config = Config::instance();
     s_outFileNames.clear();
     s_useOutputSubdirs = true;
-    if (config.getBool(format() + Config::dot + "nosubdirs"))
+    if (config.get(format() + Config::dot + "nosubdirs").asBool())
         resetUseOutputSubdirs();
 
     if (s_outputFormats.isEmpty())
@@ -1762,9 +1763,9 @@ void Generator::initializeFormat()
 
     // Use a format-specific .quotinginformation if defined, otherwise a global value
     if (config.subVars(format()).contains(CONFIG_QUOTINGINFORMATION))
-        m_quoting = config.getBool(format() + Config::dot + CONFIG_QUOTINGINFORMATION);
+        m_quoting = config.get(format() + Config::dot + CONFIG_QUOTINGINFORMATION).asBool();
     else
-        m_quoting = config.getBool(CONFIG_QUOTINGINFORMATION);
+        m_quoting = config.get(CONFIG_QUOTINGINFORMATION).asBool();
 }
 
 /*!

@@ -55,7 +55,7 @@ QDocIndexFiles *QDocIndexFiles::s_qdocIndexFiles = nullptr;
 QDocIndexFiles::QDocIndexFiles() : m_gen(nullptr)
 {
     m_qdb = QDocDatabase::qdocDB();
-    m_storeLocationInfo = Config::instance().getBool(CONFIG_LOCATIONINFO);
+    m_storeLocationInfo = Config::instance().get(CONFIG_LOCATIONINFO).asBool();
 }
 
 /*!
@@ -129,7 +129,7 @@ void QDocIndexFiles::readIndexFile(const QString &path)
     // the dependency is identical to ours, assume that also
     // the dependent html files are available under the same
     // directory tree. Otherwise, link using the full index URL.
-    if (!Config::installDir.isEmpty() && indexUrl == Config::instance().getString(CONFIG_URL)) {
+    if (!Config::installDir.isEmpty() && indexUrl == Config::instance().get(CONFIG_URL).asString()) {
         // Generate a relative URL between the install dir and the index file
         // when the -installdir command line option is set.
         QDir installDir(path.section('/', 0, -3) + '/' + Generator::outputSubdir());
@@ -1406,7 +1406,7 @@ void QDocIndexFiles::generateIndex(const QString &fileName, const QString &url,
     writer.writeAttribute("url", url);
     writer.writeAttribute("title", title);
     writer.writeAttribute("version", m_qdb->version());
-    writer.writeAttribute("project", Config::instance().getString(CONFIG_PROJECT));
+    writer.writeAttribute("project", Config::instance().get(CONFIG_PROJECT).asString());
 
     root_ = m_qdb->primaryTreeRoot();
     if (!root_->tree()->indexTitle().isEmpty())

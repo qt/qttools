@@ -92,8 +92,9 @@ CppCodeParser::CppCodeParser()
 void CppCodeParser::initializeParser()
 {
     Config &config = Config::instance();
-    QStringList exampleFilePatterns =
-            config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_FILEEXTENSIONS);
+    QStringList exampleFilePatterns{config.get(CONFIG_EXAMPLES
+                                    + Config::dot
+                                    + CONFIG_FILEEXTENSIONS).asStringList()};
 
     // Used for excluding dirs and files from the list of example files
     const auto &excludeDirsList = config.getCanonicalPathList(CONFIG_EXCLUDEDIRS);
@@ -106,15 +107,16 @@ void CppCodeParser::initializeParser()
     else
         m_exampleNameFilter = "*.cpp *.h *.js *.xq *.svg *.xml *.ui";
 
-    QStringList exampleImagePatterns =
-            config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_IMAGEEXTENSIONS);
+    QStringList exampleImagePatterns{config.get(CONFIG_EXAMPLES
+                                                + Config::dot
+                                                + CONFIG_IMAGEEXTENSIONS).asStringList()};
 
     if (!exampleImagePatterns.isEmpty())
         m_exampleImageFilter = exampleImagePatterns.join(' ');
     else
         m_exampleImageFilter = "*.png";
 
-    m_showLinkErrors = !config.getBool(CONFIG_NOLINKERRORS);
+    m_showLinkErrors = !config.get(CONFIG_NOLINKERRORS).asBool();
 }
 
 /*!

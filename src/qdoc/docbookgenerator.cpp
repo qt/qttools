@@ -145,17 +145,17 @@ void DocBookGenerator::initializeGenerator()
     Generator::initializeGenerator();
     m_config = &Config::instance();
 
-    m_project = m_config->getString(CONFIG_PROJECT);
+    m_project = m_config->get(CONFIG_PROJECT).asString();
 
-    m_projectDescription = m_config->getString(CONFIG_DESCRIPTION);
+    m_projectDescription = m_config->get(CONFIG_DESCRIPTION).asString();
     if (m_projectDescription.isEmpty() && !m_project.isEmpty())
         m_projectDescription = m_project + QLatin1String(" Reference Documentation");
 
-    m_naturalLanguage = m_config->getString(CONFIG_NATURALLANGUAGE);
+    m_naturalLanguage = m_config->get(CONFIG_NATURALLANGUAGE).asString();
     if (m_naturalLanguage.isEmpty())
         m_naturalLanguage = QLatin1String("en");
 
-    m_buildVersion = m_config->getString(CONFIG_BUILDVERSION);
+    m_buildVersion = m_config->get(CONFIG_BUILDVERSION).asString();
 }
 
 QString DocBookGenerator::format()
@@ -1221,7 +1221,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             m_writer->writeEndElement(); // bridgehead
             newLine();
 
-            if (m_config->getBool(CONFIG_DOCBOOKEXTENSIONS)) {
+            if (m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool()) {
                 if (isStyleProperty) {
                     m_writer->writeStartElement(dbNamespace, "fieldsynopsis");
 
@@ -3239,7 +3239,7 @@ void DocBookGenerator::generateRequiredLinks(const Node *node)
         return;
 
     const auto en = static_cast<const ExampleNode *>(node);
-    QString exampleUrl = Config::instance().getString(CONFIG_URL + Config::dot + CONFIG_EXAMPLES);
+    QString exampleUrl{Config::instance().get(CONFIG_URL + Config::dot + CONFIG_EXAMPLES).asString()};
 
     if (exampleUrl.isEmpty()) {
         if (!en->noAutoList()) {
@@ -3279,7 +3279,7 @@ void DocBookGenerator::generateLinkToExample(const ExampleNode *en, const QStrin
 
     // Construct a path to the example; <install path>/<example name>
     QStringList path = QStringList()
-            << Config::instance().getString(CONFIG_EXAMPLESINSTALLPATH) << en->name();
+            << Config::instance().get(CONFIG_EXAMPLESINSTALLPATH).asString() << en->name();
     path.removeAll(QString());
 
     // Write the link to the example. Typically, this link comes after sections, hence
@@ -3656,7 +3656,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
     // Generator::generateThreadSafeness, QDocIndexFiles::generateIndexSection.
 
     // This function is the only place where DocBook extensions are used.
-    if (m_config->getBool(CONFIG_DOCBOOKEXTENSIONS))
+    if (m_config->get(CONFIG_DOCBOOKEXTENSIONS).asBool())
         return;
 
     // Nothing to export in some cases. Note that isSharedCommentNode() returns
