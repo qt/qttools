@@ -149,13 +149,10 @@ private: // The rest of the class is private.
     ExampleNodeMap &exampleNodeMap() { return m_exampleNodeMap; }
     void setIndexFileName(const QString &t) { m_indexFileName = t; }
 
-    [[nodiscard]] bool treeHasBeenAnalyzed() const { return m_treeHasBeenAnalyzed; }
-    void setTreeHasBeenAnalyzed() { m_treeHasBeenAnalyzed = true; }
     FunctionNode *findFunctionNodeForTag(const QString &tag, Aggregate *parent = nullptr);
     FunctionNode *findMacroNode(const QString &t, const Aggregate *parent = nullptr);
 
 private:
-    bool m_treeHasBeenAnalyzed {};
     QString m_camelCaseModuleName {};
     QString m_physicalModuleName {};
     QString m_indexFileName {};

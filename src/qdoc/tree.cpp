@@ -44,8 +44,7 @@ QT_BEGIN_NAMESPACE
   as it appears in the qdocconf file.
  */
 Tree::Tree(const QString &camelCaseModuleName, QDocDatabase *qdb)
-    : m_treeHasBeenAnalyzed(false),
-      m_camelCaseModuleName(camelCaseModuleName),
+    : m_camelCaseModuleName(camelCaseModuleName),
       m_physicalModuleName(camelCaseModuleName.toLower()),
       m_qdb(qdb),
       m_root(nullptr, QString())

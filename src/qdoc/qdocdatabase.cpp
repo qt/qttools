@@ -702,165 +702,130 @@ QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &import, const QString &n
  */
 void QDocDatabase::processForest()
 {
-    Tree *t = m_forest.firstTree();
-    while (t) {
-        findAllClasses(t->root());
-        findAllFunctions(t->root());
-        findAllObsoleteThings(t->root());
-        findAllLegaleseTexts(t->root());
-        findAllSince(t->root());
-        findAllAttributions(t->root());
-        t->setTreeHasBeenAnalyzed();
-        t = m_forest.nextTree();
-    }
+    processForest(&QDocDatabase::findAllClasses);
+    processForest(&QDocDatabase::findAllFunctions);
+    processForest(&QDocDatabase::findAllObsoleteThings);
+    processForest(&QDocDatabase::findAllLegaleseTexts);
+    processForest(&QDocDatabase::findAllSince);
+    processForest(&QDocDatabase::findAllAttributions);
     resolveNamespaces();
 }
 
 /*!
   This function calls \a func for each tree in the forest,
-  but only if Tree::treeHasBeenAnalyzed() returns false for
-  the tree. In this way, when running qdoc in \e singleExec
-  mode, each tree is analyzed in turn, and its classes and
-  types are added to the appropriate node maps.
+  ensuring that \a func is called only once per tree.
+
+  \sa processForest()
  */
-void QDocDatabase::processForest(void (QDocDatabase::*func)(Aggregate *))
+void QDocDatabase::processForest(FindFunctionPtr func)
 {
     Tree *t = m_forest.firstTree();
     while (t) {
-        if (!t->treeHasBeenAnalyzed()) {
+        if (!m_completedFindFunctions.values(t).contains(func)) {
             (this->*(func))(t->root());
+            m_completedFindFunctions.insert(t, func);
         }
         t = m_forest.nextTree();
     }
 }
 
 /*!
-  Constructs the collection of legalese texts, if it has not
-  already been constructed, and returns a reference to it.
+  Returns a reference to the collection of legalese texts.
  */
 TextToNodeMap &QDocDatabase::getLegaleseTexts()
 {
-    if (m_legaleseTexts.isEmpty())
-        processForest(&QDocDatabase::findAllLegaleseTexts);
+    processForest(&QDocDatabase::findAllLegaleseTexts);
     return m_legaleseTexts;
 }
 
 /*!
-  Construct the data structures for obsolete things, if they
-  have not already been constructed. Returns a reference to
-  the map of C++ classes with obsolete members.
+  Returns a reference to the map of C++ classes with obsolete members.
  */
 NodeMultiMap &QDocDatabase::getClassesWithObsoleteMembers()
 {
-    if (s_obsoleteClasses.isEmpty() && s_obsoleteQmlTypes.isEmpty())
-        processForest(&QDocDatabase::findAllObsoleteThings);
+    processForest(&QDocDatabase::findAllObsoleteThings);
     return s_classesWithObsoleteMembers;
 }
 
 /*!
-  Construct the data structures for obsolete things, if they
-  have not already been constructed. Returns a reference to
-  the map of obsolete QML types.
+  Returns a reference to the map of obsolete QML types.
  */
 NodeMultiMap &QDocDatabase::getObsoleteQmlTypes()
 {
-    if (s_obsoleteClasses.isEmpty() && s_obsoleteQmlTypes.isEmpty())
-        processForest(&QDocDatabase::findAllObsoleteThings);
+    processForest(&QDocDatabase::findAllObsoleteThings);
     return s_obsoleteQmlTypes;
 }
 
 /*!
-  Construct the data structures for obsolete things, if they
-  have not already been constructed. Returns a reference to
-  the map of QML types with obsolete members.
+  Returns a reference to the map of QML types with obsolete members.
  */
 NodeMultiMap &QDocDatabase::getQmlTypesWithObsoleteMembers()
 {
-    if (s_obsoleteClasses.isEmpty() && s_obsoleteQmlTypes.isEmpty())
-        processForest(&QDocDatabase::findAllObsoleteThings);
+    processForest(&QDocDatabase::findAllObsoleteThings);
     return s_qmlTypesWithObsoleteMembers;
 }
 
 /*!
-  Construct the data structures for QML basic types, if they
-  have not already been constructed. Returns a reference to
-  the map of QML basic types.
+  Returns a reference to the map of QML basic types.
  */
 NodeMultiMap &QDocDatabase::getQmlValueTypes()
 {
-    if (s_cppClasses.isEmpty() && s_qmlBasicTypes.isEmpty())
-        processForest(&QDocDatabase::findAllClasses);
+    processForest(&QDocDatabase::findAllClasses);
     return s_qmlBasicTypes;
 }
 
 /*!
-  Construct the data structures for QML types, if they
-  have not already been constructed. Returns a reference to
-  the multimap of QML types.
+  Returns a reference to the multimap of QML types.
  */
 NodeMultiMap &QDocDatabase::getQmlTypes()
 {
-    if (s_cppClasses.isEmpty() && s_qmlTypes.isEmpty())
-        processForest(&QDocDatabase::findAllClasses);
+    processForest(&QDocDatabase::findAllClasses);
     return s_qmlTypes;
 }
 
 /*!
-  Construct the data structures for examples, if they
-  have not already been constructed. Returns a reference to
-  the multimap of example nodes.
+  Returns a reference to the multimap of example nodes.
  */
 NodeMultiMap &QDocDatabase::getExamples()
 {
-    if (s_cppClasses.isEmpty() && s_examples.isEmpty())
-        processForest(&QDocDatabase::findAllClasses);
+    processForest(&QDocDatabase::findAllClasses);
     return s_examples;
 }
 
 /*!
-  Construct the data structures for attributions, if they
-  have not already been constructed. Returns a reference to
-  the multimap of attribution nodes.
+  Returns a reference to the multimap of attribution nodes.
  */
 NodeMultiMap &QDocDatabase::getAttributions()
 {
-    if (m_attributions.isEmpty())
-        processForest(&QDocDatabase::findAllAttributions);
+    processForest(&QDocDatabase::findAllAttributions);
     return m_attributions;
 }
 
 /*!
-  Construct the data structures for obsolete things, if they
-  have not already been constructed. Returns a reference to
-  the map of obsolete C++ clases.
+  Returns a reference to the map of obsolete C++ clases.
  */
 NodeMultiMap &QDocDatabase::getObsoleteClasses()
 {
-    if (s_obsoleteClasses.isEmpty() && s_obsoleteQmlTypes.isEmpty())
-        processForest(&QDocDatabase::findAllObsoleteThings);
+    processForest(&QDocDatabase::findAllObsoleteThings);
     return s_obsoleteClasses;
 }
 
 /*!
-  Construct the C++ class data structures, if they have not
-  already been constructed. Returns a reference to the map
-  of all C++ classes.
+  Returns a reference to the map of all C++ classes.
  */
 NodeMultiMap &QDocDatabase::getCppClasses()
 {
-    if (s_cppClasses.isEmpty() && s_qmlTypes.isEmpty())
-        processForest(&QDocDatabase::findAllClasses);
+    processForest(&QDocDatabase::findAllClasses);
     return s_cppClasses;
 }
 
 /*!
-  Construct the function index data structure and return it.
-  This data structure is used to output the function index page.
+  Returns the function index. This data structure is used to
+  output the function index page.
  */
 NodeMapMap &QDocDatabase::getFunctionIndex()
 {
-    if (m_functionIndex.isEmpty())
-        processForest(&QDocDatabase::findAllFunctions);
+    processForest(&QDocDatabase::findAllFunctions);
     return m_functionIndex;
 }
 
@@ -906,12 +871,9 @@ void QDocDatabase::findAllLegaleseTexts(Aggregate *node)
  */
 const NodeMultiMap &QDocDatabase::getClassMap(const QString &key)
 {
-    if (s_newSinceMaps.isEmpty() && s_newClassMaps.isEmpty() && s_newQmlTypeMaps.isEmpty())
-        processForest(&QDocDatabase::findAllSince);
+    processForest(&QDocDatabase::findAllSince);
     auto it = s_newClassMaps.constFind(key);
-    if (it != s_newClassMaps.constEnd())
-        return it.value();
-    return emptyNodeMultiMap_;
+    return (it != s_newClassMaps.constEnd()) ? it.value() : emptyNodeMultiMap_;
 }
 
 /*!
@@ -921,12 +883,9 @@ const NodeMultiMap &QDocDatabase::getClassMap(const QString &key)
  */
 const NodeMultiMap &QDocDatabase::getQmlTypeMap(const QString &key)
 {
-    if (s_newSinceMaps.isEmpty() && s_newClassMaps.isEmpty() && s_newQmlTypeMaps.isEmpty())
-        processForest(&QDocDatabase::findAllSince);
+    processForest(&QDocDatabase::findAllSince);
     auto it = s_newQmlTypeMaps.constFind(key);
-    if (it != s_newQmlTypeMaps.constEnd())
-        return it.value();
-    return emptyNodeMultiMap_;
+    return (it != s_newQmlTypeMaps.constEnd()) ? it.value() : emptyNodeMultiMap_;
 }
 
 /*!
@@ -936,12 +895,9 @@ const NodeMultiMap &QDocDatabase::getQmlTypeMap(const QString &key)
  */
 const NodeMultiMap &QDocDatabase::getSinceMap(const QString &key)
 {
-    if (s_newSinceMaps.isEmpty() && s_newClassMaps.isEmpty() && s_newQmlTypeMaps.isEmpty())
-        processForest(&QDocDatabase::findAllSince);
+    processForest(&QDocDatabase::findAllSince);
     auto it = s_newSinceMaps.constFind(key);
-    if (it != s_newSinceMaps.constEnd())
-        return it.value();
-    return emptyNodeMultiMap_;
+    return (it != s_newSinceMaps.constEnd()) ? it.value() : emptyNodeMultiMap_;
 }
 
 /*!

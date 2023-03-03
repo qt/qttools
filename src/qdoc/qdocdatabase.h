@@ -170,6 +170,8 @@ public:
     static void destroyQdocDB();
     ~QDocDatabase() = default;
 
+    using FindFunctionPtr = void (QDocDatabase::*)(Aggregate *);
+
     Tree *findTree(const QString &t) { return m_forest.findTree(t); }
 
     const CNMap &groups() { return primaryTree()->groups(); }
@@ -356,7 +358,7 @@ private:
     {
         return m_forest.findNode(path, relative, findFlags, genus);
     }
-    void processForest(void (QDocDatabase::*)(Aggregate *));
+    void processForest(FindFunctionPtr func);
     bool isLoaded(const QString &t) { return m_forest.isLoaded(t); }
     static void initializeDB();
 
@@ -391,6 +393,7 @@ private:
     NodeMapMap m_functionIndex {};
     TextToNodeMap m_legaleseTexts {};
     QSet<QString> m_openNamespaces {};
+    QMultiHash<Tree*, FindFunctionPtr> m_completedFindFunctions {};
 };
 
 QT_END_NAMESPACE
