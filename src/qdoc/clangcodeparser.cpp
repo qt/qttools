@@ -27,6 +27,7 @@
 #include <clang-c/Index.h>
 
 #include <clang/AST/Decl.h>
+#include <clang/AST/DeclFriend.h>
 #include <clang/AST/DeclTemplate.h>
 #include <clang/AST/Expr.h>
 #include <clang/AST/Type.h>
@@ -489,7 +490,6 @@ private:
 
     QDocDatabase *qdb_;
     Aggregate *parent_;
-    bool m_friendDecl { false };             // true if currently visiting a friend declaration
     const QMultiHash<QString, QString> allHeaders_;
     QHash<CXFile, bool> isInterestingCache_; // doing a canonicalFilePath is slow, so keep a cache.
 
@@ -762,8 +762,6 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
 #if CINDEX_VERSION >= 36
     case CXCursor_FriendDecl: {
-        QScopedValueRollback<bool> setFriend(m_friendDecl, true);
-        // Visit the friend functions
         return visitChildren(cursor);
     }
 #endif
@@ -1038,8 +1036,8 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     if (clang_isFunctionTypeVariadic(funcType))
         parameters.append(QStringLiteral("..."));
     readParameterNamesAndAttributes(fn, cursor);
-    // Friend functions are not members
-    if (m_friendDecl)
+
+    if (declaration->getFriendObjectKind() != clang::Decl::FOK_None)
         fn->setRelatedNonmember(true);
 }
 
