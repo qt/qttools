@@ -39,7 +39,6 @@ private:
     }
     ~QDocForest();
 
-    NamespaceNode *nextRoot();
     Tree *firstTree();
     Tree *nextTree();
     Tree *primaryTree() { return m_primaryTree; }
@@ -331,8 +330,6 @@ public:
     void insertOpenNamespace(const QString &path) { m_openNamespaces.insert(path); }
     void processForest();
 
-    // Try to make this function private.
-    QDocForest &forest() { return m_forest; }
     NamespaceNode *primaryTreeRoot() { return m_forest.primaryTreeRoot(); }
     void newPrimaryTree(const QString &module) { m_forest.newPrimaryTree(module); }
     void setPrimaryTree(const QString &t) { m_forest.setPrimaryTree(t); }
@@ -353,11 +350,6 @@ public:
 private:
     friend class Tree;
 
-    const Node *findNode(const QStringList &path, const Node *relative, int findFlags,
-                         Node::Genus genus)
-    {
-        return m_forest.findNode(path, relative, findFlags, genus);
-    }
     void processForest(FindFunctionPtr func);
     bool isLoaded(const QString &t) { return m_forest.isLoaded(t); }
     static void initializeDB();

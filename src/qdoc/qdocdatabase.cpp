@@ -73,18 +73,6 @@ QDocForest::~QDocForest()
 }
 
 /*!
-  Increments the forest's current tree index. If the current
-  tree index is still within the forest, the function returns
-  the root node of the current tree. Otherwise it returns \nullptr.
- */
-NamespaceNode *QDocForest::nextRoot()
-{
-    ++m_currentIndex;
-    return (m_currentIndex < searchOrder().size() ? searchOrder()[m_currentIndex]->root()
-                                                  : nullptr);
-}
-
-/*!
   Initializes the forest prior to a traversal and
   returns a pointer to the primary tree. If the
   forest is empty, it returns \nullptr.
