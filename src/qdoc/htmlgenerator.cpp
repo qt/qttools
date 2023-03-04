@@ -562,6 +562,15 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
                         generateSection(nv, relative, marker);
                         out() << "<br/>";
                     }
+                } else if (index == Sections::SinceEnumValues) {
+                    out() << "<div class=\"table\"><table class=\"alignedsummary\" translate=\"no\">\n";
+                    const auto map_it = m_qdb->newEnumValueMaps().constFind(atom->string());
+                    for (auto it = map_it->cbegin(); it != map_it->cend(); ++it) {
+                        out() << "<tr><td class=\"memItemLeft\"> enum value </td><td class=\"memItemRight\">"
+                              << "<b><a href=\"" << linkForNode(it.value(), nullptr) << "\">"
+                              << it.key() << "</a></b></td></tr>\n";
+                    }
+                    out() << "</table></div>\n";
                 } else {
                     generateSection(section.members(), relative, marker);
                 }

@@ -293,10 +293,17 @@ void Tree::resolveCppToQmlLinks()
     \\since information from the associated physical or logical module.
     That is, C++ and QML types inherit the \\since of their module,
     unless that command is explicitly used in the type documentation.
+
+    In addition, resolve the since information for individual enum
+    values.
 */
 void Tree::resolveSince(Aggregate &aggregate)
 {
     for (auto *child : aggregate.childNodes()) {
+        // Order matters; resolve since-clauses in enum values
+        // first as EnumNode is not an Aggregate
+        if (child->isEnumType())
+            resolveEnumValueSince(static_cast<EnumNode&>(*child));
         if (!child->isAggregate())
             continue;
         if (!child->since().isEmpty())
@@ -306,6 +313,35 @@ void Tree::resolveSince(Aggregate &aggregate)
             child->setSince(collectionNode->since());
 
         resolveSince(static_cast<Aggregate&>(*child));
+    }
+}
+
+/*!
+  Resolve since information for values of enum node \a en.
+
+  Enum values are not derived from Node, but they can have
+  'since' information associated with them. Since-strings
+  for each enum item are initially stored in the Doc
+  instance of EnumNode as SinceTag atoms; parse the doc
+  and store them into each EnumItem.
+*/
+void Tree::resolveEnumValueSince(EnumNode &en)
+{
+    auto findNextAtom = [](const Atom *a, Atom::AtomType t) {
+        while (a && a->type() != t)
+            a = a->next();
+        return a;
+    };
+
+    const QStringList enumItems{en.doc().enumItemNames()};
+    const Atom *atom = en.doc().body().firstAtom();
+    while ((atom = findNextAtom(atom, Atom::ListTagLeft))) {
+        if (atom = atom->next(); !atom)
+            break;
+        if (auto val = atom->string(); enumItems.contains(val)) {
+            if (atom = atom->next(); atom && atom->next(Atom::SinceTagLeft))
+                en.setSince(val, atom->next()->next()->string());
+        }
     }
 }
 

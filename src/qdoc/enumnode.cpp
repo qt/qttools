@@ -46,6 +46,19 @@ QString EnumNode::itemValue(const QString &name) const
 }
 
 /*!
+  Sets \a since information to a named enum \a value, if it
+  exists in this enum.
+*/
+void EnumNode::setSince(const QString &value, const QString &since)
+{
+    auto it = std::find_if(m_items.begin(), m_items.end(), [value](EnumItem ev) {
+            return ev.name() == value;
+    });
+    if (it != m_items.end())
+        it->setSince(since);
+}
+
+/*!
   Clone this node on the heap and make the clone a child of
   \a parent.
 

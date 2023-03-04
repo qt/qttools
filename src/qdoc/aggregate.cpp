@@ -781,6 +781,22 @@ void Aggregate::findAllSince()
                 nsmap.value().insert(name, node);
             }
         }
+        // Enum values - a special case as EnumItem is not a Node subclass
+        if (node->isInAPI() && node->isEnumType()) {
+            for (const auto &val : static_cast<EnumNode *>(node)->items()) {
+                sinceString = val.since();
+                if (sinceString.isEmpty())
+                    continue;
+                // Insert to enum value map
+                QDocDatabase::newEnumValueMaps()[sinceString].insert(
+                        node->name() + "::" + val.name(), node);
+                // Ugly hack: Insert into general map with an empty key -
+                // we need something in there to mark the corresponding
+                // section populated. See Sections class constructor.
+                QDocDatabase::newSinceMaps()[sinceString].replace(QString(), node);
+            }
+        }
+
         // Recursively find child nodes with since commands.
         if (node->isAggregate())
             static_cast<Aggregate *>(node)->findAllSince();

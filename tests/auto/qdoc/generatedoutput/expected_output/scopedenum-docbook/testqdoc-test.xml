@@ -171,7 +171,7 @@
 </db:tr>
 <db:tr>
 <db:td>
-<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">ScopedEnum</db:link></db:emphasis>::All</db:code></db:para>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="testqdoc.xml">TestQDoc</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:emphasis>::<db:emphasis role="bold"><db:link xlink:href="">ScopedEnum</db:link></db:emphasis>::All (since Qt 2.0)</db:code></db:para>
 </db:td>
 <db:td><db:code>This | That</db:code></db:td>
 <db:td>

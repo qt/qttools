@@ -335,6 +335,7 @@ NodeMultiMap QDocDatabase::s_qmlTypes;
 NodeMultiMap QDocDatabase::s_examples;
 NodeMultiMapMap QDocDatabase::s_newClassMaps;
 NodeMultiMapMap QDocDatabase::s_newQmlTypeMaps;
+NodeMultiMapMap QDocDatabase::s_newEnumValueMaps;
 NodeMultiMapMap QDocDatabase::s_newSinceMaps;
 
 /*!

@@ -369,9 +369,10 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         while (reader.readNextStartElement()) {
             QXmlStreamAttributes childAttributes = reader.attributes();
             if (reader.name() == QLatin1String("value")) {
-
                 EnumItem item(childAttributes.value(QLatin1String("name")).toString(),
-                              childAttributes.value(QLatin1String("value")).toString());
+                              childAttributes.value(QLatin1String("value")).toString(),
+                              childAttributes.value(QLatin1String("since")).toString()
+                              );
                 enumNode->addItem(item);
             } else if (reader.name() == QLatin1String("keyword")) {
                 insertTarget(TargetRec::Keyword, childAttributes, enumNode);
@@ -1043,6 +1044,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeStartElement("value");
             writer.writeAttribute("name", item.name());
             writer.writeAttribute("value", item.value());
+            if (!item.since().isEmpty())
+                writer.writeAttribute("since", item.since());
             writer.writeEndElement(); // value
         }
     } break;

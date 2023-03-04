@@ -35,6 +35,7 @@ public:
     const TypedefNode *flagsType() const { return m_flagsType; }
     QString itemValue(const QString &name) const;
     Node *clone(Aggregate *parent) override;
+    void setSince(const QString &value, const QString &since);
 
 private:
     QList<EnumItem> m_items {};

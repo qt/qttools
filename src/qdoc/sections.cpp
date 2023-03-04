@@ -92,21 +92,22 @@ QList<Section> Sections::s_stdQmlTypeDetailsSections {
 };
 
 QList<Section> Sections::s_sinceSections {
-    { "    New Namespaces",              "", "", "", Section::Details },
-    { "    New Classes",                 "", "", "", Section::Details },
-    { "    New Member Functions",        "", "", "", Section::Details },
-    { "    New Functions in Namespaces", "", "", "", Section::Details },
-    { "    New Global Functions",        "", "", "", Section::Details },
-    { "    New Macros",                  "", "", "", Section::Details },
-    { "    New Enum Types",              "", "", "", Section::Details },
-    { "    New Type Aliases",            "", "", "", Section::Details },
-    { "    New Properties",              "", "", "", Section::Details },
-    { "    New Variables",               "", "", "", Section::Details },
-    { "    New QML Types",               "", "", "", Section::Details },
-    { "    New QML Properties",          "", "", "", Section::Details },
-    { "    New QML Signals",             "", "", "", Section::Details },
-    { "    New QML Signal Handlers",     "", "", "", Section::Details },
-    { "    New QML Methods",             "", "", "", Section::Details },
+    { "New Namespaces",              "", "", "", Section::Details },
+    { "New Classes",                 "", "", "", Section::Details },
+    { "New Member Functions",        "", "", "", Section::Details },
+    { "New Functions in Namespaces", "", "", "", Section::Details },
+    { "New Global Functions",        "", "", "", Section::Details },
+    { "New Macros",                  "", "", "", Section::Details },
+    { "New Enum Types",              "", "", "", Section::Details },
+    { "New Enum Values",             "", "", "", Section::Details },
+    { "New Type Aliases",            "", "", "", Section::Details },
+    { "New Properties",              "", "", "", Section::Details },
+    { "New Variables",               "", "", "", Section::Details },
+    { "New QML Types",               "", "", "", Section::Details },
+    { "New QML Properties",          "", "", "", Section::Details },
+    { "New QML Signals",             "", "", "", Section::Details },
+    { "New QML Signal Handlers",     "", "", "", Section::Details },
+    { "New QML Methods",             "", "", "", Section::Details },
 };
 
 QList<Section> Sections::s_allMembers{ { "", "member", "members", "", Section::AllMembers } };
@@ -391,9 +392,16 @@ Sections::Sections(const NodeMultiMap &nsmap) : m_aggregate(nullptr)
         case Node::Union:
             sections[SinceClasses].appendMember(node);
             break;
-        case Node::Enum:
-            sections[SinceEnumTypes].appendMember(node);
+        case Node::Enum: {
+            // The map can contain an enum node with \since, or an enum node
+            // with \value containing a since-clause. In the latter case,
+            // key() is an empty string.
+            if (!it.key().isEmpty())
+                sections[SinceEnumTypes].appendMember(node);
+            else
+                sections[SinceEnumValues].appendMember(node);
             break;
+        }
         case Node::Typedef:
         case Node::TypeAlias:
             sections[SinceTypeAliases].appendMember(node);

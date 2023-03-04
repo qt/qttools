@@ -211,6 +211,7 @@ public:
     static NodeMultiMap &examples() { return s_examples; }
     static NodeMultiMapMap &newClassMaps() { return s_newClassMaps; }
     static NodeMultiMapMap &newQmlTypeMaps() { return s_newQmlTypeMaps; }
+    static NodeMultiMapMap &newEnumValueMaps() { return s_newEnumValueMaps; }
     static NodeMultiMapMap &newSinceMaps() { return s_newSinceMaps; }
 
 private:
@@ -375,6 +376,7 @@ private:
     static NodeMultiMap s_examples;
     static NodeMultiMapMap s_newClassMaps;
     static NodeMultiMapMap s_newQmlTypeMaps;
+    static NodeMultiMapMap s_newEnumValueMaps;
     static NodeMultiMapMap s_newSinceMaps;
 
     QString m_version {};

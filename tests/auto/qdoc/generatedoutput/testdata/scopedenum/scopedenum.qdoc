@@ -17,7 +17,7 @@
     \value That Something else
     \omitvalue OmittedValue \omit Unused -
                This decription is omitted \endomit
-    \value All  Everything
+    \value [since 2.0] All  Everything
     \omitvalue VeryLastValue
                Nothing here
     \omitvalue UselessValue
@@ -33,4 +33,11 @@
 
     TestQDoc::Test::ClassicEnum::Howdy does not link,
     but TestQDoc::Test::Howdy might.
+*/
+
+/*!
+    \page whatsnew.html
+    \title New Classes and Functions
+
+    \sincelist 2.0
 */

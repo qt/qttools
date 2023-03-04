@@ -132,12 +132,12 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 
         QFile expectedFile(expected);
         if (!expectedFile.open(QIODevice::ReadOnly))
-            QFAIL("Cannot open expected data file!");
+            QFAIL(qPrintable(QString("Cannot open expected data file: %1").arg(expected)));
         QTextStream expectedIn(&expectedFile);
 
         QFile actualFile(actual);
         if (!actualFile.open(QIODevice::ReadOnly))
-            QFAIL("Cannot open actual data file!");
+            QFAIL(qPrintable(QString("Cannot open actual data file: %1").arg(actual)));
         QTextStream actualIn(&actualFile);
 
         const QLatin1String delim(": ");
@@ -379,6 +379,7 @@ void tst_generatedOutput::scopedEnum()
     testAndCompare("testdata/configs/scopedenum.qdocconf",
                    "scopedenum/testqdoc-test.html "
                    "scopedenum/scoped-enum-linking.html "
+                   "scopedenum/whatsnew.html "
                    "scopedenum-docbook/scoped-enum-linking.xml "
                    "scopedenum-docbook/testqdoc-test.xml");
 }
