@@ -60,36 +60,36 @@ void PureDocParser::processQdocComments(QFile& input_file)
 
     int token = tokenizer.getToken();
     while (token != Tok_Eoi) {
-        if (token == Tok_Doc) {
-            QString comment = tokenizer.lexeme(); // returns an entire qdoc comment.
-            Location start_loc(tokenizer.location());
+        if (token != Tok_Doc) {
             token = tokenizer.getToken();
-
-            Doc::trimCStyleComment(start_loc, comment);
-            Location end_loc(tokenizer.location());
-
-            // Doc constructor parses the comment.
-            Doc doc(start_loc, end_loc, comment, commands, topicCommands());
-            const TopicList &topics = doc.topicsUsed();
-            if (topics.isEmpty()) {
-                doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "
-                                                      "(e.g., '\\%1', '\\%2').")
-                                               .arg(COMMAND_MODULE, COMMAND_PAGE));
-                continue;
-            }
-
-            if (hasTooManyTopics(doc))
-                continue;
-
-            DocList docs;
-            NodeList nodes;
-            QString topic = topics[0].m_topic;
-
-            processTopicArgs(doc, topic, nodes, docs);
-            processMetaCommands(nodes, docs);
-        } else {
-            token = tokenizer.getToken();
+            continue;
         }
+        QString comment = tokenizer.lexeme(); // returns an entire qdoc comment.
+        Location start_loc(tokenizer.location());
+        token = tokenizer.getToken();
+
+        Doc::trimCStyleComment(start_loc, comment);
+        Location end_loc(tokenizer.location());
+
+        // Doc constructor parses the comment.
+        Doc doc(start_loc, end_loc, comment, commands, topicCommands());
+        const TopicList &topics = doc.topicsUsed();
+        if (topics.isEmpty()) {
+            doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "
+                                                  "(e.g., '\\%1', '\\%2').")
+                                           .arg(COMMAND_MODULE, COMMAND_PAGE));
+            continue;
+        }
+
+        if (hasTooManyTopics(doc))
+            continue;
+
+        DocList docs;
+        NodeList nodes;
+        QString topic = topics[0].m_topic;
+
+        processTopicArgs(doc, topic, nodes, docs);
+        processMetaCommands(nodes, docs);
     }
 }
 
