@@ -1924,9 +1924,6 @@ pixmap property in the property editor.
     and enables signal and slot connections to be made in the usual way with
     the \l{QObject::connect()}{connect()} function.
 
-    This approach is used in the \l{Multiple Inheritance Example}
-    {Multiple Inheritance} example.
-
     We need to include the header file that \c uic generates from the
     \c calculatorform.ui file, as follows:
 
