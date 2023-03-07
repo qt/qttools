@@ -6,6 +6,8 @@
 
 #include "cppcodeparser.h"
 
+#include <QtCore/QFile>
+
 QT_BEGIN_NAMESPACE
 
 class Location;
@@ -20,8 +22,7 @@ public:
     void parseSourceFile(const Location &location, const QString &filePath) override;
 
 private:
-    void processQdocComments();
-    Tokenizer *m_tokenizer { nullptr };
+    void processQdocComments(QFile& input_file);
 };
 
 QT_END_NAMESPACE

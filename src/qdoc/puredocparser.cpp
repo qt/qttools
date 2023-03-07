@@ -37,17 +37,13 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
         return;
     }
 
-    Location fileLocation(filePath);
-    Tokenizer fileTokenizer(fileLocation, in);
-    m_tokenizer = &fileTokenizer;
-
     /*
       The set of open namespaces is cleared before parsing
       each source file. The word "source" here means cpp file.
      */
     m_qdb->clearOpenNamespaces();
 
-    processQdocComments();
+    processQdocComments(in);
     in.close();
 }
 
@@ -56,19 +52,21 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
   and tree building. It only processes qdoc comments. It skips
   everything else.
  */
-void PureDocParser::processQdocComments()
+void PureDocParser::processQdocComments(QFile& input_file)
 {
+    Tokenizer tokenizer(Location{input_file.fileName()}, input_file);
+
     const QSet<QString> &commands = topicCommands() + metaCommands();
 
-    int token = m_tokenizer->getToken();
+    int token = tokenizer.getToken();
     while (token != Tok_Eoi) {
         if (token == Tok_Doc) {
-            QString comment = m_tokenizer->lexeme(); // returns an entire qdoc comment.
-            Location start_loc(m_tokenizer->location());
-            token = m_tokenizer->getToken();
+            QString comment = tokenizer.lexeme(); // returns an entire qdoc comment.
+            Location start_loc(tokenizer.location());
+            token = tokenizer.getToken();
 
             Doc::trimCStyleComment(start_loc, comment);
-            Location end_loc(m_tokenizer->location());
+            Location end_loc(tokenizer.location());
 
             // Doc constructor parses the comment.
             Doc doc(start_loc, end_loc, comment, commands, topicCommands());
@@ -90,7 +88,7 @@ void PureDocParser::processQdocComments()
             processTopicArgs(doc, topic, nodes, docs);
             processMetaCommands(nodes, docs);
         } else {
-            token = m_tokenizer->getToken();
+            token = tokenizer.getToken();
         }
     }
 }
