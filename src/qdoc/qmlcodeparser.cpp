@@ -67,10 +67,8 @@ QStringList QmlCodeParser::sourceFileNameFilter()
 void QmlCodeParser::parseSourceFile(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
-    m_currentFile = filePath;
     if (!in.open(QIODevice::ReadOnly)) {
         location.error(QStringLiteral("Cannot open QML file '%1'").arg(filePath));
-        m_currentFile.clear();
         return;
     }
 
@@ -94,7 +92,6 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
         qCDebug(lcQdoc, "%s: %d: %d: QML syntax error: %s", qUtf8Printable(filePath),
                 msg.loc.startLine, msg.loc.startColumn, qUtf8Printable(msg.message));
     }
-    m_currentFile.clear();
 }
 
 static QSet<QString> topicCommands_;

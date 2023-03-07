@@ -33,7 +33,6 @@ public:
         return nullptr;
     }
 
-    [[nodiscard]] const QString &currentFile() const { return m_currentFile; }
     [[nodiscard]] const QString &moduleHeader() const { return m_moduleHeader; }
     void setModuleHeader(const QString &t) { m_moduleHeader = t; }
     void checkModuleInclusion(Node *n);
@@ -51,7 +50,6 @@ protected:
     static void extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc);
     static bool showInternal() { return s_showInternal; }
     QString m_moduleHeader {};
-    QString m_currentFile {};
     QDocDatabase *m_qdb {};
 
 private:

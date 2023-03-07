@@ -31,11 +31,9 @@ QStringList PureDocParser::sourceFileNameFilter()
 void PureDocParser::parseSourceFile(const Location &location, const QString &filePath)
 {
     QFile in(filePath);
-    m_currentFile = filePath;
     if (!in.open(QIODevice::ReadOnly)) {
         location.error(
                 QStringLiteral("Can't open source file '%1' (%2)").arg(filePath, strerror(errno)));
-        m_currentFile.clear();
         return;
     }
 
@@ -52,7 +50,6 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
 
     processQdocComments();
     in.close();
-    m_currentFile.clear();
 }
 
 /*!

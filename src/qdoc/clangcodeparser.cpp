@@ -1538,7 +1538,6 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
       each source file. The word "source" here means cpp file.
      */
     m_qdb->clearOpenNamespaces();
-    m_currentFile = filePath;
     flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);
