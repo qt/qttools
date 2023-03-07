@@ -60,7 +60,7 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
   and tree building. It only processes qdoc comments. It skips
   everything else.
  */
-bool PureDocParser::processQdocComments()
+void PureDocParser::processQdocComments()
 {
     const QSet<QString> &commands = topicCommands() + metaCommands();
 
@@ -82,6 +82,7 @@ bool PureDocParser::processQdocComments()
                                                .arg(COMMAND_MODULE, COMMAND_PAGE));
                 continue;
             }
+
             if (hasTooManyTopics(doc))
                 continue;
 
@@ -95,7 +96,6 @@ bool PureDocParser::processQdocComments()
             m_token = m_tokenizer->getToken();
         }
     }
-    return true;
 }
 
 QT_END_NAMESPACE

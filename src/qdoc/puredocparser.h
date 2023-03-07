@@ -20,7 +20,7 @@ public:
     void parseSourceFile(const Location &location, const QString &filePath) override;
 
 private:
-    bool processQdocComments();
+    void processQdocComments();
     Tokenizer *m_tokenizer { nullptr };
     int m_token { 0 };
 };
