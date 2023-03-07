@@ -22,7 +22,6 @@ public:
 private:
     void processQdocComments();
     Tokenizer *m_tokenizer { nullptr };
-    int m_token { 0 };
 };
 
 QT_END_NAMESPACE

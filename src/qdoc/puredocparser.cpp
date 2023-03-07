@@ -40,7 +40,6 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
     Location fileLocation(filePath);
     Tokenizer fileTokenizer(fileLocation, in);
     m_tokenizer = &fileTokenizer;
-    m_token = m_tokenizer->getToken();
 
     /*
       The set of open namespaces is cleared before parsing
@@ -61,11 +60,12 @@ void PureDocParser::processQdocComments()
 {
     const QSet<QString> &commands = topicCommands() + metaCommands();
 
-    while (m_token != Tok_Eoi) {
-        if (m_token == Tok_Doc) {
+    int token = m_tokenizer->getToken();
+    while (token != Tok_Eoi) {
+        if (token == Tok_Doc) {
             QString comment = m_tokenizer->lexeme(); // returns an entire qdoc comment.
             Location start_loc(m_tokenizer->location());
-            m_token = m_tokenizer->getToken();
+            token = m_tokenizer->getToken();
 
             Doc::trimCStyleComment(start_loc, comment);
             Location end_loc(m_tokenizer->location());
@@ -90,7 +90,7 @@ void PureDocParser::processQdocComments()
             processTopicArgs(doc, topic, nodes, docs);
             processMetaCommands(nodes, docs);
         } else {
-            m_token = m_tokenizer->getToken();
+            token = m_tokenizer->getToken();
         }
     }
 }
