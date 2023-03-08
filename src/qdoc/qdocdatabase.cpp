@@ -920,7 +920,6 @@ void QDocDatabase::resolveStuff()
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveTargets(primaryTreeRoot());
         primaryTree()->resolveCppToQmlLinks();
-        primaryTree()->resolveUsingClauses(*primaryTreeRoot());
         primaryTree()->resolveSince(*primaryTreeRoot());
     }
     if (config.singleExec() && config.generating()) {
@@ -928,7 +927,6 @@ void QDocDatabase::resolveStuff()
         primaryTree()->resolvePropertyOverriddenFromPtrs(primaryTreeRoot());
         primaryTreeRoot()->resolveQmlInheritance();
         primaryTree()->resolveCppToQmlLinks();
-        primaryTree()->resolveUsingClauses(*primaryTreeRoot());
         primaryTree()->resolveSince(*primaryTreeRoot());
     }
     if (!config.preparing()) {

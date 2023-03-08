@@ -6,7 +6,6 @@
 
 #include "aggregate.h"
 #include "relatedclass.h"
-#include "usingclause.h"
 
 #include <QtCore/qglobal.h>
 #include <QtCore/qlist.h>
@@ -41,7 +40,6 @@ public:
     QList<RelatedClass> &baseClasses() { return m_bases; }
     QList<RelatedClass> &derivedClasses() { return m_derived; }
     QList<RelatedClass> &ignoredBaseClasses() { return m_ignoredBases; }
-    QList<UsingClause> &usingClauses() { return m_usingClauses; }
 
     [[nodiscard]] const QList<RelatedClass> &baseClasses() const { return m_bases; }
 
@@ -62,7 +60,6 @@ private:
     QList<RelatedClass> m_bases {};
     QList<RelatedClass> m_derived {};
     QList<RelatedClass> m_ignoredBases {};
-    QList<UsingClause> m_usingClauses {};
     bool m_abstract { false };
     bool m_wrapper { false };
     QString m_obsoleteLink {};

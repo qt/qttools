@@ -77,7 +77,6 @@ qt_internal_add_tool(${target_name}
         tokenizer.cpp
         tree.cpp
         typedefnode.cpp
-        usingclause.cpp
         utilities.cpp
         variablenode.cpp
         webxmlgenerator.cpp

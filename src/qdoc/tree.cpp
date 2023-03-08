@@ -14,7 +14,6 @@
 #include "qdocdatabase.h"
 #include "text.h"
 #include "typedefnode.h"
-#include "usingclause.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -307,29 +306,6 @@ void Tree::resolveSince(Aggregate &aggregate)
             child->setSince(collectionNode->since());
 
         resolveSince(static_cast<Aggregate&>(*child));
-    }
-}
-
-/*!
-  For each C++ class node, resolve any \c using clauses
-  that appeared in the class declaration.
- */
-void Tree::resolveUsingClauses(Aggregate &aggregate)
-{
-    for (auto *child : aggregate.childNodes()) {
-        if (child->isClassNode()) {
-            auto *cn = static_cast<ClassNode *>(child);
-            QList<UsingClause> &usingClauses = cn->usingClauses();
-            for (auto &usingClause : usingClauses) {
-                if (usingClause.node() == nullptr) {
-                    const Node *n = m_qdb->findFunctionNode(usingClause.signature(), cn, Node::CPP);
-                    if (n != nullptr)
-                        usingClause.setNode(n);
-                }
-            }
-        }
-    if (child->genus() == Node::CPP && child->isAggregate())
-        resolveUsingClauses(static_cast<Aggregate&>(*child));
     }
 }
 

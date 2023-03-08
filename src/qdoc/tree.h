@@ -109,7 +109,6 @@ private: // The rest of the class is private.
     void resolveProperties();
     void resolveCppToQmlLinks();
     void resolveSince(Aggregate &aggregate);
-    void resolveUsingClauses(Aggregate &aggregate);
     void removePrivateAndInternalBases(NamespaceNode *rootNode);
     NamespaceNode *root() { return &m_root; }
     [[nodiscard]] const NamespaceNode *root() const { return &m_root; }

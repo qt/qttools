@@ -10,7 +10,6 @@
 #include "importrec.h"
 #include "parameters.h"
 #include "relatedclass.h"
-#include "usingclause.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qlist.h>
