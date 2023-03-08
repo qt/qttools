@@ -27,7 +27,6 @@ public:
     virtual QStringList sourceFileNameFilter() = 0;
     virtual void parseHeaderFile(const Location &location, const QString &filePath);
     virtual void parseSourceFile(const Location &location, const QString &filePath) = 0;
-    virtual void precompileHeaders() {}
     virtual Node *parseFnArg(const Location &, const QString &, const QString & = QString())
     {
         return nullptr;
