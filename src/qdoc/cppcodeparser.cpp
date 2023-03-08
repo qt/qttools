@@ -136,14 +136,6 @@ void CppCodeParser::terminateParser()
 }
 
 /*!
-  Returns a list of extensions for header files.
- */
-QStringList CppCodeParser::headerFileNameFilter()
-{
-    return QStringList();
-}
-
-/*!
   Returns a list of extensions for source files, i.e. not
   header files.
  */

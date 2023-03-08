@@ -30,7 +30,6 @@ public:
     void initializeParser() override;
     void terminateParser() override;
     QString language() override { return QStringLiteral("Cpp"); }
-    QStringList headerFileNameFilter() override;
     QStringList sourceFileNameFilter() override;
     FunctionNode *parseMacroArg(const Location &location, const QString &macroArg);
     FunctionNode *parseOtherFuncArg(const QString &topic, const Location &location,

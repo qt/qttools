@@ -480,8 +480,13 @@ static void processQdocconfFile(const QString &fileName)
         for (const auto &header : headerList) {
             if (header.contains(QLatin1String("doc/snippets")))
                 continue;
+
             if (headers.contains(header))
                 continue;
+
+            if (!ClangCodeParser::accepted_header_file_extensions.contains(QFileInfo{header}.suffix()))
+                continue;
+
             headers.insert(header, header);
             QString t = header.mid(header.lastIndexOf('/') + 1);
             headerFileNames.insert(t, t);
@@ -521,11 +526,8 @@ static void processQdocconfFile(const QString &fileName)
 
         qCDebug(lcQdoc, "Parsing header files");
         for (auto it = headers.constBegin(); it != headers.constEnd(); ++it) {
-            CodeParser *codeParser = CodeParser::parserForHeaderFile(it.key());
-            if (codeParser) {
-                qCDebug(lcQdoc, "Parsing %s", qPrintable(it.key()));
-                codeParser->parseHeaderFile(config.location(), it.key());
-            }
+            qCDebug(lcQdoc, "Parsing %s", qPrintable(it.key()));
+            clangParser_->parseHeaderFile(config.location(), it.key());
         }
 
         clangParser_->precompileHeaders();

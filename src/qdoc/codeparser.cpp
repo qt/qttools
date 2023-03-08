@@ -50,16 +50,6 @@ void CodeParser::terminateParser()
     // nothing.
 }
 
-QStringList CodeParser::headerFileNameFilter()
-{
-    return sourceFileNameFilter();
-}
-
-void CodeParser::parseHeaderFile(const Location &location, const QString &filePath)
-{
-    parseSourceFile(location, filePath);
-}
-
 /*!
   All the code parsers in the static list are initialized here,
   after the qdoc configuration variables have been set.
@@ -84,21 +74,6 @@ CodeParser *CodeParser::parserForLanguage(const QString &language)
     for (const auto parser : std::as_const(s_parsers)) {
         if (parser->language() == language)
             return parser;
-    }
-    return nullptr;
-}
-
-CodeParser *CodeParser::parserForHeaderFile(const QString &filePath)
-{
-    QString fileName = QFileInfo(filePath).fileName();
-
-    for (const auto &parser : std::as_const(s_parsers)) {
-        const QStringList headerPatterns = parser->headerFileNameFilter();
-        for (const auto &pattern : headerPatterns) {
-            auto re = QRegularExpression::fromWildcard(pattern, Qt::CaseInsensitive);
-            if (re.match(fileName).hasMatch())
-                return parser;
-        }
     }
     return nullptr;
 }

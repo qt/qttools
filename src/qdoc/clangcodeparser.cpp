@@ -41,6 +41,10 @@
 
 QT_BEGIN_NAMESPACE
 
+const QStringList ClangCodeParser::accepted_header_file_extensions{
+    "ch", "h", "h++", "hh", "hpp", "hxx"
+};
+
 // We're printing diagnostics in ClangCodeParser::printDiagnostics,
 // so avoid clang itself printing them.
 static const auto kClangDontDisplayDiagnostics = 0;
@@ -1237,19 +1241,6 @@ void ClangCodeParser::terminateParser()
 QString ClangCodeParser::language()
 {
     return "Clang";
-}
-
-/*!
-  Returns a list of extensions for header files.
- */
-QStringList ClangCodeParser::headerFileNameFilter()
-{
-    return QStringList() << "*.ch"
-                         << "*.h"
-                         << "*.h++"
-                         << "*.hh"
-                         << "*.hpp"
-                         << "*.hxx";
 }
 
 /*!

@@ -7,6 +7,7 @@
 #include "cppcodeparser.h"
 
 #include <QtCore/qtemporarydir.h>
+#include <QtCore/QStringList>
 
 typedef struct CXTranslationUnitImpl *CXTranslationUnit;
 
@@ -15,14 +16,16 @@ QT_BEGIN_NAMESPACE
 class ClangCodeParser : public CppCodeParser
 {
 public:
+    static const QStringList accepted_header_file_extensions;
+
+public:
     ~ClangCodeParser() override = default;
 
     void initializeParser() override;
     void terminateParser() override;
     QString language() override;
-    QStringList headerFileNameFilter() override;
     QStringList sourceFileNameFilter() override;
-    void parseHeaderFile(const Location &location, const QString &filePath) override;
+    void parseHeaderFile(const Location &location, const QString &filePath);
     void parseSourceFile(const Location &location, const QString &filePath) override;
     void precompileHeaders();
     Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag) override;
