@@ -693,7 +693,15 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_META:
                     m_private->constructExtra();
                     p1 = getArgument();
-                    m_private->extra->m_metaMap.insert(p1, getArgument());
+                    p2 = getArgument();
+                    m_private->extra->m_metaMap.insert(p1, p2);
+                    // Special case: \meta category adds also a a group 'category<arg>'
+                    if (p1 == QLatin1String("category")) {
+                        QString extraCmd{"ingroup"};
+                        Q_ASSERT(metaCommandSet.contains(extraCmd));
+                        m_private->m_metacommandsUsed.insert(extraCmd);
+                        m_private->m_metaCommandMap[extraCmd].append(ArgPair(p2, p1));
+                    }
                     break;
                 case CMD_NOTE:
                     leavePara();

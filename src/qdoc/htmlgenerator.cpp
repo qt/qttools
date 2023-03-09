@@ -2916,10 +2916,9 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
 }
 
 /*!
-  This function generates a simple bullet list for the members
-  of collection node \a {cn}. The collection node must be a group
-  and must not be empty. If it is empty, nothing is output, and
-  false is returned. Otherewise, the list is generated and true is returned.
+  This function generates a simple unordered list for the members
+  of collection node \a {cn}. Returns \c true if the list was
+  generated (collection has members), \c false otherwise.
  */
 bool HtmlGenerator::generateGroupList(CollectionNode *cn)
 {
@@ -2927,11 +2926,10 @@ bool HtmlGenerator::generateGroupList(CollectionNode *cn)
     if (cn->members().isEmpty())
         return false;
     out() << "<ul>\n";
-    const auto members = cn->members();
-    for (const auto *node : members) {
-        out() << "<li>"
-              << "<a href=\"#" << Doc::canonicalTitle(node->title()) << "\">" << node->title()
-              << "</a></li>\n";
+    for (const auto *node : cn->members()) {
+        out() << "<li>";
+        generateFullName(node, nullptr);
+        out() << "</li>\n";
     }
     out() << "</ul>\n";
     return true;

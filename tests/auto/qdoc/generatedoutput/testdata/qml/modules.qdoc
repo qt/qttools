@@ -6,4 +6,8 @@
     \title QML Modules
 
     \generatelist qml-modules
+
+    \section1 Examples
+
+    \generatelist category {Application Example}
 */
