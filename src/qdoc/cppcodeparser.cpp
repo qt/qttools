@@ -118,14 +118,12 @@ void CppCodeParser::initializeParser()
 }
 
 /*!
-  Clear the exclude directories and exclude files sets, and call
-  the same function in the base class.
+  Clear the exclude directories and exclude files sets.
  */
 void CppCodeParser::terminateParser()
 {
     m_excludeDirs.clear();
     m_excludeFiles.clear();
-    CodeParser::terminateParser();
 }
 
 /*!
