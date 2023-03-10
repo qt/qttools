@@ -36,6 +36,27 @@ QSet<QString> CppCodeParser::m_excludeFiles;
 static QSet<QString> topicCommands_;
 static QSet<QString> metaCommands_;
 
+/*
+  All these can appear in a C++ namespace. Don't add
+  anything that can't be in a C++ namespace.
+ */
+static const QMap<QString, Node::NodeType> s_nodeTypeMap{
+    { COMMAND_NAMESPACE, Node::Namespace }, { COMMAND_NAMESPACE, Node::Namespace },
+    { COMMAND_CLASS, Node::Class },         { COMMAND_STRUCT, Node::Struct },
+    { COMMAND_UNION, Node::Union },         { COMMAND_ENUM, Node::Enum },
+    { COMMAND_TYPEALIAS, Node::TypeAlias }, { COMMAND_TYPEDEF, Node::Typedef },
+    { COMMAND_PROPERTY, Node::Property },   { COMMAND_VARIABLE, Node::Variable }
+};
+
+typedef bool (Node::*NodeTypeTestFunc)() const;
+static const QMap<QString, NodeTypeTestFunc> s_nodeTypeTestFuncMap{
+    { COMMAND_NAMESPACE, &Node::isNamespace }, { COMMAND_CLASS, &Node::isClassNode },
+    { COMMAND_STRUCT, &Node::isStruct },       { COMMAND_UNION, &Node::isUnion },
+    { COMMAND_ENUM, &Node::isEnumType },       { COMMAND_TYPEALIAS, &Node::isTypeAlias },
+    { COMMAND_TYPEDEF, &Node::isTypedef },     { COMMAND_PROPERTY, &Node::isProperty },
+    { COMMAND_VARIABLE, &Node::isVariable },
+};
+
 /*!
   The constructor initializes some regular expressions
   and initializes the tokenizer variables.
@@ -70,30 +91,6 @@ CppCodeParser::CppCodeParser()
  */
 void CppCodeParser::initializeParser()
 {
-    /*
-      All these can appear in a C++ namespace. Don't add
-      anything that can't be in a C++ namespace.
-     */
-    m_nodeTypeMap.insert(COMMAND_NAMESPACE, Node::Namespace);
-    m_nodeTypeMap.insert(COMMAND_CLASS, Node::Class);
-    m_nodeTypeMap.insert(COMMAND_STRUCT, Node::Struct);
-    m_nodeTypeMap.insert(COMMAND_UNION, Node::Union);
-    m_nodeTypeMap.insert(COMMAND_ENUM, Node::Enum);
-    m_nodeTypeMap.insert(COMMAND_TYPEALIAS, Node::TypeAlias);
-    m_nodeTypeMap.insert(COMMAND_TYPEDEF, Node::Typedef);
-    m_nodeTypeMap.insert(COMMAND_PROPERTY, Node::Property);
-    m_nodeTypeMap.insert(COMMAND_VARIABLE, Node::Variable);
-
-    m_nodeTypeTestFuncMap.insert(COMMAND_NAMESPACE, &Node::isNamespace);
-    m_nodeTypeTestFuncMap.insert(COMMAND_CLASS, &Node::isClassNode);
-    m_nodeTypeTestFuncMap.insert(COMMAND_STRUCT, &Node::isStruct);
-    m_nodeTypeTestFuncMap.insert(COMMAND_UNION, &Node::isUnion);
-    m_nodeTypeTestFuncMap.insert(COMMAND_ENUM, &Node::isEnumType);
-    m_nodeTypeTestFuncMap.insert(COMMAND_TYPEALIAS, &Node::isTypeAlias);
-    m_nodeTypeTestFuncMap.insert(COMMAND_TYPEDEF, &Node::isTypedef);
-    m_nodeTypeTestFuncMap.insert(COMMAND_PROPERTY, &Node::isProperty);
-    m_nodeTypeTestFuncMap.insert(COMMAND_VARIABLE, &Node::isVariable);
-
     Config &config = Config::instance();
     QStringList exampleFilePatterns =
             config.getStringList(CONFIG_EXAMPLES + Config::dot + CONFIG_FILEEXTENSIONS);
@@ -121,13 +118,11 @@ void CppCodeParser::initializeParser()
 }
 
 /*!
-  Clear the map of common node types and call
+  Clear the exclude directories and exclude files sets, and call
   the same function in the base class.
  */
 void CppCodeParser::terminateParser()
 {
-    m_nodeTypeMap.clear();
-    m_nodeTypeTestFuncMap.clear();
     m_excludeDirs.clear();
     m_excludeFiles.clear();
     CodeParser::terminateParser();
@@ -159,7 +154,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
     ExtraFuncData extra;
     if (command == COMMAND_FN) {
         Q_UNREACHABLE();
-    } else if (m_nodeTypeMap.contains(command)) {
+    } else if (s_nodeTypeMap.contains(command)) {
         /*
           We should only get in here if the command refers to
           something that can appear in a C++ namespace,
@@ -168,7 +163,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
           this way to allow the writer to refer to the entity
           without including the namespace qualifier.
          */
-        Node::NodeType type = m_nodeTypeMap[command];
+        Node::NodeType type = s_nodeTypeMap[command];
         QStringList words = arg.first.split(QLatin1Char(' '));
         QStringList path;
         qsizetype idx = 0;
@@ -178,9 +173,9 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             idx = words.size() - 1;
         path = words[idx].split("::");
 
-        node = m_qdb->findNodeInOpenNamespace(path, m_nodeTypeTestFuncMap[command]);
+        node = m_qdb->findNodeInOpenNamespace(path, s_nodeTypeTestFuncMap[command]);
         if (node == nullptr)
-            node = m_qdb->findNodeByNameAndType(path, m_nodeTypeTestFuncMap[command]);
+            node = m_qdb->findNodeByNameAndType(path, s_nodeTypeTestFuncMap[command]);
         // Allow representing a type alias as a class
         if (node == nullptr && command == COMMAND_CLASS) {
             node = m_qdb->findNodeByNameAndType(path, &Node::isTypeAlias);

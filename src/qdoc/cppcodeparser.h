@@ -55,11 +55,6 @@ protected:
 private:
     void setExampleFileLists(ExampleNode *en);
 
-protected:
-    typedef bool (Node::*NodeTypeTestFunc)() const;
-    QMap<QString, NodeTypeTestFunc> m_nodeTypeTestFuncMap;
-    QMap<QString, Node::NodeType> m_nodeTypeMap;
-
 private:
     static QSet<QString> m_excludeDirs;
     static QSet<QString> m_excludeFiles;
