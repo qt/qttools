@@ -13,7 +13,6 @@
 QT_BEGIN_NAMESPACE
 
 QList<CodeParser *> CodeParser::s_parsers;
-bool CodeParser::s_showInternal = false;
 
 /*!
   The constructor adds this code parser to the static
@@ -39,7 +38,6 @@ CodeParser::~CodeParser()
  */
 void CodeParser::initializeParser()
 {
-    s_showInternal = Config::instance().showInternal();
 }
 
 /*!
@@ -162,7 +160,8 @@ void CodeParser::setLink(Node *node, Node::LinkType linkType, const QString &arg
  */
 bool CodeParser::isWorthWarningAbout(const Doc &doc)
 {
-    return (s_showInternal || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
+    return (Config::instance().showInternal()
+            || !doc.metaCommandsUsed().contains(QStringLiteral("internal")));
 }
 
 /*!

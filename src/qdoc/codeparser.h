@@ -45,13 +45,11 @@ public:
 protected:
     const QSet<QString> &commonMetaCommands();
     static void extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc);
-    static bool showInternal() { return s_showInternal; }
     QString m_moduleHeader {};
     QDocDatabase *m_qdb {};
 
 private:
     static QList<CodeParser *> s_parsers;
-    static bool s_showInternal;
 };
 
 #define COMMAND_ABSTRACT QLatin1String("abstract")

@@ -587,7 +587,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (!node->isInternal())
             node->setStatus(Node::Preliminary);
     } else if (command == COMMAND_INTERNAL) {
-        if (!showInternal())
+        if (!Config::instance().showInternal())
             node->markInternal();
     } else if (command == COMMAND_REENTRANT) {
         node->setThreadSafeness(Node::Reentrant);
@@ -874,7 +874,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
         Node *node = nullptr;
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
-                if (showInternal() || !doc.isInternal())
+                if (Config::instance().showInternal() || !doc.isInternal())
                     node = parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first, args[0].second);
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
@@ -894,7 +894,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
             for (const auto &arg : std::as_const(args)) {
                 node = nullptr;
                 if (topic == COMMAND_FN) {
-                    if (showInternal() || !doc.isInternal())
+                    if (Config::instance().showInternal() || !doc.isInternal())
                         node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg.first, arg.second);
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);
