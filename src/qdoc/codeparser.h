@@ -20,7 +20,7 @@ public:
     CodeParser();
     virtual ~CodeParser();
 
-    virtual void initializeParser();
+    virtual void initializeParser() = 0;
     virtual void terminateParser();
     virtual QString language() = 0;
     virtual QStringList sourceFileNameFilter() = 0;

@@ -34,13 +34,6 @@ CodeParser::~CodeParser()
 }
 
 /*!
-  Initialize the code parser base class.
- */
-void CodeParser::initializeParser()
-{
-}
-
-/*!
   Terminating a code parser is trivial.
  */
 void CodeParser::terminateParser()

@@ -24,8 +24,6 @@ QmlCodeParser::QmlCodeParser() : m_lexer(nullptr), m_parser(nullptr) { }
  */
 void QmlCodeParser::initializeParser()
 {
-    CodeParser::initializeParser();
-
     m_lexer = new QQmlJS::Lexer(&m_engine);
     m_parser = new QQmlJS::Parser(&m_engine);
 }

@@ -70,8 +70,6 @@ CppCodeParser::CppCodeParser()
  */
 void CppCodeParser::initializeParser()
 {
-    CodeParser::initializeParser();
-
     /*
       All these can appear in a C++ namespace. Don't add
       anything that can't be in a C++ namespace.
