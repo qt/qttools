@@ -49,8 +49,6 @@ typedef std::pair<QString, QTranslator *> Translator;
 static QList<Translator> translators;
 #endif
 
-static ClangCodeParser *clangParser_ = nullptr;
-
 /*!
   Read some XML indexes containing definitions from other
   documentation sets. \a config contains a variable that
@@ -237,6 +235,7 @@ static void processQdocconfFile(const QString &fileName)
 {
     Config &config = Config::instance();
     config.setPreviousCurrentDir(QDir::currentPath());
+    ClangCodeParser clangParser;
 
     /*
       With the default configuration values in place, load
@@ -449,9 +448,9 @@ static void processQdocconfFile(const QString &fileName)
 
     const QString moduleHeader = config.getString(CONFIG_MODULEHEADER);
     if (!moduleHeader.isNull())
-        clangParser_->setModuleHeader(moduleHeader);
+        clangParser.setModuleHeader(moduleHeader);
     else
-        clangParser_->setModuleHeader(project);
+        clangParser.setModuleHeader(project);
 
     // Retrieve the dependencies if loadIndexFiles() was not called
     if (config.dependModules().isEmpty()) {
@@ -527,10 +526,10 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc, "Parsing header files");
         for (auto it = headers.constBegin(); it != headers.constEnd(); ++it) {
             qCDebug(lcQdoc, "Parsing %s", qPrintable(it.key()));
-            clangParser_->parseHeaderFile(config.location(), it.key());
+            clangParser.parseHeaderFile(config.location(), it.key());
         }
 
-        clangParser_->precompileHeaders();
+        clangParser.precompileHeaders();
 
         /*
           Parse each source text file in the set using the appropriate parser and
@@ -613,8 +612,6 @@ int main(int argc, char **argv)
       Create code parsers for the languages to be parsed,
       and create a tree for C++.
      */
-    ClangCodeParser clangParser;
-    clangParser_ = &clangParser;
     QmlCodeParser qmlParser;
     PureDocParser docParser;
 
