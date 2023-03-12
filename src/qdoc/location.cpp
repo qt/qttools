@@ -67,6 +67,9 @@ Location::Location(const Location &other)
  */
 Location &Location::operator=(const Location &other)
 {
+    if (this == &other)
+        return *this;
+
     QStack<StackEntry> *oldStk = m_stk;
 
     m_stkBottom = other.m_stkBottom;
