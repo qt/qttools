@@ -151,7 +151,6 @@ const QSet<QString> &CppCodeParser::topicCommands()
 Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                                          const ArgPair &arg)
 {
-    ExtraFuncData extra;
     if (command == COMMAND_FN) {
         Q_UNREACHABLE();
     } else if (s_nodeTypeMap.contains(command)) {

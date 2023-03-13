@@ -15,14 +15,6 @@ class Aggregate;
 
 class CppCodeParser : public CodeParser
 {
-    struct ExtraFuncData
-    {
-        Aggregate *root; // Used as the parent.
-        Node::NodeType type; // The node type: Function, etc.
-        bool isAttached; // If true, the method is attached.
-        bool isMacro; // If true, we are parsing a macro signature.
-        ExtraFuncData() : root(nullptr), type(Node::Function), isAttached(false), isMacro(false) {}
-    };
 
 public:
     CppCodeParser();
