@@ -446,12 +446,6 @@ static void processQdocconfFile(const QString &fileName)
     else
         qdb->setPrimaryTree(project);
 
-    const QString moduleHeader{config.get(CONFIG_MODULEHEADER).asString()};
-    if (!moduleHeader.isNull())
-        clangParser.setModuleHeader(moduleHeader);
-    else
-        clangParser.setModuleHeader(project);
-
     // Retrieve the dependencies if loadIndexFiles() was not called
     if (config.dependModules().isEmpty()) {
         config.dependModules() = config.get(CONFIG_DEPENDS).asStringList();
@@ -529,7 +523,8 @@ static void processQdocconfFile(const QString &fileName)
             clangParser.parseHeaderFile(config.location(), it.key());
         }
 
-        clangParser.precompileHeaders();
+        const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();
+        clangParser.precompileHeaders(moduleHeader.isNull() ? project : moduleHeader);
 
         /*
           Parse each source text file in the set using the appropriate parser and

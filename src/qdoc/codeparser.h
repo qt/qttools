@@ -30,8 +30,6 @@ public:
         return nullptr;
     }
 
-    [[nodiscard]] const QString &moduleHeader() const { return m_moduleHeader; }
-    void setModuleHeader(const QString &t) { m_moduleHeader = t; }
     void checkModuleInclusion(Node *n);
 
     static void initialize();
@@ -45,7 +43,6 @@ public:
 protected:
     const QSet<QString> &commonMetaCommands();
     static void extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc);
-    QString m_moduleHeader {};
     QDocDatabase *m_qdb {};
 
 private:

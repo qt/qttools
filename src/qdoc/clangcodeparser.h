@@ -27,7 +27,7 @@ public:
     QStringList sourceFileNameFilter() override;
     void parseHeaderFile(const Location &location, const QString &filePath);
     void parseSourceFile(const Location &location, const QString &filePath) override;
-    void precompileHeaders();
+    void precompileHeaders(QString module_header);
     Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag) override;
     static const QByteArray &fn() { return s_fn; }
 
@@ -35,7 +35,7 @@ private:
     void getDefaultArgs(); // FIXME: Clean up API
     void getMoreArgs(); // FIXME: Clean up API
 
-    void buildPCH();
+    void buildPCH(QString module_header);
 
     void printDiagnostics(const CXTranslationUnit &translationUnit) const;
 
