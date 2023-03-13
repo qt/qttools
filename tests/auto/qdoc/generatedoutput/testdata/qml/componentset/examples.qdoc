@@ -8,7 +8,7 @@
 
     \testnoautolist
 
-    \meta tag {test,sample}
+    \meta tags {test,sample}
     \meta tag {application}
     \meta category {Application Example}
     \meta installpath tutorials
