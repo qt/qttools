@@ -216,6 +216,8 @@ static QString moduleNameAsTag(const QString &module)
 /*
     Return tags that were added with
        \ meta {tag} {tag1[,tag2,...]}
+    or
+       \ meta {tags} {tag1[,tag2,...]}
     from example metadata
  */
 static QSet<QString> tagsAddedWithMetaCommand(const ExampleNode *example)
@@ -225,7 +227,9 @@ static QSet<QString> tagsAddedWithMetaCommand(const ExampleNode *example)
     QSet<QString> tags;
     const QStringMultiMap *metaTagMap = example->doc().metaTagMap();
     if (metaTagMap) {
-        for (const auto &tag : metaTagMap->values("tag")) {
+        QStringList originalTags = metaTagMap->values("tag");
+        originalTags << metaTagMap->values("tags");
+        for (const auto &tag : originalTags) {
             const auto &tagList = tag.toLower().split(QLatin1Char(','), Qt::SkipEmptyParts);
             tags += QSet<QString>(tagList.constBegin(), tagList.constEnd());
         }
@@ -329,7 +333,7 @@ void ManifestWriter::generateExampleManifestFile()
             // as they are handled separately
             QStringMultiMap map = *metaTagMapP;
             erase_if(map, [](QStringMultiMap::iterator iter) {
-                return iter.key() == "tag" || iter.key() == "installpath";
+                return iter.key() == "tag" || iter.key() == "tags" || iter.key() == "installpath";
             });
             writeMetaInformation(writer, map);
         }
