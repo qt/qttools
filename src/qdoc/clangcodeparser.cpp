@@ -1182,7 +1182,6 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
 void ClangCodeParser::initializeParser()
 {
     Config &config = Config::instance();
-    m_version = config.get(CONFIG_VERSION).asString();
     auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
                                             Config::IncludePaths);
 #ifdef Q_OS_MACOS
@@ -1609,7 +1608,8 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                 bool future = false;
                 if (doc.metaCommandsUsed().contains(COMMAND_SINCE)) {
                     QString sinceVersion = doc.metaCommandArgs(COMMAND_SINCE).at(0).first;
-                    if (getUnpatchedVersion(sinceVersion) > getUnpatchedVersion(m_version))
+                    if (getUnpatchedVersion(sinceVersion) >
+                        getUnpatchedVersion(Config::instance().get(CONFIG_VERSION).asString()))
                         future = true;
                 }
                 if (!future) {
