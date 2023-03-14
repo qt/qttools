@@ -2622,6 +2622,9 @@
     ends at the next blank line or \\value. The arguments are rendered in a
     table.
 
+    \note To include images in the \\value description, use the
+          \l {inlineimage-command}{\\inlineimage} command.
+
     Without a \e since clause, a \\value command could look like this:
 
     \code
