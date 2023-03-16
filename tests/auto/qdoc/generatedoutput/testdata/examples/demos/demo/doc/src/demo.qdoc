@@ -6,4 +6,6 @@
     \title Demo
     \image leonardo-da-vinci.png
     //! Icon made by Smashicons from www.flaticon.com
+
+    \snippet demos/demo/demo.cpp integer literal with separator
 */

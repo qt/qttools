@@ -9,6 +9,7 @@
         <example docUrl="qthelp://org.qt-project.test.001/test/test-demos-demo-example.html" imageUrl="qthelp://org.qt-project.test.001/test/images/leonardo-da-vinci.png" isTest="true" name="Demo" projectPath="test/demos/demo/demo.pro">
             <description><![CDATA[No description available]]></description>
             <tags>test</tags>
+            <fileToOpen mainFile="true">test/demos/demo/demo.cpp</fileToOpen>
         </example>
         <example docUrl="qthelp://org.qt-project.test.001/test/test-componentset-example.html" isTest="true" name="QML Documentation Example" projectPath="tutorials/componentset/componentset.pro">
             <description><![CDATA[Example for documenting QML types.]]></description>
