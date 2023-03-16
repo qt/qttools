@@ -430,7 +430,7 @@ QString CppCodeMarker::addMarkUp(const QString &in, const Node * /* relative */,
             do {
                 finish = i;
                 readChar();
-            } while (!atEOF && (ch.isLetterOrNumber() || ch == '.'));
+            } while (!atEOF && (ch.isLetterOrNumber() || ch == '.' || ch == '\''));
             tag = QStringLiteral("number");
         } else {
             switch (ch.unicode()) {

@@ -352,6 +352,7 @@ void tst_generatedOutput::examplesManifestXmlAndQhp()
 {
     testAndCompare("testdata/configs/examples-qhp.qdocconf",
                    "examples-manifest.xml "
+                   "test-demos-demo-example.html "
                    "test.qhp");
 }
 
