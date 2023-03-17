@@ -56,7 +56,7 @@ void PureDocParser::processQdocComments(QFile& input_file)
 {
     Tokenizer tokenizer(Location{input_file.fileName()}, input_file);
 
-    const QSet<QString> &commands = CppCodeParser::topic_commands + metaCommands();
+    const QSet<QString> &commands = CppCodeParser::topic_commands + CppCodeParser::meta_commands;
 
     int token = tokenizer.getToken();
     while (token != Tok_Eoi) {

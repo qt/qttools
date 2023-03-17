@@ -27,8 +27,14 @@ public:
         COMMAND_QMLMODULE, COMMAND_STRUCT, COMMAND_UNION,
     };
 
+    static inline const QSet<QString> meta_commands = QSet<QString>(CodeParser::common_meta_commands)
+        << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
+        << COMMAND_OVERLOAD << COMMAND_PREVIOUSPAGE
+        << COMMAND_QMLINSTANTIATES << COMMAND_REIMP
+        << COMMAND_RELATES;
+
 public:
-    CppCodeParser();
+    CppCodeParser() = default;
 
     void initializeParser() override;
     void terminateParser() override;
@@ -41,7 +47,6 @@ public:
     static bool isQMLPropertyTopic(const QString &t);
 
 protected:
-    static const QSet<QString> &metaCommands();
     virtual Node *processTopicCommand(const Doc &doc, const QString &command,
                                       const ArgPair &arg);
     void processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs);

@@ -1563,7 +1563,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
     CXToken *tokens;
     unsigned int numTokens = 0;
-    const QSet<QString> &commands = CppCodeParser::topic_commands + metaCommands();
+    const QSet<QString> &commands = CppCodeParser::topic_commands + CppCodeParser::meta_commands;
     clang_tokenize(tu, clang_getCursorExtent(tuCur), &tokens, &numTokens);
 
     for (unsigned int i = 0; i < numTokens; ++i) {

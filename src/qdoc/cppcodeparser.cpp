@@ -33,8 +33,6 @@ QT_BEGIN_NAMESPACE
 QSet<QString> CppCodeParser::m_excludeDirs;
 QSet<QString> CppCodeParser::m_excludeFiles;
 
-static QSet<QString> metaCommands_;
-
 /*
   All these can appear in a C++ namespace. Don't add
   anything that can't be in a C++ namespace.
@@ -55,20 +53,6 @@ static const QMap<QString, NodeTypeTestFunc> s_nodeTypeTestFuncMap{
     { COMMAND_TYPEDEF, &Node::isTypedef },     { COMMAND_PROPERTY, &Node::isProperty },
     { COMMAND_VARIABLE, &Node::isVariable },
 };
-
-/*!
-  The constructor initializes some regular expressions
-  and initializes the tokenizer variables.
- */
-CppCodeParser::CppCodeParser()
-{
-    if (metaCommands_.isEmpty()) {
-        metaCommands_ = CodeParser::common_meta_commands;
-        metaCommands_ << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
-                      << COMMAND_OVERLOAD << COMMAND_PREVIOUSPAGE << COMMAND_QMLINSTANTIATES
-                      << COMMAND_REIMP << COMMAND_RELATES;
-    }
-}
 
 /*!
   The constructor initializes a map of special node types
@@ -374,15 +358,6 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
             scn->append(n);
         scn->sort();
     }
-}
-
-/*!
-  Returns the set of strings representing the common metacommands
-  plus some other metacommands.
- */
-const QSet<QString> &CppCodeParser::metaCommands()
-{
-    return metaCommands_;
 }
 
 /*!
