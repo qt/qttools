@@ -2314,10 +2314,8 @@ bool DocBookGenerator::generateSince(const Node *node)
     // From Generator::generateSince.
     if (!node->since().isEmpty()) {
         m_writer->writeStartElement(dbNamespace, "para");
-        m_writer->writeCharacters("This " + typeString(node) + " was introduced");
-        if (node->nodeType() == Node::Enum)
-            m_writer->writeCharacters(" or modified");
-        m_writer->writeCharacters(" in " + formatSince(node) + ".");
+        m_writer->writeCharacters("This " + typeString(node) + " was introduced in ");
+        m_writer->writeCharacters(formatSince(node) + ".");
         m_writer->writeEndElement(); // para
         newLine();
 

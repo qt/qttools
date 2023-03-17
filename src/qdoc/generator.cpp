@@ -1165,10 +1165,8 @@ void Generator::generateSince(const Node *node, CodeMarker *marker)
 {
     if (!node->since().isEmpty()) {
         Text text;
-        text << Atom::ParaLeft << "This " << typeString(node) << " was introduced ";
-        if (node->isEnumType())
-            text << "or modified ";
-        text << "in " << formatSince(node) << "." << Atom::ParaRight;
+        text << Atom::ParaLeft << "This " << typeString(node) << " was introduced in "
+             << formatSince(node) << "." << Atom::ParaRight;
         generateText(text, node, marker);
     }
 }
