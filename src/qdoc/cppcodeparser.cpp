@@ -872,6 +872,35 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
     }
 }
 
+/*!
+  For each node that is part of C++ API and produces a documentation
+  page, this function ensures that the node belongs to a module.
+ */
+static void checkModuleInclusion(Node *n)
+{
+    if (n->physicalModuleName().isEmpty()) {
+        if (n->isInAPI() && !n->name().isEmpty()) {
+            switch (n->nodeType()) {
+            case Node::Class:
+            case Node::Struct:
+            case Node::Union:
+            case Node::Namespace:
+            case Node::HeaderFile:
+                break;
+            default:
+                return;
+            }
+            n->setPhysicalModuleName(Generator::defaultModuleName());
+            QDocDatabase::qdocDB()->addToModule(Generator::defaultModuleName(), n);
+            n->doc().location().warning(
+                    QStringLiteral("Documentation for %1 '%2' has no \\inmodule command; "
+                                   "using project name by default: %3")
+                            .arg(Node::nodeTypeString(n->nodeType()), n->name(),
+                                    n->physicalModuleName()));
+        }
+    }
+}
+
 void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
 {
     QList<Doc>::Iterator d = docs.begin();

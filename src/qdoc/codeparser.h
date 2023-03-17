@@ -110,8 +110,6 @@ public:
         return nullptr;
     }
 
-    void checkModuleInclusion(Node *n);
-
     static void initialize();
     static void terminate();
     static CodeParser *parserForLanguage(const QString &language);
