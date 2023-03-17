@@ -33,7 +33,6 @@ QT_BEGIN_NAMESPACE
 QSet<QString> CppCodeParser::m_excludeDirs;
 QSet<QString> CppCodeParser::m_excludeFiles;
 
-static QSet<QString> topicCommands_;
 static QSet<QString> metaCommands_;
 
 /*
@@ -63,19 +62,6 @@ static const QMap<QString, NodeTypeTestFunc> s_nodeTypeTestFuncMap{
  */
 CppCodeParser::CppCodeParser()
 {
-    if (topicCommands_.isEmpty()) {
-        topicCommands_ << COMMAND_CLASS << COMMAND_DONTDOCUMENT << COMMAND_ENUM << COMMAND_EXAMPLE
-                       << COMMAND_EXTERNALPAGE << COMMAND_FN << COMMAND_GROUP << COMMAND_HEADERFILE
-                       << COMMAND_MACRO << COMMAND_MODULE << COMMAND_NAMESPACE << COMMAND_PAGE
-                       << COMMAND_PROPERTY << COMMAND_TYPEALIAS << COMMAND_TYPEDEF
-                       << COMMAND_VARIABLE << COMMAND_QMLTYPE << COMMAND_QMLPROPERTY
-                       << COMMAND_QMLPROPERTYGROUP // mws 13/03/2019
-                       << COMMAND_QMLATTACHEDPROPERTY << COMMAND_QMLSIGNAL
-                       << COMMAND_QMLATTACHEDSIGNAL << COMMAND_QMLMETHOD
-                       << COMMAND_QMLATTACHEDMETHOD << COMMAND_QMLVALUETYPE << COMMAND_QMLBASICTYPE
-                       << COMMAND_QMLMODULE
-                       << COMMAND_STRUCT << COMMAND_UNION;
-    }
     if (metaCommands_.isEmpty()) {
         metaCommands_ = CodeParser::common_meta_commands;
         metaCommands_ << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
@@ -135,14 +121,6 @@ void CppCodeParser::terminateParser()
 QStringList CppCodeParser::sourceFileNameFilter()
 {
     return QStringList();
-}
-
-/*!
-  Returns the set of strings representing the topic commands.
- */
-const QSet<QString> &CppCodeParser::topicCommands()
-{
-    return topicCommands_;
 }
 
 /*!
@@ -971,7 +949,7 @@ void CppCodeParser::processMetaCommands(NodeList &nodes, DocList &docs)
   */
 bool CppCodeParser::hasTooManyTopics(const Doc &doc) const
 {
-    const QSet<QString> topicCommandsUsed = topicCommands() & doc.metaCommandsUsed();
+    const QSet<QString> topicCommandsUsed = CppCodeParser::topic_commands & doc.metaCommandsUsed();
 
     if (topicCommandsUsed.empty() || topicCommandsUsed.size() == 1)
         return false;

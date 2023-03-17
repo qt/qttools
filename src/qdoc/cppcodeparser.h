@@ -15,6 +15,17 @@ class Aggregate;
 
 class CppCodeParser : public CodeParser
 {
+public:
+    static inline const QSet<QString> topic_commands{
+        COMMAND_CLASS, COMMAND_DONTDOCUMENT, COMMAND_ENUM, COMMAND_EXAMPLE,
+        COMMAND_EXTERNALPAGE, COMMAND_FN, COMMAND_GROUP, COMMAND_HEADERFILE,
+        COMMAND_MACRO, COMMAND_MODULE, COMMAND_NAMESPACE, COMMAND_PAGE,
+        COMMAND_PROPERTY, COMMAND_TYPEALIAS, COMMAND_TYPEDEF, COMMAND_VARIABLE,
+        COMMAND_QMLTYPE, COMMAND_QMLPROPERTY, COMMAND_QMLPROPERTYGROUP,
+        COMMAND_QMLATTACHEDPROPERTY, COMMAND_QMLSIGNAL, COMMAND_QMLATTACHEDSIGNAL,
+        COMMAND_QMLMETHOD, COMMAND_QMLATTACHEDMETHOD, COMMAND_QMLVALUETYPE, COMMAND_QMLBASICTYPE,
+        COMMAND_QMLMODULE, COMMAND_STRUCT, COMMAND_UNION,
+    };
 
 public:
     CppCodeParser();
@@ -30,7 +41,6 @@ public:
     static bool isQMLPropertyTopic(const QString &t);
 
 protected:
-    static const QSet<QString> &topicCommands();
     static const QSet<QString> &metaCommands();
     virtual Node *processTopicCommand(const Doc &doc, const QString &command,
                                       const ArgPair &arg);

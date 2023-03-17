@@ -56,7 +56,7 @@ void PureDocParser::processQdocComments(QFile& input_file)
 {
     Tokenizer tokenizer(Location{input_file.fileName()}, input_file);
 
-    const QSet<QString> &commands = topicCommands() + metaCommands();
+    const QSet<QString> &commands = CppCodeParser::topic_commands + metaCommands();
 
     int token = tokenizer.getToken();
     while (token != Tok_Eoi) {
@@ -72,7 +72,7 @@ void PureDocParser::processQdocComments(QFile& input_file)
         Location end_loc(tokenizer.location());
 
         // Doc constructor parses the comment.
-        Doc doc(start_loc, end_loc, comment, commands, topicCommands());
+        Doc doc(start_loc, end_loc, comment, commands, CppCodeParser::topic_commands);
         const TopicList &topics = doc.topicsUsed();
         if (topics.isEmpty()) {
             doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "

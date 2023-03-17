@@ -1563,7 +1563,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
     CXToken *tokens;
     unsigned int numTokens = 0;
-    const QSet<QString> &commands = topicCommands() + metaCommands();
+    const QSet<QString> &commands = CppCodeParser::topic_commands + metaCommands();
     clang_tokenize(tu, clang_getCursorExtent(tuCur), &tokens, &numTokens);
 
     for (unsigned int i = 0; i < numTokens; ++i) {
@@ -1579,7 +1579,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
         Doc::trimCStyleComment(loc, comment);
 
         // Doc constructor parses the comment.
-        Doc doc(loc, end_loc, comment, commands, topicCommands());
+        Doc doc(loc, end_loc, comment, commands, CppCodeParser::topic_commands);
         if (hasTooManyTopics(doc))
             continue;
 
