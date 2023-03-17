@@ -13,7 +13,7 @@ typedef struct CXTranslationUnitImpl *CXTranslationUnit;
 
 QT_BEGIN_NAMESPACE
 
-class ClangCodeParser : public CppCodeParser
+class ClangCodeParser : public CodeParser
 {
 public:
     static const QStringList accepted_header_file_extensions;
@@ -22,11 +22,11 @@ public:
     ~ClangCodeParser() override = default;
 
     void initializeParser() override;
-    void terminateParser() override;
+    void terminateParser() override {}
     QString language() override;
     QStringList sourceFileNameFilter() override;
     void parseHeaderFile(const Location &location, const QString &filePath);
-    void parseSourceFile(const Location &location, const QString &filePath) override;
+    void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser&) override;
     void precompileHeaders(QString module_header);
     Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag) override;
     static const QByteArray &fn() { return s_fn; }

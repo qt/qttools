@@ -1196,7 +1196,6 @@ void ClangCodeParser::initializeParser()
     }
     m_includePaths.erase(std::unique(m_includePaths.begin(), m_includePaths.end()),
                          m_includePaths.end());
-    CppCodeParser::initializeParser();
     m_pchFileDir.reset(nullptr);
     m_allHeaders.clear();
     m_pchName.clear();
@@ -1226,13 +1225,6 @@ void ClangCodeParser::initializeParser()
     }
     qCDebug(lcQdoc).nospace() << __FUNCTION__ << " Clang v" << CINDEX_VERSION_MAJOR << '.'
                               << CINDEX_VERSION_MINOR;
-}
-
-/*!
- */
-void ClangCodeParser::terminateParser()
-{
-    CppCodeParser::terminateParser();
 }
 
 /*!
@@ -1519,7 +1511,7 @@ static float getUnpatchedVersion(QString t)
 
   Call matchDocsAndStuff() to do all the parsing and tree building.
  */
-void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QString &filePath)
+void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QString &filePath, CppCodeParser& cpp_code_parser)
 {
     /*
       The set of open namespaces is cleared before parsing
@@ -1580,7 +1572,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
         // Doc constructor parses the comment.
         Doc doc(loc, end_loc, comment, commands, CppCodeParser::topic_commands);
-        if (hasTooManyTopics(doc))
+        if (cpp_code_parser.hasTooManyTopics(doc))
             continue;
 
         DocList docs;
@@ -1634,9 +1626,9 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                     m_namespaceScope << fromCXString(clang_getCursorSpelling(cur));
                 cur = clang_getCursorLexicalParent(cur);
             }
-            processTopicArgs(doc, topic, nodes, docs);
+            cpp_code_parser.processTopicArgs(doc, topic, nodes, docs);
         }
-        processMetaCommands(nodes, docs);
+        cpp_code_parser.processMetaCommands(nodes, docs);
     }
 
     clang_disposeTokens(tu, tokens, numTokens);

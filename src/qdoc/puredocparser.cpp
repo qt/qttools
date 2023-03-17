@@ -28,7 +28,7 @@ QStringList PureDocParser::sourceFileNameFilter()
   parsed contents to the database. The \a location is used for
   reporting errors.
  */
-void PureDocParser::parseSourceFile(const Location &location, const QString &filePath)
+void PureDocParser::parseSourceFile(const Location &location, const QString &filePath, CppCodeParser& cpp_code_parser)
 {
     QFile in(filePath);
     if (!in.open(QIODevice::ReadOnly)) {
@@ -43,7 +43,7 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
      */
     m_qdb->clearOpenNamespaces();
 
-    processQdocComments(in);
+    processQdocComments(in, cpp_code_parser);
     in.close();
 }
 
@@ -52,7 +52,7 @@ void PureDocParser::parseSourceFile(const Location &location, const QString &fil
   and tree building. It only processes qdoc comments. It skips
   everything else.
  */
-void PureDocParser::processQdocComments(QFile& input_file)
+void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_code_parser)
 {
     Tokenizer tokenizer(Location{input_file.fileName()}, input_file);
 
@@ -81,15 +81,15 @@ void PureDocParser::processQdocComments(QFile& input_file)
             continue;
         }
 
-        if (hasTooManyTopics(doc))
+        if (cpp_code_parser.hasTooManyTopics(doc))
             continue;
 
         DocList docs;
         NodeList nodes;
         QString topic = topics[0].m_topic;
 
-        processTopicArgs(doc, topic, nodes, docs);
-        processMetaCommands(nodes, docs);
+        cpp_code_parser.processTopicArgs(doc, topic, nodes, docs);
+        cpp_code_parser.processMetaCommands(nodes, docs);
     }
 }
 

@@ -13,7 +13,7 @@ class ExampleNode;
 class FunctionNode;
 class Aggregate;
 
-class CppCodeParser : public CodeParser
+class CppCodeParser
 {
 public:
     static inline const QSet<QString> topic_commands{
@@ -34,17 +34,23 @@ public:
         << COMMAND_RELATES;
 
 public:
-    CppCodeParser() = default;
+    CppCodeParser();
+    ~CppCodeParser();
 
-    void initializeParser() override;
-    void terminateParser() override;
-    QString language() override { return QStringLiteral("Cpp"); }
-    QStringList sourceFileNameFilter() override;
     FunctionNode *parseMacroArg(const Location &location, const QString &macroArg);
     FunctionNode *parseOtherFuncArg(const QString &topic, const Location &location,
                                     const QString &funcArg);
     static bool isQMLMethodTopic(const QString &t);
     static bool isQMLPropertyTopic(const QString &t);
+
+    [[nodiscard]] bool hasTooManyTopics(const Doc &doc) const;
+
+    void processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs);
+
+    void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
+                            Node *node);
+    void processMetaCommands(const Doc &doc, Node *node);
+    void processMetaCommands(NodeList &nodes, DocList &docs);
 
 protected:
     virtual Node *processTopicCommand(const Doc &doc, const QString &command,
@@ -52,12 +58,6 @@ protected:
     void processQmlProperties(const Doc &doc, NodeList &nodes, DocList &docs);
     bool splitQmlPropertyArg(const QString &arg, QString &type, QString &module, QString &element,
                              QString &name, const Location &location);
-    void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
-                            Node *node);
-    void processMetaCommands(const Doc &doc, Node *node);
-    void processMetaCommands(NodeList &nodes, DocList &docs);
-    void processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs);
-    [[nodiscard]] bool hasTooManyTopics(const Doc &doc) const;
 
 private:
     void setExampleFileLists(ExampleNode *en);

@@ -27,7 +27,7 @@ public:
     void terminateParser() override;
     QString language() override;
     QStringList sourceFileNameFilter() override;
-    void parseSourceFile(const Location &location, const QString &filePath) override;
+    void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser&) override;
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     void extractPragmas(QString &script);

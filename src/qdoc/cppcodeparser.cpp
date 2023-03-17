@@ -54,12 +54,7 @@ static const QMap<QString, NodeTypeTestFunc> s_nodeTypeTestFuncMap{
     { COMMAND_VARIABLE, &Node::isVariable },
 };
 
-/*!
-  The constructor initializes a map of special node types
-  for identifying important nodes. And it initializes
-  some filters for identifying and excluding certain kinds of files.
- */
-void CppCodeParser::initializeParser()
+CppCodeParser::CppCodeParser()
 {
     Config &config = Config::instance();
     QStringList exampleFilePatterns{config.get(CONFIG_EXAMPLES
@@ -92,19 +87,10 @@ void CppCodeParser::initializeParser()
 /*!
   Clear the exclude directories and exclude files sets.
  */
-void CppCodeParser::terminateParser()
+CppCodeParser::~CppCodeParser()
 {
     m_excludeDirs.clear();
     m_excludeFiles.clear();
-}
-
-/*!
-  Returns a list of extensions for source files, i.e. not
-  header files.
- */
-QStringList CppCodeParser::sourceFileNameFilter()
-{
-    return QStringList();
 }
 
 /*!
@@ -113,6 +99,8 @@ QStringList CppCodeParser::sourceFileNameFilter()
 Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                                          const ArgPair &arg)
 {
+    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+
     if (command == COMMAND_FN) {
         Q_UNREACHABLE();
     } else if (s_nodeTypeMap.contains(command)) {
@@ -151,7 +139,7 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             }
         }
         if (node == nullptr) {
-            if (isWorthWarningAbout(doc)) {
+            if (CodeParser::isWorthWarningAbout(doc)) {
                 doc.location().warning(
                         QStringLiteral("Cannot find '%1' specified with '\\%2' in any header file")
                                 .arg(arg.first, command));
@@ -299,6 +287,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
             group = property.left(i);
     }
 
+    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+
     NodeList sharedNodes;
     QmlTypeNode *qmlType = m_qdb->findQmlType(module, qmlTypeName);
     // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
@@ -370,6 +360,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
 void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                                        const ArgPair &argPair, Node *node)
 {
+    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+
     QString arg = argPair.first;
     if (command == COMMAND_INHEADERFILE) {
         // TODO: [incorrect-constructs][header-arg]
@@ -410,7 +402,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                 // qualified name of the overridden function.
                 // If the name of the overridden function isn't
                 // set, issue a warning.
-                if (fn->overridesThis().isEmpty() && isWorthWarningAbout(doc)) {
+                if (fn->overridesThis().isEmpty() && CodeParser::isWorthWarningAbout(doc)) {
                     doc.location().warning(
                             QStringLiteral("Cannot find base function for '\\%1' in %2()")
                                     .arg(COMMAND_REIMP, node->name()),
@@ -463,11 +455,11 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             }
         }
     } else if (command == COMMAND_NEXTPAGE) {
-        setLink(node, Node::NextLink, arg);
+        CodeParser::setLink(node, Node::NextLink, arg);
     } else if (command == COMMAND_PREVIOUSPAGE) {
-        setLink(node, Node::PreviousLink, arg);
+        CodeParser::setLink(node, Node::PreviousLink, arg);
     } else if (command == COMMAND_STARTPAGE) {
-        setLink(node, Node::StartLink, arg);
+        CodeParser::setLink(node, Node::StartLink, arg);
     } else if (command == COMMAND_QMLINHERITS) {
         if (node->name() == arg)
             doc.location().warning(QStringLiteral("%1 tries to inherit itself").arg(arg));
@@ -657,6 +649,8 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     }
     funcName = colonSplit.last();
 
+    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+
     Aggregate *aggregate = m_qdb->findQmlType(moduleName, elementName);
     if (aggregate == nullptr)
         return nullptr;
@@ -687,6 +681,8 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
  */
 FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QString &macroArg)
 {
+    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+
     QStringList leftParenSplit = macroArg.split('(');
     if (leftParenSplit.isEmpty())
         return nullptr;
@@ -812,6 +808,9 @@ bool CppCodeParser::isQMLPropertyTopic(const QString &t)
 void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes,
                                      DocList &docs)
 {
+
+    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+
     if (isQMLPropertyTopic(topic)) {
         processQmlProperties(doc, nodes, docs);
     } else {
@@ -820,7 +819,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
         if (args.size() == 1) {
             if (topic == COMMAND_FN) {
                 if (Config::instance().showInternal() || !doc.isInternal())
-                    node = parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first, args[0].second);
+                    node = CodeParser::parserForLanguage("Clang")->parseFnArg(doc.location(), args[0].first, args[0].second);
             } else if (topic == COMMAND_MACRO) {
                 node = parseMacroArg(doc.location(), args[0].first);
             } else if (isQMLMethodTopic(topic)) {
@@ -840,7 +839,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                 node = nullptr;
                 if (topic == COMMAND_FN) {
                     if (Config::instance().showInternal() || !doc.isInternal())
-                        node = parserForLanguage("Clang")->parseFnArg(doc.location(), arg.first, arg.second);
+                        node = CodeParser::parserForLanguage("Clang")->parseFnArg(doc.location(), arg.first, arg.second);
                 } else if (topic == COMMAND_MACRO) {
                     node = parseMacroArg(doc.location(), arg.first);
                 } else if (isQMLMethodTopic(topic)) {

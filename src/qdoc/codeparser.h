@@ -82,6 +82,7 @@ QT_BEGIN_NAMESPACE
 class Location;
 class QString;
 class QDocDatabase;
+class CppCodeParser;
 
 class CodeParser
 {
@@ -104,7 +105,7 @@ public:
     virtual void terminateParser();
     virtual QString language() = 0;
     virtual QStringList sourceFileNameFilter() = 0;
-    virtual void parseSourceFile(const Location &location, const QString &filePath) = 0;
+    virtual void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser& cpp_code_parser) = 0;
     virtual Node *parseFnArg(const Location &, const QString &, const QString & = QString())
     {
         return nullptr;

@@ -532,14 +532,20 @@ static void processQdocconfFile(const QString &fileName)
         */
         if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Parse source files for" << project;
-        for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
-            const auto &key = it.key();
-            auto *codeParser = CodeParser::parserForSourceFile(key);
-            if (codeParser) {
-                qCDebug(lcQdoc, "Parsing %s", qPrintable(key));
-                codeParser->parseSourceFile(config.location(), key);
+
+
+        {
+            CppCodeParser cpp_code_parser{};
+            for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
+                const auto &key = it.key();
+                auto *codeParser = CodeParser::parserForSourceFile(key);
+                if (codeParser) {
+                    qCDebug(lcQdoc, "Parsing %s", qPrintable(key));
+                    codeParser->parseSourceFile(config.location(), key, cpp_code_parser);
+                }
             }
         }
+
         if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Source files parsed for" << project;
     }
