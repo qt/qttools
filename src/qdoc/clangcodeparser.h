@@ -32,8 +32,8 @@ public:
     static const QByteArray &fn() { return s_fn; }
 
 private:
-    void getDefaultArgs(); // FIXME: Clean up API
-    void getMoreArgs(); // FIXME: Clean up API
+    void getDefaultArgs();
+    void getMoreArgs();
 
     void buildPCH(QString module_header);
 
