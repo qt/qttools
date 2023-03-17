@@ -744,41 +744,35 @@ void Aggregate::findAllSince()
             continue;
         QString sinceString = node->since();
         // Insert a new entry into each map for each new since string found.
-        if (!node->isPrivate() && !sinceString.isEmpty()) {
-            auto nsmap = QDocDatabase::newSinceMaps().find(sinceString);
-            if (nsmap == QDocDatabase::newSinceMaps().end())
-                nsmap = QDocDatabase::newSinceMaps().insert(sinceString, {});
-
-            auto ncmap = QDocDatabase::newClassMaps().find(sinceString);
-            if (ncmap == QDocDatabase::newClassMaps().end())
-                ncmap = QDocDatabase::newClassMaps().insert(sinceString, {});
-
-            auto nqcmap = QDocDatabase::newQmlTypeMaps().find(sinceString);
-            if (nqcmap == QDocDatabase::newQmlTypeMaps().end())
-                nqcmap = QDocDatabase::newQmlTypeMaps().insert(sinceString, {});
+        if (node->isInAPI() && !sinceString.isEmpty()) {
+            // operator[] will insert a default-constructed value into the
+            // map if key is not found, which is what we want here.
+            auto &nsmap = QDocDatabase::newSinceMaps()[sinceString];
+            auto &ncmap = QDocDatabase::newClassMaps()[sinceString];
+            auto &nqcmap = QDocDatabase::newQmlTypeMaps()[sinceString];
 
             if (node->isFunction()) {
                 // Insert functions into the general since map.
                 auto *fn = static_cast<FunctionNode *>(node);
                 if (!fn->isDeprecated() && !fn->isSomeCtor() && !fn->isDtor())
-                    nsmap.value().insert(fn->name(), fn);
+                    nsmap.insert(fn->name(), fn);
             } else if (node->isClassNode()) {
                 // Insert classes into the since and class maps.
                 QString name = node->qualifyWithParentName();
-                nsmap.value().insert(name, node);
-                ncmap.value().insert(name, node);
+                nsmap.insert(name, node);
+                ncmap.insert(name, node);
             } else if (node->isQmlType()) {
                 // Insert QML elements into the since and element maps.
                 QString name = node->qualifyWithParentName();
-                nsmap.value().insert(name, node);
-                nqcmap.value().insert(name, node);
+                nsmap.insert(name, node);
+                nqcmap.insert(name, node);
             } else if (node->isQmlProperty()) {
                 // Insert QML properties into the since map.
-                nsmap.value().insert(node->name(), node);
+                nsmap.insert(node->name(), node);
             } else {
                 // Insert external documents into the general since map.
                 QString name = node->qualifyWithParentName();
-                nsmap.value().insert(name, node);
+                nsmap.insert(name, node);
             }
         }
         // Enum values - a special case as EnumItem is not a Node subclass
