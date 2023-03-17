@@ -77,7 +77,7 @@ CppCodeParser::CppCodeParser()
                        << COMMAND_STRUCT << COMMAND_UNION;
     }
     if (metaCommands_.isEmpty()) {
-        metaCommands_ = commonMetaCommands();
+        metaCommands_ = CodeParser::common_meta_commands;
         metaCommands_ << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
                       << COMMAND_OVERLOAD << COMMAND_PREVIOUSPAGE << COMMAND_QMLINSTANTIATES
                       << COMMAND_REIMP << COMMAND_RELATES;

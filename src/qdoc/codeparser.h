@@ -10,44 +10,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Location;
-class QString;
-class QDocDatabase;
-
-class CodeParser
-{
-public:
-    CodeParser();
-    virtual ~CodeParser();
-
-    virtual void initializeParser() = 0;
-    virtual void terminateParser();
-    virtual QString language() = 0;
-    virtual QStringList sourceFileNameFilter() = 0;
-    virtual void parseSourceFile(const Location &location, const QString &filePath) = 0;
-    virtual Node *parseFnArg(const Location &, const QString &, const QString & = QString())
-    {
-        return nullptr;
-    }
-
-    void checkModuleInclusion(Node *n);
-
-    static void initialize();
-    static void terminate();
-    static CodeParser *parserForLanguage(const QString &language);
-    static CodeParser *parserForSourceFile(const QString &filePath);
-    static void setLink(Node *node, Node::LinkType linkType, const QString &arg);
-    static bool isWorthWarningAbout(const Doc &doc);
-
-protected:
-    const QSet<QString> &commonMetaCommands();
-    static void extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc);
-    QDocDatabase *m_qdb {};
-
-private:
-    static QList<CodeParser *> s_parsers;
-};
-
 #define COMMAND_ABSTRACT QLatin1String("abstract")
 #define COMMAND_CLASS QLatin1String("class")
 #define COMMAND_DEFAULT QLatin1String("default")
@@ -116,6 +78,54 @@ private:
 
 // deprecated alias of qmlvaluetype
 #define COMMAND_QMLBASICTYPE QLatin1String("qmlbasictype")
+
+class Location;
+class QString;
+class QDocDatabase;
+
+class CodeParser
+{
+public:
+    static inline const QSet<QString> common_meta_commands{
+        COMMAND_ABSTRACT, COMMAND_DEFAULT, COMMAND_DEPRECATED, COMMAND_INGROUP,
+        COMMAND_INMODULE, COMMAND_INPUBLICGROUP, COMMAND_INQMLMODULE, COMMAND_INTERNAL,
+        COMMAND_MODULESTATE, COMMAND_NOAUTOLIST, COMMAND_NONREENTRANT, COMMAND_OBSOLETE,
+        COMMAND_PRELIMINARY, COMMAND_QMLABSTRACT, COMMAND_QMLDEFAULT, COMMAND_QMLINHERITS,
+        COMMAND_QMLREADONLY, COMMAND_QMLREQUIRED, COMMAND_QTCMAKEPACKAGE, COMMAND_QTVARIABLE,
+        COMMAND_REENTRANT, COMMAND_SINCE, COMMAND_STARTPAGE, COMMAND_SUBTITLE, COMMAND_THREADSAFE,
+        COMMAND_TITLE, COMMAND_WRAPPER, COMMAND_ATTRIBUTION,
+    };
+
+public:
+    CodeParser();
+    virtual ~CodeParser();
+
+    virtual void initializeParser() = 0;
+    virtual void terminateParser();
+    virtual QString language() = 0;
+    virtual QStringList sourceFileNameFilter() = 0;
+    virtual void parseSourceFile(const Location &location, const QString &filePath) = 0;
+    virtual Node *parseFnArg(const Location &, const QString &, const QString & = QString())
+    {
+        return nullptr;
+    }
+
+    void checkModuleInclusion(Node *n);
+
+    static void initialize();
+    static void terminate();
+    static CodeParser *parserForLanguage(const QString &language);
+    static CodeParser *parserForSourceFile(const QString &filePath);
+    static void setLink(Node *node, Node::LinkType linkType, const QString &arg);
+    static bool isWorthWarningAbout(const Doc &doc);
+
+protected:
+    static void extractPageLinkAndDesc(QStringView arg, QString *link, QString *desc);
+    QDocDatabase *m_qdb {};
+
+private:
+    static QList<CodeParser *> s_parsers;
+};
 
 QT_END_NAMESPACE
 

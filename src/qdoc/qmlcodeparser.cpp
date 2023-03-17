@@ -79,7 +79,7 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
 
     if (m_parser->parse()) {
         QQmlJS::AST::UiProgram *ast = m_parser->ast();
-        QmlDocVisitor visitor(filePath, newCode, &m_engine, topicCommands() + commonMetaCommands(),
+        QmlDocVisitor visitor(filePath, newCode, &m_engine, topicCommands() + CodeParser::common_meta_commands,
                               topicCommands());
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError())
