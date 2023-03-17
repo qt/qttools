@@ -64,6 +64,13 @@ QStringList QmlCodeParser::sourceFileNameFilter()
  */
 void QmlCodeParser::parseSourceFile(const Location &location, const QString &filePath)
 {
+    static const QSet<QString> topic_commands{
+        COMMAND_VARIABLE, COMMAND_QMLCLASS, COMMAND_QMLTYPE, COMMAND_QMLPROPERTY,
+        COMMAND_QMLPROPERTYGROUP, COMMAND_QMLATTACHEDPROPERTY, COMMAND_QMLSIGNAL,
+        COMMAND_QMLATTACHEDSIGNAL, COMMAND_QMLMETHOD, COMMAND_QMLATTACHEDMETHOD,
+        COMMAND_QMLVALUETYPE, COMMAND_QMLBASICTYPE,
+    };
+
     QFile in(filePath);
     if (!in.open(QIODevice::ReadOnly)) {
         location.error(QStringLiteral("Cannot open QML file '%1'").arg(filePath));
@@ -79,8 +86,8 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
 
     if (m_parser->parse()) {
         QQmlJS::AST::UiProgram *ast = m_parser->ast();
-        QmlDocVisitor visitor(filePath, newCode, &m_engine, topicCommands() + CodeParser::common_meta_commands,
-                              topicCommands());
+        QmlDocVisitor visitor(filePath, newCode, &m_engine, topic_commands + CodeParser::common_meta_commands,
+                              topic_commands);
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError())
             Location(filePath).warning("Could not analyze QML file, output is incomplete.");
@@ -90,22 +97,6 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
         qCDebug(lcQdoc, "%s: %d: %d: QML syntax error: %s", qUtf8Printable(filePath),
                 msg.loc.startLine, msg.loc.startColumn, qUtf8Printable(msg.message));
     }
-}
-
-static QSet<QString> topicCommands_;
-/*!
-  Returns the set of strings representing the topic commands.
- */
-const QSet<QString> &QmlCodeParser::topicCommands()
-{
-    if (topicCommands_.isEmpty()) {
-        topicCommands_ << COMMAND_VARIABLE << COMMAND_QMLCLASS << COMMAND_QMLTYPE
-                       << COMMAND_QMLPROPERTY << COMMAND_QMLPROPERTYGROUP // mws 13/03/2019
-                       << COMMAND_QMLATTACHEDPROPERTY << COMMAND_QMLSIGNAL
-                       << COMMAND_QMLATTACHEDSIGNAL << COMMAND_QMLMETHOD
-                       << COMMAND_QMLATTACHEDMETHOD << COMMAND_QMLVALUETYPE << COMMAND_QMLBASICTYPE;
-    }
-    return topicCommands_;
 }
 
 /*!

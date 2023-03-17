@@ -32,9 +32,6 @@ public:
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     void extractPragmas(QString &script);
 
-protected:
-    const QSet<QString> &topicCommands();
-
 private:
     QQmlJS::Engine m_engine {};
     QQmlJS::Lexer *m_lexer { nullptr };
