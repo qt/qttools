@@ -1006,8 +1006,8 @@ void PropertyEditor::setObject(QObject *object)
                     descriptionToolTip = customData.propertyToolTip(propertyName);
                 if (descriptionToolTip.isEmpty()) {
                     if (const char *typeS = typeName(type)) {
-                        descriptionToolTip = propertyName + QLatin1String(" (")
-                            + QLatin1String(typeS) + QLatin1Char(')');
+                        descriptionToolTip = propertyName + " ("_L1
+                            + QLatin1StringView(typeS) + ')'_L1;
                     }
                 }
                 if (!descriptionToolTip.isEmpty())

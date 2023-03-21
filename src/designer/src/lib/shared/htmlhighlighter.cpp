@@ -8,6 +8,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 HtmlHighlighter::HtmlHighlighter(QTextEdit *textEdit)
@@ -55,9 +57,6 @@ void HtmlHighlighter::highlightBlock(const QString &text)
     static const QLatin1Char apos = QLatin1Char('\'');
     static const QLatin1Char semicolon = QLatin1Char(';');
     static const QLatin1Char equals = QLatin1Char('=');
-    static const QLatin1String startComment("<!--");
-    static const QLatin1String endComment("-->");
-    static const QLatin1String endElement("/>");
 
     int state = previousBlockState();
     qsizetype len = text.size();
@@ -71,7 +70,7 @@ void HtmlHighlighter::highlightBlock(const QString &text)
             while (pos < len) {
                 QChar ch = text.at(pos);
                 if (ch == startTag) {
-                    if (text.mid(pos, 4) == startComment) {
+                    if (QStringView{text}.sliced(pos).startsWith("<!--"_L1)) {
                         state = InComment;
                     } else {
                         state = InTag;
@@ -79,9 +78,10 @@ void HtmlHighlighter::highlightBlock(const QString &text)
                         while (pos < len && text.at(pos) != space
                                && text.at(pos) != endTag
                                && text.at(pos) != tab
-                               && text.mid(pos, 2) != endElement)
+                               && !QStringView{text}.sliced(pos).startsWith("/>"_L1)) {
                             ++pos;
-                        if (text.mid(pos, 2) == endElement)
+                        }
+                        if (QStringView{text}.sliced(pos).startsWith("/>"_L1))
                             ++pos;
                         setFormat(start, pos - start,
                                   m_formats[Tag]);
@@ -104,7 +104,7 @@ void HtmlHighlighter::highlightBlock(const QString &text)
         case InComment:
             start = pos;
             for ( ; pos < len; ++pos) {
-                if (text.mid(pos, 3) == endComment) {
+                if (QStringView{text}.sliced(pos).startsWith("-->"_L1)) {
                     pos += 3;
                     state = NormalState;
                     break;
@@ -125,7 +125,7 @@ void HtmlHighlighter::highlightBlock(const QString &text)
                         setFormat(start, pos - start, m_formats[Tag]);
                         state = NormalState;
                         break;
-                    } else if (text.mid(pos, 2) == endElement) {
+                    } else if (QStringView{text}.sliced(pos).startsWith("/>"_L1)) {
                         pos += 2;
                         setFormat(start, pos - start, m_formats[Tag]);
                         state = NormalState;

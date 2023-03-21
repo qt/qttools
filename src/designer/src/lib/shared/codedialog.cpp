@@ -180,15 +180,15 @@ bool CodeDialog::showCodeDialog(const QDesignerFormWindowInterface *fw,
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setCode(code);
     dialog->setFormFileName(fw->fileName());
-    QString languageName;
+    QLatin1StringView languageName;
     switch (language) {
     case UicLanguage::Cpp:
-        languageName = QLatin1String("C++");
-        dialog->setMimeType(QLatin1String("text/x-chdr"));
+        languageName = "C++"_L1;
+        dialog->setMimeType(u"text/x-chdr"_s);
         break;
     case UicLanguage::Python:
-        languageName = QLatin1String("Python");
-        dialog->setMimeType(QLatin1String("text/x-python"));
+        languageName = "Python"_L1;
+        dialog->setMimeType(u"text/x-python"_s);
         break;
     }
     dialog->setWindowTitle(tr("%1 - [%2 Code]").
@@ -212,8 +212,8 @@ void CodeDialog::slotSaveAs()
     if (!uiFile.isEmpty()) {
         QFileInfo uiFi(uiFile);
         fileDialog.setDirectory(uiFi.absolutePath());
-        fileDialog.selectFile(QLatin1String("ui_") + uiFi.baseName()
-                              + QLatin1Char('.') + suffix);
+        fileDialog.selectFile("ui_"_L1 + uiFi.baseName()
+                              + '.'_L1 + suffix);
     }
 
     while (true) {

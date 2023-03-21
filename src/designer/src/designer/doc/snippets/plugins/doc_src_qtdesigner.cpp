@@ -228,7 +228,7 @@ QDesignerPropertySheetExtension *propertySheet = nullptr;
 QExtensionManager manager = formEditor->extensionManager();
 
 propertySheet = qt_extension<QDesignerPropertySheetExtension*>(manager, widget);
-int index = propertySheet->indexOf(QLatin1String("margin"));
+int index = propertySheet->indexOf(u"margin"_s);
 
 propertySheet->setProperty(index, 10);
 propertySheet->setChanged(index, true);

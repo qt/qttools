@@ -108,9 +108,9 @@ void PluginDialog::populateTreeWidget()
         const QFont boldFont = topLevelItem->font(0);
         for (const QString &plugin : notLoadedPlugins) {
             const QString failureReason = pluginManager->failureReason(plugin);
-            const QString htmlFailureReason = QLatin1String("<html><head/><body><p>")
+            const QString htmlFailureReason = "<html><head/><body><p>"_L1
                 + failureReason.toHtmlEscaped()
-                + QLatin1String("</p></body></html>");
+                + "</p></body></html>"_L1;
             QTreeWidgetItem *pluginItem = setPluginItem(topLevelItem, QFileInfo(plugin), boldFont);
             auto errorItem = setItem(pluginItem, failureReason,
                                      htmlFailureReason, QString(), QIcon());

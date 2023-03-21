@@ -799,7 +799,7 @@ bool QDesignerActions::writeOutForm(QDesignerFormWindowInterface *fw, const QStr
     if (check) {
         const QStringList problems = fw->checkContents();
         if (!problems.isEmpty())
-            QMessageBox::information(fw->window(), tr("Qt Designer"), problems.join(QLatin1String("<br>")));
+            QMessageBox::information(fw->window(), tr("Qt Designer"), problems.join("<br>"_L1));
     }
 
     QString contents = fw->contents();

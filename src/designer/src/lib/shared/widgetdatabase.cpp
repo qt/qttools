@@ -626,11 +626,11 @@ static QString generateNewFormXML(const QString &className, const QString &simil
         << NewFormWidth << "</width><height>" << NewFormHeight << "</height></rect></property>"
         << R"(<property name="windowTitle"><string>)" << name << "</string></property>\n";
 
-    if (similarClassName == QLatin1String("QMainWindow")) {
+    if (similarClassName == "QMainWindow"_L1) {
         str << R"(<widget class="QWidget" name="centralwidget"/>)";
-    } else if (similarClassName == QLatin1String("QWizard")) {
+    } else if (similarClassName == "QWizard"_L1) {
         str << R"(<widget class="QWizardPage" name="wizardPage1"/><widget class="QWizardPage" name="wizardPage2"/>)";
-    } else if (similarClassName == QLatin1String("QDockWidget")) {
+    } else if (similarClassName == "QDockWidget"_L1) {
         str << R"(<widget class="QWidget" name="dockWidgetContents"/>)";
     }
     str << "</widget></ui>\n";

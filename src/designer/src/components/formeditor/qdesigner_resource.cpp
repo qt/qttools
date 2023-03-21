@@ -951,8 +951,8 @@ void QDesignerResource::applyProperties(QObject *o, const QList<DomProperty*> &p
         if (isDeprecatedQt5Property(o, p)) // ### fixme Qt 7 remove this
             continue; // ### fixme Qt 7 remove this: Exclude deprecated value of Qt 5.
         QString propertyName = p->attributeName();
-        if (propertyName == QLatin1String("numDigits") && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
-            propertyName = QLatin1String("digitCount");
+        if (propertyName == "numDigits"_L1 && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
+            propertyName = u"digitCount"_s;
         const int index = sheet->indexOf(propertyName);
         QVariant v;
         if (!readDomEnumerationValue(p, sheet, index, v))
@@ -1342,7 +1342,7 @@ DomWidget *QDesignerResource::saveWidget(QToolBar *toolBar, DomWidget *ui_parent
 
         attr = new DomProperty();
         attr->setAttributeName(u"toolBarBreak"_s);
-        attr->setElementBool(toolBarBreak ? QLatin1String("true") : QLatin1String("false"));
+        attr->setElementBool(toolBarBreak ? u"true"_s : u"false"_s);
         attributes  << attr;
         ui_widget->setElementAttribute(attributes);
     }

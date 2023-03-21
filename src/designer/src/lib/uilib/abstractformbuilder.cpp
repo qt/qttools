@@ -874,8 +874,8 @@ void QAbstractFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
         const QVariant v = toVariant(o->metaObject(), p);
         if (!v.isNull()) {
             QString attributeName = p->attributeName();
-            if (attributeName == QLatin1String("numDigits") && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
-                attributeName = QLatin1String("digitCount");
+            if (attributeName == "numDigits"_L1 && o->inherits("QLCDNumber")) // Deprecated in Qt 4, removed in Qt 5.
+                attributeName = u"digitCount"_s;
             if (!d->applyPropertyInternally(o, attributeName, v))
                 o->setProperty(attributeName.toUtf8(), v);
         }
@@ -1889,6 +1889,18 @@ static const QLatin1StringView tableHeaderPrefixes[] = {
     "verticalHeader"_L1,
 };
 
+static constexpr QLatin1StringView itemViewHeaderRealPropertyNames[] =
+{
+    // Special handling for qtableview/qtreeview fake header attributes
+    "visible"_L1,
+    "cascadingSectionResizes"_L1,
+    "minimumSectionSize"_L1,    // before defaultSectionSize
+    "defaultSectionSize"_L1,
+    "highlightSections"_L1,
+    "showSortIndicator"_L1,
+    "stretchLastSection"_L1
+};
+
 /*!
     \internal
     \since 4.5
@@ -1896,24 +1908,11 @@ static const QLatin1StringView tableHeaderPrefixes[] = {
 void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemView,
                                                  DomWidget *ui_widget, DomWidget *)
 {
-    //
-    // Special handling for qtableview/qtreeview fake header attributes
-    //
-    static const QLatin1String realPropertyNames[] = {
-        QLatin1String("visible"),
-        QLatin1String("cascadingSectionResizes"),
-        QLatin1String("minimumSectionSize"),    // before defaultSectionSize
-        QLatin1String("defaultSectionSize"),
-        QLatin1String("highlightSections"),
-        QLatin1String("showSortIndicator"),
-        QLatin1String("stretchLastSection"),
-    };
-
     if (const QTreeView *treeView = qobject_cast<const QTreeView*>(itemView)) {
         auto viewProperties = ui_widget->elementAttribute();
         const auto &headerProperties = computeProperties(treeView->header());
-        for (QString realPropertyName : realPropertyNames) {
-            const QString upperPropertyName = realPropertyName.at(0).toUpper()
+        for (const QLatin1StringView realPropertyName : itemViewHeaderRealPropertyNames) {
+            const QString upperPropertyName = QChar(realPropertyName.at(0)).toUpper()
                                               + realPropertyName.mid(1);
             const QString fakePropertyName = "header"_L1 + upperPropertyName;
             for (DomProperty *property : headerProperties) {
@@ -1930,8 +1929,8 @@ void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemVi
             const auto &headerProperties = headerPrefix == "horizontalHeader"_L1
                 ? computeProperties(tableView->horizontalHeader())
                 : computeProperties(tableView->verticalHeader());
-            for (QString realPropertyName : realPropertyNames) {
-                const QString upperPropertyName = realPropertyName.at(0).toUpper()
+            for (const QLatin1StringView realPropertyName : itemViewHeaderRealPropertyNames) {
+                const QString upperPropertyName = QChar(realPropertyName.at(0)).toUpper()
                                                   + realPropertyName.mid(1);
                 const QString fakePropertyName = headerPrefix + upperPropertyName;
                 for (DomProperty *property : std::as_const(headerProperties)) {
@@ -2270,24 +2269,11 @@ void QAbstractFormBuilder::loadButtonExtraInfo(const DomWidget *ui_widget, QAbst
 void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstractItemView *itemView,
                                                  QWidget *)
 {
-    //
-    // Special handling for qtableview/qtreeview fake header attributes
-    //
-    static const QLatin1String realPropertyNames[] = {
-        QLatin1String("visible"),
-        QLatin1String("cascadingSectionResizes"),
-        QLatin1String("minimumSectionSize"),    // before defaultSectionSize
-        QLatin1String("defaultSectionSize"),
-        QLatin1String("highlightSections"),
-        QLatin1String("showSortIndicator"),
-        QLatin1String("stretchLastSection"),
-    };
-
     if (QTreeView *treeView = qobject_cast<QTreeView*>(itemView)) {
         const auto &allAttributes = ui_widget->elementAttribute();
         QList<DomProperty *> headerProperties;
-        for (QString realPropertyName : realPropertyNames) {
-            const QString upperPropertyName = realPropertyName.at(0).toUpper()
+        for (QLatin1StringView realPropertyName : itemViewHeaderRealPropertyNames) {
+            const QString upperPropertyName = QChar(realPropertyName.at(0)).toUpper()
                                               + realPropertyName.mid(1);
             const QString fakePropertyName = "header"_L1 + upperPropertyName;
             for (DomProperty *attr : allAttributes) {
@@ -2302,8 +2288,8 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
         const auto &allAttributes = ui_widget->elementAttribute();
         for (QLatin1StringView headerPrefix : tableHeaderPrefixes) {
             QList<DomProperty*> headerProperties;
-            for (QString realPropertyName : realPropertyNames) {
-                const QString upperPropertyName = realPropertyName.at(0).toUpper()
+            for (QLatin1StringView realPropertyName : itemViewHeaderRealPropertyNames) {
+                const QString upperPropertyName = QChar(realPropertyName.at(0)).toUpper()
                                                   + realPropertyName.mid(1);
                 const QString fakePropertyName = headerPrefix + upperPropertyName;
                 for (DomProperty *attr : allAttributes) {
