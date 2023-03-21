@@ -25,9 +25,9 @@ TemplateOptionsWidget::TemplateOptionsWidget(QDesignerFormEditorInterface *core,
     m_ui->setupUi(this);
 
     m_ui->m_addTemplatePathButton->setIcon(
-            qdesigner_internal::createIconSet(QString::fromUtf8("plus.png")));
+            qdesigner_internal::createIconSet(u"plus.png"_s));
     m_ui->m_removeTemplatePathButton->setIcon(
-            qdesigner_internal::createIconSet(QString::fromUtf8("minus.png")));
+            qdesigner_internal::createIconSet(u"minus.png"_s));
 
     connect(m_ui->m_templatePathListWidget, &QListWidget::itemSelectionChanged,
             this, &TemplateOptionsWidget::templatePathSelectionChanged);

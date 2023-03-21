@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static QString realClassName(QDesignerFormEditorInterface *core, QWidget *widget)
 {
     QString class_name = QLatin1String(widget->metaObject()->className());
@@ -29,7 +31,7 @@ static QString realClassName(QDesignerFormEditorInterface *core, QWidget *widget
 
 static QString widgetLabel(QDesignerFormEditorInterface *core, QWidget *widget)
 {
-    return QString::fromUtf8("%1 (%2)")
+    return "%1 (%2)"_L1
             .arg(qdesigner_internal::realObjectName(core, widget),
                  realClassName(core, widget));
 }

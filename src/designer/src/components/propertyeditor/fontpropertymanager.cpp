@@ -265,7 +265,7 @@ namespace qdesigner_internal {
 
     static QString msgXmlError(const QXmlStreamReader &r, const QString& fileName)
     {
-        return QString::fromUtf8("An error has been encountered at line %1 of %2: %3:").arg(r.lineNumber()).arg(fileName, r.errorString());
+        return u"An error has been encountered at line %1 of %2: %3:"_s.arg(r.lineNumber()).arg(fileName, r.errorString());
     }
 
     /* Switch stages when encountering a start element (state table) */
@@ -296,7 +296,7 @@ namespace qdesigner_internal {
         const QString fileName = u":/qt-project.org/propertyeditor/fontmapping.xml"_s;
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly)) {
-            *errorMessage = QString::fromUtf8("Unable to open %1: %2").arg(fileName, file.errorString());
+            *errorMessage = "Unable to open %1: %2"_L1.arg(fileName, file.errorString());
             return false;
         }
 
@@ -315,7 +315,7 @@ namespace qdesigner_internal {
                 stage = nextStage(stage, reader.name());
                 switch (stage) {
                 case ParseError:
-                    reader.raiseError(QString::fromUtf8("Unexpected element <%1>.").arg(reader.name().toString()));
+                    reader.raiseError("Unexpected element <%1>."_L1.arg(reader.name()));
                     *errorMessage = msgXmlError(reader, fileName);
                     return false;
                 case ParseWithinFamily:

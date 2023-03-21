@@ -1426,7 +1426,7 @@ QList<DomProperty*> QAbstractFormBuilder::computeProperties(QObject *obj)
             if (prop.isEnumType()) {
                 QString scope = QString::fromUtf8(prop.enumerator().scope());
                 if (scope.size())
-                    scope += QString::fromUtf8("::");
+                    scope += "::"_L1;
                 const QString e = QString::fromUtf8(prop.enumerator().valueToKey(v.toInt()));
                 if (e.size())
                     dom_prop->setElementEnum(scope + e);

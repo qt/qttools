@@ -970,7 +970,7 @@ QString QDesignerPropertySheet::propertyGroup(int index) const
         return g;
 
     if (propertyType(index) == PropertyAccessibility)
-        return QString::fromUtf8("Accessibility");
+        return u"Accessibility"_s;
 
     if (isAdditionalProperty(index))
         return d->m_meta->className();

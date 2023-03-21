@@ -7,6 +7,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 StringListEditor::StringListEditor(QWidget *parent)
@@ -22,10 +24,10 @@ StringListEditor::StringListEditor(QWidget *parent)
             &QAbstractItemDelegate::closeEditor,
             this, &StringListEditor::currentValueChanged);
 
-    QIcon upIcon = createIconSet(QString::fromUtf8("up.png"));
-    QIcon downIcon = createIconSet(QString::fromUtf8("down.png"));
-    QIcon minusIcon = createIconSet(QString::fromUtf8("minus.png"));
-    QIcon plusIcon = createIconSet(QString::fromUtf8("plus.png"));
+    QIcon upIcon = createIconSet(u"up.png"_s);
+    QIcon downIcon = createIconSet(u"down.png"_s);
+    QIcon minusIcon = createIconSet(u"minus.png"_s);
+    QIcon plusIcon = createIconSet(u"plus.png"_s);
     upButton->setIcon(upIcon);
     downButton->setIcon(downIcon);
     newButton->setIcon(plusIcon);

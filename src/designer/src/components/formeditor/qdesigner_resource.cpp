@@ -2207,7 +2207,7 @@ void QDesignerResource::applyAttributesToPropertySheet(const DomWidget *ui_widge
         const QString name = prop->attributeName();
         const int index = sheet->indexOf(name);
         if (index == -1) {
-            const QString msg = QString::fromUtf8("Unable to apply attributive property '%1' to '%2'. It does not exist.").arg(name, widget->objectName());
+            const QString msg = "Unable to apply attributive property '%1' to '%2'. It does not exist."_L1.arg(name, widget->objectName());
             designerWarning(msg);
         } else {
             sheet->setProperty(index, domPropertyToVariant(this, widget->metaObject(), prop));

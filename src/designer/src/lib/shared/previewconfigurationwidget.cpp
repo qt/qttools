@@ -109,11 +109,11 @@ PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::PreviewConfigurat
 
     // sheet
     m_ui.m_appStyleSheetLineEdit->setTextPropertyValidationMode(qdesigner_internal::ValidationStyleSheet);
-    m_ui.m_appStyleSheetClearButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("resetproperty.png")));
+    m_ui.m_appStyleSheetClearButton->setIcon(qdesigner_internal::createIconSet(u"resetproperty.png"_s));
     QObject::connect(m_ui.m_appStyleSheetClearButton, &QAbstractButton::clicked,
                      m_ui.m_appStyleSheetLineEdit, &qdesigner_internal::TextPropertyEditor::clear);
 
-    m_ui.m_skinRemoveButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("editdelete.png")));
+    m_ui.m_skinRemoveButton->setIcon(qdesigner_internal::createIconSet(u"editdelete.png"_s));
     // skins: find default skins (resources)
     m_ui.m_skinRemoveButton->setEnabled(false);
     Skins skins = defaultSkins();
