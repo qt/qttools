@@ -52,7 +52,6 @@ CodeDialog::CodeDialog(QWidget *parent) :
     QDialog(parent),
     m_impl(new CodeDialogPrivate)
 {
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     QVBoxLayout *vBoxLayout = new QVBoxLayout;
 
     // Edit tool bar

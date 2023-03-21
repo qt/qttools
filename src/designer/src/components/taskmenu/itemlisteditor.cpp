@@ -45,7 +45,6 @@ AbstractItemEditor::AbstractItemEditor(QDesignerFormWindowInterface *form, QWidg
     : QWidget(parent),
       m_iconCache(qobject_cast<FormWindowBase *>(form)->iconCache())
 {
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     m_propertyManager = new DesignerPropertyManager(form->core(), this);
     m_editorFactory = new DesignerEditorFactory(form->core(), this);
     m_editorFactory->setSpacing(0);

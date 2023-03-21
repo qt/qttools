@@ -37,7 +37,6 @@ SelectSignalDialog::SelectSignalDialog(QWidget *parent)
     , m_ui(new Ui::SelectSignalDialog)
     , m_model(new QStandardItemModel(0, 1, this))
 {
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     m_ui->setupUi(this);
     m_okButton = m_ui->buttonBox->button(QDialogButtonBox::Ok);
 

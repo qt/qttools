@@ -23,7 +23,6 @@ OrderDialog::OrderDialog(QWidget *parent) :
     m_format(PageOrderFormat)
 {
     m_ui->setupUi(this);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     m_ui->upButton->setIcon(createIconSet(QString::fromUtf8("up.png")));
     m_ui->downButton->setIcon(createIconSet(QString::fromUtf8("down.png")));
     m_ui->buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);

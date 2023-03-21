@@ -1868,7 +1868,6 @@ QtResourceEditorDialog::QtResourceEditorDialog(QDesignerFormEditorInterface *cor
     d_ptr->m_dlgGui = dlgGui;
     d_ptr->m_core = core;
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowTitle(tr("Edit Resources"));
 
     connect(d_ptr->m_qrcManager, &QtQrcManager::qrcFileInserted,

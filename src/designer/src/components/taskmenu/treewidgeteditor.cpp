@@ -37,7 +37,6 @@ TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *
 
     ui.tabWidget->insertTab(0, m_columnEditor, tr("&Columns"));
     ui.tabWidget->setCurrentIndex(0);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     ui.newItemButton->setIcon(createIconSet(QString::fromUtf8("plus.png")));
     ui.newSubItemButton->setIcon(createIconSet(QString::fromUtf8("downplus.png")));
@@ -593,7 +592,6 @@ void TreeWidgetEditor::cacheReloaded()
 TreeWidgetEditorDialog::TreeWidgetEditorDialog(QDesignerFormWindowInterface *form, QWidget *parent) :
     QDialog(parent), m_editor(form, this)
 {
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 TreeWidgetContents TreeWidgetEditorDialog::fillContentsFromTreeWidget(QTreeWidget *treeWidget)

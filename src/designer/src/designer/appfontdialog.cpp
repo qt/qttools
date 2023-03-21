@@ -369,7 +369,6 @@ AppFontDialog::AppFontDialog(QWidget *parent) :
     m_appFontWidget(new AppFontWidget)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowTitle(tr("Additional Fonts"));
     setModal(false);
     QVBoxLayout *vl = new  QVBoxLayout;

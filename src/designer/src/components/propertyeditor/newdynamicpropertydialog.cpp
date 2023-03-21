@@ -21,8 +21,6 @@ NewDynamicPropertyDialog::NewDynamicPropertyDialog(QDesignerDialogGuiInterface *
     m_ui->setupUi(this);
     connect(m_ui->m_lineEdit, &QLineEdit::textChanged, this, &NewDynamicPropertyDialog::nameChanged);
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
     m_ui->m_comboBox->addItem(QStringLiteral("String"),
                               QVariant(QMetaType(QMetaType::QString)));
     m_ui->m_comboBox->addItem(QStringLiteral("StringList"),

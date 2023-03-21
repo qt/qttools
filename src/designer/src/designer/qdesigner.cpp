@@ -104,7 +104,6 @@ void QDesigner::showErrorMessageBox(const QString &msg)
         const QString title = QCoreApplication::translate("QDesigner", "%1 - warning").arg(QLatin1String(designerApplicationName));
         m_errorMessageDialog->setWindowTitle(title);
         m_errorMessageDialog->setMinimumSize(QSize(600, 250));
-        m_errorMessageDialog->setWindowFlags(m_errorMessageDialog->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     }
     m_errorMessageDialog->showMessage(msg);
     m_lastErrorMessage = msg;
