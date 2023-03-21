@@ -30,6 +30,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum {FileNameRole = Qt::UserRole + 1, IdRole =  Qt::UserRole + 2 };
 enum { debugAppFontWidget = 0 };
 
@@ -252,16 +254,16 @@ AppFontWidget::AppFontWidget(QWidget *parent) :
     connect(m_view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &AppFontWidget::selectionChanged);
 
     m_addButton->setToolTip(tr("Add font files"));
-    m_addButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("plus.png")));
+    m_addButton->setIcon(qdesigner_internal::createIconSet(u"plus.png"_s));
     connect(m_addButton, &QAbstractButton::clicked, this, &AppFontWidget::addFiles);
 
     m_removeButton->setEnabled(false);
     m_removeButton->setToolTip(tr("Remove current font file"));
-    m_removeButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("minus.png")));
+    m_removeButton->setIcon(qdesigner_internal::createIconSet(u"minus.png"_s));
     connect(m_removeButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveFiles);
 
     m_removeAllButton->setToolTip(tr("Remove all font files"));
-    m_removeAllButton->setIcon(qdesigner_internal::createIconSet(QString::fromUtf8("editdelete.png")));
+    m_removeAllButton->setIcon(qdesigner_internal::createIconSet(u"editdelete.png"_s));
     connect(m_removeAllButton, &QAbstractButton::clicked, this, &AppFontWidget::slotRemoveAll);
 
     QHBoxLayout *hLayout = new QHBoxLayout;

@@ -273,10 +273,10 @@ ItemListEditor::ItemListEditor(QDesignerFormWindowInterface *form, QWidget *pare
             this, &ItemListEditor::togglePropertyBrowser);
     setPropertyBrowserVisible(false);
 
-    QIcon upIcon = createIconSet(QString::fromUtf8("up.png"));
-    QIcon downIcon = createIconSet(QString::fromUtf8("down.png"));
-    QIcon minusIcon = createIconSet(QString::fromUtf8("minus.png"));
-    QIcon plusIcon = createIconSet(QString::fromUtf8("plus.png"));
+    QIcon upIcon = createIconSet(u"up.png"_s);
+    QIcon downIcon = createIconSet(u"down.png"_s);
+    QIcon minusIcon = createIconSet(u"minus.png"_s);
+    QIcon plusIcon = createIconSet(u"plus.png"_s);
     ui.moveListItemUpButton->setIcon(upIcon);
     ui.moveListItemDownButton->setIcon(downIcon);
     ui.newListItemButton->setIcon(plusIcon);

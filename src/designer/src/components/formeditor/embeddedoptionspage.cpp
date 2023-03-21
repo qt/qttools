@@ -33,6 +33,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 using DeviceProfileList = QList<DeviceProfile>;
@@ -123,7 +125,7 @@ void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
     EmbeddedOptionsControl::connect(m_profileCombo, &QComboBox::currentIndexChanged,
                                     m_q, &EmbeddedOptionsControl::slotProfileIndexChanged);
 
-    m_addButton->setIcon(createIconSet(QString::fromUtf8("plus.png")));
+    m_addButton->setIcon(createIconSet(u"plus.png"_s));
     m_addButton->setToolTip(EmbeddedOptionsControl::tr("Add a profile"));
     EmbeddedOptionsControl::connect(m_addButton, &QAbstractButton::clicked,
                                     m_q, &EmbeddedOptionsControl::slotAdd);
@@ -131,11 +133,11 @@ void EmbeddedOptionsControlPrivate::init(EmbeddedOptionsControl *q)
 
     EmbeddedOptionsControl::connect(m_editButton, &QAbstractButton::clicked,
                                     m_q, &EmbeddedOptionsControl::slotEdit);
-    m_editButton->setIcon(createIconSet(QString::fromUtf8("edit.png")));
+    m_editButton->setIcon(createIconSet(u"edit.png"_s));
     m_editButton->setToolTip(EmbeddedOptionsControl::tr("Edit the selected profile"));
     hLayout->addWidget(m_editButton);
 
-    m_deleteButton->setIcon(createIconSet(QString::fromUtf8("minus.png")));
+    m_deleteButton->setIcon(createIconSet(u"minus.png"_s));
     m_deleteButton->setToolTip(EmbeddedOptionsControl::tr("Delete the selected profile"));
     EmbeddedOptionsControl::connect(m_deleteButton, &QAbstractButton::clicked,
                                     m_q, &EmbeddedOptionsControl::slotDelete);

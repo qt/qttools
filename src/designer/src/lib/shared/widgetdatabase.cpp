@@ -33,6 +33,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
     enum { debugWidgetDataBase = 0 };
 }
@@ -286,20 +288,20 @@ WidgetDataBase::WidgetDataBase(QDesignerFormEditorInterface *core, QObject *pare
     append(aivItem);
 #endif // QT_CONFIG(itemviews)
 
-    append(new WidgetDataBaseItem(QString::fromUtf8("Line")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("Spacer")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QSplitter")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QLayoutWidget")));
+    append(new WidgetDataBaseItem(u"Line"_s));
+    append(new WidgetDataBaseItem(u"Spacer"_s));
+    append(new WidgetDataBaseItem(u"QSplitter"_s));
+    append(new WidgetDataBaseItem(u"QLayoutWidget"_s));
     // QDesignerWidget is used as central widget and as container for tab widgets, etc.
-    WidgetDataBaseItem *designerWidgetItem = new WidgetDataBaseItem(QString::fromUtf8("QDesignerWidget"));
+    WidgetDataBaseItem *designerWidgetItem = new WidgetDataBaseItem(u"QDesignerWidget"_s);
     designerWidgetItem->setContainer(true);
     append(designerWidgetItem);
-    append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerDialog")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerMenu")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerMenuBar")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QDesignerDockWidget")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QAction")));
-    append(new WidgetDataBaseItem(QString::fromUtf8("QButtonGroup")));
+    append(new WidgetDataBaseItem(u"QDesignerDialog"_s));
+    append(new WidgetDataBaseItem(u"QDesignerMenu"_s));
+    append(new WidgetDataBaseItem(u"QDesignerMenuBar"_s));
+    append(new WidgetDataBaseItem(u"QDesignerDockWidget"_s));
+    append(new WidgetDataBaseItem(u"QAction"_s));
+    append(new WidgetDataBaseItem(u"QButtonGroup"_s));
 
     // ### remove me
     // ### check the casts

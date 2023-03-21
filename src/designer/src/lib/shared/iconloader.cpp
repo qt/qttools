@@ -15,16 +15,18 @@ namespace qdesigner_internal {
 
 QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 {
-    const QStringList candidates = QStringList()
-        << (QString::fromUtf8(":/qt-project.org/formeditor/images/") + name)
+    constexpr QLatin1StringView prefixes[] = {
+        ":/qt-project.org/formeditor/images/"_L1,
 #ifdef Q_OS_MACOS
-        << (QString::fromUtf8(":/qt-project.org/formeditor/images/mac/") + name)
+        ":/qt-project.org/formeditor/images/mac/"_L1,
 #else
-        << (QString::fromUtf8(":/qt-project.org/formeditor/images/win/") + name)
+        ":/qt-project.org/formeditor/images/win/"_L1,
 #endif
-        << (QString::fromUtf8(":/qt-project.org/formeditor/images/designer_") + name);
+        ":/qt-project.org/formeditor/images/designer_"_L1
+    };
 
-    for (const QString &f : candidates) {
+    for (QLatin1StringView prefix : prefixes) {
+        const QString f = prefix + name;
         if (QFile::exists(f))
             return QIcon(f);
     }

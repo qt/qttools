@@ -423,7 +423,7 @@ IconSelector::IconSelector(QWidget *parent) :
     d_ptr->m_resetAllAction = new QAction(tr("Reset All"), this);
     d_ptr->m_resetAction->setEnabled(false);
     d_ptr->m_resetAllAction->setEnabled(false);
-    //d_ptr->m_resetAction->setIcon(createIconSet(QString::fromUtf8("resetproperty.png")));
+    //d_ptr->m_resetAction->setIcon(createIconSet(u"resetproperty.png"_s));
 
     setMenu->addAction(setResourceAction);
     setMenu->addAction(setFileAction);
