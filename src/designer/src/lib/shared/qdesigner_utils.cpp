@@ -719,7 +719,7 @@ namespace qdesigner_internal
         case UicLanguage::Cpp:
             break;
         case UicLanguage::Python:
-            arguments << QLatin1String("-g") << QLatin1String("python");
+            arguments << u"-g"_s << u"python"_s;
             break;
         }
         arguments << fileName;

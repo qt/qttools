@@ -1582,7 +1582,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         QVariant v = value(property);
         const QStringList list = v.metaType().id() == QMetaType::QStringList
             ? v.toStringList() : qvariant_cast<PropertySheetStringListValue>(v).value();
-        return list.join(QLatin1String("; "));
+        return list.join("; "_L1);
     }
     if (vType == designerKeySequenceTypeId()) {
         return qvariant_cast<PropertySheetKeySequenceValue>(value(property)).value().toString(QKeySequence::NativeText);

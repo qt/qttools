@@ -17,12 +17,14 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 bool QDockWidgetPropertySheet::isEnabled(int index) const
 {
     const QString &name = propertyName(index);
-    if (name == QLatin1String("dockWidgetArea"))
+    if (name == "dockWidgetArea"_L1)
         return static_cast<const QDesignerDockWidget *>(object())->docked();
-    if (name == QLatin1String("docked"))
+    if (name == "docked"_L1)
         return static_cast<const QDesignerDockWidget *>(object())->inMainWindow();
     return QDesignerPropertySheet::isEnabled(index);
 }

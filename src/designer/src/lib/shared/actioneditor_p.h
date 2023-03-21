@@ -63,7 +63,7 @@ public:
     static void setObjectNamingMode(ObjectNamingMode n) { m_objectNamingMode = n; }
 
     static QString actionTextToName(const QString &text,
-                                    const QString &prefix = QLatin1String("action"));
+                                    const QString &prefix = QLatin1StringView("action"));
 
     // Utility to create a configure button with menu for usage on toolbars
     static QToolButton *createConfigureMenuButton(const QString &t, QMenu **ptrToMenu);

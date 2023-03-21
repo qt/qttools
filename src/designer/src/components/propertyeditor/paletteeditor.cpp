@@ -313,7 +313,7 @@ static bool loadPalette(const QString &fileName, QPalette *pal, QString *errorMe
         *errorMessage = msgCannotReadPalette(fileName, reader);
         return false;
     }
-    if (reader.name() != QLatin1String("palette")) {
+    if (reader.name() != "palette"_L1) {
         const auto why = PaletteEditor::tr("Invalid element \"%1\", expected \"palette\".")
                          .arg(reader.name().toString());
         *errorMessage = msgCannotReadPalette(fileName, reader, why);

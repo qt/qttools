@@ -147,9 +147,7 @@ static inline QDesigner::ParseArgumentsResult
     parseDesignerCommandLineArguments(QCommandLineParser &parser, Options *options,
                                       QString *errorMessage)
 {
-    parser.setApplicationDescription(u"Qt Designer "_s
-        + QLatin1String(QT_VERSION_STR)
-        + QLatin1String("\n\nUI designer for QWidget-based applications."));
+    parser.setApplicationDescription(u"Qt Designer " QT_VERSION_STR "\n\nUI designer for QWidget-based applications."_s);
     const QCommandLineOption helpOption = parser.addHelpOption();
     parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
     const QCommandLineOption serverOption(u"server"_s,
