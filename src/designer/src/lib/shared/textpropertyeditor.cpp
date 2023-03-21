@@ -20,8 +20,8 @@ QT_BEGIN_NAMESPACE
 using namespace Qt::StringLiterals;
 
 namespace {
-    const QChar NewLineChar(QLatin1Char('\n'));
-    const QLatin1String EscapedNewLine("\\n");
+    const QChar NewLineChar(u'\n');
+    const auto EscapedNewLine = "\\n"_L1;
 
     // A validator that replaces offending strings
     class ReplacementValidator : public QValidator {
@@ -153,7 +153,7 @@ namespace {
 
         // Might be a short url - try to detect the schema.
         if (!hasSchema) {
-            const int dotIndex = urlStr.indexOf(QLatin1Char('.'));
+            const int dotIndex = urlStr.indexOf(u'.');
             if (dotIndex != -1) {
                 const QString prefix = urlStr.left(dotIndex).toLower();
                 QString urlString;
@@ -223,7 +223,7 @@ namespace qdesigner_internal {
             break;
         case ValidationSingleLine:
             // Set a  validator that replaces newline characters by a blank.
-            m_lineEdit->setValidator(new ReplacementValidator(m_lineEdit, NewLineChar, QString(QLatin1Char(' '))));
+            m_lineEdit->setValidator(new ReplacementValidator(m_lineEdit, NewLineChar, QString(u' ')));
              m_lineEdit->setCompleter(nullptr);
             break;
         case ValidationObjectName:
@@ -354,7 +354,7 @@ namespace qdesigner_internal {
         // protect backslashes
         rc.replace('\\'_L1, "\\\\"_L1);
         // escape newlines
-        rc.replace(NewLineChar, QString(EscapedNewLine));
+        rc.replace(u'\n', EscapedNewLine);
         return rc;
 
     }
@@ -368,14 +368,14 @@ namespace qdesigner_internal {
             return s;
 
         QString rc(s);
-        for (qsizetype pos = 0; (pos = rc.indexOf(QLatin1Char('\\'),pos)) >= 0 ; ) {
+        for (qsizetype pos = 0; (pos = rc.indexOf(u'\\', pos)) >= 0 ; ) {
             // found an escaped character. If not a newline or at end of string, leave as is, else insert '\n'
             const qsizetype nextpos = pos + 1;
             if (nextpos  >= rc.size())  // trailing '\\'
                  break;
             // Escaped NewLine
-            if (rc.at(nextpos) ==  QChar(QLatin1Char('n')))
-                 rc[nextpos] =  NewLineChar;
+            if (rc.at(nextpos) == u'n')
+                 rc[nextpos] = u'\n';
             // Remove escape, go past escaped
             rc.remove(pos,1);
             pos++;

@@ -5,6 +5,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 // ----------------------------------------------------------------------------
@@ -24,9 +26,9 @@ QLongLongValidator::~QLongLongValidator() = default;
 
 QValidator::State QLongLongValidator::validate(QString & input, int &) const
 {
-    if (input.contains(QLatin1Char(' ')))
+    if (input.contains(u' '))
         return Invalid;
-    if (input.isEmpty() || (b < 0 && input == QString(QLatin1Char('-'))))
+    if (input.isEmpty() || (b < 0 && input == "-"_L1))
         return Intermediate;
     bool ok;
     qlonglong entered = input.toLongLong(&ok);
@@ -78,7 +80,7 @@ QValidator::State QULongLongValidator::validate(QString & input, int &) const
 
     bool ok;
     qulonglong entered = input.toULongLong(&ok);
-    if (input.contains(QLatin1Char(' ')) || input.contains(QLatin1Char('-')) || !ok)
+    if (input.contains(u' ') || input.contains(u'-') || !ok)
         return Invalid;
 
     if (entered >= b && entered <= t)

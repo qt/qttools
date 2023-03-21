@@ -85,7 +85,7 @@ void QDesigner::showErrorMessage(const QString &message)
         const QMessageLogContext emptyContext;
         previousMessageHandler(QtWarningMsg, emptyContext, message); // just in case we crash
         m_initializationErrors += qMessage;
-        m_initializationErrors += QLatin1Char('\n');
+        m_initializationErrors += u'\n';
     }
 }
 

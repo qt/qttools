@@ -407,16 +407,13 @@ bool PropertyEditor::isItemVisible(QtBrowserItem *item) const
 
 void PropertyEditor::storePropertiesExpansionState(const QList<QtBrowserItem *> &items)
 {
-    const QChar bar = QLatin1Char('|');
     for (QtBrowserItem *propertyItem : items) {
         if (!propertyItem->children().isEmpty()) {
             QtProperty *property = propertyItem->property();
             const QString propertyName = property->propertyName();
             const QMap<QtProperty *, QString>::const_iterator itGroup = m_propertyToGroup.constFind(property);
             if (itGroup != m_propertyToGroup.constEnd()) {
-                QString key = itGroup.value();
-                key += bar;
-                key += propertyName;
+                const QString key = itGroup.value() + u'|' + propertyName;
                 m_expansionState[key] = isExpanded(propertyItem);
             }
         }
@@ -450,16 +447,13 @@ void PropertyEditor::collapseAll()
 
 void PropertyEditor::applyPropertiesExpansionState(const QList<QtBrowserItem *> &items)
 {
-    const QChar bar = QLatin1Char('|');
     for (QtBrowserItem *propertyItem : items) {
         const QMap<QString, bool>::const_iterator excend = m_expansionState.constEnd();
         QtProperty *property = propertyItem->property();
         const QString propertyName = property->propertyName();
         const QMap<QtProperty *, QString>::const_iterator itGroup = m_propertyToGroup.constFind(property);
         if (itGroup != m_propertyToGroup.constEnd()) {
-            QString key = itGroup.value();
-            key += bar;
-            key += propertyName;
+            const QString key = itGroup.value() + u'|' + propertyName;
             const QMap<QString, bool>::const_iterator pit = m_expansionState.constFind(key);
             if (pit != excend)
                 setExpanded(propertyItem, pit.value());

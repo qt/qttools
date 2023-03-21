@@ -745,20 +745,19 @@ QString WidgetDataBase::scaleFormTemplate(const QString &xml, const QSize &size,
 // ---- free functions
 QDESIGNER_SHARED_EXPORT IncludeSpecification  includeSpecification(QString includeFile)
 {
-    const bool global = !includeFile.isEmpty() &&
-                        includeFile[0] == QLatin1Char('<') &&
-                        includeFile[includeFile.size() - 1] ==  QLatin1Char('>');
+    const bool global = includeFile.startsWith(u'<') && includeFile.endsWith(u'>');
     if (global) {
-        includeFile.remove(includeFile.size() - 1, 1);
+        includeFile.chop(1);
         includeFile.remove(0, 1);
     }
     return IncludeSpecification(includeFile, global ? IncludeGlobal : IncludeLocal);
 }
 
-QDESIGNER_SHARED_EXPORT QString buildIncludeFile(QString includeFile, IncludeType includeType) {
+QDESIGNER_SHARED_EXPORT QString buildIncludeFile(QString includeFile, IncludeType includeType)
+{
     if (includeType == IncludeGlobal && !includeFile.isEmpty()) {
-        includeFile.append(QLatin1Char('>'));
-        includeFile.insert(0, QLatin1Char('<'));
+        includeFile.append(u'>');
+        includeFile.prepend(u'<');
     }
     return includeFile;
 }

@@ -226,10 +226,8 @@ QVariant WidgetBoxCategoryModel::data(const QModelIndex &index, int role) const
             return QVariant(item.toolTip);
         // Icon mode tooltip should contain the  class name
         QString tt =  item.widget.name();
-        if (!item.toolTip.isEmpty()) {
-            tt += QLatin1Char('\n');
-            tt += item.toolTip;
-        }
+        if (!item.toolTip.isEmpty())
+            tt += u'\n' + item.toolTip;
         return QVariant(tt);
 
     }

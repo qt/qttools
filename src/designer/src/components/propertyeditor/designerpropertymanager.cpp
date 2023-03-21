@@ -438,7 +438,7 @@ void TextEditor::resourceActionActivated()
         oldPath.remove(0, 4);
     // returns ':/file'
     QString newPath = IconSelector::choosePixmapResource(m_core, m_core->resourceModel(), oldPath, this);
-    if (newPath.startsWith(QLatin1Char(':')))
+    if (newPath.startsWith(u':'))
          newPath.remove(0, 1);
     if (newPath.isEmpty() || newPath == oldPath)
         return;
@@ -743,7 +743,7 @@ void PixmapEditor::pasteActionActivated()
     QString subtype = u"plain"_s;
     QString text = clipboard->text(subtype);
     if (!text.isNull()) {
-        QStringList list = text.split(QLatin1Char('\n'));
+        QStringList list = text.split(u'\n');
         if (!list.isEmpty()) {
             text = list.at(0);
             if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(text)) {
@@ -1513,14 +1513,13 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
     if (m_flagValues.contains(const_cast<QtProperty *>(property))) {
         const FlagData data = m_flagValues.value(const_cast<QtProperty *>(property));
         const uint v = data.val;
-        const QChar bar = QLatin1Char('|');
         QString valueStr;
         for (const DesignerIntPair &p : data.flags) {
             const uint val = p.second;
             const bool checked = (val == 0) ? (v == 0) : ((val & v) == val);
             if (checked) {
                 if (!valueStr.isEmpty())
-                    valueStr += bar;
+                    valueStr += u'|';
                 valueStr += p.first;
             }
         }

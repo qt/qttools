@@ -153,10 +153,8 @@ void  ActionModel::setItems(QDesignerFormEditorInterface *core, QAction *action,
     // Tooltip, mostly for icon view mode
     QString firstTooltip = action->objectName();
     const QString text = action->text();
-    if (!text.isEmpty()) {
-        firstTooltip += QLatin1Char('\n');
-        firstTooltip += text;
-    }
+    if (!text.isEmpty())
+        firstTooltip += u'\n' + text;
 
     Q_ASSERT(sl.size() == NumColumns);
 
@@ -201,7 +199,7 @@ void  ActionModel::setItems(QDesignerFormEditorInterface *core, QAction *action,
     QString toolTip = action->toolTip();
     item = sl[ToolTipColumn];
     item->setToolTip(toolTip);
-    item->setText(toolTip.replace(QLatin1Char('\n'), QLatin1Char(' ')));
+    item->setText(toolTip.replace(u'\n', u' '));
     // menuRole
     const auto menuRole = action->menuRole();
     item = sl[MenuRoleColumn];

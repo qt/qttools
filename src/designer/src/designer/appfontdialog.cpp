@@ -92,9 +92,7 @@ void AppFontManager::save(QDesignerSettingsInterface *s, const QString &prefix) 
 
 void AppFontManager::restore(const QDesignerSettingsInterface *s, const QString &prefix)
 {
-    QString key = prefix;
-    key += QLatin1Char('/');
-    key += QLatin1String(fontFileKeyC);
+    const QString key = prefix + u'/' + QLatin1StringView(fontFileKeyC);
     const QStringList fontFiles = s->value(key, QStringList()).toStringList();
 
     if (debugAppFontWidget)

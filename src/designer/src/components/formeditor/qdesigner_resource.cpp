@@ -518,10 +518,10 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
             if (includeHint.isEmpty())
                 continue;
             DomInclude *incl = new DomInclude;
-            const QString location = includeHint.at(0) == QLatin1Char('<') ? global : local;
-            includeHint.remove(QLatin1Char('"'));
-            includeHint.remove(QLatin1Char('<'));
-            includeHint.remove(QLatin1Char('>'));
+            const QString location = includeHint.at(0) == u'<' ? global : local;
+            includeHint.remove(u'"');
+            includeHint.remove(u'<');
+            includeHint.remove(u'>');
             incl->setAttributeLocation(location);
             incl->setText(includeHint);
             ui_includes.append(incl);
@@ -671,9 +671,11 @@ QWidget *QDesignerResource::create(DomUI *ui, QWidget *parentWidget)
                     continue;
 
                 if (incl->hasAttributeLocation() && incl->attributeLocation() == global ) {
-                    text = text.prepend(QLatin1Char('<')).append(QLatin1Char('>'));
+                    text.prepend(u'<');
+                    text.append(u'>');
                 } else {
-                    text = text.prepend(QLatin1Char('"')).append(QLatin1Char('"'));
+                    text.prepend(u'"');
+                    text.append(u'"');
                 }
 
                 includeHints.append(text);
@@ -2112,7 +2114,8 @@ DomResources *QDesignerResource::saveResources(const QStringList &qrcPaths)
                 QString conv_path = path;
                 if (m_resourceBuilder->isSaveRelative())
                     conv_path = m_formWindow->absoluteDir().relativeFilePath(path);
-                dom_res->setAttributeLocation(conv_path.replace(QDir::separator(), QLatin1Char('/')));
+                conv_path.replace(QDir::separator(), u'/');
+                dom_res->setAttributeLocation(conv_path);
                 dom_include.append(dom_res);
             }
         }

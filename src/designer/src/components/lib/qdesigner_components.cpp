@@ -123,7 +123,6 @@ static inline void setMinorVersion(int minorVersion, int *qtVersion)
 static inline QString widgetBoxFileName(int qtVersion, const QDesignerLanguageExtension *lang = nullptr)
 {
     QString rc; {
-        const QChar dot = QLatin1Char('.');
         QTextStream str(&rc);
         str << QDir::homePath() << QDir::separator() << ".designer" << QDir::separator()
             << "widgetbox";
@@ -131,9 +130,9 @@ static inline QString widgetBoxFileName(int qtVersion, const QDesignerLanguageEx
         const int major = qtMajorVersion(qtVersion);
         const int minor = qtMinorVersion(qtVersion);
         if (major >= 4 &&  minor >= 4)
-            str << major << dot << minor;
+            str << major << '.' << minor;
         if (lang)
-            str << dot << lang->uiExtension();
+            str << '.' << lang->uiExtension();
         str << ".xml";
     }
     return rc;

@@ -59,7 +59,7 @@ bool AssistantClient::sendCommand(const QString &cmd, QString *errorMessage)
         return false;
     }
     QTextStream str(m_process);
-    str << cmd << QLatin1Char('\n') << Qt::endl;
+    str << cmd << "\n\n";
     return true;
 }
 

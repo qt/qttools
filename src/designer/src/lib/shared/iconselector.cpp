@@ -321,7 +321,7 @@ static QString imageFilter()
     const qsizetype count = supportedImageFormats.size();
     for (qsizetype i = 0; i < count; ++i) {
         if (i)
-            filter += QLatin1Char(' ');
+            filter += u' ';
         filter += "*."_L1;
         const QString outputFormat = QString::fromUtf8(supportedImageFormats.at(i));
         if (outputFormat != "JPEG"_L1)
@@ -329,7 +329,7 @@ static QString imageFilter()
         else
             filter += "jpg *.jpeg"_L1;
     }
-    filter += QLatin1Char(')');
+    filter += u')';
     return filter;
 }
 

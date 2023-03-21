@@ -48,7 +48,7 @@ StyleSheetEditor::StyleSheetEditor(QWidget *parent)
 {
     enum : int { DarkThreshold = 200 }; // Observed 239 on KDE/Dark
 
-    setTabStopDistance(fontMetrics().horizontalAdvance(QLatin1Char(' ')) * 4);
+    setTabStopDistance(fontMetrics().horizontalAdvance(u' ') * 4);
     setAcceptRichText(false);
 
     const QColor textColor = palette().color(QPalette::WindowText);
@@ -247,10 +247,8 @@ void StyleSheetEditorDialog::slotAddFont()
     QFont font = QFontDialog::getFont(&ok, this);
     if (ok) {
         QString fontStr;
-        if (font.weight() != QFont::Normal) {
-            fontStr += QString::number(font.weight());
-            fontStr += QLatin1Char(' ');
-        }
+        if (font.weight() != QFont::Normal)
+            fontStr += QString::number(font.weight()) + u' ';
 
         switch (font.style()) {
         case QFont::StyleItalic:
@@ -265,7 +263,7 @@ void StyleSheetEditorDialog::slotAddFont()
         fontStr += QString::number(font.pointSize());
         fontStr += "pt \""_L1;
         fontStr += font.family();
-        fontStr += QLatin1Char('"');
+        fontStr += u'"';
 
         insertCssProperty(u"font"_s, fontStr);
         QString decoration;
@@ -273,7 +271,7 @@ void StyleSheetEditorDialog::slotAddFont()
             decoration += "underline"_L1;
         if (font.strikeOut()) {
             if (!decoration.isEmpty())
-                decoration += QLatin1Char(' ');
+                decoration += u' ';
             decoration += "line-through"_L1;
         }
         insertCssProperty(u"text-decoration"_s, decoration);
@@ -297,13 +295,13 @@ void StyleSheetEditorDialog::insertCssProperty(const QString &name, const QStrin
                                                           closing.position() < opening.position());
             QString insertion;
             if (m_editor->textCursor().block().length() != 1)
-                insertion += QLatin1Char('\n');
+                insertion += u'\n';
             if (inSelector)
-                insertion += QLatin1Char('\t');
+                insertion += u'\t';
             insertion += name;
             insertion += ": "_L1;
             insertion += value;
-            insertion += QLatin1Char(';');
+            insertion += u';';
             cursor.insertText(insertion);
             cursor.endEditBlock();
         } else {

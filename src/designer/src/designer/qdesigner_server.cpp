@@ -15,6 +15,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 // ### review
 
 QDesignerServer::QDesignerServer(QObject *parent)
@@ -56,8 +58,8 @@ void QDesignerServer::readFromClient()
     while (m_socket->canReadLine()) {
         QString file = QString::fromUtf8(m_socket->readLine());
         if (!file.isNull()) {
-            file.remove(QLatin1Char('\n'));
-            file.remove(QLatin1Char('\r'));
+            file.remove(u'\n');
+            file.remove(u'\r');
             qDesigner->postEvent(qDesigner, new QFileOpenEvent(file));
         }
     }
@@ -102,8 +104,8 @@ void QDesignerClient::readFromSocket()
     while (m_socket->canReadLine()) {
         QString file = QString::fromUtf8(m_socket->readLine());
         if (!file.isNull()) {
-            file.remove(QLatin1Char('\n'));
-            file.remove(QLatin1Char('\r'));
+            file.remove(u'\n');
+            file.remove(u'\r');
             if (QFile::exists(file))
                 qDesigner->postEvent(qDesigner, new QFileOpenEvent(file));
         }
