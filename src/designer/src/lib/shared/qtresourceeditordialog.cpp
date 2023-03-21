@@ -1302,8 +1302,6 @@ void QtResourceEditorDialogPrivate::slotTreeViewItemChanged(QStandardItem *item)
 QString QtResourceEditorDialogPrivate::getSaveFileNameWithExtension(QWidget *parent,
             const QString &title, QString dir, const QString &filter, const QString &extension) const
 {
-    const QChar dot = QLatin1Char('.');
-
     QString saveFile;
     while (true) {
         saveFile = m_dlgGui->getSaveFileName(parent, title, dir, filter, nullptr, QFileDialog::DontConfirmOverwrite);
@@ -1311,10 +1309,8 @@ QString QtResourceEditorDialogPrivate::getSaveFileNameWithExtension(QWidget *par
             return saveFile;
 
         const QFileInfo fInfo(saveFile);
-        if (fInfo.suffix().isEmpty() && !fInfo.fileName().endsWith(dot)) {
-            saveFile += dot;
-            saveFile += extension;
-        }
+        if (fInfo.suffix().isEmpty() && !fInfo.fileName().endsWith(u'.'))
+            saveFile += u'.' + extension;
 
         const QFileInfo fi(saveFile);
         if (!fi.exists())
@@ -1657,7 +1653,7 @@ void QtResourceEditorDialogPrivate::slotClonePrefix()
             QDir dir(fi.dir());
             QString oldSuffix = fi.completeSuffix();
             if (!oldSuffix.isEmpty())
-                oldSuffix = QLatin1Char('.') + oldSuffix;
+                oldSuffix = u'.' + oldSuffix;
             const QString newBaseName = fi.baseName() + suffix + oldSuffix;
             const QString newPath = QDir::cleanPath(dir.filePath(newBaseName));
             m_qrcManager->insertResourceFile(newResourcePrefix, newPath,
@@ -2056,13 +2052,13 @@ QString QtResourceEditorDialog::selectedResource() const
     if (!currentResourcePrefix)
         return QString();
 
-    const QChar slash(QLatin1Char('/'));
+    const QChar slash(u'/');
     QString resource = currentResourcePrefix->prefix();
     if (!resource.startsWith(slash))
         resource.prepend(slash);
     if (!resource.endsWith(slash))
         resource.append(slash);
-    resource.prepend(QLatin1Char(':'));
+    resource.prepend(u':');
 
     QtResourceFile *currentResourceFile = d_ptr->getCurrentResourceFile();
     if (!currentResourceFile)

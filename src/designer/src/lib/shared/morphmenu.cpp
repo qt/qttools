@@ -188,9 +188,9 @@ static QString suggestObjectName(const QString &oldClassName, const QString &new
 {
     QString oldClassPart = oldClassName;
     QString newClassPart = newClassName;
-    if (oldClassPart.startsWith(QLatin1Char('Q')))
+    if (oldClassPart.startsWith(u'Q'))
         oldClassPart.remove(0, 1);
-    if (newClassPart.startsWith(QLatin1Char('Q')))
+    if (newClassPart.startsWith(u'Q'))
         newClassPart.remove(0, 1);
 
     QString newName = oldName;

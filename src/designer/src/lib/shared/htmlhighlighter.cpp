@@ -48,15 +48,8 @@ void HtmlHighlighter::setFormatFor(Construct construct,
 
 void HtmlHighlighter::highlightBlock(const QString &text)
 {
-    static const QLatin1Char tab = QLatin1Char('\t');
-    static const QLatin1Char space = QLatin1Char(' ');
-    static const QLatin1Char amp = QLatin1Char('&');
-    static const QLatin1Char startTag = QLatin1Char('<');
-    static const QLatin1Char endTag = QLatin1Char('>');
-    static const QLatin1Char quot = QLatin1Char('"');
-    static const QLatin1Char apos = QLatin1Char('\'');
-    static const QLatin1Char semicolon = QLatin1Char(';');
-    static const QLatin1Char equals = QLatin1Char('=');
+    static const QChar tab = u'\t';
+    static const QChar space = u' ';
 
     int state = previousBlockState();
     qsizetype len = text.size();
@@ -69,14 +62,14 @@ void HtmlHighlighter::highlightBlock(const QString &text)
         default:
             while (pos < len) {
                 QChar ch = text.at(pos);
-                if (ch == startTag) {
+                if (ch == u'<') {
                     if (QStringView{text}.sliced(pos).startsWith("<!--"_L1)) {
                         state = InComment;
                     } else {
                         state = InTag;
                         start = pos;
                         while (pos < len && text.at(pos) != space
-                               && text.at(pos) != endTag
+                               && text.at(pos) != u'>'
                                && text.at(pos) != tab
                                && !QStringView{text}.sliced(pos).startsWith("/>"_L1)) {
                             ++pos;
@@ -89,9 +82,9 @@ void HtmlHighlighter::highlightBlock(const QString &text)
                     }
                     break;
                 }
-                if (ch == amp) {
+                if (ch == u'&') {
                     start = pos;
-                    while (pos < len && text.at(pos++) != semicolon)
+                    while (pos < len && text.at(pos++) != u';')
                         ;
                     setFormat(start, pos - start,
                               m_formats[Entity]);
@@ -118,9 +111,9 @@ void HtmlHighlighter::highlightBlock(const QString &text)
                 QChar ch = text.at(pos);
                 if (quote.isNull()) {
                     start = pos;
-                    if (ch == apos || ch == quot) {
+                    if (ch == '\''_L1 || ch == u'"') {
                         quote = ch;
-                    } else if (ch == endTag) {
+                    } else if (ch == u'>') {
                         ++pos;
                         setFormat(start, pos - start, m_formats[Tag]);
                         state = NormalState;
@@ -136,7 +129,7 @@ void HtmlHighlighter::highlightBlock(const QString &text)
                         ++pos;
                         while (pos < len && text.at(pos) != space
                                && text.at(pos) != tab
-                               && text.at(pos) != equals)
+                               && text.at(pos) != u'=')
                             ++pos;
                         setFormat(start, pos - start, m_formats[Attribute]);
                         start = pos;

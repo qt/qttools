@@ -14,6 +14,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 #ifdef QFORMINTERNAL_NAMESPACE
 namespace QFormInternal {
 #endif
@@ -440,11 +442,7 @@ void QFormBuilder::updateCustomWidgets()
             if (!QLibrary::isLibrary(plugin))
                 continue;
 
-            QString loaderPath = path;
-            loaderPath += QLatin1Char('/');
-            loaderPath += plugin;
-
-            QPluginLoader loader(loaderPath);
+            QPluginLoader loader(path + u'/' + plugin);
             if (loader.load())
                 insertPlugins(loader.instance(), &d->m_customWidgets);
         }

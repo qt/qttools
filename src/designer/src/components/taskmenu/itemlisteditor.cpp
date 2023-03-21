@@ -401,9 +401,11 @@ void ItemListEditor::setItemData(int role, const QVariant &v)
 {
     QListWidgetItem *item = ui.listWidget->currentItem();
     bool reLayout = false;
-    if ((role == Qt::EditRole && (v.toString().count(QLatin1Char('\n')) != item->data(role).toString().count(QLatin1Char('\n'))))
-        || role == Qt::FontRole)
+    if ((role == Qt::EditRole
+         && (v.toString().count(u'\n') != item->data(role).toString().count(u'\n')))
+        || role == Qt::FontRole) {
             reLayout = true;
+    }
     QVariant newValue = v;
     if (role == Qt::FontRole && newValue.metaType().id() == QMetaType::QFont) {
         QFont oldFont = ui.listWidget->font();

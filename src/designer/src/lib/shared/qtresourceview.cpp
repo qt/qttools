@@ -745,8 +745,8 @@ bool QtResourceView::decodeMimeData(const QMimeData *md, ResourceType *t, QStrin
 bool QtResourceView::decodeMimeData(const QString &text, ResourceType *t, QString *file)
 {
 
-    const QString docElementName = QLatin1String(elementResourceData);
-    static const QString docElementString = QLatin1Char('<') + docElementName;
+    static auto docElementName = QLatin1StringView(elementResourceData);
+    static const QString docElementString = u'<' + docElementName;
 
     if (text.isEmpty() || text.indexOf(docElementString) == -1)
         return false;

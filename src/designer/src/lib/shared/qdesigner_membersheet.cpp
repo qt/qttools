@@ -164,24 +164,24 @@ bool QDesignerMemberSheet::signalMatchesSlot(const QString &signal, const QStrin
     bool result = true;
 
     do {
-        int signal_idx = signal.indexOf(QLatin1Char('('));
-        int slot_idx = slot.indexOf(QLatin1Char('('));
+        qsizetype signal_idx = signal.indexOf(u'(');
+        qsizetype slot_idx = slot.indexOf(u'(');
         if (signal_idx == -1 || slot_idx == -1)
             break;
 
         ++signal_idx; ++slot_idx;
 
-        if (slot.at(slot_idx) == QLatin1Char(')'))
+        if (slot.at(slot_idx) == u')')
             break;
 
         while (signal_idx < signal.size() && slot_idx < slot.size()) {
             const QChar signal_c = signal.at(signal_idx);
             const QChar slot_c = slot.at(slot_idx);
 
-            if (signal_c == QLatin1Char(',') && slot_c == QLatin1Char(')'))
+            if (signal_c == u',' && slot_c == u')')
                 break;
 
-            if (signal_c == QLatin1Char(')') && slot_c == QLatin1Char(')'))
+            if (signal_c == u')' && slot_c == u')')
                 break;
 
             if (signal_c != slot_c) {

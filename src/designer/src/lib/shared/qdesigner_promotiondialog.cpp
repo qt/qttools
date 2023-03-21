@@ -131,12 +131,11 @@ namespace qdesigner_internal {
     void NewPromotedClassPanel::slotNameChanged(const QString &className) {
         // Suggest a name
         if (!className.isEmpty()) {
-            const QChar dot(QLatin1Char('.'));
             QString suggestedHeader = m_promotedHeaderLowerCase ?
                                       className.toLower() : className;
             suggestedHeader.replace("::"_L1, "_"_L1);
-            if (!m_promotedHeaderSuffix.startsWith(dot))
-                suggestedHeader += dot;
+            if (!m_promotedHeaderSuffix.startsWith(u'.'))
+                suggestedHeader += u'.';
             suggestedHeader += m_promotedHeaderSuffix;
 
             const bool blocked = m_includeFileEdit->blockSignals(true);

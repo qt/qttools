@@ -67,7 +67,7 @@ namespace {
         if (pos == -1)
             return QString();
         xml.remove(0, pos + tag.size());
-        const int closingPos = xml.indexOf(QLatin1Char('"'));
+        const auto closingPos = xml.indexOf(u'"');
         if (closingPos == -1)
             return QString();
         xml.remove(closingPos, xml.size() - closingPos);

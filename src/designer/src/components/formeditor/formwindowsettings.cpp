@@ -189,7 +189,7 @@ FormWindowData FormWindowSettings::data() const
 
     const QString hints = m_ui->includeHintsTextEdit->toPlainText();
     if (!hints.isEmpty()) {
-        rc.includeHints = hints.split(QLatin1Char('\n'));
+        rc.includeHints = hints.split(u'\n');
         // Purge out any lines consisting of blanks only
         const QRegularExpression blankLine(u"^\\s*$"_s);
         Q_ASSERT(blankLine.isValid());
@@ -223,7 +223,7 @@ void FormWindowSettings::setData(const FormWindowData &data)
     if (data.includeHints.isEmpty()) {
         m_ui->includeHintsTextEdit->clear();
     } else {
-        m_ui->includeHintsTextEdit->setText(data.includeHints.join(QLatin1Char('\n')));
+        m_ui->includeHintsTextEdit->setText(data.includeHints.join(u'\n'));
     }
 
     m_ui->gridPanel->setChecked(data.hasFormGrid);

@@ -24,6 +24,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 /* SetControlCommand: An undo commands that sets a control bypassing
    Designer's property system which cannot handle the changing
    of the 'control' property's index and other cached information
@@ -138,10 +140,8 @@ void QAxWidgetTaskMenu::setActiveXControl()
 
     Q_ASSERT(formWin != nullptr);
     QString value = clsid.toString();
-    if (!key.isEmpty()) {
-        value += QLatin1Char(':');
-        value += key;
-    }
+    if (!key.isEmpty())
+        value += u':' + key;
     formWin->commandHistory()->push(new SetControlCommand(m_axwidget, formWin, value));
 }
 

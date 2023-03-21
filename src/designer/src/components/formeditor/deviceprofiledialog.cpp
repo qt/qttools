@@ -19,6 +19,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *profileExtensionC = "qdp";
 
 static inline QString fileFilter()
@@ -130,10 +132,8 @@ void DeviceProfileDialog::save()
     QString fn = m_dlgGui->getSaveFileName(this, tr("Save Profile"), QString(), fileFilter());
     if (fn.isEmpty())
         return;
-    if (QFileInfo(fn).completeSuffix().isEmpty()) {
-        fn += QLatin1Char('.');
-        fn += QLatin1String(profileExtensionC);
-    }
+    if (QFileInfo(fn).completeSuffix().isEmpty())
+        fn += u'.' + QLatin1StringView(profileExtensionC);
 
     QFile file(fn);
     if (!file.open(QIODevice::WriteOnly|QIODevice::Text)) {

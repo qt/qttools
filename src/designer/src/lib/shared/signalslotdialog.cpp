@@ -207,12 +207,11 @@ void SignaturePanel::slotAdd()
     m_listView->selectionModel()->clearSelection();
     // find unique name
     for (int i = 1; ; i++) {
-        QString newSlot = m_newPrefix;
-        newSlot += QString::number(i); // Always add number, Avoid setting 'slot' for first entry
-        newSlot += QLatin1Char('(');
+        // Always add number, Avoid setting 'slot' for first entry
+        QString newSlot = m_newPrefix + QString::number(i) + u'(';
         // check for function name independent of parameters
         if (m_model->findItems(newSlot, Qt::MatchStartsWith, 0).isEmpty()) {
-            newSlot += QLatin1Char(')');
+            newSlot += u')';
             QStandardItem * item = createEditableItem(newSlot);
             m_model->appendRow(item);
             const  QModelIndex index = m_model->indexFromItem (item);

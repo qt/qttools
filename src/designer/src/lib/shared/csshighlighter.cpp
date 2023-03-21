@@ -5,6 +5,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 CssHighlighter::CssHighlighter(const CssHighlightColors &colors,
@@ -41,8 +43,8 @@ void CssHighlighter::highlightBlock(const QString& text)
         // The initial state is based on the precense of a : and the absense of a {.
         // This is because Qt style sheets support both a full stylesheet as well as
         // an inline form with just properties.
-        state = save_state = (text.indexOf(QLatin1Char(':')) > -1 &&
-                              text.indexOf(QLatin1Char('{')) == -1) ? Property : Selector;
+        state = save_state = (text.indexOf(u':') > -1 &&
+                              text.indexOf(u'{') == -1) ? Property : Selector;
     } else {
         save_state = state>>16;
         state &= 0x00ff;

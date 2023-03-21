@@ -37,6 +37,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static inline int compare(const qdesigner_internal::PreviewConfiguration &pc1, const qdesigner_internal::PreviewConfiguration &pc2)
 {
     int rc = pc1.style().compare(pc2.style());
@@ -484,8 +486,7 @@ void PreviewConfiguration::toSettings(const QString &prefix, QDesignerSettingsIn
 void PreviewConfiguration::fromSettings(const QString &prefix, const QDesignerSettingsInterface *settings)
 {
     clear();
-    QString key = prefix;
-    key += QLatin1Char('/');
+    QString key = prefix + u'/';
     const auto prefixSize = key.size();
 
     PreviewConfigurationData &d = *m_d;

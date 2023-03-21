@@ -778,11 +778,8 @@ bool QDesignerActions::readInForm(const QString &fileName)
                 if (!fInfo.exists()) {
                     // Normalize file name
                     const QString directory = fInfo.absolutePath();
-                    if (QDir(directory).exists()) {
-                        newFormFileName = directory;
-                        newFormFileName  += QLatin1Char('/');
-                        newFormFileName  += fInfo.fileName();
-                    }
+                    if (QDir(directory).exists())
+                        newFormFileName = directory + u'/' + fInfo.fileName();
                 }
                 showNewFormDialog(newFormFileName);
                 return false;
@@ -1245,11 +1242,8 @@ void QDesignerActions::savePreviewImage()
     const QString filter = tr("Image files (*.%1)").arg(extension);
 
     QString suggestion = fw->fileName();
-    if (!suggestion.isEmpty()) {
-        suggestion = QFileInfo(suggestion).baseName();
-        suggestion += QLatin1Char('.');
-        suggestion += extension;
-    }
+    if (!suggestion.isEmpty())
+        suggestion = QFileInfo(suggestion).baseName() + u'.' + extension;
 
     QFileDialog dialog(fw, tr("Save Image"), suggestion, filter);
     dialog.setAcceptMode(QFileDialog::AcceptSave);

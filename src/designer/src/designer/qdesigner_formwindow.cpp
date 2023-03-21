@@ -174,8 +174,7 @@ void QDesignerFormWindow::updateWindowTitle(const QString &fileName)
     if (fileName.isEmpty()) {
         fileNameTitle += "untitled"_L1;
         if (const int maxUntitled = getNumberOfUntitledWindows()) {
-            fileNameTitle += QLatin1Char(' ');
-            fileNameTitle += QString::number(maxUntitled + 1);
+            fileNameTitle += u' ' + QString::number(maxUntitled + 1);
         }
     } else {
         fileNameTitle = QFileInfo(fileName).fileName();

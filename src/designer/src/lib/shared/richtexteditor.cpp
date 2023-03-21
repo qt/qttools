@@ -728,7 +728,7 @@ RichTextEditorDialog::RichTextEditorDialog(QDesignerFormEditorInterface *core, Q
 
     // Read settings
     const QDesignerSettingsInterface *settings = core->settingsManager();
-    const QString rootKey = QLatin1String(RichTextDialogGroupC) + QLatin1Char('/');
+    const QString rootKey = QLatin1StringView(RichTextDialogGroupC) + u'/';
     const QByteArray lastGeometry = settings->value(rootKey + QLatin1String(GeometryKeyC)).toByteArray();
     const int initialTab = settings->value(rootKey + QLatin1String(TabKeyC), QVariant(m_initialTab)).toInt();
     if (initialTab == RichTextIndex || initialTab == SourceIndex)

@@ -220,7 +220,7 @@ static inline QString postFixFromClassName(QString className)
     if (index != -1)
         className.remove(0, index + 2);
     if (className.size() > 2)
-        if (className.at(0) == QLatin1Char('Q') || className.at(0) == QLatin1Char('K'))
+        if (className.at(0) == u'Q' || className.at(0) == u'K')
             if (className.at(1).isUpper())
                 className.remove(0, 1);
     return className;

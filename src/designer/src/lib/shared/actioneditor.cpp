@@ -672,14 +672,13 @@ void ActionEditor::slotDelete()
 // UnderScore: "Open file" -> actionOpen_file
 static QString underscore(QString text)
 {
-    const QString underscore = QString(QLatin1Char('_'));
     static const QRegularExpression nonAsciiPattern(u"[^a-zA-Z_0-9]"_s);
     Q_ASSERT(nonAsciiPattern.isValid());
-    text.replace(nonAsciiPattern, underscore);
+    text.replace(nonAsciiPattern, "_"_L1);
     static const QRegularExpression multipleSpacePattern(u"__*"_s);
     Q_ASSERT(multipleSpacePattern.isValid());
-    text.replace(multipleSpacePattern, underscore);
-    if (text.endsWith(underscore.at(0)))
+    text.replace(multipleSpacePattern, "_"_L1);
+    if (text.endsWith(u'_'))
         text.chop(1);
     return text;
 }

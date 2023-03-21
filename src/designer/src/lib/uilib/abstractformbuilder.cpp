@@ -746,8 +746,7 @@ static inline Qt::Alignment alignmentFromDom(const QString &in)
 {
     Qt::Alignment rc;
     if (!in.isEmpty()) {
-        const auto flags = QStringView{in}.split(QLatin1Char('|'));
-        for (const auto &f : flags) {
+        for (const auto &f : qTokenize(in, u'|')) {
             if (f == "Qt::AlignLeft"_L1) {
                 rc |= Qt::AlignLeft;
             } else if (f == "Qt::AlignRight"_L1) {

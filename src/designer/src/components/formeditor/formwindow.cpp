@@ -1126,13 +1126,13 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     qlonglong num = 0;
     qlonglong factor = 1;
     qsizetype idx = s.size() - 1;
-    const ushort zeroUnicode = QLatin1Char('0').unicode();
+    const char16_t zeroUnicode = u'0';
     for ( ; idx > 0 && s.at(idx).isDigit(); --idx) {
         num += (s.at(idx).unicode() - zeroUnicode) * factor;
         factor *= 10;
     }
     // Position index past '_'.
-    const QChar underscore = QLatin1Char('_');
+    const QChar underscore = u'_';
     if (idx >= 0 && s.at(idx) == underscore) {
         idx++;
     }  else {
@@ -1699,7 +1699,7 @@ static inline DomUI *domUIFromClipboard(int *widgetCount, int *actionCount)
 {
     *widgetCount = *actionCount = 0;
     const QString clipboardText = qApp->clipboard()->text();
-    if (clipboardText.isEmpty() || clipboardText.indexOf(QLatin1Char('<')) == -1)
+    if (clipboardText.isEmpty() || clipboardText.indexOf(u'<') == -1)
         return nullptr;
 
     QXmlStreamReader reader(clipboardText);

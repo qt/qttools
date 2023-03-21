@@ -44,10 +44,8 @@ SaveFormAsTemplate::~SaveFormAsTemplate() = default;
 
 void SaveFormAsTemplate::accept()
 {
-    QString templateFileName = ui.categoryCombo->currentText();
-    templateFileName += QLatin1Char('/');
     const QString name = ui.templateNameEdit->text();
-    templateFileName +=  name;
+    QString templateFileName = ui.categoryCombo->currentText() + u'/' + name;
     const auto extension = ".ui"_L1;
     if (!templateFileName.endsWith(extension))
         templateFileName.append(extension);

@@ -197,11 +197,10 @@ namespace qdesigner_internal
         if (flagIds.isEmpty())
             return QString();
 
-        const QChar delimiter = QLatin1Char('|');
         QString rc;
         for (const auto &id : flagIds) {
             if (!rc.isEmpty())
-                rc += delimiter ;
+                rc += u'|';
             if (sm == FullyQualified)
                 appendQualifiedName(id, rc);
             else
@@ -220,7 +219,7 @@ namespace qdesigner_internal
         }
         uint flags = 0;
         bool valueOk = true;
-        const QStringList keys = s.split(QString(QLatin1Char('|')));
+        const QStringList keys = s.split(u'|');
         for (const QString &key : keys) {
             const uint flagValue = keyToValue(key, &valueOk);
             if (!valueOk) {
@@ -271,7 +270,7 @@ namespace qdesigner_internal
     {
         if (const QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core))
             return lang->isLanguageResource(path) ?  LanguageResourcePixmap : FilePixmap;
-        return path.startsWith(QLatin1Char(':')) ? ResourcePixmap : FilePixmap;
+        return path.startsWith(u':') ? ResourcePixmap : FilePixmap;
     }
 
     int PropertySheetPixmapValue::compare(const PropertySheetPixmapValue &other) const
@@ -751,7 +750,7 @@ namespace qdesigner_internal
 
         if (qname.size() > 1 && qname.at(1).isUpper()) {
             const QChar first = qname.at(0);
-            if (first == QLatin1Char('Q') || first == QLatin1Char('K'))
+            if (first == u'Q' || first == u'K')
                 qname.remove(0, 1);
         }
 

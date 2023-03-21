@@ -314,7 +314,7 @@ inline QString perCellPropertyToString(const Layout *l, int count, int (Layout::
         QTextStream str(&rc);
         for (int i = 0; i < count; i++) {
             if (i)
-                str << QLatin1Char(',');
+                str << ',';
             str << (l->*getter)(i);
         }
     }
@@ -339,7 +339,7 @@ inline bool parsePerCellProperty(Layout *l, int count, void (Layout::*setter)(in
         clearPerCellValue(l, count, setter, defaultValue);
         return true;
     }
-    const auto list = QStringView{s}.split(QLatin1Char(','));
+    const auto list = QStringView{s}.split(u',');
     if (list.isEmpty()) {
         clearPerCellValue(l, count, setter, defaultValue);
         return true;

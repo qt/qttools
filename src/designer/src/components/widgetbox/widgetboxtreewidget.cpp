@@ -50,6 +50,8 @@ enum TopLevelRole  { NORMAL_ITEM, SCRATCHPAD_ITEM, CUSTOM_ITEM };
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static void setTopLevelRole(TopLevelRole tlr, QTreeWidgetItem *item)
 {
     item->setData(0, Qt::UserRole, QVariant(tlr));
@@ -131,7 +133,7 @@ void  WidgetBoxTreeWidget::restoreExpandedState()
 {
     using StringSet = QSet<QString>;
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    const QString groupKey = QLatin1String(widgetBoxSettingsGroupC) + QLatin1Char('/');
+    const QString groupKey = QLatin1StringView(widgetBoxSettingsGroupC) + u'/';
     m_iconMode = settings->value(groupKey + QLatin1String(widgetBoxViewModeKeyC)).toBool();
     updateViewMode();
     const auto &closedCategoryList = settings->value(groupKey + QLatin1String(widgetBoxExpandedKeyC), QStringList()).toStringList();
@@ -497,9 +499,8 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
     }
     // Oddity: Startposition is 1 off
     QString widgetXml = xml.mid(startTagPosition, endTagPosition - startTagPosition);
-    const QChar lessThan = QLatin1Char('<');
-    if (!widgetXml.startsWith(lessThan))
-        widgetXml.prepend(lessThan);
+    if (!widgetXml.startsWith(u'<'))
+        widgetXml.prepend(u'<');
     w->setDomXml(widgetXml);
     return true;
 }
