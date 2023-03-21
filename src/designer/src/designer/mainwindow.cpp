@@ -246,7 +246,6 @@ void ToolBarManager::updateToolBarMenu()
 void ToolBarManager::configureToolBars()
 {
     QtToolBarDialog dlg(m_parent);
-    dlg.setWindowFlags(dlg.windowFlags() & ~Qt::WindowContextHelpButtonHint);
     dlg.setToolBarManager(m_manager);
     dlg.exec();
     updateToolBarMenu();

@@ -22,7 +22,6 @@ SaveFormAsTemplate::SaveFormAsTemplate(QDesignerFormEditorInterface *core,
       m_formWindow(formWindow)
 {
     ui.setupUi(this);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     ui.templateNameEdit->setText(formWindow->mainContainer()->objectName());
     ui.templateNameEdit->selectAll();

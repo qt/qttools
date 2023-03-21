@@ -48,8 +48,6 @@ ConnectDialog::ConnectDialog(QDesignerFormWindowInterface *formWindow,
 {
     m_ui.setupUi(this);
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
     connect(m_ui.signalList, &QListWidget::itemClicked,
             this, &ConnectDialog::selectSignal);
     connect(m_ui.slotList, &QListWidget::itemClicked,

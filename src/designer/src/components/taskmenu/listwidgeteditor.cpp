@@ -20,7 +20,6 @@ ListWidgetEditor::ListWidgetEditor(QDesignerFormWindowInterface *form,
                                    QWidget *parent)
     : QDialog(parent)
 {
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     QDialogButtonBox *buttonBox = new QDialogButtonBox;
     buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);

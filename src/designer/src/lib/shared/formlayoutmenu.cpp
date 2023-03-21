@@ -109,7 +109,6 @@ FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
 {
     Q_ASSERT(m_buddyMarkerRegexp.isValid());
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setModal(true);
     m_ui.setupUi(this);
     connect(m_ui.labelTextLineEdit, &QLineEdit::textEdited, this, &FormLayoutRowDialog::labelTextEdited);

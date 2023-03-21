@@ -151,8 +151,6 @@ FormWindowSettings::FormWindowSettings(QDesignerFormWindowInterface *parent) :
     m_ui->gridPanel->setCheckable(true);
     m_ui->gridPanel->setResetButtonVisible(false);
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
     QString deviceProfileName = m_formWindow->deviceProfileName();
     if (deviceProfileName.isEmpty())
         deviceProfileName = tr("None");

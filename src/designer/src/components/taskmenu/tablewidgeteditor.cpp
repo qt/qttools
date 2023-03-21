@@ -41,7 +41,6 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
     ui.tabWidget->insertTab(0, m_columnEditor, tr("&Columns"));
     ui.tabWidget->insertTab(1, m_rowEditor, tr("&Rows"));
     ui.tabWidget->setCurrentIndex(0);
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     ui.tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
 
@@ -409,7 +408,6 @@ void TableWidgetEditor::cacheReloaded()
 TableWidgetEditorDialog::TableWidgetEditorDialog(QDesignerFormWindowInterface *form, QWidget *parent) :
     QDialog(parent), m_editor(form, this)
 {
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 }
 
 TableWidgetContents TableWidgetEditorDialog::fillContentsFromTableWidget(QTableWidget *tableWidget)

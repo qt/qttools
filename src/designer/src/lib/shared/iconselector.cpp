@@ -98,7 +98,6 @@ void LanguageResourceDialogPrivate::init(LanguageResourceDialog *p)
                      p, [this] { slotAccepted(); });
     p->setModal(true);
     p->setWindowTitle(LanguageResourceDialog::tr("Choose Resource"));
-    p->setWindowFlags(p->windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setOkButtonEnabled(false);
 }
 

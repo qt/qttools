@@ -62,7 +62,6 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
         m_ui->menuRole->addItem(QLatin1StringView(key), value);
     }
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     focusText();
     updateButtons();
 

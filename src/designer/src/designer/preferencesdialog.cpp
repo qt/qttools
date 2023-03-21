@@ -18,7 +18,6 @@ PreferencesDialog::PreferencesDialog(QDesignerFormEditorInterface *core, QWidget
     m_ui(new Ui::PreferencesDialog()),
     m_core(core)
 {
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     m_ui->setupUi(this);
 
     m_optionsPages = core->optionsPages();

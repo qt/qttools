@@ -808,7 +808,6 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
     d_ptr(new QtResourceViewDialogPrivate(core))
 {
     setWindowTitle(tr("Select Resource"));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     d_ptr->q_ptr = this;
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(d_ptr->m_view);

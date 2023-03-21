@@ -186,8 +186,6 @@ AddLinkDialog::AddLinkDialog(RichTextEditor *editor, QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
     m_editor = editor;
 }
 
@@ -732,7 +730,6 @@ RichTextEditorDialog::RichTextEditorDialog(QDesignerFormEditorInterface *core, Q
     m_initialTab(RichTextIndex)
 {
     setWindowTitle(tr("Edit text"));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     // Read settings
     const QDesignerSettingsInterface *settings = core->settingsManager();

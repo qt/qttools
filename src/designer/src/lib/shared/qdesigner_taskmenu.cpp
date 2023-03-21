@@ -91,7 +91,6 @@ ObjectNameDialog::ObjectNameDialog(QWidget *parent, const QString &oldName)
                                                            qdesigner_internal::ValidationObjectName))
 {
     setWindowTitle(QCoreApplication::translate("ObjectNameDialog", "Change Object Name"));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QVBoxLayout *vboxLayout = new QVBoxLayout(this);
     vboxLayout->addWidget(new QLabel(QCoreApplication::translate("ObjectNameDialog", "Object Name")));

@@ -188,7 +188,6 @@ namespace qdesigner_internal {
         m_buttonBox = createButtonBox();
         setModal(true);
         setWindowTitle(tr("Promoted Widgets"));
-        setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
         QVBoxLayout *vboxLayout = new QVBoxLayout(this);
 

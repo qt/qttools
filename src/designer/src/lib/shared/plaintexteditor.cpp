@@ -25,7 +25,6 @@ PlainTextEditorDialog::PlainTextEditorDialog(QDesignerFormEditorInterface *core,
     m_core(core)
 {
     setWindowTitle(tr("Edit text"));
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
     QVBoxLayout *vlayout = new QVBoxLayout(this);
     vlayout->addWidget(m_editor);
