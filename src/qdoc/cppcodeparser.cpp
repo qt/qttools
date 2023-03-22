@@ -99,7 +99,7 @@ CppCodeParser::~CppCodeParser()
 Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                                          const ArgPair &arg)
 {
-    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+    QDocDatabase* database = QDocDatabase::qdocDB();
 
     if (command == COMMAND_FN) {
         Q_UNREACHABLE();
@@ -122,12 +122,12 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
             idx = words.size() - 1;
         path = words[idx].split("::");
 
-        node = m_qdb->findNodeInOpenNamespace(path, s_nodeTypeTestFuncMap[command]);
+        node = database->findNodeInOpenNamespace(path, s_nodeTypeTestFuncMap[command]);
         if (node == nullptr)
-            node = m_qdb->findNodeByNameAndType(path, s_nodeTypeTestFuncMap[command]);
+            node = database->findNodeByNameAndType(path, s_nodeTypeTestFuncMap[command]);
         // Allow representing a type alias as a class
         if (node == nullptr && command == COMMAND_CLASS) {
-            node = m_qdb->findNodeByNameAndType(path, &Node::isTypeAlias);
+            node = database->findNodeByNameAndType(path, &Node::isTypeAlias);
             if (node) {
                 auto access = node->access();
                 auto loc = node->location();
@@ -158,45 +158,45 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                 if (path.size() > 1) {
                     path.pop_back();
                     QString ns = path.join(QLatin1String("::"));
-                    m_qdb->insertOpenNamespace(ns);
+                    database->insertOpenNamespace(ns);
                 }
             }
         }
         return node;
     } else if (command == COMMAND_EXAMPLE) {
         if (Config::generateExamples) {
-            auto *en = new ExampleNode(m_qdb->primaryTreeRoot(), arg.first);
+            auto *en = new ExampleNode(database->primaryTreeRoot(), arg.first);
             en->setLocation(doc.startLocation());
             setExampleFileLists(en);
             return en;
         }
     } else if (command == COMMAND_EXTERNALPAGE) {
-        auto *epn = new ExternalPageNode(m_qdb->primaryTreeRoot(), arg.first);
+        auto *epn = new ExternalPageNode(database->primaryTreeRoot(), arg.first);
         epn->setLocation(doc.startLocation());
         return epn;
     } else if (command == COMMAND_HEADERFILE) {
-        auto *hn = new HeaderNode(m_qdb->primaryTreeRoot(), arg.first);
+        auto *hn = new HeaderNode(database->primaryTreeRoot(), arg.first);
         hn->setLocation(doc.startLocation());
         return hn;
     } else if (command == COMMAND_GROUP) {
-        CollectionNode *cn = m_qdb->addGroup(arg.first);
+        CollectionNode *cn = database->addGroup(arg.first);
         cn->setLocation(doc.startLocation());
         cn->markSeen();
         return cn;
     } else if (command == COMMAND_MODULE) {
-        CollectionNode *cn = m_qdb->addModule(arg.first);
+        CollectionNode *cn = database->addModule(arg.first);
         cn->setLocation(doc.startLocation());
         cn->markSeen();
         return cn;
     } else if (command == COMMAND_QMLMODULE) {
         QStringList blankSplit = arg.first.split(QLatin1Char(' '));
-        CollectionNode *cn = m_qdb->addQmlModule(blankSplit[0]);
+        CollectionNode *cn = database->addQmlModule(blankSplit[0]);
         cn->setLogicalModuleInfo(blankSplit);
         cn->setLocation(doc.startLocation());
         cn->markSeen();
         return cn;
     } else if (command == COMMAND_PAGE) {
-        auto *pn = new PageNode(m_qdb->primaryTreeRoot(), arg.first.split(' ').front());
+        auto *pn = new PageNode(database->primaryTreeRoot(), arg.first.split(' ').front());
         pn->setLocation(doc.startLocation());
         return pn;
     } else if (command == COMMAND_QMLTYPE ||
@@ -204,10 +204,10 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
                command == COMMAND_QMLBASICTYPE) {
         QmlTypeNode *qcn = nullptr;
         auto nodeType = (command == COMMAND_QMLTYPE) ? Node::QmlType : Node::QmlValueType;
-        Node *candidate = m_qdb->primaryTreeRoot()->findChildNode(arg.first, Node::QML);
+        Node *candidate = database->primaryTreeRoot()->findChildNode(arg.first, Node::QML);
         qcn = (candidate && candidate->nodeType() == nodeType) ?
                 static_cast<QmlTypeNode *>(candidate) :
-                new QmlTypeNode(m_qdb->primaryTreeRoot(), arg.first, nodeType);
+                new QmlTypeNode(database->primaryTreeRoot(), arg.first, nodeType);
         qcn->setLocation(doc.startLocation());
         return qcn;
     } else if ((command == COMMAND_QMLSIGNAL) || (command == COMMAND_QMLMETHOD)
@@ -287,15 +287,15 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
             group = property.left(i);
     }
 
-    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+    QDocDatabase* database = QDocDatabase::qdocDB();
 
     NodeList sharedNodes;
-    QmlTypeNode *qmlType = m_qdb->findQmlType(module, qmlTypeName);
+    QmlTypeNode *qmlType = database->findQmlType(module, qmlTypeName);
     // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
     // This may lead to unexpected behavior if documenting \qmlvaluetype's properties
     // before the type itself.
     if (qmlType == nullptr)
-        qmlType = new QmlTypeNode(m_qdb->primaryTreeRoot(), qmlTypeName, Node::QmlType);
+        qmlType = new QmlTypeNode(database->primaryTreeRoot(), qmlTypeName, Node::QmlType);
 
     for (const auto &topicCommand : topics) {
         QString cmd = topicCommand.m_topic;
@@ -303,7 +303,7 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
         if ((cmd == COMMAND_QMLPROPERTY) || (cmd == COMMAND_QMLATTACHEDPROPERTY)) {
             bool attached = cmd.contains(QLatin1String("attached"));
             if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
-                if (qmlType != m_qdb->findQmlType(module, qmlTypeName)) {
+                if (qmlType != database->findQmlType(module, qmlTypeName)) {
                     doc.startLocation().warning(
                             QStringLiteral(
                                     "All properties in a group must belong to the same type: '%1'")
@@ -360,7 +360,7 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
 void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
                                        const ArgPair &argPair, Node *node)
 {
-    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+    QDocDatabase* database = QDocDatabase::qdocDB();
 
     QString arg = argPair.first;
     if (command == COMMAND_INHEADERFILE) {
@@ -418,7 +418,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         }
     } else if (command == COMMAND_RELATES) {
         QStringList path = arg.split("::");
-        Aggregate *aggregate = m_qdb->findRelatesNode(path);
+        Aggregate *aggregate = database->findRelatesNode(path);
         if (aggregate == nullptr)
             aggregate = new ProxyNode(node->root(), arg);
 
@@ -469,7 +469,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         }
     } else if (command == COMMAND_QMLINSTANTIATES) {
         if (node->isQmlType()) {
-            ClassNode *classNode = m_qdb->findClassNode(arg.split("::"));
+            ClassNode *classNode = database->findClassNode(arg.split("::"));
             if (classNode)
                 node->setClassNode(classNode);
             else if (m_showLinkErrors) {
@@ -510,11 +510,11 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             node->setDeprecatedSince(argPair.second);
     } else if (command == COMMAND_INGROUP || command == COMMAND_INPUBLICGROUP) {
         // Note: \ingroup and \inpublicgroup are the same (and now recognized as such).
-        m_qdb->addToGroup(arg, node);
+        database->addToGroup(arg, node);
     } else if (command == COMMAND_INMODULE) {
-        m_qdb->addToModule(arg, node);
+        database->addToModule(arg, node);
     } else if (command == COMMAND_INQMLMODULE) {
-        m_qdb->addToQmlModule(arg, node);
+        database->addToQmlModule(arg, node);
     } else if (command == COMMAND_OBSOLETE) {
         node->setStatus(Node::Deprecated);
     } else if (command == COMMAND_NONREENTRANT) {
@@ -538,7 +538,7 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (!node->setTitle(arg))
             doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_TITLE));
         else if (node->isExample())
-            m_qdb->addExampleNode(static_cast<ExampleNode *>(node));
+            database->addExampleNode(static_cast<ExampleNode *>(node));
     } else if (command == COMMAND_SUBTITLE) {
         if (!node->setSubtitle(arg))
             doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_SUBTITLE));
@@ -649,9 +649,9 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     }
     funcName = colonSplit.last();
 
-    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+    QDocDatabase* database = QDocDatabase::qdocDB();
 
-    Aggregate *aggregate = m_qdb->findQmlType(moduleName, elementName);
+    Aggregate *aggregate = database->findQmlType(moduleName, elementName);
     if (aggregate == nullptr)
         return nullptr;
 
@@ -681,7 +681,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
  */
 FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QString &macroArg)
 {
-    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+    QDocDatabase* database = QDocDatabase::qdocDB();
 
     QStringList leftParenSplit = macroArg.split('(');
     if (leftParenSplit.isEmpty())
@@ -691,7 +691,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     QStringList blankSplit = leftParenSplit[0].split(' ');
     if (!blankSplit.empty()) {
         macroName = blankSplit.last();
-        oldMacroNode = m_qdb->findMacroNode(macroName);
+        oldMacroNode = database->findMacroNode(macroName);
     }
     QString returnType;
     if (blankSplit.size() > 1) {
@@ -715,7 +715,7 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     FunctionNode::Metaness metaness = FunctionNode::MacroWithParams;
     if (params.isEmpty())
         metaness = FunctionNode::MacroWithoutParams;
-    auto *macro = new FunctionNode(metaness, m_qdb->primaryTreeRoot(), macroName);
+    auto *macro = new FunctionNode(metaness, database->primaryTreeRoot(), macroName);
     macro->setAccess(Access::Public);
     macro->setLocation(location);
     macro->setReturnType(returnType);
@@ -809,7 +809,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
                                      DocList &docs)
 {
 
-    QDocDatabase* m_qdb = QDocDatabase::qdocDB();
+    QDocDatabase* database = QDocDatabase::qdocDB();
 
     if (isQMLPropertyTopic(topic)) {
         processQmlProperties(doc, nodes, docs);
@@ -825,7 +825,7 @@ void CppCodeParser::processTopicArgs(const Doc &doc, const QString &topic, NodeL
             } else if (isQMLMethodTopic(topic)) {
                 node = parseOtherFuncArg(topic, doc.location(), args[0].first);
             } else if (topic == COMMAND_DONTDOCUMENT) {
-                m_qdb->primaryTree()->addToDontDocumentMap(args[0].first);
+                database->primaryTree()->addToDontDocumentMap(args[0].first);
             } else {
                 node = processTopicCommand(doc, topic, args[0]);
             }
