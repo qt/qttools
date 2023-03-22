@@ -611,6 +611,34 @@ static void processQdocconfFile(const QString &fileName)
     qCDebug(lcQdoc, "qdoc classes terminated");
 }
 
+/*!
+    \internal
+
+    A single QDoc process for prepare and generate phases.
+    The purpose is to first generate all index files for all documentation
+    projects that combined make out the documentation set being generated.
+    This allows QDoc to link to all content contained in all projects, e.g.
+    user-defined types or overview documentation, regardless of the project
+    that content belongs to when generating the final output.
+*/
+static void singleExecutionMode()
+{
+    const QStringList qdocFiles = Config::loadMaster(Config::instance().qdocFiles().at(0));
+
+    Config::instance().setQDocPass(Config::Prepare);
+    for (const auto &file : std::as_const(qdocFiles)) {
+        Config::instance().dependModules().clear();
+        processQdocconfFile(file);
+    }
+
+    Config::instance().setQDocPass(Config::Generate);
+    QDocDatabase::qdocDB()->processForest();
+    for (const auto &file : std::as_const(qdocFiles)) {
+        Config::instance().dependModules().clear();
+        processQdocconfFile(file);
+    }
+}
+
 QT_END_NAMESPACE
 
 int main(int argc, char **argv)
@@ -655,22 +683,8 @@ int main(int argc, char **argv)
     if (qdocFiles.isEmpty())
         config.showHelp();
 
-    if (config.singleExec())
-        qdocFiles = Config::loadMaster(qdocFiles.at(0));
-
     if (config.singleExec()) {
-        // single qdoc process for prepare and generate phases
-        config.setQDocPass(Config::Prepare);
-        for (const auto &file : std::as_const(qdocFiles)) {
-            config.dependModules().clear();
-            processQdocconfFile(file);
-        }
-        config.setQDocPass(Config::Generate);
-        QDocDatabase::qdocDB()->processForest();
-        for (const auto &file : std::as_const(qdocFiles)) {
-            config.dependModules().clear();
-            processQdocconfFile(file);
-        }
+        singleExecutionMode();
     } else {
         // separate qdoc processes for prepare and generate phases
         for (const auto &file : std::as_const(qdocFiles)) {
