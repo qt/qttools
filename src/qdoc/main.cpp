@@ -44,6 +44,33 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
     return fi1.lastModified() < fi2.lastModified();
 }
 
+/*!
+    \internal
+    Iterate over a map of \a source file paths. Known source file types are
+    parsed to extract user-provided documentation and information about source
+    code level elements.
+
+    \note Unknown source file types are silently ignored.
+
+    The validity or availability of the file paths may or may not cause QDoc
+    to generate warnings; this depends on the implementation of
+    parseSourceFile() for the relevant parser.
+
+    \sa CodeParser::parserForSourceFile, CodeParser::sourceFileNameFilter
+*/
+static void parseSourceFiles(const QMap<QString, QString> &sources)
+{
+    CppCodeParser cpp_code_parser{};
+    for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
+        const auto &key = it.key();
+        auto *codeParser = CodeParser::parserForSourceFile(key);
+        if (!codeParser)
+            continue;
+        qCDebug(lcQdoc, "Parsing %s", qPrintable(key));
+        codeParser->parseSourceFile(Config::instance().location(), key, cpp_code_parser);
+    }
+}
+
 #ifndef QT_NO_TRANSLATION
 typedef std::pair<QString, QTranslator *> Translator;
 static QList<Translator> translators;
@@ -534,17 +561,7 @@ static void processQdocconfFile(const QString &fileName)
             qCInfo(lcQdoc) << "Parse source files for" << project;
 
 
-        {
-            CppCodeParser cpp_code_parser{};
-            for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
-                const auto &key = it.key();
-                auto *codeParser = CodeParser::parserForSourceFile(key);
-                if (codeParser) {
-                    qCDebug(lcQdoc, "Parsing %s", qPrintable(key));
-                    codeParser->parseSourceFile(config.location(), key, cpp_code_parser);
-                }
-            }
-        }
+        parseSourceFiles(sources);
 
         if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Source files parsed for" << project;
