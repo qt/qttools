@@ -639,6 +639,20 @@ static void singleExecutionMode()
     }
 }
 
+/*!
+    \internal
+
+    Process each .qdocconf-file passed as command line argument(s).
+*/
+static void dualExecutionMode()
+{
+    const QStringList qdocFiles = Config::instance().qdocFiles();
+    for (const auto &file : std::as_const(qdocFiles)) {
+        Config::instance().dependModules().clear();
+        processQdocconfFile(file);
+    }
+}
+
 QT_END_NAMESPACE
 
 int main(int argc, char **argv)
@@ -686,11 +700,7 @@ int main(int argc, char **argv)
     if (config.singleExec()) {
         singleExecutionMode();
     } else {
-        // separate qdoc processes for prepare and generate phases
-        for (const auto &file : std::as_const(qdocFiles)) {
-            config.dependModules().clear();
-            processQdocconfFile(file);
-        }
+        dualExecutionMode();
     }
 
     // Tidy everything away:
