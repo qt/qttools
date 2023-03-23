@@ -696,14 +696,11 @@ int main(int argc, char **argv)
     QmlCodeMarker qmlMarker;
 
     Config::instance().init(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());
-    Config &config = Config::instance();
 
-    // Get the list of files to act on:
-    QStringList qdocFiles = config.qdocFiles();
-    if (qdocFiles.isEmpty())
-        config.showHelp();
+    if (Config::instance().qdocFiles().isEmpty())
+        Config::instance().showHelp();
 
-    if (config.singleExec()) {
+    if (Config::instance().singleExec()) {
         singleExecutionMode();
     } else {
         dualExecutionMode();
