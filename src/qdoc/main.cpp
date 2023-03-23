@@ -15,7 +15,6 @@
 #include "qmlcodemarker.h"
 #include "qmlcodeparser.h"
 #include "utilities.h"
-#include "qtranslator.h"
 #include "tokenizer.h"
 #include "tree.h"
 #include "webxmlgenerator.h"
@@ -70,11 +69,6 @@ static void parseSourceFiles(const QMap<QString, QString> &sources)
         codeParser->parseSourceFile(Config::instance().location(), key, cpp_code_parser);
     }
 }
-
-#ifndef QT_NO_TRANSLATION
-typedef std::pair<QString, QTranslator *> Translator;
-static QList<Translator> translators;
-#endif
 
 /*!
   Read some XML indexes containing definitions from other
@@ -413,37 +407,6 @@ static void processQdocconfFile(const QString &fileName)
     Generator::initialize();
     Doc::initialize(file_resolver);
 
-#ifndef QT_NO_TRANSLATION
-    /*
-      Load the language translators, if the configuration specifies any,
-      but only if they haven't already been loaded. This works in both
-      -prepare/-generate mode and -singleexec mode.
-     */
-    const QStringList fileNames{config.get(CONFIG_TRANSLATORS).asStringList()};
-    for (const auto &file : fileNames) {
-        bool found = false;
-        if (!translators.isEmpty()) {
-            for (const auto &translator : translators) {
-                if (translator.first == file) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-        if (!found) {
-            auto *translator = new QTranslator(nullptr);
-            if (!translator->load(file)) {
-                config.get(CONFIG_TRANSLATORS).location()
-                        .error(QCoreApplication::translate("QDoc", "Cannot load translator '%1'")
-                                .arg(file));
-            } else {
-                QCoreApplication::instance()->installTranslator(translator);
-                translators.append(Translator(file, translator));
-            }
-        }
-    }
-#endif
-
     /*
       Initialize the qdoc database, where all the parsed source files
       will be stored. The database includes a tree of nodes, which gets
@@ -588,9 +551,9 @@ static void processQdocconfFile(const QString &fileName)
             generator->initializeFormat();
             generator->generateDocs();
         } else {
-            config.get(CONFIG_OUTPUTFORMATS).location()
-                    .fatal(QCoreApplication::translate("QDoc", "Unknown output format '%1'")
-                            .arg(format));
+            config.get(CONFIG_OUTPUTFORMATS)
+                    .location()
+                    .fatal(QStringLiteral("QDoc: Unknown output format '%1'").arg(format));
         }
     }
 
@@ -695,7 +658,7 @@ int main(int argc, char **argv)
     CppCodeMarker cppMarker;
     QmlCodeMarker qmlMarker;
 
-    Config::instance().init(QCoreApplication::translate("QDoc", "qdoc"), app.arguments());
+    Config::instance().init("QDoc", app.arguments());
 
     if (Config::instance().qdocFiles().isEmpty())
         Config::instance().showHelp();
@@ -707,13 +670,6 @@ int main(int argc, char **argv)
     }
 
     // Tidy everything away:
-#ifndef QT_NO_TRANSLATION
-    if (!translators.isEmpty()) {
-        for (const auto &translator : translators)
-            delete translator.second;
-    }
-    translators.clear();
-#endif
     QmlTypeNode::terminate();
     QDocDatabase::destroyQdocDB();
     return Location::exitCode();

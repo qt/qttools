@@ -37,92 +37,84 @@ QDocCommandLineParser::QDocCommandLineParser()
       timestampsOption(QStringList() << QStringLiteral("timestamps")),
       useDocBookExtensions(QStringList() << QStringLiteral("docbook-extensions"))
 {
-    setApplicationDescription(QCoreApplication::translate("qdoc", "Qt documentation generator"));
+    setApplicationDescription(QStringLiteral("Qt documentation generator"));
     addHelpOption();
     addVersionOption();
 
     setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
 
-    addPositionalArgument("file1.qdocconf ...", QCoreApplication::translate("qdoc", "Input files"));
+    addPositionalArgument("file1.qdocconf ...", QStringLiteral("Input files"));
 
-    defineOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Define the argument as a macro while parsing sources"));
+    defineOption.setDescription(
+            QStringLiteral("Define the argument as a macro while parsing sources"));
     defineOption.setValueName(QStringLiteral("macro[=def]"));
     addOption(defineOption);
 
-    dependsOption.setDescription(QCoreApplication::translate("qdoc", "Specify dependent modules"));
+    dependsOption.setDescription(QStringLiteral("Specify dependent modules"));
     dependsOption.setValueName(QStringLiteral("module"));
     addOption(dependsOption);
 
-    highlightingOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Turn on syntax highlighting (makes qdoc run slower)"));
+    highlightingOption.setDescription(
+            QStringLiteral("Turn on syntax highlighting (makes qdoc run slower)"));
     addOption(highlightingOption);
 
-    showInternalOption.setDescription(
-            QCoreApplication::translate("qdoc", "Include content marked internal"));
+    showInternalOption.setDescription(QStringLiteral("Include content marked internal"));
     addOption(showInternalOption);
 
     redirectDocumentationToDevNullOption.setDescription(
-            QCoreApplication::translate("qdoc",
-                                        "Save all documentation content to /dev/null. Useful if "
-                                        "someone is interested in qdoc errors only."));
+            QStringLiteral("Save all documentation content to /dev/null. "
+                           " Useful if someone is interested in qdoc errors only."));
     addOption(redirectDocumentationToDevNullOption);
 
-    noExamplesOption.setDescription(
-            QCoreApplication::translate("qdoc", "Do not generate documentation for examples"));
+    noExamplesOption.setDescription(QStringLiteral("Do not generate documentation for examples"));
     addOption(noExamplesOption);
 
-    indexDirOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Specify a directory where QDoc should search for index files to load"));
+    indexDirOption.setDescription(
+            QStringLiteral("Specify a directory where QDoc should search for index files to load"));
     indexDirOption.setValueName(QStringLiteral("dir"));
     addOption(indexDirOption);
 
-    installDirOption.setDescription(QCoreApplication::translate(
-            "qdoc",
+    installDirOption.setDescription(QStringLiteral(
             "Specify the directory where the output will be after running \"make install\""));
     installDirOption.setValueName(QStringLiteral("dir"));
     addOption(installDirOption);
 
-    outputDirOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Specify output directory, overrides setting in qdocconf file"));
+    outputDirOption.setDescription(
+            QStringLiteral("Specify output directory, overrides setting in qdocconf file"));
     outputDirOption.setValueName(QStringLiteral("dir"));
     addOption(outputDirOption);
 
-    outputFormatOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Specify output format, overrides setting in qdocconf file"));
+    outputFormatOption.setDescription(
+            QStringLiteral("Specify output format, overrides setting in qdocconf file"));
     outputFormatOption.setValueName(QStringLiteral("format"));
     addOption(outputFormatOption);
 
     noLinkErrorsOption.setDescription(
-            QCoreApplication::translate("qdoc", "Do not print link errors (i.e. missing targets)"));
+            QStringLiteral("Do not print link errors (i.e. missing targets)"));
     addOption(noLinkErrorsOption);
 
-    autoLinkErrorsOption.setDescription(
-            QCoreApplication::translate("qdoc", "Show errors when automatic linking fails"));
+    autoLinkErrorsOption.setDescription(QStringLiteral("Show errors when automatic linking fails"));
     addOption(autoLinkErrorsOption);
 
-    debugOption.setDescription(QCoreApplication::translate("qdoc", "Enable debug output"));
+    debugOption.setDescription(QStringLiteral("Enable debug output"));
     addOption(debugOption);
 
-    atomsDumpOption.setDescription(QCoreApplication::translate(
-            "qdoc",
+    atomsDumpOption.setDescription(QStringLiteral(
             "Shows a human-readable form of the intermediate result of parsing a block-comment."));
     addOption(atomsDumpOption);
 
-    prepareOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Run qdoc only to generate an index file, not the docs"));
+    prepareOption.setDescription(
+            QStringLiteral("Run qdoc only to generate an index file, not the docs"));
     addOption(prepareOption);
 
-    generateOption.setDescription(QCoreApplication::translate(
-            "qdoc", "Run qdoc to read the index files and generate the docs"));
+    generateOption.setDescription(
+            QStringLiteral("Run qdoc to read the index files and generate the docs"));
     addOption(generateOption);
 
-    logProgressOption.setDescription(
-            QCoreApplication::translate("qdoc", "Log progress on stderr."));
+    logProgressOption.setDescription(QStringLiteral("Log progress on stderr."));
     addOption(logProgressOption);
 
-    singleExecOption.setDescription(
-            QCoreApplication::translate("qdoc", "Run qdoc once over all the qdoc conf files."));
+    singleExecOption.setDescription(QStringLiteral("Run qdoc once over all the qdoc conf files."));
     addOption(singleExecOption);
 
     includePathOption.setFlags(QCommandLineOption::ShortOptionStyle);
@@ -133,12 +125,11 @@ QDocCommandLineParser::QDocCommandLineParser()
     frameworkOption.setFlags(QCommandLineOption::ShortOptionStyle);
     addOption(frameworkOption);
 
-    timestampsOption.setDescription(
-            QCoreApplication::translate("qdoc", "Timestamp each qdoc log line."));
+    timestampsOption.setDescription(QStringLiteral("Timestamp each qdoc log line."));
     addOption(timestampsOption);
 
-    useDocBookExtensions.setDescription(QCoreApplication::translate(
-            "qdoc", "Use the DocBook Library extensions for metadata."));
+    useDocBookExtensions.setDescription(
+            QStringLiteral("Use the DocBook Library extensions for metadata."));
     addOption(useDocBookExtensions);
 }
 
