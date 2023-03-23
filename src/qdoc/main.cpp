@@ -613,6 +613,21 @@ static void processQdocconfFile(const QString &fileName)
 
 /*!
     \internal
+    For each file in \a qdocFiles, first clear the configured module
+    dependencies and then pass the file to processQdocconfFile().
+
+    \sa processQdocconfFile(), singleExecutionMode(), dualExecutionMode()
+*/
+static void clearModuleDependenciesAndProcessQdocconfFile(const QStringList &qdocFiles)
+{
+    for (const auto &file : std::as_const(qdocFiles)) {
+        Config::instance().dependModules().clear();
+        processQdocconfFile(file);
+    }
+}
+
+/*!
+    \internal
 
     A single QDoc process for prepare and generate phases.
     The purpose is to first generate all index files for all documentation
@@ -626,17 +641,11 @@ static void singleExecutionMode()
     const QStringList qdocFiles = Config::loadMaster(Config::instance().qdocFiles().at(0));
 
     Config::instance().setQDocPass(Config::Prepare);
-    for (const auto &file : std::as_const(qdocFiles)) {
-        Config::instance().dependModules().clear();
-        processQdocconfFile(file);
-    }
+    clearModuleDependenciesAndProcessQdocconfFile(qdocFiles);
 
     Config::instance().setQDocPass(Config::Generate);
     QDocDatabase::qdocDB()->processForest();
-    for (const auto &file : std::as_const(qdocFiles)) {
-        Config::instance().dependModules().clear();
-        processQdocconfFile(file);
-    }
+    clearModuleDependenciesAndProcessQdocconfFile(qdocFiles);
 }
 
 /*!
@@ -647,10 +656,7 @@ static void singleExecutionMode()
 static void dualExecutionMode()
 {
     const QStringList qdocFiles = Config::instance().qdocFiles();
-    for (const auto &file : std::as_const(qdocFiles)) {
-        Config::instance().dependModules().clear();
-        processQdocconfFile(file);
-    }
+    clearModuleDependenciesAndProcessQdocconfFile(qdocFiles);
 }
 
 QT_END_NAMESPACE
