@@ -785,4 +785,14 @@
     \note Since content that is too long is not parsed in full, QDoc may
     issue warnings that are false positives. Resolve all warnings of this type
     before fixing other warnings.
+
+    \section1 No documentation generated for function <name> in global scope
+
+    QDoc was able to match the documentation for a function \e {<name>} to its
+    declaration, but no output was generated because the function is declared
+    in the global namespace.
+
+    Use the \l {relates-command}{\\relates} command to associate the function
+    with a documented type, namespace, or a header file. The function is then
+    listed as a \e {related non-member} on the associated reference page.
 */

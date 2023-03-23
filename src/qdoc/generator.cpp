@@ -1075,9 +1075,16 @@ void Generator::generateDocumentation(Node *node)
     if (node->isAggregate()) {
         auto *aggregate = static_cast<Aggregate *>(node);
         const NodeList &children = aggregate->childNodes();
-        for (auto *node : children) {
-            if (node->isPageNode() && !node->isPrivate())
-                generateDocumentation(node);
+        for (auto *child : children) {
+            if (child->isPageNode() && !child->isPrivate()) {
+                generateDocumentation(child);
+            } else if (!node->parent() && child->isInAPI() && !child->isRelatedNonmember()) {
+                // Warn if there are documented non-page-generating nodes in the root namespace
+                child->location().warning(u"No documentation generated for %1 '%2' in global scope."_s
+                    .arg(typeString(child), child->name()),
+                            u"Maybe you forgot to use the '\\relates' command?"_s);
+                child->setStatus(Node::DontDocument);
+            }
         }
     }
 }
