@@ -378,6 +378,10 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
 QString XmlGenerator::getLink(const Atom *atom, const Node *relative, const Node **node)
 {
     const QString &t = atom->string();
+
+    if (t.isEmpty())
+        return t;
+
     if (t.at(0) == QChar('h')) {
         if (t.startsWith("http:") || t.startsWith("https:"))
             return t;
