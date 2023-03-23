@@ -20,7 +20,6 @@ qt_internal_add_tool(${target_name}
     LIBRARIES
         Qt::Gui
         Qt::HelpPrivate
-        Qt::Network
 )
 qt_internal_return_unless_building_tools()
 

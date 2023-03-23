@@ -33,7 +33,6 @@ qt_internal_add_module(Help
         QHELP_LIB
     LIBRARIES
         Qt::CorePrivate
-        Qt::Network
     PUBLIC_LIBRARIES
         Qt::Core
         Qt::Gui
