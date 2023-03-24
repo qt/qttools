@@ -193,9 +193,9 @@ MainWindow::MainWindow(CmdLineParser *cmdLine, QWidget *parent)
         tabifyDockWidget(bookmarkDock, searchDock);
         contentDock->raise();
         const QRect screen = QGuiApplication::primaryScreen()->geometry();
-        resize(4*screen.width()/5, 4*screen.height()/5);
-
         adjustSize();   // make sure we won't start outside of the screen
+        resize(4 * screen.width() / 5, 4 * screen.height() / 5);
+
         move(screen.center() - rect().center());
     }
 
