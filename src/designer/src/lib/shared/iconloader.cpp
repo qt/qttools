@@ -49,7 +49,7 @@ static QIcon buildIcon(const QString &prefix, const int *sizes, size_t sizeCount
 
 QDESIGNER_SHARED_EXPORT QIcon qtLogoIcon()
 {
-    static const int sizes[] = {16, 24, 32, 64};
+    static const int sizes[] = {16, 24, 32, 64, 128};
     static const QIcon result =
         buildIcon(QStringLiteral(":/qt-project.org/formeditor/images/qtlogo"),
                   sizes, sizeof(sizes) / sizeof(sizes[0]));

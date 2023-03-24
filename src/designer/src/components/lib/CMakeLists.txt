@@ -217,6 +217,7 @@ set(formeditor_resource_files
     "../formeditor/images/mac/widgettool.png"
     "../formeditor/images/minus-16.png"
     "../formeditor/images/prefix-add.png"
+    "../formeditor/images/qtlogo128x128.png"
     "../formeditor/images/qtlogo16x16.png"
     "../formeditor/images/qtlogo24x24.png"
     "../formeditor/images/qtlogo32x32.png"
