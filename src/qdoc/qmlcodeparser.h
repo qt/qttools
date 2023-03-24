@@ -20,11 +20,11 @@ class QString;
 class QmlCodeParser : public CodeParser
 {
 public:
-    QmlCodeParser();
+    QmlCodeParser() = default;
     ~QmlCodeParser() override = default;
 
-    void initializeParser() override;
-    void terminateParser() override;
+    void initializeParser() override {}
+    void terminateParser() override {}
     QString language() override;
     QStringList sourceFileNameFilter() override;
     void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser&) override;
@@ -34,7 +34,6 @@ public:
 
 private:
     QQmlJS::Engine m_engine {};
-    QQmlJS::Parser *m_parser { nullptr };
 };
 
 QT_END_NAMESPACE

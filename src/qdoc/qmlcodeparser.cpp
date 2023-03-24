@@ -14,29 +14,6 @@
 QT_BEGIN_NAMESPACE
 
 /*!
-  Constructs the QML code parser.
- */
-QmlCodeParser::QmlCodeParser() : m_parser(nullptr) { }
-
-/*!
-  Initializes the code parser base class.
-  Also creates a parser from QQmlJS.
- */
-void QmlCodeParser::initializeParser()
-{
-    m_parser = new QQmlJS::Parser(&m_engine);
-}
-
-/*!
-  Terminates the QML code parser. Deletes the parser
-  created by the constructor.
- */
-void QmlCodeParser::terminateParser()
-{
-    delete m_parser;
-}
-
-/*!
   Returns "QML".
  */
 QString QmlCodeParser::language()
@@ -83,15 +60,17 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
     QQmlJS::Lexer lexer{&m_engine};
     lexer.setCode(newCode, 1);
 
-    if (m_parser->parse()) {
-        QQmlJS::AST::UiProgram *ast = m_parser->ast();
+    QQmlJS::Parser parser{&m_engine};
+
+    if (parser.parse()) {
+        QQmlJS::AST::UiProgram *ast = parser.ast();
         QmlDocVisitor visitor(filePath, newCode, &m_engine, topic_commands + CodeParser::common_meta_commands,
                               topic_commands);
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError())
             Location(filePath).warning("Could not analyze QML file, output is incomplete.");
     }
-    const auto &messages = m_parser->diagnosticMessages();
+    const auto &messages = parser.diagnosticMessages();
     for (const auto &msg : messages) {
         qCDebug(lcQdoc, "%s: %d: %d: QML syntax error: %s", qUtf8Printable(filePath),
                 msg.loc.startLine, msg.loc.startColumn, qUtf8Printable(msg.message));
