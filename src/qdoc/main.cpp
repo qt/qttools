@@ -479,15 +479,12 @@ static void processQdocconfFile(const QString &fileName)
         sourceList =
                 config.getAllFiles(CONFIG_SOURCES, CONFIG_SOURCEDIRS, excludedDirs, excludedFiles);
         QMap<QString, QString> sources;
-        QMultiMap<QString, QString> sourceFileNames;
         for (const auto &source : sourceList) {
             if (source.contains(QLatin1String("doc/snippets")))
                 continue;
             if (sources.contains(source))
                 continue;
             sources.insert(source, source);
-            QString t = source.mid(source.lastIndexOf('/') + 1);
-            sourceFileNames.insert(t, t);
         }
         /*
           Find all the qdoc files in the example dirs, and add
@@ -498,8 +495,6 @@ static void processQdocconfFile(const QString &fileName)
         for (const auto &example : exampleQdocList) {
             if (!sources.contains(example)) {
                 sources.insert(example, example);
-                QString t = example.mid(example.lastIndexOf('/') + 1);
-                sourceFileNames.insert(t, t);
             }
         }
         /*
