@@ -57,14 +57,16 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
 
     QString newCode = document;
     extractPragmas(newCode);
-    QQmlJS::Lexer lexer{&m_engine};
+
+    QQmlJS::Engine engine{};
+    QQmlJS::Lexer lexer{&engine};
     lexer.setCode(newCode, 1);
 
-    QQmlJS::Parser parser{&m_engine};
+    QQmlJS::Parser parser{&engine};
 
     if (parser.parse()) {
         QQmlJS::AST::UiProgram *ast = parser.ast();
-        QmlDocVisitor visitor(filePath, newCode, &m_engine, topic_commands + CodeParser::common_meta_commands,
+        QmlDocVisitor visitor(filePath, newCode, &engine, topic_commands + CodeParser::common_meta_commands,
                               topic_commands);
         QQmlJS::AST::Node::accept(ast, &visitor);
         if (visitor.hasError())

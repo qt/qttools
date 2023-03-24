@@ -31,9 +31,6 @@ public:
 
     /* Copied from src/declarative/qml/qdeclarativescriptparser.cpp */
     void extractPragmas(QString &script);
-
-private:
-    QQmlJS::Engine m_engine {};
 };
 
 QT_END_NAMESPACE
