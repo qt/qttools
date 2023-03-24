@@ -27,6 +27,8 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/qhashfunctions.h>
 
+#include <set>
+
 #ifndef QT_BOOTSTRAPPED
 #    include <QtCore/qcoreapplication.h>
 #endif
@@ -45,9 +47,9 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 
 /*!
     \internal
-    Iterate over a map of \a source file paths. Known source file types are
-    parsed to extract user-provided documentation and information about source
-    code level elements.
+    Inspects each file path in \a sources. File paths with a known
+    source file type are parsed to extract user-provided
+    documentation and information about source code level elements.
 
     \note Unknown source file types are silently ignored.
 
@@ -57,16 +59,15 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 
     \sa CodeParser::parserForSourceFile, CodeParser::sourceFileNameFilter
 */
-static void parseSourceFiles(const QMap<QString, QString> &sources)
+static void parseSourceFiles(const std::set<QString> &sources)
 {
     CppCodeParser cpp_code_parser{};
-    for (auto it = sources.cbegin(), end = sources.cend(); it != end; ++it) {
-        const auto &key = it.key();
-        auto *codeParser = CodeParser::parserForSourceFile(key);
-        if (!codeParser)
-            continue;
-        qCDebug(lcQdoc, "Parsing %s", qPrintable(key));
-        codeParser->parseSourceFile(Config::instance().location(), key, cpp_code_parser);
+    for (const QString& source_file_path : sources) {
+        auto *codeParser = CodeParser::parserForSourceFile(source_file_path);
+        if (!codeParser) continue;
+
+        qCDebug(lcQdoc, "Parsing %s", qPrintable(source_file_path));
+        codeParser->parseSourceFile(Config::instance().location(), source_file_path, cpp_code_parser);
     }
 }
 
@@ -478,13 +479,11 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc, "Reading sourcedirs");
         sourceList =
                 config.getAllFiles(CONFIG_SOURCES, CONFIG_SOURCEDIRS, excludedDirs, excludedFiles);
-        QMap<QString, QString> sources;
+        std::set<QString> sources{};
         for (const auto &source : sourceList) {
             if (source.contains(QLatin1String("doc/snippets")))
                 continue;
-            if (sources.contains(source))
-                continue;
-            sources.insert(source, source);
+            sources.emplace(source);
         }
         /*
           Find all the qdoc files in the example dirs, and add
@@ -493,9 +492,7 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc, "Reading exampledirs");
         QStringList exampleQdocList = config.getExampleQdocFiles(excludedDirs, excludedFiles);
         for (const auto &example : exampleQdocList) {
-            if (!sources.contains(example)) {
-                sources.insert(example, example);
-            }
+            sources.emplace(example);
         }
         /*
           Parse each header file in the set using the appropriate parser and add it
