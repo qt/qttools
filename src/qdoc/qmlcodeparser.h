@@ -34,7 +34,6 @@ public:
 
 private:
     QQmlJS::Engine m_engine {};
-    QQmlJS::Lexer *m_lexer { nullptr };
     QQmlJS::Parser *m_parser { nullptr };
 };
 

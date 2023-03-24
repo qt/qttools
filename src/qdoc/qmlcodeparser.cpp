@@ -16,25 +16,23 @@ QT_BEGIN_NAMESPACE
 /*!
   Constructs the QML code parser.
  */
-QmlCodeParser::QmlCodeParser() : m_lexer(nullptr), m_parser(nullptr) { }
+QmlCodeParser::QmlCodeParser() : m_parser(nullptr) { }
 
 /*!
   Initializes the code parser base class.
-  Also creates a lexer and parser from QQmlJS.
+  Also creates a parser from QQmlJS.
  */
 void QmlCodeParser::initializeParser()
 {
-    m_lexer = new QQmlJS::Lexer(&m_engine);
     m_parser = new QQmlJS::Parser(&m_engine);
 }
 
 /*!
-  Terminates the QML code parser. Deletes the lexer and parser
+  Terminates the QML code parser. Deletes the parser
   created by the constructor.
  */
 void QmlCodeParser::terminateParser()
 {
-    delete m_lexer;
     delete m_parser;
 }
 
@@ -82,7 +80,8 @@ void QmlCodeParser::parseSourceFile(const Location &location, const QString &fil
 
     QString newCode = document;
     extractPragmas(newCode);
-    m_lexer->setCode(newCode, 1);
+    QQmlJS::Lexer lexer{&m_engine};
+    lexer.setCode(newCode, 1);
 
     if (m_parser->parse()) {
         QQmlJS::AST::UiProgram *ast = m_parser->ast();
