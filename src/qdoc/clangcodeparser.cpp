@@ -1360,7 +1360,7 @@ void ClangCodeParser::buildPCH(QString module_header)
     if (m_pchFileDir->isValid()) {
         const QByteArray module = module_header.toUtf8();
         QByteArray header;
-        QByteArray privateHeaderDir;
+
         qCDebug(lcQdoc) << "Build and visit PCH for" << module_header;
         // A predicate for std::find_if() to locate a path to the module's header
         // (e.g. QtGui/QtGui) to be used as pre-compiled header
@@ -1407,12 +1407,6 @@ void ClangCodeParser::buildPCH(QString module_header)
                                 FindPredicate(candidate, module, FindPredicate::Any));
         if (it != m_includePaths.end())
             header = candidate;
-
-        // Find the path to module's private headers - currently unused
-        it = std::find_if(m_includePaths.begin(), m_includePaths.end(),
-                            FindPredicate(candidate, module, FindPredicate::Private));
-        if (it != m_includePaths.end())
-            privateHeaderDir = candidate;
 
         if (header.isEmpty()) {
             qWarning() << "(qdoc) Could not find the module header in include paths for module"
