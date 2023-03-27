@@ -24,7 +24,7 @@ static void missingPropertyWarning(const QString &filePath, const QString &prope
                                 QDir::toNativeSeparators(filePath), property)) << std::endl;
 }
 
-static bool validatePackage(Package &p, const QString &filePath, LogLevel logLevel)
+static bool validatePackage(Package &p, const QString &filePath, Checks checks, LogLevel logLevel)
 {
     bool validPackage = true;
 
@@ -81,6 +81,9 @@ static bool validatePackage(Package &p, const QString &filePath, LogLevel logLev
             validPackage = false;
         }
     }
+
+    if (!(checks & Check::Paths))
+        return validPackage;
 
     const QDir dir = p.path;
     if (!dir.exists()) {
@@ -197,7 +200,7 @@ static bool autoDetectLicenseFiles(Package &p)
 
 // Transforms a JSON object into a Package object
 static std::optional<Package> readPackage(const QJsonObject &object, const QString &filePath,
-                                          LogLevel logLevel)
+                                          Checks checks, LogLevel logLevel)
 {
     Package p;
     bool validPackage = true;
@@ -338,7 +341,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
     if (p.licenseFiles.isEmpty() && !autoDetectLicenseFiles(p))
         return std::nullopt;
 
-    if (!validatePackage(p, filePath, logLevel) || !validPackage)
+    if (!validatePackage(p, filePath, checks, logLevel) || !validPackage)
         return std::nullopt;
 
     return p;
@@ -415,12 +418,12 @@ static Package parseChromiumFile(QFile &file, const QString &filePath, LogLevel 
     }
 
     // let's ignore warnings regarding Chromium files for now
-    Q_UNUSED(validatePackage(p, filePath, logLevel));
+    Q_UNUSED(validatePackage(p, filePath, {}, logLevel));
 
     return p;
 }
 
-std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLevel)
+std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, LogLevel logLevel)
 {
     QList<Package> packages;
     bool errorsFound = false;
@@ -450,7 +453,8 @@ std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLeve
         }
 
         if (document.isObject()) {
-            std::optional<Package> p = readPackage(document.object(), file.fileName(), logLevel);
+            std::optional<Package> p =
+                    readPackage(document.object(), file.fileName(), checks, logLevel);
             if (p) {
                 packages << *p;
             } else {
@@ -462,7 +466,7 @@ std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLeve
                 QJsonValue value = array.at(i);
                 if (value.isObject()) {
                     std::optional<Package> p =
-                            readPackage(value.toObject(), file.fileName(), logLevel);
+                            readPackage(value.toObject(), file.fileName(), checks, logLevel);
                     if (p) {
                         packages << *p;
                     } else {
@@ -503,7 +507,7 @@ std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLeve
 }
 
 std::optional<QList<Package>> scanDirectory(const QString &directory, InputFormats inputFormats,
-                                            LogLevel logLevel)
+                                            Checks checks, LogLevel logLevel)
 {
     QDir dir(directory);
     QList<Package> packages;
@@ -524,13 +528,13 @@ std::optional<QList<Package>> scanDirectory(const QString &directory, InputForma
     for (const QFileInfo &info : entries) {
         if (info.isDir()) {
             std::optional<QList<Package>> ps =
-                    scanDirectory(info.filePath(), inputFormats, logLevel);
+                    scanDirectory(info.filePath(), inputFormats, checks, logLevel);
             if (!ps)
                 errorsFound = true;
             else
                 packages += *ps;
         } else {
-            std::optional p = readFile(info.filePath(), logLevel);
+            std::optional p = readFile(info.filePath(), checks, logLevel);
             if (!p)
                 errorsFound = true;
             else

@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     a.setApplicationName(u"Qt Attributions Scanner"_s);
-    a.setApplicationVersion(u"1.1"_s);
+    a.setApplicationVersion(u"1.2"_s);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(tr("Processes attribution files in Qt sources."));
@@ -47,6 +47,9 @@ int main(int argc, char *argv[])
                                      tr("Paths in documentation are made relative to this "
                                         "directory."),
                                      u"directory"_s);
+    QCommandLineOption noCheckPathsOption(
+            u"no-check-paths"_s,
+            tr("Do not check whether referenced file paths exist in basedir."));
     QCommandLineOption outputOption({ u"o"_s, u"output"_s },
                                     tr("Write generated data to <file>."),
                                     u"file"_s);
@@ -57,11 +60,16 @@ int main(int argc, char *argv[])
     parser.addOption(inputFormatOption);
     parser.addOption(filterOption);
     parser.addOption(baseDirOption);
+    parser.addOption(noCheckPathsOption);
     parser.addOption(outputOption);
     parser.addOption(verboseOption);
     parser.addOption(silentOption);
 
     parser.process(a.arguments());
+
+    using Scanner::Checks, Scanner::Check;
+    Checks checks = Check::All;
+    checks.setFlag(Check::Paths, !parser.isSet(noCheckPathsOption));
 
     LogLevel logLevel = NormalLog;
     if (parser.isSet(verboseOption) && parser.isSet(silentOption)) {
@@ -99,12 +107,12 @@ int main(int argc, char *argv[])
         if (logLevel == VerboseLog)
             std::cerr << qPrintable(tr("Recursively scanning %1 for attribution files...").arg(
                                         QDir::toNativeSeparators(path))) << std::endl;
-        std::optional<QList<Package>> p = Scanner::scanDirectory(path, formats, logLevel);
+        std::optional<QList<Package>> p = Scanner::scanDirectory(path, formats, checks, logLevel);
         if (!p)
             return 1;
         packages = *p;
     } else if (pathInfo.isFile()) {
-        std::optional<QList<Package>> p = Scanner::readFile(path, logLevel);
+        std::optional<QList<Package>> p = Scanner::readFile(path, checks, logLevel);
         if (!p)
             return 1;
         packages = *p;

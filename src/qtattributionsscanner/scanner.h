@@ -21,9 +21,13 @@ enum class InputFormat {
 Q_DECLARE_FLAGS(InputFormats, InputFormat)
 Q_DECLARE_OPERATORS_FOR_FLAGS(InputFormats)
 
-std::optional<QList<Package>> readFile(const QString &filePath, LogLevel logLevel);
+enum class Check { Paths = 0x1, All = Paths };
+Q_DECLARE_FLAGS(Checks, Check)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Checks)
+
+std::optional<QList<Package>> readFile(const QString &filePath, Checks checks, LogLevel logLevel);
 std::optional<QList<Package>> scanDirectory(const QString &directory, InputFormats inputFormats,
-                                            LogLevel logLevel);
+                                            Checks checks, LogLevel logLevel);
 }
 
 #endif // SCANNER_H
