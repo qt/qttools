@@ -1381,14 +1381,7 @@ void ClangCodeParser::buildPCH(QString module_header)
                 if (type_ != Any && !p.endsWith(module_))
                     return false;
                 candidate_ = p + "/";
-                switch (type_) {
-                case Any:
-                case Module:
-                    candidate_.append(module_);
-                    break;
-                default:
-                    break;
-                }
+                candidate_.append(module_);
                 if (p.startsWith("-I"))
                     candidate_ = candidate_.mid(2);
                 return QFile::exists(QString::fromUtf8(candidate_));
