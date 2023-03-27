@@ -1366,7 +1366,7 @@ void ClangCodeParser::buildPCH(QString module_header)
         // (e.g. QtGui/QtGui) to be used as pre-compiled header
         struct FindPredicate
         {
-            enum SearchType { Any, Module, Private };
+            enum SearchType { Any, Module };
             QByteArray &candidate_;
             const QByteArray &module_;
             SearchType type_;
@@ -1385,9 +1385,6 @@ void ClangCodeParser::buildPCH(QString module_header)
                 case Any:
                 case Module:
                     candidate_.append(module_);
-                    break;
-                case Private:
-                    candidate_.append("private");
                     break;
                 default:
                     break;
