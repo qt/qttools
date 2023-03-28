@@ -44,6 +44,9 @@ class A: public QObject {
 
         // failed same text
         tr("this is the non-matched same text");
+
+        // number heuristics QTBUG-111775
+        tr("1xb");
     }
 };
 
