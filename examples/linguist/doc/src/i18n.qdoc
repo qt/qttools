@@ -3,8 +3,11 @@
 
 /*!
     \example i18n
-    \title I18N Example
     \ingroup examples-linguist
+    \meta category {Internationalization}
+
+    \title I18N Example
+
     \brief Demonstrates Qt's support for translated text.
 
     The Internationalization (I18N) example demonstrates Qt's support for translated

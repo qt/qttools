@@ -4,6 +4,8 @@
 /*!
     \example trollprint
     \ingroup examples-linguist
+    \meta category {Internationalization}
+
     \title Troll Print Example
 
     \brief Updating translations for later releases.
