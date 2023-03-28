@@ -106,10 +106,12 @@ static QString translationAttempt(const QString &oldTranslation,
     for (i = 0; i < oldTranslation.size(); i++) {
         attempt += oldTranslation[i];
         for (k = 0; k < p; k++) {
-            if (oldTranslation[i] == oldNumbers[k][matchedYet[k]])
+            if (matchedYet[k] < oldNumbers[k].size() &&
+                oldTranslation[i] == oldNumbers[k][matchedYet[k]]) {
                 matchedYet[k]++;
-            else
+            } else {
                 matchedYet[k] = 0;
+            }
         }
 
         /*

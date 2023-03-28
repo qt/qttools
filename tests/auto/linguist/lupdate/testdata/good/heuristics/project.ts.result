@@ -18,5 +18,10 @@
         <source>this is the non-matched same text</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="main.cpp" line="49"/>
+        <source>1xb</source>
+        <translation type="unfinished">1ab {1x?}</translation>
+    </message>
 </context>
 </TS>
