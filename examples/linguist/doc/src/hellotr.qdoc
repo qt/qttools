@@ -4,6 +4,8 @@
 /*!
     \example hellotr
     \ingroup examples-linguist
+    \meta category {Internationalization}
+
     \title Hello tr() Example
 
     \brief Translating a small Hello World program to Latin.
