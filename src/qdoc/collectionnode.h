@@ -40,7 +40,6 @@ public:
     }
     [[nodiscard]] QString state() const { return m_state; }
 
-    void setLogicalModuleInfo(const QString &arg) override;
     void setLogicalModuleInfo(const QStringList &info) override;
     void setState(const QString &state) { m_state = state; }
 

@@ -82,29 +82,6 @@ QString CollectionNode::logicalModuleVersion() const
 }
 
 /*!
-  This function splits \a arg on the blank character to get a
-  logical module name and version number. If the version number
-  is present, it splits the version number on the '.' character
-  to get a major version number and a minor version number. If
-  the version number is present, both the major and minor version
-  numbers should be there, but the minor version number is not
-  absolutely necessary.
- */
-void CollectionNode::setLogicalModuleInfo(const QString &arg)
-{
-    QStringList blankSplit = arg.split(QLatin1Char(' '));
-    m_logicalModuleName = blankSplit[0];
-    if (blankSplit.size() > 1) {
-        QStringList dotSplit = blankSplit[1].split(QLatin1Char('.'));
-        m_logicalModuleVersionMajor = dotSplit[0];
-        if (dotSplit.size() > 1)
-            m_logicalModuleVersionMinor = dotSplit[1];
-        else
-            m_logicalModuleVersionMinor = "0";
-    }
-}
-
-/*!
   This function accepts the logical module \a info as a string
   list. If the logical module info contains the version number,
   it splits the version number on the '.' character to get the
