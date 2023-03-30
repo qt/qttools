@@ -38,4 +38,6 @@
 /*!
     \group cpptypes
     \title Test C++ Types
+
+    \generatelist testgroup
 */
