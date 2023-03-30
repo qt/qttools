@@ -75,7 +75,7 @@ private:
                              bool includeAlphabet, const QString &commonPrefix);
     void generateFunctionIndex(const Node *relative);
     void generateLegaleseList(const Node *relative, CodeMarker *marker);
-    [[nodiscard]] bool generateGroupList(CollectionNode *cn);
+    bool generateGroupList(CollectionNode *cn);
     void generateList(const Node *relative, CodeMarker *marker, const QString &selector);
     void generateSectionList(const Section &section, const Node *relative, CodeMarker *marker,
                              bool useObsoloteMembers = false);

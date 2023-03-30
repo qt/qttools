@@ -509,11 +509,8 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (!argPair.second.isEmpty())
             node->setDeprecatedSince(argPair.second);
     } else if (command == COMMAND_INGROUP || command == COMMAND_INPUBLICGROUP) {
-        // Use bracketed argument as a prefix; used internally by '\meta category'
-        if (!argPair.second.isEmpty())
-             database->addToGroup(argPair.second + " " + arg, node);
-        else
-             database->addToGroup(arg, node);
+        // Note: \ingroup and \inpublicgroup are the same (and now recognized as such).
+        database->addToGroup(arg, node);
     } else if (command == COMMAND_INMODULE) {
         database->addToModule(arg, node);
     } else if (command == COMMAND_INQMLMODULE) {

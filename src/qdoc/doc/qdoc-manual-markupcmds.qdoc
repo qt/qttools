@@ -3356,9 +3356,8 @@
     \section1 \\generatelist
 
     The \\generatelist command expands to a list of links to the
-    documentation entities grouped with an \l {ingroup-command}
-    {\\ingroup} command or entities that match one of the arguments
-    listed below. An example from the Qt Reference Documentation:
+    documentation entities in a group. Below is an example from the Qt
+    Reference Documentation:
 
     \badcode *
     /\1!
@@ -3374,11 +3373,6 @@
 
     This generates the \e {All Classes} page. The command accepts the
     following arguments:
-
-    \section2 \c {<group-name>}
-
-    With a group name as the only argument, QDoc lists all entities that
-    use the \c {\ingroup <group-name>} command.
 
     \target table example
     \section2 \c annotatedclasses
@@ -3548,27 +3542,6 @@
 
     The \c attributions argument is used to tell QDoc to generate a list
     of attributions in the documentation.
-
-    \section2 \c {category <category-name>}
-
-    The \c category argument generates a list of members that use the
-    \l {meta-command}{\\meta} command to specify a \e category:
-
-    \badcode *
-    /\1!
-        \example chat
-        \meta category {Networking Examples}
-    \1/
-    \endcode
-
-    Use the following \\generatelist command to output a list of
-    of examples in the \e {Networking Examples} category:
-
-    \badcode
-        \generatelist category {Networking Examples}
-    \endcode
-
-    See also \l {meta-command}{\\meta}.
 
     \section2 \c related
 

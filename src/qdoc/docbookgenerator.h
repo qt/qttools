@@ -67,16 +67,13 @@ protected:
     qsizetype generateAtom(const Atom *atom, const Node *relative) override;
 
 private:
-
-    enum GeneratedListType { Auto, AutoSection, ItemizedList };
-
     QXmlStreamWriter *startDocument(const Node *node);
     QXmlStreamWriter *startDocument(const ExampleNode *en, const QString &file);
     QXmlStreamWriter *startGenericDocument(const Node *node, const QString &fileName);
     void endDocument();
 
     void generateAnnotatedList(const Node *relative, const NodeList &nodeList,
-                               const QString &selector, GeneratedListType type = Auto);
+                               const QString &selector, bool withSectionIfNeeded = false);
     void generateAnnotatedLists(const Node *relative, const NodeMultiMap &nmm,
                                 const QString &selector);
     void generateCompactList(const Node *relative, const NodeMultiMap &nmm, bool includeAlphabet,

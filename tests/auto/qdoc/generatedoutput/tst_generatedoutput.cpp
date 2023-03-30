@@ -321,7 +321,6 @@ void tst_generatedOutput::docBookFromCpp()
 void tst_generatedOutput::docBookFromQml()
 {
     testAndCompare("testdata/configs/docbook_testqml.qdocconf",
-                   "docbook/qmlmodules.xml "
                    "docbook/test-componentset-example.xml "
                    "docbook/uicomponents-qmlmodule.xml "
                    "docbook/qdoc-test-qmlmodule.xml "
