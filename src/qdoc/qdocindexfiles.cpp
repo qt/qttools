@@ -300,8 +300,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         node = collectionNode;
     } else if (elementName == QLatin1String("qmlmodule")) {
         auto *collectionNode = m_qdb->addQmlModule(name);
-        QStringList info;
-        info << name << attributes.value(QLatin1String("qml-module-version")).toString();
+        const QStringList info = QStringList()
+                << name
+                << QString(attributes.value(QLatin1String("qml-module-version")).toString());
         collectionNode->setLogicalModuleInfo(info);
         collectionNode->setTitle(attributes.value(QLatin1String("title")).toString());
         collectionNode->setSubtitle(attributes.value(QLatin1String("subtitle")).toString());
@@ -1171,14 +1172,14 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
  */
 void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionNode *fn)
 {
-    QString objName = fn->name();
+    const QString objName = fn->name();
     writer.writeStartElement("function");
     writer.writeAttribute("name", objName);
 
-    QString fullName = fn->fullDocumentName();
+    const QString fullName = fn->fullDocumentName();
     if (fullName != objName)
         writer.writeAttribute("fullname", fullName);
-    QString href = m_gen->fullDocumentLocation(fn);
+    const QString href = m_gen->fullDocumentLocation(fn);
     if (!href.isEmpty())
         writer.writeAttribute("href", href);
     if (fn->threadSafeness() != Node::UnspecifiedSafeness)
@@ -1201,7 +1202,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     if (!fn->since().isEmpty())
         writer.writeAttribute("since", fn->since());
 
-    QString brief = fn->doc().trimmedBriefText(fn->name()).toString();
+    const QString brief = fn->doc().trimmedBriefText(fn->name()).toString();
     writer.writeAttribute("meta", fn->metanessString());
     if (fn->isCppNode()) {
         if (!fn->isNonvirtual())
