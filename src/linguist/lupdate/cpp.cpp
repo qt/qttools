@@ -343,6 +343,15 @@ static bool isStringLiteralPrefix(const QStringView s)
         || s == u"u8"_s;
 }
 
+static bool isRawStringLiteralPrefix(QStringView s)
+{
+    if (s.endsWith(u'R')) {
+        s.chop(1);
+        return s.isEmpty() || isStringLiteralPrefix(s);
+    }
+    return false;
+}
+
 static const QString strQ_OBJECT = u"Q_OBJECT"_s;
 static const QString strclass = u"class"_s;
 static const QString strenum = u"enum"_s;
@@ -643,10 +652,7 @@ CppParser::TokenType CppParser::getToken()
             }
 
             // a C++11 raw string literal?
-            if (yyCh == '"' && (
-                        yyWord == QLatin1String("R") || yyWord == QLatin1String("LR") || yyWord == QLatin1String("u8R") ||
-                        yyWord == QLatin1String("uR") || yyWord == QLatin1String("UR")
-                        )) {
+            if (yyCh == '"' && isRawStringLiteralPrefix(yyWord)) {
                 ptr = reinterpret_cast<ushort *>(const_cast<QChar *>(yyWord.unicode()));
                 //get delimiter
                 QString delimiter;
