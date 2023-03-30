@@ -3357,8 +3357,9 @@
     \section1 \\generatelist
 
     The \\generatelist command expands to a list of links to the
-    documentation entities in a group. Below is an example from the Qt
-    Reference Documentation:
+    documentation entities grouped with an \l {ingroup-command}
+    {\\ingroup} command or entities that match one of the arguments
+    listed below. An example from the Qt Reference Documentation:
 
     \badcode *
     /\1!
@@ -3374,6 +3375,11 @@
 
     This generates the \e {All Classes} page. The command accepts the
     following arguments:
+
+    \section2 \c {<group-name>}
+
+    With a group name as the only argument, QDoc lists all entities that
+    use the \c {\ingroup <group-name>} command.
 
     \target table example
     \section2 \c annotatedclasses

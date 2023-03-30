@@ -222,6 +222,7 @@ void tst_generatedOutput::htmlFromCpp()
                    "testqdoc-testderived-obsolete.html "
                    "obsolete-classes.html "
                    "autolinking.html "
+                   "cpptypes.html "
                    "testqdoc.html");
 }
 
@@ -315,6 +316,7 @@ void tst_generatedOutput::docBookFromCpp()
                    "docbook/testcpp-module.xml "
                    "docbook/testqdoc-test.xml "
                    "docbook/testqdoc-testderived.xml "
+                   "docbook/cpptypes.xml "
                    "docbook/testqdoc.xml");
 }
 
