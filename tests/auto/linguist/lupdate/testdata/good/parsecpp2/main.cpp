@@ -147,3 +147,22 @@ struct IntLiteralsWithSeparators {
     int x = 0x1'AF'FE;
     int X = 0X2'E5E7;
 };
+
+
+// QTBUG-59802: prefixed string literals
+class PrefixedStringLiterals : public QObject {
+    Q_OBJECT
+    void foo()
+    {
+        #if 0
+        tr(u8"UTF-8 string literal");
+        tr(u8R"(UTF-8 raw string literal)");
+        tr(u"UTF-16 string literal");
+        tr(uR"(UTF-16 raw string literal)");
+        tr(U"UTF-32 string literal");
+        tr(UR"(UTF-32 raw string literal)");
+        tr(L"wide string literal");
+        tr(LR"(wide raw string literal)");
+        #endif
+    }
+};

@@ -335,6 +335,14 @@ CppParser::TokenType CppParser::lookAheadToSemicolonOrLeftBrace()
     }
 }
 
+static bool isStringLiteralPrefix(const QStringView s)
+{
+    return s == u"L"_s
+        || s == u"U"_s
+        || s == u"u"_s
+        || s == u"u8"_s;
+}
+
 static const QString strQ_OBJECT = u"Q_OBJECT"_s;
 static const QString strclass = u"class"_s;
 static const QString strfinal = u"final"_s;
@@ -562,6 +570,11 @@ CppParser::TokenType CppParser::getToken()
             yyWord.resize(ptr - (ushort *)yyWord.unicode());
 
             //qDebug() << "IDENT: " << yyWord;
+
+            if (yyCh == '"' && isStringLiteralPrefix(yyWord)) {
+                // Handle prefixed string literals as ordinary string literals.
+                continue;
+            }
 
             switch (yyWord.unicode()[0].unicode()) {
             case 'N':

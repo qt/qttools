@@ -18,6 +18,49 @@
     </message>
 </context>
 <context>
+    <name>PrefixedStringLiterals</name>
+    <message>
+        <location filename="main.cpp" line="158"/>
+        <source>UTF-8 string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="159"/>
+        <source>UTF-8 raw string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="160"/>
+        <source>UTF-16 string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="161"/>
+        <source>UTF-16 raw string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="162"/>
+        <source>UTF-32 string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="163"/>
+        <source>UTF-32 raw string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="164"/>
+        <source>wide string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="165"/>
+        <source>wide raw string literal</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="main.cpp" line="107"/>
