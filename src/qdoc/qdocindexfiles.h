@@ -55,6 +55,7 @@ private:
                               IndexSectionWriter *post = nullptr);
     void generateIndexSections(QXmlStreamWriter &writer, Node *node,
                                IndexSectionWriter *post = nullptr);
+    QString appendAttributesToSignature(const FunctionNode *fn) const noexcept;
 
 private:
     static QDocIndexFiles *s_qdocIndexFiles;

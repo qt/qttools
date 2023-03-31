@@ -1254,14 +1254,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         index file, but it is not read back in by qdoc. However,
         we need it for the webxml generator.
         */
-        QString signature = fn->signature(false, false);
-        // 'const' is already part of FunctionNode::signature()
-        if (fn->isFinal())
-            signature += " final";
-        if (fn->isOverride())
-            signature += " override";
-        if (fn->isPureVirtual())
-            signature += " = 0";
+        const QString signature = appendAttributesToSignature(fn);
         writer.writeAttribute("signature", signature);
 
         QStringList groups = m_qdb->groupNamesForNode(fn);
@@ -1283,6 +1276,31 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         post_->append(writer, fn);
 
     writer.writeEndElement(); // function
+}
+
+/*!
+    \internal
+
+    Constructs the signature to be written to an index file for the function
+    represented by FunctionNode \a fn.
+
+    'const' is already part of FunctionNode::signature(), which forms the basis
+    for the signature returned by this method. The method adds, where
+    applicable, the C++ keywords "final", "override", or "= 0", to the
+    signature carried by the FunctionNode itself.
+ */
+QString QDocIndexFiles::appendAttributesToSignature(const FunctionNode *fn) const noexcept
+{
+    QString signature = fn->signature(false, false);
+
+    if (fn->isFinal())
+        signature += " final";
+    if (fn->isOverride())
+        signature += " override";
+    if (fn->isPureVirtual())
+        signature += " = 0";
+
+    return signature;
 }
 
 /*!
