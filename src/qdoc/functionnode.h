@@ -51,7 +51,6 @@ public:
     static Genus getGenus(Metaness metaness);
 
     void setReturnType(const QString &type) { m_returnType = type; }
-    void setParentPath(const QStringList &path) { m_parentPath = path; }
     void setVirtualness(const QString &value);
     void setVirtualness(Virtualness virtualness) { m_virtualness = virtualness; }
     void setVirtual() { m_virtualness = NormalVirtual; }
@@ -197,7 +196,6 @@ private:
     signed short m_overloadNumber {};
     FunctionNode *m_nextOverload { nullptr };
     QString m_returnType {};
-    QStringList m_parentPath {};
     QString m_overridesThis {};
     QString m_tag {};
     QList<PropertyNode *> m_associatedProperties {};
