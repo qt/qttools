@@ -53,7 +53,6 @@ public:
     void setReturnType(const QString &type) { m_returnType = type; }
     void setVirtualness(const QString &value);
     void setVirtualness(Virtualness virtualness) { m_virtualness = virtualness; }
-    void setVirtual() { m_virtualness = NormalVirtual; }
     void setConst(bool b) { m_const = b; }
     void setDefault(bool b) { m_default = b; }
     void setStatic(bool b) { m_static = b; }
