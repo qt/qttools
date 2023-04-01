@@ -1204,14 +1204,21 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
     QString brief = fn->doc().trimmedBriefText(fn->name()).toString();
     writer.writeAttribute("meta", fn->metanessString());
     if (fn->isCppNode()) {
-        writer.writeAttribute("virtual", fn->virtualness());
-        writer.writeAttribute("const", fn->isConst() ? "true" : "false");
-        writer.writeAttribute("static", fn->isStatic() ? "true" : "false");
-        writer.writeAttribute("final", fn->isFinal() ? "true" : "false");
-        writer.writeAttribute("override", fn->isOverride() ? "true" : "false");
+        if (!fn->isNonvirtual())
+            writer.writeAttribute("virtual", fn->virtualness());
 
-        if (fn->isExplicit()) writer.writeAttribute("explicit", "true");
-        if (fn->isConstexpr()) writer.writeAttribute("constexpr", "true");
+        if (fn->isConst())
+            writer.writeAttribute("const", "true");
+        if (fn->isStatic())
+            writer.writeAttribute("static", "true");
+        if (fn->isFinal())
+            writer.writeAttribute("final", "true");
+        if (fn->isOverride())
+            writer.writeAttribute("override", "true");
+        if (fn->isExplicit())
+            writer.writeAttribute("explicit", "true");
+        if (fn->isConstexpr())
+            writer.writeAttribute("constexpr", "true");
 
         if (auto noexcept_info = fn->getNoexcept()) {
             writer.writeAttribute("noexcept", "true");
