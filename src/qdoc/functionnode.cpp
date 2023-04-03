@@ -145,15 +145,14 @@ QString FunctionNode::virtualness() const
  */
 void FunctionNode::setVirtualness(const QString &value)
 {
-    if (value == QLatin1String("non"))
-        m_virtualness = NonVirtual;
-    else if (value == QLatin1String("virtual"))
-        m_virtualness = NormalVirtual;
-    else if (value == QLatin1String("pure")) {
+    if (value == QLatin1String("pure")) {
         m_virtualness = PureVirtual;
         if (parent() && parent()->isClassNode())
             parent()->setAbstract(true);
+        return;
     }
+
+    m_virtualness = (value == QLatin1String("virtual")) ? NormalVirtual : NonVirtual;
 }
 
 static QMap<QString, FunctionNode::Metaness> metanessMap_;

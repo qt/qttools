@@ -191,7 +191,7 @@ private:
     std::optional<QString> m_noexcept;
 
     Metaness m_metaness {};
-    Virtualness m_virtualness {};
+    Virtualness m_virtualness{ NonVirtual };
     signed short m_overloadNumber {};
     FunctionNode *m_nextOverload { nullptr };
     QString m_returnType {};
