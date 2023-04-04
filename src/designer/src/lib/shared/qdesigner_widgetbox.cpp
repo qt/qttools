@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class QDesignerWidgetBoxWidgetData : public QSharedData
 {
 public:
@@ -129,7 +131,6 @@ bool QDesignerWidgetBox::findWidget(const QDesignerWidgetBoxInterface *wbox,
     // Note that entry names do not necessarily match the class name
     // (at least, not for the standard widgets), so,
     // look in the XML for the class name of the first widget to appear
-    const QString widgetTag = QStringLiteral("<widget");
     QString pattern = QStringLiteral("^<widget\\s+class\\s*=\\s*\"");
     pattern += className;
     pattern += QStringLiteral("\".*$");
@@ -143,7 +144,7 @@ bool QDesignerWidgetBox::findWidget(const QDesignerWidgetBoxInterface *wbox,
             for (int w = 0; w < widgetCount; w++) {
                 const Widget widget = cat.widget(w);
                 QString xml = widget.domXml(); // Erase the <ui> tag that can be present starting from 4.4
-                const int widgetTagIndex = xml.indexOf(widgetTag);
+                const auto widgetTagIndex = xml.indexOf("<widget"_L1);
                 if (widgetTagIndex != -1) {
                     xml.remove(0, widgetTagIndex);
                     if (regexp.match(xml).hasMatch()) {
@@ -175,12 +176,12 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
                 continue;
             }
 
-            if (name.compare(QStringLiteral("widget"), Qt::CaseInsensitive) == 0) { // 4.3 legacy, wrap into DomUI
+            if (name.compare("widget"_L1, Qt::CaseInsensitive) == 0) { // 4.3 legacy, wrap into DomUI
                 ui = new DomUI;
                 DomWidget *widget = new DomWidget;
                 widget->read(reader);
                 ui->setElementWidget(widget);
-            } else if (name.compare(QStringLiteral("ui"), Qt::CaseInsensitive) == 0) { // 4.4
+            } else if (name.compare("ui"_L1, Qt::CaseInsensitive) == 0) { // 4.4
                 ui = new DomUI;
                 ui->read(reader);
             } else {
@@ -207,7 +208,7 @@ DomUI *QDesignerWidgetBox::xmlToUi(const QString &name, const QString &xml, bool
 
     if (insertFakeTopLevel)  {
         DomWidget *fakeTopLevel = new DomWidget;
-        fakeTopLevel->setAttributeClass(QStringLiteral("QWidget"));
+        fakeTopLevel->setAttributeClass(u"QWidget"_s);
         QList<DomWidget *> children;
         children.push_back(ui->takeElementWidget());
         fakeTopLevel->setElementWidget(children);

@@ -9,6 +9,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
@@ -32,7 +34,7 @@ QDESIGNER_SHARED_EXPORT QIcon createIconSet(const QString &name)
 
 QDESIGNER_SHARED_EXPORT QIcon emptyIcon()
 {
-    return QIcon(QStringLiteral(":/qt-project.org/formeditor/images/emptyicon.png"));
+    return QIcon(u":/qt-project.org/formeditor/images/emptyicon.png"_s);
 }
 
 static QIcon buildIcon(const QString &prefix, const int *sizes, size_t sizeCount)
@@ -40,7 +42,7 @@ static QIcon buildIcon(const QString &prefix, const int *sizes, size_t sizeCount
     QIcon result;
     for (size_t i = 0; i < sizeCount; ++i) {
         const QString size = QString::number(sizes[i]);
-        const QPixmap pixmap(prefix + size + QLatin1Char('x') + size + QStringLiteral(".png"));
+        const QPixmap pixmap(prefix + size + 'x'_L1 + size + ".png"_L1);
         Q_ASSERT(!pixmap.size().isEmpty());
         result.addPixmap(pixmap);
     }
@@ -51,7 +53,7 @@ QDESIGNER_SHARED_EXPORT QIcon qtLogoIcon()
 {
     static const int sizes[] = {16, 24, 32, 64, 128};
     static const QIcon result =
-        buildIcon(QStringLiteral(":/qt-project.org/formeditor/images/qtlogo"),
+        buildIcon(u":/qt-project.org/formeditor/images/qtlogo"_s,
                   sizes, sizeof(sizes) / sizeof(sizes[0]));
     return result;
 }

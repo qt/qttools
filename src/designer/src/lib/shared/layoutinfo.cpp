@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 /*!
   \overload
@@ -39,13 +41,12 @@ LayoutInfo::Type LayoutInfo::layoutType(const QDesignerFormEditorInterface *core
 
 static const QHash<QString, LayoutInfo::Type> &layoutNameTypeMap()
 {
-    static QHash<QString, LayoutInfo::Type> nameTypeMap;
-    if (nameTypeMap.isEmpty()) {
-        nameTypeMap.insert(QStringLiteral("QVBoxLayout"), LayoutInfo::VBox);
-        nameTypeMap.insert(QStringLiteral("QHBoxLayout"), LayoutInfo::HBox);
-        nameTypeMap.insert(QStringLiteral("QGridLayout"), LayoutInfo::Grid);
-        nameTypeMap.insert(QStringLiteral("QFormLayout"), LayoutInfo::Form);
-    }
+    static const QHash<QString, LayoutInfo::Type> nameTypeMap = {
+        {u"QVBoxLayout"_s, LayoutInfo::VBox},
+        {u"QHBoxLayout"_s, LayoutInfo::HBox},
+        {u"QGridLayout"_s, LayoutInfo::Grid},
+        {u"QFormLayout"_s, LayoutInfo::Form}
+    };
     return nameTypeMap;
 }
 

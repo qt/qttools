@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 // -------- LineEditTaskMenuInlineEditor
@@ -26,7 +28,7 @@ protected:
 };
 
 LineEditTaskMenuInlineEditor::LineEditTaskMenuInlineEditor(QLineEdit *w, QObject *parent) :
-      TaskMenuInlineEditor(w, ValidationSingleLine, QStringLiteral("text"), parent)
+      TaskMenuInlineEditor(w, ValidationSingleLine, u"text"_s, parent)
 {
 }
 

@@ -696,8 +696,8 @@ namespace qdesigner_internal
             }
         }
         if (!action) {
-            if (const QDesignerTaskMenuExtension *taskMenu = qobject_cast<QDesignerTaskMenuExtension *>(
-                        core->extensionManager()->extension(managedWidget, QStringLiteral("QDesignerInternalTaskMenuExtension")))) {
+            if (const auto *taskMenu = qobject_cast<QDesignerTaskMenuExtension *>(
+                        core->extensionManager()->extension(managedWidget, u"QDesignerInternalTaskMenuExtension"_s))) {
                 action = taskMenu->preferredEditAction();
                 if (!action) {
                     const auto actions = taskMenu->taskActions();
@@ -714,7 +714,7 @@ namespace qdesigner_internal
     {
         QProcess uic;
         QStringList arguments;
-        QString binary = QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath) + QStringLiteral("/uic");
+        QString binary = QLibraryInfo::path(QLibraryInfo::LibraryExecutablesPath) + "/uic"_L1;
         switch (language) {
         case UicLanguage::Cpp:
             break;

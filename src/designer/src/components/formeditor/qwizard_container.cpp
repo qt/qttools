@@ -12,6 +12,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 using WizardPageList = QList<QWizardPage *>;
 
 namespace qdesigner_internal {
@@ -168,7 +170,7 @@ bool QWizardPagePropertySheet::reset(int index)
 // ---------------- QWizardPropertySheet
 QWizardPropertySheet::QWizardPropertySheet(QWizard *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),
-    m_startId(QStringLiteral("startId"))
+    m_startId(u"startId"_s)
 {
 }
 

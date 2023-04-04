@@ -28,6 +28,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 // Regexp to match a function signature, arguments potentially
 // with namespace colons.
 static const char *signatureRegExp = "^[\\w+_]+\\(([\\w+:]\\*?,?)*\\)$";
@@ -88,7 +90,7 @@ namespace {
         QString signature = le->text();
         if (!m_signatureRegexp.match(signature).hasMatch()) {
             if (m_methodNameRegexp.match(signature).hasMatch()) {
-                signature += QStringLiteral("()");
+                signature += "()"_L1;
                 le->setText(signature);
             } else {
                 return;
@@ -298,8 +300,10 @@ SignalSlotDialog::SignalSlotDialog(QDesignerDialogGuiInterface *dialogGui, QWidg
     m_ui->addSignalButton->setIcon(plusIcon);
     m_ui->removeSignalButton->setIcon(minusIcon);
 
-    m_slotPanel = new SignaturePanel(this, m_ui->slotListView, m_ui->addSlotButton, m_ui->removeSlotButton, QStringLiteral("slot"));
-    m_signalPanel = new SignaturePanel(this, m_ui->signalListView, m_ui->addSignalButton, m_ui->removeSignalButton, QStringLiteral("signal"));
+    m_slotPanel = new SignaturePanel(this, m_ui->slotListView, m_ui->addSlotButton,
+                                     m_ui->removeSlotButton, u"slot"_s);
+    m_signalPanel = new SignaturePanel(this, m_ui->signalListView, m_ui->addSignalButton,
+                                       m_ui->removeSignalButton, u"signal"_s);
     connect(m_slotPanel, &SignaturePanel::checkSignature,
             this, &SignalSlotDialog::slotCheckSignature);
     connect(m_signalPanel, &SignaturePanel::checkSignature,

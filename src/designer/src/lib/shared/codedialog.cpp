@@ -30,6 +30,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 // ----------------- CodeDialogPrivate
 struct CodeDialog::CodeDialogPrivate {
@@ -57,12 +59,12 @@ CodeDialog::CodeDialog(QWidget *parent) :
     // Edit tool bar
     QToolBar *toolBar = new QToolBar;
 
-    const QIcon saveIcon = createIconSet(QStringLiteral("filesave.png"));
+    const QIcon saveIcon = createIconSet(u"filesave.png"_s);
     QAction *saveAction = toolBar->addAction(saveIcon, tr("Save..."));
     connect(saveAction, &QAction::triggered, this, &CodeDialog::slotSaveAs);
 
 #if QT_CONFIG(clipboard)
-    const QIcon copyIcon = createIconSet(QStringLiteral("editcopy.png"));
+    const QIcon copyIcon = createIconSet(u"editcopy.png"_s);
     QAction *copyAction = toolBar->addAction(copyIcon, tr("Copy All"));
     connect(copyAction, &QAction::triggered, this, &CodeDialog::copyAll);
 #endif
@@ -136,11 +138,11 @@ bool CodeDialog::generateCode(const QDesignerFormWindowInterface *fw,
         tempPattern += QDir::separator();
     const QString fileName = fw->fileName();
     if (fileName.isEmpty()) {
-        tempPattern += QStringLiteral("designer");
+        tempPattern += "designer"_L1;
     } else {
         tempPattern += QFileInfo(fileName).baseName();
     }
-    tempPattern += QStringLiteral("XXXXXX.ui");
+    tempPattern += "XXXXXX.ui"_L1;
     // Write to temp file
     QTemporaryFile tempFormFile(tempPattern);
 

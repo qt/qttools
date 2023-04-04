@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 LinePropertySheet::LinePropertySheet(Line *object, QObject *parent)
@@ -27,7 +29,7 @@ bool LinePropertySheet::isVisible(int index) const
 {
     const QString name = propertyName(index);
 
-    if (name == QStringLiteral("frameShape"))
+    if (name == "frameShape"_L1)
         return false;
     return QDesignerPropertySheet::isVisible(index);
 }

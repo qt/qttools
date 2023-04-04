@@ -19,17 +19,19 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog *dialog)
     : AbstractItemEditor(form, nullptr), m_updatingBrowser(false)
 {
     m_columnEditor = new ItemListEditor(form, this);
-    m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
+    m_columnEditor->setObjectName(u"columnEditor"_s);
     m_columnEditor->setAlignDefault(Qt::AlignCenter);
     m_columnEditor->setNewItemText(tr("New Column"));
     m_rowEditor = new ItemListEditor(form, this);
-    m_rowEditor->setObjectName(QStringLiteral("rowEditor"));
+    m_rowEditor->setObjectName(u"rowEditor"_s);
     m_rowEditor->setNewItemText(tr("New Row"));
     ui.setupUi(dialog);
 

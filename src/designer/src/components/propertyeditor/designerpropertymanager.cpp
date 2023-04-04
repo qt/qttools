@@ -46,6 +46,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *resettableAttributeC = "resettable";
 static const char *flagsAttributeC = "flags";
 static const char *validationModesAttributeC = "validationMode";
@@ -415,7 +417,7 @@ void TextEditor::buttonClicked()
     }
         break;
     case ValidationURL:
-        if (oldText.isEmpty() || oldText.startsWith(QStringLiteral("qrc:")))
+        if (oldText.isEmpty() || oldText.startsWith("qrc:"_L1))
             resourceActionActivated();
         else
             fileActionActivated();
@@ -432,7 +434,7 @@ void TextEditor::buttonClicked()
 void TextEditor::resourceActionActivated()
 {
     QString oldPath = m_editor->text();
-    if (oldPath.startsWith(QStringLiteral("qrc:")))
+    if (oldPath.startsWith("qrc:"_L1))
         oldPath.remove(0, 4);
     // returns ':/file'
     QString newPath = IconSelector::choosePixmapResource(m_core, m_core->resourceModel(), oldPath, this);
@@ -440,7 +442,7 @@ void TextEditor::resourceActionActivated()
          newPath.remove(0, 1);
     if (newPath.isEmpty() || newPath == oldPath)
         return;
-    const QString newText = QStringLiteral("qrc:") + newPath;
+    const QString newText = "qrc:"_L1 + newPath;
     m_editor->setText(newText);
     emit textChanged(newText);
 }
@@ -448,7 +450,7 @@ void TextEditor::resourceActionActivated()
 void TextEditor::fileActionActivated()
 {
     QString oldPath = m_editor->text();
-    if (oldPath.startsWith(QStringLiteral("file:")))
+    if (oldPath.startsWith("file:"_L1))
         oldPath = oldPath.mid(5);
     const QString newPath = m_core->dialogGui()->getOpenFileName(this, tr("Choose a File"), oldPath);
     if (newPath.isEmpty() || newPath == oldPath)
@@ -562,8 +564,8 @@ PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) 
     m_resourceAction(new QAction(tr("Choose Resource..."), this)),
     m_fileAction(new QAction(tr("Choose File..."), this)),
     m_themeAction(new QAction(tr("Set Icon From Theme..."), this)),
-    m_copyAction(new QAction(createIconSet(QStringLiteral("editcopy.png")), tr("Copy Path"), this)),
-    m_pasteAction(new QAction(createIconSet(QStringLiteral("editpaste.png")), tr("Paste Path"), this)),
+    m_copyAction(new QAction(createIconSet(u"editcopy.png"_s), tr("Copy Path"), this)),
+    m_pasteAction(new QAction(createIconSet(u"editpaste.png"_s), tr("Paste Path"), this)),
     m_layout(new QHBoxLayout(this)),
     m_pixmapCache(nullptr)
 {
@@ -738,7 +740,7 @@ void PixmapEditor::copyActionActivated()
 void PixmapEditor::pasteActionActivated()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    QString subtype = QStringLiteral("plain");
+    QString subtype = u"plain"_s;
     QString text = clipboard->text(subtype);
     if (!text.isNull()) {
         QStringList list = text.split(QLatin1Char('\n'));
@@ -760,7 +762,7 @@ void PixmapEditor::pasteActionActivated()
 void PixmapEditor::clipboardDataChanged()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    QString subtype = QStringLiteral("plain");
+    QString subtype = u"plain"_s;
     const QString text = clipboard->text(subtype);
     m_pasteAction->setEnabled(!text.isNull());
 }
@@ -801,7 +803,7 @@ ResetWidget::ResetWidget(QtProperty *property, QWidget *parent) :
     m_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
     m_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     m_button->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    m_button->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
+    m_button->setIcon(createIconSet(u"resetproperty.png"_s));
     m_button->setIconSize(QSize(8,8));
     m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
     connect(m_button, &QAbstractButton::clicked, this, &ResetWidget::slotClicked);
@@ -1466,7 +1468,7 @@ int DesignerPropertyManager::designerKeySequenceTypeId()
 
 QString DesignerPropertyManager::alignDefaultAttribute()
 {
-    return QStringLiteral("alignDefault");
+    return u"alignDefault"_s;
 }
 
 uint DesignerPropertyManager::alignDefault(const QtVariantProperty *prop)
@@ -2047,7 +2049,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             QtVariantProperty *alignH = addProperty(enumTypeId(), tr("Horizontal"));
             QStringList namesH;
             namesH << indexHToString(0) << indexHToString(1) << indexHToString(2) << indexHToString(3);
-            alignH->setAttribute(QStringLiteral("enumNames"), namesH);
+            alignH->setAttribute(u"enumNames"_s, namesH);
             alignH->setValue(alignToIndexH(align));
             m_propertyToAlignH[property] = alignH;
             m_alignHToProperty[alignH] = property;
@@ -2056,7 +2058,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
             QtVariantProperty *alignV = addProperty(enumTypeId(), tr("Vertical"));
             QStringList namesV;
             namesV << indexVToString(0) << indexVToString(1) << indexVToString(2);
-            alignV->setAttribute(QStringLiteral("enumNames"), namesV);
+            alignV->setAttribute(u"enumNames"_s, namesV);
             alignV->setValue(alignToIndexV(align));
             m_propertyToAlignV[property] = alignV;
             m_alignVToProperty[alignV] = property;
@@ -2098,7 +2100,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
     QtVariantPropertyManager::initializeProperty(property);
     m_fontManager.postInitializeProperty(this, property, type, DesignerPropertyManager::enumTypeId());
     if (type == QMetaType::Double)
-        setAttribute(property, QStringLiteral("decimals"), 6);
+        setAttribute(property, u"decimals"_s, 6);
 }
 
 void DesignerPropertyManager::createIconSubProperty(QtProperty *iconProperty, QIcon::Mode mode, QIcon::State state, const QString &subName)

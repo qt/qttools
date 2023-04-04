@@ -41,6 +41,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 class FormWindowBasePrivate {
@@ -207,11 +209,11 @@ void FormWindowBase::reloadProperties()
         for (auto jt = it.value().begin(), end = it.value().end(); jt != end; ++jt) {
             const int index = jt.key();
             const QVariant newValue = sheet->property(index);
-            if (qobject_cast<QLabel *>(sheet->object()) && sheet->propertyName(index) == QStringLiteral("text")) {
+            if (qobject_cast<QLabel *>(sheet->object()) && sheet->propertyName(index) == "text"_L1) {
                 const PropertySheetStringValue newString = qvariant_cast<PropertySheetStringValue>(newValue);
                 // optimize a bit, reset only if the text value might contain a reference to qt resources
                 // (however reloading of icons other than taken from resources might not work here)
-                if (newString.value().contains(QStringLiteral(":/"))) {
+                if (newString.value().contains(":/"_L1)) {
                     const QVariant resetValue = QVariant::fromValue(PropertySheetStringValue());
                     sheet->setProperty(index, resetValue);
                 }
@@ -221,7 +223,7 @@ void FormWindowBase::reloadProperties()
         if (QTabWidget *tabWidget = qobject_cast<QTabWidget *>(sheet->object())) {
             const int count = tabWidget->count();
             const int current = tabWidget->currentIndex();
-            const QString currentTabIcon = QStringLiteral("currentTabIcon");
+            const QString currentTabIcon = u"currentTabIcon"_s;
             for (int i = 0; i < count; i++) {
                 tabWidget->setCurrentIndex(i);
                 const int index = sheet->indexOf(currentTabIcon);
@@ -231,7 +233,7 @@ void FormWindowBase::reloadProperties()
         } else if (QToolBox *toolBox = qobject_cast<QToolBox *>(sheet->object())) {
             const int count = toolBox->count();
             const int current = toolBox->currentIndex();
-            const QString currentItemIcon = QStringLiteral("currentItemIcon");
+            const QString currentItemIcon = u"currentItemIcon"_s;
             for (int i = 0; i < count; i++) {
                 toolBox->setCurrentIndex(i);
                 const int index = sheet->indexOf(currentItemIcon);
@@ -441,7 +443,7 @@ QMenu *FormWindowBase::createExtensionTaskMenu(QDesignerFormWindowInterface *fw,
     QExtensionManager *em = fw->core()->extensionManager();
     if (const QDesignerTaskMenuExtension *extTaskMenu = qt_extension<QDesignerTaskMenuExtension*>(em, o))
         actions += extTaskMenu->taskActions();
-    if (const QDesignerTaskMenuExtension *intTaskMenu = qobject_cast<QDesignerTaskMenuExtension *>(em->extension(o, QStringLiteral("QDesignerInternalTaskMenuExtension")))) {
+    if (const auto *intTaskMenu = qobject_cast<QDesignerTaskMenuExtension *>(em->extension(o, u"QDesignerInternalTaskMenuExtension"_s))) {
         if (!actions.isEmpty()) {
             QAction *a = new QAction(fw);
             a->setSeparator(true);

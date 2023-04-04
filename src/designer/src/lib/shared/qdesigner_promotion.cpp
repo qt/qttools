@@ -19,19 +19,20 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
     // Return a set of on-promotable classes
     const QSet<QString> &nonPromotableClasses() {
-        static QSet<QString> rc;
-        if (rc.isEmpty()) {
-            rc.insert(QStringLiteral("Line"));
-            rc.insert(QStringLiteral("QAction"));
-            rc.insert(QStringLiteral("Spacer"));
-            rc.insert(QStringLiteral("QMainWindow"));
-            rc.insert(QStringLiteral("QDialog"));
-            rc.insert(QStringLiteral("QMdiArea"));
-            rc.insert(QStringLiteral("QMdiSubWindow"));
-        }
+        static const QSet<QString> rc = {
+            u"Line"_s,
+            u"QAction"_s,
+            u"Spacer"_s,
+            u"QMainWindow"_s,
+            u"QDialog"_s,
+            u"QMdiArea"_s,
+            u"QMdiSubWindow"_s
+        };
         return rc;
     }
 
@@ -59,8 +60,9 @@ namespace {
     }
 
     // extract class name from xml  "<widget class="QWidget" ...>". Quite a hack.
-    QString classNameFromXml(QString xml) {
-        static const QString tag = QStringLiteral("class=\"");
+    QString classNameFromXml(QString xml)
+    {
+        constexpr auto tag = "class=\""_L1;
         const int pos = xml.indexOf(tag);
         if (pos == -1)
             return QString();
@@ -168,8 +170,7 @@ namespace qdesigner_internal {
         if (nonPromotableClasses().contains(name))
             return false;
 
-        if (name.startsWith(QStringLiteral("QDesigner")) ||
-            name.startsWith(QStringLiteral("QLayout")))
+        if (name.startsWith("QDesigner"_L1) || name.startsWith("QLayout"_L1))
             return false;
 
         return true;

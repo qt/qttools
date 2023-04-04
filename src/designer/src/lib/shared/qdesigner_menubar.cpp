@@ -29,6 +29,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 using ActionList = QList<QAction *>;
 
 namespace qdesigner_internal
@@ -65,7 +67,7 @@ QDesignerMenuBar::QDesignerMenuBar(QWidget *parent)  :
     italic.setItalic(true);
     m_addMenu->setFont(italic);
 
-    m_editor->setObjectName(QStringLiteral("__qt__passive_editor"));
+    m_editor->setObjectName(u"__qt__passive_editor"_s);
     m_editor->hide();
     m_editor->installEventFilter(this);
     installEventFilter(this);
@@ -438,8 +440,8 @@ void QDesignerMenuBar::leaveEditMode(LeaveEditMode mode)
         fw->beginCommand(QApplication::translate("Command", "Change Title"));
     } else {
         fw->beginCommand(QApplication::translate("Command", "Insert Menu"));
-        const QString niceObjectName = ActionEditor::actionTextToName(m_editor->text(), QStringLiteral("menu"));
-        QMenu *menu = qobject_cast<QMenu*>(fw->core()->widgetFactory()->createWidget(QStringLiteral("QMenu"), this));
+        const QString niceObjectName = ActionEditor::actionTextToName(m_editor->text(), u"menu"_s);
+        QMenu *menu = qobject_cast<QMenu*>(fw->core()->widgetFactory()->createWidget(u"QMenu"_s, this));
         fw->core()->widgetFactory()->initialize(menu);
         menu->setObjectName(niceObjectName);
         menu->setTitle(tr("Menu"));
@@ -451,7 +453,7 @@ void QDesignerMenuBar::leaveEditMode(LeaveEditMode mode)
     }
 
     auto *cmd = new qdesigner_internal::SetPropertyCommand(fw);
-    cmd->init(action, QStringLiteral("text"), m_editor->text());
+    cmd->init(action, u"text"_s, m_editor->text());
     fw->commandHistory()->push(cmd);
     fw->endCommand();
 }

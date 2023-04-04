@@ -36,6 +36,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 enum { BrushRole = 33 };
@@ -255,8 +257,6 @@ void PaletteEditor::viewContextMenuRequested(const QPoint &pos)
     m_paletteModel->setData(index, QVariant(brush), BrushRole);
 }
 
-static inline QString paletteSuffix() { return QStringLiteral("xml"); }
-
 static inline QString paletteFilter()
 {
     return PaletteEditor::tr("QPalette UI file (*.xml)");
@@ -333,7 +333,7 @@ void PaletteEditor::save()
 {
     QFileDialog dialog(this, tr("Save Palette"), QString(), paletteFilter());
     dialog.setAcceptMode(QFileDialog::AcceptSave);
-    dialog.setDefaultSuffix(paletteSuffix());
+    dialog.setDefaultSuffix(u"xml"_s);
     while (dialog.exec() == QDialog::Accepted) {
         QString errorMessage;
         if (savePalette(dialog.selectedFiles().constFirst(), palette(), &errorMessage))
@@ -613,7 +613,7 @@ RoleEditor::RoleEditor(QWidget *parent) :
 
     QToolButton *button = new QToolButton(this);
     button->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    button->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
+    button->setIcon(createIconSet(u"resetproperty.png"_s));
     button->setIconSize(QSize(8,8));
     button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
     layout->addWidget(button);

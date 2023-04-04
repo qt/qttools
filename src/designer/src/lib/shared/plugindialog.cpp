@@ -28,6 +28,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum { ErrorItemRole = Qt::UserRole + 1 };
 
 namespace qdesigner_internal {

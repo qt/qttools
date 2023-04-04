@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 // Returns a combination of ChangeMask flags
 unsigned ActionData::compare(const ActionData &rhs) const
@@ -51,7 +53,7 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
     m_ui->tooltipEditor->setTextPropertyValidationMode(ValidationRichText);
     connect(m_ui->toolTipToolButton, &QAbstractButton::clicked, this, &NewActionDialog::slotEditToolTip);
 
-    m_ui->keysequenceResetToolButton->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
+    m_ui->keysequenceResetToolButton->setIcon(createIconSet(u"resetproperty.png"_s));
     connect(m_ui->keysequenceResetToolButton, &QAbstractButton::clicked,
             this, &NewActionDialog::slotResetKeySequence);
 

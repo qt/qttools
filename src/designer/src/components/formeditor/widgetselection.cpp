@@ -33,6 +33,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 enum { debugWidgetSelection = 0 };
 
@@ -326,7 +328,7 @@ void WidgetHandle::mouseReleaseEvent(QMouseEvent *e)
     case WidgetSelection::UnlaidOut:
        if (m_geom != m_widget->geometry()) {
            SetPropertyCommand *cmd = new SetPropertyCommand(m_formWindow);
-           cmd->init(m_widget, QStringLiteral("geometry"), m_widget->geometry());
+           cmd->init(m_widget, u"geometry"_s, m_widget->geometry());
            cmd->setOldValue(m_origGeom);
            m_formWindow->commandHistory()->push(cmd);
            m_formWindow->emitSelectionChanged();

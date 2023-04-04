@@ -33,6 +33,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 // give the user a little more space to click on the sub menu rectangle
 static inline void extendClickableArea(QRect *subMenuRect, Qt::LayoutDirection dir)
 {
@@ -49,7 +51,7 @@ static inline void extendClickableArea(QRect *subMenuRect, Qt::LayoutDirection d
 
 QDesignerMenu::QDesignerMenu(QWidget *parent) :
     QMenu(parent),
-    m_subMenuPixmap(QPixmap(QStringLiteral(":/qt-project.org/formeditor/images/submenu.png"))),
+    m_subMenuPixmap(QPixmap(u":/qt-project.org/formeditor/images/submenu.png"_s)),
     m_currentIndex(0),
     m_addItem(new qdesigner_internal::SpecialMenuAction(this)),
     m_addSeparator(new qdesigner_internal::SpecialMenuAction(this)),
@@ -75,7 +77,7 @@ QDesignerMenu::QDesignerMenu(QWidget *parent) :
 
     connect(m_deactivateWindowTimer, &QTimer::timeout, this, &QDesignerMenu::slotDeactivateNow);
 
-    m_editor->setObjectName(QStringLiteral("__qt__passive_editor"));
+    m_editor->setObjectName(u"__qt__passive_editor"_s);
     m_editor->hide();
 
     m_editor->installEventFilter(this);
@@ -979,7 +981,7 @@ void QDesignerMenu::createRealMenuAction(QAction *action)
 
     core->widgetFactory()->initialize(menu);
 
-    const QString niceObjectName = ActionEditor::actionTextToName(menu->title(), QStringLiteral("menu"));
+    const QString niceObjectName = ActionEditor::actionTextToName(menu->title(), u"menu"_s);
     menu->setObjectName(niceObjectName);
 
     core->metaDataBase()->add(menu);
@@ -1173,7 +1175,7 @@ void QDesignerMenu::leaveEditMode(LeaveEditMode mode)
     }
 
     auto *cmd = new qdesigner_internal::SetPropertyCommand(fw);
-    cmd->init(action, QStringLiteral("text"), m_editor->text());
+    cmd->init(action, u"text"_s, m_editor->text());
     fw->commandHistory()->push(cmd);
 
     if (parentMenu()) {

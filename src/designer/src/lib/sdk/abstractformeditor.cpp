@@ -47,6 +47,8 @@ static void initResources()
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class QDesignerFormEditorInterfacePrivate {
 public:
     QDesignerFormEditorInterfacePrivate();
@@ -511,9 +513,9 @@ void QDesignerFormEditorInterface::setIntrospection(QDesignerIntrospectionInterf
 QString QDesignerFormEditorInterface::resourceLocation() const
 {
 #ifdef Q_OS_MACOS
-    return QStringLiteral(":/qt-project.org/formeditor/images/mac");
+    return u":/qt-project.org/formeditor/images/mac"_s;
 #else
-    return QStringLiteral(":/qt-project.org/formeditor/images/win");
+    return u":/qt-project.org/formeditor/images/win"_s;
 #endif
 }
 

@@ -23,6 +23,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 #define USE_LAYOUT_SIZE_CONSTRAINT
 
 static const char *leftMargin = "leftMargin";
@@ -67,7 +69,7 @@ namespace {
 static bool isIntegerList(const QString &s)
 {
     // Check for empty string or comma-separated list of integers
-    static const QRegularExpression re(QStringLiteral("^[0-9]+(,[0-9]+)+$"));
+    static const QRegularExpression re(u"^[0-9]+(,[0-9]+)+$"_s);
     Q_ASSERT(re.isValid());
     return s.isEmpty() || re.match(s).hasMatch();
 }
@@ -150,7 +152,7 @@ namespace qdesigner_internal {
 LayoutPropertySheet::LayoutPropertySheet(QLayout *l, QObject *parent)
     : QDesignerPropertySheet(l, parent), m_layout(l)
 {
-    const QString layoutGroup = QStringLiteral("Layout");
+    const QString layoutGroup = u"Layout"_s;
     int pindex = createFakeProperty(QLatin1String(leftMargin), 0);
     setPropertyGroup(pindex, layoutGroup);
 

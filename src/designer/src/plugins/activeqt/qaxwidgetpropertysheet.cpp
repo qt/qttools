@@ -18,6 +18,8 @@ static const char *geometryPropertyC = "geometry";
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 const char *QAxWidgetPropertySheet::controlPropertyName = "control";
 
 static QString designerPropertyToString(const QVariant &value)
@@ -30,7 +32,7 @@ static QString designerPropertyToString(const QVariant &value)
 QAxWidgetPropertySheet::QAxWidgetPropertySheet(QDesignerAxWidget *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),
     m_controlProperty(controlPropertyName),
-    m_propertyGroup(QStringLiteral("QAxWidget"))
+    m_propertyGroup(u"QAxWidget"_s)
 {
      if (!axWidget()->loaded()) { // For some obscure reason....
         const int controlIndex = QDesignerPropertySheet::indexOf(m_controlProperty);

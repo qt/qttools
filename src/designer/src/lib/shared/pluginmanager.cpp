@@ -76,9 +76,9 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
     const QStringList path_list = QCoreApplication::libraryPaths();
 
     for (const QString &path : path_list)
-        result.append(path + u"/designer"_s);
+        result.append(path + "/designer"_L1);
 
-    result.append(qdesigner_internal::dataDirectory() + u"/plugins"_s);
+    result.append(qdesigner_internal::dataDirectory() + "/plugins"_L1);
     return result;
 }
 
@@ -88,11 +88,11 @@ QStringList QDesignerPluginManager::defaultPluginPaths()
 static inline QString getDesignerLanguage(QDesignerFormEditorInterface *core)
 {
     if (QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core)) {
-        if (lang->uiExtension() == QStringLiteral("jui"))
+        if (lang->uiExtension() == "jui"_L1)
             return QLatin1String(jambiLanguageC);
-        return QStringLiteral("unknown");
+        return u"unknown"_s;
     }
-    return QStringLiteral("c++");
+    return u"c++"_s;
 }
 
 // ----------------  QDesignerCustomWidgetSharedData
@@ -239,19 +239,19 @@ static inline QString msgAttributeMissing(const QString &name)
 static qdesigner_internal::TextPropertyValidationMode typeStringToType(const QString &v, bool *ok)
 {
     *ok = true;
-    if (v  == QStringLiteral("multiline"))
+    if (v  == "multiline"_L1)
         return qdesigner_internal::ValidationMultiLine;
-    if (v  == QStringLiteral("richtext"))
+    if (v  == "richtext"_L1)
         return qdesigner_internal::ValidationRichText;
-    if (v  == QStringLiteral("stylesheet"))
+    if (v  == "stylesheet"_L1)
         return qdesigner_internal::ValidationStyleSheet;
-    if (v  == QStringLiteral("singleline"))
+    if (v  == "singleline"_L1)
         return qdesigner_internal::ValidationSingleLine;
-    if (v  == QStringLiteral("objectname"))
+    if (v  == "objectname"_L1)
         return qdesigner_internal::ValidationObjectName;
-    if (v  == QStringLiteral("objectnamescope"))
+    if (v  == "objectnamescope"_L1)
         return qdesigner_internal::ValidationObjectNameScope;
-    if (v  == QStringLiteral("url"))
+    if (v  == "url"_L1)
         return qdesigner_internal::ValidationURL;
     *ok = false;
     return qdesigner_internal::ValidationRichText;
@@ -286,7 +286,7 @@ static bool parsePropertySpecs(QXmlStreamReader &sr,
                     return false;
                 }
                 bool typeOk;
-                const bool noTr = notrS == QStringLiteral("true") || notrS == QStringLiteral("1");
+                const bool noTr = notrS == "true"_L1 || notrS == "1"_L1;
                 QDesignerCustomWidgetSharedData::StringPropertyType v(typeStringToType(type, &typeOk), !noTr);
                 if (!typeOk) {
                     *errorMessage = QDesignerPluginManager::tr("'%1' is not a valid string property specification.").arg(type);
@@ -526,7 +526,7 @@ QDesignerPluginManager::QDesignerPluginManager(QDesignerFormEditorInterface *cor
 {
     m_d->m_pluginPaths = defaultPluginPaths();
     const QSettings settings(qApp->organizationName(), QDesignerQSettings::settingsApplicationName());
-    m_d->m_disabledPlugins = unique(settings.value(QStringLiteral("PluginManager/DisabledPlugins")).toStringList());
+    m_d->m_disabledPlugins = unique(settings.value("PluginManager/DisabledPlugins").toStringList());
 
     // Register plugins
     updateRegisteredPlugins();
@@ -684,8 +684,8 @@ void QDesignerPluginManager::registerPlugin(const QString &plugin)
 bool QDesignerPluginManager::syncSettings()
 {
     QSettings settings(qApp->organizationName(), QDesignerQSettings::settingsApplicationName());
-    settings.beginGroup(QStringLiteral("PluginManager"));
-    settings.setValue(QStringLiteral("DisabledPlugins"), m_d->m_disabledPlugins);
+    settings.beginGroup("PluginManager");
+    settings.setValue("DisabledPlugins", m_d->m_disabledPlugins);
     settings.endGroup();
     return settings.status() == QSettings::NoError;
 }

@@ -24,6 +24,8 @@ enum { debugSettings = 0 };
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *newFormShowKey = "newFormDialog/ShowOnStartup";
 
 // Change the version whenever the arrangement changes significantly.
@@ -62,8 +64,8 @@ void QDesignerSettings::saveGeometryFor(const QWidget *w)
     if (debugSettings)
         qDebug() << Q_FUNC_INFO << w << "visible=" << visible;
     s->beginGroup(w->objectName());
-    s->setValue(QStringLiteral("visible"), visible);
-    s->setValue(QStringLiteral("geometry"), w->saveGeometry());
+    s->setValue(u"visible"_s, visible);
+    s->setValue(u"geometry"_s, w->saveGeometry());
     s->endGroup();
 }
 
@@ -71,8 +73,8 @@ void QDesignerSettings::restoreGeometry(QWidget *w, QRect fallBack) const
 {
     Q_ASSERT(w && !w->objectName().isEmpty());
     const QString key = w->objectName();
-    const QByteArray ba(settings()->value(key + QStringLiteral("/geometry")).toByteArray());
-    const bool visible = settings()->value(key + QStringLiteral("/visible"), true).toBool();
+    const QByteArray ba(settings()->value(key + "/geometry"_L1).toByteArray());
+    const bool visible = settings()->value(key + "/visible"_L1, true).toBool();
 
     if (debugSettings)
         qDebug() << Q_FUNC_INFO << w << fallBack << "visible=" << visible;
@@ -171,8 +173,8 @@ QMap<QString, QString> QDesignerSettings::backup() const
 void QDesignerSettings::setUiMode(UIMode mode)
 {
     QDesignerSettingsInterface *s = settings();
-    s->beginGroup(QStringLiteral("UI"));
-    s->setValue(QStringLiteral("currentMode"), mode);
+    s->beginGroup(u"UI"_s);
+    s->setValue(u"currentMode"_s, mode);
     s->endGroup();
 }
 
@@ -183,17 +185,17 @@ UIMode QDesignerSettings::uiMode() const
 #else
     const UIMode defaultMode = DockedMode;
 #endif
-    UIMode uiMode = static_cast<UIMode>(value(QStringLiteral("UI/currentMode"), defaultMode).toInt());
+    UIMode uiMode = static_cast<UIMode>(value(u"UI/currentMode"_s, defaultMode).toInt());
     return uiMode;
 }
 
 void QDesignerSettings::setToolWindowFont(const ToolWindowFontSettings &fontSettings)
 {
     QDesignerSettingsInterface *s = settings();
-    s->beginGroup(QStringLiteral("UI"));
-    s->setValue(QStringLiteral("font"), fontSettings.m_font);
-    s->setValue(QStringLiteral("useFont"), fontSettings.m_useFont);
-    s->setValue(QStringLiteral("writingSystem"), fontSettings.m_writingSystem);
+    s->beginGroup(u"UI"_s);
+    s->setValue(u"font"_s, fontSettings.m_font);
+    s->setValue(u"useFont"_s, fontSettings.m_useFont);
+    s->setValue(u"writingSystem"_s, fontSettings.m_writingSystem);
     s->endGroup();
 }
 
@@ -201,11 +203,11 @@ ToolWindowFontSettings QDesignerSettings::toolWindowFont() const
 {
     ToolWindowFontSettings fontSettings;
     fontSettings.m_writingSystem =
-            static_cast<QFontDatabase::WritingSystem>(value(QStringLiteral("UI/writingSystem"),
+            static_cast<QFontDatabase::WritingSystem>(value(u"UI/writingSystem"_s,
                                                             QFontDatabase::Any).toInt());
-    fontSettings.m_font = qvariant_cast<QFont>(value(QStringLiteral("UI/font")));
+    fontSettings.m_font = qvariant_cast<QFont>(value(u"UI/font"_s));
     fontSettings.m_useFont =
-            settings()->value(QStringLiteral("UI/useFont"), QVariant(false)).toBool();
+            settings()->value(u"UI/useFont"_s, QVariant(false)).toBool();
     return fontSettings;
 }
 

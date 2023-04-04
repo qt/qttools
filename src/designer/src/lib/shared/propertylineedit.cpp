@@ -8,6 +8,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
     PropertyLineEdit::PropertyLineEdit(QWidget *parent) :
         QLineEdit(parent), m_wantNewLine(false)
@@ -30,7 +32,7 @@ namespace qdesigner_internal {
     }
 
     void PropertyLineEdit::insertNewLine() {
-        insertText(QStringLiteral("\\n"));
+        insertText(u"\\n"_s);
     }
 
     void PropertyLineEdit::insertText(const QString &text) {

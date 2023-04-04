@@ -28,6 +28,8 @@ static const char *uiClosingTagC = "</ui>";
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum { FilterRole = Qt::UserRole + 11 };
 
 static QString domToString(const QDomElement &elt)
@@ -180,7 +182,7 @@ void WidgetBoxCategoryModel::addWidget(const QDesignerWidgetBoxInterface::Widget
 
     // Filter on name + class name if it is different and not a layout.
     QString filter = widget.name();
-    if (!className.isEmpty() && !filter.contains(QStringLiteral("Layout")) && !filter.contains(className))
+    if (!className.isEmpty() && !filter.contains("Layout"_L1) && !filter.contains(className))
         filter += className;
 
     WidgetBoxCategoryEntry item(widget, filter, icon, editable);
@@ -324,7 +326,7 @@ QWidget *WidgetBoxCategoryEntryDelegate::createEditor(QWidget *parent,
 {
     QWidget *result = QItemDelegate::createEditor(parent, option, index);
     if (QLineEdit *line_edit = qobject_cast<QLineEdit*>(result)) {
-        static const QRegularExpression re(QStringLiteral("^[_a-zA-Z][_a-zA-Z0-9]*$"));
+        static const QRegularExpression re(u"^[_a-zA-Z][_a-zA-Z0-9]*$"_s);
         Q_ASSERT(re.isValid());
         line_edit->setValidator(new QRegularExpressionValidator(re, line_edit));
     }

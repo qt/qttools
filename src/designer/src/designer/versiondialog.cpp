@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class VersionLabel : public QLabel
 {
     Q_OBJECT
@@ -42,7 +44,7 @@ private:
 VersionLabel::VersionLabel(QWidget *parent)
         : QLabel(parent)
 {
-    QPixmap pixmap(QStringLiteral(":/qt-project.org/designer/images/designer.png"));
+    QPixmap pixmap(u":/qt-project.org/designer/images/designer.png"_s);
     pixmap.setDevicePixelRatio(devicePixelRatioF());
     setPixmap(pixmap);
     hitPoints.append(QPoint(56, 25));
@@ -140,7 +142,7 @@ VersionDialog::VersionDialog(QWidget *parent)
 
     lbl->setText(tr("%1"
                     "<br/>Copyright (C) %2 The Qt Company Ltd."
-                    ).arg(version, QStringLiteral("2023")));
+                    ).arg(version, "2023"_L1));
 
     lbl->setWordWrap(true);
     lbl->setOpenExternalLinks(true);

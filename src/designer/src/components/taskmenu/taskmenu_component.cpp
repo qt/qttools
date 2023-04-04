@@ -21,6 +21,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 TaskMenuComponent::TaskMenuComponent(QDesignerFormEditorInterface *core, QObject *parent)
@@ -30,7 +32,7 @@ TaskMenuComponent::TaskMenuComponent(QDesignerFormEditorInterface *core, QObject
     Q_ASSERT(m_core != nullptr);
 
     QExtensionManager *mgr = core->extensionManager();
-    const QString taskMenuId =  QStringLiteral("QDesignerInternalTaskMenuExtension");
+    const QString taskMenuId =  u"QDesignerInternalTaskMenuExtension"_s;
 
     ButtonTaskMenuFactory::registerExtension(mgr, taskMenuId);
     CommandLinkButtonTaskMenuFactory::registerExtension(mgr, taskMenuId); // Order!

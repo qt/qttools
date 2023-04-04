@@ -19,6 +19,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 #ifdef QFORMINTERNAL_NAMESPACE
 namespace QFormInternal
 {
@@ -294,7 +296,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         DomString *str = new DomString();
         str->setText(v.toString());
         if (!translateString)
-            str->setAttributeNotr(QStringLiteral("true"));
+            str->setAttributeNotr(u"true"_s);
         dom_prop->setElementString(str);
     }
         return true;
