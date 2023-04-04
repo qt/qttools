@@ -16,6 +16,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 class ItemPropertyBrowser : public QtTreePropertyBrowser
@@ -28,7 +30,7 @@ public:
         const QString widthSampleString = QCoreApplication::translate("ItemPropertyBrowser", "XX Icon Selected off");
         m_width = fontMetrics().horizontalAdvance(widthSampleString);
         setSplitterPosition(m_width);
-        m_width += fontMetrics().horizontalAdvance(QStringLiteral("/this/is/some/random/path"));
+        m_width += fontMetrics().horizontalAdvance(u"/this/is/some/random/path"_s);
     }
 
     QSize sizeHint() const override
@@ -103,16 +105,16 @@ void AbstractItemEditor::setupProperties(const PropertyDefinition *propList,
         }
         Q_ASSERT(prop);
         if (role == Qt::ToolTipPropertyRole || role == Qt::WhatsThisPropertyRole)
-            prop->setAttribute(QStringLiteral("validationMode"), ValidationRichText);
+            prop->setAttribute(u"validationMode"_s, ValidationRichText);
         else if (role == Qt::DisplayPropertyRole)
-            prop->setAttribute(QStringLiteral("validationMode"), ValidationMultiLine);
+            prop->setAttribute(u"validationMode"_s, ValidationMultiLine);
         else if (role == Qt::StatusTipPropertyRole)
-            prop->setAttribute(QStringLiteral("validationMode"), ValidationSingleLine);
+            prop->setAttribute(u"validationMode"_s, ValidationSingleLine);
         else if (role == ItemFlagsShadowRole)
-            prop->setAttribute(QStringLiteral("flagNames"), c2qStringList(itemFlagNames));
+            prop->setAttribute(u"flagNames"_s, c2qStringList(itemFlagNames));
         else if (role == Qt::CheckStateRole)
-            prop->setAttribute(QStringLiteral("enumNames"), c2qStringList(checkStateNames));
-        prop->setAttribute(QStringLiteral("resettable"), true);
+            prop->setAttribute(u"enumNames"_s, c2qStringList(checkStateNames));
+        prop->setAttribute(u"resettable"_s, true);
         m_properties.append(prop);
         m_rootProperties.append(prop);
         m_propertyToRole.insert(prop, role);

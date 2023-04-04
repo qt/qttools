@@ -22,6 +22,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 /*******************************************************************************
 ** WidgetBoxResource
@@ -58,7 +60,7 @@ WidgetBoxResource::WidgetBoxResource(QDesignerFormEditorInterface *core) :
 
 QWidget *WidgetBoxResource::createWidget(const QString &widgetName, QWidget *parentWidget, const QString &name)
 {
-    if (widgetName == QStringLiteral("Spacer")) {
+    if (widgetName == "Spacer"_L1) {
         Spacer *spacer = new Spacer(parentWidget);
         spacer->setObjectName(name);
         return spacer;
@@ -99,9 +101,8 @@ void WidgetBoxResource::createCustomWidgets(DomCustomWidgets *dc)
 static QSize geometryProp(const DomWidget *dw)
 {
     const auto &prop_list = dw->elementProperty();
-    const QString geometry = QStringLiteral("geometry");
     for (DomProperty *prop : prop_list) {
-        if (prop->attributeName() !=  geometry)
+        if (prop->attributeName() != "geometry"_L1)
             continue;
         DomRect *dr = prop->elementRect();
         if (dr == nullptr)

@@ -32,9 +32,9 @@ static const char *deviceProfilesKey = "DeviceProfiles";
 static const char *formTemplatePathsKey = "FormTemplatePaths";
 static const char *formTemplateKey = "FormTemplate";
 static const char *newFormSizeKey = "NewFormSize";
-static inline QString namingModeKey() { return QStringLiteral("naming"); }
-static inline QString underScoreNamingMode() { return QStringLiteral("underscore"); }
-static inline QString camelCaseNamingMode() { return QStringLiteral("camelcase"); }
+static inline QString namingModeKey() { return u"naming"_s; }
+static inline QString underScoreNamingMode() { return u"underscore"_s; }
+static inline QString camelCaseNamingMode() { return u"camelcase"_s; }
 
 static bool checkTemplatePath(const QString &path, bool create)
 {
@@ -79,7 +79,7 @@ const QStringList &QDesignerSharedSettings::defaultFormTemplatePaths()
     static QStringList rc;
     if (rc.isEmpty()) {
         // Ensure default form template paths
-        const QString templatePath = QStringLiteral("/templates");
+        const auto templatePath = "/templates"_L1;
         // home
         QString path = dataDirectory() + templatePath;
         if (checkTemplatePath(path, true))

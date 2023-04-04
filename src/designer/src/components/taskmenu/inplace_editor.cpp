@@ -15,6 +15,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 // ----------------- InPlaceEditor
@@ -28,7 +30,7 @@ InPlaceEditor::InPlaceEditor(QWidget *widget,
     m_InPlaceWidgetHelper(this, widget, fw)
 {
     setAlignment(m_InPlaceWidgetHelper.alignment());
-    setObjectName(QStringLiteral("__qt__passive_m_editor"));
+    setObjectName(u"__qt__passive_m_editor"_s);
 
     setText(text);
     selectAll();

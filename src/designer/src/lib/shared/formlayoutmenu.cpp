@@ -39,6 +39,8 @@ static const char *fieldWidgetBaseClasses[] = {
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 // Struct that describes a row of controls (descriptive label and control) to
@@ -102,7 +104,7 @@ private:
 FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
                                          QWidget *parent) :
     QDialog(parent),
-    m_buddyMarkerRegexp(QStringLiteral("\\&[^&]")),
+    m_buddyMarkerRegexp(u"\\&[^&]"_s),
     m_labelNameEdited(false),
     m_fieldNameEdited(false),
     m_buddyClicked(false)
@@ -113,7 +115,7 @@ FormLayoutRowDialog::FormLayoutRowDialog(QDesignerFormEditorInterface *core,
     m_ui.setupUi(this);
     connect(m_ui.labelTextLineEdit, &QLineEdit::textEdited, this, &FormLayoutRowDialog::labelTextEdited);
 
-    QRegularExpressionValidator *nameValidator = new QRegularExpressionValidator(QRegularExpression(QStringLiteral("^[a-zA-Z0-9_]+$")), this);
+    auto *nameValidator = new QRegularExpressionValidator(QRegularExpression(u"^[a-zA-Z0-9_]+$"_s), this);
     Q_ASSERT(nameValidator->regularExpression().isValid());
 
     m_ui.labelNameLineEdit->setValidator(nameValidator);
@@ -214,7 +216,7 @@ void FormLayoutRowDialog::labelTextEdited(const QString &text)
 // "namespace::QLineEdit"->"LineEdit"
 static inline QString postFixFromClassName(QString className)
 {
-    const int index = className.lastIndexOf(QStringLiteral("::"));
+    const int index = className.lastIndexOf("::"_L1);
     if (index != -1)
         className.remove(0, index + 2);
     if (className.size() > 2)
@@ -295,7 +297,7 @@ void FormLayoutRowDialog::updateObjectNames(bool updateLabel, bool updateField)
     const QString prefix = prefixFromLabel(labelText());
     // Set names
     if (doUpdateLabel)
-        m_ui.labelNameLineEdit->setText(prefix + QStringLiteral("Label"));
+        m_ui.labelNameLineEdit->setText(prefix + "Label"_L1);
     if (doUpdateField)
         m_ui.fieldNameLineEdit->setText(prefix + postFixFromClassName(fieldClass()));
 }
@@ -384,16 +386,16 @@ static QPair<QWidget *,QWidget *>
     QDesignerFormEditorInterface *core = formWindow->core();
     QDesignerWidgetFactoryInterface *wf = core->widgetFactory();
 
-    QPair<QWidget *,QWidget *> rc = QPair<QWidget *,QWidget *>(wf->createWidget(QStringLiteral("QLabel"), parent),
-                                                               wf->createWidget(row.fieldClassName, parent));
+    QPair<QWidget *,QWidget *> rc{wf->createWidget(u"QLabel"_s, parent),
+                                  wf->createWidget(row.fieldClassName, parent)};
     // Set up properties of the label
-    const QString objectNameProperty = QStringLiteral("objectName");
+    const QString objectNameProperty = u"objectName"_s;
     QDesignerPropertySheetExtension *labelSheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), rc.first);
     int nameIndex = labelSheet->indexOf(objectNameProperty);
     labelSheet->setProperty(nameIndex, QVariant::fromValue(PropertySheetStringValue(row.labelName)));
     labelSheet->setChanged(nameIndex, true);
     formWindow->ensureUniqueObjectName(rc.first);
-    const int textIndex = labelSheet->indexOf(QStringLiteral("text"));
+    const int textIndex = labelSheet->indexOf(u"text"_s);
     labelSheet->setProperty(textIndex, QVariant::fromValue(PropertySheetStringValue(row.labelText)));
     labelSheet->setChanged(textIndex, true);
     // Set up properties of the control

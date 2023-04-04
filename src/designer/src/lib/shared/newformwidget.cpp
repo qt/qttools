@@ -32,6 +32,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum { profileComboIndexOffset = 1 };
 enum { debugNewFormWidget = 0 };
 
@@ -116,12 +118,12 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     m_ui->lblPreview->setBackgroundRole(QPalette::Base);
     QDesignerSharedSettings settings(m_core);
 
-    QString uiExtension = QStringLiteral("ui");
-    QString templatePath = QStringLiteral(":/qt-project.org/designer/templates/forms");
+    QString uiExtension = u"ui"_s;
+    QString templatePath = u":/qt-project.org/designer/templates/forms"_s;
 
     QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core);
     if (lang) {
-        templatePath = QStringLiteral(":/templates/forms");
+        templatePath = u":/templates/forms"_s;
         uiExtension = lang->uiExtension();
     }
 
@@ -378,7 +380,7 @@ void NewFormWidget::loadFrom(const QString &path, bool resourceFile, const QStri
         return;
 
     // Iterate through the directory and add the templates
-    const QFileInfoList list = dir.entryInfoList(QStringList(QStringLiteral("*.") + uiExtension),
+    const QFileInfoList list = dir.entryInfoList(QStringList{"*."_L1 + uiExtension},
                                                  QDir::Files);
 
     if (list.isEmpty())

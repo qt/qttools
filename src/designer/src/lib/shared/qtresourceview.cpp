@@ -40,6 +40,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *elementResourceData = "resource";
 static const char *typeAttribute = "type";
 static const char *typeImage = "image";
@@ -337,7 +339,7 @@ void QtResourceViewPrivate::createPaths()
         return;
 
     // Resource root up until 4.6 was ':', changed to ":/" as of 4.7
-    const QString root(QStringLiteral(":/"));
+    const QString root(u":/"_s);
 
     QMap<QString, QString> contents = m_resourceModel->contents();
     for (auto it = contents.cbegin(), end = contents.cend(); it != end; ++it) {
@@ -377,7 +379,7 @@ void QtResourceViewPrivate::filterOutResources()
     // 3) we hide these items which has pathToVisible value false.
 
     const bool matchAll = m_filterPattern.isEmpty();
-    const QString root(QStringLiteral(":/"));
+    const QString root(u":/"_s);
 
     QQueue<QString> pathQueue;
     pathQueue.enqueue(root);
@@ -485,7 +487,7 @@ QTreeWidgetItem *QtResourceViewPrivate::createPath(const QString &path, QTreeWid
         QFileInfo di(path);
         substPath = di.fileName();
     } else {
-        substPath = QStringLiteral("<resource root>");
+        substPath = u"<resource root>"_s;
     }
     item->setText(0, substPath);
     item->setToolTip(0, path);
@@ -530,14 +532,16 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
 {
     d_ptr->q_ptr = this;
 
-    QIcon editIcon = QIcon::fromTheme(QStringLiteral("document-properties"), qdesigner_internal::createIconSet(QStringLiteral("edit.png")));
+    QIcon editIcon = QIcon::fromTheme(u"document-properties"_s,
+                                      qdesigner_internal::createIconSet(u"edit.png"_s));
     d_ptr->m_editResourcesAction = new QAction(editIcon, tr("Edit Resources..."), this);
     d_ptr->m_toolBar->addAction(d_ptr->m_editResourcesAction);
     connect(d_ptr->m_editResourcesAction, &QAction::triggered,
             this, [this] { d_ptr->slotEditResources(); });
     d_ptr->m_editResourcesAction->setEnabled(false);
 
-    QIcon refreshIcon = QIcon::fromTheme(QStringLiteral("view-refresh"), qdesigner_internal::createIconSet(QStringLiteral("reload.png")));
+    QIcon refreshIcon = QIcon::fromTheme(u"view-refresh"_s,
+                                         qdesigner_internal::createIconSet(u"reload.png"_s));
     d_ptr->m_reloadResourcesAction = new QAction(refreshIcon, tr("Reload"), this);
 
     d_ptr->m_toolBar->addAction(d_ptr->m_reloadResourcesAction);
@@ -546,7 +550,8 @@ QtResourceView::QtResourceView(QDesignerFormEditorInterface *core, QWidget *pare
     d_ptr->m_reloadResourcesAction->setEnabled(false);
 
 #if QT_CONFIG(clipboard)
-    QIcon copyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), qdesigner_internal::createIconSet(QStringLiteral("editcopy.png")));
+    QIcon copyIcon = QIcon::fromTheme(u"edit-copy"_s,
+                                      qdesigner_internal::createIconSet(u"editcopy.png"_s));
     d_ptr->m_copyResourcePathAction = new QAction(copyIcon, tr("Copy Path"), this);
     connect(d_ptr->m_copyResourcePathAction, &QAction::triggered,
             this, [this] { d_ptr->slotCopyResourcePath(); });

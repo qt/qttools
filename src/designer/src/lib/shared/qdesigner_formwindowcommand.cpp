@@ -21,6 +21,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 // ---- QDesignerFormWindowCommand ----
@@ -79,7 +81,7 @@ void QDesignerFormWindowCommand::updateBuddies(QDesignerFormWindowInterface *for
     if (label_list.isEmpty())
         return;
 
-    const QString buddyProperty = QStringLiteral("buddy");
+    const QString buddyProperty = u"buddy"_s;
     const QByteArray oldNameU8 = old_name.toUtf8();
     const QByteArray newNameU8 = new_name.toUtf8();
 

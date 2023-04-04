@@ -28,6 +28,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QDesignerFormWindow::QDesignerFormWindow(QDesignerFormWindowInterface *editor, QDesignerWorkbench *workbench, QWidget *parent, Qt::WindowFlags flags)
     : QWidget(parent, flags),
       m_editor(editor),
@@ -73,7 +75,7 @@ void QDesignerFormWindow::changeEvent(QEvent *e)
 {
     switch (e->type()) {
         case QEvent::WindowTitleChange:
-            m_action->setText(windowTitle().remove(QStringLiteral("[*]")));
+            m_action->setText(windowTitle().remove("[*]"_L1));
             break;
         case QEvent::WindowIconChange:
             m_action->setIcon(windowIcon());
@@ -138,7 +140,7 @@ int QDesignerFormWindow::getNumberOfUntitledWindows() const
     // Find the number of untitled windows excluding ourselves.
     // Do not fall for 'untitled.ui', match with modified place holder.
     // This will cause some problems with i18n, but for now I need the string to be "static"
-    static const QRegularExpression rx(QStringLiteral("untitled( (\\d+))?\\[\\*\\]$"));
+    static const QRegularExpression rx(u"untitled( (\\d+))?\\[\\*\\]$"_s);
     Q_ASSERT(rx.isValid());
     for (int i = 0; i < totalWindows; ++i) {
         QDesignerFormWindow *fw =  m_workbench->formWindow(i);
@@ -170,7 +172,7 @@ void QDesignerFormWindow::updateWindowTitle(const QString &fileName)
 
     QString fileNameTitle;
     if (fileName.isEmpty()) {
-        fileNameTitle = QStringLiteral("untitled");
+        fileNameTitle += "untitled"_L1;
         if (const int maxUntitled = getNumberOfUntitledWindows()) {
             fileNameTitle += QLatin1Char(' ');
             fileNameTitle += QString::number(maxUntitled + 1);
@@ -245,7 +247,7 @@ void QDesignerFormWindow::slotGeometryChanged()
     QObject *object = core->propertyEditor()->object();
     if (object == nullptr || !object->isWidgetType())
         return;
-    static const QString geometryProperty = QStringLiteral("geometry");
+    static const QString geometryProperty = u"geometry"_s;
     const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), object);
     const int geometryIndex = sheet->indexOf(geometryProperty);
     if (geometryIndex == -1)

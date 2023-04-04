@@ -10,6 +10,8 @@ static const char *toolTipC = "A widget for displaying a web page, from the Qt W
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QWebViewPlugin::QWebViewPlugin(QObject *parent) :
     QObject(parent),
     m_initialized(false)
@@ -18,12 +20,12 @@ QWebViewPlugin::QWebViewPlugin(QObject *parent) :
 
 QString QWebViewPlugin::name() const
 {
-    return QStringLiteral("QWebView");
+    return u"QWebView"_s;
 }
 
 QString QWebViewPlugin::group() const
 {
-    return QStringLiteral("Display Widgets");
+    return u"Display Widgets"_s;
 }
 
 QString QWebViewPlugin::toolTip() const
@@ -38,12 +40,12 @@ QString QWebViewPlugin::whatsThis() const
 
 QString QWebViewPlugin::includeFile() const
 {
-    return QStringLiteral("<QtWebKitWidgets/QWebView>");
+    return u"<QtWebKitWidgets/QWebView>"_s;
 }
 
 QIcon QWebViewPlugin::icon() const
 {
-    return QIcon(QStringLiteral(":/qt-project.org/qwebview/images/qwebview.png"));
+    return QIcon(u":/qt-project.org/qwebview/images/qwebview.png"_s);
 }
 
 bool QWebViewPlugin::isContainer() const

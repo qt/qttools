@@ -23,6 +23,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 #ifdef QFORMINTERNAL_NAMESPACE
 namespace QFormInternal {
 #endif
@@ -44,7 +46,7 @@ QFormBuilderExtra::CustomWidgetData::CustomWidgetData(const DomCustomWidget *dcw
 QFormBuilderExtra::QFormBuilderExtra() :
     m_defaultMargin(INT_MIN),
     m_defaultSpacing(INT_MIN),
-    m_language(QStringLiteral("c++"))
+    m_language(u"c++"_s)
 {
 }
 
@@ -76,7 +78,6 @@ static inline QString msgXmlError(const QXmlStreamReader &reader)
 static bool inline readUiAttributes(QXmlStreamReader &reader, const QString &language,
                                     QString *errorMessage)
 {
-    const QString uiElement = QStringLiteral("ui");
     // Read up to first element
     while (!reader.atEnd()) {
         switch (reader.readNext()) {
@@ -84,9 +85,9 @@ static bool inline readUiAttributes(QXmlStreamReader &reader, const QString &lan
             *errorMessage = msgXmlError(reader);
             return false;
         case QXmlStreamReader::StartElement:
-            if (reader.name().compare(uiElement, Qt::CaseInsensitive) == 0) {
-                const QString versionAttribute = QStringLiteral("version");
-                const QString languageAttribute = QStringLiteral("language");
+            if (reader.name().compare("ui"_L1, Qt::CaseInsensitive) == 0) {
+                const QString versionAttribute = u"version"_s;
+                const QString languageAttribute = u"language"_s;
                 const QXmlStreamAttributes attributes = reader.attributes();
                 if (attributes.hasAttribute(versionAttribute)) {
                     const QVersionNumber version =
@@ -694,47 +695,47 @@ DomBrush *QFormBuilderExtra::saveBrush(const QBrush &br)
 // ------------ QFormBuilderStrings
 
 QFormBuilderStrings::QFormBuilderStrings() :
-    buddyProperty(QStringLiteral("buddy")),
-    cursorProperty(QStringLiteral("cursor")),
-    objectNameProperty(QStringLiteral("objectName")),
-    trueValue(QStringLiteral("true")),
-    falseValue(QStringLiteral("false")),
-    horizontalPostFix(QStringLiteral("Horizontal")),
-    separator(QStringLiteral("separator")),
-    defaultTitle(QStringLiteral("Page")),
-    titleAttribute(QStringLiteral("title")),
-    labelAttribute(QStringLiteral("label")),
-    toolTipAttribute(QStringLiteral("toolTip")),
-    whatsThisAttribute(QStringLiteral("whatsThis")),
-    flagsAttribute(QStringLiteral("flags")),
-    iconAttribute(QStringLiteral("icon")),
-    pixmapAttribute(QStringLiteral("pixmap")),
-    textAttribute(QStringLiteral("text")),
-    currentIndexProperty(QStringLiteral("currentIndex")),
-    toolBarAreaAttribute(QStringLiteral("toolBarArea")),
-    toolBarBreakAttribute(QStringLiteral("toolBarBreak")),
-    dockWidgetAreaAttribute(QStringLiteral("dockWidgetArea")),
-    marginProperty(QStringLiteral("margin")),
-    spacingProperty(QStringLiteral("spacing")),
-    leftMarginProperty(QStringLiteral("leftMargin")),
-    topMarginProperty(QStringLiteral("topMargin")),
-    rightMarginProperty(QStringLiteral("rightMargin")),
-    bottomMarginProperty(QStringLiteral("bottomMargin")),
-    horizontalSpacingProperty(QStringLiteral("horizontalSpacing")),
-    verticalSpacingProperty(QStringLiteral("verticalSpacing")),
-    sizeHintProperty(QStringLiteral("sizeHint")),
-    sizeTypeProperty(QStringLiteral("sizeType")),
-    orientationProperty(QStringLiteral("orientation")),
-    styleSheetProperty(QStringLiteral("styleSheet")),
-    qtHorizontal(QStringLiteral("Qt::Horizontal")),
-    qtVertical(QStringLiteral("Qt::Vertical")),
-    currentRowProperty(QStringLiteral("currentRow")),
-    tabSpacingProperty(QStringLiteral("tabSpacing")),
-    qWidgetClass(QStringLiteral("QWidget")),
-    lineClass(QStringLiteral("Line")),
-    geometryProperty(QStringLiteral("geometry")),
-    scriptWidgetVariable(QStringLiteral("widget")),
-    scriptChildWidgetsVariable(QStringLiteral("childWidgets"))
+    buddyProperty(u"buddy"_s),
+    cursorProperty(u"cursor"_s),
+    objectNameProperty(u"objectName"_s),
+    trueValue(u"true"_s),
+    falseValue(u"false"_s),
+    horizontalPostFix(u"Horizontal"_s),
+    separator(u"separator"_s),
+    defaultTitle(u"Page"_s),
+    titleAttribute(u"title"_s),
+    labelAttribute(u"label"_s),
+    toolTipAttribute(u"toolTip"_s),
+    whatsThisAttribute(u"whatsThis"_s),
+    flagsAttribute(u"flags"_s),
+    iconAttribute(u"icon"_s),
+    pixmapAttribute(u"pixmap"_s),
+    textAttribute(u"text"_s),
+    currentIndexProperty(u"currentIndex"_s),
+    toolBarAreaAttribute(u"toolBarArea"_s),
+    toolBarBreakAttribute(u"toolBarBreak"_s),
+    dockWidgetAreaAttribute(u"dockWidgetArea"_s),
+    marginProperty(u"margin"_s),
+    spacingProperty(u"spacing"_s),
+    leftMarginProperty(u"leftMargin"_s),
+    topMarginProperty(u"topMargin"_s),
+    rightMarginProperty(u"rightMargin"_s),
+    bottomMarginProperty(u"bottomMargin"_s),
+    horizontalSpacingProperty(u"horizontalSpacing"_s),
+    verticalSpacingProperty(u"verticalSpacing"_s),
+    sizeHintProperty(u"sizeHint"_s),
+    sizeTypeProperty(u"sizeType"_s),
+    orientationProperty(u"orientation"_s),
+    styleSheetProperty(u"styleSheet"_s),
+    qtHorizontal(u"Qt::Horizontal"_s),
+    qtVertical(u"Qt::Vertical"_s),
+    currentRowProperty(u"currentRow"_s),
+    tabSpacingProperty(u"tabSpacing"_s),
+    qWidgetClass(u"QWidget"_s),
+    lineClass(u"Line"_s),
+    geometryProperty(u"geometry"_s),
+    scriptWidgetVariable(u"widget"_s),
+    scriptChildWidgetsVariable(u"childWidgets"_s)
 {
     itemRoles.append(qMakePair(Qt::FontRole, QString::fromLatin1("font")));
     itemRoles.append(qMakePair(Qt::TextAlignmentRole, QString::fromLatin1("textAlignment")));

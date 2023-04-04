@@ -27,6 +27,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
     enum { listModeIconSize = 16, iconModeIconSize = 24 };
 }
@@ -137,7 +139,7 @@ PropertySheetKeySequenceValue ActionModel::actionShortCut(QDesignerFormEditorInt
 
 PropertySheetKeySequenceValue ActionModel::actionShortCut(const QDesignerPropertySheetExtension *sheet)
 {
-    const int index = sheet->indexOf(QStringLiteral("shortcut"));
+    const int index = sheet->indexOf(u"shortcut"_s);
     if (index == -1)
         return PropertySheetKeySequenceValue();
     return qvariant_cast<PropertySheetKeySequenceValue>(sheet->property(index));
@@ -173,7 +175,7 @@ void  ActionModel::setItems(QDesignerFormEditorInterface *core, QAction *action,
     item->setCheckState(used ? Qt::Checked : Qt::Unchecked);
     if (used) {
         QString usedToolTip;
-        const QString separator = QStringLiteral(", ");
+        const auto separator = ", "_L1;
         const int count = associatedDesignerWidgets.size();
         for (int i = 0; i < count; i++) {
             if (i)

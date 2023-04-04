@@ -16,6 +16,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QAxWidgetPlugin::QAxWidgetPlugin(QObject *parent) :
     QObject(parent)
 {
@@ -23,12 +25,12 @@ QAxWidgetPlugin::QAxWidgetPlugin(QObject *parent) :
 
 QString QAxWidgetPlugin::name() const
 {
-    return QStringLiteral("QAxWidget");
+    return u"QAxWidget"_s;
 }
 
 QString QAxWidgetPlugin::group() const
 {
-    return QStringLiteral("Containers");
+    return u"Containers"_s;
 }
 
 QString QAxWidgetPlugin::toolTip() const
@@ -43,7 +45,7 @@ QString QAxWidgetPlugin::whatsThis() const
 
 QString QAxWidgetPlugin::includeFile() const
 {
-    return QStringLiteral("qaxwidget.h");
+    return u"qaxwidget.h"_s;
 }
 
 QIcon QAxWidgetPlugin::icon() const

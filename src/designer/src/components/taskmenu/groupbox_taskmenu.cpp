@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 // -------- GroupBoxTaskMenuInlineEditor
@@ -26,7 +28,7 @@ protected:
 };
 
 GroupBoxTaskMenuInlineEditor::GroupBoxTaskMenuInlineEditor(QGroupBox *w, QObject *parent) :
-      TaskMenuInlineEditor(w, ValidationSingleLine, QStringLiteral("title"), parent)
+      TaskMenuInlineEditor(w, ValidationSingleLine, u"title"_s, parent)
 {
 }
 

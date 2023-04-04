@@ -10,6 +10,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 // Qt Implementation
 static QStringList byteArrayListToStringList(const QByteArrayList &l)
 {
@@ -60,8 +62,7 @@ namespace  {
 
     QString QDesignerMetaEnum::separator() const
     {
-        static const QString rc = QStringLiteral("::");
-        return rc;
+        return u"::"_s;
     }
 
     // ------- QDesignerMetaProperty

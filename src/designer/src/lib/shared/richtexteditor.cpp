@@ -53,7 +53,7 @@ namespace qdesigner_internal {
 // Richtext simplification filter helpers: Elements to be discarded
 static inline bool filterElement(QStringView name)
 {
-    return name != QStringLiteral("meta") && name != QStringLiteral("style");
+    return name != "meta"_L1 && name != "style"_L1;
 }
 
 // Richtext simplification filter helpers: Filter attributes of elements
@@ -65,15 +65,15 @@ static inline void filterAttributes(QStringView name,
         return;
 
      // No style attributes for <body>
-    if (name == QStringLiteral("body")) {
+    if (name == "body"_L1) {
         atts->clear();
         return;
     }
 
     // Clean out everything except 'align' for 'p'
-    if (name == QStringLiteral("p")) {
+    if (name == "p"_L1) {
         for (auto it = atts->begin(); it != atts->end(); ) {
-            if (it->name() == QStringLiteral("align")) {
+            if (it->name() == "align"_L1) {
                 ++it;
                 *paragraphAlignmentFound = true;
             } else {
@@ -214,12 +214,7 @@ void AddLinkDialog::accept()
     const QString url = m_ui->urlInput->text();
 
     if (!title.isEmpty()) {
-        QString html = QStringLiteral("<a href=\"");
-        html += url;
-        html += QStringLiteral("\">");
-        html += title;
-        html += QStringLiteral("</a>");
-
+        const QString html = "<a href=\""_L1 + url + "\">"_L1 + title + "</a>"_L1;
         m_editor->insertHtml(html);
     }
 
@@ -478,12 +473,12 @@ RichTextEditorToolBar::RichTextEditorToolBar(QDesignerFormEditorInterface *core,
 
     // Insert hyperlink and image buttons
 
-    m_link_action->setIcon(createIconSet(QStringLiteral("textanchor.png")));
+    m_link_action->setIcon(createIconSet(u"textanchor.png"_s));
     m_link_action->setText(tr("Insert &Link"));
     connect(m_link_action, &QAction::triggered, this, &RichTextEditorToolBar::insertLink);
     addAction(m_link_action);
 
-    m_image_action->setIcon(createIconSet(QStringLiteral("insertimage.png")));
+    m_image_action->setIcon(createIconSet(u"insertimage.png"_s));
     m_image_action->setText(tr("Insert &Image"));
     connect(m_image_action, &QAction::triggered, this, &RichTextEditorToolBar::insertImage);
     addAction(m_image_action);

@@ -12,6 +12,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 QLayoutWidgetPropertySheet::QLayoutWidgetPropertySheet(QLayoutWidget *object, QObject *parent)
@@ -24,8 +26,7 @@ QLayoutWidgetPropertySheet::~QLayoutWidgetPropertySheet() = default;
 
 bool QLayoutWidgetPropertySheet::isVisible(int index) const
 {
-    static const QString layoutPropertyGroup = QStringLiteral("Layout");
-    if (propertyGroup(index) == layoutPropertyGroup)
+    if (propertyGroup(index) == "Layout"_L1)
         return QDesignerPropertySheet::isVisible(index);
     return false;
 }

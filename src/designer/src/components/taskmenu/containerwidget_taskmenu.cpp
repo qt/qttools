@@ -28,6 +28,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 ContainerWidgetTaskMenu::ContainerWidgetTaskMenu(QWidget *widget, ContainerType type, QObject *parent) :
@@ -267,7 +269,7 @@ ContainerWidgetTaskMenuFactory::ContainerWidgetTaskMenuFactory(QDesignerFormEdit
 
 QObject *ContainerWidgetTaskMenuFactory::createExtension(QObject *object, const QString &iid, QObject *parent) const
 {
-    if (iid != QStringLiteral("QDesignerInternalTaskMenuExtension") || !object->isWidgetType())
+    if (iid != "QDesignerInternalTaskMenuExtension"_L1 || !object->isWidgetType())
         return nullptr;
 
     QWidget *widget = qobject_cast<QWidget*>(object);

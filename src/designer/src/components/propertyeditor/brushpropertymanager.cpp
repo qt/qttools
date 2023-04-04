@@ -30,6 +30,8 @@ QT_TRANSLATE_NOOP("BrushPropertyManager", "Crossing diagonal"),
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 BrushPropertyManager::BrushPropertyManager() = default;
@@ -129,8 +131,8 @@ void BrushPropertyManager::initializeProperty(QtVariantPropertyManager *vm, QtPr
     QStringList styles;
     for (const char *brushStyle : brushStyles)
         styles.push_back(QCoreApplication::translate("BrushPropertyManager", brushStyle));
-    styleSubProperty->setAttribute(QStringLiteral("enumNames"), styles);
-    styleSubProperty->setAttribute(QStringLiteral("enumIcons"), QVariant::fromValue(brushStyleIcons()));
+    styleSubProperty->setAttribute(u"enumNames"_s, styles);
+    styleSubProperty->setAttribute(u"enumIcons"_s, QVariant::fromValue(brushStyleIcons()));
     m_brushPropertyToStyleSubProperty.insert(property, styleSubProperty);
     m_brushStyleSubPropertyToProperty.insert(styleSubProperty, property);
     // color

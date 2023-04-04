@@ -28,6 +28,8 @@ static const char *skinResourcePathC = ":/skins/";
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *skinExtensionC = "skin";
 
 // Pair of skin name, path
@@ -40,8 +42,7 @@ static const Skins &defaultSkins() {
     static Skins rc;
     if (rc.isEmpty()) {
         const QString skinPath = QLatin1String(skinResourcePathC);
-        QString pattern = QStringLiteral("*.");
-        pattern += QLatin1String(skinExtensionC);
+        const QString pattern = "*."_L1 + QLatin1StringView(skinExtensionC);
         const QDir dir(skinPath, pattern);
         const QFileInfoList list = dir.entryInfoList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::Name);
         if (list.isEmpty())

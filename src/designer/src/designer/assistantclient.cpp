@@ -15,6 +15,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum { debugAssistantClient = 0 };
 
 AssistantClient::AssistantClient() = default;
@@ -30,22 +32,19 @@ AssistantClient::~AssistantClient()
 
 bool AssistantClient::showPage(const QString &path, QString *errorMessage)
 {
-    QString cmd = QStringLiteral("SetSource ");
-    cmd += path;
+    const QString cmd = "SetSource "_L1 + path;
     return sendCommand(cmd, errorMessage);
 }
 
 bool AssistantClient::activateIdentifier(const QString &identifier, QString *errorMessage)
 {
-    QString cmd = QStringLiteral("ActivateIdentifier ");
-    cmd += identifier;
+    const QString cmd = "ActivateIdentifier "_L1 + identifier;
     return sendCommand(cmd, errorMessage);
 }
 
 bool AssistantClient::activateKeyword(const QString &keyword, QString *errorMessage)
 {
-    QString cmd = QStringLiteral("ActivateKeyword ");
-    cmd += keyword;
+    const QString cmd = "ActivateKeyword "_L1 + keyword;
     return sendCommand(cmd, errorMessage);
 }
 
@@ -73,13 +72,13 @@ QString AssistantClient::binary()
 {
     QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath) + QDir::separator();
 #if !defined(Q_OS_MACOS)
-    app += QStringLiteral("assistant");
+    app += "assistant"_L1;
 #else
-    app += QStringLiteral("Assistant.app/Contents/MacOS/Assistant");
+    app += "Assistant.app/Contents/MacOS/Assistant"_L1;
 #endif
 
 #if defined(Q_OS_WIN)
-    app += QStringLiteral(".exe");
+    app += ".exe"_L1;
 #endif
 
     return app;
@@ -122,7 +121,7 @@ bool AssistantClient::ensureRunning(QString *errorMessage)
     if (debugAssistantClient)
         qDebug() << "Running " << app;
     // run
-    QStringList args(QStringLiteral("-enableRemoteControl"));
+    QStringList args{u"-enableRemoteControl"_s};
     m_process->start(app, args);
     if (!m_process->waitForStarted()) {
         *errorMessage = QCoreApplication::translate("AssistantClient", "Unable to launch assistant (%1).").arg(app);
@@ -144,12 +143,12 @@ QString AssistantClient::documentUrl(const QString &module, int qtVersion)
 
 QString AssistantClient::designerManualUrl(int qtVersion)
 {
-    return documentUrl(QStringLiteral("qtdesigner"), qtVersion);
+    return documentUrl(u"qtdesigner"_s, qtVersion);
 }
 
 QString AssistantClient::qtReferenceManualUrl(int qtVersion)
 {
-    return documentUrl(QStringLiteral("qtdoc"), qtVersion);
+    return documentUrl(u"qtdoc"_s, qtVersion);
 }
 
 QT_END_NAMESPACE

@@ -47,6 +47,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *actionEditorViewModeKey = "ActionEditorViewMode";
 
 static const char *iconPropertyC = "icon";
@@ -112,7 +114,8 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
     toolbar->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     l->addWidget(toolbar);
     // edit actions
-    QIcon documentNewIcon = QIcon::fromTheme(QStringLiteral("document-new"), createIconSet(QStringLiteral("filenew.png")));
+    QIcon documentNewIcon = QIcon::fromTheme(u"document-new"_s,
+                                             createIconSet(u"filenew.png"_s));
     m_actionNew->setIcon(documentNewIcon);
     m_actionNew->setEnabled(false);
     connect(m_actionNew, &QAction::triggered, this, &ActionEditor::slotNewAction);
@@ -123,17 +126,20 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
 #if QT_CONFIG(clipboard)
     m_actionCut->setEnabled(false);
     connect(m_actionCut, &QAction::triggered, this, &ActionEditor::slotCut);
-    QIcon editCutIcon = QIcon::fromTheme(QStringLiteral("edit-cut"), createIconSet(QStringLiteral("editcut.png")));
+    QIcon editCutIcon = QIcon::fromTheme(u"edit-cut"_s,
+                                         createIconSet(u"editcut.png"_s));
     m_actionCut->setIcon(editCutIcon);
 
     m_actionCopy->setEnabled(false);
     connect(m_actionCopy, &QAction::triggered, this, &ActionEditor::slotCopy);
-    QIcon editCopyIcon = QIcon::fromTheme(QStringLiteral("edit-copy"), createIconSet(QStringLiteral("editcopy.png")));
+    QIcon editCopyIcon = QIcon::fromTheme(u"edit-copy"_s,
+                                          createIconSet(u"editcopy.png"_s));
     m_actionCopy->setIcon(editCopyIcon);
     toolbar->addAction(m_actionCopy);
 
     connect(m_actionPaste, &QAction::triggered, this, &ActionEditor::slotPaste);
-    QIcon editPasteIcon = QIcon::fromTheme(QStringLiteral("edit-paste"), createIconSet(QStringLiteral("editpaste.png")));
+    QIcon editPasteIcon = QIcon::fromTheme(u"edit-paste"_s,
+                                           createIconSet(u"editpaste.png"_s));
     m_actionPaste->setIcon(editPasteIcon);
     toolbar->addAction(m_actionPaste);
 #endif
@@ -143,7 +149,8 @@ ActionEditor::ActionEditor(QDesignerFormEditorInterface *core, QWidget *parent, 
 
     connect(m_actionNavigateToSlot, &QAction::triggered, this, &ActionEditor::navigateToSlotCurrentAction);
 
-    QIcon editDeleteIcon = QIcon::fromTheme(QStringLiteral("edit-delete"), createIconSet(QStringLiteral("editdelete.png")));
+    QIcon editDeleteIcon = QIcon::fromTheme(u"edit-delete"_s,
+                                            createIconSet(u"editdelete.png"_s));
     m_actionDelete->setIcon(editDeleteIcon);
     m_actionDelete->setEnabled(false);
     connect(m_actionDelete, &QAction::triggered, this, &ActionEditor::slotDelete);
@@ -222,7 +229,8 @@ QToolButton *ActionEditor::createConfigureMenuButton(const QString &t, QMenu **p
 {
     QToolButton *configureButton = new QToolButton;
     QAction *configureAction = new QAction(t, configureButton);
-    QIcon configureIcon = QIcon::fromTheme(QStringLiteral("document-properties"), createIconSet(QStringLiteral("configure.png")));
+    QIcon configureIcon = QIcon::fromTheme(u"document-properties"_s,
+                                           createIconSet(u"configure.png"_s));
     configureAction->setIcon(configureIcon);
     QMenu *configureMenu = new QMenu(configureButton);
     configureAction->setMenu(configureMenu);
@@ -569,7 +577,7 @@ void ActionEditor::editAction(QAction *action, int column)
     QDesignerFormWindowInterface *fw = formWindow();
     QUndoStack *undoStack = fw->commandHistory();
     if (severalChanges)
-        fw->beginCommand(QStringLiteral("Edit action"));
+        fw->beginCommand(u"Edit action"_s);
 
     if (changeMask & ActionData::NameChanged)
         undoStack->push(createTextPropertyCommand(QLatin1String(objectNamePropertyC), newActionData.name, action, fw));
@@ -605,7 +613,7 @@ void ActionEditor::editCurrentAction()
 void ActionEditor::navigateToSlotCurrentAction()
 {
     if (QAction *a = m_actionView->currentAction())
-        QDesignerTaskMenu::navigateToSlot(m_core, a, QStringLiteral("triggered()"));
+        QDesignerTaskMenu::navigateToSlot(m_core, a, u"triggered()"_s);
 }
 
 void ActionEditor::deleteActions(QDesignerFormWindowInterface *fw, const ActionList &actions)
@@ -665,10 +673,10 @@ void ActionEditor::slotDelete()
 static QString underscore(QString text)
 {
     const QString underscore = QString(QLatin1Char('_'));
-    static const QRegularExpression nonAsciiPattern(QStringLiteral("[^a-zA-Z_0-9]"));
+    static const QRegularExpression nonAsciiPattern(u"[^a-zA-Z_0-9]"_s);
     Q_ASSERT(nonAsciiPattern.isValid());
     text.replace(nonAsciiPattern, underscore);
-    static const QRegularExpression multipleSpacePattern(QStringLiteral("__*"));
+    static const QRegularExpression multipleSpacePattern(u"__*"_s);
     Q_ASSERT(multipleSpacePattern.isValid());
     text.replace(multipleSpacePattern, underscore);
     if (text.endsWith(underscore.at(0)))

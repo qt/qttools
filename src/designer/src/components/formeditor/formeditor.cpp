@@ -40,6 +40,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 FormEditor::FormEditor(QObject *parent)
@@ -102,8 +104,7 @@ FormEditor::FormEditor(QObject *parent)
     QTreeViewPropertySheetFactory::registerExtension(mgr);
     QTableViewPropertySheetFactory::registerExtension(mgr);
 
-    const QString internalTaskMenuId = QStringLiteral("QDesignerInternalTaskMenuExtension");
-    QDesignerTaskMenuFactory::registerExtension(mgr, internalTaskMenuId);
+    QDesignerTaskMenuFactory::registerExtension(mgr, u"QDesignerInternalTaskMenuExtension"_s);
 
     mgr->registerExtensions(new QDesignerMemberSheetFactory(mgr),
                             Q_TYPEID(QDesignerMemberSheetExtension));

@@ -15,6 +15,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QQuickWidgetPlugin::QQuickWidgetPlugin(QObject *parent)
     : QObject(parent)
 {
@@ -22,17 +24,17 @@ QQuickWidgetPlugin::QQuickWidgetPlugin(QObject *parent)
 
 QString QQuickWidgetPlugin::name() const
 {
-    return QStringLiteral("QQuickWidget");
+    return u"QQuickWidget"_s;
 }
 
 QString QQuickWidgetPlugin::group() const
 {
-    return QStringLiteral("Display Widgets");
+    return u"Display Widgets"_s;
 }
 
 QString QQuickWidgetPlugin::toolTip() const
 {
-    return QStringLiteral("A widget for displaying a Qt Quick 2 user interface.");
+    return u"A widget for displaying a Qt Quick 2 user interface."_s;
 }
 
 QString QQuickWidgetPlugin::whatsThis() const
@@ -42,12 +44,12 @@ QString QQuickWidgetPlugin::whatsThis() const
 
 QString QQuickWidgetPlugin::includeFile() const
 {
-    return QStringLiteral("<QtQuickWidgets/QQuickWidget>");
+    return u"<QtQuickWidgets/QQuickWidget>"_s;
 }
 
 QIcon QQuickWidgetPlugin::icon() const
 {
-    return QIcon(QStringLiteral(":/qt-project.org/qquickwidget/images/qquickwidget.png"));
+    return QIcon(u":/qt-project.org/qquickwidget/images/qquickwidget.png"_s);
 }
 
 bool QQuickWidgetPlugin::isContainer() const

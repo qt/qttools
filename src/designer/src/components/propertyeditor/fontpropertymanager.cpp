@@ -18,6 +18,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
     static const char *aliasingC[] = {
@@ -85,7 +87,7 @@ namespace qdesigner_internal {
         QtVariantProperty *antialiasing = vm->addProperty(enumTypeId, QCoreApplication::translate("FontPropertyManager", "Antialiasing"));
         const QFont font = qvariant_cast<QFont>(vm->variantProperty(property)->value());
 
-        antialiasing->setAttribute(QStringLiteral("enumNames"), m_aliasingEnumNames);
+        antialiasing->setAttribute(u"enumNames"_s, m_aliasingEnumNames);
         antialiasing->setValue(antialiasingToIndex(font.styleStrategy()));
         property->addSubProperty(antialiasing);
 
@@ -95,7 +97,7 @@ namespace qdesigner_internal {
         if (!m_familyMappings.isEmpty()) {
             const PropertyToSubPropertiesMap::iterator it = m_propertyToFontSubProperties.find(m_createdFontProperty);
             QtVariantProperty *familyProperty = vm->variantProperty(it.value().constFirst());
-            const QString enumNamesAttribute = QStringLiteral("enumNames");
+            const QString enumNamesAttribute = u"enumNames"_s;
             QStringList plainFamilyNames = familyProperty->attributeValue(enumNamesAttribute).toStringList();
             // Did someone load fonts or something?
             if (m_designerFamilyNames.size() != plainFamilyNames.size())
@@ -291,7 +293,7 @@ namespace qdesigner_internal {
     bool FontPropertyManager::readFamilyMapping(NameMap *rc, QString *errorMessage)
     {
         rc->clear();
-        const QString fileName = QStringLiteral(":/qt-project.org/propertyeditor/fontmapping.xml");
+        const QString fileName = u":/qt-project.org/propertyeditor/fontmapping.xml"_s;
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly)) {
             *errorMessage = QString::fromUtf8("Unable to open %1: %2").arg(fileName, file.errorString());

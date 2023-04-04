@@ -24,6 +24,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 // Store tab widget as drag source
 class MyMimeData : public QMimeData
@@ -154,7 +156,7 @@ bool QTabWidgetEventFilter::eventFilter(QObject *o, QEvent *e)
                 if (tabbar->tabRect(i).contains(m_pressPoint)) {
                     if (i != tabbar->currentIndex()) {
                         qdesigner_internal::SetPropertyCommand *cmd = new qdesigner_internal::SetPropertyCommand(fw);
-                        cmd->init(m_tabWidget, QStringLiteral("currentIndex"), i);
+                        cmd->init(m_tabWidget, u"currentIndex"_s, i);
                         fw->commandHistory()->push(cmd);
                     }
                     break;

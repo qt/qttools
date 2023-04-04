@@ -11,6 +11,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 struct Property {
@@ -116,7 +118,7 @@ ItemViewPropertySheet::ItemViewPropertySheet(QTreeView *treeViewObject, QObject 
         : QDesignerPropertySheet(treeViewObject, parent),
         d(new ItemViewPropertySheetPrivate(core(), treeViewObject->header(), nullptr))
 {
-    initHeaderProperties(treeViewObject->header(), QStringLiteral("header"));
+    initHeaderProperties(treeViewObject->header(), u"header"_s);
 }
 
 ItemViewPropertySheet::ItemViewPropertySheet(QTableView *tableViewObject, QObject *parent)
@@ -125,8 +127,8 @@ ItemViewPropertySheet::ItemViewPropertySheet(QTableView *tableViewObject, QObjec
                                            tableViewObject->horizontalHeader(),
                                            tableViewObject->verticalHeader()))
 {
-    initHeaderProperties(tableViewObject->horizontalHeader(), QStringLiteral("horizontalHeader"));
-    initHeaderProperties(tableViewObject->verticalHeader(), QStringLiteral("verticalHeader"));
+    initHeaderProperties(tableViewObject->horizontalHeader(), u"horizontalHeader"_s);
+    initHeaderProperties(tableViewObject->verticalHeader(), u"verticalHeader"_s);
 }
 
 ItemViewPropertySheet::~ItemViewPropertySheet()

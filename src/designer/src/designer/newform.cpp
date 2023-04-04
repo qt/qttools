@@ -31,6 +31,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QString &fileName)
     : QDialog(parentWidget, Qt::WindowTitleHint | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint),
       m_fileName(fileName),
@@ -100,11 +102,8 @@ NewForm::~NewForm()
 void NewForm::recentFileChosen()
 {
     QAction *action = qobject_cast<QAction *>(sender());
-    if (!action)
-        return;
-    if (action->objectName() == QStringLiteral("__qt_action_clear_menu_"))
-        return;
-    close();
+    if (action && action->objectName() != "__qt_action_clear_menu_"_L1)
+        close();
 }
 
 void NewForm::slotCurrentTemplateChanged(bool templateSelected)
@@ -158,7 +157,7 @@ bool NewForm::openTemplate(QString *ptrToErrorMessage)
     QString tempPattern = QDir::tempPath();
     if (!tempPattern.endsWith(QDir::separator())) // platform-dependant
         tempPattern += QDir::separator();
-    tempPattern += QStringLiteral("XXXXXX.ui");
+    tempPattern += "XXXXXX.ui"_L1;
     QTemporaryFile tempFormFile(tempPattern);
 
     tempFormFile.setAutoRemove(true);

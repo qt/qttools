@@ -44,6 +44,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 QDesignerFormBuilder::QDesignerFormBuilder(QDesignerFormEditorInterface *core,
@@ -98,11 +100,11 @@ QWidget *QDesignerFormBuilder::createWidget(const QString &widgetName, QWidget *
 {
     QWidget *widget = nullptr;
 
-    if (widgetName == QStringLiteral("QToolBar")) {
+    if (widgetName == "QToolBar"_L1) {
         widget = new QToolBar(parentWidget);
-    } else if (widgetName == QStringLiteral("QMenu")) {
+    } else if (widgetName == "QMenu"_L1) {
         widget = new QMenu(parentWidget);
-    } else if (widgetName == QStringLiteral("QMenuBar")) {
+    } else if (widgetName == "QMenuBar"_L1) {
         widget = new QMenuBar(parentWidget);
     } else {
         widget = core()->widgetFactory()->createWidget(widgetName, parentWidget);
@@ -206,7 +208,7 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
 
     const QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), o);
     const QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core()->extensionManager(), o);
-    const bool changingMetaObject = WidgetFactory::classNameOf(core(), o) == QStringLiteral("QAxWidget");
+    const bool changingMetaObject = WidgetFactory::classNameOf(core(), o) == "QAxWidget"_L1;
     const QDesignerMetaObjectInterface *meta = core()->introspection()->metaObject(o);
     const bool dynamicPropertiesAllowed = dynamicSheet && dynamicSheet->dynamicPropertiesAllowed();
 
@@ -242,7 +244,7 @@ void QDesignerFormBuilder::applyProperties(QObject *o, const QList<DomProperty*>
 
         QObject *obj = o;
         QAbstractScrollArea *scroll = qobject_cast<QAbstractScrollArea *>(o);
-        if (scroll && attributeName == QStringLiteral("cursor") && scroll->viewport())
+        if (scroll && attributeName == "cursor"_L1 && scroll->viewport())
             obj = scroll->viewport();
 
         // a real property

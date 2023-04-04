@@ -36,6 +36,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 // Validator for theme line edit, accepts empty or non-blank strings.
@@ -316,17 +318,16 @@ static QString imageFilter()
 {
     QString filter = QApplication::translate("IconSelector", "All Pixmaps (");
     const auto supportedImageFormats = QImageReader::supportedImageFormats();
-    const QString jpeg = QStringLiteral("JPEG");
     const qsizetype count = supportedImageFormats.size();
     for (qsizetype i = 0; i < count; ++i) {
         if (i)
             filter += QLatin1Char(' ');
-        filter += QStringLiteral("*.");
+        filter += "*."_L1;
         const QString outputFormat = QString::fromUtf8(supportedImageFormats.at(i));
-        if (outputFormat != jpeg)
+        if (outputFormat != "JPEG"_L1)
             filter += outputFormat.toLower();
         else
-            filter += QStringLiteral("jpg *.jpeg");
+            filter += "jpg *.jpeg"_L1;
     }
     filter += QLatin1Char(')');
     return filter;
@@ -503,7 +504,7 @@ static const QMap<QString, QIcon> &themeIcons()
 {
    static QMap<QString, QIcon> result;
    if (result.isEmpty()) {
-       QFile file(QStringLiteral(":/qt-project.org/designer/icon-naming-spec.txt"));
+       QFile file(u":/qt-project.org/designer/icon-naming-spec.txt"_s);
        if (file.open(QIODevice::ReadOnly)) {
            while (!file.atEnd()) {
                const auto line = file.readLine().trimmed();
@@ -546,7 +547,7 @@ IconThemeEditor::IconThemeEditor(QWidget *parent, bool wantResetButton) :
 
     if (wantResetButton) {
         QToolButton *themeResetButton = new QToolButton;
-        themeResetButton->setIcon(createIconSet(QStringLiteral("resetproperty.png")));
+        themeResetButton->setIcon(createIconSet(u"resetproperty.png"_s));
         connect(themeResetButton, &QAbstractButton::clicked, this, &IconThemeEditor::reset);
         mainHLayout->addWidget(themeResetButton);
     }

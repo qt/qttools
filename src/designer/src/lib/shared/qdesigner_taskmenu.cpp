@@ -52,6 +52,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static inline QAction *createSeparatorHelper(QObject *parent) {
     QAction *rc = new QAction(parent);
     rc->setSeparator(true);
@@ -63,8 +65,7 @@ static QString objName(const QDesignerFormEditorInterface *core, QObject *object
             = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), object);
     Q_ASSERT(sheet != nullptr);
 
-    const QString objectNameProperty = QStringLiteral("objectName");
-    const int index = sheet->indexOf(objectNameProperty);
+    const int index = sheet->indexOf(u"objectName"_s);
     const QVariant v = sheet->property(index);
     if (v.canConvert<qdesigner_internal::PropertySheetStringValue>())
         return v.value<qdesigner_internal::PropertySheetStringValue>().value();
@@ -504,10 +505,10 @@ void QDesignerTaskMenu::changeObjectName()
     if (dialog.exec() == QDialog::Accepted) {
         const QString newObjectName = dialog.newObjectName();
         if (!newObjectName.isEmpty() && newObjectName  != oldObjectName ) {
-            const QString objectNameProperty = QStringLiteral("objectName");
             PropertySheetStringValue objectNameValue;
             objectNameValue.setValue(newObjectName);
-            setProperty(fw, CurrentWidgetMode, objectNameProperty, QVariant::fromValue(objectNameValue));
+            setProperty(fw, CurrentWidgetMode, u"objectName"_s,
+                        QVariant::fromValue(objectNameValue));
         }
     }
 }
@@ -563,12 +564,12 @@ void QDesignerTaskMenu::changeTextProperty(const QString &propertyName, const QS
 
 void QDesignerTaskMenu::changeToolTip()
 {
-    changeTextProperty(QStringLiteral("toolTip"), tr("Edit ToolTip"), MultiSelectionMode, Qt::AutoText);
+    changeTextProperty(u"toolTip"_s, tr("Edit ToolTip"), MultiSelectionMode, Qt::AutoText);
 }
 
 void QDesignerTaskMenu::changeWhatsThis()
 {
-    changeTextProperty(QStringLiteral("whatsThis"), tr("Edit WhatsThis"), MultiSelectionMode, Qt::AutoText);
+    changeTextProperty(u"whatsThis"_s, tr("Edit WhatsThis"), MultiSelectionMode, Qt::AutoText);
 }
 
 void QDesignerTaskMenu::changeStyleSheet()
@@ -628,7 +629,7 @@ static void createSizeCommand(QDesignerFormWindowInterface *fw, QWidget *w, int 
         if (flags & ApplyMinimumHeight)
              minimumSize.setHeight(size.height());
         SetPropertyCommand* cmd = new SetPropertyCommand(fw);
-        cmd->init(w, QStringLiteral("minimumSize"), minimumSize);
+        cmd->init(w, u"minimumSize"_s, minimumSize);
         fw->commandHistory()->push(cmd);
     }
     if (flags & (ApplyMaximumWidth|ApplyMaximumHeight)) {
@@ -638,7 +639,7 @@ static void createSizeCommand(QDesignerFormWindowInterface *fw, QWidget *w, int 
         if (flags & ApplyMaximumHeight)
              maximumSize.setHeight(size.height());
         SetPropertyCommand* cmd = new SetPropertyCommand(fw);
-        cmd->init(w, QStringLiteral("maximumSize"), maximumSize);
+        cmd->init(w, u"maximumSize"_s, maximumSize);
         fw->commandHistory()->push(cmd);
     }
 }

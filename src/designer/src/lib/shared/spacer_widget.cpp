@@ -16,6 +16,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 // The Spacer widget is Designer representation of  QLayoutItem.
 // It uses QLayoutItem's sizeHint property as QWidget
 // sizeHint and the QLayoutItem's sizeType property as QWidget size policy.
@@ -127,7 +129,7 @@ void Spacer::resizeEvent(QResizeEvent* e)
         const QSize oldSize = e->oldSize();
         if (oldSize.isNull() || oldSize.width() <= m_SizeOffset.width() || oldSize.height() <= m_SizeOffset.height())
             if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_formWindow->core()->extensionManager(), this))
-                sheet->setChanged(sheet->indexOf(QStringLiteral("sizeHint")), true);
+                sheet->setChanged(sheet->indexOf(u"sizeHint"_s), true);
     }
 
     updateMask();

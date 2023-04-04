@@ -60,6 +60,8 @@ static const char *buttonGroupPropertyC = "buttonGroup";
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 #ifdef QFORMINTERNAL_NAMESPACE
 using namespace QFormInternal;
 #endif
@@ -709,40 +711,35 @@ static inline QFormLayout::ItemRole formLayoutRole(int column, int colspan)
 
 static inline QString alignmentValue(Qt::Alignment a)
 {
-    QString h,v;
+    QLatin1StringView h;
+    QLatin1StringView v;
     switch (a & Qt::AlignHorizontal_Mask) {
     case Qt::AlignLeft:
-        h = QStringLiteral("Qt::AlignLeft");
+        h = "Qt::AlignLeft"_L1;
         break;
     case Qt::AlignRight:
-        h = QStringLiteral("Qt::AlignRight");
+        h = "Qt::AlignRight"_L1;
         break;
     case Qt::AlignHCenter:
-        h = QStringLiteral("Qt::AlignHCenter");
+        h = "Qt::AlignHCenter"_L1;
         break;
     case Qt::AlignJustify:
-        h = QStringLiteral("Qt::AlignJustify");
+        h = "Qt::AlignJustify"_L1;
         break;
     }
     switch (a & Qt::AlignVertical_Mask) {
     case Qt::AlignTop:
-        v = QStringLiteral("Qt::AlignTop");
+        v = "Qt::AlignTop"_L1;
         break;
     case Qt::AlignBottom:
-        v = QStringLiteral("Qt::AlignBottom");
+        v = "Qt::AlignBottom"_L1;
         break;
     case Qt::AlignVCenter:
-        v = QStringLiteral("Qt::AlignVCenter");
+        v = "Qt::AlignVCenter"_L1;
         break;
     }
-    if (h.isEmpty() && v.isEmpty())
-        return QString();
-    if (!v.isEmpty()) {
-        if (!h.isEmpty())
-            h += QLatin1Char('|');
-        h += v;
-    }
-    return h;
+
+    return h + (v.isEmpty() || h.isEmpty() ? ""_L1 : "|"_L1) + v;
 }
 
 static inline Qt::Alignment alignmentFromDom(const QString &in)
@@ -751,19 +748,19 @@ static inline Qt::Alignment alignmentFromDom(const QString &in)
     if (!in.isEmpty()) {
         const auto flags = QStringView{in}.split(QLatin1Char('|'));
         for (const auto &f : flags) {
-            if (f == QStringLiteral("Qt::AlignLeft")) {
+            if (f == "Qt::AlignLeft"_L1) {
                 rc |= Qt::AlignLeft;
-            } else if (f == QStringLiteral("Qt::AlignRight")) {
+            } else if (f == "Qt::AlignRight"_L1) {
                 rc |= Qt::AlignRight;
-            } else if (f == QStringLiteral("Qt::AlignHCenter")) {
+            } else if (f == "Qt::AlignHCenter"_L1) {
                 rc |= Qt::AlignHCenter;
-            } else if (f == QStringLiteral("Qt::AlignJustify")) {
+            } else if (f == "Qt::AlignJustify"_L1) {
                 rc |= Qt::AlignJustify;
-            } else if (f == QStringLiteral("Qt::AlignTop")) {
+            } else if (f == "Qt::AlignTop"_L1) {
                 rc |= Qt::AlignTop;
-            } else if (f == QStringLiteral("Qt::AlignBottom")) {
+            } else if (f == "Qt::AlignBottom"_L1) {
                 rc |= Qt::AlignBottom;
-            } else if (f == QStringLiteral("Qt::AlignVCenter")) {
+            } else if (f == "Qt::AlignVCenter"_L1) {
                 rc |= Qt::AlignVCenter;
             }
         }
@@ -1008,7 +1005,7 @@ void QAbstractFormBuilder::save(QIODevice *dev, QWidget *widget)
     Q_ASSERT( ui_widget != nullptr );
 
     DomUI *ui = new DomUI();
-    ui->setAttributeVersion(QStringLiteral("4.0"));
+    ui->setAttributeVersion(u"4.0"_s);
     ui->setElementWidget(ui_widget);
 
     saveDom(ui, widget);
@@ -1689,10 +1686,10 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
         for (const QFormBuilderStrings::TextRoleNName &it : strings.itemTextRoles) {
             p = saveText(it.second, treeWidget->headerItem()->data(c, it.first.second));
             // Prevent uic 4.4.X from crashing if it cannot find a column text
-            if (!p && it.first.first == Qt::EditRole && it.second == QStringLiteral("text")) {
+            if (!p && it.first.first == Qt::EditRole && it.second == "text"_L1) {
                 DomString *defaultHeader = new DomString;
                 defaultHeader->setText(QString::number(c + 1));
-                defaultHeader->setAttributeNotr(QStringLiteral("true"));
+                defaultHeader->setAttributeNotr(u"true"_s);
                 p = new DomProperty;
                 p->setAttributeName(it.second);
                 p->setElementString(defaultHeader);
@@ -1878,7 +1875,7 @@ void QAbstractFormBuilder::saveButtonExtraInfo(const QAbstractButton *widget, Do
         DomPropertyList attributes = ui_widget->elementAttribute();
         DomString *domString = new DomString();
         domString->setText(buttonGroup->objectName());
-        domString->setAttributeNotr(QStringLiteral("true"));
+        domString->setAttributeNotr(u"true"_s);
         DomProperty *domProperty = new DomProperty();
         domProperty->setAttributeName(QLatin1String(buttonGroupPropertyC));
         domProperty->setElementString(domString);
@@ -1886,6 +1883,11 @@ void QAbstractFormBuilder::saveButtonExtraInfo(const QAbstractButton *widget, Do
         ui_widget->setElementAttribute(attributes);
     }
 }
+
+static const QLatin1StringView tableHeaderPrefixes[] = {
+    "horizontalHeader"_L1,
+    "verticalHeader"_L1,
+};
 
 /*!
     \internal
@@ -1913,7 +1915,7 @@ void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemVi
         for (QString realPropertyName : realPropertyNames) {
             const QString upperPropertyName = realPropertyName.at(0).toUpper()
                                               + realPropertyName.mid(1);
-            const QString fakePropertyName = QStringLiteral("header") + upperPropertyName;
+            const QString fakePropertyName = "header"_L1 + upperPropertyName;
             for (DomProperty *property : headerProperties) {
                 if (property->attributeName() == realPropertyName) {
                     property->setAttributeName(fakePropertyName);
@@ -1923,13 +1925,9 @@ void QAbstractFormBuilder::saveItemViewExtraInfo(const QAbstractItemView *itemVi
         }
         ui_widget->setElementAttribute(viewProperties);
     } else if (const QTableView *tableView = qobject_cast<const QTableView*>(itemView)) {
-        static const QStringList headerPrefixes =
-                (QStringList() << QStringLiteral("horizontalHeader")
-                               << QStringLiteral("verticalHeader"));
-
         auto viewProperties = ui_widget->elementAttribute();
-        for (const QString &headerPrefix : headerPrefixes) {
-            const auto &headerProperties = headerPrefix == QStringLiteral("horizontalHeader")
+        for (QLatin1StringView headerPrefix : tableHeaderPrefixes) {
+            const auto &headerProperties = headerPrefix == "horizontalHeader"_L1
                 ? computeProperties(tableView->horizontalHeader())
                 : computeProperties(tableView->verticalHeader());
             for (QString realPropertyName : realPropertyNames) {
@@ -2291,7 +2289,7 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
         for (QString realPropertyName : realPropertyNames) {
             const QString upperPropertyName = realPropertyName.at(0).toUpper()
                                               + realPropertyName.mid(1);
-            const QString fakePropertyName = QStringLiteral("header") + upperPropertyName;
+            const QString fakePropertyName = "header"_L1 + upperPropertyName;
             for (DomProperty *attr : allAttributes) {
                 if (attr->attributeName() == fakePropertyName) {
                     attr->setAttributeName(realPropertyName);
@@ -2301,12 +2299,8 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
         }
         applyProperties(treeView->header(), headerProperties);
     } else if (QTableView *tableView = qobject_cast<QTableView*>(itemView)) {
-        static const QStringList headerPrefixes =
-                (QStringList() << QStringLiteral("horizontalHeader")
-                               << QStringLiteral("verticalHeader"));
-
         const auto &allAttributes = ui_widget->elementAttribute();
-        for (const QString &headerPrefix : headerPrefixes) {
+        for (QLatin1StringView headerPrefix : tableHeaderPrefixes) {
             QList<DomProperty*> headerProperties;
             for (QString realPropertyName : realPropertyNames) {
                 const QString upperPropertyName = realPropertyName.at(0).toUpper()
@@ -2319,7 +2313,7 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
                     }
                 }
             }
-            if (headerPrefix == QStringLiteral("horizontalHeader"))
+            if (headerPrefix == "horizontalHeader"_L1)
                 applyProperties(tableView->horizontalHeader(), headerProperties);
             else
                 applyProperties(tableView->verticalHeader(), headerProperties);

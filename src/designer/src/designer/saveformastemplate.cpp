@@ -14,6 +14,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 SaveFormAsTemplate::SaveFormAsTemplate(QDesignerFormEditorInterface *core,
                                        QDesignerFormWindowInterface *formWindow,
                                        QWidget *parent)
@@ -46,7 +48,7 @@ void SaveFormAsTemplate::accept()
     templateFileName += QLatin1Char('/');
     const QString name = ui.templateNameEdit->text();
     templateFileName +=  name;
-    const QString extension = QStringLiteral(".ui");
+    const auto extension = ".ui"_L1;
     if (!templateFileName.endsWith(extension))
         templateFileName.append(extension);
     QFile file(templateFileName);

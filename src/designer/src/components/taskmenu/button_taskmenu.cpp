@@ -29,6 +29,8 @@ Q_DECLARE_METATYPE(QButtonGroup*)
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 enum { debugButtonMenu = 0 };
@@ -137,7 +139,7 @@ QString ButtonGroupCommand::nameList(const ButtonList& bl)
 {
     QString rc;
     const QChar quote = QLatin1Char('\'');
-    const QString separator =  QStringLiteral(", ");
+    const auto separator = ", "_L1;
     for (qsizetype i = 0, size = bl.size(); i < size; ++i) {
         if (i)
             rc += separator;
@@ -188,7 +190,7 @@ bool CreateButtonGroupCommand::init(const ButtonList &bl)
         return false;
     QDesignerFormWindowInterface *fw = formWindow();
     QButtonGroup *buttonGroup = new QButtonGroup(fw->mainContainer());
-    buttonGroup->setObjectName(QStringLiteral("buttonGroup"));
+    buttonGroup->setObjectName(u"buttonGroup"_s);
     fw->ensureUniqueObjectName(buttonGroup);
     initialize(bl, buttonGroup);
     return true;
@@ -353,7 +355,7 @@ protected:
 };
 
 ButtonTextTaskMenuInlineEditor::ButtonTextTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :
-      TaskMenuInlineEditor(button, ValidationMultiLine, QStringLiteral("text"), parent)
+      TaskMenuInlineEditor(button, ValidationMultiLine, u"text"_s, parent)
 {
 }
 
@@ -376,7 +378,7 @@ protected:
 };
 
 LinkDescriptionTaskMenuInlineEditor::LinkDescriptionTaskMenuInlineEditor(QAbstractButton *button, QObject *parent) :
-      TaskMenuInlineEditor(button, ValidationMultiLine, QStringLiteral("description"), parent)
+      TaskMenuInlineEditor(button, ValidationMultiLine, u"description"_s, parent)
 {
 }
 

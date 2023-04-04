@@ -8,7 +8,10 @@
 #include <abstractintrospection_p.h>
 
 #include <QtWidgets/qwidget.h>
+
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
 
 static QByteArrayList stringListToByteArray(const QStringList &l)
 {
@@ -142,7 +145,7 @@ bool QDesignerMemberSheet::isSlot(int index) const
 
 bool QDesignerMemberSheet::inheritedFromWidget(int index) const
 {
-    return declaredInClass(index) == QStringLiteral("QWidget") || declaredInClass(index) == QStringLiteral("QObject");
+    return declaredInClass(index) == "QWidget"_L1 || declaredInClass(index) == "QObject"_L1;
 }
 
 

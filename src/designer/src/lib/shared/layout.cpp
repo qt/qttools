@@ -38,6 +38,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum { FormLayoutColumns = 2 };
 
 namespace qdesigner_internal {
@@ -198,7 +200,7 @@ bool Layout::prepareLayout(bool &needMove, bool &needReparent)
         const QString baseWidgetClassName = useSplitter ? QLatin1String("QSplitter") : QLatin1String("QLayoutWidget");
         m_layoutBase = widgetFactory->createWidget(baseWidgetClassName, widgetFactory->containerOfWidget(m_parentWidget));
         if (useSplitter) {
-            m_layoutBase->setObjectName(QStringLiteral("splitter"));
+            m_layoutBase->setObjectName(u"splitter"_s);
             m_formWindow->ensureUniqueObjectName(m_layoutBase);
         }
     } else {
@@ -402,11 +404,11 @@ static QString suggestLayoutName(const char *className)
 {
     // Legacy
     if (!qstrcmp(className, "QHBoxLayout"))
-        return QStringLiteral("horizontalLayout");
+        return u"horizontalLayout"_s;
     if (!qstrcmp(className, "QVBoxLayout"))
-        return QStringLiteral("verticalLayout");
+        return u"verticalLayout"_s;
     if (!qstrcmp(className, "QGridLayout"))
-        return QStringLiteral("gridLayout");
+        return u"gridLayout"_s;
 
     return qtify(QString::fromUtf8(className));
 }
@@ -420,10 +422,10 @@ QLayout *Layout::createLayout(int type)
     // QLayoutWidget
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(m_formWindow->core()->extensionManager(), layout);
     if (sheet && qobject_cast<QLayoutWidget*>(m_layoutBase)) {
-        sheet->setProperty(sheet->indexOf(QStringLiteral("leftMargin")), 0);
-        sheet->setProperty(sheet->indexOf(QStringLiteral("topMargin")), 0);
-        sheet->setProperty(sheet->indexOf(QStringLiteral("rightMargin")), 0);
-        sheet->setProperty(sheet->indexOf(QStringLiteral("bottomMargin")), 0);
+        sheet->setProperty(sheet->indexOf(u"leftMargin"_s), 0);
+        sheet->setProperty(sheet->indexOf(u"topMargin"_s), 0);
+        sheet->setProperty(sheet->indexOf(u"rightMargin"_s), 0);
+        sheet->setProperty(sheet->indexOf(u"bottomMargin"_s), 0);
     }
     return layout;
 }

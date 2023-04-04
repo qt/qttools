@@ -28,6 +28,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static const char *buddyPropertyC = "buddy";
 
 static bool canBeBuddy(QWidget *w, QDesignerFormWindowInterface *form)
@@ -39,7 +41,7 @@ static bool canBeBuddy(QWidget *w, QDesignerFormWindowInterface *form)
 
     QExtensionManager *ext = form->core()->extensionManager();
     if (QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(ext, w)) {
-        const int index = sheet->indexOf(QStringLiteral("focusPolicy"));
+        const int index = sheet->indexOf(u"focusPolicy"_s);
         if (index != -1) {
             bool ok = false;
             const Qt::FocusPolicy q = static_cast<Qt::FocusPolicy>(qdesigner_internal::Utils::valueOf(sheet->property(index), &ok));

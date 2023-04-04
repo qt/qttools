@@ -12,6 +12,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal
 {
 SpacerPropertySheet::SpacerPropertySheet(Spacer *object, QObject *parent)
@@ -24,8 +26,7 @@ SpacerPropertySheet::~SpacerPropertySheet() = default;
 
 bool SpacerPropertySheet::isVisible(int index) const
 {
-    static const QString spacerGroup = QStringLiteral("Spacer");
-    return propertyGroup(index) == spacerGroup;
+    return propertyGroup(index) == "Spacer"_L1;
 }
 
 void SpacerPropertySheet::setProperty(int index, const QVariant &value)

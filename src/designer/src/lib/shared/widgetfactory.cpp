@@ -60,6 +60,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 #ifdef Q_OS_WIN
 static inline bool isAxWidget(const QObject *o)
 {
@@ -201,31 +203,31 @@ void WizardPageChangeWatcher::pageChanged()
 
 // ---------------- WidgetFactory::Strings
 WidgetFactory::Strings::Strings() :
-    m_alignment(QStringLiteral("alignment")),
-    m_bottomMargin(QStringLiteral("bottomMargin")),
-    m_geometry(QStringLiteral("geometry")),
-    m_leftMargin(QStringLiteral("leftMargin")),
-    m_line(QStringLiteral("Line")),
-    m_objectName(QStringLiteral("objectName")),
-    m_spacerName(QStringLiteral("spacerName")),
-    m_orientation(QStringLiteral("orientation")),
-    m_qAction(QStringLiteral("QAction")),
-    m_qButtonGroup(QStringLiteral("QButtonGroup")),
-    m_qAxWidget(QStringLiteral("QAxWidget")),
-    m_qDialog(QStringLiteral("QDialog")),
-    m_qDockWidget(QStringLiteral("QDockWidget")),
-    m_qLayoutWidget(QStringLiteral("QLayoutWidget")),
-    m_qMenu(QStringLiteral("QMenu")),
-    m_qMenuBar(QStringLiteral("QMenuBar")),
-    m_qWidget(QStringLiteral("QWidget")),
-    m_rightMargin(QStringLiteral("rightMargin")),
-    m_sizeHint(QStringLiteral("sizeHint")),
-    m_spacer(QStringLiteral("Spacer")),
-    m_text(QStringLiteral("text")),
-    m_title(QStringLiteral("title")),
-    m_topMargin(QStringLiteral("topMargin")),
-    m_windowIcon(QStringLiteral("windowIcon")),
-    m_windowTitle(QStringLiteral("windowTitle"))
+    m_alignment(u"alignment"_s),
+    m_bottomMargin(u"bottomMargin"_s),
+    m_geometry(u"geometry"_s),
+    m_leftMargin(u"leftMargin"_s),
+    m_line(u"Line"_s),
+    m_objectName(u"objectName"_s),
+    m_spacerName(u"spacerName"_s),
+    m_orientation(u"orientation"_s),
+    m_qAction(u"QAction"_s),
+    m_qButtonGroup(u"QButtonGroup"_s),
+    m_qAxWidget(u"QAxWidget"_s),
+    m_qDialog(u"QDialog"_s),
+    m_qDockWidget(u"QDockWidget"_s),
+    m_qLayoutWidget(u"QLayoutWidget"_s),
+    m_qMenu(u"QMenu"_s),
+    m_qMenuBar(u"QMenuBar"_s),
+    m_qWidget(u"QWidget"_s),
+    m_rightMargin(u"rightMargin"_s),
+    m_sizeHint(u"sizeHint"_s),
+    m_spacer(u"Spacer"_s),
+    m_text(u"text"_s),
+    m_title(u"title"_s),
+    m_topMargin(u"topMargin"_s),
+    m_windowIcon(u"windowIcon"_s),
+    m_windowTitle(u"windowTitle"_s)
 {
 }
 // ---------------- WidgetFactory
@@ -440,7 +442,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         if (item == nullptr) {
             // Emergency: Create, derived from QWidget
             QString includeFile = widgetName.toLower();
-            includeFile +=  QStringLiteral(".h");
+            includeFile +=  ".h"_L1;
             item = appendDerived(db,widgetName, tr("%1 Widget").arg(widgetName),fallBackBaseClass,
                                  includeFile, true, true);
             Q_ASSERT(item);
@@ -482,18 +484,18 @@ QString WidgetFactory::classNameOf(QDesignerFormEditorInterface *c, const QObjec
     if (!customClassName.isEmpty())
         return customClassName;
     if (qobject_cast<const QDesignerMenuBar*>(w))
-        return QStringLiteral("QMenuBar");
+        return u"QMenuBar"_s;
     if (qobject_cast<const QDesignerMenu*>(w))
-        return QStringLiteral("QMenu");
+        return u"QMenu"_s;
     if (qobject_cast<const QDesignerDockWidget*>(w))
-        return QStringLiteral("QDockWidget");
+        return u"QDockWidget"_s;
     if (qobject_cast<const QDesignerDialog*>(w))
-        return QStringLiteral("QDialog");
+        return u"QDialog"_s;
     if (qobject_cast<const QDesignerWidget*>(w))
-        return QStringLiteral("QWidget");
+        return u"QWidget"_s;
 #ifdef Q_OS_WIN
     if (isAxWidget(w))
-        return QStringLiteral("QAxWidget");
+        return u"QAxWidget"_s;
 #endif
     return QLatin1String(className);
 }
@@ -834,9 +836,6 @@ static bool isTabBarInteractor(const QTabBar *tabBar)
 
 static bool isPassiveInteractorHelper(const QWidget *widget)
 {
-    static const QString qtPassive = QStringLiteral("__qt__passive_");
-    static const QString qtMainWindowSplitter = QStringLiteral("qt_qmainwindow_extended_splitter");
-
     if (qobject_cast<const QMenuBar*>(widget)
 #if QT_CONFIG(sizegrip)
         || qobject_cast<const QSizeGrip*>(widget)
@@ -856,10 +855,8 @@ static bool isPassiveInteractorHelper(const QWidget *widget)
     } else if (qobject_cast<const QScrollBar*>(widget)) {
         // A scroll bar is an interactor on a QAbstractScrollArea only.
         if (auto parent = widget->parentWidget()) {
-            const QString objectName = parent->objectName();
-            static const QString scrollAreaVContainer = QStringLiteral("qt_scrollarea_vcontainer");
-            static const QString scrollAreaHContainer = QStringLiteral("qt_scrollarea_hcontainer");
-            if (objectName == scrollAreaVContainer || objectName == scrollAreaHContainer)
+            const QString &objectName = parent->objectName();
+            if (objectName == "qt_scrollarea_vcontainer"_L1 || objectName == "qt_scrollarea_hcontainer"_L1)
                 return true;
         }
     } else if (qstrcmp(widget->metaObject()->className(), "QDockWidgetTitle") == 0) {
@@ -868,7 +865,8 @@ static bool isPassiveInteractorHelper(const QWidget *widget)
         return true;
     }
     const QString &name = widget->objectName();
-    return name.startsWith(qtPassive) || name == qtMainWindowSplitter;
+    return name.startsWith("__qt__passive_"_L1)
+           || name == "qt_qmainwindow_extended_splitter"_L1;
 }
 
 bool WidgetFactory::isPassiveInteractor(QWidget *widget)

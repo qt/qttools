@@ -29,6 +29,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 using ActionList = QList<QAction *>;
 
 namespace qdesigner_internal {
@@ -190,7 +192,7 @@ void ToolBarEventFilter::slotInsertSeparator()
     QAction *theSender = qobject_cast<QAction*>(sender());
     QAction *previous = qvariant_cast<QAction *>(theSender->data());
     fw->beginCommand(tr("Insert Separator"));
-    QAction *action = createAction(fw, QStringLiteral("separator"), true);
+    QAction *action = createAction(fw, u"separator"_s, true);
     InsertActionIntoCommand *cmd = new InsertActionIntoCommand(fw);
     cmd->init(m_toolBar, action, previous);
     fw->commandHistory()->push(cmd);

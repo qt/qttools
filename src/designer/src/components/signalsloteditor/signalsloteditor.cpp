@@ -25,6 +25,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 /*******************************************************************************
@@ -52,13 +54,13 @@ DomConnection *SignalSlotConnection::toUi() const
     QPoint tp = endPointPos(EndPoint::Target);
 
     DomConnectionHint *hint = new DomConnectionHint;
-    hint->setAttributeType(QStringLiteral("sourcelabel"));
+    hint->setAttributeType(u"sourcelabel"_s);
     hint->setElementX(sp.x());
     hint->setElementY(sp.y());
     list.append(hint);
 
     hint = new DomConnectionHint;
-    hint->setAttributeType(QStringLiteral("destinationlabel"));
+    hint->setAttributeType(u"destinationlabel"_s);
     hint->setElementX(tp.x());
     hint->setElementY(tp.y());
     list.append(hint);
@@ -388,9 +390,9 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
             for (DomConnectionHint *hint : hints) {
                 QString attr_type = hint->attributeType();
                 QPoint p = QPoint(hint->elementX(), hint->elementY());
-                if (attr_type == QStringLiteral("sourcelabel"))
+                if (attr_type == "sourcelabel"_L1)
                     sp = p;
-                else if (attr_type == QStringLiteral("destinationlabel"))
+                else if (attr_type == "destinationlabel"_L1)
                     tp = p;
             }
         }
@@ -423,13 +425,13 @@ void SignalSlotEditor::fromUi(const DomConnections *connections, QWidget *parent
 static bool skipWidget(const QWidget *w)
 {
     const QString name = QLatin1String(w->metaObject()->className());
-    if (name == QStringLiteral("QDesignerWidget"))
+    if (name == "QDesignerWidget"_L1)
         return true;
-    if (name == QStringLiteral("QLayoutWidget"))
+    if (name == "QLayoutWidget"_L1)
         return true;
-    if (name == QStringLiteral("qdesigner_internal::FormWindow"))
+    if (name == "qdesigner_internal::FormWindow"_L1)
         return true;
-    if (name == QStringLiteral("Spacer"))
+    if (name == "Spacer"_L1)
         return true;
     return false;
 }

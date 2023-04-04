@@ -12,12 +12,14 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 TextEditTaskMenu::TextEditTaskMenu(QTextEdit *textEdit, QObject *parent) :
     QDesignerTaskMenu(textEdit, parent),
     m_format(Qt::RichText),
-    m_property(QStringLiteral("html")),
+    m_property(u"html"_s),
     m_windowTitle(tr("Edit HTML")),
     m_editTextAction(new QAction(tr("Change HTML..."), this))
 {
@@ -27,7 +29,7 @@ TextEditTaskMenu::TextEditTaskMenu(QTextEdit *textEdit, QObject *parent) :
 TextEditTaskMenu::TextEditTaskMenu(QPlainTextEdit *textEdit, QObject *parent) :
     QDesignerTaskMenu(textEdit, parent),
     m_format(Qt::PlainText),
-    m_property(QStringLiteral("plainText")),
+    m_property(u"plainText"_s),
     m_windowTitle(tr("Edit Text")),
     m_editTextAction(new QAction(tr("Change Plain Text..."), this))
 {

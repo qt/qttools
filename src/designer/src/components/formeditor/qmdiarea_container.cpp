@@ -14,6 +14,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 QMdiAreaContainer::QMdiAreaContainer(QMdiArea *widget, QObject *parent)
@@ -109,7 +111,7 @@ static const char *subWindowNameC = "activeSubWindowName";
 
 QMdiAreaPropertySheet::QMdiAreaPropertySheet(QWidget *mdiArea, QObject *parent) :
     QDesignerPropertySheet(mdiArea, parent),
-    m_windowTitleProperty(QStringLiteral("windowTitle"))
+    m_windowTitleProperty(u"windowTitle"_s)
 {
     createFakeProperty(QLatin1String(subWindowNameC), QString());
     createFakeProperty(QLatin1String(subWindowTitleC), QString());

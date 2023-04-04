@@ -20,13 +20,15 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qdesigner_internal {
 
 TreeWidgetEditor::TreeWidgetEditor(QDesignerFormWindowInterface *form, QDialog *dialog)
     : AbstractItemEditor(form, nullptr), m_updatingBrowser(false)
 {
     m_columnEditor = new ItemListEditor(form, this);
-    m_columnEditor->setObjectName(QStringLiteral("columnEditor"));
+    m_columnEditor->setObjectName(u"columnEditor"_s);
     m_columnEditor->setNewItemText(tr("New Column"));
     ui.setupUi(dialog);
 
