@@ -1168,7 +1168,7 @@ QtVariantPropertyManager::QtVariantPropertyManager(QObject *parent)
     d_ptr->m_typeToAttributeToAttributeType[enumId][d_ptr->m_enumIconsAttribute] =
             iconMapTypeId();
     connect(enumPropertyManager, &QtEnumPropertyManager::valueChanged,
-            this, [this](QtProperty *property, const QColor &value)
+            this, [this](QtProperty *property, int value)
             { d_ptr->slotValueChanged(property, value); });
     connect(enumPropertyManager, &QtEnumPropertyManager::enumNamesChanged,
             this, [this](QtProperty *property, const QStringList &value)
