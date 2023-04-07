@@ -2,8 +2,8 @@
 <!DOCTYPE QDOCINDEX>
 <INDEX url="" title="TestCPP Reference Documentation" version="" project="TestCPP">
     <namespace name="" status="active" access="public" module="testcpp">
-        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" type="" signature="QDOCTEST_MACRO"/>
-        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+        <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
+        <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
             <parameter type="int &amp;" name="x" default=""/>
         </function>
         <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
@@ -19,12 +19,12 @@
         </page>
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
-            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" type="" signature="QDOCTEST_MACRO"/>
+            <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" signature="QDOCTEST_MACRO"/>
             <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
-                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+                <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
-                <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" documented="true" meta="constructor" noexcept="true" type="" signature="Test()"/>
+                <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" documented="true" meta="constructor" noexcept="true" signature="Test()"/>
                 <function name="anotherObsoleteMember" fullname="TestQDoc::Test::anotherObsoleteMember" href="testqdoc-test-obsolete.html#anotherObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void anotherObsoleteMember()"/>
                 <function name="deprecatedMember" fullname="TestQDoc::Test::deprecatedMember" href="testqdoc-test-obsolete.html#deprecatedMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void deprecatedMember()"/>
                 <function name="funcPtr" fullname="TestQDoc::Test::funcPtr" href="testqdoc-test.html#funcPtr" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void (*)(bool)" signature="void (*)(bool) funcPtr(bool b, const char *s)">

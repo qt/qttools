@@ -1251,7 +1251,9 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         }
     }
 
-    writer.writeAttribute("type", fn->returnType());
+    const auto return_type = fn->returnType();
+    if (!return_type.isEmpty())
+        writer.writeAttribute("type", return_type);
 
     if (fn->isCppNode()) {
         if (!brief.isEmpty())

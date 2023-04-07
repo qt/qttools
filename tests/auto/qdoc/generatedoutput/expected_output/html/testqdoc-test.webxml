@@ -5,13 +5,13 @@
             <description>
                 <brief>A class in a namespace.</brief>
             </description>
-            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
+            <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                 <parameter type="int &amp;" name="x" default=""/>
                 <description>
                     <brief>A macro with argument <argument>x</argument>.</brief>
                 </description>
             </function>
-            <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" documented="true" meta="constructor" noexcept="true" type="" signature="Test()">
+            <function name="Test" fullname="TestQDoc::Test::Test" href="testqdoc-test.html#Test" status="active" access="public" documented="true" meta="constructor" noexcept="true" signature="Test()">
                 <description>
                     <para>Default constructor.</para>
                 </description>
