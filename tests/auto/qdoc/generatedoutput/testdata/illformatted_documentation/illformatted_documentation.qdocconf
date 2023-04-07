@@ -1,0 +1,12 @@
+include(../configs/config.qdocconf)
+project = IllformattedDocumentation
+
+headerdirs  = .
+sourcedirs  = .
+exampledirs = .
+
+outputformats             = WebXML
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+
+warninglimit = 3 # The broken example generates three warnings

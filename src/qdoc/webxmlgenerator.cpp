@@ -794,7 +794,7 @@ void WebXMLGenerator::startLink(QXmlStreamWriter &writer, const Atom *atom, cons
                 break;
             case Node::Example: {
                 const auto *en = static_cast<const ExampleNode *>(node);
-                QString fileTitle = exampleFileTitle(en, atom->string());
+                const QString fileTitle = atom ? exampleFileTitle(en, atom->string()) : QString();
                 if (!fileTitle.isEmpty()) {
                     writer.writeAttribute("page", fileTitle);
                     break;

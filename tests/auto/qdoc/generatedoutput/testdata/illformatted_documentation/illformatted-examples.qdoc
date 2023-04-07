@@ -1,0 +1,17 @@
+// Copyright (C) 2023 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page illformatted-examples.html
+    \ingroup all-examples
+    \title Test generated output for illformatted examples
+    \brief Demonstrate correctness for example generation.
+
+    This test includes the following examples:
+
+    \section1 QML Examples
+    \annotatedlist illformatted-examples-qml
+
+    \section1 C++ Examples
+    \annotatedlist illformatted-examples-cpp
+*/
