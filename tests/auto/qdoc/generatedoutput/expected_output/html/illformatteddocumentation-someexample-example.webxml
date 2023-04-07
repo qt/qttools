@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="someexample" href="illformatteddocumentation-someexample-example.html" status="active" location="some_example.qdoc" documented="true" groups="illformatted-examples-qml" subtype="example" title="QDoc: some example" fulltitle="QDoc: some example" subtitle="">
+            <description/>
+        </page>
+    </document>
+</WebXML>

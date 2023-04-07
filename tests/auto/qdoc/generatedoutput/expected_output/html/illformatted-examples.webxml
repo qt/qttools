@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="illformatted-examples.html" href="illformatted-examples.html" status="active" location="illformatted-examples.qdoc" documented="true" groups="all-examples" subtype="page" title="Test generated output for illformatted examples" fulltitle="Test generated output for illformatted examples" subtitle="" brief="Demonstrate correctness for example generation">
+            <contents name="qml-examples" title="QML Examples" level="1"/>
+            <contents name="c-examples" title="C++ Examples" level="1"/>
+            <description>
+                <brief>Demonstrate correctness for example generation.</brief>
+                <para>This test includes the following examples:</para>
+                <section id="qml-examples">
+                    <heading level="1">QML Examples</heading>
+                    <table width="100%">
+                        <row>
+                            <item>
+                                <para>
+                                    <link raw="QDoc: some example" href="illformatteddocumentation-someexample-example.html" type="page" page="QDoc: some example"/>
+                                </para>
+                            </item>
+                            <item>
+                                <para></para>
+                            </item>
+                        </row>
+                    </table>
+                </section>
+                <section id="c-examples">
+                    <heading level="1">C++ Examples</heading>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="IllformattedDocumentation Reference Documentation" version="" project="IllformattedDocumentation">
+    <namespace name="" status="active" access="public" module="illformatteddocumentation">
+        <page name="someexample" href="illformatteddocumentation-someexample-example.html" status="active" location="some_example.qdoc" documented="true" groups="illformatted-examples-qml" subtype="example" title="QDoc: some example" fulltitle="QDoc: some example" subtitle=""/>
+        <page name="illformatted-examples.html" href="illformatted-examples.html" status="active" location="illformatted-examples.qdoc" documented="true" groups="all-examples" subtype="page" title="Test generated output for illformatted examples" fulltitle="Test generated output for illformatted examples" subtitle="" brief="Demonstrate correctness for example generation">
+            <contents name="qml-examples" title="QML Examples" level="1"/>
+            <contents name="c-examples" title="C++ Examples" level="1"/>
+        </page>
+        <group name="all-examples" href="all-examples.html" status="internal" seen="false" title=""/>
+        <group name="illformatted-examples-qml" href="illformatted-examples-qml.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>
