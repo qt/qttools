@@ -45,9 +45,9 @@ endif()
 if(QT_FEATURE_qtplugininfo)
     add_subdirectory(qtplugininfo)
 endif()
-if(QT_FEATURE_qdoc AND QT_FEATURE_clangcpp)
-    add_subdirectory(qdoc)
-endif()
+
+add_subdirectory(qdoc)
+
 if(QT_FEATURE_qdbus)
     add_subdirectory(qdbus)
 endif()

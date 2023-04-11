@@ -9,11 +9,11 @@
 qt_internal_add_test(tst_qdoccommandlineparser
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     SOURCES
-        ../../../../src/qdoc/qdoccommandlineparser.cpp ../../../../src/qdoc/qdoccommandlineparser.h
-        ../../../../src/qdoc/utilities.cpp ../../../../src/qdoc/utilities.h
+        ../../../../src/qdoc/qdoc/qdoccommandlineparser.cpp ../../../../src/qdoc/qdoc/qdoccommandlineparser.h
+        ../../../../src/qdoc/qdoc/utilities.cpp ../../../../src/qdoc/qdoc/utilities.h
         tst_qdoccommandlineparser.cpp
     INCLUDE_DIRECTORIES
-        ../../../../src/qdoc
+        ../../../../src/qdoc/qdoc
 )
 
 # Resources:

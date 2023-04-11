@@ -7,8 +7,8 @@
 
 qt_internal_add_test(tst_utilities
     SOURCES
-        ../../../../src/qdoc/utilities.cpp ../../../../src/qdoc/utilities.h
+        ../../../../src/qdoc/qdoc/utilities.cpp ../../../../src/qdoc/qdoc/utilities.h
         tst_utilities.cpp
     INCLUDE_DIRECTORIES
-        ../../../../src/qdoc
+        ../../../../src/qdoc/qdoc
 )
