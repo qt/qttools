@@ -3,7 +3,7 @@
 
 /*!
     \example textfinder
-    \meta category {Desktop}
+    \examplecategory {Desktop}
     \meta tags {widgets,designer}
     \ingroup examples-qtuitools
     \title Text Finder

@@ -3,7 +3,7 @@
 
 /*!
     \example multipleinheritance
-    \meta category {Desktop}
+    \examplecategory {Desktop}
     \meta tags {widgets,designer}
     \ingroup examples-designer
     \title Calculator Form/Multiple Inheritance

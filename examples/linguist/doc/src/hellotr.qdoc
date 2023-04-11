@@ -4,7 +4,7 @@
 /*!
     \example hellotr
     \ingroup examples-linguist
-    \meta category {Internationalization}
+    \examplecategory {Internationalization}
 
     \title Hello tr() Example
 
