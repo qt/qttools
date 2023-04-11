@@ -3,7 +3,7 @@
 
 /*!
     \example customwidgetplugin
-    \meta category {Desktop}
+    \examplecategory {Desktop}
     \meta tags {widgets,designer}
     \ingroup examples-designer
     \title Custom Widget Plugin
