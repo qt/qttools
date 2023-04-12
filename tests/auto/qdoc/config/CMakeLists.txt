@@ -7,11 +7,11 @@
 
 qt_internal_add_test(tst_config
     SOURCES
-        ../../../../src/qdoc/qdoc/config.cpp ../../../../src/qdoc/qdoc/config.h
-        ../../../../src/qdoc/qdoc/location.cpp ../../../../src/qdoc/qdoc/location.h
-        ../../../../src/qdoc/qdoc/qdoccommandlineparser.cpp ../../../../src/qdoc/qdoc/qdoccommandlineparser.h
-        ../../../../src/qdoc/qdoc/utilities.cpp ../../../../src/qdoc/qdoc/utilities.h
+        ${QDOC_SOURCE_DIRECTORY}/config.cpp
+        ${QDOC_SOURCE_DIRECTORY}/location.cpp
+        ${QDOC_SOURCE_DIRECTORY}/qdoccommandlineparser.cpp
+        ${QDOC_SOURCE_DIRECTORY}/utilities.cpp
         tst_config.cpp
     INCLUDE_DIRECTORIES
-        ../../../../src/qdoc/qdoc
+        ${QDOC_INCLUDE_DIRECTORY}
 )

@@ -6,6 +6,9 @@ if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND QT_FEATURE_debug_and_release)
     return()
 endif()
 
+set(QDOC_SOURCE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/qdoc/)
+set(QDOC_INCLUDE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/qdoc/)
+
 add_subdirectory(catch_generators)
 add_subdirectory(qdoc)
 add_subdirectory(config)

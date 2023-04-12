@@ -9,12 +9,12 @@ qt_internal_add_test(tst_QDoc
     boundaries/filesystem/catch_directorypath.cpp
     filesystem/catch_fileresolver.cpp
 
-    ../../../../src/qdoc/qdoc/boundaries/filesystem/filepath.cpp
-    ../../../../src/qdoc/qdoc/boundaries/filesystem/directorypath.cpp
-    ../../../../src/qdoc/qdoc/boundaries/filesystem/resolvedfile.cpp
-    ../../../../src/qdoc/qdoc/filesystem/fileresolver.cpp
+    ${QDOC_SOURCE_DIRECTORY}/boundaries/filesystem/filepath.cpp
+    ${QDOC_SOURCE_DIRECTORY}/boundaries/filesystem/directorypath.cpp
+    ${QDOC_SOURCE_DIRECTORY}/boundaries/filesystem/resolvedfile.cpp
+    ${QDOC_SOURCE_DIRECTORY}/filesystem/fileresolver.cpp
   INCLUDE_DIRECTORIES
-    ../../../../src/qdoc/qdoc/
+    ${QDOC_INCLUDE_DIRECTORY}
     ../catch/
     ../catch_generators/
     ../catch_conversions/
