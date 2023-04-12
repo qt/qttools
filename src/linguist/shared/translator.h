@@ -114,9 +114,15 @@ public:
     void makeFileNamesAbsolute(const QDir &originalPath);
     bool translationsExist() const;
 
-    struct Duplicates { QSet<int> byId, byContents; };
+    using DuplicateEntries = QHash<int, QVector<int>>;
+    struct Duplicates
+    {
+        DuplicateEntries byId, byContents;
+    };
     Duplicates resolveDuplicates();
     void reportDuplicates(const Duplicates &dupes, const QString &fileName, bool verbose);
+    void reportDuplicatesLines(const TranslatorMessage &msg,
+                               const DuplicateEntries::value_type &dups) const;
 
     QString languageCode() const { return m_language; }
     QString sourceLanguageCode() const { return m_sourceLanguage; }

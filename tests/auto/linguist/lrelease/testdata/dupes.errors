@@ -2,4 +2,5 @@ Warning: dropping duplicate messages in '.*testdata/dupes\.qm':
 
 \* Context: FindDialog
 \* Source: Text not found
-\* Line in .ts File: 11
+\* Line in .ts file: 11
+\* Duplicate at line: 16

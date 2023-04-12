@@ -182,15 +182,15 @@ bool DataModel::load(const QString &fileName, bool *langGuessed, QWidget *parent
     if (!dupes.byId.isEmpty() || !dupes.byContents.isEmpty()) {
         QString err = tr("<qt>Duplicate messages found in '%1':").arg(fileName.toHtmlEscaped());
         int numdups = 0;
-        for (int i : dupes.byId) {
+        for (auto it = dupes.byId.begin(); it != dupes.byId.end(); ++it) {
             if (++numdups >= 5) {
                 err += tr("<p>[more duplicates omitted]");
                 goto doWarn;
             }
-            err += tr("<p>* ID: %1").arg(tor.message(i).id().toHtmlEscaped());
+            err += tr("<p>* ID: %1").arg(tor.message(it.key()).id().toHtmlEscaped());
         }
-        for (int j : dupes.byContents) {
-            const TranslatorMessage &msg = tor.message(j);
+        for (auto it = dupes.byContents.begin(); it != dupes.byContents.end(); ++it) {
+            const TranslatorMessage &msg = tor.message(it.key());
             if (++numdups >= 5) {
                 err += tr("<p>[more duplicates omitted]");
                 break;

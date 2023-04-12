@@ -562,7 +562,7 @@ Translator::Duplicates Translator::resolveDuplicates()
         const TranslatorMessage &msg = m_messages.at(i);
         TranslatorMessage *omsg;
         int oi;
-        QSet<int> *pDup;
+        DuplicateEntries *pDup;
         if (!msg.id().isEmpty()) {
             const auto it = idRefs.constFind(TranslatorMessageIdPtr(this, i));
             if (it != idRefs.constEnd()) {
@@ -594,7 +594,7 @@ Translator::Duplicates Translator::resolveDuplicates()
         ++i;
         continue;
       gotDupe:
-        pDup->insert(oi);
+        (*pDup)[oi].append(msg.tsLineNumber());
         if (!omsg->isTranslated() && msg.isTranslated())
             omsg->setTranslations(msg.translations());
         m_indexOk = false;
@@ -612,19 +612,32 @@ void Translator::reportDuplicates(const Duplicates &dupes,
             std::cerr << "'\n(try -verbose for more info).\n";
         } else {
             std::cerr << "':\n";
-            for (int i : dupes.byId)
-                std::cerr << "\n* ID: " << qPrintable(message(i).id()) << std::endl;
-            for (int j : dupes.byContents) {
-                const TranslatorMessage &msg = message(j);
+            for (auto it = dupes.byId.begin(); it != dupes.byId.end(); ++it) {
+                const TranslatorMessage &msg = message(it.key());
+                std::cerr << "\n* ID: " << qPrintable(msg.id()) << std::endl;
+                reportDuplicatesLines(msg, it.value());
+            }
+            for (auto it = dupes.byContents.begin(); it != dupes.byContents.end(); ++it) {
+                const TranslatorMessage &msg = message(it.key());
                 std::cerr << "\n* Context: " << qPrintable(msg.context())
                           << "\n* Source: " << qPrintable(msg.sourceText()) << std::endl;
                 if (!msg.comment().isEmpty())
                     std::cerr << "* Comment: " << qPrintable(msg.comment()) << std::endl;
-                const int tsLine = msg.tsLineNumber();
-                if (tsLine >= 0)
-                    std::cerr << "* Line in .ts File: " << msg.tsLineNumber() << std::endl;
+                reportDuplicatesLines(msg, it.value());
             }
             std::cerr << std::endl;
+        }
+    }
+}
+
+void Translator::reportDuplicatesLines(const TranslatorMessage &msg,
+                                       const DuplicateEntries::value_type &dups) const
+{
+    if (msg.tsLineNumber() >= 0) {
+        std::cerr << "* Line in .ts file: " << msg.tsLineNumber() << std::endl;
+        for (int tsLineNumber : dups) {
+            if (tsLineNumber >= 0)
+                std::cerr << "* Duplicate at line: " << tsLineNumber << std::endl;
         }
     }
 }
