@@ -365,14 +365,6 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
             keepQuoting = true;
         break;
 
-#ifdef QDOC_QML
-    case Atom::Qml:
-        if (!m_hasQuotingInformation)
-            writer.writeTextElement(
-                    "qml", trimmedTrailing(plainCode(atom->string()), QString(), QString()));
-        else
-            keepQuoting = true;
-#endif
     case Atom::CodeBad:
         writer.writeTextElement("badcode",
                                 trimmedTrailing(plainCode(atom->string()), QString(), QString()));
