@@ -35,6 +35,6 @@ private:
     QAction *m_action;
 };
 
-#endif // VIEW3D_TOOL_H
-
 QT_END_NAMESPACE
+
+#endif // VIEW3D_TOOL_H

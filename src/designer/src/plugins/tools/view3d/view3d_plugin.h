@@ -43,6 +43,6 @@ private:
     QAction *m_action;
 };
 
-#endif // QVIEW3D_PLUGIN_H
-
 QT_END_NAMESPACE
+
+#endif // QVIEW3D_PLUGIN_H
