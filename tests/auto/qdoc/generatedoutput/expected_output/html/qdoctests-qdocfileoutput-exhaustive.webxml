@@ -30,7 +30,6 @@
     <para>
         <bold>All your text belong to bold</bold> ...And this is an examble of only <bold>bold</bold> being, well, bold.</para>
     <dots indent="4">...</dots>
-    <para>And if I knew qmltext, I guess this is where that would go. </para>
     <para>This a caption</para>
     <legalese>
         <para>Lorem legal ipsum</para>

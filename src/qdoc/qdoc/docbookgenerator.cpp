@@ -1767,10 +1767,6 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         m_writer->writeEndElement(); // code
         m_writer->writeEndElement(); // emphasis
         break;
-    case Atom::QmlText:
-    case Atom::EndQmlText:
-        // Don't do anything with these. They are just tags.
-        Q_FALLTHROUGH();
     case Atom::CodeQuoteArgument:
     case Atom::CodeQuoteCommand:
     case Atom::SnippetCommand:
@@ -4853,34 +4849,6 @@ void DocBookGenerator::generatePageNode(PageNode *pn)
 }
 
 /*!
-  Extract sections of markup text and output them.
- */
-bool DocBookGenerator::generateQmlText(const Text &text, const Node *relative)
-{
-    // From Generator::generateQmlText.
-    const Atom *atom = text.firstAtom();
-    bool result = false;
-
-    if (atom != nullptr) {
-        initializeTextOutput();
-        while (atom) {
-            if (atom->type() != Atom::QmlText)
-                atom = atom->next();
-            else {
-                atom = atom->next();
-                while (atom && (atom->type() != Atom::EndQmlText)) {
-                    int n = 1 + generateAtom(atom, relative);
-                    while (n-- > 0)
-                        atom = atom->next();
-                }
-            }
-        }
-        result = true;
-    }
-    return result;
-}
-
-/*!
   Generate the DocBook page for a QML type. \qcn is the QML type.
  */
 void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
@@ -4903,9 +4871,6 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
     startSection("details", "Detailed Description");
     generateBody(qcn);
 
-    ClassNode *cn = qcn->classNode();
-    if (cn)
-        generateQmlText(cn->doc().body(), cn);
     generateAlsoList(qcn);
 
     endSection();

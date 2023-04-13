@@ -52,7 +52,6 @@ QT_BEGIN_NAMESPACE
   \value CodeQuoteCommand
   \value DivLeft
   \value DivRight
-  \value EndQmlText
   \value ExampleFileLink
   \value ExampleImageLink
   \value FormatElse
@@ -85,7 +84,6 @@ QT_BEGIN_NAMESPACE
   \value ParaLeft
   \value ParaRight
   \value Qml
-  \value QmlText
   \value QuotationLeft
   \value QuotationRight
   \value RawString
@@ -134,7 +132,6 @@ static const struct
              { "CodeQuoteCommand", Atom::CodeQuoteCommand },
              { "DivLeft", Atom::DivLeft },
              { "DivRight", Atom::DivRight },
-             { "EndQmlText", Atom::EndQmlText },
              { "ExampleFileLink", Atom::ExampleFileLink },
              { "ExampleImageLink", Atom::ExampleImageLink },
              { "FootnoteLeft", Atom::FootnoteLeft },
@@ -172,7 +169,6 @@ static const struct
              { "ParaLeft", Atom::ParaLeft },
              { "ParaRight", Atom::ParaRight },
              { "Qml", Atom::Qml },
-             { "QmlText", Atom::QmlText },
              { "QuotationLeft", Atom::QuotationLeft },
              { "QuotationRight", Atom::QuotationRight },
              { "RawString", Atom::RawString },

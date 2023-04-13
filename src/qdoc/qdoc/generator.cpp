@@ -1093,35 +1093,6 @@ void Generator::generateDocumentation(Node *node)
     }
 }
 
-/*!
-  Extract sections of markup text surrounded by \e qmltext
-  and \e endqmltext and output them.
- */
-bool Generator::generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
-                                const QString & /* qmlName */)
-{
-    const Atom *atom = text.firstAtom();
-    bool result = false;
-
-    if (atom != nullptr) {
-        initializeTextOutput();
-        while (atom) {
-            if (atom->type() != Atom::QmlText)
-                atom = atom->next();
-            else {
-                atom = atom->next();
-                while (atom && (atom->type() != Atom::EndQmlText)) {
-                    int n = 1 + generateAtom(atom, relative, marker);
-                    while (n-- > 0)
-                        atom = atom->next();
-                }
-            }
-        }
-        result = true;
-    }
-    return result;
-}
-
 void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *marker)
 {
     if (fn->overridesThis().isEmpty() || !fn->parent()->isClassNode())

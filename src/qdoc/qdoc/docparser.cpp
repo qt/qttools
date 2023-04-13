@@ -116,8 +116,6 @@ enum {
     CMD_ENDQML,
     CMD_CPP,
     CMD_ENDCPP,
-    CMD_QMLTEXT,
-    CMD_ENDQMLTEXT,
     CMD_CPPTEXT,
     CMD_ENDCPPTEXT,
     NOT_A_CMD
@@ -218,8 +216,6 @@ static struct
              { "endqml", CMD_ENDQML },
              { "cpp", CMD_CPP },
              { "endcpp", CMD_ENDCPP },
-             { "qmltext", CMD_QMLTEXT },
-             { "endqmltext", CMD_ENDQMLTEXT },
              { "cpptext", CMD_CPPTEXT },
              { "endcpptext", CMD_ENDCPPTEXT },
              { nullptr, 0 } };
@@ -386,9 +382,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                            getCode(CMD_QML, CodeMarker::markerForLanguage(QLatin1String("QML")),
                                    getMetaCommandArgument(cmdStr)));
                     break;
-                case CMD_QMLTEXT:
-                    append(Atom::QmlText);
-                    break;
                 case CMD_DIV:
                     leavePara();
                     p1 = getArgument(true);
@@ -447,9 +440,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_ENDQML:
                     closeCommand(cmd);
-                    break;
-                case CMD_ENDQMLTEXT:
-                    append(Atom::EndQmlText);
                     break;
                 case CMD_ENDFOOTNOTE:
                     if (closeCommand(cmd)) {
@@ -2439,8 +2429,6 @@ int DocParser::endCmdFor(int cmd)
         return CMD_ENDDIV;
     case CMD_QML:
         return CMD_ENDQML;
-    case CMD_QMLTEXT:
-        return CMD_ENDQMLTEXT;
     case CMD_FOOTNOTE:
         return CMD_ENDFOOTNOTE;
     case CMD_LEGALESE:

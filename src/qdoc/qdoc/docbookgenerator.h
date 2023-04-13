@@ -108,7 +108,6 @@ private:
     void generateLegaleseList(const Node *relative);
     void generateExampleFilePage(const Node *en, ResolvedFile resolved_file, CodeMarker* = nullptr) override;
     void generateOverloadedSignal(const Node *node);
-    bool generateQmlText(const Text &text, const Node *relative) override;
     void generateRequiredLinks(const Node *node);
     void generateLinkToExample(const ExampleNode *en, const QString &baseUrl);
 

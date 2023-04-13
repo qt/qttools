@@ -92,12 +92,6 @@ protected:
     virtual void generateCollectionNode(CollectionNode *, CodeMarker *) {}
     virtual void generateGenericCollectionPage(CollectionNode *, CodeMarker *) {}
     virtual void generateDocumentation(Node *node);
-    virtual bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
-                                 const QString &qmlName);
-    virtual bool generateQmlText(const Text &text, const Node *relative)
-    {
-        return generateQmlText(text, relative, nullptr, QString());
-    }
     virtual bool generateText(const Text &text, const Node *relative, CodeMarker *marker);
     virtual bool generateText(const Text &text, const Node *relative)
     {

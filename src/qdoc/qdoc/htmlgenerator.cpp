@@ -966,10 +966,6 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::UnknownCommand:
         out() << R"(<b class="redFont"><code translate=\"no\">\)" << protectEnc(atom->string()) << "</code></b>";
         break;
-    case Atom::QmlText:
-    case Atom::EndQmlText:
-        // don't do anything with these. They are just tags.
-        break;
     case Atom::CodeQuoteArgument:
     case Atom::CodeQuoteCommand:
     case Atom::SnippetCommand:
@@ -1416,9 +1412,6 @@ void HtmlGenerator::generateQmlTypePage(QmlTypeNode *qcn, CodeMarker *marker)
           << "Detailed Description"
           << "</h2>\n";
     generateBody(qcn, marker);
-    ClassNode *cn = qcn->classNode();
-    if (cn)
-        generateQmlText(cn->doc().body(), cn, marker, qcn->name());
     generateAlsoList(qcn, marker);
     generateExtractionMark(qcn, EndMark);
 
