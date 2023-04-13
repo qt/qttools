@@ -52,6 +52,6 @@ private:
 
 }  // namespace qdesigner_internal
 
-#endif // OBJECTINSPECTOR_H
-
 QT_END_NAMESPACE
+
+#endif // OBJECTINSPECTOR_H
