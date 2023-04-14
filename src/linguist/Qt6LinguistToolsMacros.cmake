@@ -246,6 +246,21 @@ function(qt6_add_lrelease target)
             ${lrelease_command} ${arg_OPTIONS} ${ts_file} -qm ${qm}
             DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease "${ts_file}"
             VERBATIM)
+
+        # Mark file as GENERATED, so that calling _qt_internal_expose_deferred_files_to_ide
+        # doesn't cause an error at generation time saying "Cannot find source file:" when
+        # qt6_add_lrelease is called from a subdirectory different than the target.
+        # The issue happend when the user project called cmake_minimum_required(VERSION)
+        # with a version less than 3.20 or set the CMP0118 policy value to OLD.
+        set(scope_args)
+        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+            set(scope_args TARGET_DIRECTORY ${target})
+        endif()
+        set_source_files_properties(${qm}
+            ${scope_args}
+            PROPERTIES GENERATED TRUE
+        )
+
         list(APPEND qm_files "${qm}")
 
         # QTBUG-103470: Save the target responsible for driving the build of the custom command
