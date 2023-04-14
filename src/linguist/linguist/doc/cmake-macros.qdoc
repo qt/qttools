@@ -225,6 +225,9 @@ qt_add_lrelease(target TS_FILES file1.ts [file2.ts ...]
 
 \versionlessCMakeCommandsNote qt6_add_lrelease()
 
+\warning Calling \c qt_add_lrelease in a directory scope different than the
+target directory scope requires at least CMake version 3.18.
+
 \section1 Description
 
 Creates a target \c{${target}_lrelease} to transform \c{.ts} files into \c{.qm}
@@ -316,6 +319,9 @@ qt_add_translations(target TS_FILES file1.ts [file2.ts ...]
 \versionlessCMakeCommandsNote qt6_add_translations()
 
 \preliminarycmakecommand
+
+\warning Calling \c qt_add_translations in a directory scope different than the
+target directory scope requires at least CMake version 3.18.
 
 \section1 Description
 
