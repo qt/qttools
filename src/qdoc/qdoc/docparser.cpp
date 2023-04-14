@@ -1293,11 +1293,24 @@ QString DocParser::detailsUnknownCommand(const QSet<QString> &metaCommandSet, co
     return QStringLiteral("Maybe you meant '\\%1'?").arg(best);
 }
 
+/*!
+    \internal
+
+    Issues a warning about the duplicate definition of a target or keyword in
+    at \a location. \a duplicateDefinition is the target being processed; the
+    already registered definition is \a previousDefinition.
+ */
+static void warnAboutPreexistingTarget(const Location &location, const QString &duplicateDefinition, const QString &previousDefinition)
+{
+    location.warning(
+            QStringLiteral("Duplicate target name '%1'. The previous occurrence is here: %2")
+                    .arg(duplicateDefinition, previousDefinition));
+}
+
 void DocParser::insertTarget(const QString &target, bool keyword)
 {
     if (m_targetMap.contains(target)) {
-        location().warning(QStringLiteral("Duplicate target name '%1'").arg(target));
-        m_targetMap[target].warning(QStringLiteral("(The previous occurrence is here)"));
+        return warnAboutPreexistingTarget(location(), target, m_targetMap[target].toString());
     } else {
         m_targetMap.insert(target, location());
         m_private->constructExtra();

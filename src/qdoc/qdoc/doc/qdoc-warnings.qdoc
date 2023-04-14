@@ -364,10 +364,11 @@
 
     \section1 Duplicate target name <target>
 
-    This means that there are two \l {target-command}{\\target} commands
-    with the same parameter. They should be unique.
-    This warning is followed by the warning "The previous
-    occurrence is here".
+    This warning is issued if you define two targets with the same parameter,
+    using either the \l {target-command}{\\target} or the \l {keyword-command}
+    {\\keyword} command. The target name given as parameter to these commands
+    must be unique. The warning is followed by "The previous occurrence is
+    here: [location]", where location contains a file name and line number.
 
     \section1 Cannot find qdoc include file <filename>
 
