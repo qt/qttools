@@ -635,6 +635,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     startFormat(ATOM_FORMATTING_INDEX, cmd);
                     break;
                 case CMD_KEYWORD:
+                    leavePara();
                     insertTarget(getRestOfLine(), true);
                     break;
                 case CMD_L:

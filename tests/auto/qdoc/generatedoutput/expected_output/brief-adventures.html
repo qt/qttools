@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- brief_adventures.qdoc -->
+  <meta name="description" content="Test that the \brief command doesn't eat content that follows it.">
+  <title>Adventures with QDoc's \brief command | IllformattedDocumentation</title>
+</head>
+<body>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#further-details">Further details</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title">Adventures with QDoc's \brief command</h1>
+<!-- $$$brief-adventures.html-description -->
+<div class="descr" id="details">
+<p>The purpose of this test data is to provide a regression mechanism as part of QDoc's end-to-end test, tst_generatedOutput, for an issue (QTBUG-70959) that was reported against QDoc's \keyword command. The issue, as experienced by the reporter of the bug, is that if the \keyword command isn't followed by a new command, or is the last command in a paragraph, the following paragraph is &quot;eaten&quot;. That means the entire paragraph is understood by QDoc as keywords and included as html meta information instead of as part of the rendered output.</p>
+<h2 id="further-details">Further details</h2>
+<p>The bug report is at <a href="https://bugreports.qt.io/browse/QTBUG-70959" translate="no">https://bugreports.qt.io/browse/QTBUG-70959</a>. It refers to a change that bypassed the issue by moving the \keyword command, at <a href="https://codereview.qt-project.org/c/qt/qtdoc/+/242033/" translate="no">https://codereview.qt-project.org/c/qt/qtdoc/+/242033/</a>.</p>
+</div>
+<!-- @@@brief-adventures.html -->
+</body>
+</html>

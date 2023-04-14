@@ -5,7 +5,7 @@ headerdirs  = .
 sourcedirs  = .
 exampledirs = .
 
-outputformats             = WebXML
+outputformats             = WebXML HTML
 WebXML.quotinginformation = true
 WebXML.nosubdirs          = true
 
