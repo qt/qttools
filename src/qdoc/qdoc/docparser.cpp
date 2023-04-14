@@ -1309,18 +1309,18 @@ static void warnAboutPreexistingTarget(const Location &location, const QString &
 
 void DocParser::insertTarget(const QString &target, bool keyword)
 {
-    if (m_targetMap.contains(target)) {
+    if (m_targetMap.contains(target))
         return warnAboutPreexistingTarget(location(), target, m_targetMap[target].toString());
+
+    m_targetMap.insert(target, location());
+    m_private->constructExtra();
+
+    if (keyword) {
+        append(Atom::Keyword, target);
+        m_private->extra->m_keywords.append(m_private->m_text.lastAtom());
     } else {
-        m_targetMap.insert(target, location());
-        m_private->constructExtra();
-        if (keyword) {
-            append(Atom::Keyword, target);
-            m_private->extra->m_keywords.append(m_private->m_text.lastAtom());
-        } else {
-            append(Atom::Target, target);
-            m_private->extra->m_targets.append(m_private->m_text.lastAtom());
-        }
+        append(Atom::Target, target);
+        m_private->extra->m_targets.append(m_private->m_text.lastAtom());
     }
 }
 
