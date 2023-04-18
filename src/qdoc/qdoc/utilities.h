@@ -19,6 +19,7 @@ bool debugging();
 
 QString separator(qsizetype wordPosition, qsizetype numberOfWords);
 QString comma(qsizetype wordPosition, qsizetype numberOfWords);
+QString canonicalizeFileName(const QString &name);
 QStringList getInternalIncludePaths(const QString &compiler);
 }
 

@@ -79,6 +79,45 @@ QString comma(qsizetype wordPosition, qsizetype numberOfWords)
 }
 
 /*!
+  \internal
+  Replace non-alphanum characters in \a str with hyphens
+  and convert all characters to lowercase. Returns the
+  result of the conversion with leading, trailing, and
+  consecutive hyphens removed.
+
+  The implementation is equivalent to:
+
+  \code
+      name.replace(QRegularExpression("[^A-Za-z0-9]+"), " ");
+      name = name.simplified();
+      name.replace(QLatin1Char(' '), QLatin1Char('-'));
+      name = name.toLower();
+  \endcode
+*/
+QString canonicalizeFileName(const QString &name)
+{
+    QString result;
+    bool begun = false;
+    const auto *data{name.constData()};
+    for (qsizetype i = 0; i < name.size(); ++i) {
+        char16_t u{data[i].unicode()};
+        if (u >= 'A' && u <= 'Z')
+            u += 'a' - 'A';
+        if ((u >= 'a' && u <= 'z') || (u >= '0' && u <= '9')) {
+            result += QLatin1Char(u);
+            begun = true;
+        } else if (begun) {
+            result += QLatin1Char('-');
+            begun = false;
+        }
+    }
+    if (result.endsWith(QLatin1Char('-')))
+        result.chop(1);
+
+    return result;
+}
+
+/*!
     \internal
 */
 static bool runProcess(const QString &program, const QStringList &arguments,

@@ -240,37 +240,6 @@ void Generator::endSubPage()
     delete outStreamStack.pop();
 }
 
-/*
-  the code below is effectively equivalent to:
-  input.replace(QRegularExpression("[^A-Za-z0-9]+"), " ");
-  input = input.trimmed();
-  input.replace(QLatin1Char(' '), QLatin1Char('-'));
-  input = input.toLower();
-  as this function accounted for ~8% of total running time
-  we optimize a bit...
-*/
-static void transmogrify(QString &input, QString &output)
-{
-    // +5 prevents realloc in fileName() below
-    output.reserve(input.size() + 5);
-    bool begun = false;
-    for (int i = 0; i != input.size(); ++i) {
-        QChar c = input.at(i);
-        uint u = c.unicode();
-        if (u >= 'A' && u <= 'Z')
-            u += 'a' - 'A';
-        if ((u >= 'a' && u <= 'z') || (u >= '0' && u <= '9')) {
-            output += QLatin1Char(u);
-            begun = true;
-        } else if (begun) {
-            output += QLatin1Char('-');
-            begun = false;
-        }
-    }
-    while (output.endsWith(QLatin1Char('-')))
-        output.chop(1);
-}
-
 QString Generator::fileBase(const Node *node) const
 {
     if (!node->isPageNode() && !node->isCollectionNode())
@@ -337,11 +306,10 @@ QString Generator::fileBase(const Node *node) const
         }
     }
 
-    QString res;
-    transmogrify(base, res);
+    QString canonicalName{Utilities::canonicalizeFileName(base)};
     Node *n = const_cast<Node *>(node);
-    n->setFileNameBase(res);
-    return res;
+    n->setFileNameBase(canonicalName);
+    return canonicalName;
 }
 
 /*!
@@ -352,14 +320,13 @@ QString Generator::fileBase(const Node *node) const
  */
 QString Generator::linkForExampleFile(const QString &path, const QString &fileExt)
 {
-    QString link = path;
+    QString link{path};
     link.prepend(s_project.toLower() + QLatin1Char('-'));
 
-    QString res;
-    transmogrify(link, res);
-    res.append(QLatin1Char('.'));
-    res.append(fileExt.isEmpty() ? fileExtension() : fileExt);
-    return res;
+    QString canonicalName{Utilities::canonicalizeFileName(link)};
+    canonicalName.append(QLatin1Char('.'));
+    canonicalName.append(fileExt.isEmpty() ? fileExtension() : fileExt);
+    return canonicalName;
 }
 
 /*!
