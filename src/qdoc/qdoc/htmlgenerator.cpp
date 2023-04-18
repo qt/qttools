@@ -36,6 +36,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 bool HtmlGenerator::s_inUnorderedList { false };
 
 HtmlGenerator::HtmlGenerator(FileResolver& file_resolver) : XmlGenerator(file_resolver) {}
@@ -1917,10 +1919,11 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
     const QString instantiatedByText = "Instantiated By";
     const QString qtVariableText = "qmake";
     const QString cmakeText = "CMake";
+    const QString statusText = "Status";
 
     // The order of the requisites matter
-    const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText, sinceText,
-                                       instantiatedByText, inheritsText, inheritedBytext };
+    const QStringList requisiteorder { headerText,         cmakeText,    qtVariableText,  sinceText,
+                                       instantiatedByText, inheritsText, inheritedBytext, statusText };
 
     addIncludeFileToMap(aggregate, marker, requisites, text, headerText);
     addSinceToMap(aggregate, requisites, &text, sinceText);
@@ -1938,6 +1941,9 @@ void HtmlGenerator::generateRequisites(Aggregate *aggregate, CodeMarker *marker)
         addInheritsToMap(requisites, &text, inheritsText, classe);
         addInheritedByToMap(requisites, &text, inheritedBytext, classe);
     }
+
+    // Add the state description (if any) to the map
+    addStatusToMap(aggregate, requisites, text, statusText);
 
     if (!requisites.isEmpty()) {
         // generate the table
@@ -2097,6 +2103,38 @@ void HtmlGenerator::addSinceToMap(const Aggregate *aggregate, QMap<QString, Text
 
 /*!
  * \internal
+ * Adds the status description for \a aggregate, together with a <span> element, to the \a
+ * requisites map.
+ *
+ * The span element can be used for adding CSS styling/icon associated with a specific status.
+ * The span class name is constructed by converting the description (sans \\deprecated
+ * version info) to lowercase and replacing all non-alphanum characters with hyphens. In
+ * addition, the span has a class \c status. For example,
+ * 'Tech Preview' -> class="status tech-preview"
+*/
+void HtmlGenerator::addStatusToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites,
+                                  Text &text, const QString &statusText) const
+{
+    auto status{formatStatus(aggregate, m_qdb)};
+    if (!status)
+        return;
+
+    QString spanClass;
+    if (aggregate->status() == Node::Deprecated)
+        spanClass = u"deprecated"_s; // Disregard any version info
+    else
+        spanClass = Utilities::canonicalizeFileName(status.value());
+
+    text.clear();
+    text << Atom(Atom::String, status.value())
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_SPAN +
+                 "class=\"status %1\""_L1.arg(spanClass))
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_SPAN);
+    requisites.insert(statusText, text);
+}
+
+/*!
+ * \internal
  * Adds the includes (from the \\includefile command) to the map.
  */
 void HtmlGenerator::addIncludeFileToMap(const Aggregate *aggregate, CodeMarker *marker,
@@ -2130,6 +2168,7 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
     const QString inheritedBytext = "Inherited By:";
     const QString inheritsText = "Inherits:";
     const QString instantiatesText = "Instantiates:";
+    const QString statusText = "Status:";
 
     // add the module name and version to the map
     QString logicalModuleVersion;
@@ -2189,9 +2228,12 @@ void HtmlGenerator::generateQmlRequisites(QmlTypeNode *qcn, CodeMarker *marker)
             requisites.insert(inheritedBytext, text);
     }
 
+    // Add the state description (if any) to the map
+    addStatusToMap(qcn, requisites, text, statusText);
+
     // The order of the requisites matter
     const QStringList requisiteorder { importText, sinceText, instantiatesText, inheritsText,
-                                       inheritedBytext };
+                                       inheritedBytext, statusText };
 
     if (!requisites.isEmpty()) {
         // generate the table

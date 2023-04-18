@@ -1106,6 +1106,37 @@ QString Generator::formatSince(const Node *node)
     return node->since();
 }
 
+/*!
+    \internal
+    Returns a string representing status information of a \a node.
+
+    If a status description is returned, it is one of:
+    \list
+      \li 'Deprecated [since <version>]' (\\deprecated [<version>]),
+      \li 'Preliminary' (\\preliminary), or
+      \li The description adopted from associated module's state:
+          \c {\modulestate {<description>}}.
+    \endlist
+
+    Otherwise, returns \c std::nullopt.
+*/
+std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
+{
+    QString status;
+
+    if (node->status() == Node::Deprecated) {
+        status = u"Deprecated"_s;
+        if (const auto since = node->deprecatedSince(); !since.isEmpty())
+            status += " since %1"_L1.arg(since);
+    } else if (node->status() == Node::Preliminary) {
+        status = u"Preliminary"_s;
+    } else if (const auto collection = qdb->getModuleNode(node); collection) {
+        status = collection->state();
+    }
+
+    return status.isEmpty() ? std::nullopt : std::optional(status);
+}
+
 void Generator::generateSince(const Node *node, CodeMarker *marker)
 {
     if (!node->since().isEmpty()) {

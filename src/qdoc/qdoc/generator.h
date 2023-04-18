@@ -13,6 +13,7 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
 #include <QtCore/qtextstream.h>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -197,6 +198,8 @@ protected:
     QString m_link {};
     QString m_sectionNumber {};
 };
+
+std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb);
 
 QT_END_NAMESPACE
 

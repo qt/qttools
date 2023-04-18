@@ -42,6 +42,13 @@
 */
 
 /*!
+    \qmltype OldType
+    \inqmlmodule QDoc.Test
+    \brief Deprecated old type.
+    \deprecated [1.0]
+*/
+
+/*!
     \qmlproperty int Type::id
     \readonly
     \brief A read-only property.

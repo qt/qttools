@@ -42,6 +42,9 @@
                     <section ref="qml-qdoc-test-doctest.html" title="DocTest Type Reference">
                         <section ref="qml-qdoc-test-doctest-members.html" title="List of all members"/>
                     </section>
+                    <section ref="qml-qdoc-test-oldtype.html" title="OldType Type Reference">
+                        <section ref="qml-qdoc-test-oldtype-members.html" title="List of all members"/>
+                    </section>
                     <section ref="qml-qdoc-test-type.html" title="Type Type Reference">
                         <section ref="qml-qdoc-test-type-members.html" title="List of all members"/>
                         <section ref="qml-qdoc-test-type-obsolete.html" title="Obsolete members"/>
@@ -72,6 +75,8 @@
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
+            <keyword name="OldType" id="QML.OldType" ref="qml-qdoc-test-oldtype.html"/>
+            <keyword name="OldType" id="QML.QDoc.Test1.OldType" ref="qml-qdoc-test-oldtype.html"/>
             <keyword name="ProgressBar" id="QML.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="ProgressBar" id="QML.UIComponents1.ProgressBar" ref="qml-uicomponents-progressbar.html"/>
             <keyword name="QDOCTEST_MACRO" id="QDOCTEST_MACRO" ref="testqdoc.html#QDOCTEST_MACRO"/>
@@ -172,6 +177,8 @@
             <file>qml-qdoc-test-child.html</file>
             <file>qml-qdoc-test-doctest-members.html</file>
             <file>qml-qdoc-test-doctest.html</file>
+            <file>qml-qdoc-test-oldtype-members.html</file>
+            <file>qml-qdoc-test-oldtype.html</file>
             <file>qml-qdoc-test-type-members.html</file>
             <file>qml-qdoc-test-type-obsolete.html</file>
             <file>qml-qdoc-test-type.html</file>

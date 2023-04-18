@@ -2825,6 +2825,10 @@ void DocBookGenerator::generateRequisites(const Aggregate *aggregate)
         generateEndRequisite();
     }
 
+    // Status.
+    if (auto status = formatStatus(aggregate, m_qdb); status)
+        generateRequisite("Status", status.value());
+
     // Write the elements as a list if not empty.
     delete m_writer;
     m_writer = oldWriter;
@@ -2927,6 +2931,10 @@ void DocBookGenerator::generateQmlRequisites(const QmlTypeNode *qcn)
         generateGroupReferenceText(qcn);
         generateEndRequisite();
     }
+
+    // Status.
+    if (auto status = formatStatus(qcn, m_qdb); status)
+        generateRequisite("Status:", status.value());
 
     m_writer->writeEndElement(); // variablelist
     newLine();

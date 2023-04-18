@@ -107,6 +107,8 @@ private:
                               const QString &headerText);
     void addSinceToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,
                        const QString &sinceText) const;
+    void addStatusToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text &text,
+                        const QString &statusText) const;
     void addCMakeInfoToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,
                            const QString &CMakeInfo) const;
     void addQtVariableToMap(const Aggregate *aggregate, QMap<QString, Text> &requisites, Text *text,

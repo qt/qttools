@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
-<db:title>TypeNoVersion QML Type</db:title>
+<db:title>OldType QML Type</db:title>
 <db:productname>Test</db:productname>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
-<db:para>Another QML type documented in a .cpp file.</db:para>
+<db:para>Deprecated old type.</db:para>
+<db:para><db:emphasis role="bold">This type is deprecated since 1.0. We strongly advise against using it in new code.</db:emphasis></db:para>
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
@@ -13,7 +14,7 @@
 <db:varlistentry>
 <db:term>Import Statement</db:term>
 <db:listitem>
-<db:para>import Test.NoVer</db:para>
+<db:para>import QDoc.Test 1.1</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
@@ -23,15 +24,9 @@
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>
-<db:term>Instantiates:</db:term>
-<db:listitem>
-<db:para><db:link xlink:href="testqdoc-testderived.xml">TestDerived</db:link></db:para>
-</db:listitem>
-</db:varlistentry>
-<db:varlistentry>
 <db:term>Status:</db:term>
 <db:listitem>
-<db:para>Tech Preview</db:para>
+<db:para>Deprecated since 1.0</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

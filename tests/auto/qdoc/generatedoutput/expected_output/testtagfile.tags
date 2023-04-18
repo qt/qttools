@@ -87,6 +87,10 @@
         </member>
     </compound>
     <compound kind="class">
+        <name>QDoc.Test.OldType</name>
+        <filename>qml-qdoc-test-oldtype.html</filename>
+    </compound>
+    <compound kind="class">
         <name>UIComponents.ProgressBar</name>
         <filename>qml-uicomponents-progressbar.html</filename>
     </compound>
