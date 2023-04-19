@@ -1760,26 +1760,26 @@ void DocParser::appendToCode(const QString &markedCode, Atom::AtomType defaultTy
 
 void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, const QString &string)
 {
-    if (m_paragraphState == OutsideParagraph) {
+    if (m_paragraphState != OutsideParagraph)
+        return;
 
-        if ((m_private->m_text.lastAtom()->type() != Atom::ListItemLeft)
-            && (m_private->m_text.lastAtom()->type() != Atom::DivLeft)
-            && (m_private->m_text.lastAtom()->type() != Atom::DetailsLeft)) {
-            leaveValueList();
-        }
-
-        append(leftType, string);
-        m_indexStartedParagraph = false;
-        m_pendingParagraphLeftType = leftType;
-        m_pendingParagraphRightType = rightType;
-        m_pendingParagraphString = string;
-        if (leftType == Atom::SectionHeadingLeft) {
-            m_paragraphState = InSingleLineParagraph;
-        } else {
-            m_paragraphState = InMultiLineParagraph;
-        }
-        skipSpacesOrOneEndl();
+    if ((m_private->m_text.lastAtom()->type() != Atom::ListItemLeft)
+        && (m_private->m_text.lastAtom()->type() != Atom::DivLeft)
+        && (m_private->m_text.lastAtom()->type() != Atom::DetailsLeft)) {
+        leaveValueList();
     }
+
+    append(leftType, string);
+    m_indexStartedParagraph = false;
+    m_pendingParagraphLeftType = leftType;
+    m_pendingParagraphRightType = rightType;
+    m_pendingParagraphString = string;
+    if (leftType == Atom::SectionHeadingLeft) {
+        m_paragraphState = InSingleLineParagraph;
+    } else {
+        m_paragraphState = InMultiLineParagraph;
+    }
+    skipSpacesOrOneEndl();
 }
 
 void DocParser::leavePara()
