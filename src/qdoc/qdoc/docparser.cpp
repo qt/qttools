@@ -1784,26 +1784,27 @@ void DocParser::enterPara(Atom::AtomType leftType, Atom::AtomType rightType, con
 
 void DocParser::leavePara()
 {
-    if (m_paragraphState != OutsideParagraph) {
-        if (!m_pendingFormats.isEmpty()) {
-            location().warning(QStringLiteral("Missing '}'"));
-            m_pendingFormats.clear();
-        }
+    if (m_paragraphState == OutsideParagraph)
+        return;
 
-        if (m_private->m_text.lastAtom()->type() == m_pendingParagraphLeftType) {
-            m_private->m_text.stripLastAtom();
-        } else {
-            if (m_private->m_text.lastAtom()->type() == Atom::String
-                && m_private->m_text.lastAtom()->string().endsWith(QLatin1Char(' '))) {
-                m_private->m_text.lastAtom()->chopString();
-            }
-            append(m_pendingParagraphRightType, m_pendingParagraphString);
-        }
-        m_paragraphState = OutsideParagraph;
-        m_indexStartedParagraph = false;
-        m_pendingParagraphRightType = Atom::Nop;
-        m_pendingParagraphString.clear();
+    if (!m_pendingFormats.isEmpty()) {
+        location().warning(QStringLiteral("Missing '}'"));
+        m_pendingFormats.clear();
     }
+
+    if (m_private->m_text.lastAtom()->type() == m_pendingParagraphLeftType) {
+        m_private->m_text.stripLastAtom();
+    } else {
+        if (m_private->m_text.lastAtom()->type() == Atom::String
+            && m_private->m_text.lastAtom()->string().endsWith(QLatin1Char(' '))) {
+            m_private->m_text.lastAtom()->chopString();
+        }
+        append(m_pendingParagraphRightType, m_pendingParagraphString);
+    }
+    m_paragraphState = OutsideParagraph;
+    m_indexStartedParagraph = false;
+    m_pendingParagraphRightType = Atom::Nop;
+    m_pendingParagraphString.clear();
 }
 
 void DocParser::leaveValue()
