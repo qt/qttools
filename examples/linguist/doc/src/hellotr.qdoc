@@ -119,7 +119,7 @@
     \snippet doc/snippets/doc_src_examples_hellotr.qdoc 5
 
     You should now have a file \c hellotr_la.ts in
-    the current directory, containing this:
+    the source directory, containing this:
 
     \snippet doc/snippets/doc_src_examples_hellotr.qdoc 1
 
