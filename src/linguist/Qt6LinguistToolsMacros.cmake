@@ -225,6 +225,7 @@ function(qt6_add_lrelease target)
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lrelease>)
 
     set(qm_files "")
+    set(supported_languages "")
     foreach(ts_file ${ts_files})
         if(NOT EXISTS "${ts_file}")
             message(WARNING "Translation file '${ts_file}' does not exist. "
@@ -238,6 +239,20 @@ function(qt6_add_lrelease target)
                 DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate
                 VERBATIM)
         endif()
+
+        if(APPLE)
+            execute_process(COMMAND /usr/bin/xmllint --xpath "string(/TS/@language)" ${ts_file}
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+                OUTPUT_VARIABLE language_code
+                ERROR_VARIABLE xmllint_error)
+            if(language_code AND NOT xmllint_error)
+                list(APPEND supported_languages "${language_code}")
+            else()
+                message(WARNING "Failed to resolve language code for ${ts_file}. "
+                    "Please update CFBundleLocalizations in your Info.plist manually.")
+            endif()
+        endif()
+
         get_filename_component(qm ${ts_file} NAME_WLE)
         string(APPEND qm ".qm")
         get_source_file_property(output_location ${ts_file} OUTPUT_LOCATION)
@@ -284,6 +299,12 @@ function(qt6_add_lrelease target)
             _qt_resource_target_dependency "${target}_lrelease"
         )
     endforeach()
+
+    if(APPLE)
+        set_property(TARGET "${target}" APPEND PROPERTY
+            _qt_apple_supported_languages "${supported_languages}"
+        )
+    endif()
 
     add_custom_target(${target}_lrelease DEPENDS ${qm_files})
     if(NOT arg_NO_TARGET_DEPENDENCY)
