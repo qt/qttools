@@ -3802,7 +3802,7 @@
     \target meta-command
     \section1 \\meta
 
-    The \\meta command is used for adding metadata to example documentation.
+    The \\meta command is used for adding metadata to documentation.
     The command has two arguments: the first argument is the name of the
     metadata attribute, and the second argument is the value for the attribute.
     Each argument should be enclosed in curly brackets, as shown in this
@@ -3810,22 +3810,16 @@
 
     \badcode *
     /\1!
-        \class QWidget
-        \brief The QWidget class is the base class of all user interface objects.
+        \example demos/coffee
+        \title Coffee Machine
+        \brief A Qt Quick application with a state-based custom user interface.
 
-        \ingroup basicwidgets
-
-        \meta {technology} {User Interface}
-        \meta {platform} {macOS 10.6}
-        \meta {platform} {MeeGo}
-        \meta {audience} {user}
-        \meta {audience} {programmer}
-        \meta {audience} {designer}
+        \meta {tags} {quick,embedded,states,touch}
+        \meta {category} {Application Examples}
     \1/
     \endcode
 
-    When running QDoc to generate HTML, the example above will have no
-    effect on the generated output.
+    A number of metadata attributes have a specific purpose:
 
     \b {Example Metadata}
 
@@ -3856,7 +3850,7 @@
     file, effectively removing it from Qt Creator's Welcome mode.
 
     \badcode
-    \meta tag broken
+    \meta {tag} {broken}
     \endcode
 
     \b {Example Install Paths}
@@ -3874,6 +3868,21 @@
     \endcode
 
     See also \l {examplesinstallpath}.
+
+    \b {Status}
+
+    A \c status argument for the \\meta command adds a custom status description
+    for a \l {class-command}{\\class} or a \l {qmltype-command}{\\qmltype}. This
+    description will then appear in a table at the top of the type reference page.
+
+    \badcode *
+    /\1!
+        \class QNativeInterface::QAndroidApplication
+        \meta {status} {Android-specific}
+    \1/
+    \endcode
+
+    See also \l {Status}{status-related commands}.
 
     \target noautolist-command
     \section1 \\noautolist

@@ -28,6 +28,12 @@
 <db:para><db:link xlink:href="testqdoc-test.xml">Test</db:link></db:para>
 </db:listitem>
 </db:varlistentry>
+<db:varlistentry>
+<db:term>Status:</db:term>
+<db:listitem>
+<db:para>&lt;Work In Progress&gt;</db:para>
+</db:listitem>
+</db:varlistentry>
 </db:variablelist>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>

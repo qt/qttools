@@ -1112,6 +1112,8 @@ QString Generator::formatSince(const Node *node)
 
     If a status description is returned, it is one of:
     \list
+      \li Custom status set explicitly in node's documentation using
+          \c {\meta {status} {<description>}},
       \li 'Deprecated [since <version>]' (\\deprecated [<version>]),
       \li 'Preliminary' (\\preliminary), or
       \li The description adopted from associated module's state:
@@ -1124,7 +1126,9 @@ std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
 {
     QString status;
 
-    if (node->status() == Node::Deprecated) {
+    if (const auto metaMap = node->doc().metaTagMap(); metaMap) {
+        status = metaMap->value("status");
+    } else if (node->status() == Node::Deprecated) {
         status = u"Deprecated"_s;
         if (const auto since = node->deprecatedSince(); !since.isEmpty())
             status += " since %1"_L1.arg(since);

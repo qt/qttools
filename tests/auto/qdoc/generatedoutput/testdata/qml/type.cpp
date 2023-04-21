@@ -32,6 +32,7 @@
     \instantiates TestQDoc::Test
     \inqmlmodule QDoc.Test
     \brief A QML type documented in a .cpp file.
+    \meta status { <Work In Progress> }
 */
 
 /*!
