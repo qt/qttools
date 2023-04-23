@@ -636,7 +636,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     break;
                 case CMD_KEYWORD:
                     leavePara();
-                    insertTarget(getRestOfLine(), true);
+                    insertKeyword(getRestOfLine());
                     break;
                 case CMD_L:
                     enterPara();
@@ -955,7 +955,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     append(Atom::TableOfContents, p1);
                     break;
                 case CMD_TARGET:
-                    insertTarget(getRestOfLine(), false);
+                    insertTarget(getRestOfLine());
                     break;
                 case CMD_TT:
                     startFormat(ATOM_FORMATTING_TELETYPE, cmd);
@@ -1307,7 +1307,21 @@ static void warnAboutPreexistingTarget(const Location &location, const QString &
                     .arg(duplicateDefinition, previousDefinition));
 }
 
-void DocParser::insertTarget(const QString &target, bool keyword)
+/*!
+    \internal
+
+    \brief Registers \a target as a linkable entity.
+
+    The main purpose of this method is to register a target as defined
+    along with its location, so that becomes a valid link target from other
+    parts of the documentation.
+
+    If the \a target name is already registered, a warning is issued,
+    as multiple definitions are problematic.
+
+    \sa insertKeyword, target-command
+ */
+void DocParser::insertTarget(const QString &target)
 {
     if (m_targetMap.contains(target))
         return warnAboutPreexistingTarget(location(), target, m_targetMap[target].toString());
@@ -1315,13 +1329,34 @@ void DocParser::insertTarget(const QString &target, bool keyword)
     m_targetMap.insert(target, location());
     m_private->constructExtra();
 
-    if (keyword) {
-        append(Atom::Keyword, target);
-        m_private->extra->m_keywords.append(m_private->m_text.lastAtom());
-    } else {
-        append(Atom::Target, target);
-        m_private->extra->m_targets.append(m_private->m_text.lastAtom());
-    }
+    append(Atom::Target, target);
+    m_private->extra->m_targets.append(m_private->m_text.lastAtom());
+}
+
+/*!
+    \internal
+
+    \brief Registers \a keyword as a linkable entity.
+
+    The main purpose of this method is to register a keyword as defined
+    along with its location, so that becomes a valid link target from other
+    parts of the documentation.
+
+    If the \a keyword name is already registered, a warning is issued,
+    as multiple definitions are problematic.
+
+    \sa insertTarget, keyword-command
+ */
+void DocParser::insertKeyword(const QString &keyword)
+{
+    if (m_targetMap.contains(keyword))
+        return warnAboutPreexistingTarget(location(), keyword, m_targetMap[keyword].toString());
+
+    m_targetMap.insert(keyword, location());
+    m_private->constructExtra();
+
+    append(Atom::Keyword, keyword);
+    m_private->extra->m_keywords.append(m_private->m_text.lastAtom());
 }
 
 void DocParser::include(const QString &fileName, const QString &identifier, const QStringList &parameters)

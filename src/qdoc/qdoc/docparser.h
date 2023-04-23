@@ -46,7 +46,8 @@ public:
 private:
     Location &location();
     QString detailsUnknownCommand(const QSet<QString> &metaCommandSet, const QString &str);
-    void insertTarget(const QString &target, bool keyword);
+    void insertTarget(const QString &target);
+    void insertKeyword(const QString &keyword);
     void include(const QString &fileName, const QString &identifier, const QStringList &parameters);
     void startFormat(const QString &format, int cmd);
     bool openCommand(int cmd);
