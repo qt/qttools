@@ -163,17 +163,19 @@ This function is designed to be used in conjunction with
 \l{qt6_add_lrelease}{qt_add_lrelease}.  See also the convenience wrapper
 \l{qt6_add_translations}{qt_add_translations}.
 
+//! [sources-and-include-dirs]
 \section1 Sources and Include Directories
 
 By default, \c{qt_add_lupdate} extracts the source files and include directories
 from the given target and passes them to \c{lupdate}.
 
-With \c{SOURCES} one may explicitly specify source files that contain
+With \c{SOURCES} you can explicitly specify source files that contain
 translatable strings. This turns off the automatic extraction of source files
 from the target.
 
-\c{INCLUDE_DIRECTORIES} can be used to explicitly specify include directories.
+You can use \c{INCLUDE_DIRECTORIES} to explicitly specify include directories.
 This turns off the automatic extraction of include directories from the target.
+//! [sources-and-include-dirs]
 
 \section1 Options
 
@@ -308,12 +310,13 @@ files.
 
 \badcode
 qt_add_translations(target TS_FILES file1.ts [file2.ts ...]
-                    [RESOURCE_PREFIX [OUTPUT_TARGETS variable-name]]
+                    [RESOURCE_PREFIX prefix]
+                    [OUTPUT_TARGETS variable-name]
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
-                    [SOURCES]
-                    [INCLUDE_DIRECTORIES]
-                    [LUPDATE_OPTIONS]
-                    [LRELEASE_OPTIONS])
+                    [SOURCES source1.cpp [sources2.cpp ...]]
+                    [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
+                    [LUPDATE_OPTIONS ...]
+                    [LRELEASE_OPTIONS ...])
 \endcode
 
 \versionlessCMakeCommandsNote qt6_add_translations()
@@ -341,11 +344,13 @@ built.
 
 The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 
+\include cmake-macros.qdoc sources-and-include-dirs
+
 \section1 Options
 
 You can set additional options for \l{lupdate} and \l{lrelease} with
 \c{LUPDATE_OPTIONS} and \c{LRELEASE_OPTIONS}. You can find possible options in
-the \l{translations}{translations documentation}.
+the \l{lupdate options} and \l{lrelease options}.
 
 By default, the \c{.qm} files will be placed in the current build directory
 (\c{CMAKE_CURRENT_BINARY_DIR}). To change this, you can set \c{OUTPUT_LOCATION}
@@ -375,20 +380,20 @@ the command should store the list of generated \c{.qm} files.
 \section1 Examples
 
 Add a German translation to a target \c{super_calc} using
-\c{qt_add_translations}.
+\c{qt_add_translations}:
 
 \snippet cmake-macros/examples.cmake qt_add_translations_default
 
-This is roughly equivalent to the following.
+This is roughly equivalent to the following:
 
 \snippet cmake-macros/examples.cmake qt_lupdate_lrelease
 
-Add a Norwegian translation to \c{frogger_game} with a custom resource prefix.
+Add a Norwegian translation to \c{frogger_game} with a custom resource prefix:
 
 \snippet cmake-macros/examples.cmake qt_add_translations_resource_prefix
 
 Add a Finnish translation to \c{business_logic}, and install the generated
-\c{.qm} files.
+\c{.qm} files:
 
 \snippet cmake-macros/examples.cmake qt_add_translations_install
 */
