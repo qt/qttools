@@ -3973,15 +3973,11 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             writer.writeCDATA(QString("No description available"));
         writer.writeEndElement(); // description
 
-        // Add words from module name as tags
-        // QtQuickControls -> qt,quick,controls
-        // QtOpenGL -> qt,opengl
-        QRegExp re("([A-Z]+[a-z0-9]*(3D|GL)?)");
-        int pos = 0;
-        while ((pos = re.indexIn(project, pos)) != -1) {
-            tags << re.cap(1).toLower();
-            pos += re.matchedLength();
-        }
+        // Add module name as tag
+        QString moduleName = project;
+        if (moduleName.startsWith("Qt"))
+            moduleName = moduleName.mid(2);
+        tags << moduleName.toLower();
 
         // Include tags added via \meta {tag} {tag1[,tag2,...]}
         // within \example topic
@@ -3989,31 +3985,6 @@ void HtmlGenerator::generateManifestFile(const QString &manifest, const QString 
             const auto &tagList = tag.toLower().split(QLatin1Char(','), Qt::SkipEmptyParts);
             tags += QSet<QString>(tagList.cbegin(), tagList.cend());
         }
-
-        const auto &titleWords = en->title().toLower().split(QLatin1Char(' '));
-        tags += QSet<QString>(titleWords.cbegin(), titleWords.cend());
-
-        // Clean up tags, exclude invalid and common words
-        QSet<QString>::iterator tag_it = tags.begin();
-        QSet<QString> modified;
-        while (tag_it != tags.end()) {
-            QString s = *tag_it;
-            if (s.at(0) == '(')
-                s.remove(0, 1).chop(1);
-            if (s.endsWith(QLatin1Char(':')))
-                s.chop(1);
-
-            if (s.length() < 2 || s.at(0).isDigit() || s.at(0) == '-' || s == QLatin1String("qt")
-                || s == QLatin1String("the") || s == QLatin1String("and")
-                || s.startsWith(QLatin1String("example")) || s.startsWith(QLatin1String("chapter")))
-                tag_it = tags.erase(tag_it);
-            else if (s != *tag_it) {
-                modified << s;
-                tag_it = tags.erase(tag_it);
-            } else
-                ++tag_it;
-        }
-        tags += modified;
 
         if (!tags.isEmpty()) {
             writer.writeStartElement("tags");

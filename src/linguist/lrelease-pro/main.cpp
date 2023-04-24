@@ -127,6 +127,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    lprodumpOptions << QStringLiteral("-translations-variables")
+                    << QStringLiteral("TRANSLATIONS,EXTRA_TRANSLATIONS");
+
     const QStringList proFiles = extractProFiles(&inputFiles);
     if (proFiles.isEmpty()) {
         printErr(LR::tr("lrelease-pro: No .pro/.pri files given.\n"));
