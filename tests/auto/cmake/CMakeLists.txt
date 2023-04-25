@@ -31,6 +31,7 @@ include("${_Qt5CTestMacros}")
 
 if(NOT CMAKE_CROSSCOMPILING)
     expect_pass(test_create_translation_macro)
+    expect_pass(test_create_translation_same_base_name)
     expect_pass(test_add_translation_macro)
 endif()
 
