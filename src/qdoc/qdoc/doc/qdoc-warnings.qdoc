@@ -348,12 +348,11 @@
 
     \section1 Unknown command <name>
 
-    When a QDoc comment uses a backslash followed by a token that is not
-    a QDoc built-in command and has not been defined as a custom command
-    using \l {alias-variable}{\\alias} or \l {macro-variable}{macro}, QDoc produces this
-    warning. Check the spelling of the command name and look to see if
-    your QDoc configuration has neglected to include whatever would have
-    defined it, if it is a custom command.
+    When a QDoc comment uses a backslash followed by a token that is not a QDoc
+    built-in command and has not been defined as a custom command
+    \l {macro-variable}{macro}, QDoc produces this warning. Check the spelling
+    of the command name, and check whether your QDoc configuration doesn't
+    include whatever would have defined it, if it's a custom command.
 
     This may also be produced due to code being quoted in the QDoc comment,
     for example the author may have referred to the C string termination
