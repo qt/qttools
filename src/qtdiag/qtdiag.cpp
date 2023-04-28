@@ -51,20 +51,8 @@
 #include <qpa/qplatformintegration.h>
 #include <private/qhighdpiscaling_p.h>
 
-#include <QtGui/private/qrhi_p.h>
 #include <QtGui/QOffscreenSurface>
-#if QT_CONFIG(opengl)
-# include <QtGui/private/qrhigles2_p.h>
-#endif
-#if QT_CONFIG(vulkan)
-# include <QtGui/private/qrhivulkan_p.h>
-#endif
-#ifdef Q_OS_WIN
-#include <QtGui/private/qrhid3d11_p.h>
-#endif
-#if defined(Q_OS_MACOS) || defined(Q_OS_IOS)
-# include <QtGui/private/qrhimetal_p.h>
-#endif
+#include <rhi/qrhi.h>
 
 #ifdef QT_WIDGETS_LIB
 #  include <QtWidgets/QStyleFactory>
