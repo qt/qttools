@@ -288,6 +288,7 @@ static Token getToken()
                 id = readLine().trimmed();
                 break;
             case EOF:
+                return Tok_Eof;
             case '\n':
                 break;
             default:
