@@ -107,7 +107,8 @@ bool DeviceSkinParameters::read(const QString &skinDirectory,  ReadMode rm,  QSt
     QTextStream ts(&f);
     const bool rc = read(ts, rm, errorMessage);
     if (!rc)
-        *errorMessage =  DeviceSkin::tr("The skin configuration file '%1' could not be read: %2").arg(fn).arg(*errorMessage);
+        *errorMessage =  DeviceSkin::tr("The skin configuration file '%1' could not be read: %2")
+                         .arg(fn, *errorMessage);
     return rc;
 }
 bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMessage)

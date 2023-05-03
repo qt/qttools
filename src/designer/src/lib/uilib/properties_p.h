@@ -92,7 +92,7 @@ inline EnumType enumKeyToValue(const QMetaEnum &metaEnum,const char *key, const 
     if (val == -1) {
 
         uiLibWarning(QCoreApplication::translate("QFormBuilder", "The enumeration-value '%1' is invalid. The default value '%2' will be used instead.")
-                    .arg(QString::fromUtf8(key)).arg(QString::fromUtf8(metaEnum.key(0))));
+                    .arg(QString::fromUtf8(key), QString::fromUtf8(metaEnum.key(0))));
         val = metaEnum.value(0);
     }
     return static_cast<EnumType>(val);
