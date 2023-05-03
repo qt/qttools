@@ -145,6 +145,8 @@ public:
 
     QToolBar *createToolBar(QDesignerFormEditorInterface *core, QWidget *parent = nullptr);
 
+    QString text(Qt::TextFormat format) const;
+
     bool simplifyRichText() const      { return m_simplifyRichText; }
 
 public slots:
@@ -152,7 +154,6 @@ public slots:
     void setFontPointSize(double);
     void setText(const QString &text);
     void setSimplifyRichText(bool v);
-    QString text(Qt::TextFormat format) const;
 
 signals:
     void stateChanged();
