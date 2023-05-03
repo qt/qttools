@@ -489,8 +489,7 @@ QMultiMap<QString, QByteArray> QHelpDBReader::filesData(const QStringList &filte
                                      "AND FileNameTable.FileId = FileFilterTable.FileId "
                                      "AND FileFilterTable.FilterAttributeId = FilterAttributeTable.Id "
                                      "AND FilterAttributeTable.Name = \'%1\' %2"))
-                         .arg(quote(filterAttributes.at(i)))
-                         .arg(extension));
+                         .arg(quote(filterAttributes.at(i)), extension));
         }
     }
     m_query->exec(query);
