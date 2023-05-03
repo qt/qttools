@@ -184,7 +184,7 @@ public:
                           const QString &relFileName, const QString &anchor);
 
 signals:
-    void error(const QString &msg) const;
+    void error(const QString &msg);
 
 private:
     // legacy stuff
