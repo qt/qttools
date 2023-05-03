@@ -130,7 +130,7 @@ bool WidgetEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, QEve
     case QEvent::DragEnter:
         return handleDragEnterMoveEvent(widget, managedWidget, static_cast<QDragEnterEvent *>(event), true);
     case QEvent::DragMove:
-        return handleDragEnterMoveEvent(widget, managedWidget, static_cast<QDragEnterEvent *>(event), false);
+        return handleDragEnterMoveEvent(widget, managedWidget, static_cast<QDragMoveEvent *>(event), false);
     case QEvent::DragLeave:
         return handleDragLeaveEvent(widget, managedWidget, static_cast<QDragLeaveEvent *>(event));
     case QEvent::Drop:
