@@ -13,6 +13,8 @@
 #include "quoter.h"
 #include "text.h"
 
+#include <qcryptographichash.h>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -407,10 +409,37 @@ CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, Resolve
     return marker;
 }
 
+/*!
+    \brief Generates a url-friendly string representation from \a title.
+
+    "Url-friendly" in this context is a string that contains only a subset of
+    printable ascii characters.
+
+    The subset includes alphanumeric (alnum) characters ([a-zA-Z0-9]), printable
+    ascii characters, space, punctuation characters, and common symbols.
+    Non-alnum characters in this subset are replaced by a single dash. Leading
+    and trailing dashes are removed, such that the resulting string does not
+    start or end with a dash. Any capital character is replaced by its lowercase
+    counterpart.
+
+    If any character in \a title is non-latin, or latin and not found in the
+    aforementioned subset (e.g. 'ß', 'å', or 'ö'), a hash of \a title is
+    appended to the final string.
+
+    Returns a string that is normalized for the purpose of generating fragment
+    identifiers for \a title in URLs.
+ */
 QString Doc::canonicalTitle(const QString &title)
 {
-    // The code below is equivalent to the following chunk, but _much_
-    // faster (accounts for ~10% of total running time)
+    auto legal_ascii = [](const uint value) {
+        const uint start_ascii_subset{ 32 };
+        const uint end_ascii_subset{ 126 };
+
+        return value >= start_ascii_subset && value <= end_ascii_subset;
+    };
+
+    // The code below is equivalent to the following chunk, but
+    // has been measured to be approximately 4 times faster.
     //
     //  QRegularExpression attributeExpr("[^A-Za-z0-9]+");
     //  QString result = title.toLower();
@@ -421,11 +450,16 @@ QString Doc::canonicalTitle(const QString &title)
     QString result;
     result.reserve(title.size());
 
-    bool dashAppended = false;
-    bool begun = false;
-    qsizetype lastAlnum = 0;
-    for (int i = 0; i != title.size(); ++i) {
-        uint c = title.at(i).unicode();
+    bool dashAppended{false};
+    bool begun{false};
+    qsizetype lastAlnum{0};
+    bool has_non_alnum_content{false};
+
+    for (const auto &i : title) {
+        uint c = i.unicode();
+
+        if (!legal_ascii(c))
+            has_non_alnum_content = true;
         if (c >= 'A' && c <= 'Z')
             c += 'a' - 'A';
         bool alnum = (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9');
@@ -441,6 +475,15 @@ QString Doc::canonicalTitle(const QString &title)
         }
     }
     result.truncate(lastAlnum);
+
+    if (has_non_alnum_content) {
+        auto title_hash = QString::fromLocal8Bit(
+                QCryptographicHash::hash(title.toUtf8(), QCryptographicHash::Md5).toHex());
+        title_hash.truncate(8);
+        if (!result.isEmpty())
+            result.append(QLatin1Char('-'));
+        result.append(title_hash);
+    }
     return result;
 }
 

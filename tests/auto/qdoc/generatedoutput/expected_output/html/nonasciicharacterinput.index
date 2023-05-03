@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="NonAsciiCharacterInput Reference Documentation" version="" project="NonAsciiCharacterInput">
+    <namespace name="" status="active" access="public" module="nonasciicharacterinput">
+        <page name="adventures_with_non_ascii_characters.html" href="adventures-with-non-ascii-characters.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Adventures with non-ascii characters in QDoc" fulltitle="Adventures with non-ascii characters in QDoc" subtitle="" brief="Test that non-ascii characters work as input to QDoc commands">
+            <contents name="a-713da3e8" title="A 大纲视图" level="1"/>
+            <contents name="3d-42faee45" title="3D场景视图" level="1"/>
+            <contents name="3d-c57e864e" title="这就是3D场景视图" level="1"/>
+            <contents name="662952c1" title="属性视图" level="1"/>
+            <contents name="further-details" title="Further details" level="1"/>
+            <contents name="ascii-characters-that-are-non-printable-ascii-such-as-or-521d09f0" title="Ascii characters that are non-printable ascii, such as ß, ü, or ø" level="2"/>
+        </page>
+    </namespace>
+</INDEX>

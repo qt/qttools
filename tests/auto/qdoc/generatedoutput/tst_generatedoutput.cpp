@@ -60,6 +60,7 @@ private slots:
     void testTagFile();
     void testGlobalFunctions();
     void proxyPage();
+    void nonAsciiCharacterInput();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -587,6 +588,14 @@ void tst_generatedOutput::proxyPage()
                    "proxypage/stdpair-proxy.html "
                    "proxypage-docbook/stdpair-proxy.xml");
 }
+
+void tst_generatedOutput::nonAsciiCharacterInput()
+{
+    testAndCompare("testdata/non_ascii_character_input/non_ascii_character_input.qdocconf",
+                   "html/nonasciicharacterinput.index "
+                   "adventures-with-non-ascii-characters.html");
+}
+
 
 int main(int argc, char *argv[])
 {
