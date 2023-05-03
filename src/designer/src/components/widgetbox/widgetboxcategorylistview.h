@@ -54,7 +54,7 @@ public:
 
 signals:
     void scratchPadChanged();
-    void pressed(const QString &name, const QString &xml, const QPoint &globalPos);
+    void widgetBoxPressed(const QString &name, const QString &xml, const QPoint &globalPos);
     void itemRemoved();
     void lastItemRemoved();
 

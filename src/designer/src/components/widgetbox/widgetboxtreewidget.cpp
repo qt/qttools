@@ -230,8 +230,8 @@ WidgetBoxCategoryListView *WidgetBoxTreeWidget::addCategoryView(QTreeWidgetItem 
     categoryView->setViewMode(iconMode ? QListView::IconMode : QListView::ListMode);
     connect(categoryView, &WidgetBoxCategoryListView::scratchPadChanged,
             this, &WidgetBoxTreeWidget::slotSave);
-    connect(categoryView, &WidgetBoxCategoryListView::pressed,
-            this, &WidgetBoxTreeWidget::pressed);
+    connect(categoryView, &WidgetBoxCategoryListView::widgetBoxPressed,
+            this, &WidgetBoxTreeWidget::widgetBoxPressed);
     connect(categoryView, &WidgetBoxCategoryListView::itemRemoved,
             this, &WidgetBoxTreeWidget::slotScratchPadItemDeleted);
     connect(categoryView, &WidgetBoxCategoryListView::lastItemRemoved,

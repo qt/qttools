@@ -382,7 +382,7 @@ void WidgetBoxCategoryListView::slotPressed(const QModelIndex &index)
     const QDesignerWidgetBoxInterface::Widget wgt = m_model->widgetAt(m_proxyModel->mapToSource(index));
     if (wgt.isNull())
         return;
-    emit pressed(wgt.name(), widgetDomXml(wgt), QCursor::pos());
+    emit widgetBoxPressed(wgt.name(), widgetDomXml(wgt), QCursor::pos());
 }
 
 void WidgetBoxCategoryListView::removeCurrentItem()

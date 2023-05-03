@@ -85,7 +85,7 @@ WidgetBox::WidgetBox(QDesignerFormEditorInterface *core, QWidget *parent, Qt::Wi
     l->addWidget(toolBar);
 
     // View
-    connect(m_view, &WidgetBoxTreeWidget::pressed,
+    connect(m_view, &WidgetBoxTreeWidget::widgetBoxPressed,
             this, &WidgetBox::handleMousePress);
     l->addWidget(m_view);
 
