@@ -72,8 +72,9 @@ bool QHelpCollectionHandler::isDBOpened() const
 {
     if (m_query)
         return true;
-    emit error(tr("The collection file \"%1\" is not set up yet.").
-               arg(m_collectionFile));
+    auto *that = const_cast<QHelpCollectionHandler *>(this);
+    emit that->error(tr("The collection file \"%1\" is not set up yet.").
+                     arg(m_collectionFile));
     return false;
 }
 
