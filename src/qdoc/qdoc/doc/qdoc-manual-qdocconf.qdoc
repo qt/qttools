@@ -1951,10 +1951,10 @@
     <instructionals module="QtGui">
         <examples>
             <example
-                name="Analog Clock Window Example"
+                name="Analog Clock Window"
                 docUrl="qthelp://org.qt-project.qtgui.502/qtgui/analogclock.html"
                 projectPath="gui/analogclock/analogclock.pro"
-                imageUrl="qthelp://org.qt-project.qtgui.502/qtgui/images/analogclock-window-example.png">
+                imageUrl="qthelp://org.qt-project.qtgui.502/qtgui/images/analogclock-window.png">
                 <description><![CDATA[The Analog Clock Window example shows how
                     to draw the contents of a custom window.]]></description>
                 <tags>analog,clock,window</tags>
@@ -1991,8 +1991,8 @@
     \badcode
     manifestmeta.filters                = highlighted sql webkit global
 
-    manifestmeta.highlighted.names      = "QtGui/Analog Clock Window Example" \
-                                          "QtWidgets/Analog Clock Example"
+    manifestmeta.highlighted.names      = "QtGui/Analog Clock Window" \
+                                          "QtWidgets/Analog Clock"
     manifestmeta.highlighted.attributes = isHighlighted:true
 
     manifestmeta.sql.names              = "QtSql/*"
@@ -2002,7 +2002,7 @@
     manifestmeta.webkit.tags            = webkit
 
     manifestmeta.global.names           = *
-    manifestmeta.global.tags            = qt5
+    manifestmeta.global.tags            = qt6
     \endcode
 
     Above, an \c isHighlighted attribute is added to two examples. If
