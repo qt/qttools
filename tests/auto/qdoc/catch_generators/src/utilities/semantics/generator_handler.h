@@ -5,7 +5,7 @@
 
 #include "../../namespaces.h"
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <optional>
 #include <cassert>

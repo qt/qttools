@@ -15,6 +15,7 @@ qt_internal_add_test(tst_QDoc_Catch_Generators
     utilities/semantics/catch_generator_handler.cpp
   INCLUDE_DIRECTORIES
     ../src
-    ../../catch
     ../../catch_conversions
+  LIBRARIES
+    Qt::QDocCatchPrivate
 )

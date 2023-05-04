@@ -17,7 +17,7 @@
 
 #endif
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <random>
 

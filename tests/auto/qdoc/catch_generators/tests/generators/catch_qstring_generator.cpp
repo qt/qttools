@@ -7,7 +7,7 @@
 
 #include <qt_catch_conversions.h>
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 using namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE;
 

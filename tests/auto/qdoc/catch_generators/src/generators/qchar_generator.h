@@ -7,7 +7,7 @@
 #include "../utilities/semantics/move_into_vector.h"
 #include "combinators/oneof_generator.h"
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <random>
 

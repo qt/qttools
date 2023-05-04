@@ -6,7 +6,7 @@
 
 #include <qt_catch_conversions.h>
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <QChar>
 

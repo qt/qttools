@@ -11,7 +11,7 @@
 #include "utilities/statistics/distribution.h"
 #include "utilities/semantics/copy_value.h"
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <cmath>
 #include <iterator>

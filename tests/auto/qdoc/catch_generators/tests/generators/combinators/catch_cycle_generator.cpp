@@ -4,7 +4,7 @@
 #include "namespaces.h"
 #include "generators/combinators/cycle_generator.h"
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 using namespace QDOC_CATCH_GENERATORS_ROOT_NAMESPACE;
 

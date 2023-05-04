@@ -7,7 +7,7 @@
 #include "qchar_generator.h"
 #include "../utilities/semantics/generator_handler.h"
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <random>
 

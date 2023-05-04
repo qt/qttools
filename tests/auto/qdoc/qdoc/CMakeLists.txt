@@ -15,7 +15,8 @@ qt_internal_add_test(tst_QDoc
     ${QDOC_SOURCE_DIRECTORY}/filesystem/fileresolver.cpp
   INCLUDE_DIRECTORIES
     ${QDOC_INCLUDE_DIRECTORY}
-    ../catch/
     ../catch_generators/
     ../catch_conversions/
+  LIBRARIES
+    Qt::QDocCatchPrivate
 )

@@ -1,6 +1,8 @@
 # Copyright (C) 2023 The Qt Company Ltd.
 # SPDX-License-Identifier: BSD-3-Clause
 
+add_subdirectory(catch)
+
 if(QT_FEATURE_qdoc AND QT_FEATURE_clangcpp)
     add_subdirectory(qdoc)
 endif()

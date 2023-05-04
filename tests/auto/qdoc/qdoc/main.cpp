@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_RUNNER
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 // A custom main was provided to avoid linking errors when using minGW
 // that were appearing in CI.

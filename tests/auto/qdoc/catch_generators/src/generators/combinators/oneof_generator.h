@@ -7,7 +7,7 @@
 #include "../../utilities/statistics/percentages.h"
 #include "../../utilities/semantics/generator_handler.h"
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <vector>
 #include <random>

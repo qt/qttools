@@ -3,7 +3,7 @@
 
 #include <qdoc_catch_conversions.h>
 
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <filesystem/fileresolver.h>
 
