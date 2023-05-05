@@ -34,3 +34,42 @@
 
     This paragraph is a new paragraph, and doesn't contain an image.
 */
+
+/*!
+    \page page-with-comment-after-brief.html
+    \title Yet another adventure with QDoc's \\brief command
+    \brief Another test that the \\brief command doesn't eat content that follows it.
+    //! This QDoc comment might cause an issue, let's try it!
+
+    This paragraph should render normally, but might be eaten by the \\brief
+    brief because the brief is followed by a QDoc comment (which shouldn't be
+    rendered at all).
+*/
+
+/*!
+    \page page-with-comment-in-brief.html
+    \title Yet, yet another adventure with QDoc's \\brief command
+    \brief Another test that the \\brief command //! Brief continues below
+           isn't entirely broken.
+
+    The brief for this page is:
+    "Another test that the \\brief command isn't entirely broken."
+*/
+
+/*!
+    \page another-page-with-comments-in-the-brief
+    \title There's no end to the possibilities!
+    \brief Another test that the \\brief command //! Doesn't contain a full stop.
+    //! QDoc's CMD_BRIEF should issue a warning when it doesn't end with a full
+    //! stop. However, if a \\brief is followed by a line comment (i.e. `//!`),
+    //! the warning isn't issued. This is tied to how `CMD_BRIEF` performs
+    //! macro expansion and command processing; in the case of line comments in
+    //! the argument, the last character of the brief's atom isn't a full stop.
+        isn't completely borked
+
+    The brief for this page is:
+    "Another test that the \\brief command isn't completely borked". Notice the
+    lack of a trailing full stop in the brief. QDoc should generate a warning
+    about that when generating HTML.
+
+*/

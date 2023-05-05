@@ -120,7 +120,7 @@
 /*!
     \qmlmethod Type::deprecatedMethod()
 
-    \deprecated [6.2] This method has no replacement //! No full stop for test.
+    \deprecated [6.2] This method has no replacement.
 
     This is a method that should include information about being deprecated
     and that it has been so since 6.2 in its docs.

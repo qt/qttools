@@ -1179,6 +1179,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (m_input.at(m_position + 2) == '!') {
                         m_position += 2;
                         getRestOfLine();
+                        if (m_input.at(m_position - 1) == '\n')
+                            --m_position;
                         break;
                     }
             Q_FALLTHROUGH(); // fall through

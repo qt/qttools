@@ -305,6 +305,9 @@ void tst_generatedOutput::illformated_documentation()
                    "html/illformatteddocumentation-someexample-example.webxml "
                    "html/illformatteddocumentation.index "
                    "page-with-an-image-at-the-top.html "
+                   "page-with-comment-after-brief.html "
+                   "another-page-with-comments-in-the-brief.html "
+                   "page-with-comment-in-brief.html "
                    "brief-adventures.html");
 }
 
