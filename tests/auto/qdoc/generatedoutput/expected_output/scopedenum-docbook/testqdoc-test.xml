@@ -91,6 +91,7 @@
 </db:section>
 <db:section xml:id="ScopedEnum-enum">
 <db:title>enum Test::ScopedEnum</db:title>
+<db:para>This enum has a brief to trigger a bug in CMD_BRIEF.</db:para>
 <db:informaltable>
 <db:thead>
 <db:tr>

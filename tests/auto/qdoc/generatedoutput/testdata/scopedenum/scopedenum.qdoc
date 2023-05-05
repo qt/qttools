@@ -12,7 +12,8 @@
 
 /*!
     \enum TestQDoc::Test::ScopedEnum
-
+    \brief This enum has a brief to trigger a bug in CMD_BRIEF.
+    \omitvalue UselessValue
     \value This Something
     \value That Something else
     \omitvalue OmittedValue \omit Unused -
@@ -20,7 +21,6 @@
     \value [since 2.0] All  Everything
     \omitvalue VeryLastValue
                Nothing here
-    \omitvalue UselessValue
 
     A scoped enum.
 */
@@ -38,6 +38,6 @@
 /*!
     \page whatsnew.html
     \title New Classes and Functions
-
+    \brief New classes documentation
     \sincelist 2.0
 */

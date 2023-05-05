@@ -11,6 +11,7 @@
             <contents name="qml-examples" title="QML Examples" level="1"/>
             <contents name="c-examples" title="C++ Examples" level="1"/>
         </page>
+        <page name="page-with-an-image-at-the-top.html" href="page-with-an-image-at-the-top.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="This page starts with an image" fulltitle="This page starts with an image" subtitle="" brief="This page has an image right at the top"/>
         <group name="all-examples" href="all-examples.html" status="internal" seen="false" title=""/>
         <group name="illformatted-examples-qml" href="illformatted-examples-qml.html" status="internal" seen="false" title=""/>
         <module name="sometestgroup" href="sometestgroup-module.html" status="internal" seen="false" title=""/>

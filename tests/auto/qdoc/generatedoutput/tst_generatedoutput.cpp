@@ -303,6 +303,7 @@ void tst_generatedOutput::illformated_documentation()
                    "html/illformatted-examples.webxml "
                    "html/illformatteddocumentation-someexample-example.webxml "
                    "html/illformatteddocumentation.index "
+                   "page-with-an-image-at-the-top.html "
                    "brief-adventures.html");
 }
 

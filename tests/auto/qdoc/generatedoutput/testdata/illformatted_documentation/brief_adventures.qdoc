@@ -22,3 +22,15 @@
     It refers to a change that bypassed the issue by moving the \\keyword
     command, at \l https://codereview.qt-project.org/c/qt/qtdoc/+/242033/.
 */
+
+/*!
+    \page page-with-an-image-at-the-top.html
+    \title This page starts with an image
+    \brief This page has an image right at the top.
+    \image leonardo-da-vinci.png This is the alternate text for the image
+    The image should render as expected, and the alternate text should be
+    there, too. This text is contained in its own paragraph following the
+    image.
+
+    This paragraph is a new paragraph, and doesn't contain an image.
+*/

@@ -544,6 +544,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     append(Atom::AnnotatedList, getArgument());
                     break;
                 case CMD_SINCELIST:
+                    leavePara();
                     append(Atom::SinceList, getRestOfLine().simplified());
                     break;
                 case CMD_GENERATELIST: {
@@ -750,6 +751,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     getUntilEnd(cmd);
                     break;
                 case CMD_OMITVALUE: {
+                    leavePara();
                     p1 = getArgument();
                     if (!m_private->m_enumItemList.contains(p1))
                         m_private->m_enumItemList.append(p1);
