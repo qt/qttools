@@ -10,7 +10,7 @@
 #include "utilities/statistics/distribution.h"
 #include "utilities/semantics/copy_value.h"
 
-#include <qt_catch_conversions.h>
+#include <catch_conversions/qt_catch_conversions.h>
 
 #include <catch/catch.hpp>
 

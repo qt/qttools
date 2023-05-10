@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 add_subdirectory(catch)
+add_subdirectory(catch_conversions)
 
 if(QT_FEATURE_qdoc AND QT_FEATURE_clangcpp)
     add_subdirectory(qdoc)

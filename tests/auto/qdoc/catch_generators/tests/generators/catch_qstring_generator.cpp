@@ -5,7 +5,7 @@
 #include "generators/qchar_generator.h"
 #include "generators/qstring_generator.h"
 
-#include <qt_catch_conversions.h>
+#include <catch_conversions/qt_catch_conversions.h>
 
 #include <catch/catch.hpp>
 
