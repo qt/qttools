@@ -1226,6 +1226,8 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
 {
     Q_ASSERT(node && !node->name().isEmpty());
     Text text;
+    text << Atom(Atom::DivLeft,
+         "class=\"admonition %1\""_L1.arg(generateNote ? u"note"_s : u"auto"_s));
     text << Atom::ParaLeft;
 
     if (generateNote) {
@@ -1302,7 +1304,8 @@ void Generator::generateAddendum(const Node *node, Addendum type, CodeMarker *ma
         return;
     }
 
-    text << Atom::ParaRight;
+    text << Atom::ParaRight
+         << Atom::DivRight;
     generateText(text, node, marker);
 }
 
