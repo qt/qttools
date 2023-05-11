@@ -3626,9 +3626,6 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
     std::function<void(QmlPropertyNode *)> generateQmlProperty = [&](QmlPropertyNode *n) {
         out() << qmlItemStart.arg(refForNode(n), "tblQmlPropNode");
 
-        if (!n->isReadOnlySet() && n->declarativeCppNode())
-            n->markReadOnly(!n->isWritable());
-
         QStringList extra;
         if (n->isDefault())
             extra << "default";

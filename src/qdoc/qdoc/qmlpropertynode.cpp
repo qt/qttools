@@ -28,8 +28,15 @@ QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString
 }
 
 /*!
-  Returns \c true if a QML property or attached property is
-  not read-only. If the read-only status is not set explicitly
+  \fn bool QmlPropertyNode::isReadOnly() const
+
+  Returns \c true if this QML property node is marked as a
+  read-only property.
+*/
+
+/*!
+  Returns \c true if this QML property or attached property is
+  read-only. If the read-only status is not set explicitly
   using the \\readonly command, QDoc attempts to resolve it
   from the associated C++ class instantiated by the QML type
   that this property belongs to.
@@ -38,16 +45,20 @@ QmlPropertyNode::QmlPropertyNode(Aggregate *parent, const QString &name, QString
   information may not be available to QDoc. If so, add a debug
   line but do not treat it as a warning.
  */
-bool QmlPropertyNode::isWritable()
+bool QmlPropertyNode::isReadOnly()
 {
-    if (readOnly_ != FlagValueDefault)
-        return !fromFlagValue(readOnly_, false);
+    if (m_readOnly != FlagValueDefault)
+        return fromFlagValue(m_readOnly, false);
 
-    QmlTypeNode *qcn = qmlTypeNode();
-    if (qcn && qcn->classNode()) {
-        PropertyNode *pn = findCorrespondingCppProperty();
-        if (pn)
-            return pn->isWritable();
+    // Find the parent QML type node
+    auto *parent{this->parent()};
+    while (parent && !(parent->isQmlType()))
+        parent = parent->parent();
+
+    bool readonly{false};
+    if (auto qcn = static_cast<QmlTypeNode *>(parent); qcn && qcn->classNode()) {
+        if (auto propertyNode = findCorrespondingCppProperty(); propertyNode)
+            readonly = !propertyNode->isWritable();
         else
             qCDebug(lcQdoc).nospace()
                     << qPrintable(defLocation().toString())
@@ -55,8 +66,9 @@ bool QmlPropertyNode::isWritable()
                     << name()
                     << " (Q_PROPERTY not found in the C++ class hierarchy known to QDoc. "
                     << "Likely, the type is replaced with a private implementation.)";
-}
-    return true;
+    }
+    markReadOnly(readonly);
+    return readonly;
 }
 
 /*!

@@ -1005,7 +1005,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         auto *qmlPropertyNode = static_cast<QmlPropertyNode *>(node);
         writer.writeAttribute("type", qmlPropertyNode->dataType());
         writer.writeAttribute("attached", qmlPropertyNode->isAttached() ? "true" : "false");
-        writer.writeAttribute("writable", qmlPropertyNode->isWritable() ? "true" : "false");
+        writer.writeAttribute("writable", qmlPropertyNode->isReadOnly() ? "false" : "true");
         if (qmlPropertyNode->isRequired())
             writer.writeAttribute("required", "true");
         if (!brief.isEmpty())

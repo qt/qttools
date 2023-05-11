@@ -394,10 +394,6 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
   Returns true if this node represents a QML element in the QtQuick module.
 */
 
-/*! \fn bool Node::isReadOnly() const
-  Returns true if the QML property node is marked as a read-only property.
-*/
-
 /*! \fn bool Node::isRelatableType() const
   Returns true if this node is something you can relate things to with
   the \e relates command. NamespaceNode, ClassNode, HeaderNode, and
@@ -801,39 +797,6 @@ Node::ThreadSafeness Node::inheritedThreadSafeness() const
     if (m_parent && m_safeness == UnspecifiedSafeness)
         return m_parent->inheritedThreadSafeness();
     return m_safeness;
-}
-
-/*!
-  If this node is a QML type node, return a pointer to
-  it. If it is a child of a QML type node, return the
-  pointer to its parent QML type node. Otherwise return
-  0;
- */
-QmlTypeNode *Node::qmlTypeNode()
-{
-    if (isQmlNode()) {
-        Node *n = this;
-        while (n && !(n->isQmlType()))
-            n = n->parent();
-        if (n && (n->isQmlType()))
-            return static_cast<QmlTypeNode *>(n);
-    }
-    return nullptr;
-}
-
-/*!
-  If this node is a QML node, find its QML class node,
-  and return a pointer to the C++ class node from the
-  QML class node. That pointer will be null if the QML
-  class node is a component. It will be non-null if
-  the QML class node is a QML element.
- */
-ClassNode *Node::declarativeCppNode()
-{
-    QmlTypeNode *qcn = qmlTypeNode();
-    if (qcn)
-        return qcn->classNode();
-    return nullptr;
 }
 
 /*!

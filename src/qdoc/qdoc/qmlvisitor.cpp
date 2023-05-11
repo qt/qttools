@@ -115,8 +115,7 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *no
         Doc doc(start, finish, source.mid(1), m_commands, m_topics);
         const TopicList &topicsUsed = doc.topicsUsed();
         NodeList nodes;
-        Node *nodePassedIn = node;
-        Aggregate *parent = nodePassedIn->parent();
+        auto *parent{node->parent()};
         node->setDoc(doc);
         nodes.append(node);
         if (!topicsUsed.empty()) {
@@ -126,11 +125,12 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *no
                     continue; // maybe a qdoc warning here? mws 18/07/18
                 QString args = topicsUsed.at(i).m_args;
                 if (topic.endsWith(QLatin1String("property"))) {
+                    auto *qmlProperty = static_cast<QmlPropertyNode *>(node);
                     QmlPropArgs qpa;
                     if (splitQmlPropertyArg(doc, args, qpa)) {
-                        if (qpa.m_name == nodePassedIn->name()) {
-                            if (nodePassedIn->isAlias())
-                                nodePassedIn->setDataType(qpa.m_type);
+                        if (qpa.m_name == node->name()) {
+                            if (qmlProperty->isAlias())
+                                qmlProperty->setDataType(qpa.m_type);
                         } else {
                             bool isAttached = topic.contains(QLatin1String("attached"));
                             QmlPropertyNode *n = parent->hasQmlProperty(qpa.m_name, isAttached);
@@ -138,11 +138,12 @@ bool QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *no
                                 n = new QmlPropertyNode(parent, qpa.m_name, qpa.m_type, isAttached);
                             n->setLocation(doc.location());
                             n->setDoc(doc);
-                            n->markReadOnly(nodePassedIn->isReadOnly());
-                            if (nodePassedIn->isDefault())
+                            // Use the const-overload of QmlPropertyNode::isReadOnly() as there's
+                            // no associated C++ property to resolve the read-only status from
+                            n->markReadOnly(const_cast<const QmlPropertyNode *>(qmlProperty)->isReadOnly()
+                                            && !isAttached);
+                            if (qmlProperty->isDefault())
                                 n->markDefault();
-                            if (isAttached)
-                                n->markReadOnly(0);
                             nodes.append(n);
                         }
                     } else

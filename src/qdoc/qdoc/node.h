@@ -170,7 +170,6 @@ public:
     [[nodiscard]] virtual bool isMacro() const { return false; }
     [[nodiscard]] virtual bool isPageNode() const { return false; } // means "generates a doc page"
     [[nodiscard]] virtual bool isQtQuickNode() const { return false; }
-    [[nodiscard]] virtual bool isReadOnly() const { return false; }
     [[nodiscard]] virtual bool isRelatableType() const { return false; }
     [[nodiscard]] virtual bool isMarkedReimp() const { return false; }
     [[nodiscard]] virtual bool isPropertyGroup() const { return false; }
@@ -288,8 +287,6 @@ public:
     virtual void setQmlModule(CollectionNode *) {}
     virtual ClassNode *classNode() { return nullptr; }
     virtual void setClassNode(ClassNode *) {}
-    QmlTypeNode *qmlTypeNode();
-    ClassNode *declarativeCppNode();
     [[nodiscard]] const QString &outputSubdirectory() const { return m_outSubDir; }
     virtual void setOutputSubdirectory(const QString &t) { m_outSubDir = t; }
     [[nodiscard]] QString fullDocumentName() const;

@@ -24,12 +24,11 @@ public:
 
     [[nodiscard]] const QString &dataType() const { return m_type; }
     [[nodiscard]] const QString &defaultValue() const { return m_defaultValue; }
-    [[nodiscard]] bool isReadOnlySet() const { return (readOnly_ != FlagValueDefault); }
     [[nodiscard]] bool isStored() const { return fromFlagValue(m_stored, true); }
-    bool isWritable();
     bool isRequired();
     [[nodiscard]] bool isDefault() const override { return m_isDefault; }
-    [[nodiscard]] bool isReadOnly() const override { return fromFlagValue(readOnly_, false); }
+    [[nodiscard]] bool isReadOnly() const { return fromFlagValue(m_readOnly, false); }
+    [[nodiscard]] bool isReadOnly();
     [[nodiscard]] bool isAlias() const override { return m_isAlias; }
     [[nodiscard]] bool isAttached() const override { return m_attached; }
     [[nodiscard]] bool isQtQuickNode() const override { return parent()->isQtQuickNode(); }
@@ -49,7 +48,7 @@ public:
     [[nodiscard]] QString element() const override { return parent()->name(); }
 
     void markDefault() override { m_isDefault = true; }
-    void markReadOnly(bool flag) override { readOnly_ = toFlagValue(flag); }
+    void markReadOnly(bool flag) override { m_readOnly = toFlagValue(flag); }
 
 private:
     PropertyNode *findCorrespondingCppProperty();
@@ -61,7 +60,7 @@ private:
     bool m_isAlias { false };
     bool m_isDefault { false };
     bool m_attached {};
-    FlagValue readOnly_ { FlagValueDefault };
+    FlagValue m_readOnly { FlagValueDefault };
     FlagValue m_required { FlagValueDefault };
 };
 

@@ -3784,7 +3784,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
             m_writer->writeTextElement(dbNamespace, "modifier", "attached");
             newLine();
         }
-        if ((const_cast<QmlPropertyNode *>(qpn))->isWritable()) {
+        if (!(const_cast<QmlPropertyNode *>(qpn))->isReadOnly()) {
             m_writer->writeTextElement(dbNamespace, "modifier", "writable");
             newLine();
         }
@@ -4968,9 +4968,6 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
     // From HtmlGenerator::generateDetailedQmlMember, with elements from
     // CppCodeMarker::markedUpQmlItem and HtmlGenerator::generateQmlItem.
     std::function<QString(QmlPropertyNode *)> getQmlPropertyTitle = [&](QmlPropertyNode *n) {
-        if (!n->isReadOnlySet() && n->declarativeCppNode())
-            n->markReadOnly(!n->isWritable());
-
         QString title;
         QStringList extra;
         if (n->isDefault())
