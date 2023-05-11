@@ -20,6 +20,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusMetaType>
+#include <QtDBus/QDBusServiceWatcher>
 
 #include <QtGui/QAction>
 #include <QtGui/QKeyEvent>
@@ -131,11 +132,11 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
     QMetaObject::invokeMethod(this, "refresh", Qt::QueuedConnection);
 
     if (c.isConnected()) {
+        QDBusServiceWatcher *watcher =
+                new QDBusServiceWatcher("*", c, QDBusServiceWatcher::WatchForOwnerChange, this);
+        connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged, this,
+                &QDBusViewer::serviceOwnerChanged);
         logMessage(QLatin1String("Connected to D-Bus."));
-        QDBusConnectionInterface *iface = c.interface();
-        connect(iface, &QDBusConnectionInterface::serviceRegistered, this, &QDBusViewer::serviceRegistered);
-        connect(iface, &QDBusConnectionInterface::serviceUnregistered, this, &QDBusViewer::serviceUnregistered);
-        connect(iface, &QDBusConnectionInterface::serviceOwnerChanged, this, &QDBusViewer::serviceOwnerChanged);
     } else {
         logError(QLatin1String("Cannot connect to D-Bus: ") + c.lastError().message());
     }
@@ -499,14 +500,6 @@ static QModelIndex findItem(QStringListModel *servicesModel, const QString &name
         return QModelIndex();
 
     return hits.first();
-}
-
-void QDBusViewer::serviceUnregistered(const QString &name)
-{
-    QModelIndex hit = findItem(servicesModel, name);
-    if (!hit.isValid())
-        return;
-    servicesModel->removeRows(hit.row(), 1);
 }
 
 void QDBusViewer::serviceOwnerChanged(const QString &name, const QString &oldOwner,

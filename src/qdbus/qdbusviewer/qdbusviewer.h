@@ -50,8 +50,6 @@ private slots:
     void dumpError(const QDBusError &error);
     void refreshChildren();
 
-    void serviceRegistered(const QString &service);
-    void serviceUnregistered(const QString &service);
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
 
     void serviceFilterReturnPressed();
@@ -61,6 +59,7 @@ private slots:
     void anchorClicked(const QUrl &url);
 
 private:
+    void serviceRegistered(const QString &service);
     void logMessage(const QString &msg);
     void showEvent(QShowEvent *) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
