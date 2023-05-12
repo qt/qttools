@@ -129,7 +129,7 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)
     connect(servicesView->selectionModel(), &QItemSelectionModel::currentChanged, this, &QDBusViewer::serviceChanged);
     connect(tree, &QWidget::customContextMenuRequested, this, &QDBusViewer::showContextMenu);
 
-    QMetaObject::invokeMethod(this, "refresh", Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, &QDBusViewer::refresh, Qt::QueuedConnection);
 
     if (c.isConnected()) {
         QDBusServiceWatcher *watcher =
