@@ -32,6 +32,8 @@
 
 #include <private/qdbusutil_p.h>
 
+using namespace Qt::StringLiterals;
+
 class QDBusViewModel: public QDBusModel
 {
 public:
@@ -63,10 +65,8 @@ public:
     }
 };
 
-QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
-    QWidget(parent),
-    c(connection),
-    objectPathRegExp(QLatin1String("\\[ObjectPath: (.*)\\]"))
+QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)
+    : QWidget(parent), c(connection), objectPathRegExp("\\[ObjectPath: (.*)\\]"_L1)
 {
     serviceFilterLine = new QLineEdit(this);
     serviceFilterLine->setPlaceholderText(tr("Search..."));
@@ -136,16 +136,23 @@ QDBusViewer::QDBusViewer(const QDBusConnection &connection, QWidget *parent)  :
                 new QDBusServiceWatcher("*", c, QDBusServiceWatcher::WatchForOwnerChange, this);
         connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged, this,
                 &QDBusViewer::serviceOwnerChanged);
-        logMessage(QLatin1String("Connected to D-Bus."));
+        logMessage(tr("Connected to D-Bus."));
     } else {
-        logError(QLatin1String("Cannot connect to D-Bus: ") + c.lastError().message());
+        logError(tr("Cannot connect to D-Bus: %1").arg(c.lastError().message()));
     }
 
     objectPathRegExp.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
 }
 
-static inline QString topSplitterStateKey() { return QStringLiteral("topSplitterState"); }
-static inline QString splitterStateKey() { return QStringLiteral("splitterState"); }
+static inline QString topSplitterStateKey()
+{
+    return u"topSplitterState"_s;
+}
+
+static inline QString splitterStateKey()
+{
+    return u"splitterState"_s;
+}
 
 void QDBusViewer::saveState(QSettings *settings) const
 {
@@ -161,7 +168,7 @@ void QDBusViewer::restoreState(const QSettings *settings)
 
 void QDBusViewer::logMessage(const QString &msg)
 {
-    log->append(msg + QLatin1Char('\n'));
+    log->append(msg + '\n'_L1);
 }
 
 void QDBusViewer::showEvent(QShowEvent *)
@@ -186,7 +193,7 @@ bool QDBusViewer::eventFilter(QObject *obj, QEvent *event)
 
 void QDBusViewer::logError(const QString &msg)
 {
-    log->append(QLatin1String("<font color=\"red\">Error: </font>") + msg.toHtmlEscaped() + QLatin1String("<br>"));
+    log->append(tr("<font color=\"red\">Error: </font>%1<br>").arg(msg.toHtmlEscaped()));
 }
 
 void QDBusViewer::refresh()
@@ -230,7 +237,8 @@ void QDBusViewer::activate(const QModelIndex &item)
 
 void QDBusViewer::getProperty(const BusSignature &sig)
 {
-    QDBusMessage message = QDBusMessage::createMethodCall(sig.mService, sig.mPath, QLatin1String("org.freedesktop.DBus.Properties"), QLatin1String("Get"));
+    QDBusMessage message = QDBusMessage::createMethodCall(
+            sig.mService, sig.mPath, "org.freedesktop.DBus.Properties"_L1, "Get"_L1);
     QList<QVariant> arguments;
     arguments << sig.mInterface << sig.mName;
     message.setArguments(arguments);
@@ -257,7 +265,8 @@ void QDBusViewer::setProperty(const BusSignature &sig)
         return;
     }
 
-    QDBusMessage message = QDBusMessage::createMethodCall(sig.mService, sig.mPath, QLatin1String("org.freedesktop.DBus.Properties"), QLatin1String("Set"));
+    QDBusMessage message = QDBusMessage::createMethodCall(
+            sig.mService, sig.mPath, "org.freedesktop.DBus.Properties"_L1, "Set"_L1);
     QList<QVariant> arguments;
     arguments << sig.mInterface << sig.mName << QVariant::fromValue(QDBusVariant(value));
     message.setArguments(arguments);
@@ -282,7 +291,7 @@ void QDBusViewer::callMethod(const BusSignature &sig)
     QMetaMethod method;
     for (int i = 0; i < mo->methodCount(); ++i) {
         const QString signature = QString::fromLatin1(mo->method(i).methodSignature());
-        if (signature.startsWith(sig.mName) && signature.at(sig.mName.size()) == QLatin1Char('('))
+        if (signature.startsWith(sig.mName) && signature.at(sig.mName.size()) == '('_L1)
             if (getDbusSignature(mo->method(i)) == sig.mTypeSig)
                 method = mo->method(i);
     }
@@ -420,46 +429,45 @@ void QDBusViewer::connectionRequested(const BusSignature &sig)
 void QDBusViewer::dumpMessage(const QDBusMessage &message)
 {
     QList<QVariant> args = message.arguments();
-    QString out = QLatin1String("Received ");
 
+    QString messageType;
     switch (message.type()) {
     case QDBusMessage::SignalMessage:
-        out += QLatin1String("signal ");
+        messageType = tr("signal");
         break;
     case QDBusMessage::ErrorMessage:
-        out += QLatin1String("error message ");
+        messageType = tr("error message");
         break;
     case QDBusMessage::ReplyMessage:
-        out += QLatin1String("reply ");
+        messageType = tr("reply");
         break;
     default:
-        out += QLatin1String("message ");
+        messageType = tr("message");
         break;
     }
 
-    out += QLatin1String("from ");
-    out += message.service();
+    QString out = tr("Received %1 from %2").arg(messageType).arg(message.service());
+
     if (!message.path().isEmpty())
-        out += QLatin1String(", path ") + message.path();
+        out += tr(", path %1").arg(message.path());
     if (!message.interface().isEmpty())
-        out += QLatin1String(", interface <i>") + message.interface() + QLatin1String("</i>");
+        out += tr(", interface <i>%1</i>").arg(message.interface());
     if (!message.member().isEmpty())
-        out += QLatin1String(", member ") + message.member();
-    out += QLatin1String("<br>");
+        out += tr(", member %1").arg(message.member());
+    out += "<br>"_L1;
     if (args.isEmpty()) {
-        out += QLatin1String("&nbsp;&nbsp;(no arguments)");
+        out += tr("&nbsp;&nbsp;(no arguments)");
     } else {
-        out += QLatin1String("&nbsp;&nbsp;Arguments: ");
+        QStringList argStrings;
         for (const QVariant &arg : std::as_const(args)) {
             QString str = QDBusUtil::argumentToString(arg).toHtmlEscaped();
             // turn object paths into clickable links
-            str.replace(objectPathRegExp, QLatin1String("[ObjectPath: <a href=\"qdbus://bus\\1\">\\1</a>]"));
+            str.replace(objectPathRegExp, tr("[ObjectPath: <a href=\"qdbus://bus\\1\">\\1</a>]"));
             // convert new lines from command to proper HTML line breaks
-            str.replace(QStringLiteral("\n"), QStringLiteral("<br/>"));
-            out += str;
-            out += QLatin1String(", ");
+            str.replace("\n"_L1, "<br/>"_L1);
+            argStrings.append(str);
         }
-        out.chop(2);
+        out += tr("&nbsp;&nbsp;Arguments: %1").arg(argStrings.join(tr(", ")));
     }
 
     log->append(out);
@@ -536,7 +544,7 @@ void QDBusViewer::refreshChildren()
 
 void QDBusViewer::anchorClicked(const QUrl &url)
 {
-    if (url.scheme() != QLatin1String("qdbus"))
+    if (url.scheme() != "qdbus"_L1)
         // not ours
         return;
 

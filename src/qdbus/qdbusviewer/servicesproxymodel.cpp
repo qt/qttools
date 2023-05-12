@@ -3,6 +3,8 @@
 
 #include "servicesproxymodel.h"
 
+using namespace Qt::StringLiterals;
+
 ServicesProxyModel::ServicesProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)
 {
@@ -23,8 +25,8 @@ bool ServicesProxyModel::lessThan(const QModelIndex &left,
     QString s1 = sourceModel()->data(left).toString();
     QString s2 = sourceModel()->data(right).toString();
 
-    const bool isNumber1 = s1.startsWith(QLatin1String(":1."));
-    const bool isNumber2 = s2.startsWith(QLatin1String(":1."));
+    const bool isNumber1 = s1.startsWith(":1."_L1);
+    const bool isNumber2 = s2.startsWith(":1."_L1);
     if (isNumber1 == isNumber2) {
         if (isNumber1) {
             int number1 = QStringView{s1}.mid(3).toInt();

@@ -7,16 +7,18 @@
 
 #include <stdio.h>
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QCoreApplication::setOrganizationName(QStringLiteral("QtProject"));
-    QCoreApplication::setApplicationName(QStringLiteral("QDBusViewer"));
+    QCoreApplication::setOrganizationName(u"QtProject"_s);
+    QCoreApplication::setApplicationName(u"QDBusViewer"_s);
 
     MainWindow mw;
 #if !defined(Q_OS_OSX) && !defined(Q_OS_WIN)
-    app.setWindowIcon(QIcon(QLatin1String(":/qt-project.org/qdbusviewer/images/qdbusviewer.png")));
+    app.setWindowIcon(QIcon(":/qt-project.org/qdbusviewer/images/qdbusviewer.png"_L1));
 #endif
 #ifdef Q_OS_OSX
     mw.setWindowTitle(qApp->translate("QtDBusViewer", "Qt D-Bus Viewer"));
@@ -25,7 +27,7 @@ int main(int argc, char *argv[])
     QStringList args = app.arguments();
     while (args.size()) {
         QString arg = args.takeFirst();
-        if (arg == QLatin1String("--bus"))
+        if (arg == "--bus"_L1)
             mw.addCustomBusTab(args.takeFirst());
     }
 

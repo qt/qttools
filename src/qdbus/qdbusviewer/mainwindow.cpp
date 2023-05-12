@@ -15,6 +15,8 @@
 #include <QtDBus/QDBusConnection>
 #include <QtCore/QSettings>
 
+using namespace Qt::StringLiterals;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -61,18 +63,29 @@ void MainWindow::about()
 {
     QMessageBox box(this);
 
-    box.setText(QString::fromLatin1("<center><img src=\":/qt-project.org/qdbusviewer/images/qdbusviewer-128.png\">"
-                "<h3>%1</h3>"
-                "<p>Version %2</p></center>"
-                "<p>Copyright (C) %3 The Qt Company Ltd.</p>")
-            .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QStringLiteral("2023")));
+    box.setText(tr("<center><img src=\":/qt-project.org/qdbusviewer/images/qdbusviewer-128.png\">"
+                   "<h3>%1</h3>"
+                   "<p>Version %2</p></center>"
+                   "<p>Copyright (C) %3 The Qt Company Ltd.</p>")
+                        .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), u"2023"_s));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();
 }
 
-static inline QString windowGeometryKey() { return QStringLiteral("WindowGeometry"); }
-static inline QString sessionTabGroup() { return QStringLiteral("SessionTab"); }
-static inline QString systemTabGroup() { return QStringLiteral("SystemTab"); }
+static inline QString windowGeometryKey()
+{
+    return u"WindowGeometry"_s;
+}
+
+static inline QString sessionTabGroup()
+{
+    return u"SessionTab"_s;
+}
+
+static inline QString systemTabGroup()
+{
+    return u"SystemTab"_s;
+}
 
 void MainWindow::saveSettings()
 {

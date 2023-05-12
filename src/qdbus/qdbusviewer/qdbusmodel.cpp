@@ -12,6 +12,8 @@
 
 #include <QtXml/QDomDocument>
 
+using namespace Qt::StringLiterals;
+
 struct QDBusItem
 {
     inline QDBusItem(QDBusModel::Type aType, const QString &aName, QDBusItem *aParent = 0)
@@ -50,24 +52,29 @@ QDomDocument QDBusModel::introspect(const QString &path)
 {
     QDomDocument doc;
 
-    QDBusInterface iface(service, path, QLatin1String("org.freedesktop.DBus.Introspectable"), c);
+    QDBusInterface iface(service, path, "org.freedesktop.DBus.Introspectable"_L1, c);
     if (!iface.isValid()) {
         QDBusError err(iface.lastError());
-        emit busError(QString::fromLatin1("Cannot introspect object %1 at %2:\n  %3 (%4)\n").arg(path).arg(
-                      service).arg(err.name()).arg(err.message()));
+        emit busError(tr("Cannot introspect object %1 at %2:\n  %3 (%4)\n")
+                              .arg(path)
+                              .arg(service)
+                              .arg(err.name())
+                              .arg(err.message()));
         return doc;
     }
 
-    QDBusReply<QString> xml = iface.call(QLatin1String("Introspect"));
+    QDBusReply<QString> xml = iface.call("Introspect"_L1);
 
     if (!xml.isValid()) {
         QDBusError err(xml.error());
         if (err.isValid()) {
-            emit busError(QString::fromLatin1("Call to object %1 at %2:\n  %3 (%4) failed\n").arg(
-                        path).arg(service).arg(err.name()).arg(err.message()));
+            emit busError(tr("Call to object %1 at %2:\n  %3 (%4) failed\n")
+                                  .arg(path)
+                                  .arg(service)
+                                  .arg(err.name())
+                                  .arg(err.message()));
         } else {
-            emit busError(QString::fromLatin1("Invalid XML received from object %1 at %2\n").arg(
-                    path).arg(service));
+            emit busError(tr("Invalid XML received from object %1 at %2\n").arg(path).arg(service));
         }
         return doc;
     }
@@ -83,25 +90,22 @@ void QDBusModel::addMethods(QDBusItem *parent, const QDomElement &iface)
     QDomElement child = iface.firstChildElement();
     while (!child.isNull()) {
         QDBusItem *item = nullptr;
-        if (child.tagName() == QLatin1String("method")) {
-            item = new QDBusItem(QDBusModel::MethodItem,
-                    child.attribute(QLatin1String("name")), parent);
-            item->caption = QLatin1String("Method: ") + item->name;
+        if (child.tagName() == "method"_L1) {
+            item = new QDBusItem(QDBusModel::MethodItem, child.attribute("name"_L1), parent);
+            item->caption = tr("Method: %1").arg(item->name);
             //get "type" from <arg> where "direction" is "in"
             QDomElement n = child.firstChildElement();
             while (!n.isNull()) {
-                if (n.attribute(QLatin1String("direction")) == QLatin1String("in"))
-                    item->typeSignature += n.attribute(QLatin1String("type"));
+                if (n.attribute("direction"_L1) == "in"_L1)
+                    item->typeSignature += n.attribute("type"_L1);
                 n = n.nextSiblingElement();
             }
-        } else if (child.tagName() == QLatin1String("signal")) {
-            item = new QDBusItem(QDBusModel::SignalItem,
-                    child.attribute(QLatin1String("name")), parent);
-            item->caption = QLatin1String("Signal: ") + item->name;
-        } else if (child.tagName() == QLatin1String("property")) {
-            item = new QDBusItem(QDBusModel::PropertyItem,
-                    child.attribute(QLatin1String("name")), parent);
-            item->caption = QLatin1String("Property: ") + item->name;
+        } else if (child.tagName() == "signal"_L1) {
+            item = new QDBusItem(QDBusModel::SignalItem, child.attribute("name"_L1), parent);
+            item->caption = tr("Signal: %1").arg(item->name);
+        } else if (child.tagName() == "property"_L1) {
+            item = new QDBusItem(QDBusModel::PropertyItem, child.attribute("name"_L1), parent);
+            item->caption = tr("Property: %1").arg(item->name);
         } else {
             qDebug() << "addMethods: unknown tag:" << child.tagName();
         }
@@ -122,15 +126,15 @@ void QDBusModel::addPath(QDBusItem *parent)
     QDomElement node = doc.documentElement();
     QDomElement child = node.firstChildElement();
     while (!child.isNull()) {
-        if (child.tagName() == QLatin1String("node")) {
+        if (child.tagName() == "node"_L1) {
             QDBusItem *item = new QDBusItem(QDBusModel::PathItem,
-                        child.attribute(QLatin1String("name")) + QLatin1Char('/'), parent);
+                                            child.attribute("name"_L1) + '/'_L1, parent);
             parent->children.append(item);
 
             addMethods(item, child);
-        } else if (child.tagName() == QLatin1String("interface")) {
-            QDBusItem *item = new QDBusItem(QDBusModel::InterfaceItem,
-                        child.attribute(QLatin1String("name")), parent);
+        } else if (child.tagName() == "interface"_L1) {
+            QDBusItem *item =
+                    new QDBusItem(QDBusModel::InterfaceItem, child.attribute("name"_L1), parent);
             parent->children.append(item);
 
             addMethods(item, child);
@@ -146,7 +150,7 @@ void QDBusModel::addPath(QDBusItem *parent)
 QDBusModel::QDBusModel(const QString &aService, const QDBusConnection &connection)
     : service(aService), c(connection), root(0)
 {
-    root = new QDBusItem(QDBusModel::PathItem, QLatin1String("/"));
+    root = new QDBusItem(QDBusModel::PathItem, "/"_L1);
 }
 
 QDBusModel::~QDBusModel()
@@ -208,7 +212,7 @@ QVariant QDBusModel::headerData(int section, Qt::Orientation orientation, int ro
     if (role != Qt::DisplayRole || orientation == Qt::Vertical || section != 0)
         return QVariant();
 
-    return QLatin1String("Methods");
+    return tr("Methods");
 }
 
 QDBusModel::Type QDBusModel::itemType(const QModelIndex &index) const
@@ -282,12 +286,12 @@ QString QDBusModel::dBusTypeSignature(const QModelIndex &index) const
 
 QModelIndex QDBusModel::findObject(const QDBusObjectPath &objectPath)
 {
-    QStringList path = objectPath.path().split(QLatin1Char('/'), Qt::SkipEmptyParts);
+    QStringList path = objectPath.path().split('/'_L1, Qt::SkipEmptyParts);
 
     QDBusItem *item = root;
     int childIdx = -1;
     while (item && !path.isEmpty()) {
-        const QString branch = path.takeFirst() + QLatin1Char('/');
+        const QString branch = path.takeFirst() + '/'_L1;
         childIdx = -1;
 
         // do a linear search over all the children
