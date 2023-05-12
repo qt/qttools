@@ -7,7 +7,7 @@
 
 #include <filesystem/fileresolver.h>
 
-#include <qdoc_catch_generators.h>
+#include <catch_generators/generators/path_generator.h>
 
 #include <vector>
 #include <algorithm>

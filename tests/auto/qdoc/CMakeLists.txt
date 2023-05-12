@@ -6,10 +6,14 @@ if(CMAKE_VERSION VERSION_LESS "3.19" AND MSVC AND QT_FEATURE_debug_and_release)
     return()
 endif()
 
+set(QDOC_PROJECT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/)
 set(QDOC_SOURCE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/qdoc/)
 set(QDOC_INCLUDE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/qdoc/)
 
-add_subdirectory(catch_generators)
+if(QT_BUILD_STANDALONE_TESTS)
+    include(${QDOC_PROJECT_DIRECTORY}/catch_generators/tests/CMakeLists.txt)
+endif()
+
 add_subdirectory(qdoc)
 add_subdirectory(config)
 add_subdirectory(generatedoutput)

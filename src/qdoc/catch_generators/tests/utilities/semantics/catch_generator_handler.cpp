@@ -3,8 +3,8 @@
 
 #include <catch/catch.hpp>
 
-#include "namespaces.h"
-#include "utilities/semantics/generator_handler.h"
+#include <catch_generators/namespaces.h>
+#include <catch_generators/utilities/semantics/generator_handler.h>
 
 using namespace QDOC_CATCH_GENERATORS_UTILITIES_ABSOLUTE_NAMESPACE;
 

@@ -7,7 +7,7 @@
 
 #include <boundaries/filesystem/directorypath.h>
 
-#include <qdoc_catch_generators.h>
+#include <catch_generators/generators/path_generator.h>
 
 #include <QFileInfo>
 #include <QTemporaryDir>

@@ -1,14 +1,14 @@
 // Copyright (C) 2022 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "namespaces.h"
-#include "generators/qchar_generator.h"
-#include "generators/qstring_generator.h"
-#include "generators/path_generator.h"
-#include "generators/combinators/cycle_generator.h"
-#include "utilities/statistics/percentages.h"
-#include "utilities/statistics/distribution.h"
-#include "utilities/semantics/copy_value.h"
+#include <catch_generators/namespaces.h>
+#include <catch_generators/generators/qchar_generator.h>
+#include <catch_generators/generators/qstring_generator.h>
+#include <catch_generators/generators/path_generator.h>
+#include <catch_generators/generators/combinators/cycle_generator.h>
+#include <catch_generators/utilities/statistics/percentages.h>
+#include <catch_generators/utilities/statistics/distribution.h>
+#include <catch_generators/utilities/semantics/copy_value.h>
 
 #include <catch_conversions/qt_catch_conversions.h>
 

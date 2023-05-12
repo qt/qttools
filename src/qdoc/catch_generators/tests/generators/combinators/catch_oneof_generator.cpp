@@ -3,13 +3,13 @@
 
 #include <catch_conversions/std_catch_conversions.h>
 
-#include "namespaces.h"
-#include "generators/k_partition_of_r_generator.h"
-#include "generators/combinators/oneof_generator.h"
-#include "generators/combinators/cycle_generator.h"
-#include "utilities/statistics/percentages.h"
-#include "utilities/statistics/distribution.h"
-#include "utilities/semantics/copy_value.h"
+#include <catch_generators/namespaces.h>
+#include <catch_generators/generators/k_partition_of_r_generator.h>
+#include <catch_generators/generators/combinators/oneof_generator.h>
+#include <catch_generators/generators/combinators/cycle_generator.h>
+#include <catch_generators/utilities/statistics/percentages.h>
+#include <catch_generators/utilities/statistics/distribution.h>
+#include <catch_generators/utilities/semantics/copy_value.h>
 
 #include <catch/catch.hpp>
 

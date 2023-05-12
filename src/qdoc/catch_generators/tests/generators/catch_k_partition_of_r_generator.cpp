@@ -1,8 +1,8 @@
 // Copyright (C) 2022 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "namespaces.h"
-#include "generators/k_partition_of_r_generator.h"
+#include <catch_generators/namespaces.h>
+#include <catch_generators/generators/k_partition_of_r_generator.h>
 
 #include <catch/catch.hpp>
 
