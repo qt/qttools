@@ -4,7 +4,7 @@
         "Name": "Catch2",
         "QDocModule": "qttools",
         "QtUsage": "Used for testing of QDoc",
-        "Files": "catch.hpp",
+        "Files": "include/catch/catch.hpp",
 
         "Description": "Catch2 is a multi-paradigm test framework for C++.",
         "Homepage": "https://github.com/catchorg/Catch2",
