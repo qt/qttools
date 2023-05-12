@@ -5,8 +5,6 @@
 
 #include "mainwindow.h"
 
-#include <stdio.h>
-
 using namespace Qt::StringLiterals;
 
 int main(int argc, char *argv[])
