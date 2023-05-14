@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="SEITE_MIT_AUSSCHLIEßLICH_GROßBUCHSTABEN_IM_TITEL_ÜBERSCHRIFT.htm" href="seite-mit-ausschlie-lich-gro-buchstaben-im-titel-berschrift-htm-bfa91582.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle="">
+            <description>
+                <para>This page exists solely to understand how QDoc will generate the file name for a page with non-ascii-printable latin characters in its name.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

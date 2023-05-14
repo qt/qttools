@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="圣马苏里拉.html" href="8b5c72eb.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle="">
+            <description>
+                <para>This page exists solely to understand how QDoc will generate the file name for a page with non-latin characters in its name.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

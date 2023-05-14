@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include <QtCore/qprocess.h>
+#include <QCryptographicHash>
+#include "location.h"
 #include "utilities.h"
 
 QT_BEGIN_NAMESPACE
@@ -96,11 +98,22 @@ QString comma(qsizetype wordPosition, qsizetype numberOfWords)
 */
 QString canonicalizeFileName(const QString &name)
 {
+    auto legal_ascii = [](const uint value) {
+        const uint start_ascii_subset{ 32 };
+        const uint end_ascii_subset{ 126 };
+
+        return value >= start_ascii_subset && value <= end_ascii_subset;
+    };
+
     QString result;
     bool begun = false;
+    bool has_non_alnum_content{ false };
     const auto *data{name.constData()};
     for (qsizetype i = 0; i < name.size(); ++i) {
         char16_t u{data[i].unicode()};
+        if (!legal_ascii(u))
+            has_non_alnum_content = true;
+
         if (u >= 'A' && u <= 'Z')
             u += 'a' - 'A';
         if ((u >= 'a' && u <= 'z') || (u >= '0' && u <= '9')) {
@@ -113,6 +126,15 @@ QString canonicalizeFileName(const QString &name)
     }
     if (result.endsWith(QLatin1Char('-')))
         result.chop(1);
+
+    if (has_non_alnum_content) {
+        auto title_hash = QString::fromLocal8Bit(
+                QCryptographicHash::hash(name.toUtf8(), QCryptographicHash::Md5).toHex());
+        title_hash.truncate(8);
+        if (!result.isEmpty())
+            result.append(QLatin1Char('-'));
+        result.append(title_hash);
+    }
 
     return result;
 }

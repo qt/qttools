@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="santaموزاريلا.html" href="santa-14209312.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle="">
+            <description>
+                <para>This page exists solely to understand how QDoc will generate the file name for a page that mixes printable ascii with right-to-left script in its name.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>
