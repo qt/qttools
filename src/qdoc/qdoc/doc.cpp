@@ -74,6 +74,8 @@ Doc::~Doc()
 
 Doc &Doc::operator=(const Doc &doc)
 {
+    if (&doc == this)
+        return *this;
     if (doc.m_priv)
         doc.m_priv->ref();
     if (m_priv && m_priv->deref())
