@@ -528,7 +528,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         for (const auto &section : sinceSections) {
             if (!section.members().isEmpty()) {
                 out() << "<li>"
-                      << "<a href=\"#" << Doc::canonicalTitle(section.title()) << "\">"
+                      << "<a href=\"#" << Utilities::asAsciiPrintable(section.title()) << "\">"
                       << section.title() << "</a></li>\n";
             }
         }
@@ -537,7 +537,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         int index = 0;
         for (const auto &section : sinceSections) {
             if (!section.members().isEmpty()) {
-                out() << "<h3 id=\"" << Doc::canonicalTitle(section.title()) << "\">"
+                out() << "<h3 id=\"" << Utilities::asAsciiPrintable(section.title()) << "\">"
                       << protectEnc(section.title()) << "</h3>\n";
                 if (index == Sections::SinceClasses)
                     generateCompactList(Generic, relative, ncmap, false, QStringLiteral("Q"));
@@ -867,7 +867,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::SectionHeadingLeft: {
         int unit = atom->string().toInt() + hOffset(relative);
         out() << "<h" + QString::number(unit) + QLatin1Char(' ') << "id=\""
-              << Doc::canonicalTitle(Text::sectionHeading(atom).toString()) << "\">";
+              << Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString()) << "\">";
         m_inSectionHeading = true;
         break;
     }
@@ -970,7 +970,7 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     case Atom::Keyword:
         break;
     case Atom::Target:
-        out() << "<span id=\"" << Doc::canonicalTitle(atom->string()) << "\"></span>";
+        out() << "<span id=\"" << Utilities::asAsciiPrintable(atom->string()) << "\"></span>";
         break;
     case Atom::UnhandledFormat:
         out() << "<b class=\"redFont\">&lt;Missing HTML&gt;</b>";
@@ -2123,7 +2123,7 @@ void HtmlGenerator::addStatusToMap(const Aggregate *aggregate, QMap<QString, Tex
     if (aggregate->status() == Node::Deprecated)
         spanClass = u"deprecated"_s; // Disregard any version info
     else
-        spanClass = Utilities::canonicalizeFileName(status.value());
+        spanClass = Utilities::asAsciiPrintable(status.value());
 
     text.clear();
     text << Atom(Atom::String, status.value())
@@ -2367,7 +2367,7 @@ void HtmlGenerator::generateTableOfContents(const Node *node, CodeMarker *marker
             Text headingText = Text::sectionHeading(atom);
             QString s = headingText.toString();
             out() << "<li class=\"level" << sectionNumber << "\">";
-            out() << "<a href=\"" << '#' << Doc::canonicalTitle(s) << "\">";
+            out() << "<a href=\"" << '#' << Utilities::asAsciiPrintable(s) << "\">";
             generateAtomList(headingText.firstAtom(), node, marker, true, numAtoms);
             out() << "</a></li>\n";
         }

@@ -306,7 +306,7 @@ QString Generator::fileBase(const Node *node) const
         }
     }
 
-    QString canonicalName{Utilities::canonicalizeFileName(base)};
+    QString canonicalName{ Utilities::asAsciiPrintable(base) };
     Node *n = const_cast<Node *>(node);
     n->setFileNameBase(canonicalName);
     return canonicalName;
@@ -323,7 +323,7 @@ QString Generator::linkForExampleFile(const QString &path, const QString &fileEx
     QString link{path};
     link.prepend(s_project.toLower() + QLatin1Char('-'));
 
-    QString canonicalName{Utilities::canonicalizeFileName(link)};
+    QString canonicalName{ Utilities::asAsciiPrintable(link) };
     canonicalName.append(QLatin1Char('.'));
     canonicalName.append(fileExt.isEmpty() ? fileExtension() : fileExt);
     return canonicalName;

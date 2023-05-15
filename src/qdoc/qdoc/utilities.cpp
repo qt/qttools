@@ -81,22 +81,35 @@ QString comma(qsizetype wordPosition, qsizetype numberOfWords)
 }
 
 /*!
-  \internal
-  Replace non-alphanum characters in \a str with hyphens
-  and convert all characters to lowercase. Returns the
-  result of the conversion with leading, trailing, and
-  consecutive hyphens removed.
+    \brief Returns an ascii-printable representation of \a str.
 
-  The implementation is equivalent to:
+    Replace non-ascii-printable characters in \a str from a subset of such
+    characters. The subset includes alphanumeric (alnum) characters
+    ([a-zA-Z0-9]), space, punctuation characters, and common symbols. Non-alnum
+    characters in this subset are replaced by a single hyphen. Leading,
+    trailing, and consecutive hyphens are removed, such that the resulting
+    string does not start or end with a hyphen. All characters are converted to
+    lowercase.
 
-  \code
+    If any character in \a str is non-latin, or latin and not found in the
+    aforementioned subset (e.g. 'ß', 'å', or 'ö'), a hash of \a str is appended
+    to the final string.
+
+    Returns a string that is normalized for use where ascii-printable strings
+    are required, such as file names or fragment identifiers in URLs.
+
+    The implementation is equivalent to:
+
+    \code
       name.replace(QRegularExpression("[^A-Za-z0-9]+"), " ");
       name = name.simplified();
       name.replace(QLatin1Char(' '), QLatin1Char('-'));
       name = name.toLower();
-  \endcode
+    \endcode
+
+    However, it has been measured to be approximately four times faster.
 */
-QString canonicalizeFileName(const QString &name)
+QString asAsciiPrintable(const QString &str)
 {
     auto legal_ascii = [](const uint value) {
         const uint start_ascii_subset{ 32 };
@@ -108,12 +121,11 @@ QString canonicalizeFileName(const QString &name)
     QString result;
     bool begun = false;
     bool has_non_alnum_content{ false };
-    const auto *data{name.constData()};
-    for (qsizetype i = 0; i < name.size(); ++i) {
-        char16_t u{data[i].unicode()};
+
+    for (const auto &c : str) {
+        char16_t u = c.unicode();
         if (!legal_ascii(u))
             has_non_alnum_content = true;
-
         if (u >= 'A' && u <= 'Z')
             u += 'a' - 'A';
         if ((u >= 'a' && u <= 'z') || (u >= '0' && u <= '9')) {
@@ -129,7 +141,7 @@ QString canonicalizeFileName(const QString &name)
 
     if (has_non_alnum_content) {
         auto title_hash = QString::fromLocal8Bit(
-                QCryptographicHash::hash(name.toUtf8(), QCryptographicHash::Md5).toHex());
+                QCryptographicHash::hash(str.toUtf8(), QCryptographicHash::Md5).toHex());
         title_hash.truncate(8);
         if (!result.isEmpty())
             result.append(QLatin1Char('-'));

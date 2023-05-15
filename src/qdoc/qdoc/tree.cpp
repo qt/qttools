@@ -722,7 +722,7 @@ QString Tree::getRef(const QString &target, const Node *node) const
             ++it;
         } while (it != m_nodesByTargetTitle.constEnd() && it.key() == target);
     }
-    QString key = Doc::canonicalTitle(target);
+    QString key = Utilities::asAsciiPrintable(target);
     it = m_nodesByTargetRef.constFind(key);
     if (it != m_nodesByTargetRef.constEnd()) {
         do {
@@ -758,7 +758,7 @@ void Tree::resolveTargets(Aggregate *root)
             QString key = node->title();
             if (!key.isEmpty()) {
                 if (key.contains(QChar(' ')))
-                    key = Doc::canonicalTitle(key);
+                    key = Utilities::asAsciiPrintable(key);
                 QList<PageNode *> nodes = m_pageNodesByTitle.values(key);
                 bool alreadyThere = false;
                 if (!nodes.empty()) {
@@ -782,7 +782,7 @@ void Tree::resolveTargets(Aggregate *root)
                 QString ref = refForAtom(i);
                 QString title = Text::sectionHeading(i).toString();
                 if (!ref.isEmpty() && !title.isEmpty()) {
-                    QString key = Doc::canonicalTitle(title);
+                    QString key = Utilities::asAsciiPrintable(title);
                     auto *target = new TargetRec(ref, TargetRec::Contents, child, 3);
                     m_nodesByTargetRef.insert(key, target);
                     m_nodesByTargetTitle.insert(title, target);
@@ -796,7 +796,7 @@ void Tree::resolveTargets(Aggregate *root)
                 QString title = i->string();
                 if (!ref.isEmpty() && !title.isEmpty()) {
                     auto *target = new TargetRec(ref, TargetRec::Keyword, child, 1);
-                    m_nodesByTargetRef.insert(Doc::canonicalTitle(title), target);
+                    m_nodesByTargetRef.insert(Utilities::asAsciiPrintable(title), target);
                     m_nodesByTargetTitle.insert(title, target);
                 }
             }
@@ -807,7 +807,7 @@ void Tree::resolveTargets(Aggregate *root)
                 QString ref = refForAtom(i);
                 QString title = i->string();
                 if (!ref.isEmpty() && !title.isEmpty()) {
-                    QString key = Doc::canonicalTitle(title);
+                    QString key = Utilities::asAsciiPrintable(title);
                     auto *target = new TargetRec(ref, TargetRec::Target, child, 2);
                     m_nodesByTargetRef.insert(key, target);
                     m_nodesByTargetTitle.insert(title, target);
@@ -841,7 +841,7 @@ const TargetRec *Tree::findUnambiguousTarget(const QString &target, Node::Genus 
 
     TargetRec *bestTarget = findBestCandidate(m_nodesByTargetTitle, target);
     if (!bestTarget)
-        bestTarget = findBestCandidate(m_nodesByTargetRef, Doc::canonicalTitle(target));
+        bestTarget = findBestCandidate(m_nodesByTargetRef, Utilities::asAsciiPrintable(target));
 
     return bestTarget;
 }
@@ -853,7 +853,7 @@ const PageNode *Tree::findPageNodeByTitle(const QString &title) const
 {
     PageNodeMultiMap::const_iterator it;
     if (title.contains(QChar(' ')))
-        it = m_pageNodesByTitle.constFind(Doc::canonicalTitle(title));
+        it = m_pageNodesByTitle.constFind(Utilities::asAsciiPrintable(title));
     else
         it = m_pageNodesByTitle.constFind(title);
     if (it != m_pageNodesByTitle.constEnd()) {
@@ -890,9 +890,9 @@ QString Tree::refForAtom(const Atom *atom)
 {
     if (atom) {
         if (atom->type() == Atom::SectionLeft)
-            return Doc::canonicalTitle(Text::sectionHeading(atom).toString());
+            return Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString());
         if ((atom->type() == Atom::Target) || (atom->type() == Atom::Keyword))
-            return Doc::canonicalTitle(atom->string());
+            return Utilities::asAsciiPrintable(atom->string());
     }
     return QString();
 }

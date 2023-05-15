@@ -76,8 +76,8 @@ public:
     static void initialize(FileResolver& file_resolver);
     static void terminate();
     static void trimCStyleComment(Location &location, QString &str);
-    static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter, ResolvedFile resolved_file);
-    static QString canonicalTitle(const QString &title);
+    static CodeMarker *quoteFromFile(const Location &location, Quoter &quoter,
+                                     ResolvedFile resolved_file);
 
 private:
     void detach();

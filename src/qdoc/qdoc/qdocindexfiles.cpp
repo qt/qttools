@@ -1082,7 +1082,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const auto &targets = node->doc().targets();
         for (const Atom *target : targets) {
             const QString &title = target->string();
-            QString name = Doc::canonicalTitle(title);
+            QString name = Utilities::asAsciiPrintable(title);
             writer.writeStartElement("target");
             if (!external)
                 writer.writeAttribute("name", name);
@@ -1097,7 +1097,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
         const auto &keywords = node->doc().keywords();
         for (const Atom *keyword : keywords) {
             const QString &title = keyword->string();
-            QString name = Doc::canonicalTitle(title);
+            QString name = Utilities::asAsciiPrintable(title);
             writer.writeStartElement("keyword");
             writer.writeAttribute("name", name);
             if (name != title)
@@ -1120,7 +1120,7 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
                 int level = node->doc().tableOfContentsLevels()[i];
                 QString title = Text::sectionHeading(item).toString();
                 writer.writeStartElement("contents");
-                writer.writeAttribute("name", Doc::canonicalTitle(title));
+                writer.writeAttribute("name", Utilities::asAsciiPrintable(title));
                 writer.writeAttribute("title", title);
                 writer.writeAttribute("level", QString::number(level));
                 writer.writeEndElement(); // contents

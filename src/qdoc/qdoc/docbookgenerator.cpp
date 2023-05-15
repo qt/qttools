@@ -1052,7 +1052,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
                 }
 
                 // If there is an anchor just after with the same ID, skip it.
-                if (matchAhead(atom, Atom::Target) && Doc::canonicalTitle(atom->next()->string()) == id) {
+                if (matchAhead(atom, Atom::Target)
+                    && Utilities::asAsciiPrintable(atom->next()->string()) == id) {
                     ++skipAhead;
                 }
             } else {
@@ -1514,7 +1515,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             sectionLevels.push(currentSectionLevel);
 
             m_writer->writeStartElement(dbNamespace, "section");
-            writeXmlId(Doc::canonicalTitle(Text::sectionHeading(atom).toString()));
+            writeXmlId(Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString()));
             newLine();
             // Unlike startSectionBegin, don't start a title here.
         }
@@ -1624,7 +1625,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         const Atom *next = atom->next();
         QString id{""};
         if (matchAhead(atom, Atom::Target)) {
-            id = Doc::canonicalTitle(next->string());
+            id = Utilities::asAsciiPrintable(next->string());
             next = next->next();
             ++skipAhead;
         }
@@ -1671,7 +1672,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
         QString id{""};
         bool hasTarget {false};
         if (matchAhead(atom, Atom::Target)) {
-            id = Doc::canonicalTitle(atom->next()->string());
+            id = Utilities::asAsciiPrintable(atom->next()->string());
             ++skipAhead;
             hasTarget = true;
         }
@@ -1768,13 +1769,14 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
     case Atom::Target:
         // Sometimes, there is a \target just before a section title with the same ID. Only outut one xml:id.
         if (matchAhead(atom, Atom::SectionRight) && matchAhead(atom->next(), Atom::SectionLeft)) {
-            QString nextId = Doc::canonicalTitle(Text::sectionHeading(atom->next()->next()).toString());
-            QString ownId = Doc::canonicalTitle(atom->string());
+            QString nextId = Utilities::asAsciiPrintable(
+                    Text::sectionHeading(atom->next()->next()).toString());
+            QString ownId = Utilities::asAsciiPrintable(atom->string());
             if (nextId == ownId)
                 break;
         }
 
-        writeAnchor(Doc::canonicalTitle(atom->string()));
+        writeAnchor(Utilities::asAsciiPrintable(atom->string()));
         break;
     case Atom::UnhandledFormat:
         m_writer->writeStartElement(dbNamespace, "emphasis");

@@ -11,6 +11,7 @@
 #include "propertynode.h"
 #include "qdocdatabase.h"
 #include "quoter.h"
+#include "utilities.h"
 
 #include <QtCore/qxmlstream.h>
 
@@ -638,7 +639,8 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
 
     case Atom::SectionLeft:
         writer.writeStartElement("section");
-        writer.writeAttribute("id", Doc::canonicalTitle(Text::sectionHeading(atom).toString()));
+        writer.writeAttribute("id",
+                              Utilities::asAsciiPrintable(Text::sectionHeading(atom).toString()));
         break;
 
     case Atom::SectionRight:
@@ -743,7 +745,7 @@ const Atom *WebXMLGenerator::addAtomElements(QXmlStreamWriter &writer, const Ato
 
     case Atom::Target:
         writer.writeStartElement("target");
-        writer.writeAttribute("name", Doc::canonicalTitle(atom->string()));
+        writer.writeAttribute("name", Utilities::asAsciiPrintable(atom->string()));
         writer.writeEndElement();
         break;
 
