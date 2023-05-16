@@ -2266,43 +2266,54 @@ QString DocParser::getOptionalArgument()
     }
 }
 
+/*!
+    \brief Create a string that may optionally span multiple lines as one line.
+
+    Process a block of text that may span multiple lines using trailing
+    backslashes (`\`) as line continuation character. Trailing backslashes and
+    any newline character that follow them are removed.
+
+    Returns a string as if it was one continuous line of text, stripped of
+    leading and trailing whitespace characters.
+ */
 QString DocParser::getRestOfLine()
 {
-    QString t;
-
-    skipSpacesOnLine();
-
-    bool trailingSlash = false;
-
-    do {
-        qsizetype begin = m_position;
-
-        while (m_position < m_input.size() && m_input[m_position] != '\n') {
-            if (m_input[m_position] == '\\' && !trailingSlash) {
-                trailingSlash = true;
+    auto lineHasTrailingBackslash = [this](bool trailingBackslash) -> bool {
+        while (m_position < m_inputLength && m_input[m_position] != '\n') {
+            if (m_input[m_position] == '\\' && !trailingBackslash) {
+                trailingBackslash = true;
                 ++m_position;
-                while ((m_position < m_input.size()) && m_input[m_position].isSpace()
-                       && (m_input[m_position] != '\n'))
-                    ++m_position;
+                skipSpacesOnLine();
             } else {
-                trailingSlash = false;
+                trailingBackslash = false;
                 ++m_position;
             }
         }
+        return trailingBackslash;
+    };
 
-        if (!t.isEmpty())
-            t += QLatin1Char(' ');
-        t += m_input.mid(begin, m_position - begin).simplified();
+    QString rest_of_line;
+    skipSpacesOnLine();
+    bool trailing_backslash{ false };
 
-        if (trailingSlash) {
-            t.chop(1);
-            t = t.simplified();
-        }
-        if (m_position < m_input.size())
+    for (qsizetype start_of_line = m_position; m_position < m_inputLength; ++m_position) {
+        trailing_backslash = lineHasTrailingBackslash(trailing_backslash);
+
+        if (!rest_of_line.isEmpty())
+            rest_of_line += QLatin1Char(' ');
+        rest_of_line += m_input.sliced(start_of_line, m_position - start_of_line);
+
+        if (trailing_backslash)
+            rest_of_line.chop(1);
+
+        if (m_position < m_inputLength)
             ++m_position;
-    } while (m_position < m_input.size() && trailingSlash);
 
-    return t;
+        if (!trailing_backslash)
+            break;
+    }
+
+    return rest_of_line.simplified();
 }
 
 /*!
