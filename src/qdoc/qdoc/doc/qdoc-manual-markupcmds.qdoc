@@ -3042,11 +3042,13 @@
     commands in your \l {table-command} {\\table} or \l {list-command}
     {\\list}.
 
-    The command takes an argument specifying the code's format. QDoc recognizes
-    the formats it can generate as input to the \\raw command.
+    The command takes an argument specifying the code's format.
 
-    The \\raw command can sometimes be useful if you need special HTML effects
-    in your documentation.
+    QDoc generates the given code only when generating the format that
+    was specified by the user.
+
+    For example, "\raw HTML" will only generate code when QDoc
+    generates HTML documentation.
 
     \note You can often achieve the intended purpose by using QDoc commands,
     while reducing the chance of mistakes or content becoming unmaintained.

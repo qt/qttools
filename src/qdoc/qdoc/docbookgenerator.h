@@ -118,7 +118,6 @@ private:
     void endLink();
     void writeXmlId(const QString &id);
     void writeXmlId(const Node *node);
-    inline void writeRawHtml(const QString &rawCode);
     inline void newLine();
     void startSectionBegin(const QString &id = "");
     void startSectionBegin(const Node *node);
@@ -153,7 +152,6 @@ private:
     bool m_inPara { false }; // Ignores nesting of paragraphs (like list items).
     bool m_inBlockquote { false };
     unsigned m_inList { 0 }; // Depth in number of nested lists.
-    bool m_rewritingCustomQmlModuleSummary { false };
 
     // Generator configuration, set before starting the generation.
     QString m_project {};

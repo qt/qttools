@@ -9,36 +9,7 @@
 <db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
 </db:info>
 <db:para>The navigation commands...</db:para>
-<db:blockquote><db:programlisting role="raw-html"><![CDATA[        <table border="0" cellpadding="0" cellspacing="5" width="100%">
-
-        <tr>
-        <p>
-        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Basic Qt</a>]
-        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
-        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Creating Dialogs</a>]
-        </p>
-
-        <h1 align="center">Getting Started<br /></h1>
-
-        <p>
-        This chapter shows how to combine basic C++ with the
-        functionality provided by Qt to create a few small graphical
-        interface (GUI) applications.
-        </p>
-
-        <p>
-        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Basic Qt</a>]
-        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
-        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Creating Dialogs</a>]
-        </p>
-
-        </table>
-    ]]></db:programlisting>
-</db:blockquote>
+<db:blockquote/>
 <db:programlisting language="cpp">&amp;lt;head&amp;gt;
     ...
     &amp;lt;link rel=&amp;quot;start&amp;quot; href=&amp;quot;basicqt.html&amp;quot; /&amp;gt;

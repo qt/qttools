@@ -331,8 +331,7 @@
 
     The \l {raw-command}{\\raw} command and the corresponding \l {raw-command}{\\endraw}
     command delimit a block of raw mark-up language code. The \\raw
-    command must be followed by the format name. For now, this can
-    only be HTML.
+    command must be followed by the format name.
 
     \section1 Macro cannot have both format-specific and qdoc-syntax definitions
 
