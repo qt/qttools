@@ -236,7 +236,7 @@ const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *rel
         default:
             int n = 1;
             if (generate) {
-                n += generateAtom(atom, relative);
+                n += generateAtom(atom, relative, nullptr);
                 numAtoms += n;
             }
             while (n-- > 0)
@@ -256,7 +256,7 @@ QString removeCodeMarkers(const QString& code) {
 /*!
   Generate DocBook from an instance of Atom.
  */
-qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
+qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative, CodeMarker*)
 {
     Q_ASSERT(m_writer);
     // From HtmlGenerator::generateAtom, without warning generation.
@@ -566,18 +566,18 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             skipAhead += 2;
 
             Q_ASSERT(current->type() == Atom::CaptionLeft);
-            generateAtom(current, relative);
+            generateAtom(current, relative, nullptr);
             current = current->next();
             ++skipAhead;
 
             while (current->type() != Atom::CaptionRight) { // The actual caption.
-                generateAtom(current, relative);
+                generateAtom(current, relative, nullptr);
                 current = current->next();
                 ++skipAhead;
             }
 
             Q_ASSERT(current->type() == Atom::CaptionRight);
-            generateAtom(current, relative);
+            generateAtom(current, relative, nullptr);
             current = current->next();
             ++skipAhead;
 
@@ -599,18 +599,18 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             ++skipAhead;
 
             Q_ASSERT(current->type() == Atom::CaptionLeft);
-            generateAtom(current, relative);
+            generateAtom(current, relative, nullptr);
             current = current->next();
             ++skipAhead;
 
             while (current->type() != Atom::CaptionRight) { // The actual caption.
-                generateAtom(current, relative);
+                generateAtom(current, relative, nullptr);
                 current = current->next();
                 ++skipAhead;
             }
 
             Q_ASSERT(current->type() == Atom::CaptionRight);
-            generateAtom(current, relative);
+            generateAtom(current, relative, nullptr);
             current = current->next();
             ++skipAhead;
 
@@ -1528,9 +1528,9 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative)
             // A lonely section at the end of the document indicates that a
             // generated list of some sort should be within this section.
             // Close this section later on, in generateFooter().
-            generateAtom(atom->next(), relative);
-            generateAtom(atom->next()->next(), relative);
-            generateAtom(atom->next()->next()->next(), relative);
+            generateAtom(atom->next(), relative, nullptr);
+            generateAtom(atom->next()->next(), relative, nullptr);
+            generateAtom(atom->next()->next()->next(), relative, nullptr);
 
             m_closeSectionAfterGeneratedList = true;
             skipAhead += 4;

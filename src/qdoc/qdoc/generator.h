@@ -81,10 +81,6 @@ protected:
     virtual void generateAlsoList(const Node *node, CodeMarker *marker);
     virtual void generateAlsoList(const Node *node) { generateAlsoList(node, nullptr); }
     virtual qsizetype generateAtom(const Atom *, const Node *, CodeMarker *) { return 0; }
-    virtual qsizetype generateAtom(const Atom *atom, const Node *node)
-    {
-        return generateAtom(atom, node, nullptr);
-    }
     virtual void generateBody(const Node *node, CodeMarker *marker);
     virtual void generateCppReferencePage(Aggregate *, CodeMarker *) {}
     virtual void generateProxyPage(Aggregate *, CodeMarker *) {}
