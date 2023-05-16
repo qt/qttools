@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="a-page-with-a-line-comment-in-the-see-also-command.html" href="a-page-with-a-line-comment-in-the-see-also-command.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="The source for this page has a line comment in its sa command" fulltitle="The source for this page has a line comment in its sa command" subtitle="">
+            <description>
+                <para>QDoc's \sa command doesn't respect QDoc's line comments.</para>
+                <see-also>
+                    <link raw="This page starts with an image" href="another-page-with-an-image-at-the-top.html" type="page" page="This page starts with an image">This page starts with an image</link>
+                    <link raw="Adventures with QDoc's line comments" href="line-comment-adventures.html" type="page" page="Adventures with QDoc's line comments">Adventures with QDoc's line comments</link>
+                </see-also>
+            </description>
+        </page>
+    </document>
+</WebXML>

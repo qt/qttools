@@ -61,6 +61,7 @@ private slots:
     void testGlobalFunctions();
     void proxyPage();
     void nonAsciiCharacterInput();
+    void lineComments();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -610,6 +611,22 @@ void tst_generatedOutput::nonAsciiCharacterInput()
             "adventures-with-non-ascii-characters.html");
 }
 
+void tst_generatedOutput::lineComments()
+{
+    testAndCompare(
+       "testdata/line_comments/line_comments.qdocconf",
+
+   "linecomments/a-page-with-a-line-comment-in-the-see-also-command.html "
+            "linecomments/a-page-with-a-line-comment-in-the-see-also-command.webxml "
+            "linecomments/a-page-with-a-line-comment-in-the-see-also-command.xml "
+            "linecomments/another-page-with-an-image-at-the-top.html "
+            "linecomments/another-page-with-an-image-at-the-top.webxml "
+            "linecomments/another-page-with-an-image-at-the-top.xml "
+            "linecomments/line-comment-adventures.html "
+            "linecomments/line-comment-adventures.webxml "
+            "linecomments/line-comment-adventures.xml"
+    );
+}
 
 int main(int argc, char *argv[])
 {

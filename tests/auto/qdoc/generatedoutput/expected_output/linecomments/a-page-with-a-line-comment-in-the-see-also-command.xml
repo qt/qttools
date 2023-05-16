@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>The source for this page has a line comment in its sa command</db:title>
+<db:productname>LineComment</db:productname>
+<db:titleabbrev>LineComment Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>LineComment Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:para>QDoc's \sa command doesn't respect QDoc's line comments.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="another-page-with-an-image-at-the-top.xml">This page starts with an image</db:link></db:member>
+<db:member><db:link xlink:href="line-comment-adventures.xml">Adventures with QDoc's line comments</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:article>

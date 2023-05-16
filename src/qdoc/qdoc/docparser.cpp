@@ -1688,8 +1688,40 @@ void DocParser::endSection(int, int) // (int unit, int endCmd)
     m_currentSection = (Doc::NoSection);
 }
 
+/*!
+    \internal
+    \brief Parses arguments to QDoc's see also command.
+
+    Parses space or comma separated arguments passed to the \\sa command.
+    Multi-line input requires that the arguments are comma separated. Wrap
+    arguments in curly braces for multi-word targets, and for scope resolution
+    (for example, {QString::}{count()}).
+
+    This method updates the list of links for the See also section.
+
+    \sa {DocPrivate::}{addAlso()}, getArgument()
+ */
 void DocParser::parseAlso()
 {
+    auto line_comment = [this]() -> bool {
+        skipSpacesOnLine();
+        if (m_position + 2 > m_inputLength)
+            return false;
+        if (m_input[m_position].unicode() == '/') {
+            if (m_input[m_position + 1].unicode() == '/') {
+                if (m_input[m_position + 2].unicode() == '!') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    auto skip_everything_until_newline = [this]() -> void {
+        while (m_position < m_inputLength && m_input[m_position] != '\n')
+            ++m_position;
+    };
+
     leavePara();
     skipSpacesOnLine();
     while (m_position < m_inputLength && m_input[m_position] != '\n') {
@@ -1724,8 +1756,14 @@ void DocParser::parseAlso()
         }
 
         skipSpacesOnLine();
+
+        if (line_comment())
+            skip_everything_until_newline();
+
         if (m_position < m_inputLength && m_input[m_position] == ',') {
             m_position++;
+            if (line_comment())
+                skip_everything_until_newline();
             skipSpacesOrOneEndl();
         } else if (m_position >= m_inputLength || m_input[m_position] != '\n') {
             location().warning(QStringLiteral("Missing comma in '\\%1'").arg(cmdName(CMD_SA)));

@@ -1,0 +1,19 @@
+include(../configs/config.qdocconf)
+project = LineComment
+
+headerdirs  = .
+sourcedirs  = .
+exampledirs = .
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = linecomments
+
+HTML.nosubdirs = true
+HTML.outputsubdir = linecomments
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = linecomments
+
+# warninglimit = 3

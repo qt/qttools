@@ -1,0 +1,39 @@
+// Copyright (C) 2023 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page line-comment-adventures.html
+    \title Adventures with QDoc's line comments
+    \brief Test that line comments don't break documentation.
+
+    The purpose of this test data is to provide a regression mechanism as part
+    of QDoc's end-to-end test, tst_generatedOutput, for an issue (QTBUG-105754)
+    that was reported against QDoc's \\sa command. The issue, as experienced by
+    the reporter of the bug, is that if the \\sa command is followed by a line
+    comment, QDoc generates a series of "Missing comma in \\sa" warnings.
+
+    \section1 Further details
+    The bug report is at \l https://bugreports.qt.io/browse/QTBUG-105754.
+*/
+
+/*!
+    \page another-page-with-an-image-at-the-top.html
+    \title This page starts with an image
+    \brief This page has an image right at the top.
+    \image leonardo-da-vinci.png This is the alternate text for the image
+    The image should render as expected, and the alternate text should be
+    there, too. This text is contained in its own paragraph following the
+    image.
+
+    This paragraph is a new paragraph, and doesn't contain an image.
+*/
+
+/*!
+    \page a-page-with-a-line-comment-in-the-see-also-command.html
+    \title The source for this page has a line comment in its sa command
+
+    QDoc's \\sa command doesn't respect QDoc's line comments.
+
+    \sa {This page starts with an image}, //! let's go to bar after this
+        {Adventures with QDoc's line comments}
+*/

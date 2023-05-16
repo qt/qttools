@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>This page starts with an image</db:title>
+<db:productname>LineComment</db:productname>
+<db:titleabbrev>LineComment Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>This page has an image right at the top.</db:para>
+</db:abstract>
+</db:info>
+<db:mediaobject>
+<db:alt>This is the alternate text for the image</db:alt>
+<db:imageobject>
+<db:imagedata fileref="images/leonardo-da-vinci.png"/>
+</db:imageobject>
+</db:mediaobject>
+<db:para>The image should render as expected, and the alternate text should be there, too. This text is contained in its own paragraph following the image.</db:para>
+<db:para>This paragraph is a new paragraph, and doesn't contain an image.</db:para>
+</db:article>

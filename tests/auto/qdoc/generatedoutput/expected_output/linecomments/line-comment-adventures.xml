@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Adventures with QDoc's line comments</db:title>
+<db:productname>LineComment</db:productname>
+<db:titleabbrev>LineComment Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Test that line comments don't break documentation.</db:para>
+</db:abstract>
+</db:info>
+<db:para>The purpose of this test data is to provide a regression mechanism as part of QDoc's end-to-end test, tst_generatedOutput, for an issue (QTBUG-105754) that was reported against QDoc's \sa command. The issue, as experienced by the reporter of the bug, is that if the \sa command is followed by a line comment, QDoc generates a series of &quot;Missing comma in \sa&quot; warnings.</db:para>
+<db:section xml:id="further-details">
+<db:title>Further details</db:title>
+<db:para>The bug report is at <db:link xlink:href="https://bugreports.qt.io/browse/QTBUG-105754">https://bugreports.qt.io/browse/QTBUG-105754</db:link>.</db:para>
+</db:section>
+</db:article>
