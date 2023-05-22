@@ -28,11 +28,20 @@ namespace qdesigner_internal {
         QT_TRANSLATE_NOOP("FontPropertyManager", "PreferAntialias")
     };
 
+    static const char *hintingPreferenceC[] = {
+        QT_TRANSLATE_NOOP("FontPropertyManager", "PreferDefaultHinting"),
+        QT_TRANSLATE_NOOP("FontPropertyManager", "PreferNoHinting"),
+        QT_TRANSLATE_NOOP("FontPropertyManager", "PreferVerticalHinting"),
+        QT_TRANSLATE_NOOP("FontPropertyManager", "PreferFullHinting")
+    };
+
     FontPropertyManager::FontPropertyManager()
     {
-        const int nameCount = sizeof(aliasingC)/sizeof(const char *);
-        for (int  i = 0; i < nameCount; i++)
-            m_aliasingEnumNames.push_back(QCoreApplication::translate("FontPropertyManager", aliasingC[i]));
+        for (const auto *a : aliasingC)
+            m_aliasingEnumNames.append(QCoreApplication::translate("FontPropertyManager", a));
+
+        for (const auto *h : hintingPreferenceC)
+            m_hintingPreferenceEnumNames.append(QCoreApplication::translate("FontPropertyManager", h));
 
         QString errorMessage;
         if (!readFamilyMapping(&m_familyMappings, &errorMessage)) {
@@ -93,6 +102,15 @@ namespace qdesigner_internal {
 
         m_propertyToAntialiasing[property] = antialiasing;
         m_antialiasingToProperty[antialiasing] = property;
+
+        QtVariantProperty *hintingPreference = vm->addProperty(enumTypeId, QCoreApplication::translate("FontPropertyManager", "HintingPreference"));
+        hintingPreference->setAttribute(u"enumNames"_s, m_hintingPreferenceEnumNames);
+        hintingPreference->setValue(hintingPreferenceToIndex(font.hintingPreference()));
+        property->addSubProperty(hintingPreference);
+
+        m_propertyToHintingPreference[property] = hintingPreference;
+        m_hintingPreferenceToProperty[hintingPreference] = property;
+
         // Fiddle family names
         if (!m_familyMappings.isEmpty()) {
             const PropertyToSubPropertiesMap::iterator it = m_propertyToFontSubProperties.find(m_createdFontProperty);
@@ -118,6 +136,14 @@ namespace qdesigner_internal {
             delete antialiasing;
         }
 
+        const PropertyToPropertyMap::iterator hit =  m_propertyToHintingPreference.find(property);
+        if (hit != m_propertyToHintingPreference.end()) {
+            QtProperty *hintingPreference = hit.value();
+            m_hintingPreferenceToProperty.remove(hintingPreference);
+            m_propertyToHintingPreference.erase(hit);
+            delete hintingPreference;
+        }
+
         PropertyToSubPropertiesMap::iterator sit = m_propertyToFontSubProperties.find(property);
         if (sit == m_propertyToFontSubProperties.end())
             return false;
@@ -132,6 +158,7 @@ namespace qdesigner_internal {
     void FontPropertyManager::slotPropertyDestroyed(QtProperty *property)
     {
         removeAntialiasingProperty(property);
+        removeHintingPreferenceProperty(property);
     }
 
     void FontPropertyManager::removeAntialiasingProperty(QtProperty *property)
@@ -141,6 +168,15 @@ namespace qdesigner_internal {
             return;
         m_propertyToAntialiasing[ait.value()] = 0;
         m_antialiasingToProperty.erase(ait);
+    }
+
+    void FontPropertyManager::removeHintingPreferenceProperty(QtProperty *property)
+    {
+        const PropertyToPropertyMap::iterator hit =  m_hintingPreferenceToProperty.find(property);
+        if (hit == m_hintingPreferenceToProperty.end())
+            return;
+        m_propertyToHintingPreference[hit.value()] = nullptr;
+        m_hintingPreferenceToProperty.erase(hit);
     }
 
     bool FontPropertyManager::resetFontSubProperty(QtVariantPropertyManager *vm, QtProperty *property)
@@ -184,6 +220,36 @@ namespace qdesigner_internal {
         return QFont::PreferDefault;
     }
 
+    int FontPropertyManager::hintingPreferenceToIndex(QFont::HintingPreference h)
+    {
+        switch (h) {
+        case QFont::PreferDefaultHinting:
+            return 0;
+        case QFont::PreferNoHinting:
+            return 1;
+        case QFont::PreferVerticalHinting:
+            return 2;
+        case QFont::PreferFullHinting:
+            return 3;
+        }
+        return 0;
+    }
+
+    QFont::HintingPreference FontPropertyManager::indexToHintingPreference(int idx)
+    {
+        switch (idx) {
+        case 0:
+            return QFont::PreferDefaultHinting;
+        case 1:
+            return QFont::PreferNoHinting;
+        case 2:
+            return QFont::PreferVerticalHinting;
+        case 3:
+            return QFont::PreferFullHinting;
+        }
+        return QFont::PreferDefaultHinting;
+    }
+
     unsigned FontPropertyManager::fontFlag(int idx)
     {
         switch (idx) {
@@ -195,20 +261,29 @@ namespace qdesigner_internal {
         case 5: return QFont::StrikeOutResolved;
         case 6: return QFont::KerningResolved;
         case 7: return QFont::StyleStrategyResolved;
+        case 8: return QFont::HintingPreferenceResolved;
         }
         return 0;
     }
 
     int FontPropertyManager::valueChanged(QtVariantPropertyManager *vm, QtProperty *property, const QVariant &value)
     {
-        QtProperty *antialiasingProperty = m_antialiasingToProperty.value(property, 0);
-        if (!antialiasingProperty) {
-            if (m_propertyToFontSubProperties.contains(property)) {
-                updateModifiedState(property, value);
-            }
-            return DesignerPropertyManager::NoMatch;
-        }
+        if (auto *antialiasingProperty = m_antialiasingToProperty.value(property, nullptr))
+            return antialiasingValueChanged(vm, antialiasingProperty, value);
 
+        if (auto *hintingPreferenceProperty = m_hintingPreferenceToProperty.value(property, nullptr))
+            return hintingPreferenceValueChanged(vm, hintingPreferenceProperty, value);
+
+        if (m_propertyToFontSubProperties.contains(property))
+            updateModifiedState(property, value);
+
+        return DesignerPropertyManager::NoMatch;
+    }
+
+    int FontPropertyManager::antialiasingValueChanged(QtVariantPropertyManager *vm,
+                                                      QtProperty *antialiasingProperty,
+                                                      const QVariant &value)
+    {
         QtVariantProperty *fontProperty = vm->variantProperty(antialiasingProperty);
         const QFont::StyleStrategy newValue = indexToAntialiasing(value.toInt());
 
@@ -218,6 +293,23 @@ namespace qdesigner_internal {
             return DesignerPropertyManager::Unchanged;
 
         font.setStyleStrategy(newValue);
+        fontProperty->setValue(QVariant::fromValue(font));
+        return DesignerPropertyManager::Changed;
+    }
+
+    int FontPropertyManager::hintingPreferenceValueChanged(QtVariantPropertyManager *vm,
+                                                           QtProperty *hintingPreferenceProperty,
+                                                           const QVariant &value)
+    {
+        QtVariantProperty *fontProperty = vm->variantProperty(hintingPreferenceProperty);
+        const QFont::HintingPreference newValue = indexToHintingPreference(value.toInt());
+
+        QFont font = qvariant_cast<QFont>(fontProperty->value());
+        const QFont::HintingPreference oldValue = font.hintingPreference();
+        if (newValue == oldValue)
+            return DesignerPropertyManager::Unchanged;
+
+        font.setHintingPreference(newValue);
         fontProperty->setValue(QVariant::fromValue(font));
         return DesignerPropertyManager::Changed;
     }
@@ -251,6 +343,14 @@ namespace qdesigner_internal {
                 antialiasing->setValue(antialiasingToIndex(font.styleStrategy()));
             }
         }
+
+        if (QtProperty *hintingPreferenceProperty = m_propertyToHintingPreference.value(property, nullptr)) {
+            if (auto *hintingPreference = vm->variantProperty(hintingPreferenceProperty)) {
+                QFont font = qvariant_cast<QFont>(value);
+                hintingPreference->setValue(hintingPreferenceToIndex(font.hintingPreference()));
+            }
+        }
+
     }
 
     /* Parse a mappings file of the form:

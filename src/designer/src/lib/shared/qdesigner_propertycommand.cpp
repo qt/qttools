@@ -246,6 +246,7 @@ quint64 compareSubProperties(const QFont & f1, const QFont & f2)
     compareFontSubProperty(f1, f2, &QFont::strikeOut,     QFont::StrikeOutResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::kerning,       QFont::KerningResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::styleStrategy, QFont::StyleStrategyResolved, rc);
+    compareFontSubProperty(f1, f2, &QFont::hintingPreference, QFont::HintingPreferenceResolved, rc);
     if (debugPropertyCommands)
         qDebug() << "compareSubProperties " <<  fontString(f1) << fontString(f2) << "\n\treturns " << fontMask(rc);
     return rc;
@@ -447,6 +448,7 @@ QFont applyFontSubProperty(const QFont &oldValue, const QFont &newValue, unsigne
     setFontSubProperty(mask, newValue, QFont::StrikeOutResolved,     &QFont::strikeOut,     &QFont::setStrikeOut, rc);
     setFontSubProperty(mask, newValue, QFont::KerningResolved,       &QFont::kerning,       &QFont::setKerning, rc);
     setFontSubProperty(mask, newValue, QFont::StyleStrategyResolved, &QFont::styleStrategy, &QFont::setStyleStrategy, rc);
+    setFontSubProperty(mask, newValue, QFont::HintingPreferenceResolved, &QFont::hintingPreference, &QFont::setHintingPreference, rc);
     if (debugPropertyCommands)
         qDebug() << "applyFontSubProperty old " <<  fontMask(oldValue.resolveMask()) << " new " << fontMask(newValue.resolveMask()) << " return: " << fontMask(rc.resolveMask());
     return rc;
