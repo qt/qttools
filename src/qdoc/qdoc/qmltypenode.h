@@ -35,8 +35,6 @@ public:
     void setWrapper() override { m_wrapper = true; }
     [[nodiscard]] bool isInternal() const override { return (status() == Internal); }
     [[nodiscard]] QString qmlFullBaseName() const override;
-    [[nodiscard]] QString obsoleteLink() const override { return m_obsoleteLink; }
-    void setObsoleteLink(const QString &t) override { m_obsoleteLink = t; }
     [[nodiscard]] QString logicalModuleName() const override;
     [[nodiscard]] QString logicalModuleVersion() const override;
     [[nodiscard]] QString logicalModuleIdentifier() const override;
@@ -61,7 +59,6 @@ private:
     bool m_wrapper { false };
     ClassNode *m_classNode { nullptr };
     QString m_qmlBaseName {};
-    QString m_obsoleteLink {};
     CollectionNode *m_logicalModule { nullptr };
     QmlTypeNode *m_qmlBaseNode { nullptr };
     ImportList m_importList {};

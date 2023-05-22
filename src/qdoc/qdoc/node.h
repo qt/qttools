@@ -234,9 +234,6 @@ public:
     [[nodiscard]] const QString &name() const { return m_name; }
     [[nodiscard]] QString physicalModuleName() const { return m_physicalModuleName; }
     [[nodiscard]] QString url() const { return m_url; }
-    [[nodiscard]] virtual QString nameForLists() const { return m_name; }
-    [[nodiscard]] virtual QString obsoleteLink() const { return QString(); }
-    virtual void setObsoleteLink(const QString &) {}
     virtual void setQtVariable(const QString &) {}
     [[nodiscard]] virtual QString qtVariable() const { return QString(); }
     virtual void setQtCMakeComponent(const QString &) {}

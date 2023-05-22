@@ -35,8 +35,6 @@ public:
         m_subtitle = subtitle;
         return true;
     }
-    [[nodiscard]] QString nameForLists() const override { return title(); }
-
     [[nodiscard]] virtual QString imageFileName() const { return QString(); }
     virtual void setImageFileName(const QString &) {}
 

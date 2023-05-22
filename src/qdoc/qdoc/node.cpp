@@ -1168,21 +1168,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   Returns the node's name data member.
 */
 
-/*! \fn QString Node::nameForLists() const
-  If this node is a PageNode or a HeaderNode, title() is returned.
-  Otherwise name() is returned.
- */
-
-/*! \fn QString Node::obsoleteLink() const
-  If this node is a ClassNode or a QmlTypeNode, the link to the obsolete members
-  page is returned. Otherwise an empty string is returned.
- */
-
-/*! \fn void Node::setObsoleteLink(const QString &t)
-  If this node is a ClassNode or a QmlTypeNode, the link to the obsolete members
-  page is set to \a t. Otherwise the function does nothing.
- */
-
 /*! \fn void Node::setQtVariable(const QString &v)
   If this node is a CollectionNode, its QT variable is set to \a v.
   Otherwise the function does nothing. I don't know what the QT variable

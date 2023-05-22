@@ -86,10 +86,6 @@ bool PageNode::setTitle(const QString &title)
   \sa Aggregate.
  */
 
-/*! \fn QString PageNode::nameForLists() const
-  Returns the title().
- */
-
 /*! \fn QString PageNode::imageFileName() const
   If this PageNode is an ExampleNode, the image file name
   data member is returned. Otherwise an empty string is

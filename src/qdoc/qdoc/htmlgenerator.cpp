@@ -2498,7 +2498,6 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
     if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
         link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
     link += fileName;
-    aggregate->setObsoleteLink(link);
 
     beginSubPage(aggregate, fileName);
     generateHeader(title, aggregate, marker);
@@ -2551,7 +2550,6 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
     if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
         link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
     link += fileName;
-    aggregate->setObsoleteLink(link);
 
     beginSubPage(aggregate, fileName);
     generateHeader(title, aggregate, marker);

@@ -34,7 +34,6 @@ public:
         m_subtitle = subtitle;
         return true;
     }
-    [[nodiscard]] QString nameForLists() const override { return title(); }
     [[nodiscard]] bool hasDocumentedChildren() const;
 
 private:

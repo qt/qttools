@@ -27,8 +27,6 @@ public:
     [[nodiscard]] bool isClassNode() const override { return true; }
     [[nodiscard]] bool isRelatableType() const override { return true; }
     [[nodiscard]] bool isWrapper() const override { return m_wrapper; }
-    [[nodiscard]] QString obsoleteLink() const override { return m_obsoleteLink; }
-    void setObsoleteLink(const QString &t) override { m_obsoleteLink = t; }
     void setWrapper() override { m_wrapper = true; }
 
     void addResolvedBaseClass(Access access, ClassNode *node);
@@ -62,7 +60,6 @@ private:
     QList<RelatedClass> m_ignoredBases {};
     bool m_abstract { false };
     bool m_wrapper { false };
-    QString m_obsoleteLink {};
     QmlTypeNode *m_qmlElement { nullptr };
 };
 
