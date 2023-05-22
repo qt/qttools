@@ -60,19 +60,32 @@ private:
     using PropertyToSubPropertiesMap = QMap<QtProperty *, PropertyList>;
 
     void removeAntialiasingProperty(QtProperty *);
+    void removeHintingPreferenceProperty(QtProperty *);
+    int antialiasingValueChanged(QtVariantPropertyManager *vm,
+                                 QtProperty *antialiasingProperty, const QVariant &value);
+    int hintingPreferenceValueChanged(QtVariantPropertyManager *vm,
+                                      QtProperty *hintingPreferenceProperty,
+                                      const QVariant &value);
     void updateModifiedState(QtProperty *property, const QVariant &value);
     static int antialiasingToIndex(QFont::StyleStrategy antialias);
     static QFont::StyleStrategy indexToAntialiasing(int idx);
+    static int hintingPreferenceToIndex(QFont::HintingPreference h);
+    static QFont::HintingPreference indexToHintingPreference(int idx);
+
     static unsigned fontFlag(int idx);
 
     PropertyToPropertyMap m_propertyToAntialiasing;
     PropertyToPropertyMap m_antialiasingToProperty;
+    PropertyToPropertyMap m_propertyToHintingPreference;
+    PropertyToPropertyMap m_hintingPreferenceToProperty;
+
 
     PropertyToSubPropertiesMap m_propertyToFontSubProperties;
     QMap<QtProperty *, int> m_fontSubPropertyToFlag;
     PropertyToPropertyMap m_fontSubPropertyToProperty;
     QtProperty *m_createdFontProperty = nullptr;
     QStringList m_aliasingEnumNames;
+    QStringList m_hintingPreferenceEnumNames;
     // Font families with Designer annotations
     QStringList m_designerFamilyNames;
     NameMap m_familyMappings;
