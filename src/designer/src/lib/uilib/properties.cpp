@@ -210,6 +210,10 @@ QVariant domPropertyToVariant(const DomProperty *p)
             f.setStyleStrategy(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QFont::StyleStrategy>("styleStrategy",
                                                                                                         font->elementStyleStrategy().toLatin1().constData()));
         }
+        if (font->hasElementHintingPreference()) {
+            f.setHintingPreference(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QFont::HintingPreference>("hintingPreference",
+                                                                                                                font->elementHintingPreference().toLatin1().constData()));
+        }
         return QVariant::fromValue(f);
     }
 
@@ -430,6 +434,11 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
             const QMetaEnum styleStrategy_enum = metaEnum<QAbstractFormBuilderGadget>("styleStrategy");
             fnt->setElementStyleStrategy(QLatin1String(styleStrategy_enum.valueToKey(font.styleStrategy())));
         }
+        if (mask & QFont::HintingPreferenceResolved) {
+            const QMetaEnum hintingPreference_enum = metaEnum<QAbstractFormBuilderGadget>("hintingPreference");
+            fnt->setElementHintingPreference(QLatin1String(hintingPreference_enum.valueToKey(font.hintingPreference())));
+        }
+
         dom_prop->setElementFont(fnt);
     }
         return true;
