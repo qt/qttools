@@ -62,8 +62,6 @@ private:
 
 int main(int argc, char **argv)
 {
-    Q_INIT_RESOURCE(linguist);
-
     QApplication app(argc, argv);
     QApplication::setOverrideCursor(Qt::WaitCursor);
 

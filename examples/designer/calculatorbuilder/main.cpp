@@ -51,8 +51,6 @@ static QWidget *loadCalculatorForm(QWidget *parent = nullptr)
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(calculatorbuilder);
-
     QApplication app(argc, argv);
     QWidget w;
     auto *formWidget = loadCalculatorForm(&w);
