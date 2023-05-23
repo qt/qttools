@@ -289,6 +289,15 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         { "ThreeDimensionalTextures", QRhi::ThreeDimensionalTextures },
         { "RenderTo3DTextureSlice", QRhi::RenderTo3DTextureSlice },
         { "TextureArrays", QRhi::TextureArrays },
+        { "Tessellation", QRhi::Tessellation },
+        { "GeometryShader", QRhi::GeometryShader },
+        { "TextureArrayRange", QRhi::TextureArrayRange },
+        { "NonFillPolygonMode", QRhi::NonFillPolygonMode },
+        { "OneDimensionalTextures", QRhi::OneDimensionalTextures },
+        { "OneDimensionalTextureMipmaps", QRhi::OneDimensionalTextureMipmaps },
+        { "HalfAttributes", QRhi::HalfAttributes },
+        { "RenderToOneDimensionalTexture", QRhi::RenderToOneDimensionalTexture },
+        { "ThreeDimensionalTextureMipmaps", QRhi::ThreeDimensionalTextureMipmaps },
 
         { nullptr, QRhi::Feature(0) }
     };
@@ -300,14 +309,18 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         { "RGBA8", QRhiTexture::RGBA8 },
         { "BGRA8", QRhiTexture::BGRA8 },
         { "R8", QRhiTexture::R8 },
-        { "R16", QRhiTexture::R16 },
         { "RG8", QRhiTexture::RG8 },
+        { "R16", QRhiTexture::R16 },
+        { "RG16", QRhiTexture::RG16 },
         { "RED_OR_ALPHA8", QRhiTexture::RED_OR_ALPHA8 },
         { "RGBA16F", QRhiTexture::RGBA16F },
         { "RGBA32F", QRhiTexture::RGBA32F },
         { "R16F", QRhiTexture::R16F },
         { "R32F", QRhiTexture::R32F },
+        { "RGB10A2", QRhiTexture::RGB10A2 },
         { "D16", QRhiTexture::D16 },
+        { "D24", QRhiTexture::D24 },
+        { "D24S8", QRhiTexture::D24S8 },
         { "D32F", QRhiTexture::D32F },
         { "BC1", QRhiTexture::BC1 },
         { "BC2", QRhiTexture::BC2 },
@@ -352,6 +365,8 @@ void dumpRhiBackendInfo(QTextStream &str, const char *name, QRhi::Implementation
         str << "  MaxThreadGroupZ: " << rhi->resourceLimit(QRhi::MaxThreadGroupZ) << "\n";
         str << "  TextureArraySizeMax: " << rhi->resourceLimit(QRhi::TextureArraySizeMax) << "\n";
         str << "  MaxUniformBufferRange: " << rhi->resourceLimit(QRhi::MaxUniformBufferRange) << "\n";
+        str << "  MaxVertexInputs: " << rhi->resourceLimit(QRhi::MaxVertexInputs) << "\n";
+        str << "  MaxVertexOutputs: " << rhi->resourceLimit(QRhi::MaxVertexOutputs) << "\n";
         str << "  Uniform Buffer Alignment: " << rhi->ubufAlignment() << "\n";
         QByteArrayList supportedSampleCounts;
         for (int s : rhi->supportedSampleCounts())
@@ -398,6 +413,10 @@ void dumpRhiInfo(QTextStream &str)
     {
         QRhiD3D11InitParams params;
         dumpRhiBackendInfo(str, "Direct3D 11", QRhi::D3D11, &params);
+    }
+    {
+        QRhiD3D12InitParams params;
+        dumpRhiBackendInfo(str, "Direct3D 12", QRhi::D3D12, &params);
     }
 #endif
 
