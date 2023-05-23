@@ -17,6 +17,8 @@
 #include <QtWidgets/qframe.h>
 #include <QtWidgets/qabstractscrollarea.h>
 
+#include <limits>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -111,6 +113,15 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
     return domPropertyToVariant(p);
 }
 
+// Convert a legacy Qt 4 integer font weight to the closes enumeration value
+
+static inline QMetaEnum fontWeightMetaEnum()
+{
+    const QMetaEnum result = metaEnum<QAbstractFormBuilderGadget>("fontWeight");
+    Q_ASSERT(result.isValid());
+    return result;
+}
+
 // Convert simple DOM types
 QVariant domPropertyToVariant(const DomProperty *p)
 {
@@ -196,8 +207,6 @@ QVariant domPropertyToVariant(const DomProperty *p)
             f.setPointSize(font->elementPointSize());
         if (font->hasElementItalic())
             f.setItalic(font->elementItalic());
-        if (font->hasElementBold())
-            f.setBold(font->elementBold());
         if (font->hasElementUnderline())
             f.setUnderline(font->elementUnderline());
         if (font->hasElementStrikeOut())
@@ -214,6 +223,15 @@ QVariant domPropertyToVariant(const DomProperty *p)
             f.setHintingPreference(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QFont::HintingPreference>("hintingPreference",
                                                                                                                 font->elementHintingPreference().toLatin1().constData()));
         }
+
+        if (font->hasElementFontWeight()) {
+            f.setWeight(enumKeyOfObjectToValue<QAbstractFormBuilderGadget, QFont::Weight>(
+                "fontWeight",
+                font->elementFontWeight().toLatin1().constData()));
+        } else if (font->hasElementBold()) {
+            f.setBold(font->elementBold());
+        }
+
         return QVariant::fromValue(f);
     }
 
@@ -416,8 +434,22 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         DomFont *fnt = new DomFont();
         const QFont font = qvariant_cast<QFont>(v);
         const uint mask = font.resolveMask();
-        if (mask & QFont::WeightResolved)
-            fnt->setElementBold(font.bold());
+        if (mask & QFont::WeightResolved) {
+            switch (font.weight()) {
+            case QFont::Normal:
+                fnt->setElementBold(false);
+                break;
+            case QFont::Bold:
+                fnt->setElementBold(true);
+                break;
+            default: {
+                const QMetaEnum me = fontWeightMetaEnum();
+                const QString ws = QLatin1StringView(me.valueToKey(font.weight()));
+                fnt->setElementFontWeight(ws);
+            }
+                break;
+            }
+        }
         if ((mask & (QFont::FamilyResolved | QFont::FamiliesResolved)) != 0)
             fnt->setElementFamily(font.family());
         if (mask & QFont::StyleResolved)
