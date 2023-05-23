@@ -49,6 +49,7 @@
         <xsl:when test="$text='strikeout'">strikeOut</xsl:when>
         <xsl:when test="$text='stylestrategy'">styleStrategy</xsl:when>
         <xsl:when test="$text='hintingpreference'">hintingPreference</xsl:when>
+        <xsl:when test="$text='fontweight'">fontWeight</xsl:when>
         <xsl:when test="$text='hsizetype'">hSizeType</xsl:when>
         <xsl:when test="$text='vsizetype'">vSizeType</xsl:when>
         <xsl:when test="$text='horstretch'">horStretch</xsl:when>
