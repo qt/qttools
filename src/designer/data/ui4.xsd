@@ -301,6 +301,7 @@
                 <xs:all>
                         <xs:element name="family" type="xs:string" minOccurs="0" />
                         <xs:element name="pointsize" type="xs:integer" minOccurs="0" />
+                        <!-- Qt 4 legacy (int) -->
                         <xs:element name="weight" type="xs:integer" minOccurs="0" />
                         <xs:element name="italic" type="xs:boolean" minOccurs="0" />
                         <xs:element name="bold" type="xs:boolean" minOccurs="0" />
@@ -310,6 +311,8 @@
                         <xs:element name="stylestrategy" type="xs:string" minOccurs="0" />
                         <xs:element name="kerning" type="xs:boolean" minOccurs="0" />
                         <xs:element name="hintingpreference" type="xs:string" minOccurs="0"/>
+                        <!-- Qt 5/6 (enum) -->
+                        <xs:element name="fontweight" type="xs:string" minOccurs="0"/>
                 </xs:all>
         </xs:complexType>
 
