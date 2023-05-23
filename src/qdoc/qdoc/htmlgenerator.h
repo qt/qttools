@@ -10,7 +10,6 @@
 
 #include <QtCore/qhash.h>
 #include <QtCore/qregularexpression.h>
-#include <QtCore/qxmlstream.h>
 
 QT_BEGIN_NAMESPACE
 
