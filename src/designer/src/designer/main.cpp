@@ -14,8 +14,6 @@ static const char rhiBackEndVar[] = "QSG_RHI_BACKEND";
 
 int main(int argc, char *argv[])
 {
-    Q_INIT_RESOURCE(designer);
-
     // Enable the QWebEngineView, QQuickWidget plugins on Windows.
     if (QOperatingSystemVersion::currentType() == QOperatingSystemVersion::Windows
         && !qEnvironmentVariableIsSet(rhiBackEndVar)) {
