@@ -56,6 +56,7 @@ class QAbstractFormBuilderGadget: public QWidget
     Q_PROPERTY(QPalette::ColorGroup colorGroup READ fakeColorGroup)
     Q_PROPERTY(QFont::StyleStrategy styleStrategy READ fakeStyleStrategy)
     Q_PROPERTY(QFont::HintingPreference hintingPreference READ fakeHintingPreference)
+    Q_PROPERTY(QFont::Weight fontWeight READ fakeFontWeight)
     Q_PROPERTY(Qt::CursorShape cursorShape READ fakeCursorShape)
     Q_PROPERTY(Qt::BrushStyle brushStyle READ fakeBrushStyle)
     Q_PROPERTY(Qt::ToolBarArea toolBarArea READ fakeToolBarArea)
@@ -73,6 +74,7 @@ public:
     QPalette::ColorRole fakeColorRole() const   { Q_ASSERT(0); return static_cast<QPalette::ColorRole>(0); }
     QFont::StyleStrategy fakeStyleStrategy() const     { Q_ASSERT(0); return QFont::PreferDefault; }
     QFont::HintingPreference fakeHintingPreference() const { Q_ASSERT(0); return QFont::PreferDefaultHinting; }
+    QFont::Weight fakeFontWeight() const { Q_ASSERT(0); return QFont::Weight::Normal; }
     Qt::CursorShape fakeCursorShape() const     { Q_ASSERT(0); return Qt::ArrowCursor; }
     Qt::BrushStyle fakeBrushStyle() const       { Q_ASSERT(0); return Qt::NoBrush; }
     Qt::ToolBarArea fakeToolBarArea() const {  Q_ASSERT(0); return Qt::NoToolBarArea; }
