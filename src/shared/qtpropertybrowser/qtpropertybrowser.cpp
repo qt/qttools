@@ -1296,9 +1296,9 @@ void QtAbstractPropertyBrowserPrivate::createBrowserIndexes(QtProperty *property
             return;
 
         for (QtBrowserItem *idx : it.value())
-            parentToAfter[idx] = 0;
+            parentToAfter[idx] = nullptr;
     } else {
-        parentToAfter[0] = 0;
+        parentToAfter[nullptr] = nullptr;
     }
 
     const QMap<QtBrowserItem *, QtBrowserItem *>::ConstIterator pcend = parentToAfter.constEnd();
