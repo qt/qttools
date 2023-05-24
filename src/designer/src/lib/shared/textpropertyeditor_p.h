@@ -31,8 +31,6 @@ namespace qdesigner_internal {
     // corresponds to that of QLineEdit.
     class QDESIGNER_SHARED_EXPORT TextPropertyEditor : public QWidget
     {
-        TextPropertyEditor(const TextPropertyEditor &);
-        TextPropertyEditor& operator=(const TextPropertyEditor &);
         Q_OBJECT
         Q_PROPERTY(QString text READ text WRITE setText USER true)
     public:

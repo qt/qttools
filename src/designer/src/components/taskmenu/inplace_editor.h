@@ -37,9 +37,8 @@ private:
 // To use it for a particular widget/property, overwrite the method
 // returning the edit area.
 
-class TaskMenuInlineEditor : public QObject {
-    TaskMenuInlineEditor(const TaskMenuInlineEditor&);
-    TaskMenuInlineEditor &operator=(const TaskMenuInlineEditor&);
+class TaskMenuInlineEditor : public QObject
+{
     Q_OBJECT
 
 public slots:
