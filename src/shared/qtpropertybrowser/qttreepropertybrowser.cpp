@@ -250,15 +250,15 @@ void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
             m_editorToProperty.erase(it);
         }
         if (m_editedWidget == w) {
-            m_editedWidget = 0;
-            m_editedItem = 0;
+            m_editedWidget = nullptr;
+            m_editedItem = nullptr;
         }
     }
 }
 
 void QtPropertyEditorDelegate::closeEditor(QtProperty *property)
 {
-    if (QWidget *w = m_propertyToEditor.value(property, 0))
+    if (QWidget *w = m_propertyToEditor.value(property, nullptr))
         w->deleteLater();
 }
 
@@ -434,8 +434,8 @@ QtBrowserItem *QtTreePropertyBrowserPrivate::currentItem() const
 void QtTreePropertyBrowserPrivate::setCurrentItem(QtBrowserItem *browserItem, bool block)
 {
     const bool blocked = block ? m_treeWidget->blockSignals(true) : false;
-    if (browserItem == 0)
-        m_treeWidget->setCurrentItem(0);
+    if (browserItem == nullptr)
+        m_treeWidget->setCurrentItem(nullptr);
     else
         m_treeWidget->setCurrentItem(m_indexToItem.value(browserItem));
     if (block)
@@ -638,7 +638,7 @@ QTreeWidgetItem *QtTreePropertyBrowserPrivate::editedItem() const
 
 void QtTreePropertyBrowserPrivate::editItem(QtBrowserItem *browserItem)
 {
-    if (QTreeWidgetItem *treeItem = m_indexToItem.value(browserItem, 0)) {
+    if (QTreeWidgetItem *treeItem = m_indexToItem.value(browserItem, nullptr)) {
         m_treeWidget->setCurrentItem (treeItem, 1);
         m_treeWidget->editItem(treeItem, 1);
     }
