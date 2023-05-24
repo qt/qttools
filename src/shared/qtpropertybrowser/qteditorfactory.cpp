@@ -73,7 +73,7 @@ Editor *EditorFactoryPrivate<Editor>::createEditor(QtProperty *property, QWidget
 template <class Editor>
 void EditorFactoryPrivate<Editor>::initializeEditor(QtProperty *property, Editor *editor)
 {
-    typename PropertyToEditorListMap::iterator it = m_createdEditors.find(property);
+    auto it = m_createdEditors.find(property);
     if (it == m_createdEditors.end())
         it = m_createdEditors.insert(property, EditorList());
     it.value().append(editor);
@@ -83,12 +83,12 @@ void EditorFactoryPrivate<Editor>::initializeEditor(QtProperty *property, Editor
 template <class Editor>
 void EditorFactoryPrivate<Editor>::slotEditorDestroyed(QObject *object)
 {
-    const typename EditorToPropertyMap::iterator ecend = m_editorToProperty.end();
-    for (typename EditorToPropertyMap::iterator itEditor = m_editorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
+    const auto ecend = m_editorToProperty.end();
+    for (auto itEditor = m_editorToProperty.begin(); itEditor !=  ecend; ++itEditor) {
         if (itEditor.key() == object) {
             Editor *editor = itEditor.key();
             QtProperty *property = itEditor.value();
-            const typename PropertyToEditorListMap::iterator pit = m_createdEditors.find(property);
+            const auto pit = m_createdEditors.find(property);
             if (pit != m_createdEditors.end()) {
                 pit.value().removeAll(editor);
                 if (pit.value().isEmpty())
@@ -2194,7 +2194,7 @@ public:
 void QtColorEditorFactoryPrivate::slotPropertyChanged(QtProperty *property,
                 const QColor &value)
 {
-    const PropertyToEditorListMap::const_iterator it = m_createdEditors.constFind(property);
+    const auto it = m_createdEditors.constFind(property);
     if (it == m_createdEditors.constEnd())
         return;
 
@@ -2409,7 +2409,7 @@ public:
 void QtFontEditorFactoryPrivate::slotPropertyChanged(QtProperty *property,
                 const QFont &value)
 {
-    const PropertyToEditorListMap::const_iterator it = m_createdEditors.constFind(property);
+    const auto it = m_createdEditors.constFind(property);
     if (it == m_createdEditors.constEnd())
         return;
 
