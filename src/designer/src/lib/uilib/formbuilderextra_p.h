@@ -59,6 +59,8 @@ class QTextBuilder;
 class QDESIGNER_UILIB_EXPORT QFormBuilderExtra
 {
 public:
+    Q_DISABLE_COPY_MOVE(QFormBuilderExtra);
+
     QFormBuilderExtra();
     ~QFormBuilderExtra();
 

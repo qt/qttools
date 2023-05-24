@@ -28,6 +28,8 @@ namespace qt {
 class Writer
 {
 public:
+    Q_DISABLE_COPY_MOVE(Writer);
+
     Writer(const QString &path);
     ~Writer();
 

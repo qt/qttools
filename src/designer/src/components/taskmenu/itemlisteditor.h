@@ -28,8 +28,10 @@ class DesignerEditorFactory;
 class BoolBlocker
 {
 public:
-    inline BoolBlocker(bool &b):block(b), reset(b){block = true;}
-    inline ~BoolBlocker(){block = reset; }
+    Q_DISABLE_COPY_MOVE(BoolBlocker);
+
+    inline explicit BoolBlocker(bool &b) noexcept : block(b), reset(b) { block = true; }
+    inline ~BoolBlocker() noexcept { block = reset; }
 private:
     bool &block;
     bool reset;

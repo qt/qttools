@@ -26,6 +26,8 @@ QT_BEGIN_NAMESPACE
 class Transaction
 {
 public:
+    Q_DISABLE_COPY_MOVE(Transaction);
+
     Transaction(const QString &connectionName)
         : m_db(QSqlDatabase::database(connectionName)),
           m_inTransaction(m_db.driver()->hasFeature(QSqlDriver::Transactions))

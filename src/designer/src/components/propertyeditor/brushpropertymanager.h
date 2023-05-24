@@ -21,11 +21,11 @@ namespace qdesigner_internal {
 // BrushPropertyManager: A mixin for DesignerPropertyManager that manages brush properties.
 
 class BrushPropertyManager {
-    BrushPropertyManager(const BrushPropertyManager&);
-    BrushPropertyManager &operator=(const BrushPropertyManager&);
-
 public:
+    Q_DISABLE_COPY_MOVE(BrushPropertyManager);
+
     BrushPropertyManager();
+    ~BrushPropertyManager();
 
     void initializeProperty(QtVariantPropertyManager *vm, QtProperty *property, int enumTypeId);
     bool uninitializeProperty(QtProperty *property);

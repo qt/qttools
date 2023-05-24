@@ -122,6 +122,8 @@ QString BrushPropertyManager::brushStyleIndexToString(int brushStyleIndex)
     return brushStyleIndex < brushStyleCount ? QCoreApplication::translate("BrushPropertyManager", brushStyles[brushStyleIndex]) :  QString();
 }
 
+BrushPropertyManager::~BrushPropertyManager() = default;
+
 void BrushPropertyManager::initializeProperty(QtVariantPropertyManager *vm, QtProperty *property, int enumTypeId)
 {
     m_brushValues.insert(property, QBrush());
