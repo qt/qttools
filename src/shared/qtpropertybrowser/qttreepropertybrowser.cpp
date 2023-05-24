@@ -244,7 +244,7 @@ int QtPropertyEditorDelegate::indentation(const QModelIndex &index) const
 void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
 {
     if (QWidget *w = qobject_cast<QWidget *>(object)) {
-        const EditorToPropertyMap::iterator it = m_editorToProperty.find(w);
+        const auto it = m_editorToProperty.find(w);
         if (it != m_editorToProperty.end()) {
             m_propertyToEditor.remove(it.value());
             m_editorToProperty.erase(it);
@@ -591,9 +591,9 @@ void QtTreePropertyBrowserPrivate::updateItem(QTreeWidgetItem *item)
 QColor QtTreePropertyBrowserPrivate::calculatedBackgroundColor(QtBrowserItem *item) const
 {
     QtBrowserItem *i = item;
-    const QMap<QtBrowserItem *, QColor>::const_iterator itEnd = m_indexToBackgroundColor.constEnd();
+    const auto itEnd = m_indexToBackgroundColor.constEnd();
     while (i) {
-        QMap<QtBrowserItem *, QColor>::const_iterator it = m_indexToBackgroundColor.constFind(i);
+        auto it = m_indexToBackgroundColor.constFind(i);
         if (it != itEnd)
             return it.value();
         i = i->parent();

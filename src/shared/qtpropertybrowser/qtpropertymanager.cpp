@@ -560,8 +560,7 @@ public:
         void setMaximumValue(int newMaxVal) { setSimpleMaximumData(this, newMaxVal); }
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -686,7 +685,7 @@ int QtIntPropertyManager::singleStep(const QtProperty *property) const
 */
 QString QtIntPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtIntPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     return QString::number(it.value().val);
@@ -781,7 +780,7 @@ void QtIntPropertyManager::setRange(QtProperty *property, int minVal, int maxVal
 */
 void QtIntPropertyManager::setSingleStep(QtProperty *property, int step)
 {
-    const QtIntPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -837,8 +836,7 @@ public:
         void setMaximumValue(double newMaxVal) { setSimpleMaximumData(this, newMaxVal); }
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -984,7 +982,7 @@ int QtDoublePropertyManager::decimals(const QtProperty *property) const
 */
 QString QtDoublePropertyManager::valueText(const QtProperty *property) const
 {
-    const QtDoublePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     return QString::number(it.value().val, 'f', it.value().decimals);
@@ -1019,7 +1017,7 @@ void QtDoublePropertyManager::setValue(QtProperty *property, double val)
 */
 void QtDoublePropertyManager::setSingleStep(QtProperty *property, double step)
 {
-    const QtDoublePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -1049,7 +1047,7 @@ void QtDoublePropertyManager::setSingleStep(QtProperty *property, double step)
 */
 void QtDoublePropertyManager::setDecimals(QtProperty *property, int prec)
 {
-    const QtDoublePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -1160,7 +1158,6 @@ public:
         QRegularExpression regExp;
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
     QMap<const QtProperty *, Data> m_values;
 };
 
@@ -1255,7 +1252,7 @@ QRegularExpression QtStringPropertyManager::regExp(const QtProperty *property) c
 */
 QString QtStringPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtStringPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     return it.value().val;
@@ -1273,7 +1270,7 @@ QString QtStringPropertyManager::valueText(const QtProperty *property) const
 */
 void QtStringPropertyManager::setValue(QtProperty *property, const QString &val)
 {
-    const QtStringPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -1302,7 +1299,7 @@ void QtStringPropertyManager::setValue(QtProperty *property, const QString &val)
 */
 void QtStringPropertyManager::setRegExp(QtProperty *property, const QRegularExpression &regExp)
 {
-    const QtStringPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -1444,7 +1441,7 @@ bool QtBoolPropertyManager::value(const QtProperty *property) const
 */
 QString QtBoolPropertyManager::valueText(const QtProperty *property) const
 {
-    const QMap<const QtProperty *, bool>::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -1458,7 +1455,7 @@ QString QtBoolPropertyManager::valueText(const QtProperty *property) const
 */
 QIcon QtBoolPropertyManager::valueIcon(const QtProperty *property) const
 {
-    const QMap<const QtProperty *, bool>::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
 
@@ -1518,7 +1515,6 @@ public:
 
     QString m_format;
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
     QMap<const QtProperty *, Data> m_values;
 };
 
@@ -1627,7 +1623,7 @@ QDate QtDatePropertyManager::maximum(const QtProperty *property) const
 */
 QString QtDatePropertyManager::valueText(const QtProperty *property) const
 {
-    const QtDatePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     return it.value().val.toString(d_ptr->m_format);
@@ -1740,8 +1736,7 @@ public:
 
     const QString m_format;
 
-    typedef QMap<const QtProperty *, QTime> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QTime> m_values;
 };
 
 QtTimePropertyManagerPrivate::QtTimePropertyManagerPrivate(QtTimePropertyManager *q) :
@@ -1812,7 +1807,7 @@ QTime QtTimePropertyManager::value(const QtProperty *property) const
 */
 QString QtTimePropertyManager::valueText(const QtProperty *property) const
 {
-   const QtTimePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+   const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     return it.value().toString(d_ptr->m_format);
@@ -1860,8 +1855,7 @@ public:
 
     const QString m_format;
 
-    typedef QMap<const QtProperty *, QDateTime> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QDateTime> m_values;
 };
 
 QtDateTimePropertyManagerPrivate::QtDateTimePropertyManagerPrivate(QtDateTimePropertyManager *q) :
@@ -1928,7 +1922,7 @@ QDateTime QtDateTimePropertyManager::value(const QtProperty *property) const
 */
 QString QtDateTimePropertyManager::valueText(const QtProperty *property) const
 {
-   const QtDateTimePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+   const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     return it.value().toString(d_ptr->m_format);
@@ -1975,8 +1969,7 @@ public:
 
     QString m_format;
 
-    typedef QMap<const QtProperty *, QKeySequence> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QKeySequence> m_values;
 };
 
 /*! \class QtKeySequencePropertyManager
@@ -2039,7 +2032,7 @@ QKeySequence QtKeySequencePropertyManager::value(const QtProperty *property) con
 */
 QString QtKeySequencePropertyManager::valueText(const QtProperty *property) const
 {
-    const QtKeySequencePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     return it.value().toString(QKeySequence::NativeText);
@@ -2084,8 +2077,7 @@ class QtCharPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtCharPropertyManager)
 public:
 
-    typedef QMap<const QtProperty *, QChar> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QChar> m_values;
 };
 
 /*! \class QtCharPropertyManager
@@ -2148,7 +2140,7 @@ QChar QtCharPropertyManager::value(const QtProperty *property) const
 */
 QString QtCharPropertyManager::valueText(const QtProperty *property) const
 {
-   const QtCharPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+   const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QChar c = it.value();
@@ -2197,8 +2189,7 @@ public:
     void slotEnumChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    typedef QMap<const QtProperty *, QLocale> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QLocale> m_values;
 
     QtEnumPropertyManager *m_enumPropertyManager = nullptr;
 
@@ -2329,7 +2320,7 @@ QLocale QtLocalePropertyManager::value(const QtProperty *property) const
 */
 QString QtLocalePropertyManager::valueText(const QtProperty *property) const
 {
-    const QtLocalePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -2362,7 +2353,7 @@ QString QtLocalePropertyManager::valueText(const QtProperty *property) const
 */
 void QtLocalePropertyManager::setValue(QtProperty *property, const QLocale &val)
 {
-    const QtLocalePropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -2448,8 +2439,7 @@ public:
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    typedef QMap<const QtProperty *, QPoint> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QPoint> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
@@ -2573,7 +2563,7 @@ QPoint QtPointPropertyManager::value(const QtProperty *property) const
 */
 QString QtPointPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtPointPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QPoint v = it.value();
@@ -2590,7 +2580,7 @@ QString QtPointPropertyManager::valueText(const QtProperty *property) const
 */
 void QtPointPropertyManager::setValue(QtProperty *property, const QPoint &val)
 {
-    const QtPointPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -2666,8 +2656,7 @@ public:
     void slotDoubleChanged(QtProperty *property, double value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 
     QtDoublePropertyManager *m_doublePropertyManager;
 
@@ -2811,7 +2800,7 @@ int QtPointFPropertyManager::decimals(const QtProperty *property) const
 */
 QString QtPointFPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtPointFPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QPointF v = it.value().val;
@@ -2830,7 +2819,7 @@ QString QtPointFPropertyManager::valueText(const QtProperty *property) const
 */
 void QtPointFPropertyManager::setValue(QtProperty *property, const QPointF &val)
 {
-    const QtPointFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -2856,7 +2845,7 @@ void QtPointFPropertyManager::setValue(QtProperty *property, const QPointF &val)
 */
 void QtPointFPropertyManager::setDecimals(QtProperty *property, int prec)
 {
-    const QtPointFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -2950,8 +2939,7 @@ public:
         void setMaximumValue(const QSize &newMaxVal) { setSizeMaximumData(this, newMaxVal); }
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
@@ -3131,7 +3119,7 @@ QSize QtSizePropertyManager::maximum(const QtProperty *property) const
 */
 QString QtSizePropertyManager::valueText(const QtProperty *property) const
 {
-    const QtSizePropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QSize v = it.value().val;
@@ -3294,8 +3282,7 @@ public:
         void setMaximumValue(const QSizeF &newMaxVal) { setSizeMaximumData(this, newMaxVal); }
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 
     QtDoublePropertyManager *m_doublePropertyManager;
 
@@ -3493,7 +3480,7 @@ QSizeF QtSizeFPropertyManager::maximum(const QtProperty *property) const
 */
 QString QtSizeFPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtSizeFPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QSizeF v = it.value().val;
@@ -3532,7 +3519,7 @@ void QtSizeFPropertyManager::setValue(QtProperty *property, const QSizeF &val)
 */
 void QtSizeFPropertyManager::setDecimals(QtProperty *property, int prec)
 {
-    const QtSizeFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -3686,8 +3673,7 @@ public:
         QRect constraint;
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
@@ -3886,7 +3872,7 @@ QRect QtRectPropertyManager::constraint(const QtProperty *property) const
 */
 QString QtRectPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtRectPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QRect v = it.value().val;
@@ -3908,7 +3894,7 @@ QString QtRectPropertyManager::valueText(const QtProperty *property) const
 */
 void QtRectPropertyManager::setValue(QtProperty *property, const QRect &val)
 {
-    const QtRectPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -3953,7 +3939,7 @@ void QtRectPropertyManager::setValue(QtProperty *property, const QRect &val)
 */
 void QtRectPropertyManager::setConstraint(QtProperty *property, const QRect &constraint)
 {
-    const QtRectPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -4093,8 +4079,7 @@ public:
         int decimals{2};
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 
     QtDoublePropertyManager *m_doublePropertyManager;
 
@@ -4313,7 +4298,7 @@ QRectF QtRectFPropertyManager::constraint(const QtProperty *property) const
 */
 QString QtRectFPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtRectFPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
     const QRectF v = it.value().val;
@@ -4338,7 +4323,7 @@ QString QtRectFPropertyManager::valueText(const QtProperty *property) const
 */
 void QtRectFPropertyManager::setValue(QtProperty *property, const QRectF &val)
 {
-    const QtRectFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -4383,7 +4368,7 @@ void QtRectFPropertyManager::setValue(QtProperty *property, const QRectF &val)
 */
 void QtRectFPropertyManager::setConstraint(QtProperty *property, const QRectF &constraint)
 {
-    const QtRectFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -4441,7 +4426,7 @@ void QtRectFPropertyManager::setConstraint(QtProperty *property, const QRectF &c
 */
 void QtRectFPropertyManager::setDecimals(QtProperty *property, int prec)
 {
-    const QtRectFPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -4559,8 +4544,7 @@ public:
         QMap<int, QIcon> enumIcons;
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -4675,7 +4659,7 @@ QMap<int, QIcon> QtEnumPropertyManager::enumIcons(const QtProperty *property) co
 */
 QString QtEnumPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtEnumPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -4692,7 +4676,7 @@ QString QtEnumPropertyManager::valueText(const QtProperty *property) const
 */
 QIcon QtEnumPropertyManager::valueIcon(const QtProperty *property) const
 {
-    const QtEnumPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
 
@@ -4714,7 +4698,7 @@ QIcon QtEnumPropertyManager::valueIcon(const QtProperty *property) const
 */
 void QtEnumPropertyManager::setValue(QtProperty *property, int val)
 {
-    const QtEnumPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -4752,7 +4736,7 @@ void QtEnumPropertyManager::setValue(QtProperty *property, int val)
 */
 void QtEnumPropertyManager::setEnumNames(QtProperty *property, const QStringList &enumNames)
 {
-    const QtEnumPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -4786,7 +4770,7 @@ void QtEnumPropertyManager::setEnumNames(QtProperty *property, const QStringList
 */
 void QtEnumPropertyManager::setEnumIcons(QtProperty *property, const QMap<int, QIcon> &enumIcons)
 {
-    const QtEnumPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -4830,8 +4814,7 @@ public:
         QStringList flagNames;
     };
 
-    typedef QMap<const QtProperty *, Data> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, Data> m_values;
 
     QtBoolPropertyManager *m_boolPropertyManager;
 
@@ -4995,7 +4978,7 @@ QStringList QtFlagPropertyManager::flagNames(const QtProperty *property) const
 */
 QString QtFlagPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtFlagPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -5004,12 +4987,11 @@ QString QtFlagPropertyManager::valueText(const QtProperty *property) const
     QString str;
     int level = 0;
     const QChar bar = QLatin1Char('|');
-    const QStringList::const_iterator fncend = data.flagNames.constEnd();
-    for (QStringList::const_iterator it =  data.flagNames.constBegin(); it != fncend; ++it) {
+    for (const auto &name : data.flagNames) {
         if (data.val & (1 << level)) {
             if (!str.isEmpty())
                 str += bar;
-            str += *it;
+            str += name;
         }
 
         level++;
@@ -5032,7 +5014,7 @@ QString QtFlagPropertyManager::valueText(const QtProperty *property) const
 */
 void QtFlagPropertyManager::setValue(QtProperty *property, int val)
 {
-    const QtFlagPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -5074,7 +5056,7 @@ void QtFlagPropertyManager::setValue(QtProperty *property, int val)
 */
 void QtFlagPropertyManager::setFlagNames(QtProperty *property, const QStringList &flagNames)
 {
-    const QtFlagPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -5156,8 +5138,7 @@ public:
     void slotEnumChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    typedef QMap<const QtProperty *, QSizePolicy> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QSizePolicy> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
     QtEnumPropertyManager *m_enumPropertyManager;
@@ -5333,7 +5314,7 @@ QSizePolicy QtSizePolicyPropertyManager::value(const QtProperty *property) const
 */
 QString QtSizePolicyPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtSizePolicyPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -5358,7 +5339,7 @@ QString QtSizePolicyPropertyManager::valueText(const QtProperty *property) const
 */
 void QtSizePolicyPropertyManager::setValue(QtProperty *property, const QSizePolicy &val)
 {
-    const QtSizePolicyPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -5485,8 +5466,7 @@ public:
 
     QStringList m_familyNames;
 
-    typedef QMap<const QtProperty *, QFont> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QFont> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
     QtEnumPropertyManager *m_enumPropertyManager;
@@ -5608,16 +5588,13 @@ void QtFontPropertyManagerPrivate::slotFontDatabaseChanged()
 
 void QtFontPropertyManagerPrivate::slotFontDatabaseDelayedChange()
 {
-    typedef QMap<const QtProperty *, QtProperty *> PropertyPropertyMap;
     // rescan available font names
     const QStringList oldFamilies = m_familyNames;
     m_familyNames = QFontDatabase::families();
 
     // Adapt all existing properties
     if (!m_propertyToFamily.isEmpty()) {
-        PropertyPropertyMap::const_iterator cend = m_propertyToFamily.constEnd();
-        for (PropertyPropertyMap::const_iterator it = m_propertyToFamily.constBegin(); it != cend; ++it) {
-            QtProperty *familyProp = it.value();
+        for (QtProperty *familyProp : std::as_const(m_propertyToFamily)) {
             const int oldIdx = m_enumPropertyManager->value(familyProp);
             int newIdx = m_familyNames.indexOf(oldFamilies.at(oldIdx));
             if (newIdx < 0)
@@ -5764,7 +5741,7 @@ QFont QtFontPropertyManager::value(const QtProperty *property) const
 */
 QString QtFontPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtFontPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -5776,7 +5753,7 @@ QString QtFontPropertyManager::valueText(const QtProperty *property) const
 */
 QIcon QtFontPropertyManager::valueIcon(const QtProperty *property) const
 {
-    const QtFontPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
 
@@ -5793,7 +5770,7 @@ QIcon QtFontPropertyManager::valueIcon(const QtProperty *property) const
 */
 void QtFontPropertyManager::setValue(QtProperty *property, const QFont &val)
 {
-    const QtFontPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -5954,8 +5931,7 @@ public:
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    typedef QMap<const QtProperty *, QColor> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QColor> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
@@ -6100,7 +6076,7 @@ QColor QtColorPropertyManager::value(const QtProperty *property) const
 
 QString QtColorPropertyManager::valueText(const QtProperty *property) const
 {
-    const QtColorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -6113,7 +6089,7 @@ QString QtColorPropertyManager::valueText(const QtProperty *property) const
 
 QIcon QtColorPropertyManager::valueIcon(const QtProperty *property) const
 {
-    const QtColorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
     return QtPropertyBrowserUtils::brushValueIcon(QBrush(it.value()));
@@ -6129,7 +6105,7 @@ QIcon QtColorPropertyManager::valueIcon(const QtProperty *property) const
 */
 void QtColorPropertyManager::setValue(QtProperty *property, const QColor &val)
 {
-    const QtColorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 
@@ -6231,8 +6207,7 @@ class QtCursorPropertyManagerPrivate
     QtCursorPropertyManager *q_ptr;
     Q_DECLARE_PUBLIC(QtCursorPropertyManager)
 public:
-    typedef QMap<const QtProperty *, QCursor> PropertyValueMap;
-    PropertyValueMap m_values;
+    QMap<const QtProperty *, QCursor> m_values;
 };
 
 /*!
@@ -6299,7 +6274,7 @@ QCursor QtCursorPropertyManager::value(const QtProperty *property) const
 */
 QString QtCursorPropertyManager::valueText(const QtProperty *property) const
 {
-   const QtCursorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+   const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QString();
 
@@ -6311,7 +6286,7 @@ QString QtCursorPropertyManager::valueText(const QtProperty *property) const
 */
 QIcon QtCursorPropertyManager::valueIcon(const QtProperty *property) const
 {
-    const QtCursorPropertyManagerPrivate::PropertyValueMap::const_iterator it = d_ptr->m_values.constFind(property);
+    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
         return QIcon();
 
@@ -6328,7 +6303,7 @@ QIcon QtCursorPropertyManager::valueIcon(const QtProperty *property) const
 void QtCursorPropertyManager::setValue(QtProperty *property, const QCursor &value)
 {
 #ifndef QT_NO_CURSOR
-    const QtCursorPropertyManagerPrivate::PropertyValueMap::iterator it = d_ptr->m_values.find(property);
+    const auto it = d_ptr->m_values.find(property);
     if (it == d_ptr->m_values.end())
         return;
 

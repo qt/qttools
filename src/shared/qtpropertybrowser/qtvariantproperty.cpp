@@ -1283,7 +1283,7 @@ QtVariantPropertyManager::~QtVariantPropertyManager()
 */
 QtVariantProperty *QtVariantPropertyManager::variantProperty(const QtProperty *property) const
 {
-    const QMap<const QtProperty *, QPair<QtVariantProperty *, int> >::const_iterator it = d_ptr->m_propertyToType.constFind(property);
+    const auto it = d_ptr->m_propertyToType.constFind(property);
     if (it == d_ptr->m_propertyToType.constEnd())
         return 0;
     return it.value().first;
@@ -1430,7 +1430,7 @@ int QtVariantPropertyManager::valueType(int propertyType) const
 */
 int QtVariantPropertyManager::propertyType(const QtProperty *property) const
 {
-    const QMap<const QtProperty *, QPair<QtVariantProperty *, int> >::const_iterator it = d_ptr->m_propertyToType.constFind(property);
+    const auto it = d_ptr->m_propertyToType.constFind(property);
     if (it == d_ptr->m_propertyToType.constEnd())
         return 0;
     return it.value().second;
@@ -1838,11 +1838,11 @@ void QtVariantPropertyManager::initializeProperty(QtProperty *property)
 */
 void QtVariantPropertyManager::uninitializeProperty(QtProperty *property)
 {
-    const QMap<const QtProperty *, QPair<QtVariantProperty *, int> >::iterator type_it = d_ptr->m_propertyToType.find(property);
+    const auto type_it = d_ptr->m_propertyToType.find(property);
     if (type_it == d_ptr->m_propertyToType.end())
         return;
 
-    PropertyMap::iterator it = propertyToWrappedProperty()->find(property);
+    const auto it = propertyToWrappedProperty()->find(property);
     if (it != propertyToWrappedProperty()->end()) {
         QtProperty *internProp = it.value();
         if (internProp) {
