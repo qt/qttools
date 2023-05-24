@@ -98,7 +98,7 @@ QString QtCursorDatabase::cursorToShapeName(const QCursor &cursor) const
     int val = cursorToValue(cursor);
     if (val >= 0)
         return m_cursorNames.at(val);
-    return QString();
+    return {};
 }
 
 QIcon QtCursorDatabase::cursorToShapeIcon(const QCursor &cursor) const
@@ -122,7 +122,7 @@ QCursor QtCursorDatabase::valueToCursor(int value) const
 {
     if (m_valueToCursorShape.contains(value))
         return QCursor(m_valueToCursorShape[value]);
-    return QCursor();
+    return {};
 }
 #endif
 
@@ -221,7 +221,7 @@ QtBoolEdit::QtBoolEdit(QWidget *parent) :
     m_checkBox(new QCheckBox(this)),
     m_textVisible(true)
 {
-    QHBoxLayout *lt = new QHBoxLayout;
+    auto *lt = new QHBoxLayout;
     if (QApplication::layoutDirection() == Qt::LeftToRight)
         lt->setContentsMargins(4, 0, 0, 0);
     else
