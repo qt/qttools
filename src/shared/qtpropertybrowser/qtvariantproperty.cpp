@@ -96,8 +96,9 @@ int QtVariantPropertyManager::iconMapTypeId()
     return qMetaTypeId<QtIconMap>();
 }
 
-typedef QMap<const QtProperty *, QtProperty *> PropertyMap;
-Q_GLOBAL_STATIC(PropertyMap, propertyToWrappedProperty)
+using PropertyPropertyMap = QMap<const QtProperty *, QtProperty *>;
+
+Q_GLOBAL_STATIC(PropertyPropertyMap, propertyToWrappedProperty)
 
 static QtProperty *wrappedProperty(QtProperty *property)
 {
