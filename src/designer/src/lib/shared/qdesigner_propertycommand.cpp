@@ -240,7 +240,7 @@ quint64 compareSubProperties(const QFont & f1, const QFont & f2)
     quint64 rc = 0;
     compareFontSubProperty(f1, f2, &QFont::family,        QFontFamiliesResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::pointSize,     QFont::SizeResolved, rc);
-    compareFontSubProperty(f1, f2, &QFont::bold,          QFont::WeightResolved, rc);
+    compareFontSubProperty(f1, f2, &QFont::weight,        QFont::WeightResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::italic,        QFont::StyleResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::underline,     QFont::UnderlineResolved, rc);
     compareFontSubProperty(f1, f2, &QFont::strikeOut,     QFont::StrikeOutResolved, rc);
@@ -442,7 +442,7 @@ QFont applyFontSubProperty(const QFont &oldValue, const QFont &newValue, unsigne
     QFont  rc = oldValue;
     setFontSubProperty(mask, newValue, QFontFamiliesResolved,        &QFont::family,        &QFont::setFamily, rc);
     setFontSubProperty(mask, newValue, QFont::SizeResolved,          &QFont::pointSize,     &QFont::setPointSize, rc);
-    setFontSubProperty(mask, newValue, QFont::WeightResolved,        &QFont::bold,          &QFont::setBold, rc);
+    setFontSubProperty(mask, newValue, QFont::WeightResolved,        &QFont::weight,        &QFont::setWeight, rc);
     setFontSubProperty(mask, newValue, QFont::StyleResolved,         &QFont::italic,        &QFont::setItalic, rc);
     setFontSubProperty(mask, newValue, QFont::UnderlineResolved,     &QFont::underline,     &QFont::setUnderline, rc);
     setFontSubProperty(mask, newValue, QFont::StrikeOutResolved,     &QFont::strikeOut,     &QFont::setStrikeOut, rc);

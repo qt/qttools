@@ -253,15 +253,25 @@ namespace qdesigner_internal {
     unsigned FontPropertyManager::fontFlag(int idx)
     {
         switch (idx) {
-        case 0: return QFont::FamilyResolved | QFont::FamiliesResolved;
-        case 1: return QFont::SizeResolved;
-        case 2: return QFont::WeightResolved;
-        case 3: return QFont::StyleResolved;
-        case 4: return QFont::UnderlineResolved;
-        case 5: return QFont::StrikeOutResolved;
-        case 6: return QFont::KerningResolved;
-        case 7: return QFont::StyleStrategyResolved;
-        case 8: return QFont::HintingPreferenceResolved;
+        case 0:
+            return QFont::FamilyResolved | QFont::FamiliesResolved;
+        case 1:
+            return QFont::SizeResolved;
+        case 2:
+        case 7:
+            return QFont::WeightResolved;
+        case 3:
+            return QFont::StyleResolved;
+        case 4:
+            return QFont::UnderlineResolved;
+        case 5:
+            return QFont::StrikeOutResolved;
+        case 6:
+            return QFont::KerningResolved;
+        case 8:
+            return QFont::StyleStrategyResolved;
+        case 9:
+            return QFont::HintingPreferenceResolved;
         }
         return 0;
     }
