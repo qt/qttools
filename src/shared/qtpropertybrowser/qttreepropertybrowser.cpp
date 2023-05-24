@@ -243,7 +243,7 @@ int QtPropertyEditorDelegate::indentation(const QModelIndex &index) const
 
 void QtPropertyEditorDelegate::slotEditorDestroyed(QObject *object)
 {
-    if (QWidget *w = qobject_cast<QWidget *>(object)) {
+    if (auto *w = qobject_cast<QWidget *>(object)) {
         const auto it = m_editorToProperty.find(w);
         if (it != m_editorToProperty.end()) {
             m_propertyToEditor.remove(it.value());
@@ -393,7 +393,7 @@ static QIcon drawIndicatorIcon(const QPalette &palette, QStyle *style)
 
 void QtTreePropertyBrowserPrivate::init(QWidget *parent)
 {
-    QHBoxLayout *layout = new QHBoxLayout(parent);
+    auto *layout = new QHBoxLayout(parent);
     layout->setContentsMargins(QMargins());
     m_treeWidget = new QtPropertyEditorView(parent);
     m_treeWidget->setEditorPrivate(this);

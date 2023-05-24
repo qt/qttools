@@ -685,7 +685,7 @@ QString QtIntPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     return QString::number(it.value().val);
 }
 
@@ -982,7 +982,7 @@ QString QtDoublePropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     return QString::number(it.value().val, 'f', it.value().decimals);
 }
 
@@ -1252,7 +1252,7 @@ QString QtStringPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     return it.value().val;
 }
 
@@ -1441,7 +1441,7 @@ QString QtBoolPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     static const QString trueText = tr("True");
     static const QString falseText = tr("False");
@@ -1455,7 +1455,7 @@ QIcon QtBoolPropertyManager::valueIcon(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QIcon();
+        return {};
 
     return it.value() ? d_ptr->m_checkedIcon : d_ptr->m_uncheckedIcon;
 }
@@ -1623,7 +1623,7 @@ QString QtDatePropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     return it.value().val.toString(d_ptr->m_format);
 }
 
@@ -1807,7 +1807,7 @@ QString QtTimePropertyManager::valueText(const QtProperty *property) const
 {
    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     return it.value().toString(d_ptr->m_format);
 }
 
@@ -1922,7 +1922,7 @@ QString QtDateTimePropertyManager::valueText(const QtProperty *property) const
 {
    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     return it.value().toString(d_ptr->m_format);
 }
 
@@ -2032,7 +2032,7 @@ QString QtKeySequencePropertyManager::valueText(const QtProperty *property) cons
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     return it.value().toString(QKeySequence::NativeText);
 }
 
@@ -2140,7 +2140,7 @@ QString QtCharPropertyManager::valueText(const QtProperty *property) const
 {
    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     const QChar c = it.value();
     return c.isNull() ? QString() : QString(c);
 }
@@ -2320,7 +2320,7 @@ QString QtLocalePropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     const QLocale loc = it.value();
 
@@ -2563,7 +2563,7 @@ QString QtPointPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     const QPoint v = it.value();
     return tr("(%1, %2)").arg(v.x()).arg(v.y());
 }
@@ -2800,7 +2800,7 @@ QString QtPointFPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     const QPointF v = it.value().val;
     const int dec =  it.value().decimals;
     return tr("(%1, %2)").arg(QString::number(v.x(), 'f', dec),
@@ -3119,7 +3119,7 @@ QString QtSizePropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     const QSize v = it.value().val;
     return tr("%1 x %2").arg(v.width()).arg(v.height());
 }
@@ -3480,7 +3480,7 @@ QString QtSizeFPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     const QSizeF v = it.value().val;
     const int dec = it.value().decimals;
     return tr("%1 x %2").arg(QString::number(v.width(), 'f', dec),
@@ -3872,7 +3872,7 @@ QString QtRectPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     const QRect v = it.value().val;
     return tr("[(%1, %2), %3 x %4]").arg(v.x()) .arg(v.y())
                                     .arg(v.width()).arg(v.height());
@@ -4298,7 +4298,7 @@ QString QtRectFPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
     const QRectF v = it.value().val;
     const int dec = it.value().decimals;
     return QString(tr("[(%1, %2), %3 x %4]").arg(QString::number(v.x(), 'f', dec),
@@ -4659,14 +4659,14 @@ QString QtEnumPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     const QtEnumPropertyManagerPrivate::Data &data = it.value();
 
     const int v = data.val;
     if (v >= 0 && v < data.enumNames.size())
         return data.enumNames.at(v);
-    return QString();
+    return {};
 }
 
 /*!
@@ -4676,7 +4676,7 @@ QIcon QtEnumPropertyManager::valueIcon(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QIcon();
+        return {};
 
     const QtEnumPropertyManagerPrivate::Data &data = it.value();
 
@@ -4978,7 +4978,7 @@ QString QtFlagPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     const QtFlagPropertyManagerPrivate::Data &data = it.value();
 
@@ -5314,7 +5314,7 @@ QString QtSizePolicyPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     const QSizePolicy sp = it.value();
     const QtMetaEnumProvider *mep = metaEnumProvider();
@@ -5741,7 +5741,7 @@ QString QtFontPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     return QtPropertyBrowserUtils::fontValueText(it.value());
 }
@@ -5753,7 +5753,7 @@ QIcon QtFontPropertyManager::valueIcon(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QIcon();
+        return {};
 
     return QtPropertyBrowserUtils::fontValueIcon(it.value());
 }
@@ -6076,7 +6076,7 @@ QString QtColorPropertyManager::valueText(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     return QtPropertyBrowserUtils::colorValueText(it.value());
 }
@@ -6089,7 +6089,7 @@ QIcon QtColorPropertyManager::valueIcon(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QIcon();
+        return {};
     return QtPropertyBrowserUtils::brushValueIcon(QBrush(it.value()));
 }
 
@@ -6274,7 +6274,7 @@ QString QtCursorPropertyManager::valueText(const QtProperty *property) const
 {
    const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QString();
+        return {};
 
     return QtCursorDatabase::instance()->cursorToShapeName(it.value());
 }
@@ -6286,7 +6286,7 @@ QIcon QtCursorPropertyManager::valueIcon(const QtProperty *property) const
 {
     const auto it = d_ptr->m_values.constFind(property);
     if (it == d_ptr->m_values.constEnd())
-        return QIcon();
+        return {};
 
     return QtCursorDatabase::instance()->cursorToShapeIcon(it.value());
 }
