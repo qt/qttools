@@ -1,12 +1,3 @@
-QTDIR_build {
-# This is only for the Qt build. Do not use externally. We mean it.
-PLUGIN_TYPE = designer
-PLUGIN_CLASS_NAME = MultiPageWidgetPlugin
-load(qt_plugin)
-CONFIG += install_ok
-} else {
-# Public example:
-
 #! [0]
 TEMPLATE = lib
 CONFIG  += plugin
@@ -18,7 +9,6 @@ TARGET   = $$qtLibraryTarget($$TARGET)
 target.path = $$[QT_INSTALL_PLUGINS]/designer
 INSTALLS += target
 #! [3]
-}
 
 #! [1]
 QT      += widgets designer
