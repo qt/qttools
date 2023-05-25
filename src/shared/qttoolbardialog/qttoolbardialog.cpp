@@ -426,10 +426,7 @@ QList<QAction *> QtFullToolBarManager::categoryActions(const QString &category) 
 
 QString QtFullToolBarManager::actionCategory(QAction *action) const
 {
-    QMap<QAction *, QString>::ConstIterator it = d_ptr->actionToCategory.find(action);
-    if (it != d_ptr->actionToCategory.constEnd())
-        return it.value();
-    return QString();
+    return d_ptr->actionToCategory.value(action, {});
 }
 
 void QtFullToolBarManager::addAction(QAction *action, const QString &category)

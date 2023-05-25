@@ -145,8 +145,7 @@ QObjectList MetaDataBase::objects() const
 {
     QObjectList result;
 
-    ItemMap::const_iterator it = m_items.begin();
-    for (; it != m_items.end(); ++it) {
+    for (auto it = m_items.cbegin(), cend = m_items.cend(); it != cend; ++it) {
         if (it.value()->enabled())
             result.append(it.key());
     }

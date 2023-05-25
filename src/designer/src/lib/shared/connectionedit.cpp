@@ -1333,9 +1333,9 @@ static ConnectionEdit::ConnectionSet findConnectionsOf(const ConnectionEdit::Con
 {
     ConnectionEdit::ConnectionSet rc;
 
-    const ConnectionEdit::ConnectionList::const_iterator ccend = cl.constEnd();
+    const auto ccend = cl.cend();
     for ( ; oi1 != oi2; ++oi1) {
-        for (ConnectionEdit::ConnectionList::const_iterator cit = cl.constBegin(); cit != ccend; ++cit) {
+        for (auto cit = cl.constBegin(); cit != ccend; ++cit) {
             Connection *con = *cit;
             if (con->object(ConnectionEdit::EndPoint::Source) == *oi1 || con->object(ConnectionEdit::EndPoint::Target) == *oi1)
                 rc.insert(con, con);

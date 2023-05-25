@@ -214,7 +214,7 @@ ToolBarManager::ToolBarManager(QMainWindow *configureableMainWindow,
 
     // Filter out the device profile preview actions which have int data().
     ActionList previewActions = actions->styleActions()->actions();
-    ActionList::iterator it = previewActions.begin();
+    auto it = previewActions.begin();
     for ( ; (*it)->isSeparator() || (*it)->data().metaType().id() == QMetaType::Int; ++it) ;
     previewActions.erase(previewActions.begin(), it);
     addActionsToToolBarManager(previewActions, tr("Style"), m_manager);

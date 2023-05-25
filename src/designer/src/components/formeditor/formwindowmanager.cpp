@@ -768,7 +768,7 @@ QWidgetList FormWindowManager::layoutsToBeBroken() const
     for (QWidget *wToBeInserted : unsortedLayouts) {
         if (!orderedLayoutList.contains(wToBeInserted)) {
             // try to find first child, use as insertion position, else append
-            const QWidgetList::iterator firstChildPos = findFirstChildOf(orderedLayoutList.begin(), orderedLayoutList.end(), wToBeInserted);
+            const auto firstChildPos = findFirstChildOf(orderedLayoutList.begin(), orderedLayoutList.end(), wToBeInserted);
             if (firstChildPos == orderedLayoutList.end()) {
                 orderedLayoutList.push_back(wToBeInserted);
             } else {

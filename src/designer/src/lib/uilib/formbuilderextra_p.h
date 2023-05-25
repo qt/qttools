@@ -161,8 +161,7 @@ private:
     void clearResourceBuilder();
     void clearTextBuilder();
 
-    using BuddyHash = QHash<QLabel*, QString>;
-    BuddyHash m_buddies;
+    QHash<QLabel *, QString> m_buddies;
 
     QHash<QString, CustomWidgetData> m_customWidgetDataHash;
 

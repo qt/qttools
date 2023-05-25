@@ -333,11 +333,9 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
         break;
     }
     // Restore expansionState from QVariant map
-    if (!expansionState.isEmpty()) {
-        const QVariantMap::const_iterator cend = expansionState.constEnd();
-        for (QVariantMap::const_iterator it = expansionState.constBegin(); it != cend; ++it)
-            m_expansionState.insert(it.key(), it.value().toBool());
-    }
+    for (auto it = expansionState.cbegin(), cend = expansionState.cend(); it != cend; ++it)
+        m_expansionState.insert(it.key(), it.value().toBool());
+
     updateActionsState();
 }
 
@@ -359,11 +357,8 @@ void PropertyEditor::saveSettings() const
     settings->setValue(QLatin1String(SortedKeyC), QVariant(m_sorting));
     // Save last expansionState as QVariant map
     QVariantMap expansionState;
-    if (!m_expansionState.isEmpty()) {
-        const QMap<QString, bool>::const_iterator cend = m_expansionState.constEnd();
-        for (QMap<QString, bool>::const_iterator it = m_expansionState.constBegin(); it != cend; ++it)
-            expansionState.insert(it.key(), QVariant(it.value()));
-    }
+    for (auto it = m_expansionState.cbegin(), cend = m_expansionState.cend(); it != cend; ++it)
+        expansionState.insert(it.key(), QVariant(it.value()));
     settings->setValue(QLatin1String(ExpansionKeyC), expansionState);
     settings->setValue(QLatin1String(SplitterPositionKeyC), m_treeBrowser->splitterPosition());
     settings->endGroup();
@@ -448,13 +443,13 @@ void PropertyEditor::collapseAll()
 void PropertyEditor::applyPropertiesExpansionState(const QList<QtBrowserItem *> &items)
 {
     for (QtBrowserItem *propertyItem : items) {
-        const QMap<QString, bool>::const_iterator excend = m_expansionState.constEnd();
+        const auto excend = m_expansionState.cend();
         QtProperty *property = propertyItem->property();
         const QString propertyName = property->propertyName();
         const auto itGroup = m_propertyToGroup.constFind(property);
         if (itGroup != m_propertyToGroup.constEnd()) {
             const QString key = itGroup.value() + u'|' + propertyName;
-            const QMap<QString, bool>::const_iterator pit = m_expansionState.constFind(key);
+            const auto pit = m_expansionState.constFind(key);
             if (pit != excend)
                 setExpanded(propertyItem, pit.value());
             else
@@ -469,10 +464,10 @@ void PropertyEditor::applyExpansionState()
     if (m_sorting) {
         applyPropertiesExpansionState(items);
     } else {
-        const QMap<QString, bool>::const_iterator excend = m_expansionState.constEnd();
+        const auto excend = m_expansionState.cend();
         for (QtBrowserItem *item : items) {
             const QString groupName = item->property()->propertyName();
-            const QMap<QString, bool>::const_iterator git = m_expansionState.constFind(groupName);
+            const auto git = m_expansionState.constFind(groupName);
             if (git != excend)
                 setExpanded(item, git.value());
             else
@@ -699,7 +694,7 @@ void PropertyEditor::setReadOnly(bool /*readOnly*/)
 
 void PropertyEditor::setPropertyValue(const QString &name, const QVariant &value, bool changed)
 {
-    const QMap<QString, QtVariantProperty*>::const_iterator it = m_nameToProperty.constFind(name);
+    const auto it = m_nameToProperty.constFind(name);
     if (it == m_nameToProperty.constEnd())
         return;
     QtVariantProperty *property = it.value();
@@ -717,10 +712,10 @@ void PropertyEditor::updatePropertySheet()
     updateToolBarLabel();
 
     const int propertyCount = m_propertySheet->count();
-    const  QMap<QString, QtVariantProperty*>::const_iterator npcend = m_nameToProperty.constEnd();
+    const auto npcend = m_nameToProperty.cend();
     for (int i = 0; i < propertyCount; ++i) {
         const QString propertyName = m_propertySheet->propertyName(i);
-        QMap<QString, QtVariantProperty*>::const_iterator it = m_nameToProperty.constFind(propertyName);
+        const auto it = m_nameToProperty.constFind(propertyName);
         if (it != npcend)
             updateBrowserValue(it.value(), m_propertySheet->property(i));
     }
@@ -914,7 +909,7 @@ void PropertyEditor::setObject(QObject *object)
             if (m_propertySheet->indexOf(propertyName) != i)
                 continue;
             const QString groupName = m_propertySheet->propertyGroup(i);
-            const QMap<QString, QtVariantProperty *>::const_iterator rit = toRemove.constFind(propertyName);
+            const auto rit = toRemove.constFind(propertyName);
             if (rit != toRemove.constEnd()) {
                 QtVariantProperty *property = rit.value();
                 const int propertyType = property->propertyType();
@@ -1033,7 +1028,7 @@ void PropertyEditor::setObject(QObject *object)
                         m_currentBrowser->insertProperty(property, previous);
                     }
                 }
-                const QMap<QString, QtVariantProperty*>::const_iterator gnit = m_nameToGroup.constFind(groupName);
+                const auto gnit = m_nameToGroup.constFind(groupName);
                 if (gnit != m_nameToGroup.constEnd()) {
                     groupProperty = gnit.value();
                 } else {

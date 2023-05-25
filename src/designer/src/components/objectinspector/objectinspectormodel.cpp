@@ -383,8 +383,8 @@ namespace qdesigner_internal {
         if (newModel.isEmpty())
             return;
 
-        const ObjectModel::const_iterator mcend = newModel.constEnd();
-        ObjectModel::const_iterator it = newModel.constBegin();
+        const auto mcend = newModel.cend();
+        auto it = newModel.cbegin();
         // Set up root element
         StandardItemList rootRow = createModelRow(it->object());
         it->setItems(rootRow, m_icons);

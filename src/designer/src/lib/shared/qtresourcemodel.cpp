@@ -57,8 +57,7 @@ public:
     QMap<QString, QList<QtResourceSet *> >  m_pathToResourceSet;
     QtResourceSet                          *m_currentResourceSet = nullptr;
 
-    typedef QMap<QString, const QByteArray *> PathDataMap;
-    PathDataMap m_pathToData;
+    QMap<QString, const QByteArray *> m_pathToData;
 
     QMap<QString, QStringList> m_pathToContents; // qrc path to its contents.
     QMap<QString, QString>     m_fileToQrc; // this map contains the content of active resource set only.
@@ -175,7 +174,7 @@ void QtResourceModelPrivate::registerResourceSet(QtResourceSet *resourceSet)
     for (const QString &path : toRegister) {
         if (debugResourceModel)
             qDebug() << "registerResourceSet " << path;
-        const PathDataMap::const_iterator itRcc = m_pathToData.constFind(path);
+        const auto itRcc = m_pathToData.constFind(path);
         if (itRcc != m_pathToData.constEnd()) { // otherwise data was not created yet
             const QByteArray *data = itRcc.value();
             if (data) {
@@ -203,7 +202,7 @@ void QtResourceModelPrivate::unregisterResourceSet(QtResourceSet *resourceSet)
     for (const QString &path : toUnregister) {
         if (debugResourceModel)
             qDebug() << "unregisterResourceSet " << path;
-        const PathDataMap::const_iterator itRcc = m_pathToData.constFind(path);
+        const auto itRcc = m_pathToData.constFind(path);
         if (itRcc != m_pathToData.constEnd()) { // otherwise data was not created yet
             const QByteArray *data = itRcc.value();
             if (data) {
@@ -234,12 +233,12 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
     if (resourceSet && resourceSet->activeResourceFilePaths() != newPaths && !m_newlyCreated.contains(resourceSet))
         newResourceSetChanged = true;
 
-    PathDataMap newPathToData = m_pathToData;
+    auto newPathToData = m_pathToData;
 
     for (const QString &path : newPaths) {
         if (resourceSet && !m_pathToResourceSet[path].contains(resourceSet))
             m_pathToResourceSet[path].append(resourceSet);
-        const QMap<QString, bool>::iterator itMod = m_pathToModified.find(path);
+        const auto itMod = m_pathToModified.find(path);
         if (itMod == m_pathToModified.end() || itMod.value()) { // new path or path is already created, but needs to be recreated
             QStringList contents;
             int qrcErrorCount;
@@ -288,7 +287,7 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
             *errorMessages = stderrOutput;
     }
     // register
-    const QMap<QtResourceSet *, bool>::iterator itReload = m_resourceSetToReload.find(resourceSet);
+    const auto itReload = m_resourceSetToReload.find(resourceSet);
     if (itReload != m_resourceSetToReload.end()) {
         if (itReload.value()) {
             newResourceSetChanged = true;
@@ -302,7 +301,7 @@ void QtResourceModelPrivate::activate(QtResourceSet *resourceSet, const QStringL
 
     const bool needReregister = (oldActivePaths != newPaths) || newResourceSetChanged;
 
-    QMap<QtResourceSet *, bool>::iterator itNew = m_newlyCreated.find(resourceSet);
+    const auto itNew = m_newlyCreated.find(resourceSet);
     if (itNew != m_newlyCreated.end()) {
         m_newlyCreated.remove(resourceSet);
         if (needReregister)
@@ -354,7 +353,7 @@ void QtResourceModelPrivate::removeOldPaths(QtResourceSet *resourceSet, const QS
                     if (idx >= 0)
                         itRemove.value().removeAt(idx);
                     if (itRemove.value().isEmpty()) {
-                        PathDataMap::iterator it = m_pathToData.find(oldPath);
+                        const auto it = m_pathToData.find(oldPath);
                         if (it != m_pathToData.end())
                             deleteResource(it.value());
                         m_pathToResourceSet.erase(itRemove);
@@ -384,7 +383,7 @@ void QtResourceModelPrivate::setWatcherEnabled(const QString &path, bool enable)
 
 void QtResourceModelPrivate::addWatcher(const QString &path)
 {
-    QMap<QString, bool>::ConstIterator it = m_fileWatchedMap.constFind(path);
+    const auto it = m_fileWatchedMap.constFind(path);
     if (it != m_fileWatchedMap.constEnd() && !it.value())
         return;
 
@@ -440,16 +439,12 @@ QStringList QtResourceModel::loadedQrcFiles() const
 
 bool QtResourceModel::isModified(const QString &path) const
 {
-    QMap<QString, bool>::const_iterator it = d_ptr->m_pathToModified.constFind(path);
-    if (it != d_ptr->m_pathToModified.constEnd())
-        return it.value();
-    return true;
+    return d_ptr->m_pathToModified.value(path, true);
 }
 
 void QtResourceModel::setModified(const QString &path)
 {
-    QMap<QString, bool>::const_iterator itMod = d_ptr->m_pathToModified.constFind(path);
-    if (itMod == d_ptr->m_pathToModified.constEnd())
+    if (!d_ptr->m_pathToModified.contains(path))
         return;
 
     d_ptr->m_pathToModified[path] = true;
@@ -552,7 +547,7 @@ bool QtResourceModel::isWatcherEnabled() const
 
 void QtResourceModel::setWatcherEnabled(const QString &path, bool enable)
 {
-    QMap<QString, bool>::Iterator it = d_ptr->m_fileWatchedMap.find(path);
+    const auto it = d_ptr->m_fileWatchedMap.find(path);
     if (it == d_ptr->m_fileWatchedMap.end())
         return;
 

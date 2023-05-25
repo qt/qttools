@@ -235,7 +235,7 @@ QPixmap  NewFormWidget::formPreviewPixmap(const QTreeWidgetItem *item)
 {
     // Cache pixmaps per item/device profile
     const ItemPixmapCacheKey cacheKey(item, profileComboIndex());
-    ItemPixmapCache::iterator it = m_itemPixmapCache.find(cacheKey);
+    auto it = m_itemPixmapCache.find(cacheKey);
     if (it == m_itemPixmapCache.end()) {
         // file or string?
         const QVariant fileName = item->data(0, TemplateNameRole);

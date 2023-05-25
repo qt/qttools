@@ -386,7 +386,7 @@ namespace qdesigner_internal
 
     QPixmap DesignerPixmapCache::pixmap(const PropertySheetPixmapValue &value) const
     {
-        QMap<PropertySheetPixmapValue, QPixmap>::const_iterator it = m_cache.constFind(value);
+        const auto it = m_cache.constFind(value);
         if (it != m_cache.constEnd())
             return it.value();
 

@@ -161,11 +161,7 @@ bool QFormBuilderExtra::applyPropertyInternally(QObject *o, const QString &prope
 
 void QFormBuilderExtra::applyInternalProperties() const
 {
-    if (m_buddies.isEmpty())
-        return;
-
-    const BuddyHash::const_iterator cend = m_buddies.constEnd();
-    for (BuddyHash::const_iterator it = m_buddies.constBegin(); it != cend; ++it )
+    for (auto it = m_buddies.cbegin(), cend = m_buddies.cend(); it != cend; ++it )
         applyBuddy(it.value(), BuddyApplyAll, it.key());
 }
 
@@ -218,15 +214,15 @@ void QFormBuilderExtra::storeCustomWidgetData(const QString &className, const Do
 
 QString QFormBuilderExtra::customWidgetBaseClass(const QString &className) const
 {
-    const QHash<QString, CustomWidgetData>::const_iterator it = m_customWidgetDataHash.constFind(className);
+    const auto it = m_customWidgetDataHash.constFind(className);
     if (it != m_customWidgetDataHash.constEnd())
-            return it.value().baseClass;
+        return it.value().baseClass;
     return QString();
 }
 
 QString QFormBuilderExtra::customWidgetAddPageMethod(const QString &className) const
 {
-    const QHash<QString, CustomWidgetData>::const_iterator it = m_customWidgetDataHash.constFind(className);
+    const auto it = m_customWidgetDataHash.constFind(className);
     if (it != m_customWidgetDataHash.constEnd())
         return it.value().addPageMethod;
     return QString();
@@ -234,7 +230,7 @@ QString QFormBuilderExtra::customWidgetAddPageMethod(const QString &className) c
 
 bool QFormBuilderExtra::isCustomWidgetContainer(const QString &className) const
 {
-    const QHash<QString, CustomWidgetData>::const_iterator it = m_customWidgetDataHash.constFind(className);
+    const auto it = m_customWidgetDataHash.constFind(className);
     if (it != m_customWidgetDataHash.constEnd())
         return it.value().isContainer;
     return false;

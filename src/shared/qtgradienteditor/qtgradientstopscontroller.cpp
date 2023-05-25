@@ -162,25 +162,16 @@ void QtGradientStopsControllerPrivate::enableCurrent(bool enable)
 QtGradientStopsControllerPrivate::PositionColorMap QtGradientStopsControllerPrivate::stopsData(const PositionStopMap &stops) const
 {
     PositionColorMap data;
-    PositionStopMap::ConstIterator itStop = stops.constBegin();
-    while (itStop != stops.constEnd()) {
-        QtGradientStop *stop = itStop.value();
+    for (QtGradientStop *stop : stops)
         data[stop->position()] = stop->color();
-
-        ++itStop;
-    }
     return data;
 }
 
 QGradientStops QtGradientStopsControllerPrivate::makeGradientStops(const PositionColorMap &data) const
 {
     QGradientStops stops;
-    PositionColorMap::ConstIterator itData = data.constBegin();
-    while (itData != data.constEnd()) {
+    for (auto itData = data.cbegin(), cend = data.cend(); itData != cend; ++itData)
         stops << QPair<qreal, QColor>(itData.key(), itData.value());
-
-        ++itData;
-    }
     return stops;
 }
 

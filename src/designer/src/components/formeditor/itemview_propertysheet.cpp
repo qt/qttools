@@ -24,8 +24,6 @@ struct Property {
     int m_id{-1};
 };
 
-typedef QMap<int, Property> FakePropertyMap;
-
 struct ItemViewPropertySheetPrivate {
     ItemViewPropertySheetPrivate(QDesignerFormEditorInterface *core,
                                  QHeaderView *horizontalHeader,
@@ -35,7 +33,7 @@ struct ItemViewPropertySheetPrivate {
     inline QString fakePropertyName(const QString &prefix, const QString &realName);
 
     // Maps index of fake property to index of real property in respective sheet
-    FakePropertyMap m_propertyIdMap;
+    QMap<int, Property> m_propertyIdMap;
 
     // Maps name of fake property to name of real property
     QHash<QString, QString> m_propertyNameMap;
@@ -165,7 +163,7 @@ QHash<QString,QString> ItemViewPropertySheet::propertyNameMap() const
 
 QVariant ItemViewPropertySheet::property(int index) const
 {
-    const FakePropertyMap::const_iterator it = d->m_propertyIdMap.constFind(index);
+    const auto it = d->m_propertyIdMap.constFind(index);
     if (it != d->m_propertyIdMap.constEnd())
         return it.value().m_sheet->property(it.value().m_id);
     return QDesignerPropertySheet::property(index);
@@ -173,7 +171,7 @@ QVariant ItemViewPropertySheet::property(int index) const
 
 void ItemViewPropertySheet::setProperty(int index, const QVariant &value)
 {
-    const FakePropertyMap::iterator it = d->m_propertyIdMap.find(index);
+    const auto it = d->m_propertyIdMap.find(index);
     if (it != d->m_propertyIdMap.end()) {
         it.value().m_sheet->setProperty(it.value().m_id, value);
     } else {
@@ -183,7 +181,7 @@ void ItemViewPropertySheet::setProperty(int index, const QVariant &value)
 
 void ItemViewPropertySheet::setChanged(int index, bool changed)
 {
-    const FakePropertyMap::iterator it = d->m_propertyIdMap.find(index);
+    const auto it = d->m_propertyIdMap.find(index);
     if (it != d->m_propertyIdMap.end()) {
         it.value().m_sheet->setChanged(it.value().m_id, changed);
     } else {
@@ -193,7 +191,7 @@ void ItemViewPropertySheet::setChanged(int index, bool changed)
 
 bool ItemViewPropertySheet::isChanged(int index) const
 {
-    const FakePropertyMap::const_iterator it = d->m_propertyIdMap.constFind(index);
+    const auto it = d->m_propertyIdMap.constFind(index);
     if (it != d->m_propertyIdMap.constEnd())
         return it.value().m_sheet->isChanged(it.value().m_id);
     return QDesignerPropertySheet::isChanged(index);
@@ -201,7 +199,7 @@ bool ItemViewPropertySheet::isChanged(int index) const
 
 bool ItemViewPropertySheet::hasReset(int index) const
 {
-    const FakePropertyMap::const_iterator it = d->m_propertyIdMap.constFind(index);
+    const auto it = d->m_propertyIdMap.constFind(index);
     if (it != d->m_propertyIdMap.constEnd())
         return it.value().m_sheet->hasReset(it.value().m_id);
     return QDesignerPropertySheet::hasReset(index);
@@ -209,7 +207,7 @@ bool ItemViewPropertySheet::hasReset(int index) const
 
 bool ItemViewPropertySheet::reset(int index)
 {
-    const FakePropertyMap::iterator it = d->m_propertyIdMap.find(index);
+    const auto it = d->m_propertyIdMap.find(index);
     if (it != d->m_propertyIdMap.end()) {
        QDesignerPropertySheetExtension *headerSheet = it.value().m_sheet;
        const int headerIndex = it.value().m_id;

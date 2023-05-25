@@ -91,7 +91,7 @@ QIcon WidgetBoxTreeWidget::iconForWidget(const QString &iconName) const
         return qdesigner_internal::qtLogoIcon();
 
     if (iconName.startsWith(QLatin1String(iconPrefixC))) {
-        const IconCache::const_iterator it = m_pluginIcons.constFind(iconName);
+        const auto it = m_pluginIcons.constFind(iconName);
         if (it != m_pluginIcons.constEnd())
             return it.value();
     }

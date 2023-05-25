@@ -662,14 +662,13 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void GridLayoutState::applyToLayout(const QDesignerFormEditorInterface *core, QWidget *w) const
     {
-        using LayoutItemRectMap =QHash<QLayoutItem *, QRect>;
         QGridLayout *grid = qobject_cast<QGridLayout *>(LayoutInfo::managedLayout(core, w));
         Q_ASSERT(grid);
         if (debugLayout)
             qDebug() << ">GridLayoutState::applyToLayout" <<  *this << *grid;
         const bool shrink = grid->rowCount() > rowCount || grid->columnCount() > colCount;
         // Build a map of existing items to rectangles via widget map, delete spacers
-        LayoutItemRectMap itemMap;
+        QHash<QLayoutItem *, QRect> itemMap;
         while (grid->count()) {
             QLayoutItem *item = grid->takeAt(0);
             if (!LayoutInfo::isEmptyItem(item)) {
@@ -689,8 +688,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
             grid = static_cast<QGridLayout*>(recreateManagedLayout(core, w, grid));
 
         // Add widgets items
-        const LayoutItemRectMap::const_iterator icend = itemMap.constEnd();
-        for (LayoutItemRectMap::const_iterator it = itemMap.constBegin(); it != icend; ++it) {
+        for (auto it = itemMap.cbegin(), icend = itemMap.cend(); it != icend; ++it) {
             const QRect info = it.value();
             const Qt::Alignment alignment = widgetAlignmentMap.value(it.key()->widget(), {});
             grid->addItem(it.key(), info.y(), info.x(), info.height(), info.width(), alignment);

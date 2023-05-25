@@ -422,21 +422,18 @@ void QtResourceViewPrivate::filterOutResources()
         bool searchForNewPathWithContents = true;
 
         if (!currentPath.isEmpty()) { // if the currentPath is empty we will search for a new path too
-            QMap<QString, bool>::ConstIterator it = pathToMatchingContents.constFind(currentPath);
+            const auto it = pathToMatchingContents.constFind(currentPath);
             if (it != pathToMatchingContents.constEnd() && it.value()) // the current item has contents, we don't need to search for another path
                 searchForNewPathWithContents = false;
         }
 
         if (searchForNewPathWithContents) {
             // we find the first path with the matching contents
-            QMap<QString, bool>::ConstIterator itContents = pathToMatchingContents.constBegin();
-            while (itContents != pathToMatchingContents.constEnd()) {
+            for (auto itContents = pathToMatchingContents.cbegin(), cend = pathToMatchingContents.cend(); itContents != cend; ++itContents) {
                 if (itContents.value()) {
                     newCurrentPath = itContents.key(); // the new path will be activated
                     break;
                 }
-
-                itContents++;
             }
         }
 

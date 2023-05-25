@@ -64,8 +64,7 @@ void OrderDialog::setPageList(const QWidgetList &pages)
 void OrderDialog::buildList()
 {
     m_ui->pageList->clear();
-    const OrderMap::const_iterator cend = m_orderMap.constEnd();
-    for (OrderMap::const_iterator it = m_orderMap.constBegin(); it != cend; ++it) {
+    for (auto it = m_orderMap.cbegin(), cend = m_orderMap.cend(); it != cend; ++it) {
         QListWidgetItem *item = new QListWidgetItem();
         const int index = it.key();
         switch (m_format) {

@@ -2385,9 +2385,10 @@ void TableWidgetContents::applyToTableWidget(QTableWidget *tableWidget, Designer
         row++;
     }
     // items
-    const TableItemMap::const_iterator icend = m_items.constEnd();
-    for (TableItemMap::const_iterator it = m_items.constBegin(); it !=  icend; ++ it)
-        tableWidget->setItem(it.key().first, it.key().second, it.value().createTableItem(iconCache, editor));
+    for (auto it = m_items.cbegin(), icend = m_items.cend(); it != icend; ++ it) {
+        tableWidget->setItem(it.key().first, it.key().second,
+                             it.value().createTableItem(iconCache, editor));
+    }
 }
 
 bool TableWidgetContents::operator==(const TableWidgetContents &rhs) const

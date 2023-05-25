@@ -856,7 +856,6 @@ struct QDESIGNER_SHARED_EXPORT ListContents {
 struct QDESIGNER_SHARED_EXPORT TableWidgetContents {
 
     using CellRowColumnAddress = QPair<int, int>;
-    using TableItemMap = QMap<CellRowColumnAddress, ItemData>;
 
     TableWidgetContents();
     void clear();
@@ -875,7 +874,7 @@ struct QDESIGNER_SHARED_EXPORT TableWidgetContents {
     int m_rowCount = 0;
     ListContents m_horizontalHeader;
     ListContents m_verticalHeader;
-    TableItemMap m_items;
+    QMap<CellRowColumnAddress, ItemData> m_items;
 };
 
 class QDESIGNER_SHARED_EXPORT ChangeTableContentsCommand: public QDesignerFormWindowCommand

@@ -81,8 +81,7 @@ private slots:
 
 private:
     QDesignerFormEditorInterface *m_core;
-    typedef QHash<QObject *, MetaDataBaseItem*> ItemMap;
-    ItemMap m_items;
+    QHash<QObject *, MetaDataBaseItem *> m_items;
 };
 
     // promotion convenience

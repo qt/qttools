@@ -34,7 +34,7 @@ template <class T>
 // Obtain a value form QVariantMap
 template <class T>
     static inline bool valueFromVariantMap(const QVariantMap &v, const QString &key, T &value) {
-        const QVariantMap::const_iterator it = v.constFind(key);
+        const auto it = v.constFind(key);
         const bool found = it != v.constEnd();
         if (found)
             value = qvariant_cast<T>(it.value());

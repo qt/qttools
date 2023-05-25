@@ -55,8 +55,7 @@ private:
     PropertyToPropertyMap m_brushStyleSubPropertyToProperty;
     PropertyToPropertyMap m_brushColorSubPropertyToProperty;
 
-    typedef QMap<QtProperty *, QBrush> PropertyBrushMap;
-    PropertyBrushMap m_brushValues;
+    QMap<QtProperty *, QBrush> m_brushValues;
 };
 
 }

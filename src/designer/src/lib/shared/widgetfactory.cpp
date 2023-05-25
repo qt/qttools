@@ -295,11 +295,11 @@ static bool classNameMatches(const QObject *created, const QString &className)
 QWidget*  WidgetFactory::createCustomWidget(const QString &className, QWidget *parentWidget, bool *creationError) const
 {
     *creationError = false;
-    CustomWidgetFactoryMap::const_iterator it = m_customFactory.constFind(className);
-    if (it == m_customFactory.constEnd())
+
+    auto *factory = m_customFactory.value(className, nullptr);
+    if (factory == nullptr)
         return nullptr;
 
-    QDesignerCustomWidgetInterface *factory = it.value();
     QWidget *rc = factory->createWidget(parentWidget);
     // shouldn't happen
     if (!rc) {
@@ -768,7 +768,7 @@ QStyle *WidgetFactory::getStyle(const QString &styleName)
     if (isApplicationStyle(styleName))
         return qApp->style();
 
-    StyleCache::iterator it = m_styleCache.find(styleName);
+    auto it = m_styleCache.find(styleName);
     if (it == m_styleCache.end()) {
         QStyle *style = QStyleFactory::create(styleName);
         if (!style) {

@@ -195,9 +195,7 @@ void ConnectDialog::populateSlotList(const QString &signal)
     QVariant variantFont = QVariant::fromValue(font);
 
     QListWidgetItem *curr = nullptr;
-    QMap<QString, QString>::ConstIterator itMember = memberToClassName.constBegin();
-    const QMap<QString, QString>::ConstIterator itMemberEnd = memberToClassName.constEnd();
-    while (itMember != itMemberEnd) {
+    for (auto itMember = memberToClassName.cbegin(), itMemberEnd = memberToClassName.cend(); itMember != itMemberEnd; ++itMember) {
         const QString member = itMember.key();
         QListWidgetItem *item = new QListWidgetItem(m_ui.slotList);
         item->setText(member);
@@ -210,7 +208,6 @@ void ConnectDialog::populateSlotList(const QString &signal)
             item->setData(Qt::FontRole, variantFont);
             item->setData(Qt::ForegroundRole, QColor(Qt::red));
         }
-        ++itMember;
     }
 
     if (curr)
@@ -237,9 +234,7 @@ void ConnectDialog::populateSignalList()
     QVariant variantFont = QVariant::fromValue(font);
 
     QListWidgetItem *curr = nullptr;
-    QMap<QString, QString>::ConstIterator itMember = memberToClassName.constBegin();
-    const QMap<QString, QString>::ConstIterator itMemberEnd = memberToClassName.constEnd();
-    while (itMember != itMemberEnd) {
+    for (auto itMember = memberToClassName.cbegin(), itMemberEnd = memberToClassName.cend(); itMember != itMemberEnd; ++itMember) {
         const QString member = itMember.key();
 
         QListWidgetItem *item = new QListWidgetItem(m_ui.signalList);
@@ -253,7 +248,6 @@ void ConnectDialog::populateSignalList()
             item->setData(Qt::FontRole, variantFont);
             item->setData(Qt::ForegroundRole, QColor(Qt::red));
         }
-        ++itMember;
     }
 
     if (curr) {

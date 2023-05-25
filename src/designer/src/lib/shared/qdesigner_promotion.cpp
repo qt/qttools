@@ -180,9 +180,7 @@ namespace qdesigner_internal {
     {
         using ClassNameItemMap = QMap<QString, QDesignerWidgetDataBaseItemInterface *>;
         // A map containing base classes and their promoted classes.
-        using BaseClassPromotedMap = QMap<QString, ClassNameItemMap>;
-
-        BaseClassPromotedMap baseClassPromotedMap;
+        QMap<QString, ClassNameItemMap> baseClassPromotedMap;
 
         QDesignerWidgetDataBaseInterface *widgetDataBase = m_core->widgetDataBase();
         // Look for promoted classes and insert into map according to base class.
@@ -191,7 +189,7 @@ namespace qdesigner_internal {
             QDesignerWidgetDataBaseItemInterface *dbItem = widgetDataBase->item(i);
             if (dbItem->isPromoted()) {
                 const QString baseClassName = dbItem->extends();
-                BaseClassPromotedMap::iterator it = baseClassPromotedMap.find(baseClassName);
+                auto it = baseClassPromotedMap.find(baseClassName);
                 if (it == baseClassPromotedMap.end()) {
                     it = baseClassPromotedMap.insert(baseClassName, ClassNameItemMap());
                 }
@@ -204,14 +202,12 @@ namespace qdesigner_internal {
         if (baseClassPromotedMap.isEmpty())
             return rc;
 
-        const BaseClassPromotedMap::const_iterator bcend = baseClassPromotedMap.constEnd();
-        for (BaseClassPromotedMap::const_iterator bit = baseClassPromotedMap.constBegin(); bit !=  bcend; ++bit) {
+        for (auto bit = baseClassPromotedMap.cbegin(), bcend = baseClassPromotedMap.cend(); bit != bcend; ++bit) {
             const int baseIndex = widgetDataBase->indexOfClassName(bit.key());
             Q_ASSERT(baseIndex >= 0);
             QDesignerWidgetDataBaseItemInterface *baseItem = widgetDataBase->item(baseIndex);
             // promoted
-            const ClassNameItemMap::const_iterator pcend = bit.value().constEnd();
-            for (ClassNameItemMap::const_iterator pit = bit.value().constBegin(); pit != pcend; ++pit) {
+            for (auto pit = bit.value().cbegin(), pcend = bit.value().cend(); pit != pcend; ++pit) {
                 PromotedClass item;
                 item.baseItem = baseItem;
                 item.promotedItem = pit.value();

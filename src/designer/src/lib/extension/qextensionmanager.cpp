@@ -81,7 +81,7 @@ void QExtensionManager::registerExtensions(QAbstractExtensionFactory *factory, c
         return;
     }
 
-    FactoryMap::iterator it = m_extensions.find(iid);
+    auto it = m_extensions.find(iid);
     if (it == m_extensions.end())
         it = m_extensions.insert(iid, FactoryList());
 
@@ -99,7 +99,7 @@ void QExtensionManager::unregisterExtensions(QAbstractExtensionFactory *factory,
         return;
     }
 
-    const FactoryMap::iterator it = m_extensions.find(iid);
+    const auto it = m_extensions.find(iid);
     if (it == m_extensions.end())
         return;
 
@@ -116,7 +116,7 @@ void QExtensionManager::unregisterExtensions(QAbstractExtensionFactory *factory,
 */
 QObject *QExtensionManager::extension(QObject *object, const QString &iid) const
 {
-    const FactoryMap::const_iterator it = m_extensions.constFind(iid);
+    const auto it = m_extensions.constFind(iid);
     if (it != m_extensions.constEnd()) {
         for (const auto &f : it.value()) {
             if (QObject *ext = f->extension(object, iid))

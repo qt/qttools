@@ -372,12 +372,9 @@ static WidgetDataBaseItem *createCustomWidgetItem(const QDesignerCustomWidgetInt
 
 void WidgetDataBase::loadPlugins()
 {
-    typedef QMap<QString, qsizetype> NameIndexMap;
-    using ItemList = QList<QDesignerWidgetDataBaseItemInterface *>;
-    using NameSet = QSet<QString>;
     // 1) create a map of existing custom classes
-    NameIndexMap existingCustomClasses;
-    NameSet nonCustomClasses;
+    QMap<QString, qsizetype> existingCustomClasses;
+    QSet<QString> nonCustomClasses;
     for (qsizetype i = 0, count = m_items.size(); i < count; ++i)    {
         const QDesignerWidgetDataBaseItemInterface* item =  m_items.at(i);
         if (item->isCustom() && !item->isPromoted())
@@ -386,7 +383,7 @@ void WidgetDataBase::loadPlugins()
             nonCustomClasses.insert(item->name());
     }
     // 2) create a list plugins
-    ItemList pluginList;
+    QList<QDesignerWidgetDataBaseItemInterface *> pluginList;
     const QDesignerPluginManager *pm = m_core->pluginManager();
     const auto &customWidgets = pm->registeredCustomWidgets();
     for (QDesignerCustomWidgetInterface* c : customWidgets)
@@ -400,8 +397,8 @@ void WidgetDataBase::loadPlugins()
     if (!pluginList.isEmpty()) {
         for (QDesignerWidgetDataBaseItemInterface *pluginItem : std::as_const(pluginList)) {
             const QString pluginName = pluginItem->name();
-            NameIndexMap::iterator existingIt = existingCustomClasses.find(pluginName);
-            if (existingIt == existingCustomClasses.end()) {
+            const auto existingIt = existingCustomClasses.constFind(pluginName);
+            if (existingIt == existingCustomClasses.cend()) {
                 // Add new class.
                 if (nonCustomClasses.contains(pluginName)) {
                     designerWarning(tr("A custom widget plugin whose class name (%1) matches that of an existing class has been found.").arg(pluginName));
@@ -421,16 +418,14 @@ void WidgetDataBase::loadPlugins()
         }
     }
     // 4) remove classes that have not been matched. The stored indexes become invalid while deleting.
-    if (!existingCustomClasses.isEmpty()) {
-        NameIndexMap::const_iterator cend = existingCustomClasses.constEnd();
-        for (NameIndexMap::const_iterator it = existingCustomClasses.constBegin();it != cend; ++it )  {
-            const int index = indexOfClassName(it.key());
-            if (index != -1) {
-                remove(index);
-                removedPlugins++;
-            }
+    for (auto it = existingCustomClasses.cbegin(), cend = existingCustomClasses.cend(); it != cend; ++it )  {
+        const int index = indexOfClassName(it.key());
+        if (index != -1) {
+            remove(index);
+            removedPlugins++;
         }
     }
+
     if (debugWidgetDataBase)
         qDebug() << "WidgetDataBase::loadPlugins(): " << addedPlugins << " added, " << replacedPlugins << " replaced, " << removedPlugins << "deleted.";
 }
@@ -560,8 +555,6 @@ QStringList WidgetDataBase::customFormWidgetClasses(const QDesignerFormEditorInt
 // properties to be suitable for new forms
 static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const QString &className, const QString &objectName)
 {
-    using PropertyList = QList<DomProperty *>;
-
     QDesignerWidgetBoxInterface::Widget widget;
     const bool found = QDesignerWidgetBox::findWidget(core->widgetBox(), className, QString(), &widget);
     if (!found)
@@ -575,8 +568,8 @@ static QString xmlFromWidgetBox(const QDesignerFormEditorInterface *core, const 
         return QString();
     // Properties: Remove the "objectName" property in favour of the name attribute and check geometry.
     domWidget->setAttributeName(objectName);
-    PropertyList properties = domWidget->elementProperty();
-    for (PropertyList::iterator it = properties.begin(); it != properties.end(); ) {
+    QList<DomProperty *> properties = domWidget->elementProperty();
+    for (auto it = properties.begin(); it != properties.end(); ) {
         DomProperty *property = *it;
         if (property->attributeName() == "objectName"_L1) { // remove  "objectName"
             it = properties.erase(it);
