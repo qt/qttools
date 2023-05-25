@@ -89,7 +89,7 @@ QObject *QExtensionFactory::extension(QObject *object, const QString &iid) const
 
     if (!m_extended.contains(object)) {
         connect(object, &QObject::destroyed, this, &QExtensionFactory::objectDestroyed);
-        m_extended.insert(object, true);
+        m_extended.insert(object);
     }
 
     if (it == m_extensions.end())
