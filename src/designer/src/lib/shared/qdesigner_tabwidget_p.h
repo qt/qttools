@@ -19,6 +19,7 @@
 #include "qdesigner_propertysheet_p.h"
 #include "qdesigner_utils_p.h"
 
+#include <QtCore/qhash.h>
 #include <QtCore/qpointer.h>
 #include <QtGui/qicon.h>
 
@@ -105,7 +106,7 @@ private:
     qdesigner_internal::PropertySheetStringValue whatsthis;
     qdesigner_internal::PropertySheetIconValue icon;
     };
-    QMap<QWidget *, PageData> m_pageToData;
+    QHash<QWidget *, PageData> m_pageToData;
 };
 
 using QTabWidgetPropertySheetFactory = QDesignerPropertySheetFactory<QTabWidget, QTabWidgetPropertySheet>;

@@ -17,7 +17,7 @@
 
 #include "shared_global_p.h"
 #include <abstractintrospection_p.h>
-#include <QtCore/qmap.h>
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -34,10 +34,9 @@ namespace qdesigner_internal {
         const QDesignerMetaObjectInterface* metaObject(const QObject *object) const override;
 
         const QDesignerMetaObjectInterface* metaObjectForQMetaObject(const QMetaObject *metaObject) const;
-    private:
-        using MetaObjectMap = QMap<const QMetaObject*, QDesignerMetaObjectInterface*>;
-        mutable MetaObjectMap m_metaObjectMap;
 
+    private:
+        mutable QHash<const QMetaObject *, QDesignerMetaObjectInterface *> m_metaObjectMap;
     };
 }
 

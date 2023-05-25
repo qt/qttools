@@ -92,7 +92,7 @@ private:
         qdesigner_internal::PropertySheetStringValue tooltip;
         qdesigner_internal::PropertySheetIconValue icon;
         };
-    QMap<QWidget *, PageData> m_pageToData;
+    QHash<QWidget *, PageData> m_pageToData;
 };
 
 using QToolBoxWidgetPropertySheetFactory = QDesignerPropertySheetFactory<QToolBox, QToolBoxWidgetPropertySheet>;

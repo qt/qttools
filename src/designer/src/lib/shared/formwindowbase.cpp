@@ -35,6 +35,7 @@
 #include <QtGui/qaction.h>
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qset.h>
 #include <QtCore/qtimer.h>
@@ -57,8 +58,8 @@ public:
     DesignerPixmapCache *m_pixmapCache;
     DesignerIconCache *m_iconCache;
     QtResourceSet *m_resourceSet;
-    QMap<QDesignerPropertySheet *, QMap<int, bool> > m_reloadableResources; // bool is dummy, QMap used as QSet
-    QMap<QDesignerPropertySheet *, QObject *> m_reloadablePropertySheets;
+    QHash<QDesignerPropertySheet *, QSet<int>> m_reloadableResources;
+    QHash<QDesignerPropertySheet *, QObject *> m_reloadablePropertySheets;
     const DeviceProfile m_deviceProfile;
     FormWindowBase::LineTerminatorMode m_lineTerminatorMode;
     FormWindowBase::ResourceFileSaveMode m_saveResourcesBehaviour;
@@ -134,7 +135,7 @@ void FormWindowBase::setResourceSet(QtResourceSet *resourceSet)
 void FormWindowBase::addReloadableProperty(QDesignerPropertySheet *sheet, int index)
 {
     connectSheet(sheet);
-    m_d->m_reloadableResources[sheet][index] = true;
+    m_d->m_reloadableResources[sheet].insert(index);
 }
 
 void FormWindowBase::removeReloadableProperty(QDesignerPropertySheet *sheet, int index)
@@ -206,8 +207,7 @@ void FormWindowBase::reloadProperties()
     iconCache()->clear();
     for (auto it = m_d->m_reloadableResources.cbegin(), end = m_d->m_reloadableResources.cend(); it != end; ++it) {
         QDesignerPropertySheet *sheet = it.key();
-        for (auto jt = it.value().begin(), end = it.value().end(); jt != end; ++jt) {
-            const int index = jt.key();
+        for (int index : it.value()) {
             const QVariant newValue = sheet->property(index);
             if (qobject_cast<QLabel *>(sheet->object()) && sheet->propertyName(index) == "text"_L1) {
                 const PropertySheetStringValue newString = qvariant_cast<PropertySheetStringValue>(newValue);
