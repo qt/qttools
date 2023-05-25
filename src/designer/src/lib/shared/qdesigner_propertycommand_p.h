@@ -18,8 +18,8 @@
 #include "qdesigner_formwindowcommand_p.h"
 
 #include <QtCore/qvariant.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
 #include <QtCore/qpair.h>
 #include <QtCore/qsharedpointer.h>
 
@@ -261,7 +261,7 @@ public:
 private:
     void setDescription();
     QString m_propertyName;
-    QMap<QObject *, QPair<QVariant, bool> > m_objectToValueAndChanged;
+    QHash<QObject *, QPair<QVariant, bool> > m_objectToValueAndChanged;
 };
 
 } // namespace qdesigner_internal

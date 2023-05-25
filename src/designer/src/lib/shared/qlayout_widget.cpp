@@ -23,6 +23,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qalgorithms.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qstack.h>
 #include <QtCore/qpair.h>
@@ -584,11 +585,8 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         // [column1, column2,...] (address as  row * columnCount + col)
         static CellStates cellStates(const QList<QRect> &rects, int numRows, int numColumns);
 
-        typedef QMap<QWidget *, QRect> WidgetItemMap;
-        typedef QMap<QWidget *, Qt::Alignment> WidgetAlignmentMap;
-
-        WidgetItemMap widgetItemMap;
-        WidgetAlignmentMap widgetAlignmentMap;
+        QHash<QWidget *, QRect> widgetItemMap;
+        QHash<QWidget *, Qt::Alignment> widgetAlignmentMap;
 
         int rowCount = 0;
         int colCount = 0;
@@ -603,8 +601,8 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         str << "GridLayoutState: " <<  gs.rowCount << " rows x " <<  gs.colCount
             << " cols " << gs.widgetItemMap.size() << " items\n";
 
-        const GridLayoutState::WidgetItemMap::const_iterator wcend = gs.widgetItemMap.constEnd();
-        for (GridLayoutState::WidgetItemMap::const_iterator it = gs.widgetItemMap.constBegin(); it != wcend; ++it)
+        const auto wcend = gs.widgetItemMap.constEnd();
+        for (auto it = gs.widgetItemMap.constBegin(); it != wcend; ++it)
             str << "Item " << it.key() << it.value() << '\n';
         return str;
     }
@@ -676,7 +674,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
             QLayoutItem *item = grid->takeAt(0);
             if (!LayoutInfo::isEmptyItem(item)) {
                 QWidget *itemWidget = item->widget();
-                const WidgetItemMap::const_iterator it = widgetItemMap.constFind(itemWidget);
+                const auto it = widgetItemMap.constFind(itemWidget);
                 if (it == widgetItemMap.constEnd())
                     qFatal("GridLayoutState::applyToLayout: Attempt to apply to a layout that has a widget '%s'/'%s' added after saving the state.",
                            itemWidget->metaObject()->className(), itemWidget->objectName().toUtf8().constData());

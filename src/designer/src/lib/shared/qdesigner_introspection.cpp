@@ -320,7 +320,7 @@ namespace qdesigner_internal {
 
     const QDesignerMetaObjectInterface* QDesignerIntrospection::metaObjectForQMetaObject(const QMetaObject *metaObject) const
     {
-        MetaObjectMap::iterator it = m_metaObjectMap.find(metaObject);
+        auto it = m_metaObjectMap.find(metaObject);
         if (it == m_metaObjectMap.end())
             it = m_metaObjectMap.insert(metaObject, new QDesignerMetaObject(this, metaObject));
         return it.value();

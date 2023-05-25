@@ -31,6 +31,7 @@
 #include <QtGui/qaction.h>
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -1633,8 +1634,7 @@ struct QDesignerAbstractPropertySheetFactory::PropertySheetFactoryPrivate {
     const QString m_propertySheetId;
     const QString m_dynamicPropertySheetId;
 
-    using ExtensionMap = QMap<QObject*, QObject*>;
-    ExtensionMap m_extensions;
+    QHash<QObject *, QObject *> m_extensions;
 };
 
 QDesignerAbstractPropertySheetFactory::PropertySheetFactoryPrivate::PropertySheetFactoryPrivate() :

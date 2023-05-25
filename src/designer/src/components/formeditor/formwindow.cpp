@@ -2485,7 +2485,7 @@ void FormWindow::highlightWidget(QWidget *widget, const QPoint &pos, HighlightMo
         return;
 
     if (mode == Restore) {
-        const WidgetPaletteMap::iterator pit = m_palettesBeforeHighlight.find(container);
+        const auto pit = m_palettesBeforeHighlight.find(container);
         if (pit != m_palettesBeforeHighlight.end()) {
             container->setPalette(pit.value().first);
             container->setAutoFillBackground(pit.value().second);

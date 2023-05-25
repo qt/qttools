@@ -11,7 +11,6 @@
 #include <QtGui/qundostack.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
-#include <QtCore/qmap.h>
 #include <QtCore/qset.h>
 #include <QtCore/qpointer.h>
 
@@ -316,8 +315,7 @@ private:
     QString m_fileName;
 
     using PaletteAndFill = QPair<QPalette ,bool>;
-    using WidgetPaletteMap = QMap<QWidget*, PaletteAndFill>;
-    WidgetPaletteMap m_palettesBeforeHighlight;
+    QHash<QWidget *, PaletteAndFill> m_palettesBeforeHighlight;
 
     QRubberBand *m_rubberBand = nullptr;
 

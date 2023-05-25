@@ -130,7 +130,7 @@ private:
     DesignerEditorFactory *m_groupFactory;
     QPointer<QObject> m_object;
     QMap<QString, QtVariantProperty*> m_nameToProperty;
-    QMap<QtProperty*, QString> m_propertyToGroup;
+    QHash<QtProperty *, QString> m_propertyToGroup;
     QMap<QString, QtVariantProperty*> m_nameToGroup;
     QList<QtProperty *> m_groups;
     QtProperty *m_dynamicGroup = nullptr;

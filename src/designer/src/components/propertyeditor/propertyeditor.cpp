@@ -411,7 +411,7 @@ void PropertyEditor::storePropertiesExpansionState(const QList<QtBrowserItem *> 
         if (!propertyItem->children().isEmpty()) {
             QtProperty *property = propertyItem->property();
             const QString propertyName = property->propertyName();
-            const QMap<QtProperty *, QString>::const_iterator itGroup = m_propertyToGroup.constFind(property);
+            const auto itGroup = m_propertyToGroup.constFind(property);
             if (itGroup != m_propertyToGroup.constEnd()) {
                 const QString key = itGroup.value() + u'|' + propertyName;
                 m_expansionState[key] = isExpanded(propertyItem);
@@ -451,7 +451,7 @@ void PropertyEditor::applyPropertiesExpansionState(const QList<QtBrowserItem *> 
         const QMap<QString, bool>::const_iterator excend = m_expansionState.constEnd();
         QtProperty *property = propertyItem->property();
         const QString propertyName = property->propertyName();
-        const QMap<QtProperty *, QString>::const_iterator itGroup = m_propertyToGroup.constFind(property);
+        const auto itGroup = m_propertyToGroup.constFind(property);
         if (itGroup != m_propertyToGroup.constEnd()) {
             const QString key = itGroup.value() + u'|' + propertyName;
             const QMap<QString, bool>::const_iterator pit = m_expansionState.constFind(key);
@@ -542,7 +542,7 @@ QColor PropertyEditor::propertyColor(QtProperty *property) const
 
     QtProperty *groupProperty = property;
 
-    QMap<QtProperty *, QString>::ConstIterator itProp = m_propertyToGroup.constFind(property);
+    const auto itProp = m_propertyToGroup.constFind(property);
     if (itProp != m_propertyToGroup.constEnd())
         groupProperty = m_nameToGroup.value(itProp.value());
 

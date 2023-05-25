@@ -1478,8 +1478,7 @@ bool RemoveDynamicPropertyCommand::init(const QObjectList &selection, QObject *c
 void RemoveDynamicPropertyCommand::redo()
 {
     QDesignerFormEditorInterface *core = formWindow()->core();
-    QMap<QObject *, QPair<QVariant, bool> >::ConstIterator it = m_objectToValueAndChanged.constBegin();
-    while (it != m_objectToValueAndChanged.constEnd()) {
+    for (auto it = m_objectToValueAndChanged.cbegin(), end = m_objectToValueAndChanged.cend(); it != end; ++it) {
         QObject *obj = it.key();
         QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core->extensionManager(), obj);
         QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), obj);
@@ -1488,15 +1487,13 @@ void RemoveDynamicPropertyCommand::redo()
             if (propertyEditor->object() == obj)
                 propertyEditor->setObject(obj);
         }
-        ++it;
     }
 }
 
 void RemoveDynamicPropertyCommand::undo()
 {
     QDesignerFormEditorInterface *core = formWindow()->core();
-    QMap<QObject *, QPair<QVariant, bool> >::ConstIterator it = m_objectToValueAndChanged.constBegin();
-    while (it != m_objectToValueAndChanged.constEnd()) {
+    for (auto it = m_objectToValueAndChanged.cbegin(), end = m_objectToValueAndChanged.cend(); it != end; ++it) {
         QObject *obj = it.key();
         QDesignerPropertySheetExtension *propertySheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), obj);
         QDesignerDynamicPropertySheetExtension *dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core->extensionManager(), obj);
@@ -1506,7 +1503,6 @@ void RemoveDynamicPropertyCommand::undo()
             if (propertyEditor->object() == obj)
                 propertyEditor->setObject(obj);
         }
-        ++it;
     }
 }
 
