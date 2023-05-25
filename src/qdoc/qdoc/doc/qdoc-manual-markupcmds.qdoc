@@ -102,28 +102,6 @@
     preceded by the \\a command. The parameter name is then rendered
     in italics.
 
-    \badcode *
-      /\1!
-         Constructs a line edit containing the text
-         \a contents. The \a parent parameter is sent
-         to the QWidget constructor.
-      \1/
-      QLineEdit::QLineEdit(const QString &contents, QWidget *parent) :QWidget(parent)
-      {
-         ...
-      }
-    \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        \b {QLineEdit::QLineEdit ( const QString &
-        contents, QWidget *parent )}
-
-        Constructs a line edit containing the text \a contents.
-        The \a parent parameter is sent to the QWidget constructor.
-    \endquotation
-
     The formal parameter name may be enclosed between curly brackets,
     but that isn't required.
 
@@ -134,37 +112,13 @@
     class names, and C++ keywords (for example, \c int and \c for) in the code
     font.
 
-    The command renders its argument using a monospace font. For
-    example:
-
-    \badcode *
-    /\1!
-        The \c AnalogClock class provides a clock widget with hour
-        and minute hands that is automatically updated every
-        few seconds.
-    \1/
-    \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        The \c AnalogClock class provides a clock widget with hour
-        and minute hands, which are automatically updated every
-        few seconds.
-    \endquotation
-
-    If the text to be rendered in the code font contains spaces, enclose the
-    entire text in curly brackets.
+    The command renders its argument using a monospace font. If the text to be
+    rendered in the code font contains spaces, enclose the entire text in curly
+    brackets:
 
     \code
       \c {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) : QWidget(parent)}
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-      \c {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) : QWidget(parent)}
-    \endquotation
 
     The \\c command accepts the special character \c \ within its
     argument, which renders it as a normal character. So if you want
@@ -198,17 +152,6 @@
     \badcode
     <summary>QDoc details</summary><div class="admonition note"><p><b>Note: </b>You're looking at detailed information.</p></div>
     \endcode
-
-    QDoc renders this as:
-
-    \raw HTML
-        <details>
-        <summary>QDoc details</summary>
-        <div class="admonition note">
-        <p><b>Note: </b>You're looking at detailed information.</p>
-        </div>
-        </details>
-    \endraw
 
     For any other output format, QDoc generates the contents as a normal paragraph,
     ignoring the summary string.
@@ -387,27 +330,12 @@
        \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       After having populated the main container with
-       child widgets, \c setupUi() scans the main container's list of
-       slots for names with the form
-       \tt{on_\e{objectName}_\e{signalName}().}
-    \endquotation
-
     If the text to be rendered in the code font contains spaces, enclose the
     entire text in curly brackets.
 
     \code
       \tt {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) :QWidget(parent)}
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-      \tt {QLineEdit::QLineEdit(const QString &contents, QWidget *parent) :QWidget(parent)}
-    \endquotation
 
     See also \l {c-command} {\\c}.
 
@@ -424,13 +352,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-    This is regular text; \b {this text is rendered using
-    the \\b command}.
-    \endquotation
-
     \target e-command
     \section1 \\e (emphasis, italics)
 
@@ -446,15 +367,9 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        Here, we render \e {a few words} in italics.
-    \endquotation
-
     If you want to use other QDoc commands within an argument that
     contains spaces, you always need to enclose the argument in
-    braces. But QDoc is smart enough to count parentheses [3], so you
+    braces. But QDoc is smart enough to count parentheses, so you
     don't need braces in cases like this:
 
     \badcode *
@@ -464,65 +379,8 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       An argument can sometimes contain whitespaces,
-       for example: \e QPushButton(tr("A Brand New Button"))
-    \endquotation
-
-    Finally, trailing punctuation is not included in an argument [4],
-    nor is "'s" [5]
-
-    \raw HTML
-        <table align="center" cellpadding="2"
-           cellspacing="1" border="0">
-        <tr valign="top" bgcolor="#a2c511">
-            <th></th>
-            <th>QDoc Syntax</th>
-            <th>Generated Documentation</th>
-        </tr>
-
-        <tr valign="top" bgcolor="#d0d0d0">
-           <td>1</td>
-            <td>A variation of a command button is a \e menu
-                button.</td>
-            <td>A variation of a command button is a <i>menu</i>
-                button.</td>
-        </tr>
-
-        <tr valign="top" bgcolor="#c0c0c0">
-            <td>2</td>
-            <td>The QPushButton widget provides a
-                \e {command button}.</td>
-            <td>The QPushButton widget provides a
-                <i>command button</i>.</td>
-        </tr>
-
-        <tr valign="top" bgcolor="#d0d0d0">
-            <td>3</td>
-            <td>Another class of buttons are option buttons
-                \e (see QRadioButton).</td>
-            <td>Another class of buttons are option buttons
-                <i> (see QRadioButton)</i>.</td>
-        </tr>
-
-        <tr valign="top" bgcolor="#c0c0c0">
-            <td>4</td>
-            <td>A push button emits the signal \e clicked().</td>
-            <td>A push button emits the signal <i>clicked</i>().</td>
-        </tr>
-
-        <tr valign="top" bgcolor="#d0d0d0">
-            <td>5</td>
-            <td>The \e QPushButton's checked property is
-                false by default.</td>
-            <td>The <i>QPushButton</i>'s checked property is
-                false by default.</td>
-        </tr>
-
-        </table>
-    \endraw
+    Finally, trailing punctuation is not included in an argument,
+    nor is "'s".
 
     \target sub-command
     \section1 \\sub
@@ -540,17 +398,6 @@
         is called the range of the sequence.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        Definition (Range): Consider the sequence
-        {x\sub n}\sub {n > 1} . The set
-
-        {x\sub 2, x\sub 3, x\sub 4, ...} = {x\sub n ; n = 2, 3, 4, ...}
-
-        is called the range of the sequence.
-    \endquotation
 
     If the argument contains spaces or other punctuation, enclose the
     argument in curly brackets.
@@ -570,16 +417,6 @@
         is called the \i {geometric series}.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        The series
-
-        1 + a + a\sup 2 + a\sup 3 + a\sup 4 + ...
-
-        is called the \e {geometric series}.
-    \endquotation
 
     If the argument contains spaces or other punctuation, enclose the
     argument in curly brackets.
@@ -605,14 +442,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        The \underline {F}ile menu gives the users the possibility
-        to edit an existing file, or save a new or modified
-        file, and exit the application.
-    \endquotation
-
     If the argument contains spaces or other punctuation, enclose the
     argument in curly brackets.
 
@@ -633,14 +462,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        The \\\\ command is useful if you want a
-        backslash to appear verbatim, for example,
-        writing C:\\windows\\home\\.
-    \endquotation
-
     However, if you want your text to appear in a monospace font as
     well, you can use the \l {c-command} {\\c} command instead, which
     accepts and renders the backslash as any other character. For
@@ -654,15 +475,6 @@
         like this: \c {C:\windows\home\}.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        The \\c command is useful if you want a
-        backslash to appear verbatim, and the word
-        that contains it written in a monospace font,
-        like this: \c {C:\windows\home\}.
-    \endquotation
 
     \target endash-sequence
     \section1 \-- (en dash)
@@ -678,13 +490,6 @@
         \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        The \\c command -- useful if you want text in a monospace font --
-        is well documented.
-    \endquotation
-
     However, other commands may require that the hyphens are escaped to ensure
     QDoc renders the output as expected. For example;
 
@@ -697,16 +502,6 @@
         renders both hyphens as intended.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        This \l {endash-sequence}{link to the -- (endash) sequence}
-        isn't escaped and QDoc therefore renders an endash in the link
-        text. However, the escaped
-        \l {endash-sequence}{link to the \-- (endash) sequence}
-        renders both hyphens as intended.
-    \endquotation
 
     See also \l {emdash-sequence}{\-\-- (em dash)}.
 
@@ -725,13 +520,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        The \\c command---useful when you want text to be rendered
-        verbatim---is well documented.
-    \endquotation
-
     However, other commands may require that the hyphens are escaped to ensure
     QDoc renders the output as expected. For example;
 
@@ -744,16 +532,6 @@
         renders both hyphens as intended.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        This \l {emdash-sequence}{link to the --- (emdash) sequence}
-        isn't escaped and QDoc therefore renders an emdash in the link
-        text. However, the escaped
-        \l {emdash-sequence}{link to the -\-- (emdash) sequence}
-        renders both hyphens as intended.
-    \endquotation
 
     \note The escaped control sequence in this example is for the en dash.
           This avoids a hyphen followed by an en dash in the output.
@@ -859,67 +637,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-           \quotation
-           \raw HTML
-               <a name="Basic Qt">
-               <h1>Basic Qt</h1>
-               </a>
-               <p>This is the first section.</p>
-
-                   <a name="Getting started">
-                   <h2>Getting Started</h2>
-                   </a>
-                   This is the first subsection.</p>
-
-                       <a name="Hello Qt">
-                       <h3>Hello Qt</h3>
-                       </a>
-                       <p>This is the first subsubsection.</p>
-
-                       <a name="Making Connections">
-                       <h3>Making Connections</h3>
-                       </a>
-                       <p>This is the second subsubsection.</p>
-
-                       <a name="Using the Reference Documentation">
-                       <h3>Using the Reference Documentation</h3>
-                       </a>
-                       <p>This is the third subsubsection.</p>
-
-                   <a name="Creating Dialogs">
-                   <h2>Creating Dialogs</h2>
-                   </a>
-                   <p>This is the second subsection.</p>
-
-                       <a name="Subclassing QDialog">
-                       <h3>Subclassing QDialog</h3>
-                       </a>
-                       <p>This is the first subsubsection.</p>
-
-                       ...
-
-               <a name="Intermediate Qt">
-               <h1>Intermediate Qt</h1>
-               </a>
-               <p>This is the second section.</p>
-
-                   <a name="Layout Management">
-                   <h2>Layout Management</h2>
-                   </a>
-                   <p>This is the second section's first subsection.</p>
-
-                       <a name="Basic Layouts">
-                       <h3>Basic Layouts</h3>
-                       </a>
-                       <p>This is the first subsubsection.</p>
-
-               ...
-
-           \endraw
-           \endquotation
-
     Each section is a logical unit in the document. The section
     heading appears in the automatically generated table of contents
     that normally appears in the upper right-hand corner of the page.
@@ -1017,18 +734,6 @@
        \2/
        \endcode
 
-       QDoc renders this as:
-
-       \code
-           #include <QApplication>
-           #include <QPushButton>
-
-           int main(int argc, char *argv[])
-           {
-               ...
-           }
-       \endcode
-
     Other QDoc commands are disabled within \\code... \\endcode, and
     the special character '\\' is accepted and rendered like the rest
     of the code, unless it is followed by a digit and parameters were
@@ -1124,25 +829,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \qml
-        import QtQuick 2.0
-
-        Row {
-            Rectangle {
-                width: 100; height: 100
-                color: "blue"
-                transform: Translate { y: 20 }
-            }
-            Rectangle {
-                width: 100; height: 100
-                color: "red"
-                transform: Translate { y: -20 }
-            }
-        }
-    \endqml
-
     Like the \l{code-command}{\\code} command, \\qml accepts optional
     parameters.
 */
@@ -1195,17 +881,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       This is a simple "Hello world" example:
-
-       \quotefile examples/main.cpp
-
-       It contains only the bare minimum you need to get a Qt
-       application up and running.
-    \endquotation
-
     See also \l {quotefromfile-command} {\\quotefromfile} and
     \l {code-command} {\\code}.
 
@@ -1249,29 +924,6 @@
        ...
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-       The whole application is contained within
-       the \c main() function:
-
-       \quotefromfile examples/main.cpp
-
-       \skipto main
-       \printuntil app(argc, argv)
-
-       First we create a QApplication object using the \c argc
-       and \c argv parameters.
-
-       \skipto QPushButton
-       \printuntil resize
-
-       Then we create a QPushButton, and give it a reasonable
-       size using the QWidget::resize() function.
-
-       ...
-    \endquotation
 
     QDoc remembers which file it is quoting from, and the current
     position in that file (see \l {file} {\\printline} for more
@@ -1322,33 +974,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       There has to be exactly one QApplication object
-       in every GUI application that uses Qt.
-
-       \quotefromfile examples/main.cpp
-
-       \skipto QApplication
-       \printline QApplication
-
-       This line includes the QApplication class
-       definition. QApplication manages various
-       application-wide resources, such as the
-       default font and cursor.
-
-       \printline QPushButton
-
-       This line includes the QPushButton class
-       definition. The QPushButton widget provides a command
-       button.
-
-       \printline main
-
-       The main function...
-    \endquotation
-
     \target file
 
     QDoc reads the file sequentially. To move the current position
@@ -1376,21 +1001,6 @@
        application.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-       \quotefromfile examples/mainwindow.cpp
-
-       \skipto closeEvent
-       \printuntil /^\}/
-
-       Close events are sent to widgets that the users want to
-       close, usually by clicking \c File|Exit or by clicking
-       the \c X title bar button. By reimplementing the event
-       handler, we can intercept attempts to close the
-       application.
-    \endquotation
 
     (\l {widgets/scribble} {The complete example file...})
 
@@ -1436,20 +1046,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       The whole application is contained within the
-       \c main() function:
-
-       \quotefromfile examples/main.cpp
-       \skipto main
-       \printto hello
-
-       First we create a QApplication object using the \c argc
-       and \c argv parameters...
-    \endquotation
-
     See also \l {printline-command} {\\printline} and \l
     {printuntil-command} {\\printuntil}.
 
@@ -1488,23 +1084,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       The whole application is contained within the
-       \c main() function:
-
-       \quotefromfile examples/main.cpp
-       \skipto main
-       \printuntil hello
-
-       First we create a \l
-       {http://doc.qt.io/qt-6/qapplication.html} {QApplication}
-       object using the \c argc and \c argv parameters, then we
-       create a \l
-       {http://doc.qt.io/qt-6/qpushbutton.html} {QPushButton}.
-    \endquotation
-
     See also \l {printline-command} {\\printline} and \l
     {printto-command} {\\printto}.
 
@@ -1541,23 +1120,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       \l
-       QPushButton is a GUI push button that the user
-       can press and release.
-
-       \quotefromfile examples/main.cpp
-       \skipto QApplication
-       \skipline QApplication
-       \printline QPushButton
-
-       This line includes the QPushButton class
-       definition. For each class that is part of the public
-       Qt API, there exists a header file of the same name
-       that contains its definition.
-    \endquotation
 
     See also \l {skipto-command} {\\skipto}, \l {skipuntil-command}
     {\\skipuntil} and \l {dots} {\\dots}.
@@ -1599,22 +1161,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       The whole application is contained within
-       the \c main() function:
-
-       \quotefromfile examples/main.cpp
-       \skipto main
-       \printuntil }
-
-       First we create a QApplication object. There has to be
-       exactly one such object in every GUI application that
-       uses Qt. Then we create a QPushButton, resize it to a
-       reasonable size ...
-    \endquotation
-
     See also \l {skipline-command} {\\skipline}, \l
     {skipuntil-command} {\\skipuntil} and \l {dots} {\\dots}.
 
@@ -1654,22 +1200,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       The first thing we did in the \c main() function was to
-       create a QApplication object \c app.
-
-       \quotefromfile examples/main.cpp
-       \skipuntil show
-       \dots
-       \printuntil }
-
-       In the end we must remember to make \c main() pass the
-       control to Qt. QCoreApplication::exec()
-       will return when the application exits...
-    \endquotation
-
     See also \l {skipline-command} {\\skipline}, \l {skipto-command}
     {\\skipto} and \l {dots} {\\dots}.
 
@@ -1695,15 +1225,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotefromfile examples/main.cpp
-    \skipto main
-    \printuntil {
-    \dots
-    \skipuntil exec
-    \printline }
-
     The default indentation is 4 spaces, but this can be adjusted
     using the command's optional argument.
 
@@ -1716,14 +1237,6 @@
         \dots 16
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \dots 0
-    \dots
-    \dots 8
-    \dots 12
-    \dots 16
 
     See also \l {skipline-command} {\\skipline}, \l {skipto-command}
     {\\skipto} and \l {skipuntil-command} {\\skipuntil}.
@@ -1811,13 +1324,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       Read the \l {http://doc.qt.io/qt-6/}
-       {Qt 6 Documentation} carefully.
-    \endquotation
-
     If the link target is equivalent to the link text, the second
     argument can be omitted.
 
@@ -1904,12 +1410,6 @@
     \list
         \li \c {\l {QWidget::} {sizeHint()}}
     \endlist
-
-    QDoc renders this as:
-
-    \quotation
-    \l {QWidget::} {sizeHint()}
-    \endquotation
 
     \section2 Fixing Ambiguous Links
 
@@ -2058,19 +1558,6 @@
     }
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        \b {void QWidget::addActions ( QList<QAction*>
-        \e actions )}
-
-        Appends the actions \e actions to this widget's list of
-        actions.
-
-        See also \l {QWidget::removeAction()} {removeAction()},
-        \l QMenu, and \l {QWidget::addAction()} {addAction()}.
-    \endquotation
-
     See also \l {l-command} {\\l}, \l {target-command} {\\target} and
     \l {keyword-command} {\\keyword}.
 
@@ -2159,13 +1646,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        When a string is surrounded by slashes, it is
-        interpreted as a \l {regular expression}.
-    \endquotation
-
     If the keyword text contains spaces, the brackets are required.
 
     See also \l {l-command} {\\l (link)}, \l {sa-command} {\\sa (see
@@ -2214,18 +1694,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        Qt is a C++ toolkit for cross-platform GUI application development.
-
-        \image happyguy.jpg image "Happy guy"
-
-        Qt provides single-source portability across Microsoft
-        Windows, macOS, Linux, and all major commercial Unix
-        variants. It is also available for embedded devices.
-        \endquotation
-
     See also \l {inlineimage-command} {\\inlineimage} and \l
     {caption-command} {\\caption}.
 
@@ -2253,13 +1721,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \list 1
-      \li \inlineimage happy.gif {Oh so happy, I am a caption!}
-      \li \inlineimage happy.gif Oh so happy, but I'm not a caption.
-    \endlist
-
     Here is an example of including inline images in a table:
 
     \badcode *
@@ -2278,30 +1739,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \raw HTML
-        <table align="center" cellpadding="2"
-            cellspacing="1" border="0">
-        <tr valign="top" bgcolor="#a2c511">
-            <th>Qt</th>
-            <th>Qt Creator</th>
-        </tr>
-        <tr valign="top" bgcolor="#f0f0f0">
-            <td><img src="images/happy.gif" alt="Oh so happy!" />
-            </td>
-            <td><img src="images/happy.gif"/> Oh so happy!
-            </td>
-        </tr>
-        <tr valign="top" bgcolor="#f0f0f0">
-            <td><img src="images/happy.gif"/> Oh so happy!
-            </td>
-            <td><img src="images/happy.gif" alt="Oh so happy!" />
-            </td>
-        </tr>
-        </table>
-    \endraw
-
     The command can also be used to insert an image inline with the
     text.
 
@@ -2314,16 +1751,6 @@
         derive maximum benefit from the course.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        \inlineimage training.jpg {Qt Training} The Qt Programming course is
-        offered as a five day Open Enrollment Course. The classes are open to
-        the public. Although the course is open to anyone who wants to learn,
-        attendees should have significant experience in C++ development to
-        derive maximum benefit from the course.
-    \endquotation
 
     See also \l {image-command} {\\image} and \l {caption-command} {\\caption}.
 
@@ -2347,17 +1774,6 @@
        \endtable
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \table 100%
-      \row
-        \li \image windows-pushbutton.png
-           \caption The QPushButton widget provides a command button.
-        \li \image windows-toolbutton.png
-           \caption The QToolButton class provides a quick-access button to commands
-           or options, usually used inside a QToolBar.
-    \endtable
 
     See also \l {image-command} {\\image} and \l {inlineimage-command}
     {\\inlineimage}
@@ -2429,45 +1845,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \raw HTML
-       <table align="center" cellpadding="2"
-           cellspacing="1" border="0">
-       <tr valign="top" bgcolor="#a2c511">
-           <th>Qt Core Feature</th>
-           <th>Brief Description</th>
-       </tr>
-
-       <tr valign="top" bgcolor="#d0d0d0">
-           <td>
-           <a href="http://doc.qt.io/qt-6/signalsandslots.html">
-               Signals and Slots</a>
-           </td>
-           <td>Signals and slots are used for communication
-               between objects.</td>
-       </tr>
-
-       <tr valign="top" bgcolor="#c0c0c0">
-           <td>
-           <a href="http://doc.qt.io/qt-6/layout.html">
-               Layout Management</a></td>
-           <td>The Qt layout system provides a simple
-               and powerful way of specifying the layout
-               of child widgets.</td>
-       </tr>
-
-       <tr valign="top" bgcolor="#d0d0d0">
-           <td>
-           <a href="http://doc.qt.io/qt-6/dnd.html">
-               Drag and Drop</a></td>
-           <td>Drag and drop provides a simple visual
-               mechanism which users can use to transfer
-               information between and within applications.</td>
-       </tr>
-       </table>
-    \endraw
-
     You can also make cells span several rows and columns. For
     example:
 
@@ -2488,34 +1865,6 @@
        \endtable
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \raw HTML
-       <table align="center" cellpadding="2" cellspacing="1"
-        border="0">
-
-       <tr valign="top" bgcolor="#a2c511">
-           <th colspan="3" rowspan="1">
-           This header cell spans three columns, but only one row.
-           </th>
-       </tr>
-
-       <tr valign="top" bgcolor="#d0d0d0">
-           <td colspan="2" rowspan="1">
-           This table cell spans two columns, but only one row.
-           </td>
-           <td rowspan="2">
-           This table cell spans only one column, but two rows.
-           </td>
-       </tr>
-
-       <tr valign="top" bgcolor="#c0c0c0">
-           <td>A regular table cell</td>
-           <td>A regular table cell</td>
-       </tr>
-       </table>
-    \endraw
 
     See also \l {header-command} {\\header}, \l {row-command} {\\row} and \l {li-command} {\\li}.
 
@@ -2545,27 +1894,6 @@
        \endtable
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \raw HTML
-       <table align="center" cellpadding="2"
-           cellspacing="1" border="0">
-       <tr valign="top" bgcolor="#a2c511">
-           <th>Qt Core Feature</th>
-           <th>Brief Description</th>
-       </tr>
-
-       <tr valign="top" bgcolor="#d0d0d0">
-           <td>
-           <a href="http://doc.qt.io/qt-6/signalsandslots.html">
-               Signals and Slots</a>
-           </td>
-           <td>Signals and slots are used for communication
-               between objects.</td>
-       </tr>
-       </table>
-    \endraw
 
     See also \l {table-command} {\\table}, \l {row-command} {\\row} and \l {li-command} {\\li}.
 
@@ -2607,45 +1935,6 @@
        \endtable
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \raw HTML
-       <table align="center" cellpadding="2"
-           cellspacing="1" border="0">
-       <tr valign="top" bgcolor="#a2c511">
-           <th>Qt Core Feature</th>
-           <th>Brief Description</th>
-       </tr>
-
-       <tr valign="top" bgcolor="#d0d0d0">
-           <td>
-           <a href="http://doc.qt.io/qt-6/signalsandslots.html">
-               Signals and Slots</a>
-           </td>
-           <td>Signals and slots are used for communication
-               between objects.</td>
-       </tr>
-
-       <tr valign="top" bgcolor="#c0c0c0">
-           <td>
-           <a href="http://doc.qt.io/qt-6/layout.html">
-               Layout Management</a></td>
-           <td>The Qt layout system provides a simple
-               and powerful way of specifying the layout
-               of child widgets.</td>
-       </tr>
-
-       <tr valign="top" bgcolor="#d0d0d0">
-           <td>
-           <a href="http://doc.qt.io/qt-6/dnd.html">
-               Drag and Drop</a></td>
-           <td>Drag and drop provides a simple visual
-               mechanism which users can use to transfer
-               information between and within applications.</td>
-       </tr>
-       </table>
-    \endraw
 
     See also \l {table-command} {\\table}, \l {header-command}
     {\\header}, and \l {li-command} {\\li}.
@@ -2732,23 +2021,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \list
-        \li Qt Reference Documentation: Getting Started
-        \list
-            \li How to Learn Qt
-            \li Installation
-            \list
-                \li Qt/X11
-                \li Qt/Windows
-                \li Qt/Mac
-                \li Qt/Embedded
-            \endlist
-        \li Tutorial and Examples
-        \endlist
-    \endlist
-
     The \\list command takes an optional argument providing
     alternative appearances for the list items.
 
@@ -2761,14 +2033,6 @@
        \endlist
     \1/
     \endcode
-
-    QDoc renders the list items with bullets (the default):
-
-    \list
-       \li How to Learn Qt
-       \li Installation
-       \li Tutorial and Examples
-    \endlist
 
     If you provide 'A' as an argument to the \\list command, the
     bullets are replaced with characters in alphabetical order:
@@ -2821,14 +2085,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \list G
-       \li How to Learn Qt
-       \li Installation
-       \li Tutorial and Examples
-    \endlist
-
     See also \l {li-command} {\\li}.
 
     \target li-command
@@ -2863,34 +2119,6 @@
        \endtable
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \raw HTML
-       <table align="center" cellpadding="2" cellspacing="1"
-        border="0">
-
-       <tr valign="top" bgcolor="#a2c511">
-           <th colspan="3" rowspan="1">
-           This header cell spans three columns, but only one row.
-           </th>
-       </tr>
-
-       <tr valign="top" bgcolor="#d0d0d0">
-           <td colspan="2" rowspan="1">
-           This table item spans two columns, but only one row.
-           </td>
-           <td rowspan="2">
-           This table item spans only one column, but two rows.
-           </td>
-       </tr>
-
-       <tr valign="top" bgcolor="#c0c0c0">
-           <td>A regular table item</td>
-           <td>A regular table item</td>
-       </tr>
-       </table>
-    \endraw
 
     If not specified, the item will span one column and one row.
 
@@ -3034,33 +2262,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-       \raw HTML
-           <h3>geometry :
-           <a href="http://doc.qt.io/qt-6/qrect.html">QRect</a>
-           </h3>
-       \endraw
-
-       This property holds the geometry of the widget relative
-       to its parent and excluding the window frame.
-
-       ...
-
-       Access functions:
-       \list
-           \li \b {const QRect & geometry () const}
-           \li \b {void setGeometry ( int x, int y, int w, int h )}
-           \li \b {void setGeometry ( const QRect & )}
-       \endlist
-
-       See also \l
-       {QWidget::frameGeometry()} {frameGeometry()}, \l
-       {QWidget::rect()} {rect()}, ...
-    \endquotation
-
-
     When the \\brief command is used to describe a class, we recommend
     using a complete sentence like this:
 
@@ -3089,108 +2290,6 @@
        \sa QWidget
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-            <h1>PreviewWindow Class Reference</h1>
-        \endraw
-
-        The PreviewWindow class is a custom widget displaying
-        the names of its currently set window flags in a
-        read-only text editor. \l {preview window} {More...}
-
-        \raw HTML
-            <h3>Properties</h3>
-        \endraw
-
-        \list
-            \li 52 properties inherited from QWidget
-            \li 1 property inherited from QObject
-        \endlist
-
-        \raw HTML
-            <h3>Public Functions</h3>
-        \endraw
-
-        \list
-            \li \l {constructor} {PreviewWindow}(QWidget *parent = 0)
-            \li void \l {function} {setWindowFlags}(Qt::WindowFlags flags)
-        \endlist
-
-        \list
-            \li 183 public functions inherited from QWidget
-            \li 28 public functions inherited from QObject
-        \endlist
-
-        \raw HTML
-            <h3>Public Slots</h3>
-        \endraw
-
-        \list
-            \li 17 public slots inherited from QWidget
-            \li 1 public slot inherited from QObject
-        \endlist
-
-        \raw HTML
-            <h3>Additional Inherited Members</h3>
-        \endraw
-
-        \list
-            \li 1 signal inherited from QWidget
-            \li 1 signal inherited from QObject
-            \li 4 static public members inherited from QWidget
-            \li 4 static public members inherited from QObject
-            \li 39 protected functions inherited from QWidget
-            \li 7 protected functions inherited from QObject
-        \endlist
-
-        \target preview window
-
-        \raw HTML
-            <hr />
-            <h2>Detailed Description</h2>
-        \endraw
-
-        The PreviewWindow class is a custom widget displaying
-        the names of its currently set window flags in a
-        read-only text editor.
-
-        The PreviewWindow class inherits QWidget. The widget
-        displays the names of its window flags set with the \l
-        {function} {setWindowFlags()} function. It is also
-        provided with a QPushButton that closes the window.
-
-        ...
-
-        See also QWidget.
-
-        \raw HTML
-            <hr />
-            <h2>Member Function Documentation</h2>
-        \endraw
-
-        \target constructor
-        \raw HTML
-            <h3>PreviewWindow(QWidget *parent = 0)</h3>
-        \endraw
-
-        Constructs a preview window widget with \e parent.
-
-        \target function
-        \raw HTML
-            <h3>setWindowFlags(Qt::WindowFlags flags)</h3>
-        \endraw
-
-        Sets the widgets flags using the
-        QWidget::setWindowFlags() function.
-
-        Then runs through the available window flags,
-        creating a text that contains the names of the flags
-        that matches the flags parameter, displaying
-        the text in the widgets text editor.
-    \endquotation
 
     Using \\brief in a \l{namespace-command}{\\namespace}:
 
@@ -3310,17 +2409,6 @@
        \warning Using this type is not portable.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-       Qt::HANDLE is a platform-specific handle type
-       for system objects. This is  equivalent to
-       \c{void *} on Windows and macOS, and to
-       \c{unsigned long} on X11.
-
-       \warning Using this type is not portable.
-    \endquotation
 */
 
 
@@ -3936,98 +3024,26 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \raw HTML
-        <table align="center" cellpadding="2"
-            cellspacing="1" border="0">
-
-        <tr valign="top" bgcolor="#d0d0d0">
-            <td>Basic Widgets</td>
-            <td>Basic GUI widgets such as buttons, comboboxes
-               and scrollbars.</td>
-        </tr>
-
-        <tr valign="top" bgcolor="#c0c0c0">
-            <td>Database Classes</td>
-            <td>Database related classes, e.g. for SQL databases.</td>
-        </tr>
-        </table>
-    \endraw
-
     \target raw-command
-    \section1 \\raw (avoid)
+    \section1 \\raw (avoid!)
 
     The \\raw command and the corresponding
     \\endraw command delimit a block of raw mark-up language code.
 
-    \note Avoid using this command if possible. If you are trying to generate
-    special table or list behavior, try to get the behavior you want
+    \warning Avoid using this command if possible. If you are trying to
+    generate special table or list behavior, try to get the behavior you want
     using the \l {span-command} {\\span} and \l {div-command} {\\div}
     commands in your \l {table-command} {\\table} or \l {list-command}
     {\\list}.
 
-    The command takes an argument specifying the code's format.
-    Currently, the only supported format is HTML.
+    The command takes an argument specifying the code's format. QDoc recognizes
+    the formats it can generate as input to the \\raw command.
 
-    The \\raw command is useful if you want some special HTML effects
+    The \\raw command can sometimes be useful if you need special HTML effects
     in your documentation.
 
-    \badcode *
-    /\1!
-       Qt has some predefined QColor objects.
-
-       \raw HTML
-       <style type="text/css" id="colorstyles">
-       #color-blue { background-color: #0000ff; color: #ffffff }
-       #color-darkBlue { background-color: #000080; color: #ffffff }
-       #color-cyan { background-color: #00ffff; color: #000000 }
-       </style>
-
-       <p>
-       <tt id="color-blue">Blue(#0000ff)</tt>,
-       <tt id="color-darkBlue">dark blue(#000080)</tt> and
-       <tt id="color-cyan">cyan(#00ffff)</tt>.
-    </p>
-       \endraw
-    \1/
-    \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        Qt has some predefined QColor objects.
-
-        \raw HTML
-        <style type="text/css" id="colorstyles">
-            #color-blue { background-color: #0000ff; color: #ffffff }
-            #color-darkBlue { background-color: #000080; color: #ffffff }
-            #color-cyan { background-color: #00ffff; color: #000000 }
-        </style>
-
-        <p>
-            <tt id="color-blue">Blue(#0000ff)</tt>,
-            <tt id="color-darkBlue">dark blue(#000080)</tt> and
-            <tt id="color-cyan">cyan(#00ffff)</tt>.
-        </p>
-       \endraw
-    \endquotation
-
-    \note But you can achieve the exact same thing using QDoc
-    commands. In this case, all you have to do is include the color
-    styles in your style.css file. Then you can write:
-
-    \badcode
-       \tt {\span {id="color-blue"} {Blue(#0000ff)}},
-       \tt {\span {id="color-darkBlue"} {dark blue(#000080)}} and
-       \tt {\span {id="color-cyan"} {cyan(#00ffff)}}.
-    \endcode
-
-    which QDoc renders as:
-
-    \tt {\span {id="color-blue"} {Blue(#0000ff)}},
-    \tt {\span {id="color-darkBlue"} {dark blue(#000080)}} and
-    \tt {\span {id="color-cyan"} {cyan(#00ffff)}}.
+    \note You can often achieve the intended purpose by using QDoc commands,
+    while reducing the chance of mistakes or content becoming unmaintained.
 
     \target sincelist-command
     \section1 \\sincelist
@@ -4059,25 +3075,6 @@
 
     The command takes an argument specifying the character as an
     integer. By default, base 10 is assumed, unless a '0x' or '0'
-    prefix is specified (for base 16 and 8, respectively). For
-    example:
-
-    \badcode
-        O G\unicode{0xEA}nio e as Rosas
-
-        \unicode 0xC0 table en famille avec 15 \unicode 0x20AC par jour
-
-        \unicode 0x3A3 \e{a}\sub{\e{i}}
-    \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        O G\unicode{0xEA}nio e as Rosas
-
-        \unicode 0xC0 table en famille avec 15 \unicode 0x20AC par jour
-
-        \unicode 0x3A3 \e{a}\sub{\e{i}}
-    \endquotation
+    prefix is specified (for base 16 and 8, respectively).
 */
 

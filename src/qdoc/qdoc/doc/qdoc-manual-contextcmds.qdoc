@@ -68,41 +68,6 @@
     \section1 Example
     \quotefile files/basicqt.qdoc.sample
 
-    QDoc renders the "Getting Started" page in \c{creatingdialogs.html}:
-
-    \quotation
-    \raw HTML
-        <table border="0" cellpadding="0" cellspacing="5" width="100%">
-
-        <tr>
-        <p>
-        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Basic Qt</a>]
-        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
-        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Creating Dialogs</a>]
-        </p>
-
-        <h1 align="center">Getting Started<br /></h1>
-
-        <p>
-        This chapter shows how to combine basic C++ with the
-        functionality provided by Qt to create a few small graphical
-        interface (GUI) applications.
-        </p>
-
-        <p>
-        [Previous: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Basic Qt</a>]
-        [<a href="15-qdoc-commands-navigation.html#deadlink">Contents</a>]
-        [Next: <a href="15-qdoc-commands-navigation.html#deadlink">
-        Creating Dialogs</a>]
-        </p>
-
-        </table>
-    \endraw
-    \endquotation
-
     The \l {startpage-command} {\\startpage} command creates a link to
     the page the author wants as the first page of a multipage document.
 
@@ -313,34 +278,6 @@
     \1/
     \endcode
 
-    QDoc renders this in \c{myclass-obsolete.html} as:
-
-    \quotation
-        \raw HTML
-        <h1>Deprecated Members for MyClass</h1>
-        \endraw
-
-        \b {The following class members are deprecated.}  We strongly
-        advise against using them in new code.
-
-        ...
-
-        \list
-            \li void MyDeprecatedFunction() \c (deprecated)
-            \li ...
-        \endlist
-
-        \raw HTML
-        <hr />
-        <h2>Member Function Documentation</h2>
-        <h3>void MyDeprecatedFunction ()</h3>
-        <p>This function is deprecated since 6.2. It is provided to
-        keep old source code working. We strongly advise against using
-        it in new code. Use MyNewFunction() instead.</p>
-        \endraw
-        ...
-    \endquotation
-
     \target internal-command
     \section1 \\internal
 
@@ -427,34 +364,6 @@
     }
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-        <h3>
-        <a href="http://doc.qt.io/qt-5/qchar.html#JoiningType-enum">JoiningType</a>
-        QChar::joiningType() const</h3>
-        \endraw
-
-        \b {This function is under development and
-        subject to change.}
-
-        Returns information about the joining type attributes of the
-        character (needed for certain languages such as Arabic or
-        Syriac).
-    \endquotation
-
-    And the function's entry in QChar's list of public functions will be
-    rendered as:
-
-    \quotation
-        \list
-        \li ...
-        \li JoiningType \l {QChar::joiningType()} {joiningType}() const  \c (preliminary)
-       \li ...
-       \endlist
-    \endquotation
-
     \target readonly-command
     \section1 \\readonly
 
@@ -474,37 +383,6 @@
 
     The \\since command tells in which minor release
     the associated functionality was added.
-
-    \badcode *
-    /\1!
-        \since 4.1
-
-        Returns an icon for \a standardIcon.
-
-        ...
-
-        \sa standardPixmap()
-    \1/
-    QIcon QStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption *option, const QWidget *widget) const
-    {
-    }
-    \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-        <h3>QIcon QStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption *option, const QWidget *widget) const</h3>
-        \endraw
-
-        This function was introduced in Qt version 4.1.
-
-        Returns an icon for \a standardIcon.
-
-        ...
-
-        \b {See also} \l {QStyle::standardPixmap()} {standardPixmap()}.
-    \endquotation
 
     If the argument passed to \\since contains no spaces, it is assumed to be
     a version number string for the Qt project, and QDoc will prefix it with
@@ -607,55 +485,7 @@
     }
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-            <h1><center>QLocale Class Reference</center></h1>
-        \endraw
-
-        The QLocale class converts between numbers and their string
-        representations in various languages. More...
-
-        \code
-        #include <QLocale>
-        \endcode
-
-        \b {Note:} All the functions in this class are \l
-        {17-qdoc-commands-thread.html#reentrant} {reentrant}, except \l
-        {QLocale::setDefault()} {setDefault()}.
-
-        ...
-
-        \raw HTML
-            <hr />
-            <h2>Member Type Documentation</h2>
-        \endraw
-
-        ...
-
-        \raw HTML
-            <h3>void QLocale::setDefault ( const QLocale & locale ) </h3>
-        \endraw
-
-        Sets the global default locale to locale. These values are
-        used when a QLocale object is constructed with no
-        arguments. If this function is not called, the system's locale
-        is used.
-
-        \warning In a multithreaded application, the default locale
-        should be set at application startup, before any non-GUI
-        threads are created.
-
-        \warning This function is not reentrant.
-
-        See also \l {QLocale::system()} {system()} and \l
-        {QLocale::c()} {c()}.
-
-        ...
-    \endquotation
-
-    As shown above, QDoc generates a notification when a class is
+    QDoc generates a notification when a class is
     declared reentrant, and lists the exceptions (the declared
     nonreentrant functions). A link to the general documentation on \l
     {17-qdoc-commands-thread.html#reentrant} {reentrancy and thread-safety} is
@@ -817,27 +647,6 @@
         return ret;
     }
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-        <h3><a href="http://doc.qt.io/qt-5/qaction.html">QAction</a>
-        * QMenu::addAction ( const QIcon & <i>icon</i>,
-        const QString & <i>text</i> )
-        </h3>
-        \endraw
-
-    This function overloads \l {QMenu::addAction()} {addAction()}
-
-        This convenience function creates a new action with an
-        \e icon and some \e text. The function adds the newly
-        created action to the menu's list of actions, and
-        returns it.
-
-        See also
-        \l {QWidget::addAction()} {QWidget::addAction}().
-    \endquotation
 
     If you don't include the function name with the \b{\\overload}
     command, then instead of the "This function overloads..." line
@@ -1022,19 +831,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-            <h1><center>Signal and Slots</center></h1>
-        \endraw
-
-        Signals and slots are used for communication between
-        objects. The signals and slots mechanism is a central
-        feature of Qt and probably the part that differs most
-        from the features provided by other frameworks.
-        ...
-    \endquotation
     See also \l {subtitle-command} {\\subtitle}.
 
     \target subtitle-command
@@ -1055,20 +851,6 @@
         ...
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-            <h1><center>Qtopia Core</center></h1>
-            <h2><center>Qt for Embedded Linux</center></h2>
-        \endraw
-
-        Qt/Embedded, the embedded Linux port of Qt, is a
-        complete and self-contained C++ GUI and platform
-        development tool for Linux-based embedded development.
-        ...
-    \endquotation
 
     See also \l {title-command} {\\title}.
 

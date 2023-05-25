@@ -198,109 +198,8 @@
     \1/
     \endcode
 
-    The way QDoc renders this \\class will depend a lot on your \c
-    {style.css} file, but the general outline of the class reference
-    page will look like this:
-
-    \quotation
-        \raw HTML
-            <h1>PreviewWindow Class Reference</h1>
-        \endraw
-
-        The PreviewWindow class is a custom widget displaying
-        the names of its currently set window flags in a
-        read-only text editor. \l {preview window} {More...}
-
-        \raw HTML
-            <h3>Properties</h3>
-        \endraw
-
-        \list
-            \li 52 properties inherited from QWidget
-            \li 1 property inherited from QObject
-        \endlist
-
-        \raw HTML
-            <h3>Public Functions</h3>
-        \endraw
-
-        \list
-            \li \l {constructor} {PreviewWindow}(QWidget *parent = 0)
-            \li void \l {function} {setWindowFlags}(Qt::WindowFlags flags)
-        \endlist
-
-        \list
-            \li 183 public functions inherited from QWidget
-            \li 28 public functions inherited from QObject
-        \endlist
-
-        \raw HTML
-           <h3>Public Slots</h3>
-        \endraw
-
-        \list
-            \li 17 public slots inherited from QWidget
-            \li 1 public slot inherited from QObject
-        \endlist
-
-        \raw HTML
-            <h3>Additional Inherited Members</h3>
-        \endraw
-
-        \list
-            \li 1 signal inherited from QWidget
-            \li 1 signal inherited from QObject
-            \li 4 static public members inherited from QWidget
-            \li 4 static public members inherited from QObject
-            \li 39 protected functions inherited from QWidget
-            \li 7 protected functions inherited from QObject
-        \endlist
-
-        \target preview window
-
-        \raw HTML
-            <hr />
-            <h2>Detailed Description</h2>
-        \endraw
-
-        The PreviewWindow class is a custom widget displaying
-        the names of its currently set window flags in a
-        read-only text editor.
-
-        The PreviewWindow class inherits QWidget. The widget
-        displays the names of its window flags set with the \l
-        {function} {setWindowFlags()} function. It is also
-        provided with a QPushButton that closes the window.
-
-        ...
-
-        See also QWidget.
-
-        \raw HTML
-            <hr />
-            <h2>Member Function Documentation</h2>
-        \endraw
-
-        \target constructor
-        \raw HTML
-           <h3>PreviewWindow(QWidget *parent = 0)</h3>
-        \endraw
-
-        Constructs a preview window widget with \e parent.
-
-        \target function
-        \raw HTML
-            <h3>setWindowFlags(Qt::WindowFlags flags)</h3>
-        \endraw
-
-        Sets the widgets flags using the
-        QWidget::setWindowFlags() function.
-
-        Then runs through the available window flags,
-        creating a text that contains the names of the flags
-        that matches the flags parameter, displaying
-        the text in the widgets text editor.
-    \endquotation
+    The way QDoc renders this \\class depends on your \c {style.css}
+    file.
 
     \target enum-command
     \section1 \\enum
@@ -357,49 +256,7 @@
     \1/
     \endcode
 
-    Note the inclusion of the namespace qualifier. QDoc will render
-    this enum type in \c {qt.html} like this:
-
-           \quotation
-           \raw HTML
-               <h3 class="fn"><a name="Corner-enum"></a>enum Qt::Corner</h3>
-
-               <p>This enum type specifies a corner in a rectangle:</p>
-
-               <table border="1" cellpadding="2" cellspacing="1" width="100%">
-               <tr>
-               <th width="25%">Constant</th>
-               <th width="15%">Value</th>
-               <th width="60%">Description</th>
-               </tr>
-
-               <tr>
-               <td valign="top"><tt>Qt::TopLeftCorner</tt></td>
-               <td align="center" valign="top"><tt>0x00000</tt></td>
-               <td valign="top">The top-left corner of the rectangle.</td>
-               </tr>
-
-               <tr>
-               <td valign="top"><tt>Qt::TopRightCorner</tt></td>
-               <td align="center" valign="top"><tt>0x00001</tt></td>
-               <td valign="top">The top-right corner of the rectangle.</td>
-               </tr>
-
-               <tr>
-               <td valign="top"><tt>Qt::BottomLeftCorner</tt></td>
-               <td align="center" valign="top"><tt>0x00002</tt></td>
-               <td valign="top">The bottom-left corner of the rectangle.</td>
-               </tr>
-
-               <tr>
-               <td valign="top"><tt>Qt::BottomRightCorner</tt></td>
-               <td align="center" valign="top"><tt>0x00003</tt></td>
-               <td valign="top">The bottom-right corner of the rectangle.</td>
-               </tr>
-
-               </table>
-           \endraw
-           \endquotation
+    Note the inclusion of the namespace qualifier.
 
     See also \l {value-command} {\\value} and \l {omitvalue-command} {\\omitvalue}.
 
@@ -433,30 +290,6 @@
     \1/
     \endcode
 
-    QDoc renders this example in widgets-imageviewer.html:
-
-    \quotation
-        \raw HTML
-        <center><h1>Image Viewer Example</h1></center>
-        \endraw
-
-        The example shows how to combine QLabel and QScrollArea
-        to display an image.
-
-        Files:
-        \list
-        \li \l{http://doc.qt.io/qt-5/qtwidgets-widgets-imageviewer-imageviewer-cpp.html}
-           {widgets/imageviewer/imageviewer.cpp}
-        \li \l{http://doc.qt.io/qt-5/qtwidgets-widgets-imageviewer-imageviewer-h.html}
-           {widgets/imageviewer/imageviewer.h}
-        \li \l{http://doc.qt.io/qt-5/qtwidgets-widgets-imageviewer-main-cpp.html}
-           {widgets/imageviewer/main.cpp}
-        \endlist
-
-
-        ...
-    \endquotation
-
     \b {See also:} \l {noautolist-command}{\\noautolist},
                    \l {url.examples-variable}{url.examples},
                    \l {meta-command}{\\meta}
@@ -482,14 +315,6 @@
         documentation for Qt, Qt Creator, the Qt SDK and much more.
     \1/
     \endcode
-
-    QDoc renders this as:
-
-    \quotation
-        At the \l {http://doc.qt.io/}{Qt Documentation Site}
-        you can find the latest documentation for Qt, Qt Creator, the Qt SDK
-        and much more.
-    \endquotation
 
     To achieve the same result without using the \\externalpage
     command, you would have to hard-code the address into your
@@ -559,18 +384,6 @@
     \1/
     \endcode
 
-    QDoc renders this as:
-
-    \quotation
-        \raw HTML
-           <h3>bool QToolBar::isAreaAllowed(Qt::ToolBarArea area) const
-           </h3>
-        \endraw
-
-        Returns \c true if this toolbar is dockable in the given
-        \a area; otherwise returns \c false.
-    \endquotation
-
     \note Running in debug mode (pass the \c {-debug} command line option
     or set the \c QDOC_DEBUG environment variable before invoking QDoc)
     can help troubleshoot \\fn commands that QDoc fails to parse. In
@@ -611,46 +424,7 @@
     \1/
     \endcode
 
-    QDoc generates a group page in \c{io.html} that will look
-    like this:
-
-    \quotation
-         \raw HTML
-
-         <h1>Input/Output and Networking</h1>
-
-         <p>These classes are used to handle input and output
-         to and from external devices, processes, files etc., as
-         well as manipulating files and directories.</p>
-
-         <p>
-         <table width="100%">
-             <tr valign="top" bgcolor="#e0e0e0">
-             <td><b>
-             <a href="http://doc.qt.io/qt-5/qabstractsocket.html">QAbstractSocket</a>
-             </b></td>
-             <td>
-             The base functionality common to all socket types
-             </td></tr>
-
-             <tr valign="top" bgcolor="#e0e0e0">
-             <td><b>
-             <a href="http://doc.qt.io/qt-5/qbuffer.html">QBuffer</a>
-             </b></td>
-             <td>
-             QIODevice interface for a QByteArray
-             </td></tr>
-
-             <tr valign="top" bgcolor="#e0e0e0">
-             <td><b>
-             <a href="http://doc.qt.io/qt-5/qclipboard.html">QClipboard</a>
-             </b></td>
-             <td>
-             Access to the window system clipboard
-             </td></tr>
-         </table>
-         \endraw
-    \endquotation
+    QDoc generates a group page in \c{io.html}.
 
     Note that overview pages related to the group, must be listed
     explicitly using the \l {generatelist-command} {\\generatelist}
@@ -704,42 +478,7 @@
     \1/
     \endcode
 
-    QDoc generates a header file page \c{qtalgorithms.html} that looks
-    like this:
-
-    \quotation
-       \raw HTML
-       <center><h1>&lt;QtAlgorithms&gt; -
-                   Generic Algorithms</h1></center>
-       <p>The <QtAlgorithms> header file provides generic
-       template-based algorithms.
-       <a href="13-qdoc-commands-topics.html#header-command">More...</a>
-       </p>
-
-       <h3>Functions</h3>
-       <ul>
-       <li>RandomAccessIterator
-       <a href="http://doc.qt.io/qt-5/qtalgorithms-obsolete.html#qBinaryFind">qBinaryFind</a></b>
-       (RandomAccessIterator begin, RandomAccessIterator end,
-       const T & value)</li>
-       <li>...</li></ul>
-       <hr />
-       \endraw
-
-       \target header
-
-       \raw HTML
-       <h2>Detailed Description</h2>
-       <p>The <QtAlgorithms> header file provides generic
-       template-based algorithms. </p>
-       \endraw
-
-       Qt provides a number of global template functions in \c
-       <QtAlgorithms> that work on containers and perform
-       well-know algorithms.
-
-       ...
-    \endquotation
+    QDoc generates a header file page, \c{qtalgorithms.html}.
 
     See also \l {inheaderfile-command}{\\inheaderfile}.
 
@@ -754,93 +493,7 @@
     The \\macro comment must contain a \l {relates-command}
     {\\relates} command that attaches the macro comment to a class,
     header file, or namespace. Otherwise, the documentation will be
-    lost. Here are three example macro comments followed by what they
-    might look like in \c {qtglobal.html} or \c {qobject.html}:
-
-    \badcode *
-    /\1!
-        \macro void Q_ASSERT(bool test)
-        \relates <QtGlobal>
-
-        Prints a warning message containing the source code
-        file name and line number if \a test is false.
-
-        ...
-
-        \sa Q_ASSERT_X(), qFatal(), {Debugging Techniques}
-    \1/
-    \endcode
-
-    \quotation
-        \raw HTML
-        <h3>void Q_ASSERT ( bool <i>test</i> )</h3>
-        \endraw
-
-        Prints a warning message containing the source code
-        file name and line number if \a test is false.
-
-        ...
-
-        See also Q_ASSERT_X(), qFatal() and \l {Debugging Techniques}.
-    \endquotation
-
-    \badcode *
-    /\1!
-        \macro Q_PROPERTY(...)
-        \relates QObject
-
-        This macro declares a QObject property. The syntax is:
-
-        ...
-
-        \sa {Qt's Property System}
-    \1/
-    \endcode
-
-    \quotation
-        \raw HTML
-        <h3>Q_PROPERTY ( ... )</h3>
-        \endraw
-
-        This macro declares a QObject property. The syntax is:
-
-        ...
-
-        See also \l {Qt's Property System}.
-    \endquotation
-
-    \badcode
-    /\1!
-        \macro Q_OBJECT
-        \relates QObject
-
-        The Q_OBJECT macro must appear in the private section
-        of a class definition that declares its own signals and
-        slots, or that uses other services provided by Qt's
-        meta-object system.
-
-        ...
-
-        \sa {Meta-Object System}, {Signals and Slots}, {Qt's
-        Property System}
-    \1/
-    \endcode
-
-    \quotation
-        \raw HTML
-        <h3>Q_OBJECT</h3>
-        \endraw
-
-        The Q_OBJECT macro must appear in the private section
-        of a class definition that declares its own signals and
-        slots or that uses other services provided by Qt's
-        meta-object system.
-
-        ...
-
-        See also \l {Meta-Object System}, \l {Signals &
-        Slots} and \l {Qt's Property System}.
-    \endquotation
+    lost.
 
     \target module-command
     \section1 \\module
@@ -873,59 +526,6 @@
     \1/
     \endcode
 
-    QDoc renders this in \c {qtnetwork.html} like this:
-
-    \quotation
-       \raw HTML
-       <h1><center>Qt Network Module</center></h1>
-       \endraw
-
-       The Qt Network module offers classes that allow you to
-       write TCP/IP clients and servers.\l {module
-       details} {More...}
-
-       \raw HTML
-       <p>
-       <table width="100%">
-           <tr valign="top" bgcolor="#d0d0d0">
-           <td><b>
-           <a href="https://doc.qt.io/qt-5/qabstractsocket.html">QAbstractSocket</a>
-           </b></td>
-           <td>
-           The base functionality common to all socket types
-           </td></tr>
-
-           <tr valign="top" bgcolor="#d0d0d0">
-           <td>...</td>
-           <td>...</td>
-           </tr>
-       </table>
-
-       <p><hr /></p>
-       \endraw
-
-       \target module details
-
-       \raw HTML
-       <h2>Detailed Description</h2>
-
-       <p>
-       The Qt Network module offers classes that allow you to
-       write TCP/IP clients and servers.
-       </p>
-
-       <p>
-       The network module provides classes to make network
-       programming easier and portable. It offers both
-       high-level classes such as QNetworkAccessManager that
-       implements application-level protocols, and
-       lower-level classes such as QTcpSocket, QTcpServer, and
-       QUdpSocket.
-       </p>
-       \endraw
-       ...
-    \endquotation
-
     The \l {noautolist-command} {\\noautolist} command can be used here
     to omit the automatically generated list of classes at the end.
 
@@ -946,43 +546,6 @@
         \brief Contains miscellaneous identifiers used throughout the Qt library.
     \1/
     \endcode
-
-    QDoc renders this in \c{qt.html} like this:
-
-    \quotation
-       \raw HTML
-       <center><h1>Qt Namespace</h1></center>
-       <p>The Qt namespace contains miscellaneous
-       identifiers used throughout the Qt library.
-       <a href="13-qdoc-commands-topics.html#name">More...</a>
-       </p>
-
-       <pre>#include &lt;Qt&gt;</pre>
-       <ul>
-       <li>
-       <a href="https://doc.qt.io/qt-5/qt-obsolete.html">
-           Obsolete members</a></li>
-       </ul>
-
-
-       <h3>Types</h3>
-       <ul>
-       <li>flags
-       <a href="https://doc.qt.io/qt-5/qt.html#AlignmentFlag-enum">Alignment</a></b></li>
-       <li>...</li></ul>
-       <hr />
-       \endraw
-
-       \target name
-
-       \raw HTML
-       <h2>Detailed Description</h2>
-       <p>Contains miscellaneous identifiers
-       used throughout the Qt library.</p>
-       \endraw
-
-       ...
-    \endquotation
 
     Note that in C++, a particular namespace can be used in more
     than one module, but when C++ elements from different modules
@@ -1062,60 +625,6 @@
         This property's default is false.
     \1/
     \endcode
-
-    QDoc includes this in \c {qpushbutton.html} like this:
-
-    \quotation
-        \raw HTML
-        <h3>flat : bool</h3>
-        \endraw
-
-        This property holds whether the border is disabled.
-
-        This property's default is false.
-
-        Access functions:
-
-        \list
-        \li \b { bool isFlat () const}
-        \li \b { void setFlat ( bool )}
-        \endlist
-    \endquotation
-
-    \badcode *
-    /\1!
-        \property QWidget::width
-        \brief The width of the widget excluding any window frame.
-
-        See the \l {Window Geometry} documentation for an
-        overview of window geometry.
-
-        \sa geometry, height, size
-    \1/
-    \endcode
-
-    QDoc includes this in \c {qwidget.html} like this:
-
-    \quotation
-        \raw HTML
-        <h3>width : const int</h3>
-        \endraw
-
-        This property holds the width of the widget excluding
-        any window frame.
-
-        See the \l {Window Geometry} documentation for an
-        overview of window geometry.
-
-        Access functions:
-
-        \list
-        \li \b { int width () const}
-        \endlist
-
-        See also \l{QWidget::geometry} {geometry},
-        \l{QWidget::height} {height}, and \l{QWidget::size} {size}.
-    \endquotation
 
     \target qmlattachedproperty-command
     \section1 \\qmlattachedproperty
@@ -1497,53 +1006,6 @@
     \1/
     \endcode
 
-    QDoc includes this in \c {qobject.html} as:
-
-    \quotation
-        \raw HTML
-        <h3>typedef QObjectList</h3>
-        \endraw
-
-        Synonym for QList<QObject>.
-    \endquotation
-
-    Another, although more rare, example:
-
-    \badcode * endcode
-    /\1!
-        \typedef QMsgHandler
-        \relates QtGlobal
-
-        This is a typedef for a pointer to a function with the
-        following signature:
-
-        \code
-            void myMsgHandler(QtMsgType, const char *);
-        \\2
-
-        \sa QtMsgType, qInstallMessageHandler()
-    \1/
-    \endcode
-
-    QDoc includes this in \c {qtglobal.html} as:
-
-    \quotation
-        \raw HTML
-        <h3>typedef QtMsgHandler</h3>
-        \endraw
-
-        This is a typedef for a pointer to a function with the
-        following signature:
-
-        \raw HTML
-        <tt>
-        <pre>    void myMsgHandler(QtMsgType, const char *);</pre>
-        </tt>
-        \endraw
-
-        See also QtMsgType and qInstallMessageHandler().
-    \endquotation
-
     Other typedefs are located on the reference page for the class
     that defines them.
 
@@ -1554,16 +1016,6 @@
         Qt-style synonym for QList::iterator.
     \1/
     \endcode
-
-    QDoc includes this one on the reference page for class QList as:
-
-    \quotation
-        \raw HTML
-        <h3>typedef QList::Iterator</h3>
-        \endraw
-
-        Qt-style synonym for QList::iterator.
-    \endquotation
 
     See also \l {typealias-command}{\\typealias}.
 
@@ -1588,22 +1040,6 @@
                the control
     \1/
     \endcode
-
-    QDoc includes this in qstyleoption.html as:
-
-    \quotation
-        \raw HTML
-        <h3>
-            <a href="http://doc.qt.io/qt-5/qpalette.html">
-                QPalette
-            </a>
-            QStyleOption::palette
-        </h3>
-        \endraw
-
-        This variable holds the palette that should be used
-        when painting the control.
-    \endquotation
 
     You can also document constants with the \\variable command. For
     example, suppose you have the \c Type and \c UserType constants in
@@ -1636,31 +1072,4 @@
     \1/
     \endcode
 
-    QDoc includes these in qtreewidget.html as:
-
-    \quotation
-        \raw HTML
-        <h3>
-        const int QTreeWidgetItem::Type
-        </h3>
-        \endraw
-
-        The default type for tree widget items.
-
-        See also \l {QTreeWidgetItem::UserType} {UserType} and \l
-        {QTreeWidgetItem::type()} {type()}.
-
-        \raw HTML
-        <h3>
-        const int QTreeWidgetItem::UserType
-        </h3>
-        \endraw
-
-        The minimum value for custom types. Values below
-        UserType are reserved by Qt.
-
-        See also \l {QTreeWidgetItem::Type} {Type} and
-        \l{QTreeWidgetItem::type()} {type()}.
-
-    \endquotation
 */
