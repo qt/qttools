@@ -514,19 +514,12 @@ void QtResourceModel::reload(const QString &path, int *errorCount, QString *erro
 
 void QtResourceModel::reload(int *errorCount, QString *errorMessages)
 {
-    QMap<QString, bool>::iterator it = d_ptr->m_pathToModified.begin();
-    QMap<QString, bool>::iterator itEnd = d_ptr->m_pathToModified.end(); // will it be valid when I iterate the map and change it???
-    while (it != itEnd) {
-        it = d_ptr->m_pathToModified.insert(it.key(), true);
-        ++it;
-    }
+    for (auto it = d_ptr->m_pathToModified.begin(), end = d_ptr->m_pathToModified.end(); it != end; ++it)
+        it.value() = true;
 
-    QMap<QtResourceSet *, bool>::iterator itReload = d_ptr->m_resourceSetToReload.begin();
-    QMap<QtResourceSet *, bool>::iterator itReloadEnd = d_ptr->m_resourceSetToReload.end();
-    while (itReload != itReloadEnd) {
-        itReload = d_ptr->m_resourceSetToReload.insert(itReload.key(), true); // empty resourceSets could be omitted here
-        ++itReload;
-    }
+    // empty resourceSets could be omitted here
+    for (auto itReload = d_ptr->m_resourceSetToReload.begin(), end = d_ptr->m_resourceSetToReload.end(); itReload != end; ++itReload)
+        itReload.value() = true;
 
     d_ptr->activate(d_ptr->m_currentResourceSet, d_ptr->m_resourceSetToPaths.value(d_ptr->m_currentResourceSet), errorCount, errorMessages);
 }
