@@ -117,7 +117,7 @@ IntType MetaEnum<IntType>::keyToValue(QString key, bool *ok) const
 {
     if (!m_scope.isEmpty() && key.startsWith(m_scope))
         key.remove(0, m_scope.size() + m_separator.size());
-    const typename KeyToValueMap::const_iterator it = m_keyToValueMap.find(key);
+    const auto it = m_keyToValueMap.find(key);
     const bool found = it != m_keyToValueMap.constEnd();
     if (ok)
         *ok = found;

@@ -127,7 +127,7 @@ void QView3DWidget::addTexture(QWidget *w, const QPixmap &pm)
 
 void QView3DWidget::addWidget(int depth, QWidget *widget)
 {
-    TextureMap::const_iterator it = m_texture_map.find(widget);
+    const auto it = m_texture_map.find(widget);
     Q_ASSERT(it != m_texture_map.end());
 
     makeCurrent();
@@ -163,7 +163,7 @@ void QView3DWidget::clear()
 {
     makeCurrent();
     glDeleteLists(m_form_list_id, 1);
-    for (TextureMap::iterator it = m_texture_map.begin(), end = m_texture_map.end(); it != end; ++it)
+    for (auto it = m_texture_map.begin(), end = m_texture_map.end(); it != end; ++it)
         glDeleteTextures(1, &(it.value()));
     m_texture_map.clear();
     m_widget_name_map.clear();

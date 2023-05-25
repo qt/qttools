@@ -1116,8 +1116,7 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     if (!buttonGroupChildren.isEmpty())
         insertNames(metaDataBase, buttonGroupChildren.constBegin(), buttonGroupChildren.constEnd(), w, existingNames);
 
-    const StringSet::const_iterator enEnd = existingNames.constEnd();
-    if (existingNames.constFind(s) == enEnd)
+    if (!existingNames.contains(s))
         return true;
     if (!changeIt)
         return false;
@@ -1144,7 +1143,7 @@ bool FormWindow::unify(QObject *w, QString &s, bool changeIt)
     for (num++ ; ;num++) {
         s.truncate(idx);
         s += QString::number(num);
-        if (existingNames.constFind(s) == enEnd)
+        if (!existingNames.contains(s))
             break;
     }
     return false;

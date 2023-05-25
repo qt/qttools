@@ -1087,7 +1087,7 @@ template <class PropertyListIterator, class Function>
     QDesignerPropertyEditorInterface *propertyEditor = core->propertyEditor();
     bool updatedPropertyEditor = false;
 
-    for (PropertyListIterator it = begin; it != end; ++it) {
+    for (auto it = begin; it != end; ++it) {
         PropertyHelper *ph = it->get();
         if (QObject* object = ph->object()) { // Might have been deleted in the meantime
             const PropertyHelper::Value newValue = function( *ph );

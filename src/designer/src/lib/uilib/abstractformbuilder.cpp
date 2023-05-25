@@ -154,8 +154,6 @@ QWidget *QAbstractFormBuilder::load(QIODevice *dev, QWidget *parentWidget)
 */
 QWidget *QAbstractFormBuilder::create(DomUI *ui, QWidget *parentWidget)
 {
-    using ButtonGroupHash = QFormBuilderExtra::ButtonGroupHash;
-
     d->clear();
     if (const DomLayoutDefault *def = ui->elementLayoutDefault()) {
        d->m_defaultMargin = def->hasAttributeMargin() ? def->attributeMargin() : INT_MIN;
@@ -173,12 +171,9 @@ QWidget *QAbstractFormBuilder::create(DomUI *ui, QWidget *parentWidget)
 
     if (QWidget *widget = create(ui_widget, parentWidget)) {
         // Reparent button groups that were actually created to main container for them to be found in the signal/slot part
-        const ButtonGroupHash &buttonGroups = d->buttonGroups();
-        if (!buttonGroups.isEmpty()) {
-            const ButtonGroupHash::const_iterator cend = buttonGroups.constEnd();
-            for (ButtonGroupHash::const_iterator it = buttonGroups.constBegin(); it != cend; ++it)
-                if (it.value().second)
-                    it.value().second->setParent(widget);
+        for (const auto &bg : std::as_const(d->buttonGroups())) {
+            if (bg.second)
+                bg.second->setParent(widget);
         }
         createConnections(ui->elementConnections(), widget);
         createResources(ui->elementResources()); // maybe this should go first, before create()...
@@ -2244,7 +2239,7 @@ void QAbstractFormBuilder::loadButtonExtraInfo(const DomWidget *ui_widget, QAbst
         return;
     // Find entry
     ButtonGroupHash &buttonGroups = d->buttonGroups();
-    ButtonGroupHash::iterator it = buttonGroups.find(groupName);
+    const auto it = buttonGroups.find(groupName);
     if (it == buttonGroups.end()) {
 #ifdef QFORMINTERNAL_NAMESPACE // Suppress the warning when copying in Designer
         uiLibWarning(QCoreApplication::translate("QAbstractFormBuilder", "Invalid QButtonGroup reference '%1' referenced by '%2'.").arg(groupName, button->objectName()));

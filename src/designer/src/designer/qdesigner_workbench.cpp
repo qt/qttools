@@ -435,7 +435,7 @@ void QDesignerWorkbench::adjustMDIFormPositions()
     const QPoint mdiAreaOffset = m_dockedMainWindow->mdiArea()->pos();
 
     for (QDesignerFormWindow *fw : std::as_const(m_formWindows)) {
-        const PositionMap::const_iterator pit = m_Positions.constFind(fw);
+        const auto pit = m_Positions.constFind(fw);
         if (pit != m_Positions.constEnd())
             pit->applyTo(mdiSubWindowOf(fw), mdiAreaOffset);
     }
@@ -503,7 +503,7 @@ void QDesignerWorkbench::switchToTopLevelMode()
     for (QDesignerFormWindow *fw : std::as_const(m_formWindows)) {
         fw->setParent(magicalParent(fw), magicalWindowFlags(fw));
         fw->setAttribute(Qt::WA_DeleteOnClose, true);
-        const PositionMap::const_iterator pit = m_Positions.constFind(fw);
+        const auto pit = m_Positions.constFind(fw);
         if (pit != m_Positions.constEnd()) pit->applyTo(fw, desktopOffset);
         // Force an activate in order to refresh minimumSize, otherwise it will not be respected
         if (QLayout *layout = fw->layout())

@@ -55,7 +55,7 @@ namespace qdesigner_internal {
                                                     ResetMap &resetMap)
     {
         if (m_createdFontProperty) {
-            PropertyToSubPropertiesMap::iterator it = m_propertyToFontSubProperties.find(m_createdFontProperty);
+            auto it = m_propertyToFontSubProperties.find(m_createdFontProperty);
             if (it == m_propertyToFontSubProperties.end())
                 it = m_propertyToFontSubProperties.insert(m_createdFontProperty, PropertyList());
             const int index = it.value().size();
@@ -113,7 +113,7 @@ namespace qdesigner_internal {
 
         // Fiddle family names
         if (!m_familyMappings.isEmpty()) {
-            const PropertyToSubPropertiesMap::iterator it = m_propertyToFontSubProperties.find(m_createdFontProperty);
+            const auto it = m_propertyToFontSubProperties.find(m_createdFontProperty);
             QtVariantProperty *familyProperty = vm->variantProperty(it.value().constFirst());
             const QString enumNamesAttribute = u"enumNames"_s;
             QStringList plainFamilyNames = familyProperty->attributeValue(enumNamesAttribute).toStringList();
@@ -128,7 +128,7 @@ namespace qdesigner_internal {
 
     bool FontPropertyManager::uninitializeProperty(QtProperty *property)
     {
-        const PropertyToPropertyMap::iterator ait =  m_propertyToAntialiasing.find(property);
+        const auto ait =  m_propertyToAntialiasing.find(property);
         if (ait != m_propertyToAntialiasing.end()) {
             QtProperty *antialiasing = ait.value();
             m_antialiasingToProperty.remove(antialiasing);
@@ -136,7 +136,7 @@ namespace qdesigner_internal {
             delete antialiasing;
         }
 
-        const PropertyToPropertyMap::iterator hit =  m_propertyToHintingPreference.find(property);
+        const auto hit =  m_propertyToHintingPreference.find(property);
         if (hit != m_propertyToHintingPreference.end()) {
             QtProperty *hintingPreference = hit.value();
             m_hintingPreferenceToProperty.remove(hintingPreference);
@@ -144,7 +144,7 @@ namespace qdesigner_internal {
             delete hintingPreference;
         }
 
-        PropertyToSubPropertiesMap::iterator sit = m_propertyToFontSubProperties.find(property);
+        const auto sit = m_propertyToFontSubProperties.find(property);
         if (sit == m_propertyToFontSubProperties.end())
             return false;
 
@@ -163,7 +163,7 @@ namespace qdesigner_internal {
 
     void FontPropertyManager::removeAntialiasingProperty(QtProperty *property)
     {
-        const PropertyToPropertyMap::iterator ait =  m_antialiasingToProperty.find(property);
+        const auto ait =  m_antialiasingToProperty.find(property);
         if (ait == m_antialiasingToProperty.end())
             return;
         m_propertyToAntialiasing[ait.value()] = 0;
@@ -172,7 +172,7 @@ namespace qdesigner_internal {
 
     void FontPropertyManager::removeHintingPreferenceProperty(QtProperty *property)
     {
-        const PropertyToPropertyMap::iterator hit =  m_hintingPreferenceToProperty.find(property);
+        const auto hit =  m_hintingPreferenceToProperty.find(property);
         if (hit == m_hintingPreferenceToProperty.end())
             return;
         m_propertyToHintingPreference[hit.value()] = nullptr;
@@ -181,7 +181,7 @@ namespace qdesigner_internal {
 
     bool FontPropertyManager::resetFontSubProperty(QtVariantPropertyManager *vm, QtProperty *property)
     {
-        const PropertyToPropertyMap::iterator it = m_fontSubPropertyToProperty.find(property);
+        const auto it = m_fontSubPropertyToProperty.find(property);
         if (it == m_fontSubPropertyToProperty.end())
             return false;
 
@@ -316,7 +316,7 @@ namespace qdesigner_internal {
 
     void FontPropertyManager::updateModifiedState(QtProperty *property, const QVariant &value)
     {
-        const PropertyToSubPropertiesMap::iterator it = m_propertyToFontSubProperties.find(property);
+        const auto it = m_propertyToFontSubProperties.find(property);
         if (it == m_propertyToFontSubProperties.end())
             return;
 

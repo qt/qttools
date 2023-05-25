@@ -124,9 +124,8 @@ static MorphCategory category(const QWidget *w)
 
 static QStringList classesOfCategory(MorphCategory cat)
 {
-    typedef QMap<MorphCategory, QStringList> CandidateCache;
-    static CandidateCache candidateCache;
-    CandidateCache::iterator it = candidateCache.find(cat);
+    static QMap<MorphCategory, QStringList> candidateCache;
+    auto it = candidateCache.find(cat);
     if (it == candidateCache.end()) {
         it = candidateCache.insert(cat, QStringList());
         QStringList &l = it.value();

@@ -63,8 +63,7 @@ private:
     void buildList();
     void enableButtons(int r);
 
-    typedef QMap<int, QWidget*> OrderMap;
-    OrderMap m_orderMap;
+    QMap<int, QWidget *> m_orderMap;
     Ui::OrderDialog* m_ui;
     Format m_format;
 };

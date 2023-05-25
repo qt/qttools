@@ -129,14 +129,12 @@ private:
 
     const Strings m_strings;
     QDesignerFormEditorInterface *m_core;
-    using CustomWidgetFactoryMap = QMap<QString, QDesignerCustomWidgetInterface*>;
-    CustomWidgetFactoryMap m_customFactory;
+    QMap<QString, QDesignerCustomWidgetInterface *> m_customFactory;
     QDesignerFormWindowInterface *m_formWindow;
 
     // Points to the cached style or 0 if the default (qApp) is active
     QStyle *m_currentStyle;
-    using StyleCache = QHash<QString, QStyle *>;
-    StyleCache m_styleCache;
+    QHash<QString, QStyle *> m_styleCache;
 };
 
 } // namespace qdesigner_internal

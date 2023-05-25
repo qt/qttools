@@ -427,8 +427,7 @@ QDesignerResource::QDesignerResource(FormWindow *formWindow)  :
     m_internal_to_qt.insert(u"QDesignerDockWidget"_s, u"QDockWidget"_s);
 
     // invert
-    QHash<QString, QString>::const_iterator cend = m_internal_to_qt.constEnd();
-    for (QHash<QString, QString>::const_iterator it = m_internal_to_qt.constBegin();it != cend; ++it )  {
+    for (auto it = m_internal_to_qt.cbegin(), cend = m_internal_to_qt.cend(); it != cend; ++it )  {
         if (it.value() != designerWidget  && it.value() != layoutWidget)
             m_qt_to_internal.insert(it.value(), it.key());
 
@@ -496,8 +495,7 @@ void QDesignerResource::saveDom(DomUI *ui, QWidget *widget)
     const QVariantMap designerFormData = m_formWindow->formData();
     if (!designerFormData.isEmpty()) {
         DomPropertyList domPropertyList;
-        const  QVariantMap::const_iterator cend = designerFormData.constEnd();
-        for (QVariantMap::const_iterator it = designerFormData.constBegin(); it != cend; ++it) {
+        for (auto it = designerFormData.cbegin(), cend = designerFormData.cend(); it != cend; ++it) {
             if (DomProperty *prop = variantToDomProperty(this, widget->metaObject(), it.key(), it.value()))
                 domPropertyList += prop;
         }

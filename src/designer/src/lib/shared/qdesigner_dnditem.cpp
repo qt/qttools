@@ -121,8 +121,8 @@ QDesignerMimeData::QDesignerMimeData(const QDesignerDnDItems &items, QDrag *drag
         break;
     default: {
         // determine size of drag decoration by uniting all geometries
-        const QDesignerDnDItems::const_iterator cend = m_items.constEnd();
-        QDesignerDnDItems::const_iterator it =m_items.constBegin();
+        const auto cend = m_items.cend();
+        auto it = m_items.cbegin();
         QRect unitedGeometry = (*it)->decoration()->geometry();
         const qreal devicePixelRatio = (*it)->decoration()->devicePixelRatioF();
         for (++it; it != cend; ++it )

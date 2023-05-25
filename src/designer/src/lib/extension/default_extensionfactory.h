@@ -34,8 +34,7 @@ protected:
 
 private:
     typedef QPair<QString,QObject*> IdObjectKey;
-    typedef QMap< IdObjectKey, QObject*> ExtensionMap;
-    mutable ExtensionMap m_extensions;
+    mutable QMap< IdObjectKey, QObject *> m_extensions;
     mutable QSet<QObject *> m_extended;
 };
 

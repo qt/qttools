@@ -67,7 +67,7 @@ QDesignerAxWidget *QAxWidgetPropertySheet::axWidget() const
 bool QAxWidgetPropertySheet::reset(int index)
 {
     const QString name = propertyName(index);
-    QMap<QString, QVariant>::iterator it = m_currentProperties.changedProperties.find(name);
+    const auto it = m_currentProperties.changedProperties.find(name);
     if (it !=  m_currentProperties.changedProperties.end())
         m_currentProperties.changedProperties.erase(it);
     if (name != m_controlProperty)

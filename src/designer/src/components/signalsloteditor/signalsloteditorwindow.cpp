@@ -433,16 +433,13 @@ void InlineEditorModel::addTextList(const QMap<QString, bool> &text_list)
     QFont font = QApplication::font();
     font.setItalic(true);
     QVariant fontVariant = QVariant::fromValue(font);
-    QMap<QString, bool>::ConstIterator it = text_list.constBegin();
-    const QMap<QString, bool>::ConstIterator itEnd = text_list.constEnd();
-    while (it != itEnd) {
+    for (auto it = text_list.cbegin(), itEnd = text_list.cend(); it != itEnd; ++it) {
         const QModelIndex text_idx = index(cnt++, 0);
         setData(text_idx, it.key(), Qt::DisplayRole);
         if (it.value()) {
             setData(text_idx, fontVariant, Qt::FontRole);
             setData(text_idx, QColor(Qt::red), Qt::ForegroundRole);
         }
-        ++it;
     }
 }
 

@@ -27,8 +27,7 @@ public:
 
 private:
     using FactoryList = QList<QAbstractExtensionFactory *>;
-    typedef QHash<QString, FactoryList> FactoryMap;
-    FactoryMap m_extensions;
+    QHash<QString, FactoryList> m_extensions;
     FactoryList m_globalExtension;
 };
 

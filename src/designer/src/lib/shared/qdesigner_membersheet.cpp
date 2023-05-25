@@ -35,11 +35,9 @@ public:
         bool visible{true};
     };
 
-    using InfoHash = QHash<int, Info>;
-
     Info &ensureInfo(int index);
 
-    InfoHash m_info;
+    QHash<int, Info> m_info;
 };
 
 QDesignerMemberSheetPrivate::QDesignerMemberSheetPrivate(QObject *object, QObject *sheetParent) :
@@ -50,10 +48,9 @@ QDesignerMemberSheetPrivate::QDesignerMemberSheetPrivate(QObject *object, QObjec
 
 QDesignerMemberSheetPrivate::Info &QDesignerMemberSheetPrivate::ensureInfo(int index)
 {
-    InfoHash::iterator it = m_info.find(index);
-    if (it == m_info.end()) {
+    auto it = m_info.find(index);
+    if (it == m_info.end())
         it = m_info.insert(index, Info());
-    }
     return it.value();
 }
 

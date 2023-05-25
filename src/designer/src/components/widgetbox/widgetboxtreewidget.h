@@ -99,8 +99,7 @@ private:
 
     QDesignerFormEditorInterface *m_core;
     QString m_file_name;
-    using IconCache = QHash<QString, QIcon>;
-    mutable IconCache m_pluginIcons;
+    mutable QHash<QString, QIcon> m_pluginIcons;
     bool m_iconMode;
     QTimer *m_scratchPadDeleteTimer;
 };

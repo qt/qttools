@@ -101,8 +101,6 @@ class QDesignerCustomWidgetSharedData : public QSharedData {
 public:
     // Type of a string property
     using StringPropertyType = QPair<qdesigner_internal::TextPropertyValidationMode, bool>;
-    using StringPropertyTypeMap = QHash<QString, StringPropertyType>;
-    using PropertyToolTipMap = QHash<QString, QString>;
 
     explicit QDesignerCustomWidgetSharedData(const QString &thePluginPath) : pluginPath(thePluginPath) {}
     void clearXML();
@@ -115,8 +113,8 @@ public:
     QString xmlAddPageMethod;
     QString xmlExtends;
 
-    StringPropertyTypeMap xmlStringPropertyTypeMap;
-    PropertyToolTipMap propertyToolTipMap;
+    QHash<QString, StringPropertyType> xmlStringPropertyTypeMap;
+    QHash<QString, QString> propertyToolTipMap;
 };
 
 void QDesignerCustomWidgetSharedData::clearXML()
@@ -188,7 +186,7 @@ QString QDesignerCustomWidgetData::pluginPath() const
 
 bool QDesignerCustomWidgetData::xmlStringPropertyType(const QString &name, StringPropertyType *type) const
 {
-    QDesignerCustomWidgetSharedData::StringPropertyTypeMap::const_iterator it = m_d->xmlStringPropertyTypeMap.constFind(name);
+    const auto it = m_d->xmlStringPropertyTypeMap.constFind(name);
     if (it == m_d->xmlStringPropertyTypeMap.constEnd()) {
         *type = StringPropertyType(qdesigner_internal::ValidationRichText, true);
         return false;
@@ -437,8 +435,7 @@ class QDesignerPluginManagerPrivate {
     // TODO: QPluginLoader also caches invalid plugins -> This seems to be dead code
     QStringList m_disabledPlugins;
 
-    typedef QMap<QString, QString> FailedPluginMap;
-    FailedPluginMap m_failedPlugins;
+    QMap<QString, QString> m_failedPlugins;
 
     // Synced lists of custom widgets and their data. Note that the list
     // must be ordered for collections to appear in order.
@@ -669,7 +666,7 @@ void QDesignerPluginManager::registerPlugin(const QString &plugin)
     QPluginLoader loader(plugin);
     if (loader.isLoaded() || loader.load()) {
         m_d->m_registeredPlugins += plugin;
-        QDesignerPluginManagerPrivate::FailedPluginMap::iterator fit = m_d->m_failedPlugins.find(plugin);
+        const auto fit = m_d->m_failedPlugins.find(plugin);
         if (fit != m_d->m_failedPlugins.end())
             m_d->m_failedPlugins.erase(fit);
         return;

@@ -97,7 +97,7 @@ QColor QtGradientStopsModel::color(qreal pos) const
         return gradStops[pos]->color();
 
     gradStops[pos] = 0;
-    PositionStopMap::ConstIterator itStop = gradStops.constFind(pos);
+    auto itStop = gradStops.constFind(pos);
     if (itStop == gradStops.constBegin()) {
         ++itStop;
         return itStop.value()->color();
@@ -106,8 +106,8 @@ QColor QtGradientStopsModel::color(qreal pos) const
         --itStop;
         return itStop.value()->color();
     }
-    PositionStopMap::ConstIterator itPrev = itStop;
-    PositionStopMap::ConstIterator itNext = itStop;
+    auto itPrev = itStop;
+    auto itNext = itStop;
     --itPrev;
     ++itNext;
 
@@ -265,7 +265,7 @@ void QtGradientStopsModel::setCurrentStop(QtGradientStop *stop)
 QtGradientStop *QtGradientStopsModel::firstSelected() const
 {
     PositionStopMap stopList = stops();
-    PositionStopMap::ConstIterator itStop = stopList.constBegin();
+    auto itStop = stopList.cbegin();
     while (itStop != stopList.constEnd()) {
         QtGradientStop *stop = itStop.value();
         if (isSelected(stop))
@@ -278,7 +278,7 @@ QtGradientStop *QtGradientStopsModel::firstSelected() const
 QtGradientStop *QtGradientStopsModel::lastSelected() const
 {
     PositionStopMap stopList = stops();
-    PositionStopMap::ConstIterator itStop = stopList.constEnd();
+    auto itStop = stopList.cend();
     while (itStop != stopList.constBegin()) {
         --itStop;
 
@@ -344,7 +344,7 @@ void QtGradientStopsModel::moveStops(double newPosition)
         stopList[stop->position()] = stop;
     stopList[current->position()] = current;
 
-    PositionStopMap::ConstIterator itStop = forward ? stopList.constBegin() : stopList.constEnd();
+    auto itStop = forward ? stopList.cbegin() : stopList.cend();
     while (itStop != (forward ? stopList.constEnd() : stopList.constBegin())) {
         if (!forward)
             --itStop;

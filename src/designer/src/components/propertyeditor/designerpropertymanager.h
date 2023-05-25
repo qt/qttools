@@ -161,10 +161,9 @@ private:
         DesignerFlagList flags;
         QList<uint> values;
     };
-    typedef QMap<QtProperty *, FlagData> PropertyFlagDataMap;
-    PropertyFlagDataMap m_flagValues;
-    typedef  QMap<QtProperty *, QList<QtProperty *> > PropertyToPropertyListMap;
-    PropertyToPropertyListMap m_propertyToFlags;
+
+    QMap<QtProperty *, FlagData> m_flagValues;
+    QMap<QtProperty *, QList<QtProperty *>> m_propertyToFlags;
     QMap<QtProperty *, QtProperty *> m_flagToProperty;
 
     int alignToIndexH(uint align) const;
@@ -195,8 +194,7 @@ private:
         QPalette val;
         QPalette superPalette;
     };
-    typedef QMap<QtProperty *, PaletteData>  PropertyPaletteDataMap;
-    PropertyPaletteDataMap m_paletteValues;
+    QMap<QtProperty *, PaletteData> m_paletteValues;
 
     QMap<QtProperty *, qdesigner_internal::PropertySheetPixmapValue> m_pixmapValues;
     QMap<QtProperty *, qdesigner_internal::PropertySheetIconValue> m_iconValues;
@@ -207,10 +205,8 @@ private:
     QMap<QtProperty *, QUrl> m_urlValues;
     QMap<QtProperty *, QByteArray> m_byteArrayValues;
 
-    typedef QMap<QtProperty *, int>  PropertyIntMap;
-    PropertyIntMap m_stringAttributes;
-    typedef QMap<QtProperty *, QFont>  PropertyFontMap;
-    PropertyFontMap m_stringFontAttributes;
+    QMap<QtProperty *, int> m_stringAttributes;
+    QMap<QtProperty *, QFont> m_stringFontAttributes;
     PropertyBoolMap m_stringThemeAttributes;
 
     BrushPropertyManager m_brushManager;

@@ -105,7 +105,7 @@ QDesignerPropertyEditor::StringPropertyParameters QDesignerPropertyEditor::textP
         return StringPropertyParameters(ValidationMultiLine, true);
 
     // Check hardcoded property ames
-   const PropertyNameTypeMap::const_iterator hit = stringPropertyTypes().constFind(propertyName);
+   const auto hit = stringPropertyTypes().constFind(propertyName);
    if (hit != stringPropertyTypes().constEnd())
        return hit.value();
 

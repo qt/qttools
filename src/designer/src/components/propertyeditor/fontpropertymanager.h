@@ -57,7 +57,6 @@ public:
 private:
     using PropertyToPropertyMap = QMap<QtProperty *, QtProperty *>;
     using PropertyList = QList<QtProperty *>;
-    using PropertyToSubPropertiesMap = QMap<QtProperty *, PropertyList>;
 
     void removeAntialiasingProperty(QtProperty *);
     void removeHintingPreferenceProperty(QtProperty *);
@@ -80,7 +79,7 @@ private:
     PropertyToPropertyMap m_hintingPreferenceToProperty;
 
 
-    PropertyToSubPropertiesMap m_propertyToFontSubProperties;
+    QMap<QtProperty *, PropertyList> m_propertyToFontSubProperties;
     QMap<QtProperty *, int> m_fontSubPropertyToFlag;
     PropertyToPropertyMap m_fontSubPropertyToProperty;
     QtProperty *m_createdFontProperty = nullptr;
