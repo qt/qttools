@@ -10,6 +10,7 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qpair.h>
+#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -35,8 +36,7 @@ private:
     typedef QPair<QString,QObject*> IdObjectKey;
     typedef QMap< IdObjectKey, QObject*> ExtensionMap;
     mutable ExtensionMap m_extensions;
-    typedef QHash<QObject*, bool> ExtendedSet;
-    mutable ExtendedSet m_extended;
+    mutable QSet<QObject *> m_extended;
 };
 
 QT_END_NAMESPACE
