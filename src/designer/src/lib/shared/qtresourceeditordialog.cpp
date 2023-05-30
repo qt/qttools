@@ -321,9 +321,9 @@ private:
 
     QList<QtQrcFile *> m_qrcFiles;
     QMap<QString, QtQrcFile *> m_pathToQrc;
-    QMap<QtQrcFile *, bool> m_qrcFileToExists;
-    QMap<QtResourcePrefix *, QtQrcFile *> m_prefixToQrc;
-    QMap<QtResourceFile *, QtResourcePrefix *> m_fileToPrefix;
+    QHash<QtQrcFile *, bool> m_qrcFileToExists;
+    QHash<QtResourcePrefix *, QtQrcFile *> m_prefixToQrc;
+    QHash<QtResourceFile *, QtResourcePrefix *> m_fileToPrefix;
     QMap<QString, QList<QtResourceFile *> > m_fullPathToResourceFiles;
     QMap<QString, QIcon> m_fullPathToIcon;
     QMap<QString, bool> m_fullPathToExists;
@@ -849,16 +849,16 @@ public:
     QtQrcManager *m_qrcManager = nullptr;
     QList<QtQrcFileData> m_initialState;
 
-    QMap<QtQrcFile *, QListWidgetItem *> m_qrcFileToItem;
-    QMap<QListWidgetItem *, QtQrcFile *> m_itemToQrcFile;
-    QMap<QtResourcePrefix *, QStandardItem *> m_resourcePrefixToPrefixItem;
-    QMap<QtResourcePrefix *, QStandardItem *> m_resourcePrefixToLanguageItem;
-    QMap<QStandardItem *, QtResourcePrefix *> m_prefixItemToResourcePrefix;
-    QMap<QStandardItem *, QtResourcePrefix *> m_languageItemToResourcePrefix;
-    QMap<QtResourceFile *, QStandardItem *> m_resourceFileToPathItem;
-    QMap<QtResourceFile *, QStandardItem *> m_resourceFileToAliasItem;
-    QMap<QStandardItem *, QtResourceFile *> m_pathItemToResourceFile;
-    QMap<QStandardItem *, QtResourceFile *> m_aliasItemToResourceFile;
+    QHash<QtQrcFile *, QListWidgetItem *> m_qrcFileToItem;
+    QHash<QListWidgetItem *, QtQrcFile *> m_itemToQrcFile;
+    QHash<QtResourcePrefix *, QStandardItem *> m_resourcePrefixToPrefixItem;
+    QHash<QtResourcePrefix *, QStandardItem *> m_resourcePrefixToLanguageItem;
+    QHash<QStandardItem *, QtResourcePrefix *> m_prefixItemToResourcePrefix;
+    QHash<QStandardItem *, QtResourcePrefix *> m_languageItemToResourcePrefix;
+    QHash<QtResourceFile *, QStandardItem *> m_resourceFileToPathItem;
+    QHash<QtResourceFile *, QStandardItem *> m_resourceFileToAliasItem;
+    QHash<QStandardItem *, QtResourceFile *> m_pathItemToResourceFile;
+    QHash<QStandardItem *, QtResourceFile *> m_aliasItemToResourceFile;
 
     bool m_ignoreCurrentChanged = false;
     bool m_firstQrcFileDialog = true;
@@ -1176,7 +1176,7 @@ void QtResourceEditorDialogPrivate::slotCurrentQrcFileChanged(QListWidgetItem *i
         return;
 
     if (m_currentQrcFile) {
-        QMap<QtResourcePrefix *, QStandardItem *> currentPrefixList = m_resourcePrefixToPrefixItem;
+        QHash<QtResourcePrefix *, QStandardItem *> currentPrefixList = m_resourcePrefixToPrefixItem;
         for (auto it = currentPrefixList.cbegin(), end = currentPrefixList.cend(); it != end; ++it) {
             QtResourcePrefix *resourcePrefix = it.key();
             const auto currentResourceFiles = resourcePrefix->resourceFiles();

@@ -5,6 +5,7 @@
 #include "rcc_p.h"
 
 #include <QtCore/qstringlist.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qresource.h>
 #include <QtCore/qfileinfo.h>
@@ -46,16 +47,16 @@ public:
     void activate(QtResourceSet *resourceSet, const QStringList &newPaths, int *errorCount = nullptr, QString *errorMessages = nullptr);
     void removeOldPaths(QtResourceSet *resourceSet, const QStringList &newPaths);
 
-    QMap<QString, bool>                     m_pathToModified;
-    QMap<QtResourceSet *, QStringList>      m_resourceSetToPaths;
-    QMap<QtResourceSet *, bool>             m_resourceSetToReload; // while path is recreated it needs to be reregistered
-                                                                   // (it is - in the new current resource set, but when the path was used in
-                                                                   // other resource set
-                                                                   // then later when that resource set is activated it needs to be reregistered)
-    QMap<QtResourceSet *, bool>             m_newlyCreated; // all created but not activated yet
-                                                            // (if was active at some point and it's not now it will not be on that map)
-    QMap<QString, QList<QtResourceSet *> >  m_pathToResourceSet;
-    QtResourceSet                          *m_currentResourceSet = nullptr;
+    QMap<QString, bool> m_pathToModified;
+    QHash<QtResourceSet *, QStringList> m_resourceSetToPaths;
+    QHash<QtResourceSet *, bool> m_resourceSetToReload; // while path is recreated it needs to be reregistered
+                                                        // (it is - in the new current resource set, but when the path was used in
+                                                        // other resource set
+                                                        // then later when that resource set is activated it needs to be reregistered)
+    QHash<QtResourceSet *, bool> m_newlyCreated; // all created but not activated yet
+                                                 // (if was active at some point and it's not now it will not be on that map)
+    QMap<QString, QList<QtResourceSet *>> m_pathToResourceSet;
+    QtResourceSet                         *m_currentResourceSet = nullptr;
 
     QMap<QString, const QByteArray *> m_pathToData;
 

@@ -2552,8 +2552,8 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
 
 template <class Editor>
 bool removeEditor(QObject *object,
-                QMap<QtProperty *, QList<Editor> > *propertyToEditors,
-                QMap<Editor, QtProperty *> *editorToProperty)
+                  QHash<QtProperty *, QList<Editor>> *propertyToEditors,
+                  QHash<Editor, QtProperty *> *editorToProperty)
 {
     if (!propertyToEditors)
         return false;
@@ -2603,7 +2603,7 @@ void DesignerEditorFactory::slotEditorDestroyed(QObject *object)
 
 template<class Editor>
 bool updateManager(QtVariantEditorFactory *factory, bool *changingPropertyValue,
-        const QMap<Editor, QtProperty *> &editorToProperty, QWidget *editor, const QVariant &value)
+        const QHash<Editor, QtProperty *> &editorToProperty, QWidget *editor, const QVariant &value)
 {
     if (!editor)
         return false;
@@ -2646,7 +2646,7 @@ void DesignerEditorFactory::slotByteArrayChanged(const QString &value)
 }
 
 template <class Editor>
-QtProperty *findPropertyForEditor(const QMap<Editor *, QtProperty *> &editorMap,
+QtProperty *findPropertyForEditor(const QHash<Editor *, QtProperty *> &editorMap,
                                   const QObject *sender)
 {
     for (auto it = editorMap.constBegin(), cend = editorMap.constEnd(); it != cend; ++it)
