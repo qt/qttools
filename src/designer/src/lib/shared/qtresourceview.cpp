@@ -32,6 +32,7 @@
 #include <QtCore/qmimedata.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qqueue.h>
 
 #include <QtXml/qdom.h>
@@ -137,13 +138,13 @@ public:
     QTreeWidget *m_treeWidget;
     QListWidget *m_listWidget;
     QSplitter *m_splitter = nullptr;
-    QMap<QString, QStringList>       m_pathToContents; // full path to contents file names (full path to its resource filenames)
-    QMap<QString, QString>           m_pathToParentPath; // full path to full parent path
-    QMap<QString, QStringList>       m_pathToSubPaths; // full path to full sub paths
+    QMap<QString, QStringList> m_pathToContents; // full path to contents file names (full path to its resource filenames)
+    QMap<QString, QString> m_pathToParentPath; // full path to full parent path
+    QMap<QString, QStringList> m_pathToSubPaths; // full path to full sub paths
     QMap<QString, QTreeWidgetItem *> m_pathToItem;
-    QMap<QTreeWidgetItem *, QString> m_itemToPath;
+    QHash<QTreeWidgetItem *, QString> m_itemToPath;
     QMap<QString, QListWidgetItem *> m_resourceToItem;
-    QMap<QListWidgetItem *, QString> m_itemToResource;
+    QHash<QListWidgetItem *, QString> m_itemToResource;
     QAction *m_editResourcesAction = nullptr;
     QAction *m_reloadResourcesAction = nullptr;
     QAction *m_copyResourcePathAction = nullptr;
