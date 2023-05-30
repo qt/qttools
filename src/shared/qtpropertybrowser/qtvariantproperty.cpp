@@ -7,8 +7,8 @@
 
 #include <QtCore/QVariant>
 #include <QtCore/QDate>
+#include <QtCore/QHash>
 #include <QtCore/QLocale>
-#include <QtCore/QMap>
 #include <QtCore/QRegularExpression>
 
 #if defined(Q_CC_MSVC)
@@ -311,7 +311,7 @@ public:
     QMap<int, int> m_typeToValueType;
 
 
-    QMap<QtProperty *, QtVariantProperty *> m_internalToProperty;
+    QHash<QtProperty *, QtVariantProperty *> m_internalToProperty;
 
     const QString m_constraintAttribute;
     const QString m_singleStepAttribute;
@@ -1893,7 +1893,7 @@ public:
     QtColorEditorFactory       *m_colorEditorFactory;
     QtFontEditorFactory        *m_fontEditorFactory;
 
-    QMap<QtAbstractEditorFactoryBase *, int> m_factoryToType;
+    QHash<QtAbstractEditorFactoryBase *, int> m_factoryToType;
     QMap<int, QtAbstractEditorFactoryBase *> m_typeToFactory;
 };
 

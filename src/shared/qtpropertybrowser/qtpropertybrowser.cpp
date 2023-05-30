@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtpropertybrowser.h"
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtGui/QIcon>
 
 #if defined(Q_CC_MSVC)
@@ -416,7 +416,7 @@ void QtProperty::insertSubProperty(QtProperty *property,
 
     // traverse all children of item. if this item is a child of item then cannot add.
     auto pendingList = property->subProperties();
-    QMap<QtProperty *, bool> visited;
+    QHash<QtProperty *, bool> visited;
     while (!pendingList.isEmpty()) {
         QtProperty *i = pendingList.first();
         if (i == this)
@@ -1166,10 +1166,10 @@ QtBrowserItem::~QtBrowserItem()
 
 ////////////////////////////////////
 
-using Map1 = QMap<QtAbstractPropertyBrowser *,
-                  QMap<QtAbstractPropertyManager *, QtAbstractEditorFactoryBase *>>;
-using Map2 = QMap<QtAbstractPropertyManager *,
-                  QMap<QtAbstractEditorFactoryBase *, QList<QtAbstractPropertyBrowser *>>>;
+using Map1 = QHash<QtAbstractPropertyBrowser *,
+                  QHash<QtAbstractPropertyManager *, QtAbstractEditorFactoryBase *>>;
+using Map2 = QHash<QtAbstractPropertyManager *,
+                  QHash<QtAbstractEditorFactoryBase *, QList<QtAbstractPropertyBrowser *>>>;
 
 Q_GLOBAL_STATIC(Map1, m_viewToManagerToFactory)
 Q_GLOBAL_STATIC(Map2, m_managerToFactoryToViews)
@@ -1198,12 +1198,12 @@ public:
     void slotPropertyDataChanged(QtProperty *property);
 
     QList<QtProperty *> m_subItems;
-    QMap<QtAbstractPropertyManager *, QList<QtProperty *> > m_managerToProperties;
-    QMap<QtProperty *, QList<QtProperty *> > m_propertyToParents;
+    QHash<QtAbstractPropertyManager *, QList<QtProperty *> > m_managerToProperties;
+    QHash<QtProperty *, QList<QtProperty *> > m_propertyToParents;
 
-    QMap<QtProperty *, QtBrowserItem *> m_topLevelPropertyToIndex;
+    QHash<QtProperty *, QtBrowserItem *> m_topLevelPropertyToIndex;
     QList<QtBrowserItem *> m_topLevelIndexes;
-    QMap<QtProperty *, QList<QtBrowserItem *> > m_propertyToIndexes;
+    QHash<QtProperty *, QList<QtBrowserItem *> > m_propertyToIndexes;
 
     QtBrowserItem *m_currentItem;
 };
@@ -1279,7 +1279,7 @@ void QtAbstractPropertyBrowserPrivate::removeSubTree(QtProperty *property,
 
 void QtAbstractPropertyBrowserPrivate::createBrowserIndexes(QtProperty *property, QtProperty *parentProperty, QtProperty *afterProperty)
 {
-    QMap<QtBrowserItem *, QtBrowserItem *> parentToAfter;
+    QHash<QtBrowserItem *, QtBrowserItem *> parentToAfter;
     if (afterProperty) {
         const auto it = m_propertyToIndexes.constFind(afterProperty);
         if (it == m_propertyToIndexes.constEnd())
