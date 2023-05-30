@@ -216,8 +216,7 @@ void QDesignerMimeData::moveDecoration(const QPoint &globalPos) const
 
 void QDesignerMimeData::removeMovedWidgetsFromSourceForm(const QDesignerDnDItems &items)
 {
-    typedef QMultiMap<FormWindowBase *, QWidget *> FormWidgetMap;
-    FormWidgetMap formWidgetMap;
+    QMultiMap<FormWindowBase *, QWidget *> formWidgetMap;
     // Find moved widgets per form
     for (auto *item : items) {
         if (item->type() == QDesignerDnDItemInterface::MoveDrop) {

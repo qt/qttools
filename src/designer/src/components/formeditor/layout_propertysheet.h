@@ -36,7 +36,7 @@ private:
     QLayout *m_layout;
 };
 
-typedef QDesignerPropertySheetFactory<QLayout, LayoutPropertySheet>  LayoutPropertySheetFactory;
+using LayoutPropertySheetFactory = QDesignerPropertySheetFactory<QLayout, LayoutPropertySheet>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

@@ -49,7 +49,7 @@ public:
     QStringList dataFiles() const;
 
     // Return a map of resource identifier (':/newPrefix/images/p1.png') to file.
-    typedef QHash<QString, QString> ResourceDataFileMap;
+    using ResourceDataFileMap = QHash<QString, QString>;
     ResourceDataFileMap resourceDataFileMap() const;
 
     void setVerbose(bool b) { m_verbose = b; }

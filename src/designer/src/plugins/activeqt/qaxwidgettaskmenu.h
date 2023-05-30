@@ -31,7 +31,7 @@ private:
     QList<QAction*> m_taskActions;
 };
 
-typedef qdesigner_internal::ExtensionFactory<QDesignerTaskMenuExtension, QDesignerAxWidget, QAxWidgetTaskMenu>  ActiveXTaskMenuFactory;
+using ActiveXTaskMenuFactory = qdesigner_internal::ExtensionFactory<QDesignerTaskMenuExtension, QDesignerAxWidget, QAxWidgetTaskMenu>;
 
 QT_END_NAMESPACE
 

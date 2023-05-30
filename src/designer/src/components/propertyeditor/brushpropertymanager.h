@@ -46,10 +46,9 @@ private:
     static Qt::BrushStyle brushStyleIndexToStyle(int brushStyleIndex);
     static QString brushStyleIndexToString(int brushStyleIndex);
 
-    typedef QMap<int, QIcon> EnumIndexIconMap;
-    static const EnumIndexIconMap &brushStyleIcons();
+    static const QMap<int, QIcon> &brushStyleIcons();
 
-    typedef QMap<QtProperty *, QtProperty *> PropertyToPropertyMap;
+    using PropertyToPropertyMap = QMap<QtProperty *, QtProperty *>;
     PropertyToPropertyMap m_brushPropertyToStyleSubProperty;
     PropertyToPropertyMap m_brushPropertyToColorSubProperty;
     PropertyToPropertyMap m_brushStyleSubPropertyToProperty;

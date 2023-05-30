@@ -33,8 +33,7 @@ protected:
     virtual QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const;
 
 private:
-    typedef QPair<QString,QObject*> IdObjectKey;
-    mutable QMap< IdObjectKey, QObject *> m_extensions;
+    mutable QMap<QPair<QString, QObject *>, QObject *> m_extensions;
     mutable QSet<QObject *> m_extended;
 };
 

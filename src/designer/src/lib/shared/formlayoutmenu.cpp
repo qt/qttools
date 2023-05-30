@@ -330,9 +330,6 @@ void FormLayoutRowDialog::buddyClicked()
  * from them ("QLineEdit", "CustomLineEdit", "QComboBox"...). */
 QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface *core)
 {
-    // Base class -> custom widgets map
-    typedef QMultiHash<QString, QString> ClassMap;
-
     static QStringList rc;
     if (rc.isEmpty()) {
         // Turn known base classes into list
@@ -342,7 +339,7 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
         // Scan for custom widgets that inherit them and store them in a
         // multimap of base class->custom widgets unless we have a language
         // extension installed which might do funny things with custom widgets.
-        ClassMap customClassMap;
+        QMultiHash<QString, QString> customClassMap; // Base class -> custom widgets map
         if (qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core) == nullptr) {
             const QDesignerWidgetDataBaseInterface *wdb = core->widgetDataBase();
             const int wdbCount = wdb->count();

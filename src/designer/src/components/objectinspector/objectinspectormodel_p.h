@@ -110,15 +110,13 @@ namespace qdesigner_internal {
         bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
     private:
-        typedef QMultiMap<QObject *,QModelIndex> ObjectIndexMultiMap;
-
         void rebuild(const ObjectModel &newModel);
         void updateItemContents(ObjectModel &oldModel, const ObjectModel &newModel);
         void clearItems();
         StandardItemList rowAt(QModelIndex index) const;
 
         ObjectInspectorIcons m_icons;
-        ObjectIndexMultiMap m_objectIndexMultiMap;
+        QMultiMap<QObject *, QModelIndex> m_objectIndexMultiMap;
         ObjectModel m_model;
         QPointer<QDesignerFormWindowInterface> m_formWindow;
     };

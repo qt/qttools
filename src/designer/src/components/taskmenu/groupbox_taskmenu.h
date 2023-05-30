@@ -31,7 +31,7 @@ private:
     QList<QAction*> m_taskActions;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QGroupBox, GroupBoxTaskMenu>  GroupBoxTaskMenuFactory;
+using GroupBoxTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QGroupBox, GroupBoxTaskMenu>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

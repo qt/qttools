@@ -101,7 +101,7 @@ static void clearBrushIcons()
     brushIcons()->clear();
 }
 
-const BrushPropertyManager::EnumIndexIconMap &BrushPropertyManager::brushStyleIcons()
+const QMap<int, QIcon> &BrushPropertyManager::brushStyleIcons()
 {
     // Create a map of icons for the brush style editor
     if (brushIcons()->empty()) {
