@@ -47,8 +47,7 @@ private:
     const QString m_propertyGroup;
     int m_controlIndex;
     struct SavedProperties {
-        typedef QMap<QString, QVariant> NamePropertyMap;
-        NamePropertyMap changedProperties;
+        QVariantMap changedProperties;
         QWidget *widget;
         QString clsid;
     } m_currentProperties;
@@ -56,7 +55,7 @@ private:
     static void reloadPropertySheet(const struct SavedProperties &properties, QDesignerFormWindowInterface *formWin);
 };
 
-typedef QDesignerPropertySheetFactory<QDesignerAxWidget, QAxWidgetPropertySheet> ActiveXPropertySheetFactory;
+using ActiveXPropertySheetFactory = QDesignerPropertySheetFactory<QDesignerAxWidget, QAxWidgetPropertySheet>;
 
 QT_END_NAMESPACE
 

@@ -578,7 +578,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
             Occupied  // Item bordering on it
         };
         // Horiontal, Vertical pair of state
-        typedef QPair<DimensionCellState, DimensionCellState> CellState;
+        using CellState = QPair<DimensionCellState, DimensionCellState>;
         using CellStates = QList<CellState>;
 
         // Figure out states of a cell and return as a flat vector of
@@ -979,8 +979,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     // ---------------- FormLayoutHelper
     class FormLayoutHelper : public  LayoutHelper {
     public:
-        typedef QPair<QWidget *, QWidget *> WidgetPair;
-        using FormLayoutState = QList<WidgetPair>;
+        using FormLayoutState = QList<QPair<QWidget *, QWidget *>>;
 
         FormLayoutHelper() = default;
 
@@ -1073,7 +1072,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
         const int rowCount = lt->rowCount();
         if (rowCount == 0)
             return FormLayoutState();
-        FormLayoutState rc(rowCount, WidgetPair(0, 0));
+        FormLayoutState rc(rowCount, {nullptr, nullptr});
         const int count = lt->count();
         int row, column, colspan;
         for (int i = 0; i < count; i++) {

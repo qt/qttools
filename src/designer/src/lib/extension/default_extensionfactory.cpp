@@ -77,7 +77,7 @@ QObject *QExtensionFactory::extension(QObject *object, const QString &iid) const
 {
     if (!object)
         return nullptr;
-    const IdObjectKey key = qMakePair(iid, object);
+    const auto key = qMakePair(iid, object);
 
     auto it = m_extensions.find(key);
     if (it == m_extensions.end()) {

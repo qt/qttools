@@ -1818,8 +1818,7 @@ DomCustomWidgets *QDesignerResource::saveCustomWidgets()
     QDesignerFormEditorInterface *core = m_formWindow->core();
     QDesignerWidgetDataBaseInterface *db = core->widgetDataBase();
     const bool isInternalWidgetDataBase = qobject_cast<const WidgetDataBase *>(db);
-    typedef QMap<int,DomCustomWidget*>  OrderedDBIndexDomCustomWidgetMap;
-    OrderedDBIndexDomCustomWidgetMap orderedMap;
+    QMap<int, DomCustomWidget *> orderedMap;
 
     for (auto it = m_usedCustomWidgets.cbegin(), end = m_usedCustomWidgets.cend(); it != end; ++it) {
         QDesignerWidgetDataBaseItemInterface *item = it.key();

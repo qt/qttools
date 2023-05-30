@@ -77,8 +77,7 @@ private slots:
 private:
     QWidgetList m_widgets;
     QWidget *m_parentWidget;
-    typedef QHash<QWidget *, QRect> WidgetGeometryHash;
-    WidgetGeometryHash m_geometries;
+    QHash<QWidget *, QRect> m_geometries;
     QWidget *m_layoutBase;
     QDesignerFormWindowInterface *m_formWindow;
     const LayoutInfo::Type m_layoutType;

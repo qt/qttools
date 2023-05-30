@@ -33,7 +33,7 @@ using namespace Qt::StringLiterals;
 static const char *skinExtensionC = "skin";
 
 // Pair of skin name, path
-typedef QPair<QString, QString> SkinNamePath;
+using SkinNamePath = QPair<QString, QString>;
 using Skins = QList<SkinNamePath>;
 enum { SkinComboNoneIndex = 0 };
 

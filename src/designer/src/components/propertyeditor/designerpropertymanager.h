@@ -18,7 +18,7 @@
 
 QT_BEGIN_NAMESPACE
 
-typedef QPair<QString, uint> DesignerIntPair;
+using DesignerIntPair = QPair<QString, uint>;
 using DesignerFlagList = QList<DesignerIntPair>;
 
 class QDesignerFormEditorInterface;
@@ -152,8 +152,7 @@ private Q_SLOTS:
 private:
     void createIconSubProperty(QtProperty *iconProperty, QIcon::Mode mode, QIcon::State state, const QString &subName);
 
-    typedef QMap<QtProperty *, bool> PropertyBoolMap;
-    PropertyBoolMap m_resetMap;
+    QMap<QtProperty *, bool> m_resetMap;
 
     struct FlagData
     {
@@ -173,7 +172,7 @@ private:
     QString indexHToString(int idx) const;
     QString indexVToString(int idx) const;
     QMap<QtProperty *, uint> m_alignValues;
-    typedef QMap<QtProperty *, QtProperty *> PropertyToPropertyMap;
+    using PropertyToPropertyMap = QMap<QtProperty *, QtProperty *>;
     PropertyToPropertyMap m_propertyToAlignH;
     PropertyToPropertyMap m_propertyToAlignV;
     PropertyToPropertyMap m_alignHToProperty;
@@ -207,7 +206,7 @@ private:
 
     QMap<QtProperty *, int> m_stringAttributes;
     QMap<QtProperty *, QFont> m_stringFontAttributes;
-    PropertyBoolMap m_stringThemeAttributes;
+    QMap<QtProperty *, bool> m_stringThemeAttributes;
 
     BrushPropertyManager m_brushManager;
     FontPropertyManager m_fontManager;

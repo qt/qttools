@@ -496,8 +496,7 @@ QDesignerPropertySheet::ObjectFlags QDesignerPropertySheet::objectFlagsFromObjec
 
 QDesignerPropertySheet::PropertyType QDesignerPropertySheet::propertyTypeFromName(const QString &name)
 {
-    typedef QHash<QString, PropertyType> PropertyTypeHash;
-    static const PropertyTypeHash propertyTypeHash= {
+    static const QHash<QString, PropertyType> propertyTypeHash = {
         {QLatin1StringView(layoutObjectNameC),         PropertyLayoutObjectName},
         {QLatin1StringView(layoutLeftMarginC),         PropertyLayoutLeftMargin},
         {QLatin1StringView(layoutTopMarginC),          PropertyLayoutTopMargin},

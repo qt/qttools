@@ -39,7 +39,7 @@ private:
     QAction *m_editItemsAction;
 };
 
-typedef ExtensionFactory<QDesignerTaskMenuExtension, QTreeWidget, TreeWidgetTaskMenu> TreeWidgetTaskMenuFactory;
+using TreeWidgetTaskMenuFactory = ExtensionFactory<QDesignerTaskMenuExtension, QTreeWidget, TreeWidgetTaskMenu>;
 }  // namespace qdesigner_internal
 
 QT_END_NAMESPACE

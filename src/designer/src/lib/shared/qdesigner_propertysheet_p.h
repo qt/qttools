@@ -231,7 +231,7 @@ void QDesignerPropertySheetFactory<Object, PropertySheet>::registerExtension(QEx
 
 
 // Standard property sheet
-typedef QDesignerPropertySheetFactory<QObject, QDesignerPropertySheet> QDesignerDefaultPropertySheetFactory;
+using QDesignerDefaultPropertySheetFactory = QDesignerPropertySheetFactory<QObject, QDesignerPropertySheet>;
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QDesignerPropertySheet::ObjectFlags)
 

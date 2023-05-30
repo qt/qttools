@@ -145,8 +145,7 @@ private:
     using SelectionPool = QList<WidgetSelection *>;
     SelectionPool m_selectionPool;
 
-    typedef QHash<QWidget *, WidgetSelection *> SelectionHash;
-    SelectionHash m_usedSelections;
+    QHash<QWidget *, WidgetSelection *> m_usedSelections;
 };
 
 FormWindow::Selection::Selection() = default;
