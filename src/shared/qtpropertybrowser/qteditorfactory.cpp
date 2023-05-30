@@ -4,7 +4,7 @@
 #include "qteditorfactory.h"
 #include "qtpropertybrowserutils_p.h"
 
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QRegularExpression>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QRegularExpressionValidator>
@@ -51,8 +51,8 @@ class EditorFactoryPrivate
 public:
 
     using EditorList = QList<Editor *>;
-    using PropertyToEditorListMap = QMap<QtProperty *, EditorList>;
-    using EditorToPropertyMap = QMap<Editor *, QtProperty *>;
+    using PropertyToEditorListMap = QHash<QtProperty *, EditorList>;
+    using EditorToPropertyMap = QHash<Editor *, QtProperty *>;
 
     Editor *createEditor(QtProperty *property, QWidget *parent);
     void initializeEditor(QtProperty *property, Editor *e);
@@ -1920,10 +1920,10 @@ public:
     QtEnumEditorFactory *m_enumEditorFactory;
     QtEnumPropertyManager *m_enumPropertyManager;
 
-    QMap<QtProperty *, QtProperty *> m_propertyToEnum;
-    QMap<QtProperty *, QtProperty *> m_enumToProperty;
-    QMap<QtProperty *, QWidgetList > m_enumToEditors;
-    QMap<QWidget *, QtProperty *> m_editorToEnum;
+    QHash<QtProperty *, QtProperty *> m_propertyToEnum;
+    QHash<QtProperty *, QtProperty *> m_enumToProperty;
+    QHash<QtProperty *, QWidgetList > m_enumToEditors;
+    QHash<QWidget *, QtProperty *> m_editorToEnum;
     bool m_updatingEnum;
 };
 

@@ -3,7 +3,7 @@
 
 #include "qttreepropertybrowser.h"
 
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtGui/QFocusEvent>
 #include <QtGui/QIcon>
 #include <QtGui/QPainter>
@@ -61,10 +61,10 @@ public:
 private:
     void updateItem(QTreeWidgetItem *item);
 
-    QMap<QtBrowserItem *, QTreeWidgetItem *> m_indexToItem;
-    QMap<QTreeWidgetItem *, QtBrowserItem *> m_itemToIndex;
+    QHash<QtBrowserItem *, QTreeWidgetItem *> m_indexToItem;
+    QHash<QTreeWidgetItem *, QtBrowserItem *> m_itemToIndex;
 
-    QMap<QtBrowserItem *, QColor> m_indexToBackgroundColor;
+    QHash<QtBrowserItem *, QColor> m_indexToBackgroundColor;
 
     QtPropertyEditorView *m_treeWidget;
 
@@ -215,10 +215,10 @@ private slots:
 private:
     int indentation(const QModelIndex &index) const;
 
-    using EditorToPropertyMap = QMap<QWidget *, QtProperty *>;
+    using EditorToPropertyMap = QHash<QWidget *, QtProperty *>;
     mutable EditorToPropertyMap m_editorToProperty;
 
-    using PropertyToEditorMap = QMap<QtProperty *, QWidget *>;
+    using PropertyToEditorMap = QHash<QtProperty *, QWidget *>;
     mutable PropertyToEditorMap m_propertyToEditor;
     QtTreePropertyBrowserPrivate *m_editorPrivate;
     mutable QTreeWidgetItem *m_editedItem;
