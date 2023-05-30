@@ -179,63 +179,9 @@ bool DocBookGenerator::generateText(const Text &text, const Node *relative)
 
     int numAtoms = 0;
     initializeTextOutput();
-    generateAtomList(text.firstAtom(), relative, true, numAtoms);
+    generateAtomList(text.firstAtom(), relative, nullptr, true, numAtoms);
     closeTextSections();
     return true;
-}
-
-/*!
-  Generate the text for \a atom relatively to \a relative.
-  \a generate indicates if output to \a writer is expected.
-  The number of generated atoms is returned in the argument
-  \a numAtoms. The returned value is the first atom that was not
-  generated.
- */
-const Atom *DocBookGenerator::generateAtomList(const Atom *atom, const Node *relative,
-                                               bool generate, int &numAtoms)
-{
-    Q_ASSERT(m_writer);
-    // From Generator::generateAtomList.
-    while (atom) {
-        switch (atom->type()) {
-        case Atom::FormatIf: {
-            int numAtoms0 = numAtoms;
-            bool rightFormat = canHandleFormat(atom->string());
-            atom = generateAtomList(atom->next(), relative, generate && rightFormat, numAtoms);
-            if (!atom)
-                return nullptr;
-
-            if (atom->type() == Atom::FormatElse) {
-                ++numAtoms;
-                atom = generateAtomList(atom->next(), relative, generate && !rightFormat, numAtoms);
-                if (!atom)
-                    return nullptr;
-            }
-
-            if (atom->type() == Atom::FormatEndif) {
-                if (generate && numAtoms0 == numAtoms) {
-                    relative->location().warning(QStringLiteral("Output format %1 not handled %2")
-                                                         .arg(format(), outFileName()));
-                    Atom unhandledFormatAtom(Atom::UnhandledFormat, format());
-                    generateAtomList(&unhandledFormatAtom, relative, generate, numAtoms);
-                }
-                atom = atom->next();
-            }
-        } break;
-        case Atom::FormatElse:
-        case Atom::FormatEndif:
-            return atom;
-        default:
-            int n = 1;
-            if (generate) {
-                n += generateAtom(atom, relative, nullptr);
-                numAtoms += n;
-            }
-            while (n-- > 0)
-                atom = atom->next();
-        }
-    }
-    return nullptr;
 }
 
 QString removeCodeMarkers(const QString& code) {

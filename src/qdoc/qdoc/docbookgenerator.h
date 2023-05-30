@@ -62,8 +62,6 @@ protected:
     void generateBody(const Node *node);
 
     bool generateText(const Text &text, const Node *relative) override;
-    const Atom *generateAtomList(const Atom *atom, const Node *relative, bool generate,
-                                 int &numAtoms);
     qsizetype generateAtom(const Atom *atom, const Node *relative, CodeMarker*) override;
 
 private:
