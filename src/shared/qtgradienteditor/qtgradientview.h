@@ -5,7 +5,7 @@
 #define GRADIENTVIEW_H
 
 #include <QtWidgets/QWidget>
-#include <QtCore/QMap>
+#include <QtCore/QHash>
 #include "ui_qtgradientview.h"
 
 QT_BEGIN_NAMESPACE
@@ -44,8 +44,8 @@ private slots:
     void slotGradientActivated(QListWidgetItem *item);
 
 private:
-    QMap<QString, QListWidgetItem *> m_idToItem;
-    QMap<QListWidgetItem *, QString> m_itemToId;
+    QHash<QString, QListWidgetItem *> m_idToItem;
+    QHash<QListWidgetItem *, QString> m_itemToId;
 
     QAction *m_newAction;
     QAction *m_editAction;

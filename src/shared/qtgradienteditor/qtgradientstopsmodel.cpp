@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qtgradientstopsmodel.h"
+
 #include <QtGui/QColor>
+#include <QtCore/QHash>
 
 QT_BEGIN_NAMESPACE
 
@@ -57,8 +59,8 @@ class QtGradientStopsModelPrivate
     Q_DECLARE_PUBLIC(QtGradientStopsModel)
 public:
     QMap<qreal, QtGradientStop *> m_posToStop;
-    QMap<QtGradientStop *, qreal> m_stopToPos;
-    QMap<QtGradientStop *, bool> m_selection;
+    QHash<QtGradientStop *, qreal> m_stopToPos;
+    QHash<QtGradientStop *, bool> m_selection;
     QtGradientStop *m_current;
 };
 
@@ -385,7 +387,7 @@ void QtGradientStopsModel::clearSelection()
 void QtGradientStopsModel::flipAll()
 {
     QMap<qreal, QtGradientStop *> stopsMap = stops();
-    QMap<QtGradientStop *, bool> swappedList;
+    QHash<QtGradientStop *, bool> swappedList;
     for (auto itStop = stopsMap.keyValueEnd(), begin = stopsMap.keyValueBegin(); itStop != begin;) {
         --itStop;
         QtGradientStop *stop = (*itStop).second;
