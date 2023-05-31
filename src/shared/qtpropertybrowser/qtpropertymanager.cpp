@@ -5,6 +5,7 @@
 #include "qtpropertybrowserutils_p.h"
 
 #include <QtCore/QDateTime>
+#include <QtCore/QHash>
 #include <QtCore/QLocale>
 #include <QtCore/QMap>
 #include <QtCore/QMetaEnum>
@@ -150,7 +151,7 @@ void orderBorders(QSizeF &minVal, QSizeF &maxVal)
 ////////
 
 template <class Value, class PrivateData>
-static Value getData(const QMap<const QtProperty *, PrivateData> &propertyMap,
+static Value getData(const QHash<const QtProperty *, PrivateData> &propertyMap,
             Value PrivateData::*data,
             const QtProperty *property, const Value &defaultValue = Value())
 {
@@ -161,28 +162,28 @@ static Value getData(const QMap<const QtProperty *, PrivateData> &propertyMap,
 }
 
 template <class Value, class PrivateData>
-static Value getValue(const QMap<const QtProperty *, PrivateData> &propertyMap,
+static Value getValue(const QHash<const QtProperty *, PrivateData> &propertyMap,
             const QtProperty *property, const Value &defaultValue = Value())
 {
     return getData<Value>(propertyMap, &PrivateData::val, property, defaultValue);
 }
 
 template <class Value, class PrivateData>
-static Value getMinimum(const QMap<const QtProperty *, PrivateData> &propertyMap,
+static Value getMinimum(const QHash<const QtProperty *, PrivateData> &propertyMap,
             const QtProperty *property, const Value &defaultValue = Value())
 {
     return getData<Value>(propertyMap, &PrivateData::minVal, property, defaultValue);
 }
 
 template <class Value, class PrivateData>
-static Value getMaximum(const QMap<const QtProperty *, PrivateData> &propertyMap,
+static Value getMaximum(const QHash<const QtProperty *, PrivateData> &propertyMap,
             const QtProperty *property, const Value &defaultValue = Value())
 {
     return getData<Value>(propertyMap, &PrivateData::maxVal, property, defaultValue);
 }
 
 template <class ValueChangeParameter, class Value, class PropertyManager>
-static void setSimpleValue(QMap<const QtProperty *, Value> &propertyMap,
+static void setSimpleValue(QHash<const QtProperty *, Value> &propertyMap,
             PropertyManager *manager,
             void (PropertyManager::*propertyChangedSignal)(QtProperty *),
             void (PropertyManager::*valueChangedSignal)(QtProperty *, ValueChangeParameter),
@@ -558,7 +559,7 @@ public:
         void setMaximumValue(int newMaxVal) { setSimpleMaximumData(this, newMaxVal); }
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -834,7 +835,7 @@ public:
         void setMaximumValue(double newMaxVal) { setSimpleMaximumData(this, newMaxVal); }
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -1156,7 +1157,7 @@ public:
         QRegularExpression regExp;
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -1367,7 +1368,7 @@ class QtBoolPropertyManagerPrivate
 public:
     QtBoolPropertyManagerPrivate();
 
-    QMap<const QtProperty *, bool> m_values;
+    QHash<const QtProperty *, bool> m_values;
     const QIcon m_checkedIcon;
     const QIcon m_uncheckedIcon;
 };
@@ -1513,7 +1514,7 @@ public:
 
     QString m_format;
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 };
 
 QtDatePropertyManagerPrivate::QtDatePropertyManagerPrivate(QtDatePropertyManager *q) :
@@ -1734,7 +1735,7 @@ public:
 
     const QString m_format;
 
-    QMap<const QtProperty *, QTime> m_values;
+    QHash<const QtProperty *, QTime> m_values;
 };
 
 QtTimePropertyManagerPrivate::QtTimePropertyManagerPrivate(QtTimePropertyManager *q) :
@@ -1853,7 +1854,7 @@ public:
 
     const QString m_format;
 
-    QMap<const QtProperty *, QDateTime> m_values;
+    QHash<const QtProperty *, QDateTime> m_values;
 };
 
 QtDateTimePropertyManagerPrivate::QtDateTimePropertyManagerPrivate(QtDateTimePropertyManager *q) :
@@ -1967,7 +1968,7 @@ public:
 
     QString m_format;
 
-    QMap<const QtProperty *, QKeySequence> m_values;
+    QHash<const QtProperty *, QKeySequence> m_values;
 };
 
 /*! \class QtKeySequencePropertyManager
@@ -2075,7 +2076,7 @@ class QtCharPropertyManagerPrivate
     Q_DECLARE_PUBLIC(QtCharPropertyManager)
 public:
 
-    QMap<const QtProperty *, QChar> m_values;
+    QHash<const QtProperty *, QChar> m_values;
 };
 
 /*! \class QtCharPropertyManager
@@ -2187,15 +2188,15 @@ public:
     void slotEnumChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    QMap<const QtProperty *, QLocale> m_values;
+    QHash<const QtProperty *, QLocale> m_values;
 
     QtEnumPropertyManager *m_enumPropertyManager = nullptr;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToLanguage;
-    QMap<const QtProperty *, QtProperty *> m_propertyToTerritory;
+    QHash<const QtProperty *, QtProperty *> m_propertyToLanguage;
+    QHash<const QtProperty *, QtProperty *> m_propertyToTerritory;
 
-    QMap<const QtProperty *, QtProperty *> m_languageToProperty;
-    QMap<const QtProperty *, QtProperty *> m_territoryToProperty;
+    QHash<const QtProperty *, QtProperty *> m_languageToProperty;
+    QHash<const QtProperty *, QtProperty *> m_territoryToProperty;
 };
 
 void QtLocalePropertyManagerPrivate::slotEnumChanged(QtProperty *property, int value)
@@ -2437,15 +2438,15 @@ public:
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    QMap<const QtProperty *, QPoint> m_values;
+    QHash<const QtProperty *, QPoint> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToX;
-    QMap<const QtProperty *, QtProperty *> m_propertyToY;
+    QHash<const QtProperty *, QtProperty *> m_propertyToX;
+    QHash<const QtProperty *, QtProperty *> m_propertyToY;
 
-    QMap<const QtProperty *, QtProperty *> m_xToProperty;
-    QMap<const QtProperty *, QtProperty *> m_yToProperty;
+    QHash<const QtProperty *, QtProperty *> m_xToProperty;
+    QHash<const QtProperty *, QtProperty *> m_yToProperty;
 };
 
 void QtPointPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
@@ -2654,15 +2655,15 @@ public:
     void slotDoubleChanged(QtProperty *property, double value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 
     QtDoublePropertyManager *m_doublePropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToX;
-    QMap<const QtProperty *, QtProperty *> m_propertyToY;
+    QHash<const QtProperty *, QtProperty *> m_propertyToX;
+    QHash<const QtProperty *, QtProperty *> m_propertyToY;
 
-    QMap<const QtProperty *, QtProperty *> m_xToProperty;
-    QMap<const QtProperty *, QtProperty *> m_yToProperty;
+    QHash<const QtProperty *, QtProperty *> m_xToProperty;
+    QHash<const QtProperty *, QtProperty *> m_yToProperty;
 };
 
 void QtPointFPropertyManagerPrivate::slotDoubleChanged(QtProperty *property, double value)
@@ -2937,15 +2938,15 @@ public:
         void setMaximumValue(const QSize &newMaxVal) { setSizeMaximumData(this, newMaxVal); }
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToW;
-    QMap<const QtProperty *, QtProperty *> m_propertyToH;
+    QHash<const QtProperty *, QtProperty *> m_propertyToW;
+    QHash<const QtProperty *, QtProperty *> m_propertyToH;
 
-    QMap<const QtProperty *, QtProperty *> m_wToProperty;
-    QMap<const QtProperty *, QtProperty *> m_hToProperty;
+    QHash<const QtProperty *, QtProperty *> m_wToProperty;
+    QHash<const QtProperty *, QtProperty *> m_hToProperty;
 };
 
 void QtSizePropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
@@ -3280,15 +3281,15 @@ public:
         void setMaximumValue(const QSizeF &newMaxVal) { setSizeMaximumData(this, newMaxVal); }
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 
     QtDoublePropertyManager *m_doublePropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToW;
-    QMap<const QtProperty *, QtProperty *> m_propertyToH;
+    QHash<const QtProperty *, QtProperty *> m_propertyToW;
+    QHash<const QtProperty *, QtProperty *> m_propertyToH;
 
-    QMap<const QtProperty *, QtProperty *> m_wToProperty;
-    QMap<const QtProperty *, QtProperty *> m_hToProperty;
+    QHash<const QtProperty *, QtProperty *> m_wToProperty;
+    QHash<const QtProperty *, QtProperty *> m_hToProperty;
 };
 
 void QtSizeFPropertyManagerPrivate::slotDoubleChanged(QtProperty *property, double value)
@@ -3671,19 +3672,19 @@ public:
         QRect constraint;
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToX;
-    QMap<const QtProperty *, QtProperty *> m_propertyToY;
-    QMap<const QtProperty *, QtProperty *> m_propertyToW;
-    QMap<const QtProperty *, QtProperty *> m_propertyToH;
+    QHash<const QtProperty *, QtProperty *> m_propertyToX;
+    QHash<const QtProperty *, QtProperty *> m_propertyToY;
+    QHash<const QtProperty *, QtProperty *> m_propertyToW;
+    QHash<const QtProperty *, QtProperty *> m_propertyToH;
 
-    QMap<const QtProperty *, QtProperty *> m_xToProperty;
-    QMap<const QtProperty *, QtProperty *> m_yToProperty;
-    QMap<const QtProperty *, QtProperty *> m_wToProperty;
-    QMap<const QtProperty *, QtProperty *> m_hToProperty;
+    QHash<const QtProperty *, QtProperty *> m_xToProperty;
+    QHash<const QtProperty *, QtProperty *> m_yToProperty;
+    QHash<const QtProperty *, QtProperty *> m_wToProperty;
+    QHash<const QtProperty *, QtProperty *> m_hToProperty;
 };
 
 void QtRectPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
@@ -4077,19 +4078,19 @@ public:
         int decimals{2};
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 
     QtDoublePropertyManager *m_doublePropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToX;
-    QMap<const QtProperty *, QtProperty *> m_propertyToY;
-    QMap<const QtProperty *, QtProperty *> m_propertyToW;
-    QMap<const QtProperty *, QtProperty *> m_propertyToH;
+    QHash<const QtProperty *, QtProperty *> m_propertyToX;
+    QHash<const QtProperty *, QtProperty *> m_propertyToY;
+    QHash<const QtProperty *, QtProperty *> m_propertyToW;
+    QHash<const QtProperty *, QtProperty *> m_propertyToH;
 
-    QMap<const QtProperty *, QtProperty *> m_xToProperty;
-    QMap<const QtProperty *, QtProperty *> m_yToProperty;
-    QMap<const QtProperty *, QtProperty *> m_wToProperty;
-    QMap<const QtProperty *, QtProperty *> m_hToProperty;
+    QHash<const QtProperty *, QtProperty *> m_xToProperty;
+    QHash<const QtProperty *, QtProperty *> m_yToProperty;
+    QHash<const QtProperty *, QtProperty *> m_wToProperty;
+    QHash<const QtProperty *, QtProperty *> m_hToProperty;
 };
 
 void QtRectFPropertyManagerPrivate::slotDoubleChanged(QtProperty *property, double value)
@@ -4542,7 +4543,7 @@ public:
         QMap<int, QIcon> enumIcons;
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 };
 
 /*!
@@ -4812,13 +4813,13 @@ public:
         QStringList flagNames;
     };
 
-    QMap<const QtProperty *, Data> m_values;
+    QHash<const QtProperty *, Data> m_values;
 
     QtBoolPropertyManager *m_boolPropertyManager;
 
-    QMap<const QtProperty *, QList<QtProperty *> > m_propertyToFlags;
+    QHash<const QtProperty *, QList<QtProperty *>> m_propertyToFlags;
 
-    QMap<const QtProperty *, QtProperty *> m_flagToProperty;
+    QHash<const QtProperty *, QtProperty *> m_flagToProperty;
 };
 
 void QtFlagPropertyManagerPrivate::slotBoolChanged(QtProperty *property, bool value)
@@ -5136,20 +5137,20 @@ public:
     void slotEnumChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    QMap<const QtProperty *, QSizePolicy> m_values;
+    QHash<const QtProperty *, QSizePolicy> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
     QtEnumPropertyManager *m_enumPropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToHPolicy;
-    QMap<const QtProperty *, QtProperty *> m_propertyToVPolicy;
-    QMap<const QtProperty *, QtProperty *> m_propertyToHStretch;
-    QMap<const QtProperty *, QtProperty *> m_propertyToVStretch;
+    QHash<const QtProperty *, QtProperty *> m_propertyToHPolicy;
+    QHash<const QtProperty *, QtProperty *> m_propertyToVPolicy;
+    QHash<const QtProperty *, QtProperty *> m_propertyToHStretch;
+    QHash<const QtProperty *, QtProperty *> m_propertyToVStretch;
 
-    QMap<const QtProperty *, QtProperty *> m_hPolicyToProperty;
-    QMap<const QtProperty *, QtProperty *> m_vPolicyToProperty;
-    QMap<const QtProperty *, QtProperty *> m_hStretchToProperty;
-    QMap<const QtProperty *, QtProperty *> m_vStretchToProperty;
+    QHash<const QtProperty *, QtProperty *> m_hPolicyToProperty;
+    QHash<const QtProperty *, QtProperty *> m_vPolicyToProperty;
+    QHash<const QtProperty *, QtProperty *> m_hStretchToProperty;
+    QHash<const QtProperty *, QtProperty *> m_vStretchToProperty;
 };
 
 QtSizePolicyPropertyManagerPrivate::QtSizePolicyPropertyManagerPrivate()
@@ -5464,27 +5465,27 @@ public:
 
     QStringList m_familyNames;
 
-    QMap<const QtProperty *, QFont> m_values;
+    QHash<const QtProperty *, QFont> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
     QtEnumPropertyManager *m_enumPropertyManager;
     QtBoolPropertyManager *m_boolPropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToFamily;
-    QMap<const QtProperty *, QtProperty *> m_propertyToPointSize;
-    QMap<const QtProperty *, QtProperty *> m_propertyToBold;
-    QMap<const QtProperty *, QtProperty *> m_propertyToItalic;
-    QMap<const QtProperty *, QtProperty *> m_propertyToUnderline;
-    QMap<const QtProperty *, QtProperty *> m_propertyToStrikeOut;
-    QMap<const QtProperty *, QtProperty *> m_propertyToKerning;
+    QHash<const QtProperty *, QtProperty *> m_propertyToFamily;
+    QHash<const QtProperty *, QtProperty *> m_propertyToPointSize;
+    QHash<const QtProperty *, QtProperty *> m_propertyToBold;
+    QHash<const QtProperty *, QtProperty *> m_propertyToItalic;
+    QHash<const QtProperty *, QtProperty *> m_propertyToUnderline;
+    QHash<const QtProperty *, QtProperty *> m_propertyToStrikeOut;
+    QHash<const QtProperty *, QtProperty *> m_propertyToKerning;
 
-    QMap<const QtProperty *, QtProperty *> m_familyToProperty;
-    QMap<const QtProperty *, QtProperty *> m_pointSizeToProperty;
-    QMap<const QtProperty *, QtProperty *> m_boldToProperty;
-    QMap<const QtProperty *, QtProperty *> m_italicToProperty;
-    QMap<const QtProperty *, QtProperty *> m_underlineToProperty;
-    QMap<const QtProperty *, QtProperty *> m_strikeOutToProperty;
-    QMap<const QtProperty *, QtProperty *> m_kerningToProperty;
+    QHash<const QtProperty *, QtProperty *> m_familyToProperty;
+    QHash<const QtProperty *, QtProperty *> m_pointSizeToProperty;
+    QHash<const QtProperty *, QtProperty *> m_boldToProperty;
+    QHash<const QtProperty *, QtProperty *> m_italicToProperty;
+    QHash<const QtProperty *, QtProperty *> m_underlineToProperty;
+    QHash<const QtProperty *, QtProperty *> m_strikeOutToProperty;
+    QHash<const QtProperty *, QtProperty *> m_kerningToProperty;
 
     bool m_settingValue;
     QTimer *m_fontDatabaseChangeTimer;
@@ -5929,19 +5930,19 @@ public:
     void slotIntChanged(QtProperty *property, int value);
     void slotPropertyDestroyed(QtProperty *property);
 
-    QMap<const QtProperty *, QColor> m_values;
+    QHash<const QtProperty *, QColor> m_values;
 
     QtIntPropertyManager *m_intPropertyManager;
 
-    QMap<const QtProperty *, QtProperty *> m_propertyToR;
-    QMap<const QtProperty *, QtProperty *> m_propertyToG;
-    QMap<const QtProperty *, QtProperty *> m_propertyToB;
-    QMap<const QtProperty *, QtProperty *> m_propertyToA;
+    QHash<const QtProperty *, QtProperty *> m_propertyToR;
+    QHash<const QtProperty *, QtProperty *> m_propertyToG;
+    QHash<const QtProperty *, QtProperty *> m_propertyToB;
+    QHash<const QtProperty *, QtProperty *> m_propertyToA;
 
-    QMap<const QtProperty *, QtProperty *> m_rToProperty;
-    QMap<const QtProperty *, QtProperty *> m_gToProperty;
-    QMap<const QtProperty *, QtProperty *> m_bToProperty;
-    QMap<const QtProperty *, QtProperty *> m_aToProperty;
+    QHash<const QtProperty *, QtProperty *> m_rToProperty;
+    QHash<const QtProperty *, QtProperty *> m_gToProperty;
+    QHash<const QtProperty *, QtProperty *> m_bToProperty;
+    QHash<const QtProperty *, QtProperty *> m_aToProperty;
 };
 
 void QtColorPropertyManagerPrivate::slotIntChanged(QtProperty *property, int value)
@@ -6205,7 +6206,7 @@ class QtCursorPropertyManagerPrivate
     QtCursorPropertyManager *q_ptr;
     Q_DECLARE_PUBLIC(QtCursorPropertyManager)
 public:
-    QMap<const QtProperty *, QCursor> m_values;
+    QHash<const QtProperty *, QCursor> m_values;
 };
 
 /*!
