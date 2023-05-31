@@ -15,8 +15,8 @@ class QtGradientStopsControllerPrivate : public QObject
     QtGradientStopsController *q_ptr;
     Q_DECLARE_PUBLIC(QtGradientStopsController)
 public:
-    typedef QMap<qreal, QColor> PositionColorMap;
-    typedef QMap<qreal, QtGradientStop *> PositionStopMap;
+    using PositionColorMap = QMap<qreal, QColor>;
+    using PositionStopMap = QMap<qreal, QtGradientStop *>;
 
     void setUi(Ui::QtGradientEditor *ui);
 
