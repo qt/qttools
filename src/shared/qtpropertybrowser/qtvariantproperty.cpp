@@ -96,7 +96,7 @@ int QtVariantPropertyManager::iconMapTypeId()
     return qMetaTypeId<QtIconMap>();
 }
 
-using PropertyPropertyMap = QMap<const QtProperty *, QtProperty *>;
+using PropertyPropertyMap = QHash<const QtProperty *, QtProperty *>;
 
 Q_GLOBAL_STATIC(PropertyPropertyMap, propertyToWrappedProperty)
 
@@ -306,7 +306,7 @@ public:
     QMap<int, QtAbstractPropertyManager *> m_typeToPropertyManager;
     QMap<int, QMap<QString, int> > m_typeToAttributeToAttributeType;
 
-    QMap<const QtProperty *, QPair<QtVariantProperty *, int> > m_propertyToType;
+    QHash<const QtProperty *, QPair<QtVariantProperty *, int>> m_propertyToType;
 
     QMap<int, int> m_typeToValueType;
 
