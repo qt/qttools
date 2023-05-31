@@ -5,6 +5,7 @@
 #include "ui_qttoolbardialog.h"
 
 #include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QSet>
 #include <QtGui/QAction>
 #include <QtGui/QtEvents>
@@ -50,7 +51,7 @@ public:
 
     void removeDefaultToolBar(QToolBar *toolBar);
     // NULL on action list means separator.
-    QMap<QToolBar *, QList<QAction *> > defaultToolBars() const;
+    QHash<QToolBar *, QList<QAction *>> defaultToolBars() const;
     bool isDefaultToolBar(QToolBar *toolBar) const;
 
     QToolBar *createToolBar(const QString &toolBarName);
@@ -58,10 +59,10 @@ public:
 
     QList<QAction *> actions(QToolBar *toolBar) const;
 
-    void setToolBars(const QMap<QToolBar *, QList<QAction *> > &actions);
+    void setToolBars(const QHash<QToolBar *, QList<QAction *>> &actions);
     void setToolBar(QToolBar *toolBar, const QList<QAction *> &actions);
 
-    QMap<QToolBar *, QList<QAction *> > toolBarsActions() const;
+    QHash<QToolBar *, QList<QAction *>> toolBarsActions() const;
     QByteArray saveState(int version = 0) const;
     bool restoreState(const QByteArray &state, int version = 0);
 
@@ -96,7 +97,7 @@ class QtFullToolBarManagerPrivate
 public:
 
     QToolBar *toolBarWidgetAction(QAction *action) const;
-    void removeWidgetActions(const QMap<QToolBar *, QList<QAction *> > &actions);
+    void removeWidgetActions(const QHash<QToolBar *, QList<QAction *>> &actions);
 
     enum {
         VersionMarker = 0xff,
@@ -111,17 +112,17 @@ public:
 
     QToolBar *toolBarByName(const QString &toolBarName) const;
 
-    QMap<QString, QList<QAction *> > categoryToActions;
-    QMap<QAction *, QString>         actionToCategory;
+    QHash<QString, QList<QAction *>> categoryToActions;
+    QHash<QAction *, QString>        actionToCategory;
 
     QSet<QAction *> allActions;
-    QMap<QAction *, QToolBar *> widgetActions;
+    QHash<QAction *, QToolBar *> widgetActions;
     QSet<QAction *> regularActions;
-    QMap<QAction *, QList<QToolBar *> > actionToToolBars;
+    QHash<QAction *, QList<QToolBar *>> actionToToolBars;
 
-    QMap<QToolBar *, QList<QAction *> > toolBars;
-    QMap<QToolBar *, QList<QAction *> > toolBarsWithSeparators;
-    QMap<QToolBar *, QList<QAction *> > defaultToolBars;
+    QHash<QToolBar *, QList<QAction *>> toolBars;
+    QHash<QToolBar *, QList<QAction *>> toolBarsWithSeparators;
+    QHash<QToolBar *, QList<QAction *>> defaultToolBars;
     QList<QToolBar *> customToolBars;
 
     QMainWindow *theMainWindow{nullptr};
@@ -134,7 +135,7 @@ QToolBar *QtFullToolBarManagerPrivate::toolBarWidgetAction(QAction *action) cons
     return 0;
 }
 
-void QtFullToolBarManagerPrivate::removeWidgetActions(const QMap<QToolBar *, QList<QAction *> >
+void QtFullToolBarManagerPrivate::removeWidgetActions(const QHash<QToolBar *, QList<QAction *>>
             &actions)
 {
     auto itToolBar = actions.constBegin();
@@ -543,7 +544,7 @@ void QtFullToolBarManager::removeDefaultToolBar(QToolBar *toolBar)
     }
 }
 
-QMap<QToolBar *, QList<QAction *> > QtFullToolBarManager::defaultToolBars() const
+QHash<QToolBar *, QList<QAction *>> QtFullToolBarManager::defaultToolBars() const
 {
     return d_ptr->defaultToolBars;
 }
@@ -593,7 +594,7 @@ QList<QAction *> QtFullToolBarManager::actions(QToolBar *toolBar) const
     return QList<QAction *>();
 }
 
-void QtFullToolBarManager::setToolBars(const QMap<QToolBar *, QList<QAction *> > &actions)
+void QtFullToolBarManager::setToolBars(const QHash<QToolBar *, QList<QAction *>> &actions)
 {
     auto it = actions.constBegin();
     while (it != actions.constEnd()) {
@@ -612,7 +613,7 @@ void QtFullToolBarManager::setToolBar(QToolBar *toolBar, const QList<QAction *> 
     if (actions == d_ptr->toolBars[toolBar])
         return;
 
-    QMap<QToolBar *, QList<QAction *> > toRemove;
+    QHash<QToolBar *, QList<QAction *>> toRemove;
 
     QList<QAction *> newActions;
     for (QAction *action : actions) {
@@ -657,7 +658,7 @@ void QtFullToolBarManager::setToolBar(QToolBar *toolBar, const QList<QAction *> 
     d_ptr->toolBarsWithSeparators.insert(toolBar, newActionsWithSeparators);
 }
 
-QMap<QToolBar *, QList<QAction *> > QtFullToolBarManager::toolBarsActions() const
+QHash<QToolBar *, QList<QAction *>> QtFullToolBarManager::toolBarsActions() const
 {
     return d_ptr->toolBars;
 }
@@ -955,8 +956,8 @@ public:
     void clearOld();
     void fillNew();
     QtFullToolBarManager *toolBarManager;
-    QMap<ToolBarItem *, QList<QAction *> > currentState;
-    QMap<QToolBar *, ToolBarItem *> toolBarItems;
+    QHash<ToolBarItem *, QList<QAction *>> currentState;
+    QHash<QToolBar *, ToolBarItem *> toolBarItems;
     QSet<ToolBarItem *> createdItems;
     QSet<ToolBarItem *> removedItems;
 
@@ -964,20 +965,20 @@ public:
 
     // static
     QTreeWidgetItem *currentAction;
-    QMap<QAction *, QTreeWidgetItem *> actionToItem;
-    QMap<QTreeWidgetItem *, QAction *> itemToAction;
+    QHash<QAction *, QTreeWidgetItem *> actionToItem;
+    QHash<QTreeWidgetItem *, QAction *> itemToAction;
 
     // dynamic
     ToolBarItem *currentToolBar;
-    QMap<ToolBarItem *, QListWidgetItem *> toolBarToItem;
-    QMap<QListWidgetItem *, ToolBarItem *> itemToToolBar;
+    QHash<ToolBarItem *, QListWidgetItem *> toolBarToItem;
+    QHash<QListWidgetItem *, ToolBarItem *> itemToToolBar;
 
     // dynamic
-    QMap<QAction *, QListWidgetItem *> actionToCurrentItem;
-    QMap<QListWidgetItem *, QAction *> currentItemToAction;
+    QHash<QAction *, QListWidgetItem *> actionToCurrentItem;
+    QHash<QListWidgetItem *, QAction *> currentItemToAction;
 
-    QMap<QAction *, ToolBarItem *> widgetActionToToolBar;
-    QMap<ToolBarItem *, QSet<QAction *> > toolBarToWidgetActions;
+    QHash<QAction *, ToolBarItem *> widgetActionToToolBar;
+    QHash<ToolBarItem *, QSet<QAction *>> toolBarToWidgetActions;
 
     QString separatorText;
     Ui::QtToolBarDialog ui;

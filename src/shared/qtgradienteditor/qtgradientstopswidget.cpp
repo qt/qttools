@@ -5,6 +5,7 @@
 #include "qtgradientstopsmodel.h"
 
 #include <QtCore/QMap>
+#include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
@@ -73,7 +74,7 @@ public:
 
     bool m_moving;
     int m_moveOffset;
-    QMap<QtGradientStop *, qreal> m_moveStops;
+    QHash<QtGradientStop *, qreal> m_moveStops;
 
     QMap<qreal, QColor> m_moveOriginal;
 };
