@@ -21,9 +21,6 @@ class QtGradientStopsWidgetPrivate : public QObject
     QtGradientStopsWidget *q_ptr;
     Q_DECLARE_PUBLIC(QtGradientStopsWidget)
 public:
-    typedef QMap<qreal, QColor> PositionColorMap;
-    typedef QMap<QtGradientStop *, qreal> StopPositionMap;
-
     void setGradientStopsModel(QtGradientStopsModel *model);
 
     void slotStopAdded(QtGradientStop *stop);
@@ -76,9 +73,9 @@ public:
 
     bool m_moving;
     int m_moveOffset;
-    StopPositionMap m_moveStops;
+    QMap<QtGradientStop *, qreal> m_moveStops;
 
-    PositionColorMap m_moveOriginal;
+    QMap<qreal, QColor> m_moveOriginal;
 };
 
 void QtGradientStopsWidgetPrivate::setGradientStopsModel(QtGradientStopsModel *model)
@@ -123,7 +120,7 @@ void QtGradientStopsWidgetPrivate::setGradientStopsModel(QtGradientStopsModel *m
         connect(m_model, &QtGradientStopsModel::currentStopChanged,
                     this, &QtGradientStopsWidgetPrivate::slotCurrentStopChanged);
 
-        const QtGradientStopsModel::PositionStopMap stopsMap = m_model->stops();
+        const auto stopsMap = m_model->stops();
         for (auto it = stopsMap.cbegin(), end = stopsMap.cend(); it != end; ++it)
             slotStopAdded(it.value());
 
@@ -432,7 +429,6 @@ void QtGradientStopsWidget::setGradientStopsModel(QtGradientStopsModel *model)
 
 void QtGradientStopsWidget::mousePressEvent(QMouseEvent *e)
 {
-    typedef QtGradientStopsModel::PositionStopMap PositionStopMap;
     if (!d_ptr->m_model)
         return;
 
@@ -451,7 +447,7 @@ void QtGradientStopsWidget::mousePressEvent(QMouseEvent *e)
         } else if (e->modifiers() & Qt::ShiftModifier) {
             QtGradientStop *oldCurrent = d_ptr->m_model->currentStop();
             if (oldCurrent) {
-                PositionStopMap stops = d_ptr->m_model->stops();
+                const auto stops = d_ptr->m_model->stops();
                 auto itSt = stops.constFind(oldCurrent->position());
                 if (itSt != stops.constEnd()) {
                     while (itSt != stops.constFind(stop->position())) {
@@ -668,7 +664,6 @@ void QtGradientStopsWidget::mouseDoubleClickEvent(QMouseEvent *e)
 
 void QtGradientStopsWidget::keyPressEvent(QKeyEvent *e)
 {
-    typedef QtGradientStopsModel::PositionStopMap PositionStopMap;
     if (!d_ptr->m_model)
         return;
 
@@ -676,7 +671,7 @@ void QtGradientStopsWidget::keyPressEvent(QKeyEvent *e)
         d_ptr->m_model->deleteStops();
     } else if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right ||
                 e->key() == Qt::Key_Home || e->key() == Qt::Key_End) {
-        PositionStopMap stops = d_ptr->m_model->stops();
+        const auto stops = d_ptr->m_model->stops();
         if (stops.isEmpty())
             return;
         QtGradientStop *newCurrent = nullptr;

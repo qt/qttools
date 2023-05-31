@@ -33,7 +33,7 @@ class QtGradientStopsModel : public QObject
 {
     Q_OBJECT
 public:
-    typedef QMap<qreal, QtGradientStop *> PositionStopMap;
+    using PositionStopMap = QMap<qreal, QtGradientStop *>;
 
     QtGradientStopsModel(QObject *parent = 0);
     ~QtGradientStopsModel();
