@@ -1019,11 +1019,11 @@ void PropertyEditor::setObject(QObject *object)
                 QtVariantProperty *groupProperty = nullptr;
 
                 if (newProperty) {
-                    QMap<QString, QtVariantProperty*>::const_iterator itPrev(m_nameToProperty.insert(propertyName, property));
+                    auto itPrev = m_nameToProperty.insert(propertyName, property);
                     m_propertyToGroup[property] = groupName;
                     if (m_sorting) {
                         QtProperty *previous = nullptr;
-                        if (itPrev != m_nameToProperty.constBegin())
+                        if (itPrev != m_nameToProperty.begin())
                             previous = (--itPrev).value();
                         m_currentBrowser->insertProperty(property, previous);
                     }
