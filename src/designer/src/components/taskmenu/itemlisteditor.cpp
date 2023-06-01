@@ -271,6 +271,20 @@ ItemListEditor::ItemListEditor(QDesignerFormWindowInterface *form, QWidget *pare
     injectPropertyBrowser(this, ui.widget);
     connect(ui.showPropertiesButton, &QAbstractButton::clicked,
             this, &ItemListEditor::togglePropertyBrowser);
+
+    connect(ui.newListItemButton, &QAbstractButton::clicked,
+            this, &ItemListEditor::newListItemButtonClicked);
+    connect(ui.deleteListItemButton, &QAbstractButton::clicked,
+            this, &ItemListEditor::deleteListItemButtonClicked);
+    connect(ui.moveListItemUpButton, &QAbstractButton::clicked,
+            this, &ItemListEditor::moveListItemUpButtonClicked);
+    connect(ui.moveListItemDownButton, &QAbstractButton::clicked,
+            this, &ItemListEditor::moveListItemDownButtonClicked);
+    connect(ui.listWidget, &QListWidget::currentRowChanged,
+            this, &ItemListEditor::listWidgetCurrentRowChanged);
+    connect(ui.listWidget, &QListWidget::itemChanged,
+            this, &ItemListEditor::listWidgetItemChanged);
+
     setPropertyBrowserVisible(false);
 
     QIcon upIcon = createIconSet(u"up.png"_s);
@@ -304,7 +318,7 @@ void ItemListEditor::setCurrentIndex(int idx)
     m_updating = false;
 }
 
-void ItemListEditor::on_newListItemButton_clicked()
+void ItemListEditor::newListItemButtonClicked()
 {
     int row = ui.listWidget->currentRow() + 1;
 
@@ -323,7 +337,7 @@ void ItemListEditor::on_newListItemButton_clicked()
     ui.listWidget->editItem(item);
 }
 
-void ItemListEditor::on_deleteListItemButton_clicked()
+void ItemListEditor::deleteListItemButtonClicked()
 {
     int row = ui.listWidget->currentRow();
 
@@ -340,7 +354,7 @@ void ItemListEditor::on_deleteListItemButton_clicked()
         ui.listWidget->setCurrentRow(row);
 }
 
-void ItemListEditor::on_moveListItemUpButton_clicked()
+void ItemListEditor::moveListItemUpButtonClicked()
 {
     int row = ui.listWidget->currentRow();
     if (row <= 0)
@@ -351,7 +365,7 @@ void ItemListEditor::on_moveListItemUpButton_clicked()
     emit itemMovedUp(row);
 }
 
-void ItemListEditor::on_moveListItemDownButton_clicked()
+void ItemListEditor::moveListItemDownButtonClicked()
 {
     int row = ui.listWidget->currentRow();
     if (row == -1 || row == ui.listWidget->count() - 1)
@@ -362,14 +376,14 @@ void ItemListEditor::on_moveListItemDownButton_clicked()
     emit itemMovedDown(row);
 }
 
-void ItemListEditor::on_listWidget_currentRowChanged()
+void ItemListEditor::listWidgetCurrentRowChanged()
 {
     updateEditor();
     if (!m_updating)
         emit indexChanged(ui.listWidget->currentRow());
 }
 
-void ItemListEditor::on_listWidget_itemChanged(QListWidgetItem *item)
+void ItemListEditor::listWidgetItemChanged(QListWidgetItem *item)
 {
     if (m_updatingBrowser)
         return;
