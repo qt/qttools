@@ -55,7 +55,7 @@ public:
     explicit QDesignerDialog(QDesignerFormWindowInterface *fw, QWidget *parent);
 
     QSize minimumSizeHint() const override
-    { return QWidget::minimumSizeHint().expandedTo(QSize(16, 16)); }
+    { return QDialog::minimumSizeHint().expandedTo(QSize(16, 16)); }
 
 protected:
     void paintEvent(QPaintEvent *e) override;
