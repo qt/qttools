@@ -273,6 +273,7 @@ struct ConfigStrings
     static QString OUTPUTFORMATS;
     static QString OUTPUTPREFIXES;
     static QString OUTPUTSUFFIXES;
+    static QString PLATFORMEOL;
     static QString PROJECT;
     static QString REDIRECTDOCUMENTATIONTODEVNULL;
     static QString QHP;
@@ -351,6 +352,7 @@ struct ConfigStrings
 #define CONFIG_OUTPUTFORMATS ConfigStrings::OUTPUTFORMATS
 #define CONFIG_OUTPUTPREFIXES ConfigStrings::OUTPUTPREFIXES
 #define CONFIG_OUTPUTSUFFIXES ConfigStrings::OUTPUTSUFFIXES
+#define CONFIG_PLATFORMEOL ConfigStrings::PLATFORMEOL
 #define CONFIG_PROJECT ConfigStrings::PROJECT
 #define CONFIG_REDIRECTDOCUMENTATIONTODEVNULL ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL
 #define CONFIG_QHP ConfigStrings::QHP

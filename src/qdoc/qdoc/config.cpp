@@ -64,6 +64,7 @@ QString ConfigStrings::OUTPUTDIR = QStringLiteral("outputdir");
 QString ConfigStrings::OUTPUTFORMATS = QStringLiteral("outputformats");
 QString ConfigStrings::OUTPUTPREFIXES = QStringLiteral("outputprefixes");
 QString ConfigStrings::OUTPUTSUFFIXES = QStringLiteral("outputsuffixes");
+QString ConfigStrings::PLATFORMEOL = QStringLiteral("platformEOL");
 QString ConfigStrings::PROJECT = QStringLiteral("project");
 QString ConfigStrings::REDIRECTDOCUMENTATIONTODEVNULL =
         QStringLiteral("redirectdocumentationtodevnull");

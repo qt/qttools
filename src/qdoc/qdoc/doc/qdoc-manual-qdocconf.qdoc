@@ -173,6 +173,7 @@
     \li \l {outputformats-variable} {outputformats}
     \li \l {outputprefixes-variable} {outputprefixes}
     \li \l {outputsuffixes-variable} {outputsuffixes}
+    \li \l {platformEOL-variable} {platformEOL}
     \li \l {project-variable} {project}
     \li \l {sourcedirs-variable} {sourcedirs}
     \li \l {sources-variable} {sources}
@@ -1805,6 +1806,17 @@
     documentation only uses the \c depends variable.
 
     See also \l depends, \l project and \l url.
+
+    \target platformEOL-variable
+    \section1 platformEOL
+
+    The \c platformEOL variable controls whether QDoc outputs platform dependent
+    end-of-line (EOL) terminator characters. If set to true, QDoc will translate
+    \c {\n} EOL characters to \c {\r\n} when running on Windows. The default
+    behavior is to output only \c {\n}, which is the standard EOL termination
+    character sequence on Unix-like systems, including Linux and macOS.
+
+    This configuration variable was introduced in QDoc 6.6.
 
     \target project-variable
     \section1 project
