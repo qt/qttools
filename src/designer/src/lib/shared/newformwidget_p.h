@@ -61,9 +61,9 @@ public:
                            const qdesigner_internal::DeviceProfile &dp);
 
 private slots:
-    void on_treeWidget_itemActivated(QTreeWidgetItem *item);
-    void on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *);
-    void on_treeWidget_itemPressed(QTreeWidgetItem *item);
+    void treeWidgetItemActivated(QTreeWidgetItem *item);
+    void treeWidgetCurrentItemChanged(QTreeWidgetItem *current);
+    void treeWidgetItemPressed(QTreeWidgetItem *item);
     void slotDeviceProfileIndexChanged(int idx);
 
 private:

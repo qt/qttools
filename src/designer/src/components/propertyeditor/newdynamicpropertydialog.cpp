@@ -22,6 +22,8 @@ NewDynamicPropertyDialog::NewDynamicPropertyDialog(QDesignerDialogGuiInterface *
 {
     m_ui->setupUi(this);
     connect(m_ui->m_lineEdit, &QLineEdit::textChanged, this, &NewDynamicPropertyDialog::nameChanged);
+    connect(m_ui->m_buttonBox, &QDialogButtonBox::clicked,
+            this, &NewDynamicPropertyDialog::buttonBoxClicked);
 
     m_ui->m_comboBox->addItem(u"String"_s,
                               QVariant(QMetaType(QMetaType::QString)));
@@ -142,7 +144,7 @@ bool NewDynamicPropertyDialog::validatePropertyName(const QString& name)
     return true;
 }
 
-void NewDynamicPropertyDialog::on_m_buttonBox_clicked(QAbstractButton *btn)
+void NewDynamicPropertyDialog::buttonBoxClicked(QAbstractButton *btn)
 {
     const int role = m_ui->m_buttonBox->buttonRole(btn);
     switch (role) {

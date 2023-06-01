@@ -49,34 +49,34 @@ TableWidgetEditor::TableWidgetEditor(QDesignerFormWindowInterface *form, QDialog
     connect(iconCache(), &DesignerIconCache::reloaded, this, &TableWidgetEditor::cacheReloaded);
 
     connect(ui.tableWidget, &QTableWidget::currentCellChanged,
-            this, &TableWidgetEditor::on_tableWidget_currentCellChanged);
+            this, &TableWidgetEditor::tableWidgetCurrentCellChanged);
     connect(ui.tableWidget, &QTableWidget::itemChanged,
-            this, &TableWidgetEditor::on_tableWidget_itemChanged);
+            this, &TableWidgetEditor::tableWidgetItemChanged);
     connect(m_columnEditor, &ItemListEditor::indexChanged,
-            this, &TableWidgetEditor::on_columnEditor_indexChanged);
+            this, &TableWidgetEditor::columnEditorIndexChanged);
     connect(m_columnEditor, &ItemListEditor::itemChanged,
-            this, &TableWidgetEditor::on_columnEditor_itemChanged);
+            this, &TableWidgetEditor::columnEditorItemChanged);
     connect(m_columnEditor, &ItemListEditor::itemInserted,
-            this, &TableWidgetEditor::on_columnEditor_itemInserted);
+            this, &TableWidgetEditor::columnEditorItemInserted);
     connect(m_columnEditor, &ItemListEditor::itemDeleted,
-            this, &TableWidgetEditor::on_columnEditor_itemDeleted);
+            this, &TableWidgetEditor::columnEditorItemDeleted);
     connect(m_columnEditor, &ItemListEditor::itemMovedUp,
-            this, &TableWidgetEditor::on_columnEditor_itemMovedUp);
+            this, &TableWidgetEditor::columnEditorItemMovedUp);
     connect(m_columnEditor, &ItemListEditor::itemMovedDown,
-            this, &TableWidgetEditor::on_columnEditor_itemMovedDown);
+            this, &TableWidgetEditor::columnEditorItemMovedDown);
 
     connect(m_rowEditor, &ItemListEditor::indexChanged,
-            this, &TableWidgetEditor::on_rowEditor_indexChanged);
+            this, &TableWidgetEditor::rowEditorIndexChanged);
     connect(m_rowEditor, &ItemListEditor::itemChanged,
-            this, &TableWidgetEditor::on_rowEditor_itemChanged);
+            this, &TableWidgetEditor::rowEditorItemChanged);
     connect(m_rowEditor, &ItemListEditor::itemInserted,
-            this, &TableWidgetEditor::on_rowEditor_itemInserted);
+            this, &TableWidgetEditor::rowEditorItemInserted);
     connect(m_rowEditor, &ItemListEditor::itemDeleted,
-            this, &TableWidgetEditor::on_rowEditor_itemDeleted);
+            this, &TableWidgetEditor::rowEditorItemDeleted);
     connect(m_rowEditor, &ItemListEditor::itemMovedUp,
-            this, &TableWidgetEditor::on_rowEditor_itemMovedUp);
+            this, &TableWidgetEditor::rowEditorItemMovedUp);
     connect(m_rowEditor, &ItemListEditor::itemMovedDown,
-            this, &TableWidgetEditor::on_rowEditor_itemMovedDown);
+            this, &TableWidgetEditor::rowEditorItemMovedDown);
 }
 
 static AbstractItemEditor::PropertyDefinition tableHeaderPropList[] = {
@@ -175,14 +175,14 @@ int TableWidgetEditor::defaultItemFlags() const
     return flags;
 }
 
-void TableWidgetEditor::on_tableWidget_currentCellChanged(int currentRow, int currentCol, int, int /* XXX remove me */)
+void TableWidgetEditor::tableWidgetCurrentCellChanged(int currentRow, int currentCol)
 {
     m_rowEditor->setCurrentIndex(currentRow);
     m_columnEditor->setCurrentIndex(currentCol);
     updateBrowser();
 }
 
-void TableWidgetEditor::on_tableWidget_itemChanged(QTableWidgetItem *item)
+void TableWidgetEditor::tableWidgetItemChanged(QTableWidgetItem *item)
 {
     if (m_updatingBrowser)
         return;
@@ -195,22 +195,22 @@ void TableWidgetEditor::on_tableWidget_itemChanged(QTableWidgetItem *item)
     updateBrowser();
 }
 
-void TableWidgetEditor::on_columnEditor_indexChanged(int col)
+void TableWidgetEditor::columnEditorIndexChanged(int col)
 {
     ui.tableWidget->setCurrentCell(ui.tableWidget->currentRow(), col);
 }
 
-void TableWidgetEditor::on_columnEditor_itemChanged(int idx, int role, const QVariant &v)
+void TableWidgetEditor::columnEditorItemChanged(int idx, int role, const QVariant &v)
 {
     ui.tableWidget->horizontalHeaderItem(idx)->setData(role, v);
 }
 
-void TableWidgetEditor::on_rowEditor_indexChanged(int col)
+void TableWidgetEditor::rowEditorIndexChanged(int col)
 {
     ui.tableWidget->setCurrentCell(col, ui.tableWidget->currentColumn());
 }
 
-void TableWidgetEditor::on_rowEditor_itemChanged(int idx, int role, const QVariant &v)
+void TableWidgetEditor::rowEditorItemChanged(int idx, int role, const QVariant &v)
 {
     ui.tableWidget->verticalHeaderItem(idx)->setData(role, v);
 }
@@ -318,7 +318,7 @@ void TableWidgetEditor::moveRowsUp(int fromRow, int toRow)
     }
 }
 
-void TableWidgetEditor::on_columnEditor_itemInserted(int idx)
+void TableWidgetEditor::columnEditorItemInserted(int idx)
 {
     const int columnCount = ui.tableWidget->columnCount();
     ui.tableWidget->setColumnCount(columnCount + 1);
@@ -336,7 +336,7 @@ void TableWidgetEditor::on_columnEditor_itemInserted(int idx)
     updateEditor();
 }
 
-void TableWidgetEditor::on_columnEditor_itemDeleted(int idx)
+void TableWidgetEditor::columnEditorItemDeleted(int idx)
 {
     const int columnCount = ui.tableWidget->columnCount();
 
@@ -346,21 +346,21 @@ void TableWidgetEditor::on_columnEditor_itemDeleted(int idx)
     updateEditor();
 }
 
-void TableWidgetEditor::on_columnEditor_itemMovedUp(int idx)
+void TableWidgetEditor::columnEditorItemMovedUp(int idx)
 {
     moveColumnsRight(idx - 1, idx);
 
     ui.tableWidget->setCurrentCell(ui.tableWidget->currentRow(), idx - 1);
 }
 
-void TableWidgetEditor::on_columnEditor_itemMovedDown(int idx)
+void TableWidgetEditor::columnEditorItemMovedDown(int idx)
 {
     moveColumnsLeft(idx, idx + 1);
 
     ui.tableWidget->setCurrentCell(ui.tableWidget->currentRow(), idx + 1);
 }
 
-void TableWidgetEditor::on_rowEditor_itemInserted(int idx)
+void TableWidgetEditor::rowEditorItemInserted(int idx)
 {
     const int rowCount = ui.tableWidget->rowCount();
     ui.tableWidget->setRowCount(rowCount + 1);
@@ -378,7 +378,7 @@ void TableWidgetEditor::on_rowEditor_itemInserted(int idx)
     updateEditor();
 }
 
-void TableWidgetEditor::on_rowEditor_itemDeleted(int idx)
+void TableWidgetEditor::rowEditorItemDeleted(int idx)
 {
     const int rowCount = ui.tableWidget->rowCount();
 
@@ -388,14 +388,14 @@ void TableWidgetEditor::on_rowEditor_itemDeleted(int idx)
     updateEditor();
 }
 
-void TableWidgetEditor::on_rowEditor_itemMovedUp(int idx)
+void TableWidgetEditor::rowEditorItemMovedUp(int idx)
 {
     moveRowsUp(idx - 1, idx);
 
     ui.tableWidget->setCurrentCell(idx - 1, ui.tableWidget->currentColumn());
 }
 
-void TableWidgetEditor::on_rowEditor_itemMovedDown(int idx)
+void TableWidgetEditor::rowEditorItemMovedDown(int idx)
 {
     moveRowsDown(idx, idx + 1);
 

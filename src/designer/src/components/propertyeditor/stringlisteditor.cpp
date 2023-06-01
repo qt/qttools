@@ -24,6 +24,12 @@ StringListEditor::StringListEditor(QWidget *parent)
             &QAbstractItemDelegate::closeEditor,
             this, &StringListEditor::currentValueChanged);
 
+    connect(upButton, &QAbstractButton::clicked, this, &StringListEditor::upButtonClicked);
+    connect(downButton, &QAbstractButton::clicked, this, &StringListEditor::downButtonClicked);
+    connect(newButton, &QAbstractButton::clicked, this, &StringListEditor::newButtonClicked);
+    connect(deleteButton, &QAbstractButton::clicked, this, &StringListEditor::deleteButtonClicked);
+    connect(valueEdit, &QLineEdit::textEdited, this, &StringListEditor::valueEdited);
+
     QIcon upIcon = createIconSet(u"up.png"_s);
     QIcon downIcon = createIconSet(u"down.png"_s);
     QIcon minusIcon = createIconSet(u"minus.png"_s);
@@ -72,7 +78,7 @@ void StringListEditor::currentValueChanged()
     updateUi();
 }
 
-void StringListEditor::on_upButton_clicked()
+void StringListEditor::upButtonClicked()
 {
     int from = currentIndex();
     int to = currentIndex() - 1;
@@ -83,7 +89,7 @@ void StringListEditor::on_upButton_clicked()
     updateUi();
 }
 
-void StringListEditor::on_downButton_clicked()
+void StringListEditor::downButtonClicked()
 {
     int from = currentIndex();
     int to = currentIndex() + 1;
@@ -94,7 +100,7 @@ void StringListEditor::on_downButton_clicked()
     updateUi();
 }
 
-void StringListEditor::on_newButton_clicked()
+void StringListEditor::newButtonClicked()
 {
     int to = currentIndex();
     if (to == -1)
@@ -106,14 +112,14 @@ void StringListEditor::on_newButton_clicked()
     editString(to);
 }
 
-void StringListEditor::on_deleteButton_clicked()
+void StringListEditor::deleteButtonClicked()
 {
     removeString(currentIndex());
     setCurrentIndex(currentIndex());
     updateUi();
 }
 
-void StringListEditor::on_valueEdit_textEdited(const QString &text)
+void StringListEditor::valueEdited(const QString &text)
 {
     setStringAt(currentIndex(), text);
 }
