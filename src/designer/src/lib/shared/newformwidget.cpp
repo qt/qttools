@@ -116,6 +116,14 @@ NewFormWidget::NewFormWidget(QDesignerFormEditorInterface *core, QWidget *parent
     m_ui->treeWidget->header()->hide();
     m_ui->treeWidget->header()->setStretchLastSection(true);
     m_ui->lblPreview->setBackgroundRole(QPalette::Base);
+
+    connect(m_ui->treeWidget, &QTreeWidget::itemActivated,
+            this, &NewFormWidget::treeWidgetItemActivated);
+    connect(m_ui->treeWidget, &QTreeWidget::currentItemChanged,
+            this, &NewFormWidget::treeWidgetCurrentItemChanged);
+    connect(m_ui->treeWidget, &QTreeWidget::itemPressed,
+            this, &NewFormWidget::treeWidgetItemPressed);
+
     QDesignerSharedSettings settings(m_core);
 
     QString uiExtension = u"ui"_s;
@@ -191,7 +199,7 @@ NewFormWidget::~NewFormWidget()
     delete m_ui;
 }
 
-void NewFormWidget::on_treeWidget_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *)
+void NewFormWidget::treeWidgetCurrentItemChanged(QTreeWidgetItem *current)
 {
     if (debugNewFormWidget)
         qDebug() << Q_FUNC_INFO << current;
@@ -222,7 +230,7 @@ bool NewFormWidget::showCurrentItemPixmap()
     return rc;
 }
 
-void NewFormWidget::on_treeWidget_itemActivated(QTreeWidgetItem *item)
+void NewFormWidget::treeWidgetItemActivated(QTreeWidgetItem *item)
 {
     if (debugNewFormWidget)
         qDebug() << Q_FUNC_INFO << item;
@@ -435,7 +443,7 @@ void NewFormWidget::loadFrom(const QString &title, const QStringList &nameList,
     }
 }
 
-void NewFormWidget::on_treeWidget_itemPressed(QTreeWidgetItem *item)
+void NewFormWidget::treeWidgetItemPressed(QTreeWidgetItem *item)
 {
     if (item && !item->parent())
         item->setExpanded(!item->isExpanded());

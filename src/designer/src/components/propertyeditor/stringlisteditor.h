@@ -24,11 +24,11 @@ public:
         QWidget *parent, const QStringList &init = QStringList(), int *result = nullptr);
 
 private slots:
-    void on_upButton_clicked();
-    void on_downButton_clicked();
-    void on_newButton_clicked();
-    void on_deleteButton_clicked();
-    void on_valueEdit_textEdited(const QString &text);
+    void upButtonClicked();
+    void downButtonClicked();
+    void newButtonClicked();
+    void deleteButtonClicked();
+    void valueEdited(const QString &text);
     void currentIndexChanged(const QModelIndex &current, const QModelIndex &previous);
     void currentValueChanged();
 

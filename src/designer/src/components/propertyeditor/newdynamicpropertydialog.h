@@ -46,7 +46,7 @@ public:
 
 private slots:
 
-    void on_m_buttonBox_clicked(QAbstractButton *btn);
+    void buttonBoxClicked(QAbstractButton *btn);
     void nameChanged(const QString &);
 
 private:

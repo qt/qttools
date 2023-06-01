@@ -53,6 +53,19 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
     auto loadButton = ui.buttonBox->addButton(tr("Load..."), QDialogButtonBox::ActionRole);
     connect(loadButton, &QPushButton::clicked, this, &PaletteEditor::load);
 
+    connect(ui.buildButton, &QtColorButton::colorChanged,
+            this, &PaletteEditor::buildButtonColorChanged);
+    connect(ui.activeRadio, &QAbstractButton::clicked,
+            this, &PaletteEditor::activeRadioClicked);
+    connect(ui.inactiveRadio,  &QAbstractButton::clicked,
+            this, &PaletteEditor::inactiveRadioClicked);
+    connect(ui.disabledRadio, &QAbstractButton::clicked,
+            this, &PaletteEditor::disabledRadioClicked);
+    connect(ui.computeRadio, &QAbstractButton::clicked,
+            this, &PaletteEditor::computeRadioClicked);
+    connect(ui.detailsRadio, &QAbstractButton::clicked,
+            this, &PaletteEditor::detailsRadioClicked);
+
     ui.paletteView->setModel(m_paletteModel);
     updatePreviewPalette();
     updateStyledButton();
@@ -111,30 +124,30 @@ void PaletteEditor::setPalette(const QPalette &palette, const QPalette &parentPa
     setPalette(palette);
 }
 
-void PaletteEditor::on_buildButton_colorChanged(const QColor &)
+void PaletteEditor::buildButtonColorChanged()
 {
     buildPalette();
 }
 
-void PaletteEditor::on_activeRadio_clicked()
+void PaletteEditor::activeRadioClicked()
 {
     m_currentColorGroup = QPalette::Active;
     updatePreviewPalette();
 }
 
-void PaletteEditor::on_inactiveRadio_clicked()
+void PaletteEditor::inactiveRadioClicked()
 {
     m_currentColorGroup = QPalette::Inactive;
     updatePreviewPalette();
 }
 
-void PaletteEditor::on_disabledRadio_clicked()
+void PaletteEditor::disabledRadioClicked()
 {
     m_currentColorGroup = QPalette::Disabled;
     updatePreviewPalette();
 }
 
-void PaletteEditor::on_computeRadio_clicked()
+void PaletteEditor::computeRadioClicked()
 {
     if (m_compute)
         return;
@@ -144,7 +157,7 @@ void PaletteEditor::on_computeRadio_clicked()
     m_paletteModel->setCompute(true);
 }
 
-void PaletteEditor::on_detailsRadio_clicked()
+void PaletteEditor::detailsRadioClicked()
 {
     if (!m_compute)
         return;

@@ -110,12 +110,12 @@ signals:
     void itemMovedDown(int idx);
 
 private slots:
-    void on_newListItemButton_clicked();
-    void on_deleteListItemButton_clicked();
-    void on_moveListItemUpButton_clicked();
-    void on_moveListItemDownButton_clicked();
-    void on_listWidget_currentRowChanged();
-    void on_listWidget_itemChanged(QListWidgetItem * item);
+    void newListItemButtonClicked();
+    void deleteListItemButtonClicked();
+    void moveListItemUpButtonClicked();
+    void moveListItemDownButtonClicked();
+    void listWidgetCurrentRowChanged();
+    void listWidgetItemChanged(QListWidgetItem * item);
     void togglePropertyBrowser();
     void cacheReloaded();
 
