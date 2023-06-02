@@ -206,7 +206,7 @@ QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
     if (!s_redirectDocumentationToDevNull && outFile->exists())
         qCDebug(lcQdoc) << "Output file already exists; overwriting" << qPrintable(outFile->fileName());
 
-    if (!outFile->open(QFile::WriteOnly)) {
+    if (!outFile->open(QFile::WriteOnly | QFile::Text)) {
         node->location().fatal(
                 QStringLiteral("Cannot open output file '%1'").arg(outFile->fileName()));
     }
