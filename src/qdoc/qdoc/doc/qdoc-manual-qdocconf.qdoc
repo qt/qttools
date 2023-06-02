@@ -1250,11 +1250,25 @@
     \target qhp-variable
     \section1 qhp
 
-    The \c qhp variable is used to define the information to be
+    The \c qhp sub-variables are used to define the information to be
     written out to Qt Help Project (\c{qhp}) files.
 
     See the \l{Creating Help Project Files} chapter for information
     about this process.
+
+    Since QDoc 6.6, setting the base \c qhp variable to \c true means
+    that a valid help project configuration is expected:
+
+    \badcode
+    qhp = true
+    \endcode
+
+    Then, if a project configuration did not define \c {qhp.projects},
+    QDoc issues a warning. This is useful for ensuring that all
+    documentation projects with a shared top-level \e .qdocconf file
+    (as in Qt) are configured correctly.
+
+    To turn off the warning, set the variable to \c false.
 
     \target sourcedirs-variable
     \section1 sourcedirs

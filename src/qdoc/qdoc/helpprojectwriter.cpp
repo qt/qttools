@@ -22,6 +22,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 HelpProjectWriter::HelpProjectWriter(const QString &defaultFileName, Generator *g)
 {
     reset(defaultFileName, g);
@@ -449,6 +451,11 @@ void HelpProjectWriter::generateSections(HelpProject &project, QXmlStreamWriter 
 
 void HelpProjectWriter::generate()
 {
+    // Warn if .qhp configuration was expected but not provided
+    if (auto &config = Config::instance(); m_projects.isEmpty() && config.get(CONFIG_QHP).asBool()) {
+        config.location().warning(u"Documentation configuration for '%1' doesn't define a help project (qhp)"_s
+                .arg(config.get(CONFIG_PROJECT).asString()));
+    }
     for (HelpProject &project : m_projects)
         generateProject(project);
 }

@@ -790,4 +790,11 @@
     Use the \l {relates-command}{\\relates} command to associate the function
     with a documented type, namespace, or a header file. The function is then
     listed as a \e {related non-member} on the associated reference page.
+
+    \section1 Documentation configuration for <project> doesn't define a help project (qhp)
+
+    A valid Qt help configuration was expected but not provided in the project's
+    .qdocconf file.
+
+    See also \l{Creating Help Project Files} and \l {qhp-variable}{qhp}.
 */
