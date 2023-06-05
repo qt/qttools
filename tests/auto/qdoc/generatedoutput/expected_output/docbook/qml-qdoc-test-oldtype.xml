@@ -6,7 +6,7 @@
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
 <db:abstract>
 <db:para>Deprecated old type.</db:para>
-<db:para><db:emphasis role="bold">This type is deprecated since 1.0. We strongly advise against using it in new code.</db:emphasis></db:para>
+<db:para><db:emphasis role="bold">This type is deprecated since QDoc.Test 1.0. We strongly advise against using it in new code.</db:emphasis></db:para>
 <db:para>This type was introduced in Qt 1.1.</db:para>
 </db:abstract>
 </db:info>
@@ -30,6 +30,7 @@
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>
+<db:para><db:emphasis role="bold">This type is deprecated since QDoc.Test 1.0. We strongly advise against using it in new code.</db:emphasis></db:para>
 <db:section xml:id="details">
 <db:title>Detailed Description</db:title>
 </db:section>

@@ -1203,8 +1203,13 @@ void Generator::generateStatus(const Node *node, CodeMarker *marker)
         if (node->isAggregate())
             text << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD);
         text << "This " << typeString(node) << " is deprecated";
-        if (const QString &version = node->deprecatedSince(); !version.isEmpty())
-            text << " since " << version;
+        if (const QString &version = node->deprecatedSince(); !version.isEmpty()) {
+            text << " since ";
+            if (node->isQmlNode() && !node->logicalModuleName().isEmpty())
+                text << node->logicalModuleName() << " ";
+            text << version;
+        }
+
         text << ". We strongly advise against using it in new code.";
         if (node->isAggregate())
             text << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);

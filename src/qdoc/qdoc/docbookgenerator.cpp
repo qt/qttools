@@ -3015,8 +3015,12 @@ bool DocBookGenerator::generateStatus(const Node *node)
             m_writer->writeAttribute("role", "bold");
         }
         m_writer->writeCharacters("This " + typeString(node) + " is deprecated");
-        if (const QString &version = node->deprecatedSince(); !version.isEmpty())
-            m_writer->writeCharacters(" since " + version);
+        if (const QString &version = node->deprecatedSince(); !version.isEmpty()) {
+            m_writer->writeCharacters(" since ");
+            if (node->isQmlNode() && !node->logicalModuleName().isEmpty())
+                m_writer->writeCharacters(node->logicalModuleName() + " ");
+            m_writer->writeCharacters(version);
+        }
         m_writer->writeCharacters(". We strongly advise against using it in new code.");
         if (node->isAggregate())
             m_writer->writeEndElement(); // emphasis
@@ -4931,6 +4935,7 @@ void DocBookGenerator::generateQmlTypePage(QmlTypeNode *qcn)
 
     generateHeader(title, qcn->subtitle(), qcn);
     generateQmlRequisites(qcn);
+    generateStatus(qcn);
 
     startSection("details", "Detailed Description");
     generateBody(qcn);
