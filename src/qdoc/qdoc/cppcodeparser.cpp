@@ -275,13 +275,13 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     QString arg;
     QString type;
     QString group;
-    QString module;
+    QString qmlModule;
     QString property;
     QString qmlTypeName;
 
     Topic topic = topics.at(0);
     arg = topic.m_args;
-    if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
+    if (splitQmlPropertyArg(arg, type, qmlModule, qmlTypeName, property, doc.location())) {
         qsizetype i = property.indexOf('.');
         if (i != -1)
             group = property.left(i);
@@ -290,7 +290,7 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     QDocDatabase* database = QDocDatabase::qdocDB();
 
     NodeList sharedNodes;
-    QmlTypeNode *qmlType = database->findQmlType(module, qmlTypeName);
+    QmlTypeNode *qmlType = database->findQmlType(qmlModule, qmlTypeName);
     // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
     // This may lead to unexpected behavior if documenting \qmlvaluetype's properties
     // before the type itself.
@@ -302,8 +302,8 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
         arg = topicCommand.m_args;
         if ((cmd == COMMAND_QMLPROPERTY) || (cmd == COMMAND_QMLATTACHEDPROPERTY)) {
             bool attached = cmd.contains(QLatin1String("attached"));
-            if (splitQmlPropertyArg(arg, type, module, qmlTypeName, property, doc.location())) {
-                if (qmlType != database->findQmlType(module, qmlTypeName)) {
+            if (splitQmlPropertyArg(arg, type, qmlModule, qmlTypeName, property, doc.location())) {
+                if (qmlType != database->findQmlType(qmlModule, qmlTypeName)) {
                     doc.startLocation().warning(
                             QStringLiteral(
                                     "All properties in a group must belong to the same type: '%1'")
