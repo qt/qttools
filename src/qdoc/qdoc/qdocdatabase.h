@@ -197,9 +197,13 @@ public:
     void addExampleNode(ExampleNode *n) { primaryTree()->addExampleNode(n); }
     ExampleNodeMap &exampleNodeMap() { return primaryTree()->exampleNodeMap(); }
 
-    QmlTypeNode *findQmlType(const QString &name);
+    QmlTypeNode *findQmlType(const QString &name)
+    {
+        return m_forest.lookupQmlType(name);
+    }
     QmlTypeNode *findQmlType(const QString &qmid, const QString &name);
     QmlTypeNode *findQmlType(const ImportRec &import, const QString &name);
+    QmlTypeNode *findQmlTypeInPrimaryTree(const QString &qmid, const QString &name);
 
     static NodeMultiMap &obsoleteClasses() { return s_obsoleteClasses; }
     static NodeMultiMap &obsoleteQmlTypes() { return s_obsoleteQmlTypes; }

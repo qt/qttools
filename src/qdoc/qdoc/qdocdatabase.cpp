@@ -15,6 +15,7 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
 static NodeMultiMap emptyNodeMultiMap_;
 
 /*!
@@ -620,66 +621,61 @@ void QDocDatabase::initializeDB()
   list. The parent of \a node is not changed by this function.
  */
 
-/*!
-  Looks up the QML type node identified by the qualified Qml
-  type \a name and returns a pointer to the QML type node.
+/*! \fn QmlTypeNode *QDocDatabase::findQmlType(const QString &name)
+  Returns the QML type node identified by the qualified
+  QML type \a name, or \c nullptr if no type was found.
  */
-QmlTypeNode *QDocDatabase::findQmlType(const QString &name)
-{
-    QmlTypeNode *qcn = m_forest.lookupQmlType(name);
-    if (qcn)
-        return qcn;
-    return nullptr;
-}
 
 /*!
-  Looks up the QML type node identified by the Qml module id
-  \a qmid and QML type \a name and returns a pointer to the
-  QML type node. The key is \a qmid + "::" + \a name.
+  Returns the QML type node identified by the QML module id
+  \a qmid and QML type \a name, or \c nullptr if no type
+  was found.
 
-  If the QML module id is empty, it looks up the QML type by
+  If the QML module id is empty, looks up the QML type by
   \a name only.
  */
 QmlTypeNode *QDocDatabase::findQmlType(const QString &qmid, const QString &name)
 {
     if (!qmid.isEmpty()) {
-        QString t = qmid + "::" + name;
-        QmlTypeNode *qcn = m_forest.lookupQmlType(t);
-        if (qcn)
+        if (auto *qcn = m_forest.lookupQmlType(qmid + u"::"_s + name); qcn)
             return qcn;
     }
 
     QStringList path(name);
-    Node *n = m_forest.findNodeByNameAndType(path, &Node::isQmlType);
-    if (n && n->isQmlType())
-        return static_cast<QmlTypeNode *>(n);
-    return nullptr;
+    return static_cast<QmlTypeNode *>(m_forest.findNodeByNameAndType(path, &Node::isQmlType));
 }
 
 /*!
-  Looks up the QML type node identified by the Qml module id
-  constructed from the strings in the \a import record and the
-  QML type \a name and returns a pointer to the QML type node.
-  If a QML type node is not found, 0 is returned.
+  Returns the QML type node identified by the QML module id
+  constructed from the strings in the import \a record and the
+  QML type \a name. Returns \c nullptr if no type was not found.
  */
-QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &import, const QString &name)
+QmlTypeNode *QDocDatabase::findQmlType(const ImportRec &record, const QString &name)
 {
-    if (!import.isEmpty()) {
-        QStringList dotSplit;
-        dotSplit = name.split(QLatin1Char('.'));
-        QString qmName;
-        if (import.m_importUri.isEmpty())
-            qmName = import.m_moduleName;
-        else
-            qmName = import.m_importUri;
+    if (!record.isEmpty()) {
+        const QString qmName = record.m_importUri.isEmpty() ?
+                record.m_moduleName : record.m_importUri;
+        const QStringList dotSplit{name.split(QLatin1Char('.'))};
         for (const auto &namePart : dotSplit) {
-            QString qualifiedName = qmName + "::" + namePart;
-            QmlTypeNode *qcn = m_forest.lookupQmlType(qualifiedName);
-            if (qcn)
+            if (auto *qcn = m_forest.lookupQmlType(qmName + u"::"_s + namePart); qcn)
                 return qcn;
         }
     }
     return nullptr;
+}
+
+/*!
+  Returns the QML node identified by the QML module id \a qmid
+  and \a name, searching in the primary tree only. If \a qmid
+  is an empty string, searches for the node using name only.
+
+  Returns \c nullptr if no node was found.
+*/
+QmlTypeNode *QDocDatabase::findQmlTypeInPrimaryTree(const QString &qmid, const QString &name)
+{
+    if (!qmid.isEmpty())
+        return primaryTree()->lookupQmlType(qmid + u"::"_s + name);
+    return static_cast<QmlTypeNode *>(primaryTreeRoot()->findChildNode(name, Node::QML, TypesOnly));
 }
 
 /*!
