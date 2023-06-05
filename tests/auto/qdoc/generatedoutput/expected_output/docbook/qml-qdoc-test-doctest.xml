@@ -27,7 +27,7 @@
 <db:title>Detailed Description</db:title>
 <db:section xml:id="introduction">
 <db:title>Introduction</db:title>
-<db:para>A documentation test case, itself documented inline in <db:link xlink:href="qml-qdoc-test-doctest.xml">DocTest</db:link>.qml.</db:para>
+<db:para>A documentation test case, itself documented inline in DocTest.qml.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="property-documentation">

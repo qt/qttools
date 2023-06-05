@@ -202,12 +202,17 @@ Node *CppCodeParser::processTopicCommand(const Doc &doc, const QString &command,
     } else if (command == COMMAND_QMLTYPE ||
                command == COMMAND_QMLVALUETYPE ||
                command == COMMAND_QMLBASICTYPE) {
-        QmlTypeNode *qcn = nullptr;
         auto nodeType = (command == COMMAND_QMLTYPE) ? Node::QmlType : Node::QmlValueType;
-        Node *candidate = database->primaryTreeRoot()->findChildNode(arg.first, Node::QML);
-        qcn = (candidate && candidate->nodeType() == nodeType) ?
-                static_cast<QmlTypeNode *>(candidate) :
-                new QmlTypeNode(database->primaryTreeRoot(), arg.first, nodeType);
+        QString qmid;
+        if (auto args = doc.metaCommandArgs(COMMAND_INQMLMODULE); !args.isEmpty())
+            qmid = args.first().first;
+        auto *qcn = database->findQmlTypeInPrimaryTree(qmid, arg.first);
+        // A \qmlproperty may have already constructed a placeholder type
+        // without providing a module identifier; allow such cases
+        if (!qcn && !qmid.isEmpty())
+            qcn = database->findQmlTypeInPrimaryTree(QString(), arg.first);
+        if (!qcn || qcn->nodeType() != nodeType)
+            qcn = new QmlTypeNode(database->primaryTreeRoot(), arg.first, nodeType);
         qcn->setLocation(doc.startLocation());
         return qcn;
     } else if ((command == COMMAND_QMLSIGNAL) || (command == COMMAND_QMLMETHOD)
@@ -290,12 +295,15 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     QDocDatabase* database = QDocDatabase::qdocDB();
 
     NodeList sharedNodes;
-    QmlTypeNode *qmlType = database->findQmlType(qmlModule, qmlTypeName);
+    QmlTypeNode *qmlType = database->findQmlTypeInPrimaryTree(qmlModule, qmlTypeName);
     // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
     // This may lead to unexpected behavior if documenting \qmlvaluetype's properties
     // before the type itself.
-    if (qmlType == nullptr)
+    if (qmlType == nullptr) {
         qmlType = new QmlTypeNode(database->primaryTreeRoot(), qmlTypeName, Node::QmlType);
+        if (!qmlModule.isEmpty())
+            database->addToQmlModule(qmlModule, qmlType);
+    }
 
     for (const auto &topicCommand : topics) {
         QString cmd = topicCommand.m_topic;
@@ -303,7 +311,7 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
         if ((cmd == COMMAND_QMLPROPERTY) || (cmd == COMMAND_QMLATTACHEDPROPERTY)) {
             bool attached = cmd.contains(QLatin1String("attached"));
             if (splitQmlPropertyArg(arg, type, qmlModule, qmlTypeName, property, doc.location())) {
-                if (qmlType != database->findQmlType(qmlModule, qmlTypeName)) {
+                if (qmlType != database->findQmlTypeInPrimaryTree(qmlModule, qmlTypeName)) {
                     doc.startLocation().warning(
                             QStringLiteral(
                                     "All properties in a group must belong to the same type: '%1'")
@@ -651,9 +659,15 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
 
     QDocDatabase* database = QDocDatabase::qdocDB();
 
-    Aggregate *aggregate = database->findQmlType(moduleName, elementName);
-    if (aggregate == nullptr)
-        return nullptr;
+    auto *aggregate = database->findQmlTypeInPrimaryTree(moduleName, elementName);
+    // Note: Constructing a QmlType node by default, as opposed to QmlValueType.
+    // This may lead to unexpected behavior if documenting \qmlvaluetype's methods
+    // before the type itself.
+    if (!aggregate) {
+        aggregate = new QmlTypeNode(database->primaryTreeRoot(), elementName, Node::QmlType);
+        if (!moduleName.isEmpty())
+            database->addToQmlModule(moduleName, aggregate);
+    }
 
     QString params;
     QStringList leftParenSplit = funcArg.split('(');

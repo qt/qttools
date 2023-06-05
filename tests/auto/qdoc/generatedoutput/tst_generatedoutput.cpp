@@ -248,6 +248,7 @@ void tst_generatedOutput::htmlFromQml()
                    "qml-qdoc-test-type-obsolete.html "
                    "qml-qdoc-test-type.html "
                    "qml-qdoc-test-oldtype.html "
+                   "qml-test-nover-doctest.html "
                    "qml-test-nover-typenoversion.html "
                    "qml-test-nover-typenoversion-members.html "
                    "qml-uicomponents-progressbar.html "

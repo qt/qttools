@@ -12,7 +12,7 @@ import QtQuick 2.0
 
     \section1 Introduction
 
-    A documentation test case, itself documented inline in DocTest.qml.
+    A documentation test case, itself documented inline in \DocTest.qml.
 */
 Item {
     id: testCase

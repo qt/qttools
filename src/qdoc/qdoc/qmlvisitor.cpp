@@ -92,82 +92,98 @@ private:
 
 /*!
   Finds the nearest unused qdoc comment above the QML entity
-  represented by the \a node and processes the qdoc commands
+  represented by a \a node and processes the qdoc commands
   in that comment. The processed documentation is stored in
-  the \a node.
+  \a node.
 
-  If a qdoc comment is found for \a location, true is returned.
-  If a comment is not found there, false is returned.
+  If \a node is a \c nullptr and there is a valid comment block,
+  the QML module identifier (\inqmlmodule argument) is used
+  for searching an existing QML type node. If an existing node
+  is not found, constructs a new QmlTypeNode instance.
+
+  Returns a pointer to the QmlTypeNode instance if one was
+  found or constructed. Otherwise, returns a pointer to the \a
+  node that was passed as an argument.
  */
-bool QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *node)
+Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *node)
 {
     QQmlJS::SourceLocation loc = precedingComment(location.begin());
+    Location comment_loc(m_filePath);
 
-    if (loc.isValid()) {
-        QString source = m_document.mid(loc.offset, loc.length);
-        Location start(m_filePath);
-        start.setLineNo(loc.startLine);
-        start.setColumnNo(loc.startColumn);
-        Location finish(m_filePath);
-        finish.setLineNo(loc.startLine);
-        finish.setColumnNo(loc.startColumn);
+    // No preceding comment; construct a new QML type if
+    // needed.
+    if (!loc.isValid()) {
+        if (!node)
+            node = new QmlTypeNode(m_current, m_name, Node::QmlType);
+        comment_loc.setLineNo(location.startLine);
+        node->setLocation(comment_loc);
+        return node;
+    }
 
-        Doc doc(start, finish, source.mid(1), m_commands, m_topics);
-        const TopicList &topicsUsed = doc.topicsUsed();
-        NodeList nodes;
-        auto *parent{node->parent()};
-        node->setDoc(doc);
-        nodes.append(node);
-        if (!topicsUsed.empty()) {
-            for (int i = 0; i < topicsUsed.size(); ++i) {
-                QString topic = topicsUsed.at(i).m_topic;
-                if (!topic.startsWith(QLatin1String("qml")))
-                    continue; // maybe a qdoc warning here? mws 18/07/18
-                QString args = topicsUsed.at(i).m_args;
-                if (topic.endsWith(QLatin1String("property"))) {
-                    auto *qmlProperty = static_cast<QmlPropertyNode *>(node);
-                    QmlPropArgs qpa;
-                    if (splitQmlPropertyArg(doc, args, qpa)) {
-                        if (qpa.m_name == node->name()) {
-                            if (qmlProperty->isAlias())
-                                qmlProperty->setDataType(qpa.m_type);
-                        } else {
-                            bool isAttached = topic.contains(QLatin1String("attached"));
-                            QmlPropertyNode *n = parent->hasQmlProperty(qpa.m_name, isAttached);
-                            if (n == nullptr)
-                                n = new QmlPropertyNode(parent, qpa.m_name, qpa.m_type, isAttached);
-                            n->setLocation(doc.location());
-                            n->setDoc(doc);
-                            // Use the const-overload of QmlPropertyNode::isReadOnly() as there's
-                            // no associated C++ property to resolve the read-only status from
-                            n->markReadOnly(const_cast<const QmlPropertyNode *>(qmlProperty)->isReadOnly()
-                                            && !isAttached);
-                            if (qmlProperty->isDefault())
-                                n->markDefault();
-                            nodes.append(n);
-                        }
-                    } else
-                        qCDebug(lcQdoc) << "Failed to parse QML property:" << topic << args;
-                } else if (topic.endsWith(QLatin1String("method")) || topic == COMMAND_QMLSIGNAL) {
-                    if (node->isFunction()) {
-                        auto *fn = static_cast<FunctionNode *>(node);
-                        QmlSignatureParser qsp(fn, args, doc.location());
+    QString source = m_document.mid(loc.offset + 1, loc.length - 1);
+    comment_loc.setLineNo(loc.startLine);
+    comment_loc.setColumnNo(loc.startColumn);
+
+    Doc doc(comment_loc, comment_loc, source, m_commands, m_topics);
+    const TopicList &topicsUsed = doc.topicsUsed();
+    NodeList nodes;
+    if (!node) {
+        QString qmid;
+        if (auto args = doc.metaCommandArgs(COMMAND_INQMLMODULE); !args.isEmpty())
+            qmid = args.first().first;
+        node = QDocDatabase::qdocDB()->findQmlTypeInPrimaryTree(qmid, m_name);
+        if (!node) {
+            node = new QmlTypeNode(m_current, m_name, Node::QmlType);
+            node->setLocation(comment_loc);
+        }
+    }
+
+    auto *parent{node->parent()};
+    node->setDoc(doc);
+    nodes.append(node);
+    if (!topicsUsed.empty()) {
+        for (int i = 0; i < topicsUsed.size(); ++i) {
+            QString topic = topicsUsed.at(i).m_topic;
+            if (!topic.startsWith(QLatin1String("qml")))
+                continue; // maybe a qdoc warning here? mws 18/07/18
+            QString args = topicsUsed.at(i).m_args;
+            if (topic.endsWith(QLatin1String("property"))) {
+                auto *qmlProperty = static_cast<QmlPropertyNode *>(node);
+                QmlPropArgs qpa;
+                if (splitQmlPropertyArg(doc, args, qpa)) {
+                    if (qpa.m_name == node->name()) {
+                        if (qmlProperty->isAlias())
+                            qmlProperty->setDataType(qpa.m_type);
+                    } else {
+                        bool isAttached = topic.contains(QLatin1String("attached"));
+                        QmlPropertyNode *n = parent->hasQmlProperty(qpa.m_name, isAttached);
+                        if (n == nullptr)
+                            n = new QmlPropertyNode(parent, qpa.m_name, qpa.m_type, isAttached);
+                        n->setLocation(doc.location());
+                        n->setDoc(doc);
+                        // Use the const-overload of QmlPropertyNode::isReadOnly() as there's
+                        // no associated C++ property to resolve the read-only status from
+                        n->markReadOnly(const_cast<const QmlPropertyNode *>(qmlProperty)->isReadOnly()
+                                        && !isAttached);
+                        if (qmlProperty->isDefault())
+                            n->markDefault();
+                        nodes.append(n);
                     }
+                } else
+                    qCDebug(lcQdoc) << "Failed to parse QML property:" << topic << args;
+            } else if (topic.endsWith(QLatin1String("method")) || topic == COMMAND_QMLSIGNAL) {
+                if (node->isFunction()) {
+                    auto *fn = static_cast<FunctionNode *>(node);
+                    QmlSignatureParser qsp(fn, args, doc.location());
                 }
             }
         }
-        for (const auto &node : nodes)
-            applyMetacommands(loc, node, doc);
-        m_usedComments.insert(loc.offset);
-        if (doc.isEmpty()) {
-            return false;
-        }
-        return true;
     }
-    Location codeLoc(m_filePath);
-    codeLoc.setLineNo(location.startLine);
-    node->setLocation(codeLoc);
-    return false;
+    for (const auto &node : nodes)
+        applyMetacommands(loc, node, doc);
+
+    m_usedComments.insert(loc.offset);
+    return node;
 }
 
 QmlSignatureParser::QmlSignatureParser(FunctionNode *func, const QString &signature,
@@ -465,27 +481,24 @@ QString QmlDocVisitor::getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id)
   to test whether we are at the public API level. The public level
   is level 1.
 
-  Note that this visit() function creates the qdoc object node as a
-  QmlType.
+  Defers the construction of a QmlTypeNode instance to
+  applyDocumentation(), by passing \c nullptr as the second
+  argument.
  */
 bool QmlDocVisitor::visit(QQmlJS::AST::UiObjectDefinition *definition)
 {
     QString type = getFullyQualifiedId(definition->qualifiedTypeNameId);
     m_nestingLevel++;
-
     if (m_current->isNamespace()) {
-        QmlTypeNode *component = nullptr;
-        Node *candidate = m_current->findChildNode(m_name, Node::QML);
-        if (candidate != nullptr)
-            component = static_cast<QmlTypeNode *>(candidate);
-        else
-            component = new QmlTypeNode(m_current, m_name, Node::QmlType);
-        component->setTitle(m_name);
-        component->setImportList(m_importList);
+        auto component = applyDocumentation(definition->firstSourceLocation(), nullptr);
+        Q_ASSERT(component);
+        auto *qmlTypeNode = static_cast<QmlTypeNode *>(component);
+        if (!component->doc().isEmpty())
+            qmlTypeNode->setQmlBaseName(type);
+        qmlTypeNode->setTitle(m_name);
+        qmlTypeNode->setImportList(m_importList);
         m_importList.clear();
-        if (applyDocumentation(definition->firstSourceLocation(), component))
-            component->setQmlBaseName(type);
-        m_current = component;
+        m_current = qmlTypeNode;
     }
 
     return true;

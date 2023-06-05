@@ -74,6 +74,8 @@
             <keyword name="CrossModuleRef" id="CrossModuleRef" ref="crossmoduleref.html"/>
             <keyword name="DocTest" id="QML.DocTest" ref="qml-qdoc-test-doctest.html"/>
             <keyword name="DocTest" id="QML.QDoc.Test1.DocTest" ref="qml-qdoc-test-doctest.html"/>
+            <keyword name="DocTest" id="QML.DocTest" ref="qml-test-nover-doctest.html"/>
+            <keyword name="DocTest" id="QML.Test.NoVer.DocTest" ref="qml-test-nover-doctest.html"/>
             <keyword name="Obsolete Classes" id="Obsolete Classes" ref="obsolete-classes.html"/>
             <keyword name="OldType" id="QML.OldType" ref="qml-qdoc-test-oldtype.html"/>
             <keyword name="OldType" id="QML.QDoc.Test1.OldType" ref="qml-qdoc-test-oldtype.html"/>
@@ -185,6 +187,8 @@
             <file>qml-qdoc-test-type.html</file>
             <file>qml-qdoc-test-yetanotherchild-members.html</file>
             <file>qml-qdoc-test-yetanotherchild.html</file>
+            <file>qml-test-nover-doctest-members.html</file>
+            <file>qml-test-nover-doctest.html</file>
             <file>qml-test-nover-typenoversion-members.html</file>
             <file>qml-test-nover-typenoversion.html</file>
             <file>qml-uicomponents-progressbar-members.html</file>

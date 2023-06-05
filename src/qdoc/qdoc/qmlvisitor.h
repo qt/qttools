@@ -70,7 +70,7 @@ public:
 private:
     QString getFullyQualifiedId(QQmlJS::AST::UiQualifiedId *id);
     [[nodiscard]] QQmlJS::SourceLocation precedingComment(quint32 offset) const;
-    bool applyDocumentation(QQmlJS::SourceLocation location, Node *node);
+    Node *applyDocumentation(QQmlJS::SourceLocation location, Node *node);
     void applyMetacommands(QQmlJS::SourceLocation location, Node *node, Doc &doc);
     bool splitQmlPropertyArg(const Doc &doc, const QString &arg, QmlPropArgs &qpa);
 
