@@ -17,6 +17,7 @@
     \li \l {b-command} {\\b}
     \li \l {badcode-command} {\\badcode}
     \li \l {b-command} {\\bold} (deprecated, use \\b)
+    \li \l {br-command} {\\br}
     \li \l {brief-command} {\\brief}
     \li \l {c-command} {\\c}
     \li \l {caption-command} {\\caption}
@@ -351,6 +352,11 @@
         rendered using the \\b command}.
     \1/
     \endcode
+
+    \target br-command
+    \section1 \\br
+
+    The \\br command forces a line break.
 
     \target e-command
     \section1 \\e (emphasis, italics)
