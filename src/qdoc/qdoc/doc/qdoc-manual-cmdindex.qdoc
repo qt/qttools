@@ -18,6 +18,7 @@
     \li \l {b-command} {\\b}
     \li \l {badcode-command} {\\badcode}
     \li \l {b-command} {\\bold} (deprecated, use \\b)
+    \li \l {br-command} {\\br}
     \li \l {brief-command} {\\brief}
     \li \l {c-command} {\\c}
     \li \l {caption-command} {\\caption}
