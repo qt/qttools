@@ -10,7 +10,6 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qpair.h>
-#include <QtCore/qset.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -34,7 +33,8 @@ protected:
 
 private:
     mutable QMap<QPair<QString, QObject *>, QObject *> m_extensions;
-    mutable QSet<QObject *> m_extended;
+    // ### FIXME Qt 7: Use QSet, add out of line destructor.
+    mutable QHash<QObject*, bool>  m_extended;
 };
 
 QT_END_NAMESPACE
