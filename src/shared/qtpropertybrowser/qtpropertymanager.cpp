@@ -24,12 +24,15 @@
 #include <float.h>
 
 #include <algorithm>
+#include <utility>
 
 #if defined(Q_CC_MSVC)
 #    pragma warning(disable: 4786) /* MS VS 6: truncating debug info after 255 characters */
 #endif
 
 QT_BEGIN_NAMESPACE
+
+using DisambiguatedTranslation = std::pair<const char *, const char *>;
 
 static const QFont::Weight weightValues[] = {
     QFont::Thin, QFont::ExtraLight, QFont::Light, QFont::Normal, QFont::Medium, QFont::DemiBold,
@@ -5828,21 +5831,21 @@ void QtFontPropertyManager::setValue(QtProperty *property, const QFont &val)
 
 static QStringList fontWeightNames()
 {
-    static const char *weightsC[] = {
-        QT_TRANSLATE_NOOP("FontPropertyManager", "Thin"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "ExtraLight"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "Light"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "Normal"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "Medium"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "DemiBold"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "Bold"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "ExtraBold"),
-        QT_TRANSLATE_NOOP("FontPropertyManager", "Black")
+    static const DisambiguatedTranslation weightsC[] = {
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "Thin", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "ExtraLight", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "Light", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "Normal", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "Medium", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "DemiBold", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "Bold", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "ExtraBold", "QFont::Weight combo"),
+        QT_TRANSLATE_NOOP3("FontPropertyManager", "Black", "QFont::Weight combo")
     };
 
     QStringList result;
-    for (const auto *w : weightsC)
-       result.append(QCoreApplication::translate("FontPropertyManager", w));
+    for (const auto &w : weightsC)
+       result.append(QCoreApplication::translate("FontPropertyManager", w.first, w.second));
     return result;
 }
 
@@ -5876,7 +5879,7 @@ void QtFontPropertyManager::initializeProperty(QtProperty *property)
     property->addSubProperty(pointSizeProp);
 
     QtProperty *boldProp = d_ptr->m_boolPropertyManager->addProperty();
-    boldProp->setPropertyName(tr("Bold"));
+    boldProp->setPropertyName(tr("Bold", "Bold toggle"));
     d_ptr->m_boolPropertyManager->setValue(boldProp, val.bold());
     d_ptr->m_propertyToBold[property] = boldProp;
     d_ptr->m_boldToProperty[boldProp] = property;
