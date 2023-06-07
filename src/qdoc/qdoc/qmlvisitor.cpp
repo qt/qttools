@@ -144,8 +144,6 @@ Node *QmlDocVisitor::applyDocumentation(QQmlJS::SourceLocation location, Node *n
     if (!topicsUsed.empty()) {
         for (int i = 0; i < topicsUsed.size(); ++i) {
             QString topic = topicsUsed.at(i).m_topic;
-            if (!topic.startsWith(QLatin1String("qml")))
-                continue; // maybe a qdoc warning here? mws 18/07/18
             QString args = topicsUsed.at(i).m_args;
             if (topic.endsWith(QLatin1String("property"))) {
                 auto *qmlProperty = static_cast<QmlPropertyNode *>(node);

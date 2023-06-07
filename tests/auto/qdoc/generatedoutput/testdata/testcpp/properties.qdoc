@@ -32,6 +32,10 @@
 */
 
 /*!
+    \qmlmodule TheModule
+*/
+
+/*!
     \qmltype TheType
     \instantiates TestQDoc::TestDerived
     \inqmlmodule TheModule

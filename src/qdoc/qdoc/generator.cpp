@@ -1055,6 +1055,22 @@ void Generator::generateDocumentation(Node *node)
                     .arg(typeString(child), child->name()),
                             u"Maybe you forgot to use the '\\relates' command?"_s);
                 child->setStatus(Node::DontDocument);
+            } else if (child->isQmlModule() && !child->wasSeen()) {
+                // An undocumented QML module that was constructed as a placeholder
+                auto *qmlModule = static_cast<CollectionNode *>(child);
+                for (const auto *member : qmlModule->members()) {
+                    member->location().warning(
+                        u"Undocumented QML module '%1' referred by type '%2' or its members"_s
+                            .arg(qmlModule->name(), member->name()),
+                                u"Maybe you forgot to document '\\qmlmodule %1'?"_s
+                                    .arg(qmlModule->name()));
+                }
+            } else if (child->isQmlType() && !child->hasDoc()) {
+                // A placeholder QML type with incorrect module identifier
+                auto *qmlType = static_cast<QmlTypeNode *>(child);
+                if (auto qmid = qmlType->logicalModuleName(); !qmid.isEmpty())
+                    qmlType->location().warning(u"No such type '%1' in QML module '%2'"_s
+                        .arg(qmlType->name(), qmid));
             }
         }
     }

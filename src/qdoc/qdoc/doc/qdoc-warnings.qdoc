@@ -59,6 +59,30 @@
     QDoc issues this warning if it is unable to locate the snippet file
     quoted in a \l {snippet-command}{\\snippet} command.
 
+    \section1 Undocumented QML <module> referred by <type> or its members
+
+    QDoc issues this warning if it is unable to locate a QML module
+    based on the identifier passed to the
+    \l {inqmlmodule-command}{\\inqmlmodule} or \l {qmlproperty-command}
+    {\\qmlproperty} commands associated with a QML \e type.
+
+    This means that either documentation for the \l {qmlmodule-command}
+    {\\qmlmodule} is missing, or an incorrect module identifier was
+    used in \\qmlproperty, \\qmlmethod, or \\qmlsignal command(s).
+
+    \section No such <type> in QML <module>
+
+    QDoc issues this warning if a \l {qmlproperty-command} {\\qmlproperty},
+    \l {qmlmethod-command} {\\qmlmethod}, or  \l {qmlsignal-command}
+    {\\qmlsignal} command argument uses a QML module identifier, but
+    the associated \l {qmltype-command}{\\qmltype} does not belong to
+    that module.
+
+    The QML module identifier, if defined, \b must match with the
+    \l {inqmlmodule-command} {\\inqmlmodule} argument in the QML type
+    documentation. In most cases, QDoc is able to locate the QML type
+    without a module identifier.
+
     \section1 Undocumented return value
 
     For functions whose return-type is not void, QDoc checks if the return

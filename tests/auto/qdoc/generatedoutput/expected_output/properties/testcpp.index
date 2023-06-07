@@ -106,8 +106,8 @@
                 </property>
             </class>
         </namespace>
-        <qmlclass name="TheType" href="qml-thetype.html" status="active" access="public" location="properties.qdoc" documented="true" title="TheType" fulltitle="TheType" subtitle="">
-            <qmlproperty name="name" fullname="TheType::name" href="qml-thetype.html#name-prop" status="active" access="public" location="properties.qdoc" documented="true" type="string" attached="false" writable="false" brief="Read-only status of this property is resolved from Q_PROPERTY"/>
+        <qmlclass name="TheType" qml-module-name="TheModule" fullname="TheModule.TheType" href="qml-themodule-thetype.html" status="active" access="public" location="properties.qdoc" documented="true" title="TheType" fulltitle="TheType" subtitle="">
+            <qmlproperty name="name" fullname="TheModule.TheType.name" href="qml-themodule-thetype.html#name-prop" status="active" access="public" location="properties.qdoc" documented="true" type="string" attached="false" writable="false" brief="Read-only status of this property is resolved from Q_PROPERTY"/>
         </qmlclass>
         <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types"/>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
@@ -115,6 +115,6 @@
             <contents name="linking-to-function-like-things" title="Linking to function-like things" level="1"/>
             <contents name="section" title="section()" level="2"/>
         </module>
-        <qmlmodule name="TheModule" href="themodule-qmlmodule.html" status="internal" seen="false" title=""/>
+        <qmlmodule name="TheModule" qml-module-name="TheModule" href="themodule-qmlmodule.html" status="active" location="properties.qdoc" documented="true" seen="true" title=""/>
     </namespace>
 </INDEX>

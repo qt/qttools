@@ -45,7 +45,7 @@
 <db:varlistentry>
 <db:term>Instantiated By</db:term>
 <db:listitem>
-<db:para>qml-thetype.xml</db:para>
+<db:para>qml-themodule-thetype.xml</db:para>
 </db:listitem>
 </db:varlistentry>
 <db:varlistentry>

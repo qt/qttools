@@ -301,6 +301,7 @@ void CppCodeParser::processQmlProperties(const Doc &doc, NodeList &nodes, DocLis
     // before the type itself.
     if (qmlType == nullptr) {
         qmlType = new QmlTypeNode(database->primaryTreeRoot(), qmlTypeName, Node::QmlType);
+        qmlType->setLocation(doc.startLocation());
         if (!qmlModule.isEmpty())
             database->addToQmlModule(qmlModule, qmlType);
     }
@@ -665,6 +666,7 @@ FunctionNode *CppCodeParser::parseOtherFuncArg(const QString &topic, const Locat
     // before the type itself.
     if (!aggregate) {
         aggregate = new QmlTypeNode(database->primaryTreeRoot(), elementName, Node::QmlType);
+        aggregate->setLocation(location);
         if (!moduleName.isEmpty())
             database->addToQmlModule(moduleName, aggregate);
     }
