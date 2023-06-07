@@ -15,10 +15,10 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(u"QDBusViewer"_s);
 
     MainWindow mw;
-#if !defined(Q_OS_OSX) && !defined(Q_OS_WIN)
+#if !defined(Q_OS_MACOS) && !defined(Q_OS_WIN)
     app.setWindowIcon(QIcon(":/qt-project.org/qdbusviewer/images/qdbusviewer.png"_L1));
 #endif
-#ifdef Q_OS_OSX
+#ifdef Q_OS_MACOS
     mw.setWindowTitle(qApp->translate("QtDBusViewer", "Qt D-Bus Viewer"));
 #endif
 

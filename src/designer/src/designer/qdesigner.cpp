@@ -60,7 +60,7 @@ QDesigner::QDesigner(int &argc, char **argv)
     setApplicationName(QLatin1String(designerApplicationName));
     QDesignerComponents::initializeResources();
 
-#if !defined(Q_OS_OSX) && !defined(Q_OS_WIN)
+#if !defined(Q_OS_MACOS) && !defined(Q_OS_WIN)
     setWindowIcon(QIcon(u":/qt-project.org/designer/images/designer.png"_s));
 #endif
 }
