@@ -15,7 +15,7 @@ MainWindow::MainWindow()
 
 //! [1]
     exitAct = new QAction(tr("E&xit"), this);
-    exitAct->setShortcuts(QKeySequence::Quit);
+    exitAct->setShortcut(QKeySequence(tr("Ctrl+Q", "Quit")));
     connect(exitAct, &QAction::triggered, this, &MainWindow::close);
 //! [1]
 

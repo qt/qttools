@@ -19,3 +19,7 @@ setenv LANG fr
 //! [4]
 cmake --build . --target update_translations
 //! [4]
+
+//! [5]
+cmake --build . --target release_translations
+//! [5]
