@@ -2,8 +2,11 @@
     {
         "Id": "catch2",
         "Name": "Catch2",
-        "QDocModule": "qttools",
+        "QDocModule": "qdoc",
         "QtUsage": "Used for testing of QDoc",
+        "QtParts": [
+            "tests"
+        ],
         "Files": "include/catch/catch.hpp",
 
         "Description": "Catch2 is a multi-paradigm test framework for C++.",
