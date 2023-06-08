@@ -631,14 +631,14 @@
 
     The \\qmlattachedproperty command is for documenting a QML
     property that will be attached to some QML type. See
-    \l{https://doc.qt.io/qt-5/qtqml-syntax-objectattributes.html#attached-properties-and-attached-signal-handlers}
-    {Attached Properties}. The argument is the rest of the line. The
-    argument text should be the property type, followed by the QML
-    element name where the property is being declared, the \c{::}
-    qualifier, and finally the property name. If we have a QML
-    attached property named \c isCurrentItem in QML \c ListView,
-    and the property has type \c {bool}, the \\qmlattachedproperty for
-    it would look like this:
+    \l{Attached Properties and Attached Signal Handlers}
+    {Attached Properties}. The argument is the rest of the line.
+    It must start with the property type, followed by the QML
+    type name where the property is declared, the \c{::}
+    qualifier, and finally the property name.
+
+    For example, to document a boolean QML attached property named
+    \c isCurrentItem for the \c ListView type:
 
     \badcode *
     /\1!
@@ -658,6 +658,9 @@
 
     QDoc includes this attached property on the QML reference page for the
     \l [QML] {ListView} type.
+
+    \note Like \l{qmlproperty-command}{\\qmlproperty}, \\qmlattachedproperty
+          accepts a QML module identifier as part of its argument.
 
     \target qmlattachedsignal-command
     \section1 \\qmlattachedsignal
@@ -682,89 +685,26 @@
     QDoc includes this documentation on the QML reference page for the
     \l GridView element.
 
+    \note Like \l{qmlproperty-command}{\\qmlproperty}, \\qmlattachedsignal accepts
+          a QML module identifier as part of its argument.
+
     \target qmlvaluetype-command
     \section1 \\qmlvaluetype
 
-    The \\qmlvaluetype command is for documenting a value type for QML.
-    The argument is the type name. The type must be included in the
-    QML value types group using the \l{ingroup-command}{\\ingroup}
-    command as shown below. This will cause QDoc to include the
-    documentation for the type on the
-    \l{https://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
-    {QML Value Types} page. The \l{brief-command} {\\brief} command
-    is also required, because it appears on the
-    \l{https://doc.qt.io/qt-5/qtqml-typesystem-valuetypes.html}
-    {QML Value Types} page as well.
+    The \\qmlvaluetype command is for documenting a \l [QtQml]
+    {QML Value Types}{value type} for QML. The command takes
+    a type name as its only argument.
 
-    \badcode *
-    /\1!
-        \qmlvaluetype int
-        \ingroup qmlvaluetypes
-
-        \brief An integer is a whole number, for example 0, 10, or -20.
-
-        An integer is a whole number, e.g. 0, 10, or -20. The possible
-        \c int values range from around -2000000000 to around
-        2000000000, although most elements will only accept a reduced
-        range (which they mention in their documentation).
-
-        Example:
-        \qml
-        Item { width: 100; height: 200 }
-        \endqml
-
-        \sa {QML Value Types}
-    \1/
-    \endcode
-
-    QDoc outputs this as \l{http://doc.qt.io/qt-5/qml-int.html}
-    {qml-int.html}.
+    \\qmlvaluetype is functionally identical to the
+    \l {qmltype-command}{\\qmltype} command. The only difference
+    is that the type will be titled (and grouped) as a
+    \e {QML value type}.
 
     \target qmlclass-command
     \section1 \\qmlclass
 
     This command is deprecated. Use \l{qmltype-command} {\\qmltype}
     instead.
-
-    The \\qmlclass command is for documenting a QML type that is
-    instantiated by a C++ class. The command has two arguments. The
-    first argument is the name of the QML type. The second argument
-    is the name of the C++ class that instantiates the QML type.
-
-    \badcode *
-    /\1!
-        \qmlclass Transform QGraphicsTransform
-        \ingroup qml-transform-elements
-        \since 4.7
-        \brief Provides a way of building advanced transformations on Items.
-
-        The Transform element is a base type which cannot be
-        instantiated directly. The following concrete Transform types
-        are available:
-
-        \list
-          \li \l Rotation
-          \li \l Scale
-          \li \l Translate
-        \endlist
-
-        The Transform elements let you create and control advanced
-        transformations that can be configured independently using
-        specialized properties.
-
-        You can assign any number of Transform elements to an \l
-        Item. Each Transform is applied in order, one at a time.
-    \1/
-    \endcode
-
-    This example generates the
-    \l {https://doc.qt.io/qt-5/qml-qtquick-transform.html} {QML Transform}
-    page. The \\qmlclass comment should include the \l
-    {since-command} {\\since} command, because all QML types are
-    new. It should also include the \l{brief-command} {\\brief}
-    command. If a type is a member of a group of QML
-    types, it should also include one or more \l{ingroup-command}
-    {\\ingroup} commands.
 
     \target qmlmethod-command
     \section1 \\qmlmethod
@@ -801,6 +741,11 @@
     If the QML type is instantiated by a C++ class, that class must be
     specified using the \l{instantiates-command} {\\instantiates}
     context command.
+
+    The \l {inqmlmodule-command}{\\inqmlmodule} command documents the
+    QML module the type belongs to. The argument passed to this command
+    must match with a documented \l {qmlmodule-command}{\\qmlmodule}
+    page.
 
     \badcode *
     /\1!
@@ -849,6 +794,19 @@
     combination of flags, the \l{value-command}{\\value} command can
     be used to document the acceptable values.
 
+    QDoc accepts also a fully qualified property name, including the
+    QML module identifier:
+
+    \badcode
+    \qmlproperty bool QtQuick.Controls::Button::highlighted
+    \endcode
+
+    If specified, the module identifier (above, \c {QtQuick.Controls})
+    must match with value passed to \l {inqmlmodule-command}{\\inqmlmodule}
+    command in the associated \\qmltype documentation. If the name of
+    the QML type the property belongs to is unique across all types in
+    the documentation project, the module identifier can be omitted.
+
     \target qmlsignal-command
     \section1 \\qmlsignal
 
@@ -860,7 +818,7 @@
 
     \badcode *
     /\1!
-        \qmlsignal QtQuick::MouseArea::clicked(MouseEvent mouse)
+        \qmlsignal MouseArea::clicked(MouseEvent mouse)
 
         This signal is emitted when there is a click. A click is defined as a
         press followed by a release, both inside the MouseArea.
@@ -869,6 +827,9 @@
 
     QDoc includes this documentation on the QML reference page for the
     \l [QML] {MouseArea} type.
+
+    \note Like \l{qmlproperty-command}{\\qmlproperty}, \\qmlsignal
+          accepts a QML module identifier as part of its argument.
 
     \target qmlmodule-command
     \section1 \\qmlmodule
@@ -904,11 +865,13 @@
     \target inqmlmodule-command
     \section1 \\inqmlmodule
 
-    A QML class may belong to a \l{qmlmodule-command}{QML module} by inserting
-    the \l{inqmlmodule-command}{\\inqmlmodule} command as a topic command, with
-    the module name (without a version number) as the only argument. Every
-    member of a group must be linked to using the module name and two colons
-    (\c{::}).
+    A QML type is marked as being available under a specific QML module
+    import by inserting the \\inqmlmodule command in a
+    \l {qmltype-command}{\\qmltype} topic. The command takes the module
+    (import) name, without a version number, as the only argument.
+
+    The QML module name must match with a QML module documented with
+    the (\l{qmlmodule-command}{\\qmlmodule} command).
 
     \badcode *
     /\1!
@@ -919,11 +882,18 @@
     \1/
     \endcode
 
-    To link to the \c ClickableButton, use the
-    \c{\l ClickableComponents::ClickableButton} format.
+    QDoc outputs a row \e {Import statement: import <qmlmodule>}
+    in a table at the top of the QML type reference page.
 
-    The \l {noautolist-command} {\\noautolist} command can be used here
-    to omit the automatically generated list of types at the end.
+    When linking to QML types, the QML module identifier may appear in
+    the link target. For example:
+
+    \badcode
+    \l {ClickableComponents::}{ClickableButton}
+    \endcode
+
+    Links to the type reference page, with \e ClickableButton as the
+    link text.
 
     \target instantiates-command
     \section1 \\instantiates
