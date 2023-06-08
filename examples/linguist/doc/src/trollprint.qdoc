@@ -120,8 +120,8 @@
 
     \snippet doc/snippets/doc_src_examples_trollprint.cpp 1
 
-    Now run \c lupdate and open \c trollprint_pt.ts with \e {Qt Linguist}. You
-    should now see two changes.
+    Now recompile, run \c lupdate and open \c trollprint_pt.ts with
+    \e {Qt Linguist}. You should now see two changes.
 
     First, the translation source file now contains \e three "Enabled",
     "Disabled" pairs. The first pair is marked "(obs.)" signifying that they
