@@ -199,7 +199,7 @@ private:
 };
 Q_DECLARE_TYPEINFO(ProKey, Q_RELOCATABLE_TYPE);
 
-template <> struct QConcatenable<ProString> : private QAbstractConcatenable
+template <> struct QConcatenable<ProString>
 {
     typedef ProString type;
     typedef QString ConvertTo;
@@ -215,7 +215,7 @@ template <> struct QConcatenable<ProString> : private QAbstractConcatenable
     }
 };
 
-template <> struct QConcatenable<ProKey> : private QAbstractConcatenable
+template <> struct QConcatenable<ProKey>
 {
     typedef ProKey type;
     typedef QString ConvertTo;
