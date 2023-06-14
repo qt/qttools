@@ -358,7 +358,7 @@ QString Generator::fileName(const Node *node, const QString &extension) const
         return node->url();
 
     QString name = fileBase(node) + QLatin1Char('.');
-    return extension.isNull() ? name + fileExtension() : name + extension;
+    return name + (extension.isNull() ? fileExtension() : extension);
 }
 
 /*!
