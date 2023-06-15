@@ -328,6 +328,14 @@ int TestDerived::id()
 }
 
 /*!
+    Returns a value using an aliases type.
+*/
+TestDerived::NotTypedef TestDerived::someValue()
+{
+    return 0;
+}
+
+/*!
 \if defined(test_template)
     \fn template <typename T1, typename T2> void TestQDoc::Test::funcTemplate(T1 a, T2 b)
     \brief Function template with two parameters, \a a and \a b.

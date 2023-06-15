@@ -5,6 +5,11 @@
             <description>
                 <brief>A derived class in a namespace.</brief>
             </description>
+            <function name="someValue" fullname="TestQDoc::TestDerived::someValue" href="testqdoc-testderived.html#someValue" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::TestDerived::NotTypedef" signature="TestQDoc::TestDerived::NotTypedef someValue()">
+                <description>
+                    <para>Returns a value using an aliases type.</para>
+                </description>
+            </function>
             <function name="staticObsoleteMember" fullname="TestQDoc::TestDerived::staticObsoleteMember" href="testqdoc-testderived-obsolete.html#staticObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" static="true" type="void" signature="void staticObsoleteMember()">
                 <description>
                     <para>Static obsolete method.</para>
