@@ -97,6 +97,7 @@ public:
     using NotTypedef = int;
     void virtualFun() override;
     static void staticObsoleteMember();
+    NotTypedef someValue();
 #ifdef test_properties
     QBindable<QString> bindableProp();
     QBindable<QString> someBindableProp();

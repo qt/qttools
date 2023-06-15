@@ -59,6 +59,10 @@
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
+<db:section xml:id="someValue">
+<db:title its:translate="no">TestQDoc::TestDerived::NotTypedef TestDerived::someValue()</db:title>
+<db:para>Returns a value using an aliases type.</db:para>
+</db:section>
 <db:section xml:id="virtualFun">
 <db:title its:translate="no">[override virtual] void TestDerived::virtualFun()</db:title>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" role="function">Test::virtualFun()</db:link>.</db:para>

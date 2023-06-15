@@ -155,6 +155,10 @@
 <db:para>This function can be invoked via the meta-object system and from QML. See <db:link xlink:href="">Q_INVOKABLE</db:link>.</db:para>
 </db:note>
 </db:section>
+<db:section xml:id="someValue">
+<db:title>TestQDoc::TestDerived::NotTypedef TestDerived::someValue()</db:title>
+<db:para>Returns a value using an aliases type.</db:para>
+</db:section>
 <db:section xml:id="virtualFun">
 <db:title>[override virtual] void TestDerived::virtualFun()</db:title>
 <db:para>Reimplements: <db:link xlink:href="testqdoc-test.xml#virtualFun" role="function">Test::virtualFun()</db:link>.</db:para>
