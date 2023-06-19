@@ -3047,7 +3047,7 @@
     QDoc generates the given code only when generating the format that
     was specified by the user.
 
-    For example, "\raw HTML" will only generate code when QDoc
+    For example, "\\raw HTML" will only generate code when QDoc
     generates HTML documentation.
 
     \note You can often achieve the intended purpose by using QDoc commands,
