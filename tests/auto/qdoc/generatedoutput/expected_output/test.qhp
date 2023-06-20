@@ -205,6 +205,7 @@
             <file>test-componentset-tabwidget-qml.html</file>
             <file>test-demos-demo-demo-cpp.html</file>
             <file>test-demos-demo-demo-pro.html</file>
+            <file>test-demos-demo-dontxclude-cmakelists-txt.html</file>
             <file>test-demos-demo-example.html</file>
             <file>test-demos-hidden-example.html</file>
             <file>test-empty-qmlmodule.html</file>
