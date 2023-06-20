@@ -231,12 +231,12 @@ function(qt6_add_lrelease target)
                 "Consider building the target '${target}_lupdate' to create an initial "
                 "version of that file.")
 
-            # Provide a command that creates an initial .ts file with the right language set.
-            # The language is guessed by lupdate from the file name.
-            add_custom_command(OUTPUT ${ts_file}
-                ${lupdate_command} -ts ${ts_file}
-                DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate
-                VERBATIM)
+            # Write an initial .ts file that can be read by lrelease and updated by lupdate.
+            file(WRITE "${ts_file}"
+                [[<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS/>
+]])
         endif()
         get_filename_component(qm ${ts_file} NAME_WLE)
         string(APPEND qm ".qm")
