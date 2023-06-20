@@ -773,7 +773,8 @@ void CppCodeParser::setExampleFileLists(ExampleNode *en)
 
         // Add any resource and project files
         exampleFiles += Config::getFilesHere(exampleDir.path(),
-                QLatin1String("*.qrc *.pro *.qmlproject *.pyproject CMakeLists.txt qmldir"));
+                QLatin1String("*.qrc *.pro *.qmlproject *.pyproject CMakeLists.txt qmldir"),
+                Location(), m_excludeDirs, m_excludeFiles);
     }
 
     const qsizetype pathLen = exampleDir.path().size() - en->name().size();
