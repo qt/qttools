@@ -51,6 +51,7 @@
                 \li \l{TS file format}
                 \li \l{Text ID based translations}
                 \li \l{CMake Commands in Qt6 LinguistTools}{CMake commands}
+                \li \l{Examples}
             \endlist
     \endtable
 
@@ -87,6 +88,7 @@
                 \li \l{TS file format}
                 \li \l{Text ID based translations}
                 \li \l{CMake Commands in Qt6 LinguistTools}{CMake commands}
+                \li \l{Examples}
             \endlist
     \endlist
  */
@@ -1183,8 +1185,16 @@
     \image front-coding.png
 
     Design your application so that it can be adapted to various languages and
-    regions without engineering changes. For more information, see:
+    regions without engineering changes.
 
+    \list
+        \li \l{TS file format}
+        \li \l{Text ID based translations}
+        \li \l{CMake Commands in Qt6 LinguistTools}{CMake commands}
+        \li \l{Examples}
+    \endlist
+
+    For more information, see also:
     \list
         \li \l {Internationalization with Qt}
         \li \l {Writing Source Code for Translation}
@@ -1195,30 +1205,6 @@
     with translation support. For more information, see
     \l {Qt Creator: Creating Projects}.
 
-    \section1 Examples
-
-    The following examples illustrate how to prepare Qt applications for
-    translation:
-
-    \list
-    \li \l{hellotr}{Hello tr()} is a C++ application that demonstrates the
-        creation of a \l QTranslator object. It also shows the simplest use of
-        the \c tr() function to mark user-visible source text for
-        translation.
-
-    \li \l{arrowpad}{Arrow Pad} is a C++ application that demonstrates how to
-       make the application load translations depending on the current locale.
-       It also shows the use of the two-argument form of \c tr() which provides
-       additional information to the translator.
-
-    \li \l{trollprint}{Troll Print} is a C++ application that demonstrates how
-        to distinguish identical source text in the same context. It also shows
-        how minimize the translator's work when an application is upgraded.
-
-    \li \l{Qt Quick I18N} demonstrates how to internationalize Qt Quick
-        applications.
-    \endlist
-
     The following video shows how to internationalize and localize a simple
     example application:
 
@@ -1226,11 +1212,39 @@
 */
 
 /*!
+    \page linguist-programmers-examples.html
+    \title  Examples
+
+    \nextpage Developers
+
+    The following examples illustrate how to prepare Qt applications for
+    translation:
+
+    \list
+    \li \l{hellotr}{Hello tr()} is a C++ application that demonstrates the
+    creation of a \l QTranslator object. It also shows the simplest use of
+    the \c tr() function to mark user-visible source text for
+    translation.
+
+    \li \l{arrowpad}{Arrow Pad} is a C++ application that demonstrates how to
+    make the application load translations depending on the current locale.
+    It also shows the use of the two-argument form of \c tr() which provides
+    additional information to the translator.
+
+    \li \l{trollprint}{Troll Print} is a C++ application that demonstrates how
+    to distinguish identical source text in the same context. It also shows
+    how minimize the translator's work when an application is upgraded.
+
+    \li \l{Qt Quick I18N} demonstrates how to internationalize Qt Quick
+    applications.
+    \endlist
+*/
+
+/*!
     \page linguist-ts-file-format.html
     \title TS file format
 
     \previouspage Developers
-    \nextpage Text ID based translations
 
     \brief TS file format.
 
@@ -1248,7 +1262,6 @@
     \title Text ID based translations
     \ingroup internationalization
 
-    \previouspage TS file format
 
     \brief Text ID based internationalization provides support for large scale
     projects with many target locales and many texts to translate.
