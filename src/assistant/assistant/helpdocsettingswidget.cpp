@@ -106,23 +106,23 @@ HelpDocSettingsWidget::HelpDocSettingsWidget(QWidget *parent)
     d->q_ptr = this;
     d->m_ui.setupUi(this);
 
-    connect(d->m_ui.docAddButton, &QAbstractButton::clicked,
+    connect(d->m_ui.docAddButton, &QAbstractButton::clicked, this,
             [this]() {
         Q_D(HelpDocSettingsWidget);
         d->addDocumentation();
     });
-    connect(d->m_ui.docRemoveButton, &QAbstractButton::clicked,
+    connect(d->m_ui.docRemoveButton, &QAbstractButton::clicked, this,
             [this]() {
         Q_D(HelpDocSettingsWidget);
         d->removeDocumentation();
     });
-    connect(d->m_ui.registeredDocsFilterLineEdit, &QLineEdit::textChanged,
+    connect(d->m_ui.registeredDocsFilterLineEdit, &QLineEdit::textChanged, this,
             [this](const QString &) {
         Q_D(HelpDocSettingsWidget);
         for (const auto item : d->m_namespaceToItem)
             d->applyDocListFilter(item);
     });
-    connect(d->m_ui.registeredDocsListWidget, &QListWidget::itemSelectionChanged,
+    connect(d->m_ui.registeredDocsListWidget, &QListWidget::itemSelectionChanged, this,
             [this]() {
         Q_D(HelpDocSettingsWidget);
         d->m_ui.docRemoveButton->setEnabled(

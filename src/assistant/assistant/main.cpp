@@ -170,7 +170,7 @@ QCoreApplication* createApplication(int &argc, char *argv[])
     }
 #endif
     QApplication *app = new QApplication(argc, argv);
-    app->connect(app, &QGuiApplication::lastWindowClosed,
+    app->connect(app, &QGuiApplication::lastWindowClosed, app,
                  &QCoreApplication::quit);
     return app;
 }

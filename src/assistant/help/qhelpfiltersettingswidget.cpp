@@ -292,12 +292,12 @@ QHelpFilterSettingsWidget::QHelpFilterSettingsWidget(QWidget *parent)
     d->m_ui.addButton->setIcon(QIcon(resourcePath + QLatin1String("/plus.png")));
     d->m_ui.removeButton->setIcon(QIcon(resourcePath + QLatin1String("/minus.png")));
 
-    connect(d->m_ui.componentWidget, &QOptionsWidget::optionSelectionChanged,
+    connect(d->m_ui.componentWidget, &QOptionsWidget::optionSelectionChanged, this,
             [this](const QStringList &options) {
         Q_D(QHelpFilterSettingsWidget);
         d->componentsChanged(options);
     });
-    connect(d->m_ui.versionWidget, &QOptionsWidget::optionSelectionChanged,
+    connect(d->m_ui.versionWidget, &QOptionsWidget::optionSelectionChanged, this,
             [this](const QStringList &options) {
         Q_D(QHelpFilterSettingsWidget);
         d->versionsChanged(options);
@@ -307,24 +307,24 @@ QHelpFilterSettingsWidget::QHelpFilterSettingsWidget(QWidget *parent)
         Q_D(QHelpFilterSettingsWidget);
         d->updateCurrentFilter();
     });
-    connect(d->m_ui.filterWidget, &QListWidget::itemDoubleClicked,
+    connect(d->m_ui.filterWidget, &QListWidget::itemDoubleClicked, this,
             [this](QListWidgetItem *) {
         Q_D(QHelpFilterSettingsWidget);
         d->renameFilterClicked();
     });
 
     // TODO: repeat these actions on context menu
-    connect(d->m_ui.addButton, &QAbstractButton::clicked,
+    connect(d->m_ui.addButton, &QAbstractButton::clicked, this,
             [this]() {
         Q_D(QHelpFilterSettingsWidget);
         d->addFilterClicked();
     });
-    connect(d->m_ui.renameButton, &QAbstractButton::clicked,
+    connect(d->m_ui.renameButton, &QAbstractButton::clicked, this,
             [this]() {
         Q_D(QHelpFilterSettingsWidget);
         d->renameFilterClicked();
     });
-    connect(d->m_ui.removeButton, &QAbstractButton::clicked,
+    connect(d->m_ui.removeButton, &QAbstractButton::clicked, this,
             [this]() {
         Q_D(QHelpFilterSettingsWidget);
         d->removeFilterClicked();

@@ -43,7 +43,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     if (m_hideDocsTab) {
         m_ui.tabWidget->removeTab(m_ui.tabWidget->indexOf(m_ui.docsTab));
     } else {
-        connect(m_ui.docSettingsWidget, &HelpDocSettingsWidget::docSettingsChanged,
+        connect(m_ui.docSettingsWidget, &HelpDocSettingsWidget::docSettingsChanged, this,
                 [this](const HelpDocSettings &settings) {
             m_docSettings = settings;
             if (m_hideFiltersTab)
