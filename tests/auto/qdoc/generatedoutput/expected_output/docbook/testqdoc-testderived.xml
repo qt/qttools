@@ -71,6 +71,20 @@
 </db:section>
 <db:section xml:id="member-function-documentation">
 <db:title>Member Function Documentation</db:title>
+<db:section xml:id="someValue">
+<db:title>TestQDoc::TestDerived::NotTypedef TestDerived::someValue()</db:title>
+<db:methodsynopsis>
+<db:type>TestQDoc::TestDerived::NotTypedef</db:type>
+<db:methodname>someValue</db:methodname>
+<db:void/>
+<db:synopsisinfo role="meta">plain</db:synopsisinfo>
+<db:synopsisinfo role="signature">TestQDoc::TestDerived::NotTypedef someValue()</db:synopsisinfo>
+<db:synopsisinfo role="access">public</db:synopsisinfo>
+<db:synopsisinfo role="status">active</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+</db:methodsynopsis>
+<db:para>Returns a value using an aliases type.</db:para>
+</db:section>
 <db:section xml:id="virtualFun">
 <db:title>[override virtual] void TestDerived::virtualFun()</db:title>
 <db:methodsynopsis>

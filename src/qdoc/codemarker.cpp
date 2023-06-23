@@ -332,6 +332,7 @@ QString CodeMarker::taggedNode(const Node *node)
     case Node::Enum:
         tag = QLatin1String("@enum");
         break;
+    case Node::TypeAlias:
     case Node::Typedef:
         tag = QLatin1String("@typedef");
         break;

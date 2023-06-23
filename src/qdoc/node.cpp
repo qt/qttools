@@ -574,6 +574,7 @@ Node::Genus Node::getGenus(Node::NodeType t)
     case Node::Struct:
     case Node::Union:
     case Node::Module:
+    case Node::TypeAlias:
     case Node::Typedef:
     case Node::Property:
     case Node::Variable:

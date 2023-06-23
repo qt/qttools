@@ -258,6 +258,13 @@
         <name>TestQDoc::TestDerived</name>
         <filename>testqdoc-testderived.html</filename>
         <base>Test</base>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>TestQDoc::TestDerived::NotTypedef</type>
+            <name>someValue</name>
+            <anchorfile>testqdoc-testderived.html</anchorfile>
+            <anchor>someValue</anchor>
+            <arglist>()</arglist>
+        </member>
         <member kind="function" protection="public" virtualness="non" static="yes">
             <type>void</type>
             <name>staticObsoleteMember</name>
