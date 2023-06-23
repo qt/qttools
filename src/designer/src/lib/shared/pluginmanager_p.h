@@ -77,6 +77,8 @@ public:
     using CustomWidgetList = QList<QDesignerCustomWidgetInterface *>;
 
     explicit QDesignerPluginManager(QDesignerFormEditorInterface *core);
+    explicit QDesignerPluginManager(const QStringList &pluginPaths,
+                                    QDesignerFormEditorInterface *core);
     ~QDesignerPluginManager() override;
 
     QDesignerFormEditorInterface *core() const;
@@ -104,6 +106,8 @@ public:
 
     bool registerNewPlugins();
 
+    static QStringList defaultPluginPaths();
+
 public slots:
     bool syncSettings();
     void ensureInitialized();
@@ -114,8 +118,6 @@ private:
     void registerPlugin(const QString &plugin);
 
 private:
-    static QStringList defaultPluginPaths();
-
     QDesignerPluginManagerPrivate *m_d;
 };
 

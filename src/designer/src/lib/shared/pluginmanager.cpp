@@ -518,10 +518,16 @@ void QDesignerPluginManagerPrivate::addCustomWidgets(QObject *o,
 // As of 4.4, the header will be distributed with the Eclipse plugin.
 
 QDesignerPluginManager::QDesignerPluginManager(QDesignerFormEditorInterface *core) :
+      QDesignerPluginManager(QStringList{}, core)
+{
+}
+
+QDesignerPluginManager::QDesignerPluginManager(const QStringList &pluginPaths,
+                                               QDesignerFormEditorInterface *core) :
     QObject(core),
     m_d(new QDesignerPluginManagerPrivate(core))
 {
-    m_d->m_pluginPaths = defaultPluginPaths();
+    m_d->m_pluginPaths = pluginPaths.isEmpty() ? defaultPluginPaths() : pluginPaths;
     const QSettings settings(qApp->organizationName(), QDesignerQSettings::settingsApplicationName());
     m_d->m_disabledPlugins = unique(settings.value("PluginManager/DisabledPlugins").toStringList());
 

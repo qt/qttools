@@ -16,6 +16,7 @@
 #include <QtGui/qicon.h>
 #include <QtWidgets/qerrormessage.h>
 #include <QtCore/qmetaobject.h>
+#include <QtCore/qdir.h>
 #include <QtCore/qfile.h>
 #include <QtCore/qlibraryinfo.h>
 #include <QtCore/qlocale.h>
@@ -138,6 +139,7 @@ struct Options
 {
     QStringList files;
     QString resourceDir{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
+    QStringList pluginPaths;
     bool server{false};
     quint16 clientPort{0};
     bool enableInternalDynamicProperties{false};
@@ -164,6 +166,10 @@ static inline QDesigner::ParseArgumentsResult
     const QCommandLineOption internalDynamicPropertyOption(u"enableinternaldynamicproperties"_s,
                                           u"Enable internal dynamic properties"_s);
     parser.addOption(internalDynamicPropertyOption);
+    const QCommandLineOption pluginPathsOption(u"plugin-path"_s,
+                                               u"Default plugin path list"_s,
+                                               u"path"_s);
+    parser.addOption(pluginPathsOption);
 
     parser.addPositionalArgument(u"files"_s,
                                  u"The UI files to open."_s);
@@ -190,6 +196,10 @@ static inline QDesigner::ParseArgumentsResult
     }
     if (parser.isSet(resourceDirOption))
         options->resourceDir = parser.value(resourceDirOption);
+    const auto pluginPathValues = parser.values(pluginPathsOption);
+    for (const auto &pluginPath : pluginPathValues)
+        options->pluginPaths.append(pluginPath.split(QDir::listSeparator(), Qt::SkipEmptyParts));
+
     options->enableInternalDynamicProperties = parser.isSet(internalDynamicPropertyOption);
     options->files = parser.positionalArguments();
     return QDesigner::ParseArgumentsSuccess;
@@ -224,7 +234,7 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
             installTranslator(qtTranslator.release());
     }
 
-    m_workbench = new QDesignerWorkbench();
+    m_workbench = new QDesignerWorkbench(options.pluginPaths);
 
     emit initialized();
     previousMessageHandler = qInstallMessageHandler(designerMessageHandler); // Warn when loading faulty forms

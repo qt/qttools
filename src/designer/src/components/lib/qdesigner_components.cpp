@@ -4,6 +4,7 @@
 #include <QtDesigner/QDesignerComponents>
 
 #include <actioneditor_p.h>
+#include <pluginmanager_p.h>
 #include <widgetdatabase_p.h>
 #include <widgetfactory_p.h>
 
@@ -96,12 +97,25 @@ void QDesignerComponents::initializePlugins(QDesignerFormEditorInterface *core)
     QDesignerIntegration::initializePlugins(core);
 }
 
+// ### fixme Qt 7 createFormEditorWithPluginPaths->createFormEditor
+
 /*!
     Constructs a form editor interface with the given \a parent.*/
 QDesignerFormEditorInterface *QDesignerComponents::createFormEditor(QObject *parent)
 {
+    return createFormEditorWithPluginPaths({}, parent);
+}
+
+/*!
+    Constructs a form editor interface with the given \a pluginPaths and the \a parent.
+    \since 6.7
+*/
+QDesignerFormEditorInterface *
+    QDesignerComponents::createFormEditorWithPluginPaths(const QStringList &pluginPaths,
+                                                         QObject *parent)
+{
     initInstances();
-    return new qdesigner_internal::FormEditor(parent);
+    return new qdesigner_internal::FormEditor(pluginPaths, parent);
 }
 
 /*!
@@ -224,6 +238,17 @@ QWidget *QDesignerComponents::createResourceEditor(QDesignerFormEditorInterface 
 QWidget *QDesignerComponents::createSignalSlotEditor(QDesignerFormEditorInterface *core, QWidget *parent)
 {
     return new qdesigner_internal::SignalSlotEditorWindow(core, parent);
+}
+
+/*!
+    Returns the default plugin paths of Qt Designer's plugin manager.
+
+    \return Plugin paths
+    \since 6.7
+*/
+QStringList QDesignerComponents::defaultPluginPaths()
+{
+    return QDesignerPluginManager::defaultPluginPaths();
 }
 
 QT_END_NAMESPACE

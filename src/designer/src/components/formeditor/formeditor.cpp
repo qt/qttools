@@ -44,12 +44,17 @@ using namespace Qt::StringLiterals;
 
 namespace qdesigner_internal {
 
-FormEditor::FormEditor(QObject *parent)
+FormEditor::FormEditor(QObject *parent) : FormEditor(QStringList{}, parent)
+{
+}
+
+FormEditor::FormEditor(const QStringList &pluginPaths,
+                       QObject *parent)
     : QDesignerFormEditorInterface(parent)
 {
     setIntrospection(new QDesignerIntrospection);
     setDialogGui(new DialogGui);
-    QDesignerPluginManager *pluginManager = new QDesignerPluginManager(this);
+    auto *pluginManager = new QDesignerPluginManager(pluginPaths, this);
     setPluginManager(pluginManager);
 
     WidgetDataBase *widgetDatabase = new WidgetDataBase(this, this);

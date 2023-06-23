@@ -25,6 +25,9 @@ public:
     static void initializePlugins(QDesignerFormEditorInterface *core);
 
     static QDesignerFormEditorInterface *createFormEditor(QObject *parent);
+    static QDesignerFormEditorInterface *
+        createFormEditorWithPluginPaths(const QStringList &pluginPaths,
+                                        QObject *parent);
     static QDesignerWidgetBoxInterface *createWidgetBox(QDesignerFormEditorInterface *core, QWidget *parent);
     static QDesignerPropertyEditorInterface *createPropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent);
     static QDesignerObjectInspectorInterface *createObjectInspector(QDesignerFormEditorInterface *core, QWidget *parent);
@@ -33,6 +36,8 @@ public:
     static QObject *createTaskMenu(QDesignerFormEditorInterface *core, QObject *parent);
     static QWidget *createResourceEditor(QDesignerFormEditorInterface *core, QWidget *parent);
     static QWidget *createSignalSlotEditor(QDesignerFormEditorInterface *core, QWidget *parent);
+
+    static QStringList defaultPluginPaths();
 };
 
 QT_END_NAMESPACE

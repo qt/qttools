@@ -41,7 +41,7 @@ class QDesignerWorkbench: public QObject
     Q_OBJECT
 
 public:
-    QDesignerWorkbench();
+    explicit QDesignerWorkbench(const QStringList &pluginPaths);
     ~QDesignerWorkbench() override;
 
     UIMode mode() const;
