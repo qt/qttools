@@ -91,6 +91,29 @@ This is a test string
 </source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="main.cpp" line="214"/>
+        <source>SomeClassWithArrowInMethods::f1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="226"/>
+        <source>SomeClassWithArrowInMethods::f2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SomeClassWithArrowInMethods</name>
+    <message>
+        <location filename="main.cpp" line="219"/>
+        <source>SomeClassWithArrowInMethods::f3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="231"/>
+        <source>SomeClassWithArrowInMethods::f4</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TopLevel</name>
@@ -105,6 +128,40 @@ This is a test string
     <message>
         <location filename="main.cpp" line="81"/>
         <source>TopLevel2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TrailingReturnType</name>
+    <message>
+        <location filename="main.cpp" line="175"/>
+        <source>f1: trailing return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="180"/>
+        <source>f3: trailing return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="184"/>
+        <location filename="main.cpp" line="200"/>
+        <source>f4: trailing return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="188"/>
+        <source>f5: trailing return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="195"/>
+        <source>f2: trailing return type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.cpp" line="205"/>
+        <source>f6: trailing return type</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
