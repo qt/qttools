@@ -17,6 +17,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , systemBusViewer(nullptr)
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QAction *quitAction = fileMenu->addAction(tr("&Quit"), this, &QWidget::close);
@@ -36,9 +37,13 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(tabWidget);
 
     sessionBusViewer = new QDBusViewer(QDBusConnection::sessionBus());
-    systemBusViewer = new QDBusViewer(QDBusConnection::systemBus());
     tabWidget->addTab(sessionBusViewer, tr("Session Bus"));
-    tabWidget->addTab(systemBusViewer, tr("System Bus"));
+
+    QDBusConnection connection = QDBusConnection::systemBus();
+    if (connection.isConnected()) {
+        systemBusViewer = new QDBusViewer(connection);
+        tabWidget->addTab(systemBusViewer, tr("System Bus"));
+    }
 
     restoreSettings();
 }
@@ -84,9 +89,11 @@ void MainWindow::saveSettings()
     sessionBusViewer->saveState(&settings);
     settings.endGroup();
 
-    settings.beginGroup(systemTabGroup());
-    systemBusViewer->saveState(&settings);
-    settings.endGroup();
+    if (systemBusViewer) {
+        settings.beginGroup(systemTabGroup());
+        systemBusViewer->saveState(&settings);
+        settings.endGroup();
+    }
 }
 
 void MainWindow::restoreSettings()
@@ -99,7 +106,9 @@ void MainWindow::restoreSettings()
     sessionBusViewer->restoreState(&settings);
     settings.endGroup();
 
-    settings.beginGroup(systemTabGroup());
-    systemBusViewer->restoreState(&settings);
-    settings.endGroup();
+    if (systemBusViewer) {
+        settings.beginGroup(systemTabGroup());
+        systemBusViewer->restoreState(&settings);
+        settings.endGroup();
+    }
 }
