@@ -20,4 +20,10 @@
             </meta>
         </example>
     </examples>
+    <categories>
+        <category>Application Examples</category>
+        <category>Desktop</category>
+        <category>Mobile</category>
+        <category>Embedded</category>
+    </categories>
 </instructionals>

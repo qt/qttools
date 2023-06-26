@@ -35,6 +35,7 @@ private:
     QString m_project {};
     QDocDatabase *m_qdb { nullptr };
     QList<ManifestMetaFilter> m_manifestMetaContent {};
+    QStringList m_exampleCategories {};
 
     template <typename F>
     void processManifestMetaContent(const QString &fullName, F matchFunc);
