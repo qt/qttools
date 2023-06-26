@@ -99,13 +99,12 @@ private:
 
     enum TokenType {
         Tok_Eof, Tok_class, Tok_enum, Tok_friend, Tok_namespace, Tok_using, Tok_return,
-        Tok_Q_OBJECT, Tok_Access, Tok_Cancel,
+        Tok_decltype, Tok_Q_OBJECT, Tok_Access, Tok_Cancel,
         Tok_Ident, Tok_String, Tok_RawString, Tok_Arrow, Tok_Colon, Tok_ColonColon,
-        Tok_Equals, Tok_LeftBracket, Tok_RightBracket, Tok_QuestionMark,
+        Tok_Equals, Tok_LeftBracket, Tok_RightBracket, Tok_AngleBracket, Tok_QuestionMark,
         Tok_LeftBrace, Tok_RightBrace, Tok_LeftParen, Tok_RightParen, Tok_Comma, Tok_Semicolon,
         Tok_Null, Tok_Integer,
-        Tok_QuotedInclude, Tok_AngledInclude,
-        Tok_Other
+        Tok_QuotedInclude, Tok_AngledInclude
     };
 
     std::ostream &yyMsg(int line = 0);
@@ -345,6 +344,7 @@ static bool isStringLiteralPrefix(const QStringView s)
 
 static const QString strQ_OBJECT = u"Q_OBJECT"_s;
 static const QString strclass = u"class"_s;
+static const QString strdecltype = u"decltype"_s;
 static const QString strenum = u"enum"_s;
 static const QString strfinal = u"final"_s;
 static const QString strfriend = u"friend"_s;
@@ -594,6 +594,10 @@ CppParser::TokenType CppParser::getToken()
                 if (yyWord == strclass)
                     return Tok_class;
                 break;
+            case 'd':
+                if (yyWord == strdecltype)
+                    return Tok_decltype;
+                break;
             case 'e':
                 if (yyWord == strenum)
                     return Tok_enum;
@@ -794,7 +798,7 @@ CppParser::TokenType CppParser::getToken()
             case '>':
             case '<':
                 yyCh = getChar();
-                return Tok_Other;
+                return Tok_AngleBracket;
             case '\'':
                 yyCh = getChar();
                 if (yyCh == '\\')
@@ -1660,6 +1664,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
 #endif
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
     bool yyTokIdentSeen = false; // Start of initializer (member or base class)
+    bool maybeInTrailingReturnType = false;
     metaExpected = true;
 
     prospectiveContext.clear();
@@ -1751,7 +1756,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     }
                 }
 
-                if (yyTok == Tok_Colon || yyTok == Tok_Other) {
+                if (yyTok == Tok_Colon || yyTok == Tok_AngleBracket) {
                     // Skip any token until '{' or ';' since we might do things wrong if we find
                     // a '::' or ':' token here.
                     do {
@@ -1946,7 +1951,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 yyTok = getToken();
                 break;
             }
-            if (yyTok == Tok_ColonColon) {
+            if (yyTok == Tok_ColonColon && !maybeInTrailingReturnType) {
                 prefix += yyWord;
                 prefix.detach();
             } else {
@@ -1956,6 +1961,8 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             metaExpected = false;
             break;
         case Tok_Arrow:
+            if (yyParenDepth == 0 && yyBraceDepth == namespaceDepths.size())
+                maybeInTrailingReturnType = true;
             yyTok = getToken();
             if (yyTok == Tok_Ident) {
                 switch (trFunctionAliasManager.trFunctionByName(yyWord)) {
@@ -1967,7 +1974,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             break;
         case Tok_ColonColon:
-            if (yyTokIdentSeen) {
+            if (yyTokIdentSeen || maybeInTrailingReturnType) {
                 // member or base class identifier
                 yyTok = getToken();
                 break;
@@ -2001,6 +2008,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             Q_FALLTHROUGH();
         case Tok_Semicolon:
+            maybeInTrailingReturnType = false;
             prospectiveContext.clear();
             prefix.clear();
             if (!sourcetext.isEmpty() || !extracomment.isEmpty() || !msgid.isEmpty() || !extra.isEmpty()) {
@@ -2049,6 +2057,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                     yyTokColonSeen = false;
                 }
             }
+            maybeInTrailingReturnType = false;
             yyTokIdentSeen = false;
             metaExpected = true;
             yyTok = getToken();
@@ -2082,6 +2091,19 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
             }
             yyTok = getToken();
             break;
+        case Tok_decltype:
+            {
+                // Save the parentheses depth outside the 'decltype' specifier.
+                auto initialParenDepth = yyParenDepth;
+
+                // Eat the opening parenthesis that follows 'decltype'.
+                yyTok = getToken();
+
+                // Skip over everything within the parentheses that follow 'decltype'.
+                while (yyParenDepth != initialParenDepth && yyTok != Tok_Eof)
+                    yyTok = getToken();
+            }
+            break;
         case Tok_enum:
             yyTok = getToken();
             // If it is an enum class then ignore
@@ -2089,7 +2111,7 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 yyTok = getToken();
             break;
         default:
-            if (!yyParenDepth)
+            if (!yyParenDepth && !maybeInTrailingReturnType)
                 prospectiveContext.clear();
             Q_FALLTHROUGH();
         case Tok_RightBracket: // ignoring indexing; for static initializers

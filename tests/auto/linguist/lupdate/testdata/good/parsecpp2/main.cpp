@@ -26,7 +26,7 @@
 
 
 
-// IMPORTANT!!!! If you want to add testdata to this file, 
+// IMPORTANT!!!! If you want to add testdata to this file,
 // always add it to the end in order to not change the linenumbers of translations!!!
 
 // nothing here
@@ -166,3 +166,67 @@ class PrefixedStringLiterals : public QObject {
         #endif
     }
 };
+
+// QTBUG-110949: trailing return types with template parameters
+class TrailingReturnType : public QObject {
+    Q_OBJECT
+    auto f1() -> QString
+    {
+        return tr("f1: trailing return type");
+    }
+    auto f2() -> QString;
+    auto f3() -> std::vector<QString>
+    {
+        return { tr("f3: trailing return type") };
+    }
+    auto f4() -> std::vector<QString>
+    {
+        return { tr("f4: trailing return type") };
+    }
+    auto f5() -> decltype([]() { return 1; })
+    {
+        tr("f5: trailing return type");
+    }
+    auto f6() -> decltype([]() { return 1; });
+};
+
+auto TrailingReturnType::f2() -> QString
+{
+    return tr("f2: trailing return type");
+}
+
+auto TrailingReturnType::f4() -> std::vector<QString>
+{
+    return { tr("f4: trailing return type") };
+}
+
+auto TrailingReturnType::f6() -> decltype([]() { return 1; })
+{
+    tr("f6: trailing return type");
+    return {};
+}
+
+// Check that our -> handling doesn't break the common cases.
+class SomeClassWithArrowInMethods : public QObject {
+    Q_OBJECT
+    void f1()
+    {
+        mainWindow->setWindowTitle(QObject::tr("SomeClassWithArrowInMethods::f1"));
+    }
+    void f2();
+    void f3()
+    {
+        mainWindow->setWindowTitle(tr("SomeClassWithArrowInMethods::f3"));
+    }
+    void f4();
+};
+
+SomeClassWithArrowInMethods::f2()
+{
+    mainWindow->setWindowTitle(QObject::tr("SomeClassWithArrowInMethods::f2"));
+}
+
+SomeClassWithArrowInMethods::f4()
+{
+    mainWindow->setWindowTitle(tr("SomeClassWithArrowInMethods::f4"));
+}
