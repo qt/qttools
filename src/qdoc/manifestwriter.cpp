@@ -341,6 +341,17 @@ void ManifestWriter::generateExampleManifestFile()
     }
 
     writer.writeEndElement(); // examples
+
+    if (!m_exampleCategories.isEmpty()) {
+        writer.writeStartElement("categories");
+        for (const auto &examplecategory : m_exampleCategories) {
+            writer.writeStartElement("category");
+            writer.writeCharacters(examplecategory);
+            writer.writeEndElement();
+        }
+        writer.writeEndElement(); // categories
+    }
+
     writer.writeEndElement(); // instructionals
     writer.writeEndDocument();
     outputFile.close();
@@ -367,6 +378,9 @@ void ManifestWriter::readManifestMetaContent()
         filter.m_tags = config.getStringSet(prefix + QStringLiteral("tags"));
         m_manifestMetaContent.append(filter);
     }
+
+    m_exampleCategories =
+            config.getStringList(CONFIG_MANIFESTMETA + QStringLiteral(".examplecategories"));
 }
 
 /*!
