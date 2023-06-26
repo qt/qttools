@@ -38,4 +38,3 @@ manifestmeta.thumbnail.names += "QtAssistant/Remote Control Example"
 
 navigation.landingpage = "Qt Assistant Manual"
 
-warninglimit = 0

@@ -41,4 +41,3 @@ depends                 += qtdoc qtgui qtwidgets qtcore qtuitools qtquick qtcmak
 navigation.landingpage = "Qt Designer Manual"
 navigation.cppclassespage = "Qt Designer C++ Classes"
 
-warninglimit = 0
