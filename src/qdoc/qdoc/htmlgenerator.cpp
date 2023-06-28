@@ -1737,9 +1737,9 @@ void HtmlGenerator::generateHeader(const QString &title, const Node *node, CodeM
         out() << "<!-- " << node->doc().location().fileName() << " -->\n";
 
     if (node && !node->doc().briefText().isEmpty()) {
-        out() << "  <meta name=\"description\" content=\"";
-        generateText(node->doc().briefText(), node, marker);
-        out() << "\">\n";
+        out() << "  <meta name=\"description\" content=\""
+              << protectEnc(node->doc().briefText().toString())
+              << "\">\n";
     }
 
     // determine the rest of the <title> element content: "title | titleSuffix version"

@@ -87,7 +87,7 @@ namespace TestQDoc {
 /*!
     \class TestQDoc::TestDerived
     \inmodule TestCPP
-    \brief A derived class in a namespace.
+    \brief A class in a namespace, derived from \l [CPP] Test.
 */
 
 /*!

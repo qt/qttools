@@ -51,7 +51,7 @@
 </db:section>
 <db:section>
 <db:title>class <db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestDerived</db:link></db:title>
-<db:para>A derived class in a namespace.</db:para>
+<db:para>A class in a namespace, derived from <db:link xlink:href="testqdoc-test.xml">Test</db:link>.</db:para>
 </db:section>
 </db:section>
 <db:section xml:id="macro-documentation">
