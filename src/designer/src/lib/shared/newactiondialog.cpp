@@ -52,6 +52,10 @@ NewActionDialog::NewActionDialog(ActionEditor *parent) :
 
     m_ui->tooltipEditor->setTextPropertyValidationMode(ValidationRichText);
     connect(m_ui->toolTipToolButton, &QAbstractButton::clicked, this, &NewActionDialog::slotEditToolTip);
+    connect(m_ui->editActionText, &QLineEdit::textEdited,
+            this, &NewActionDialog::onEditActionTextTextEdited);
+    connect(m_ui->editObjectName, &QLineEdit::textEdited,
+            this, &NewActionDialog::onEditObjectNameTextEdited);
 
     m_ui->keysequenceResetToolButton->setIcon(createIconSet(u"resetproperty.png"_s));
     connect(m_ui->keysequenceResetToolButton, &QAbstractButton::clicked,
@@ -152,7 +156,7 @@ void NewActionDialog::setActionData(const ActionData &d)
     updateButtons();
 }
 
-void NewActionDialog::on_editActionText_textEdited(const QString &text)
+void NewActionDialog::onEditActionTextTextEdited(const QString &text)
 {
     if (m_autoUpdateObjectName)
         m_ui->editObjectName->setText(ActionEditor::actionTextToName(text));
@@ -160,7 +164,7 @@ void NewActionDialog::on_editActionText_textEdited(const QString &text)
     updateButtons();
 }
 
-void NewActionDialog::on_editObjectName_textEdited(const QString&)
+void NewActionDialog::onEditObjectNameTextEdited(const QString&)
 {
     updateButtons();
     m_autoUpdateObjectName = false;
