@@ -75,8 +75,9 @@ public slots:
     void focusMenuRole();
 
 private slots:
-    void on_editActionText_textEdited(const QString &text);
-    void on_editObjectName_textEdited(const QString &text);
+    void onEditActionTextTextEdited(const QString &text);
+    void onEditObjectNameTextEdited(const QString &text);
+
     void slotEditToolTip();
     void slotResetKeySequence();
 
