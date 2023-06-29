@@ -541,7 +541,7 @@ bool saveTS(const Translator &translator, QIODevice &dev, ConversionData &cd)
 
                 t << "    <message";
                 if (!msg.id().isEmpty())
-                    t << " id=\"" << msg.id() << "\"";
+                    t << " id=\"" << tsProtect(msg.id()) << "\"";
                 if (msg.isPlural())
                     t << " numerus=\"yes\"";
                 t << ">\n";
