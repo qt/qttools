@@ -18,8 +18,6 @@ using namespace Qt::StringLiterals;
 
 static const QString CppMagicComment = u"TRANSLATOR"_s;
 
-//#define DIAGNOSE_RETRANSLATABILITY // FIXME: should make a runtime option of this
-
 size_t qHash(const HashString &str)
 {
     if (str.m_hash & 0x80000000)
@@ -1517,14 +1515,6 @@ void CppParser::handleTr(QString &prefix, bool plural)
                 context = joinNamespaces(stringifyNamespace(functionContext), functionContextUnresolved);
             }
         } else {
-#ifdef DIAGNOSE_RETRANSLATABILITY
-            int last = prefix.lastIndexOf(QLatin1String("::"));
-            QString className = prefix.mid(last == -1 ? 0 : last + 2);
-            if (!className.isEmpty() && className == functionName) {
-                yyMsg() << qPrintable(QStringLiteral("It is not recommended to call tr() from within a constructor '%1::%2'\n")
-                        .arg(className).arg(functionName));
-            }
-#endif
             prefix.chop(2);
             NamespaceList nsl;
             NamespaceList unresolved;
@@ -1665,9 +1655,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
     static QString strColons(QLatin1String("::"));
 
     QString prefix;
-#ifdef DIAGNOSE_RETRANSLATABILITY
-    QString functionName;
-#endif
     bool yyTokColonSeen = false; // Start of c'tor's initializer list
     bool yyTokIdentSeen = false; // Start of initializer (member or base class)
     bool maybeInTrailingReturnType = false;
@@ -1989,12 +1976,6 @@ void CppParser::parseInternal(ConversionData &cd, const QStringList &includeStac
                 prospectiveContext = prefix;
             prefix += strColons;
             yyTok = getToken();
-#ifdef DIAGNOSE_RETRANSLATABILITY
-            if (yyTok == Tok_Ident && yyBraceDepth == namespaceDepths.count() && yyParenDepth == 0) {
-                functionName = yyWord;
-                functionName.detach();
-            }
-#endif
             break;
         case Tok_RightBrace:
             if (!yyTokColonSeen) {
