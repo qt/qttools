@@ -80,6 +80,7 @@ namespace TestQDoc {
 
 /*!
     \fn Test &Test::operator=(Test &&other)
+    \ingroup testgroup
 
     Move-assigns \a other.
 */
