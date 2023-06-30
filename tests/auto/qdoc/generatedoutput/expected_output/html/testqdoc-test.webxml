@@ -72,7 +72,7 @@
             <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()">
                 <description/>
             </function>
-            <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" documented="true" meta="move-assign" virtual="non" const="false" static="false" final="false" override="false" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)">
+            <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" documented="true" meta="move-assign" virtual="non" const="false" static="false" final="false" override="false" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
                 <parameter type="TestQDoc::Test &amp;&amp;" name="other" default=""/>
                 <description>
                     <para>Move-assigns <argument>other</argument>.</para>
