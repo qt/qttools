@@ -34,6 +34,10 @@
     Tries to load a file called \c hellotr_la.qm (the \c .qm file extension is
     implicit) that contains Latin translations for the source texts used in
     the program. No error will occur if the file is not found.
+    This example works best on desktop platforms.
+    On platforms like Android and iOS,
+    the .qm file needs to be part of the app bundle. Usually,
+    this involves bundling the .qm file in a Qt resource.
 
     \snippet hellotr/main.cpp 7
 
