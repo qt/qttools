@@ -40,7 +40,7 @@
 <db:varlistentry>
 <db:term><db:link xlink:href="testqdoc-testderived.xml" xlink:role="class">TestQDoc::TestDerived</db:link></db:term>
 <db:listitem>
-<db:para>A derived class in a namespace.</db:para>
+<db:para>A class in a namespace, derived from Test.</db:para>
 </db:listitem>
 </db:varlistentry>
 </db:variablelist>

@@ -6,7 +6,7 @@
 <db:productname>TestCPP</db:productname>
 <db:titleabbrev>TestCPP Reference Documentation</db:titleabbrev>
 <db:abstract>
-<db:para>A derived class in a namespace.</db:para>
+<db:para>A class in a namespace, derived from <db:link xlink:href="testqdoc-test.xml">Test</db:link>.</db:para>
 <db:para>This class was introduced in Qt 2.0.</db:para>
 </db:abstract>
 </db:info>
