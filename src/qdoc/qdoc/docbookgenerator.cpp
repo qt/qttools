@@ -1353,7 +1353,9 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
         m_writer->writeAttribute("role", selector);
         newLine();
 
-        for (const auto &node : nodeList) {
+        NodeList members{nodeList};
+        std::sort(members.begin(), members.end(), Node::nodeNameLessThan);
+        for (const auto &node : std::as_const(members)) {
             if (node->isInternal() || node->isDeprecated())
                 continue;
 
