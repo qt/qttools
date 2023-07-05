@@ -38,6 +38,14 @@
     </message>
 </context>
 <context>
+    <name>NestedClass</name>
+    <message>
+        <location filename="main.py" line="73"/>
+        <source>Nested Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Window</name>
     <message>
         <location filename="main.py" line="17"/>
@@ -71,6 +79,11 @@
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
+    </message>
+    <message>
+        <location filename="main.py" line="77"/>
+        <source>Window Message</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
