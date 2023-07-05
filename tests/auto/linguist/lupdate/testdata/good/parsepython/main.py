@@ -5,10 +5,10 @@ from PySide6.QtCore import (QItemSelection, QLibraryInfo, QLocale, QTranslator,
                             Qt, Slot)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QListWidget,
                                QMainWindow, QWidget)
-
-
 import linguist_rc
 
+""""
+     Misleading indentation (5) for PYSIDE-2379"""
 
 class Window(QMainWindow):
     def __init__(self):
@@ -66,6 +66,12 @@ class Window(QMainWindow):
                        "THIS SHOULD NOT WORK"
                       )
 
+    class NestedClass:
+        def foo(self):
+            msg = self.tr("Nested Message")
+
+    def window_method(self):  # PYSIDE-2379, Don't put this into NestedClass
+        msg = self.tr("Window Message")
 
 
 if __name__ == '__main__':
