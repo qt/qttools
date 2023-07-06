@@ -125,11 +125,68 @@ static void startTokenizer(const QString &fileName, int (*getCharFunc)(),
     yyContextStack.clear();
 }
 
-static Token parseString()
+static bool parseStringEscape()
 {
     static const char tab[] = "abfnrtv";
     static const char backTab[] = "\a\b\f\n\r\t\v";
 
+    yyCh = getChar();
+    if (yyCh == EOF)
+        return false;
+
+    if (yyCh == 'x') {
+        QByteArray hex = "0";
+        yyCh = getChar();
+        if (yyCh == EOF)
+            return false;
+        while (std::isxdigit(yyCh)) {
+            hex += char(yyCh);
+            yyCh = getChar();
+            if (yyCh == EOF)
+                return false;
+        }
+        uint n;
+#ifdef Q_CC_MSVC
+        sscanf_s(hex, "%x", &n);
+#else
+        std::sscanf(hex, "%x", &n);
+#endif
+        if (yyStringLen < sizeof(yyString) - 1)
+            yyString[yyStringLen++] = char(n);
+         return true;
+    }
+
+    if (yyCh >= '0' && yyCh < '8') {
+         QByteArray oct;
+         int n = 0;
+         do {
+            oct += char(yyCh);
+            ++n;
+            yyCh = getChar();
+            if (yyCh == EOF)
+                return false;
+         } while (yyCh >= '0' && yyCh < '8' && n < 3);
+#ifdef Q_CC_MSVC
+         sscanf_s(oct, "%o", &n);
+#else
+         std::sscanf(oct, "%o", &n);
+#endif
+         if (yyStringLen < sizeof(yyString) - 1)
+            yyString[yyStringLen++] = char(n);
+         return true;
+    }
+
+    const char *p = std::strchr(tab, yyCh);
+    if (yyStringLen < sizeof(yyString) - 1) {
+         yyString[yyStringLen++] = p == nullptr
+                                   ? char(yyCh) : backTab[p - tab];
+    }
+    yyCh = getChar();
+    return true;
+}
+
+static Token parseString()
+{
     int quoteChar = yyCh;
     bool tripleQuote = false;
     bool singleQuote = true;
@@ -169,48 +226,8 @@ static Token parseString()
         }
 
         if (yyCh == '\\') {
-            yyCh = getChar();
-
-            if (yyCh == 'x') {
-                QByteArray hex = "0";
-
-                yyCh = getChar();
-                while (std::isxdigit(yyCh)) {
-                    hex += char(yyCh);
-                    yyCh = getChar();
-                }
-                uint n;
-#ifdef Q_CC_MSVC
-                sscanf_s(hex, "%x", &n);
-#else
-                std::sscanf(hex, "%x", &n);
-#endif
-                if (yyStringLen < sizeof(yyString) - 1)
-                    yyString[yyStringLen++] = char(n);
-            } else if (yyCh >= '0' && yyCh < '8') {
-                QByteArray oct;
-                int n = 0;
-
-                do {
-                    oct += char(yyCh);
-                    ++n;
-                    yyCh = getChar();
-                } while (yyCh >= '0' && yyCh < '8' && n < 3);
-#ifdef Q_CC_MSVC
-                sscanf_s(oct, "%o", &n);
-#else
-                std::sscanf(oct, "%o", &n);
-#endif
-                if (yyStringLen < sizeof(yyString) - 1)
-                    yyString[yyStringLen++] = char(n);
-            } else {
-                const char *p = std::strchr(tab, yyCh);
-                if (yyStringLen < sizeof(yyString) - 1) {
-                    yyString[yyStringLen++] = (p == nullptr)
-                            ? char(yyCh) : backTab[p - tab];
-                }
-                yyCh = getChar();
-            }
+            if (!parseStringEscape())
+                return Tok_Eof;
         } else {
             char *yStart = yyString + yyStringLen;
             char *yp = yStart;
