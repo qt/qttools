@@ -30,6 +30,14 @@ enum Token { Tok_Eof, Tok_class, Tok_def, Tok_return, Tok_tr,
              Tok_LeftParen, Tok_RightParen,
              Tok_Comma, Tok_None, Tok_Integer};
 
+enum class StringType
+{
+    NoString,
+    String,
+    FormatString,
+    RawString
+};
+
 /*
   The tokenizer maintains the following global variables. The names
   should be self-explanatory.
@@ -125,7 +133,7 @@ static void startTokenizer(const QString &fileName, int (*getCharFunc)(),
     yyContextStack.clear();
 }
 
-static bool parseStringEscape()
+static bool parseStringEscape(int quoteChar, StringType stringType)
 {
     static const char tab[] = "abfnrtv";
     static const char backTab[] = "\a\b\f\n\r\t\v";
@@ -133,6 +141,14 @@ static bool parseStringEscape()
     yyCh = getChar();
     if (yyCh == EOF)
         return false;
+
+    if (stringType == StringType::RawString) {
+        if (yyCh != quoteChar) // Only quotes can be escaped in raw strings
+            yyString[yyStringLen++] = '\\';
+        yyString[yyStringLen++] = yyCh;
+        yyCh = getChar();
+        return true;
+    }
 
     if (yyCh == 'x') {
         QByteArray hex = "0";
@@ -185,7 +201,7 @@ static bool parseStringEscape()
     return true;
 }
 
-static Token parseString()
+static Token parseString(StringType stringType = StringType::NoString)
 {
     int quoteChar = yyCh;
     bool tripleQuote = false;
@@ -226,7 +242,7 @@ static Token parseString()
         }
 
         if (yyCh == '\\') {
-            if (!parseStringEscape())
+            if (!parseStringEscape(quoteChar, stringType))
                 return Tok_Eof;
         } else {
             char *yStart = yyString + yyStringLen;
@@ -266,7 +282,7 @@ static QByteArray readLine()
     return result;
 }
 
-static Token getToken()
+static Token getToken(StringType stringType = StringType::NoString)
 {
     yyIdent.clear();
     yyCommentLen = 0;
@@ -304,7 +320,7 @@ static Token getToken()
             break;
         case '"':
         case '\'':
-            return parseString();
+            return parseString(stringType);
         case '(':
             yyParenDepth++;
             yyCh = getChar();
@@ -376,15 +392,34 @@ static bool match(Token t)
     return matches;
 }
 
+static bool matchStringStart()
+{
+    if (yyTok == Tok_String)
+        return true;
+    // Check for f"bla{var}" and raw strings r"bla".
+    if (yyTok == Tok_Ident && yyIdent.size() == 1) {
+        switch (yyIdent.at(0)) {
+        case 'r':
+            yyTok = getToken(StringType::RawString);
+            return yyTok == Tok_String;
+        case 'f':
+            yyTok = getToken(StringType::FormatString);
+            return yyTok == Tok_String;
+        }
+    }
+    return false;
+}
+
 static bool matchString(QByteArray *s)
 {
-    const bool matches = (yyTok == Tok_String);
     s->clear();
-    while (yyTok == Tok_String) {
+    bool ok = false;
+    while (matchStringStart()) {
         *s += yyString;
         yyTok = getToken();
+        ok = true;
     }
-    return matches;
+    return ok;
 }
 
 static bool matchEncoding(bool *utf8)
