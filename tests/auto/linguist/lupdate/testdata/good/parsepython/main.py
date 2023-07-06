@@ -72,6 +72,10 @@ class Window(QMainWindow):
 
     def window_method(self):  # PYSIDE-2379, Don't put this into NestedClass
         msg = self.tr("Window Message")
+        msg = self.tr(f"An f-string\\")
+        msg = self.tr(r"A raw strin\g")
+        msg = self.tr(r"A raw strin\g""continued\\")
+        msg = self.tr(r"A raw string with escaped quote\"bla")
 
 
 if __name__ == '__main__':

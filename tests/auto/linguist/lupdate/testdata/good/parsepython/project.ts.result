@@ -81,8 +81,28 @@
         </translation>
     </message>
     <message>
-        <location filename="main.py" line="77"/>
+        <location filename="main.py" line="75"/>
         <source>Window Message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="76"/>
+        <source>An f-string\</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="77"/>
+        <source>A raw strin\g</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="78"/>
+        <source>A raw strin\gcontinued\</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main.py" line="81"/>
+        <source>A raw string with escaped quote&quot;bla</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
