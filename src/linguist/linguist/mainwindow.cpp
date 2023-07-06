@@ -2598,8 +2598,9 @@ void MainWindow::updateDanger(const MultiDataIndex &index, bool verbose)
                                     escape_start, escape_end - escape_start).toInt(&ok);
                             if (ok)
                                 placeMarkerIndexes[markerIndex] += (pass == 0 ? numTranslations : -1);
+                        } else {
+                            ++c;
                         }
-                        ++c;
                     }
                 }
 
