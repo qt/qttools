@@ -3,7 +3,6 @@
 
 /*!
     \group examples-linguist
-    \ingroup all-examples
     \ingroup internationalization
     \title Qt Linguist Examples
     \brief Using Qt Linguist to internationalize your Qt application.

@@ -3,7 +3,6 @@
 
 /*!
     \group examples-qthelp
-    \ingroup all-examples
     \title Qt Help Examples
     \brief Adding context-sensitive help to Qt applications.
 

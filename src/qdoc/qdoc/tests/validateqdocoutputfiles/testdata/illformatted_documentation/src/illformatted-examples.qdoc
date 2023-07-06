@@ -3,7 +3,6 @@
 
 /*!
     \page illformatted-examples.html
-    \ingroup all-examples
     \title Test generated output for illformatted examples
     \brief Demonstrate correctness for example generation.
 
