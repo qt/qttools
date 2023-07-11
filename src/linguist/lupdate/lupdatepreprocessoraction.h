@@ -49,6 +49,7 @@ private:
     void storeMacroArguments(const std::vector<QString> &args, TranslationRelatedStore *store);
 
     void SourceRangeSkipped(clang::SourceRange sourceRange, clang::SourceLocation endifLoc) override;
+#if (LUPDATE_CLANG_VERSION < LUPDATE_CLANG_VERSION_CHECK(14,0,0))
     void InclusionDirective(clang::SourceLocation /*hashLoc*/, const clang::Token &/*includeTok*/,
                             clang::StringRef /*fileName*/, bool /*isAngled*/,
                             clang::CharSourceRange /*filenameRange*/,
@@ -62,6 +63,7 @@ private:
                             clang::StringRef /*searchPath*/, clang::StringRef /*relativePath*/,
                             const clang::Module */*imported*/,
                             clang::SrcMgr::CharacteristicKind /*fileType*/) override;
+#endif
 
     std::string m_inputFile;
     clang::Preprocessor &m_preprocessor;

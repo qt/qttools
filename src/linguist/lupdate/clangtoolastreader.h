@@ -30,9 +30,17 @@ class Translator;
 class LupdateVisitor : public clang::RecursiveASTVisitor<LupdateVisitor>
 {
 public:
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(14,0,0))
+    explicit LupdateVisitor(clang::ASTContext *context,
+                            clang::Preprocessor *preprocessor, Stores *stores)
+        : m_context(context)
+        , m_preprocessor(preprocessor)
+        , m_stores(stores)
+#else
     explicit LupdateVisitor(clang::ASTContext *context, Stores *stores)
         : m_context(context)
         , m_stores(stores)
+#endif
     {
         m_inputFile = m_context->getSourceManager().getFileEntryForID(
             m_context->getSourceManager().getMainFileID())->getName();
@@ -55,6 +63,9 @@ private:
     void processIsolatedComments(const clang::FileID file);
 
     clang::ASTContext *m_context = nullptr;
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(14,0,0))
+    clang::Preprocessor *m_preprocessor = nullptr;
+#endif
     std::string m_inputFile;
 
     Stores *m_stores = nullptr;
@@ -68,8 +79,14 @@ private:
 class LupdateASTConsumer : public clang::ASTConsumer
 {
 public:
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(14,0,0))
+    explicit LupdateASTConsumer(clang::ASTContext *context, clang::Preprocessor *preprocessor,
+                                Stores *stores)
+        : m_visitor(context, preprocessor, stores)
+#else
     explicit LupdateASTConsumer(clang::ASTContext *context, Stores *stores)
         : m_visitor(context, stores)
+#endif
     {}
 
     // This method is called when the ASTs for entire translation unit have been
@@ -96,7 +113,12 @@ public:
     std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
         clang::CompilerInstance &compiler, llvm::StringRef /* inFile */) override
     {
-        auto consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_stores);
+        #if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(14,0,0))
+            auto consumer = new LupdateASTConsumer(&compiler.getASTContext(),
+                                                   &compiler.getPreprocessor(), m_stores);
+        #else
+            auto consumer = new LupdateASTConsumer(&compiler.getASTContext(), m_stores);
+        #endif
         return std::unique_ptr<clang::ASTConsumer>(consumer);
     }
 

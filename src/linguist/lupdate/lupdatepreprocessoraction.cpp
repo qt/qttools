@@ -154,6 +154,7 @@ void LupdatePPCallbacks::SourceRangeSkipped(clang::SourceRange sourceRange,
 }
 
 // To list the included files
+#if (LUPDATE_CLANG_VERSION < LUPDATE_CLANG_VERSION_CHECK(14,0,0))
 void LupdatePPCallbacks::InclusionDirective(clang::SourceLocation /*hashLoc*/,
     const clang::Token & /*includeTok*/, clang::StringRef /*fileName*/, bool /*isAngled*/,
     clang::CharSourceRange /*filenameRange*/,
@@ -191,5 +192,6 @@ void LupdatePPCallbacks::InclusionDirective(clang::SourceLocation /*hashLoc*/,
     if (store.isValid())
         m_ppStores.emplace_back(std::move(store));
 }
+#endif
 
 QT_END_NAMESPACE

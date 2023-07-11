@@ -724,6 +724,24 @@ void LupdateVisitor::processPreprocessorCalls()
             processPreprocessorCall(store);
     }
 
+    // Processing the isolated comments (TRANSLATOR) in the files included in the main input file.
+#if (LUPDATE_CLANG_VERSION >= LUPDATE_CLANG_VERSION_CHECK(14,0,0))
+    for (const clang::FileEntry *file : m_preprocessor->getIncludedFiles()) {
+        auto &sourceMgr = m_context->getSourceManager();
+
+        clang::StringRef fileNameRealPath = file->tryGetRealPathName();
+        if (!LupdatePrivate::isFileSignificant(fileNameRealPath.str())
+                || fileNameRealPath.str() == m_inputFile)
+            continue;
+
+        auto sourceFile = sourceMgr.getFileManager()
+            .getFile(fileNameRealPath);
+        auto sourceLocation = sourceMgr.translateFileLineCol(sourceFile.get(), 1, 1);
+        const clang::FileID fileId = sourceMgr.getDecomposedLoc(sourceLocation).first;
+        processIsolatedComments(fileId);
+    }
+#endif
+
     if (m_qDeclareTrMacroAll.size() > 0 || m_noopTranslationMacroAll.size() > 0)
         m_macro = true;
 }
@@ -738,12 +756,14 @@ void LupdateVisitor::processPreprocessorCall(TranslationRelatedStore store)
         setInfoFromRawComment(rawComment, &store);
 
     // Processing the isolated comments (TRANSLATOR) in the files included in the main input file.
+#if (LUPDATE_CLANG_VERSION < LUPDATE_CLANG_VERSION_CHECK(14,0,0))
     if (store.callType.contains(QStringLiteral("InclusionDirective"))) {
         auto &sourceMgr = m_context->getSourceManager();
         const clang::FileID file = sourceMgr.getDecomposedLoc(store.callLocation(sourceMgr)).first;
         processIsolatedComments(file);
         return;
     }
+#endif
 
     if (store.isValid()) {
         if (store.funcName.contains(QStringLiteral("Q_DECLARE_TR_FUNCTIONS")))
