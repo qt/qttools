@@ -8,6 +8,15 @@
 <db:abstract>
 <db:para>A class in a namespace.</db:para>
 <db:para>This class was introduced in Qt 2.0.</db:para>
+<db:note>
+<db:para>All functions in this class are <db:link xlink:href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command">reentrant</db:link> with the following exceptions:</db:para>
+<db:para>These functions are not <db:link xlink:href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command">reentrant</db:link>:</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="testqdoc-test.xml#someFunctionDefaultArg">someFunctionDefaultArg(int i, bool b)</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:note>
 </db:abstract>
 </db:info>
 <db:variablelist>
@@ -216,10 +225,12 @@
 <db:synopsisinfo role="signature">void someFunctionDefaultArg(int i, bool b)</db:synopsisinfo>
 <db:synopsisinfo role="access">public</db:synopsisinfo>
 <db:synopsisinfo role="status">active</db:synopsisinfo>
-<db:synopsisinfo role="threadsafeness">unspecified</db:synopsisinfo>
+<db:synopsisinfo role="threadsafeness">non-reentrant</db:synopsisinfo>
 </db:methodsynopsis>
 <db:para>Function that takes a parameter <db:code role="parameter">i</db:code> and <db:code role="parameter">b</db:code>.</db:para>
-</db:section>
+<db:warning>
+<db:para>This function is not <db:link xlink:href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command">reentrant</db:link>.</db:para>
+</db:warning></db:section>
 <db:section xml:id="virtualFun">
 <db:title>[virtual] void Test::virtualFun()</db:title>
 <db:methodsynopsis>

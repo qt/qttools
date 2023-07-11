@@ -1306,7 +1306,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
  */
 QString QDocIndexFiles::appendAttributesToSignature(const FunctionNode *fn) const noexcept
 {
-    QString signature = fn->signature(false, false);
+    QString signature = fn->signature(Node::SignatureReturnType);
 
     if (fn->isFinal())
         signature += " final";

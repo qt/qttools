@@ -2429,7 +2429,7 @@ void DocBookGenerator::generateSignatureList(const NodeList &nodes)
         m_writer->writeStartElement(dbNamespace, "para");
 
         generateSimpleLink(currentGenerator()->fullDocumentLocation(*n),
-                           (*n)->signature(false, true));
+                           (*n)->signature(Node::SignaturePlain));
 
         m_writer->writeEndElement(); // para
         newLine();
@@ -2852,7 +2852,7 @@ void DocBookGenerator::generateReimplementsClause(const FunctionNode *fn)
             m_writer->writeStartElement(dbNamespace, "para");
             m_writer->writeCharacters("Reimplements: ");
             QString fullName =
-                    overrides->parent()->name() + "::" + overrides->signature(false, true);
+                    overrides->parent()->name() + "::" + overrides->signature(Node::SignaturePlain);
             generateFullName(overrides->parent(), fullName, overrides);
             m_writer->writeCharacters(".");
             m_writer->writeEndElement(); // para
@@ -3302,7 +3302,7 @@ void DocBookGenerator::generateDocBookSynopsis(const Node *node)
                                  associatedProperties.join(QLatin1Char(',')));
         }
 
-        QString signature = functionNode->signature(false, false);
+        QString signature = functionNode->signature(Node::SignatureReturnType);
         // 'const' is already part of FunctionNode::signature()
         if (functionNode->isFinal())
             signature += " final";

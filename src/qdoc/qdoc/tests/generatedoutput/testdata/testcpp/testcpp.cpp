@@ -70,6 +70,7 @@ namespace TestQDoc {
 \endif
     \ingroup testgroup
     \ingroup cpptypes
+    \reentrant
 */
 
 /*!
@@ -143,6 +144,7 @@ void Test::anotherObsoleteMember()
 }
 
 /*!
+    \nonreentrant
     Function that takes a parameter \a i and \a b.
 \if defined(test_ignoresince)
     \since 2.0
