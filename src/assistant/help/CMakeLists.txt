@@ -31,6 +31,7 @@ qt_internal_add_module(Help
     DEFINES
         # -QT_ASCII_CAST_WARNINGS # special case remove
         QHELP_LIB
+        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::CorePrivate
     PUBLIC_LIBRARIES

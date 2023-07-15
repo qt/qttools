@@ -45,6 +45,7 @@ qt_internal_add_app(linguist
         QT_KEYWORDS
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
+        QT_NO_CONTEXTLESS_CONNECT
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES

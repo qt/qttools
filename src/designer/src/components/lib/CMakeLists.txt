@@ -96,6 +96,7 @@ qt_internal_add_module(DesignerComponentsPrivate
         qdesigner_components.cpp
     DEFINES
         QDESIGNER_COMPONENTS_LIBRARY
+        QT_NO_CONTEXTLESS_CONNECT
         QT_STATICPLUGIN
     INCLUDE_DIRECTORIES
         .

@@ -155,6 +155,7 @@ qt_internal_add_module(Designer
         QDESIGNER_SHARED_LIBRARY
         QDESIGNER_UILIB_LIBRARY
         QT_DESIGNER
+        QT_NO_CONTEXTLESS_CONNECT
         QT_USE_QSTRINGBUILDER
     INCLUDE_DIRECTORIES
         ../../../shared/deviceskin

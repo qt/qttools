@@ -10,6 +10,8 @@ qt_internal_add_app(qtdiag
     SOURCES
         main.cpp
         qtdiag.cpp qtdiag.h
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::CorePrivate
         # Qt::Gui # special case QTBUG-83498

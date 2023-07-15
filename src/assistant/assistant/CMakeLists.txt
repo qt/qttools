@@ -41,6 +41,8 @@ qt_internal_add_app(assistant
         topicchooser.cpp topicchooser.h topicchooser.ui
         tracer.h
         xbelsupport.cpp xbelsupport.h
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     INCLUDE_DIRECTORIES
         ../../shared/fontpanel
     LIBRARIES

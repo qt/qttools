@@ -21,5 +21,6 @@ qt_internal_add_tool(${target_name}
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
+        QT_NO_CONTEXTLESS_CONNECT
 )
 qt_internal_return_unless_building_tools()

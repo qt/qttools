@@ -13,6 +13,8 @@ qt_internal_add_test(tst_QDoc_Catch_Generators
     ${CMAKE_CURRENT_LIST_DIR}/generators/combinators/catch_cycle_generator.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/utilities/semantics/catch_generator_handler.cpp
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
   LIBRARIES
     Qt::QDocCatchPrivate
     Qt::QDocCatchConversionsPrivate

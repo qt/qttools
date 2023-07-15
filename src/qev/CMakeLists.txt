@@ -8,6 +8,8 @@
 qt_internal_add_app(qev
     SOURCES
         qev.cpp
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     PUBLIC_LIBRARIES
         Qt::Gui
         Qt::Widgets

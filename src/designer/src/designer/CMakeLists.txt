@@ -27,6 +27,8 @@ qt_internal_add_app(designer
         qdesigner_workbench.cpp qdesigner_workbench.h
         saveformastemplate.cpp saveformastemplate.h saveformastemplate.ui
         versiondialog.cpp versiondialog.h
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     INCLUDE_DIRECTORIES
         ../../../shared/fontpanel
         ../../../shared/qttoolbardialog

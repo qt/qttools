@@ -81,6 +81,8 @@ qt_internal_add_tool(${target_name}
         variablenode.cpp
         webxmlgenerator.cpp
         xmlgenerator.cpp
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_LIST_DIR}
     LIBRARIES

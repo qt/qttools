@@ -343,11 +343,11 @@ QDesignerTaskMenu::QDesignerTaskMenu(QWidget *widget, QObject *parent) :
             [this] () { this->addToolBar(Qt::TopToolBarArea); });
     auto areaMenu = new QMenu;
     d->m_addAreaSubMenu->setMenu(areaMenu);
-    areaMenu->addAction(QDesignerTaskMenu::tr("Left"),
+    areaMenu->addAction(QDesignerTaskMenu::tr("Left"), this,
                         [this] () { this->addToolBar(Qt::LeftToolBarArea); });
-    areaMenu->addAction(QDesignerTaskMenu::tr("Right"),
+    areaMenu->addAction(QDesignerTaskMenu::tr("Right"), this,
                         [this] () { this->addToolBar(Qt::RightToolBarArea); });
-    areaMenu->addAction(QDesignerTaskMenu::tr("Bottom"),
+    areaMenu->addAction(QDesignerTaskMenu::tr("Bottom"), this,
                         [this] () { this->addToolBar(Qt::BottomToolBarArea); });
     connect(d->m_addStatusBar, &QAction::triggered, this, &QDesignerTaskMenu::createStatusBar);
     connect(d->m_removeStatusBar, &QAction::triggered, this, &QDesignerTaskMenu::removeStatusBar);

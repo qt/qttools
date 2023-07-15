@@ -17,6 +17,8 @@ qt_internal_add_tool(${target_name}
         main.cpp
         qhelpdatainterface.cpp qhelpdatainterface_p.h
         qhelpprojectdata.cpp qhelpprojectdata_p.h
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::Gui
         Qt::HelpPrivate

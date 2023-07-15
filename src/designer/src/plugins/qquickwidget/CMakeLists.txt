@@ -10,6 +10,8 @@ qt_internal_add_plugin(QQuickWidgetPlugin
     PLUGIN_TYPE designer
     SOURCES
         qquickwidget_plugin.cpp qquickwidget_plugin.h
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::Core
         Qt::Designer

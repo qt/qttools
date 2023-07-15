@@ -8,6 +8,8 @@
 qt_internal_add_app(qtplugininfo
     SOURCES
         qtplugininfo.cpp
+    DEFINES
+        QT_NO_CONTEXTLESS_CONNECT
 )
 set_target_properties(qtplugininfo PROPERTIES
     WIN32_EXECUTABLE FALSE

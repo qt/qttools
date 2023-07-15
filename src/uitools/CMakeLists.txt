@@ -20,6 +20,7 @@ qt_internal_add_module(UiTools
         QFORMINTERNAL_NAMESPACE
         QT_DESIGNER
         QT_DESIGNER_STATIC
+        QT_NO_CONTEXTLESS_CONNECT
         QT_USE_QSTRINGBUILDER
     INCLUDE_DIRECTORIES
         ../designer/src/lib/uilib
