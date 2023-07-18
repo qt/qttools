@@ -13,6 +13,8 @@
 #include <QMenuBar>
 #include <QMessageBox>
 
+using namespace Qt::StringLiterals;
+
 // ![0]
 MainWindow::MainWindow()
     : textViewer(new TextEdit)
@@ -20,7 +22,7 @@ MainWindow::MainWindow()
 {
 // ![0]
     textViewer->setContents(QLibraryInfo::path(QLibraryInfo::ExamplesPath)
-            + QLatin1String("/assistant/simpletextviewer/documentation/intro.html"));
+                            + "/assistant/simpletextviewer/documentation/intro.html"_L1);
     setCentralWidget(textViewer);
 
     createActions();
