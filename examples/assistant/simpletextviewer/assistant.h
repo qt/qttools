@@ -9,13 +9,11 @@
 #include <QScopedPointer>
 #include <QString>
 
-
 class Assistant
 {
     Q_DECLARE_TR_FUNCTIONS(Assistant)
 
 public:
-    Assistant();
     ~Assistant();
     void showDocumentation(const QString &file);
 

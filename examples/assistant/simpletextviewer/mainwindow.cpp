@@ -15,10 +15,10 @@
 
 // ![0]
 MainWindow::MainWindow()
+    : textViewer(new TextEdit)
+    , assistant(new Assistant)
 {
-    assistant = new Assistant;
 // ![0]
-    textViewer = new TextEdit;
     textViewer->setContents(QLibraryInfo::path(QLibraryInfo::ExamplesPath)
             + QLatin1String("/assistant/simpletextviewer/documentation/intro.html"));
     setCentralWidget(textViewer);
@@ -102,7 +102,6 @@ void MainWindow::createMenus()
     helpMenu->addSeparator();
     helpMenu->addAction(aboutAct);
     helpMenu->addAction(aboutQtAct);
-
 
     menuBar()->addMenu(fileMenu);
     menuBar()->addMenu(helpMenu);
