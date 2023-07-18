@@ -12,7 +12,6 @@ class QDialogButtonBox;
 class QLabel;
 class QToolButton;
 class QTreeWidget;
-class QTreeWidgetItem;
 QT_END_NAMESPACE
 
 class Assistant;
@@ -42,8 +41,8 @@ private:
     void createLabels();
     void createLayout();
 
-    Assistant *currentAssistant;
     TextEdit *currentEditor;
+    Assistant *currentAssistant;
     QTreeWidget *foundFilesTree;
 
     QComboBox *directoryComboBox;

@@ -20,9 +20,9 @@
 //! [0]
 FindFileDialog::FindFileDialog(TextEdit *editor, Assistant *assistant)
     : QDialog(editor)
+    , currentEditor(editor)
+    , currentAssistant(assistant)
 {
-    currentAssistant = assistant;
-    currentEditor = editor;
 //! [0]
 
     createButtons();
@@ -42,8 +42,8 @@ FindFileDialog::FindFileDialog(TextEdit *editor, Assistant *assistant)
 
 void FindFileDialog::browse()
 {
-    QString currentDirectory = directoryComboBox->currentText();
-    QString newDirectory = QFileDialog::getExistingDirectory(this,
+    const QString currentDirectory = directoryComboBox->currentText();
+    const QString newDirectory = QFileDialog::getExistingDirectory(this,
                                tr("Select Directory"), currentDirectory);
     if (!newDirectory.isEmpty()) {
         directoryComboBox->addItem(QDir::toNativeSeparators(newDirectory));
@@ -61,12 +61,12 @@ void FindFileDialog::help()
 
 void FindFileDialog::openFile()
 {
-    auto item  = foundFilesTree->currentItem();
+    QTreeWidgetItem *item = foundFilesTree->currentItem();
     if (!item)
         return;
 
-    QString fileName = item->text(0);
-    QString path = QDir(directoryComboBox->currentText()).filePath(fileName);
+    const QString fileName = item->text(0);
+    const QString path = QDir(directoryComboBox->currentText()).filePath(fileName);
 
     currentEditor->setContents(path);
     close();
@@ -75,8 +75,7 @@ void FindFileDialog::openFile()
 void FindFileDialog::update()
 {
     findFiles();
-    buttonBox->button(QDialogButtonBox::Open)->setEnabled(
-            foundFilesTree->topLevelItemCount() > 0);
+    buttonBox->button(QDialogButtonBox::Open)->setEnabled(foundFilesTree->topLevelItemCount() > 0);
 }
 
 void FindFileDialog::findFiles()
@@ -84,9 +83,9 @@ void FindFileDialog::findFiles()
     QString wildCard = fileNameComboBox->currentText();
     if (!wildCard.endsWith('*'))
         wildCard += '*';
-    QRegularExpression filePattern(QRegularExpression::wildcardToRegularExpression(wildCard));
+    const QRegularExpression filePattern(QRegularExpression::wildcardToRegularExpression(wildCard));
 
-    QDir directory(directoryComboBox->currentText());
+    const QDir directory(directoryComboBox->currentText());
 
     const QStringList allFiles = directory.entryList(QDir::Files | QDir::NoSymLinks);
     QStringList matchingFiles;
@@ -102,10 +101,8 @@ void FindFileDialog::showFiles(const QStringList &files)
 {
     foundFilesTree->clear();
 
-    for (int i = 0; i < files.count(); ++i) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(foundFilesTree);
-        item->setText(0, files[i]);
-    }
+    for (const QString &file : files)
+        new QTreeWidgetItem(foundFilesTree, {file});
 
     if (files.count() > 0)
         foundFilesTree->setCurrentItem(foundFilesTree->topLevelItem(0));
@@ -131,19 +128,14 @@ void FindFileDialog::createComboBoxes()
     fileNameComboBox = new QComboBox;
 
     fileNameComboBox->setEditable(true);
-    fileNameComboBox->setSizePolicy(QSizePolicy::Expanding,
-                                    QSizePolicy::Preferred);
+    fileNameComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     directoryComboBox->setMinimumContentsLength(30);
-    directoryComboBox->setSizeAdjustPolicy(
-            QComboBox::AdjustToContents);
-    directoryComboBox->setSizePolicy(QSizePolicy::Expanding,
-                                     QSizePolicy::Preferred);
+    directoryComboBox->setSizeAdjustPolicy(QComboBox::AdjustToContents);
+    directoryComboBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
-    connect(fileNameComboBox, &QComboBox::editTextChanged,
-            this, &FindFileDialog::update);
-    connect(directoryComboBox, &QComboBox::currentTextChanged,
-            this, &FindFileDialog::update);
+    connect(fileNameComboBox, &QComboBox::editTextChanged, this, &FindFileDialog::update);
+    connect(directoryComboBox, &QComboBox::currentTextChanged, this, &FindFileDialog::update);
 }
 
 void FindFileDialog::createFilesTree()
@@ -154,8 +146,7 @@ void FindFileDialog::createFilesTree()
     foundFilesTree->setRootIsDecorated(false);
     foundFilesTree->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    connect(foundFilesTree, &QTreeWidget::itemActivated,
-            this, &FindFileDialog::openFile);
+    connect(foundFilesTree, &QTreeWidget::itemActivated, this, &FindFileDialog::openFile);
 }
 
 void FindFileDialog::createLabels()
