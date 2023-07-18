@@ -10,6 +10,8 @@
 #include <QMessageBox>
 #include <QStandardPaths>
 
+using namespace Qt::StringLiterals;
+
 //! [0]
 Assistant::~Assistant()
 {
@@ -38,13 +40,13 @@ static QString documentationDirectory()
 {
     QStringList paths;
 #ifdef SRCDIR
-    paths.append(QLatin1String(SRCDIR));
+    paths.append(QLatin1StringView(SRCDIR));
 #endif
     paths.append(QLibraryInfo::path(QLibraryInfo::ExamplesPath));
     paths.append(QCoreApplication::applicationDirPath());
     paths.append(QStandardPaths::standardLocations(QStandardPaths::AppDataLocation));
     for (const auto &dir : std::as_const(paths)) {
-        const QString path = dir + QLatin1String("/documentation");
+        const QString path = dir + "/documentation"_L1;
         if (QFileInfo::exists(path))
             return path;
     }
@@ -65,9 +67,9 @@ bool Assistant::startAssistant()
     if (m_process->state() != QProcess::Running) {
         QString app = QLibraryInfo::path(QLibraryInfo::BinariesPath);
 #ifndef Q_OS_DARWIN
-        app += QLatin1String("/assistant");
+        app += "/assistant"_L1;
 #else
-        app += QLatin1String("/Assistant.app/Contents/MacOS/Assistant");
+        app += "/Assistant.app/Contents/MacOS/Assistant"_L1;
 #endif
 
         const QString collectionDirectory = documentationDirectory();
@@ -76,9 +78,9 @@ bool Assistant::startAssistant()
             return false;
         }
 
-        const QStringList args{QLatin1String("-collectionFile"),
-                    collectionDirectory + QLatin1String("/simpletextviewer.qhc"),
-                    QLatin1String("-enableRemoteControl")};
+        const QStringList args{"-collectionFile"_L1,
+                               collectionDirectory + "/simpletextviewer.qhc"_L1,
+                               "-enableRemoteControl"_L1};
 
         m_process->start(app, args);
 
