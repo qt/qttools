@@ -33,8 +33,8 @@ private:
     void createActions();
     void createMenus();
 
-    Assistant *assistant;
     TextEdit *textViewer;
+    Assistant *assistant;
 
     QMenu *fileMenu;
     QMenu *helpMenu;

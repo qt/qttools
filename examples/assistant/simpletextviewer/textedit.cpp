@@ -14,11 +14,11 @@ TextEdit::TextEdit(QWidget *parent)
 
 void TextEdit::setContents(const QString &fileName)
 {
-    QFileInfo fi(fileName);
+    const QFileInfo fi(fileName);
     srcUrl = QUrl::fromLocalFile(fi.absoluteFilePath());
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly)) {
-        QString data(file.readAll());
+        const QString data(QString::fromUtf8(file.readAll()));
         if (fileName.endsWith(".html"))
             setHtml(data);
         else
