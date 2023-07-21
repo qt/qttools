@@ -149,6 +149,19 @@ qt_internal_add_module(Designer
         uilib/ui4.cpp uilib/ui4_p.h
         components/qdesigner_components.h
         components/qdesigner_components_global.h
+    NO_UNITY_BUILD_SOURCES
+        shared/previewconfigurationwidget.cpp # no type named 'PreviewConfigurationWidget' in namespace 'qdesigner_internal::Ui'
+        shared/qdesigner_command.cpp # redefinition of 'QMetaTypeId<QList<QWidget *>>' (from morphmenu.cpp)
+                                     # and recursiveUpdate (from formwindowbase.cpp)
+        shared/qlayout_widget.cpp    # redefinition of 'FormLayoutColumns' (from layout.cpp)
+        shared/qtresourceeditordialog.cpp # redefinition of 'Geometry' (from plaintexteditor.cpp)
+        shared/richtexteditor.cpp # no type named 'AddLinkDialog' in namespace 'qdesigner_internal::Ui'
+        shared/selectsignaldialog.cpp # no type named 'SelectSignalDialog' in namespace 'qdesigner_internal::Ui'
+        shared/signalslotdialog.cpp # no type named 'SignalSlotDialogClass' in namespace 'qdesigner_internal::Ui'
+        shared/widgetdatabase.cpp # redefinition of 'debugWidgetDataBase' (from abstractwidgetdatabase.cpp)
+        uilib/abstractformbuilder.cpp # redefinition of 'QMetaTypeId<QList<QWidget *>>' (from morphmenu.cpp)
+        uilib/formbuilderextra.cpp # use of undeclared identifier 'dcw'
+        uilib/properties.cpp # 'setupColorGroup' [etc] is a protected member of 'QAbstractFormBuilder'
     DEFINES
         QDESIGNER_EXTENSION_LIBRARY
         QDESIGNER_SDK_LIBRARY

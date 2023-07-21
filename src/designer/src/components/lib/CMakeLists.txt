@@ -94,6 +94,8 @@ qt_internal_add_module(DesignerComponentsPrivate
         ../widgetbox/widgetboxcategorylistview.cpp ../widgetbox/widgetboxcategorylistview.h
         ../widgetbox/widgetboxtreewidget.cpp ../widgetbox/widgetboxtreewidget.h
         qdesigner_components.cpp
+    NO_UNITY_BUILD_SOURCES
+        ../tabordereditor/tabordereditor.cpp # redefinition of 'QMetaTypeId<QList<QWidget *>>' (from qdesigner_resource.cpp)
     DEFINES
         QDESIGNER_COMPONENTS_LIBRARY
         QT_STATICPLUGIN
