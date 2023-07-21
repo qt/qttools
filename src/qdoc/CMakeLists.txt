@@ -82,6 +82,8 @@ qt_internal_add_tool(${target_name}
         variablenode.cpp
         webxmlgenerator.cpp
         xmlgenerator.cpp
+    NO_UNITY_BUILD_SOURCES
+        qmlmarkupvisitor.cpp # redefinition of 'samp'/'slt' (from codemarker.cpp)
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_LIST_DIR}
     LIBRARIES
