@@ -193,7 +193,9 @@ QVariant QDesignerResourceBuilder::loadResource(const QDir &workingDirectory, co
         case DomProperty::IconSet: {
             PropertySheetIconValue icon;
             DomResourceIcon *di = property->elementIconSet();
-            icon.setTheme(di->attributeTheme());
+            const bool hasTheme = di->hasAttributeTheme();
+            if (hasTheme)
+                icon.setTheme(di->attributeTheme());
             if (const int flags = iconStateFlags(di)) { // new, post 4.4 format
                 if (flags & NormalOff)
                     setIconPixmap(QIcon::Normal, QIcon::Off, workingDirectory, di->elementNormalOff()->text(), icon, m_lang);
@@ -211,7 +213,7 @@ QVariant QDesignerResourceBuilder::loadResource(const QDir &workingDirectory, co
                     setIconPixmap(QIcon::Selected, QIcon::Off, workingDirectory, di->elementSelectedOff()->text(), icon, m_lang);
                 if (flags & SelectedOn)
                     setIconPixmap(QIcon::Selected, QIcon::On, workingDirectory, di->elementSelectedOn()->text(), icon, m_lang);
-            } else {
+            } else if (!hasTheme) {
 #ifdef OLD_RESOURCE_FORMAT
                 setIconPixmap(QIcon::Normal, QIcon::Off, workingDirectory, di->text(), icon, m_lang);
                 if (di->hasAttributeResource())
