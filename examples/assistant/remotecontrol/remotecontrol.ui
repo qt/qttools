@@ -109,10 +109,10 @@
           <number>0</number>
          </property>
          <item>
-          <widget class="QLineEdit" name="identifierLineEdit" />
+          <widget class="QLineEdit" name="idLineEdit" />
          </item>
          <item>
-          <widget class="QToolButton" name="identifierButton" >
+          <widget class="QToolButton" name="idButton" >
            <property name="text" >
             <string/>
            </property>

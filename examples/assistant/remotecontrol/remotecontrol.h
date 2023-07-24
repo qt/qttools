@@ -17,24 +17,18 @@ class RemoteControl : public QMainWindow
     Q_OBJECT
 
 public:
-    RemoteControl(QWidget *parent = nullptr, Qt::WindowFlags flags = {});
+    RemoteControl();
     ~RemoteControl();
 
 private:
     Ui::RemoteControlClass ui;
     QProcess *process;
 
-private slots:
-    void on_launchButton_clicked();
-    void on_actionQuit_triggered();
-    void on_indexButton_clicked();
-    void on_identifierButton_clicked();
-    void on_urlButton_clicked();
-    void on_syncContentsButton_clicked();
-    void on_contentsCheckBox_toggled(bool checked);
-    void on_indexCheckBox_toggled(bool checked);
-    void on_bookmarksCheckBox_toggled(bool checked);
-    void helpViewerClosed();
+private:
+    void onLaunchClicked();
+    void onIndexClicked();
+    void onIdClicked();
+    void onUrlClicked();
 
     void sendCommand(const QString &cmd);
 };
