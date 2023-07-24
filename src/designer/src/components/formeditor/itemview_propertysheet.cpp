@@ -43,16 +43,16 @@ struct ItemViewPropertySheetPrivate {
 };
 
 // Name of the fake group
-static const char *headerGroup = "Header";
+static const char headerGroup[] = "Header";
 
 // Name of the real properties
-static const char *visibleProperty = "visible";
-static const char *cascadingSectionResizesProperty = "cascadingSectionResizes";
-static const char *defaultSectionSizeProperty = "defaultSectionSize";
-static const char *highlightSectionsProperty = "highlightSections";
-static const char *minimumSectionSizeProperty = "minimumSectionSize";
-static const char *showSortIndicatorProperty = "showSortIndicator";
-static const char *stretchLastSectionProperty = "stretchLastSection";
+static const char visibleProperty[] = "visible";
+static const char cascadingSectionResizesProperty[] = "cascadingSectionResizes";
+static const char defaultSectionSizeProperty[] = "defaultSectionSize";
+static const char highlightSectionsProperty[] = "highlightSections";
+static const char minimumSectionSizeProperty[] = "minimumSectionSize";
+static const char showSortIndicatorProperty[] = "showSortIndicator";
+static const char stretchLastSectionProperty[] = "stretchLastSection";
 
 /***************** ItemViewPropertySheetPrivate *********************/
 

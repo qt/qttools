@@ -24,13 +24,13 @@
 #include <QtCore/qshareddata.h>
 
 
-static const char *skinResourcePathC = ":/skins/";
+static const char skinResourcePathC[] = ":/skins/";
 
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *skinExtensionC = "skin";
+static const char skinExtensionC[] = "skin";
 
 // Pair of skin name, path
 using SkinNamePath = QPair<QString, QString>;

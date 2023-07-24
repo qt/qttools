@@ -407,9 +407,9 @@ void ZoomablePreviewDeviceSkin::fitWidget(const QSize &size)
 
 // ------------- PreviewConfiguration
 
-static const char *styleKey = "Style";
-static const char *appStyleSheetKey = "AppStyleSheet";
-static const char *skinKey = "Skin";
+static const char styleKey[] = "Style";
+static const char appStyleSheetKey[] = "AppStyleSheet";
+static const char skinKey[] = "Skin";
 
 PreviewConfiguration::PreviewConfiguration() :
     m_d(new PreviewConfigurationData)

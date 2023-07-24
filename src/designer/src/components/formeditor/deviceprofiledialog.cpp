@@ -21,7 +21,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *profileExtensionC = "qdp";
+static const char profileExtensionC[] = "qdp";
 
 static inline QString fileFilter()
 {

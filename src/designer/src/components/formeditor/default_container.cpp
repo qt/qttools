@@ -21,7 +21,7 @@ static inline void ensureNoParent(QWidget *widget)
         widget->setParent(nullptr);
 }
 
-static const char *PageLabel = "Page";
+static const char PageLabel[] = "Page";
 
 namespace qdesigner_internal {
 

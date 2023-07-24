@@ -44,7 +44,7 @@ enum NewForm_CustomRole {
     ClassNameRole = Qt::UserRole + 101
 };
 
-static const char *newFormObjectNameC = "Form";
+static const char newFormObjectNameC[] = "Form";
 
 // Create a form name for an arbitrary class. If it is Qt, qtify it,
 //  else return "Form".

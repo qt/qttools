@@ -208,11 +208,11 @@ QMenu *QToolBoxHelper::addContextMenuActions(QMenu *popup) const
 
 // -------- QToolBoxWidgetPropertySheet
 
-static const char *currentItemTextKey = "currentItemText";
-static const char *currentItemNameKey = "currentItemName";
-static const char *currentItemIconKey = "currentItemIcon";
-static const char *currentItemToolTipKey = "currentItemToolTip";
-static const char *tabSpacingKey = "tabSpacing";
+static const char currentItemTextKey[] = "currentItemText";
+static const char currentItemNameKey[] = "currentItemName";
+static const char currentItemIconKey[] = "currentItemIcon";
+static const char currentItemToolTipKey[] = "currentItemToolTip";
+static const char tabSpacingKey[] = "tabSpacing";
 
 enum { tabSpacingDefault = -1 };
 

@@ -30,7 +30,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *buddyPropertyC = "buddy";
+static const char buddyPropertyC[] = "buddy";
 
 static bool canBeBuddy(QWidget *w, QDesignerFormWindowInterface *form)
 {

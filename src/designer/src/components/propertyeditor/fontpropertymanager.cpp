@@ -372,10 +372,10 @@ namespace qdesigner_internal {
      * <mapping><family>DejaVu Sans</family><display>DejaVu Sans [CE]</display></mapping>
      * ... which is used to display on which platforms fonts are available.*/
 
-    static const char *rootTagC = "fontmappings";
-    static const char *mappingTagC = "mapping";
-    static const char *familyTagC = "family";
-    static const char *displayTagC = "display";
+    static const char rootTagC[] = "fontmappings";
+    static const char mappingTagC[] = "mapping";
+    static const char familyTagC[] = "family";
+    static const char displayTagC[] = "display";
 
     static QString msgXmlError(const QXmlStreamReader &r, const QString& fileName)
     {

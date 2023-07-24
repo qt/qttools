@@ -26,15 +26,15 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *rccRootTag = "RCC";
-static const char *rccTag = "qresource";
-static const char *rccFileTag = "file";
-static const char *rccAliasAttribute = "alias";
-static const char *rccPrefixAttribute = "prefix";
-static const char *rccLangAttribute = "lang";
-static const char *SplitterPosition = "SplitterPosition";
+static const char rccRootTag[] = "RCC";
+static const char rccTag[] = "qresource";
+static const char rccFileTag[] = "file";
+static const char rccAliasAttribute[] = "alias";
+static const char rccPrefixAttribute[] = "prefix";
+static const char rccLangAttribute[] = "lang";
+static const char SplitterPosition[] = "SplitterPosition";
 static const char ResourceEditorGeometry[] = "Geometry";
-static const char *QrcDialogC = "QrcDialog";
+static const char QrcDialogC[] = "QrcDialog";
 
 static QString msgOverwrite(const QString &fname)
 {
