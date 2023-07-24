@@ -31,7 +31,7 @@
 #include <QtCore/qhash.h>
 #include <QtCore/qdebug.h>
 
-static const char *buddyPropertyC = "buddy";
+static const char buddyPropertyC[] = "buddy";
 static const char *fieldWidgetBaseClasses[] = {
     "QLineEdit", "QComboBox", "QSpinBox", "QDoubleSpinBox", "QCheckBox",
     "QDateEdit", "QTimeEdit", "QDateTimeEdit", "QDial", "QWidget"

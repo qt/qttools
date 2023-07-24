@@ -66,8 +66,8 @@ static inline void setPropertySheetWindowTitle(const QDesignerFormEditorInterfac
 namespace qdesigner_internal {
 
 // Helpers for the dynamic properties that store Z/Widget order
-static const char *widgetOrderPropertyC = "_q_widgetOrder";
-static const char *zOrderPropertyC = "_q_zOrder";
+static const char widgetOrderPropertyC[] = "_q_widgetOrder";
+static const char zOrderPropertyC[] = "_q_zOrder";
 
 static void addToWidgetListDynamicProperty(QWidget *parentWidget, QWidget *widget, const char *name, int index = -1)
 {

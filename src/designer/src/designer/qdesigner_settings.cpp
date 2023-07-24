@@ -26,15 +26,15 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *newFormShowKey = "newFormDialog/ShowOnStartup";
+static const char newFormShowKey[] = "newFormDialog/ShowOnStartup";
 
 // Change the version whenever the arrangement changes significantly.
-static const char *mainWindowStateKey = "MainWindowState45";
-static const char *toolBarsStateKey = "ToolBarsState45";
+static const char mainWindowStateKey[] = "MainWindowState45";
+static const char toolBarsStateKey[] = "ToolBarsState45";
 
-static const char *backupOrgListKey = "backup/fileListOrg";
-static const char *backupBakListKey = "backup/fileListBak";
-static const char *recentFilesListKey = "recentFilesList";
+static const char backupOrgListKey[] = "backup/fileListOrg";
+static const char backupBakListKey[] = "backup/fileListBak";
+static const char recentFilesListKey[] = "recentFilesList";
 
 QDesignerSettings::QDesignerSettings(QDesignerFormEditorInterface *core) :
     qdesigner_internal::QDesignerSharedSettings(core)

@@ -70,7 +70,7 @@ void QWizardContainer::setCurrentIndex(int index)
     }
 }
 
-static const char *msgWrongType = "** WARNING Attempt to add oject that is not of class WizardPage to a QWizard";
+static const char msgWrongType[] = "** WARNING Attempt to add oject that is not of class WizardPage to a QWizard";
 
 void QWizardContainer::addWidget(QWidget *widget)
 {

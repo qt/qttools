@@ -56,7 +56,7 @@
 
 Q_DECLARE_METATYPE(QWidgetList)
 
-static const char *buttonGroupPropertyC = "buttonGroup";
+static const char buttonGroupPropertyC[] = "buttonGroup";
 
 QT_BEGIN_NAMESPACE
 

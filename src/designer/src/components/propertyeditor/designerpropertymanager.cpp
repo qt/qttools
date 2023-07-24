@@ -48,13 +48,13 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *resettableAttributeC = "resettable";
-static const char *flagsAttributeC = "flags";
-static const char *validationModesAttributeC = "validationMode";
-static const char *superPaletteAttributeC = "superPalette";
-static const char *defaultResourceAttributeC = "defaultResource";
-static const char *fontAttributeC = "font";
-static const char *themeAttributeC = "theme";
+static const char resettableAttributeC[] = "resettable";
+static const char flagsAttributeC[] = "flags";
+static const char validationModesAttributeC[] = "validationMode";
+static const char superPaletteAttributeC[] = "superPalette";
+static const char defaultResourceAttributeC[] = "defaultResource";
+static const char fontAttributeC[] = "font";
+static const char themeAttributeC[] = "theme";
 
 class DesignerFlagPropertyType
 {

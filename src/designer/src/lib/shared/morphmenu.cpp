@@ -51,8 +51,8 @@ QT_BEGIN_NAMESPACE
 using namespace Qt::StringLiterals;
 
 // Helpers for the dynamic properties that store Z/Widget order
-static const char *widgetOrderPropertyC = "_q_widgetOrder";
-static const char *zOrderPropertyC = "_q_zOrder";
+static const char widgetOrderPropertyC[] = "_q_widgetOrder";
+static const char zOrderPropertyC[] = "_q_zOrder";
 
 /* Morphing in Designer:
  * It is possible to morph:

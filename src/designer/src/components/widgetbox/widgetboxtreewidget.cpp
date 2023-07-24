@@ -32,19 +32,19 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/qdebug.h>
 
-static const char *widgetBoxRootElementC = "widgetbox";
-static const char *wbWidgetElementC = "widget";
-static const char *uiElementC = "ui";
-static const char *categoryElementC = "category";
-static const char *categoryEntryElementC = "categoryentry";
-static const char *wbNameAttributeC = "name";
-static const char *typeAttributeC = "type";
-static const char *iconAttributeC = "icon";
-static const char *defaultTypeValueC = "default";
-static const char *customValueC = "custom";
-static const char *iconPrefixC = "__qt_icon__";
-static const char *scratchPadValueC = "scratchpad";
-static const char *invisibleNameC = "[invisible]";
+static const char widgetBoxRootElementC[] = "widgetbox";
+static const char wbWidgetElementC[] = "widget";
+static const char uiElementC[] = "ui";
+static const char categoryElementC[] = "category";
+static const char categoryEntryElementC[] = "categoryentry";
+static const char wbNameAttributeC[] = "name";
+static const char typeAttributeC[] = "type";
+static const char iconAttributeC[] = "icon";
+static const char defaultTypeValueC[] = "default";
+static const char customValueC[] = "custom";
+static const char iconPrefixC[] = "__qt_icon__";
+static const char scratchPadValueC[] = "scratchpad";
+static const char invisibleNameC[] = "[invisible]";
 
 enum TopLevelRole  { NORMAL_ITEM, SCRATCHPAD_ITEM, CUSTOM_ITEM };
 

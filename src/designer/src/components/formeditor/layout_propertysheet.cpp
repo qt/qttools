@@ -27,19 +27,19 @@ using namespace Qt::StringLiterals;
 
 #define USE_LAYOUT_SIZE_CONSTRAINT
 
-static const char *leftMargin = "leftMargin";
-static const char *topMargin = "topMargin";
-static const char *rightMargin = "rightMargin";
-static const char *bottomMargin = "bottomMargin";
-static const char *horizontalSpacing = "horizontalSpacing";
-static const char *verticalSpacing = "verticalSpacing";
-static const char *spacing = "spacing";
-static const char *sizeConstraint = "sizeConstraint";
-static const char *boxStretchPropertyC = "stretch";
-static const char *gridRowStretchPropertyC = "rowStretch";
-static const char *gridColumnStretchPropertyC = "columnStretch";
-static const char *gridRowMinimumHeightPropertyC = "rowMinimumHeight";
-static const char *gridColumnMinimumWidthPropertyC = "columnMinimumWidth";
+static const char leftMargin[] = "leftMargin";
+static const char topMargin[] = "topMargin";
+static const char rightMargin[] = "rightMargin";
+static const char bottomMargin[] = "bottomMargin";
+static const char horizontalSpacing[] = "horizontalSpacing";
+static const char verticalSpacing[] = "verticalSpacing";
+static const char spacing[] = "spacing";
+static const char sizeConstraint[] = "sizeConstraint";
+static const char boxStretchPropertyC[] = "stretch";
+static const char gridRowStretchPropertyC[] = "rowStretch";
+static const char gridColumnStretchPropertyC[] = "columnStretch";
+static const char gridRowMinimumHeightPropertyC[] = "rowMinimumHeight";
+static const char gridColumnMinimumWidthPropertyC[] = "columnMinimumWidth";
 
 namespace {
     enum LayoutPropertyType {

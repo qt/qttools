@@ -358,12 +358,12 @@ QMenu *QTabWidgetEventFilter::addContextMenuActions(QMenu *popup)
 
 // ----------- QTabWidgetPropertySheet
 
-static const char *currentTabTextKey = "currentTabText";
-static const char *currentTabNameKey = "currentTabName";
-static const char *currentTabIconKey = "currentTabIcon";
-static const char *currentTabToolTipKey = "currentTabToolTip";
-static const char *currentTabWhatsThisKey = "currentTabWhatsThis";
-static const char *tabMovableKey = "movable";
+static const char currentTabTextKey[] = "currentTabText";
+static const char currentTabNameKey[] = "currentTabName";
+static const char currentTabIconKey[] = "currentTabIcon";
+static const char currentTabToolTipKey[] = "currentTabToolTip";
+static const char currentTabWhatsThisKey[] = "currentTabWhatsThis";
+static const char tabMovableKey[] = "movable";
 
 QTabWidgetPropertySheet::QTabWidgetPropertySheet(QTabWidget *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),

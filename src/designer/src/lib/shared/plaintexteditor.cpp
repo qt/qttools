@@ -13,7 +13,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static const char *PlainTextDialogC = "PlainTextDialog";
+static const char PlainTextDialogC[] = "PlainTextDialog";
 static const char PlainTextEditorGeometryC[] = "Geometry";
 
 

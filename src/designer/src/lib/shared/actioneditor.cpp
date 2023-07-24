@@ -49,15 +49,15 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *actionEditorViewModeKey = "ActionEditorViewMode";
+static const char actionEditorViewModeKey[] = "ActionEditorViewMode";
 
-static const char *iconPropertyC = "icon";
-static const char *shortcutPropertyC = "shortcut";
-static const char *menuRolePropertyC = "menuRole";
-static const char *toolTipPropertyC = "toolTip";
-static const char *checkablePropertyC = "checkable";
-static const char *objectNamePropertyC = "objectName";
-static const char *textPropertyC = "text";
+static const char iconPropertyC[] = "icon";
+static const char shortcutPropertyC[] = "shortcut";
+static const char menuRolePropertyC[] = "menuRole";
+static const char toolTipPropertyC[] = "toolTip";
+static const char checkablePropertyC[] = "checkable";
+static const char objectNamePropertyC[] = "objectName";
+static const char textPropertyC[] = "text";
 
 namespace qdesigner_internal {
 //--------  ActionGroupDelegate
