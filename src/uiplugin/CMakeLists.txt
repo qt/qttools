@@ -12,8 +12,6 @@ qt_internal_add_module(UiPlugin
     SOURCES
         customwidget.h
         qdesignerexportwidget.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     PUBLIC_LIBRARIES
         Qt::Core
         Qt::Gui
