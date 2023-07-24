@@ -12,6 +12,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 #ifdef QFORMINTERNAL_NAMESPACE
 namespace QFormInternal {
 #endif
@@ -25,7 +27,8 @@ QResourceBuilder::~QResourceBuilder() = default;
 int QResourceBuilder::iconStateFlags(const DomResourceIcon *dpi)
 {
     int rc = 0;
-    if (dpi->hasElementNormalOff())
+    // Fix form files broken by QTBUG-115465
+    if (dpi->hasElementNormalOff() && dpi->elementNormalOff()->text() != "."_L1)
         rc |= NormalOff;
     if (dpi->hasElementNormalOn())
         rc |= NormalOn;
