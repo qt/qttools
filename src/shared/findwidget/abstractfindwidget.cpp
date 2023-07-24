@@ -35,6 +35,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 static QIcon afwCreateIconSet(const QString &name)
 {
     QStringList candidates = QStringList()
@@ -77,7 +79,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
 #endif
 
     m_toolClose = new QToolButton(this);
-    m_toolClose->setIcon(afwCreateIconSet(QLatin1String("closetab.png")));
+    m_toolClose->setIcon(afwCreateIconSet("closetab.png"_L1));
     m_toolClose->setAutoRaise(true);
     layOut->addWidget(m_toolClose);
     connect(m_toolClose, &QAbstractButton::clicked, this, &AbstractFindWidget::deactivate);
@@ -92,7 +94,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     m_toolPrevious->setAutoRaise(true);
     m_toolPrevious->setText(tr("&Previous"));
     m_toolPrevious->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    m_toolPrevious->setIcon(afwCreateIconSet(QLatin1String("previous.png")));
+    m_toolPrevious->setIcon(afwCreateIconSet("previous.png"_L1));
     layOut->addWidget(m_toolPrevious);
     connect(m_toolPrevious, &QAbstractButton::clicked, this, &AbstractFindWidget::findPrevious);
 
@@ -100,7 +102,7 @@ AbstractFindWidget::AbstractFindWidget(FindFlags flags, QWidget *parent)
     m_toolNext->setAutoRaise(true);
     m_toolNext->setText(tr("&Next"));
     m_toolNext->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    m_toolNext->setIcon(afwCreateIconSet(QLatin1String("next.png")));
+    m_toolNext->setIcon(afwCreateIconSet("next.png"_L1));
     layOut->addWidget(m_toolNext);
     connect(m_toolNext, &QAbstractButton::clicked, this, &AbstractFindWidget::findNext);
 
@@ -169,7 +171,7 @@ AbstractFindWidget::~AbstractFindWidget() = default;
  */
 QIcon AbstractFindWidget::findIconSet()
 {
-    return afwCreateIconSet(QLatin1String("searchfind.png"));
+    return afwCreateIconSet("searchfind.png"_L1);
 }
 
 /*!

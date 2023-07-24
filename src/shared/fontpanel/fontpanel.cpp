@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 FontPanel::FontPanel(QWidget *parentWidget) :
     QGroupBox(parentWidget),
     m_previewLineEdit(new QLineEdit),
@@ -62,9 +64,9 @@ QFont FontPanel::selectedFont() const
     const QString family = rc.family();
     rc.setPointSize(pointSize());
     const QString styleDescription = styleString();
-    if (styleDescription.contains(QLatin1String("Italic")))
+    if (styleDescription.contains("Italic"_L1))
         rc.setStyle(QFont::StyleItalic);
-    else if (styleDescription.contains(QLatin1String("Oblique")))
+    else if (styleDescription.contains("Oblique"_L1))
         rc.setStyle(QFont::StyleOblique);
     else
         rc.setStyle(QFont::StyleNormal);
@@ -180,7 +182,7 @@ void FontPanel::updateFamily(const QString &family)
     m_styleComboBox->setEnabled(hasStyles);
 
     int normalIndex = -1;
-    const QString normalStyle = QLatin1String("Normal");
+    const QString normalStyle = "Normal"_L1;
 
     if (hasStyles) {
         for (const QString &style : styles) {

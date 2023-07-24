@@ -432,11 +432,11 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
             fnt->setElementKerning(font.kerning());
         if (mask & QFont::StyleStrategyResolved) {
             const QMetaEnum styleStrategy_enum = metaEnum<QAbstractFormBuilderGadget>("styleStrategy");
-            fnt->setElementStyleStrategy(QLatin1String(styleStrategy_enum.valueToKey(font.styleStrategy())));
+            fnt->setElementStyleStrategy(QLatin1StringView(styleStrategy_enum.valueToKey(font.styleStrategy())));
         }
         if (mask & QFont::HintingPreferenceResolved) {
             const QMetaEnum hintingPreference_enum = metaEnum<QAbstractFormBuilderGadget>("hintingPreference");
-            fnt->setElementHintingPreference(QLatin1String(hintingPreference_enum.valueToKey(font.hintingPreference())));
+            fnt->setElementHintingPreference(QLatin1StringView(hintingPreference_enum.valueToKey(font.hintingPreference())));
         }
 
         dom_prop->setElementFont(fnt);
@@ -446,7 +446,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
 #if QT_CONFIG(cursor)
     case QMetaType::QCursor: {
         const QMetaEnum cursorShape_enum = metaEnum<QAbstractFormBuilderGadget>("cursorShape");
-        dom_prop->setElementCursorShape(QLatin1String(cursorShape_enum.valueToKey(qvariant_cast<QCursor>(v).shape())));
+        dom_prop->setElementCursorShape(QLatin1StringView(cursorShape_enum.valueToKey(qvariant_cast<QCursor>(v).shape())));
         }
         return true;
 #endif
@@ -465,8 +465,8 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         const QMetaEnum language_enum = metaEnum<QAbstractFormBuilderGadget>("language");
         const QMetaEnum territory_enum = metaEnum<QAbstractFormBuilderGadget>("country");
 
-        dom->setAttributeLanguage(QLatin1String(language_enum.valueToKey(locale.language())));
-        dom->setAttributeCountry(QLatin1String(territory_enum.valueToKey(locale.territory())));
+        dom->setAttributeLanguage(QLatin1StringView(language_enum.valueToKey(locale.language())));
+        dom->setAttributeCountry(QLatin1StringView(territory_enum.valueToKey(locale.territory())));
 
         dom_prop->setElementLocale(dom);
         }
@@ -481,8 +481,8 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
 
         const QMetaEnum sizeType_enum = metaEnum<QAbstractFormBuilderGadget>("sizeType");
 
-        dom->setAttributeHSizeType(QLatin1String(sizeType_enum.valueToKey(sizePolicy.horizontalPolicy())));
-        dom->setAttributeVSizeType(QLatin1String(sizeType_enum.valueToKey(sizePolicy.verticalPolicy())));
+        dom->setAttributeHSizeType(QLatin1StringView(sizeType_enum.valueToKey(sizePolicy.horizontalPolicy())));
+        dom->setAttributeVSizeType(QLatin1StringView(sizeType_enum.valueToKey(sizePolicy.verticalPolicy())));
 
         dom_prop->setElementSizePolicy(dom);
     }
@@ -555,7 +555,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
 static QString msgCannotWriteProperty(const QString &pname, const QVariant &v)
 {
     return QCoreApplication::translate("QFormBuilder", "The property %1 could not be written. The type %2 is not supported yet.").
-                       arg(pname).arg(QLatin1String(v.typeName()));
+                       arg(pname).arg(QLatin1StringView(v.typeName()));
 
 }
 

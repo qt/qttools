@@ -35,6 +35,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 /*!
     Constructs a ItemViewFindWidget.
 
@@ -266,8 +268,8 @@ QModelIndex ItemViewFindWidget::findHelper(const QString &textToFind, bool skipC
             Qt::CaseSensitivity cs = caseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
             if (wholeWords()) {
-                QString rx = QLatin1String("\\b") + QRegularExpression::escape(textToFind)
-                             + QLatin1String("\\b");
+                QString rx = "\\b"_L1 + QRegularExpression::escape(textToFind)
+                             + "\\b"_L1;
                 QRegularExpression re(rx);
                 if (cs == Qt::CaseInsensitive)
                     re.setPatternOptions(QRegularExpression::CaseInsensitiveOption);

@@ -1339,7 +1339,7 @@ DomWidget *QDesignerResource::saveWidget(QToolBar *toolBar, DomWidget *ui_parent
 
         DomProperty *attr = new DomProperty();
         attr->setAttributeName(u"toolBarArea"_s);
-        attr->setElementEnum(QLatin1String(toolBarAreaMetaEnum().valueToKey(area)));
+        attr->setElementEnum(QLatin1StringView(toolBarAreaMetaEnum().valueToKey(area)));
         attributes  << attr;
 
         attr = new DomProperty();
@@ -1497,7 +1497,7 @@ DomWidget *QDesignerResource::saveWidget(QWizardPage *wizardPage, DomWidget *ui_
     DomWidget *ui_widget = QAbstractFormBuilder::createDom(wizardPage, ui_parentWidget, true);
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), wizardPage);
     // Save the page id (string) attribute, append to existing attributes
-    const QString pageIdPropertyName = QLatin1String(QWizardPagePropertySheet::pageIdProperty);
+    const QString pageIdPropertyName = QLatin1StringView(QWizardPagePropertySheet::pageIdProperty);
     const int pageIdIndex = sheet->indexOf(pageIdPropertyName);
     if (pageIdIndex != -1 && sheet->isChanged(pageIdIndex)) {
         DomProperty *property = variantToDomProperty(this, wizardPage->metaObject(), pageIdPropertyName, sheet->property(pageIdIndex));
@@ -1684,7 +1684,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     m_copyWidget = true;
 
     DomWidget *ui_widget = new DomWidget();
-    ui_widget->setAttributeName(QLatin1String(clipboardObjectName));
+    ui_widget->setAttributeName(QLatin1StringView(clipboardObjectName));
     bool hasItems = false;
     // Widgets
     if (!selection.m_widgets.isEmpty()) {
@@ -1723,7 +1723,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     }
     // UI
     DomUI *ui = new DomUI();
-    ui->setAttributeVersion(QLatin1String(currentUiVersion));
+    ui->setAttributeVersion(QLatin1StringView(currentUiVersion));
     ui->setElementWidget(ui_widget);
     ui->setElementResources(saveResources(m_resourceBuilder->usedQrcFiles()));
     if (DomCustomWidgets *cws = saveCustomWidgets())

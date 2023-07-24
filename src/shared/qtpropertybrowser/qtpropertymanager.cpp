@@ -432,7 +432,7 @@ QtMetaEnumProvider::QtMetaEnumProvider()
     m_policyEnum = p.enumerator();
     const int keyCount = m_policyEnum.keyCount();
     for (int i = 0; i < keyCount; i++)
-        m_policyEnumNames << QLatin1String(m_policyEnum.key(i));
+        m_policyEnumNames << QLatin1StringView(m_policyEnum.key(i));
 
     initLocale();
 }

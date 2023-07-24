@@ -137,7 +137,7 @@ VersionDialog::VersionDialog(QWidget *parent)
     VersionLabel *label = new VersionLabel(this);
     QLabel *lbl = new QLabel(this);
     QString version = tr("<h3>%1</h3><br/><br/>Version %2");
-    version = version.arg(tr("Qt Designer")).arg(QLatin1String(QT_VERSION_STR));
+    version = version.arg(tr("Qt Designer")).arg(QLatin1StringView(QT_VERSION_STR));
     version.append(tr("<br/>Qt Designer is a graphical user interface designer for Qt applications.<br/>"));
 
     lbl->setText(tr("%1"

@@ -631,7 +631,7 @@ QDesignerPropertySheet::QDesignerPropertySheet(QObject *object, QObject *parent)
             const int fakeLayoutPropertyCount = sizeof(fakeLayoutProperties)/sizeof(const char*);
             const int size = count();
             for (int i = 0; i < fakeLayoutPropertyCount; i++) {
-                createFakeProperty(QLatin1String(fakeLayoutProperties[i]), 0);
+                createFakeProperty(QLatin1StringView(fakeLayoutProperties[i]), 0);
                 setAttribute(size  + i, true);
                 setPropertyGroup(size  + i, layoutGroup);
             }

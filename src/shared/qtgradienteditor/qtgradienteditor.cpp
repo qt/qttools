@@ -9,6 +9,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class QtGradientEditorPrivate : public QObject
 {
     Q_OBJECT
@@ -135,9 +137,9 @@ QtGradientEditorPrivate::QtGradientEditorPrivate(QtGradientEditor *q)
     connect(m_gradientStopsController, &QtGradientStopsController::gradientStopsChanged,
             this, &QtGradientEditorPrivate::slotGradientStopsChanged);
 
-    QIcon iconLinear(QLatin1String(":/qt-project.org/qtgradienteditor/images/typelinear.png"));
-    QIcon iconRadial(QLatin1String(":/qt-project.org/qtgradienteditor/images/typeradial.png"));
-    QIcon iconConical(QLatin1String(":/qt-project.org/qtgradienteditor/images/typeconical.png"));
+    QIcon iconLinear(":/qt-project.org/qtgradienteditor/images/typelinear.png"_L1);
+    QIcon iconRadial(":/qt-project.org/qtgradienteditor/images/typeradial.png"_L1);
+    QIcon iconConical(":/qt-project.org/qtgradienteditor/images/typeconical.png"_L1);
 
     m_ui.typeComboBox->addItem(iconLinear, QtGradientEditor::tr("Linear"));
     m_ui.typeComboBox->addItem(iconRadial, QtGradientEditor::tr("Radial"));
@@ -157,9 +159,9 @@ QtGradientEditorPrivate::QtGradientEditorPrivate(QtGradientEditor *q)
     connect(m_ui.typeComboBox, &QComboBox::activated,
             this, &QtGradientEditorPrivate::slotTypeChanged);
 
-    QIcon iconPad(QLatin1String(":/qt-project.org/qtgradienteditor/images/spreadpad.png"));
-    QIcon iconRepeat(QLatin1String(":/qt-project.org/qtgradienteditor/images/spreadrepeat.png"));
-    QIcon iconReflect(QLatin1String(":/qt-project.org/qtgradienteditor/images/spreadreflect.png"));
+    QIcon iconPad(":/qt-project.org/qtgradienteditor/images/spreadpad.png"_L1);
+    QIcon iconRepeat(":/qt-project.org/qtgradienteditor/images/spreadrepeat.png"_L1);
+    QIcon iconReflect(":/qt-project.org/qtgradienteditor/images/spreadreflect.png"_L1);
 
     m_ui.spreadComboBox->addItem(iconPad, QtGradientEditor::tr("Pad"));
     m_ui.spreadComboBox->addItem(iconRepeat, QtGradientEditor::tr("Repeat"));

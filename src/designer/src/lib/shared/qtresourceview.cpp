@@ -174,7 +174,7 @@ void QtResourceViewPrivate::restoreSettings()
     QDesignerSettingsInterface *settings = m_core->settingsManager();
     settings->beginGroup(m_settingsKey);
 
-    m_splitter->restoreState(settings->value(QLatin1String(qrvSplitterPosition)).toByteArray());
+    m_splitter->restoreState(settings->value(QLatin1StringView(qrvSplitterPosition)).toByteArray());
     settings->endGroup();
 }
 
@@ -186,7 +186,7 @@ void QtResourceViewPrivate::saveSettings()
     QDesignerSettingsInterface *settings = m_core->settingsManager();
     settings->beginGroup(m_settingsKey);
 
-    settings->setValue(QLatin1String(qrvSplitterPosition), m_splitter->saveState());
+    settings->setValue(QLatin1StringView(qrvSplitterPosition), m_splitter->saveState());
     settings->endGroup();
 }
 
@@ -718,19 +718,19 @@ bool QtResourceView::dragEnabled() const
 QString QtResourceView::encodeMimeData(ResourceType resourceType, const QString &path)
 {
     QDomDocument doc;
-    QDomElement elem = doc.createElement(QLatin1String(elementResourceData));
+    QDomElement elem = doc.createElement(QLatin1StringView(elementResourceData));
     switch (resourceType) {
     case ResourceImage:
-        elem.setAttribute(QLatin1String(typeAttribute), QLatin1String(typeImage));
+        elem.setAttribute(QLatin1StringView(typeAttribute), QLatin1StringView(typeImage));
         break;
     case ResourceStyleSheet:
-        elem.setAttribute(QLatin1String(typeAttribute), QLatin1String(typeStyleSheet));
+        elem.setAttribute(QLatin1StringView(typeAttribute), QLatin1StringView(typeStyleSheet));
         break;
     case ResourceOther:
-        elem.setAttribute(QLatin1String(typeAttribute), QLatin1String(typeOther));
+        elem.setAttribute(QLatin1StringView(typeAttribute), QLatin1StringView(typeOther));
         break;
     }
-    elem.setAttribute(QLatin1String(fileAttribute), path);
+    elem.setAttribute(QLatin1StringView(fileAttribute), path);
     doc.appendChild(elem);
     return doc.toString();
 }
@@ -758,18 +758,18 @@ bool QtResourceView::decodeMimeData(const QString &text, ResourceType *t, QStrin
         return false;
 
     if (t) {
-        const QString typeAttr = QLatin1String(typeAttribute);
+        const QString typeAttr = QLatin1StringView(typeAttribute);
         if (domElement.hasAttribute (typeAttr)) {
-            const QString typeValue = domElement.attribute(typeAttr, QLatin1String(typeOther));
-            if (typeValue == QLatin1String(typeImage)) {
+            const QString typeValue = domElement.attribute(typeAttr, QLatin1StringView(typeOther));
+            if (typeValue == QLatin1StringView(typeImage)) {
                 *t = ResourceImage;
             } else {
-                *t = typeValue == QLatin1String(typeStyleSheet) ? ResourceStyleSheet : ResourceOther;
+                *t = typeValue == QLatin1StringView(typeStyleSheet) ? ResourceStyleSheet : ResourceOther;
             }
         }
     }
     if (file) {
-        const QString fileAttr = QLatin1String(fileAttribute);
+        const QString fileAttr = QLatin1StringView(fileAttribute);
         if (domElement.hasAttribute(fileAttr)) {
             *file = domElement.attribute(fileAttr, QString());
         } else {
@@ -802,7 +802,7 @@ QtResourceViewDialogPrivate::QtResourceViewDialogPrivate(QDesignerFormEditorInte
     m_view(new QtResourceView(core)),
     m_box(new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel))
 {
-    m_view->setSettingsKey(QLatin1String(ResourceViewDialogC));
+    m_view->setSettingsKey(QLatin1StringView(ResourceViewDialogC));
 }
 
 // ------------ QtResourceViewDialog
@@ -824,9 +824,9 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
     d_ptr->m_view->setResourceModel(core->resourceModel());
 
     QDesignerSettingsInterface *settings = core->settingsManager();
-    settings->beginGroup(QLatin1String(ResourceViewDialogC));
+    settings->beginGroup(QLatin1StringView(ResourceViewDialogC));
 
-    const QVariant geometry = settings->value(QLatin1String(qrvGeometry));
+    const QVariant geometry = settings->value(QLatin1StringView(qrvGeometry));
     if (geometry.metaType().id() == QMetaType::QByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374.
         restoreGeometry(geometry.toByteArray());
 
@@ -836,9 +836,9 @@ QtResourceViewDialog::QtResourceViewDialog(QDesignerFormEditorInterface *core, Q
 QtResourceViewDialog::~QtResourceViewDialog()
 {
     QDesignerSettingsInterface *settings = d_ptr->m_core->settingsManager();
-    settings->beginGroup(QLatin1String(ResourceViewDialogC));
+    settings->beginGroup(QLatin1StringView(ResourceViewDialogC));
 
-    settings->setValue(QLatin1String(qrvGeometry), saveGeometry());
+    settings->setValue(QLatin1StringView(qrvGeometry), saveGeometry());
 
     settings->endGroup();
 }
