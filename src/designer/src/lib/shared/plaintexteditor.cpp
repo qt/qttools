@@ -14,7 +14,7 @@
 QT_BEGIN_NAMESPACE
 
 static const char *PlainTextDialogC = "PlainTextDialog";
-static const char *Geometry = "Geometry";
+static const char PlainTextEditorGeometryC[] = "Geometry";
 
 
 namespace qdesigner_internal {
@@ -39,8 +39,8 @@ PlainTextEditorDialog::PlainTextEditorDialog(QDesignerFormEditorInterface *core,
     QDesignerSettingsInterface *settings = core->settingsManager();
     settings->beginGroup(QLatin1String(PlainTextDialogC));
 
-    if (settings->contains(QLatin1String(Geometry)))
-        restoreGeometry(settings->value(QLatin1String(Geometry)).toByteArray());
+    if (settings->contains(QLatin1String(PlainTextEditorGeometryC)))
+        restoreGeometry(settings->value(QLatin1StringView(PlainTextEditorGeometryC)).toByteArray());
 
     settings->endGroup();
 }
@@ -50,7 +50,7 @@ PlainTextEditorDialog::~PlainTextEditorDialog()
     QDesignerSettingsInterface *settings = m_core->settingsManager();
     settings->beginGroup(QLatin1String(PlainTextDialogC));
 
-    settings->setValue(QLatin1String(Geometry), saveGeometry());
+    settings->setValue(QLatin1StringView(PlainTextEditorGeometryC), saveGeometry());
     settings->endGroup();
 }
 

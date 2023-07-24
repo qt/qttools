@@ -34,7 +34,7 @@ using Methods = QList<SelectSignalDialog::Method>;
 
 SelectSignalDialog::SelectSignalDialog(QWidget *parent)
     : QDialog(parent)
-    , m_ui(new Ui::SelectSignalDialog)
+    , m_ui(new QT_PREPEND_NAMESPACE(Ui)::SelectSignalDialog)
     , m_model(new QStandardItemModel(0, 1, this))
 {
     m_ui->setupUi(this);

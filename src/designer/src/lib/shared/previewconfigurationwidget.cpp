@@ -84,7 +84,7 @@ private:
 
     const QString m_defaultStyle;
     QGroupBox *m_parent;
-    Ui::PreviewConfigurationWidget m_ui;
+    QT_PREPEND_NAMESPACE(Ui)::PreviewConfigurationWidget m_ui;
 
     int m_firstUserSkinIndex;
     int m_browseSkinIndex;
