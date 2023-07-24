@@ -335,7 +335,7 @@ QStringList FormLayoutRowDialog::fieldWidgetClasses(QDesignerFormEditorInterface
         // Turn known base classes into list
         QStringList baseClasses;
         for (auto fw : fieldWidgetBaseClasses)
-            baseClasses.append(QLatin1String(fw));
+            baseClasses.append(QLatin1StringView(fw));
         // Scan for custom widgets that inherit them and store them in a
         // multimap of base class->custom widgets unless we have a language
         // extension installed which might do funny things with custom widgets.
@@ -426,7 +426,7 @@ static void addFormLayoutRow(const FormLayoutRow &formLayoutRow, int row, QWidge
     undoStack->push(controlCmd);
     if (formLayoutRow.buddy) {
         SetPropertyCommand *buddyCommand = new SetPropertyCommand(formWindow);
-        buddyCommand->init(widgetPair.first, QLatin1String(buddyPropertyC), widgetPair.second->objectName());
+        buddyCommand->init(widgetPair.first, QLatin1StringView(buddyPropertyC), widgetPair.second->objectName());
         undoStack->push(buddyCommand);
     }
     undoStack->endMacro();

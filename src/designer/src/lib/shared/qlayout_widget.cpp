@@ -292,7 +292,7 @@ int LayoutProperties::fromPropertySheet(const QDesignerFormEditorInterface *core
     Q_ASSERT(sheet);
     // name
     if (mask & ObjectNameProperty) {
-        const int nameIndex = sheet->indexOf(QLatin1String(objectNameC));
+        const int nameIndex = sheet->indexOf(QLatin1StringView(objectNameC));
         Q_ASSERT(nameIndex != -1);
         m_objectName = sheet->property(nameIndex);
         m_objectNameChanged =  sheet->isChanged(nameIndex);
@@ -302,25 +302,25 @@ int LayoutProperties::fromPropertySheet(const QDesignerFormEditorInterface *core
     const int marginFlags[MarginCount] = { LeftMarginProperty, TopMarginProperty, RightMarginProperty, BottomMarginProperty};
     for (int i = 0; i < MarginCount; i++)
         if (mask & marginFlags[i])
-            if (intValueFromSheet(sheet, QLatin1String(marginPropertyNamesC[i]), m_margins + i, m_marginsChanged + i))
+            if (intValueFromSheet(sheet, QLatin1StringView(marginPropertyNamesC[i]), m_margins + i, m_marginsChanged + i))
                 rc |= marginFlags[i];
 
     const int spacingFlags[] = { SpacingProperty, HorizSpacingProperty, VertSpacingProperty};
     for (int i = 0; i < SpacingsCount; i++)
         if (mask & spacingFlags[i])
-            if (intValueFromSheet(sheet, QLatin1String(spacingPropertyNamesC[i]), m_spacings + i, m_spacingsChanged + i))
+            if (intValueFromSheet(sheet, QLatin1StringView(spacingPropertyNamesC[i]), m_spacings + i, m_spacingsChanged + i))
                 rc |= spacingFlags[i];
     // sizeConstraint, flags
-    variantPropertyFromSheet(mask, SizeConstraintProperty, sheet, QLatin1String(sizeConstraintC), &m_sizeConstraint, &m_sizeConstraintChanged, &rc);
-    variantPropertyFromSheet(mask, FieldGrowthPolicyProperty, sheet, QLatin1String(fieldGrowthPolicyPropertyC), &m_fieldGrowthPolicy, &m_fieldGrowthPolicyChanged, &rc);
-    variantPropertyFromSheet(mask, RowWrapPolicyProperty, sheet, QLatin1String(rowWrapPolicyPropertyC), &m_rowWrapPolicy, &m_rowWrapPolicyChanged, &rc);
-    variantPropertyFromSheet(mask, LabelAlignmentProperty, sheet, QLatin1String(labelAlignmentPropertyC), &m_labelAlignment, &m_labelAlignmentChanged, &rc);
-    variantPropertyFromSheet(mask, FormAlignmentProperty, sheet, QLatin1String(formAlignmentPropertyC), &m_formAlignment, &m_formAlignmentChanged, &rc);
-    variantPropertyFromSheet(mask, BoxStretchProperty, sheet, QLatin1String(boxStretchPropertyC), &m_boxStretch, & m_boxStretchChanged, &rc);
-    variantPropertyFromSheet(mask, GridRowStretchProperty, sheet, QLatin1String(gridRowStretchPropertyC), &m_gridRowStretch, &m_gridRowStretchChanged, &rc);
-    variantPropertyFromSheet(mask, GridColumnStretchProperty, sheet, QLatin1String(gridColumnStretchPropertyC), &m_gridColumnStretch, &m_gridColumnStretchChanged, &rc);
-    variantPropertyFromSheet(mask, GridRowMinimumHeightProperty, sheet, QLatin1String(gridRowMinimumHeightPropertyC), &m_gridRowMinimumHeight, &m_gridRowMinimumHeightChanged, &rc);
-    variantPropertyFromSheet(mask, GridColumnMinimumWidthProperty, sheet, QLatin1String(gridColumnMinimumWidthPropertyC), &m_gridColumnMinimumWidth, &m_gridColumnMinimumWidthChanged, &rc);
+    variantPropertyFromSheet(mask, SizeConstraintProperty, sheet, QLatin1StringView(sizeConstraintC), &m_sizeConstraint, &m_sizeConstraintChanged, &rc);
+    variantPropertyFromSheet(mask, FieldGrowthPolicyProperty, sheet, QLatin1StringView(fieldGrowthPolicyPropertyC), &m_fieldGrowthPolicy, &m_fieldGrowthPolicyChanged, &rc);
+    variantPropertyFromSheet(mask, RowWrapPolicyProperty, sheet, QLatin1StringView(rowWrapPolicyPropertyC), &m_rowWrapPolicy, &m_rowWrapPolicyChanged, &rc);
+    variantPropertyFromSheet(mask, LabelAlignmentProperty, sheet, QLatin1StringView(labelAlignmentPropertyC), &m_labelAlignment, &m_labelAlignmentChanged, &rc);
+    variantPropertyFromSheet(mask, FormAlignmentProperty, sheet, QLatin1StringView(formAlignmentPropertyC), &m_formAlignment, &m_formAlignmentChanged, &rc);
+    variantPropertyFromSheet(mask, BoxStretchProperty, sheet, QLatin1StringView(boxStretchPropertyC), &m_boxStretch, & m_boxStretchChanged, &rc);
+    variantPropertyFromSheet(mask, GridRowStretchProperty, sheet, QLatin1StringView(gridRowStretchPropertyC), &m_gridRowStretch, &m_gridRowStretchChanged, &rc);
+    variantPropertyFromSheet(mask, GridColumnStretchProperty, sheet, QLatin1StringView(gridColumnStretchPropertyC), &m_gridColumnStretch, &m_gridColumnStretchChanged, &rc);
+    variantPropertyFromSheet(mask, GridRowMinimumHeightProperty, sheet, QLatin1StringView(gridRowMinimumHeightPropertyC), &m_gridRowMinimumHeight, &m_gridRowMinimumHeightChanged, &rc);
+    variantPropertyFromSheet(mask, GridColumnMinimumWidthProperty, sheet, QLatin1StringView(gridColumnMinimumWidthPropertyC), &m_gridColumnMinimumWidth, &m_gridColumnMinimumWidthChanged, &rc);
     return rc;
 }
 
@@ -360,7 +360,7 @@ int LayoutProperties::toPropertySheet(const QDesignerFormEditorInterface *core, 
     Q_ASSERT(sheet);
     // name
     if (mask & ObjectNameProperty) {
-        const int nameIndex = sheet->indexOf(QLatin1String(objectNameC));
+        const int nameIndex = sheet->indexOf(QLatin1StringView(objectNameC));
         Q_ASSERT(nameIndex != -1);
         sheet->setProperty(nameIndex, m_objectName);
         if (applyChanged)
@@ -371,25 +371,25 @@ int LayoutProperties::toPropertySheet(const QDesignerFormEditorInterface *core, 
     const int marginFlags[MarginCount] = { LeftMarginProperty, TopMarginProperty, RightMarginProperty, BottomMarginProperty};
     for (int i = 0; i < MarginCount; i++)
         if (mask & marginFlags[i])
-            if (intValueToSheet(sheet, QLatin1String(marginPropertyNamesC[i]), m_margins[i], m_marginsChanged[i], applyChanged))
+            if (intValueToSheet(sheet, QLatin1StringView(marginPropertyNamesC[i]), m_margins[i], m_marginsChanged[i], applyChanged))
                 rc |= marginFlags[i];
 
     const int spacingFlags[] = { SpacingProperty, HorizSpacingProperty, VertSpacingProperty};
     for (int i = 0; i < SpacingsCount; i++)
         if (mask & spacingFlags[i])
-            if (intValueToSheet(sheet, QLatin1String(spacingPropertyNamesC[i]), m_spacings[i], m_spacingsChanged[i], applyChanged))
+            if (intValueToSheet(sheet, QLatin1StringView(spacingPropertyNamesC[i]), m_spacings[i], m_spacingsChanged[i], applyChanged))
                 rc |= spacingFlags[i];
     // sizeConstraint
-    variantPropertyToSheet(mask, SizeConstraintProperty, applyChanged, sheet, QLatin1String(sizeConstraintC), m_sizeConstraint, m_sizeConstraintChanged, &rc);
-    variantPropertyToSheet(mask, FieldGrowthPolicyProperty, applyChanged, sheet, QLatin1String(fieldGrowthPolicyPropertyC), m_fieldGrowthPolicy, m_fieldGrowthPolicyChanged, &rc);
-    variantPropertyToSheet(mask, RowWrapPolicyProperty, applyChanged, sheet, QLatin1String(rowWrapPolicyPropertyC), m_rowWrapPolicy, m_rowWrapPolicyChanged, &rc);
-    variantPropertyToSheet(mask, LabelAlignmentProperty, applyChanged, sheet, QLatin1String(labelAlignmentPropertyC), m_labelAlignment, m_labelAlignmentChanged, &rc);
-    variantPropertyToSheet(mask, FormAlignmentProperty, applyChanged, sheet, QLatin1String(formAlignmentPropertyC), m_formAlignment, m_formAlignmentChanged, &rc);
-    variantPropertyToSheet(mask, BoxStretchProperty, applyChanged, sheet, QLatin1String(boxStretchPropertyC), m_boxStretch, m_boxStretchChanged, &rc);
-    variantPropertyToSheet(mask, GridRowStretchProperty, applyChanged, sheet, QLatin1String(gridRowStretchPropertyC), m_gridRowStretch, m_gridRowStretchChanged, &rc);
-    variantPropertyToSheet(mask, GridColumnStretchProperty, applyChanged, sheet, QLatin1String(gridColumnStretchPropertyC), m_gridColumnStretch, m_gridColumnStretchChanged, &rc);
-    variantPropertyToSheet(mask, GridRowMinimumHeightProperty, applyChanged, sheet, QLatin1String(gridRowMinimumHeightPropertyC), m_gridRowMinimumHeight, m_gridRowMinimumHeightChanged, &rc);
-    variantPropertyToSheet(mask, GridColumnMinimumWidthProperty, applyChanged, sheet, QLatin1String(gridColumnMinimumWidthPropertyC), m_gridColumnMinimumWidth, m_gridColumnMinimumWidthChanged, &rc);
+    variantPropertyToSheet(mask, SizeConstraintProperty, applyChanged, sheet, QLatin1StringView(sizeConstraintC), m_sizeConstraint, m_sizeConstraintChanged, &rc);
+    variantPropertyToSheet(mask, FieldGrowthPolicyProperty, applyChanged, sheet, QLatin1StringView(fieldGrowthPolicyPropertyC), m_fieldGrowthPolicy, m_fieldGrowthPolicyChanged, &rc);
+    variantPropertyToSheet(mask, RowWrapPolicyProperty, applyChanged, sheet, QLatin1StringView(rowWrapPolicyPropertyC), m_rowWrapPolicy, m_rowWrapPolicyChanged, &rc);
+    variantPropertyToSheet(mask, LabelAlignmentProperty, applyChanged, sheet, QLatin1StringView(labelAlignmentPropertyC), m_labelAlignment, m_labelAlignmentChanged, &rc);
+    variantPropertyToSheet(mask, FormAlignmentProperty, applyChanged, sheet, QLatin1StringView(formAlignmentPropertyC), m_formAlignment, m_formAlignmentChanged, &rc);
+    variantPropertyToSheet(mask, BoxStretchProperty, applyChanged, sheet, QLatin1StringView(boxStretchPropertyC), m_boxStretch, m_boxStretchChanged, &rc);
+    variantPropertyToSheet(mask, GridRowStretchProperty, applyChanged, sheet, QLatin1StringView(gridRowStretchPropertyC), m_gridRowStretch, m_gridRowStretchChanged, &rc);
+    variantPropertyToSheet(mask, GridColumnStretchProperty, applyChanged, sheet, QLatin1StringView(gridColumnStretchPropertyC), m_gridColumnStretch, m_gridColumnStretchChanged, &rc);
+    variantPropertyToSheet(mask, GridRowMinimumHeightProperty, applyChanged, sheet, QLatin1StringView(gridRowMinimumHeightPropertyC), m_gridRowMinimumHeight, m_gridRowMinimumHeightChanged, &rc);
+    variantPropertyToSheet(mask, GridColumnMinimumWidthProperty, applyChanged, sheet, QLatin1StringView(gridColumnMinimumWidthPropertyC), m_gridColumnMinimumWidth, m_gridColumnMinimumWidthChanged, &rc);
     return rc;
 }
 

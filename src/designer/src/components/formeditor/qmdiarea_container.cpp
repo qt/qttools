@@ -113,8 +113,8 @@ QMdiAreaPropertySheet::QMdiAreaPropertySheet(QWidget *mdiArea, QObject *parent) 
     QDesignerPropertySheet(mdiArea, parent),
     m_windowTitleProperty(u"windowTitle"_s)
 {
-    createFakeProperty(QLatin1String(subWindowNameC), QString());
-    createFakeProperty(QLatin1String(subWindowTitleC), QString());
+    createFakeProperty(QLatin1StringView(subWindowNameC), QString());
+    createFakeProperty(QLatin1StringView(subWindowTitleC), QString());
 }
 
 QMdiAreaPropertySheet::MdiAreaProperty QMdiAreaPropertySheet::mdiAreaProperty(const QString &name)
@@ -122,8 +122,8 @@ QMdiAreaPropertySheet::MdiAreaProperty QMdiAreaPropertySheet::mdiAreaProperty(co
     using MdiAreaPropertyHash = QHash<QString, MdiAreaProperty>;
     static MdiAreaPropertyHash mdiAreaPropertyHash;
     if (mdiAreaPropertyHash.isEmpty()) {
-        mdiAreaPropertyHash.insert(QLatin1String(subWindowNameC), MdiAreaSubWindowName);
-        mdiAreaPropertyHash.insert(QLatin1String(subWindowTitleC), MdiAreaSubWindowTitle);
+        mdiAreaPropertyHash.insert(QLatin1StringView(subWindowNameC), MdiAreaSubWindowName);
+        mdiAreaPropertyHash.insert(QLatin1StringView(subWindowTitleC), MdiAreaSubWindowTitle);
     }
     return mdiAreaPropertyHash.value(name,MdiAreaNone);
 }

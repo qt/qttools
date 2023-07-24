@@ -260,9 +260,9 @@ void HtmlTextEdit::contextMenuEvent(QContextMenuEvent *event)
     };
 
     for (const Entry &e : entries) {
-        QAction *entityAction = new QAction(QLatin1String(e.text),
+        QAction *entityAction = new QAction(QLatin1StringView(e.text),
                                             htmlMenu);
-        entityAction->setData(QLatin1String(e.entity));
+        entityAction->setData(QLatin1StringView(e.entity));
         htmlMenu->addAction(entityAction);
     }
 
@@ -730,8 +730,8 @@ RichTextEditorDialog::RichTextEditorDialog(QDesignerFormEditorInterface *core, Q
     // Read settings
     const QDesignerSettingsInterface *settings = core->settingsManager();
     const QString rootKey = QLatin1StringView(RichTextDialogGroupC) + u'/';
-    const QByteArray lastGeometry = settings->value(rootKey + QLatin1String(GeometryKeyC)).toByteArray();
-    const int initialTab = settings->value(rootKey + QLatin1String(TabKeyC), QVariant(m_initialTab)).toInt();
+    const QByteArray lastGeometry = settings->value(rootKey + QLatin1StringView(GeometryKeyC)).toByteArray();
+    const int initialTab = settings->value(rootKey + QLatin1StringView(TabKeyC), QVariant(m_initialTab)).toInt();
     if (initialTab == RichTextIndex || initialTab == SourceIndex)
         m_initialTab = initialTab;
 
@@ -781,10 +781,10 @@ RichTextEditorDialog::RichTextEditorDialog(QDesignerFormEditorInterface *core, Q
 RichTextEditorDialog::~RichTextEditorDialog()
 {
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1String(RichTextDialogGroupC));
+    settings->beginGroup(QLatin1StringView(RichTextDialogGroupC));
 
-    settings->setValue(QLatin1String(GeometryKeyC), saveGeometry());
-    settings->setValue(QLatin1String(TabKeyC), m_tab_widget->currentIndex());
+    settings->setValue(QLatin1StringView(GeometryKeyC), saveGeometry());
+    settings->setValue(QLatin1StringView(TabKeyC), m_tab_widget->currentIndex());
     settings->endGroup();
 }
 

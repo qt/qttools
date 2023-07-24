@@ -360,7 +360,7 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
     if (parentWidget == nullptr)
         return true;
     // Check special cases. First: Custom container
-    const QString className = QLatin1String(parentWidget->metaObject()->className());
+    const QString className = QLatin1StringView(parentWidget->metaObject()->className());
     const QString addPageMethod = d->customWidgetAddPageMethod(className);
     if (!addPageMethod.isEmpty()) {
         // If this fails ( non-existent or non-slot), use ContainerExtension in Designer, else it can't be helped
@@ -1057,7 +1057,7 @@ DomConnections *QAbstractFormBuilder::saveConnections()
 DomWidget *QAbstractFormBuilder::createDom(QWidget *widget, DomWidget *ui_parentWidget, bool recursive)
 {
     DomWidget *ui_widget = new DomWidget();
-    ui_widget->setAttributeClass(QLatin1String(widget->metaObject()->className()));
+    ui_widget->setAttributeClass(QLatin1StringView(widget->metaObject()->className()));
     ui_widget->setAttributeName(widget->objectName());
 
     ui_widget->setElementProperty(computeProperties(widget));
@@ -1283,7 +1283,7 @@ DomLayout *QAbstractFormBuilder::createDom(QLayout *layout, DomLayout *ui_layout
 {
     Q_UNUSED(ui_layout);
     DomLayout *lay = new DomLayout();
-    lay->setAttributeClass(QLatin1String(layout->metaObject()->className()));
+    lay->setAttributeClass(QLatin1StringView(layout->metaObject()->className()));
     const QString objectName = layout->objectName();
     if (!objectName.isEmpty())
         lay->setAttributeName(objectName);
@@ -1405,7 +1405,7 @@ QList<DomProperty*> QAbstractFormBuilder::computeProperties(QObject *obj)
         const QString pname = QString::fromUtf8(propertyNames.at(i));
         const QMetaProperty prop = meta->property(meta->indexOfProperty(pname.toUtf8()));
 
-        if (!prop.isWritable() || !checkProperty(obj, QLatin1String(prop.name())))
+        if (!prop.isWritable() || !checkProperty(obj, QLatin1StringView(prop.name())))
             continue;
 
         const QVariant v = prop.read(obj);
@@ -1871,7 +1871,7 @@ void QAbstractFormBuilder::saveButtonExtraInfo(const QAbstractButton *widget, Do
         domString->setText(buttonGroup->objectName());
         domString->setAttributeNotr(u"true"_s);
         DomProperty *domProperty = new DomProperty();
-        domProperty->setAttributeName(QLatin1String(buttonGroupPropertyC));
+        domProperty->setAttributeName(QLatin1StringView(buttonGroupPropertyC));
         domProperty->setElementString(domString);
         attributes += domProperty;
         ui_widget->setElementAttribute(attributes);
@@ -2217,7 +2217,7 @@ static QString buttonGroupName(const DomWidget *ui_widget)
     const auto &attributes = ui_widget->elementAttribute();
     if (attributes.isEmpty())
         return QString();
-    const QString buttonGroupProperty = QLatin1String(buttonGroupPropertyC);
+    const QString buttonGroupProperty = QLatin1StringView(buttonGroupPropertyC);
     for (const DomProperty *p : attributes) {
         if (p->attributeName() == buttonGroupProperty)
             return p->elementString()->text();

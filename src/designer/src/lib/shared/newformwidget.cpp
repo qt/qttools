@@ -51,7 +51,7 @@ static const char *newFormObjectNameC = "Form";
 static QString formName(const QString &className)
 {
     if (!className.startsWith(u'Q'))
-        return QLatin1String(newFormObjectNameC);
+        return QLatin1StringView(newFormObjectNameC);
     QString rc = className;
     rc.remove(0, 1);
     return rc;

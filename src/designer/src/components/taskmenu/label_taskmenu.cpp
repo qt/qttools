@@ -29,7 +29,7 @@ protected:
 };
 
 LabelTaskMenuInlineEditor::LabelTaskMenuInlineEditor(QLabel *w, QObject *parent) :
-      TaskMenuInlineEditor(w, ValidationRichText, QLatin1String(textPropertyC), parent)
+      TaskMenuInlineEditor(w, ValidationRichText, QLatin1StringView(textPropertyC), parent)
 {
 }
 
@@ -73,7 +73,7 @@ QList<QAction*> LabelTaskMenu::taskActions() const
 
 void LabelTaskMenu::editRichText()
 {
-    changeTextProperty(QLatin1String(textPropertyC), QString(), MultiSelectionMode, m_label->textFormat());
+    changeTextProperty(QLatin1StringView(textPropertyC), QString(), MultiSelectionMode, m_label->textFormat());
 }
 
 }

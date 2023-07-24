@@ -11,7 +11,7 @@
 
 QT_BEGIN_NAMESPACE
 
-#define Q_TYPEID(IFace) QLatin1String(IFace##_iid)
+#define Q_TYPEID(IFace) QLatin1StringView(IFace##_iid)
 
 class QDESIGNER_EXTENSION_EXPORT QAbstractExtensionFactory
 {

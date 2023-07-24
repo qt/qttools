@@ -78,19 +78,19 @@ static bool isIntegerList(const QString &s)
 static LayoutPropertyType  layoutPropertyType(const QString &name)
 {
     static const QHash<QString, LayoutPropertyType> namePropertyMap = {
-        {QLatin1String(leftMargin), LayoutPropertyLeftMargin},
-        {QLatin1String(topMargin), LayoutPropertyTopMargin},
-        {QLatin1String(rightMargin), LayoutPropertyRightMargin},
-        {QLatin1String(bottomMargin), LayoutPropertyBottomMargin},
-        {QLatin1String(horizontalSpacing), LayoutPropertyHorizontalSpacing},
-        {QLatin1String(verticalSpacing), LayoutPropertyVerticalSpacing},
-        {QLatin1String(spacing), LayoutPropertySpacing},
-        {QLatin1String(sizeConstraint), LayoutPropertySizeConstraint},
-        {QLatin1String(boxStretchPropertyC ), LayoutPropertyBoxStretch},
-        {QLatin1String(gridRowStretchPropertyC), LayoutPropertyGridRowStretch},
-        {QLatin1String(gridColumnStretchPropertyC), LayoutPropertyGridColumnStretch},
-        {QLatin1String(gridRowMinimumHeightPropertyC), LayoutPropertyGridRowMinimumHeight},
-        {QLatin1String(gridColumnMinimumWidthPropertyC), LayoutPropertyGridColumnMinimumWidth}
+        {QLatin1StringView(leftMargin), LayoutPropertyLeftMargin},
+        {QLatin1StringView(topMargin), LayoutPropertyTopMargin},
+        {QLatin1StringView(rightMargin), LayoutPropertyRightMargin},
+        {QLatin1StringView(bottomMargin), LayoutPropertyBottomMargin},
+        {QLatin1StringView(horizontalSpacing), LayoutPropertyHorizontalSpacing},
+        {QLatin1StringView(verticalSpacing), LayoutPropertyVerticalSpacing},
+        {QLatin1StringView(spacing), LayoutPropertySpacing},
+        {QLatin1StringView(sizeConstraint), LayoutPropertySizeConstraint},
+        {QLatin1StringView(boxStretchPropertyC), LayoutPropertyBoxStretch},
+        {QLatin1StringView(gridRowStretchPropertyC), LayoutPropertyGridRowStretch},
+        {QLatin1StringView(gridColumnStretchPropertyC), LayoutPropertyGridColumnStretch},
+        {QLatin1StringView(gridRowMinimumHeightPropertyC), LayoutPropertyGridRowMinimumHeight},
+        {QLatin1StringView(gridColumnMinimumWidthPropertyC), LayoutPropertyGridColumnMinimumWidth}
     };
     return namePropertyMap.value(name, LayoutPropertyNone);
 }
@@ -153,48 +153,48 @@ LayoutPropertySheet::LayoutPropertySheet(QLayout *l, QObject *parent)
     : QDesignerPropertySheet(l, parent), m_layout(l)
 {
     const QString layoutGroup = u"Layout"_s;
-    int pindex = createFakeProperty(QLatin1String(leftMargin), 0);
+    int pindex = createFakeProperty(QLatin1StringView(leftMargin), 0);
     setPropertyGroup(pindex, layoutGroup);
 
-    pindex = createFakeProperty(QLatin1String(topMargin), 0);
+    pindex = createFakeProperty(QLatin1StringView(topMargin), 0);
     setPropertyGroup(pindex, layoutGroup);
 
-    pindex = createFakeProperty(QLatin1String(rightMargin), 0);
+    pindex = createFakeProperty(QLatin1StringView(rightMargin), 0);
     setPropertyGroup(pindex, layoutGroup);
 
-    pindex = createFakeProperty(QLatin1String(bottomMargin), 0);
+    pindex = createFakeProperty(QLatin1StringView(bottomMargin), 0);
     setPropertyGroup(pindex, layoutGroup);
 
     const int visibleMask = LayoutProperties::visibleProperties(m_layout);
     if (visibleMask & LayoutProperties::HorizSpacingProperty) {
-        pindex = createFakeProperty(QLatin1String(horizontalSpacing), 0);
+        pindex = createFakeProperty(QLatin1StringView(horizontalSpacing), 0);
         setPropertyGroup(pindex, layoutGroup);
 
-        pindex = createFakeProperty(QLatin1String(verticalSpacing), 0);
+        pindex = createFakeProperty(QLatin1StringView(verticalSpacing), 0);
         setPropertyGroup(pindex, layoutGroup);
 
-        setAttribute(indexOf(QLatin1String(spacing)), true);
+        setAttribute(indexOf(QLatin1StringView(spacing)), true);
     }
 
     // Stretch
     if (visibleMask & LayoutProperties::BoxStretchProperty) {
-        pindex = createFakeProperty(QLatin1String(boxStretchPropertyC), QByteArray());
+        pindex = createFakeProperty(QLatin1StringView(boxStretchPropertyC), QByteArray());
         setPropertyGroup(pindex, layoutGroup);
         setAttribute(pindex, true);
     } else {
         // Add the grid per-row/column stretch and size limits
         if (visibleMask & LayoutProperties::GridColumnStretchProperty) {
             const QByteArray empty;
-            pindex = createFakeProperty(QLatin1String(gridRowStretchPropertyC), empty);
+            pindex = createFakeProperty(QLatin1StringView(gridRowStretchPropertyC), empty);
             setPropertyGroup(pindex, layoutGroup);
             setAttribute(pindex, true);
-            pindex = createFakeProperty(QLatin1String(gridColumnStretchPropertyC), empty);
+            pindex = createFakeProperty(QLatin1StringView(gridColumnStretchPropertyC), empty);
             setPropertyGroup(pindex, layoutGroup);
             setAttribute(pindex, true);
-            pindex = createFakeProperty(QLatin1String(gridRowMinimumHeightPropertyC), empty);
+            pindex = createFakeProperty(QLatin1StringView(gridRowMinimumHeightPropertyC), empty);
             setPropertyGroup(pindex, layoutGroup);
             setAttribute(pindex, true);
-            pindex = createFakeProperty(QLatin1String(gridColumnMinimumWidthPropertyC), empty);
+            pindex = createFakeProperty(QLatin1StringView(gridColumnMinimumWidthPropertyC), empty);
             setPropertyGroup(pindex, layoutGroup);
             setAttribute(pindex, true);
         }
@@ -204,7 +204,7 @@ LayoutPropertySheet::LayoutPropertySheet(QLayout *l, QObject *parent)
     // as it affects the layout parent widget and thus
     // conflicts with Designer's special layout widget.
     // It will take effect on the preview only.
-    pindex = createFakeProperty(QLatin1String(sizeConstraint));
+    pindex = createFakeProperty(QLatin1StringView(sizeConstraint));
     setPropertyGroup(pindex, layoutGroup);
 #endif
 }
@@ -415,8 +415,8 @@ void LayoutPropertySheet::setChanged(int index, bool changed)
     switch (type) {
     case LayoutPropertySpacing:
         if (LayoutProperties::visibleProperties(m_layout) & LayoutProperties::HorizSpacingProperty) {
-            setChanged(indexOf(QLatin1String(horizontalSpacing)), changed);
-            setChanged(indexOf(QLatin1String(verticalSpacing)), changed);
+            setChanged(indexOf(QLatin1StringView(horizontalSpacing)), changed);
+            setChanged(indexOf(QLatin1StringView(verticalSpacing)), changed);
         }
         break;
     default:
@@ -437,31 +437,31 @@ void LayoutPropertySheet::stretchAttributesToDom(QDesignerFormEditorInterface *c
 
     // Stretch
     if (visibleMask & LayoutProperties::BoxStretchProperty) {
-        const int index = sheet->indexOf(QLatin1String(boxStretchPropertyC));
+        const int index = sheet->indexOf(QLatin1StringView(boxStretchPropertyC));
         Q_ASSERT(index != -1);
         if (sheet->isChanged(index))
             domLayout->setAttributeStretch(sheet->property(index).toString());
     }
     if (visibleMask & LayoutProperties::GridColumnStretchProperty) {
-        const int index = sheet->indexOf(QLatin1String(gridColumnStretchPropertyC));
+        const int index = sheet->indexOf(QLatin1StringView(gridColumnStretchPropertyC));
         Q_ASSERT(index != -1);
         if (sheet->isChanged(index))
             domLayout->setAttributeColumnStretch(sheet->property(index).toString());
     }
     if (visibleMask & LayoutProperties::GridRowStretchProperty) {
-        const int index = sheet->indexOf(QLatin1String(gridRowStretchPropertyC));
+        const int index = sheet->indexOf(QLatin1StringView(gridRowStretchPropertyC));
         Q_ASSERT(index != -1);
         if (sheet->isChanged(index))
             domLayout->setAttributeRowStretch(sheet->property(index).toString());
     }
     if (visibleMask & LayoutProperties::GridRowMinimumHeightProperty) {
-        const int index = sheet->indexOf(QLatin1String(gridRowMinimumHeightPropertyC));
+        const int index = sheet->indexOf(QLatin1StringView(gridRowMinimumHeightPropertyC));
         Q_ASSERT(index != -1);
         if (sheet->isChanged(index))
             domLayout->setAttributeRowMinimumHeight(sheet->property(index).toString());
     }
     if (visibleMask & LayoutProperties::GridColumnMinimumWidthProperty) {
-        const int index = sheet->indexOf(QLatin1String(gridColumnMinimumWidthPropertyC));
+        const int index = sheet->indexOf(QLatin1StringView(gridColumnMinimumWidthPropertyC));
         Q_ASSERT(index != -1);
         if (sheet->isChanged(index))
             domLayout->setAttributeColumnMinimumWidth(sheet->property(index).toString());
@@ -475,15 +475,15 @@ void LayoutPropertySheet::markChangedStretchProperties(QDesignerFormEditorInterf
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core->extensionManager(), lt);
     Q_ASSERT(sheet);
     if (!domLayout->attributeStretch().isEmpty())
-        sheet->setChanged(sheet->indexOf(QLatin1String(boxStretchPropertyC)), true);
+        sheet->setChanged(sheet->indexOf(QLatin1StringView(boxStretchPropertyC)), true);
     if (!domLayout->attributeRowStretch().isEmpty())
-        sheet->setChanged(sheet->indexOf(QLatin1String(gridRowStretchPropertyC)), true);
+        sheet->setChanged(sheet->indexOf(QLatin1StringView(gridRowStretchPropertyC)), true);
     if (!domLayout->attributeColumnStretch().isEmpty())
-        sheet->setChanged(sheet->indexOf(QLatin1String(gridColumnStretchPropertyC)), true);
+        sheet->setChanged(sheet->indexOf(QLatin1StringView(gridColumnStretchPropertyC)), true);
    if (!domLayout->attributeColumnMinimumWidth().isEmpty())
-        sheet->setChanged(sheet->indexOf(QLatin1String(gridColumnMinimumWidthPropertyC)), true);
+        sheet->setChanged(sheet->indexOf(QLatin1StringView(gridColumnMinimumWidthPropertyC)), true);
    if (!domLayout->attributeRowMinimumHeight().isEmpty())
-        sheet->setChanged(sheet->indexOf(QLatin1String(gridRowMinimumHeightPropertyC)), true);
+        sheet->setChanged(sheet->indexOf(QLatin1StringView(gridRowMinimumHeightPropertyC)), true);
 }
 
 }

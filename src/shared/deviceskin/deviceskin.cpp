@@ -27,6 +27,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace {
     enum { joydistance = 10, key_repeat_period = 50, key_repeat_delay = 500 };
     enum { debugDeviceSkin = 0 };
@@ -90,7 +92,7 @@ bool DeviceSkinParameters::read(const QString &skinDirectory,  ReadMode rm,  QSt
         prefix += QLatin1Char('/');
         fn = prefix;
         fn += fi.baseName();
-        fn += QLatin1String(".skin");
+        fn += ".skin"_L1;
     } else if (fi.isFile()){
         fn = skinFile;
         prefix = fi.path();
@@ -121,20 +123,20 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
     QString mark;
     ts >> mark;
     hasMouseHover = true; // historical default
-    if ( mark == QLatin1String("[SkinFile]") ) {
-        const QString UpKey = QLatin1String("Up");
-        const QString DownKey = QLatin1String("Down");
-        const QString ClosedKey = QLatin1String("Closed");
-        const QString ClosedAreasKey = QLatin1String("ClosedAreas");
-        const QString ScreenKey = QLatin1String("Screen");
-        const QString ScreenDepthKey = QLatin1String("ScreenDepth");
-        const QString BackScreenKey = QLatin1String("BackScreen");
-        const QString ClosedScreenKey = QLatin1String("ClosedScreen");
-        const QString CursorKey = QLatin1String("Cursor");
-        const QString AreasKey = QLatin1String("Areas");
-        const QString ToggleAreasKey = QLatin1String("ToggleAreas");
-        const QString ToggleActiveAreasKey = QLatin1String("ToggleActiveAreas");
-        const QString HasMouseHoverKey = QLatin1String("HasMouseHover");
+    if (mark == "[SkinFile]"_L1) {
+        const QString UpKey = "Up"_L1;
+        const QString DownKey = "Down"_L1;
+        const QString ClosedKey = "Closed"_L1;
+        const QString ClosedAreasKey = "ClosedAreas"_L1;
+        const QString ScreenKey = "Screen"_L1;
+        const QString ScreenDepthKey = "ScreenDepth"_L1;
+        const QString BackScreenKey = "BackScreen"_L1;
+        const QString ClosedScreenKey = "ClosedScreen"_L1;
+        const QString CursorKey = "Cursor"_L1;
+        const QString AreasKey = "Areas"_L1;
+        const QString ToggleAreasKey = "ToggleAreas"_L1;
+        const QString ToggleActiveAreasKey = "ToggleActiveAreas"_L1;
+        const QString HasMouseHoverKey = "HasMouseHover"_L1;
         // New
         while (!nareas) {
             QString line = ts.readLine();
@@ -175,7 +177,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
                     } else if ( key == ToggleActiveAreasKey ) {
                         toggleActiveAreas = value.split(QLatin1Char(' '));
                     } else if ( key == HasMouseHoverKey ) {
-                        hasMouseHover = value == QLatin1String("true") || value == QLatin1String("1");
+                        hasMouseHover = value == "true"_L1 || value == "1"_L1;
                     }
                 } else {
                     *errorMessage =  DeviceSkin::tr("Syntax error: %1").arg(line);
@@ -249,8 +251,8 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
     int i = 0;
     ts.readLine(); // eol
     joystick = -1;
-    const QString Joystick = QLatin1String("Joystick");
-    const QRegularExpression splitRe(QLatin1String("[ \t][ \t]*"));
+    const QString Joystick = "Joystick"_L1;
+    const QRegularExpression splitRe("[ \t][ \t]*"_L1);
     Q_ASSERT(splitRe.isValid());
     while (i < nareas && !ts.atEnd() ) {
         buttonAreas.push_back(DeviceSkinButtonArea());
@@ -264,7 +266,7 @@ bool DeviceSkinParameters::read(QTextStream &ts, ReadMode rm, QString *errorMess
             } else {
                 area.name = tok[0];
                 QString k = tok[1];
-                if ( k.left(2).toLower() == QLatin1String("0x")) {
+                if ( k.left(2).toLower() == "0x"_L1) {
                     area.keyCode = k.mid(2).toInt(0,16);
                 } else {
                     area.keyCode = k.toInt();

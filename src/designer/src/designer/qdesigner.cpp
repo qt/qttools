@@ -42,7 +42,7 @@ static void designerMessageHandler(QtMsgType type, const QMessageLogContext &con
 {
     // Only Designer warnings are displayed as box
     QDesigner *designerApp = qDesigner;
-    if (type != QtWarningMsg || !designerApp || !msg.startsWith(QLatin1String(designerWarningPrefix))) {
+    if (type != QtWarningMsg || !designerApp || !msg.startsWith(QLatin1StringView(designerWarningPrefix))) {
         previousMessageHandler(type, context, msg);
         return;
     }
@@ -56,8 +56,8 @@ QDesigner::QDesigner(int &argc, char **argv)
       m_workbench(0), m_suppressNewFormShow(false)
 {
     setOrganizationName(u"QtProject"_s);
-    QGuiApplication::setApplicationDisplayName(QLatin1String(designerDisplayName));
-    setApplicationName(QLatin1String(designerApplicationName));
+    QGuiApplication::setApplicationDisplayName(QLatin1StringView(designerDisplayName));
+    setApplicationName(QLatin1StringView(designerApplicationName));
     QDesignerComponents::initializeResources();
 
 #if !defined(Q_OS_MACOS) && !defined(Q_OS_WIN)
@@ -101,7 +101,7 @@ void QDesigner::showErrorMessageBox(const QString &msg)
     if (!m_errorMessageDialog) {
         m_lastErrorMessage.clear();
         m_errorMessageDialog = new QErrorMessage(m_mainWindow);
-        const QString title = QCoreApplication::translate("QDesigner", "%1 - warning").arg(QLatin1String(designerApplicationName));
+        const QString title = QCoreApplication::translate("QDesigner", "%1 - warning").arg(QLatin1StringView(designerApplicationName));
         m_errorMessageDialog->setWindowTitle(title);
         m_errorMessageDialog->setMinimumSize(QSize(600, 250));
     }

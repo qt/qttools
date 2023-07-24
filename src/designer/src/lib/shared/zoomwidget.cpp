@@ -241,7 +241,7 @@ ZoomedEventFilterRedirector::ZoomedEventFilterRedirector(ZoomWidget *zw, QObject
     QObject(parent),
     m_zw(zw)
 {
-    setObjectName(QLatin1String(zoomedEventFilterRedirectorNameC));
+    setObjectName(QLatin1StringView(zoomedEventFilterRedirectorNameC));
 }
 
 bool ZoomedEventFilterRedirector::eventFilter(QObject *watched, QEvent *event)
@@ -268,7 +268,7 @@ void ZoomWidget::setWidget(QWidget *w, Qt::WindowFlags wFlags)
         scene().removeItem(m_proxy);
         if (QWidget *w = m_proxy->widget()) {
             // remove the event filter
-            if (QObject *evf =  w->findChild<QObject*>(QLatin1String(zoomedEventFilterRedirectorNameC)))
+            if (QObject *evf =  w->findChild<QObject*>(QLatin1StringView(zoomedEventFilterRedirectorNameC)))
                 w->removeEventFilter(evf);
         }
         m_proxy->deleteLater();

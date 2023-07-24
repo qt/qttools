@@ -9,6 +9,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class QtGradientStopsControllerPrivate : public QObject
 {
     Q_OBJECT
@@ -127,8 +129,8 @@ void QtGradientStopsControllerPrivate::setUi(Ui::QtGradientEditor *ui)
             this, &QtGradientStopsControllerPrivate::slotRgbClicked);
 
     enableCurrent(false);
-    m_ui->zoomInButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/zoomin.png")));
-    m_ui->zoomOutButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/zoomout.png")));
+    m_ui->zoomInButton->setIcon(QIcon(":/qt-project.org/qtgradienteditor/images/zoomin.png"_L1));
+    m_ui->zoomOutButton->setIcon(QIcon(":/qt-project.org/qtgradienteditor/images/zoomout.png"_L1));
     updateZoom(1);
 }
 
