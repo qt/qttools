@@ -33,7 +33,7 @@ static const char *rccAliasAttribute = "alias";
 static const char *rccPrefixAttribute = "prefix";
 static const char *rccLangAttribute = "lang";
 static const char *SplitterPosition = "SplitterPosition";
-static const char *Geometry = "Geometry";
+static const char ResourceEditorGeometry[] = "Geometry";
 static const char *QrcDialogC = "QrcDialog";
 
 static QString msgOverwrite(const QString &fname)
@@ -1995,7 +1995,7 @@ QtResourceEditorDialog::QtResourceEditorDialog(QDesignerFormEditorInterface *cor
     settings->beginGroup(QLatin1String(QrcDialogC));
 
     d_ptr->m_ui.splitter->restoreState(settings->value(QLatin1String(SplitterPosition)).toByteArray());
-    const QVariant geometry = settings->value(QLatin1String(Geometry));
+    const QVariant geometry = settings->value(QLatin1StringView(ResourceEditorGeometry));
     if (geometry.metaType().id() == QMetaType::QByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374
         restoreGeometry(geometry.toByteArray());
 
@@ -2008,7 +2008,7 @@ QtResourceEditorDialog::~QtResourceEditorDialog()
     settings->beginGroup(QLatin1String(QrcDialogC));
 
     settings->setValue(QLatin1String(SplitterPosition), d_ptr->m_ui.splitter->saveState());
-    settings->setValue(QLatin1String(Geometry), saveGeometry());
+    settings->setValue(QLatin1StringView(ResourceEditorGeometry), saveGeometry());
     settings->endGroup();
 
     disconnect(d_ptr->m_qrcManager, nullptr, this, nullptr);

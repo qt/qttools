@@ -7,9 +7,7 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace {
-    enum { debugWidgetDataBase =  0 };
-}
+enum { debugAbstractWidgetDataBase =  0 };
 
 /*!
     \class QDesignerWidgetDataBaseInterface
@@ -61,7 +59,7 @@ int QDesignerWidgetDataBaseInterface::indexOf(QDesignerWidgetDataBaseItemInterfa
 */
 void QDesignerWidgetDataBaseInterface::insert(int index, QDesignerWidgetDataBaseItemInterface *item)
 {
-    if (debugWidgetDataBase)
+    if (debugAbstractWidgetDataBase)
         qDebug() << "insert at " << index << ' ' << item->name() << " derived from " << item->extends();
 
     m_items.insert(index, item);
@@ -71,7 +69,7 @@ void QDesignerWidgetDataBaseInterface::insert(int index, QDesignerWidgetDataBase
 */
 void QDesignerWidgetDataBaseInterface::append(QDesignerWidgetDataBaseItemInterface *item)
 {
-    if (debugWidgetDataBase)
+    if (debugAbstractWidgetDataBase)
         qDebug() << "append " << item->name() << " derived from " << item->extends();
     m_items.append(item);
 }

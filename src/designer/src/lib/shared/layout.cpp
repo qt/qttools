@@ -41,8 +41,6 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-enum { FormLayoutColumns = 2 };
-
 namespace qdesigner_internal {
 
 /* The wizard has a policy of setting a size policy of its external children
@@ -556,6 +554,8 @@ class GridHelper
 {
     Q_DISABLE_COPY_MOVE(GridHelper);
 public:
+    enum { FormLayoutColumns = 2 };
+
     enum Mode {
         GridLayout, // Arbitrary size/supports span
         FormLayout  // 2-column/no span
