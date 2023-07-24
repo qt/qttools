@@ -178,12 +178,12 @@ public slots:
 
 private:
     RichTextEditor *m_editor;
-    Ui::AddLinkDialog *m_ui;
+    QT_PREPEND_NAMESPACE(Ui)::AddLinkDialog *m_ui;
 };
 
 AddLinkDialog::AddLinkDialog(RichTextEditor *editor, QWidget *parent) :
     QDialog(parent),
-    m_ui(new Ui::AddLinkDialog)
+    m_ui(new QT_PREPEND_NAMESPACE(Ui)::AddLinkDialog)
 {
     m_ui->setupUi(this);
 
