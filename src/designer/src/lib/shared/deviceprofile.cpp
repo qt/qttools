@@ -21,18 +21,18 @@
 #include <QtCore/qxmlstream.h>
 
 
-static const char *dpiXPropertyC = "_q_customDpiX";
-static const char *dpiYPropertyC = "_q_customDpiY";
+static const char dpiXPropertyC[] = "_q_customDpiX";
+static const char dpiYPropertyC[] = "_q_customDpiY";
 
 // XML serialization
 static const char *xmlVersionC="1.0";
 static const char *rootElementC="deviceprofile";
-static const char *nameElementC = "name";
-static const char *fontFamilyElementC = "fontfamily";
-static const char *fontPointSizeElementC = "fontpointsize";
-static const char *dPIXElementC = "dpix";
-static const char *dPIYElementC = "dpiy";
-static const char *styleElementC = "style";
+static const char nameElementC[] = "name";
+static const char fontFamilyElementC[] = "fontfamily";
+static const char fontPointSizeElementC[] = "fontpointsize";
+static const char dPIXElementC[] = "dpix";
+static const char dPIYElementC[] = "dpiy";
+static const char styleElementC[] = "style";
 
 /* DeviceProfile:
  * For preview purposes (preview, widget box, new form dialog), the

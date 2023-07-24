@@ -45,12 +45,12 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qtextstream.h>
 
-static const char *SettingsGroupC = "PropertyEditor";
-static const char *ViewKeyC = "View";
-static const char *ColorKeyC = "Colored";
-static const char *SortedKeyC = "Sorted";
-static const char *ExpansionKeyC = "ExpandedItems";
-static const char *SplitterPositionKeyC = "SplitterPosition";
+static const char SettingsGroupC[] = "PropertyEditor";
+static const char ViewKeyC[] = "View";
+static const char ColorKeyC[] = "Colored";
+static const char SortedKeyC[] = "Sorted";
+static const char ExpansionKeyC[] = "ExpandedItems";
+static const char SplitterPositionKeyC[] = "SplitterPosition";
 
 enum SettingsView { TreeView, ButtonView };
 

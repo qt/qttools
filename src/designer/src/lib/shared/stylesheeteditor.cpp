@@ -37,9 +37,9 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *styleSheetProperty = "styleSheet";
-static const char *StyleSheetDialogC = "StyleSheetDialog";
-static const char *seGeometry = "Geometry";
+static const char styleSheetProperty[] = "styleSheet";
+static const char StyleSheetDialogC[] = "StyleSheetDialog";
+static const char seGeometry[] = "Geometry";
 
 namespace qdesigner_internal {
 

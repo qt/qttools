@@ -21,17 +21,17 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *defaultGridKey = "defaultGrid";
-static const char *previewKey = "Preview";
-static const char *enabledKey = "Enabled";
+static const char defaultGridKey[] = "defaultGrid";
+static const char previewKey[] = "Preview";
+static const char enabledKey[] = "Enabled";
 static const char *userDeviceSkinsKey= "UserDeviceSkins";
-static const char *zoomKey = "zoom";
-static const char *zoomEnabledKey = "zoomEnabled";
-static const char *deviceProfileIndexKey = "DeviceProfileIndex";
-static const char *deviceProfilesKey = "DeviceProfiles";
-static const char *formTemplatePathsKey = "FormTemplatePaths";
-static const char *formTemplateKey = "FormTemplate";
-static const char *newFormSizeKey = "NewFormSize";
+static const char zoomKey[] = "zoom";
+static const char zoomEnabledKey[] = "zoomEnabled";
+static const char deviceProfileIndexKey[] = "DeviceProfileIndex";
+static const char deviceProfilesKey[] = "DeviceProfiles";
+static const char formTemplatePathsKey[] = "FormTemplatePaths";
+static const char formTemplateKey[] = "FormTemplate";
+static const char newFormSizeKey[] = "NewFormSize";
 static inline QString namingModeKey() { return u"naming"_s; }
 static inline QString underScoreNamingMode() { return u"underscore"_s; }
 static inline QString camelCaseNamingMode() { return u"camelcase"_s; }

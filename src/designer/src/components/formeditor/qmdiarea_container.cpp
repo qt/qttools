@@ -106,8 +106,8 @@ void QMdiAreaContainer::remove(int index)
 // 1) window name (object name of child)
 // 2) title (windowTitle of child).
 
-static const char *subWindowTitleC = "activeSubWindowTitle";
-static const char *subWindowNameC = "activeSubWindowName";
+static const char subWindowTitleC[] = "activeSubWindowTitle";
+static const char subWindowNameC[] = "activeSubWindowName";
 
 QMdiAreaPropertySheet::QMdiAreaPropertySheet(QWidget *mdiArea, QObject *parent) :
     QDesignerPropertySheet(mdiArea, parent),

@@ -49,7 +49,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *appFontPrefixC = "AppFonts";
+static const char appFontPrefixC[] = "AppFonts";
 
 using ActionList = QList<QAction *>;
 

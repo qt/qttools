@@ -33,8 +33,8 @@ namespace {
     enum { listModeIconSize = 16, iconModeIconSize = 24 };
 }
 
-static const char *actionMimeType = "action-repository/actions";
-static const char *plainTextMimeType = "text/plain";
+static const char actionMimeType[] = "action-repository/actions";
+static const char plainTextMimeType[] = "text/plain";
 
 static inline QAction *actionOfItem(const QStandardItem* item)
 {

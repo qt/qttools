@@ -313,7 +313,7 @@ QMenu *QStackedWidgetEventFilter::addContextMenuActions(QMenu *popup)
 
 // --------  QStackedWidgetPropertySheet
 
-static const char *pagePropertyName = "currentPageName";
+static const char pagePropertyName[] = "currentPageName";
 
 QStackedWidgetPropertySheet::QStackedWidgetPropertySheet(QStackedWidget *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),

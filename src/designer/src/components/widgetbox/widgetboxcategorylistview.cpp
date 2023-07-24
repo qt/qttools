@@ -21,10 +21,10 @@
 #include <QtCore/qtextstream.h>
 #include <QtCore/qregularexpression.h>
 
-static const char *widgetElementC = "widget";
-static const char *nameAttributeC = "name";
-static const char *uiOpeningTagC = "<ui>";
-static const char *uiClosingTagC = "</ui>";
+static const char widgetElementC[] = "widget";
+static const char nameAttributeC[] = "name";
+static const char uiOpeningTagC[] = "<ui>";
+static const char uiClosingTagC[] = "</ui>";
 
 QT_BEGIN_NAMESPACE
 

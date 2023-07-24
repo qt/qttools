@@ -78,8 +78,8 @@ inline void getGridItemPosition(QFormLayout *formLayout, int index, int *row, in
 
 QT_BEGIN_NAMESPACE
 
-static const char *objectNameC = "objectName";
-static const char *sizeConstraintC = "sizeConstraint";
+static const char objectNameC[] = "objectName";
+static const char sizeConstraintC[] = "sizeConstraint";
 
 /* A padding spacer element that is used to represent an empty form layout cell. It should grow with its cell.
  * Should not be used on a grid as it causes resizing inconsistencies */
@@ -252,15 +252,15 @@ int LayoutProperties::visibleProperties(const  QLayout *layout)
 
 static const char *marginPropertyNamesC[] = {"leftMargin", "topMargin", "rightMargin", "bottomMargin"};
 static const char *spacingPropertyNamesC[] = {"spacing", "horizontalSpacing", "verticalSpacing" };
-static const char *fieldGrowthPolicyPropertyC = "fieldGrowthPolicy";
-static const char *rowWrapPolicyPropertyC = "rowWrapPolicy";
-static const char *labelAlignmentPropertyC = "labelAlignment";
-static const char *formAlignmentPropertyC = "formAlignment";
-static const char *boxStretchPropertyC = "stretch";
-static const char *gridRowStretchPropertyC = "rowStretch";
-static const char *gridColumnStretchPropertyC = "columnStretch";
-static const char *gridRowMinimumHeightPropertyC = "rowMinimumHeight";
-static const char *gridColumnMinimumWidthPropertyC = "columnMinimumWidth";
+static const char fieldGrowthPolicyPropertyC[] = "fieldGrowthPolicy";
+static const char rowWrapPolicyPropertyC[] = "rowWrapPolicy";
+static const char labelAlignmentPropertyC[] = "labelAlignment";
+static const char formAlignmentPropertyC[] = "formAlignment";
+static const char boxStretchPropertyC[] = "stretch";
+static const char gridRowStretchPropertyC[] = "rowStretch";
+static const char gridColumnStretchPropertyC[] = "columnStretch";
+static const char gridRowMinimumHeightPropertyC[] = "rowMinimumHeight";
+static const char gridColumnMinimumWidthPropertyC[] = "columnMinimumWidth";
 
 static bool intValueFromSheet(const QDesignerPropertySheetExtension *sheet, const QString &name, int *value, bool *changed)
 {

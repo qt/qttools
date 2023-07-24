@@ -29,7 +29,7 @@
 
 #include <algorithm>
 
-static const char *uriListMimeFormatC = "text/uri-list";
+static const char uriListMimeFormatC[] = "text/uri-list";
 
 QT_BEGIN_NAMESPACE
 

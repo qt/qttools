@@ -43,15 +43,15 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *elementResourceData = "resource";
-static const char *typeAttribute = "type";
-static const char *typeImage = "image";
-static const char *typeStyleSheet = "stylesheet";
-static const char *typeOther = "other";
-static const char *fileAttribute = "file";
-static const char *qrvSplitterPosition = "SplitterPosition";
-static const char *qrvGeometry = "Geometry";
-static const char *ResourceViewDialogC = "ResourceDialog";
+static const char elementResourceData[] = "resource";
+static const char typeAttribute[] = "type";
+static const char typeImage[] = "image";
+static const char typeStyleSheet[] = "stylesheet";
+static const char typeOther[] = "other";
+static const char fileAttribute[] = "file";
+static const char qrvSplitterPosition[] = "SplitterPosition";
+static const char qrvGeometry[] = "Geometry";
+static const char ResourceViewDialogC[] = "ResourceDialog";
 
 // ---------------- ResourceListWidget: A list widget that has drag enabled
 class ResourceListWidget : public QListWidget {

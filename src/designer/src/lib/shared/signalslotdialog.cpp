@@ -32,8 +32,8 @@ using namespace Qt::StringLiterals;
 
 // Regexp to match a function signature, arguments potentially
 // with namespace colons.
-static const char *signatureRegExp = "^[\\w+_]+\\(([\\w+:]\\*?,?)*\\)$";
-static const char *methodNameRegExp = "^[\\w+_]+$";
+static const char signatureRegExp[] = "^[\\w+_]+\\(([\\w+:]\\*?,?)*\\)$";
+static const char methodNameRegExp[] = "^[\\w+_]+$";
 
 static QStandardItem *createEditableItem(const QString &text)
 {

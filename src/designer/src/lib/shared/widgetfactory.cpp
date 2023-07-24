@@ -66,7 +66,7 @@ using namespace Qt::StringLiterals;
 static inline bool isAxWidget(const QObject *o)
 {
     // Is it one of  QDesignerAxWidget/QDesignerAxPluginWidget?
-    static const char *axWidgetName = "QDesignerAx";
+    static const char axWidgetName[] = "QDesignerAx";
     static const size_t axWidgetNameLen = qstrlen(axWidgetName);
     return qstrncmp(o->metaObject()->className(), axWidgetName, axWidgetNameLen) == 0;
 }
@@ -75,7 +75,7 @@ static inline bool isAxWidget(const QObject *o)
 /* Dynamic boolean property indicating object was created by the factory
  * for the form editor. */
 
-static const char *formEditorDynamicProperty = "_q_formEditorObject";
+static const char formEditorDynamicProperty[] = "_q_formEditorObject";
 
 namespace qdesigner_internal {
 

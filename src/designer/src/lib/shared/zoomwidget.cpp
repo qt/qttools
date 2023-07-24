@@ -224,7 +224,7 @@ QVariant ZoomProxyWidget::itemChange(GraphicsItemChange change, const QVariant &
  * It redirects the events to another handler of ZoomWidget as its
  * base class QScrollArea also implements eventFilter() for its viewport. */
 
-static const char *zoomedEventFilterRedirectorNameC = "__qt_ZoomedEventFilterRedirector";
+static const char zoomedEventFilterRedirectorNameC[] = "__qt_ZoomedEventFilterRedirector";
 
 class ZoomedEventFilterRedirector : public QObject {
     Q_DISABLE_COPY_MOVE(ZoomedEventFilterRedirector)

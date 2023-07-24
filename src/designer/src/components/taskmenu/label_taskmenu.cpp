@@ -12,7 +12,7 @@
 #include <QtGui/qaction.h>
 #include <QtGui/qtextdocument.h>
 
-static const char *textPropertyC = "text";
+static const char textPropertyC[] = "text";
 
 QT_BEGIN_NAMESPACE
 

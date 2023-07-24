@@ -34,9 +34,9 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char *designerApplicationName = "Designer";
+static const char designerApplicationName[] = "Designer";
 static const char designerDisplayName[] = "Qt Designer";
-static const char *designerWarningPrefix = "Designer: ";
+static const char designerWarningPrefix[] = "Designer: ";
 static QtMessageHandler previousMessageHandler = nullptr;
 
 static void designerMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)

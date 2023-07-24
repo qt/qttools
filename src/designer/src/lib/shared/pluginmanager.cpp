@@ -27,21 +27,21 @@
 
 using namespace Qt::StringLiterals;
 
-static const char *uiElementC = "ui";
-static const char *languageAttributeC = "language";
-static const char *widgetElementC = "widget";
-static const char *displayNameAttributeC = "displayname";
-static const char *classAttributeC = "class";
-static const char *customwidgetElementC = "customwidget";
-static const char *extendsElementC = "extends";
-static const char *addPageMethodC = "addpagemethod";
-static const char *propertySpecsC = "propertyspecifications";
-static const char *stringPropertySpecC = "stringpropertyspecification";
+static const char uiElementC[] = "ui";
+static const char languageAttributeC[] = "language";
+static const char widgetElementC[] = "widget";
+static const char displayNameAttributeC[] = "displayname";
+static const char classAttributeC[] = "class";
+static const char customwidgetElementC[] = "customwidget";
+static const char extendsElementC[] = "extends";
+static const char addPageMethodC[] = "addpagemethod";
+static const char propertySpecsC[] = "propertyspecifications";
+static const char stringPropertySpecC[] = "stringpropertyspecification";
 static const char propertyToolTipC[] = "tooltip";
-static const char *stringPropertyNameAttrC = "name";
-static const char *stringPropertyTypeAttrC = "type";
-static const char *stringPropertyNoTrAttrC = "notr";
-static const char *jambiLanguageC = "jambi";
+static const char stringPropertyNameAttrC[] = "name";
+static const char stringPropertyTypeAttrC[] = "type";
+static const char stringPropertyNoTrAttrC[] = "notr";
+static const char jambiLanguageC[] = "jambi";
 
 enum { debugPluginManager = 0 };
 

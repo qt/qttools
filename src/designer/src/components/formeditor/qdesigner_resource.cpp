@@ -89,8 +89,8 @@ namespace {
     using DomPropertyList = QList<DomProperty *>;
 }
 
-static const char *currentUiVersion = "4.0";
-static const char *clipboardObjectName = "__qt_fake_top_level";
+static const char currentUiVersion[] = "4.0";
+static const char clipboardObjectName[] = "__qt_fake_top_level";
 
 #define OLD_RESOURCE_FORMAT // Support pre 4.4 format.
 
