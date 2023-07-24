@@ -220,13 +220,13 @@ QToolBoxWidgetPropertySheet::QToolBoxWidgetPropertySheet(QToolBox *object, QObje
     QDesignerPropertySheet(object, parent),
     m_toolBox(object)
 {
-    createFakeProperty(QLatin1String(currentItemTextKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
-    createFakeProperty(QLatin1String(currentItemNameKey), QString());
-    createFakeProperty(QLatin1String(currentItemIconKey), QVariant::fromValue(qdesigner_internal::PropertySheetIconValue()));
+    createFakeProperty(QLatin1StringView(currentItemTextKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
+    createFakeProperty(QLatin1StringView(currentItemNameKey), QString());
+    createFakeProperty(QLatin1StringView(currentItemIconKey), QVariant::fromValue(qdesigner_internal::PropertySheetIconValue()));
     if (formWindowBase())
-        formWindowBase()->addReloadableProperty(this, indexOf(QLatin1String(currentItemIconKey)));
-    createFakeProperty(QLatin1String(currentItemToolTipKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
-    createFakeProperty(QLatin1String(tabSpacingKey), QVariant(tabSpacingDefault));
+        formWindowBase()->addReloadableProperty(this, indexOf(QLatin1StringView(currentItemIconKey)));
+    createFakeProperty(QLatin1StringView(currentItemToolTipKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
+    createFakeProperty(QLatin1StringView(tabSpacingKey), QVariant(tabSpacingDefault));
 }
 
 QToolBoxWidgetPropertySheet::ToolBoxProperty QToolBoxWidgetPropertySheet::toolBoxPropertyFromName(const QString &name)
@@ -234,11 +234,11 @@ QToolBoxWidgetPropertySheet::ToolBoxProperty QToolBoxWidgetPropertySheet::toolBo
     using ToolBoxPropertyHash = QHash<QString, ToolBoxProperty>;
     static ToolBoxPropertyHash toolBoxPropertyHash;
     if (toolBoxPropertyHash.isEmpty()) {
-        toolBoxPropertyHash.insert(QLatin1String(currentItemTextKey),    PropertyCurrentItemText);
-        toolBoxPropertyHash.insert(QLatin1String(currentItemNameKey),    PropertyCurrentItemName);
-        toolBoxPropertyHash.insert(QLatin1String(currentItemIconKey),    PropertyCurrentItemIcon);
-        toolBoxPropertyHash.insert(QLatin1String(currentItemToolTipKey), PropertyCurrentItemToolTip);
-        toolBoxPropertyHash.insert(QLatin1String(tabSpacingKey),         PropertyTabSpacing);
+        toolBoxPropertyHash.insert(QLatin1StringView(currentItemTextKey),    PropertyCurrentItemText);
+        toolBoxPropertyHash.insert(QLatin1StringView(currentItemNameKey),    PropertyCurrentItemName);
+        toolBoxPropertyHash.insert(QLatin1StringView(currentItemIconKey),    PropertyCurrentItemIcon);
+        toolBoxPropertyHash.insert(QLatin1StringView(currentItemToolTipKey), PropertyCurrentItemToolTip);
+        toolBoxPropertyHash.insert(QLatin1StringView(tabSpacingKey),         PropertyTabSpacing);
     }
     return toolBoxPropertyHash.value(name, PropertyToolBoxNone);
 }

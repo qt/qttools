@@ -282,20 +282,20 @@ QString DeviceProfile::toXml() const
     const DeviceProfileData &d = *m_d;
     QString rc;
     QXmlStreamWriter writer(&rc);
-    writer.writeStartDocument(QLatin1String(xmlVersionC));
-    writer.writeStartElement(QLatin1String(rootElementC));
-    writeElement(writer, QLatin1String(nameElementC), d.m_name);
+    writer.writeStartDocument(QLatin1StringView(xmlVersionC));
+    writer.writeStartElement(QLatin1StringView(rootElementC));
+    writeElement(writer, QLatin1StringView(nameElementC), d.m_name);
 
     if (!d.m_fontFamily.isEmpty())
-        writeElement(writer, QLatin1String(fontFamilyElementC), d.m_fontFamily);
+        writeElement(writer, QLatin1StringView(fontFamilyElementC), d.m_fontFamily);
     if (d.m_fontPointSize >= 0)
-        writeElement(writer, QLatin1String(fontPointSizeElementC), QString::number(d.m_fontPointSize));
+        writeElement(writer, QLatin1StringView(fontPointSizeElementC), QString::number(d.m_fontPointSize));
     if (d.m_dpiX > 0)
-        writeElement(writer, QLatin1String(dPIXElementC), QString::number(d.m_dpiX));
+        writeElement(writer, QLatin1StringView(dPIXElementC), QString::number(d.m_dpiX));
     if (d.m_dpiY > 0)
-        writeElement(writer, QLatin1String(dPIYElementC), QString::number(d.m_dpiY));
+        writeElement(writer, QLatin1StringView(dPIYElementC), QString::number(d.m_dpiY));
     if (!d.m_style.isEmpty())
-        writeElement(writer, QLatin1String(styleElementC), d.m_style);
+        writeElement(writer, QLatin1StringView(styleElementC), d.m_style);
 
     writer.writeEndElement();
     writer.writeEndDocument();
@@ -311,7 +311,7 @@ static ParseStage nextStage(ParseStage currentStage, QStringView startElement)
 {
     switch (currentStage) {
     case ParseBeginning:
-        if (startElement == QLatin1String(rootElementC))
+        if (startElement == QLatin1StringView(rootElementC))
             return ParseWithinRoot;
         break;
     case ParseWithinRoot:
@@ -321,17 +321,17 @@ static ParseStage nextStage(ParseStage currentStage, QStringView startElement)
     case ParseDPIX:
     case ParseDPIY:
     case ParseStyle:
-        if (startElement == QLatin1String(nameElementC))
+        if (startElement == QLatin1StringView(nameElementC))
             return ParseName;
-        if (startElement == QLatin1String(fontFamilyElementC))
+        if (startElement == QLatin1StringView(fontFamilyElementC))
             return ParseFontFamily;
-        if (startElement == QLatin1String(fontPointSizeElementC))
+        if (startElement == QLatin1StringView(fontPointSizeElementC))
             return ParseFontPointSize;
-        if (startElement == QLatin1String(dPIXElementC))
+        if (startElement == QLatin1StringView(dPIXElementC))
             return ParseDPIX;
-        if (startElement == QLatin1String(dPIYElementC))
+        if (startElement == QLatin1StringView(dPIYElementC))
             return ParseDPIY;
-        if (startElement == QLatin1String(styleElementC))
+        if (startElement == QLatin1StringView(styleElementC))
             return ParseStyle;
         break;
     case ParseError:

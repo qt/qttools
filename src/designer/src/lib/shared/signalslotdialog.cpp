@@ -66,8 +66,8 @@ namespace {
 
     SignatureDelegate::SignatureDelegate(QObject * parent) :
         QItemDelegate(parent),
-        m_signatureRegexp(QLatin1String(signatureRegExp)),
-        m_methodNameRegexp(QLatin1String(methodNameRegExp))
+        m_signatureRegexp(QLatin1StringView(signatureRegExp)),
+        m_methodNameRegexp(QLatin1StringView(methodNameRegExp))
     {
         Q_ASSERT(m_signatureRegexp.isValid());
         Q_ASSERT(m_methodNameRegexp.isValid());

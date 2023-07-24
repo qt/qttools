@@ -153,7 +153,7 @@ const char *QWizardPagePropertySheet::pageIdProperty = "pageId";
 
 QWizardPagePropertySheet::QWizardPagePropertySheet(QWizardPage *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),
-    m_pageIdIndex(createFakeProperty(QLatin1String(pageIdProperty), QString()))
+    m_pageIdIndex(createFakeProperty(QLatin1StringView(pageIdProperty), QString()))
 {
     setAttribute(m_pageIdIndex, true);
 }

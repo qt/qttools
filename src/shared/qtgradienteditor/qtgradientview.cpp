@@ -14,6 +14,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 void QtGradientView::slotGradientAdded(const QString &id, const QGradient &gradient)
 {
     QListWidgetItem *item = new QListWidgetItem(QtGradientUtils::gradientPixmap(gradient), id, m_ui.listWidget);
@@ -170,10 +172,10 @@ QtGradientView::QtGradientView(QWidget *parent)
     connect(m_ui.listWidget, &QListWidget::itemChanged, this, &QtGradientView::slotRenameGradientItem);
     connect(m_ui.listWidget, &QListWidget::currentItemChanged, this, &QtGradientView::slotCurrentItemChanged);
 
-    m_newAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/plus.png")), tr("New..."), this);
-    m_editAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/edit.png")), tr("Edit..."), this);
+    m_newAction = new QAction(QIcon(":/qt-project.org/qtgradienteditor/images/plus.png"_L1), tr("New..."), this);
+    m_editAction = new QAction(QIcon(":/qt-project.org/qtgradienteditor/images/edit.png"_L1), tr("Edit..."), this);
     m_renameAction = new QAction(tr("Rename"), this);
-    m_removeAction = new QAction(QIcon(QLatin1String(":/qt-project.org/qtgradienteditor/images/minus.png")), tr("Remove"), this);
+    m_removeAction = new QAction(QIcon(":/qt-project.org/qtgradienteditor/images/minus.png"_L1), tr("Remove"), this);
 
     connect(m_newAction, &QAction::triggered, this, &QtGradientView::slotNewGradient);
     connect(m_editAction, &QAction::triggered, this, &QtGradientView::slotEditGradient);

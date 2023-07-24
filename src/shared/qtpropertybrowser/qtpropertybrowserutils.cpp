@@ -13,6 +13,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 // Make sure icons are removed as soon as QApplication is destroyed, otherwise,
 // handles are leaked on X11.
 static void clearCursorDatabase()
@@ -25,43 +27,43 @@ QtCursorDatabase::QtCursorDatabase()
     qAddPostRoutine(clearCursorDatabase);
 
     appendCursor(Qt::ArrowCursor, QCoreApplication::translate("QtCursorDatabase", "Arrow"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-arrow.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-arrow.png"_L1));
     appendCursor(Qt::UpArrowCursor, QCoreApplication::translate("QtCursorDatabase", "Up Arrow"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-uparrow.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-uparrow.png"_L1));
     appendCursor(Qt::CrossCursor, QCoreApplication::translate("QtCursorDatabase", "Cross"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-cross.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-cross.png"_L1));
     appendCursor(Qt::WaitCursor, QCoreApplication::translate("QtCursorDatabase", "Wait"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-wait.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-wait.png"_L1));
     appendCursor(Qt::IBeamCursor, QCoreApplication::translate("QtCursorDatabase", "IBeam"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-ibeam.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-ibeam.png"_L1));
     appendCursor(Qt::SizeVerCursor, QCoreApplication::translate("QtCursorDatabase", "Size Vertical"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-sizev.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizev.png"_L1));
     appendCursor(Qt::SizeHorCursor, QCoreApplication::translate("QtCursorDatabase", "Size Horizontal"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-sizeh.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizeh.png"_L1));
     appendCursor(Qt::SizeFDiagCursor, QCoreApplication::translate("QtCursorDatabase", "Size Backslash"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-sizef.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizef.png"_L1));
     appendCursor(Qt::SizeBDiagCursor, QCoreApplication::translate("QtCursorDatabase", "Size Slash"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-sizeb.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizeb.png"_L1));
     appendCursor(Qt::SizeAllCursor, QCoreApplication::translate("QtCursorDatabase", "Size All"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-sizeall.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-sizeall.png"_L1));
     appendCursor(Qt::BlankCursor, QCoreApplication::translate("QtCursorDatabase", "Blank"),
                  QIcon());
     appendCursor(Qt::SplitVCursor, QCoreApplication::translate("QtCursorDatabase", "Split Vertical"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-vsplit.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-vsplit.png"_L1));
     appendCursor(Qt::SplitHCursor, QCoreApplication::translate("QtCursorDatabase", "Split Horizontal"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-hsplit.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-hsplit.png"_L1));
     appendCursor(Qt::PointingHandCursor, QCoreApplication::translate("QtCursorDatabase", "Pointing Hand"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-hand.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-hand.png"_L1));
     appendCursor(Qt::ForbiddenCursor, QCoreApplication::translate("QtCursorDatabase", "Forbidden"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-forbidden.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-forbidden.png"_L1));
     appendCursor(Qt::OpenHandCursor, QCoreApplication::translate("QtCursorDatabase", "Open Hand"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-openhand.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-openhand.png"_L1));
     appendCursor(Qt::ClosedHandCursor, QCoreApplication::translate("QtCursorDatabase", "Closed Hand"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-closedhand.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-closedhand.png"_L1));
     appendCursor(Qt::WhatsThisCursor, QCoreApplication::translate("QtCursorDatabase", "What's This"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-whatsthis.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-whatsthis.png"_L1));
     appendCursor(Qt::BusyCursor, QCoreApplication::translate("QtCursorDatabase", "Busy"),
-                 QIcon(QLatin1String(":/qt-project.org/qtpropertybrowser/images/cursor-busy.png")));
+                 QIcon(":/qt-project.org/qtpropertybrowser/images/cursor-busy.png"_L1));
 }
 
 void QtCursorDatabase::clear()
@@ -197,7 +199,7 @@ QString QtPropertyBrowserUtils::dateFormat()
     QString format = loc.dateFormat(QLocale::ShortFormat);
     // Change dd.MM.yy, MM/dd/yy to 4 digit years
     if (format.count(QLatin1Char('y')) == 2)
-        format.insert(format.indexOf(QLatin1Char('y')), QLatin1String("yy"));
+        format.insert(format.indexOf(QLatin1Char('y')), "yy"_L1);
     return format;
 }
 

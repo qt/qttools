@@ -89,7 +89,7 @@ static inline QString getDesignerLanguage(QDesignerFormEditorInterface *core)
 {
     if (QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core)) {
         if (lang->uiExtension() == "jui"_L1)
-            return QLatin1String(jambiLanguageC);
+            return QLatin1StringView(jambiLanguageC);
         return u"unknown"_s;
     }
     return u"c++"_s;
@@ -259,12 +259,12 @@ static bool parsePropertySpecs(QXmlStreamReader &sr,
                                QDesignerCustomWidgetSharedData *data,
                                QString *errorMessage)
 {
-    const QString propertySpecs = QLatin1String(propertySpecsC);
-    const QString stringPropertySpec = QLatin1String(stringPropertySpecC);
-    const QString propertyToolTip = QLatin1String(propertyToolTipC);
-    const QString stringPropertyTypeAttr = QLatin1String(stringPropertyTypeAttrC);
-    const QString stringPropertyNoTrAttr = QLatin1String(stringPropertyNoTrAttrC);
-    const QString stringPropertyNameAttr = QLatin1String(stringPropertyNameAttrC);
+    const QString propertySpecs = QLatin1StringView(propertySpecsC);
+    const QString stringPropertySpec = QLatin1StringView(stringPropertySpecC);
+    const QString propertyToolTip = QLatin1StringView(propertyToolTipC);
+    const QString stringPropertyTypeAttr = QLatin1StringView(stringPropertyTypeAttrC);
+    const QString stringPropertyNoTrAttr = QLatin1StringView(stringPropertyNoTrAttrC);
+    const QString stringPropertyNameAttr = QLatin1StringView(stringPropertyNameAttrC);
 
     while (!sr.atEnd()) {
         switch(sr.readNext()) {
@@ -330,8 +330,8 @@ QDesignerCustomWidgetData::ParseResult
     ParseResult rc = ParseOk;
     // Parse for the (optional) <ui> or the first <widget> element
     QStringList elements;
-    elements.push_back(QLatin1String(uiElementC));
-    elements.push_back(QLatin1String(widgetElementC));
+    elements.push_back(QLatin1StringView(uiElementC));
+    elements.push_back(QLatin1StringView(widgetElementC));
     for (int i = 0; i < 2 && !foundWidget; i++) {
         switch (findElement(elements, sr)) {
         case FindError:
@@ -342,13 +342,13 @@ QDesignerCustomWidgetData::ParseResult
             return ParseError;
         case 0: { // <ui>
             const QXmlStreamAttributes attributes = sr.attributes();
-            data.xmlLanguage = attributes.value(QLatin1String(languageAttributeC)).toString();
-            data.xmlDisplayName = attributes.value(QLatin1String(displayNameAttributeC)).toString();
+            data.xmlLanguage = attributes.value(QLatin1StringView(languageAttributeC)).toString();
+            data.xmlDisplayName = attributes.value(QLatin1StringView(displayNameAttributeC)).toString();
             foundUI = true;
         }
             break;
         case 1: // <widget>: Do some sanity checks
-            data.xmlClassName = sr.attributes().value(QLatin1String(classAttributeC)).toString();
+            data.xmlClassName = sr.attributes().value(QLatin1StringView(classAttributeC)).toString();
             if (data.xmlClassName.isEmpty()) {
                 *errorMessage = QDesignerPluginManager::tr("The class attribute for the class %1 is missing.").arg(name);
                 rc = ParseWarning;
@@ -366,7 +366,7 @@ QDesignerCustomWidgetData::ParseResult
     if (!foundUI)
         return rc;
     elements.clear();
-    elements.push_back(QLatin1String(customwidgetElementC));
+    elements.push_back(QLatin1StringView(customwidgetElementC));
     switch (findElement(elements, sr)) {
     case FindError:
         *errorMessage = msgXmlError(name, sr.errorString());
@@ -378,9 +378,9 @@ QDesignerCustomWidgetData::ParseResult
     }
     // Find <extends>, <addPageMethod>, <stringproperties>
     elements.clear();
-    elements.push_back(QLatin1String(extendsElementC));
-    elements.push_back(QLatin1String(addPageMethodC));
-    elements.push_back(QLatin1String(propertySpecsC));
+    elements.push_back(QLatin1StringView(extendsElementC));
+    elements.push_back(QLatin1StringView(addPageMethodC));
+    elements.push_back(QLatin1StringView(propertySpecsC));
     while (true) {
         switch (findElement(elements, sr)) {
         case FindError:

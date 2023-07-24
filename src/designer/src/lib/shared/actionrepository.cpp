@@ -221,7 +221,7 @@ QMimeData *ActionModel::mimeData(const QModelIndexList &indexes ) const
 // Resource images are plain text. The drag needs to be restricted, however.
 QStringList ActionModel::mimeTypes() const
 {
-    return QStringList(QLatin1String(plainTextMimeType));
+    return QStringList(QLatin1StringView(plainTextMimeType));
 }
 
 QString ActionModel::actionName(int row) const
@@ -613,7 +613,7 @@ ActionRepositoryMimeData::ActionRepositoryMimeData(const ActionList &al, Qt::Dro
 
 QStringList ActionRepositoryMimeData::formats() const
 {
-    return QStringList(QLatin1String(actionMimeType));
+    return QStringList(QLatin1StringView(actionMimeType));
 }
 
 QPixmap  ActionRepositoryMimeData::actionDragPixmap(const QAction *action)

@@ -21,7 +21,7 @@ using namespace Qt::StringLiterals;
 
 static QString realClassName(QDesignerFormEditorInterface *core, QWidget *widget)
 {
-    QString class_name = QLatin1String(widget->metaObject()->className());
+    QString class_name = QLatin1StringView(widget->metaObject()->className());
     const QDesignerWidgetDataBaseInterface *wdb = core->widgetDataBase();
     const int idx = wdb->indexOfObject(widget);
     if (idx != -1)

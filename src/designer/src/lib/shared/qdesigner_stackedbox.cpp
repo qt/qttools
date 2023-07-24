@@ -319,19 +319,19 @@ QStackedWidgetPropertySheet::QStackedWidgetPropertySheet(QStackedWidget *object,
     QDesignerPropertySheet(object, parent),
     m_stackedWidget(object)
 {
-    createFakeProperty(QLatin1String(pagePropertyName), QString());
+    createFakeProperty(QLatin1StringView(pagePropertyName), QString());
 }
 
 bool QStackedWidgetPropertySheet::isEnabled(int index) const
 {
-    if (propertyName(index) != QLatin1String(pagePropertyName))
+    if (propertyName(index) != QLatin1StringView(pagePropertyName))
         return QDesignerPropertySheet::isEnabled(index);
     return  m_stackedWidget->currentWidget() != nullptr;
 }
 
 void QStackedWidgetPropertySheet::setProperty(int index, const QVariant &value)
 {
-    if (propertyName(index) == QLatin1String(pagePropertyName)) {
+    if (propertyName(index) == QLatin1StringView(pagePropertyName)) {
         if (QWidget *w = m_stackedWidget->currentWidget())
             w->setObjectName(value.toString());
     } else {
@@ -341,7 +341,7 @@ void QStackedWidgetPropertySheet::setProperty(int index, const QVariant &value)
 
 QVariant QStackedWidgetPropertySheet::property(int index) const
 {
-    if (propertyName(index) == QLatin1String(pagePropertyName)) {
+    if (propertyName(index) == QLatin1StringView(pagePropertyName)) {
         if (const QWidget *w = m_stackedWidget->currentWidget())
             return w->objectName();
         return QString();
@@ -351,7 +351,7 @@ QVariant QStackedWidgetPropertySheet::property(int index) const
 
 bool QStackedWidgetPropertySheet::reset(int index)
 {
-    if (propertyName(index) == QLatin1String(pagePropertyName)) {
+    if (propertyName(index) == QLatin1StringView(pagePropertyName)) {
         setProperty(index, QString());
         return true;
     }
@@ -360,7 +360,7 @@ bool QStackedWidgetPropertySheet::reset(int index)
 
 bool QStackedWidgetPropertySheet::checkProperty(const QString &propertyName)
 {
-    return propertyName != QLatin1String(pagePropertyName);
+    return propertyName != QLatin1StringView(pagePropertyName);
 }
 
 QT_END_NAMESPACE

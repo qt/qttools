@@ -98,7 +98,7 @@ void AbstractItemEditor::setupProperties(const PropertyDefinition *propList,
     for (int i = 0; propList[i].name; i++) {
         int type = propList[i].typeFunc ? propList[i].typeFunc() : propList[i].type;
         int role = propList[i].role;
-        QtVariantProperty *prop = m_propertyManager->addProperty(type, QLatin1String(propList[i].name));
+        QtVariantProperty *prop = m_propertyManager->addProperty(type, QLatin1StringView(propList[i].name));
         if (role == Qt::TextAlignmentRole) {
             prop->setAttribute(DesignerPropertyManager::alignDefaultAttribute(),
                                QVariant(uint(alignDefault)));

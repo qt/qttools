@@ -37,9 +37,9 @@ PlainTextEditorDialog::PlainTextEditorDialog(QDesignerFormEditorInterface *core,
     vlayout->addWidget(buttonBox);
 
     QDesignerSettingsInterface *settings = core->settingsManager();
-    settings->beginGroup(QLatin1String(PlainTextDialogC));
+    settings->beginGroup(QLatin1StringView(PlainTextDialogC));
 
-    if (settings->contains(QLatin1String(PlainTextEditorGeometryC)))
+    if (settings->contains(QLatin1StringView(PlainTextEditorGeometryC)))
         restoreGeometry(settings->value(QLatin1StringView(PlainTextEditorGeometryC)).toByteArray());
 
     settings->endGroup();
@@ -48,7 +48,7 @@ PlainTextEditorDialog::PlainTextEditorDialog(QDesignerFormEditorInterface *core,
 PlainTextEditorDialog::~PlainTextEditorDialog()
 {
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1String(PlainTextDialogC));
+    settings->beginGroup(QLatin1StringView(PlainTextDialogC));
 
     settings->setValue(QLatin1StringView(PlainTextEditorGeometryC), saveGeometry());
     settings->endGroup();

@@ -25,7 +25,7 @@ static const char profileExtensionC[] = "qdp";
 
 static inline QString fileFilter()
 {
-    return qdesigner_internal::DeviceProfileDialog::tr("Device Profiles (*.%1)").arg(QLatin1String(profileExtensionC));
+    return qdesigner_internal::DeviceProfileDialog::tr("Device Profiles (*.%1)").arg(QLatin1StringView(profileExtensionC));
 }
 
 // Populate a combo with a sequence of integers, also set them as data.

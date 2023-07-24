@@ -514,7 +514,7 @@ DomColorGroup *QFormBuilderExtra::saveColorGroup(const QPalette &palette,
             const QBrush &br = palette.brush(colorGroup, role);
             DomColorRole *colorRole = new DomColorRole();
             colorRole->setElementBrush(saveBrush(br));
-            colorRole->setAttributeRole(QLatin1String(colorRole_enum.valueToKey(role)));
+            colorRole->setAttributeRole(QLatin1StringView(colorRole_enum.valueToKey(role)));
             colorRoles.append(colorRole);
         }
     }
@@ -620,7 +620,7 @@ DomBrush *QFormBuilderExtra::saveBrush(const QBrush &br)
 
     DomBrush *brush = new DomBrush();
     const Qt::BrushStyle style = br.style();
-    brush->setAttributeBrushStyle(QLatin1String(brushStyle_enum.valueToKey(style)));
+    brush->setAttributeBrushStyle(QLatin1StringView(brushStyle_enum.valueToKey(style)));
     if (style == Qt::LinearGradientPattern ||
                 style == Qt::RadialGradientPattern ||
                 style == Qt::ConicalGradientPattern) {
@@ -631,9 +631,9 @@ DomBrush *QFormBuilderExtra::saveBrush(const QBrush &br)
         DomGradient *gradient = new DomGradient();
         const QGradient *gr = br.gradient();
         const QGradient::Type type = gr->type();
-        gradient->setAttributeType(QLatin1String(gradientType_enum.valueToKey(type)));
-        gradient->setAttributeSpread(QLatin1String(gradientSpread_enum.valueToKey(gr->spread())));
-        gradient->setAttributeCoordinateMode(QLatin1String(gradientCoordinate_enum.valueToKey(gr->coordinateMode())));
+        gradient->setAttributeType(QLatin1StringView(gradientType_enum.valueToKey(type)));
+        gradient->setAttributeSpread(QLatin1StringView(gradientSpread_enum.valueToKey(gr->spread())));
+        gradient->setAttributeCoordinateMode(QLatin1StringView(gradientCoordinate_enum.valueToKey(gr->coordinateMode())));
         QList<DomGradientStop *> stops;
         const QGradientStops st = gr->stops();
         for (const QGradientStop &pair : st) {

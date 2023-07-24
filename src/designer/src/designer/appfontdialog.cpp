@@ -83,7 +83,7 @@ void AppFontManager::save(QDesignerSettingsInterface *s, const QString &prefix) 
         fontFiles.push_back(fnp.first);
 
     s->beginGroup(prefix);
-    s->setValue(QLatin1String(fontFileKeyC),  fontFiles);
+    s->setValue(QLatin1StringView(fontFileKeyC),  fontFiles);
     s->endGroup();
 
     if (debugAppFontWidget)

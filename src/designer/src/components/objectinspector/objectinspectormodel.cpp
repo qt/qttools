@@ -115,7 +115,7 @@ namespace qdesigner_internal {
     ObjectData::ObjectData(QObject *parent, QObject *object, const ModelRecursionContext &ctx) :
        m_parent(parent),
        m_object(object),
-       m_className(QLatin1String(object->metaObject()->className())),
+       m_className(QLatin1StringView(object->metaObject()->className())),
        m_objectName(object->objectName())
     {
 
@@ -161,7 +161,7 @@ namespace qdesigner_internal {
             if (const QLayout *layout = w->layout()) {
                 m_type = LayoutWidget;
                 m_managedLayoutType = LayoutInfo::layoutType(ctx.core, layout);
-                m_className = QLatin1String(layout->metaObject()->className());
+                m_className = QLatin1StringView(layout->metaObject()->className());
                 m_objectName = layout->objectName();
             }
             return;

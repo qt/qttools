@@ -56,11 +56,11 @@ Grid::Grid() :
 bool Grid::fromVariantMap(const QVariantMap& vm)
 {
     Grid grid;
-    bool anyData = valueFromVariantMap(vm, QLatin1String(KEY_VISIBLE), grid.m_visible);
-    anyData |= valueFromVariantMap(vm, QLatin1String(KEY_SNAPX), grid.m_snapX);
-    anyData |= valueFromVariantMap(vm, QLatin1String(KEY_SNAPY), grid.m_snapY);
-    anyData |= valueFromVariantMap(vm, QLatin1String(KEY_DELTAX), grid.m_deltaX);
-    anyData |= valueFromVariantMap(vm, QLatin1String(KEY_DELTAY), grid.m_deltaY);
+    bool anyData = valueFromVariantMap(vm, QLatin1StringView(KEY_VISIBLE), grid.m_visible);
+    anyData |= valueFromVariantMap(vm, QLatin1StringView(KEY_SNAPX), grid.m_snapX);
+    anyData |= valueFromVariantMap(vm, QLatin1StringView(KEY_SNAPY), grid.m_snapY);
+    anyData |= valueFromVariantMap(vm, QLatin1StringView(KEY_DELTAX), grid.m_deltaX);
+    anyData |= valueFromVariantMap(vm, QLatin1StringView(KEY_DELTAY), grid.m_deltaY);
     if (!anyData)
         return false;
     if (grid.m_deltaX == 0 || grid.m_deltaY == 0) {
@@ -80,11 +80,11 @@ QVariantMap Grid::toVariantMap(bool forceKeys) const
 
 void  Grid::addToVariantMap(QVariantMap& vm, bool forceKeys) const
 {
-    valueToVariantMap(m_visible, defaultVisible, QLatin1String(KEY_VISIBLE), vm, forceKeys);
-    valueToVariantMap(m_snapX, defaultSnap, QLatin1String(KEY_SNAPX), vm, forceKeys);
-    valueToVariantMap(m_snapY, defaultSnap, QLatin1String(KEY_SNAPY), vm, forceKeys);
-    valueToVariantMap(m_deltaX, DEFAULT_GRID, QLatin1String(KEY_DELTAX), vm, forceKeys);
-    valueToVariantMap(m_deltaY, DEFAULT_GRID, QLatin1String(KEY_DELTAY), vm, forceKeys);
+    valueToVariantMap(m_visible, defaultVisible, QLatin1StringView(KEY_VISIBLE), vm, forceKeys);
+    valueToVariantMap(m_snapX, defaultSnap, QLatin1StringView(KEY_SNAPX), vm, forceKeys);
+    valueToVariantMap(m_snapY, defaultSnap, QLatin1StringView(KEY_SNAPY), vm, forceKeys);
+    valueToVariantMap(m_deltaX, DEFAULT_GRID, QLatin1StringView(KEY_DELTAX), vm, forceKeys);
+    valueToVariantMap(m_deltaY, DEFAULT_GRID, QLatin1StringView(KEY_DELTAY), vm, forceKeys);
 }
 
 void Grid::paint(QWidget *widget, QPaintEvent *e) const

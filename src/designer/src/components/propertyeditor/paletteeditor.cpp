@@ -388,7 +388,7 @@ PaletteModel::PaletteModel(QObject *parent)  :
     for (int r = QPalette::WindowText; r < QPalette::NColorRoles; r++) {
         const auto role = static_cast<QPalette::ColorRole>(r);
         if (role != QPalette::NoRole)
-            m_roleEntries.append({QLatin1String(e.key(r)), role});
+            m_roleEntries.append({QLatin1StringView(e.key(r)), role});
     }
 }
 

@@ -308,13 +308,13 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
 
     // retrieve initial settings
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1String(SettingsGroupC));
-    const SettingsView view = settings->value(QLatin1String(ViewKeyC), TreeView).toInt() == TreeView ? TreeView :  ButtonView;
+    settings->beginGroup(QLatin1StringView(SettingsGroupC));
+    const SettingsView view = settings->value(QLatin1StringView(ViewKeyC), TreeView).toInt() == TreeView ? TreeView :  ButtonView;
     // Coloring not available unless treeview and not sorted
-    m_sorting = settings->value(QLatin1String(SortedKeyC), false).toBool();
-    m_coloring = settings->value(QLatin1String(ColorKeyC), true).toBool();
-    const QVariantMap expansionState = settings->value(QLatin1String(ExpansionKeyC), QVariantMap()).toMap();
-    const int splitterPosition = settings->value(QLatin1String(SplitterPositionKeyC), 150).toInt();
+    m_sorting = settings->value(QLatin1StringView(SortedKeyC), false).toBool();
+    m_coloring = settings->value(QLatin1StringView(ColorKeyC), true).toBool();
+    const QVariantMap expansionState = settings->value(QLatin1StringView(ExpansionKeyC), QVariantMap()).toMap();
+    const int splitterPosition = settings->value(QLatin1StringView(SplitterPositionKeyC), 150).toInt();
     settings->endGroup();
     // Apply settings
     m_sortingAction->setChecked(m_sorting);
@@ -351,16 +351,16 @@ PropertyEditor::~PropertyEditor()
 void PropertyEditor::saveSettings() const
 {
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1String(SettingsGroupC));
-    settings->setValue(QLatin1String(ViewKeyC), QVariant(m_treeAction->isChecked() ? TreeView : ButtonView));
-    settings->setValue(QLatin1String(ColorKeyC), QVariant(m_coloring));
-    settings->setValue(QLatin1String(SortedKeyC), QVariant(m_sorting));
+    settings->beginGroup(QLatin1StringView(SettingsGroupC));
+    settings->setValue(QLatin1StringView(ViewKeyC), QVariant(m_treeAction->isChecked() ? TreeView : ButtonView));
+    settings->setValue(QLatin1StringView(ColorKeyC), QVariant(m_coloring));
+    settings->setValue(QLatin1StringView(SortedKeyC), QVariant(m_sorting));
     // Save last expansionState as QVariant map
     QVariantMap expansionState;
     for (auto it = m_expansionState.cbegin(), cend = m_expansionState.cend(); it != cend; ++it)
         expansionState.insert(it.key(), QVariant(it.value()));
-    settings->setValue(QLatin1String(ExpansionKeyC), expansionState);
-    settings->setValue(QLatin1String(SplitterPositionKeyC), m_treeBrowser->splitterPosition());
+    settings->setValue(QLatin1StringView(ExpansionKeyC), expansionState);
+    settings->setValue(QLatin1StringView(SplitterPositionKeyC), m_treeBrowser->splitterPosition());
     settings->endGroup();
 }
 
@@ -807,14 +807,14 @@ QString PropertyEditor::realClassName(QObject *object) const
     if (!object)
         return QString();
 
-    QString className = QLatin1String(object->metaObject()->className());
+    QString className = QLatin1StringView(object->metaObject()->className());
     const QDesignerWidgetDataBaseInterface *db = core()->widgetDataBase();
     if (QDesignerWidgetDataBaseItemInterface *widgetItem = db->item(db->indexOfObject(object, true))) {
         className = widgetItem->name();
 
         if (object->isWidgetType() && className == m_strings.m_qLayoutWidget
                 && static_cast<QWidget*>(object)->layout()) {
-            className = QLatin1String(static_cast<QWidget*>(object)->layout()->metaObject()->className());
+            className = QLatin1StringView(static_cast<QWidget*>(object)->layout()->metaObject()->className());
         }
     }
 

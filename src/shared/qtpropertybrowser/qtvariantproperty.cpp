@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 using QtIconMap = QMap<int, QIcon>;
 
 class QtEnumPropertyType
@@ -325,15 +327,15 @@ public:
 };
 
 QtVariantPropertyManagerPrivate::QtVariantPropertyManagerPrivate() :
-    m_constraintAttribute(QLatin1String("constraint")),
-    m_singleStepAttribute(QLatin1String("singleStep")),
-    m_decimalsAttribute(QLatin1String("decimals")),
-    m_enumIconsAttribute(QLatin1String("enumIcons")),
-    m_enumNamesAttribute(QLatin1String("enumNames")),
-    m_flagNamesAttribute(QLatin1String("flagNames")),
-    m_maximumAttribute(QLatin1String("maximum")),
-    m_minimumAttribute(QLatin1String("minimum")),
-    m_regExpAttribute(QLatin1String("regExp"))
+    m_constraintAttribute("constraint"_L1),
+    m_singleStepAttribute("singleStep"_L1),
+    m_decimalsAttribute("decimals"_L1),
+    m_enumIconsAttribute("enumIcons"_L1),
+    m_enumNamesAttribute("enumNames"_L1),
+    m_flagNamesAttribute("flagNames"_L1),
+    m_maximumAttribute("maximum"_L1),
+    m_minimumAttribute("minimum"_L1),
+    m_regExpAttribute("regExp"_L1)
 {
 }
 

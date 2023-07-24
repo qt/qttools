@@ -74,13 +74,13 @@ QStringList ItemViewPropertySheetPrivate::realPropertyNames()
 {
     if (m_realPropertyNames.isEmpty())
         m_realPropertyNames
-            << QLatin1String(visibleProperty)
-            << QLatin1String(cascadingSectionResizesProperty)
-            << QLatin1String(defaultSectionSizeProperty)
-            << QLatin1String(highlightSectionsProperty)
-            << QLatin1String(minimumSectionSizeProperty)
-            << QLatin1String(showSortIndicatorProperty)
-            << QLatin1String(stretchLastSectionProperty);
+            << QLatin1StringView(visibleProperty)
+            << QLatin1StringView(cascadingSectionResizesProperty)
+            << QLatin1StringView(defaultSectionSizeProperty)
+            << QLatin1StringView(highlightSectionsProperty)
+            << QLatin1StringView(minimumSectionSizeProperty)
+            << QLatin1StringView(showSortIndicatorProperty)
+            << QLatin1StringView(stretchLastSectionProperty);
     return m_realPropertyNames;
 }
 
@@ -138,12 +138,12 @@ void ItemViewPropertySheet::initHeaderProperties(QHeaderView *hv, const QString 
 {
     QDesignerPropertySheetExtension *headerSheet = d->m_propertySheet.value(hv);
     Q_ASSERT(headerSheet);
-    const QString headerGroupS = QLatin1String(headerGroup);
+    const QString headerGroupS = QLatin1StringView(headerGroup);
     const QStringList &realPropertyNames = d->realPropertyNames();
     for (const QString &realPropertyName : realPropertyNames) {
         const int headerIndex = headerSheet->indexOf(realPropertyName);
         Q_ASSERT(headerIndex != -1);
-        const QVariant defaultValue = realPropertyName == QLatin1String(visibleProperty) ?
+        const QVariant defaultValue = realPropertyName == QLatin1StringView(visibleProperty) ?
                                       QVariant(true) : headerSheet->property(headerIndex);
         const QString fakePropertyName = d->fakePropertyName(prefix, realPropertyName);
         const int fakeIndex = createFakeProperty(fakePropertyName, defaultValue);
@@ -215,7 +215,7 @@ bool ItemViewPropertySheet::reset(int index)
        // Resetting for "visible" might fail and the stored default
        // of the Widget database is "false" due to the widget not being
        // visible at the time it was determined. Reset to "true" manually.
-       if (!resetRC && headerSheet->propertyName(headerIndex) == QLatin1String(visibleProperty)) {
+       if (!resetRC && headerSheet->propertyName(headerIndex) == QLatin1StringView(visibleProperty)) {
            headerSheet->setProperty(headerIndex, QVariant(true));
            headerSheet->setChanged(headerIndex, false);
            return true;

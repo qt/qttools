@@ -63,7 +63,7 @@ Grid QDesignerSharedSettings::defaultGrid() const
 {
     Grid grid;
     const QVariantMap defaultGridMap
-            = m_settings->value(QLatin1String(defaultGridKey), QVariantMap()).toMap();
+            = m_settings->value(QLatin1StringView(defaultGridKey), QVariantMap()).toMap();
     if (!defaultGridMap.isEmpty())
         grid.fromVariantMap(defaultGridMap);
     return grid;
@@ -71,7 +71,7 @@ Grid QDesignerSharedSettings::defaultGrid() const
 
 void QDesignerSharedSettings::setDefaultGrid(const Grid &grid)
 {
-    m_settings->setValue(QLatin1String(defaultGridKey), grid.toVariantMap());
+    m_settings->setValue(QLatin1StringView(defaultGridKey), grid.toVariantMap());
 }
 
 const QStringList &QDesignerSharedSettings::defaultFormTemplatePaths()
@@ -116,23 +116,23 @@ void QDesignerSharedSettings::migrateTemplates()
 
 QStringList QDesignerSharedSettings::formTemplatePaths() const
 {
-    return m_settings->value(QLatin1String(formTemplatePathsKey),
+    return m_settings->value(QLatin1StringView(formTemplatePathsKey),
                             defaultFormTemplatePaths()).toStringList();
 }
 
 void QDesignerSharedSettings::setFormTemplatePaths(const QStringList &paths)
 {
-    m_settings->setValue(QLatin1String(formTemplatePathsKey), paths);
+    m_settings->setValue(QLatin1StringView(formTemplatePathsKey), paths);
 }
 
 QString  QDesignerSharedSettings::formTemplate() const
 {
-    return m_settings->value(QLatin1String(formTemplateKey)).toString();
+    return m_settings->value(QLatin1StringView(formTemplateKey)).toString();
 }
 
 void QDesignerSharedSettings::setFormTemplate(const QString &t)
 {
-    m_settings->setValue(QLatin1String(formTemplateKey), t);
+    m_settings->setValue(QLatin1StringView(formTemplateKey), t);
 }
 
 void QDesignerSharedSettings::setAdditionalFormTemplatePaths(const QStringList &additionalPaths)
@@ -157,15 +157,15 @@ QStringList QDesignerSharedSettings::additionalFormTemplatePaths() const
 
 QSize QDesignerSharedSettings::newFormSize() const
 {
-    return m_settings->value(QLatin1String(newFormSizeKey), QSize(0, 0)).toSize();
+    return m_settings->value(QLatin1StringView(newFormSizeKey), QSize(0, 0)).toSize();
 }
 
 void  QDesignerSharedSettings::setNewFormSize(const QSize &s)
 {
     if (s.isNull()) {
-        m_settings->remove(QLatin1String(newFormSizeKey));
+        m_settings->remove(QLatin1StringView(newFormSizeKey));
     } else {
-        m_settings->setValue(QLatin1String(newFormSizeKey), s);
+        m_settings->setValue(QLatin1StringView(newFormSizeKey), s);
     }
 }
 
@@ -173,54 +173,54 @@ void  QDesignerSharedSettings::setNewFormSize(const QSize &s)
 PreviewConfiguration QDesignerSharedSettings::customPreviewConfiguration() const
 {
     PreviewConfiguration configuration;
-    configuration.fromSettings(QLatin1String(previewKey), m_settings);
+    configuration.fromSettings(QLatin1StringView(previewKey), m_settings);
     return configuration;
 }
 
 void QDesignerSharedSettings::setCustomPreviewConfiguration(const PreviewConfiguration &configuration)
 {
-    configuration.toSettings(QLatin1String(previewKey), m_settings);
+    configuration.toSettings(QLatin1StringView(previewKey), m_settings);
 }
 
 bool QDesignerSharedSettings::isCustomPreviewConfigurationEnabled() const
 {
-    m_settings->beginGroup(QLatin1String(previewKey));
-    bool isEnabled = m_settings->value(QLatin1String(enabledKey), false).toBool();
+    m_settings->beginGroup(QLatin1StringView(previewKey));
+    bool isEnabled = m_settings->value(QLatin1StringView(enabledKey), false).toBool();
     m_settings->endGroup();
     return isEnabled;
 }
 
 void QDesignerSharedSettings::setCustomPreviewConfigurationEnabled(bool enabled)
 {
-    m_settings->beginGroup(QLatin1String(previewKey));
-    m_settings->setValue(QLatin1String(enabledKey), enabled);
+    m_settings->beginGroup(QLatin1StringView(previewKey));
+    m_settings->setValue(QLatin1StringView(enabledKey), enabled);
     m_settings->endGroup();
 }
 
 QStringList QDesignerSharedSettings::userDeviceSkins() const
 {
-    m_settings->beginGroup(QLatin1String(previewKey));
+    m_settings->beginGroup(QLatin1StringView(previewKey));
     QStringList userDeviceSkins
-            = m_settings->value(QLatin1String(userDeviceSkinsKey), QStringList()).toStringList();
+            = m_settings->value(QLatin1StringView(userDeviceSkinsKey), QStringList()).toStringList();
     m_settings->endGroup();
     return userDeviceSkins;
 }
 
 void QDesignerSharedSettings::setUserDeviceSkins(const QStringList &userDeviceSkins)
 {
-    m_settings->beginGroup(QLatin1String(previewKey));
-    m_settings->setValue(QLatin1String(userDeviceSkinsKey), userDeviceSkins);
+    m_settings->beginGroup(QLatin1StringView(previewKey));
+    m_settings->setValue(QLatin1StringView(userDeviceSkinsKey), userDeviceSkins);
     m_settings->endGroup();
 }
 
 int QDesignerSharedSettings::zoom() const
 {
-    return m_settings->value(QLatin1String(zoomKey), 100).toInt();
+    return m_settings->value(QLatin1StringView(zoomKey), 100).toInt();
 }
 
 void QDesignerSharedSettings::setZoom(int z)
 {
-    m_settings->setValue(QLatin1String(zoomKey), QVariant(z));
+    m_settings->setValue(QLatin1StringView(zoomKey), QVariant(z));
 }
 
 ObjectNamingMode QDesignerSharedSettings::objectNamingMode() const
@@ -239,12 +239,12 @@ void QDesignerSharedSettings::setObjectNamingMode(ObjectNamingMode n)
 
 bool QDesignerSharedSettings::zoomEnabled() const
 {
-    return m_settings->value(QLatin1String(zoomEnabledKey), false).toBool();
+    return m_settings->value(QLatin1StringView(zoomEnabledKey), false).toBool();
 }
 
 void QDesignerSharedSettings::setZoomEnabled(bool v)
 {
-     m_settings->setValue(QLatin1String(zoomEnabledKey), v);
+     m_settings->setValue(QLatin1StringView(zoomEnabledKey), v);
 }
 
 DeviceProfile QDesignerSharedSettings::currentDeviceProfile() const
@@ -254,12 +254,12 @@ DeviceProfile QDesignerSharedSettings::currentDeviceProfile() const
 
 void QDesignerSharedSettings::setCurrentDeviceProfileIndex(int i)
 {
-    m_settings->setValue(QLatin1String(deviceProfileIndexKey), i);
+    m_settings->setValue(QLatin1StringView(deviceProfileIndexKey), i);
 }
 
 int QDesignerSharedSettings::currentDeviceProfileIndex() const
 {
-     return m_settings->value(QLatin1String(deviceProfileIndexKey), -1).toInt();
+     return m_settings->value(QLatin1StringView(deviceProfileIndexKey), -1).toInt();
 }
 
 static inline QString msgWarnDeviceProfileXml(const QString &msg)
@@ -285,7 +285,7 @@ DeviceProfile QDesignerSharedSettings::deviceProfileAt(int idx) const
 
 QStringList QDesignerSharedSettings::deviceProfileXml() const
 {
-    return m_settings->value(QLatin1String(deviceProfilesKey), QStringList()).toStringList();
+    return m_settings->value(QLatin1StringView(deviceProfilesKey), QStringList()).toStringList();
 }
 
 QDesignerSharedSettings::DeviceProfileList QDesignerSharedSettings::deviceProfiles() const
@@ -312,7 +312,7 @@ void QDesignerSharedSettings::setDeviceProfiles(const DeviceProfileList &dpl)
     QStringList l;
     for (const auto &dp : dpl)
         l.push_back(dp.toXml());
-    m_settings->setValue(QLatin1String(deviceProfilesKey), l);
+    m_settings->setValue(QLatin1StringView(deviceProfilesKey), l);
 }
 }
 

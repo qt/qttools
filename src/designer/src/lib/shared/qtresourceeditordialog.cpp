@@ -86,15 +86,15 @@ static bool loadResourceFileData(const QDomElement &fileElem, QtResourceFileData
     if (!fileData)
         return false;
 
-    if (fileElem.tagName() != QLatin1String(rccFileTag)) {
-        *errorMessage = msgTagMismatch(fileElem.tagName(), QLatin1String(rccFileTag));
+    if (fileElem.tagName() != QLatin1StringView(rccFileTag)) {
+        *errorMessage = msgTagMismatch(fileElem.tagName(), QLatin1StringView(rccFileTag));
         return false;
     }
 
     QtResourceFileData &data = *fileData;
 
     data.path = fileElem.text();
-    data.alias = fileElem.attribute(QLatin1String(rccAliasAttribute));
+    data.alias = fileElem.attribute(QLatin1StringView(rccAliasAttribute));
 
     return true;
 }
@@ -104,15 +104,15 @@ static bool loadResourcePrefixData(const QDomElement &prefixElem, QtResourcePref
     if (!prefixData)
         return false;
 
-    if (prefixElem.tagName() != QLatin1String(rccTag)) {
-        *errorMessage = msgTagMismatch(prefixElem.tagName(), QLatin1String(rccTag));
+    if (prefixElem.tagName() != QLatin1StringView(rccTag)) {
+        *errorMessage = msgTagMismatch(prefixElem.tagName(), QLatin1StringView(rccTag));
         return false;
     }
 
     QtResourcePrefixData &data = *prefixData;
 
-    data.prefix = prefixElem.attribute(QLatin1String(rccPrefixAttribute));
-    data.language = prefixElem.attribute(QLatin1String(rccLangAttribute));
+    data.prefix = prefixElem.attribute(QLatin1StringView(rccPrefixAttribute));
+    data.language = prefixElem.attribute(QLatin1StringView(rccLangAttribute));
     QDomElement fileElem = prefixElem.firstChildElement();
     while (!fileElem.isNull()) {
         QtResourceFileData fileData;
@@ -132,8 +132,8 @@ static bool loadQrcFileData(const QDomDocument &doc, const QString &path, QtQrcF
     QtQrcFileData &data = *qrcFileData;
 
     QDomElement docElem = doc.documentElement();
-    if (docElem.tagName() != QLatin1String(rccRootTag)) {
-        *errorMessage = msgTagMismatch(docElem.tagName(), QLatin1String(rccRootTag));
+    if (docElem.tagName() != QLatin1StringView(rccRootTag)) {
+        *errorMessage = msgTagMismatch(docElem.tagName(), QLatin1StringView(rccRootTag));
         return false;
     }
 
@@ -153,9 +153,9 @@ static bool loadQrcFileData(const QDomDocument &doc, const QString &path, QtQrcF
 
 static QDomElement saveResourceFileData(QDomDocument &doc, const QtResourceFileData &fileData)
 {
-    QDomElement fileElem = doc.createElement(QLatin1String(rccFileTag));
+    QDomElement fileElem = doc.createElement(QLatin1StringView(rccFileTag));
     if (!fileData.alias.isEmpty())
-        fileElem.setAttribute(QLatin1String(rccAliasAttribute), fileData.alias);
+        fileElem.setAttribute(QLatin1StringView(rccAliasAttribute), fileData.alias);
 
     QDomText textElem = doc.createTextNode(fileData.path);
     fileElem.appendChild(textElem);
@@ -165,11 +165,11 @@ static QDomElement saveResourceFileData(QDomDocument &doc, const QtResourceFileD
 
 static QDomElement saveResourcePrefixData(QDomDocument &doc, const QtResourcePrefixData &prefixData)
 {
-    QDomElement prefixElem = doc.createElement(QLatin1String(rccTag));
+    QDomElement prefixElem = doc.createElement(QLatin1StringView(rccTag));
     if (!prefixData.prefix.isEmpty())
-        prefixElem.setAttribute(QLatin1String(rccPrefixAttribute), prefixData.prefix);
+        prefixElem.setAttribute(QLatin1StringView(rccPrefixAttribute), prefixData.prefix);
     if (!prefixData.language.isEmpty())
-        prefixElem.setAttribute(QLatin1String(rccLangAttribute), prefixData.language);
+        prefixElem.setAttribute(QLatin1StringView(rccLangAttribute), prefixData.language);
 
     for (const QtResourceFileData &rfd : prefixData.resourceFileList) {
         QDomElement fileElem = saveResourceFileData(doc, rfd);
@@ -182,7 +182,7 @@ static QDomElement saveResourcePrefixData(QDomDocument &doc, const QtResourcePre
 static QDomDocument saveQrcFileData(const QtQrcFileData &qrcFileData)
 {
     QDomDocument doc;
-    QDomElement docElem = doc.createElement(QLatin1String(rccRootTag));
+    QDomElement docElem = doc.createElement(QLatin1StringView(rccRootTag));
     for (const QtResourcePrefixData &prefixData : qrcFileData.resourceList) {
         QDomElement prefixElem = saveResourcePrefixData(doc, prefixData);
 
@@ -1992,9 +1992,9 @@ QtResourceEditorDialog::QtResourceEditorDialog(QDesignerFormEditorInterface *cor
     d_ptr->m_moveDownQrcFileAction->setEnabled(false);
 
     QDesignerSettingsInterface *settings = core->settingsManager();
-    settings->beginGroup(QLatin1String(QrcDialogC));
+    settings->beginGroup(QLatin1StringView(QrcDialogC));
 
-    d_ptr->m_ui.splitter->restoreState(settings->value(QLatin1String(SplitterPosition)).toByteArray());
+    d_ptr->m_ui.splitter->restoreState(settings->value(QLatin1StringView(SplitterPosition)).toByteArray());
     const QVariant geometry = settings->value(QLatin1StringView(ResourceEditorGeometry));
     if (geometry.metaType().id() == QMetaType::QByteArray) // Used to be a QRect up until 5.4.0, QTBUG-43374
         restoreGeometry(geometry.toByteArray());
@@ -2005,9 +2005,9 @@ QtResourceEditorDialog::QtResourceEditorDialog(QDesignerFormEditorInterface *cor
 QtResourceEditorDialog::~QtResourceEditorDialog()
 {
     QDesignerSettingsInterface *settings = d_ptr->m_core->settingsManager();
-    settings->beginGroup(QLatin1String(QrcDialogC));
+    settings->beginGroup(QLatin1StringView(QrcDialogC));
 
-    settings->setValue(QLatin1String(SplitterPosition), d_ptr->m_ui.splitter->saveState());
+    settings->setValue(QLatin1StringView(SplitterPosition), d_ptr->m_ui.splitter->saveState());
     settings->setValue(QLatin1StringView(ResourceEditorGeometry), saveGeometry());
     settings->endGroup();
 

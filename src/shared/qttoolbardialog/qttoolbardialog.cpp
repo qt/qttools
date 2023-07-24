@@ -17,6 +17,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 class QtFullToolBarManagerPrivate;
 
 class QtFullToolBarManager : public QObject
@@ -438,8 +440,7 @@ void QtFullToolBarManager::addAction(QAction *action, const QString &category)
         return;
     if (d_ptr->allActions.contains(action))
         return;
-    if (QLatin1String(action->metaObject()->className()) ==
-                QLatin1String("QToolBarWidgetAction"))
+    if (qstrcmp(action->metaObject()->className(), "QToolBarWidgetAction") == 0)
         d_ptr->widgetActions.insert(action, 0);
     else
         d_ptr->regularActions.insert(action);
@@ -562,7 +563,7 @@ QToolBar *QtFullToolBarManager::createToolBar(const QString &toolBarName)
         return 0;
     QToolBar *toolBar = new QToolBar(toolBarName, mainWindow());
     int i = 1;
-    const QString prefix = QLatin1String("_Custom_Toolbar_%1");
+    const QString prefix = "_Custom_Toolbar_%1"_L1;
     QString name = prefix.arg(i);
     while (d_ptr->toolBarByName(name))
         name = prefix.arg(++i);
@@ -1684,12 +1685,12 @@ QtToolBarDialog::QtToolBarDialog(QWidget *parent, Qt::WindowFlags flags)
     d_ptr->ui.actionTree->setRootIsDecorated(false);
     d_ptr->ui.actionTree->header()->hide();
 
-    d_ptr->ui.upButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/up.png")));
-    d_ptr->ui.downButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/down.png")));
-    d_ptr->ui.leftButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/back.png")));
-    d_ptr->ui.rightButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/forward.png")));
-    d_ptr->ui.newButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/plus.png")));
-    d_ptr->ui.removeButton->setIcon(QIcon(QLatin1String(":/qt-project.org/qttoolbardialog/images/minus.png")));
+    d_ptr->ui.upButton->setIcon(QIcon(":/qt-project.org/qttoolbardialog/images/up.png"_L1));
+    d_ptr->ui.downButton->setIcon(QIcon(":/qt-project.org/qttoolbardialog/images/down.png"_L1));
+    d_ptr->ui.leftButton->setIcon(QIcon(":/qt-project.org/qttoolbardialog/images/back.png"_L1));
+    d_ptr->ui.rightButton->setIcon(QIcon(":/qt-project.org/qttoolbardialog/images/forward.png"_L1));
+    d_ptr->ui.newButton->setIcon(QIcon(":/qt-project.org/qttoolbardialog/images/plus.png"_L1));
+    d_ptr->ui.removeButton->setIcon(QIcon(":/qt-project.org/qttoolbardialog/images/minus.png"_L1));
 
     connect(d_ptr->ui.newButton, &QAbstractButton::clicked, this, [this] { d_ptr->newClicked(); });
     connect(d_ptr->ui.removeButton, &QAbstractButton::clicked, this, [this] { d_ptr->removeClicked(); });
