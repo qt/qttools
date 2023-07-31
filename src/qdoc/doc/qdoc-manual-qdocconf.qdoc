@@ -24,7 +24,7 @@
     define where QDoc should find the various source files, images and
     examples, where to put generated documentation etc. The
     configuration file can also contain directives like \c
-    include. For an example, see \l {minimal-qdocconf}{a minimal qdocconf file}.
+    include. For an example, see \l {minimal-qdocconf}.
 
     You can also use configuration variables to get QDoc to support
     \l{Supporting Derived Projects} {derived projects}, i.e QDoc can
