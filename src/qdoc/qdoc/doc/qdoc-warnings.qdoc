@@ -70,7 +70,7 @@
     {\\qmlmodule} is missing, or an incorrect module identifier was
     used in \\qmlproperty, \\qmlmethod, or \\qmlsignal command(s).
 
-    \section No such <type> in QML <module>
+    \section1 No such <type> in QML <module>
 
     QDoc issues this warning if a \l {qmlproperty-command} {\\qmlproperty},
     \l {qmlmethod-command} {\\qmlmethod}, or  \l {qmlsignal-command}
