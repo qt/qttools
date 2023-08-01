@@ -1575,8 +1575,8 @@
     can link to using the \l {l-command} {\\l (link)} and \l
     {sa-command} {\\sa (see also)} commands.
 
-    The text up to the line break becomes the target name. Be sure to
-    follow the target name with a line break. Curly brackets are not
+    \e{The text up to the line break becomes the target name}. Be sure
+    to follow the target name with a line break. Curly brackets are not
     required around the target name, but they may be required when the
     target name is used in a link command. See below.
 
@@ -1601,6 +1601,25 @@
 
     \note The brackets in the link example are required because the
     target name contains spaces.
+
+    \section2 \\target in a \\table
+    When you use the \\target command in a table, make sure that the
+    \\target command follows a \l {li-command}{\\li}-command (table
+    cell), and that it's either on a separate line, or the last content
+    that occurs in the line it's in. This is due to how the \\target
+    command works; it consumes anything up to the next line break as
+    its parameter. In other words, if you have a table and need a
+    \\target within it, make sure that it follows the following
+    structure:
+
+    \badcode
+    \table
+        \row
+            \li \target my-target
+            My text goes here.
+            \li This is my next table cell.
+    \endtable
+    \endcode
 
     See also \l {l-command} {\\l}, \l {sa-command} {\\sa} and \l
     {keyword-command} {\\keyword}.

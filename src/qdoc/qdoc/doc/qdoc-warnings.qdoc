@@ -34,6 +34,14 @@
         text was not.
     \endlist
 
+    \section1 Found a \\target command outside table item in a table
+
+    If QDoc encounters a \l {target-command}{\\target command} that is not
+    preceded by an \\li command within a \l {table-command}
+    {\\table ... \\endtable block}, it issues this warning. The warning is
+    followed by the text
+    \e {Move the \\target inside the \\li to resolve this warning}.
+
     \section1 Cannot find snippets file to quote from
 
     QDoc issues this warning if it is unable to find the file named

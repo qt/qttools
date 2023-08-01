@@ -957,6 +957,10 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     append(Atom::TableOfContents, p1);
                     break;
                 case CMD_TARGET:
+                    if (m_openedCommands.top() == CMD_TABLE && !m_inTableItem) {
+                        location().warning("Found a \\target command outside table item in a table.\n"
+                                           "Move the \\target inside the \\li to resolve this warning.");
+                    }
                     insertTarget(getRestOfLine());
                     break;
                 case CMD_TT:
