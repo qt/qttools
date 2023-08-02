@@ -127,7 +127,7 @@ const QByteArray *QtResourceModelPrivate::createResource(const QString &path, QS
     contents->clear();
     do {
         // run RCC
-        RCCResourceLibrary library;
+        RCCResourceLibrary library(3);
         library.setVerbose(true);
         library.setInputFiles(QStringList(path));
         library.setFormat(RCCResourceLibrary::Binary);
@@ -138,7 +138,7 @@ const QByteArray *QtResourceModelPrivate::createResource(const QString &path, QS
             break;
         // return code cannot be fully trusted, might still be empty
         const ResourceDataFileMap resMap = library.resourceDataFileMap();
-        if (!library.output(buffer, errorDevice))
+        if (!library.output(buffer, buffer /* tempfile, unused */, errorDevice))
             break;
 
         *errorCount = library.failedResources().size();

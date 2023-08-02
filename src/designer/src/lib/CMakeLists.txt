@@ -411,6 +411,15 @@ qt_internal_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
         ../../../shared/qtpropertybrowser
 )
 
+if(NOT TARGET WrapZSTD::WrapZSTD)
+    qt_find_package(WrapZSTD 1.3 PROVIDED_TARGETS WrapZSTD::WrapZSTD)
+endif()
+
+qt_internal_extend_target(Designer CONDITION QT_FEATURE_zstd
+    LIBRARIES
+        WrapZSTD::WrapZSTD
+)
+
 if(NOT QT_BUILD_SHARED_LIBS)
     # Resources:
     set(qtpropertybrowser_resource_files
