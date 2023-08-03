@@ -5,9 +5,9 @@
 
 #include "qt_catch_conversions.h"
 
-#include <boundaries/filesystem/directorypath.h>
-#include <boundaries/filesystem/filepath.h>
-#include <boundaries/filesystem/resolvedfile.h>
+#include <qdoc/boundaries/filesystem/directorypath.h>
+#include <qdoc/boundaries/filesystem/filepath.h>
+#include <qdoc/boundaries/filesystem/resolvedfile.h>
 
 #include <ostream>
 

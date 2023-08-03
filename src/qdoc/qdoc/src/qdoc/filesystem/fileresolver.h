@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "boundaries/filesystem/directorypath.h"
-#include "boundaries/filesystem/resolvedfile.h"
+#include "qdoc/boundaries/filesystem/directorypath.h"
+#include "qdoc/boundaries/filesystem/resolvedfile.h"
 
 #include <optional>
 #include <vector>

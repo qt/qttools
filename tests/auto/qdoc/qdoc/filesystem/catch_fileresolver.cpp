@@ -5,7 +5,7 @@
 
 #include <catch/catch.hpp>
 
-#include <filesystem/fileresolver.h>
+#include <qdoc/filesystem/fileresolver.h>
 
 #include <catch_generators/generators/path_generator.h>
 

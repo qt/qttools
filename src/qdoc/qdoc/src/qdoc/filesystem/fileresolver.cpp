@@ -3,7 +3,7 @@
 
 #include "fileresolver.h"
 
-#include "boundaries/filesystem/filepath.h"
+#include "qdoc/boundaries/filesystem/filepath.h"
 
 #include <QDir>
 

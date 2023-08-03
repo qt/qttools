@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "boundaries/refined_typedef.h"
+#include "qdoc/boundaries/refined_typedef.h"
 
 #include <optional>
 

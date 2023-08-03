@@ -5,7 +5,7 @@
 
 #include <catch/catch.hpp>
 
-#include <boundaries/filesystem/filepath.h>
+#include <qdoc/boundaries/filesystem/filepath.h>
 
 #include <catch_generators/generators/path_generator.h>
 

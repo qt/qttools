@@ -5,7 +5,7 @@
 
 #include <catch/catch.hpp>
 
-#include <boundaries/filesystem/directorypath.h>
+#include <qdoc/boundaries/filesystem/directorypath.h>
 
 #include <catch_generators/generators/path_generator.h>
 
