@@ -111,3 +111,7 @@ qt_internal_extend_target(${target_name} CONDITION (WIN32 AND ICC) OR MSVC
 qt_internal_add_docs(${target_name}
     doc/config/qdoc.qdocconf
 )
+
+if(QT_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
