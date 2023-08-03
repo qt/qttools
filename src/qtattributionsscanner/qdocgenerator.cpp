@@ -136,7 +136,7 @@ static void generate(QTextStream &out, const Package &package, const QDir &baseD
         out << package.license << ".\n\n";
     }
 
-    foreach (const QString &license, package.licenseFilesContents)
+    for (const QString &license : package.licenseFilesContents)
         sourceCode(out, license);
 
     out << "*/\n";

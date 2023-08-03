@@ -325,7 +325,7 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         p.copyrightFileContents = QString::fromUtf8(file.readAll());
     }
 
-    foreach (const QString &licenseFile, p.licenseFiles) {
+    for (const QString &licenseFile : std::as_const(p.licenseFiles)) {
         QFile file(licenseFile);
         if (!file.open(QIODevice::ReadOnly)) {
             if (logLevel != SilentLog) {
