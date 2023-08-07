@@ -15,16 +15,21 @@ endif()
 qt_internal_add_test(tst_qdoccommandlineparser
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     SOURCES
-        ${QDOC_SOURCE_DIRECTORY}/qdoccommandlineparser.cpp
-        ${QDOC_SOURCE_DIRECTORY}/utilities.cpp
-        tst_qdoccommandlineparser.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/tst_qdoccommandlineparser.cpp
+
+        ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/qdoccommandlineparser.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/utilities.cpp
     INCLUDE_DIRECTORIES
-        ${QDOC_INCLUDE_DIRECTORY}
+        ${CMAKE_CURRENT_LIST_DIR}/../../src/
 )
 
 # Resources:
+set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/tst_arguments.txt"
+    PROPERTIES QT_RESOURCE_ALIAS "tst_arguments.txt"
+)
+
 set(tst_qdoccommandlineparser_resource_files
-    "tst_arguments.txt"
+    "${CMAKE_CURRENT_LIST_DIR}/tst_arguments.txt"
 )
 
 qt_internal_add_resource(tst_qdoccommandlineparser "tst_qdoccommandlineparser"
