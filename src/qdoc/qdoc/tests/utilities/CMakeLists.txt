@@ -13,8 +13,9 @@ endif()
 
 qt_internal_add_test(tst_utilities
     SOURCES
-        ${QDOC_SOURCE_DIRECTORY}/utilities.cpp
-        tst_utilities.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/tst_utilities.cpp
+
+        ${CMAKE_CURRENT_LIST_DIR}/../../src/qdoc/utilities.cpp
     INCLUDE_DIRECTORIES
-        ${QDOC_INCLUDE_DIRECTORY}
+        ${CMAKE_CURRENT_LIST_DIR}/../../src/
 )
