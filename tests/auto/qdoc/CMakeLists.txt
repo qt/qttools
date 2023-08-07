@@ -36,9 +36,9 @@ set(QDOC_INCLUDE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/qdoc/src/
 if(QT_BUILD_STANDALONE_TESTS)
     include(${QDOC_PROJECT_DIRECTORY}/catch_generators/tests/CMakeLists.txt)
     include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/qdoc/CMakeLists.txt)
+    include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/config/CMakeLists.txt)
 endif()
 
-add_subdirectory(config)
 add_subdirectory(generatedoutput)
 add_subdirectory(qdoccommandlineparser)
 add_subdirectory(utilities)
