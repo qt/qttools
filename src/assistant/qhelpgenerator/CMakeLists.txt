@@ -24,12 +24,13 @@ qt_internal_add_tool(${target_name}
 )
 qt_internal_return_unless_building_tools()
 
+set(needed_plugins
+    QMinimalIntegrationPlugin
+    QSQLiteDriverPlugin
+)
+list(TRANSFORM needed_plugins PREPEND Qt:: OUTPUT_VARIABLE needed_plugin_targets)
+
 if(NOT QT_BUILD_SHARED_LIBS)
-    set(needed_plugins
-        QMinimalIntegrationPlugin
-        QSQLiteDriverPlugin
-    )
-    list(TRANSFORM needed_plugins PREPEND Qt:: OUTPUT_VARIABLE needed_plugin_targets)
     if(QT_SUPERBUILD)
         # In a top-level build, qt_import_plugins() is a no-op because
         # __qt_internal_add_static_plugins_once() is not called.
@@ -59,5 +60,9 @@ ${import_plugin_code}
         qt_import_plugins(${target_name}
             INCLUDE ${needed_plugin_targets}
         )
+    endif()
+else() # QT_BUILD_SHARED_LIBS
+    if(QT_SUPERBUILD)
+        add_dependencies(qhelpgenerator ${needed_plugins})
     endif()
 endif()
