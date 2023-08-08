@@ -39,6 +39,5 @@ if(QT_BUILD_STANDALONE_TESTS)
     include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/config/CMakeLists.txt)
     include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/qdoccommandlineparser/CMakeLists.txt)
     include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/utilities/CMakeLists.txt)
+    include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/generatedoutput/CMakeLists.txt)
 endif()
-
-add_subdirectory(generatedoutput)

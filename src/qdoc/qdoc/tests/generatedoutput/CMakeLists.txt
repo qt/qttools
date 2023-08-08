@@ -15,7 +15,7 @@ endif()
 
 qt_internal_add_test(tst_generatedOutput
     SOURCES
-        tst_generatedoutput.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/tst_generatedoutput.cpp
 )
 
 # Write relevant Qt include path to a file, to be read in by QDoc
