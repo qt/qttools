@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="TableAfterValue" href="tableaftervalue.html" status="active" access="public" location="table-after-value.h" documented="true" module="Test" brief="Test that the \table command can follow a \value command">
+            <contents name="background-for-this-test-content" title="Background for this test content" level="1"/>
+            <description>
+                <brief>Test that the \table command can follow a \value command.</brief>
+                <section id="background-for-this-test-content">
+                    <heading level="1">Background for this test content</heading>
+                    <para>According to QTBUG-115720, whenever a \value is followed by \table, the contents of the two commands end up being merged. This is likely surprising. The bug report suggests a workaround, which is adding \br between \value and \table.</para>
+                </section>
+                <see-also>
+                    <link raw="TableAfterValue::Reproduces" href="tableaftervalue.html#Reproduces-enum" type="enum" enum="TableAfterValue::Reproduces">TableAfterValue::Reproduces</link>
+                </see-also>
+            </description>
+            <enum name="Reproduces" fullname="TableAfterValue::Reproduces" href="tableaftervalue.html#Reproduces-enum" status="active" access="public" location="table-after-value.h" documented="true">
+                <value name="Problem" value="0"/>
+                <description>
+                    <list type="enum">
+                        <definition>
+                            <term>TableAfterValue::Problem</term>Problem</definition>
+                        <item/>
+                    </list>
+                    <table>
+                        <row>
+                            <item>
+                                <para>This table shouldn't be mangled by the previous \value command.</para>
+                            </item>
+                        </row>
+                    </table>
+                </description>
+            </enum>
+        </class>
+    </document>
+</WebXML>

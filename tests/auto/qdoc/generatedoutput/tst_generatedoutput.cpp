@@ -57,6 +57,7 @@ private slots:
     void testTagFile();
     void testGlobalFunctions();
     void proxyPage();
+    void tableAfterValue();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -299,6 +300,16 @@ void tst_generatedOutput::illformated_documentation_caused_qtbug112641()
                    "html/illformatted-examples.webxml "
                    "html/illformatteddocumentation-someexample-example.webxml "
                    "html/illformatteddocumentation.index");
+}
+
+void tst_generatedOutput::tableAfterValue()
+{
+    testAndCompare("testdata/tables/table-after-value.qdocconf",
+                   "tableaftervalue/tableaftervalue-members.html "
+                   "tableaftervalue/tableaftervalue.html "
+                   "tableaftervalue/tableaftervalue.index "
+                   "tableaftervalue/tableaftervalue.webxml "
+                   "tableaftervalue/tableaftervalue.xml");
 }
 
 void tst_generatedOutput::docBookFromQDocFile()

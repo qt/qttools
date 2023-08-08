@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+<!-- table-after-value.cpp -->
+  <meta name="description" content="Test that the \table command can follow a \value command.">
+  <title>TableAfterValue Class | TableAfterValue</title>
+</head>
+<body>
+<li>TableAfterValue</li>
+<div class="sidebar">
+<div class="toc">
+<h3 id="toc">Contents</h3>
+<ul>
+<li class="level1"><a href="#public-types">Public Types</a></li>
+<li class="level1"><a href="#details">Detailed Description</a></li>
+<li class="level2"><a href="#background-for-this-test-content">Background for this test content</a></li>
+</ul>
+</div>
+<div class="sidebar-content" id="sidebar-content"></div></div>
+<h1 class="title" translate="no">TableAfterValue Class</h1>
+<!-- $$$TableAfterValue-brief -->
+<p>Test that the \table command can follow a \value command. <a href="#details">More...</a></p>
+<!-- @@@TableAfterValue -->
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> Header:</td><td class="memItemRight bottomAlign"> <span class="preprocessor">#include &lt;TableAfterValue&gt;</span></td></tr>
+</table></div>
+<ul>
+<li><a href="tableaftervalue-members.html">List of all members, including inherited members</a></li>
+</ul>
+<h2 id="public-types">Public Types</h2>
+<div class="table"><table class="alignedsummary" translate="no">
+<tr><td class="memItemLeft rightAlign topAlign"> enum </td><td class="memItemRight bottomAlign"><b><a href="tableaftervalue.html#Reproduces-enum" translate="no">Reproduces</a></b> { Problem }</td></tr>
+</table></div>
+<!-- $$$TableAfterValue-description -->
+<div class="descr">
+<h2 id="details">Detailed Description</h2>
+<h3 id="background-for-this-test-content">Background for this test content</h3>
+<p>According to QTBUG-115720, whenever a \value is followed by \table, the contents of the two commands end up being merged. This is likely surprising. The bug report suggests a workaround, which is adding \br between \value and \table.</p>
+</div>
+<p><b>See also </b><a href="tableaftervalue.html#Reproduces-enum" translate="no">TableAfterValue::Reproduces</a>.</p>
+<!-- @@@TableAfterValue -->
+<div class="types">
+<h2>Member Type Documentation</h2>
+<!-- $$$Reproduces$$$Problem -->
+<h3 class="fn" translate="no" id="Reproduces-enum">enum TableAfterValue::<span class="name">Reproduces</span></h3>
+<div class="table"><table class="valuelist"><tr><th class="tblConst">Constant</th><th class="tblVal">Value</th></tr>
+<tr><td class="topAlign"><code translate="no">TableAfterValue::Problem</code></td><td class="topAlign tblval"><code translate="no">0</code></td></tr>
+</table></div>
+<div class="table"><table class="generic">
+ <tr valign="top" class="odd"><td >This table shouldn't be mangled by the previous \value command.</td></tr>
+</table></div>
+<!-- @@@Reproduces -->
+</div>
+</body>
+</html>

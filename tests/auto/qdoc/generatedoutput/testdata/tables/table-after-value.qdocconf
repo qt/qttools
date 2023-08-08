@@ -1,0 +1,17 @@
+include(../configs/config.qdocconf)
+project = TableAfterValue
+
+headerdirs  = .
+sourcedirs  = .
+exampledirs = .
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = tableaftervalue
+
+HTML.nosubdirs = true
+HTML.outputsubdir = tableaftervalue
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = tableaftervalue
