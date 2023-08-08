@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TableAfterValue Class</db:title>
+<db:productname>TableAfterValue</db:productname>
+<db:titleabbrev>TableAfterValue Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Test that the \table command can follow a \value command.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TableAfterValue</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:section xml:id="background-for-this-test-content">
+<db:title>Background for this test content</db:title>
+<db:para>According to QTBUG-115720, whenever a \value is followed by \table, the contents of the two commands end up being merged. This is likely surprising. The bug report suggests a workaround, which is adding \br between \value and \table.</db:para>
+</db:section>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="tableaftervalue.xml#Reproduces-enum">TableAfterValue::Reproduces</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="member-type-documentation">
+<db:title>Member Type Documentation</db:title>
+<db:section xml:id="Reproduces-enum">
+<db:title>enum TableAfterValue::Reproduces</db:title>
+<db:informaltable>
+<db:thead>
+<db:tr>
+<db:th>Constant</db:th>
+</db:tr>
+</db:thead>
+<db:tr>
+<db:td>
+<db:para><db:code><db:emphasis role="bold"><db:link xlink:href="tableaftervalue.xml">TableAfterValue</db:link></db:emphasis>::Problem</db:code></db:para>
+</db:td>
+<db:td><db:code>0</db:code></db:td>
+</db:tr>
+</db:informaltable>
+<db:informaltable style="generic">
+<db:tr valign="top">
+<db:td>
+<db:para>This table shouldn't be mangled by the previous \value command.</db:para>
+</db:td>
+</db:tr>
+</db:informaltable>
+</db:section>
+</db:section>
+</db:article>

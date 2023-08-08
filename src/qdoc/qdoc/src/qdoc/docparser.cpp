@@ -938,6 +938,7 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     startFormat(ATOM_FORMATTING_SUPERSCRIPT, cmd);
                     break;
                 case CMD_TABLE:
+                    leaveValueList();
                     p1 = getOptionalArgument();
                     p2 = getOptionalArgument();
                     if (openCommand(cmd)) {

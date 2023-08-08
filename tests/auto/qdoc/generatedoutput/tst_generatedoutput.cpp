@@ -62,6 +62,7 @@ private slots:
     void proxyPage();
     void nonAsciiCharacterInput();
     void lineComments();
+    void tableAfterValue();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -311,6 +312,16 @@ void tst_generatedOutput::illformated_documentation()
                    "another-page-with-comments-in-the-brief.html "
                    "page-with-comment-in-brief.html "
                    "brief-adventures.html");
+}
+
+void tst_generatedOutput::tableAfterValue()
+{
+    testAndCompare("testdata/tables/table-after-value.qdocconf",
+                   "tableaftervalue/tableaftervalue-members.html "
+                   "tableaftervalue/tableaftervalue.html "
+                   "tableaftervalue/tableaftervalue.index "
+                   "tableaftervalue/tableaftervalue.webxml "
+                   "tableaftervalue/tableaftervalue.xml");
 }
 
 void tst_generatedOutput::docBookFromQDocFile()
