@@ -53,6 +53,7 @@ function(expect_files_in_list list_var)
 endfunction()
 
 # Test NO_GLOBAL_TARGET for lupdate.
+# Also, use the old signature where the first argument is the target.
 create_app(app1)
 qt6_add_lupdate(app1
     NO_GLOBAL_TARGET
@@ -76,7 +77,8 @@ expect_files_in_list(qm_files myobject_de.qm myobject_en.qm)
 
 # Typical usage of qt_add_lupdate/qt_add_lrelease. Pass some options for good measure.
 create_app(app3)
-qt6_add_lupdate(app3
+qt6_add_lupdate(
+    TARGETS app1 app2 app3
     TS_FILES myobject_no.ts myobject_fi.ts
     OPTIONS -source-language en_US)
 qt6_add_lrelease(app3

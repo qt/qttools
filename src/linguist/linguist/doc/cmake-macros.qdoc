@@ -140,7 +140,8 @@ files in the build directory:
 \section1 Synopsis
 
 \badcode
-qt_add_lupdate(target TS_FILES file1.ts [file2.ts ...]
+qt_add_lupdate(TS_FILES file1.ts [file2.ts ...]
+               [TARGETS target1 [target2 ...]]
                [SOURCES source1.cpp [sources2.cpp ...]]
                [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
                [LUPDATE_TARGET target-name]
@@ -160,8 +161,9 @@ calls of \c qt_add_lupdate will create target names with an increasing number
 appended. The custom target name can be specified with the \c LUPDATE_TARGET
 option.
 
-The parameter \c{target} is an existing executable or library target that
-contains sources with translatable strings.
+With the \c{TARGETS} argument you can specify a list of targets that contain
+sources with translatable strings. If \c{TARGETS} is not specified, you must
+specify \c{SOURCES}, which is described below.
 
 The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 
@@ -199,6 +201,11 @@ Pass \c{NO_GLOBAL_TARGET} to \c{qt_add_lupdate} to prevent this behavior.
 
 The name of this target can be overridden by setting the variable
 \c{QT_GLOBAL_LUPDATE_TARGET} before calling \c{qt_add_lupdate}.
+
+\section1 Deprecated Command Signature
+
+Older versions of \c qt_add_lupdate took a target as the first argument. This is
+deprecated. Use the \c TARGETS argument instead.
 
 \section1 Examples
 

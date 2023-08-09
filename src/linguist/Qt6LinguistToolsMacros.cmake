@@ -138,17 +138,33 @@ endfunction()
 # Needed to locate Qt6LupdateProject.json.in file inside functions
 set(_Qt6_LINGUIST_TOOLS_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE INTERNAL "")
 
-function(qt6_add_lupdate target)
+function(qt6_add_lupdate)
     set(options
         NO_GLOBAL_TARGET)
     set(oneValueArgs
         LUPDATE_TARGET)
     set(multiValueArgs
+        TARGETS
         TS_FILES
         SOURCES
         INCLUDE_DIRECTORIES
         OPTIONS)
     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    # Set up the list of targets. Support the old command signature that takes one target as first
+    # argument.
+    set(targets "${arg_TARGETS}")
+    if("${targets}" STREQUAL "")
+        list(POP_FRONT arg_UNPARSED_ARGUMENTS target)
+        if(TARGET "${target}")
+            list(APPEND targets ${target})
+        endif()
+        unset(target)
+    endif()
+
+    if("${targets}" STREQUAL "" AND "${arg_SOURCES}" STREQUAL "")
+        message(FATAL_ERROR "No TARGETS nor SOURCES were given.")
+    endif()
 
     # Set up the name of the custom target.
     set(lupdate_target "${arg_LUPDATE_TARGET}")
@@ -162,16 +178,15 @@ function(qt6_add_lupdate target)
         endwhile()
     endif()
 
+    set(includePaths "")
+    set(sources "")
+    list(LENGTH targets targets_length)
+
     if(arg_INCLUDE_DIRECTORIES)
-        qt_internal_make_paths_absolute(includePaths "${arg_INCLUDE_DIRECTORIES}")
-    else()
-        set(includePaths "$<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>")
+        qt_internal_make_paths_absolute(additionalIncludePaths "${arg_INCLUDE_DIRECTORIES}")
     endif()
     if(arg_SOURCES)
-        qt_internal_make_paths_absolute(sources "${arg_SOURCES}")
-    else()
-        set(exclude_regex "\\.ts$")
-        set(sources "$<FILTER:$<TARGET_PROPERTY:${target},SOURCES>,EXCLUDE,${exclude_regex}>")
+        qt_internal_make_paths_absolute(additionalSources "${arg_SOURCES}")
     endif()
 
     qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
@@ -184,12 +199,25 @@ function(qt6_add_lupdate target)
     endif()
     string(APPEND lupdate_project_cmake ".cmake")
     set(lupdate_project_json "${lupdate_project_base}.json")
-    file(GENERATE OUTPUT "${lupdate_project_cmake}"
-        CONTENT "set(lupdate_project_file \"${CMAKE_CURRENT_LIST_FILE}\")
-set(lupdate_include_paths \"${includePaths}\")
-set(lupdate_sources \"${sources}\")
+    set(content "set(lupdate_project_file \"${CMAKE_CURRENT_LIST_FILE}\")
 set(lupdate_translations \"${ts_files}\")
+set(lupdate_include_paths \"${additionalIncludePaths}\")
+set(lupdate_sources \"${additionalSources}\")
+set(lupdate_subproject_count ${targets_length})
 ")
+    set(exclude_ts "\\.ts$")
+    set(n 1)
+    foreach(target IN LISTS targets)
+        set(includePaths "$<TARGET_PROPERTY:${target},INCLUDE_DIRECTORIES>")
+        set(sources "$<FILTER:$<TARGET_PROPERTY:${target},SOURCES>,EXCLUDE,${exclude_ts}>")
+        string(APPEND content "
+set(lupdate_subproject${n}_source_dir \"$<TARGET_PROPERTY:${target},SOURCE_DIR>\")
+set(lupdate_subproject${n}_include_paths \"${includePaths}\")
+set(lupdate_subproject${n}_sources \"${sources}\")
+")
+        math(EXPR n "${n} + 1")
+    endforeach()
+    file(GENERATE OUTPUT "${lupdate_project_cmake}" CONTENT "${content}")
 
     _qt_internal_get_tool_wrapper_script_path(tool_wrapper)
     set(lupdate_command
