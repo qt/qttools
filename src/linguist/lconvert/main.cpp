@@ -74,6 +74,8 @@ static int usage(const QStringList &args)
         "           Default is absolute.\n\n"
         "    -no-ui-lines\n"
         "           Drop line numbers from references to UI files.\n\n"
+        "    -pluralonly\n"
+        "           Drop non-plural form messages.\n\n"
         "    -verbose\n"
         "           be a bit more verbose\n\n"
         "Long options can be specified with only one leading dash, too.\n\n"
@@ -121,6 +123,7 @@ int main(int argc, char *argv[])
     bool noUntranslated = false;
     bool verbose = false;
     bool noUiLines = false;
+    bool pluralOnly = false;
     Translator::LocationsType locations = Translator::DefaultLocations;
 
     ConversionData cd;
@@ -190,6 +193,8 @@ int main(int argc, char *argv[])
                 return usage(args);
         } else if (args[i] == QLatin1String("-no-ui-lines")) {
             noUiLines = true;
+        } else if (args[i] == QLatin1String("-pluralonly")) {
+            pluralOnly = true;
         } else if (args[i] == QLatin1String("-verbose")) {
             verbose = true;
         } else if (args[i].startsWith(QLatin1Char('-'))) {
@@ -238,6 +243,8 @@ int main(int argc, char *argv[])
         tr.dropTranslations();
     if (noUiLines)
         tr.dropUiLines();
+    if (pluralOnly)
+        tr.stripNonPluralForms();
     if (locations != Translator::DefaultLocations)
         tr.setLocationsType(locations);
 
