@@ -23,6 +23,7 @@
     \li \l {caption-command} {\\caption}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
+    \li \l {details-command} {\\details}
     \li \l {div-command} {\\div}
     \li \l {dots-command} {\\dots}
     \li \l {e-command} {\\e}
@@ -129,7 +130,7 @@
     See also \l {tt-command} {\\tt} and \l {code-command} {\\code}.
 
     \target details-command
-    \section1 \\details
+    \section1 \\details (collapsible)
 
     The \\details and \\enddetails commands generates a collapsible <details>
     element with a <summary> to control the hidden/visible state.
@@ -154,8 +155,14 @@
     <summary>QDoc details</summary><div class="admonition note"><p><b>Note: </b>You're looking at detailed information.</p></div>
     \endcode
 
+    QDoc renders this as:
+
+    \details {QDoc details}
+       \note You're looking at detailed information.
+    \enddetails
+
     For any other output format, QDoc generates the contents as a normal paragraph,
-    ignoring the summary string.
+    ignoring the summary string. This command was introduced to QDoc in Qt6.6.
 
     \target div-command
     \section1 \\div

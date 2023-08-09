@@ -27,6 +27,7 @@
     \li \l {codeline-command} {\\codeline}
     \li \l {deprecated-command} {\\deprecated}
     \li \l {default-command} {\\default}
+    \li \l {details-command} {\\details}
     \li \l {div-command} {\\div}
     \li \l {dots-command} {\\dots}
     \li \l {e-command} {\\e}
