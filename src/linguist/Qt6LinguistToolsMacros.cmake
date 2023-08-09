@@ -141,13 +141,27 @@ set(_Qt6_LINGUIST_TOOLS_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE INTERNAL "")
 function(qt6_add_lupdate target)
     set(options
         NO_GLOBAL_TARGET)
-    set(oneValueArgs)
+    set(oneValueArgs
+        LUPDATE_TARGET)
     set(multiValueArgs
         TS_FILES
         SOURCES
         INCLUDE_DIRECTORIES
         OPTIONS)
     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    # Set up the name of the custom target.
+    set(lupdate_target "${arg_LUPDATE_TARGET}")
+    if("${lupdate_target}" STREQUAL "")
+        set(lupdate_target "${PROJECT_NAME}_lupdate")
+        set(lupdate_target_orig "${lupdate_target}")
+        set(n 1)
+        while(TARGET "${lupdate_target}")
+            set(lupdate_target "${lupdate_target_orig}${n}")
+            math(EXPR n "${n} + 1")
+        endwhile()
+    endif()
+
     if(arg_INCLUDE_DIRECTORIES)
         qt_internal_make_paths_absolute(includePaths "${arg_INCLUDE_DIRECTORIES}")
     else()
@@ -162,7 +176,7 @@ function(qt6_add_lupdate target)
 
     qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
 
-    set(lupdate_project_base "${CMAKE_CURRENT_BINARY_DIR}/.lupdate/${target}_project")
+    set(lupdate_project_base "${CMAKE_CURRENT_BINARY_DIR}/.lupdate/${lupdate_target}_project")
     set(lupdate_project_cmake "${lupdate_project_base}")
     get_property(multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
     if(multi_config)
@@ -182,7 +196,7 @@ set(lupdate_translations \"${ts_files}\")
         COMMAND
             "${tool_wrapper}"
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
-    add_custom_target(${target}_lupdate
+    add_custom_target(${lupdate_target}
         COMMAND "${CMAKE_COMMAND}" "-DIN_FILE=${lupdate_project_cmake}"
                 "-DOUT_FILE=${lupdate_project_json}"
                 -P "${_Qt6_LINGUIST_TOOLS_DIR}/GenerateLUpdateProject.cmake"
@@ -198,7 +212,7 @@ set(lupdate_translations \"${ts_files}\")
         if(NOT TARGET ${QT_GLOBAL_LUPDATE_TARGET})
             add_custom_target(${QT_GLOBAL_LUPDATE_TARGET})
         endif()
-        add_dependencies(${QT_GLOBAL_LUPDATE_TARGET} ${target}_lupdate)
+        add_dependencies(${QT_GLOBAL_LUPDATE_TARGET} ${lupdate_target})
     endif()
 endfunction()
 
@@ -225,7 +239,7 @@ function(qt6_add_lrelease target)
     foreach(ts_file ${ts_files})
         if(NOT EXISTS "${ts_file}")
             message(WARNING "Translation file '${ts_file}' does not exist. "
-                "Consider building the target '${target}_lupdate' to create an initial "
+                "Consider building the target 'update_translations' to create an initial "
                 "version of that file.")
 
             # Write an initial .ts file that can be read by lrelease and updated by lupdate.
@@ -328,6 +342,7 @@ endfunction()
 function(qt6_add_translations target)
     set(options)
     set(oneValueArgs
+        LUPDATE_TARGET
         QM_FILES_OUTPUT_VARIABLE
         RESOURCE_PREFIX
         OUTPUT_TARGETS)
@@ -352,6 +367,7 @@ function(qt6_add_translations target)
     endif()
 
     qt6_add_lupdate(${target}
+        LUPDATE_TARGET "${arg_LUPDATE_TARGET}"
         TS_FILES "${arg_TS_FILES}"
         SOURCES "${arg_SOURCES}"
         INCLUDE_DIRECTORIES "${arg_INCLUDE_DIRECTORIES}"

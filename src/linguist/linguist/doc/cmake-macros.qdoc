@@ -143,6 +143,7 @@ files in the build directory:
 qt_add_lupdate(target TS_FILES file1.ts [file2.ts ...]
                [SOURCES source1.cpp [sources2.cpp ...]]
                [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
+               [LUPDATE_TARGET target-name]
                [NO_GLOBAL_TARGET]
                [OPTIONS ...])
 \endcode
@@ -151,8 +152,13 @@ qt_add_lupdate(target TS_FILES file1.ts [file2.ts ...]
 
 \section1 Description
 
-Creates a target \c{${target}_lupdate} to generate or update Qt Linguist \c{.ts}
+Creates a custom target to generate or update Qt Linguist \c{.ts}
 files with \l{lupdate}.
+
+The name of that custom target defaults to \c{${PROJECT_NAME}_lupdate}. Further
+calls of \c qt_add_lupdate will create target names with an increasing number
+appended. The custom target name can be specified with the \c LUPDATE_TARGET
+option.
 
 The parameter \c{target} is an existing executable or library target that
 contains sources with translatable strings.
@@ -315,6 +321,7 @@ qt_add_translations(target TS_FILES file1.ts [file2.ts ...]
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
                     [SOURCES source1.cpp [sources2.cpp ...]]
                     [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
+                    [LUPDATE_TARGET target-name]
                     [LUPDATE_OPTIONS ...]
                     [LRELEASE_OPTIONS ...])
 \endcode
@@ -347,6 +354,9 @@ The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 \include cmake-macros.qdoc sources-and-include-dirs
 
 \section1 Options
+
+You can specify the name of the custom target that calls lupdate with the \c
+LUPDATE_TARGET option.
 
 You can set additional options for \l{lupdate} and \l{lrelease} with
 \c{LUPDATE_OPTIONS} and \c{LRELEASE_OPTIONS}. You can find possible options in
