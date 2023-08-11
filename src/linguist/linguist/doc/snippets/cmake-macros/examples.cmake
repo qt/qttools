@@ -58,3 +58,12 @@ qt_add_translations(business_logic
     QM_FILES_OUTPUT_VARIABLE qm_files)
 install(FILES ${qm_files} DESTINATION "translations")
 #! [qt_add_translations_install]
+
+#! [qt_collect_i18n_targets]
+add_subdirectory(src)          # the actual application is defined here
+
+qt_collect_i18n_targets(i18n_targets)
+qt_add_lupdate(TARGETS ${i18n_targets})
+
+add_subdirectory(tests)        # unit tests - we don't want to translate those
+#! [qt_collect_i18n_targets]

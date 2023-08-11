@@ -1,0 +1,64 @@
+// Copyright (C) 2023 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\group cmake-directory-properties-qtlinguisttools
+\title CMake Directory Properties in Qt6 LinguistTools
+
+\l{CMake Command Reference#Qt6::LinguistTools}{CMake Commands} know about the
+following CMake directory properties:
+
+\sa{CMake Property Reference}
+*/
+
+
+/*!
+\page cmake-directory-property-qt-exclude-from-translation.html
+\ingroup cmake-properties-qtlinguisttools
+\ingroup cmake-directory-properties-qtlinguisttools
+\keyword directory property QT_EXCLUDE_FROM_TRANSLATION
+
+\title QT_EXCLUDE_FROM_TRANSLATION
+
+\brief Marks the directory as excluded from translation
+
+\cmakepropertysince 6.7
+
+Set this directory property to \c ON to exclude all targets in the directory and
+its subdirectories from translation. The command
+\l{qt6_collect_i18n_targets}{qt_collect_i18n_targets} will skip such targets.
+
+To exclude a single target, use the \l{target property
+QT_EXCLUDE_FROM_TRANSLATION}.
+*/
+
+
+/*!
+\group cmake-target-properties-qtlinguisttools
+\title CMake Target Properties in Qt6 LinguistTools
+
+\l{CMake Command Reference#Qt6::LinguistTools}{CMake Commands} know about the
+following CMake target properties:
+
+\sa{CMake Property Reference}
+*/
+
+
+/*!
+\page cmake-target-property-qt-exclude-from-translation.html
+\ingroup cmake-properties-qtlinguisttools
+\ingroup cmake-target-properties-qtlinguisttools
+\keyword target property QT_EXCLUDE_FROM_TRANSLATION
+
+\title QT_EXCLUDE_FROM_TRANSLATION
+
+\brief Marks the target as excluded from translation
+
+\cmakepropertysince 6.7
+
+Set this target property to \c ON to exclude it from translation. The command
+\l{qt6_collect_i18n_targets}{qt_collect_i18n_targets} will skip such targets.
+
+To exclude all targets under a subdirectory, use the \l{directory property
+QT_EXCLUDE_FROM_TRANSLATION}.
+*/
