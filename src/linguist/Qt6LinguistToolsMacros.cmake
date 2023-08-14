@@ -216,17 +216,64 @@ set(lupdate_translations \"${ts_files}\")
     endif()
 endfunction()
 
-function(qt6_add_lrelease target)
+function(_qt_internal_store_languages_from_ts_files_in_target target ts_files)
+    if(NOT APPLE)
+        return()
+    endif()
+    set(supported_languages "")
+    foreach(ts_file IN LISTS ts_files)
+        execute_process(COMMAND /usr/bin/xmllint --xpath "string(/TS/@language)" ${ts_file}
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            OUTPUT_VARIABLE language_code
+            ERROR_VARIABLE xmllint_error)
+        if(NOT language_code OR xmllint_error)
+            message(WARNING "Failed to resolve language code for ${ts_file}. "
+                "Please update CFBundleLocalizations in your Info.plist manually.")
+        endif()
+    endforeach()
+    set_property(TARGET "${target}" APPEND PROPERTY
+        _qt_apple_supported_languages "${supported_languages}"
+    )
+endfunction()
+
+function(qt6_add_lrelease)
     set(options
-        NO_TARGET_DEPENDENCY
+        NO_TARGET_DEPENDENCY        ### Qt7: remove together with legacy signature
+        EXCLUDE_FROM_ALL
         NO_GLOBAL_TARGET)
     set(oneValueArgs
+        LRELEASE_TARGET
         QM_FILES_OUTPUT_VARIABLE)
     set(multiValueArgs
         TS_FILES
         OPTIONS)
     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
+
+    # Support the old command signature that takes one target as first argument.
+    set(legacy_signature_used FALSE)
+    set(legacy_target "")
+    list(LENGTH arg_UNPARSED_ARGUMENTS unparsed_arguments_count)
+    if(unparsed_arguments_count GREATER 0)
+        list(POP_FRONT arg_UNPARSED_ARGUMENTS legacy_target)
+        if(TARGET "${legacy_target}")
+            set(legacy_signature_used TRUE)
+        else()
+            set(legacy_target "")
+        endif()
+    endif()
+
+    # Set up the driving target.
+    set(lrelease_target "${arg_LRELEASE_TARGET}")
+    if("${lrelease_target}" STREQUAL "")
+        set(lrelease_target "${PROJECT_NAME}_lrelease")
+        set(lrelease_target_orig "${lrelease_target}")
+        set(n 1)
+        while(TARGET "${lrelease_target}")
+            set(lrelease_target "${lrelease_target_orig}${n}")
+            math(EXPR n "${n} + 1")
+        endwhile()
+    endif()
 
     _qt_internal_get_tool_wrapper_script_path(tool_wrapper)
     set(lrelease_command
@@ -235,7 +282,6 @@ function(qt6_add_lrelease target)
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lrelease>)
 
     set(qm_files "")
-    set(supported_languages "")
     foreach(ts_file ${ts_files})
         if(NOT EXISTS "${ts_file}")
             message(WARNING "Translation file '${ts_file}' does not exist. "
@@ -248,19 +294,6 @@ function(qt6_add_lrelease target)
 <!DOCTYPE TS>
 <TS/>
 ]])
-        endif()
-
-        if(APPLE)
-            execute_process(COMMAND /usr/bin/xmllint --xpath "string(/TS/@language)" ${ts_file}
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                OUTPUT_VARIABLE language_code
-                ERROR_VARIABLE xmllint_error)
-            if(language_code AND NOT xmllint_error)
-                list(APPEND supported_languages "${language_code}")
-            else()
-                message(WARNING "Failed to resolve language code for ${ts_file}. "
-                    "Please update CFBundleLocalizations in your Info.plist manually.")
-            endif()
         endif()
 
         get_filename_component(qm ${ts_file} NAME_WLE)
@@ -281,44 +314,38 @@ function(qt6_add_lrelease target)
             DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease "${ts_file}"
             VERBATIM)
 
-        # Mark file as GENERATED, so that calling _qt_internal_expose_deferred_files_to_ide
-        # doesn't cause an error at generation time saying "Cannot find source file:" when
-        # qt6_add_lrelease is called from a subdirectory different than the target.
-        # The issue happend when the user project called cmake_minimum_required(VERSION)
-        # with a version less than 3.20 or set the CMP0118 policy value to OLD.
-        set(scope_args)
-        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
-            set(scope_args TARGET_DIRECTORY ${target})
-        endif()
-        set_source_files_properties(${qm}
-            ${scope_args}
-            PROPERTIES GENERATED TRUE
-        )
-
         list(APPEND qm_files "${qm}")
 
         # QTBUG-103470: Save the target responsible for driving the build of the custom command
         # into an internal source file property. It will be added as a dependency for targets
         # created by _qt_internal_process_resource, to avoid the Xcode issue of not allowing
         # multiple targets depending on the output, without having a common target ancestor.
-        set(scope_args)
-        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
-            set(scope_args TARGET_DIRECTORY ${target})
+        if(legacy_signature_used)
+            set(scope_args "")
+            if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+                set(scope_args TARGET_DIRECTORY ${legacy_target})
+                set_source_files_properties("${qm}" ${scope_args} PROPERTIES
+                    _qt_resource_target_dependency "${lrelease_target}"
+                )
+            endif()
         endif()
-        set_source_files_properties("${qm}" ${scope_args} PROPERTIES
-            _qt_resource_target_dependency "${target}_lrelease"
-        )
     endforeach()
 
-    if(APPLE)
-        set_property(TARGET "${target}" APPEND PROPERTY
-            _qt_apple_supported_languages "${supported_languages}"
-        )
+    if(legacy_signature_used)
+        _qt_internal_store_languages_from_ts_files_in_target("${legacy_target}" "${ts_files}")
     endif()
 
-    add_custom_target(${target}_lrelease DEPENDS ${qm_files})
-    if(NOT arg_NO_TARGET_DEPENDENCY)
-        add_dependencies(${target} ${target}_lrelease)
+    if(legacy_signature_used)
+        add_custom_target(${lrelease_target} DEPENDS ${qm_files})
+        if(NOT arg_NO_TARGET_DEPENDENCY)
+            add_dependencies(${legacy_target} ${lrelease_target})
+        endif()
+    else()
+        set(maybe_all ALL)
+        if(arg_EXCLUDE_FROM_ALL)
+            set(maybe_all "")
+        endif()
+        add_custom_target(${lrelease_target} ${maybe_all} DEPENDS ${qm_files})
     endif()
 
     if(NOT DEFINED QT_GLOBAL_LRELEASE_TARGET)
@@ -329,7 +356,7 @@ function(qt6_add_lrelease target)
         if(NOT TARGET ${QT_GLOBAL_LRELEASE_TARGET})
             add_custom_target(${QT_GLOBAL_LRELEASE_TARGET})
         endif()
-        add_dependencies(${QT_GLOBAL_LRELEASE_TARGET} ${target}_lrelease)
+        add_dependencies(${QT_GLOBAL_LRELEASE_TARGET} ${lrelease_target})
     endif()
 
     if(NOT "${arg_QM_FILES_OUTPUT_VARIABLE}" STREQUAL "")
@@ -343,6 +370,7 @@ function(qt6_add_translations target)
     set(options)
     set(oneValueArgs
         LUPDATE_TARGET
+        LRELEASE_TARGET
         QM_FILES_OUTPUT_VARIABLE
         RESOURCE_PREFIX
         OUTPUT_TARGETS)
@@ -373,9 +401,25 @@ function(qt6_add_translations target)
         INCLUDE_DIRECTORIES "${arg_INCLUDE_DIRECTORIES}"
         OPTIONS "${arg_LUPDATE_OPTIONS}")
     qt6_add_lrelease(${target}
+        LRELEASE_TARGET "${arg_LRELEASE_TARGET}"
         TS_FILES "${arg_TS_FILES}"
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
+
+    # Mark .qm files as GENERATED, so that calling _qt_internal_expose_deferred_files_to_ide
+    # doesn't cause an error at generation time saying "Cannot find source file:" when
+    # qt6_add_lrelease is called from a subdirectory different than the target.
+    # The issue happend when the user project called cmake_minimum_required(VERSION)
+    # with a version less than 3.20 or set the CMP0118 policy value to OLD.
+    set(scope_args "")
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+        set(scope_args TARGET_DIRECTORY ${target})
+    endif()
+    set_source_files_properties(${qm_files}
+        ${scope_args}
+        PROPERTIES GENERATED TRUE
+    )
+
     if(NOT "${arg_RESOURCE_PREFIX}" STREQUAL "")
         qt6_add_resources(${target} "${target}_translations"
             PREFIX "${arg_RESOURCE_PREFIX}"

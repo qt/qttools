@@ -224,8 +224,9 @@ Add the targets \c{myapp_lupdate} and \c{update_translations} for updating the
 \section1 Synopsis
 
 \badcode
-qt_add_lrelease(target TS_FILES file1.ts [file2.ts ...]
-                [NO_TARGET_DEPENDENCY]
+qt_add_lrelease(TS_FILES file1.ts [file2.ts ...]
+                [LRELEASE_TARGET target-name]
+                [EXCLUDE_FROM_ALL]
                 [NO_GLOBAL_TARGET]
                 [QM_FILES_OUTPUT_VARIABLE variable-name]
                 [OPTIONS ...])
@@ -238,11 +239,14 @@ target directory scope requires at least CMake version 3.18.
 
 \section1 Description
 
-Creates a target \c{${target}_lrelease} to transform \c{.ts} files into \c{.qm}
-files with \l{lrelease}.
+Creates a custom command to transform \c{.ts} files into \c{.qm} files with
+\l{lrelease}.
 
-The parameter \c{target} is an existing executable or library target that
-contains sources with translatable strings.
+The execution of the custom command is driven by a custom target that is built
+by default. The name of that custom target defaults to
+\c{${PROJECT_NAME}_lrelease}. Further calls of \c qt_add_lrelease will create
+target names with an increasing number appended. The custom target name can be
+specified with the \c LRELEASE_TARGET option.
 
 The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 
@@ -274,10 +278,11 @@ that.
 
 \section1 Build by Default
 
-By default, the command makes \c{${target}} depend on \c{${target}_lrelease}.
-This ensures that the \c{.qm} files are always up-to-date when \c{${target}} is
-built. This behavior can be turned off with \c{NO_TARGET_DEPENDENCY}. In this
-case, the user must build the \c{${target}_lrelease} target manually.
+By default, the command creates a custom target that is added to the default
+build target. This ensures that the \c{.qm} files are always up-to-date when the
+project is built. This behavior can be turned off with the \c{EXCLUDE_FROM_ALL}
+argument. In this case, the user must build the \c{${PROJECT_NAME}_lrelease}
+target manually.
 
 \section1 Umbrella Target
 
@@ -289,6 +294,11 @@ Pass \c{NO_GLOBAL_TARGET} to \c{qt_add_lrelease} to prevent this behavior.
 
 The name of this target can be overridden by setting the variable
 \c{QT_GLOBAL_LRELEASE_TARGET} before calling \c{qt_add_lrelease}.
+
+\section1 Deprecated Command Signature
+
+Older versions of \c qt_add_lrelease took a target as the first argument. This
+is still possible but deprecated.
 
 \section1 Examples
 
@@ -323,6 +333,7 @@ qt_add_translations(target TS_FILES file1.ts [file2.ts ...]
                     [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
                     [LUPDATE_TARGET target-name]
                     [LUPDATE_OPTIONS ...]
+                    [LRELEASE_TARGET target-name]
                     [LRELEASE_OPTIONS ...])
 \endcode
 
@@ -356,7 +367,8 @@ The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 \section1 Options
 
 You can specify the name of the custom target that calls lupdate with the \c
-LUPDATE_TARGET option.
+LUPDATE_TARGET option. Likewise, \c LRELEASE_TARGET controls the name of the
+custom target that drives the call to \c lrelease.
 
 You can set additional options for \l{lupdate} and \l{lrelease} with
 \c{LUPDATE_OPTIONS} and \c{LRELEASE_OPTIONS}. You can find possible options in
