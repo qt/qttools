@@ -195,6 +195,12 @@
     alternative text, which should be added as an attribute to the inline
     image.
 
+    File quoting:
+
+    \quotefromfile main.cpp
+    \skipto /if \(/
+    \printuntil /^    \}/   
+
     \section1 Commands not yet tested
 
     \warning The following commands have yet to be tested:
@@ -208,11 +214,8 @@
     inlineimage
     printline
     printto
-    printuntil  // what’s the difference between printto and printuntil???
     quotefile
-    quotefromfile
     skipline
-    skipto
     skipuntil
     span
     snippet

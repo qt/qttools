@@ -7,6 +7,8 @@ moduleheader =
 sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc \
           ../outputfromqdocfiles/qdoctests-outputfromqdocmanuallikefiles.qdoc
 
+exampledirs = ../outputfromqdocfiles/snippets
+
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"
 macro.PROD = QDoc

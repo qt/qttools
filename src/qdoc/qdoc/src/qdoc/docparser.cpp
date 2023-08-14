@@ -2356,7 +2356,7 @@ QString DocParser::getRestOfLine()
             break;
     }
 
-    return rest_of_line.simplified();
+    return rest_of_line.trimmed();
 }
 
 /*!

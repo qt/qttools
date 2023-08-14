@@ -114,11 +114,16 @@
 <db:imagedata fileref="images/01.png"/>
 </db:imageobject>
 </db:inlinemediaobject> inline image with alternative text, which should be added as an attribute to the inline image.</db:para>
+<db:para>File quoting:</db:para>
+<db:programlisting language="cpp">    if (false) {
+        return 1;
+    }
+</db:programlisting>
 </db:section>
 <db:section xml:id="commands-not-yet-tested">
 <db:title>Commands not yet tested</db:title>
 <db:warning>
-<db:para>The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</db:para>
+<db:para>The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it inlineimage printline printto quotefile skipline skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</db:para>
 </db:warning>
 </db:section>
 </db:article>
