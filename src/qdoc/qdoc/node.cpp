@@ -68,7 +68,8 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
         const auto *f2 = static_cast<const FunctionNode *>(n2);
 
         LT_RETURN_IF_NOT_EQUAL(f1->isConst(), f2->isConst());
-        LT_RETURN_IF_NOT_EQUAL(f1->signature(false, false), f2->signature(false, false));
+        LT_RETURN_IF_NOT_EQUAL(f1->signature(Node::SignatureReturnType),
+                               f2->signature(Node::SignatureReturnType));
     }
 
     LT_RETURN_IF_NOT_EQUAL(n1->nodeType(), n2->nodeType());
@@ -470,7 +471,7 @@ QString Node::plainSignature() const
     QString fullName;
     const Node *node = this;
     while (node) {
-        fullName.prepend(node->signature(false, true));
+        fullName.prepend(node->signature(Node::SignaturePlain));
         if (node->parent()->name().isEmpty())
             break;
         fullName.prepend(QLatin1String("::"));
@@ -978,15 +979,14 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   Sets this node's Genus to \a t.
 */
 
-/*! \fn  QString Node::signature(bool values, bool noReturnType, bool templateParams) const
+/*! \fn  QString Node::signature(Node::SignatureOptions options) const
 
-  If this node is a FunctionNode, this function returns the function's
-  signature, including default values if \a values is \c true,
-  function's return type if \a noReturnType is \c false, and
-  prefixed with 'template <parameter_list>' for function templates
-  if templateParams is \true.
+  Specific parts of the signature are included according to flags in
+  \a options.
 
   If this node is not a FunctionNode, this function returns plainName().
+
+  \sa FunctionNode::signature()
 */
 
 /*! \fn const QString &Node::fileNameBase() const

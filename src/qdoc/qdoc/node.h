@@ -98,6 +98,14 @@ public:
         ThreadSafe
     };
 
+    enum SignatureOption : unsigned char {
+        SignaturePlain          = 0x0,
+        SignatureDefaultValues  = 0x1,
+        SignatureReturnType     = 0x2,
+        SignatureTemplateParams = 0x4
+    };
+    Q_DECLARE_FLAGS(SignatureOptions, SignatureOption)
+
     enum LinkType : unsigned char { StartLink, NextLink, PreviousLink, ContentsLink };
 
     enum FlagValue { FlagValueDefault = -1, FlagValueFalse = 0, FlagValueTrue = 1 };
@@ -184,8 +192,7 @@ public:
     QString plainFullName(const Node *relative = nullptr) const;
     [[nodiscard]] QString plainSignature() const;
     QString fullName(const Node *relative = nullptr) const;
-    [[nodiscard]] virtual QString signature(bool, bool) const { return plainName(); }
-    [[nodiscard]] virtual QString signature(bool, bool, bool) const { return plainName(); }
+    [[nodiscard]] virtual QString signature(Node::SignatureOptions) const { return plainName(); }
 
     [[nodiscard]] const QString &fileNameBase() const { return m_fileNameBase; }
     [[nodiscard]] bool hasFileNameBase() const { return !m_fileNameBase.isEmpty(); }
@@ -325,6 +332,8 @@ private:
     QString m_outSubDir {};
     QString m_deprecatedSince {};
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Node::SignatureOptions)
 
 QT_END_NAMESPACE
 
