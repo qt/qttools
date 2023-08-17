@@ -333,6 +333,8 @@ private:
     QString m_deprecatedSince {};
 };
 
+Q_DECLARE_OPERATORS_FOR_FLAGS(Node::SignatureOptions)
+
 QT_END_NAMESPACE
 
 #endif
