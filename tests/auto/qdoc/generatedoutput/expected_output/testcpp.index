@@ -20,7 +20,7 @@
         <namespace name="TestQDoc" href="testqdoc.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="A namespace">
             <contents name="usage" title="Usage" level="1"/>
             <function name="QDOCTEST_MACRO" href="testqdoc.html#QDOCTEST_MACRO" status="active" access="public" documented="true" related="0" meta="macrowithoutparams" virtual="non" const="false" static="false" final="false" override="false" type="" signature="QDOCTEST_MACRO"/>
-            <class name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
+            <class threadsafety="reentrant" name="Test" fullname="TestQDoc::Test" href="testqdoc-test.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" groups="cpptypes,testgroup" module="TestCPP" brief="A class in a namespace">
                 <function name="QDOCTEST_MACRO2" href="testqdoc-test.html#QDOCTEST_MACRO2" status="active" access="public" documented="true" related="1" since="Test 1.1" meta="macrowithparams" virtual="non" const="false" static="false" final="false" override="false" type="" brief="A macro with argument x" signature="QDOCTEST_MACRO2(int &amp;x)" groups="testgroup">
                     <parameter type="int &amp;" name="x" default=""/>
                 </function>
@@ -52,7 +52,7 @@
                     <parameter type="int" name="" default=""/>
                     <parameter type="int" name="v" default="0"/>
                 </function>
-                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)" groups="testgroup">
+                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="non" const="false" static="false" final="false" override="false" type="void" signature="void someFunctionDefaultArg(int i, bool b)" groups="testgroup">
                     <parameter type="int" name="i" default=""/>
                     <parameter type="bool" name="b" default="false"/>
                 </function>
@@ -67,6 +67,7 @@
                 <typedef name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int"/>
             </class>
         </namespace>
+        <page name="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command" status="active" location="classlists.qdoc" documented="true" subtype="externalpage" title="reentrant" fulltitle="reentrant" subtitle=""/>
         <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types"/>
         <group name="testgroup" href="testgroup.html" status="internal" seen="false" title=""/>
         <module name="TestCPP" href="testcpp-module.html" status="active" since="2.0" documented="true" seen="true" title="QDoc Test C++ Classes" brief="A test module page">

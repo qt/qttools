@@ -108,8 +108,7 @@ public:
     [[nodiscard]] const Parameters &parameters() const { return m_parameters; }
     [[nodiscard]] bool isPrivateSignal() const { return m_parameters.isPrivateSignal(); }
     void setParameters(const QString &signature) { m_parameters.set(signature); }
-    [[nodiscard]] QString signature(bool values, bool noReturnType,
-                                    bool templateParams = false) const override;
+    [[nodiscard]] QString signature(Node::SignatureOptions options) const override;
 
     [[nodiscard]] const QString &overridesThis() const { return m_overridesThis; }
     [[nodiscard]] const QList<PropertyNode *> &associatedProperties() const { return m_associatedProperties; }

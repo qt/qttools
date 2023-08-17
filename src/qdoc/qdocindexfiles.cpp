@@ -1247,7 +1247,7 @@ void QDocIndexFiles::generateFunctionSection(QXmlStreamWriter &writer, FunctionN
         index file, but it is not read back in by qdoc. However,
         we need it for the webxml generator.
         */
-        QString signature = fn->signature(false, false);
+        QString signature = fn->signature(Node::SignatureReturnType);
         // 'const' is already part of FunctionNode::signature()
         if (fn->isFinal())
             signature += " final";

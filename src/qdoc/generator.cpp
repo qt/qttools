@@ -112,7 +112,7 @@ void Generator::appendSignature(Text &text, const Node *node)
 {
     text << Atom(Atom::LinkNode, CodeMarker::stringForNode(node))
          << Atom(Atom::FormattingLeft, ATOM_FORMATTING_LINK)
-         << Atom(Atom::String, node->signature(false, true))
+         << Atom(Atom::String, node->signature(Node::SignaturePlain))
          << Atom(Atom::FormattingRight, ATOM_FORMATTING_LINK);
 }
 
@@ -1130,7 +1130,8 @@ void Generator::generateReimplementsClause(const FunctionNode *fn, CodeMarker *m
             Text text;
             text << Atom::ParaLeft << "Reimplements: ";
             QString fullName =
-                    overrides->parent()->name() + "::" + overrides->signature(false, true);
+                    overrides->parent()->name()
+                    + "::" + overrides->signature(Node::SignaturePlain);
             appendFullName(text, overrides->parent(), fullName, overrides);
             text << "." << Atom::ParaRight;
             generateText(text, fn, marker);

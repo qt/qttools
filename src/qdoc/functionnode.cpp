@@ -410,24 +410,34 @@ bool FunctionNode::isDeprecated() const
  */
 
 /*!
-  Reconstructs and returns the function's signature. If \a values
-  is \c true, the default values of the parameters are included.
-  The return type is included unless \a noReturnType is \c true.
-  Function templates are prefixed with \c {template <parameter_list>}
-  if \a templateParams is \c true.
+  Reconstructs and returns the function's signature.
+
+  Specific parts of the signature are included according to
+  flags in \a options:
+
+  \value Node::SignaturePlain
+         Plain signature
+  \value Node::SignatureDefaultValues
+         Include any default argument values
+  \value Node::SignatureReturnType
+         Include return type
+  \value Node::SignatureTemplateParams
+         Include \c {template <parameter_list>} if one exists
  */
-QString FunctionNode::signature(bool values, bool noReturnType, bool templateParams) const
+QString FunctionNode::signature(Node::SignatureOptions options) const
 {
     QStringList elements;
 
-    if (templateParams)
+    if (options & Node::SignatureTemplateParams)
         elements << templateDecl();
-    if (!noReturnType)
+    if (options & Node::SignatureReturnType)
         elements << m_returnType;
     elements.removeAll(QString());
 
     if (!isMacroWithoutParams()) {
-        elements << name() + QLatin1Char('(') + m_parameters.signature(values) + QLatin1Char(')');
+        elements << name() + QLatin1Char('(')
+                + m_parameters.signature(options & Node::SignatureDefaultValues)
+                + QLatin1Char(')');
         if (!isMacro()) {
             if (isConst())
                 elements << QStringLiteral("const");
@@ -497,7 +507,7 @@ bool FunctionNode::isIgnored() const
             || name() == QLatin1String("d_func")) {
             return true;
         }
-        QString s = signature(false, false);
+        QString s = signature(Node::SignatureReturnType);
         if (s.contains(QLatin1String("enum_type")) && s.contains(QLatin1String("operator|")))
             return true;
     }
