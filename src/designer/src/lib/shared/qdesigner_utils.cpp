@@ -780,7 +780,7 @@ namespace qdesigner_internal
 quint64 paletteResolveMask(QPalette::ColorGroup colorGroup,
                            QPalette::ColorRole colorRole)
 {
-    if (colorRole == QPalette::AccentColor)
+    if (colorRole == QPalette::Accent)
         colorRole = QPalette::NoRole; // See qtbase/17c589df94a2245ee92d45839c2cba73566d7310
     const auto offset = quint64(QPalette::NColorRoles - 1) * quint64(colorGroup);
     const auto bitPos = quint64(colorRole) + offset;
