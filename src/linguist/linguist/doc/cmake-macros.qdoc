@@ -177,15 +177,11 @@ This function is designed to be used in conjunction with
 //! [sources-and-include-dirs]
 \section1 Sources and Include Directories
 
-By default, \c{qt_add_lupdate} extracts the source files and include directories
-from the given target and passes them to \c{lupdate}.
+With \c{SOURCES} you can explicitly specify additional source files that contain
+translatable strings.
 
-With \c{SOURCES} you can explicitly specify source files that contain
-translatable strings. This turns off the automatic extraction of source files
-from the target.
-
-You can use \c{INCLUDE_DIRECTORIES} to explicitly specify include directories.
-This turns off the automatic extraction of include directories from the target.
+You can use \c{INCLUDE_DIRECTORIES} to explicitly specify include directories
+for those source files.
 //! [sources-and-include-dirs]
 
 \section1 Options
@@ -335,7 +331,10 @@ files.
 \section1 Synopsis
 
 \badcode
-qt_add_translations(target TS_FILES file1.ts [file2.ts ...]
+qt_add_translations([target]
+                    [TARGETS target1 [target2...]]
+                    [SOURCE_TARGETS target1 [target2...]]
+                    TS_FILES file1.ts [file2.ts ...]
                     [RESOURCE_PREFIX prefix]
                     [OUTPUT_TARGETS variable-name]
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
@@ -344,7 +343,8 @@ qt_add_translations(target TS_FILES file1.ts [file2.ts ...]
                     [LUPDATE_TARGET target-name]
                     [LUPDATE_OPTIONS ...]
                     [LRELEASE_TARGET target-name]
-                    [LRELEASE_OPTIONS ...])
+                    [LRELEASE_OPTIONS ...]
+                    [IMMEDIATE_CALL])
 \endcode
 
 \versionlessCMakeCommandsNote qt6_add_translations()
@@ -361,14 +361,25 @@ into \c{.qm} files. This function is a convenience wrapper around
 \l{qt6_add_lupdate}{qt_add_lupdate} and \l{qt6_add_lrelease}{qt_add_lrelease}
 and aims to offer the most common usage of both functions with one call.
 
-The parameter \c{target} is an existing executable or library target that
-contains sources with translatable strings. This function will create the
-targets \c{${target}_lupdate}, \c{${target}_lrelease}, \c{update_translations}
-and \c{release_translations}. The latter targets are umbrella targets that build
-all \c{${target}_lupdate} and \c{${target}}_lrelease targets.
+The parameter \c TARGETS specifies a list of targets that intend to load the
+generated \c{.qm} files at run time. If there's only one such target, you may
+directly pass the target's name as the first argument.
 
-\c{${target}_lrelease} is built automatically whenever \c{${target}} needs to be
-built.
+The parameter \c SOURCE_TARGETS specifies a list of executable or library
+targets that contain sources with translatable strings. From the sources of
+these targets, \c{.ts} files will be created.
+
+If \c SOURCE_TARGETS is not given, targets are automatically gathered by calling
+\l{qt6_collect_i18n_targets}{qt_collect_i18n_targets} at the end of the
+directory scope of \c{PROJECT_SOURCE_DIR}. This functionality requires CMake
+3.19 or newer. This functionality can be turned off with the argument
+\c{IMMEDIATE_CALL}.
+
+This function will create the target \c{update_translations} that scans all
+source files with \c lupdate and creates and updates the \c{.ts} files.
+
+This function will create the target \c{release_translations} that generates the
+\c{.qm} files from the \c{.ts} files. This target is built by default.
 
 The \c{.ts} files must be specified with the argument \c{TS_FILES}.
 
@@ -396,8 +407,8 @@ in a \c{translations} directory below the current build directory.
 \section1 Embedding Generated .qm Files in Resources
 
 By default, the generated \c{.qm} files are embedded in a Qt resource that will
-be linked into \c{${target}}. The files in the resource are accessible under the
-resource prefix \c{"/i18n"}.
+be linked into the targets passed with \c{TARGETS}. The files in the resource
+are accessible under the resource prefix \c{"/i18n"}.
 
 You can set the resource prefix with \c{RESOURCE_PREFIX}.
 
@@ -405,9 +416,21 @@ In a static Qt build, when a resource target is created, additional targets can
 be created. You can instruct \c{qt_add_translations} to store these targets in a
 variable, by passing \c{OUTPUT_TARGETS <variable-name>}.
 
+If \c OUTPUT_TARGETS is used, either \c IMMEDIATE_CALL or \c SOURCE_TARGETS must
+be specified.
+
 The automatic resource embedding can be turned off by giving the
 \c{QM_FILES_OUTPUT_VARIABLE} option, followed by the name of a variable in which
 the command should store the list of generated \c{.qm} files.
+
+\section1 \c{qt_add_translations} before Qt 6.7
+
+Before Qt 6.7, this command accepted only one target as the first argument. This
+target was used for both, extracting translatable sources and embedding \c{.qm}
+files.
+
+Since Qt 6.7, the target in the first argument is not used for source extraction
+anymore.
 
 \section1 Examples
 
@@ -420,7 +443,8 @@ This is roughly equivalent to the following:
 
 \snippet cmake-macros/examples.cmake qt_lupdate_lrelease
 
-Add a Norwegian translation to \c{frogger_game} with a custom resource prefix:
+Add a Norwegian translation to \c{frogger_game} and \c{frogger_level_editor}
+with a custom resource prefix:
 
 \snippet cmake-macros/examples.cmake qt_add_translations_resource_prefix
 

@@ -93,7 +93,10 @@ expect_files_in_list(qm_files2 myobject_no.qm myobject_fi.qm)
 
 # Now do the same with qt6_add_translations.
 create_app(app4)
-qt6_add_translations(app4
+qt6_add_translations(
+    IMMEDIATE_CALL
+    TARGETS app4
+    SOURCE_TARGETS app4
     LUPDATE_TARGET app4_lupdate
     LRELEASE_TARGET app4_lrelease
     TS_FILES myobject_lv.ts myobject_et.ts
@@ -108,6 +111,7 @@ expect_files_in_list(qm_files myobject_lv.qm myobject_et.qm)
 # Typical usage of qt_add_translations with a generated resource.
 create_app(app5)
 qt6_add_translations(app5
+    IMMEDIATE_CALL
     TS_FILES myobject_ru.ts
     RESOURCE_PREFIX "/tränslehschns")
 
@@ -120,6 +124,8 @@ target_include_directories(staticlib1
 target_link_libraries(staticlib1 PRIVATE Qt6::Core)
 set(staticlib1_resource_targets "")
 qt6_add_translations(staticlib1
+    IMMEDIATE_CALL
+    SOURCE_TARGETS staticlib1
     TS_FILES myobject_da.ts
     OUTPUT_TARGETS staticlib1_resource_targets)
 if("${staticlib1_resource_targets}" STREQUAL "")
@@ -129,12 +135,16 @@ endif()
 # Explicitly specify SOURCES.
 create_app(app6)
 qt6_add_translations(app6
+    IMMEDIATE_CALL
+    SOURCE_TARGETS app6
     TS_FILES myobject_cs.ts
     SOURCES myi18nobject.cpp)
 
 # Explicitly specify INCLUDE_DIRECTORIES.
 create_app(app7)
 qt6_add_translations(app7
+    IMMEDIATE_CALL
+    SOURCE_TARGETS app7
     TS_FILES myobject_nl.ts
     INCLUDE_DIRECTORIES some_dir)
 

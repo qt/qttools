@@ -287,7 +287,7 @@ set(lupdate_subproject${n}_sources \"${sources}\")
     endif()
 endfunction()
 
-function(_qt_internal_store_languages_from_ts_files_in_target target ts_files)
+function(_qt_internal_store_languages_from_ts_files_in_targets targets ts_files)
     if(NOT APPLE)
         return()
     endif()
@@ -302,9 +302,28 @@ function(_qt_internal_store_languages_from_ts_files_in_target target ts_files)
                 "Please update CFBundleLocalizations in your Info.plist manually.")
         endif()
     endforeach()
-    set_property(TARGET "${target}" APPEND PROPERTY
-        _qt_apple_supported_languages "${supported_languages}"
-    )
+    foreach(target IN LISTS targets)
+        set_property(TARGET "${target}" APPEND PROPERTY
+            _qt_apple_supported_languages "${supported_languages}"
+        )
+    endforeach()
+endfunction()
+
+# Store in ${out_var} the file path to the .qm file that will be generated from the given .ts file.
+function(_qt_internal_generated_qm_file_path out_var ts_file)
+    get_filename_component(qm ${ts_file} NAME_WLE)
+    string(APPEND qm ".qm")
+    get_source_file_property(output_location ${ts_file} OUTPUT_LOCATION)
+    if(output_location)
+        if(NOT IS_ABSOLUTE "${output_location}")
+            get_filename_component(output_location "${output_location}" ABSOLUTE
+                BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+        endif()
+        string(PREPEND qm "${output_location}/")
+    else()
+        string(PREPEND qm "${CMAKE_CURRENT_BINARY_DIR}/")
+    endif()
+    set("${out_var}" "${qm}" PARENT_SCOPE)
 endfunction()
 
 function(qt6_add_lrelease)
@@ -367,24 +386,13 @@ function(qt6_add_lrelease)
 ]])
         endif()
 
-        get_filename_component(qm ${ts_file} NAME_WLE)
-        string(APPEND qm ".qm")
-        get_source_file_property(output_location ${ts_file} OUTPUT_LOCATION)
-        if(output_location)
-            if(NOT IS_ABSOLUTE "${output_location}")
-                get_filename_component(output_location "${output_location}" ABSOLUTE
-                    BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-            endif()
-            file(MAKE_DIRECTORY "${output_location}")
-            string(PREPEND qm "${output_location}/")
-        else()
-            string(PREPEND qm "${CMAKE_CURRENT_BINARY_DIR}/")
-        endif()
+        _qt_internal_generated_qm_file_path(qm "${ts_file}")
+        get_filename_component(qm_dir "${qm}" DIRECTORY)
+        file(MAKE_DIRECTORY "${qm_dir}")
         add_custom_command(OUTPUT ${qm}
             ${lrelease_command} ${arg_OPTIONS} ${ts_file} -qm ${qm}
             DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease "${ts_file}"
             VERBATIM)
-
         list(APPEND qm_files "${qm}")
 
         # QTBUG-103470: Save the target responsible for driving the build of the custom command
@@ -403,7 +411,7 @@ function(qt6_add_lrelease)
     endforeach()
 
     if(legacy_signature_used)
-        _qt_internal_store_languages_from_ts_files_in_target("${legacy_target}" "${ts_files}")
+        _qt_internal_store_languages_from_ts_files_in_targets("${legacy_target}" "${ts_files}")
     endif()
 
     if(legacy_signature_used)
@@ -437,8 +445,9 @@ endfunction()
 
 # This function is currently in Technical Preview.
 # It's signature and behavior might change.
-function(qt6_add_translations target)
-    set(options)
+function(qt6_add_translations)
+    set(options
+        IMMEDIATE_CALL)
     set(oneValueArgs
         LUPDATE_TARGET
         LRELEASE_TARGET
@@ -446,6 +455,8 @@ function(qt6_add_translations target)
         RESOURCE_PREFIX
         OUTPUT_TARGETS)
     set(multiValueArgs
+        TARGETS
+        SOURCE_TARGETS
         TS_FILES
         SOURCES
         INCLUDE_DIRECTORIES
@@ -453,6 +464,16 @@ function(qt6_add_translations target)
         LRELEASE_OPTIONS)
     cmake_parse_arguments(arg "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+    set(targets "${arg_TARGETS}")
+    if(NOT "${arg_UNPARSED_ARGUMENTS}" STREQUAL "")
+        list(POP_FRONT arg_UNPARSED_ARGUMENTS target)
+        list(PREPEND targets "${target}")
+        unset(target)
+        set(arg_TARGETS ${targets})       # to forward this argument
+    endif()
+    if(targets STREQUAL "")
+        message(FATAL_ERROR "No targets provided.")
+    endif()
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
             "together with RESOURCE_PREFIX.")
@@ -465,17 +486,93 @@ function(qt6_add_translations target)
         set(arg_RESOURCE_PREFIX "/i18n")
     endif()
 
-    qt6_add_lupdate(${target}
+    # Defer the actual function call if SOURCE_TARGETS was not given and an immediate call was not
+    # requested.
+    set(source_targets "${arg_SOURCE_TARGETS}")
+    if(source_targets STREQUAL "" AND NOT arg_IMMEDIATE_CALL)
+        if(DEFINED arg_OUTPUT_TARGETS)
+            # We don't have the infrastructure to predict the resource target names.
+            message(FATAL_ERROR "Deferring qt6_add_translations is not supported with "
+                "OUTPUT_TARGETS. Pass IMMEDIATE_CALL or specify SOURCE_TARGETS.")
+        endif()
+        if(CMAKE_VERSION VERSION_LESS "3.19")
+            message(WARNING
+                "qt6_add_translations cannot defer function calls with this CMake version. "
+                "Only targets created prior to the qt6_add_translations call are used for i18n. "
+                "To avoid this warning, make sure this command is called at the end of the "
+                "top-level directory scope and pass the IMMEDIATE_CALL keyword. "
+                "Alternatively, upgrade to CMake 3.19 or newer."
+            )
+            qt6_add_translations(IMMEDIATE_CALL ${ARGV})
+        else()
+            # Predict the names of generated .qm files.
+            if(DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
+                set(qm_files "")
+                foreach(ts_file IN LISTS arg_TS_FILES)
+                    _qt_internal_generated_qm_file_path(qm_file "${ts_file}")
+                    list(APPEND qm_files "${qm_file}")
+                endforeach()
+                set("${arg_QM_FILES_OUTPUT_VARIABLE}" "${qm_files}" PARENT_SCOPE)
+            endif()
+
+            # Forward options.
+            set(forwarded_args IMMEDIATE_CALL)
+            foreach(keyword IN LISTS options)
+                if(arg_${keyword})
+                    list(APPEND forwarded_args ${keyword})
+                endif()
+            endforeach()
+
+            # Forward one-value and multi-value arguments.
+            # Filter path variables. We will forward those separately.
+            set(to_forward ${oneValueArgs} ${multiValueArgs})
+            set(path_variables
+                TS_FILES
+                SOURCES
+                INCLUDE_DIRECTORIES
+            )
+            list(REMOVE_ITEM to_forward ${path_variables})
+            foreach(keyword IN LISTS to_forward)
+                if(DEFINED arg_${keyword})
+                    list(APPEND forwarded_args ${keyword} ${arg_${keyword}})
+                endif()
+            endforeach()
+
+            # Make variables that specify paths absolute.
+            # Relative paths are considered to be relative to the current source dir.
+            foreach(var IN LISTS path_variables)
+                qt_internal_make_paths_absolute(absolute_paths ${arg_${var}})
+                if(NOT "${absolute_paths}" STREQUAL "")
+                    list(APPEND forwarded_args ${var} ${absolute_paths})
+                endif()
+            endforeach()
+
+            # Schedule this command to be called at the end of the project's source dir.
+            cmake_language(EVAL CODE
+                "cmake_language(DEFER
+                    DIRECTORY \"${PROJECT_SOURCE_DIR}\"
+                    CALL qt6_add_translations ${forwarded_args})")
+        endif()
+        return()
+    endif()
+
+    if(source_targets STREQUAL "")
+        qt6_collect_i18n_targets(source_targets)
+    endif()
+    qt6_add_lupdate(
+        TARGETS "${source_targets}"
         LUPDATE_TARGET "${arg_LUPDATE_TARGET}"
         TS_FILES "${arg_TS_FILES}"
         SOURCES "${arg_SOURCES}"
         INCLUDE_DIRECTORIES "${arg_INCLUDE_DIRECTORIES}"
-        OPTIONS "${arg_LUPDATE_OPTIONS}")
-    qt6_add_lrelease(${target}
+        OPTIONS "${arg_LUPDATE_OPTIONS}"
+    )
+    qt6_add_lrelease(
         LRELEASE_TARGET "${arg_LRELEASE_TARGET}"
         TS_FILES "${arg_TS_FILES}"
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
+    _qt_internal_store_languages_from_ts_files_in_targets("${targets}" "${arg_TS_FILES}")
 
     # Mark .qm files as GENERATED, so that calling _qt_internal_expose_deferred_files_to_ide
     # doesn't cause an error at generation time saying "Cannot find source file:" when
@@ -484,7 +581,7 @@ function(qt6_add_translations target)
     # with a version less than 3.20 or set the CMP0118 policy value to OLD.
     set(scope_args "")
     if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
-        set(scope_args TARGET_DIRECTORY ${target})
+        set(scope_args TARGET_DIRECTORY ${targets})
     endif()
     set_source_files_properties(${qm_files}
         ${scope_args}
@@ -492,13 +589,17 @@ function(qt6_add_translations target)
     )
 
     if(NOT "${arg_RESOURCE_PREFIX}" STREQUAL "")
-        qt6_add_resources(${target} "${target}_translations"
-            PREFIX "${arg_RESOURCE_PREFIX}"
-            BASE "${CMAKE_CURRENT_BINARY_DIR}"
-            OUTPUT_TARGETS out_targets
-            FILES ${qm_files})
+        set(accumulated_out_targets "")
+        foreach(target IN LISTS targets)
+            qt6_add_resources(${target} "${target}_translations"
+                PREFIX "${arg_RESOURCE_PREFIX}"
+                BASE "${CMAKE_CURRENT_BINARY_DIR}"
+                OUTPUT_TARGETS out_targets
+                FILES ${qm_files})
+            list(APPEND accumulated_out_targets ${out_targets})
+        endforeach()
         if(DEFINED arg_OUTPUT_TARGETS)
-            set("${arg_OUTPUT_TARGETS}" "${out_targets}" PARENT_SCOPE)
+            set("${arg_OUTPUT_TARGETS}" "${accumulated_out_targets}" PARENT_SCOPE)
         endif()
     endif()
     if(NOT "${arg_QM_FILES_OUTPUT_VARIABLE}" STREQUAL "")

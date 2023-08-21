@@ -36,8 +36,11 @@ qt_add_translations(super_calc TS_FILES super_calc_de.ts)
 #! [qt_add_translations_default]
 
 #! [qt_lupdate_lrelease]
-qt_add_lupdate(super_calc TS_FILES super_calc_de.ts)
-qt_add_lrelease(super_calc
+qt_collect_i18n_targets(i18n_targets)
+qt_add_lupdate(
+    TARGETS ${i18n_targets}
+    TS_FILES super_calc_de.ts)
+qt_add_lrelease(
     TS_FILES super_calc_de.ts
     QM_FILES_OUTPUT_VARIABLE qm_files)
 qt_add_resources(super_calc "translations"
@@ -47,7 +50,8 @@ qt_add_resources(super_calc "translations"
 #! [qt_lupdate_lrelease]
 
 #! [qt_add_translations_resource_prefix]
-qt_add_translations(frogger_game
+qt_add_translations(
+    TARGETS frogger_game frogger_level_editor
     TS_FILES frogger_game_no.ts
     RESOURCE_PREFIX "/translations")
 #! [qt_add_translations_resource_prefix]
