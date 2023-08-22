@@ -98,7 +98,6 @@ qt_internal_add_module(DesignerComponentsPrivate
         ../tabordereditor/tabordereditor.cpp # redefinition of 'QMetaTypeId<QList<QWidget *>>' (from qdesigner_resource.cpp)
     DEFINES
         QDESIGNER_COMPONENTS_LIBRARY
-        QT_NO_CONTEXTLESS_CONNECT
         QT_STATICPLUGIN
     INCLUDE_DIRECTORIES
         .

@@ -117,7 +117,7 @@ void tst_generatedOutput::runQDocProcess(const QStringList &arguments)
         QFAIL(qPrintable(QStringLiteral("Running qdoc failed with exit code %1: %2")
                 .arg(qdocProcess.exitCode()).arg(qdocProcess.errorString())));
     };
-    QObject::connect(&qdocProcess, &QProcess::errorOccurred, failQDoc);
+    QObject::connect(&qdocProcess, &QProcess::errorOccurred, this, failQDoc);
 
     qdocProcess.start();
     qdocProcess.waitForFinished();

@@ -83,8 +83,6 @@ qt_internal_add_tool(${target_name}
         src/qdoc/xmlgenerator.cpp
     NO_UNITY_BUILD_SOURCES
         src/qdoc/qmlmarkupvisitor.cpp # redefinition of 'samp'/'slt' (from codemarker.cpp)
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_LIST_DIR}/src
     LIBRARIES

@@ -8,8 +8,6 @@
 qt_internal_add_app(kmap2qmap
     SOURCES
         main.cpp
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     PUBLIC_LIBRARIES
         Qt::InputSupportPrivate
 )

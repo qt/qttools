@@ -8,8 +8,6 @@
 qt_internal_add_app(qdbus
     SOURCES
         qdbus.cpp
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::DBusPrivate
         Qt::Xml

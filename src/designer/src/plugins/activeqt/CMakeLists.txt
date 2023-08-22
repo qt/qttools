@@ -14,8 +14,6 @@ qt_internal_add_plugin(QAxWidgetPlugin
         qaxwidgetpropertysheet.cpp qaxwidgetpropertysheet.h
         qaxwidgettaskmenu.cpp qaxwidgettaskmenu.h
         qdesigneraxwidget.cpp qdesigneraxwidget.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::AxContainer
         Qt::Core

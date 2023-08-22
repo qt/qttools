@@ -9,8 +9,6 @@ qt_internal_add_app(pixeltool
     SOURCES
         main.cpp
         qpixeltool.cpp qpixeltool.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::CorePrivate
         Qt::Gui

@@ -10,8 +10,6 @@ qt_internal_add_plugin(QWebViewPlugin
     PLUGIN_TYPE designer
     SOURCES
         qwebview_plugin.cpp qwebview_plugin.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::Core
         Qt::Designer

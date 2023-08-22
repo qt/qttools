@@ -14,8 +14,6 @@ qt_internal_add_app(qdbusviewer
         qdbusmodel.cpp qdbusmodel.h
         qdbusviewer.cpp qdbusviewer.h
         servicesproxymodel.cpp servicesproxymodel.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::DBusPrivate
         Qt::Gui

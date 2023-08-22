@@ -30,7 +30,6 @@ qt_internal_add_tool(${target_name}
         QMAKE_OVERRIDE_PRFS
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
-        QT_NO_CONTEXTLESS_CONNECT
     INCLUDE_DIRECTORIES
         ../shared
     LIBRARIES

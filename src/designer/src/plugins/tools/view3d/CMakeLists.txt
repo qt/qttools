@@ -13,8 +13,6 @@ qt_internal_add_plugin(QView3DPlugin
         view3d_global.h
         view3d_plugin.cpp view3d_plugin.h
         view3d_tool.cpp view3d_tool.h
-    DEFINES
-        QT_NO_CONTEXTLESS_CONNECT
     LIBRARIES
         Qt::Core
         Qt::Designer

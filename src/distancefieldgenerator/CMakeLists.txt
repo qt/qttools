@@ -14,7 +14,6 @@ qt_internal_add_app(qdistancefieldgenerator
     DEFINES
         QT_NO_CAST_FROM_ASCII
         QT_NO_CAST_TO_ASCII
-        QT_NO_CONTEXTLESS_CONNECT
         QT_NO_FOREACH
     LIBRARIES
         Qt::CorePrivate
