@@ -185,8 +185,8 @@ bool LayoutAlignmentMenu::setAlignment(const QDesignerFormEditorInterface *core,
 {
     bool enabled;
     const Qt::Alignment alignment = LayoutAlignmentCommand::alignmentOf(core, w, &enabled);
+    m_subMenuAction->setEnabled(enabled);
     if (!enabled) {
-        m_subMenuAction->setEnabled(false);
         m_actions[HorizNone]->setChecked(true);
         m_actions[VerticalNone]->setChecked(true);
         return false;
