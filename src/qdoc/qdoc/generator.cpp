@@ -1946,6 +1946,8 @@ void Generator::supplementAlsoList(const Node *node, QList<Text> &alsoList)
                 }
 
                 if (i == alsoList.size()) {
+                    if (alternateFunc->isDeprecated() && !fn->isDeprecated())
+                        return;
                     alternateName += "()";
 
                     Text also;
