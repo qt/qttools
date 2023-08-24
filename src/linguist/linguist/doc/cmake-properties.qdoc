@@ -30,6 +30,8 @@ its subdirectories from translation. The command
 
 To exclude a single target, use the \l{target property
 QT_EXCLUDE_FROM_TRANSLATION}.
+
+\sa QT_EXCLUDE_SOURCES_FROM_TRANSLATION
 */
 
 
@@ -61,4 +63,28 @@ Set this target property to \c ON to exclude it from translation. The command
 
 To exclude all targets under a subdirectory, use the \l{directory property
 QT_EXCLUDE_FROM_TRANSLATION}.
+
+\sa QT_EXCLUDE_SOURCES_FROM_TRANSLATION
+*/
+
+
+/*!
+\page cmake-target-property-qt-exclude-sources-from-translation.html
+\ingroup cmake-properties-qtlinguisttools
+\ingroup cmake-target-properties-qtlinguisttools
+
+\title QT_EXCLUDE_SOURCES_FROM_TRANSLATION
+
+\brief List of source file paths that shall be excluded from translation
+
+\cmakepropertysince 6.7
+
+This target property specifies a list of source file paths that are excluded
+from translation. The paths may be absolute or relative to
+\c{CMAKE_CURRENT_SOURCE_DIR}. The paths may contain wildcards.
+
+\snippet cmake-macros/examples.cmake exclude sources from i18n
+
+\sa {target property QT_EXCLUDE_FROM_TRANSLATION}
+\sa {directory property QT_EXCLUDE_FROM_TRANSLATION}
 */

@@ -43,6 +43,7 @@ foreach(i RANGE 1 ${lupdate_subproject_count})
     list(APPEND path_variables
         subproject${i}_include_paths
         subproject${i}_sources
+        subproject${i}_excluded
     )
 endforeach()
 foreach(path_var IN LISTS path_variables)
@@ -76,10 +77,12 @@ foreach(i RANGE 1 ${lupdate_subproject_count})
     filter_nonexistent_files(existing_sources ${absolute_subproject${i}_sources})
     list_to_json_array("${existing_sources}" json_sources)
     list_to_json_array("${absolute_subproject${i}_include_paths}" json_include_paths)
+    list_to_json_array("${absolute_subproject${i}_excluded}" json_sources_exclusions)
     string(APPEND content "    {
       \"projectFile\": \"${lupdate_subproject${i}_source_dir}/CMakeLists.txt\",
       \"includePaths\": ${json_include_paths},
-      \"sources\": ${json_sources}
+      \"sources\": ${json_sources},
+      \"excluded\": ${json_sources_exclusions}
     }")
     if(i LESS lupdate_subproject_count)
         string(APPEND content ",")

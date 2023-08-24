@@ -21,6 +21,10 @@ endforeach()
 set(forbidden_strings
     "<source>Hello from MyObject2!</source>"
     "<source>Hello from test1!</source>"
+    "<source>excluded1</source>"
+    "<source>excluded2</source>"
+    "<source>excluded3</source>"
+    "<source>excluded4</source>"
 )
 foreach(needle IN LISTS forbidden_strings)
     string(FIND "${ts_file_content}" "${needle}" pos)

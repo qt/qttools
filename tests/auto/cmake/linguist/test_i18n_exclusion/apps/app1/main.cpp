@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include "lib1.h"
 #include "lib2.h"
+#include "subdir2/excluded4.cpp"
 
 int main(int argc, char **argv)
 {
@@ -12,6 +13,7 @@ int main(int argc, char **argv)
     auto obj2 = new MyObject2(&app);
     qDebug() << QCoreApplication::translate("app1", "Hello from app1!")
              << obj1->greeting()
-             << obj2->greeting();
+             << obj2->greeting()
+             << WossName::greeting();
     return app.exec();
 }

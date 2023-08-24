@@ -71,3 +71,16 @@ qt_add_lupdate(TARGETS ${i18n_targets})
 
 add_subdirectory(tests)        # unit tests - we don't want to translate those
 #! [qt_collect_i18n_targets]
+
+#! [exclude sources from i18n]
+qt_add_executable(myapp
+    main.cpp
+    untranslatable.cpp
+    3rdparty/sqlite3.h
+    3rdparty/sqlite3.c
+)
+set_property(TARGET myapp PROPERTY QT_EXCLUDE_SOURCES_FROM_TRANSLATION
+    untranslatable.cpp
+    3rdparty/*
+)
+#! [exclude sources from i18n]
