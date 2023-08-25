@@ -109,7 +109,8 @@ static const struct symbol_map_t symbol_map[] = {
     { "twosuperior", Qt::Key_twosuperior },
     { "threesuperior", Qt::Key_threesuperior },
     { "acute", Qt::Key_acute },
-    { "mu", Qt::Key_mu },
+    { "micro", Qt::Key_micro },
+    { "mu", Qt::Key_micro }, // Old name, deprecated since Qt 6.6
     { "paragraph", Qt::Key_paragraph },
     { "periodcentered", Qt::Key_periodcentered },
     { "cedilla", Qt::Key_cedilla },
