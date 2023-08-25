@@ -11,6 +11,8 @@ QT_BEGIN_NAMESPACE
 #if 0
 // pragma for syncqt, don't remove.
 #pragma qt_class(QDesignerExportWidget)
+#pragma qt_deprecates(QtDesigner/qdesignerexportwidget.h)
+#pragma qt_deprecates(QtDesigner/QDesignerExportWidget)
 #endif
 
 #if defined(QDESIGNER_EXPORT_WIDGETS)
