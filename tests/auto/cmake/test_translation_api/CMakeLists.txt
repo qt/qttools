@@ -91,14 +91,14 @@ expect_files_in_list(qm_files2 myobject_no.qm myobject_fi.qm)
 # Now do the same with qt6_add_translations.
 create_app(app4)
 qt6_add_translations(app4
-    TS_FILES myobject_no.ts myobject_fi.ts
+    TS_FILES myobject_lv.ts myobject_et.ts
     QM_FILES_OUTPUT_VARIABLE qm_files
     LUPDATE_OPTIONS -source-language en_US
     LRELEASE_OPTIONS -compress)
 expect_target(app4_lupdate)
 expect_target(app4_lrelease)
 expect_target(release_translations)
-expect_files_in_list(qm_files myobject_no.qm myobject_fi.qm)
+expect_files_in_list(qm_files myobject_lv.qm myobject_et.qm)
 
 # Typical usage of qt_add_translations with a generated resource.
 create_app(app5)
