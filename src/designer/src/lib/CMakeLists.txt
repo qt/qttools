@@ -455,3 +455,6 @@ qt_internal_extend_target(Designer CONDITION QT_FEATURE_opengl
     LIBRARIES
         Qt::OpenGL
 )
+
+# UiPlugin module generates deprecated header files for Designer.
+qt_internal_add_sync_header_dependencies(Designer UiPlugin)
