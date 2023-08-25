@@ -60,9 +60,7 @@ include("${_Qt6CTestMacros}")
 
 if (TARGET Qt6::Widgets)
     _qt_internal_test_expect_pass(test_uiplugin_module)
-
-    # Disabled until QTBUG-116483 has been fixed:
-    #  _qt_internal_test_expect_fail(test_uiplugin_via_designer)
+    _qt_internal_test_expect_pass(test_uiplugin_via_designer)
 endif()
 
 if(TARGET Qt6::lupdate)
