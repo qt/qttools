@@ -4,7 +4,7 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="myi18nobject.cpp" line="45"/>
+        <location filename="myi18nobject.cpp" line="20"/>
         <source>Hello, world!</source>
         <translation>Hallo, Welt!</translation>
     </message>
