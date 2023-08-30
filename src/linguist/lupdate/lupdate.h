@@ -27,7 +27,6 @@ enum UpdateOption {
     NoSort = 8,
     HeuristicSameText = 16,
     HeuristicSimilarText = 32,
-    HeuristicNumber = 64,
     AbsoluteLocations = 256,
     RelativeLocations = 512,
     NoLocations = 1024,

@@ -279,7 +279,7 @@
         \li \c {-no-ui-lines}
         \li Do not record line numbers in references to UI files.
     \row
-        \li \c {-disable-heuristic {sametext|similartext|number}}
+        \li \c {-disable-heuristic {sametext|similartext}}
         \li Disable the named merge heuristic. Can be specified multiple times.
     \row
         \li \c {-project <filename>}

@@ -15,15 +15,15 @@ MainWindow::MainWindow()
     createMenus();
 
 //! [0]
-    setWindowTitle(tr("Troll Print 1.0"));
+    setWindowTitle(tr("Troll Print %1").arg("1.0"));
 //! [0]
 }
 
 void MainWindow::about()
 {
-    QMessageBox::information(this, tr("About Troll Print 1.0"),
-                      tr("Troll Print 1.0.\n\n"
-                      "Copyright 1999 Software, Inc."));
+    QMessageBox::information(this, tr("About Troll Print %1").arg("1.0"),
+                      tr("Troll Print %1.\n\n"
+                      "Copyright 1999 Software, Inc.").arg("1.0"));
 }
 
 //! [1]

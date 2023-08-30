@@ -254,7 +254,7 @@ static void printUsage()
         "           Default is absolute for new files.\n"
         "    -no-ui-lines\n"
         "           Do not record line numbers in references to UI files.\n"
-        "    -disable-heuristic {sametext|similartext|number}\n"
+        "    -disable-heuristic {sametext|similartext}\n"
         "           Disable the named merge heuristic. Can be specified multiple times.\n"
         "    -project <filename>\n"
         "           Name of a file containing the project's description in JSON format.\n"
@@ -728,7 +728,7 @@ int main(int argc, char **argv)
 
     UpdateOptions options =
         Verbose | // verbose is on by default starting with Qt 4.2
-        HeuristicSameText | HeuristicSimilarText | HeuristicNumber;
+        HeuristicSameText | HeuristicSimilarText;
     int numFiles = 0;
     bool metTsFlag = false;
     bool metXTsFlag = false;
@@ -799,8 +799,6 @@ int main(int argc, char **argv)
                 options &= ~HeuristicSameText;
             } else if (arg == QLatin1String("similartext")) {
                 options &= ~HeuristicSimilarText;
-            } else if (arg == QLatin1String("number")) {
-                options &= ~HeuristicNumber;
             } else {
                 printErr(u"Invalid heuristic name passed to -disable-heuristic.\n"_s);
                 return 1;

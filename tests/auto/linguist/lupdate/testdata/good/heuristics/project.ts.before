@@ -2,14 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="de_DE">
 <context>
-    <name>A</name>
-    <message>
-        <location filename="main.cpp" line="53"/>
-        <source>version 1.0 now</source>
-        <translation>teraz wersja 1.0</translation>
-    </message>
-</context>
-<context>
     <name>B</name>
     <message>
         <location filename="main.cpp" line="56"/>
@@ -33,14 +25,6 @@
         <location filename="main.cpp" line="59"/>
         <source>this is the non-matched same text</source>
         <translation>völlig andere variante des reinfalls mit same-text</translation>
-    </message>
-</context>
-<context>
-    <name>D</name>
-    <message>
-        <location filename="main.cpp" line="62"/>
-        <source>1ab</source>
-        <translation>1ab</translation>
     </message>
 </context>
 </TS>

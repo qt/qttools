@@ -2,8 +2,8 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Troll Print 1.0</source>
-        <translation>Troll Imprimir 1.0</translation>
+        <source>Troll Print %1</source>
+        <translation>Troll Imprimir %1</translation>
     </message>
     <message>
         <source>E&amp;xit</source>
@@ -26,14 +26,14 @@
         <translation>A&amp;juda</translation>
     </message>
     <message>
-        <source>About Troll Print 1.0</source>
-        <translation>Sobre Troll Imprimir 1.0</translation>
+        <source>About Troll Print %1</source>
+        <translation>Sobre Troll Imprimir %1</translation>
     </message>
     <message>
-        <source>Troll Print 1.0.
+        <source>Troll Print %1.
 
 Copyright 1999 Software, Inc.</source>
-        <translation>Troll Imprimir 1.0
+        <translation>Troll Imprimir %1
 
 Copyright 1999 Software, Inc.</translation>
     </message>
