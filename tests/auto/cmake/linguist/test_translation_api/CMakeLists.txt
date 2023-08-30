@@ -133,7 +133,9 @@ qt6_add_translations(app7
     TS_FILES myobject_nl.ts
     INCLUDE_DIRECTORIES some_dir)
 
-# Build the update_translations target
-add_custom_target(my_all_target
-    ALL
-    DEPENDS update_translations)
+# Build 'update_translations' before any of the '*_lrelease' targets.
+get_directory_property(lrelease_targets BUILDSYSTEM_TARGETS)
+list(FILTER lrelease_targets INCLUDE REGEX "_lrelease$")
+foreach(target IN LISTS lrelease_targets)
+    add_dependencies(${target} update_translations)
+endforeach()
