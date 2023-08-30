@@ -1,5 +1,4 @@
 Updating 'project\.ts'\.\.\.
-    Found 4 source text\(s\) \(4 new and 0 already existing\)
-    Removed 6 obsolete entries
-    Number heuristic provided 2 translation\(s\)
+    Found 2 source text\(s\) \(2 new and 0 already existing\)
+    Removed 4 obsolete entries
     Same-text heuristic provided 1 translation\(s\)

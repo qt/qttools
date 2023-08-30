@@ -195,20 +195,6 @@
     Linguist}. The following items are of special interest:
 
     \list
-    \li \c MainWindow
-         \list
-         \li Troll Print 1.0 - marked "(obs.)", obsolete
-         \li About Troll Print 1.0 - marked "(obs.)", obsolete
-         \li Troll Print 1.0. Copyright 1999 Software, Inc. -
-       marked obsolete
-         \li Troll Print 1.1 - automatically translated as
-       "Troll Imprimir 1.1"
-         \li About Troll Print 1.1 - automatically translated as
-       "Troll Imprimir 1.1"
-         \li Troll Print 1.1. Copyright 1999-2000 Software,
-       Inc. - automatically translated as "Troll Imprimir 1.1.
-       Copyright 1999-2000 Software, Inc."
-         \endlist
     \li \c PrintPanel
          \list
          \li 2-sided - marked "(obs.)", obsolete
@@ -217,8 +203,9 @@
          \endlist
     \endlist
 
-    Notice that \c lupdate works hard behind the scenes to make revisions
-    easier, and it's pretty smart with numbers.
+    In order to make revisions easier, instead of tr("Troll Print 1.0")
+    you can use tr("Troll Print %1").arg("1.0") or such to avoid having to update
+    the string on every release.
 
     Go over the translations in \c MainWindow and mark these as "done".
     Translate "\<b\>TROLL PRINT\</b\>" as "\<b\>TROLL IMPRIMIR\</b\>".

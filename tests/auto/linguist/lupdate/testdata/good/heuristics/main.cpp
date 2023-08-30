@@ -36,17 +36,11 @@ class A: public QObject {
     Q_OBJECT
     void foo()
     {
-        // number Heuristics
-        tr("version 2.0 now");
-
         // same text match
         tr("this is the matched same text");
 
         // failed same text
         tr("this is the non-matched same text");
-
-        // number heuristics QTBUG-111775
-        tr("1xb");
     }
 };
 
