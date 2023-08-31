@@ -1676,14 +1676,16 @@ void HtmlGenerator::generateNavigationBar(const QString &title, const Node *node
                     navNodes.push_front(currentNode->navigationParent());
                 currentNode = currentNode->navigationParent();
             }
-            // If no nav. parent was found but the page is in a single group, use that
+            // If no nav. parent was found but the page is a \group member, add a link to the
+            // (first) group page.
             if (navNodes.empty()) {
-                QStringList groups = static_cast<const PageNode *>(node)->groupNames();
-                if (groups.size() == 1) {
-                    const Node *groupNode =
-                            m_qdb->findNodeByNameAndType(QStringList(groups[0]), &Node::isGroup);
-                    if (groupNode && !groupNode->title().isEmpty())
+                const QStringList groups = static_cast<const PageNode *>(node)->groupNames();
+                for (const auto &groupName : groups) {
+                    const auto *groupNode = m_qdb->findNodeByNameAndType(QStringList{groupName}, &Node::isGroup);
+                    if (groupNode && !groupNode->title().isEmpty()) {
                         navNodes.push_front(groupNode);
+                        break;
+                    }
                 }
             }
             while (!navNodes.empty()) {

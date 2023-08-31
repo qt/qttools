@@ -394,8 +394,9 @@
     \target group-command
     \section1 \\group
 
-    The \\group command creates a separate page that lists the classes
-    belonging to the group. The argument is the group name.
+    The \\group command creates a separate page that lists the classes,
+    pages, or other entities belonging to a named group. The argument
+    is the group name.
 
     A class is included in a group by using the \l {ingroup-command}
     {\\ingroup} command. Overview pages can also be related to a group
@@ -408,25 +409,20 @@
     HTML page for the group is written to an \c {.html} file named
     <lower-case-group-name>.html.
 
-    Each class name is listed as a link to the class reference page
-    followed by the text from the class's \l {brief-command} {\\brief}
-    texts.
+    Each entity in the group is listed as a link (using page title
+    or class name), followed by a decription from the \l {brief-command}
+    {\\brief} command in the entity's documentation.
 
     \badcode *
     /\1!
         \group io
-
         \title Input/Output and Networking
-
-        These classes are used to handle input and output to
-        and from external devices, processes, files etc., as
-        well as manipulating files and directories.
     \1/
     \endcode
 
-    QDoc generates a group page in \c{io.html}.
+    QDoc generates a group page \c{io.html}.
 
-    Note that overview pages related to the group, must be listed
+    Note that overview pages related to the group must be listed
     explicitly using the \l {generatelist-command} {\\generatelist}
     command with the \c related argument.
 
@@ -444,8 +440,9 @@
     \1/
     \endcode
 
-    See also \l {ingroup-command} {\\ingroup} and \l
-    {generatelist-command} {\\generatelist}.
+    See also \l {ingroup-command} {\\ingroup}, \l {annotatedlist-command}
+    {\\annotatedlist}, \l {generatelist-command} {\\generatelist}, and
+    \l {noautolist-command}{\\noautolist}.
 
     \target headerfile-command
     \section1 \\headerfile

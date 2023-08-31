@@ -9,11 +9,16 @@
     \inmodule TestCPP
     \brief A header file.
     \ingroup headers
+    \ingroup tests
 */
 
 /*!
     \group headers
     \title Headers
+*/
+
+/*! \group tests
+    \title Tests
 */
 
 /*!
