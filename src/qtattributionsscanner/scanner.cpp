@@ -124,6 +124,20 @@ static std::optional<QStringList> toStringList(const QJsonValue &value)
     return result;
 }
 
+static std::optional<QString> arrayToMultiLineString(const QJsonValue &value)
+{
+    if (!value.isArray())
+        return std::nullopt;
+    QString result;
+    for (const auto &iter : value.toArray()) {
+        if (iter.type() != QJsonValue::String)
+            return std::nullopt;
+        result.append(iter.toString());
+        result.append(QLatin1StringView("\n"));
+    }
+    return result;
+}
+
 // Extracts SPDX license ids from a SPDX license expression.
 // For "(BSD-3-Clause AND BeerWare)" this function returns { "BSD-3-Clause", "BeerWare" }.
 static QStringList extractLicenseIdsFromSPDXExpression(QString expression)
@@ -211,7 +225,8 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         const QString key = iter.key();
 
         if (!iter.value().isString() && key != "QtParts"_L1 && key != "SecurityCritical"_L1
-            && key != "Files"_L1 && key != "LicenseFiles"_L1 && key != "Comment"_L1) {
+            && key != "Files"_L1 && key != "LicenseFiles"_L1 && key != "Comment"_L1
+            && key != "Copyright"_L1) {
             if (logLevel != SilentLog)
                 std::cerr << qPrintable(tr("File %1: Expected JSON string as value of %2.").arg(
                                             QDir::toNativeSeparators(filePath), key)) << std::endl;
@@ -273,7 +288,24 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
             for (const auto &iter : std::as_const(strings.value()))
                 p.licenseFiles.push_back(dir.absoluteFilePath(iter));
         } else if (key == "Copyright"_L1) {
-            p.copyright = value;
+            QJsonValueConstRef jsonValue = iter.value();
+            if (jsonValue.isArray()) {
+                // Array joined with new lines
+                auto maybeString = arrayToMultiLineString(jsonValue);
+                if (maybeString)
+                    p.copyright = maybeString.value();
+            } else if (jsonValue.isString()) {
+                // Legacy format: multiple values separated by space in one string.
+                p.copyright = value;
+            } else {
+                if (logLevel != SilentLog) {
+                    std::cerr << qPrintable(tr("File %1: Expected JSON array of string or"
+                                               "string as value of %2.").arg(
+                                                QDir::toNativeSeparators(filePath), key)) << std::endl;
+                    validPackage = false;
+                    continue;
+                }
+            }
         } else if (key == "CopyrightFile"_L1) {
             p.copyrightFile = QDir(directory).absoluteFilePath(value);
         } else if (key == "PackageComment"_L1) {
