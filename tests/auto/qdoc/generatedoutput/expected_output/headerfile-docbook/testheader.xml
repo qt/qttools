@@ -18,7 +18,7 @@
 <db:varlistentry>
 <db:term>Group</db:term>
 <db:listitem>
-<db:para><db:para>&lt;TestHeader&gt; is part of <db:simplelist><db:member><db:link xlink:href="headers.xml">Headers</db:link></db:member></db:simplelist></db:para>
+<db:para><db:para>&lt;TestHeader&gt; is part of <db:simplelist><db:member><db:link xlink:href="headers.xml">Headers</db:link></db:member><db:member><db:link xlink:href="tests.xml">Tests</db:link></db:member></db:simplelist></db:para>
 </db:para>
 </db:listitem>
 </db:varlistentry>

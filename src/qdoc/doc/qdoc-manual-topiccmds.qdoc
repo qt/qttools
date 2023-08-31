@@ -581,8 +581,9 @@
     \target group-command
     \section1 \\group
 
-    The \\group command creates a separate page that lists the classes
-    belonging to the group. The argument is the group name.
+    The \\group command creates a separate page that lists the classes,
+    pages, or other entities belonging to a named group. The argument
+    is the group name.
 
     A class is included in a group by using the \l {ingroup-command}
     {\\ingroup} command. Overview pages can also be related to a group
@@ -595,64 +596,20 @@
     HTML page for the group is written to an \c {.html} file named
     <lower-case-group-name>.html.
 
-    Each class name is listed as a link to the class reference page
-    followed by the text from the class's \l {brief-command} {\\brief}
-    texts.
+    Each entity in the group is listed as a link (using page title
+    or class name), followed by a decription from the \l {brief-command}
+    {\\brief} command in the entity's documentation.
 
     \badcode *
     /\1!
         \group io
-
         \title Input/Output and Networking
-
-        These classes are used to handle input and output to
-        and from external devices, processes, files etc., as
-        well as manipulating files and directories.
     \1/
     \endcode
 
-    QDoc generates a group page in \c{io.html} that will look
-    like this:
+    QDoc generates a group page \c{io.html}.
 
-    \quotation
-         \raw HTML
-
-         <h1>Input/Output and Networking</h1>
-
-         <p>These classes are used to handle input and output
-         to and from external devices, processes, files etc., as
-         well as manipulating files and directories.</p>
-
-         <p>
-         <table width="100%">
-             <tr valign="top" bgcolor="#e0e0e0">
-             <td><b>
-             <a href="http://doc.qt.io/qt-5/qabstractsocket.html">QAbstractSocket</a>
-             </b></td>
-             <td>
-             The base functionality common to all socket types
-             </td></tr>
-
-             <tr valign="top" bgcolor="#e0e0e0">
-             <td><b>
-             <a href="http://doc.qt.io/qt-5/qbuffer.html">QBuffer</a>
-             </b></td>
-             <td>
-             QIODevice interface for a QByteArray
-             </td></tr>
-
-             <tr valign="top" bgcolor="#e0e0e0">
-             <td><b>
-             <a href="http://doc.qt.io/qt-5/qclipboard.html">QClipboard</a>
-             </b></td>
-             <td>
-             Access to the window system clipboard
-             </td></tr>
-         </table>
-         \endraw
-    \endquotation
-
-    Note that overview pages related to the group, must be listed
+    Note that overview pages related to the group must be listed
     explicitly using the \l {generatelist-command} {\\generatelist}
     command with the \c related argument.
 
@@ -670,8 +627,9 @@
     \1/
     \endcode
 
-    See also \l {ingroup-command} {\\ingroup} and \l
-    {generatelist-command} {\\generatelist}.
+    See also \l {ingroup-command} {\\ingroup}, \l {annotatedlist-command}
+    {\\annotatedlist}, \l {generatelist-command} {\\generatelist}, and
+    \l {noautolist-command}{\\noautolist}.
 
     \target headerfile-command
     \section1 \\headerfile

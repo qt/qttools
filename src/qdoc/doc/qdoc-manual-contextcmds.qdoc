@@ -924,10 +924,10 @@
     \section2 \\ingroup
 
     The \\ingroup command indicates that the given
-    overview or documented class belongs to a certain group of
+    class, page, or other entity belongs to a certain group of
     related documentation.
 
-    A class or overview may belong to many groups.
+    An entity may belong to multiple groups.
 
     The \\ingroup command's argument is a group name, but note
     that the command considers the rest of the line as part of
@@ -945,13 +945,36 @@
     \1/
     \endcode
 
-    This will include the QDir class in the \c io group, which means,
-    for example, that QDir will appear on the list created by calling
-    the \l {group-command} {\\group} command with the \c io argument.
+    This adds the QDir class to the \c io group. An entry for QDir
+    will then appear on the list created with, for example,
+    the \l {annotatedlist-command} {\\annotatedlist} command with
+    an argument \c io.
 
-    To list overviews that are related to a certain group, you must
-    generate the list explicitly using the \l {generatelist-command}
-    {\\generatelist} command with the \c related argument.
+    QDoc automatically generates links to associated groups on a
+    C++ class, namespace, or header reference page. For example,
+    given the above documentation for class \QDir and the following
+    \l {group-command}{\\group} page:
+
+    \badcode *
+    /\1
+        \group io
+        \title Input/Output and Networking
+        ...
+    \1/
+    \endcode
+
+    QDoc then outputs a statement on the QDir reference page:
+
+    \quotation
+    \list
+        \li \QDir is part of \l {Input/Output and Networking}.
+    \endlist
+    \endquotation
+
+    For HTML output, QDoc also generates a link to the group
+    page as part of the navigation bar (breadcrumbs). If multiple
+    \\ingroup commands are used, the first one that references
+    a documented \\group is selected.
 
     See also \l {group-command} {\\group}.
 
