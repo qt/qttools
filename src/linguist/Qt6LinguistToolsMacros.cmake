@@ -460,6 +460,8 @@ function(qt6_add_translations)
         TARGETS
         SOURCE_TARGETS
         TS_FILES
+        TS_FILE_BASE
+        TS_FILE_DIR
         SOURCES
         INCLUDE_DIRECTORIES
         LUPDATE_OPTIONS
@@ -476,6 +478,9 @@ function(qt6_add_translations)
     if(targets STREQUAL "")
         message(FATAL_ERROR "No targets provided.")
     endif()
+    if(NOT DEFINED arg_TS_FILES AND "${QT_I18N_LANGUAGES}" STREQUAL "")
+        message(FATAL_ERROR "Neither QT_I18N_LANGUAGES is set nor TS_FILES argument is given.")
+    endif()
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
             "together with RESOURCE_PREFIX.")
@@ -486,6 +491,21 @@ function(qt6_add_translations)
     endif()
     if(NOT DEFINED arg_RESOURCE_PREFIX AND NOT DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         set(arg_RESOURCE_PREFIX "/i18n")
+    endif()
+
+    # Determine the .ts file paths if necessary. This must happen before function deferral.
+    if(NOT DEFINED arg_TS_FILES)
+        if(NOT DEFINED arg_TS_FILE_DIR)
+            set(arg_TS_FILE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+        endif()
+        if(NOT DEFINED arg_TS_FILE_BASE)
+            set(arg_TS_FILE_BASE "${PROJECT_NAME}")
+            string(REPLACE " " "-" arg_TS_FILE_BASE "${arg_TS_FILE_BASE}")
+        endif()
+        set(arg_TS_FILES "")
+        foreach(lang IN LISTS QT_I18N_LANGUAGES)
+            list(APPEND arg_TS_FILES "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${lang}.ts")
+        endforeach()
     endif()
 
     # Defer the actual function call if SOURCE_TARGETS was not given and an immediate call was not
@@ -533,7 +553,11 @@ function(qt6_add_translations)
                 SOURCES
                 INCLUDE_DIRECTORIES
             )
-            list(REMOVE_ITEM to_forward ${path_variables})
+            set(ignored_variables
+                TS_FILE_BASE
+                TS_FILE_DIR
+            )
+            list(REMOVE_ITEM to_forward ${path_variables} ${ignored_variables})
             foreach(keyword IN LISTS to_forward)
                 if(DEFINED arg_${keyword})
                     list(APPEND forwarded_args ${keyword} ${arg_${keyword}})
@@ -574,7 +598,10 @@ function(qt6_add_translations)
         TS_FILES "${arg_TS_FILES}"
         QM_FILES_OUTPUT_VARIABLE qm_files
         OPTIONS "${arg_LRELEASE_OPTIONS}")
-    _qt_internal_store_languages_from_ts_files_in_targets("${targets}" "${arg_TS_FILES}")
+
+    if("${QT_I18N_LANGUAGES}" STREQUAL "")
+        _qt_internal_store_languages_from_ts_files_in_targets("${targets}" "${arg_TS_FILES}")
+    endif()
 
     # Mark .qm files as GENERATED, so that calling _qt_internal_expose_deferred_files_to_ide
     # doesn't cause an error at generation time saying "Cannot find source file:" when

@@ -1,0 +1,76 @@
+# Copyright (C) 2023 The Qt Company Ltd.
+# SPDX-License-Identifier: BSD-3-Clause
+
+cmake_minimum_required(VERSION 3.16)
+project(test_i18n_auto_ts_file_names)
+
+# Set up the project structure.
+find_package(Qt6 REQUIRED COMPONENTS Core Gui LinguistTools)
+qt_standard_project_setup()
+
+# Remove .ts files from older test runs.
+file(GLOB_RECURSE old_ts_files "${CMAKE_CURRENT_SOURCE_DIR}/*.ts")
+foreach(f IN LISTS old_ts_files)
+    message("Removing: ${f}")
+    file(REMOVE "${f}")
+endforeach()
+
+set(expected_files "")
+
+# Check defaults for the deferred call.
+qt_add_library(lib1 STATIC lib.cpp)
+set(QT_I18N_LANGUAGES te st)
+qt_add_translations(TARGETS lib1)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_te.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_st.ts")
+
+# Check defaults for the immediate call.
+qt_add_library(lib2 STATIC lib.cpp)
+set(QT_I18N_LANGUAGES hi ho)
+qt_add_translations(TARGETS lib2 IMMEDIATE_CALL)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_hi.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_ho.ts")
+
+# Check defaults for deferred/immediate call in a subdir.
+add_subdirectory(subdir)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/subdir/test_i18n_auto_ts_file_names_de.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/subdir/test_i18n_auto_ts_file_names_da.ts"
+)
+
+# Check whether TS_FILE_BASE works.
+qt_add_library(lib5 STATIC lib.cpp)
+set(QT_I18N_LANGUAGES no)
+qt_add_translations(TARGETS lib5 TS_FILE_BASE lib5)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/lib5_no.ts")
+
+# Check whether TS_FILE_DIR works.
+qt_add_library(lib6 STATIC lib.cpp)
+set(QT_I18N_LANGUAGES sv)
+qt_add_translations(TARGETS lib6 TS_FILE_DIR translations)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/translations/test_i18n_auto_ts_file_names_sv.ts")
+
+# Check whether TS_FILE_BASE and TS_FILE_DIR work together.
+qt_add_library(lib7 STATIC lib.cpp)
+set(QT_I18N_LANGUAGES fi)
+qt_add_translations(TARGETS lib7 TS_FILE_BASE lib7 TS_FILE_DIR translations)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/translations/lib7_fi.ts")
+
+function(check_ts_file_paths)
+    foreach(filepath IN LISTS expected_files)
+        if(NOT EXISTS "${filepath}")
+            message(FATAL_ERROR "Expected file '${filepath}' does not exist.")
+        endif()
+    endforeach()
+endfunction()
+
+if(CMAKE_VERSION VERSION_LESS "3.19")
+    check_ts_file_paths()
+else()
+    cmake_language(DEFER CALL check_ts_file_paths)
+endif()

@@ -15,6 +15,17 @@ qt_add_translation(qmFiles ${TS_FILES})
 qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} helloworld_en.ts helloworld_de.ts)
 #! [qt_create_translation]
 
+#! [auto_determine_ts_file_paths]
+project(myproject)
+cmake_minimum_required(VERSION 3.19)
+qt_standard_project_setup(I18N_LANGUAGES de fr)
+
+add_subdirectory(libs)
+add_subdirectory(apps)
+
+qt_add_translations(TARGETS myapp)
+#! [auto_determine_ts_file_paths]
+
 #! [set_output_location_on_ts_file]
 set_source_files_properties(app_en.ts app_de.ts
     PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")

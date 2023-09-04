@@ -334,7 +334,9 @@ files.
 qt_add_translations([target]
                     [TARGETS target1 [target2...]]
                     [SOURCE_TARGETS target1 [target2...]]
-                    TS_FILES file1.ts [file2.ts ...]
+                    [TS_FILE_BASE name]
+                    [TS_FILE_DIR directory]
+                    [TS_FILES file1.ts [file2.ts ...]]
                     [RESOURCE_PREFIX prefix]
                     [OUTPUT_TARGETS variable-name]
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
@@ -381,9 +383,31 @@ source files with \c lupdate and creates and updates the \c{.ts} files.
 This function will create the target \c{release_translations} that generates the
 \c{.qm} files from the \c{.ts} files. This target is built by default.
 
-The \c{.ts} files must be specified with the argument \c{TS_FILES}.
+The \c{.ts} files may be specified with the argument \c{TS_FILES}, but it's more
+convenient to let \c qt_add_translations figure out the file paths
+automatically. See \l{Automatic Determination of \c{.ts} File Paths} for
+details.
 
 \include cmake-macros.qdoc sources-and-include-dirs
+
+\section1 Automatic Determination of \c{.ts} File Paths
+
+The paths of the \c{.ts} files that are used as input for \c qt_add_translations
+can be automatically determined if \l{QT_I18N_LANGUAGES} has been set.
+
+The following project setup is usually enough:
+
+\snippet cmake-macros/examples.cmake auto_determine_ts_file_paths
+
+This will create the files \c{myproject_de.ts} and \c{myproject_fr.ts} in the
+project's source directory.
+
+By default, the \c{.ts} files are created in \c{CMAKE_CURRENT_SOURCE_DIR}. You
+can change the location by passing a different directory with the \c TS_FILE_DIR
+argument.
+
+By default, the \c{.ts} file names are constructed from \c{PROJECT_NAME}. You
+can specify a different base name with the \c{TS_FILE_BASE} argument.
 
 \section1 Options
 
