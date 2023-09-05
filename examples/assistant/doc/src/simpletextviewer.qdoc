@@ -5,6 +5,7 @@
     \example simpletextviewer
     \ingroup examples-qtassistant
     \title Simple Text Viewer Example
+    \examplecategory {Desktop}
 
     \brief Using \QA as a customized help viewer for your application.
 

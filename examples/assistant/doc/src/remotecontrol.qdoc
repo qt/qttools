@@ -5,6 +5,7 @@
     \example remotecontrol
     \ingroup examples-qtassistant
     \title Remote Control Example
+    \examplecategory {Desktop}
 
     \brief Using and controlling Qt Assistant as a help viewer.
 */
