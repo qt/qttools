@@ -32,6 +32,7 @@ qt_internal_add_tool(${target_name}
         src/qdoc/codemarker.cpp
         src/qdoc/codeparser.cpp
         src/qdoc/collectionnode.cpp
+        src/qdoc/comparisoncategory.h
         src/qdoc/config.cpp
         src/qdoc/cppcodemarker.cpp
         src/qdoc/cppcodeparser.cpp

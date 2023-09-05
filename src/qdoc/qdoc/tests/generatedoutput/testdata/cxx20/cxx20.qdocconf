@@ -1,0 +1,17 @@
+include(../configs/config.qdocconf)
+project = cxx20
+
+headerdirs  = .
+sourcedirs  = .
+exampledirs = .
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = cxx20
+
+HTML.nosubdirs = true
+HTML.outputsubdir = cxx20
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = cxx20

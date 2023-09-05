@@ -1154,6 +1154,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
 
     closeUnorderedList();
+    generateComparisonCategory(aggregate, marker);
     generateThreadSafeness(aggregate, marker);
 
     bool needOtherSection = false;
@@ -3487,6 +3488,7 @@ void HtmlGenerator::generateDetailedMember(const Node *node, const PageNode *rel
     generateStatus(node, marker);
     generateBody(node, marker);
     generateOverloadedSignal(node, marker);
+    generateComparisonCategory(node, marker);
     generateThreadSafeness(node, marker);
     generateSince(node, marker);
     generateNoexceptNote(node, marker);

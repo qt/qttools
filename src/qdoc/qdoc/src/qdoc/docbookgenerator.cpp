@@ -9,6 +9,7 @@
 #include "classnode.h"
 #include "codemarker.h"
 #include "collectionnode.h"
+#include "comparisoncategory.h"
 #include "config.h"
 #include "enumnode.h"
 #include "examplenode.h"
@@ -1894,6 +1895,7 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
         generatedSomething |= generateStatus(node);
         generatedSomething |= generateSince(node);
         generatedSomething |= generateThreadSafeness(node);
+        generatedSomething |= generateComparisonCategory(node);
 
         // An abstract cannot be empty, hence use the project description.
         if (!generatedSomething)
@@ -4104,6 +4106,7 @@ void DocBookGenerator::generateDetailedMember(const Node *node, const PageNode *
     }
 
     generateOverloadedSignal(node);
+    generateComparisonCategory(node);
     generateThreadSafeness(node);
     generateSince(node);
 

@@ -6,6 +6,7 @@
 #include "access.h"
 #include "classnode.h"
 #include "collectionnode.h"
+#include "comparisoncategory.h"
 #include "config.h"
 #include "examplenode.h"
 #include "externalpagenode.h"
@@ -390,6 +391,8 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             static_cast<Aggregate *>(node)->setIncludeFile(arg);
         else
             doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_INHEADERFILE));
+    } else if (command == COMMAND_COMPARES) {
+        processComparesCommand(node, arg, doc.location());
     } else if (command == COMMAND_OVERLOAD) {
         /*
           Note that this might set the overload flag of the
@@ -603,6 +606,31 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
         if (!node->isTextPageNode()) {
             doc.location().warning(u"Command '\\%1' is only meaningful in '\\%2'"_s.arg(COMMAND_ATTRIBUTION, COMMAND_PAGE));
         } else { static_cast<PageNode*>(node)->markAttribution(); }
+    }
+}
+
+/*!
+    \internal
+    Processes the argument \a arg that's passed to the \\compares command,
+    and sets the comparison category of the \a node accordingly.
+
+    If the argument is invalid, issue a warning at the location the command
+    appears through \a loc.
+*/
+void CppCodeParser::processComparesCommand(Node *node, const QString &arg, const Location &loc)
+{
+    if (!node->isClassNode()) {
+        loc.warning(u"Found \\%1 command outside of \\%2 context."_s.arg(COMMAND_COMPARES,
+                                                                         COMMAND_CLASS));
+        return;
+    }
+
+    if (auto category = comparisonCategoryFromString(arg.toStdString());
+            category != ComparisonCategory::None) {
+        node->setComparisonCategory(category);
+    } else {
+        loc.warning(u"Invalid argument to \\%1 command: `%2`"_s.arg(COMMAND_COMPARES, arg),
+                    u"Valid arguments are `strong`, `weak`, `partial`, or `equality`."_s);
     }
 }
 

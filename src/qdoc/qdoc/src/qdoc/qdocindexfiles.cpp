@@ -7,6 +7,7 @@
 #include "atom.h"
 #include "classnode.h"
 #include "collectionnode.h"
+#include "comparisoncategory.h"
 #include "config.h"
 #include "enumnode.h"
 #include "examplenode.h"
@@ -544,6 +545,9 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         } else
             node->setThreadSafeness(Node::UnspecifiedSafeness);
 
+        const QString category = attributes.value(QLatin1String("comparison_category")).toString();
+        node->setComparisonCategory(comparisonCategoryFromString(category.toStdString()));
+
         QString status = attributes.value(QLatin1String("status")).toString();
         // TODO: "obsolete" is kept for backward compatibility, remove in the near future
         if (status == QLatin1String("obsolete") || status == QLatin1String("deprecated"))
@@ -944,6 +948,8 @@ bool QDocIndexFiles::generateIndexSection(QXmlStreamWriter &writer, Node *node,
             writer.writeAttribute("module", node->physicalModuleName());
         if (!brief.isEmpty())
             writer.writeAttribute("brief", brief);
+        if (auto category = node->comparisonCategory(); category != ComparisonCategory::None)
+            writer.writeAttribute("comparison_category", comparisonCategoryAsString(category));
     } break;
     case Node::HeaderFile: {
         const auto *headerNode = static_cast<const HeaderNode *>(node);

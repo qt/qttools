@@ -23,6 +23,7 @@
 
     \list
       \li \l {abstract-command} {\\abstract}
+      \li \l {compares-command}{\\compares} (Since QDoc 6.7)
       \li \l {default-command} {\\default}
       \li \l {deprecated-command}{\\deprecated}
       \li \l {ingroup-command}{\\ingroup}
@@ -174,6 +175,30 @@
         \default "invalid"
     \1/
     \endcode
+
+    \target compares-command
+    \section2 \\compares
+
+    Use the \c {\compares} command to describe the comparison results for the
+    documented C++ type when compared to itself. You must use this command in
+    conjunction with either the \l {class-command}{\\class},
+    \l {struct-command}{\\struct}, or \l {union-command}{\\union} command.
+
+    \c {\compares} takes one of the following arguments:
+
+    //! [comparison-categories]
+    \list
+        \li \c strong
+        \li \c partial
+        \li \c weak
+        \li \c equality
+    \endlist
+
+    \c {strong}, \c {partial}, and \c {weak} relate to the ordering.
+    \c {equality} means that the type is only compared for equality.
+    //! [comparison-categories]
+
+    This command was introduced to QDoc with Qt 6.7.
 
     \target qmldefault-command
     \section1 \\qmldefault

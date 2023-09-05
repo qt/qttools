@@ -8,6 +8,7 @@
 #include "classnode.h"
 #include "codemarker.h"
 #include "collectionnode.h"
+#include "comparisoncategory.h"
 #include "config.h"
 #include "doc.h"
 #include "editdistance.h"
@@ -1482,6 +1483,30 @@ void Generator::generateThreadSafeness(const Node *node, CodeMarker *marker)
             }
         }
     }
+}
+
+/*!
+  \internal
+
+  Generates text that describes the comparison category of \a node.
+  The CodeMarker \a marker is passed along to generateText().
+ */
+bool Generator::generateComparisonCategory(const Node *node, CodeMarker *marker)
+{
+    auto category{node->comparisonCategory()};
+    if (category == ComparisonCategory::None)
+        return false;
+
+    Text text;
+    text << Atom::ParaLeft << "This %1 is "_L1.arg(typeString(node))
+         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_ITALIC)
+         << QString::fromStdString(comparisonCategoryAsString(category))
+         << ((category == ComparisonCategory::Equality) ? "-"_L1 : "ly "_L1)
+         << Atom(Atom::String, "comparable"_L1)
+         << Atom(Atom::FormattingRight, ATOM_FORMATTING_ITALIC)
+         << "."_L1 << Atom::ParaRight;
+    generateText(text, node, marker);
+    return true;
 }
 
 /*!

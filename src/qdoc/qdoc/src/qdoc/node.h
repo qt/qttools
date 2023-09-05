@@ -5,6 +5,7 @@
 #define NODE_H
 
 #include "access.h"
+#include "comparisoncategory.h"
 #include "doc.h"
 #include "enumitem.h"
 #include "importrec.h"
@@ -211,6 +212,8 @@ public:
     void setParent(Aggregate *n) { m_parent = n; }
     void setIndexNodeFlag(bool isIndexNode = true) { m_indexNodeFlag = isIndexNode; }
     void setHadDoc() { m_hadDoc = true; }
+    void setComparisonCategory(const ComparisonCategory &category) { m_comparisonCategory = category; }
+    [[nodiscard]] ComparisonCategory comparisonCategory() const { return m_comparisonCategory; }
     virtual void setRelatedNonmember(bool b) { m_relatedNonmember = b; }
     virtual void addMember(Node *) {}
     [[nodiscard]] virtual bool hasNamespaces() const { return false; }
@@ -312,6 +315,7 @@ private:
     Access m_access { Access::Public };
     ThreadSafeness m_safeness { UnspecifiedSafeness };
     Status m_status { Active };
+    ComparisonCategory m_comparisonCategory { ComparisonCategory::None };
     bool m_indexNodeFlag : 1;
     bool m_relatedNonmember : 1;
     bool m_hadDoc : 1;

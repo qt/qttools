@@ -28,10 +28,9 @@ public:
     };
 
     static inline const QSet<QString> meta_commands = QSet<QString>(CodeParser::common_meta_commands)
-        << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
-        << COMMAND_OVERLOAD << COMMAND_PREVIOUSPAGE
-        << COMMAND_QMLINSTANTIATES << COMMAND_REIMP
-        << COMMAND_RELATES;
+        << COMMAND_COMPARES << COMMAND_INHEADERFILE << COMMAND_NEXTPAGE
+        << COMMAND_OVERLOAD << COMMAND_PREVIOUSPAGE << COMMAND_QMLINSTANTIATES
+        << COMMAND_REIMP << COMMAND_RELATES;
 
 public:
     CppCodeParser();
@@ -61,6 +60,7 @@ protected:
 
 private:
     void setExampleFileLists(ExampleNode *en);
+    static void processComparesCommand(Node *node, const QString &arg, const Location &loc);
 
 private:
     static QSet<QString> m_excludeDirs;

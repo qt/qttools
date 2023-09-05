@@ -123,6 +123,7 @@ protected:
         generateAddendum(node, type, marker, true);
     };
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
+    bool generateComparisonCategory(const Node *node, CodeMarker *marker = nullptr);
 
     void generateOverloadedSignal(const Node *node, CodeMarker *marker);
     static QString getOverloadedSignalCode(const Node *node);

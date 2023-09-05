@@ -61,6 +61,7 @@ private slots:
     void testGlobalFunctions();
     void proxyPage();
     void nonAsciiCharacterInput();
+    void orderingCategoryCommand();
     void lineComments();
     void tableAfterValue();
     void trailingBackslashes();
@@ -665,6 +666,23 @@ void tst_generatedOutput::modulestateCommand()
                    "modulestate/moduleinstate-module.webxml "
                    "modulestate/moduleinstate-module.xml "
                    "modulestate/modulestate.index");
+}
+
+void tst_generatedOutput::orderingCategoryCommand() {
+    testAndCompare("testdata/cxx20/cxx20.qdocconf",
+                   "cxx20/cxx20.index "
+                   "cxx20/partiallyorderedclass.html "
+                   "cxx20/partiallyorderedclass.webxml "
+                   "cxx20/partiallyorderedclass.xml "
+                   "cxx20/stronglyorderedclass.html "
+                   "cxx20/stronglyorderedclass.webxml "
+                   "cxx20/stronglyorderedclass.xml "
+                   "cxx20/weaklyorderedclass.html "
+                   "cxx20/weaklyorderedclass.webxml "
+                   "cxx20/weaklyorderedclass.xml "
+                   "cxx20/equalitycomparableclass.xml "
+                   "cxx20/equalitycomparableclass.webxml "
+                   "cxx20/equalitycomparableclass.html");
 }
 
 int main(int argc, char *argv[])

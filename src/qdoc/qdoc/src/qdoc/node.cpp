@@ -147,6 +147,24 @@ bool Node::nodeNameLessThan(const Node *n1, const Node *n2)
 */
 
 /*!
+    \internal
+    \fn setComparisonCategory(const ComparisonCategory category)
+
+    Sets the comparison category of this node to \a category.
+
+    \sa ComparisonCategory, comparisonCategory()
+ */
+
+/*!
+    \internal
+    \fn ComparisonCategory comparisonCategory()
+
+    Returns the comparison category of this node.
+
+    \sa ComparisonCategory, setComparisonCategory()
+ */
+
+/*!
   \enum Access
 
   An unsigned char value that indicates the C++ access level.

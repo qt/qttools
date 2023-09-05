@@ -25,6 +25,7 @@
     \li \l {class-command} {\\class}
     \li \l {code-command} {\\code}
     \li \l {codeline-command} {\\codeline}
+    \li \l {compares-command} {\\compares}
     \li \l {deprecated-command} {\\deprecated}
     \li \l {default-command} {\\default}
     \li \l {details-command} {\\details}
