@@ -178,6 +178,27 @@ function(qt_internal_make_paths_absolute out_var)
     set("${out_var}" "${result}" PARENT_SCOPE)
 endfunction()
 
+# If the given TS_FILE does not exist, write an initial .ts file that can be read by lrelease and
+# updated by lupdate.
+function(_qt_internal_ensure_ts_file)
+    set(no_value_options "")
+    set(single_value_options TS_FILE)
+    set(multi_value_options "")
+    cmake_parse_arguments(PARSE_ARGV 0 arg
+        "${no_value_options}" "${single_value_options}" "${multi_value_options}"
+    )
+
+    if(EXISTS "${arg_TS_FILE}")
+        return()
+    endif()
+
+    file(WRITE "${arg_TS_FILE}"
+        [[<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS/>
+]])
+endfunction()
+
 # Needed to locate Qt6LupdateProject.json.in file inside functions
 set(_Qt6_LINGUIST_TOOLS_DIR ${CMAKE_CURRENT_LIST_DIR} CACHE INTERNAL "")
 
@@ -185,6 +206,7 @@ function(qt6_add_lupdate)
     set(options
         NO_GLOBAL_TARGET)
     set(oneValueArgs
+        NATIVE_TS_FILE
         LUPDATE_TARGET)
     set(multiValueArgs
         TARGETS
@@ -232,9 +254,19 @@ function(qt6_add_lupdate)
         qt_internal_make_paths_absolute(additionalSources "${arg_SOURCES}")
     endif()
 
+    set(lupdate_work_dir "${CMAKE_CURRENT_BINARY_DIR}/.lupdate")
     qt_internal_make_paths_absolute(ts_files "${arg_TS_FILES}")
+    set(native_ts_file "")
+    set(raw_native_ts_file "")
+    if(NOT "${arg_NATIVE_TS_FILE}" STREQUAL "")
+        qt_internal_make_paths_absolute(native_ts_file "${arg_NATIVE_TS_FILE}")
+        _qt_internal_ensure_ts_file(TS_FILE "${native_ts_file}")
+        get_filename_component(raw_native_ts_file "${native_ts_file}" NAME)
+        string(PREPEND raw_native_ts_file "${lupdate_work_dir}/")
+        list(APPEND ts_files "${raw_native_ts_file}")
+    endif()
 
-    set(lupdate_project_base "${CMAKE_CURRENT_BINARY_DIR}/.lupdate/${lupdate_target}_project")
+    set(lupdate_project_base "${lupdate_work_dir}/${lupdate_target}_project")
     set(lupdate_project_cmake "${lupdate_project_base}")
     get_property(multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
     if(multi_config)
@@ -269,11 +301,32 @@ set(lupdate_subproject${n}_excluded \"${excluded}\")
         COMMAND
             "${tool_wrapper}"
             $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lupdate>)
+    set(prepare_native_ts_command "")
+    set(finish_native_ts_command "")
+    if(NOT native_ts_file STREQUAL "")
+        # Copy the existing .ts file to preserve already translated strings.
+        set(prepare_native_ts_command
+            COMMAND
+            "${CMAKE_COMMAND}" -E copy "${native_ts_file}" "${raw_native_ts_file}"
+        )
+
+        # Filter out the non-numerus forms with lconvert.
+        set(finish_native_ts_command
+            COMMAND
+            "${tool_wrapper}"
+            $<TARGET_FILE:${QT_CMAKE_EXPORT_NAMESPACE}::lconvert>
+            -pluralonly
+            -i "${raw_native_ts_file}"
+            -o "${native_ts_file}"
+        )
+    endif()
     add_custom_target(${lupdate_target}
         COMMAND "${CMAKE_COMMAND}" "-DIN_FILE=${lupdate_project_cmake}"
                 "-DOUT_FILE=${lupdate_project_json}"
                 -P "${_Qt6_LINGUIST_TOOLS_DIR}/GenerateLUpdateProject.cmake"
+        ${prepare_native_ts_command}
         ${lupdate_command} -project "${lupdate_project_json}" ${arg_OPTIONS}
+        ${finish_native_ts_command}
         DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lupdate
         VERBATIM)
 
@@ -379,13 +432,7 @@ function(qt6_add_lrelease)
             message(WARNING "Translation file '${ts_file}' does not exist. "
                 "Consider building the target 'update_translations' to create an initial "
                 "version of that file.")
-
-            # Write an initial .ts file that can be read by lrelease and updated by lupdate.
-            file(WRITE "${ts_file}"
-                [[<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS/>
-]])
+            _qt_internal_ensure_ts_file(TS_FILE "${ts_file}")
         endif()
 
         _qt_internal_generated_qm_file_path(qm "${ts_file}")
@@ -462,6 +509,7 @@ function(qt6_add_translations)
         TS_FILES
         TS_FILE_BASE
         TS_FILE_DIR
+        NATIVE_TS_FILE
         SOURCES
         INCLUDE_DIRECTORIES
         LUPDATE_OPTIONS
@@ -478,8 +526,11 @@ function(qt6_add_translations)
     if(targets STREQUAL "")
         message(FATAL_ERROR "No targets provided.")
     endif()
-    if(NOT DEFINED arg_TS_FILES AND "${QT_I18N_LANGUAGES}" STREQUAL "")
-        message(FATAL_ERROR "Neither QT_I18N_LANGUAGES is set nor TS_FILES argument is given.")
+    if(NOT DEFINED arg_TS_FILES
+            AND NOT DEFINED arg_NATIVE_TS_FILE
+            AND "${QT_I18N_LANGUAGES}" STREQUAL "")
+        message(FATAL_ERROR
+            "One of QT_I18N_LANGUAGES, TS_FILES, or NATIVE_TS_FILE must be provided.")
     endif()
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
@@ -530,7 +581,7 @@ function(qt6_add_translations)
             # Predict the names of generated .qm files.
             if(DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
                 set(qm_files "")
-                foreach(ts_file IN LISTS arg_TS_FILES)
+                foreach(ts_file IN LISTS arg_TS_FILES arg_NATIVE_TS_FILE)
                     _qt_internal_generated_qm_file_path(qm_file "${ts_file}")
                     list(APPEND qm_files "${qm_file}")
                 endforeach()
@@ -550,6 +601,7 @@ function(qt6_add_translations)
             set(to_forward ${oneValueArgs} ${multiValueArgs})
             set(path_variables
                 TS_FILES
+                NATIVE_TS_FILE
                 SOURCES
                 INCLUDE_DIRECTORIES
             )
@@ -589,6 +641,7 @@ function(qt6_add_translations)
         TARGETS "${source_targets}"
         LUPDATE_TARGET "${arg_LUPDATE_TARGET}"
         TS_FILES "${arg_TS_FILES}"
+        NATIVE_TS_FILE "${arg_NATIVE_TS_FILE}"
         SOURCES "${arg_SOURCES}"
         INCLUDE_DIRECTORIES "${arg_INCLUDE_DIRECTORIES}"
         OPTIONS "${arg_LUPDATE_OPTIONS}"

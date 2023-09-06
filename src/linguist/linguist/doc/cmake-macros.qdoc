@@ -141,6 +141,7 @@ files in the build directory:
 
 \badcode
 qt_add_lupdate(TS_FILES file1.ts [file2.ts ...]
+               [NATIVE_TS_FILE file.ts]
                [TARGETS target1 [target2 ...]]
                [SOURCES source1.cpp [sources2.cpp ...]]
                [INCLUDE_DIRECTORIES directory1 [directory2 ...]]
@@ -200,6 +201,18 @@ Pass \c{NO_GLOBAL_TARGET} to \c{qt_add_lupdate} to prevent this behavior.
 
 The name of this target can be overridden by setting the variable
 \c{QT_GLOBAL_LUPDATE_TARGET} before calling \c{qt_add_lupdate}.
+
+//! [ts-native-language]
+\section1 Native Language
+
+The native language of a project is the language in which the source code
+strings are written. For handling plural forms correctly, create an additional
+\c{.ts} file for that language that only contains translatable strings for
+plural forms. See \l{Handle Plural Forms} for details.
+
+With \c NATIVE_TS_FILE you can specify the \c{.ts} file for the native language.
+This file will only contain plural forms.
+//! [ts-native-language]
 
 \section1 Deprecated Command Signature
 
@@ -337,6 +350,7 @@ qt_add_translations([target]
                     [TS_FILE_BASE name]
                     [TS_FILE_DIR directory]
                     [TS_FILES file1.ts [file2.ts ...]]
+                    [NATIVE_TS_FILE file.ts]
                     [RESOURCE_PREFIX prefix]
                     [OUTPUT_TARGETS variable-name]
                     [QM_FILES_OUTPUT_VARIABLE variable-name]
@@ -408,6 +422,8 @@ argument.
 
 By default, the \c{.ts} file names are constructed from \c{PROJECT_NAME}. You
 can specify a different base name with the \c{TS_FILE_BASE} argument.
+
+\include cmake-macros.qdoc ts-native-language
 
 \section1 Options
 
