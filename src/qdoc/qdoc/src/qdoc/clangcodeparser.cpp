@@ -864,6 +864,25 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
     }
 }
 
+/*!
+ * Returns the underlying Decl that \a cursor represents.
+ *
+ * This can be used to drop back down from a LibClang's CXCursor to
+ * the underlying C++ AST that Clang provides.
+ *
+ * It should be used when LibClang does not expose certain
+ * functionalities that are available in the C++ AST.
+ *
+ * The CXCursor should represent a declaration. Usages of this
+ * function on CXCursors that do not represent a declaration may
+ * produce undefined results.
+ */
+static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
+    assert(clang_isDeclaration(clang_getCursorKind(cursor)));
+
+    return static_cast<const clang::Decl*>(cursor.data[0]);
+}
+
 void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor)
 {
     Parameters &parameters = fn->parameters();
@@ -885,46 +904,36 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
         } else if (kind == CXCursor_ParmDecl) {
             if (i >= parameters.count())
                 return CXChildVisit_Break; // Attributes comes before parameters so we can break.
-            QString name = fromCXString(clang_getCursorSpelling(cur));
-            if (!name.isEmpty()) {
+
+            if (QString name = fromCXString(clang_getCursorSpelling(cur)); !name.isEmpty())
                 parameters[i].setName(name);
-                // Find the default value
-                visitChildrenLambda(cur, [&](CXCursor cur) {
-                    if (clang_isExpression(clang_getCursorKind(cur))) {
-                        QString defaultValue = getSpelling(clang_getCursorExtent(cur));
-                        if (defaultValue.startsWith('=')) // In some cases, the = is part of the range.
-                            defaultValue = QStringView{defaultValue}.mid(1).trimmed().toString();
-                        if (defaultValue.isEmpty())
-                            defaultValue = QStringLiteral("...");
-                        parameters[i].setDefaultValue(defaultValue);
-                        return CXChildVisit_Break;
-                    }
-                    return CXChildVisit_Continue;
-                });
+
+            const clang::ParmVarDecl* parameter_declaration = llvm::dyn_cast<const clang::ParmVarDecl>(get_cursor_declaration(cur));
+
+            if (parameter_declaration->hasDefaultArg() && !parameter_declaration->hasUnparsedDefaultArg()) {
+                const clang::Expr* default_initializer =
+                    parameter_declaration->hasUninstantiatedDefaultArg() ? parameter_declaration->getUninstantiatedDefaultArg()
+                                                                         : parameter_declaration->getDefaultArg();
+
+                auto default_value = QString::fromStdString(clang::Lexer::getSourceText(
+                    clang::CharSourceRange::getTokenRange(default_initializer->getSourceRange()),
+                    parameter_declaration->getASTContext().getSourceManager(),
+                    parameter_declaration->getASTContext().getLangOpts()
+                ).str());
+
+                if (default_value.startsWith("="))
+                    default_value.remove(0, 1);
+
+                default_value = default_value.trimmed();
+
+                if (!default_value.isEmpty())
+                    parameters[i].setDefaultValue(default_value);
             }
+
             ++i;
         }
         return CXChildVisit_Continue;
     });
-}
-
-/*!
- * Returns the underlying Decl that \a cursor represents.
- *
- * This can be used to drop back down from a LibClang's CXCursor to
- * the underlying C++ AST that Clang provides.
- *
- * It should be used when LibClang does not expose certain
- * functionalities that are available in the C++ AST.
- *
- * The CXCursor should represent a declaration. Usages of this
- * function on CXCursors that do not represent a declaration may
- * produce undefined results.
- */
-static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
-    assert(clang_isDeclaration(clang_getCursorKind(cursor)));
-
-    return static_cast<const clang::Decl*>(cursor.data[0]);
 }
 
 void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
