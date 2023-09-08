@@ -160,8 +160,6 @@
     \li \l {ignorewords-variable} {ignorewords}
     \li \l {ignoresince-variable} {ignoresince}
     \li \l {imagedirs-variable} {imagedirs}
-    \li \l {images-variable} {images}
-    \li \l {images.fileextensions-variable} {images.fileextensions}
     \li \l {indexes-variable} {indexes}
     \li \l {language-variable} {language}
     \li \l {locationinfo-variable} {locationinfo}
@@ -831,62 +829,6 @@
     only supports HTML.
 
     See also \l images and \l images.fileextensions.
-
-    \target images-variable
-    \section1 images
-
-    The \c images variable allows you to specify individual image
-    files in addition to those located in the directories specified by
-    the \l {imagedirs} {\c imagedirs} variable.
-
-    \badcode
-        images = $QTDIR/doc/src/images/calculator-example.png
-    \endcode
-
-    When processing the \c images variable, QDoc behaves in the same
-    way as it does when processing the \l {imagedirs} {\c imagedirs}
-    variable. For more information, see the \l {imagedirs} {\c
-    imagedirs} variable.
-
-    See also \l imagedirs and \l images.fileextensions.
-
-    \target images.fileextensions-variable
-    \section1 images.fileextensions
-
-    The images.fileextensions variable filters the files within an
-    image directory.
-
-    The variable's values (the extensions) are given as standard
-    wildcard expressions. The general syntax is: \tt
-    {images.fileextensions.\e{format} = *.\e{extension}}.
-
-    The idea is to enable different image format for different output
-    format.
-
-    \badcode
-        images.fileextensions.HTML = *.png
-        images.fileextensions.LOUT = *.eps
-    \endcode
-
-    Then, when processing the \l {image-command} {\\image} and \l
-    {inlineimage-command} {\\inlineimage} commands, QDoc will only
-    search for files with extensions specified in the variable
-    containing the list of output formats.
-
-    \warning This is only a preliminary functionality since QDoc at this
-    point only supports HTML.
-
-    The default extensions for HTML are *.png, *.jpg, *.jpeg, and
-    *.gif.
-
-    You can add a file extension to the filter using '+='. For
-    example:
-
-    \badcode
-        images.fileextensions.HTML += *.eps
-    \endcode
-
-    See also \l imagedirs and \l images.
 
     \target language-variable
     \section1 language

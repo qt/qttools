@@ -332,7 +332,6 @@ struct ConfigStrings
 #define CONFIG_IGNORETOKENS ConfigStrings::IGNORETOKENS
 #define CONFIG_IGNOREWORDS ConfigStrings::IGNOREWORDS
 #define CONFIG_IMAGEDIRS ConfigStrings::IMAGEDIRS
-#define CONFIG_IMAGES ConfigStrings::IMAGES
 #define CONFIG_INCLUDEPATHS ConfigStrings::INCLUDEPATHS
 #define CONFIG_INCLUSIVE ConfigStrings::INCLUSIVE
 #define CONFIG_INDEXES ConfigStrings::INDEXES
