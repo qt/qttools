@@ -412,23 +412,4 @@ CodeMarker *Doc::quoteFromFile(const Location &location, Quoter &quoter, Resolve
     return marker;
 }
 
-void Doc::detach()
-{
-    if (m_priv == nullptr) {
-        m_priv = new DocPrivate;
-        return;
-    }
-    if (m_priv->count == 1)
-        return;
-
-    --m_priv->count;
-
-    auto *newPriv = new DocPrivate(*m_priv);
-    newPriv->count = 1;
-    if (m_priv->extra)
-        newPriv->extra = new DocPrivateExtra(*m_priv->extra);
-
-    m_priv = newPriv;
-}
-
 QT_END_NAMESPACE

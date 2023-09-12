@@ -80,7 +80,6 @@ public:
                                      ResolvedFile resolved_file);
 
 private:
-    void detach();
     DocPrivate *m_priv { nullptr };
     static DocUtilities &m_utilities;
 };
