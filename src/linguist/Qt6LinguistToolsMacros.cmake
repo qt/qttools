@@ -390,8 +390,8 @@ function(qt6_add_lrelease)
 
         _qt_internal_generated_qm_file_path(qm "${ts_file}")
         get_filename_component(qm_dir "${qm}" DIRECTORY)
-        file(MAKE_DIRECTORY "${qm_dir}")
         add_custom_command(OUTPUT ${qm}
+            COMMAND "${CMAKE_COMMAND}" -E make_directory "${qm_dir}"
             ${lrelease_command} ${arg_OPTIONS} ${ts_file} -qm ${qm}
             DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::lrelease "${ts_file}"
             VERBATIM)
