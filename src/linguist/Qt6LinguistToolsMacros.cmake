@@ -528,9 +528,11 @@ function(qt6_add_translations)
     endif()
     if(NOT DEFINED arg_TS_FILES
             AND NOT DEFINED arg_NATIVE_TS_FILE
-            AND "${QT_I18N_LANGUAGES}" STREQUAL "")
+            AND "${QT_I18N_LANGUAGES}" STREQUAL ""
+            AND "${QT_I18N_NATIVE_LANGUAGE}" STREQUAL "")
         message(FATAL_ERROR
-            "One of QT_I18N_LANGUAGES, TS_FILES, or NATIVE_TS_FILE must be provided.")
+            "One of QT_I18N_LANGUAGES, QT_I18N_NATIVE_LANGUAGE, TS_FILES, "
+            "or NATIVE_TS_FILE must be provided.")
     endif()
     if(DEFINED arg_RESOURCE_PREFIX AND DEFINED arg_QM_FILES_OUTPUT_VARIABLE)
         message(FATAL_ERROR "QM_FILES_OUTPUT_VARIABLE cannot be specified "
@@ -557,6 +559,12 @@ function(qt6_add_translations)
         foreach(lang IN LISTS QT_I18N_LANGUAGES)
             list(APPEND arg_TS_FILES "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${lang}.ts")
         endforeach()
+
+        # Determine the path to the native .ts file if necessary.
+        if(NOT DEFINED arg_NATIVE_TS_FILE AND NOT "${QT_I18N_NATIVE_LANGUAGE}" STREQUAL "")
+            set(arg_NATIVE_TS_FILE
+                "${arg_TS_FILE_DIR}/${arg_TS_FILE_BASE}_${QT_I18N_NATIVE_LANGUAGE}.ts")
+        endif()
     endif()
 
     # Defer the actual function call if SOURCE_TARGETS was not given and an immediate call was not

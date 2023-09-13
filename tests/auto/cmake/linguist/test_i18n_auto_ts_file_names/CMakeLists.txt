@@ -61,6 +61,23 @@ qt_add_translations(TARGETS lib7 TS_FILE_BASE lib7 TS_FILE_DIR translations)
 list(APPEND expected_files
     "${CMAKE_CURRENT_SOURCE_DIR}/translations/lib7_fi.ts")
 
+# Check defaults for the deferred call with native language set.
+qt_add_library(lib8 STATIC lib.cpp)
+set(QT_I18N_LANGUAGES qu)
+set(QT_I18N_NATIVE_LANGUAGE ak)
+qt_add_translations(TARGETS lib8)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_qu.ts"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_ak.ts")
+
+# Check defaults for the deferred call with just the native language set.
+qt_add_library(lib9 STATIC lib.cpp)
+set(QT_I18N_LANGUAGES "")
+set(QT_I18N_NATIVE_LANGUAGE nl)
+qt_add_translations(TARGETS lib9)
+list(APPEND expected_files
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_i18n_auto_ts_file_names_nl.ts")
+
 function(check_ts_file_paths)
     foreach(filepath IN LISTS expected_files)
         if(NOT EXISTS "${filepath}")

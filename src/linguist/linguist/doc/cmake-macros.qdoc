@@ -425,6 +425,9 @@ can specify a different base name with the \c{TS_FILE_BASE} argument.
 
 \include cmake-macros.qdoc ts-native-language
 
+If \l{QT_I18N_NATIVE_LANGUAGE} is set then the path to the native \c{.ts} file
+will also be automatically determined.
+
 \section1 Options
 
 You can specify the name of the custom target that calls lupdate with the \c
