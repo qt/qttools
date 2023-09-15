@@ -1557,26 +1557,6 @@ Generator *Generator::generatorForFormat(const QString &format)
     return nullptr;
 }
 
-/*!
-  Looks up the tag \a t in the map of metadata values for the
-  current topic in \a inner. If values for the tag are found,
-  they are returned in a string list.
-
-  \note If \a t is found in the metadata map, all the pairs
-  having the key \a t are erased. i.e. Once you call this
-  function for a particular \a t, you consume \a t.
- */
-QStringList Generator::getMetadataElements(const Aggregate *inner, const QString &t)
-{
-    QStringList result;
-    QStringMultiMap *metaTagMap = inner->doc().metaTagMap();
-    if (metaTagMap)
-        result = metaTagMap->values(t);
-    if (!result.isEmpty())
-        metaTagMap->remove(t);
-    return result;
-}
-
 QString Generator::indent(int level, const QString &markedCode)
 {
     if (level == 0)

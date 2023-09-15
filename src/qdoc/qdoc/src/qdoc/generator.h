@@ -123,7 +123,7 @@ protected:
         generateAddendum(node, type, marker, true);
     };
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
-    QStringList getMetadataElements(const Aggregate *inner, const QString &t);
+
     void generateOverloadedSignal(const Node *node, CodeMarker *marker);
     static QString getOverloadedSignalCode(const Node *node);
     QString indent(int level, const QString &markedCode);
