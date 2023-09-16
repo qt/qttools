@@ -909,6 +909,7 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
                 parameters[i].setName(name);
 
             const clang::ParmVarDecl* parameter_declaration = llvm::dyn_cast<const clang::ParmVarDecl>(get_cursor_declaration(cur));
+            Q_ASSERT(parameter_declaration);
 
             if (parameter_declaration->hasDefaultArg() && !parameter_declaration->hasUnparsedDefaultArg()) {
                 const clang::Expr* default_initializer =
