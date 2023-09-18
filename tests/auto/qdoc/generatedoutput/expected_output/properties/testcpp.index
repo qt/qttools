@@ -8,6 +8,7 @@
         </function>
         <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
             <contents name="testqdoc" title="TestQDoc" level="1"/>
+            <contents name="someprop" title="someProp" level="1"/>
         </page>
         <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
             <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void documentMe()"/>
