@@ -4,6 +4,8 @@
 /*!
     \property TestQDoc::TestDerived::bindableProp
     Some property.
+
+    \sa someProp
 */
 
 /*!

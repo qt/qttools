@@ -75,6 +75,14 @@
 <db:title>[bindable] bindableProp : QString</db:title>
 <db:para>This property supports <db:link xlink:href="https://wiki.qt.io/QProperty">QProperty</db:link> bindings.</db:para>
 <db:para>Some property.</db:para>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="testqdoc-testderived.xml#someProp-prop">someProp</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
 </db:section>
 <db:section xml:id="boolProp-prop">
 <db:title>boolProp : bool</db:title>

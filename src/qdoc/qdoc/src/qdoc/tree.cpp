@@ -446,11 +446,14 @@ Node *Tree::findNodeRecursive(const QStringList &path, int pathIndex, const Node
   begins at the root.
 
   The \a flags can indicate whether to search base classes and/or
-  the enum values in enum types. \a genus can be a further restriction
-  on what kind of node is an acceptible match, i.e. CPP or QML.
+  the enum values in enum types. \a genus further restricts
+  the type of nodes to match, i.e. CPP or QML.
 
-  If a matching node is found, \a ref is an output parameter that
-  is set to the HTML reference to use for the link.
+  If a matching node is found, \a ref is set to the HTML fragment
+  identifier to use for the link. On return, the optional
+  \a targetType parameter contains the type of the resolved
+  target; section title (Contents), \\target, \\keyword, or other
+  (Unknown).
  */
 const Node *Tree::findNodeForTarget(const QStringList &path, const QString &target,
                                     const Node *start, int flags, Node::Genus genus,
@@ -458,35 +461,35 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
 {
     const Node *node = nullptr;
 
-    if ((genus == Node::DontCare) || (genus == Node::DOC)) {
-        node = findPageNodeByTitle(path.at(0));
-        if (node) {
-            if (!target.isEmpty()) {
-                if (ref = getRef(target, node); ref.isEmpty())
-                    node = nullptr;
-            }
-            if (node)
+    // Retrieves and sets ref from target for Node n.
+    // Returns n on valid (or empty) target, or nullptr on an invalid target.
+    auto set_ref_from_target = [this, &ref, &target](const Node *n) -> const Node* {
+        if (!target.isEmpty()) {
+            if (ref = getRef(target, n); ref.isEmpty())
+                return nullptr;
+        }
+        return n;
+    };
+
+    if (genus == Node::DontCare || genus == Node::DOC) {
+        if (node = findPageNodeByTitle(path.at(0)); node) {
+            if (node = set_ref_from_target(node); node)
                 return node;
         }
     }
 
     const TargetRec *result = findUnambiguousTarget(path.join(QLatin1String("::")), genus);
     if (result) {
-        node = result->m_node;
         ref = result->m_ref;
-        if (!target.isEmpty()) {
-            if (ref = getRef(target, node); ref.isEmpty())
-                node = nullptr;
-        }
-        if (node) {
-            if (targetType)
-                *targetType = result->m_type;
+        if (node = set_ref_from_target(result->m_node); node) {
             // Delay returning references to section titles as we
             // may find a better match below
-            if (!targetType || *targetType != TargetRec::Contents)
+            if (result->m_type != TargetRec::Contents) {
+                if (targetType)
+                    *targetType = result->m_type;
                 return node;
-            else
-                ref.clear();
+            }
+            ref.clear();
         }
     }
 
@@ -498,18 +501,13 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
       the type.
     */
     int path_idx = 0;
-    if (((genus == Node::QML) || (genus == Node::DontCare)) && (path.size() >= 2)
-        && !path[0].isEmpty()) {
-        QmlTypeNode *qcn = lookupQmlType(QString(path[0] + "::" + path[1]));
-        if (qcn) {
+    if ((genus == Node::QML || genus == Node::DontCare)
+        && path.size() >= 2 && !path[0].isEmpty()) {
+        if (auto *qcn = lookupQmlType(path.sliced(0, 2).join(QLatin1String("::"))); qcn) {
             current = qcn;
-            if (path.size() == 2) {
-                if (!target.isEmpty()) {
-                    ref = getRef(target, current);
-                    return (!ref.isEmpty()) ? current : nullptr;
-                }
-                return current;
-            }
+            // No further elements in the path, return the type
+            if (path.size() == 2)
+                return set_ref_from_target(qcn);
             path_idx = 2;
         }
     }
@@ -525,8 +523,12 @@ const Node *Tree::findNodeForTarget(const QStringList &path, const QString &targ
         path_idx = 0;
     }
 
-    if (node && result)
-        ref = result->m_ref; // Restore section title's ref
+    if (node && result) {
+        // Fall back to previously found section title
+        ref = result->m_ref;
+        if (targetType)
+            *targetType = result->m_type;
+    }
     return node;
 }
 
