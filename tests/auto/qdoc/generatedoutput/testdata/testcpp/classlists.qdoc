@@ -33,6 +33,9 @@
         \li \l [CPP] {TestQDoc::TestDerived}
         \li \l {Obsolete Classes#TestQDoc}
     \endlist
+
+    //! a section title shadowing a known property name
+    \section1 someProp
 */
 
 /*!

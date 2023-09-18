@@ -24,7 +24,7 @@ class QDocDatabase;
 struct TargetRec
 {
 public:
-    enum TargetType { Unknown, Target, Keyword, Contents, Class, Function, Page, Subtitle };
+    enum TargetType { Unknown, Target, Keyword, Contents };
 
     TargetRec(QString name, TargetRec::TargetType type, Node *node, int priority)
         : m_node(node), m_ref(std::move(name)), m_type(type), m_priority(priority)
