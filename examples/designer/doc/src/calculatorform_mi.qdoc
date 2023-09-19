@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 /*!
-    \example multipleinheritance
+    \example calculatorform_mi
     \examplecategory {Desktop}
     \meta tags {widgets,designer}
     \ingroup examples-designer
