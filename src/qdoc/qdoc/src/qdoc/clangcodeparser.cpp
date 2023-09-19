@@ -1008,11 +1008,15 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
             clang::SourceManager& source_manager = function_declaration->getASTContext().getSourceManager();
             const clang::LangOptions& lang_options = function_declaration->getASTContext().getLangOpts();
 
-            fn->markNoexcept(
+            const QString exception_specification_spelling =
                 exception_specification.NoexceptExpr ?
-                    QString::fromStdString(clang::Lexer::getSourceText(clang::CharSourceRange::getTokenRange(exception_specification.NoexceptExpr->getSourceRange()), source_manager, lang_options).str()) :
-                    ""
-            );
+                    QString::fromStdString(clang::Lexer::getSourceText(
+                        clang::CharSourceRange::getTokenRange(exception_specification.NoexceptExpr->getSourceRange()),
+                        source_manager, lang_options
+                    ).str()) : "";
+
+            if (exception_specification_spelling != "false")
+                fn->markNoexcept(exception_specification_spelling);
         }
     }
 
