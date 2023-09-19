@@ -773,8 +773,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         auto *en = static_cast<EnumNode *>(findNodeForCursor(qdb_, cursor));
         if (en && en->items().size())
             return CXChildVisit_Continue; // Was already parsed, probably in another TU
+
         QString enumTypeName = fromCXString(clang_getCursorSpelling(cursor));
-        if (enumTypeName.isEmpty()) {
+
+        if (clang_Cursor_isAnonymous(cursor)) {
             enumTypeName = "anonymous";
             if (parent_ && (parent_->isClassNode() || parent_->isNamespace())) {
                 Node *n = parent_->findNonfunctionChild(enumTypeName, &Node::isEnumType);
