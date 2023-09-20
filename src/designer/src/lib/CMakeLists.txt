@@ -411,6 +411,9 @@ qt_internal_extend_target(Designer CONDITION NOT QT_BUILD_SHARED_LIBS
         ../../../shared/qtpropertybrowser
 )
 
+if(TARGET zstd::libzstd_shared)
+    qt_internal_disable_find_package_global_promotion(zstd::libzstd_shared)
+endif()
 if(NOT TARGET WrapZSTD::WrapZSTD)
     qt_find_package(WrapZSTD 1.3 PROVIDED_TARGETS WrapZSTD::WrapZSTD)
 endif()
