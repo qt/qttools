@@ -533,8 +533,6 @@ function(qt6_add_lrelease)
     endif()
 endfunction()
 
-# This function is currently in Technical Preview.
-# It's signature and behavior might change.
 function(qt6_add_translations)
     set(options
         IMMEDIATE_CALL)

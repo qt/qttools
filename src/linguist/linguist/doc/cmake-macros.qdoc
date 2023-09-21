@@ -365,8 +365,6 @@ qt_add_translations([target]
 
 \versionlessCMakeCommandsNote qt6_add_translations()
 
-\preliminarycmakecommand
-
 \warning Calling \c qt_add_translations in a directory scope different than the
 target directory scope requires at least CMake version 3.18.
 
