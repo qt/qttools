@@ -285,8 +285,7 @@ QString Generator::fileBase(const Node *node) const
 
         base.prepend(outputPrefix(node));
     } else if (node->isProxyNode()) {
-        base = node->name();
-        base.append("-proxy");
+        base.append("%1-%2-proxy"_L1.arg(node->name(), node->tree()->physicalModuleName()));
     } else {
         const Node *p = node;
         forever {
