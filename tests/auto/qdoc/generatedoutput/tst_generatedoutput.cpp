@@ -589,8 +589,8 @@ void tst_generatedOutput::testGlobalFunctions()
 void tst_generatedOutput::proxyPage()
 {
     testAndCompare("testdata/proxypage/proxypage.qdocconf",
-                   "proxypage/stdpair-proxy.html "
-                   "proxypage-docbook/stdpair-proxy.xml");
+                   "proxypage/stdpair-proxypage-proxy.html "
+                   "proxypage-docbook/stdpair-proxypage-proxy.xml");
 }
 
 void tst_generatedOutput::nonAsciiCharacterInput()
