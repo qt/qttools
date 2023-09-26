@@ -448,15 +448,13 @@ function(qt6_add_lrelease)
         # into an internal source file property. It will be added as a dependency for targets
         # created by _qt_internal_process_resource, to avoid the Xcode issue of not allowing
         # multiple targets depending on the output, without having a common target ancestor.
-        if(legacy_signature_used)
-            set(scope_args "")
-            if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
-                set(scope_args TARGET_DIRECTORY ${legacy_target})
-                set_source_files_properties("${qm}" ${scope_args} PROPERTIES
-                    _qt_resource_target_dependency "${lrelease_target}"
-                )
-            endif()
+        set(scope_args "")
+        if(legacy_signature_used AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+            set(scope_args TARGET_DIRECTORY ${legacy_target})
         endif()
+        set_source_files_properties("${qm}" ${scope_args} PROPERTIES
+            _qt_resource_target_dependency "${lrelease_target}"
+        )
     endforeach()
 
     if(legacy_signature_used)
