@@ -93,22 +93,21 @@ int XmlGenerator::hOffset(const Node *node)
  */
 void XmlGenerator::rewritePropertyBrief(const Atom *atom, const Node *relative)
 {
-    if (relative->nodeType() == Node::Property || relative->nodeType() == Node::Variable) {
-        atom = atom->next();
-        if (atom && atom->type() == Atom::String) {
-            QString firstWord =
-                    atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
-            if (firstWord == QLatin1String("the") || firstWord == QLatin1String("a")
-                || firstWord == QLatin1String("an") || firstWord == QLatin1String("whether")
-                || firstWord == QLatin1String("which")) {
-                QString str = QLatin1String("This ")
-                        + QLatin1String(relative->nodeType() == Node::Property ? "property"
-                                                                               : "variable")
-                        + QLatin1String(" holds ") + atom->string().left(1).toLower()
-                        + atom->string().mid(1);
-                const_cast<Atom *>(atom)->setString(str);
-            }
-        }
+    if (relative->nodeType() != Node::Property && relative->nodeType() != Node::Variable)
+        return;
+    atom = atom->next();
+    if (!atom || atom->type() != Atom::String)
+        return;
+
+    const QString firstWord =
+            atom->string().toLower().section(' ', 0, 0, QString::SectionSkipEmpty);
+    const QStringList words{ "the", "a", "an", "whether", "which" };
+    if (words.contains(firstWord)) {
+        QString str = QLatin1String("This ")
+                + QLatin1String(relative->nodeType() == Node::Property ? "property" : "variable")
+                + QLatin1String(" holds ") + atom->string().left(1).toLower()
+                + atom->string().mid(1);
+        const_cast<Atom *>(atom)->setString(str);
     }
 }
 
