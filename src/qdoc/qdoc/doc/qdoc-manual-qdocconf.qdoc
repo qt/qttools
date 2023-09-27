@@ -819,17 +819,6 @@
         $QTDIR/examples/calculator-example.png
     \endcode
 
-    You can filter the images in an image directory using the \l
-    {images.fileextensions} {\c images.fileextensions} variable. The
-    general idea behind the \l {images.fileextensions} {\c images.fileextensions}
-    variable is to enable different image format for different output format.
-
-    \warning The \l {images.fileextensions} {\c images.fileextensions}
-    variable's functionality is preliminary since QDoc at this point
-    only supports HTML.
-
-    See also \l images and \l images.fileextensions.
-
     \target language-variable
     \section1 language
 
