@@ -19,4 +19,8 @@ if(QT_FEATURE_process AND QT_FEATURE_pushbutton AND QT_FEATURE_toolbutton AND TA
 endif()
 
 # Create a fake module that would emulate the Qt5::LinguistTools CMake Config package
-qt_internal_add_module(Linguist NO_MODULE_HEADERS HEADER_MODULE)
+qt_internal_add_module(Linguist
+    HEADER_MODULE
+    NO_MODULE_HEADERS
+    NO_PRIVATE_MODULE
+)
