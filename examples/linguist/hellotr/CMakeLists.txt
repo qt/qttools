@@ -4,8 +4,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(hellotr LANGUAGES CXX)
 
-set(CMAKE_AUTOMOC ON)
-
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
     set(INSTALL_EXAMPLESDIR "examples")
 endif()
@@ -16,6 +14,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 #! [0]
 find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
+
+qt_standard_project_setup(I18N_LANGUAGES la)
 #! [0]
 
 qt_add_executable(hellotr
@@ -24,7 +24,6 @@ qt_add_executable(hellotr
 
 #! [1]
 qt6_add_translations(hellotr
-    TS_FILES hellotr_la.ts
     QM_FILES_OUTPUT_VARIABLE qm_files)
 install(FILES ${qm_files} DESTINATION ${INSTALL_EXAMPLEDIR})
 #! [1]
