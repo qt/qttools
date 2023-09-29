@@ -3403,12 +3403,6 @@ QString HtmlGenerator::protect(const QString &string)
             APPEND("&mdash;");
         } else if (ch == QLatin1Char('"')) {
             APPEND("&quot;");
-        } else if ((ch == QLatin1Char('*') && i + 1 < n && string.at(i) == QLatin1Char('/'))
-                   || (ch == QLatin1Char('.') && i > 2 && string.at(i - 2) == QLatin1Char('.'))) {
-            // we escape '*/' and the last dot in 'e.g.' and 'i.e.' for the Javadoc generator
-            APPEND("&#x");
-            html += QString::number(ch.unicode(), 16);
-            html += QLatin1Char(';');
         } else {
             if (!html.isEmpty())
                 html += ch;
