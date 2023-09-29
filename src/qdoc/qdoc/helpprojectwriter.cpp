@@ -778,8 +778,11 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeEndElement(); // filterSection
     writer.writeEndElement(); // QtHelpProject
     writer.writeEndDocument();
-    writeHashFile(file);
     file.close();
+    if (file.open(QFile::ReadOnly)) {
+        writeHashFile(file);
+        file.close();
+    }
 }
 
 QT_END_NAMESPACE
