@@ -118,7 +118,7 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <!-- @@@inlineFunction -->
 <!-- $$$methodWithEmDashInItsDocs[overload1]$$$methodWithEmDashInItsDocs -->
 <h3 class="fn" translate="no" id="methodWithEmDashInItsDocs"><span class="type">void</span> Test::<span class="name">methodWithEmDashInItsDocs</span>()</h3>
-<p>This method has em dashes in its documentation&mdash;as you'll find represented by <code translate="no">---</code> in the sources&mdash;here and there. The important bit to note is that when passed e.g&#x2e; to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</p>
+<p>This method has em dashes in its documentation&mdash;as you'll find represented by <code translate="no">---</code> in the sources&mdash;here and there. The important bit to note is that when passed e.g. to the \c command, the three hyphens are processed as input to the command and not replaced by an em dash.</p>
 <p>-----------------------------------------------------------------------</p>
 <p>People can still add a bunch of dashes, though, without QDoc replacing them all with a series of em dashes.</p>
 <p>&mdash;You can also start a new paragraph with an em dash, if you want to.</p>
@@ -126,7 +126,7 @@ target_link_libraries(mytarget PRIVATE Qt6::QDocTest)</td></tr>
 <!-- @@@methodWithEmDashInItsDocs -->
 <!-- $$$methodWithEnDashInItsDocs[overload1]$$$methodWithEnDashInItsDocs -->
 <h3 class="fn" translate="no" id="methodWithEnDashInItsDocs"><span class="type">void</span> Test::<span class="name">methodWithEnDashInItsDocs</span>()</h3>
-<p>This method has en dashes in its documentation &ndash; as you'll find represented by <code translate="no">--</code> in the sources &ndash; here and there. The important bit to note is that when passed e.g&#x2e; to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</p>
+<p>This method has en dashes in its documentation &ndash; as you'll find represented by <code translate="no">--</code> in the sources &ndash; here and there. The important bit to note is that when passed e.g. to the \c command, the two hyphens are processed as input to the command and not replaced by an en dash. This also applies to code blocks, where otherwise, the decrement operator would get completely borked:</p>
 <pre class="cpp" translate="no"><span class="keyword">for</span> (<span class="type">int</span> i <span class="operator">=</span> <span class="number">42</span>; i <span class="operator">&gt;</span> <span class="number">0</span>; <span class="operator">-</span><span class="operator">-</span>i)
     <span class="comment">// Do something cool during countdown.</span></pre>
 <p>...as it would be silly if this would output &ndash;i instead of <code translate="no">--i</code>.</p>
