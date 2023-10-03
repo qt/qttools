@@ -1,0 +1,6 @@
+The command is defined in the \c LinguistTools component of the \c Qt6 package.
+Load the package with:
+
+\code
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
+\endcode

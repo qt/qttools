@@ -26,13 +26,29 @@
 ****************************************************************************/
 
 /*!
+\group cmake-commands-qtlinguisttools
+\title CMake Commands in Qt6 LinguistTools
+
+The following CMake commands are defined when Qt6::LinguistTools is loaded, for instance
+with
+
+\code
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
+\endcode
+
+\sa{CMake Command Reference}
+*/
+
+/*!
 \page qtlinguist-cmake-qt-add-translation.html
-\ingroup cmake-macros-qtlinguisttools
+\ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_translation
 \target qt6_add_translation
 
-\brief Compiles Qt Linguist .ts files into .qm files.
+\summary {Compiles Qt Linguist .ts files into .qm files.}
+
+\include cmake-find-package-linguisttools.qdocinc
 
 \warning This function is deprecated. Consider using the target-based
 functions \l{qt6_add_lrelease} or \l{qt6_add_translations} instead.
@@ -80,15 +96,17 @@ sub-directory:
 
 /*!
 \page qtlinguist-cmake-qt-create-translation.html
-\ingroup cmake-macros-qtlinguisttools
+\ingroup cmake-commands-qtlinguisttools
 
 \title qt_create_translation
 \target qt6_create_translation
 
+\summary {Sets up the Qt Linguist translation toolchain.}
+
+\include cmake-find-package-linguisttools.qdocinc
+
 \warning This function is deprecated. Consider using the target-based
 functions \l{qt6_add_lupdate} or \l{qt6_add_translations} instead.
-
-\brief Sets up the Qt Linguist translation toolchain.
 
 \section1 Synopsis
 
@@ -132,12 +150,14 @@ files in the build directory:
 
 /*!
 \page qtlinguist-cmake-qt-add-lupdate.html
-\ingroup cmake-macros-qtlinguisttools
+\ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_lupdate
 \target qt6_add_lupdate
 
-\brief Add targets to generate or update Qt Linguist .ts files.
+\summary {Add targets to generate or update Qt Linguist .ts files.}
+
+\include cmake-find-package-linguisttools.qdocinc
 
 \cmakecommandsince 6.2
 
@@ -206,12 +226,14 @@ Add the targets \c{myapp_lupdate} and \c{update_translations} for updating the
 
 /*!
 \page qtlinguist-cmake-qt-add-lrelease.html
-\ingroup cmake-macros-qtlinguisttools
+\ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_lrelease
 \target qt6_add_lrelease
 
-\brief Add targets to transform Qt Linguist .ts files into .qm files.
+\summary {Add targets to transform Qt Linguist .ts files into .qm files.}
+
+\include cmake-find-package-linguisttools.qdocinc
 
 \cmakecommandsince 6.2
 
@@ -292,12 +314,14 @@ files.
 
 /*!
 \page qtlinguist-cmake-qt-add-translations.html
-\ingroup cmake-macros-qtlinguisttools
+\ingroup cmake-commands-qtlinguisttools
 
 \title qt_add_translations
 \target qt6_add_translations
 
-\brief Add targets to update and transform Qt Linguist .ts files into .qm files.
+\summary {Add targets to update and transform Qt Linguist .ts files into .qm files.}
+
+\include cmake-find-package-linguisttools.qdocinc
 
 \cmakecommandsince 6.2
 
