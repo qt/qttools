@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="ExcitingClass" href="excitingclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" module="ModuleInState">
+            <contents name="what-makes-excitingclass-more-exciting-than-boringclass" title="What makes ExcitingClass more exciting than BoringClass?" level="1"/>
+            <description>
+                <para>There's a lot to say about <link raw="ExcitingClass" href="excitingclass.html" type="class">ExcitingClass</link>. Let's dive into the details!</para>
+                <section id="what-makes-excitingclass-more-exciting-than-boringclass">
+                    <heading level="1">What makes ExcitingClass more exciting than BoringClass?</heading>
+                    <para>Well, for one, it has a \section1 heading in it's documentation! How exciting is that?!</para>
+                </section>
+            </description>
+        </class>
+    </document>
+</WebXML>

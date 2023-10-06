@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="BoringClass" href="boringclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" module="ModuleInState">
+            <description>
+                <para>There's not much to say about <link raw="BoringClass" href="boringclass.html" type="class">BoringClass</link>, really, apart from that it is quite boring.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

@@ -1128,7 +1128,10 @@ std::optional<QString> formatStatus(const Node *node, QDocDatabase *qdb)
 
     if (const auto metaMap = node->doc().metaTagMap(); metaMap) {
         status = metaMap->value("status");
-    } else if (node->status() == Node::Deprecated) {
+        if (!status.isEmpty())
+            return {status};
+    }
+    if (node->status() == Node::Deprecated) {
         status = u"Deprecated"_s;
         if (const auto since = node->deprecatedSince(); !since.isEmpty())
             status += " since %1"_L1.arg(since);

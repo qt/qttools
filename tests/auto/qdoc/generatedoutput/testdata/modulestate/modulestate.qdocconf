@@ -1,0 +1,17 @@
+include(../configs/config.qdocconf)
+project = ModuleState
+
+headerdirs  = .
+sourcedirs  = .
+exampledirs = .
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = modulestate
+
+HTML.nosubdirs = true
+HTML.outputsubdir = modulestate
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = modulestate
