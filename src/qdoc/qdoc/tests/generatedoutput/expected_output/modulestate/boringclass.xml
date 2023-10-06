@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>BoringClass Class</db:title>
+<db:productname>ModuleState</db:productname>
+<db:titleabbrev>ModuleState Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>ModuleState Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>BoringClass</db:para>
+</db:listitem>
+</db:varlistentry>
+<db:varlistentry>
+<db:term>Status</db:term>
+<db:listitem>
+<db:para>Technical Preview</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>There's not much to say about <db:link xlink:href="boringclass.xml">BoringClass</db:link>, really, apart from that it is quite boring.</db:para>
+</db:section>
+</db:article>

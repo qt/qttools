@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ModuleState Reference Documentation" version="" project="ModuleState">
+    <namespace name="" status="active" access="public" module="modulestate">
+        <class name="BoringClass" href="boringclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" module="ModuleInState"/>
+        <class name="ExcitingClass" href="excitingclass.html" status="active" access="public" location="classes_in_stateful_module.h" documented="true" module="ModuleInState">
+            <contents name="what-makes-excitingclass-more-exciting-than-boringclass" title="What makes ExcitingClass more exciting than BoringClass?" level="1"/>
+        </class>
+        <module name="ModuleInState" href="moduleinstate-module.html" status="active" location="module_in_a_state.qdoc" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>
