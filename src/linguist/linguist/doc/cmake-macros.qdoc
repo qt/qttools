@@ -399,12 +399,12 @@ This function will create the target \c{release_translations} that generates the
 
 The \c{.ts} files may be specified with the argument \c{TS_FILES}, but it's more
 convenient to let \c qt_add_translations figure out the file paths
-automatically. See \l{Automatic Determination of \c{.ts} File Paths} for
+automatically. See \l{Automatic Determination of .ts File Paths} for
 details.
 
 \include cmake-macros.qdoc sources-and-include-dirs
 
-\section1 Automatic Determination of \c{.ts} File Paths
+\section1 Automatic Determination of .ts File Paths
 
 The paths of the \c{.ts} files that are used as input for \c qt_add_translations
 can be automatically determined if \l{QT_I18N_LANGUAGES} has been set.

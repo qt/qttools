@@ -45,3 +45,5 @@ navigation.toctitles = \
 
 navigation.toctitles.inclusive = true
 
+# Enforce zero documentation warnings
+warninglimit = 0
