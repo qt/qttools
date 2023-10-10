@@ -61,7 +61,7 @@ ${import_plugin_code}
         )
     endif()
 else() # QT_BUILD_SHARED_LIBS
-    if(QT_SUPERBUILD)
-        add_dependencies(qhelpgenerator ${needed_plugins})
+    if(TARGET ${target_name} AND QT_SUPERBUILD)
+        add_dependencies(${target_name} ${needed_plugins})
     endif()
 endif()
