@@ -60,6 +60,16 @@ protected:
     void accept(AST::Node *node)
     { AST::Node::accept(node, this); }
 
+    bool visit(AST::UiPragma *node) override
+    {
+        if (!node->name.isNull()) {
+            if (node->name == "Translator"_L1) {
+                m_component = node->values->value.toString();
+            }
+        }
+        return false;
+    }
+
     void endVisit(AST::CallExpression *node) override
     {
         QString name;
