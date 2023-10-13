@@ -21,6 +21,7 @@
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qpair.h>
+#include <QtCore/qpointer.h>
 #include <QtCore/qsharedpointer.h>
 
 QT_BEGIN_NAMESPACE

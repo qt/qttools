@@ -33,6 +33,7 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
+#include <QtCore/qpointer.h>
 #include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE

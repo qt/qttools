@@ -38,6 +38,7 @@
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qlist.h>
+#include <QtCore/qpointer.h>
 #include <QtCore/qsortfilterproxymodel.h>
 
 QT_BEGIN_NAMESPACE
