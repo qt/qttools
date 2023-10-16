@@ -27,3 +27,6 @@ qsTranslate("Foo", "Nine");
 // Empty context.
 // TRANSLATOR
 qsTr("Ten");
+
+// setting context with TRANSLATOR comment is not supported on the QML side
+// The support on the lupdate side has been removed

@@ -32,8 +32,6 @@ using namespace QQmlJS;
 
 using namespace Qt::StringLiterals;
 
-static QString QmlMagicComment = u"TRANSLATOR"_s;
-
 class FindTrCalls: protected AST::Visitor
 {
 public:
@@ -377,29 +375,6 @@ void FindTrCalls::processComment(const SourceLocation &loc)
         ushort c;
         while ((c = chars[idx].unicode()) == ' ' || c == '\t' || c == '\r' || c == '\n')
             ++idx;
-        if (!memcmp(chars + idx, QmlMagicComment.unicode(), QmlMagicComment.size() * 2)) {
-            idx += QmlMagicComment.size();
-            QString comment = QString(chars + idx, length - idx).simplified();
-            int k = comment.indexOf(QLatin1Char(' '));
-            if (k == -1) {
-                trcontext = comment;
-            } else {
-                trcontext = comment.left(k);
-                comment.remove(0, k + 1);
-                TranslatorMessage msg(
-                        trcontext, QString(),
-                        comment, QString(),
-                        m_fileName, loc.startLine, QStringList(),
-                        TranslatorMessage::Finished, /*plural=*/false);
-                msg.setExtraComment(extracomment.simplified());
-                extracomment.clear();
-                m_translator->append(msg);
-                m_translator->setExtras(extra);
-                extra.clear();
-            }
-
-            m_component = trcontext;
-        }
     }
 }
 
