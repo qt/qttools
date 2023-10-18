@@ -132,7 +132,7 @@ void MetaEnum<IntType>::appendQualifiedName(const QString &key, QString &target)
         target += m_scope;
         target += m_separator;
     }
-    target += key;
+    target += m_enumName + m_separator + key;
 }
 
 // -------------- DesignerMetaEnum: Meta type for enumerations

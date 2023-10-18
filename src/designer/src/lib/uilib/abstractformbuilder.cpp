@@ -696,27 +696,27 @@ static inline QString alignmentValue(Qt::Alignment a)
     QLatin1StringView v;
     switch (a & Qt::AlignHorizontal_Mask) {
     case Qt::AlignLeft:
-        h = "Qt::AlignLeft"_L1;
+        h = "Qt::AlignmentFlag::AlignLeft"_L1;
         break;
     case Qt::AlignRight:
-        h = "Qt::AlignRight"_L1;
+        h = "Qt::AlignmentFlag::AlignRight"_L1;
         break;
     case Qt::AlignHCenter:
-        h = "Qt::AlignHCenter"_L1;
+        h = "Qt::AlignmentFlag::AlignHCenter"_L1;
         break;
     case Qt::AlignJustify:
-        h = "Qt::AlignJustify"_L1;
+        h = "Qt::AlignmentFlag::AlignJustify"_L1;
         break;
     }
     switch (a & Qt::AlignVertical_Mask) {
     case Qt::AlignTop:
-        v = "Qt::AlignTop"_L1;
+        v = "Qt::AlignmentFlag::AlignTop"_L1;
         break;
     case Qt::AlignBottom:
-        v = "Qt::AlignBottom"_L1;
+        v = "Qt::AlignmentFlag::AlignBottom"_L1;
         break;
     case Qt::AlignVCenter:
-        v = "Qt::AlignVCenter"_L1;
+        v = "Qt::AlignmentFlag::AlignVCenter"_L1;
         break;
     }
 
@@ -1349,7 +1349,7 @@ DomSpacer *QAbstractFormBuilder::createDom(QSpacerItem *spacer, DomLayout *ui_la
     prop = new DomProperty(); // ### we don't implemented the case where expandingDirections() is both Vertical and Horizontal
     prop->setAttributeName("orientation"_L1);
     prop->setElementEnum((spacer->expandingDirections() & Qt::Horizontal) != 0 ?
-                         "Qt::Horizontal"_L1 : "Qt::Vertical"_L1);
+                         "Qt:::Orientation::Horizontal"_L1 : "Qt:::Orientation::Vertical"_L1);
     properties.append(prop);
 
     ui_spacer->setElementProperty(properties);
