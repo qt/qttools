@@ -1,0 +1,20 @@
+[
+    {
+        "Id": "llvm_clang_typename_namespace",
+        "Name": "QualTypeNames",
+        "QDocModule": "qdoc",
+        "QtUsage": "Used to have access to a version of clang::TypeName::getFullyQualifiedName that does not expand templates to an instance.",
+        "QtParts": [
+            "tools"
+        ],
+        "Files": "QualTypeNames.h",
+
+        "Description": "A part of Clang's C++ API that deals with fully qualifying types.",
+        "Homepage": "https://github.com/llvm/llvm-project",
+        "Version": "16.0",
+        "License": "Apache License 2.0",
+        "LicenseId": "Apache-2.0 WITH LLVM-exception",
+        "LicenseFile": "LLVM_LICENSE.txt",
+        "Copyright": "Copyright assigned to LLVM project contributors."
+    }
+]
