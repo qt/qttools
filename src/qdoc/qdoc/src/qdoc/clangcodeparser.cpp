@@ -37,6 +37,8 @@
 #include <clang/Lex/Lexer.h>
 #include <llvm/Support/Casting.h>
 
+#include "clang/AST/QualTypeNames.h"
+
 #include <cstdio>
 
 QT_BEGIN_NAMESPACE
@@ -73,6 +75,61 @@ static QDebug operator<<(QDebug debug, const std::vector<T> &v)
     return debug;
 }
 #endif // !QT_NO_DEBUG_STREAM
+
+/*!
+ * Returns the underlying Decl that \a cursor represents.
+ *
+ * This can be used to drop back down from a LibClang's CXCursor to
+ * the underlying C++ AST that Clang provides.
+ *
+ * It should be used when LibClang does not expose certain
+ * functionalities that are available in the C++ AST.
+ *
+ * The CXCursor should represent a declaration. Usages of this
+ * function on CXCursors that do not represent a declaration may
+ * produce undefined results.
+ */
+static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
+    assert(clang_isDeclaration(clang_getCursorKind(cursor)));
+
+    return static_cast<const clang::Decl*>(cursor.data[0]);
+}
+
+
+/*!
+ * Returns a string representing the name of \a type as if it was
+ * referred to at the end of the translation unit that it was parsed
+ * from.
+ *
+ * For example, given the following code:
+ *
+ * \code
+ * namespace foo {
+ *    template<typename T>
+ *    struct Bar {
+ *       using Baz = const T&;
+ *
+ *       void bam(Baz);
+ *    };
+ * }
+ * \endcode
+ *
+ * Given a parsed translation unit and an AST node, say \e {decl},
+ * representing the parameter declaration of the first argument of \c {bam},
+ * calling \c{get_fully_qualified_name(decl->getType(), * decl->getASTContext())}
+ * would result in the string \c {foo::Bar<T>::Baz}.
+ *
+ * This should generally be used every time the stringified
+ * representation of a type is acquired as part of parsing with Clang,
+ * so as to ensure a consistent behavior and output.
+ */
+static std::string get_fully_qualified_type_name(clang::QualType type, const clang::ASTContext& declaration_context) {
+     return clang::TypeName::getFullyQualifiedName(
+        type,
+        declaration_context,
+        clang::PrintingPolicy{declaration_context.getLangOpts()}
+    );
+}
 
 /*!
    Call clang_visitChildren on the given cursor with the lambda as a callback
@@ -115,12 +172,21 @@ static QStringList getTemplateParameters(CXCursor cursor)
         case CXCursor_TemplateTypeParameter:
             type = QStringLiteral("typename");
             break;
-        case CXCursor_NonTypeTemplateParameter:
-            type = fromCXString(clang_getTypeSpelling(clang_getCursorType(cur)));
+        case CXCursor_NonTypeTemplateParameter: {
+            const auto* non_type_template_declaration =
+                llvm::dyn_cast<clang::NonTypeTemplateParmDecl>(get_cursor_declaration(cur));
+            assert(non_type_template_declaration);
+
+            type = QString::fromStdString(get_fully_qualified_type_name(
+                non_type_template_declaration->getType(),
+                non_type_template_declaration->getASTContext()
+            ));
+
             // Hack: Omit QtPrivate template parameters from public documentation
             if (type.startsWith(QLatin1String("QtPrivate")))
                 return CXChildVisit_Continue;
             break;
+        }
         case CXCursor_TemplateTemplateParameter:
             type = templateDecl(cur) + QLatin1String(" class");
             break;
@@ -864,25 +930,6 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         }
         return CXChildVisit_Continue;
     }
-}
-
-/*!
- * Returns the underlying Decl that \a cursor represents.
- *
- * This can be used to drop back down from a LibClang's CXCursor to
- * the underlying C++ AST that Clang provides.
- *
- * It should be used when LibClang does not expose certain
- * functionalities that are available in the C++ AST.
- *
- * The CXCursor should represent a declaration. Usages of this
- * function on CXCursors that do not represent a declaration may
- * produce undefined results.
- */
-static const clang::Decl* get_cursor_declaration(CXCursor cursor) {
-    assert(clang_isDeclaration(clang_getCursorKind(cursor)));
-
-    return static_cast<const clang::Decl*>(cursor.data[0]);
 }
 
 void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cursor)
