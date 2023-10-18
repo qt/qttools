@@ -728,19 +728,19 @@ static inline Qt::Alignment alignmentFromDom(const QString &in)
     Qt::Alignment rc;
     if (!in.isEmpty()) {
         for (const auto &f : qTokenize(in, u'|')) {
-            if (f == "Qt::AlignLeft"_L1) {
+            if (f.endsWith("::AlignLeft"_L1)) {
                 rc |= Qt::AlignLeft;
-            } else if (f == "Qt::AlignRight"_L1) {
+            } else if (f.endsWith("::AlignRight"_L1)) {
                 rc |= Qt::AlignRight;
-            } else if (f == "Qt::AlignHCenter"_L1) {
+            } else if (f.endsWith("::AlignHCenter"_L1)) {
                 rc |= Qt::AlignHCenter;
-            } else if (f == "Qt::AlignJustify"_L1) {
+            } else if (f.endsWith("::AlignJustify"_L1)) {
                 rc |= Qt::AlignJustify;
-            } else if (f == "Qt::AlignTop"_L1) {
+            } else if (f.endsWith("::AlignTop"_L1)) {
                 rc |= Qt::AlignTop;
-            } else if (f == "Qt::AlignBottom"_L1) {
+            } else if (f.endsWith("::AlignBottom"_L1)) {
                 rc |= Qt::AlignBottom;
-            } else if (f == "Qt::AlignVCenter"_L1) {
+            } else if (f.endsWith("::AlignVCenter"_L1)) {
                 rc |= Qt::AlignVCenter;
             }
         }

@@ -28,14 +28,30 @@ namespace QFormInternal
 {
 #endif
 
-static inline void fixEnum(QString &s)
+static QStringView fixEnum(QStringView s)
 {
-    qsizetype qualifierIndex = s.lastIndexOf(u':');
-    if (qualifierIndex == -1)
-        qualifierIndex = s.lastIndexOf(u'.');
-    if (qualifierIndex != -1)
-        s.remove(0, qualifierIndex + 1);
+    qsizetype valuePos = s.lastIndexOf(u':'); // "E::A" -> 3
+    if (valuePos == -1)
+        valuePos = s.lastIndexOf(u'.');
+    return valuePos != -1 ? s.sliced(valuePos + 1) : s;
 }
+
+// "QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok"
+// -> "Cancel|Ok"
+// ### FIXME Remove/check when QTBUG-118240 is fixed.
+static inline QString fixFlags(QStringView s)
+{
+    QString result;
+    result.reserve(s.size());
+    const auto flags = s.split(u'|');
+    for (const auto &flag : flags) {
+        if (!result.isEmpty())
+            result.append(u'|');
+        result.append(fixEnum(flag));
+    }
+    return result;
+}
+
 // Convert complex DOM types with the help of  QAbstractFormBuilder
 QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,const  DomProperty *p)
 {
@@ -75,17 +91,16 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
 
         const QMetaEnum e = meta->property(index).enumerator();
         Q_ASSERT(e.isFlag() == true);
-        return QVariant(e.keysToValue(p->elementSet().toUtf8()));
+        return QVariant(e.keysToValue(fixFlags(p->elementSet()).toUtf8()));
     }
 
     case DomProperty::Enum: {
         const QByteArray pname = p->attributeName().toUtf8();
         const int index = meta->indexOfProperty(pname);
-        QString enumValue = p->elementEnum();
+        const QStringView enumValue = fixEnum(p->elementEnum());
         // Triggers in case of objects in Designer like Spacer/Line for which properties
         // are serialized using language introspection. On preview, however, these objects are
         // emulated by hacks in the formbuilder (size policy/orientation)
-        fixEnum(enumValue);
         if (index == -1) {
             // ### special-casing for Line (QFrame) -- fix for 4.2. Jambi hack for enumerations
             if (!qstrcmp(meta->className(), "QFrame")
