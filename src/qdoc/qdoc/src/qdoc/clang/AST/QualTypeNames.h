@@ -291,27 +291,6 @@ static inline NestedNameSpecifier *createNestedNameSpecifierForScopeOf(
   const auto *Outer = dyn_cast_or_null<NamedDecl>(DC);
   const auto *OuterNS = dyn_cast_or_null<NamespaceDecl>(DC);
   if (Outer && !(OuterNS && OuterNS->isAnonymousNamespace())) {
-    if (const auto *CxxDecl = dyn_cast<CXXRecordDecl>(DC)) {
-      if (ClassTemplateDecl *ClassTempl =
-              CxxDecl->getDescribedClassTemplate()) {
-        // We are in the case of a type(def) that was declared in a
-        // class template but is *not* type dependent.  In clang, it
-        // gets attached to the class template declaration rather than
-        // any specific class template instantiation.  This result in
-        // 'odd' fully qualified typename:
-        //
-        //    vector<_Tp,_Alloc>::size_type
-        //
-        // Make the situation is 'useable' but looking a bit odd by
-        // picking a random instance as the declaring context.
-        if (ClassTempl->spec_begin() != ClassTempl->spec_end()) {
-          Decl = *(ClassTempl->spec_begin());
-          Outer = dyn_cast<NamedDecl>(Decl);
-          OuterNS = dyn_cast<NamespaceDecl>(Decl);
-        }
-      }
-    }
-
     if (OuterNS) {
       return createNestedNameSpecifier(Ctx, OuterNS, WithGlobalNsPrefix);
     } else if (const auto *TD = dyn_cast<TagDecl>(Outer)) {
