@@ -62,7 +62,7 @@ class MetaEnum
 public:
     using KeyToValueMap = QMap<QString, IntType>;
 
-    MetaEnum(const QString &name, const QString &scope, const QString &separator);
+    MetaEnum(const QString &enumName, const QString &scope, const QString &separator);
     MetaEnum() = default;
     void addKey(IntType value, const QString &name);
 
@@ -70,7 +70,7 @@ public:
     // Ignorant of scopes.
     IntType keyToValue(QString key, bool *ok = nullptr) const;
 
-    const QString &name() const      { return m_name; }
+    const QString &enumName() const  { return m_enumName; }
     const QString &scope() const     { return m_scope; }
     const QString &separator() const { return m_separator; }
 
@@ -81,7 +81,7 @@ protected:
     void appendQualifiedName(const QString &key, QString &target) const;
 
 private:
-    QString m_name;
+    QString m_enumName;
     QString m_scope;
     QString m_separator;
     KeyToValueMap m_keyToValueMap;
@@ -89,8 +89,8 @@ private:
 };
 
 template <class IntType>
-MetaEnum<IntType>::MetaEnum(const QString &name, const QString &scope, const QString &separator) :
-    m_name(name),
+MetaEnum<IntType>::MetaEnum(const QString &enumName, const QString &scope, const QString &separator) :
+      m_enumName(enumName),
     m_scope(scope),
     m_separator(separator)
 {
@@ -160,7 +160,8 @@ public:
 class QDESIGNER_SHARED_EXPORT DesignerMetaFlags : public MetaEnum<uint>
 {
 public:
-    DesignerMetaFlags(const QString &name, const QString &scope, const QString &separator);
+    explicit DesignerMetaFlags(const QString &enumName, const QString &scope,
+                               const QString &separator);
     DesignerMetaFlags() = default;
 
     enum SerializationMode { FullyQualified, NameOnly };

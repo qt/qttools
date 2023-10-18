@@ -155,18 +155,19 @@ namespace qdesigner_internal
     {
         return QCoreApplication::translate("DesignerMetaEnum",
                                            "%1 is not a valid enumeration value of '%2'.")
-                                           .arg(value).arg(name());
+                                           .arg(value).arg(enumName());
     }
 
     QString DesignerMetaEnum::messageParseFailed(const QString &s) const
     {
         return QCoreApplication::translate("DesignerMetaEnum",
                                            "'%1' could not be converted to an enumeration value of type '%2'.")
-                                           .arg(s, name());
+                                           .arg(s, enumName());
     }
     // -------------- DesignerMetaFlags
-    DesignerMetaFlags::DesignerMetaFlags(const QString &name, const QString &scope, const QString &separator) :
-       MetaEnum<uint>(name, scope, separator)
+    DesignerMetaFlags::DesignerMetaFlags(const QString &enumName, const QString &scope,
+                                         const QString &separator) :
+        MetaEnum<uint>(enumName, scope, separator)
     {
     }
 
@@ -237,7 +238,7 @@ namespace qdesigner_internal
     {
         return QCoreApplication::translate("DesignerMetaFlags",
                                            "'%1' could not be converted to a flag value of type '%2'.")
-                                           .arg(s, name());
+                                           .arg(s, enumName());
     }
 
     // ---------- PropertySheetEnumValue

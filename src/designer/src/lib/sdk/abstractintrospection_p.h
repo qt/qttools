@@ -34,6 +34,7 @@ public:
     virtual int keyToValue(const QString &key) const = 0;
     virtual int keysToValue(const QString &keys) const = 0;
     virtual QString name() const = 0;
+    virtual QString enumName() const = 0;
     virtual QString scope() const = 0;
     virtual QString separator() const = 0;
     virtual int value(int index) const = 0;

@@ -41,6 +41,7 @@ namespace  {
         int keyToValue(const QString &key) const override   { return m_enum.keyToValue(key.toUtf8()); }
         int keysToValue(const QString &keys) const override { return m_enum.keysToValue(keys.toUtf8()); }
         QString name() const override                       { return m_name; }
+        QString enumName() const override                   { return charToQString(m_enum.enumName()); }
         QString scope() const override                      { return m_scope; }
         QString separator() const override;
         int value(int index) const override                 { return m_enum.value(index); }

@@ -126,7 +126,7 @@ static const qdesigner_internal::DesignerMetaFlags &designerMetaFlagsFor(const Q
     const ScopeNameKey key = ScopeNameKey(scope, name);
     auto it = cache.find(key);
     if (it == cache.end()) {
-        qdesigner_internal::DesignerMetaFlags dme = qdesigner_internal::DesignerMetaFlags(name, scope, me->separator());
+        auto dme = qdesigner_internal::DesignerMetaFlags(me->enumName(), scope, me->separator());
         const int keyCount = me->keyCount();
         for (int i=0; i < keyCount; ++i)
             dme.addKey(me->value(i), me->key(i));
