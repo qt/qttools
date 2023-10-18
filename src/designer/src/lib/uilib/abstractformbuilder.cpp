@@ -798,19 +798,19 @@ static inline Qt::Alignment alignmentFromDom(const QString &in)
     if (!in.isEmpty()) {
         const auto flags = in.splitRef(QLatin1Char('|'));
         for (const auto &f : flags) {
-            if (f == QStringLiteral("Qt::AlignLeft")) {
+            if (f.endsWith(QLatin1String("::AlignLeft"))) {
                 rc |= Qt::AlignLeft;
-            } else if (f == QStringLiteral("Qt::AlignRight")) {
+            } else if (f.endsWith(QLatin1String("::AlignRight"))) {
                 rc |= Qt::AlignRight;
-            } else if (f == QStringLiteral("Qt::AlignHCenter")) {
+            } else if (f.endsWith(QLatin1String("::AlignHCenter"))) {
                 rc |= Qt::AlignHCenter;
-            } else if (f == QStringLiteral("Qt::AlignJustify")) {
+            } else if (f.endsWith(QLatin1String("::AlignJustify"))) {
                 rc |= Qt::AlignJustify;
-            } else if (f == QStringLiteral("Qt::AlignTop")) {
+            } else if (f.endsWith(QLatin1String("::AlignTop"))) {
                 rc |= Qt::AlignTop;
-            } else if (f == QStringLiteral("Qt::AlignBottom")) {
+            } else if (f.endsWith(QLatin1String("::AlignBottom"))) {
                 rc |= Qt::AlignBottom;
-            } else if (f == QStringLiteral("Qt::AlignVCenter")) {
+            } else if (f.endsWith(QLatin1String("::AlignVCenter"))) {
                 rc |= Qt::AlignVCenter;
             }
         }
