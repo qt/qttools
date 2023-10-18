@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="TableAfterValue Reference Documentation" version="" project="TableAfterValue">
+    <namespace name="" status="active" access="public" module="tableaftervalue">
+        <class name="TableAfterValue" href="tableaftervalue.html" status="active" access="public" location="table-after-value.h" documented="true" module="Test" brief="Test that the \table command can follow a \value command">
+            <contents name="background-for-this-test-content" title="Background for this test content" level="1"/>
+            <enum name="Reproduces" fullname="TableAfterValue::Reproduces" href="tableaftervalue.html#Reproduces-enum" status="active" access="public" location="table-after-value.h" documented="true">
+                <value name="Problem" value="0"/>
+            </enum>
+        </class>
+        <module name="Test" href="test-module.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>
