@@ -413,26 +413,40 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         for (Node *candidate : std::as_const(candidates)) {
             if (!candidate->isFunction(Node::CPP))
                 continue;
+
             auto fn = static_cast<FunctionNode *>(candidate);
             const Parameters &parameters = fn->parameters();
+
             if (parameters.count() != numArg + isVariadic)
                 continue;
+
             if (fn->isConst() != bool(clang_CXXMethod_isConst(cur)))
                 continue;
+
             if (isVariadic && parameters.last().type() != QLatin1String("..."))
                 continue;
+
             if (fn->isRef() != (clang_Type_getCXXRefQualifier(funcType) == CXRefQualifier_LValue))
                 continue;
+
             if (fn->isRefRef() != (clang_Type_getCXXRefQualifier(funcType) == CXRefQualifier_RValue))
                 continue;
+
+            auto function_declaration = get_cursor_declaration(cur)->getAsFunction();
 
             bool different = false;
             for (int i = 0; i < numArg; ++i) {
                 CXType argType = clang_getArgType(funcType, i);
+
                 if (args.size() <= i)
-                    args.append(fromCXString(clang_getTypeSpelling(argType)));
+                    args.append(QString::fromStdString(get_fully_qualified_type_name(
+                        function_declaration->getParamDecl(i)->getOriginalType(),
+                        function_declaration->getASTContext()
+                    )));
+
                 QString recordedType = parameters.at(i).type();
                 QString typeSpelling = args.at(i);
+
                 auto p = parent;
                 while (p && recordedType != typeSpelling) {
                     QString parentScope = p->name() + QLatin1String("::");
@@ -447,13 +461,18 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                     QStringView canonicalType = parameters.at(i).canonicalType();
                     if (!canonicalType.isEmpty()) {
                         different = canonicalType !=
-                            fromCXString(clang_getTypeSpelling(clang_getCanonicalType(argType)));
+                            QString::fromStdString(get_fully_qualified_type_name(
+                                function_declaration->getParamDecl(i)->getOriginalType().getCanonicalType(),
+                                function_declaration->getASTContext()
+                            ));
                     }
                 }
+
                 if (different) {
                     break;
                 }
             }
+
             if (!different)
                 return fn;
         }
@@ -1084,18 +1103,20 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     parameters.clear();
     parameters.reserve(function_declaration->getNumParams());
 
-    const clang::LangOptions& lang_options = function_declaration->getASTContext().getLangOpts();
-    clang::PrintingPolicy p{lang_options};
-
     for (clang::ParmVarDecl* const parameter_declaration : function_declaration->parameters()) {
         clang::QualType parameter_type = parameter_declaration->getOriginalType();
 
-        parameters.append(adjustTypeName(QString::fromStdString(parameter_type.getAsString(p))));
+        parameters.append(QString::fromStdString(get_fully_qualified_type_name(
+            parameter_type,
+            parameter_declaration->getASTContext()
+        )));
 
         if (!parameter_type.isCanonical())
-            parameters.last().setCanonicalType(QString::fromStdString(parameter_type.getCanonicalType().getAsString(p)));
+            parameters.last().setCanonicalType(QString::fromStdString(get_fully_qualified_type_name(
+                parameter_type.getCanonicalType(),
+                parameter_declaration->getASTContext()
+            )));
     }
-
 
     if (parameters.count() > 0) {
         if (parameters.last().type().endsWith(QLatin1String("QPrivateSignal"))) {
@@ -1103,6 +1124,7 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
             parameters.setPrivateSignal();
         }
     }
+
     if (clang_isFunctionTypeVariadic(funcType))
         parameters.append(QStringLiteral("..."));
     readParameterNamesAndAttributes(fn, cursor);
