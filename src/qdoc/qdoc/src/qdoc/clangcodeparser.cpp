@@ -903,12 +903,21 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         if (findNodeForCursor(qdb_, cursor)) // Was already parsed, probably in another TU
             return CXChildVisit_Continue;
 
+        auto value_declaration =
+            llvm::dyn_cast<clang::ValueDecl>(get_cursor_declaration(cursor));
+        assert(value_declaration);
+
         auto access = fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor));
         auto var = new VariableNode(parent_, fromCXString(clang_getCursorSpelling(cursor)));
+
         var->setAccess(access);
         var->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
-        var->setLeftType(fromCXString(clang_getTypeSpelling(clang_getCursorType(cursor))));
+        var->setLeftType(QString::fromStdString(get_fully_qualified_type_name(
+            value_declaration->getType(),
+            value_declaration->getASTContext()
+        )));
         var->setStatic(kind == CXCursor_VarDecl && parent_->isClassNode());
+
         return CXChildVisit_Continue;
     }
     case CXCursor_TypedefDecl: {
