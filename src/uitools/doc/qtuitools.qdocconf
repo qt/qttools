@@ -39,3 +39,5 @@ depends                += qtdoc qtdesigner qtcore qtwidgets qtcmake qmake
 navigation.landingpage = "Qt UI Tools"
 navigation.cppclassespage = "Qt UI Tools C++ Classes"
 
+# Highlighted example for Desktop category
+manifestmeta.highlighted.names = "QtUiTools/Text Finder"
