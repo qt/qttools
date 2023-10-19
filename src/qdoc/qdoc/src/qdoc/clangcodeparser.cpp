@@ -1013,12 +1013,10 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     // Failure to do so implies a bug in the call chain and should be
     // dealt with as such.
     const clang::Decl* declaration = get_cursor_declaration(cursor);
-    const clang::FunctionDecl* function_declaration{nullptr};
-    if (auto templated_decl = llvm::dyn_cast_or_null<const clang::FunctionTemplateDecl>(declaration))
-        function_declaration = templated_decl->getTemplatedDecl();
-    else function_declaration = static_cast<const clang::FunctionDecl*>(declaration);
 
-    assert(function_declaration);
+    assert(declaration);
+
+    const clang::FunctionDecl* function_declaration = declaration->getAsFunction();
 
     if (kind == CXCursor_Constructor
         // a constructor template is classified as CXCursor_FunctionTemplate
