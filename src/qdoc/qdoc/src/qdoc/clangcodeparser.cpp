@@ -315,10 +315,13 @@ QString functionName(CXCursor cursor)
         // For a CXCursor_ConversionFunction we don't want the spelling which would be something
         // like "operator type-parameter-0-0" or "operator unsigned int". we want the actual name as
         // spelled;
-        QString type = fromCXString(clang_getTypeSpelling(clang_getCursorResultType(cursor)));
-        if (type.isEmpty())
-            return fromCXString(clang_getCursorSpelling(cursor));
-        return QLatin1String("operator ") + type;
+        auto conversion_declaration =
+                static_cast<const clang::CXXConversionDecl*>(get_cursor_declaration(cursor));
+
+        return QLatin1String("operator ") + QString::fromStdString(get_fully_qualified_type_name(
+            conversion_declaration->getConversionType(),
+            conversion_declaration->getASTContext()
+        ));
     }
 
     QString name = fromCXString(clang_getCursorSpelling(cursor));
