@@ -36,6 +36,9 @@ depends                 += qtdoc qmake
 # Use a generic thumbnail image for examples that have no images in their docs
 manifestmeta.thumbnail.names += "QtAssistant/Remote Control Example"
 
+# Highlighted example for Desktop category
+manifestmeta.highlighted.names = "QtAssistant/Simple Text Viewer Example"
+
 navigation.landingpage = "Qt Assistant Manual"
 
 warninglimit = 0
