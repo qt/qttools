@@ -995,16 +995,6 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     CXType funcType = clang_getCursorType(cursor);
     fn->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
     fn->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
-    if (kind == CXCursor_Constructor
-        // a constructor template is classified as CXCursor_FunctionTemplate
-        || (kind == CXCursor_FunctionTemplate && fn->name() == parent_->name()))
-        fn->setMetaness(FunctionNode::Ctor);
-    else if (kind == CXCursor_Destructor)
-        fn->setMetaness(FunctionNode::Dtor);
-    else
-        fn->setReturnType(adjustTypeName(
-                fromCXString(clang_getTypeSpelling(clang_getResultType(funcType)))));
-
     fn->setStatic(clang_CXXMethod_isStatic(cursor));
     fn->setConst(clang_CXXMethod_isConst(cursor));
     fn->setVirtualness(!clang_CXXMethod_isVirtual(cursor)
@@ -1029,6 +1019,18 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
     else function_declaration = static_cast<const clang::FunctionDecl*>(declaration);
 
     assert(function_declaration);
+
+    if (kind == CXCursor_Constructor
+        // a constructor template is classified as CXCursor_FunctionTemplate
+        || (kind == CXCursor_FunctionTemplate && fn->name() == parent_->name()))
+        fn->setMetaness(FunctionNode::Ctor);
+    else if (kind == CXCursor_Destructor)
+        fn->setMetaness(FunctionNode::Dtor);
+    else
+        fn->setReturnType(QString::fromStdString(get_fully_qualified_type_name(
+            function_declaration->getReturnType(),
+            function_declaration->getASTContext()
+        )));
 
     const clang::CXXConstructorDecl* constructor_declaration = llvm::dyn_cast<const clang::CXXConstructorDecl>(function_declaration);
 
