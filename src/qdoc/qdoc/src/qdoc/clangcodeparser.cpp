@@ -447,13 +447,6 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
                 QString recordedType = parameters.at(i).type();
                 QString typeSpelling = args.at(i);
 
-                auto p = parent;
-                while (p && recordedType != typeSpelling) {
-                    QString parentScope = p->name() + QLatin1String("::");
-                    recordedType.remove(parentScope);
-                    typeSpelling.remove(parentScope);
-                    p = p->parent();
-                }
                 different = recordedType != typeSpelling;
 
                 // Retry with a canonical type spelling
