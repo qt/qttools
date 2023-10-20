@@ -142,7 +142,7 @@ private slots:
     void slotSubWindowActivated(QMdiSubWindow*);
 
 private:
-    ToolBarManager *m_toolBarManager;
+    ToolBarManager *m_toolBarManager = nullptr;
 };
 
 QT_END_NAMESPACE

@@ -22,7 +22,6 @@ using namespace Qt::StringLiterals;
 QDesignerServer::QDesignerServer(QObject *parent)
     : QObject(parent)
 {
-    m_socket = nullptr;
     m_server = new QTcpServer(this);
     if (m_server->listen(QHostAddress::LocalHost, 0)) {
         connect(m_server, &QTcpServer::newConnection,

@@ -50,8 +50,8 @@ private:
     QPointer<QDesignerFormWindowInterface> m_editor;
     QPointer<QDesignerWorkbench> m_workbench;
     QAction *m_action;
-    bool m_initialized;
-    bool m_windowTitleInitialized;
+    bool m_initialized = false;
+    bool m_windowTitleInitialized = false;
 };
 
 QT_END_NAMESPACE

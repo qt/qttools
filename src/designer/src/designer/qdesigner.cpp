@@ -50,10 +50,7 @@ static void designerMessageHandler(QtMsgType type, const QMessageLogContext &con
 }
 
 QDesigner::QDesigner(int &argc, char **argv)
-    : QApplication(argc, argv),
-      m_server(nullptr),
-      m_client(nullptr),
-      m_workbench(0), m_suppressNewFormShow(false)
+    : QApplication(argc, argv)
 {
     setOrganizationName(u"QtProject"_s);
     QGuiApplication::setApplicationDisplayName(QLatin1StringView(designerDisplayName));
