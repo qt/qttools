@@ -303,7 +303,7 @@ void MainWindow::save()
             quint32 originalOffset = qFromBigEndian(offsetTable->offset);
             quint32 length = qFromBigEndian(offsetTable->length);
             offsetLengthPairs.append(qMakePair(originalOffset, length));
-            if (offsetTable->tag == qToBigEndian(MAKE_TAG('h', 'e', 'a', 'd')))
+            if (offsetTable->tag == qFromBigEndian(QFont::Tag("head").value()))
                 headOffset = currentOffset;
 
             TableRecord newTableRecord;
@@ -333,7 +333,7 @@ void MainWindow::save()
             TableRecord qtdfRecord;
             qtdfRecord.offset = qToBigEndian(currentOffset);
             qtdfRecord.length = qToBigEndian(qtdf.size());
-            qtdfRecord.tag = qToBigEndian(MAKE_TAG('q', 't', 'd', 'f'));
+            qtdfRecord.tag = qFromBigEndian(QFont::Tag("qtdf").value());
             quint32 checkSum = 0;
             const quint32 *start = reinterpret_cast<const quint32 *>(qtdf.constData());
             const quint32 *end = reinterpret_cast<const quint32 *>(qtdf.constData() + qtdf.size());
