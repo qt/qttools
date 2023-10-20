@@ -227,7 +227,7 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
     previousMessageHandler = qInstallMessageHandler(designerMessageHandler); // Warn when loading faulty forms
     Q_ASSERT(previousMessageHandler);
 
-    m_suppressNewFormShow = m_workbench->readInBackup();
+    bool suppressNewFormShow = m_workbench->readInBackup();
 
     for (auto fileName : std::as_const(options.files)) {
         // Ensure absolute paths for recent file list to be unique
@@ -237,13 +237,13 @@ QDesigner::ParseArgumentsResult QDesigner::parseCommandLineArguments()
         m_workbench->readInForm(fileName);
     }
 
-    if ( m_workbench->formWindowCount())
-        m_suppressNewFormShow = true;
+    if (m_workbench->formWindowCount() > 0)
+        suppressNewFormShow = true;
 
     // Show up error box with parent now if something went wrong
     if (m_initializationErrors.isEmpty()) {
-        if (!m_suppressNewFormShow && QDesignerSettings(m_workbench->core()).showNewFormOnStartup())
-            QTimer::singleShot(100, this, &QDesigner::callCreateForm); // won't show anything if suppressed
+        if (!suppressNewFormShow)
+            m_workbench->showNewForm();
     } else {
         showErrorMessageBox(m_initializationErrors);
         m_initializationErrors.clear();
@@ -256,10 +256,7 @@ bool QDesigner::event(QEvent *ev)
     bool eaten;
     switch (ev->type()) {
     case QEvent::FileOpen:
-        // Set it true first since, if it's a Qt 3 form, the messagebox from convert will fire the timer.
-        m_suppressNewFormShow = true;
-        if (!m_workbench->readInForm(static_cast<QFileOpenEvent *>(ev)->file()))
-            m_suppressNewFormShow = false;
+        m_workbench->readInForm(static_cast<QFileOpenEvent *>(ev)->file());
         eaten = true;
         break;
     case QEvent::Close: {
@@ -289,12 +286,6 @@ void QDesigner::setMainWindow(MainWindowBase *tw)
 MainWindowBase *QDesigner::mainWindow() const
 {
     return m_mainWindow;
-}
-
-void QDesigner::callCreateForm()
-{
-    if (!m_suppressNewFormShow)
-        m_workbench->actionManager()->createForm();
 }
 
 QT_END_NAMESPACE
