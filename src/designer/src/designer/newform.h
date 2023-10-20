@@ -58,7 +58,7 @@ private:
     QCheckBox *m_chkShowOnStartup;
     QPushButton *m_createButton;
     QPushButton *m_recentButton;
-    QDialogButtonBox *m_buttonBox;
+    QDialogButtonBox *m_buttonBox = nullptr;
 };
 
 QT_END_NAMESPACE

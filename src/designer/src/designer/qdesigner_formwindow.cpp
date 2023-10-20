@@ -34,9 +34,7 @@ QDesignerFormWindow::QDesignerFormWindow(QDesignerFormWindowInterface *editor, Q
     : QWidget(parent, flags),
       m_editor(editor),
       m_workbench(workbench),
-      m_action(new QAction(this)),
-      m_initialized(false),
-      m_windowTitleInitialized(false)
+      m_action(new QAction(this))
 {
     Q_ASSERT(workbench);
 

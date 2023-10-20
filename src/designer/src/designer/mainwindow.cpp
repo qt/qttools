@@ -274,8 +274,7 @@ bool ToolBarManager::restoreState(const QByteArray &state, int version)
 
 DockedMainWindow::DockedMainWindow(QDesignerWorkbench *wb,
                                    QMenu *toolBarMenu,
-                                   const QList<QDesignerToolWindow *> &toolWindows) :
-    m_toolBarManager(nullptr)
+                                   const QList<QDesignerToolWindow *> &toolWindows)
 {
     setObjectName(u"MDIWindow"_s);
     setWindowTitle(mainWindowTitle());

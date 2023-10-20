@@ -56,15 +56,15 @@ private slots:
 private:
     void showErrorMessageBox(const QString &);
 
-    QDesignerServer *m_server;
-    QDesignerClient *m_client;
-    QDesignerWorkbench *m_workbench;
+    QDesignerServer *m_server = nullptr;
+    QDesignerClient *m_client = nullptr;
+    QDesignerWorkbench *m_workbench = nullptr;
     QPointer<MainWindowBase> m_mainWindow;
     QPointer<QErrorMessage> m_errorMessageDialog;
 
     QString m_initializationErrors;
     QString m_lastErrorMessage;
-    bool m_suppressNewFormShow;
+    bool m_suppressNewFormShow = false;
 };
 
 QT_END_NAMESPACE

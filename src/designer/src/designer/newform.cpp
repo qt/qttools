@@ -40,8 +40,7 @@ NewForm::NewForm(QDesignerWorkbench *workbench, QWidget *parentWidget, const QSt
       m_workbench(workbench),
       m_chkShowOnStartup(new QCheckBox(tr("Show this Dialog on Startup"))),
       m_createButton(new QPushButton(QApplication::translate("NewForm", "C&reate", nullptr))),
-      m_recentButton(new QPushButton(QApplication::translate("NewForm", "Recent", nullptr))),
-      m_buttonBox(nullptr)
+      m_recentButton(new QPushButton(QApplication::translate("NewForm", "Recent", nullptr)))
 {
     setWindowTitle(tr("New Form"));
     QDesignerSettings settings(m_workbench->core());

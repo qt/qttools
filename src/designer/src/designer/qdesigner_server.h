@@ -29,7 +29,7 @@ private slots:
 
 private:
     QTcpServer *m_server;
-    QTcpSocket *m_socket;
+    QTcpSocket *m_socket = nullptr;
 };
 
 class QDesignerClient: public QObject
