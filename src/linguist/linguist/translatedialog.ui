@@ -4,7 +4,7 @@
 * SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 </comment>
  <class>TranslateDialog</class>
- <widget class="QDialog" name="translateDialog">
+ <widget class="QDialog" name="TranslateDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -206,7 +206,7 @@
   <connection>
    <sender>cancel</sender>
    <signal>clicked()</signal>
-   <receiver>translateDialog</receiver>
+   <receiver>TranslateDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

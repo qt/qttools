@@ -4,7 +4,7 @@
 * SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 </comment>
  <class>Statistics</class>
- <widget class="QDialog" name="linguist_stats">
+ <widget class="QDialog" name="Statistics">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -327,7 +327,7 @@
   <connection>
    <sender>closeBtn</sender>
    <signal>clicked()</signal>
-   <receiver>linguist_stats</receiver>
+   <receiver>Statistics</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
