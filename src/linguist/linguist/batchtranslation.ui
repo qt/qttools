@@ -4,7 +4,7 @@
 * SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 </comment>
  <class>BatchTranslationDialog</class>
- <widget class="QDialog" name="batchTranslationDialog">
+ <widget class="QDialog" name="BatchTranslationDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -206,7 +206,7 @@
   <connection>
    <sender>cancelButton</sender>
    <signal>clicked()</signal>
-   <receiver>batchTranslationDialog</receiver>
+   <receiver>BatchTranslationDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
