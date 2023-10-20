@@ -77,6 +77,9 @@ public:
     void updateBackup(QDesignerFormWindowInterface* fwi);
     void applyUiSettings();
 
+    bool suppressNewFormShow() const { return m_suppressNewFormShow; }
+    void setSuppressNewFormShow(bool v) { m_suppressNewFormShow = v; }
+
 signals:
     void modeChanged(UIMode mode);
     void initialized();
@@ -86,6 +89,7 @@ public slots:
     void removeFormWindow(QDesignerFormWindow *formWindow);
     void bringAllToFront();
     void toggleFormMinimizationState();
+    void showNewForm();
 
 private slots:
     void switchToNeutralMode();
@@ -167,6 +171,7 @@ private:
     enum State { StateInitializing, StateUp, StateClosing };
     State m_state = StateInitializing;
     bool m_uiSettingsChanged = false; // UI mode changed in preference dialog, trigger delayed slot.
+    bool m_suppressNewFormShow = false;
 };
 
 QT_END_NAMESPACE

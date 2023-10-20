@@ -599,11 +599,15 @@ void QDesignerWorkbench::removeFormWindow(QDesignerFormWindow *formWindow)
     if (m_formWindows.isEmpty()) {
         m_actionManager->setWindowListSeparatorVisible(false);
         // Show up new form dialog unless closing
-        if (loadOk && m_state == StateUp
-            && QDesignerSettings(m_core).showNewFormOnStartup()) {
-            QTimer::singleShot(200, m_actionManager, &QDesignerActions::createForm);
-        }
+        if (loadOk && m_state == StateUp)
+            showNewForm();
     }
+}
+
+void QDesignerWorkbench::showNewForm()
+{
+    if (!m_suppressNewFormShow && QDesignerSettings(m_core).showNewFormOnStartup())
+        QTimer::singleShot(100, m_actionManager, &QDesignerActions::createForm);
 }
 
 void QDesignerWorkbench::initializeCorePlugins()

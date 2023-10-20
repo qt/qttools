@@ -50,9 +50,6 @@ signals:
 public slots:
     void showErrorMessage(const QString &message);
 
-private slots:
-    void callCreateForm();
-
 private:
     void showErrorMessageBox(const QString &);
 
@@ -64,7 +61,6 @@ private:
 
     QString m_initializationErrors;
     QString m_lastErrorMessage;
-    bool m_suppressNewFormShow = false;
 };
 
 QT_END_NAMESPACE
