@@ -90,7 +90,7 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
             // ### special-casing for Line (QFrame) -- fix for 4.2. Jambi hack for enumerations
             if (!qstrcmp(meta->className(), "QFrame")
                 && (pname == QByteArray("orientation"))) {
-                return QVariant(enumValue == QFormBuilderStrings::instance().horizontalPostFix ? QFrame::HLine : QFrame::VLine);
+                return QVariant(enumValue == "Horizontal"_L1 ? QFrame::HLine : QFrame::VLine);
             }
             uiLibWarning(QCoreApplication::translate("QFormBuilder", "The enumeration-type property %1 could not be read.").arg(p->attributeName()));
             return QVariant();
@@ -128,7 +128,7 @@ QVariant domPropertyToVariant(const DomProperty *p)
     // requires non-const virtual nameToIcon, etc.
     switch(p->kind()) {
     case DomProperty::Bool:
-        return QVariant(p->elementBool() == QFormBuilderStrings::instance().trueValue);
+        return QVariant(p->elementBool() == "true"_L1);
 
     case DomProperty::Cstring:
         return QVariant(p->elementCstring().toUtf8());
@@ -348,7 +348,7 @@ static bool applySimpleProperty(const QVariant &v, bool translateString, DomProp
         return true;
 
     case QMetaType::Bool:
-        dom_prop->setElementBool(v.toBool() ? QFormBuilderStrings::instance().trueValue : QFormBuilderStrings::instance().falseValue);
+        dom_prop->setElementBool(v.toBool() ? "true"_L1 : "false"_L1);
         return true;
 
     case QMetaType::QChar: {
@@ -602,10 +602,9 @@ static bool isOfType(const QMetaObject *what, const QMetaObject *type)
 
 static bool isTranslatable(const QString &pname, const QVariant &v, const QMetaObject *meta)
 {
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-    if (pname == strings.objectNameProperty)
+    if (pname == "objectName"_L1)
         return false;
-    if (pname == strings.styleSheetProperty && v.metaType().id() == QMetaType::QString
+    if (pname == "styleSheet"_L1 && v.metaType().id() == QMetaType::QString
         && isOfType(meta, &QWidget::staticMetaObject)) {
         return false;
     }
@@ -617,8 +616,6 @@ static bool isTranslatable(const QString &pname, const QVariant &v, const QMetaO
 DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *meta,
                                   const QString &pname, const QVariant &v)
 {
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-
     DomProperty *dom_prop = new DomProperty();
     dom_prop->setAttributeName(pname);
 
@@ -633,8 +630,11 @@ DomProperty *variantToDomProperty(QAbstractFormBuilder *afb, const QMetaObject *
                 dom_prop->setElementEnum(QString::fromLatin1(e.valueToKey(v.toInt())));
             return dom_prop;
         }
-        if (!meta_property.hasStdCppSet() || (isOfType(meta, &QAbstractScrollArea::staticMetaObject) && pname == strings.cursorProperty))
+        if (!meta_property.hasStdCppSet()
+            || (isOfType(meta, &QAbstractScrollArea::staticMetaObject)
+                && pname == "cursor"_L1)) {
             dom_prop->setAttributeStdset(0);
+        }
     }
 
     // Try simple properties

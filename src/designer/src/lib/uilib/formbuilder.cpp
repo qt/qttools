@@ -88,7 +88,7 @@ QWidget *QFormBuilder::create(DomWidget *ui_widget, QWidget *parentWidget)
     // Is this a QLayoutWidget with a margin of 0: Not a known page-based
     // container and no method for adding pages registered.
     d->setProcessingLayoutWidget(false);
-    if (ui_widget->attributeClass() == QFormBuilderStrings::instance().qWidgetClass && !ui_widget->hasAttributeNative()
+    if (ui_widget->attributeClass() == "QWidget"_L1 && !ui_widget->hasAttributeNative()
             && parentWidget
 #if QT_CONFIG(mainwindow)
             && !qobject_cast<QMainWindow *>(parentWidget)
@@ -148,7 +148,7 @@ QWidget *QFormBuilder::createWidget(const QString &widgetName, QWidget *parentWi
 
     // ### special-casing for Line (QFrame) -- fix for 4.2
     do {
-        if (widgetName == QFormBuilderStrings::instance().lineClass) {
+        if (widgetName == "Line"_L1) {
             w = new QFrame(parentWidget);
             static_cast<QFrame*>(w)->setFrameStyle(QFrame::HLine | QFrame::Sunken);
             break;
@@ -461,8 +461,6 @@ void QFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &proper
     if (properties.isEmpty())
         return;
 
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-
     for (DomProperty *p : properties) {
         const QVariant v = toVariant(o->metaObject(), p);
         if (!v.isValid()) // QTBUG-33130, do not fall for QVariant(QString()).isNull() == true.
@@ -470,11 +468,12 @@ void QFormBuilder::applyProperties(QObject *o, const QList<DomProperty*> &proper
 
         const QString attributeName = p->attributeName();
         const bool isWidget = o->isWidgetType();
-        if (isWidget && o->parent() == d->parentWidget() && attributeName == strings.geometryProperty) {
+        if (isWidget && o->parent() == d->parentWidget() && attributeName == "geometry"_L1) {
             // apply only the size part of a geometry for the root widget
             static_cast<QWidget*>(o)->resize(qvariant_cast<QRect>(v).size());
         } else if (d->applyPropertyInternally(o, attributeName, v)) {
-        } else if (isWidget && !qstrcmp("QFrame", o->metaObject()->className ()) && attributeName == strings.orientationProperty) {
+        } else if (isWidget && qstrcmp("QFrame", o->metaObject()->className()) == 0
+                   && attributeName == "orientation"_L1) {
             // ### special-casing for Line (QFrame) -- try to fix me
             o->setProperty("frameShape", v); // v is of QFrame::Shape enum
         } else {
