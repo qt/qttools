@@ -712,25 +712,23 @@ DomProperty *QFormBuilderExtra::propertyByName(const QList<DomProperty*> &proper
 
 // ------------ QFormBuilderStrings
 
-QFormBuilderStrings::QFormBuilderStrings()
+QFormBuilderStrings::QFormBuilderStrings() :
+    itemRoles {
+        {Qt::FontRole, "font"_L1},
+        {Qt::TextAlignmentRole, "textAlignment"_L1},
+        {Qt::BackgroundRole, "background"_L1},
+        {Qt::ForegroundRole, "foreground"_L1},
+        {Qt::CheckStateRole, "checkState"_L1}
+    },
+    itemTextRoles { // This must be first for the loop below
+        { {Qt::EditRole, Qt::DisplayPropertyRole}, textAttribute},
+        { {Qt::ToolTipRole, Qt::ToolTipPropertyRole}, toolTipAttribute},
+        { {Qt::StatusTipRole, Qt::StatusTipPropertyRole}, "statusTip"_L1},
+        { {Qt::WhatsThisRole, Qt::WhatsThisPropertyRole}, whatsThisAttribute}
+    }
 {
-    itemRoles.append(qMakePair(Qt::FontRole, QString::fromLatin1("font")));
-    itemRoles.append(qMakePair(Qt::TextAlignmentRole, QString::fromLatin1("textAlignment")));
-    itemRoles.append(qMakePair(Qt::BackgroundRole, QString::fromLatin1("background")));
-    itemRoles.append(qMakePair(Qt::ForegroundRole, QString::fromLatin1("foreground")));
-    itemRoles.append(qMakePair(Qt::CheckStateRole, QString::fromLatin1("checkState")));
-
     for (const RoleNName &it : std::as_const(itemRoles))
         treeItemRoleHash.insert(it.second, it.first);
-
-    itemTextRoles.append(qMakePair(qMakePair(Qt::EditRole, Qt::DisplayPropertyRole),
-                                   textAttribute)); // This must be first for the loop below
-    itemTextRoles.append(qMakePair(qMakePair(Qt::ToolTipRole, Qt::ToolTipPropertyRole),
-                                   toolTipAttribute));
-    itemTextRoles.append(qMakePair(qMakePair(Qt::StatusTipRole, Qt::StatusTipPropertyRole),
-                                   QString::fromLatin1("statusTip")));
-    itemTextRoles.append(qMakePair(qMakePair(Qt::WhatsThisRole, Qt::WhatsThisPropertyRole),
-                                   whatsThisAttribute));
 
     // Note: this skips the first item!
     auto it = itemTextRoles.constBegin();
