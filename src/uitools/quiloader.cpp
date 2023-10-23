@@ -467,9 +467,9 @@ QWidget *FormBuilderPrivate::create(DomWidget *ui_widget, QWidget *parentWidget)
 
 #define TRANSLATE_SUBWIDGET_PROP(mainWidget, attribute, setter, propName) \
     do { \
-        if (const DomProperty *p##attribute = attributes.value(strings.attribute)) { \
+        if (const auto *p = attributes.value(attribute)) { \
             QUiTranslatableStringValue strVal; \
-            const QString text = convertTranslatable(p##attribute, m_class, m_idBased, &strVal); \
+            const QString text = convertTranslatable(p, m_class, m_idBased, &strVal); \
             if (!text.isEmpty()) { \
                 if (dynamicTr) \
                     mainWidget->widget(i)->setProperty(propName, QVariant::fromValue(strVal)); \
@@ -491,28 +491,31 @@ bool FormBuilderPrivate::addItem(DomWidget *ui_widget, QWidget *widget, QWidget 
     if (!d->customWidgetAddPageMethod(className).isEmpty())
         return true;
 
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-
     if (0) {
 #if QT_CONFIG(tabwidget)
     } else if (QTabWidget *tabWidget = qobject_cast<QTabWidget*>(parentWidget)) {
         const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = tabWidget->count() - 1;
-        TRANSLATE_SUBWIDGET_PROP(tabWidget, titleAttribute, setTabText, PROP_TABPAGETEXT);
+        TRANSLATE_SUBWIDGET_PROP(tabWidget, QFormBuilderStrings::titleAttribute,
+                                 setTabText, PROP_TABPAGETEXT);
 #if QT_CONFIG(tooltip)
-        TRANSLATE_SUBWIDGET_PROP(tabWidget, toolTipAttribute, setTabToolTip, PROP_TABPAGETOOLTIP);
+        TRANSLATE_SUBWIDGET_PROP(tabWidget, QFormBuilderStrings::toolTipAttribute,
+                                 setTabToolTip, PROP_TABPAGETOOLTIP);
 # endif
 #if QT_CONFIG(whatsthis)
-        TRANSLATE_SUBWIDGET_PROP(tabWidget, whatsThisAttribute, setTabWhatsThis, PROP_TABPAGEWHATSTHIS);
+        TRANSLATE_SUBWIDGET_PROP(tabWidget, QFormBuilderStrings::whatsThisAttribute,
+                                 setTabWhatsThis, PROP_TABPAGEWHATSTHIS);
 # endif
 #endif
 #if QT_CONFIG(toolbox)
     } else if (QToolBox *toolBox = qobject_cast<QToolBox*>(parentWidget)) {
         const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
         const int i = toolBox->count() - 1;
-        TRANSLATE_SUBWIDGET_PROP(toolBox, labelAttribute, setItemText, PROP_TOOLITEMTEXT);
+        TRANSLATE_SUBWIDGET_PROP(toolBox, QFormBuilderStrings::labelAttribute,
+                                 setItemText, PROP_TOOLITEMTEXT);
 #if QT_CONFIG(tooltip)
-        TRANSLATE_SUBWIDGET_PROP(toolBox, toolTipAttribute, setItemToolTip, PROP_TOOLITEMTOOLTIP);
+        TRANSLATE_SUBWIDGET_PROP(toolBox, QFormBuilderStrings::toolTipAttribute,
+                                 setItemToolTip, PROP_TOOLITEMTOOLTIP);
 # endif
 #endif
     }
