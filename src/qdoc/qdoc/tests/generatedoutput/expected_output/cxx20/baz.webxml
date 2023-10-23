@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Baz" href="baz.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc">
+            <description/>
+        </class>
+    </document>
+</WebXML>

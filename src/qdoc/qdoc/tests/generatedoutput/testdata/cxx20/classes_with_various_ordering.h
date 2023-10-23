@@ -16,5 +16,26 @@ class WeaklyOrderedClass
 class EqualityComparableClass
 {
 };
+class ComparesStronglyWithTwoClasses
+{
+};
+class ComparesStronglyWithThreeClasses
+{
+};
+class ComparesStronglyWithThreeClassesAcrossMultipleLines
+{
+};
+class ComparesStronglyWithOneClassAndPartiallyWithAnother
+{
+};
+class Foo
+{
+};
+class Bar
+{
+};
+class Baz
+{
+};
 
 #endif // CLASSES_WITH_VARIOUS_ORDERING_H

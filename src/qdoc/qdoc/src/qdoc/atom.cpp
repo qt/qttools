@@ -132,6 +132,8 @@ static const struct
              { "CodeBad", Atom::CodeBad },
              { "CodeQuoteArgument", Atom::CodeQuoteArgument },
              { "CodeQuoteCommand", Atom::CodeQuoteCommand },
+             { "ComparesLeft", Atom::ComparesLeft },
+             { "ComparesRight", Atom::ComparesRight },
              { "DetailsLeft", Atom::DetailsLeft },
              { "DetailsRight", Atom::DetailsRight },
              { "DivLeft", Atom::DivLeft },

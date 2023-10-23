@@ -165,6 +165,7 @@ private:
     // semantic depending on the required data-flow.
     static FileResolver* file_resolver;
 };
+
 QT_END_NAMESPACE
 
 #endif // DOCPARSER_H

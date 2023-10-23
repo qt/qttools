@@ -37,6 +37,7 @@ struct DocPrivateExtra
     QList<Atom *> m_keywords {};
     QList<Atom *> m_targets {};
     QStringMultiMap m_metaMap {};
+    QMultiMap<ComparisonCategory, Text> m_comparesWithMap {};
 };
 
 class DocPrivate

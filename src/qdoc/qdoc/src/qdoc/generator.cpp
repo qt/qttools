@@ -1510,6 +1510,42 @@ bool Generator::generateComparisonCategory(const Node *node, CodeMarker *marker)
 }
 
 /*!
+    Generates a list of types that compare to \a node with the comparison
+    category that applies for the relationship, followed by (an optional)
+    descriptive text.
+
+    Returns \c true if text was generated, \c false otherwise.
+ */
+bool Generator::generateComparisonList(const Node *node)
+{
+    Q_ASSERT(node);
+    if (!node->doc().comparesWithMap())
+        return false;
+
+    Text relationshipText;
+    for (auto [key, description] : node->doc().comparesWithMap()->asKeyValueRange()) {
+        const QString &category = QString::fromStdString(comparisonCategoryAsString(key));
+
+        relationshipText << Atom::ParaLeft << "This %1 is "_L1.arg(typeString(node))
+                         << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD) << category
+                         << ((key == ComparisonCategory::Equality) ? "-"_L1 : "ly "_L1)
+                         << "comparable"_L1
+                         << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
+                         << " with "_L1;
+
+        const QStringList types{description.firstAtom()->string().split(' '_L1)};
+        for (const auto &name : types)
+            relationshipText << Atom(Atom::AutoLink, name)
+                             << Utilities::separator(types.indexOf(name), types.size());
+
+        relationshipText << Atom(Atom::ParaRight) << description;
+    }
+
+    generateText(relationshipText, node, nullptr);
+    return !relationshipText.isEmpty();
+}
+
+/*!
   Returns the string containing an example code of the input node,
   if it is an overloaded signal. Otherwise, returns an empty string.
  */

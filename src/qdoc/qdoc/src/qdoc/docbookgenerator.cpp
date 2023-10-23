@@ -1175,6 +1175,8 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
         break;
     case Atom::CodeQuoteArgument:
     case Atom::CodeQuoteCommand:
+    case Atom::ComparesLeft:
+    case Atom::ComparesRight:
     case Atom::SnippetCommand:
     case Atom::SnippetIdentifier:
     case Atom::SnippetLocation:
@@ -1896,6 +1898,7 @@ void DocBookGenerator::generateHeader(const QString &title, const QString &subTi
         generatedSomething |= generateSince(node);
         generatedSomething |= generateThreadSafeness(node);
         generatedSomething |= generateComparisonCategory(node);
+        generatedSomething |= generateComparisonList(node);
 
         // An abstract cannot be empty, hence use the project description.
         if (!generatedSomething)

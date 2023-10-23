@@ -5,6 +5,8 @@ headerdirs  = .
 sourcedirs  = .
 exampledirs = .
 
+macro.equalitycomparesto  = "\\compareswith equality \1\n\\endcompareswith"
+
 outputformats             = WebXML HTML DocBook
 WebXML.quotinginformation = true
 WebXML.nosubdirs          = true

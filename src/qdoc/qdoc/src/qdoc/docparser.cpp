@@ -36,12 +36,14 @@ enum {
     CMD_CAPTION,
     CMD_CODE,
     CMD_CODELINE,
+    CMD_COMPARESWITH,
     CMD_DETAILS,
     CMD_DIV,
     CMD_DOTS,
     CMD_E,
     CMD_ELSE,
     CMD_ENDCODE,
+    CMD_ENDCOMPARESWITH,
     CMD_ENDDETAILS,
     CMD_ENDDIV,
     CMD_ENDFOOTNOTE,
@@ -138,12 +140,14 @@ static struct
              { "caption", CMD_CAPTION },
              { "code", CMD_CODE },
              { "codeline", CMD_CODELINE },
+             { "compareswith", CMD_COMPARESWITH },
              { "details", CMD_DETAILS },
              { "div", CMD_DIV },
              { "dots", CMD_DOTS },
              { "e", CMD_E },
              { "else", CMD_ELSE },
              { "endcode", CMD_ENDCODE },
+             { "endcompareswith", CMD_ENDCOMPARESWITH },
              { "enddetails", CMD_ENDDETAILS },
              { "enddiv", CMD_ENDDIV },
              { "endfootnote", CMD_ENDFOOTNOTE },
@@ -228,6 +232,7 @@ int DocParser::s_tabSize;
 QStringList DocParser::s_ignoreWords;
 bool DocParser::s_quoting = false;
 FileResolver *DocParser::file_resolver{ nullptr };
+static void processComparesWithCommand(DocPrivate *priv, const Location &location);
 
 static QString cleanLink(const QString &link)
 {
@@ -774,6 +779,19 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     }
                     break;
                 }
+                case CMD_COMPARESWITH:
+                    leavePara();
+                    p1 = getRestOfLine();
+                    if (openCommand(cmd))
+                        append(Atom::ComparesLeft, p1);
+                    break;
+                case CMD_ENDCOMPARESWITH:
+                    if (closeCommand(cmd)) {
+                        leavePara();
+                        append(Atom::ComparesRight);
+                        processComparesWithCommand(m_private, location());
+                    }
+                    break;
                 case CMD_PRINTLINE: {
                     leavePara();
                     QString rest = getRestOfLine();
@@ -1467,7 +1485,10 @@ bool DocParser::openCommand(int cmd)
     int outer = m_openedCommands.top();
     bool ok = true;
 
-    if (cmd != CMD_LINK) {
+    if (cmd == CMD_COMPARESWITH && m_openedCommands.contains(cmd)) {
+        location().warning(u"Cannot nest '\\%1' commands"_s.arg(cmdName(cmd)));
+        return false;
+    } else if (cmd != CMD_LINK) {
         if (outer == CMD_LIST) {
             ok = (cmd == CMD_FOOTNOTE || cmd == CMD_LIST);
         } else if (outer == CMD_SIDEBAR) {
@@ -2353,7 +2374,7 @@ QString DocParser::getRestOfLine()
         rest_of_line += m_input.sliced(start_position, m_position - start_position);
 
         if (trailing_backslash) {
-            rest_of_line.chop(1);
+            rest_of_line.truncate(rest_of_line.lastIndexOf('\\'));
             return_simplified_string = true;
         }
 
@@ -2560,6 +2581,8 @@ int DocParser::endCmdFor(int cmd)
         return CMD_ENDCODE;
     case CMD_CODE:
         return CMD_ENDCODE;
+    case CMD_COMPARESWITH:
+        return CMD_ENDCOMPARESWITH;
     case CMD_DETAILS:
         return CMD_ENDDETAILS;
     case CMD_DIV:
@@ -2696,6 +2719,51 @@ bool DocParser::isQuote(const Atom *atom)
     return (type == Atom::CodeQuoteArgument || type == Atom::CodeQuoteCommand
             || type == Atom::SnippetCommand || type == Atom::SnippetIdentifier
             || type == Atom::SnippetLocation);
+}
+
+/*!
+    \internal
+    Processes the arguments passed to the \\compareswith block command.
+    The arguments are stored as text within the first atom of the block
+    (Atom::ComparesLeft).
+
+    Extracts the comparison category and the list of types, and stores
+    the information into a map accessed via \a priv.
+*/
+static void processComparesWithCommand(DocPrivate *priv, const Location &location)
+{
+    const QString cmd{DocParser::cmdName(CMD_COMPARESWITH)};
+    Text text = priv->m_text.splitAtFirst(Atom::ComparesLeft);
+    auto *atom = text.firstAtom();
+    QStringList segments{atom->string().split(QLatin1Char(' '), Qt::SkipEmptyParts)};
+    QString categoryString;
+    if (!segments.isEmpty())
+        categoryString = segments.takeFirst();
+    auto category = comparisonCategoryFromString(categoryString.toStdString());
+
+    if (category == ComparisonCategory::None) {
+        location.warning(u"Invalid argument to \\%1 command: `%2`"_s.arg(cmd, categoryString),
+                         u"Valid arguments are `strong`, `weak`, `partial`, or `equality`."_s);
+        return;
+    }
+
+    if (segments.isEmpty()) {
+        location.warning(u"Missing argument to \\%1 command."_s.arg(cmd),
+                         u"Provide at least one type name, or a list of types separated by spaces."_s);
+        return;
+    }
+
+    // Store cleaned-up type names back into the atom
+    segments.removeDuplicates();
+    atom->setString(segments.join(QLatin1Char(' ')));
+
+    // Add an entry to meta-command map for error handling in CppCodeParser
+    priv->m_metaCommandMap[cmd].append(ArgPair(categoryString, atom->string()));
+    priv->m_metacommandsUsed.insert(cmd);
+
+    priv->constructExtra();
+    const auto end{priv->extra->m_comparesWithMap.cend()};
+    priv->extra->m_comparesWithMap.insert(end, category, text);
 }
 
 QT_END_NAMESPACE

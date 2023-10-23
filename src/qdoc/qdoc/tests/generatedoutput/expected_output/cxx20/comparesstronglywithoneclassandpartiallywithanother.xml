@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>ComparesStronglyWithOneClassAndPartiallyWithAnother Class</db:title>
+<db:productname>cxx20</db:productname>
+<db:titleabbrev>cxx20 Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>Class with various comparison relationships.</db:para>
+<db:para>This class is <db:emphasis role="bold">strongly comparable</db:emphasis> with <db:link xlink:href="foo.xml">Foo</db:link>.</db:para>
+<db:para>This class is <db:emphasis role="bold">partially comparable</db:emphasis> with <db:link xlink:href="bar.xml">Bar</db:link>.</db:para>
+<db:para>Here we describe partial comparison with Bar.</db:para>
+<db:para>This class is <db:emphasis role="bold">equality-comparable</db:emphasis> with <db:link xlink:href="foo.xml">Foo</db:link>.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>ComparesStronglyWithOneClassAndPartiallyWithAnother</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>This class compares strongly with one type, and partially with another.</db:para>
+</db:section>
+</db:article>

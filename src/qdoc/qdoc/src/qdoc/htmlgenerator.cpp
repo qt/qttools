@@ -980,6 +980,8 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         break;
     case Atom::CodeQuoteArgument:
     case Atom::CodeQuoteCommand:
+    case Atom::ComparesLeft:
+    case Atom::ComparesRight:
     case Atom::SnippetCommand:
     case Atom::SnippetIdentifier:
     case Atom::SnippetLocation:
@@ -1155,6 +1157,8 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
     closeUnorderedList();
     generateComparisonCategory(aggregate, marker);
+    generateComparisonList(aggregate);
+
     generateThreadSafeness(aggregate, marker);
 
     bool needOtherSection = false;

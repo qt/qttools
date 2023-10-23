@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="ComparesStronglyWithOneClassAndPartiallyWithAnother" href="comparesstronglywithoneclassandpartiallywithanother.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" brief="Class with various comparison relationships">
+            <description>
+                <brief>Class with various comparison relationships.</brief>
+                <para>This class compares strongly with one type, and partially with another.</para>
+            </description>
+        </class>
+    </document>
+</WebXML>

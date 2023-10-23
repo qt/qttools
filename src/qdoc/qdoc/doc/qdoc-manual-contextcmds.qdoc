@@ -24,6 +24,7 @@
     \list
       \li \l {abstract-command} {\\abstract}
       \li \l {compares-command}{\\compares} (Since QDoc 6.7)
+      \li \l {compareswith-command}{\\compareswith} (Since QDoc 6.7)
       \li \l {default-command} {\\default}
       \li \l {deprecated-command}{\\deprecated}
       \li \l {ingroup-command}{\\ingroup}
@@ -199,6 +200,27 @@
     //! [comparison-categories]
 
     This command was introduced to QDoc with Qt 6.7.
+
+    See also \l {compareswith-command}{\\compareswith}.
+
+    \target compareswith-command
+    \section1 \\compareswith
+
+    Use the \c {\compareswith .. \endcompareswith} pair of commands to
+    describe the comparison results for the documented C++ type when
+    compared to other types. \c {\compareswith} takes two or more
+    arguments: a comparison category, followed by a type name, or a
+    space-separated list of type names. Any text lines between
+    \c {\compareswith} and \c {\endcompareswith} commands are
+    considered further details that apply to all types subject
+    to the comparison category argument.
+
+    The comparison category argument must be one of the following:
+    \include qdoc-manual-contextcmds.qdoc comparison-categories
+
+    This command was introduced to QDoc with Qt 6.7.
+
+    See also \l {compares-command}{\\compares}.
 
     \target qmldefault-command
     \section1 \\qmldefault

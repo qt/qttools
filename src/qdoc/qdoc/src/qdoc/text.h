@@ -42,7 +42,17 @@ public:
     static Text sectionHeading(const Atom *sectionBegin);
     static int compare(const Text &text1, const Text &text2);
 
+    [[nodiscard]] Text splitAtFirst(Atom::AtomType start);
+
 private:
+    Text(Atom *start, Atom *end) : m_first(start), m_last(end)
+    {
+        Q_ASSERT(m_first != nullptr);
+        Q_ASSERT(m_last != nullptr);
+
+        m_last->setNext(nullptr);
+    }
+
     Atom *m_first { nullptr };
     Atom *m_last { nullptr };
 };

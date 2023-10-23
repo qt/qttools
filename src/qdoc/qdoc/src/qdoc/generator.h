@@ -124,6 +124,7 @@ protected:
     };
     void generateThreadSafeness(const Node *node, CodeMarker *marker);
     bool generateComparisonCategory(const Node *node, CodeMarker *marker = nullptr);
+    bool generateComparisonList(const Node *node);
 
     void generateOverloadedSignal(const Node *node, CodeMarker *marker);
     static QString getOverloadedSignalCode(const Node *node);

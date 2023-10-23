@@ -13,6 +13,7 @@ QT_BEGIN_NAMESPACE
 #define COMMAND_ABSTRACT QLatin1String("abstract")
 #define COMMAND_CLASS QLatin1String("class")
 #define COMMAND_COMPARES QLatin1String("compares")
+#define COMMAND_COMPARESWITH QLatin1String("compareswith")
 #define COMMAND_DEFAULT QLatin1String("default")
 #define COMMAND_DEPRECATED QLatin1String("deprecated") // ### don't document
 #define COMMAND_DONTDOCUMENT QLatin1String("dontdocument")

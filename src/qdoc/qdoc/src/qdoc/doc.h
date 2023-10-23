@@ -5,6 +5,7 @@
 #define DOC_H
 
 #include "location.h"
+#include "comparisoncategory.h"
 #include "docutilities.h"
 #include "topic.h"
 
@@ -72,6 +73,7 @@ public:
     [[nodiscard]] const QList<Atom *> &keywords() const;
     [[nodiscard]] const QList<Atom *> &targets() const;
     [[nodiscard]] QStringMultiMap *metaTagMap() const;
+    [[nodiscard]] QMultiMap<ComparisonCategory, Text> *comparesWithMap() const;
 
     static void initialize(FileResolver& file_resolver);
     static void terminate();

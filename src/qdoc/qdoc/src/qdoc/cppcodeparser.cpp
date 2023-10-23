@@ -393,6 +393,11 @@ void CppCodeParser::processMetaCommand(const Doc &doc, const QString &command,
             doc.location().warning(QStringLiteral("Ignored '\\%1'").arg(COMMAND_INHEADERFILE));
     } else if (command == COMMAND_COMPARES) {
         processComparesCommand(node, arg, doc.location());
+    } else if (command == COMMAND_COMPARESWITH) {
+        if (!node->isClassNode())
+            doc.location().warning(
+                    u"Found \\%1 command outside of \\%2 context."_s
+                            .arg(COMMAND_COMPARESWITH, COMMAND_CLASS));
     } else if (command == COMMAND_OVERLOAD) {
         /*
           Note that this might set the overload flag of the

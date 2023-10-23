@@ -303,4 +303,39 @@ int Text::compare(const Text &text1, const Text &text2)
     }
 }
 
+/*!
+    \internal
+
+    \brief Splits the current Text from \a start to end into a new Text object.
+
+    Returns a new Text from the first Atom in this Text of atom type \a start.
+ */
+Text Text::splitAtFirst(Atom::AtomType start) {
+    if (m_first == nullptr)
+        return {};
+
+    Atom *previous = nullptr;
+    Atom *current = m_first;
+
+    while (current != nullptr) {
+        if (current->type() == start)
+            break;
+        previous = current;
+        current = current->next();
+    }
+
+    if (!current)
+        return {};
+
+    Text splitText = Text(current, m_last);
+
+    // Reset this Text's first and last atom pointers based on
+    // whether all or part of the content was extracted.
+    m_first = previous ? m_first : nullptr;
+    if (m_last = previous; m_last)
+        m_last->setNext(nullptr);
+
+    return splitText;
+}
+
 QT_END_NAMESPACE
