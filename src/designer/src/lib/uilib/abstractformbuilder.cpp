@@ -361,7 +361,6 @@ Qt::ToolBarArea QAbstractFormBuilder::toolbarAreaFromDOMAttributes(const DomProp
 */
 bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget)
 {
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
 
     if (parentWidget == nullptr)
@@ -439,25 +438,25 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
         widget->setParent(nullptr);
 
         const int tabIndex = tabWidget->count();
-        if (const DomProperty *titleP = attributes.value(strings.titleAttribute, 0))
+        if (auto *titleP = attributes.value(QFormBuilderStrings::titleAttribute))
             tabWidget->addTab(widget, toString(titleP->elementString()));
         else
             tabWidget->addTab(widget, "Page"_L1);
 
-        if (DomProperty *picon = attributes.value(strings.iconAttribute)) {
+        if (const auto *picon = attributes.value(QFormBuilderStrings::iconAttribute)) {
             QVariant v = resourceBuilder()->loadResource(workingDirectory(), picon);
             QVariant nativeValue = resourceBuilder()->toNativeValue(v);
             tabWidget->setTabIcon(tabIndex, qvariant_cast<QIcon>(nativeValue));
         }
 
 #if QT_CONFIG(tooltip)
-        if (const DomProperty *ptoolTip = attributes.value(strings.toolTipAttribute)) {
+        if (const auto *ptoolTip = attributes.value(QFormBuilderStrings::toolTipAttribute)) {
             tabWidget->setTabToolTip(tabIndex, toString(ptoolTip->elementString()));
         }
 #endif
 
 #if QT_CONFIG(whatsthis)
-        if (const DomProperty *pwhatsThis = attributes.value(strings.whatsThisAttribute)) {
+        if (const auto *pwhatsThis = attributes.value(QFormBuilderStrings::whatsThisAttribute)) {
             tabWidget->setTabWhatsThis(tabIndex, toString(pwhatsThis->elementString()));
         }
 #endif
@@ -469,19 +468,19 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
 #if QT_CONFIG(toolbox)
     else if (QToolBox *toolBox = qobject_cast<QToolBox*>(parentWidget)) {
         const int tabIndex = toolBox->count();
-        if (const DomProperty *labelP =  attributes.value(strings.labelAttribute, 0))
+        if (const auto *labelP =  attributes.value(QFormBuilderStrings::labelAttribute))
             toolBox->addItem(widget, toString(labelP->elementString()));
         else
             toolBox->addItem(widget, "Page"_L1);
 
-        if (DomProperty *picon = attributes.value(strings.iconAttribute)) {
+        if (const auto *picon = attributes.value(QFormBuilderStrings::iconAttribute)) {
             QVariant v = resourceBuilder()->loadResource(workingDirectory(), picon);
             QVariant nativeValue = resourceBuilder()->toNativeValue(v);
             toolBox->setItemIcon(tabIndex, qvariant_cast<QIcon>(nativeValue));
         }
 
 #if QT_CONFIG(tooltip)
-        if (const DomProperty *ptoolTip = attributes.value(strings.toolTipAttribute)) {
+        if (const auto *ptoolTip = attributes.value(QFormBuilderStrings::toolTipAttribute)) {
             toolBox->setItemToolTip(tabIndex, toString(ptoolTip->elementString()));
         }
 #endif
@@ -1550,13 +1549,12 @@ public:
 template<class T>
 static void storeItemFlags(const T *item, QList<DomProperty*> *properties)
 {
-    static const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     static const Qt::ItemFlags defaultFlags = T().flags();
     static const QMetaEnum itemFlags_enum = metaEnum<QAbstractFormBuilderGadget>("itemFlags");
 
     if (item->flags() != defaultFlags) {
         DomProperty *p = new DomProperty;
-        p->setAttributeName(strings.flagsAttribute);
+        p->setAttributeName(QFormBuilderStrings::flagsAttribute);
         p->setElementSet(QString::fromLatin1(itemFlags_enum.valueToKeys(item->flags())));
         properties->append(p);
     }
@@ -1634,13 +1632,12 @@ template<class T>
 static void loadItemPropsNFlags(QAbstractFormBuilder *abstractFormBuilder, T *item,
         const QHash<QString, DomProperty*> &properties)
 {
-    static const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     static const QMetaEnum itemFlags_enum = metaEnum<QAbstractFormBuilderGadget>("itemFlags");
 
     loadItemProps<T>(abstractFormBuilder, item, properties);
 
-    DomProperty *p;
-    if ((p = properties.value(strings.flagsAttribute)) && p->kind() == DomProperty::Set)
+    DomProperty *p = properties.value(QFormBuilderStrings::flagsAttribute);
+    if (p != nullptr && p->kind() == DomProperty::Set)
         item->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, p->elementSet().toLatin1()));
 }
 
@@ -1822,7 +1819,7 @@ void QAbstractFormBuilder::saveComboBoxExtraInfo(QComboBox *comboBox, DomWidget 
     for (int i=0; i < count; ++i) {
         // We might encounter items for which both builders return 0 in Designer
         // (indicating a custom combo adding items in the constructor). Ignore those.
-        DomProperty *textProperty = saveText(QFormBuilderStrings::instance().textAttribute,
+        DomProperty *textProperty = saveText(QFormBuilderStrings::textAttribute,
                                              comboBox->itemData(i, Qt::DisplayPropertyRole));
         DomProperty *iconProperty = saveResource(comboBox->itemData(i, Qt::DecorationPropertyRole));
         if (textProperty || iconProperty) {
@@ -2035,7 +2032,7 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
                 treeWidget->headerItem()->setData(i, it.first.second, v);
             }
 
-        if ((p = properties.value(strings.iconAttribute))) {
+        if ((p = properties.value(QFormBuilderStrings::iconAttribute))) {
             v = resourceBuilder()->loadResource(workingDirectory(), p);
             QVariant nativeValue = resourceBuilder()->toNativeValue(v);
             treeWidget->headerItem()->setIcon(i, qvariant_cast<QIcon>(nativeValue));
@@ -2063,16 +2060,18 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
         const auto &properties = domItem->elementProperty();
         int col = -1;
         for (DomProperty *property : properties) {
-            if (property->attributeName() == strings.flagsAttribute && !property->elementSet().isEmpty()) {
+            if (property->attributeName() == QFormBuilderStrings::flagsAttribute
+                && !property->elementSet().isEmpty()) {
                 currentItem->setFlags(enumKeysToValue<Qt::ItemFlags>(itemFlags_enum, property->elementSet().toLatin1()));
-            } else if (property->attributeName() == strings.textAttribute && property->elementString()) {
+            } else if (property->attributeName() == QFormBuilderStrings::textAttribute
+                       && property->elementString()) {
                 col++;
                 QVariant textV = textBuilder()->loadText(property);
                 QVariant nativeValue = textBuilder()->toNativeValue(textV);
                 currentItem->setText(col, qvariant_cast<QString>(nativeValue));
                 currentItem->setData(col, Qt::DisplayPropertyRole, textV);
             } else if (col >= 0) {
-                if (property->attributeName() == strings.iconAttribute) {
+                if (property->attributeName() == QFormBuilderStrings::iconAttribute) {
                     QVariant v = resourceBuilder()->loadResource(workingDirectory(), property);
                     if (v.isValid()) {
                         QVariant nativeValue = resourceBuilder()->toNativeValue(v);
@@ -2159,24 +2158,21 @@ void QAbstractFormBuilder::loadTableWidgetExtraInfo(DomWidget *ui_widget, QTable
 void QAbstractFormBuilder::loadComboBoxExtraInfo(DomWidget *ui_widget, QComboBox *comboBox, QWidget *parentWidget)
 {
     Q_UNUSED(parentWidget);
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     const auto &elementItem = ui_widget->elementItem();
     for (DomItem *ui_item : elementItem) {
-        const DomPropertyHash properties = propertyMap(ui_item->elementProperty());
+        const auto &properties = ui_item->elementProperty();
         QString text;
         QIcon icon;
         QVariant textData;
         QVariant iconData;
 
-        DomProperty *p = nullptr;
-
-        p = properties.value(strings.textAttribute);
+        DomProperty *p = QFBE::propertyByName(properties, QFormBuilderStrings::textAttribute);
         if (p && p->elementString()) {
              textData = textBuilder()->loadText(p);
              text = qvariant_cast<QString>(textBuilder()->toNativeValue(textData));
         }
 
-        p = properties.value(strings.iconAttribute);
+        p = QFBE::propertyByName(properties, QFormBuilderStrings::iconAttribute);
         if (p) {
              iconData = resourceBuilder()->loadResource(workingDirectory(), p);
              icon = qvariant_cast<QIcon>(resourceBuilder()->toNativeValue(iconData));
@@ -2452,7 +2448,7 @@ void QAbstractFormBuilder::setIconProperty(DomProperty &p, const IconPaths &ip) 
 */
     dpi->setText(ip.first);
 
-    p.setAttributeName(QFormBuilderStrings::instance().iconAttribute);
+    p.setAttributeName(QFormBuilderStrings::iconAttribute);
     p.setElementIconSet(dpi);
 }
 
@@ -2478,7 +2474,7 @@ DomProperty *QAbstractFormBuilder::saveResource(const QVariant &v) const
 
     DomProperty *p = resourceBuilder()->saveResource(workingDirectory(), v);
     if (p)
-        p->setAttributeName(QFormBuilderStrings::instance().iconAttribute);
+        p->setAttributeName(QFormBuilderStrings::iconAttribute);
     return p;
 }
 

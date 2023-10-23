@@ -189,13 +189,13 @@ struct QDESIGNER_UILIB_EXPORT QFormBuilderStrings {
 
     static const QFormBuilderStrings &instance();
 
-    const QString titleAttribute;
-    const QString labelAttribute;
-    const QString toolTipAttribute;
-    const QString whatsThisAttribute;
-    const QString flagsAttribute;
-    const QString iconAttribute;
-    const QString textAttribute;
+    static constexpr auto titleAttribute = QLatin1StringView("title");
+    static constexpr auto labelAttribute = QLatin1StringView("label");
+    static constexpr auto toolTipAttribute = QLatin1StringView("toolTip");
+    static constexpr auto whatsThisAttribute = QLatin1StringView("whatsThis");
+    static constexpr auto flagsAttribute = QLatin1StringView("flags");
+    static constexpr auto iconAttribute = QLatin1StringView("icon");
+    static constexpr auto textAttribute = QLatin1StringView("text") ;
 
     using RoleNName = QPair<Qt::ItemDataRole, QString>;
     QList<RoleNName> itemRoles;

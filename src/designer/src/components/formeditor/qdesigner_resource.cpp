@@ -85,6 +85,8 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
+using QFBE = QFormBuilderExtra;
+
 namespace {
     using DomPropertyList = QList<DomProperty *>;
 }
@@ -1384,20 +1386,19 @@ DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_paren
             }
             QList<DomProperty*> ui_attribute_list;
 
-            const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
             // attribute `icon'
             widget->setCurrentIndex(i);
             QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), widget);
             PropertySheetIconValue icon = qvariant_cast<PropertySheetIconValue>(sheet->property(sheet->indexOf(u"currentTabIcon"_s)));
             DomProperty *p = resourceBuilder()->saveResource(workingDirectory(), QVariant::fromValue(icon));
             if (p) {
-                p->setAttributeName(strings.iconAttribute);
+                p->setAttributeName(QFormBuilderStrings::iconAttribute);
                 ui_attribute_list.append(p);
             }
             // attribute `title'
             p = textBuilder()->saveText(sheet->property(sheet->indexOf(u"currentTabText"_s)));
             if (p) {
-                p->setAttributeName(strings.titleAttribute);
+                p->setAttributeName(QFormBuilderStrings::titleAttribute);
                 ui_attribute_list.append(p);
             }
 
@@ -1406,7 +1407,7 @@ DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_paren
             if (!qvariant_cast<PropertySheetStringValue>(v).value().isEmpty()) {
                 p = textBuilder()->saveText(v);
                 if (p) {
-                    p->setAttributeName(strings.toolTipAttribute);
+                    p->setAttributeName(QFormBuilderStrings::toolTipAttribute);
                 ui_attribute_list.append(p);
                 }
             }
@@ -1416,7 +1417,7 @@ DomWidget *QDesignerResource::saveWidget(QTabWidget *widget, DomWidget *ui_paren
             if (!qvariant_cast<PropertySheetStringValue>(v).value().isEmpty()) {
                 p = textBuilder()->saveText(v);
                 if (p) {
-                    p->setAttributeName(strings.whatsThisAttribute);
+                    p->setAttributeName(QFormBuilderStrings::whatsThisAttribute);
                 ui_attribute_list.append(p);
                 }
             }
@@ -1453,20 +1454,18 @@ DomWidget *QDesignerResource::saveWidget(QToolBox *widget, DomWidget *ui_parentW
             // attribute `label'
             QList<DomProperty*> ui_attribute_list;
 
-            const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-
             // attribute `icon'
             widget->setCurrentIndex(i);
             QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), widget);
             PropertySheetIconValue icon = qvariant_cast<PropertySheetIconValue>(sheet->property(sheet->indexOf(u"currentItemIcon"_s)));
             DomProperty *p = resourceBuilder()->saveResource(workingDirectory(), QVariant::fromValue(icon));
             if (p) {
-                p->setAttributeName(strings.iconAttribute);
+                p->setAttributeName(QFormBuilderStrings::iconAttribute);
                 ui_attribute_list.append(p);
             }
             p = textBuilder()->saveText(sheet->property(sheet->indexOf(u"currentItemText"_s)));
             if (p) {
-                p->setAttributeName(strings.labelAttribute);
+                p->setAttributeName(QFormBuilderStrings::labelAttribute);
                 ui_attribute_list.append(p);
             }
 
@@ -1475,7 +1474,7 @@ DomWidget *QDesignerResource::saveWidget(QToolBox *widget, DomWidget *ui_parentW
             if (!qvariant_cast<PropertySheetStringValue>(v).value().isEmpty()) {
                 p = textBuilder()->saveText(v);
                 if (p) {
-                    p->setAttributeName(strings.toolTipAttribute);
+                    p->setAttributeName(QFormBuilderStrings::toolTipAttribute);
                     ui_attribute_list.append(p);
                 }
             }
@@ -1605,23 +1604,21 @@ bool QDesignerResource::addItem(DomWidget *ui_widget, QWidget *widget, QWidget *
 
         tabWidget->setCurrentIndex(tabIndex);
 
-        const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-
-        const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
+        const auto &attributes = ui_widget->elementAttribute();
         QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), parentWidget);
-        if (DomProperty *picon = attributes.value(strings.iconAttribute)) {
+        if (auto *picon = QFBE::propertyByName(attributes, QFormBuilderStrings::iconAttribute)) {
             QVariant v = resourceBuilder()->loadResource(workingDirectory(), picon);
             sheet->setProperty(sheet->indexOf(u"currentTabIcon"_s), v);
         }
-        if (DomProperty *ptext = attributes.value(strings.titleAttribute)) {
+        if (auto *ptext = QFBE::propertyByName(attributes, QFormBuilderStrings::titleAttribute)) {
             QVariant v = textBuilder()->loadText(ptext);
             sheet->setProperty(sheet->indexOf(u"currentTabText"_s), v);
         }
-        if (DomProperty *ptext = attributes.value(strings.toolTipAttribute)) {
+        if (auto *ptext = QFBE::propertyByName(attributes, QFormBuilderStrings::toolTipAttribute)) {
             QVariant v = textBuilder()->loadText(ptext);
             sheet->setProperty(sheet->indexOf(u"currentTabToolTip"_s), v);
         }
-        if (DomProperty *ptext = attributes.value(strings.whatsThisAttribute)) {
+        if (auto *ptext = QFBE::propertyByName(attributes, QFormBuilderStrings::whatsThisAttribute)) {
             QVariant v = textBuilder()->loadText(ptext);
             sheet->setProperty(sheet->indexOf(u"currentTabWhatsThis"_s), v);
         }
@@ -1632,19 +1629,17 @@ bool QDesignerResource::addItem(DomWidget *ui_widget, QWidget *widget, QWidget *
 
         toolBox->setCurrentIndex(itemIndex);
 
-        const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-
-        const DomPropertyHash attributes = propertyMap(ui_widget->elementAttribute());
+        const auto &attributes = ui_widget->elementAttribute();
         QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), parentWidget);
-        if (DomProperty *picon = attributes.value(strings.iconAttribute)) {
+        if (auto *picon = QFBE::propertyByName(attributes, QFormBuilderStrings::iconAttribute)) {
             QVariant v = resourceBuilder()->loadResource(workingDirectory(), picon);
             sheet->setProperty(sheet->indexOf(u"currentItemIcon"_s), v);
         }
-        if (DomProperty *ptext = attributes.value(strings.labelAttribute)) {
+        if (auto *ptext = QFBE::propertyByName(attributes, QFormBuilderStrings::labelAttribute)) {
             QVariant v = textBuilder()->loadText(ptext);
             sheet->setProperty(sheet->indexOf(u"currentItemText"_s), v);
         }
-        if (DomProperty *ptext = attributes.value(strings.toolTipAttribute)) {
+        if (auto *ptext = QFBE::propertyByName(attributes, QFormBuilderStrings::toolTipAttribute)) {
             QVariant v = textBuilder()->loadText(ptext);
             sheet->setProperty(sheet->indexOf(u"currentItemToolTip"_s), v);
         }

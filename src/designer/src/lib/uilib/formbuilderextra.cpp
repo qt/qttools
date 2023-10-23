@@ -712,14 +712,7 @@ DomProperty *QFormBuilderExtra::propertyByName(const QList<DomProperty*> &proper
 
 // ------------ QFormBuilderStrings
 
-QFormBuilderStrings::QFormBuilderStrings() :
-    titleAttribute(u"title"_s),
-    labelAttribute(u"label"_s),
-    toolTipAttribute(u"toolTip"_s),
-    whatsThisAttribute(u"whatsThis"_s),
-    flagsAttribute(u"flags"_s),
-    iconAttribute(u"icon"_s),
-    textAttribute(u"text"_s)
+QFormBuilderStrings::QFormBuilderStrings()
 {
     itemRoles.append(qMakePair(Qt::FontRole, QString::fromLatin1("font")));
     itemRoles.append(qMakePair(Qt::TextAlignmentRole, QString::fromLatin1("textAlignment")));
