@@ -66,6 +66,13 @@ using namespace Qt::StringLiterals;
 using namespace QFormInternal;
 #endif
 
+using QFBE = QFormBuilderExtra;
+
+static inline DomProperty *currentIndexProperty(const QList<DomProperty*> &properties)
+{
+    return QFBE::propertyByName(properties, "currentIndex");
+}
+
 class QFriendlyLayout: public QLayout
 {
 public:
@@ -538,15 +545,13 @@ bool QAbstractFormBuilder::addItem(DomWidget *ui_widget, QWidget *widget, QWidge
 void QAbstractFormBuilder::layoutInfo(DomLayout *ui_layout, QObject *parent, int *margin, int *spacing)
 {
     Q_UNUSED(parent);
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-    const DomPropertyHash properties = propertyMap(ui_layout->elementProperty());
+    auto properties = ui_layout->elementProperty();
 
     int mar = INT_MIN;
     int spac = INT_MIN;
-    if (const DomProperty *p = properties.value(strings.marginProperty, 0))
+    if (const DomProperty *p = QFBE::propertyByName(properties, "margin"))
         mar = p->elementNumber();
-
-    if (const DomProperty *p = properties.value(strings.spacingProperty, 0))
+    if (const DomProperty *p = QFBE::propertyByName(properties, "spacing"))
         spac = p->elementNumber();
 
 #ifdef Q_OS_MACOS
@@ -559,7 +564,7 @@ void QAbstractFormBuilder::layoutInfo(DomLayout *ui_layout, QObject *parent, int
             spac = INT_MIN;
 
         if (mar == INT_MIN || spac == INT_MIN) {
-            auto properties = ui_layout->elementProperty();
+            const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
             for (auto it = properties.begin(); it != properties.end(); ) {
                 DomProperty *prop = *it;
                 if ((mar == INT_MIN && prop->attributeName() == strings.marginProperty)
@@ -624,25 +629,10 @@ QLayout *QAbstractFormBuilder::create(DomLayout *ui_layout, QLayout *parentLayou
     if (margin != INT_MIN) {
         layout->setContentsMargins(margin, margin, margin, margin);
     } else {
-        const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-        int left, top, right, bottom;
-        left = top = right = bottom = -1;
+        int left = -1, top = -1, right = -1, bottom = -1;
         layout->getContentsMargins(&left, &top, &right, &bottom);
-
-        const DomPropertyHash properties = propertyMap(ui_layout->elementProperty());
-
-        if (const DomProperty *p = properties.value(strings.leftMarginProperty, 0))
-            left = p->elementNumber();
-
-        if (const DomProperty *p = properties.value(strings.topMarginProperty, 0))
-            top = p->elementNumber();
-
-        if (const DomProperty *p = properties.value(strings.rightMarginProperty, 0))
-            right = p->elementNumber();
-
-        if (const DomProperty *p = properties.value(strings.bottomMarginProperty, 0))
-            bottom = p->elementNumber();
-
+        QFormBuilderExtra::getLayoutMargins(ui_layout->elementProperty(),
+                                            &left, &top, &right, &bottom);
         layout->setContentsMargins(left, top, right, bottom);
     }
 
@@ -651,12 +641,10 @@ QLayout *QAbstractFormBuilder::create(DomLayout *ui_layout, QLayout *parentLayou
     } else {
         QGridLayout *grid = qobject_cast<QGridLayout *>(layout);
         if (grid) {
-            const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-            const DomPropertyHash properties = propertyMap(ui_layout->elementProperty());
-
-            if (const DomProperty *p = properties.value(strings.horizontalSpacingProperty, 0))
+            const auto &properties = ui_layout->elementProperty();
+            if (const auto *p = QFBE::propertyByName(properties, "horizontalSpacing"))
                 grid->setHorizontalSpacing(p->elementNumber());
-            if (const DomProperty *p = properties.value(strings.verticalSpacingProperty, 0))
+            if (const auto *p = QFBE::propertyByName(properties, "verticalSpacing"))
                 grid->setVerticalSpacing(p->elementNumber());
         }
     }
@@ -2008,8 +1996,6 @@ void QAbstractFormBuilder::saveExtraInfo(QWidget *widget, DomWidget *ui_widget,
 void QAbstractFormBuilder::loadListWidgetExtraInfo(DomWidget *ui_widget, QListWidget *listWidget, QWidget *parentWidget)
 {
     Q_UNUSED(parentWidget);
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
-
     const auto &elementItem = ui_widget->elementItem();
     for (DomItem *ui_item : elementItem) {
         const DomPropertyHash properties = propertyMap(ui_item->elementProperty());
@@ -2017,8 +2003,7 @@ void QAbstractFormBuilder::loadListWidgetExtraInfo(DomWidget *ui_widget, QListWi
         loadItemPropsNFlags<QListWidgetItem>(this, item, properties);
     }
 
-    DomProperty *currentRow = propertyMap(ui_widget->elementProperty()).value(strings.currentRowProperty);
-    if (currentRow)
+    if (auto *currentRow = QFBE::propertyByName(ui_widget->elementProperty(), "currentRow"))
         listWidget->setCurrentRow(currentRow->elementNumber());
 }
 
@@ -2206,8 +2191,7 @@ void QAbstractFormBuilder::loadComboBoxExtraInfo(DomWidget *ui_widget, QComboBox
         comboBox->setItemData((comboBox->count()-1), textData, Qt::DisplayPropertyRole);
     }
 
-    DomProperty *currentIndex = propertyMap(ui_widget->elementProperty()).value(strings.currentIndexProperty);
-    if (currentIndex)
+    if (auto *currentIndex = currentIndexProperty(ui_widget->elementProperty()))
         comboBox->setCurrentIndex(currentIndex->elementNumber());
 }
 
@@ -2306,7 +2290,6 @@ void QAbstractFormBuilder::loadItemViewExtraInfo(DomWidget *ui_widget, QAbstract
 */
 void QAbstractFormBuilder::loadExtraInfo(DomWidget *ui_widget, QWidget *widget, QWidget *parentWidget)
 {
-    const QFormBuilderStrings &strings = QFormBuilderStrings::instance();
     if (false) {
 #if QT_CONFIG(listwidget)
     } else if (QListWidget *listWidget = qobject_cast<QListWidget*>(widget)) {
@@ -2327,23 +2310,19 @@ void QAbstractFormBuilder::loadExtraInfo(DomWidget *ui_widget, QWidget *widget, 
 #endif
 #if QT_CONFIG(tabwidget)
     } else if (QTabWidget *tabWidget = qobject_cast<QTabWidget*>(widget)) {
-        const DomProperty *currentIndex = propertyMap(ui_widget->elementProperty()).value(strings.currentIndexProperty);
-        if (currentIndex)
+        if (auto *currentIndex = currentIndexProperty(ui_widget->elementProperty()))
             tabWidget->setCurrentIndex(currentIndex->elementNumber());
 #endif
 #if QT_CONFIG(stackedwidget)
     } else if (QStackedWidget *stackedWidget = qobject_cast<QStackedWidget*>(widget)) {
-        const DomProperty *currentIndex = propertyMap(ui_widget->elementProperty()).value(strings.currentIndexProperty);
-        if (currentIndex)
+        if (auto *currentIndex = currentIndexProperty(ui_widget->elementProperty()))
             stackedWidget->setCurrentIndex(currentIndex->elementNumber());
 #endif
 #if QT_CONFIG(toolbox)
     } else if (QToolBox *toolBox = qobject_cast<QToolBox*>(widget)) {
-        const DomProperty *currentIndex = propertyMap(ui_widget->elementProperty()).value(strings.currentIndexProperty);
-        if (currentIndex)
+        if (auto *currentIndex = currentIndexProperty(ui_widget->elementProperty()))
             toolBox->setCurrentIndex(currentIndex->elementNumber());
-        const DomProperty *tabSpacing = propertyMap(ui_widget->elementProperty()).value(strings.tabSpacingProperty);
-        if (tabSpacing)
+        if (auto *tabSpacing = QFBE::propertyByName(ui_widget->elementProperty(), "tabSpacing"))
             toolBox->layout()->setSpacing(tabSpacing->elementNumber());
 #endif
     } else if (QAbstractButton *ab = qobject_cast<QAbstractButton *>(widget)) {

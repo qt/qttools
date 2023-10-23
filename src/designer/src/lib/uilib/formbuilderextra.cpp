@@ -363,6 +363,19 @@ static QString msgInvalidStretch(const QString &objectName, const QString &stret
     return QCoreApplication::translate("FormBuilder", "Invalid stretch value for '%1': '%2'").arg(objectName, stretch);
 }
 
+void QFormBuilderExtra::getLayoutMargins(const QList<DomProperty*> &properties,
+                                         int *left, int *top, int *right, int *bottom)
+{
+    if (const auto *p = propertyByName(properties, "leftMargin"))
+        *left = p->elementNumber();
+    if (const auto *p = propertyByName(properties, "topMargin"))
+        *top = p->elementNumber();
+    if (const auto *p = propertyByName(properties, "rightMargin"))
+        *right = p->elementNumber();
+    if (const auto *p = propertyByName(properties, "bottomMargin"))
+        *bottom = p->elementNumber();
+}
+
 QString QFormBuilderExtra::boxLayoutStretch(const QBoxLayout *box)
 {
      return perCellPropertyToString(box, box->count(), &QBoxLayout::stretch);
@@ -688,6 +701,15 @@ DomBrush *QFormBuilderExtra::saveBrush(const QBrush &br)
     return brush;
 }
 
+DomProperty *QFormBuilderExtra::propertyByName(const QList<DomProperty*> &properties,
+                                               QAnyStringView needle)
+{
+    auto it = std::find_if(properties.cbegin(), properties.cend(),
+                           [needle](const DomProperty *p) {
+                               return p->attributeName() == needle; });
+    return it != properties.cend() ? *it : nullptr;
+}
+
 // ------------ QFormBuilderStrings
 
 QFormBuilderStrings::QFormBuilderStrings() :
@@ -707,26 +729,17 @@ QFormBuilderStrings::QFormBuilderStrings() :
     iconAttribute(u"icon"_s),
     pixmapAttribute(u"pixmap"_s),
     textAttribute(u"text"_s),
-    currentIndexProperty(u"currentIndex"_s),
     toolBarAreaAttribute(u"toolBarArea"_s),
     toolBarBreakAttribute(u"toolBarBreak"_s),
     dockWidgetAreaAttribute(u"dockWidgetArea"_s),
     marginProperty(u"margin"_s),
     spacingProperty(u"spacing"_s),
-    leftMarginProperty(u"leftMargin"_s),
-    topMarginProperty(u"topMargin"_s),
-    rightMarginProperty(u"rightMargin"_s),
-    bottomMarginProperty(u"bottomMargin"_s),
-    horizontalSpacingProperty(u"horizontalSpacing"_s),
-    verticalSpacingProperty(u"verticalSpacing"_s),
     sizeHintProperty(u"sizeHint"_s),
     sizeTypeProperty(u"sizeType"_s),
     orientationProperty(u"orientation"_s),
     styleSheetProperty(u"styleSheet"_s),
     qtHorizontal(u"Qt::Horizontal"_s),
     qtVertical(u"Qt::Vertical"_s),
-    currentRowProperty(u"currentRow"_s),
-    tabSpacingProperty(u"tabSpacing"_s),
     qWidgetClass(u"QWidget"_s),
     lineClass(u"Line"_s),
     geometryProperty(u"geometry"_s),
