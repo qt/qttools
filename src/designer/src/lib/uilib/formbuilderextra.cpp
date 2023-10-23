@@ -152,7 +152,7 @@ bool QFormBuilderExtra::applyPropertyInternally(QObject *o, const QString &prope
 {
     // Store buddies and apply them later on as the widgets might not exist yet.
     QLabel *label = qobject_cast<QLabel*>(o);
-    if (!label || propertyName != QFormBuilderStrings::instance().buddyProperty)
+    if (label == nullptr || propertyName != "buddy"_L1)
         return false;
 
     m_buddies.insert(label, value.toString());
@@ -482,7 +482,7 @@ void QFormBuilderExtra::setPixmapProperty(DomProperty *p, const QPair<QString, Q
 
     pix->setText(ip.first);
 
-    p->setAttributeName(QFormBuilderStrings::instance().pixmapAttribute);
+    p->setAttributeName("pixmap"_L1);
     p->setElementPixmap(pix);
 }
 
@@ -713,38 +713,13 @@ DomProperty *QFormBuilderExtra::propertyByName(const QList<DomProperty*> &proper
 // ------------ QFormBuilderStrings
 
 QFormBuilderStrings::QFormBuilderStrings() :
-    buddyProperty(u"buddy"_s),
-    cursorProperty(u"cursor"_s),
-    objectNameProperty(u"objectName"_s),
-    trueValue(u"true"_s),
-    falseValue(u"false"_s),
-    horizontalPostFix(u"Horizontal"_s),
-    separator(u"separator"_s),
-    defaultTitle(u"Page"_s),
     titleAttribute(u"title"_s),
     labelAttribute(u"label"_s),
     toolTipAttribute(u"toolTip"_s),
     whatsThisAttribute(u"whatsThis"_s),
     flagsAttribute(u"flags"_s),
     iconAttribute(u"icon"_s),
-    pixmapAttribute(u"pixmap"_s),
-    textAttribute(u"text"_s),
-    toolBarAreaAttribute(u"toolBarArea"_s),
-    toolBarBreakAttribute(u"toolBarBreak"_s),
-    dockWidgetAreaAttribute(u"dockWidgetArea"_s),
-    marginProperty(u"margin"_s),
-    spacingProperty(u"spacing"_s),
-    sizeHintProperty(u"sizeHint"_s),
-    sizeTypeProperty(u"sizeType"_s),
-    orientationProperty(u"orientation"_s),
-    styleSheetProperty(u"styleSheet"_s),
-    qtHorizontal(u"Qt::Horizontal"_s),
-    qtVertical(u"Qt::Vertical"_s),
-    qWidgetClass(u"QWidget"_s),
-    lineClass(u"Line"_s),
-    geometryProperty(u"geometry"_s),
-    scriptWidgetVariable(u"widget"_s),
-    scriptChildWidgetsVariable(u"childWidgets"_s)
+    textAttribute(u"text"_s)
 {
     itemRoles.append(qMakePair(Qt::FontRole, QString::fromLatin1("font")));
     itemRoles.append(qMakePair(Qt::TextAlignmentRole, QString::fromLatin1("textAlignment")));

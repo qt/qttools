@@ -189,38 +189,13 @@ struct QDESIGNER_UILIB_EXPORT QFormBuilderStrings {
 
     static const QFormBuilderStrings &instance();
 
-    const QString buddyProperty;
-    const QString cursorProperty;
-    const QString objectNameProperty;
-    const QString trueValue;
-    const QString falseValue;
-    const QString horizontalPostFix;
-    const QString separator;
-    const QString defaultTitle;
     const QString titleAttribute;
     const QString labelAttribute;
     const QString toolTipAttribute;
     const QString whatsThisAttribute;
     const QString flagsAttribute;
     const QString iconAttribute;
-    const QString pixmapAttribute;
     const QString textAttribute;
-    const QString toolBarAreaAttribute;
-    const QString toolBarBreakAttribute;
-    const QString dockWidgetAreaAttribute;
-    const QString marginProperty;
-    const QString spacingProperty;
-    const QString sizeHintProperty;
-    const QString sizeTypeProperty;
-    const QString orientationProperty;
-    const QString styleSheetProperty;
-    const QString qtHorizontal;
-    const QString qtVertical;
-    const QString qWidgetClass;
-    const QString lineClass;
-    const QString geometryProperty;
-    const QString scriptWidgetVariable;
-    const QString scriptChildWidgetsVariable;
 
     using RoleNName = QPair<Qt::ItemDataRole, QString>;
     QList<RoleNName> itemRoles;
