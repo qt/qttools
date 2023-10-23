@@ -201,35 +201,6 @@ void WizardPageChangeWatcher::pageChanged()
     }
 }
 
-// ---------------- WidgetFactory::Strings
-WidgetFactory::Strings::Strings() :
-    m_alignment(u"alignment"_s),
-    m_bottomMargin(u"bottomMargin"_s),
-    m_geometry(u"geometry"_s),
-    m_leftMargin(u"leftMargin"_s),
-    m_line(u"Line"_s),
-    m_objectName(u"objectName"_s),
-    m_spacerName(u"spacerName"_s),
-    m_orientation(u"orientation"_s),
-    m_qAction(u"QAction"_s),
-    m_qButtonGroup(u"QButtonGroup"_s),
-    m_qAxWidget(u"QAxWidget"_s),
-    m_qDialog(u"QDialog"_s),
-    m_qDockWidget(u"QDockWidget"_s),
-    m_qLayoutWidget(u"QLayoutWidget"_s),
-    m_qMenu(u"QMenu"_s),
-    m_qMenuBar(u"QMenuBar"_s),
-    m_qWidget(u"QWidget"_s),
-    m_rightMargin(u"rightMargin"_s),
-    m_sizeHint(u"sizeHint"_s),
-    m_spacer(u"Spacer"_s),
-    m_text(u"text"_s),
-    m_title(u"title"_s),
-    m_topMargin(u"topMargin"_s),
-    m_windowIcon(u"windowIcon"_s),
-    m_windowTitle(u"windowTitle"_s)
-{
-}
 // ---------------- WidgetFactory
 const char *WidgetFactory::disableStyleCustomPaintingPropertyC = "_q_custom_style_disabled";
 
@@ -266,9 +237,9 @@ QObject* WidgetFactory::createObject(const QString &className, QObject* parent) 
         qWarning("** WARNING %s called with an empty class name", Q_FUNC_INFO);
         return nullptr;
     }
-    if (className == m_strings.m_qAction)
+    if (className == "QAction"_L1)
         return new QAction(parent);
-    if (className == m_strings.m_qButtonGroup)
+    if (className == "QButtonGroup"_L1)
         return new QButtonGroup(parent);
     return nullptr;
 }
@@ -370,7 +341,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
             return nullptr;
 
         // 2) Special widgets
-        if (widgetName == m_strings.m_line) {
+        if (widgetName == "Line"_L1) {
             w = new Line(parentWidget);
 #if QT_CONFIG(abstractbutton)
         } else if (widgetName == u"QAbstractButton") {
@@ -380,23 +351,23 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         } else if (widgetName == u"QAbstractItemView") {
             w = new QDesignerAbstractItemView(parentWidget);
 #endif
-        } else if (widgetName == m_strings.m_qDockWidget) {
+        } else if (widgetName == "QDockWidget"_L1) {
             w = new QDesignerDockWidget(parentWidget);
-        } else if (widgetName == m_strings.m_qMenuBar) {
+        } else if (widgetName == "QMenuBar"_L1) {
             w = new QDesignerMenuBar(parentWidget);
-        } else if (widgetName == m_strings.m_qMenu) {
+        } else if (widgetName == "QMenu"_L1) {
             w = new QDesignerMenu(parentWidget);
-        } else if (widgetName == m_strings.m_spacer) {
+        } else if (widgetName == "Spacer"_L1) {
             w = new Spacer(parentWidget);
-        } else if (widgetName == m_strings.m_qLayoutWidget) {
+        } else if (widgetName == "QLayoutWidget"_L1) {
             w = fw ? new QLayoutWidget(fw, parentWidget) : new QWidget(parentWidget);
-        } else if (widgetName == m_strings.m_qDialog) {
+        } else if (widgetName == "QDialog"_L1) {
             if (fw) {
                 w = new QDesignerDialog(fw, parentWidget);
             } else {
                 w = new QDialog(parentWidget);
             }
-        } else if (widgetName == m_strings.m_qWidget) {
+        } else if (widgetName == "QWidget"_L1) {
             /* We want a 'QDesignerWidget' that draws a grid only for widget
              * forms and container extension pages (not for preview and not
              * for normal QWidget children on forms (legacy) */
@@ -436,7 +407,7 @@ QWidget *WidgetFactory::createWidget(const QString &widgetName, QWidget *parentW
         if (w)
             break;
         // 4) fallBack
-        const QString fallBackBaseClass = m_strings.m_qWidget;
+        const QString fallBackBaseClass = "QWidget"_L1;
         QDesignerWidgetDataBaseInterface *db = core()->widgetDataBase();
         QDesignerWidgetDataBaseItemInterface *item = db->item(db->indexOfClassName(widgetName));
         if (item == nullptr) {
@@ -554,15 +525,15 @@ QLayout *WidgetFactory::createLayout(QWidget *widget, QLayout *parentLayout, int
     QDesignerPropertySheetExtension *sheet = qt_extension<QDesignerPropertySheetExtension*>(core()->extensionManager(), layout);
 
     if (sheet) {
-        sheet->setChanged(sheet->indexOf(m_strings.m_objectName), true);
+        sheet->setChanged(sheet->indexOf(u"objectName"_s), true);
         if (widget->inherits("QLayoutWidget")) {
-            sheet->setProperty(sheet->indexOf(m_strings.m_leftMargin), 0);
-            sheet->setProperty(sheet->indexOf(m_strings.m_topMargin), 0);
-            sheet->setProperty(sheet->indexOf(m_strings.m_rightMargin), 0);
-            sheet->setProperty(sheet->indexOf(m_strings.m_bottomMargin), 0);
+            sheet->setProperty(sheet->indexOf(u"leftMargin"_s), 0);
+            sheet->setProperty(sheet->indexOf(u"topMargin"_s), 0);
+            sheet->setProperty(sheet->indexOf(u"rightMargin"_s), 0);
+            sheet->setProperty(sheet->indexOf(u"bottomMargin"_s), 0);
         }
 
-        const int index = sheet->indexOf(m_strings.m_alignment);
+        const int index = sheet->indexOf(u"alignment"_s);
         if (index != -1)
             sheet->setChanged(index, true);
     }
@@ -661,11 +632,11 @@ void WidgetFactory::initialize(QObject *object) const
     if (!sheet)
         return;
 
-    sheet->setChanged(sheet->indexOf(m_strings.m_objectName), true);
+    sheet->setChanged(sheet->indexOf(u"objectName"_s), true);
 
     if (!object->isWidgetType()) {
         if (qobject_cast<QAction*>(object))
-            sheet->setChanged(sheet->indexOf(m_strings.m_text), true);
+            sheet->setChanged(sheet->indexOf(u"text"_s), true);
         return;
     }
 
@@ -677,32 +648,32 @@ void WidgetFactory::initialize(QObject *object) const
     widget->setFocusPolicy((isMenu || isMenuBar) ? Qt::StrongFocus : Qt::NoFocus);
 
     if (!isMenu)
-        sheet->setChanged(sheet->indexOf(m_strings.m_geometry), true);
+        sheet->setChanged(sheet->indexOf(u"geometry"_s), true);
 
     if (qobject_cast<Spacer*>(widget)) {
-        sheet->setChanged(sheet->indexOf(m_strings.m_spacerName), true);
+        sheet->setChanged(sheet->indexOf(u"spacerName"_s), true);
         return;
     }
 
-    const int o = sheet->indexOf(m_strings.m_orientation);
+    const int o = sheet->indexOf(u"orientation"_s);
     if (o != -1 && widget->inherits("QSplitter"))
         sheet->setChanged(o, true);
 
     if (QToolBar *toolBar = qobject_cast<QToolBar*>(widget)) {
         ToolBarEventFilter::install(toolBar);
-        sheet->setVisible(sheet->indexOf(m_strings.m_windowTitle), true);
+        sheet->setVisible(sheet->indexOf(u"windowTitle"_s), true);
         toolBar->setFloatable(false);  // prevent toolbars from being dragged off
         return;
     }
 
     if (qobject_cast<QDockWidget*>(widget)) {
-        sheet->setVisible(sheet->indexOf(m_strings.m_windowTitle), true);
-        sheet->setVisible(sheet->indexOf(m_strings.m_windowIcon), true);
+        sheet->setVisible(sheet->indexOf(u"windowTitle"_s), true);
+        sheet->setVisible(sheet->indexOf(u"windowIcon"_s), true);
         return;
     }
 
     if (isMenu) {
-        sheet->setChanged(sheet->indexOf(m_strings.m_title), true);
+        sheet->setChanged(sheet->indexOf(u"title"_s), true);
         return;
     }
     // helpers
