@@ -594,31 +594,6 @@ private:
         return false;
     }
 
-    /*!
-        The type parameters do not need to be fully qualified
-        This function removes the ClassName:: if needed.
-
-        example: 'QLinkedList::iterator' -> 'iterator'
-     */
-    QString adjustTypeName(const QString &typeName)
-    {
-        auto parent = parent_->parent();
-        if (parent && parent->isClassNode()) {
-            QStringView typeNameConstRemoved(typeName);
-            if (typeNameConstRemoved.startsWith(QLatin1String("const ")))
-                typeNameConstRemoved = typeNameConstRemoved.mid(6);
-
-            auto parentName = parent->fullName();
-            if (typeNameConstRemoved.startsWith(parentName)
-                && typeNameConstRemoved.mid(parentName.size(), 2) == QLatin1String("::")) {
-                QString result = typeName;
-                result.remove(typeName.indexOf(typeNameConstRemoved), parentName.size() + 2);
-                return result;
-            }
-        }
-        return typeName;
-    }
-
     CXChildVisitResult visitSource(CXCursor cursor, CXSourceLocation loc);
     CXChildVisitResult visitHeader(CXCursor cursor, CXSourceLocation loc);
     CXChildVisitResult visitFnSignature(CXCursor cursor, CXSourceLocation loc, Node **fnNode,
