@@ -127,7 +127,7 @@ static std::string get_fully_qualified_type_name(clang::QualType type, const cla
      return clang::TypeName::getFullyQualifiedName(
         type,
         declaration_context,
-        clang::PrintingPolicy{declaration_context.getLangOpts()}
+        declaration_context.getPrintingPolicy()
     );
 }
 
