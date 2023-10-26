@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <struct name="Struct" href="struct.html" status="active" access="public" location="trailing_backslashes.h" documented="true" module="TrailingBackslashes">
+            <description/>
+            <function name="MultipleTrailingSlashes" fullname="Struct::MultipleTrailingSlashes" href="struct.html#MultipleTrailingSlashes" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void MultipleTrailingSlashes()">
+                <description>
+                    <see-also>
+                        <link raw="one slash" href="struct.html#oneTrailingSlash" type="function">one slash</link>
+                    </see-also>
+                </description>
+            </function>
+            <function name="multipleTrailingSlashesAndRandomWhitespace" fullname="Struct::multipleTrailingSlashesAndRandomWhitespace" href="struct.html#multipleTrailingSlashesAndRandomWhitespace" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void multipleTrailingSlashesAndRandomWhitespace()">
+                <description>
+                    <see-also>
+                        <link raw="two slashes here" href="struct.html#MultipleTrailingSlashes" type="function">two slashes here</link>
+                    </see-also>
+                </description>
+            </function>
+            <function name="oneTrailingSlash" fullname="Struct::oneTrailingSlash" href="struct.html#oneTrailingSlash" status="active" access="public" location="trailing_backslashes.h" documented="true" meta="plain" type="void" signature="void oneTrailingSlash()">
+                <description>
+                    <see-also>
+                        <link raw="two slashes again" href="struct.html#multipleTrailingSlashesAndRandomWhitespace" type="function">two slashes again</link>
+                    </see-also>
+                </description>
+            </function>
+        </struct>
+    </document>
+</WebXML>
