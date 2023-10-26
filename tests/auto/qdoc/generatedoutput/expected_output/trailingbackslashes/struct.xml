@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title></db:title>
+<db:productname>TrailingBackslashes</db:productname>
+<db:titleabbrev>TrailingBackslashes Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>TrailingBackslashes Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Struct</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="MultipleTrailingSlashes">
+<db:title>void Struct::MultipleTrailingSlashes()</db:title>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="struct.xml#oneTrailingSlash">one slash</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="multipleTrailingSlashesAndRandomWhitespace">
+<db:title>void Struct::multipleTrailingSlashesAndRandomWhitespace()</db:title>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="struct.xml#MultipleTrailingSlashes">two slashes here</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+<db:section xml:id="oneTrailingSlash">
+<db:title>void Struct::oneTrailingSlash()</db:title>
+<db:section>
+<db:title>See Also</db:title>
+<db:para><db:emphasis>See also </db:emphasis>
+<db:simplelist type="vert" role="see-also">
+<db:member><db:link xlink:href="struct.xml#multipleTrailingSlashesAndRandomWhitespace">two slashes again</db:link></db:member>
+</db:simplelist>
+</db:para>
+</db:section>
+</db:section>
+</db:section>
+</db:article>

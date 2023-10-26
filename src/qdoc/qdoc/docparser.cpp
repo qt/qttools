@@ -2312,8 +2312,13 @@ QString DocParser::getOptionalArgument()
     backslashes (`\`) as line continuation character. Trailing backslashes and
     any newline character that follow them are removed.
 
-    Returns a string as if it was one continuous line of text, stripped of
-    leading and trailing whitespace characters.
+    Returns a string as if it was one continuous line of text. If trailing
+    backslashes are removed, the method returns a "simplified" QString, which
+    means any sequence of internal whitespace is replaced with a single space.
+
+    Whitespace at the start and end is always removed from the returned string.
+
+    \sa QString::simplified(), QString::trimmed().
  */
 QString DocParser::getRestOfLine()
 {
@@ -2334,25 +2339,32 @@ QString DocParser::getRestOfLine()
     QString rest_of_line;
     skipSpacesOnLine();
     bool trailing_backslash{ false };
+    bool return_simplified_string{ false };
 
-    for (qsizetype start_of_line = m_position; m_position < m_inputLength; ++m_position) {
+    for (qsizetype start_position = m_position; m_position < m_inputLength; ++m_position) {
         trailing_backslash = lineHasTrailingBackslash(trailing_backslash);
 
         if (!rest_of_line.isEmpty())
             rest_of_line += QLatin1Char(' ');
-        rest_of_line += m_input.sliced(start_of_line, m_position - start_of_line);
+        rest_of_line += m_input.sliced(start_position, m_position - start_position);
 
-        if (trailing_backslash)
+        if (trailing_backslash) {
             rest_of_line.chop(1);
+            return_simplified_string = true;
+        }
 
         if (m_position < m_inputLength)
             ++m_position;
 
         if (!trailing_backslash)
             break;
+        start_position = m_position;
     }
 
-    return rest_of_line.simplified();
+    if (return_simplified_string)
+        return rest_of_line.simplified();
+
+    return rest_of_line.trimmed();
 }
 
 /*!

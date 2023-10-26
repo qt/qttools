@@ -1,0 +1,19 @@
+include(../configs/config.qdocconf)
+project = TrailingBackslashes
+
+headerdirs  = .
+sourcedirs  = .
+exampledirs = .
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = trailingbackslashes
+
+HTML.nosubdirs = true
+HTML.outputsubdir = trailingbackslashes
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = trailingbackslashes
+
+warninglimit = 1

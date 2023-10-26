@@ -63,6 +63,7 @@ private slots:
     void nonAsciiCharacterInput();
     void lineComments();
     void tableAfterValue();
+    void trailingBackslashes();
     void modulestateCommand();
 
 private:
@@ -638,6 +639,16 @@ void tst_generatedOutput::lineComments()
             "linecomments/line-comment-adventures.webxml "
             "linecomments/line-comment-adventures.xml"
     );
+}
+
+void tst_generatedOutput::trailingBackslashes()
+{
+    testAndCompare("testdata/trailing_backslashes/trailingbackslashes.qdocconf",
+                   "trailingbackslashes/struct-members.html "
+                   "trailingbackslashes/struct.html "
+                   "trailingbackslashes/struct.webxml "
+                   "trailingbackslashes/struct.xml "
+                   "trailingbackslashes/trailingbackslashes.index");
 }
 
 void tst_generatedOutput::modulestateCommand()
