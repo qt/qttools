@@ -20,13 +20,13 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     a.setApplicationName(u"Qt Attributions Scanner"_s);
-    a.setApplicationVersion(u"1.2"_s);
+    a.setApplicationVersion(u"1.3"_s);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(tr("Processes attribution files in Qt sources."));
-    parser.addPositionalArgument(u"path"_s,
-                                 tr("Path to a qt_attribution.json/README.chromium file, "
-                                    "or a directory to be scannned recursively."));
+    parser.addPositionalArgument(u"paths"_s,
+                                 tr("Paths to qt_attribution.json/README.chromium files, "
+                                    "or directories to be scannned recursively."));
     parser.addHelpOption();
     parser.addVersionOption();
 
@@ -82,10 +82,10 @@ int main(int argc, char *argv[])
     else if (parser.isSet(silentOption))
         logLevel = SilentLog;
 
-    if (parser.positionalArguments().size() != 1)
+    if (parser.positionalArguments().size() == 0)
         parser.showHelp(2);
 
-    const QString path = parser.positionalArguments().constLast();
+    const QStringList paths = parser.positionalArguments();
 
     QString inputFormat = parser.value(inputFormatOption);
     Scanner::InputFormats formats;
@@ -102,25 +102,28 @@ int main(int argc, char *argv[])
 
     // Parse the attribution files
     QList<Package> packages;
-    const QFileInfo pathInfo(path);
-    if (pathInfo.isDir()) {
-        if (logLevel == VerboseLog)
-            std::cerr << qPrintable(tr("Recursively scanning %1 for attribution files...").arg(
-                                        QDir::toNativeSeparators(path))) << std::endl;
-        std::optional<QList<Package>> p = Scanner::scanDirectory(path, formats, checks, logLevel);
-        if (!p)
-            return 1;
-        packages = *p;
-    } else if (pathInfo.isFile()) {
-        std::optional<QList<Package>> p = Scanner::readFile(path, checks, logLevel);
-        if (!p)
-            return 1;
-        packages = *p;
+    for (const QString &path: paths) {
+        const QFileInfo pathInfo(path);
+        if (pathInfo.isDir()) {
+            if (logLevel == VerboseLog)
+                std::cerr << qPrintable(tr("Recursively scanning %1 for attribution files...").arg(
+                                            QDir::toNativeSeparators(path))) << std::endl;
+            std::optional<QList<Package>> p
+                    = Scanner::scanDirectory(path, formats, checks, logLevel);
+            if (!p)
+                return 1;
+            packages.append(*p);
+        } else if (pathInfo.isFile()) {
+            std::optional<QList<Package>> p = Scanner::readFile(path, checks, logLevel);
+            if (!p)
+                return 1;
+            packages.append(*p);
 
-    } else {
-        std::cerr << qPrintable(tr("%1 is not a valid file or directory.").arg(
-                                    QDir::toNativeSeparators(path))) << std::endl << std::endl;
-        parser.showHelp(7);
+        } else {
+            std::cerr << qPrintable(tr("%1 is not a valid file or directory.").arg(
+                                        QDir::toNativeSeparators(path))) << std::endl << std::endl;
+            parser.showHelp(7);
+        }
     }
 
     // Apply the filter
@@ -154,6 +157,12 @@ int main(int argc, char *argv[])
     if (generator == "qdoc"_L1) {
         QString baseDirectory = parser.value(baseDirOption);
         if (baseDirectory.isEmpty()) {
+            if (paths.size() != 1) {
+                std::cerr << qPrintable(tr("baseDir option is not optional."));
+                return 1;
+            }
+
+            const QFileInfo pathInfo(paths.last());
             if (pathInfo.isDir()) {
                 // include top level module name in printed paths
                 baseDirectory = pathInfo.dir().absoluteFilePath(u".."_s);
