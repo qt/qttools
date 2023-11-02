@@ -178,8 +178,7 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
             writer.writeAttribute("level", "1");
             writer.writeCharacters("Namespaces");
             writer.writeEndElement(); // heading
-            NodeMap namespaces;
-            cnn->getMemberNamespaces(namespaces);
+            NodeMap namespaces{cnn->getMembers(Node::Namespace)};
             generateAnnotatedList(writer, node, namespaces);
             writer.writeEndElement(); // section
         }
@@ -189,8 +188,7 @@ void WebXMLGenerator::append(QXmlStreamWriter &writer, Node *node)
             writer.writeAttribute("level", "1");
             writer.writeCharacters("Classes");
             writer.writeEndElement(); // heading
-            NodeMap classes;
-            cnn->getMemberClasses(classes);
+            NodeMap classes{cnn->getMembers([](const Node *n){ return n->isClassNode(); })};
             generateAnnotatedList(writer, node, classes);
             writer.writeEndElement(); // section
         }

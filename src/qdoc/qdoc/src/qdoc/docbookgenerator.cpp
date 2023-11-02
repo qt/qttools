@@ -417,18 +417,29 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
             generateCompactList(relative, things, true, rootName, atom->string());
         } else if ((idx = atom->string().indexOf(QStringLiteral("bymodule"))) != -1) {
             QString moduleName = atom->string().mid(idx + 8).trimmed();
-            Node::NodeType type = typeFromString(atom);
+            Node::NodeType moduleType = typeFromString(atom);
             QDocDatabase *qdb = QDocDatabase::qdocDB();
-            if (const CollectionNode *cn = qdb->getCollectionNode(moduleName, type)) {
-                if (type == Node::Module) {
-                    NodeMap m;
-                    cn->getMemberClasses(m);
-                    if (!m.isEmpty())
-                        generateAnnotatedList(relative, m.values(), atom->string());
-                    hasGeneratedSomething = !m.isEmpty();
-                } else {
+            if (const CollectionNode *cn = qdb->getCollectionNode(moduleName, moduleType)) {
+                NodeMap map;
+                switch (moduleType) {
+                case Node::Module:
+                    // classesbymodule <module_name>
+                    map = cn->getMembers([](const Node *n){ return n->isClassNode(); });
+                    break;
+                case Node::QmlModule:
+                    if (atom->string().contains(QLatin1String("qmlvaluetypes")))
+                        map = cn->getMembers(Node::QmlValueType); // qmlvaluetypesbymodule <module_name>
+                    else
+                        map = cn->getMembers(Node::QmlType);      // qmltypesbymodule <module_name>
+                    break;
+                default: // fall back to generating all members
                     generateAnnotatedList(relative, cn->members(), atom->string());
                     hasGeneratedSomething = !cn->members().isEmpty();
+                    break;
+                }
+                if (!map.isEmpty()) {
+                    generateAnnotatedList(relative, map.values(), atom->string());
+                    hasGeneratedSomething = true;
                 }
             }
         } else if (atom->string() == QLatin1String("classhierarchy")) {
@@ -4627,15 +4638,13 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
     // Actual content.
     if (cn->isModule()) {
         if (!cn->noAutoList()) {
-            NodeMap nmm;
-            cn->getMemberNamespaces(nmm);
+            NodeMap nmm{cn->getMembers(Node::Namespace)};
             if (!nmm.isEmpty()) {
                 startSection("namespaces", "Namespaces");
                 generateAnnotatedList(cn, nmm.values(), "namespaces");
                 endSection();
             }
-            nmm.clear();
-            cn->getMemberClasses(nmm);
+            nmm = cn->getMembers([](const Node *n){ return n->isClassNode(); });
             if (!nmm.isEmpty()) {
                 startSection("classes", "Classes");
                 generateAnnotatedList(cn, nmm.values(), "classes");

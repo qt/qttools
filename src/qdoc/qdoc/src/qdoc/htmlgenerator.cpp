@@ -458,19 +458,28 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         } else if (atom->string() == QLatin1String("qmltypes")) {
             generateCompactList(Generic, relative, m_qdb->getQmlTypes(), true, QStringLiteral(""));
         } else if ((idx = atom->string().indexOf(QStringLiteral("bymodule"))) != -1) {
-            QString moduleName = atom->string().mid(idx + 8).trimmed();
-            Node::NodeType type = typeFromString(atom);
             QDocDatabase *qdb = QDocDatabase::qdocDB();
-            const CollectionNode *cn = qdb->getCollectionNode(moduleName, type);
-            if (cn) {
-                if (type == Node::Module) {
-                    NodeMap m;
-                    cn->getMemberClasses(m);
-                    if (!m.isEmpty()) {
-                        generateAnnotatedList(relative, marker, m.values());
-                    }
-                } else
+            QString moduleName = atom->string().mid(idx + 8).trimmed();
+            Node::NodeType moduleType = typeFromString(atom);
+            if (const auto *cn = qdb->getCollectionNode(moduleName, moduleType)) {
+                NodeMap map;
+                switch (moduleType) {
+                case Node::Module:
+                    // classesbymodule <module_name>
+                    map = cn->getMembers([](const Node *n) { return n->isClassNode(); });
+                    generateAnnotatedList(relative, marker, map.values());
+                    break;
+                case Node::QmlModule:
+                    if (atom->string().contains(QLatin1String("qmlvaluetypes")))
+                        map = cn->getMembers(Node::QmlValueType); // qmlvaluetypesbymodule <module_name>
+                    else
+                        map = cn->getMembers(Node::QmlType);      // qmltypesbymodule <module_name>
+                    generateAnnotatedList(relative, marker, map.values());
+                    break;
+                default: // fall back to listing all members
                     generateAnnotatedList(relative, marker, cn->members());
+                    break;
+                }
             }
         } else if (atom->string() == QLatin1String("classhierarchy")) {
             generateClassHierarchy(relative, m_qdb->getCppClasses());
@@ -1505,15 +1514,13 @@ void HtmlGenerator::generateCollectionNode(CollectionNode *cn, CodeMarker *marke
 
     if (cn->isModule()) {
         if (!cn->noAutoList()) {
-            NodeMap nmm;
-            cn->getMemberNamespaces(nmm);
+            NodeMap nmm{cn->getMembers(Node::Namespace)};
             if (!nmm.isEmpty()) {
                 ref = registerRef("namespaces");
                 out() << "<h2 id=\"" << ref << "\">Namespaces</h2>\n";
                 generateAnnotatedList(cn, marker, nmm.values());
             }
-            nmm.clear();
-            cn->getMemberClasses(nmm);
+            nmm = cn->getMembers([](const Node *n){ return n->isClassNode(); });
             if (!nmm.isEmpty()) {
                 ref = registerRef("classes");
                 out() << "<h2 id=\"" << ref << "\">Classes</h2>\n";

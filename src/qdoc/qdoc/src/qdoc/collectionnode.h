@@ -27,8 +27,6 @@ public:
     void addMember(Node *node) override;
     [[nodiscard]] bool hasNamespaces() const override;
     [[nodiscard]] bool hasClasses() const override;
-    void getMemberNamespaces(NodeMap &out);
-    void getMemberClasses(NodeMap &out) const;
     [[nodiscard]] bool wasSeen() const override { return m_seen; }
 
     [[nodiscard]] QString fullTitle() const override { return title(); }
@@ -39,6 +37,24 @@ public:
         return m_logicalModuleName + m_logicalModuleVersionMajor;
     }
     [[nodiscard]] QString state() const { return m_state; }
+
+    template <typename F>
+    NodeMap getMembers(F &&predicate) const
+    {
+        NodeMap result;
+        for (const auto &member : std::as_const(m_members)) {
+            if (std::invoke(predicate, member) && member->isInAPI())
+                result.insert(member->name(), member);
+        }
+        return result;
+    }
+
+    NodeMap getMembers(Node::NodeType type) const
+    {
+        return getMembers([type](const Node *n) {
+                    return n->nodeType() == type;
+                });
+    }
 
     void setLogicalModuleInfo(const QStringList &info) override;
     void setState(const QString &state) { m_state = state; }

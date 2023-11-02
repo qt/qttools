@@ -6,4 +6,14 @@
     \title QML Modules
 
     \generatelist qml-modules
+
+    \section1 QML types
+
+    \generatelist qmltypesbymodule QDoc.Test
+
+    \section1 QML value types
+
+    \generatelist qmlvaluetypes
+
+    \generatelist qmlvaluetypesbymodule QDoc.Test
 */

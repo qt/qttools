@@ -45,30 +45,19 @@ bool CollectionNode::hasClasses() const
 }
 
 /*!
-  Loads \a out with all this collection node's members that
-  are namespace nodes.
- */
-void CollectionNode::getMemberNamespaces(NodeMap &out)
-{
-    out.clear();
-    for (const auto &member : std::as_const(m_members)) {
-        if (member->isNamespace() && member->isInAPI())
-            out.insert(member->name(), member);
-    }
-}
+    \fn template <typename F> NodeMap CollectionNode::getMembers(const F &&predicate) const
+
+    Returns a map containing this collection node's member nodes for which \c
+    predicate(node) returns \c true. The \a predicate is a function or a
+    lambda that takes a const Node pointer as an argument and returns a bool.
+*/
 
 /*!
-  Loads \a out with all this collection node's members that
-  are class nodes.
- */
-void CollectionNode::getMemberClasses(NodeMap &out) const
-{
-    out.clear();
-    for (const auto &member : std::as_const(m_members)) {
-        if (member->isClassNode() && member->isInAPI())
-            out.insert(member->name(), member);
-    }
-}
+    \fn NodeMap CollectionNode::getMembers(Node::NodeType type) const
+
+    Returns a map containing this collection node's member nodes with
+    a specified node \a type.
+*/
 
 /*!
   Returns the logical module version.
