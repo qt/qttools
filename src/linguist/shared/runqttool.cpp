@@ -60,8 +60,8 @@ static QString commandLineForSystem(const QString &program,
             + shellQuoted(arguments).join(QLatin1Char(' '));
 }
 
-void runQtTool(const QString &toolName, const QStringList &arguments,
-               QLibraryInfo::LibraryPath location)
+static int runQtToolHelper(const QString &toolName, const QStringList &arguments,
+                           QLibraryInfo::LibraryPath location)
 {
     int exitCode = 0;
     const QString commandLine = commandLineForSystem(qtToolFilePath(toolName, location), arguments);
@@ -73,13 +73,27 @@ void runQtTool(const QString &toolName, const QStringList &arguments,
 #else
     exitCode = std::system(qPrintable(commandLine));
 #endif
+    return exitCode;
+}
+
+void runQtTool(const QString &toolName, const QStringList &arguments,
+               QLibraryInfo::LibraryPath location)
+{
+    const int exitCode = runQtToolHelper(toolName, arguments, location);
     if (exitCode != 0)
         exit(exitCode);
 }
 
+static int runInternalQtToolHelper(const QString &toolName, const QStringList &arguments)
+{
+    return runQtToolHelper(toolName, arguments, QLibraryInfo::LibraryExecutablesPath);
+}
+
 void runInternalQtTool(const QString &toolName, const QStringList &arguments)
 {
-    runQtTool(toolName, arguments, QLibraryInfo::LibraryExecutablesPath);
+    const int exitCode = runInternalQtToolHelper(toolName, arguments);
+    if (exitCode != 0)
+        exit(exitCode);
 }
 
 std::unique_ptr<QTemporaryFile> createProjectDescription(QStringList args)
@@ -91,6 +105,10 @@ std::unique_ptr<QTemporaryFile> createProjectDescription(QStringList args)
     }
     file->close();
     args << QStringLiteral("-out") << file->fileName();
-    runInternalQtTool(QStringLiteral("lprodump"), args);
+    const int exitCode = runInternalQtToolHelper(QStringLiteral("lprodump"), args);
+    if (exitCode != 0) {
+        file.reset();
+        exit(exitCode);
+    }
     return file;
 }
