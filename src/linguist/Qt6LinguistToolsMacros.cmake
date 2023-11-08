@@ -338,7 +338,23 @@ set(lupdate_subproject${n}_excluded \"${excluded}\")
         if(NOT TARGET ${QT_GLOBAL_LUPDATE_TARGET})
             add_custom_target(${QT_GLOBAL_LUPDATE_TARGET})
         endif()
-        add_dependencies(${QT_GLOBAL_LUPDATE_TARGET} ${lupdate_target})
+        if(CMAKE_GENERATOR MATCHES "^Visual Studio ")
+            # For the Visual Studio generators we cannot use add_dependencies, because this would
+            # enable ${lupdate_target} in the default build of the solution. See QTBUG-115166 and
+            # upstream CMake issue #16668 for details. As a work-around, we run the
+            # ${lupdate_target} through 'cmake --build' as PRE_BUILD step of the global lupdate
+            # target.
+            add_custom_command(
+                TARGET ${QT_GLOBAL_LUPDATE_TARGET} PRE_BUILD
+                COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" -t ${lupdate_target}
+            )
+
+            # Exclude ${lupdate_target} from the solution's default build to avoid it being enabled
+            # should the user add a dependency to it.
+            set_property(TARGET ${lupdate_target} PROPERTY EXCLUDE_FROM_DEFAULT_BUILD ON)
+        else()
+            add_dependencies(${QT_GLOBAL_LUPDATE_TARGET} ${lupdate_target})
+        endif()
     endif()
 endfunction()
 
