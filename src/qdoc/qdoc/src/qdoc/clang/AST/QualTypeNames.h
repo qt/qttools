@@ -380,7 +380,7 @@ inline NestedNameSpecifier *createNestedNameSpecifier(const ASTContext &Ctx,
 /// Return the fully qualified type, including fully-qualified
 /// versions of any template parameters.
 inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
-                               bool WithGlobalNsPrefix) {
+                               bool WithGlobalNsPrefix = false) {
   // In case of myType* we need to strip the pointer first, fully
   // qualify and attach the pointer once again.
   if (isa<PointerType>(QT.getTypePtr())) {
@@ -485,7 +485,7 @@ inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
 inline std::string getFullyQualifiedName(QualType QT,
                                   const ASTContext &Ctx,
                                   const PrintingPolicy &Policy,
-                                  bool WithGlobalNsPrefix) {
+                                  bool WithGlobalNsPrefix = false) {
   QualType FQQT = getFullyQualifiedType(QT, Ctx, WithGlobalNsPrefix);
   return FQQT.getAsString(Policy);
 }
