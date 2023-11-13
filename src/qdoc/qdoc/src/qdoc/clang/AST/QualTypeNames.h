@@ -20,6 +20,9 @@ namespace clang {
 
 namespace TypeName {
 
+inline QualType getFullyQualifiedType(QualType QT, const ASTContext &Ctx,
+                                      bool WithGlobalNsPrefix);
+
 /// Create a NestedNameSpecifier for Namesp and its enclosing
 /// scopes.
 ///
