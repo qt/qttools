@@ -598,7 +598,9 @@ void tst_generatedOutput::testTagFile()
 
 void tst_generatedOutput::testGlobalFunctions()
 {
-    testAndCompare("testdata/configs/testglobals.qdocconf", "globals.html");
+    testAndCompare("testdata/configs/testglobals.qdocconf",
+                   "globals.html "
+                   "testglobals-module.html");
 }
 
 void tst_generatedOutput::proxyPage()

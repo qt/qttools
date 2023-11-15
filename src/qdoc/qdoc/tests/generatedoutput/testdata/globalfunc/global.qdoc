@@ -3,6 +3,8 @@
 
 /*!
     \module TestGlobals
+
+    A collection of \l foo() functions.
 */
 
 /*!

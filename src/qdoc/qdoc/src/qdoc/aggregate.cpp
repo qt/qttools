@@ -406,26 +406,28 @@ void Aggregate::addFunction(FunctionNode *fn)
   another Aggregate, the function is inserted into this
   Aggregate's function map.
 
-  The function is also removed from the overload list
-  that's relative to the original parent \a firstParent.
+  If the function has overloads, it is also moved to the end of
+  the overload list that's relative to the original parent
+  \a firstParent, in order to not interfere with documenting
+  other overloads.
 
-  \note This is a private function.
+  \note \a fn is \b not removed from the original parent's function
+        map, as we want to be able to still find global functions
+        from the global namespace, even after adopting them
+        elsewhere.
  */
 void Aggregate::adoptFunction(FunctionNode *fn, Aggregate *firstParent)
 {
-    auto *primary = firstParent->m_functionMap.value(fn->name());
-    if (primary) {
-        if (primary != fn)
-            primary->removeOverload(fn);
-        else if (primary->nextOverload())
-            firstParent->m_functionMap.insert(primary->name(),
-                                              primary->nextOverload());
-        /* else...technically we should call
-        firstParent->m_functionMap.remove(primary->name());
-        but we want to be able to still find global functions
-        from the global namespace, even after adopting them
-        elsewhere.
-        */
+    if (auto *primary = firstParent->m_functionMap.value(fn->name()); primary) {
+        if (primary->nextOverload()) {
+            if (primary != fn)
+                primary->removeOverload(fn);
+            else {
+                primary = primary->nextOverload();
+                firstParent->m_functionMap.insert(primary->name(), primary);
+            }
+            primary->appendOverload(fn);
+        }
     }
     fn->setNextOverload(nullptr);
     addFunction(fn);
