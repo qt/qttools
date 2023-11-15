@@ -357,6 +357,9 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         p.copyrightFileContents = QString::fromUtf8(file.readAll());
     }
 
+    if (p.licenseFiles.isEmpty() && !autoDetectLicenseFiles(p))
+        return std::nullopt;
+
     for (const QString &licenseFile : std::as_const(p.licenseFiles)) {
         QFile file(licenseFile);
         if (!file.open(QIODevice::ReadOnly)) {
@@ -369,9 +372,6 @@ static std::optional<Package> readPackage(const QJsonObject &object, const QStri
         }
         p.licenseFilesContents << QString::fromUtf8(file.readAll()).trimmed();
     }
-
-    if (p.licenseFiles.isEmpty() && !autoDetectLicenseFiles(p))
-        return std::nullopt;
 
     if (!validatePackage(p, filePath, checks, logLevel) || !validPackage)
         return std::nullopt;
