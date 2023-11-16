@@ -26,6 +26,8 @@
 
 #include <qdebug.h>
 
+#include <cmath>
+
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -471,12 +473,10 @@ QSize QPixelTool::sizeHint() const
     return m_initialSize;
 }
 
-static inline QString pixelToolTitle(QPoint pos, const QColor &currentColor)
+static inline QString pixelToolTitle(QPoint pos, const QScreen *screen, const QColor &currentColor)
 {
-    if (QHighDpiScaling::isActive()) {
-        if (auto screen = QGuiApplication::screenAt(pos))
-            pos = QHighDpi::toNativePixels(pos, screen);
-    }
+    if (screen != nullptr)
+        pos = QHighDpi::toNativePixels(pos, screen);
     return QCoreApplication::applicationName() + QLatin1String(" [")
         + QString::number(pos.x())
         + QLatin1String(", ") + QString::number(pos.y()) + QLatin1String("] ")
@@ -497,37 +497,38 @@ void QPixelTool::grabScreen()
     if (mousePos == m_lastMousePos && !m_autoUpdate)
         return;
 
+    QScreen *screen = QGuiApplication::screenAt(mousePos);
+
     if (m_lastMousePos != mousePos)
-        setWindowTitle(pixelToolTitle(mousePos, m_currentColor));
+        setWindowTitle(pixelToolTitle(mousePos, screen, m_currentColor));
 
-    int w = int(width() / float(m_zoom));
-    int h = int(height() / float(m_zoom));
-
-    if (width() % m_zoom > 0)
-        ++w;
-    if (height() % m_zoom > 0)
-        ++h;
-
-    int x = mousePos.x() - w/2;
-    int y = mousePos.y() - h/2;
+    const auto widgetDpr = devicePixelRatioF();
+    const auto screenDpr = screen != nullptr ? screen->devicePixelRatio() : widgetDpr;
+    // When grabbing from another screen, we grab an area fitting our size using our DPR.
+    const auto factor = widgetDpr / screenDpr / qreal(m_zoom);
+    const QSize size{int(std::ceil(width() * factor)), int(std::ceil(height() * factor))};
+    const QPoint pos = mousePos - QPoint{size.width(), size.height()} / 2;
 
     const QBrush darkBrush = palette().color(QPalette::Dark);
-    if (QScreen *screen = this->screen()) {
-        m_buffer = screen->grabWindow(0, x, y, w, h);
+    if (screen != nullptr) {
+        const QPoint screenPos = pos - screen->geometry().topLeft();
+        m_buffer = screen->grabWindow(0, screenPos.x(), screenPos.y(), size.width(), size.height());
     } else {
-        m_buffer = QPixmap(w, h);
+        m_buffer = QPixmap(size);
         m_buffer.fill(darkBrush.color());
     }
-    QRegion geom(x, y, w, h);
+    m_buffer.setDevicePixelRatio(widgetDpr);
+
+    QRegion geom(QRect{pos, size});
     QRect screenRect;
     const auto screens = QGuiApplication::screens();
     for (auto screen : screens)
         screenRect |= screen->geometry();
     geom -= screenRect;
     const auto rectsInRegion = geom.rectCount();
-    if (rectsInRegion > 0) {
+    if (!geom.isEmpty()) {
         QPainter p(&m_buffer);
-        p.translate(-x, -y);
+        p.translate(-pos);
         p.setPen(Qt::NoPen);
         p.setBrush(darkBrush);
         p.drawRects(geom.begin(), rectsInRegion);
