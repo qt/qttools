@@ -8,10 +8,25 @@
 
 #pragma once
 
+// Those directives indirectly includes "clang/AST/Attrs.h" which
+// includes "clang/AST/Attrs.inc".
+// "clang/AST/Attrs.inc", produces some "C4267" warnings specifically
+// on MSVC 2019.
+// This in turn blocks CI integrations for configuration with that
+// compiler that treats warnings as errors.
+// As that header is not under our control, we disable the warning
+// completely when going through those includes.
+#include <QtCore/qcompilerdetection.h>
+
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_MSVC(4267)
+
 #include "clang/AST/DeclTemplate.h"
 #include "clang/AST/DeclarationName.h"
 #include "clang/AST/GlobalDecl.h"
 #include "clang/AST/Mangle.h"
+
+QT_WARNING_POP
 
 #include <stdio.h>
 #include <memory>
