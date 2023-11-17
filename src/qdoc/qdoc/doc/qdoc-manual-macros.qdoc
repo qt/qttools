@@ -1,0 +1,467 @@
+// Copyright (C) 2023 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \page qdoc-macros.html
+    \previouspage 12-0-qdoc-commands-miscellaneous.html
+    \nextpage qdoc-macros-cmake-text-snippets.html
+    \title Macros
+
+    Use the \l {macro-variable}{macro} variable to create your own simple QDoc
+    commands.
+
+    Macros are useful for:
+
+    \list
+        \li Including recurring text, such as formatted text snippets,
+            into documentation.
+        \li Pulling in information, such as version strings, from the build
+            system into .documentation.
+        \li Maintaining a single location for strings that are likely to change
+            in the future, such as product names.
+        \li Making sure that a term or product name is used consistently.
+        \li Styling the generated documentation by using HTML and DocBook
+            elements, such as forced line breaks and special characters.
+        \li Using tabs to show examples of content for different programming
+            languages, operating systems, or tools, for example.
+    \endlist
+
+    \section1 Global Macros
+
+    For a set of predefined global macros that you can use in all documentation
+    projects and their current values, see
+    \l{https://github.com/qt/qtbase/blob/e4315204b1412d74842b3167c3eb9a49dc233355/doc/global/macros.qdocconf}
+    {/qtbase/doc/global/macros.qdocconf} and
+    \l{https://github.com/qt/qtbase/blob/e4315204b1412d74842b3167c3eb9a49dc233355/doc/global/htmltabs.qdocconf}
+    {/qtbase/doc/global/htmltabs.qdocconf}. They have macros that include:
+
+    \list
+        \li \l {CMake Text Snippets}
+        \li \l {HTML and DocBook Formatting}
+        \li \l {Product Names}
+        \li \l {Product Versions}
+        \li \l {Tabbed Content}
+        \li \l {youtube-macro}{Links to YouTube content}
+        \li \l {Miscellaneous Macros}
+    \endlist
+
+    \QOI copies the macros files to your Qt installation folder, so you can use
+    the macros even if you build the documentation using QDoc from an installed
+    Qt (as opposed to building QDoc yourself from sources).
+
+    \note The values of the global macros might change between Qt versions,
+    so the macros might be extended differently depending on the Qt version that
+    you use to build the documentation.
+
+    \section1 Adding Macros
+
+    You can add macros for a particular documentation project in the
+    .qdocconf file of the project or any .qdocconf file that you include into it.
+    If the macro could be useful in more than one documentation project, add it
+    to the global macros file.
+
+    For more information about the macro syntax and options, see
+    \l {macro-variable}{macro}.
+
+    \section1 Using Macros
+
+    You can use macros in the same way as the built-in QDoc commands in:
+
+    \list
+        \li Code source files, in documentation comments (.cpp, .qml)
+        \li Documentation source files (.qdoc, .qdocinc)
+    \endlist
+
+    For example:
+
+    \badcode
+    \QOI copies the macros files to your Qt installation folder.
+    \endcode
+
+    \section1 Obsolete Macros
+
+    The global macros file contains the following obsolete macros for
+    compatibility with older documentation sets.
+
+    \table
+    \header
+        \li Don't Use
+        \li Use
+    \row
+        \li \\gui
+        \li \l{uicontrol-command}{\\uicontrol}
+    \row
+        \li \\menu
+        \li \l{uicontrol-command}{\\uicontrol}
+    \row
+        \li \\param
+        \li \l{a-command}{\\a}
+    \row
+        \li \\return
+        \li Write \e Returns or \e returns.
+    \endtable
+
+    \sa {macro-variable}{macro}, {Unknown macro}
+*/
+
+/*!
+    \page qdoc-macros-cmake-text-snippets.html
+    \previouspage qdoc-macros.html
+    \nextpage qdoc-macros-formatting.html
+
+    \title CMake Text Snippets
+
+    See \l{https://github.com/qt/qtbase/blob/e4315204b1412d74842b3167c3eb9a49dc233355/doc/global/macros.qdocconf}
+    {/qtbase/doc/global/macros.qdocconf} for standard text snippets that you
+    should use when writing \l {Building with CMake}
+    {Qt-specific CMake documentation}:
+
+    \table
+    \header
+        \li Macro
+        \li Use
+    \row
+        \li \\cmakecommandandroidonly
+        \li For Android targets
+    \row
+        \li \\cmakecommandsince
+        \li To indicate which Qt version introduced the command
+    \row
+        \li \\cmakepropertyandroidonly
+        \li For Android targets
+    \row
+        \li \\cmakepropertyiosonly
+        \li For iOS targets
+    \row
+        \li \\cmakepropertysince
+        \li To indicate which Qt version introduced the property
+    \row
+        \li \\cmakepropertywebassemblyonly
+        \li For WebAssembly targets
+    \row
+        \li \\cmakevariableandroidonly
+        \li For Android targets
+    \row
+        \li \\cmakevariableiosonly
+        \li For iOS targets
+    \row
+        \li \\cmakevariablesince
+        \li To indicate which Qt version introduced the variable
+    \row
+        \li \\preliminarycmakecommand
+        \li To indicate that the command may change in future versions
+    \row
+        \li \\preliminarycmakeproperty
+        \li To indicate that the property may change in future versions
+    \row
+        \li \\preliminarycmakevariable
+        \li To indicate that the variable may change in future versions
+    \row
+        \li \\versionlessCMakeCommandsNote
+        \li For all commands, to tell users how to use versioned commands
+    \endtable
+
+    \sa {macro-variable}{macro}, {Macros}
+*/
+
+/*!
+    \page qdoc-macros-formatting.html
+    \previouspage qdoc-macros.html
+    \nextpage qdoc-macros-product-names.html
+
+    \title HTML and DocBook Formatting
+
+    See \l{https://github.com/qt/qtbase/blob/e4315204b1412d74842b3167c3eb9a49dc233355/doc/global/macros.qdocconf}
+    {/qtbase/doc/global/macros.qdocconf} for HTML and DocBook elements and
+    special characters that you can use in documentation source files.
+
+    \sa {Macros and Other Configurations}, {macro-variable}{macro}, {Macros}
+
+*/
+
+/*!
+    \page qdoc-macros-product-names.html
+    \previouspage qdoc-macros-formatting.html
+    \nextpage qdoc-macros-tabbed-content.html
+
+    \title Product Names
+
+    Use the following macros to refer to products:
+
+    \table
+    \header
+        \li Macro
+        \li Expands To
+    \row
+        \li \\macos
+        \li macOS
+    \row
+        \li \\QA
+        \li Qt Assistant
+    \row
+        \li \\QB
+        \li Qt Bridge
+    \row
+        \li \\QBF
+        \li Qt Bridge for Figma
+    \row
+        \li \\QBPS
+        \li Qt Bridge for Adobe Photoshop
+    \row
+        \li \\QBSK
+        \li Qt Bridge for Sketch
+    \row
+        \li \\QBXD
+        \li Qt Bridge for Adobe XD
+    \row
+        \li \\QD
+        \li Qt Designer
+    \row
+        \li \\QDS
+        \li Qt Design Studio
+    \row
+        \li \\QDV
+        \li Qt Design Viewer
+    \row
+        \li \\QL
+        \li Qt Linguist
+    \row
+        \li \\QMCU
+        \li Qt for MCUs
+    \row
+        \li \\QMT
+        \li Qt Maintenance Tool
+    \row
+        \li \\QOI
+        \li Qt Online Installer
+    \row
+        \li \\QQV
+        \li Qt QML Viewer
+    \row
+        \li \\QtAA
+        \li Qt for Android Automotive
+    \row
+        \li \\QUL
+        \li Qt Quick Ultralite
+    \endtable
+
+    \sa {macro-variable}{macro}, {Macros}
+*/
+
+/*!
+    \page qdoc-macros-product-versions.html
+    \previouspage qdoc-macros-product-names.html
+    \nextpage qdoc-macros-tabbed-content.html
+
+    \title Product Versions
+
+    Use the following macros to display version and status information about a
+    topic:
+
+    \table
+    \header
+        \li Macro
+        \li Expands To
+    \row
+        \li \\QtMajorVersion
+        \li The major version number based on the $QT_VER environment variable
+    \row
+        \li \\QtMinorVersion
+        \li The minor version number based on the $QT_VER environment variable
+    \row
+        \li \\QtVersion
+        \li The value of the $QT_VERSION environment variable
+    \row
+        \li \\QtVer
+        \li The value of the $QT_VER environment variable
+    \row
+        \li \\techpreview
+        \li The statement that a module or class is preliminary and might change
+    \endtable
+
+    \section1 \\techpreview
+
+    Appends the tech preview link to the brief sentence and adds the topic to
+    the \c tech_preview group.
+
+    Must be placed directly under a \brief command.
+
+    \sa {macro-variable}{macro}, {Macros}
+*/
+
+/*!
+    \page qdoc-macros-tabbed-content.html
+    \previouspage qdoc-macros-formatting.html
+    \nextpage qdoc-macros-youtube-videos.html
+
+    \title Tabbed Content
+
+    Use the following macros to create \e {tab groups} of labeled HTML tabs that
+    have comparable or alternative content. For example, you can show code
+    snippets for different programming languages.
+
+    \list
+        \li \l{tab-macro}{\\tab}
+        \li \l{tabcontent-macro}{\\tabcontent}
+        \li \l{endtabcontent-macro}{\\endtabcontent}
+    \endlist
+
+    \section1 Using Tab Macros
+
+    \badcode
+    \tab {name}{tab-id}{title}{checked}
+    \tabcontent {tab-id}
+      content
+    \endtabcontent
+    \endcode
+
+    \note These macros only work with the online template, so you usually
+    need to use conditional text to get good results also for the offline help.
+
+    For example, to show instructions for the CMake and qmake build systems in
+    tabs:
+
+    \badcode
+    \if defined(onlinedocs)
+      \tab {build-qt-app}{tab-cmake}{CMake}{checked}
+      \tab {build-qt-app}{tab-qmake}{qmake}{}
+      \tabcontent {tab-cmake}
+    \else
+      \section1 Using CMake
+    \endif
+      CMake-specific instructions go here
+    \if defined(onlinedocs)
+      \endtabcontent
+      \tabcontent {tab-qmake}
+    \else
+      \section1 Using qmake
+    \endif
+      qmake-specific instructions go here
+    \if defined(onlinedocs)
+      \endtabcontent
+    \endif
+    \endcode
+
+    \target tab-macro
+    \section1 \\tab
+
+    \badcode
+    \tab {name}{tab-id}{title}{checked}
+    \endcode
+
+    Specifies a tab in a tab group with a name, ID, title, and default state.
+
+    Use a unique \e {name} to specify which tabs belong to a tab group. That is,
+    all tabs in a group have the same name. To separate the tabs from each other,
+    give them each a unique \e {tab-id} within the group. Use this \e {tab-id}
+    as the value of the \\tabcontent macro to add content to the tab.
+
+    The \e {checked} argument selects the tab by default when the HTML page is
+    loaded. For the initially hidden tabs, pass an empty argument {}.
+
+    \target tabcontent-macro
+    \section1 \\tabcontent
+
+    \badcode
+    \tabcontent {tab-id}
+    \endcode
+
+    Adds content to the tab with the \e {tab-id} you specify.
+
+    \target endtabcontent-macro
+    \section1 \\endtabcontent
+
+    Marks the end of the tab content that you begin with \\tabcontent.
+
+    \sa {Macros}
+*/
+
+/*!
+    \page qdoc-macros-youtube-videos.html
+    \previouspage qdoc-macros-tabbed-content.html
+    \nextpage qdoc-macros-misc.html
+
+    \target youtube-macro
+    \title \\youtube
+
+    When generating online documentation, embeds a YouTube video in the HTML.
+    When generating offline documentation (.qch), adds an external link to the
+    video with a thumbnail image. The HTML docs show a thumbnail of the video
+    with a play button. You need to save the thumbnail in
+    \c {\images\extraimages\} in your project folder.
+
+    Use the following URL to open the thumbnail image in a browser:
+    \c {https://img.youtube.com/vi/<ID>/0.jpg}. The \c <ID> is the ID of
+    the video on YouTube. For example, if the URL to the video is
+    \c {https://www.youtube.com/watch?v=dQw4w9WgXcQ&feature=youtu.be},
+    the ID is \c dQw4w9WgXcQ. Save the image file as \c dQw4w9WgXcQ.jpg.
+
+    You must add the filename of the thumbnail file to
+    \c {\images\extraimages\extraimages.qdocconf}. For example:
+
+    \badcode
+    {HTML.extraimages,qhp.qtdesignstudio.extraFiles} += \
+        images/dQw4w9WgXcQ.jpg
+    \endcode
+
+    To add a link to the video in text, write:
+
+    \badcode
+    \youtube dQw4w9WgXcQ
+    \endcode
+
+    \sa {Macros}
+*/
+
+/*!
+    \page qdoc-macros-misc.html
+    \previouspage qdoc-macros-youtube-videos.html
+    \nextpage 21-0-qdoc-configuration.html
+
+    \title Miscellaneous Macros
+
+    You can use the following macros to affect the HTML output and to use
+    standard terminology:
+
+    \list
+        \li \l {borderedimage-macro}{\\borderedimage}
+        \li \l {examplecategory-macro}{\\examplecategory}
+        \li \l {key-macro}{\\key}
+        \li \l {nullptr-macro}{\\nullptr}
+        \li \l {summary-macro}{\\summary}
+    \endlist
+
+    \target borderedimage-macro
+    \section1 \\borderedimage
+
+    Like \l{image-command}{\\image}, but adds a border around the image.
+
+    \target examplecategory-macro
+    \section1 \\examplecategory
+
+    Describes the category an example is sorted to in the Qt Creator
+    \uicontrol Examples tab.
+
+    \target key-macro
+    \section1 \\key
+
+    Formats keyboard key names.
+
+    \target nullptr-macro
+    \section1 \\nullptr
+
+    Expands to the term to use for null pointers.
+
+    \target summary-macro
+    \section1 \\summary
+
+    Like \l{brief-command}{\\brief}, but replicates the sentence also as text.
+
+    Wrap the entire sentence within \c {{}}. For example:
+
+    \badcode
+    \summary {Creates a build target.}
+    \endcode
+
+    \sa {macro-variable}{macro}, {Macros}
+*/

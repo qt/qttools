@@ -3,7 +3,7 @@
 
 /*!
     \page 21-0-qdoc-configuration.html
-    \previouspage Miscellaneous
+    \previouspage Miscellaneous Macros
     \nextpage Generic Configuration Variables
 
     \title The QDoc Configuration File
@@ -875,11 +875,11 @@
     example, the macro is only used when generating HTML output.
 
     \badcode
-        macro.gui              = "\\b"
+        macro.key              = "\\b"
         macro.raisedaster.HTML = "<sup>*</sup>"
     \endcode
 
-    The first macro defines the \\gui command to render its argument
+    The first macro defines the \\key command to render its argument
     using a bold font. The second macro defines the \\raisedaster
     command to render a superscript asterisk, but only when generating
     HTML.
@@ -923,6 +923,8 @@
     A macro that defines a match pattern outputs all capture groups
     (parentheses) concatenated together, or the exact matched string
     if the pattern does not contain any capture groups.
+
+    For more information about pre-defined macros, see \l {Macros}.
 
     \target manifestmeta-variable
     \section1 manifestmeta

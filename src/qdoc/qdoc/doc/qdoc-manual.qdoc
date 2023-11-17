@@ -33,6 +33,16 @@
           \li \l {Special Content}
           \li \l {Miscellaneous}
         \endlist
+      \li \l {Macros}
+        \list
+            \li \l {CMake Text Snippets}
+            \li \l {HTML and DocBook Formatting}
+            \li \l {Product Names}
+            \li \l {Product Versions}
+            \li \l {Tabbed Content}
+            \li \l {youtube-macro}{Linking to YouTube content}
+            \li \l {Miscellaneous Macros}
+        \endlist
       \li \l {The QDoc Configuration File}
         \list
           \li \l {Generic Configuration Variables}
