@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 
     if (!parser.positionalArguments().isEmpty()) {
         const QString previewImageFileName = parser.positionalArguments().constFirst();
-        if (QFileInfo(previewImageFileName).exists()) {
+        if (QFileInfo::exists(previewImageFileName)) {
             QImage previewImage(previewImageFileName);
             if (!previewImage.size().isEmpty())
                 pixelTool.setPreviewImage(previewImage);
@@ -43,5 +43,5 @@ int main(int argc, char **argv)
     QObject::connect(&app, &QApplication::lastWindowClosed,
                      &app, &QCoreApplication::quit);
 
-    return app.exec();
+    return QCoreApplication::exec();
 }

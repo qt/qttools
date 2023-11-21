@@ -66,7 +66,7 @@ private:
     int m_gridSize;
     int m_lcdMode;
 
-    int m_updateId;
+    int m_updateId = 0;
     int m_displayZoomId = 0;
     int m_displayGridSizeId = 0;
 
