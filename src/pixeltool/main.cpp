@@ -10,18 +10,20 @@
 
 QT_USE_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
-    QCoreApplication::setApplicationName(QLatin1String("PixelTool"));
-    QCoreApplication::setApplicationVersion(QLatin1String(QT_VERSION_STR));
-    QCoreApplication::setOrganizationName(QLatin1String("QtProject"));
+    QCoreApplication::setApplicationName("PixelTool"_L1);
+    QCoreApplication::setApplicationVersion(QLatin1StringView(qVersion()));
+    QCoreApplication::setOrganizationName("QtProject"_L1);
 
     QCommandLineParser parser;
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument(QLatin1String("preview"),
-                                 QLatin1String("The preview image to show."));
+    parser.addPositionalArgument("preview"_L1,
+                                 "The preview image to show."_L1);
 
     parser.process(app);
 

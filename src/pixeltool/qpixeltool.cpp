@@ -32,11 +32,21 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
+static constexpr auto settingsGroup = "QPixelTool"_L1;
+static constexpr auto organization = "QtProject"_L1;
+static constexpr auto autoUpdateKey = "autoUpdate"_L1;
+static constexpr auto gridSizeKey = "gridSize"_L1;
+static constexpr auto gridActiveKey = "gridActive"_L1;
+static constexpr auto zoomKey = "zoom"_L1;
+static constexpr auto initialSizeKey = "initialSize"_L1;
+static constexpr auto positionKey = "position"_L1;
+static constexpr auto lcdModeKey = "lcdMode"_L1;
+
 static QPoint initialPos(const QSettings &settings, const QSize &initialSize)
 {
     const QPoint defaultPos = QGuiApplication::primaryScreen()->availableGeometry().topLeft();
     const QPoint savedPos =
-        settings.value(QLatin1String("position"), QVariant(defaultPos)).toPoint();
+        settings.value(positionKey, QVariant(defaultPos)).toPoint();
     auto savedScreen = QGuiApplication::screenAt(savedPos);
     return savedScreen != nullptr
         && savedScreen->availableGeometry().intersects(QRect(savedPos, initialSize))
@@ -47,13 +57,13 @@ QPixelTool::QPixelTool(QWidget *parent)
     : QWidget(parent)
 {
     setWindowTitle(QCoreApplication::applicationName());
-    QSettings settings(QLatin1String("QtProject"), QLatin1String("QPixelTool"));
-    m_autoUpdate = settings.value(QLatin1String("autoUpdate"), 0).toBool();
-    m_gridSize = settings.value(QLatin1String("gridSize"), 1).toInt();
-    m_gridActive = settings.value(QLatin1String("gridActive"), 1).toInt();
-    m_zoom = settings.value(QLatin1String("zoom"), 4).toInt();
-    m_initialSize = settings.value(QLatin1String("initialSize"), QSize(250, 200)).toSize();
-    m_lcdMode = settings.value(QLatin1String("lcdMode"), 0).toInt();
+    QSettings settings(organization, settingsGroup);
+    m_autoUpdate = settings.value(autoUpdateKey, 0).toBool();
+    m_gridSize = settings.value(gridSizeKey, 1).toInt();
+    m_gridActive = settings.value(gridActiveKey, 1).toInt();
+    m_zoom = settings.value(zoomKey, 4).toInt();
+    m_initialSize = settings.value(initialSizeKey, QSize(250, 200)).toSize();
+    m_lcdMode = settings.value(lcdModeKey, 0).toInt();
 
     move(initialPos(settings, m_initialSize));
 
@@ -64,14 +74,14 @@ QPixelTool::QPixelTool(QWidget *parent)
 
 QPixelTool::~QPixelTool()
 {
-    QSettings settings(QLatin1String("QtProject"), QLatin1String("QPixelTool"));
-    settings.setValue(QLatin1String("autoUpdate"), int(m_autoUpdate));
-    settings.setValue(QLatin1String("gridSize"), m_gridSize);
-    settings.setValue(QLatin1String("gridActive"), m_gridActive);
-    settings.setValue(QLatin1String("zoom"), m_zoom);
-    settings.setValue(QLatin1String("initialSize"), size());
-    settings.setValue(QLatin1String("position"), pos());
-    settings.setValue(QLatin1String("lcdMode"), m_lcdMode);
+    QSettings settings(organization, settingsGroup);
+    settings.setValue(autoUpdateKey, int(m_autoUpdate));
+    settings.setValue(gridSizeKey, m_gridSize);
+    settings.setValue(gridActiveKey, m_gridActive);
+    settings.setValue(zoomKey, m_zoom);
+    settings.setValue(initialSizeKey, size());
+    settings.setValue(positionKey, pos());
+    settings.setValue(lcdModeKey, m_lcdMode);
 }
 
 void QPixelTool::setPreviewImage(const QImage &image)
@@ -215,13 +225,13 @@ void QPixelTool::paintEvent(QPaintEvent *)
 
     if (m_displayZoom) {
         render_string(&p, w, h,
-                      QLatin1String("Zoom: x") + QString::number(m_zoom),
+                      "Zoom: x"_L1 + QString::number(m_zoom),
                       Qt::AlignTop | Qt::AlignRight);
     }
 
     if (m_displayGridSize) {
         render_string(&p, w, h,
-                      QLatin1String("Grid size: ") + QString::number(m_gridSize),
+                      "Grid size: "_L1 + QString::number(m_gridSize),
                       Qt::AlignBottom | Qt::AlignLeft);
     }
 
@@ -377,66 +387,66 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     m_freeze = true;
 
     QMenu menu;
-    menu.addAction(QLatin1String("Qt Pixel Zooming Tool"))->setEnabled(false);
+    menu.addAction("Qt Pixel Zooming Tool"_L1)->setEnabled(false);
     menu.addSeparator();
 
     // Grid color options...
     QActionGroup *gridGroup = new QActionGroup(&menu);
-    addCheckableAction(menu, QLatin1String("White grid"), m_gridActive == 2,
+    addCheckableAction(menu, "White grid"_L1, m_gridActive == 2,
                        Qt::Key_W, gridGroup);
-    QAction *blackGrid = addCheckableAction(menu, QLatin1String("Black grid"),
+    QAction *blackGrid = addCheckableAction(menu, "Black grid"_L1,
                                             m_gridActive == 1, Qt::Key_B, gridGroup);
-    QAction *noGrid = addCheckableAction(menu, QLatin1String("No grid"), m_gridActive == 0,
+    QAction *noGrid = addCheckableAction(menu, "No grid"_L1, m_gridActive == 0,
                                          Qt::Key_N, gridGroup);
     menu.addSeparator();
 
     // Grid size options
-    menu.addAction(QLatin1String("Increase grid size"), Qt::Key_PageUp,
+    menu.addAction("Increase grid size"_L1, Qt::Key_PageUp,
                    this, &QPixelTool::increaseGridSize);
-    menu.addAction(QLatin1String("Decrease grid size"), Qt::Key_PageDown,
+    menu.addAction("Decrease grid size"_L1, Qt::Key_PageDown,
                    this, &QPixelTool::decreaseGridSize);
     menu.addSeparator();
 
     QActionGroup *lcdGroup = new QActionGroup(&menu);
-    addCheckableAction(menu, QLatin1String("No subpixels"), m_lcdMode == 0,
+    addCheckableAction(menu, "No subpixels"_L1, m_lcdMode == 0,
                        QKeySequence(), lcdGroup);
-    QAction *rgbPixels = addCheckableAction(menu, QLatin1String("RGB subpixels"),
+    QAction *rgbPixels = addCheckableAction(menu, "RGB subpixels"_L1,
                                             m_lcdMode == 1, QKeySequence(), lcdGroup);
-    QAction *bgrPixels = addCheckableAction(menu, QLatin1String("BGR subpixels"),
+    QAction *bgrPixels = addCheckableAction(menu, "BGR subpixels"_L1,
                                             m_lcdMode == 2, QKeySequence(), lcdGroup);
-    QAction *vrgbPixels = addCheckableAction(menu, QLatin1String("VRGB subpixels"),
+    QAction *vrgbPixels = addCheckableAction(menu, "VRGB subpixels"_L1,
                                              m_lcdMode == 3, QKeySequence(), lcdGroup);
-    QAction *vbgrPixels = addCheckableAction(menu, QLatin1String("VBGR subpixels"),
+    QAction *vbgrPixels = addCheckableAction(menu, "VBGR subpixels"_L1,
                                              m_lcdMode == 4, QKeySequence(), lcdGroup);
     menu.addSeparator();
 
     // Zoom options
-    menu.addAction(QLatin1String("Zoom in"), Qt::Key_Plus,
+    menu.addAction("Zoom in"_L1, Qt::Key_Plus,
                    this, &QPixelTool::increaseZoom);
-    menu.addAction(QLatin1String("Zoom out"), Qt::Key_Minus,
+    menu.addAction("Zoom out"_L1, Qt::Key_Minus,
                    this, &QPixelTool::decreaseZoom);
     menu.addSeparator();
 
     // Freeze / Autoupdate
-    QAction *freeze = addCheckableAction(menu, QLatin1String("Frozen"),
+    QAction *freeze = addCheckableAction(menu, "Frozen"_L1,
                                          tmpFreeze, Qt::Key_Space);
-    QAction *autoUpdate = addCheckableAction(menu, QLatin1String("Continuous update"),
+    QAction *autoUpdate = addCheckableAction(menu, "Continuous update"_L1,
                                              m_autoUpdate, Qt::Key_A);
     menu.addSeparator();
 
     // Copy to clipboard / save
-    menu.addAction(QLatin1String("Save as image..."), QKeySequence::SaveAs,
+    menu.addAction("Save as image..."_L1, QKeySequence::SaveAs,
                    this, &QPixelTool::saveToFile);
 #if QT_CONFIG(clipboard)
-    menu.addAction(QLatin1String("Copy to clipboard"), QKeySequence::Copy,
+    menu.addAction("Copy to clipboard"_L1, QKeySequence::Copy,
                    this, &QPixelTool::copyToClipboard);
-    menu.addAction(QLatin1String("Copy color value to clipboard"), Qt::Key_C,
+    menu.addAction("Copy color value to clipboard"_L1, Qt::Key_C,
                    this, &QPixelTool::copyColorToClipboard);
 #endif // QT_CONFIG(clipboard)
 
     menu.addSeparator();
-    menu.addAction(QLatin1String("About Qt"), qApp, &QApplication::aboutQt);
-    menu.addAction(QLatin1String("About Qt Pixeltool"), this, &QPixelTool::aboutPixelTool);
+    menu.addAction("About Qt"_L1, qApp, &QApplication::aboutQt);
+    menu.addAction("About Qt Pixeltool"_L1, this, &QPixelTool::aboutPixelTool);
 
     menu.exec(mapToGlobal(e->pos()));
 
@@ -477,9 +487,9 @@ static inline QString pixelToolTitle(QPoint pos, const QScreen *screen, const QC
 {
     if (screen != nullptr)
         pos = QHighDpi::toNativePixels(pos, screen);
-    return QCoreApplication::applicationName() + QLatin1String(" [")
+    return QCoreApplication::applicationName() + " ["_L1
         + QString::number(pos.x())
-        + QLatin1String(", ") + QString::number(pos.y()) + QLatin1String("] ")
+        + ", "_L1 + QString::number(pos.y()) + "] "_L1
         + currentColor.name();
 }
 
@@ -635,7 +645,7 @@ void QPixelTool::saveToFile()
     m_freeze = true;
 
     QFileDialog fileDialog(this);
-    fileDialog.setWindowTitle(QLatin1String("Save as image"));
+    fileDialog.setWindowTitle("Save as image"_L1);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     fileDialog.setDirectory(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation));
     QStringList mimeTypes;
@@ -643,16 +653,16 @@ void QPixelTool::saveToFile()
     for (const QByteArray &mimeTypeB : supportedMimeTypes)
         mimeTypes.append(QString::fromLatin1(mimeTypeB));
     fileDialog.setMimeTypeFilters(mimeTypes);
-    const QString pngType = QLatin1String("image/png");
+    const QString pngType = "image/png"_L1;
     if (mimeTypes.contains(pngType)) {
         fileDialog.selectMimeTypeFilter(pngType);
-        fileDialog.setDefaultSuffix(QLatin1String("png"));
+        fileDialog.setDefaultSuffix("png"_L1);
     }
 
     while (fileDialog.exec() == QDialog::Accepted
         && !m_buffer.save(fileDialog.selectedFiles().constFirst())) {
-        QMessageBox::warning(this, QLatin1String("Unable to write image"),
-                             QLatin1String("Unable to write ")
+        QMessageBox::warning(this, "Unable to write image"_L1,
+                             "Unable to write "_L1
                              + QDir::toNativeSeparators(fileDialog.selectedFiles().first()));
     }
     m_freeze = oldFreeze;
