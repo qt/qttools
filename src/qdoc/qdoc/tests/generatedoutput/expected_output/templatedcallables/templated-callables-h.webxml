@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <header name="&lt;templated_callables.h&gt;" href="templated-callables-h.html" status="active" documented="true" module="TestQDoc" title="&lt;templated_callables.h&gt;" fulltitle="&lt;templated_callables.h&gt;" subtitle="">
+            <description>
+                <para>Containing headers for the tested free functions.</para>
+            </description>
+            <function name="templated_function_with_defaulted_non_type_template_parameter" href="templated-callables-h.html#templated_function_with_defaulted_non_type_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="0" meta="plain" type="void" signature="void templated_function_with_defaulted_non_type_template_parameter()">
+                <description>
+                    <para>A templated function with a defaulted non type template parameter.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_defaulted_template_template_parameter" href="templated-callables-h.html#templated_function_with_defaulted_template_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="1" meta="plain" type="void" signature="void templated_function_with_defaulted_template_template_parameter(Container&lt;T, size&gt;)">
+                <parameter type="Container&lt;T, size&gt;" name="" default=""/>
+                <description>
+                    <para>A templated function with a defaulted template template parameter.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_defaulted_type_template_parameter" href="templated-callables-h.html#templated_function_with_defaulted_type_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="2" meta="plain" type="void" signature="void templated_function_with_defaulted_type_template_parameter(T)">
+                <parameter type="T" name="" default=""/>
+                <description>
+                    <para>A templated function with a defaulted type template parameter.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_non_type_template_parameter" href="templated-callables-h.html#templated_function_with_non_type_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="3" meta="plain" type="void" signature="void templated_function_with_non_type_template_parameter()">
+                <description>
+                    <para>A templated function with a non-defaulted non type template parameter.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_non_type_template_parameter_pack" href="templated-callables-h.html#templated_function_with_non_type_template_parameter_pack" status="active" access="public" location="templated_callables.h" documented="true" related="4" meta="plain" type="void" signature="void templated_function_with_non_type_template_parameter_pack()">
+                <description>
+                    <para>A templated function with a non type template parameter pack.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_placeholder_non_type_template_parameter" href="templated-callables-h.html#templated_function_with_placeholder_non_type_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="5" meta="plain" type="void" signature="void templated_function_with_placeholder_non_type_template_parameter()">
+                <description>
+                    <para>A templated function with a placeholder non type template parameter.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_template_template_parameter" href="templated-callables-h.html#templated_function_with_template_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="6" meta="plain" type="void" signature="void templated_function_with_template_template_parameter(K&lt;T&gt;)">
+                <parameter type="K&lt;T&gt;" name="" default=""/>
+                <description>
+                    <para>A templated function with a non-defaulted template template parameter.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_template_template_parameter_pack" href="templated-callables-h.html#templated_function_with_template_template_parameter_pack" status="active" access="public" location="templated_callables.h" documented="true" related="7" meta="plain" type="void" signature="void templated_function_with_template_template_parameter_pack(Container&lt;T&gt;...)">
+                <parameter type="Container&lt;T&gt;..." name="" default=""/>
+                <description>
+                    <para>A templated function with a template template parameter pack.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_type_template_parameter" href="templated-callables-h.html#templated_function_with_type_template_parameter" status="active" access="public" location="templated_callables.h" documented="true" related="8" meta="plain" type="void" signature="void templated_function_with_type_template_parameter(T)">
+                <parameter type="T" name="" default=""/>
+                <description>
+                    <para>A templated function with a non-defaulted type template parameter.</para>
+                </description>
+            </function>
+            <function name="templated_function_with_type_template_parameter_pack" href="templated-callables-h.html#templated_function_with_type_template_parameter_pack" status="active" access="public" location="templated_callables.h" documented="true" related="9" meta="plain" type="void" signature="void templated_function_with_type_template_parameter_pack(Ts...)">
+                <parameter type="Ts..." name="" default=""/>
+                <description>
+                    <para>A templated function with a type template parameter pack.</para>
+                </description>
+            </function>
+        </header>
+    </document>
+</WebXML>

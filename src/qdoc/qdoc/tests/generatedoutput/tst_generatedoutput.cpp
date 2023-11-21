@@ -58,6 +58,7 @@ private slots:
     void usingDirective();
     void properties();
     void testTagFile();
+    void templatedCallables();
     void testGlobalFunctions();
     void proxyPage();
     void nonAsciiCharacterInput();
@@ -594,6 +595,16 @@ void tst_generatedOutput::properties()
 void tst_generatedOutput::testTagFile()
 {
     testAndCompare("testdata/configs/tagfiles.qdocconf", "testtagfile.tags");
+}
+
+void tst_generatedOutput::templatedCallables() {
+    testAndCompare("testdata/templatedcallables/templatedcallables.qdocconf",
+                   "templatedcallables/templated-callables-h.html "
+                   "templatedcallables/templated-callables-h.xml "
+                   "templatedcallables/templated-callables-h.webxml "
+                   "templatedcallables/templatedclass.html "
+                   "templatedcallables/templatedclass.xml "
+                   "templatedcallables/templatedclass.webxml");
 }
 
 void tst_generatedOutput::testGlobalFunctions()

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TemplatedClass Class</db:title>
+<db:subtitle>template &lt;typename T&gt; class TemplatedClass</db:subtitle>
+<db:productname>templatedcallables</db:productname>
+<db:titleabbrev>templatedcallables Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>templatedcallables Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>TemplatedClass</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>Containing record for the tested methods.</db:para>
+</db:section>
+<db:section xml:id="member-function-documentation">
+<db:title>Member Function Documentation</db:title>
+<db:section xml:id="templated_method_with_defaulted_non_type_template_parameter">
+<db:title>void TemplatedClass::templated_method_with_defaulted_non_type_template_parameter()</db:title>
+<db:para>A templated method under a templated class with a defaulted non type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_defaulted_template_template_parameter">
+<db:title>void TemplatedClass::templated_method_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;U, size&gt;</db:emphasis>)</db:title>
+<db:para>A templated method under a templated class with a defaulted template template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_defaulted_type_template_parameter">
+<db:title>void TemplatedClass::templated_method_with_defaulted_type_template_parameter(<db:emphasis>U</db:emphasis>)</db:title>
+<db:para>A templated method under a templated class with a defaulted type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_non_type_template_parameter">
+<db:title>void TemplatedClass::templated_method_with_non_type_template_parameter()</db:title>
+<db:para>A templated method under a templated class with a non-defaulted non type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_non_type_template_parameter_pack">
+<db:title>void TemplatedClass::templated_method_with_non_type_template_parameter_pack()</db:title>
+<db:para>A templated method under a templated class with a non type template parameter pack.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_placeholder_non_type_template_parameter">
+<db:title>void TemplatedClass::templated_method_with_placeholder_non_type_template_parameter()</db:title>
+<db:para>A templated method under a templated class with a placeholder non type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_template_template_parameter">
+<db:title>void TemplatedClass::templated_method_with_template_template_parameter(<db:emphasis>X&lt;U&gt;</db:emphasis>)</db:title>
+<db:para>A templated method under a templated class with a non-defaulted template template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_template_template_parameter_pack">
+<db:title>void TemplatedClass::templated_method_with_template_template_parameter_pack(<db:emphasis>Container&lt;U&gt;...</db:emphasis>)</db:title>
+<db:para>A templated method under a templated class with a template template parameter pack.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_type_template_parameter">
+<db:title>void TemplatedClass::templated_method_with_type_template_parameter(<db:emphasis>U</db:emphasis>)</db:title>
+<db:para>A templated method under a templated class with a non-defaulted type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_method_with_type_template_parameter_pack">
+<db:title>void TemplatedClass::templated_method_with_type_template_parameter_pack(<db:emphasis>Ts...</db:emphasis>)</db:title>
+<db:para>A templated method under a templated class with a type template parameter pack.</db:para>
+</db:section>
+</db:section>
+</db:article>

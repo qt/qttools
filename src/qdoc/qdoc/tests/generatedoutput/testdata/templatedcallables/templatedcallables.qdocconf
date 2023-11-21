@@ -1,0 +1,17 @@
+include(../configs/config.qdocconf)
+project = templatedcallables
+
+headerdirs  = .
+sourcedirs  = .
+exampledirs = .
+outputformats = WebXML HTML DocBook
+
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir = templatedcallables
+
+HTML.nosubdirs = true
+HTML.outputsubdir = templatedcallables
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = templatedcallables

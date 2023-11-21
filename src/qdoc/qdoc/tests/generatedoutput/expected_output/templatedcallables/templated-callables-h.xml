@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>&lt;templated_callables.h&gt;</db:title>
+<db:productname>templatedcallables</db:productname>
+<db:titleabbrev>templatedcallables Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>templatedcallables Reference Documentation.</db:para></db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>templated_callables.h</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+<db:para>Containing headers for the tested free functions.</db:para>
+</db:section>
+<db:section xml:id="function-documentation">
+<db:title>Function Documentation</db:title>
+<db:section xml:id="templated_function_with_defaulted_non_type_template_parameter">
+<db:title>void templated_function_with_defaulted_non_type_template_parameter()</db:title>
+<db:para>A templated function with a defaulted non type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_defaulted_template_template_parameter">
+<db:title>void templated_function_with_defaulted_template_template_parameter(<db:emphasis>Container&lt;T, size&gt;</db:emphasis>)</db:title>
+<db:para>A templated function with a defaulted template template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_defaulted_type_template_parameter">
+<db:title>void templated_function_with_defaulted_type_template_parameter(<db:emphasis>T</db:emphasis>)</db:title>
+<db:para>A templated function with a defaulted type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_non_type_template_parameter">
+<db:title>void templated_function_with_non_type_template_parameter()</db:title>
+<db:para>A templated function with a non-defaulted non type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_non_type_template_parameter_pack">
+<db:title>void templated_function_with_non_type_template_parameter_pack()</db:title>
+<db:para>A templated function with a non type template parameter pack.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_placeholder_non_type_template_parameter">
+<db:title>void templated_function_with_placeholder_non_type_template_parameter()</db:title>
+<db:para>A templated function with a placeholder non type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_template_template_parameter">
+<db:title>void templated_function_with_template_template_parameter(<db:emphasis>K&lt;T&gt;</db:emphasis>)</db:title>
+<db:para>A templated function with a non-defaulted template template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_template_template_parameter_pack">
+<db:title>void templated_function_with_template_template_parameter_pack(<db:emphasis>Container&lt;T&gt;...</db:emphasis>)</db:title>
+<db:para>A templated function with a template template parameter pack.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_type_template_parameter">
+<db:title>void templated_function_with_type_template_parameter(<db:emphasis>T</db:emphasis>)</db:title>
+<db:para>A templated function with a non-defaulted type template parameter.</db:para>
+</db:section>
+<db:section xml:id="templated_function_with_type_template_parameter_pack">
+<db:title>void templated_function_with_type_template_parameter_pack(<db:emphasis>Ts...</db:emphasis>)</db:title>
+<db:para>A templated function with a type template parameter pack.</db:para>
+</db:section>
+</db:section>
+</db:article>
