@@ -5,7 +5,6 @@
 
 #include <qapplication.h>
 #include <qdir.h>
-#include <qapplication.h>
 #include <qscreen.h>
 #if QT_CONFIG(clipboard)
 #include <qclipboard.h>
@@ -18,7 +17,6 @@
 #include <qmenu.h>
 #include <qactiongroup.h>
 #include <qimagewriter.h>
-#include <qscreen.h>
 #include <qstandardpaths.h>
 #include <qtextstream.h>
 #include <qwindow.h>
@@ -42,12 +40,12 @@ static constexpr auto initialSizeKey = "initialSize"_L1;
 static constexpr auto positionKey = "position"_L1;
 static constexpr auto lcdModeKey = "lcdMode"_L1;
 
-static QPoint initialPos(const QSettings &settings, const QSize &initialSize)
+static QPoint initialPos(const QSettings &settings, QSize initialSize)
 {
     const QPoint defaultPos = QGuiApplication::primaryScreen()->availableGeometry().topLeft();
     const QPoint savedPos =
         settings.value(positionKey, QVariant(defaultPos)).toPoint();
-    auto savedScreen = QGuiApplication::screenAt(savedPos);
+    auto *savedScreen = QGuiApplication::screenAt(savedPos);
     return savedScreen != nullptr
         && savedScreen->availableGeometry().intersects(QRect(savedPos, initialSize))
         ? savedPos : defaultPos;
@@ -303,7 +301,7 @@ void QPixelTool::keyPressEvent(QKeyEvent *e)
         break;
 #endif // QT_CONFIG(clipboard)
     case Qt::Key_S:
-        if (e->modifiers() & Qt::ControlModifier) {
+        if (e->modifiers().testFlag(Qt::ControlModifier)) {
             releaseKeyboard();
             saveToFile();
         }
@@ -391,7 +389,7 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     menu.addSeparator();
 
     // Grid color options...
-    QActionGroup *gridGroup = new QActionGroup(&menu);
+    auto *gridGroup = new QActionGroup(&menu);
     addCheckableAction(menu, "White grid"_L1, m_gridActive == 2,
                        Qt::Key_W, gridGroup);
     QAction *blackGrid = addCheckableAction(menu, "Black grid"_L1,
@@ -407,7 +405,7 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
                    this, &QPixelTool::decreaseGridSize);
     menu.addSeparator();
 
-    QActionGroup *lcdGroup = new QActionGroup(&menu);
+    auto *lcdGroup = new QActionGroup(&menu);
     addCheckableAction(menu, "No subpixels"_L1, m_lcdMode == 0,
                        QKeySequence(), lcdGroup);
     QAction *rgbPixels = addCheckableAction(menu, "RGB subpixels"_L1,
@@ -474,7 +472,7 @@ void QPixelTool::contextMenuEvent(QContextMenuEvent *e)
     m_freeze = freeze->isChecked();
 
     // LCD mode looks off unless zoom is dividable by 3
-    if (m_lcdMode && m_zoom % 3)
+    if (m_lcdMode && (m_zoom % 3) != 0)
         setZoom(qMax(3, (m_zoom + 1) / 3));
 }
 
@@ -532,7 +530,7 @@ void QPixelTool::grabScreen()
     QRegion geom(QRect{pos, size});
     QRect screenRect;
     const auto screens = QGuiApplication::screens();
-    for (auto screen : screens)
+    for (auto *screen : screens)
         screenRect |= screen->geometry();
     geom -= screenRect;
     const auto rectsInRegion = geom.rectCount();
@@ -663,7 +661,7 @@ void QPixelTool::saveToFile()
         && !m_buffer.save(fileDialog.selectedFiles().constFirst())) {
         QMessageBox::warning(this, "Unable to write image"_L1,
                              "Unable to write "_L1
-                             + QDir::toNativeSeparators(fileDialog.selectedFiles().first()));
+                             + QDir::toNativeSeparators(fileDialog.selectedFiles().constFirst()));
     }
     m_freeze = oldFreeze;
 }
