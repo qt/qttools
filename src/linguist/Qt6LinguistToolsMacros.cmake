@@ -1,6 +1,6 @@
 # Copyright (C) 2020 The Qt Company Ltd.
 # Copyright 2005-2011 Kitware, Inc.
-# SPDX-License-Identifier: LicenseRef-Qt-Commercial
+# SPDX-License-Identifier: BSD-3-Clause
 
 include(CMakeParseArguments)
 

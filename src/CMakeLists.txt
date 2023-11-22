@@ -1,5 +1,5 @@
 # Copyright (C) 2022 The Qt Company Ltd.
-# SPDX-License-Identifier: LicenseRef-Qt-Commercial
+# SPDX-License-Identifier: BSD-3-Clause
 
 # Need to stop building these apps by default because they would fail
 # in device_and_simulator and webassembly builds.
