@@ -28,30 +28,6 @@ namespace QFormInternal
 {
 #endif
 
-static QStringView fixEnum(QStringView s)
-{
-    qsizetype valuePos = s.lastIndexOf(u':'); // "E::A" -> 3
-    if (valuePos == -1)
-        valuePos = s.lastIndexOf(u'.');
-    return valuePos != -1 ? s.sliced(valuePos + 1) : s;
-}
-
-// "QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok"
-// -> "Cancel|Ok"
-// ### FIXME Remove/check when QTBUG-118240 is fixed.
-static inline QString fixFlags(QStringView s)
-{
-    QString result;
-    result.reserve(s.size());
-    const auto flags = s.split(u'|');
-    for (const auto &flag : flags) {
-        if (!result.isEmpty())
-            result.append(u'|');
-        result.append(fixEnum(flag));
-    }
-    return result;
-}
-
 // Convert complex DOM types with the help of  QAbstractFormBuilder
 QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,const  DomProperty *p)
 {
@@ -91,13 +67,21 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
 
         const QMetaEnum e = meta->property(index).enumerator();
         Q_ASSERT(e.isFlag() == true);
-        return QVariant(e.keysToValue(fixFlags(p->elementSet()).toUtf8()));
+        bool ok{};
+        QVariant result(e.keysToValue(p->elementSet().toUtf8().constData(), &ok));
+        if (!ok) {
+            uiLibWarning(QCoreApplication::translate("QFormBuilder",
+                                                     "The value \"%1\" of the set-type property %2 could not be read.").
+                                                     arg(p->attributeName(), p->elementSet()));
+            return {};
+        }
+        return result;
     }
 
     case DomProperty::Enum: {
         const QByteArray pname = p->attributeName().toUtf8();
         const int index = meta->indexOfProperty(pname);
-        const QStringView enumValue = fixEnum(p->elementEnum());
+        const auto &enumValue = p->elementEnum();
         // Triggers in case of objects in Designer like Spacer/Line for which properties
         // are serialized using language introspection. On preview, however, these objects are
         // emulated by hacks in the formbuilder (size policy/orientation)
@@ -105,14 +89,22 @@ QVariant domPropertyToVariant(QAbstractFormBuilder *afb,const QMetaObject *meta,
             // ### special-casing for Line (QFrame) -- fix for 4.2. Jambi hack for enumerations
             if (!qstrcmp(meta->className(), "QFrame")
                 && (pname == QByteArray("orientation"))) {
-                return QVariant(enumValue == "Horizontal"_L1 ? QFrame::HLine : QFrame::VLine);
+                return QVariant(enumValue.endsWith("Horizontal"_L1) ? QFrame::HLine : QFrame::VLine);
             }
             uiLibWarning(QCoreApplication::translate("QFormBuilder", "The enumeration-type property %1 could not be read.").arg(p->attributeName()));
             return QVariant();
         }
 
         const QMetaEnum e = meta->property(index).enumerator();
-        return QVariant(e.keyToValue(enumValue.toUtf8()));
+        bool ok{};
+        QVariant result(e.keyToValue(enumValue.toUtf8().constData(), &ok));
+        if (!ok) {
+            uiLibWarning(QCoreApplication::translate("QFormBuilder",
+                                                     "The value \"%1\" of the enum-type property %2 could not be read.").
+                         arg(p->attributeName(), enumValue));
+            return {};
+        }
+        return result;
     }
     case DomProperty::Brush:
         return QVariant::fromValue(afb->setupBrush(p->elementBrush()));
