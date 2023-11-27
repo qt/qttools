@@ -51,7 +51,7 @@ qt_feature("clang" PRIVATE
 qt_feature("qdoc" PRIVATE
     LABEL "QDoc"
     PURPOSE "QDoc is Qt's documentation generator for C++ and QML projects."
-    CONDITION TARGET Qt::QmlPrivate AND QT_FEATURE_clang AND QT_FEATURE_clangcpp AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread
+    CONDITION TARGET Qt::QmlPrivate AND QT_FEATURE_clang AND QT_FEATURE_clangcpp AND QT_FEATURE_commandlineparser AND QT_FEATURE_thread AND QT_LIB_CLANG_VERSION VERSION_GREATER_EQUAL QDOC_MINIMUM_CLANG_VERSION
 )
 qt_feature("clangcpp" PRIVATE
     LABEL "Clang-based lupdate parser"
@@ -139,6 +139,11 @@ qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "QDoc cannot be compiled without Qt's commandline parser or thread features."
     CONDITION NOT QT_FEATURE_commandlineparser OR NOT QT_FEATURE_thread
+)
+qt_configure_add_report_entry(
+    TYPE WARNING
+    MESSAGE "QDoc will not be compiled because it requires libclang ${QDOC_MINIMUM_CLANG_VERSION} or newer."
+    CONDITION QT_LIB_CLANG_VERSION VERSION_LESS QDOC_MINIMUM_CLANG_VERSION
 )
 qt_configure_add_report_entry(
     TYPE WARNING

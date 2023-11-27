@@ -640,7 +640,7 @@
     \l {fn-command} {\\fn} commands. Clang is part of
     \l {https://llvm.org/}{the LLVM Compiler Infrastructure Project}.
     If you're going to build QDoc from source, you must install
-    \l{http://clang.llvm.org}{Clang 8.0} or later.
+    \l{http://clang.llvm.org}{Clang 15.0} or later.
 
     You can get Clang through various channels:
 
