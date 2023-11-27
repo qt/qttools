@@ -5,6 +5,8 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <functional>
+#include <numeric>
 #include <optional>
 #include <string>
 #include <vector>
@@ -442,4 +444,59 @@ inline std::string TemplateDeclarationStorage::to_std_string() const
                                   return acc + ", " + parameter.to_std_string();
                               })
             + ">";
+}
+
+/*
+ * Returns true if the two template declaration represented by left
+ * and right are substitutable.
+ *
+ * QDoc uses a simplified model for template declarations and,
+ * similarly, uses a simplified model of "substitutability".
+ *
+ * Two declarations are substitutable if:
+ *
+ *  - They have the same amount of parameters
+ *  - For each pair of parameters with the same postion:
+ *    - They have the same kind
+ *    - They are both parameter packs or both are not parameter packs
+ *    - If they are non-type template parameters then they have the same type
+ *    - If they are both template template parameters then they both
+ *      carry an additional template declaration and the additional
+ *      template declarations are substitutable
+ *
+ *  This means that in the simplified models, we generally ignore default arguments, name and such.
+ *
+ *  This model does not follow the way C++ performs disambiguation but
+ *  should be enough to handle most cases in the documentation.
+ */
+inline bool are_template_declarations_substitutable(const TemplateDeclarationStorage& left, const TemplateDeclarationStorage& right) {
+    static auto are_template_parameters_substitutable = [](const RelaxedTemplateParameter& left, const RelaxedTemplateParameter& right) {
+        if (left.kind != right.kind) return false;
+        if (left.is_parameter_pack != right.is_parameter_pack) return false;
+
+        if (left.kind == RelaxedTemplateParameter::Kind::NonTypeTemplateParameter &&
+            (left.valued_declaration.type != right.valued_declaration.type))
+            return false;
+
+        if (left.kind == RelaxedTemplateParameter::Kind::TemplateTemplateParameter) {
+            if (!left.template_declaration && right.template_declaration) return false;
+            if (left.template_declaration && !right.template_declaration) return false;
+
+            if (left.template_declaration && right.template_declaration)
+                return are_template_declarations_substitutable(*left.template_declaration, *right.template_declaration);
+        }
+
+        return true;
+    };
+
+    const auto& left_parameters = left.parameters;
+    const auto& right_parameters = right.parameters;
+
+    if (left_parameters.size() != right_parameters.size()) return false;
+
+    return std::transform_reduce(left_parameters.cbegin(), left_parameters.cend(), right_parameters.cbegin(),
+        true,
+        std::logical_and<bool>{},
+        are_template_parameters_substitutable
+    );
 }

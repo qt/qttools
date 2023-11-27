@@ -276,6 +276,38 @@ static RelaxedTemplateDeclaration get_template_declaration(const clang::Template
         if (auto non_type_template_parameter = llvm::dyn_cast<clang::NonTypeTemplateParmDecl>(template_parameter)) {
             kind = RelaxedTemplateParameter::Kind::NonTypeTemplateParameter;
             type = get_fully_qualified_type_name(non_type_template_parameter->getType(), non_type_template_parameter->getASTContext());
+
+            // REMARK: QDoc uses this information to match a user
+            // provided documentation (for example from an "\fn"
+            // command) with a `Node` that was extracted from the
+            // code-base.
+            //
+            // Due to how QDoc obtains an AST for documentation that
+            // is provided by the user, there might be a mismatch in
+            // the type of certain non type template parameters.
+            //
+            // QDoc generally builds a fake out-of-line definition for
+            // a callable provided through an "\fn" command, when it
+            // needs to match it.
+            // In that context, certain type names may be dependent
+            // names, while they may not be when the element they
+            // represent is extracted from the code-base.
+            //
+            // This in turn makes their stringified representation
+            // different in the two contextes, as a dependent name may
+            // require the "typename" keyword to precede it.
+            //
+            // Since QDoc uses a very simplified model, and it
+            // generally doesn't need care about the exact name
+            // resolution rules for C++, since it passes by
+            // Clang-validated data, we remove the "typename" keyword
+            // if it prefixes the type representation, so that it
+            // doesn't impact the matching procedure..
+
+            // KLUDGE: Waiting for C++20 to avoid the conversion.
+            //         Doesn't really impact performance in a
+            //         meaningful way so it can be kept while waiting.
+            if (QString::fromStdString(type).startsWith("typename ")) type.erase(0, std::string("typename ").size());
         }
 
         auto template_template_parameter = llvm::dyn_cast<clang::TemplateTemplateParmDecl>(template_parameter);
@@ -492,15 +524,34 @@ static Node *findNodeForCursor(QDocDatabase *qdb, CXCursor cur)
         parent->findChildren(functionName(cur), candidates);
         if (candidates.isEmpty())
             return nullptr;
+
         CXType funcType = clang_getCursorType(cur);
         auto numArg = clang_getNumArgTypes(funcType);
         bool isVariadic = clang_isFunctionTypeVariadic(funcType);
         QVarLengthArray<QString, 20> args;
+
+        std::optional<RelaxedTemplateDeclaration> relaxed_template_declaration{std::nullopt};
+        if (kind == CXCursor_FunctionTemplate)
+            relaxed_template_declaration = get_template_declaration(
+                get_cursor_declaration(cur)->getAsFunction()->getDescribedFunctionTemplate()
+            );
+
         for (Node *candidate : std::as_const(candidates)) {
             if (!candidate->isFunction(Node::CPP))
                 continue;
 
             auto fn = static_cast<FunctionNode *>(candidate);
+
+            if (!fn->templateDecl() && relaxed_template_declaration)
+                continue;
+
+            if (fn->templateDecl() && !relaxed_template_declaration)
+                continue;
+
+            if (fn->templateDecl() && relaxed_template_declaration &&
+                !are_template_declarations_substitutable(*fn->templateDecl(), *relaxed_template_declaration))
+                continue;
+
             const Parameters &parameters = fn->parameters();
 
             if (parameters.count() != numArg + isVariadic)
