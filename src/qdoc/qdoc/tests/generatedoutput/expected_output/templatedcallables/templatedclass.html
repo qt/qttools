@@ -46,15 +46,15 @@
 <div class="func">
 <h2>Member Function Documentation</h2>
 <!-- $$$templated_method_with_defaulted_non_type_template_parameter[overload1]$$$templated_method_with_defaulted_non_type_template_parameter -->
-<h3 class="fn" translate="no" id="templated_method_with_defaulted_non_type_template_parameter">template &lt;int Size&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_defaulted_non_type_template_parameter</span>()</h3>
+<h3 class="fn" translate="no" id="templated_method_with_defaulted_non_type_template_parameter">template &lt;int Size = 10&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_defaulted_non_type_template_parameter</span>()</h3>
 <p>A templated method under a templated class with a defaulted non type template parameter.</p>
 <!-- @@@templated_method_with_defaulted_non_type_template_parameter -->
 <!-- $$$templated_method_with_defaulted_template_template_parameter[overload1]$$$templated_method_with_defaulted_template_template_parameterContainer<U,size> -->
-<h3 class="fn" translate="no" id="templated_method_with_defaulted_template_template_parameter">template &lt;typename U, int size, template &lt;typename, int&gt; class Container> <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_defaulted_template_template_parameter</span>(<span class="type">Container</span>&lt;<span class="type">U</span>, <span class="type">size</span>&gt;)</h3>
+<h3 class="fn" translate="no" id="templated_method_with_defaulted_template_template_parameter">template &lt;typename U, int size, template &lt;typename, int &gt; typename Container = std::array> <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_defaulted_template_template_parameter</span>(<span class="type">Container</span>&lt;<span class="type">U</span>, <span class="type">size</span>&gt;)</h3>
 <p>A templated method under a templated class with a defaulted template template parameter.</p>
 <!-- @@@templated_method_with_defaulted_template_template_parameter -->
 <!-- $$$templated_method_with_defaulted_type_template_parameter[overload1]$$$templated_method_with_defaulted_type_template_parameterU -->
-<h3 class="fn" translate="no" id="templated_method_with_defaulted_type_template_parameter">template &lt;typename U&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_defaulted_type_template_parameter</span>(<span class="type">U</span>)</h3>
+<h3 class="fn" translate="no" id="templated_method_with_defaulted_type_template_parameter">template &lt;typename U = bool&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_defaulted_type_template_parameter</span>(<span class="type">U</span>)</h3>
 <p>A templated method under a templated class with a defaulted type template parameter.</p>
 <!-- @@@templated_method_with_defaulted_type_template_parameter -->
 <!-- $$$templated_method_with_non_type_template_parameter[overload1]$$$templated_method_with_non_type_template_parameter -->
@@ -62,7 +62,7 @@
 <p>A templated method under a templated class with a non-defaulted non type template parameter.</p>
 <!-- @@@templated_method_with_non_type_template_parameter -->
 <!-- $$$templated_method_with_non_type_template_parameter_pack[overload1]$$$templated_method_with_non_type_template_parameter_pack -->
-<h3 class="fn" translate="no" id="templated_method_with_non_type_template_parameter_pack">template &lt;int Dimensions&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_non_type_template_parameter_pack</span>()</h3>
+<h3 class="fn" translate="no" id="templated_method_with_non_type_template_parameter_pack">template &lt;int... Dimensions&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_non_type_template_parameter_pack</span>()</h3>
 <p>A templated method under a templated class with a non type template parameter pack.</p>
 <!-- @@@templated_method_with_non_type_template_parameter_pack -->
 <!-- $$$templated_method_with_placeholder_non_type_template_parameter[overload1]$$$templated_method_with_placeholder_non_type_template_parameter -->
@@ -70,11 +70,11 @@
 <p>A templated method under a templated class with a placeholder non type template parameter.</p>
 <!-- @@@templated_method_with_placeholder_non_type_template_parameter -->
 <!-- $$$templated_method_with_template_template_parameter[overload1]$$$templated_method_with_template_template_parameterX<U> -->
-<h3 class="fn" translate="no" id="templated_method_with_template_template_parameter">template &lt;typename U, template &lt;typename&gt; class X> <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_template_template_parameter</span>(<span class="type">X</span>&lt;<span class="type">U</span>&gt;)</h3>
+<h3 class="fn" translate="no" id="templated_method_with_template_template_parameter">template &lt;typename U, template &lt;typename&gt; typename X> <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_template_template_parameter</span>(<span class="type">X</span>&lt;<span class="type">U</span>&gt;)</h3>
 <p>A templated method under a templated class with a non-defaulted template template parameter.</p>
 <!-- @@@templated_method_with_template_template_parameter -->
 <!-- $$$templated_method_with_template_template_parameter_pack[overload1]$$$templated_method_with_template_template_parameter_packContainer<U>... -->
-<h3 class="fn" translate="no" id="templated_method_with_template_template_parameter_pack">template &lt;typename U, template &lt;typename&gt; class Container> <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_template_template_parameter_pack</span>(<span class="type">Container</span>&lt;<span class="type">U</span>&gt;...)</h3>
+<h3 class="fn" translate="no" id="templated_method_with_template_template_parameter_pack">template &lt;typename U, template &lt;typename&gt; typename... Container> <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_template_template_parameter_pack</span>(<span class="type">Container</span>&lt;<span class="type">U</span>&gt;...)</h3>
 <p>A templated method under a templated class with a template template parameter pack.</p>
 <!-- @@@templated_method_with_template_template_parameter_pack -->
 <!-- $$$templated_method_with_type_template_parameter[overload1]$$$templated_method_with_type_template_parameterU -->
@@ -82,7 +82,7 @@
 <p>A templated method under a templated class with a non-defaulted type template parameter.</p>
 <!-- @@@templated_method_with_type_template_parameter -->
 <!-- $$$templated_method_with_type_template_parameter_pack[overload1]$$$templated_method_with_type_template_parameter_packTs... -->
-<h3 class="fn" translate="no" id="templated_method_with_type_template_parameter_pack">template &lt;typename Ts&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_type_template_parameter_pack</span>(<span class="type">Ts</span>...)</h3>
+<h3 class="fn" translate="no" id="templated_method_with_type_template_parameter_pack">template &lt;typename... Ts&gt; <span class="type">void</span> TemplatedClass::<span class="name">templated_method_with_type_template_parameter_pack</span>(<span class="type">Ts</span>...)</h3>
 <p>A templated method under a templated class with a type template parameter pack.</p>
 <!-- @@@templated_method_with_type_template_parameter_pack -->
 </div>

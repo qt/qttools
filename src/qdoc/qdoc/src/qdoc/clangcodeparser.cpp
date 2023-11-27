@@ -38,6 +38,7 @@
 #include <llvm/Support/Casting.h>
 
 #include "clang/AST/QualTypeNames.h"
+#include "template_declaration.h"
 
 #include <cstdio>
 
@@ -131,6 +132,108 @@ static std::string get_fully_qualified_type_name(clang::QualType type, const cla
     );
 }
 
+/*
+ * Retrieves expression as written in the original source code.
+ *
+ * declaration_context should be the ASTContext of the declaration
+ * from which the expression was extracted from.
+ *
+ * If the expression contains a leading equal sign it will be removed.
+ *
+ * Leading and trailing spaces will be similarly removed from the expression.
+ */
+static std::string get_expression_as_string(const clang::Expr* expression, const clang::ASTContext& declaration_context) {
+    QString default_value = QString::fromStdString(clang::Lexer::getSourceText(
+        clang::CharSourceRange::getTokenRange(expression->getSourceRange()),
+        declaration_context.getSourceManager(),
+        declaration_context.getLangOpts()
+    ).str());
+
+    if (default_value.startsWith("="))
+        default_value.remove(0, 1);
+
+    default_value = default_value.trimmed();
+
+    return default_value.toStdString();
+}
+
+/*
+ * Retrieves the default value of the passed in type template parameter as a string.
+ *
+ * The default value of a type template parameter is always a type,
+ * and its stringified representation will be return as the fully
+ * qualified version of the type.
+ *
+ * If the parameter as no default value the empty string will be returned.
+ */
+static std::string get_default_value_initializer_as_string(const clang::TemplateTypeParmDecl* parameter) {
+    return (parameter && parameter->hasDefaultArgument()) ?
+                get_fully_qualified_type_name(parameter->getDefaultArgument(), parameter->getASTContext()) :
+                "";
+
+}
+
+/*
+ * Retrieves the default value of the passed in non-type template parameter as a string.
+ *
+ * The default value of a non-type template parameter is an expression
+ * and its stringified representation will be return as it was written
+ * in the original code.
+ *
+ * If the parameter as no default value the empty string will be returned.
+ */
+static std::string get_default_value_initializer_as_string(const clang::NonTypeTemplateParmDecl* parameter) {
+    return (parameter && parameter->hasDefaultArgument()) ?
+        get_expression_as_string(parameter->getDefaultArgument(), parameter->getASTContext()) : "";
+
+}
+
+/*
+ * Retrieves the default value of the passed in template template parameter as a string.
+ *
+ * The default value of a template template parameter is a template
+ * name and its stringified representation will be returned as a fully
+ * qualified version of that name.
+ *
+ * If the parameter as no default value the empty string will be returned.
+ */
+static std::string get_default_value_initializer_as_string(const clang::TemplateTemplateParmDecl* parameter) {
+    std::string default_value{};
+
+    if (parameter && parameter->hasDefaultArgument()) {
+        const clang::TemplateName template_name = parameter->getDefaultArgument().getArgument().getAsTemplate();
+
+        llvm::raw_string_ostream ss{default_value};
+        template_name.print(ss, parameter->getASTContext().getPrintingPolicy(), clang::TemplateName::Qualified::Fully);
+    }
+
+    return default_value;
+}
+
+/*
+ * Retrieves the default value of the passed in declaration, based on
+ * its concrete type, as a string.
+ *
+ * If the declaration is a nullptr or the concrete type of the
+ * declaration is not a supported one, the returned string will be the
+ * empty string.
+ */
+static std::string get_default_value_initializer_as_string(const clang::NamedDecl* declaration) {
+    if (!declaration) return "";
+
+    if (auto type_template_parameter = llvm::dyn_cast<clang::TemplateTypeParmDecl>(declaration))
+        return get_default_value_initializer_as_string(type_template_parameter);
+
+    if (auto non_type_template_parameter = llvm::dyn_cast<clang::NonTypeTemplateParmDecl>(declaration))
+        return get_default_value_initializer_as_string(non_type_template_parameter);
+
+    if (auto template_template_parameter = llvm::dyn_cast<clang::TemplateTemplateParmDecl>(declaration)) {
+        return get_default_value_initializer_as_string(template_template_parameter);
+    }
+
+    return "";
+}
+
 /*!
    Call clang_visitChildren on the given cursor with the lambda as a callback
    T can be any functor that is callable with a CXCursor parameter and returns a CXChildVisitResult
@@ -156,61 +259,44 @@ static QString fromCXString(CXString &&string)
     return ret;
 }
 
-static QString templateDecl(CXCursor cursor);
-
-/*!
-    Returns a list of template parameters at \a cursor.
-*/
-static QStringList getTemplateParameters(CXCursor cursor)
-{
-    QStringList parameters;
-    visitChildrenLambda(cursor, [&parameters](CXCursor cur) {
-        QString name = fromCXString(clang_getCursorSpelling(cur));
-        QString type;
-
-        switch (clang_getCursorKind(cur)) {
-        case CXCursor_TemplateTypeParameter:
-            type = QStringLiteral("typename");
-            break;
-        case CXCursor_NonTypeTemplateParameter: {
-            const auto* non_type_template_declaration =
-                llvm::dyn_cast<clang::NonTypeTemplateParmDecl>(get_cursor_declaration(cur));
-            assert(non_type_template_declaration);
-
-            type = QString::fromStdString(get_fully_qualified_type_name(
-                non_type_template_declaration->getType(),
-                non_type_template_declaration->getASTContext()
-            ));
-
-            // Hack: Omit QtPrivate template parameters from public documentation
-            if (type.startsWith(QLatin1String("QtPrivate")))
-                return CXChildVisit_Continue;
-            break;
-        }
-        case CXCursor_TemplateTemplateParameter:
-            type = templateDecl(cur) + QLatin1String(" class");
-            break;
-        default:
-            return CXChildVisit_Continue;
-        }
-
-        if (!name.isEmpty())
-            name.prepend(QLatin1Char(' '));
-
-        parameters << type + name;
-        return CXChildVisit_Continue;
-    });
-
-    return parameters;
-}
-
-/*!
-   Gets the template declaration at specified \a cursor.
+/*
+ * Returns an intermediate representation that models the the given
+ * template declaration.
  */
-static QString templateDecl(CXCursor cursor)
-{
-    QStringList params = getTemplateParameters(cursor);
-    return QLatin1String("template <") + params.join(QLatin1String(", ")) + QLatin1Char('>');
+static RelaxedTemplateDeclaration get_template_declaration(const clang::TemplateDecl* template_declaration) {
+    assert(template_declaration);
+
+    RelaxedTemplateDeclaration template_declaration_ir{};
+
+    auto template_parameters = template_declaration->getTemplateParameters();
+    for (auto template_parameter : template_parameters->asArray()) {
+        auto kind{RelaxedTemplateParameter::Kind::TypeTemplateParameter};
+        std::string type{};
+
+        if (auto non_type_template_parameter = llvm::dyn_cast<clang::NonTypeTemplateParmDecl>(template_parameter)) {
+            kind = RelaxedTemplateParameter::Kind::NonTypeTemplateParameter;
+            type = get_fully_qualified_type_name(non_type_template_parameter->getType(), non_type_template_parameter->getASTContext());
+        }
+
+        auto template_template_parameter = llvm::dyn_cast<clang::TemplateTemplateParmDecl>(template_parameter);
+        if (template_template_parameter) kind = RelaxedTemplateParameter::Kind::TemplateTemplateParameter;
+
+        template_declaration_ir.parameters.push_back({
+            kind,
+            template_parameter->isTemplateParameterPack(),
+            {
+                type,
+                template_parameter->getNameAsString(),
+                get_default_value_initializer_as_string(template_parameter)
+            },
+            (template_template_parameter ?
+                std::optional<TemplateDeclarationStorage>(TemplateDeclarationStorage{
+                    get_template_declaration(template_template_parameter).parameters
+                }) : std::nullopt)
+        });
+    }
+
+    return template_declaration_ir;
 }
 
 /*!
@@ -689,7 +775,7 @@ CXChildVisitResult ClangVisitor::visitFnSignature(CXCursor cursor, CXSourceLocat
 CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation loc)
 {
     auto kind = clang_getCursorKind(cursor);
-    QString templateString;
+
     switch (kind) {
     case CXCursor_TypeAliasTemplateDecl:
     case CXCursor_TypeAliasDecl: {
@@ -700,15 +786,17 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             const QLatin1String usingString("using ");
             qsizetype usingPos = typeAlias[0].indexOf(usingString);
             if (usingPos != -1) {
-                if (kind == CXCursor_TypeAliasTemplateDecl)
-                    templateString = typeAlias[0].left(usingPos).trimmed();
                 typeAlias[0].remove(0, usingPos + usingString.size());
                 typeAlias[0] = typeAlias[0].split(QLatin1Char(' ')).first();
                 typeAlias[1] = typeAlias[1].trimmed();
                 auto *ta = new TypeAliasNode(parent_, typeAlias[0], typeAlias[1]);
                 ta->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
                 ta->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
-                ta->setTemplateDecl(templateString);
+
+                if (kind == CXCursor_TypeAliasTemplateDecl) {
+                    auto template_decl = llvm::dyn_cast<clang::TemplateDecl>(get_cursor_declaration(cursor));
+                    ta->setTemplateDecl(get_template_declaration(template_decl));
+                }
             }
         }
         return CXChildVisit_Continue;
@@ -719,7 +807,6 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
             return CXChildVisit_Continue;
         Q_FALLTHROUGH();
     case CXCursor_ClassTemplate:
-        templateString = templateDecl(cursor);
         Q_FALLTHROUGH();
     case CXCursor_ClassDecl: {
         if (!clang_isCursorDefinition(cursor))
@@ -748,8 +835,10 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         classe->setAccess(fromCX_CXXAccessSpecifier(clang_getCXXAccessSpecifier(cursor)));
         classe->setLocation(fromCXSourceLocation(clang_getCursorLocation(cursor)));
 
-        if (kind == CXCursor_ClassTemplate)
-            classe->setTemplateDecl(templateString);
+        if (kind == CXCursor_ClassTemplate) {
+            auto template_declaration = llvm::dyn_cast<clang::TemplateDecl>(get_cursor_declaration(cursor));
+            classe->setTemplateDecl(get_template_declaration(template_declaration));
+        }
 
         QScopedValueRollback<Aggregate *> setParent(parent_, classe);
         return visitChildren(cursor);
@@ -787,7 +876,6 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
         return visitChildren(cursor);
     }
     case CXCursor_FunctionTemplate:
-        templateString = templateDecl(cursor);
         Q_FALLTHROUGH();
     case CXCursor_FunctionDecl:
     case CXCursor_CXXMethod:
@@ -816,8 +904,14 @@ CXChildVisitResult ClangVisitor::visitHeader(CXCursor cursor, CXSourceLocation l
                 }
             }
         }
+
         processFunction(fn, cursor);
-        fn->setTemplateDecl(templateString);
+
+        if (kind == CXCursor_FunctionTemplate) {
+            auto template_declaration = get_cursor_declaration(cursor)->getAsFunction()->getDescribedFunctionTemplate();
+            fn->setTemplateDecl(get_template_declaration(template_declaration));
+        }
+
         return CXChildVisit_Continue;
     }
 #if CINDEX_VERSION >= 36

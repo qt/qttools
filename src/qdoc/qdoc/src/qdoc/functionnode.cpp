@@ -427,8 +427,8 @@ QString FunctionNode::signature(Node::SignatureOptions options) const
 {
     QStringList elements;
 
-    if (options & Node::SignatureTemplateParams)
-        elements << templateDecl();
+    if (options & Node::SignatureTemplateParams && templateDecl())
+        elements << (*templateDecl()).to_qstring();
     if (options & Node::SignatureReturnType)
         elements << m_returnType;
     elements.removeAll(QString());

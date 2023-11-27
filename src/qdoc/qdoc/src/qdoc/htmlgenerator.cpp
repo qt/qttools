@@ -1079,7 +1079,7 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
 
     Sections sections(aggregate);
     QString word = aggregate->typeWord(true);
-    QString templateDecl = aggregate->templateDecl();
+    auto templateDecl = aggregate->templateDecl();
     if (aggregate->isNamespace()) {
         rawTitle = aggregate->plainName();
         fullTitle = aggregate->plainFullName();
@@ -1100,10 +1100,10 @@ void HtmlGenerator::generateCppReferencePage(Aggregate *aggregate, CodeMarker *m
     }
 
     Text subtitleText;
-    if (rawTitle != fullTitle || !templateDecl.isEmpty()) {
+    if (rawTitle != fullTitle || templateDecl) {
         if (aggregate->isClassNode()) {
-            if (!templateDecl.isEmpty())
-                subtitleText << templateDecl + QLatin1Char(' ');
+            if (templateDecl)
+                subtitleText << (*templateDecl).to_qstring() + QLatin1Char(' ');
             subtitleText << aggregate->typeWord(false) + QLatin1Char(' ');
             const QStringList ancestors = fullTitle.split(QLatin1String("::"));
             for (const auto &a : ancestors) {

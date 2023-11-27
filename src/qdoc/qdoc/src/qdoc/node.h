@@ -11,11 +11,14 @@
 #include "importrec.h"
 #include "parameters.h"
 #include "relatedclass.h"
+#include "template_declaration.h"
 
 #include <QtCore/qdir.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
 #include <QtCore/qstringlist.h>
+
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -207,7 +210,7 @@ public:
     void setSince(const QString &since);
     void setPhysicalModuleName(const QString &name) { m_physicalModuleName = name; }
     void setUrl(const QString &url) { m_url = url; }
-    void setTemplateDecl(const QString &t) { m_templateDecl = t; }
+    void setTemplateDecl(std::optional<RelaxedTemplateDeclaration> t) { m_templateDecl = t; }
     void setReconstitutedBrief(const QString &t) { m_reconstitutedBrief = t; }
     void setParent(Aggregate *n) { m_parent = n; }
     void setIndexNodeFlag(bool isIndexNode = true) { m_indexNodeFlag = isIndexNode; }
@@ -274,7 +277,7 @@ public:
     [[nodiscard]] ThreadSafeness threadSafeness() const;
     [[nodiscard]] ThreadSafeness inheritedThreadSafeness() const;
     [[nodiscard]] QString since() const { return m_since; }
-    [[nodiscard]] const QString &templateDecl() const { return m_templateDecl; }
+    [[nodiscard]] const std::optional<RelaxedTemplateDeclaration>& templateDecl() const { return m_templateDecl; }
     [[nodiscard]] const QString &reconstitutedBrief() const { return m_reconstitutedBrief; }
 
     [[nodiscard]] bool isSharingComment() const { return (m_sharedCommentNode != nullptr); }
@@ -331,7 +334,7 @@ private:
     QString m_physicalModuleName {};
     QString m_url {};
     QString m_since {};
-    QString m_templateDecl {};
+    std::optional<RelaxedTemplateDeclaration> m_templateDecl{std::nullopt};
     QString m_reconstitutedBrief {};
     QString m_outSubDir {};
     QString m_deprecatedSince {};

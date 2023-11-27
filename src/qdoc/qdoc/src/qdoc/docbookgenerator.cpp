@@ -3003,9 +3003,11 @@ void DocBookGenerator::generateCppReferencePage(Node *node)
         title = rawTitle + " Namespace";
     } else if (aggregate->isClass()) {
         rawTitle = aggregate->plainName();
-        QString templateDecl = node->templateDecl();
-        if (!templateDecl.isEmpty())
-            fullTitle = QString("%1 %2 ").arg(templateDecl, aggregate->typeWord(false));
+
+        auto templateDecl = node->templateDecl();
+        if (templateDecl)
+            fullTitle = QString("%1 %2 ").arg((*templateDecl).to_qstring(), aggregate->typeWord(false));
+
         fullTitle += aggregate->plainFullName();
         title = rawTitle + QLatin1Char(' ') + aggregate->typeWord(true);
     } else if (aggregate->isHeader()) {
@@ -3850,9 +3852,9 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     } break;
     case Node::TypeAlias: {
         if (style == Section::Details) {
-            const QString& templateDecl = node->templateDecl();
-            if (!templateDecl.isEmpty())
-                m_writer->writeCharacters(templateDecl + QLatin1Char(' '));
+            auto templateDecl = node->templateDecl();
+            if (templateDecl)
+                m_writer->writeCharacters((*templateDecl).to_qstring() + QLatin1Char(' '));
         }
         m_writer->writeCharacters(namePrefix);
         generateSynopsisName(node, relative, generateNameLink);

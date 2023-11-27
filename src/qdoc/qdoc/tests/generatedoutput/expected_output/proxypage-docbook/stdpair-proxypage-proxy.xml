@@ -10,7 +10,7 @@
 <db:section xml:id="type-documentation">
 <db:title>Type Documentation</db:title>
 <db:section xml:id="StdPair-typedef">
-<db:title>[alias] template &lt;class T1, class T2&gt; StdPair</db:title>
+<db:title>[alias] template &lt;typename T1, typename T2&gt; StdPair</db:title>
 </db:section>
 </db:section>
 </db:article>
