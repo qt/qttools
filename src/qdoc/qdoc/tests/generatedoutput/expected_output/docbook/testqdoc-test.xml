@@ -162,22 +162,22 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="operator-2b-2b">
-<db:title its:translate="no">TestQDoc::Test &amp;Test::operator++()</db:title>
-<db:bridgehead renderas="sect2" xml:id="operator--" its:translate="no">TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
+<db:title its:translate="no">[deprecated] TestQDoc::Test &amp;Test::operator++()</db:title>
+<db:bridgehead renderas="sect2" xml:id="operator--" its:translate="no">[deprecated] TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 </db:section>
 <db:section xml:id="anotherObsoleteMember">
-<db:title its:translate="no">void Test::anotherObsoleteMember()</db:title>
+<db:title its:translate="no">[deprecated] void Test::anotherObsoleteMember()</db:title>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="deprecatedMember">
-<db:title its:translate="no">void Test::deprecatedMember()</db:title>
+<db:title its:translate="no">[deprecated in 6.0] void Test::deprecatedMember()</db:title>
 <db:para>This function is deprecated since 6.0. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="obsoleteMember">
-<db:title its:translate="no">void Test::obsoleteMember()</db:title>
+<db:title its:translate="no">[deprecated] void Test::obsoleteMember()</db:title>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>

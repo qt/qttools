@@ -2955,7 +2955,10 @@ void HtmlGenerator::generateQmlItem(const Node *node, const Node *relative, Code
     // in one go (instead of <@param> and </@param> separately, for instance).
     marked.replace("@param>", "i>");
 
-    marked.replace("@extra>", "code>");
+    marked.replace("<@extra>", "<code class=\"%1 extra\" translate=\"no\">"_L1
+                    .arg(summary ? "summary"_L1 : "details"_L1));
+    marked.replace("</@extra>", "</code>");
+
 
     if (summary) {
         marked.remove("<@name>");
@@ -3200,7 +3203,8 @@ void HtmlGenerator::generateSynopsis(const Node *node, const Node *relative, Cod
                                                      QRegularExpression::InvertedGreedinessOption);
         marked.remove(extraRegExp);
     } else {
-        marked.replace("<@extra>", "<code translate=\"no\">");
+        marked.replace("<@extra>", "<code class=\"%1 extra\" translate=\"no\">"_L1
+                    .arg(style == Section::Summary ? "summary"_L1 : "details"_L1));
         marked.replace("</@extra>", "</code>");
     }
 
@@ -3627,35 +3631,13 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
 
     QString qmlItemFooter("</table></div></div>\n");
 
-    std::function<void(QmlPropertyNode *)> generateQmlProperty = [&](QmlPropertyNode *n) {
+    auto generateQmlProperty = [&](Node *n) {
         out() << qmlItemStart.arg(refForNode(n), "tblQmlPropNode");
-
-        QStringList extra;
-        if (n->isDefault())
-            extra << "default";
-        else if (n->isReadOnly())
-            extra << "read-only";
-        else if (n->isRequired())
-            extra << "required";
-        else if (!n->defaultValue().isEmpty()) {
-            extra << "default: " + n->defaultValue();
-        }
-
-        if (!n->since().isEmpty()) {
-            if (!extra.isEmpty())
-                extra.last().append(',');
-            extra << "since " + n->since();
-        }
-
-        if (!extra.isEmpty())
-            out() << QString("<span class=\"qmlextra\">[%1] </span>")
-                    .arg(extra.join(QLatin1Char(' ')));
-
         generateQmlItem(n, relative, marker, false);
         out() << qmlItemEnd;
     };
 
-    std::function<void(Node *)> generateQmlMethod = [&](Node *n) {
+    auto generateQmlMethod = [&](Node *n) {
         out() << qmlItemStart.arg(refForNode(n), "tblQmlFuncNode");
         generateSynopsis(n, relative, marker, Section::Details, false);
         out() << qmlItemEnd;
@@ -3675,12 +3657,12 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
         const QList<Node *> sharedNodes = scn->collective();
         for (const auto &sharedNode : sharedNodes) {
             if (sharedNode->isQmlProperty())
-                generateQmlProperty(static_cast<QmlPropertyNode *>(sharedNode));
+                generateQmlProperty(sharedNode);
         }
         out() << qmlItemFooter;
     } else if (node->isQmlProperty()) {
         out() << qmlItemHeader;
-        generateQmlProperty(static_cast<QmlPropertyNode *>(node));
+        generateQmlProperty(node);
         out() << qmlItemFooter;
     } else if (node->isSharedCommentNode()) {
         const auto *scn = reinterpret_cast<const SharedCommentNode *>(node);
@@ -3689,11 +3671,11 @@ void HtmlGenerator::generateDetailedQmlMember(Node *node, const Aggregate *relat
             out() << "<div class=\"fngroup\">\n";
         out() << qmlItemHeader;
         for (const auto &sharedNode : sharedNodes) {
-            // Generate the node only if it is relevant for Qt Quick.
+            // Generate the node only if it's a QML method
             if (sharedNode->isFunction(Node::QML))
                 generateQmlMethod(sharedNode);
             else if (sharedNode->isQmlProperty())
-                generateQmlProperty(static_cast<QmlPropertyNode *>(sharedNode));
+                generateQmlProperty(sharedNode);
         }
         out() << qmlItemFooter;
         if (sharedNodes.size() > 1)

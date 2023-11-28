@@ -19,6 +19,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 /*!
   Returns \c true.
  */
@@ -217,8 +219,8 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
 
     QString extra = CodeMarker::extraSynopsis(node, style);
     if (!extra.isEmpty()) {
-        extra.prepend("<@extra>");
-        extra.append("</@extra>");
+        extra.prepend(u"<@extra>"_s);
+        extra.append(u"</@extra> "_s);
     }
 
     return extra + synopsis;
@@ -229,6 +231,8 @@ QString CppCodeMarker::markedUpSynopsis(const Node *node, const Node * /* relati
 QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
 {
     QString name = taggedQmlNode(node);
+    QString synopsis;
+
     if (summary) {
         name = linkTag(node, name);
     } else if (node->isQmlProperty()) {
@@ -237,7 +241,6 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
             name.prepend(pn->element() + QLatin1Char('.'));
     }
     name = "<@name>" + name + "</@name>";
-    QString synopsis;
     if (node->isQmlProperty()) {
         const auto *pn = static_cast<const QmlPropertyNode *>(node);
         synopsis = name + " : " + typified(pn->dataType());
@@ -270,22 +273,12 @@ QString CppCodeMarker::markedUpQmlItem(const Node *node, bool summary)
         synopsis = name;
     }
 
-    QString extra;
-    if (summary) {
-        if (node->isPreliminary())
-            extra += " (preliminary)";
-        else if (node->isDeprecated()) {
-            if (const QString &version = node->deprecatedSince(); !version.isEmpty())
-                extra += " (deprecated since " + version + ")";
-            else
-                extra += " (deprecated)";
-        }
+    QString extra = CodeMarker::extraSynopsis(node, summary ? Section::Summary : Section::Details);
+    if (!extra.isEmpty()) {
+        extra.prepend(u" <@extra>"_s);
+        extra.append(u"</@extra>"_s);
     }
 
-    if (!extra.isEmpty()) {
-        extra.prepend("<@extra>");
-        extra.append("</@extra>");
-    }
     return synopsis + extra;
 }
 

@@ -8,13 +8,17 @@
 #include "functionnode.h"
 #include "node.h"
 #include "propertynode.h"
+#include "qmlpropertynode.h"
 
 #include <QtCore/qobjectdefs.h>
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QString CodeMarker::s_defaultLang;
 QList<CodeMarker *> CodeMarker::s_markers;
+
 
 /*!
   When a code marker constructs itself, it puts itself into
@@ -127,11 +131,46 @@ QString CodeMarker::stringForNode(const Node *node)
 }
 
 /*!
+    Returns a string representing the \a node status, set using \preliminary, \since,
+    and \deprecated commands.
+
+    If a string is returned, it is one of:
+    \list
+        \li \c {"preliminary"}
+        \li \c {"since <version_since>, deprecated in <version_deprecated>"}
+        \li \c {"since <version_since>"}
+        \li \c {"since <version_since>, deprecated"}
+        \li \c {"deprecated in <version_deprecated>"}
+        \li \c {"deprecated"}
+    \endlist
+
+    If \a node has no related status information, returns std::nullopt.
+*/
+static std::optional<QString> nodeStatusAsString(const Node *node)
+{
+    if (node->isPreliminary())
+        return std::optional(u"preliminary"_s);
+
+    QStringList result;
+    if (const auto &since = node->since(); !since.isEmpty())
+        result << "since %1"_L1.arg(since);
+    if (const auto &deprecated = node->deprecatedSince(); !deprecated.isEmpty())
+        result << "deprecated in %1"_L1.arg(deprecated);
+    else if (node->isDeprecated())
+        result << u"deprecated"_s;
+
+    return result.isEmpty() ? std::nullopt : std::optional(result.join(u", "_s));
+}
+
+/*!
     Returns the 'extra' synopsis string for \a node with status information,
     using a specified section \a style.
 */
 QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
 {
+    if (style != Section::Summary && style != Section::Details)
+        return {};
+
     QStringList extra;
     if (style == Section::Details) {
         switch (node->nodeType()) {
@@ -183,30 +222,37 @@ QString CodeMarker::extraSynopsis(const Node *node, Section::Style style)
                 extra << "read-only";
         }
         break;
+        case Node::QmlProperty: {
+            auto qmlProperty = static_cast<const QmlPropertyNode *>(node);
+            if (qmlProperty->isDefault())
+                extra << u"default"_s;
+            // Call non-const overloads to ensure attributes are fetched from
+            // associated C++ properties
+            else if (const_cast<QmlPropertyNode *>(qmlProperty)->isReadOnly())
+                extra << u"read-only"_s;
+            else if (const_cast<QmlPropertyNode *>(qmlProperty)->isRequired())
+                extra << u"required"_s;
+            else if (!qmlProperty->defaultValue().isEmpty()) {
+                extra << u"default: "_s + qmlProperty->defaultValue();
+        }
+        break;
+        }
         default:
             break;
         }
-    } else if (style == Section::Summary) {
-        if (node->isPreliminary())
-            extra << "preliminary";
-        else if (node->isDeprecated()) {
-            extra << "deprecated";
-            if (const QString &since = node->deprecatedSince(); !since.isEmpty())
-                extra << QStringLiteral("(%1)").arg(since);
-        }
     }
 
-    if (style == Section::Details && !node->since().isEmpty()) {
+    // Add status for both Summary and Details
+    if (auto status = nodeStatusAsString(node)) {
         if (!extra.isEmpty())
-            extra.last() += QLatin1Char(',');
-        extra << "since" << node->since();
+            extra.last() += ','_L1;
+        extra << *status;
     }
 
     QString extraStr = extra.join(QLatin1Char(' '));
     if (!extraStr.isEmpty()) {
         extraStr.prepend(style == Section::Details ? '[' : '(');
         extraStr.append(style == Section::Details ? ']' : ')');
-        extraStr.append(' ');
     }
 
     return extraStr;

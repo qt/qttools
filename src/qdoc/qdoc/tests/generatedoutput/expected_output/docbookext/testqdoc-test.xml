@@ -315,12 +315,12 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="operator-2b-2b">
-<db:title>TestQDoc::Test &amp;Test::operator++()</db:title>
-<db:bridgehead renderas="sect2" xml:id="operator--">TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
+<db:title>[deprecated] TestQDoc::Test &amp;Test::operator++()</db:title>
+<db:bridgehead renderas="sect2" xml:id="operator--">[deprecated] TestQDoc::Test &amp;Test::operator--()</db:bridgehead>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 </db:section>
 <db:section xml:id="anotherObsoleteMember">
-<db:title>void Test::anotherObsoleteMember()</db:title>
+<db:title>[deprecated] void Test::anotherObsoleteMember()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>anotherObsoleteMember</db:methodname>
@@ -335,7 +335,7 @@
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#obsoleteMember">obsoleteMember</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="deprecatedMember">
-<db:title>void Test::deprecatedMember()</db:title>
+<db:title>[deprecated in 6.0] void Test::deprecatedMember()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>deprecatedMember</db:methodname>
@@ -350,7 +350,7 @@
 <db:para>Use <db:link xlink:href="testqdoc-test.xml#someFunction">someFunction</db:link>() instead.</db:para>
 </db:section>
 <db:section xml:id="obsoleteMember">
-<db:title>void Test::obsoleteMember()</db:title>
+<db:title>[deprecated] void Test::obsoleteMember()</db:title>
 <db:methodsynopsis>
 <db:void/>
 <db:methodname>obsoleteMember</db:methodname>

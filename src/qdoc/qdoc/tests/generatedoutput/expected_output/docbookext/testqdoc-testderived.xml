@@ -108,7 +108,7 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="staticObsoleteMember">
-<db:title>[static] void TestDerived::staticObsoleteMember()</db:title>
+<db:title>[static, deprecated] void TestDerived::staticObsoleteMember()</db:title>
 <db:methodsynopsis>
 <db:modifier>static</db:modifier>
 <db:void/>

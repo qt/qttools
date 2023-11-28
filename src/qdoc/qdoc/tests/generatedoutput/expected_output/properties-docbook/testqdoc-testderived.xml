@@ -178,7 +178,7 @@
 <db:section xml:id="obsolete-member-function-documentation">
 <db:title>Obsolete Member Function Documentation</db:title>
 <db:section xml:id="staticObsoleteMember">
-<db:title>[static] void TestDerived::staticObsoleteMember()</db:title>
+<db:title>[static, deprecated] void TestDerived::staticObsoleteMember()</db:title>
 <db:para>This function is deprecated. We strongly advise against using it in new code.</db:para>
 <db:para>Static obsolete method.</db:para>
 </db:section>

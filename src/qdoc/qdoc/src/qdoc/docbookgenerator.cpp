@@ -3718,8 +3718,10 @@ void DocBookGenerator::generateSynopsis(const Node *node, const Node *relative,
     // From CppCodeMarker::markedUpSynopsis, reversed the generation of "extra" and "synopsis".
     const int MaxEnumValues = 6;
 
-    if (generateExtra)
-        m_writer->writeCharacters(CodeMarker::extraSynopsis(node, style));
+    if (generateExtra) {
+        if (auto extra = CodeMarker::extraSynopsis(node, style); !extra.isEmpty())
+            m_writer->writeCharacters(extra + " ");
+    }
 
     // Then generate the synopsis.
     QString namePrefix {};
@@ -4357,26 +4359,10 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
 {
     // From HtmlGenerator::generateDetailedQmlMember, with elements from
     // CppCodeMarker::markedUpQmlItem and HtmlGenerator::generateQmlItem.
-    std::function<QString(QmlPropertyNode *)> getQmlPropertyTitle = [&](QmlPropertyNode *n) {
-        QString title;
-        QStringList extra;
-        if (n->isDefault())
-            extra << "default";
-        else if (n->isReadOnly())
-            extra << "read-only";
-        else if (n->isRequired())
-            extra << "required";
-        else if (!n->defaultValue().isEmpty())
-            extra << "default: " + n->defaultValue();
-
-        if (!n->since().isEmpty()) {
-            if (!extra.isEmpty())
-                extra.last().append(',');
-            extra << "since " + n->since();
-        }
-        if (!extra.isEmpty())
-            title = QString("[%1] ").arg(extra.join(QLatin1Char(' ')));
-
+    auto getQmlPropertyTitle = [&](QmlPropertyNode *n) {
+        QString title{CodeMarker::extraSynopsis(n, Section::Details)};
+        if (!title.isEmpty())
+            title += ' '_L1;
         // Finalise generation of name, as per CppCodeMarker::markedUpQmlItem.
         if (n->isAttached())
             title += n->element() + QLatin1Char('.');
@@ -4385,7 +4371,7 @@ void DocBookGenerator::generateDetailedQmlMember(Node *node, const Aggregate *re
         return title;
     };
 
-    std::function<void(Node *)> generateQmlMethodTitle = [&](Node *node) {
+    auto generateQmlMethodTitle = [&](Node *node) {
         generateSynopsis(node, relative, Section::Details);
     };
 
