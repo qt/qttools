@@ -13,4 +13,5 @@ qt_internal_add_module(Tools
     # special case end
     MODULE_INTERFACE_NAME Tools # Specify the 'Tools' name explicitly to avoid warning
                                 # related to the expected name of internal module.
+    NO_GENERATE_CPP_EXPORTS
 )

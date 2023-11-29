@@ -188,6 +188,7 @@ qt_internal_add_module(Designer
         uic
     PRECOMPILED_HEADER
         "lib_pch.h"
+    NO_GENERATE_CPP_EXPORTS
 )
 
 set(ui_sources

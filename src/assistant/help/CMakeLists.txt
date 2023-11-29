@@ -41,6 +41,7 @@ qt_internal_add_module(Help
         Qt::Widgets
     ENABLE_AUTOGEN_TOOLS
         uic
+    NO_GENERATE_CPP_EXPORTS
 )
 
 # Resources:

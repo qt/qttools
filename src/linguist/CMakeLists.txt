@@ -23,4 +23,5 @@ qt_internal_add_module(Linguist
     HEADER_MODULE
     NO_MODULE_HEADERS
     NO_PRIVATE_MODULE
+    NO_GENERATE_CPP_EXPORTS
 )

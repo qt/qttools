@@ -2,6 +2,7 @@ qt_internal_add_module(QDocCatchConversionsPrivate
     INTERNAL_MODULE
     HEADER_MODULE
     EXTERNAL_HEADERS_DIR src
+    NO_GENERATE_CPP_EXPORTS
 )
 
 qt_internal_extend_target(QDocCatchConversionsPrivate

@@ -29,6 +29,7 @@ qt_internal_add_module(UiTools
         Qt::Core
         Qt::Gui
         Qt::Widgets
+    NO_GENERATE_CPP_EXPORTS
 )
 
 ## Scopes:

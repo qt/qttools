@@ -16,6 +16,7 @@ qt_internal_add_module(UiPlugin
         Qt::Core
         Qt::Gui
         Qt::Widgets
+    NO_GENERATE_CPP_EXPORTS
 )
 
 set(is_plugin "$<TARGET_PROPERTY:QT_PLUGIN_CLASS_NAME>")
