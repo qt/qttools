@@ -19,6 +19,7 @@
 
 #include <QtDesigner/abstractformwindow.h>
 
+#include <QtCore/qcompare.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qshareddata.h>
 #include <QtCore/qmap.h>
@@ -302,7 +303,6 @@ protected:
     PropertySheetTranslatableData(bool translatable = true,
                                   const QString &disambiguation = QString(),
                                   const QString &comment = QString());
-    bool equals(const PropertySheetTranslatableData &rhs) const;
 
 public:
     bool translatable() const                { return m_translatable; }
@@ -315,6 +315,16 @@ public:
     void setId(const QString &id)            { m_id = id; }
 
 private:
+    friend bool comparesEqual(const PropertySheetTranslatableData &lhs,
+                              const PropertySheetTranslatableData &rhs) noexcept
+    {
+        return lhs.m_translatable == rhs.m_translatable
+            && lhs.m_disambiguation == rhs.m_disambiguation
+            && lhs.m_comment == rhs.m_comment
+            && lhs.m_id == rhs.m_id;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(PropertySheetTranslatableData)
+
     bool m_translatable;
     QString m_disambiguation;
     QString m_comment;
@@ -328,14 +338,18 @@ public:
     PropertySheetStringValue(const QString &value = QString(), bool translatable = true,
                              const QString &disambiguation = QString(), const QString &comment = QString());
 
-    bool operator==(const PropertySheetStringValue &other) const { return equals(other); }
-    bool operator!=(const PropertySheetStringValue &other) const { return !equals(other); }
-
     QString value() const;
     void setValue(const QString &value);
 
 private:
-    bool equals(const PropertySheetStringValue &rhs) const;
+    friend bool comparesEqual(const PropertySheetStringValue &lhs,
+                              const PropertySheetStringValue &rhs) noexcept
+    {
+        const PropertySheetTranslatableData &upLhs = lhs;
+        const PropertySheetTranslatableData &upRhs = rhs;
+        return lhs.m_value == rhs.m_value && upLhs == upRhs;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(PropertySheetStringValue)
 
     QString m_value;
 };
@@ -349,14 +363,18 @@ public:
                                  const QString &disambiguation = QString(),
                                  const QString &comment = QString());
 
-    bool operator==(const PropertySheetStringListValue &other) const { return equals(other); }
-    bool operator!=(const PropertySheetStringListValue &other) const { return !equals(other); }
-
     QStringList value() const;
     void setValue(const QStringList &value);
 
 private:
-    bool equals(const PropertySheetStringListValue &rhs) const;
+    friend bool comparesEqual(const PropertySheetStringListValue &lhs,
+                              const PropertySheetStringListValue &rhs) noexcept
+    {
+        const PropertySheetTranslatableData &upLhs = lhs;
+        const PropertySheetTranslatableData &upRhs = rhs;
+        return lhs.m_value == rhs.m_value && upLhs == upRhs;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(PropertySheetStringListValue)
 
     QStringList m_value;
 };
@@ -374,9 +392,6 @@ public:
                                   const QString &disambiguation = QString(),
                                   const QString &comment = QString());
 
-    bool operator==(const PropertySheetKeySequenceValue &other) const { return equals(other); }
-    bool operator!=(const PropertySheetKeySequenceValue &other) const { return !equals(other); }
-
     QKeySequence value() const;
     void setValue(const QKeySequence &value);
     QKeySequence::StandardKey standardKey() const;
@@ -384,7 +399,15 @@ public:
     bool isStandardKey() const;
 
 private:
-    bool equals(const PropertySheetKeySequenceValue &rhs) const;
+    friend bool comparesEqual(const PropertySheetKeySequenceValue &lhs,
+                              const PropertySheetKeySequenceValue &rhs) noexcept
+    {
+        const PropertySheetTranslatableData &upLhs = lhs;
+        const PropertySheetTranslatableData &upRhs = rhs;
+        return lhs.m_value == rhs.m_value && lhs.m_standardKey == rhs.m_standardKey
+            && upLhs == upRhs;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(PropertySheetKeySequenceValue)
 
     QKeySequence m_value;
     QKeySequence::StandardKey m_standardKey;

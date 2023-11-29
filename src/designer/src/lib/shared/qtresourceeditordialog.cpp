@@ -11,6 +11,7 @@
 #include <QtDesigner/abstractsettings.h>
 #include <QtDesigner/abstractformeditor.h>
 
+#include <QtCore/qcompare.h>
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qdir.h>
 #include <QtCore/qcoreapplication.h>
@@ -49,29 +50,45 @@ static QString msgTagMismatch(const QString &got, const QString &expected)
 namespace qdesigner_internal {
 
 // below 3 data classes should be derived from QSharedData and made implicit shared class
-struct QtResourceFileData {
+struct QtResourceFileData
+{
     QString path;
     QString alias;
-    bool operator==(const QtResourceFileData &other) const
-    { return path == other.path && alias == other.alias; }
+
+    friend bool comparesEqual(const QtResourceFileData &lhs,
+                              const QtResourceFileData &rhs) noexcept
+    {
+        return lhs.path == rhs.path && lhs.alias == rhs.alias;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(QtResourceFileData)
 };
 
-struct QtResourcePrefixData {
+struct QtResourcePrefixData
+{
     QString prefix;
     QString language;
     QList<QtResourceFileData> resourceFileList;
-    bool operator==(const QtResourcePrefixData &other) const
+
+    friend bool comparesEqual(const QtResourcePrefixData &lhs,
+                              const QtResourcePrefixData &rhs) noexcept
     {
-        return prefix == other.prefix && language == other.language
-            && resourceFileList == other.resourceFileList;
+        return lhs.prefix == rhs.prefix && lhs.language == rhs.language
+                && lhs.resourceFileList == rhs.resourceFileList;
     }
+    Q_DECLARE_EQUALITY_COMPARABLE(QtResourcePrefixData)
 };
 
-struct QtQrcFileData {
+struct QtQrcFileData
+{
     QString qrcPath;
     QList<QtResourcePrefixData> resourceList;
-    bool operator==(const QtQrcFileData &other) const
-    { return qrcPath == other.qrcPath && resourceList == other.resourceList; }
+
+    friend bool comparesEqual(const QtQrcFileData &lhs,
+                              const QtQrcFileData &rhs) noexcept
+    {
+        return lhs.qrcPath == rhs.qrcPath && lhs.resourceList == rhs.resourceList;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(QtQrcFileData)
 };
 
 } // namespace qdesigner_internal

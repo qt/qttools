@@ -147,14 +147,6 @@ int Grid::widgetHandleAdjustY(int y) const
     return m_snapY ? (y / m_deltaY) * m_deltaY + 1 : y;
 }
 
-bool Grid::equals(const Grid &rhs) const
-{
-    return m_visible == rhs.m_visible &&
-           m_snapX   == rhs.m_snapX &&
-           m_snapY   == rhs.m_snapY &&
-           m_deltaX  == rhs.m_deltaX &&
-           m_deltaY  == rhs.m_deltaY;
-}
 }
 
 QT_END_NAMESPACE

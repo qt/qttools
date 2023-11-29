@@ -261,9 +261,9 @@ void DeviceProfile::apply(const QDesignerFormEditorInterface *core, QWidget *wid
     }
 }
 
-bool DeviceProfile::equals(const DeviceProfile& rhs) const
+bool comparesEqual(const DeviceProfile &lhs, const DeviceProfile &rhs) noexcept
 {
-    const DeviceProfileData &d = *m_d;
+    const DeviceProfileData &d = *lhs.m_d;
     const DeviceProfileData &rhs_d = *rhs.m_d;
     return d.m_fontPointSize == rhs_d.m_fontPointSize &&
            d.m_dpiX == rhs_d.m_dpiX && d.m_dpiY == rhs_d.m_dpiY && d.m_fontFamily == rhs_d.m_fontFamily &&

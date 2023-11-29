@@ -24,14 +24,6 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-// ---------------- QDesignerToolWindowFontSettings
-bool ToolWindowFontSettings::equals(const ToolWindowFontSettings &rhs) const
-{
-    return m_useFont == rhs.m_useFont &&
-           m_writingSystem == rhs.m_writingSystem &&
-           m_font == rhs.m_font;
-}
-
 // ---------------- QDesignerToolWindow
 QDesignerToolWindow::QDesignerToolWindow(QDesignerWorkbench *workbench,
                                          QWidget *w,

@@ -2391,14 +2391,13 @@ void TableWidgetContents::applyToTableWidget(QTableWidget *tableWidget, Designer
     }
 }
 
-bool TableWidgetContents::operator==(const TableWidgetContents &rhs) const
+bool comparesEqual(const TableWidgetContents &lhs,
+                   const TableWidgetContents &rhs) noexcept
 {
-    if (m_columnCount != rhs.m_columnCount || m_rowCount !=  rhs.m_rowCount)
-        return false;
-
-    return m_horizontalHeader.m_items == rhs.m_horizontalHeader.m_items &&
-           m_verticalHeader.m_items == rhs.m_verticalHeader.m_items &&
-           m_items == rhs.m_items;
+    return lhs.m_columnCount == rhs.m_columnCount && lhs.m_rowCount == rhs.m_rowCount &&
+           lhs.m_horizontalHeader.m_items == rhs.m_horizontalHeader.m_items &&
+           lhs.m_verticalHeader.m_items == rhs.m_verticalHeader.m_items &&
+           lhs.m_items == rhs.m_items;
 }
 
 // ---- ChangeTableContentsCommand ----
@@ -2468,12 +2467,11 @@ QTreeWidgetItem *TreeWidgetContents::ItemContents::createTreeItem(DesignerIconCa
     return item;
 }
 
-bool TreeWidgetContents::ItemContents::operator==(const TreeWidgetContents::ItemContents &rhs) const
+bool comparesEqual(const TreeWidgetContents::ItemContents &lhs,
+                   const TreeWidgetContents::ItemContents &rhs) noexcept
 {
-    return
-        m_itemFlags == rhs.m_itemFlags &&
-        m_items == rhs.m_items &&
-        m_children == rhs.m_children;
+    return lhs.m_itemFlags == rhs.m_itemFlags && lhs.m_items == rhs.m_items
+        && lhs.m_children == rhs.m_children;
 }
 
 void TreeWidgetContents::clear()
@@ -2499,13 +2497,6 @@ void TreeWidgetContents::applyToTreeWidget(QTreeWidget *treeWidget, DesignerIcon
     for (const ItemContents &ic : m_rootItems)
         treeWidget->addTopLevelItem(ic.createTreeItem(iconCache, editor));
     treeWidget->expandAll();
-}
-
-bool TreeWidgetContents::operator==(const TreeWidgetContents &rhs) const
-{
-    return
-        m_headerItem == rhs.m_headerItem &&
-        m_rootItems == rhs.m_rootItems;
 }
 
 // ---- ChangeTreeContentsCommand ----

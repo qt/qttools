@@ -9,6 +9,7 @@
 
 #include <QtDesigner/abstractoptionspage.h>
 
+#include <QtCore/qcompare.h>
 #include <QtCore/qobject.h>
 #include <QtCore/qpointer.h>
 #include <QtWidgets/qwidget.h>
@@ -23,24 +24,22 @@ namespace Ui {
 }
 
 /* AppearanceOptions data */
-struct AppearanceOptions {
-    bool equals(const AppearanceOptions&) const;
+struct AppearanceOptions
+{
     void toSettings(QDesignerSettings &) const;
     void fromSettings(const QDesignerSettings &);
 
     UIMode uiMode{DockedMode};
     ToolWindowFontSettings toolWindowFontSettings;
+
+    friend bool comparesEqual(const AppearanceOptions &lhs,
+                              const AppearanceOptions &rhs) noexcept
+    {
+        return lhs.uiMode == rhs.uiMode
+            && lhs.toolWindowFontSettings == rhs.toolWindowFontSettings;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(AppearanceOptions)
 };
-
-inline bool operator==(const AppearanceOptions &ao1, const AppearanceOptions &ao2)
-{
-    return ao1.equals(ao2);
-}
-
-inline bool operator!=(const AppearanceOptions &ao1, const AppearanceOptions &ao2)
-{
-    return !ao1.equals(ao2);
-}
 
 /* QDesignerAppearanceOptionsWidget: Let the user edit AppearanceOptions */
 class QDesignerAppearanceOptionsWidget : public QWidget

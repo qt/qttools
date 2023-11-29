@@ -19,6 +19,7 @@
 
 #include <QtWidgets/qdialog.h>
 #include <QtGui/qkeysequence.h>
+#include <QtCore/qcompare.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -48,10 +49,13 @@ struct ActionData {
     bool checkable{false};
     PropertySheetKeySequenceValue keysequence;
     PropertySheetFlagValue menuRole;
-};
 
-inline bool operator==(const ActionData &a1, const ActionData &a2) {  return a1.compare(a2) == 0u; }
-inline bool operator!=(const ActionData &a1, const ActionData &a2) {  return a1.compare(a2) != 0u; }
+    friend bool comparesEqual(const ActionData &lhs, const ActionData &rhs) noexcept
+    {
+        return lhs.compare(rhs) == 0;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(ActionData)
+};
 
 class NewActionDialog: public QDialog
 {

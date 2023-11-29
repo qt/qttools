@@ -19,6 +19,7 @@
 
 #include <QtGui/qstandarditemmodel.h>
 #include <QtGui/qicon.h>
+#include <QtCore/qcompare.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
@@ -74,6 +75,12 @@ namespace qdesigner_internal {
         void setItemsDisplayData(const StandardItemList &row, const ObjectInspectorIcons &icons, unsigned mask) const;
 
     private:
+        friend bool comparesEqual(const ObjectData &lhs, const ObjectData &rhs) noexcept
+        {
+            return lhs.m_parent == rhs.m_parent && lhs.m_object == rhs.m_object;
+        }
+        Q_DECLARE_EQUALITY_COMPARABLE(ObjectData)
+
         void initObject(const ModelRecursionContext &ctx);
         void initWidget(QWidget *w, const ModelRecursionContext &ctx);
 
@@ -85,9 +92,6 @@ namespace qdesigner_internal {
         QIcon m_classIcon;
         LayoutInfo::Type m_managedLayoutType = LayoutInfo::NoLayout;
     };
-
-    inline bool operator==(const ObjectData &e1, const ObjectData &e2) { return e1.equals(e2); }
-    inline bool operator!=(const ObjectData &e1, const ObjectData &e2) { return !e1.equals(e2); }
 
     using ObjectModel = QList<ObjectData>;
 

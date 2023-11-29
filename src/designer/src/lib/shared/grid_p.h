@@ -17,6 +17,7 @@
 
 #include "shared_global_p.h"
 
+#include <QtCore/qcompare.h>
 #include <QtCore/qvariant.h>
 
 QT_BEGIN_NAMESPACE
@@ -61,11 +62,15 @@ public:
     int widgetHandleAdjustX(int x) const;
     int widgetHandleAdjustY(int y) const;
 
-    inline bool operator==(const Grid &rhs) const { return equals(rhs); }
-    inline bool operator!=(const Grid &rhs) const { return !equals(rhs); }
-
 private:
-    bool equals(const Grid &rhs) const;
+    friend bool comparesEqual(const Grid &lhs, const Grid &rhs) noexcept
+    {
+        return lhs.m_visible == rhs.m_visible
+            && lhs.m_snapX == rhs.m_snapX && lhs.m_snapY == rhs.m_snapY
+            && lhs.m_deltaX == rhs.m_deltaX && lhs.m_deltaY == rhs.m_deltaY;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(Grid)
+
     int snapValue(int value, int grid) const;
     bool m_visible;
     bool m_snapX;

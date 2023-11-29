@@ -447,14 +447,6 @@ namespace qdesigner_internal
     PropertySheetTranslatableData::PropertySheetTranslatableData(bool translatable, const QString &disambiguation, const QString &comment) :
         m_translatable(translatable), m_disambiguation(disambiguation), m_comment(comment) { }
 
-    bool PropertySheetTranslatableData::equals(const PropertySheetTranslatableData &rhs) const
-    {
-        return m_translatable == rhs.m_translatable
-               && m_disambiguation == rhs.m_disambiguation
-               && m_comment == rhs.m_comment
-               && m_id == rhs.m_id;
-    }
-
     PropertySheetStringValue::PropertySheetStringValue(const QString &value,
                     bool translatable, const QString &disambiguation, const QString &comment) :
         PropertySheetTranslatableData(translatable, disambiguation, comment), m_value(value) {}
@@ -467,11 +459,6 @@ namespace qdesigner_internal
     void PropertySheetStringValue::setValue(const QString &value)
     {
         m_value = value;
-    }
-
-    bool PropertySheetStringValue::equals(const PropertySheetStringValue &rhs) const
-    {
-        return m_value == rhs.m_value && PropertySheetTranslatableData::equals(rhs);
     }
 
     PropertySheetStringListValue::PropertySheetStringListValue(const QStringList &value,
@@ -490,11 +477,6 @@ namespace qdesigner_internal
     void PropertySheetStringListValue::setValue(const QStringList &value)
     {
         m_value = value;
-    }
-
-    bool PropertySheetStringListValue::equals(const PropertySheetStringListValue &rhs) const
-    {
-        return m_value == rhs.m_value && PropertySheetTranslatableData::equals(rhs);
     }
 
     QStringList m_value;
@@ -535,12 +517,6 @@ namespace qdesigner_internal
     bool PropertySheetKeySequenceValue::isStandardKey() const
     {
         return m_standardKey != QKeySequence::UnknownKey;
-    }
-
-    bool PropertySheetKeySequenceValue::equals(const PropertySheetKeySequenceValue &rhs) const
-    {
-        return m_value == rhs.m_value && m_standardKey == rhs.m_standardKey
-                && PropertySheetTranslatableData::equals(rhs);
     }
 
     /* IconSubPropertyMask: Assign each icon sub-property (pixmaps for the

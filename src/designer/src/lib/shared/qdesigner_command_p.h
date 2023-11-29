@@ -26,6 +26,7 @@
 
 #include <QtGui/qicon.h>
 
+#include <QtCore/qcompare.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qlist.h>
 #include <QtCore/qmap.h>
@@ -827,10 +828,14 @@ struct QDESIGNER_SHARED_EXPORT ItemData {
     void fillTreeItemColumn(QTreeWidgetItem *item, int column, DesignerIconCache *iconCache) const;
 
     bool isValid() const { return !m_properties.isEmpty(); }
-    bool operator==(const ItemData &rhs) const { return m_properties == rhs.m_properties; }
-    bool operator!=(const ItemData &rhs) const { return m_properties != rhs.m_properties; }
 
     QHash<int, QVariant> m_properties;
+
+    friend bool comparesEqual(const ItemData &lhs, const ItemData  &rhs) noexcept
+    {
+        return lhs.m_properties == rhs.m_properties;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(ItemData)
 };
 
 struct QDESIGNER_SHARED_EXPORT ListContents {
@@ -846,10 +851,13 @@ struct QDESIGNER_SHARED_EXPORT ListContents {
     void createFromComboBox(const QComboBox *listWidget);
     void applyToComboBox(QComboBox *listWidget, DesignerIconCache *iconCache) const;
 
-    bool operator==(const ListContents &rhs) const { return m_items == rhs.m_items; }
-    bool operator!=(const ListContents &rhs) const { return m_items != rhs.m_items; }
-
     QList<ItemData> m_items;
+
+    friend bool comparesEqual(const ListContents &lhs, const ListContents &rhs) noexcept
+    {
+        return lhs.m_items == rhs.m_items;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(ListContents)
 };
 
 // Data structure representing the contents of a QTableWidget with
@@ -864,9 +872,6 @@ struct QDESIGNER_SHARED_EXPORT TableWidgetContents {
     void fromTableWidget(const QTableWidget *tableWidget, bool editor);
     void applyToTableWidget(QTableWidget *tableWidget, DesignerIconCache *iconCache, bool editor) const;
 
-    bool operator==(const TableWidgetContents &rhs) const;
-    bool operator!=(const TableWidgetContents &rhs) const { return !(*this == rhs); }
-
     static bool nonEmpty(const QTableWidgetItem *item, int headerColumn);
     static QString defaultHeaderText(int i);
     static void insertHeaderItem(const QTableWidgetItem *item, int i, ListContents *header, bool editor);
@@ -876,6 +881,11 @@ struct QDESIGNER_SHARED_EXPORT TableWidgetContents {
     ListContents m_horizontalHeader;
     ListContents m_verticalHeader;
     QMap<CellRowColumnAddress, ItemData> m_items;
+
+    friend QDESIGNER_SHARED_EXPORT
+    bool comparesEqual(const TableWidgetContents &lhs,
+                       const TableWidgetContents &rhs) noexcept;
+    Q_DECLARE_EQUALITY_COMPARABLE(TableWidgetContents)
 };
 
 class QDESIGNER_SHARED_EXPORT ChangeTableContentsCommand: public QDesignerFormWindowCommand
@@ -903,14 +913,16 @@ struct QDESIGNER_SHARED_EXPORT TreeWidgetContents {
         ItemContents(const QTreeWidgetItem *item, bool editor);
         QTreeWidgetItem *createTreeItem(DesignerIconCache *iconCache, bool editor) const;
 
-        bool operator==(const ItemContents &rhs) const;
-        bool operator!=(const ItemContents &rhs) const { return !(*this == rhs); }
-
         int m_itemFlags = -1;
         //bool m_firstColumnSpanned:1;
         //bool m_hidden:1;
         //bool m_expanded:1;
         QList<ItemContents> m_children;
+
+        friend QDESIGNER_SHARED_EXPORT
+        bool comparesEqual(const ItemContents &lhs,
+                           const ItemContents &rhs) noexcept;
+        Q_DECLARE_EQUALITY_COMPARABLE(ItemContents)
     };
 
     void clear();
@@ -918,11 +930,15 @@ struct QDESIGNER_SHARED_EXPORT TreeWidgetContents {
     void fromTreeWidget(const QTreeWidget *treeWidget, bool editor);
     void applyToTreeWidget(QTreeWidget *treeWidget, DesignerIconCache *iconCache, bool editor) const;
 
-    bool operator==(const TreeWidgetContents &rhs) const;
-    bool operator!=(const TreeWidgetContents &rhs) const { return !(*this == rhs); }
-
     ListContents m_headerItem;
     QList<ItemContents> m_rootItems;
+
+    friend bool comparesEqual(const TreeWidgetContents &lhs,
+                              const TreeWidgetContents &rhs) noexcept
+    {
+        return lhs.m_headerItem == rhs.m_headerItem && lhs.m_rootItems == rhs.m_rootItems;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(TreeWidgetContents)
 };
 
 class QDESIGNER_SHARED_EXPORT ChangeTreeContentsCommand: public QDesignerFormWindowCommand

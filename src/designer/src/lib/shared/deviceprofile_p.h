@@ -17,6 +17,7 @@
 
 #include "shared_global_p.h"
 
+#include <QtCore/qcompare.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qshareddata.h>
 
@@ -76,8 +77,6 @@ public:
     static void systemResolution(int *dpiX, int *dpiY);
     static void widgetResolution(const QWidget *w, int *dpiX, int *dpiY);
 
-    bool equals(const DeviceProfile& rhs) const;
-
     // Apply to form/preview (using font inheritance)
     enum ApplyMode {
         /* Pre-Apply to parent widget of form being edited: Apply font
@@ -98,16 +97,14 @@ public:
     bool fromXml(const QString &xml, QString *errorMessage);
 
 private:
+    friend QDESIGNER_SHARED_EXPORT bool comparesEqual(const DeviceProfile &lhs,
+                                                      const DeviceProfile &rhs) noexcept;
+    Q_DECLARE_EQUALITY_COMPARABLE(DeviceProfile)
+
     QSharedDataPointer<DeviceProfileData> m_d;
 };
 
-inline bool operator==(const DeviceProfile &s1, const DeviceProfile &s2)
-    { return s1.equals(s2); }
-inline bool operator!=(const DeviceProfile &s1, const DeviceProfile &s2)
-    { return !s1.equals(s2); }
-
-}
-
+} // namespace qdesigner_internal
 
 QT_END_NAMESPACE
 
