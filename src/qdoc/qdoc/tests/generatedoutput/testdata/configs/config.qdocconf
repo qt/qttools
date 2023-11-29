@@ -18,7 +18,3 @@ locationinfo = false
 HTML.nosubdirs = true
 HTML.outputsubdir = .
 
-# Macro from qtbase/doc/global/macros.qdocconf
-# The file cannot be included directly, because it requires many
-# variables to be set, like QT_VER
-macro.borderedimage       = "\\div {class=\"border\"} \\image \1\n\\enddiv"

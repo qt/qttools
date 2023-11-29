@@ -13,6 +13,11 @@ macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"
 macro.PROD = QDoc
 
+# Macro from qtbase/doc/global/macros.qdocconf
+# The file cannot be included directly, because it requires many
+# variables to be set, like QT_VER
+macro.borderedimage       = "\\div {class=\"border\"} \\image \1\n\\enddiv"
+
 defines = test_navigation
 
 # allow (qdoc) warning: Can't link to ''
