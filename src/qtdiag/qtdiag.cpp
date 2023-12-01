@@ -601,8 +601,10 @@ QString qtDiag(unsigned flags)
     str << "\nEnvironment:\n";
     const QStringList keys = systemEnvironment.keys();
     for (const QString &key : keys) {
-        if (key.startsWith(QLatin1Char('Q')))
-           str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
+        if (key.size() < 2 || !key.startsWith(QLatin1Char('Q')))
+            continue;
+        if (key.at(1) == 'T' || key.at(1) == '_')
+            str << "  " << key << "=\"" << systemEnvironment.value(key) << "\"\n";
     }
 #endif // QT_CONFIG(process)
 
