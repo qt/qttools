@@ -195,27 +195,54 @@ set(lupdate_translations \"${ts_files}\")
     endif()
 
     if(NOT arg_NO_GLOBAL_TARGET)
-        if(NOT TARGET ${QT_GLOBAL_LUPDATE_TARGET})
-            add_custom_target(${QT_GLOBAL_LUPDATE_TARGET})
-        endif()
         if(CMAKE_GENERATOR MATCHES "^Visual Studio ")
             # For the Visual Studio generators we cannot use add_dependencies, because this would
             # enable ${target}_lupdate in the default build of the solution. See QTBUG-115166 and
-            # upstream CMake issue #16668 for details. As a work-around, we run the
-            # ${target}_lupdate through 'cmake --build' as PRE_BUILD step of the global lupdate
-            # target.
-            add_custom_command(
-                TARGET ${QT_GLOBAL_LUPDATE_TARGET} PRE_BUILD
-                COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" -t ${target}_lupdate
-            )
+            # upstream CMake issue #16668 for details. Instead, we record ${target}_lupdate and
+            # create an update_translations target at the end of the top-level directory scope.
+            if(${CMAKE_VERSION} VERSION_LESS "3.19.0")
+                if(NOT QT_NO_GLOBAL_LUPDATE_TARGET_CREATION_WARNING)
+                    message(WARNING
+                        "Cannot create target ${QT_GLOBAL_LUPDATE_TARGET} with this CMake version. "
+                        "Please upgrade to CMake 3.19.0 or newer. "
+                        "Set QT_NO_GLOBAL_LUPDATE_TARGET_CREATION_WARNING to ON to disable this "
+                        "warning."
+                    )
+                endif()
+                return()
+            endif()
+            set(property_name _qt_target_${QT_GLOBAL_LUPDATE_TARGET}_dependencies)
+            get_property(recorded_targets GLOBAL PROPERTY ${property_name})
+            if("${recorded_targets}" STREQUAL "")
+                cmake_language(EVAL CODE
+                    "cmake_language(DEFER DIRECTORY \"${CMAKE_SOURCE_DIR}\" CALL _qt_internal_add_global_lupdate_target_deferred \"${QT_GLOBAL_LUPDATE_TARGET}\")"
+                )
+            endif()
+            set_property(GLOBAL APPEND PROPERTY ${property_name} ${target}_lupdate)
 
             # Exclude ${target}_lupdate from the solution's default build to avoid it being enabled
             # should the user add a dependency to it.
             set_property(TARGET ${target}_lupdate PROPERTY EXCLUDE_FROM_DEFAULT_BUILD ON)
         else()
+            if(NOT TARGET ${QT_GLOBAL_LUPDATE_TARGET})
+                add_custom_target(${QT_GLOBAL_LUPDATE_TARGET})
+            endif()
             add_dependencies(${QT_GLOBAL_LUPDATE_TARGET} ${target}_lupdate)
         endif()
     endif()
+endfunction()
+
+# Hack for the Visual Studio generator. Create the global lupdate target named ${target} and work
+# around the lack of a working add_dependencies by calling 'cmake --build' for every dependency.
+function(_qt_internal_add_global_lupdate_target_deferred target)
+    get_property(target_dependencies GLOBAL PROPERTY _qt_target_${target}_dependencies)
+    set(target_commands "")
+    foreach(dependency IN LISTS target_dependencies)
+        list(APPEND target_commands
+            COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" -t ${dependency}
+        )
+    endforeach()
+    add_custom_target(${target} ${target_commands})
 endfunction()
 
 function(qt6_add_lrelease target)
