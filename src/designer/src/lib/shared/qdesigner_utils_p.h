@@ -22,10 +22,11 @@
 #include <QtCore/qcompare.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qshareddata.h>
-#include <QtCore/qmap.h>
 #include <QtWidgets/qmainwindow.h>
 #include <QtGui/qicon.h>
 #include <QtGui/qpixmap.h>
+
+#include <map>
 
 QT_BEGIN_NAMESPACE
 
@@ -61,7 +62,7 @@ template <class IntType>
 class MetaEnum
 {
 public:
-    using KeyToValueMap = QMap<QString, IntType>;
+    using KeyToValueMap = std::map<QString, IntType, std::less<>>;
 
     MetaEnum(const QString &enumName, const QString &scope, const QString &separator);
     MetaEnum() = default;
@@ -69,7 +70,7 @@ public:
 
     QString valueToKey(IntType value, bool *ok = nullptr) const;
     // Ignorant of scopes.
-    IntType keyToValue(QString key, bool *ok = nullptr) const;
+    IntType keyToValue(QStringView key, bool *ok = nullptr) const;
 
     const QString &enumName() const  { return m_enumName; }
     const QString &scope() const     { return m_scope; }
@@ -100,30 +101,36 @@ MetaEnum<IntType>::MetaEnum(const QString &enumName, const QString &scope, const
 template <class IntType>
 void MetaEnum<IntType>::addKey(IntType value, const QString &name)
 {
-    m_keyToValueMap.insert(name, value);
+    m_keyToValueMap.insert({name, value});
     m_keys.append(name);
 }
 
 template <class IntType>
 QString MetaEnum<IntType>::valueToKey(IntType value, bool *ok) const
 {
-    const QString rc = m_keyToValueMap.key(value);
+    QString rc;
+    for (auto it = m_keyToValueMap.begin(), end = m_keyToValueMap.end(); it != end; ++it)  {
+        if (it->second == value) {
+            rc = it->first;
+            break;
+        }
+    }
     if (ok)
         *ok = !rc.isEmpty();
     return rc;
 }
 
 template <class IntType>
-IntType MetaEnum<IntType>::keyToValue(QString key, bool *ok) const
+IntType MetaEnum<IntType>::keyToValue(QStringView key, bool *ok) const
 {
     const auto lastSep = key.lastIndexOf(m_separator);
     if (lastSep != -1)
-        key.remove(0, lastSep + m_separator.size());
+        key = key.sliced(lastSep + m_separator.size());
     const auto it = m_keyToValueMap.find(key);
-    const bool found = it != m_keyToValueMap.constEnd();
+    const bool found = it != m_keyToValueMap.end();
     if (ok)
         *ok = found;
-    return found ? it.value() : IntType(0);
+    return found ? it->second : IntType(0);
 }
 
 template <class IntType>

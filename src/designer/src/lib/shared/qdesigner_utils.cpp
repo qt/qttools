@@ -175,18 +175,18 @@ namespace qdesigner_internal
     {
         QStringList rc;
         const uint v = static_cast<uint>(ivalue);
-        for (auto it = keyToValueMap().constBegin(), cend = keyToValueMap().constEnd(); it != cend; ++it )  {
-            const uint itemValue = it.value();
+        for (auto it = keyToValueMap().begin(), end = keyToValueMap().end(); it != end; ++it)  {
+            const uint itemValue = it->second;
             // Check for equality first as flag values can be 0 or -1, too. Takes preference over a bitwise flag
             if (v == itemValue) {
                 rc.clear();
-                rc.push_back(it.key());
+                rc.push_back(it->first);
                 return rc;
             }
             // Do not add 0-flags (None-flags)
             if (itemValue)
                 if ((v & itemValue) == itemValue)
-                    rc.push_back(it.key());
+                    rc.push_back(it->first);
         }
         return rc;
     }
@@ -220,8 +220,8 @@ namespace qdesigner_internal
         }
         uint flags = 0;
         bool valueOk = true;
-        const QStringList keys = s.split(u'|');
-        for (const QString &key : keys) {
+        const auto keys = QStringView{s}.split(u'|');
+        for (const auto &key : keys) {
             const uint flagValue = keyToValue(key, &valueOk);
             if (!valueOk) {
                 flags = 0;
