@@ -1206,18 +1206,14 @@ void ClangVisitor::processFunction(FunctionNode *fn, CXCursor cursor)
         clang::FunctionProtoType::ExceptionSpecInfo exception_specification = function_prototype->getExceptionSpecInfo();
 
         if (exception_specification.Type != clang::ExceptionSpecificationType::EST_None) {
-            clang::SourceManager& source_manager = function_declaration->getASTContext().getSourceManager();
-            const clang::LangOptions& lang_options = function_declaration->getASTContext().getLangOpts();
-
-            const QString exception_specification_spelling =
-                exception_specification.NoexceptExpr ?
-                    QString::fromStdString(clang::Lexer::getSourceText(
-                        clang::CharSourceRange::getTokenRange(exception_specification.NoexceptExpr->getSourceRange()),
-                        source_manager, lang_options
-                    ).str()) : "";
+            const std::string exception_specification_spelling =
+                exception_specification.NoexceptExpr ? get_expression_as_string(
+                    exception_specification.NoexceptExpr,
+                    function_declaration->getASTContext()
+                ) : "";
 
             if (exception_specification_spelling != "false")
-                fn->markNoexcept(exception_specification_spelling);
+                fn->markNoexcept(QString::fromStdString(exception_specification_spelling));
         }
     }
 
