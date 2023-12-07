@@ -164,7 +164,7 @@ static std::string get_expression_as_string(const clang::Expr* expression, const
  * and its stringified representation will be return as the fully
  * qualified version of the type.
  *
- * If the parameter as no default value the empty string will be returned.
+ * If the parameter has no default value the empty string will be returned.
  */
 static std::string get_default_value_initializer_as_string(const clang::TemplateTypeParmDecl* parameter) {
     return (parameter && parameter->hasDefaultArgument()) ?
@@ -211,6 +211,27 @@ static std::string get_default_value_initializer_as_string(const clang::Template
 }
 
 /*
+ * Retrieves the default value of the passed in function parameter as
+ * a string.
+ *
+ * The default value of a function parameter is an expression and its
+ * stringified representation will be returned as it was written in
+ * the original code.
+ *
+ * If the parameter as no default value or Clang was not able to yet
+ * parse it at this time the empty string will be returned.
+ */
+static std::string get_default_value_initializer_as_string(const clang::ParmVarDecl* parameter) {
+    if (!parameter || !parameter->hasDefaultArg() || parameter->hasUnparsedDefaultArg())
+        return "";
+
+    return get_expression_as_string(
+        parameter->hasUninstantiatedDefaultArg() ? parameter->getUninstantiatedDefaultArg() : parameter->getDefaultArg(),
+        parameter->getASTContext()
+    );
+}
+
+/*
  * Retrieves the default value of the passed in declaration, based on
  * its concrete type, as a string.
  *
@@ -229,6 +250,10 @@ static std::string get_default_value_initializer_as_string(const clang::NamedDec
 
     if (auto template_template_parameter = llvm::dyn_cast<clang::TemplateTemplateParmDecl>(declaration)) {
         return get_default_value_initializer_as_string(template_template_parameter);
+    }
+
+    if (auto function_parameter = llvm::dyn_cast<clang::ParmVarDecl>(declaration)) {
+        return get_default_value_initializer_as_string(function_parameter);
     }
 
     return "";
@@ -1104,25 +1129,10 @@ void ClangVisitor::readParameterNamesAndAttributes(FunctionNode *fn, CXCursor cu
             const clang::ParmVarDecl* parameter_declaration = llvm::dyn_cast<const clang::ParmVarDecl>(get_cursor_declaration(cur));
             Q_ASSERT(parameter_declaration);
 
-            if (parameter_declaration->hasDefaultArg() && !parameter_declaration->hasUnparsedDefaultArg()) {
-                const clang::Expr* default_initializer =
-                    parameter_declaration->hasUninstantiatedDefaultArg() ? parameter_declaration->getUninstantiatedDefaultArg()
-                                                                         : parameter_declaration->getDefaultArg();
+            std::string default_value = get_default_value_initializer_as_string(parameter_declaration);
 
-                auto default_value = QString::fromStdString(clang::Lexer::getSourceText(
-                    clang::CharSourceRange::getTokenRange(default_initializer->getSourceRange()),
-                    parameter_declaration->getASTContext().getSourceManager(),
-                    parameter_declaration->getASTContext().getLangOpts()
-                ).str());
-
-                if (default_value.startsWith("="))
-                    default_value.remove(0, 1);
-
-                default_value = default_value.trimmed();
-
-                if (!default_value.isEmpty())
-                    parameters[i].setDefaultValue(default_value);
-            }
+            if (!default_value.empty())
+                parameters[i].setDefaultValue(QString::fromStdString(default_value));
 
             ++i;
         }
