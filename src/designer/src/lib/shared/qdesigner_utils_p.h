@@ -20,6 +20,7 @@
 #include <QtDesigner/abstractformwindow.h>
 
 #include <QtCore/qcompare.h>
+#include <QtCore/qhash.h>
 #include <QtCore/qvariant.h>
 #include <QtCore/qshareddata.h>
 #include <QtWidgets/qmainwindow.h>
@@ -210,10 +211,6 @@ public:
     PropertySheetPixmapValue(const QString &path);
     PropertySheetPixmapValue();
 
-    bool operator==(const PropertySheetPixmapValue &other) const { return compare(other) == 0; }
-    bool operator!=(const PropertySheetPixmapValue &other) const { return compare(other) != 0; }
-    bool operator<(const PropertySheetPixmapValue &other) const  { return compare(other) <  0; }
-
     // Check where a pixmap comes from
     enum PixmapSource { LanguageResourcePixmap , ResourcePixmap, FilePixmap };
     static PixmapSource getPixmapSource(QDesignerFormEditorInterface *core, const QString & path);
@@ -223,9 +220,18 @@ public:
     QString path() const;
     void setPath(const QString &path); // passing the empty path resets the pixmap
 
-    int compare(const PropertySheetPixmapValue &other) const;
-
 private:
+    friend size_t qHash(const PropertySheetPixmapValue &p, size_t seed = 0) noexcept
+    {
+        return qHash(p.m_path, seed);
+    }
+    friend bool comparesEqual(const PropertySheetPixmapValue &lhs,
+                              const PropertySheetPixmapValue &rhs) noexcept
+    {
+        return lhs.m_path == rhs.m_path;
+    }
+    Q_DECLARE_EQUALITY_COMPARABLE(PropertySheetPixmapValue)
+
     QString m_path;
 };
 
@@ -241,10 +247,6 @@ class QDESIGNER_SHARED_EXPORT PropertySheetIconValue
     ~PropertySheetIconValue();
     PropertySheetIconValue(const PropertySheetIconValue &);
     PropertySheetIconValue &operator=(const PropertySheetIconValue &);
-
-    bool operator==(const PropertySheetIconValue &other) const { return equals(other); }
-    bool operator!=(const PropertySheetIconValue &other) const { return !equals(other); }
-    bool operator<(const PropertySheetIconValue &other) const;
 
     bool isEmpty() const;
 
@@ -268,7 +270,15 @@ class QDESIGNER_SHARED_EXPORT PropertySheetIconValue
     const ModeStateToPixmapMap &paths() const;
 
 private:
-    bool equals(const PropertySheetIconValue &rhs) const;
+    friend QDESIGNER_SHARED_EXPORT
+    size_t qHash(const PropertySheetIconValue &p, size_t seed) noexcept;
+    friend size_t qHash(const PropertySheetIconValue &p) noexcept
+    { return qHash(p, 0); }
+    friend QDESIGNER_SHARED_EXPORT
+    bool comparesEqual(const PropertySheetIconValue &lhs,
+                       const PropertySheetIconValue &rhs) noexcept;
+    Q_DECLARE_EQUALITY_COMPARABLE(PropertySheetIconValue)
+
     QSharedDataPointer<PropertySheetIconValueData> m_data;
 };
 
@@ -284,7 +294,7 @@ public:
 signals:
     void reloaded();
 private:
-    mutable QMap<PropertySheetPixmapValue, QPixmap> m_cache;
+    mutable QHash<PropertySheetPixmapValue, QPixmap> m_cache;
     friend class FormWindowBase;
 };
 
@@ -298,7 +308,7 @@ public:
 signals:
     void reloaded();
 private:
-    mutable QMap<PropertySheetIconValue, QIcon> m_cache;
+    mutable QHash<PropertySheetIconValue, QIcon> m_cache;
     DesignerPixmapCache *m_pixmapCache;
     friend class FormWindowBase;
 };

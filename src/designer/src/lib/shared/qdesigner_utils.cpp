@@ -274,11 +274,6 @@ namespace qdesigner_internal
         return path.startsWith(u':') ? ResourcePixmap : FilePixmap;
     }
 
-    int PropertySheetPixmapValue::compare(const PropertySheetPixmapValue &other) const
-    {
-        return m_path.compare(other.m_path);
-    }
-
     QString PropertySheetPixmapValue::path() const
     {
         return m_path;
@@ -324,35 +319,26 @@ namespace qdesigner_internal
         return *this;
     }
 
-    bool PropertySheetIconValue::equals(const PropertySheetIconValue &rhs) const
+} // namespace qdesigner_internal
+
+namespace qdesigner_internal {
+
+    size_t qHash(const PropertySheetIconValue &p, size_t seed) noexcept
     {
-        return m_data->m_theme == rhs.m_data->m_theme && m_data->m_paths == rhs.m_data->m_paths;
+        // qHash for paths making use of the existing QPair hash functions.
+        const auto *d = p.m_data.constData();
+        return qHashMulti(qHashRange(d->m_paths.constKeyValueBegin(),
+                                     d->m_paths.constKeyValueEnd(), seed),
+                          d->m_theme);
     }
 
-    bool PropertySheetIconValue::operator<(const PropertySheetIconValue &other) const
+    bool comparesEqual(const PropertySheetIconValue &lhs,
+                       const PropertySheetIconValue &rhs) noexcept
     {
-        if (const int themeCmp = m_data->m_theme.compare(other.m_data->m_theme))
-            return themeCmp < 0;
-        auto itThis = m_data->m_paths.cbegin();
-        auto itThisEnd = m_data->m_paths.cend();
-        auto itOther = other.m_data->m_paths.cbegin();
-        auto itOtherEnd = other.m_data->m_paths.cend();
-        while (itThis != itThisEnd && itOther != itOtherEnd) {
-            const ModeStateKey thisPair = itThis.key();
-            const ModeStateKey otherPair = itOther.key();
-            if (thisPair < otherPair)
-                return true;
-            if (otherPair < thisPair)
-                return false;
-            const int crc = itThis.value().compare(itOther.value());
-            if (crc < 0)
-                return true;
-            if (crc > 0)
-                return false;
-            ++itThis;
-            ++itOther;
-        }
-        return itOther != itOtherEnd;
+        const auto *lhsd = lhs.m_data.constData();
+        const auto *rhsd = rhs.m_data.constData();
+        return lhsd == rhsd
+            || (lhsd->m_theme == rhsd->m_theme && lhsd->m_paths == rhsd->m_paths);
     }
 
     bool PropertySheetIconValue::isEmpty() const
