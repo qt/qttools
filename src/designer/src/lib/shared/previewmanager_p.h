@@ -17,6 +17,7 @@
 
 #include "shared_global_p.h"
 
+#include <QtCore/qcompare.h>
 #include <QtCore/qobject.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qshareddata.h>
@@ -64,12 +65,16 @@ public:
     void fromSettings(const QString &prefix, const QDesignerSettingsInterface *settings);
 
 private:
+    friend QDESIGNER_SHARED_EXPORT
+    bool comparesEqual(const PreviewConfiguration &lhs,
+                       const PreviewConfiguration &rhs) noexcept;
+    friend QDESIGNER_SHARED_EXPORT
+    Qt::strong_ordering compareThreeWay(const PreviewConfiguration &lhs,
+                                        const PreviewConfiguration &rhs) noexcept;
+    Q_DECLARE_STRONGLY_ORDERED(PreviewConfiguration)
+
     QSharedDataPointer<PreviewConfigurationData> m_d;
 };
-
-QDESIGNER_SHARED_EXPORT bool operator<(const PreviewConfiguration &pc1, const PreviewConfiguration &pc2);
-QDESIGNER_SHARED_EXPORT bool operator==(const PreviewConfiguration &pc1, const PreviewConfiguration &pc2);
-QDESIGNER_SHARED_EXPORT bool operator!=(const PreviewConfiguration &pc1, const PreviewConfiguration &pc2);
 
 // ----------- Preview window manager.
 // Maintains a list of preview widgets with their associated form windows and configuration.

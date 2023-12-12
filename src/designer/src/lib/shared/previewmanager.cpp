@@ -40,7 +40,8 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static inline int compare(const qdesigner_internal::PreviewConfiguration &pc1, const qdesigner_internal::PreviewConfiguration &pc2)
+static inline int compare(const qdesigner_internal::PreviewConfiguration &pc1,
+                          const qdesigner_internal::PreviewConfiguration &pc2) noexcept
 {
     int rc = pc1.style().compare(pc2.style());
     if (rc)
@@ -288,6 +289,29 @@ public:
     QString m_deviceSkin;
 };
 
+static bool comparesEqual(const PreviewConfigurationData &lhs,
+                          const PreviewConfigurationData &rhs) noexcept
+{
+    return lhs.m_style == rhs.m_style
+        && lhs.m_applicationStyleSheet == rhs.m_applicationStyleSheet
+        && lhs.m_deviceSkin == rhs.m_deviceSkin;
+}
+
+bool comparesEqual(const PreviewConfiguration &lhs,
+                   const PreviewConfiguration &rhs) noexcept
+{
+    const auto *lhsd = lhs.m_d.constData();
+    const auto *rhsd = rhs.m_d.constData();
+    return lhsd == rhsd || comparesEqual(*lhsd, *rhsd);
+}
+
+Qt::strong_ordering compareThreeWay(const PreviewConfiguration &lhs,
+                                    const PreviewConfiguration &rhs) noexcept
+{
+    const int val = compare(lhs, rhs);
+    return Qt::compareThreeWay(val, 0);
+}
+
 PreviewConfigurationData::PreviewConfigurationData(const QString &style, const QString &applicationStyleSheet, const QString &deviceSkin) :
     m_style(style),
     m_applicationStyleSheet(applicationStyleSheet),
@@ -502,22 +526,6 @@ void PreviewConfiguration::fromSettings(const QString &prefix, const QDesignerSe
 
     key.replace(prefixSize, key.size() - prefixSize, skinKey);
     d.m_deviceSkin = settings->value(key, emptyString).toString();
-}
-
-
-QDESIGNER_SHARED_EXPORT bool operator<(const PreviewConfiguration &pc1, const PreviewConfiguration &pc2)
-{
-    return compare(pc1, pc2) < 0;
-}
-
-QDESIGNER_SHARED_EXPORT bool operator==(const PreviewConfiguration &pc1, const PreviewConfiguration &pc2)
-{
-    return compare(pc1, pc2) == 0;
-}
-
-QDESIGNER_SHARED_EXPORT bool operator!=(const PreviewConfiguration &pc1, const PreviewConfiguration &pc2)
-{
-    return compare(pc1, pc2) != 0;
 }
 
 // ------------- PreviewManagerPrivate
