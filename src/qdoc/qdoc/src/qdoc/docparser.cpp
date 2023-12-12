@@ -1799,37 +1799,21 @@ void DocParser::parseAlso()
 
 void DocParser::append(Atom::AtomType type, const QString &string)
 {
-    Atom::AtomType lastType = m_private->m_text.lastAtom()->type();
-    if ((lastType == Atom::Code)
-        && m_private->m_text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
-        m_private->m_text.lastAtom()->chopString();
     m_private->m_text << Atom(type, string);
 }
 
 void DocParser::append(const QString &string)
 {
-    Atom::AtomType lastType = m_private->m_text.lastAtom()->type();
-    if ((lastType == Atom::Code)
-        && m_private->m_text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
-        m_private->m_text.lastAtom()->chopString();
     m_private->m_text << Atom(Atom::Link, string);
 }
 
 void DocParser::append(Atom::AtomType type, const QString &p1, const QString &p2)
 {
-    Atom::AtomType lastType = m_private->m_text.lastAtom()->type();
-    if ((lastType == Atom::Code)
-        && m_private->m_text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
-        m_private->m_text.lastAtom()->chopString();
     m_private->m_text << Atom(type, p1, p2);
 }
 
 void DocParser::append(const QString &p1, const QString &p2)
 {
-    Atom::AtomType lastType = m_private->m_text.lastAtom()->type();
-    if ((lastType == Atom::Code)
-        && m_private->m_text.lastAtom()->string().endsWith(QLatin1String("\n\n")))
-        m_private->m_text.lastAtom()->chopString();
     if (p2.isEmpty())
         m_private->m_text << Atom(Atom::Link, p1);
     else
