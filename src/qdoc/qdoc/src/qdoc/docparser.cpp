@@ -648,36 +648,26 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     enterPara();
                     if (isLeftBracketAhead())
                         p2 = getBracketedArgument();
+
+                    p1 = getArgument();
+                    append(p1, p2);
+
+                    if (!p2.isEmpty() && !(m_private->m_text.lastAtom()->error().isEmpty()))
+                        location().warning(
+                                QStringLiteral(
+                                        "Check parameter in '[ ]' of '\\l' command: '%1', "
+                                        "possible misspelling, or unrecognized module name")
+                                        .arg(m_private->m_text.lastAtom()->error()));
+
                     if (isLeftBraceAhead()) {
-                        p1 = getArgument();
-                        append(p1, p2);
-                        if (!p2.isEmpty() && !(m_private->m_text.lastAtom()->error().isEmpty()))
-                            location().warning(
-                                    QStringLiteral(
-                                            "Check parameter in '[ ]' of '\\l' command: '%1', "
-                                            "possible misspelling, or unrecognized module name")
-                                            .arg(m_private->m_text.lastAtom()->error()));
-                        if (isLeftBraceAhead()) {
-                            currentLinkAtom = m_private->m_text.lastAtom();
-                            startFormat(ATOM_FORMATTING_LINK, cmd);
-                        } else {
-                            append(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
-                            append(Atom::String, cleanLink(p1));
-                            append(Atom::FormattingRight, ATOM_FORMATTING_LINK);
-                        }
+                        currentLinkAtom = m_private->m_text.lastAtom();
+                        startFormat(ATOM_FORMATTING_LINK, cmd);
                     } else {
-                        p1 = getArgument();
-                        append(p1, p2);
-                        if (!p2.isEmpty() && !(m_private->m_text.lastAtom()->error().isEmpty()))
-                            location().warning(
-                                    QStringLiteral(
-                                            "Check parameter in '[ ]' of '\\l' command: '%1', "
-                                            "possible misspelling, or unrecognized module name")
-                                            .arg(m_private->m_text.lastAtom()->error()));
                         append(Atom::FormattingLeft, ATOM_FORMATTING_LINK);
                         append(Atom::String, cleanLink(p1));
                         append(Atom::FormattingRight, ATOM_FORMATTING_LINK);
                     }
+
                     p2.clear();
                     break;
                 case CMD_LEGALESE:
