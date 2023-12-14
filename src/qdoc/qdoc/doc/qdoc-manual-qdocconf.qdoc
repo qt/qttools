@@ -1306,7 +1306,7 @@
     \warning The above assignment may not work as described.
 
     See also \l {sourcedirs-variable} {sourcedirs} and \l
-    (sources-variable} {sources}.
+    {sources-variable} {sources}.
 
 
     \target spurious-variable
