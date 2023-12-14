@@ -55,10 +55,8 @@ private:
     void startSection(Doc::Sections unit, int cmd);
     void endSection(int unit, int endCmd);
     void parseAlso();
-    void append(const QString &string);
-    void append(Atom::AtomType type, const QString &string = QString());
-    void append(Atom::AtomType type, const QString &p1, const QString &p2);
-    void append(const QString &p1, const QString &p2);
+    void appendAtom(const Atom&);
+    void appendAtom(const LinkAtom&);
     void appendChar(QChar ch);
     void appendWord(const QString &word);
     void appendToCode(const QString &code);
