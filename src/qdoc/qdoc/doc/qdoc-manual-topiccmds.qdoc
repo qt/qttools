@@ -143,14 +143,15 @@
     \target class-command
     \section1 \\class
 
-    The \\class command is for documenting a C++ class. The argument
-    is the complete name of the class. The command tells QDoc that a
-    class is part of the public API, and lets you enter a detailed
-    description.
+    The \\class command is for documenting a C++ \e class, a C/C++
+    \e struct, or a \e union. The argument is the complete, qualified
+    name of the class. The command tells QDoc that a class is part of
+    the public API, and lets you enter a detailed description.
 
     \badcode *
     /\1!
         \class QMap::iterator
+        \inmodule QtCore
 
         \brief The QMap::iterator class provides an STL-style
         non-const iterator for QMap and QMultiMap.
@@ -162,11 +163,9 @@
 
     The HTML documentation for the named class is written to a
     \c{.html} file named from the class name, in lower case, and with
-    the double colon qualifier(s) replaced with '-'. For example, the
-    documentation for the \c QMap::Iterator class is written to \c
+    the double colon qualifiers replaced with '-'. For example, the
+    documentation for the \c QMap::iterator class is written to \c
     qmap-iterator.html.
-
-    \target framework
 
     The file contains the class description from the \\class comment,
     plus the documentation generated from QDoc comments for all the
@@ -174,13 +173,14 @@
     functions, signals, and slots.
 
     In addition to the detailed description of the class, the \\class
-    comment typically contains a \l {brief-command} {\\brief} command
-    and one or more \l{Markup Commands}. See the \\class command for
-    any of the Qt class for examples. Here is a very simple example:
+    comment typically contains an \l {inmodule-command} {\\inmodule}
+    command, as well as a \l {brief-command} {\\brief} description.
+    Here is a very simple example:
 
     \badcode *
     /\1!
         \class PreviewWindow
+        \inmodule CustomWidgets
         \brief The PreviewWindow class is a custom widget.
                displaying the names of its currently set
                window flags in a read-only text editor.
