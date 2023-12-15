@@ -474,7 +474,7 @@ void QFormBuilderExtra::clearGridLayoutColumnMinimumWidth(QGridLayout *grid)
     clearPerCellValue(grid, grid->columnCount(), &QGridLayout::setColumnMinimumWidth);
 }
 
-void QFormBuilderExtra::setPixmapProperty(DomProperty *p, const QPair<QString, QString> &ip)
+void QFormBuilderExtra::setPixmapProperty(DomProperty *p, const std::pair<QString, QString> &ip)
 {
     DomResourcePixmap *pix = new DomResourcePixmap;
     if (!ip.second.isEmpty())

@@ -18,7 +18,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using DesignerIntPair = QPair<QString, uint>;
+using DesignerIntPair = std::pair<QString, uint>;
 using DesignerFlagList = QList<DesignerIntPair>;
 
 class QDesignerFormEditorInterface;
@@ -179,8 +179,8 @@ private:
     PropertyToPropertyMap m_alignVToProperty;
     QHash<const QtProperty *, Qt::Alignment> m_alignDefault;
 
-    QHash<QtProperty *, QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *>> m_propertyToIconSubProperties;
-    QHash<QtProperty *, QPair<QIcon::Mode, QIcon::State>> m_iconSubPropertyToState;
+    QHash<QtProperty *, QMap<std::pair<QIcon::Mode, QIcon::State>, QtProperty *>> m_propertyToIconSubProperties;
+    QHash<QtProperty *, std::pair<QIcon::Mode, QIcon::State>> m_iconSubPropertyToState;
     PropertyToPropertyMap m_iconSubPropertyToProperty;
     PropertyToPropertyMap m_propertyToTheme;
 

@@ -372,13 +372,13 @@ namespace qdesigner_internal
 
     PropertySheetPixmapValue PropertySheetIconValue::pixmap(QIcon::Mode mode, QIcon::State state) const
     {
-        const ModeStateKey pair = qMakePair(mode, state);
+        const ModeStateKey pair{mode, state};
         return m_data->m_paths.value(pair);
     }
 
     void PropertySheetIconValue::setPixmap(QIcon::Mode mode, QIcon::State state, const PropertySheetPixmapValue &pixmap)
     {
-        const ModeStateKey pair = qMakePair(mode, state);
+        const ModeStateKey pair{mode, state};
         if (pixmap.path().isEmpty())
             m_data->m_paths.remove(pair);
         else
@@ -553,28 +553,28 @@ namespace qdesigner_internal
         return     state == QIcon::On ?   NormalOnIconMask :   NormalOffIconMask;
     }
 
-    static inline QPair<QIcon::Mode, QIcon::State> subPropertyFlagToIconModeState(unsigned flag)
+    static inline std::pair<QIcon::Mode, QIcon::State> subPropertyFlagToIconModeState(unsigned flag)
     {
         switch (flag) {
         case NormalOnIconMask:
-            return qMakePair(QIcon::Normal,   QIcon::On);
+            return {QIcon::Normal,   QIcon::On};
         case DisabledOffIconMask:
-            return qMakePair(QIcon::Disabled, QIcon::Off);
+            return {QIcon::Disabled, QIcon::Off};
         case DisabledOnIconMask:
-            return qMakePair(QIcon::Disabled, QIcon::On);
+            return {QIcon::Disabled, QIcon::On};
         case ActiveOffIconMask:
-            return qMakePair(QIcon::Active,   QIcon::Off);
+            return {QIcon::Active,   QIcon::Off};
         case ActiveOnIconMask:
-            return qMakePair(QIcon::Active,   QIcon::On);
+            return {QIcon::Active,   QIcon::On};
         case SelectedOffIconMask:
-            return qMakePair(QIcon::Selected, QIcon::Off);
+            return {QIcon::Selected, QIcon::Off};
         case SelectedOnIconMask:
-            return qMakePair(QIcon::Selected, QIcon::On);
+            return {QIcon::Selected, QIcon::On};
         case NormalOffIconMask:
         default:
             break;
         }
-        return     qMakePair(QIcon::Normal,   QIcon::Off);
+        return     {QIcon::Normal,   QIcon::Off};
     }
 
     uint PropertySheetIconValue::mask() const
@@ -593,7 +593,7 @@ namespace qdesigner_internal
         for (int i = 0; i < 8; i++) {
             const uint flag = 1 << i;
             if (diffMask & flag) { // if state is set in both icons, compare the values
-                const QPair<QIcon::Mode, QIcon::State> state = subPropertyFlagToIconModeState(flag);
+                const auto state = subPropertyFlagToIconModeState(flag);
                 if (pixmap(state.first, state.second) == other.pixmap(state.first, state.second))
                     diffMask &= ~flag;
             }

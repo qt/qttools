@@ -17,7 +17,7 @@
 
 QT_BEGIN_NAMESPACE
 
-using ClassNameSignaturePair = QPair<QString, QString>;
+using ClassNameSignaturePair = std::pair<QString, QString>;
 
 // Find all member functions that match a predicate on the signature string
 // using the member sheet and the fake methods stored in the widget

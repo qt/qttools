@@ -157,7 +157,7 @@ public:
 
     InsertMode currentInsertMode() const override      { return m_currentInsertMode; }
 
-    QPair<int, int> currentCell() const  override      { return m_currentCell; }
+    std::pair<int, int> currentCell() const  override      { return m_currentCell; }
 
     int findItemAt(const QPoint &pos) const override;
     int indexOf(QWidget *widget) const override;
@@ -200,7 +200,7 @@ protected:
     QWidget *widget() const              { return m_widget; }
 
     void setInsertMode(InsertMode im);
-    void setCurrentCell(const QPair<int, int> &cell);
+    void setCurrentCell(const std::pair<int, int> &cell);
 
 private:
     enum Indicator { LeftIndicator, TopIndicator, RightIndicator, BottomIndicator, NumIndicators };
@@ -215,7 +215,7 @@ private:
     QPointer<QWidget> m_indicators[NumIndicators];
     int m_currentIndex;
     InsertMode m_currentInsertMode;
-    QPair<int, int> m_currentCell;
+    std::pair<int, int> m_currentCell;
 };
 } // namespace qdesigner_internal
 

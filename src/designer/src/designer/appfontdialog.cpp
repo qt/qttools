@@ -59,7 +59,7 @@ public:
     bool removeAt(int index, QString *errorMessage);
 
     // Store loaded fonts as pair of file name and Id
-    using FileNameFontIdPair = QPair<QString,int>;
+    using FileNameFontIdPair = std::pair<QString, int>;
     using FileNameFontIdPairs = QList<FileNameFontIdPair>;
     const FileNameFontIdPairs &fonts() const;
 

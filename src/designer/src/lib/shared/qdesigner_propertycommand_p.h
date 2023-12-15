@@ -49,7 +49,7 @@ class QDESIGNER_SHARED_EXPORT PropertyHelper {
     Q_DISABLE_COPY(PropertyHelper)
 public:
     // A pair of Value and changed flag
-    using Value = QPair<QVariant, bool>;
+    using Value = std::pair<QVariant, bool>;
 
     enum ObjectType {OT_Object, OT_FreeAction, OT_AssociatedAction, OT_Widget};
 
@@ -262,7 +262,7 @@ public:
 private:
     void setDescription();
     QString m_propertyName;
-    QHash<QObject *, QPair<QVariant, bool> > m_objectToValueAndChanged;
+    QHash<QObject *, std::pair<QVariant, bool> > m_objectToValueAndChanged;
 };
 
 } // namespace qdesigner_internal

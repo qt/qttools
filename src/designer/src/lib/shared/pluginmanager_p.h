@@ -36,7 +36,7 @@ class QDesignerCustomWidgetSharedData;
 class QDESIGNER_SHARED_EXPORT QDesignerCustomWidgetData {
 public:
     // StringPropertyType: validation mode and translatable flag.
-    using StringPropertyType = QPair<qdesigner_internal::TextPropertyValidationMode, bool>;
+    using StringPropertyType = std::pair<qdesigner_internal::TextPropertyValidationMode, bool>;
 
     explicit QDesignerCustomWidgetData(const QString &pluginPath = QString());
 

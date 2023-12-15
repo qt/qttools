@@ -196,11 +196,11 @@ PropertyEditor::PropertyEditor(QDesignerFormEditorInterface *core, QWidget *pare
     const int darknessFactor = 250;
     m_colors.reserve(std::size(colors));
     for (const QColor &c : colors)
-        m_colors.push_back(qMakePair(c, c.darker(darknessFactor)));
+        m_colors.append({c, c.darker(darknessFactor)});
     QColor dynamicColor(191, 207, 255);
     QColor layoutColor(255, 191, 191);
-    m_dynamicColor = qMakePair(dynamicColor, dynamicColor.darker(darknessFactor));
-    m_layoutColor = qMakePair(layoutColor, layoutColor.darker(darknessFactor));
+    m_dynamicColor = {dynamicColor, dynamicColor.darker(darknessFactor)};
+    m_layoutColor = {layoutColor, layoutColor.darker(darknessFactor)};
 
     updateForegroundBrightness();
 
@@ -542,7 +542,7 @@ QColor PropertyEditor::propertyColor(QtProperty *property) const
         groupProperty = m_nameToGroup.value(itProp.value());
 
     const int groupIdx = m_groups.indexOf(groupProperty);
-    QPair<QColor, QColor> pair;
+    std::pair<QColor, QColor> pair;
     if (groupIdx != -1) {
         if (groupProperty == m_dynamicGroup)
             pair = m_dynamicColor;
@@ -973,10 +973,10 @@ void PropertyEditor::setObject(QObject *object)
                         m_updatingBrowser = false;
                     } else if (type == DesignerPropertyManager::designerFlagTypeId()) {
                         const PropertySheetFlagValue f = qvariant_cast<PropertySheetFlagValue>(value);
-                        QList<QPair<QString, uint> > flags;
+                        QList<std::pair<QString, uint>> flags;
                         for (const QString &name : f.metaFlags.keys()) {
                             const uint val = f.metaFlags.keyToValue(name);
-                            flags.append(qMakePair(name, val));
+                            flags.append({name, val});
                         }
                         m_updatingBrowser = true;
                         QVariant v;

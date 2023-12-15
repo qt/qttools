@@ -881,7 +881,7 @@ QVariant PropertyHelper::findDefaultValue(QDesignerFormWindowInterface *fw) cons
 PropertyHelper::Value PropertyHelper::restoreDefaultValue(QDesignerFormWindowInterface *fw)
 {
 
-    Value defaultValue = qMakePair(QVariant(), false);
+    Value defaultValue{{}, false};
     const QVariant currentValue = m_propertySheet->property(m_index);
     // try to reset sheet, else try to find default
     if (m_propertySheet->reset(m_index)) {
@@ -1458,7 +1458,8 @@ bool RemoveDynamicPropertyCommand::init(const QObjectList &selection, QObject *c
     if (!dynamicSheet->isDynamicProperty(index))
         return false;
 
-    m_objectToValueAndChanged[current] = qMakePair(propertySheet->property(index), propertySheet->isChanged(index));
+    m_objectToValueAndChanged[current] = {propertySheet->property(index),
+                                          propertySheet->isChanged(index)};
 
     for (QObject *obj : selection) {
         if (m_objectToValueAndChanged.contains(obj))
@@ -1468,7 +1469,8 @@ bool RemoveDynamicPropertyCommand::init(const QObjectList &selection, QObject *c
         dynamicSheet = qt_extension<QDesignerDynamicPropertySheetExtension*>(core->extensionManager(), obj);
         const int idx = propertySheet->indexOf(m_propertyName);
         if (dynamicSheet->isDynamicProperty(idx))
-            m_objectToValueAndChanged[obj] = qMakePair(propertySheet->property(idx), propertySheet->isChanged(idx));
+            m_objectToValueAndChanged[obj] = {propertySheet->property(idx),
+                                              propertySheet->isChanged(idx)};
     }
 
     setDescription();

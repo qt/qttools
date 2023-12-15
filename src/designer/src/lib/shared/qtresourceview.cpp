@@ -356,15 +356,15 @@ void QtResourceViewPrivate::createPaths()
         }
     }
 
-    QQueue<QPair<QString, QTreeWidgetItem *> > pathToParentItemQueue;
-    pathToParentItemQueue.enqueue(qMakePair(root, static_cast<QTreeWidgetItem *>(nullptr)));
+    QQueue<std::pair<QString, QTreeWidgetItem *>> pathToParentItemQueue;
+    pathToParentItemQueue.enqueue(std::make_pair(root, static_cast<QTreeWidgetItem *>(nullptr)));
     while (!pathToParentItemQueue.isEmpty()) {
-        QPair<QString, QTreeWidgetItem *> pathToParentItem = pathToParentItemQueue.dequeue();
+        std::pair<QString, QTreeWidgetItem *> pathToParentItem = pathToParentItemQueue.dequeue();
         const QString path = pathToParentItem.first;
         QTreeWidgetItem *item = createPath(path, pathToParentItem.second);
         const QStringList subPaths = m_pathToSubPaths.value(path);
         for (const QString &subPath : subPaths)
-            pathToParentItemQueue.enqueue(qMakePair(subPath, item));
+            pathToParentItemQueue.enqueue(std::make_pair(subPath, item));
     }
 }
 

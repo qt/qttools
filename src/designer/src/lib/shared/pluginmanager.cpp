@@ -100,7 +100,7 @@ static inline QString getDesignerLanguage(QDesignerFormEditorInterface *core)
 class QDesignerCustomWidgetSharedData : public QSharedData {
 public:
     // Type of a string property
-    using StringPropertyType = QPair<qdesigner_internal::TextPropertyValidationMode, bool>;
+    using StringPropertyType = std::pair<qdesigner_internal::TextPropertyValidationMode, bool>;
 
     explicit QDesignerCustomWidgetSharedData(const QString &thePluginPath) : pluginPath(thePluginPath) {}
     void clearXML();
@@ -417,7 +417,7 @@ QDesignerCustomWidgetData::ParseResult
 
 class QDesignerPluginManagerPrivate {
     public:
-    using ClassNamePropertyNameKey = QPair<QString, QString>;
+    using ClassNamePropertyNameKey = std::pair<QString, QString>;
 
     QDesignerPluginManagerPrivate(QDesignerFormEditorInterface *core);
 

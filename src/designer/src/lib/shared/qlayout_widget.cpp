@@ -578,7 +578,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
             Occupied  // Item bordering on it
         };
         // Horiontal, Vertical pair of state
-        using CellState = QPair<DimensionCellState, DimensionCellState>;
+        using CellState = std::pair<DimensionCellState, DimensionCellState>;
         using CellStates = QList<CellState>;
 
         // Figure out states of a cell and return as a flat vector of
@@ -979,7 +979,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
     // ---------------- FormLayoutHelper
     class FormLayoutHelper : public  LayoutHelper {
     public:
-        using FormLayoutState = QList<QPair<QWidget *, QWidget *>>;
+        using FormLayoutState = QList<std::pair<QWidget *, QWidget *>>;
 
         FormLayoutHelper() = default;
 
@@ -1143,7 +1143,7 @@ QRect LayoutHelper::itemInfo(QLayout *lt, const QWidget *widget) const
 
     void FormLayoutHelper::simplify(const QDesignerFormEditorInterface *core, QWidget *widgetWithManagedLayout, const QRect &restrictionArea)
     {
-        using LayoutItemPair = QPair<QLayoutItem*, QLayoutItem*>;
+        using LayoutItemPair = std::pair<QLayoutItem*, QLayoutItem*>;
         using LayoutItemPairs = QList<LayoutItemPair>;
 
         QFormLayout *formLayout = qobject_cast<QFormLayout *>(LayoutInfo::managedLayout(core, widgetWithManagedLayout));
@@ -1268,7 +1268,7 @@ void QLayoutSupport::setInsertMode(InsertMode im)
     m_currentInsertMode = im;
 }
 
-void QLayoutSupport::setCurrentCell(const QPair<int, int> &cell)
+void QLayoutSupport::setCurrentCell(const std::pair<int, int> &cell)
 {
     m_currentCell = cell;
 }
@@ -1506,7 +1506,7 @@ class QBoxLayoutSupport: public QLayoutSupport
 public:
     QBoxLayoutSupport(QDesignerFormWindowInterface *formWindow, QWidget *widget, Qt::Orientation orientation, QObject *parent = nullptr);
 
-    void insertWidget(QWidget *widget, const QPair<int, int> &cell) override;
+    void insertWidget(QWidget *widget, const std::pair<int, int> &cell) override;
     void removeWidget(QWidget *widget) override;
     void simplify() override {}
     void insertRow(int /*row*/) override {}
@@ -1532,7 +1532,7 @@ void QBoxLayoutSupport::removeWidget(QWidget *widget)
     // of higher index, which happens as follows:
     // Drag start: The widget is hidden
     // Drop: Current cell is stored, widget is removed and re-added, causing an index offset that needs to be compensated
-    QPair<int, int> currCell = currentCell();
+    std::pair<int, int> currCell = currentCell();
     switch (m_orientation) {
     case Qt::Horizontal:
         if (currCell.second > 0 && index < currCell.second ) {
@@ -1559,10 +1559,10 @@ QBoxLayoutSupport::QBoxLayoutSupport(QDesignerFormWindowInterface *formWindow, Q
 void QBoxLayoutSupport::setCurrentCellFromIndicatorOnEmptyCell(int index)
 {
     qDebug() << "QBoxLayoutSupport::setCurrentCellFromIndicatorOnEmptyCell(): Warning: found a fake spacer inside a vbox layout at " << index;
-    setCurrentCell(qMakePair(0, 0));
+    setCurrentCell({0, 0});
 }
 
-void QBoxLayoutSupport::insertWidget(QWidget *widget, const QPair<int, int> &cell)
+void QBoxLayoutSupport::insertWidget(QWidget *widget, const std::pair<int, int> &cell)
 {
     switch (m_orientation) {
     case  Qt::Horizontal:
@@ -1576,11 +1576,10 @@ void QBoxLayoutSupport::insertWidget(QWidget *widget, const QPair<int, int> &cel
 
 void QBoxLayoutSupport::setCurrentCellFromIndicator(Qt::Orientation indicatorOrientation, int index, int increment)
 {
-    if (m_orientation == Qt::Horizontal && indicatorOrientation == Qt::Vertical) {
-        setCurrentCell(qMakePair(0, index + increment));
-    } else if (m_orientation == Qt::Vertical && indicatorOrientation == Qt::Horizontal) {
-        setCurrentCell(qMakePair(index + increment, 0));
-    }
+    if (m_orientation == Qt::Horizontal && indicatorOrientation == Qt::Vertical)
+        setCurrentCell({0, index + increment});
+    else if (m_orientation == Qt::Vertical && indicatorOrientation == Qt::Horizontal)
+        setCurrentCell({index + increment, 0});
 }
 
 bool QBoxLayoutSupport::supportsIndicatorOrientation(Qt::Orientation indicatorOrientation) const
@@ -1638,7 +1637,7 @@ public:
     GridLikeLayoutSupportBase(QDesignerFormWindowInterface *formWindow, QWidget *widget, LayoutHelper *helper, QObject *parent = nullptr) :
         QLayoutSupport(formWindow, widget, helper, parent) {}
 
-    void insertWidget(QWidget *widget, const QPair<int, int> &cell) override;
+    void insertWidget(QWidget *widget, const std::pair<int, int> &cell) override;
     void removeWidget(QWidget *widget) override { helper()->removeWidget(layout(), widget); }
     int findItemAt(int row, int column) const override;
     using QLayoutSupport::findItemAt;
@@ -1670,7 +1669,7 @@ void GridLikeLayoutSupportBase<GridLikeLayout>::setCurrentCellFromIndicatorOnEmp
     int row, column, rowspan, colspan;
 
     getGridItemPosition(grid, index, &row, &column, &rowspan, &colspan);
-    setCurrentCell(qMakePair(row, column));
+    setCurrentCell({row, column});
 }
 
 template <class GridLikeLayout>
@@ -1682,7 +1681,7 @@ void GridLikeLayoutSupportBase<GridLikeLayout>::setCurrentCellFromIndicator(Qt::
         int row = info.top();
         int column = increment ? info.right() + 1 : info.left();
         checkCellForInsertion(&row, &column);
-        setCurrentCell(qMakePair(row , column));
+        setCurrentCell({row, column});
     }
         break;
     case Qt::Horizontal: {
@@ -1690,14 +1689,14 @@ void GridLikeLayoutSupportBase<GridLikeLayout>::setCurrentCellFromIndicator(Qt::
         int row = increment ? info.bottom() + 1 : info.top();
         int column = info.left();
         checkCellForInsertion(&row, &column);
-        setCurrentCell(qMakePair(row, column));
+        setCurrentCell({row, column});
     }
         break;
     }
 }
 
 template <class GridLikeLayout>
-void GridLikeLayoutSupportBase<GridLikeLayout>::insertWidget(QWidget *widget, const QPair<int, int> &cell)
+void GridLikeLayoutSupportBase<GridLikeLayout>::insertWidget(QWidget *widget, const std::pair<int, int> &cell)
 {
     helper()->insertWidget(layout(), QRect(cell.second, cell.first, 1, 1), widget);
 }

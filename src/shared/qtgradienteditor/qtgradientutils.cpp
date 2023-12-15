@@ -156,7 +156,7 @@ static QGradientStop loadGradientStop(const QDomElement &elem)
         return QGradientStop();
 
     const qreal pos = static_cast<qreal>(elem.attribute("position"_L1).toDouble());
-    return qMakePair(pos, loadColor(elem.firstChild().toElement()));
+    return std::make_pair(pos, loadColor(elem.firstChild().toElement()));
 }
 
 static QGradient loadGradient(const QDomElement &elem)
