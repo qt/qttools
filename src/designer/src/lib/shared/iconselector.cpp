@@ -162,6 +162,25 @@ LanguageResourceDialog* LanguageResourceDialog::create(QDesignerFormEditorInterf
 
 // ------------ IconSelectorPrivate
 
+struct QIconStateName
+{
+    std::pair<QIcon::Mode, QIcon::State> state;
+    const char *name;
+};
+
+constexpr QIconStateName stateToName[] = {
+    {{QIcon::Normal,   QIcon::Off}, QT_TRANSLATE_NOOP("IconSelector", "Normal Off")},
+    {{QIcon::Normal,   QIcon::On},  QT_TRANSLATE_NOOP("IconSelector", "Normal On")},
+    {{QIcon::Disabled, QIcon::Off}, QT_TRANSLATE_NOOP("IconSelector", "Disabled Off")},
+    {{QIcon::Disabled, QIcon::On},  QT_TRANSLATE_NOOP("IconSelector", "Disabled On")},
+    {{QIcon::Active,   QIcon::Off}, QT_TRANSLATE_NOOP("IconSelector", "Active Off")},
+    {{QIcon::Active,   QIcon::On},  QT_TRANSLATE_NOOP("IconSelector", "Active On")},
+    {{QIcon::Selected, QIcon::Off}, QT_TRANSLATE_NOOP("IconSelector", "Selected Off")},
+    {{QIcon::Selected, QIcon::On},  QT_TRANSLATE_NOOP("IconSelector", "Selected On")}
+};
+
+constexpr int stateToNameSize = int(sizeof(stateToName) / sizeof(stateToName[0]));
+
 class IconSelectorPrivate
 {
     IconSelector *q_ptr = nullptr;
@@ -177,10 +196,12 @@ public:
     void slotResetAllActivated();
     void slotUpdate();
 
-    QList<QPair<QPair<QIcon::Mode, QIcon::State>, QString> > m_stateToName; // could be static map
-
-    QMap<QPair<QIcon::Mode, QIcon::State>, int>  m_stateToIndex;
-    QMap<int, QPair<QIcon::Mode, QIcon::State> > m_indexToState;
+    std::pair<QIcon::Mode, QIcon::State> currentState() const
+    {
+        const int i = m_stateComboBox->currentIndex();
+        return i >= 0 && i < stateToNameSize
+            ? stateToName[i].state : std::pair<QIcon::Mode, QIcon::State>{};
+    }
 
     const QIcon m_emptyIcon;
     QComboBox *m_stateComboBox = nullptr;
@@ -200,12 +221,10 @@ void IconSelectorPrivate::slotUpdate()
     if (m_iconCache)
         icon = m_iconCache->icon(m_icon);
 
-    QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> paths = m_icon.paths();
-    for (auto itIndex = m_stateToIndex.cbegin(), end = m_stateToIndex.cend(); itIndex != end; ++itIndex) {
-        const QPair<QIcon::Mode, QIcon::State> state = itIndex.key();
+    const auto &paths = m_icon.paths();
+    for (int index = 0; index < stateToNameSize; ++index) {
+        const auto &state = stateToName[index].state;
         const PropertySheetPixmapValue pixmap = paths.value(state);
-        const int index = itIndex.value();
-
         QIcon pixmapIcon = QIcon(icon.pixmap(16, 16, state.first, state.second));
         if (pixmapIcon.isNull())
             pixmapIcon = m_emptyIcon;
@@ -216,8 +235,7 @@ void IconSelectorPrivate::slotUpdate()
         m_stateComboBox->setItemData(index, font, Qt::FontRole);
     }
 
-    QPair<QIcon::Mode, QIcon::State> state = m_indexToState.value(m_stateComboBox->currentIndex());
-    PropertySheetPixmapValue currentPixmap = paths.value(state);
+    PropertySheetPixmapValue currentPixmap = paths.value(currentState());
     m_resetAction->setEnabled(!currentPixmap.path().isEmpty());
     m_resetAllAction->setEnabled(!paths.isEmpty());
     m_stateComboBox->update();
@@ -230,7 +248,7 @@ void IconSelectorPrivate::slotStateActivated()
 
 void IconSelectorPrivate::slotSetActivated()
 {
-    QPair<QIcon::Mode, QIcon::State> state = m_indexToState.value(m_stateComboBox->currentIndex());
+    const auto state = currentState();
     const PropertySheetPixmapValue pixmap = m_icon.pixmap(state.first, state.second);
     // Default to resource
     const PropertySheetPixmapValue::PixmapSource ps = pixmap.path().isEmpty() ? PropertySheetPixmapValue::ResourcePixmap : pixmap.pixmapSource(m_core);
@@ -269,7 +287,7 @@ QString IconSelector::choosePixmapResource(QDesignerFormEditorInterface *core, Q
 
 void IconSelectorPrivate::slotSetResourceActivated()
 {
-    const QPair<QIcon::Mode, QIcon::State> state = m_indexToState.value(m_stateComboBox->currentIndex());
+    const auto state = currentState();
 
     PropertySheetPixmapValue pixmap = m_icon.pixmap(state.first, state.second);
     const QString oldPath = pixmap.path();
@@ -353,7 +371,7 @@ QString IconSelector::choosePixmapFile(const QString &directory, QDesignerDialog
 
 void IconSelectorPrivate::slotSetFileActivated()
 {
-    QPair<QIcon::Mode, QIcon::State> state = m_indexToState.value(m_stateComboBox->currentIndex());
+    const auto state = currentState();
 
     PropertySheetPixmapValue pixmap = m_icon.pixmap(state.first, state.second);
     const QString newPath = IconSelector::choosePixmapFile(pixmap.path(), m_core->dialogGui(), q_ptr);
@@ -369,7 +387,7 @@ void IconSelectorPrivate::slotSetFileActivated()
 
 void IconSelectorPrivate::slotResetActivated()
 {
-    QPair<QIcon::Mode, QIcon::State> state = m_indexToState.value(m_stateComboBox->currentIndex());
+    const auto state = currentState();
 
     PropertySheetPixmapValue pixmap = m_icon.pixmap(state.first, state.second);
     const PropertySheetPixmapValue newPixmap;
@@ -406,15 +424,6 @@ IconSelector::IconSelector(QWidget *parent) :
     l->addWidget(d_ptr->m_iconButton);
     l->setContentsMargins(QMargins());
 
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Normal,   QIcon::Off), tr("Normal Off")   );
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Normal,   QIcon::On),  tr("Normal On")    );
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Disabled, QIcon::Off), tr("Disabled Off") );
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Disabled, QIcon::On),  tr("Disabled On")  );
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Active,   QIcon::Off), tr("Active Off")   );
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Active,   QIcon::On),  tr("Active On")    );
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Selected, QIcon::Off), tr("Selected Off") );
-    d_ptr->m_stateToName << qMakePair(qMakePair(QIcon::Selected, QIcon::On),  tr("Selected On")  );
-
     QMenu *setMenu = new QMenu(this);
 
     QAction *setResourceAction = new QAction(tr("Choose Resource..."), this);
@@ -431,18 +440,8 @@ IconSelector::IconSelector(QWidget *parent) :
     setMenu->addAction(d_ptr->m_resetAction);
     setMenu->addAction(d_ptr->m_resetAllAction);
 
-    int index = 0;
-    QStringList items;
-    for (const auto &item : std::as_const(d_ptr->m_stateToName)) {
-        const QPair<QIcon::Mode, QIcon::State> state = item.first;
-        const QString name = item.second;
-
-        items.append(name);
-        d_ptr->m_stateToIndex[state] = index;
-        d_ptr->m_indexToState[index] = state;
-        index++;
-    }
-    d_ptr->m_stateComboBox->addItems(items);
+    for (const auto &item : stateToName)
+        d_ptr->m_stateComboBox->addItem(tr(item.name));
 
     d_ptr->m_iconButton->setMenu(setMenu);
 
