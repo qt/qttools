@@ -372,6 +372,7 @@ private:
         XC_translator_comment,
         XC_restype_context,
         XC_restype_translation,
+        XC_mtype_seg_translation,
         XC_restype_plurals,
         XC_alt_trans
     };
@@ -513,6 +514,11 @@ bool XLIFFHandler::startElement(QStringView namespaceURI, QStringView localName,
     } else if (localName == QLatin1String("target")) {
         if (atts.value(QLatin1String("restype")) != QLatin1String(restypeDummy))
             pushContext(XC_restype_translation);
+    } else if (localName == QLatin1String("mrk")) {
+        if (atts.value(QLatin1String("mtype")) == QLatin1String("seg")) {
+            if (currentContext() == XC_restype_translation)
+                pushContext(XC_mtype_seg_translation);
+        }
     } else if (localName == QLatin1String("context-group")) {
         if (atts.value(QLatin1String("purpose")) == QLatin1String("location"))
             pushContext(XC_context_group);
@@ -543,7 +549,7 @@ bool XLIFFHandler::startElement(QStringView namespaceURI, QStringView localName,
         pushContext(XC_ph);
     }
 bail:
-    if (currentContext() != XC_ph)
+    if (currentContext() != XC_ph && currentContext() != XC_mtype_seg_translation)
         accum.clear();
     return true;
 }
@@ -581,6 +587,8 @@ bool XLIFFHandler::endElement(QStringView namespaceURI, QStringView localName,
                           QChar(Translator::BinaryVariantSeparator));
             m_translations.append(accum);
         }
+    } else if (localName == QLatin1String("mrk")) {
+        popContext(XC_mtype_seg_translation);
     } else if (localName == QLatin1String("context-group")) {
         if (popContext(XC_context_group)) {
             m_refs.append(TranslatorMessage::Reference(
