@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="de">
+<context>
+    <name></name>
+    <message id="hello_world">
+        <source>Hello world!</source>
+        <translation type="unfinished">Hallo Welt!</translation>
+    </message>
+    <message>
+        <location filename="self" line="137"/>
+        <source>A standout centrepiece for any occasion. Use the temperature sensor for best results.
+
+Serve with roast tomatoes and hasselback potatoes.</source>
+        <translation type="unfinished">Un centro de mesa destacado para cualquier ocasión.Utilice el sensor de temperatura para obtener mejores resultados.
+
+Acompañe con tomates asados y papas horneadas tipo hassleback.</translation>
+    </message>
+    <message>
+        <location filename="self" line="137"/>
+        <source>Two pieces</source>
+        <translation type="unfinished">Zwei Stueck</translation>
+    </message>
+    <message id="test">
+        <source>Hello!</source>
+        <translation type="unfinished">Hallo!</translation>
+    </message>
+</context>
+</TS>
