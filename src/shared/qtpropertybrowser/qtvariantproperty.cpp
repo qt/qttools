@@ -308,7 +308,7 @@ public:
     QMap<int, QtAbstractPropertyManager *> m_typeToPropertyManager;
     QMap<int, QMap<QString, int> > m_typeToAttributeToAttributeType;
 
-    QHash<const QtProperty *, QPair<QtVariantProperty *, int>> m_propertyToType;
+    QHash<const QtProperty *, std::pair<QtVariantProperty *, int>> m_propertyToType;
 
     QMap<int, int> m_typeToValueType;
 
@@ -1868,7 +1868,7 @@ QtProperty *QtVariantPropertyManager::createProperty()
         return 0;
 
     auto *property = new QtVariantProperty(this);
-    d_ptr->m_propertyToType.insert(property, qMakePair(property, d_ptr->m_propertyType));
+    d_ptr->m_propertyToType.insert(property, {property, d_ptr->m_propertyType});
 
     return property;
 }

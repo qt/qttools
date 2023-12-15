@@ -250,7 +250,7 @@ DomProperty *QDesignerResourceBuilder::saveResource(const QDir &workingDirectory
     }
     if (value.canConvert<PropertySheetIconValue>()) {
         const PropertySheetIconValue icon = qvariant_cast<PropertySheetIconValue>(value);
-        const QMap<QPair<QIcon::Mode, QIcon::State>, PropertySheetPixmapValue> pixmaps = icon.paths();
+        const auto &pixmaps = icon.paths();
         const QString theme = icon.theme();
         if (!pixmaps.isEmpty() || !theme.isEmpty()) {
             DomResourceIcon *ri = new DomResourceIcon;

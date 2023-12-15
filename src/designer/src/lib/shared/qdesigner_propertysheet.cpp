@@ -96,7 +96,7 @@ static bool hasLayoutAttributes(QDesignerFormEditorInterface *core, QObject *obj
 // Cache DesignerMetaEnum by scope/name of a  QMetaEnum
 static const qdesigner_internal::DesignerMetaEnum &designerMetaEnumFor(const QDesignerMetaEnumInterface *me)
 {
-    using ScopeNameKey = QPair<QString, QString>;
+    using ScopeNameKey = std::pair<QString, QString>;
     static QMap<ScopeNameKey, qdesigner_internal::DesignerMetaEnum> cache;
 
     const QString name = me->name();
@@ -117,7 +117,7 @@ static const qdesigner_internal::DesignerMetaEnum &designerMetaEnumFor(const QDe
 // Cache DesignerMetaFlags by scope/name of a  QMetaEnum
 static const qdesigner_internal::DesignerMetaFlags &designerMetaFlagsFor(const QDesignerMetaEnumInterface *me)
 {
-    using ScopeNameKey = QPair<QString, QString>;
+    using ScopeNameKey = std::pair<QString, QString>;
     static QMap<ScopeNameKey, qdesigner_internal::DesignerMetaFlags> cache;
 
     const QString name = me->name();

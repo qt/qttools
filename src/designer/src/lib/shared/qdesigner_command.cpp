@@ -121,7 +121,7 @@ void InsertWidgetCommand::init(QWidget *widget, bool already_in_form, int layout
         m_cell.first = layoutRow;
         m_cell.second = layoutColumn;
     } else {
-        m_cell = deco ? deco->currentCell() : qMakePair(0, 0);
+        m_cell = deco ? deco->currentCell() : std::make_pair(0, 0);
     }
     m_widgetWasManaged = already_in_form;
 }

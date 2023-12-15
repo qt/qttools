@@ -14,6 +14,8 @@
 #include <QtCore/qset.h>
 #include <QtCore/qpointer.h>
 
+#include <utility>
+
 QT_BEGIN_NAMESPACE
 
 class QDesignerDnDItemInterface;
@@ -314,7 +316,7 @@ private:
 
     QString m_fileName;
 
-    using PaletteAndFill = QPair<QPalette ,bool>;
+    using PaletteAndFill = std::pair<QPalette, bool>;
     QHash<QWidget *, PaletteAndFill> m_palettesBeforeHighlight;
 
     QRubberBand *m_rubberBand = nullptr;

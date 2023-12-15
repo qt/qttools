@@ -87,7 +87,7 @@ private:
     bool showCurrentItemPixmap();
 
     // Pixmap cache (item, profile combo index)
-    using ItemPixmapCacheKey = QPair<const QTreeWidgetItem *, int>;
+    using ItemPixmapCacheKey = std::pair<const QTreeWidgetItem *, int>;
     using ItemPixmapCache = QMap<ItemPixmapCacheKey, QPixmap>;
     ItemPixmapCache m_itemPixmapCache;
 

@@ -291,7 +291,7 @@ void MainWindow::save()
         outBuffer.write(reinterpret_cast<char *>(&fontDirectoryHeader),
                         sizeof(FontDirectoryHeader));
 
-        QVarLengthArray<QPair<quint32, quint32>> offsetLengthPairs;
+        QVarLengthArray<std::pair<quint32, quint32>> offsetLengthPairs;
         offsetLengthPairs.reserve(numTables - 1);
 
         // Copy the offset table, updating offsets
@@ -302,7 +302,7 @@ void MainWindow::save()
 
             quint32 originalOffset = qFromBigEndian(offsetTable->offset);
             quint32 length = qFromBigEndian(offsetTable->length);
-            offsetLengthPairs.append(qMakePair(originalOffset, length));
+            offsetLengthPairs.append({originalOffset, length});
             if (offsetTable->tag == qFromBigEndian(QFont::Tag("head").value()))
                 headOffset = currentOffset;
 
@@ -346,7 +346,7 @@ void MainWindow::save()
         }
 
         // Copy all font tables
-        for (const QPair<quint32, quint32> &offsetLengthPair : offsetLengthPairs) {
+        for (const std::pair<quint32, quint32> &offsetLengthPair : offsetLengthPairs) {
             PAD_BUFFER(outBuffer, output.size())
             outBuffer.write(reinterpret_cast<char *>(inData + offsetLengthPair.first),
                             offsetLengthPair.second);

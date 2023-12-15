@@ -155,9 +155,9 @@ private:
     QMap<QString, bool> m_expansionState;
 
     QString m_filterPattern;
-    QList<QPair<QColor, QColor> > m_colors;
-    QPair<QColor, QColor> m_dynamicColor;
-    QPair<QColor, QColor> m_layoutColor;
+    QList<std::pair<QColor, QColor> > m_colors;
+    std::pair<QColor, QColor> m_dynamicColor;
+    std::pair<QColor, QColor> m_layoutColor;
 
     bool m_brightness = false;
 };

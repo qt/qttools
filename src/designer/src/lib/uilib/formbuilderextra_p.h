@@ -107,7 +107,7 @@ public:
     // --- Hash used in creating button groups on demand. Store a map of name and pair of dom group and real group
     void registerButtonGroups(const DomButtonGroups *groups);
 
-    using ButtonGroupEntry = QPair<DomButtonGroup *, QButtonGroup*>;
+    using ButtonGroupEntry = std::pair<DomButtonGroup *, QButtonGroup *>;
     using ButtonGroupHash = QHash<QString, ButtonGroupEntry>;
     const ButtonGroupHash &buttonGroups() const { return m_buttonGroups; }
     ButtonGroupHash &buttonGroups()  { return m_buttonGroups; }
@@ -138,7 +138,7 @@ public:
     static bool setGridLayoutColumnMinimumWidth(const QString &, QGridLayout *);
     static void clearGridLayoutColumnMinimumWidth(QGridLayout *);
 
-    static void setPixmapProperty(DomProperty *p, const QPair<QString, QString> &ip);
+    static void setPixmapProperty(DomProperty *p, const std::pair<QString, QString> &ip);
     static QPalette loadPalette(const DomPalette *dom);
     static void setupColorGroup(QPalette *palette, QPalette::ColorGroup colorGroup,
                                 const DomColorGroup *group);
@@ -197,16 +197,16 @@ struct QDESIGNER_UILIB_EXPORT QFormBuilderStrings {
     static constexpr auto iconAttribute = QLatin1StringView("icon");
     static constexpr auto textAttribute = QLatin1StringView("text") ;
 
-    using RoleNName = QPair<Qt::ItemDataRole, QString>;
+    using RoleNName = std::pair<Qt::ItemDataRole, QString>;
     QList<RoleNName> itemRoles;
     QHash<QString, Qt::ItemDataRole> treeItemRoleHash;
 
     // first.first is primary role, first.second is shadow role.
     // Shadow is used for either the translation source or the designer
     // representation of the string value.
-    using TextRoleNName = QPair<QPair<Qt::ItemDataRole, Qt::ItemDataRole>, QString>;
+    using TextRoleNName = std::pair<std::pair<Qt::ItemDataRole, Qt::ItemDataRole>, QString>;
     QList<TextRoleNName> itemTextRoles;
-    QHash<QString, QPair<Qt::ItemDataRole, Qt::ItemDataRole> > treeItemTextRoleHash;
+    QHash<QString, std::pair<Qt::ItemDataRole, Qt::ItemDataRole> > treeItemTextRoleHash;
 };
 #ifdef QFORMINTERNAL_NAMESPACE
 }

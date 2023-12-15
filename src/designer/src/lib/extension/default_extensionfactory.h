@@ -32,7 +32,7 @@ protected:
     virtual QObject *createExtension(QObject *object, const QString &iid, QObject *parent) const;
 
 private:
-    mutable QMap<QPair<QString, QObject *>, QObject *> m_extensions;
+    mutable QMap<std::pair<QString, QObject *>, QObject *> m_extensions;
     // ### FIXME Qt 7: Use QSet, add out of line destructor.
     mutable QHash<QObject*, bool>  m_extended;
 };

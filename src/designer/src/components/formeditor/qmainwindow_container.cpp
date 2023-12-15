@@ -48,7 +48,7 @@ void QMainWindowContainer::setCurrentIndex(int index)
 
 namespace {
     // Pair of <area,break_before>
-    using ToolBarData = QPair<Qt::ToolBarArea,bool> ;
+    using ToolBarData = std::pair<Qt::ToolBarArea, bool>;
 
     ToolBarData toolBarData(QToolBar *me) {
         const QMainWindow *mw = qobject_cast<const QMainWindow*>(me->parentWidget());

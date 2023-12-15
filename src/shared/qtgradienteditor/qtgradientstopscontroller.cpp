@@ -173,7 +173,7 @@ QGradientStops QtGradientStopsControllerPrivate::makeGradientStops(const Positio
 {
     QGradientStops stops;
     for (auto itData = data.cbegin(), cend = data.cend(); itData != cend; ++itData)
-        stops << QPair<qreal, QColor>(itData.key(), itData.value());
+        stops << std::pair<qreal, QColor>(itData.key(), itData.value());
     return stops;
 }
 
@@ -627,7 +627,7 @@ void QtGradientStopsController::setGradientStops(const QGradientStops &stops)
 {
     d_ptr->m_model->clear();
     QtGradientStop *first = nullptr;
-    for (const QPair<qreal, QColor> &pair : stops) {
+    for (const std::pair<qreal, QColor> &pair : stops) {
         QtGradientStop *stop = d_ptr->m_model->addStop(pair.first, pair.second);
         if (!first)
             first = stop;
@@ -641,7 +641,7 @@ QGradientStops QtGradientStopsController::gradientStops() const
     QGradientStops stops;
     const auto stopsList = d_ptr->m_model->stops().values();
     for (const QtGradientStop *stop : stopsList)
-        stops << QPair<qreal, QColor>(stop->position(), stop->color());
+        stops.append({stop->position(), stop->color()});
     return stops;
 }
 

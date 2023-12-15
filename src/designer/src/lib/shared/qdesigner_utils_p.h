@@ -262,7 +262,7 @@ class QDESIGNER_SHARED_EXPORT PropertySheetIconValue
     PropertySheetIconValue themed() const;
     PropertySheetIconValue unthemed() const;
 
-    using ModeStateKey = QPair<QIcon::Mode, QIcon::State>;
+    using ModeStateKey = std::pair<QIcon::Mode, QIcon::State>;
     using ModeStateToPixmapMap = QMap<ModeStateKey, PropertySheetPixmapValue>;
 
     const ModeStateToPixmapMap &paths() const;

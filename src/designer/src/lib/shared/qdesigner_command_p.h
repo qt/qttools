@@ -84,7 +84,7 @@ private:
 
     QPointer<QWidget> m_widget;
     QDesignerLayoutDecorationExtension::InsertMode m_insertMode;
-    QPair<int, int> m_cell;
+    std::pair<int, int> m_cell;
     LayoutHelper* m_layoutHelper;
     bool m_widgetWasManaged;
 };
@@ -864,7 +864,7 @@ struct QDESIGNER_SHARED_EXPORT ListContents {
 // methods to retrieve and apply for ChangeTableContentsCommand
 struct QDESIGNER_SHARED_EXPORT TableWidgetContents {
 
-    using CellRowColumnAddress = QPair<int, int>;
+    using CellRowColumnAddress = std::pair<int, int>;
 
     TableWidgetContents();
     void clear();

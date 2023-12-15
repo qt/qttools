@@ -1082,7 +1082,7 @@ void DesignerPropertyManager::slotValueChanged(QtProperty *property, const QVari
         PropertySheetIconValue icon = qvariant_cast<PropertySheetIconValue>(iconProperty->value());
         const auto itState = m_iconSubPropertyToState.constFind(property);
         if (itState != m_iconSubPropertyToState.constEnd()) {
-            QPair<QIcon::Mode, QIcon::State> pair = m_iconSubPropertyToState.value(property);
+            const auto pair = m_iconSubPropertyToState.value(property);
             icon.setPixmap(pair.first, pair.second, qvariant_cast<PropertySheetPixmapValue>(value));
         } else { // must be theme property
             icon.setTheme(value.toString());
@@ -1120,8 +1120,8 @@ void DesignerPropertyManager::slotPropertyDestroyed(QtProperty *property)
             m_propertyToTheme.remove(iconProperty);
         } else {
             const auto it = m_propertyToIconSubProperties.find(iconProperty);
-            QPair<QIcon::Mode, QIcon::State> state = m_iconSubPropertyToState.value(property);
-            QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> &propertyList = it.value();
+            const auto state = m_iconSubPropertyToState.value(property);
+            auto &propertyList = it.value();
             propertyList.remove(state);
             m_iconSubPropertyToState.remove(property);
         }
@@ -1279,7 +1279,7 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
 
         QList<uint> values;
 
-        for (const QPair<QString, uint> &pair : flags) {
+        for (const auto &pair : flags) {
             const QString flagName = pair.first;
             QtProperty *prop = addProperty(QMetaType::Bool);
             prop->setPropertyName(flagName);
@@ -1403,9 +1403,9 @@ void DesignerPropertyManager::setAttribute(QtProperty *property,
 
         qdesigner_internal::PropertySheetIconValue icon = m_iconValues.value(property);
         if (icon.paths().isEmpty()) {
-            QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subIconProperties = m_propertyToIconSubProperties.value(property);
+            const auto &subIconProperties = m_propertyToIconSubProperties.value(property);
             for (auto itSub = subIconProperties.cbegin(), end = subIconProperties.cend(); itSub != end; ++itSub) {
-                QPair<QIcon::Mode, QIcon::State> pair = itSub.key();
+                const auto pair = itSub.key();
                 QtProperty *subProp = itSub.value();
                 setAttribute(subProp, QLatin1StringView(defaultResourceAttributeC),
                              defaultIcon.pixmap(16, 16, pair.first, pair.second));
@@ -1543,7 +1543,7 @@ QString DesignerPropertyManager::valueText(const QtProperty *property) const
         if (!theme.isEmpty() && QIcon::hasThemeIcon(theme))
             return tr("[Theme] %1").arg(theme);
         const auto &paths = icon.paths();
-        const auto it = paths.constFind(qMakePair(QIcon::Normal, QIcon::Off));
+        const auto it = paths.constFind({QIcon::Normal, QIcon::Off});
         if (it == paths.constEnd())
             return QString();
         return QFileInfo(it.value().path()).fileName();
@@ -1613,9 +1613,9 @@ void DesignerPropertyManager::reloadResourceProperties()
                 defaultIcon = iconCache->icon(icon);
         }
 
-        QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subProperties = m_propertyToIconSubProperties.value(property);
+        const auto &subProperties = m_propertyToIconSubProperties.value(property);
         for (auto itSub = subProperties.cbegin(), end = subProperties.cend(); itSub != end; ++itSub) {
-            const QPair<QIcon::Mode, QIcon::State> pair = itSub.key();
+            const auto pair = itSub.key();
             QtVariantProperty *subProperty = variantProperty(itSub.value());
             subProperty->setAttribute(QLatin1StringView(defaultResourceAttributeC),
                                       defaultIcon.pixmap(16, 16, pair.first, pair.second));
@@ -1862,9 +1862,9 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
 
         const auto &iconPaths = icon.paths();
 
-        QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> subProperties = m_propertyToIconSubProperties.value(property);
+        const auto &subProperties = m_propertyToIconSubProperties.value(property);
         for (auto itSub = subProperties.cbegin(), end = subProperties.cend(); itSub != end; ++itSub) {
-            const QPair<QIcon::Mode, QIcon::State> pair = itSub.key();
+            const auto pair = itSub.key();
             QtVariantProperty *subProperty = variantProperty(itSub.value());
             bool hasPath = iconPaths.contains(pair);
             subProperty->setModified(hasPath);
@@ -1883,7 +1883,7 @@ void DesignerPropertyManager::setValue(QtProperty *property, const QVariant &val
         emit propertyChanged(property);
 
         QString toolTip;
-        const auto itNormalOff = iconPaths.constFind(qMakePair(QIcon::Normal, QIcon::Off));
+        const auto itNormalOff = iconPaths.constFind({QIcon::Normal, QIcon::Off});
         if (itNormalOff != iconPaths.constEnd())
             toolTip = itNormalOff.value().path();
         // valueText() only show the file name; show full path as ToolTip.
@@ -2102,7 +2102,7 @@ void DesignerPropertyManager::initializeProperty(QtProperty *property)
 
 void DesignerPropertyManager::createIconSubProperty(QtProperty *iconProperty, QIcon::Mode mode, QIcon::State state, const QString &subName)
 {
-    QPair<QIcon::Mode, QIcon::State> pair = qMakePair(mode, state);
+    const auto pair = std::make_pair(mode, state);
     QtVariantProperty *subProp = addProperty(DesignerPropertyManager::designerPixmapTypeId(), subName);
     m_propertyToIconSubProperties[iconProperty][pair] = subProp;
     m_iconSubPropertyToState[subProp] = pair;
@@ -2159,7 +2159,7 @@ void DesignerPropertyManager::uninitializeProperty(QtProperty *property)
     m_pixmapValues.remove(property);
     m_defaultPixmaps.remove(property);
 
-    QMap<QPair<QIcon::Mode, QIcon::State>, QtProperty *> iconSubProperties = m_propertyToIconSubProperties.value(property);
+    const auto &iconSubProperties = m_propertyToIconSubProperties.value(property);
     for (auto itIcon = iconSubProperties.cbegin(), end = iconSubProperties.cend(); itIcon != end; ++itIcon) {
         QtProperty *subIcon = itIcon.value();
         delete subIcon;

@@ -1689,12 +1689,12 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
 
     auto items = ui_widget->elementItem();
 
-    QQueue<QPair<QTreeWidgetItem *, DomItem *> > pendingQueue;
+    QQueue<std::pair<QTreeWidgetItem *, DomItem *> > pendingQueue;
     for (int i = 0; i < treeWidget->topLevelItemCount(); i++)
-        pendingQueue.enqueue(qMakePair(treeWidget->topLevelItem(i), nullptr));
+        pendingQueue.enqueue(std::make_pair(treeWidget->topLevelItem(i), nullptr));
 
     while (!pendingQueue.isEmpty()) {
-        const QPair<QTreeWidgetItem *, DomItem *> pair = pendingQueue.dequeue();
+        const std::pair<QTreeWidgetItem *, DomItem *> pair = pendingQueue.dequeue();
         QTreeWidgetItem *item = pair.first;
         DomItem *parentDomItem = pair.second;
 
@@ -1725,7 +1725,7 @@ void QAbstractFormBuilder::saveTreeWidgetExtraInfo(QTreeWidget *treeWidget, DomW
             items.append(currentDomItem);
 
         for (int i = 0; i < item->childCount(); i++)
-            pendingQueue.enqueue(qMakePair(item->child(i), currentDomItem));
+            pendingQueue.enqueue(std::make_pair(item->child(i), currentDomItem));
     }
 
     ui_widget->setElementItem(items);
@@ -2040,13 +2040,13 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
         }
     }
 
-    QQueue<QPair<DomItem *, QTreeWidgetItem *> > pendingQueue;
+    QQueue<std::pair<DomItem *, QTreeWidgetItem *> > pendingQueue;
     const auto &widgetElementItem = ui_widget->elementItem();
     for (DomItem *ui_item : widgetElementItem)
-        pendingQueue.enqueue(qMakePair(ui_item, nullptr));
+        pendingQueue.enqueue(std::make_pair(ui_item, nullptr));
 
     while (!pendingQueue.isEmpty()) {
-        const QPair<DomItem *, QTreeWidgetItem *> pair = pendingQueue.dequeue();
+        const std::pair<DomItem *, QTreeWidgetItem *> pair = pendingQueue.dequeue();
         const DomItem *domItem = pair.first;
         QTreeWidgetItem *parentItem = pair.second;
 
@@ -2085,9 +2085,9 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
                         if ((v = toVariant(&QAbstractFormBuilderGadget::staticMetaObject, property)).isValid())
                             currentItem->setData(col, role, v);
                     } else {
-                        QPair<Qt::ItemDataRole, Qt::ItemDataRole> rolePair =
+                        std::pair<Qt::ItemDataRole, Qt::ItemDataRole> rolePair =
                             strings.treeItemTextRoleHash.value(property->attributeName(),
-                                         qMakePair((Qt::ItemDataRole)-1, (Qt::ItemDataRole)-1));
+                                         std::make_pair((Qt::ItemDataRole)-1, (Qt::ItemDataRole)-1));
                         if (rolePair.first >= 0) {
                             QVariant textV = textBuilder()->loadText(property);
                             QVariant nativeValue = textBuilder()->toNativeValue(textV);
@@ -2101,7 +2101,7 @@ void QAbstractFormBuilder::loadTreeWidgetExtraInfo(DomWidget *ui_widget, QTreeWi
 
         const auto &elementItem = domItem->elementItem();
         for (DomItem *childItem : elementItem)
-            pendingQueue.enqueue(qMakePair(childItem, currentItem));
+            pendingQueue.enqueue(std::make_pair(childItem, currentItem));
 
     }
 }

@@ -198,7 +198,7 @@ protected:
 //  Icon/pixmap stuff
 //
     // A Pair of icon path/qrc path.
-    using IconPaths = QPair<QString, QString>;
+    using IconPaths = std::pair<QString, QString>;
 
     void setIconProperty(DomProperty &, const IconPaths &) const;
     void setPixmapProperty(DomProperty &, const IconPaths &) const;

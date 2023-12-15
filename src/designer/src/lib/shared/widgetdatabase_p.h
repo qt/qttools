@@ -115,7 +115,7 @@ private:
 
 enum IncludeType { IncludeLocal, IncludeGlobal  };
 
-using IncludeSpecification = QPair<QString, IncludeType>;
+using IncludeSpecification = std::pair<QString, IncludeType>;
 
 QDESIGNER_SHARED_EXPORT IncludeSpecification  includeSpecification(QString includeFile);
 QDESIGNER_SHARED_EXPORT QString buildIncludeFile(QString includeFile, IncludeType includeType);
