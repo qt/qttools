@@ -200,6 +200,7 @@ void tst_lconvert::converts_data()
     QTest::newRow("broken utf8") << "test-broken-utf8.po" << "test-broken-utf8.po.out" << "po";
     QTest::newRow("line joins") << "test-slurp.po" << "test-slurp.po.out" << "po";
     QTest::newRow("escapes") << "test-escapes.po" << "test-escapes.po.out" << "po";
+    QTest::newRow("xlf seg") << "test-trans_seg.xlf" << "test-trans_seg.ts.out" << "ts";
 }
 
 void tst_lconvert::converts()
