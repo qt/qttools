@@ -653,13 +653,6 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                     if (p2.isEmpty()) appendAtom(Atom(Atom::Link, p1));
                     else appendAtom(LinkAtom(p1, p2));
 
-                    if (!p2.isEmpty() && !(m_private->m_text.lastAtom()->error().isEmpty()))
-                        location().warning(
-                                QStringLiteral(
-                                        "Check parameter in '[ ]' of '\\l' command: '%1', "
-                                        "possible misspelling, or unrecognized module name")
-                                        .arg(m_private->m_text.lastAtom()->error()));
-
                     if (isLeftBraceAhead()) {
                         currentLinkAtom = m_private->m_text.lastAtom();
                         startFormat(ATOM_FORMATTING_LINK, cmd);

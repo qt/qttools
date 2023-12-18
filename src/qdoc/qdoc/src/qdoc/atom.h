@@ -154,11 +154,9 @@ public:
     [[nodiscard]] virtual bool isLinkAtom() const { return false; }
     virtual Node::Genus genus() { return Node::DontCare; }
     virtual Tree *domain() { return nullptr; }
-    virtual const QString &error() { return s_noError; }
     virtual void resolveSquareBracketParams() {}
 
 protected:
-    static QString s_noError;
     Atom *m_next = nullptr;
     AtomType m_type {};
     QStringList m_strs {};
@@ -183,14 +181,12 @@ public:
         resolveSquareBracketParams();
         return m_domain;
     }
-    const QString &error() override { return m_error; }
     void resolveSquareBracketParams() override;
 
 protected:
     bool m_resolved {};
     Node::Genus m_genus {};
     Tree *m_domain {};
-    QString m_error {};
     QString m_squareBracketParams {};
 };
 

@@ -113,8 +113,6 @@ QT_BEGIN_NAMESPACE
   \value UnknownCommand
 */
 
-QString Atom::s_noError = QString();
-
 static const struct
 {
     const char *english;
@@ -395,7 +393,6 @@ void LinkAtom::resolveSquareBracketParams()
             m_genus = Node::API;
             continue;
         }
-        m_error = m_squareBracketParams;
         break;
     }
     m_resolved = true;
@@ -409,7 +406,6 @@ LinkAtom::LinkAtom(const LinkAtom &t)
       m_resolved(t.m_resolved),
       m_genus(t.m_genus),
       m_domain(t.m_domain),
-      m_error(t.m_error),
       m_squareBracketParams(t.m_squareBracketParams)
 {
     // nothing
@@ -425,7 +421,6 @@ LinkAtom::LinkAtom(Atom *previous, const LinkAtom &t)
       m_resolved(t.m_resolved),
       m_genus(t.m_genus),
       m_domain(t.m_domain),
-      m_error(t.m_error),
       m_squareBracketParams(t.m_squareBracketParams)
 {
     previous->m_next = this;
