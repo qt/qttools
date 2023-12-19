@@ -60,7 +60,7 @@ public:
     QAction *action() const;
 
     Qt::DockWidgetArea dockWidgetAreaHint() const { return m_dockAreaHint; }
-    virtual QRect geometryHint() const;
+    virtual QRect geometryHint(const QRect &availableGeometry) const = 0;
 
 private slots:
     void showMe(bool);
@@ -69,8 +69,6 @@ protected:
     void showEvent(QShowEvent *e) override;
     void hideEvent(QHideEvent *e) override;
     void changeEvent(QEvent *e) override;
-
-    QRect availableToolWindowGeometry() const;
 
 private:
     const Qt::DockWidgetArea m_dockAreaHint;
