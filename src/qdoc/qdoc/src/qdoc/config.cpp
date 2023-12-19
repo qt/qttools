@@ -484,7 +484,7 @@ void Config::processCommandLineOptions(const QStringList &args)
     if (m_parser.isSet(m_parser.installDirOption))
         installDir = m_parser.value(m_parser.installDirOption);
     if (m_parser.isSet(m_parser.outputDirOption))
-        overrideOutputDir = m_parser.value(m_parser.outputDirOption);
+        overrideOutputDir = QDir(m_parser.value(m_parser.outputDirOption)).absolutePath();
 
     const auto outputFormats = m_parser.values(m_parser.outputFormatOption);
     for (const auto &format : outputFormats)

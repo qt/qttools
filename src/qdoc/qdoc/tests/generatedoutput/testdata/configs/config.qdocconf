@@ -13,6 +13,11 @@ warninglimit.enabled = true
 # don't write host system-specific paths to index files
 locationinfo = false
 
+# By default, use -outputdir directly, no subdir.
+# outputsubdir '.' matches the root of expected_output/
+HTML.nosubdirs = true
+HTML.outputsubdir = .
+
 # Macro from qtbase/doc/global/macros.qdocconf
 # The file cannot be included directly, because it requires many
 # variables to be set, like QT_VER

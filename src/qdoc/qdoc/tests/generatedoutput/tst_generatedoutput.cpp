@@ -78,7 +78,7 @@ private:
     void runQDocProcess(const QStringList &arguments);
     void compareLineByLine(const QStringList &expectedFiles);
     void testAndCompare(const char *input, const char *outNames, const char *extraParams = nullptr,
-                        const char *outputPathPrefix = nullptr);
+                        const char *outputSubDir = "html");
     void copyIndexFiles();
 };
 
@@ -164,9 +164,9 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 }
 
 void tst_generatedOutput::testAndCompare(const char *input, const char *outNames,
-                                         const char *extraParams, const char *outputPathPrefix)
+                                         const char *extraParams, const char *outputSubDir)
 {
-    QStringList args { "-outputdir", m_outputDir->path() + "/" + outputPathPrefix,
+    QStringList args { "-outputdir", m_outputDir->path() + "/" + outputSubDir,
                        QFINDTESTDATA(input) };
     if (extraParams)
         args << QString(QLatin1String(extraParams)).split(QChar(' '));
@@ -177,10 +177,6 @@ void tst_generatedOutput::testAndCompare(const char *input, const char *outNames
         return;
 
     QStringList expectedOuts(QString(QLatin1String(outNames)).split(QChar(' ')));
-    if (outputPathPrefix)
-        for (auto &expectedOut : expectedOuts)
-            expectedOut = QString(outputPathPrefix) + "/" + expectedOut;
-
     if (m_regen) {
         QVERIFY(m_expectedDir.mkpath(m_expectedDir.path()));
         for (const auto &file : std::as_const(expectedOuts)) {
@@ -516,6 +512,9 @@ void tst_generatedOutput::includeFromExampleDirs()
 void tst_generatedOutput::singleExec()
 {
     // Build both testcpp and crossmodule projects in single-exec mode
+    // Note: Last arg (nullptr) clears the default output subdirectory -
+    // This is because QDoc always appends a subdir based on the project
+    // name in single-exec mode.
     testAndCompare("testdata/singleexec/singleexec.qdocconf",
                    "testcpp-module.html "
                    "testqdoc-test.html "
@@ -525,7 +524,8 @@ void tst_generatedOutput::singleExec()
                    "crossmodule/all-namespaces.html "
                    "crossmodule/testtype.html "
                    "crossmodule/testtype-members.html",
-                   "-single-exec");
+                   "-single-exec",
+                   nullptr);
 }
 
 void tst_generatedOutput::preparePhase()

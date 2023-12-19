@@ -1,3 +1,4 @@
+include(../configs/config.qdocconf)
 # test linking to entities loaded from index
 project = IndexLinking
 
