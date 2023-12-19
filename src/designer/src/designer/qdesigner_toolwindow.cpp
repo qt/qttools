@@ -24,6 +24,8 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
+static constexpr int margin = 20;
+
 // ---------------- QDesignerToolWindow
 QDesignerToolWindow::QDesignerToolWindow(QDesignerWorkbench *workbench,
                                          QWidget *w,
@@ -148,7 +150,6 @@ PropertyEditorToolWindow::PropertyEditorToolWindow(QDesignerWorkbench *workbench
 QRect PropertyEditorToolWindow::geometryHint() const
 {
     const QRect g = availableToolWindowGeometry();
-    const int margin = workbench()->marginHint();
     const int spacing = 40;
     const QSize sz(g.width() * 1/4, g.height() * 4/6);
 
@@ -200,7 +201,6 @@ ActionEditorToolWindow::ActionEditorToolWindow(QDesignerWorkbench *workbench) :
 QRect ActionEditorToolWindow::geometryHint() const
 {
     const QRect g = availableToolWindowGeometry();
-    const int margin = workbench()->marginHint();
 
     const QSize sz(g.width() * 1/4, g.height() * 1/6);
 
@@ -242,7 +242,6 @@ ObjectInspectorToolWindow::ObjectInspectorToolWindow(QDesignerWorkbench *workben
 QRect ObjectInspectorToolWindow::geometryHint() const
 {
     const QRect g = availableToolWindowGeometry();
-    const int margin = workbench()->marginHint();
 
     const QSize sz(g.width() * 1/4, g.height() * 1/6);
 
@@ -277,7 +276,6 @@ ResourceEditorToolWindow::ResourceEditorToolWindow(QDesignerWorkbench *workbench
 QRect ResourceEditorToolWindow::geometryHint() const
 {
     const QRect g = availableToolWindowGeometry();
-    const int margin = workbench()->marginHint();
 
     const QSize sz(g.width() * 1/3, g.height() * 1/6);
     QRect r(QPoint(0, 0), sz);
@@ -311,7 +309,6 @@ SignalSlotEditorToolWindow::SignalSlotEditorToolWindow(QDesignerWorkbench *workb
 QRect SignalSlotEditorToolWindow::geometryHint() const
 {
     const QRect g = availableToolWindowGeometry();
-    const int margin = workbench()->marginHint();
 
     const QSize sz(g.width() * 1/3, g.height() * 1/6);
     QRect r(QPoint(0, 0), sz);
@@ -352,7 +349,6 @@ WidgetBoxToolWindow::WidgetBoxToolWindow(QDesignerWorkbench *workbench) :
 QRect WidgetBoxToolWindow::geometryHint() const
 {
     const QRect g = availableToolWindowGeometry();
-    const int margin = workbench()->marginHint();
     const  QRect rc = QRect(g.left() + margin,
                             g.top() + margin,
                             g.width() * 1/4, g.height() * 5/6);

@@ -571,10 +571,6 @@ QRect QDesignerWorkbench::availableGeometry() const
     return screen ? screen->availableGeometry() : QGuiApplication::primaryScreen()->availableGeometry() ;
 }
 
-int QDesignerWorkbench::marginHint() const
-{    return 20;
-}
-
 void QDesignerWorkbench::slotFormWindowActivated(QDesignerFormWindow* fw)
 {
     core()->formWindowManager()->setActiveFormWindow(fw->editor());

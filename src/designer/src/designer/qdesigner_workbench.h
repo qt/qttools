@@ -67,8 +67,6 @@ public:
     QRect availableGeometry() const;
     QRect desktopGeometry() const;
 
-    int marginHint() const;
-
     bool readInForm(const QString &fileName) const;
     bool writeOutForm(QDesignerFormWindowInterface *formWindow, const QString &fileName) const;
     bool saveForm(QDesignerFormWindowInterface *fw);
