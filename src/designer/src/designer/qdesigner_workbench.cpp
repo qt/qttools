@@ -55,7 +55,7 @@ using ActionList = QList<QAction *>;
 
 static QMdiSubWindow *mdiSubWindowOf(const QWidget *w)
 {
-    QMdiSubWindow *rc = qobject_cast<QMdiSubWindow *>(w->parentWidget());
+    auto *rc = qobject_cast<QMdiSubWindow *>(w->parentWidget());
     Q_ASSERT(rc);
     return rc;
 }
@@ -63,7 +63,7 @@ static QMdiSubWindow *mdiSubWindowOf(const QWidget *w)
 static QDockWidget *dockWidgetOf(const QWidget *w)
 {
     for (QWidget *parentWidget = w->parentWidget(); parentWidget ; parentWidget = parentWidget->parentWidget()) {
-        if (QDockWidget *dw = qobject_cast<QDockWidget *>(parentWidget)) {
+        if (auto *dw = qobject_cast<QDockWidget *>(parentWidget)) {
             return dw;
         }
     }
@@ -166,7 +166,7 @@ QDesignerWorkbench::QDesignerWorkbench()  :
     addActionsToMenu(editMenu, m_actionManager->toolActions()->actions());
 
     QMenu *formMenu = addMenu(m_globalMenuBar, tr("F&orm"),  m_actionManager->formActions()->actions());
-    QMenu *previewSubMenu = new QMenu(tr("Preview in"), formMenu);
+    auto *previewSubMenu = new QMenu(tr("Preview in"), formMenu);
     formMenu->insertMenu(m_actionManager->previewFormAction(), previewSubMenu);
     addActionsToMenu(previewSubMenu, m_actionManager->styleActions()->actions());
 
@@ -179,7 +179,7 @@ QDesignerWorkbench::QDesignerWorkbench()  :
     addMenu(m_globalMenuBar, tr("&Help"), m_actionManager->helpActions()->actions());
 
     //  Add the tools in view menu order
-    QActionGroup *viewActions = new QActionGroup(this);
+    auto *viewActions = new QActionGroup(this);
     viewActions->setExclusive(false);
 
     for (int i = 0; i < QDesignerToolWindow::StandardToolWindowCount; i++) {
@@ -326,11 +326,12 @@ QWidget *QDesignerWorkbench::magicalParent(const QWidget *w) const
         case DockedMode:
             return m_dockedMainWindow->mdiArea();
         case NeutralMode:
-            return nullptr;
+            break;
         default:
-            Q_ASSERT(0);
-            return 0;
+            Q_ASSERT(false);
+            break;
     }
+    return nullptr;
 }
 
 void QDesignerWorkbench::switchToNeutralMode()
@@ -478,8 +479,8 @@ void QDesignerWorkbench::switchToTopLevelMode()
     m_topLevelData.toolbarManager = new ToolBarManager(widgetBoxWrapper, widgetBoxWrapper,
                                                        m_toolbarMenu, m_actionManager,
                                                        m_topLevelData.toolbars, m_toolWindows);
-    const int toolBarCount = m_topLevelData.toolbars.size();
-    for (int i = 0; i < toolBarCount; i++) {
+    const qsizetype toolBarCount = m_topLevelData.toolbars.size();
+    for (qsizetype i = 0; i < toolBarCount; ++i) {
         widgetBoxWrapper->addToolBar(m_topLevelData.toolbars.at(i));
         if (i == 3)
             widgetBoxWrapper->insertToolBarBreak(m_topLevelData.toolbars.at(i));
@@ -496,7 +497,7 @@ void QDesignerWorkbench::switchToTopLevelMode()
     }
 
     if (!m_toolWindows.isEmpty() && !found_visible_window)
-        m_toolWindows.first()->show();
+        m_toolWindows.constFirst()->show();
 
     m_actionManager->setBringAllToFrontVisible(true);
 
@@ -683,7 +684,7 @@ bool QDesignerWorkbench::handleClose()
             dirtyForms << w;
     }
 
-    const int count = dirtyForms.size();
+    const auto count = dirtyForms.size();
     if (count == 1) {
         if (!dirtyForms.at(0)->close()) {
             m_state = StateUp;
@@ -696,7 +697,7 @@ bool QDesignerWorkbench::handleClose()
                         QMessageBox::Cancel | QMessageBox::Discard | QMessageBox::Save);
         box.setInformativeText(tr("If you do not review your documents, all your changes will be lost."));
         box.button(QMessageBox::Discard)->setText(tr("Discard Changes"));
-        QPushButton *save = static_cast<QPushButton *>(box.button(QMessageBox::Save));
+        auto *save = static_cast<QPushButton *>(box.button(QMessageBox::Save));
         save->setText(tr("Review Changes"));
         box.setDefaultButton(save);
         switch (box.exec()) {
@@ -759,14 +760,14 @@ void QDesignerWorkbench::updateWindowMenu(QDesignerFormWindowInterface *fwi)
 
 void QDesignerWorkbench::formWindowActionTriggered(QAction *a)
 {
-    QDesignerFormWindow *fw = qobject_cast<QDesignerFormWindow *>(a->parent());
+    auto *fw = qobject_cast<QDesignerFormWindow *>(a->parent());
     Q_ASSERT(fw);
 
     if (isFormWindowMinimized(fw))
         setFormWindowMinimized(fw, false);
 
     if (m_mode == DockedMode) {
-        if (QMdiSubWindow *subWindow = qobject_cast<QMdiSubWindow *>(fw->parent())) {
+        if (auto *subWindow = qobject_cast<QMdiSubWindow *>(fw->parent())) {
             m_dockedMainWindow->mdiArea()->setActiveSubWindow(subWindow);
         }
     } else {
@@ -852,7 +853,7 @@ void QDesignerWorkbench::resizeForm(QDesignerFormWindow *fw, const QWidget *main
         return;
     }
     // get decorations and resize MDI
-    QMdiSubWindow *mdiSubWindow = qobject_cast<QMdiSubWindow *>(fw->parent());
+    auto *mdiSubWindow = qobject_cast<QMdiSubWindow *>(fw->parent());
     Q_ASSERT(mdiSubWindow);
     const QSize decorationSize = mdiSubWindow->geometry().size() - mdiSubWindow->contentsRect().size();
     mdiSubWindow->resize(containerSize + decorationSize);
@@ -902,7 +903,7 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
     // Create a form
     QDesignerFormWindowManagerInterface *formWindowManager = m_core->formWindowManager();
 
-    QDesignerFormWindow *formWindow = new QDesignerFormWindow(/*formWindow=*/ nullptr, this);
+    auto *formWindow = new QDesignerFormWindow(/*formWindow=*/ nullptr, this);
     addFormWindow(formWindow);
     QDesignerFormWindowInterface *editor = formWindow->editor();
     Q_ASSERT(editor);

@@ -18,7 +18,7 @@
 
 #include <QtCore/qdebug.h>
 
-enum { debugToolWindow = 0 };
+static constexpr bool debugToolWindow = false;
 
 QT_BEGIN_NAMESPACE
 
