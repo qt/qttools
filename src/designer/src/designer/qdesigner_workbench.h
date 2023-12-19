@@ -29,6 +29,7 @@ class QMenuBar;
 class QToolBar;
 class QMdiSubWindow;
 class QCloseEvent;
+class QScreen;
 class ToolBarManager;
 
 class QDesignerFormEditorInterface;
@@ -63,9 +64,6 @@ public:
     QDesignerActions *actionManager() const;
 
     QActionGroup *modeActionGroup() const;
-
-    QRect availableGeometry() const;
-    QRect desktopGeometry() const;
 
     bool readInForm(const QString &fileName) const;
     bool writeOutForm(QDesignerFormWindowInterface *formWindow, const QString &fileName) const;
@@ -106,6 +104,8 @@ private slots:
     void slotFileDropped(const QString &f);
 
 private:
+    QScreen *screen() const;
+    QRect availableFormGeometry() const;
     QWidget *magicalParent(const QWidget *w) const;
     Qt::WindowFlags magicalWindowFlags(const QWidget *widgetForFlags) const;
     QDesignerFormWindowManagerInterface *formWindowManager() const;
