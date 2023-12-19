@@ -405,7 +405,9 @@ void QDesignerWorkbench::switchToDockedMode()
             this, &QDesignerWorkbench::slotFileDropped);
     connect(m_dockedMainWindow, &DockedMainWindow::formWindowActivated,
             this, &QDesignerWorkbench::slotFormWindowActivated);
-    m_dockedMainWindow->restoreSettings(settings, m_dockedMainWindow->addToolWindows(m_toolWindows), desktopGeometry());
+    m_dockedMainWindow->restoreSettings(settings,
+                                        m_dockedMainWindow->addToolWindows(m_toolWindows),
+                                        screen()->availableGeometry());
 
     m_core->setTopLevel(m_dockedMainWindow);
 
@@ -452,9 +454,10 @@ void QDesignerWorkbench::switchToTopLevelMode()
     Q_ASSERT(widgetBoxWrapper);
 
     switchToNeutralMode();
-    const QRect availableGeometry = desktopGeometry();
+    m_mode = TopLevelMode; // Set new mode before calling screen()
+    const auto *currentScreen = screen();
+    const QRect availableGeometry = currentScreen->availableGeometry();
     const QPoint desktopOffset = availableGeometry.topLeft();
-    m_mode = TopLevelMode;
 
     // The widget box is special, it gets the menubar and gets to be the main widget.
 
@@ -545,32 +548,20 @@ QDesignerFormWindow *QDesignerWorkbench::formWindow(int index) const
     return m_formWindows.at(index);
 }
 
-QRect QDesignerWorkbench::desktopGeometry() const
+QScreen *QDesignerWorkbench::screen() const
 {
-    // Return geometry of the desktop designer is running in.
-    QWidget *widget = nullptr;
-    switch (m_mode) {
-    case DockedMode:
-        widget = m_dockedMainWindow;
-        break;
-    case TopLevelMode:
-        widget = widgetBoxToolWindow();
-        break;
-    case NeutralMode:
-        break;
-    }
-    const auto screen = widget ? widget->screen() : QGuiApplication::primaryScreen();
-    return screen ? screen->availableGeometry()
-                  : QGuiApplication::primaryScreen()->availableGeometry();
+    auto *widget = m_mode == DockedMode
+        ? static_cast<QWidget *>(m_dockedMainWindow.data())
+        : static_cast<QWidget *>(widgetBoxToolWindow());
+    return widget != nullptr
+        ? widget->screen() : QGuiApplication::primaryScreen();
 }
 
-QRect QDesignerWorkbench::availableGeometry() const
+QRect QDesignerWorkbench::availableFormGeometry() const
 {
-    if (m_mode == DockedMode)
-        return m_dockedMainWindow->mdiArea()->geometry();
-
-    const auto screen = widgetBoxToolWindow()->screen();
-    return screen ? screen->availableGeometry() : QGuiApplication::primaryScreen()->availableGeometry() ;
+    // Return available geometry for forms
+    return m_mode == DockedMode
+        ? m_dockedMainWindow->mdiArea()->geometry() : screen()->availableGeometry();
 }
 
 void QDesignerWorkbench::slotFormWindowActivated(QDesignerFormWindow* fw)
@@ -937,7 +928,7 @@ QDesignerFormWindow * QDesignerWorkbench::loadForm(const QString &fileName,
         formWindow->setAttribute(Qt::WA_DeleteOnClose, true);
         formWindow->setParent(magicalParent(formWindow), magicalWindowFlags(formWindow));
         formWindow->resize(formWindowGeometryHint.size());
-        formWindow->move(availableGeometry().center() - formWindowGeometryHint.center());
+        formWindow->move(availableFormGeometry().center() - formWindowGeometryHint.center());
     }
         break;
     case NeutralMode:
