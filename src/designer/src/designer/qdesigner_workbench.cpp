@@ -452,7 +452,8 @@ void QDesignerWorkbench::switchToTopLevelMode()
     Q_ASSERT(widgetBoxWrapper);
 
     switchToNeutralMode();
-    const QPoint desktopOffset = desktopGeometry().topLeft();
+    const QRect availableGeometry = desktopGeometry();
+    const QPoint desktopOffset = availableGeometry.topLeft();
     m_mode = TopLevelMode;
 
     // The widget box is special, it gets the menubar and gets to be the main widget.
@@ -491,7 +492,7 @@ void QDesignerWorkbench::switchToTopLevelMode()
     bool found_visible_window = false;
     for (QDesignerToolWindow *tw : std::as_const(m_toolWindows)) {
         tw->setParent(magicalParent(tw), magicalWindowFlags(tw));
-        settings.restoreGeometry(tw, tw->geometryHint());
+        settings.restoreGeometry(tw, tw->geometryHint(availableGeometry));
         tw->action()->setChecked(tw->isVisible());
         found_visible_window |= tw->isVisible();
     }

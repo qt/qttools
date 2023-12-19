@@ -113,16 +113,6 @@ QDesignerWorkbench *QDesignerToolWindow::workbench() const
     return m_workbench;
 }
 
-QRect QDesignerToolWindow::geometryHint() const
-{
-    return QRect();
-}
-
-QRect QDesignerToolWindow::availableToolWindowGeometry() const
-{
-    return m_workbench->availableGeometry();
-}
-
 //  ---------------------- PropertyEditorToolWindow
 
 static inline QWidget *createPropertyEditor(QDesignerFormEditorInterface *core, QWidget *parent = nullptr)
@@ -137,7 +127,7 @@ class PropertyEditorToolWindow : public QDesignerToolWindow
 public:
     explicit PropertyEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const override;
+    QRect geometryHint(const QRect &) const override;
 
 protected:
     void showEvent(QShowEvent *event) override;
@@ -155,9 +145,8 @@ PropertyEditorToolWindow::PropertyEditorToolWindow(QDesignerWorkbench *workbench
 
 }
 
-QRect PropertyEditorToolWindow::geometryHint() const
+QRect PropertyEditorToolWindow::geometryHint(const QRect &g) const
 {
-    const QRect g = availableToolWindowGeometry();
     const int spacing = 40;
     const QSize sz(g.width() * 1/4, g.height() * 4/6);
 
@@ -193,7 +182,7 @@ class ActionEditorToolWindow: public QDesignerToolWindow
 public:
     explicit ActionEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const override;
+    QRect geometryHint(const QRect &g) const override;
 };
 
 ActionEditorToolWindow::ActionEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -206,10 +195,8 @@ ActionEditorToolWindow::ActionEditorToolWindow(QDesignerWorkbench *workbench) :
 {
 }
 
-QRect ActionEditorToolWindow::geometryHint() const
+QRect ActionEditorToolWindow::geometryHint(const QRect &g) const
 {
-    const QRect g = availableToolWindowGeometry();
-
     const QSize sz(g.width() * 1/4, g.height() * 1/6);
 
     const QRect rc = QRect((g.right() + 1 - sz.width() - margin),
@@ -234,7 +221,7 @@ class ObjectInspectorToolWindow: public QDesignerToolWindow
 public:
     explicit ObjectInspectorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const override;
+    QRect geometryHint(const QRect &g) const override;
 };
 
 ObjectInspectorToolWindow::ObjectInspectorToolWindow(QDesignerWorkbench *workbench) :
@@ -247,10 +234,8 @@ ObjectInspectorToolWindow::ObjectInspectorToolWindow(QDesignerWorkbench *workben
 {
 }
 
-QRect ObjectInspectorToolWindow::geometryHint() const
+QRect ObjectInspectorToolWindow::geometryHint(const QRect &g) const
 {
-    const QRect g = availableToolWindowGeometry();
-
     const QSize sz(g.width() * 1/4, g.height() * 1/6);
 
     const QRect rc = QRect((g.right() + 1 - sz.width() - margin),
@@ -268,7 +253,7 @@ class ResourceEditorToolWindow: public QDesignerToolWindow
 public:
     explicit ResourceEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const override;
+    QRect geometryHint(const QRect &g) const override;
 };
 
 ResourceEditorToolWindow::ResourceEditorToolWindow(QDesignerWorkbench *workbench)  :
@@ -281,10 +266,8 @@ ResourceEditorToolWindow::ResourceEditorToolWindow(QDesignerWorkbench *workbench
 {
 }
 
-QRect ResourceEditorToolWindow::geometryHint() const
+QRect ResourceEditorToolWindow::geometryHint(const QRect &g) const
 {
-    const QRect g = availableToolWindowGeometry();
-
     const QSize sz(g.width() * 1/3, g.height() * 1/6);
     QRect r(QPoint(0, 0), sz);
     r.moveCenter(g.center());
@@ -301,7 +284,7 @@ class SignalSlotEditorToolWindow: public QDesignerToolWindow
 public:
     explicit SignalSlotEditorToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const override;
+    QRect geometryHint(const QRect &g) const override;
 };
 
 SignalSlotEditorToolWindow::SignalSlotEditorToolWindow(QDesignerWorkbench *workbench) :
@@ -314,10 +297,8 @@ SignalSlotEditorToolWindow::SignalSlotEditorToolWindow(QDesignerWorkbench *workb
 {
 }
 
-QRect SignalSlotEditorToolWindow::geometryHint() const
+QRect SignalSlotEditorToolWindow::geometryHint(const QRect &g) const
 {
-    const QRect g = availableToolWindowGeometry();
-
     const QSize sz(g.width() * 1/3, g.height() * 1/6);
     QRect r(QPoint(0, 0), sz);
     r.moveCenter(g.center());
@@ -341,7 +322,7 @@ class WidgetBoxToolWindow: public QDesignerToolWindow
 public:
     explicit WidgetBoxToolWindow(QDesignerWorkbench *workbench);
 
-    QRect geometryHint() const override;
+    QRect geometryHint(const QRect &g) const override;
 };
 
 WidgetBoxToolWindow::WidgetBoxToolWindow(QDesignerWorkbench *workbench) :
@@ -354,9 +335,8 @@ WidgetBoxToolWindow::WidgetBoxToolWindow(QDesignerWorkbench *workbench) :
 {
 }
 
-QRect WidgetBoxToolWindow::geometryHint() const
+QRect WidgetBoxToolWindow::geometryHint(const QRect &g) const
 {
-    const QRect g = availableToolWindowGeometry();
     const  QRect rc = QRect(g.left() + margin,
                             g.top() + margin,
                             g.width() * 1/4, g.height() * 5/6);
