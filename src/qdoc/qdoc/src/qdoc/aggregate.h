@@ -51,7 +51,6 @@ public:
     void addChildByTitle(Node *child, const QString &title);
     void addChild(Node *child);
     void adoptChild(Node *child);
-    void setOutputSubdirectory(const QString &t) override;
 
     FunctionMap &functionMap() { return m_functionMap; }
     void findAllFunctions(NodeMapMap &functionIndex);

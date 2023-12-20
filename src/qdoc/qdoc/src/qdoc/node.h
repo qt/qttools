@@ -297,8 +297,6 @@ public:
     virtual void setQmlModule(CollectionNode *) {}
     virtual ClassNode *classNode() { return nullptr; }
     virtual void setClassNode(ClassNode *) {}
-    [[nodiscard]] const QString &outputSubdirectory() const { return m_outSubDir; }
-    virtual void setOutputSubdirectory(const QString &t) { m_outSubDir = t; }
     [[nodiscard]] QString fullDocumentName() const;
     QString qualifyCppName();
     QString qualifyQmlName();
@@ -336,7 +334,6 @@ private:
     QString m_since {};
     std::optional<RelaxedTemplateDeclaration> m_templateDecl{std::nullopt};
     QString m_reconstitutedBrief {};
-    QString m_outSubDir {};
     QString m_deprecatedSince {};
 };
 

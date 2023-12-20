@@ -51,7 +51,7 @@ public:
     virtual void terminateGenerator();
     virtual QString typeString(const Node *node);
 
-    QString fullDocumentLocation(const Node *node, bool useSubdir = false);
+    QString fullDocumentLocation(const Node *node);
     QString linkForExampleFile(const QString &path, const QString &fileExt = QString());
     static QString exampleFileTitle(const ExampleNode *relative, const QString &fileName);
     static Generator *currentGenerator() { return s_currentGenerator; }

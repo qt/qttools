@@ -194,12 +194,7 @@ int Generator::appendSortedQmlNames(Text &text, const Node *base, const NodeList
  */
 QFile *Generator::openSubPageFile(const Node *node, const QString &fileName)
 {
-    QString path = outputDir() + QLatin1Char('/');
-    if (Generator::useOutputSubdirs() && !node->outputSubdirectory().isEmpty()
-        && !outputDir().endsWith(node->outputSubdirectory())) {
-        path += node->outputSubdirectory() + QLatin1Char('/');
-    }
-    path += fileName;
+    QString path = outputDir() + QLatin1Char('/') + fileName;
 
     auto outPath = s_redirectDocumentationToDevNull ? QStringLiteral("/dev/null") : path;
     auto outFile = new QFile(outPath);
@@ -438,7 +433,7 @@ QMap<QString, QString> &Generator::formattingRightMap()
 /*!
   Returns the full document location.
  */
-QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
+QString Generator::fullDocumentLocation(const Node *node)
 {
     if (node == nullptr)
         return QString();
@@ -447,18 +442,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
 
     QString parentName;
     QString anchorRef;
-    QString fdl;
 
-    /*
-      If the useSubdir parameter is set, then the output is
-      being sent to subdirectories of the output directory.
-      Prepend the subdirectory name + '/' to the result.
-     */
-    if (useSubdir) {
-        fdl = node->outputSubdirectory();
-        if (!fdl.isEmpty())
-            fdl.append(QLatin1Char('/'));
-    }
     if (node->isNamespace()) {
         /*
           The root namespace has no name - check for this before creating
@@ -570,7 +554,7 @@ QString Generator::fullDocumentLocation(const Node *node, bool useSubdir)
                                "-obsolete." + currentGenerator()->fileExtension());
     }
 
-    return fdl + parentName.toLower() + anchorRef;
+    return parentName.toLower() + anchorRef;
 }
 
 void Generator::generateAlsoList(const Node *node, CodeMarker *marker)

@@ -162,7 +162,7 @@ void HelpProjectWriter::addExtraFile(const QString &file)
 
 Keyword HelpProjectWriter::keywordDetails(const Node *node) const
 {
-    QString ref = m_gen->fullDocumentLocation(node, false);
+    QString ref = m_gen->fullDocumentLocation(node);
 
     if (node->parent() && !node->parent()->name().isEmpty()) {
         QString name = (node->isEnumType() || node->isTypedef())
@@ -260,12 +260,12 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
             for (const Atom *keyword : keywords) {
                 if (!keyword->string().isEmpty()) {
                     project.m_keywords.append(Keyword(keyword->string(), keyword->string(),
-                                                      m_gen->fullDocumentLocation(node, false)));
+                                                      m_gen->fullDocumentLocation(node)));
                 }
                 else
                     node->doc().location().warning(
                             QStringLiteral("Bad keyword in %1")
-                                    .arg(m_gen->fullDocumentLocation(node, false)));
+                                    .arg(m_gen->fullDocumentLocation(node)));
             }
         }
         project.m_keywords.append(keywordDetails(node));
@@ -291,7 +291,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                 } else {
                     name = id = item.name();
                 }
-                QString ref = m_gen->fullDocumentLocation(node, false);
+                QString ref = m_gen->fullDocumentLocation(node);
                 project.m_keywords.append(Keyword(name, id, ref));
             }
         }
@@ -308,11 +308,11 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                     if (!keyword->string().isEmpty()) {
                         project.m_keywords.append(
                                 Keyword(keyword->string(), keyword->string(),
-                                        m_gen->fullDocumentLocation(node, false)));
+                                        m_gen->fullDocumentLocation(node)));
                     } else
                         cn->doc().location().warning(
                                 QStringLiteral("Bad keyword in %1")
-                                        .arg(m_gen->fullDocumentLocation(node, false)));
+                                        .arg(m_gen->fullDocumentLocation(node)));
                 }
             }
             project.m_keywords.append(keywordDetails(node));
@@ -359,7 +359,7 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
         // Use the location of any associated enum node in preference
         // to that of the typedef.
         if (enumNode)
-            typedefDetails.m_ref = m_gen->fullDocumentLocation(enumNode, false);
+            typedefDetails.m_ref = m_gen->fullDocumentLocation(enumNode);
 
         project.m_keywords.append(typedefDetails);
     } break;
@@ -379,9 +379,9 @@ bool HelpProjectWriter::generateSection(HelpProject &project, QXmlStreamWriter &
                     if (!keyword->string().isEmpty()) {
                         project.m_keywords.append(
                                 Keyword(keyword->string(), keyword->string(),
-                                        m_gen->fullDocumentLocation(node, false)));
+                                        m_gen->fullDocumentLocation(node)));
                     } else {
-                        QString loc = m_gen->fullDocumentLocation(node, false);
+                        QString loc = m_gen->fullDocumentLocation(node);
                         pn->doc().location().warning(QStringLiteral("Bad keyword in %1").arg(loc));
                     }
                 }
@@ -487,7 +487,7 @@ void HelpProjectWriter::writeSection(QXmlStreamWriter &writer, const QString &pa
  */
 void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node)
 {
-    QString href = m_gen->fullDocumentLocation(node, false);
+    QString href = m_gen->fullDocumentLocation(node);
     href = href.left(href.size() - 5);
     if (href.isEmpty())
         return;
@@ -511,7 +511,7 @@ void HelpProjectWriter::addMembers(HelpProject &project, QXmlStreamWriter &write
 
 void HelpProjectWriter::writeNode(HelpProject &project, QXmlStreamWriter &writer, const Node *node)
 {
-    QString href = m_gen->fullDocumentLocation(node, false);
+    QString href = m_gen->fullDocumentLocation(node);
     QString objName = node->name();
 
     switch (node->nodeType()) {
@@ -625,7 +625,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
         node = m_qdb->findNodeByNameAndType(QStringList("index.html"), &Node::isPageNode);
     QString indexPath;
     if (node)
-        indexPath = m_gen->fullDocumentLocation(node, false);
+        indexPath = m_gen->fullDocumentLocation(node);
     else
         indexPath = "index.html";
     writer.writeAttribute("ref", indexPath);
@@ -667,7 +667,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
                             const Node *page = m_qdb->findNodeForTarget(atom->string(), nullptr);
                             writer.writeStartElement("section");
-                            QString indexPath = m_gen->fullDocumentLocation(page, false);
+                            QString indexPath = m_gen->fullDocumentLocation(page);
                             writer.writeAttribute("ref", indexPath);
                             writer.writeAttribute("title", atom->linkText());
 
@@ -689,7 +689,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
 
             writer.writeStartElement("section");
             QString indexPath = m_gen->fullDocumentLocation(
-                    m_qdb->findNodeForTarget(subproject.m_indexTitle, nullptr), false);
+                    m_qdb->findNodeForTarget(subproject.m_indexTitle, nullptr));
             writer.writeAttribute("ref", indexPath);
             writer.writeAttribute("title", subproject.m_title);
 

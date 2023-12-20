@@ -73,7 +73,7 @@ void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Agg
 
         if (node->isClassNode()) {
             writer.writeTextElement("name", node->fullDocumentName());
-            writer.writeTextElement("filename", m_generator->fullDocumentLocation(node, false));
+            writer.writeTextElement("filename", m_generator->fullDocumentLocation(node));
 
             // Classes contain information about their base classes.
             const auto *classNode = static_cast<const ClassNode *>(node);
@@ -92,7 +92,7 @@ void TagFileWriter::generateTagFileCompounds(QXmlStreamWriter &writer, const Agg
             generateTagFileCompounds(writer, aggregate);
         } else {
             writer.writeTextElement("name", node->fullDocumentName());
-            writer.writeTextElement("filename", m_generator->fullDocumentLocation(node, false));
+            writer.writeTextElement("filename", m_generator->fullDocumentLocation(node));
 
             // Recurse to write all members.
             generateTagFileMembers(writer, aggregate);
@@ -202,7 +202,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
 
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             QString signature = functionNode->signature(Node::SignatureReturnType);
@@ -224,7 +224,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
             writer.writeAttribute("type", propertyNode->dataType());
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             writer.writeTextElement("arglist", QString());
@@ -235,7 +235,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
             const auto *enumNode = static_cast<const EnumNode *>(node);
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             writer.writeEndElement(); // member
@@ -259,7 +259,7 @@ void TagFileWriter::generateTagFileMembers(QXmlStreamWriter &writer, const Aggre
                 writer.writeAttribute("type", QString());
             writer.writeTextElement("name", objName);
             const QStringList pieces =
-                    m_generator->fullDocumentLocation(node, false).split(QLatin1Char('#'));
+                    m_generator->fullDocumentLocation(node).split(QLatin1Char('#'));
             writer.writeTextElement("anchorfile", pieces[0]);
             writer.writeTextElement("anchor", pieces[1]);
             writer.writeTextElement("arglist", QString());

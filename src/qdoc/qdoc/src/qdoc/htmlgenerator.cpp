@@ -2509,10 +2509,6 @@ QString HtmlGenerator::generateObsoleteMembersFile(const Sections &sections, Cod
     Aggregate *aggregate = sections.aggregate();
     QString title = "Obsolete Members for " + aggregate->name();
     QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
-    QString link;
-    if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
-        link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
-    link += fileName;
 
     beginSubPage(aggregate, fileName);
     generateHeader(title, aggregate, marker);
@@ -2561,10 +2557,6 @@ QString HtmlGenerator::generateObsoleteQmlMembersFile(const Sections &sections, 
     Aggregate *aggregate = sections.aggregate();
     QString title = "Obsolete Members for " + aggregate->name();
     QString fileName = fileBase(aggregate) + "-obsolete." + fileExtension();
-    QString link;
-    if (useOutputSubdirs() && !Generator::outputSubdir().isEmpty())
-        link = QString("../" + Generator::outputSubdir() + QLatin1Char('/'));
-    link += fileName;
 
     beginSubPage(aggregate, fileName);
     generateHeader(title, aggregate, marker);
@@ -2844,9 +2836,8 @@ void HtmlGenerator::generateCompactList(ListType listType, const Node *relative,
             } else if (listType == Obsolete) {
                 QString fileName = fileBase(it.value()) + "-obsolete." + fileExtension();
                 QString link;
-                if (useOutputSubdirs()) {
-                    link = QString("../" + it.value()->outputSubdirectory() + QLatin1Char('/'));
-                }
+                if (useOutputSubdirs())
+                    link = "../%1/"_L1.arg(it.value()->tree()->physicalModuleName());
                 link += fileName;
                 out() << "<a href=\"" << link << "\">";
             }

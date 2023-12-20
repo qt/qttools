@@ -567,8 +567,6 @@ Node::Node(NodeType type, Aggregate *parent, QString name)
     if (m_parent)
         m_parent->addChild(this);
 
-    m_outSubDir = Generator::outputSubdir();
-
     setGenus(getGenus(type));
 }
 
@@ -1349,18 +1347,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
   If this is a QmlTypeNode, this function sets the C++ class node
   to \a cn. The C++ ClassNode is the C++ implementation of the QML
   type.
- */
-
-/*! \fn const QString &Node::outputSubdirectory() const
-  Returns the node's output subdirector, which is the subdirectory
-  of the output directory where the node's documentation file is
-  written.
- */
-
-/*! \fn void Node::setOutputSubdirectory(const QString &t)
-  Sets the node's output subdirectory to \a t. This is the subdirector
-  of the output directory where the node's documentation file will be
-  written.
  */
 
 /*! \fn NodeType Node::goal(const QString &t)

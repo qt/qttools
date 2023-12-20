@@ -10,6 +10,8 @@
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 
+using namespace Qt::Literals::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 const QRegularExpression XmlGenerator::m_funcLeftParen(QStringLiteral("^\\S+(\\(.*\\))$"));
@@ -355,20 +357,13 @@ QString XmlGenerator::linkForNode(const Node *node, const Node *relative)
     }
 
     /*
-      If the output is going to subdirectories, then if the
-      two nodes will be output to different directories, then
-      the link must go up to the parent directory and then
-      back down into the other subdirectory.
+      If the output is going to subdirectories, the
+      two nodes have different output directories if 'node'
+      was read from index.
      */
     if (relative && (node != relative)) {
-        if (useOutputSubdirs() && !node->isExternalPage()
-            && node->outputSubdirectory() != relative->outputSubdirectory()) {
-            if (link.startsWith(QString(node->outputSubdirectory() + QLatin1Char('/')))) {
-                link.prepend(QString("../"));
-            } else {
-                link.prepend(QString("../" + node->outputSubdirectory() + QLatin1Char('/')));
-            }
-        }
+        if (useOutputSubdirs() && !node->isExternalPage() && node->isIndexNode())
+            link.prepend("../%1/"_L1.arg(node->tree()->physicalModuleName()));
     }
     return link;
 }

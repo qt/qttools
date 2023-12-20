@@ -594,7 +594,6 @@ void QDocIndexFiles::readIndexSection(QXmlStreamReader &reader, Node *current,
         Doc doc(location, location, QString(), emptySet, emptySet); // placeholder
         node->setDoc(doc);
         node->setIndexNodeFlag(); // Important: This node came from an index file.
-        node->setOutputSubdirectory(m_project.toLower());
         QString briefAttr = attributes.value(QLatin1String("brief")).toString();
         if (!briefAttr.isEmpty()) {
             node->setReconstitutedBrief(briefAttr);

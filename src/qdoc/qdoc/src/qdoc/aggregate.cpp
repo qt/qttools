@@ -466,7 +466,6 @@ void Aggregate::addChild(Node *child)
 {
     m_children.append(child);
     child->setParent(this);
-    child->setOutputSubdirectory(this->outputSubdirectory());
     child->setUrl(QString());
     child->setIndexNodeFlag(isIndexNode());
 
@@ -506,16 +505,6 @@ void Aggregate::adoptChild(Node *child)
                 adoptChild(n);
         }
     }
-}
-
-/*!
-  Recursively sets the output subdirectory for children
- */
-void Aggregate::setOutputSubdirectory(const QString &t)
-{
-    Node::setOutputSubdirectory(t);
-    for (auto *node : std::as_const(m_children))
-        node->setOutputSubdirectory(t);
 }
 
 /*!
