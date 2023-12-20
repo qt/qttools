@@ -148,9 +148,9 @@ private:
     // interface modes.
     class Position {
     public:
-        Position(const QDockWidget *dockWidget);
-        Position(const QMdiSubWindow *mdiSubWindow, const QPoint &mdiAreaOffset);
-        Position(const QWidget *topLevelWindow, const QPoint &desktopTopLeft);
+        explicit Position(const QDockWidget *dockWidget);
+        explicit Position(const QMdiSubWindow *mdiSubWindow);
+        explicit Position(const QWidget *topLevelWindow);
 
         void applyTo(QMdiSubWindow *mdiSubWindow, const QPoint &mdiAreaOffset) const;
         void applyTo(QWidget *topLevelWindow, const QPoint &desktopTopLeft) const;
