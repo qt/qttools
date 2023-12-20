@@ -35,6 +35,37 @@ function(filter_nonexistent_files out_var)
     set("${out_var}" "${existing_sources}" PARENT_SCOPE)
 endfunction()
 
+# Remove ui_foo.h for each foo.ui file found in the sources.
+#    filter_generated_ui_headers(existing_files .../src/foo.ui .../target_autogen/include/ui_foo.h)
+#    -> .../src/foo.ui
+function(filter_generated_ui_headers out_var)
+    set(ui_file_paths ${ARGN})
+    list(FILTER ui_file_paths INCLUDE REGEX "/[^/]+\\.ui$")
+
+    set(filter_regex "")
+    foreach(file_path IN LISTS ui_file_paths)
+        get_filename_component(file_name "${file_path}" NAME_WLE)
+        if(NOT "${filter_regex}" STREQUAL "")
+            string(APPEND filter_regex "|")
+        endif()
+        string(APPEND filter_regex "(/ui_${file_name}\\.h$)")
+    endforeach()
+
+    set(result ${ARGN})
+    if(NOT "${filter_regex}" STREQUAL "")
+        list(FILTER result EXCLUDE REGEX ${filter_regex})
+    endif()
+
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
+function(prepare_json_sources out_var)
+    filter_nonexistent_files(sources ${ARGN})
+    filter_generated_ui_headers(sources ${sources})
+    list_to_json_array("${sources}" result)
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
 get_filename_component(project_root "${lupdate_project_file}" DIRECTORY)
 
 # Make relative paths absolute to the project root
@@ -61,8 +92,7 @@ foreach(path_var IN LISTS path_variables)
     endforeach()
 endforeach()
 
-filter_nonexistent_files(existing_sources ${absolute_sources})
-list_to_json_array("${existing_sources}" json_sources)
+prepare_json_sources(json_sources ${absolute_sources})
 list_to_json_array("${absolute_include_paths}" json_include_paths)
 list_to_json_array("${absolute_translations}" json_translations)
 
@@ -74,8 +104,7 @@ set(content "{
   \"subProjects\": [
 ")
 foreach(i RANGE 1 ${lupdate_subproject_count})
-    filter_nonexistent_files(existing_sources ${absolute_subproject${i}_sources})
-    list_to_json_array("${existing_sources}" json_sources)
+    prepare_json_sources(json_sources ${absolute_subproject${i}_sources})
     list_to_json_array("${absolute_subproject${i}_include_paths}" json_include_paths)
     list_to_json_array("${absolute_subproject${i}_excluded}" json_sources_exclusions)
     string(APPEND content "    {
