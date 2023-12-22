@@ -41,7 +41,7 @@
     \class ComparesStronglyWithThreeClasses
     \inmodule TestQDoc
 
-    \compareswith strong Foo Bar Baz
+    \compareswith strong Foo {Bar Bar Jinks} Baz
     \endcompareswith
 */
 

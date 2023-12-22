@@ -214,6 +214,25 @@
     considered further details that apply to all types subject
     to the comparison category argument.
 
+    Types that have one or more space in their name, such as
+    \c{unsigned long}, should be enclosed in braces.
+
+    For example:
+
+    \badcode *
+    /\1!
+        ...
+        \compareswith strong int long {unsigned long} {unsigned int} char
+        ...
+        \endcompareswith
+        ...
+    \1/
+    \endcode
+
+    Argument enclosed in braces have their leading and trailing whitespaces
+    removed.
+    For example, \c{unsigned long} and \c{ unsigned long } are equivalent.
+
     The comparison category argument must be one of the following:
     \include qdoc-manual-contextcmds.qdoc comparison-categories
 

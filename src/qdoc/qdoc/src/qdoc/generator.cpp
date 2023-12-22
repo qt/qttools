@@ -1517,7 +1517,7 @@ bool Generator::generateComparisonList(const Node *node)
                          << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD)
                          << " with "_L1;
 
-        const QStringList types{description.firstAtom()->string().split(' '_L1)};
+        const QStringList types{description.firstAtom()->string().split(';'_L1)};
         for (const auto &name : types)
             relationshipText << Atom(Atom::AutoLink, name)
                              << Utilities::separator(types.indexOf(name), types.size());

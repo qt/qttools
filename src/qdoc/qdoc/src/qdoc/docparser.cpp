@@ -2686,10 +2686,84 @@ bool DocParser::isQuote(const Atom *atom)
 */
 static void processComparesWithCommand(DocPrivate *priv, const Location &location)
 {
+    static auto take_while = [](QStringView input, auto predicate) {
+        QStringView::size_type end{0};
+
+        while (end < input.size() && std::invoke(predicate, input[end]))
+            ++end;
+
+        return std::make_tuple(input.sliced(0, end), input.sliced(end));
+    };
+
+    static auto peek = [](QStringView input, QChar c) {
+        return !input.empty() && input.first() == c;
+    };
+
+    static auto skip_one = [](QStringView input) {
+        if (input.empty()) return std::make_tuple(QStringView{}, input);
+        else return std::make_tuple(input.sliced(0, 1), input.sliced(1));
+    };
+
+    static auto enclosed = [](QStringView input, QChar open, QChar close) {
+        if (!peek(input, open)) return std::make_tuple(QStringView{}, input);
+
+        auto [opened, without_open] = skip_one(input);
+        auto [parsed, remaining] = take_while(without_open, [close](QChar c){ return c != close; });
+
+        if (remaining.empty()) return std::make_tuple(QStringView{}, input);
+
+        auto [closed, without_close] = skip_one(remaining);
+
+        return std::make_tuple(parsed.trimmed(), without_close);
+    };
+
+    static auto one_of = [](auto first, auto second) {
+        return [first, second](QStringView input) {
+            auto [parsed, remaining] = std::invoke(first, input);
+
+            if (parsed.empty()) return std::invoke(second, input);
+            else return std::make_tuple(parsed, remaining);
+        };
+    };
+
+    static auto collect = [](QStringView input, auto parser) {
+        QStringList collected{};
+
+        while (true) {
+          auto [parsed, remaining] = std::invoke(parser, input);
+
+          if (parsed.empty()) break;
+          collected.append(parsed.toString());
+
+          input = remaining;
+        };
+
+        return collected;
+    };
+
+    static auto spaces = [](QStringView input) {
+        return take_while(input, [](QChar c){ return c.isSpace(); });
+    };
+
+    static auto word = [](QStringView input) {
+        return take_while(input, [](QChar c){ return !c.isSpace(); });
+    };
+
+    static auto parse_argument = [](QStringView input) {
+        auto [_, without_spaces] = spaces(input);
+
+        return one_of(
+            [](QStringView input){ return enclosed(input, '{', '}'); },
+            word
+        )(without_spaces);
+    };
+
     const QString cmd{DocParser::cmdName(CMD_COMPARESWITH)};
     Text text = priv->m_text.splitAtFirst(Atom::ComparesLeft);
+
     auto *atom = text.firstAtom();
-    QStringList segments{atom->string().split(QLatin1Char(' '), Qt::SkipEmptyParts)};
+    QStringList segments = collect(atom->string(), parse_argument);
+
     QString categoryString;
     if (!segments.isEmpty())
         categoryString = segments.takeFirst();
@@ -2709,7 +2783,7 @@ static void processComparesWithCommand(DocPrivate *priv, const Location &locatio
 
     // Store cleaned-up type names back into the atom
     segments.removeDuplicates();
-    atom->setString(segments.join(QLatin1Char(' ')));
+    atom->setString(segments.join(QLatin1Char(';')));
 
     // Add an entry to meta-command map for error handling in CppCodeParser
     priv->m_metaCommandMap[cmd].append(ArgPair(categoryString, atom->string()));
