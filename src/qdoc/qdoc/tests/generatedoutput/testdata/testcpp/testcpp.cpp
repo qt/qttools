@@ -151,7 +151,7 @@ void Test::anotherObsoleteMember()
 \endif
     \ingroup testgroup
 */
-void Test::someFunctionDefaultArg(int i, bool b = false)
+void Test::someFunctionDefaultArg(int i, bool b = false) const
 {
     return;
 }

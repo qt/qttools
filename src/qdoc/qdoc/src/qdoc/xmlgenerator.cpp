@@ -14,7 +14,7 @@ using namespace Qt::Literals::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
-const QRegularExpression XmlGenerator::m_funcLeftParen(QStringLiteral("^\\S+(\\(.*\\))$"));
+const QRegularExpression XmlGenerator::m_funcLeftParen(QStringLiteral("^\\S+(\\(.*\\))"));
 
 XmlGenerator::XmlGenerator(FileResolver& file_resolver) : Generator(file_resolver) {}
 

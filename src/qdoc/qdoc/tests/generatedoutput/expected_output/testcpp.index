@@ -53,7 +53,7 @@
                     <parameter type="int" name="" default=""/>
                     <parameter type="int" name="v" default="0"/>
                 </function>
-                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void someFunctionDefaultArg(int i, bool b)" groups="testgroup">
+                <function name="someFunctionDefaultArg" fullname="TestQDoc::Test::someFunctionDefaultArg" href="testqdoc-test.html#someFunctionDefaultArg" threadsafety="non-reentrant" status="active" access="public" location="testcpp.h" documented="true" meta="plain" const="true" type="void" signature="void someFunctionDefaultArg(int i, bool b) const" groups="testgroup">
                     <parameter type="int" name="i" default=""/>
                     <parameter type="bool" name="b" default="false"/>
                 </function>

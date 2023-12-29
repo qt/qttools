@@ -13,7 +13,7 @@
 <db:para>These functions are not <db:link xlink:href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command">reentrant</db:link>:</db:para>
 <db:itemizedlist>
 <db:listitem>
-<db:para><db:link xlink:href="testqdoc-test.xml#someFunctionDefaultArg">someFunctionDefaultArg(int i, bool b)</db:link></db:para>
+<db:para><db:link xlink:href="testqdoc-test.xml#someFunctionDefaultArg">someFunctionDefaultArg(int i, bool b) const</db:link></db:para>
 </db:listitem>
 </db:itemizedlist>
 </db:note>
@@ -127,7 +127,7 @@
 <db:para>Function that takes a parameter <db:code its:translate="no" role="parameter">v</db:code>. Also returns the value of <db:code its:translate="no" role="parameter">v</db:code>.</db:para>
 </db:section>
 <db:section xml:id="someFunctionDefaultArg">
-<db:title its:translate="no">void Test::someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false)</db:title>
+<db:title its:translate="no">void Test::someFunctionDefaultArg(int <db:emphasis>i</db:emphasis>, bool <db:emphasis>b</db:emphasis> = false) const</db:title>
 <db:para>Function that takes a parameter <db:code its:translate="no" role="parameter">i</db:code> and <db:code its:translate="no" role="parameter">b</db:code>.</db:para>
 <db:warning>
 <db:para>This function is not <db:link xlink:href="https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command">reentrant</db:link>.</db:para>

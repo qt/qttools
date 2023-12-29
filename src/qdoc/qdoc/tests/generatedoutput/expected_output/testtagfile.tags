@@ -241,19 +241,19 @@
             <anchor>overload-1</anchor>
             <arglist>(bool b)</arglist>
         </member>
-        <member kind="function" protection="public" virtualness="non" static="no">
-            <type>void</type>
-            <name>someFunctionDefaultArg</name>
-            <anchorfile>testqdoc-test.html</anchorfile>
-            <anchor>someFunctionDefaultArg</anchor>
-            <arglist>(int i, bool b)</arglist>
-        </member>
         <member kind="function" protection="public" virtualness="virtual" static="no">
             <type>virtual void</type>
             <name>virtualFun</name>
             <anchorfile>testqdoc-test.html</anchorfile>
             <anchor>virtualFun</anchor>
             <arglist>()</arglist>
+        </member>
+        <member kind="function" protection="public" virtualness="non" static="no">
+            <type>void</type>
+            <name>someFunctionDefaultArg</name>
+            <anchorfile>testqdoc-test.html</anchorfile>
+            <anchor>someFunctionDefaultArg</anchor>
+            <arglist>(int i, bool b) const const</arglist>
         </member>
         <member kind="typedef" type="">
             <name>SomeType</name>
