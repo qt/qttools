@@ -61,11 +61,14 @@ void DocBookGenerator::writeXmlId(const Node *node)
     if (!node)
         return;
 
-    // Specifically for nodes, do not use the same code path, as refForNode
-    // calls registerRef in all cases. Calling registerRef a second time adds
-    // a character to "disambiguate" the two IDs (the one returned by
-    // refForNode, then the one that is written as xml:id).
-    m_writer->writeAttribute("xml:id", Generator::cleanRef(refForNode(node), true));
+    // Specifically for nodes, do not use the same code path as for QString
+    // inputs, as refForNode calls registerRef in all cases. Calling
+    // registerRef a second time adds a character to "disambiguate" the two IDs
+    // (the one returned by refForNode, then the one that is written as
+    // xml:id).
+    QString id = Generator::cleanRef(refForNode(node), true);
+    if (!id.isEmpty())
+        m_writer->writeAttribute("xml:id", id);
 }
 
 void DocBookGenerator::startSectionBegin(const QString &id)
