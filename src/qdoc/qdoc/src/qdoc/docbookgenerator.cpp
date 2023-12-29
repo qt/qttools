@@ -2472,7 +2472,6 @@ void DocBookGenerator::generateGroupReferenceText(const Node* node)
 
     const QStringList &groups_names{aggregate->groupNames()};
     if (!groups_names.empty()) {
-        m_writer->writeStartElement(dbNamespace, "para");
         m_writer->writeCharacters(aggregate->name() + " is part of ");
         m_writer->writeStartElement(dbNamespace, "simplelist");
 
@@ -2489,7 +2488,6 @@ void DocBookGenerator::generateGroupReferenceText(const Node* node)
         }
 
         m_writer->writeEndElement(); // simplelist
-        m_writer->writeEndElement(); // para
         newLine();
     }
 }

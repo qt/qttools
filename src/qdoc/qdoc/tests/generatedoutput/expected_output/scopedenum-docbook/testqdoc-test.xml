@@ -54,7 +54,7 @@
 <db:varlistentry>
 <db:term>Group</db:term>
 <db:listitem>
-<db:para><db:para>Test is part of <db:simplelist><db:member>testgroup</db:member><db:member><db:link xlink:href="cpptypes.xml">Test C++ Types</db:link></db:member></db:simplelist></db:para>
+<db:para>Test is part of <db:simplelist><db:member>testgroup</db:member><db:member><db:link xlink:href="cpptypes.xml">Test C++ Types</db:link></db:member></db:simplelist>
 </db:para>
 </db:listitem>
 </db:varlistentry>
