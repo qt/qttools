@@ -1366,7 +1366,7 @@ void DocBookGenerator::generateAnnotatedList(const Node *relative, const NodeLis
 
     // From WebXMLGenerator::generateAnnotatedList.
     if (!nodeList.isEmpty()) {
-        m_writer->writeStartElement(dbNamespace, "variablelist");
+        m_writer->writeStartElement(dbNamespace, noItemsHaveTitle ? "itemizedlist" : "variablelist");
         m_writer->writeAttribute("role", selector);
         newLine();
 
