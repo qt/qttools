@@ -92,6 +92,7 @@ int generateCollectionFile(const QByteArray &data, const QString &basePath, cons
     if (!config.filesToRegister().isEmpty()) {
         if (Q_UNLIKELY(qEnvironmentVariableIsSet("SOURCE_DATE_EPOCH"))) {
             QDateTime dt;
+            dt.setTimeZone(QTimeZone::UTC);
             dt.setSecsSinceEpoch(qEnvironmentVariableIntValue("SOURCE_DATE_EPOCH"));
             CollectionConfiguration::updateLastRegisterTime(helpEngine, dt);
         } else {

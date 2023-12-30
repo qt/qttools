@@ -2170,8 +2170,10 @@ bool QHelpCollectionHandler::registerIndexTable(const QHelpDBReader::IndexTable 
         const QString sourceDateEpochStr = qEnvironmentVariable("SOURCE_DATE_EPOCH");
         bool ok;
         const qlonglong sourceDateEpoch = sourceDateEpochStr.toLongLong(&ok);
-        if (ok && sourceDateEpoch < lastModified.toSecsSinceEpoch())
+        if (ok && sourceDateEpoch < lastModified.toSecsSinceEpoch()) {
+            lastModified.setTimeZone(QTimeZone::UTC);
             lastModified.setSecsSinceEpoch(sourceDateEpoch);
+        }
     }
     m_query->addBindValue(lastModified.toString(Qt::ISODate));
     if (!m_query->exec())
