@@ -650,8 +650,8 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                         p2 = getBracketedArgument();
 
                     p1 = getArgument();
-                    if (p2.isEmpty()) appendAtom(Atom(Atom::Link, p1));
-                    else appendAtom(LinkAtom(p1, p2));
+
+                    appendAtom(LinkAtom(p1, p2));
 
                     if (isLeftBraceAhead()) {
                         currentLinkAtom = m_private->m_text.lastAtom();
