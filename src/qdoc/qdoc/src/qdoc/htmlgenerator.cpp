@@ -714,17 +714,11 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
     } break;
     case Atom::ExampleFileLink: {
         QString link = linkForExampleFile(atom->string());
-        if (link.isEmpty() && !noLinkErrors())
-            relative->doc().location().warning(
-                    QStringLiteral("Can't link to '%1'").arg(atom->string()));
         beginLink(link);
         skipAhead = 1;
     } break;
     case Atom::ExampleImageLink: {
         QString link = atom->string();
-        if (link.isEmpty() && !noLinkErrors())
-            relative->doc().location().warning(
-                    QStringLiteral("Can't link to '%1'").arg(atom->string()));
         link = "images/used-in-examples/" + link;
         beginLink(link);
         skipAhead = 1;
