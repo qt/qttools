@@ -705,7 +705,9 @@ qsizetype HtmlGenerator::generateAtom(const Atom *atom, const Node *relative, Co
         const Node *node = nullptr;
         QString link = getLink(atom, relative, &node);
         if (link.isEmpty() && (node != relative) && !noLinkErrors()) {
-            relative->doc().location().warning(
+            Location location = atom->isLinkAtom() ? static_cast<const LinkAtom*>(atom)->location
+                                                   : relative->doc().location();
+            location.warning(
                     QStringLiteral("Can't link to '%1'").arg(atom->string()));
         }
         beginLink(link, nullptr, relative);

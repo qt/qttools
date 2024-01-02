@@ -349,8 +349,9 @@ QString Atom::linkText() const
   words separated by spaces. The constructor splits \a p2 on
   the space character.
  */
-LinkAtom::LinkAtom(const QString &p1, const QString &p2)
+LinkAtom::LinkAtom(const QString &p1, const QString &p2, Location location)
     : Atom(Atom::Link, p1),
+      location(location),
       m_resolved(false),
       m_genus(Node::DontCare),
       m_domain(nullptr),
@@ -403,6 +404,7 @@ void LinkAtom::resolveSquareBracketParams()
  */
 LinkAtom::LinkAtom(const LinkAtom &t)
     : Atom(Link, t.string()),
+      location(t.location),
       m_resolved(t.m_resolved),
       m_genus(t.m_genus),
       m_domain(t.m_domain),
@@ -418,6 +420,7 @@ LinkAtom::LinkAtom(const LinkAtom &t)
  */
 LinkAtom::LinkAtom(Atom *previous, const LinkAtom &t)
     : Atom(previous, Link, t.string()),
+      location(t.location),
       m_resolved(t.m_resolved),
       m_genus(t.m_genus),
       m_domain(t.m_domain),

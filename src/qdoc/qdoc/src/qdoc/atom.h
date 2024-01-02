@@ -165,7 +165,7 @@ protected:
 class LinkAtom : public Atom
 {
 public:
-    LinkAtom(const QString &p1, const QString &p2);
+    LinkAtom(const QString &p1, const QString &p2, Location location = Location());
     LinkAtom(const LinkAtom &t);
     LinkAtom(Atom *previous, const LinkAtom &t);
     ~LinkAtom() override = default;
@@ -182,6 +182,9 @@ public:
         return m_domain;
     }
     void resolveSquareBracketParams() override;
+
+public:
+    Location location;
 
 protected:
     bool m_resolved {};
