@@ -65,6 +65,7 @@ bool ToolBarEventFilter::eventFilter (QObject *watched, QEvent *event)
     if (watched != m_toolBar)
         return QObject::eventFilter (watched, event);
 
+    bool handled = false;
     switch (event->type()) {
     case QEvent::ChildAdded: {
         // Children should not interact with the mouse
@@ -76,24 +77,32 @@ bool ToolBarEventFilter::eventFilter (QObject *watched, QEvent *event)
     }
         break;
     case QEvent::ContextMenu:
-        return handleContextMenuEvent(static_cast<QContextMenuEvent*>(event));
+        handled = handleContextMenuEvent(static_cast<QContextMenuEvent*>(event));
+        break;
     case QEvent::DragEnter:
     case QEvent::DragMove:
-        return handleDragEnterMoveEvent(static_cast<QDragMoveEvent *>(event));
+        handled = handleDragEnterMoveEvent(static_cast<QDragMoveEvent *>(event));
+        break;
     case QEvent::DragLeave:
-        return handleDragLeaveEvent(static_cast<QDragLeaveEvent *>(event));
+        handled = handleDragLeaveEvent(static_cast<QDragLeaveEvent *>(event));
+        break;
     case QEvent::Drop:
-        return handleDropEvent(static_cast<QDropEvent *>(event));
+        handled = handleDropEvent(static_cast<QDropEvent *>(event));
+        break;
     case QEvent::MouseButtonPress:
-        return handleMousePressEvent(static_cast<QMouseEvent*>(event));
+        handled = handleMousePressEvent(static_cast<QMouseEvent*>(event));
+        break;
     case QEvent::MouseButtonRelease:
-        return handleMouseReleaseEvent(static_cast<QMouseEvent*>(event));
+        handled = handleMouseReleaseEvent(static_cast<QMouseEvent*>(event));
+        break;
     case QEvent::MouseMove:
-        return handleMouseMoveEvent(static_cast<QMouseEvent*>(event));
+        handled = handleMouseMoveEvent(static_cast<QMouseEvent*>(event));
+        break;
     default:
         break;
     }
-    return QObject::eventFilter (watched, event);
+
+    return handled || QObject::eventFilter(watched, event);
 }
 
 ActionList ToolBarEventFilter::contextMenuActions(const QPoint &globalPos)
@@ -250,9 +259,13 @@ bool ToolBarEventFilter::handleMousePressEvent(QMouseEvent *event)
         }
         core->propertyEditor()->setObject(m_toolBar);
     }
-    m_startPosition = m_toolBar->mapFromGlobal(event->globalPosition().toPoint());
-    event->accept();
-    return true;
+    const auto pos = m_toolBar->mapFromGlobal(event->globalPosition().toPoint());
+    if (actionIndexAt(m_toolBar, pos, m_toolBar->orientation()) != -1) {
+        m_startPosition = pos;
+        event->accept();
+        return true;
+    }
+    return false;
 }
 
 bool ToolBarEventFilter::handleMouseReleaseEvent(QMouseEvent *event)
@@ -272,8 +285,8 @@ bool ToolBarEventFilter::handleMouseMoveEvent(QMouseEvent *event)
         return false;
 
     const QPoint pos = m_toolBar->mapFromGlobal(event->globalPosition().toPoint());
-    if ((pos - m_startPosition).manhattanLength() > qApp->startDragDistance()) {
-        startDrag(m_startPosition, event->modifiers());
+    if ((pos - m_startPosition).manhattanLength() > QApplication::startDragDistance()
+         && startDrag(m_startPosition, event->modifiers())) {
         m_startPosition = QPoint();
         event->accept();
         return true;
@@ -355,11 +368,11 @@ bool ToolBarEventFilter::handleDropEvent(QDropEvent *event)
     return true;
 }
 
-void ToolBarEventFilter::startDrag(const QPoint &pos, Qt::KeyboardModifiers modifiers)
+bool ToolBarEventFilter::startDrag(const QPoint &pos, Qt::KeyboardModifiers modifiers)
 {
     const int index = actionIndexAt(m_toolBar, pos, m_toolBar->orientation());
     if (index == - 1)
-        return;
+        return false;
 
     const ActionList actions = m_toolBar->actions();
     QAction *action = actions.at(index);
@@ -390,6 +403,7 @@ void ToolBarEventFilter::startDrag(const QPoint &pos, Qt::KeyboardModifiers modi
             fw->commandHistory()->push(cmd);
         }
     }
+    return true;
 }
 
 QAction *ToolBarEventFilter::actionAt(const QToolBar *tb, const QPoint &pos)
