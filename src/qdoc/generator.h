@@ -112,9 +112,6 @@ protected:
     virtual void generateInheritedBy(const ClassNode *classe, CodeMarker *marker);
     virtual void generateInherits(const ClassNode *classe, CodeMarker *marker);
     virtual void generateDocumentation(Node *node);
-    virtual void generateMaintainerList(const Aggregate *node, CodeMarker *marker);
-    virtual void generateQmlInheritedBy(const QmlTypeNode *qcn, CodeMarker *marker);
-    virtual void generateQmlInherits(QmlTypeNode *, CodeMarker *) {}
     virtual bool generateQmlText(const Text &text, const Node *relative, CodeMarker *marker,
                                  const QString &qmlName);
     virtual bool generateText(const Text &text, const Node *relative, CodeMarker *marker);

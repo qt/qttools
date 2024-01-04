@@ -128,7 +128,6 @@ private:
     void generateQmlSummary(const NodeVector &members, const Node *relative, CodeMarker *marker);
     void generateQmlItem(const Node *node, const Node *relative, CodeMarker *marker, bool summary);
     void generateDetailedQmlMember(Node *node, const Aggregate *relative, CodeMarker *marker);
-    void generateQmlInherits(QmlTypeNode *qcn, CodeMarker *marker) override;
     void generateQmlInstantiates(QmlTypeNode *qcn, CodeMarker *marker);
     void generateInstantiatedBy(ClassNode *cn, CodeMarker *marker);
 

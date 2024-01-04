@@ -147,8 +147,8 @@ int main(int argc, char *argv[])
         std::cerr << qPrintable(tr("%1 packages found.").arg(packages.size())) << std::endl;
 
     // Prepare the output text stream
-    QTextStream out(stdout);
     QFile outFile(parser.value(outputOption));
+    QTextStream out(stdout);
     if (!outFile.fileName().isEmpty()) {
         if (!outFile.open(QFile::WriteOnly)) {
             std::cerr << qPrintable(tr("Cannot open %1 for writing.").arg(

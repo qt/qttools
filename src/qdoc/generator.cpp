@@ -1191,45 +1191,6 @@ void Generator::generateDocumentation(Node *node)
 }
 
 /*!
-  Generate a list of maintainers in the output
- */
-void Generator::generateMaintainerList(const Aggregate *node, CodeMarker *marker)
-{
-    QStringList sl = getMetadataElements(node, "maintainer");
-
-    if (!sl.isEmpty()) {
-        Text text;
-        text << Atom::ParaLeft << Atom(Atom::FormattingLeft, ATOM_FORMATTING_BOLD)
-             << "Maintained by: " << Atom(Atom::FormattingRight, ATOM_FORMATTING_BOLD);
-
-        for (int i = 0; i < sl.size(); ++i)
-            text << sl.at(i) << separator(i, sl.size());
-
-        text << Atom::ParaRight;
-        generateText(text, node, marker);
-    }
-}
-
-/*!
-  Output the "Inherit by" list for the QML element,
-  if it is inherited by any other elements.
- */
-void Generator::generateQmlInheritedBy(const QmlTypeNode *qcn, CodeMarker *marker)
-{
-    if (qcn) {
-        NodeList subs;
-        QmlTypeNode::subclasses(qcn, subs);
-        if (!subs.isEmpty()) {
-            Text text;
-            text << Atom::ParaLeft << "Inherited by ";
-            appendSortedQmlNames(text, qcn, subs);
-            text << Atom::ParaRight;
-            generateText(text, qcn, marker);
-        }
-    }
-}
-
-/*!
   Extract sections of markup text surrounded by \e qmltext
   and \e endqmltext and output them.
  */

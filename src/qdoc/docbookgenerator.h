@@ -127,7 +127,6 @@ private:
     void generateBrief(const Node *node);
     void generateAlsoList(const Node *node, CodeMarker *marker = nullptr) override;
     void generateSignatureList(const NodeList &nodes);
-    void generateMaintainerList(const Aggregate *node, CodeMarker *marker = nullptr) override;
     void generateReimplementsClause(const FunctionNode *fn);
     void generateClassHierarchy(const Node *relative, NodeMap &classMap);
     void generateFunctionIndex(const Node *relative);
