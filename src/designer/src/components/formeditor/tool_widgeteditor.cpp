@@ -50,6 +50,7 @@ QDesignerFormWindowInterface *WidgetEditorTool::formWindow() const
     return m_formWindow;
 }
 
+// separators in QMainWindow are no longer widgets
 bool WidgetEditorTool::mainWindowSeparatorEvent(QWidget *widget, QEvent *event)
 {
     QMainWindow *mw = qobject_cast<QMainWindow*>(widget);
@@ -84,11 +85,14 @@ bool WidgetEditorTool::mainWindowSeparatorEvent(QWidget *widget, QEvent *event)
     return false;
 }
 
+bool WidgetEditorTool::isPassiveInteractor(QWidget *widget, QEvent *event)
+{
+    auto *widgetFactory = core()->widgetFactory();
+    return widgetFactory->isPassiveInteractor(widget) || mainWindowSeparatorEvent(widget, event);
+}
+
 bool WidgetEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, QEvent *event)
 {
-    const bool passive = core()->widgetFactory()->isPassiveInteractor(widget) != 0
-                    || mainWindowSeparatorEvent(widget, event); // separators in QMainWindow
-                                                                // are no longer widgets
     switch (event->type()) {
     case QEvent::Resize:
     case QEvent::Move:
@@ -97,35 +101,43 @@ bool WidgetEditorTool::handleEvent(QWidget *widget, QWidget *managedWidget, QEve
 
     case QEvent::FocusOut:
     case QEvent::FocusIn: // Popup cancelled over a form widget: Reset its focus frame
-        return !(passive || widget == m_formWindow || widget == m_formWindow->mainContainer());
+        return widget != m_formWindow && widget != m_formWindow->mainContainer()
+            && !isPassiveInteractor(widget, event);
 
     case QEvent::Wheel: // Prevent spinboxes and combos from reacting
         if (widget == m_formWindow->formContainer() || widget == m_formWindow
             || widget == m_formWindow->mainContainer()) { // Allow scrolling the form with wheel.
             return false;
         }
-        return !passive;
+        return !isPassiveInteractor(widget, event);
 
     case QEvent::KeyPress:
-        return !passive && handleKeyPressEvent(widget, managedWidget, static_cast<QKeyEvent*>(event));
+        return !isPassiveInteractor(widget, event)
+            && handleKeyPressEvent(widget, managedWidget, static_cast<QKeyEvent*>(event));
 
     case QEvent::KeyRelease:
-        return !passive && handleKeyReleaseEvent(widget, managedWidget, static_cast<QKeyEvent*>(event));
+        return !isPassiveInteractor(widget, event)
+            && handleKeyReleaseEvent(widget, managedWidget, static_cast<QKeyEvent*>(event));
 
     case QEvent::MouseMove:
-        return !passive && handleMouseMoveEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
+        return !isPassiveInteractor(widget, event)
+            && handleMouseMoveEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
 
     case QEvent::MouseButtonPress:
-        return !passive && handleMousePressEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
+        return !isPassiveInteractor(widget, event)
+            && handleMousePressEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
 
     case QEvent::MouseButtonRelease:
-        return !passive && handleMouseReleaseEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
+        return !isPassiveInteractor(widget, event)
+            && handleMouseReleaseEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
 
     case QEvent::MouseButtonDblClick:
-        return !passive && handleMouseButtonDblClickEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
+        return !isPassiveInteractor(widget, event)
+            && handleMouseButtonDblClickEvent(widget, managedWidget, static_cast<QMouseEvent*>(event));
 
     case QEvent::ContextMenu:
-        return !passive && handleContextMenu(widget, managedWidget, static_cast<QContextMenuEvent*>(event));
+        return !isPassiveInteractor(widget, event)
+            && handleContextMenu(widget, managedWidget, static_cast<QContextMenuEvent*>(event));
 
     case QEvent::DragEnter:
         return handleDragEnterMoveEvent(widget, managedWidget, static_cast<QDragEnterEvent *>(event), true);
