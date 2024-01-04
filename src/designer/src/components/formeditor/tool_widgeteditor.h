@@ -57,6 +57,7 @@ private:
     QAction *m_action;
 
     bool mainWindowSeparatorEvent(QWidget *widget, QEvent *event);
+    bool isPassiveInteractor(QWidget *widget, QEvent *event);
     QPointer<QMainWindow> m_separator_drag_mw;
     QPointer<QWidget> m_lastDropTarget;
     bool m_specialDockDrag;
