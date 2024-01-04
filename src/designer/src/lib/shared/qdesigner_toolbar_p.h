@@ -84,7 +84,7 @@ private:
     QDesignerFormWindowInterface *formWindow() const;
     void adjustDragIndicator(const QPoint &pos);
     void hideDragIndicator();
-    void startDrag(const QPoint &pos, Qt::KeyboardModifiers modifiers);
+    bool startDrag(const QPoint &pos, Qt::KeyboardModifiers modifiers);
     bool withinHandleArea(const QPoint &pos) const;
 
     QToolBar *m_toolBar;
