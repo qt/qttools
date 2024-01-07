@@ -1,0 +1,12 @@
+project = A minimal QDoc configuration
+
+locationinfo = false
+
+headers.fileextensions  = "*.h *.hpp"
+sources.fileextensions  = "*.cpp *.qml *.qdoc"
+
+headerdirs  = .
+sourcedirs  = .
+
+warninglimit = 0
+warninglimit.enabled = true

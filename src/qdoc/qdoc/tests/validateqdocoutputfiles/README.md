@@ -1,0 +1,64 @@
+<!--
+    Copyright (C) 2024 The Qt Company Ltd.
+    SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+-->
+
+# QDoc output test
+This is a test that validates the files QDoc generates. It is not a test for
+QDoc itself. The test calls the qdoc executable for each project in the
+`testdata` directory (see [Test project structure](# Test project structure),
+below), and then compares the output to that in the `expected` directory for
+the test project. Each test is identified in the test output by the name of the
+test project directory *and* the name of the .qdocconf-file.
+
+The test creates a new temporary directory for each test project. The
+comparison is done by running `git diff` on the content in this temporary
+directory (the output directory) and the contents in the test's `expected`
+directory. A non-zero exit code fails the test for that project, and the test
+includes the diff in its output if this happens.
+
+## How to add a new test
+1. Create a new directory in the `testdata` directory. The name of the new
+   directory should be descriptive of the test project.
+2. Create a `.qdocconf` file in the new directory. See
+   [The .qdocconf file](# The .qdocconf file) below for further details.
+3. Add the necessary files (.qdoc, .h/.cpp, .qml, etc) so that the project
+   can be built in a meaningful manner.
+4. Run QDoc on the project.
+5. Verify that the output looks correct.
+6. Copy the output into `[testdata/[new test directory]/expected`.
+7. Run the test executable and verify that the test output includes a **PASS**
+   line for the new test-case.
+8. Push your change upstream.
+
+## Test project structure
+The `testdata` directory is where the test looks for projects to test. Each
+project has its own directory, a `qdocconf` file, and an `expected`
+directory that contains the expected file output from QDoc.
+
+The project directory must contain a .qdocconf whose name matches that of the
+project directory, otherwise the project won't be picked up by the test.
+
+### The .qdocconf file
+The `.qdocconf` file contains the configuration necessary to build the
+QDoc project in the directory. Observe the following:
+- The name of the .qdocconf-file must be identical as that of the directory
+  that contains it. This means that for a project **foo**, it should go into
+  `testdata/foo` and the configuration file should be
+  `testdata/foo/foo.qdocconf`.
+- Any other `.qdocconf` file will not be picked up explicitly by the test.
+  This means that for a test project **foo** that resides in `testdata/foo`,
+  `testdata/foo/foo.qdocconf` will be treated as a test-case, while
+  `testdata/foo/bar.qdocconf` will not. However, `foo.qdocconf` may contain
+  `include(bar.qdocconf)`, and this will work as expected.
+- The `warninglimit` should be set to the number of warnings expected
+  from QDoc for that specific project, if any are to be expected at all.
+
+### The `expected` directory
+The `expected` directory contains the expected output from QDoc
+for the project. If QDoc generates an empty directory (for example, it
+always creates the `images/` directory for a project, whether
+the project contains any images or not), that directory isn't tracked
+in the `expected` directory, as **git** doesn't track directories, only
+files.
+

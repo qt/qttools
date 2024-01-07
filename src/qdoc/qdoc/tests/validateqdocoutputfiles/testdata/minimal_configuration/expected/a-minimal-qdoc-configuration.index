@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="A minimal QDoc configuration Reference Documentation" version="" project="A minimal QDoc configuration">
+    <namespace name="" status="active" access="public" module="a minimal qdoc configuration">
+        <page name="readme.html" href="readme.html" status="active" location="README.qdoc" documented="true" subtype="page" title="README" fulltitle="README" subtitle=""/>
+    </namespace>
+</INDEX>
