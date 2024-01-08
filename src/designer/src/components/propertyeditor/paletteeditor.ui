@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-<comment>
+ <comment>
 * Copyright (C) 2016 The Qt Company Ltd.
 * SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 </comment>
@@ -109,7 +110,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="GroupBox126">
+      <widget class="QGroupBox" name="previewGroupBox">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>

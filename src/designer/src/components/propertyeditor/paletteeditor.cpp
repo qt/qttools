@@ -20,6 +20,7 @@
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qstyle.h>
 
 #include <QtGui/qaction.h>
 #if QT_CONFIG(clipboard)
@@ -67,6 +68,7 @@ PaletteEditor::PaletteEditor(QDesignerFormEditorInterface *core, QWidget *parent
             this, &PaletteEditor::detailsRadioClicked);
 
     ui.paletteView->setModel(m_paletteModel);
+    ui.previewGroupBox->setTitle(tr("Preview (%1)").arg(style()->objectName()));
     updatePreviewPalette();
     updateStyledButton();
     ui.paletteView->setModel(m_paletteModel);
