@@ -73,8 +73,7 @@ void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_co
 
         // Doc constructor parses the comment.
         Doc doc(start_loc, end_loc, comment, commands, CppCodeParser::topic_commands);
-        const TopicList &topics = doc.topicsUsed();
-        if (topics.isEmpty()) {
+        if (doc.topicsUsed().isEmpty()) {
             doc.location().warning(QStringLiteral("This qdoc comment contains no topic command "
                                                   "(e.g., '\\%1', '\\%2').")
                                            .arg(COMMAND_MODULE, COMMAND_PAGE));
@@ -86,9 +85,8 @@ void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_co
 
         DocList docs;
         NodeList nodes;
-        QString topic = topics[0].m_topic;
 
-        cpp_code_parser.processTopicArgs(doc, topic, nodes, docs);
+        cpp_code_parser.processTopicArgs(doc, nodes, docs);
         cpp_code_parser.processMetaCommands(nodes, docs);
     }
 }

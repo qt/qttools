@@ -44,7 +44,7 @@ public:
 
     [[nodiscard]] bool hasTooManyTopics(const Doc &doc) const;
 
-    void processTopicArgs(const Doc &doc, const QString &topic, NodeList &nodes, DocList &docs);
+    void processTopicArgs(const Doc &doc, NodeList &nodes, DocList &docs);
 
     void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
                             Node *node);

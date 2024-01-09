@@ -1777,13 +1777,9 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
             continue;
 
         DocList docs;
-        QString topic;
         NodeList nodes;
-        const TopicList &topics = doc.topicsUsed();
-        if (!topics.isEmpty())
-            topic = topics[0].m_topic;
 
-        if (topic.isEmpty()) {
+        if (doc.topicsUsed().isEmpty()) {
             Node *n = nullptr;
             if (i + 1 < numTokens) {
                 // Try to find the next declaration.
@@ -1827,7 +1823,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                     m_namespaceScope << fromCXString(clang_getCursorSpelling(cur));
                 cur = clang_getCursorLexicalParent(cur);
             }
-            cpp_code_parser.processTopicArgs(doc, topic, nodes, docs);
+            cpp_code_parser.processTopicArgs(doc, nodes, docs);
         }
         cpp_code_parser.processMetaCommands(nodes, docs);
     }
