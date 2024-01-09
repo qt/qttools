@@ -83,10 +83,7 @@ void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_co
         if (cpp_code_parser.hasTooManyTopics(doc))
             continue;
 
-        DocList docs;
-        NodeList nodes;
-
-        cpp_code_parser.processTopicArgs(doc, nodes, docs);
+        auto [nodes, docs] = cpp_code_parser.processTopicArgs(doc);
         cpp_code_parser.processMetaCommands(nodes, docs);
     }
 }

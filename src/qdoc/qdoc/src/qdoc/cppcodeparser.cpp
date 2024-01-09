@@ -855,13 +855,16 @@ bool CppCodeParser::isQMLPropertyTopic(const QString &t)
     return (t == COMMAND_QMLPROPERTY || t == COMMAND_QMLATTACHEDPROPERTY);
 }
 
-void CppCodeParser::processTopicArgs(const Doc &doc, NodeList &nodes, DocList &docs)
+std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
 {
-    if (doc.topicsUsed().isEmpty()) return;
+    if (doc.topicsUsed().isEmpty()) return {};
 
     QDocDatabase* database = QDocDatabase::qdocDB();
 
     const QString topic = doc.topicsUsed().first().m_topic;
+
+    NodeList nodes;
+    DocList docs;
 
     if (isQMLPropertyTopic(topic)) {
         processQmlProperties(doc, nodes, docs);
@@ -921,6 +924,8 @@ void CppCodeParser::processTopicArgs(const Doc &doc, NodeList &nodes, DocList &d
                 scn->sort();
         }
     }
+
+    return std::make_pair(nodes, docs);
 }
 
 /*!

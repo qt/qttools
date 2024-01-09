@@ -1823,8 +1823,10 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                     m_namespaceScope << fromCXString(clang_getCursorSpelling(cur));
                 cur = clang_getCursorLexicalParent(cur);
             }
-            cpp_code_parser.processTopicArgs(doc, nodes, docs);
+
+            std::tie(nodes, docs) = cpp_code_parser.processTopicArgs(doc);
         }
+
         cpp_code_parser.processMetaCommands(nodes, docs);
     }
 
