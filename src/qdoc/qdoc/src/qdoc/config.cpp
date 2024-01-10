@@ -554,13 +554,12 @@ QString Config::getOutputDir(const QString &format) const
         t += QLatin1Char('/') + project.toLower();
     }
     if (m_configVars.value(format + Config::dot + "nosubdirs").asBool()) {
-        t = t.left(t.lastIndexOf('/'));
         QString singleOutputSubdir = m_configVars.value(format + Config::dot + "outputsubdir").asString();
         if (singleOutputSubdir.isEmpty())
             singleOutputSubdir = "html";
         t += QLatin1Char('/') + singleOutputSubdir;
     }
-    return t;
+    return QDir::cleanPath(t);
 }
 
 /*!

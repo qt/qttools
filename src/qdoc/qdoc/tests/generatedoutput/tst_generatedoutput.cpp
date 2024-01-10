@@ -77,8 +77,7 @@ private:
 
     void runQDocProcess(const QStringList &arguments);
     void compareLineByLine(const QStringList &expectedFiles);
-    void testAndCompare(const char *input, const char *outNames, const char *extraParams = nullptr,
-                        const char *outputSubDir = "html");
+    void testAndCompare(const char *input, const char *outNames, const char *extraParams = nullptr);
     void copyIndexFiles();
 };
 
@@ -164,10 +163,9 @@ void tst_generatedOutput::compareLineByLine(const QStringList &expectedFiles)
 }
 
 void tst_generatedOutput::testAndCompare(const char *input, const char *outNames,
-                                         const char *extraParams, const char *outputSubDir)
+                                         const char *extraParams)
 {
-    QStringList args { "-outputdir", m_outputDir->path() + "/" + outputSubDir,
-                       QFINDTESTDATA(input) };
+    QStringList args{ "-outputdir", m_outputDir->path() + "/", QFINDTESTDATA(input) };
     if (extraParams)
         args << QString(QLatin1String(extraParams)).split(QChar(' '));
 
@@ -512,20 +510,16 @@ void tst_generatedOutput::includeFromExampleDirs()
 void tst_generatedOutput::singleExec()
 {
     // Build both testcpp and crossmodule projects in single-exec mode
-    // Note: Last arg (nullptr) clears the default output subdirectory -
-    // This is because QDoc always appends a subdir based on the project
-    // name in single-exec mode.
     testAndCompare("testdata/singleexec/singleexec.qdocconf",
-                   "testcpp-module.html "
-                   "testqdoc-test.html "
-                   "testqdoc-test-members.html "
-                   "testqdoc.html "
-                   "crossmoduleref.html "
-                   "crossmodule/all-namespaces.html "
-                   "crossmodule/testtype.html "
-                   "crossmodule/testtype-members.html",
-                   "-single-exec",
-                   nullptr);
+                   "testcpp/testcpp-module.html "
+                   "testcpp/testqdoc-test.html "
+                   "testcpp/testqdoc-test-members.html "
+                   "testcpp/testqdoc.html "
+                   "testcpp/crossmoduleref.html "
+                   "crossmodule/crossmodule/all-namespaces.html "
+                   "crossmodule/crossmodule/testtype.html "
+                   "crossmodule/crossmodule/testtype-members.html",
+                   "-single-exec");
 }
 
 void tst_generatedOutput::preparePhase()
