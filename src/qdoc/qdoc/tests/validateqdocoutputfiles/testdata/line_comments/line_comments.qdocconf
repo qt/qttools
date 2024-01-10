@@ -1,0 +1,27 @@
+project = LineComment
+
+{headerdirs,sourcedirs,exampledirs} = .
+
+outputformats             = WebXML HTML DocBook
+WebXML.quotinginformation = true
+
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
+
+DocBook.nosubdirs = true
+DocBook.outputsubdir = docbook
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+imagedirs = images

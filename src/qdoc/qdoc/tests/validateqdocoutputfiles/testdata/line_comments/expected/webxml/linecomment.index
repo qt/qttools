@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="LineComment Reference Documentation" version="" project="LineComment">
+    <namespace name="" status="active" access="public" module="linecomment">
+        <page name="line-comment-adventures.html" href="line-comment-adventures.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="Adventures with QDoc's line comments" fulltitle="Adventures with QDoc's line comments" subtitle="" brief="Test that line comments don't break documentation">
+            <contents name="further-details" title="Further details" level="1"/>
+        </page>
+        <page name="a-page-with-a-line-comment-in-the-see-also-command.html" href="a-page-with-a-line-comment-in-the-see-also-command.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="The source for this page has a line comment in its sa command" fulltitle="The source for this page has a line comment in its sa command" subtitle=""/>
+        <page name="another-page-with-an-image-at-the-top.html" href="another-page-with-an-image-at-the-top.html" status="active" location="line_comment_adventures.qdoc" documented="true" subtype="page" title="This page starts with an image" fulltitle="This page starts with an image" subtitle="" brief="This page has an image right at the top"/>
+    </namespace>
+</INDEX>
