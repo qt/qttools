@@ -88,12 +88,6 @@ protected:
                                       .arg(name));
                     return;
                 }
-                if (AST::cast<AST::TemplateLiteral *>(node->arguments->expression)) {
-                    yyMsg(identLineNo)
-                        << qPrintable(QStringLiteral("%1() cannot be used with template literals. "
-                                                     "Ignoring\n").arg(name));
-                    return;
-                }
 
                 QString source;
                 if (!createString(node->arguments->expression, &source))
@@ -224,6 +218,9 @@ private:
                 if (createString(binop->right, out))
                     return true;
             }
+        } else if (AST::TemplateLiteral *templit = AST::cast<AST::TemplateLiteral *>(ast)) {
+            out->append(templit->value);
+            return true;
         }
 
         return false;

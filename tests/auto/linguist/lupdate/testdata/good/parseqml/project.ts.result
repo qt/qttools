@@ -113,6 +113,14 @@
     </message>
 </context>
 <context>
+    <name>TemplateLiteral</name>
+    <message>
+        <location filename="main.qml" line="105"/>
+        <source>template literal 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message>
         <location filename="main.qml" line="5"/>
@@ -201,6 +209,11 @@
         <source>translation with extras-quoted field</source>
         <translation type="unfinished"></translation>
         <extra-quoted> string with spaces </extra-quoted>
+    </message>
+    <message>
+        <location filename="main.qml" line="104"/>
+        <source>template literal</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
