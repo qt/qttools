@@ -229,6 +229,9 @@
         \li \\QMCU
         \li Qt for MCUs
     \row
+        \li \\QMLLS
+        \li QML Language Server
+    \row
         \li \\QMT
         \li Qt Maintenance Tool
     \row
