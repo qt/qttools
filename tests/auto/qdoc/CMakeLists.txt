@@ -35,10 +35,13 @@ set(QDOC_INCLUDE_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../../../src/qdoc/qdoc/src/
 # we can depend on to filter the inclusions.
 if(QT_BUILD_STANDALONE_TESTS)
     include(${QDOC_PROJECT_DIRECTORY}/catch_generators/tests/CMakeLists.txt)
-    include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/qdoc/CMakeLists.txt)
-    include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/config/CMakeLists.txt)
-    include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/qdoccommandlineparser/CMakeLists.txt)
-    include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/utilities/CMakeLists.txt)
-    include(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/generatedoutput/CMakeLists.txt)
-    add_subdirectory(${QDOC_PROJECT_DIRECTORY}/qdoc/tests/validateqdocoutputfiles ${CMAKE_CURRENT_BINARY_DIR}/validateqdocoutputfiles)
+
+    # Add all tests in src/qdoc/qdoc/tests:
+    file(GLOB qdoc_tests_dir_content LIST_DIRECTORIES true "${QDOC_PROJECT_DIRECTORY}/qdoc/tests/*")
+    foreach(path IN LISTS qdoc_tests_dir_content)
+        if(EXISTS "${path}/CMakeLists.txt")
+            get_filename_component(test_directory "${path}" NAME)
+            add_subdirectory("${path}" "${test_directory}")
+        endif()
+    endforeach()
 endif()
