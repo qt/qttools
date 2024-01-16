@@ -24,13 +24,13 @@ LanguageChooser::LanguageChooser(QWidget *parent) : QDialog(parent, Qt::WindowSt
     const QStringList qmFiles = findQmFiles();
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (int i = 0; i < qmFiles.size(); ++i) {
-        const QString &qmlFile = qmFiles.at(i);
-        QCheckBox *checkBox = new QCheckBox(languageName(qmlFile));
-        qmFileForCheckBoxMap.insert(checkBox, qmlFile);
+        const QString &qmFile = qmFiles.at(i);
+        QCheckBox *checkBox = new QCheckBox(languageName(qmFile));
+        qmFileForCheckBoxMap.insert(checkBox, qmFile);
         connect(checkBox, &QCheckBox::toggled, this, &LanguageChooser::checkBoxToggled);
         if (std::find_if(
                     uiLanguages.begin(), uiLanguages.end(),
-                    [qmlFile](const QString &lang) -> bool { return languageMatch(lang, qmlFile); })
+                    [qmFile](const QString &lang) -> bool { return languageMatch(lang, qmFile); })
             != uiLanguages.end())
             checkBox->setCheckState(Qt::Checked);
         groupBoxLayout->addWidget(checkBox, i / 2, i % 2);
