@@ -1,2 +1,4 @@
 include(testqml.qdocconf)
-include(webxml.qdocconf)
+outputformats             = WebXML
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true

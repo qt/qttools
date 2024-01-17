@@ -1,2 +1,5 @@
 include(testmodule.qdocconf)
-include(../configs/webxml.qdocconf)
+outputformats             = WebXML
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+
