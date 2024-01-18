@@ -1896,15 +1896,14 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
 
     CXIndex index = clang_createIndex(1, kClangDontDisplayDiagnostics);
 
-    std::vector<const char *> args(std::begin(defaultArgs_), std::end(defaultArgs_));
-    // Add the defines from the qdocconf file.
-    for (const auto &p : std::as_const(m_defines))
-        args.push_back(p.constData());
+    getDefaultArgs();
+
     if (!m_pchName.isEmpty()) {
-        args.push_back("-w");
-        args.push_back("-include-pch");
-        args.push_back(m_pchName.constData());
+        m_args.push_back("-w");
+        m_args.push_back("-include-pch");
+        m_args.push_back(m_pchName.constData());
     }
+
     CXTranslationUnit tu;
     s_fn.clear();
     for (const auto &ns : std::as_const(m_namespaceScope))
@@ -1917,9 +1916,9 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
     const char *dummyFileName = fnDummyFileName;
     CXUnsavedFile unsavedFile { dummyFileName, s_fn.constData(),
                                 static_cast<unsigned long>(s_fn.size()) };
-    CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, args.data(),
-                                                  int(args.size()), &unsavedFile, 1, flags, &tu);
-    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << args
+    CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, m_args.data(),
+                                                  int(m_args.size()), &unsavedFile, 1, flags, &tu);
+    qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << m_args
                     << ") returns" << err;
     printDiagnostics(tu);
     if (err || !tu) {
