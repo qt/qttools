@@ -53,7 +53,6 @@ const QStringList ClangCodeParser::accepted_header_file_extensions{
 static const auto kClangDontDisplayDiagnostics = 0;
 
 static CXTranslationUnit_Flags flags_ = static_cast<CXTranslationUnit_Flags>(0);
-static CXIndex index_ = nullptr;
 
 QByteArray ClangCodeParser::s_fn;
 constexpr const char fnDummyFileName[] = "/fn_dummyfile.cpp";
@@ -1581,7 +1580,7 @@ void ClangCodeParser::buildPCH(QString module_header)
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);
 
-    index_ = clang_createIndex(1, kClangDontDisplayDiagnostics);
+    CXIndex index = clang_createIndex(1, kClangDontDisplayDiagnostics);
 
     m_pchFileDir.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
     if (m_pchFileDir->isValid()) {
@@ -1650,7 +1649,7 @@ void ClangCodeParser::buildPCH(QString module_header)
                 QFileInfo headerFile(header);
                 if (!headerFile.exists()) {
                     qWarning() << "Could not find module header file" << header;
-                    clang_disposeIndex(index_);
+                    clang_disposeIndex(index);
                     return;
                 }
                 out << QLatin1String("#include \"") + header + QLatin1String("\"");
@@ -1658,7 +1657,7 @@ void ClangCodeParser::buildPCH(QString module_header)
         }
 
         CXErrorCode err =
-                clang_parseTranslationUnit2(index_, tmpHeader.toLatin1().data(), m_args.data(),
+                clang_parseTranslationUnit2(index, tmpHeader.toLatin1().data(), m_args.data(),
                                             static_cast<int>(m_args.size()), nullptr, 0,
                                             flags_ | CXTranslationUnit_ForSerialization, &tu);
         qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << m_args
@@ -1689,7 +1688,7 @@ void ClangCodeParser::buildPCH(QString module_header)
         m_args.pop_back(); // remove the "-xc++";
     }
 
-    clang_disposeIndex(index_);
+    clang_disposeIndex(index);
 }
 
 static float getUnpatchedVersion(QString t)
@@ -1717,7 +1716,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
                                                   | CXTranslationUnit_SkipFunctionBodies
                                                   | CXTranslationUnit_KeepGoing);
 
-    index_ = clang_createIndex(1, kClangDontDisplayDiagnostics);
+    CXIndex index = clang_createIndex(1, kClangDontDisplayDiagnostics);
 
     getDefaultArgs();
     if (!m_pchName.isEmpty() && !filePath.endsWith(".mm")) {
@@ -1731,7 +1730,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
     CXTranslationUnit tu;
     CXErrorCode err =
-            clang_parseTranslationUnit2(index_, filePath.toLocal8Bit(), m_args.data(),
+            clang_parseTranslationUnit2(index, filePath.toLocal8Bit(), m_args.data(),
                                         static_cast<int>(m_args.size()), nullptr, 0, flags_, &tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << filePath << m_args
                     << ") returns" << err;
@@ -1740,7 +1739,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
         clang_disposeTranslationUnit(tu);
-        clang_disposeIndex(index_);
+        clang_disposeIndex(index);
         return;
     }
 
@@ -1826,7 +1825,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
     clang_disposeTokens(tu, tokens, numTokens);
     clang_disposeTranslationUnit(tu);
-    clang_disposeIndex(index_);
+    clang_disposeIndex(index);
     m_namespaceScope.clear();
     s_fn.clear();
 }
