@@ -56,6 +56,22 @@ struct CompilationIndex {
     }
 };
 
+struct TranslationUnit {
+    CXTranslationUnit tu = nullptr;
+
+    operator CXTranslationUnit() {
+        return tu;
+    }
+
+    operator bool() {
+        return tu;
+    }
+
+    ~TranslationUnit() {
+        clang_disposeTranslationUnit(tu);
+    }
+};
+
 const QStringList ClangCodeParser::accepted_header_file_extensions{
     "ch", "h", "h++", "hh", "hpp", "hxx"
 };
@@ -1643,7 +1659,9 @@ void ClangCodeParser::buildPCH(QString module_header)
                             "file";
         }
         m_args.push_back("-xc++");
-        CXTranslationUnit tu;
+
+        TranslationUnit tu;
+
         QString tmpHeader = m_pchFileDir->path() + "/" + module;
         if (QFile tmpHeaderFile(tmpHeader); tmpHeaderFile.open(QIODevice::Text | QIODevice::WriteOnly)) {
             QTextStream out(&tmpHeaderFile);
@@ -1670,7 +1688,7 @@ void ClangCodeParser::buildPCH(QString module_header)
         CXErrorCode err =
                 clang_parseTranslationUnit2(index, tmpHeader.toLatin1().data(), m_args.data(),
                                             static_cast<int>(m_args.size()), nullptr, 0,
-                                            flags_ | CXTranslationUnit_ForSerialization, &tu);
+                                            flags_ | CXTranslationUnit_ForSerialization, &tu.tu);
         qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << tmpHeader << m_args
                         << ") returns" << err;
 
@@ -1695,7 +1713,6 @@ void ClangCodeParser::buildPCH(QString module_header)
             m_pchFileDir->remove();
             qCCritical(lcQdoc) << "Could not create PCH file for " << module_header;
         }
-        clang_disposeTranslationUnit(tu);
         m_args.pop_back(); // remove the "-xc++";
     }
 }
@@ -1737,17 +1754,16 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     for (const auto &p : std::as_const(m_moreArgs))
         m_args.push_back(p.constData());
 
-    CXTranslationUnit tu;
+    TranslationUnit tu;
     CXErrorCode err =
             clang_parseTranslationUnit2(index, filePath.toLocal8Bit(), m_args.data(),
-                                        static_cast<int>(m_args.size()), nullptr, 0, flags_, &tu);
+                                        static_cast<int>(m_args.size()), nullptr, 0, flags_, &tu.tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << filePath << m_args
                     << ") returns" << err;
     printDiagnostics(tu);
 
     if (err || !tu) {
         qWarning() << "(qdoc) Could not parse source file" << filePath << " error code:" << err;
-        clang_disposeTranslationUnit(tu);
         return;
     }
 
@@ -1832,7 +1848,6 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
     }
 
     clang_disposeTokens(tu, tokens, numTokens);
-    clang_disposeTranslationUnit(tu);
     m_namespaceScope.clear();
     s_fn.clear();
 }
@@ -1904,7 +1919,7 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
         m_args.push_back(m_pchName.constData());
     }
 
-    CXTranslationUnit tu;
+    TranslationUnit tu;
     s_fn.clear();
     for (const auto &ns : std::as_const(m_namespaceScope))
         s_fn.prepend("namespace " + ns.toUtf8() + " {");
@@ -1917,13 +1932,12 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
     CXUnsavedFile unsavedFile { dummyFileName, s_fn.constData(),
                                 static_cast<unsigned long>(s_fn.size()) };
     CXErrorCode err = clang_parseTranslationUnit2(index, dummyFileName, m_args.data(),
-                                                  int(m_args.size()), &unsavedFile, 1, flags, &tu);
+                                                  int(m_args.size()), &unsavedFile, 1, flags, &tu.tu);
     qCDebug(lcQdoc) << __FUNCTION__ << "clang_parseTranslationUnit2(" << dummyFileName << m_args
                     << ") returns" << err;
     printDiagnostics(tu);
     if (err || !tu) {
         location.error(QStringLiteral("clang could not parse \\fn %1").arg(fnSignature));
-        clang_disposeTranslationUnit(tu);
         return fnNode;
     } else {
         /*
@@ -1969,7 +1983,6 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
             }
         }
     }
-    clang_disposeTranslationUnit(tu);
     return fnNode;
 }
 
