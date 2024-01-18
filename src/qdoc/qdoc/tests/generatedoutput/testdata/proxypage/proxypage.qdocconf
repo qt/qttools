@@ -1,4 +1,15 @@
-include(../configs/config.qdocconf)
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# images
+imagedirs = ../images
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
 
 project = ProxyPage
 includepaths += .

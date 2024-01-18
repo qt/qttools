@@ -1,4 +1,3 @@
-include(../configs/config.qdocconf)
 project = CrossModule
 includepaths += -I.
 
@@ -11,3 +10,17 @@ HTML.nosubdirs    = true
 HTML.outputsubdir = crossmodule
 
 defines += test_crossmodule
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# images
+imagedirs = ../images
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+

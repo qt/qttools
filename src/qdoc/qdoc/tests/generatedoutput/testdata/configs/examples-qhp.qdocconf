@@ -1,5 +1,4 @@
 # QML test includes a documented example
-include(config.qdocconf)
 include(testqml.qdocconf)
 version = 0.0.1
 

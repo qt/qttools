@@ -1,4 +1,3 @@
-include(config.qdocconf)
 include(testcpp.qdocconf)
 outputformats             = WebXML
 WebXML.quotinginformation = true

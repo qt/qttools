@@ -1,4 +1,14 @@
-include(config.qdocconf)
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# images
+imagedirs = ../images
+
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
 include(testqml.qdocconf)
 outputformats             = DocBook
 DocBook.nosubdirs         = true
