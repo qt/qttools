@@ -507,7 +507,7 @@ static void processQdocconfFile(const QString &fileName)
         }
 
         const QString moduleHeader = config.get(CONFIG_MODULEHEADER).asString();
-        clangParser.precompileHeaders(moduleHeader.isNull() ? project : moduleHeader);
+        clangParser.buildPCH(moduleHeader.isNull() ? project : moduleHeader);
 
         /*
           Parse each source text file in the set using the appropriate parser and

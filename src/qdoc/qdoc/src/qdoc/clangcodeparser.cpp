@@ -1572,6 +1572,17 @@ void ClangCodeParser::buildPCH(QString module_header)
     if (m_pchFileDir) return;
     if (module_header.isEmpty()) return;
 
+    getDefaultArgs();
+    getMoreArgs();
+    for (const auto &p : std::as_const(m_moreArgs))
+        m_args.push_back(p.constData());
+
+    flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
+                                                  | CXTranslationUnit_SkipFunctionBodies
+                                                  | CXTranslationUnit_KeepGoing);
+
+    index_ = clang_createIndex(1, kClangDontDisplayDiagnostics);
+
     m_pchFileDir.reset(new QTemporaryDir(QDir::tempPath() + QLatin1String("/qdoc_pch")));
     if (m_pchFileDir->isValid()) {
         const QByteArray module = module_header.toUtf8();
@@ -1639,6 +1650,7 @@ void ClangCodeParser::buildPCH(QString module_header)
                 QFileInfo headerFile(header);
                 if (!headerFile.exists()) {
                     qWarning() << "Could not find module header file" << header;
+                    clang_disposeIndex(index_);
                     return;
                 }
                 out << QLatin1String("#include \"") + header + QLatin1String("\"");
@@ -1676,25 +1688,7 @@ void ClangCodeParser::buildPCH(QString module_header)
         clang_disposeTranslationUnit(tu);
         m_args.pop_back(); // remove the "-xc++";
     }
-}
 
-/*!
-  Precompile the header files for the current module.
- */
-void ClangCodeParser::precompileHeaders(QString module_header)
-{
-    getDefaultArgs();
-    getMoreArgs();
-    for (const auto &p : std::as_const(m_moreArgs))
-        m_args.push_back(p.constData());
-
-    flags_ = static_cast<CXTranslationUnit_Flags>(CXTranslationUnit_Incomplete
-                                                  | CXTranslationUnit_SkipFunctionBodies
-                                                  | CXTranslationUnit_KeepGoing);
-
-    index_ = clang_createIndex(1, kClangDontDisplayDiagnostics);
-
-    buildPCH(module_header);
     clang_disposeIndex(index_);
 }
 
