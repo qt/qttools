@@ -176,7 +176,7 @@
 
     The \c{HTML.headerstyles} variable inserts the style information into the
     HTML file and the \c{HTML.stylesheets} specifies which files QDoc should
-    copy into the output directory. As well, QDoc will embed the string
+    copy into the output directory. In addition, QDoc will embed the string
     in the \c postheader, \c footer, and related variables into each HTML file.
 
     The \l {Format-specific Configuration Variables} article outlines the usage
