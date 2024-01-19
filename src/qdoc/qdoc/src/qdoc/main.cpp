@@ -101,13 +101,14 @@ static void loadIndexFiles(const QSet<QString> &formats)
     bool useNoSubDirs = false;
     QSet<QString> subDirs;
 
+    // Add format-specific output subdirectories to the set of
+    // subdirectories where we look for index files
     for (const auto &format : formats) {
         if (config.get(format + Config::dot + "nosubdirs").asBool()) {
             useNoSubDirs = true;
-            QString singleOutputSubdir{config.get(format + Config::dot + "outputsubdir").asString()};
-            if (singleOutputSubdir.isEmpty())
-                singleOutputSubdir = "html";
-            subDirs << singleOutputSubdir;
+            const auto singleOutputSubdir{QDir(config.getOutputDir(format)).dirName()};
+            if (!singleOutputSubdir.isEmpty())
+                subDirs << singleOutputSubdir;
         }
     }
 
