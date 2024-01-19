@@ -529,23 +529,19 @@
     The \c extraimages variable tells QDoc to incorporate specific
     images in the generated documentation.
 
-    QDoc will not recognize images used within HTML (or any other
-    markup language). If we want the images to be copied from the
-    directories specified by \l {imagedirs} {\c imagedirs} (the images
-    in question must be located in these directories) to the output
-    directory, we must specify the images using the \c extraimages
-    variable.
+    QDoc automatically copies an image file from \l imagedirs to the output
+    directory if it's referenced by the \l {image-command} {\c{\image}} or
+    \l {inlineimage-command} {\c{\inlineimage}} command. If you want to copy
+    additional images, you must specify them using the \c extraimages variable.
 
-    The general syntax is \tt {extraimages.\e{format} = \e image}. The
-    file extension is optional.
+    The general syntax is \tt {\e{format}.extraimages = \e image}.
 
-    For example, in \l qtgui.qdocconf we use a couple of images within
-    the HTML.postheader variable which value is pure HTML. For that
-    reason, these images are specified using the \c extraimages
-    variable:
+    For a contextualized example, refer to the description of the
+    \l {HTML.postheader-variable}{HTML.postheader} variable.
 
+    Example:
     \badcode
-        extraimages.HTML = qt-logo
+        HTML.extraimages = images/qt-logo.png
     \endcode
 
     See also \l images and \l imagedirs.
