@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="adventures_with_non_ascii_characters.html" href="adventures-with-non-ascii-characters.html" status="active" location="adventures_with_non_ascii_characters.qdoc" documented="true" subtype="page" title="Adventures with non-ascii characters in QDoc" fulltitle="Adventures with non-ascii characters in QDoc" subtitle="" brief="Test that non-ascii characters work as input to QDoc commands">
+            <contents name="a-713da3e8" title="A 大纲视图" level="1"/>
+            <contents name="3d-42faee45" title="3D场景视图" level="1"/>
+            <contents name="3d-c57e864e" title="这就是3D场景视图" level="1"/>
+            <contents name="662952c1" title="属性视图" level="1"/>
+            <contents name="further-details" title="Further details" level="1"/>
+            <contents name="ascii-characters-that-are-non-printable-ascii-such-as-or-521d09f0" title="Ascii characters that are non-printable ascii, such as ß, ü, or ø" level="2"/>
+            <description>
+                <brief>Test that non-ascii characters work as input to QDoc commands.</brief>
+                <para>The purpose of this test data is to provide a regression mechanism as part of QDoc's end-to-end test, tst_generatedOutput, for an issue (QTBUG-64506) that was reported against QDoc's \section1 command. The issue, as experienced by the reporter of the bug, is that if the \section1 command is followed by a non-ascii character (for example Chinese characters), navigation links aren't generated for the section title. The bug was filed against Qt 5.9.2. This test case aims at reproducing the issue as filed by the reporter.</para>
+                <para>Such this document snippet:</para>
+                <section id="a-713da3e8">
+                    <heading level="1">A 大纲视图</heading>
+                    <para>The reporter states that this link works, presumably because it begins with the ascii character &quot;A&quot;.</para>
+                    <para>这就是大纲视图</para>
+                </section>
+                <section id="3d-42faee45">
+                    <heading level="1">3D场景视图</heading>
+                    <para>The reporter states that this link works, presumably because it begins with the digit &quot;3&quot;.</para>
+                    <para>这就是3D场景视图</para>
+                </section>
+                <section id="3d-c57e864e">
+                    <heading level="1">这就是3D场景视图</heading>
+                    <para>If this section generates a duplicate anchor, &quot;3D&quot;, it's because 3D is the only part of the section title QDoc recognizes. This is an error caused by the same bug, and the link should somehow reflect that QDoc encountered the Chinese (or any non-ascii) characters instead.</para>
+                </section>
+                <section id="662952c1">
+                    <heading level="1">属性视图</heading>
+                    <para>The reporter states that this link doesn't work, presumably because it begins with the Chinese character &quot;属&quot;.</para>
+                    <para>这就是属性视图</para>
+                </section>
+                <section id="further-details">
+                    <heading level="1">Further details</heading>
+                    <para>The bug report is at <link raw="https://bugreports.qt.io/browse/QTBUG-64506" href="https://bugreports.qt.io/browse/QTBUG-64506" type="external">https://bugreports.qt.io/browse/QTBUG-64506</link>. It contains the content used to trigger the behavior in this test case. The Chinese characters are copied verbatim from the report.</para>
+                </section>
+                <section id="ascii-characters-that-are-non-printable-ascii-such-as-or-521d09f0">
+                    <heading level="2">Ascii characters that are non-printable ascii, such as ß, ü, or ø</heading>
+                    <para>A whole range of ascii characters are not printable ascii characters. These could also cause issues for QDoc. This section is here to confirm linking to such section titles works as expected. It's made a section2 to exercise the behavior for other section levels than 1.</para>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

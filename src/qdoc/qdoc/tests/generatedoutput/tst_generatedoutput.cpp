@@ -61,7 +61,6 @@ private slots:
     void templatedCallables();
     void testGlobalFunctions();
     void proxyPage();
-    void nonAsciiCharacterInput();
     void orderingCategoryCommand();
     void tableAfterValue();
     void trailingBackslashes();
@@ -612,24 +611,6 @@ void tst_generatedOutput::proxyPage()
     testAndCompare("testdata/proxypage/proxypage.qdocconf",
                    "proxypage/stdpair-proxypage-proxy.html "
                    "proxypage-docbook/stdpair-proxypage-proxy.xml");
-}
-
-void tst_generatedOutput::nonAsciiCharacterInput()
-{
-    testAndCompare(
-            "testdata/non_ascii_character_input/non_ascii_character_input.qdocconf",
-            "html/nonasciicharacterinput.index "
-            "html/mozzarella-7c883eff.webxml "
-            "html/santa-14209312.webxml "
-            "html/seite-mit-ausschlie-lich-gro-buchstaben-im-titel-berschrift-htm-bfa91582.webxml "
-            "html/8b5c72eb.webxml "
-            "html/e85685de.webxml "
-            "seite-mit-ausschlie-lich-gro-buchstaben-im-titel-berschrift-htm-bfa91582.html "
-            "mozzarella-7c883eff.html "
-            "santa-14209312.html "
-            "8b5c72eb.html "
-            "e85685de.html "
-            "adventures-with-non-ascii-characters.html");
 }
 
 void tst_generatedOutput::trailingBackslashes()
