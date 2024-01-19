@@ -1,4 +1,55 @@
-include(../configs/testqml.qdocconf)
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# images
+imagedirs = ../images
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+includepaths += -I../testcpp
+
+headers = ../testcpp/testcpp.h
+sources = ../testcpp/testcpp.cpp \
+          ../testcpp/classlists.qdoc
+
+macro.CMDFN = \\\\fn
+macro.nothing = \\dontdocument ()
+macro.testnoautolist = \\if defined(test_noautolist)\n\\noautolist\n\\endif
+
+navigation.cppclassespage = "QDoc Test C++ Classes"
+
+moduleheader = TestCPP
+
+project = Test
+description = "A test project for QDoc build artifacts"
+outputdir = ./html
+
+exampledirs = ../qml
+
+headerdirs += ../
+sourcedirs += ../qml
+
+# Exclude source files from other tests' subdirs
+excludedirs = ../bug80259
+
+examples.fileextensions = "*.qml *.cpp"
+
+macro.begincomment      = "\\c{/*}"
+macro.QDocTestVer       = "1.1"
+
+navigation.qmltypespage     = "QDoc.Test QML Module"
+navigation.qmltypestitle    = "Types"
+warninglimit += 1
+
+manifestmeta.examplecategories = "Application Examples" \
+                                 "Desktop" \
+                                 "Mobile" \
+                                 "Embedded"
 
 sourcedirs += src
 
