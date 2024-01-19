@@ -1,6 +1,32 @@
-include(testcpp.qdocconf)
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
 
-# Config::getOutputDir() forces a subdir in single-exec mode (why?),
-# disable it here explicitly
-HTML.nosubdirs          = true
-HTML.outputsubdir       = .
+# images
+imagedirs = ../images
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+# By default, use -outputdir directly, no subdir.
+# outputsubdir '.' matches the root of expected_output/
+HTML.nosubdirs = true
+HTML.outputsubdir = .
+
+project = TestCPP
+includepaths += -I../testcpp
+
+headers = ../testcpp/testcpp.h
+sources = ../testcpp/testcpp.cpp \
+          ../testcpp/classlists.qdoc
+exampledirs = ../testcpp/snippets
+
+macro.CMDFN = \\\\fn
+macro.nothing = \\dontdocument ()
+macro.testnoautolist = \\if defined(test_noautolist)\n\\noautolist\n\\endif
+
+navigation.cppclassespage = "QDoc Test C++ Classes"
+

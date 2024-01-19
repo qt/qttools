@@ -1,4 +1,29 @@
-include(../configs/testcpp.qdocconf)
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# images
+imagedirs = ../images
+
+# zero warning policy
+warninglimit = 0
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+project = TestCPP
+includepaths += -I../testcpp
+
+headers = ../testcpp/testcpp.h
+sources = ../testcpp/testcpp.cpp \
+          ../testcpp/classlists.qdoc
+exampledirs = ../testcpp/snippets
+
+macro.CMDFN = \\\\fn
+macro.nothing = \\dontdocument ()
+macro.testnoautolist = \\if defined(test_noautolist)\n\\noautolist\n\\endif
+
+navigation.cppclassespage = "QDoc Test C++ Classes"
 
 headers += dont.h
 sources += dont.cpp test.qdoc
