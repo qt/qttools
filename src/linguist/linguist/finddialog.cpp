@@ -24,7 +24,7 @@ FindDialog::FindDialog(QWidget *parent)
 
     connect(findNxt, &QAbstractButton::clicked,
             this, &FindDialog::emitFindNext);
-    connect(useRegExp, &QCheckBox::stateChanged,
+    connect(useRegExp, &QCheckBox::checkStateChanged,
             this, &FindDialog::verify);
     connect(led, &QLineEdit::textChanged,
             this, &FindDialog::verify);
