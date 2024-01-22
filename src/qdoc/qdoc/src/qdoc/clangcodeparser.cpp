@@ -104,6 +104,24 @@ static QDebug operator<<(QDebug debug, const std::vector<T> &v)
 }
 #endif // !QT_NO_DEBUG_STREAM
 
+static void printDiagnostics(const CXTranslationUnit &translationUnit)
+{
+    if (!lcQdocClang().isDebugEnabled())
+        return;
+
+    static const auto displayOptions = CXDiagnosticDisplayOptions::CXDiagnostic_DisplaySourceLocation
+                                     | CXDiagnosticDisplayOptions::CXDiagnostic_DisplayColumn
+                                     | CXDiagnosticDisplayOptions::CXDiagnostic_DisplayOption;
+
+    for (unsigned i = 0, numDiagnostics = clang_getNumDiagnostics(translationUnit); i < numDiagnostics; ++i) {
+        auto diagnostic = clang_getDiagnostic(translationUnit, i);
+        auto formattedDiagnostic = clang_formatDiagnostic(diagnostic, displayOptions);
+        qCDebug(lcQdocClang) << clang_getCString(formattedDiagnostic);
+        clang_disposeString(formattedDiagnostic);
+        clang_disposeDiagnostic(diagnostic);
+    }
+}
+
 /*!
  * Returns the underlying Decl that \a cursor represents.
  *
@@ -1984,24 +2002,6 @@ Node *ClangCodeParser::parseFnArg(const Location &location, const QString &fnSig
         }
     }
     return fnNode;
-}
-
-void ClangCodeParser::printDiagnostics(const CXTranslationUnit &translationUnit) const
-{
-    if (!lcQdocClang().isDebugEnabled())
-        return;
-
-    static const auto displayOptions = CXDiagnosticDisplayOptions::CXDiagnostic_DisplaySourceLocation
-                                     | CXDiagnosticDisplayOptions::CXDiagnostic_DisplayColumn
-                                     | CXDiagnosticDisplayOptions::CXDiagnostic_DisplayOption;
-
-    for (unsigned i = 0, numDiagnostics = clang_getNumDiagnostics(translationUnit); i < numDiagnostics; ++i) {
-        auto diagnostic = clang_getDiagnostic(translationUnit, i);
-        auto formattedDiagnostic = clang_formatDiagnostic(diagnostic, displayOptions);
-        qCDebug(lcQdocClang) << clang_getCString(formattedDiagnostic);
-        clang_disposeString(formattedDiagnostic);
-        clang_disposeDiagnostic(diagnostic);
-    }
 }
 
 QT_END_NAMESPACE

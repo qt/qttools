@@ -35,9 +35,6 @@ private:
     void getDefaultArgs();
     void getMoreArgs();
 
-
-    void printDiagnostics(const CXTranslationUnit &translationUnit) const;
-
     QMultiHash<QString, QString> m_allHeaders {}; // file name->path
     QList<QByteArray> m_includePaths {};
     QScopedPointer<QTemporaryDir> m_pchFileDir {};
