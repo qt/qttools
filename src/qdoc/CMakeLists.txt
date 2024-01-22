@@ -107,6 +107,12 @@ qt_internal_add_tool(${target_name}
 #### Keys ignored in scope 2:.:.:qdoc.pro:NOT force_bootstrap:
 # _REQUIREMENTS = "qtConfig(xmlstreamwriter)"
 
+if(TARGET ${target_name})
+    # If libclangTooling.a is not built with -fPIE enabled we cannot link it to qdoc.
+    # TODO: Re-enable PIE once clang is built with PIE in provisioning.
+    set_target_properties(${target_name} PROPERTIES POSITION_INDEPENDENT_CODE FALSE)
+endif()
+
 qt_internal_extend_target(${target_name} CONDITION TARGET Qt::QmlDevToolsPrivate
     PUBLIC_LIBRARIES
         Qt::QmlDevToolsPrivate

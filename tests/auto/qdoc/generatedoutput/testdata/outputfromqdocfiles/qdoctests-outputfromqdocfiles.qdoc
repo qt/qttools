@@ -107,7 +107,7 @@
 */
 
 /*!
-    \page qdoctests-qdocfileoutput-exhaustive.html 
+    \page qdoctests-qdocfileoutput-exhaustive.html
     \title Exhaustive testing of QDoc commands
     \brief This page is a dumping ground for QDoc commands under test.
 
@@ -123,7 +123,7 @@
     \badcode
         This is bad code
     \endcode
-    
+
     This text should have a line break riiiiight \br noooow.
 
     \b{All your text belong to bold}
@@ -174,6 +174,18 @@
 
     \hr
 
+    An inline image:
+
+    The is a paragraph containing an \inlineimage 01.png inline image to test
+    if qdoc handles them properly, without considering rest of the line as
+    alt text for the image.
+
+    An inline image with alt text:
+
+    Here is another example of \inlineimage 01.png {No. 1} inline image with
+    alternative text, which should be added as an attribute to the inline
+    image.
+
     \warning The following commands have yet to be tested:
     footnote
     link
@@ -183,7 +195,6 @@
     index
     topicref // or just don’t care, remove it
     image
-    inlineimage
     printline
     printto
     printuntil  // what’s the difference between printto and printuntil???

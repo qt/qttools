@@ -49,21 +49,20 @@
 ****************************************************************************/
 
 //! [0]
-        QDesignerPropertyEditorInterface *propertyEditor = 0;
-        propertyEditor = formEditor->propertyEditor();
+        auto *propertyEditor = formEditor->propertyEditor();
 
-        connect(propertyEditor, SIGNAL(propertyChanged(QString,QVariant)),
-                this, SLOT(checkProperty(QString,QVariant)));
+        connect(propertyEditor, &QDesignerPropertyEditorInterface::propertyChanged,
+                this, &MyClass::checkProperty);
 //! [0]
 
 
 //! [1]
-        void checkProperty(QString property, QVariant value) {
-            QDesignerPropertyEditorInterface *propertyEditor = 0;
-            propertyEditor = formEditor->propertyEditor();
+        void checkProperty(const QString &property, const QVariant &value)
+        {
+            auto *propertyEditor = formEditor->propertyEditor();
 
-            QObject *object = propertyeditor->object();
-            MyCustomWidget *widget = qobject_cast<MyCustomWidget>(object);
+            auto *object = propertyeditor->object();
+            auto *widget = qobject_cast<MyCustomWidget *>(object);
 
             if (widget && property == aProperty && value != expectedValue)
                 {...}

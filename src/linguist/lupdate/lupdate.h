@@ -133,6 +133,7 @@ public:
     { return m_trFunctionAliases[trFunction].contains(identifier); }
 
     QStringList availableFunctionsWithAliases() const;
+    QStringList listAliases() const;
 
     const NameToTrFunctionMap &nameToTrFunctionMap() const;
 

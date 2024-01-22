@@ -77,6 +77,7 @@ qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
     SOURCES
         clangtoolastreader.cpp clangtoolastreader.h
         cpp_clang.cpp cpp_clang.h
+        filesignificancecheck.cpp filesignificancecheck.h
         lupdatepreprocessoraction.cpp lupdatepreprocessoraction.h
         synchronized.h
     DEFINES
@@ -96,6 +97,12 @@ qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_clangcpp
     LIBRARIES # special case
         WrapLibClang::WrapLibClang # special case
 )
+
+if(QT_FEATURE_clangcpp AND TARGET ${target_name})
+    # If libclangTooling.a is not built with -fPIE enabled we cannot link it to lupdate.
+    # TODO: Re-enable PIE once clang is built with PIE in provisioning.
+    set_target_properties(${target_name} PROPERTIES POSITION_INDEPENDENT_CODE FALSE)
+endif()
 
 qt_internal_extend_target(${target_name} CONDITION MSVC
     DEFINES _SILENCE_CXX17_ITERATOR_BASE_CLASS_DEPRECATION_WARNING)

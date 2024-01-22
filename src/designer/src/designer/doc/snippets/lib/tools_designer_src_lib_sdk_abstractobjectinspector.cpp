@@ -49,11 +49,8 @@
 ****************************************************************************/
 
 //! [0]
-        QDesignerObjectInspectorInterface *objectInspector = 0;
-        objectInspector = formEditor->objectInspector();
-
-        QDesignerFormWindowManagerInterface *manager = 0;
-        manager = formEditor->formWindowManager();
+        auto *objectInspector = formEditor->objectInspector();
+        auto *manager = formEditor->formWindowManager();
 
         objectInspector->setFormWindow(manager->formWindow(0));
 //! [0]

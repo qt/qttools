@@ -58,9 +58,8 @@
             QWidget *myWidget = builder.load(&file, this);
             file.close();
 
-            QVBoxLayout *layout = new QVBoxLayout;
+            auto *layout = new QVBoxLayout(this);
             layout->addWidget(myWidget);
-            setLayout(layout);
         }
 //! [0]
 

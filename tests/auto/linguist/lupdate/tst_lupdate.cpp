@@ -255,8 +255,8 @@ void tst_lupdate::good_data()
         "preprocess",
         "proparsing2", // llvm8 cannot handle file name without extension
         "respfile", //@lst not supported with the new parser yet (include not properly set in the compile_command.json)
-        "tr_function_alias", //alias defined in command line not supported with the new parser yet. (and need project file)
         "cmdline_deeppath", //no project file, new parser does not support (yet) this way of launching lupdate
+        "tr_function_alias", //alias defined in command line not supported with the new parser yet. (and need project file)
         "cmdline_order", // no project, new parser do not pickup on macro defined but not used. Test not needed for new parser.
         "cmdline_recurse", // recursive scan without project file not supported (yet) with the new parser
     };

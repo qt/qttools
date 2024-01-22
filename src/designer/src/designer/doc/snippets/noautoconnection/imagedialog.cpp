@@ -48,7 +48,7 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QMessageBox>
 
 #include "imagedialog.h"
 
@@ -68,19 +68,20 @@ ImageDialog::ImageDialog(QWidget *parent)
     colorDepthCombo->addItem(tr("65536 colors (16 bits per pixel)"));
     colorDepthCombo->addItem(tr("16 million colors (24 bits per pixel)"));
 
-    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(cancelButton, &QAbstractButton::clicked, this, &QDialog::reject);
 //! [1]
-    connect(okButton, SIGNAL(clicked()), this, SLOT(checkValues()));
+    connect(okButton, &QAbstractButton::clicked, this, &ImageDialog::checkValues);
 }
 //! [1]
 
 //! [2]
 void ImageDialog::checkValues()
 {
-    if (nameLineEdit->text().isEmpty())
-        (void) QMessageBox::information(this, tr("No Image Name"),
+    if (nameLineEdit->text().isEmpty()) {
+        QMessageBox::information(this, tr("No Image Name"),
             tr("Please supply a name for the image."), QMessageBox::Cancel);
-    else
+    } else {
         accept();
+    }
 }
 //! [2]

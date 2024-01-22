@@ -25,11 +25,11 @@
 <h3 id="this-is-a-section2">This is a section2</h3>
 <h4 id="this-is-a-section3">This is a section3</h4>
 <h5 id="this-is-a-section4">This is a section4</h5>
-<pre class="cpp plain">This is bad code</pre>
+<pre class="cpp plain" translate="no">This is bad code</pre>
 <p>This text should have a line break riiiiight <br />
  noooow.</p>
 <p><b>All your text belong to bold</b> ..&#x2e;And this is an examble of only <b>bold</b> being, well, bold.</p>
-<pre class="cpp">    ...</pre>
+<pre class="cpp" translate="no">    ...</pre>
 <pre class="js"><span class="comment">// If I knew JavaScript, this is where I would write it.</span></pre>
 <p>And if I knew qmltext, I guess this is where that would go. </p>
 <p class="figCaption">This a caption</p>
@@ -46,15 +46,19 @@
 <p><b>Important: </b>This is really important.</p>
 </div>
 <p>For example, if you have code like</p>
-<pre class="cpp plain">This is old code.</pre>
+<pre class="cpp plain" translate="no">This is old code.</pre>
 <p>you can rewrite it as</p>
-<pre class="cpp">This is <span class="keyword">new</span> and shiny<span class="operator">!</span></pre>
+<pre class="cpp" translate="no">This is <span class="keyword">new</span> and shiny<span class="operator">!</span></pre>
 <div class="admonition note">
 <p><b>Note: </b>The code above doesn't compile</p>
 </div>
 <hr />
+<p>An inline image:</p>
+<p>The is a paragraph containing an <img src="images/01.png" alt="" /> inline image to test if qdoc handles them properly, without considering rest of the line as alt text for the image.</p>
+<p>An inline image with alt text:</p>
+<p>Here is another example of <img src="images/01.png" alt="No. 1" /> inline image with alternative text, which should be added as an attribute to the inline image.</p>
 <div class="admonition warning">
-<p><b>Warning: </b>The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it image inlineimage printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile quotefunction skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</p>
+<p><b>Warning: </b>The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it image printline printto printuntil // what’s the difference between printto and printuntil??? quotefile quotefromfile quotefunction skipline skipto skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</p>
 </div>
 </div>
 <!-- @@@qdoctests-qdocfileoutput-exhaustive.html -->

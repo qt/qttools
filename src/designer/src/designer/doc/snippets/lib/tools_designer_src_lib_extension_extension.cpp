@@ -49,10 +49,9 @@
 ****************************************************************************/
 
 //! [0]
-       QDesignerPropertySheetExtension *propertySheet;
-       QExtensionManager manager = formEditor->extensionManager();
+       auto *manager = formEditor->extensionManager();
 
-       propertySheet = qt_extension<QDesignerPropertySheetExtension*>(manager, widget);
+       auto *propertySheet = qt_extension<QDesignerPropertySheetExtension*>(manager, widget);
 
        if(propertySheet) {...}
 //! [0]

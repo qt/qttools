@@ -663,8 +663,12 @@ void DocParser::parse(const QString &source, DocPrivate *docPrivate,
                 case CMD_INLINEIMAGE:
                     enterPara();
                     append(Atom::InlineImage, getArgument());
-                    append(Atom::ImageText, getRestOfLine());
-                    append(Atom::String, " ");
+                    //Append ImageText only if the following
+                    //argument is enclosed in braces.
+                    if (isLeftBraceAhead()) {
+                        append(Atom::ImageText, getArgument());
+                        append(Atom::String, " ");
+                    }
                     break;
                 case CMD_INDEX:
                     if (m_paragraphState == OutsideParagraph) {
@@ -1380,9 +1384,11 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                 QStringList lineBuffer = includedStuff.split(QLatin1Char('\n'));
                 int i = 0;
                 int startLine = -1;
+                QStringView trimmedLine;
                 while (i < lineBuffer.size()) {
-                    if (lineBuffer[i].startsWith("//!")) {
-                        if (lineBuffer[i].contains(identifier)) {
+                    trimmedLine = QStringView{lineBuffer[i]}.trimmed();
+                    if (trimmedLine.startsWith(QLatin1String("//!"))) {
+                        if (trimmedLine.contains(identifier)) {
                             startLine = i + 1;
                             break;
                         }
@@ -1397,9 +1403,10 @@ void DocParser::include(const QString &fileName, const QString &identifier)
                 QString result;
                 i = startLine;
                 do {
-                    if (lineBuffer[i].startsWith("//!")) {
+                    trimmedLine = QStringView{lineBuffer[i]}.trimmed();
+                    if (trimmedLine.startsWith(QLatin1String("//!"))) {
                         if (i < lineBuffer.size()) {
-                            if (lineBuffer[i].contains(identifier)) {
+                            if (trimmedLine.contains(identifier)) {
                                 break;
                             }
                         }

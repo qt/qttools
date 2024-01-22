@@ -913,7 +913,8 @@ DesignerPropertyManager::~DesignerPropertyManager()
 
 bool DesignerPropertyManager::m_IdBasedTranslations = false;
 
-int DesignerPropertyManager::bitCount(int mask) const
+template <class IntT>
+static int bitCount(IntT mask)
 {
     int count = 0;
     for (; mask; count++)
