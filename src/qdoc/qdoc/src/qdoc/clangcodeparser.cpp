@@ -1463,15 +1463,6 @@ void ClangCodeParser::initializeParser()
     m_defines.clear();
 
     {
-        const QStringList tmpDefines{config.get(CONFIG_CLANGDEFINES).asStringList()};
-        for (const QString &def : tmpDefines) {
-            QByteArray tmp("-D");
-            tmp.append(def.toUtf8());
-            m_defines.append(tmp.constData());
-        }
-    }
-
-    {
         const QStringList tmpDefines{config.get(CONFIG_DEFINES).asStringList()};
         for (const QString &def : tmpDefines) {
             if (!def.contains(QChar('*'))) {
