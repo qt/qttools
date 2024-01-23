@@ -1461,29 +1461,27 @@ void ClangCodeParser::initializeParser()
     m_allHeaders.clear();
     m_pchName.clear();
     m_defines.clear();
-    QSet<QString> accepted;
+
     {
         const QStringList tmpDefines{config.get(CONFIG_CLANGDEFINES).asStringList()};
         for (const QString &def : tmpDefines) {
-            if (!accepted.contains(def)) {
-                QByteArray tmp("-D");
-                tmp.append(def.toUtf8());
-                m_defines.append(tmp.constData());
-                accepted.insert(def);
-            }
+            QByteArray tmp("-D");
+            tmp.append(def.toUtf8());
+            m_defines.append(tmp.constData());
         }
     }
+
     {
         const QStringList tmpDefines{config.get(CONFIG_DEFINES).asStringList()};
         for (const QString &def : tmpDefines) {
-            if (!accepted.contains(def) && !def.contains(QChar('*'))) {
+            if (!def.contains(QChar('*'))) {
                 QByteArray tmp("-D");
                 tmp.append(def.toUtf8());
                 m_defines.append(tmp.constData());
-                accepted.insert(def);
             }
         }
     }
+
     qCDebug(lcQdoc).nospace() << __FUNCTION__ << " Clang v" << CINDEX_VERSION_MAJOR << '.'
                               << CINDEX_VERSION_MINOR;
 }
