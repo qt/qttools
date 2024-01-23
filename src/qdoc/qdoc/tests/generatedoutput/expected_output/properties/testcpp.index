@@ -37,8 +37,8 @@
                 <function name="methodWithEmDashInItsDocs" fullname="TestQDoc::Test::methodWithEmDashInItsDocs" href="testqdoc-test.html#methodWithEmDashInItsDocs" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void methodWithEmDashInItsDocs()"/>
                 <function name="methodWithEnDashInItsDocs" fullname="TestQDoc::Test::methodWithEnDashInItsDocs" href="testqdoc-test.html#methodWithEnDashInItsDocs" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void methodWithEnDashInItsDocs()"/>
                 <function name="obsoleteMember" fullname="TestQDoc::Test::obsoleteMember" href="testqdoc-test-obsolete.html#obsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void obsoleteMember()"/>
-                <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()"/>
-                <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()"/>
+                <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()"/>
+                <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()"/>
                 <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" documented="true" meta="move-assign" noexcept="true" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
                     <parameter type="TestQDoc::Test &amp;&amp;" name="other" default=""/>
                 </function>
@@ -46,7 +46,7 @@
                     <parameter type="const TestQDoc::Test &amp;" name="lhs" default=""/>
                     <parameter type="const TestQDoc::Test &amp;" name="rhs" default=""/>
                 </function>
-                <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" meta="plain" type="void" signature="void overload()"/>
+                <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" documented="true" meta="plain" type="void" signature="void overload()"/>
                 <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" documented="true" since="Test 1.2" meta="plain" overload="true" overload-number="1" type="void" signature="void overload(bool b)">
                     <parameter type="bool" name="b" default=""/>
                 </function>

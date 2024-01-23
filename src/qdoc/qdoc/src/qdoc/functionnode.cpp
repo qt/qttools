@@ -500,7 +500,7 @@ bool FunctionNode::compare(const Node *node, bool sameParent) const
  */
 bool FunctionNode::isIgnored() const
 {
-    if (!hasDoc() && !hasSharedDoc()) {
+    if (!hasDoc()) {
         if (name().startsWith(QLatin1String("qt_")) || name() == QLatin1String("metaObject")
             || name() == QLatin1String("tr") || name() == QLatin1String("trUtf8")
             || name() == QLatin1String("d_func")) {
