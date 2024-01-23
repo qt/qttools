@@ -66,10 +66,10 @@
                     <para>Use <link raw="someFunction()" href="testqdoc-test.html#someFunction" type="function">someFunction()</link> instead.</para>
                 </description>
             </function>
-            <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()">
+            <function name="operator++" fullname="TestQDoc::Test::operator++" href="testqdoc-test-obsolete.html#operator-2b-2b" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator++()">
                 <description/>
             </function>
-            <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()">
+            <function name="operator--" fullname="TestQDoc::Test::operator--" href="testqdoc-test-obsolete.html#operator--" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator--()">
                 <description/>
             </function>
             <function name="operator=" fullname="TestQDoc::Test::operator=" href="testqdoc-test.html#operator-eq" status="active" access="public" documented="true" meta="move-assign" noexcept="true" type="TestQDoc::Test &amp;" signature="TestQDoc::Test &amp; operator=(TestQDoc::Test &amp;&amp;other)" groups="testgroup">
@@ -85,7 +85,7 @@
                     <para>Returns true if <argument>lhs</argument> and <argument>rhs</argument> are equal.</para>
                 </description>
             </function>
-            <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" meta="plain" type="void" signature="void overload()">
+            <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload" status="active" access="protected" location="testcpp.h" documented="true" meta="plain" type="void" signature="void overload()">
                 <description/>
             </function>
             <function name="overload" fullname="TestQDoc::Test::overload" href="testqdoc-test.html#overload-1" status="active" access="protected" location="testcpp.h" documented="true" since="Test 1.2" meta="plain" overload="true" overload-number="1" type="void" signature="void overload(bool b)">

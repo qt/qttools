@@ -2612,7 +2612,7 @@ void DocBookGenerator::generateBody(const Node *node)
     // From Generator::generateBody, without warnings.
     const FunctionNode *fn = node->isFunction() ? static_cast<const FunctionNode *>(node) : nullptr;
 
-    if (!node->hasDoc() && !node->hasSharedDoc()) {
+    if (!node->hasDoc()) {
         /*
           Test for special function, like a destructor or copy constructor,
           that has no documentation.

@@ -874,11 +874,20 @@ void Node::setLocation(const Location &t)
 }
 
 /*!
-  Returns true if this node is sharing a comment and the
-  shared comment is not empty.
+  Returns \c true if this node is documented, or it represents
+  a documented node read from the index ('had doc'), or this
+  node is sharing a non-empty doc with other nodes.
+
+  \sa Doc
  */
-bool Node::hasSharedDoc() const
+bool Node::hasDoc() const
 {
+    if (m_hadDoc)
+        return true;
+
+    if (!m_doc.isEmpty())
+        return true;
+
     return (m_sharedCommentNode && m_sharedCommentNode->hasDoc());
 }
 
@@ -1243,13 +1252,6 @@ void Node::setDeprecatedSince(const QString &sinceVersion)
 
 /*! \fn const Doc &Node::doc() const
   Returns a reference to the node's Doc data member.
-
-  \sa Doc
- */
-
-/*! \fn bool Node::hasDoc() const
-  Returns \c true if the node has documentation, i.e. if its Doc
-  data member is not empty.
 
   \sa Doc
  */

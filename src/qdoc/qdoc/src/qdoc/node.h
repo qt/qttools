@@ -271,7 +271,7 @@ public:
     {
         return !isPrivate() && !isInternal() && !isDontDocument() && hasDoc();
     }
-    [[nodiscard]] bool hasDoc() const { return (m_hadDoc || !m_doc.isEmpty()); }
+    [[nodiscard]] bool hasDoc() const;
     [[nodiscard]] bool hadDoc() const { return m_hadDoc; }
     [[nodiscard]] Status status() const { return m_status; }
     [[nodiscard]] ThreadSafeness threadSafeness() const;
@@ -281,7 +281,6 @@ public:
     [[nodiscard]] const QString &reconstitutedBrief() const { return m_reconstitutedBrief; }
 
     [[nodiscard]] bool isSharingComment() const { return (m_sharedCommentNode != nullptr); }
-    [[nodiscard]] bool hasSharedDoc() const;
     void setSharedCommentNode(SharedCommentNode *t) { m_sharedCommentNode = t; }
     SharedCommentNode *sharedCommentNode() { return m_sharedCommentNode; }
 

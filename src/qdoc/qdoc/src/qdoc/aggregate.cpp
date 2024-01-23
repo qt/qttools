@@ -210,7 +210,7 @@ FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
 void Aggregate::markUndocumentedChildrenInternal()
 {
     for (auto *child : std::as_const(m_children)) {
-        if (!child->isSharingComment() && !child->hasDoc() && !child->isDontDocument()) {
+        if (!child->hasDoc() && !child->isDontDocument()) {
             if (!child->docMustBeGenerated()) {
                 if (child->isFunction()) {
                     if (static_cast<FunctionNode *>(child)->hasAssociatedProperties())

@@ -642,7 +642,7 @@ const Atom *Generator::generateAtomList(const Atom *atom, const Node *relative, 
 void Generator::generateBody(const Node *node, CodeMarker *marker)
 {
     const FunctionNode *fn = node->isFunction() ? static_cast<const FunctionNode *>(node) : nullptr;
-    if (!node->hasDoc() && !node->hasSharedDoc()) {
+    if (!node->hasDoc()) {
         /*
           Test for special function, like a destructor or copy constructor,
           that has no documentation.
