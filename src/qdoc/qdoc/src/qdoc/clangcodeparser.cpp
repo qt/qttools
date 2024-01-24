@@ -82,7 +82,6 @@ static const auto kClangDontDisplayDiagnostics = 0;
 
 static CXTranslationUnit_Flags flags_ = static_cast<CXTranslationUnit_Flags>(0);
 
-QByteArray ClangCodeParser::s_fn;
 constexpr const char fnDummyFileName[] = "/fn_dummyfile.cpp";
 
 #ifndef QT_NO_DEBUG_STREAM
@@ -461,10 +460,6 @@ static QString readFile(CXFile cxFile, unsigned int offset1, unsigned int offset
         if (fileName == entry.fileName)
             return fromCache(entry.content, offset1, offset2);
     }
-
-    // "fn_dummyfile.cpp" comes with varying cxFile values
-    if (fileName == fnDummyFileName)
-        return fromCache(ClangCodeParser::fn(), offset1, offset2);
 
     QFile file(QString::fromUtf8(fileName));
     if (file.open(QIODeviceBase::ReadOnly)) { // binary to match clang offsets

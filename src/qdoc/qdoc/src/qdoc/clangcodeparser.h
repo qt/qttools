@@ -29,7 +29,6 @@ public:
     void parseSourceFile(const Location &location, const QString &filePath, CppCodeParser&) override;
     void buildPCH(QString module_header);
     Node *parseFnArg(const Location &location, const QString &fnSignature, const QString &idTag) override;
-    static const QByteArray &fn() { return s_fn; }
 
 private:
     void getDefaultArgs();
@@ -43,7 +42,7 @@ private:
     std::vector<const char *> m_args {};
     QList<QByteArray> m_moreArgs {};
     QStringList m_namespaceScope {};
-    static QByteArray s_fn;
+    QByteArray s_fn;
 };
 
 QT_END_NAMESPACE
