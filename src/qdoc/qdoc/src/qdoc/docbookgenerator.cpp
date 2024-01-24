@@ -4664,8 +4664,7 @@ void DocBookGenerator::generateCollectionNode(CollectionNode *cn)
     // The anchor is only needed if the node has a body.
     else if (
             // generateBody generates something.
-            (cn->isFunction() && ((!cn->hasDoc() && !cn->hasSharedDoc()) || !cn->isSharingComment())) ||
-            cn->isExample() ||
+            !cn->doc().body().isEmpty() ||
             // generateAlsoList generates something.
             !cn->doc().alsoList().empty() ||
             // generateAnnotatedList generates something.
