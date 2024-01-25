@@ -42,6 +42,15 @@ function(filter_generated_ui_headers out_var)
     set("${out_var}" "${result}" PARENT_SCOPE)
 endfunction()
 
+# Remove source files that are unsuitable input for lupdate.
+#    filter_unsuitable_lupdate_input(sources main.cpp foo_de.qm bar.qml whatever_metatypes.json)
+#    -> main.cpp bar.qml
+function(filter_unsuitable_lupdate_input out_var)
+    set(result ${ARGN})
+    list(FILTER result EXCLUDE REGEX "\\.(qm|json)$")
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
 get_filename_component(project_root "${lupdate_project_file}" DIRECTORY)
 
 # Make relative paths absolute to the project root
@@ -64,6 +73,7 @@ foreach(path IN LISTS absolute_sources)
 endforeach()
 
 filter_generated_ui_headers(sources ${existing_sources})
+filter_unsuitable_lupdate_input(sources ${sources})
 
 list_to_json_array("${sources}" json_sources)
 list_to_json_array("${absolute_include_paths}" json_include_paths)
