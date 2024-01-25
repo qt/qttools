@@ -35,6 +35,15 @@ function(filter_nonexistent_files out_var)
     set("${out_var}" "${existing_sources}" PARENT_SCOPE)
 endfunction()
 
+# Remove source files that are unsuitable input for lupdate.
+#    filter_unsuitable_lupdate_input(sources main.cpp foo_de.qm bar.qml whatever_metatypes.json)
+#    -> main.cpp bar.qml
+function(filter_unsuitable_lupdate_input out_var)
+    set(result ${ARGN})
+    list(FILTER result EXCLUDE REGEX "\\.(qm|json)$")
+    set("${out_var}" "${result}" PARENT_SCOPE)
+endfunction()
+
 # Remove ui_foo.h for each foo.ui file found in the sources.
 #    filter_generated_ui_headers(existing_files .../src/foo.ui .../target_autogen/include/ui_foo.h)
 #    -> .../src/foo.ui
@@ -61,6 +70,7 @@ endfunction()
 
 function(prepare_json_sources out_var)
     filter_nonexistent_files(sources ${ARGN})
+    filter_unsuitable_lupdate_input(sources ${sources})
     filter_generated_ui_headers(sources ${sources})
     list_to_json_array("${sources}" result)
     set("${out_var}" "${result}" PARENT_SCOPE)
