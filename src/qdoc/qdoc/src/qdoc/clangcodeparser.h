@@ -6,6 +6,8 @@
 
 #include "cppcodeparser.h"
 
+#include "config.h"
+
 #include <QtCore/qtemporarydir.h>
 #include <QtCore/QStringList>
 
@@ -19,7 +21,7 @@ public:
     static const QStringList accepted_header_file_extensions;
 
 public:
-    ClangCodeParser();
+    ClangCodeParser(const Config&);
     ~ClangCodeParser() override = default;
 
     void initializeParser() override {}

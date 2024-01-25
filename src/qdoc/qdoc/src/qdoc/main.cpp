@@ -394,7 +394,7 @@ static void processQdocconfFile(const QString &fileName)
     WebXMLGenerator webXMLGenerator{file_resolver};
     DocBookGenerator docBookGenerator{file_resolver};
 
-    ClangCodeParser clangParser;
+    ClangCodeParser clangParser(Config::instance());
 
     /*
       Initialize all the classes and data structures with the

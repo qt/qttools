@@ -1427,9 +1427,8 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     return node;
 }
 
-ClangCodeParser::ClangCodeParser()
+ClangCodeParser::ClangCodeParser(const Config& config)
 {
-    Config &config = Config::instance();
     auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
                                             Config::IncludePaths);
 #ifdef Q_OS_MACOS
