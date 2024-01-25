@@ -31,6 +31,14 @@ includes the diff in its output if this happens.
    line for the new test-case.
 8. Push your change upstream.
 
+## Update the expected content for all tests
+If you make a change to QDoc that causes significant changes in output, you may
+need to update the expected output for many, or even all, tests. If you set the
+environment variable `QDOC_REGENERATE_TESTDATA=1` before running the test, all
+current test data will be removed, and QDoc will be run on each project to
+generate new output. Note, however, that the comparison per project is skipped
+in this scenario.
+
 ## Test project structure
 The `testdata` directory is where the test looks for projects to test. Each
 project has its own directory, a `qdocconf` file, and an `expected`

@@ -26,8 +26,21 @@ private:
     QScopedPointer<QTemporaryDir> m_outputDir{};
 };
 
+static inline bool regenerate{false};
+
+//! Update `README.md` if you change the name of this environment variable!
+static constexpr QLatin1StringView REGENERATE_ENVVAR{"QDOC_REGENERATE_TESTDATA"};
+
 void tst_validateQdocOutputFiles::initTestCase()
 {
+    QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+    if (environment.contains(REGENERATE_ENVVAR)) {
+        qInfo() << "Regenerating expected output for all tests.";
+        regenerate = true;
+        qInfo("Removing %s environment variable.", REGENERATE_ENVVAR.constData());
+        environment.remove(REGENERATE_ENVVAR);
+    }
+
     // Build the path to the QDoc binary the same way moc tests do for moc.
     const auto binpath = QLibraryInfo::path(QLibraryInfo::BinariesPath);
     const auto extension = QSysInfo::productType() == "windows" ? ".exe" : "";
@@ -129,10 +142,23 @@ void tst_validateQdocOutputFiles::qdocProjects()
     QFETCH(const QString, qdocconf);
     QFETCH(const QString, expectedPath);
 
-    const QString actualPath = m_outputDir->path();
+    QString actualPath{m_outputDir->path()};
+    if (regenerate) {
+        actualPath = expectedPath;
+        QDir pathToRemove{expectedPath};
+        if (!pathToRemove.removeRecursively())
+            qCritical("Cannot remove expected output directory, aborting!");
+    }
+
     const QStringList arguments{ "-outputdir", actualPath, m_extraParams, qdocconf };
 
     runQDocProcess(arguments);
+
+    if (regenerate) {
+        const QString message = "Regenerated expected output files for" + qdocconf;
+        QSKIP(message.toLocal8Bit().constData());
+    }
+
     std::optional<QByteArray> gitDiff = gitDiffDirectories(actualPath, expectedPath);
     if (gitDiff.has_value()) {
         qInfo() << qUtf8Printable(gitDiff.value());
