@@ -19,9 +19,10 @@ public:
     static const QStringList accepted_header_file_extensions;
 
 public:
+    ClangCodeParser();
     ~ClangCodeParser() override = default;
 
-    void initializeParser() override;
+    void initializeParser() override {}
     void terminateParser() override {}
     QString language() override;
     QStringList sourceFileNameFilter() override;

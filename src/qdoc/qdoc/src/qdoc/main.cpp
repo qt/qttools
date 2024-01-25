@@ -258,7 +258,6 @@ static void processQdocconfFile(const QString &fileName)
 {
     Config &config = Config::instance();
     config.setPreviousCurrentDir(QDir::currentPath());
-    ClangCodeParser clangParser;
 
     /*
       With the default configuration values in place, load
@@ -394,6 +393,8 @@ static void processQdocconfFile(const QString &fileName)
     HtmlGenerator htmlGenerator{file_resolver};
     WebXMLGenerator webXMLGenerator{file_resolver};
     DocBookGenerator docBookGenerator{file_resolver};
+
+    ClangCodeParser clangParser;
 
     /*
       Initialize all the classes and data structures with the

@@ -1427,15 +1427,7 @@ Node *ClangVisitor::nodeForCommentAtLocation(CXSourceLocation loc, CXSourceLocat
     return node;
 }
 
-/*!
-  Get the include paths from the qdoc configuration database
-  \a config. Call the initializeParser() in the base class.
-  Get the defines list from the qdocconf database.
-
-  \note on \macos and Linux, we try to also query the system
-  and framework (\macos) include paths from the compiler.
- */
-void ClangCodeParser::initializeParser()
+ClangCodeParser::ClangCodeParser()
 {
     Config &config = Config::instance();
     auto args = config.getCanonicalPathList(CONFIG_INCLUDEPATHS,
@@ -1445,17 +1437,13 @@ void ClangCodeParser::initializeParser()
 #elif defined(Q_OS_LINUX)
     args.append(Utilities::getInternalIncludePaths(QStringLiteral("g++")));
 #endif
-    m_includePaths.clear();
+
     for (const auto &path : std::as_const(args)) {
         if (!path.isEmpty())
             m_includePaths.append(path.toUtf8());
     }
     m_includePaths.erase(std::unique(m_includePaths.begin(), m_includePaths.end()),
                          m_includePaths.end());
-    m_pchFileDir.reset(nullptr);
-    m_allHeaders.clear();
-    m_pchName.clear();
-    m_defines.clear();
 
     {
         const QStringList tmpDefines{config.get(CONFIG_DEFINES).asStringList()};
@@ -1467,9 +1455,6 @@ void ClangCodeParser::initializeParser()
             }
         }
     }
-
-    qCDebug(lcQdoc).nospace() << __FUNCTION__ << " Clang v" << CINDEX_VERSION_MAJOR << '.'
-                              << CINDEX_VERSION_MINOR;
 }
 
 /*!
