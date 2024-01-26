@@ -60,7 +60,6 @@ private slots:
     void templatedCallables();
     void testGlobalFunctions();
     void proxyPage();
-    void orderingCategoryCommand();
     void tableAfterValue();
     void modulestateCommand();
 
@@ -611,45 +610,6 @@ void tst_generatedOutput::modulestateCommand()
                    "modulestate/moduleinstate-module.webxml "
                    "modulestate/moduleinstate-module.xml "
                    "modulestate/modulestate.index");
-}
-
-void tst_generatedOutput::orderingCategoryCommand() {
-    testAndCompare("testdata/cxx20/cxx20.qdocconf",
-                   "cxx20/bar.html "
-                   "cxx20/bar.webxml "
-                   "cxx20/bar.xml "
-                   "cxx20/baz.html "
-                   "cxx20/baz.webxml "
-                   "cxx20/baz.xml "
-                   "cxx20/comparesstronglywiththreeclassesacrossmultiplelines.html "
-                   "cxx20/comparesstronglywiththreeclassesacrossmultiplelines.webxml "
-                   "cxx20/comparesstronglywiththreeclassesacrossmultiplelines.xml "
-                   "cxx20/comparesstronglywithoneclassandpartiallywithanother.html "
-                   "cxx20/comparesstronglywithoneclassandpartiallywithanother.webxml "
-                   "cxx20/comparesstronglywithoneclassandpartiallywithanother.xml "
-                   "cxx20/comparesstronglywiththreeclasses.html "
-                   "cxx20/comparesstronglywiththreeclasses.webxml "
-                   "cxx20/comparesstronglywiththreeclasses.xml "
-                   "cxx20/comparesstronglywithtwoclasses.html "
-                   "cxx20/comparesstronglywithtwoclasses.webxml "
-                   "cxx20/comparesstronglywithtwoclasses.xml "
-                   "cxx20/cxx20.index "
-                   "cxx20/equalitycomparableclass.html "
-                   "cxx20/equalitycomparableclass.webxml "
-                   "cxx20/equalitycomparableclass.xml "
-                   "cxx20/foo.html "
-                   "cxx20/foo.webxml "
-                   "cxx20/foo.xml "
-                   "cxx20/partiallyorderedclass.html "
-                   "cxx20/partiallyorderedclass.webxml "
-                   "cxx20/partiallyorderedclass.xml "
-                   "cxx20/stronglyorderedclass.html "
-                   "cxx20/stronglyorderedclass.webxml "
-                   "cxx20/stronglyorderedclass.xml "
-                   "cxx20/weaklyorderedclass.html "
-                   "cxx20/weaklyorderedclass.webxml "
-                   "cxx20/weaklyorderedclass.xml"
-    );
 }
 
 int main(int argc, char *argv[])

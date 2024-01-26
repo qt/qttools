@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="cxx20 Reference Documentation" version="" project="cxx20">
+    <namespace name="" status="active" access="public" module="cxx20">
+        <class name="Bar" href="bar.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc"/>
+        <class name="Baz" href="baz.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc"/>
+        <class name="ComparesStronglyWithOneClassAndPartiallyWithAnother" href="comparesstronglywithoneclassandpartiallywithanother.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" brief="Class with various comparison relationships"/>
+        <class name="ComparesStronglyWithThreeClasses" href="comparesstronglywiththreeclasses.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc"/>
+        <class name="ComparesStronglyWithThreeClassesAcrossMultipleLines" href="comparesstronglywiththreeclassesacrossmultiplelines.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc"/>
+        <class name="ComparesStronglyWithTwoClasses" href="comparesstronglywithtwoclasses.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc"/>
+        <class name="EqualityComparableClass" href="equalitycomparableclass.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" comparison_category="equality"/>
+        <class name="Foo" href="foo.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc"/>
+        <class name="PartiallyOrderedClass" href="partiallyorderedclass.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" comparison_category="partial"/>
+        <class name="StronglyOrderedClass" href="stronglyorderedclass.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" comparison_category="strong"/>
+        <class name="WeaklyOrderedClass" href="weaklyorderedclass.html" status="active" access="public" location="classes_with_various_ordering.h" documented="true" module="TestQDoc" comparison_category="weak"/>
+        <module name="TestQDoc" href="testqdoc-module.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

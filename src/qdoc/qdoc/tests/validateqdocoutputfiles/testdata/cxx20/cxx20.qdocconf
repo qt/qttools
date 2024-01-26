@@ -9,19 +9,19 @@ macro.equalitycomparesto  = "\\compareswith equality \1\n\\endcompareswith"
 outputformats             = WebXML HTML DocBook
 WebXML.quotinginformation = true
 WebXML.nosubdirs          = true
-WebXML.outputsubdir = cxx20
+WebXML.outputsubdir = webxml
 
 HTML.nosubdirs = true
-HTML.outputsubdir = cxx20
+HTML.outputsubdir = html
 
 DocBook.nosubdirs = true
-DocBook.outputsubdir = cxx20
+DocBook.outputsubdir = docbook
 
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = ../images
+imagedirs = images
 
 # zero warning policy
 warninglimit = 0
