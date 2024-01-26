@@ -59,16 +59,37 @@ bool creationTimeBefore(const QFileInfo &fi1, const QFileInfo &fi2)
 
     \sa CodeParser::parserForSourceFile, CodeParser::sourceFileNameFilter
 */
-static void parseSourceFiles(const std::set<QString> &sources)
+static void parseSourceFiles(std::vector<QString>&& sources)
 {
     CppCodeParser cpp_code_parser{};
-    for (const QString& source_file_path : sources) {
-        auto *codeParser = CodeParser::parserForSourceFile(source_file_path);
-        if (!codeParser) continue;
 
-        qCDebug(lcQdoc, "Parsing %s", qPrintable(source_file_path));
-        codeParser->parseSourceFile(Config::instance().location(), source_file_path, cpp_code_parser);
-    }
+    std::stable_sort(sources.begin(), sources.end());
+
+    sources.erase (
+        std::unique(sources.begin(), sources.end()),
+        sources.end()
+    );
+
+    auto non_clang_handled_sources =
+        std::stable_partition(sources.begin(), sources.end(), [](const QString& source){
+            return CodeParser::parserForSourceFile(source) == CodeParser::parserForLanguage("Clang");
+        });
+
+
+    std::for_each(sources.begin(), non_clang_handled_sources, [&cpp_code_parser](const QString& source){
+        auto codeParser = static_cast<ClangCodeParser*>(CodeParser::parserForLanguage("Clang"));
+
+        qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
+        codeParser->parseSourceFile(Config::instance().location(), source, cpp_code_parser);
+    });
+
+    std::for_each(non_clang_handled_sources, sources.end(), [&cpp_code_parser](const QString& source){
+        auto *codeParser = CodeParser::parserForSourceFile(source);
+        if (!codeParser) return;
+
+        qCDebug(lcQdoc, "Parsing %s", qPrintable(source));
+        codeParser->parseSourceFile(Config::instance().location(), source, cpp_code_parser);
+    });
 }
 
 /*!
@@ -481,11 +502,12 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc, "Reading sourcedirs");
         sourceList =
                 config.getAllFiles(CONFIG_SOURCES, CONFIG_SOURCEDIRS, excludedDirs, excludedFiles);
-        std::set<QString> sources{};
+
+        std::vector<QString> sources{};
         for (const auto &source : sourceList) {
             if (source.contains(QLatin1String("doc/snippets")))
                 continue;
-            sources.emplace(source);
+            sources.emplace_back(source);
         }
         /*
           Find all the qdoc files in the example dirs, and add
@@ -494,7 +516,7 @@ static void processQdocconfFile(const QString &fileName)
         qCDebug(lcQdoc, "Reading exampledirs");
         QStringList exampleQdocList = config.getExampleQdocFiles(excludedDirs, excludedFiles);
         for (const auto &example : exampleQdocList) {
-            sources.emplace(example);
+            sources.emplace_back(example);
         }
         /*
           Parse each header file in the set using the appropriate parser and add it
@@ -518,7 +540,7 @@ static void processQdocconfFile(const QString &fileName)
             qCInfo(lcQdoc) << "Parse source files for" << project;
 
 
-        parseSourceFiles(sources);
+        parseSourceFiles(std::move(sources));
 
         if (config.get(CONFIG_LOGPROGRESS).asBool())
             qCInfo(lcQdoc) << "Source files parsed for" << project;
