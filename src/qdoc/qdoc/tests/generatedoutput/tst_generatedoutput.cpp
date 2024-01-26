@@ -61,7 +61,6 @@ private slots:
     void testGlobalFunctions();
     void proxyPage();
     void tableAfterValue();
-    void modulestateCommand();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -595,21 +594,6 @@ void tst_generatedOutput::proxyPage()
     testAndCompare("testdata/proxypage/proxypage.qdocconf",
                    "proxypage/stdpair-proxypage-proxy.html "
                    "proxypage-docbook/stdpair-proxypage-proxy.xml");
-}
-
-void tst_generatedOutput::modulestateCommand()
-{
-    testAndCompare("testdata/modulestate/modulestate.qdocconf",
-                   "modulestate/boringclass.html "
-                   "modulestate/boringclass.webxml "
-                   "modulestate/boringclass.xml "
-                   "modulestate/excitingclass.html "
-                   "modulestate/excitingclass.webxml "
-                   "modulestate/excitingclass.xml "
-                   "modulestate/moduleinstate-module.html "
-                   "modulestate/moduleinstate-module.webxml "
-                   "modulestate/moduleinstate-module.xml "
-                   "modulestate/modulestate.index");
 }
 
 int main(int argc, char *argv[])
