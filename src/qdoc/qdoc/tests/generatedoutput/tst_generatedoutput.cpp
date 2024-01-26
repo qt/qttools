@@ -27,7 +27,6 @@ private slots:
     void webXmlFromCpp();
     void webXmlFromQml();
     void webXmlFromCppBug80259();
-    void illformated_documentation();
 
     // DocBook generator (wiht and without extensions)
     void docBookFromQDocFile();
@@ -294,19 +293,6 @@ void tst_generatedOutput::webXmlFromCppBug80259()
                    "html/second.webxml "
                    "html/third.webxml "
                    "html/index.webxml");
-}
-
-void tst_generatedOutput::illformated_documentation()
-{
-    testAndCompare("testdata/illformatted_documentation/illformatted_documentation.qdocconf",
-                   "html/illformatted-examples.webxml "
-                   "html/illformatteddocumentation-someexample-example.webxml "
-                   "html/illformatteddocumentation.index "
-                   "page-with-an-image-at-the-top.html "
-                   "page-with-comment-after-brief.html "
-                   "another-page-with-comments-in-the-brief.html "
-                   "page-with-comment-in-brief.html "
-                   "brief-adventures.html");
 }
 
 void tst_generatedOutput::tableAfterValue()

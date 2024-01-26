@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="page-with-comment-in-brief.html" href="page-with-comment-in-brief.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="Yet, yet another adventure with QDoc's \brief command" fulltitle="Yet, yet another adventure with QDoc's \brief command" subtitle="" brief="Another test that the \brief command isn't entirely broken">
+            <description>
+                <brief>Another test that the \brief command isn't entirely broken.</brief>
+                <para>The brief for this page is: &quot;Another test that the \brief command isn't entirely broken.&quot;</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

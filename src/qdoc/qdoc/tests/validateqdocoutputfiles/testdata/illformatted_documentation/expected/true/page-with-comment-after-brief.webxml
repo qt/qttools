@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="page-with-comment-after-brief.html" href="page-with-comment-after-brief.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="Yet another adventure with QDoc's \brief command" fulltitle="Yet another adventure with QDoc's \brief command" subtitle="" brief="Another test that the \brief command doesn't eat content that follows it">
+            <description>
+                <brief>Another test that the \brief command doesn't eat content that follows it.</brief>
+                <para>This paragraph should render normally, but might be eaten by the \brief brief because the brief is followed by a QDoc comment (which shouldn't be rendered at all).</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

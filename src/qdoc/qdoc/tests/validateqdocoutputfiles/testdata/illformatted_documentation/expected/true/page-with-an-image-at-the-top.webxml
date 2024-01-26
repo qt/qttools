@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="page-with-an-image-at-the-top.html" href="page-with-an-image-at-the-top.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="This page starts with an image" fulltitle="This page starts with an image" subtitle="" brief="This page has an image right at the top">
+            <description>
+                <brief>This page has an image right at the top.</brief>
+                <para>The image should render as expected, and the alternate text should be there, too. This text is contained in its own paragraph following the image.</para>
+                <para>This paragraph is a new paragraph, and doesn't contain an image.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

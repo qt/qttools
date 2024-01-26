@@ -7,6 +7,7 @@ exampledirs = .
 outputformats             = WebXML HTML
 WebXML.quotinginformation = true
 WebXML.nosubdirs          = true
+WebXML.outputsubdir       = true
 
 warninglimit = 3 # The broken example generates three warnings
 
@@ -24,5 +25,5 @@ locationinfo = false
 # By default, use -outputdir directly, no subdir.
 # outputsubdir '.' matches the root of expected_output/
 HTML.nosubdirs = true
-HTML.outputsubdir = .
+HTML.outputsubdir = html
 

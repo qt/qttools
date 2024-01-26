@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="IllformattedDocumentation Reference Documentation" version="" project="IllformattedDocumentation">
+    <namespace name="" status="active" access="public" module="illformatteddocumentation">
+        <page name="brief-adventures.html" href="brief-adventures.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="Adventures with QDoc's \brief command" fulltitle="Adventures with QDoc's \brief command" subtitle="" brief="Test that the \brief command doesn't eat content that follows it">
+            <keyword name="some-keyword" title="some_keyword"/>
+            <contents name="further-details" title="Further details" level="1"/>
+        </page>
+        <page name="someexample" href="illformatteddocumentation-someexample-example.html" status="active" location="some_example.qdoc" documented="true" groups="illformatted-examples-qml" subtype="example" title="QDoc: some example" fulltitle="QDoc: some example" subtitle=""/>
+        <page name="illformatted-examples.html" href="illformatted-examples.html" status="active" location="illformatted-examples.qdoc" documented="true" groups="all-examples" subtype="page" title="Test generated output for illformatted examples" fulltitle="Test generated output for illformatted examples" subtitle="" brief="Demonstrate correctness for example generation">
+            <contents name="qml-examples" title="QML Examples" level="1"/>
+            <contents name="c-examples" title="C++ Examples" level="1"/>
+        </page>
+        <page name="another-page-with-comments-in-the-brief" href="another-page-with-comments-in-the-brief.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="There's no end to the possibilities!" fulltitle="There's no end to the possibilities!" subtitle="" brief="Another test that the \brief command isn't completely borked"/>
+        <page name="page-with-an-image-at-the-top.html" href="page-with-an-image-at-the-top.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="This page starts with an image" fulltitle="This page starts with an image" subtitle="" brief="This page has an image right at the top"/>
+        <page name="page-with-comment-after-brief.html" href="page-with-comment-after-brief.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="Yet another adventure with QDoc's \brief command" fulltitle="Yet another adventure with QDoc's \brief command" subtitle="" brief="Another test that the \brief command doesn't eat content that follows it"/>
+        <page name="page-with-comment-in-brief.html" href="page-with-comment-in-brief.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="Yet, yet another adventure with QDoc's \brief command" fulltitle="Yet, yet another adventure with QDoc's \brief command" subtitle="" brief="Another test that the \brief command isn't entirely broken"/>
+        <group name="all-examples" href="all-examples.html" status="internal" seen="false" title=""/>
+        <group name="illformatted-examples-qml" href="illformatted-examples-qml.html" status="internal" seen="false" title=""/>
+        <module name="sometestgroup" href="sometestgroup-module.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

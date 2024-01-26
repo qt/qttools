@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="another-page-with-comments-in-the-brief" href="another-page-with-comments-in-the-brief.html" status="active" location="brief_adventures.qdoc" documented="true" subtype="page" title="There's no end to the possibilities!" fulltitle="There's no end to the possibilities!" subtitle="" brief="Another test that the \brief command isn't completely borked">
+            <description>
+                <brief>Another test that the \brief command isn't completely borked</brief>
+                <para>The brief for this page is: &quot;Another test that the \brief command isn't completely borked&quot;. Notice the lack of a trailing full stop in the brief. QDoc should generate a warning about that when generating HTML.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>
