@@ -7,19 +7,19 @@ exampledirs = .
 outputformats             = WebXML HTML DocBook
 WebXML.quotinginformation = true
 WebXML.nosubdirs          = true
-WebXML.outputsubdir = trailingbackslashes
+WebXML.outputsubdir = webxml
 
 HTML.nosubdirs = true
-HTML.outputsubdir = trailingbackslashes
+HTML.outputsubdir =  html
 
 DocBook.nosubdirs = true
-DocBook.outputsubdir = trailingbackslashes
+DocBook.outputsubdir = docbook
 
 sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = ../images
+imagedirs = images
 
 warninglimit.enabled = true
 

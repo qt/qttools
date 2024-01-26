@@ -63,7 +63,6 @@ private slots:
     void proxyPage();
     void orderingCategoryCommand();
     void tableAfterValue();
-    void trailingBackslashes();
     void modulestateCommand();
 
 private:
@@ -611,16 +610,6 @@ void tst_generatedOutput::proxyPage()
     testAndCompare("testdata/proxypage/proxypage.qdocconf",
                    "proxypage/stdpair-proxypage-proxy.html "
                    "proxypage-docbook/stdpair-proxypage-proxy.xml");
-}
-
-void tst_generatedOutput::trailingBackslashes()
-{
-    testAndCompare("testdata/trailing_backslashes/trailingbackslashes.qdocconf",
-                   "trailingbackslashes/struct-members.html "
-                   "trailingbackslashes/struct.html "
-                   "trailingbackslashes/struct.webxml "
-                   "trailingbackslashes/struct.xml "
-                   "trailingbackslashes/trailingbackslashes.index");
 }
 
 void tst_generatedOutput::modulestateCommand()
