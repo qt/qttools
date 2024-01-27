@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="ProxyPage Reference Documentation" version="" project="ProxyPage">
+    <namespace name="" status="active" access="public" module="proxypage">
+        <typedef name="StdPair" href="stdpair-proxypage-proxy.html#StdPair-typedef" status="active" access="public" location="proxy.h" related="0" documented="true" aliasedtype="std::pair&lt;T1, T2&gt;"/>
+        <proxy name="StdPair" href="stdpair-proxypage-proxy.html" status="active" access="public">
+            <typedef name="StdPair" href="stdpair-proxypage-proxy.html#StdPair-typedef" status="active" access="public" location="proxy.h" related="0" documented="true" aliasedtype="std::pair&lt;T1, T2&gt;"/>
+        </proxy>
+    </namespace>
+</INDEX>

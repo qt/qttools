@@ -59,7 +59,6 @@ private slots:
     void testTagFile();
     void templatedCallables();
     void testGlobalFunctions();
-    void proxyPage();
     void tableAfterValue();
 
 private:
@@ -587,13 +586,6 @@ void tst_generatedOutput::testGlobalFunctions()
     testAndCompare("testdata/configs/testglobals.qdocconf",
                    "globals.html "
                    "testglobals-module.html");
-}
-
-void tst_generatedOutput::proxyPage()
-{
-    testAndCompare("testdata/proxypage/proxypage.qdocconf",
-                   "proxypage/stdpair-proxypage-proxy.html "
-                   "proxypage-docbook/stdpair-proxypage-proxy.xml");
 }
 
 int main(int argc, char *argv[])
