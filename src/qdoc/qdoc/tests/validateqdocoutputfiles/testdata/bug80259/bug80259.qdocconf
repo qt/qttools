@@ -10,7 +10,7 @@ sources.fileextensions = "*.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 outputdir = doc
-outputformats = HTML
+outputformats = HTML WebXML
 
 # images
 imagedirs = ../images
@@ -25,5 +25,7 @@ locationinfo = false
 # By default, use -outputdir directly, no subdir.
 # outputsubdir '.' matches the root of expected_output/
 HTML.nosubdirs = true
-HTML.outputsubdir = .
+HTML.outputsubdir = html
 
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml

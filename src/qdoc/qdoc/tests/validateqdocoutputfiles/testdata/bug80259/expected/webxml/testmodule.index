@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="TestModule Reference Documentation" version="" project="TestModule">
+    <namespace name="" status="active" access="public" module="testmodule">
+        <struct name="First" href="first.html" status="active" access="public" location="bbb.h" documented="true" module="TestModule">
+            <class name="Nested" fullname="First::Nested" href="first-nested.html" status="active" access="public" location="bbb.h" documented="true" module="TestModule"/>
+        </struct>
+        <class name="Second" href="second.html" status="active" access="public" location="ccc.h" documented="true" module="TestModule"/>
+        <class name="Third" href="third.html" status="active" access="public" location="aaa.h" documented="true" module="TestModule"/>
+        <page name="index.html" href="index.html" status="active" location="index.qdoc" documented="true" subtype="page" title="doc index" fulltitle="doc index" subtitle=""/>
+        <module name="TestModule" href="testmodule-module.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

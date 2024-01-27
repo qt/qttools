@@ -20,13 +20,11 @@ private slots:
     void htmlFromQDocFile();
     void htmlFromCpp();
     void htmlFromQml();
-    void htmlFromCppBug80259();
 
     // WebXML generator
     void webXmlFromQDocFile();
     void webXmlFromCpp();
     void webXmlFromQml();
-    void webXmlFromCppBug80259();
 
     // DocBook generator (wiht and without extensions)
     void docBookFromQDocFile();
@@ -249,15 +247,6 @@ void tst_generatedOutput::htmlFromQml()
                    "qml-int.html");
 }
 
-void tst_generatedOutput::htmlFromCppBug80259()
-{
-    testAndCompare("testdata/bug80259/testmodule.qdocconf",
-                   "first.html "
-                   "second.html "
-                   "third.html "
-                   "index.html");
-}
-
 void tst_generatedOutput::webXmlFromQDocFile()
 {
     testAndCompare("testdata/configs/webxml_test.qdocconf",
@@ -281,15 +270,6 @@ void tst_generatedOutput::webXmlFromQml()
                    "html/test-componentset-example.webxml "
                    "html/test-nover-qmlmodule.webxml "
                    "html/uicomponents-qmlmodule.webxml");
-}
-
-void tst_generatedOutput::webXmlFromCppBug80259()
-{
-    testAndCompare("testdata/bug80259/webxml_testmodule.qdocconf",
-                   "html/first.webxml "
-                   "html/second.webxml "
-                   "html/third.webxml "
-                   "html/index.webxml");
 }
 
 void tst_generatedOutput::tableAfterValue()
