@@ -196,7 +196,7 @@ void tst_generatedOutput::copyIndexFiles()
 
 void tst_generatedOutput::htmlFromQDocFile()
 {
-    testAndCompare("testdata/configs/test.qdocconf",
+    testAndCompare("testdata/outputfromqdocfiles/test.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html "
                    "qdoctests-qdocmanuallikefileoutput.html "
@@ -248,7 +248,7 @@ void tst_generatedOutput::htmlFromQml()
 
 void tst_generatedOutput::webXmlFromQDocFile()
 {
-    testAndCompare("testdata/configs/webxml_test.qdocconf",
+    testAndCompare("testdata/outputfromqdocfiles/webxml_test.qdocconf",
                    "html/qdoctests-qdocfileoutput.webxml "
                    "html/qdoctests-qdocmanuallikefileoutput.webxml "
                    "html/qdoctests-qdocfileoutput-linking.webxml "
@@ -283,7 +283,7 @@ void tst_generatedOutput::tableAfterValue()
 
 void tst_generatedOutput::docBookFromQDocFile()
 {
-    testAndCompare("testdata/configs/docbook_test.qdocconf",
+    testAndCompare("testdata/outputfromqdocfiles/docbook_test.qdocconf",
                    "docbook/qdoctests-qdocfileoutput.xml "
                    "docbook/qdoctests-qdocmanuallikefileoutput.xml "
                    "docbook/qdoctests-qdocfileoutput-linking.xml "
@@ -322,7 +322,7 @@ void tst_generatedOutput::docBookFromQml()
 
 void tst_generatedOutput::docBookWithExtensionsFromQDocFile()
 {
-    testAndCompare("testdata/configs/docbookext_test.qdocconf",
+    testAndCompare("testdata/outputfromqdocfiles/docbookext_test.qdocconf",
                    "docbookext/qdoctests-qdocfileoutput.xml "
                    "docbookext/qdoctests-qdocmanuallikefileoutput.xml "
                    "docbookext/qdoctests-qdocfileoutput-linking.xml "
@@ -360,7 +360,7 @@ void tst_generatedOutput::docBookWithExtensionsFromQml()
 void tst_generatedOutput::autoNavigation()
 {
     // Same expected files as htmlFromQdocFile, but with auto-generated navigation links
-    testAndCompare("testdata/configs/tocnavigation.qdocconf",
+    testAndCompare("testdata/outputfromqdocfiles/tocnavigation.qdocconf",
                    "qdoctests-qdocfileoutput.html "
                    "qdoctests-qdocfileoutput-linking.html "
                    "qdoctests-qdocfileoutput-exhaustive.html "
@@ -369,7 +369,7 @@ void tst_generatedOutput::autoNavigation()
 
 void tst_generatedOutput::tocBreadcrumbs()
 {
-    testAndCompare("testdata/configs/tocbreadcrumbs.qdocconf",
+    testAndCompare("testdata/outputfromqdocfiles/tocbreadcrumbs.qdocconf",
                    "tocbreadcrumbs/qdoctests-qdocfileoutput.html "
                    "tocbreadcrumbs/qdoctests-qdocfileoutput-linking.html "
                    "tocbreadcrumbs/qdoctests-qdocfileoutput-exhaustive.html "

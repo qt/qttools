@@ -21,10 +21,10 @@ locationinfo = false
 HTML.nosubdirs = true
 HTML.outputsubdir = .
 
-sources = ../outputfromqdocfiles/qdoctests-outputfromqdocfiles.qdoc \
-          ../outputfromqdocfiles/qdoctests-outputfromqdocmanuallikefiles.qdoc
+sources = qdoctests-outputfromqdocfiles.qdoc \
+          qdoctests-outputfromqdocmanuallikefiles.qdoc
 
-exampledirs = ../outputfromqdocfiles/snippets
+exampledirs = snippets
 
 macro.beginqdoc = "\\c {/*!}"
 macro.endqdoc = "\\c */"

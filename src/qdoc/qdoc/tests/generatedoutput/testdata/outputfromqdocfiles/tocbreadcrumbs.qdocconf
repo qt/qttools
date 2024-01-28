@@ -1,6 +1,6 @@
 include(tocnavigation.qdocconf)
 
-sources += ../toc/toc.qdoc
+sources += toc.qdoc
 
 navigation.toctitles    = TOC
 navigation.toctitles.inclusive = true
