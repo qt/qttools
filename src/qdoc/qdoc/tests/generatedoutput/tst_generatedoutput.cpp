@@ -56,7 +56,6 @@ private slots:
     void properties();
     void testTagFile();
     void templatedCallables();
-    void testGlobalFunctions();
     void tableAfterValue();
 
 private:
@@ -559,13 +558,6 @@ void tst_generatedOutput::templatedCallables() {
                    "templatedcallables/templatedclass.html "
                    "templatedcallables/templatedclass.xml "
                    "templatedcallables/templatedclass.webxml");
-}
-
-void tst_generatedOutput::testGlobalFunctions()
-{
-    testAndCompare("testdata/configs/testglobals.qdocconf",
-                   "globals.html "
-                   "testglobals-module.html");
 }
 
 int main(int argc, char *argv[])

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="TestGlobals Reference Documentation" version="" project="TestGlobals">
+    <namespace name="" status="active" access="public" module="testglobals">
+        <function name="foo" href="globals.html#foo" status="active" access="public" location="global.h" documented="true" related="0" meta="plain" type="int" signature="int foo(int a)">
+            <parameter type="int" name="a" default=""/>
+        </function>
+        <function name="foo" href="globals.html#foo-1" status="active" access="public" location="global.h" documented="true" related="1" meta="plain" overload="true" overload-number="1" type="int" signature="int foo(int a, bool b)">
+            <parameter type="int" name="a" default=""/>
+            <parameter type="bool" name="b" default=""/>
+        </function>
+        <class name="Globals" href="globals.html" status="active" access="public" location="global.h" documented="true" module="TestGlobals">
+            <function name="foo" href="globals.html#foo" status="active" access="public" location="global.h" documented="true" related="0" meta="plain" type="int" signature="int foo(int a)">
+                <parameter type="int" name="a" default=""/>
+            </function>
+            <function name="foo" href="globals.html#foo-1" status="active" access="public" location="global.h" documented="true" related="1" meta="plain" overload="true" overload-number="1" type="int" signature="int foo(int a, bool b)">
+                <parameter type="int" name="a" default=""/>
+                <parameter type="bool" name="b" default=""/>
+            </function>
+        </class>
+        <module name="TestGlobals" href="testglobals-module.html" status="active" location="global.qdoc" documented="true" seen="true" title=""/>
+    </namespace>
+</INDEX>

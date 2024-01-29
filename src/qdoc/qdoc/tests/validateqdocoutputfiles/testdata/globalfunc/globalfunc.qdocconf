@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = ../images
+imagedirs = images
 
 # zero warning policy
 warninglimit = 0
@@ -14,10 +14,10 @@ locationinfo = false
 # By default, use -outputdir directly, no subdir.
 # outputsubdir '.' matches the root of expected_output/
 HTML.nosubdirs = true
-HTML.outputsubdir = .
+HTML.outputsubdir = html
 
 project = TestGlobals
-includepaths += -I../globalfunc
+includepaths += -Iglobalfunc
 
-headers = ../globalfunc/global.h
-sources = ../globalfunc/global.qdoc
+headers = global.h
+sources = global.qdoc
