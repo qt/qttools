@@ -55,4 +55,12 @@ manifestmeta.examplecategories = "Application Examples" \
                                  "Desktop" \
                                  "Mobile" \
                                  "Embedded"
-include(docbook.qdocconf)
+
+outputformats             = DocBook
+DocBook.nosubdirs         = true
+DocBook.outputsubdir      = docbook
+DocBook.its            = true
+
+# TODO: DocBook generator has trouble handling shared comment nodes
+# allow two warnings related to these
+warninglimit = 2

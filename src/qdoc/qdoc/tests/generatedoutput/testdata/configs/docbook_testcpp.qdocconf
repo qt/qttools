@@ -29,4 +29,12 @@ macro.nothing = \\dontdocument ()
 macro.testnoautolist = \\if defined(test_noautolist)\n\\noautolist\n\\endif
 
 navigation.cppclassespage = "QDoc Test C++ Classes"
-include(docbook.qdocconf)
+
+outputformats             = DocBook
+DocBook.nosubdirs         = true
+DocBook.outputsubdir      = docbook
+DocBook.its            = true
+
+# TODO: DocBook generator has trouble handling shared comment nodes
+# allow two warnings related to these
+warninglimit = 2
