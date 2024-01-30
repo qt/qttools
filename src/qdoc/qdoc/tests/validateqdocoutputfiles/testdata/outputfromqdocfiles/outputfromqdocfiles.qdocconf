@@ -7,19 +7,24 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = ../images
+imagedirs = images
 
-# zero warning policy
-warninglimit = 0
+# zero warning policy -- here; allow one which is (qdoc) warning: Can't link to ''
+warninglimit = 1
 warninglimit.enabled = true
 
 # don't write host system-specific paths to index files
 locationinfo = false
 
-# By default, use -outputdir directly, no subdir.
-# outputsubdir '.' matches the root of expected_output/
+outputformats             = HTML WebXML DocBook
 HTML.nosubdirs = true
-HTML.outputsubdir = .
+HTML.outputsubdir = html
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir       = webxml
+DocBook.nosubdirs         = true
+DocBook.outputsubdir      = docbook
+DocBook.usedocbookextensions = true
 
 sources = qdoctests-outputfromqdocfiles.qdoc \
           qdoctests-outputfromqdocmanuallikefiles.qdoc
@@ -36,6 +41,3 @@ macro.PROD = QDoc
 macro.borderedimage       = "\\div {class=\"border\"} \\image \1\n\\enddiv"
 
 defines = test_navigation
-
-# allow (qdoc) warning: Can't link to ''
-warninglimit += 1

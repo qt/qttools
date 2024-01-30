@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>TOC</db:title>
+<db:productname>OutputFromQDocFiles</db:productname>
+<db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
+<db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:abstract>
+<db:para>A test project for QDoc build artifacts.</db:para></db:abstract>
+</db:info>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput.xml">QDoc Testing</db:link></db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput-exhaustive.xml">Exhaustive testing of QDoc commands</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:listitem>
+<db:listitem>
+<db:para>Linking</db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput-linking.xml">QDoc Linking Test</db:link></db:para>
+<db:itemizedlist>
+<db:listitem>
+<db:para><db:link xlink:href="qdoctests-qdocfileoutput-linking.xml#link-targets">Link targets</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="crash.xml">Random page</db:link></db:para>
+</db:listitem>
+<db:listitem>
+<db:para><db:link xlink:href="toc.xml">Table of Contents</db:link></db:para>
+</db:listitem>
+</db:itemizedlist>
+</db:listitem>
+</db:itemizedlist>
+</db:article>

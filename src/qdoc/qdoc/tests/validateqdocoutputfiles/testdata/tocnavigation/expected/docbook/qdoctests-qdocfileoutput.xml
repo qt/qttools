@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
 <db:title>Testing QDoc output from .qdoc files</db:title>
 <db:productname>OutputFromQDocFiles</db:productname>
 <db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
-<db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput-linking.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="QDoc Linking Test"/></db:extendedlink>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput-exhaustive.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="Exhaustive testing of QDoc commands"/></db:extendedlink>
 <db:abstract>
 <db:para>This is a simple page for testing purposes only.</db:para>
 </db:abstract>

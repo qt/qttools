@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="toc-test.html" href="toc-test.html" status="active" location="toc.qdoc" documented="true" subtype="page" title="TOC" fulltitle="TOC" subtitle="">
+            <description>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="Testing QDoc output from .qdoc files" href="qdoctests-qdocfileoutput.html" type="page" page="Testing QDoc output from .qdoc files">QDoc Testing</link></para>
+                        <list type="bullet">
+                            <item>
+                                <para>
+                                    <link raw="Exhaustive testing of QDoc commands" href="qdoctests-qdocfileoutput-exhaustive.html" type="page" page="Exhaustive testing of QDoc commands">Exhaustive testing of QDoc commands</link></para>
+                            </item>
+                        </list>
+                    </item>
+                    <item>
+                        <para>Linking</para>
+                        <list type="bullet">
+                            <item>
+                                <para>
+                                    <link raw="QDoc Linking Test" href="qdoctests-qdocfileoutput-linking.html" type="page" page="Testing QDoc's link command">QDoc Linking Test</link></para>
+                                <list type="bullet">
+                                    <item>
+                                        <para>
+                                            <link raw="Link targets" href="qdoctests-qdocfileoutput-linking.html#link-targets" type="page" page="Testing QDoc's link command">Link targets</link></para>
+                                    </item>
+                                </list>
+                            </item>
+                            <item>
+                                <para>
+                                    <link raw="crash.html" href="crash.html" type="page" page="crash.html">Random page</link></para>
+                            </item>
+                            <item>
+                                <para>
+                                    <link raw="Table of Contents" href="toc.html" type="page" page="Table of Contents">Table of Contents</link></para>
+                            </item>
+                        </list>
+                    </item>
+                </list>
+            </description>
+        </page>
+    </document>
+</WebXML>

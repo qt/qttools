@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="qdoctests-qdocfileoutput-exhaustive.html" href="qdoctests-qdocfileoutput-exhaustive.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Exhaustive testing of QDoc commands" fulltitle="Exhaustive testing of QDoc commands" subtitle="" brief="This page is a dumping ground for QDoc commands under test">
+            <contents name="this-is-a-section1" title="This is a section1" level="1"/>
+            <contents name="this-is-a-section2" title="This is a section2" level="2"/>
+            <contents name="this-is-a-section3" title="This is a section3" level="3"/>
+            <contents name="this-is-a-section4" title="This is a section4" level="4"/>
+            <contents name="images" title="Images" level="1"/>
+            <contents name="commands-not-yet-tested" title="Commands not yet tested" level="1"/>
+            <description>
+                <relation href="qdoctests-qdocfileoutput-linking.html" type="page" meta="next" description="Testing QDoc's link command"/>
+                <relation href="qdoctests-qdocfileoutput.html" type="page" meta="previous" description="Testing QDoc output from .qdoc files"/>
+                <brief>This page is a dumping ground for QDoc commands under test.</brief>
+                <section id="this-is-a-section1">
+                    <heading level="1">This is a section1</heading>
+                </section>
+                <section id="this-is-a-section2">
+                    <heading level="2">This is a section2</heading>
+                </section>
+                <section id="this-is-a-section3">
+                    <heading level="3">This is a section3</heading>
+                </section>
+                <section id="this-is-a-section4">
+                    <heading level="4">This is a section4</heading>
+                </section>
+            </description>
+        </page>
+    </document>
+    <badcode>This is bad code</badcode>
+    <para>This text should have a line break riiiiight  noooow.</para>
+    <para>
+        <bold>All your text belong to bold</bold> ...And this is an examble of only <bold>bold</bold> being, well, bold.</para>
+    <dots indent="4">...</dots>
+    <para>This a caption</para>
+    <legalese>
+        <para>Lorem legal ipsum</para>
+    </legalese>
+    <quote>
+        <para>This is a quotation.</para>
+    </quote>
+    <raw format="HTML">        &lt;html&gt;&lt;body&gt;This is &lt;b&gt;raw&lt;/b&gt;. Like the &lt;h1&gt;Eddie Murphy&lt;/h1&gt; movie. Just not as funny.&lt;/body&gt;&lt;/html&gt;
+    </raw>
+    <para>Look, ma! I made a sidebar!</para>
+    <table>
+        <row>
+            <item>
+                <para>Table item in a table row</para>
+            </item>
+        </row>
+        <row>
+            <item>
+                <para>Another item in a different row</para>
+            </item>
+        </row>
+    </table>
+    <para>
+        <bold>Important:</bold> This is really important.</para>
+    <para>
+        <bold>Note:</bold> The code above doesn't compile</para>
+    <section id="images">
+        <heading level="1">Images</heading>
+        <para>An image without any text:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>An image with just an alternative text:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>An image with alternative text and 1-atom caption:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>Image caption</para>
+        <para>An image with alternative text and 2-atom caption:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>Image caption with <bold>bold</bold> text</para>
+        <para>A bordered image:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>A bordered image with a caption:</para>
+        <image href="images/leonardo-da-vinci.png"/>
+        <para>Screenshot of the System Tray Icon</para>
+        <para>An inline image:</para>
+        <para>The is a paragraph containing an <inlineimage href="images/01.png"/> inline image to test if qdoc handles them properly, without considering rest of the line as alt text for the image.</para>
+        <para>An inline image with alt text:</para>
+        <para>Here is another example of <inlineimage href="images/01.png"/> inline image with alternative text, which should be added as an attribute to the inline image.</para>
+        <para>File quoting:</para>
+        <quotefromfile>main.cpp</quotefromfile>
+        <skipto>/if \(/</skipto>
+        <printuntil>/^    \}/</printuntil>
+    </section>
+    <section id="commands-not-yet-tested">
+        <heading level="1">Commands not yet tested</heading>
+        <para>
+            <bold>Warning:</bold> The following commands have yet to be tested: footnote link sincelist header index topicref // or just don’t care, remove it inlineimage printline printto quotefile skipline skipuntil span snippet codeline overload sub sup tableofcontents tt uicontrol endmapref endomit underline unicode</para>
+    </section>
+</WebXML>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="A test project for QDoc build artifacts" version="" project="OutputFromQDocFiles">
+    <namespace name="" status="active" access="public" module="outputfromqdocfiles">
+        <page name="qdoctests-qdocmanuallikefileoutput.html" href="qdoctests-qdocmanuallikefileoutput.html" status="active" location="qdoctests-outputfromqdocmanuallikefiles.qdoc" documented="true" subtype="page" title="Document Navigation" fulltitle="Document Navigation" subtitle="">
+            <target name="previouspage-command"/>
+            <contents name="commands" title="Commands" level="1"/>
+            <contents name="previouspage" title="\previouspage" level="2"/>
+        </page>
+        <page name="qdoctests-qdocfileoutput-exhaustive.html" href="qdoctests-qdocfileoutput-exhaustive.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Exhaustive testing of QDoc commands" fulltitle="Exhaustive testing of QDoc commands" subtitle="" brief="This page is a dumping ground for QDoc commands under test">
+            <contents name="this-is-a-section1" title="This is a section1" level="1"/>
+            <contents name="this-is-a-section2" title="This is a section2" level="2"/>
+            <contents name="this-is-a-section3" title="This is a section3" level="3"/>
+            <contents name="this-is-a-section4" title="This is a section4" level="4"/>
+            <contents name="images" title="Images" level="1"/>
+            <contents name="commands-not-yet-tested" title="Commands not yet tested" level="1"/>
+        </page>
+        <page name="toc.html" href="toc.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Table of Contents" fulltitle="Table of Contents" subtitle=""/>
+        <page name="qdoctests-qdocfileoutput.html" href="qdoctests-qdocfileoutput.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Testing QDoc output from .qdoc files" fulltitle="Testing QDoc output from .qdoc files" subtitle="" brief="This is a simple page for testing purposes only">
+            <contents name="supported-file-types" title="Supported file types" level="1"/>
+            <contents name="further-information" title="Further information" level="1"/>
+            <contents name="linking" title="Linking" level="1"/>
+            <contents name="qdoc-linking-test" title="QDoc Linking Test" level="1"/>
+            <contents name="linking-to-something-in-a-section-title" title="Linking to something in a section title" level="1"/>
+        </page>
+        <page name="qdoctests-qdocfileoutput-linking.html" href="qdoctests-qdocfileoutput-linking.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Testing QDoc's link command" fulltitle="Testing QDoc's link command" subtitle="" brief="This is a page for testing QDoc's link command">
+            <target name="link-test-target"/>
+            <keyword name="qdoc-linking-test" title="QDoc Linking Test"/>
+            <contents name="link-targets" title="Link targets" level="1"/>
+        </page>
+        <page name="crash.html" href="crash.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle=""/>
+    </namespace>
+</INDEX>

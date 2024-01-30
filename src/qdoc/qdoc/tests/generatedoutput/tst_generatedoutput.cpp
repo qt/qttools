@@ -17,26 +17,20 @@ private slots:
     void init();
 
     // HTML generator
-    void htmlFromQDocFile();
     void htmlFromCpp();
     void htmlFromQml();
 
     // WebXML generator
-    void webXmlFromQDocFile();
     void webXmlFromCpp();
     void webXmlFromQml();
 
     // DocBook generator (wiht and without extensions)
-    void docBookFromQDocFile();
     void docBookFromCpp();
     void docBookFromQml();
-    void docBookWithExtensionsFromQDocFile();
     void docBookWithExtensionsFromCpp();
     void docBookWithExtensionsFromQml();
 
     // Output format independent tests
-    void autoNavigation();
-    void tocBreadcrumbs();
     void examplesManifestXmlAndQhp();
     void ignoresinceVariable();
     void templateParameters();
@@ -194,16 +188,6 @@ void tst_generatedOutput::copyIndexFiles()
     }
 }
 
-void tst_generatedOutput::htmlFromQDocFile()
-{
-    testAndCompare("testdata/outputfromqdocfiles/test.qdocconf",
-                   "qdoctests-qdocfileoutput.html "
-                   "qdoctests-qdocfileoutput-linking.html "
-                   "qdoctests-qdocmanuallikefileoutput.html "
-                   "qdoctests-qdocfileoutput-exhaustive.html "
-                   "toc.html");
-}
-
 void tst_generatedOutput::htmlFromCpp()
 {
     testAndCompare("testdata/configs/testcpp.qdocconf",
@@ -246,15 +230,6 @@ void tst_generatedOutput::htmlFromQml()
                    "qml-int.html");
 }
 
-void tst_generatedOutput::webXmlFromQDocFile()
-{
-    testAndCompare("testdata/outputfromqdocfiles/webxml_test.qdocconf",
-                   "html/qdoctests-qdocfileoutput.webxml "
-                   "html/qdoctests-qdocmanuallikefileoutput.webxml "
-                   "html/qdoctests-qdocfileoutput-linking.webxml "
-                   "html/qdoctests-qdocfileoutput-exhaustive.webxml");
-}
-
 void tst_generatedOutput::webXmlFromCpp()
 {
     testAndCompare("testdata/configs/webxml_testcpp.qdocconf",
@@ -279,15 +254,6 @@ void tst_generatedOutput::tableAfterValue()
                    "tableaftervalue/tableaftervalue.index "
                    "tableaftervalue/tableaftervalue.webxml "
                    "tableaftervalue/tableaftervalue.xml");
-}
-
-void tst_generatedOutput::docBookFromQDocFile()
-{
-    testAndCompare("testdata/outputfromqdocfiles/docbook_test.qdocconf",
-                   "docbook/qdoctests-qdocfileoutput.xml "
-                   "docbook/qdoctests-qdocmanuallikefileoutput.xml "
-                   "docbook/qdoctests-qdocfileoutput-linking.xml "
-                   "docbook/qdoctests-qdocfileoutput-exhaustive.xml");
 }
 
 void tst_generatedOutput::docBookFromCpp()
@@ -320,15 +286,6 @@ void tst_generatedOutput::docBookFromQml()
                    "docbook/qml-int.xml");
 }
 
-void tst_generatedOutput::docBookWithExtensionsFromQDocFile()
-{
-    testAndCompare("testdata/outputfromqdocfiles/docbookext_test.qdocconf",
-                   "docbookext/qdoctests-qdocfileoutput.xml "
-                   "docbookext/qdoctests-qdocmanuallikefileoutput.xml "
-                   "docbookext/qdoctests-qdocfileoutput-linking.xml "
-                   "docbookext/qdoctests-qdocfileoutput-exhaustive.xml");
-}
-
 void tst_generatedOutput::docBookWithExtensionsFromCpp()
 {
     testAndCompare("testdata/configs/docbookext_testcpp.qdocconf",
@@ -356,26 +313,6 @@ void tst_generatedOutput::docBookWithExtensionsFromQml()
                    "docbookext/qml-uicomponents-tabwidget.xml "
                    "docbookext/qml-int.xml");
 }
-
-void tst_generatedOutput::autoNavigation()
-{
-    // Same expected files as htmlFromQdocFile, but with auto-generated navigation links
-    testAndCompare("testdata/outputfromqdocfiles/tocnavigation.qdocconf",
-                   "qdoctests-qdocfileoutput.html "
-                   "qdoctests-qdocfileoutput-linking.html "
-                   "qdoctests-qdocfileoutput-exhaustive.html "
-                   "toc.html");
-}
-
-void tst_generatedOutput::tocBreadcrumbs()
-{
-    testAndCompare("testdata/outputfromqdocfiles/tocbreadcrumbs.qdocconf",
-                   "tocbreadcrumbs/qdoctests-qdocfileoutput.html "
-                   "tocbreadcrumbs/qdoctests-qdocfileoutput-linking.html "
-                   "tocbreadcrumbs/qdoctests-qdocfileoutput-exhaustive.html "
-                   "tocbreadcrumbs/toc-test.html");
-}
-
 
 void tst_generatedOutput::examplesManifestXmlAndQhp()
 {

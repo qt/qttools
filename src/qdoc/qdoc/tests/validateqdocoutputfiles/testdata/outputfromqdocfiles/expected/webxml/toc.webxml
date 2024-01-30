@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="toc.html" href="toc.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="Table of Contents" fulltitle="Table of Contents" subtitle="">
+            <description>
+                <relation href="qdoctests-qdocfileoutput-linking.html" type="page" meta="previous" description="Testing QDoc's link command"/>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="Testing QDoc output from .qdoc files" href="qdoctests-qdocfileoutput.html" type="page" page="Testing QDoc output from .qdoc files">QDoc Testing</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="QDoc Linking Test" href="qdoctests-qdocfileoutput-linking.html" type="page" page="Testing QDoc's link command">QDoc Linking Test</link></para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="Table of Contents" href="toc.html" type="page" page="Table of Contents">Table of Contents</link></para>
+                    </item>
+                </list>
+            </description>
+        </page>
+    </document>
+</WebXML>

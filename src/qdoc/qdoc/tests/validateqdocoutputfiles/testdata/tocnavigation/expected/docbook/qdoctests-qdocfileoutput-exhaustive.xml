@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:its="http://www.w3.org/2005/11/its" version="5.2" xml:lang="en">
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
 <db:info>
 <db:title>Exhaustive testing of QDoc commands</db:title>
 <db:productname>OutputFromQDocFiles</db:productname>
 <db:edition>OutputFromQDocFiles - A test project for QDoc build artifacts</db:edition>
 <db:titleabbrev>A test project for QDoc build artifacts</db:titleabbrev>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput.xml" xlink:type="arc" xlink:arcrole="prev" xlink:title="QDoc Testing"/></db:extendedlink>
+<db:extendedlink xlink:type="extended"><db:link xlink:to="qdoctests-qdocfileoutput-linking.xml" xlink:type="arc" xlink:arcrole="next" xlink:title="QDoc Linking Test"/></db:extendedlink>
 <db:abstract>
 <db:para>This page is a dumping ground for QDoc commands under test.</db:para>
 </db:abstract>
@@ -17,11 +19,11 @@
 <db:title>This is a section3</db:title>
 <db:section xml:id="this-is-a-section4">
 <db:title>This is a section4</db:title>
-<db:programlisting language="cpp" role="bad" its:translate="no">This is bad code
+<db:programlisting language="cpp" role="bad">This is bad code
 </db:programlisting>
 <db:para>This text should have a line break riiiiight  noooow.</db:para>
 <db:para><db:emphasis role="bold">All your text belong to bold</db:emphasis> ...And this is an examble of only <db:emphasis role="bold">bold</db:emphasis> being, well, bold.</db:para>
-<db:programlisting language="cpp" its:translate="no">    ...
+<db:programlisting language="cpp">    ...
 </db:programlisting>
 <db:title>This a caption</db:title>
 <db:para>Lorem legal ipsum</db:para>
@@ -115,7 +117,7 @@
 </db:imageobject>
 </db:inlinemediaobject> inline image with alternative text, which should be added as an attribute to the inline image.</db:para>
 <db:para>File quoting:</db:para>
-<db:programlisting language="cpp" its:translate="no">    if (false) {
+<db:programlisting language="cpp">    if (false) {
         return 1;
     }
 </db:programlisting>

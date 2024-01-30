@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="crash.html" href="crash.html" status="active" location="qdoctests-outputfromqdocfiles.qdoc" documented="true" subtype="page" title="" fulltitle="" subtitle="">
+            <description>
+                <relation href="toc.html" type="page" meta="next" description="Table of Contents"/>
+                <relation href="qdoctests-qdocfileoutput-linking.html" type="page" meta="previous" description="Testing QDoc's link command"/>
+                <para></para>
+            </description>
+        </page>
+    </document>
+</WebXML>

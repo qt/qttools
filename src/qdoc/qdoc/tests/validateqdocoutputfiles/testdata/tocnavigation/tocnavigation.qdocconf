@@ -1,0 +1,48 @@
+project = OutputFromQDocFiles
+description = "A test project for QDoc build artifacts"
+buildversion = "$project - $description"
+moduleheader =
+
+sources.fileextensions = "*.qml *.cpp *.qdoc"
+headers.fileextensions = "*.h"
+
+# zero warning policy -- here; allow one which is (qdoc) warning: Can't link to ''
+warninglimit = 1
+warninglimit.enabled = true
+
+# don't write host system-specific paths to index files
+locationinfo = false
+
+outputformats             = HTML WebXML DocBook
+HTML.nosubdirs = true
+HTML.outputsubdir = html
+WebXML.quotinginformation = true
+WebXML.nosubdirs          = true
+WebXML.outputsubdir       = webxml
+DocBook.nosubdirs         = true
+DocBook.outputsubdir      = docbook
+DocBook.usedocbookextensions = true
+
+# images
+imagedirs = images
+
+sources = qdoctests-outputfromqdocfiles.qdoc \
+          qdoctests-outputfromqdocmanuallikefiles.qdoc \
+          toc.qdoc
+
+exampledirs = snippets
+
+macro.beginqdoc = "\\c {/*!}"
+macro.endqdoc = "\\c */"
+macro.PROD = QDoc
+
+# Macro from qtbase/doc/global/macros.qdocconf
+# The file cannot be included directly, because it requires many
+# variables to be set, like QT_VER
+macro.borderedimage       = "\\div {class=\"border\"} \\image \1\n\\enddiv"
+
+defines =
+
+navigation.toctitles    = TOC
+navigation.toctitles.inclusive = true
+
