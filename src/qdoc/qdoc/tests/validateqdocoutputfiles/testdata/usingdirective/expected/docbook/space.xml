@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db:article xmlns:db="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" version="5.2" xml:lang="en">
+<db:info>
+<db:title>Space Namespace</db:title>
+<db:productname>UsingDirective</db:productname>
+<db:titleabbrev>UsingDirective Reference Documentation</db:titleabbrev>
+<db:abstract>
+<db:para>A namespace...in space.</db:para>
+</db:abstract>
+</db:info>
+<db:variablelist>
+<db:varlistentry>
+<db:term>Header</db:term>
+<db:listitem>
+<db:para>Space</db:para>
+</db:listitem>
+</db:varlistentry>
+</db:variablelist>
+<db:section xml:id="details">
+<db:title>Detailed Description</db:title>
+</db:section>
+<db:section xml:id="function-documentation">
+<db:title>Function Documentation</db:title>
+<db:section xml:id="spaceFun">
+<db:title>void spaceFun(Space::spacename <db:emphasis>space</db:emphasis>)</db:title>
+<db:para>A <db:code role="parameter">space</db:code> function.</db:para>
+</db:section>
+</db:section>
+</db:article>

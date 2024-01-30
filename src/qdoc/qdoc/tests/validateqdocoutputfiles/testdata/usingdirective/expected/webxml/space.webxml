@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="Space" href="space.html" status="active" access="public" location="space.h" documented="true" module="UsingDirective" brief="A namespace...in space">
+            <description>
+                <brief>A namespace...in space.</brief>
+            </description>
+            <function name="spaceFun" href="space.html#spaceFun" status="active" access="public" location="space.h" documented="true" related="0" meta="plain" type="void" signature="void spaceFun(Space::spacename space)">
+                <parameter type="Space::spacename" name="space" default=""/>
+                <description>
+                    <para>A <argument>space</argument> function.</para>
+                </description>
+            </function>
+        </namespace>
+    </document>
+</WebXML>
