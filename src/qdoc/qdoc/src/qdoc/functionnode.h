@@ -164,7 +164,6 @@ public:
     [[nodiscard]] signed short overloadNumber() const { return m_overloadNumber; }
     FunctionNode *nextOverload() { return m_nextOverload; }
     void setNextOverload(FunctionNode *functionNode) { m_nextOverload = functionNode; }
-    FunctionNode *findPrimaryFunction();
 
     friend int compare(const FunctionNode *f1, const FunctionNode *f2);
 

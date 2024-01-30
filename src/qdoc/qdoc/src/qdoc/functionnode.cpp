@@ -289,26 +289,6 @@ void FunctionNode::removeOverload(FunctionNode *functionNode)
 }
 
 /*!
-  Returns the primary function - the first function
-  from the linked list of overloads that is \e not
-  marked as an overload. If found, the primary function
-  is removed from the list and returned. Otherwise
-  returns \c nullptr.
- */
-FunctionNode *FunctionNode::findPrimaryFunction()
-{
-    auto current = this;
-    while (current->m_nextOverload && current->m_nextOverload->isOverload())
-        current = current->m_nextOverload;
-
-    auto primary = current->m_nextOverload;
-    if (primary)
-        current->m_nextOverload = primary->m_nextOverload;
-
-    return primary;
-}
-
-/*!
   \fn void FunctionNode::setReimpFlag()
 
   Sets the function node's reimp flag to \c true, which means
