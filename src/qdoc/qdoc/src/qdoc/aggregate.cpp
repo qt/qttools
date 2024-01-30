@@ -10,6 +10,7 @@
 #include "qmlpropertynode.h"
 #include "qmltypenode.h"
 #include "sharedcommentnode.h"
+#include <vector>
 
 QT_BEGIN_NAMESPACE
 
@@ -227,48 +228,50 @@ void Aggregate::markUndocumentedChildrenInternal()
 }
 
 /*!
-  This is where we set the overload numbers for function nodes.
+  Traverses the linked overload lists in the function map, sorts them,
+  and assigns overload numbers.
+
+  For sorting, active functions take precedence over internal ones, as well
+  as ones marked as \\overload - the latter ones typically do not contain
+  full documentation, so selecting them as the \e primary function
+  (i.e. head of the linked list) would cause unnecessary warnings to be
+  generated.
+
+  Otherwise, the order is set as determined by FunctionNode::compare().
  */
 void Aggregate::normalizeOverloads()
 {
-    /*
-      Ensure that none of the primary functions is inactive, private,
-      or marked \e {overload}.
-    */
-    for (auto it = m_functionMap.begin(); it != m_functionMap.end(); ++it) {
-        FunctionNode *fn = it.value();
-        if (fn->isOverload()) {
-            FunctionNode *primary = fn->findPrimaryFunction();
-            if (primary) {
-                primary->setNextOverload(fn);
-                it.value() = primary;
-                fn = primary;
+    for (auto map_it = m_functionMap.begin(); map_it != m_functionMap.end(); ++map_it) {
+        if ((*map_it)->nextOverload()) {
+            auto fn{*map_it};
+            // Place overloads into a vector for sorting
+            std::vector<FunctionNode *> overloads{fn};
+            do {
+                overloads.emplace_back(fn = fn->nextOverload());
+            } while (fn->nextOverload());
+
+            std::sort(overloads.begin(), overloads.end(),
+                [](const FunctionNode *f1, const FunctionNode *f2) -> bool {
+                    if (f1->isInternal() != f2->isInternal())
+                        return f2->isInternal();
+                    if (f1->isOverload() != f2->isOverload())
+                        return f2->isOverload();
+                    // Prioritize documented over undocumented
+                    if (f1->hasDoc() != f2->hasDoc())
+                        return f1->hasDoc();
+                    return (compare(f1, f2) < 0);
+            });
+
+            // Reconstruct the linked overload list
+            int n{0};
+            overloads.emplace_back(nullptr);
+            for (auto vec_it = overloads.begin(); (*vec_it) != nullptr; ++vec_it) {
+                (*vec_it)->setNextOverload(*(vec_it + 1));
+                (*vec_it)->setOverloadNumber(n++);
             }
-        }
-        int count = 0;
-        fn->setOverloadNumber(0); // also clears the overload flag
-        FunctionNode *internalFn = nullptr;
-        while (fn != nullptr) {
-            FunctionNode *next = fn->nextOverload();
-            if (next) {
-                if (next->isInternal()) {
-                    // internal overloads are moved to a separate list
-                    // and processed last
-                    fn->setNextOverload(next->nextOverload());
-                    next->setNextOverload(internalFn);
-                    internalFn = next;
-                } else {
-                    next->setOverloadNumber(++count);
-                    fn = fn->nextOverload();
-                }
-            } else {
-                fn->setNextOverload(internalFn);
-                break;
-            }
-        }
-        while (internalFn) {
-            internalFn->setOverloadNumber(++count);
-            internalFn = internalFn->nextOverload();
+
+            // Insert the new 'primary' function to the map
+            m_functionMap.insert(map_it.key(), overloads.front());
         }
     }
 

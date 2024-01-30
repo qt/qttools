@@ -49,7 +49,7 @@
 <db:title>void name(Child <db:emphasis>child</db:emphasis>, <db:emphasis>name</db:emphasis>)</db:title>
 <db:para>Name a <db:code its:translate="no" role="parameter">child</db:code> of this child using <db:code its:translate="no" role="parameter">name</db:code>.</db:para>
 </db:section>
-<db:section xml:id="name-method-1">
+<db:section xml:id="name-method">
 <db:title>void name()</db:title>
 <db:para>Name all children with random names.</db:para>
 </db:section>
