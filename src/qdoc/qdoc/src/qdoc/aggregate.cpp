@@ -194,12 +194,9 @@ FunctionNode *Aggregate::findFunctionChild(const QString &name, const Parameters
 FunctionNode *Aggregate::findFunctionChild(const FunctionNode *clone)
 {
     FunctionNode *fn = m_functionMap.value(clone->name());
-    while (fn != nullptr) {
-        if (isSameSignature(clone, fn))
-            return fn;
+    while (fn && compare(clone, fn) != 0)
         fn = fn->nextOverload();
-    }
-    return nullptr;
+    return fn;
 }
 
 /*!
@@ -314,54 +311,6 @@ const EnumNode *Aggregate::findEnumNodeForValue(const QString &enumValue) const
             return en;
     }
     return nullptr;
-}
-
-/*!
-  Compare \a f1 to \a f2 and return \c true if they have the same
-  signature. Otherwise return \c false. They must have the same
-  number of parameters, and all the parameter types must be the
-  same. The functions must have the same constness and refness.
-  This is a private function.
- */
-bool Aggregate::isSameSignature(const FunctionNode *f1, const FunctionNode *f2)
-{
-    if (f1->parameters().count() != f2->parameters().count())
-        return false;
-    if (f1->isConst() != f2->isConst())
-        return false;
-    if (f1->isRef() != f2->isRef())
-        return false;
-    if (f1->isRefRef() != f2->isRefRef())
-        return false;
-
-    const Parameters &p1 = f1->parameters();
-    const Parameters &p2 = f2->parameters();
-    for (int i = 0; i < p1.count(); i++) {
-        if (p1.at(i).hasType() && p2.at(i).hasType()) {
-            QString t1 = p1.at(i).type();
-            QString t2 = p2.at(i).type();
-
-            if (t1.size() < t2.size())
-                qSwap(t1, t2);
-
-            /*
-              ### hack for C++ to handle superfluous
-              "Foo::" prefixes gracefully
-             */
-            if (t1 != t2 && t1 != (f2->parent()->name() + "::" + t2)) {
-                // Accept a difference in the template parametters of the type if one
-                // is omited (eg. "QAtomicInteger" == "QAtomicInteger<T>")
-                auto ltLoc = t1.indexOf('<');
-                auto gtLoc = t1.indexOf('>', ltLoc);
-                if (ltLoc < 0 || gtLoc < ltLoc)
-                    return false;
-                t1.remove(ltLoc, gtLoc - ltLoc + 1);
-                if (t1 != t2)
-                    return false;
-            }
-        }
-    }
-    return true;
 }
 
 /*!

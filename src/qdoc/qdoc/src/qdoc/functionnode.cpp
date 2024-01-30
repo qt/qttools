@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 #include "functionnode.h"
-
 #include "propertynode.h"
+
+#include <string>
 
 QT_BEGIN_NAMESPACE
 
@@ -452,36 +453,56 @@ QString FunctionNode::signature(Node::SignatureOptions options) const
 }
 
 /*!
-  Compares this FunctionNode to \a node. If \a sameParent is \c true, compares
-  also the parent of the two nodes. Returns \c true if they describe
-  the same function.
- */
-bool FunctionNode::compare(const Node *node, bool sameParent) const
-{
-    if (!node || !node->isFunction())
-        return false;
+  \fn int FunctionNode::compare(const FunctionNode *f1, const FunctionNode *f2)
 
-    const auto *functionNode = static_cast<const FunctionNode *>(node);
-    if (metaness() != functionNode->metaness())
-        return false;
-    if (sameParent && parent() != functionNode->parent())
-        return false;
-    if (m_returnType != functionNode->returnType())
-        return false;
-    if (isConst() != functionNode->isConst())
-        return false;
-    if (isAttached() != functionNode->isAttached())
-        return false;
-    const Parameters &p = functionNode->parameters();
-    if (m_parameters.count() != p.count())
-        return false;
-    if (!p.isEmpty()) {
-        for (int i = 0; i < p.count(); ++i) {
-            if (m_parameters.at(i).type() != p.at(i).type())
-                return false;
+  Compares FunctionNode \a f1 with \a f2, assumed to have identical names.
+  Returns an integer less than, equal to, or greater than zero if f1 is
+  considered less than, equal to, or greater than f2.
+
+  The main purpose is to provide stable ordering for function overloads.
+ */
+[[nodiscard]] int compare(const FunctionNode *f1, const FunctionNode *f2)
+{
+    // Compare parameter count
+    int param_count{f1->parameters().count()};
+
+    if (int param_diff = param_count - f2->parameters().count(); param_diff != 0)
+        return param_diff;
+
+    // Constness
+    if (f1->isConst() != f2->isConst())
+        return f1->isConst() ? 1 : -1;
+
+    // Reference qualifiers
+    if (f1->isRef() != f2->isRef())
+        return f1->isRef() ? 1 : -1;
+    if (f1->isRefRef() != f2->isRefRef())
+        return f1->isRefRef() ? 1 : -1;
+
+    // Attachedness (applies to QML methods)
+    if (f1->isAttached() != f2->isAttached())
+        return f1->isAttached() ? 1 : -1;
+
+    // Parameter types
+    const Parameters &p1{f1->parameters()};
+    const Parameters &p2{f2->parameters()};
+    for (qsizetype i = 0; i < param_count; ++i) {
+        if (int type_comp = QString::compare(p1.at(i).type(), p2.at(i).type());
+                type_comp != 0) {
+            return type_comp;
         }
     }
-    return true;
+
+    // Template declarations
+    const auto t1{f1->templateDecl()};
+    const auto t2{f2->templateDecl()};
+    if (!t1 && !t2)
+        return 0;
+
+    if (t1 && t2)
+        return (*t1).to_std_string().compare((*t2).to_std_string());
+
+    return t1 ? 1 : -1;
 }
 
 /*!

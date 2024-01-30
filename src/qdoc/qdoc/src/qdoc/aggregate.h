@@ -75,7 +75,6 @@ private:
     friend class Node;
     void addFunction(FunctionNode *fn);
     void adoptFunction(FunctionNode *fn, Aggregate *firstParent);
-    static bool isSameSignature(const FunctionNode *f1, const FunctionNode *f2);
     void dropNonRelatedMembers();
 
 protected:

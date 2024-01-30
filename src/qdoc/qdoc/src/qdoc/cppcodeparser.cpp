@@ -769,7 +769,8 @@ FunctionNode *CppCodeParser::parseMacroArg(const Location &location, const QStri
     macro->setLocation(location);
     macro->setReturnType(returnType);
     macro->setParameters(params);
-    if (macro->compare(oldMacroNode)) {
+    if (oldMacroNode && macro->parent() == oldMacroNode->parent()
+                && compare(macro, oldMacroNode) == 0) {
         location.warning(QStringLiteral("\\macro %1 documented more than once")
                 .arg(macroArg), QStringLiteral("also seen here: %1")
                         .arg(oldMacroNode->doc().location().toString()));

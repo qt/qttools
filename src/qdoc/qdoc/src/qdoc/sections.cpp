@@ -921,7 +921,9 @@ void Sections::buildStdQmlTypeRefPageSections()
                 m_aggregate->findChildren(n->name(), candidates);
                 if (std::any_of(candidates.cbegin(), candidates.cend(), [&n](const Node *c) {
                     if (c->nodeType() == n->nodeType()) {
-                        if (!n->isFunction() || static_cast<const FunctionNode*>(n)->compare(c, false))
+                        if (!n->isFunction() ||
+                                compare(static_cast<const FunctionNode *>(n),
+                                        static_cast<const FunctionNode *>(c)) == 0)
                             return true;
                     }
                     return false;

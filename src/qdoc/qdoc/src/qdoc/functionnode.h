@@ -155,7 +155,6 @@ public:
     [[nodiscard]] bool hasTag(const QString &tag) const override { return (m_tag == tag); }
     void setTag(const QString &tag) { m_tag = tag; }
     [[nodiscard]] const QString &tag() const { return m_tag; }
-    bool compare(const Node *node, bool sameParent = true) const;
     [[nodiscard]] bool isIgnored() const;
     [[nodiscard]] bool hasOverloads() const;
     void setOverloadFlag() { m_overloadFlag = true; }
@@ -166,6 +165,8 @@ public:
     FunctionNode *nextOverload() { return m_nextOverload; }
     void setNextOverload(FunctionNode *functionNode) { m_nextOverload = functionNode; }
     FunctionNode *findPrimaryFunction();
+
+    friend int compare(const FunctionNode *f1, const FunctionNode *f2);
 
 private:
     void addAssociatedProperty(PropertyNode *property);
