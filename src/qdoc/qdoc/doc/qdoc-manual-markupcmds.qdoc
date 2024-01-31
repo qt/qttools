@@ -566,7 +566,6 @@
     correspond to the traditional section, subsection, etc used in
     outlining.
 
-    \target section-commands
     \section1 Section commands
 
     In general a document structuring command considers everything
