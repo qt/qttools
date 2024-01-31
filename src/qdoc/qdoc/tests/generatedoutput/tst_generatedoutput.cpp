@@ -46,7 +46,6 @@ private slots:
     void noAutoList();
     void nestedMacro();
     void properties();
-    void testTagFile();
     void templatedCallables();
     void tableAfterValue();
 
@@ -464,11 +463,6 @@ void tst_generatedOutput::properties()
                    "properties/testcpp.index "
                    "properties-docbook/testqdoc-testderived.xml",
                    m_extraParams.toLatin1().data());
-}
-
-void tst_generatedOutput::testTagFile()
-{
-    testAndCompare("testdata/configs/tagfiles.qdocconf", "testtagfile.tags");
 }
 
 void tst_generatedOutput::templatedCallables() {

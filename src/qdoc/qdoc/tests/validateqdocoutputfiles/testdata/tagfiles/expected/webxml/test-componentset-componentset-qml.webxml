@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="componentset/componentset.qml" href="test-componentset-componentset-qml.html" title="componentset.qml Example File" fulltitle="componentset.qml Example File" subtitle="componentset/componentset.qml">
+            <description>
+                <code>&lt;@comment&gt;// Copyright (C) 2023 The Qt Company Ltd.&lt;/@comment&gt;
+&lt;@comment&gt;// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0&lt;/@comment&gt;
+
+import QtQuick 2.0
+
+&lt;@type&gt;Item&lt;/@type&gt; {
+}</code>
+            </description>
+        </page>
+    </document>
+</WebXML>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="cmaketest" href="test-cmaketest-example.html" status="active" location="cmaketest.qdoc" documented="true" subtype="example" title="CMake Example Project" fulltitle="CMake Example Project" subtitle="">
+            <description>
+                <image href="images/leonardo-da-vinci.png"/>
+                <para>Files:</para>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="cmaketest/CMakeLists.txt" href="test-cmaketest-cmakelists-txt.html" type="page" page="CMakeLists.txt Example File">cmaketest/CMakeLists.txt</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="cmaketest/main.cpp" href="test-cmaketest-main-cpp.html" type="page" page="main.cpp Example File">cmaketest/main.cpp</link>
+                        </para>
+                    </item>
+                </list>
+            </description>
+        </page>
+    </document>
+</WebXML>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="TestDerived" fullname="TestQDoc::TestDerived" href="testqdoc-testderived.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" bases="TestQDoc::Test" module="TestCPP" brief="A class in a namespace, derived from Test">
+            <description>
+                <brief>A class in a namespace, derived from <link raw="Test" href="testqdoc-test.html" type="class">Test</link>.</brief>
+            </description>
+            <function name="someValue" fullname="TestQDoc::TestDerived::someValue" href="testqdoc-testderived.html#someValue" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="TestQDoc::TestDerived::NotTypedef" signature="TestQDoc::TestDerived::NotTypedef someValue()">
+                <description>
+                    <para>Returns a value using an aliases type.</para>
+                </description>
+            </function>
+            <function name="staticObsoleteMember" fullname="TestQDoc::TestDerived::staticObsoleteMember" href="testqdoc-testderived-obsolete.html#staticObsoleteMember" status="deprecated" access="public" location="testcpp.h" documented="true" meta="plain" static="true" type="void" signature="void staticObsoleteMember()">
+                <description>
+                    <para>Static obsolete method.</para>
+                </description>
+            </function>
+            <function name="virtualFun" fullname="TestQDoc::TestDerived::virtualFun" href="testqdoc-testderived.html#virtualFun" status="active" access="public" location="testcpp.h" documented="true" meta="plain" virtual="virtual" override="true" type="void" signature="void virtualFun() override">
+                <description/>
+            </function>
+            <typedef name="DerivedType" fullname="TestQDoc::TestDerived::DerivedType" href="testqdoc-testderived.html#DerivedType-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="Test::SomeType">
+                <description>
+                    <para>An aliased typedef.</para>
+                </description>
+            </typedef>
+            <typedef name="NotTypedef" fullname="TestQDoc::TestDerived::NotTypedef" href="testqdoc-testderived.html#NotTypedef-typedef" status="active" access="public" location="testcpp.h" documented="true" aliasedtype="int">
+                <description>
+                    <para>I'm an alias, not a typedef.</para>
+                </description>
+            </typedef>
+        </class>
+    </document>
+</WebXML>

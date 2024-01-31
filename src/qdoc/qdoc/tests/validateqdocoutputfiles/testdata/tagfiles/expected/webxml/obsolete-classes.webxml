@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="obsolete-classes.html" href="obsolete-classes.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Obsolete Classes" fulltitle="Obsolete Classes" subtitle="">
+            <contents name="classes-with-obsolete-members" title="Classes with obsolete members" level="1"/>
+            <contents name="testqdoc" title="TestQDoc" level="2"/>
+            <description>
+                <section id="classes-with-obsolete-members">
+                    <heading level="1">Classes with obsolete members</heading>
+                    <generatedlist contents="obsoletecppmembers"/>
+                </section>
+                <section id="testqdoc">
+                    <heading level="2">TestQDoc</heading>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

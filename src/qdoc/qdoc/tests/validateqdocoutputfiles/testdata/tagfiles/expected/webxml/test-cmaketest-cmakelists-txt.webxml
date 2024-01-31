@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="cmaketest/CMakeLists.txt" href="test-cmaketest-cmakelists-txt.html" title="CMakeLists.txt Example File" fulltitle="CMakeLists.txt Example File" subtitle="cmaketest/CMakeLists.txt">
+            <description>
+                <code>cmake_minimum_required(VERSION 3.16)
+project (QDOCTEST)</code>
+            </description>
+        </page>
+    </document>
+</WebXML>

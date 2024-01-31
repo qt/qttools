@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="componentset/componentset.pro" href="test-componentset-componentset-pro.html" title="componentset.pro Example File" fulltitle="componentset.pro Example File" subtitle="componentset/componentset.pro">
+            <description>
+                <code>SOURCES       = componentset.pro \
+                ProgressBar.qml \
+                Switch.qml \
+                TabWidget.qml \
+                uicomponents.qdoc</code>
+            </description>
+        </page>
+    </document>
+</WebXML>
