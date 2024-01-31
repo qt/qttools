@@ -1159,7 +1159,7 @@ qsizetype DocBookGenerator::generateAtom(const Atom *atom, const Node *relative,
     case Atom::Keyword:
         break;
     case Atom::Target:
-        // Sometimes, there is a \target just before a section title with the same ID. Only outut one xml:id.
+        // Sometimes, there is a \target just before a section title with the same ID. Only output one xml:id.
         if (matchAhead(atom, Atom::SectionRight) && matchAhead(atom->next(), Atom::SectionLeft)) {
             QString nextId = Utilities::asAsciiPrintable(
                     Text::sectionHeading(atom->next()->next()).toString());
