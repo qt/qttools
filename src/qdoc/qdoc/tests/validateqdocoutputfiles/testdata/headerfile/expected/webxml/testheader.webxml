@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <header name="&lt;TestHeader&gt;" href="testheader.html" status="active" documented="true" groups="headers,tests" module="TestCPP" brief="A header file" title="Test Header" fulltitle="&lt;TestHeader&gt; - Test Header" subtitle="">
+            <description>
+                <brief>A header file.</brief>
+            </description>
+            <function name="globalFunc" href="testheader.html#globalFunc" status="active" access="public" location="testheader.h" documented="true" related="0" meta="plain" type="void" brief="Global function" signature="void globalFunc()">
+                <description>
+                    <brief>Global function.</brief>
+                </description>
+            </function>
+            <enum name="Globals" href="testheader.html#Globals-enum" status="active" access="public" location="testheader.h" related="1" documented="true">
+                <value name="Glo" value="0"/>
+                <value name="Bal" value="1"/>
+                <description>
+                    <list type="enum">
+                        <definition>
+                            <term>Glo</term>Glo</definition>
+                        <item/>
+                        <definition>
+                            <term>Bal</term>Bal</definition>
+                        <item/>
+                    </list>
+                </description>
+            </enum>
+            <variable name="globalVar" href="testheader.html#globalVar-var" status="active" access="public" location="testheader.h" related="2" documented="true" type="const int" static="false" brief="Global variable">
+                <description>
+                    <brief>This variable holds Global variable..</brief>
+                </description>
+            </variable>
+        </header>
+    </document>
+</WebXML>

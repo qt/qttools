@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QDOCINDEX>
+<INDEX url="" title="HeaderFile Reference Documentation" version="" project="HeaderFile">
+    <namespace name="" status="active" access="public" module="headerfile">
+        <function name="globalFunc" href="testheader.html#globalFunc" status="active" access="public" location="testheader.h" documented="true" related="0" meta="plain" type="void" brief="Global function" signature="void globalFunc()"/>
+        <header name="&lt;TestHeader&gt;" href="testheader.html" status="active" documented="true" groups="headers,tests" module="TestCPP" brief="A header file" title="Test Header" fulltitle="&lt;TestHeader&gt; - Test Header" subtitle="">
+            <function name="globalFunc" href="testheader.html#globalFunc" status="active" access="public" location="testheader.h" documented="true" related="0" meta="plain" type="void" brief="Global function" signature="void globalFunc()"/>
+            <enum name="Globals" href="testheader.html#Globals-enum" status="active" access="public" location="testheader.h" related="1" documented="true">
+                <value name="Glo" value="0"/>
+                <value name="Bal" value="1"/>
+            </enum>
+            <variable name="globalVar" href="testheader.html#globalVar-var" status="active" access="public" location="testheader.h" related="2" documented="true" type="const int" static="false" brief="Global variable"/>
+        </header>
+        <enum name="Globals" href="testheader.html#Globals-enum" status="active" access="public" location="testheader.h" related="1" documented="true">
+            <value name="Glo" value="0"/>
+            <value name="Bal" value="1"/>
+        </enum>
+        <variable name="globalVar" href="testheader.html#globalVar-var" status="active" access="public" location="testheader.h" related="2" documented="true" type="const int" static="false" brief="Global variable"/>
+        <group name="headers" href="headers.html" status="active" documented="true" seen="true" title="Headers"/>
+        <group name="tests" href="tests.html" status="active" documented="true" seen="true" title="Tests"/>
+        <module name="TestCPP" href="testcpp-module.html" status="internal" seen="false" title=""/>
+    </namespace>
+</INDEX>

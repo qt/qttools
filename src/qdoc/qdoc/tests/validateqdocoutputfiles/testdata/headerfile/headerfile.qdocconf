@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = ../images
+imagedirs = images
 
 # zero warning policy
 warninglimit = 0
@@ -14,10 +14,12 @@ locationinfo = false
 project = HeaderFile
 moduleheader = testheader.h
 
-{includepaths,sourcedirs,headerdirs} += ../headerfile
+{includepaths,sourcedirs,headerdirs} += .
 
-outputformats = HTML DocBook
+outputformats = HTML WebXML DocBook
 HTML.nosubdirs = true
-HTML.outputsubdir = headerfile
+HTML.outputsubdir = html
+WebXML.nosubdirs = true
+WebXML.outputsubdir = webxml
 DocBook.nosubdirs = true
-DocBook.outputsubdir = headerfile-docbook
+DocBook.outputsubdir = docbook

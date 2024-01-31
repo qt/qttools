@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <group name="tests" href="tests.html" status="active" documented="true" seen="true" title="Tests">
+            <description>
+                <table width="100%">
+                    <row>
+                        <item>
+                            <para>
+                                <link raw="&lt;TestHeader&gt;" href="testheader.html" type=""/>
+                            </para>
+                        </item>
+                        <item>
+                            <para>A header file.</para>
+                        </item>
+                    </row>
+                </table>
+            </description>
+        </group>
+    </document>
+</WebXML>
