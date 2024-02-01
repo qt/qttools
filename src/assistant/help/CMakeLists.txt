@@ -6,6 +6,7 @@
 #####################################################################
 
 qt_internal_add_module(Help
+    PLUGIN_TYPES help
     SOURCES
     # QtHelpCore
         qcompressedhelpinfo.cpp qcompressedhelpinfo.h

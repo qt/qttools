@@ -19,6 +19,7 @@ endif()
 add_subdirectory(help)
 add_subdirectory(assistant)
 add_subdirectory(qhelpgenerator)
+add_subdirectory(plugins)
 
 set(QLITEHTML_BIN_PATH ${INSTALL_BINDIR})
 set(QLITEHTML_LIBRARY_PATH ${INSTALL_LIBDIR})
