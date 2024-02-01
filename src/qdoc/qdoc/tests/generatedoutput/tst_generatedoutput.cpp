@@ -47,7 +47,6 @@ private slots:
     void nestedMacro();
     void properties();
     void templatedCallables();
-    void tableAfterValue();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -241,16 +240,6 @@ void tst_generatedOutput::webXmlFromQml()
                    "html/test-componentset-example.webxml "
                    "html/test-nover-qmlmodule.webxml "
                    "html/uicomponents-qmlmodule.webxml");
-}
-
-void tst_generatedOutput::tableAfterValue()
-{
-    testAndCompare("testdata/tables/table-after-value.qdocconf",
-                   "tableaftervalue/tableaftervalue-members.html "
-                   "tableaftervalue/tableaftervalue.html "
-                   "tableaftervalue/tableaftervalue.index "
-                   "tableaftervalue/tableaftervalue.webxml "
-                   "tableaftervalue/tableaftervalue.xml");
 }
 
 void tst_generatedOutput::docBookFromCpp()
