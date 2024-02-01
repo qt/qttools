@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="whatsnew.html" href="whatsnew.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="New Classes and Functions" fulltitle="New Classes and Functions" subtitle="" brief="New classes documentation">
+            <description>
+                <brief>New classes documentation</brief>
+            </description>
+        </page>
+    </document>
+</WebXML>

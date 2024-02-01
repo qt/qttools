@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = ../images
+imagedirs = images
 
 # zero warning policy
 warninglimit = 0
@@ -12,12 +12,13 @@ warninglimit.enabled = true
 locationinfo = false
 
 project = TestCPP
-includepaths += -I../testcpp
+includepaths += -I.
 
-headers = ../testcpp/testcpp.h
-sources = ../testcpp/testcpp.cpp \
-          ../testcpp/classlists.qdoc
-exampledirs = ../testcpp/snippets
+headers = testcpp.h
+sources = testcpp.cpp \
+          classlists.qdoc \
+          scopedenum.qdoc
+exampledirs = snippets
 
 macro.CMDFN = \\\\fn
 macro.nothing = \\dontdocument ()
@@ -27,10 +28,10 @@ navigation.cppclassespage = "QDoc Test C++ Classes"
 
 defines += test_scopedenum
 
-sources += ../scopedenum/scopedenum.qdoc
-
-outputformats = HTML DocBook
+outputformats = HTML WebXML DocBook
 
 {HTML.nosubdirs,DocBook.nosubdirs}  = true
-HTML.outputsubdir                   = scopedenum
-DocBook.outputsubdir                = scopedenum-docbook
+HTML.outputsubdir                   = html
+WebXML.nosubdirs                    = true
+WebXML.outputsubdir                 = webxml
+DocBook.outputsubdir                = docbook

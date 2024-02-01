@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="scoped-enum-linking.html" href="scoped-enum-linking.html" status="active" location="scopedenum.qdoc" documented="true" subtype="page" title="Enum Linking" fulltitle="Enum Linking" subtitle="">
+            <description>
+                <para>Linking to <link raw="TestQDoc::Test::ScopedEnum::All" href="testqdoc-test.html#ScopedEnum-enum" type="enum" enum="TestQDoc::Test::ScopedEnum">All</link>.</para>
+                <para>TestQDoc::Test::ClassicEnum::Howdy does not link, but <link raw="TestQDoc::Test::Howdy" href="testqdoc-test.html#ClassicEnum-enum" type="enum" enum="TestQDoc::Test::ClassicEnum">TestQDoc::Test::Howdy</link> might.</para>
+            </description>
+        </page>
+    </document>
+</WebXML>

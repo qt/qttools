@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="autolinking.html" href="autolinking.html" status="active" location="classlists.qdoc" documented="true" subtype="page" title="Autolinking" fulltitle="Autolinking" subtitle="">
+            <contents name="testqdoc" title="TestQDoc" level="1"/>
+            <contents name="someprop" title="someProp" level="1"/>
+            <description>
+                <section id="testqdoc">
+                    <heading level="1">TestQDoc</heading>
+                    <para>The string <link raw="TestQDoc" href="testqdoc.html" type="namespace">TestQDoc</link> links to the C++ namespace unless linking explicitly, <link raw="#TestQDoc" href="autolinking.html#testqdoc" type="page" page="Autolinking">like this</link>, or <link raw="TestQDoc" href="testqdoc.html" type="namespace">this</link>. Also,</para>
+                    <para>Autolinks:</para>
+                    <list type="bullet">
+                        <item>
+                            <para>
+                                <link raw="TestQDoc::TestDerived" href="testqdoc-testderived.html" type="class">TestQDoc::TestDerived</link></para>
+                        </item>
+                    </list>
+                    <para>Explicit links:</para>
+                    <list type="bullet">
+                        <item>
+                            <para>
+                                <link raw="TestQDoc::TestDerived" href="testqdoc-testderived.html" type="class">TestQDoc::TestDerived</link></para>
+                        </item>
+                        <item>
+                            <para>
+                                <link raw="Obsolete Classes#TestQDoc" href="obsolete-classes.html#testqdoc" type="page" page="Obsolete Classes">Obsolete Classes#TestQDoc</link></para>
+                        </item>
+                    </list>
+                </section>
+                <section id="someprop">
+                    <heading level="1">someProp</heading>
+                </section>
+            </description>
+        </page>
+    </document>
+</WebXML>

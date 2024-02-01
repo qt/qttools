@@ -1,0 +1,51 @@
+// Copyright (C) 2021 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \page obsolete-classes.html
+    \title Obsolete Classes
+
+    \section1 Classes with obsolete members
+    \generatelist obsoletecppmembers
+
+    \section2 TestQDoc
+*/
+
+/*!
+    \page autolinking.html
+    \title Autolinking
+
+    //! a section title that qualifies for autolinking
+    \section1 TestQDoc
+
+    The string TestQDoc links to the C++ namespace unless linking explicitly,
+    \l {#TestQDoc}{like this}, or \l {TestQDoc}{this}. Also,
+
+    Autolinks:
+
+    \list
+        \li TestQDoc::TestDerived
+    \endlist
+
+    Explicit links:
+
+    \list
+        \li \l [CPP] {TestQDoc::TestDerived}
+        \li \l {Obsolete Classes#TestQDoc}
+    \endlist
+
+    //! a section title shadowing a known property name
+    \section1 someProp
+*/
+
+/*!
+    \group cpptypes
+    \title Test C++ Types
+
+    \generatelist testgroup
+*/
+
+/*!
+    \externalpage https://doc.qt.io/qt/17-qdoc-commands-thread.html#reentrant-command
+    \title reentrant
+*/

@@ -34,7 +34,6 @@ private slots:
     void examplesManifestXmlAndQhp();
     void ignoresinceVariable();
     void templateParameters();
-    void scopedEnum();
     void dontDocument();
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
@@ -324,16 +323,6 @@ void tst_generatedOutput::templateParameters()
                    "template/foo.html "
                    "template/bar.html "
                    "template/baz.html");
-}
-
-void tst_generatedOutput::scopedEnum()
-{
-    testAndCompare("testdata/configs/scopedenum.qdocconf",
-                   "scopedenum/testqdoc-test.html "
-                   "scopedenum/scoped-enum-linking.html "
-                   "scopedenum/whatsnew.html "
-                   "scopedenum-docbook/scoped-enum-linking.xml "
-                   "scopedenum-docbook/testqdoc-test.xml");
 }
 
 void tst_generatedOutput::dontDocument()
