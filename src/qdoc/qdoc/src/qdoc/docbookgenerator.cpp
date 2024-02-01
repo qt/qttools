@@ -2839,7 +2839,7 @@ void DocBookGenerator::generateExampleFilePage(const Node *node, ResolvedFile re
 
     // Store current (active) writer
     QXmlStreamWriter *currentWriter = m_writer;
-    m_writer = startDocument(en, resolved_file.get_path());
+    m_writer = startDocument(en, resolved_file.get_query());
     generateHeader(en->fullTitle(), en->subtitle(), en);
 
     Text text;
