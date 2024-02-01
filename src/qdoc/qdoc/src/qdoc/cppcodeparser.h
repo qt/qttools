@@ -5,6 +5,7 @@
 #define CPPCODEPARSER_H
 
 #include "codeparser.h"
+#include "utilities.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -42,8 +43,6 @@ public:
     static bool isQMLMethodTopic(const QString &t);
     static bool isQMLPropertyTopic(const QString &t);
 
-    [[nodiscard]] bool hasTooManyTopics(const Doc &doc) const;
-
     std::pair<NodeList, DocList> processTopicArgs(const Doc &doc);
 
     void processMetaCommand(const Doc &doc, const QString &command, const ArgPair &argLocPair,
@@ -69,6 +68,41 @@ private:
     QString m_exampleImageFilter;
     bool m_showLinkErrors { false };
 };
+
+/*!
+  * \internal
+  * \brief Checks if there are too many topic commands in \a doc.
+  *
+  * This method compares the commands used in \a doc with the set of topic
+  * commands. If zero or one topic command is found, or if all found topic
+  * commands are {\\qml*}-commands, the method returns \c false.
+  *
+  * If more than one topic command is found, QDoc issues a warning and the list
+  * of topic commands used in \a doc, and the method returns \c true.
+  */
+[[nodiscard]] inline bool hasTooManyTopics(const Doc &doc)
+{
+    const QSet<QString> topicCommandsUsed = CppCodeParser::topic_commands & doc.metaCommandsUsed();
+
+    if (topicCommandsUsed.empty() || topicCommandsUsed.size() == 1)
+        return false;
+    if (std::all_of(topicCommandsUsed.cbegin(), topicCommandsUsed.cend(),
+                    [](const auto &cmd) { return cmd.startsWith(QLatin1String("qml")); }))
+        return false;
+
+    const QStringList commands = topicCommandsUsed.values();
+    const QString topicCommands{ std::accumulate(
+            commands.cbegin(), commands.cend(), QString{},
+            [index = qsizetype{ 0 }, numberOfCommands = commands.size()](
+                    const QString &accumulator, const QString &topic) mutable -> QString {
+                return accumulator + QLatin1String("\\") + topic
+                        + Utilities::separator(index++, numberOfCommands);
+            }) };
+
+    doc.location().warning(
+            QStringLiteral("Multiple topic commands found in comment: %1").arg(topicCommands));
+    return true;
+}
 
 QT_END_NAMESPACE
 

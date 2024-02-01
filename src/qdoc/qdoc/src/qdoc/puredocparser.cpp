@@ -80,7 +80,7 @@ void PureDocParser::processQdocComments(QFile& input_file, CppCodeParser& cpp_co
             continue;
         }
 
-        if (cpp_code_parser.hasTooManyTopics(doc))
+        if (hasTooManyTopics(doc))
             continue;
 
         auto [nodes, docs] = cpp_code_parser.processTopicArgs(doc);

@@ -1776,7 +1776,7 @@ void ClangCodeParser::parseSourceFile(const Location & /*location*/, const QStri
 
         // Doc constructor parses the comment.
         Doc doc(loc, end_loc, comment, commands, CppCodeParser::topic_commands);
-        if (cpp_code_parser.hasTooManyTopics(doc))
+        if (hasTooManyTopics(doc))
             continue;
 
         DocList docs;
