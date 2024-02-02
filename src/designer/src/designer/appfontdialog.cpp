@@ -35,7 +35,7 @@ using namespace Qt::StringLiterals;
 enum {FileNameRole = Qt::UserRole + 1, IdRole =  Qt::UserRole + 2 };
 enum { debugAppFontWidget = 0 };
 
-static const char fontFileKeyC[] = "fontFiles";
+static constexpr auto fontFileKeyC = "fontFiles"_L1;
 
 // AppFontManager: Singleton that maintains the mapping of loaded application font
 // ids to the file names (which are not stored in QFontDatabase)
@@ -83,7 +83,7 @@ void AppFontManager::save(QDesignerSettingsInterface *s, const QString &prefix) 
         fontFiles.push_back(fnp.first);
 
     s->beginGroup(prefix);
-    s->setValue(QLatin1StringView(fontFileKeyC),  fontFiles);
+    s->setValue(fontFileKeyC,  fontFiles);
     s->endGroup();
 
     if (debugAppFontWidget)
@@ -92,7 +92,7 @@ void AppFontManager::save(QDesignerSettingsInterface *s, const QString &prefix) 
 
 void AppFontManager::restore(const QDesignerSettingsInterface *s, const QString &prefix)
 {
-    const QString key = prefix + u'/' + QLatin1StringView(fontFileKeyC);
+    const QString key = prefix + u'/' + fontFileKeyC;
     const QStringList fontFiles = s->value(key, QStringList()).toStringList();
 
     if (debugAppFontWidget)

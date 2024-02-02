@@ -50,7 +50,7 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char appFontPrefixC[] = "AppFonts";
+static constexpr auto appFontPrefixC = "AppFonts"_L1;
 
 using ActionList = QList<QAction *>;
 
@@ -220,7 +220,7 @@ QDesignerWorkbench::QDesignerWorkbench(const QStringList &pluginPaths)  :
     }
 
     restoreUISettings();
-    AppFontWidget::restore(m_core->settingsManager(), QLatin1StringView(appFontPrefixC));
+    AppFontWidget::restore(m_core->settingsManager(), appFontPrefixC);
     m_state = StateUp;
 }
 
@@ -627,7 +627,7 @@ void QDesignerWorkbench::saveSettings() const
     QDesignerSettings settings(m_core);
     settings.clearBackup();
     saveGeometries(settings);
-    AppFontWidget::save(m_core->settingsManager(), QLatin1StringView(appFontPrefixC));
+    AppFontWidget::save(m_core->settingsManager(), appFontPrefixC);
 }
 
 void QDesignerWorkbench::saveGeometries(QDesignerSettings &settings) const

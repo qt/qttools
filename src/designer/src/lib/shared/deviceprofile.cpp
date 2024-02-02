@@ -24,15 +24,21 @@
 static const char dpiXPropertyC[] = "_q_customDpiX";
 static const char dpiYPropertyC[] = "_q_customDpiY";
 
+QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
+
+namespace qdesigner_internal {
+
 // XML serialization
 static const char *xmlVersionC="1.0";
 static const char *rootElementC="deviceprofile";
-static const char nameElementC[] = "name";
-static const char fontFamilyElementC[] = "fontfamily";
-static const char fontPointSizeElementC[] = "fontpointsize";
-static const char dPIXElementC[] = "dpix";
-static const char dPIYElementC[] = "dpiy";
-static const char styleElementC[] = "style";
+static constexpr auto nameElementC = "name"_L1;
+static constexpr auto fontFamilyElementC = "fontfamily"_L1;
+static constexpr auto fontPointSizeElementC = "fontpointsize"_L1;
+static constexpr auto dPIXElementC = "dpix"_L1;
+static constexpr auto dPIYElementC = "dpiy"_L1;
+static constexpr auto styleElementC = "style"_L1;
 
 /* DeviceProfile:
  * For preview purposes (preview, widget box, new form dialog), the
@@ -43,10 +49,6 @@ static const char styleElementC[] = "style";
  * as not to interfere with the font settings of the form main container.
  * In addition, the widgetfactory maintains the system settings style
  * and applies it when creating widgets. */
-
-QT_BEGIN_NAMESPACE
-
-namespace qdesigner_internal {
 
 // ---------------- DeviceProfileData
 class DeviceProfileData : public QSharedData {
@@ -284,18 +286,18 @@ QString DeviceProfile::toXml() const
     QXmlStreamWriter writer(&rc);
     writer.writeStartDocument(QLatin1StringView(xmlVersionC));
     writer.writeStartElement(QLatin1StringView(rootElementC));
-    writeElement(writer, QLatin1StringView(nameElementC), d.m_name);
+    writeElement(writer, nameElementC, d.m_name);
 
     if (!d.m_fontFamily.isEmpty())
-        writeElement(writer, QLatin1StringView(fontFamilyElementC), d.m_fontFamily);
+        writeElement(writer, fontFamilyElementC, d.m_fontFamily);
     if (d.m_fontPointSize >= 0)
-        writeElement(writer, QLatin1StringView(fontPointSizeElementC), QString::number(d.m_fontPointSize));
+        writeElement(writer, fontPointSizeElementC, QString::number(d.m_fontPointSize));
     if (d.m_dpiX > 0)
-        writeElement(writer, QLatin1StringView(dPIXElementC), QString::number(d.m_dpiX));
+        writeElement(writer, dPIXElementC, QString::number(d.m_dpiX));
     if (d.m_dpiY > 0)
-        writeElement(writer, QLatin1StringView(dPIYElementC), QString::number(d.m_dpiY));
+        writeElement(writer, dPIYElementC, QString::number(d.m_dpiY));
     if (!d.m_style.isEmpty())
-        writeElement(writer, QLatin1StringView(styleElementC), d.m_style);
+        writeElement(writer, styleElementC, d.m_style);
 
     writer.writeEndElement();
     writer.writeEndDocument();
@@ -321,17 +323,17 @@ static ParseStage nextStage(ParseStage currentStage, QStringView startElement)
     case ParseDPIX:
     case ParseDPIY:
     case ParseStyle:
-        if (startElement == QLatin1StringView(nameElementC))
+        if (startElement == nameElementC)
             return ParseName;
-        if (startElement == QLatin1StringView(fontFamilyElementC))
+        if (startElement == fontFamilyElementC)
             return ParseFontFamily;
-        if (startElement == QLatin1StringView(fontPointSizeElementC))
+        if (startElement == fontPointSizeElementC)
             return ParseFontPointSize;
-        if (startElement == QLatin1StringView(dPIXElementC))
+        if (startElement == dPIXElementC)
             return ParseDPIX;
-        if (startElement == QLatin1StringView(dPIYElementC))
+        if (startElement == dPIYElementC)
             return ParseDPIY;
-        if (startElement == QLatin1StringView(styleElementC))
+        if (startElement == styleElementC)
             return ParseStyle;
         break;
     case ParseError:

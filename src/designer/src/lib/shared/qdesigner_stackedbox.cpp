@@ -313,25 +313,25 @@ QMenu *QStackedWidgetEventFilter::addContextMenuActions(QMenu *popup)
 
 // --------  QStackedWidgetPropertySheet
 
-static const char pagePropertyName[] = "currentPageName";
+static constexpr auto pagePropertyName = "currentPageName"_L1;
 
 QStackedWidgetPropertySheet::QStackedWidgetPropertySheet(QStackedWidget *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),
     m_stackedWidget(object)
 {
-    createFakeProperty(QLatin1StringView(pagePropertyName), QString());
+    createFakeProperty(pagePropertyName, QString());
 }
 
 bool QStackedWidgetPropertySheet::isEnabled(int index) const
 {
-    if (propertyName(index) != QLatin1StringView(pagePropertyName))
+    if (propertyName(index) != pagePropertyName)
         return QDesignerPropertySheet::isEnabled(index);
     return  m_stackedWidget->currentWidget() != nullptr;
 }
 
 void QStackedWidgetPropertySheet::setProperty(int index, const QVariant &value)
 {
-    if (propertyName(index) == QLatin1StringView(pagePropertyName)) {
+    if (propertyName(index) == pagePropertyName) {
         if (QWidget *w = m_stackedWidget->currentWidget())
             w->setObjectName(value.toString());
     } else {
@@ -341,7 +341,7 @@ void QStackedWidgetPropertySheet::setProperty(int index, const QVariant &value)
 
 QVariant QStackedWidgetPropertySheet::property(int index) const
 {
-    if (propertyName(index) == QLatin1StringView(pagePropertyName)) {
+    if (propertyName(index) == pagePropertyName) {
         if (const QWidget *w = m_stackedWidget->currentWidget())
             return w->objectName();
         return QString();
@@ -351,7 +351,7 @@ QVariant QStackedWidgetPropertySheet::property(int index) const
 
 bool QStackedWidgetPropertySheet::reset(int index)
 {
-    if (propertyName(index) == QLatin1StringView(pagePropertyName)) {
+    if (propertyName(index) == pagePropertyName) {
         setProperty(index, QString());
         return true;
     }
@@ -360,7 +360,7 @@ bool QStackedWidgetPropertySheet::reset(int index)
 
 bool QStackedWidgetPropertySheet::checkProperty(const QString &propertyName)
 {
-    return propertyName != QLatin1StringView(pagePropertyName);
+    return propertyName != pagePropertyName;
 }
 
 QT_END_NAMESPACE

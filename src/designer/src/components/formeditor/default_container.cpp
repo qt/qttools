@@ -6,6 +6,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 template <class Container>
 static inline void setCurrentContainerIndex(int index, Container *container)
 {
@@ -21,7 +23,7 @@ static inline void ensureNoParent(QWidget *widget)
         widget->setParent(nullptr);
 }
 
-static const char PageLabel[] = "Page";
+static constexpr auto PageLabel = "Page"_L1;
 
 namespace qdesigner_internal {
 

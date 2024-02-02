@@ -91,8 +91,8 @@ namespace {
     using DomPropertyList = QList<DomProperty *>;
 }
 
-static const char currentUiVersion[] = "4.0";
-static const char clipboardObjectName[] = "__qt_fake_top_level";
+static constexpr auto currentUiVersion = "4.0"_L1;
+static constexpr auto clipboardObjectName = "__qt_fake_top_level"_L1;
 
 #define OLD_RESOURCE_FORMAT // Support pre 4.4 format.
 
@@ -1679,7 +1679,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     m_copyWidget = true;
 
     DomWidget *ui_widget = new DomWidget();
-    ui_widget->setAttributeName(QLatin1StringView(clipboardObjectName));
+    ui_widget->setAttributeName(clipboardObjectName);
     bool hasItems = false;
     // Widgets
     if (!selection.m_widgets.isEmpty()) {
@@ -1718,7 +1718,7 @@ DomUI *QDesignerResource::copy(const FormBuilderClipboard &selection)
     }
     // UI
     DomUI *ui = new DomUI();
-    ui->setAttributeVersion(QLatin1StringView(currentUiVersion));
+    ui->setAttributeVersion(currentUiVersion);
     ui->setElementWidget(ui_widget);
     ui->setElementResources(saveResources(m_resourceBuilder->usedQrcFiles()));
     if (DomCustomWidgets *cws = saveCustomWidgets())

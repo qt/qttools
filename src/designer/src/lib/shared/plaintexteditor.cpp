@@ -13,9 +13,10 @@
 
 QT_BEGIN_NAMESPACE
 
-static const char PlainTextDialogC[] = "PlainTextDialog";
-static const char PlainTextEditorGeometryC[] = "Geometry";
+using namespace Qt::StringLiterals;
 
+static constexpr auto PlainTextDialogC = "PlainTextDialog"_L1;
+static constexpr auto PlainTextEditorGeometryC = "Geometry"_L1;
 
 namespace qdesigner_internal {
 
@@ -37,10 +38,10 @@ PlainTextEditorDialog::PlainTextEditorDialog(QDesignerFormEditorInterface *core,
     vlayout->addWidget(buttonBox);
 
     QDesignerSettingsInterface *settings = core->settingsManager();
-    settings->beginGroup(QLatin1StringView(PlainTextDialogC));
+    settings->beginGroup(PlainTextDialogC);
 
-    if (settings->contains(QLatin1StringView(PlainTextEditorGeometryC)))
-        restoreGeometry(settings->value(QLatin1StringView(PlainTextEditorGeometryC)).toByteArray());
+    if (settings->contains(PlainTextEditorGeometryC))
+        restoreGeometry(settings->value(PlainTextEditorGeometryC).toByteArray());
 
     settings->endGroup();
 }
@@ -48,9 +49,9 @@ PlainTextEditorDialog::PlainTextEditorDialog(QDesignerFormEditorInterface *core,
 PlainTextEditorDialog::~PlainTextEditorDialog()
 {
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1StringView(PlainTextDialogC));
+    settings->beginGroup(PlainTextDialogC);
 
-    settings->setValue(QLatin1StringView(PlainTextEditorGeometryC), saveGeometry());
+    settings->setValue(PlainTextEditorGeometryC, saveGeometry());
     settings->endGroup();
 }
 

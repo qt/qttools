@@ -23,14 +23,12 @@
 #include <QtCore/qfileinfo.h>
 #include <QtCore/qshareddata.h>
 
-
-static const char skinResourcePathC[] = ":/skins/";
-
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char skinExtensionC[] = "skin";
+static constexpr auto skinResourcePathC = ":/skins/"_L1;
+static constexpr auto skinExtensionC = "skin"_L1;
 
 // Pair of skin name, path
 using SkinNamePath = std::pair<QString, QString>;
@@ -41,9 +39,7 @@ enum { SkinComboNoneIndex = 0 };
 static const Skins &defaultSkins() {
     static Skins rc;
     if (rc.isEmpty()) {
-        const QString skinPath = QLatin1StringView(skinResourcePathC);
-        const QString pattern = "*."_L1 + QLatin1StringView(skinExtensionC);
-        const QDir dir(skinPath, pattern);
+        const QDir dir(skinResourcePathC, "*."_L1 + skinExtensionC);
         const QFileInfoList list = dir.entryInfoList(QDir::Dirs|QDir::NoDotAndDotDot, QDir::Name);
         if (list.isEmpty())
             return rc;
@@ -241,7 +237,7 @@ int  PreviewConfigurationWidget::PreviewConfigurationWidgetPrivate::browseSkin()
     dlg.setOption(QFileDialog::ShowDirsOnly);
     const QString title = tr("Load Custom Device Skin");
     dlg.setWindowTitle(title);
-    dlg.setNameFilter(tr("All QVFB Skins (*.%1)").arg(QLatin1StringView(skinExtensionC)));
+    dlg.setNameFilter(tr("All QVFB Skins (*.%1)").arg(skinExtensionC));
 
     int rc = m_lastSkinIndex;
     do {

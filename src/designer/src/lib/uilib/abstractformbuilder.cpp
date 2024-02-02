@@ -56,11 +56,11 @@
 
 Q_DECLARE_METATYPE(QWidgetList)
 
-static const char buttonGroupPropertyC[] = "buttonGroup";
-
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
+
+static constexpr auto buttonGroupPropertyC = "buttonGroup"_L1;
 
 #ifdef QFORMINTERNAL_NAMESPACE
 using namespace QFormInternal;
@@ -1852,7 +1852,7 @@ void QAbstractFormBuilder::saveButtonExtraInfo(const QAbstractButton *widget, Do
         domString->setText(buttonGroup->objectName());
         domString->setAttributeNotr(u"true"_s);
         DomProperty *domProperty = new DomProperty();
-        domProperty->setAttributeName(QLatin1StringView(buttonGroupPropertyC));
+        domProperty->setAttributeName(buttonGroupPropertyC);
         domProperty->setElementString(domString);
         attributes += domProperty;
         ui_widget->setElementAttribute(attributes);
@@ -2193,7 +2193,7 @@ static QString buttonGroupName(const DomWidget *ui_widget)
     const auto &attributes = ui_widget->elementAttribute();
     if (attributes.isEmpty())
         return QString();
-    const QString buttonGroupProperty = QLatin1StringView(buttonGroupPropertyC);
+    const QString buttonGroupProperty = buttonGroupPropertyC;
     for (const DomProperty *p : attributes) {
         if (p->attributeName() == buttonGroupProperty)
             return p->elementString()->text();

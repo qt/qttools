@@ -19,6 +19,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 enum { debugZoomWidget = 0 };
 
 static const int menuZoomList[] = { 100, 25, 50, 75, 125, 150 , 175, 200 };
@@ -224,7 +226,7 @@ QVariant ZoomProxyWidget::itemChange(GraphicsItemChange change, const QVariant &
  * It redirects the events to another handler of ZoomWidget as its
  * base class QScrollArea also implements eventFilter() for its viewport. */
 
-static const char zoomedEventFilterRedirectorNameC[] = "__qt_ZoomedEventFilterRedirector";
+static constexpr auto zoomedEventFilterRedirectorNameC = "__qt_ZoomedEventFilterRedirector"_L1;
 
 class ZoomedEventFilterRedirector : public QObject {
     Q_DISABLE_COPY_MOVE(ZoomedEventFilterRedirector)
@@ -241,7 +243,7 @@ ZoomedEventFilterRedirector::ZoomedEventFilterRedirector(ZoomWidget *zw, QObject
     QObject(parent),
     m_zw(zw)
 {
-    setObjectName(QLatin1StringView(zoomedEventFilterRedirectorNameC));
+    setObjectName(zoomedEventFilterRedirectorNameC);
 }
 
 bool ZoomedEventFilterRedirector::eventFilter(QObject *watched, QEvent *event)
@@ -268,7 +270,7 @@ void ZoomWidget::setWidget(QWidget *w, Qt::WindowFlags wFlags)
         scene().removeItem(m_proxy);
         if (QWidget *w = m_proxy->widget()) {
             // remove the event filter
-            if (QObject *evf =  w->findChild<QObject*>(QLatin1StringView(zoomedEventFilterRedirectorNameC)))
+            if (QObject *evf =  w->findChild<QObject*>(zoomedEventFilterRedirectorNameC))
                 w->removeEventFilter(evf);
         }
         m_proxy->deleteLater();

@@ -32,25 +32,25 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/qdebug.h>
 
-static const char widgetBoxRootElementC[] = "widgetbox";
-static const char wbWidgetElementC[] = "widget";
-static const char uiElementC[] = "ui";
-static const char categoryElementC[] = "category";
-static const char categoryEntryElementC[] = "categoryentry";
-static const char wbNameAttributeC[] = "name";
-static const char typeAttributeC[] = "type";
-static const char iconAttributeC[] = "icon";
-static const char defaultTypeValueC[] = "default";
-static const char customValueC[] = "custom";
-static const char iconPrefixC[] = "__qt_icon__";
-static const char scratchPadValueC[] = "scratchpad";
-static const char invisibleNameC[] = "[invisible]";
-
-enum TopLevelRole  { NORMAL_ITEM, SCRATCHPAD_ITEM, CUSTOM_ITEM };
-
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
+
+static constexpr auto widgetBoxRootElementC = "widgetbox"_L1;
+static constexpr auto wbWidgetElementC = "widget"_L1;
+static constexpr auto uiElementC = "ui"_L1;
+static constexpr auto categoryElementC = "category"_L1;
+static constexpr auto categoryEntryElementC = "categoryentry"_L1;
+static constexpr auto wbNameAttributeC = "name"_L1;
+static constexpr auto typeAttributeC = "type"_L1;
+static constexpr auto iconAttributeC = "icon"_L1;
+static constexpr auto defaultTypeValueC = "default"_L1;
+static constexpr auto customValueC = "custom"_L1;
+static constexpr auto iconPrefixC = "__qt_icon__"_L1;
+static constexpr auto scratchPadValueC = "scratchpad"_L1;
+static constexpr auto invisibleNameC = "[invisible]"_L1;
+
+enum TopLevelRole  { NORMAL_ITEM, SCRATCHPAD_ITEM, CUSTOM_ITEM };
 
 static void setTopLevelRole(TopLevelRole tlr, QTreeWidgetItem *item)
 {
@@ -90,7 +90,7 @@ QIcon WidgetBoxTreeWidget::iconForWidget(const QString &iconName) const
     if (iconName.isEmpty())
         return qdesigner_internal::qtLogoIcon();
 
-    if (iconName.startsWith(QLatin1StringView(iconPrefixC))) {
+    if (iconName.startsWith(iconPrefixC)) {
         const auto it = m_pluginIcons.constFind(iconName);
         if (it != m_pluginIcons.constEnd())
             return it.value();
@@ -108,9 +108,9 @@ WidgetBoxCategoryListView *WidgetBoxTreeWidget::categoryViewAt(int idx) const
     return rc;
 }
 
-static const char widgetBoxSettingsGroupC[] = "WidgetBox";
-static const char widgetBoxExpandedKeyC[] = "Closed categories";
-static const char widgetBoxViewModeKeyC[] = "View mode";
+static constexpr auto widgetBoxSettingsGroupC = "WidgetBox"_L1;
+static constexpr auto widgetBoxExpandedKeyC = "Closed categories"_L1;
+static constexpr auto widgetBoxViewModeKeyC = "View mode"_L1;
 
 void WidgetBoxTreeWidget::saveExpandedState() const
 {
@@ -123,9 +123,9 @@ void WidgetBoxTreeWidget::saveExpandedState() const
         }
     }
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1StringView(widgetBoxSettingsGroupC));
-    settings->setValue(QLatin1StringView(widgetBoxExpandedKeyC), closedCategories);
-    settings->setValue(QLatin1StringView(widgetBoxViewModeKeyC), m_iconMode);
+    settings->beginGroup(widgetBoxSettingsGroupC);
+    settings->setValue(widgetBoxExpandedKeyC, closedCategories);
+    settings->setValue(widgetBoxViewModeKeyC, m_iconMode);
     settings->endGroup();
 }
 
@@ -133,10 +133,10 @@ void  WidgetBoxTreeWidget::restoreExpandedState()
 {
     using StringSet = QSet<QString>;
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    const QString groupKey = QLatin1StringView(widgetBoxSettingsGroupC) + u'/';
-    m_iconMode = settings->value(groupKey + QLatin1StringView(widgetBoxViewModeKeyC)).toBool();
+    const QString groupKey = widgetBoxSettingsGroupC + u'/';
+    m_iconMode = settings->value(groupKey + widgetBoxViewModeKeyC).toBool();
     updateViewMode();
-    const auto &closedCategoryList = settings->value(groupKey + QLatin1StringView(widgetBoxExpandedKeyC), QStringList()).toStringList();
+    const auto &closedCategoryList = settings->value(groupKey + widgetBoxExpandedKeyC, QStringList()).toStringList();
     const StringSet closedCategories(closedCategoryList.cbegin(), closedCategoryList.cend());
     expandAll();
     if (closedCategories.isEmpty())
@@ -353,33 +353,33 @@ bool WidgetBoxTreeWidget::readCategories(const QString &fileName, const QString 
         switch (reader.readNext()) {
         case QXmlStreamReader::StartElement: {
             const auto tag = reader.name();
-            if (tag == QLatin1StringView(widgetBoxRootElementC)) {
+            if (tag == widgetBoxRootElementC) {
                 //<widgetbox version="4.5">
                 continue;
             }
-            if (tag == QLatin1StringView(categoryElementC)) {
+            if (tag == categoryElementC) {
                 // <category name="Layouts">
                 const QXmlStreamAttributes attributes = reader.attributes();
-                const QString categoryName = attributes.value(QLatin1StringView(wbNameAttributeC)).toString();
-                if (categoryName == QLatin1StringView(invisibleNameC)) {
+                const QString categoryName = attributes.value(wbNameAttributeC).toString();
+                if (categoryName == invisibleNameC) {
                     ignoreEntries = true;
                 } else {
                     Category category(categoryName);
-                    if (attributes.value(QLatin1StringView(typeAttributeC)) == QLatin1StringView(scratchPadValueC))
+                    if (attributes.value(typeAttributeC) == scratchPadValueC)
                         category.setType(Category::Scratchpad);
                     cats->push_back(category);
                 }
                 continue;
             }
-            if (tag == QLatin1StringView(categoryEntryElementC)) {
+            if (tag == categoryEntryElementC) {
                 //  <categoryentry name="Vertical Layout" icon="win/editvlayout.png" type="default">
                 if (!ignoreEntries) {
                     QXmlStreamAttributes attr = reader.attributes();
-                    const QString widgetName = attr.value(QLatin1StringView(wbNameAttributeC)).toString();
-                    const QString widgetIcon = attr.value(QLatin1StringView(iconAttributeC)).toString();
+                    const QString widgetName = attr.value(wbNameAttributeC).toString();
+                    const QString widgetIcon = attr.value(iconAttributeC).toString();
                     const WidgetBoxTreeWidget::Widget::Type widgetType =
-                        attr.value(QLatin1StringView(typeAttributeC)).toString()
-                            == QLatin1StringView(customValueC) ?
+                        attr.value(typeAttributeC).toString()
+                            == customValueC ?
                         WidgetBoxTreeWidget::Widget::Custom :
                         WidgetBoxTreeWidget::Widget::Default;
 
@@ -398,14 +398,14 @@ bool WidgetBoxTreeWidget::readCategories(const QString &fileName, const QString 
         }
         case QXmlStreamReader::EndElement: {
            const auto tag = reader.name();
-           if (tag == QLatin1StringView(widgetBoxRootElementC)) {
+           if (tag == widgetBoxRootElementC) {
                continue;
            }
-           if (tag == QLatin1StringView(categoryElementC)) {
+           if (tag == categoryElementC) {
                ignoreEntries = false;
                continue;
            }
-           if (tag == QLatin1StringView(categoryEntryElementC)) {
+           if (tag == categoryEntryElementC) {
                continue;
            }
            break;
@@ -459,10 +459,10 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
             if (nesting++ == 0) {
                 // First element must be <ui> or (legacy) <widget>
                 const auto name = r.name();
-                if (name == QLatin1StringView(uiElementC)) {
+                if (name == uiElementC) {
                     startTagPosition = currentPosition;
                 } else {
-                    if (name == QLatin1StringView(wbWidgetElementC)) {
+                    if (name == wbWidgetElementC) {
                         startTagPosition = currentPosition;
                         parsedWidgetTag = true;
                     } else {
@@ -472,7 +472,7 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
                 }
             } else {
                 // We are within <ui> looking for the first <widget> tag
-                if (!parsedWidgetTag && r.name() == QLatin1StringView(wbWidgetElementC)) {
+                if (!parsedWidgetTag && r.name() == wbWidgetElementC) {
                     parsedWidgetTag = true;
                 }
             }
@@ -507,14 +507,14 @@ bool WidgetBoxTreeWidget::readWidget(Widget *w, const QString &xml, QXmlStreamRe
 
 void WidgetBoxTreeWidget::writeCategories(QXmlStreamWriter &writer, const CategoryList &cat_list) const
 {
-    const QString widgetbox = QLatin1StringView(widgetBoxRootElementC);
-    const QString name = QLatin1StringView(wbNameAttributeC);
-    const QString type = QLatin1StringView(typeAttributeC);
-    const QString icon = QLatin1StringView(iconAttributeC);
-    const QString defaultType = QLatin1StringView(defaultTypeValueC);
-    const QString category = QLatin1StringView(categoryElementC);
-    const QString categoryEntry = QLatin1StringView(categoryEntryElementC);
-    const QString iconPrefix = QLatin1StringView(iconPrefixC);
+    const QString widgetbox = widgetBoxRootElementC;
+    const QString name = wbNameAttributeC;
+    const QString type = typeAttributeC;
+    const QString icon = iconAttributeC;
+    const QString defaultType = defaultTypeValueC;
+    const QString category = categoryElementC;
+    const QString categoryEntry = categoryEntryElementC;
+    const QString iconPrefix = iconPrefixC;
 
     //
     // <widgetbox>
@@ -536,7 +536,7 @@ void WidgetBoxTreeWidget::writeCategories(QXmlStreamWriter &writer, const Catego
         writer.writeStartElement(category);
         writer.writeAttribute(name, cat.name());
         if (cat.type() == Category::Scratchpad)
-            writer.writeAttribute(type, QLatin1StringView(scratchPadValueC));
+            writer.writeAttribute(type, scratchPadValueC);
 
         const int widgetCount = cat.widgetCount();
         for (int i = 0; i < widgetCount; ++i) {
@@ -595,8 +595,8 @@ WidgetBoxTreeWidget::CategoryList WidgetBoxTreeWidget::loadCustomCategoryList() 
 
     static const QString customCatName = tr("Custom Widgets");
 
-    const QString invisible = QLatin1StringView(invisibleNameC);
-    const QString iconPrefix = QLatin1StringView(iconPrefixC);
+    const QString invisible = invisibleNameC;
+    const QString iconPrefix = iconPrefixC;
 
     for (QDesignerCustomWidgetInterface *c : customWidgets) {
         const QString dom_xml = c->domXml();
