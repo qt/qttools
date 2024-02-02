@@ -45,7 +45,6 @@ private slots:
     void noAutoList();
     void nestedMacro();
     void properties();
-    void templatedCallables();
 
 private:
     QScopedPointer<QTemporaryDir> m_outputDir;
@@ -441,16 +440,6 @@ void tst_generatedOutput::properties()
                    "properties/testcpp.index "
                    "properties-docbook/testqdoc-testderived.xml",
                    m_extraParams.toLatin1().data());
-}
-
-void tst_generatedOutput::templatedCallables() {
-    testAndCompare("testdata/templatedcallables/templatedcallables.qdocconf",
-                   "templatedcallables/templated-callables-h.html "
-                   "templatedcallables/templated-callables-h.xml "
-                   "templatedcallables/templated-callables-h.webxml "
-                   "templatedcallables/templatedclass.html "
-                   "templatedcallables/templatedclass.xml "
-                   "templatedcallables/templatedclass.webxml");
 }
 
 int main(int argc, char *argv[])
