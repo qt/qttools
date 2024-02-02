@@ -1,0 +1,11 @@
+// Copyright (C) 2020 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+/*!
+    \example demos/hidden
+    \title Hidden Demo
+    \meta tag broken
+    \brief Tagged 'broken', does not appear in examples-manifest.xml.
+
+    Also missing an image, but that's OK as it's broken anyway.
+*/

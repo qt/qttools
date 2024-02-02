@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="demos/demo/demo.cpp" href="test-demos-demo-demo-cpp.html" title="demo.cpp Example File" fulltitle="demo.cpp Example File" subtitle="demos/demo/demo.cpp">
+            <description>
+                <code>&lt;@comment&gt;// Copyright (C) 2023 The Qt Company Ltd.&lt;/@comment&gt;
+&lt;@comment&gt;// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0&lt;/@comment&gt;
+
+&lt;@type&gt;bool&lt;/@type&gt; isOverThousand(&lt;@type&gt;int&lt;/@type&gt; n)
+{
+    &lt;@keyword&gt;if&lt;/@keyword&gt; (n &lt;@op&gt;&amp;gt;&lt;/@op&gt; &lt;@number&gt;1'000&lt;/@number&gt;)
+        &lt;@keyword&gt;return&lt;/@keyword&gt; &lt;@keyword&gt;true&lt;/@keyword&gt;;
+    &lt;@keyword&gt;return&lt;/@keyword&gt; &lt;@keyword&gt;false&lt;/@keyword&gt;;
+}</code>
+            </description>
+        </page>
+    </document>
+</WebXML>

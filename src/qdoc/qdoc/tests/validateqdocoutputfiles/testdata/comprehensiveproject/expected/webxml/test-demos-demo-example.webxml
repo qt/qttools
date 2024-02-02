@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <page name="demos/demo" href="test-demos-demo-example.html" status="active" location="demo.qdoc" documented="true" subtype="example" title="Demo" fulltitle="Demo" subtitle="">
+            <description>
+                <image href="images/leonardo-da-vinci.png"/>
+                <code>    if (n &gt; 1'000)
+        return true;</code>
+                <para>Files:</para>
+                <list type="bullet">
+                    <item>
+                        <para>
+                            <link raw="demos/demo/demo.cpp" href="test-demos-demo-demo-cpp.html" type="page" page="demo.cpp Example File">demos/demo/demo.cpp</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="demos/demo/demo.pro" href="test-demos-demo-demo-pro.html" type="page" page="demo.pro Example File">demos/demo/demo.pro</link>
+                        </para>
+                    </item>
+                    <item>
+                        <para>
+                            <link raw="demos/demo/dontxclude/CMakeLists.txt" href="test-demos-demo-dontxclude-cmakelists-txt.html" type="page" page="CMakeLists.txt Example File">demos/demo/dontxclude/CMakeLists.txt</link>
+                        </para>
+                    </item>
+                </list>
+            </description>
+        </page>
+    </document>
+</WebXML>

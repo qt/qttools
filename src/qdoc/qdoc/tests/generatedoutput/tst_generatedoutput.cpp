@@ -18,20 +18,8 @@ private slots:
 
     // HTML generator
     void htmlFromCpp();
-    void htmlFromQml();
-
-    // WebXML generator
-    void webXmlFromCpp();
-    void webXmlFromQml();
-
-    // DocBook generator (wiht and without extensions)
-    void docBookFromCpp();
-    void docBookFromQml();
-    void docBookWithExtensionsFromCpp();
-    void docBookWithExtensionsFromQml();
 
     // Output format independent tests
-    void examplesManifestXmlAndQhp();
     void ignoresinceVariable();
     void templateParameters();
     void dontDocument();
@@ -196,114 +184,6 @@ void tst_generatedOutput::htmlFromCpp()
                    "autolinking.html "
                    "cpptypes.html "
                    "testqdoc.html");
-}
-
-void tst_generatedOutput::htmlFromQml()
-{
-    testAndCompare("testdata/configs/testqml.qdocconf",
-                   "qmlmodules.html "
-                   "test-componentset-example.html "
-                   "test-cmaketest-example.html "
-                   "uicomponents-qmlmodule.html "
-                   "qdoc-test-qmlmodule.html "
-                   "test-nover-qmlmodule.html "
-                   "qml-qdoc-test-abstractparent.html "
-                   "qml-qdoc-test-child.html "
-                   "qml-qdoc-test-yetanotherchild.html "
-                   "qml-qdoc-test-doctest.html "
-                   "qml-qdoc-test-type-members.html "
-                   "qml-qdoc-test-type-obsolete.html "
-                   "qml-qdoc-test-type.html "
-                   "qml-qdoc-test-oldtype.html "
-                   "qml-test-nover-doctest.html "
-                   "qml-test-nover-typenoversion.html "
-                   "qml-test-nover-typenoversion-members.html "
-                   "qml-uicomponents-progressbar.html "
-                   "qml-uicomponents-switch.html "
-                   "qml-uicomponents-tabwidget.html "
-                   "qml-int.html");
-}
-
-void tst_generatedOutput::webXmlFromCpp()
-{
-    testAndCompare("testdata/configs/webxml_testcpp.qdocconf",
-                   "html/testcpp-module.webxml "
-                   "html/testqdoc-test.webxml "
-                   "html/testqdoc-testderived.webxml");
-}
-
-void tst_generatedOutput::webXmlFromQml()
-{
-    testAndCompare("testdata/configs/webxml_testqml.qdocconf",
-                   "html/test-componentset-example.webxml "
-                   "html/test-nover-qmlmodule.webxml "
-                   "html/uicomponents-qmlmodule.webxml");
-}
-
-void tst_generatedOutput::docBookFromCpp()
-{
-    testAndCompare("testdata/configs/docbook_testcpp.qdocconf",
-                   "docbook/testcpp-module.xml "
-                   "docbook/testqdoc-test.xml "
-                   "docbook/testqdoc-testderived.xml "
-                   "docbook/cpptypes.xml "
-                   "docbook/testqdoc.xml");
-}
-
-void tst_generatedOutput::docBookFromQml()
-{
-    testAndCompare("testdata/configs/docbook_testqml.qdocconf",
-                   "docbook/test-componentset-example.xml "
-                   "docbook/uicomponents-qmlmodule.xml "
-                   "docbook/qdoc-test-qmlmodule.xml "
-                   "docbook/test-nover-qmlmodule.xml "
-                   "docbook/qml-qdoc-test-abstractparent.xml "
-                   "docbook/qml-qdoc-test-child.xml "
-                   "docbook/qml-qdoc-test-yetanotherchild.xml "
-                   "docbook/qml-qdoc-test-doctest.xml "
-                   "docbook/qml-qdoc-test-type.xml "
-                   "docbook/qml-qdoc-test-oldtype.xml "
-                   "docbook/qml-test-nover-typenoversion.xml "
-                   "docbook/qml-uicomponents-progressbar.xml "
-                   "docbook/qml-uicomponents-switch.xml "
-                   "docbook/qml-uicomponents-tabwidget.xml "
-                   "docbook/qml-int.xml");
-}
-
-void tst_generatedOutput::docBookWithExtensionsFromCpp()
-{
-    testAndCompare("testdata/configs/docbookext_testcpp.qdocconf",
-                   "docbookext/testcpp-module.xml "
-                   "docbookext/testqdoc-test.xml "
-                   "docbookext/testqdoc-testderived.xml "
-                   "docbookext/testqdoc.xml");
-}
-
-void tst_generatedOutput::docBookWithExtensionsFromQml()
-{
-    testAndCompare("testdata/configs/docbookext_testqml.qdocconf",
-                   "docbookext/test-componentset-example.xml "
-                   "docbookext/uicomponents-qmlmodule.xml "
-                   "docbookext/qdoc-test-qmlmodule.xml "
-                   "docbookext/test-nover-qmlmodule.xml "
-                   "docbookext/qml-qdoc-test-abstractparent.xml "
-                   "docbookext/qml-qdoc-test-child.xml "
-                   "docbookext/qml-qdoc-test-yetanotherchild.xml "
-                   "docbookext/qml-qdoc-test-doctest.xml "
-                   "docbookext/qml-qdoc-test-type.xml "
-                   "docbookext/qml-test-nover-typenoversion.xml "
-                   "docbookext/qml-uicomponents-progressbar.xml "
-                   "docbookext/qml-uicomponents-switch.xml "
-                   "docbookext/qml-uicomponents-tabwidget.xml "
-                   "docbookext/qml-int.xml");
-}
-
-void tst_generatedOutput::examplesManifestXmlAndQhp()
-{
-    testAndCompare("testdata/configs/examples-qhp.qdocconf",
-                   "examples-manifest.xml "
-                   "test-demos-demo-example.html "
-                   "test.qhp");
 }
 
 void tst_generatedOutput::ignoresinceVariable()
