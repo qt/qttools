@@ -466,7 +466,7 @@ void HelpProjectWriter::writeHashFile(QFile &file)
     hash.addData(&file);
 
     QFile hashFile(file.fileName() + ".sha1");
-    if (!hashFile.open(QFile::WriteOnly | QFile::Text))
+    if (!hashFile.open(QFile::WriteOnly))
         return;
 
     hashFile.write(hash.result().toHex());
@@ -578,7 +578,7 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     project.m_keywords.clear();
 
     QFile file(m_outputDir + QDir::separator() + project.m_fileName);
-    if (!file.open(QFile::WriteOnly | QFile::Text))
+    if (!file.open(QFile::WriteOnly))
         return;
 
     QXmlStreamWriter writer(&file);
