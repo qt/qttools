@@ -27,21 +27,21 @@
 
 using namespace Qt::StringLiterals;
 
-static const char uiElementC[] = "ui";
-static const char languageAttributeC[] = "language";
-static const char widgetElementC[] = "widget";
-static const char displayNameAttributeC[] = "displayname";
-static const char classAttributeC[] = "class";
-static const char customwidgetElementC[] = "customwidget";
-static const char extendsElementC[] = "extends";
-static const char addPageMethodC[] = "addpagemethod";
-static const char propertySpecsC[] = "propertyspecifications";
-static const char stringPropertySpecC[] = "stringpropertyspecification";
-static const char propertyToolTipC[] = "tooltip";
-static const char stringPropertyNameAttrC[] = "name";
-static const char stringPropertyTypeAttrC[] = "type";
-static const char stringPropertyNoTrAttrC[] = "notr";
-static const char jambiLanguageC[] = "jambi";
+static constexpr auto uiElementC = "ui"_L1;
+static constexpr auto languageAttributeC = "language"_L1;
+static constexpr auto widgetElementC = "widget"_L1;
+static constexpr auto displayNameAttributeC = "displayname"_L1;
+static constexpr auto classAttributeC = "class"_L1;
+static constexpr auto customwidgetElementC = "customwidget"_L1;
+static constexpr auto extendsElementC = "extends"_L1;
+static constexpr auto addPageMethodC = "addpagemethod"_L1;
+static constexpr auto propertySpecsC = "propertyspecifications"_L1;
+static constexpr auto stringPropertySpecC = "stringpropertyspecification"_L1;
+static constexpr auto propertyToolTipC = "tooltip"_L1;
+static constexpr auto stringPropertyNameAttrC = "name"_L1;
+static constexpr auto stringPropertyTypeAttrC = "type"_L1;
+static constexpr auto stringPropertyNoTrAttrC = "notr"_L1;
+static constexpr auto jambiLanguageC = "jambi"_L1;
 
 enum { debugPluginManager = 0 };
 
@@ -89,7 +89,7 @@ static inline QString getDesignerLanguage(QDesignerFormEditorInterface *core)
 {
     if (QDesignerLanguageExtension *lang = qt_extension<QDesignerLanguageExtension *>(core->extensionManager(), core)) {
         if (lang->uiExtension() == "jui"_L1)
-            return QLatin1StringView(jambiLanguageC);
+            return jambiLanguageC;
         return u"unknown"_s;
     }
     return u"c++"_s;
@@ -259,12 +259,12 @@ static bool parsePropertySpecs(QXmlStreamReader &sr,
                                QDesignerCustomWidgetSharedData *data,
                                QString *errorMessage)
 {
-    const QString propertySpecs = QLatin1StringView(propertySpecsC);
-    const QString stringPropertySpec = QLatin1StringView(stringPropertySpecC);
-    const QString propertyToolTip = QLatin1StringView(propertyToolTipC);
-    const QString stringPropertyTypeAttr = QLatin1StringView(stringPropertyTypeAttrC);
-    const QString stringPropertyNoTrAttr = QLatin1StringView(stringPropertyNoTrAttrC);
-    const QString stringPropertyNameAttr = QLatin1StringView(stringPropertyNameAttrC);
+    const QString propertySpecs = propertySpecsC;
+    const QString stringPropertySpec = stringPropertySpecC;
+    const QString propertyToolTip = propertyToolTipC;
+    const QString stringPropertyTypeAttr = stringPropertyTypeAttrC;
+    const QString stringPropertyNoTrAttr = stringPropertyNoTrAttrC;
+    const QString stringPropertyNameAttr = stringPropertyNameAttrC;
 
     while (!sr.atEnd()) {
         switch(sr.readNext()) {
@@ -330,8 +330,8 @@ QDesignerCustomWidgetData::ParseResult
     ParseResult rc = ParseOk;
     // Parse for the (optional) <ui> or the first <widget> element
     QStringList elements;
-    elements.push_back(QLatin1StringView(uiElementC));
-    elements.push_back(QLatin1StringView(widgetElementC));
+    elements.push_back(uiElementC);
+    elements.push_back(widgetElementC);
     for (int i = 0; i < 2 && !foundWidget; i++) {
         switch (findElement(elements, sr)) {
         case FindError:
@@ -342,13 +342,13 @@ QDesignerCustomWidgetData::ParseResult
             return ParseError;
         case 0: { // <ui>
             const QXmlStreamAttributes attributes = sr.attributes();
-            data.xmlLanguage = attributes.value(QLatin1StringView(languageAttributeC)).toString();
-            data.xmlDisplayName = attributes.value(QLatin1StringView(displayNameAttributeC)).toString();
+            data.xmlLanguage = attributes.value(languageAttributeC).toString();
+            data.xmlDisplayName = attributes.value(displayNameAttributeC).toString();
             foundUI = true;
         }
             break;
         case 1: // <widget>: Do some sanity checks
-            data.xmlClassName = sr.attributes().value(QLatin1StringView(classAttributeC)).toString();
+            data.xmlClassName = sr.attributes().value(classAttributeC).toString();
             if (data.xmlClassName.isEmpty()) {
                 *errorMessage = QDesignerPluginManager::tr("The class attribute for the class %1 is missing.").arg(name);
                 rc = ParseWarning;
@@ -366,7 +366,7 @@ QDesignerCustomWidgetData::ParseResult
     if (!foundUI)
         return rc;
     elements.clear();
-    elements.push_back(QLatin1StringView(customwidgetElementC));
+    elements.push_back(customwidgetElementC);
     switch (findElement(elements, sr)) {
     case FindError:
         *errorMessage = msgXmlError(name, sr.errorString());
@@ -377,10 +377,7 @@ QDesignerCustomWidgetData::ParseResult
         break;
     }
     // Find <extends>, <addPageMethod>, <stringproperties>
-    elements.clear();
-    elements.push_back(QLatin1StringView(extendsElementC));
-    elements.push_back(QLatin1StringView(addPageMethodC));
-    elements.push_back(QLatin1StringView(propertySpecsC));
+    elements = {extendsElementC, addPageMethodC, propertySpecsC};
     while (true) {
         switch (findElement(elements, sr)) {
         case FindError:

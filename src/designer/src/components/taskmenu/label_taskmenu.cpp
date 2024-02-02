@@ -12,9 +12,11 @@
 #include <QtGui/qaction.h>
 #include <QtGui/qtextdocument.h>
 
-static const char textPropertyC[] = "text";
-
 QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
+
+static constexpr auto textPropertyC = "text"_L1;
 
 namespace qdesigner_internal {
 
@@ -29,7 +31,7 @@ protected:
 };
 
 LabelTaskMenuInlineEditor::LabelTaskMenuInlineEditor(QLabel *w, QObject *parent) :
-      TaskMenuInlineEditor(w, ValidationRichText, QLatin1StringView(textPropertyC), parent)
+      TaskMenuInlineEditor(w, ValidationRichText, textPropertyC, parent)
 {
 }
 
@@ -73,7 +75,7 @@ QList<QAction*> LabelTaskMenu::taskActions() const
 
 void LabelTaskMenu::editRichText()
 {
-    changeTextProperty(QLatin1StringView(textPropertyC), QString(), MultiSelectionMode, m_label->textFormat());
+    changeTextProperty(textPropertyC, QString(), MultiSelectionMode, m_label->textFormat());
 }
 
 }

@@ -31,15 +31,15 @@
 #include <QtCore/qhash.h>
 #include <QtCore/qdebug.h>
 
-static const char buddyPropertyC[] = "buddy";
+QT_BEGIN_NAMESPACE
+
+using namespace Qt::StringLiterals;
+
+static constexpr auto buddyPropertyC = "buddy"_L1;
 static const char *fieldWidgetBaseClasses[] = {
     "QLineEdit", "QComboBox", "QSpinBox", "QDoubleSpinBox", "QCheckBox",
     "QDateEdit", "QTimeEdit", "QDateTimeEdit", "QDial", "QWidget"
 };
-
-QT_BEGIN_NAMESPACE
-
-using namespace Qt::StringLiterals;
 
 namespace qdesigner_internal {
 
@@ -426,7 +426,7 @@ static void addFormLayoutRow(const FormLayoutRow &formLayoutRow, int row, QWidge
     undoStack->push(controlCmd);
     if (formLayoutRow.buddy) {
         SetPropertyCommand *buddyCommand = new SetPropertyCommand(formWindow);
-        buddyCommand->init(widgetPair.first, QLatin1StringView(buddyPropertyC), widgetPair.second->objectName());
+        buddyCommand->init(widgetPair.first, buddyPropertyC, widgetPair.second->objectName());
         undoStack->push(buddyCommand);
     }
     undoStack->endMacro();

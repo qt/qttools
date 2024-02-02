@@ -21,11 +21,11 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char profileExtensionC[] = "qdp";
+static constexpr auto profileExtensionC = "qdp"_L1;
 
 static inline QString fileFilter()
 {
-    return qdesigner_internal::DeviceProfileDialog::tr("Device Profiles (*.%1)").arg(QLatin1StringView(profileExtensionC));
+    return qdesigner_internal::DeviceProfileDialog::tr("Device Profiles (*.%1)").arg(profileExtensionC);
 }
 
 // Populate a combo with a sequence of integers, also set them as data.
@@ -133,7 +133,7 @@ void DeviceProfileDialog::save()
     if (fn.isEmpty())
         return;
     if (QFileInfo(fn).completeSuffix().isEmpty())
-        fn += u'.' + QLatin1StringView(profileExtensionC);
+        fn += u'.' + profileExtensionC;
 
     QFile file(fn);
     if (!file.open(QIODevice::WriteOnly|QIODevice::Text)) {

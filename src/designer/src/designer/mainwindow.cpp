@@ -29,8 +29,6 @@
 
 #include <algorithm>
 
-static const char uriListMimeFormatC[] = "text/uri-list";
-
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -134,7 +132,7 @@ QStringList DockedMdiArea::uiFiles(const QMimeData *d) const
 {
     // Extract dropped UI files from Mime data.
     QStringList rc;
-    if (!d->hasFormat(QLatin1StringView(uriListMimeFormatC)))
+    if (!d->hasFormat("text/uri-list"_L1))
         return rc;
     const auto urls = d->urls();
     if (urls.isEmpty())

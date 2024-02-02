@@ -372,10 +372,10 @@ namespace qdesigner_internal {
      * <mapping><family>DejaVu Sans</family><display>DejaVu Sans [CE]</display></mapping>
      * ... which is used to display on which platforms fonts are available.*/
 
-    static const char rootTagC[] = "fontmappings";
-    static const char mappingTagC[] = "mapping";
-    static const char familyTagC[] = "family";
-    static const char displayTagC[] = "display";
+static constexpr auto rootTagC = "fontmappings"_L1;
+static constexpr auto mappingTagC = "mapping"_L1;
+static constexpr auto familyTagC = "family"_L1;
+static constexpr auto displayTagC = "display"_L1;
 
     static QString msgXmlError(const QXmlStreamReader &r, const QString& fileName)
     {
@@ -390,14 +390,14 @@ namespace qdesigner_internal {
     {
         switch (currentStage) {
         case ParseBeginning:
-            return startElement == QLatin1StringView(rootTagC) ? ParseWithinRoot : ParseError;
+            return startElement == rootTagC ? ParseWithinRoot : ParseError;
         case ParseWithinRoot:
         case ParseWithinDisplay: // Next mapping, was in <display>
-            return startElement == QLatin1StringView(mappingTagC) ? ParseWithinMapping : ParseError;
+            return startElement == mappingTagC ? ParseWithinMapping : ParseError;
         case ParseWithinMapping:
-            return startElement == QLatin1StringView(familyTagC) ? ParseWithinFamily : ParseError;
+            return startElement == familyTagC ? ParseWithinFamily : ParseError;
         case ParseWithinFamily:
-            return startElement == QLatin1StringView(displayTagC) ? ParseWithinDisplay : ParseError;
+            return startElement == displayTagC ? ParseWithinDisplay : ParseError;
         case ParseError:
             break;
         }

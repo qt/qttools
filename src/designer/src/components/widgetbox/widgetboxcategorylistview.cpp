@@ -21,14 +21,14 @@
 #include <QtCore/qtextstream.h>
 #include <QtCore/qregularexpression.h>
 
-static const char widgetElementC[] = "widget";
-static const char nameAttributeC[] = "name";
-static const char uiOpeningTagC[] = "<ui>";
-static const char uiClosingTagC[] = "</ui>";
-
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
+
+static constexpr auto widgetElementC = "widget"_L1;
+static constexpr auto nameAttributeC = "name"_L1;
+static constexpr auto uiOpeningTagC = "<ui>"_L1;
+static constexpr auto uiClosingTagC = "</ui>"_L1;
 
 enum { FilterRole = Qt::UserRole + 11 };
 
@@ -250,9 +250,9 @@ bool WidgetBoxCategoryModel::setData(const QModelIndex &index, const QVariant &v
     item.widget.setName(newName);
 
     const QDomDocument doc = stringToDom(WidgetBoxCategoryListView::widgetDomXml(item.widget));
-    QDomElement widget_elt = doc.firstChildElement(QLatin1StringView(widgetElementC));
+    QDomElement widget_elt = doc.firstChildElement(widgetElementC);
     if (!widget_elt.isNull()) {
-        widget_elt.setAttribute(QLatin1StringView(nameAttributeC), newName);
+        widget_elt.setAttribute(nameAttributeC, newName);
         item.widget.setDomXml(domToString(widget_elt));
     }
     emit dataChanged(index, index);
@@ -446,13 +446,8 @@ QString WidgetBoxCategoryListView::widgetDomXml(const QDesignerWidgetBoxInterfac
 {
     QString domXml = widget.domXml();
 
-    if (domXml.isEmpty()) {
-        domXml = QLatin1StringView(uiOpeningTagC);
-        domXml += QStringLiteral("<widget class=\"");
-        domXml += widget.name();
-        domXml += QStringLiteral("\"/>");
-        domXml += QLatin1StringView(uiClosingTagC);
-    }
+    if (domXml.isEmpty())
+        domXml = uiOpeningTagC + "<widget class=\""_L1 + widget.name() +"\"/>"_L1 + uiClosingTagC;
     return domXml;
 }
 

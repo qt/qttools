@@ -43,16 +43,16 @@ struct ItemViewPropertySheetPrivate {
 };
 
 // Name of the fake group
-static const char headerGroup[] = "Header";
+static constexpr auto headerGroup = "Header"_L1;
 
 // Name of the real properties
-static const char visibleProperty[] = "visible";
-static const char cascadingSectionResizesProperty[] = "cascadingSectionResizes";
-static const char defaultSectionSizeProperty[] = "defaultSectionSize";
-static const char highlightSectionsProperty[] = "highlightSections";
-static const char minimumSectionSizeProperty[] = "minimumSectionSize";
-static const char showSortIndicatorProperty[] = "showSortIndicator";
-static const char stretchLastSectionProperty[] = "stretchLastSection";
+static constexpr auto visibleProperty = "visible"_L1;
+static constexpr auto cascadingSectionResizesProperty = "cascadingSectionResizes"_L1;
+static constexpr auto defaultSectionSizeProperty = "defaultSectionSize"_L1;
+static constexpr auto highlightSectionsProperty = "highlightSections"_L1;
+static constexpr auto minimumSectionSizeProperty = "minimumSectionSize"_L1;
+static constexpr auto showSortIndicatorProperty = "showSortIndicator"_L1;
+static constexpr auto stretchLastSectionProperty = "stretchLastSection"_L1;
 
 /***************** ItemViewPropertySheetPrivate *********************/
 
@@ -73,14 +73,12 @@ ItemViewPropertySheetPrivate::ItemViewPropertySheetPrivate(QDesignerFormEditorIn
 QStringList ItemViewPropertySheetPrivate::realPropertyNames()
 {
     if (m_realPropertyNames.isEmpty())
-        m_realPropertyNames
-            << QLatin1StringView(visibleProperty)
-            << QLatin1StringView(cascadingSectionResizesProperty)
-            << QLatin1StringView(defaultSectionSizeProperty)
-            << QLatin1StringView(highlightSectionsProperty)
-            << QLatin1StringView(minimumSectionSizeProperty)
-            << QLatin1StringView(showSortIndicatorProperty)
-            << QLatin1StringView(stretchLastSectionProperty);
+        m_realPropertyNames = {
+            visibleProperty, cascadingSectionResizesProperty,
+            defaultSectionSizeProperty, highlightSectionsProperty,
+            minimumSectionSizeProperty, showSortIndicatorProperty,
+            stretchLastSectionProperty
+        };
     return m_realPropertyNames;
 }
 
@@ -138,12 +136,12 @@ void ItemViewPropertySheet::initHeaderProperties(QHeaderView *hv, const QString 
 {
     QDesignerPropertySheetExtension *headerSheet = d->m_propertySheet.value(hv);
     Q_ASSERT(headerSheet);
-    const QString headerGroupS = QLatin1StringView(headerGroup);
+    const QString headerGroupS = headerGroup;
     const QStringList &realPropertyNames = d->realPropertyNames();
     for (const QString &realPropertyName : realPropertyNames) {
         const int headerIndex = headerSheet->indexOf(realPropertyName);
         Q_ASSERT(headerIndex != -1);
-        const QVariant defaultValue = realPropertyName == QLatin1StringView(visibleProperty) ?
+        const QVariant defaultValue = realPropertyName == visibleProperty ?
                                       QVariant(true) : headerSheet->property(headerIndex);
         const QString fakePropertyName = d->fakePropertyName(prefix, realPropertyName);
         const int fakeIndex = createFakeProperty(fakePropertyName, defaultValue);
@@ -215,7 +213,7 @@ bool ItemViewPropertySheet::reset(int index)
        // Resetting for "visible" might fail and the stored default
        // of the Widget database is "false" due to the widget not being
        // visible at the time it was determined. Reset to "true" manually.
-       if (!resetRC && headerSheet->propertyName(headerIndex) == QLatin1StringView(visibleProperty)) {
+       if (!resetRC && headerSheet->propertyName(headerIndex) == visibleProperty) {
            headerSheet->setProperty(headerIndex, QVariant(true));
            headerSheet->setChanged(headerIndex, false);
            return true;

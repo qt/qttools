@@ -408,9 +408,9 @@ void ZoomablePreviewDeviceSkin::fitWidget(const QSize &size)
 
 // ------------- PreviewConfiguration
 
-static const char styleKey[] = "Style";
-static const char appStyleSheetKey[] = "AppStyleSheet";
-static const char skinKey[] = "Skin";
+static constexpr auto styleKey = "Style"_L1;
+static constexpr auto appStyleSheetKey = "AppStyleSheet"_L1;
+static constexpr auto skinKey = "Skin"_L1;
 
 PreviewConfiguration::PreviewConfiguration() :
     m_d(new PreviewConfigurationData)
@@ -478,9 +478,9 @@ void PreviewConfiguration::toSettings(const QString &prefix, QDesignerSettingsIn
 {
     const PreviewConfigurationData &d = *m_d;
     settings->beginGroup(prefix);
-    settings->setValue(QLatin1StringView(styleKey),  d.m_style);
-    settings->setValue(QLatin1StringView(appStyleSheetKey), d.m_applicationStyleSheet);
-    settings->setValue(QLatin1StringView(skinKey), d.m_deviceSkin);
+    settings->setValue(styleKey, d.m_style);
+    settings->setValue(appStyleSheetKey, d.m_applicationStyleSheet);
+    settings->setValue(skinKey, d.m_deviceSkin);
     settings->endGroup();
 }
 
@@ -494,13 +494,13 @@ void PreviewConfiguration::fromSettings(const QString &prefix, const QDesignerSe
 
     const QVariant emptyString = QVariant(QString());
 
-    key += QLatin1StringView(styleKey);
+    key += styleKey;
     d.m_style = settings->value(key, emptyString).toString();
 
-    key.replace(prefixSize, key.size() - prefixSize, QLatin1StringView(appStyleSheetKey));
+    key.replace(prefixSize, key.size() - prefixSize, appStyleSheetKey);
     d.m_applicationStyleSheet = settings->value(key, emptyString).toString();
 
-    key.replace(prefixSize, key.size() - prefixSize, QLatin1StringView(skinKey));
+    key.replace(prefixSize, key.size() - prefixSize, skinKey);
     d.m_deviceSkin = settings->value(key, emptyString).toString();
 }
 

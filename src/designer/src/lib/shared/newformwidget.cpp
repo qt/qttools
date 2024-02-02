@@ -44,14 +44,14 @@ enum NewForm_CustomRole {
     ClassNameRole = Qt::UserRole + 101
 };
 
-static const char newFormObjectNameC[] = "Form";
+static constexpr auto newFormObjectNameC = "Form"_L1;
 
 // Create a form name for an arbitrary class. If it is Qt, qtify it,
 //  else return "Form".
 static QString formName(const QString &className)
 {
     if (!className.startsWith(u'Q'))
-        return QLatin1StringView(newFormObjectNameC);
+        return newFormObjectNameC;
     QString rc = className;
     rc.remove(0, 1);
     return rc;

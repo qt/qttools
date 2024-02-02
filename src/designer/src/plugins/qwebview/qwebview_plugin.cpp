@@ -6,11 +6,11 @@
 #include <QtCore/qplugin.h>
 #include <QWebView>
 
-static const char *toolTipC = "A widget for displaying a web page, from the Qt WebKit Widgets module.";
-
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
+
+static constexpr auto toolTipC = "A widget for displaying a web page, from the Qt WebKit Widgets module."_L1;
 
 QWebViewPlugin::QWebViewPlugin(QObject *parent) :
     QObject(parent),

@@ -37,9 +37,9 @@ QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
 
-static const char styleSheetProperty[] = "styleSheet";
-static const char StyleSheetDialogC[] = "StyleSheetDialog";
-static const char seGeometry[] = "Geometry";
+static constexpr auto styleSheetProperty = "styleSheet"_L1;
+static constexpr auto StyleSheetDialogC = "StyleSheetDialog"_L1;
+static constexpr auto seGeometry = "Geometry"_L1;
 
 namespace qdesigner_internal {
 
@@ -170,10 +170,10 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
     m_editor->setFocus();
 
     QDesignerSettingsInterface *settings = core->settingsManager();
-    settings->beginGroup(QLatin1StringView(StyleSheetDialogC));
+    settings->beginGroup(StyleSheetDialogC);
 
-    if (settings->contains(QLatin1StringView(seGeometry)))
-        restoreGeometry(settings->value(QLatin1StringView(seGeometry)).toByteArray());
+    if (settings->contains(seGeometry))
+        restoreGeometry(settings->value(seGeometry).toByteArray());
 
     settings->endGroup();
 }
@@ -181,9 +181,9 @@ StyleSheetEditorDialog::StyleSheetEditorDialog(QDesignerFormEditorInterface *cor
 StyleSheetEditorDialog::~StyleSheetEditorDialog()
 {
     QDesignerSettingsInterface *settings = m_core->settingsManager();
-    settings->beginGroup(QLatin1StringView(StyleSheetDialogC));
+    settings->beginGroup(StyleSheetDialogC);
 
-    settings->setValue(QLatin1StringView(seGeometry), saveGeometry());
+    settings->setValue(seGeometry, saveGeometry());
     settings->endGroup();
 }
 
@@ -390,7 +390,7 @@ StyleSheetPropertyEditorDialog::StyleSheetPropertyEditorDialog(QWidget *parent,
     QDesignerPropertySheetExtension *sheet =
             qt_extension<QDesignerPropertySheetExtension*>(m_fw->core()->extensionManager(), m_widget);
     Q_ASSERT(sheet != nullptr);
-    const int index = sheet->indexOf(QLatin1StringView(styleSheetProperty));
+    const int index = sheet->indexOf(styleSheetProperty);
     const PropertySheetStringValue value = qvariant_cast<PropertySheetStringValue>(sheet->property(index));
     setText(value.value());
 }
@@ -398,7 +398,7 @@ StyleSheetPropertyEditorDialog::StyleSheetPropertyEditorDialog(QWidget *parent,
 void StyleSheetPropertyEditorDialog::applyStyleSheet()
 {
     const PropertySheetStringValue value(text(), false);
-    m_fw->cursor()->setWidgetProperty(m_widget, QLatin1StringView(styleSheetProperty), QVariant::fromValue(value));
+    m_fw->cursor()->setWidgetProperty(m_widget, styleSheetProperty, QVariant::fromValue(value));
 }
 
 } // namespace qdesigner_internal

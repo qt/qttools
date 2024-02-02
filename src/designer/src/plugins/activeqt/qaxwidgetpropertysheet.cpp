@@ -14,8 +14,6 @@
 #include <QtCore/qdebug.h>
 #include <QtCore/qtimer.h>
 
-static const char *geometryPropertyC = "geometry";
-
 QT_BEGIN_NAMESPACE
 
 using namespace Qt::StringLiterals;
@@ -143,7 +141,7 @@ void QAxWidgetPropertySheet::reloadPropertySheet(const struct SavedProperties &p
                                                                  properties.widget);
 
     bool foundGeometry = false;
-    const QString geometryProperty = QLatin1String(geometryPropertyC);
+    const QString geometryProperty = "geometry"_L1;
     for (auto i = properties.changedProperties.cbegin(), cend = properties.changedProperties.cend();
          i != cend; ++i) {
         const QString name = i.key();

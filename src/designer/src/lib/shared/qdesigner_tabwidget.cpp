@@ -358,39 +358,37 @@ QMenu *QTabWidgetEventFilter::addContextMenuActions(QMenu *popup)
 
 // ----------- QTabWidgetPropertySheet
 
-static const char currentTabTextKey[] = "currentTabText";
-static const char currentTabNameKey[] = "currentTabName";
-static const char currentTabIconKey[] = "currentTabIcon";
-static const char currentTabToolTipKey[] = "currentTabToolTip";
-static const char currentTabWhatsThisKey[] = "currentTabWhatsThis";
-static const char tabMovableKey[] = "movable";
+static constexpr auto currentTabTextKey = "currentTabText"_L1;
+static constexpr auto currentTabNameKey = "currentTabName"_L1;
+static constexpr auto currentTabIconKey = "currentTabIcon"_L1;
+static constexpr auto currentTabToolTipKey = "currentTabToolTip"_L1;
+static constexpr auto currentTabWhatsThisKey = "currentTabWhatsThis"_L1;
+static constexpr auto tabMovableKey = "movable"_L1;
 
 QTabWidgetPropertySheet::QTabWidgetPropertySheet(QTabWidget *object, QObject *parent) :
     QDesignerPropertySheet(object, parent),
     m_tabWidget(object)
 {
-    createFakeProperty(QLatin1StringView(currentTabTextKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
-    createFakeProperty(QLatin1StringView(currentTabNameKey), QString());
-    createFakeProperty(QLatin1StringView(currentTabIconKey), QVariant::fromValue(qdesigner_internal::PropertySheetIconValue()));
+    createFakeProperty(currentTabTextKey, QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
+    createFakeProperty(currentTabNameKey, QString());
+    createFakeProperty(currentTabIconKey, QVariant::fromValue(qdesigner_internal::PropertySheetIconValue()));
     if (formWindowBase())
-        formWindowBase()->addReloadableProperty(this, indexOf(QLatin1StringView(currentTabIconKey)));
-    createFakeProperty(QLatin1StringView(currentTabToolTipKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
-    createFakeProperty(QLatin1StringView(currentTabWhatsThisKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
+        formWindowBase()->addReloadableProperty(this, indexOf(currentTabIconKey));
+    createFakeProperty(currentTabToolTipKey, QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
+    createFakeProperty(currentTabWhatsThisKey, QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
     // Prevent the tab widget's drag and drop handling from interfering with Designer's
-    createFakeProperty(QLatin1StringView(tabMovableKey), QVariant(false));
+    createFakeProperty(tabMovableKey, QVariant(false));
 }
 
 QTabWidgetPropertySheet::TabWidgetProperty QTabWidgetPropertySheet::tabWidgetPropertyFromName(const QString &name)
 {
-    using TabWidgetPropertyHash = QHash<QString, TabWidgetProperty>;
-    static TabWidgetPropertyHash tabWidgetPropertyHash;
-    if (tabWidgetPropertyHash.isEmpty()) {
-        tabWidgetPropertyHash.insert(QLatin1StringView(currentTabTextKey),      PropertyCurrentTabText);
-        tabWidgetPropertyHash.insert(QLatin1StringView(currentTabNameKey),      PropertyCurrentTabName);
-        tabWidgetPropertyHash.insert(QLatin1StringView(currentTabIconKey),      PropertyCurrentTabIcon);
-        tabWidgetPropertyHash.insert(QLatin1StringView(currentTabToolTipKey),   PropertyCurrentTabToolTip);
-        tabWidgetPropertyHash.insert(QLatin1StringView(currentTabWhatsThisKey), PropertyCurrentTabWhatsThis);
-    }
+    static const QHash<QString, TabWidgetProperty> tabWidgetPropertyHash = {
+        {currentTabTextKey,      PropertyCurrentTabText},
+        {currentTabNameKey,      PropertyCurrentTabName},
+        {currentTabIconKey,      PropertyCurrentTabIcon},
+        {currentTabToolTipKey,   PropertyCurrentTabToolTip},
+        {currentTabWhatsThisKey, PropertyCurrentTabWhatsThis}
+    };
     return tabWidgetPropertyHash.value(name, PropertyTabWidgetNone);
 }
 

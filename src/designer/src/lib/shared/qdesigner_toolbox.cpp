@@ -21,6 +21,8 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 QToolBoxHelper::QToolBoxHelper(QToolBox *toolbox) :
     QObject(toolbox),
     m_toolbox(toolbox),
@@ -208,11 +210,11 @@ QMenu *QToolBoxHelper::addContextMenuActions(QMenu *popup) const
 
 // -------- QToolBoxWidgetPropertySheet
 
-static const char currentItemTextKey[] = "currentItemText";
-static const char currentItemNameKey[] = "currentItemName";
-static const char currentItemIconKey[] = "currentItemIcon";
-static const char currentItemToolTipKey[] = "currentItemToolTip";
-static const char tabSpacingKey[] = "tabSpacing";
+static constexpr auto currentItemTextKey = "currentItemText"_L1;
+static constexpr auto currentItemNameKey = "currentItemName"_L1;
+static constexpr auto currentItemIconKey = "currentItemIcon"_L1;
+static constexpr auto currentItemToolTipKey = "currentItemToolTip"_L1;
+static constexpr auto tabSpacingKey = "tabSpacing"_L1;
 
 enum { tabSpacingDefault = -1 };
 
@@ -220,26 +222,24 @@ QToolBoxWidgetPropertySheet::QToolBoxWidgetPropertySheet(QToolBox *object, QObje
     QDesignerPropertySheet(object, parent),
     m_toolBox(object)
 {
-    createFakeProperty(QLatin1StringView(currentItemTextKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
-    createFakeProperty(QLatin1StringView(currentItemNameKey), QString());
-    createFakeProperty(QLatin1StringView(currentItemIconKey), QVariant::fromValue(qdesigner_internal::PropertySheetIconValue()));
+    createFakeProperty(currentItemTextKey, QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
+    createFakeProperty(currentItemNameKey, QString());
+    createFakeProperty(currentItemIconKey, QVariant::fromValue(qdesigner_internal::PropertySheetIconValue()));
     if (formWindowBase())
-        formWindowBase()->addReloadableProperty(this, indexOf(QLatin1StringView(currentItemIconKey)));
-    createFakeProperty(QLatin1StringView(currentItemToolTipKey), QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
-    createFakeProperty(QLatin1StringView(tabSpacingKey), QVariant(tabSpacingDefault));
+        formWindowBase()->addReloadableProperty(this, indexOf(currentItemIconKey));
+    createFakeProperty(currentItemToolTipKey, QVariant::fromValue(qdesigner_internal::PropertySheetStringValue()));
+    createFakeProperty(tabSpacingKey, QVariant(tabSpacingDefault));
 }
 
 QToolBoxWidgetPropertySheet::ToolBoxProperty QToolBoxWidgetPropertySheet::toolBoxPropertyFromName(const QString &name)
 {
-    using ToolBoxPropertyHash = QHash<QString, ToolBoxProperty>;
-    static ToolBoxPropertyHash toolBoxPropertyHash;
-    if (toolBoxPropertyHash.isEmpty()) {
-        toolBoxPropertyHash.insert(QLatin1StringView(currentItemTextKey),    PropertyCurrentItemText);
-        toolBoxPropertyHash.insert(QLatin1StringView(currentItemNameKey),    PropertyCurrentItemName);
-        toolBoxPropertyHash.insert(QLatin1StringView(currentItemIconKey),    PropertyCurrentItemIcon);
-        toolBoxPropertyHash.insert(QLatin1StringView(currentItemToolTipKey), PropertyCurrentItemToolTip);
-        toolBoxPropertyHash.insert(QLatin1StringView(tabSpacingKey),         PropertyTabSpacing);
-    }
+    static const QHash<QString, ToolBoxProperty> toolBoxPropertyHash = {
+        {currentItemTextKey,    PropertyCurrentItemText},
+        {currentItemNameKey,    PropertyCurrentItemName},
+        {currentItemIconKey,    PropertyCurrentItemIcon},
+        {currentItemToolTipKey, PropertyCurrentItemToolTip},
+        {tabSpacingKey,         PropertyTabSpacing}
+    };
     return toolBoxPropertyHash.value(name, PropertyToolBoxNone);
 }
 
