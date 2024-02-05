@@ -15,54 +15,22 @@
 // We mean it.
 //
 
-#include <QtCore/qobject.h>
+#include "qhelpenginecore_p.h"
 
 QT_BEGIN_NAMESPACE
 
-class QHelpCollectionHandler;
 class QHelpContentModel;
 class QHelpContentWidget;
-class QHelpEngineCore;
-class QHelpFilterEngine;
 class QHelpIndexModel;
 class QHelpIndexWidget;
 class QHelpSearchEngine;
-
-class QHelpEngineCorePrivate : public QObject
-{
-    Q_OBJECT
-
-public:
-    virtual ~QHelpEngineCorePrivate();
-
-    virtual void init(const QString &collectionFile,
-        QHelpEngineCore *helpEngineCore);
-
-    bool setup();
-
-    QHelpCollectionHandler *collectionHandler = nullptr;
-    QHelpFilterEngine *filterEngine = nullptr;
-    QString currentFilter;
-    QString error;
-    bool needsSetup = true;
-    bool autoSaveFilter = true;
-    bool usesFilterEngine = false;
-    bool readOnly = true;
-
-protected:
-    QHelpEngineCore *q;
-
-private slots:
-    void errorReceived(const QString &msg);
-};
 
 class QHelpEnginePrivate : public QHelpEngineCorePrivate
 {
     Q_OBJECT
 
 public:
-    void init(const QString &collectionFile,
-        QHelpEngineCore *helpEngineCore) override;
+    void init(const QString &collectionFile, QHelpEngineCore *helpEngineCore) override;
 
     QHelpContentModel *contentModel = nullptr;
     QHelpContentWidget *contentWidget = nullptr;
@@ -89,9 +57,8 @@ private slots:
 
 private:
     bool m_isApplyCurrentFilterScheduled = false;
-
 };
 
 QT_END_NAMESPACE
 
-#endif
+#endif // QHELPENGINE_P_H

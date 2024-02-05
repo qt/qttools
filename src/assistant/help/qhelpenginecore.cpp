@@ -4,7 +4,7 @@
 #include "qhelpenginecore.h"
 #include "qhelpcollectionhandler_p.h"
 #include "qhelpdbreader_p.h"
-#include "qhelpengine_p.h"
+#include "qhelpenginecore_p.h"
 #include "qhelpfilterengine.h"
 #include "qhelplink.h"
 
