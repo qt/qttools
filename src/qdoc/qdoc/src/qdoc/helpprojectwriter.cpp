@@ -16,8 +16,6 @@
 #include "qdocdatabase.h"
 #include "typedefnode.h"
 
-#include <QtCore/qcryptographichash.h>
-#include <QtCore/qdebug.h>
 #include <QtCore/qhash.h>
 
 QT_BEGIN_NAMESPACE
@@ -460,19 +458,6 @@ void HelpProjectWriter::generate()
         generateProject(project);
 }
 
-void HelpProjectWriter::writeHashFile(QFile &file)
-{
-    QCryptographicHash hash(QCryptographicHash::Sha1);
-    hash.addData(&file);
-
-    QFile hashFile(file.fileName() + ".sha1");
-    if (!hashFile.open(QFile::WriteOnly))
-        return;
-
-    hashFile.write(hash.result().toHex());
-    hashFile.close();
-}
-
 void HelpProjectWriter::writeSection(QXmlStreamWriter &writer, const QString &path,
                                      const QString &value)
 {
@@ -779,10 +764,6 @@ void HelpProjectWriter::generateProject(HelpProject &project)
     writer.writeEndElement(); // QtHelpProject
     writer.writeEndDocument();
     file.close();
-    if (file.open(QFile::ReadOnly)) {
-        writeHashFile(file);
-        file.close();
-    }
 }
 
 QT_END_NAMESPACE

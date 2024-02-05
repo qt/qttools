@@ -89,7 +89,6 @@ private:
     void generateSections(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     bool generateSection(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     Keyword keywordDetails(const Node *node) const;
-    void writeHashFile(QFile &file);
     void writeNode(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
     void readSelectors(SubProject &subproject, const QStringList &selectors);
     void addMembers(HelpProject &project, QXmlStreamWriter &writer, const Node *node);
