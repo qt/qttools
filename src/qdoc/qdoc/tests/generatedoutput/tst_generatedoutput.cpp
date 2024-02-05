@@ -21,7 +21,6 @@ private slots:
 
     // Output format independent tests
     void ignoresinceVariable();
-    void templateParameters();
     void dontDocument();
     void inheritedQmlPropertyGroups();
     void crossModuleLinking();
@@ -191,17 +190,6 @@ void tst_generatedOutput::ignoresinceVariable()
     testAndCompare("testdata/configs/ignoresince.qdocconf",
                    "ignoresince/testqdoc.html "
                    "ignoresince/testqdoc-test.html");
-}
-
-void tst_generatedOutput::templateParameters()
-{
-    testAndCompare("testdata/configs/testtemplate.qdocconf",
-                   "template/testqdoc-test.html "
-                   "template/testqdoc-test-struct.html "
-                   "template/testqdoc-vec.html "
-                   "template/foo.html "
-                   "template/bar.html "
-                   "template/baz.html");
 }
 
 void tst_generatedOutput::dontDocument()

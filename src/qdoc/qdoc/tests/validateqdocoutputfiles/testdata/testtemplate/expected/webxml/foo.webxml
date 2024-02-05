@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Foo" href="foo.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template">
+            <description>
+                <brief>Class template.</brief>
+            </description>
+        </class>
+    </document>
+</WebXML>

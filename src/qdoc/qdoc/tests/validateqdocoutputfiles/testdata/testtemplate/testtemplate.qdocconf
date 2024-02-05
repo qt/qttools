@@ -2,7 +2,7 @@ sources.fileextensions = "*.qml *.cpp *.qdoc"
 headers.fileextensions = "*.h"
 
 # images
-imagedirs = ../images
+imagedirs = images
 
 # zero warning policy
 warninglimit = 0
@@ -11,12 +11,14 @@ warninglimit.enabled = true
 # don't write host system-specific paths to index files
 locationinfo = false
 
-project = TestCPP
-includepaths += -I../testcpp
+project = TestTemplate
+includepaths += -I.
 
-headers = ../testcpp/testcpp.h
-sources = ../testcpp/testcpp.cpp \
-          ../testcpp/classlists.qdoc
+headers = testcpp.h \
+          testtemplate.h
+sources = testcpp.cpp \
+          testtemplate.cpp \
+          classlists.qdoc
 exampledirs = ../testcpp/snippets
 
 macro.CMDFN = \\\\fn
@@ -27,8 +29,10 @@ navigation.cppclassespage = "QDoc Test C++ Classes"
 
 defines += test_template
 
-headers += ../testtemplate/testtemplate.h
-sources += ../testtemplate/testtemplate.cpp
-
+outputformats = HTML DocBook WebXML
 HTML.nosubdirs          = true
-HTML.outputsubdir       = template
+HTML.outputsubdir       = html
+DocBook.nosubdirs          = true
+DocBook.outputsubdir       = docbook
+WebXML.nosubdirs          = true
+WebXML.outputsubdir       = webxml

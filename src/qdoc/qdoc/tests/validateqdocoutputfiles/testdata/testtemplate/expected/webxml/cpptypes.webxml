@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <group name="cpptypes" href="cpptypes.html" status="active" location="classlists.qdoc" documented="true" seen="true" title="Test C++ Types">
+            <description>
+                <generatedlist contents="testgroup"/>
+                <table width="100%">
+                    <row>
+                        <item>
+                            <para>
+                                <link raw="TestQDoc::Test" href="testqdoc-test.html" type="class"/>
+                            </para>
+                        </item>
+                        <item>
+                            <para>A class in a namespace.</para>
+                        </item>
+                    </row>
+                </table>
+            </description>
+        </group>
+    </document>
+</WebXML>

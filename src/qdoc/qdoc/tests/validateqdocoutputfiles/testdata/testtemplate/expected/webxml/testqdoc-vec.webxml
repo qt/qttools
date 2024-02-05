@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <class name="Vec" fullname="TestQDoc::Vec" href="testqdoc-vec.html" status="active" access="public" location="testcpp.h" since="2.0" documented="true" module="TestCPP" brief="Type alias that has its own reference">
+            <description>
+                <brief>Type alias that has its own reference.</brief>
+            </description>
+        </class>
+    </document>
+</WebXML>

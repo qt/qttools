@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <namespace name="CrossModuleRef" href="crossmoduleref.html" status="active" access="public" location="testcpp.h" since="3.0" documented="true" module="TestCPP" brief="Namespace that has documented functions in multiple modules">
+            <description>
+                <brief>Namespace that has documented functions in multiple modules.</brief>
+            </description>
+            <function name="documentMe" fullname="CrossModuleRef::documentMe" href="crossmoduleref.html#documentMe" status="active" access="public" location="testcpp.h" documented="true" meta="plain" type="void" signature="void documentMe()">
+                <description>
+                    <para>Document me!</para>
+                </description>
+            </function>
+        </namespace>
+    </document>
+</WebXML>

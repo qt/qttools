@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebXML>
+    <document>
+        <struct name="Baz" href="baz.html" status="active" access="public" location="testtemplate.h" since="2.0" documented="true" module="TestCPP" brief="Class template template">
+            <description>
+                <brief>Class template template.</brief>
+            </description>
+        </struct>
+    </document>
+</WebXML>
