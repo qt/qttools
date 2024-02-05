@@ -5,21 +5,19 @@
 #include "qhelp_global.h"
 #include "qhelpdbreader_p.h"
 #include "qhelpfilterdata.h"
+#include "qhelplink.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QList>
 #include <QtCore/QMultiMap>
 #include <QtCore/QTimer>
 #include <QtCore/QVersionNumber>
 
-#include <QtHelp/QHelpLink>
-
-#include <QtSql/QSqlError>
 #include <QtSql/QSqlDriver>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 QT_BEGIN_NAMESPACE
 

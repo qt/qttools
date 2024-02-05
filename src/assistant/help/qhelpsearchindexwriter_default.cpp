@@ -3,15 +3,14 @@
 
 #include "qhelpsearchindexwriter_default_p.h"
 #include "qhelp_global.h"
-#include "qhelpenginecore.h"
 #include "qhelpdbreader_p.h"
+#include "qhelpenginecore.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 #include <QtCore/QStringDecoder>
 #include <QtCore/QTextStream>
-#include <QtCore/QSet>
 #include <QtCore/QUrl>
 #include <QtCore/QVariant>
 #include <QtSql/QSqlDatabase>

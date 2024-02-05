@@ -15,24 +15,18 @@
 // We mean it.
 //
 
-#include <QtCore/QHash>
-#include <QtCore/QMap>
-#include <QtCore/QStringList>
 #include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
 
-class QSqlQuery;
-
-class QHelpEngineCore;
-class QHelpDBReader;
+class QHelpCollectionHandler;
 class QHelpContentModel;
 class QHelpContentWidget;
+class QHelpEngineCore;
+class QHelpFilterEngine;
 class QHelpIndexModel;
 class QHelpIndexWidget;
 class QHelpSearchEngine;
-class QHelpCollectionHandler;
-class QHelpFilterEngine;
 
 class QHelpEngineCorePrivate : public QObject
 {

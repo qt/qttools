@@ -17,9 +17,9 @@
 
 #include "qhelpsearchindexreader_p.h"
 
-QT_FORWARD_DECLARE_CLASS(QSqlDatabase)
-
 QT_BEGIN_NAMESPACE
+
+class QSqlDatabase;
 
 namespace fulltextsearch {
 namespace qt {

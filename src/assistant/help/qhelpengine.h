@@ -8,7 +8,6 @@
 
 QT_BEGIN_NAMESPACE
 
-
 class QHelpContentModel;
 class QHelpContentWidget;
 class QHelpIndexModel;

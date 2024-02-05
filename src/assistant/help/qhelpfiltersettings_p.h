@@ -19,11 +19,11 @@
 
 QT_BEGIN_NAMESPACE
 
-template <class K, class T>
-class QMap;
 class QHelpFilterData;
 class QHelpFilterEngine;
 class QHelpFilterSettingsPrivate;
+template <class K, class T>
+class QMap;
 
 class QHelpFilterSettings final
 {

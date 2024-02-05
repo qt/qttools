@@ -18,9 +18,9 @@
 #include <QtCore/QMutex>
 #include <QtCore/QThread>
 
-QT_FORWARD_DECLARE_CLASS(QSqlDatabase)
-
 QT_BEGIN_NAMESPACE
+
+class QSqlDatabase;
 
 namespace fulltextsearch {
 namespace qt {
@@ -62,7 +62,6 @@ private:
     QVariantList m_contents;
 };
 
-
 class QHelpSearchIndexWriter : public QThread
 {
     Q_OBJECT
@@ -91,7 +90,7 @@ private:
     QString m_indexFilesFolder;
 };
 
-}   // namespace std
+}   // namespace qt
 }   // namespace fulltextsearch
 
 QT_END_NAMESPACE

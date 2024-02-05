@@ -5,11 +5,10 @@
 #define QHELP_GLOBAL_H
 
 #include <QtCore/qglobal.h>
-#include <QtCore/QString>
-#include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
 
+class QString;
 
 #ifdef QT_STATIC
 #   define QHELP_EXPORT

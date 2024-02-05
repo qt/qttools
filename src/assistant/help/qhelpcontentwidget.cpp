@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qhelpcontentwidget.h"
+#include "qhelpcollectionhandler_p.h"
 #include "qhelpenginecore.h"
 #include "qhelpengine_p.h"
-#include "qhelpcollectionhandler_p.h"
 
-#include <QDir>
-#include <QtCore/QStack>
-#include <QtCore/QThread>
+#include <QtCore/QDir>
 #include <QtCore/QMutex>
+#include <QtCore/QThread>
+#include <QtCore/QStack>
 #include <QtWidgets/QHeaderView>
 
 QT_BEGIN_NAMESPACE
@@ -61,8 +61,6 @@ public:
     QHelpContentItem *rootItem = nullptr;
     QHelpContentProvider *qhelpContentProvider;
 };
-
-
 
 /*!
     \class QHelpContentItem

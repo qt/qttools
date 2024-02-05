@@ -6,20 +6,18 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QUrl>
 #include <QtCore/QObject>
 #include <QtCore/QSharedDataPointer>
-#include <QtCore/QString>
 #include <QtCore/QStringList>
 
 QT_BEGIN_NAMESPACE
 
 class QHelpEngineCore;
-class QHelpSearchQueryWidget;
 class QHelpSearchEnginePrivate;
+class QHelpSearchQueryWidget;
 class QHelpSearchResultData;
 class QHelpSearchResultWidget;
+class QUrl;
 
 class QHELP_EXPORT QHelpSearchQuery
 {

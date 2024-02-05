@@ -15,8 +15,9 @@
 // We mean it.
 //
 
-#include <QtWidgets/QDialog>
 #include "ui_qfilternamedialog.h"
+
+#include <QtWidgets/QDialog>
 
 QT_BEGIN_NAMESPACE
 

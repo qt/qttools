@@ -10,14 +10,13 @@
 
 QT_BEGIN_NAMESPACE
 
-template <class K, class T>
-class QMap;
-class QVersionNumber;
-
 class QHelpCollectionHandler;
 class QHelpEngineCore;
 class QHelpFilterData;
 class QHelpFilterEnginePrivate;
+template <class K, class T>
+class QMap;
+class QVersionNumber;
 
 class QHELP_EXPORT QHelpFilterEngine : public QObject
 {

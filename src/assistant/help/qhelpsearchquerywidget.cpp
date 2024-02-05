@@ -4,15 +4,12 @@
 #include "qhelpsearchquerywidget.h"
 
 #include <QtCore/QAbstractListModel>
-#include <QtCore/QObject>
 #include <QtCore/QStringList>
-#include <QtCore/QtGlobal>
-
+#include <QtGui/QFocusEvent>
 #include <QtWidgets/QCompleter>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QLineEdit>
-#include <QtGui/QFocusEvent>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QToolButton>
 

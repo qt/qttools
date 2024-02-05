@@ -7,14 +7,9 @@
 #include <QtHelp/qhelp_global.h>
 #include <QtHelp/qhelpsearchengine.h>
 
-#include <QtCore/QMap>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
-
 
 class QFocusEvent;
 class QHelpSearchQueryWidgetPrivate;

@@ -6,18 +6,15 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtCore/QQueue>
-#include <QtCore/QString>
 #include <QtWidgets/QTreeView>
 
 QT_BEGIN_NAMESPACE
 
-
-class QHelpEnginePrivate;
 class QHelpContentItemPrivate;
 class QHelpContentModelPrivate;
 class QHelpEngine;
-class QHelpContentProvider;
+class QHelpEnginePrivate;
+class QUrl;
 
 class QHELP_EXPORT QHelpContentItem
 {

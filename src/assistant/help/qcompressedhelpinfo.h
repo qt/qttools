@@ -10,8 +10,8 @@
 
 QT_BEGIN_NAMESPACE
 
-class QVersionNumber;
 class QCompressedHelpInfoPrivate;
+class QVersionNumber;
 
 class QHELP_EXPORT QCompressedHelpInfo final
 {

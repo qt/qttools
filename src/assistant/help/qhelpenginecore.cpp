@@ -2,19 +2,15 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qhelpenginecore.h"
-#include "qhelpengine_p.h"
-#include "qhelpdbreader_p.h"
 #include "qhelpcollectionhandler_p.h"
+#include "qhelpdbreader_p.h"
+#include "qhelpengine_p.h"
 #include "qhelpfilterengine.h"
+#include "qhelplink.h"
 
 #include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QPluginLoader>
 #include <QtCore/QFileInfo>
 #include <QtCore/QThread>
-#include <QtHelp/QHelpLink>
-#include <QtWidgets/QApplication>
-#include <QtSql/QSqlQuery>
 
 QT_BEGIN_NAMESPACE
 

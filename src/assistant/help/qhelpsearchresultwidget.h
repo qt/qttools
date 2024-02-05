@@ -4,18 +4,16 @@
 #ifndef QHELPSEARCHRESULTWIDGET_H
 #define QHELPSEARCHRESULTWIDGET_H
 
-#include <QtHelp/qhelpsearchengine.h>
 #include <QtHelp/qhelp_global.h>
-
-#include <QtCore/QUrl>
-#include <QtCore/QPoint>
-#include <QtCore/QObject>
+#include <QtHelp/qhelpsearchengine.h>
 
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
 class QHelpSearchResultWidgetPrivate;
+class QPoint;
+class QUrl;
 
 class QHELP_EXPORT QHelpSearchResultWidget : public QWidget
 {

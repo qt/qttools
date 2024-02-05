@@ -15,21 +15,18 @@
 // We mean it.
 //
 
-#include <QtCore/QList>
-#include <QtCore/QString>
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
-#include <QtCore/QStringList>
-
-#include <QtSql/QSqlQuery>
-
 #include "qhelpdbreader_p.h"
 #include "qhelplink.h"
 
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
+
 QT_BEGIN_NAMESPACE
 
-class QVersionNumber;
 class QHelpFilterData;
+class QSqlQuery;
+class QVariant;
+class QVersionNumber;
 
 class QHelpCollectionHandler : public QObject
 {

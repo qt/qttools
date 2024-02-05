@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qhelpfilterdata.h"
+#include "qfilternamedialog_p.h"
 #include "qhelpfiltersettings_p.h"
 #include "qhelpfiltersettingswidget.h"
 #include "ui_qhelpfiltersettingswidget.h"
-#include "qfilternamedialog_p.h"
 
-#include <QtWidgets/QMessageBox>
 #include <QtCore/QVersionNumber>
+#include <QtWidgets/QMessageBox>
 
 QT_BEGIN_NAMESPACE
 

@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qhelpfilterengine.h"
+#include "qhelpcollectionhandler_p.h"
 #include "qhelpenginecore.h"
 #include "qhelpfilterdata.h"
-#include "qhelpdbreader_p.h"
-#include "qhelpcollectionhandler_p.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QVersionNumber>

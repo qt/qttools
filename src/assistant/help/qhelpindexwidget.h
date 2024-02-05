@@ -6,15 +6,15 @@
 
 #include <QtHelp/qhelp_global.h>
 
-#include <QtCore/QUrl>
 #include <QtCore/QStringListModel>
+#include <QtCore/QUrl>
+
 #include <QtWidgets/QListView>
 
 QT_BEGIN_NAMESPACE
 
-
-class QHelpEnginePrivate;
 class QHelpEngineCore;
+class QHelpEnginePrivate;
 class QHelpIndexModelPrivate;
 struct QHelpLink;
 

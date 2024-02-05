@@ -15,11 +15,9 @@
 // We mean it.
 //
 
+#include <QtCore/QByteArray>
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
-#include <QtCore/QUrl>
-#include <QtCore/QByteArray>
-#include <QtCore/QSet>
 
 QT_BEGIN_NAMESPACE
 

@@ -23,8 +23,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class QHelpEngineCore;
-
 namespace fulltextsearch {
 
 class QHelpSearchIndexReader : public QThread
