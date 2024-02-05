@@ -72,7 +72,7 @@ void MainWindow::about()
                    "<h3>%1</h3>"
                    "<p>Version %2</p></center>"
                    "<p>Copyright (C) %3 The Qt Company Ltd.</p>")
-                        .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), u"2023"_s));
+                        .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QString()));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();
 }

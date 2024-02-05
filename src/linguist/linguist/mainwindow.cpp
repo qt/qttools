@@ -1346,11 +1346,9 @@ void MainWindow::about()
 
     const QString description
             = tr("Qt Linguist is a tool for adding translations to Qt applications.");
-    const QString copyright
-            = tr("Copyright (C) %1 The Qt Company Ltd.").arg(QStringLiteral("2023"));
     box.setText(QStringLiteral("<center><img src=\":/images/icons/linguist-128-32.png\"/></img><p>%1</p></center>"
                                "<p>%2</p>"
-                               "<p>%3</p>").arg(version, description, copyright));
+                               "<p>Copyright (C) The Qt Company Ltd.</p>").arg(version, description));
 
     box.setWindowTitle(QApplication::translate("AboutDialog", "Qt Linguist"));
     box.setIcon(QMessageBox::NoIcon);

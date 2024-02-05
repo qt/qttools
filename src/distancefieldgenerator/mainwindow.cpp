@@ -746,7 +746,7 @@ void MainWindow::about()
                        "to prepare a font cache for Qt applications.</p>"
                        "<p>Copyright (C) %2 The Qt Company Ltd.</p>")
                     .arg(QLatin1String(QT_VERSION_STR))
-                    .arg(QLatin1String("2019")));
+                    .arg(QString()));
     msgBox->show();
 }
 
