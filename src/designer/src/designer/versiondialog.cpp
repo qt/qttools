@@ -140,9 +140,8 @@ VersionDialog::VersionDialog(QWidget *parent)
     version = version.arg(tr("Qt Widgets Designer")).arg(QLatin1StringView(QT_VERSION_STR));
     version.append(tr("<br/>Qt Widgets Designer is a graphical user interface designer for Qt applications.<br/>"));
 
-    lbl->setText(tr("%1"
-                    "<br/>Copyright (C) %2 The Qt Company Ltd."
-                    ).arg(version, QString()));
+    lbl->setText(
+            tr("%1<br/>Copyright (C) The Qt Company Ltd. and other contributors.").arg(version));
 
     lbl->setWordWrap(true);
     lbl->setOpenExternalLinks(true);
