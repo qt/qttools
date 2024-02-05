@@ -50,6 +50,7 @@ qt_internal_add_module(DesignerComponentsPrivate
         ../propertyeditor/newdynamicpropertydialog.cpp ../propertyeditor/newdynamicpropertydialog.h
         ../propertyeditor/paletteeditor.cpp ../propertyeditor/paletteeditor.h
         ../propertyeditor/paletteeditorbutton.cpp ../propertyeditor/paletteeditorbutton.h
+        ../propertyeditor/pixmapeditor.cpp ../propertyeditor/pixmapeditor.h
         ../propertyeditor/previewframe.cpp ../propertyeditor/previewframe.h
         ../propertyeditor/previewwidget.cpp ../propertyeditor/previewwidget.h
         ../propertyeditor/propertyeditor.cpp ../propertyeditor/propertyeditor.h

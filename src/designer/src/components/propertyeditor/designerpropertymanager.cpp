@@ -4,6 +4,7 @@
 #include "designerpropertymanager.h"
 #include "qtpropertymanager.h"
 #include "paletteeditorbutton.h"
+#include "pixmapeditor.h"
 #include "qlonglongvalidator.h"
 #include "stringlisteditorbutton.h"
 #include "qtresourceview_p.h"
@@ -35,9 +36,6 @@
 #include <QtWidgets/qkeysequenceedit.h>
 
 #include <QtGui/qaction.h>
-#if QT_CONFIG(clipboard)
-#include <QtGui/qclipboard.h>
-#endif
 #include <QtGui/qevent.h>
 
 #include <QtCore/qdebug.h>
@@ -459,314 +457,6 @@ void TextEditor::fileActionActivated()
     m_editor->setText(newText);
     emit textChanged(newText);
 }
-
-// ------------ ThemeInputDialog
-
-class IconThemeDialog : public QDialog
-{
-    Q_OBJECT
-public:
-    static QString getTheme(QWidget *parent, const QString &theme, bool *ok);
-private:
-    IconThemeDialog(QWidget *parent);
-    IconThemeEditor *m_editor;
-};
-
-IconThemeDialog::IconThemeDialog(QWidget *parent)
-    : QDialog(parent)
-{
-    setWindowTitle(tr("Set Icon From Theme"));
-
-    QVBoxLayout *layout = new QVBoxLayout(this);
-    QLabel *label = new QLabel(tr("Select icon name from theme:"), this);
-    m_editor = new IconThemeEditor(this);
-    QDialogButtonBox *buttons = new QDialogButtonBox(this);
-    buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-
-    layout->addWidget(label);
-    layout->addWidget(m_editor);
-    layout->addWidget(buttons);
-
-    connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
-    connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
-}
-
-QString IconThemeDialog::getTheme(QWidget *parent, const QString &theme, bool *ok)
-{
-    IconThemeDialog dlg(parent);
-    dlg.m_editor->setTheme(theme);
-    if (dlg.exec() == QDialog::Accepted) {
-        *ok = true;
-        return dlg.m_editor->theme();
-    }
-    *ok = false;
-    return QString();
-}
-
-// ------------ PixmapEditor
-class PixmapEditor : public QWidget
-{
-    Q_OBJECT
-public:
-    PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent);
-
-    void setSpacing(int spacing);
-    void setPixmapCache(DesignerPixmapCache *cache);
-    void setIconThemeModeEnabled(bool enabled);
-public slots:
-    void setPath(const QString &path);
-    void setTheme(const QString &theme);
-    void setDefaultPixmap(const QPixmap &pixmap);
-
-signals:
-    void pathChanged(const QString &path);
-    void themeChanged(const QString &theme);
-
-protected:
-    void contextMenuEvent(QContextMenuEvent *event) override;
-
-private slots:
-    void defaultActionActivated();
-    void resourceActionActivated();
-    void fileActionActivated();
-    void themeActionActivated();
-#if QT_CONFIG(clipboard)
-    void copyActionActivated();
-    void pasteActionActivated();
-    void clipboardDataChanged();
-#endif
-private:
-    void updateLabels();
-    bool m_iconThemeModeEnabled;
-    QDesignerFormEditorInterface *m_core;
-    QLabel *m_pixmapLabel;
-    QLabel *m_pathLabel;
-    QToolButton *m_button;
-    QAction *m_resourceAction;
-    QAction *m_fileAction;
-    QAction *m_themeAction;
-    QAction *m_copyAction;
-    QAction *m_pasteAction;
-    QHBoxLayout *m_layout;
-    QPixmap m_defaultPixmap;
-    QString m_path;
-    QString m_theme;
-    DesignerPixmapCache *m_pixmapCache;
-};
-
-PixmapEditor::PixmapEditor(QDesignerFormEditorInterface *core, QWidget *parent) :
-    QWidget(parent),
-    m_iconThemeModeEnabled(false),
-    m_core(core),
-    m_pixmapLabel(new QLabel(this)),
-    m_pathLabel(new QLabel(this)),
-    m_button(new QToolButton(this)),
-    m_resourceAction(new QAction(tr("Choose Resource..."), this)),
-    m_fileAction(new QAction(tr("Choose File..."), this)),
-    m_themeAction(new QAction(tr("Set Icon From Theme..."), this)),
-    m_copyAction(new QAction(createIconSet(u"editcopy.png"_s), tr("Copy Path"), this)),
-    m_pasteAction(new QAction(createIconSet(u"editpaste.png"_s), tr("Paste Path"), this)),
-    m_layout(new QHBoxLayout(this)),
-    m_pixmapCache(nullptr)
-{
-    m_layout->addWidget(m_pixmapLabel);
-    m_layout->addWidget(m_pathLabel);
-    m_button->setText(tr("..."));
-    m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
-    m_button->setFixedWidth(30);
-    m_button->setPopupMode(QToolButton::MenuButtonPopup);
-    m_layout->addWidget(m_button);
-    m_layout->setContentsMargins(QMargins());
-    m_layout->setSpacing(0);
-    m_pixmapLabel->setFixedWidth(16);
-    m_pixmapLabel->setAlignment(Qt::AlignCenter);
-    m_pathLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
-    m_themeAction->setVisible(false);
-
-    QMenu *menu = new QMenu(this);
-    menu->addAction(m_resourceAction);
-    menu->addAction(m_fileAction);
-    menu->addAction(m_themeAction);
-
-    m_button->setMenu(menu);
-    m_button->setText(tr("..."));
-
-    connect(m_button, &QAbstractButton::clicked, this, &PixmapEditor::defaultActionActivated);
-    connect(m_resourceAction, &QAction::triggered, this, &PixmapEditor::resourceActionActivated);
-    connect(m_fileAction, &QAction::triggered, this, &PixmapEditor::fileActionActivated);
-    connect(m_themeAction, &QAction::triggered, this, &PixmapEditor::themeActionActivated);
-#if QT_CONFIG(clipboard)
-    connect(m_copyAction, &QAction::triggered, this, &PixmapEditor::copyActionActivated);
-    connect(m_pasteAction, &QAction::triggered, this, &PixmapEditor::pasteActionActivated);
-#endif
-    setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored));
-    setFocusProxy(m_button);
-
-#if QT_CONFIG(clipboard)
-    connect(QApplication::clipboard(), &QClipboard::dataChanged,
-            this, &PixmapEditor::clipboardDataChanged);
-    clipboardDataChanged();
-#endif
-}
-
-void PixmapEditor::setPixmapCache(DesignerPixmapCache *cache)
-{
-    m_pixmapCache = cache;
-}
-
-void PixmapEditor::setIconThemeModeEnabled(bool enabled)
-{
-    if (m_iconThemeModeEnabled == enabled)
-        return;
-    m_iconThemeModeEnabled = enabled;
-    m_themeAction->setVisible(enabled);
-}
-
-void PixmapEditor::setSpacing(int spacing)
-{
-    m_layout->setSpacing(spacing);
-}
-
-void PixmapEditor::setPath(const QString &path)
-{
-    m_path = path;
-    updateLabels();
-}
-
-void PixmapEditor::setTheme(const QString &theme)
-{
-    m_theme = theme;
-    updateLabels();
-}
-
-void PixmapEditor::updateLabels()
-{
-    if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme)) {
-        m_pixmapLabel->setPixmap(QIcon::fromTheme(m_theme).pixmap(16, 16));
-        m_pathLabel->setText(tr("[Theme] %1").arg(m_theme));
-        m_copyAction->setEnabled(true);
-    } else {
-        if (m_path.isEmpty()) {
-            m_pathLabel->setText(m_path);
-            m_pixmapLabel->setPixmap(m_defaultPixmap);
-            m_copyAction->setEnabled(false);
-        } else {
-            m_pathLabel->setText(QFileInfo(m_path).fileName());
-            if (m_pixmapCache)
-                m_pixmapLabel->setPixmap(QIcon(m_pixmapCache->pixmap(PropertySheetPixmapValue(m_path))).pixmap(16, 16));
-            m_copyAction->setEnabled(true);
-        }
-    }
-}
-
-void PixmapEditor::setDefaultPixmap(const QPixmap &pixmap)
-{
-    m_defaultPixmap = QIcon(pixmap).pixmap(16, 16);
-    const bool hasThemeIcon = m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme);
-    if (!hasThemeIcon && m_path.isEmpty())
-        m_pixmapLabel->setPixmap(m_defaultPixmap);
-}
-
-void PixmapEditor::contextMenuEvent(QContextMenuEvent *event)
-{
-    QMenu menu(this);
-    menu.addAction(m_copyAction);
-    menu.addAction(m_pasteAction);
-    menu.exec(event->globalPos());
-    event->accept();
-}
-
-void PixmapEditor::defaultActionActivated()
-{
-    if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme)) {
-        themeActionActivated();
-        return;
-    }
-    // Default to resource
-    const PropertySheetPixmapValue::PixmapSource ps = m_path.isEmpty() ? PropertySheetPixmapValue::ResourcePixmap : PropertySheetPixmapValue::getPixmapSource(m_core, m_path);
-    switch (ps) {
-    case PropertySheetPixmapValue::LanguageResourcePixmap:
-    case PropertySheetPixmapValue::ResourcePixmap:
-        resourceActionActivated();
-        break;
-    case PropertySheetPixmapValue::FilePixmap:
-        fileActionActivated();
-        break;
-    }
-}
-
-void PixmapEditor::resourceActionActivated()
-{
-    const QString oldPath = m_path;
-    const  QString newPath = IconSelector::choosePixmapResource(m_core, m_core->resourceModel(), oldPath, this);
-    if (!newPath.isEmpty() &&  newPath != oldPath) {
-        setTheme(QString());
-        setPath(newPath);
-        emit pathChanged(newPath);
-    }
-}
-
-void PixmapEditor::fileActionActivated()
-{
-    const QString newPath = IconSelector::choosePixmapFile(m_path, m_core->dialogGui(), this);
-    if (!newPath.isEmpty() && newPath != m_path) {
-        setTheme(QString());
-        setPath(newPath);
-        emit pathChanged(newPath);
-    }
-}
-
-void PixmapEditor::themeActionActivated()
-{
-    bool ok;
-    const QString newTheme = IconThemeDialog::getTheme(this, m_theme, &ok);
-    if (ok && newTheme != m_theme) {
-        setTheme(newTheme);
-        setPath(QString());
-        emit themeChanged(newTheme);
-    }
-}
-
-#if QT_CONFIG(clipboard)
-void PixmapEditor::copyActionActivated()
-{
-    QClipboard *clipboard = QApplication::clipboard();
-    if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(m_theme))
-        clipboard->setText(m_theme);
-    else
-        clipboard->setText(m_path);
-}
-
-void PixmapEditor::pasteActionActivated()
-{
-    QClipboard *clipboard = QApplication::clipboard();
-    QString subtype = u"plain"_s;
-    QString text = clipboard->text(subtype);
-    if (!text.isNull()) {
-        QStringList list = text.split(u'\n');
-        if (!list.isEmpty()) {
-            text = list.at(0);
-            if (m_iconThemeModeEnabled && QIcon::hasThemeIcon(text)) {
-                setTheme(text);
-                setPath(QString());
-                emit themeChanged(text);
-            } else {
-                setPath(text);
-                setTheme(QString());
-                emit pathChanged(text);
-            }
-        }
-    }
-}
-
-void PixmapEditor::clipboardDataChanged()
-{
-    QClipboard *clipboard = QApplication::clipboard();
-    QString subtype = u"plain"_s;
-    const QString text = clipboard->text(subtype);
-    m_pasteAction->setEnabled(!text.isNull());
-}
-#endif
 
 // --------------- ResetWidget
 class ResetWidget : public QWidget
@@ -2318,17 +2008,17 @@ void DesignerEditorFactory::slotPropertyChanged(QtProperty *property)
     QtVariantPropertyManager *manager = propertyManager(property);
     const int type = manager->propertyType(property);
     if (type == DesignerPropertyManager::designerIconTypeId()) {
-        QPixmap defaultPixmap;
+        QIcon defaultPixmap;
         if (!property->isModified()) {
             const auto attributeValue = manager->attributeValue(property, defaultResourceAttributeC);
-            defaultPixmap = attributeValue.value<QIcon>().pixmap(16, 16);
+            defaultPixmap = attributeValue.value<QIcon>();
         } else if (m_fwb) {
             const auto value = manager->value(property);
-            defaultPixmap = m_fwb->iconCache()->icon(value.value<PropertySheetIconValue>()).pixmap(16, 16);
+            defaultPixmap = m_fwb->iconCache()->icon(value.value<PropertySheetIconValue>());
         }
         const auto editors = m_iconPropertyToEditors.value(property);
         for (PixmapEditor *editor : editors)
-            editor->setDefaultPixmap(defaultPixmap);
+            editor->setDefaultPixmapIcon(defaultPixmap);
     }
 }
 
@@ -2502,12 +2192,12 @@ QWidget *DesignerEditorFactory::createEditor(QtVariantPropertyManager *manager, 
             PropertySheetIconValue value = qvariant_cast<PropertySheetIconValue>(manager->value(property));
             ed->setTheme(value.theme());
             ed->setPath(value.pixmap(QIcon::Normal, QIcon::Off).path());
-            QPixmap defaultPixmap;
+            QIcon defaultPixmap;
             if (!property->isModified())
-                defaultPixmap = qvariant_cast<QIcon>(manager->attributeValue(property, defaultResourceAttributeC)).pixmap(16, 16);
+                defaultPixmap = qvariant_cast<QIcon>(manager->attributeValue(property, defaultResourceAttributeC));
             else if (m_fwb)
-                defaultPixmap = m_fwb->iconCache()->icon(value).pixmap(16, 16);
-            ed->setDefaultPixmap(defaultPixmap);
+                defaultPixmap = m_fwb->iconCache()->icon(value);
+            ed->setDefaultPixmapIcon(defaultPixmap);
             ed->setSpacing(m_spacing);
             m_iconPropertyToEditors[property].append(ed);
             m_editorToIconProperty[ed] = property;
