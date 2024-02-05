@@ -654,11 +654,34 @@ void CppCodeParser::processComparesCommand(Node *node, const QString &arg, const
  */
 void CppCodeParser::processMetaCommands(const Doc &doc, Node *node)
 {
+    std::vector<Node*> nodes_to_process{};
+    if (node->isSharedCommentNode()) {
+        auto scn = static_cast<SharedCommentNode*>(node);
+
+        nodes_to_process.reserve(scn->count() + 1);
+        std::copy(scn->collective().cbegin(), scn->collective().cend(), std::back_inserter(nodes_to_process));
+    }
+
+    // REMARK: Ordering is important here. If node is a
+    // SharedCommentNode it MUST be processed after all its child
+    // nodes.
+    // Failure to do so can incur in incorrect warnings.
+    // For example, if a shared documentation has a "\relates" command.
+    // When the command is processed for the SharedCommentNode it will
+    // apply to all its child nodes.
+    // If a child node is processed after the SharedCommentNode that
+    // contains it, that "\relates" command will be considered applied
+    // already, resulting in a warning.
+    nodes_to_process.push_back(node);
+
     const QStringList metaCommandsUsed = doc.metaCommandsUsed().values();
     for (const auto &command : metaCommandsUsed) {
         const ArgList args = doc.metaCommandArgs(command);
-        for (const auto &arg : args)
-            processMetaCommand(doc, command, arg, node);
+        for (const auto &arg : args) {
+            std::for_each(nodes_to_process.cbegin(), nodes_to_process.cend(), [this, doc, command, arg](auto node){
+                processMetaCommand(doc, command, arg, node);
+            });
+        }
     }
 }
 
@@ -925,7 +948,6 @@ std::pair<NodeList, DocList> CppCodeParser::processTopicArgs(const Doc &doc)
                         nodes.append(scn);
                         docs.append(doc);
                     }
-                    processMetaCommands(doc, node);
                 }
             }
             for (auto *scn : sharedCommentNodes)
