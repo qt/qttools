@@ -744,9 +744,8 @@ void MainWindow::about()
                        "<p>Version %1.<br/>"
                        "The Qt Distance Field Generator tool allows "
                        "to prepare a font cache for Qt applications.</p>"
-                       "<p>Copyright (C) %2 The Qt Company Ltd.</p>")
-                    .arg(QLatin1String(QT_VERSION_STR))
-                    .arg(QString()));
+                       "<p>Copyright (C) The Qt Company Ltd. and other contributors.</p>")
+                    .arg(QLatin1String(QT_VERSION_STR)));
     msgBox->show();
 }
 

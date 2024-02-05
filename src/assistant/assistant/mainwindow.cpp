@@ -856,8 +856,8 @@ void MainWindow::showAboutDialog()
             "<h3>%1</h3>"
             "<p>Version %2</p>"
             "<p>Browser: %3</p></center>"
-            "<p>Copyright (C) %4 The Qt Company Ltd.</p>")
-            .arg(tr("Qt Assistant"), QLatin1StringView(QT_VERSION_STR), browser, QString()),
+            "<p>Copyright (C) The Qt Company Ltd. and other contributors.</p>")
+            .arg(tr("Qt Assistant"), QLatin1String(QT_VERSION_STR), browser),
             resources);
         aboutDia.setPixmap(QString(":/qt-project.org/assistant/images/assistant-128.png"_L1));
     }

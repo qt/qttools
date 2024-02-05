@@ -71,8 +71,8 @@ void MainWindow::about()
     box.setText(tr("<center><img src=\":/qt-project.org/qdbusviewer/images/qdbusviewer-128.png\">"
                    "<h3>%1</h3>"
                    "<p>Version %2</p></center>"
-                   "<p>Copyright (C) %3 The Qt Company Ltd.</p>")
-                        .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR), QString()));
+                   "<p>Copyright (C) The Qt Company Ltd. and other contributors.</p>")
+                        .arg(tr("D-Bus Viewer"), QLatin1String(QT_VERSION_STR)));
     box.setWindowTitle(tr("D-Bus Viewer"));
     box.exec();
 }
